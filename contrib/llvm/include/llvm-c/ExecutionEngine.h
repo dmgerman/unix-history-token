@@ -398,6 +398,17 @@ modifier|*
 name|OutFn
 parameter_list|)
 function_decl|;
+name|void
+modifier|*
+name|LLVMRecompileAndRelinkFunction
+parameter_list|(
+name|LLVMExecutionEngineRef
+name|EE
+parameter_list|,
+name|LLVMValueRef
+name|Fn
+parameter_list|)
+function_decl|;
 name|LLVMTargetDataRef
 name|LLVMGetExecutionEngineTargetData
 parameter_list|(

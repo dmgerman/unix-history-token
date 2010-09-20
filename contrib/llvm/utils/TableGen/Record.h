@@ -3811,6 +3811,19 @@ operator|&
 name|Elements
 argument_list|)
 block|;
+comment|/// getFieldType - This method is used to implement the FieldInit class.
+comment|/// Implementors of this method should return the type of the named field if
+comment|/// they are of record type.
+comment|///
+name|virtual
+name|RecTy
+operator|*
+name|getFieldType
+argument_list|(
+argument|const std::string&FieldName
+argument_list|)
+specifier|const
+block|;
 comment|/// resolveBitReference - This method is used to implement
 comment|/// VarBitInit::resolveReferences.  If the bit is able to be resolved, we
 comment|/// simply return the resolved value, otherwise we return null.
@@ -5171,19 +5184,6 @@ name|RecordVal
 operator|*
 name|RV
 argument_list|)
-block|;
-comment|/// getFieldType - This method is used to implement the FieldInit class.
-comment|/// Implementors of this method should return the type of the named field if
-comment|/// they are of record type.
-comment|///
-name|virtual
-name|RecTy
-operator|*
-name|getFieldType
-argument_list|(
-argument|const std::string&FieldName
-argument_list|)
-specifier|const
 block|;
 name|virtual
 name|std

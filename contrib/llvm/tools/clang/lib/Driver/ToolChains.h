@@ -170,6 +170,17 @@ range|:
 name|public
 name|ToolChain
 block|{
+name|public
+operator|:
+comment|/// The host version.
+name|unsigned
+name|DarwinVersion
+index|[
+literal|3
+index|]
+block|;
+name|private
+operator|:
 name|mutable
 name|llvm
 operator|::
@@ -211,6 +222,15 @@ operator|::
 name|string
 name|MacosxVersionMin
 block|;
+name|private
+operator|:
+name|void
+name|AddDeploymentTarget
+argument_list|(
+argument|DerivedArgList&Args
+argument_list|)
+specifier|const
+block|;
 name|public
 operator|:
 name|Darwin
@@ -226,21 +246,20 @@ operator|::
 name|Triple
 operator|&
 name|Triple
-argument_list|,
-specifier|const
-name|unsigned
-argument_list|(
-operator|&
-name|DarwinVersion
-argument_list|)
-index|[
-literal|3
-index|]
 argument_list|)
 block|;
 operator|~
 name|Darwin
 argument_list|()
+block|;
+name|std
+operator|::
+name|string
+name|ComputeEffectiveClangTriple
+argument_list|(
+argument|const ArgList&Args
+argument_list|)
+specifier|const
 block|;
 comment|/// @name Darwin Specific Toolchain API
 comment|/// {
@@ -634,6 +653,16 @@ comment|/// }
 comment|/// @name ToolChain Implementation
 comment|/// {
 name|virtual
+name|types
+operator|::
+name|ID
+name|LookupTypeForExtension
+argument_list|(
+argument|const char *Ext
+argument_list|)
+specifier|const
+expr_stmt|;
+name|virtual
 name|DerivedArgList
 modifier|*
 name|TranslateArgs
@@ -673,28 +702,10 @@ name|IsBlocksDefault
 argument_list|()
 specifier|const
 block|{
-comment|// Blocks default to on for OS X 10.6 and iPhoneOS 3.0 and beyond.
-if|if
-condition|(
-name|isTargetIPhoneOS
-argument_list|()
-condition|)
+comment|// Always allow blocks on Darwin; users interested in versioning are
+comment|// expected to use /usr/include/Blocks.h.
 return|return
-operator|!
-name|isIPhoneOSVersionLT
-argument_list|(
-literal|3
-argument_list|)
-return|;
-else|else
-return|return
-operator|!
-name|isMacosxVersionLT
-argument_list|(
-literal|10
-argument_list|,
-literal|6
-argument_list|)
+name|true
 return|;
 block|}
 name|virtual
@@ -896,16 +907,6 @@ operator|::
 name|Triple
 operator|&
 name|Triple
-argument_list|,
-specifier|const
-name|unsigned
-argument_list|(
-operator|&
-name|DarwinVersion
-argument_list|)
-index|[
-literal|3
-index|]
 argument_list|)
 block|;
 comment|/// @name Darwin ToolChain Implementation
@@ -969,26 +970,6 @@ operator|::
 name|Triple
 operator|&
 name|Triple
-argument_list|,
-specifier|const
-name|unsigned
-argument_list|(
-operator|&
-name|DarwinVersion
-argument_list|)
-index|[
-literal|3
-index|]
-argument_list|,
-specifier|const
-name|unsigned
-argument_list|(
-operator|&
-name|GCCVersion
-argument_list|)
-index|[
-literal|3
-index|]
 argument_list|)
 block|;
 comment|/// @name Darwin ToolChain Implementation
@@ -1048,6 +1029,15 @@ argument_list|,
 argument|Triple
 argument_list|)
 block|{}
+name|std
+operator|::
+name|string
+name|ComputeEffectiveClangTriple
+argument_list|(
+argument|const ArgList&Args
+argument_list|)
+specifier|const
+block|;
 name|virtual
 specifier|const
 name|char
@@ -1145,11 +1135,17 @@ name|public
 operator|:
 name|FreeBSD
 argument_list|(
-argument|const HostInfo&Host
+specifier|const
+name|HostInfo
+operator|&
+name|Host
 argument_list|,
-argument|const llvm::Triple& Triple
-argument_list|,
-argument|bool Lib32
+specifier|const
+name|llvm
+operator|::
+name|Triple
+operator|&
+name|Triple
 argument_list|)
 block|;
 name|virtual
@@ -1259,6 +1255,17 @@ name|Triple
 operator|&
 name|Triple
 argument_list|)
+block|;
+name|virtual
+name|Tool
+operator|&
+name|SelectTool
+argument_list|(
+argument|const Compilation&C
+argument_list|,
+argument|const JobAction&JA
+argument_list|)
+specifier|const
 block|; }
 block|;
 comment|/// TCEToolChain - A tool chain using the llvm bitcode tools to perform
@@ -1340,6 +1347,82 @@ operator|*
 operator|>
 name|Tools
 block|;  }
+block|;
+name|class
+name|LLVM_LIBRARY_VISIBILITY
+name|Windows
+operator|:
+name|public
+name|ToolChain
+block|{
+name|mutable
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|unsigned
+block|,
+name|Tool
+operator|*
+operator|>
+name|Tools
+block|;
+name|public
+operator|:
+name|Windows
+argument_list|(
+specifier|const
+name|HostInfo
+operator|&
+name|Host
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|Triple
+operator|&
+name|Triple
+argument_list|)
+block|;
+name|virtual
+name|Tool
+operator|&
+name|SelectTool
+argument_list|(
+argument|const Compilation&C
+argument_list|,
+argument|const JobAction&JA
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|IsIntegratedAssemblerDefault
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|bool
+name|IsUnwindTablesDefault
+argument_list|()
+specifier|const
+block|;
+name|virtual
+specifier|const
+name|char
+operator|*
+name|GetDefaultRelocationModel
+argument_list|()
+specifier|const
+block|;
+name|virtual
+specifier|const
+name|char
+operator|*
+name|GetForcedPicModel
+argument_list|()
+specifier|const
+block|; }
 block|;  }
 comment|// end namespace toolchains
 block|}

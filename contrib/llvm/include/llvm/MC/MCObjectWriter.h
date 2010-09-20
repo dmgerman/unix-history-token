@@ -624,6 +624,9 @@ parameter_list|(
 name|raw_ostream
 modifier|&
 name|OS
+parameter_list|,
+name|bool
+name|is64Bit
 parameter_list|)
 function_decl|;
 block|}

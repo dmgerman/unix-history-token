@@ -112,7 +112,6 @@ argument_list|)
 operator|:
 name|FunctionPass
 argument_list|(
-operator|&
 name|ID
 argument_list|)
 operator|,
@@ -124,9 +123,8 @@ block|{     }
 name|explicit
 name|LibCallAliasAnalysis
 argument_list|(
-specifier|const
-name|void
-operator|*
+name|char
+operator|&
 name|ID
 argument_list|,
 name|LibCallInfo
@@ -151,9 +149,10 @@ expr_stmt|;
 name|ModRefResult
 name|getModRefInfo
 parameter_list|(
-name|CallSite
+name|ImmutableCallSite
 name|CS
 parameter_list|,
+specifier|const
 name|Value
 modifier|*
 name|P
@@ -165,10 +164,10 @@ function_decl|;
 name|ModRefResult
 name|getModRefInfo
 parameter_list|(
-name|CallSite
+name|ImmutableCallSite
 name|CS1
 parameter_list|,
-name|CallSite
+name|ImmutableCallSite
 name|CS2
 parameter_list|)
 block|{
@@ -213,6 +212,41 @@ return|return
 name|false
 return|;
 block|}
+comment|/// getAdjustedAnalysisPointer - This method is used when a pass implements
+comment|/// an analysis interface through multiple inheritance.  If needed, it
+comment|/// should override this to adjust the this pointer as needed for the
+comment|/// specified pass info.
+name|virtual
+name|void
+modifier|*
+name|getAdjustedAnalysisPointer
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|PI
+parameter_list|)
+block|{
+if|if
+condition|(
+name|PI
+operator|==
+operator|&
+name|AliasAnalysis
+operator|::
+name|ID
+condition|)
+return|return
+operator|(
+name|AliasAnalysis
+operator|*
+operator|)
+name|this
+return|;
+return|return
+name|this
+return|;
+block|}
 name|private
 label|:
 name|ModRefResult
@@ -223,9 +257,10 @@ name|LibCallFunctionInfo
 modifier|*
 name|FI
 parameter_list|,
-name|CallSite
+name|ImmutableCallSite
 name|CS
 parameter_list|,
+specifier|const
 name|Value
 modifier|*
 name|P

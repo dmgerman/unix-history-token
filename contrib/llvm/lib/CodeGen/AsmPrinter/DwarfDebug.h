@@ -946,13 +946,6 @@ name|DwarfDebugLocSectionSym
 decl_stmt|;
 name|MCSymbol
 modifier|*
-name|DwarfDebugLineSectionSym
-decl_stmt|,
-modifier|*
-name|CurrentLineSectionSym
-decl_stmt|;
-name|MCSymbol
-modifier|*
 name|FunctionBeginSym
 decl_stmt|,
 modifier|*
@@ -1235,9 +1228,7 @@ name|DIE
 modifier|*
 name|Die
 parameter_list|,
-specifier|const
 name|DIVariable
-modifier|*
 name|V
 parameter_list|)
 function_decl|;
@@ -1248,9 +1239,7 @@ name|DIE
 modifier|*
 name|Die
 parameter_list|,
-specifier|const
 name|DIGlobalVariable
-modifier|*
 name|G
 parameter_list|)
 function_decl|;
@@ -1261,9 +1250,7 @@ name|DIE
 modifier|*
 name|Die
 parameter_list|,
-specifier|const
 name|DISubprogram
-modifier|*
 name|SP
 parameter_list|)
 function_decl|;
@@ -1274,9 +1261,7 @@ name|DIE
 modifier|*
 name|Die
 parameter_list|,
-specifier|const
 name|DIType
-modifier|*
 name|Ty
 parameter_list|)
 function_decl|;
@@ -1287,9 +1272,7 @@ name|DIE
 modifier|*
 name|Die
 parameter_list|,
-specifier|const
 name|DINameSpace
-modifier|*
 name|NS
 parameter_list|)
 function_decl|;
@@ -1422,6 +1405,24 @@ modifier|&
 name|Location
 parameter_list|)
 function_decl|;
+comment|/// addVariableAddress - Add DW_AT_location attribute for a DbgVariable based
+comment|/// on provided frame index.
+name|void
+name|addVariableAddress
+parameter_list|(
+name|DbgVariable
+modifier|*
+modifier|&
+name|DV
+parameter_list|,
+name|DIE
+modifier|*
+name|Die
+parameter_list|,
+name|int64_t
+name|FI
+parameter_list|)
+function_decl|;
 comment|/// addToContextOwner - Add Die into the list of its context owner's children.
 name|void
 name|addToContextOwner
@@ -1546,25 +1547,12 @@ name|DIEnumerator
 name|ETy
 parameter_list|)
 function_decl|;
-comment|/// createGlobalVariableDIE - Create new DIE using GV.
-name|DIE
-modifier|*
-name|createGlobalVariableDIE
-parameter_list|(
-specifier|const
-name|DIGlobalVariable
-modifier|&
-name|GV
-parameter_list|)
-function_decl|;
 comment|/// createMemberDIE - Create new member DIE.
 name|DIE
 modifier|*
 name|createMemberDIE
 parameter_list|(
-specifier|const
 name|DIDerivedType
-modifier|&
 name|DT
 parameter_list|)
 function_decl|;
@@ -1573,9 +1561,7 @@ name|DIE
 modifier|*
 name|createSubprogramDIE
 parameter_list|(
-specifier|const
 name|DISubprogram
-modifier|&
 name|SP
 parameter_list|,
 name|bool
@@ -1889,22 +1875,6 @@ modifier|*
 name|N
 parameter_list|)
 function_decl|;
-comment|// FIXME: This should go away in favor of complex addresses.
-comment|/// Find the type the programmer originally declared the variable to be
-comment|/// and return that type.  Obsolete, use GetComplexAddrType instead.
-comment|///
-name|DIType
-name|getBlockByrefType
-argument_list|(
-name|DIType
-name|Ty
-argument_list|,
-name|std
-operator|::
-name|string
-name|Name
-argument_list|)
-decl_stmt|;
 comment|/// recordSourceLine - Register a source line with debug info. Returns the
 comment|/// unique label that was emitted and which provides correspondence to
 comment|/// the source line list.

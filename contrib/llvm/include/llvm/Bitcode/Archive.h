@@ -934,7 +934,7 @@ comment|/// This method opens an existing archive file from \p Filename and read
 comment|/// its symbol table without reading in any of the archive's members. This
 comment|/// reduces both I/O and cpu time in opening the archive if it is to be used
 comment|/// solely for symbol lookup (e.g. during linking).  The \p Filename must
-comment|/// exist and be an archive file or an exception will be thrown. This form
+comment|/// exist and be an archive file or an error will be returned. This form
 comment|/// of opening the archive is intended for read-only operations that need to
 comment|/// locate members via the symbol table for link editing.  Since the archve
 comment|/// members are not read by this method, the archive will appear empty upon
@@ -943,8 +943,7 @@ comment|/// completely replace the contents of the archive! It is recommended th
 comment|/// if this form of opening the archive is used that only the symbol table
 comment|/// lookup methods (getSymbolTable, findModuleDefiningSymbol, and
 comment|/// findModulesDefiningSymbols) be used.
-comment|/// @throws std::string if an error occurs opening the file
-comment|/// @returns an Archive* that represents the archive file.
+comment|/// @returns an Archive* that represents the archive file, or null on error.
 comment|/// @brief Open an existing archive and load its symbols.
 specifier|static
 name|Archive
@@ -978,7 +977,6 @@ comment|/// This destructor cleans up the Archive object, releases all memory, a
 comment|/// closes files. It does nothing with the archive file on disk. If you
 comment|/// haven't used the writeToDisk method by the time the destructor is
 comment|/// called, all changes to the archive will be lost.
-comment|/// @throws std::string if an error occurs
 comment|/// @brief Destruct in-memory archive
 operator|~
 name|Archive

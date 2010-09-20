@@ -46,12 +46,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/Driver/Types.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/Triple.h"
 end_include
 
@@ -194,20 +188,6 @@ name|virtual
 name|bool
 name|useDriverDriver
 argument_list|()
-specifier|const
-operator|=
-literal|0
-expr_stmt|;
-comment|/// lookupTypeForExtension - Return the default language type to use for the
-comment|/// given extension.
-name|virtual
-name|types
-operator|::
-name|ID
-name|lookupTypeForExtension
-argument_list|(
-argument|const char *Ext
-argument_list|)
 specifier|const
 operator|=
 literal|0
@@ -376,6 +356,42 @@ specifier|const
 name|HostInfo
 modifier|*
 name|createTCEHostInfo
+argument_list|(
+specifier|const
+name|Driver
+operator|&
+name|D
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|Triple
+operator|&
+name|Triple
+argument_list|)
+decl_stmt|;
+specifier|const
+name|HostInfo
+modifier|*
+name|createWindowsHostInfo
+argument_list|(
+specifier|const
+name|Driver
+operator|&
+name|D
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|Triple
+operator|&
+name|Triple
+argument_list|)
+decl_stmt|;
+specifier|const
+name|HostInfo
+modifier|*
+name|createMinGWHostInfo
 argument_list|(
 specifier|const
 name|Driver

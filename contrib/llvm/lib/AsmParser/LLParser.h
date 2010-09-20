@@ -129,9 +129,6 @@ decl_stmt|;
 name|class
 name|MDNode
 decl_stmt|;
-name|class
-name|UnionType
-decl_stmt|;
 comment|/// ValID - Represents a reference of a definition of some sort with no type.
 comment|/// There are several cases where we have to parse the value but where the
 comment|/// type can depend on later context.  This may either be a numeric reference
@@ -306,6 +303,14 @@ name|M
 decl_stmt|;
 comment|// Instruction metadata resolution.  Each instruction can have a list of
 comment|// MDRef info associated with them.
+comment|//
+comment|// The simpler approach of just creating temporary MDNodes and then calling
+comment|// RAUW on them when the definition is processed doesn't work because some
+comment|// instruction metadata kinds, such as dbg, get stored in the IR in an
+comment|// "optimized" format which doesn't participate in the normal value use
+comment|// lists. This means that RAUW doesn't work, even on temporary MDNodes
+comment|// which otherwise support RAUW. Instead, we defer resolving MDNode
+comment|// references until the definitions have been processed.
 struct|struct
 name|MDRef
 block|{
@@ -930,14 +935,6 @@ name|Alignment
 parameter_list|)
 function_decl|;
 name|bool
-name|ParseInstructionMetadata
-parameter_list|(
-name|Instruction
-modifier|*
-name|Inst
-parameter_list|)
-function_decl|;
-name|bool
 name|ParseOptionalCommaAlign
 parameter_list|(
 name|unsigned
@@ -1200,14 +1197,6 @@ name|H
 parameter_list|,
 name|bool
 name|Packed
-parameter_list|)
-function_decl|;
-name|bool
-name|ParseUnionType
-parameter_list|(
-name|PATypeHolder
-modifier|&
-name|H
 parameter_list|)
 function_decl|;
 name|bool
@@ -1612,24 +1601,6 @@ name|PFS
 argument_list|)
 return|;
 block|}
-name|bool
-name|ParseUnionValue
-parameter_list|(
-specifier|const
-name|UnionType
-modifier|*
-name|utype
-parameter_list|,
-name|ValID
-modifier|&
-name|ID
-parameter_list|,
-name|Value
-modifier|*
-modifier|&
-name|V
-parameter_list|)
-function_decl|;
 struct|struct
 name|ParamInfo
 block|{
@@ -1735,6 +1706,18 @@ name|Elts
 argument_list|)
 decl_stmt|;
 name|bool
+name|ParseMetadataListValue
+parameter_list|(
+name|ValID
+modifier|&
+name|ID
+parameter_list|,
+name|PerFunctionState
+modifier|*
+name|PFS
+parameter_list|)
+function_decl|;
+name|bool
 name|ParseMetadataValue
 parameter_list|(
 name|ValID
@@ -1761,6 +1744,18 @@ operator|*
 name|PFS
 argument_list|)
 decl_stmt|;
+name|bool
+name|ParseInstructionMetadata
+parameter_list|(
+name|Instruction
+modifier|*
+name|Inst
+parameter_list|,
+name|PerFunctionState
+modifier|*
+name|PFS
+parameter_list|)
+function_decl|;
 comment|// Function Parsing.
 struct|struct
 name|ArgInfo

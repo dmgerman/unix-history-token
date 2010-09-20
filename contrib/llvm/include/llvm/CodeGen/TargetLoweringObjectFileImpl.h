@@ -337,11 +337,6 @@ block|;
 specifier|const
 name|MCSection
 operator|*
-name|ConstDataCoalSection
-block|;
-specifier|const
-name|MCSection
-operator|*
 name|ConstDataSection
 block|;
 specifier|const

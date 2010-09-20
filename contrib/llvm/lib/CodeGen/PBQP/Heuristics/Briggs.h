@@ -188,48 +188,20 @@ condition|)
 return|return
 name|true
 return|;
-if|if
-condition|(
-name|s
-operator|->
-name|getSolverDegree
-argument_list|(
-name|n1Itr
-argument_list|)
-operator|<
-name|s
-operator|->
-name|getSolverDegree
-argument_list|(
-name|n2Itr
-argument_list|)
-condition|)
 return|return
 name|false
 return|;
-return|return
-operator|(
-operator|&
-operator|*
-name|n1Itr
-operator|<
-operator|&
-operator|*
-name|n2Itr
-operator|)
-return|;
 block|}
 name|private
-label|:
+operator|:
 name|HeuristicSolverImpl
 operator|<
 name|Briggs
 operator|>
 operator|*
 name|s
-expr_stmt|;
-block|}
-empty_stmt|;
+block|;       }
+decl_stmt|;
 name|class
 name|SpillCostComparator
 block|{
@@ -320,25 +292,8 @@ condition|)
 return|return
 name|true
 return|;
-if|if
-condition|(
-name|cost1
-operator|>
-name|cost2
-condition|)
 return|return
 name|false
-return|;
-return|return
-operator|(
-operator|&
-operator|*
-name|n1Itr
-operator|<
-operator|&
-operator|*
-name|n2Itr
-operator|)
 return|;
 block|}
 name|private
@@ -355,13 +310,7 @@ modifier|*
 name|g
 decl_stmt|;
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_typedef
 typedef|typedef
 name|std
 operator|::
@@ -373,18 +322,12 @@ name|NodeItr
 operator|>
 name|RNAllocableList
 expr_stmt|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 name|RNAllocableList
 operator|::
 name|iterator
 name|RNAllocableListItr
 expr_stmt|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 name|std
 operator|::
@@ -396,23 +339,14 @@ name|NodeItr
 operator|>
 name|RNUnallocableList
 expr_stmt|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 name|RNUnallocableList
 operator|::
 name|iterator
 name|RNUnallocableListItr
 expr_stmt|;
-end_typedef
-
-begin_label
 name|public
 label|:
-end_label
-
-begin_struct
 struct|struct
 name|NodeData
 block|{
@@ -476,9 +410,6 @@ argument_list|)
 block|{ }
 block|}
 struct|;
-end_struct
-
-begin_struct
 struct|struct
 name|EdgeData
 block|{
@@ -524,17 +455,8 @@ argument_list|)
 block|{}
 block|}
 struct|;
-end_struct
-
-begin_comment
 comment|/// \brief Construct an instance of the Briggs heuristic.
-end_comment
-
-begin_comment
 comment|/// @param solver A reference to the solver which is using this heuristic.
-end_comment
-
-begin_expr_stmt
 name|Briggs
 argument_list|(
 name|HeuristicSolverImpl
@@ -587,36 +509,21 @@ return|return
 name|true
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|// else
-end_comment
-
-begin_return
 return|return
 name|false
 return|;
-end_return
-
-begin_comment
-unit|}
+block|}
 comment|/// \brief Add a node to the heuristic reduce list.
-end_comment
-
-begin_comment
 comment|/// @param nItr Node iterator to add to the heuristic reduce list.
-end_comment
-
-begin_macro
-unit|void
+name|void
 name|addToHeuristicReduceList
 argument_list|(
-argument|Graph::NodeItr nItr
+name|Graph
+operator|::
+name|NodeItr
+name|nItr
 argument_list|)
-end_macro
-
-begin_block
 block|{
 name|NodeData
 modifier|&
@@ -682,49 +589,16 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
-
-begin_comment
 comment|/// \brief Heuristically reduce one of the nodes in the heuristic
-end_comment
-
-begin_comment
 comment|///        reduce list.
-end_comment
-
-begin_comment
 comment|/// @return True if a reduction takes place, false if the heuristic reduce
-end_comment
-
-begin_comment
 comment|///         list is empty.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// If the list of allocable nodes is non-empty a node is selected
-end_comment
-
-begin_comment
 comment|/// from it and pushed to the stack. Otherwise if the non-allocable list
-end_comment
-
-begin_comment
 comment|/// is non-empty a node is selected from it and pushed to the stack.
-end_comment
-
-begin_comment
 comment|/// If both lists are empty the method simply returns false with no action
-end_comment
-
-begin_comment
 comment|/// taken.
-end_comment
-
-begin_function
 name|bool
 name|heuristicReduce
 parameter_list|()
@@ -861,17 +735,8 @@ return|return
 name|false
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Prepare a change in the costs on the given edge.
-end_comment
-
-begin_comment
 comment|/// @param eItr Edge iterator.
-end_comment
-
-begin_decl_stmt
 name|void
 name|preUpdateEdgeCosts
 argument_list|(
@@ -980,17 +845,8 @@ operator|=
 name|false
 expr_stmt|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Handle the change in the costs on the given edge.
-end_comment
-
-begin_comment
 comment|/// @param eItr Edge iterator.
-end_comment
-
-begin_decl_stmt
 name|void
 name|postUpdateEdgeCosts
 argument_list|(
@@ -1008,33 +864,12 @@ name|eItr
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Handle the addition of a new edge into the PBQP graph.
-end_comment
-
-begin_comment
 comment|/// @param eItr Edge iterator for the added edge.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Updates allocability of any nodes connected by this edge which are
-end_comment
-
-begin_comment
 comment|/// being managed by the heuristic. If allocability changes they are
-end_comment
-
-begin_comment
 comment|/// moved to the appropriate list.
-end_comment
-
-begin_decl_stmt
 name|void
 name|handleAddEdge
 argument_list|(
@@ -1239,33 +1074,12 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Handle disconnection of an edge from a node.
-end_comment
-
-begin_comment
 comment|/// @param eItr Edge iterator for edge being disconnected.
-end_comment
-
-begin_comment
 comment|/// @param nItr Node iterator for the node being disconnected from.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Updates allocability of the given node and, if appropriate, moves the
-end_comment
-
-begin_comment
 comment|/// node to a new list.
-end_comment
-
-begin_decl_stmt
 name|void
 name|handleRemoveEdge
 argument_list|(
@@ -1432,14 +1246,8 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_decl_stmt
-
-begin_label
 name|private
 label|:
-end_label
-
-begin_decl_stmt
 name|NodeData
 modifier|&
 name|getHeuristicNodeData
@@ -1460,9 +1268,6 @@ name|nItr
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_decl_stmt
 name|EdgeData
 modifier|&
 name|getHeuristicEdgeData
@@ -1483,17 +1288,8 @@ name|eItr
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|// Work out what this edge will contribute to the allocability of the
-end_comment
-
-begin_comment
 comment|// nodes connected to it.
-end_comment
-
-begin_decl_stmt
 name|void
 name|computeEdgeContributions
 argument_list|(
@@ -1758,25 +1554,10 @@ operator|=
 name|true
 expr_stmt|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|// Add the contributions of the given edge to the given node's
-end_comment
-
-begin_comment
 comment|// numDenied and safe members. No action is taken other than to update
-end_comment
-
-begin_comment
 comment|// these member values. Once updated these numbers can be used by clients
-end_comment
-
-begin_comment
 comment|// to update the node's allocability.
-end_comment
-
-begin_decl_stmt
 name|void
 name|addEdgeContributions
 argument_list|(
@@ -1929,25 +1710,10 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_decl_stmt
-
-begin_comment
 comment|// Subtract the contributions of the given edge to the given node's
-end_comment
-
-begin_comment
 comment|// numDenied and safe members. No action is taken other than to update
-end_comment
-
-begin_comment
 comment|// these member values. Once updated these numbers can be used by clients
-end_comment
-
-begin_comment
 comment|// to update the node's allocability.
-end_comment
-
-begin_decl_stmt
 name|void
 name|subtractEdgeContributions
 argument_list|(
@@ -2100,9 +1866,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_decl_stmt
-
-begin_decl_stmt
 name|void
 name|updateAllocability
 argument_list|(
@@ -2154,9 +1917,6 @@ operator|>
 literal|0
 expr_stmt|;
 block|}
-end_decl_stmt
-
-begin_decl_stmt
 name|void
 name|initializeNode
 argument_list|(
@@ -2295,9 +2055,6 @@ operator|=
 name|true
 expr_stmt|;
 block|}
-end_decl_stmt
-
-begin_decl_stmt
 name|void
 name|handleRemoveNode
 argument_list|(
@@ -2417,22 +2174,21 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-end_decl_stmt
-
-begin_decl_stmt
 name|RNAllocableList
 name|rnAllocableList
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|RNUnallocableList
 name|rnUnallocableList
 decl_stmt|;
+block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_endif
-unit|};    } }
+unit|} }
 endif|#
 directive|endif
 end_endif

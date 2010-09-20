@@ -36,7 +36,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|//  Exception classes for llvmc.
+comment|//  Error handling.
 end_comment
 
 begin_comment
@@ -62,56 +62,50 @@ end_define
 begin_include
 include|#
 directive|include
-file|<stdexcept>
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/raw_ostream.h"
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvmc
 block|{
-comment|/// error_code - This gets thrown during the compilation process if a tool
-comment|/// invocation returns a non-zero exit code.
-name|class
-name|error_code
-range|:
-name|public
-name|std
+specifier|inline
+name|void
+name|PrintError
+argument_list|(
+name|llvm
 operator|::
-name|runtime_error
+name|StringRef
+name|Err
+argument_list|)
 block|{
-name|int
-name|Code_
-block|;
-name|public
-operator|:
-name|error_code
-argument_list|(
-argument|int c
-argument_list|)
-operator|:
-name|std
-operator|::
-name|runtime_error
-argument_list|(
-literal|"Tool returned error code"
-argument_list|)
-block|,
-name|Code_
-argument_list|(
-argument|c
-argument_list|)
-block|{}
-name|int
-name|code
-argument_list|()
+specifier|extern
 specifier|const
-block|{
-return|return
-name|Code_
-return|;
+name|char
+modifier|*
+name|ProgramName
+decl_stmt|;
+name|llvm
+operator|::
+name|errs
+argument_list|()
+operator|<<
+name|ProgramName
+operator|<<
+literal|": "
+operator|<<
+name|Err
+operator|<<
+literal|'\n'
+expr_stmt|;
 block|}
-expr|}
-block|;  }
+block|}
 end_decl_stmt
 
 begin_endif

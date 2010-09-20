@@ -94,6 +94,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/FoldingSet.h"
 end_include
 
@@ -141,6 +147,79 @@ decl_stmt|;
 name|class
 name|CodeTextRegion
 decl_stmt|;
+comment|/// Represent a region's offset within the top level base region.
+name|class
+name|RegionOffset
+block|{
+comment|/// The base region.
+specifier|const
+name|MemRegion
+modifier|*
+name|R
+decl_stmt|;
+comment|/// The bit offset within the base region. It shouldn't be negative.
+name|int64_t
+name|Offset
+decl_stmt|;
+name|public
+label|:
+name|RegionOffset
+argument_list|(
+specifier|const
+name|MemRegion
+operator|*
+name|r
+argument_list|)
+operator|:
+name|R
+argument_list|(
+name|r
+argument_list|)
+operator|,
+name|Offset
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+name|RegionOffset
+argument_list|(
+argument|const MemRegion *r
+argument_list|,
+argument|int64_t off
+argument_list|)
+operator|:
+name|R
+argument_list|(
+name|r
+argument_list|)
+operator|,
+name|Offset
+argument_list|(
+argument|off
+argument_list|)
+block|{}
+specifier|const
+name|MemRegion
+operator|*
+name|getRegion
+argument_list|()
+specifier|const
+block|{
+return|return
+name|R
+return|;
+block|}
+name|int64_t
+name|getOffset
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Offset
+return|;
+block|}
+block|}
+empty_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|// Base region classes.
 comment|//===----------------------------------------------------------------------===//
@@ -334,6 +413,12 @@ specifier|const
 block|;
 name|bool
 name|hasStackParametersStorage
+argument_list|()
+specifier|const
+block|;
+comment|/// Compute the offset within the top level memory object.
+name|RegionOffset
+name|getAsOffset
 argument_list|()
 specifier|const
 block|;
@@ -1054,83 +1139,6 @@ block|}
 expr|}
 block|;
 comment|//===----------------------------------------------------------------------===//
-comment|// Auxillary data classes for use with MemRegions.
-comment|//===----------------------------------------------------------------------===//
-name|class
-name|ElementRegion
-block|;
-name|class
-name|RegionRawOffset
-block|{
-name|private
-operator|:
-name|friend
-name|class
-name|ElementRegion
-block|;
-specifier|const
-name|MemRegion
-operator|*
-name|Region
-block|;
-name|int64_t
-name|Offset
-block|;
-name|RegionRawOffset
-argument_list|(
-argument|const MemRegion* reg
-argument_list|,
-argument|int64_t offset =
-literal|0
-argument_list|)
-operator|:
-name|Region
-argument_list|(
-name|reg
-argument_list|)
-block|,
-name|Offset
-argument_list|(
-argument|offset
-argument_list|)
-block|{}
-name|public
-operator|:
-comment|// FIXME: Eventually support symbolic offsets.
-name|int64_t
-name|getByteOffset
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Offset
-return|;
-block|}
-specifier|const
-name|MemRegion
-operator|*
-name|getRegion
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Region
-return|;
-block|}
-name|void
-name|dumpToStream
-argument_list|(
-argument|llvm::raw_ostream& os
-argument_list|)
-specifier|const
-block|;
-name|void
-name|dump
-argument_list|()
-specifier|const
-block|; }
-block|;
-comment|//===----------------------------------------------------------------------===//
 comment|// MemRegion subclasses.
 comment|//===----------------------------------------------------------------------===//
 comment|/// AllocaRegion - A region that represents an untyped blob of bytes created
@@ -1285,9 +1293,7 @@ operator|:
 name|virtual
 name|QualType
 name|getValueType
-argument_list|(
-argument|ASTContext&C
-argument_list|)
+argument_list|()
 specifier|const
 operator|=
 literal|0
@@ -1295,38 +1301,31 @@ block|;
 name|virtual
 name|QualType
 name|getLocationType
-argument_list|(
-argument|ASTContext& C
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 comment|// FIXME: We can possibly optimize this later to cache this value.
 return|return
-name|C
+name|getContext
+argument_list|()
 operator|.
 name|getPointerType
 argument_list|(
 name|getValueType
-argument_list|(
-name|C
-argument_list|)
+argument_list|()
 argument_list|)
 return|;
 block|}
 name|QualType
 name|getDesugaredValueType
-argument_list|(
-argument|ASTContext& C
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 name|QualType
 name|T
 operator|=
 name|getValueType
-argument_list|(
-name|C
-argument_list|)
+argument_list|()
 block|;
 return|return
 name|T
@@ -1344,16 +1343,12 @@ return|;
 block|}
 name|QualType
 name|getDesugaredLocationType
-argument_list|(
-argument|ASTContext& C
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 return|return
 name|getLocationType
-argument_list|(
-name|C
-argument_list|)
+argument_list|()
 operator|.
 name|getDesugaredType
 argument_list|()
@@ -1365,15 +1360,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|!
-name|getValueType
-argument_list|(
-name|getContext
-argument_list|()
-argument_list|)
-operator|.
-name|isNull
-argument_list|()
+name|true
 return|;
 block|}
 specifier|static
@@ -1429,15 +1416,14 @@ name|public
 operator|:
 name|QualType
 name|getValueType
-argument_list|(
-argument|ASTContext&C
-argument_list|)
+argument_list|()
 specifier|const
 block|{
-comment|// Do not get the object type of a CodeTextRegion.
 name|assert
 argument_list|(
 literal|0
+operator|&&
+literal|"Do not get the object type of a CodeTextRegion."
 argument_list|)
 block|;
 return|return
@@ -1522,13 +1508,12 @@ argument_list|)
 block|{}
 name|QualType
 name|getLocationType
-argument_list|(
-argument|ASTContext&C
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 return|return
-name|C
+name|getContext
+argument_list|()
 operator|.
 name|getPointerType
 argument_list|(
@@ -1668,9 +1653,7 @@ name|public
 operator|:
 name|QualType
 name|getLocationType
-argument_list|(
-argument|ASTContext&C
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 return|return
@@ -2227,9 +2210,7 @@ return|;
 block|}
 name|QualType
 name|getValueType
-argument_list|(
-argument|ASTContext& C
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 return|return
@@ -2366,21 +2347,14 @@ name|public
 operator|:
 name|QualType
 name|getValueType
-argument_list|(
-argument|ASTContext& C
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 return|return
-name|C
-operator|.
-name|getCanonicalType
-argument_list|(
 name|CL
 operator|->
 name|getType
 argument_list|()
-argument_list|)
 return|;
 block|}
 name|bool
@@ -2632,23 +2606,16 @@ specifier|const
 block|;
 name|QualType
 name|getValueType
-argument_list|(
-argument|ASTContext& C
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 comment|// FIXME: We can cache this if needed.
 return|return
-name|C
-operator|.
-name|getCanonicalType
-argument_list|(
 name|getDecl
 argument_list|()
 operator|->
 name|getType
 argument_list|()
-argument_list|)
 return|;
 block|}
 name|void
@@ -2746,9 +2713,7 @@ name|public
 operator|:
 name|QualType
 name|getValueType
-argument_list|(
-argument|ASTContext&C
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 return|return
@@ -2851,23 +2816,16 @@ return|;
 block|}
 name|QualType
 name|getValueType
-argument_list|(
-argument|ASTContext& C
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 comment|// FIXME: We can cache this if needed.
 return|return
-name|C
-operator|.
-name|getCanonicalType
-argument_list|(
 name|getDecl
 argument_list|()
 operator|->
 name|getType
 argument_list|()
-argument_list|)
 return|;
 block|}
 name|DefinedOrUnknownSVal
@@ -2996,9 +2954,7 @@ return|;
 block|}
 name|QualType
 name|getValueType
-argument_list|(
-argument|ASTContext&
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 return|return
@@ -3033,6 +2989,83 @@ name|ObjCIvarRegionKind
 return|;
 block|}
 expr|}
+block|;
+comment|//===----------------------------------------------------------------------===//
+comment|// Auxillary data classes for use with MemRegions.
+comment|//===----------------------------------------------------------------------===//
+name|class
+name|ElementRegion
+block|;
+name|class
+name|RegionRawOffset
+block|{
+name|private
+operator|:
+name|friend
+name|class
+name|ElementRegion
+block|;
+specifier|const
+name|MemRegion
+operator|*
+name|Region
+block|;
+name|int64_t
+name|Offset
+block|;
+name|RegionRawOffset
+argument_list|(
+argument|const MemRegion* reg
+argument_list|,
+argument|int64_t offset =
+literal|0
+argument_list|)
+operator|:
+name|Region
+argument_list|(
+name|reg
+argument_list|)
+block|,
+name|Offset
+argument_list|(
+argument|offset
+argument_list|)
+block|{}
+name|public
+operator|:
+comment|// FIXME: Eventually support symbolic offsets.
+name|int64_t
+name|getByteOffset
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Offset
+return|;
+block|}
+specifier|const
+name|MemRegion
+operator|*
+name|getRegion
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Region
+return|;
+block|}
+name|void
+name|dumpToStream
+argument_list|(
+argument|llvm::raw_ostream& os
+argument_list|)
+specifier|const
+block|;
+name|void
+name|dump
+argument_list|()
+specifier|const
+block|; }
 block|;
 name|class
 name|ElementRegion
@@ -3138,9 +3171,7 @@ return|;
 block|}
 name|QualType
 name|getValueType
-argument_list|(
-argument|ASTContext&
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 return|return
@@ -3156,8 +3187,9 @@ return|return
 name|ElementType
 return|;
 block|}
+comment|/// Compute the offset within the array. The array might also be a subobject.
 name|RegionRawOffset
-name|getAsRawOffset
+name|getAsArrayOffset
 argument_list|()
 specifier|const
 block|;
@@ -3259,9 +3291,7 @@ name|public
 operator|:
 name|QualType
 name|getValueType
-argument_list|(
-argument|ASTContext& C
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 return|return

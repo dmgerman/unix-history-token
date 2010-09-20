@@ -88,6 +88,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/Dominators.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Analysis/Passes.h"
 end_include
 
@@ -640,6 +646,14 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 comment|// Thread jumps
+name|PM
+operator|->
+name|add
+argument_list|(
+name|createCorrelatedValuePropagationPass
+argument_list|()
+argument_list|)
+expr_stmt|;
 name|PM
 operator|->
 name|add

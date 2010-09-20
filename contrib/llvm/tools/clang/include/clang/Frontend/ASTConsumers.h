@@ -108,9 +108,6 @@ name|class
 name|LangOptions
 decl_stmt|;
 name|class
-name|PCHReader
-decl_stmt|;
-name|class
 name|Preprocessor
 decl_stmt|;
 name|class
@@ -168,36 +165,6 @@ modifier|*
 name|CreateDeclContextPrinter
 parameter_list|()
 function_decl|;
-comment|// PCH generator: generates a precompiled header file; this file can be used
-comment|// later with the PCHReader (clang -cc1 option -include-pch) to speed up compile
-comment|// times.
-name|ASTConsumer
-modifier|*
-name|CreatePCHGenerator
-argument_list|(
-specifier|const
-name|Preprocessor
-operator|&
-name|PP
-argument_list|,
-name|llvm
-operator|::
-name|raw_ostream
-operator|*
-name|OS
-argument_list|,
-name|PCHReader
-operator|*
-name|Chain
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|isysroot
-operator|=
-literal|0
-argument_list|)
-decl_stmt|;
 comment|// Inheritance viewer: for C++ code, creates a graph of the inheritance
 comment|// tree for the given class and displays it with "dotty".
 name|ASTConsumer

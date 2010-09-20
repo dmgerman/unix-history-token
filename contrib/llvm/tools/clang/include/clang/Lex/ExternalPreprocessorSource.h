@@ -70,7 +70,7 @@ block|{
 comment|/// \brief Abstract interface for external sources of preprocessor
 comment|/// information.
 comment|///
-comment|/// This abstract class allows an external sources (such as the \c PCHReader)
+comment|/// This abstract class allows an external sources (such as the \c ASTReader)
 comment|/// to provide additional macro definitions.
 name|class
 name|ExternalPreprocessorSource

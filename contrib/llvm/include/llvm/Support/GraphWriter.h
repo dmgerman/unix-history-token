@@ -406,7 +406,7 @@ name|DOTTraits
 argument_list|(
 name|SN
 argument_list|)
-block|;  }
+block|; }
 name|void
 name|writeHeader
 argument_list|(
@@ -1528,6 +1528,26 @@ expr_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|/// getOStream - Get the raw output stream into the graph file. Useful to
+end_comment
+
+begin_comment
+comment|/// write fancy things using addCustomGraphFeatures().
+end_comment
+
+begin_function
+name|raw_ostream
+modifier|&
+name|getOStream
+parameter_list|()
+block|{
+return|return
+name|O
+return|;
+block|}
+end_function
+
 begin_expr_stmt
 unit|};
 name|template
@@ -1756,6 +1776,8 @@ name|empty
 argument_list|()
 condition|)
 block|{
+name|llvm
+operator|::
 name|WriteGraph
 argument_list|(
 name|O
@@ -1842,6 +1864,8 @@ operator|::
 name|Path
 name|Filename
 operator|=
+name|llvm
+operator|::
 name|WriteGraph
 argument_list|(
 name|G

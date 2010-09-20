@@ -164,6 +164,7 @@ block|}
 enum|;
 name|protected
 label|:
+specifier|const
 name|void
 modifier|*
 name|Data
@@ -184,14 +185,7 @@ argument_list|)
 block|:
 name|Data
 argument_list|(
-name|const_cast
-operator|<
-name|void
-operator|*
-operator|>
-operator|(
 name|d
-operator|)
 argument_list|)
 operator|,
 name|Kind
@@ -204,7 +198,7 @@ name|SVal
 argument_list|(
 argument|BaseKind k
 argument_list|,
-argument|void* D = NULL
+argument|const void* D = NULL
 argument_list|)
 operator|:
 name|Data
@@ -319,14 +313,7 @@ name|ID
 operator|.
 name|AddPointer
 argument_list|(
-name|reinterpret_cast
-operator|<
-name|void
-operator|*
-operator|>
-operator|(
 name|Data
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -660,6 +647,7 @@ argument_list|)
 block|{}
 name|UndefinedVal
 argument_list|(
+specifier|const
 name|void
 operator|*
 name|D
@@ -689,6 +677,7 @@ operator|==
 name|UndefinedKind
 return|;
 block|}
+specifier|const
 name|void
 operator|*
 name|getData
@@ -1187,6 +1176,7 @@ block|{
 return|return
 name|reinterpret_cast
 operator|<
+specifier|const
 name|SymExpr
 operator|*
 operator|>
@@ -1276,6 +1266,7 @@ return|return
 operator|*
 name|static_cast
 operator|<
+specifier|const
 name|llvm
 operator|::
 name|APSInt
@@ -1581,6 +1572,7 @@ block|{
 return|return
 name|static_cast
 operator|<
+specifier|const
 name|CompoundValData
 operator|*
 operator|>
@@ -1792,6 +1784,7 @@ argument_list|,
 argument|Label
 argument_list|)
 block|{}
+specifier|const
 name|LabelStmt
 operator|*
 name|getLabel
@@ -1801,6 +1794,7 @@ block|{
 return|return
 name|static_cast
 operator|<
+specifier|const
 name|LabelStmt
 operator|*
 operator|>
@@ -1885,6 +1879,7 @@ block|{
 return|return
 name|static_cast
 operator|<
+specifier|const
 name|MemRegion
 operator|*
 operator|>
@@ -2051,6 +2046,7 @@ return|return
 operator|*
 name|static_cast
 operator|<
+specifier|const
 name|llvm
 operator|::
 name|APSInt

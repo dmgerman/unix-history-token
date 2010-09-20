@@ -320,20 +320,6 @@ return|;
 block|}
 name|public
 operator|:
-name|llvm
-operator|::
-name|Constant
-operator|*
-name|getNSConcreteGlobalBlock
-argument_list|()
-block|;
-name|llvm
-operator|::
-name|Constant
-operator|*
-name|getNSConcreteStackBlock
-argument_list|()
-block|;
 name|int
 name|getGlobalUniqueCount
 argument_list|()
@@ -377,22 +363,6 @@ name|char
 operator|*
 argument_list|)
 block|;
-comment|/// NSConcreteGlobalBlock - Cached reference to the class pointer for global
-comment|/// blocks.
-name|llvm
-operator|::
-name|Constant
-operator|*
-name|NSConcreteGlobalBlock
-block|;
-comment|/// NSConcreteStackBlock - Cached reference to the class poinnter for stack
-comment|/// blocks.
-name|llvm
-operator|::
-name|Constant
-operator|*
-name|NSConcreteStackBlock
-block|;
 specifier|const
 name|llvm
 operator|::
@@ -412,18 +382,6 @@ name|int
 name|GlobalUniqueCount
 block|;   }
 name|Block
-block|;
-name|llvm
-operator|::
-name|Value
-operator|*
-name|BlockObjectAssign
-block|;
-name|llvm
-operator|::
-name|Value
-operator|*
-name|BlockObjectDispose
 block|;
 specifier|const
 name|llvm
@@ -519,32 +477,12 @@ name|getContext
 argument_list|()
 argument_list|)
 block|,
-name|NSConcreteGlobalBlock
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|NSConcreteStackBlock
-argument_list|(
-literal|0
-argument_list|)
-block|,
 name|BlockDescriptorType
 argument_list|(
 literal|0
 argument_list|)
 block|,
 name|GenericBlockLiteralType
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|BlockObjectAssign
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|BlockObjectDispose
 argument_list|(
 literal|0
 argument_list|)
@@ -903,20 +841,6 @@ argument|int flag
 argument_list|,
 argument|unsigned Align
 argument_list|)
-block|;
-name|llvm
-operator|::
-name|Value
-operator|*
-name|getBlockObjectAssign
-argument_list|()
-block|;
-name|llvm
-operator|::
-name|Value
-operator|*
-name|getBlockObjectDispose
-argument_list|()
 block|;
 name|void
 name|BuildBlockRelease

@@ -160,6 +160,8 @@ name|DerivedKind
 block|,
 name|ExtentKind
 block|,
+name|MetadataKind
+block|,
 name|END_SYMBOLS
 block|,
 name|SymIntKind
@@ -809,6 +811,9 @@ return|;
 block|}
 expr|}
 block|;
+comment|/// SymbolExtent - Represents the extent (size in bytes) of a bounded region.
+comment|///  Clients should not ask the SymbolManager for a region's extent. Always use
+comment|///  SubRegion::getExtent instead -- the value returned may not be a symbol.
 name|class
 name|SymbolExtent
 operator|:
@@ -922,6 +927,246 @@ name|getKind
 argument_list|()
 operator|==
 name|ExtentKind
+return|;
+block|}
+expr|}
+block|;
+comment|/// SymbolMetadata - Represents path-dependent metadata about a specific region.
+comment|///  Metadata symbols remain live as long as they are marked as in use before
+comment|///  dead-symbol sweeping AND their associated regions are still alive.
+comment|///  Intended for use by checkers.
+name|class
+name|SymbolMetadata
+operator|:
+name|public
+name|SymbolData
+block|{
+specifier|const
+name|MemRegion
+operator|*
+name|R
+block|;
+specifier|const
+name|Stmt
+operator|*
+name|S
+block|;
+name|QualType
+name|T
+block|;
+name|unsigned
+name|Count
+block|;
+specifier|const
+name|void
+operator|*
+name|Tag
+block|;
+name|public
+operator|:
+name|SymbolMetadata
+argument_list|(
+argument|SymbolID sym
+argument_list|,
+argument|const MemRegion* r
+argument_list|,
+argument|const Stmt* s
+argument_list|,
+argument|QualType t
+argument_list|,
+argument|unsigned count
+argument_list|,
+argument|const void* tag
+argument_list|)
+operator|:
+name|SymbolData
+argument_list|(
+name|MetadataKind
+argument_list|,
+name|sym
+argument_list|)
+block|,
+name|R
+argument_list|(
+name|r
+argument_list|)
+block|,
+name|S
+argument_list|(
+name|s
+argument_list|)
+block|,
+name|T
+argument_list|(
+name|t
+argument_list|)
+block|,
+name|Count
+argument_list|(
+name|count
+argument_list|)
+block|,
+name|Tag
+argument_list|(
+argument|tag
+argument_list|)
+block|{}
+specifier|const
+name|MemRegion
+operator|*
+name|getRegion
+argument_list|()
+specifier|const
+block|{
+return|return
+name|R
+return|;
+block|}
+specifier|const
+name|Stmt
+operator|*
+name|getStmt
+argument_list|()
+specifier|const
+block|{
+return|return
+name|S
+return|;
+block|}
+name|unsigned
+name|getCount
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Count
+return|;
+block|}
+specifier|const
+name|void
+operator|*
+name|getTag
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Tag
+return|;
+block|}
+name|QualType
+name|getType
+argument_list|(
+argument|ASTContext&
+argument_list|)
+specifier|const
+block|;
+name|void
+name|dumpToStream
+argument_list|(
+argument|llvm::raw_ostream&os
+argument_list|)
+specifier|const
+block|;
+specifier|static
+name|void
+name|Profile
+argument_list|(
+argument|llvm::FoldingSetNodeID& profile
+argument_list|,
+argument|const MemRegion *R
+argument_list|,
+argument|const Stmt *S
+argument_list|,
+argument|QualType T
+argument_list|,
+argument|unsigned Count
+argument_list|,
+argument|const void *Tag
+argument_list|)
+block|{
+name|profile
+operator|.
+name|AddInteger
+argument_list|(
+operator|(
+name|unsigned
+operator|)
+name|MetadataKind
+argument_list|)
+block|;
+name|profile
+operator|.
+name|AddPointer
+argument_list|(
+name|R
+argument_list|)
+block|;
+name|profile
+operator|.
+name|AddPointer
+argument_list|(
+name|S
+argument_list|)
+block|;
+name|profile
+operator|.
+name|Add
+argument_list|(
+name|T
+argument_list|)
+block|;
+name|profile
+operator|.
+name|AddInteger
+argument_list|(
+name|Count
+argument_list|)
+block|;
+name|profile
+operator|.
+name|AddPointer
+argument_list|(
+name|Tag
+argument_list|)
+block|;   }
+name|virtual
+name|void
+name|Profile
+argument_list|(
+argument|llvm::FoldingSetNodeID& profile
+argument_list|)
+block|{
+name|Profile
+argument_list|(
+name|profile
+argument_list|,
+name|R
+argument_list|,
+name|S
+argument_list|,
+name|T
+argument_list|,
+name|Count
+argument_list|,
+name|Tag
+argument_list|)
+block|;   }
+comment|// Implement isa<T> support.
+specifier|static
+specifier|inline
+name|bool
+name|classof
+argument_list|(
+argument|const SymExpr* SE
+argument_list|)
+block|{
+return|return
+name|SE
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|MetadataKind
 return|;
 block|}
 expr|}
@@ -1507,6 +1752,23 @@ name|R
 argument_list|)
 block|;
 specifier|const
+name|SymbolMetadata
+operator|*
+name|getMetadataSymbol
+argument_list|(
+argument|const MemRegion* R
+argument_list|,
+argument|const Stmt* S
+argument_list|,
+argument|QualType T
+argument_list|,
+argument|unsigned VisitCount
+argument_list|,
+argument|const void* SymbolTag =
+literal|0
+argument_list|)
+block|;
+specifier|const
 name|SymIntExpr
 operator|*
 name|getSymIntExpr
@@ -1614,6 +1876,9 @@ name|SetTy
 name|TheLiving
 block|;
 name|SetTy
+name|MetadataInUse
+block|;
+name|SetTy
 name|TheDead
 block|;
 specifier|const
@@ -1710,12 +1975,29 @@ argument|const VarRegion *VR
 argument_list|)
 specifier|const
 block|;
+comment|// markLive - Unconditionally marks a symbol as live. This should never be
+comment|//  used by checkers, only by the state infrastructure such as the store and
+comment|//  environment. Checkers should instead use metadata symbols and markInUse.
 name|void
 name|markLive
 argument_list|(
 argument|SymbolRef sym
 argument_list|)
 block|;
+comment|// markInUse - Marks a symbol as important to a checker. For metadata symbols,
+comment|//  this will keep the symbol alive as long as its associated region is also
+comment|//  live. For other symbols, this has no effect; checkers are not permitted
+comment|//  to influence the life of other symbols. This should be used before any
+comment|//  symbol marking has occurred, i.e. in the MarkLiveSymbols callback.
+name|void
+name|markInUse
+argument_list|(
+argument|SymbolRef sym
+argument_list|)
+block|;
+comment|// maybeDead - If a symbol is known to be live, marks the symbol as live.
+comment|//  Otherwise, if the symbol cannot be proven live, it is marked as dead.
+comment|//  Returns true if the symbol is dead, false if live.
 name|bool
 name|maybeDead
 argument_list|(
@@ -1763,6 +2045,25 @@ name|TheDead
 operator|.
 name|empty
 argument_list|()
+return|;
+block|}
+comment|/// isDead - Returns whether or not a symbol has been confirmed dead. This
+comment|///  should only be called once all marking of dead symbols has completed.
+comment|///  (For checkers, this means only in the EvalDeadSymbols callback.)
+name|bool
+name|isDead
+argument_list|(
+argument|SymbolRef sym
+argument_list|)
+specifier|const
+block|{
+return|return
+name|TheDead
+operator|.
+name|count
+argument_list|(
+name|sym
+argument_list|)
 return|;
 block|}
 expr|}

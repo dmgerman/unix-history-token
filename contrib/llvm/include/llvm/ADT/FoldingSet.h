@@ -127,9 +127,9 @@ comment|///       ...
 comment|///      void Profile(FoldingSetNodeID&ID) const {
 comment|///        ID.AddString(Name);
 comment|///        ID.AddInteger(Value);
-comment|///       }
-comment|///       ...
-comment|///     };
+comment|///      }
+comment|///      ...
+comment|///    };
 comment|///
 comment|/// To define the folding set itself use the FoldingSet template;
 comment|///
@@ -401,13 +401,54 @@ name|virtual
 name|void
 name|GetNodeProfile
 argument_list|(
+name|Node
+operator|*
+name|N
+argument_list|,
+name|FoldingSetNodeID
+operator|&
+name|ID
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
+comment|/// NodeEquals - Instantiations of the FoldingSet template implement
+comment|/// this function to compare the given node with the given ID.
+name|virtual
+name|bool
+name|NodeEquals
+argument_list|(
+name|Node
+operator|*
+name|N
+argument_list|,
+specifier|const
 name|FoldingSetNodeID
 operator|&
 name|ID
 argument_list|,
+name|FoldingSetNodeID
+operator|&
+name|TempID
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
+comment|/// NodeEquals - Instantiations of the FoldingSet template implement
+comment|/// this function to compute a hash value for the given node.
+name|virtual
+name|unsigned
+name|ComputeNodeHash
+argument_list|(
 name|Node
 operator|*
 name|N
+argument_list|,
+name|FoldingSetNodeID
+operator|&
+name|TempID
 argument_list|)
 decl|const
 init|=
@@ -416,13 +457,6 @@ decl_stmt|;
 block|}
 empty_stmt|;
 comment|//===----------------------------------------------------------------------===//
-comment|/// FoldingSetTrait - This trait class is used to define behavior of how
-comment|///  to "profile" (in the FoldingSet parlance) an object of a given type.
-comment|///  The default behavior is to invoke a 'Profile' method on an object, but
-comment|///  through template specialization the behavior can be tailored for specific
-comment|///  types.  Combined with the FoldingSetNodeWrapper classs, one can add objects
-comment|///  to FoldingSets that were not originally designed to have that behavior.
-comment|///
 name|template
 operator|<
 name|typename
@@ -430,9 +464,19 @@ name|T
 operator|>
 expr|struct
 name|FoldingSetTrait
+expr_stmt|;
+comment|/// DefaultFoldingSetTrait - This class provides default implementations
+comment|/// for FoldingSetTrait implementations.
+comment|///
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+expr|struct
+name|DefaultFoldingSetTrait
 block|{
 specifier|static
-specifier|inline
 name|void
 name|Profile
 argument_list|(
@@ -447,9 +491,8 @@ name|Profile
 argument_list|(
 name|ID
 argument_list|)
-block|;}
+block|;   }
 specifier|static
-specifier|inline
 name|void
 name|Profile
 argument_list|(
@@ -464,14 +507,96 @@ name|Profile
 argument_list|(
 name|ID
 argument_list|)
+block|;   }
+comment|// Equals - Test if the profile for X would match ID, using TempID
+comment|// to compute a temporary ID if necessary. The default implementation
+comment|// just calls Profile and does a regular comparison. Implementations
+comment|// can override this to provide more efficient implementations.
+specifier|static
+specifier|inline
+name|bool
+name|Equals
+argument_list|(
+name|T
+operator|&
+name|X
+argument_list|,
+specifier|const
+name|FoldingSetNodeID
+operator|&
+name|ID
+argument_list|,
+name|FoldingSetNodeID
+operator|&
+name|TempID
+argument_list|)
+block|;
+comment|// ComputeHash - Compute a hash value for X, using TempID to
+comment|// compute a temporary ID if necessary. The default implementation
+comment|// just calls Profile and does a regular hash computation.
+comment|// Implementations can override this to provide more efficient
+comment|// implementations.
+specifier|static
+specifier|inline
+name|unsigned
+name|ComputeHash
+argument_list|(
+name|T
+operator|&
+name|X
+argument_list|,
+name|FoldingSetNodeID
+operator|&
+name|TempID
+argument_list|)
 block|; }
+expr_stmt|;
+comment|/// FoldingSetTrait - This trait class is used to define behavior of how
+comment|/// to "profile" (in the FoldingSet parlance) an object of a given type.
+comment|/// The default behavior is to invoke a 'Profile' method on an object, but
+comment|/// through template specialization the behavior can be tailored for specific
+comment|/// types.  Combined with the FoldingSetNodeWrapper class, one can add objects
+comment|/// to FoldingSets that were not originally designed to have that behavior.
 name|template
 operator|<
 name|typename
+name|T
+operator|>
+expr|struct
+name|FoldingSetTrait
+operator|:
+name|public
+name|DefaultFoldingSetTrait
+operator|<
+name|T
+operator|>
+block|{}
+expr_stmt|;
+name|template
+operator|<
+name|typename
+name|T
+operator|,
+name|typename
 name|Ctx
 operator|>
+expr|struct
+name|ContextualFoldingSetTrait
+expr_stmt|;
+comment|/// DefaultContextualFoldingSetTrait - Like DefaultFoldingSetTrait, but
+comment|/// for ContextualFoldingSets.
+name|template
+operator|<
+name|typename
+name|T
+operator|,
+name|typename
+name|Ctx
+operator|>
+expr|struct
+name|DefaultContextualFoldingSetTrait
+block|{
 specifier|static
-specifier|inline
 name|void
 name|Profile
 argument_list|(
@@ -491,7 +616,54 @@ argument_list|,
 name|Context
 argument_list|)
 block|;   }
-block|}
+specifier|static
+specifier|inline
+name|bool
+name|Equals
+argument_list|(
+argument|T&X
+argument_list|,
+argument|const FoldingSetNodeID&ID
+argument_list|,
+argument|FoldingSetNodeID&TempID
+argument_list|,
+argument|Ctx Context
+argument_list|)
+block|;
+specifier|static
+specifier|inline
+name|unsigned
+name|ComputeHash
+argument_list|(
+argument|T&X
+argument_list|,
+argument|FoldingSetNodeID&TempID
+argument_list|,
+argument|Ctx Context
+argument_list|)
+block|; }
+expr_stmt|;
+comment|/// ContextualFoldingSetTrait - Like FoldingSetTrait, but for
+comment|/// ContextualFoldingSets.
+name|template
+operator|<
+name|typename
+name|T
+operator|,
+name|typename
+name|Ctx
+operator|>
+expr|struct
+name|ContextualFoldingSetTrait
+operator|:
+name|public
+name|DefaultContextualFoldingSetTrait
+operator|<
+name|T
+operator|,
+name|Ctx
+operator|>
+block|{}
 expr_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|/// FoldingSetNodeIDRef - This class describes a reference to an interned
@@ -502,6 +674,7 @@ comment|/// allocation means it requires a non-trivial destructor call.
 name|class
 name|FoldingSetNodeIDRef
 block|{
+specifier|const
 name|unsigned
 modifier|*
 name|Data
@@ -526,7 +699,7 @@ argument_list|)
 block|{}
 name|FoldingSetNodeIDRef
 argument_list|(
-argument|unsigned *D
+argument|const unsigned *D
 argument_list|,
 argument|size_t S
 argument_list|)
@@ -541,6 +714,22 @@ argument_list|(
 argument|S
 argument_list|)
 block|{}
+comment|/// ComputeHash - Compute a strong hash value for this FoldingSetNodeIDRef,
+comment|/// used to lookup the node in the FoldingSetImpl.
+name|unsigned
+name|ComputeHash
+argument_list|()
+specifier|const
+expr_stmt|;
+name|bool
+name|operator
+operator|==
+operator|(
+name|FoldingSetNodeIDRef
+operator|)
+specifier|const
+expr_stmt|;
+specifier|const
 name|unsigned
 operator|*
 name|getData
@@ -704,7 +893,7 @@ name|this
 argument_list|)
 block|; }
 comment|/// clear - Clear the accumulated profile, allowing this FoldingSetNodeID
-comment|///  object to be used to compute a new profile.
+comment|/// object to be used to compute a new profile.
 specifier|inline
 name|void
 name|clear
@@ -716,7 +905,7 @@ name|clear
 argument_list|()
 block|; }
 comment|/// ComputeHash - Compute a strong hash value for this FoldingSetNodeID, used
-comment|///  to lookup the node in the FoldingSetImpl.
+comment|/// to lookup the node in the FoldingSetImpl.
 name|unsigned
 name|ComputeHash
 argument_list|()
@@ -731,6 +920,16 @@ operator|(
 specifier|const
 name|FoldingSetNodeID
 operator|&
+name|RHS
+operator|)
+specifier|const
+expr_stmt|;
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|FoldingSetNodeIDRef
 name|RHS
 operator|)
 specifier|const
@@ -772,6 +971,184 @@ operator|>
 name|class
 name|FoldingSetBucketIterator
 expr_stmt|;
+comment|// Definitions of FoldingSetTrait and ContextualFoldingSetTrait functions, which
+comment|// require the definition of FoldingSetNodeID.
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+specifier|inline
+name|bool
+name|DefaultFoldingSetTrait
+operator|<
+name|T
+operator|>
+operator|::
+name|Equals
+argument_list|(
+argument|T&X
+argument_list|,
+argument|const FoldingSetNodeID&ID
+argument_list|,
+argument|FoldingSetNodeID&TempID
+argument_list|)
+block|{
+name|FoldingSetTrait
+operator|<
+name|T
+operator|>
+operator|::
+name|Profile
+argument_list|(
+name|X
+argument_list|,
+name|TempID
+argument_list|)
+block|;
+return|return
+name|TempID
+operator|==
+name|ID
+return|;
+block|}
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+specifier|inline
+name|unsigned
+name|DefaultFoldingSetTrait
+operator|<
+name|T
+operator|>
+operator|::
+name|ComputeHash
+argument_list|(
+argument|T&X
+argument_list|,
+argument|FoldingSetNodeID&TempID
+argument_list|)
+block|{
+name|FoldingSetTrait
+operator|<
+name|T
+operator|>
+operator|::
+name|Profile
+argument_list|(
+name|X
+argument_list|,
+name|TempID
+argument_list|)
+block|;
+return|return
+name|TempID
+operator|.
+name|ComputeHash
+argument_list|()
+return|;
+block|}
+name|template
+operator|<
+name|typename
+name|T
+operator|,
+name|typename
+name|Ctx
+operator|>
+specifier|inline
+name|bool
+name|DefaultContextualFoldingSetTrait
+operator|<
+name|T
+operator|,
+name|Ctx
+operator|>
+operator|::
+name|Equals
+argument_list|(
+argument|T&X
+argument_list|,
+argument|const FoldingSetNodeID&ID
+argument_list|,
+argument|FoldingSetNodeID&TempID
+argument_list|,
+argument|Ctx Context
+argument_list|)
+block|{
+name|ContextualFoldingSetTrait
+operator|<
+name|T
+block|,
+name|Ctx
+operator|>
+operator|::
+name|Profile
+argument_list|(
+name|X
+argument_list|,
+name|TempID
+argument_list|,
+name|Context
+argument_list|)
+block|;
+return|return
+name|TempID
+operator|==
+name|ID
+return|;
+block|}
+name|template
+operator|<
+name|typename
+name|T
+operator|,
+name|typename
+name|Ctx
+operator|>
+specifier|inline
+name|unsigned
+name|DefaultContextualFoldingSetTrait
+operator|<
+name|T
+operator|,
+name|Ctx
+operator|>
+operator|::
+name|ComputeHash
+argument_list|(
+argument|T&X
+argument_list|,
+argument|FoldingSetNodeID&TempID
+argument_list|,
+argument|Ctx Context
+argument_list|)
+block|{
+name|ContextualFoldingSetTrait
+operator|<
+name|T
+block|,
+name|Ctx
+operator|>
+operator|::
+name|Profile
+argument_list|(
+name|X
+argument_list|,
+name|TempID
+argument_list|,
+name|Context
+argument_list|)
+block|;
+return|return
+name|TempID
+operator|.
+name|ComputeHash
+argument_list|()
+return|;
+block|}
 comment|//===----------------------------------------------------------------------===//
 comment|/// FoldingSet - This template class is used to instantiate a specialized
 comment|/// implementation of the folding set to the node class T.  T must be a
@@ -796,9 +1173,9 @@ name|virtual
 name|void
 name|GetNodeProfile
 argument_list|(
-argument|FoldingSetNodeID&ID
-argument_list|,
 argument|Node *N
+argument_list|,
+argument|FoldingSetNodeID&ID
 argument_list|)
 specifier|const
 block|{
@@ -828,6 +1205,90 @@ argument_list|,
 name|ID
 argument_list|)
 block|;   }
+comment|/// NodeEquals - Instantiations may optionally provide a way to compare a
+comment|/// node with a specified ID.
+name|virtual
+name|bool
+name|NodeEquals
+argument_list|(
+argument|Node *N
+argument_list|,
+argument|const FoldingSetNodeID&ID
+argument_list|,
+argument|FoldingSetNodeID&TempID
+argument_list|)
+specifier|const
+block|{
+name|T
+operator|*
+name|TN
+operator|=
+name|static_cast
+operator|<
+name|T
+operator|*
+operator|>
+operator|(
+name|N
+operator|)
+block|;
+return|return
+name|FoldingSetTrait
+operator|<
+name|T
+operator|>
+operator|::
+name|Equals
+argument_list|(
+operator|*
+name|TN
+argument_list|,
+name|ID
+argument_list|,
+name|TempID
+argument_list|)
+return|;
+block|}
+comment|/// NodeEquals - Instantiations may optionally provide a way to compute a
+comment|/// hash value directly from a node.
+name|virtual
+name|unsigned
+name|ComputeNodeHash
+argument_list|(
+argument|Node *N
+argument_list|,
+argument|FoldingSetNodeID&TempID
+argument_list|)
+specifier|const
+block|{
+name|T
+operator|*
+name|TN
+operator|=
+name|static_cast
+operator|<
+name|T
+operator|*
+operator|>
+operator|(
+name|N
+operator|)
+block|;
+return|return
+name|FoldingSetTrait
+operator|<
+name|T
+operator|>
+operator|::
+name|ComputeHash
+argument_list|(
+operator|*
+name|TN
+argument_list|,
+name|TempID
+argument_list|)
+return|;
+block|}
 name|public
 operator|:
 name|explicit
@@ -1101,9 +1562,9 @@ name|virtual
 name|void
 name|GetNodeProfile
 argument_list|(
-argument|FoldingSetNodeID&ID
-argument_list|,
 argument|FoldingSetImpl::Node *N
+argument_list|,
+argument|FoldingSetNodeID&ID
 argument_list|)
 specifier|const
 block|{
@@ -1120,30 +1581,123 @@ operator|(
 name|N
 operator|)
 block|;
-comment|// We must use explicit template arguments in case Ctx is a
-comment|// reference type.
-name|FoldingSetTrait
+name|ContextualFoldingSetTrait
 operator|<
 name|T
-operator|>
-operator|::
-name|template
-name|Profile
-operator|<
+block|,
 name|Ctx
 operator|>
-operator|(
+operator|::
+name|Profile
+argument_list|(
 operator|*
 name|TN
-operator|,
+argument_list|,
 name|ID
-operator|,
+argument_list|,
 name|Context
-operator|)
+argument_list|)
 block|;   }
+name|virtual
+name|bool
+name|NodeEquals
+argument_list|(
+argument|FoldingSetImpl::Node *N
+argument_list|,
+argument|const FoldingSetNodeID&ID
+argument_list|,
+argument|FoldingSetNodeID&TempID
+argument_list|)
+specifier|const
+block|{
+name|T
+operator|*
+name|TN
+operator|=
+name|static_cast
+operator|<
+name|T
+operator|*
+operator|>
+operator|(
+name|N
+operator|)
+block|;
+return|return
+name|ContextualFoldingSetTrait
+operator|<
+name|T
+operator|,
+name|Ctx
+operator|>
+operator|::
+name|Equals
+argument_list|(
+operator|*
+name|TN
+argument_list|,
+name|ID
+argument_list|,
+name|TempID
+argument_list|,
+name|Context
+argument_list|)
+return|;
+block|}
+name|virtual
+name|unsigned
+name|ComputeNodeHash
+argument_list|(
+argument|FoldingSetImpl::Node *N
+argument_list|,
+argument|FoldingSetNodeID&TempID
+argument_list|)
+specifier|const
+block|{
+name|T
+operator|*
+name|TN
+operator|=
+name|static_cast
+operator|<
+name|T
+operator|*
+operator|>
+operator|(
+name|N
+operator|)
+block|;
+return|return
+name|ContextualFoldingSetTrait
+operator|<
+name|T
+operator|,
+name|Ctx
+operator|>
+operator|::
+name|ComputeHash
+argument_list|(
+operator|*
+name|TN
+argument_list|,
+name|TempID
+argument_list|,
+name|Context
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_label
 name|public
-operator|:
+label|:
+end_label
+
+begin_macro
 name|explicit
+end_macro
+
+begin_macro
 name|ContextualFoldingSet
 argument_list|(
 argument|Ctx Context
@@ -1151,12 +1705,15 @@ argument_list|,
 argument|unsigned Log2InitSize =
 literal|6
 argument_list|)
-operator|:
+end_macro
+
+begin_expr_stmt
+unit|:
 name|FoldingSetImpl
 argument_list|(
 name|Log2InitSize
 argument_list|)
-block|,
+operator|,
 name|Context
 argument_list|(
 argument|Context
@@ -1619,11 +2176,11 @@ comment|/// FoldingSetBucketIteratorImpl - This is the common bucket iterator su
 end_comment
 
 begin_comment
-comment|///  shared by all folding sets, which knows how to walk a particular bucket
+comment|/// shared by all folding sets, which knows how to walk a particular bucket
 end_comment
 
 begin_comment
-comment|///  of a folding set hash table.
+comment|/// of a folding set hash table.
 end_comment
 
 begin_decl_stmt
@@ -2254,6 +2811,7 @@ name|Profile
 argument_list|(
 argument|FoldingSetNodeID& ID
 argument_list|)
+specifier|const
 block|{
 name|ID
 operator|=
@@ -2290,23 +2848,6 @@ name|void
 name|Profile
 argument_list|(
 argument|const T* X
-argument_list|,
-argument|FoldingSetNodeID& ID
-argument_list|)
-block|{
-name|ID
-operator|.
-name|AddPointer
-argument_list|(
-name|X
-argument_list|)
-block|;   }
-specifier|static
-specifier|inline
-name|void
-name|Profile
-argument_list|(
-argument|T* X
 argument_list|,
 argument|FoldingSetNodeID& ID
 argument_list|)

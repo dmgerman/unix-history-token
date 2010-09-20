@@ -96,6 +96,12 @@ comment|/// explicit section specified.
 name|bool
 name|IsExplicit
 block|;
+comment|/// EntrySize - The size of each entry in this section. This size only
+comment|/// makes sense for sections that contain fixed-sized entries. If a
+comment|/// section does not contain fixed-sized entries 'EntrySize' will be 0.
+name|unsigned
+name|EntrySize
+block|;
 name|private
 operator|:
 name|friend
@@ -113,6 +119,8 @@ argument_list|,
 argument|SectionKind K
 argument_list|,
 argument|bool isExplicit
+argument_list|,
+argument|unsigned entrySize
 argument_list|)
 operator|:
 name|MCSection
@@ -139,7 +147,12 @@ argument_list|)
 block|,
 name|IsExplicit
 argument_list|(
-argument|isExplicit
+name|isExplicit
+argument_list|)
+block|,
+name|EntrySize
+argument_list|(
+argument|entrySize
 argument_list|)
 block|{}
 operator|~
@@ -369,6 +382,15 @@ specifier|const
 block|{
 return|return
 name|Flags
+return|;
+block|}
+name|unsigned
+name|getEntrySize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|EntrySize
 return|;
 block|}
 name|void

@@ -468,7 +468,6 @@ argument_list|()
 operator|:
 name|MachineFunctionPass
 argument_list|(
-operator|&
 name|ID
 argument_list|)
 operator|,
@@ -551,6 +550,24 @@ argument_list|(
 name|AU
 argument_list|)
 expr_stmt|;
+block|}
+name|MachineFunction
+operator|&
+name|getMachineFunction
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|MF
+operator|&&
+literal|"getMachineFunction called before runOnMAchineFunction"
+argument_list|)
+block|;
+return|return
+operator|*
+name|MF
+return|;
 block|}
 name|void
 name|grow

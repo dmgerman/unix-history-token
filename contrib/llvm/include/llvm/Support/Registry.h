@@ -892,8 +892,16 @@ unit|};
 comment|/// Registry::Parser now lives in llvm/Support/RegistryParser.h.
 end_comment
 
-begin_expr_stmt
+begin_comment
 unit|};
+comment|// Since these are defined in a header file, plugins must be sure to export
+end_comment
+
+begin_comment
+comment|// these symbols.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename

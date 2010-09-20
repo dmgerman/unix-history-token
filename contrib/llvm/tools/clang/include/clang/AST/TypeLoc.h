@@ -1248,6 +1248,22 @@ name|public
 operator|:
 specifier|static
 name|bool
+name|classofType
+argument_list|(
+argument|const Type *Ty
+argument_list|)
+block|{
+return|return
+name|TypeClass
+operator|::
+name|classof
+argument_list|(
+name|Ty
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
 name|classof
 argument_list|(
 argument|const TypeLoc *TL

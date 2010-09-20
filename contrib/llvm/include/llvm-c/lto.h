@@ -28,6 +28,12 @@ directive|include
 file|<stddef.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/System/DataTypes.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -307,10 +313,23 @@ name|lto_module_t
 name|mod
 parameter_list|)
 function_decl|;
+comment|/**  * Sets triple string with which the object will be codegened.  */
+specifier|extern
+name|void
+name|lto_module_set_target_triple
+parameter_list|(
+name|lto_module_t
+name|mod
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|triple
+parameter_list|)
+function_decl|;
 comment|/**  * Returns the number of symbols in the object module.  */
 specifier|extern
-name|unsigned
-name|int
+name|uint32_t
 name|lto_module_get_num_symbols
 parameter_list|(
 name|lto_module_t
@@ -327,8 +346,7 @@ parameter_list|(
 name|lto_module_t
 name|mod
 parameter_list|,
-name|unsigned
-name|int
+name|uint32_t
 name|index
 parameter_list|)
 function_decl|;
@@ -340,8 +358,7 @@ parameter_list|(
 name|lto_module_t
 name|mod
 parameter_list|,
-name|unsigned
-name|int
+name|uint32_t
 name|index
 parameter_list|)
 function_decl|;
@@ -395,10 +412,10 @@ parameter_list|,
 name|lto_codegen_model
 parameter_list|)
 function_decl|;
-comment|/**  * Sets the location of the "gcc" to run. If not set, libLTO will search for  * "gcc" on the path.  */
+comment|/**  * Sets the cpu to generate code for.  */
 specifier|extern
 name|void
-name|lto_codegen_set_gcc_path
+name|lto_codegen_set_cpu
 parameter_list|(
 name|lto_code_gen_t
 name|cg
@@ -406,7 +423,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|path
+name|cpu
 parameter_list|)
 function_decl|;
 comment|/**  * Sets the location of the assembler tool to run. If not set, libLTO  * will use gcc to invoke the assembler.  */
@@ -421,6 +438,24 @@ specifier|const
 name|char
 modifier|*
 name|path
+parameter_list|)
+function_decl|;
+comment|/**  * Sets extra arguments that libLTO should pass to the assembler.  */
+specifier|extern
+name|void
+name|lto_codegen_set_assembler_args
+parameter_list|(
+name|lto_code_gen_t
+name|cg
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|args
+parameter_list|,
+name|int
+name|nargs
 parameter_list|)
 function_decl|;
 comment|/**  * Adds to a list of all global symbols that must exist in the final  * generated code.  If a function is not listed, it might be  * inlined into every usage and optimized away.  */

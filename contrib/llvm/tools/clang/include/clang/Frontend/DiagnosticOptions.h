@@ -127,6 +127,12 @@ literal|1
 decl_stmt|;
 comment|/// Show source ranges in numeric form.
 name|unsigned
+name|ShowParseableFixits
+range|:
+literal|1
+decl_stmt|;
+comment|/// Show machine parseable fix-its.
+name|unsigned
 name|ShowOptionNames
 range|:
 literal|1
@@ -292,6 +298,10 @@ operator|=
 literal|0
 expr_stmt|;
 name|ShowSourceRanges
+operator|=
+literal|0
+expr_stmt|;
+name|ShowParseableFixits
 operator|=
 literal|0
 expr_stmt|;

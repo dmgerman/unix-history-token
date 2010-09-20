@@ -193,9 +193,9 @@ name|ReadArgMem
 block|,
 name|ReadMem
 block|,
-name|WriteArgMem
+name|ReadWriteArgMem
 block|,
-name|WriteMem
+name|ReadWriteMem
 block|}
 name|ModRef
 enum|;

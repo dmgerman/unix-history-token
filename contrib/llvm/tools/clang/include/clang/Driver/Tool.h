@@ -181,22 +181,6 @@ return|;
 block|}
 name|virtual
 name|bool
-name|acceptsPipedInput
-argument_list|()
-specifier|const
-operator|=
-literal|0
-expr_stmt|;
-name|virtual
-name|bool
-name|canPipeOutput
-argument_list|()
-specifier|const
-operator|=
-literal|0
-expr_stmt|;
-name|virtual
-name|bool
 name|hasIntegratedAssembler
 argument_list|()
 specifier|const
@@ -228,7 +212,6 @@ block|}
 comment|/// ConstructJob - Construct jobs to perform the action \arg JA,
 comment|/// writing to \arg Output and with \arg Inputs.
 comment|///
-comment|/// \param Dest - Where to put the resulting commands.
 comment|/// \param TCArgs - The argument list for this toolchain, with any
 comment|/// tool chain specific translations applied.
 comment|/// \param LinkingOutput - If this output will eventually feed the
@@ -245,10 +228,6 @@ specifier|const
 name|JobAction
 operator|&
 name|JA
-argument_list|,
-name|Job
-operator|&
-name|Dest
 argument_list|,
 specifier|const
 name|InputInfo

@@ -154,6 +154,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/STLExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Analysis/Dominators.h"
 end_include
 
@@ -1292,7 +1298,7 @@ end_return
 
 begin_comment
 unit|}
-comment|/// getExitEdges - Return all pairs of (_inside_block_,_outside_block_).
+comment|/// Edge type.
 end_comment
 
 begin_expr_stmt
@@ -1301,11 +1307,9 @@ name|std
 operator|::
 name|pair
 operator|<
-specifier|const
 name|BlockT
 operator|*
 operator|,
-specifier|const
 name|BlockT
 operator|*
 operator|>
@@ -1313,18 +1317,22 @@ name|Edge
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
+begin_comment
+comment|/// getExitEdges - Return all pairs of (_inside_block_,_outside_block_).
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|EdgeT
+operator|>
 name|void
 name|getExitEdges
 argument_list|(
-name|SmallVectorImpl
-operator|<
-name|Edge
-operator|>
-operator|&
-name|ExitEdges
+argument|SmallVectorImpl<EdgeT>&ExitEdges
 argument_list|)
-decl|const
+specifier|const
 block|{
 comment|// Sort the blocks vector so that we can use binary search to do quick
 comment|// lookups.
@@ -1332,7 +1340,7 @@ name|SmallVector
 operator|<
 name|BlockT
 operator|*
-operator|,
+block|,
 literal|128
 operator|>
 name|LoopBBs
@@ -1343,10 +1351,8 @@ argument_list|,
 name|block_end
 argument_list|()
 argument_list|)
-expr_stmt|;
-name|std
-operator|::
-name|sort
+block|;
+name|array_pod_sort
 argument_list|(
 name|LoopBBs
 operator|.
@@ -1358,7 +1364,7 @@ operator|.
 name|end
 argument_list|()
 argument_list|)
-expr_stmt|;
+block|;
 typedef|typedef
 name|GraphTraits
 operator|<
@@ -1367,6 +1373,9 @@ operator|*
 operator|>
 name|BlockTraits
 expr_stmt|;
+end_expr_stmt
+
+begin_for
 for|for
 control|(
 name|block_iterator
@@ -1446,9 +1455,7 @@ name|ExitEdges
 operator|.
 name|push_back
 argument_list|(
-name|std
-operator|::
-name|make_pair
+name|EdgeT
 argument_list|(
 operator|*
 name|BI
@@ -1458,10 +1465,10 @@ name|I
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
-end_decl_stmt
+end_for
 
 begin_comment
+unit|}
 comment|/// getLoopPreheader - If there is a preheader for this loop, return it.  A
 end_comment
 
@@ -1490,7 +1497,7 @@ comment|///
 end_comment
 
 begin_expr_stmt
-name|BlockT
+unit|BlockT
 operator|*
 name|getLoopPreheader
 argument_list|()
@@ -3122,8 +3129,50 @@ argument_list|)
 block|;   }
 end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
 unit|};
+name|template
+operator|<
+name|class
+name|BlockT
+operator|,
+name|class
+name|LoopT
+operator|>
+name|raw_ostream
+operator|&
+name|operator
+operator|<<
+operator|(
+name|raw_ostream
+operator|&
+name|OS
+operator|,
+specifier|const
+name|LoopBase
+operator|<
+name|BlockT
+operator|,
+name|LoopT
+operator|>
+operator|&
+name|Loop
+operator|)
+block|{
+name|Loop
+operator|.
+name|print
+argument_list|(
+name|OS
+argument_list|)
+block|;
+return|return
+name|OS
+return|;
+block|}
+end_expr_stmt
+
+begin_decl_stmt
 name|class
 name|Loop
 range|:
@@ -3230,16 +3279,6 @@ comment|///
 name|PHINode
 operator|*
 name|getCanonicalInductionVariable
-argument_list|()
-specifier|const
-expr_stmt|;
-comment|/// getCanonicalInductionVariableIncrement - Return the LLVM value that holds
-comment|/// the canonical induction variable value for the "next" iteration of the
-comment|/// loop.  This always succeeds if getCanonicalInductionVariable succeeds.
-comment|///
-name|Instruction
-operator|*
-name|getCanonicalInductionVariableIncrement
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -5330,7 +5369,7 @@ argument_list|()
 operator|:
 name|FunctionPass
 argument_list|(
-argument|&ID
+argument|ID
 argument_list|)
 block|{}
 name|LoopInfoBase

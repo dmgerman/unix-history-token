@@ -102,6 +102,17 @@ operator|=
 literal|0
 argument_list|)
 decl_stmt|;
+comment|/// This function removes a file from the list of files to be removed on
+comment|/// signal delivery.
+name|void
+name|DontRemoveFileOnSignal
+parameter_list|(
+specifier|const
+name|Path
+modifier|&
+name|Filename
+parameter_list|)
+function_decl|;
 comment|/// When an error signal (such as SIBABRT or SIGSEGV) is delivered to the
 comment|/// process, print a stack trace and then exit.
 comment|/// @brief Print a stack trace if a fatal signal occurs.

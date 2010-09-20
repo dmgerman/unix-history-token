@@ -263,8 +263,6 @@ comment|/// eliminates unreachable basic blocks, and does other "peephole" optim
 comment|/// of the CFG.  It returns true if a modification was made, possibly deleting
 comment|/// the basic block that was pointed to.
 comment|///
-comment|/// WARNING:  The entry node of a method may not be simplified.
-comment|///
 name|bool
 name|SimplifyCFG
 parameter_list|(

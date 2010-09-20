@@ -154,7 +154,7 @@ argument_list|()
 operator|:
 name|MachineFunctionPass
 argument_list|(
-argument|&ID
+argument|ID
 argument_list|)
 block|{}
 specifier|const
@@ -289,30 +289,6 @@ comment|// TRI->requiresFrameIndexScavenging() for the curren function.
 name|bool
 name|FrameIndexVirtualScavenging
 decl_stmt|;
-comment|// When using the scavenger post-pass to resolve frame reference
-comment|// materialization registers, maintain a map of the registers to
-comment|// the constant value and SP adjustment associated with it.
-typedef|typedef
-name|std
-operator|::
-name|pair
-operator|<
-name|TargetRegisterInfo
-operator|::
-name|FrameIndexValue
-operator|,
-name|int
-operator|>
-name|FrameConstantEntry
-expr_stmt|;
-name|DenseMap
-operator|<
-name|unsigned
-operator|,
-name|FrameConstantEntry
-operator|>
-name|FrameConstantRegMap
-expr_stmt|;
 ifndef|#
 directive|ifndef
 name|NDEBUG

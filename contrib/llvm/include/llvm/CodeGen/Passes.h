@@ -100,7 +100,7 @@ decl_stmt|;
 comment|/// createUnreachableBlockEliminationPass - The LLVM code generator does not
 comment|/// work well with unreachable basic blocks (what live ranges make sense for a
 comment|/// block that cannot be reached?).  As such, a code generator should either
-comment|/// not instruction select unreachable blocks, or it can run this pass as it's
+comment|/// not instruction select unreachable blocks, or run this pass as its
 comment|/// last LLVM modifying pass to clean up blocks that are not reachable from
 comment|/// the entry block.
 name|FunctionPass
@@ -109,7 +109,7 @@ name|createUnreachableBlockEliminationPass
 parameter_list|()
 function_decl|;
 comment|/// MachineFunctionPrinter pass - This pass prints out the machine function to
-comment|/// the given stream, as a debugging tool.
+comment|/// the given stream as a debugging tool.
 name|MachineFunctionPass
 modifier|*
 name|createMachineFunctionPrinterPass
@@ -131,19 +131,15 @@ decl_stmt|;
 comment|/// MachineLoopInfo pass - This pass is a loop analysis pass.
 comment|///
 specifier|extern
-specifier|const
-name|PassInfo
-modifier|*
-specifier|const
+name|char
+modifier|&
 name|MachineLoopInfoID
 decl_stmt|;
 comment|/// MachineDominators pass - This pass is a machine dominators analysis pass.
 comment|///
 specifier|extern
-specifier|const
-name|PassInfo
-modifier|*
-specifier|const
+name|char
+modifier|&
 name|MachineDominatorsID
 decl_stmt|;
 comment|/// PHIElimination pass - This pass eliminates machine instruction PHI nodes
@@ -152,10 +148,8 @@ comment|/// desired input for some register allocators.  This pass is "required"
 comment|/// these register allocator like this: AU.addRequiredID(PHIEliminationID);
 comment|///
 specifier|extern
-specifier|const
-name|PassInfo
-modifier|*
-specifier|const
+name|char
+modifier|&
 name|PHIEliminationID
 decl_stmt|;
 comment|/// StrongPHIElimination pass - This pass eliminates machine instruction PHI
@@ -165,46 +159,36 @@ comment|/// "required" by these register allocator like this:
 comment|///    AU.addRequiredID(PHIEliminationID);
 comment|///  This pass is still in development
 specifier|extern
-specifier|const
-name|PassInfo
-modifier|*
-specifier|const
+name|char
+modifier|&
 name|StrongPHIEliminationID
 decl_stmt|;
 specifier|extern
-specifier|const
-name|PassInfo
-modifier|*
-specifier|const
+name|char
+modifier|&
 name|PreAllocSplittingID
 decl_stmt|;
 comment|/// SimpleRegisterCoalescing pass.  Aggressively coalesces every register
 comment|/// copy it can.
 comment|///
 specifier|extern
-specifier|const
-name|PassInfo
-modifier|*
-specifier|const
+name|char
+modifier|&
 name|SimpleRegisterCoalescingID
 decl_stmt|;
 comment|/// TwoAddressInstruction pass - This pass reduces two-address instructions to
 comment|/// use two operands. This destroys SSA information but it is desired by
 comment|/// register allocators.
 specifier|extern
-specifier|const
-name|PassInfo
-modifier|*
-specifier|const
+name|char
+modifier|&
 name|TwoAddressInstructionPassID
 decl_stmt|;
 comment|/// UnreachableMachineBlockElimination pass - This pass removes unreachable
 comment|/// machine basic blocks.
 specifier|extern
-specifier|const
-name|PassInfo
-modifier|*
-specifier|const
+name|char
+modifier|&
 name|UnreachableMachineBlockElimID
 decl_stmt|;
 comment|/// DeadMachineInstructionElim pass - This pass removes dead machine
@@ -386,11 +370,11 @@ modifier|*
 name|createMachineSinkingPass
 parameter_list|()
 function_decl|;
-comment|/// createOptimizeExtsPass - This pass performs sign / zero extension
-comment|/// optimization by increasing uses of extended values.
+comment|/// createPeepholeOptimizerPass - This pass performs peephole optimizations -
+comment|/// like extension and comparison eliminations.
 name|FunctionPass
 modifier|*
-name|createOptimizeExtsPass
+name|createPeepholeOptimizerPass
 parameter_list|()
 function_decl|;
 comment|/// createOptimizePHIsPass - This pass optimizes machine instruction PHIs
@@ -421,16 +405,10 @@ parameter_list|)
 function_decl|;
 comment|/// createMachineVerifierPass - This pass verifies cenerated machine code
 comment|/// instructions for correctness.
-comment|///
-comment|/// @param allowDoubleDefs ignore double definitions of
-comment|///        registers. Useful before LiveVariables has run.
 name|FunctionPass
 modifier|*
 name|createMachineVerifierPass
-parameter_list|(
-name|bool
-name|allowDoubleDefs
-parameter_list|)
+parameter_list|()
 function_decl|;
 comment|/// createDwarfEHPass - This pass mulches exception handling code into a form
 comment|/// adapted to code generation.  Required if using dwarf exception handling.
@@ -442,9 +420,6 @@ specifier|const
 name|TargetMachine
 modifier|*
 name|tm
-parameter_list|,
-name|bool
-name|fast
 parameter_list|)
 function_decl|;
 comment|/// createSjLjEHPass - This pass adapts exception handling code to use
@@ -458,6 +433,16 @@ name|TargetLowering
 modifier|*
 name|tli
 parameter_list|)
+function_decl|;
+comment|/// createLocalStackSlotAllocationPass - This pass assigns local frame
+comment|/// indices to stack slots relative to one another and allocates
+comment|/// base registers to access them when it is estimated by the target to
+comment|/// be out of range of normal frame pointer or stack pointer index
+comment|/// addressing.
+name|FunctionPass
+modifier|*
+name|createLocalStackSlotAllocationPass
+parameter_list|()
 function_decl|;
 block|}
 end_decl_stmt

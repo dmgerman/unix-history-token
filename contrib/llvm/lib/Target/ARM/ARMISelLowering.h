@@ -78,6 +78,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Target/TargetRegisterInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/FastISel.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/SelectionDAG.h"
 end_include
 
@@ -148,6 +160,9 @@ comment|// Return with a flag operand.
 name|PIC_ADD
 block|,
 comment|// Add with a PC operand and a PIC label.
+name|AND
+block|,
+comment|// ARM "and" instruction that sets the 's' flag in CPSR.
 name|CMP
 block|,
 comment|// ARM compare instructions.
@@ -347,6 +362,13 @@ comment|// unzip (deinterleave)
 name|VTRN
 block|,
 comment|// transpose
+comment|// Vector multiply long:
+name|VMULLs
+block|,
+comment|// ...signed
+name|VMULLu
+block|,
+comment|// ...unsigned
 comment|// Operands of the standard BUILD_VECTOR node are not legalized, which
 comment|// is fine if BUILD_VECTORs are always lowered to shuffles or other
 comment|// operations, but for ARM some BUILD_VECTORs are legal as-is and their
@@ -358,6 +380,9 @@ comment|// Floating-point max and min:
 name|FMAX
 block|,
 name|FMIN
+block|,
+comment|// Bit-field insert
+name|BFI
 block|}
 enum|;
 block|}
@@ -387,6 +412,13 @@ modifier|&
 name|FPImm
 parameter_list|)
 function_decl|;
+name|bool
+name|isBitFieldInvertedMask
+parameter_list|(
+name|unsigned
+name|v
+parameter_list|)
+function_decl|;
 block|}
 comment|//===--------------------------------------------------------------------===//
 comment|//  ARMTargetLowering - ARM Implementation of the TargetLowering interface
@@ -405,6 +437,14 @@ name|TargetMachine
 operator|&
 name|TM
 argument_list|)
+block|;
+name|virtual
+name|unsigned
+name|getJumpTableEncoding
+argument_list|(
+argument|void
+argument_list|)
+specifier|const
 block|;
 name|virtual
 name|SDValue
@@ -652,12 +692,40 @@ argument|const Function *F
 argument_list|)
 specifier|const
 block|;
+comment|/// getMaximalGlobalOffset - Returns the maximal possible offset which can
+comment|/// be used for loads / stores from the global.
+name|virtual
+name|unsigned
+name|getMaximalGlobalOffset
+argument_list|()
+specifier|const
+block|;
+comment|/// createFastISel - This method returns a target specific FastISel object,
+comment|/// or null if the target does not support "fast" ISel.
+name|virtual
+name|FastISel
+operator|*
+name|createFastISel
+argument_list|(
+argument|FunctionLoweringInfo&funcInfo
+argument_list|)
+specifier|const
+block|;
 name|Sched
 operator|::
 name|Preference
 name|getSchedulingPreference
 argument_list|(
 argument|SDNode *N
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|getRegPressureLimit
+argument_list|(
+argument|const TargetRegisterClass *RC
+argument_list|,
+argument|MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
@@ -690,6 +758,24 @@ argument|EVT VT
 argument_list|)
 specifier|const
 block|;
+name|protected
+operator|:
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|TargetRegisterClass
+operator|*
+block|,
+name|uint8_t
+operator|>
+name|findRepresentativeClass
+argument_list|(
+argument|EVT VT
+argument_list|)
+specifier|const
+block|;
 name|private
 operator|:
 comment|/// Subtarget - Keep a pointer to the ARMSubtarget around so that we can
@@ -698,6 +784,11 @@ specifier|const
 name|ARMSubtarget
 operator|*
 name|Subtarget
+block|;
+specifier|const
+name|TargetRegisterInfo
+operator|*
+name|RegInfo
 block|;
 comment|/// ARMPCLabelIndex - Keep track of the number of ARM PC labels created.
 comment|///
@@ -982,6 +1073,18 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|SDValue
+name|LowerSELECT
+argument_list|(
+name|SDValue
+name|Op
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|)
+decl|const
+decl_stmt|;
+name|SDValue
 name|LowerSELECT_CC
 argument_list|(
 name|SDValue
@@ -1042,18 +1145,6 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|SDValue
-name|LowerDYNAMIC_STACKALLOC
-argument_list|(
-name|SDValue
-name|Op
-argument_list|,
-name|SelectionDAG
-operator|&
-name|DAG
-argument_list|)
-decl|const
-decl_stmt|;
-name|SDValue
 name|LowerShiftRightParts
 argument_list|(
 name|SDValue
@@ -1067,6 +1158,18 @@ decl|const
 decl_stmt|;
 name|SDValue
 name|LowerShiftLeftParts
+argument_list|(
+name|SDValue
+name|Op
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|)
+decl|const
+decl_stmt|;
+name|SDValue
+name|LowerFLT_ROUNDS_
 argument_list|(
 name|SDValue
 name|Op
@@ -1426,6 +1529,22 @@ end_decl_stmt
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
+
+begin_decl_stmt
+name|namespace
+name|ARM
+block|{
+name|FastISel
+modifier|*
+name|createFastISel
+parameter_list|(
+name|FunctionLoweringInfo
+modifier|&
+name|funcInfo
+parameter_list|)
+function_decl|;
+block|}
+end_decl_stmt
 
 begin_endif
 unit|}

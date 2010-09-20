@@ -1,6 +1,70 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*===-- llvm-c/Target.h - Target Lib C Iface --------------------*- C++ -*-===*\ |*                                                                            *| |*                     The LLVM Compiler Infrastructure                       *| |*                                                                            *| |* This file is distributed under the University of Illinois Open Source      *| |* License. See LICENSE.TXT for details.                                      *| |*                                                                            *| |*===----------------------------------------------------------------------===*| |*                                                                            *| |* This header declares the C interface to libLLVMTarget.a, which             *| |* implements target information.                                             *| |*                                                                            *| |* Many exotic languages can interoperate with C code but have a harder time  *| |* with C++ due to name mangling. So in addition to C, this interface enables *| |* tools written in such languages.                                           *| |*                                                                            *| \*===----------------------------------------------------------------------===*/
+comment|/*===-- llvm-c/Target.h - Target Lib C Iface --------------------*- C++ -*-===*/
+end_comment
+
+begin_comment
+comment|/*                                                                            */
+end_comment
+
+begin_comment
+comment|/*                     The LLVM Compiler Infrastructure                       */
+end_comment
+
+begin_comment
+comment|/*                                                                            */
+end_comment
+
+begin_comment
+comment|/* This file is distributed under the University of Illinois Open Source      */
+end_comment
+
+begin_comment
+comment|/* License. See LICENSE.TXT for details.                                      */
+end_comment
+
+begin_comment
+comment|/*                                                                            */
+end_comment
+
+begin_comment
+comment|/*===----------------------------------------------------------------------===*/
+end_comment
+
+begin_comment
+comment|/*                                                                            */
+end_comment
+
+begin_comment
+comment|/* This header declares the C interface to libLLVMTarget.a, which             */
+end_comment
+
+begin_comment
+comment|/* implements target information.                                             */
+end_comment
+
+begin_comment
+comment|/*                                                                            */
+end_comment
+
+begin_comment
+comment|/* Many exotic languages can interoperate with C code but have a harder time  */
+end_comment
+
+begin_comment
+comment|/* with C++ due to name mangling. So in addition to C, this interface enables */
+end_comment
+
+begin_comment
+comment|/* tools written in such languages.                                           */
+end_comment
+
+begin_comment
+comment|/*                                                                            */
+end_comment
+
+begin_comment
+comment|/*===----------------------------------------------------------------------===*/
 end_comment
 
 begin_ifndef
@@ -24,7 +88,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Config/config.h"
+file|"llvm/Config/llvm-config.h"
 end_include
 
 begin_ifdef
@@ -149,36 +213,16 @@ block|{
 comment|/* If we have a native target, initialize it to ensure it is linked in. */
 ifdef|#
 directive|ifdef
-name|LLVM_NATIVE_ARCH
-define|#
-directive|define
-name|DoInit2
-parameter_list|(
-name|TARG
-parameter_list|)
-define|\
-value|LLVMInitialize ## TARG ## Info ();          \   LLVMInitialize ## TARG ()
-define|#
-directive|define
-name|DoInit
-parameter_list|(
-name|T
-parameter_list|)
-value|DoInit2(T)
-name|DoInit
-argument_list|(
-name|LLVM_NATIVE_ARCH
-argument_list|)
+name|LLVM_NATIVE_TARGET
+name|LLVM_NATIVE_TARGETINFO
+argument_list|()
+expr_stmt|;
+name|LLVM_NATIVE_TARGET
+argument_list|()
 expr_stmt|;
 return|return
 literal|0
 return|;
-undef|#
-directive|undef
-name|DoInit
-undef|#
-directive|undef
-name|DoInit2
 else|#
 directive|else
 return|return

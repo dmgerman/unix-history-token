@@ -181,6 +181,9 @@ name|class
 name|PPCallbacks
 decl_stmt|;
 name|class
+name|CodeCompletionHandler
+decl_stmt|;
+name|class
 name|DirectoryLookup
 decl_stmt|;
 name|class
@@ -286,9 +289,14 @@ modifier|*
 name|Ident_Pragma
 decl_stmt|,
 modifier|*
+name|Ident__pragma
+decl_stmt|;
+comment|// _Pragma, __pragma
+name|IdentifierInfo
+modifier|*
 name|Ident__VA_ARGS__
 decl_stmt|;
-comment|// _Pragma, __VA_ARGS__
+comment|// __VA_ARGS__
 name|IdentifierInfo
 modifier|*
 name|Ident__has_feature
@@ -375,7 +383,7 @@ comment|/// It is declared/instantiated here because it's role/lifetime is
 comment|/// conceptually similar the IdentifierTable. In addition, the current control
 comment|/// flow (in clang::ParseAST()), make it convenient to put here.
 comment|/// FIXME: Make sure the lifetime of Identifiers/Selectors *isn't* tied to
-comment|/// the lifetime fo the preprocessor.
+comment|/// the lifetime of the preprocessor.
 name|SelectorTable
 name|Selectors
 decl_stmt|;
@@ -402,12 +410,31 @@ operator|*
 operator|>
 name|CommentHandlers
 expr_stmt|;
+comment|/// \brief The code-completion handler.
+name|CodeCompletionHandler
+modifier|*
+name|CodeComplete
+decl_stmt|;
 comment|/// \brief The file that we're performing code-completion for, if any.
 specifier|const
 name|FileEntry
 modifier|*
 name|CodeCompletionFile
 decl_stmt|;
+comment|/// \brief The number of bytes that we will initially skip when entering the
+comment|/// main file, which is used when loading a precompiled preamble, along
+comment|/// with a flag that indicates whether skipping this number of bytes will
+comment|/// place the lexer at the start of a line.
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+operator|,
+name|bool
+operator|>
+name|SkipMainFilePreamble
+expr_stmt|;
 comment|/// CurLexer - This is the current top of the stack that we're lexing from if
 comment|/// not expanding a macro and we are lexing directly from source code.
 comment|///  Only one of CurLexer, CurPTHLexer, or CurTokenLexer will be non-null.
@@ -583,6 +610,26 @@ name|friend
 name|class
 name|MacroArgs
 decl_stmt|;
+comment|/// PragmaPushMacroInfo - For each IdentifierInfo used in a #pragma
+comment|/// push_macro directive, we keep a MacroInfo stack used to restore
+comment|/// previous macro value.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|IdentifierInfo
+operator|*
+operator|,
+name|std
+operator|::
+name|vector
+operator|<
+name|MacroInfo
+operator|*
+operator|>
+expr|>
+name|PragmaPushMacroInfo
+expr_stmt|;
 comment|// Various statistics we track for performance analysis.
 name|unsigned
 name|NumDirectives
@@ -1242,6 +1289,48 @@ modifier|*
 name|Handler
 parameter_list|)
 function_decl|;
+comment|/// \brief Set the code completion handler to the given object.
+name|void
+name|setCodeCompletionHandler
+parameter_list|(
+name|CodeCompletionHandler
+modifier|&
+name|Handler
+parameter_list|)
+block|{
+name|CodeComplete
+operator|=
+operator|&
+name|Handler
+expr_stmt|;
+block|}
+comment|/// \brief Retrieve the current code-completion handler.
+name|CodeCompletionHandler
+operator|*
+name|getCodeCompletionHandler
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CodeComplete
+return|;
+block|}
+comment|/// \brief Clear out the code completion handler.
+name|void
+name|clearCodeCompletionHandler
+parameter_list|()
+block|{
+name|CodeComplete
+operator|=
+literal|0
+expr_stmt|;
+block|}
+comment|/// \brief Hook used by the lexer to invoke the "natural language" code
+comment|/// completion point.
+name|void
+name|CodeCompleteNaturalLanguage
+parameter_list|()
+function_decl|;
 comment|/// \brief Retrieve the preprocessing record, or NULL if there is no
 comment|/// preprocessing record.
 name|PreprocessingRecord
@@ -1769,6 +1858,36 @@ name|FileLoc
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Instruct the preprocessor to skip part of the main
+comment|/// the main source file.
+comment|///
+comment|/// \brief Bytes The number of bytes in the preamble to skip.
+comment|///
+comment|/// \brief StartOfLine Whether skipping these bytes puts the lexer at the
+comment|/// start of a line.
+name|void
+name|setSkipMainFilePreamble
+parameter_list|(
+name|unsigned
+name|Bytes
+parameter_list|,
+name|bool
+name|StartOfLine
+parameter_list|)
+block|{
+name|SkipMainFilePreamble
+operator|.
+name|first
+operator|=
+name|Bytes
+expr_stmt|;
+name|SkipMainFilePreamble
+operator|.
+name|second
+operator|=
+name|StartOfLine
+expr_stmt|;
+block|}
 comment|/// Diag - Forwarding function for diagnostics.  This emits a diagnostic at
 comment|/// the specified Token's location, translating the token's start
 comment|/// position in the current buffer into a SourcePosition object for rendering.
@@ -2299,6 +2418,17 @@ name|SourceLocation
 name|L
 parameter_list|)
 function_decl|;
+comment|/// CloneMacroInfo - Allocate a new MacroInfo object which is clone of MI.
+name|MacroInfo
+modifier|*
+name|CloneMacroInfo
+parameter_list|(
+specifier|const
+name|MacroInfo
+modifier|&
+name|MI
+parameter_list|)
+function_decl|;
 comment|/// GetIncludeFilenameSpelling - Turn the specified lexer token into a fully
 comment|/// checked and spelled filename, e.g. as an operand of #include. This returns
 comment|/// true if the input filename was in<>'s or false if it were in ""'s.  The
@@ -2491,6 +2621,12 @@ name|pop_back
 argument_list|()
 expr_stmt|;
 block|}
+comment|/// AllocateMacroInfo - Allocate a new MacroInfo object.
+name|MacroInfo
+modifier|*
+name|AllocateMacroInfo
+parameter_list|()
+function_decl|;
 comment|/// ReleaseMacroInfo - Release the specified MacroInfo.  This memory will
 comment|///  be reused for allocating new MacroInfo objects.
 name|void
@@ -2643,6 +2779,33 @@ modifier|&
 name|Tok
 parameter_list|)
 function_decl|;
+comment|/// HandleMicrosoft__pragma - Like Handle_Pragma except the pragma text
+comment|/// is not enclosed within a string literal.
+name|void
+name|HandleMicrosoft__pragma
+parameter_list|(
+name|Token
+modifier|&
+name|Tok
+parameter_list|)
+function_decl|;
+name|void
+name|Handle_Pragma
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|StrVal
+argument_list|,
+name|SourceLocation
+name|PragmaLoc
+argument_list|,
+name|SourceLocation
+name|RParenLoc
+argument_list|)
+decl_stmt|;
 comment|/// EnterSourceFileWithLexer - Add a lexer to the top of the include stack and
 comment|/// start lexing tokens from it instead of the current buffer.
 name|void
@@ -2767,6 +2930,10 @@ operator|==
 literal|0
 operator|&&
 name|CurTokenLexer
+operator|==
+literal|0
+operator|&&
+name|CurPTHLexer
 operator|==
 literal|0
 operator|&&
@@ -3020,6 +3187,31 @@ parameter_list|(
 name|Token
 modifier|&
 name|MessageTok
+parameter_list|)
+function_decl|;
+name|void
+name|HandlePragmaPushMacro
+parameter_list|(
+name|Token
+modifier|&
+name|Tok
+parameter_list|)
+function_decl|;
+name|void
+name|HandlePragmaPopMacro
+parameter_list|(
+name|Token
+modifier|&
+name|Tok
+parameter_list|)
+function_decl|;
+name|IdentifierInfo
+modifier|*
+name|ParsePragmaPushOrPopMacro
+parameter_list|(
+name|Token
+modifier|&
+name|Tok
 parameter_list|)
 function_decl|;
 comment|// Return true and store the first token only if any CommentHandler

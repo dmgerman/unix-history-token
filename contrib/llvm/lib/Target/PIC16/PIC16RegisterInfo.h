@@ -147,14 +147,12 @@ argument_list|)
 specifier|const
 block|;
 name|virtual
-name|unsigned
+name|void
 name|eliminateFrameIndex
 argument_list|(
 argument|MachineBasicBlock::iterator MI
 argument_list|,
 argument|int SPAdj
-argument_list|,
-argument|FrameIndexValue *Value = NULL
 argument_list|,
 argument|RegScavenger *RS=NULL
 argument_list|)

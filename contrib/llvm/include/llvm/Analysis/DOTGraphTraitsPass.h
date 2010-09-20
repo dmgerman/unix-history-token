@@ -98,7 +98,7 @@ name|DOTGraphTraitsViewer
 argument_list|(
 argument|std::string GraphName
 argument_list|,
-argument|const void *ID
+argument|char&ID
 argument_list|)
 operator|:
 name|FunctionPass
@@ -226,7 +226,7 @@ name|DOTGraphTraitsPrinter
 argument_list|(
 argument|std::string GraphName
 argument_list|,
-argument|const void *ID
+argument|char&ID
 argument_list|)
 operator|:
 name|FunctionPass

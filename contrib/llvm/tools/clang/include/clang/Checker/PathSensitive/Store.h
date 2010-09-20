@@ -599,14 +599,11 @@ argument_list|()
 return|;
 block|}
 name|virtual
-specifier|const
-name|GRState
-modifier|*
+name|Store
 name|RemoveDeadBindings
 argument_list|(
-name|GRState
-operator|&
-name|state
+name|Store
+name|store
 argument_list|,
 specifier|const
 name|StackFrameContext
@@ -673,33 +670,38 @@ name|SymbolRef
 operator|>
 name|InvalidatedSymbols
 expr_stmt|;
-name|virtual
-name|Store
-name|InvalidateRegion
-parameter_list|(
-name|Store
-name|store
-parameter_list|,
+typedef|typedef
+name|llvm
+operator|::
+name|SmallVector
+operator|<
 specifier|const
 name|MemRegion
-modifier|*
-name|R
-parameter_list|,
-specifier|const
-name|Expr
-modifier|*
-name|E
-parameter_list|,
-name|unsigned
-name|Count
-parameter_list|,
-name|InvalidatedSymbols
-modifier|*
-name|IS
-parameter_list|)
-init|=
-literal|0
-function_decl|;
+operator|*
+operator|,
+literal|8
+operator|>
+name|InvalidatedRegions
+expr_stmt|;
+comment|/// InvalidateRegions - Clears out the specified regions from the store,
+comment|///  marking their values as unknown. Depending on the store, this may also
+comment|///  invalidate additional regions that may have changed based on accessing
+comment|///  the given regions. Optionally, invalidates non-static globals as well.
+comment|/// \param[in] store The initial store
+comment|/// \param[in] Begin A pointer to the first region to invalidate.
+comment|/// \param[in] End A pointer just past the last region to invalidate.
+comment|/// \param[in] E The current statement being evaluated. Used to conjure
+comment|///   symbols to mark the values of invalidated regions.
+comment|/// \param[in] Count The current block count. Used to conjure
+comment|///   symbols to mark the values of invalidated regions.
+comment|/// \param[in,out] IS A set to fill with any symbols that are no longer
+comment|///   accessible. Pass \c NULL if this information will not be used.
+comment|/// \param[in] invalidateGlobals If \c true, any non-static global regions
+comment|///   are invalidated as well.
+comment|/// \param[in,out] Regions A vector to fill with any regions being
+comment|///   invalidated. This should include any regions explicitly invalidated
+comment|///   even if they do not currently have bindings. Pass \c NULL if this
+comment|///   information will not be used.
 name|virtual
 name|Store
 name|InvalidateRegions
@@ -735,6 +737,10 @@ name|IS
 parameter_list|,
 name|bool
 name|invalidateGlobals
+parameter_list|,
+name|InvalidatedRegions
+modifier|*
+name|Regions
 parameter_list|)
 init|=
 literal|0
@@ -742,9 +748,7 @@ function_decl|;
 comment|/// EnterStackFrame - Let the StoreManager to do something when execution
 comment|/// engine is about to execute into a callee.
 name|virtual
-specifier|const
-name|GRState
-modifier|*
+name|Store
 name|EnterStackFrame
 parameter_list|(
 specifier|const
@@ -757,11 +761,7 @@ name|StackFrameContext
 modifier|*
 name|frame
 parameter_list|)
-block|{
-return|return
-name|state
-return|;
-block|}
+function_decl|;
 name|virtual
 name|void
 name|print

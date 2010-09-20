@@ -1404,6 +1404,52 @@ return|return
 name|L
 return|;
 block|}
+name|Qualifiers
+operator|&
+name|operator
+operator|-=
+operator|(
+name|Qualifiers
+name|R
+operator|)
+block|{
+name|Mask
+operator|=
+name|Mask
+operator|&
+operator|~
+operator|(
+name|R
+operator|.
+name|Mask
+operator|)
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+comment|/// \brief Compute the difference between two qualifier sets.
+name|friend
+name|Qualifiers
+name|operator
+operator|-
+operator|(
+name|Qualifiers
+name|L
+operator|,
+name|Qualifiers
+name|R
+operator|)
+block|{
+name|L
+operator|-=
+name|R
+block|;
+return|return
+name|L
+return|;
+block|}
 name|std
 operator|::
 name|string
@@ -1778,7 +1824,10 @@ name|CC_X86FastCall
 block|,
 comment|// __attribute__((fastcall))
 name|CC_X86ThisCall
+block|,
 comment|// __attribute__((thiscall))
+name|CC_X86Pascal
+comment|// __attribute__((pascal))
 block|}
 block|;
 comment|/// QualType - For efficiency, we don't store CV-qualified types as nodes on
@@ -3361,16 +3410,16 @@ name|CachedLinkage
 range|:
 literal|2
 decl_stmt|;
-comment|/// \brief FromPCH - Whether this type comes from a PCH file.
+comment|/// \brief FromAST - Whether this type comes from an AST file.
 name|mutable
 name|bool
-name|FromPCH
+name|FromAST
 range|:
 literal|1
 decl_stmt|;
-comment|/// \brief Set whether this type comes from a PCH file.
+comment|/// \brief Set whether this type comes from an AST file.
 name|void
-name|setFromPCH
+name|setFromAST
 argument_list|(
 name|bool
 name|V
@@ -3379,7 +3428,7 @@ name|true
 argument_list|)
 decl|const
 block|{
-name|FromPCH
+name|FromAST
 operator|=
 name|V
 expr_stmt|;
@@ -3457,7 +3506,7 @@ argument_list|(
 name|NoLinkage
 argument_list|)
 operator|,
-name|FromPCH
+name|FromAST
 argument_list|(
 argument|false
 argument_list|)
@@ -3466,15 +3515,6 @@ name|virtual
 operator|~
 name|Type
 argument_list|()
-block|{}
-name|virtual
-name|void
-name|Destroy
-argument_list|(
-name|ASTContext
-operator|&
-name|C
-argument_list|)
 expr_stmt|;
 name|friend
 name|class
@@ -3497,14 +3537,14 @@ name|TC
 operator|)
 return|;
 block|}
-comment|/// \brief Whether this type comes from a PCH file.
+comment|/// \brief Whether this type comes from an AST file.
 name|bool
-name|isFromPCH
+name|isFromAST
 argument_list|()
 specifier|const
 block|{
 return|return
-name|FromPCH
+name|FromAST
 return|;
 block|}
 name|bool
@@ -3523,17 +3563,6 @@ return|;
 block|}
 comment|/// Types are partitioned into 3 broad categories (C99 6.2.5p1):
 comment|/// object types, function types, and incomplete types.
-comment|/// \brief Determines whether the type describes an object in memory.
-comment|///
-comment|/// Note that this definition of object type corresponds to the C++
-comment|/// definition of object type, which includes incomplete types, as
-comment|/// opposed to the C definition (which does not include incomplete
-comment|/// types).
-name|bool
-name|isObjectType
-argument_list|()
-specifier|const
-expr_stmt|;
 comment|/// isIncompleteType - Return true if this is an incomplete type.
 comment|/// A type that can describe objects, but which lacks information needed to
 comment|/// determine its size (e.g. void, or a fwd declared struct). Clients of this
@@ -3790,6 +3819,11 @@ argument_list|()
 specifier|const
 expr_stmt|;
 name|bool
+name|isMemberDataPointerType
+argument_list|()
+specifier|const
+expr_stmt|;
+name|bool
 name|isArrayType
 argument_list|()
 specifier|const
@@ -3890,6 +3924,11 @@ specifier|const
 expr_stmt|;
 comment|// Class<foo>
 name|bool
+name|isObjCObjectOrInterfaceType
+argument_list|()
+specifier|const
+expr_stmt|;
+name|bool
 name|isObjCIdType
 argument_list|()
 specifier|const
@@ -3961,6 +4000,27 @@ comment|/// hasObjCPointerRepresentation - Whether this type can represent
 comment|/// an objective pointer type for the purpose of GC'ability
 name|bool
 name|hasObjCPointerRepresentation
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief Determine whether this type has an integer representation
+comment|/// of some sort, e.g., it is an integer type or a vector.
+name|bool
+name|hasIntegerRepresentation
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief Determine whether this type has an signed integer representation
+comment|/// of some sort, e.g., it is an signed integer type or a vector.
+name|bool
+name|hasSignedIntegerRepresentation
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief Determine whether this type has an unsigned integer representation
+comment|/// of some sort, e.g., it is an unsigned integer type or a vector.
+name|bool
+name|hasUnsignedIntegerRepresentation
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -4036,7 +4096,8 @@ name|getAsCXXRecordDecl
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|// Member-template getAs<specific type>'.  This scheme will eventually
+comment|// Member-template getAs<specific type>'.  Look through sugar for
+comment|// an instance of<specific type>.   This scheme will eventually
 comment|// replace the specific getAsXXXX methods above.
 comment|//
 comment|// There are some specializations of this member template listed
@@ -4173,11 +4234,11 @@ return|;
 block|}
 name|friend
 name|class
-name|PCHReader
+name|ASTReader
 decl_stmt|;
 name|friend
 name|class
-name|PCHWriter
+name|ASTWriter
 decl_stmt|;
 block|}
 empty_stmt|;
@@ -5423,6 +5484,35 @@ return|return
 name|PointeeType
 return|;
 block|}
+comment|/// Returns true if the member type (i.e. the pointee type) is a
+comment|/// function type rather than a data-member type.
+name|bool
+name|isMemberFunctionPointer
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PointeeType
+operator|->
+name|isFunctionProtoType
+argument_list|()
+return|;
+block|}
+comment|/// Returns true if the member type (i.e. the pointee type) is a
+comment|/// data type rather than a function type.
+name|bool
+name|isMemberDataPointer
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|PointeeType
+operator|->
+name|isFunctionProtoType
+argument_list|()
+return|;
+block|}
 specifier|const
 name|Type
 operator|*
@@ -5863,6 +5953,30 @@ literal|0
 argument_list|)
 return|;
 block|}
+comment|/// \brief Determine the number of bits required to address a member of
+comment|// an array with the given element type and number of elements.
+specifier|static
+name|unsigned
+name|getNumAddressingBits
+argument_list|(
+argument|ASTContext&Context
+argument_list|,
+argument|QualType ElementType
+argument_list|,
+argument|const llvm::APInt&NumElements
+argument_list|)
+block|;
+comment|/// \brief Determine the maximum number of active bits that an array's size
+comment|/// can require, which limits the maximum size of the array.
+specifier|static
+name|unsigned
+name|getMaxSizeBits
+argument_list|(
+name|ASTContext
+operator|&
+name|Context
+argument_list|)
+block|;
 name|void
 name|Profile
 argument_list|(
@@ -6195,15 +6309,6 @@ name|class
 name|ASTContext
 block|;
 comment|// ASTContext creates these.
-name|virtual
-name|void
-name|Destroy
-argument_list|(
-name|ASTContext
-operator|&
-name|C
-argument_list|)
-block|;
 name|public
 operator|:
 name|Expr
@@ -6414,15 +6519,6 @@ name|class
 name|ASTContext
 block|;
 comment|// ASTContext creates these.
-name|virtual
-name|void
-name|Destroy
-argument_list|(
-name|ASTContext
-operator|&
-name|C
-argument_list|)
-block|;
 name|public
 operator|:
 name|Expr
@@ -6650,15 +6746,6 @@ block|{}
 name|friend
 name|class
 name|ASTContext
-block|;
-name|virtual
-name|void
-name|Destroy
-argument_list|(
-name|ASTContext
-operator|&
-name|C
-argument_list|)
 block|;
 name|public
 operator|:
@@ -7469,7 +7556,7 @@ comment|// * ASTContext::mergeFunctionTypes
 comment|// * FunctionNoProtoType::Profile
 comment|// * FunctionProtoType::Profile
 comment|// * TypePrinter::PrintFunctionProto
-comment|// * PCH read and write
+comment|// * AST read and write
 comment|// * Codegen
 name|class
 name|ExtInfo
@@ -7477,7 +7564,7 @@ block|{
 name|public
 operator|:
 comment|// Constructor with no defaults. Use this when you know that you
-comment|// have all the elements (when reading a PCH file for example).
+comment|// have all the elements (when reading an AST file for example).
 name|ExtInfo
 argument_list|(
 argument|bool noReturn
@@ -7680,7 +7767,7 @@ name|unsigned
 name|RegParm
 block|;
 comment|// The calling convention as specified via
-comment|// __attribute__((cdecl|stdcall|fastcall|thiscall))
+comment|// __attribute__((cdecl|stdcall|fastcall|thiscall|pascal))
 name|CallingConv
 name|CC
 block|;   }
@@ -9362,30 +9449,11 @@ operator|:
 name|public
 name|Type
 block|{
-comment|/// Stores the TagDecl associated with this type. The decl will
-comment|/// point to the TagDecl that actually defines the entity (or is a
-comment|/// definition in progress), if there is such a definition. The
-comment|/// single-bit value will be non-zero when this tag is in the
-comment|/// process of being defined.
-name|mutable
-name|llvm
-operator|::
-name|PointerIntPair
-operator|<
+comment|/// Stores the TagDecl associated with this type. The decl may point to any
+comment|/// TagDecl that declares the entity.
 name|TagDecl
 operator|*
-block|,
-literal|1
-operator|>
 name|decl
-block|;
-name|friend
-name|class
-name|ASTContext
-block|;
-name|friend
-name|class
-name|TagDecl
 block|;
 name|protected
 operator|:
@@ -9411,46 +9479,14 @@ operator|*
 name|getDecl
 argument_list|()
 specifier|const
-block|{
-return|return
-name|decl
-operator|.
-name|getPointer
-argument_list|()
-return|;
-block|}
+block|;
 comment|/// @brief Determines whether this type is in the process of being
 comment|/// defined.
 name|bool
 name|isBeingDefined
 argument_list|()
 specifier|const
-block|{
-return|return
-name|decl
-operator|.
-name|getInt
-argument_list|()
-return|;
-block|}
-name|void
-name|setBeingDefined
-argument_list|(
-argument|bool Def
-argument_list|)
-specifier|const
-block|{
-name|decl
-operator|.
-name|setInt
-argument_list|(
-name|Def
-operator|?
-literal|1
-operator|:
-literal|0
-argument_list|)
-block|; }
+block|;
 specifier|static
 name|bool
 name|classof
@@ -10310,15 +10346,6 @@ argument_list|,
 argument|QualType Canon
 argument_list|)
 block|;
-name|virtual
-name|void
-name|Destroy
-argument_list|(
-name|ASTContext
-operator|&
-name|C
-argument_list|)
-block|;
 name|friend
 name|class
 name|ASTContext
@@ -10629,15 +10656,10 @@ block|;
 comment|// ASTContext creates these.
 name|friend
 name|class
-name|TagDecl
-block|;
-comment|// TagDecl mutilates the Decl
-name|friend
-name|class
-name|PCHReader
+name|ASTReader
 block|;
 comment|// FIXME: ASTContext::getInjectedClassNameType is not
-comment|// currently suitable for PCH reading, too much
+comment|// currently suitable for AST reading, too much
 comment|// interdependencies.
 name|InjectedClassNameType
 argument_list|(
@@ -10730,11 +10752,7 @@ operator|*
 name|getDecl
 argument_list|()
 specifier|const
-block|{
-return|return
-name|Decl
-return|;
-block|}
+block|;
 name|bool
 name|isSugared
 argument_list|()
@@ -11497,15 +11515,6 @@ argument_list|,
 argument|QualType Canon
 argument_list|)
 block|;
-name|virtual
-name|void
-name|Destroy
-argument_list|(
-name|ASTContext
-operator|&
-name|C
-argument_list|)
-block|;
 name|friend
 name|class
 name|ASTContext
@@ -12177,15 +12186,6 @@ block|{}
 name|public
 operator|:
 name|void
-name|Destroy
-argument_list|(
-name|ASTContext
-operator|&
-name|C
-argument_list|)
-block|;
-comment|// key function
-name|void
 name|Profile
 argument_list|(
 name|llvm
@@ -12287,15 +12287,6 @@ block|;
 comment|// ASTContext creates these.
 name|public
 operator|:
-name|void
-name|Destroy
-argument_list|(
-name|ASTContext
-operator|&
-name|C
-argument_list|)
-block|;
-comment|// key function
 comment|/// getDecl - Get the declaration of this interface.
 name|ObjCInterfaceDecl
 operator|*
@@ -12470,14 +12461,6 @@ specifier|const
 block|;
 name|public
 operator|:
-name|void
-name|Destroy
-argument_list|(
-name|ASTContext
-operator|&
-name|C
-argument_list|)
-block|;
 comment|/// getPointeeType - Gets the type pointed to by this ObjC pointer.
 comment|/// The result will always be an ObjCObjectType or sugar thereof.
 name|QualType
@@ -14171,10 +14154,40 @@ condition|)
 return|return
 name|T
 operator|->
-name|getPointeeType
+name|isMemberFunctionPointer
 argument_list|()
+return|;
+else|else
+return|return
+name|false
+return|;
+block|}
+specifier|inline
+name|bool
+name|Type
+operator|::
+name|isMemberDataPointerType
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+specifier|const
+name|MemberPointerType
+modifier|*
+name|T
+init|=
+name|getAs
+operator|<
+name|MemberPointerType
+operator|>
+operator|(
+operator|)
+condition|)
+return|return
+name|T
 operator|->
-name|isFunctionType
+name|isMemberDataPointer
 argument_list|()
 return|;
 else|else
@@ -14371,6 +14384,32 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|isa
+operator|<
+name|ObjCObjectType
+operator|>
+operator|(
+name|CanonicalType
+operator|)
+return|;
+block|}
+specifier|inline
+name|bool
+name|Type
+operator|::
+name|isObjCObjectOrInterfaceType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isa
+operator|<
+name|ObjCInterfaceType
+operator|>
+operator|(
+name|CanonicalType
+operator|)
+operator|||
 name|isa
 operator|<
 name|ObjCObjectType

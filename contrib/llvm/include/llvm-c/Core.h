@@ -538,10 +538,7 @@ name|LLVMVectorTypeKind
 block|,
 comment|/**< SIMD 'packed' format, or other vector type */
 name|LLVMMetadataTypeKind
-block|,
 comment|/**< Metadata */
-name|LLVMUnionTypeKind
-comment|/**< Unions */
 block|}
 name|LLVMTypeKind
 typedef|;
@@ -593,7 +590,10 @@ name|LLVMLinkerPrivateLinkage
 block|,
 comment|/**< Like Private, but linker removes. */
 name|LLVMLinkerPrivateWeakLinkage
+block|,
 comment|/**< Like LinkerPrivate, but is weak. */
+name|LLVMLinkerPrivateWeakDefAutoLinkage
+comment|/**< Like LinkerPrivateWeak, but possibly                                            hidden. */
 block|}
 name|LLVMLinkage
 typedef|;
@@ -1201,50 +1201,6 @@ name|LLVMTypeRef
 name|StructTy
 parameter_list|)
 function_decl|;
-comment|/* Operations on union types */
-name|LLVMTypeRef
-name|LLVMUnionTypeInContext
-parameter_list|(
-name|LLVMContextRef
-name|C
-parameter_list|,
-name|LLVMTypeRef
-modifier|*
-name|ElementTypes
-parameter_list|,
-name|unsigned
-name|ElementCount
-parameter_list|)
-function_decl|;
-name|LLVMTypeRef
-name|LLVMUnionType
-parameter_list|(
-name|LLVMTypeRef
-modifier|*
-name|ElementTypes
-parameter_list|,
-name|unsigned
-name|ElementCount
-parameter_list|)
-function_decl|;
-name|unsigned
-name|LLVMCountUnionElementTypes
-parameter_list|(
-name|LLVMTypeRef
-name|UnionTy
-parameter_list|)
-function_decl|;
-name|void
-name|LLVMGetUnionElementTypes
-parameter_list|(
-name|LLVMTypeRef
-name|UnionTy
-parameter_list|,
-name|LLVMTypeRef
-modifier|*
-name|Dest
-parameter_list|)
-function_decl|;
 comment|/* Operations on array, pointer, and vector types (sequence types) */
 name|LLVMTypeRef
 name|LLVMArrayType
@@ -1513,6 +1469,26 @@ name|Val
 parameter_list|,
 name|unsigned
 name|Index
+parameter_list|)
+function_decl|;
+name|void
+name|LLVMSetOperand
+parameter_list|(
+name|LLVMValueRef
+name|User
+parameter_list|,
+name|unsigned
+name|Index
+parameter_list|,
+name|LLVMValueRef
+name|Val
+parameter_list|)
+function_decl|;
+name|int
+name|LLVMGetNumOperands
+parameter_list|(
+name|LLVMValueRef
+name|Val
 parameter_list|)
 function_decl|;
 comment|/* Operations on constants of any type */
@@ -1811,16 +1787,6 @@ name|ScalarConstantVals
 parameter_list|,
 name|unsigned
 name|Size
-parameter_list|)
-function_decl|;
-name|LLVMValueRef
-name|LLVMConstUnion
-parameter_list|(
-name|LLVMTypeRef
-name|Ty
-parameter_list|,
-name|LLVMValueRef
-name|Val
 parameter_list|)
 function_decl|;
 comment|/* Constant expressions */
@@ -3095,6 +3061,26 @@ name|LLVMDeleteBasicBlock
 parameter_list|(
 name|LLVMBasicBlockRef
 name|BB
+parameter_list|)
+function_decl|;
+name|void
+name|LLVMMoveBasicBlockBefore
+parameter_list|(
+name|LLVMBasicBlockRef
+name|BB
+parameter_list|,
+name|LLVMBasicBlockRef
+name|MovePos
+parameter_list|)
+function_decl|;
+name|void
+name|LLVMMoveBasicBlockAfter
+parameter_list|(
+name|LLVMBasicBlockRef
+name|BB
+parameter_list|,
+name|LLVMBasicBlockRef
+name|MovePos
 parameter_list|)
 function_decl|;
 comment|/* Operations on instructions */

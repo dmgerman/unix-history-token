@@ -663,6 +663,14 @@ name|MRM_F9
 init|=
 literal|42
 block|,
+comment|/// RawFrmImm16 - This is used for CALL FAR instructions, which have two
+comment|/// immediates, the first of which is a 16 or 32-bit immediate (specified by
+comment|/// the imm encoding) and the second is a 16-bit fixed value.  In the AMD
+comment|/// manual, this operand is described as pntr16:32 and pntr16:16
+name|RawFrmImm16
+init|=
+literal|43
+block|,
 name|FormMask
 init|=
 literal|63
@@ -1003,35 +1011,35 @@ comment|//===------------------------------------------------------------------=
 comment|// VEX - The opcode prefix used by AVX instructions
 name|VEX
 init|=
-literal|1ULL
+literal|1U
 operator|<<
-literal|32
+literal|0
 block|,
 comment|// VEX_W - Has a opcode specific functionality, but is used in the same
 comment|// way as REX_W is for regular SSE instructions.
 name|VEX_W
 init|=
-literal|1ULL
+literal|1U
 operator|<<
-literal|33
+literal|1
 block|,
 comment|// VEX_4V - Used to specify an additional AVX/SSE register. Several 2
 comment|// address instructions in SSE are represented as 3 address ones in AVX
 comment|// and the additional register is encoded in VEX_VVVV prefix.
 name|VEX_4V
 init|=
-literal|1ULL
+literal|1U
 operator|<<
-literal|34
+literal|2
 block|,
 comment|// VEX_I8IMM - Specifies that the last register used in a AVX instruction,
 comment|// must be encoded in the i8 immediate field. This usually happens in
 comment|// instructions with 4 operands.
 name|VEX_I8IMM
 init|=
-literal|1ULL
+literal|1U
 operator|<<
-literal|35
+literal|3
 block|,
 comment|// VEX_L - Stands for a bit in the VEX opcode prefix meaning the current
 comment|// instruction uses 256-bit wide registers. This is usually auto detected if
@@ -1039,9 +1047,9 @@ comment|// a VR256 register is used, but some AVX instructions also have this fi
 comment|// marked when using a f256 memory references.
 name|VEX_L
 init|=
-literal|1ULL
+literal|1U
 operator|<<
-literal|36
+literal|4
 block|}
 enum|;
 comment|// getBaseOpcodeFor - This function returns the "base" X86 opcode for the
@@ -1305,6 +1313,11 @@ name|X86II
 operator|::
 name|MRMSrcReg
 case|:
+case|case
+name|X86II
+operator|::
+name|RawFrmImm16
+case|:
 return|return
 operator|-
 literal|1
@@ -1326,7 +1339,11 @@ block|{
 name|bool
 name|HasVEX_4V
 init|=
+operator|(
 name|TSFlags
+operator|>>
+literal|32
+operator|)
 operator|&
 name|X86II
 operator|::
@@ -1852,24 +1869,6 @@ return|return
 name|RI
 return|;
 block|}
-comment|/// Return true if the instruction is a register to register move and return
-comment|/// the source and dest operands and their sub-register indices by reference.
-name|virtual
-name|bool
-name|isMoveInstr
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|,
-argument|unsigned&SrcReg
-argument_list|,
-argument|unsigned&DstReg
-argument_list|,
-argument|unsigned&SrcSubIdx
-argument_list|,
-argument|unsigned&DstSubIdx
-argument_list|)
-specifier|const
-block|;
 comment|/// isCoalescableExtInstr - Return true if the instruction is a "coalescable"
 comment|/// extension instruction. That is, it's like a copy where it's legal for the
 comment|/// source to overlap the destination. e.g. X86::MOVSX64rr32. If this returns
@@ -2458,16 +2457,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-specifier|static
-name|unsigned
-name|determineREX
-parameter_list|(
-specifier|const
-name|MachineInstr
-modifier|&
-name|MI
-parameter_list|)
-function_decl|;
 comment|/// isX86_64ExtendedReg - Is the MachineOperand a x86-64 extended (r8 or
 comment|/// higher) register?  e.g. r8, xmm8, xmm13, etc.
 specifier|static
@@ -2478,19 +2467,6 @@ name|unsigned
 name|RegNo
 parameter_list|)
 function_decl|;
-comment|/// GetInstSize - Returns the size of the specified MachineInstr.
-comment|///
-name|virtual
-name|unsigned
-name|GetInstSizeInBytes
-argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
-argument_list|)
-decl|const
-decl_stmt|;
 comment|/// getGlobalBaseReg - Return a virtual register initialized with the
 comment|/// the global base register value. Output instructions required to
 comment|/// initialize the register in the function entry block, if necessary.

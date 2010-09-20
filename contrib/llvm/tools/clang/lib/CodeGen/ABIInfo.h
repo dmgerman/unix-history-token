@@ -65,6 +65,9 @@ decl_stmt|;
 name|class
 name|LLVMContext
 decl_stmt|;
+name|class
+name|TargetData
+decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -75,8 +78,6 @@ block|{
 name|class
 name|ASTContext
 decl_stmt|;
-comment|// FIXME: This is a layering issue if we want to move ABIInfo
-comment|// down. Fortunately CGFunctionInfo has no real tie to CodeGen.
 name|namespace
 name|CodeGen
 block|{
@@ -86,8 +87,14 @@ decl_stmt|;
 name|class
 name|CodeGenFunction
 decl_stmt|;
+name|class
+name|CodeGenTypes
+decl_stmt|;
 block|}
-comment|/* FIXME: All of this stuff should be part of the target interface      somehow. It is currently here because it is not clear how to factor      the targets to support this, since the Targets currently live in a      layer below types n'stuff.   */
+comment|// FIXME: All of this stuff should be part of the target interface
+comment|// somehow. It is currently here because it is not clear how to factor
+comment|// the targets to support this, since the Targets currently live in a
+comment|// layer below types n'stuff.
 comment|/// ABIArgInfo - Helper class to encapsulate information about how a
 comment|/// specific C type should be passed to or returned from a function.
 name|class
@@ -98,36 +105,31 @@ label|:
 enum|enum
 name|Kind
 block|{
+comment|/// Direct - Pass the argument directly using the normal converted LLVM
+comment|/// type, or by coercing to another specified type stored in
+comment|/// 'CoerceToType').  If an offset is specified (in UIntData), then the
+comment|/// argument passed is offset by some number of bytes in the memory
+comment|/// representation.
 name|Direct
 block|,
-comment|/// Pass the argument directly using the normal
-comment|/// converted LLVM type. Complex and structure types
-comment|/// are passed using first class aggregates.
+comment|/// Extend - Valid only for integer argument types. Same as 'direct'
+comment|/// but also emit a zero/sign extension attribute.
 name|Extend
 block|,
-comment|/// Valid only for integer argument types. Same as 'direct'
-comment|/// but also emit a zero/sign extension attribute.
+comment|/// Indirect - Pass the argument indirectly via a hidden pointer
+comment|/// with the specified alignment (0 indicates default alignment).
 name|Indirect
 block|,
-comment|/// Pass the argument indirectly via a hidden pointer
-comment|/// with the specified alignment (0 indicates default
-comment|/// alignment).
+comment|/// Ignore - Ignore the argument (treat as void). Useful for void and
+comment|/// empty structs.
 name|Ignore
 block|,
-comment|/// Ignore the argument (treat as void). Useful for
-comment|/// void and empty structs.
-name|Coerce
-block|,
-comment|/// Only valid for aggregate return types, the argument
-comment|/// should be accessed by coercion to a provided type.
+comment|/// Expand - Only valid for aggregate argument types. The structure should
+comment|/// be expanded into consecutive arguments for its constituent fields.
+comment|/// Currently expand is only allowed on structures whose fields
+comment|/// are all scalar types or are themselves expandable types.
 name|Expand
 block|,
-comment|/// Only valid for aggregate argument types. The
-comment|/// structure should be expanded into consecutive
-comment|/// arguments for its constituent fields. Currently
-comment|/// expand is only allowed on structures whose fields
-comment|/// are all scalar types or are themselves expandable
-comment|/// types.
 name|KindFirst
 init|=
 name|Direct
@@ -209,24 +211,47 @@ block|{}
 specifier|static
 name|ABIArgInfo
 name|getDirect
-argument_list|()
+argument_list|(
+argument|const llvm::Type *T =
+literal|0
+argument_list|,
+argument|unsigned Offset =
+literal|0
+argument_list|)
 block|{
 return|return
 name|ABIArgInfo
 argument_list|(
 name|Direct
+argument_list|,
+name|T
+argument_list|,
+name|Offset
 argument_list|)
 return|;
 block|}
 specifier|static
 name|ABIArgInfo
 name|getExtend
-parameter_list|()
+argument_list|(
+specifier|const
+name|llvm
+operator|::
+name|Type
+operator|*
+name|T
+operator|=
+literal|0
+argument_list|)
 block|{
 return|return
 name|ABIArgInfo
 argument_list|(
 name|Extend
+argument_list|,
+name|T
+argument_list|,
+literal|0
 argument_list|)
 return|;
 block|}
@@ -239,27 +264,6 @@ return|return
 name|ABIArgInfo
 argument_list|(
 name|Ignore
-argument_list|)
-return|;
-block|}
-specifier|static
-name|ABIArgInfo
-name|getCoerce
-argument_list|(
-specifier|const
-name|llvm
-operator|::
-name|Type
-operator|*
-name|T
-argument_list|)
-block|{
-return|return
-name|ABIArgInfo
-argument_list|(
-name|Coerce
-argument_list|,
-name|T
 argument_list|)
 return|;
 block|}
@@ -344,17 +348,6 @@ name|Ignore
 return|;
 block|}
 name|bool
-name|isCoerce
-argument_list|()
-specifier|const
-block|{
-return|return
-name|TheKind
-operator|==
-name|Coerce
-return|;
-block|}
-name|bool
 name|isIndirect
 argument_list|()
 specifier|const
@@ -376,7 +369,44 @@ operator|==
 name|Expand
 return|;
 block|}
-comment|// Coerce accessors
+name|bool
+name|canHaveCoerceToType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TheKind
+operator|==
+name|Direct
+operator|||
+name|TheKind
+operator|==
+name|Extend
+return|;
+block|}
+comment|// Direct/Extend accessors
+name|unsigned
+name|getDirectOffset
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+operator|(
+name|isDirect
+argument_list|()
+operator|||
+name|isExtend
+argument_list|()
+operator|)
+operator|&&
+literal|"Not a direct or extend kind"
+argument_list|)
+block|;
+return|return
+name|UIntData
+return|;
+block|}
 specifier|const
 name|llvm
 operator|::
@@ -388,9 +418,8 @@ specifier|const
 block|{
 name|assert
 argument_list|(
-name|TheKind
-operator|==
-name|Coerce
+name|canHaveCoerceToType
+argument_list|()
 operator|&&
 literal|"Invalid kind!"
 argument_list|)
@@ -398,6 +427,30 @@ block|;
 return|return
 name|TypeData
 return|;
+block|}
+name|void
+name|setCoerceToType
+argument_list|(
+specifier|const
+name|llvm
+operator|::
+name|Type
+operator|*
+name|T
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|canHaveCoerceToType
+argument_list|()
+operator|&&
+literal|"Invalid kind!"
+argument_list|)
+expr_stmt|;
+name|TypeData
+operator|=
+name|T
+expr_stmt|;
 block|}
 comment|// Indirect accessors
 name|unsigned
@@ -450,10 +503,53 @@ name|ABIInfo
 block|{
 name|public
 label|:
+name|CodeGen
+operator|::
+name|CodeGenTypes
+operator|&
+name|CGT
+expr_stmt|;
+name|ABIInfo
+argument_list|(
+name|CodeGen
+operator|::
+name|CodeGenTypes
+operator|&
+name|cgt
+argument_list|)
+operator|:
+name|CGT
+argument_list|(
+argument|cgt
+argument_list|)
+block|{}
 name|virtual
 operator|~
 name|ABIInfo
 argument_list|()
+expr_stmt|;
+name|ASTContext
+operator|&
+name|getContext
+argument_list|()
+specifier|const
+expr_stmt|;
+name|llvm
+operator|::
+name|LLVMContext
+operator|&
+name|getVMContext
+argument_list|()
+specifier|const
+expr_stmt|;
+specifier|const
+name|llvm
+operator|::
+name|TargetData
+operator|&
+name|getTargetData
+argument_list|()
+specifier|const
 expr_stmt|;
 name|virtual
 name|void
@@ -464,34 +560,6 @@ operator|::
 name|CGFunctionInfo
 operator|&
 name|FI
-argument_list|,
-name|ASTContext
-operator|&
-name|Ctx
-argument_list|,
-name|llvm
-operator|::
-name|LLVMContext
-operator|&
-name|VMContext
-argument_list|,
-comment|// This is the preferred type for argument lowering
-comment|// which can be used to generate better IR.
-specifier|const
-name|llvm
-operator|::
-name|Type
-operator|*
-specifier|const
-operator|*
-name|PrefTypes
-operator|=
-literal|0
-argument_list|,
-name|unsigned
-name|NumPrefTypes
-operator|=
-literal|0
 argument_list|)
 decl|const
 init|=

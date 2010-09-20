@@ -4010,7 +4010,7 @@ argument_list|()
 operator|:
 name|FunctionPass
 argument_list|(
-argument|&ID
+argument|ID
 argument_list|)
 block|{
 name|DT
@@ -4989,7 +4989,7 @@ end_label
 begin_macro
 name|DominanceFrontierBase
 argument_list|(
-argument|void *ID
+argument|char&ID
 argument_list|,
 argument|bool isPostDom
 argument_list|)
@@ -5702,6 +5702,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// dump - Dump the dominance frontier to dbgs().
+end_comment
+
+begin_expr_stmt
+name|void
+name|dump
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 unit|};
 comment|//===-------------------------------------
 end_comment
@@ -5737,7 +5749,7 @@ argument_list|()
 operator|:
 name|DominanceFrontierBase
 argument_list|(
-argument|&ID
+argument|ID
 argument_list|,
 argument|false
 argument_list|)

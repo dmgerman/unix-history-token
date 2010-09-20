@@ -140,61 +140,6 @@ decl_stmt|;
 name|class
 name|ASTContext
 decl_stmt|;
-name|namespace
-block|{
-comment|// An element of the CFG for implicit descructor calls implied by the language
-comment|// rules.
-name|class
-name|Dtor
-block|{
-comment|// Statement that introduces the variable.
-name|Stmt
-modifier|*
-name|S
-decl_stmt|;
-comment|// A token which ends the scope, return, goto, throw, }.
-name|SourceLocation
-name|Loc
-decl_stmt|;
-name|public
-label|:
-name|Dtor
-argument_list|(
-argument|Stmt *s
-argument_list|,
-argument|SourceLocation l
-argument_list|)
-block|:
-name|S
-argument_list|(
-name|s
-argument_list|)
-operator|,
-name|Loc
-argument_list|(
-argument|l
-argument_list|)
-block|{   }
-name|SourceLocation
-name|getLoc
-argument_list|()
-block|{
-return|return
-name|Loc
-return|;
-block|}
-name|Stmt
-modifier|*
-name|getStmt
-parameter_list|()
-block|{
-return|return
-name|S
-return|;
-block|}
-block|}
-empty_stmt|;
-block|}
 comment|/// CFGElement - Represents a top-level expression in a basic block.
 name|class
 name|CFGElement
@@ -258,7 +203,6 @@ argument|:
 literal|3
 argument_list|)
 block|{}
-comment|// CFGElement(Dtor *S, Type t) : Data(reinterpret_cast<Stmt*>(S), 4) {}
 name|Stmt
 operator|*
 name|getStmt
@@ -350,25 +294,6 @@ name|getStmt
 argument_list|()
 operator|!=
 literal|0
-return|;
-block|}
-name|operator
-name|Dtor
-operator|*
-operator|(
-operator|)
-specifier|const
-block|{
-return|return
-name|reinterpret_cast
-operator|<
-name|Dtor
-operator|*
-operator|>
-operator|(
-name|getStmt
-argument_list|()
-operator|)
 return|;
 block|}
 block|}
@@ -1566,6 +1491,11 @@ parameter_list|,
 name|ASTContext
 modifier|*
 name|C
+parameter_list|,
+name|bool
+name|pruneTriviallyFalseEdges
+init|=
+name|true
 parameter_list|,
 name|bool
 name|AddEHEdges

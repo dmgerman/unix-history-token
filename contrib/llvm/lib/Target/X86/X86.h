@@ -140,14 +140,6 @@ modifier|*
 name|createSSEDomainFixPass
 parameter_list|()
 function_decl|;
-comment|/// createX87FPRegKillInserterPass - This function returns a pass which
-comment|/// inserts FP_REG_KILL instructions where needed.
-comment|///
-name|FunctionPass
-modifier|*
-name|createX87FPRegKillInserterPass
-parameter_list|()
-function_decl|;
 comment|/// createX86CodeEmitterPass - Return a pass that emits the collected X86 code
 comment|/// to the specified MCE object.
 name|FunctionPass

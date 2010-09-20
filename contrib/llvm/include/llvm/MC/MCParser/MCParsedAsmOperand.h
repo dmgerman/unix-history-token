@@ -50,6 +50,9 @@ block|{
 name|class
 name|SMLoc
 decl_stmt|;
+name|class
+name|raw_ostream
+decl_stmt|;
 comment|/// MCParsedAsmOperand - This abstract class represents a source-level assembly
 comment|/// instruction operand.  It should be subclassed by target-specific code.  This
 comment|/// base class is used by target-independent clients and is the interface
@@ -73,6 +76,8 @@ name|SMLoc
 name|getStartLoc
 argument_list|()
 specifier|const
+operator|=
+literal|0
 expr_stmt|;
 comment|/// getEndLoc - Get the location of the last token of this operand.
 name|virtual
@@ -80,7 +85,22 @@ name|SMLoc
 name|getEndLoc
 argument_list|()
 specifier|const
+operator|=
+literal|0
 expr_stmt|;
+comment|/// dump - Print a debug representation of the operand to the given stream.
+name|virtual
+name|void
+name|dump
+argument_list|(
+name|raw_ostream
+operator|&
+name|OS
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
 block|}
 empty_stmt|;
 block|}

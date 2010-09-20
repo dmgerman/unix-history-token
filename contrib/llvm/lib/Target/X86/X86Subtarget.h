@@ -194,6 +194,10 @@ comment|/// HasAES - Target has AES instructions
 name|bool
 name|HasAES
 block|;
+comment|/// HasCLMUL - Target has carry-less multiplication
+name|bool
+name|HasCLMUL
+block|;
 comment|/// HasFMA3 - Target has 3-operand fused multiply-add
 name|bool
 name|HasFMA3
@@ -467,6 +471,15 @@ name|HasAES
 return|;
 block|}
 name|bool
+name|hasCLMUL
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasCLMUL
+return|;
+block|}
+name|bool
 name|hasFMA3
 argument_list|()
 specifier|const
@@ -657,6 +670,24 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|Is64Bit
+operator|&&
+operator|(
+name|isTargetMingw
+argument_list|()
+operator|||
+name|isTargetWindows
+argument_list|()
+operator|)
+return|;
+block|}
+name|bool
+name|isTargetWin32
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
 name|Is64Bit
 operator|&&
 operator|(

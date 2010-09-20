@@ -104,15 +104,6 @@ name|raw_ostream
 operator|&
 name|o
 argument_list|)
-block|;
-comment|// runHeader - Emit a header file that allows use of the instruction table.
-name|void
-name|runHeader
-argument_list|(
-name|raw_ostream
-operator|&
-name|o
-argument_list|)
 block|;   }
 decl_stmt|;
 block|}

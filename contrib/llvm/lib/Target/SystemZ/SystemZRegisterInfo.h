@@ -132,7 +132,7 @@ block|;
 name|bool
 name|hasReservedCallFrame
 argument_list|(
-argument|MachineFunction&MF
+argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|{
@@ -167,14 +167,12 @@ argument|MachineBasicBlock::iterator I
 argument_list|)
 specifier|const
 block|;
-name|unsigned
+name|void
 name|eliminateFrameIndex
 argument_list|(
 argument|MachineBasicBlock::iterator II
 argument_list|,
 argument|int SPAdj
-argument_list|,
-argument|FrameIndexValue *Value = NULL
 argument_list|,
 argument|RegScavenger *RS = NULL
 argument_list|)

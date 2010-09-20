@@ -158,24 +158,6 @@ return|return
 name|RI
 return|;
 block|}
-comment|/// Return true if the instruction is a register to register move and return
-comment|/// the source and dest operands and their sub-register indices by reference.
-name|virtual
-name|bool
-name|isMoveInstr
-argument_list|(
-argument|const MachineInstr&MI
-argument_list|,
-argument|unsigned&SrcReg
-argument_list|,
-argument|unsigned&DstReg
-argument_list|,
-argument|unsigned&SrcSubIdx
-argument_list|,
-argument|unsigned&DstSubIdx
-argument_list|)
-specifier|const
-block|;
 comment|/// isLoadFromStackSlot - If the specified machine instruction is a direct
 comment|/// load from a stack slot, return the virtual or physical register number of
 comment|/// the destination along with the FrameIndex of the loaded stack slot.  If

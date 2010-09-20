@@ -113,7 +113,6 @@ argument_list|()
 operator|:
 name|FunctionPass
 argument_list|(
-operator|&
 name|ID
 argument_list|)
 block|,

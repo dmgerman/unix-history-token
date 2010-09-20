@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/ValueHandle.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<set>
 end_include
 
@@ -142,18 +148,22 @@ name|std
 operator|::
 name|set
 operator|<
+name|AssertingVH
+operator|<
 name|Value
-operator|*
 operator|>
+expr|>
 name|InsertedValues
 expr_stmt|;
 name|std
 operator|::
 name|set
 operator|<
+name|AssertingVH
+operator|<
 name|Value
-operator|*
 operator|>
+expr|>
 name|InsertedPostIncValues
 expr_stmt|;
 comment|/// PostIncLoops - Addrecs referring to any of the given loops are expanded
@@ -251,12 +261,22 @@ name|InsertedExpressions
 operator|.
 name|clear
 argument_list|()
-block|; }
+block|;
+name|InsertedValues
+operator|.
+name|clear
+argument_list|()
+block|;
+name|InsertedPostIncValues
+operator|.
+name|clear
+argument_list|()
+block|;     }
 comment|/// getOrInsertCanonicalInductionVariable - This method returns the
 comment|/// canonical induction variable of the specified type for the specified
 comment|/// loop (inserting one if there is none).  A canonical induction variable
 comment|/// starts at zero and steps by one on each iteration.
-name|Value
+name|PHINode
 operator|*
 name|getOrInsertCanonicalInductionVariable
 argument_list|(

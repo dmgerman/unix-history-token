@@ -114,11 +114,15 @@ name|Target
 operator|&
 argument_list|)
 block|;
-comment|/// TheTarget - The Target that this machine was created for.
+comment|/// The Target that this machine was created for.
 specifier|const
 name|Target
 operator|&
 name|TheTarget
+block|;
+comment|/// The current set of available features.
+name|unsigned
+name|AvailableFeatures
 block|;
 name|public
 operator|:
@@ -138,6 +142,25 @@ return|return
 name|TheTarget
 return|;
 block|}
+name|unsigned
+name|getAvailableFeatures
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AvailableFeatures
+return|;
+block|}
+name|void
+name|setAvailableFeatures
+argument_list|(
+argument|unsigned Value
+argument_list|)
+block|{
+name|AvailableFeatures
+operator|=
+name|Value
+block|; }
 comment|/// ParseInstruction - Parse one assembly instruction.
 comment|///
 comment|/// The parser is positioned following the instruction name. The target
@@ -186,22 +209,18 @@ block|;
 comment|/// MatchInstruction - Recognize a series of operands of a parsed instruction
 comment|/// as an actual MCInst.  This returns false and fills in Inst on success and
 comment|/// returns true on failure to match.
+comment|///
+comment|/// On failure, the target parser is responsible for emitting a diagnostic
+comment|/// explaining the match failure.
 name|virtual
 name|bool
 name|MatchInstruction
 argument_list|(
-specifier|const
-name|SmallVectorImpl
-operator|<
-name|MCParsedAsmOperand
-operator|*
-operator|>
-operator|&
-name|Operands
+argument|SMLoc IDLoc
 argument_list|,
-name|MCInst
-operator|&
-name|Inst
+argument|const SmallVectorImpl<MCParsedAsmOperand*>&Operands
+argument_list|,
+argument|MCInst&Inst
 argument_list|)
 operator|=
 literal|0

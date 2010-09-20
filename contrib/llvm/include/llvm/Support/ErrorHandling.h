@@ -141,6 +141,42 @@ name|void
 name|remove_fatal_error_handler
 parameter_list|()
 function_decl|;
+comment|/// ScopedFatalErrorHandler - This is a simple helper class which just
+comment|/// calls install_fatal_error_handler in its constructor and
+comment|/// remove_fatal_error_handler in its destructor.
+struct|struct
+name|ScopedFatalErrorHandler
+block|{
+name|explicit
+name|ScopedFatalErrorHandler
+parameter_list|(
+name|fatal_error_handler_t
+name|handler
+parameter_list|,
+name|void
+modifier|*
+name|user_data
+init|=
+literal|0
+parameter_list|)
+block|{
+name|install_fatal_error_handler
+argument_list|(
+name|handler
+argument_list|,
+name|user_data
+argument_list|)
+expr_stmt|;
+block|}
+operator|~
+name|ScopedFatalErrorHandler
+argument_list|()
+block|{
+name|remove_fatal_error_handler
+argument_list|()
+block|; }
+block|}
+struct|;
 comment|/// Reports a serious error, calling any installed error handler. These
 comment|/// functions are intended to be used for error conditions which are outside
 comment|/// the control of the compiler (I/O errors, invalid user input, etc.)

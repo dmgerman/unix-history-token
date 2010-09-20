@@ -1178,6 +1178,34 @@ return|return
 name|Result
 return|;
 block|}
+comment|/// Version of AllocateStack with extra register to be shadowed.
+name|unsigned
+name|AllocateStack
+parameter_list|(
+name|unsigned
+name|Size
+parameter_list|,
+name|unsigned
+name|Align
+parameter_list|,
+name|unsigned
+name|ShadowReg
+parameter_list|)
+block|{
+name|MarkAllocated
+argument_list|(
+name|ShadowReg
+argument_list|)
+expr_stmt|;
+return|return
+name|AllocateStack
+argument_list|(
+name|Size
+argument_list|,
+name|Align
+argument_list|)
+return|;
+block|}
 comment|// HandleByVal - Allocate a stack slot large enough to pass an argument by
 comment|// value. The size and alignment information of the argument is encoded in its
 comment|// parameter attribute.

@@ -136,6 +136,8 @@ name|kw_linker_private
 block|,
 name|kw_linker_private_weak
 block|,
+name|kw_linker_private_weak_def_auto
+block|,
 name|kw_internal
 block|,
 name|kw_linkonce
@@ -283,8 +285,6 @@ block|,
 name|kw_type
 block|,
 name|kw_opaque
-block|,
-name|kw_union
 block|,
 name|kw_eq
 block|,

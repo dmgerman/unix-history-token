@@ -126,21 +126,8 @@ operator|:
 name|explicit
 name|CallGraphSCCPass
 argument_list|(
-argument|intptr_t pid
-argument_list|)
-operator|:
-name|Pass
-argument_list|(
-argument|PT_CallGraphSCC
-argument_list|,
-argument|pid
-argument_list|)
-block|{}
-name|explicit
-name|CallGraphSCCPass
-argument_list|(
-name|void
-operator|*
+name|char
+operator|&
 name|pid
 argument_list|)
 operator|:
@@ -215,7 +202,7 @@ name|assignPassManager
 argument_list|(
 argument|PMStack&PMS
 argument_list|,
-argument|PassManagerType PMT =PMT_CallGraphPassManager
+argument|PassManagerType PMT
 argument_list|)
 block|;
 comment|///  Return what kind of Pass Manager can manage this pass.

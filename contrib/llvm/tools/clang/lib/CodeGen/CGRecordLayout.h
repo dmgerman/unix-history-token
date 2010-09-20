@@ -405,6 +405,60 @@ name|dump
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// \brief Given a bit-field decl, build an appropriate helper object for
+comment|/// accessing that field (which is expected to have the given offset and
+comment|/// size).
+specifier|static
+name|CGBitFieldInfo
+name|MakeInfo
+parameter_list|(
+name|class
+name|CodeGenTypes
+modifier|&
+name|Types
+parameter_list|,
+specifier|const
+name|FieldDecl
+modifier|*
+name|FD
+parameter_list|,
+name|uint64_t
+name|FieldOffset
+parameter_list|,
+name|uint64_t
+name|FieldSize
+parameter_list|)
+function_decl|;
+comment|/// \brief Given a bit-field decl, build an appropriate helper object for
+comment|/// accessing that field (which is expected to have the given offset and
+comment|/// size). The field decl should be known to be contained within a type of at
+comment|/// least the given size and with the given alignment.
+specifier|static
+name|CGBitFieldInfo
+name|MakeInfo
+parameter_list|(
+name|CodeGenTypes
+modifier|&
+name|Types
+parameter_list|,
+specifier|const
+name|FieldDecl
+modifier|*
+name|FD
+parameter_list|,
+name|uint64_t
+name|FieldOffset
+parameter_list|,
+name|uint64_t
+name|FieldSize
+parameter_list|,
+name|uint64_t
+name|ContainingTypeSizeInBits
+parameter_list|,
+name|unsigned
+name|ContainingTypeAlign
+parameter_list|)
+function_decl|;
 block|}
 empty_stmt|;
 comment|/// CGRecordLayout - This class handles struct and union layout info while
@@ -491,7 +545,7 @@ expr_stmt|;
 comment|/// Whether one of the fields in this record layout is a pointer to data
 comment|/// member, or a struct that contains pointer to data member.
 name|bool
-name|ContainsPointerToDataMember
+name|IsZeroInitializable
 range|:
 literal|1
 decl_stmt|;
@@ -501,7 +555,7 @@ name|CGRecordLayout
 argument_list|(
 argument|const llvm::Type *T
 argument_list|,
-argument|bool ContainsPointerToDataMember
+argument|bool IsZeroInitializable
 argument_list|)
 block|:
 name|LLVMType
@@ -509,9 +563,9 @@ argument_list|(
 name|T
 argument_list|)
 operator|,
-name|ContainsPointerToDataMember
+name|IsZeroInitializable
 argument_list|(
-argument|ContainsPointerToDataMember
+argument|IsZeroInitializable
 argument_list|)
 block|{}
 comment|/// \brief Return the LLVM type associated with this record.
@@ -528,14 +582,15 @@ return|return
 name|LLVMType
 return|;
 block|}
-comment|/// \brief Check whether this struct contains pointers to data members.
+comment|/// \brief Check whether this struct can be C++ zero-initialized
+comment|/// with a zeroinitializer.
 name|bool
-name|containsPointerToDataMember
+name|isZeroInitializable
 argument_list|()
 specifier|const
 block|{
 return|return
-name|ContainsPointerToDataMember
+name|IsZeroInitializable
 return|;
 block|}
 comment|/// \brief Return llvm::StructType element number that corresponds to the

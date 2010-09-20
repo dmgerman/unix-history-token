@@ -141,6 +141,9 @@ decl_stmt|;
 name|class
 name|MCContext
 decl_stmt|;
+name|class
+name|TargetMachine
+decl_stmt|;
 typedef|typedef
 name|std
 operator|::
@@ -522,7 +525,7 @@ name|SN
 operator|->
 name|Link
 operator|=
-name|ELFSection
+name|ELF
 operator|::
 name|SHN_UNDEF
 block|;
@@ -547,7 +550,7 @@ name|getSection
 argument_list|(
 literal|".note.GNU-stack"
 argument_list|,
-name|ELFSection
+name|ELF
 operator|::
 name|SHT_PROGBITS
 argument_list|,
@@ -567,7 +570,7 @@ name|getSection
 argument_list|(
 literal|".symtab"
 argument_list|,
-name|ELFSection
+name|ELF
 operator|::
 name|SHT_SYMTAB
 argument_list|,
@@ -585,7 +588,7 @@ name|getSection
 argument_list|(
 literal|".strtab"
 argument_list|,
-name|ELFSection
+name|ELF
 operator|::
 name|SHT_STRTAB
 argument_list|,
@@ -605,7 +608,7 @@ name|getSection
 argument_list|(
 literal|".shstrtab"
 argument_list|,
-name|ELFSection
+name|ELF
 operator|::
 name|SHT_STRTAB
 argument_list|,
@@ -625,7 +628,7 @@ name|getSection
 argument_list|(
 literal|""
 argument_list|,
-name|ELFSection
+name|ELF
 operator|::
 name|SHT_NULL
 argument_list|,

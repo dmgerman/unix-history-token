@@ -153,11 +153,6 @@ name|ExternalBuffer
 block|}
 name|BufferMode
 enum|;
-comment|/// Error This flag is true if an error of any kind has been detected.
-comment|///
-name|bool
-name|Error
-decl_stmt|;
 name|public
 label|:
 comment|// color order matches ANSI escape sequence, don't change
@@ -193,16 +188,7 @@ argument_list|)
 block|:
 name|BufferMode
 argument_list|(
-name|unbuffered
-condition|?
-name|Unbuffered
-else|:
-name|InternalBuffer
-argument_list|)
-operator|,
-name|Error
-argument_list|(
-argument|false
+argument|unbuffered ? Unbuffered : InternalBuffer
 argument_list|)
 block|{
 comment|// Start out ready to flush.
@@ -213,7 +199,8 @@ operator|=
 name|OutBufCur
 operator|=
 literal|0
-block|;   }
+expr_stmt|;
+block|}
 name|virtual
 operator|~
 name|raw_ostream
@@ -232,31 +219,6 @@ operator|+
 name|GetNumBytesInBuffer
 argument_list|()
 return|;
-block|}
-comment|/// has_error - Return the value of the flag in this raw_ostream indicating
-comment|/// whether an output error has been encountered.
-comment|/// This doesn't implicitly flush any pending output.
-name|bool
-name|has_error
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Error
-return|;
-block|}
-comment|/// clear_error - Set the flag read by has_error() to false. If the error
-comment|/// flag is set at the time when this raw_ostream's destructor is called,
-comment|/// report_fatal_error is called to report the error. Use clear_error()
-comment|/// after handling the error to avoid this behavior.
-name|void
-name|clear_error
-parameter_list|()
-block|{
-name|Error
-operator|=
-name|false
-expr_stmt|;
 block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// Configuration Interface
@@ -1114,26 +1076,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// error_detected - Set the flag indicating that an output error has
-end_comment
-
-begin_comment
-comment|/// been encountered.
-end_comment
-
-begin_function
-name|void
-name|error_detected
-parameter_list|()
-block|{
-name|Error
-operator|=
-name|true
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/// getBufferStart - Return the beginning of the current stream buffer, or 0
 end_comment
 
@@ -1269,6 +1211,11 @@ block|;
 name|bool
 name|ShouldClose
 block|;
+comment|/// Error This flag is true if an error of any kind has been detected.
+comment|///
+name|bool
+name|Error
+block|;
 name|uint64_t
 name|pos
 block|;
@@ -1301,6 +1248,16 @@ name|preferred_buffer_size
 argument_list|()
 specifier|const
 block|;
+comment|/// error_detected - Set the flag indicating that an output error has
+comment|/// been encountered.
+name|void
+name|error_detected
+argument_list|()
+block|{
+name|Error
+operator|=
+name|true
+block|; }
 name|public
 operator|:
 expr|enum
@@ -1330,8 +1287,11 @@ comment|/// information about the error is put into ErrorInfo, and the stream sh
 comment|/// be immediately destroyed; the string will be empty if no error occurred.
 comment|/// This allows optional flags to control how the file will be opened.
 comment|///
-comment|/// \param Filename - The file to open. If this is "-" then the
-comment|/// stream will use stdout instead.
+comment|/// As a special case, if Filename is "-", then the stream will use
+comment|/// STDOUT_FILENO instead of opening a file. Note that it will still consider
+comment|/// itself to own the file descriptor. In particular, it will close the
+comment|/// file descriptor when it is done (this is necessary to detect
+comment|/// output errors).
 name|raw_fd_ostream
 argument_list|(
 argument|const char *Filename
@@ -1365,7 +1325,12 @@ argument_list|)
 block|,
 name|ShouldClose
 argument_list|(
-argument|shouldClose
+name|shouldClose
+argument_list|)
+block|,
+name|Error
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 operator|~
@@ -1373,12 +1338,13 @@ name|raw_fd_ostream
 argument_list|()
 block|;
 comment|/// close - Manually flush the stream and close the file.
+comment|/// Note that this does not call fsync.
 name|void
 name|close
 argument_list|()
 block|;
 comment|/// seek - Flushes the stream and repositions the underlying file descriptor
-comment|///  positition to the offset specified from the beginning of the file.
+comment|/// positition to the offset specified from the beginning of the file.
 name|uint64_t
 name|seek
 argument_list|(
@@ -1408,140 +1374,68 @@ name|bool
 name|is_displayed
 argument_list|()
 specifier|const
-block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// raw_stdout_ostream - This is a stream that always prints to stdout.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_decl_stmt
-name|class
-name|raw_stdout_ostream
-range|:
-name|public
-name|raw_fd_ostream
-block|{
-comment|// An out of line virtual method to provide a home for the class vtable.
-name|virtual
-name|void
-name|handle
-argument_list|()
 block|;
-name|public
-operator|:
-name|raw_stdout_ostream
+comment|/// has_error - Return the value of the flag in this raw_fd_ostream indicating
+comment|/// whether an output error has been encountered.
+comment|/// This doesn't implicitly flush any pending output.  Also, it doesn't
+comment|/// guarantee to detect all errors unless the the stream has been closed.
+name|bool
+name|has_error
 argument_list|()
-block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// raw_stderr_ostream - This is a stream that always prints to stderr.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_decl_stmt
-name|class
-name|raw_stderr_ostream
-range|:
-name|public
-name|raw_fd_ostream
+specifier|const
 block|{
-comment|// An out of line virtual method to provide a home for the class vtable.
-name|virtual
+return|return
+name|Error
+return|;
+block|}
+comment|/// clear_error - Set the flag read by has_error() to false. If the error
+comment|/// flag is set at the time when this raw_ostream's destructor is called,
+comment|/// report_fatal_error is called to report the error. Use clear_error()
+comment|/// after handling the error to avoid this behavior.
+comment|///
+comment|///   "Errors should never pass silently.
+comment|///    Unless explicitly silenced."
+comment|///      - from The Zen of Python, by Tim Peters
+comment|///
 name|void
-name|handle
+name|clear_error
 argument_list|()
+block|{
+name|Error
+operator|=
+name|false
+block|;   }
+expr|}
 block|;
-name|public
-operator|:
-name|raw_stderr_ostream
-argument_list|()
-block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// outs() - This returns a reference to a raw_ostream for standard output.
-end_comment
-
-begin_comment
 comment|/// Use it like: outs()<< "foo"<< "bar";
-end_comment
-
-begin_function_decl
 name|raw_ostream
-modifier|&
+operator|&
 name|outs
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
+argument_list|()
+block|;
 comment|/// errs() - This returns a reference to a raw_ostream for standard error.
-end_comment
-
-begin_comment
 comment|/// Use it like: errs()<< "foo"<< "bar";
-end_comment
-
-begin_function_decl
 name|raw_ostream
-modifier|&
+operator|&
 name|errs
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
+argument_list|()
+block|;
 comment|/// nulls() - This returns a reference to a raw_ostream which simply discards
-end_comment
-
-begin_comment
 comment|/// output.
-end_comment
-
-begin_function_decl
 name|raw_ostream
-modifier|&
+operator|&
 name|nulls
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
+argument_list|()
+block|;
 comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|// Output Stream Adaptors
-end_comment
-
-begin_comment
 comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|/// raw_string_ostream - A raw_ostream that writes to an std::string.  This is a
-end_comment
-
-begin_comment
 comment|/// simple adaptor class. This class does not encounter output errors.
-end_comment
-
-begin_decl_stmt
 name|class
 name|raw_string_ostream
-range|:
+operator|:
 name|public
 name|raw_ostream
 block|{
@@ -1719,6 +1613,91 @@ operator|~
 name|raw_null_ostream
 argument_list|()
 block|; }
+block|;
+comment|/// tool_output_file - This class contains a raw_fd_ostream and adds a
+comment|/// few extra features commonly needed for compiler-like tool output files:
+comment|///   - The file is automatically deleted if the process is killed.
+comment|///   - The file is automatically deleted when the tool_output_file
+comment|///     object is destroyed unless the client calls keep().
+name|class
+name|tool_output_file
+block|{
+comment|/// Installer - This class is declared before the raw_fd_ostream so that
+comment|/// it is constructed before the raw_fd_ostream is constructed and
+comment|/// destructed after the raw_fd_ostream is destructed. It installs
+comment|/// cleanups in its constructor and uninstalls them in its destructor.
+name|class
+name|CleanupInstaller
+block|{
+comment|/// Filename - The name of the file.
+name|std
+operator|::
+name|string
+name|Filename
+block|;
+name|public
+operator|:
+comment|/// Keep - The flag which indicates whether we should not delete the file.
+name|bool
+name|Keep
+block|;
+name|explicit
+name|CleanupInstaller
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|filename
+argument_list|)
+block|;
+operator|~
+name|CleanupInstaller
+argument_list|()
+block|;   }
+name|Installer
+block|;
+comment|/// OS - The contained stream. This is intentionally declared after
+comment|/// Installer.
+name|raw_fd_ostream
+name|OS
+block|;
+name|public
+operator|:
+comment|/// tool_output_file - This constructor's arguments are passed to
+comment|/// to raw_fd_ostream's constructor.
+name|tool_output_file
+argument_list|(
+argument|const char *filename
+argument_list|,
+argument|std::string&ErrorInfo
+argument_list|,
+argument|unsigned Flags =
+literal|0
+argument_list|)
+block|;
+comment|/// os - Return the contained raw_fd_ostream.
+name|raw_fd_ostream
+operator|&
+name|os
+argument_list|()
+block|{
+return|return
+name|OS
+return|;
+block|}
+comment|/// keep - Indicate that the tool's job wrt this output file has been
+comment|/// successful and the file should not be deleted.
+name|void
+name|keep
+argument_list|()
+block|{
+name|Installer
+operator|.
+name|Keep
+operator|=
+name|true
+block|; }
+expr|}
 block|;  }
 end_decl_stmt
 

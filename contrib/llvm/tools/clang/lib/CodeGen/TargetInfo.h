@@ -166,6 +166,23 @@ name|M
 argument_list|)
 decl|const
 block|{ }
+comment|/// Determines the size of struct _Unwind_Exception on this platform,
+comment|/// in 8-bit units.  The Itanium ABI defines this as:
+comment|///   struct _Unwind_Exception {
+comment|///     uint64 exception_class;
+comment|///     _Unwind_Exception_Cleanup_Fn exception_cleanup;
+comment|///     uint64 private_1;
+comment|///     uint64 private_2;
+comment|///   };
+name|unsigned
+name|getSizeOfUnwindException
+argument_list|()
+specifier|const
+block|{
+return|return
+literal|32
+return|;
+block|}
 comment|/// Controls whether __builtin_extend_pointer should sign-extend
 comment|/// pointers to uint64_t or zero-extend them (the default).  Has
 comment|/// no effect for targets:

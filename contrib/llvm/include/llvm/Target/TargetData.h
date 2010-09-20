@@ -167,12 +167,10 @@ literal|8
 decl_stmt|;
 comment|//< Alignment type (AlignTypeEnum)
 name|unsigned
-name|char
 name|ABIAlign
 decl_stmt|;
 comment|//< ABI alignment for this type/bitw
 name|unsigned
-name|char
 name|PrefAlign
 decl_stmt|;
 comment|//< Pref. alignment for this type/bitw
@@ -189,11 +187,9 @@ name|AlignTypeEnum
 name|align_type
 parameter_list|,
 name|unsigned
-name|char
 name|abi_align
 parameter_list|,
 name|unsigned
-name|char
 name|pref_align
 parameter_list|,
 name|uint32_t
@@ -227,17 +223,14 @@ name|LittleEndian
 block|;
 comment|///< Defaults to false
 name|unsigned
-name|char
 name|PointerMemSize
 block|;
 comment|///< Pointer size in bytes
 name|unsigned
-name|char
 name|PointerABIAlign
 block|;
 comment|///< Pointer ABI alignment
 name|unsigned
-name|char
 name|PointerPrefAlign
 block|;
 comment|///< Pointer preferred alignment
@@ -284,9 +277,9 @@ name|setAlignment
 argument_list|(
 argument|AlignTypeEnum align_type
 argument_list|,
-argument|unsigned char abi_align
+argument|unsigned abi_align
 argument_list|,
-argument|unsigned char pref_align
+argument|unsigned pref_align
 argument_list|,
 argument|uint32_t bit_width
 argument_list|)
@@ -306,7 +299,6 @@ specifier|const
 block|;
 comment|//! Internal helper method that returns requested alignment for type.
 name|unsigned
-name|char
 name|getAlignment
 argument_list|(
 argument|const Type *Ty
@@ -352,7 +344,7 @@ argument_list|)
 operator|:
 name|ImmutablePass
 argument_list|(
-argument|&ID
+argument|ID
 argument_list|)
 block|{
 name|init
@@ -380,7 +372,6 @@ argument_list|)
 operator|:
 name|ImmutablePass
 argument_list|(
-operator|&
 name|ID
 argument_list|)
 block|,
@@ -546,7 +537,6 @@ return|;
 block|}
 comment|/// Target pointer alignment
 name|unsigned
-name|char
 name|getPointerABIAlignment
 argument_list|()
 specifier|const
@@ -557,7 +547,6 @@ return|;
 block|}
 comment|/// Return target's alignment for stack-based pointers
 name|unsigned
-name|char
 name|getPointerPrefAlignment
 argument_list|()
 specifier|const
@@ -568,7 +557,6 @@ return|;
 block|}
 comment|/// Target pointer size
 name|unsigned
-name|char
 name|getPointerSize
 argument_list|()
 specifier|const
@@ -579,7 +567,6 @@ return|;
 block|}
 comment|/// Target pointer size, in bits
 name|unsigned
-name|char
 name|getPointerSizeInBits
 argument_list|()
 specifier|const
@@ -722,7 +709,6 @@ block|}
 comment|/// getABITypeAlignment - Return the minimum ABI-required alignment for the
 comment|/// specified type.
 name|unsigned
-name|char
 name|getABITypeAlignment
 argument_list|(
 specifier|const
@@ -735,7 +721,6 @@ decl_stmt|;
 comment|/// getABIIntegerTypeAlignment - Return the minimum ABI-required alignment for
 comment|/// an integer type of the specified bitwidth.
 name|unsigned
-name|char
 name|getABIIntegerTypeAlignment
 argument_list|(
 name|unsigned
@@ -746,7 +731,6 @@ decl_stmt|;
 comment|/// getCallFrameTypeAlignment - Return the minimum ABI-required alignment
 comment|/// for the specified type when it is part of a call frame.
 name|unsigned
-name|char
 name|getCallFrameTypeAlignment
 argument_list|(
 specifier|const
@@ -759,7 +743,6 @@ decl_stmt|;
 comment|/// getPrefTypeAlignment - Return the preferred stack/global alignment for
 comment|/// the specified type.  This is always at least as good as the ABI alignment.
 name|unsigned
-name|char
 name|getPrefTypeAlignment
 argument_list|(
 specifier|const
@@ -773,7 +756,6 @@ comment|/// getPreferredTypeAlignmentShift - Return the preferred alignment for 
 comment|/// specified type, returned as log2 of the value (a shift amount).
 comment|///
 name|unsigned
-name|char
 name|getPreferredTypeAlignmentShift
 argument_list|(
 specifier|const

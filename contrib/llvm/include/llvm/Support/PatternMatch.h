@@ -2668,6 +2668,40 @@ return|;
 block|}
 expr|}
 block|;
+comment|/// m_BitCast
+name|template
+operator|<
+name|typename
+name|OpTy
+operator|>
+specifier|inline
+name|CastClass_match
+operator|<
+name|OpTy
+block|,
+name|Instruction
+operator|::
+name|BitCast
+operator|>
+name|m_BitCast
+argument_list|(
+argument|const OpTy&Op
+argument_list|)
+block|{
+return|return
+name|CastClass_match
+operator|<
+name|OpTy
+operator|,
+name|Instruction
+operator|::
+name|BitCast
+operator|>
+operator|(
+name|Op
+operator|)
+return|;
+block|}
 comment|/// m_PtrToInt
 name|template
 operator|<

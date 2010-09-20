@@ -62,6 +62,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|"CGCall.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"GlobalDecl.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Module.h"
 end_include
 
@@ -75,18 +87,6 @@ begin_include
 include|#
 directive|include
 file|<vector>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"CGCall.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"GlobalDecl.h"
 end_include
 
 begin_decl_stmt
@@ -184,6 +184,9 @@ name|namespace
 name|CodeGen
 block|{
 name|class
+name|CGCXXABI
+decl_stmt|;
+name|class
 name|CGRecordLayout
 decl_stmt|;
 comment|/// CodeGenTypes - This class organizes the cross-module state that is used
@@ -217,6 +220,10 @@ specifier|const
 name|ABIInfo
 modifier|&
 name|TheABIInfo
+decl_stmt|;
+name|CGCXXABI
+modifier|&
+name|TheCXXABI
 decl_stmt|;
 name|llvm
 operator|::
@@ -375,6 +382,10 @@ specifier|const
 name|ABIInfo
 operator|&
 name|Info
+argument_list|,
+name|CGCXXABI
+operator|&
+name|CXXABI
 argument_list|)
 expr_stmt|;
 operator|~
@@ -424,6 +435,16 @@ specifier|const
 block|{
 return|return
 name|TheABIInfo
+return|;
+block|}
+name|CGCXXABI
+operator|&
+name|getCXXABI
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TheCXXABI
 return|;
 block|}
 name|llvm
@@ -548,10 +569,7 @@ name|Type
 operator|*
 name|GetFunctionTypeForVTable
 argument_list|(
-specifier|const
-name|CXXMethodDecl
-operator|*
-name|MD
+argument|GlobalDecl GD
 argument_list|)
 expr_stmt|;
 specifier|const
@@ -714,7 +732,9 @@ operator|=
 name|false
 argument_list|)
 decl_stmt|;
-comment|// getFunctionInfo - Get the function info for a member function.
+comment|/// getFunctionInfo - Get the function info for a member function of
+comment|/// the given type.  This is used for calls through member function
+comment|/// pointers.
 specifier|const
 name|CGFunctionInfo
 modifier|&
@@ -865,19 +885,19 @@ name|bool
 name|IsRecursive
 argument_list|)
 decl_stmt|;
-comment|/// ContainsPointerToDataMember - Return whether the given type contains a
-comment|/// pointer to a data member.
+comment|/// IsZeroInitializable - Return whether a type can be
+comment|/// zero-initialized (in the C++ sense) with an LLVM zeroinitializer.
 name|bool
-name|ContainsPointerToDataMember
+name|isZeroInitializable
 parameter_list|(
 name|QualType
 name|T
 parameter_list|)
 function_decl|;
-comment|/// ContainsPointerToDataMember - Return whether the record decl contains a
-comment|/// pointer to a data member.
+comment|/// IsZeroInitializable - Return whether a record type can be
+comment|/// zero-initialized (in the C++ sense) with an LLVM zeroinitializer.
 name|bool
-name|ContainsPointerToDataMember
+name|isZeroInitializable
 parameter_list|(
 specifier|const
 name|CXXRecordDecl

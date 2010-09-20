@@ -223,7 +223,21 @@ range|:
 literal|1
 decl_stmt|;
 comment|// See "RecomputeNeedsHandleIdentifier".
-comment|// 9 bits left in 32-bit word.
+name|bool
+name|IsFromAST
+range|:
+literal|1
+decl_stmt|;
+comment|// True if identfier first appeared in an AST
+comment|// file and wasn't modified since.
+name|bool
+name|RevertedTokenID
+range|:
+literal|1
+decl_stmt|;
+comment|// True if RevertTokenIDToIdentifier was
+comment|// called.
+comment|// 7 bits left in 32-bit word.
 name|void
 modifier|*
 name|FETokenInfo
@@ -518,11 +532,15 @@ else|else
 name|RecomputeNeedsHandleIdentifier
 argument_list|()
 expr_stmt|;
+name|IsFromAST
+operator|=
+name|false
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/// get/setTokenID - If this is a source-language token (e.g. 'for'), this API
+comment|/// getTokenID - If this is a source-language token (e.g. 'for'), this API
 end_comment
 
 begin_comment
@@ -552,22 +570,74 @@ return|;
 block|}
 end_expr_stmt
 
-begin_decl_stmt
+begin_comment
+comment|/// \brief True if RevertTokenIDToIdentifier() was called.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|hasRevertedTokenIDToIdentifier
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RevertedTokenID
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Revert TokenID to tok::identifier; used for GNU libstdc++ 4.2
+end_comment
+
+begin_comment
+comment|/// compatibility.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// TokenID is normally read-only but there are 2 instances where we revert it
+end_comment
+
+begin_comment
+comment|/// to tok::identifier for libstdc++ 4.2. Keep track of when this happens
+end_comment
+
+begin_comment
+comment|/// using this method so we can inform serialization about it.
+end_comment
+
+begin_function
 name|void
-name|setTokenID
+name|RevertTokenIDToIdentifier
+parameter_list|()
+block|{
+name|assert
 argument_list|(
+name|TokenID
+operator|!=
 name|tok
 operator|::
-name|TokenKind
-name|ID
+name|identifier
+operator|&&
+literal|"Already at tok::identifier"
 argument_list|)
-block|{
+expr_stmt|;
 name|TokenID
 operator|=
-name|ID
+name|tok
+operator|::
+name|identifier
+expr_stmt|;
+name|RevertedTokenID
+operator|=
+name|true
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/// getPPKeywordID - Return the preprocessor keyword ID for this identifier.
@@ -836,6 +906,10 @@ else|else
 name|RecomputeNeedsHandleIdentifier
 argument_list|()
 expr_stmt|;
+name|IsFromAST
+operator|=
+name|false
+expr_stmt|;
 block|}
 end_function
 
@@ -976,6 +1050,43 @@ name|NeedsHandleIdentifier
 return|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|/// isFromAST - Return true if the identifier in its current state was loaded
+end_comment
+
+begin_comment
+comment|/// from an AST file.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isFromAST
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsFromAST
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|void
+name|setIsFromAST
+parameter_list|(
+name|bool
+name|FromAST
+init|=
+name|true
+parameter_list|)
+block|{
+name|IsFromAST
+operator|=
+name|FromAST
+expr_stmt|;
+block|}
+end_function
 
 begin_label
 name|private
@@ -1343,6 +1454,40 @@ block|}
 name|IdentifierInfo
 modifier|&
 name|get
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
+name|Name
+argument_list|,
+name|tok
+operator|::
+name|TokenKind
+name|TokenCode
+argument_list|)
+block|{
+name|IdentifierInfo
+modifier|&
+name|II
+init|=
+name|get
+argument_list|(
+name|Name
+argument_list|)
+decl_stmt|;
+name|II
+operator|.
+name|TokenID
+operator|=
+name|TokenCode
+expr_stmt|;
+return|return
+name|II
+return|;
+block|}
+name|IdentifierInfo
+modifier|&
+name|get
 parameter_list|(
 specifier|const
 name|char
@@ -1398,17 +1543,15 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-comment|/// \brief Creates a new IdentifierInfo from the given string.
+comment|/// \brief Gets an IdentifierInfo for the given name without consulting
+comment|///        external sources.
 comment|///
-comment|/// This is a lower-level version of get() that requires that this
-comment|/// identifier not be known previously and that does not consult an
-comment|/// external source for identifiers. In particular, external
-comment|/// identifier sources can use this routine to build IdentifierInfo
-comment|/// nodes and then introduce additional information about those
-comment|/// identifiers.
+comment|/// This is a version of get() meant for external sources that want to
+comment|/// introduce or modify an identifier. If they called get(), they would
+comment|/// likely end up in a recursion.
 name|IdentifierInfo
 modifier|&
-name|CreateIdentifierInfo
+name|getOwn
 parameter_list|(
 specifier|const
 name|char
@@ -1449,14 +1592,12 @@ operator|.
 name|getValue
 argument_list|()
 decl_stmt|;
-name|assert
-argument_list|(
+if|if
+condition|(
 operator|!
 name|II
-operator|&&
-literal|"IdentifierInfo already exists"
-argument_list|)
-expr_stmt|;
+condition|)
+block|{
 comment|// Lookups failed, make a new IdentifierInfo.
 name|void
 modifier|*
@@ -1497,6 +1638,7 @@ operator|=
 operator|&
 name|Entry
 expr_stmt|;
+block|}
 return|return
 operator|*
 name|II
@@ -1504,7 +1646,7 @@ return|;
 block|}
 name|IdentifierInfo
 modifier|&
-name|CreateIdentifierInfo
+name|getOwn
 argument_list|(
 name|llvm
 operator|::
@@ -1513,7 +1655,7 @@ name|Name
 argument_list|)
 block|{
 return|return
-name|CreateIdentifierInfo
+name|getOwn
 argument_list|(
 name|Name
 operator|.

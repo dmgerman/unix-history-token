@@ -66,24 +66,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/AST/DeclarationName.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/AST/Type.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SmallVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<cassert>
 end_include
 
@@ -92,6 +74,21 @@ include|#
 directive|include
 file|<vector>
 end_include
+
+begin_decl_stmt
+name|namespace
+name|llvm
+block|{
+name|template
+operator|<
+name|class
+name|T
+operator|>
+name|class
+name|SmallVectorImpl
+expr_stmt|;
+block|}
+end_decl_stmt
 
 begin_decl_stmt
 name|namespace
@@ -107,36 +104,24 @@ name|class
 name|DeclContext
 decl_stmt|;
 name|class
+name|DeclContextLookupResult
+decl_stmt|;
+name|class
+name|DeclarationName
+decl_stmt|;
+name|class
 name|ExternalSemaSource
 decl_stmt|;
 comment|// layering violation required for downcasting
 name|class
+name|NamedDecl
+decl_stmt|;
+name|class
+name|Selector
+decl_stmt|;
+name|class
 name|Stmt
 decl_stmt|;
-comment|/// \brief The deserialized representation of a set of declarations
-comment|/// with the same name that are visible in a given context.
-struct|struct
-name|VisibleDeclaration
-block|{
-comment|/// \brief The name of the declarations.
-name|DeclarationName
-name|Name
-decl_stmt|;
-comment|/// \brief The ID numbers of all of the declarations with this name.
-comment|///
-comment|/// These declarations have not necessarily been de-serialized.
-name|llvm
-operator|::
-name|SmallVector
-operator|<
-name|unsigned
-operator|,
-literal|4
-operator|>
-name|Declarations
-expr_stmt|;
-block|}
-struct|;
 comment|/// \brief Abstract interface for external sources of AST nodes.
 comment|///
 comment|/// External AST sources provide AST nodes constructed from some
@@ -171,6 +156,51 @@ operator|~
 name|ExternalASTSource
 argument_list|()
 expr_stmt|;
+comment|/// \brief RAII class for safely pairing a StartedDeserializing call
+comment|/// with FinishedDeserializing.
+name|class
+name|Deserializing
+block|{
+name|ExternalASTSource
+modifier|*
+name|Source
+decl_stmt|;
+name|public
+label|:
+name|explicit
+name|Deserializing
+argument_list|(
+name|ExternalASTSource
+operator|*
+name|source
+argument_list|)
+operator|:
+name|Source
+argument_list|(
+argument|source
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|Source
+argument_list|)
+block|;
+name|Source
+operator|->
+name|StartedDeserializing
+argument_list|()
+block|;     }
+operator|~
+name|Deserializing
+argument_list|()
+block|{
+name|Source
+operator|->
+name|FinishedDeserializing
+argument_list|()
+block|;     }
+block|}
+empty_stmt|;
 comment|/// \brief Resolve a declaration ID into a declaration, potentially
 comment|/// building a new declaration.
 comment|///
@@ -234,18 +264,38 @@ comment|/// Generally the final step of this method is either to call
 comment|/// SetExternalVisibleDeclsForName or to recursively call lookup on
 comment|/// the DeclContext after calling SetExternalVisibleDecls.
 name|virtual
-name|DeclContext
-operator|::
-name|lookup_result
+name|DeclContextLookupResult
 name|FindExternalVisibleDeclsByName
-argument_list|(
-argument|const DeclContext *DC
-argument_list|,
-argument|DeclarationName Name
-argument_list|)
-operator|=
+parameter_list|(
+specifier|const
+name|DeclContext
+modifier|*
+name|DC
+parameter_list|,
+name|DeclarationName
+name|Name
+parameter_list|)
+init|=
 literal|0
-expr_stmt|;
+function_decl|;
+comment|/// \brief Deserialize all the visible declarations from external storage.
+comment|///
+comment|/// Name lookup deserializes visible declarations lazily, thus a DeclContext
+comment|/// may not have a complete name lookup table. This function deserializes
+comment|/// the rest of visible declarations from the external storage and completes
+comment|/// the name lookup table of the DeclContext.
+name|virtual
+name|void
+name|MaterializeVisibleDecls
+parameter_list|(
+specifier|const
+name|DeclContext
+modifier|*
+name|DC
+parameter_list|)
+init|=
+literal|0
+function_decl|;
 comment|/// \brief Finds all declarations lexically contained within the given
 comment|/// DeclContext.
 comment|///
@@ -272,6 +322,25 @@ argument_list|)
 init|=
 literal|0
 decl_stmt|;
+comment|/// \brief Notify ExternalASTSource that we started deserialization of
+comment|/// a decl or type so until FinishedDeserializing is called there may be
+comment|/// decls that are initializing. Must be paired with FinishedDeserializing.
+comment|///
+comment|/// The default implementation of this method is a no-op.
+name|virtual
+name|void
+name|StartedDeserializing
+parameter_list|()
+block|{ }
+comment|/// \brief Notify ExternalASTSource that we finished the deserialization of
+comment|/// a decl or type. Must be paired with StartedDeserializing.
+comment|///
+comment|/// The default implementation of this method is a no-op.
+name|virtual
+name|void
+name|FinishedDeserializing
+parameter_list|()
+block|{ }
 comment|/// \brief Function that will be invoked when we begin parsing a new
 comment|/// translation unit involving this external AST source.
 comment|///
@@ -296,42 +365,18 @@ parameter_list|()
 function_decl|;
 name|protected
 label|:
-comment|/// \brief Initialize the context's lookup map with the given decls.
-comment|/// It is assumed that none of the declarations are redeclarations of
-comment|/// each other.
 specifier|static
-name|void
-name|SetExternalVisibleDecls
+name|DeclContextLookupResult
+name|SetExternalVisibleDeclsForName
 argument_list|(
 specifier|const
 name|DeclContext
 operator|*
 name|DC
 argument_list|,
-specifier|const
-name|llvm
-operator|::
-name|SmallVectorImpl
-operator|<
-name|VisibleDeclaration
-operator|>
-operator|&
-name|Decls
-argument_list|)
-decl_stmt|;
-comment|/// \brief Initialize the context's lookup map with the given decls.
-comment|/// It is assumed that none of the declarations are redeclarations of
-comment|/// each other.
-specifier|static
-name|void
-name|SetExternalVisibleDecls
-argument_list|(
-specifier|const
-name|DeclContext
-operator|*
-name|DC
+name|DeclarationName
+name|Name
 argument_list|,
-specifier|const
 name|llvm
 operator|::
 name|SmallVectorImpl
@@ -344,46 +389,40 @@ name|Decls
 argument_list|)
 decl_stmt|;
 specifier|static
+name|DeclContextLookupResult
+name|SetNoExternalVisibleDeclsForName
+parameter_list|(
+specifier|const
 name|DeclContext
-operator|::
-name|lookup_result
-name|SetExternalVisibleDeclsForName
+modifier|*
+name|DC
+parameter_list|,
+name|DeclarationName
+name|Name
+parameter_list|)
+function_decl|;
+name|void
+name|MaterializeVisibleDeclsForName
 argument_list|(
 specifier|const
 name|DeclContext
 operator|*
 name|DC
 argument_list|,
-specifier|const
-name|VisibleDeclaration
+name|DeclarationName
+name|Name
+argument_list|,
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|NamedDecl
+operator|*
+operator|>
 operator|&
-name|VD
+name|Decls
 argument_list|)
-expr_stmt|;
-specifier|static
-name|DeclContext
-operator|::
-name|lookup_result
-name|SetExternalVisibleDeclsForName
-argument_list|(
-argument|const DeclContext *DC
-argument_list|,
-argument|DeclarationName Name
-argument_list|,
-argument|llvm::SmallVectorImpl<NamedDecl*>&Decls
-argument_list|)
-expr_stmt|;
-specifier|static
-name|DeclContext
-operator|::
-name|lookup_result
-name|SetNoExternalVisibleDeclsForName
-argument_list|(
-argument|const DeclContext *DC
-argument_list|,
-argument|DeclarationName Name
-argument_list|)
-expr_stmt|;
+decl_stmt|;
 block|}
 empty_stmt|;
 comment|/// \brief A lazy pointer to an AST node (of base type T) that resides
@@ -397,6 +436,9 @@ operator|<
 name|typename
 name|T
 operator|,
+name|typename
+name|OffsT
+operator|,
 name|T
 operator|*
 operator|(
@@ -406,7 +448,7 @@ operator|*
 name|Get
 operator|)
 operator|(
-name|uint64_t
+name|OffsT
 name|Offset
 operator|)
 operator|>
@@ -664,12 +706,35 @@ name|LazyOffsetPtr
 operator|<
 name|Stmt
 operator|,
+name|uint64_t
+operator|,
 operator|&
 name|ExternalASTSource
 operator|::
 name|GetExternalDeclStmt
 operator|>
 name|LazyDeclStmtPtr
+expr_stmt|;
+end_typedef
+
+begin_comment
+comment|/// \brief A lazy pointer to a declaration.
+end_comment
+
+begin_typedef
+typedef|typedef
+name|LazyOffsetPtr
+operator|<
+name|Decl
+operator|,
+name|uint32_t
+operator|,
+operator|&
+name|ExternalASTSource
+operator|::
+name|GetExternalDecl
+operator|>
+name|LazyDeclPtr
 expr_stmt|;
 end_typedef
 

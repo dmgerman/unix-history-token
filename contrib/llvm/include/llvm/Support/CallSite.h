@@ -229,11 +229,16 @@ argument_list|)
 operator|:
 name|I
 argument_list|(
-argument|reinterpret_cast<InstrTy*>(CI)
+argument|CI
 argument_list|,
 argument|true
 argument_list|)
-block|{}
+block|{
+name|assert
+argument_list|(
+name|CI
+argument_list|)
+block|; }
 name|CallSiteBase
 argument_list|(
 name|InvokeTy
@@ -243,11 +248,16 @@ argument_list|)
 operator|:
 name|I
 argument_list|(
-argument|reinterpret_cast<InstrTy*>(II)
+argument|II
 argument_list|,
 argument|false
 argument_list|)
-block|{}
+block|{
+name|assert
+argument_list|(
+name|II
+argument_list|)
+block|; }
 name|CallSiteBase
 argument_list|(
 argument|ValTy *II
@@ -287,6 +297,8 @@ name|I
 operator|.
 name|getPointer
 argument_list|()
+operator|&&
+literal|"Not a call?"
 argument_list|)
 block|;   }
 comment|/// CallSiteBase::get - This static method is sort of like a constructor.  It
@@ -330,7 +342,7 @@ condition|)
 return|return
 name|CallSiteBase
 argument_list|(
-name|reinterpret_cast
+name|static_cast
 operator|<
 name|CallTy
 operator|*
@@ -355,7 +367,7 @@ condition|)
 return|return
 name|CallSiteBase
 argument_list|(
-name|reinterpret_cast
+name|static_cast
 operator|<
 name|InvokeTy
 operator|*
@@ -598,9 +610,6 @@ argument_list|()
 operator|->
 name|setOperand
 argument_list|(
-name|getArgumentOffset
-argument_list|()
-operator|+
 name|ArgNo
 argument_list|,
 name|newVal
@@ -691,9 +700,6 @@ name|this
 operator|)
 operator|->
 name|op_begin
-argument_list|()
-operator|+
-name|getArgumentOffset
 argument_list|()
 return|;
 block|}
@@ -1086,35 +1092,6 @@ name|private
 label|:
 end_label
 
-begin_comment
-comment|/// Returns the operand number of the first argument
-end_comment
-
-begin_expr_stmt
-name|unsigned
-name|getArgumentOffset
-argument_list|()
-specifier|const
-block|{
-if|if
-condition|(
-name|isCall
-argument_list|()
-condition|)
-return|return
-name|CallInst
-operator|::
-name|ArgOffset
-return|;
-comment|// Skip Function (ATM)
-else|else
-return|return
-literal|0
-return|;
-comment|// Args are at the front
-block|}
-end_expr_stmt
-
 begin_expr_stmt
 name|unsigned
 name|getArgumentEndOffset
@@ -1127,20 +1104,14 @@ name|isCall
 argument_list|()
 condition|)
 return|return
-name|CallInst
-operator|::
-name|ArgOffset
-operator|?
-literal|0
-operator|:
 literal|1
 return|;
-comment|// Unchanged (ATM)
+comment|// Skip Callee
 else|else
 return|return
 literal|3
 return|;
-comment|// Skip BB, BB, Function
+comment|// Skip BB, BB, Callee
 block|}
 end_expr_stmt
 
@@ -1150,124 +1121,46 @@ name|getCallee
 argument_list|()
 specifier|const
 block|{
-comment|// FIXME: this is slow, since we do not have the fast versions
-comment|// of the op_*() functions here. See CallSite::getCallee.
-comment|//
 if|if
 condition|(
 name|isCall
 argument_list|()
 condition|)
+comment|// Skip Callee
 return|return
+name|cast
+operator|<
 name|CallInst
-operator|::
-name|ArgOffset
-operator|?
+operator|>
+operator|(
 name|getInstruction
 argument_list|()
-operator|->
-name|op_begin
-argument_list|()
-comment|// Unchanged
-operator|:
-name|getInstruction
-argument_list|()
+operator|)
 operator|->
 name|op_end
 argument_list|()
 operator|-
 literal|1
 return|;
-comment|// Skip Function
 else|else
+comment|// Skip BB, BB, Callee
 return|return
+name|cast
+operator|<
+name|InvokeInst
+operator|>
+operator|(
 name|getInstruction
 argument_list|()
+operator|)
 operator|->
 name|op_end
 argument_list|()
 operator|-
 literal|3
 return|;
-comment|// Skip BB, BB, Function
 block|}
 end_expr_stmt
-
-begin_comment
-unit|};
-comment|/// ImmutableCallSite - establish a view to a call site for examination
-end_comment
-
-begin_decl_stmt
-name|class
-name|ImmutableCallSite
-range|:
-name|public
-name|CallSiteBase
-operator|<
-operator|>
-block|{
-typedef|typedef
-name|CallSiteBase
-operator|<
-operator|>
-name|Base
-expr_stmt|;
-name|public
-operator|:
-name|ImmutableCallSite
-argument_list|(
-specifier|const
-name|Value
-operator|*
-name|V
-argument_list|)
-operator|:
-name|Base
-argument_list|(
-argument|V
-argument_list|)
-block|{}
-name|ImmutableCallSite
-argument_list|(
-specifier|const
-name|CallInst
-operator|*
-name|CI
-argument_list|)
-operator|:
-name|Base
-argument_list|(
-argument|CI
-argument_list|)
-block|{}
-name|ImmutableCallSite
-argument_list|(
-specifier|const
-name|InvokeInst
-operator|*
-name|II
-argument_list|)
-operator|:
-name|Base
-argument_list|(
-argument|II
-argument_list|)
-block|{}
-name|ImmutableCallSite
-argument_list|(
-specifier|const
-name|Instruction
-operator|*
-name|II
-argument_list|)
-operator|:
-name|Base
-argument_list|(
-argument|II
-argument_list|)
-block|{}
-end_decl_stmt
 
 begin_decl_stmt
 unit|};
@@ -1328,6 +1221,18 @@ block|:
 name|Base
 argument_list|(
 argument|B
+argument_list|)
+block|{}
+name|CallSite
+argument_list|(
+name|Value
+operator|*
+name|V
+argument_list|)
+operator|:
+name|Base
+argument_list|(
+argument|V
 argument_list|)
 block|{}
 name|CallSite
@@ -1465,7 +1370,92 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-unit|}
+comment|/// ImmutableCallSite - establish a view to a call site for examination
+end_comment
+
+begin_decl_stmt
+name|class
+name|ImmutableCallSite
+range|:
+name|public
+name|CallSiteBase
+operator|<
+operator|>
+block|{
+typedef|typedef
+name|CallSiteBase
+operator|<
+operator|>
+name|Base
+expr_stmt|;
+name|public
+operator|:
+name|ImmutableCallSite
+argument_list|(
+specifier|const
+name|Value
+operator|*
+name|V
+argument_list|)
+operator|:
+name|Base
+argument_list|(
+argument|V
+argument_list|)
+block|{}
+name|ImmutableCallSite
+argument_list|(
+specifier|const
+name|CallInst
+operator|*
+name|CI
+argument_list|)
+operator|:
+name|Base
+argument_list|(
+argument|CI
+argument_list|)
+block|{}
+name|ImmutableCallSite
+argument_list|(
+specifier|const
+name|InvokeInst
+operator|*
+name|II
+argument_list|)
+operator|:
+name|Base
+argument_list|(
+argument|II
+argument_list|)
+block|{}
+name|ImmutableCallSite
+argument_list|(
+specifier|const
+name|Instruction
+operator|*
+name|II
+argument_list|)
+operator|:
+name|Base
+argument_list|(
+argument|II
+argument_list|)
+block|{}
+name|ImmutableCallSite
+argument_list|(
+argument|CallSite CS
+argument_list|)
+operator|:
+name|Base
+argument_list|(
+argument|CS.getInstruction()
+argument_list|)
+block|{}
+end_decl_stmt
+
+begin_comment
+unit|};  }
 comment|// End llvm namespace
 end_comment
 

@@ -341,6 +341,9 @@ comment|/// updated to include mappings from all of the instructions and basicbl
 comment|/// the function from their old to new values.  The final argument captures
 comment|/// information about the cloned code if non-null.
 comment|///
+comment|/// If ModuleLevelChanges is false, VMap contains no non-identity GlobalValue
+comment|/// mappings.
+comment|///
 name|Function
 modifier|*
 name|CloneFunction
@@ -361,6 +364,9 @@ operator|*
 operator|>
 operator|&
 name|VMap
+argument_list|,
+name|bool
+name|ModuleLevelChanges
 argument_list|,
 name|ClonedCodeInfo
 operator|*
@@ -411,10 +417,13 @@ argument_list|)
 return|;
 block|}
 comment|/// Clone OldFunc into NewFunc, transforming the old arguments into references
-comment|/// to ArgMap values.  Note that if NewFunc already has basic blocks, the ones
+comment|/// to VMap values.  Note that if NewFunc already has basic blocks, the ones
 comment|/// cloned into it will be added to the end of the function.  This function
 comment|/// fills in a list of return instructions, and can optionally append the
 comment|/// specified suffix to all values cloned.
+comment|///
+comment|/// If ModuleLevelChanges is false, VMap contains no non-identity GlobalValue
+comment|/// mappings.
 comment|///
 name|void
 name|CloneFunctionInto
@@ -439,6 +448,9 @@ operator|*
 operator|>
 operator|&
 name|VMap
+argument_list|,
+name|bool
+name|ModuleLevelChanges
 argument_list|,
 name|SmallVectorImpl
 operator|<
@@ -469,6 +481,10 @@ comment|/// example) a function call with constant arguments is inlined, and tho
 comment|/// constant arguments cause a significant amount of code in the callee to be
 comment|/// dead.  Since this doesn't produce an exactly copy of the input, it can't be
 comment|/// used for things like CloneFunction or CloneModule.
+comment|///
+comment|/// If ModuleLevelChanges is false, VMap contains no non-identity GlobalValue
+comment|/// mappings.
+comment|///
 name|void
 name|CloneAndPruneFunctionInto
 argument_list|(
@@ -492,6 +508,9 @@ operator|*
 operator|>
 operator|&
 name|VMap
+argument_list|,
+name|bool
+name|ModuleLevelChanges
 argument_list|,
 name|SmallVectorImpl
 operator|<

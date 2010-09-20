@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/TypeLoc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/UnresolvedSet.h"
 end_include
 
@@ -581,7 +587,6 @@ block|{
 comment|/// Range - The source code range that covers the full base
 comment|/// specifier, including the "virtual" (if present) and access
 comment|/// specifier (if present).
-comment|// FIXME: Move over to a TypeLoc!
 name|SourceRange
 name|Range
 block|;
@@ -609,10 +614,12 @@ name|Access
 operator|:
 literal|2
 block|;
-comment|/// BaseType - The type of the base class. This will be a class or
-comment|/// struct (or a typedef of such).
-name|QualType
-name|BaseType
+comment|/// BaseTypeInfo - The type of the base class. This will be a class or struct
+comment|/// (or a typedef of such). The source code range does not include the
+comment|/// "virtual" or access specifier.
+name|TypeSourceInfo
+operator|*
+name|BaseTypeInfo
 block|;
 name|public
 operator|:
@@ -629,7 +636,7 @@ argument|bool BC
 argument_list|,
 argument|AccessSpecifier A
 argument_list|,
-argument|QualType T
+argument|TypeSourceInfo *TInfo
 argument_list|)
 operator|:
 name|Range
@@ -652,9 +659,9 @@ argument_list|(
 name|A
 argument_list|)
 block|,
-name|BaseType
+name|BaseTypeInfo
 argument_list|(
-argument|T
+argument|TInfo
 argument_list|)
 block|{ }
 comment|/// getSourceRange - Retrieves the source range that contains the
@@ -679,7 +686,7 @@ return|return
 name|Virtual
 return|;
 block|}
-comment|/// \brief Determine whether this base class if a base of a class declared
+comment|/// \brief Determine whether this base class is a base of a class declared
 comment|/// with the 'class' keyword (vs. one declared with the 'struct' keyword).
 name|bool
 name|isBaseOfClass
@@ -748,7 +755,21 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|BaseType
+name|BaseTypeInfo
+operator|->
+name|getType
+argument_list|()
+return|;
+block|}
+comment|/// getTypeLoc - Retrieves the type and source location of the base class.
+name|TypeSourceInfo
+operator|*
+name|getTypeSourceInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BaseTypeInfo
 return|;
 block|}
 expr|}
@@ -1075,10 +1096,6 @@ argument_list|,
 argument|SourceLocation TKL = SourceLocation()
 argument_list|)
 block|;
-operator|~
-name|CXXRecordDecl
-argument_list|()
-block|;
 name|public
 operator|:
 comment|/// base_class_iterator - Iterator that traverses the base classes
@@ -1289,18 +1306,6 @@ name|C
 parameter_list|,
 name|EmptyShell
 name|Empty
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|virtual
-name|void
-name|Destroy
-parameter_list|(
-name|ASTContext
-modifier|&
-name|C
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4256,14 +4261,14 @@ end_function
 begin_decl_stmt
 name|friend
 name|class
-name|PCHDeclReader
+name|ASTDeclReader
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|friend
 name|class
-name|PCHDeclWriter
+name|ASTDeclWriter
 decl_stmt|;
 end_decl_stmt
 
@@ -4291,9 +4296,7 @@ argument|Kind DK
 argument_list|,
 argument|CXXRecordDecl *RD
 argument_list|,
-argument|SourceLocation L
-argument_list|,
-argument|DeclarationName N
+argument|const DeclarationNameInfo&NameInfo
 argument_list|,
 argument|QualType T
 argument_list|,
@@ -4312,15 +4315,13 @@ argument|DK
 argument_list|,
 argument|RD
 argument_list|,
-argument|L
-argument_list|,
-argument|N
+argument|NameInfo
 argument_list|,
 argument|T
 argument_list|,
 argument|TInfo
 argument_list|,
-argument|(isStatic ? Static : None)
+argument|(isStatic ? SC_Static : SC_None)
 argument_list|,
 argument|SCAsWritten
 argument_list|,
@@ -4338,9 +4339,7 @@ argument|ASTContext&C
 argument_list|,
 argument|CXXRecordDecl *RD
 argument_list|,
-argument|SourceLocation L
-argument_list|,
-argument|DeclarationName N
+argument|const DeclarationNameInfo&NameInfo
 argument_list|,
 argument|QualType T
 argument_list|,
@@ -4348,7 +4347,7 @@ argument|TypeSourceInfo *TInfo
 argument_list|,
 argument|bool isStatic = false
 argument_list|,
-argument|StorageClass SCAsWritten = FunctionDecl::None
+argument|StorageClass SCAsWritten = SC_None
 argument_list|,
 argument|bool isInline = false
 argument_list|)
@@ -4362,7 +4361,7 @@ return|return
 name|getStorageClass
 argument_list|()
 operator|==
-name|Static
+name|SC_Static
 return|;
 block|}
 name|bool
@@ -4991,15 +4990,6 @@ name|unsigned
 name|NumIndices
 parameter_list|)
 function_decl|;
-comment|/// \brief Destroy the base or member initializer.
-name|void
-name|Destroy
-parameter_list|(
-name|ASTContext
-modifier|&
-name|Context
-parameter_list|)
-function_decl|;
 comment|/// isBaseInitializer - Returns true when this initializer is
 comment|/// initializing a base class.
 name|bool
@@ -5101,9 +5091,10 @@ comment|/// getMember - If this is a member initializer, returns the
 comment|/// declaration of the non-static data member being
 comment|/// initialized. Otherwise, returns NULL.
 name|FieldDecl
-modifier|*
+operator|*
 name|getMember
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 if|if
 condition|(
@@ -5422,9 +5413,10 @@ name|Index
 expr_stmt|;
 block|}
 name|Expr
-modifier|*
+operator|*
 name|getInit
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
 name|static_cast
@@ -5520,9 +5512,7 @@ name|CXXConstructorDecl
 argument_list|(
 argument|CXXRecordDecl *RD
 argument_list|,
-argument|SourceLocation L
-argument_list|,
-argument|DeclarationName N
+argument|const DeclarationNameInfo&NameInfo
 argument_list|,
 argument|QualType T
 argument_list|,
@@ -5541,9 +5531,7 @@ name|CXXConstructor
 argument_list|,
 name|RD
 argument_list|,
-name|L
-argument_list|,
-name|N
+name|NameInfo
 argument_list|,
 name|T
 argument_list|,
@@ -5551,9 +5539,7 @@ name|TInfo
 argument_list|,
 name|false
 argument_list|,
-name|FunctionDecl
-operator|::
-name|None
+name|SC_None
 argument_list|,
 name|isInline
 argument_list|)
@@ -5583,15 +5569,6 @@ argument_list|(
 name|isImplicitlyDeclared
 argument_list|)
 block|;   }
-name|virtual
-name|void
-name|Destroy
-argument_list|(
-name|ASTContext
-operator|&
-name|C
-argument_list|)
-block|;
 name|public
 operator|:
 specifier|static
@@ -5613,9 +5590,7 @@ argument|ASTContext&C
 argument_list|,
 argument|CXXRecordDecl *RD
 argument_list|,
-argument|SourceLocation L
-argument_list|,
-argument|DeclarationName N
+argument|const DeclarationNameInfo&NameInfo
 argument_list|,
 argument|QualType T
 argument_list|,
@@ -6062,14 +6037,14 @@ end_function
 begin_decl_stmt
 name|friend
 name|class
-name|PCHDeclReader
+name|ASTDeclReader
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|friend
 name|class
-name|PCHDeclWriter
+name|ASTDeclWriter
 decl_stmt|;
 end_decl_stmt
 
@@ -6136,9 +6111,7 @@ name|CXXDestructorDecl
 argument_list|(
 argument|CXXRecordDecl *RD
 argument_list|,
-argument|SourceLocation L
-argument_list|,
-argument|DeclarationName N
+argument|const DeclarationNameInfo&NameInfo
 argument_list|,
 argument|QualType T
 argument_list|,
@@ -6153,9 +6126,7 @@ name|CXXDestructor
 argument_list|,
 name|RD
 argument_list|,
-name|L
-argument_list|,
-name|N
+name|NameInfo
 argument_list|,
 name|T
 argument_list|,
@@ -6164,9 +6135,7 @@ literal|0
 argument_list|,
 name|false
 argument_list|,
-name|FunctionDecl
-operator|::
-name|None
+name|SC_None
 argument_list|,
 name|isInline
 argument_list|)
@@ -6207,9 +6176,7 @@ argument|ASTContext&C
 argument_list|,
 argument|CXXRecordDecl *RD
 argument_list|,
-argument|SourceLocation L
-argument_list|,
-argument|DeclarationName N
+argument|const DeclarationNameInfo&NameInfo
 argument_list|,
 argument|QualType T
 argument_list|,
@@ -6324,11 +6291,11 @@ return|;
 block|}
 name|friend
 name|class
-name|PCHDeclReader
+name|ASTDeclReader
 block|;
 name|friend
 name|class
-name|PCHDeclWriter
+name|ASTDeclWriter
 block|; }
 decl_stmt|;
 end_decl_stmt
@@ -6388,9 +6355,7 @@ name|CXXConversionDecl
 argument_list|(
 argument|CXXRecordDecl *RD
 argument_list|,
-argument|SourceLocation L
-argument_list|,
-argument|DeclarationName N
+argument|const DeclarationNameInfo&NameInfo
 argument_list|,
 argument|QualType T
 argument_list|,
@@ -6407,9 +6372,7 @@ name|CXXConversion
 argument_list|,
 name|RD
 argument_list|,
-name|L
-argument_list|,
-name|N
+name|NameInfo
 argument_list|,
 name|T
 argument_list|,
@@ -6417,9 +6380,7 @@ name|TInfo
 argument_list|,
 name|false
 argument_list|,
-name|FunctionDecl
-operator|::
-name|None
+name|SC_None
 argument_list|,
 name|isInline
 argument_list|)
@@ -6450,9 +6411,7 @@ argument|ASTContext&C
 argument_list|,
 argument|CXXRecordDecl *RD
 argument_list|,
-argument|SourceLocation L
-argument_list|,
-argument|DeclarationName N
+argument|const DeclarationNameInfo&NameInfo
 argument_list|,
 argument|QualType T
 argument_list|,
@@ -6563,11 +6522,11 @@ return|;
 block|}
 name|friend
 name|class
-name|PCHDeclReader
+name|ASTDeclReader
 block|;
 name|friend
 name|class
-name|PCHDeclWriter
+name|ASTDeclWriter
 block|; }
 decl_stmt|;
 end_decl_stmt
@@ -6876,6 +6835,10 @@ range|:
 name|public
 name|NamedDecl
 block|{
+comment|/// \brief The location of the "using" keyword.
+name|SourceLocation
+name|UsingLoc
+block|;
 comment|/// SourceLocation - Location of 'namespace' token.
 name|SourceLocation
 name|NamespaceLoc
@@ -6890,11 +6853,6 @@ comment|/// name, if any.
 name|NestedNameSpecifier
 operator|*
 name|Qualifier
-block|;
-comment|/// IdentLoc - Location of nominated namespace-name identifier.
-comment|// FIXME: We don't store location of scope specifier.
-name|SourceLocation
-name|IdentLoc
 block|;
 comment|/// NominatedNamespace - Namespace nominated by using-directive.
 name|NamedDecl
@@ -6926,7 +6884,7 @@ name|UsingDirectiveDecl
 argument_list|(
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation L
+argument|SourceLocation UsingLoc
 argument_list|,
 argument|SourceLocation NamespcLoc
 argument_list|,
@@ -6947,10 +6905,15 @@ name|UsingDirective
 argument_list|,
 name|DC
 argument_list|,
-name|L
+name|IdentLoc
 argument_list|,
 name|getName
 argument_list|()
+argument_list|)
+block|,
+name|UsingLoc
+argument_list|(
+name|UsingLoc
 argument_list|)
 block|,
 name|NamespaceLoc
@@ -6966,11 +6929,6 @@ block|,
 name|Qualifier
 argument_list|(
 name|Qualifier
-argument_list|)
-block|,
-name|IdentLoc
-argument_list|(
-name|IdentLoc
 argument_list|)
 block|,
 name|NominatedNamespace
@@ -6996,18 +6954,6 @@ return|return
 name|QualifierRange
 return|;
 block|}
-comment|/// \brief Set the source range of the nested-name-specifier that
-comment|/// qualifies the namespace name.
-name|void
-name|setQualifierRange
-argument_list|(
-argument|SourceRange R
-argument_list|)
-block|{
-name|QualifierRange
-operator|=
-name|R
-block|; }
 comment|/// \brief Retrieve the nested-name-specifier that qualifies the
 comment|/// name of the namespace.
 name|NestedNameSpecifier
@@ -7020,18 +6966,6 @@ return|return
 name|Qualifier
 return|;
 block|}
-comment|/// \brief Set the nested-name-specifier that qualifes the name of the
-comment|/// namespace.
-name|void
-name|setQualifier
-argument_list|(
-argument|NestedNameSpecifier *NNS
-argument_list|)
-block|{
-name|Qualifier
-operator|=
-name|NNS
-block|; }
 name|NamedDecl
 operator|*
 name|getNominatedNamespaceAsWritten
@@ -7079,16 +7013,6 @@ name|getNominatedNamespace
 argument_list|()
 return|;
 block|}
-comment|/// setNominatedNamespace - Set the namespace nominataed by the
-comment|/// using-directive.
-name|void
-name|setNominatedNamespace
-argument_list|(
-name|NamedDecl
-operator|*
-name|NS
-argument_list|)
-block|;
 comment|/// \brief Returns the common ancestor context of this using-directive and
 comment|/// its nominated namespace.
 name|DeclContext
@@ -7111,18 +7035,16 @@ return|return
 name|CommonAncestor
 return|;
 block|}
-comment|/// \brief Set the common ancestor context of this using-directive and its
-comment|/// nominated namespace.
-name|void
-name|setCommonAncestor
-argument_list|(
-argument|DeclContext* Cxt
-argument_list|)
+comment|/// \brief Return the location of the "using" keyword.
+name|SourceLocation
+name|getUsingLoc
+argument_list|()
+specifier|const
 block|{
-name|CommonAncestor
-operator|=
-name|Cxt
-block|; }
+return|return
+name|UsingLoc
+return|;
+block|}
 comment|// FIXME: Could omit 'Key' in name.
 comment|/// getNamespaceKeyLocation - Returns location of namespace keyword.
 name|SourceLocation
@@ -7134,17 +7056,6 @@ return|return
 name|NamespaceLoc
 return|;
 block|}
-comment|/// setNamespaceKeyLocation - Set the the location of the namespacekeyword.
-name|void
-name|setNamespaceKeyLocation
-argument_list|(
-argument|SourceLocation L
-argument_list|)
-block|{
-name|NamespaceLoc
-operator|=
-name|L
-block|; }
 comment|/// getIdentLocation - Returns location of identifier.
 name|SourceLocation
 name|getIdentLocation
@@ -7152,20 +7063,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|IdentLoc
+name|getLocation
+argument_list|()
 return|;
 block|}
-comment|/// setIdentLocation - set the location of the identifier.
-name|void
-name|setIdentLocation
-argument_list|(
-argument|SourceLocation L
-argument_list|)
-block|{
-name|IdentLoc
-operator|=
-name|L
-block|; }
 specifier|static
 name|UsingDirectiveDecl
 operator|*
@@ -7175,7 +7076,7 @@ argument|ASTContext&C
 argument_list|,
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation L
+argument|SourceLocation UsingLoc
 argument_list|,
 argument|SourceLocation NamespaceLoc
 argument_list|,
@@ -7190,6 +7091,21 @@ argument_list|,
 argument|DeclContext *CommonAncestor
 argument_list|)
 block|;
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SourceRange
+argument_list|(
+name|UsingLoc
+argument_list|,
+name|getLocation
+argument_list|()
+argument_list|)
+return|;
+block|}
 specifier|static
 name|bool
 name|classof
@@ -7235,6 +7151,10 @@ comment|// Friend for getUsingDirectiveName.
 name|friend
 name|class
 name|DeclContext
+block|;
+name|friend
+name|class
+name|ASTDeclReader
 block|; }
 decl_stmt|;
 end_decl_stmt
@@ -7266,8 +7186,9 @@ range|:
 name|public
 name|NamedDecl
 block|{
+comment|/// \brief The location of the "namespace" keyword.
 name|SourceLocation
-name|AliasLoc
+name|NamespaceLoc
 block|;
 comment|/// \brief The source range that covers the nested-name-specifier
 comment|/// preceding the namespace name.
@@ -7294,7 +7215,7 @@ name|NamespaceAliasDecl
 argument_list|(
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation L
+argument|SourceLocation NamespaceLoc
 argument_list|,
 argument|SourceLocation AliasLoc
 argument_list|,
@@ -7315,14 +7236,14 @@ name|NamespaceAlias
 argument_list|,
 name|DC
 argument_list|,
-name|L
+name|AliasLoc
 argument_list|,
 name|Alias
 argument_list|)
 block|,
-name|AliasLoc
+name|NamespaceLoc
 argument_list|(
-name|AliasLoc
+name|NamespaceLoc
 argument_list|)
 block|,
 name|QualifierRange
@@ -7345,6 +7266,10 @@ argument_list|(
 argument|Namespace
 argument_list|)
 block|{ }
+name|friend
+name|class
+name|ASTDeclReader
+block|;
 name|public
 operator|:
 comment|/// \brief Retrieve the source range of the nested-name-specifier
@@ -7471,33 +7396,11 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|AliasLoc
+name|getLocation
+argument_list|()
 return|;
 block|}
 end_expr_stmt
-
-begin_comment
-comment|/// Set the location o;f the alias name, e.e., 'foo' in
-end_comment
-
-begin_comment
-comment|/// "namespace foo = ns::bar;".
-end_comment
-
-begin_function
-name|void
-name|setAliasLoc
-parameter_list|(
-name|SourceLocation
-name|L
-parameter_list|)
-block|{
-name|AliasLoc
-operator|=
-name|L
-expr_stmt|;
-block|}
-end_function
 
 begin_comment
 comment|/// Returns the location of the 'namespace' keyword.
@@ -7510,8 +7413,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|getLocation
-argument_list|()
+name|NamespaceLoc
 return|;
 block|}
 end_expr_stmt
@@ -7531,25 +7433,6 @@ name|IdentLoc
 return|;
 block|}
 end_expr_stmt
-
-begin_comment
-comment|/// Set the location of the identifier in the named namespace.
-end_comment
-
-begin_function
-name|void
-name|setTargetNameLoc
-parameter_list|(
-name|SourceLocation
-name|L
-parameter_list|)
-block|{
-name|IdentLoc
-operator|=
-name|L
-expr_stmt|;
-block|}
-end_function
 
 begin_comment
 comment|/// \brief Retrieve the namespace that this alias refers to, which
@@ -7572,53 +7455,6 @@ return|;
 block|}
 end_expr_stmt
 
-begin_comment
-comment|/// \brief Set the namespace or namespace alias pointed to by this
-end_comment
-
-begin_comment
-comment|/// alias decl.
-end_comment
-
-begin_function
-name|void
-name|setAliasedNamespace
-parameter_list|(
-name|NamedDecl
-modifier|*
-name|ND
-parameter_list|)
-block|{
-name|assert
-argument_list|(
-operator|(
-name|isa
-operator|<
-name|NamespaceAliasDecl
-operator|>
-operator|(
-name|ND
-operator|)
-operator|||
-name|isa
-operator|<
-name|NamespaceDecl
-operator|>
-operator|(
-name|ND
-operator|)
-operator|)
-operator|&&
-literal|"expecting namespace or namespace alias decl"
-argument_list|)
-expr_stmt|;
-name|Namespace
-operator|=
-name|ND
-expr_stmt|;
-block|}
-end_function
-
 begin_function_decl
 specifier|static
 name|NamespaceAliasDecl
@@ -7634,7 +7470,7 @@ modifier|*
 name|DC
 parameter_list|,
 name|SourceLocation
-name|L
+name|NamespaceLoc
 parameter_list|,
 name|SourceLocation
 name|AliasLoc
@@ -7659,6 +7495,24 @@ name|Namespace
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_expr_stmt
+name|virtual
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SourceRange
+argument_list|(
+name|NamespaceLoc
+argument_list|,
+name|IdentLoc
+argument_list|)
+return|;
+block|}
+end_expr_stmt
 
 begin_function
 specifier|static
@@ -8000,6 +7854,11 @@ name|NestedNameSpecifier
 operator|*
 name|TargetNestedName
 block|;
+comment|/// DNLoc - Provides source/type location info for the
+comment|/// declaration name embedded in the ValueDecl base class.
+name|DeclarationNameLoc
+name|DNLoc
+block|;
 comment|/// \brief The collection of shadow declarations associated with
 comment|/// this using declaration.  This set can change as a class is
 comment|/// processed.
@@ -8022,15 +7881,13 @@ name|UsingDecl
 argument_list|(
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation L
-argument_list|,
 argument|SourceRange NNR
 argument_list|,
 argument|SourceLocation UL
 argument_list|,
 argument|NestedNameSpecifier* TargetNNS
 argument_list|,
-argument|DeclarationName Name
+argument|const DeclarationNameInfo&NameInfo
 argument_list|,
 argument|bool IsTypeNameArg
 argument_list|)
@@ -8041,9 +7898,15 @@ name|Using
 argument_list|,
 name|DC
 argument_list|,
-name|L
+name|NameInfo
+operator|.
+name|getLoc
+argument_list|()
 argument_list|,
-name|Name
+name|NameInfo
+operator|.
+name|getName
+argument_list|()
 argument_list|)
 block|,
 name|NestedNameRange
@@ -8061,6 +7924,14 @@ argument_list|(
 name|TargetNNS
 argument_list|)
 block|,
+name|DNLoc
+argument_list|(
+name|NameInfo
+operator|.
+name|getInfo
+argument_list|()
+argument_list|)
+block|,
 name|IsTypeName
 argument_list|(
 argument|IsTypeNameArg
@@ -8068,12 +7939,12 @@ argument_list|)
 block|{   }
 name|public
 operator|:
-comment|// FIXME: Should be const?
 comment|/// \brief Returns the source range that covers the nested-name-specifier
 comment|/// preceding the namespace name.
 name|SourceRange
 name|getNestedNameRange
 argument_list|()
+specifier|const
 block|{
 return|return
 name|NestedNameRange
@@ -8090,12 +7961,12 @@ name|NestedNameRange
 operator|=
 name|R
 block|; }
-comment|// FIXME; Should be const?
 comment|// FIXME: Naming is inconsistent with other get*Loc functions.
 comment|/// \brief Returns the source location of the "using" keyword.
 name|SourceLocation
 name|getUsingLocation
 argument_list|()
+specifier|const
 block|{
 return|return
 name|UsingLocation
@@ -8117,6 +7988,7 @@ name|NestedNameSpecifier
 operator|*
 name|getTargetNestedNameDecl
 argument_list|()
+specifier|const
 block|{
 return|return
 name|TargetNestedName
@@ -8133,6 +8005,24 @@ name|TargetNestedName
 operator|=
 name|NNS
 block|;   }
+name|DeclarationNameInfo
+name|getNameInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DeclarationNameInfo
+argument_list|(
+name|getDeclName
+argument_list|()
+argument_list|,
+name|getLocation
+argument_list|()
+argument_list|,
+name|DNLoc
+argument_list|)
+return|;
+block|}
 comment|/// \brief Return true if the using declaration has 'typename'.
 name|bool
 name|isTypeName
@@ -8287,19 +8177,35 @@ argument|ASTContext&C
 argument_list|,
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation IdentL
-argument_list|,
 argument|SourceRange NNR
 argument_list|,
 argument|SourceLocation UsingL
 argument_list|,
 argument|NestedNameSpecifier* TargetNNS
 argument_list|,
-argument|DeclarationName Name
+argument|const DeclarationNameInfo&NameInfo
 argument_list|,
 argument|bool IsTypeNameArg
 argument_list|)
 block|;
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SourceRange
+argument_list|(
+name|UsingLocation
+argument_list|,
+name|getNameInfo
+argument_list|()
+operator|.
+name|getEndLoc
+argument_list|()
+argument_list|)
+return|;
+block|}
 specifier|static
 name|bool
 name|classof
@@ -8343,11 +8249,11 @@ return|;
 block|}
 name|friend
 name|class
-name|PCHDeclReader
+name|ASTDeclReader
 block|;
 name|friend
 name|class
-name|PCHDeclWriter
+name|ASTDeclWriter
 block|; }
 decl_stmt|;
 end_decl_stmt
@@ -8404,6 +8310,11 @@ name|NestedNameSpecifier
 operator|*
 name|TargetNestedNameSpecifier
 block|;
+comment|/// DNLoc - Provides source/type location info for the
+comment|/// declaration name embedded in the ValueDecl base class.
+name|DeclarationNameLoc
+name|DNLoc
+block|;
 name|UnresolvedUsingValueDecl
 argument_list|(
 argument|DeclContext *DC
@@ -8416,9 +8327,7 @@ argument|SourceRange TargetNNR
 argument_list|,
 argument|NestedNameSpecifier *TargetNNS
 argument_list|,
-argument|SourceLocation TargetNameLoc
-argument_list|,
-argument|DeclarationName TargetName
+argument|const DeclarationNameInfo&NameInfo
 argument_list|)
 operator|:
 name|ValueDecl
@@ -8427,9 +8336,15 @@ name|UnresolvedUsingValue
 argument_list|,
 name|DC
 argument_list|,
-name|TargetNameLoc
+name|NameInfo
+operator|.
+name|getLoc
+argument_list|()
 argument_list|,
-name|TargetName
+name|NameInfo
+operator|.
+name|getName
+argument_list|()
 argument_list|,
 name|Ty
 argument_list|)
@@ -8446,7 +8361,12 @@ argument_list|)
 block|,
 name|TargetNestedNameSpecifier
 argument_list|(
-argument|TargetNNS
+name|TargetNNS
+argument_list|)
+block|,
+name|DNLoc
+argument_list|(
+argument|NameInfo.getInfo()
 argument_list|)
 block|{ }
 name|public
@@ -8479,6 +8399,7 @@ name|NestedNameSpecifier
 operator|*
 name|getTargetNestedNameSpecifier
 argument_list|()
+specifier|const
 block|{
 return|return
 name|TargetNestedNameSpecifier
@@ -8516,6 +8437,24 @@ name|UsingLocation
 operator|=
 name|L
 block|; }
+name|DeclarationNameInfo
+name|getNameInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DeclarationNameInfo
+argument_list|(
+name|getDeclName
+argument_list|()
+argument_list|,
+name|getLocation
+argument_list|()
+argument_list|,
+name|DNLoc
+argument_list|)
+return|;
+block|}
 specifier|static
 name|UnresolvedUsingValueDecl
 operator|*
@@ -8531,11 +8470,27 @@ argument|SourceRange TargetNNR
 argument_list|,
 argument|NestedNameSpecifier *TargetNNS
 argument_list|,
-argument|SourceLocation TargetNameLoc
-argument_list|,
-argument|DeclarationName TargetName
+argument|const DeclarationNameInfo&NameInfo
 argument_list|)
 block|;
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SourceRange
+argument_list|(
+name|UsingLocation
+argument_list|,
+name|getNameInfo
+argument_list|()
+operator|.
+name|getEndLoc
+argument_list|()
+argument_list|)
+return|;
+block|}
 specifier|static
 name|bool
 name|classof
@@ -8659,6 +8614,10 @@ argument_list|(
 argument|TargetNNS
 argument_list|)
 block|{ }
+name|friend
+name|class
+name|ASTDeclReader
+block|;
 name|public
 operator|:
 comment|/// \brief Returns the source range that covers the nested-name-specifier
@@ -8672,18 +8631,6 @@ return|return
 name|TargetNestedNameRange
 return|;
 block|}
-comment|/// \brief Set the source range coverting the nested-name-specifier preceding
-comment|/// the namespace name.
-name|void
-name|setTargetNestedNameRange
-argument_list|(
-argument|SourceRange R
-argument_list|)
-block|{
-name|TargetNestedNameRange
-operator|=
-name|R
-block|; }
 comment|/// \brief Get target nested name declaration.
 name|NestedNameSpecifier
 operator|*
@@ -8694,17 +8641,6 @@ return|return
 name|TargetNestedNameSpecifier
 return|;
 block|}
-comment|/// \brief Set the nested name declaration.
-name|void
-name|setTargetNestedNameSpecifier
-argument_list|(
-argument|NestedNameSpecifier* NNS
-argument_list|)
-block|{
-name|TargetNestedNameSpecifier
-operator|=
-name|NNS
-block|;   }
 comment|/// \brief Returns the source location of the 'using' keyword.
 name|SourceLocation
 name|getUsingLoc
@@ -8715,17 +8651,6 @@ return|return
 name|UsingLocation
 return|;
 block|}
-comment|/// \brief Set the source location of the 'using' keyword.
-name|void
-name|setUsingLoc
-argument_list|(
-argument|SourceLocation L
-argument_list|)
-block|{
-name|UsingLocation
-operator|=
-name|L
-block|; }
 comment|/// \brief Returns the source location of the 'typename' keyword.
 name|SourceLocation
 name|getTypenameLoc
@@ -8736,17 +8661,6 @@ return|return
 name|TypenameLocation
 return|;
 block|}
-comment|/// \brief Set the source location of the 'typename' keyword.
-name|void
-name|setTypenameLoc
-argument_list|(
-argument|SourceLocation L
-argument_list|)
-block|{
-name|TypenameLocation
-operator|=
-name|L
-block|; }
 specifier|static
 name|UnresolvedUsingTypenameDecl
 operator|*
@@ -8769,6 +8683,21 @@ argument_list|,
 argument|DeclarationName TargetName
 argument_list|)
 block|;
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SourceRange
+argument_list|(
+name|UsingLocation
+argument_list|,
+name|getLocation
+argument_list|()
+argument_list|)
+return|;
+block|}
 specifier|static
 name|bool
 name|classof
@@ -8915,20 +8844,6 @@ return|return
 name|Message
 return|;
 block|}
-name|virtual
-operator|~
-name|StaticAssertDecl
-argument_list|()
-block|;
-name|virtual
-name|void
-name|Destroy
-argument_list|(
-name|ASTContext
-operator|&
-name|C
-argument_list|)
-block|;
 specifier|static
 name|bool
 name|classof
@@ -8970,7 +8885,10 @@ operator|==
 name|StaticAssert
 return|;
 block|}
-expr|}
+name|friend
+name|class
+name|ASTDeclReader
+block|; }
 block|;
 comment|/// Insertion operator for diagnostics.  This allows sending AccessSpecifier's
 comment|/// into a diagnostic with<<.

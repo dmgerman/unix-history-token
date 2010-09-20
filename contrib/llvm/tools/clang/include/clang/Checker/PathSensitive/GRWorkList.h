@@ -98,6 +98,7 @@ decl_stmt|;
 name|GRBlockCounter
 name|Counter
 decl_stmt|;
+specifier|const
 name|CFGBlock
 modifier|*
 name|Block
@@ -114,7 +115,7 @@ argument|ExplodedNode* N
 argument_list|,
 argument|GRBlockCounter C
 argument_list|,
-argument|CFGBlock* B
+argument|const CFGBlock* B
 argument_list|,
 argument|unsigned idx
 argument_list|)
@@ -186,6 +187,7 @@ return|return
 name|Counter
 return|;
 block|}
+specifier|const
 name|CFGBlock
 operator|*
 name|getBlock
@@ -247,8 +249,9 @@ name|ExplodedNode
 modifier|*
 name|N
 parameter_list|,
+specifier|const
 name|CFGBlock
-modifier|&
+modifier|*
 name|B
 parameter_list|,
 name|unsigned
@@ -263,7 +266,6 @@ name|N
 argument_list|,
 name|CurrentCounter
 argument_list|,
-operator|&
 name|B
 argument_list|,
 name|idx

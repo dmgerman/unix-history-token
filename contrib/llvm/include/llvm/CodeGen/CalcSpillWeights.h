@@ -49,6 +49,12 @@ directive|include
 file|"llvm/CodeGen/MachineFunctionPass.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -56,6 +62,92 @@ block|{
 name|class
 name|LiveInterval
 decl_stmt|;
+name|class
+name|LiveIntervals
+decl_stmt|;
+name|class
+name|MachineLoopInfo
+decl_stmt|;
+comment|/// VirtRegAuxInfo - Calculate auxiliary information for a virtual
+comment|/// register such as its spill weight and allocation hint.
+name|class
+name|VirtRegAuxInfo
+block|{
+name|MachineFunction
+modifier|&
+name|mf_
+decl_stmt|;
+name|LiveIntervals
+modifier|&
+name|lis_
+decl_stmt|;
+specifier|const
+name|MachineLoopInfo
+modifier|&
+name|loops_
+decl_stmt|;
+name|DenseMap
+operator|<
+name|unsigned
+operator|,
+name|float
+operator|>
+name|hint_
+expr_stmt|;
+name|public
+label|:
+name|VirtRegAuxInfo
+argument_list|(
+name|MachineFunction
+operator|&
+name|mf
+argument_list|,
+name|LiveIntervals
+operator|&
+name|lis
+argument_list|,
+specifier|const
+name|MachineLoopInfo
+operator|&
+name|loops
+argument_list|)
+operator|:
+name|mf_
+argument_list|(
+name|mf
+argument_list|)
+operator|,
+name|lis_
+argument_list|(
+name|lis
+argument_list|)
+operator|,
+name|loops_
+argument_list|(
+argument|loops
+argument_list|)
+block|{}
+comment|/// CalculateRegClass - recompute the register class for reg from its uses.
+comment|/// Since the register class can affect the allocation hint, this function
+comment|/// should be called before CalculateWeightAndHint if both are called.
+name|void
+name|CalculateRegClass
+argument_list|(
+argument|unsigned reg
+argument_list|)
+expr_stmt|;
+comment|/// CalculateWeightAndHint - (re)compute li's spill weight and allocation
+comment|/// hint.
+name|void
+name|CalculateWeightAndHint
+parameter_list|(
+name|LiveInterval
+modifier|&
+name|li
+parameter_list|)
+function_decl|;
+block|}
+empty_stmt|;
 comment|/// CalculateSpillWeights - Compute spill weights for all virtual register
 comment|/// live intervals.
 name|class
@@ -75,7 +167,7 @@ argument_list|()
 operator|:
 name|MachineFunctionPass
 argument_list|(
-argument|&ID
+argument|ID
 argument_list|)
 block|{}
 name|virtual

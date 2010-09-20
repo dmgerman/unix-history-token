@@ -49,12 +49,6 @@ directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<vector>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -63,28 +57,16 @@ name|class
 name|LiveInterval
 decl_stmt|;
 name|class
-name|LiveIntervals
-decl_stmt|;
-name|class
-name|LiveStacks
-decl_stmt|;
-name|class
 name|MachineFunction
 decl_stmt|;
 name|class
-name|MachineInstr
-decl_stmt|;
-name|class
-name|MachineLoopInfo
+name|MachineFunctionPass
 decl_stmt|;
 name|class
 name|SlotIndex
 decl_stmt|;
 name|class
 name|VirtRegMap
-decl_stmt|;
-name|class
-name|VNInfo
 decl_stmt|;
 comment|/// Spiller interface.
 comment|///
@@ -109,8 +91,6 @@ comment|/// @param li            The live interval to be spilled.
 comment|/// @param spillIs       A list of intervals that are about to be spilled,
 comment|///                      and so cannot be used for remat etc.
 comment|/// @param newIntervals  The newly created intervals will be appended here.
-comment|/// @param earliestIndex The earliest point for splitting. (OK, it's another
-comment|///                      pointer to the allocator guts).
 name|virtual
 name|void
 name|spill
@@ -119,9 +99,7 @@ name|LiveInterval
 operator|*
 name|li
 argument_list|,
-name|std
-operator|::
-name|vector
+name|SmallVectorImpl
 operator|<
 name|LiveInterval
 operator|*
@@ -136,12 +114,6 @@ operator|*
 operator|>
 operator|&
 name|spillIs
-argument_list|,
-name|SlotIndex
-operator|*
-name|earliestIndex
-operator|=
-literal|0
 argument_list|)
 init|=
 literal|0
@@ -153,21 +125,16 @@ name|Spiller
 modifier|*
 name|createSpiller
 parameter_list|(
+name|MachineFunctionPass
+modifier|&
+name|pass
+parameter_list|,
 name|MachineFunction
-modifier|*
+modifier|&
 name|mf
 parameter_list|,
-name|LiveIntervals
-modifier|*
-name|li
-parameter_list|,
-specifier|const
-name|MachineLoopInfo
-modifier|*
-name|loopInfo
-parameter_list|,
 name|VirtRegMap
-modifier|*
+modifier|&
 name|vrm
 parameter_list|)
 function_decl|;

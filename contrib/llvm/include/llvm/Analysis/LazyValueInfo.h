@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_ANALYSIS_LIVEVALUES_H
+name|LLVM_ANALYSIS_LAZYVALUEINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_ANALYSIS_LIVEVALUES_H
+name|LLVM_ANALYSIS_LAZYVALUEINFO_H
 end_define
 
 begin_include
@@ -128,7 +128,6 @@ argument_list|()
 operator|:
 name|FunctionPass
 argument_list|(
-operator|&
 name|ID
 argument_list|)
 block|,
@@ -218,6 +217,33 @@ argument_list|,
 name|BasicBlock
 operator|*
 name|ToBB
+argument_list|)
+block|;
+comment|/// threadEdge - Inform the analysis cache that we have threaded an edge from
+comment|/// PredBB to OldSucc to be from PredBB to NewSucc instead.
+name|void
+name|threadEdge
+argument_list|(
+name|BasicBlock
+operator|*
+name|PredBB
+argument_list|,
+name|BasicBlock
+operator|*
+name|OldSucc
+argument_list|,
+name|BasicBlock
+operator|*
+name|NewSucc
+argument_list|)
+block|;
+comment|/// eraseBlock - Inform the analysis cache that we have erased a block.
+name|void
+name|eraseBlock
+argument_list|(
+name|BasicBlock
+operator|*
+name|BB
 argument_list|)
 block|;
 comment|// Implementation boilerplate.

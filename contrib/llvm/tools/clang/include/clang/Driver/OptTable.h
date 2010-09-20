@@ -110,7 +110,7 @@ operator|<<
 literal|3
 operator|)
 block|,
-name|RenderAsInput
+name|NoForward
 init|=
 operator|(
 literal|1
@@ -118,7 +118,7 @@ operator|<<
 literal|4
 operator|)
 block|,
-name|RenderJoined
+name|RenderAsInput
 init|=
 operator|(
 literal|1
@@ -126,7 +126,7 @@ operator|<<
 literal|5
 operator|)
 block|,
-name|RenderSeparate
+name|RenderJoined
 init|=
 operator|(
 literal|1
@@ -134,12 +134,20 @@ operator|<<
 literal|6
 operator|)
 block|,
-name|Unsupported
+name|RenderSeparate
 init|=
 operator|(
 literal|1
 operator|<<
 literal|7
+operator|)
+block|,
+name|Unsupported
+init|=
+operator|(
+literal|1
+operator|<<
+literal|8
 operator|)
 block|}
 enum|;
@@ -192,7 +200,7 @@ name|char
 name|Kind
 decl_stmt|;
 name|unsigned
-name|char
+name|short
 name|Flags
 decl_stmt|;
 name|unsigned

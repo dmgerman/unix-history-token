@@ -146,6 +146,10 @@ comment|///< Like Private, but linker removes.
 name|LinkerPrivateWeakLinkage
 block|,
 comment|///< Like LinkerPrivate, but weak.
+name|LinkerPrivateWeakDefAutoLinkage
+block|,
+comment|///< Like LinkerPrivateWeak, but possibly
+comment|///  hidden.
 name|DLLImportLinkage
 block|,
 comment|///< Function to be imported from DLL
@@ -275,7 +279,13 @@ argument_list|()
 specifier|const
 block|{
 return|return
+operator|(
+literal|1u
+operator|<<
 name|Alignment
+operator|)
+operator|>>
+literal|1
 return|;
 block|}
 name|void
@@ -283,28 +293,7 @@ name|setAlignment
 argument_list|(
 argument|unsigned Align
 argument_list|)
-block|{
-name|assert
-argument_list|(
-operator|(
-name|Align
-operator|&
-operator|(
-name|Align
-operator|-
-literal|1
-operator|)
-operator|)
-operator|==
-literal|0
-operator|&&
-literal|"Alignment is not a power of 2!"
-argument_list|)
 block|;
-name|Alignment
-operator|=
-name|Align
-block|;   }
 name|VisibilityTypes
 name|getVisibility
 argument_list|()
@@ -586,6 +575,19 @@ return|;
 block|}
 specifier|static
 name|bool
+name|isLinkerPrivateWeakDefAutoLinkage
+argument_list|(
+argument|LinkageTypes Linkage
+argument_list|)
+block|{
+return|return
+name|Linkage
+operator|==
+name|LinkerPrivateWeakDefAutoLinkage
+return|;
+block|}
+specifier|static
+name|bool
 name|isLocalLinkage
 argument_list|(
 argument|LinkageTypes Linkage
@@ -608,6 +610,11 @@ name|Linkage
 argument_list|)
 operator|||
 name|isLinkerPrivateWeakLinkage
+argument_list|(
+name|Linkage
+argument_list|)
+operator|||
+name|isLinkerPrivateWeakDefAutoLinkage
 argument_list|(
 name|Linkage
 argument_list|)
@@ -676,7 +683,6 @@ argument|LinkageTypes Linkage
 argument_list|)
 block|{
 return|return
-operator|(
 name|Linkage
 operator|==
 name|WeakAnyLinkage
@@ -696,7 +702,10 @@ operator|||
 name|Linkage
 operator|==
 name|LinkerPrivateWeakLinkage
-operator|)
+operator|||
+name|Linkage
+operator|==
+name|LinkerPrivateWeakDefAutoLinkage
 return|;
 block|}
 comment|/// isWeakForLinker - Whether the definition of this global may be replaced at
@@ -709,7 +718,6 @@ argument|LinkageTypes Linkage
 argument_list|)
 block|{
 return|return
-operator|(
 name|Linkage
 operator|==
 name|AvailableExternallyLinkage
@@ -741,7 +749,10 @@ operator|||
 name|Linkage
 operator|==
 name|LinkerPrivateWeakLinkage
-operator|)
+operator|||
+name|Linkage
+operator|==
+name|LinkerPrivateWeakDefAutoLinkage
 return|;
 block|}
 name|bool
@@ -847,6 +858,18 @@ specifier|const
 block|{
 return|return
 name|isLinkerPrivateWeakLinkage
+argument_list|(
+name|Linkage
+argument_list|)
+return|;
+block|}
+name|bool
+name|hasLinkerPrivateWeakDefAutoLinkage
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isLinkerPrivateWeakDefAutoLinkage
 argument_list|(
 name|Linkage
 argument_list|)

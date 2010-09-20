@@ -79,7 +79,7 @@ name|Eng
 parameter_list|)
 function_decl|;
 name|void
-name|RegisterPthreadLockChecker
+name|RegisterIdempotentOperationChecker
 parameter_list|(
 name|GRExprEngine
 modifier|&
@@ -95,6 +95,14 @@ name|Eng
 parameter_list|)
 function_decl|;
 name|void
+name|RegisterPthreadLockChecker
+parameter_list|(
+name|GRExprEngine
+modifier|&
+name|Eng
+parameter_list|)
+function_decl|;
+name|void
 name|RegisterStreamChecker
 parameter_list|(
 name|GRExprEngine
@@ -103,7 +111,7 @@ name|Eng
 parameter_list|)
 function_decl|;
 name|void
-name|RegisterIdempotentOperationChecker
+name|RegisterUnreachableCodeChecker
 parameter_list|(
 name|GRExprEngine
 modifier|&

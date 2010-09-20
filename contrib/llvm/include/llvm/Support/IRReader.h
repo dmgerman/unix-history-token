@@ -278,12 +278,7 @@ name|SMDiagnostic
 argument_list|(
 name|Filename
 argument_list|,
-literal|"Could not open input file "
-literal|"'"
-operator|+
-name|Filename
-operator|+
-literal|"': "
+literal|"Could not open input file: "
 operator|+
 name|ErrMsg
 argument_list|)
@@ -372,10 +367,6 @@ operator|&
 name|ErrMsg
 argument_list|)
 decl_stmt|;
-comment|// ParseBitcodeFile does not take ownership of the Buffer.
-name|delete
-name|Buffer
-decl_stmt|;
 if|if
 condition|(
 name|M
@@ -394,6 +385,10 @@ argument_list|,
 name|ErrMsg
 argument_list|)
 expr_stmt|;
+comment|// ParseBitcodeFile does not take ownership of the Buffer.
+name|delete
+name|Buffer
+decl_stmt|;
 return|return
 name|M
 return|;
@@ -470,12 +465,7 @@ name|SMDiagnostic
 argument_list|(
 name|Filename
 argument_list|,
-literal|"Could not open input file "
-literal|"'"
-operator|+
-name|Filename
-operator|+
-literal|"': "
+literal|"Could not open input file: "
 operator|+
 name|ErrMsg
 argument_list|)

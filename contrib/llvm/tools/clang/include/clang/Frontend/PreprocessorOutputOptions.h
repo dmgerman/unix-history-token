@@ -61,11 +61,17 @@ literal|1
 decl_stmt|;
 comment|///< Print normal preprocessed output.
 name|unsigned
-name|ShowMacros
+name|ShowComments
 range|:
 literal|1
 decl_stmt|;
-comment|///< Print macro definitions.
+comment|///< Show comments.
+name|unsigned
+name|ShowHeaderIncludes
+range|:
+literal|1
+decl_stmt|;
+comment|///< Show header inclusions (-H).
 name|unsigned
 name|ShowLineMarkers
 range|:
@@ -73,17 +79,17 @@ literal|1
 decl_stmt|;
 comment|///< Show #line markers.
 name|unsigned
-name|ShowComments
-range|:
-literal|1
-decl_stmt|;
-comment|///< Show comments.
-name|unsigned
 name|ShowMacroComments
 range|:
 literal|1
 decl_stmt|;
 comment|///< Show comments, even in macros.
+name|unsigned
+name|ShowMacros
+range|:
+literal|1
+decl_stmt|;
+comment|///< Print macro definitions.
 name|public
 label|:
 name|PreprocessorOutputOptions
@@ -93,7 +99,11 @@ name|ShowCPP
 operator|=
 literal|1
 expr_stmt|;
-name|ShowMacros
+name|ShowComments
+operator|=
+literal|0
+expr_stmt|;
+name|ShowHeaderIncludes
 operator|=
 literal|0
 expr_stmt|;
@@ -101,11 +111,11 @@ name|ShowLineMarkers
 operator|=
 literal|1
 expr_stmt|;
-name|ShowComments
+name|ShowMacroComments
 operator|=
 literal|0
 expr_stmt|;
-name|ShowMacroComments
+name|ShowMacros
 operator|=
 literal|0
 expr_stmt|;

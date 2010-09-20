@@ -660,7 +660,7 @@ argument_list|()
 operator|==
 name|TargetOpcode
 operator|::
-name|DBG_LABEL
+name|PROLOG_LABEL
 operator|||
 name|getOpcode
 argument_list|()
@@ -678,7 +678,7 @@ name|GC_LABEL
 return|;
 block|}
 name|bool
-name|isDebugLabel
+name|isPrologLabel
 argument_list|()
 specifier|const
 block|{
@@ -688,7 +688,7 @@ argument_list|()
 operator|==
 name|TargetOpcode
 operator|::
-name|DBG_LABEL
+name|PROLOG_LABEL
 return|;
 block|}
 name|bool

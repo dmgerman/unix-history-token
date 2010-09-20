@@ -86,12 +86,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/AST/Attr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/AST/Decl.h"
 end_include
 
@@ -216,6 +210,9 @@ name|SourceManager
 decl_stmt|;
 name|class
 name|TargetInfo
+decl_stmt|;
+name|class
+name|CXXABI
 decl_stmt|;
 comment|// Decls
 name|class
@@ -776,7 +773,7 @@ specifier|const
 name|Decl
 operator|*
 operator|,
-name|Attr
+name|AttrVec
 operator|*
 operator|>
 name|DeclAttrs
@@ -917,15 +914,10 @@ comment|///  this ASTContext object.
 name|LangOptions
 name|LangOpts
 decl_stmt|;
-comment|/// MallocAlloc/BumpAlloc - The allocator objects used to create AST objects.
-name|bool
-name|FreeMemory
-decl_stmt|;
-name|llvm
-operator|::
-name|MallocAllocator
-name|MallocAlloc
-expr_stmt|;
+comment|/// \brief The allocator used to create AST objects.
+comment|///
+comment|/// AST objects are never destructed; rather, all memory associated with the
+comment|/// AST objects will be released when the ASTContext itself is destroyed.
 name|llvm
 operator|::
 name|BumpPtrAllocator
@@ -937,6 +929,25 @@ operator|::
 name|StorageAllocator
 name|DiagAllocator
 expr_stmt|;
+comment|/// \brief The current C++ ABI.
+name|llvm
+operator|::
+name|OwningPtr
+operator|<
+name|CXXABI
+operator|>
+name|ABI
+expr_stmt|;
+name|CXXABI
+modifier|*
+name|createCXXABI
+parameter_list|(
+specifier|const
+name|TargetInfo
+modifier|&
+name|T
+parameter_list|)
+function_decl|;
 name|public
 label|:
 specifier|const
@@ -1019,17 +1030,6 @@ literal|8
 parameter_list|)
 block|{
 return|return
-name|FreeMemory
-condition|?
-name|MallocAlloc
-operator|.
-name|Allocate
-argument_list|(
-name|Size
-argument_list|,
-name|Align
-argument_list|)
-else|:
 name|BumpAlloc
 operator|.
 name|Allocate
@@ -1047,19 +1047,7 @@ name|void
 modifier|*
 name|Ptr
 parameter_list|)
-block|{
-if|if
-condition|(
-name|FreeMemory
-condition|)
-name|MallocAlloc
-operator|.
-name|Deallocate
-argument_list|(
-name|Ptr
-argument_list|)
-expr_stmt|;
-block|}
+block|{ }
 name|PartialDiagnostic
 operator|::
 name|StorageAllocator
@@ -1100,8 +1088,7 @@ argument_list|)
 return|;
 block|}
 comment|/// \brief Retrieve the attributes for the given declaration.
-name|Attr
-modifier|*
+name|AttrVec
 modifier|&
 name|getDeclAttrs
 parameter_list|(
@@ -1110,14 +1097,7 @@ name|Decl
 modifier|*
 name|D
 parameter_list|)
-block|{
-return|return
-name|DeclAttrs
-index|[
-name|D
-index|]
-return|;
-block|}
+function_decl|;
 comment|/// \brief Erase the attributes corresponding to the given declaration.
 name|void
 name|eraseDeclAttrs
@@ -1127,15 +1107,7 @@ name|Decl
 modifier|*
 name|D
 parameter_list|)
-block|{
-name|DeclAttrs
-operator|.
-name|erase
-argument_list|(
-name|D
-argument_list|)
-expr_stmt|;
-block|}
+function_decl|;
 comment|/// \brief If this variable is an instantiated static data member of a
 comment|/// class template specialization, returns the templated static data member
 comment|/// from which it was instantiated.
@@ -1401,10 +1373,7 @@ argument|SelectorTable&sels
 argument_list|,
 argument|Builtin::Context&builtins
 argument_list|,
-argument|bool FreeMemory = true
-argument_list|,
-argument|unsigned size_reserve=
-literal|0
+argument|unsigned size_reserve
 argument_list|)
 empty_stmt|;
 operator|~
@@ -1780,16 +1749,16 @@ decl_stmt|;
 comment|/// This builds the struct used for __block variables.
 name|QualType
 name|BuildByRefType
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|DeclName
-parameter_list|,
+argument_list|,
 name|QualType
 name|Ty
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// Returns true iff we need copy/dispose helpers for the given type.
 name|bool
 name|BlockRequiresCopying
@@ -3062,11 +3031,14 @@ name|Qs
 argument_list|)
 return|;
 block|}
-name|DeclarationName
+name|DeclarationNameInfo
 name|getNameForTemplate
 parameter_list|(
 name|TemplateName
 name|Name
+parameter_list|,
+name|SourceLocation
+name|NameLoc
 parameter_list|)
 function_decl|;
 name|TemplateName
@@ -3170,6 +3142,19 @@ argument|const QualType&Ty
 argument_list|)
 specifier|const
 expr_stmt|;
+comment|/// areCompatibleVectorTypes - Return true if the given vector types either
+comment|/// are of the same unqualified type or if one is GCC and other - equivalent
+comment|/// AltiVec vector type.
+name|bool
+name|areCompatibleVectorTypes
+parameter_list|(
+name|QualType
+name|FirstVec
+parameter_list|,
+name|QualType
+name|SecondVec
+parameter_list|)
+function_decl|;
 comment|/// isObjCNSObjectType - Return true if this is an NSObject object with
 comment|/// its NSObject attribute set.
 name|bool
@@ -3492,25 +3477,6 @@ name|RD
 parameter_list|)
 function_decl|;
 name|void
-name|CollectObjCIvars
-argument_list|(
-specifier|const
-name|ObjCInterfaceDecl
-operator|*
-name|OI
-argument_list|,
-name|llvm
-operator|::
-name|SmallVectorImpl
-operator|<
-name|FieldDecl
-operator|*
-operator|>
-operator|&
-name|Fields
-argument_list|)
-decl_stmt|;
-name|void
 name|ShallowCollectObjCIvars
 argument_list|(
 specifier|const
@@ -3530,12 +3496,15 @@ name|Ivars
 argument_list|)
 decl_stmt|;
 name|void
-name|CollectNonClassIvars
+name|DeepCollectObjCIvars
 argument_list|(
 specifier|const
 name|ObjCInterfaceDecl
 operator|*
 name|OI
+argument_list|,
+name|bool
+name|leafClass
 argument_list|,
 name|llvm
 operator|::
@@ -3741,7 +3710,6 @@ modifier|&
 name|T2
 parameter_list|)
 function_decl|;
-comment|/// \brief Retrieves the "canonical" declaration of
 comment|/// \brief Retrieves the "canonical" nested name specifier for a
 comment|/// given nested name specifier.
 comment|///
@@ -4104,8 +4072,15 @@ name|bool
 name|typesAreCompatible
 parameter_list|(
 name|QualType
+name|T1
 parameter_list|,
 name|QualType
+name|T2
+parameter_list|,
+name|bool
+name|CompareUnqualified
+init|=
+name|false
 parameter_list|)
 function_decl|;
 comment|// C99 6.2.7p1
@@ -4182,6 +4157,16 @@ name|bool
 name|ForCompare
 parameter_list|)
 function_decl|;
+name|bool
+name|ObjCQualifiedClassTypesAreCompatible
+parameter_list|(
+name|QualType
+name|LHS
+parameter_list|,
+name|QualType
+name|RHS
+parameter_list|)
+function_decl|;
 comment|// Check the safety of assignment from LHS to RHS
 name|bool
 name|canAssignObjCInterfaces
@@ -4249,6 +4234,16 @@ modifier|*
 name|RHSOPT
 parameter_list|)
 function_decl|;
+name|bool
+name|canBindObjCObjectType
+parameter_list|(
+name|QualType
+name|To
+parameter_list|,
+name|QualType
+name|From
+parameter_list|)
+function_decl|;
 comment|// Functions for calculating composite types
 name|QualType
 name|mergeTypes
@@ -4259,6 +4254,11 @@ name|QualType
 parameter_list|,
 name|bool
 name|OfBlockPointer
+init|=
+name|false
+parameter_list|,
+name|bool
+name|Unqualified
 init|=
 name|false
 parameter_list|)
@@ -4272,6 +4272,11 @@ name|QualType
 parameter_list|,
 name|bool
 name|OfBlockPointer
+init|=
+name|false
+parameter_list|,
+name|bool
+name|Unqualified
 init|=
 name|false
 parameter_list|)
@@ -4297,6 +4302,23 @@ name|QualType
 name|rhs
 parameter_list|)
 function_decl|;
+name|void
+name|ResetObjCLayout
+parameter_list|(
+specifier|const
+name|ObjCContainerDecl
+modifier|*
+name|CD
+parameter_list|)
+block|{
+name|ObjCLayouts
+index|[
+name|CD
+index|]
+operator|=
+literal|0
+expr_stmt|;
+block|}
 comment|//===--------------------------------------------------------------------===//
 comment|//                    Integer Predicates
 comment|//===--------------------------------------------------------------------===//
@@ -4552,6 +4574,39 @@ parameter_list|,
 name|void
 modifier|*
 name|Data
+parameter_list|)
+function_decl|;
+name|GVALinkage
+name|GetGVALinkageForFunction
+parameter_list|(
+specifier|const
+name|FunctionDecl
+modifier|*
+name|FD
+parameter_list|)
+function_decl|;
+name|GVALinkage
+name|GetGVALinkageForVariable
+parameter_list|(
+specifier|const
+name|VarDecl
+modifier|*
+name|VD
+parameter_list|)
+function_decl|;
+comment|/// \brief Determines if the decl can be CodeGen'ed or deserialized from PCH
+comment|/// lazily, only when used; this is only relevant for function or file scoped
+comment|/// var definitions.
+comment|///
+comment|/// \returns true if the function/var must be CodeGen'ed/deserialized even if
+comment|/// it is not used.
+name|bool
+name|DeclMustBeEmitted
+parameter_list|(
+specifier|const
+name|Decl
+modifier|*
+name|D
 parameter_list|)
 function_decl|;
 comment|//===--------------------------------------------------------------------===//

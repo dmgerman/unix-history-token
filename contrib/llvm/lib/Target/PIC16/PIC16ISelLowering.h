@@ -168,7 +168,7 @@ block|,
 comment|// Compare for equality or inequality.
 name|SELECT_ICC
 block|,
-comment|// Psuedo to be caught in schedular and expanded to brcond.
+comment|// Pseudo to be caught in scheduler and expanded to brcond.
 name|BRCOND
 block|,
 comment|// Conditional branch.
@@ -657,6 +657,24 @@ return|return
 literal|1
 return|;
 block|}
+name|protected
+operator|:
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|TargetRegisterClass
+operator|*
+block|,
+name|uint8_t
+operator|>
+name|findRepresentativeClass
+argument_list|(
+argument|EVT VT
+argument_list|)
+specifier|const
+block|;
 name|private
 operator|:
 comment|// If the Node is a BUILD_PAIR representing a direct Address,

@@ -115,6 +115,9 @@ name|class
 name|MCAssembler
 decl_stmt|;
 name|class
+name|MCBinaryExpr
+decl_stmt|;
+name|class
 name|MCContext
 decl_stmt|;
 name|class
@@ -244,6 +247,11 @@ block|;
 name|public
 operator|:
 comment|// Only for sentinel.
+name|MCFragment
+argument_list|()
+block|;
+name|virtual
+operator|~
 name|MCFragment
 argument_list|()
 block|;
@@ -627,7 +635,7 @@ comment|/// Inst - The instruction this is a fragment for.
 name|MCInst
 name|Inst
 block|;
-comment|/// InstSize - The size of the currently encoded instruction.
+comment|/// Code - Binary data for the currently encoded instruction.
 name|SmallString
 operator|<
 literal|8
@@ -1954,6 +1962,13 @@ comment|// common symbol can never get a definition.
 name|uint64_t
 name|CommonSize
 block|;
+comment|/// SymbolSize - An expression describing how to calculate the size of
+comment|/// a symbol. If a symbol has no size this field will be NULL.
+specifier|const
+name|MCExpr
+operator|*
+name|SymbolSize
+block|;
 comment|/// CommonAlign - The alignment of the symbol, if it is 'common'.
 comment|//
 comment|// FIXME: Pack this in with other fields?
@@ -2129,6 +2144,27 @@ argument_list|)
 block|;
 return|return
 name|CommonSize
+return|;
+block|}
+name|void
+name|setSize
+argument_list|(
+argument|const MCExpr *SS
+argument_list|)
+block|{
+name|SymbolSize
+operator|=
+name|SS
+block|;   }
+specifier|const
+name|MCExpr
+operator|*
+name|getSize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SymbolSize
 return|;
 block|}
 comment|/// getCommonAlignment - Return the alignment of a 'common' symbol.
@@ -2582,6 +2618,18 @@ name|OW
 argument_list|)
 decl|const
 decl_stmt|;
+name|void
+name|AddSectionToTheEnd
+parameter_list|(
+name|MCSectionData
+modifier|&
+name|SD
+parameter_list|,
+name|MCAsmLayout
+modifier|&
+name|Layout
+parameter_list|)
+function_decl|;
 name|public
 label|:
 comment|/// Construct a new assembler instance.
@@ -2646,9 +2694,17 @@ name|Emitter
 return|;
 block|}
 comment|/// Finish - Do final processing and write the object to the output stream.
+comment|/// \arg Writer is used for custom object writer (as the MCJIT does),
+comment|/// if not specified it is automatically created from backend.
 name|void
 name|Finish
-parameter_list|()
+parameter_list|(
+name|MCObjectWriter
+modifier|*
+name|Writer
+init|=
+literal|0
+parameter_list|)
 function_decl|;
 comment|// FIXME: This does not belong here.
 name|bool

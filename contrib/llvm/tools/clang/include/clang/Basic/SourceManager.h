@@ -161,14 +161,28 @@ block|,
 name|C_ExternCSystem
 block|}
 enum|;
-comment|/// ContentCache - Once instance of this struct is kept for every file
+comment|/// ContentCache - One instance of this struct is kept for every file
 comment|/// loaded or used.  This object owns the MemoryBuffer object.
 name|class
 name|ContentCache
 block|{
+enum|enum
+name|CCFlags
+block|{
+comment|/// \brief Whether the buffer is invalid.
+name|InvalidFlag
+init|=
+literal|0x01
+block|,
+comment|/// \brief Whether the buffer should not be freed on destruction.
+name|DoNotFreeFlag
+init|=
+literal|0x02
+block|}
+enum|;
 comment|/// Buffer - The actual buffer containing the characters from the input
 comment|/// file.  This is owned by the ContentCache object.
-comment|/// The bit indicates whether the buffer is invalid.
+comment|/// The bits indicate indicates whether the buffer is invalid.
 name|mutable
 name|llvm
 operator|::
@@ -180,9 +194,7 @@ operator|::
 name|MemoryBuffer
 operator|*
 operator|,
-literal|1
-operator|,
-name|bool
+literal|2
 operator|>
 name|Buffer
 expr_stmt|;
@@ -289,6 +301,24 @@ name|false
 argument_list|)
 expr_stmt|;
 block|}
+comment|/// \brief Get the underlying buffer, returning NULL if the buffer is not
+comment|/// yet available.
+specifier|const
+name|llvm
+operator|::
+name|MemoryBuffer
+operator|*
+name|getRawBuffer
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Buffer
+operator|.
+name|getPointer
+argument_list|()
+return|;
+block|}
 comment|/// \brief Replace the existing buffer (which will be deleted)
 comment|/// with the given buffer.
 name|void
@@ -300,8 +330,47 @@ operator|::
 name|MemoryBuffer
 operator|*
 name|B
+argument_list|,
+name|bool
+name|DoNotFree
+operator|=
+name|false
 argument_list|)
 decl_stmt|;
+comment|/// \brief Determine whether the buffer itself is invalid.
+name|bool
+name|isBufferInvalid
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Buffer
+operator|.
+name|getInt
+argument_list|()
+operator|&
+name|InvalidFlag
+return|;
+block|}
+comment|/// \brief Determine whether the buffer should be freed.
+name|bool
+name|shouldFreeBuffer
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|Buffer
+operator|.
+name|getInt
+argument_list|()
+operator|&
+name|DoNotFreeFlag
+operator|)
+operator|==
+literal|0
+return|;
+block|}
 name|ContentCache
 argument_list|(
 specifier|const
@@ -1299,9 +1368,6 @@ specifier|const
 name|FileEntry
 modifier|*
 name|SourceFile
-parameter_list|,
-name|SourceLocation
-name|IncludePos
 parameter_list|)
 block|{
 name|assert
@@ -1320,7 +1386,8 @@ name|createFileID
 argument_list|(
 name|SourceFile
 argument_list|,
-name|IncludePos
+name|SourceLocation
+argument_list|()
 argument_list|,
 name|SrcMgr
 operator|::
@@ -1337,7 +1404,7 @@ comment|//===-------------------------------------------------------------------
 comment|/// createFileID - Create a new FileID that represents the specified file
 comment|/// being #included from the specified IncludePosition.  This returns 0 on
 comment|/// error and translates NULL into standard input.
-comment|/// PreallocateID should be non-zero to specify which a pre-allocated,
+comment|/// PreallocateID should be non-zero to specify which pre-allocated,
 comment|/// lazily computed source location is being filled in by this operation.
 name|FileID
 name|createFileID
@@ -1539,10 +1606,13 @@ expr_stmt|;
 comment|/// \brief Override the contents of the given source file by providing an
 comment|/// already-allocated buffer.
 comment|///
-comment|/// \param SourceFile the source file whose contents will be override.
+comment|/// \param SourceFile the source file whose contents will be overriden.
 comment|///
 comment|/// \param Buffer the memory buffer whose contents will be used as the
 comment|/// data in the given source file.
+comment|///
+comment|/// \param DoNotFree If true, then the buffer will not be freed when the
+comment|/// source manager is destroyed.
 comment|///
 comment|/// \returns true if an error occurred, false otherwise.
 name|bool
@@ -1559,6 +1629,11 @@ operator|::
 name|MemoryBuffer
 operator|*
 name|Buffer
+argument_list|,
+name|bool
+name|DoNotFree
+operator|=
+name|false
 argument_list|)
 decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
@@ -2866,7 +2941,7 @@ comment|// FIXME: Exposing this is a little gross; what we want is a good way
 end_comment
 
 begin_comment
-comment|//  to iterate the entries that were not defined in a PCH file (or
+comment|//  to iterate the entries that were not defined in an AST file (or
 end_comment
 
 begin_comment

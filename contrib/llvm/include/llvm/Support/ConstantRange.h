@@ -157,21 +157,6 @@ name|Lower
 decl_stmt|,
 name|Upper
 decl_stmt|;
-specifier|static
-name|ConstantRange
-name|intersect1Wrapped
-parameter_list|(
-specifier|const
-name|ConstantRange
-modifier|&
-name|LHS
-parameter_list|,
-specifier|const
-name|ConstantRange
-modifier|&
-name|RHS
-parameter_list|)
-function_decl|;
 name|public
 label|:
 comment|/// Initialize a full (the default) or empty set for the specified bit width.
@@ -549,7 +534,7 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// add - Return a new range representing the possible values resulting
-comment|/// from an addition of a value in this range and a value in Other.
+comment|/// from an addition of a value in this range and a value in \p Other.
 name|ConstantRange
 name|add
 argument_list|(
@@ -560,8 +545,20 @@ name|Other
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// sub - Return a new range representing the possible values resulting
+comment|/// from a subtraction of a value in this range and a value in \p Other.
+name|ConstantRange
+name|sub
+argument_list|(
+specifier|const
+name|ConstantRange
+operator|&
+name|Other
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// multiply - Return a new range representing the possible values resulting
-comment|/// from a multiplication of a value in this range and a value in Other.
+comment|/// from a multiplication of a value in this range and a value in \p Other.
 comment|/// TODO: This isn't fully implemented yet.
 name|ConstantRange
 name|multiply
@@ -574,7 +571,7 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// smax - Return a new range representing the possible values resulting
-comment|/// from a signed maximum of a value in this range and a value in Other.
+comment|/// from a signed maximum of a value in this range and a value in \p Other.
 name|ConstantRange
 name|smax
 argument_list|(
@@ -586,7 +583,7 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// umax - Return a new range representing the possible values resulting
-comment|/// from an unsigned maximum of a value in this range and a value in Other.
+comment|/// from an unsigned maximum of a value in this range and a value in \p Other.
 name|ConstantRange
 name|umax
 argument_list|(
@@ -598,8 +595,8 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// udiv - Return a new range representing the possible values resulting
-comment|/// from an unsigned division of a value in this range and a value in Other.
-comment|/// TODO: This isn't fully implemented yet.
+comment|/// from an unsigned division of a value in this range and a value in
+comment|/// \p Other.
 name|ConstantRange
 name|udiv
 argument_list|(
@@ -611,41 +608,38 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// shl - Return a new range representing the possible values resulting
-comment|/// from a left shift of a value in this range by the Amount value.
+comment|/// from a left shift of a value in this range by a value in \p Other.
+comment|/// TODO: This isn't fully implemented yet.
 name|ConstantRange
 name|shl
 argument_list|(
 specifier|const
 name|ConstantRange
 operator|&
-name|Amount
+name|Other
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// ashr - Return a new range representing the possible values resulting from
-comment|/// an arithmetic right shift of a value in this range by the Amount value.
-name|ConstantRange
-name|ashr
-argument_list|(
-specifier|const
-name|ConstantRange
-operator|&
-name|Amount
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// shr - Return a new range representing the possible values resulting
-comment|/// from a logical right shift of a value in this range by the Amount value.
+comment|/// lshr - Return a new range representing the possible values resulting
+comment|/// from a logical right shift of a value in this range and a value in
+comment|/// \p Other.
 name|ConstantRange
 name|lshr
 argument_list|(
 specifier|const
 name|ConstantRange
 operator|&
-name|Amount
+name|Other
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// inverse - Return a new range that is the logical not of the current set.
+comment|///
+name|ConstantRange
+name|inverse
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// print - Print out the bounds to a stream...
 comment|///
 name|void

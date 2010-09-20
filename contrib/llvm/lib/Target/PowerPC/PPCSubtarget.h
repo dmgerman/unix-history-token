@@ -169,6 +169,9 @@ block|;
 name|bool
 name|HasLazyResolverStubs
 block|;
+name|bool
+name|IsJITCodeModel
+block|;
 comment|/// DarwinVers - Nonzero if this is a darwin platform.  Otherwise, the numeric
 comment|/// version of the platform, e.g. 8 = 10.4 (Tiger), 9 = 10.5 (Leopard), etc.
 name|unsigned
@@ -320,6 +323,16 @@ argument|const TargetMachine&TM
 argument_list|)
 specifier|const
 block|;
+comment|// isJITCodeModel - True if we're generating code for the JIT
+name|bool
+name|isJITCodeModel
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsJITCodeModel
+return|;
+block|}
 comment|// Specific obvious features.
 name|bool
 name|hasFSQRT

@@ -74,7 +74,6 @@ name|arg
 parameter_list|)
 function_decl|;
 comment|/*!  @typedef EDAssemblySyntax_t  An assembly syntax for use in tokenizing instructions.  */
-typedef|typedef
 enum|enum
 block|{
 comment|/*! @constant kEDAssemblySyntaxX86Intel Intel syntax for i386 and x86_64. */
@@ -91,45 +90,32 @@ name|kEDAssemblySyntaxARMUAL
 init|=
 literal|2
 block|}
+enum|;
+typedef|typedef
+name|unsigned
 name|EDAssemblySyntax_t
 typedef|;
 comment|/*!  @typedef EDDisassemblerRef  Encapsulates a disassembler for a single CPU architecture.  */
-struct_decl|struct
-name|EDDisassembler
-struct_decl|;
 typedef|typedef
-name|struct
-name|EDDisassembler
+name|void
 modifier|*
 name|EDDisassemblerRef
 typedef|;
 comment|/*!  @typedef EDInstRef  Encapsulates a single disassembled instruction in one assembly syntax.  */
-struct_decl|struct
-name|EDInst
-struct_decl|;
 typedef|typedef
-name|struct
-name|EDInst
+name|void
 modifier|*
 name|EDInstRef
 typedef|;
 comment|/*!  @typedef EDTokenRef  Encapsulates a token from the disassembly of an instruction.  */
-struct_decl|struct
-name|EDToken
-struct_decl|;
 typedef|typedef
-name|struct
-name|EDToken
+name|void
 modifier|*
 name|EDTokenRef
 typedef|;
 comment|/*!  @typedef EDOperandRef  Encapsulates an operand of an instruction.  */
-struct_decl|struct
-name|EDOperand
-struct_decl|;
 typedef|typedef
-name|struct
-name|EDOperand
+name|void
 modifier|*
 name|EDOperandRef
 typedef|;

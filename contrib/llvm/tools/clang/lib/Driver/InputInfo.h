@@ -68,9 +68,6 @@ block|{
 name|namespace
 name|driver
 block|{
-name|class
-name|PipedJob
-decl_stmt|;
 comment|/// InputInfo - Wrapper for information about an input source.
 name|class
 name|InputInfo
@@ -104,10 +101,6 @@ specifier|const
 name|Arg
 modifier|*
 name|InputArg
-decl_stmt|;
-name|PipedJob
-modifier|*
-name|Pipe
 decl_stmt|;
 block|}
 name|Data
@@ -212,36 +205,6 @@ name|InputArg
 operator|=
 name|_InputArg
 block|;   }
-name|InputInfo
-argument_list|(
-argument|PipedJob *_Pipe
-argument_list|,
-argument|types::ID _Type
-argument_list|,
-argument|const char *_BaseInput
-argument_list|)
-operator|:
-name|Kind
-argument_list|(
-name|Pipe
-argument_list|)
-operator|,
-name|Type
-argument_list|(
-name|_Type
-argument_list|)
-operator|,
-name|BaseInput
-argument_list|(
-argument|_BaseInput
-argument_list|)
-block|{
-name|Data
-operator|.
-name|Pipe
-operator|=
-name|_Pipe
-block|;   }
 name|bool
 name|isNothing
 argument_list|()
@@ -273,17 +236,6 @@ return|return
 name|Kind
 operator|==
 name|InputArg
-return|;
-block|}
-name|bool
-name|isPipe
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Kind
-operator|==
-name|Pipe
 return|;
 block|}
 name|types
@@ -351,27 +303,6 @@ operator|.
 name|InputArg
 return|;
 block|}
-name|PipedJob
-operator|&
-name|getPipe
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|isPipe
-argument_list|()
-operator|&&
-literal|"Invalid accessor."
-argument_list|)
-block|;
-return|return
-operator|*
-name|Data
-operator|.
-name|Pipe
-return|;
-block|}
 comment|/// getAsString - Return a string name for this input, for
 comment|/// debugging.
 name|std
@@ -381,15 +312,6 @@ name|getAsString
 argument_list|()
 specifier|const
 block|{
-if|if
-condition|(
-name|isPipe
-argument_list|()
-condition|)
-return|return
-literal|"(pipe)"
-return|;
-elseif|else
 if|if
 condition|(
 name|isFilename

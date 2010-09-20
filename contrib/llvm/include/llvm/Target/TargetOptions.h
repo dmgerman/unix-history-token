@@ -156,19 +156,22 @@ specifier|extern
 name|bool
 name|UnsafeFPMath
 decl_stmt|;
-comment|/// FiniteOnlyFPMath - This returns true when the -enable-finite-only-fp-math
-comment|/// option is specified on the command line. If this returns false (default),
-comment|/// the code generator is not allowed to assume that FP arithmetic arguments
-comment|/// and results are never NaNs or +-Infs.
+comment|/// NoInfsFPMath - This flag is enabled when the
+comment|/// -enable-no-infs-fp-math flag is specified on the command line. When
+comment|/// this flag is off (the default), the code generator is not allowed to
+comment|/// assume the FP arithmetic arguments and results are never +-Infs.
 specifier|extern
 name|bool
-name|FiniteOnlyFPMathOption
+name|NoInfsFPMath
 decl_stmt|;
+comment|/// NoNaNsFPMath - This flag is enabled when the
+comment|/// -enable-no-nans-fp-math flag is specified on the command line. When
+comment|/// this flag is off (the default), the code generator is not allowed to
+comment|/// assume the FP arithmetic arguments and results are never NaNs.
 specifier|extern
 name|bool
-name|FiniteOnlyFPMath
-parameter_list|()
-function_decl|;
+name|NoNaNsFPMath
+decl_stmt|;
 comment|/// HonorSignDependentRoundingFPMath - This returns true when the
 comment|/// -enable-sign-dependent-rounding-fp-math is specified.  If this returns
 comment|/// false (the default), the code generator is allowed to assume that the
@@ -247,8 +250,8 @@ specifier|extern
 name|unsigned
 name|StackAlignment
 decl_stmt|;
-comment|/// RealignStack - This flag indicates, whether stack should be automatically
-comment|/// realigned, if needed.
+comment|/// RealignStack - This flag indicates whether the stack should be
+comment|/// automatically realigned, if needed.
 specifier|extern
 name|bool
 name|RealignStack

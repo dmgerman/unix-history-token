@@ -650,34 +650,6 @@ modifier|*
 name|Node
 parameter_list|)
 function_decl|;
-comment|/// setDbgMetadata - This is just an optimized helper function that is
-comment|/// equivalent to setMetadata("dbg", Node);
-name|void
-name|setDbgMetadata
-parameter_list|(
-name|MDNode
-modifier|*
-name|Node
-parameter_list|)
-function_decl|;
-comment|/// getDbgMetadata - This is just an optimized helper function that is
-comment|/// equivalent to calling getMetadata("dbg").
-name|MDNode
-operator|*
-name|getDbgMetadata
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DbgLoc
-operator|.
-name|getAsMDNode
-argument_list|(
-name|getContext
-argument_list|()
-argument_list|)
-return|;
-block|}
 comment|/// setDebugLoc - Set the debug location information for this instruction.
 name|void
 name|setDebugLoc
@@ -785,7 +757,7 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|void
-name|removeAllMetadata
+name|clearMetadataHashEntries
 parameter_list|()
 function_decl|;
 name|public

@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Analysis/AnalysisContext.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Analysis/CFG.h"
 end_include
 
@@ -113,6 +119,9 @@ name|class
 name|LocationContext
 decl_stmt|;
 name|class
+name|AnalysisContext
+decl_stmt|;
+name|class
 name|FunctionDecl
 decl_stmt|;
 name|class
@@ -157,7 +166,7 @@ name|PostStmtKind
 block|,
 name|MaxPostStmtKind
 init|=
-name|PostLValueKind
+name|CallExitKind
 block|}
 enum|;
 name|private
@@ -537,6 +546,7 @@ argument_list|,
 argument|tag
 argument_list|)
 block|{}
+specifier|const
 name|CFGBlock
 operator|*
 name|getBlock
@@ -544,12 +554,6 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|const_cast
-operator|<
-name|CFGBlock
-operator|*
-operator|>
-operator|(
 name|reinterpret_cast
 operator|<
 specifier|const
@@ -560,9 +564,9 @@ operator|(
 name|getData1
 argument_list|()
 operator|)
-operator|)
 return|;
 block|}
+specifier|const
 name|CFGElement
 name|getFirstElement
 argument_list|()
@@ -591,6 +595,7 @@ name|front
 argument_list|()
 return|;
 block|}
+specifier|const
 name|Stmt
 operator|*
 name|getFirstStmt
@@ -653,6 +658,7 @@ argument_list|,
 argument|L
 argument_list|)
 block|{}
+specifier|const
 name|CFGBlock
 operator|*
 name|getBlock
@@ -660,12 +666,6 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|const_cast
-operator|<
-name|CFGBlock
-operator|*
-operator|>
-operator|(
 name|reinterpret_cast
 operator|<
 specifier|const
@@ -676,9 +676,9 @@ operator|(
 name|getData1
 argument_list|()
 operator|)
-operator|)
 return|;
 block|}
+specifier|const
 name|Stmt
 operator|*
 name|getLastStmt
@@ -708,6 +708,7 @@ name|back
 argument_list|()
 return|;
 block|}
+specifier|const
 name|Stmt
 operator|*
 name|getTerminator
@@ -1622,6 +1623,7 @@ argument_list|,
 argument|L
 argument_list|)
 block|{}
+specifier|const
 name|CFGBlock
 operator|*
 name|getSrc
@@ -1629,12 +1631,6 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|const_cast
-operator|<
-name|CFGBlock
-operator|*
-operator|>
-operator|(
 name|static_cast
 operator|<
 specifier|const
@@ -1645,9 +1641,9 @@ operator|(
 name|getData1
 argument_list|()
 operator|)
-operator|)
 return|;
 block|}
+specifier|const
 name|CFGBlock
 operator|*
 name|getDst
@@ -1655,12 +1651,6 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|const_cast
-operator|<
-name|CFGBlock
-operator|*
-operator|>
-operator|(
 name|static_cast
 operator|<
 specifier|const
@@ -1670,7 +1660,6 @@ operator|>
 operator|(
 name|getData2
 argument_list|()
-operator|)
 operator|)
 return|;
 block|}
@@ -1700,7 +1689,7 @@ name|StmtPoint
 block|{
 name|public
 operator|:
-comment|// CallEnter uses the caller's location context.
+comment|// L is caller's location context. AC is callee's AnalysisContext.
 name|CallEnter
 argument_list|(
 specifier|const
@@ -1709,9 +1698,9 @@ operator|*
 name|S
 argument_list|,
 specifier|const
-name|FunctionDecl
+name|AnalysisContext
 operator|*
-name|fd
+name|AC
 argument_list|,
 specifier|const
 name|LocationContext
@@ -1723,7 +1712,7 @@ name|StmtPoint
 argument_list|(
 argument|S
 argument_list|,
-argument|fd
+argument|AC
 argument_list|,
 argument|CallEnterKind
 argument_list|,
@@ -1752,23 +1741,29 @@ argument_list|()
 operator|)
 return|;
 block|}
-specifier|const
-name|FunctionDecl
+name|AnalysisContext
 operator|*
-name|getCallee
+name|getCalleeContext
 argument_list|()
 specifier|const
 block|{
 return|return
+name|const_cast
+operator|<
+name|AnalysisContext
+operator|*
+operator|>
+operator|(
 name|static_cast
 operator|<
 specifier|const
-name|FunctionDecl
+name|AnalysisContext
 operator|*
 operator|>
 operator|(
 name|getData2
 argument_list|()
+operator|)
 operator|)
 return|;
 block|}

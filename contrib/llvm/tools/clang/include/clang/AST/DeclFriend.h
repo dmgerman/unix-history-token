@@ -222,10 +222,10 @@ name|EmptyShell
 name|Empty
 parameter_list|)
 function_decl|;
-comment|/// If this friend declaration names an (untemplated but
-comment|/// possibly dependent) type, return the type;  otherwise
-comment|/// return null.  This is used only for C++0x's unelaborated
-comment|/// friend type declarations.
+comment|/// If this friend declaration names an (untemplated but possibly
+comment|/// dependent) type, return the type; otherwise return null.  This
+comment|/// is used for elaborated-type-specifiers and, in C++0x, for
+comment|/// arbitrary friend type declarations.
 name|TypeSourceInfo
 operator|*
 name|getFriendType
@@ -244,8 +244,8 @@ operator|(
 operator|)
 return|;
 block|}
-comment|/// If this friend declaration doesn't name an unelaborated
-comment|/// type, return the inner declaration.
+comment|/// If this friend declaration doesn't name a type, return the inner
+comment|/// declaration.
 name|NamedDecl
 operator|*
 name|getFriendDecl
@@ -327,11 +327,11 @@ return|;
 block|}
 name|friend
 name|class
-name|PCHDeclReader
+name|ASTDeclReader
 decl_stmt|;
 name|friend
 name|class
-name|PCHDeclWriter
+name|ASTDeclWriter
 decl_stmt|;
 block|}
 end_decl_stmt

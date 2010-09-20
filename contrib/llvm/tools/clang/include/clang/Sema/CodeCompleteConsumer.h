@@ -62,6 +62,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/AST/Type.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/CanonicalType.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -69,6 +81,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang-c/Index.h"
 end_include
 
 begin_include
@@ -97,10 +115,24 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
+name|class
+name|Decl
+decl_stmt|;
 comment|/// \brief Default priority values for code-completion results based
 comment|/// on their kind.
 enum|enum
 block|{
+comment|/// \brief Priority for the next initialization in a constructor initializer
+comment|/// list.
+name|CCP_NextInitializer
+init|=
+literal|7
+block|,
+comment|/// \brief Priority for a send-to-super completion.
+name|CCP_SuperCompletion
+init|=
+literal|8
+block|,
 comment|/// \brief Priority for a declaration that is in the local scope.
 name|CCP_LocalDeclaration
 init|=
@@ -123,11 +155,6 @@ name|CCP_CodePattern
 init|=
 literal|30
 block|,
-comment|/// \brief Priority for a type.
-name|CCP_Type
-init|=
-literal|40
-block|,
 comment|/// \brief Priority for a non-type declaration.
 name|CCP_Declaration
 init|=
@@ -137,6 +164,11 @@ comment|/// \brief Priority for a constant value (e.g., enumerator).
 name|CCP_Constant
 init|=
 literal|60
+block|,
+comment|/// \brief Priority for a type.
+name|CCP_Type
+init|=
+literal|65
 block|,
 comment|/// \brief Priority for a preprocessor macro.
 name|CCP_Macro
@@ -155,7 +187,7 @@ init|=
 literal|80
 block|}
 enum|;
-comment|/// \brief Priority value deltas that are applied to code-completion results
+comment|/// \brief Priority value deltas that are added to code-completion results
 comment|/// based on the context of the result.
 enum|enum
 block|{
@@ -163,6 +195,30 @@ comment|/// \brief The result is in a base class.
 name|CCD_InBaseClass
 init|=
 literal|2
+block|,
+comment|/// \brief The result is a type match against void.
+comment|///
+comment|/// Since everything converts to "void", we don't give as drastic an
+comment|/// adjustment for matching void.
+name|CCD_VoidMatch
+init|=
+operator|-
+literal|5
+block|,
+comment|/// \brief The result is a C++ non-static member function whose qualifiers
+comment|/// exactly match the object type on which the member function can be called.
+name|CCD_ObjectQualifierMatch
+init|=
+operator|-
+literal|1
+block|,
+comment|/// \brief The selector of the given message exactly matches the selector
+comment|/// of the current method, which might imply that some kind of delegation
+comment|/// is occurring.
+name|CCD_SelectorMatch
+init|=
+operator|-
+literal|3
 block|}
 enum|;
 comment|/// \brief Priority value factors by which we will divide or multiply the
@@ -183,6 +239,83 @@ init|=
 literal|2
 block|}
 enum|;
+comment|/// \brief A simplified classification of types used when determining
+comment|/// "similar" types for code completion.
+enum|enum
+name|SimplifiedTypeClass
+block|{
+name|STC_Arithmetic
+block|,
+name|STC_Array
+block|,
+name|STC_Block
+block|,
+name|STC_Function
+block|,
+name|STC_ObjectiveC
+block|,
+name|STC_Other
+block|,
+name|STC_Pointer
+block|,
+name|STC_Record
+block|,
+name|STC_Void
+block|}
+enum|;
+comment|/// \brief Determine the simplified type class of the given canonical type.
+name|SimplifiedTypeClass
+name|getSimplifiedTypeClass
+parameter_list|(
+name|CanQualType
+name|T
+parameter_list|)
+function_decl|;
+comment|/// \brief Determine the type that this declaration will have if it is used
+comment|/// as a type or in an expression.
+name|QualType
+name|getDeclUsageType
+parameter_list|(
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|NamedDecl
+modifier|*
+name|ND
+parameter_list|)
+function_decl|;
+comment|/// \brief Determine the priority to be given to a macro code completion result
+comment|/// with the given name.
+comment|///
+comment|/// \param MacroName The name of the macro.
+comment|///
+comment|/// \param PreferredTypeIsPointer Whether the preferred type for the context
+comment|/// of this macro is a pointer type.
+name|unsigned
+name|getMacroUsagePriority
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
+name|MacroName
+argument_list|,
+name|bool
+name|PreferredTypeIsPointer
+operator|=
+name|false
+argument_list|)
+decl_stmt|;
+comment|/// \brief Determine the libclang cursor kind associated with the given
+comment|/// declaration.
+name|CXCursorKind
+name|getCursorKindForDecl
+parameter_list|(
+name|Decl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
 name|class
 name|FunctionDecl
 decl_stmt|;
@@ -204,6 +337,207 @@ decl_stmt|;
 name|class
 name|Sema
 decl_stmt|;
+comment|/// \brief The context in which code completion occurred, so that the
+comment|/// code-completion consumer can process the results accordingly.
+name|class
+name|CodeCompletionContext
+block|{
+name|public
+label|:
+enum|enum
+name|Kind
+block|{
+comment|/// \brief An unspecified code-completion context.
+name|CCC_Other
+block|,
+comment|/// \brief Code completion occurred within a "top-level" completion context,
+comment|/// e.g., at namespace or global scope.
+name|CCC_TopLevel
+block|,
+comment|/// \brief Code completion occurred within an Objective-C interface,
+comment|/// protocol, or category interface.
+name|CCC_ObjCInterface
+block|,
+comment|/// \brief Code completion occurred within an Objective-C implementation
+comment|/// or category implementation.
+name|CCC_ObjCImplementation
+block|,
+comment|/// \brief Code completion occurred within the instance variable list of
+comment|/// an Objective-C interface, implementation, or category implementation.
+name|CCC_ObjCIvarList
+block|,
+comment|/// \brief Code completion occurred within a class, struct, or union.
+name|CCC_ClassStructUnion
+block|,
+comment|/// \brief Code completion occurred where a statement (or declaration) is
+comment|/// expected in a function, method, or block.
+name|CCC_Statement
+block|,
+comment|/// \brief Code completion occurred where an expression is expected.
+name|CCC_Expression
+block|,
+comment|/// \brief Code completion occurred where an Objective-C message receiver
+comment|/// is expected.
+name|CCC_ObjCMessageReceiver
+block|,
+comment|/// \brief Code completion occurred on the right-hand side of a member
+comment|/// access expression.
+comment|///
+comment|/// The results of this completion are the members of the type being
+comment|/// accessed. The type itself is available via
+comment|/// \c CodeCompletionContext::getType().
+name|CCC_MemberAccess
+block|,
+comment|/// \brief Code completion occurred after the "enum" keyword, to indicate
+comment|/// an enumeration name.
+name|CCC_EnumTag
+block|,
+comment|/// \brief Code completion occurred after the "union" keyword, to indicate
+comment|/// a union name.
+name|CCC_UnionTag
+block|,
+comment|/// \brief Code completion occurred after the "struct" or "class" keyword,
+comment|/// to indicate a struct or class name.
+name|CCC_ClassOrStructTag
+block|,
+comment|/// \brief Code completion occurred where a protocol name is expected.
+name|CCC_ObjCProtocolName
+block|,
+comment|/// \brief Code completion occurred where a namespace or namespace alias
+comment|/// is expected.
+name|CCC_Namespace
+block|,
+comment|/// \brief Code completion occurred where a type name is expected.
+name|CCC_Type
+block|,
+comment|/// \brief Code completion occurred where a new name is expected.
+name|CCC_Name
+block|,
+comment|/// \brief Code completion occurred where a new name is expected and a
+comment|/// qualified name is permissible.
+name|CCC_PotentiallyQualifiedName
+block|,
+comment|/// \brief Code completion occurred where an macro is being defined.
+name|CCC_MacroName
+block|,
+comment|/// \brief Code completion occurred where a macro name is expected
+comment|/// (without any arguments, in the case of a function-like macro).
+name|CCC_MacroNameUse
+block|,
+comment|/// \brief Code completion occurred within a preprocessor expression.
+name|CCC_PreprocessorExpression
+block|,
+comment|/// \brief Code completion occurred where a preprocessor directive is
+comment|/// expected.
+name|CCC_PreprocessorDirective
+block|,
+comment|/// \brief Code completion occurred in a context where natural language is
+comment|/// expected, e.g., a comment or string literal.
+comment|///
+comment|/// This context usually implies that no completions should be added,
+comment|/// unless they come from an appropriate natural-language dictionary.
+name|CCC_NaturalLanguage
+block|,
+comment|/// \brief Code completion for a selector, as in an @selector expression.
+name|CCC_SelectorName
+block|,
+comment|/// \brief Code completion within a type-qualifier list.
+name|CCC_TypeQualifiers
+block|}
+enum|;
+name|private
+label|:
+name|enum
+name|Kind
+name|Kind
+decl_stmt|;
+comment|/// \brief The type that would prefer to see at this point (e.g., the type
+comment|/// of an initializer or function parameter).
+name|QualType
+name|PreferredType
+decl_stmt|;
+comment|/// \brief The type of the base object in a member access expression.
+name|QualType
+name|BaseType
+decl_stmt|;
+name|public
+label|:
+comment|/// \brief Construct a new code-completion context of the given kind.
+name|CodeCompletionContext
+argument_list|(
+argument|enum Kind Kind
+argument_list|)
+block|:
+name|Kind
+argument_list|(
+argument|Kind
+argument_list|)
+block|{ }
+comment|/// \brief Construct a new code-completion context of the given kind.
+name|CodeCompletionContext
+argument_list|(
+argument|enum Kind Kind
+argument_list|,
+argument|QualType T
+argument_list|)
+block|:
+name|Kind
+argument_list|(
+argument|Kind
+argument_list|)
+block|{
+if|if
+condition|(
+name|Kind
+operator|==
+name|CCC_MemberAccess
+condition|)
+name|BaseType
+operator|=
+name|T
+expr_stmt|;
+else|else
+name|PreferredType
+operator|=
+name|T
+expr_stmt|;
+block|}
+comment|/// \brief Retrieve the kind of code-completion context.
+block|enum
+name|Kind
+name|getKind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+return|;
+block|}
+comment|/// \brief Retrieve the type that this expression would prefer to have, e.g.,
+comment|/// if the expression is a variable initializer or a function argument, the
+comment|/// type of the corresponding variable or function parameter.
+name|QualType
+name|getPreferredType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PreferredType
+return|;
+block|}
+comment|/// \brief Retrieve the type of the base object in a member-access
+comment|/// expression.
+name|QualType
+name|getBaseType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BaseType
+return|;
+block|}
+block|}
+empty_stmt|;
 comment|/// \brief A "string" used to describe how code completion can
 comment|/// be performed for an entity.
 comment|///
@@ -795,12 +1129,21 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|/// \brief Clone this code-completion string.
+comment|///
+comment|/// \param Result If non-NULL, points to an empty code-completion
+comment|/// result that will be given a cloned copy of
+name|CodeCompletionString
+modifier|*
+name|Clone
+argument_list|(
 name|CodeCompletionString
 operator|*
-name|Clone
-argument_list|()
-specifier|const
-expr_stmt|;
+name|Result
+operator|=
+literal|0
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Serialize this code-completion string to the given stream.
 name|void
 name|Serialize
@@ -833,52 +1176,12 @@ parameter_list|)
 function_decl|;
 block|}
 empty_stmt|;
-name|llvm
-operator|::
-name|raw_ostream
-operator|&
-name|operator
-operator|<<
-operator|(
-name|llvm
-operator|::
-name|raw_ostream
-operator|&
-name|OS
-operator|,
-specifier|const
-name|CodeCompletionString
-operator|&
-name|CCS
-operator|)
-expr_stmt|;
-comment|/// \brief Abstract interface for a consumer of code-completion
-comment|/// information.
+comment|/// \brief Captures a result of code completion.
 name|class
-name|CodeCompleteConsumer
+name|CodeCompletionResult
 block|{
-name|protected
-label|:
-comment|/// \brief Whether to include macros in the code-completion results.
-name|bool
-name|IncludeMacros
-decl_stmt|;
-comment|/// \brief Whether to include code patterns (such as for loops) within
-comment|/// the completion results.
-name|bool
-name|IncludeCodePatterns
-decl_stmt|;
-comment|/// \brief Whether the output format for the code-completion consumer is
-comment|/// binary.
-name|bool
-name|OutputIsBinary
-decl_stmt|;
 name|public
 label|:
-comment|/// \brief Captures a result of code completion.
-struct|struct
-name|Result
-block|{
 comment|/// \brief Describes the kind of result generated.
 enum|enum
 name|ResultKind
@@ -934,6 +1237,14 @@ comment|/// \brief The priority of this particular code-completion result.
 name|unsigned
 name|Priority
 decl_stmt|;
+comment|/// \brief The cursor kind that describes this result.
+name|CXCursorKind
+name|CursorKind
+decl_stmt|;
+comment|/// \brief The availability of this result.
+name|CXAvailabilityKind
+name|Availability
+decl_stmt|;
 comment|/// \brief Specifies which parameter (of a function, Objective-C method,
 comment|/// macro, etc.) we should start with when formatting the result.
 name|unsigned
@@ -980,7 +1291,7 @@ modifier|*
 name|Qualifier
 decl_stmt|;
 comment|/// \brief Build a result that refers to a declaration.
-name|Result
+name|CodeCompletionResult
 argument_list|(
 argument|NamedDecl *Declaration
 argument_list|,
@@ -1006,6 +1317,11 @@ name|getPriorityFromDecl
 argument_list|(
 name|Declaration
 argument_list|)
+argument_list|)
+operator|,
+name|Availability
+argument_list|(
+name|CXAvailability_Available
 argument_list|)
 operator|,
 name|StartParameter
@@ -1042,9 +1358,12 @@ name|Qualifier
 argument_list|(
 argument|Qualifier
 argument_list|)
-block|{      }
+block|{
+name|computeCursorKindAndAvailability
+argument_list|()
+block|;   }
 comment|/// \brief Build a result that refers to a keyword or symbol.
-name|Result
+name|CodeCompletionResult
 argument_list|(
 argument|const char *Keyword
 argument_list|,
@@ -1066,6 +1385,11 @@ argument_list|(
 name|Priority
 argument_list|)
 operator|,
+name|Availability
+argument_list|(
+name|CXAvailability_Available
+argument_list|)
+operator|,
 name|StartParameter
 argument_list|(
 literal|0
@@ -1100,9 +1424,12 @@ name|Qualifier
 argument_list|(
 literal|0
 argument_list|)
-block|{ }
+block|{
+name|computeCursorKindAndAvailability
+argument_list|()
+block|;   }
 comment|/// \brief Build a result that refers to a macro.
-name|Result
+name|CodeCompletionResult
 argument_list|(
 argument|IdentifierInfo *Macro
 argument_list|,
@@ -1124,6 +1451,11 @@ argument_list|(
 name|Priority
 argument_list|)
 operator|,
+name|Availability
+argument_list|(
+name|CXAvailability_Available
+argument_list|)
+operator|,
 name|StartParameter
 argument_list|(
 literal|0
@@ -1158,13 +1490,20 @@ name|Qualifier
 argument_list|(
 literal|0
 argument_list|)
-block|{ }
+block|{
+name|computeCursorKindAndAvailability
+argument_list|()
+block|;   }
 comment|/// \brief Build a result that refers to a pattern.
-name|Result
+name|CodeCompletionResult
 argument_list|(
 argument|CodeCompletionString *Pattern
 argument_list|,
 argument|unsigned Priority = CCP_CodePattern
+argument_list|,
+argument|CXCursorKind CursorKind = CXCursor_NotImplemented
+argument_list|,
+argument|CXAvailabilityKind Availability = CXAvailability_Available
 argument_list|)
 operator|:
 name|Kind
@@ -1182,6 +1521,16 @@ argument_list|(
 name|Priority
 argument_list|)
 operator|,
+name|CursorKind
+argument_list|(
+name|CursorKind
+argument_list|)
+operator|,
+name|Availability
+argument_list|(
+name|Availability
+argument_list|)
+operator|,
 name|StartParameter
 argument_list|(
 literal|0
@@ -1216,7 +1565,7 @@ name|Qualifier
 argument_list|(
 literal|0
 argument_list|)
-block|{ }
+block|{    }
 comment|/// \brief Retrieve the declaration stored in this result.
 name|NamedDecl
 operator|*
@@ -1260,6 +1609,12 @@ return|;
 block|}
 comment|/// \brief Create a new code-completion string that describes how to insert
 comment|/// this result into a program.
+comment|///
+comment|/// \param S The semantic analysis that created the result.
+comment|///
+comment|/// \param Result If non-NULL, the already-allocated, empty
+comment|/// code-completion string that will be populated with the
+comment|/// appropriate code completion string for this result.
 name|CodeCompletionString
 modifier|*
 name|CreateCodeCompletionString
@@ -1267,6 +1622,12 @@ parameter_list|(
 name|Sema
 modifier|&
 name|S
+parameter_list|,
+name|CodeCompletionString
+modifier|*
+name|Result
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 name|void
@@ -1283,8 +1644,148 @@ modifier|*
 name|ND
 parameter_list|)
 function_decl|;
+name|private
+label|:
+name|void
+name|computeCursorKindAndAvailability
+parameter_list|()
+function_decl|;
 block|}
-struct|;
+empty_stmt|;
+name|bool
+name|operator
+operator|<
+operator|(
+specifier|const
+name|CodeCompletionResult
+operator|&
+name|X
+operator|,
+specifier|const
+name|CodeCompletionResult
+operator|&
+name|Y
+operator|)
+expr_stmt|;
+specifier|inline
+name|bool
+name|operator
+operator|>
+operator|(
+specifier|const
+name|CodeCompletionResult
+operator|&
+name|X
+operator|,
+specifier|const
+name|CodeCompletionResult
+operator|&
+name|Y
+operator|)
+block|{
+return|return
+name|Y
+operator|<
+name|X
+return|;
+block|}
+specifier|inline
+name|bool
+name|operator
+operator|<=
+operator|(
+specifier|const
+name|CodeCompletionResult
+operator|&
+name|X
+operator|,
+specifier|const
+name|CodeCompletionResult
+operator|&
+name|Y
+operator|)
+block|{
+return|return
+operator|!
+operator|(
+name|Y
+operator|<
+name|X
+operator|)
+return|;
+block|}
+specifier|inline
+name|bool
+name|operator
+operator|>=
+operator|(
+specifier|const
+name|CodeCompletionResult
+operator|&
+name|X
+operator|,
+specifier|const
+name|CodeCompletionResult
+operator|&
+name|Y
+operator|)
+block|{
+return|return
+operator|!
+operator|(
+name|X
+operator|<
+name|Y
+operator|)
+return|;
+block|}
+name|llvm
+operator|::
+name|raw_ostream
+operator|&
+name|operator
+operator|<<
+operator|(
+name|llvm
+operator|::
+name|raw_ostream
+operator|&
+name|OS
+operator|,
+specifier|const
+name|CodeCompletionString
+operator|&
+name|CCS
+operator|)
+expr_stmt|;
+comment|/// \brief Abstract interface for a consumer of code-completion
+comment|/// information.
+name|class
+name|CodeCompleteConsumer
+block|{
+name|protected
+label|:
+comment|/// \brief Whether to include macros in the code-completion results.
+name|bool
+name|IncludeMacros
+decl_stmt|;
+comment|/// \brief Whether to include code patterns (such as for loops) within
+comment|/// the completion results.
+name|bool
+name|IncludeCodePatterns
+decl_stmt|;
+comment|/// \brief Whether to include global (top-level) declarations and names in
+comment|/// the completion results.
+name|bool
+name|IncludeGlobals
+decl_stmt|;
+comment|/// \brief Whether the output format for the code-completion consumer is
+comment|/// binary.
+name|bool
+name|OutputIsBinary
+decl_stmt|;
+name|public
+label|:
 name|class
 name|OverloadCandidate
 block|{
@@ -1461,6 +1962,16 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
+name|IncludeCodePatterns
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|IncludeGlobals
+argument_list|(
+name|true
+argument_list|)
+operator|,
 name|OutputIsBinary
 argument_list|(
 argument|false
@@ -1471,6 +1982,8 @@ argument_list|(
 argument|bool IncludeMacros
 argument_list|,
 argument|bool IncludeCodePatterns
+argument_list|,
+argument|bool IncludeGlobals
 argument_list|,
 argument|bool OutputIsBinary
 argument_list|)
@@ -1483,6 +1996,11 @@ operator|,
 name|IncludeCodePatterns
 argument_list|(
 name|IncludeCodePatterns
+argument_list|)
+operator|,
+name|IncludeGlobals
+argument_list|(
+name|IncludeGlobals
 argument_list|)
 operator|,
 name|OutputIsBinary
@@ -1508,6 +2026,16 @@ specifier|const
 block|{
 return|return
 name|IncludeCodePatterns
+return|;
+block|}
+comment|/// \brief Whether to include global (top-level) declaration results.
+name|bool
+name|includeGlobals
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IncludeGlobals
 return|;
 block|}
 comment|/// \brief Determine whether the output of this consumer is binary.
@@ -1537,7 +2065,10 @@ name|Sema
 modifier|&
 name|S
 parameter_list|,
-name|Result
+name|CodeCompletionContext
+name|Context
+parameter_list|,
+name|CodeCompletionResult
 modifier|*
 name|Results
 parameter_list|,
@@ -1600,6 +2131,8 @@ argument|bool IncludeMacros
 argument_list|,
 argument|bool IncludeCodePatterns
 argument_list|,
+argument|bool IncludeGlobals
+argument_list|,
 argument|llvm::raw_ostream&OS
 argument_list|)
 operator|:
@@ -1608,6 +2141,8 @@ argument_list|(
 name|IncludeMacros
 argument_list|,
 name|IncludeCodePatterns
+argument_list|,
+name|IncludeGlobals
 argument_list|,
 name|false
 argument_list|)
@@ -1624,7 +2159,9 @@ name|ProcessCodeCompleteResults
 argument_list|(
 argument|Sema&S
 argument_list|,
-argument|Result *Results
+argument|CodeCompletionContext Context
+argument_list|,
+argument|CodeCompletionResult *Results
 argument_list|,
 argument|unsigned NumResults
 argument_list|)
@@ -1669,6 +2206,8 @@ argument|bool IncludeMacros
 argument_list|,
 argument|bool IncludeCodePatterns
 argument_list|,
+argument|bool IncludeGlobals
+argument_list|,
 argument|llvm::raw_ostream&OS
 argument_list|)
 operator|:
@@ -1677,6 +2216,8 @@ argument_list|(
 name|IncludeMacros
 argument_list|,
 name|IncludeCodePatterns
+argument_list|,
+name|IncludeGlobals
 argument_list|,
 name|true
 argument_list|)
@@ -1693,7 +2234,9 @@ name|ProcessCodeCompleteResults
 argument_list|(
 argument|Sema&S
 argument_list|,
-argument|Result *Results
+argument|CodeCompletionContext Context
+argument_list|,
+argument|CodeCompletionResult *Results
 argument_list|,
 argument|unsigned NumResults
 argument_list|)

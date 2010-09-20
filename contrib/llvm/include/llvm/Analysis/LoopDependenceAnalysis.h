@@ -375,7 +375,7 @@ argument_list|()
 operator|:
 name|LoopPass
 argument_list|(
-argument|&ID
+argument|ID
 argument_list|)
 block|{}
 comment|/// isDependencePair - Check whether two values can possibly give rise to

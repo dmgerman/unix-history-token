@@ -685,7 +685,7 @@ name|size
 argument_list|()
 return|;
 block|}
-comment|// Used by PCHReader.
+comment|// Used by ASTReader.
 name|void
 name|setHeaderFileInfoForUID
 parameter_list|(

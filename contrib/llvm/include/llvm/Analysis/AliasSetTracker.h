@@ -421,15 +421,18 @@ operator|*
 name|Prev
 block|;
 comment|// Doubly linked list of AliasSets.
+comment|// All calls& invokes in this alias set.
 name|std
 operator|::
 name|vector
 operator|<
-name|CallSite
+name|AssertingVH
+operator|<
+name|Instruction
 operator|>
+expr|>
 name|CallSites
 block|;
-comment|// All calls& invokes in this alias set.
 comment|// RefCount - Number of nodes pointing to this AliasSet plus the number of
 comment|// AliasSets forwarding to it.
 name|unsigned
@@ -529,6 +532,33 @@ argument_list|(
 name|AST
 argument_list|)
 expr_stmt|;
+block|}
+name|CallSite
+name|getCallSite
+argument_list|(
+argument|unsigned i
+argument_list|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|i
+operator|<
+name|CallSites
+operator|.
+name|size
+argument_list|()
+argument_list|)
+block|;
+return|return
+name|CallSite
+argument_list|(
+name|CallSites
+index|[
+name|i
+index|]
+argument_list|)
+return|;
 block|}
 name|public
 operator|:
@@ -1086,9 +1116,6 @@ name|CallSites
 index|[
 name|i
 index|]
-operator|.
-name|getInstruction
-argument_list|()
 operator|==
 name|CS
 operator|.

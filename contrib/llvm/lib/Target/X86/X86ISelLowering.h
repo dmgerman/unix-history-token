@@ -394,6 +394,76 @@ block|,
 comment|// PTEST - Vector bitwise comparisons
 name|PTEST
 block|,
+comment|// TESTP - Vector packed fp sign bitwise comparisons
+name|TESTP
+block|,
+comment|// Several flavors of instructions with vector shuffle behaviors.
+name|PALIGN
+block|,
+name|PSHUFD
+block|,
+name|PSHUFHW
+block|,
+name|PSHUFLW
+block|,
+name|PSHUFHW_LD
+block|,
+name|PSHUFLW_LD
+block|,
+name|SHUFPD
+block|,
+name|SHUFPS
+block|,
+name|MOVDDUP
+block|,
+name|MOVSHDUP
+block|,
+name|MOVSLDUP
+block|,
+name|MOVSHDUP_LD
+block|,
+name|MOVSLDUP_LD
+block|,
+name|MOVLHPS
+block|,
+name|MOVLHPD
+block|,
+name|MOVHLPS
+block|,
+name|MOVHLPD
+block|,
+name|MOVLPS
+block|,
+name|MOVLPD
+block|,
+name|MOVSD
+block|,
+name|MOVSS
+block|,
+name|UNPCKLPS
+block|,
+name|UNPCKLPD
+block|,
+name|UNPCKHPS
+block|,
+name|UNPCKHPD
+block|,
+name|PUNPCKLBW
+block|,
+name|PUNPCKLWD
+block|,
+name|PUNPCKLDQ
+block|,
+name|PUNPCKLQDQ
+block|,
+name|PUNPCKHBW
+block|,
+name|PUNPCKHWD
+block|,
+name|PUNPCKHDQ
+block|,
+name|PUNPCKHQDQ
+block|,
 comment|// VASTART_SAVE_XMM_REGS - Save xmm argument registers to the stack,
 comment|// according to %al. An operator is needed so that this can be expanded
 comment|// with control flow.
@@ -422,6 +492,15 @@ block|,
 name|ATOMNAND64_DAG
 block|,
 name|ATOMSWAP64_DAG
+block|,
+comment|// Memory barrier
+name|MEMBARRIER
+block|,
+name|MFENCE
+block|,
+name|SFENCE
+block|,
+name|LFENCE
 comment|// WARNING: Do not add anything in the end unless you want the node to
 comment|// have memop! In fact, starting from ATOMADD64_DAG all opcodes will be
 comment|// thought as target memory ops!
@@ -1256,6 +1335,15 @@ argument|const Function *F
 argument_list|)
 specifier|const
 block|;
+name|unsigned
+name|getRegPressureLimit
+argument_list|(
+argument|const TargetRegisterClass *RC
+argument_list|,
+argument|MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
 comment|/// getStackCookieLocation - Return true if the target stores stack
 comment|/// protector cookies at a fixed offset in some non-standard address
 comment|/// space, and populates the address space and offset as
@@ -1267,6 +1355,24 @@ argument_list|(
 argument|unsigned&AddressSpace
 argument_list|,
 argument|unsigned&Offset
+argument_list|)
+specifier|const
+block|;
+name|protected
+operator|:
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|TargetRegisterClass
+operator|*
+block|,
+name|uint8_t
+operator|>
+name|findRepresentativeClass
+argument_list|(
+argument|EVT VT
 argument_list|)
 specifier|const
 block|;
@@ -1929,6 +2035,15 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
+name|LowerSHL
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
 name|LowerXALUO
 argument_list|(
 argument|SDValue Op
@@ -1957,6 +2072,25 @@ specifier|const
 block|;
 name|SDValue
 name|LowerREADCYCLECOUNTER
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerMEMBARRIER
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+comment|// Utility functions to help LowerVECTOR_SHUFFLE
+name|SDValue
+name|LowerVECTOR_SHUFFLEv8i16
 argument_list|(
 argument|SDValue Op
 argument_list|,

@@ -186,6 +186,9 @@ name|class
 name|TargetData
 decl_stmt|;
 name|class
+name|TargetMachine
+decl_stmt|;
+name|class
 name|Twine
 decl_stmt|;
 name|class
@@ -759,6 +762,20 @@ argument|unsigned Size
 argument_list|)
 specifier|const
 block|;
+comment|/// EmitLabelPlusOffset - Emit something like ".long Label+Offset"
+comment|/// where the size in bytes of the directive is specified by Size and Label
+comment|/// specifies the label.  This implicitly uses .set if it is available.
+name|void
+name|EmitLabelPlusOffset
+argument_list|(
+argument|const MCSymbol *Label
+argument_list|,
+argument|uint64_t Offset
+argument_list|,
+argument|unsigned Size
+argument_list|)
+specifier|const
+block|;
 comment|//===------------------------------------------------------------------===//
 comment|// Dwarf Emission Helper Routines
 comment|//===------------------------------------------------------------------===//
@@ -863,6 +880,17 @@ argument|const MachineInstr *MI
 argument_list|)
 specifier|const
 block|;
+comment|/// getISAEncoding - Get the value for DW_AT_APPLE_isa. Zero if no isa
+comment|/// encoding specified.
+name|virtual
+name|unsigned
+name|getISAEncoding
+argument_list|()
+block|{
+return|return
+literal|0
+return|;
+block|}
 comment|//===------------------------------------------------------------------===//
 comment|// Dwarf Lowering Routines
 comment|//===------------------------------------------------------------------===//

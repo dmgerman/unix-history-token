@@ -97,7 +97,7 @@ typedef|;
 typedef|typedef
 name|Value
 operator|::
-name|use_const_iterator
+name|const_use_iterator
 name|ChildIteratorType
 expr_stmt|;
 specifier|static

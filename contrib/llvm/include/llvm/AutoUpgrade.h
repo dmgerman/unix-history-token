@@ -67,6 +67,9 @@ name|class
 name|Module
 decl_stmt|;
 name|class
+name|GlobalVariable
+decl_stmt|;
+name|class
 name|Function
 decl_stmt|;
 name|class
@@ -113,6 +116,16 @@ parameter_list|(
 name|Function
 modifier|*
 name|F
+parameter_list|)
+function_decl|;
+comment|/// This checks for global variables which should be upgraded. It returns true
+comment|/// if it requires upgrading.
+name|bool
+name|UpgradeGlobalVariable
+parameter_list|(
+name|GlobalVariable
+modifier|*
+name|GV
 parameter_list|)
 function_decl|;
 comment|/// This function checks debug info intrinsics. If an intrinsic is invalid

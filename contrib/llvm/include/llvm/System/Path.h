@@ -426,6 +426,7 @@ parameter_list|()
 function_decl|;
 comment|/// GetMainExecutable - Return the path to the main executable, given the
 comment|/// value of argv[0] from program startup and the address of main itself.
+comment|/// In extremis, this function may fail and return an empty path.
 specifier|static
 name|Path
 name|GetMainExecutable
@@ -805,9 +806,9 @@ comment|/// This function determines if the path name in the object references a
 comment|/// native Dynamic Library (shared library, shared object) by looking at
 comment|/// the file's magic number. The Path object must reference a file, not a
 comment|/// directory.
-comment|/// @return strue if the file starts with the magid number for a native
+comment|/// @returns true if the file starts with the magic number for a native
 comment|/// shared library.
-comment|/// @brief Determine if the path reference a dynamic library.
+comment|/// @brief Determine if the path references a dynamic library.
 name|bool
 name|isDynamicLibrary
 argument_list|()

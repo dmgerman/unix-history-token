@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringSwitch.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/Triple.h"
 end_include
 
@@ -141,6 +147,24 @@ struct_decl|struct
 name|Info
 struct_decl|;
 block|}
+comment|/// TargetCXXABI - The types of C++ ABIs for which we can generate code.
+enum|enum
+name|TargetCXXABI
+block|{
+comment|/// The generic ("Itanium") C++ ABI, documented at:
+comment|///   http://www.codesourcery.com/public/cxx-abi/
+name|CXXABI_Itanium
+block|,
+comment|/// The ARM C++ ABI, based largely on the Itanium ABI but with
+comment|/// significant differences.
+comment|///    http://infocenter.arm.com
+comment|///                    /help/topic/com.arm.doc.ihi0041c/IHI0041C_cppabi.pdf
+name|CXXABI_ARM
+block|,
+comment|/// The Visual Studio ABI.  Only scattered official documentation exists.
+name|CXXABI_Microsoft
+block|}
+enum|;
 comment|/// TargetInfo - This class exposes information about the current target.
 comment|///
 name|class
@@ -239,11 +263,9 @@ name|RegParmMax
 decl_stmt|,
 name|SSERegParmMax
 decl_stmt|;
-name|std
-operator|::
-name|string
+name|TargetCXXABI
 name|CXXABI
-expr_stmt|;
+decl_stmt|;
 name|unsigned
 name|HasAlignMac68kSupport
 range|:
@@ -1580,9 +1602,7 @@ return|;
 block|}
 comment|/// getCXXABI - Get the C++ ABI in use.
 name|virtual
-name|llvm
-operator|::
-name|StringRef
+name|TargetCXXABI
 name|getCXXABI
 argument_list|()
 specifier|const
@@ -1633,8 +1653,7 @@ return|;
 block|}
 comment|/// setCXXABI - Use this specific C++ ABI.
 comment|///
-comment|/// \return - False on error (invalid ABI name).
-name|virtual
+comment|/// \return - False on error (invalid C++ ABI name).
 name|bool
 name|setCXXABI
 argument_list|(
@@ -1646,22 +1665,89 @@ operator|&
 name|Name
 argument_list|)
 block|{
+specifier|static
+specifier|const
+name|TargetCXXABI
+name|Unknown
+init|=
+name|static_cast
+operator|<
+name|TargetCXXABI
+operator|>
+operator|(
+operator|-
+literal|1
+operator|)
+decl_stmt|;
+name|TargetCXXABI
+name|ABI
+init|=
+name|llvm
+operator|::
+name|StringSwitch
+operator|<
+name|TargetCXXABI
+operator|>
+operator|(
+name|Name
+operator|)
+operator|.
+name|Case
+argument_list|(
+literal|"arm"
+argument_list|,
+name|CXXABI_ARM
+argument_list|)
+operator|.
+name|Case
+argument_list|(
+literal|"itanium"
+argument_list|,
+name|CXXABI_Itanium
+argument_list|)
+operator|.
+name|Case
+argument_list|(
+literal|"microsoft"
+argument_list|,
+name|CXXABI_Microsoft
+argument_list|)
+operator|.
+name|Default
+argument_list|(
+name|Unknown
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
-name|Name
-operator|!=
-literal|"itanium"
-operator|&&
-name|Name
-operator|!=
-literal|"microsoft"
+name|ABI
+operator|==
+name|Unknown
 condition|)
 return|return
 name|false
 return|;
+return|return
+name|setCXXABI
+argument_list|(
+name|ABI
+argument_list|)
+return|;
+block|}
+comment|/// setCXXABI - Set the C++ ABI to be used by this implementation.
+comment|///
+comment|/// \return - False on error (ABI not valid on this target)
+name|virtual
+name|bool
+name|setCXXABI
+parameter_list|(
+name|TargetCXXABI
+name|ABI
+parameter_list|)
+block|{
 name|CXXABI
 operator|=
-name|Name
+name|ABI
 expr_stmt|;
 return|return
 name|true

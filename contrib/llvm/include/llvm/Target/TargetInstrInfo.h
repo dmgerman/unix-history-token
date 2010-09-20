@@ -312,40 +312,6 @@ decl|const
 decl_stmt|;
 name|public
 label|:
-comment|/// isMoveInstr - Return true if the instruction is a register to register
-comment|/// move and return the source and dest operands and their sub-register
-comment|/// indices by reference.
-name|virtual
-name|bool
-name|isMoveInstr
-argument_list|(
-specifier|const
-name|MachineInstr
-operator|&
-name|MI
-argument_list|,
-name|unsigned
-operator|&
-name|SrcReg
-argument_list|,
-name|unsigned
-operator|&
-name|DstReg
-argument_list|,
-name|unsigned
-operator|&
-name|SrcSubIdx
-argument_list|,
-name|unsigned
-operator|&
-name|DstSubIdx
-argument_list|)
-decl|const
-block|{
-return|return
-name|false
-return|;
-block|}
 comment|/// isCoalescableExtInstr - Return true if the instruction is a "coalescable"
 comment|/// extension instruction. That is, it's like a copy where it's legal for the
 comment|/// source to overlap the destination. e.g. X86::MOVSX64rr32. If this returns
@@ -375,99 +341,6 @@ name|SubIdx
 argument_list|)
 decl|const
 block|{
-return|return
-name|false
-return|;
-block|}
-comment|/// isIdentityCopy - Return true if the instruction is a copy (or
-comment|/// extract_subreg, insert_subreg, subreg_to_reg) where the source and
-comment|/// destination registers are the same.
-name|bool
-name|isIdentityCopy
-argument_list|(
-specifier|const
-name|MachineInstr
-operator|&
-name|MI
-argument_list|)
-decl|const
-block|{
-name|unsigned
-name|SrcReg
-decl_stmt|,
-name|DstReg
-decl_stmt|,
-name|SrcSubIdx
-decl_stmt|,
-name|DstSubIdx
-decl_stmt|;
-if|if
-condition|(
-name|isMoveInstr
-argument_list|(
-name|MI
-argument_list|,
-name|SrcReg
-argument_list|,
-name|DstReg
-argument_list|,
-name|SrcSubIdx
-argument_list|,
-name|DstSubIdx
-argument_list|)
-operator|&&
-name|SrcReg
-operator|==
-name|DstReg
-condition|)
-return|return
-name|true
-return|;
-if|if
-condition|(
-operator|(
-name|MI
-operator|.
-name|getOpcode
-argument_list|()
-operator|==
-name|TargetOpcode
-operator|::
-name|INSERT_SUBREG
-operator|||
-name|MI
-operator|.
-name|getOpcode
-argument_list|()
-operator|==
-name|TargetOpcode
-operator|::
-name|SUBREG_TO_REG
-operator|)
-operator|&&
-name|MI
-operator|.
-name|getOperand
-argument_list|(
-literal|0
-argument_list|)
-operator|.
-name|getReg
-argument_list|()
-operator|==
-name|MI
-operator|.
-name|getOperand
-argument_list|(
-literal|2
-argument_list|)
-operator|.
-name|getReg
-argument_list|()
-condition|)
-return|return
-name|true
-return|;
 return|return
 name|false
 return|;
@@ -1831,46 +1704,6 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
-comment|/// GetInstSize - Returns the size of the specified Instruction.
-comment|///
-name|virtual
-name|unsigned
-name|GetInstSizeInBytes
-argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
-argument_list|)
-decl|const
-block|{
-name|assert
-argument_list|(
-literal|0
-operator|&&
-literal|"Target didn't implement TargetInstrInfo::GetInstSize!"
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-comment|/// GetFunctionSizeInBytes - Returns the size of the specified
-comment|/// MachineFunction.
-comment|///
-name|virtual
-name|unsigned
-name|GetFunctionSizeInBytes
-argument_list|(
-specifier|const
-name|MachineFunction
-operator|&
-name|MF
-argument_list|)
-decl|const
-init|=
-literal|0
-decl_stmt|;
 comment|/// Measure the specified inline asm to determine an approximation of its
 comment|/// length.
 name|virtual
@@ -1905,6 +1738,52 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
+comment|/// AnalyzeCompare - For a comparison instruction, return the source register
+comment|/// in SrcReg and the value it compares against in CmpValue. Return true if
+comment|/// the comparison instruction can be analyzed.
+name|virtual
+name|bool
+name|AnalyzeCompare
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|*
+name|MI
+argument_list|,
+name|unsigned
+operator|&
+name|SrcReg
+argument_list|,
+name|int
+operator|&
+name|CmpValue
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// ConvertToSetZeroFlag - Convert the instruction to set the zero flag so
+comment|/// that we can remove a "comparison with zero".
+name|virtual
+name|bool
+name|ConvertToSetZeroFlag
+argument_list|(
+name|MachineInstr
+operator|*
+name|Instr
+argument_list|,
+name|MachineInstr
+operator|*
+name|CmpInstr
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
 block|}
 empty_stmt|;
 comment|/// TargetInstrInfoImpl - This is the default implementation of
@@ -2035,14 +1914,6 @@ argument|const MachineInstr *MI
 argument_list|,
 argument|const MachineBasicBlock *MBB
 argument_list|,
-argument|const MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|unsigned
-name|GetFunctionSizeInBytes
-argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const

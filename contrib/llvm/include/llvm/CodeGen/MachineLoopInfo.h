@@ -260,7 +260,7 @@ argument_list|()
 operator|:
 name|MachineFunctionPass
 argument_list|(
-argument|&ID
+argument|ID
 argument_list|)
 block|{}
 name|LoopInfoBase

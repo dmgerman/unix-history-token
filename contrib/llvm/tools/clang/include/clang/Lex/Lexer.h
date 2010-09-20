@@ -607,6 +607,54 @@ argument_list|,
 argument|const LangOptions&LangOpts
 argument_list|)
 block|;
+comment|/// \brief Given a location any where in a source buffer, find the location
+comment|/// that corresponds to the beginning of the token in which the original
+comment|/// source location lands.
+comment|///
+comment|/// \param Loc
+specifier|static
+name|SourceLocation
+name|GetBeginningOfToken
+argument_list|(
+argument|SourceLocation Loc
+argument_list|,
+argument|const SourceManager&SM
+argument_list|,
+argument|const LangOptions&LangOpts
+argument_list|)
+block|;
+comment|/// \brief Compute the preamble of the given file.
+comment|///
+comment|/// The preamble of a file contains the initial comments, include directives,
+comment|/// and other preprocessor directives that occur before the code in this
+comment|/// particular file actually begins. The preamble of the main source file is
+comment|/// a potential prefix header.
+comment|///
+comment|/// \param Buffer The memory buffer containing the file's contents.
+comment|///
+comment|/// \param MaxLines If non-zero, restrict the length of the preamble
+comment|/// to fewer than this number of lines.
+comment|///
+comment|/// \returns The offset into the file where the preamble ends and the rest
+comment|/// of the file begins along with a boolean value indicating whether
+comment|/// the preamble ends at the beginning of a new line.
+specifier|static
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+block|,
+name|bool
+operator|>
+name|ComputePreamble
+argument_list|(
+argument|const llvm::MemoryBuffer *Buffer
+argument_list|,
+argument|unsigned MaxLines =
+literal|0
+argument_list|)
+block|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Internal implementation interfaces.
 name|private
@@ -1022,6 +1070,16 @@ parameter_list|)
 function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Other lexer functions.
+name|void
+name|SkipBytes
+parameter_list|(
+name|unsigned
+name|Bytes
+parameter_list|,
+name|bool
+name|StartOfLine
+parameter_list|)
+function_decl|;
 comment|// Helper functions to lex the remainder of a token of the specific type.
 name|void
 name|LexIdentifier

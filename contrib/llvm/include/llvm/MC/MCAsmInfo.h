@@ -504,6 +504,17 @@ modifier|*
 name|DwarfSectionOffsetDirective
 decl_stmt|;
 comment|// Defaults to NULL
+comment|/// DwarfUsesAbsoluteLabelForStmtList - True if DW_AT_stmt_list needs
+comment|/// absolute label instead of offset.
+name|bool
+name|DwarfUsesAbsoluteLabelForStmtList
+decl_stmt|;
+comment|// Defaults to true;
+comment|// DwarfUsesLabelOffsetDifference - True if Dwarf2 output can
+comment|// use EmitLabelOffsetDifference.
+name|bool
+name|DwarfUsesLabelOffsetForRanges
+decl_stmt|;
 comment|//===--- CBE Asm Translation Table -----------------------------------===//
 specifier|const
 name|char
@@ -1153,6 +1164,24 @@ specifier|const
 block|{
 return|return
 name|DwarfSectionOffsetDirective
+return|;
+block|}
+name|bool
+name|doesDwarfUsesAbsoluteLabelForStmtList
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DwarfUsesAbsoluteLabelForStmtList
+return|;
+block|}
+name|bool
+name|doesDwarfUsesLabelOffsetForRanges
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DwarfUsesLabelOffsetForRanges
 return|;
 block|}
 specifier|const

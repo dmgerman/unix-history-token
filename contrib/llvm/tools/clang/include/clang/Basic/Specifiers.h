@@ -200,6 +200,103 @@ block|,
 name|AS_none
 block|}
 enum|;
+comment|/// ExprValueKind - The categorization of expression values,
+comment|/// currently following the C++0x scheme.
+enum|enum
+name|ExprValueKind
+block|{
+comment|/// An r-value expression (a gr-value in the C++0x taxonomy)
+comment|/// produces a temporary value.
+name|VK_RValue
+block|,
+comment|/// An l-value expression is a reference to an object with
+comment|/// independent storage.
+name|VK_LValue
+block|,
+comment|/// An x-value expression is a reference to an object with
+comment|/// independent storage but which can be "moved", i.e.
+comment|/// efficiently cannibalized for its resources.
+name|VK_XValue
+block|}
+enum|;
+comment|// \brief Describes the kind of template specialization that a
+comment|// particular template specialization declaration represents.
+enum|enum
+name|TemplateSpecializationKind
+block|{
+comment|/// This template specialization was formed from a template-id but
+comment|/// has not yet been declared, defined, or instantiated.
+name|TSK_Undeclared
+init|=
+literal|0
+block|,
+comment|/// This template specialization was implicitly instantiated from a
+comment|/// template. (C++ [temp.inst]).
+name|TSK_ImplicitInstantiation
+block|,
+comment|/// This template specialization was declared or defined by an
+comment|/// explicit specialization (C++ [temp.expl.spec]) or partial
+comment|/// specialization (C++ [temp.class.spec]).
+name|TSK_ExplicitSpecialization
+block|,
+comment|/// This template specialization was instantiated from a template
+comment|/// due to an explicit instantiation declaration request
+comment|/// (C++0x [temp.explicit]).
+name|TSK_ExplicitInstantiationDeclaration
+block|,
+comment|/// This template specialization was instantiated from a template
+comment|/// due to an explicit instantiation definition request
+comment|/// (C++ [temp.explicit]).
+name|TSK_ExplicitInstantiationDefinition
+block|}
+enum|;
+comment|/// \brief Storage classes.
+enum|enum
+name|StorageClass
+block|{
+comment|// These are legal on both functions and variables.
+name|SC_None
+block|,
+name|SC_Extern
+block|,
+name|SC_Static
+block|,
+name|SC_PrivateExtern
+block|,
+comment|// These are only legal on variables.
+name|SC_Auto
+block|,
+name|SC_Register
+block|}
+enum|;
+comment|/// Checks whether the given storage class is legal for functions.
+specifier|inline
+name|bool
+name|isLegalForFunction
+parameter_list|(
+name|StorageClass
+name|SC
+parameter_list|)
+block|{
+return|return
+name|SC
+operator|<=
+name|SC_PrivateExtern
+return|;
+block|}
+comment|/// Checks whether the given storage class is legal for variables.
+specifier|inline
+name|bool
+name|isLegalForVariable
+parameter_list|(
+name|StorageClass
+name|SC
+parameter_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
 block|}
 end_decl_stmt
 

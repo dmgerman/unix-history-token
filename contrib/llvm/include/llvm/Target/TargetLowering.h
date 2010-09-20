@@ -582,6 +582,106 @@ return|return
 name|RC
 return|;
 block|}
+comment|/// getRepRegClassFor - Return the 'representative' register class for the
+comment|/// specified value type. The 'representative' register class is the largest
+comment|/// legal super-reg register class for the register class of the value type.
+comment|/// For example, on i386 the rep register class for i8, i16, and i32 are GR32;
+comment|/// while the rep register class is GR64 on x86_64.
+name|virtual
+specifier|const
+name|TargetRegisterClass
+modifier|*
+name|getRepRegClassFor
+argument_list|(
+name|EVT
+name|VT
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+name|VT
+operator|.
+name|isSimple
+argument_list|()
+operator|&&
+literal|"getRepRegClassFor called on illegal type!"
+argument_list|)
+expr_stmt|;
+specifier|const
+name|TargetRegisterClass
+modifier|*
+name|RC
+init|=
+name|RepRegClassForVT
+index|[
+name|VT
+operator|.
+name|getSimpleVT
+argument_list|()
+operator|.
+name|SimpleTy
+index|]
+decl_stmt|;
+return|return
+name|RC
+return|;
+block|}
+comment|/// getRepRegClassCostFor - Return the cost of the 'representative' register
+comment|/// class for the specified value type.
+name|virtual
+name|uint8_t
+name|getRepRegClassCostFor
+argument_list|(
+name|EVT
+name|VT
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+name|VT
+operator|.
+name|isSimple
+argument_list|()
+operator|&&
+literal|"getRepRegClassCostFor called on illegal type!"
+argument_list|)
+expr_stmt|;
+return|return
+name|RepRegClassCostForVT
+index|[
+name|VT
+operator|.
+name|getSimpleVT
+argument_list|()
+operator|.
+name|SimpleTy
+index|]
+return|;
+block|}
+comment|/// getRegPressureLimit - Return the register pressure "high water mark" for
+comment|/// the specific register class. The scheduler is in high register pressure
+comment|/// mode (for the specific register class) if it goes over the limit.
+name|virtual
+name|unsigned
+name|getRegPressureLimit
+argument_list|(
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|RC
+argument_list|,
+name|MachineFunction
+operator|&
+name|MF
+argument_list|)
+decl|const
+block|{
+return|return
+literal|0
+return|;
+block|}
 comment|/// isTypeLegal - Return true if the target has native support for the
 comment|/// specified value type.  This means that it has a register that directly
 comment|/// holds it without promotions or expansions.
@@ -677,6 +777,163 @@ operator|::
 name|LAST_VALUETYPE
 index|]
 decl_stmt|;
+name|LegalizeAction
+name|getExtendedTypeAction
+argument_list|(
+name|EVT
+name|VT
+argument_list|)
+decl|const
+block|{
+comment|// Handle non-vector integers.
+if|if
+condition|(
+operator|!
+name|VT
+operator|.
+name|isVector
+argument_list|()
+condition|)
+block|{
+name|assert
+argument_list|(
+name|VT
+operator|.
+name|isInteger
+argument_list|()
+operator|&&
+literal|"Unsupported extended type!"
+argument_list|)
+expr_stmt|;
+name|unsigned
+name|BitSize
+init|=
+name|VT
+operator|.
+name|getSizeInBits
+argument_list|()
+decl_stmt|;
+comment|// First promote to a power-of-two size, then expand if necessary.
+if|if
+condition|(
+name|BitSize
+operator|<
+literal|8
+operator|||
+operator|!
+name|isPowerOf2_32
+argument_list|(
+name|BitSize
+argument_list|)
+condition|)
+return|return
+name|Promote
+return|;
+return|return
+name|Expand
+return|;
+block|}
+comment|// If this is a type smaller than a legal vector type, promote to that
+comment|// type, e.g.<2 x float> -><4 x float>.
+if|if
+condition|(
+name|VT
+operator|.
+name|getVectorElementType
+argument_list|()
+operator|.
+name|isSimple
+argument_list|()
+operator|&&
+name|VT
+operator|.
+name|getVectorNumElements
+argument_list|()
+operator|!=
+literal|1
+condition|)
+block|{
+name|MVT
+name|EltType
+init|=
+name|VT
+operator|.
+name|getVectorElementType
+argument_list|()
+operator|.
+name|getSimpleVT
+argument_list|()
+decl_stmt|;
+name|unsigned
+name|NumElts
+init|=
+name|VT
+operator|.
+name|getVectorNumElements
+argument_list|()
+decl_stmt|;
+while|while
+condition|(
+literal|1
+condition|)
+block|{
+comment|// Round up to the nearest power of 2.
+name|NumElts
+operator|=
+operator|(
+name|unsigned
+operator|)
+name|NextPowerOf2
+argument_list|(
+name|NumElts
+argument_list|)
+expr_stmt|;
+name|MVT
+name|LargerVector
+init|=
+name|MVT
+operator|::
+name|getVectorVT
+argument_list|(
+name|EltType
+argument_list|,
+name|NumElts
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|LargerVector
+operator|==
+name|MVT
+argument_list|()
+condition|)
+break|break;
+comment|// If this the larger type is legal, promote to it.
+if|if
+condition|(
+name|getTypeAction
+argument_list|(
+name|LargerVector
+argument_list|)
+operator|==
+name|Legal
+condition|)
+return|return
+name|Promote
+return|;
+block|}
+block|}
+return|return
+name|VT
+operator|.
+name|isPow2VectorType
+argument_list|()
+condition|?
+name|Expand
+else|:
+name|Promote
+return|;
+block|}
 name|public
 label|:
 name|ValueTypeActionImpl
@@ -700,10 +957,6 @@ block|}
 name|LegalizeAction
 name|getTypeAction
 argument_list|(
-name|LLVMContext
-operator|&
-name|Context
-argument_list|,
 name|EVT
 name|VT
 argument_list|)
@@ -711,81 +964,45 @@ decl|const
 block|{
 if|if
 condition|(
+operator|!
 name|VT
 operator|.
 name|isExtended
 argument_list|()
 condition|)
-block|{
-if|if
-condition|(
-name|VT
-operator|.
-name|isVector
-argument_list|()
-condition|)
-block|{
 return|return
-name|VT
-operator|.
-name|isPow2VectorType
-argument_list|()
-condition|?
-name|Expand
-else|:
-name|Promote
-return|;
-block|}
-if|if
-condition|(
-name|VT
-operator|.
-name|isInteger
-argument_list|()
-condition|)
-comment|// First promote to a power-of-two size, then expand if necessary.
-return|return
-name|VT
-operator|==
-name|VT
-operator|.
-name|getRoundIntegerType
+name|getTypeAction
 argument_list|(
-name|Context
-argument_list|)
-condition|?
-name|Expand
-else|:
-name|Promote
-return|;
-name|assert
-argument_list|(
-literal|0
-operator|&&
-literal|"Unsupported extended type!"
-argument_list|)
-expr_stmt|;
-return|return
-name|Legal
-return|;
-block|}
-name|unsigned
-name|I
-init|=
 name|VT
 operator|.
 name|getSimpleVT
 argument_list|()
-operator|.
-name|SimpleTy
-decl_stmt|;
+argument_list|)
+return|;
+return|return
+name|getExtendedTypeAction
+argument_list|(
+name|VT
+argument_list|)
+return|;
+block|}
+name|LegalizeAction
+name|getTypeAction
+argument_list|(
+name|MVT
+name|VT
+argument_list|)
+decl|const
+block|{
 return|return
 operator|(
 name|LegalizeAction
 operator|)
 name|ValueTypeActions
 index|[
-name|I
+name|VT
+operator|.
+name|SimpleTy
 index|]
 return|;
 block|}
@@ -837,10 +1054,6 @@ comment|/// of smaller integer type (return 'Expand').  'Custom' is not an optio
 name|LegalizeAction
 name|getTypeAction
 argument_list|(
-name|LLVMContext
-operator|&
-name|Context
-argument_list|,
 name|EVT
 name|VT
 argument_list|)
@@ -851,8 +1064,23 @@ name|ValueTypeActions
 operator|.
 name|getTypeAction
 argument_list|(
-name|Context
-argument_list|,
+name|VT
+argument_list|)
+return|;
+block|}
+name|LegalizeAction
+name|getTypeAction
+argument_list|(
+name|MVT
+name|VT
+argument_list|)
+decl|const
+block|{
+return|return
+name|ValueTypeActions
+operator|.
+name|getTypeAction
+argument_list|(
 name|VT
 argument_list|)
 return|;
@@ -918,8 +1146,6 @@ name|assert
 argument_list|(
 name|getTypeAction
 argument_list|(
-name|Context
-argument_list|,
 name|NVT
 argument_list|)
 operator|!=
@@ -1001,8 +1227,6 @@ comment|// Promote to a power of two size, avoiding multi-step promotion.
 return|return
 name|getTypeAction
 argument_list|(
-name|Context
-argument_list|,
 name|NVT
 argument_list|)
 operator|==
@@ -1059,13 +1283,10 @@ operator|/
 literal|2
 argument_list|)
 return|;
-else|else
 comment|// Promote to a power of two size, avoiding multi-step promotion.
 return|return
 name|getTypeAction
 argument_list|(
-name|Context
-argument_list|,
 name|NVT
 argument_list|)
 operator|==
@@ -1132,8 +1353,6 @@ switch|switch
 condition|(
 name|getTypeAction
 argument_list|(
-name|Context
-argument_list|,
 name|VT
 argument_list|)
 condition|)
@@ -3102,6 +3321,18 @@ return|return
 name|false
 return|;
 block|}
+comment|/// getMaximalGlobalOffset - Returns the maximal possible offset which can be
+comment|/// used for loads / stores from the global.
+name|virtual
+name|unsigned
+name|getMaximalGlobalOffset
+argument_list|()
+specifier|const
+block|{
+return|return
+literal|0
+return|;
+block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// TargetLowering Optimization Methods
 comment|//
@@ -3857,6 +4088,25 @@ operator|=
 name|isSynthesizable
 expr_stmt|;
 block|}
+comment|/// findRepresentativeClass - Return the largest legal super-reg register class
+comment|/// of the register class for the specified type and its associated "cost".
+name|virtual
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|TargetRegisterClass
+operator|*
+operator|,
+name|uint8_t
+operator|>
+name|findRepresentativeClass
+argument_list|(
+argument|EVT VT
+argument_list|)
+specifier|const
+expr_stmt|;
 comment|/// computeRegisterProperties - Once all of the register classes are added,
 comment|/// this allows us to compute derived properties we expose.
 name|void
@@ -5728,6 +5978,33 @@ operator|::
 name|LAST_VALUETYPE
 index|]
 decl_stmt|;
+comment|/// RepRegClassForVT - This indicates the "representative" register class to
+comment|/// use for each ValueType the target supports natively. This information is
+comment|/// used by the scheduler to track register pressure. By default, the
+comment|/// representative register class is the largest legal super-reg register
+comment|/// class of the register class of the specified type. e.g. On x86, i8, i16,
+comment|/// and i32's representative class would be GR32.
+specifier|const
+name|TargetRegisterClass
+modifier|*
+name|RepRegClassForVT
+index|[
+name|MVT
+operator|::
+name|LAST_VALUETYPE
+index|]
+decl_stmt|;
+comment|/// RepRegClassCostForVT - This indicates the "cost" of the "representative"
+comment|/// register class for each ValueType. The cost is used by the scheduler to
+comment|/// approximate register pressure.
+name|uint8_t
+name|RepRegClassCostForVT
+index|[
+name|MVT
+operator|::
+name|LAST_VALUETYPE
+index|]
+decl_stmt|;
 comment|/// Synthesizable indicates whether it is OK for the compiler to create new
 comment|/// operations using this type.  All Legal types are Synthesizable except
 comment|/// MMX types on X86.  Non-Legal types are not Synthesizable.
@@ -5976,6 +6253,32 @@ comment|/// This field specifies whether the target can benefit from code placem
 comment|/// optimization.
 name|bool
 name|benefitFromCodePlacementOpt
+decl_stmt|;
+name|private
+label|:
+comment|/// isLegalRC - Return true if the value types that can be represented by the
+comment|/// specified register class are all legal.
+name|bool
+name|isLegalRC
+argument_list|(
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|RC
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// hasLegalSuperRegRegClasses - Return true if the specified register class
+comment|/// has one or more super-reg register classes that are legal.
+name|bool
+name|hasLegalSuperRegRegClasses
+argument_list|(
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|RC
+argument_list|)
+decl|const
 decl_stmt|;
 block|}
 empty_stmt|;

@@ -598,16 +598,6 @@ name|std
 operator|::
 name|vector
 operator|<
-name|SUnit
-operator|*
-operator|>
-name|Defs
-index|[
-name|TargetRegisterInfo
-operator|::
-name|FirstVirtualRegister
-index|]
-block|;
 name|std
 operator|::
 name|vector
@@ -615,12 +605,22 @@ operator|<
 name|SUnit
 operator|*
 operator|>
-name|Uses
-index|[
-name|TargetRegisterInfo
+expr|>
+name|Defs
+block|;
+name|std
 operator|::
-name|FirstVirtualRegister
-index|]
+name|vector
+operator|<
+name|std
+operator|::
+name|vector
+operator|<
+name|SUnit
+operator|*
+operator|>
+expr|>
+name|Uses
 block|;
 comment|/// DbgValueVec - Remember DBG_VALUEs that refer to a particular
 comment|/// register.

@@ -159,7 +159,7 @@ name|false
 return|;
 block|}
 block|}
-name|struct
+name|class
 name|ARMBaseRegisterInfo
 range|:
 name|public
@@ -180,6 +180,12 @@ block|;
 comment|/// FramePtr - ARM physical register used as frame ptr.
 name|unsigned
 name|FramePtr
+block|;
+comment|/// BasePtr - ARM physical register used as a base ptr in complex stack
+comment|/// frames. I.e., when we need a 3rd base, not just SP and FP, due to
+comment|/// variable size stack objects.
+name|unsigned
+name|BasePtr
 block|;
 comment|// Can be only subclassed.
 name|explicit
@@ -337,6 +343,13 @@ argument_list|)
 specifier|const
 block|;
 name|bool
+name|hasBasePointer
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+name|bool
 name|canRealignStack
 argument_list|(
 argument|const MachineFunction&MF
@@ -347,6 +360,57 @@ name|bool
 name|needsStackRealignment
 argument_list|(
 argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+name|int64_t
+name|getFrameIndexInstrOffset
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|int Idx
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|needsFrameBaseReg
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|int64_t Offset
+argument_list|)
+specifier|const
+block|;
+name|void
+name|materializeFrameBaseRegister
+argument_list|(
+argument|MachineBasicBlock::iterator I
+argument_list|,
+argument|unsigned BaseReg
+argument_list|,
+argument|int FrameIdx
+argument_list|,
+argument|int64_t Offset
+argument_list|)
+specifier|const
+block|;
+name|void
+name|resolveFrameIndex
+argument_list|(
+argument|MachineBasicBlock::iterator I
+argument_list|,
+argument|unsigned BaseReg
+argument_list|,
+argument|int64_t Offset
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isFrameOffsetLegal
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|int64_t Offset
 argument_list|)
 specifier|const
 block|;
@@ -387,6 +451,19 @@ argument_list|,
 argument|int FI
 argument_list|,
 argument|unsigned&FrameReg
+argument_list|)
+specifier|const
+block|;
+name|int
+name|ResolveFrameIndexReference
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|,
+argument|int FI
+argument_list|,
+argument|unsigned&FrameReg
+argument_list|,
+argument|int SPAdj
 argument_list|)
 specifier|const
 block|;
@@ -480,9 +557,17 @@ specifier|const
 block|;
 name|virtual
 name|bool
+name|requiresVirtualBaseRegisters
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
 name|hasReservedCallFrame
 argument_list|(
-argument|MachineFunction&MF
+argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
@@ -490,7 +575,7 @@ name|virtual
 name|bool
 name|canSimplifyCallFramePseudos
 argument_list|(
-argument|MachineFunction&MF
+argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
@@ -507,14 +592,12 @@ argument_list|)
 specifier|const
 block|;
 name|virtual
-name|unsigned
+name|void
 name|eliminateFrameIndex
 argument_list|(
 argument|MachineBasicBlock::iterator II
 argument_list|,
 argument|int SPAdj
-argument_list|,
-argument|FrameIndexValue *Value = NULL
 argument_list|,
 argument|RegScavenger *RS = NULL
 argument_list|)

@@ -1843,6 +1843,7 @@ comment|//    IA - Increment after
 comment|//    IB - Increment before
 comment|//    DA - Decrement after
 comment|//    DB - Decrement before
+comment|// For VFP instructions, only the IA and DB modes are valid.
 specifier|static
 specifier|inline
 name|AMSubMode
@@ -1889,14 +1890,6 @@ comment|// addrmode5 := reg +/- imm8*4
 comment|//
 comment|// The first operand is always a Reg.  The second operand encodes the
 comment|// operation in bit 8 and the immediate in bits 0-7.
-comment|//
-comment|// This is also used for FP load/store multiple ops. The second operand
-comment|// encodes the number of registers (or 2 times the number of registers
-comment|// for DPR ops) in bits 0-7. In addition, bits 8-10 encode one of the
-comment|// following two sub-modes:
-comment|//
-comment|//    IA - Increment after
-comment|//    DB - Decrement before
 comment|/// getAM5Opc - This function encodes the addrmode5 opc field.
 specifier|static
 specifier|inline
@@ -1970,73 +1963,6 @@ condition|?
 name|sub
 else|:
 name|add
-return|;
-block|}
-comment|/// getAM5Opc - This function encodes the addrmode5 opc field for VLDM and
-comment|/// VSTM instructions.
-specifier|static
-specifier|inline
-name|unsigned
-name|getAM5Opc
-parameter_list|(
-name|AMSubMode
-name|SubMode
-parameter_list|,
-name|unsigned
-name|char
-name|Offset
-parameter_list|)
-block|{
-name|assert
-argument_list|(
-operator|(
-name|SubMode
-operator|==
-name|ia
-operator|||
-name|SubMode
-operator|==
-name|db
-operator|)
-operator|&&
-literal|"Illegal addressing mode 5 sub-mode!"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-operator|(
-name|int
-operator|)
-name|SubMode
-operator|<<
-literal|8
-operator|)
-operator||
-name|Offset
-return|;
-block|}
-specifier|static
-specifier|inline
-name|AMSubMode
-name|getAM5SubMode
-parameter_list|(
-name|unsigned
-name|AM5Opc
-parameter_list|)
-block|{
-return|return
-call|(
-name|AMSubMode
-call|)
-argument_list|(
-operator|(
-name|AM5Opc
-operator|>>
-literal|8
-operator|)
-operator|&
-literal|0x7
-argument_list|)
 return|;
 block|}
 comment|//===--------------------------------------------------------------------===//

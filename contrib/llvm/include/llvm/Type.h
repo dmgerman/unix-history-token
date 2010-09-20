@@ -190,21 +190,18 @@ comment|///<  9: Functions
 name|StructTyID
 block|,
 comment|///< 10: Structures
-name|UnionTyID
-block|,
-comment|///< 11: Unions
 name|ArrayTyID
 block|,
-comment|///< 12: Arrays
+comment|///< 11: Arrays
 name|PointerTyID
 block|,
-comment|///< 13: Pointers
+comment|///< 12: Pointers
 name|OpaqueTyID
 block|,
-comment|///< 14: Opaque: type with unknown structure
+comment|///< 13: Opaque: type with unknown structure
 name|VectorTyID
 block|,
-comment|///< 15: SIMD 'packed' format, or other vector type
+comment|///< 14: SIMD 'packed' format, or other vector type
 name|NumTypeIDs
 block|,
 comment|// Must remain as last defined ID
@@ -667,19 +664,6 @@ operator|==
 name|StructTyID
 return|;
 block|}
-comment|/// isUnionTy - True if this is an instance of UnionType.
-comment|///
-name|bool
-name|isUnionTy
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ID
-operator|==
-name|UnionTyID
-return|;
-block|}
 comment|/// isArrayTy - True if this is an instance of ArrayType.
 comment|///
 name|bool
@@ -862,10 +846,6 @@ operator|||
 name|ID
 operator|==
 name|ArrayTyID
-operator|||
-name|ID
-operator|==
-name|UnionTyID
 return|;
 block|}
 comment|/// isSized - Return true if it makes sense to take the size of this type.  To
@@ -909,10 +889,6 @@ operator|&&
 name|ID
 operator|!=
 name|VectorTyID
-operator|&&
-name|ID
-operator|!=
-name|UnionTyID
 condition|)
 return|return
 name|false

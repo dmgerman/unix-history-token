@@ -395,7 +395,7 @@ argument|CastKind kind
 argument_list|,
 argument|Expr *op
 argument_list|,
-argument|CXXBaseSpecifierArray BasePath
+argument|unsigned PathSize
 argument_list|,
 argument|TypeSourceInfo *writtenTy
 argument_list|,
@@ -412,7 +412,7 @@ name|kind
 argument_list|,
 name|op
 argument_list|,
-name|BasePath
+name|PathSize
 argument_list|,
 name|writtenTy
 argument_list|)
@@ -428,6 +428,8 @@ argument_list|(
 argument|StmtClass SC
 argument_list|,
 argument|EmptyShell Shell
+argument_list|,
+argument|unsigned PathSize
 argument_list|)
 operator|:
 name|ExplicitCastExpr
@@ -435,6 +437,8 @@ argument_list|(
 argument|SC
 argument_list|,
 argument|Shell
+argument_list|,
+argument|PathSize
 argument_list|)
 block|{ }
 name|public
@@ -548,8 +552,6 @@ operator|:
 name|public
 name|CXXNamedCastExpr
 block|{
-name|public
-operator|:
 name|CXXStaticCastExpr
 argument_list|(
 argument|QualType ty
@@ -558,7 +560,7 @@ argument|CastKind kind
 argument_list|,
 argument|Expr *op
 argument_list|,
-argument|CXXBaseSpecifierArray BasePath
+argument|unsigned pathSize
 argument_list|,
 argument|TypeSourceInfo *writtenTy
 argument_list|,
@@ -575,7 +577,7 @@ argument|kind
 argument_list|,
 argument|op
 argument_list|,
-argument|BasePath
+argument|pathSize
 argument_list|,
 argument|writtenTy
 argument_list|,
@@ -586,6 +588,8 @@ name|explicit
 name|CXXStaticCastExpr
 argument_list|(
 argument|EmptyShell Empty
+argument_list|,
+argument|unsigned PathSize
 argument_list|)
 operator|:
 name|CXXNamedCastExpr
@@ -593,8 +597,42 @@ argument_list|(
 argument|CXXStaticCastExprClass
 argument_list|,
 argument|Empty
+argument_list|,
+argument|PathSize
 argument_list|)
 block|{ }
+name|public
+operator|:
+specifier|static
+name|CXXStaticCastExpr
+operator|*
+name|Create
+argument_list|(
+argument|ASTContext&Context
+argument_list|,
+argument|QualType T
+argument_list|,
+argument|CastKind K
+argument_list|,
+argument|Expr *Op
+argument_list|,
+argument|const CXXCastPath *Path
+argument_list|,
+argument|TypeSourceInfo *Written
+argument_list|,
+argument|SourceLocation L
+argument_list|)
+block|;
+specifier|static
+name|CXXStaticCastExpr
+operator|*
+name|CreateEmpty
+argument_list|(
+argument|ASTContext&Context
+argument_list|,
+argument|unsigned PathSize
+argument_list|)
+block|;
 specifier|static
 name|bool
 name|classof
@@ -636,8 +674,6 @@ operator|:
 name|public
 name|CXXNamedCastExpr
 block|{
-name|public
-operator|:
 name|CXXDynamicCastExpr
 argument_list|(
 argument|QualType ty
@@ -646,7 +682,7 @@ argument|CastKind kind
 argument_list|,
 argument|Expr *op
 argument_list|,
-argument|CXXBaseSpecifierArray BasePath
+argument|unsigned pathSize
 argument_list|,
 argument|TypeSourceInfo *writtenTy
 argument_list|,
@@ -663,7 +699,7 @@ argument|kind
 argument_list|,
 argument|op
 argument_list|,
-argument|BasePath
+argument|pathSize
 argument_list|,
 argument|writtenTy
 argument_list|,
@@ -674,6 +710,8 @@ name|explicit
 name|CXXDynamicCastExpr
 argument_list|(
 argument|EmptyShell Empty
+argument_list|,
+argument|unsigned pathSize
 argument_list|)
 operator|:
 name|CXXNamedCastExpr
@@ -681,8 +719,42 @@ argument_list|(
 argument|CXXDynamicCastExprClass
 argument_list|,
 argument|Empty
+argument_list|,
+argument|pathSize
 argument_list|)
 block|{ }
+name|public
+operator|:
+specifier|static
+name|CXXDynamicCastExpr
+operator|*
+name|Create
+argument_list|(
+argument|ASTContext&Context
+argument_list|,
+argument|QualType T
+argument_list|,
+argument|CastKind Kind
+argument_list|,
+argument|Expr *Op
+argument_list|,
+argument|const CXXCastPath *Path
+argument_list|,
+argument|TypeSourceInfo *Written
+argument_list|,
+argument|SourceLocation L
+argument_list|)
+block|;
+specifier|static
+name|CXXDynamicCastExpr
+operator|*
+name|CreateEmpty
+argument_list|(
+argument|ASTContext&Context
+argument_list|,
+argument|unsigned pathSize
+argument_list|)
+block|;
 specifier|static
 name|bool
 name|classof
@@ -724,8 +796,6 @@ operator|:
 name|public
 name|CXXNamedCastExpr
 block|{
-name|public
-operator|:
 name|CXXReinterpretCastExpr
 argument_list|(
 argument|QualType ty
@@ -734,7 +804,7 @@ argument|CastKind kind
 argument_list|,
 argument|Expr *op
 argument_list|,
-argument|CXXBaseSpecifierArray BasePath
+argument|unsigned pathSize
 argument_list|,
 argument|TypeSourceInfo *writtenTy
 argument_list|,
@@ -751,17 +821,18 @@ argument|kind
 argument_list|,
 argument|op
 argument_list|,
-argument|BasePath
+argument|pathSize
 argument_list|,
 argument|writtenTy
 argument_list|,
 argument|l
 argument_list|)
 block|{}
-name|explicit
 name|CXXReinterpretCastExpr
 argument_list|(
 argument|EmptyShell Empty
+argument_list|,
+argument|unsigned pathSize
 argument_list|)
 operator|:
 name|CXXNamedCastExpr
@@ -769,8 +840,42 @@ argument_list|(
 argument|CXXReinterpretCastExprClass
 argument_list|,
 argument|Empty
+argument_list|,
+argument|pathSize
 argument_list|)
 block|{ }
+name|public
+operator|:
+specifier|static
+name|CXXReinterpretCastExpr
+operator|*
+name|Create
+argument_list|(
+argument|ASTContext&Context
+argument_list|,
+argument|QualType T
+argument_list|,
+argument|CastKind Kind
+argument_list|,
+argument|Expr *Op
+argument_list|,
+argument|const CXXCastPath *Path
+argument_list|,
+argument|TypeSourceInfo *WrittenTy
+argument_list|,
+argument|SourceLocation L
+argument_list|)
+block|;
+specifier|static
+name|CXXReinterpretCastExpr
+operator|*
+name|CreateEmpty
+argument_list|(
+argument|ASTContext&Context
+argument_list|,
+argument|unsigned pathSize
+argument_list|)
+block|;
 specifier|static
 name|bool
 name|classof
@@ -811,8 +916,6 @@ operator|:
 name|public
 name|CXXNamedCastExpr
 block|{
-name|public
-operator|:
 name|CXXConstCastExpr
 argument_list|(
 argument|QualType ty
@@ -834,7 +937,7 @@ argument|CK_NoOp
 argument_list|,
 argument|op
 argument_list|,
-argument|CXXBaseSpecifierArray()
+literal|0
 argument_list|,
 argument|writtenTy
 argument_list|,
@@ -852,8 +955,38 @@ argument_list|(
 argument|CXXConstCastExprClass
 argument_list|,
 argument|Empty
+argument_list|,
+literal|0
 argument_list|)
 block|{ }
+name|public
+operator|:
+specifier|static
+name|CXXConstCastExpr
+operator|*
+name|Create
+argument_list|(
+argument|ASTContext&Context
+argument_list|,
+argument|QualType T
+argument_list|,
+argument|Expr *Op
+argument_list|,
+argument|TypeSourceInfo *WrittenTy
+argument_list|,
+argument|SourceLocation L
+argument_list|)
+block|;
+specifier|static
+name|CXXConstCastExpr
+operator|*
+name|CreateEmpty
+argument_list|(
+name|ASTContext
+operator|&
+name|Context
+argument_list|)
+block|;
 specifier|static
 name|bool
 name|classof
@@ -1978,17 +2111,6 @@ operator|)
 operator|=
 name|SubExpr
 block|;   }
-name|protected
-operator|:
-name|virtual
-name|void
-name|DoDestroy
-argument_list|(
-name|ASTContext
-operator|&
-name|C
-argument_list|)
-block|;
 name|public
 operator|:
 name|CXXDefaultArgExpr
@@ -2212,11 +2334,11 @@ argument_list|()
 block|;
 name|friend
 name|class
-name|PCHStmtReader
+name|ASTStmtReader
 block|;
 name|friend
 name|class
-name|PCHStmtWriter
+name|ASTStmtWriter
 block|; }
 block|;
 comment|/// CXXTemporary - Represents a C++ temporary.
@@ -2242,10 +2364,6 @@ argument_list|(
 argument|destructor
 argument_list|)
 block|{ }
-operator|~
-name|CXXTemporary
-argument_list|()
-block|{ }
 name|public
 operator|:
 specifier|static
@@ -2261,14 +2379,6 @@ specifier|const
 name|CXXDestructorDecl
 operator|*
 name|Destructor
-argument_list|)
-block|;
-name|void
-name|Destroy
-argument_list|(
-name|ASTContext
-operator|&
-name|Ctx
 argument_list|)
 block|;
 specifier|const
@@ -2347,21 +2457,6 @@ argument_list|(
 argument|subexpr
 argument_list|)
 block|{ }
-operator|~
-name|CXXBindTemporaryExpr
-argument_list|()
-block|{ }
-name|protected
-operator|:
-name|virtual
-name|void
-name|DoDestroy
-argument_list|(
-name|ASTContext
-operator|&
-name|C
-argument_list|)
-block|;
 name|public
 operator|:
 name|CXXBindTemporaryExpr
@@ -2529,238 +2624,6 @@ name|child_end
 argument_list|()
 block|; }
 block|;
-comment|/// CXXBindReferenceExpr - Represents binding an expression to a reference.
-comment|/// In the example:
-comment|///
-comment|/// const int&i = 10;
-comment|///
-comment|/// a bind reference expression is inserted to indicate that 10 is bound to
-comment|/// a reference, and that a temporary needs to be created to hold the
-comment|/// value.
-name|class
-name|CXXBindReferenceExpr
-operator|:
-name|public
-name|Expr
-block|{
-comment|// SubExpr - The expression being bound.
-name|Stmt
-operator|*
-name|SubExpr
-block|;
-comment|// ExtendsLifetime - Whether binding this reference extends the lifetime of
-comment|// the expression being bound. FIXME: Add C++ reference.
-name|bool
-name|ExtendsLifetime
-block|;
-comment|/// RequiresTemporaryCopy - Whether binding the subexpression requires a
-comment|/// temporary copy.
-name|bool
-name|RequiresTemporaryCopy
-block|;
-name|CXXBindReferenceExpr
-argument_list|(
-argument|Expr *subexpr
-argument_list|,
-argument|bool ExtendsLifetime
-argument_list|,
-argument|bool RequiresTemporaryCopy
-argument_list|)
-operator|:
-name|Expr
-argument_list|(
-name|CXXBindReferenceExprClass
-argument_list|,
-name|subexpr
-operator|->
-name|getType
-argument_list|()
-argument_list|,
-name|false
-argument_list|,
-name|false
-argument_list|)
-block|,
-name|SubExpr
-argument_list|(
-name|subexpr
-argument_list|)
-block|,
-name|ExtendsLifetime
-argument_list|(
-name|ExtendsLifetime
-argument_list|)
-block|,
-name|RequiresTemporaryCopy
-argument_list|(
-argument|RequiresTemporaryCopy
-argument_list|)
-block|{ }
-operator|~
-name|CXXBindReferenceExpr
-argument_list|()
-block|{ }
-name|protected
-operator|:
-name|virtual
-name|void
-name|DoDestroy
-argument_list|(
-name|ASTContext
-operator|&
-name|C
-argument_list|)
-block|;
-name|public
-operator|:
-specifier|static
-name|CXXBindReferenceExpr
-operator|*
-name|Create
-argument_list|(
-argument|ASTContext&C
-argument_list|,
-argument|Expr *SubExpr
-argument_list|,
-argument|bool ExtendsLifetime
-argument_list|,
-argument|bool RequiresTemporaryCopy
-argument_list|)
-block|;
-name|explicit
-name|CXXBindReferenceExpr
-argument_list|(
-argument|EmptyShell Empty
-argument_list|)
-operator|:
-name|Expr
-argument_list|(
-argument|CXXBindReferenceExprClass
-argument_list|,
-argument|Empty
-argument_list|)
-block|{ }
-specifier|const
-name|Expr
-operator|*
-name|getSubExpr
-argument_list|()
-specifier|const
-block|{
-return|return
-name|cast
-operator|<
-name|Expr
-operator|>
-operator|(
-name|SubExpr
-operator|)
-return|;
-block|}
-name|Expr
-operator|*
-name|getSubExpr
-argument_list|()
-block|{
-return|return
-name|cast
-operator|<
-name|Expr
-operator|>
-operator|(
-name|SubExpr
-operator|)
-return|;
-block|}
-name|void
-name|setSubExpr
-argument_list|(
-argument|Expr *E
-argument_list|)
-block|{
-name|SubExpr
-operator|=
-name|E
-block|; }
-name|virtual
-name|SourceRange
-name|getSourceRange
-argument_list|()
-specifier|const
-block|{
-return|return
-name|SubExpr
-operator|->
-name|getSourceRange
-argument_list|()
-return|;
-block|}
-comment|/// requiresTemporaryCopy - Whether binding the subexpression requires a
-comment|/// temporary copy.
-name|bool
-name|requiresTemporaryCopy
-argument_list|()
-specifier|const
-block|{
-return|return
-name|RequiresTemporaryCopy
-return|;
-block|}
-comment|// extendsLifetime - Whether binding this reference extends the lifetime of
-comment|// the expression being bound. FIXME: Add C++ reference.
-name|bool
-name|extendsLifetime
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ExtendsLifetime
-return|;
-block|}
-comment|// Implement isa/cast/dyncast/etc.
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const Stmt *T
-argument_list|)
-block|{
-return|return
-name|T
-operator|->
-name|getStmtClass
-argument_list|()
-operator|==
-name|CXXBindReferenceExprClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const CXXBindReferenceExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-comment|// Iterators
-name|virtual
-name|child_iterator
-name|child_begin
-argument_list|()
-block|;
-name|virtual
-name|child_iterator
-name|child_end
-argument_list|()
-block|;
-name|friend
-name|class
-name|PCHStmtReader
-block|; }
-block|;
 comment|/// CXXConstructExpr - Represents a call to a C++ constructor.
 name|class
 name|CXXConstructExpr
@@ -2837,10 +2700,6 @@ argument_list|,
 argument|ConstructionKind ConstructKind = CK_Complete
 argument_list|)
 block|;
-operator|~
-name|CXXConstructExpr
-argument_list|()
-block|{ }
 comment|/// \brief Construct an empty C++ construction expression.
 name|CXXConstructExpr
 argument_list|(
@@ -2886,15 +2745,6 @@ argument_list|(
 literal|0
 argument_list|)
 block|{ }
-name|virtual
-name|void
-name|DoDestroy
-argument_list|(
-name|ASTContext
-operator|&
-name|C
-argument_list|)
-block|;
 name|public
 operator|:
 comment|/// \brief Construct an empty C++ construction expression.
@@ -3284,7 +3134,7 @@ argument_list|()
 block|;
 name|friend
 name|class
-name|PCHStmtReader
+name|ASTStmtReader
 block|; }
 block|;
 comment|/// CXXFunctionalCastExpr - Represents an explicit C++ type conversion
@@ -3302,8 +3152,6 @@ block|;
 name|SourceLocation
 name|RParenLoc
 block|;
-name|public
-operator|:
 name|CXXFunctionalCastExpr
 argument_list|(
 argument|QualType ty
@@ -3316,7 +3164,7 @@ argument|CastKind kind
 argument_list|,
 argument|Expr *castExpr
 argument_list|,
-argument|CXXBaseSpecifierArray BasePath
+argument|unsigned pathSize
 argument_list|,
 argument|SourceLocation rParenLoc
 argument_list|)
@@ -3331,7 +3179,7 @@ name|kind
 argument_list|,
 name|castExpr
 argument_list|,
-name|BasePath
+name|pathSize
 argument_list|,
 name|writtenTy
 argument_list|)
@@ -3350,6 +3198,8 @@ name|explicit
 name|CXXFunctionalCastExpr
 argument_list|(
 argument|EmptyShell Shell
+argument_list|,
+argument|unsigned PathSize
 argument_list|)
 operator|:
 name|ExplicitCastExpr
@@ -3357,8 +3207,44 @@ argument_list|(
 argument|CXXFunctionalCastExprClass
 argument_list|,
 argument|Shell
+argument_list|,
+argument|PathSize
 argument_list|)
 block|{ }
+name|public
+operator|:
+specifier|static
+name|CXXFunctionalCastExpr
+operator|*
+name|Create
+argument_list|(
+argument|ASTContext&Context
+argument_list|,
+argument|QualType T
+argument_list|,
+argument|TypeSourceInfo *Written
+argument_list|,
+argument|SourceLocation TyBeginLoc
+argument_list|,
+argument|CastKind Kind
+argument_list|,
+argument|Expr *Op
+argument_list|,
+argument|const CXXCastPath *Path
+argument_list|,
+argument|SourceLocation RPLoc
+argument_list|)
+block|;
+specifier|static
+name|CXXFunctionalCastExpr
+operator|*
+name|CreateEmpty
+argument_list|(
+argument|ASTContext&Context
+argument_list|,
+argument|unsigned PathSize
+argument_list|)
+block|;
 name|SourceLocation
 name|getTypeBeginLoc
 argument_list|()
@@ -3502,10 +3388,6 @@ argument_list|,
 argument|Empty
 argument_list|)
 block|{ }
-operator|~
-name|CXXTemporaryObjectExpr
-argument_list|()
-block|{ }
 name|SourceLocation
 name|getTypeBeginLoc
 argument_list|()
@@ -3568,7 +3450,7 @@ return|;
 block|}
 name|friend
 name|class
-name|PCHStmtReader
+name|ASTStmtReader
 block|; }
 block|;
 comment|/// CXXScalarValueInitExpr - [C++ 5.2.3p2]
@@ -3821,7 +3703,7 @@ name|EndLoc
 block|;
 name|friend
 name|class
-name|PCHStmtReader
+name|ASTStmtReader
 block|;
 name|public
 operator|:
@@ -3886,15 +3768,6 @@ argument_list|,
 argument|unsigned numPlaceArgs
 argument_list|,
 argument|unsigned numConsArgs
-argument_list|)
-block|;
-name|virtual
-name|void
-name|DoDestroy
-argument_list|(
-name|ASTContext
-operator|&
-name|C
 argument_list|)
 block|;
 name|QualType
@@ -5645,7 +5518,7 @@ argument_list|()
 block|;
 name|friend
 name|class
-name|PCHStmtReader
+name|ASTStmtReader
 block|; }
 block|;
 comment|/// \brief A reference to an overloaded function set, either an
@@ -5668,8 +5541,8 @@ name|unsigned
 name|NumResults
 block|;
 comment|/// The common name of these declarations.
-name|DeclarationName
-name|Name
+name|DeclarationNameInfo
+name|NameInfo
 block|;
 comment|/// The scope specifier, if any.
 name|NestedNameSpecifier
@@ -5679,10 +5552,6 @@ block|;
 comment|/// The source range of the scope specifier.
 name|SourceRange
 name|QualifierRange
-block|;
-comment|/// The location of the name.
-name|SourceLocation
-name|NameLoc
 block|;
 name|protected
 operator|:
@@ -5704,9 +5573,7 @@ argument|NestedNameSpecifier *Qualifier
 argument_list|,
 argument|SourceRange QRange
 argument_list|,
-argument|DeclarationName Name
-argument_list|,
-argument|SourceLocation NameLoc
+argument|const DeclarationNameInfo&NameInfo
 argument_list|,
 argument|bool HasTemplateArgs
 argument_list|,
@@ -5763,22 +5630,27 @@ argument|UnresolvedSetIterator End
 argument_list|,
 argument|const TemplateArgumentListInfo *Args
 argument_list|)
+block|;    struct
+name|FindResult
+block|{
+name|OverloadExpr
+operator|*
+name|Expression
+block|;
+name|bool
+name|IsAddressOfOperand
+block|;
+name|bool
+name|HasFormOfMemberPointer
+block|;   }
 block|;
 comment|/// Finds the overloaded expression in the given expression of
 comment|/// OverloadTy.
 comment|///
-comment|/// \return the expression (which must be there) and true if it is
-comment|/// within an address-of operator.
+comment|/// \return the expression (which must be there) and true if it has
+comment|/// the particular form of a member pointer expression
 specifier|static
-name|llvm
-operator|::
-name|PointerIntPair
-operator|<
-name|OverloadExpr
-operator|*
-block|,
-literal|1
-operator|>
+name|FindResult
 name|find
 argument_list|(
 argument|Expr *E
@@ -5799,10 +5671,8 @@ name|Overload
 argument_list|)
 argument_list|)
 block|;
-name|bool
-name|op
-operator|=
-name|false
+name|FindResult
+name|Result
 block|;
 name|E
 operator|=
@@ -5821,10 +5691,23 @@ operator|(
 name|E
 operator|)
 condition|)
-name|op
-operator|=
-name|true
-operator|,
+block|{
+name|assert
+argument_list|(
+name|cast
+operator|<
+name|UnaryOperator
+operator|>
+operator|(
+name|E
+operator|)
+operator|->
+name|getOpcode
+argument_list|()
+operator|==
+name|UO_AddrOf
+argument_list|)
+expr_stmt|;
 name|E
 operator|=
 name|cast
@@ -5837,21 +5720,68 @@ operator|)
 operator|->
 name|getSubExpr
 argument_list|()
+expr_stmt|;
+name|OverloadExpr
+modifier|*
+name|Ovl
+init|=
+name|cast
+operator|<
+name|OverloadExpr
+operator|>
+operator|(
+name|E
 operator|->
 name|IgnoreParens
 argument_list|()
-expr_stmt|;
-return|return
-name|llvm
-operator|::
-name|PointerIntPair
-operator|<
-name|OverloadExpr
-operator|*
-operator|,
-literal|1
-operator|>
+operator|)
+decl_stmt|;
+name|Result
+operator|.
+name|HasFormOfMemberPointer
+operator|=
 operator|(
+name|E
+operator|==
+name|Ovl
+operator|&&
+name|Ovl
+operator|->
+name|getQualifier
+argument_list|()
+operator|)
+expr_stmt|;
+name|Result
+operator|.
+name|IsAddressOfOperand
+operator|=
+name|true
+expr_stmt|;
+name|Result
+operator|.
+name|Expression
+operator|=
+name|Ovl
+expr_stmt|;
+block|}
+else|else
+block|{
+name|Result
+operator|.
+name|HasFormOfMemberPointer
+operator|=
+name|false
+expr_stmt|;
+name|Result
+operator|.
+name|IsAddressOfOperand
+operator|=
+name|false
+expr_stmt|;
+name|Result
+operator|.
+name|Expression
+operator|=
 name|cast
 operator|<
 name|OverloadExpr
@@ -5859,9 +5789,10 @@ operator|>
 operator|(
 name|E
 operator|)
-expr|,
-name|op
-operator|)
+expr_stmt|;
+block|}
+return|return
+name|Result
 return|;
 block|}
 comment|/// Gets the naming class of this lookup, if any.
@@ -5923,6 +5854,28 @@ return|return
 name|NumResults
 return|;
 block|}
+comment|/// Gets the full name info.
+specifier|const
+name|DeclarationNameInfo
+operator|&
+name|getNameInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NameInfo
+return|;
+block|}
+name|void
+name|setNameInfo
+argument_list|(
+argument|const DeclarationNameInfo&N
+argument_list|)
+block|{
+name|NameInfo
+operator|=
+name|N
+block|; }
 comment|/// Gets the name looked up.
 name|DeclarationName
 name|getName
@@ -5930,7 +5883,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Name
+name|NameInfo
+operator|.
+name|getName
+argument_list|()
 return|;
 block|}
 name|void
@@ -5939,9 +5895,12 @@ argument_list|(
 argument|DeclarationName N
 argument_list|)
 block|{
-name|Name
-operator|=
+name|NameInfo
+operator|.
+name|setName
+argument_list|(
 name|N
+argument_list|)
 block|; }
 comment|/// Gets the location of the name.
 name|SourceLocation
@@ -5950,7 +5909,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|NameLoc
+name|NameInfo
+operator|.
+name|getLoc
+argument_list|()
 return|;
 block|}
 name|void
@@ -5959,9 +5921,12 @@ argument_list|(
 argument|SourceLocation Loc
 argument_list|)
 block|{
-name|NameLoc
-operator|=
+name|NameInfo
+operator|.
+name|setLoc
+argument_list|(
 name|Loc
+argument_list|)
 block|; }
 comment|/// Fetches the nested-name qualifier, if one was given.
 name|NestedNameSpecifier
@@ -6042,6 +6007,10 @@ name|getExplicitTemplateArgs
 argument_list|()
 return|;
 block|}
+comment|/// \brief Retrieves the optional explicit template arguments.
+comment|/// This points to the same data as getExplicitTemplateArgs(), but
+comment|/// returns null if there are no explicit template arguments.
+specifier|const
 name|ExplicitTemplateArgumentList
 operator|*
 name|getOptionalExplicitTemplateArgs
@@ -6049,27 +6018,25 @@ argument_list|()
 block|{
 if|if
 condition|(
+operator|!
 name|hasExplicitTemplateArgs
 argument_list|()
 condition|)
+return|return
+literal|0
+return|;
 return|return
 operator|&
 name|getExplicitTemplateArgs
 argument_list|()
 return|;
-return|return
-literal|0
-return|;
 block|}
 specifier|static
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|Stmt
-modifier|*
-name|T
-parameter_list|)
+argument_list|(
+argument|const Stmt *T
+argument_list|)
 block|{
 return|return
 name|T
@@ -6090,67 +6057,29 @@ block|}
 specifier|static
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|OverloadExpr
-modifier|*
-parameter_list|)
+argument_list|(
+argument|const OverloadExpr *
+argument_list|)
 block|{
 return|return
 name|true
 return|;
 block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
+expr|}
+block|;
 comment|/// \brief A reference to a name which we were able to look up during
-end_comment
-
-begin_comment
 comment|/// parsing but could not resolve to a specific declaration.  This
-end_comment
-
-begin_comment
 comment|/// arises in several ways:
-end_comment
-
-begin_comment
 comment|///   * we might be waiting for argument-dependent lookup
-end_comment
-
-begin_comment
 comment|///   * the name might resolve to an overloaded function
-end_comment
-
-begin_comment
 comment|/// and eventually:
-end_comment
-
-begin_comment
 comment|///   * the lookup might have included a function template
-end_comment
-
-begin_comment
 comment|/// These never include UnresolvedUsingValueDecls, which are always
-end_comment
-
-begin_comment
 comment|/// class members and therefore appear only in
-end_comment
-
-begin_comment
 comment|/// UnresolvedMemberLookupExprs.
-end_comment
-
-begin_decl_stmt
 name|class
 name|UnresolvedLookupExpr
-range|:
+operator|:
 name|public
 name|OverloadExpr
 block|{
@@ -6188,9 +6117,7 @@ argument|NestedNameSpecifier *Qualifier
 argument_list|,
 argument|SourceRange QRange
 argument_list|,
-argument|DeclarationName Name
-argument_list|,
-argument|SourceLocation NameLoc
+argument|const DeclarationNameInfo&NameInfo
 argument_list|,
 argument|bool RequiresADL
 argument_list|,
@@ -6217,9 +6144,7 @@ name|Qualifier
 argument_list|,
 name|QRange
 argument_list|,
-name|Name
-argument_list|,
-name|NameLoc
+name|NameInfo
 argument_list|,
 name|HasTemplateArgs
 argument_list|,
@@ -6287,9 +6212,7 @@ argument|NestedNameSpecifier *Qualifier
 argument_list|,
 argument|SourceRange QualifierRange
 argument_list|,
-argument|DeclarationName Name
-argument_list|,
-argument|SourceLocation NameLoc
+argument|const DeclarationNameInfo&NameInfo
 argument_list|,
 argument|bool ADL
 argument_list|,
@@ -6327,9 +6250,7 @@ name|Qualifier
 argument_list|,
 name|QualifierRange
 argument_list|,
-name|Name
-argument_list|,
-name|NameLoc
+name|NameInfo
 argument_list|,
 name|ADL
 argument_list|,
@@ -6358,9 +6279,7 @@ argument|NestedNameSpecifier *Qualifier
 argument_list|,
 argument|SourceRange QualifierRange
 argument_list|,
-argument|DeclarationName Name
-argument_list|,
-argument|SourceLocation NameLoc
+argument|const DeclarationNameInfo&NameInfo
 argument_list|,
 argument|bool ADL
 argument_list|,
@@ -6502,6 +6421,30 @@ literal|1
 operator|)
 return|;
 block|}
+comment|/// \brief Retrieves the optional explicit template arguments.
+comment|/// This points to the same data as getExplicitTemplateArgs(), but
+comment|/// returns null if there are no explicit template arguments.
+specifier|const
+name|ExplicitTemplateArgumentList
+operator|*
+name|getOptionalExplicitTemplateArgs
+argument_list|()
+block|{
+if|if
+condition|(
+operator|!
+name|hasExplicitTemplateArgs
+argument_list|()
+condition|)
+return|return
+literal|0
+return|;
+return|return
+operator|&
+name|getExplicitTemplateArgs
+argument_list|()
+return|;
+block|}
 comment|/// \brief Copies the template arguments (if present) into the given
 comment|/// structure.
 name|void
@@ -6579,7 +6522,10 @@ block|{
 name|SourceRange
 name|Range
 argument_list|(
-name|getNameLoc
+name|getNameInfo
+argument_list|()
+operator|.
+name|getSourceRange
 argument_list|()
 argument_list|)
 block|;
@@ -6612,16 +6558,14 @@ name|getRAngleLoc
 argument_list|()
 argument_list|)
 expr_stmt|;
-end_decl_stmt
-
-begin_return
 return|return
 name|Range
 return|;
-end_return
+block|}
+end_decl_stmt
 
 begin_function_decl
-unit|}    virtual
+name|virtual
 name|StmtIterator
 name|child_begin
 parameter_list|()
@@ -6739,12 +6683,8 @@ name|public
 name|Expr
 block|{
 comment|/// The name of the entity we will be referencing.
-name|DeclarationName
-name|Name
-block|;
-comment|/// Location of the name of the declaration we're referencing.
-name|SourceLocation
-name|Loc
+name|DeclarationNameInfo
+name|NameInfo
 block|;
 comment|/// QualifierRange - The source range that covers the
 comment|/// nested-name-specifier.
@@ -6769,9 +6709,7 @@ argument|NestedNameSpecifier *Qualifier
 argument_list|,
 argument|SourceRange QualifierRange
 argument_list|,
-argument|DeclarationName Name
-argument_list|,
-argument|SourceLocation NameLoc
+argument|const DeclarationNameInfo&NameInfo
 argument_list|,
 argument|bool HasExplicitTemplateArgs
 argument_list|)
@@ -6787,14 +6725,9 @@ argument_list|,
 name|true
 argument_list|)
 block|,
-name|Name
+name|NameInfo
 argument_list|(
-name|Name
-argument_list|)
-block|,
-name|Loc
-argument_list|(
-name|NameLoc
+name|NameInfo
 argument_list|)
 block|,
 name|QualifierRange
@@ -6825,9 +6758,7 @@ argument|NestedNameSpecifier *Qualifier
 argument_list|,
 argument|SourceRange QualifierRange
 argument_list|,
-argument|DeclarationName Name
-argument_list|,
-argument|SourceLocation NameLoc
+argument|const DeclarationNameInfo&NameInfo
 argument_list|,
 argument|const TemplateArgumentListInfo *TemplateArgs =
 literal|0
@@ -6844,13 +6775,38 @@ argument|unsigned NumTemplateArgs
 argument_list|)
 block|;
 comment|/// \brief Retrieve the name that this expression refers to.
+specifier|const
+name|DeclarationNameInfo
+operator|&
+name|getNameInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NameInfo
+return|;
+block|}
+name|void
+name|setNameInfo
+argument_list|(
+argument|const DeclarationNameInfo&N
+argument_list|)
+block|{
+name|NameInfo
+operator|=
+name|N
+block|; }
+comment|/// \brief Retrieve the name that this expression refers to.
 name|DeclarationName
 name|getDeclName
 argument_list|()
 specifier|const
 block|{
 return|return
-name|Name
+name|NameInfo
+operator|.
+name|getName
+argument_list|()
 return|;
 block|}
 name|void
@@ -6859,9 +6815,12 @@ argument_list|(
 argument|DeclarationName N
 argument_list|)
 block|{
-name|Name
-operator|=
+name|NameInfo
+operator|.
+name|setName
+argument_list|(
 name|N
+argument_list|)
 block|; }
 comment|/// \brief Retrieve the location of the name within the expression.
 name|SourceLocation
@@ -6870,7 +6829,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Loc
+name|NameInfo
+operator|.
+name|getLoc
+argument_list|()
 return|;
 block|}
 name|void
@@ -6879,9 +6841,12 @@ argument_list|(
 argument|SourceLocation L
 argument_list|)
 block|{
-name|Loc
-operator|=
+name|NameInfo
+operator|.
+name|setLoc
+argument_list|(
 name|L
+argument_list|)
 block|; }
 comment|/// \brief Retrieve the source range of the nested-name-specifier.
 name|SourceRange
@@ -6992,14 +6957,49 @@ literal|1
 operator|)
 return|;
 block|}
+comment|/// \brief Retrieves the optional explicit template arguments.
+comment|/// This points to the same data as getExplicitTemplateArgs(), but
+comment|/// returns null if there are no explicit template arguments.
+specifier|const
+name|ExplicitTemplateArgumentList
+operator|*
+name|getOptionalExplicitTemplateArgs
+argument_list|()
+block|{
+if|if
+condition|(
+operator|!
+name|hasExplicitTemplateArgs
+argument_list|()
+condition|)
+return|return
+literal|0
+return|;
+return|return
+operator|&
+name|getExplicitTemplateArgs
+argument_list|()
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Copies the template arguments (if present) into the given
+end_comment
+
+begin_comment
 comment|/// structure.
+end_comment
+
+begin_decl_stmt
 name|void
 name|copyTemplateArgumentsInto
 argument_list|(
-argument|TemplateArgumentListInfo&List
+name|TemplateArgumentListInfo
+operator|&
+name|List
 argument_list|)
-specifier|const
+decl|const
 block|{
 name|getExplicitTemplateArgs
 argument_list|()
@@ -7008,7 +7008,11 @@ name|copyInto
 argument_list|(
 name|List
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_expr_stmt
 name|SourceLocation
 name|getLAngleLoc
 argument_list|()
@@ -7021,6 +7025,9 @@ operator|.
 name|LAngleLoc
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|SourceLocation
 name|getRAngleLoc
 argument_list|()
@@ -7033,6 +7040,9 @@ operator|.
 name|RAngleLoc
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|TemplateArgumentLoc
 specifier|const
 operator|*
@@ -7048,6 +7058,9 @@ name|getTemplateArgs
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|unsigned
 name|getNumTemplateArgs
 argument_list|()
@@ -7060,6 +7073,9 @@ operator|.
 name|NumTemplateArgs
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|virtual
 name|SourceRange
 name|getSourceRange
@@ -7091,14 +7107,16 @@ name|getRAngleLoc
 argument_list|()
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 name|Range
 return|;
-block|}
-end_decl_stmt
+end_return
 
 begin_function
-specifier|static
+unit|}    static
 name|bool
 name|classof
 parameter_list|(
@@ -7180,21 +7198,6 @@ argument_list|,
 argument|CXXTemporary **Temps
 argument_list|,
 argument|unsigned NumTemps
-argument_list|)
-block|;
-operator|~
-name|CXXExprWithTemporaries
-argument_list|()
-block|;
-name|protected
-operator|:
-name|virtual
-name|void
-name|DoDestroy
-argument_list|(
-name|ASTContext
-operator|&
-name|C
 argument_list|)
 block|;
 name|public
@@ -8043,12 +8046,8 @@ block|;
 comment|/// \brief The member to which this member expression refers, which
 comment|/// can be name, overloaded operator, or destructor.
 comment|/// FIXME: could also be a template-id
-name|DeclarationName
-name|Member
-block|;
-comment|/// \brief The location of the member name.
-name|SourceLocation
-name|MemberLoc
+name|DeclarationNameInfo
+name|MemberNameInfo
 block|;
 name|CXXDependentScopeMemberExpr
 argument_list|(
@@ -8068,9 +8067,7 @@ argument|SourceRange QualifierRange
 argument_list|,
 argument|NamedDecl *FirstQualifierFoundInScope
 argument_list|,
-argument|DeclarationName Member
-argument_list|,
-argument|SourceLocation MemberLoc
+argument|DeclarationNameInfo MemberNameInfo
 argument_list|,
 argument|const TemplateArgumentListInfo *TemplateArgs
 argument_list|)
@@ -8095,9 +8092,7 @@ argument|SourceRange QualifierRange
 argument_list|,
 argument|NamedDecl *FirstQualifierFoundInScope
 argument_list|,
-argument|DeclarationName Member
-argument_list|,
-argument|SourceLocation MemberLoc
+argument|DeclarationNameInfo MemberNameInfo
 argument_list|)
 operator|:
 name|Expr
@@ -8153,14 +8148,9 @@ argument_list|(
 name|FirstQualifierFoundInScope
 argument_list|)
 block|,
-name|Member
+name|MemberNameInfo
 argument_list|(
-name|Member
-argument_list|)
-block|,
-name|MemberLoc
-argument_list|(
-argument|MemberLoc
+argument|MemberNameInfo
 argument_list|)
 block|{ }
 specifier|static
@@ -8184,9 +8174,7 @@ argument|SourceRange QualifierRange
 argument_list|,
 argument|NamedDecl *FirstQualifierFoundInScope
 argument_list|,
-argument|DeclarationName Member
-argument_list|,
-argument|SourceLocation MemberLoc
+argument|DeclarationNameInfo MemberNameInfo
 argument_list|,
 argument|const TemplateArgumentListInfo *TemplateArgs
 argument_list|)
@@ -8386,13 +8374,39 @@ name|D
 block|;   }
 comment|/// \brief Retrieve the name of the member that this expression
 comment|/// refers to.
+specifier|const
+name|DeclarationNameInfo
+operator|&
+name|getMemberNameInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MemberNameInfo
+return|;
+block|}
+name|void
+name|setMemberNameInfo
+argument_list|(
+argument|const DeclarationNameInfo&N
+argument_list|)
+block|{
+name|MemberNameInfo
+operator|=
+name|N
+block|; }
+comment|/// \brief Retrieve the name of the member that this expression
+comment|/// refers to.
 name|DeclarationName
 name|getMember
 argument_list|()
 specifier|const
 block|{
 return|return
-name|Member
+name|MemberNameInfo
+operator|.
+name|getName
+argument_list|()
 return|;
 block|}
 name|void
@@ -8401,9 +8415,12 @@ argument_list|(
 argument|DeclarationName N
 argument_list|)
 block|{
-name|Member
-operator|=
+name|MemberNameInfo
+operator|.
+name|setName
+argument_list|(
 name|N
+argument_list|)
 block|; }
 comment|// \brief Retrieve the location of the name of the member that this
 comment|// expression refers to.
@@ -8413,7 +8430,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|MemberLoc
+name|MemberNameInfo
+operator|.
+name|getLoc
+argument_list|()
 return|;
 block|}
 name|void
@@ -8422,9 +8442,12 @@ argument_list|(
 argument|SourceLocation L
 argument_list|)
 block|{
-name|MemberLoc
-operator|=
+name|MemberNameInfo
+operator|.
+name|setLoc
+argument_list|(
 name|L
+argument_list|)
 block|; }
 comment|/// \brief Determines whether this member expression actually had a C++
 comment|/// template argument list explicitly specified, e.g., x.f<int>.
@@ -8440,8 +8463,8 @@ block|}
 comment|/// \brief Retrieve the explicit template argument list that followed the
 comment|/// member template name, if any.
 name|ExplicitTemplateArgumentList
-operator|*
-name|getExplicitTemplateArgumentList
+operator|&
+name|getExplicitTemplateArgs
 argument_list|()
 block|{
 name|assert
@@ -8450,6 +8473,7 @@ name|HasExplicitTemplateArgs
 argument_list|)
 block|;
 return|return
+operator|*
 name|reinterpret_cast
 operator|<
 name|ExplicitTemplateArgumentList
@@ -8466,8 +8490,8 @@ comment|/// \brief Retrieve the explicit template argument list that followed th
 comment|/// member template name, if any.
 specifier|const
 name|ExplicitTemplateArgumentList
-operator|*
-name|getExplicitTemplateArgumentList
+operator|&
+name|getExplicitTemplateArgs
 argument_list|()
 specifier|const
 block|{
@@ -8481,73 +8505,122 @@ operator|(
 name|this
 operator|)
 operator|->
-name|getExplicitTemplateArgumentList
+name|getExplicitTemplateArgs
 argument_list|()
 return|;
 block|}
+comment|/// \brief Retrieves the optional explicit template arguments.
+comment|/// This points to the same data as getExplicitTemplateArgs(), but
+comment|/// returns null if there are no explicit template arguments.
+specifier|const
+name|ExplicitTemplateArgumentList
+operator|*
+name|getOptionalExplicitTemplateArgs
+argument_list|()
+block|{
+if|if
+condition|(
+operator|!
+name|hasExplicitTemplateArgs
+argument_list|()
+condition|)
+return|return
+literal|0
+return|;
+return|return
+operator|&
+name|getExplicitTemplateArgs
+argument_list|()
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Copies the template arguments (if present) into the given
+end_comment
+
+begin_comment
 comment|/// structure.
+end_comment
+
+begin_decl_stmt
 name|void
 name|copyTemplateArgumentsInto
 argument_list|(
-argument|TemplateArgumentListInfo&List
+name|TemplateArgumentListInfo
+operator|&
+name|List
 argument_list|)
-specifier|const
+decl|const
 block|{
-name|assert
-argument_list|(
-name|HasExplicitTemplateArgs
-argument_list|)
-block|;
-name|getExplicitTemplateArgumentList
+name|getExplicitTemplateArgs
 argument_list|()
-operator|->
+operator|.
 name|copyInto
 argument_list|(
 name|List
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Initializes the template arguments using the given structure.
+end_comment
+
+begin_function
 name|void
 name|initializeTemplateArgumentsFrom
-argument_list|(
-argument|const TemplateArgumentListInfo&List
-argument_list|)
+parameter_list|(
+specifier|const
+name|TemplateArgumentListInfo
+modifier|&
+name|List
+parameter_list|)
 block|{
-name|assert
-argument_list|(
-name|HasExplicitTemplateArgs
-argument_list|)
-block|;
-name|getExplicitTemplateArgumentList
+name|getExplicitTemplateArgs
 argument_list|()
-operator|->
+operator|.
 name|initializeFrom
 argument_list|(
 name|List
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/// \brief Retrieve the location of the left angle bracket following the
+end_comment
+
+begin_comment
 comment|/// member name ('<'), if any.
+end_comment
+
+begin_expr_stmt
 name|SourceLocation
 name|getLAngleLoc
 argument_list|()
 specifier|const
 block|{
-name|assert
-argument_list|(
-name|HasExplicitTemplateArgs
-argument_list|)
-block|;
 return|return
-name|getExplicitTemplateArgumentList
+name|getExplicitTemplateArgs
 argument_list|()
-operator|->
+operator|.
 name|LAngleLoc
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Retrieve the template arguments provided as part of this
+end_comment
+
+begin_comment
 comment|/// template-id.
+end_comment
+
+begin_expr_stmt
 specifier|const
 name|TemplateArgumentLoc
 operator|*
@@ -8555,57 +8628,63 @@ name|getTemplateArgs
 argument_list|()
 specifier|const
 block|{
-name|assert
-argument_list|(
-name|HasExplicitTemplateArgs
-argument_list|)
-block|;
 return|return
-name|getExplicitTemplateArgumentList
+name|getExplicitTemplateArgs
 argument_list|()
-operator|->
+operator|.
 name|getTemplateArgs
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Retrieve the number of template arguments provided as part of this
+end_comment
+
+begin_comment
 comment|/// template-id.
+end_comment
+
+begin_expr_stmt
 name|unsigned
 name|getNumTemplateArgs
 argument_list|()
 specifier|const
 block|{
-name|assert
-argument_list|(
-name|HasExplicitTemplateArgs
-argument_list|)
-block|;
 return|return
-name|getExplicitTemplateArgumentList
+name|getExplicitTemplateArgs
 argument_list|()
-operator|->
+operator|.
 name|NumTemplateArgs
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Retrieve the location of the right angle bracket following the
+end_comment
+
+begin_comment
 comment|/// template arguments ('>').
+end_comment
+
+begin_expr_stmt
 name|SourceLocation
 name|getRAngleLoc
 argument_list|()
 specifier|const
 block|{
-name|assert
-argument_list|(
-name|HasExplicitTemplateArgs
-argument_list|)
-block|;
 return|return
-name|getExplicitTemplateArgumentList
+name|getExplicitTemplateArgs
 argument_list|()
-operator|->
+operator|.
 name|RAngleLoc
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|virtual
 name|SourceRange
 name|getSourceRange
@@ -8656,9 +8735,15 @@ name|Range
 operator|.
 name|setBegin
 argument_list|(
-name|MemberLoc
+name|MemberNameInfo
+operator|.
+name|getBeginLoc
+argument_list|()
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|hasExplicitTemplateArgs
@@ -8677,10 +8762,13 @@ name|Range
 operator|.
 name|setEnd
 argument_list|(
-name|MemberLoc
+name|MemberNameInfo
+operator|.
+name|getEndLoc
+argument_list|()
 argument_list|)
 expr_stmt|;
-end_decl_stmt
+end_if
 
 begin_return
 return|return
@@ -8857,9 +8945,7 @@ argument|NestedNameSpecifier *Qualifier
 argument_list|,
 argument|SourceRange QualifierRange
 argument_list|,
-argument|DeclarationName Member
-argument_list|,
-argument|SourceLocation MemberLoc
+argument|const DeclarationNameInfo&MemberNameInfo
 argument_list|,
 argument|const TemplateArgumentListInfo *TemplateArgs
 argument_list|,
@@ -8920,9 +9006,7 @@ argument|NestedNameSpecifier *Qualifier
 argument_list|,
 argument|SourceRange QualifierRange
 argument_list|,
-argument|DeclarationName Member
-argument_list|,
-argument|SourceLocation MemberLoc
+argument|const DeclarationNameInfo&MemberNameInfo
 argument_list|,
 argument|const TemplateArgumentListInfo *TemplateArgs
 argument_list|,
@@ -9101,6 +9185,31 @@ name|getNamingClass
 argument_list|()
 specifier|const
 block|;
+comment|/// \brief Retrieve the full name info for the member that this expression
+comment|/// refers to.
+specifier|const
+name|DeclarationNameInfo
+operator|&
+name|getMemberNameInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getNameInfo
+argument_list|()
+return|;
+block|}
+name|void
+name|setMemberNameInfo
+argument_list|(
+argument|const DeclarationNameInfo&N
+argument_list|)
+block|{
+name|setNameInfo
+argument_list|(
+name|N
+argument_list|)
+block|; }
 comment|/// \brief Retrieve the name of the member that this expression
 comment|/// refers to.
 name|DeclarationName
@@ -9204,13 +9313,45 @@ literal|1
 operator|)
 return|;
 block|}
+comment|/// \brief Retrieves the optional explicit template arguments.
+comment|/// This points to the same data as getExplicitTemplateArgs(), but
+comment|/// returns null if there are no explicit template arguments.
+specifier|const
+name|ExplicitTemplateArgumentList
+operator|*
+name|getOptionalExplicitTemplateArgs
+argument_list|()
+block|{
+if|if
+condition|(
+operator|!
+name|hasExplicitTemplateArgs
+argument_list|()
+condition|)
+return|return
+literal|0
+return|;
+return|return
+operator|&
+name|getExplicitTemplateArgs
+argument_list|()
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Copies the template arguments into the given structure.
+end_comment
+
+begin_decl_stmt
 name|void
 name|copyTemplateArgumentsInto
 argument_list|(
-argument|TemplateArgumentListInfo&List
+name|TemplateArgumentListInfo
+operator|&
+name|List
 argument_list|)
-specifier|const
+decl|const
 block|{
 name|getExplicitTemplateArgs
 argument_list|()
@@ -9219,9 +9360,19 @@ name|copyInto
 argument_list|(
 name|List
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Retrieve the location of the left angle bracket following
+end_comment
+
+begin_comment
 comment|/// the member name ('<').
+end_comment
+
+begin_expr_stmt
 name|SourceLocation
 name|getLAngleLoc
 argument_list|()
@@ -9234,8 +9385,17 @@ operator|.
 name|LAngleLoc
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Retrieve the template arguments provided as part of this
+end_comment
+
+begin_comment
 comment|/// template-id.
+end_comment
+
+begin_expr_stmt
 specifier|const
 name|TemplateArgumentLoc
 operator|*
@@ -9251,8 +9411,17 @@ name|getTemplateArgs
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Retrieve the number of template arguments provided as
+end_comment
+
+begin_comment
 comment|/// part of this template-id.
+end_comment
+
+begin_expr_stmt
 name|unsigned
 name|getNumTemplateArgs
 argument_list|()
@@ -9265,8 +9434,17 @@ operator|.
 name|NumTemplateArgs
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Retrieve the location of the right angle bracket
+end_comment
+
+begin_comment
 comment|/// following the template arguments ('>').
+end_comment
+
+begin_expr_stmt
 name|SourceLocation
 name|getRAngleLoc
 argument_list|()
@@ -9279,6 +9457,9 @@ operator|.
 name|RAngleLoc
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|virtual
 name|SourceRange
 name|getSourceRange
@@ -9287,6 +9468,12 @@ specifier|const
 block|{
 name|SourceRange
 name|Range
+operator|=
+name|getMemberNameInfo
+argument_list|()
+operator|.
+name|getSourceRange
+argument_list|()
 block|;
 if|if
 condition|(
@@ -9324,15 +9511,9 @@ name|getBegin
 argument_list|()
 argument_list|)
 expr_stmt|;
-else|else
-name|Range
-operator|.
-name|setBegin
-argument_list|(
-name|getMemberLoc
-argument_list|()
-argument_list|)
-expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|hasExplicitTemplateArgs
@@ -9346,16 +9527,7 @@ name|getRAngleLoc
 argument_list|()
 argument_list|)
 expr_stmt|;
-else|else
-name|Range
-operator|.
-name|setEnd
-argument_list|(
-name|getMemberLoc
-argument_list|()
-argument_list|)
-expr_stmt|;
-end_decl_stmt
+end_if
 
 begin_return
 return|return

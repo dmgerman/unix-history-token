@@ -221,6 +221,15 @@ block|}
 comment|// Pass Pipeline Configuration
 name|virtual
 name|bool
+name|addPreISel
+argument_list|(
+argument|PassManagerBase&PM
+argument_list|,
+argument|CodeGenOpt::Level OptLevel
+argument_list|)
+block|;
+name|virtual
+name|bool
 name|addInstSelector
 argument_list|(
 argument|PassManagerBase&PM

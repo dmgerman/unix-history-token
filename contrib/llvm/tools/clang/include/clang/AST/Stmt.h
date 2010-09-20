@@ -895,16 +895,6 @@ block|{ }
 struct|;
 name|protected
 label|:
-comment|/// DestroyChildren - Invoked by destructors of subclasses of Stmt to
-comment|///  recursively release child AST nodes.
-name|void
-name|DestroyChildren
-parameter_list|(
-name|ASTContext
-modifier|&
-name|Ctx
-parameter_list|)
-function_decl|;
 comment|/// \brief Construct an empty statement.
 name|explicit
 name|Stmt
@@ -939,20 +929,6 @@ name|SC
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// \brief Virtual method that performs the actual destruction of
-comment|/// this statement.
-comment|///
-comment|/// Subclasses should override this method (not Destroy()) to
-comment|/// provide class-specific destruction.
-name|virtual
-name|void
-name|DoDestroy
-parameter_list|(
-name|ASTContext
-modifier|&
-name|Ctx
-parameter_list|)
-function_decl|;
 name|public
 label|:
 name|Stmt
@@ -1010,35 +986,6 @@ return|;
 block|}
 endif|#
 directive|endif
-comment|/// \brief Destroy the current statement and its children.
-name|void
-name|Destroy
-parameter_list|(
-name|ASTContext
-modifier|&
-name|Ctx
-parameter_list|)
-block|{
-name|assert
-argument_list|(
-name|RefCount
-operator|>=
-literal|1
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|--
-name|RefCount
-operator|==
-literal|0
-condition|)
-name|DoDestroy
-argument_list|(
-name|Ctx
-argument_list|)
-expr_stmt|;
-block|}
 comment|/// \brief Increases the reference count for this statement.
 comment|///
 comment|/// Invoke the Retain() operation when this statement or expression
@@ -1163,6 +1110,21 @@ expr_stmt|;
 name|void
 name|dump
 argument_list|(
+name|SourceManager
+operator|&
+name|SM
+argument_list|)
+decl|const
+decl_stmt|;
+name|void
+name|dump
+argument_list|(
+name|llvm
+operator|::
+name|raw_ostream
+operator|&
+name|OS
+argument_list|,
 name|SourceManager
 operator|&
 name|SM
@@ -1438,17 +1400,6 @@ name|SourceLocation
 name|StartLoc
 block|,
 name|EndLoc
-block|;
-name|protected
-operator|:
-name|virtual
-name|void
-name|DoDestroy
-argument_list|(
-name|ASTContext
-operator|&
-name|Ctx
-argument_list|)
 block|;
 name|public
 operator|:
@@ -3697,17 +3648,6 @@ name|virtual
 name|child_iterator
 name|child_end
 argument_list|()
-block|;
-name|protected
-operator|:
-name|virtual
-name|void
-name|DoDestroy
-argument_list|(
-name|ASTContext
-operator|&
-name|Ctx
-argument_list|)
 block|; }
 decl_stmt|;
 end_decl_stmt
@@ -3751,17 +3691,6 @@ name|FirstCase
 block|;
 name|SourceLocation
 name|SwitchLoc
-block|;
-name|protected
-operator|:
-name|virtual
-name|void
-name|DoDestroy
-argument_list|(
-name|ASTContext
-operator|&
-name|Ctx
-argument_list|)
 block|;
 name|public
 operator|:
@@ -4353,17 +4282,6 @@ name|virtual
 name|child_iterator
 name|child_end
 argument_list|()
-block|;
-name|protected
-operator|:
-name|virtual
-name|void
-name|DoDestroy
-argument_list|(
-name|ASTContext
-operator|&
-name|Ctx
-argument_list|)
 block|; }
 decl_stmt|;
 end_decl_stmt
@@ -5119,17 +5037,6 @@ name|virtual
 name|child_iterator
 name|child_end
 argument_list|()
-block|;
-name|protected
-operator|:
-name|virtual
-name|void
-name|DoDestroy
-argument_list|(
-name|ASTContext
-operator|&
-name|Ctx
-argument_list|)
 block|; }
 decl_stmt|;
 end_decl_stmt
@@ -6070,17 +5977,6 @@ name|StringLiteral
 operator|*
 operator|*
 name|Clobbers
-block|;
-name|protected
-operator|:
-name|virtual
-name|void
-name|DoDestroy
-argument_list|(
-name|ASTContext
-operator|&
-name|Ctx
-argument_list|)
 block|;
 name|public
 operator|:

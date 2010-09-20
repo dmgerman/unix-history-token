@@ -302,6 +302,25 @@ name|O
 argument_list|)
 block|;   }
 name|void
+name|printi256mem
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|{
+name|printMemReference
+argument_list|(
+name|MI
+argument_list|,
+name|OpNo
+argument_list|,
+name|O
+argument_list|)
+block|;   }
+name|void
 name|printf32mem
 argument_list|(
 argument|const MCInst *MI

@@ -107,6 +107,15 @@ expr_stmt|;
 name|SelectionsMap
 name|selections
 decl_stmt|;
+name|unsigned
+name|r0Reductions
+decl_stmt|,
+name|r1Reductions
+decl_stmt|,
+name|r2Reductions
+decl_stmt|,
+name|rNReductions
+decl_stmt|;
 name|public
 label|:
 comment|/// \brief Number of nodes for which selections have been made.
@@ -121,6 +130,86 @@ name|selections
 operator|.
 name|size
 argument_list|()
+return|;
+block|}
+comment|/// \brief Records a reduction via the R0 rule. Should be called from the
+comment|///        solver only.
+name|void
+name|recordR0
+parameter_list|()
+block|{
+operator|++
+name|r0Reductions
+expr_stmt|;
+block|}
+comment|/// \brief Returns the number of R0 reductions applied to solve the problem.
+name|unsigned
+name|numR0Reductions
+argument_list|()
+specifier|const
+block|{
+return|return
+name|r0Reductions
+return|;
+block|}
+comment|/// \brief Records a reduction via the R1 rule. Should be called from the
+comment|///        solver only.
+name|void
+name|recordR1
+parameter_list|()
+block|{
+operator|++
+name|r1Reductions
+expr_stmt|;
+block|}
+comment|/// \brief Returns the number of R1 reductions applied to solve the problem.
+name|unsigned
+name|numR1Reductions
+argument_list|()
+specifier|const
+block|{
+return|return
+name|r1Reductions
+return|;
+block|}
+comment|/// \brief Records a reduction via the R2 rule. Should be called from the
+comment|///        solver only.
+name|void
+name|recordR2
+parameter_list|()
+block|{
+operator|++
+name|r2Reductions
+expr_stmt|;
+block|}
+comment|/// \brief Returns the number of R2 reductions applied to solve the problem.
+name|unsigned
+name|numR2Reductions
+argument_list|()
+specifier|const
+block|{
+return|return
+name|r2Reductions
+return|;
+block|}
+comment|/// \brief Records a reduction via the RN rule. Should be called from the
+comment|///        solver only.
+name|void
+name|recordRN
+parameter_list|()
+block|{
+operator|++
+name|rNReductions
+expr_stmt|;
+block|}
+comment|/// \brief Returns the number of RN reductions applied to solve the problem.
+name|unsigned
+name|numRNReductions
+argument_list|()
+specifier|const
+block|{
+return|return
+name|rNReductions
 return|;
 block|}
 comment|/// \brief Set the selection for a given node.

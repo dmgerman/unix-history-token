@@ -167,15 +167,15 @@ comment|/// live range, the register class. If the register is not live, the
 comment|/// corresponding value is null. If the register is live but used in
 comment|/// multiple register classes, the corresponding value is -1 casted to a
 comment|/// pointer.
+name|std
+operator|::
+name|vector
+operator|<
 specifier|const
 name|TargetRegisterClass
 operator|*
+operator|>
 name|Classes
-index|[
-name|TargetRegisterInfo
-operator|::
-name|FirstVirtualRegister
-index|]
 block|;
 comment|/// RegRegs - Map registers to all their references within a live range.
 name|std
@@ -191,23 +191,23 @@ name|RegRefs
 block|;
 comment|/// KillIndices - The index of the most recent kill (proceding bottom-up),
 comment|/// or ~0u if the register is not live.
-name|unsigned
-name|KillIndices
-index|[
-name|TargetRegisterInfo
+name|std
 operator|::
-name|FirstVirtualRegister
-index|]
+name|vector
+operator|<
+name|unsigned
+operator|>
+name|KillIndices
 block|;
 comment|/// DefIndices - The index of the most recent complete def (proceding bottom
 comment|/// up), or ~0u if the register is live.
-name|unsigned
-name|DefIndices
-index|[
-name|TargetRegisterInfo
+name|std
 operator|::
-name|FirstVirtualRegister
-index|]
+name|vector
+operator|<
+name|unsigned
+operator|>
+name|DefIndices
 block|;
 comment|/// KeepRegs - A set of registers which are live and cannot be changed to
 comment|/// break anti-dependencies.

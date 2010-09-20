@@ -329,21 +329,57 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// createHybridListDAGScheduler - This creates a bottom up hybrid register
+comment|/// createHybridListDAGScheduler - This creates a bottom up register pressure
 end_comment
 
 begin_comment
-comment|/// usage reduction list scheduler that make use of latency information to
+comment|/// aware list scheduler that make use of latency information to avoid stalls
 end_comment
 
 begin_comment
-comment|/// avoid stalls for long latency instructions.
+comment|/// for long latency instructions in low register pressure mode. In high
+end_comment
+
+begin_comment
+comment|/// register pressure mode it schedules to reduce register pressure.
 end_comment
 
 begin_decl_stmt
 name|ScheduleDAGSDNodes
 modifier|*
 name|createHybridListDAGScheduler
+argument_list|(
+name|SelectionDAGISel
+operator|*
+name|IS
+argument_list|,
+name|CodeGenOpt
+operator|::
+name|Level
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// createILPListDAGScheduler - This creates a bottom up register pressure
+end_comment
+
+begin_comment
+comment|/// aware list scheduler that tries to increase instruction level parallelism
+end_comment
+
+begin_comment
+comment|/// in low register pressure mode. In high register pressure mode it schedules
+end_comment
+
+begin_comment
+comment|/// to reduce register pressure.
+end_comment
+
+begin_decl_stmt
+name|ScheduleDAGSDNodes
+modifier|*
+name|createILPListDAGScheduler
 argument_list|(
 name|SelectionDAGISel
 operator|*

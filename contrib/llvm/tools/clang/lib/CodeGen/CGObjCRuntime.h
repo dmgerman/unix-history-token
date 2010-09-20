@@ -188,6 +188,9 @@ decl_stmt|;
 name|class
 name|ObjCStringLiteral
 decl_stmt|;
+name|class
+name|BlockDeclRefExpr
+decl_stmt|;
 name|namespace
 name|CodeGen
 block|{
@@ -340,6 +343,22 @@ specifier|const
 name|ObjCMethodDecl
 operator|*
 name|Method
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+comment|/// Get the type constant to catch for the given ObjC pointer type.
+comment|/// This is used externally to implement catching ObjC types in C++.
+comment|/// Runtimes which don't support this should add the appropriate
+comment|/// error to Sema.
+name|virtual
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|GetEHType
+argument_list|(
+argument|QualType T
 argument_list|)
 operator|=
 literal|0
@@ -701,6 +720,11 @@ operator|::
 name|Value
 operator|*
 name|dest
+argument_list|,
+name|bool
+name|threadlocal
+operator|=
+name|false
 argument_list|)
 init|=
 literal|0
@@ -848,6 +872,33 @@ argument_list|)
 init|=
 literal|0
 decl_stmt|;
+name|virtual
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|GCBlockLayout
+argument_list|(
+name|CodeGen
+operator|::
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+specifier|const
+name|BlockDeclRefExpr
+operator|*
+operator|>
+operator|&
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
 block|}
 empty_stmt|;
 comment|/// Creates an instance of an Objective-C runtime class.

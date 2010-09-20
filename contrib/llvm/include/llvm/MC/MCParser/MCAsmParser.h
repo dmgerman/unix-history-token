@@ -57,6 +57,9 @@ name|class
 name|AsmToken
 decl_stmt|;
 name|class
+name|MCAsmInfo
+decl_stmt|;
+name|class
 name|MCAsmLexer
 decl_stmt|;
 name|class
@@ -81,6 +84,12 @@ name|class
 name|StringRef
 decl_stmt|;
 name|class
+name|Target
+decl_stmt|;
+name|class
+name|TargetAsmParser
+decl_stmt|;
+name|class
 name|Twine
 decl_stmt|;
 comment|/// MCAsmParser - Generic assembler parser interface, for use by target specific
@@ -92,18 +101,19 @@ name|public
 label|:
 typedef|typedef
 name|bool
-argument_list|(
-name|MCAsmParserExtension
-operator|::
-operator|*
+function_decl|(
+modifier|*
 name|DirectiveHandler
-argument_list|)
-argument_list|(
+function_decl|)
+parameter_list|(
+name|MCAsmParserExtension
+modifier|*
+parameter_list|,
 name|StringRef
-argument_list|,
+parameter_list|,
 name|SMLoc
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 name|private
 label|:
 name|MCAsmParser
@@ -124,6 +134,15 @@ operator|&
 operator|)
 decl_stmt|;
 comment|// DO NOT IMPLEMENT
+name|TargetAsmParser
+modifier|*
+name|TargetParser
+decl_stmt|;
+name|unsigned
+name|ShowParsedOperands
+range|:
+literal|1
+decl_stmt|;
 name|protected
 label|:
 comment|// Can only create subclasses.
@@ -187,6 +206,62 @@ parameter_list|()
 init|=
 literal|0
 function_decl|;
+name|TargetAsmParser
+operator|&
+name|getTargetParser
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|TargetParser
+return|;
+block|}
+name|void
+name|setTargetParser
+parameter_list|(
+name|TargetAsmParser
+modifier|&
+name|P
+parameter_list|)
+function_decl|;
+name|bool
+name|getShowParsedOperands
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ShowParsedOperands
+return|;
+block|}
+name|void
+name|setShowParsedOperands
+parameter_list|(
+name|bool
+name|Value
+parameter_list|)
+block|{
+name|ShowParsedOperands
+operator|=
+name|Value
+expr_stmt|;
+block|}
+comment|/// Run - Run the parser on the input source buffer.
+name|virtual
+name|bool
+name|Run
+parameter_list|(
+name|bool
+name|NoInitialTextSection
+parameter_list|,
+name|bool
+name|NoFinalize
+init|=
+name|false
+parameter_list|)
+init|=
+literal|0
+function_decl|;
 comment|/// Warning - Emit a warning at the location \arg L, with the message \arg
 comment|/// Msg.
 name|virtual
@@ -247,8 +322,8 @@ name|bool
 name|TokError
 parameter_list|(
 specifier|const
-name|char
-modifier|*
+name|Twine
+modifier|&
 name|Msg
 parameter_list|)
 function_decl|;
@@ -262,6 +337,16 @@ name|StringRef
 modifier|&
 name|Res
 parameter_list|)
+init|=
+literal|0
+function_decl|;
+comment|/// \brief Parse up to the end of statement and return the contents from the
+comment|/// current token until the end of the statement; the current token on exit
+comment|/// will be either the EndOfStatement or EOF.
+name|virtual
+name|StringRef
+name|ParseStringToEndOfStatement
+parameter_list|()
 init|=
 literal|0
 function_decl|;
@@ -339,6 +424,29 @@ literal|0
 function_decl|;
 block|}
 empty_stmt|;
+comment|/// \brief Create an MCAsmParser instance.
+name|MCAsmParser
+modifier|*
+name|createMCAsmParser
+parameter_list|(
+specifier|const
+name|Target
+modifier|&
+parameter_list|,
+name|SourceMgr
+modifier|&
+parameter_list|,
+name|MCContext
+modifier|&
+parameter_list|,
+name|MCStreamer
+modifier|&
+parameter_list|,
+specifier|const
+name|MCAsmInfo
+modifier|&
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

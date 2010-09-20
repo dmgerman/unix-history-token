@@ -149,7 +149,7 @@ specifier|const
 name|std
 operator|::
 name|string
-operator|&
+operator|*
 name|GetLanguage
 argument_list|(
 argument|const llvm::sys::Path&
@@ -205,7 +205,7 @@ name|ToolName_
 return|;
 block|}
 name|virtual
-name|unsigned
+name|int
 name|Weight
 argument_list|(
 argument|const InputLanguagesSet& InLangs
@@ -246,7 +246,7 @@ argument_list|(
 argument|T
 argument_list|)
 block|{}
-name|unsigned
+name|int
 name|Weight
 argument_list|(
 argument|const InputLanguagesSet&
@@ -585,8 +585,8 @@ name|T
 parameter_list|)
 function_decl|;
 comment|/// insertEdge - Insert a new edge into the graph. Takes ownership
-comment|/// of the Edge object.
-name|void
+comment|/// of the Edge object. Returns non-zero value on error.
+name|int
 name|insertEdge
 argument_list|(
 specifier|const
@@ -601,8 +601,9 @@ operator|*
 name|E
 argument_list|)
 decl_stmt|;
-comment|/// Build - Build target(s) from the input file set. Command-line
-comment|/// options are passed implicitly as global variables.
+comment|/// Build - Build target(s) from the input file set. Command-line options
+comment|/// are passed implicitly as global variables. Returns non-zero value on
+comment|/// error (usually the failed program's exit code).
 name|int
 name|Build
 argument_list|(
@@ -621,17 +622,17 @@ operator|&
 name|LangMap
 argument_list|)
 decl_stmt|;
-comment|/// Check - Check the compilation graph for common errors like
-comment|/// cycles, input/output language mismatch and multiple default
-comment|/// edges. Prints error messages and in case it finds any errors.
+comment|/// Check - Check the compilation graph for common errors like cycles,
+comment|/// input/output language mismatch and multiple default edges. Prints error
+comment|/// messages and in case it finds any errors.
 name|int
 name|Check
 parameter_list|()
 function_decl|;
-comment|/// getNode - Return a reference to the node correponding to the
-comment|/// given tool name. Throws std::runtime_error.
+comment|/// getNode - Return a reference to the node corresponding to the given tool
+comment|/// name. Returns 0 on error.
 name|Node
-modifier|&
+modifier|*
 name|getNode
 argument_list|(
 specifier|const
@@ -644,7 +645,7 @@ argument_list|)
 decl_stmt|;
 specifier|const
 name|Node
-modifier|&
+modifier|*
 name|getNode
 argument_list|(
 specifier|const
@@ -656,17 +657,16 @@ name|ToolName
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// viewGraph - This function is meant for use from the debugger.
-comment|/// You can just say 'call G->viewGraph()' and a ghostview window
-comment|/// should pop up from the program, displaying the compilation
-comment|/// graph. This depends on there being a 'dot' and 'gv' program
-comment|/// in your path.
+comment|/// viewGraph - This function is meant for use from the debugger. You can
+comment|/// just say 'call G->viewGraph()' and a ghostview window should pop up from
+comment|/// the program, displaying the compilation graph. This depends on there
+comment|/// being a 'dot' and 'gv' program in your path.
 name|void
 name|viewGraph
 parameter_list|()
 function_decl|;
 comment|/// writeGraph - Write Graphviz .dot source file to the current direcotry.
-name|void
+name|int
 name|writeGraph
 argument_list|(
 specifier|const
@@ -698,11 +698,10 @@ name|private
 label|:
 comment|// Helper functions.
 comment|/// getToolsVector - Return a reference to the list of tool names
-comment|/// corresponding to the given language name. Throws
-comment|/// std::runtime_error.
+comment|/// corresponding to the given language name. Returns 0 on error.
 specifier|const
 name|tools_vector_type
-modifier|&
+modifier|*
 name|getToolsVector
 argument_list|(
 specifier|const
@@ -714,9 +713,9 @@ name|LangName
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// PassThroughGraph - Pass the input file through the toolchain
-comment|/// starting at StartNode.
-name|void
+comment|/// PassThroughGraph - Pass the input file through the toolchain starting at
+comment|/// StartNode.
+name|int
 name|PassThroughGraph
 argument_list|(
 specifier|const
@@ -788,8 +787,9 @@ name|LangMap
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// BuildInitial - Traverse the initial parts of the toolchains.
-name|void
+comment|/// BuildInitial - Traverse the initial parts of the toolchains. Returns
+comment|/// non-zero value on error.
+name|int
 name|BuildInitial
 argument_list|(
 name|InputLanguagesSet
@@ -811,8 +811,9 @@ operator|&
 name|LangMap
 argument_list|)
 decl_stmt|;
-comment|/// TopologicalSort - Sort the nodes in topological order.
-name|void
+comment|/// TopologicalSort - Sort the nodes in topological order. Returns non-zero
+comment|/// value on error.
+name|int
 name|TopologicalSort
 argument_list|(
 name|std
@@ -827,9 +828,10 @@ operator|&
 name|Out
 argument_list|)
 decl_stmt|;
-comment|/// TopologicalSortFilterJoinNodes - Call TopologicalSort and
-comment|/// filter the resulting list to include only Join nodes.
-name|void
+comment|/// TopologicalSortFilterJoinNodes - Call TopologicalSort and filter the
+comment|/// resulting list to include only Join nodes. Returns non-zero value on
+comment|/// error.
+name|int
 name|TopologicalSortFilterJoinNodes
 argument_list|(
 name|std
@@ -845,21 +847,24 @@ name|Out
 argument_list|)
 decl_stmt|;
 comment|// Functions used to implement Check().
-comment|/// CheckLanguageNames - Check that output/input language names
-comment|/// match for all nodes.
+comment|/// CheckLanguageNames - Check that output/input language names match for
+comment|/// all nodes. Returns non-zero value on error (number of errors
+comment|/// encountered).
 name|int
 name|CheckLanguageNames
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// CheckMultipleDefaultEdges - check that there are no multiple
-comment|/// default default edges.
+comment|/// CheckMultipleDefaultEdges - check that there are no multiple default
+comment|/// default edges. Returns non-zero value on error (number of errors
+comment|/// encountered).
 name|int
 name|CheckMultipleDefaultEdges
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// CheckCycles - Check that there are no cycles in the graph.
+comment|/// CheckCycles - Check that there are no cycles in the graph. Returns
+comment|/// non-zero value on error (number of errors encountered).
 name|int
 name|CheckCycles
 parameter_list|()
@@ -1215,7 +1220,6 @@ operator|)
 specifier|const
 block|{
 return|return
-operator|&
 name|OwningGraph
 operator|->
 name|getNode
@@ -1393,7 +1397,6 @@ name|G
 parameter_list|)
 block|{
 return|return
-operator|&
 name|G
 operator|->
 name|getNode

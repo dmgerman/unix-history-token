@@ -941,15 +941,11 @@ name|virtual
 name|void
 name|MacroUndefined
 argument_list|(
-specifier|const
-name|IdentifierInfo
-operator|*
-name|II
+argument|SourceLocation Loc
 argument_list|,
-specifier|const
-name|MacroInfo
-operator|*
-name|MI
+argument|const IdentifierInfo *II
+argument_list|,
+argument|const MacroInfo *MI
 argument_list|)
 block|;   }
 block|; }

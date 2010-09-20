@@ -143,7 +143,7 @@ comment|/// Code Generation virtual methods...
 name|bool
 name|hasReservedCallFrame
 argument_list|(
-argument|MachineFunction&MF
+argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
@@ -158,24 +158,32 @@ argument|MachineBasicBlock::iterator I
 argument_list|)
 specifier|const
 block|;
-comment|// rewrite MI to access 'Offset' bytes from the FP. Return the offset that
-comment|// could not be handled directly in MI.
-name|int
+comment|// rewrite MI to access 'Offset' bytes from the FP. Update Offset to be
+comment|// however much remains to be handled. Return 'true' if no further
+comment|// work is required.
+name|bool
 name|rewriteFrameIndex
 argument_list|(
-argument|MachineInstr&MI
+argument|MachineBasicBlock::iterator II
 argument_list|,
 argument|unsigned FrameRegIdx
 argument_list|,
 argument|unsigned FrameReg
 argument_list|,
-argument|int Offset
+argument|int&Offset
 argument_list|,
-argument|unsigned MOVOpc
+argument|const ARMBaseInstrInfo&TII
+argument_list|)
+specifier|const
+block|;
+name|void
+name|resolveFrameIndex
+argument_list|(
+argument|MachineBasicBlock::iterator I
 argument_list|,
-argument|unsigned ADDriOpc
+argument|unsigned BaseReg
 argument_list|,
-argument|unsigned SUBriOpc
+argument|int64_t Offset
 argument_list|)
 specifier|const
 block|;
@@ -194,14 +202,12 @@ argument|unsigned Reg
 argument_list|)
 specifier|const
 block|;
-name|unsigned
+name|void
 name|eliminateFrameIndex
 argument_list|(
 argument|MachineBasicBlock::iterator II
 argument_list|,
 argument|int SPAdj
-argument_list|,
-argument|FrameIndexValue *Value = NULL
 argument_list|,
 argument|RegScavenger *RS = NULL
 argument_list|)

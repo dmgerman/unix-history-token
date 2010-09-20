@@ -811,11 +811,6 @@ block|;
 name|buf
 operator|<<
 name|value
-block|;
-name|buf
-operator|.
-name|flush
-argument_list|()
 block|;   }
 name|Out
 operator|<<

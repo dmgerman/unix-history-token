@@ -11,6 +11,18 @@ begin_comment
 comment|/* include/llvm/Config/config.h.in.  Generated from autoconf/configure.ac by autoheader.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CONFIG_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|CONFIG_H
+end_define
+
 begin_comment
 comment|/* 32 bit multilib directory. */
 end_comment
@@ -208,6 +220,14 @@ directive|define
 name|HAVE_CLOSEDIR
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<CrashReporterClient.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_CRASHREPORTERCLIENT_H */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<ctype.h> header file. */
@@ -457,6 +477,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Have Darwin getsect() support */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_GETSECT */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the `gettimeofday' function. */
 end_comment
 
@@ -694,6 +722,14 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE_MACH_O_DYLD_H */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<mach-o/getsect.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_MACH_O_GETSECT_H */
 end_comment
 
 begin_comment
@@ -1527,6 +1563,17 @@ value|X86Target
 end_define
 
 begin_comment
+comment|/* Short LLVM architecture name for the native architecture, if available */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_NATIVE_ARCHNAME
+value|X86
+end_define
+
+begin_comment
 comment|/* Define if this is Unixish platform */
 end_comment
 
@@ -1617,7 +1664,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_PREFIX
-value|"/usr/local"
+value|"/usr"
 end_define
 
 begin_comment
@@ -1851,6 +1898,11 @@ end_comment
 begin_comment
 comment|/* #undef size_t */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

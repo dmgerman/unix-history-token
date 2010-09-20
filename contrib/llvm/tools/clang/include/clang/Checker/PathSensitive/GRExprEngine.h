@@ -196,6 +196,7 @@ operator|*
 name|CleanedState
 block|;
 comment|/// CurrentStmt - The current block-level statement.
+specifier|const
 name|Stmt
 operator|*
 name|CurrentStmt
@@ -220,7 +221,63 @@ operator|<
 name|GRSimpleAPICheck
 operator|>
 name|BatchAuditor
+block|;    enum
+name|CallbackKind
+block|{
+name|PreVisitStmtCallback
+block|,
+name|PostVisitStmtCallback
+block|,
+name|ProcessAssumeCallback
+block|,
+name|EvalRegionChangesCallback
+block|}
 block|;
+typedef|typedef
+name|uint32_t
+name|CallbackTag
+typedef|;
+comment|/// GetCallbackTag - Create a tag for a certain kind of callback. The 'Sub'
+comment|///  argument can be used to differentiate callbacks that depend on another
+comment|///  value from a small set of possibilities, such as statement classes.
+specifier|static
+specifier|inline
+name|CallbackTag
+name|GetCallbackTag
+argument_list|(
+argument|CallbackKind K
+argument_list|,
+argument|uint32_t Sub =
+literal|0
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|Sub
+operator|==
+operator|(
+operator|(
+name|Sub
+operator|<<
+literal|8
+operator|)
+operator|>>
+literal|8
+operator|)
+operator|&&
+literal|"Tag sub-kind must fit into 24 bits"
+argument_list|)
+block|;
+return|return
+name|K
+operator||
+operator|(
+name|Sub
+operator|<<
+literal|8
+operator|)
+return|;
+block|}
 typedef|typedef
 name|llvm
 operator|::
@@ -256,14 +313,7 @@ name|llvm
 operator|::
 name|DenseMap
 operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|unsigned
-operator|,
-name|unsigned
-operator|>
+name|CallbackTag
 operator|,
 name|CheckersOrdered
 operator|*
@@ -281,7 +331,7 @@ name|CheckersOrdered
 name|Checkers
 decl_stmt|;
 comment|/// A map used for caching the checkers that respond to the callback for
-comment|///  a particular statement and visitation order.
+comment|///  a particular callback tag.
 name|CheckersOrderedCache
 name|COCache
 decl_stmt|;
@@ -306,7 +356,7 @@ name|public
 label|:
 name|CallExpr
 operator|::
-name|arg_iterator
+name|const_arg_iterator
 name|I
 expr_stmt|;
 name|ExplodedNode
@@ -318,7 +368,7 @@ argument_list|(
 specifier|const
 name|CallExpr
 operator|::
-name|arg_iterator
+name|const_arg_iterator
 operator|&
 name|i
 argument_list|,
@@ -377,6 +427,46 @@ argument_list|(
 name|L
 argument_list|,
 name|Steps
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// Execute the work list with an initial state. Nodes that reaches the exit
+comment|/// of the function are added into the Dst set, which represent the exit
+comment|/// state of the function call.
+name|void
+name|ExecuteWorkListWithInitialState
+parameter_list|(
+specifier|const
+name|LocationContext
+modifier|*
+name|L
+parameter_list|,
+name|unsigned
+name|Steps
+parameter_list|,
+specifier|const
+name|GRState
+modifier|*
+name|InitState
+parameter_list|,
+name|ExplodedNodeSet
+modifier|&
+name|Dst
+parameter_list|)
+block|{
+name|CoreEngine
+operator|.
+name|ExecuteWorkListWithInitialState
+argument_list|(
+name|L
+argument_list|,
+name|Steps
+argument_list|,
+name|InitState
+argument_list|,
+name|Dst
 argument_list|)
 expr_stmt|;
 block|}
@@ -394,11 +484,11 @@ name|getASTContext
 argument_list|()
 return|;
 block|}
+name|virtual
 name|AnalysisManager
-operator|&
+modifier|&
 name|getAnalysisManager
-argument_list|()
-specifier|const
+parameter_list|()
 block|{
 return|return
 name|AMgr
@@ -625,6 +715,7 @@ comment|///  nodes by processing the 'effects' of a block-level statement.
 name|void
 name|ProcessStmt
 parameter_list|(
+specifier|const
 name|CFGElement
 name|E
 parameter_list|,
@@ -639,6 +730,7 @@ comment|///  exploring the given path, and false otherwise.
 name|bool
 name|ProcessBlockEntrance
 parameter_list|(
+specifier|const
 name|CFGBlock
 modifier|*
 name|B
@@ -657,10 +749,12 @@ comment|///  nodes by processing the 'effects' of a branch condition.
 name|void
 name|ProcessBranch
 parameter_list|(
+specifier|const
 name|Stmt
 modifier|*
 name|Condition
 parameter_list|,
+specifier|const
 name|Stmt
 modifier|*
 name|Term
@@ -745,21 +839,49 @@ name|bool
 name|assumption
 parameter_list|)
 function_decl|;
+comment|/// WantsRegionChangeUpdate - Called by GRStateManager to determine if a
+comment|///  region change should trigger a ProcessRegionChanges update.
+name|bool
+name|WantsRegionChangeUpdate
+parameter_list|(
+specifier|const
+name|GRState
+modifier|*
+name|state
+parameter_list|)
+function_decl|;
+comment|/// ProcessRegionChanges - Called by GRStateManager whenever a change is made
+comment|///  to the store. Used to update checkers that track region values.
+specifier|const
+name|GRState
+modifier|*
+name|ProcessRegionChanges
+parameter_list|(
+specifier|const
+name|GRState
+modifier|*
+name|state
+parameter_list|,
+specifier|const
+name|MemRegion
+modifier|*
+specifier|const
+modifier|*
+name|Begin
+parameter_list|,
+specifier|const
+name|MemRegion
+modifier|*
+specifier|const
+modifier|*
+name|End
+parameter_list|)
+function_decl|;
+name|virtual
 name|GRStateManager
 modifier|&
 name|getStateManager
 parameter_list|()
-block|{
-return|return
-name|StateMgr
-return|;
-block|}
-specifier|const
-name|GRStateManager
-operator|&
-name|getStateManager
-argument_list|()
-specifier|const
 block|{
 return|return
 name|StateMgr
@@ -857,6 +979,48 @@ return|return
 name|SymMgr
 return|;
 block|}
+comment|// Functions for external checking of whether we have unfinished work
+name|bool
+name|wasBlockAborted
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CoreEngine
+operator|.
+name|wasBlockAborted
+argument_list|()
+return|;
+block|}
+name|bool
+name|hasWorkRemaining
+argument_list|()
+specifier|const
+block|{
+return|return
+name|wasBlockAborted
+argument_list|()
+operator|||
+name|CoreEngine
+operator|.
+name|getWorkList
+argument_list|()
+operator|->
+name|hasWork
+argument_list|()
+return|;
+block|}
+specifier|const
+name|GRCoreEngine
+operator|&
+name|getCoreEngine
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CoreEngine
+return|;
+block|}
 name|protected
 label|:
 specifier|const
@@ -892,6 +1056,7 @@ name|ExplodedNodeSet
 operator|&
 name|Dst
 argument_list|,
+specifier|const
 name|Stmt
 operator|*
 name|S
@@ -927,6 +1092,7 @@ comment|///  at specific statements.
 name|void
 name|CheckerVisit
 parameter_list|(
+specifier|const
 name|Stmt
 modifier|*
 name|S
@@ -939,8 +1105,8 @@ name|ExplodedNodeSet
 modifier|&
 name|Src
 parameter_list|,
-name|bool
-name|isPrevisit
+name|CallbackKind
+name|Kind
 parameter_list|)
 function_decl|;
 name|bool
@@ -988,11 +1154,6 @@ parameter_list|(
 specifier|const
 name|Stmt
 modifier|*
-name|AssignE
-parameter_list|,
-specifier|const
-name|Stmt
-modifier|*
 name|StoreE
 parameter_list|,
 name|ExplodedNodeSet
@@ -1018,6 +1179,7 @@ comment|///  other functions that handle specific kinds of statements.
 name|void
 name|Visit
 parameter_list|(
+specifier|const
 name|Stmt
 modifier|*
 name|S
@@ -1037,6 +1199,7 @@ comment|/// storage location. Note that not all kinds of expressions has lvalue.
 name|void
 name|VisitLValue
 parameter_list|(
+specifier|const
 name|Expr
 modifier|*
 name|Ex
@@ -1054,6 +1217,7 @@ comment|/// VisitArraySubscriptExpr - Transfer function for array accesses.
 name|void
 name|VisitArraySubscriptExpr
 parameter_list|(
+specifier|const
 name|ArraySubscriptExpr
 modifier|*
 name|Ex
@@ -1074,6 +1238,7 @@ comment|/// VisitAsmStmt - Transfer function logic for inline asm.
 name|void
 name|VisitAsmStmt
 parameter_list|(
+specifier|const
 name|AsmStmt
 modifier|*
 name|A
@@ -1090,18 +1255,19 @@ function_decl|;
 name|void
 name|VisitAsmStmtHelperOutputs
 argument_list|(
+specifier|const
 name|AsmStmt
 operator|*
 name|A
 argument_list|,
 name|AsmStmt
 operator|::
-name|outputs_iterator
+name|const_outputs_iterator
 name|I
 argument_list|,
 name|AsmStmt
 operator|::
-name|outputs_iterator
+name|const_outputs_iterator
 name|E
 argument_list|,
 name|ExplodedNode
@@ -1116,18 +1282,19 @@ decl_stmt|;
 name|void
 name|VisitAsmStmtHelperInputs
 argument_list|(
+specifier|const
 name|AsmStmt
 operator|*
 name|A
 argument_list|,
 name|AsmStmt
 operator|::
-name|inputs_iterator
+name|const_inputs_iterator
 name|I
 argument_list|,
 name|AsmStmt
 operator|::
-name|inputs_iterator
+name|const_inputs_iterator
 name|E
 argument_list|,
 name|ExplodedNode
@@ -1143,6 +1310,7 @@ comment|/// VisitBlockExpr - Transfer function logic for BlockExprs.
 name|void
 name|VisitBlockExpr
 parameter_list|(
+specifier|const
 name|BlockExpr
 modifier|*
 name|BE
@@ -1160,6 +1328,7 @@ comment|/// VisitBinaryOperator - Transfer function logic for binary operators.
 name|void
 name|VisitBinaryOperator
 parameter_list|(
+specifier|const
 name|BinaryOperator
 modifier|*
 name|B
@@ -1180,6 +1349,7 @@ comment|/// VisitCall - Transfer function for function calls.
 name|void
 name|VisitCall
 argument_list|(
+specifier|const
 name|CallExpr
 operator|*
 name|CE
@@ -1190,12 +1360,12 @@ name|Pred
 argument_list|,
 name|CallExpr
 operator|::
-name|arg_iterator
+name|const_arg_iterator
 name|AI
 argument_list|,
 name|CallExpr
 operator|::
-name|arg_iterator
+name|const_arg_iterator
 name|AE
 argument_list|,
 name|ExplodedNodeSet
@@ -1210,10 +1380,12 @@ comment|/// VisitCast - Transfer function logic for all casts (implicit and expl
 name|void
 name|VisitCast
 parameter_list|(
+specifier|const
 name|CastExpr
 modifier|*
 name|CastE
 parameter_list|,
+specifier|const
 name|Expr
 modifier|*
 name|Ex
@@ -1234,6 +1406,7 @@ comment|/// VisitCompoundLiteralExpr - Transfer function logic for compound lite
 name|void
 name|VisitCompoundLiteralExpr
 parameter_list|(
+specifier|const
 name|CompoundLiteralExpr
 modifier|*
 name|CL
@@ -1254,6 +1427,7 @@ comment|/// VisitDeclRefExpr - Transfer function logic for DeclRefExprs.
 name|void
 name|VisitDeclRefExpr
 parameter_list|(
+specifier|const
 name|DeclRefExpr
 modifier|*
 name|DR
@@ -1274,6 +1448,7 @@ comment|/// VisitBlockDeclRefExpr - Transfer function logic for BlockDeclRefExpr
 name|void
 name|VisitBlockDeclRefExpr
 parameter_list|(
+specifier|const
 name|BlockDeclRefExpr
 modifier|*
 name|DR
@@ -1293,6 +1468,7 @@ function_decl|;
 name|void
 name|VisitCommonDeclRefExpr
 parameter_list|(
+specifier|const
 name|Expr
 modifier|*
 name|DR
@@ -1318,6 +1494,7 @@ comment|/// VisitDeclStmt - Transfer function logic for DeclStmts.
 name|void
 name|VisitDeclStmt
 parameter_list|(
+specifier|const
 name|DeclStmt
 modifier|*
 name|DS
@@ -1335,14 +1512,17 @@ comment|/// VisitGuardedExpr - Transfer function logic for ?, __builtin_choose
 name|void
 name|VisitGuardedExpr
 parameter_list|(
+specifier|const
 name|Expr
 modifier|*
 name|Ex
 parameter_list|,
+specifier|const
 name|Expr
 modifier|*
 name|L
 parameter_list|,
+specifier|const
 name|Expr
 modifier|*
 name|R
@@ -1361,10 +1541,12 @@ comment|///  of a condition variable in an IfStmt, SwitchStmt, etc.
 name|void
 name|VisitCondInit
 parameter_list|(
+specifier|const
 name|VarDecl
 modifier|*
 name|VD
 parameter_list|,
+specifier|const
 name|Stmt
 modifier|*
 name|S
@@ -1381,6 +1563,7 @@ function_decl|;
 name|void
 name|VisitInitListExpr
 parameter_list|(
+specifier|const
 name|InitListExpr
 modifier|*
 name|E
@@ -1398,6 +1581,7 @@ comment|/// VisitLogicalExpr - Transfer function logic for '&&', '||'
 name|void
 name|VisitLogicalExpr
 parameter_list|(
+specifier|const
 name|BinaryOperator
 modifier|*
 name|B
@@ -1415,6 +1599,7 @@ comment|/// VisitMemberExpr - Transfer function for member expressions.
 name|void
 name|VisitMemberExpr
 parameter_list|(
+specifier|const
 name|MemberExpr
 modifier|*
 name|M
@@ -1435,6 +1620,7 @@ comment|/// VisitObjCIvarRefExpr - Transfer function logic for ObjCIvarRefExprs.
 name|void
 name|VisitObjCIvarRefExpr
 parameter_list|(
+specifier|const
 name|ObjCIvarRefExpr
 modifier|*
 name|DR
@@ -1456,6 +1642,7 @@ comment|///  ObjCForCollectionStmt.
 name|void
 name|VisitObjCForCollectionStmt
 parameter_list|(
+specifier|const
 name|ObjCForCollectionStmt
 modifier|*
 name|S
@@ -1472,6 +1659,7 @@ function_decl|;
 name|void
 name|VisitObjCForCollectionStmtAux
 parameter_list|(
+specifier|const
 name|ObjCForCollectionStmt
 modifier|*
 name|S
@@ -1492,6 +1680,7 @@ comment|/// VisitObjCMessageExpr - Transfer function for ObjC message expression
 name|void
 name|VisitObjCMessageExpr
 parameter_list|(
+specifier|const
 name|ObjCMessageExpr
 modifier|*
 name|ME
@@ -1512,6 +1701,7 @@ comment|/// VisitReturnStmt - Transfer function logic for return statements.
 name|void
 name|VisitReturnStmt
 parameter_list|(
+specifier|const
 name|ReturnStmt
 modifier|*
 name|R
@@ -1529,6 +1719,7 @@ comment|/// VisitOffsetOfExpr - Transfer function for offsetof.
 name|void
 name|VisitOffsetOfExpr
 parameter_list|(
+specifier|const
 name|OffsetOfExpr
 modifier|*
 name|Ex
@@ -1546,6 +1737,7 @@ comment|/// VisitSizeOfAlignOfExpr - Transfer function for sizeof.
 name|void
 name|VisitSizeOfAlignOfExpr
 parameter_list|(
+specifier|const
 name|SizeOfAlignOfExpr
 modifier|*
 name|Ex
@@ -1563,6 +1755,7 @@ comment|/// VisitUnaryOperator - Transfer function logic for unary operators.
 name|void
 name|VisitUnaryOperator
 parameter_list|(
+specifier|const
 name|UnaryOperator
 modifier|*
 name|B
@@ -1582,6 +1775,7 @@ function_decl|;
 name|void
 name|VisitCXXThisExpr
 parameter_list|(
+specifier|const
 name|CXXThisExpr
 modifier|*
 name|TE
@@ -1635,6 +1829,7 @@ function_decl|;
 name|void
 name|VisitCXXNewExpr
 parameter_list|(
+specifier|const
 name|CXXNewExpr
 modifier|*
 name|CNE
@@ -1651,6 +1846,7 @@ function_decl|;
 name|void
 name|VisitCXXDeleteExpr
 parameter_list|(
+specifier|const
 name|CXXDeleteExpr
 modifier|*
 name|CDE
@@ -1688,6 +1884,7 @@ comment|/// Create a C++ temporary object for an rvalue.
 name|void
 name|CreateCXXTemporaryObject
 parameter_list|(
+specifier|const
 name|Expr
 modifier|*
 name|Ex
@@ -1722,10 +1919,10 @@ comment|/// Evaluate arguments with a work list algorithm.
 name|void
 name|EvalArguments
 parameter_list|(
-name|ExprIterator
+name|ConstExprIterator
 name|AI
 parameter_list|,
-name|ExprIterator
+name|ConstExprIterator
 name|AE
 parameter_list|,
 specifier|const
@@ -1756,6 +1953,7 @@ name|ExplodedNodeSet
 modifier|&
 name|Src
 parameter_list|,
+specifier|const
 name|Expr
 modifier|*
 name|Ex
@@ -1963,6 +2161,7 @@ name|ExplodedNodeSet
 modifier|&
 name|Dst
 parameter_list|,
+specifier|const
 name|ObjCMessageExpr
 modifier|*
 name|ME
@@ -2015,6 +2214,7 @@ name|GRState
 modifier|*
 name|St
 parameter_list|,
+specifier|const
 name|Stmt
 modifier|*
 name|Terminator
@@ -2032,10 +2232,7 @@ name|ExplodedNodeSet
 modifier|&
 name|Dst
 parameter_list|,
-name|Stmt
-modifier|*
-name|AssignE
-parameter_list|,
+specifier|const
 name|Stmt
 modifier|*
 name|StoreE
@@ -2072,6 +2269,7 @@ name|ExplodedNodeSet
 modifier|&
 name|Dst
 parameter_list|,
+specifier|const
 name|Expr
 modifier|*
 name|Ex
@@ -2111,10 +2309,12 @@ name|ExplodedNodeSet
 modifier|&
 name|Dst
 parameter_list|,
+specifier|const
 name|Expr
 modifier|*
 name|AssignE
 parameter_list|,
+specifier|const
 name|Expr
 modifier|*
 name|StoreE
@@ -2151,6 +2351,7 @@ name|ExplodedNodeSet
 modifier|&
 name|Dst
 parameter_list|,
+specifier|const
 name|Expr
 modifier|*
 name|Ex
@@ -2185,6 +2386,7 @@ name|ExplodedNodeSet
 modifier|&
 name|Dst
 parameter_list|,
+specifier|const
 name|Stmt
 modifier|*
 name|S
