@@ -1114,18 +1114,6 @@ name|unsigned
 name|long
 name|rx_overruns
 decl_stmt|;
-name|unsigned
-name|long
-name|rx_irq
-decl_stmt|;
-name|unsigned
-name|long
-name|tx_irq
-decl_stmt|;
-name|unsigned
-name|long
-name|link_irq
-decl_stmt|;
 comment|/* 82547 workaround */
 name|uint32_t
 name|tx_fifo_size
