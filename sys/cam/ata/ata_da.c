@@ -4220,6 +4220,16 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
+name|bp
+operator|->
+name|bio_flags
+operator|&
+name|BIO_ORDERED
+operator|)
+operator|!=
+literal|0
+operator|||
+operator|(
 name|softc
 operator|->
 name|flags
