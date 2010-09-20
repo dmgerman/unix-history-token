@@ -755,6 +755,36 @@ end_if
 begin_function
 specifier|static
 name|__inline
+name|uint32_t
+name|xlr_paddr_lw
+parameter_list|(
+name|uint64_t
+name|paddr
+parameter_list|)
+block|{
+name|paddr
+operator||=
+literal|0x9800000000000000ULL
+expr_stmt|;
+return|return
+operator|(
+operator|*
+operator|(
+name|uint32_t
+operator|*
+operator|)
+operator|(
+name|uintptr_t
+operator|)
+name|paddr
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
 name|uint64_t
 name|xlr_paddr_ld
 parameter_list|(
@@ -794,6 +824,34 @@ end_elif
 begin_function
 specifier|static
 name|__inline
+name|uint32_t
+name|xlr_paddr_lw
+parameter_list|(
+name|uint32_t
+name|paddr
+parameter_list|)
+block|{
+name|uint32_t
+name|val
+decl_stmt|;
+name|paddr
+operator||=
+literal|0x9800000000000000ULL
+expr_stmt|;
+asm|__asm__
+specifier|__volatile__
+asm|( 	    ".set	push		\n\t" 	    ".set	mips64		\n\t" 	    "lw		%0, 0(%1)	\n\t" 	    ".set	pop		\n" 	    : "=r"(val) 	    : "r"(paddr));
+return|return
+operator|(
+name|val
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
 name|uint64_t
 name|xlr_paddr_ld
 parameter_list|(
@@ -824,10 +882,63 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* o32 compilation */
+end_comment
+
 begin_function
 specifier|static
 name|__inline
 name|uint32_t
+name|xlr_paddr_lw
+parameter_list|(
+name|uint64_t
+name|paddr
+parameter_list|)
+block|{
+name|uint32_t
+name|addrh
+decl_stmt|,
+name|addrl
+decl_stmt|;
+name|uint32_t
+name|val
+decl_stmt|;
+name|addrh
+operator|=
+literal|0x98000000
+operator||
+operator|(
+name|paddr
+operator|>>
+literal|32
+operator|)
+expr_stmt|;
+name|addrl
+operator|=
+name|paddr
+operator|&
+literal|0xffffffff
+expr_stmt|;
+asm|__asm__
+specifier|__volatile__
+asm|( 	    ".set	push		\n\t" 	    ".set	mips64		\n\t" 	    "dsll32	%1, %1, 0	\n\t" 	    "dsll32	%2, %2, 0	\n\t"
+comment|/* get rid of the */
+asm|"dsrl32	%2, %2, 0	\n\t"
+comment|/* sign extend */
+asm|"or		%0, %1, %2	\n\t" 	    "lw		%0, 0(%0)	\n\t" 	    ".set	pop		\n" 	    :       "=&r"(val) 	    :       "r"(addrh), "r"(addrl));
+return|return
+operator|(
+name|val
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|uint64_t
 name|xlr_paddr_ld
 parameter_list|(
 name|uint64_t
@@ -862,11 +973,11 @@ literal|0xffffffff
 expr_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|( 	    ".set push         \n\t" 	    ".set mips64       \n\t" 	    "dsll32 %2, %2, 0  \n\t" 	    "dsll32 %3, %3, 0  \n\t"
+asm|( 	    ".set	push		\n\t" 	    ".set	mips64		\n\t" 	    "dsll32	%2, %2, 0	\n\t" 	    "dsll32	%3, %3, 0	\n\t"
 comment|/* get rid of the */
-asm|"dsrl32 %3, %3, 0  \n\t"
+asm|"dsrl32	%3, %3, 0	\n\t"
 comment|/* sign extend */
-asm|"or     %2, %2, %3 \n\t" 	    "lw     %0, 0(%2)  \n\t" 	    "lw     %1, 4(%2)  \n\t" 	    ".set pop           \n" 	    :       "=&r"(valh), "=r"(vall) 	    :       "r"(addrh), "r"(addrl));
+asm|"or		%0, %2, %3	\n\t" 	    "lw		%1, 4(%0)	\n\t" 	    "lw		%0, 0(%0)	\n\t" 	    ".set	pop		\n" 	    :       "=&r"(valh), "=r"(vall) 	    :       "r"(addrh), "r"(addrl));
 return|return
 operator|(
 operator|(
@@ -941,6 +1052,14 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* !defined(__mips_n64)&& !defined(__mips_n32) */
+end_comment
+
+begin_comment
+comment|/*  * o32 compilation, we will disable interrupts and enable  * the KX bit so that we can use XKPHYS to access any 40bit  * physical address  */
+end_comment
+
 begin_function
 specifier|static
 name|__inline
@@ -998,6 +1117,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* defined(__mips_n64) || defined(__mips_n32) */
+end_comment
 
 begin_comment
 comment|/* for cpuid to hardware thread id mapping */
