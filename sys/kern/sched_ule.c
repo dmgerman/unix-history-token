@@ -10136,13 +10136,13 @@ name|td
 argument_list|)
 condition|)
 return|return;
+comment|/* 	 * Force a switch before returning to userspace.  If the 	 * target thread is not running locally send an ipi to force 	 * the issue. 	 */
 name|td
 operator|->
 name|td_flags
 operator||=
 name|TDF_NEEDRESCHED
 expr_stmt|;
-comment|/* 	 * Force a switch before returning to userspace.  If the 	 * target thread is not running locally send an ipi to force 	 * the issue. 	 */
 if|if
 condition|(
 name|td
