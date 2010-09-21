@@ -109,7 +109,7 @@ begin_define
 define|#
 directive|define
 name|MAXINTERP
-value|32
+value|PATH_MAX
 end_define
 
 begin_comment
