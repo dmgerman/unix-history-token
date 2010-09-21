@@ -575,13 +575,26 @@ begin_comment
 comment|/* Periodic or one-shot mode. */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|int
+name|want_periodic
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* What mode to prefer. */
+end_comment
+
 begin_expr_stmt
 name|TUNABLE_INT
 argument_list|(
 literal|"kern.eventtimer.periodic"
 argument_list|,
 operator|&
-name|periodic
+name|want_periodic
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2913,6 +2926,10 @@ name|cpu_new_callout
 expr_stmt|;
 endif|#
 directive|endif
+name|periodic
+operator|=
+name|want_periodic
+expr_stmt|;
 comment|/* Grab requested timer or the best of present. */
 if|if
 condition|(
@@ -4076,6 +4093,10 @@ condition|)
 name|cpu_disable_deep_sleep
 operator|--
 expr_stmt|;
+name|periodic
+operator|=
+name|want_periodic
+expr_stmt|;
 name|timer
 operator|=
 name|et
@@ -4196,6 +4217,8 @@ literal|0
 argument_list|)
 expr_stmt|;
 name|periodic
+operator|=
+name|want_periodic
 operator|=
 name|val
 expr_stmt|;
