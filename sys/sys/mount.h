@@ -100,7 +100,7 @@ name|fid_len
 decl_stmt|;
 comment|/* length of data in bytes */
 name|u_short
-name|fid_reserved
+name|fid_data0
 decl_stmt|;
 comment|/* force longword alignment */
 name|char
