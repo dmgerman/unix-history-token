@@ -3304,7 +3304,7 @@ else|else
 block|{
 ifdef|#
 directive|ifdef
-name|__mips64
+name|__mips_n64
 name|m
 operator|=
 operator|(
@@ -9301,7 +9301,9 @@ name|NULL
 condition|)
 block|{
 return|return
+operator|(
 literal|2
+operator|)
 return|;
 block|}
 comment|/* 				 * Save the virtual address in the descriptor, 				 * it makes freeing easy. 				 */
@@ -9466,7 +9468,7 @@ operator|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|__mips64
+name|__mips_n64
 comment|/*  	 * On n64, we cannot store our mbuf pointer(64 bit) in the freeback 	 * message (40bit available), so we put the mbuf in m_nextpkt and  	 * use the physical addr of that in freeback message. 	 */
 name|mbuf_chain
 operator|->

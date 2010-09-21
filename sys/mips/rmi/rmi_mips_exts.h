@@ -827,7 +827,7 @@ name|__inline
 name|uint32_t
 name|xlr_paddr_lw
 parameter_list|(
-name|uint32_t
+name|uint64_t
 name|paddr
 parameter_list|)
 block|{
