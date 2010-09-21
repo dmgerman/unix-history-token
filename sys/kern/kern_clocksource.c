@@ -3825,10 +3825,20 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * If timer is periodic - just update next event time for target CPU. 	 */
+comment|/* 	 * If timer is periodic - just update next event time for target CPU. 	 * If timer is global - there is chance it is already programmed. 	 */
 if|if
 condition|(
 name|periodic
+operator|||
+operator|(
+name|timer
+operator|->
+name|et_flags
+operator|&
+name|ET_FLAGS_PERCPU
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|state
@@ -3864,12 +3874,31 @@ operator|&
 name|tmp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|periodic
+operator|||
+name|bintime_cmp
+argument_list|(
+operator|&
+name|state
+operator|->
+name|nextevent
+argument_list|,
+operator|&
+name|nexttick
+argument_list|,
+operator|>=
+argument_list|)
+condition|)
+block|{
 name|ET_HW_UNLOCK
 argument_list|(
 name|state
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
 block|}
 comment|/* 	 * Otherwise we have to wake that CPU up, as we can't get present 	 * bintime to reprogram global timer from here. If timer is per-CPU, 	 * we by definition can't do it from here. 	 */
 name|ET_HW_UNLOCK
