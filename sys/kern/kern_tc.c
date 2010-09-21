@@ -3883,6 +3883,9 @@ argument_list|(
 name|timecounter
 argument_list|)
 expr_stmt|;
+name|tc_windup
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
