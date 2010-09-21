@@ -136,7 +136,7 @@ name|char
 modifier|*
 name|td_name
 decl_stmt|;
-comment|/* Pointer to the node this entry refers to. */
+comment|/* Pointer to the node this entry refers to.  In case this field 	 * is NULL, the node is a whiteout. */
 name|struct
 name|tmpfs_node
 modifier|*
@@ -913,6 +913,36 @@ name|uio
 modifier|*
 parameter_list|,
 name|off_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|tmpfs_dir_whiteout_add
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+parameter_list|,
+name|struct
+name|componentname
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|tmpfs_dir_whiteout_remove
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+parameter_list|,
+name|struct
+name|componentname
 modifier|*
 parameter_list|)
 function_decl|;
