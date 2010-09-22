@@ -32,12 +32,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<assert.h>
 end_include
 
@@ -51,6 +45,12 @@ begin_include
 include|#
 directive|include
 file|<pthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_include
