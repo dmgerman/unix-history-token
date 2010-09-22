@@ -3982,15 +3982,15 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * DDB Helpers.  DDB has to look across multiple files with their own symbol  * tables and string tables.  *  * Note that we do not obey list locking protocols here.  We really don't need  * DDB to hang because somebody's got the lock held.  We'll take the chance  * that the files list is inconsistant instead.  */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|DDB
 end_ifdef
-
-begin_comment
-comment|/*  * DDB Helpers.  DDB has to look across multiple files with their own symbol  * tables and string tables.  *  * Note that we do not obey list locking protocols here.  We really don't need  * DDB to hang because somebody's got the lock held.  We'll take the chance  * that the files list is inconsistant instead.  */
-end_comment
 
 begin_function
 name|int
@@ -4018,6 +4018,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int
@@ -4110,11 +4115,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * stack(9) helper for non-debugging environemnts.  Unlike DDB helpers, we do  * obey locking protocols, and offer a significantly less complex interface.  */

@@ -1447,7 +1447,7 @@ operator|&
 name|st
 argument_list|)
 expr_stmt|;
-name|stack_print
+name|stack_print_ddb
 argument_list|(
 operator|&
 name|st
