@@ -1428,11 +1428,13 @@ argument_list|(
 name|va_page
 argument_list|)
 expr_stmt|;
-name|pmap_kenter
+name|pmap_kenter_attr
 argument_list|(
 name|va_page
 argument_list|,
 name|pa_page
+argument_list|,
+name|PTE_C_UNCACHED
 argument_list|)
 expr_stmt|;
 name|zbpci_config_space

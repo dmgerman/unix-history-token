@@ -3627,7 +3627,6 @@ comment|/*  * add a wired page to the kva  */
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|pmap_kenter_attr
 parameter_list|(
@@ -3745,24 +3744,22 @@ name|vm_paddr_t
 name|pa
 parameter_list|)
 block|{
-name|int
-name|attr
-decl_stmt|;
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|is_cacheable_mem
 argument_list|(
 name|pa
 argument_list|)
-condition|)
-name|attr
-operator|=
-name|PTE_C_CACHE
-expr_stmt|;
-else|else
-name|attr
-operator|=
-name|PTE_C_UNCACHED
+argument_list|,
+operator|(
+literal|"pmap_kenter: memory at 0x%lx is not cacheable"
+operator|,
+operator|(
+name|u_long
+operator|)
+name|pa
+operator|)
+argument_list|)
 expr_stmt|;
 name|pmap_kenter_attr
 argument_list|(
@@ -3770,7 +3767,7 @@ name|va
 argument_list|,
 name|pa
 argument_list|,
-name|attr
+name|PTE_C_CACHE
 argument_list|)
 expr_stmt|;
 block|}
