@@ -208,6 +208,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|cpu_block_copy_t
+name|zeus_block_copy
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|cpu_block_zero_t
+name|zeus_block_zero
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|extern
 name|cpu_block_copy_t
 modifier|*
