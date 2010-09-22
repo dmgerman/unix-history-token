@@ -4210,9 +4210,16 @@ name|cpu_disable_deep_sleep
 condition|)
 name|i
 operator|=
+name|min
+argument_list|(
+name|sc
+operator|->
+name|cpu_cx_lowest
+argument_list|,
 name|sc
 operator|->
 name|cpu_non_c3
+argument_list|)
 expr_stmt|;
 else|else
 endif|#
