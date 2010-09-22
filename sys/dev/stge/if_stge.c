@@ -9332,7 +9332,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-break|break;
 block|}
 if|if
 condition|(
@@ -9367,7 +9366,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-break|break;
 block|}
 block|}
 block|}
