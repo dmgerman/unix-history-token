@@ -34,6 +34,12 @@ end_ifndef
 begin_include
 include|#
 directive|include
+file|"opt_device_polling.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_kdtrace.h"
 end_include
 
@@ -3516,6 +3522,16 @@ operator|&
 name|ET_FLAGS_PERCPU
 operator|)
 operator|)
+ifdef|#
+directive|ifdef
+name|DEVICE_POLLING
+operator|||
+name|curcpu
+operator|==
+name|CPU_FIRST
+argument_list|()
+endif|#
+directive|endif
 condition|)
 return|return;
 name|state
