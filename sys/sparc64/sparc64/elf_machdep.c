@@ -540,6 +540,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|_RF_X
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* Bare symbols, needs proc */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|_RF_SZ
 parameter_list|(
 name|s
@@ -710,6 +721,8 @@ name|_RF_S
 operator||
 name|_RF_A
 operator||
+name|_RF_X
+operator||
 name|_RF_SZ
 argument_list|(
 literal|32
@@ -724,6 +737,8 @@ comment|/* HI22 */
 name|_RF_S
 operator||
 name|_RF_A
+operator||
+name|_RF_X
 operator||
 name|_RF_SZ
 argument_list|(
@@ -740,6 +755,8 @@ name|_RF_S
 operator||
 name|_RF_A
 operator||
+name|_RF_X
+operator||
 name|_RF_SZ
 argument_list|(
 literal|32
@@ -754,6 +771,8 @@ comment|/* 13 */
 name|_RF_S
 operator||
 name|_RF_A
+operator||
+name|_RF_X
 operator||
 name|_RF_SZ
 argument_list|(
@@ -1011,6 +1030,8 @@ name|_RF_S
 operator||
 name|_RF_A
 operator||
+name|_RF_X
+operator||
 name|_RF_SZ
 argument_list|(
 literal|32
@@ -1026,6 +1047,8 @@ name|_RF_S
 operator||
 name|_RF_A
 operator||
+name|_RF_X
+operator||
 name|_RF_SZ
 argument_list|(
 literal|32
@@ -1040,6 +1063,8 @@ comment|/* 11 */
 name|_RF_S
 operator||
 name|_RF_A
+operator||
+name|_RF_X
 operator||
 name|_RF_SZ
 argument_list|(
@@ -1072,6 +1097,8 @@ name|_RF_S
 operator||
 name|_RF_A
 operator||
+name|_RF_X
+operator||
 name|_RF_SZ
 argument_list|(
 literal|32
@@ -1087,6 +1114,8 @@ name|_RF_S
 operator||
 name|_RF_A
 operator||
+name|_RF_X
+operator||
 name|_RF_SZ
 argument_list|(
 literal|32
@@ -1101,6 +1130,8 @@ comment|/* HM10 */
 name|_RF_S
 operator||
 name|_RF_A
+operator||
+name|_RF_X
 operator||
 name|_RF_SZ
 argument_list|(
@@ -1217,6 +1248,8 @@ name|_RF_S
 operator||
 name|_RF_A
 operator||
+name|_RF_X
+operator||
 name|_RF_SZ
 argument_list|(
 literal|32
@@ -1232,6 +1265,8 @@ name|_RF_S
 operator||
 name|_RF_A
 operator||
+name|_RF_X
+operator||
 name|_RF_SZ
 argument_list|(
 literal|32
@@ -1246,6 +1281,8 @@ comment|/* 5 */
 name|_RF_S
 operator||
 name|_RF_A
+operator||
+name|_RF_X
 operator||
 name|_RF_SZ
 argument_list|(
@@ -1292,6 +1329,8 @@ name|_RF_S
 operator||
 name|_RF_A
 operator||
+name|_RF_X
+operator||
 name|_RF_SZ
 argument_list|(
 literal|32
@@ -1306,6 +1345,8 @@ comment|/* HIX22 */
 name|_RF_S
 operator||
 name|_RF_A
+operator||
+name|_RF_X
 operator||
 name|_RF_SZ
 argument_list|(
@@ -1322,6 +1363,8 @@ name|_RF_S
 operator||
 name|_RF_A
 operator||
+name|_RF_X
+operator||
 name|_RF_SZ
 argument_list|(
 literal|32
@@ -1337,6 +1380,8 @@ name|_RF_S
 operator||
 name|_RF_A
 operator||
+name|_RF_X
+operator||
 name|_RF_SZ
 argument_list|(
 literal|32
@@ -1351,6 +1396,8 @@ comment|/* M44 */
 name|_RF_S
 operator||
 name|_RF_A
+operator||
+name|_RF_X
 operator||
 name|_RF_SZ
 argument_list|(
@@ -1476,6 +1523,16 @@ parameter_list|(
 name|t
 parameter_list|)
 value|((reloc_target_flags[t]& _RF_A) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RELOC_BARE_SYMBOL
+parameter_list|(
+name|t
+parameter_list|)
+value|((reloc_target_flags[t]& _RF_X) != 0)
 end_define
 
 begin_define
@@ -2148,6 +2205,22 @@ return|;
 name|value
 operator|+=
 name|addr
+expr_stmt|;
+if|if
+condition|(
+name|RELOC_BARE_SYMBOL
+argument_list|(
+name|rtype
+argument_list|)
+condition|)
+name|value
+operator|=
+name|elf_relocaddr
+argument_list|(
+name|lf
+argument_list|,
+name|value
+argument_list|)
 expr_stmt|;
 block|}
 if|if
