@@ -775,7 +775,7 @@ comment|/* (k) Deferred entries. */
 define|#
 directive|define
 name|td_endzero
-value|td_base_pri
+value|td_rqindex
 comment|/* Copied during fork1() or thread_sched_upcall(). */
 define|#
 directive|define
