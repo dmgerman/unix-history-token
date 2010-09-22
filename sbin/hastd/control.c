@@ -1659,7 +1659,19 @@ argument_list|,
 literal|"Unable to receive control message"
 argument_list|)
 expr_stmt|;
-continue|continue;
+name|kill
+argument_list|(
+name|getpid
+argument_list|()
+argument_list|,
+name|SIGTERM
+argument_list|)
+expr_stmt|;
+name|pthread_exit
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
 block|}
 name|cmd
 operator|=
