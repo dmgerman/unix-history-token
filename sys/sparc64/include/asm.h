@@ -151,8 +151,19 @@ value|.text ; \ 	_ALIGN_TEXT
 end_define
 
 begin_comment
-comment|/*  * Define a function entry point.  *  * The compiler produces #function for the .type pseudo-op, but the '#'  * character has special meaning in cpp macros, so we use @function like  * other architectures.  The assembler seems to accept both.  * The assembler also accepts a .proc pseudo-op, which is used by the  * peep hole optimizer, whose argument is the type code of the return  * value.  Since this is difficult to predict and its expected that  * assembler code is already optimized, we leave it out.  */
+comment|/*  * Define function entry and alternate entry points.  *  * The compiler produces #function for the .type pseudo-op, but the '#'  * character has special meaning in cpp macros, so we use @function like  * other architectures.  The assembler seems to accept both.  * The assembler also accepts a .proc pseudo-op, which is used by the  * peep hole optimizer, whose argument is the type code of the return  * value.  Since this is difficult to predict and its expected that  * assembler code is already optimized, we leave it out.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|_ALTENTRY
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|.globl	CNAME(x) ; \ 	.type	CNAME(x),@function ; \ CNAME(x):
+end_define
 
 begin_define
 define|#
@@ -163,6 +174,16 @@ name|x
 parameter_list|)
 define|\
 value|_START_ENTRY ; \ 	.globl	CNAME(x) ; \ 	.type	CNAME(x),@function ; \ CNAME(x):
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALTENTRY
+parameter_list|(
+name|x
+parameter_list|)
+value|_ALTENTRY(x)
 end_define
 
 begin_define
