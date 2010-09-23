@@ -198,6 +198,18 @@ modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|reinit
+function_decl|)
+parameter_list|(
+name|caddr_t
+parameter_list|,
+name|u_int8_t
+modifier|*
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct
@@ -331,6 +343,14 @@ specifier|extern
 name|struct
 name|enc_xform
 name|enc_xform_rijndael128
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|enc_xform
+name|enc_xform_aes_xts
 decl_stmt|;
 end_decl_stmt
 

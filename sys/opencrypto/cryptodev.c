@@ -2062,6 +2062,15 @@ name|enc_xform_rijndael128
 expr_stmt|;
 break|break;
 case|case
+name|CRYPTO_AES_XTS
+case|:
+name|txform
+operator|=
+operator|&
+name|enc_xform_aes_xts
+expr_stmt|;
+break|break;
+case|case
 name|CRYPTO_NULL_CBC
 case|:
 name|txform

@@ -465,8 +465,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|CRYPTO_AES_XTS
+value|22
+end_define
+
+begin_define
+define|#
+directive|define
 name|CRYPTO_ALGORITHM_MAX
-value|21
+value|22
 end_define
 
 begin_comment
