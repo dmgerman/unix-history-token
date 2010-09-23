@@ -75,11 +75,15 @@ directive|include
 file|"proto.h"
 end_include
 
+begin_comment
+comment|/*  * Version history:  * 0 - initial version  * 1 - HIO_KEEPALIVE added  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|HAST_PROTO_VERSION
-value|0
+value|1
 end_define
 
 begin_define
@@ -220,6 +224,13 @@ define|#
 directive|define
 name|HIO_FLUSH
 value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|HIO_KEEPALIVE
+value|5
 end_define
 
 begin_define
@@ -397,6 +408,13 @@ comment|/* Maximum number of extents that are kept dirty. */
 name|int
 name|hr_keepdirty
 decl_stmt|;
+comment|/* Path to a program to execute on various events. */
+name|char
+name|hr_exec
+index|[
+name|PATH_MAX
+index|]
+decl_stmt|;
 comment|/* Path to local component. */
 name|char
 name|hr_localpath
@@ -506,6 +524,12 @@ name|proto_conn
 modifier|*
 name|hr_ctrl
 decl_stmt|;
+comment|/* Events from child to parent. */
+name|struct
+name|proto_conn
+modifier|*
+name|hr_event
+decl_stmt|;
 comment|/* Activemap structure. */
 name|struct
 name|activemap
@@ -537,6 +561,9 @@ specifier|const
 name|char
 modifier|*
 name|config
+parameter_list|,
+name|bool
+name|exitonerror
 parameter_list|)
 function_decl|;
 end_function_decl

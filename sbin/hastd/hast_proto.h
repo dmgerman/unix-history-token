@@ -41,6 +41,7 @@ begin_function_decl
 name|int
 name|hast_proto_send
 parameter_list|(
+specifier|const
 name|struct
 name|hast_resource
 modifier|*
@@ -71,6 +72,7 @@ begin_function_decl
 name|int
 name|hast_proto_recv
 parameter_list|(
+specifier|const
 name|struct
 name|hast_resource
 modifier|*
@@ -101,6 +103,7 @@ begin_function_decl
 name|int
 name|hast_proto_recv_hdr
 parameter_list|(
+specifier|const
 name|struct
 name|proto_conn
 modifier|*
@@ -119,6 +122,7 @@ begin_function_decl
 name|int
 name|hast_proto_recv_data
 parameter_list|(
+specifier|const
 name|struct
 name|hast_resource
 modifier|*

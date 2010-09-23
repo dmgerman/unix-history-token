@@ -481,36 +481,10 @@ name|addr
 operator|+=
 literal|6
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|addr
-index|[
-literal|0
-index|]
-operator|!=
-literal|'/'
-operator|&&
-comment|/* If this is not path... */
-name|strstr
-argument_list|(
-name|addr
-argument_list|,
-literal|"://"
-argument_list|)
-operator|==
-name|NULL
-condition|)
-comment|/* ...and has no prefix... */
-empty_stmt|;
-comment|/* ...tcp4 is the default. */
 else|else
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+block|{
+comment|/* 		 * Because TCP4 is the default assume IP or host is given without 		 * prefix. 		 */
+block|}
 name|sinp
 operator|->
 name|sin_family
@@ -656,6 +630,9 @@ operator|(
 name|ENAMETOOLONG
 operator|)
 return|;
+operator|(
+name|void
+operator|)
 name|strlcpy
 argument_list|(
 name|iporhost
@@ -1096,7 +1073,7 @@ name|errno
 operator|)
 return|;
 block|}
-comment|/* 	 * We make socket non-blocking so we have decided about connection 	 * timeout. 	 */
+comment|/* 	 * We make socket non-blocking so we can handle connection timeout 	 * manually. 	 */
 name|flags
 operator||=
 name|O_NONBLOCK
@@ -2027,6 +2004,8 @@ operator|->
 name|sin_port
 argument_list|)
 expr_stmt|;
+name|PJDLOG_VERIFY
+argument_list|(
 name|snprintf
 argument_list|(
 name|addr
@@ -2072,6 +2051,12 @@ literal|0xff
 operator|)
 argument_list|,
 name|port
+argument_list|)
+operator|<
+operator|(
+name|ssize_t
+operator|)
+name|size
 argument_list|)
 expr_stmt|;
 block|}
@@ -2285,12 +2270,17 @@ operator|<
 literal|0
 condition|)
 block|{
+name|PJDLOG_VERIFY
+argument_list|(
 name|strlcpy
 argument_list|(
 name|addr
 argument_list|,
 literal|"N/A"
 argument_list|,
+name|size
+argument_list|)
+operator|<
 name|size
 argument_list|)
 expr_stmt|;
@@ -2388,12 +2378,17 @@ operator|<
 literal|0
 condition|)
 block|{
+name|PJDLOG_VERIFY
+argument_list|(
 name|strlcpy
 argument_list|(
 name|addr
 argument_list|,
 literal|"N/A"
 argument_list|,
+name|size
+argument_list|)
+operator|<
 name|size
 argument_list|)
 expr_stmt|;
@@ -2557,6 +2552,8 @@ name|proto_register
 argument_list|(
 operator|&
 name|tcp4_proto
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 block|}
