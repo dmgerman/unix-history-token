@@ -334,6 +334,13 @@ name|G_ELI_MKEYLEN
 value|(G_ELI_DATAIVKEYLEN + SHA512_MDLEN)
 end_define
 
+begin_define
+define|#
+directive|define
+name|G_ELI_OVERWRITES
+value|5
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef

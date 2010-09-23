@@ -307,7 +307,7 @@ begin_decl_stmt
 name|u_int
 name|g_eli_overwrites
 init|=
-literal|5
+name|G_ELI_OVERWRITES
 decl_stmt|;
 end_decl_stmt
 
