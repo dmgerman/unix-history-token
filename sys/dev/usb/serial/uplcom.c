@@ -974,6 +974,46 @@ init|=
 block|{
 name|UPLCOM_DEV
 argument_list|(
+name|ACERP
+argument_list|,
+name|S81
+argument_list|)
+block|,
+comment|/* BenQ S81 phone */
+name|UPLCOM_DEV
+argument_list|(
+name|ADLINK
+argument_list|,
+name|ND6530
+argument_list|)
+block|,
+comment|/* ADLINK ND-6530 USB-Serial */
+name|UPLCOM_DEV
+argument_list|(
+name|ALCATEL
+argument_list|,
+name|OT535
+argument_list|)
+block|,
+comment|/* Alcatel One Touch 535/735 */
+name|UPLCOM_DEV
+argument_list|(
+name|ALCOR
+argument_list|,
+name|AU9720
+argument_list|)
+block|,
+comment|/* Alcor AU9720 USB 2.0-RS232 */
+name|UPLCOM_DEV
+argument_list|(
+name|ANCHOR
+argument_list|,
+name|SERIAL
+argument_list|)
+block|,
+comment|/* Anchor Serial adapter */
+name|UPLCOM_DEV
+argument_list|(
 name|ATEN
 argument_list|,
 name|UC232A
@@ -996,6 +1036,14 @@ name|CGUSBRS232R
 argument_list|)
 block|,
 comment|/* Corega CG-USBRS232R */
+name|UPLCOM_DEV
+argument_list|(
+name|EPSON
+argument_list|,
+name|CRESSI_EDY
+argument_list|)
+block|,
+comment|/* Cressi Edy diving computer */
 name|UPLCOM_DEV
 argument_list|(
 name|ELECOM
@@ -1022,6 +1070,14 @@ block|,
 comment|/* HAL Corporation Crossam2+USB */
 name|UPLCOM_DEV
 argument_list|(
+name|HP
+argument_list|,
+name|LD220
+argument_list|)
+block|,
+comment|/* HP LD220 POS Display */
+name|UPLCOM_DEV
+argument_list|(
 name|IODATA
 argument_list|,
 name|USBRSAQ
@@ -1038,12 +1094,124 @@ block|,
 comment|/* I/O DATA USB-RSAQ5 */
 name|UPLCOM_DEV
 argument_list|(
+name|ITEGNO
+argument_list|,
+name|WM1080A
+argument_list|)
+block|,
+comment|/* iTegno WM1080A GSM/GFPRS modem */
+name|UPLCOM_DEV
+argument_list|(
+name|ITEGNO
+argument_list|,
+name|WM2080A
+argument_list|)
+block|,
+comment|/* iTegno WM2080A CDMA modem */
+name|UPLCOM_DEV
+argument_list|(
+name|LEADTEK
+argument_list|,
+literal|9531
+argument_list|)
+block|,
+comment|/* Leadtek 9531 GPS */
+name|UPLCOM_DEV
+argument_list|(
+name|MICROSOFT
+argument_list|,
+literal|700WX
+argument_list|)
+block|,
+comment|/* Microsoft Palm 700WX */
+name|UPLCOM_DEV
+argument_list|(
 name|MOBILEACTION
 argument_list|,
 name|MA620
 argument_list|)
 block|,
 comment|/* Mobile Action MA-620 Infrared Adapter */
+name|UPLCOM_DEV
+argument_list|(
+name|NETINDEX
+argument_list|,
+name|WS002IN
+argument_list|)
+block|,
+comment|/* Willcom W-S002IN */
+name|UPLCOM_DEV
+argument_list|(
+name|NOKIA2
+argument_list|,
+name|CA42
+argument_list|)
+block|,
+comment|/* Nokia CA-42 cable */
+name|UPLCOM_DEV
+argument_list|(
+name|OTI
+argument_list|,
+name|DKU5
+argument_list|)
+block|,
+comment|/* OTI DKU-5 cable */
+name|UPLCOM_DEV
+argument_list|(
+name|PANASONIC
+argument_list|,
+name|TYTP50P6S
+argument_list|)
+block|,
+comment|/* Panasonic TY-TP50P6-S flat screen */
+name|UPLCOM_DEV
+argument_list|(
+name|PLX
+argument_list|,
+name|CA42
+argument_list|)
+block|,
+comment|/* PLX CA-42 clone cable */
+name|UPLCOM_DEV
+argument_list|(
+name|PROLIFIC
+argument_list|,
+name|ALLTRONIX_GPRS
+argument_list|)
+block|,
+comment|/* Alltronix ACM003U00 modem */
+name|UPLCOM_DEV
+argument_list|(
+name|PROLIFIC
+argument_list|,
+name|ALDIGA_AL11U
+argument_list|)
+block|,
+comment|/* AlDiga AL-11U modem */
+name|UPLCOM_DEV
+argument_list|(
+name|PROLIFIC
+argument_list|,
+name|DCU11
+argument_list|)
+block|,
+comment|/* DCU-11 Phone Cable */
+name|UPLCOM_DEV
+argument_list|(
+name|PROLIFIC
+argument_list|,
+name|HCR331
+argument_list|)
+block|,
+comment|/* HCR331 Card Reader */
+name|UPLCOM_DEV
+argument_list|(
+name|PROLIFIC
+argument_list|,
+name|MICROMAX_610U
+argument_list|)
+block|,
+comment|/* Micromax 610U modem */
 name|UPLCOM_DEV
 argument_list|(
 name|PROLIFIC
@@ -1059,7 +1227,7 @@ argument_list|,
 name|PL2303
 argument_list|)
 block|,
-comment|/* Generic */
+comment|/* Generic adapter */
 name|UPLCOM_DEV
 argument_list|(
 name|PROLIFIC
@@ -1080,10 +1248,10 @@ name|UPLCOM_DEV
 argument_list|(
 name|PROLIFIC2
 argument_list|,
-name|WSIM
+name|PL2303
 argument_list|)
 block|,
-comment|/* Willcom W-SIM */
+comment|/* Prolific adapter */
 name|UPLCOM_DEV
 argument_list|(
 name|RADIOSHACK
@@ -1109,6 +1277,54 @@ block|,
 comment|/* Sagem USB-Serial Controller */
 name|UPLCOM_DEV
 argument_list|(
+name|SAMSUNG
+argument_list|,
+name|I330
+argument_list|)
+block|,
+comment|/* Samsung I330 phone cradle */
+name|UPLCOM_DEV
+argument_list|(
+name|SANWA
+argument_list|,
+name|KB_USB2
+argument_list|)
+block|,
+comment|/* Sanwa KB-USB2 Multimeter cable */
+name|UPLCOM_DEV
+argument_list|(
+name|SIEMENS3
+argument_list|,
+name|EF81
+argument_list|)
+block|,
+comment|/* Seimens EF81 */
+name|UPLCOM_DEV
+argument_list|(
+name|SIEMENS3
+argument_list|,
+name|SX1
+argument_list|)
+block|,
+comment|/* Seimens SX1 */
+name|UPLCOM_DEV
+argument_list|(
+name|SIEMENS3
+argument_list|,
+name|X65
+argument_list|)
+block|,
+comment|/* Seimens X65 */
+name|UPLCOM_DEV
+argument_list|(
+name|SIEMENS3
+argument_list|,
+name|X75
+argument_list|)
+block|,
+comment|/* Seimens X75 */
+name|UPLCOM_DEV
+argument_list|(
 name|SITECOM
 argument_list|,
 name|SERIAL
@@ -1117,12 +1333,36 @@ block|,
 comment|/* Sitecom USB to Serial */
 name|UPLCOM_DEV
 argument_list|(
+name|SMART
+argument_list|,
+name|PL2303
+argument_list|)
+block|,
+comment|/* SMART Technologies */
+name|UPLCOM_DEV
+argument_list|(
+name|SONY
+argument_list|,
+name|QN3
+argument_list|)
+block|,
+comment|/* Sony QN3 phone cable */
+name|UPLCOM_DEV
+argument_list|(
+name|SONYERICSSON
+argument_list|,
+name|DATAPILOT
+argument_list|)
+block|,
+comment|/* Sony Ericsson Datapilot */
+name|UPLCOM_DEV
+argument_list|(
 name|SONYERICSSON
 argument_list|,
 name|DCU10
 argument_list|)
 block|,
-comment|/* Sony Ericsson USB Cable */
+comment|/* Sony Ericsson DCU-10 Cable */
 name|UPLCOM_DEV
 argument_list|(
 name|SOURCENEXT
@@ -1141,6 +1381,22 @@ block|,
 comment|/* SOURCENEXT KeikaiDenwa 8 with charger */
 name|UPLCOM_DEV
 argument_list|(
+name|SPEEDDRAGON
+argument_list|,
+name|MS3303H
+argument_list|)
+block|,
+comment|/* Speed Dragon USB-Serial */
+name|UPLCOM_DEV
+argument_list|(
+name|SYNTECH
+argument_list|,
+name|CPT8001C
+argument_list|)
+block|,
+comment|/* Syntech CPT-8001C Barcode scanner */
+name|UPLCOM_DEV
+argument_list|(
 name|TDK
 argument_list|,
 name|UHA6400
@@ -1149,12 +1405,28 @@ block|,
 comment|/* TDK USB-PHS Adapter UHA6400 */
 name|UPLCOM_DEV
 argument_list|(
+name|TDK
+argument_list|,
+name|UPA9664
+argument_list|)
+block|,
+comment|/* TDK USB-PHS Adapter UPA9664 */
+name|UPLCOM_DEV
+argument_list|(
 name|TRIPPLITE
 argument_list|,
 name|U209
 argument_list|)
 block|,
 comment|/* Tripp-Lite U209-000-R */
+name|UPLCOM_DEV
+argument_list|(
+name|YCCABLE
+argument_list|,
+name|PL2303
+argument_list|)
+block|,
+comment|/* YC Cable USB-Serial */
 block|}
 decl_stmt|;
 end_decl_stmt
