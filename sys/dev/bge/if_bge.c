@@ -13374,10 +13374,6 @@ goto|goto
 name|fail
 goto|;
 block|}
-if|if
-condition|(
-name|bootverbose
-condition|)
 name|device_printf
 argument_list|(
 name|dev
