@@ -4346,9 +4346,12 @@ name|request
 operator|->
 name|donecount
 operator|=
+name|le32toh
+argument_list|(
 name|prb
 operator|->
 name|transfer_count
+argument_list|)
 expr_stmt|;
 else|else
 name|request
