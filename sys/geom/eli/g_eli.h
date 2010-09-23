@@ -136,14 +136,14 @@ value|".eli"
 end_define
 
 begin_comment
-comment|/*  * Version history:  * 0 - Initial version number.  * 1 - Added data authentication support (md_aalgo field and  *     G_ELI_FLAG_AUTH flag).  * 2 - Added G_ELI_FLAG_READONLY.  * 3 - Added 'configure' subcommand.  * 4 - IV is generated from offset converted to little-endian  *     (flag G_ELI_FLAG_NATIVE_BYTE_ORDER will be set for older versions).  */
+comment|/*  * Version history:  * 0 - Initial version number.  * 1 - Added data authentication support (md_aalgo field and  *     G_ELI_FLAG_AUTH flag).  * 2 - Added G_ELI_FLAG_READONLY.  * 3 - Added 'configure' subcommand.  * 4 - IV is generated from offset converted to little-endian  *     (flag G_ELI_FLAG_NATIVE_BYTE_ORDER will be set for older versions).  * 5 - Added multiple encrypton keys.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|G_ELI_VERSION
-value|4
+value|5
 end_define
 
 begin_comment
@@ -253,6 +253,17 @@ name|G_ELI_FLAG_NATIVE_BYTE_ORDER
 value|0x00040000
 end_define
 
+begin_comment
+comment|/* Provider uses single encryption key. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|G_ELI_FLAG_SINGLE_KEY
+value|0x00080000
+end_define
+
 begin_define
 define|#
 directive|define
@@ -339,6 +350,17 @@ define|#
 directive|define
 name|G_ELI_OVERWRITES
 value|5
+end_define
+
+begin_comment
+comment|/* Switch data encryption key every 2^20 blocks. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|G_ELI_KEY_SHIFT
+value|20
 end_define
 
 begin_ifdef
@@ -457,10 +479,12 @@ name|G_ELI_DATAIVKEYLEN
 index|]
 decl_stmt|;
 name|uint8_t
-name|sc_ekey
-index|[
-name|G_ELI_DATAKEYLEN
-index|]
+modifier|*
+modifier|*
+name|sc_ekeys
+decl_stmt|;
+name|u_int
+name|sc_nekeys
 decl_stmt|;
 name|u_int
 name|sc_ealgo
@@ -500,6 +524,12 @@ name|sc_nkey
 decl_stmt|;
 name|uint32_t
 name|sc_flags
+decl_stmt|;
+name|off_t
+name|sc_mediasize
+decl_stmt|;
+name|size_t
+name|sc_sectorsize
 decl_stmt|;
 name|u_int
 name|sc_bytes_per_sector
@@ -1210,7 +1240,7 @@ begin_function
 specifier|static
 name|__inline
 name|int
-name|eli_metadata_decode_v1v2v3v4
+name|eli_metadata_decode_v1v2v3v4v5
 parameter_list|(
 specifier|const
 name|u_char
@@ -1581,9 +1611,12 @@ case|:
 case|case
 literal|4
 case|:
+case|case
+literal|5
+case|:
 name|error
 operator|=
-name|eli_metadata_decode_v1v2v3v4
+name|eli_metadata_decode_v1v2v3v4v5
 argument_list|(
 name|data
 argument_list|,
@@ -2754,6 +2787,25 @@ name|struct
 name|cryptop
 modifier|*
 name|crp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint8_t
+modifier|*
+name|g_eli_crypto_key
+parameter_list|(
+name|struct
+name|g_eli_softc
+modifier|*
+name|sc
+parameter_list|,
+name|off_t
+name|offset
+parameter_list|,
+name|size_t
+name|blocksize
 parameter_list|)
 function_decl|;
 end_function_decl

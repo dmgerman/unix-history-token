@@ -2398,9 +2398,14 @@ name|crde
 operator|->
 name|crd_key
 operator|=
+name|g_eli_crypto_key
+argument_list|(
 name|sc
-operator|->
-name|sc_ekey
+argument_list|,
+name|dstoff
+argument_list|,
+name|encr_secsize
+argument_list|)
 expr_stmt|;
 name|crde
 operator|->
