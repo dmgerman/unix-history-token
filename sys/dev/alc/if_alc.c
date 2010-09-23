@@ -15994,6 +15994,9 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
+name|status
+operator|&
+operator|(
 name|RRD_ERR_CRC
 operator||
 name|RRD_ERR_ALIGN
@@ -16001,6 +16004,7 @@ operator||
 name|RRD_ERR_TRUNC
 operator||
 name|RRD_ERR_RUNT
+operator|)
 operator|)
 operator|!=
 literal|0
