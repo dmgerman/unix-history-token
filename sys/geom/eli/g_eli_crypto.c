@@ -220,6 +220,19 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|algo
+operator|!=
+name|CRYPTO_AES_XTS
+argument_list|,
+operator|(
+literal|"%s: CRYPTO_AES_XTS unexpected here"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 name|bzero
 argument_list|(
 operator|&
@@ -681,6 +694,13 @@ decl_stmt|;
 name|int
 name|outsize
 decl_stmt|;
+name|assert
+argument_list|(
+name|algo
+operator|!=
+name|CRYPTO_AES_XTS
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|algo
@@ -1002,6 +1022,17 @@ name|size_t
 name|keysize
 parameter_list|)
 block|{
+comment|/* We prefer AES-CBC for metadata protection. */
+if|if
+condition|(
+name|algo
+operator|==
+name|CRYPTO_AES_XTS
+condition|)
+name|algo
+operator|=
+name|CRYPTO_AES_CBC
+expr_stmt|;
 return|return
 operator|(
 name|g_eli_crypto_cipher
@@ -1046,6 +1077,17 @@ name|size_t
 name|keysize
 parameter_list|)
 block|{
+comment|/* We prefer AES-CBC for metadata protection. */
+if|if
+condition|(
+name|algo
+operator|==
+name|CRYPTO_AES_XTS
+condition|)
+name|algo
+operator|=
+name|CRYPTO_AES_CBC
+expr_stmt|;
 return|return
 operator|(
 name|g_eli_crypto_cipher
