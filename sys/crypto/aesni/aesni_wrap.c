@@ -650,15 +650,11 @@ name|buf
 operator|==
 name|NULL
 condition|)
-block|{
-name|error
-operator|=
+return|return
+operator|(
 name|ENOMEM
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
+operator|)
+return|;
 name|td
 operator|=
 name|curthread
@@ -684,7 +680,7 @@ operator|!=
 literal|0
 condition|)
 goto|goto
-name|out1
+name|out
 goto|;
 if|if
 condition|(
@@ -926,7 +922,7 @@ operator|->
 name|iv
 argument_list|)
 expr_stmt|;
-name|out1
+name|out
 label|:
 if|if
 condition|(
@@ -950,8 +946,6 @@ name|M_AESNI
 argument_list|)
 expr_stmt|;
 block|}
-name|out
-label|:
 return|return
 operator|(
 name|error
