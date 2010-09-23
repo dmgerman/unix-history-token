@@ -6560,6 +6560,24 @@ goto|goto
 name|out
 goto|;
 block|}
+if|if
+condition|(
+name|oldsize
+operator|==
+name|mediasize
+condition|)
+block|{
+name|gctl_error
+argument_list|(
+name|req
+argument_list|,
+literal|"Size hasn't changed."
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 comment|/* Read metadata from the 'oldsize' offset. */
 if|if
 condition|(
