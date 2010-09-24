@@ -2975,6 +2975,42 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/*  	 * Set cache line size.  On Octeon it should be 128 bytes, 	 * but according to Linux some Intel bridges have trouble 	 * with values over 64 bytes, so use 64 bytes. 	 */
+name|octopci_write_config
+argument_list|(
+name|dev
+argument_list|,
+name|b
+argument_list|,
+name|s
+argument_list|,
+name|f
+argument_list|,
+name|PCIR_CACHELNSZ
+argument_list|,
+literal|16
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* Set latency timer.  */
+name|octopci_write_config
+argument_list|(
+name|dev
+argument_list|,
+name|b
+argument_list|,
+name|s
+argument_list|,
+name|f
+argument_list|,
+name|PCIR_LATTIMER
+argument_list|,
+literal|48
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 comment|/* Configure PCI-PCI bridges.  */
 name|class
 operator|=
@@ -3701,6 +3737,13 @@ argument_list|(
 name|bus_setup_intr
 argument_list|,
 name|bus_generic_setup_intr
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|bus_teardown_intr
+argument_list|,
+name|bus_generic_teardown_intr
 argument_list|)
 block|,
 name|DEVMETHOD
