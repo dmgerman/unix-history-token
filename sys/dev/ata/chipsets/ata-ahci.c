@@ -3366,9 +3366,12 @@ name|request
 operator|->
 name|donecount
 operator|=
+name|le32toh
+argument_list|(
 name|clp
 operator|->
 name|bytecount
+argument_list|)
 expr_stmt|;
 comment|/* release SG list etc */
 name|ch
