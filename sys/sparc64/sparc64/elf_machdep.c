@@ -464,7 +464,7 @@ modifier|*
 name|off
 name|__unused
 parameter_list|)
-block|{ }
+block|{  }
 end_function
 
 begin_comment
@@ -1470,7 +1470,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static const char *reloc_names[] = { 	"NONE", "RELOC_8", "RELOC_16", "RELOC_32", "DISP_8", 	"DISP_16", "DISP_32", "WDISP_30", "WDISP_22", "HI22", 	"22", "13", "LO10", "GOT10", "GOT13", 	"GOT22", "PC10", "PC22", "WPLT30", "COPY", 	"GLOB_DAT", "JMP_SLOT", "RELATIVE", "UA_32", "PLT32", 	"HIPLT22", "LOPLT10", "LOPLT10", "PCPLT22", "PCPLT32", 	"10", "11", "64", "OLO10", "HH22", 	"HM10", "LM22", "PC_HH22", "PC_HM10", "PC_LM22",  	"WDISP16", "WDISP19", "GLOB_JMP", "7", "5", "6", 	"DISP64", "PLT64", "HIX22", "LOX10", "H44", "M44",  	"L44", "REGISTER", "UA64", "UA16" };
+unit|static const char *const reloc_names[] = { 	"NONE", "RELOC_8", "RELOC_16", "RELOC_32", "DISP_8", 	"DISP_16", "DISP_32", "WDISP_30", "WDISP_22", "HI22", 	"22", "13", "LO10", "GOT10", "GOT13", 	"GOT22", "PC10", "PC22", "WPLT30", "COPY", 	"GLOB_DAT", "JMP_SLOT", "RELATIVE", "UA_32", "PLT32", 	"HIPLT22", "LOPLT10", "LOPLT10", "PCPLT22", "PCPLT32", 	"10", "11", "64", "OLO10", "HH22", 	"HM10", "LM22", "PC_HH22", "PC_HM10", "PC_LM22",  	"WDISP16", "WDISP19", "GLOB_JMP", "7", "5", "6", 	"DISP64", "PLT64", "HIX22", "LOX10", "H44", "M44",  	"L44", "REGISTER", "UA64", "UA16" };
 endif|#
 directive|endif
 end_endif
@@ -1892,15 +1892,13 @@ name|type
 parameter_list|,
 name|elf_lookup_fn
 name|lookup
+name|__unused
 parameter_list|)
 block|{
 specifier|const
 name|Elf_Rela
 modifier|*
 name|rela
-decl_stmt|;
-name|Elf_Addr
-name|value
 decl_stmt|;
 name|Elf_Addr
 modifier|*
@@ -1944,19 +1942,6 @@ operator|-
 literal|1
 operator|)
 return|;
-name|value
-operator|=
-name|rela
-operator|->
-name|r_addend
-operator|+
-operator|(
-name|Elf_Addr
-operator|)
-name|lf
-operator|->
-name|address
-expr_stmt|;
 name|where
 operator|=
 operator|(
@@ -1964,12 +1949,7 @@ name|Elf_Addr
 operator|*
 operator|)
 operator|(
-operator|(
-name|Elf_Addr
-operator|)
-name|lf
-operator|->
-name|address
+name|relocbase
 operator|+
 name|rela
 operator|->
@@ -1983,7 +1963,11 @@ name|elf_relocaddr
 argument_list|(
 name|lf
 argument_list|,
-name|value
+name|rela
+operator|->
+name|r_addend
+operator|+
+name|relocbase
 argument_list|)
 expr_stmt|;
 return|return
@@ -2265,7 +2249,6 @@ argument_list|(
 name|rtype
 argument_list|)
 condition|)
-block|{
 name|value
 operator|=
 name|elf_relocaddr
@@ -2277,7 +2260,6 @@ operator|+
 name|relocbase
 argument_list|)
 expr_stmt|;
-block|}
 name|mask
 operator|=
 name|RELOC_VALUE_BITMASK
