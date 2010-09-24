@@ -7732,16 +7732,6 @@ operator|.
 name|num_restart
 operator|++
 expr_stmt|;
-name|vr_stop
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|vr_reset
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|vr_ifp
@@ -11172,16 +11162,6 @@ argument_list|(
 name|ifp
 argument_list|,
 literal|"watchdog timeout\n"
-argument_list|)
-expr_stmt|;
-name|vr_stop
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|vr_reset
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 name|ifp
