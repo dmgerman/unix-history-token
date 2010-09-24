@@ -304,6 +304,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|newfile_format
@@ -3462,9 +3463,6 @@ block|{
 name|uint16_t
 name|block
 decl_stmt|;
-name|uint32_t
-name|amount
-decl_stmt|;
 name|time_t
 name|now
 decl_stmt|;
@@ -3531,6 +3529,8 @@ name|LOG_INFO
 argument_list|,
 literal|"Sent %d bytes in %d seconds"
 argument_list|,
+name|ts
+operator|.
 name|amount
 argument_list|,
 name|time
@@ -3558,9 +3558,6 @@ modifier|*
 name|mode
 parameter_list|)
 block|{
-name|uint32_t
-name|filesize
-decl_stmt|;
 name|uint16_t
 name|block
 decl_stmt|;
@@ -3626,6 +3623,14 @@ expr_stmt|;
 name|write_close
 argument_list|()
 expr_stmt|;
+name|gettimeofday
+argument_list|(
+operator|&
+name|now2
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|debug
@@ -3687,7 +3692,9 @@ name|LOG_INFO
 argument_list|,
 literal|"Download of %d bytes in %d blocks completed after %0.1f seconds\n"
 argument_list|,
-name|filesize
+name|ts
+operator|.
+name|amount
 argument_list|,
 name|block
 argument_list|,

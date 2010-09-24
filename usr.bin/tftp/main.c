@@ -1132,13 +1132,14 @@ name|NULL
 decl_stmt|;
 name|char
 modifier|*
-name|options
+name|opts
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
-name|mode
+name|tmode
 init|=
 literal|"octet"
 decl_stmt|;
@@ -1231,7 +1232,7 @@ name|s
 operator|=
 literal|'\0'
 expr_stmt|;
-name|options
+name|opts
 operator|=
 name|s
 operator|+
@@ -1241,7 +1242,7 @@ if|if
 condition|(
 name|strncmp
 argument_list|(
-name|options
+name|opts
 argument_list|,
 literal|"mode="
 argument_list|,
@@ -1251,11 +1252,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|mode
+name|tmode
 operator|=
-name|options
+name|opts
 expr_stmt|;
-name|mode
+name|tmode
 operator|+=
 literal|5
 expr_stmt|;
@@ -1289,7 +1290,7 @@ index|]
 operator|.
 name|m_name
 argument_list|,
-name|mode
+name|tmode
 argument_list|)
 operator|==
 literal|0
@@ -3622,7 +3623,9 @@ specifier|const
 name|char
 modifier|*
 name|command_prompt
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -5008,21 +5011,14 @@ decl_stmt|;
 name|size_t
 name|max
 decl_stmt|;
-name|char
-name|maxbuffer
-index|[
-literal|100
-index|]
-decl_stmt|;
-name|int
-modifier|*
+name|u_long
 name|maxdgram
 decl_stmt|;
 name|max
 operator|=
 sizeof|sizeof
 argument_list|(
-name|maxbuffer
+name|maxdgram
 argument_list|)
 expr_stmt|;
 if|if
@@ -5031,7 +5027,8 @@ name|sysctlbyname
 argument_list|(
 literal|"net.inet.udp.maxdgram"
 argument_list|,
-name|maxbuffer
+operator|&
+name|maxdgram
 argument_list|,
 operator|&
 name|max
@@ -5051,14 +5048,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|maxdgram
-operator|=
-operator|(
-name|int
-operator|*
-operator|)
-name|maxbuffer
-expr_stmt|;
 if|if
 condition|(
 name|size
@@ -5086,7 +5075,9 @@ if|if
 condition|(
 name|size
 operator|>
-operator|*
+operator|(
+name|int
+operator|)
 name|maxdgram
 operator|-
 literal|4
@@ -5094,10 +5085,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Blocksize can't be bigger than %d bytes due "
+literal|"Blocksize can't be bigger than %ld bytes due "
 literal|"to the net.inet.udp.maxdgram sysctl limitation.\n"
 argument_list|,
-operator|*
 name|maxdgram
 operator|-
 literal|4
@@ -5113,9 +5103,8 @@ index|]
 operator|.
 name|o_request
 argument_list|,
-literal|"%d"
+literal|"%ld"
 argument_list|,
-operator|*
 name|maxdgram
 operator|-
 literal|4
@@ -5208,14 +5197,7 @@ decl_stmt|;
 name|size_t
 name|max
 decl_stmt|;
-name|char
-name|maxbuffer
-index|[
-literal|100
-index|]
-decl_stmt|;
-name|int
-modifier|*
+name|u_long
 name|maxdgram
 decl_stmt|;
 name|int
@@ -5256,7 +5238,7 @@ name|max
 operator|=
 sizeof|sizeof
 argument_list|(
-name|maxbuffer
+name|maxdgram
 argument_list|)
 expr_stmt|;
 if|if
@@ -5265,7 +5247,8 @@ name|sysctlbyname
 argument_list|(
 literal|"net.inet.udp.maxdgram"
 argument_list|,
-name|maxbuffer
+operator|&
+name|maxdgram
 argument_list|,
 operator|&
 name|max
@@ -5285,14 +5268,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|maxdgram
-operator|=
-operator|(
-name|int
-operator|*
-operator|)
-name|maxbuffer
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -5367,7 +5342,9 @@ if|if
 condition|(
 name|size
 operator|>
-operator|*
+operator|(
+name|int
+operator|)
 name|maxdgram
 operator|-
 literal|4
@@ -5375,10 +5352,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Blocksize2 can't be bigger than %d bytes due "
+literal|"Blocksize2 can't be bigger than %ld bytes due "
 literal|"to the net.inet.udp.maxdgram sysctl limitation.\n"
 argument_list|,
-operator|*
 name|maxdgram
 operator|-
 literal|4
@@ -5405,7 +5381,9 @@ control|)
 block|{
 if|if
 condition|(
-operator|*
+operator|(
+name|int
+operator|)
 name|maxdgram
 operator|<
 name|sizes
