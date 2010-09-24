@@ -4219,7 +4219,7 @@ block|{
 case|case
 name|AF_INET
 case|:
-name|__rpc_inet_ntop
+name|inet_ntop
 argument_list|(
 name|AF_INET
 argument_list|,
@@ -4249,7 +4249,7 @@ name|INET6
 case|case
 name|AF_INET6
 case|:
-name|__rpc_inet_ntop
+name|inet_ntop
 argument_list|(
 name|AF_INET6
 argument_list|,

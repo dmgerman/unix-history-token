@@ -61,12 +61,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/socket.h>
 end_include
 
@@ -79,13 +73,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<rpc/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<rpc/rpc_com.h>
+file|<netinet/in.h>
 end_include
 
 begin_if
@@ -152,7 +140,7 @@ end_comment
 
 begin_function
 name|int
-name|__rpc_inet_pton
+name|inet_pton
 parameter_list|(
 name|int
 name|af
@@ -160,12 +148,10 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|__restrict
 name|src
 parameter_list|,
 name|void
 modifier|*
-name|__restrict
 name|dst
 parameter_list|)
 block|{

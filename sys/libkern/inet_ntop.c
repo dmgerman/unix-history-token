@@ -61,12 +61,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/socket.h>
 end_include
 
@@ -79,13 +73,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<rpc/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<rpc/rpc_com.h>
+file|<netinet/in.h>
 end_include
 
 begin_comment
@@ -94,7 +82,6 @@ end_comment
 
 begin_function_decl
 specifier|static
-specifier|const
 name|char
 modifier|*
 name|inet_ntop4
@@ -116,7 +103,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-specifier|const
 name|char
 modifier|*
 name|inet_ntop6
@@ -141,10 +127,9 @@ comment|/* char *  * inet_ntop(af, src, dst, size)  *	convert a network format a
 end_comment
 
 begin_function
-specifier|const
 name|char
 modifier|*
-name|__rpc_inet_ntop
+name|inet_ntop
 parameter_list|(
 name|int
 name|af
@@ -152,12 +137,10 @@ parameter_list|,
 specifier|const
 name|void
 modifier|*
-name|__restrict
 name|src
 parameter_list|,
 name|char
 modifier|*
-name|__restrict
 name|dst
 parameter_list|,
 name|socklen_t
@@ -216,7 +199,6 @@ end_comment
 
 begin_function
 specifier|static
-specifier|const
 name|char
 modifier|*
 name|inet_ntop4
@@ -328,7 +310,6 @@ end_comment
 
 begin_function
 specifier|static
-specifier|const
 name|char
 modifier|*
 name|inet_ntop6

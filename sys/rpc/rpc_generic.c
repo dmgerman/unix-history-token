@@ -1136,7 +1136,7 @@ name|buf
 expr_stmt|;
 if|if
 condition|(
-name|__rpc_inet_ntop
+name|inet_ntop
 argument_list|(
 name|af
 argument_list|,
@@ -1210,7 +1210,7 @@ name|buf
 expr_stmt|;
 if|if
 condition|(
-name|__rpc_inet_ntop
+name|inet_ntop
 argument_list|(
 name|af
 argument_list|,
@@ -1626,7 +1626,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|__rpc_inet_pton
+name|inet_pton
 argument_list|(
 name|AF_INET
 argument_list|,
@@ -1747,7 +1747,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|__rpc_inet_pton
+name|inet_pton
 argument_list|(
 name|AF_INET6
 argument_list|,
