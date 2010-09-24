@@ -241,7 +241,7 @@ begin_define
 define|#
 directive|define
 name|CVMX_OCT_PCI_IO_BASE
-value|0x00001000
+value|0x00004000
 end_define
 
 begin_define
@@ -255,14 +255,14 @@ begin_define
 define|#
 directive|define
 name|CVMX_OCT_PCI_MEM1_BASE
-value|0x80000000
+value|0xf0000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|CVMX_OCT_PCI_MEM1_SIZE
-value|0x40000000
+value|0x0f000000
 end_define
 
 begin_endif
