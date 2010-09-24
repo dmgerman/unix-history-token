@@ -281,7 +281,7 @@ begin_define
 define|#
 directive|define
 name|BGE_CSUM_FEATURES
-value|(CSUM_IP | CSUM_TCP | CSUM_UDP)
+value|(CSUM_IP | CSUM_TCP)
 end_define
 
 begin_define
@@ -13987,6 +13987,11 @@ goto|goto
 name|fail
 goto|;
 block|}
+name|bge_add_sysctls
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* Set default tuneable values. */
 name|sc
 operator|->
@@ -14017,6 +14022,27 @@ operator|->
 name|bge_tx_max_coal_bds
 operator|=
 literal|10
+expr_stmt|;
+comment|/* Initialize checksum features to use. */
+name|sc
+operator|->
+name|bge_csum_features
+operator|=
+name|BGE_CSUM_FEATURES
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|bge_forced_udpcsum
+operator|!=
+literal|0
+condition|)
+name|sc
+operator|->
+name|bge_csum_features
+operator||=
+name|CSUM_UDP
 expr_stmt|;
 comment|/* Set up ifnet structure */
 name|ifp
@@ -14139,7 +14165,9 @@ name|ifp
 operator|->
 name|if_hwassist
 operator|=
-name|BGE_CSUM_FEATURES
+name|sc
+operator|->
+name|bge_csum_features
 expr_stmt|;
 name|ifp
 operator|->
@@ -14859,11 +14887,6 @@ literal|"couldn't set up irq\n"
 argument_list|)
 expr_stmt|;
 block|}
-name|bge_add_sysctls
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -19407,7 +19430,9 @@ name|m_pkthdr
 operator|.
 name|csum_flags
 operator|&
-name|BGE_CSUM_FEATURES
+name|sc
+operator|->
+name|bge_csum_features
 operator|)
 operator|!=
 literal|0
@@ -20589,6 +20614,64 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* Override UDP checksum offloading. */
+if|if
+condition|(
+name|sc
+operator|->
+name|bge_forced_udpcsum
+operator|==
+literal|0
+condition|)
+name|sc
+operator|->
+name|bge_csum_features
+operator|&=
+operator|~
+name|CSUM_UDP
+expr_stmt|;
+else|else
+name|sc
+operator|->
+name|bge_csum_features
+operator||=
+name|CSUM_UDP
+expr_stmt|;
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_capabilities
+operator|&
+name|IFCAP_TXCSUM
+operator|&&
+name|ifp
+operator|->
+name|if_capenable
+operator|&
+name|IFCAP_TXCSUM
+condition|)
+block|{
+name|ifp
+operator|->
+name|if_hwassist
+operator|&=
+operator|~
+operator|(
+name|BGE_CSUM_FEATURES
+operator||
+name|CSUM_UDP
+operator|)
+expr_stmt|;
+name|ifp
+operator|->
+name|if_hwassist
+operator||=
+name|sc
+operator|->
+name|bge_csum_features
+expr_stmt|;
+block|}
 comment|/* Init RX ring. */
 if|if
 condition|(
@@ -21951,7 +22034,9 @@ name|ifp
 operator|->
 name|if_hwassist
 operator||=
-name|BGE_CSUM_FEATURES
+name|sc
+operator|->
+name|bge_csum_features
 expr_stmt|;
 else|else
 name|ifp
@@ -21959,7 +22044,9 @@ operator|->
 name|if_hwassist
 operator|&=
 operator|~
-name|BGE_CSUM_FEATURES
+name|sc
+operator|->
+name|bge_csum_features
 expr_stmt|;
 block|}
 if|if
@@ -23555,6 +23642,60 @@ literal|0
 argument_list|,
 literal|"Number of fragmented TX buffers of a frame allowed before "
 literal|"forced collapsing"
+argument_list|)
+expr_stmt|;
+comment|/* 	 * It seems all Broadcom controllers have a bug that can generate UDP 	 * datagrams with checksum value 0 when TX UDP checksum offloading is 	 * enabled.  Generating UDP checksum value 0 is RFC 768 violation. 	 * Even though the probability of generating such UDP datagrams is 	 * low, I don't want to see FreeBSD boxes to inject such datagrams 	 * into network so disable UDP checksum offloading by default.  Users 	 * still override this behavior by setting a sysctl variable, 	 * dev.bge.0.forced_udpcsum. 	 */
+name|sc
+operator|->
+name|bge_forced_udpcsum
+operator|=
+literal|0
+expr_stmt|;
+name|snprintf
+argument_list|(
+name|tn
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tn
+argument_list|)
+argument_list|,
+literal|"dev.bge.%d.bge_forced_udpcsum"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+name|tn
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|bge_forced_udpcsum
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"forced_udpcsum"
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|bge_forced_udpcsum
+argument_list|,
+literal|0
+argument_list|,
+literal|"Enable UDP checksum offloading even if controller can "
+literal|"generate UDP checksum value 0"
 argument_list|)
 expr_stmt|;
 if|if
