@@ -6940,6 +6940,9 @@ case|:
 case|case
 name|IPV6_AUTOFLOWLABEL
 case|:
+case|case
+name|IPV6_BINDANY
+case|:
 switch|switch
 condition|(
 name|optname

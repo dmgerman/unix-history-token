@@ -4653,6 +4653,9 @@ case|:
 case|case
 name|IP_DONTFRAG
 case|:
+case|case
+name|IP_BINDANY
+case|:
 switch|switch
 condition|(
 name|sopt
@@ -4816,6 +4819,17 @@ operator|=
 name|OPTBIT
 argument_list|(
 name|INP_DONTFRAG
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|IP_BINDANY
+case|:
+name|optval
+operator|=
+name|OPTBIT
+argument_list|(
+name|INP_BINDANY
 argument_list|)
 expr_stmt|;
 break|break;
