@@ -2300,47 +2300,16 @@ condition|)
 block|{
 if|if
 condition|(
-name|strlen
+name|strncmp
 argument_list|(
 name|path
-argument_list|)
-operator|>
+argument_list|,
+literal|"/dev/"
+argument_list|,
 literal|5
-operator|&&
-name|path
-index|[
+argument_list|)
+operator|==
 literal|0
-index|]
-operator|==
-literal|'/'
-operator|&&
-name|path
-index|[
-literal|1
-index|]
-operator|==
-literal|'d'
-operator|&&
-name|path
-index|[
-literal|2
-index|]
-operator|==
-literal|'e'
-operator|&&
-name|path
-index|[
-literal|3
-index|]
-operator|==
-literal|'v'
-operator|&&
-name|path
-index|[
-literal|4
-index|]
-operator|==
-literal|'/'
 condition|)
 name|path
 operator|+=
@@ -3046,7 +3015,7 @@ begin_define
 define|#
 directive|define
 name|STATUS_FORMAT
-value|"        %-16s %-10s\n"
+value|"        %s %s\n"
 end_define
 
 begin_function
@@ -6384,7 +6353,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-32s 0x%llx\n"
+literal|"%s 0x%llx\n"
 argument_list|,
 name|name
 argument_list|,
