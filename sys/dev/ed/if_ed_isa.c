@@ -163,6 +163,13 @@ block|}
 block|,
 comment|/* AXE2001 */
 block|{
+literal|0x0115180e
+block|,
+name|NULL
+block|}
+block|,
+comment|/* CPX1501 */
+block|{
 literal|0x0090252a
 block|,
 name|NULL
