@@ -1070,7 +1070,7 @@ parameter_list|(
 name|thr
 parameter_list|)
 define|\
-value|((thr)->cancel_pending&& (thr)->cancel_enable&&	\ 	 ((thr)->cancel_point || (thr)->cancel_async)&&	\ 	 (thr)->no_cancel == 0)
+value|((thr)->cancel_pending&& (thr)->cancel_enable&&	\ 	 (thr)->no_cancel == 0)
 comment|/* Cancellation is enabled */
 name|int
 name|cancel_enable

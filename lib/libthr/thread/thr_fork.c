@@ -766,6 +766,12 @@ operator|=
 name|cancelsave
 expr_stmt|;
 comment|/* test async cancel */
+if|if
+condition|(
+name|curthread
+operator|->
+name|cancel_async
+condition|)
 name|_thr_testcancel
 argument_list|(
 name|curthread
