@@ -7225,11 +7225,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|xl_reset
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|xl_stop
 argument_list|(
 name|sc
@@ -10148,11 +10143,6 @@ operator|&
 name|XL_STAT_ADFAIL
 condition|)
 block|{
-name|xl_reset
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|ifp
 operator|->
 name|if_drv_flags
@@ -10459,11 +10449,6 @@ operator|&
 name|XL_STAT_ADFAIL
 condition|)
 block|{
-name|xl_reset
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|ifp
 operator|->
 name|if_drv_flags
@@ -12252,6 +12237,12 @@ condition|)
 return|return;
 comment|/* 	 * Cancel pending I/O and free all RX/TX buffers. 	 */
 name|xl_stop
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* Reset the chip to a known state. */
+name|xl_reset
 argument_list|(
 name|sc
 argument_list|)
@@ -14395,11 +14386,6 @@ argument_list|,
 literal|"no carrier - transceiver cable problem?\n"
 argument_list|)
 expr_stmt|;
-name|xl_reset
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|ifp
 operator|->
 name|if_drv_flags
@@ -14931,11 +14917,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|xl_reset
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|xl_stop
 argument_list|(
 name|sc
@@ -15031,11 +15012,6 @@ operator|->
 name|xl_ifp
 expr_stmt|;
 name|XL_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|xl_reset
 argument_list|(
 name|sc
 argument_list|)
