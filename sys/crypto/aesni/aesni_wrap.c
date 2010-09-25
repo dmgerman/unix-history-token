@@ -1115,7 +1115,7 @@ name|ses
 operator|->
 name|algo
 operator|==
-name|CRYPTO_AES_XTS
+name|CRYPTO_AES_CBC
 condition|)
 name|arc4rand
 argument_list|(
@@ -1593,7 +1593,7 @@ name|rounds
 argument_list|,
 name|ses
 operator|->
-name|enc_schedule
+name|dec_schedule
 argument_list|,
 name|ses
 operator|->
