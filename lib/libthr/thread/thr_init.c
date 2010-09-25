@@ -1431,7 +1431,23 @@ argument_list|(
 argument|__pthread_cleanup_push_imp
 argument_list|)
 block|}
+block|,
 comment|/* PJT_CLEANUP_PUSH_IMP */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_cancel_enter
+argument_list|)
+block|}
+block|,
+comment|/* PJT_CANCEL_ENTER */
+block|{
+name|DUAL_ENTRY
+argument_list|(
+argument|_pthread_cancel_leave
+argument_list|)
+block|}
+comment|/* PJT_CANCEL_LEAVE */
 block|}
 decl_stmt|;
 end_decl_stmt

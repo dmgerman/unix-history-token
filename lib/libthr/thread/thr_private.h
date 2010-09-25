@@ -2620,6 +2620,26 @@ name|__hidden
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|void
+name|_pthread_cancel_enter
+parameter_list|(
+name|int
+name|maycancel
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_pthread_cancel_leave
+parameter_list|(
+name|int
+name|maycancel
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* #include<fcntl.h> */
 end_comment
