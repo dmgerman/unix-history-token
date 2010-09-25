@@ -6834,6 +6834,13 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|G_PART_DESTROY
+argument_list|(
+name|table
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
