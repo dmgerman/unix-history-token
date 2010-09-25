@@ -1234,6 +1234,9 @@ name|void
 modifier|*
 name|unwind_stackend
 decl_stmt|;
+name|int
+name|unwind_disabled
+decl_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * Magic value to help recognize a valid thread structure 	 * from an invalid one: 	 */
