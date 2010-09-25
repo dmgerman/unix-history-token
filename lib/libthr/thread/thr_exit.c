@@ -120,6 +120,13 @@ end_ifdef
 
 begin_decl_stmt
 specifier|static
+name|int
+name|message_printed
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|void
 name|thread_unwind
 argument_list|(
@@ -864,6 +871,12 @@ name|PIC
 name|thread_uw_init
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* PIC */
+ifdef|#
+directive|ifdef
+name|PIC
 if|if
 condition|(
 name|uwl_forcedunwind
@@ -871,10 +884,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|thread_unwind
-argument_list|()
-expr_stmt|;
-block|}
 else|#
 directive|else
 if|if
@@ -884,15 +893,47 @@ operator|!=
 name|NULL
 condition|)
 block|{
+endif|#
+directive|endif
+if|if
+condition|(
+name|curthread
+operator|->
+name|unwind_disabled
+condition|)
+block|{
+if|if
+condition|(
+name|message_printed
+operator|==
+literal|0
+condition|)
+block|{
+name|message_printed
+operator|=
+literal|1
+expr_stmt|;
+name|_thread_printf
+argument_list|(
+literal|2
+argument_list|,
+literal|"Warning: old _pthread_cleanup_push was called, "
+literal|"stack unwinding is disabled.\n"
+argument_list|)
+expr_stmt|;
+block|}
+goto|goto
+name|cleanup
+goto|;
+block|}
 name|thread_unwind
 argument_list|()
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* PIC */
 else|else
 block|{
+name|cleanup
+label|:
 while|while
 condition|(
 name|curthread
@@ -936,9 +977,6 @@ endif|#
 directive|endif
 comment|/* _PTHREAD_FORCED_UNWIND */
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|exit_thread
