@@ -154,6 +154,13 @@ index|[
 literal|16
 index|]
 decl_stmt|;
+name|int
+name|need_link_update
+decl_stmt|;
+name|struct
+name|task
+name|link_task
+decl_stmt|;
 name|struct
 name|ifmedia
 name|media
