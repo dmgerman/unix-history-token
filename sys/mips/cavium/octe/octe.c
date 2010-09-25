@@ -1392,7 +1392,6 @@ argument_list|(
 name|priv
 argument_list|)
 expr_stmt|;
-comment|/* 		 * XXX 		 * 		 * We may not be able to pass the mbuf up to BPF for one of 		 * two very good reasons: 		 * (1) immediately after our inserting it another CPU may be 		 *     kind enough to free it for us. 		 * (2) m_collapse gets called on m and we don't get back the 		 *     modified pointer. 		 * 		 * We have some options other than an m_dup route: 		 * (1) use a mutex or spinlock to prevent another CPU from 		 *     freeing it.  We could lock the tx_free_list's lock, 		 *     that would make sense. 		 * (2) get back the new mbuf pointer. 		 * (3) do the collapse here. 		 */
 if|if
 condition|(
 name|priv

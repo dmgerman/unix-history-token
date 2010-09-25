@@ -62,6 +62,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sched.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/smp.h>
 end_include
 
@@ -568,12 +580,8 @@ name|int
 name|pending
 parameter_list|)
 block|{
-specifier|const
 name|int
 name|coreid
-init|=
-name|cvmx_get_core_num
-argument_list|()
 decl_stmt|;
 name|uint64_t
 name|old_group_mask
@@ -595,6 +603,14 @@ decl_stmt|;
 name|int
 name|packet_not_copied
 decl_stmt|;
+name|sched_pin
+argument_list|()
+expr_stmt|;
+name|coreid
+operator|=
+name|cvmx_get_core_num
+argument_list|()
+expr_stmt|;
 comment|/* Prefetch cvm_oct_device since we know we need it soon */
 name|CVMX_PREFETCH
 argument_list|(
@@ -1495,6 +1511,9 @@ expr_stmt|;
 block|}
 block|}
 block|}
+name|sched_unpin
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 

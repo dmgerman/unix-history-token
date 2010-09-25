@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/bpf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/ethernet.h>
 end_include
 
@@ -972,6 +978,14 @@ name|tx_free_queue
 index|[
 name|qos
 index|]
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+comment|/* Pass it to any BPF listeners.  */
+name|ETHER_BPF_MTAP
+argument_list|(
+name|ifp
 argument_list|,
 name|m
 argument_list|)
