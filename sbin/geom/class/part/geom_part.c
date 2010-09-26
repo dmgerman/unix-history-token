@@ -670,7 +670,7 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
-literal|"bootcode [-b bootcode] [-p partcode] [-i index] [-f flags] geom"
+literal|"[-b bootcode] [-p partcode] [-i index] [-f flags] geom"
 block|}
 block|,
 block|{
