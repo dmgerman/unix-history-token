@@ -449,6 +449,12 @@ define|\
 value|((TARGET_64BIT || flag_pic || TARGET_RELOCATABLE)			\    ? (((GLOBAL) ? DW_EH_PE_indirect : 0) | DW_EH_PE_pcrel		\       | (TARGET_64BIT ? DW_EH_PE_udata8 : DW_EH_PE_sdata4))		\    : DW_EH_PE_absptr)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -459,8 +465,13 @@ parameter_list|,
 name|FS
 parameter_list|)
 define|\
-value|if (TARGET_64BIT) {							\     if ((FS)->regs.reg[2].how == REG_UNSAVED)				\       {									\ 	unsigned int *insn						\ 	  = (unsigned int *)						\ 	    _Unwind_GetGR ((CTX), LINK_REGISTER_REGNUM);		\ 	if (*insn == 0xE8410028)					\ 	  _Unwind_SetGRPtr ((CTX), 2, (CTX)->cfa + 40);			\       }									\   }
+value|if ((FS)->regs.reg[2].how == REG_UNSAVED)				\       {									\ 	unsigned int *insn = (unsigned int *)				\ 	    _Unwind_GetGR ((CTX), LINK_REGISTER_REGNUM);		\ 	if (insn != NULL&& *insn == 0xE8410028)			\ 	  _Unwind_SetGRPtr ((CTX), 2, (CTX)->cfa + 40);			\       }
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* FreeBSD doesn't support saving and restoring 64-bit regs with a 32-bit    kernel. This is supported when running on a 64-bit kernel with    COMPAT_FREEBSD32, but tell GCC it isn't so that our 32-bit binaries    are compatible. */
