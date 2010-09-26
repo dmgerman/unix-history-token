@@ -1651,6 +1651,11 @@ argument_list|,
 name|path
 argument_list|)
 expr_stmt|;
+name|hook_free
+argument_list|(
+name|hp
+argument_list|)
+expr_stmt|;
 return|return;
 case|case
 literal|0
