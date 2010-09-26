@@ -1081,20 +1081,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Thread was created with initial refcount 1, we drop the 	 * reference count to allow it to be garbage collected. 	 */
-name|curthread
-operator|->
-name|refcount
-operator|--
-expr_stmt|;
-name|_thr_try_gc
-argument_list|(
-name|curthread
-argument_list|,
-name|curthread
-argument_list|)
-expr_stmt|;
-comment|/* thread lock released */
 if|if
 condition|(
 operator|!
@@ -1114,6 +1100,20 @@ argument_list|(
 name|curthread
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Thread was created with initial refcount 1, we drop the 	 * reference count to allow it to be garbage collected. 	 */
+name|curthread
+operator|->
+name|refcount
+operator|--
+expr_stmt|;
+name|_thr_try_gc
+argument_list|(
+name|curthread
+argument_list|,
+name|curthread
+argument_list|)
+expr_stmt|;
+comment|/* thread lock released */
 if|#
 directive|if
 name|defined
