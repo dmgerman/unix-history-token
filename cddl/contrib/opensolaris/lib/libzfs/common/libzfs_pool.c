@@ -8010,6 +8010,22 @@ name|msg
 argument_list|)
 operator|)
 return|;
+case|case
+name|EEXIST
+case|:
+comment|/* 		 * The log device has unplayed logs 		 */
+return|return
+operator|(
+name|zfs_error
+argument_list|(
+name|hdl
+argument_list|,
+name|EZFS_UNPLAYED_LOGS
+argument_list|,
+name|msg
+argument_list|)
+operator|)
+return|;
 default|default:
 return|return
 operator|(
