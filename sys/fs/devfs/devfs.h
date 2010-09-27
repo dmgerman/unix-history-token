@@ -276,6 +276,16 @@ name|componentname
 struct_decl|;
 end_struct_decl
 
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|devfs_dlist_head
+argument_list|,
+name|devfs_dirent
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_struct
 struct|struct
 name|devfs_dirent
@@ -311,6 +321,10 @@ define|#
 directive|define
 name|DE_COVERED
 value|0x10
+define|#
+directive|define
+name|DE_USER
+value|0x20
 name|int
 name|de_holdcnt
 decl_stmt|;
@@ -325,13 +339,10 @@ argument|devfs_dirent
 argument_list|)
 name|de_list
 expr_stmt|;
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|devfs_dirent
-argument_list|)
+name|struct
+name|devfs_dlist_head
 name|de_dlist
-expr_stmt|;
+decl_stmt|;
 name|struct
 name|devfs_dirent
 modifier|*

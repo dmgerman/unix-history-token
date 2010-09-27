@@ -8056,6 +8056,12 @@ argument_list|)
 expr_stmt|;
 name|de
 operator|->
+name|de_flags
+operator|=
+name|DE_USER
+expr_stmt|;
+name|de
+operator|->
 name|de_uid
 operator|=
 literal|0
@@ -8241,6 +8247,13 @@ argument_list|,
 name|de
 argument_list|,
 name|de_list
+argument_list|)
+expr_stmt|;
+name|devfs_dir_ref_de
+argument_list|(
+name|dmp
+argument_list|,
+name|dd
 argument_list|)
 expr_stmt|;
 return|return
