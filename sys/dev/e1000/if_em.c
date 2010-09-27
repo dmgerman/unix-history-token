@@ -17976,11 +17976,11 @@ name|m_head
 operator|==
 name|NULL
 condition|)
-name|panic
-argument_list|(
-literal|"RX ring hdr initialization failed!\n"
-argument_list|)
-expr_stmt|;
+return|return
+operator|(
+name|ENOBUFS
+operator|)
+return|;
 name|rxbuf
 operator|->
 name|m_head
@@ -18040,11 +18040,26 @@ name|error
 operator|!=
 literal|0
 condition|)
-name|panic
+block|{
+name|m_freem
 argument_list|(
-literal|"RX ring dma initialization failed!\n"
+name|rxbuf
+operator|->
+name|m_head
 argument_list|)
 expr_stmt|;
+name|rxbuf
+operator|->
+name|m_head
+operator|=
+name|NULL
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
 name|bus_dmamap_sync
 argument_list|(
 name|rxr
