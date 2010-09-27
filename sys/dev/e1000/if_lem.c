@@ -1002,7 +1002,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|lem_setup_interface
 parameter_list|(
 name|device_t
@@ -3448,13 +3448,20 @@ name|dev
 argument_list|)
 expr_stmt|;
 comment|/* Setup OS specific network interface */
+if|if
+condition|(
 name|lem_setup_interface
 argument_list|(
 name|dev
 argument_list|,
 name|adapter
 argument_list|)
-expr_stmt|;
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|err_rx_struct
+goto|;
 comment|/* Initialize statistics */
 name|lem_update_stats_counters
 argument_list|(
@@ -3672,6 +3679,21 @@ name|err_tx_desc
 label|:
 name|err_pci
 label|:
+if|if
+condition|(
+name|adapter
+operator|->
+name|ifp
+operator|!=
+name|NULL
+condition|)
+name|if_free
+argument_list|(
+name|adapter
+operator|->
+name|ifp
+argument_list|)
+expr_stmt|;
 name|lem_free_pci_resources
 argument_list|(
 name|adapter
@@ -10427,11 +10449,13 @@ argument|); 		return (EIO); 	}  	e1000_check_for_link(&adapter->hw);  	return (
 literal|0
 argument|); }
 comment|/*********************************************************************  *  *  Setup networking device structure and register an interface.  *  **********************************************************************/
-argument|static void lem_setup_interface(device_t dev, struct adapter *adapter) { 	struct ifnet   *ifp;  	INIT_DEBUGOUT(
+argument|static int lem_setup_interface(device_t dev, struct adapter *adapter) { 	struct ifnet   *ifp;  	INIT_DEBUGOUT(
 literal|"lem_setup_interface: begin"
-argument|);  	ifp = adapter->ifp = if_alloc(IFT_ETHER); 	if (ifp == NULL) 		panic(
-literal|"%s: can not if_alloc()"
-argument|, device_get_nameunit(dev)); 	if_initname(ifp, device_get_name(dev), device_get_unit(dev)); 	ifp->if_mtu = ETHERMTU; 	ifp->if_init =  lem_init; 	ifp->if_softc = adapter; 	ifp->if_flags = IFF_BROADCAST | IFF_SIMPLEX | IFF_MULTICAST; 	ifp->if_ioctl = lem_ioctl; 	ifp->if_start = lem_start; 	IFQ_SET_MAXLEN(&ifp->if_snd, adapter->num_tx_desc -
+argument|);  	ifp = adapter->ifp = if_alloc(IFT_ETHER); 	if (ifp == NULL) { 		device_printf(dev,
+literal|"can not allocate ifnet structure\n"
+argument|); 		return (-
+literal|1
+argument|); 	} 	if_initname(ifp, device_get_name(dev), device_get_unit(dev)); 	ifp->if_mtu = ETHERMTU; 	ifp->if_init =  lem_init; 	ifp->if_softc = adapter; 	ifp->if_flags = IFF_BROADCAST | IFF_SIMPLEX | IFF_MULTICAST; 	ifp->if_ioctl = lem_ioctl; 	ifp->if_start = lem_start; 	IFQ_SET_MAXLEN(&ifp->if_snd, adapter->num_tx_desc -
 literal|1
 argument|); 	ifp->if_snd.ifq_drv_maxlen = adapter->num_tx_desc -
 literal|1
@@ -10481,7 +10505,9 @@ argument|, NULL); 			ifmedia_add(&adapter->media, 				IFM_ETHER | IFM_1000_T,
 literal|0
 argument|, NULL); 		} 	} 	ifmedia_add(&adapter->media, IFM_ETHER | IFM_AUTO,
 literal|0
-argument|, NULL); 	ifmedia_set(&adapter->media, IFM_ETHER | IFM_AUTO); }
+argument|, NULL); 	ifmedia_set(&adapter->media, IFM_ETHER | IFM_AUTO); 	return (
+literal|0
+argument|); }
 comment|/*********************************************************************  *  *  Workaround for SmartSpeed on 82541 and 82547 controllers  *  **********************************************************************/
 argument|static void lem_smartspeed(struct adapter *adapter) { 	u16 phy_tmp;  	if (adapter->link_active || (adapter->hw.phy.type != e1000_phy_igp) || 	    adapter->hw.mac.autoneg ==
 literal|0

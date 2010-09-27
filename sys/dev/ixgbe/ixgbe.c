@@ -623,7 +623,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|ixgbe_setup_interface
 parameter_list|(
 name|device_t
@@ -2824,13 +2824,20 @@ goto|goto
 name|err_late
 goto|;
 comment|/* Setup OS specific network interface */
+if|if
+condition|(
 name|ixgbe_setup_interface
 argument_list|(
 name|dev
 argument_list|,
 name|adapter
 argument_list|)
-expr_stmt|;
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|err_late
+goto|;
 comment|/* Sysctl for limiting the amount of work done in the taskqueue */
 name|ixgbe_add_rx_process_limit
 argument_list|(
@@ -3054,6 +3061,21 @@ argument_list|)
 expr_stmt|;
 name|err_out
 label|:
+if|if
+condition|(
+name|adapter
+operator|->
+name|ifp
+operator|!=
+name|NULL
+condition|)
+name|if_free
+argument_list|(
+name|adapter
+operator|->
+name|ifp
+argument_list|)
+expr_stmt|;
 name|ixgbe_free_pci_resources
 argument_list|(
 name|adapter
@@ -10756,7 +10778,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|ixgbe_setup_interface
 parameter_list|(
 name|device_t
@@ -10805,16 +10827,21 @@ name|ifp
 operator|==
 name|NULL
 condition|)
-name|panic
-argument_list|(
-literal|"%s: can not if_alloc()\n"
-argument_list|,
-name|device_get_nameunit
+block|{
+name|device_printf
 argument_list|(
 name|dev
-argument_list|)
+argument_list|,
+literal|"can not allocate ifnet structure\n"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 name|if_initname
 argument_list|(
 name|ifp
@@ -11086,7 +11113,11 @@ operator||
 name|IFM_AUTO
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

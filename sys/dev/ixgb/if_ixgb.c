@@ -377,7 +377,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|ixgb_setup_interface
 parameter_list|(
 name|device_t
@@ -1590,13 +1590,20 @@ name|err_hw_init
 goto|;
 block|}
 comment|/* Setup OS specific network interface */
+if|if
+condition|(
 name|ixgb_setup_interface
 argument_list|(
 name|dev
 argument_list|,
 name|adapter
 argument_list|)
-expr_stmt|;
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|err_hw_init
+goto|;
 comment|/* Initialize statistics */
 name|ixgb_clear_hw_cntrs
 argument_list|(
@@ -1649,6 +1656,21 @@ name|err_tx_desc
 label|:
 name|err_pci
 label|:
+if|if
+condition|(
+name|adapter
+operator|->
+name|ifp
+operator|!=
+name|NULL
+condition|)
+name|if_free
+argument_list|(
+name|adapter
+operator|->
+name|ifp
+argument_list|)
+expr_stmt|;
 name|ixgb_free_pci_resources
 argument_list|(
 name|adapter
@@ -5543,7 +5565,7 @@ return|;
 block|}
 comment|/*********************************************************************  *  *  Setup networking device structure and register an interface.  *  **********************************************************************/
 specifier|static
-name|void
+name|int
 name|ixgb_setup_interface
 parameter_list|(
 name|device_t
@@ -5582,16 +5604,21 @@ name|ifp
 operator|==
 name|NULL
 condition|)
-name|panic
-argument_list|(
-literal|"%s: can not if_alloc()\n"
-argument_list|,
-name|device_get_nameunit
+block|{
+name|device_printf
 argument_list|(
 name|dev
-argument_list|)
+argument_list|,
+literal|"can not allocate ifnet structure\n"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 if|#
 directive|if
 name|__FreeBSD_version
@@ -5851,7 +5878,11 @@ operator||
 name|IFM_AUTO
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 comment|/********************************************************************  * Manage DMA'able memory.  *******************************************************************/
 specifier|static
