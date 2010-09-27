@@ -440,12 +440,9 @@ argument_list|)
 expr_stmt|;
 name|mii
 operator|=
-name|device_get_softc
-argument_list|(
-name|sc
+name|ma
 operator|->
-name|mii_dev
-argument_list|)
+name|mii_data
 expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(

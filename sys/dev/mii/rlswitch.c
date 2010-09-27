@@ -394,12 +394,9 @@ argument_list|)
 expr_stmt|;
 name|mii
 operator|=
-name|device_get_softc
-argument_list|(
-name|sc
+name|ma
 operator|->
-name|mii_dev
-argument_list|)
+name|mii_data
 expr_stmt|;
 comment|/* 	 * We handle all pseudo PHY in a single instance, so never allow 	 * non-zero * instances! 	 */
 if|if
