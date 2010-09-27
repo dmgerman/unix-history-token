@@ -121,51 +121,41 @@ name|RMI_CHIP_XLR532
 value|0x09
 end_define
 
-begin_define
-define|#
-directive|define
-name|RMI_CHIP_XLS616_B0
-value|0x40
-end_define
-
-begin_define
-define|#
-directive|define
-name|RMI_CHIP_XLS608_B0
-value|0x4a
-end_define
-
-begin_define
-define|#
-directive|define
-name|RMI_CHIP_XLS608
-value|0x80
-end_define
-
 begin_comment
-comment|/* Internal */
+comment|/*  * XLR C revisions  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|RMI_CHIP_XLS416_B0
-value|0x44
+name|RMI_CHIP_XLR308_C
+value|0x0F
 end_define
 
 begin_define
 define|#
 directive|define
-name|RMI_CHIP_XLS412_B0
-value|0x4c
+name|RMI_CHIP_XLR508_C
+value|0x0b
 end_define
 
 begin_define
 define|#
 directive|define
-name|RMI_CHIP_XLS408_B0
-value|0x4e
+name|RMI_CHIP_XLR516_C
+value|0x0a
 end_define
+
+begin_define
+define|#
+directive|define
+name|RMI_CHIP_XLR532_C
+value|0x08
+end_define
+
+begin_comment
+comment|/*  * XLS processors  */
+end_comment
 
 begin_define
 define|#
@@ -181,9 +171,13 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RMI_CHIP_XLS404_B0
-value|0x4f
+name|RMI_CHIP_XLS608
+value|0x80
 end_define
+
+begin_comment
+comment|/* Internal */
+end_comment
 
 begin_define
 define|#
@@ -225,12 +219,58 @@ value|0xcf
 end_define
 
 begin_comment
+comment|/*  * XLS B revision chips  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RMI_CHIP_XLS616_B0
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|RMI_CHIP_XLS608_B0
+value|0x4a
+end_define
+
+begin_define
+define|#
+directive|define
+name|RMI_CHIP_XLS416_B0
+value|0x44
+end_define
+
+begin_define
+define|#
+directive|define
+name|RMI_CHIP_XLS412_B0
+value|0x4c
+end_define
+
+begin_define
+define|#
+directive|define
+name|RMI_CHIP_XLS408_B0
+value|0x4e
+end_define
+
+begin_define
+define|#
+directive|define
+name|RMI_CHIP_XLS404_B0
+value|0x4f
+end_define
+
+begin_comment
 comment|/*   * The XLS product line has chip versions 0x4x and 0x8x  */
 end_comment
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|unsigned
 name|int
 name|xlr_is_xls
@@ -280,7 +320,7 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|unsigned
 name|int
 name|xlr_revision
@@ -289,10 +329,12 @@ name|void
 parameter_list|)
 block|{
 return|return
+operator|(
 name|mips_rd_prid
 argument_list|()
 operator|&
 literal|0xff
+operator|)
 return|;
 block|}
 end_function
@@ -303,7 +345,7 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|unsigned
 name|int
 name|xlr_processor_id
@@ -332,7 +374,7 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|int
 name|xlr_board_pci
 parameter_list|(
@@ -360,7 +402,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|int
 name|xlr_is_xls1xx
 parameter_list|(
@@ -389,7 +431,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|int
 name|xlr_is_xls2xx
 parameter_list|(
@@ -418,7 +460,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline__
+name|__inline
 name|int
 name|xlr_is_xls4xx_lite
 parameter_list|(
@@ -440,6 +482,36 @@ operator|||
 name|chipid
 operator|==
 literal|0x8c
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|unsigned
+name|int
+name|xlr_is_xls_b0
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|uint32_t
+name|chipid
+init|=
+name|xlr_processor_id
+argument_list|()
+decl_stmt|;
+return|return
+operator|(
+name|chipid
+operator|>=
+literal|0x40
+operator|&&
+name|chipid
+operator|<=
+literal|0x4f
 operator|)
 return|;
 block|}

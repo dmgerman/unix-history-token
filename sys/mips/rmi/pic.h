@@ -238,6 +238,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|PIC_IRT_PCIE_B0_LINK2_INDEX
+value|28
+end_define
+
+begin_define
+define|#
+directive|define
+name|PIC_IRT_PCIE_B0_LINK3_INDEX
+value|29
+end_define
+
+begin_define
+define|#
+directive|define
 name|PIC_IRT_PCIE_INT_INDEX
 value|28
 end_define
@@ -682,8 +696,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|PIC_PCIE_B0_LINK2_IRQ
+value|(PIC_IRQ_BASE + PIC_IRT_PCIE_B0_LINK2_INDEX)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PIC_PCIE_B0_LINK3_IRQ
+value|(PIC_IRQ_BASE + PIC_IRT_PCIE_B0_LINK3_INDEX)
+end_define
+
+begin_define
+define|#
+directive|define
 name|PIC_PCIE_INT_IRQ
-value|(PIC_IRQ_BASE + PIC_IRT_PCIE_INT__INDEX)
+value|(PIC_IRQ_BASE + PIC_IRT_PCIE_INT_INDEX)
 end_define
 
 begin_define
