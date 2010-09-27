@@ -1580,15 +1580,6 @@ if|if
 condition|(
 name|len
 operator|==
-literal|0
-operator|&&
-name|msgs
-index|[
-name|i
-index|]
-operator|.
-name|len
-operator|!=
 literal|1
 condition|)
 name|WR4
