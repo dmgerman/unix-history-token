@@ -174,6 +174,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|devfs_dev_exists
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|devfs_free
 parameter_list|(
