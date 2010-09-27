@@ -4434,7 +4434,7 @@ name|ZIO_FLAG_DONT_CACHE
 operator||
 name|ZIO_FLAG_DONT_AGGREGATE
 operator||
-name|ZIO_FLAG_DONT_RETRY
+name|ZIO_FLAG_TRYHARD
 expr_stmt|;
 if|if
 condition|(
@@ -4842,6 +4842,8 @@ operator|=
 name|zio_handle_device_injection
 argument_list|(
 name|vd
+argument_list|,
+name|NULL
 argument_list|,
 name|ENXIO
 argument_list|)
@@ -9964,6 +9966,25 @@ condition|(
 name|flags
 operator|&
 name|ZIO_FLAG_SPECULATIVE
+condition|)
+return|return;
+comment|/* 	 * If this is an I/O error that is going to be retried, then ignore the 	 * error.  Otherwise, the user may interpret B_FAILFAST I/O errors as 	 * hard errors, when in reality they can happen for any number of 	 * innocuous reasons (bus resets, MPxIO link failure, etc). 	 */
+if|if
+condition|(
+name|zio
+operator|->
+name|io_error
+operator|==
+name|EIO
+operator|&&
+operator|!
+operator|(
+name|zio
+operator|->
+name|io_flags
+operator|&
+name|ZIO_FLAG_IO_RETRY
+operator|)
 condition|)
 return|return;
 name|mutex_enter

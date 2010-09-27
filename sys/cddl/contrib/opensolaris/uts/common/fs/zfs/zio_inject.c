@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_comment
@@ -645,6 +645,10 @@ name|vdev_t
 modifier|*
 name|vd
 parameter_list|,
+name|zio_t
+modifier|*
+name|zio
+parameter_list|,
 name|int
 name|error
 parameter_list|)
@@ -716,6 +720,35 @@ operator|.
 name|zi_guid
 condition|)
 block|{
+if|if
+condition|(
+name|handler
+operator|->
+name|zi_record
+operator|.
+name|zi_failfast
+operator|&&
+operator|(
+name|zio
+operator|==
+name|NULL
+operator|||
+operator|(
+name|zio
+operator|->
+name|io_flags
+operator|&
+operator|(
+name|ZIO_FLAG_IO_RETRY
+operator||
+name|ZIO_FLAG_TRYHARD
+operator|)
+operator|)
+operator|)
+condition|)
+block|{
+continue|continue;
+block|}
 if|if
 condition|(
 name|handler

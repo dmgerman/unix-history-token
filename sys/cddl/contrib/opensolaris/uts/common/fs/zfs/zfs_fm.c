@@ -207,6 +207,25 @@ operator|&
 name|ZIO_FLAG_SPECULATIVE
 condition|)
 return|return;
+comment|/* 		 * If this I/O is not a retry I/O, don't post an ereport. 		 * Otherwise, we risk making bad diagnoses based on B_FAILFAST 		 * I/Os. 		 */
+if|if
+condition|(
+name|zio
+operator|->
+name|io_error
+operator|==
+name|EIO
+operator|&&
+operator|!
+operator|(
+name|zio
+operator|->
+name|io_flags
+operator|&
+name|ZIO_FLAG_IO_RETRY
+operator|)
+condition|)
+return|return;
 if|if
 condition|(
 name|vd

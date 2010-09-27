@@ -301,9 +301,8 @@ name|uint32_t
 name|zi_freq
 decl_stmt|;
 name|uint32_t
-name|zi_pad
+name|zi_failfast
 decl_stmt|;
-comment|/* pad out to 64 bit alignment */
 block|}
 name|zinject_record_t
 typedef|;
