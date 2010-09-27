@@ -964,6 +964,11 @@ name|sysctl_oid
 modifier|*
 name|sysctl_tree
 decl_stmt|;
+comment|/* Multicast array memory */
+name|u_int8_t
+modifier|*
+name|mta
+decl_stmt|;
 comment|/* Misc stats maintained by the driver */
 name|unsigned
 name|long
