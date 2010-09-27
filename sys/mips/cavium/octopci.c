@@ -2966,6 +2966,11 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|DELAY
+argument_list|(
+literal|10000
+argument_list|)
+expr_stmt|;
 comment|/* Program BARs.  */
 switch|switch
 condition|(
@@ -3070,6 +3075,11 @@ argument_list|,
 name|command
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|10000
 argument_list|)
 expr_stmt|;
 comment|/*  	 * Set cache line size.  On Octeon it should be 128 bytes, 	 * but according to Linux some Intel bridges have trouble 	 * with values over 64 bytes, so use 64 bytes. 	 */
