@@ -285,7 +285,7 @@ parameter_list|,
 name|f2
 parameter_list|)
 define|\
-value|((f1)->fh_fsid.val[0] == (f2)->fh_fsid.val[0]&&			\      (f1)->fh_fsid.val[1] == (f2)->fh_fsid.val[1]&&			\      !bcmp((f1)->fh_fid.fid_data, (f2)->fh_fid.fid_data,		\             (f1)->fh_fid.fid_len))
+value|((f1)->fh_fsid.val[0] == (f2)->fh_fsid.val[0]&&			\      (f1)->fh_fsid.val[1] == (f2)->fh_fsid.val[1]&&			\      bcmp(&(f1)->fh_fid,&(f2)->fh_fid, sizeof(struct fid)) == 0)
 end_define
 
 begin_define
