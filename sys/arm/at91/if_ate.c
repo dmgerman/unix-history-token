@@ -1896,7 +1896,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Compute the multicast filter for this device using the standard  * algorithm.  I wonder why this isn't in ether somewhere as a lot  * of different MAC chips use this method (or the reverse the bits)  * method.  */
+comment|/*  * Compute the multicast filter for this device.  */
 end_comment
 
 begin_function
