@@ -425,6 +425,59 @@ define|\
 value|do { 							\ 		(dst)->tv_sec = (src)->tv_sec - (val)->tv_sec;	\ 		(dst)->tv_nsec = (src)->tv_nsec - (val)->tv_nsec; \ 		if ((dst)->tv_nsec< 0) {			\ 			(dst)->tv_sec--;			\ 			(dst)->tv_nsec += 1000000000;		\ 		}						\ 	} while (0)
 end_define
 
+begin_comment
+comment|/* XXX These values should be same as those defined in pthread.h */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|THR_MUTEX_INITIALIZER
+value|((struct pthread_mutex *)NULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|THR_ADAPTIVE_MUTEX_INITIALIZER
+value|((struct pthread_mutex *)1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|THR_MUTEX_DESTROYED
+value|((struct pthread_mutex *)2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|THR_COND_INITIALIZER
+value|((struct pthread_cond *)NULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|THR_COND_DESTROYED
+value|((struct pthread_cond *)1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|THR_RWLOCK_INITIALIZER
+value|((struct pthread_rwlock *)NULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|THR_RWLOCK_DESTROYED
+value|((struct pthread_rwlock *)1)
+end_define
+
 begin_struct
 struct|struct
 name|pthread_mutex
@@ -1715,6 +1768,15 @@ specifier|extern
 name|struct
 name|pthread_mutex_attr
 name|_pthread_mutexattr_default
+name|__hidden
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|pthread_mutex_attr
+name|_pthread_mutexattr_adaptive_default
 name|__hidden
 decl_stmt|;
 end_decl_stmt

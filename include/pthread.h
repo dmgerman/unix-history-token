@@ -261,7 +261,7 @@ begin_define
 define|#
 directive|define
 name|PTHREAD_ADAPTIVE_MUTEX_INITIALIZER_NP
-value|NULL
+value|((pthread_mutex_t)1)
 end_define
 
 begin_define

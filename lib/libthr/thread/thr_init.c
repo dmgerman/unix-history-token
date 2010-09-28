@@ -336,6 +336,30 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|pthread_mutex_attr
+name|_pthread_mutexattr_adaptive_default
+init|=
+block|{
+operator|.
+name|m_type
+operator|=
+name|PTHREAD_MUTEX_ADAPTIVE_NP
+block|,
+operator|.
+name|m_protocol
+operator|=
+name|PTHREAD_PRIO_NONE
+block|,
+operator|.
+name|m_ceiling
+operator|=
+literal|0
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Default condition variable attributes: */
 end_comment
