@@ -95,27 +95,6 @@ end_expr_stmt
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|FREE_PKT
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|FREE_PKT
-parameter_list|(
-name|m
-parameter_list|)
-value|m_freem(m)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|__linux__
 end_ifndef
 
@@ -863,11 +842,11 @@ init|=
 literal|0x0040
 block|,
 comment|/* object is a delay line */
-name|DN_F_SCHI
+name|DN_DEL_SAFE
 init|=
-literal|0x00C0
+literal|0x0080
 block|,
-comment|/* object is a sched.instance */
+comment|/* delete a queue only if no longer needed 				   * by scheduler */
 name|DN_QHT_IS_Q
 init|=
 literal|0x0100
@@ -890,7 +869,7 @@ comment|//VNET_DECLARE(struct dn_parms, _base_dn_cfg);
 end_comment
 
 begin_comment
-comment|//#define dn_cfg              VNET(_base_dn_cfg)
+comment|//#define dn_cfg	VNET(_base_dn_cfg)
 end_comment
 
 begin_function_decl
