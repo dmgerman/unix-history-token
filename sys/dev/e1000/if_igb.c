@@ -334,7 +334,7 @@ name|char
 name|igb_driver_version
 index|[]
 init|=
-literal|"version - 2.0.1"
+literal|"version - 2.0.4"
 decl_stmt|;
 end_decl_stmt
 
@@ -461,6 +461,18 @@ block|{
 literal|0x8086
 block|,
 name|E1000_DEV_ID_82576_QUAD_COPPER
+block|,
+name|PCI_ANY_ID
+block|,
+name|PCI_ANY_ID
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
+name|E1000_DEV_ID_82576_QUAD_COPPER_ET2
 block|,
 name|PCI_ANY_ID
 block|,
@@ -8604,6 +8616,24 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
+comment|/*  	** If flow control has paused us since last checking 	** it invalidates the watchdog timing, so dont run it. 	*/
+if|if
+condition|(
+name|adapter
+operator|->
+name|pause_frames
+condition|)
+block|{
+name|adapter
+operator|->
+name|pause_frames
+operator|=
+literal|0
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 comment|/*         ** Watchdog: check for time since any descriptor was cleaned         */
 for|for
 control|(
@@ -8625,15 +8655,39 @@ name|txr
 operator|++
 control|)
 block|{
+name|IGB_TX_LOCK
+argument_list|(
+name|txr
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
+operator|(
 name|txr
 operator|->
 name|watchdog_check
 operator|==
 name|FALSE
+operator|)
+operator|||
+operator|(
+name|txr
+operator|->
+name|tx_avail
+operator|==
+name|adapter
+operator|->
+name|num_tx_desc
+operator|)
 condition|)
+block|{
+name|IGB_TX_UNLOCK
+argument_list|(
+name|txr
+argument_list|)
+expr_stmt|;
 continue|continue;
+block|}
 if|if
 condition|(
 operator|(
@@ -8649,7 +8703,14 @@ condition|)
 goto|goto
 name|timeout
 goto|;
+name|IGB_TX_UNLOCK
+argument_list|(
+name|txr
+argument_list|)
+expr_stmt|;
 block|}
+name|out
+label|:
 name|callout_reset
 argument_list|(
 operator|&
@@ -8750,6 +8811,11 @@ name|adapter
 operator|->
 name|watchdog_events
 operator|++
+expr_stmt|;
+name|IGB_TX_UNLOCK
+argument_list|(
+name|txr
+argument_list|)
 expr_stmt|;
 name|igb_init_locked
 argument_list|(
@@ -19364,6 +19430,12 @@ operator|->
 name|m_pack
 expr_stmt|;
 comment|/* Reuse loaded DMA map and just update mbuf chain */
+if|if
+condition|(
+name|mh
+condition|)
+block|{
+comment|/* with no hdr split would be null */
 name|mh
 operator|->
 name|m_len
@@ -19382,6 +19454,7 @@ name|m_next
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 name|mp
 operator|->
 name|m_len
@@ -22053,16 +22126,28 @@ argument_list|,
 name|E1000_XONTXC
 argument_list|)
 expr_stmt|;
-name|stats
+comment|/* 	** For watchdog management we need to know if we have been 	** paused during the last interval, so capture that here. 	*/
+name|adapter
 operator|->
-name|xoffrxc
-operator|+=
+name|pause_frames
+operator|=
 name|E1000_READ_REG
 argument_list|(
+operator|&
+name|adapter
+operator|->
 name|hw
 argument_list|,
 name|E1000_XOFFRXC
 argument_list|)
+expr_stmt|;
+name|stats
+operator|->
+name|xoffrxc
+operator|+=
+name|adapter
+operator|->
+name|pause_frames
 expr_stmt|;
 name|stats
 operator|->

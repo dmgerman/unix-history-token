@@ -280,7 +280,7 @@ name|char
 name|lem_driver_version
 index|[]
 init|=
-literal|"1.0.1"
+literal|"1.0.2"
 decl_stmt|;
 end_decl_stmt
 
@@ -7966,6 +7966,12 @@ name|next_eop
 operator|=
 name|last
 expr_stmt|;
+name|adapter
+operator|->
+name|watchdog_time
+operator|=
+name|ticks
+expr_stmt|;
 comment|/* 	 * Advance the Transmit Descriptor Tail (TDT), this tells the E1000 	 * that this frame is available to transmit. 	 */
 name|bus_dmamap_sync
 argument_list|(
@@ -9150,18 +9156,6 @@ decl_stmt|;
 name|EM_CORE_LOCK_ASSERT
 argument_list|(
 name|adapter
-argument_list|)
-expr_stmt|;
-name|taskqueue_enqueue
-argument_list|(
-name|adapter
-operator|->
-name|tq
-argument_list|,
-operator|&
-name|adapter
-operator|->
-name|rxtx_task
 argument_list|)
 expr_stmt|;
 name|lem_update_link_status

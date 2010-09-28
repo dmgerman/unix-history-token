@@ -1728,6 +1728,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_KMRNCTRLSTA_CTRL_OFFSET
+value|0x1
+end_define
+
+begin_comment
+comment|/* Kumeran Control */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|E1000_KMRNCTRLSTA_DIAG_OFFSET
 value|0x3
 end_define
@@ -1782,6 +1793,17 @@ directive|define
 name|E1000_KMRNCTRLSTA_K1_ENABLE
 value|0x0002
 end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_KMRNCTRLSTA_HD_CTRL
+value|0x10
+end_define
+
+begin_comment
+comment|/* Kumeran HD Control */
+end_comment
 
 begin_define
 define|#

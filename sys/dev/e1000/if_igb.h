@@ -361,21 +361,6 @@ value|3
 end_define
 
 begin_comment
-comment|/* ** This is the total number of MSIX vectors you wish ** to use, it also controls the size of resources. ** The 82575 has a total of 10, 82576 has 25. Set this ** to the real amount you need to streamline data storage. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IGB_MSIX_VEC
-value|6
-end_define
-
-begin_comment
-comment|/* MSIX vectors configured */
-end_comment
-
-begin_comment
 comment|/* Defines for printing debug information */
 end_comment
 
@@ -631,31 +616,6 @@ define|#
 directive|define
 name|IGB_DEFAULT_ITR
 value|1000000000/(IGB_INTS_PER_SEC * 256)
-end_define
-
-begin_comment
-comment|/* Header split codes for get_buf */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IGB_CLEAN_HEADER
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|IGB_CLEAN_PAYLOAD
-value|0x02
-end_define
-
-begin_define
-define|#
-directive|define
-name|IGB_CLEAN_BOTH
-value|(IGB_CLEAN_HEADER | IGB_CLEAN_PAYLOAD)
 end_define
 
 begin_define
@@ -1066,6 +1026,9 @@ decl_stmt|;
 name|int
 name|min_frame_size
 decl_stmt|;
+name|int
+name|pause_frames
+decl_stmt|;
 name|struct
 name|mtx
 name|core_mtx
@@ -1120,6 +1083,11 @@ decl_stmt|;
 name|u16
 name|num_tx_desc
 decl_stmt|;
+comment|/* Multicast array pointer */
+name|u8
+modifier|*
+name|mta
+decl_stmt|;
 comment|/*  	 * Receive rings 	 */
 name|struct
 name|rx_ring
@@ -1140,11 +1108,6 @@ name|rx_mbuf_sz
 decl_stmt|;
 name|u32
 name|rx_mask
-decl_stmt|;
-comment|/* Multicast array memory */
-name|u8
-modifier|*
-name|mta
 decl_stmt|;
 comment|/* Misc stats maintained by the driver */
 name|unsigned

@@ -220,6 +220,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_FEXTNVM4
+value|0x00024
+end_define
+
+begin_comment
+comment|/* Future Extended NVM 4 - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|E1000_FEXTNVM
 value|0x00028
 end_define
@@ -1333,6 +1344,26 @@ parameter_list|(
 name|_i
 parameter_list|)
 value|(((_i)<= 15) ? (0x05404 + ((_i) * 8)) : \                                        (0x054E4 + ((_i - 16) * 8)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_SHRAL
+parameter_list|(
+name|_i
+parameter_list|)
+value|(0x05438 + ((_i) * 8))
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_SHRAH
+parameter_list|(
+name|_i
+parameter_list|)
+value|(0x0543C + ((_i) * 8))
 end_define
 
 begin_define
@@ -4151,6 +4182,17 @@ end_define
 
 begin_comment
 comment|/* DMA Tx Switch Control - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_WVBR
+value|0x03554
+end_define
+
+begin_comment
+comment|/* VM Wrong Behavior - RWS */
 end_comment
 
 begin_define
