@@ -33841,7 +33841,7 @@ operator|<<
 literal|24
 operator|)
 argument_list|,
-name|BUS_SPACE_MAXADDR
+name|BUS_SPACE_MAXADDR_32BIT
 argument_list|,
 name|BUS_SPACE_MAXADDR
 argument_list|,
