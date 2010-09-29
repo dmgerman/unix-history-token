@@ -352,6 +352,10 @@ name|m_nextpkt
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* Update stats for the queue */
+end_comment
+
 begin_expr_stmt
 name|q
 operator|->
