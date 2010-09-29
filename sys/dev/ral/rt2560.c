@@ -14331,12 +14331,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|rt2560_stop
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|RAL_UNLOCK
+name|rt2560_stop_locked
 argument_list|(
 name|sc
 argument_list|)
