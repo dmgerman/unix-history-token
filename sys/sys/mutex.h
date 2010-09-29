@@ -936,7 +936,7 @@ name|_rel_spin_lock
 parameter_list|(
 name|mp
 parameter_list|)
-value|do {						\ 	if (mtx_recursed((mp)))						\ 		(mp)->mtx_recurse--;					\ 	else								\ 		(mp)->mtx_lock = MTX_UNOWNED;				\ 	spinlock_exit();						\ } while (0)
+value|do {						\ 	if (mtx_recursed((mp)))						\ 		(mp)->mtx_recurse--;					\ 	else {								\ 		LOCKSTAT_PROFILE_RELEASE_LOCK(LS_MTX_SPIN_UNLOCK_RELEASE, \ 			mp);						\ 		(mp)->mtx_lock = MTX_UNOWNED;				\ 	}                                                               \ 	spinlock_exit();						\ } while (0)
 end_define
 
 begin_endif
