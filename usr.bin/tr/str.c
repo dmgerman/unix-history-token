@@ -686,6 +686,15 @@ case|:
 comment|/* "[=equiv=]" */
 if|if
 condition|(
+name|s
+operator|->
+name|str
+index|[
+literal|2
+index|]
+operator|==
+literal|'\0'
+operator|||
 operator|(
 name|p
 operator|=
@@ -695,7 +704,7 @@ name|s
 operator|->
 name|str
 operator|+
-literal|2
+literal|3
 argument_list|,
 literal|']'
 argument_list|)
