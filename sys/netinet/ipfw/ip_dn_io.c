@@ -3514,7 +3514,18 @@ goto|;
 comment|/* already active, nothing to do */
 block|}
 comment|/* compute the initial allowance */
+if|if
+condition|(
+name|si
+operator|->
+name|idle_time
+operator|<
+name|dn_cfg
+operator|.
+name|curr_time
+condition|)
 block|{
+comment|/* Do this only on the first packet on an idle pipe */
 name|struct
 name|dn_link
 modifier|*
@@ -3527,6 +3538,14 @@ name|sched
 operator|->
 name|link
 decl_stmt|;
+name|si
+operator|->
+name|sched_time
+operator|=
+name|dn_cfg
+operator|.
+name|curr_time
+expr_stmt|;
 name|si
 operator|->
 name|credit
