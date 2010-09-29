@@ -1303,7 +1303,7 @@ name|sf_buf
 modifier|*
 name|sf
 decl_stmt|;
-name|int64_t
+name|int
 name|off
 decl_stmt|;
 name|ASSERT
@@ -1357,7 +1357,7 @@ block|{
 name|vm_page_t
 name|pp
 decl_stmt|;
-name|uint64_t
+name|int
 name|nbytes
 init|=
 name|MIN
@@ -1549,8 +1549,6 @@ name|sf
 decl_stmt|;
 name|int64_t
 name|start
-decl_stmt|,
-name|off
 decl_stmt|;
 name|caddr_t
 name|va
@@ -1559,6 +1557,9 @@ name|int
 name|len
 init|=
 name|nbytes
+decl_stmt|;
+name|int
+name|off
 decl_stmt|;
 name|int
 name|error
@@ -1626,7 +1627,7 @@ operator|+=
 name|PAGESIZE
 control|)
 block|{
-name|uint64_t
+name|int
 name|bytes
 init|=
 name|MIN
@@ -1662,9 +1663,6 @@ name|vm_page_is_valid
 argument_list|(
 name|m
 argument_list|,
-operator|(
-name|vm_offset_t
-operator|)
 name|off
 argument_list|,
 name|bytes
