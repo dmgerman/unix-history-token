@@ -2810,6 +2810,20 @@ name|__packed
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|AIF_EM_DRIVE_INSERTION
+init|=
+literal|31
+block|,
+name|AIF_EM_DRIVE_REMOVAL
+block|}
+name|aac_AifEMEventType
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
 name|aac_AifEnsBatteryEvent
