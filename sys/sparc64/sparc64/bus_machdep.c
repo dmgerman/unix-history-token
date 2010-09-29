@@ -2397,11 +2397,11 @@ operator|)
 return|;
 if|if
 condition|(
-operator|(
-name|uintptr_t
-operator|)
+name|vtophys
+argument_list|(
 operator|*
 name|vaddr
+argument_list|)
 operator|%
 name|dmat
 operator|->

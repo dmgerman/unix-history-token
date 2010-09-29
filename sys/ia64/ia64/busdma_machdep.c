@@ -1992,11 +1992,11 @@ return|;
 elseif|else
 if|if
 condition|(
-operator|(
-name|uintptr_t
-operator|)
+name|vtophys
+argument_list|(
 operator|*
 name|vaddr
+argument_list|)
 operator|&
 operator|(
 name|dmat
