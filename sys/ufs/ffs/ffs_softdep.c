@@ -44353,7 +44353,7 @@ name|ir_state
 operator||=
 name|ATTACHED
 expr_stmt|;
-comment|/* 	 * Move allocindirs with written pointers to the completehd if 	 * the the indirdep's pointer is not yet written.  Otherwise 	 * free them here. 	 */
+comment|/* 	 * Move allocindirs with written pointers to the completehd if 	 * the indirdep's pointer is not yet written.  Otherwise 	 * free them here. 	 */
 while|while
 condition|(
 operator|(
