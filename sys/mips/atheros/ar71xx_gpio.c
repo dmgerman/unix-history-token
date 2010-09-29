@@ -1751,14 +1751,14 @@ name|ar71xx_gpio_function_enable
 argument_list|(
 name|sc
 argument_list|,
-name|GPIO_SPI_CS1_EN
+name|GPIO_FUNC_SPI_CS1_EN
 argument_list|)
 expr_stmt|;
 name|ar71xx_gpio_function_enable
 argument_list|(
 name|sc
 argument_list|,
-name|GPIO_SPI_CS2_EN
+name|GPIO_FUNC_SPI_CS2_EN
 argument_list|)
 expr_stmt|;
 comment|/* Configure all pins as input */
@@ -1943,14 +1943,14 @@ name|ar71xx_gpio_function_disable
 argument_list|(
 name|sc
 argument_list|,
-name|GPIO_SPI_CS1_EN
+name|GPIO_FUNC_SPI_CS1_EN
 argument_list|)
 expr_stmt|;
 name|ar71xx_gpio_function_disable
 argument_list|(
 name|sc
 argument_list|,
-name|GPIO_SPI_CS2_EN
+name|GPIO_FUNC_SPI_CS2_EN
 argument_list|)
 expr_stmt|;
 name|bus_generic_detach

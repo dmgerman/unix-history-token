@@ -717,7 +717,7 @@ begin_define
 define|#
 directive|define
 name|GPIO_FUNC_SPI_CS2_EN
-value|(1<< 15)
+value|(1<< 13)
 end_define
 
 begin_comment
@@ -728,19 +728,12 @@ begin_define
 define|#
 directive|define
 name|GPIO_FUNC_SPI_CS1_EN
-value|(1<< 14)
+value|(1<< 12)
 end_define
 
 begin_comment
 comment|/* CS1 is shared with GPIO_0 */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|GPIO_FUNC_SPI_EN
-value|(1<< 13)
-end_define
 
 begin_define
 define|#
