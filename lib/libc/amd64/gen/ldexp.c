@@ -51,6 +51,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_include
+include|#
+directive|include
+file|<math.h>
+end_include
+
 begin_comment
 comment|/*  * ldexp(value, exp): return value * (2 ** exp).  *  * Written by Sean Eric Fagan (sef@kithrup.COM)  * Sun Mar 11 20:27:09 PST 1990  */
 end_comment
@@ -74,7 +80,14 @@ name|double
 name|temp
 decl_stmt|,
 name|texp
-decl_stmt|,
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__clang__
+specifier|volatile
+endif|#
+directive|endif
+name|double
 name|temp2
 decl_stmt|;
 name|texp
@@ -86,24 +99,24 @@ directive|ifdef
 name|__GNUC__
 asm|__asm ("fscale "
 block|:
-literal|"=u"
-operator|(
-name|temp2
-operator|)
-operator|,
 literal|"=t"
 operator|(
 name|temp
 operator|)
+operator|,
+literal|"=u"
+operator|(
+name|temp2
+operator|)
 operator|:
 literal|"0"
 operator|(
-name|texp
+name|value
 operator|)
 operator|,
 literal|"1"
 operator|(
-name|value
+name|texp
 operator|)
 block|)
 function|;
