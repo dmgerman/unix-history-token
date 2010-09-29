@@ -20600,6 +20600,16 @@ argument_list|,
 name|BGE_RXMODE_ENABLE
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Set the number of good frames to receive after RX MBUF 	 * Low Watermark has been reached. After the RX MAC receives 	 * this number of frames, it will drop subsequent incoming 	 * frames until the MBUF High Watermark is reached. 	 */
+name|CSR_WRITE_4
+argument_list|(
+name|sc
+argument_list|,
+name|BGE_MAX_RX_FRAME_LOWAT
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
 comment|/* Tell firmware we're alive. */
 name|BGE_SETBIT
 argument_list|(

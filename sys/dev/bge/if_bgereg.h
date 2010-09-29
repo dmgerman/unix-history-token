@@ -3550,6 +3550,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|BGE_MAX_RX_FRAME_LOWAT
+value|0x0504
+end_define
+
+begin_define
+define|#
+directive|define
 name|BGE_SERDES_CFG
 value|0x0590
 end_define
