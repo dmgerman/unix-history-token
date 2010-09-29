@@ -227,6 +227,14 @@ begin_decl_stmt
 specifier|extern
 specifier|const
 name|bfd_target
+name|bfd_efi_app_x86_64_vec
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|bfd_target
 name|bfd_efi_app_ia64_vec
 decl_stmt|;
 end_decl_stmt
@@ -2182,6 +2190,9 @@ name|b_out_vec_little_host
 block|,
 operator|&
 name|bfd_efi_app_ia32_vec
+block|,
+operator|&
+name|bfd_efi_app_x86_64_vec
 block|,
 ifdef|#
 directive|ifdef
