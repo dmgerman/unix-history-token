@@ -180,6 +180,13 @@ name|HPET_VENDID_INTEL
 value|0x8086
 end_define
 
+begin_define
+define|#
+directive|define
+name|HPET_VENDID_NVIDIA
+value|0x10de
+end_define
+
 begin_expr_stmt
 name|ACPI_SERIAL_DECL
 argument_list|(
@@ -2701,6 +2708,23 @@ condition|(
 name|vendor
 operator|==
 name|HPET_VENDID_AMD
+condition|)
+name|sc
+operator|->
+name|allowed_irqs
+operator|=
+literal|0x00000000
+expr_stmt|;
+comment|/* 	 * NVidia MCP5x chipsets have number of unexplained interrupt 	 * problems. For some reason, using HPET interrupts breaks HDA sound. 	 */
+if|if
+condition|(
+name|vendor
+operator|==
+name|HPET_VENDID_NVIDIA
+operator|&&
+name|rev
+operator|<=
+literal|0x01
 condition|)
 name|sc
 operator|->
