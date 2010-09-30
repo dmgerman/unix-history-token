@@ -261,6 +261,9 @@ block|{
 name|u_int64_t
 name|mdpg_attrs
 decl_stmt|;
+name|vm_memattr_t
+name|mdpg_cache_attrs
+decl_stmt|;
 name|struct
 name|pvo_head
 name|mdpg_pvoh
@@ -276,7 +279,7 @@ name|pmap_page_get_memattr
 parameter_list|(
 name|m
 parameter_list|)
-value|VM_MEMATTR_DEFAULT
+value|((m)->md.mdpg_cache_attrs)
 end_define
 
 begin_define
@@ -287,18 +290,6 @@ parameter_list|(
 name|m
 parameter_list|)
 value|(!LIST_EMPTY(&(m)->md.mdpg_pvoh))
-end_define
-
-begin_define
-define|#
-directive|define
-name|pmap_page_set_memattr
-parameter_list|(
-name|m
-parameter_list|,
-name|ma
-parameter_list|)
-value|(void)0
 end_define
 
 begin_comment
@@ -586,18 +577,6 @@ parameter_list|)
 value|(!TAILQ_EMPTY(&(m)->md.pv_list))
 end_define
 
-begin_define
-define|#
-directive|define
-name|pmap_page_set_memattr
-parameter_list|(
-name|m
-parameter_list|,
-name|ma
-parameter_list|)
-value|(void)0
-end_define
-
 begin_endif
 endif|#
 directive|endif
@@ -737,6 +716,21 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|pmap_kenter_attr
+parameter_list|(
+name|vm_offset_t
+name|va
+parameter_list|,
+name|vm_offset_t
+name|pa
+parameter_list|,
+name|vm_memattr_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|pmap_kremove
 parameter_list|(
 name|vm_offset_t
@@ -758,11 +752,36 @@ end_function_decl
 
 begin_function_decl
 name|void
+modifier|*
+name|pmap_mapdev_attr
+parameter_list|(
+name|vm_offset_t
+parameter_list|,
+name|vm_size_t
+parameter_list|,
+name|vm_memattr_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|pmap_unmapdev
 parameter_list|(
 name|vm_offset_t
 parameter_list|,
 name|vm_size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pmap_page_set_memattr
+parameter_list|(
+name|vm_page_t
+parameter_list|,
+name|vm_memattr_t
 parameter_list|)
 function_decl|;
 end_function_decl
