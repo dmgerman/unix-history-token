@@ -19,6 +19,12 @@ directive|define
 name|_UNWIND_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/_types.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -145,8 +151,7 @@ comment|/* The C++ ABI requires exception_class, private_1, and private_2 to    
 struct|struct
 name|_Unwind_Exception
 block|{
-name|unsigned
-name|long
+name|__int64_t
 name|exception_class
 decl_stmt|;
 name|_Unwind_Exception_Cleanup_Fn
@@ -284,9 +289,17 @@ name|_Unwind_Context
 modifier|*
 parameter_list|)
 function_decl|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|_GNU_SOURCE
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_BSD_SOURCE
+argument_list|)
 comment|/* Callback for _Unwind_Backtrace().  The backtrace stops immediately    if the callback returns any value other than _URC_NO_REASON. */
 typedef|typedef
 name|_Unwind_Reason_Code
@@ -386,7 +399,7 @@ function_decl|;
 comment|/* See also Linux Standard Base Spec:     http://www.linuxbase.org/spec/refspecs/LSB_1.3.0/gLSB/gLSB/libgcc-s.html */
 endif|#
 directive|endif
-comment|/* _GNU_SOURCE */
+comment|/* _GNU_SOURCE || _BSD_SOURCE */
 ifdef|#
 directive|ifdef
 name|__cplusplus
