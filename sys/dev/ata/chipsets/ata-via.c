@@ -2268,16 +2268,6 @@ name|mode
 expr_stmt|;
 block|}
 comment|/* Set WDMA/PIO timings */
-if|if
-condition|(
-name|ctlr
-operator|->
-name|chip
-operator|->
-name|cfg1
-operator|!=
-name|VIA133
-condition|)
 name|pci_write_config
 argument_list|(
 name|parent
