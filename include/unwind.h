@@ -132,8 +132,7 @@ name|int
 parameter_list|,
 name|_Unwind_Action
 parameter_list|,
-name|unsigned
-name|long
+name|__int64_t
 parameter_list|,
 name|struct
 name|_Unwind_Exception
