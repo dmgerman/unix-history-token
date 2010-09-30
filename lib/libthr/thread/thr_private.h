@@ -225,10 +225,16 @@ directive|ifdef
 name|_PTHREAD_FORCED_UNWIND
 end_ifdef
 
+begin_define
+define|#
+directive|define
+name|_BSD_SOURCE
+end_define
+
 begin_include
 include|#
 directive|include
-file|<unwind-generic.h>
+file|<unwind.h>
 end_include
 
 begin_endif

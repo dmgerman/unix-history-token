@@ -163,7 +163,7 @@ parameter_list|,
 name|_Unwind_Action
 name|actions
 parameter_list|,
-name|_Unwind_Exception_Class
+name|int64_t
 name|exc_class
 parameter_list|,
 name|struct
@@ -209,7 +209,8 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|_Unwind_Word
+name|unsigned
+name|long
 function_decl|(
 modifier|*
 name|uwl_getcfa
@@ -407,7 +408,8 @@ block|}
 end_function
 
 begin_function
-name|_Unwind_Word
+name|unsigned
+name|long
 name|_Unwind_GetCFA
 parameter_list|(
 name|struct
@@ -490,7 +492,7 @@ parameter_list|,
 name|_Unwind_Action
 name|actions
 parameter_list|,
-name|_Unwind_Exception_Class
+name|int64_t
 name|exc_class
 parameter_list|,
 name|struct
