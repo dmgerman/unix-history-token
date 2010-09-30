@@ -680,7 +680,7 @@ name|OID_AUTO
 argument_list|,
 name|kmem_size
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|vm_kmem_size
@@ -708,7 +708,7 @@ name|OID_AUTO
 argument_list|,
 name|kmem_size_min
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|vm_kmem_size_min
@@ -736,7 +736,7 @@ name|OID_AUTO
 argument_list|,
 name|kmem_size_max
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|vm_kmem_size_max
@@ -764,7 +764,7 @@ name|OID_AUTO
 argument_list|,
 name|kmem_size_scale
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|vm_kmem_size_scale
