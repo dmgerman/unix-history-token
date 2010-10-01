@@ -116,6 +116,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/rman.h>
 end_include
 
@@ -1372,7 +1378,7 @@ name|sc
 operator|->
 name|sc_stride
 argument_list|,
-literal|0
+name|BUS_SPACE_MAP_PREFETCHABLE
 argument_list|,
 operator|&
 name|sc
@@ -2971,37 +2977,7 @@ operator|*
 operator|)
 name|adp
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_num_pciaddrs
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
-comment|/* 	 * Hack for Radeon... 	 */
-if|if
-condition|(
-name|ofwfb_ignore_mmap_checks
-condition|)
-block|{
-operator|*
-name|paddr
-operator|=
-name|offset
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-comment|/* 	 * Make sure the requested address lies within the PCI device's assigned addrs 	 */
+comment|/* 	 * Make sure the requested address lies within the PCI device's 	 * assigned addrs 	 */
 for|for
 control|(
 name|i
@@ -3053,6 +3029,42 @@ name|size_lo
 operator|)
 condition|)
 block|{
+comment|/* 			 * If this is a prefetchable BAR, we can (and should) 			 * enable write-combining. 			 */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_pciaddrs
+index|[
+name|i
+index|]
+operator|.
+name|phys_hi
+operator|&
+name|OFW_PCI_PHYS_HI_PREFETCHABLE
+condition|)
+operator|*
+name|memattr
+operator|=
+name|VM_MEMATTR_WRITE_COMBINING
+expr_stmt|;
+operator|*
+name|paddr
+operator|=
+name|offset
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+comment|/* 	 * Hack for Radeon... 	 */
+if|if
+condition|(
+name|ofwfb_ignore_mmap_checks
+condition|)
+block|{
 operator|*
 name|paddr
 operator|=
@@ -3093,6 +3105,20 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/* 	 * Error if we didn't have a better idea. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_num_pciaddrs
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
 return|return
 operator|(
 name|EINVAL
