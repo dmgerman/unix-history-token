@@ -3544,6 +3544,14 @@ name|link
 decl_stmt|;
 name|si
 operator|->
+name|sched_time
+operator|=
+name|dn_cfg
+operator|.
+name|curr_time
+expr_stmt|;
+name|si
+operator|->
 name|credit
 operator|=
 name|dn_cfg
