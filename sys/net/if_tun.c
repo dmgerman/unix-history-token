@@ -2559,9 +2559,6 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|INET
 name|struct
 name|tun_softc
 modifier|*
@@ -2571,6 +2568,9 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 name|struct
 name|ifaddr
 modifier|*
