@@ -802,7 +802,7 @@ expr_stmt|;
 if|if
 condition|(
 name|flags
-operator|&&
+operator|&
 name|GV_FLAG_R
 condition|)
 block|{
@@ -1171,7 +1171,7 @@ expr_stmt|;
 if|if
 condition|(
 name|flags
-operator|&&
+operator|&
 name|GV_FLAG_R
 condition|)
 block|{

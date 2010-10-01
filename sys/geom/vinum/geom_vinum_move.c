@@ -453,7 +453,7 @@ operator|&&
 operator|!
 operator|(
 name|flags
-operator|&&
+operator|&
 name|GV_FLAG_F
 operator|)
 condition|)
@@ -477,7 +477,7 @@ condition|(
 operator|!
 operator|(
 name|flags
-operator|&&
+operator|&
 name|GV_FLAG_F
 operator|)
 condition|)
