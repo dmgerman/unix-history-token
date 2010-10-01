@@ -4613,6 +4613,7 @@ name|igmp_group
 operator|.
 name|s_addr
 argument_list|)
+argument_list|)
 operator|||
 operator|!
 name|in_hosteq
@@ -4624,7 +4625,6 @@ argument_list|,
 name|ip
 operator|->
 name|ip_dst
-argument_list|)
 argument_list|)
 condition|)
 block|{
