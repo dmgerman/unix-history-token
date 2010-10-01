@@ -9549,6 +9549,19 @@ name|val
 operator||=
 name|BGE_WDMAMODE_STATUS_TAG_FIX
 expr_stmt|;
+comment|/* Request larger DMA burst size to get better performance. */
+if|if
+condition|(
+name|sc
+operator|->
+name|bge_asicrev
+operator|==
+name|BGE_ASICREV_BCM5785
+condition|)
+name|val
+operator||=
+name|BGE_WDMAMODE_BURST_ALL_DATA
+expr_stmt|;
 comment|/* Turn on write DMA state machine */
 name|CSR_WRITE_4
 argument_list|(
