@@ -5842,7 +5842,6 @@ name|BGE_STD_RX_RING_CNT
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 name|bus_dmamap_sync
 argument_list|(
 name|sc
@@ -6098,7 +6097,6 @@ name|BGE_JUMBO_RX_RING_CNT
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 name|bus_dmamap_sync
 argument_list|(
 name|sc
