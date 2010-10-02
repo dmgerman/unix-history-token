@@ -1439,6 +1439,7 @@ begin_function
 name|void
 name|setinputfile
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fname

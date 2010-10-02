@@ -97,6 +97,7 @@ name|char
 modifier|*
 name|savestr
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)

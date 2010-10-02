@@ -975,6 +975,7 @@ begin_function
 name|void
 name|readcmdfile
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1061,6 +1062,7 @@ name|char
 modifier|*
 name|fullname
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|path

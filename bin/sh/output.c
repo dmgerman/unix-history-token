@@ -1297,6 +1297,7 @@ parameter_list|(
 name|int
 name|fd
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|buf

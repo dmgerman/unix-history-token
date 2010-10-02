@@ -127,9 +127,11 @@ name|STATIC
 name|void
 name|setalias
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -168,10 +170,12 @@ name|STATIC
 name|void
 name|setalias
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|val
@@ -627,6 +631,7 @@ name|alias
 modifier|*
 name|lookupalias
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name

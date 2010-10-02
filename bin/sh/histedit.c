@@ -1660,6 +1660,7 @@ begin_function
 name|int
 name|not_fcnumber
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|s
@@ -1702,6 +1703,7 @@ begin_function
 name|int
 name|str_to_event
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str
@@ -1713,6 +1715,7 @@ block|{
 name|HistEvent
 name|he
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|s

@@ -66,6 +66,7 @@ begin_function_decl
 name|void
 name|trputs
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)

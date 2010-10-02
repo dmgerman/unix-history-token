@@ -147,9 +147,11 @@ begin_function_decl
 name|int
 name|patmatch
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -176,6 +178,7 @@ name|union
 name|node
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)

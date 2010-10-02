@@ -106,6 +106,7 @@ end_struct
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|pathopt
@@ -139,6 +140,7 @@ name|char
 modifier|*
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -152,10 +154,12 @@ name|char
 modifier|*
 name|padvance
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -179,6 +183,7 @@ begin_function_decl
 name|void
 name|find_command
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -188,6 +193,7 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -198,6 +204,7 @@ begin_function_decl
 name|int
 name|find_builtin
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -240,6 +247,7 @@ begin_function_decl
 name|void
 name|addcmdentry
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -254,6 +262,7 @@ begin_function_decl
 name|void
 name|defun
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -268,6 +277,7 @@ begin_function_decl
 name|int
 name|unsetfunc
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)

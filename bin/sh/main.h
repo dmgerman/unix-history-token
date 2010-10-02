@@ -29,6 +29,7 @@ begin_function_decl
 name|void
 name|readcmdfile
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
