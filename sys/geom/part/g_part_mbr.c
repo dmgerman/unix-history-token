@@ -2688,6 +2688,11 @@ operator|)
 operator|-
 literal|1
 expr_stmt|;
+name|g_free
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
