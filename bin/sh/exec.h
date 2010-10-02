@@ -128,26 +128,27 @@ begin_comment
 comment|/* last exec error */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|shellexec
-parameter_list|(
+argument_list|(
 name|char
-modifier|*
-modifier|*
-parameter_list|,
+operator|*
+operator|*
+argument_list|,
 name|char
-modifier|*
-modifier|*
-parameter_list|,
+operator|*
+operator|*
+argument_list|,
 specifier|const
 name|char
-modifier|*
-parameter_list|,
+operator|*
+argument_list|,
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__dead2
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|char
