@@ -412,6 +412,7 @@ argument_list|)
 case|case
 name|CVMX_BOARD_TYPE_CUST_LANNER_MR320
 case|:
+comment|/* Port 0 is a Marvell 88E6161 switch, ports 1 and 2 are Marvell 	       88E1111 interfaces.  */
 switch|switch
 condition|(
 name|ipd_port
@@ -420,10 +421,8 @@ block|{
 case|case
 literal|0
 case|:
-comment|/* XXX Switch PHY?  */
 return|return
-operator|-
-literal|1
+literal|16
 return|;
 case|case
 literal|1

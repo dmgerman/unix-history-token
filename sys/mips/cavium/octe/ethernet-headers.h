@@ -67,6 +67,27 @@ directive|include
 file|"ethernet-util.h"
 end_include
 
+begin_comment
+comment|/*  * Any board- or vendor-specific includes.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OCTEON_VENDOR_LANNER
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"ethernet-mv88e61xx.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
