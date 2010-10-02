@@ -1795,6 +1795,8 @@ operator|.
 name|uc_range
 operator|=
 literal|8
+operator|<<
+literal|3
 block|,
 operator|.
 name|uc_rclk

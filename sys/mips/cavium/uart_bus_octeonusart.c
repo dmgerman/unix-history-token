@@ -324,7 +324,7 @@ name|bst
 operator|=
 name|uart_bus_space_mem
 expr_stmt|;
-comment|/* 	 * XXX 	 * RBR isn't really a great base address and it'd be great to not have 	 * a hard-coded 1024. 	 */
+comment|/* 	 * XXX 	 * RBR isn't really a great base address. 	 */
 if|if
 condition|(
 name|bus_space_map
@@ -340,7 +340,12 @@ argument_list|(
 literal|0
 argument_list|)
 argument_list|,
-literal|1024
+name|uart_getrange
+argument_list|(
+name|sc
+operator|->
+name|sc_class
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
