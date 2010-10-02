@@ -398,29 +398,6 @@ name|ma
 operator|->
 name|mii_data
 expr_stmt|;
-comment|/* 	 * We handle all pseudo PHY in a single instance, so never allow 	 * non-zero * instances! 	 */
-if|if
-condition|(
-name|mii
-operator|->
-name|mii_instance
-operator|!=
-literal|0
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"ignoring this PHY, non-zero instance\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
 name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
@@ -440,6 +417,7 @@ operator|=
 name|mii
 operator|->
 name|mii_instance
+operator|++
 expr_stmt|;
 name|sc
 operator|->
@@ -461,11 +439,7 @@ name|mii_pdata
 operator|=
 name|mii
 expr_stmt|;
-name|mii
-operator|->
-name|mii_instance
-operator|++
-expr_stmt|;
+comment|/* 	 * We handle all pseudo PHYs in a single instance. 	 */
 name|sc
 operator|->
 name|mii_flags
@@ -484,14 +458,7 @@ value|ifmedia_add(&mii->mii_media, (m), (c), NULL)
 if|#
 directive|if
 literal|0
-comment|/* See above. */
-block|ADD(IFM_MAKEWORD(IFM_ETHER, IFM_NONE, 0, sc->mii_inst), 	    BMCR_ISO);
-endif|#
-directive|endif
-if|#
-directive|if
-literal|0
-block|ADD(IFM_MAKEWORD(IFM_ETHER, IFM_100_TX, IFM_LOOP, sc->mii_inst), 	    BMCR_LOOP|BMCR_S100);
+block|ADD(IFM_MAKEWORD(IFM_ETHER, IFM_100_TX, IFM_LOOP, sc->mii_inst), 	    MII_MEDIA_100_TX);
 endif|#
 directive|endif
 name|sc

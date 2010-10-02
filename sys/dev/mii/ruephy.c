@@ -396,29 +396,6 @@ name|ma
 operator|->
 name|mii_data
 expr_stmt|;
-comment|/* 	 * The RealTek PHY can never be isolated, so never allow non-zero 	 * instances! 	 */
-if|if
-condition|(
-name|mii
-operator|->
-name|mii_instance
-operator|!=
-literal|0
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"ignoring this PHY, non-zero instance\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
 name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
@@ -438,6 +415,7 @@ operator|=
 name|mii
 operator|->
 name|mii_instance
+operator|++
 expr_stmt|;
 name|sc
 operator|->
@@ -459,12 +437,7 @@ name|mii_pdata
 operator|=
 name|mii
 expr_stmt|;
-name|mii
-operator|->
-name|mii_instance
-operator|++
-expr_stmt|;
-comment|/* 	 * Apparently, we can't neither isolate nor do loopback on this PHY. 	 */
+comment|/* 	 * Apparently, we can neither isolate nor do loopback on this PHY. 	 */
 name|sc
 operator|->
 name|mii_flags
@@ -558,25 +531,6 @@ decl_stmt|;
 name|int
 name|reg
 decl_stmt|;
-comment|/* 	 * We can't isolate the RealTek RTL8150 PHY, 	 * so it has to be the only one! 	 */
-if|if
-condition|(
-name|IFM_INST
-argument_list|(
-name|ife
-operator|->
-name|ifm_media
-argument_list|)
-operator|!=
-name|sc
-operator|->
-name|mii_inst
-condition|)
-name|panic
-argument_list|(
-literal|"ruephy_service: can't isolate RealTek RTL8150 PHY"
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|cmd
@@ -671,15 +625,16 @@ operator|&
 name|RUEPHY_MSR_LINK
 condition|)
 break|break;
-comment|/* 		 * Only retry autonegotiation every 5 seconds. 		 */
+comment|/* Only retry autonegotiation every mii_anegticks seconds. */
 if|if
 condition|(
-operator|++
 name|sc
 operator|->
 name|mii_ticks
 operator|<=
-name|MII_ANEGTICKS
+name|sc
+operator|->
+name|mii_anegticks
 condition|)
 break|break;
 name|sc
