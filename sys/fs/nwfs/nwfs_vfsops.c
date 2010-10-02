@@ -932,8 +932,6 @@ name|M_NWFSDATA
 argument_list|,
 name|M_WAITOK
 operator||
-name|M_USE_RESERVE
-operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;

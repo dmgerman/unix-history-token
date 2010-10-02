@@ -984,8 +984,6 @@ argument_list|,
 name|M_SMBFSDATA
 argument_list|,
 name|M_WAITOK
-operator||
-name|M_USE_RESERVE
 argument_list|)
 expr_stmt|;
 endif|#
