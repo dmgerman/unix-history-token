@@ -1003,6 +1003,12 @@ name|td_rux
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|newtd
+operator|->
+name|td_map_def_user
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* XXX check if we should zero. */
 name|bcopy
 argument_list|(

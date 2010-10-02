@@ -2209,6 +2209,12 @@ name|td_rux
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|td2
+operator|->
+name|td_map_def_user
+operator|=
+name|NULL
+expr_stmt|;
 name|bcopy
 argument_list|(
 operator|&

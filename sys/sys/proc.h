@@ -914,6 +914,12 @@ name|rusage_ext
 name|td_rux
 decl_stmt|;
 comment|/* (t) Internal rusage information. */
+name|struct
+name|vm_map_entry
+modifier|*
+name|td_map_def_user
+decl_stmt|;
+comment|/* (k) Deferred entries. */
 block|}
 struct|;
 end_struct
