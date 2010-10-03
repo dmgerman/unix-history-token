@@ -90,12 +90,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/mii/axphyreg.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"miibus_if.h"
 end_include
 
