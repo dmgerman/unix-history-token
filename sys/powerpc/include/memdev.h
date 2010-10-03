@@ -29,12 +29,11 @@ name|memrw
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
+begin_decl_stmt
+name|d_ioctl_t
 name|memioctl
-value|(d_ioctl_t *)NULL
-end_define
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|d_mmap_t
