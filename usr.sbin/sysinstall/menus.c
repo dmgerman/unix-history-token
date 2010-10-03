@@ -5653,9 +5653,17 @@ block|,
 name|DIST_INFO
 block|}
 block|,
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__amd64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__powerpc64__
+argument_list|)
 block|{
 literal|" lib32"
 block|,

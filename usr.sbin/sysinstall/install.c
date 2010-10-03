@@ -3884,7 +3884,9 @@ argument_list|)
 expr_stmt|;
 name|vsystem
 argument_list|(
-literal|"mv /boot/GENERIC /boot/kernel"
+literal|"mv /boot/"
+name|GENERIC_KERNEL_NAME
+literal|" /boot/kernel"
 argument_list|)
 expr_stmt|;
 block|}
