@@ -238,6 +238,7 @@ name|char
 modifier|*
 name|prompt
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|ifs
@@ -883,6 +884,7 @@ name|char
 modifier|*
 modifier|*
 name|argv
+name|__unused
 parameter_list|)
 block|{
 name|char

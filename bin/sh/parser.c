@@ -568,6 +568,7 @@ name|STATIC
 name|void
 name|synerror
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -7126,6 +7127,7 @@ name|STATIC
 name|void
 name|synerror
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|msg
@@ -7236,6 +7238,13 @@ name|j
 decl_stmt|,
 name|trim
 decl_stmt|;
+specifier|static
+name|char
+name|internal_error
+index|[]
+init|=
+literal|"<internal prompt error>"
+decl_stmt|;
 comment|/* 	 * Select prompt format. 	 */
 switch|switch
 condition|(
@@ -7247,7 +7256,7 @@ literal|0
 case|:
 name|fmt
 operator|=
-literal|""
+name|nullstr
 expr_stmt|;
 break|break;
 case|case
@@ -7270,7 +7279,7 @@ expr_stmt|;
 break|break;
 default|default:
 return|return
-literal|"<internal prompt error>"
+name|internal_error
 return|;
 block|}
 comment|/* 	 * Format prompt string. 	 */

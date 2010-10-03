@@ -277,7 +277,6 @@ comment|/* input line number */
 end_comment
 
 begin_decl_stmt
-name|MKINIT
 name|int
 name|parsenleft
 decl_stmt|;
@@ -414,13 +413,19 @@ name|INCLUDE
 literal|"input.h"
 name|INCLUDE
 literal|"error.h"
-name|INIT
-block|{
-specifier|extern
+name|MKINIT
 name|char
 name|basebuf
 index|[]
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|INIT
+end_macro
+
+begin_block
+block|{
 name|basepf
 operator|.
 name|nextc
@@ -430,12 +435,19 @@ operator|.
 name|buf
 operator|=
 name|basebuf
-block|; }
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
 name|RESET
+end_macro
+
+begin_block
 block|{
 name|popallfiles
 argument_list|()
-block|;
+expr_stmt|;
 if|if
 condition|(
 name|exception
@@ -450,7 +462,7 @@ literal|0
 expr_stmt|;
 comment|/* clear input buffer */
 block|}
-end_expr_stmt
+end_block
 
 begin_macro
 name|SHELLPROC

@@ -443,7 +443,7 @@ begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
-name|optptr
+name|nextopt_optptr
 decl_stmt|;
 end_decl_stmt
 

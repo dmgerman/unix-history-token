@@ -301,6 +301,7 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|dest

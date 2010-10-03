@@ -3995,10 +3995,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-specifier|extern
-name|int
-name|oexitstatus
-decl_stmt|;
 name|char
 name|sep
 decl_stmt|;
@@ -4456,6 +4452,7 @@ name|char
 modifier|*
 name|q
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|ifs

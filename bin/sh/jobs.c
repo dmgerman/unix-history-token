@@ -445,6 +445,7 @@ name|STATIC
 name|void
 name|cmdputs
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -5438,6 +5439,7 @@ name|nodelist
 modifier|*
 name|lp
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|p
@@ -6113,15 +6115,18 @@ name|STATIC
 name|void
 name|cmdputs
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|s
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|p
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|q
 decl_stmt|;

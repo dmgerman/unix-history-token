@@ -385,7 +385,7 @@ modifier|*
 name|path
 parameter_list|,
 name|int
-name|index
+name|idx
 parameter_list|)
 block|{
 name|char
@@ -456,7 +456,7 @@ block|{
 if|if
 condition|(
 operator|--
-name|index
+name|idx
 operator|<
 literal|0
 operator|&&
@@ -1155,7 +1155,7 @@ name|verbose
 parameter_list|)
 block|{
 name|int
-name|index
+name|idx
 decl_stmt|;
 specifier|const
 name|char
@@ -1175,7 +1175,7 @@ operator|==
 name|CMDNORMAL
 condition|)
 block|{
-name|index
+name|idx
 operator|=
 name|cmdp
 operator|->
@@ -1211,7 +1211,7 @@ block|}
 do|while
 condition|(
 operator|--
-name|index
+name|idx
 operator|>=
 literal|0
 condition|)
@@ -1370,7 +1370,7 @@ modifier|*
 name|cmdp
 decl_stmt|;
 name|int
-name|index
+name|idx
 decl_stmt|;
 name|int
 name|prev
@@ -1544,7 +1544,7 @@ name|e
 operator|=
 name|ENOENT
 expr_stmt|;
-name|index
+name|idx
 operator|=
 operator|-
 literal|1
@@ -1573,7 +1573,7 @@ argument_list|(
 name|fullname
 argument_list|)
 expr_stmt|;
-name|index
+name|idx
 operator|++
 expr_stmt|;
 if|if
@@ -1678,14 +1678,14 @@ index|]
 operator|==
 literal|'/'
 operator|&&
-name|index
+name|idx
 operator|<=
 name|prev
 condition|)
 block|{
 if|if
 condition|(
-name|index
+name|idx
 operator|<
 name|prev
 condition|)
@@ -1924,7 +1924,7 @@ name|param
 operator|.
 name|index
 operator|=
-name|index
+name|idx
 expr_stmt|;
 name|INTON
 expr_stmt|;
@@ -2211,7 +2211,7 @@ modifier|*
 name|new
 decl_stmt|;
 name|int
-name|index
+name|idx
 decl_stmt|;
 name|int
 name|firstchange
@@ -2233,7 +2233,7 @@ operator|=
 literal|9999
 expr_stmt|;
 comment|/* assume no change */
-name|index
+name|idx
 operator|=
 literal|0
 expr_stmt|;
@@ -2259,7 +2259,7 @@ condition|)
 block|{
 name|firstchange
 operator|=
-name|index
+name|idx
 expr_stmt|;
 if|if
 condition|(
@@ -2326,7 +2326,7 @@ argument_list|)
 condition|)
 name|bltin
 operator|=
-name|index
+name|idx
 expr_stmt|;
 if|if
 condition|(
@@ -2336,7 +2336,7 @@ operator|==
 literal|':'
 condition|)
 block|{
-name|index
+name|idx
 operator|++
 expr_stmt|;
 block|}
@@ -3121,8 +3121,10 @@ name|tblentry
 modifier|*
 name|cmdp
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
+specifier|const
 modifier|*
 name|pp
 decl_stmt|;
@@ -3135,16 +3137,9 @@ name|int
 name|i
 decl_stmt|;
 name|int
-name|error
+name|error1
 init|=
 literal|0
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-specifier|const
-name|parsekwd
-index|[]
 decl_stmt|;
 for|for
 control|(
@@ -3165,11 +3160,6 @@ for|for
 control|(
 name|pp
 operator|=
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 name|parsekwd
 init|;
 operator|*
@@ -3549,7 +3539,7 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|error
+name|error1
 operator||=
 literal|127
 expr_stmt|;
@@ -3655,7 +3645,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|error
+name|error1
 operator||=
 literal|127
 expr_stmt|;
@@ -3663,7 +3653,7 @@ break|break;
 block|}
 block|}
 return|return
-name|error
+name|error1
 return|;
 block|}
 end_function

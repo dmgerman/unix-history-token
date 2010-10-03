@@ -28,6 +28,17 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|oexitstatus
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* saved exit status */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|struct
 name|strlist
 modifier|*

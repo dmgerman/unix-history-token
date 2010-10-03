@@ -249,6 +249,7 @@ name|STATIC
 name|void
 name|read_profile
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -915,6 +916,7 @@ name|STATIC
 name|void
 name|read_profile
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1227,10 +1229,6 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
-specifier|extern
-name|int
-name|oexitstatus
-decl_stmt|;
 if|if
 condition|(
 name|stoppedjobs
