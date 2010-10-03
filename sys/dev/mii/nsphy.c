@@ -940,6 +940,8 @@ operator|->
 name|mii_media_active
 operator||=
 name|IFM_100_T4
+operator||
+name|IFM_HDX
 expr_stmt|;
 elseif|else
 if|if
@@ -953,6 +955,8 @@ operator|->
 name|mii_media_active
 operator||=
 name|IFM_100_TX
+operator||
+name|IFM_HDX
 expr_stmt|;
 elseif|else
 if|if
@@ -981,6 +985,8 @@ operator|->
 name|mii_media_active
 operator||=
 name|IFM_10_T
+operator||
+name|IFM_HDX
 expr_stmt|;
 else|else
 name|mii
@@ -1020,12 +1026,12 @@ name|mii_media_active
 operator||=
 name|IFM_100_TX
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (par& PAR_FDX) 			mii->mii_media_active |= IFM_FDX;
-endif|#
-directive|endif
+name|mii
+operator|->
+name|mii_media_active
+operator||=
+name|IFM_HDX
+expr_stmt|;
 block|}
 else|else
 name|mii

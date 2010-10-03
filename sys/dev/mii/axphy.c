@@ -683,7 +683,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|scr = PHY_READ(sc, MII_AXPHY_SCR); 		if (scr& SCR_S100) 			mii->mii_media_active |= IFM_100_TX; 		else 			mii->mii_media_active |= IFM_10_T; 		if (scr& SCR_FDX) 			mii->mii_media_active |= IFM_FDX;
+block|scr = PHY_READ(sc, MII_AXPHY_SCR); 		if (scr& SCR_S100) 			mii->mii_media_active |= IFM_100_TX; 		else 			mii->mii_media_active |= IFM_10_T; 		if (scr& SCR_FDX) 			mii->mii_media_active |= IFM_FDX; 		else 			mii->mii_media_active |= IFM_HDX;
 endif|#
 directive|endif
 block|}
