@@ -5067,7 +5067,7 @@ expr_stmt|;
 name|bucket_map
 operator||=
 operator|(
-literal|1ULL
+literal|3ULL
 operator|<<
 name|bucket
 operator|)
@@ -13051,7 +13051,11 @@ if|if
 condition|(
 name|register_msgring_handler
 argument_list|(
-name|TX_STN_GMAC0
+name|MSGRNG_STNID_GMAC
+argument_list|,
+name|MSGRNG_STNID_GMAC
+operator|+
+literal|1
 argument_list|,
 name|rmi_xlr_mac_msgring_handler
 argument_list|,
@@ -13069,7 +13073,11 @@ if|if
 condition|(
 name|register_msgring_handler
 argument_list|(
-name|TX_STN_GMAC1
+name|MSGRNG_STNID_GMAC1
+argument_list|,
+name|MSGRNG_STNID_GMAC1
+operator|+
+literal|1
 argument_list|,
 name|rmi_xlr_mac_msgring_handler
 argument_list|,
@@ -13090,7 +13098,11 @@ if|if
 condition|(
 name|register_msgring_handler
 argument_list|(
-name|TX_STN_GMAC
+name|MSGRNG_STNID_GMAC
+argument_list|,
+name|MSGRNG_STNID_GMAC
+operator|+
+literal|1
 argument_list|,
 name|rmi_xlr_mac_msgring_handler
 argument_list|,

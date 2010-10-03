@@ -4394,7 +4394,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-comment|/* 	 * It is seen that this is a critical function in bringing up FreeBSD. 	 * When it is not invoked, FreeBSD panics and fails during the 	 * multi-processor init (SI_SUB_SMP of * mi_startup). The key function 	 * in this sequence seems to be platform_prep_smp_launch. */
+comment|/* 	 * Register message ring handler for the NA block, messages from 	 * the GMAC will have sourec station id to the first bucket of the  	 * NA FMN station, so register just that station id. 	 */
 if|if
 condition|(
 name|register_msgring_handler
@@ -4402,6 +4402,12 @@ argument_list|(
 name|sc
 operator|->
 name|station_id
+argument_list|,
+name|sc
+operator|->
+name|station_id
+operator|+
+literal|1
 argument_list|,
 name|nlge_msgring_handler
 argument_list|,
@@ -5507,22 +5513,19 @@ name|cpu
 operator|=
 name|i
 expr_stmt|;
+comment|/* use bucket 0 and 1 on every core for NA msgs */
 name|bucket
 operator|=
-operator|(
-operator|(
 name|cpu
-operator|>>
-literal|2
-operator|)
-operator|<<
-literal|3
-operator|)
+operator|/
+literal|4
+operator|*
+literal|8
 expr_stmt|;
 name|bucket_map
 operator||=
 operator|(
-literal|1ULL
+literal|3ULL
 operator|<<
 name|bucket
 operator|)
@@ -5675,6 +5678,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Update the network accelerator packet distribution engine for SMP.  * On bootup, we have just the boot hw thread handling all packets, on SMP  * start, we can start distributing packets across all the cores which are up.  */
+end_comment
 
 begin_function
 specifier|static
@@ -6002,21 +6009,10 @@ name|gmac_cc_config
 decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|id
 decl_stmt|;
 name|block_info
 operator|=
 name|device_get_ivars
-argument_list|(
-name|sc
-operator|->
-name|nlna_dev
-argument_list|)
-expr_stmt|;
-name|id
-operator|=
-name|device_get_unit
 argument_list|(
 name|sc
 operator|->

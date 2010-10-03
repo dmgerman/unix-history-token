@@ -532,13 +532,6 @@ name|XLR_CACHELINE_SIZE
 value|32
 end_define
 
-begin_define
-define|#
-directive|define
-name|XLR_MAX_CORES
-value|8
-end_define
-
 begin_comment
 comment|/* functions to write to and read from the extended  * cp0 registers.  * EIRR : Extended Interrupt Request Register  *        cp0 register 9 sel 6  *        bits 0...7 are same as cause register 8...15  * EIMR : Extended Interrupt Mask Register  *        cp0 register 9 sel 7  *        bits 0...7 are same as status register 8...15  */
 end_comment
@@ -1123,8 +1116,40 @@ comment|/* defined(__mips_n64) || defined(__mips_n32) */
 end_comment
 
 begin_comment
-comment|/* for cpuid to hardware thread id mapping */
+comment|/*  * XLR/XLS processors have maximum 8 cores, and maximum 4 threads  * per core  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|XLR_MAX_CORES
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|XLR_NTHREADS
+value|4
+end_define
+
+begin_comment
+comment|/*  * FreeBSD can be started with few threads and cores turned off,  * so have a hardware thread id to FreeBSD cpuid mapping.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|xlr_ncores
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|xlr_threads_per_core
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
