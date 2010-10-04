@@ -1542,6 +1542,9 @@ argument_list|(
 name|bus
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|USB_HAVE_POWERD
 comment|/* In case we are out of sync, update the power state. */
 name|usb_bus_power_update
 argument_list|(
@@ -1550,6 +1553,8 @@ operator|->
 name|bus
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
