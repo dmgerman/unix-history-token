@@ -3269,6 +3269,20 @@ block|}
 end_function
 
 begin_function
+specifier|static
+name|void
+name|dummy_sighandler
+parameter_list|(
+name|int
+name|sig
+name|__unused
+parameter_list|)
+block|{
+comment|/* Nothing to do. */
+block|}
+end_function
+
+begin_function
 name|int
 name|main
 parameter_list|(
@@ -3461,6 +3475,19 @@ argument_list|(
 name|cfg
 operator|!=
 name|NULL
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Because SIGCHLD is ignored by default, setup dummy handler for it, 	 * so we can mask it. 	 */
+name|PJDLOG_VERIFY
+argument_list|(
+name|signal
+argument_list|(
+name|SIGCHLD
+argument_list|,
+name|dummy_sighandler
+argument_list|)
+operator|!=
+name|SIG_ERR
 argument_list|)
 expr_stmt|;
 name|PJDLOG_VERIFY
