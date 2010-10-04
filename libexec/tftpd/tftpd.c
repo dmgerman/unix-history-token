@@ -2682,13 +2682,6 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-name|tftp_log
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"Prevent NAK storm"
-argument_list|)
-expr_stmt|;
 name|send_error
 argument_list|(
 name|peer
