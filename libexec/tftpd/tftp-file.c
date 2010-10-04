@@ -351,7 +351,7 @@ name|n
 init|=
 literal|0
 decl_stmt|,
-name|read
+name|in
 init|=
 literal|0
 decl_stmt|;
@@ -374,7 +374,7 @@ name|n
 operator|=
 literal|0
 expr_stmt|;
-name|read
+name|in
 operator|=
 literal|0
 expr_stmt|;
@@ -416,7 +416,7 @@ if|if
 condition|(
 name|n
 operator|==
-name|read
+name|in
 condition|)
 block|{
 comment|/* When done we're done */
@@ -429,7 +429,7 @@ argument_list|)
 condition|)
 break|break;
 comment|/* Otherwise read another bunch */
-name|read
+name|in
 operator|=
 name|fread
 argument_list|(
@@ -444,7 +444,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|read
+name|in
 operator|==
 literal|0
 condition|)
@@ -911,6 +911,7 @@ name|synchnet
 parameter_list|(
 name|int
 name|peer
+name|__unused
 parameter_list|)
 block|{
 return|return

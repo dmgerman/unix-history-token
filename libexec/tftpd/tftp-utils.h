@@ -222,8 +222,10 @@ block|{
 name|int
 name|value
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|name
 decl_stmt|;
 block|}
@@ -240,6 +242,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|const
 name|char
 modifier|*
 name|packettype
@@ -260,8 +263,10 @@ block|{
 name|int
 name|error
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|desc
 decl_stmt|;
 block|}
@@ -334,12 +339,16 @@ block|{
 name|int
 name|value
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|name
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|desc
 decl_stmt|;
 block|}
@@ -392,6 +401,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|char
 modifier|*
 name|debug_show
