@@ -4367,6 +4367,13 @@ argument_list|,
 literal|"transfer complete\n"
 argument_list|)
 expr_stmt|;
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&=
+operator|~
+name|IFF_DRV_OACTIVE
+expr_stmt|;
 comment|/* FALLTHROUGH */
 case|case
 name|USB_ST_SETUP
@@ -4384,9 +4391,19 @@ name|AXE_FLAG_LINK
 operator|)
 operator|==
 literal|0
+operator|||
+operator|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_OACTIVE
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
-comment|/* 			 * don't send anything if there is no link ! 			 */
+comment|/* 			 * Don't send anything if there is no link or 			 * controller is busy. 			 */
 return|return;
 block|}
 name|pos
@@ -4610,6 +4627,12 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
+name|ifp
+operator|->
+name|if_drv_flags
+operator||=
+name|IFF_DRV_OACTIVE
+expr_stmt|;
 return|return;
 default|default:
 comment|/* Error */
@@ -4629,6 +4652,13 @@ name|ifp
 operator|->
 name|if_oerrors
 operator|++
+expr_stmt|;
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&=
+operator|~
+name|IFF_DRV_OACTIVE
 expr_stmt|;
 if|if
 condition|(
@@ -5245,7 +5275,11 @@ operator|->
 name|if_drv_flags
 operator|&=
 operator|~
+operator|(
 name|IFF_DRV_RUNNING
+operator||
+name|IFF_DRV_OACTIVE
+operator|)
 expr_stmt|;
 name|sc
 operator|->
