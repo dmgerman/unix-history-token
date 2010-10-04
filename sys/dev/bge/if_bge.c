@@ -24617,7 +24617,7 @@ name|rxstats
 operator|.
 name|ifHCInOctets
 argument_list|,
-literal|"Octets"
+literal|"ifHCInOctets"
 argument_list|)
 expr_stmt|;
 name|BGE_SYSCTL_STAT
@@ -24651,7 +24651,7 @@ name|rxstats
 operator|.
 name|ifHCInUcastPkts
 argument_list|,
-literal|"UcastPkts"
+literal|"UnicastPkts"
 argument_list|)
 expr_stmt|;
 name|BGE_SYSCTL_STAT
@@ -24898,7 +24898,7 @@ name|txstats
 operator|.
 name|ifHCOutOctets
 argument_list|,
-literal|"Octets"
+literal|"ifHCOutOctets"
 argument_list|)
 expr_stmt|;
 name|BGE_SYSCTL_STAT
@@ -25085,7 +25085,7 @@ name|txstats
 operator|.
 name|ifHCOutUcastPkts
 argument_list|,
-literal|"UcastPkts"
+literal|"UnicastPkts"
 argument_list|)
 expr_stmt|;
 name|BGE_SYSCTL_STAT
@@ -25451,7 +25451,7 @@ name|ctx
 argument_list|,
 name|child
 argument_list|,
-literal|"UcastPkts"
+literal|"UnicastPkts"
 argument_list|,
 operator|&
 name|stats
@@ -25669,7 +25669,7 @@ name|ctx
 argument_list|,
 name|child
 argument_list|,
-literal|"Octets"
+literal|"ifHCOutOctets"
 argument_list|,
 operator|&
 name|stats
@@ -25829,7 +25829,7 @@ name|ctx
 argument_list|,
 name|child
 argument_list|,
-literal|"UcastPkts"
+literal|"UnicastPkts"
 argument_list|,
 operator|&
 name|stats
@@ -25845,7 +25845,7 @@ name|ctx
 argument_list|,
 name|child
 argument_list|,
-literal|"McastPkts"
+literal|"MulticastPkts"
 argument_list|,
 operator|&
 name|stats
@@ -25861,7 +25861,7 @@ name|ctx
 argument_list|,
 name|child
 argument_list|,
-literal|"BcastPkts"
+literal|"BroadcastPkts"
 argument_list|,
 operator|&
 name|stats
