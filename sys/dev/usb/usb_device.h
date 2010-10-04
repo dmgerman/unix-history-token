@@ -506,6 +506,10 @@ name|power_mode
 decl_stmt|;
 comment|/* see USB_POWER_XXX */
 name|uint8_t
+name|re_enumerate_wait
+decl_stmt|;
+comment|/* set if re-enum. is in progress */
+name|uint8_t
 name|ifaces_max
 decl_stmt|;
 comment|/* number of interfaces present */
