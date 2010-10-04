@@ -8267,6 +8267,13 @@ name|BGE_RDMA_STATUS
 value|0x4804
 end_define
 
+begin_define
+define|#
+directive|define
+name|BGE_RDMA_RSRVCTRL
+value|0x4900
+end_define
+
 begin_comment
 comment|/* Read DMA mode register */
 end_comment
@@ -8455,6 +8462,17 @@ define|#
 directive|define
 name|BGE_RDMASTAT_LOCWRITE_TOOBIG
 value|0x00000200
+end_define
+
+begin_comment
+comment|/* Read DMA Reserved Control register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BGE_RDMA_RSRVCTRL_FIFO_OFLW_FIX
+value|0x00000004
 end_define
 
 begin_comment
