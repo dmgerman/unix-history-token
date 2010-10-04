@@ -490,6 +490,24 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|DRIVER_MODULE
+argument_list|(
+name|usbus
+argument_list|,
+name|xhci
+argument_list|,
+name|usb_driver
+argument_list|,
+name|usb_devclass
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Device Only Drivers */
 end_comment
@@ -1352,6 +1370,23 @@ operator|->
 name|bdev
 argument_list|,
 literal|"480Mbps Wireless USB v2.5\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|USB_REV_3_0
+case|:
+name|speed
+operator|=
+name|USB_SPEED_SUPER
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|bus
+operator|->
+name|bdev
+argument_list|,
+literal|"4.8Gbps Super Speed USB v3.0\n"
 argument_list|)
 expr_stmt|;
 break|break;

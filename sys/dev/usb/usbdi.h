@@ -569,6 +569,11 @@ modifier|*
 name|edesc
 decl_stmt|;
 name|struct
+name|usb_endpoint_ss_comp_descriptor
+modifier|*
+name|ecomp
+decl_stmt|;
+name|struct
 name|usb_pipe_methods
 modifier|*
 name|methods
