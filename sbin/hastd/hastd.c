@@ -3127,9 +3127,7 @@ operator|==
 literal|0
 condition|)
 name|hook_check
-argument_list|(
-name|false
-argument_list|)
+argument_list|()
 expr_stmt|;
 elseif|else
 if|if
