@@ -153,6 +153,7 @@ name|_timeoutnetwork
 parameter_list|,
 name|int
 name|_maxtimeouts
+name|__unused
 parameter_list|)
 block|{
 name|int
@@ -265,13 +266,11 @@ operator|*
 operator|)
 name|sin6
 expr_stmt|;
+name|memcpy
+argument_list|(
+operator|&
 name|addr
-operator|=
-operator|*
-operator|(
-name|u_int32_t
-operator|*
-operator|)
+argument_list|,
 operator|&
 name|sin6
 operator|->
@@ -281,6 +280,12 @@ name|s6_addr
 index|[
 literal|12
 index|]
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|addr
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|port
 operator|=
@@ -629,6 +634,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|packettype
@@ -922,6 +928,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|debug_show
