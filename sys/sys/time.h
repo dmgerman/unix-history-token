@@ -337,7 +337,7 @@ name|bt
 operator|->
 name|frac
 operator|&
-literal|0xffffffffllu
+literal|0xffffffffull
 operator|)
 operator|*
 name|x
@@ -389,7 +389,7 @@ operator||
 operator|(
 name|p1
 operator|&
-literal|0xffffffffllu
+literal|0xffffffffull
 operator|)
 expr_stmt|;
 block|}
