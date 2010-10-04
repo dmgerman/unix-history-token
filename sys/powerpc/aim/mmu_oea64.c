@@ -431,7 +431,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_asm
-asm|__asm __volatile("\ 	    mfmsr %0; \ 	    mr %1, %0; \ 	    insrdi %1,%5,1,0; \ 	    mtmsrd %1; \ 	    ptesync; \ 	    \ 	    sld %1,%2,%4; \ 	    or %1,%1,%3; \ 	    tlbie %1; \ 	    \ 	    mtmsrd %0; \ 	    eieio; \ 	    tlbsync; \ 	    ptesync;"
+asm|__asm __volatile("\ 	    mfmsr %0; \ 	    mr %1, %0; \ 	    insrdi %1,%5,1,0; \ 	    mtmsrd %1; isync; \ 	    ptesync; \ 	    \ 	    sld %1,%2,%4; \ 	    or %1,%1,%3; \ 	    tlbie %1; \ 	    \ 	    mtmsrd %0; isync; \ 	    eieio; \ 	    tlbsync; \ 	    ptesync;"
 end_asm
 
 begin_expr_stmt

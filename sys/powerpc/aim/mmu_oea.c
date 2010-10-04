@@ -2082,11 +2082,9 @@ operator|&
 name|tlbie_mtx
 argument_list|)
 expr_stmt|;
+asm|__asm __volatile("ptesync");
 asm|__asm __volatile("tlbie %0" :: "r"(va));
-asm|__asm __volatile("tlbsync");
-name|powerpc_sync
-argument_list|()
-expr_stmt|;
+asm|__asm __volatile("eieio; tlbsync; ptesync");
 name|mtx_unlock_spin
 argument_list|(
 operator|&
