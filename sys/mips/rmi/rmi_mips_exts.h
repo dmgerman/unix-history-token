@@ -915,11 +915,11 @@ literal|0xffffffff
 expr_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|( 	    ".set	push		\n\t" 	    ".set	mips64		\n\t" 	    "dsll32	%1, %1, 0	\n\t" 	    "dsll32	%2, %2, 0	\n\t"
+asm|( 	    ".set	push		\n\t" 	    ".set	mips64		\n\t" 	    "dsll32	$8, %1, 0	\n\t" 	    "dsll32	$9, %2, 0	\n\t"
 comment|/* get rid of the */
-asm|"dsrl32	%2, %2, 0	\n\t"
+asm|"dsrl32	$9, $9, 0	\n\t"
 comment|/* sign extend */
-asm|"or		%0, %1, %2	\n\t" 	    "lw		%0, 0(%0)	\n\t" 	    ".set	pop		\n" 	    :       "=&r"(val) 	    :       "r"(addrh), "r"(addrl));
+asm|"or		$9, $8, $8	\n\t" 	    "lw		%0, 0($9)	\n\t" 	    ".set	pop		\n" 	    :	"=r"(val) 	    :	"r"(addrh), "r"(addrl) 	    :	"$8", "$9");
 return|return
 operator|(
 name|val
@@ -966,11 +966,11 @@ literal|0xffffffff
 expr_stmt|;
 asm|__asm__
 specifier|__volatile__
-asm|( 	    ".set	push		\n\t" 	    ".set	mips64		\n\t" 	    "dsll32	%2, %2, 0	\n\t" 	    "dsll32	%3, %3, 0	\n\t"
+asm|( 	    ".set	push		\n\t" 	    ".set	mips64		\n\t" 	    "dsll32	%0, %2, 0	\n\t" 	    "dsll32	%1, %3, 0	\n\t"
 comment|/* get rid of the */
-asm|"dsrl32	%3, %3, 0	\n\t"
+asm|"dsrl32	%1, %1, 0	\n\t"
 comment|/* sign extend */
-asm|"or		%0, %2, %3	\n\t" 	    "lw		%1, 4(%0)	\n\t" 	    "lw		%0, 0(%0)	\n\t" 	    ".set	pop		\n" 	    :       "=&r"(valh), "=r"(vall) 	    :       "r"(addrh), "r"(addrl));
+asm|"or		%0, %0, %1	\n\t" 	    "lw		%1, 4(%0)	\n\t" 	    "lw		%0, 0(%0)	\n\t" 	    ".set	pop		\n" 	    :       "=&r"(valh), "=&r"(vall) 	    :       "r"(addrh), "r"(addrl));
 return|return
 operator|(
 operator|(
