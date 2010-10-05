@@ -122,6 +122,7 @@ decl_stmt|;
 name|register_t
 name|vscr
 decl_stmt|;
+comment|/* aligned at vector element 3 */
 block|}
 name|pcb_vec
 name|__aligned

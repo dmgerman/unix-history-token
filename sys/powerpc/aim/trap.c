@@ -917,16 +917,31 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|EXC_VECAST
+name|EXC_VECAST_G4
 case|:
-name|printf
+case|case
+name|EXC_VECAST_G5
+case|:
+comment|/* 			 * We get a VPU assist exception for IEEE mode 			 * vector operations on denormalized floats. 			 * Emulating this is a giant pain, so for now, 			 * just switch off IEEE mode and treat them as 			 * zero. 			 */
+name|save_vec
 argument_list|(
-literal|"Vector assist exception!\n"
+name|td
 argument_list|)
 expr_stmt|;
-name|sig
-operator|=
-name|SIGILL
+name|td
+operator|->
+name|td_pcb
+operator|->
+name|pcb_vec
+operator|.
+name|vscr
+operator||=
+name|ALTIVEC_VSCR_NJ
+expr_stmt|;
+name|enable_vec
+argument_list|(
+name|td
+argument_list|)
 expr_stmt|;
 break|break;
 case|case

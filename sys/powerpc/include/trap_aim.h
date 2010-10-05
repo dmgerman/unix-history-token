@@ -196,6 +196,21 @@ comment|/* Run Mode/Trace Exception */
 end_comment
 
 begin_comment
+comment|/* The following are only available on 970(G5): */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXC_VECAST_G5
+value|0x1700
+end_define
+
+begin_comment
+comment|/* AltiVec Assist */
+end_comment
+
+begin_comment
 comment|/* The following are only available on 7400(G4): */
 end_comment
 
@@ -213,7 +228,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EXC_VECAST
+name|EXC_VECAST_G4
 value|0x1600
 end_define
 

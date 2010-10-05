@@ -1523,7 +1523,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|EXC_VECAST
+name|EXC_VECAST_G4
 argument_list|,
 operator|(
 name|size_t
@@ -1540,7 +1540,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|EXC_THRM
+name|EXC_VECAST_G5
 argument_list|,
 operator|(
 name|size_t
