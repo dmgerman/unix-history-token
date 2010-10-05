@@ -724,7 +724,7 @@ comment|/* physical address of "Idle" state directory */
 end_comment
 
 begin_comment
-comment|/*  * virtual address to page table entry and  * to physical address.  * Note: these work recursively, thus vtopte of a pte will give  * the corresponding pde that in turn maps it.  */
+comment|/*  * Translate a virtual address to the kernel virtual address of its page table  * entry (PTE).  This can be used recursively.  If the address of a PTE as  * previously returned by this macro is itself given as the argument, then the  * address of the page directory entry (PDE) that maps the PTE will be  * returned.  *  * This macro may be used before pmap_bootstrap() is called.  */
 end_comment
 
 begin_define
@@ -736,6 +736,10 @@ name|va
 parameter_list|)
 value|(PTmap + i386_btop(va))
 end_define
+
+begin_comment
+comment|/*  * Translate a virtual address to its physical address.  *  * This macro may be used before pmap_bootstrap() is called.  */
+end_comment
 
 begin_define
 define|#
@@ -1129,7 +1133,7 @@ argument_list|)
 end_elif
 
 begin_comment
-comment|/*  * KPTmap is a linear mapping of the kernel page table.  It differs from the  * recursive mapping in two ways: (1) it only provides access to kernel page  * table pages, and not user page table pages, and (2) it provides access to  * a kernel page table page after the corresponding virtual addresses have  * been promoted to a 2/4MB page mapping.  */
+comment|/*  * KPTmap is a linear mapping of the kernel page table.  It differs from the  * recursive mapping in two ways: (1) it only provides access to kernel page  * table pages, and not user page table pages, and (2) it provides access to  * a kernel page table page after the corresponding virtual addresses have  * been promoted to a 2/4MB page mapping.  *  * KPTmap is first initialized by locore to support just NPKT page table  * pages.  Later, it is reinitialized by pmap_bootstrap() to allow for  * expansion of the kernel page table.  */
 end_comment
 
 begin_decl_stmt
@@ -1141,7 +1145,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  *	Routine:	pmap_kextract  *	Function:  *		Extract the physical page address associated  *		kernel virtual address.  */
+comment|/*  * Extract from the kernel page table the physical address that is mapped by  * the given virtual address "va".  *  * This function may be used before pmap_bootstrap() is called.  */
 end_comment
 
 begin_function
@@ -2055,6 +2059,10 @@ name|sz
 parameter_list|)
 value|pmap_unmapdev((va), (sz))
 end_define
+
+begin_comment
+comment|/*  * Only the following functions or macros may be used before pmap_bootstrap()  * is called: pmap_kenter(), pmap_kextract(), pmap_kremove(), vtophys(), and  * vtopte().  */
+end_comment
 
 begin_function_decl
 name|void
