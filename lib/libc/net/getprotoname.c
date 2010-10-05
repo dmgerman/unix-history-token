@@ -621,16 +621,7 @@ name|ret_errno
 expr_stmt|;
 return|return
 operator|(
-operator|(
 name|ret_errno
-operator|!=
-literal|0
-operator|)
-condition|?
-name|ret_errno
-else|:
-operator|-
-literal|1
 operator|)
 return|;
 block|}
