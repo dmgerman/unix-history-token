@@ -3329,7 +3329,7 @@ condition|)
 ifdef|#
 directive|ifdef
 name|X86BIOS_NATIVE_ARCH
-name|pmap_unmapdev
+name|pmap_unmapbios
 argument_list|(
 operator|(
 name|vm_offset_t
