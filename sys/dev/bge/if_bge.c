@@ -12947,9 +12947,9 @@ name|BGE_CHIPID_BCM5705_A1
 condition|)
 name|sc
 operator|->
-name|bge_flags
+name|bge_phy_flags
 operator||=
-name|BGE_FLAG_WIRESPEED
+name|BGE_PHY_WIRESPEED
 expr_stmt|;
 if|if
 condition|(
@@ -13066,7 +13066,7 @@ name|BGE_FLAG_5705_PLUS
 expr_stmt|;
 break|break;
 block|}
-comment|/* Set various bug flags. */
+comment|/* Set various PHY bug flags. */
 if|if
 condition|(
 name|sc
@@ -13083,9 +13083,9 @@ name|BGE_CHIPID_BCM5701_B0
 condition|)
 name|sc
 operator|->
-name|bge_flags
+name|bge_phy_flags
 operator||=
-name|BGE_FLAG_CRC_BUG
+name|BGE_PHY_CRC_BUG
 expr_stmt|;
 if|if
 condition|(
@@ -13103,9 +13103,9 @@ name|BGE_CHIPREV_5704_AX
 condition|)
 name|sc
 operator|->
-name|bge_flags
+name|bge_phy_flags
 operator||=
-name|BGE_FLAG_ADC_BUG
+name|BGE_PHY_ADC_BUG
 expr_stmt|;
 if|if
 condition|(
@@ -13117,9 +13117,9 @@ name|BGE_CHIPID_BCM5704_A0
 condition|)
 name|sc
 operator|->
-name|bge_flags
+name|bge_phy_flags
 operator||=
-name|BGE_FLAG_5704_A0_BUG
+name|BGE_PHY_5704_A0_BUG
 expr_stmt|;
 if|if
 condition|(
@@ -13132,9 +13132,9 @@ name|DELL_VENDORID
 condition|)
 name|sc
 operator|->
-name|bge_flags
+name|bge_phy_flags
 operator||=
-name|BGE_FLAG_NO_3LED
+name|BGE_PHY_NO_3LED
 expr_stmt|;
 if|if
 condition|(
@@ -13147,9 +13147,9 @@ name|BCOM_DEVICEID_BCM5755M
 condition|)
 name|sc
 operator|->
-name|bge_flags
+name|bge_phy_flags
 operator||=
-name|BGE_FLAG_ADJUST_TRIM
+name|BGE_PHY_ADJUST_TRIM
 expr_stmt|;
 if|if
 condition|(
@@ -13162,9 +13162,9 @@ operator|!
 operator|(
 name|sc
 operator|->
-name|bge_flags
+name|bge_phy_flags
 operator|&
-name|BGE_FLAG_ADJUST_TRIM
+name|BGE_PHY_ADJUST_TRIM
 operator|)
 condition|)
 block|{
@@ -13213,9 +13213,9 @@ name|BCOM_DEVICEID_BCM5756
 condition|)
 name|sc
 operator|->
-name|bge_flags
+name|bge_phy_flags
 operator||=
-name|BGE_FLAG_JITTER_BUG
+name|BGE_PHY_JITTER_BUG
 expr_stmt|;
 block|}
 elseif|else
@@ -13229,9 +13229,9 @@ name|BGE_ASICREV_BCM5906
 condition|)
 name|sc
 operator|->
-name|bge_flags
+name|bge_phy_flags
 operator||=
-name|BGE_FLAG_BER_BUG
+name|BGE_PHY_BER_BUG
 expr_stmt|;
 block|}
 comment|/* 	 * All controllers that are not 5755 or higher have 4GB 	 * boundary DMA bug. 	 * Whenever an address crosses a multiple of the 4GB boundary 	 * (including 4GB, 8Gb, 12Gb, etc.) and makes the transition 	 * from 0xX_FFFF_FFFF to 0x(X+1)_0000_0000 an internal DMA 	 * state machine will lockup and cause the device to hang. 	 */
@@ -26325,7 +26325,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|bge_flags
+name|bge_phy_flags
 operator|&
 name|BGE_FLAG_NO_3LED
 condition|)
