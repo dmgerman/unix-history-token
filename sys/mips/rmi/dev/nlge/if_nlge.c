@@ -4394,7 +4394,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-comment|/* 	 * Register message ring handler for the NA block, messages from 	 * the GMAC will have sourec station id to the first bucket of the  	 * NA FMN station, so register just that station id. 	 */
+comment|/* 	 * Register message ring handler for the NA block, messages from 	 * the GMAC will have source station id to the first bucket of the  	 * NA FMN station, so register just that station id. 	 */
 if|if
 condition|(
 name|register_msgring_handler
