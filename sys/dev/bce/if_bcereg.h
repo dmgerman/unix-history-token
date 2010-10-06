@@ -36480,6 +36480,10 @@ name|vlan_tagged_frames_stripped
 decl_stmt|;
 endif|#
 directive|endif
+name|uint8_t
+modifier|*
+name|nvram_buf
+decl_stmt|;
 block|}
 struct|;
 end_struct
