@@ -2731,11 +2731,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|errc
+name|errx
 argument_list|(
 literal|2
-argument_list|,
-name|EAGAIN
 argument_list|,
 literal|"Invalid value for recursion level (%d)."
 argument_list|,
@@ -2751,11 +2749,9 @@ operator|>
 name|MKLVL_MAXVAL
 condition|)
 block|{
-name|errc
+name|errx
 argument_list|(
 literal|2
-argument_list|,
-name|EAGAIN
 argument_list|,
 literal|"Max recursion level (%d) exceeded."
 argument_list|,
