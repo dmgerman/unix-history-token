@@ -26330,7 +26330,7 @@ name|sc
 operator|->
 name|bge_phy_flags
 operator|&
-name|BGE_FLAG_NO_3LED
+name|BGE_PHY_NO_3LED
 condition|)
 name|printf
 argument_list|(
