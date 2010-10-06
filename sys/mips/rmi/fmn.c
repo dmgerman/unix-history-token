@@ -1779,6 +1779,9 @@ operator|(
 name|void
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|hwtid
 argument_list|,
 operator|&
