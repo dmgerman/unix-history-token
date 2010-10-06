@@ -41,7 +41,7 @@ file|"pathmatch.h"
 end_include
 
 begin_comment
-comment|/*  * Check whether a character 'c' is matched by a list specification [...]:  *    * Leading '!' negates the class.  *    *<char>-<char> is a range of characters  *    * \<char> removes any special meaning for<char>  *  * Some interesting boundary cases:  *   a-d-e is one range (a-d) followed by two single characters - and e.  *   \a-\d is same as a-d  *   a\-d is three single characters: a, d, -  *   Trailing - is not special (so [a-] is two characters a and -).  *   Initial - is not special ([a-] is same as [-a] is same as [\\-a])  *   This function never sees a trailing \.  *   [] always fails  *   [!] always succeeds  */
+comment|/*  * Check whether a character 'c' is matched by a list specification [...]:  *    * Leading '!' or '^' negates the class.  *    *<char>-<char> is a range of characters  *    * \<char> removes any special meaning for<char>  *  * Some interesting boundary cases:  *   a-d-e is one range (a-d) followed by two single characters - and e.  *   \a-\d is same as a-d  *   a\-d is three single characters: a, d, -  *   Trailing - is not special (so [a-] is two characters a and -).  *   Initial - is not special ([a-] is same as [-a] is same as [\\-a])  *   This function never sees a trailing \.  *   [] always fails  *   [!] always succeeds  */
 end_comment
 
 begin_function
@@ -100,10 +100,17 @@ comment|/* UNUSED */
 comment|/* If this is a negated class, return success for nomatch. */
 if|if
 condition|(
+operator|(
 operator|*
 name|p
 operator|==
 literal|'!'
+operator|||
+operator|*
+name|p
+operator|==
+literal|'^'
+operator|)
 operator|&&
 name|p
 operator|<
