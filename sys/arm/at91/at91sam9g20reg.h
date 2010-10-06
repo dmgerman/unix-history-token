@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2009 Sylvestre Gallon.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2009 Sylvestre Gallon.  All rights reserved.  * Copyright (c) 2010 Greg Ansley.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -17,6 +17,172 @@ begin_define
 define|#
 directive|define
 name|AT91SAM9G20REG_H_
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|AT91SAM9G20_MASTER_CLOCK
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|AT91SAM9G20_MASTER_CLOCK
+value|((18432000 * 43)/6)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Chip Specific limits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SAM9G20_PLL_A_MIN_IN_FREQ
+value|2000000
+end_define
+
+begin_comment
+comment|/*   2 Mhz */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SAM9G20_PLL_A_MAX_IN_FREQ
+value|32000000
+end_define
+
+begin_comment
+comment|/*  32 Mhz */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SAM9G20_PLL_A_MIN_OUT_FREQ
+value|400000000
+end_define
+
+begin_comment
+comment|/* 400 Mhz */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SAM9G20_PLL_A_MAX_OUT_FREQ
+value|800000000
+end_define
+
+begin_comment
+comment|/* 800 Mhz */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SAM9G20_PLL_A_MUL_SHIFT
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAM9G20_PLL_A_MUL_MASK
+value|0xFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAM9G20_PLL_A_DIV_SHIFT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAM9G20_PLL_A_DIV_MASK
+value|0xFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAM9G20_PLL_B_MIN_IN_FREQ
+value|2000000
+end_define
+
+begin_comment
+comment|/*   2 Mhz */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SAM9G20_PLL_B_MAX_IN_FREQ
+value|32000000
+end_define
+
+begin_comment
+comment|/*  32 Mhz */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SAM9G20_PLL_B_MIN_OUT_FREQ
+value|30000000
+end_define
+
+begin_comment
+comment|/*  30 Mhz */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SAM9G20_PLL_B_MAX_OUT_FREQ
+value|100000000
+end_define
+
+begin_comment
+comment|/* 100 Mhz */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SAM9G20_PLL_B_MUL_SHIFT
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAM9G20_PLL_B_MUL_MASK
+value|0x3F
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAM9G20_PLL_B_DIV_SHIFT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAM9G20_PLL_B_DIV_MASK
+value|0xFF
 end_define
 
 begin_comment
@@ -89,13 +255,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|AT91SAM9G20_IRQ_EMAC
-value|21
-end_define
-
-begin_define
-define|#
-directive|define
 name|AT91SAM9G20_EMAC_BASE
 value|0xffc4000
 end_define
@@ -112,6 +271,13 @@ define|#
 directive|define
 name|AT91SAM9G20_RSTC_BASE
 value|0xffffd00
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91SAM9G20_RSTC_SIZE
+value|0x10
 end_define
 
 begin_define
@@ -149,6 +315,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AT91SAM9G20_USART_SIZE
+value|0x4000
+end_define
+
+begin_define
+define|#
+directive|define
 name|AT91SAM9G20_USART0_BASE
 value|0xffb0000
 end_define
@@ -158,6 +331,13 @@ define|#
 directive|define
 name|AT91SAM9G20_USART0_PDC
 value|0xffb0100
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91SAM9G20_USART0_SIZE
+value|AT91SAM9G20_USART_SIZE
 end_define
 
 begin_define
@@ -177,6 +357,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AT91SAM9G20_USART1_SIZE
+value|AT91SAM9G20_USART_SIZE
+end_define
+
+begin_define
+define|#
+directive|define
 name|AT91SAM9G20_USART2_BASE
 value|0xffb8000
 end_define
@@ -191,8 +378,71 @@ end_define
 begin_define
 define|#
 directive|define
-name|AT91SAM9G20_USART_SIZE
-value|0x4000
+name|AT91SAM9G20_USART2_SIZE
+value|AT91SAM9G20_USART_SIZE
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91SAM9G20_USART3_BASE
+value|0xffd0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91SAM9G20_USART3_PDC
+value|0xffd0100
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91SAM9G20_USART3_SIZE
+value|AT91SAM9G20_USART_SIZE
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91SAM9G20_USART4_BASE
+value|0xffd4000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91SAM9G20_USART4_PDC
+value|0xffd4100
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91SAM9G20_USART4_SIZE
+value|AT91SAM9G20_USART_SIZE
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91SAM9G20_USART5_BASE
+value|0xffd8000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91SAM9G20_USART5_PDC
+value|0xffd8100
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91SAM9G20_USART5_SIZE
+value|AT91SAM9G20_USART_SIZE
 end_define
 
 begin_comment
@@ -302,28 +552,35 @@ begin_define
 define|#
 directive|define
 name|AT91SAM9G20_SYS_BASE
-value|0xfffe000
+value|0xffff000
 end_define
 
 begin_define
 define|#
 directive|define
 name|AT91SAM9G20_SYS_SIZE
-value|0x2000
+value|0x1000
 end_define
 
 begin_define
 define|#
 directive|define
-name|AT91SAM9G20_MATRIX
-value|(0xe00)
+name|AT91SAM9G20_MATRIX_BASE
+value|0xfffee00
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91SAM9G20_MATRIX_SIZE
+value|0x1000
 end_define
 
 begin_define
 define|#
 directive|define
 name|AT91SAM9G20_EBICSA
-value|(AT91SAM9G20_MATRIX + 0x011C)
+value|0x011C
 end_define
 
 begin_define
@@ -336,49 +593,16 @@ end_define
 begin_define
 define|#
 directive|define
-name|DBGU
+name|AT91SAM9G20_DBGU_BASE
+value|0xffff200
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91SAM9G20_DBGU_SIZE
 value|0x200
 end_define
-
-begin_define
-define|#
-directive|define
-name|DBGU_SIZE
-value|0x200
-end_define
-
-begin_define
-define|#
-directive|define
-name|DBGU_C1R
-value|(0x200 + 64)
-end_define
-
-begin_comment
-comment|/* Chip ID1 Register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DBGU_C2R
-value|(0x200 + 68)
-end_define
-
-begin_comment
-comment|/* Chip ID2 Register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DBGU_FNTR
-value|(0x200 + 72)
-end_define
-
-begin_comment
-comment|/* Force NTRST Register */
-end_comment
 
 begin_comment
 comment|/*  * PIO  */
@@ -394,7 +618,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|AT91SAM9G20_PIO_SIZE
+name|AT91SAM9G20_PIOA_SIZE
 value|0x200
 end_define
 
@@ -408,8 +632,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|AT91SAM9G20_PIOB_SIZE
+value|0x200
+end_define
+
+begin_define
+define|#
+directive|define
 name|AT91SAM9G20_PIOC_BASE
 value|0xffff800
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91SAM9G20_PIOC_SIZE
+value|0x200
 end_define
 
 begin_define
@@ -431,7 +669,7 @@ comment|/* IRQs : */
 end_comment
 
 begin_comment
-comment|/*  * 0: AIC   * 1: System peripheral (System timer, RTC, DBGU)  * 2: PIO Controller A  * 3: PIO Controller B  * 4: PIO Controller C  * 5: -  * 6: USART 0  * 7: USART 1  * 8: USART 2  * 9: MMC Interface  * 10: USB device port  * 11: Two-wirte interface  * 12: SPI  * 13: SPI  * 14: SSC  * 15: SSC  * 16: SSC  * 17: Timer Counter 0  * 18: Timer Counter 1  * 19: Timer Counter 2  * 20: USB Host port  * 21: EMAC  * 22-28: -  * 29: AIC  * 30: AIC  * 31: AIC  */
+comment|/*  * 0: AIC   * 1: System peripheral (System timer, RTC, DBGU)  * 2: PIO Controller A  * 3: PIO Controller B  * 4: PIO Controller C  * 5: ADC  * 6: USART 0  * 7: USART 1  * 8: USART 2  * 9: MMC Interface  * 10: USB device port  * 11: Two-wirte interface  * 12: SPI 0  * 13: SPI 1  * 14: SSC  * 15: - (reserved)  * 16: - (reserved)  * 17: Timer Counter 0  * 18: Timer Counter 1  * 19: Timer Counter 2  * 20: USB Host port  * 21: EMAC  * 22: ISI  * 23: USART 3  * 24: USART 4  * 25: USART 2  * 26: Timer Counter 3  * 27: Timer Counter 4  * 28: Timer Counter 5  * 29: AIC IRQ0  * 30: AIC IRQ1  * 31: AIC IRQ2  */
 end_comment
 
 begin_define
@@ -570,27 +808,108 @@ end_define
 begin_define
 define|#
 directive|define
+name|AT91SAM9G20_IRQ_EMAC
+value|21
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91SAM9G20_IRQ_USART3
+value|23
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91SAM9G20_IRQ_USART4
+value|24
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91SAM9G20_IRQ_USART5
+value|25
+end_define
+
+begin_define
+define|#
+directive|define
 name|AT91SAM9G20_IRQ_AICBASE
 value|29
 end_define
 
 begin_comment
-comment|/* Timer */
+comment|/* Alias */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|AT91SAM9G20_DBGU_BASE
-value|0xffff200
+name|AT91SAM9G20_IRQ_DBGU
+value|AT91SAM9G20_IRQ_SYSTEM
 end_define
 
 begin_define
 define|#
 directive|define
-name|AT91SAM9G20_DBGU_SIZE
+name|AT91SAM9G20_IRQ_PMC
+value|AT91SAM9G20_IRQ_SYSTEM
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91SAM9G20_IRQ_WDT
+value|AT91SAM9G20_IRQ_SYSTEM
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91SAM9G20_IRQ_PIT
+value|AT91SAM9G20_IRQ_SYSTEM
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91SAM9G20_IRQ_RSTC
+value|AT91SAM9G20_IRQ_SYSTEM
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91SAM9G20_IRQ_OHCI
+value|AT91SAM9G20_IRQ_UHP
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91SAM9G20_IRQ_NAND
+value|(-1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91SAM9G20_AIC_BASE
+value|0xffff000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91SAM9G20_AIC_SIZE
 value|0x200
 end_define
+
+begin_comment
+comment|/* Timer */
+end_comment
 
 begin_define
 define|#
@@ -665,8 +984,40 @@ end_define
 begin_define
 define|#
 directive|define
+name|AT91SAM9G20_MCI_BASE
+value|0xffa8000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91SAM9G20_MCI_SIZE
+value|0x4000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91SAM9G20_TWI_BASE
+value|0xffaC000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91SAM9G20_TWI_SIZE
+value|0x4000
+end_define
+
+begin_comment
+comment|/* XXX Needs to be carfully coordinated with  * other * soc's so phyical and vm address  * mapping are unique. XXX  */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|AT91SAM9G20_OHCI_BASE
-value|0xdfe00000
+value|0xdfc00000
 end_define
 
 begin_define
@@ -682,14 +1033,6 @@ directive|define
 name|AT91SAM9G20_OHCI_SIZE
 value|0x00100000
 end_define
-
-begin_comment
-comment|//#define AT91SAM9G20_NAND_BASE 0xdf100000
-end_comment
-
-begin_comment
-comment|//#define AT91SAM9G20_NAND_BASE 0x40000000
-end_comment
 
 begin_define
 define|#
@@ -711,14 +1054,6 @@ directive|define
 name|AT91SAM9G20_NAND_SIZE
 value|0x10000000
 end_define
-
-begin_comment
-comment|//#define AT91SAM9G20_NAND_SIZE	0x00900000
-end_comment
-
-begin_comment
-comment|//#define AT91SAM9G20_OHCI_SIZE	0x0004000
-end_comment
 
 begin_comment
 comment|/* SDRAMC */
@@ -869,6 +1204,13 @@ define|#
 directive|define
 name|AT91SAM9G20_SDRAMC_CR_NB_4
 value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91SAM9G20_SDRAMC_CR_DBW_16
+value|0x80
 end_define
 
 begin_define

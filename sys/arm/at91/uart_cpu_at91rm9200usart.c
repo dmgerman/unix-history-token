@@ -196,6 +196,10 @@ operator|->
 name|uc_rclk
 operator|==
 literal|0
+operator|&&
+name|at91_master_clock
+operator|!=
+literal|0
 condition|)
 name|class
 operator|->
@@ -259,9 +263,7 @@ name|bsh
 operator|=
 name|AT91RM92_BASE
 operator|+
-name|AT91RM92_SYS_BASE
-operator|+
-name|DBGU
+name|AT91RM92_DBGU_BASE
 expr_stmt|;
 name|di
 operator|->

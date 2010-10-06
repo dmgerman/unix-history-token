@@ -20,6 +20,158 @@ name|AT91RM92REG_H_
 end_define
 
 begin_comment
+comment|/* Chip Specific limits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RM9200_PLL_A_MIN_IN_FREQ
+value|1000000
+end_define
+
+begin_comment
+comment|/*   1 MHz */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RM9200_PLL_A_MAX_IN_FREQ
+value|32000000
+end_define
+
+begin_comment
+comment|/*  32 MHz */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RM9200_PLL_A_MIN_OUT_FREQ
+value|80000000
+end_define
+
+begin_comment
+comment|/*  80 MHz */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RM9200_PLL_A_MAX_OUT_FREQ
+value|180000000
+end_define
+
+begin_comment
+comment|/* 180 MHz */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RM9200_PLL_A_MUL_SHIFT
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|RM9200_PLL_A_MUL_MASK
+value|0x7FF
+end_define
+
+begin_define
+define|#
+directive|define
+name|RM9200_PLL_A_DIV_SHIFT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|RM9200_PLL_A_DIV_MASK
+value|0xFF
+end_define
+
+begin_comment
+comment|/*  * PLL B input frequency spec sheet says it must be between 1MHz and 32MHz,  * but it works down as low as 100kHz, a frequency necessary for some  * output frequencies to work.  *  * PLL Max output frequency is 240MHz.  The errata says 180MHz is the max  * for some revisions of this part.  Be more permissive and optimistic.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RM9200_PLL_B_MIN_IN_FREQ
+value|100000
+end_define
+
+begin_comment
+comment|/* 100 KHz */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RM9200_PLL_B_MAX_IN_FREQ
+value|32000000
+end_define
+
+begin_comment
+comment|/*  32 MHz */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RM9200_PLL_B_MIN_OUT_FREQ
+value|30000000
+end_define
+
+begin_comment
+comment|/*  30 MHz */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RM9200_PLL_B_MAX_OUT_FREQ
+value|240000000
+end_define
+
+begin_comment
+comment|/* 240 MHz */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RM9200_PLL_B_MUL_SHIFT
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|RM9200_PLL_B_MUL_MASK
+value|0x7FF
+end_define
+
+begin_define
+define|#
+directive|define
+name|RM9200_PLL_B_DIV_SHIFT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|RM9200_PLL_B_DIV_MASK
+value|0xFF
+end_define
+
+begin_comment
 comment|/*   * Memory map, from datasheet :  * 0x00000000 - 0x0ffffffff : Internal Memories  * 0x10000000 - 0x1ffffffff : Chip Select 0  * 0x20000000 - 0x2ffffffff : Chip Select 1  * 0x30000000 - 0x3ffffffff : Chip Select 2  * 0x40000000 - 0x4ffffffff : Chip Select 3  * 0x50000000 - 0x5ffffffff : Chip Select 4  * 0x60000000 - 0x6ffffffff : Chip Select 5  * 0x70000000 - 0x7ffffffff : Chip Select 6  * 0x80000000 - 0x8ffffffff : Chip Select 7  * 0x90000000 - 0xeffffffff : Undefined (Abort)  * 0xf0000000 - 0xfffffffff : Peripherals  */
 end_comment
 
@@ -37,6 +189,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AT91RM92_USART_SIZE
+value|0x4000
+end_define
+
+begin_define
+define|#
+directive|define
 name|AT91RM92_USART0_BASE
 value|0xffc0000
 end_define
@@ -46,6 +205,13 @@ define|#
 directive|define
 name|AT91RM92_USART0_PDC
 value|0xffc0100
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91RM92_USART0_SIZE
+value|AT91RM92_USART_SIZE
 end_define
 
 begin_define
@@ -65,6 +231,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AT91RM92_USART1_SIZE
+value|AT91RM92_USART_SIZE
+end_define
+
+begin_define
+define|#
+directive|define
 name|AT91RM92_USART2_BASE
 value|0xffc8000
 end_define
@@ -74,6 +247,13 @@ define|#
 directive|define
 name|AT91RM92_USART2_PDC
 value|0xffc8100
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91RM92_USART2_SIZE
+value|AT91RM92_USART_SIZE
 end_define
 
 begin_define
@@ -93,8 +273,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|AT91RM92_USART_SIZE
-value|0x4000
+name|AT91RM92_USART3_SIZE
+value|AT91RM92_USART_SIZE
 end_define
 
 begin_comment
@@ -114,6 +294,12 @@ directive|define
 name|AT91RM92_SYS_SIZE
 value|0x1000
 end_define
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_comment
 comment|/* Interrupt Controller */
@@ -315,57 +501,6 @@ end_define
 
 begin_comment
 comment|/* Fast forcing status register */
-end_comment
-
-begin_comment
-comment|/* DBGU */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DBGU
-value|0x200
-end_define
-
-begin_define
-define|#
-directive|define
-name|DBGU_SIZE
-value|0x200
-end_define
-
-begin_define
-define|#
-directive|define
-name|DBGU_C1R
-value|(0x200 + 64)
-end_define
-
-begin_comment
-comment|/* Chip ID1 Register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DBGU_C2R
-value|(0x200 + 68)
-end_define
-
-begin_comment
-comment|/* Chip ID2 Register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DBGU_FNTR
-value|(0x200 + 72)
-end_define
-
-begin_comment
-comment|/* Force NTRST Register */
 end_comment
 
 begin_define
@@ -1644,9 +1779,21 @@ begin_comment
 comment|/* Output write status register */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * PIO  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91RM92_PIO_SIZE
+value|0x200
+end_define
 
 begin_define
 define|#
@@ -1658,8 +1805,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|AT91RM92_PIO_SIZE
-value|0x200
+name|AT91RM92_PIOA_SIZE
+value|AT91RM92_PIO_SIZE
 end_define
 
 begin_define
@@ -1672,6 +1819,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AT91RM92_PIOB_SIZE
+value|AT91RM92_PIO_SIZE
+end_define
+
+begin_define
+define|#
+directive|define
 name|AT91RM92_PIOC_BASE
 value|0xffff800
 end_define
@@ -1679,8 +1833,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|AT91RM92_PIOC_SIZE
+value|AT91RM92_PIO_SIZE
+end_define
+
+begin_define
+define|#
+directive|define
 name|AT91RM92_PIOD_BASE
 value|0xffffa00
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91RM92_PIOD_SIZE
+value|AT91RM92_PIO_SIZE
 end_define
 
 begin_comment
@@ -1825,41 +1993,55 @@ begin_define
 define|#
 directive|define
 name|AT91RM92_IRQ_TC0
+value|17,18,19
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91RM92_IRQ_TC0C0
 value|17
 end_define
 
 begin_define
 define|#
 directive|define
-name|AT91RM92_IRQ_TC1
+name|AT91RM92_IRQ_TC0C1
 value|18
 end_define
 
 begin_define
 define|#
 directive|define
-name|AT91RM92_IRQ_TC2
+name|AT91RM92_IRQ_TC0C2
 value|19
 end_define
 
 begin_define
 define|#
 directive|define
-name|AT91RM92_IRQ_TC3
+name|AT91RM92_IRQ_TC1
+value|20,21,22
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91RM92_IRQ_TC1C1
 value|20
 end_define
 
 begin_define
 define|#
 directive|define
-name|AT91RM92_IRQ_TC4
+name|AT91RM92_IRQ_TC1C2
 value|21
 end_define
 
 begin_define
 define|#
 directive|define
-name|AT91RM92_IRQ_TC5
+name|AT91RM92_IRQ_TC1C3
 value|22
 end_define
 
@@ -1880,8 +2062,110 @@ end_define
 begin_define
 define|#
 directive|define
-name|AT91RM92_IRQ_AIC_BASE
+name|AT91RM92_IRQ_AIC_IRQ0
 value|25
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91RM92_IRQ_AIC_IRQ1
+value|26
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91RM92_IRQ_AIC_IRQ2
+value|27
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91RM92_IRQ_AIC_IRQ3
+value|28
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91RM92_IRQ_AIC_IRQ4
+value|29
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91RM92_IRQ_AIC_IRQ5
+value|30
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91RM92_IRQ_AIC_IRQ6
+value|31
+end_define
+
+begin_comment
+comment|/* Alias */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT91RM92_IRQ_DBGU
+value|AT91RM92_IRQ_SYSTEM
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91RM92_IRQ_PMC
+value|AT91RM92_IRQ_SYSTEM
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91RM92_IRQ_ST
+value|AT91RM92_IRQ_SYSTEM
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91RM92_IRQ_RTC
+value|AT91RM92_IRQ_SYSTEM
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91RM92_IRQ_MC
+value|AT91RM92_IRQ_SYSTEM
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91RM92_IRQ_OHCI
+value|AT91RM92_IRQ_UHP
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91RM92_IRQ_AIC
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91RM92_IRQ_CF
+value|-1
 end_define
 
 begin_comment
@@ -1901,6 +2185,10 @@ directive|define
 name|AT91RM92_AIC_SIZE
 value|0x200
 end_define
+
+begin_comment
+comment|/* DBGU */
+end_comment
 
 begin_define
 define|#
@@ -1982,6 +2270,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AT91RM92_SSC_SIZE
+value|0x4000
+end_define
+
+begin_define
+define|#
+directive|define
 name|AT91RM92_SSC0_BASE
 value|0xffd0000
 end_define
@@ -1991,6 +2286,13 @@ define|#
 directive|define
 name|AT91RM92_SSC0_PDC
 value|0xffd0100
+end_define
+
+begin_define
+define|#
+directive|define
+name|AT91RM92_SSC0_SIZE
+value|AT91RM92_SSC_SIZE
 end_define
 
 begin_define
@@ -2010,6 +2312,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AT91RM92_SSC1_SIZE
+value|AT91RM92_SSC_SIZE
+end_define
+
+begin_define
+define|#
+directive|define
 name|AT91RM92_SSC2_BASE
 value|0xffd8000
 end_define
@@ -2024,8 +2333,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|AT91RM92_SSC_SIZE
-value|0x4000
+name|AT91RM92_SSC2_SIZE
+value|AT91RM92_SSC_SIZE
 end_define
 
 begin_define
@@ -2094,6 +2403,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AT91RM92_TC_SIZE
+value|0x4000
+end_define
+
+begin_define
+define|#
+directive|define
 name|AT91RM92_TC0_BASE
 value|0xffa0000
 end_define
@@ -2101,8 +2417,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|AT91RM92_TC_SIZE
-value|0x4000
+name|AT91RM92_TC0_SIZE
+value|AT91RM92_TC_SIZE
 end_define
 
 begin_define
@@ -2136,6 +2452,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AT91RM92_TC1_SIZE
+value|AT91RM92_TC_SIZE
+end_define
+
+begin_define
+define|#
+directive|define
 name|AT91RM92_TC1C0_BASE
 value|0xffa4000
 end_define
@@ -2153,6 +2476,10 @@ directive|define
 name|AT91RM92_TC1C2_BASE
 value|0xffa4080
 end_define
+
+begin_comment
+comment|/* XXX Needs to be carfully coordinated with  * other * soc's so phyical and vm address  * mapping are unique. XXX  */
+end_comment
 
 begin_define
 define|#

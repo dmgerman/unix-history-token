@@ -92,12 +92,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<arm/at91/at91rm92reg.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<arm/at91/at91_twireg.h>
 end_include
 

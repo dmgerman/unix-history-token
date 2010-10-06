@@ -567,7 +567,13 @@ argument_list|,
 name|mr
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Set the baud rate 	 */
+comment|/* 	 * Set the baud rate (only if we know our master clock rate) 	 */
+if|if
+condition|(
+name|DEFAULT_RCLK
+operator|!=
+literal|0
+condition|)
 name|WR4
 argument_list|(
 name|bas
@@ -3178,6 +3184,13 @@ break|break;
 case|case
 name|UART_IOCTL_BAUD
 case|:
+comment|/* only if we know our master clock rate */
+if|if
+condition|(
+name|DEFAULT_RCLK
+operator|!=
+literal|0
+condition|)
 name|WR4
 argument_list|(
 operator|&
