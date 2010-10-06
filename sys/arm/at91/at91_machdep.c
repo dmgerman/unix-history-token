@@ -1577,13 +1577,6 @@ operator|=
 name|board_init
 argument_list|()
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"memsize = %d\n"
-argument_list|,
-name|memsize
-argument_list|)
-expr_stmt|;
 name|physmem
 operator|=
 name|memsize

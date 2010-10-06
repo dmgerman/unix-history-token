@@ -502,7 +502,7 @@ begin_define
 define|#
 directive|define
 name|PMC_MCKR_CSS_MASK
-value|(3<< 8)
+value|(3<< 0)
 end_define
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Theses defines come from an atmel file that says specifically that it  * has no copyright.  */
+comment|/*  * Theses defines come from an atmel file that says specifically that it  * has no copyright.  *  * These defines are also usable for the AT91SAM9260 which has pin multiplexing  * that is identical to the AT91SAM9G20.  */
 end_comment
 
 begin_comment

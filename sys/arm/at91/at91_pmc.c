@@ -1606,6 +1606,8 @@ name|clk
 operator|->
 name|pll_mul_mask
 expr_stmt|;
+comment|//	printf("pll = (%d /  %d) * %d = %d\n",
+comment|//	    freq, div ,mul + 1, (freq/div) * (mul+1));
 if|if
 condition|(
 name|div
@@ -2124,21 +2126,19 @@ name|at91_is_sam9
 argument_list|()
 condition|)
 block|{
+if|if
+condition|(
+name|mdiv
+operator|>
+literal|0
+condition|)
 name|mck
 operator|.
 name|hz
 operator|/=
-operator|(
-name|mdiv
-operator|)
-condition|?
-operator|(
 name|mdiv
 operator|*
 literal|2
-operator|)
-else|:
-literal|1
 expr_stmt|;
 block|}
 else|else

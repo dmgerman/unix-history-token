@@ -792,16 +792,10 @@ condition|(
 name|rst_sc
 condition|)
 block|{
-if|if
-condition|(
-name|at91_cpu_is
-argument_list|(
-name|AT91_CPU_SAM9G20
-argument_list|)
-condition|)
 name|cpu_reset_sam9g20
 argument_list|()
 expr_stmt|;
+comment|/* May be null */
 name|WR4
 argument_list|(
 name|rst_sc
