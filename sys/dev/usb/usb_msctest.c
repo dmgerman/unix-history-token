@@ -2259,12 +2259,6 @@ literal|0
 expr_stmt|;
 name|sc
 operator|->
-name|data_ptr
-operator|=
-name|data_ptr
-expr_stmt|;
-name|sc
-operator|->
 name|cmd_len
 operator|=
 name|cmd_len
