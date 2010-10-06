@@ -7063,6 +7063,9 @@ decl_stmt|;
 name|int
 name|port_type
 decl_stmt|;
+name|int
+name|if_flags
+decl_stmt|;
 name|xlr_mac_speed_t
 name|speed
 decl_stmt|;
