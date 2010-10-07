@@ -5249,6 +5249,11 @@ name|bad
 goto|;
 block|}
 block|}
+name|cache_purge
+argument_list|(
+name|fvp
+argument_list|)
+expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
 name|fvp
