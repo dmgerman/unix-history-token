@@ -13371,7 +13371,15 @@ name|bge_flags
 operator||=
 name|BGE_FLAG_4G_BNDRY_BUG
 expr_stmt|;
-comment|/* 	 * We could possibly check for BCOM_DEVICEID_BCM5788 in bge_probe() 	 * but I do not know the DEVICEID for the 5788M. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|bge_asicrev
+operator|==
+name|BGE_ASICREV_BCM5705
+condition|)
+block|{
 name|misccfg
 operator|=
 name|CSR_READ_4
@@ -13399,6 +13407,7 @@ name|bge_flags
 operator||=
 name|BGE_FLAG_5788
 expr_stmt|;
+block|}
 comment|/* 	 * Some controllers seem to require a special firmware to use 	 * TSO. But the firmware is not available to FreeBSD and Linux 	 * claims that the TSO performed by the firmware is slower than 	 * hardware based TSO. Moreover the firmware based TSO has one 	 * known bug which can't handle TSO if ethernet header + IP/TCP 	 * header is greater than 80 bytes. The workaround for the TSO 	 * bug exist but it seems it's too expensive than not using 	 * TSO at all. Some hardwares also have the TSO bug so limit 	 * the TSO to the controllers that are not affected TSO issues 	 * (e.g. 5755 or higher). 	 */
 if|if
 condition|(
