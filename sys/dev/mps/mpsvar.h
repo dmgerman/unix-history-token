@@ -267,6 +267,10 @@ define|#
 directive|define
 name|MPS_CM_FLAGS_WAKEUP
 value|(1<< 5)
+define|#
+directive|define
+name|MPS_CM_FLAGS_ACTIVE
+value|(1<< 6)
 name|u_int
 name|cm_state
 decl_stmt|;
@@ -373,6 +377,12 @@ value|(1<< 3)
 name|u_int
 name|mps_debug
 decl_stmt|;
+name|u_int
+name|allow_multiple_tm_cmds
+decl_stmt|;
+name|int
+name|tm_cmds_active
+decl_stmt|;
 name|struct
 name|sysctl_ctx_list
 name|sysctl_ctx
@@ -414,6 +424,13 @@ argument_list|,
 argument|mps_chain
 argument_list|)
 name|chain_list
+expr_stmt|;
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|mps_command
+argument_list|)
+name|tm_list
 expr_stmt|;
 name|int
 name|replypostindex
