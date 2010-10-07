@@ -802,8 +802,10 @@ operator|<
 literal|0
 condition|)
 block|{
-name|pjdlog_warning
+name|pjdlog_errno
 argument_list|(
+name|LOG_WARNING
+argument_list|,
 literal|"Unable to destroy hast/%s device"
 argument_list|,
 name|res
