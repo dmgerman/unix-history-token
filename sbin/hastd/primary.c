@@ -751,14 +751,6 @@ name|rerrno
 operator|=
 name|errno
 expr_stmt|;
-comment|/* 	 * Close descriptor to /dev/hast/<name> 	 * to work-around race in the kernel. 	 */
-name|close
-argument_list|(
-name|res
-operator|->
-name|hr_localfd
-argument_list|)
-expr_stmt|;
 comment|/* Destroy ggate provider if we created one. */
 if|if
 condition|(
