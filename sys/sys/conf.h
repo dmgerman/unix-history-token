@@ -1375,6 +1375,13 @@ name|MAKEDEV_ETERNAL
 value|0x10
 end_define
 
+begin_define
+define|#
+directive|define
+name|MAKEDEV_CHECKNAME
+value|0x20
+end_define
+
 begin_function_decl
 name|struct
 name|cdev
