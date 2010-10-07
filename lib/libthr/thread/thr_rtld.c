@@ -545,11 +545,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|curthread
-operator|->
-name|rdlock_count
-operator|--
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -561,6 +556,11 @@ operator|==
 literal|0
 condition|)
 block|{
+name|curthread
+operator|->
+name|rdlock_count
+operator|--
+expr_stmt|;
 name|THR_CRITICAL_LEAVE
 argument_list|(
 name|curthread
