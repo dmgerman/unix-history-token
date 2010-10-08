@@ -8062,6 +8062,13 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&=
+operator|~
+name|IFF_DRV_RUNNING
+expr_stmt|;
 name|sis_initl
 argument_list|(
 name|sc
@@ -8273,6 +8280,13 @@ name|sis_reset
 argument_list|(
 name|sc
 argument_list|)
+expr_stmt|;
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&=
+operator|~
+name|IFF_DRV_RUNNING
 expr_stmt|;
 name|sis_initl
 argument_list|(
@@ -9085,6 +9099,19 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+operator|)
+operator|!=
+literal|0
+condition|)
+return|return;
 comment|/* 	 * Cancel pending I/O and free all RX/TX buffers. 	 */
 name|sis_stop
 argument_list|(
