@@ -148,6 +148,15 @@ name|hr_ctrl
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+name|res
+operator|->
+name|hr_event
+operator|!=
+name|NULL
+condition|)
+block|{
 name|proto_close
 argument_list|(
 name|res
@@ -161,6 +170,7 @@ name|hr_event
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 name|res
 operator|->
 name|hr_workerpid
