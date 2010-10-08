@@ -471,9 +471,9 @@ name|OID_AUTO
 argument_list|,
 name|stop_cpus
 argument_list|,
-name|CTLTYPE_INT
-operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|kdb_stop_cpus
