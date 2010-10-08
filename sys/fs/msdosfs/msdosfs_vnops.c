@@ -5249,6 +5249,7 @@ name|bad
 goto|;
 block|}
 block|}
+comment|/* 	 * The msdosfs lookup is case insensitive. Several aliases may 	 * be inserted for a single directory entry. As a consequnce, 	 * name cache purge done by lookup for fvp when DELETE op for 	 * namei is specified, might be not enough to expunge all 	 * namecache entries that were installed for this direntry. 	 */
 name|cache_purge
 argument_list|(
 name|fvp
