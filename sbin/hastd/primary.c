@@ -4307,17 +4307,6 @@ name|hio
 operator|->
 name|hio_ggio
 expr_stmt|;
-name|bzero
-argument_list|(
-name|ggio
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|ggio
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|ggio
 operator|->
 name|gctl_unit
