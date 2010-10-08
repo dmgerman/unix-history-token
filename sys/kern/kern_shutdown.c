@@ -323,6 +323,8 @@ argument_list|,
 name|debugger_on_panic
 argument_list|,
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|debugger_on_panic
@@ -334,6 +336,17 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"debug.debugger_on_panic"
+argument_list|,
+operator|&
+name|debugger_on_panic
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -341,6 +354,7 @@ name|KDB_TRACE
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 name|int
 name|trace_on_panic
 init|=
@@ -354,6 +368,7 @@ directive|else
 end_else
 
 begin_decl_stmt
+specifier|static
 name|int
 name|trace_on_panic
 init|=
@@ -376,6 +391,8 @@ argument_list|,
 name|trace_on_panic
 argument_list|,
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|trace_on_panic
@@ -383,6 +400,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Print stack trace on kernel panic"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"debug.trace_on_panic"
+argument_list|,
+operator|&
+name|trace_on_panic
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -397,6 +425,7 @@ comment|/* KDB */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|sync_on_panic
 init|=
@@ -414,6 +443,8 @@ argument_list|,
 name|sync_on_panic
 argument_list|,
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|sync_on_panic
@@ -421,6 +452,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Do a sync before rebooting from a panic"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.sync_on_panic"
+argument_list|,
+operator|&
+name|sync_on_panic
 argument_list|)
 expr_stmt|;
 end_expr_stmt
