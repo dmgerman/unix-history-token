@@ -4568,6 +4568,12 @@ name|td
 operator|->
 name|td_proc
 expr_stmt|;
+name|kp
+operator|->
+name|ki_tdaddr
+operator|=
+name|td
+expr_stmt|;
 name|PROC_LOCK_ASSERT
 argument_list|(
 name|p
