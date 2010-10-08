@@ -10477,7 +10477,31 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{
-comment|/* XXX do nothing? */
+specifier|static
+name|int
+name|warning_printed
+decl_stmt|;
+if|if
+condition|(
+name|warning_printed
+operator|==
+literal|0
+condition|)
+block|{
+name|if_printf
+argument_list|(
+name|ifp
+argument_list|,
+literal|"need to implement %s\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+name|warning_printed
+operator|=
+literal|1
+expr_stmt|;
+block|}
 block|}
 end_function
 
