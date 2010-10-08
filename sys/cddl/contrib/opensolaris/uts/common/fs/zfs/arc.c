@@ -10343,7 +10343,7 @@ return|;
 comment|/* 	 * Cooperate with pagedaemon when it's time for it to scan 	 * and reclaim some pages. 	 */
 if|if
 condition|(
-name|vm_paging_need
+name|vm_paging_needed
 argument_list|()
 condition|)
 return|return
