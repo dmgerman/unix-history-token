@@ -1211,9 +1211,6 @@ modifier|*
 name|sfp
 parameter_list|)
 block|{
-name|sched_pin
-argument_list|()
-expr_stmt|;
 operator|*
 name|sfp
 operator|=
@@ -1221,7 +1218,7 @@ name|sf_buf_alloc
 argument_list|(
 name|pp
 argument_list|,
-name|SFB_CPUPRIVATE
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -1254,9 +1251,6 @@ name|sf_buf_free
 argument_list|(
 name|sf
 argument_list|)
-expr_stmt|;
-name|sched_unpin
-argument_list|()
 expr_stmt|;
 block|}
 end_function
