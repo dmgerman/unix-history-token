@@ -6323,6 +6323,22 @@ argument_list|,
 literal|"watchdog timed out\n"
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|ifp
+operator|->
+name|if_oerrors
+operator|++
+expr_stmt|;
+name|sc
+operator|->
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&=
+operator|~
+name|IFF_DRV_RUNNING
+expr_stmt|;
 name|et_init_locked
 argument_list|(
 name|sc
