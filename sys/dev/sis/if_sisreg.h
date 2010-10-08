@@ -2244,9 +2244,6 @@ decl_stmt|;
 name|int
 name|sis_watchdog_timer
 decl_stmt|;
-name|int
-name|sis_stopped
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEVICE_POLLING
@@ -2255,9 +2252,6 @@ name|rxcycles
 decl_stmt|;
 endif|#
 directive|endif
-name|int
-name|in_tick
-decl_stmt|;
 name|struct
 name|mtx
 name|sis_mtx
