@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_stack.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -69,6 +75,12 @@ begin_include
 include|#
 directive|include
 file|<sys/smp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stack.h>
 end_include
 
 begin_include
@@ -1415,6 +1427,35 @@ name|dbbe_trace
 argument_list|()
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|STACK
+else|else
+block|{
+name|struct
+name|stack
+name|st
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"KDB: stack backtrace:\n"
+argument_list|)
+expr_stmt|;
+name|stack_save
+argument_list|(
+operator|&
+name|st
+argument_list|)
+expr_stmt|;
+name|stack_print
+argument_list|(
+operator|&
+name|st
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 block|}
 end_function
 
