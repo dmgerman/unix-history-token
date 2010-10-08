@@ -4089,9 +4089,7 @@ name|periodic_resettodr
 argument_list|,
 name|SI_SUB_RUN_SCHEDULER
 argument_list|,
-name|SI_ORDER_ANY
-operator|-
-literal|1
+name|SI_ORDER_MIDDLE
 argument_list|,
 name|start_periodic_resettodr
 argument_list|,
