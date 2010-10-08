@@ -600,7 +600,8 @@ argument_list|(
 name|periph
 argument_list|)
 expr_stmt|;
-name|destroy_dev
+comment|/* 	 * passcleanup() is indirectly a d_close method via passclose, 	 * so using destroy_dev(9) directly can result in deadlock. 	 */
+name|destroy_dev_sched
 argument_list|(
 name|softc
 operator|->
