@@ -1701,7 +1701,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1876,7 +1875,6 @@ argument_list|,
 name|csrsave
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3388,7 +3386,6 @@ argument_list|,
 name|filtsave
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3821,7 +3818,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -6680,7 +6676,6 @@ literal|0
 else|:
 literal|5
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8595,7 +8590,7 @@ block|{
 name|uint32_t
 name|reg
 decl_stmt|;
-comment|/* 		 * Short Cable Receive Errors (MP21.E)  		 */
+comment|/* 		 * Short Cable Receive Errors (MP21.E) 		 */
 name|CSR_WRITE_4
 argument_list|(
 name|sc
