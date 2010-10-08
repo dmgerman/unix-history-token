@@ -2741,7 +2741,7 @@ operator|!
 operator|(
 name|ioflag
 operator|&
-name|FAPPEND
+name|IO_APPEND
 operator|)
 operator|&&
 operator|(
