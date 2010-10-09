@@ -7147,25 +7147,22 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* XXX 		 * Current, We only support process private PI-mutex, 		 * we need a faster way to find an owner thread for 		 * process-shared mutex (not available yet). 		 */
 name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|umtx_lock
 argument_list|)
 expr_stmt|;
-name|PROC_LOCK
-argument_list|(
-name|curproc
-argument_list|)
-expr_stmt|;
+comment|/* XXX Only look up thread in current process. */
 name|td1
 operator|=
-name|thread_find
+name|tdfind
 argument_list|(
-name|curproc
-argument_list|,
 name|owner
+argument_list|,
+name|curproc
+operator|->
+name|p_pid
 argument_list|)
 expr_stmt|;
 name|mtx_lock_spin
@@ -7203,7 +7200,9 @@ expr_stmt|;
 block|}
 name|PROC_UNLOCK
 argument_list|(
-name|curproc
+name|td1
+operator|->
+name|td_proc
 argument_list|)
 expr_stmt|;
 block|}

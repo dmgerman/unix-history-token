@@ -1143,6 +1143,11 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|tidhash_add
+argument_list|(
+name|newtd
+argument_list|)
+expr_stmt|;
 comment|/* Delay putting it on the run queue until now. */
 if|if
 condition|(
@@ -1204,6 +1209,11 @@ operator|=
 name|curthread
 operator|->
 name|td_proc
+expr_stmt|;
+name|tidhash_remove
+argument_list|(
+name|curthread
+argument_list|)
 expr_stmt|;
 comment|/* A module may be waiting for us to exit. */
 name|wakeup

@@ -1919,6 +1919,11 @@ argument_list|,
 name|p_hash
 argument_list|)
 expr_stmt|;
+name|tidhash_add
+argument_list|(
+name|td2
+argument_list|)
+expr_stmt|;
 name|PROC_LOCK
 argument_list|(
 name|p2

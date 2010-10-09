@@ -1352,6 +1352,11 @@ argument_list|(
 name|plim
 argument_list|)
 expr_stmt|;
+name|tidhash_remove
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Remove proc from allproc queue and pidhash chain. 	 * Place onto zombproc.  Unlink from parent's child list. 	 */
 name|sx_xlock
 argument_list|(
