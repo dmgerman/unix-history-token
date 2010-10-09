@@ -8739,11 +8739,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|rx_npkts
-operator|)
-return|;
+return|return;
 block|}
 elseif|else
 if|if
