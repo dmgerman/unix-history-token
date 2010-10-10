@@ -4973,6 +4973,8 @@ index|]
 operator|.
 name|ref
 operator|.
+name|v
+operator|.
 name|device_id
 expr_stmt|;
 if|if
@@ -5377,6 +5379,8 @@ argument_list|,
 name|sp
 operator|->
 name|ref
+operator|.
+name|v
 operator|.
 name|device_id
 argument_list|)
