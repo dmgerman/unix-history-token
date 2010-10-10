@@ -3765,6 +3765,24 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|vfs_oexport_conv
+parameter_list|(
+specifier|const
+name|struct
+name|oexport_args
+modifier|*
+name|oexp
+parameter_list|,
+name|struct
+name|export_args
+modifier|*
+name|exp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|vfs_ref
 parameter_list|(
 name|struct
