@@ -235,6 +235,30 @@ name|HAVE_LIBZ
 value|1
 end_define
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|800505
+end_if
+
+begin_comment
+comment|/* liblzma introduced */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LIBLZMA
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
