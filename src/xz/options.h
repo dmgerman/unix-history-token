@@ -44,36 +44,6 @@ comment|////////////////////////////////////////////////////////////////////////
 end_comment
 
 begin_comment
-comment|/// \brief      Parser for Subblock options
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// \return     Pointer to allocated options structure.
-end_comment
-
-begin_comment
-comment|///             Doesn't return on error.
-end_comment
-
-begin_function_decl
-specifier|extern
-name|lzma_options_subblock
-modifier|*
-name|options_subblock
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|str
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// \brief      Parser for Delta options
 end_comment
 

@@ -381,7 +381,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/**  * \brief       Get the types of integrity Checks  *  * If lzma_index_stream_padding() is used to set the Stream Flags for  * every Stream, lzma_index_checks() can be used to get a bitmask to  * indicate which Check types have been used. It can be useful e.g. if  * showing the Check types to the user.  *  * The bitmask is 1<< check_id, e.g. CRC32 is 1<< 1 and SHA-256 is 1<< 10.  */
+comment|/**  * \brief       Get the types of integrity Checks  *  * If lzma_index_stream_flags() is used to set the Stream Flags for  * every Stream, lzma_index_checks() can be used to get a bitmask to  * indicate which Check types have been used. It can be useful e.g. if  * showing the Check types to the user.  *  * The bitmask is 1<< check_id, e.g. CRC32 is 1<< 1 and SHA-256 is 1<< 10.  */
 end_comment
 
 begin_extern
@@ -683,9 +683,9 @@ begin_macro
 unit|)
 name|lzma_index_cat
 argument_list|(
-argument|lzma_index *lzma_restrict dest
+argument|lzma_index *dest
 argument_list|,
-argument|lzma_index *lzma_restrict src
+argument|lzma_index *src
 argument_list|,
 argument|lzma_allocator *allocator
 argument_list|)

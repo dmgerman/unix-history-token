@@ -1416,15 +1416,16 @@ block|}
 ifdef|#
 directive|ifdef
 name|O_NOFOLLOW
-comment|// Give an understandable error message in if reason
+comment|// Give an understandable error message if the reason
 comment|// for failing was that the file was a symbolic link.
 comment|//
 comment|// Note that at least Linux, OpenBSD, Solaris, and Darwin
-comment|// use ELOOP to indicate if O_NOFOLLOW was the reason
+comment|// use ELOOP to indicate that O_NOFOLLOW was the reason
 comment|// that open() failed. Because there may be
 comment|// directories in the pathname, ELOOP may occur also
 comment|// because of a symlink loop in the directory part.
-comment|// So ELOOP doesn't tell us what actually went wrong.
+comment|// So ELOOP doesn't tell us what actually went wrong,
+comment|// and this stupidity went into POSIX-1.2008 too.
 comment|//
 comment|// FreeBSD associates EMLINK with O_NOFOLLOW and
 comment|// Tru64 uses ENOTSUP. We use these directly here
@@ -1484,10 +1485,10 @@ name|defined
 argument_list|(
 name|__NetBSD__
 argument_list|)
-comment|// FIXME? As of 2008-11-20, NetBSD doesn't document what
-comment|// errno is used with O_NOFOLLOW. It seems to be EFTYPE,
-comment|// but since it isn't documented, it may be wrong to rely
-comment|// on it here.
+comment|// As of 2010-09-05, NetBSD doesn't document what errno is
+comment|// used with O_NOFOLLOW. It is EFTYPE though, and I
+comment|// understood that is very unlikely to change even though
+comment|// it is undocumented.
 if|if
 condition|(
 name|errno

@@ -113,9 +113,9 @@ argument|lzma_vli vli
 argument_list|,
 argument|size_t *vli_pos
 argument_list|,
-argument|uint8_t *lzma_restrict out
+argument|uint8_t *out
 argument_list|,
-argument|size_t *lzma_restrict out_pos
+argument|size_t *out_pos
 argument_list|,
 argument|size_t out_size
 argument_list|)
@@ -138,13 +138,13 @@ begin_macro
 unit|)
 name|lzma_vli_decode
 argument_list|(
-argument|lzma_vli *lzma_restrict vli
+argument|lzma_vli *vli
 argument_list|,
 argument|size_t *vli_pos
 argument_list|,
-argument|const uint8_t *lzma_restrict in
+argument|const uint8_t *in
 argument_list|,
-argument|size_t *lzma_restrict in_pos
+argument|size_t *in_pos
 argument_list|,
 argument|size_t in_size
 argument_list|)
