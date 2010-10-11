@@ -491,6 +491,8 @@ name|bArg
 block|,
 name|DArg
 block|,
+name|rArg
+block|,
 comment|// GlibC specific specifiers.
 name|PrintErrno
 block|,
