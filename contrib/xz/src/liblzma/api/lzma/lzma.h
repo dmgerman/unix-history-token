@@ -47,7 +47,7 @@ value|LZMA_VLI_C(0x21)
 end_define
 
 begin_comment
-comment|/**  * \brief       Match finders  *  * Match finder has major effect on both speed and compression ratio.  * Usually hash chains are faster than binary trees.  *  * The memory usage formulas are only rough estimates, which are closest to  * reality when dict_size is a power of two. The formulas are  more complex  * in reality, and can also change a little between liblzma versions. Use  * lzma_memusage_encoder() to get more accurate estimate of memory usage.  */
+comment|/**  * \brief       Match finders  *  * Match finder has major effect on both speed and compression ratio.  * Usually hash chains are faster than binary trees.  *  * The memory usage formulas are only rough estimates, which are closest to  * reality when dict_size is a power of two. The formulas are  more complex  * in reality, and can also change a little between liblzma versions. Use  * lzma_raw_encoder_memusage() to get more accurate estimate of memory usage.  */
 end_comment
 
 begin_typedef
@@ -63,7 +63,7 @@ name|LZMA_MF_HC4
 init|=
 literal|0x04
 block|,
-comment|/**< 		 * \brief       Hash Chain with 2-, 3-, and 4-byte hashing 		 * 		 * Minimum nice_len: 4 		 * 		 * Memory usage: dict_size * 7.5 		 */
+comment|/**< 		 * \brief       Hash Chain with 2-, 3-, and 4-byte hashing 		 * 		 * Minimum nice_len: 4 		 * 		 * Memory usage: 		 *  - dict_size<= 32 MiB: dict_size * 7.5 		 *  - dict_size> 32 MiB: dict_size * 6.5 		 */
 name|LZMA_MF_BT2
 init|=
 literal|0x12
@@ -77,7 +77,7 @@ comment|/**< 		 * \brief       Binary Tree with 2- and 3-byte hashing 		 * 		 * 
 name|LZMA_MF_BT4
 init|=
 literal|0x14
-comment|/**< 		 * \brief       Binary Tree with 2-, 3-, and 4-byte hashing 		 * 		 * Minimum nice_len: 4 		 * 		 * Memory usage: dict_size * 11.5 		 */
+comment|/**< 		 * \brief       Binary Tree with 2-, 3-, and 4-byte hashing 		 * 		 * Minimum nice_len: 4 		 * 		 * Memory usage: 		 *  - dict_size<= 32 MiB: dict_size * 11.5 		 *  - dict_size> 32 MiB: dict_size * 10.5 		 */
 block|}
 name|lzma_match_finder
 typedef|;

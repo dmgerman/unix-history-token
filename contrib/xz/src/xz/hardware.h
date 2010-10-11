@@ -95,11 +95,23 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// Set custom memory usage limit. This is used for both encoding and
+comment|/// Set the memory usage limit. There are separate limits for compression
 end_comment
 
 begin_comment
-comment|/// decoding. Zero indicates resetting the limit back to defaults.
+comment|/// and decompression (the latter includes also --list), one or both can
+end_comment
+
+begin_comment
+comment|/// be set with a single call to this function. Zero indicates resetting
+end_comment
+
+begin_comment
+comment|/// the limit back to the defaults. The limit can also be set as a percentage
+end_comment
+
+begin_comment
+comment|/// of installed RAM; the percentage must be in the range [1, 100].
 end_comment
 
 begin_function_decl
@@ -108,32 +120,22 @@ name|void
 name|hardware_memlimit_set
 parameter_list|(
 name|uint64_t
-name|memlimit
+name|new_memlimit
+parameter_list|,
+name|bool
+name|set_compress
+parameter_list|,
+name|bool
+name|set_decompress
+parameter_list|,
+name|bool
+name|is_percentage
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// Set custom memory usage limit as a percentage of installed RAM.
-end_comment
-
-begin_comment
-comment|/// The percentage must be in the range [1, 100].
-end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-name|hardware_memlimit_set_percentage
-parameter_list|(
-name|uint32_t
-name|percentage
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// Get the current memory usage limit.
+comment|/// Get the current memory usage limit for compression or decompression.
 end_comment
 
 begin_function_decl
@@ -141,10 +143,33 @@ specifier|extern
 name|uint64_t
 name|hardware_memlimit_get
 parameter_list|(
-name|void
+name|enum
+name|operation_mode
+name|mode
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/// Display the amount of RAM and memory usage limits and exit.
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|hardware_memlimit_show
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|lzma_attribute
+parameter_list|(
+function_decl|(noreturn
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
 
 end_unit
 

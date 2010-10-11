@@ -70,18 +70,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"subblock_decoder.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"subblock_decoder_helper.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"simple_decoder.h"
 end_include
 
@@ -216,53 +204,6 @@ name|props_decode
 operator|=
 operator|&
 name|lzma_lzma2_props_decode
-block|, 	}
-block|,
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|HAVE_DECODER_SUBBLOCK
-block|{
-operator|.
-name|id
-operator|=
-name|LZMA_FILTER_SUBBLOCK
-block|,
-operator|.
-name|init
-operator|=
-operator|&
-name|lzma_subblock_decoder_init
-block|,
-comment|// 		.memusage =&lzma_subblock_decoder_memusage,
-operator|.
-name|props_decode
-operator|=
-name|NULL
-block|, 	}
-block|,
-block|{
-operator|.
-name|id
-operator|=
-name|LZMA_FILTER_SUBBLOCK_HELPER
-block|,
-operator|.
-name|init
-operator|=
-operator|&
-name|lzma_subblock_decoder_helper_init
-block|,
-operator|.
-name|memusage
-operator|=
-name|NULL
-block|,
-operator|.
-name|props_decode
-operator|=
-name|NULL
 block|, 	}
 block|,
 endif|#

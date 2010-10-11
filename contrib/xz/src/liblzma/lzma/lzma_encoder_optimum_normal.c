@@ -1406,7 +1406,7 @@ specifier|const
 name|uint32_t
 name|buf_avail
 init|=
-name|MIN
+name|my_min
 argument_list|(
 name|mf_avail
 argument_list|(
@@ -1883,7 +1883,7 @@ specifier|const
 name|uint32_t
 name|len_end
 init|=
-name|MAX
+name|my_max
 argument_list|(
 name|len_main
 argument_list|,
@@ -3099,7 +3099,7 @@ specifier|const
 name|uint32_t
 name|buf_avail
 init|=
-name|MIN
+name|my_min
 argument_list|(
 name|buf_avail_full
 argument_list|,
@@ -3137,7 +3137,7 @@ specifier|const
 name|uint32_t
 name|limit
 init|=
-name|MIN
+name|my_min
 argument_list|(
 name|buf_avail_full
 argument_list|,
@@ -3597,7 +3597,7 @@ specifier|const
 name|uint32_t
 name|limit
 init|=
-name|MIN
+name|my_min
 argument_list|(
 name|buf_avail_full
 argument_list|,
@@ -4178,7 +4178,7 @@ specifier|const
 name|uint32_t
 name|limit
 init|=
-name|MIN
+name|my_min
 argument_list|(
 name|buf_avail_full
 argument_list|,
@@ -4770,7 +4770,7 @@ name|mf
 operator|->
 name|nice_len
 argument_list|,
-name|MIN
+name|my_min
 argument_list|(
 name|mf_avail
 argument_list|(

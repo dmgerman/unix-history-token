@@ -70,12 +70,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"subblock_encoder.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"simple_encoder.h"
 end_include
 
@@ -273,45 +267,6 @@ name|props_encode
 operator|=
 operator|&
 name|lzma_lzma2_props_encode
-block|, 	}
-block|,
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|HAVE_ENCODER_SUBBLOCK
-block|{
-operator|.
-name|id
-operator|=
-name|LZMA_FILTER_SUBBLOCK
-block|,
-operator|.
-name|init
-operator|=
-operator|&
-name|lzma_subblock_encoder_init
-block|,
-comment|// 		.memusage =&lzma_subblock_encoder_memusage,
-operator|.
-name|chunk_size
-operator|=
-name|NULL
-block|,
-operator|.
-name|props_size_get
-operator|=
-name|NULL
-block|,
-operator|.
-name|props_size_fixed
-operator|=
-literal|0
-block|,
-operator|.
-name|props_encode
-operator|=
-name|NULL
 block|, 	}
 block|,
 endif|#

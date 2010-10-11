@@ -84,6 +84,14 @@ name|FORMAT_AUTO
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|bool
+name|opt_auto_adjust
+init|=
+name|true
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/// Stream used to communicate with liblzma
 end_comment
@@ -154,40 +162,6 @@ name|size_t
 name|preset_number
 init|=
 literal|6
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// True if we should auto-adjust the compression settings to use less memory
-end_comment
-
-begin_comment
-comment|/// if memory usage limit is too low for the original settings.
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|bool
-name|auto_adjust
-init|=
-name|true
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// Indicate if no preset has been explicitly given. In that case, if we need
-end_comment
-
-begin_comment
-comment|/// to auto-adjust for lower memory usage, we won't print a warning.
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|bool
-name|preset_default
-init|=
-name|true
 decl_stmt|;
 end_decl_stmt
 
@@ -270,10 +244,38 @@ name|preset_number
 operator|=
 name|new_preset
 expr_stmt|;
-name|preset_default
-operator|=
-name|false
+comment|// Setting a preset makes us forget a possibly defined custom
+comment|// filter chain.
+while|while
+condition|(
+name|filters_count
+operator|>
+literal|0
+condition|)
+block|{
+operator|--
+name|filters_count
 expr_stmt|;
+name|free
+argument_list|(
+name|filters
+index|[
+name|filters_count
+index|]
+operator|.
+name|options
+argument_list|)
+expr_stmt|;
+name|filters
+index|[
+name|filters_count
+index|]
+operator|.
+name|options
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 return|return;
 block|}
 end_function
@@ -501,13 +503,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-else|else
-block|{
-name|preset_default
-operator|=
-name|false
-expr_stmt|;
-block|}
 comment|// Terminate the filter options array.
 name|filters
 index|[
@@ -593,7 +588,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|// Print the selected filter chain.
-name|message_filters
+name|message_filters_show
 argument_list|(
 name|V_DEBUG
 argument_list|,
@@ -608,7 +603,9 @@ name|uint64_t
 name|memory_limit
 init|=
 name|hardware_memlimit_get
-argument_list|()
+argument_list|(
+name|opt_mode
+argument_list|)
 decl_stmt|;
 name|uint64_t
 name|memory_usage
@@ -659,6 +656,50 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|opt_mode
+operator|==
+name|MODE_COMPRESS
+condition|)
+block|{
+specifier|const
+name|uint64_t
+name|decmem
+init|=
+name|lzma_raw_decoder_memusage
+argument_list|(
+name|filters
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|decmem
+operator|!=
+name|UINT64_MAX
+condition|)
+name|message
+argument_list|(
+name|V_DEBUG
+argument_list|,
+name|_
+argument_list|(
+literal|"Decompression will need "
+literal|"%s MiB of memory."
+argument_list|)
+argument_list|,
+name|uint64_to_str
+argument_list|(
+name|round_up_to_mib
+argument_list|(
+name|decmem
+argument_list|)
+argument_list|,
+literal|0
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|memory_usage
 operator|>
 name|memory_limit
@@ -670,7 +711,7 @@ comment|// --format=raw implies --no-auto-adjust.
 if|if
 condition|(
 operator|!
-name|auto_adjust
+name|opt_auto_adjust
 operator|||
 name|opt_format
 operator|==
@@ -848,13 +889,6 @@ literal|20
 expr_stmt|;
 block|}
 comment|// Tell the user that we decreased the dictionary size.
-comment|// However, omit the message if no preset or custom chain
-comment|// was given. FIXME: Always warn?
-if|if
-condition|(
-operator|!
-name|preset_default
-condition|)
 name|message
 argument_list|(
 name|V_WARNING
@@ -1420,7 +1454,9 @@ operator|&
 name|strm
 argument_list|,
 name|hardware_memlimit_get
-argument_list|()
+argument_list|(
+name|MODE_DECOMPRESS
+argument_list|)
 argument_list|,
 name|flags
 argument_list|)
@@ -1437,7 +1473,9 @@ operator|&
 name|strm
 argument_list|,
 name|hardware_memlimit_get
-argument_list|()
+argument_list|(
+name|MODE_DECOMPRESS
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;

@@ -114,8 +114,8 @@ begin_decl_stmt
 specifier|extern
 specifier|const
 name|char
-modifier|*
 name|stdin_filename
+index|[]
 decl_stmt|;
 end_decl_stmt
 

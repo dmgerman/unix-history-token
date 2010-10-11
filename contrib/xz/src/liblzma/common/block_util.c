@@ -65,7 +65,7 @@ name|lzma_block_compressed_size
 argument_list|(
 argument|lzma_block *block
 argument_list|,
-argument|lzma_vli total_size
+argument|lzma_vli unpadded_size
 argument_list|)
 end_macro
 
@@ -102,9 +102,9 @@ decl_stmt|;
 comment|// Validate that Compressed Size will be greater than zero.
 if|if
 condition|(
-name|container_size
+name|unpadded_size
 operator|<=
-name|total_size
+name|container_size
 condition|)
 return|return
 name|LZMA_DATA_ERROR
@@ -116,7 +116,7 @@ specifier|const
 name|lzma_vli
 name|compressed_size
 init|=
-name|total_size
+name|unpadded_size
 operator|-
 name|container_size
 decl_stmt|;

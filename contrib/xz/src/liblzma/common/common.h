@@ -279,25 +279,6 @@ value|(LZMA_VLI_C(1)<< 62)
 end_define
 
 begin_comment
-comment|/// Internal helper filter used by Subblock decoder. It is mapped to an
-end_comment
-
-begin_comment
-comment|/// otherwise invalid Filter ID, which is impossible to get from any input
-end_comment
-
-begin_comment
-comment|/// file (even if malicious file).
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LZMA_FILTER_SUBBLOCK_HELPER
-value|LZMA_VLI_C(0x7000000000000001)
-end_define
-
-begin_comment
 comment|/// Supported flags that can be passed to lzma_stream_decoder()
 end_comment
 

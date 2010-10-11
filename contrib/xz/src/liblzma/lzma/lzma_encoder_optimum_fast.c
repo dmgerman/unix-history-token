@@ -162,7 +162,7 @@ specifier|const
 name|uint32_t
 name|buf_avail
 init|=
-name|MIN
+name|my_min
 argument_list|(
 name|mf_avail
 argument_list|(
