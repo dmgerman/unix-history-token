@@ -535,15 +535,13 @@ decl_stmt|;
 if|if
 condition|(
 name|rt
-operator|&&
-name|rt
-operator|->
-name|rt_refcnt
-operator|==
-literal|0
 condition|)
 block|{
-comment|/* this is first reference */
+name|RT_LOCK
+argument_list|(
+name|rt
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|rt
@@ -569,6 +567,11 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|RT_UNLOCK
+argument_list|(
+name|rt
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 name|rn
