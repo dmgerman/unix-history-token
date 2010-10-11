@@ -884,8 +884,6 @@ name|AXE_BULK_DT_WR
 block|,
 name|AXE_BULK_DT_RD
 block|,
-name|AXE_INTR_DT_RD
-block|,
 name|AXE_N_TRANSFER
 block|, }
 enum|;
