@@ -595,7 +595,7 @@ block|}
 block|}
 block|}
 block|}
-comment|/* 	 * After we nuke off the slice, we should have just a device name 	 * and unit number.  That means there must be at least 2 	 * characters.  If we only have 1, we don't have a valid device name. 	 */
+comment|/* 	 * We should now have just a device name and unit number. 	 * That means that there must be at least 2 characters. 	 * If we only have 1, we don't have a valid device name. 	 */
 if|if
 condition|(
 name|strlen
