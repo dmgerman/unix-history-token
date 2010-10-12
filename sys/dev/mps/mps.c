@@ -7670,6 +7670,12 @@ name|RequestFlags
 operator|=
 name|MPI2_REQ_DESCRIPT_FLAGS_DEFAULT_TYPE
 expr_stmt|;
+name|cm
+operator|->
+name|cm_complete_data
+operator|=
+name|params
+expr_stmt|;
 if|if
 condition|(
 name|params
@@ -7684,12 +7690,6 @@ operator|->
 name|cm_complete
 operator|=
 name|mps_config_complete
-expr_stmt|;
-name|cm
-operator|->
-name|cm_complete_data
-operator|=
-name|params
 expr_stmt|;
 return|return
 operator|(
