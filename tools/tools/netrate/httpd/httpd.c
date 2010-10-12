@@ -1354,7 +1354,7 @@ index|[
 name|i
 index|]
 argument_list|)
-operator|<
+operator|!=
 literal|0
 condition|)
 name|err
@@ -1464,7 +1464,7 @@ name|hts_thread
 argument_list|,
 name|NULL
 argument_list|)
-operator|<
+operator|!=
 literal|0
 condition|)
 name|err
