@@ -1032,6 +1032,26 @@ argument_list|,
 literal|"Unable to determine CPU information"
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"%d %s CPUs present, with %d PMCs per CPU\n"
+argument_list|,
+name|pc
+operator|->
+name|pm_ncpu
+argument_list|,
+name|pmc_name_of_cputype
+argument_list|(
+name|pc
+operator|->
+name|pm_cputype
+argument_list|)
+argument_list|,
+name|pc
+operator|->
+name|pm_npmc
+argument_list|)
+expr_stmt|;
 name|dummy
 operator|=
 sizeof|sizeof
