@@ -22429,7 +22429,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"please turns on the RF switch\n"
+literal|"please turn on the RF switch\n"
 argument_list|)
 expr_stmt|;
 block|}
