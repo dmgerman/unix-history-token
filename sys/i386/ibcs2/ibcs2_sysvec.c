@@ -505,7 +505,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|DECLARE_MODULE
+name|DECLARE_MODULE_TIED
 argument_list|(
 name|ibcs2
 argument_list|,
