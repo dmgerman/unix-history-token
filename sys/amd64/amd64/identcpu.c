@@ -988,7 +988,8 @@ comment|/* Send Task Priority Messages*/
 literal|"\020PDCM"
 comment|/* Perf/Debug Capability MSR */
 literal|"\021<b16>"
-literal|"\022<b17>"
+literal|"\022PCID"
+comment|/* Process-context Identifiers */
 literal|"\023DCA"
 comment|/* Direct Cache Access */
 literal|"\024SSE4.1"

@@ -609,6 +609,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPUID2_PCID
+value|0x00020000
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPUID2_DCA
 value|0x00040000
 end_define
