@@ -1257,12 +1257,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDF_UNUSED19
+name|TDF_TIDHASH
 value|0x00080000
 end_define
 
 begin_comment
-comment|/* Thread is sleeping on a umtx. */
+comment|/* Thread is on hash table. */
 end_comment
 
 begin_define
