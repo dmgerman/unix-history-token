@@ -285,7 +285,7 @@ name|char
 name|opts
 index|[]
 init|=
-literal|"EGYNnORhjvxyzf:p:P:C:c:d:i:I:k:K:r:t:X:D:m:s:S:o:b:"
+literal|"EGYNnORhjJvxyzf:p:P:C:c:d:i:I:k:K:r:t:X:D:m:s:S:o:b:"
 decl_stmt|;
 end_decl_stmt
 
@@ -741,6 +741,14 @@ case|:
 name|Zipper
 operator|=
 name|GZIP
+expr_stmt|;
+break|break;
+case|case
+literal|'J'
+case|:
+name|Zipper
+operator|=
+name|XZ
 expr_stmt|;
 break|break;
 case|case
