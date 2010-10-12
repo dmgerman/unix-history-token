@@ -202,23 +202,6 @@ name|TQ_FLAGS_PENDING
 value|(1<< 2)
 end_define
 
-begin_function_decl
-specifier|static
-name|void
-name|taskqueue_run
-parameter_list|(
-name|struct
-name|taskqueue
-modifier|*
-parameter_list|,
-name|struct
-name|task
-modifier|*
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 specifier|static
 name|__inline
@@ -948,7 +931,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|taskqueue_run
 parameter_list|(

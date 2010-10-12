@@ -182,6 +182,24 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|taskqueue_run
+parameter_list|(
+name|struct
+name|taskqueue
+modifier|*
+name|queue
+parameter_list|,
+name|struct
+name|task
+modifier|*
+modifier|*
+name|tpp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|taskqueue_block
 parameter_list|(
 name|struct
