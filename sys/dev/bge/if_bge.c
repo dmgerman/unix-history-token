@@ -8496,11 +8496,10 @@ block|}
 comment|/* Disable the mini receive producer ring RCB. */
 if|if
 condition|(
+name|BGE_IS_5700_FAMILY
+argument_list|(
 name|sc
-operator|->
-name|bge_asicrev
-operator|==
-name|BGE_ASICREV_BCM5700
+argument_list|)
 condition|)
 block|{
 name|rcb
