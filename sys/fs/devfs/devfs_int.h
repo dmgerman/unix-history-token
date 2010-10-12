@@ -202,7 +202,6 @@ parameter_list|(
 name|struct
 name|cdev
 modifier|*
-name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -214,7 +213,6 @@ parameter_list|(
 name|struct
 name|cdev
 modifier|*
-name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -226,7 +224,6 @@ parameter_list|(
 name|struct
 name|cdev_privdata
 modifier|*
-name|p
 parameter_list|)
 function_decl|;
 end_function_decl
