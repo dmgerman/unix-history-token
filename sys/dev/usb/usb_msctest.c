@@ -461,16 +461,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|uint8_t
-name|scsi_tct_dummy
-index|[
-literal|4
-index|]
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -3042,6 +3032,7 @@ break|break;
 case|case
 name|MSC_EJECT_TCT
 case|:
+comment|/* 		 * TCTMobile needs DIR_IN flag. To get it, we 		 * supply a dummy data with the command. 		 */
 name|err
 operator|=
 name|bbb_command_start
@@ -3053,11 +3044,15 @@ argument_list|,
 literal|0
 argument_list|,
 operator|&
-name|scsi_tct_dummy
+name|sc
+operator|->
+name|buffer
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|scsi_tct_dummy
+name|sc
+operator|->
+name|buffer
 argument_list|)
 argument_list|,
 operator|&
