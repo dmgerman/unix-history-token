@@ -17770,6 +17770,16 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
+name|sc_cmd_cur
+operator|=
+name|sc
+operator|->
+name|sc_cmd_next
+operator|=
+literal|0
+expr_stmt|;
+name|sc
+operator|->
 name|sc_tx_timer
 operator|=
 literal|0
