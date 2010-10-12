@@ -3460,7 +3460,15 @@ name|sprintf
 argument_list|(
 name|p
 argument_list|,
-literal|"%s, "
+literal|"%s%s"
+argument_list|,
+name|p
+operator|!=
+name|avail
+condition|?
+literal|", "
+else|:
+literal|""
 argument_list|,
 name|idle_tbl
 index|[
