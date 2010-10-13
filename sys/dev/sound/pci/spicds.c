@@ -1343,7 +1343,8 @@ expr_stmt|;
 break|break;
 case|case
 name|SPICDS_TYPE_AK4381
-operator|||
+case|:
+case|case
 name|SPICDS_TYPE_AK4396
 case|:
 name|left

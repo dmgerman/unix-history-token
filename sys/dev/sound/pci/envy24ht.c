@@ -11134,7 +11134,8 @@ condition|)
 block|{
 case|case
 literal|0x01
-operator|||
+case|:
+case|case
 literal|0x02
 case|:
 name|printf
