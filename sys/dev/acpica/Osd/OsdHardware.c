@@ -30,18 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/iodev.h>
 end_include
 
@@ -49,18 +37,6 @@ begin_include
 include|#
 directive|include
 file|<machine/pci_cfgreg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/acpica/acpivar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/pci/pcireg.h>
 end_include
 
 begin_comment
