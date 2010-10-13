@@ -26,57 +26,43 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CompilerCreatorRevision
+name|ASL_REVISION
 value|ACPI_CA_VERSION
 end_define
 
 begin_define
 define|#
 directive|define
-name|IntelAcpiCA
-value|"Intel ACPI Component Architecture"
-end_define
-
-begin_define
-define|#
-directive|define
-name|CompilerId
+name|ASL_COMPILER_NAME
 value|"ASL Optimizing Compiler"
 end_define
 
 begin_define
 define|#
 directive|define
-name|DisassemblerId
+name|AML_DISASSEMBLER_NAME
 value|"AML Disassembler"
 end_define
 
 begin_define
 define|#
 directive|define
-name|CompilerCopyright
-value|"Copyright (c) 2000 - 2010 Intel Corporation"
-end_define
-
-begin_define
-define|#
-directive|define
-name|CompilerCompliance
-value|"Supports ACPI Specification Revision 4.0a"
-end_define
-
-begin_define
-define|#
-directive|define
-name|CompilerName
+name|ASL_INVOCATION_NAME
 value|"iasl"
 end_define
 
 begin_define
 define|#
 directive|define
-name|CompilerCreatorId
+name|ASL_CREATOR_ID
 value|"INTL"
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASL_COMPLIANCE
+value|"Supports ACPI Specification Revision 4.0a"
 end_define
 
 begin_comment

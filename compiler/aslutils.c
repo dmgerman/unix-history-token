@@ -37,6 +37,12 @@ directive|include
 file|"amlcode.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<acapps.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -1034,14 +1040,16 @@ name|FlPrintFile
 argument_list|(
 name|FileId
 argument_list|,
-literal|"%s version %X [%s]\n"
+literal|"%s version %X%s [%s]\n"
 argument_list|,
-name|CompilerId
+name|ASL_COMPILER_NAME
 argument_list|,
 operator|(
 name|UINT32
 operator|)
 name|ACPI_CA_VERSION
+argument_list|,
+name|ACPI_WIDTH
 argument_list|,
 name|__DATE__
 argument_list|)

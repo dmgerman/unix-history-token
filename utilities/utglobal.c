@@ -316,7 +316,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Predefined ACPI Names (Built-in to the Interpreter)  *  * NOTES:  * 1) _SB_ is defined to be a device to allow \_SB_._INI to be run  *    during the initialization sequence.  * 2) _TZ_ is defined to be a thermal zone in order to allow ASL code to  *    perform a Notify() operation on it.  */
+comment|/*  * Predefined ACPI Names (Built-in to the Interpreter)  *  * NOTES:  * 1) _SB_ is defined to be a device to allow \_SB_._INI to be run  *    during the initialization sequence.  * 2) _TZ_ is defined to be a thermal zone in order to allow ASL code to  *    perform a Notify() operation on it. 09/2010: Changed to type Device.  *    This still allows notifies, but does not confuse host code that  *    searches for valid ThermalZone objects.  */
 end_comment
 
 begin_decl_stmt
@@ -361,7 +361,7 @@ block|,
 block|{
 literal|"_TZ_"
 block|,
-name|ACPI_TYPE_THERMAL
+name|ACPI_TYPE_DEVICE
 block|,
 name|NULL
 block|}

@@ -52,7 +52,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiInstallAddressSpaceHandler  *  * PARAMETERS:  Device          - Handle for the device  *              SpaceId         - The address space ID  *              Handler         - Address of the handler  *              Setup           - Address of the setup function  *              Context         - Value passed to the handler on each access  *  * RETURN:      Status  *  * DESCRIPTION: Install a handler for all OpRegions of a given SpaceId.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiInstallAddressSpaceHandler  *  * PARAMETERS:  Device          - Handle for the device  *              SpaceId         - The address space ID  *              Handler         - Address of the handler  *              Setup           - Address of the setup function  *              Context         - Value passed to the handler on each access  *  * RETURN:      Status  *  * DESCRIPTION: Install a handler for all OpRegions of a given SpaceId.  *  * NOTE: This function should only be called after AcpiEnableSubsystem has  * been called. This is because any _REG methods associated with the Space ID  * are executed here, and these methods can only be safely executed after  * the default handlers have been installed and the hardware has been  * initialized (via AcpiEnableSubsystem.)  *  ******************************************************************************/
 end_comment
 
 begin_function

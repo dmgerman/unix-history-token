@@ -149,6 +149,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"aslmessages.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"aslglobal.h"
 end_include
 
@@ -1793,6 +1799,10 @@ parameter_list|,
 name|ACPI_PARSE_OBJECT
 modifier|*
 name|AlignOp
+parameter_list|,
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1831,6 +1841,10 @@ parameter_list|,
 name|ACPI_PARSE_OBJECT
 modifier|*
 name|GranOp
+parameter_list|,
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
 parameter_list|)
 function_decl|;
 end_function_decl

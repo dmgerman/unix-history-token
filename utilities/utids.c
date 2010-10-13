@@ -46,68 +46,6 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/* Local prototypes */
-end_comment
-
-begin_function_decl
-specifier|static
-name|void
-name|AcpiUtCopyIdString
-parameter_list|(
-name|char
-modifier|*
-name|Destination
-parameter_list|,
-name|char
-modifier|*
-name|Source
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtCopyIdString  *  * PARAMETERS:  Destination         - Where to copy the string  *              Source              - Source string  *  * RETURN:      None  *  * DESCRIPTION: Copies an ID string for the _HID, _CID, and _UID methods.  *              Performs removal of a leading asterisk if present -- workaround  *              for a known issue on a bunch of machines.  *  ******************************************************************************/
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|AcpiUtCopyIdString
-parameter_list|(
-name|char
-modifier|*
-name|Destination
-parameter_list|,
-name|char
-modifier|*
-name|Source
-parameter_list|)
-block|{
-comment|/*      * Workaround for ID strings that have a leading asterisk. This construct      * is not allowed by the ACPI specification  (ID strings must be      * alphanumeric), but enough existing machines have this embedded in their      * ID strings that the following code is useful.      */
-if|if
-condition|(
-operator|*
-name|Source
-operator|==
-literal|'*'
-condition|)
-block|{
-name|Source
-operator|++
-expr_stmt|;
-block|}
-comment|/* Do the actual copy */
-name|ACPI_STRCPY
-argument_list|(
-name|Destination
-argument_list|,
-name|Source
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtExecute_HID  *  * PARAMETERS:  DeviceNode          - Node for the device  *              ReturnId            - Where the string HID is returned  *  * RETURN:      Status  *  * DESCRIPTION: Executes the _HID control method that returns the hardware  *              ID of the device. The HID is either an 32-bit encoded EISAID  *              Integer or a String. A string is always returned. An EISAID  *              is converted to a string.  *  *              NOTE: Internal function, no parameter validation  *  ******************************************************************************/
 end_comment
 
@@ -279,7 +217,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|AcpiUtCopyIdString
+name|ACPI_STRCPY
 argument_list|(
 name|Hid
 operator|->
@@ -494,7 +432,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|AcpiUtCopyIdString
+name|ACPI_STRCPY
 argument_list|(
 name|Uid
 operator|->
@@ -855,7 +793,7 @@ else|else
 comment|/* ACPI_TYPE_STRING */
 block|{
 comment|/* Copy the String CID from the returned object */
-name|AcpiUtCopyIdString
+name|ACPI_STRCPY
 argument_list|(
 name|NextIdString
 argument_list|,

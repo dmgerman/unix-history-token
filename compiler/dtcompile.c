@@ -437,7 +437,7 @@ name|Next
 operator|->
 name|Value
 operator|=
-name|CompilerCreatorId
+name|ASL_CREATOR_ID
 expr_stmt|;
 name|Next
 operator|->

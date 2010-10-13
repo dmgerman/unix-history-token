@@ -2843,7 +2843,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_BITMASK_ALL_FIXED_STATUS
-value|(\     ACPI_BITMASK_TIMER_STATUS          | \     ACPI_BITMASK_BUS_MASTER_STATUS     | \     ACPI_BITMASK_GLOBAL_LOCK_STATUS    | \     ACPI_BITMASK_POWER_BUTTON_STATUS   | \     ACPI_BITMASK_SLEEP_BUTTON_STATUS   | \     ACPI_BITMASK_RT_CLOCK_STATUS       | \     ACPI_BITMASK_WAKE_STATUS)
+value|(\     ACPI_BITMASK_TIMER_STATUS          | \     ACPI_BITMASK_BUS_MASTER_STATUS     | \     ACPI_BITMASK_GLOBAL_LOCK_STATUS    | \     ACPI_BITMASK_POWER_BUTTON_STATUS   | \     ACPI_BITMASK_SLEEP_BUTTON_STATUS   | \     ACPI_BITMASK_RT_CLOCK_STATUS       | \     ACPI_BITMASK_PCIEXP_WAKE_STATUS    | \     ACPI_BITMASK_WAKE_STATUS)
 end_define
 
 begin_define
@@ -3156,8 +3156,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_OSI_WIN_7
+name|ACPI_OSI_WIN_VISTA_SP2
 value|0x0A
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_OSI_WIN_7
+value|0x0B
 end_define
 
 begin_define

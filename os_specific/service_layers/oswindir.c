@@ -135,7 +135,9 @@ name|SearchInfo
 condition|)
 block|{
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 comment|/* Allocate space for the full wildcard path */
@@ -170,7 +172,9 @@ literal|"Could not allocate buffer for wildcard pathname\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 comment|/* Create the full wildcard path */
@@ -228,7 +232,9 @@ name|SearchInfo
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 comment|/* Save the info in the return structure */
@@ -265,7 +271,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiOsGetNextFilename  *  * PARAMETERS:  DirHandle           - Created via AcpiOsOpenDirectory  *  * RETURN:      Next filename matched.  NULL if no more matches.  *  * DESCRIPTION: Get the next file in the directory that matches the wildcard  *              specification.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiOsGetNextFilename  *  * PARAMETERS:  DirHandle           - Created via AcpiOsOpenDirectory  *  * RETURN:      Next filename matched. NULL if no more matches.  *  * DESCRIPTION: Get the next file in the directory that matches the wildcard  *              specification.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -341,7 +347,9 @@ literal|0
 condition|)
 block|{
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 block|}
@@ -400,7 +408,9 @@ block|}
 break|break;
 default|default:
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 block|}
@@ -417,7 +427,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiOsCloseDirectory  *  * PARAMETERS:  DirHandle           - Created via AcpiOsOpenDirectory  *  * RETURN:      None.  *  * DESCRIPTION: Close the open directory and cleanup.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiOsCloseDirectory  *  * PARAMETERS:  DirHandle           - Created via AcpiOsOpenDirectory  *  * RETURN:      None  *  * DESCRIPTION: Close the open directory and cleanup.  *  ******************************************************************************/
 end_comment
 
 begin_function

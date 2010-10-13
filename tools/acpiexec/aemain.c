@@ -909,26 +909,10 @@ endif|#
 directive|endif
 name|printf
 argument_list|(
-literal|"\nIntel ACPI Component Architecture\nAML Execution/Debug Utility"
-argument_list|)
-expr_stmt|;
-name|printf
+name|ACPI_COMMON_SIGNON
 argument_list|(
-literal|" version %8.8X"
-argument_list|,
-operator|(
-operator|(
-name|UINT32
-operator|)
-name|ACPI_CA_VERSION
-operator|)
+literal|"AML Execution/Debug Utility"
 argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|" [%s]\n\n"
-argument_list|,
-name|__DATE__
 argument_list|)
 expr_stmt|;
 if|if

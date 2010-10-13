@@ -520,9 +520,16 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
+literal|"%s\n"
+argument_list|,
+name|ASL_COMPLIANCE
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"Usage:    %s [Options] [Files]\n\n"
 argument_list|,
-name|CompilerName
+name|ASL_INVOCATION_NAME
 argument_list|)
 expr_stmt|;
 name|Options
@@ -1756,9 +1763,12 @@ operator|<
 literal|2
 condition|)
 block|{
-name|AslCompilerSignon
+name|printf
 argument_list|(
-name|ASL_FILE_STDOUT
+name|ACPI_COMMON_SIGNON
+argument_list|(
+name|ASL_COMPILER_NAME
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|Usage
@@ -1846,9 +1856,12 @@ condition|(
 name|Gbl_DoSignon
 condition|)
 block|{
-name|AslCompilerSignon
+name|printf
 argument_list|(
-name|ASL_FILE_STDOUT
+name|ACPI_COMMON_SIGNON
+argument_list|(
+name|ASL_COMPILER_NAME
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

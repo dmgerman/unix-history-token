@@ -55,6 +55,10 @@ directive|include
 file|"acpisrc.h"
 end_include
 
+begin_comment
+comment|/*  * Allocated structure returned from OsOpenDirectory  */
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -199,7 +203,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiOsGetNextFilename  *  * PARAMETERS:  DirHandle           - Created via AcpiOsOpenDirectory  *  * RETURN:      Next filename matched.  NULL if no more matches.  *  * DESCRIPTION: Get the next file in the directory that matches the wildcard  *              specification.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiOsGetNextFilename  *  * PARAMETERS:  DirHandle           - Created via AcpiOsOpenDirectory  *  * RETURN:      Next filename matched. NULL if no more matches.  *  * DESCRIPTION: Get the next file in the directory that matches the wildcard  *              specification.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -279,7 +283,9 @@ index|]
 operator|==
 literal|'.'
 condition|)
+block|{
 continue|continue;
+block|}
 name|str_len
 operator|=
 name|strlen
@@ -319,7 +325,9 @@ literal|"Could not allocate buffer for temporary string\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 name|strcpy
@@ -376,7 +384,9 @@ literal|"stat() error - should not happen\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 if|if
@@ -440,7 +450,9 @@ block|}
 block|}
 block|}
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 end_function
@@ -485,7 +497,7 @@ comment|/* Other functions acpisrc uses but that aren't standard on Unix */
 end_comment
 
 begin_comment
-comment|/* lowercase a string */
+comment|/*******************************************************************************  *  * FUNCTION:    strlwr  *  * PARAMETERS:  str                 - String to be lowercased.  *  * RETURN:      str.  *  * DESCRIPTION: Lowercase a string in-place.  *  ******************************************************************************/
 end_comment
 
 begin_function
