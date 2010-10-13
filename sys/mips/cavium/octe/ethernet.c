@@ -556,6 +556,10 @@ specifier|static
 name|int
 name|port
 decl_stmt|;
+specifier|static
+name|int
+name|updated
+decl_stmt|;
 if|if
 condition|(
 name|port
@@ -626,6 +630,9 @@ operator|->
 name|need_link_update
 condition|)
 block|{
+name|updated
+operator|++
+expr_stmt|;
 name|taskqueue_enqueue
 argument_list|(
 name|cvm_oct_link_taskq
@@ -794,7 +801,36 @@ name|port
 operator|=
 literal|0
 expr_stmt|;
-comment|/* All ports have been polled. Start the next iteration through 		   the ports in one second */
+comment|/* If any updates were made in this run, continue iterating at 		 * 1/50th of a second, so that if a link has merely gone down 		 * temporarily (e.g. because of interface reinitialization) it 		 * will not be forced to stay down for an entire second. 		 */
+if|if
+condition|(
+name|updated
+operator|>
+literal|0
+condition|)
+block|{
+name|updated
+operator|=
+literal|0
+expr_stmt|;
+name|callout_reset
+argument_list|(
+operator|&
+name|cvm_oct_poll_timer
+argument_list|,
+name|hz
+operator|/
+literal|50
+argument_list|,
+name|cvm_do_timer
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* All ports have been polled. Start the next iteration through 			   the ports in one second */
 name|callout_reset
 argument_list|(
 operator|&
@@ -807,6 +843,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_function
