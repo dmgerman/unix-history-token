@@ -784,6 +784,9 @@ name|error
 operator|)
 return|;
 block|}
+operator|(
+name|void
+operator|)
 name|DE_INTERNALIZE
 argument_list|(
 name|ldep
