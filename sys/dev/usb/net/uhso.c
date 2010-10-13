@@ -7832,7 +7832,11 @@ name|ifp
 operator|->
 name|if_flags
 operator|=
-literal|0
+name|IFF_BROADCAST
+operator||
+name|IFF_MULTICAST
+operator||
+name|IFF_NOARP
 expr_stmt|;
 name|ifp
 operator|->
