@@ -221,7 +221,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|char
 modifier|*
 name|fc_replace
@@ -1639,7 +1639,7 @@ block|}
 end_function
 
 begin_function
-name|STATIC
+specifier|static
 name|char
 modifier|*
 name|fc_replace

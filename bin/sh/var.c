@@ -529,7 +529,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|struct
 name|var
 modifier|*
@@ -544,7 +544,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|int
 name|varequal
 parameter_list|(
@@ -560,7 +560,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|int
 name|localevar
 parameter_list|(
@@ -1179,7 +1179,7 @@ block|}
 end_function
 
 begin_function
-name|STATIC
+specifier|static
 name|int
 name|localevar
 parameter_list|(
@@ -1292,7 +1292,7 @@ comment|/*  * Sets/unsets an environment variable from a pointer that may actual
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|change_env
 parameter_list|(
@@ -2595,7 +2595,7 @@ block|}
 end_function
 
 begin_function
-name|STATIC
+specifier|static
 name|int
 name|var_compare
 parameter_list|(
@@ -4176,7 +4176,7 @@ comment|/*  * Find the appropriate entry in the hash table from the name.  */
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|struct
 name|var
 modifier|*
@@ -4243,7 +4243,7 @@ comment|/*  * Returns true if the two strings specify the same varable.  The fir
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|int
 name|varequal
 parameter_list|(

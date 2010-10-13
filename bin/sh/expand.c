@@ -315,7 +315,7 @@ comment|/* holds expanded arg list */
 end_comment
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|argstr
 parameter_list|(
@@ -328,7 +328,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|char
 modifier|*
 name|exptilde
@@ -342,7 +342,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|expbackq
 parameter_list|(
@@ -358,7 +358,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|int
 name|subevalvar
 parameter_list|(
@@ -380,7 +380,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|char
 modifier|*
 name|evalvar
@@ -394,7 +394,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|int
 name|varisset
 parameter_list|(
@@ -407,7 +407,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|varvalue
 parameter_list|(
@@ -424,7 +424,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|recordregion
 parameter_list|(
@@ -438,7 +438,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|removerecordregions
 parameter_list|(
@@ -448,7 +448,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|ifsbreakup
 parameter_list|(
@@ -463,7 +463,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|expandmeta
 parameter_list|(
@@ -477,7 +477,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|expmeta
 parameter_list|(
@@ -491,7 +491,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|addfname
 parameter_list|(
@@ -502,7 +502,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|struct
 name|strlist
 modifier|*
@@ -516,7 +516,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|struct
 name|strlist
 modifier|*
@@ -532,7 +532,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|char
 modifier|*
 name|cvtnum
@@ -546,7 +546,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|int
 name|collate_range_cmp
 parameter_list|(
@@ -558,7 +558,7 @@ function_decl|;
 end_function_decl
 
 begin_function
-name|STATIC
+specifier|static
 name|int
 name|collate_range_cmp
 parameter_list|(
@@ -932,7 +932,7 @@ comment|/*  * Perform parameter expansion, command substitution and arithmetic  
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|argstr
 parameter_list|(
@@ -1216,7 +1216,7 @@ comment|/*  * Perform tilde expansion, placing the result in the stack string an
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|char
 modifier|*
 name|exptilde
@@ -1473,7 +1473,7 @@ block|}
 end_function
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|removerecordregions
 parameter_list|(
@@ -1918,7 +1918,7 @@ comment|/*  * Perform command substitution.  */
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|expbackq
 parameter_list|(
@@ -2354,7 +2354,7 @@ block|}
 end_function
 
 begin_function
-name|STATIC
+specifier|static
 name|int
 name|subevalvar
 parameter_list|(
@@ -3021,7 +3021,7 @@ comment|/*  * Expand a variable, and return a pointer to the next character in t
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|char
 modifier|*
 name|evalvar
@@ -3853,7 +3853,7 @@ comment|/*  * Test whether a specialized variable is set.  */
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|int
 name|varisset
 parameter_list|(
@@ -4027,7 +4027,7 @@ comment|/*  * Add the value of a specialized variable to the stack string.  */
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|varvalue
 parameter_list|(
@@ -4360,7 +4360,7 @@ comment|/*  * Record the the fact that we have to scan this region of the  * str
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|recordregion
 parameter_list|(
@@ -4477,7 +4477,7 @@ comment|/*  * Break the argument string into pieces based upon IFS and add the  
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|ifsbreakup
 parameter_list|(
@@ -4928,7 +4928,7 @@ comment|/*  * Perform pathname generation and remove control characters.  * At t
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|expandmeta
 parameter_list|(
@@ -5131,7 +5131,7 @@ comment|/*  * Do metacharacter (i.e. *, ?, [...]) expansion.  */
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|expmeta
 parameter_list|(
@@ -5833,7 +5833,7 @@ comment|/*  * Add a file name to the list.  */
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|addfname
 parameter_list|(
@@ -5914,7 +5914,7 @@ comment|/*  * Sort the results of file name expansion.  It calculates the number
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|struct
 name|strlist
 modifier|*
@@ -5967,7 +5967,7 @@ block|}
 end_function
 
 begin_function
-name|STATIC
+specifier|static
 name|struct
 name|strlist
 modifier|*
@@ -6962,7 +6962,7 @@ comment|/*  * Our own itoa().  */
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|char
 modifier|*
 name|cvtnum

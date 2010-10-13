@@ -410,7 +410,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|union
 name|node
 modifier|*
@@ -422,7 +422,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|union
 name|node
 modifier|*
@@ -434,7 +434,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|union
 name|node
 modifier|*
@@ -446,7 +446,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|union
 name|node
 modifier|*
@@ -458,7 +458,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|union
 name|node
 modifier|*
@@ -477,7 +477,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|union
 name|node
 modifier|*
@@ -489,7 +489,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|parsefname
 parameter_list|(
@@ -499,7 +499,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|parseheredoc
 parameter_list|(
@@ -509,7 +509,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|int
 name|peektoken
 parameter_list|(
@@ -519,7 +519,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|int
 name|readtoken
 parameter_list|(
@@ -529,7 +529,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|int
 name|xxreadtoken
 parameter_list|(
@@ -539,7 +539,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|int
 name|readtoken1
 parameter_list|(
@@ -558,7 +558,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|int
 name|noexpand
 parameter_list|(
@@ -569,7 +569,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|void
 name|synexpect
 argument_list|(
@@ -580,7 +580,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|void
 name|synerror
 argument_list|(
@@ -593,7 +593,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|setprompt
 parameter_list|(
@@ -603,7 +603,7 @@ function_decl|;
 end_function_decl
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 modifier|*
 name|parser_temp_alloc
@@ -666,7 +666,7 @@ block|}
 end_function
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 modifier|*
 name|parser_temp_realloc
@@ -727,7 +727,7 @@ block|}
 end_function
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|parser_temp_free_upto
 parameter_list|(
@@ -805,7 +805,7 @@ block|}
 end_function
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|parser_temp_free_all
 parameter_list|(
@@ -942,7 +942,7 @@ block|}
 end_function
 
 begin_function
-name|STATIC
+specifier|static
 name|union
 name|node
 modifier|*
@@ -1274,7 +1274,7 @@ block|}
 end_function
 
 begin_function
-name|STATIC
+specifier|static
 name|union
 name|node
 modifier|*
@@ -1399,7 +1399,7 @@ block|}
 end_function
 
 begin_function
-name|STATIC
+specifier|static
 name|union
 name|node
 modifier|*
@@ -1638,7 +1638,7 @@ block|}
 end_function
 
 begin_function
-name|STATIC
+specifier|static
 name|union
 name|node
 modifier|*
@@ -3091,7 +3091,7 @@ block|}
 end_function
 
 begin_function
-name|STATIC
+specifier|static
 name|union
 name|node
 modifier|*
@@ -3410,7 +3410,7 @@ block|}
 end_function
 
 begin_function
-name|STATIC
+specifier|static
 name|union
 name|node
 modifier|*
@@ -3601,7 +3601,7 @@ block|}
 end_function
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|parsefname
 parameter_list|(
@@ -3821,7 +3821,7 @@ comment|/*  * Input any here documents.  */
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|parseheredoc
 parameter_list|(
@@ -3957,7 +3957,7 @@ block|}
 end_function
 
 begin_function
-name|STATIC
+specifier|static
 name|int
 name|peektoken
 parameter_list|(
@@ -3984,7 +3984,7 @@ block|}
 end_function
 
 begin_function
-name|STATIC
+specifier|static
 name|int
 name|readtoken
 parameter_list|(
@@ -4270,7 +4270,7 @@ value|return lasttoken = token
 end_define
 
 begin_function
-name|STATIC
+specifier|static
 name|int
 name|xxreadtoken
 parameter_list|(
@@ -4551,7 +4551,7 @@ end_function
 begin_define
 define|#
 directive|define
-name|MAXNEST_STATIC
+name|MAXNEST_static
 value|8
 end_define
 
@@ -4593,7 +4593,7 @@ comment|/*  * Called to parse command substitutions.  */
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|char
 modifier|*
 name|parsebackq
@@ -5288,7 +5288,7 @@ value|{goto parsearith; parsearith_return:;}
 end_define
 
 begin_function
-name|STATIC
+specifier|static
 name|int
 name|readtoken1
 parameter_list|(
@@ -5349,13 +5349,13 @@ name|struct
 name|tokenstate
 name|state_static
 index|[
-name|MAXNEST_STATIC
+name|MAXNEST_static
 index|]
 decl_stmt|;
 name|int
 name|maxnest
 init|=
-name|MAXNEST_STATIC
+name|MAXNEST_static
 decl_stmt|;
 name|struct
 name|tokenstate
@@ -7452,7 +7452,7 @@ name|state
 argument_list|,
 name|state_static
 argument_list|,
-name|MAXNEST_STATIC
+name|MAXNEST_static
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -7611,7 +7611,7 @@ name|state
 argument_list|,
 name|state_static
 argument_list|,
-name|MAXNEST_STATIC
+name|MAXNEST_static
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -7747,7 +7747,7 @@ comment|/*  * Returns true if the text contains nothing to expand (no dollar sig
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|int
 name|noexpand
 parameter_list|(
@@ -7885,7 +7885,7 @@ comment|/*  * Called when an unexpected token is read during the parse.  The arg
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|synexpect
 parameter_list|(
@@ -7952,7 +7952,7 @@ block|}
 end_function
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|synerror
 parameter_list|(
@@ -7999,7 +7999,7 @@ block|}
 end_function
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|setprompt
 parameter_list|(

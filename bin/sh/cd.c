@@ -173,7 +173,7 @@ file|"cd.h"
 end_include
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|int
 name|cdlogical
 parameter_list|(
@@ -184,7 +184,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|int
 name|cdphysical
 parameter_list|(
@@ -195,7 +195,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|int
 name|docd
 parameter_list|(
@@ -210,7 +210,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|char
 modifier|*
 name|getcomponent
@@ -221,7 +221,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|char
 modifier|*
 name|findcwd
@@ -233,7 +233,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|updatepwd
 parameter_list|(
@@ -244,7 +244,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|char
 modifier|*
 name|getpwd
@@ -255,7 +255,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|char
 modifier|*
 name|getpwd2
@@ -655,7 +655,7 @@ comment|/*  * Actually change the directory.  In an interactive shell, print the
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|int
 name|docd
 parameter_list|(
@@ -732,7 +732,7 @@ block|}
 end_function
 
 begin_function
-name|STATIC
+specifier|static
 name|int
 name|cdlogical
 parameter_list|(
@@ -975,7 +975,7 @@ block|}
 end_function
 
 begin_function
-name|STATIC
+specifier|static
 name|int
 name|cdphysical
 parameter_list|(
@@ -1040,7 +1040,7 @@ comment|/*  * Get the next component of the path name pointed to by cdcomppath. 
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|char
 modifier|*
 name|getcomponent
@@ -1121,7 +1121,7 @@ block|}
 end_function
 
 begin_function
-name|STATIC
+specifier|static
 name|char
 modifier|*
 name|findcwd
@@ -1334,7 +1334,7 @@ comment|/*  * Update curdir (the name of the current directory) in response to a
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|updatepwd
 parameter_list|(
@@ -1562,7 +1562,7 @@ comment|/*  * Get the current directory and cache the result in curdir.  */
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|char
 modifier|*
 name|getpwd
@@ -1617,7 +1617,7 @@ comment|/*  * Return the current directory.  */
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|char
 modifier|*
 name|getpwd2

@@ -314,7 +314,7 @@ comment|/* saved exit status */
 end_comment
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|evalloop
 parameter_list|(
@@ -328,7 +328,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|evalfor
 parameter_list|(
@@ -342,7 +342,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|evalcase
 parameter_list|(
@@ -356,7 +356,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|evalsubshell
 parameter_list|(
@@ -370,7 +370,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|evalredir
 parameter_list|(
@@ -384,7 +384,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|expredir
 parameter_list|(
@@ -396,7 +396,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|evalpipe
 parameter_list|(
@@ -408,7 +408,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|evalcommand
 parameter_list|(
@@ -426,7 +426,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|prehash
 parameter_list|(
@@ -1243,7 +1243,7 @@ block|}
 end_function
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|evalloop
 parameter_list|(
@@ -1400,7 +1400,7 @@ block|}
 end_function
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|evalfor
 parameter_list|(
@@ -1604,7 +1604,7 @@ block|}
 end_function
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|evalcase
 parameter_list|(
@@ -1773,7 +1773,7 @@ comment|/*  * Kick off a subshell to evaluate a tree.  */
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|evalsubshell
 parameter_list|(
@@ -1913,7 +1913,7 @@ comment|/*  * Evaluate a redirected compound command.  */
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|evalredir
 parameter_list|(
@@ -2068,7 +2068,7 @@ comment|/*  * Compute the names of the files in a redirection list.  */
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|expredir
 parameter_list|(
@@ -2224,7 +2224,7 @@ comment|/*  * Evaluate a pipeline.  All the processes in the pipeline are childr
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|evalpipe
 parameter_list|(
@@ -2826,7 +2826,7 @@ comment|/*  * Execute a simple command.  */
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|evalcommand
 parameter_list|(
@@ -4960,7 +4960,7 @@ comment|/*  * Search for a command.  This is called before we fork so that the  
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|prehash
 parameter_list|(

@@ -123,7 +123,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|setalias
 parameter_list|(
@@ -139,7 +139,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|int
 name|unalias
 parameter_list|(
@@ -151,7 +151,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|struct
 name|alias
 modifier|*
@@ -166,7 +166,7 @@ function_decl|;
 end_function_decl
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|setalias
 parameter_list|(
@@ -369,7 +369,7 @@ block|}
 end_function
 
 begin_function
-name|STATIC
+specifier|static
 name|int
 name|unalias
 parameter_list|(
@@ -708,7 +708,7 @@ block|}
 end_function
 
 begin_function
-name|STATIC
+specifier|static
 name|int
 name|comparealiases
 parameter_list|(
@@ -765,7 +765,7 @@ block|}
 end_function
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|printalias
 parameter_list|(
@@ -831,7 +831,7 @@ block|}
 end_function
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|printaliases
 parameter_list|(
@@ -1176,7 +1176,7 @@ block|}
 end_function
 
 begin_function
-name|STATIC
+specifier|static
 name|struct
 name|alias
 modifier|*

@@ -165,7 +165,7 @@ comment|/* error occurred on output */
 end_comment
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|int
 name|doformat_wr
 parameter_list|(
@@ -1143,7 +1143,7 @@ block|}
 end_function
 
 begin_function
-name|STATIC
+specifier|static
 name|int
 name|doformat_wr
 parameter_list|(

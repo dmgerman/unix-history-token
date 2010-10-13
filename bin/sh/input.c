@@ -383,7 +383,7 @@ comment|/* cookie for editline package */
 end_comment
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|pushfile
 parameter_list|(
@@ -393,7 +393,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|int
 name|preadfd
 parameter_list|(
@@ -587,7 +587,7 @@ block|}
 end_function
 
 begin_function
-name|STATIC
+specifier|static
 name|int
 name|preadfd
 parameter_list|(
@@ -1700,7 +1700,7 @@ comment|/*  * To handle the "." command, a stack of input files is used.  Pushfi
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|pushfile
 parameter_list|(

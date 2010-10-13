@@ -235,7 +235,7 @@ comment|/* argument to -c option */
 end_comment
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|options
 parameter_list|(
@@ -245,7 +245,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|minus_o
 parameter_list|(
@@ -258,7 +258,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|setoption
 parameter_list|(
@@ -270,7 +270,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|int
 name|getopts
 parameter_list|(
@@ -583,7 +583,7 @@ comment|/*  * Process shell options.  The global variable argptr contains a poin
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|options
 parameter_list|(
@@ -971,7 +971,7 @@ block|}
 end_function
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|minus_o
 parameter_list|(
@@ -1198,7 +1198,7 @@ block|}
 end_function
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|setoption
 parameter_list|(
@@ -1852,7 +1852,7 @@ block|}
 end_function
 
 begin_function
-name|STATIC
+specifier|static
 name|int
 name|getopts
 parameter_list|(

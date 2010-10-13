@@ -229,7 +229,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|openredirect
 parameter_list|(
@@ -246,7 +246,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|int
 name|openhere
 parameter_list|(
@@ -573,7 +573,7 @@ block|}
 end_function
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|openredirect
 parameter_list|(
@@ -1080,7 +1080,7 @@ comment|/*  * Handle here documents.  Normally we fork off a process to write th
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|int
 name|openhere
 parameter_list|(

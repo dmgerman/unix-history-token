@@ -336,7 +336,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|stnewblock
 parameter_list|(
