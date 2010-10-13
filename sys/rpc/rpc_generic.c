@@ -135,6 +135,17 @@ directive|include
 file|<rpc/rpc_com.h>
 end_include
 
+begin_decl_stmt
+specifier|extern
+name|u_long
+name|sb_max_adj
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* not defined in socketvar.h */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -354,17 +365,8 @@ name|size
 parameter_list|)
 block|{
 name|int
-name|maxsize
-decl_stmt|,
 name|defsize
 decl_stmt|;
-name|maxsize
-operator|=
-literal|256
-operator|*
-literal|1024
-expr_stmt|;
-comment|/* XXX */
 switch|switch
 condition|(
 name|proto
@@ -410,12 +412,12 @@ return|return
 operator|(
 name|size
 operator|>
-name|maxsize
+name|sb_max_adj
 condition|?
 operator|(
 name|u_int
 operator|)
-name|maxsize
+name|sb_max_adj
 else|:
 operator|(
 name|u_int
