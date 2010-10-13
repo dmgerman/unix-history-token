@@ -1190,7 +1190,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * And when the system call is done, we handle it here.  * Currently, no attempt is made to ensure that the system calls  * match -- this needs to be fixed (and is, in fact, why S_SCX includes  * the sytem call number instead of, say, an error status).  */
+comment|/*  * And when the system call is done, we handle it here.  * Currently, no attempt is made to ensure that the system calls  * match -- this needs to be fixed (and is, in fact, why S_SCX includes  * the system call number instead of, say, an error status).  */
 end_comment
 
 begin_function
