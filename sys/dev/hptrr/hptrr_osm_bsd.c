@@ -6528,6 +6528,8 @@ name|S_IRUSR
 operator||
 name|S_IWUSR
 argument_list|,
+literal|"%s"
+argument_list|,
 name|driver_name
 argument_list|)
 expr_stmt|;
