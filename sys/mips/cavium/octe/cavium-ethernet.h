@@ -147,6 +147,11 @@ decl_stmt|;
 name|int
 name|phy_id
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|phy_device
+decl_stmt|;
 name|int
 function_decl|(
 modifier|*

@@ -403,6 +403,12 @@ argument_list|)
 expr_stmt|;
 name|priv
 operator|->
+name|phy_device
+operator|=
+name|NULL
+expr_stmt|;
+name|priv
+operator|->
 name|mdio_read
 operator|=
 name|NULL
