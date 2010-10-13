@@ -40,8 +40,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CDCE_NCM_TX_MINLEN
+value|512
+end_define
+
+begin_comment
+comment|/* bytes, must be power of two */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CDCE_NCM_TX_MAXLEN
-value|2048UL
+value|(1UL<< 14)
 end_define
 
 begin_comment
@@ -91,6 +102,21 @@ end_define
 begin_comment
 comment|/* units */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|CDCE_NCM_ALIGN
+parameter_list|(
+name|rem
+parameter_list|,
+name|off
+parameter_list|,
+name|mod
+parameter_list|)
+define|\
+value|((uint32_t)(((uint32_t)(rem)) - \     ((uint32_t)((-(uint32_t)(off))& (-(uint32_t)(mod))))))
+end_define
 
 begin_ifndef
 ifndef|#
@@ -162,6 +188,9 @@ name|tx_struct_align
 decl_stmt|;
 name|uint16_t
 name|tx_seq
+decl_stmt|;
+name|uint16_t
+name|tx_nframe
 decl_stmt|;
 block|}
 struct|;
