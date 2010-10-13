@@ -8536,6 +8536,8 @@ operator|&
 name|G_PART_PARM_GEOM
 argument_list|,
 operator|(
+literal|"%s"
+operator|,
 name|__func__
 operator|)
 argument_list|)
@@ -9185,6 +9187,8 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
+literal|"%s"
+operator|,
 name|__func__
 operator|)
 argument_list|)
@@ -9213,6 +9217,8 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
+literal|"%s"
+operator|,
 name|__func__
 operator|)
 argument_list|)
@@ -9291,6 +9297,8 @@ operator|==
 name|NULL
 argument_list|,
 operator|(
+literal|"%s"
+operator|,
 name|__func__
 operator|)
 argument_list|)
@@ -9569,6 +9577,8 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
+literal|"%s"
+operator|,
 name|__func__
 operator|)
 argument_list|)
@@ -9600,6 +9610,8 @@ operator|!=
 literal|0
 argument_list|,
 operator|(
+literal|"%s"
+operator|,
 name|__func__
 operator|)
 argument_list|)
