@@ -1027,7 +1027,7 @@ argument_list|(
 operator|&
 name|sb
 argument_list|,
-literal|" %s=%hhu"
+literal|" %s=%d"
 argument_list|,
 name|FM_VERSION
 argument_list|,
