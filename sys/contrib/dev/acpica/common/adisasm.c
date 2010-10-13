@@ -1307,19 +1307,22 @@ expr_stmt|;
 comment|/* Header and input table info */
 name|AcpiOsPrintf
 argument_list|(
-literal|"/*\n * Intel ACPI Component Architecture\n"
+literal|"/*\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|" * AML Disassembler version %8.8X\n"
+name|ACPI_COMMON_HEADER
+argument_list|(
+literal|"AML Disassembler"
 argument_list|,
-name|ACPI_CA_VERSION
+literal|" * "
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|" *\n * Disassembly of %s, %s"
+literal|" * Disassembly of %s, %s"
 argument_list|,
 name|Filename
 argument_list|,

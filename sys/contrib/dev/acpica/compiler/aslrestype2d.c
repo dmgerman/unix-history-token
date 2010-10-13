@@ -915,6 +915,8 @@ argument_list|,
 name|LengthOp
 argument_list|,
 name|GranOp
+argument_list|,
+name|Op
 argument_list|)
 expr_stmt|;
 name|Rnode
@@ -1853,6 +1855,8 @@ argument_list|,
 name|LengthOp
 argument_list|,
 name|GranOp
+argument_list|,
+name|Op
 argument_list|)
 expr_stmt|;
 name|Rnode
@@ -2671,6 +2675,8 @@ argument_list|,
 name|LengthOp
 argument_list|,
 name|GranOp
+argument_list|,
+name|Op
 argument_list|)
 expr_stmt|;
 name|Rnode

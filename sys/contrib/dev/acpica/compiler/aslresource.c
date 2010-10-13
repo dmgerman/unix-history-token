@@ -40,7 +40,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    RsSmallAddressCheck  *  * PARAMETERS:  Minimum             - Address Min value  *              Maximum             - Address Max value  *              Length              - Address range value  *              Alignment           - Address alignment value  *              MinOp               - Original Op for Address Min  *              MaxOp               - Original Op for Address Max  *              LengthOp            - Original Op for address range  *              AlignOp             - Original Op for address alignment. If  *                                    NULL, means "zero value for alignment is  *                                    OK, and means 64K alignment" (for  *                                    Memory24 descriptor)  *  * RETURN:      None. Adds error messages to error log if necessary  *  * DESCRIPTION: Perform common value checks for "small" address descriptors.  *              Currently:  *                  Io, Memory24, Memory32  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    RsSmallAddressCheck  *  * PARAMETERS:  Minimum             - Address Min value  *              Maximum             - Address Max value  *              Length              - Address range value  *              Alignment           - Address alignment value  *              MinOp               - Original Op for Address Min  *              MaxOp               - Original Op for Address Max  *              LengthOp            - Original Op for address range  *              AlignOp             - Original Op for address alignment. If  *                                    NULL, means "zero value for alignment is  *                                    OK, and means 64K alignment" (for  *                                    Memory24 descriptor)  *              Op                  - Parent Op for entire construct  *  * RETURN:      None. Adds error messages to error log if necessary  *  * DESCRIPTION: Perform common value checks for "small" address descriptors.  *              Currently:  *                  Io, Memory24, Memory32  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -77,6 +77,10 @@ parameter_list|,
 name|ACPI_PARSE_OBJECT
 modifier|*
 name|AlignOp
+parameter_list|,
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
 parameter_list|)
 block|{
 if|if
@@ -84,6 +88,44 @@ condition|(
 name|Gbl_NoResourceChecking
 condition|)
 block|{
+return|return;
+block|}
+comment|/*      * Check for a so-called "null descriptor". These are descriptors that are      * created with most fields set to zero. The intent is that the descriptor      * will be updated/completed at runtime via a BufferField.      *      * If the descriptor does NOT have a resource tag, it cannot be referenced      * by a BufferField and we will flag this as an error. Conversely, if      * the descriptor has a resource tag, we will assume that a BufferField      * will be used to dynamically update it, so no error.      *      * A possible enhancement to this check would be to verify that in fact      * a BufferField is created using the resource tag, and perhaps even      * verify that a Store is performed to the BufferField.      *      * Note: for these descriptors, Alignment is allowed to be zero      */
+if|if
+condition|(
+operator|!
+name|Minimum
+operator|&&
+operator|!
+name|Maximum
+operator|&&
+operator|!
+name|Length
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|Op
+operator|->
+name|Asl
+operator|.
+name|ExternalName
+condition|)
+block|{
+comment|/* No resource tag. Descriptor is fixed and is also illegal */
+name|AslError
+argument_list|(
+name|ASL_ERROR
+argument_list|,
+name|ASL_MSG_NULL_DESCRIPTOR
+argument_list|,
+name|Op
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
 return|return;
 block|}
 comment|/* Special case for Memory24, values are compressed */
@@ -231,7 +273,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    RsLargeAddressCheck  *  * PARAMETERS:  Minimum             - Address Min value  *              Maximum             - Address Max value  *              Length              - Address range value  *              Granularity         - Address granularity value  *              Flags               - General flags for address descriptors:  *                                    _MIF, _MAF, _DEC  *              MinOp               - Original Op for Address Min  *              MaxOp               - Original Op for Address Max  *              LengthOp            - Original Op for address range  *              GranOp              - Original Op for address granularity  *  * RETURN:      None. Adds error messages to error log if necessary  *  * DESCRIPTION: Perform common value checks for "large" address descriptors.  *              Currently:  *                  WordIo,     WordBusNumber,  WordSpace  *                  DWordIo,    DWordMemory,    DWordSpace  *                  QWordIo,    QWordMemory,    QWordSpace  *                  ExtendedIo, ExtendedMemory, ExtendedSpace  *  * _MIF flag set means that the minimum address is fixed and is not relocatable  * _MAF flag set means that the maximum address is fixed and is not relocatable  * Length of zero means that the record size is variable  *  * This function implements the LEN/MIF/MAF/MIN/MAX/GRA rules within Table 6-40  * of the ACPI 4.0a specification. Added 04/2010.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    RsLargeAddressCheck  *  * PARAMETERS:  Minimum             - Address Min value  *              Maximum             - Address Max value  *              Length              - Address range value  *              Granularity         - Address granularity value  *              Flags               - General flags for address descriptors:  *                                    _MIF, _MAF, _DEC  *              MinOp               - Original Op for Address Min  *              MaxOp               - Original Op for Address Max  *              LengthOp            - Original Op for address range  *              GranOp              - Original Op for address granularity  *              Op                  - Parent Op for entire construct  *  * RETURN:      None. Adds error messages to error log if necessary  *  * DESCRIPTION: Perform common value checks for "large" address descriptors.  *              Currently:  *                  WordIo,     WordBusNumber,  WordSpace  *                  DWordIo,    DWordMemory,    DWordSpace  *                  QWordIo,    QWordMemory,    QWordSpace  *                  ExtendedIo, ExtendedMemory, ExtendedSpace  *  * _MIF flag set means that the minimum address is fixed and is not relocatable  * _MAF flag set means that the maximum address is fixed and is not relocatable  * Length of zero means that the record size is variable  *  * This function implements the LEN/MIF/MAF/MIN/MAX/GRA rules within Table 6-40  * of the ACPI 4.0a specification. Added 04/2010.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -268,6 +310,10 @@ parameter_list|,
 name|ACPI_PARSE_OBJECT
 modifier|*
 name|GranOp
+parameter_list|,
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
 parameter_list|)
 block|{
 if|if
@@ -275,6 +321,47 @@ condition|(
 name|Gbl_NoResourceChecking
 condition|)
 block|{
+return|return;
+block|}
+comment|/*      * Check for a so-called "null descriptor". These are descriptors that are      * created with most fields set to zero. The intent is that the descriptor      * will be updated/completed at runtime via a BufferField.      *      * If the descriptor does NOT have a resource tag, it cannot be referenced      * by a BufferField and we will flag this as an error. Conversely, if      * the descriptor has a resource tag, we will assume that a BufferField      * will be used to dynamically update it, so no error.      *      * A possible enhancement to this check would be to verify that in fact      * a BufferField is created using the resource tag, and perhaps even      * verify that a Store is performed to the BufferField.      */
+if|if
+condition|(
+operator|!
+name|Minimum
+operator|&&
+operator|!
+name|Maximum
+operator|&&
+operator|!
+name|Length
+operator|&&
+operator|!
+name|Granularity
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|Op
+operator|->
+name|Asl
+operator|.
+name|ExternalName
+condition|)
+block|{
+comment|/* No resource tag. Descriptor is fixed and is also illegal */
+name|AslError
+argument_list|(
+name|ASL_ERROR
+argument_list|,
+name|ASL_MSG_NULL_DESCRIPTOR
+argument_list|,
+name|Op
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
 return|return;
 block|}
 comment|/* Basic checks on Min/Max/Length */

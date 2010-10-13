@@ -8,7 +8,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * These interfaces are required in order to compile the ASL compiler under  * Linux or other Unix-like system.  *  * Note: Use #define __APPLE__ for OS X generation.  */
+comment|/*  * These interfaces are required in order to compile the ASL compiler and the  * various ACPICA tools under Linux or other Unix-like system.  *  * Note: Use #define __APPLE__ for OS X generation.  */
 end_comment
 
 begin_include
@@ -163,7 +163,29 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiOsInitialize, AcpiOsTerminate  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Init and terminate.  Nothing to do.  *  *****************************************************************************/
+comment|/* Apple-specific */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__APPLE__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|sem_destroy
+value|sem_close
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsInitialize, AcpiOsTerminate  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Init and terminate. Nothing to do.  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -201,7 +223,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiOsGetRootPointer  *  * PARAMETERS:  None  *  * RETURN:      RSDP physical address  *  * DESCRIPTION: Gets the root pointer (RSDP)  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsGetRootPointer  *  * PARAMETERS:  None  *  * RETURN:      RSDP physical address  *  * DESCRIPTION: Gets the ACPI root pointer (RSDP)  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -221,7 +243,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiOsPredefinedOverride  *  * PARAMETERS:  InitVal     - Initial value of the predefined object  *              NewVal      - The new value for the object  *  * RETURN:      Status, pointer to value.  Null pointer returned if not  *              overriding.  *  * DESCRIPTION: Allow the OS to override predefined names  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsPredefinedOverride  *  * PARAMETERS:  InitVal             - Initial value of the predefined object  *              NewVal              - The new value for the object  *  * RETURN:      Status, pointer to value. Null pointer returned if not  *              overriding.  *  * DESCRIPTION: Allow the OS to override predefined names  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -267,7 +289,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiOsTableOverride  *  * PARAMETERS:  ExistingTable   - Header of current table (probably firmware)  *              NewTable        - Where an entire new table is returned.  *  * RETURN:      Status, pointer to new table.  Null pointer returned if no  *              table is available to override  *  * DESCRIPTION: Return a different version of a table if one is available  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsTableOverride  *  * PARAMETERS:  ExistingTable       - Header of current table (probably  *                                    firmware)  *              NewTable            - Where an entire new table is returned.  *  * RETURN:      Status, pointer to new table. Null pointer returned if no  *              table is available to override  *  * DESCRIPTION: Return a different version of a table if one is available  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -352,7 +374,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiOsPrintf  *  * PARAMETERS:  fmt, ...            Standard printf format  *  * RETURN:      None  *  * DESCRIPTION: Formatted output  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsPrintf  *  * PARAMETERS:  fmt, ...            - Standard printf format  *  * RETURN:      None  *  * DESCRIPTION: Formatted output  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -394,7 +416,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiOsVprintf  *  * PARAMETERS:  fmt                 Standard printf format  *              args                Argument list  *  * RETURN:      None  *  * DESCRIPTION: Formatted output with argument list pointer  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsVprintf  *  * PARAMETERS:  fmt                 - Standard printf format  *              args                - Argument list  *  * RETURN:      None  *  * DESCRIPTION: Formatted output with argument list pointer  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -480,7 +502,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiOsGetLine  *  * PARAMETERS:  fmt                 Standard printf format  *              args                Argument list  *  * RETURN:      Actual bytes read  *  * DESCRIPTION: Formatted input with argument list pointer  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsGetLine  *  * PARAMETERS:  fmt                 - Standard printf format  *              args                - Argument list  *  * RETURN:      Actual bytes read  *  * DESCRIPTION: Formatted input with argument list pointer  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -555,7 +577,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiOsMapMemory  *  * PARAMETERS:  where               Physical address of memory to be mapped  *              length              How much memory to map  *  * RETURN:      Pointer to mapped memory.  Null on error.  *  * DESCRIPTION: Map physical memory into caller's address space  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsMapMemory  *  * PARAMETERS:  where               - Physical address of memory to be mapped  *              length              - How much memory to map  *  * RETURN:      Pointer to mapped memory. Null on error.  *  * DESCRIPTION: Map physical memory into caller's address space  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -585,7 +607,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiOsUnmapMemory  *  * PARAMETERS:  where               Logical address of memory to be unmapped  *              length              How much memory to unmap  *  * RETURN:      None.  *  * DESCRIPTION: Delete a previously created mapping.  Where and Length must  *              correspond to a previous mapping exactly.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsUnmapMemory  *  * PARAMETERS:  where               - Logical address of memory to be unmapped  *              length              - How much memory to unmap  *  * RETURN:      None.  *  * DESCRIPTION: Delete a previously created mapping. Where and Length must  *              correspond to a previous mapping exactly.  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -605,7 +627,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiOsAllocate  *  * PARAMETERS:  Size                Amount to allocate, in bytes  *  * RETURN:      Pointer to the new allocation.  Null on error.  *  * DESCRIPTION: Allocate memory.  Algorithm is dependent on the OS.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsAllocate  *  * PARAMETERS:  Size                - Amount to allocate, in bytes  *  * RETURN:      Pointer to the new allocation. Null on error.  *  * DESCRIPTION: Allocate memory. Algorithm is dependent on the OS.  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -644,7 +666,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiOsFree  *  * PARAMETERS:  mem                 Pointer to previously allocated memory  *  * RETURN:      None.  *  * DESCRIPTION: Free memory allocated via AcpiOsAllocate  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsFree  *  * PARAMETERS:  mem                 - Pointer to previously allocated memory  *  * RETURN:      None.  *  * DESCRIPTION: Free memory allocated via AcpiOsAllocate  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -663,6 +685,109 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_SINGLE_THREADED
+end_ifdef
+
+begin_comment
+comment|/******************************************************************************  *  * FUNCTION:    Semaphore stub functions  *  * DESCRIPTION: Stub functions used for single-thread applications that do  *              not require semaphore synchronization. Full implementations  *              of these functions appear after the stubs.  *  *****************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_STATUS
+name|AcpiOsCreateSemaphore
+parameter_list|(
+name|UINT32
+name|MaxUnits
+parameter_list|,
+name|UINT32
+name|InitialUnits
+parameter_list|,
+name|ACPI_HANDLE
+modifier|*
+name|OutHandle
+parameter_list|)
+block|{
+operator|*
+name|OutHandle
+operator|=
+operator|(
+name|ACPI_HANDLE
+operator|)
+literal|1
+expr_stmt|;
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|ACPI_STATUS
+name|AcpiOsDeleteSemaphore
+parameter_list|(
+name|ACPI_HANDLE
+name|Handle
+parameter_list|)
+block|{
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|ACPI_STATUS
+name|AcpiOsWaitSemaphore
+parameter_list|(
+name|ACPI_HANDLE
+name|Handle
+parameter_list|,
+name|UINT32
+name|Units
+parameter_list|,
+name|UINT16
+name|Timeout
+parameter_list|)
+block|{
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|ACPI_STATUS
+name|AcpiOsSignalSemaphore
+parameter_list|(
+name|ACPI_HANDLE
+name|Handle
+parameter_list|,
+name|UINT32
+name|Units
+parameter_list|)
+block|{
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+block|}
+end_function
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_comment
 comment|/******************************************************************************  *  * FUNCTION:    AcpiOsCreateSemaphore  *  * PARAMETERS:  InitialUnits        - Units to be assigned to the new semaphore  *              OutHandle           - Where a handle will be returned  *  * RETURN:      Status  *  * DESCRIPTION: Create an OS semaphore  *  *****************************************************************************/
@@ -702,14 +827,21 @@ block|}
 ifdef|#
 directive|ifdef
 name|__APPLE__
-name|Sem
-operator|=
-name|sem_open
-argument_list|(
+block|{
+name|char
+modifier|*
+name|SemaphoreName
+init|=
 name|tmpnam
 argument_list|(
 name|NULL
 argument_list|)
+decl_stmt|;
+name|Sem
+operator|=
+name|sem_open
+argument_list|(
+name|SemaphoreName
 argument_list|,
 name|O_EXCL
 operator||
@@ -731,6 +863,13 @@ operator|(
 name|AE_NO_MEMORY
 operator|)
 return|;
+block|}
+name|sem_unlink
+argument_list|(
+name|SemaphoreName
+argument_list|)
+expr_stmt|;
+comment|/* This just deletes the name */
 block|}
 else|#
 directive|else
@@ -1120,6 +1259,15 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ACPI_SINGLE_THREADED */
+end_comment
+
 begin_comment
 comment|/******************************************************************************  *  * FUNCTION:    Spinlock interfaces  *  * DESCRIPTION: Map these interfaces to semaphore interfaces  *  *****************************************************************************/
 end_comment
@@ -1211,7 +1359,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiOsInstallInterruptHandler  *  * PARAMETERS:  InterruptNumber     Level handler should respond to.  *              Isr                 Address of the ACPI interrupt handler  *              ExceptPtr           Where status is returned  *  * RETURN:      Handle to the newly installed handler.  *  * DESCRIPTION: Install an interrupt handler.  Used to install the ACPI  *              OS-independent handler.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsInstallInterruptHandler  *  * PARAMETERS:  InterruptNumber     - Level handler should respond to.  *              Isr                 - Address of the ACPI interrupt handler  *              ExceptPtr           - Where status is returned  *  * RETURN:      Handle to the newly installed handler.  *  * DESCRIPTION: Install an interrupt handler. Used to install the ACPI  *              OS-independent handler.  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -1238,7 +1386,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiOsRemoveInterruptHandler  *  * PARAMETERS:  Handle              Returned when handler was installed  *  * RETURN:      Status  *  * DESCRIPTION: Uninstalls an interrupt handler.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsRemoveInterruptHandler  *  * PARAMETERS:  Handle              - Returned when handler was installed  *  * RETURN:      Status  *  * DESCRIPTION: Uninstalls an interrupt handler.  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -1261,7 +1409,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiOsExecute  *  * PARAMETERS:  Type            - Type of execution  *              Function        - Address of the function to execute  *              Context         - Passed as a parameter to the function  *  * RETURN:      Status.  *  * DESCRIPTION: Execute a new thread  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsExecute  *  * PARAMETERS:  Type                - Type of execution  *              Function            - Address of the function to execute  *              Context             - Passed as a parameter to the function  *  * RETURN:      Status.  *  * DESCRIPTION: Execute a new thread  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -1322,7 +1470,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiOsStall  *  * PARAMETERS:  microseconds        To sleep  *  * RETURN:      Blocks until sleep is completed.  *  * DESCRIPTION: Sleep at microsecond granularity  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsStall  *  * PARAMETERS:  microseconds        - Time to sleep  *  * RETURN:      Blocks until sleep is completed.  *  * DESCRIPTION: Sleep at microsecond granularity  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -1348,7 +1496,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiOsSleep  *  * PARAMETERS:  milliseconds        To sleep  *  * RETURN:      Blocks until sleep is completed.  *  * DESCRIPTION: Sleep at millisecond granularity  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsSleep  *  * PARAMETERS:  milliseconds        - Time to sleep  *  * RETURN:      Blocks until sleep is completed.  *  * DESCRIPTION: Sleep at millisecond granularity  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -1436,7 +1584,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiOsReadPciConfiguration  *  * PARAMETERS:  PciId               Seg/Bus/Dev  *              Register            Device Register  *              Value               Buffer where value is placed  *              Width               Number of bits  *  * RETURN:      Status  *  * DESCRIPTION: Read data from PCI configuration space  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsReadPciConfiguration  *  * PARAMETERS:  PciId               - Seg/Bus/Dev  *              Register            - Device Register  *              Value               - Buffer where value is placed  *              Width               - Number of bits  *  * RETURN:      Status  *  * DESCRIPTION: Read data from PCI configuration space  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -1467,7 +1615,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiOsWritePciConfiguration  *  * PARAMETERS:  PciId               Seg/Bus/Dev  *              Register            Device Register  *              Value               Value to be written  *              Width               Number of bits  *  * RETURN:      Status.  *  * DESCRIPTION: Write data to PCI configuration space  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsWritePciConfiguration  *  * PARAMETERS:  PciId               - Seg/Bus/Dev  *              Register            - Device Register  *              Value               - Value to be written  *              Width               - Number of bits  *  * RETURN:      Status.  *  * DESCRIPTION: Write data to PCI configuration space  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -1497,7 +1645,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiOsReadPort  *  * PARAMETERS:  Address             Address of I/O port/register to read  *              Value               Where value is placed  *              Width               Number of bits  *  * RETURN:      Value read from port  *  * DESCRIPTION: Read data from an I/O port or register  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsReadPort  *  * PARAMETERS:  Address             - Address of I/O port/register to read  *              Value               - Where value is placed  *              Width               - Number of bits  *  * RETURN:      Value read from port  *  * DESCRIPTION: Read data from an I/O port or register  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -1563,7 +1711,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiOsWritePort  *  * PARAMETERS:  Address             Address of I/O port/register to write  *              Value               Value to write  *              Width               Number of bits  *  * RETURN:      None  *  * DESCRIPTION: Write data to an I/O port or register  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsWritePort  *  * PARAMETERS:  Address             - Address of I/O port/register to write  *              Value               - Value to write  *              Width               - Number of bits  *  * RETURN:      None  *  * DESCRIPTION: Write data to an I/O port or register  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -1589,7 +1737,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiOsReadMemory  *  * PARAMETERS:  Address             Physical Memory Address to read  *              Value               Where value is placed  *              Width               Number of bits  *  * RETURN:      Value read from physical memory address  *  * DESCRIPTION: Read data from a physical memory address  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsReadMemory  *  * PARAMETERS:  Address             - Physical Memory Address to read  *              Value               - Where value is placed  *              Width               - Number of bits  *  * RETURN:      Value read from physical memory address  *  * DESCRIPTION: Read data from a physical memory address  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -1643,7 +1791,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiOsWriteMemory  *  * PARAMETERS:  Address             Physical Memory Address to write  *              Value               Value to write  *              Width               Number of bits  *  * RETURN:      None  *  * DESCRIPTION: Write data to a physical memory address  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsWriteMemory  *  * PARAMETERS:  Address             - Physical Memory Address to write  *              Value               - Value to write  *              Width               - Number of bits  *  * RETURN:      None  *  * DESCRIPTION: Write data to a physical memory address  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -1717,7 +1865,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiOsGetThreadId  *  * PARAMETERS:  None  *  * RETURN:      Id of the running thread  *  * DESCRIPTION: Get the Id of the current (running) thread  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsGetThreadId  *  * PARAMETERS:  None  *  * RETURN:      Id of the running thread  *  * DESCRIPTION: Get the ID of the current (running) thread  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -1740,7 +1888,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiOsSignal  *  * PARAMETERS:  Function            ACPI CA signal function code  *              Info                Pointer to function-dependent structure  *  * RETURN:      Status  *  * DESCRIPTION: Miscellaneous functions. Example implementation only.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsSignal  *  * PARAMETERS:  Function            - ACPI CA signal function code  *              Info                - Pointer to function-dependent structure  *  * RETURN:      Status  *  * DESCRIPTION: Miscellaneous functions. Example implementation only.  *  *****************************************************************************/
 end_comment
 
 begin_function

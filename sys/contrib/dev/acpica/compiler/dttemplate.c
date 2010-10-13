@@ -660,16 +660,17 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"/*\n * %s\n"
-argument_list|,
-name|IntelAcpiCA
+literal|"/*\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|" * iASL Compiler/Disassembler version %8.8X\n *\n"
+name|ACPI_COMMON_HEADER
+argument_list|(
+literal|"iASL Compiler/Disassembler"
 argument_list|,
-name|ACPI_CA_VERSION
+literal|" * "
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf

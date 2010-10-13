@@ -151,6 +151,17 @@ block|}
 block|,
 comment|/* Windows Vista SP1 - Added 09/2009 */
 block|{
+literal|"Windows 2006 SP2"
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+name|ACPI_OSI_WIN_VISTA_SP2
+block|}
+block|,
+comment|/* Windows Vista SP2 - Added 09/2010 */
+block|{
 literal|"Windows 2009"
 block|,
 name|NULL

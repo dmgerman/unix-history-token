@@ -25,6 +25,12 @@ directive|include
 file|<contrib/dev/acpica/compiler/aslcompiler.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/include/acapps.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -103,6 +109,10 @@ name|Prefix
 init|=
 literal|""
 decl_stmt|;
+name|char
+modifier|*
+name|UtilityName
+decl_stmt|;
 comment|/* Set line prefix depending on the destination file type */
 switch|switch
 condition|(
@@ -179,71 +189,44 @@ default|default:
 comment|/* No other output types supported */
 break|break;
 block|}
-comment|/*      * Compiler signon with copyright      */
-name|FlPrintFile
-argument_list|(
-name|FileId
-argument_list|,
-literal|"%s\n%s%s\n%s"
-argument_list|,
-name|Prefix
-argument_list|,
-name|Prefix
-argument_list|,
-name|IntelAcpiCA
-argument_list|,
-name|Prefix
-argument_list|)
-expr_stmt|;
 comment|/* Running compiler or disassembler? */
 if|if
 condition|(
 name|Gbl_DisasmFlag
 condition|)
 block|{
-name|FlPrintFile
-argument_list|(
-name|FileId
-argument_list|,
-literal|"%s"
-argument_list|,
-name|DisassemblerId
-argument_list|)
+name|UtilityName
+operator|=
+name|AML_DISASSEMBLER_NAME
 expr_stmt|;
 block|}
 else|else
 block|{
-name|FlPrintFile
-argument_list|(
-name|FileId
-argument_list|,
-literal|"%s"
-argument_list|,
-name|CompilerId
-argument_list|)
+name|UtilityName
+operator|=
+name|ASL_COMPILER_NAME
 expr_stmt|;
 block|}
-comment|/* Version, copyright, compliance */
+comment|/* Compiler signon with copyright */
 name|FlPrintFile
 argument_list|(
 name|FileId
 argument_list|,
-literal|" version %X\n%s%s\n%s%s\n%s\n"
-argument_list|,
-operator|(
-name|UINT32
-operator|)
-name|ACPI_CA_VERSION
+literal|"%s\n"
 argument_list|,
 name|Prefix
+argument_list|)
+expr_stmt|;
+name|FlPrintFile
+argument_list|(
+name|FileId
 argument_list|,
-name|CompilerCopyright
+name|ACPI_COMMON_HEADER
+argument_list|(
+name|UtilityName
 argument_list|,
 name|Prefix
-argument_list|,
-name|CompilerCompliance
-argument_list|,
-name|Prefix
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
