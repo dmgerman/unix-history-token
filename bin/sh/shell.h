@@ -86,6 +86,10 @@ name|pointer
 typedef|;
 end_typedef
 
+begin_comment
+comment|/* STATIC is only for use with functions, not variables.  */
+end_comment
+
 begin_if
 if|#
 directive|if

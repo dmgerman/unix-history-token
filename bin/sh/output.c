@@ -165,7 +165,7 @@ comment|/* error occurred on output */
 end_comment
 
 begin_function_decl
-specifier|static
+name|STATIC
 name|int
 name|doformat_wr
 parameter_list|(
@@ -600,7 +600,7 @@ block|}
 end_function
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|char
 name|out_junk
 index|[
@@ -1143,7 +1143,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|STATIC
 name|int
 name|doformat_wr
 parameter_list|(

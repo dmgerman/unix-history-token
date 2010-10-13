@@ -293,7 +293,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-specifier|static
+name|STATIC
 name|int
 name|getsigaction
 parameter_list|(
@@ -310,7 +310,7 @@ comment|/*  * Map a string to a signal number.  *  * Note: the signal number may
 end_comment
 
 begin_function
-specifier|static
+name|STATIC
 name|int
 name|sigstring_to_signum
 parameter_list|(
@@ -451,7 +451,7 @@ comment|/*  * Print a list of valid signal names.  */
 end_comment
 
 begin_function
-specifier|static
+name|STATIC
 name|void
 name|printsignals
 parameter_list|(
@@ -1376,7 +1376,7 @@ comment|/*  * Return the current setting for sig w/o changing it.  */
 end_comment
 
 begin_function
-specifier|static
+name|STATIC
 name|int
 name|getsigaction
 parameter_list|(

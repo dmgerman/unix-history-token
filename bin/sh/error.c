@@ -165,7 +165,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+name|STATIC
 name|void
 name|exverror
 argument_list|(
@@ -318,7 +318,7 @@ comment|/*  * Exverror is called to raise the error exception.  If the first arg
 end_comment
 
 begin_function
-specifier|static
+name|STATIC
 name|void
 name|exverror
 parameter_list|(

@@ -265,7 +265,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|struct
 name|tblentry
 modifier|*
@@ -277,7 +277,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|int
 name|builtinloc
 init|=
@@ -2739,7 +2739,7 @@ comment|/*  * Locate a command in the command hash table.  If "add" is nonzero, 
 end_comment
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|struct
 name|tblentry
 modifier|*

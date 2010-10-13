@@ -236,7 +236,7 @@ comment|/* set if we are skipping commands */
 end_comment
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|int
 name|skipcount
 decl_stmt|;
@@ -268,7 +268,7 @@ comment|/* depth of function calls */
 end_comment
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|int
 name|builtin_flags
 decl_stmt|;

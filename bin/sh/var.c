@@ -309,21 +309,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|struct
 name|var
 name|voptind
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-name|STATIC
+begin_decl_stmt
+specifier|static
 specifier|const
-expr|struct
+name|struct
 name|varinit
 name|varinit
 index|[]
-operator|=
+init|=
 block|{
 ifndef|#
 directive|ifndef
@@ -457,11 +457,11 @@ block|,
 name|NULL
 block|}
 block|}
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|struct
 name|var
 modifier|*
@@ -473,7 +473,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -502,7 +502,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 specifier|const
 name|int
 name|locale_categories
@@ -1292,7 +1292,7 @@ comment|/*  * Sets/unsets an environment variable from a pointer that may actual
 end_comment
 
 begin_function
-specifier|static
+name|STATIC
 name|void
 name|change_env
 parameter_list|(
@@ -2595,7 +2595,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|STATIC
 name|int
 name|var_compare
 parameter_list|(

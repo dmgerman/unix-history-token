@@ -234,7 +234,7 @@ file|"mystring.h"
 end_include
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|struct
 name|job
 modifier|*
@@ -247,7 +247,7 @@ comment|/* array of jobs */
 end_comment
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|int
 name|njobs
 decl_stmt|;
@@ -293,7 +293,7 @@ name|JOBS
 end_if
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|struct
 name|job
 modifier|*
@@ -306,7 +306,7 @@ comment|/* most recently used job list */
 end_comment
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|pid_t
 name|initialpgrp
 decl_stmt|;
@@ -5642,7 +5642,7 @@ comment|/*  * Return a string identifying a command (to be printed by the  * job
 end_comment
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|char
 modifier|*
 name|cmdnextc
@@ -5650,7 +5650,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|int
 name|cmdnleft
 decl_stmt|;

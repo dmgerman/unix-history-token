@@ -247,7 +247,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|char
 modifier|*
 name|expdest
@@ -259,7 +259,7 @@ comment|/* output of current string */
 end_comment
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|struct
 name|nodelist
 modifier|*
@@ -272,7 +272,7 @@ comment|/* list of back quote expressions */
 end_comment
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|struct
 name|ifsregion
 name|ifsfirst
@@ -284,7 +284,7 @@ comment|/* first struct in list of ifs regions */
 end_comment
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|struct
 name|ifsregion
 modifier|*
@@ -297,7 +297,7 @@ comment|/* last struct in list */
 end_comment
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|struct
 name|arglist
 name|exparg
@@ -4894,7 +4894,7 @@ block|}
 end_function
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|char
 name|expdir
 index|[

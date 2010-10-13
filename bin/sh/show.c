@@ -111,7 +111,7 @@ name|DEBUG
 end_ifdef
 
 begin_function_decl
-specifier|static
+name|STATIC
 name|void
 name|shtree
 parameter_list|(
@@ -131,7 +131,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
+name|STATIC
 name|void
 name|shcmd
 parameter_list|(
@@ -146,7 +146,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
+name|STATIC
 name|void
 name|sharg
 parameter_list|(
@@ -161,7 +161,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
+name|STATIC
 name|void
 name|indent
 parameter_list|(
@@ -177,7 +177,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
+name|STATIC
 name|void
 name|trstring
 parameter_list|(
@@ -217,7 +217,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|STATIC
 name|void
 name|shtree
 parameter_list|(
@@ -467,7 +467,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|STATIC
 name|void
 name|shcmd
 parameter_list|(
@@ -846,7 +846,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|STATIC
 name|void
 name|sharg
 parameter_list|(
@@ -1213,7 +1213,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|STATIC
 name|void
 name|indent
 parameter_list|(
@@ -1464,7 +1464,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|STATIC
 name|void
 name|trstring
 parameter_list|(

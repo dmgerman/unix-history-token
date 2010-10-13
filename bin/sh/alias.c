@@ -104,7 +104,7 @@ value|39
 end_define
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|struct
 name|alias
 modifier|*
@@ -116,7 +116,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|int
 name|aliases
 decl_stmt|;
@@ -708,7 +708,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|STATIC
 name|int
 name|comparealiases
 parameter_list|(
@@ -765,7 +765,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|STATIC
 name|void
 name|printalias
 parameter_list|(
@@ -831,7 +831,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|STATIC
 name|void
 name|printaliases
 parameter_list|(

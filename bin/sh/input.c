@@ -334,7 +334,7 @@ comment|/* buffer for top level input file */
 end_comment
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|struct
 name|parsefile
 modifier|*
@@ -393,7 +393,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
+name|STATIC
 name|int
 name|preadfd
 parameter_list|(
@@ -587,7 +587,7 @@ block|}
 end_function
 
 begin_function
-specifier|static
+name|STATIC
 name|int
 name|preadfd
 parameter_list|(
