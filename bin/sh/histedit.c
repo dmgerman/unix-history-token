@@ -1737,8 +1737,10 @@ name|dest
 argument_list|)
 expr_stmt|;
 block|}
-name|STACKSTRNUL
+name|STPUTC
 argument_list|(
+literal|'\0'
+argument_list|,
 name|dest
 argument_list|)
 expr_stmt|;
