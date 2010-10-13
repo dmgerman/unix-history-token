@@ -1019,6 +1019,9 @@ name|kbd
 operator|->
 name|kb_unit
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|kbdd_ioctl
 argument_list|(
 name|mux
@@ -1121,6 +1124,9 @@ name|kbd
 operator|->
 name|kb_unit
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|kbdd_ioctl
 argument_list|(
 name|mux
@@ -5787,7 +5793,7 @@ parameter_list|,
 name|l
 parameter_list|)
 define|\
-value|if (!((s)& l ## DOWN)) {				\ 		int i;						\ 		(s) |= l ## DOWN;				\ 		(s) ^= l ## ED;					\ 		i = (s)& LOCK_MASK;				\ 		kbdd_ioctl((k), KDSETLED, (caddr_t)&i);		\ 	}
+value|if (!((s)& l ## DOWN)) {				\ 		int i;						\ 		(s) |= l ## DOWN;				\ 		(s) ^= l ## ED;					\ 		i = (s)& LOCK_MASK;				\ 		(void)kbdd_ioctl((k), KDSETLED, (caddr_t)&i);	\ 	}
 end_define
 
 begin_function
@@ -6520,6 +6526,9 @@ name|state
 operator|&
 name|LOCK_MASK
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|kbdd_ioctl
 argument_list|(
 name|kbd
@@ -6700,6 +6709,9 @@ name|state
 operator|&
 name|LOCK_MASK
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|kbdd_ioctl
 argument_list|(
 name|kbd

@@ -2867,6 +2867,9 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* set up the keyboard */
+operator|(
+name|void
+operator|)
 name|kbdd_ioctl
 argument_list|(
 name|sc
@@ -3407,6 +3410,9 @@ name|keynum
 operator|=
 name|KEYCODE_BS
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|kbdd_ioctl
 argument_list|(
 name|sc
@@ -3791,6 +3797,9 @@ name|sc
 operator|->
 name|cur_scp
 condition|)
+operator|(
+name|void
+operator|)
 name|kbdd_ioctl
 argument_list|(
 name|scp
@@ -7091,6 +7100,9 @@ name|sc
 operator|->
 name|cur_scp
 condition|)
+operator|(
+name|void
+operator|)
 name|kbdd_ioctl
 argument_list|(
 name|sc
@@ -7761,6 +7773,9 @@ name|keyboard
 operator|=
 name|i
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|kbdd_ioctl
 argument_list|(
 name|sc
@@ -9189,6 +9204,9 @@ name|kbd_mode
 operator|=
 name|K_XLATE
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|kbdd_ioctl
 argument_list|(
 name|scp
@@ -9249,6 +9267,9 @@ name|kbd_mode
 operator|=
 name|cur_mode
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|kbdd_ioctl
 argument_list|(
 name|scp
@@ -9792,6 +9813,9 @@ operator|->
 name|keyboard
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|kbdd_ioctl
 argument_list|(
 name|sc
@@ -13685,6 +13709,9 @@ name|scp
 operator|->
 name|kbd_mode
 condition|)
+operator|(
+name|void
+operator|)
 name|kbdd_ioctl
 argument_list|(
 name|sc
@@ -18098,6 +18125,9 @@ break|break;
 case|case
 name|SLK
 case|:
+operator|(
+name|void
+operator|)
 name|kbdd_ioctl
 argument_list|(
 name|sc
@@ -20251,6 +20281,9 @@ name|k
 operator|->
 name|kb_unit
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|kbdd_ioctl
 argument_list|(
 name|k0
