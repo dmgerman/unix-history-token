@@ -5963,8 +5963,6 @@ operator|*
 operator|)
 name|data
 argument_list|)
-operator|&&
-name|PP_FR
 condition|)
 block|{
 name|d
