@@ -2660,6 +2660,8 @@ break|break;
 default|default:
 name|panic
 argument_list|(
+literal|"%s"
+argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;

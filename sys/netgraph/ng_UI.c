@@ -743,6 +743,8 @@ block|}
 else|else
 name|panic
 argument_list|(
+literal|"%s"
+argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
@@ -878,6 +880,8 @@ expr_stmt|;
 else|else
 name|panic
 argument_list|(
+literal|"%s"
+argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
