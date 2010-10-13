@@ -44,13 +44,6 @@ begin_struct
 struct|struct
 name|task
 block|{
-name|struct
-name|task
-modifier|*
-modifier|*
-name|ta_running
-decl_stmt|;
-comment|/* (q) queue's running task pointer */
 name|STAILQ_ENTRY
 argument_list|(
 argument|task
