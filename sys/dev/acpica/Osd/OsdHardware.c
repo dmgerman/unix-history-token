@@ -348,6 +348,7 @@ end_comment
 begin_function
 specifier|static
 name|int
+name|__unused
 name|acpi_bus_number
 parameter_list|(
 name|ACPI_HANDLE
