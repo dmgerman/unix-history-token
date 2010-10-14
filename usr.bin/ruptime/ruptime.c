@@ -1358,7 +1358,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%-12.12s%s\n"
+literal|"%-25.25s%s\n"
 argument_list|,
 name|hsp
 operator|->
@@ -1387,7 +1387,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%-12.12s%s,  %4d user%s  load %*.2f, %*.2f, %*.2f\n"
+literal|"%-25.25s%s,  %4d user%s  load %*.2f, %*.2f, %*.2f\n"
 argument_list|,
 name|hsp
 operator|->
