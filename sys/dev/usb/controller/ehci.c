@@ -14911,7 +14911,7 @@ goto|;
 block|}
 name|v
 operator|=
-name|EOREAD4
+name|EREAD4
 argument_list|(
 name|sc
 argument_list|,
