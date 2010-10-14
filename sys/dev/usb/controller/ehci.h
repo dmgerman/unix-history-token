@@ -1313,6 +1313,10 @@ name|pframes_pc
 decl_stmt|;
 name|struct
 name|usb_page_cache
+name|terminate_pc
+decl_stmt|;
+name|struct
+name|usb_page_cache
 name|async_start_pc
 decl_stmt|;
 name|struct
@@ -1339,6 +1343,10 @@ decl_stmt|;
 name|struct
 name|usb_page
 name|pframes_pg
+decl_stmt|;
+name|struct
+name|usb_page
+name|terminate_pg
 decl_stmt|;
 name|struct
 name|usb_page
@@ -1502,6 +1510,10 @@ decl_stmt|;
 name|bus_space_handle_t
 name|sc_io_hdl
 decl_stmt|;
+name|uint32_t
+name|sc_terminate_self
+decl_stmt|;
+comment|/* TD short packet termination pointer */
 name|uint32_t
 name|sc_eintrs
 decl_stmt|;
