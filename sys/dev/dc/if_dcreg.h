@@ -3914,6 +3914,12 @@ decl_stmt|;
 name|u_int32_t
 name|dc_txthresh
 decl_stmt|;
+name|u_int32_t
+name|dc_eaddr
+index|[
+literal|2
+index|]
+decl_stmt|;
 name|u_int8_t
 modifier|*
 name|dc_srom
