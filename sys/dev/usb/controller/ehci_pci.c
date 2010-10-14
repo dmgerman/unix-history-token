@@ -296,13 +296,6 @@ name|PCI_EHCI_VENDORID_VIA
 value|0x1106
 end_define
 
-begin_define
-define|#
-directive|define
-name|PCI_EHCI_BASE_REG
-value|0x10
-end_define
-
 begin_function_decl
 specifier|static
 name|void

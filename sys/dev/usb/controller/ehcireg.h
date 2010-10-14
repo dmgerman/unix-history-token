@@ -180,8 +180,15 @@ begin_comment
 comment|/* RO Capability register length field */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|EHCI_RESERVED
+value|0x01
+end_define
+
 begin_comment
-comment|/* reserved			0x01 */
+comment|/* Reserved register */
 end_comment
 
 begin_define
