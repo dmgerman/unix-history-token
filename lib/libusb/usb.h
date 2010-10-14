@@ -1207,6 +1207,14 @@ modifier|*
 name|dev
 parameter_list|)
 function_decl|;
+name|int
+name|usb_check_connected
+parameter_list|(
+name|usb_dev_handle
+modifier|*
+name|dev
+parameter_list|)
+function_decl|;
 specifier|const
 name|char
 modifier|*
