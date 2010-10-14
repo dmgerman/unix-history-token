@@ -615,6 +615,9 @@ literal|0
 init|;
 name|i
 operator|!=
+operator|(
+name|int
+operator|)
 name|nfds
 condition|;
 name|i
@@ -666,6 +669,9 @@ literal|0
 init|;
 name|i
 operator|!=
+operator|(
+name|int
+operator|)
 name|nfds
 condition|;
 name|i
