@@ -2019,6 +2019,21 @@ operator|->
 name|pc_impl
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Clear (S)TICK timer(s) (including NPT) and ensure they are stopped. 	 */
+name|tick_clear
+argument_list|(
+name|pc
+operator|->
+name|pc_impl
+argument_list|)
+expr_stmt|;
+name|tick_stop
+argument_list|(
+name|pc
+operator|->
+name|pc_impl
+argument_list|)
+expr_stmt|;
 comment|/* Lock the kernel TSB in the TLB. */
 name|pmap_map_tsb
 argument_list|()
@@ -2033,7 +2048,7 @@ argument_list|(
 name|pc
 argument_list|)
 expr_stmt|;
-comment|/* Enable interrupts. */
+comment|/* 	 * Enable interrupts. 	 * Note that the PIL we be lowered indirectly via sched_throw(NULL) 	 * when fake spinlock held by the idle thread eventually is released. 	 */
 name|wrpr
 argument_list|(
 name|pstate
