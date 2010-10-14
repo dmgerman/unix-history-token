@@ -301,7 +301,7 @@ begin_define
 define|#
 directive|define
 name|MIIF_INITDONE
-value|0x0001
+value|0x00000001
 end_define
 
 begin_comment
@@ -312,7 +312,7 @@ begin_define
 define|#
 directive|define
 name|MIIF_NOISOLATE
-value|0x0002
+value|0x00000002
 end_define
 
 begin_comment
@@ -323,7 +323,7 @@ begin_define
 define|#
 directive|define
 name|MIIF_NOLOOP
-value|0x0004
+value|0x00000004
 end_define
 
 begin_comment
@@ -334,7 +334,7 @@ begin_define
 define|#
 directive|define
 name|MIIF_AUTOTSLEEP
-value|0x0010
+value|0x00000010
 end_define
 
 begin_comment
@@ -345,7 +345,7 @@ begin_define
 define|#
 directive|define
 name|MIIF_HAVEFIBER
-value|0x0020
+value|0x00000020
 end_define
 
 begin_comment
@@ -356,7 +356,7 @@ begin_define
 define|#
 directive|define
 name|MIIF_HAVE_GTCR
-value|0x0040
+value|0x00000040
 end_define
 
 begin_comment
@@ -367,7 +367,7 @@ begin_define
 define|#
 directive|define
 name|MIIF_IS_1000X
-value|0x0080
+value|0x00000080
 end_define
 
 begin_comment
@@ -378,7 +378,7 @@ begin_define
 define|#
 directive|define
 name|MIIF_DOPAUSE
-value|0x0100
+value|0x00000100
 end_define
 
 begin_comment
@@ -389,7 +389,7 @@ begin_define
 define|#
 directive|define
 name|MIIF_IS_HPNA
-value|0x0200
+value|0x00000200
 end_define
 
 begin_comment
@@ -400,11 +400,77 @@ begin_define
 define|#
 directive|define
 name|MIIF_FORCEANEG
-value|0x0400
+value|0x00000400
 end_define
 
 begin_comment
 comment|/* force auto-negotiation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIIF_MACPRIV0
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* private to the MAC driver */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIIF_MACPRIV1
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* private to the MAC driver */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIIF_MACPRIV2
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* private to the MAC driver */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIIF_PHYPRIV0
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* private to the PHY driver */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIIF_PHYPRIV1
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* private to the PHY driver */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIIF_PHYPRIV2
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* private to the PHY driver */
 end_comment
 
 begin_comment
@@ -430,6 +496,24 @@ define|#
 directive|define
 name|MIIF_INHERIT_MASK
 value|(MIIF_NOISOLATE|MIIF_NOLOOP|MIIF_AUTOTSLEEP)
+end_define
+
+begin_comment
+comment|/*  * Special `locators' passed to mii_attach().  If one of these is not  * an `any' value, we look for *that* PHY and configure it.  If both  * are not `any', that is an error, and mii_attach() will panic.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MII_OFFSET_ANY
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MII_PHY_ANY
+value|-1
 end_define
 
 begin_comment
@@ -654,6 +738,45 @@ define|\
 value|MIIBUS_WRITEREG((p)->mii_dev, (p)->mii_phy, (r), (v))
 end_define
 
+begin_enum
+enum|enum
+name|miibus_device_ivars
+block|{
+name|MIIBUS_IVAR_FLAGS
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/*  * Simplified accessors for miibus  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIIBUS_ACCESSOR
+parameter_list|(
+name|var
+parameter_list|,
+name|ivar
+parameter_list|,
+name|type
+parameter_list|)
+define|\
+value|__BUS_ACCESSOR(miibus, var, MIIBUS, ivar, type)
+end_define
+
+begin_macro
+name|MIIBUS_ACCESSOR
+argument_list|(
+argument|flags
+argument_list|,
+argument|FLAGS
+argument_list|,
+argument|int
+argument_list|)
+end_macro
+
 begin_decl_stmt
 specifier|extern
 name|devclass_t
@@ -691,6 +814,34 @@ name|int
 name|miibus_detach
 parameter_list|(
 name|device_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|mii_attach
+parameter_list|(
+name|device_t
+parameter_list|,
+name|device_t
+modifier|*
+parameter_list|,
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|ifm_change_cb_t
+parameter_list|,
+name|ifm_stat_cb_t
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
