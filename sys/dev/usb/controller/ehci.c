@@ -13772,10 +13772,8 @@ block|,
 operator|.
 name|bInterfaceProtocol
 operator|=
-name|UIPROTO_HSHUBSTT
-block|,
 literal|0
-block|}
+block|, 	}
 block|,
 operator|.
 name|endpd
