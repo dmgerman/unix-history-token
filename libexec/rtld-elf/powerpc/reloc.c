@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/cpufunc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/md_var.h>
 end_include
 
@@ -1982,6 +1988,10 @@ index|]
 operator|=
 name|target
 expr_stmt|;
+name|powerpc_mb
+argument_list|()
+expr_stmt|;
+comment|/* Order jmptab update before next changes */
 if|if
 condition|(
 name|reloff
@@ -2008,15 +2018,7 @@ argument_list|)
 expr_stmt|;
 comment|/* li   r11,reloff */
 comment|/* b    pltcall  # use indirect pltcall routine */
-name|wherep
-index|[
-literal|0
-index|]
-operator|=
-literal|0x39600000
-operator||
-name|reloff
-expr_stmt|;
+comment|/* first instruction same as before */
 name|wherep
 index|[
 literal|1
@@ -2270,13 +2272,16 @@ expr_stmt|;
 comment|/* 	 * Sync the icache for the byte range represented by the 	 * trampoline routines and call slots. 	 */
 name|__syncicache
 argument_list|(
-name|pltcall
+name|obj
+operator|->
+name|pltgot
 argument_list|,
-literal|72
-operator|+
+name|JMPTAB_BASE
+argument_list|(
 name|N
+argument_list|)
 operator|*
-literal|8
+literal|4
 argument_list|)
 expr_stmt|;
 block|}
