@@ -14836,11 +14836,6 @@ index|]
 expr_stmt|;
 name|dinfo
 operator|=
-operator|(
-expr|struct
-name|pci_devinfo
-operator|*
-operator|)
 name|device_get_ivars
 argument_list|(
 name|child
@@ -17236,11 +17231,6 @@ name|pci_cfg_save
 argument_list|(
 name|child
 argument_list|,
-operator|(
-expr|struct
-name|pci_devinfo
-operator|*
-operator|)
 name|device_get_ivars
 argument_list|(
 name|child
@@ -20231,7 +20221,6 @@ argument_list|)
 operator|!=
 name|PCI_POWERSTATE_D0
 condition|)
-block|{
 name|pci_set_powerstate
 argument_list|(
 name|dev
@@ -20239,7 +20228,6 @@ argument_list|,
 name|PCI_POWERSTATE_D0
 argument_list|)
 expr_stmt|;
-block|}
 for|for
 control|(
 name|i
