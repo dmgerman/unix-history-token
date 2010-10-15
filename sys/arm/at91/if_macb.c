@@ -223,12 +223,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<arm/at91/at91_pio_sam9.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<arm/at91/at91sam9g20reg.h>
 end_include
 
@@ -6424,9 +6418,9 @@ argument_list|(
 name|IFT_ETHER
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|mii_phy_probe
+name|err
+operator|=
+name|mii_attach
 argument_list|(
 name|dev
 argument_list|,
@@ -6435,22 +6429,34 @@ name|sc
 operator|->
 name|miibus
 argument_list|,
+name|ifp
+argument_list|,
 name|macb_ifmedia_upd
 argument_list|,
 name|macb_ifmedia_sts
+argument_list|,
+name|BMSR_DEFCAPMASK
+argument_list|,
+name|MII_PHY_ANY
+argument_list|,
+name|MII_OFFSET_ANY
+argument_list|,
+literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+operator|!=
+literal|0
 condition|)
 block|{
 name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Cannot find my PHY.\n"
+literal|"attaching PHYs failed\n"
 argument_list|)
-expr_stmt|;
-name|err
-operator|=
-name|ENXIO
 expr_stmt|;
 goto|goto
 name|out

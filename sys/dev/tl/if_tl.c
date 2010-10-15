@@ -5058,10 +5058,10 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Do MII setup. If no PHYs are found, then this is a 	 * bitrate ThunderLAN chip that only supports 10baseT 	 * and AUI/BNC. 	 */
+comment|/* 	 * Do MII setup. If no PHYs are found, then this is a 	 * bitrate ThunderLAN chip that only supports 10baseT 	 * and AUI/BNC. 	 * XXX mii_attach() can fail for reason different than 	 * no PHYs found! 	 */
 if|if
 condition|(
-name|mii_phy_probe
+name|mii_attach
 argument_list|(
 name|dev
 argument_list|,
@@ -5070,9 +5070,19 @@ name|sc
 operator|->
 name|tl_miibus
 argument_list|,
+name|ifp
+argument_list|,
 name|tl_ifmedia_upd
 argument_list|,
 name|tl_ifmedia_sts
+argument_list|,
+name|BMSR_DEFCAPMASK
+argument_list|,
+name|MII_PHY_ANY
+argument_list|,
+name|MII_OFFSET_ANY
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 block|{

@@ -5745,10 +5745,10 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* MII child bus by probing the PHY. */
-if|if
-condition|(
-name|mii_phy_probe
+comment|/* MII child bus by attaching the PHY. */
+name|rc
+operator|=
+name|mii_attach
 argument_list|(
 name|dev
 argument_list|,
@@ -5757,24 +5757,38 @@ name|sc
 operator|->
 name|bce_miibus
 argument_list|,
+name|ifp
+argument_list|,
 name|bce_ifmedia_upd
 argument_list|,
 name|bce_ifmedia_sts
+argument_list|,
+name|BMSR_DEFCAPMASK
+argument_list|,
+name|sc
+operator|->
+name|bce_phy_addr
+argument_list|,
+name|MII_OFFSET_ANY
+argument_list|,
+literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rc
+operator|!=
+literal|0
 condition|)
 block|{
 name|BCE_PRINTF
 argument_list|(
-literal|"%s(%d): No PHY found on child MII bus!\n"
+literal|"%s(%d): attaching PHYs failed\n"
 argument_list|,
 name|__FILE__
 argument_list|,
 name|__LINE__
 argument_list|)
-expr_stmt|;
-name|rc
-operator|=
-name|ENXIO
 expr_stmt|;
 goto|goto
 name|bce_attach_fail
