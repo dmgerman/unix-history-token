@@ -923,6 +923,15 @@ expr_stmt|;
 comment|/* Initialize mii_softc structure */
 name|sc
 operator|->
+name|mii_flags
+operator|=
+name|miibus_get_flags
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
 name|mii_inst
 operator|=
 name|mii

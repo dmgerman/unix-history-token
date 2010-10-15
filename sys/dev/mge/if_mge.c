@@ -3609,6 +3609,8 @@ name|int
 name|i
 decl_stmt|,
 name|error
+decl_stmt|,
+name|phy
 decl_stmt|;
 name|sc
 operator|=
@@ -3661,9 +3663,7 @@ operator|->
 name|node
 argument_list|,
 operator|&
-name|sc
-operator|->
-name|phyaddr
+name|phy
 argument_list|)
 operator|!=
 literal|0
@@ -3987,10 +3987,10 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Probe PHY(s) */
+comment|/* Attach PHY(s) */
 name|error
 operator|=
-name|mii_phy_probe
+name|mii_attach
 argument_list|(
 name|dev
 argument_list|,
@@ -3999,9 +3999,19 @@ name|sc
 operator|->
 name|miibus
 argument_list|,
+name|ifp
+argument_list|,
 name|mge_ifmedia_upd
 argument_list|,
 name|mge_ifmedia_sts
+argument_list|,
+name|BMSR_DEFCAPMASK
+argument_list|,
+name|phy
+argument_list|,
+name|MII_OFFSET_ANY
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -4013,7 +4023,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"MII failed to find PHY\n"
+literal|"attaching PHYs failed\n"
 argument_list|)
 expr_stmt|;
 name|mge_detach
@@ -6515,19 +6525,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|phyaddr
-operator|!=
-name|phy
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 name|MGE_WRITE
 argument_list|(
 name|sc_mge0
@@ -6640,19 +6637,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|phyaddr
-operator|!=
-name|phy
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 name|MGE_WRITE
 argument_list|(
 name|sc_mge0

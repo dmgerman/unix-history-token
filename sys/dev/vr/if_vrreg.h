@@ -3809,9 +3809,6 @@ name|VR_F_RESTART
 value|0x01
 comment|/* Restart unit on next tick */
 name|int
-name|vr_phyaddr
-decl_stmt|;
-name|int
 name|vr_if_flags
 decl_stmt|;
 name|struct

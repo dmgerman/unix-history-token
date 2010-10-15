@@ -1562,10 +1562,10 @@ name|IFCAP_POLLING
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Probe PHY(s) */
+comment|/* Attach PHY(s) */
 name|error
 operator|=
-name|mii_phy_probe
+name|mii_attach
 argument_list|(
 name|sc
 operator|->
@@ -1576,9 +1576,21 @@ name|sc
 operator|->
 name|tsec_miibus
 argument_list|,
+name|ifp
+argument_list|,
 name|tsec_ifmedia_upd
 argument_list|,
 name|tsec_ifmedia_sts
+argument_list|,
+name|BMSR_DEFCAPMASK
+argument_list|,
+name|sc
+operator|->
+name|phyaddr
+argument_list|,
+name|MII_OFFSET_ANY
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1592,7 +1604,7 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"MII failed to find PHY!\n"
+literal|"attaching PHYs failed\n"
 argument_list|)
 expr_stmt|;
 name|if_free
@@ -6933,26 +6945,6 @@ name|timeout
 decl_stmt|;
 name|sc
 operator|=
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|phyaddr
-operator|!=
-name|phy
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-name|sc
-operator|=
 name|tsec0_sc
 expr_stmt|;
 name|TSEC_WRITE
@@ -7066,26 +7058,6 @@ decl_stmt|;
 name|uint32_t
 name|timeout
 decl_stmt|;
-name|sc
-operator|=
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|phyaddr
-operator|!=
-name|phy
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 name|sc
 operator|=
 name|tsec0_sc

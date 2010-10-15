@@ -264,9 +264,6 @@ decl_stmt|;
 name|int
 name|mge_ver
 decl_stmt|;
-name|int
-name|phyaddr
-decl_stmt|;
 block|}
 struct|;
 end_struct

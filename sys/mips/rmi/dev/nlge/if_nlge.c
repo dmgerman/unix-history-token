@@ -4163,12 +4163,6 @@ if|if
 condition|(
 name|sc
 operator|->
-name|phy_addr
-operator|==
-name|phyaddr
-operator|&&
-name|sc
-operator|->
 name|port_type
 operator|!=
 name|XLR_XGMII
@@ -4229,12 +4223,6 @@ expr_stmt|;
 name|val
 operator|=
 operator|(
-name|sc
-operator|->
-name|phy_addr
-operator|!=
-name|phyaddr
-operator|&&
 name|sc
 operator|->
 name|port_type
@@ -9513,7 +9501,7 @@ expr_stmt|;
 block|}
 name|error
 operator|=
-name|mii_phy_probe
+name|mii_attach
 argument_list|(
 name|dev
 argument_list|,
@@ -9522,9 +9510,23 @@ name|sc
 operator|->
 name|mii_bus
 argument_list|,
+name|sc
+operator|->
+name|nlge_if
+argument_list|,
 name|nlge_mediachange
 argument_list|,
 name|nlge_mediastatus
+argument_list|,
+name|BMSR_DEFCAPMASK
+argument_list|,
+name|sc
+operator|->
+name|phy_addr
+argument_list|,
+name|MII_OFFSET_ANY
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -9536,7 +9538,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"no PHY device found\n"
+literal|"attaching PHYs failed\n"
 argument_list|)
 expr_stmt|;
 name|sc

@@ -2165,13 +2165,6 @@ condition|)
 goto|goto
 name|fail
 goto|;
-comment|/* Set default PHY address. */
-name|sc
-operator|->
-name|phyaddr
-operator|=
-name|AE_PHYADDR_DEFAULT
-expr_stmt|;
 name|ifp
 operator|=
 name|sc
@@ -2337,7 +2330,7 @@ expr_stmt|;
 comment|/* 	 * Configure and attach MII bus. 	 */
 name|error
 operator|=
-name|mii_phy_probe
+name|mii_attach
 argument_list|(
 name|dev
 argument_list|,
@@ -2346,9 +2339,19 @@ name|sc
 operator|->
 name|miibus
 argument_list|,
+name|ifp
+argument_list|,
 name|ae_mediachange
 argument_list|,
 name|ae_mediastatus
+argument_list|,
+name|BMSR_DEFCAPMASK
+argument_list|,
+name|AE_PHYADDR_DEFAULT
+argument_list|,
+name|MII_OFFSET_ANY
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2362,7 +2365,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"no PHY found.\n"
+literal|"attaching PHYs failed\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -4295,19 +4298,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Locking is done in upper layers. 	 */
-if|if
-condition|(
-name|phy
-operator|!=
-name|sc
-operator|->
-name|phyaddr
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 name|val
 operator|=
 operator|(
@@ -4477,19 +4467,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Locking is done in upper layers. 	 */
-if|if
-condition|(
-name|phy
-operator|!=
-name|sc
-operator|->
-name|phyaddr
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 name|aereg
 operator|=
 operator|(

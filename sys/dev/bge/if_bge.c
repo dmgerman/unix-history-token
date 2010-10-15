@@ -4165,20 +4165,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* Prevent the probe from finding incorrect devices. */
-if|if
-condition|(
-name|phy
-operator|!=
-name|sc
-operator|->
-name|bge_phy_addr
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 comment|/* Clear the autopoll bit if set, otherwise may trigger PCI errors. */
 if|if
 condition|(
@@ -12970,6 +12956,8 @@ name|error
 decl_stmt|,
 name|msicount
 decl_stmt|,
+name|phy_addr
+decl_stmt|,
 name|reg
 decl_stmt|,
 name|rid
@@ -13121,9 +13109,7 @@ name|bge_chipid
 argument_list|)
 expr_stmt|;
 comment|/* Set default PHY address. */
-name|sc
-operator|->
-name|bge_phy_addr
+name|phy_addr
 operator|=
 literal|1
 expr_stmt|;
@@ -14697,9 +14683,10 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|mii_phy_probe
+name|error
+operator|=
+operator|(
+name|mii_attach
 argument_list|(
 name|dev
 argument_list|,
@@ -14708,10 +14695,27 @@ name|sc
 operator|->
 name|bge_miibus
 argument_list|,
+name|ifp
+argument_list|,
 name|bge_ifmedia_upd
 argument_list|,
 name|bge_ifmedia_sts
+argument_list|,
+name|BMSR_DEFCAPMASK
+argument_list|,
+name|phy_addr
+argument_list|,
+name|MII_OFFSET_ANY
+argument_list|,
+literal|0
 argument_list|)
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
 condition|)
 block|{
 if|if
@@ -14754,12 +14758,8 @@ name|sc
 operator|->
 name|bge_dev
 argument_list|,
-literal|"MII without any PHY!\n"
+literal|"attaching PHYs failed\n"
 argument_list|)
-expr_stmt|;
-name|error
-operator|=
-name|ENXIO
 expr_stmt|;
 goto|goto
 name|fail

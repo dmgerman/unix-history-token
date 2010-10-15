@@ -669,7 +669,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|mii_phy_probe
+name|mii_attach
 argument_list|(
 name|dev
 argument_list|,
@@ -678,9 +678,21 @@ name|priv
 operator|->
 name|miibus
 argument_list|,
+name|ifp
+argument_list|,
 name|octe_mii_medchange
 argument_list|,
 name|octe_mii_medstat
+argument_list|,
+name|BMSR_DEFCAPMASK
+argument_list|,
+name|priv
+operator|->
+name|phy_id
+argument_list|,
+name|MII_OFFSET_ANY
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -693,11 +705,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"missing phy %u\n"
-argument_list|,
-name|priv
-operator|->
-name|phy_id
+literal|"attaching PHYs failed\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1077,19 +1085,25 @@ argument_list|)
 operator|)
 return|;
 comment|/* 	 * Try generic MII routine. 	 */
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|phy
-operator|!=
+operator|==
 name|priv
 operator|->
 name|phy_id
-condition|)
-return|return
+argument_list|,
 operator|(
-literal|0
+literal|"read from phy %u but our phy is %u"
+operator|,
+name|phy
+operator|,
+name|priv
+operator|->
+name|phy_id
 operator|)
-return|;
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|cvm_oct_mdio_read
