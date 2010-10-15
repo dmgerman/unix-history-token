@@ -1440,13 +1440,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"Cannot find my PHY.\n"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|err
