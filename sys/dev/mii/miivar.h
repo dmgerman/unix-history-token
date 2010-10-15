@@ -900,22 +900,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|mii_phy_probe
-parameter_list|(
-name|device_t
-parameter_list|,
-name|device_t
-modifier|*
-parameter_list|,
-name|ifm_change_cb_t
-parameter_list|,
-name|ifm_stat_cb_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|mii_add_media
 parameter_list|(
