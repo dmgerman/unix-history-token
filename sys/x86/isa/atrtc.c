@@ -782,8 +782,6 @@ name|s
 decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|diag
 decl_stmt|;
 name|sc
 operator|=
@@ -828,28 +826,6 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"Warning: Couldn't map I/O.\n"
-argument_list|)
-expr_stmt|;
-name|diag
-operator|=
-name|rtcin
-argument_list|(
-name|RTC_DIAG
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|diag
-operator|!=
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|"RTC BIOS diagnostic error %b\n"
-argument_list|,
-name|diag
-argument_list|,
-name|RTCDG_BITS
 argument_list|)
 expr_stmt|;
 name|atrtc_start
