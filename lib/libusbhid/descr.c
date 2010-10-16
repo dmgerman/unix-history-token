@@ -345,7 +345,10 @@ name|ugd
 operator|.
 name|ugd_data
 operator|=
+name|hid_pass_ptr
+argument_list|(
 name|NULL
+argument_list|)
 expr_stmt|;
 name|ugd
 operator|.
@@ -417,7 +420,10 @@ name|ugd
 operator|.
 name|ugd_data
 operator|=
+name|hid_pass_ptr
+argument_list|(
 name|data
+argument_list|)
 expr_stmt|;
 name|ugd
 operator|.
@@ -454,6 +460,28 @@ name|NULL
 operator|)
 return|;
 block|}
+comment|/* sanity check */
+if|if
+condition|(
+name|ugd
+operator|.
+name|ugd_actlen
+operator|<
+literal|1
+condition|)
+block|{
+comment|/* invalid report descriptor */
+name|free
+argument_list|(
+name|data
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 comment|/* check END_COLLECTION */
 if|if
 condition|(
@@ -463,9 +491,7 @@ name|unsigned
 name|char
 operator|*
 operator|)
-name|ugd
-operator|.
-name|ugd_data
+name|data
 operator|)
 index|[
 name|ugd
