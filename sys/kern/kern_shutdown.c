@@ -1904,26 +1904,6 @@ comment|/* assuming reset worked */
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
-begin_decl_stmt
-specifier|static
-name|u_int
-name|panic_cpu
-init|=
-name|NOCPU
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Panic is called on unresolvable fatal errors.  It prints "panic: mesg",  * and then reboots.  If we are called twice, then we avoid trying to sync  * the disks as this often leads to recursive panics.  */
 end_comment
@@ -1940,6 +1920,18 @@ parameter_list|,
 modifier|...
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|SMP
+specifier|static
+specifier|volatile
+name|u_int
+name|panic_cpu
+init|=
+name|NOCPU
+decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|thread
 modifier|*
