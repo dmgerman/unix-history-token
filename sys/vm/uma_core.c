@@ -11164,7 +11164,7 @@ comment|/* See uma.h */
 end_comment
 
 begin_function
-name|void
+name|int
 name|uma_zone_set_max
 parameter_list|(
 name|uma_zone_t
@@ -11225,11 +11225,26 @@ name|keg
 operator|->
 name|uk_ppera
 expr_stmt|;
+name|nitems
+operator|=
+name|keg
+operator|->
+name|uk_maxpages
+operator|*
+name|keg
+operator|->
+name|uk_ipers
+expr_stmt|;
 name|ZONE_UNLOCK
 argument_list|(
 name|zone
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|nitems
+operator|)
+return|;
 block|}
 end_function
 

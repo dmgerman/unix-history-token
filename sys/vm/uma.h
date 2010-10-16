@@ -815,11 +815,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Sets a high limit on the number of items allowed in a zone  *  * Arguments:  *	zone  The zone to limit  *  * Returns:  *	Nothing  */
+comment|/*  * Sets a high limit on the number of items allowed in a zone  *  * Arguments:  *	zone  The zone to limit  *	nitems  The requested upper limit on the number of items allowed  *  * Returns:  *	int  The effective value of nitems after rounding up based on page size  */
 end_comment
 
 begin_function_decl
-name|void
+name|int
 name|uma_zone_set_max
 parameter_list|(
 name|uma_zone_t
