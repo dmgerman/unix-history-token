@@ -19929,7 +19929,7 @@ name|CISS_LDRIVE_RAID1
 case|:
 return|return
 operator|(
-literal|"RAID 1"
+literal|"RAID 1(1+0)"
 operator|)
 return|;
 case|case
