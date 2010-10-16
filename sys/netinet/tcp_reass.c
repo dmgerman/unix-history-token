@@ -242,6 +242,26 @@ begin_comment
 comment|/* TCPDEBUG */
 end_comment
 
+begin_function_decl
+specifier|static
+name|int
+name|tcp_reass_sysctl_maxseg
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|tcp_reass_sysctl_qsize
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
@@ -281,7 +301,7 @@ value|VNET(tcp_reass_maxseg)
 end_define
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_tcp_reass
 argument_list|,
@@ -298,6 +318,11 @@ name|tcp_reass_maxseg
 argument_list|)
 argument_list|,
 literal|0
+argument_list|,
+operator|&
+name|tcp_reass_sysctl_maxseg
+argument_list|,
+literal|"I"
 argument_list|,
 literal|"Global maximum number of TCP Segments in Reassembly Queue"
 argument_list|)
@@ -325,7 +350,7 @@ value|VNET(tcp_reass_qsize)
 end_define
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_tcp_reass
 argument_list|,
@@ -342,6 +367,11 @@ name|tcp_reass_qsize
 argument_list|)
 argument_list|,
 literal|0
+argument_list|,
+operator|&
+name|tcp_reass_sysctl_qsize
+argument_list|,
+literal|"I"
 argument_list|,
 literal|"Global number of TCP Segments currently in Reassembly Queue"
 argument_list|)
@@ -642,9 +672,6 @@ operator|->
 name|t_segqlen
 operator|--
 expr_stmt|;
-name|V_tcp_reass_qsize
-operator|--
-expr_stmt|;
 block|}
 name|KASSERT
 argument_list|(
@@ -667,6 +694,70 @@ name|t_segqlen
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|tcp_reass_sysctl_maxseg
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+block|{
+name|V_tcp_reass_maxseg
+operator|=
+name|uma_zone_get_max
+argument_list|(
+name|V_tcp_reass_zone
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|sysctl_handle_int
+argument_list|(
+name|oidp
+argument_list|,
+name|arg1
+argument_list|,
+name|arg2
+argument_list|,
+name|req
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|tcp_reass_sysctl_qsize
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+block|{
+name|V_tcp_reass_qsize
+operator|=
+name|uma_zone_get_cur
+argument_list|(
+name|V_tcp_reass_zone
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|sysctl_handle_int
+argument_list|(
+name|oidp
+argument_list|,
+name|arg1
+argument_list|,
+name|arg2
+argument_list|,
+name|req
+argument_list|)
+operator|)
+return|;
 block|}
 end_function
 
@@ -750,7 +841,7 @@ condition|)
 goto|goto
 name|present
 goto|;
-comment|/* 	 * Limit the number of segments in the reassembly queue to prevent 	 * holding on to too many segments (and thus running out of mbufs). 	 * Make sure to let the missing segment through which caused this 	 * queue.  Always keep one global queue entry spare to be able to 	 * process the missing segment. 	 */
+comment|/* 	 * Limit the number of segments in the reassembly queue to prevent 	 * holding on to too many segments (and thus running out of mbufs). 	 * Make sure to let the missing segment through which caused this 	 * queue. 	 */
 if|if
 condition|(
 name|th
@@ -761,19 +852,11 @@ name|tp
 operator|->
 name|rcv_nxt
 operator|&&
-operator|(
-name|V_tcp_reass_qsize
-operator|+
-literal|1
-operator|>=
-name|V_tcp_reass_maxseg
-operator|||
 name|tp
 operator|->
 name|t_segqlen
 operator|>=
 name|V_tcp_reass_maxqlen
-operator|)
 condition|)
 block|{
 name|V_tcp_reass_overflows
@@ -841,9 +924,6 @@ block|}
 name|tp
 operator|->
 name|t_segqlen
-operator|++
-expr_stmt|;
-name|V_tcp_reass_qsize
 operator|++
 expr_stmt|;
 comment|/* 	 * Find a segment which begins after this one does. 	 */
@@ -948,9 +1028,6 @@ expr_stmt|;
 name|tp
 operator|->
 name|t_segqlen
-operator|--
-expr_stmt|;
-name|V_tcp_reass_qsize
 operator|--
 expr_stmt|;
 comment|/* 				 * Try to present any queued data 				 * at the left window edge to the user. 				 * This is needed after the 3-WHS 				 * completes. 				 */
@@ -1090,9 +1167,6 @@ expr_stmt|;
 name|tp
 operator|->
 name|t_segqlen
-operator|--
-expr_stmt|;
-name|V_tcp_reass_qsize
 operator|--
 expr_stmt|;
 name|q
@@ -1284,9 +1358,6 @@ expr_stmt|;
 name|tp
 operator|->
 name|t_segqlen
-operator|--
-expr_stmt|;
-name|V_tcp_reass_qsize
 operator|--
 expr_stmt|;
 name|q
