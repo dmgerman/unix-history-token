@@ -579,7 +579,7 @@ name|nchash
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Size of namecache hash table"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -595,6 +595,10 @@ end_decl_stmt
 
 begin_comment
 comment|/* ratio of negative entries */
+end_comment
+
+begin_comment
+comment|/* _debug sysctl left for backward compatibility */
 end_comment
 
 begin_expr_stmt
@@ -618,6 +622,27 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SYSCTL_ULONG
+argument_list|(
+name|_vfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|ncnegfactor
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ncnegfactor
+argument_list|,
+literal|0
+argument_list|,
+literal|"Ratio of negative namecache entries"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
 name|u_long
@@ -626,7 +651,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* number of cache entries allocated */
+comment|/* number of negative entries allocated */
 end_comment
 
 begin_expr_stmt
@@ -645,7 +670,7 @@ name|numneg
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Number of negative entries in namecache"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -677,7 +702,7 @@ name|numcache
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Number of namecache entries"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -709,27 +734,40 @@ name|numcachehv
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Number of namecache entries with vnodes held"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_if
-if|#
-directive|if
+begin_decl_stmt
+specifier|static
+name|u_int
+name|ncsizefactor
+init|=
+literal|2
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_vfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|ncsizefactor
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ncsizefactor
+argument_list|,
 literal|0
-end_if
-
-begin_comment
-unit|static u_long	numcachepl;
-comment|/* number of cache purge for leaf entries */
-end_comment
-
-begin_endif
-unit|SYSCTL_ULONG(_debug, OID_AUTO, numcachepl, CTLFLAG_RD,&numcachepl, 0, "");
-endif|#
-directive|endif
-end_endif
+argument_list|,
+literal|"Size factor for namecache"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|struct
@@ -891,7 +929,7 @@ name|doingcache
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"VFS namecache enabled"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3268,7 +3306,7 @@ name|numcache
 operator|>=
 name|desiredvnodes
 operator|*
-literal|2
+name|ncsizefactor
 condition|)
 return|return;
 name|flag
