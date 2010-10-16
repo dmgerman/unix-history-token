@@ -5582,7 +5582,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-comment|/* Must be gone alrady */
+comment|/* Must be gone already */
 return|return;
 if|if
 condition|(

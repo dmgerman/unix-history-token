@@ -372,7 +372,7 @@ decl_stmt|;
 block|}
 name|w
 struct|;
-comment|/* Write paramenters */
+comment|/* Write parameters */
 struct|struct
 block|{
 name|char_type
