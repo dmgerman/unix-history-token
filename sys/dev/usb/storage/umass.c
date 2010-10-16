@@ -10866,6 +10866,12 @@ name|base_transfer_speed
 operator|=
 name|UMASS_SUPER_TRANSFER_SPEED
 expr_stmt|;
+name|cpi
+operator|->
+name|maxio
+operator|=
+name|MAXPHYS
+expr_stmt|;
 break|break;
 case|case
 name|USB_SPEED_HIGH
