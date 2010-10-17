@@ -1726,17 +1726,19 @@ name|vm_memattr_t
 name|attr
 parameter_list|)
 block|{
-name|CTR3
+name|CTR4
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"%s(%#x, %#x)"
+literal|"%s(%#x, %#x, %#x)"
 argument_list|,
 name|__func__
 argument_list|,
 name|pa
 argument_list|,
 name|size
+argument_list|,
+name|attr
 argument_list|)
 expr_stmt|;
 return|return
@@ -1771,13 +1773,13 @@ name|CTR3
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"%s(%#x, %#x)"
+literal|"%s(%p, %#x)"
 argument_list|,
 name|__func__
 argument_list|,
-name|pa
+name|m
 argument_list|,
-name|size
+name|ma
 argument_list|)
 expr_stmt|;
 return|return
@@ -1913,17 +1915,19 @@ name|vm_memattr_t
 name|ma
 parameter_list|)
 block|{
-name|CTR3
+name|CTR4
 argument_list|(
 name|KTR_PMAP
 argument_list|,
-literal|"%s(%#x, %#x)"
+literal|"%s(%#x, %#x, %#x)"
 argument_list|,
 name|__func__
 argument_list|,
 name|va
 argument_list|,
 name|pa
+argument_list|,
+name|ma
 argument_list|)
 expr_stmt|;
 name|MMU_KENTER_ATTR
