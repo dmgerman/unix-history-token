@@ -73,16 +73,16 @@ end_define
 begin_define
 define|#
 directive|define
-name|obj_fix_adjustable
+name|tc_fix_adjustable
 parameter_list|(
-name|fixP
+name|FIX
 parameter_list|)
-value|v850_fix_adjustable(fixP)
+value|v850_fix_adjustable (FIX)
 end_define
 
 begin_decl_stmt
 specifier|extern
-name|boolean
+name|bfd_boolean
 name|v850_fix_adjustable
 name|PARAMS
 argument_list|(
@@ -100,9 +100,9 @@ define|#
 directive|define
 name|TC_FORCE_RELOCATION
 parameter_list|(
-name|fixp
+name|FIX
 parameter_list|)
-value|v850_force_relocation(fixp)
+value|v850_force_relocation(FIX)
 end_define
 
 begin_decl_stmt
@@ -127,17 +127,17 @@ name|OBJ_ELF
 end_ifdef
 
 begin_comment
-comment|/* This arranges for gas/write.c to not apply a relocation if    obj_fix_adjustable() says it is not adjustable.  */
+comment|/* Values passed to md_apply_fix3 don't include the symbol value.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TC_FIX_ADJUSTABLE
+name|MD_APPLY_SYM_VALUE
 parameter_list|(
-name|fixP
+name|FIX
 parameter_list|)
-value|obj_fix_adjustable (fixP)
+value|0
 end_define
 
 begin_endif
@@ -259,56 +259,43 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* This section must be in the small data area (pointed to by GP).  */
+comment|/* When relaxing, we need to generate    relocations for alignment directives.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SHF_V850_GPREL
-value|0x10000000
+name|HANDLE_ALIGN
+parameter_list|(
+name|frag
+parameter_list|)
+value|v850_handle_align (frag)
 end_define
 
-begin_comment
-comment|/* This section must be in the tiny data area (pointed to by EP).  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SHF_V850_EPREL
-value|0x20000000
-end_define
-
-begin_comment
-comment|/* This section must be in the zero data area (pointed to by R0).  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SHF_V850_R0REL
-value|0x40000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|ELF_TC_SPECIAL_SECTIONS
-define|\
-value|{ ".sdata",	SHT_PROGBITS,		SHF_ALLOC + SHF_WRITE + SHF_V850_GPREL	}, \   { ".rosdata",	SHT_PROGBITS,		SHF_ALLOC +             SHF_V850_GPREL	}, \   { ".sbss",	SHT_NOBITS,		SHF_ALLOC + SHF_WRITE + SHF_V850_GPREL	}, \   { ".scommon",	SHT_V850_SCOMMON, 	SHF_ALLOC + SHF_WRITE + SHF_V850_GPREL	}, \   { ".tdata",	SHT_PROGBITS,		SHF_ALLOC + SHF_WRITE + SHF_V850_EPREL	}, \   { ".tbss",	SHT_NOBITS,		SHF_ALLOC + SHF_WRITE + SHF_V850_EPREL	}, \   { ".tcommon",	SHT_V850_TCOMMON,	SHF_ALLOC + SHF_WRITE + SHF_V850_R0REL	}, \   { ".zdata",	SHT_PROGBITS,		SHF_ALLOC + SHF_WRITE + SHF_V850_R0REL	}, \   { ".rozdata",	SHT_PROGBITS,		SHF_ALLOC +             SHF_V850_R0REL	}, \   { ".zbss",	SHT_NOBITS,	  	SHF_ALLOC + SHF_WRITE + SHF_V850_R0REL	}, \   { ".zcommon",	SHT_V850_ZCOMMON, 	SHF_ALLOC + SHF_WRITE + SHF_V850_R0REL	}, \   { ".call_table_data",	SHT_PROGBITS,	SHF_ALLOC + SHF_WRITE },	   \   { ".call_table_text",	SHT_PROGBITS,	SHF_ALLOC + SHF_WRITE + SHF_EXECINSTR },
-end_define
+begin_decl_stmt
+specifier|extern
+name|void
+name|v850_handle_align
+name|PARAMS
+argument_list|(
+operator|(
+name|fragS
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
 directive|define
 name|MD_PCREL_FROM_SECTION
 parameter_list|(
-name|fixP
+name|FIX
 parameter_list|,
-name|section
+name|SEC
 parameter_list|)
-value|v850_pcrel_from_section (fixP, section)
+value|v850_pcrel_from_section (FIX, SEC)
 end_define
 
 begin_decl_stmt

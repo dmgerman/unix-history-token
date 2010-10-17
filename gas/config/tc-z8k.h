@@ -16,22 +16,11 @@ name|TARGET_BYTES_BIG_ENDIAN
 value|1
 end_define
 
-begin_if
-if|#
-directive|if
-name|ANSI_PROTOTYPES
-end_if
-
 begin_struct_decl
 struct_decl|struct
 name|internal_reloc
 struct_decl|;
 end_struct_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -61,7 +50,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* This macro translates between an internal fix and an coff reloc type */
+comment|/* This macro translates between an internal fix and a coff reloc type.  */
 end_comment
 
 begin_define
@@ -103,6 +92,12 @@ define|#
 directive|define
 name|IGNORE_NONSTANDARD_ESCAPES
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|WARN_SIGNED_OVERFLOW_WORD
+end_undef
 
 begin_define
 define|#

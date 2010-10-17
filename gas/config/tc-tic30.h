@@ -147,6 +147,13 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|tc_aout_pre_write_hook
+value|{}
+end_define
+
 begin_endif
 endif|#
 directive|endif
