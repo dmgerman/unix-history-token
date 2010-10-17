@@ -112,6 +112,18 @@ define|#
 directive|define
 name|GPT_ENT_ATTR_PLATFORM
 value|(1ULL<< 0)
+define|#
+directive|define
+name|GPT_ENT_ATTR_BOOTME
+value|(1ULL<< 59)
+define|#
+directive|define
+name|GPT_ENT_ATTR_BOOTONCE
+value|(1ULL<< 58)
+define|#
+directive|define
+name|GPT_ENT_ATTR_BOOTFAILED
+value|(1ULL<< 57)
 name|uint16_t
 name|ent_name
 index|[
