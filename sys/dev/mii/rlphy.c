@@ -467,12 +467,9 @@ argument_list|)
 expr_stmt|;
 name|mii
 operator|=
-name|device_get_softc
-argument_list|(
-name|sc
+name|ma
 operator|->
-name|mii_dev
-argument_list|)
+name|mii_data
 expr_stmt|;
 comment|/*          * Check whether we're the RTL8201L PHY and remember so the status          * routine can query the proper register for speed detection.          */
 name|rsc
