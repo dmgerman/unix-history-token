@@ -68,8 +68,7 @@ begin_function_decl
 name|void
 name|hook_check
 parameter_list|(
-name|bool
-name|sigchld
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

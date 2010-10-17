@@ -627,14 +627,7 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|" "
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|out
-argument_list|,
-literal|"%s"
+literal|" %s"
 argument_list|,
 name|pjdlog_prefix
 argument_list|)

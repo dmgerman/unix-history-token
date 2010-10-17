@@ -220,7 +220,7 @@ begin_define
 define|#
 directive|define
 name|REPORT_INTERVAL
-value|10
+value|5
 end_define
 
 begin_function
@@ -2417,7 +2417,9 @@ index|]
 decl_stmt|;
 name|proto_remote_address
 argument_list|(
-name|conn
+name|res
+operator|->
+name|hr_remotein
 argument_list|,
 name|oaddr
 argument_list|,
@@ -3127,9 +3129,7 @@ operator|==
 literal|0
 condition|)
 name|hook_check
-argument_list|(
-name|false
-argument_list|)
+argument_list|()
 expr_stmt|;
 elseif|else
 if|if
@@ -3265,6 +3265,20 @@ expr_stmt|;
 block|}
 block|}
 block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|dummy_sighandler
+parameter_list|(
+name|int
+name|sig
+name|__unused
+parameter_list|)
+block|{
+comment|/* Nothing to do. */
 block|}
 end_function
 
@@ -3461,6 +3475,19 @@ argument_list|(
 name|cfg
 operator|!=
 name|NULL
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Because SIGCHLD is ignored by default, setup dummy handler for it, 	 * so we can mask it. 	 */
+name|PJDLOG_VERIFY
+argument_list|(
+name|signal
+argument_list|(
+name|SIGCHLD
+argument_list|,
+name|dummy_sighandler
+argument_list|)
+operator|!=
+name|SIG_ERR
 argument_list|)
 expr_stmt|;
 name|PJDLOG_VERIFY
