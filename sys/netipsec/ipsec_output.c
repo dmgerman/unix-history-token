@@ -4059,7 +4059,6 @@ name|rt_flags
 operator|&
 name|RTF_GATEWAY
 condition|)
-block|{
 name|state
 operator|->
 name|dst
@@ -4077,18 +4076,6 @@ name|ro_rt
 operator|->
 name|rt_gateway
 expr_stmt|;
-name|dst6
-operator|=
-operator|(
-expr|struct
-name|sockaddr_in6
-operator|*
-operator|)
-name|state
-operator|->
-name|dst
-expr_stmt|;
-block|}
 block|}
 name|m
 operator|=
