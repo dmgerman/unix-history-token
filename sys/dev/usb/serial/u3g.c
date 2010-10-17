@@ -411,6 +411,17 @@ begin_comment
 comment|/* Requires Huawei SCSI init command */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|U3GINIT_TCT
+value|10
+end_define
+
+begin_comment
+comment|/* Requires TCT Mobile init command */
+end_comment
+
 begin_enum
 enum|enum
 block|{
@@ -3685,6 +3696,15 @@ argument_list|)
 block|,
 name|U3G_DEV
 argument_list|(
+name|TCTMOBILE
+argument_list|,
+name|X080S
+argument_list|,
+name|U3GINIT_TCT
+argument_list|)
+block|,
+name|U3G_DEV
+argument_list|(
 name|TELIT
 argument_list|,
 name|UC864E
@@ -4872,6 +4892,21 @@ argument_list|,
 literal|0
 argument_list|,
 name|MSC_EJECT_CMOTECH
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|U3GINIT_TCT
+case|:
+name|error
+operator|=
+name|usb_msc_eject
+argument_list|(
+name|udev
+argument_list|,
+literal|0
+argument_list|,
+name|MSC_EJECT_TCT
 argument_list|)
 expr_stmt|;
 break|break;
