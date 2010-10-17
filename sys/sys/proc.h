@@ -1257,12 +1257,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDF_TIDHASH
+name|TDF_UNUSED19
 value|0x00080000
 end_define
 
 begin_comment
-comment|/* Thread is on hash table. */
+comment|/* --available-- */
 end_comment
 
 begin_define
