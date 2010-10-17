@@ -2349,6 +2349,15 @@ argument_list|()
 expr_stmt|;
 name|wrpr
 argument_list|(
+name|pil
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|wrpr
+argument_list|(
 name|pstate
 argument_list|,
 literal|0
