@@ -364,9 +364,11 @@ begin_comment
 comment|/* clock thru shared memory */
 end_comment
 
-begin_comment
-comment|/* #undef CLOCK_SHM */
-end_comment
+begin_define
+define|#
+directive|define
+name|CLOCK_SHM
+end_define
 
 begin_comment
 comment|/* Spectracom 8170/Netclock/2 WWVB receiver */
