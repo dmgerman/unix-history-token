@@ -686,6 +686,8 @@ decl_stmt|,
 name|reg
 decl_stmt|;
 comment|/* 	 * See if there's another PHY on this bus with us. 	 * If so, we may need it for 10Mbps modes. 	 */
+if|if
+condition|(
 name|device_get_children
 argument_list|(
 name|msc
@@ -700,7 +702,10 @@ argument_list|,
 operator|&
 name|devs
 argument_list|)
-expr_stmt|;
+operator|==
+literal|0
+condition|)
+block|{
 for|for
 control|(
 name|i
@@ -751,6 +756,7 @@ argument_list|,
 name|M_TEMP
 argument_list|)
 expr_stmt|;
+block|}
 switch|switch
 condition|(
 name|cmd
@@ -1428,6 +1434,10 @@ decl_stmt|,
 name|i
 decl_stmt|;
 comment|/* See if there's another PHY on the bus with us. */
+name|devs
+operator|=
+literal|0
+expr_stmt|;
 name|device_get_children
 argument_list|(
 name|msc
