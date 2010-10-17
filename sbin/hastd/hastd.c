@@ -2417,7 +2417,9 @@ index|]
 decl_stmt|;
 name|proto_remote_address
 argument_list|(
-name|conn
+name|res
+operator|->
+name|hr_remotein
 argument_list|,
 name|oaddr
 argument_list|,
