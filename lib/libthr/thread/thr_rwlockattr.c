@@ -237,6 +237,12 @@ name|pshared
 operator|=
 name|PTHREAD_PROCESS_PRIVATE
 expr_stmt|;
+name|prwlockattr
+operator|->
+name|kind
+operator|=
+name|PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP
+expr_stmt|;
 operator|*
 name|rwlockattr
 operator|=
