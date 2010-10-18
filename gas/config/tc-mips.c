@@ -10438,6 +10438,10 @@ name|prev_insn_extended
 operator|=
 literal|0
 expr_stmt|;
+name|prev_insn_is_delay_slot
+operator|=
+literal|1
+expr_stmt|;
 block|}
 else|else
 block|{

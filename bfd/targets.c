@@ -355,6 +355,14 @@ begin_decl_stmt
 specifier|extern
 specifier|const
 name|bfd_target
+name|bfd_elf32_hppa_nbsd_vec
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|bfd_target
 name|bfd_elf32_hppa_vec
 decl_stmt|;
 end_decl_stmt
@@ -2236,6 +2244,9 @@ name|bfd_elf32_h8300_vec
 block|,
 operator|&
 name|bfd_elf32_hppa_linux_vec
+block|,
+operator|&
+name|bfd_elf32_hppa_nbsd_vec
 block|,
 operator|&
 name|bfd_elf32_hppa_vec

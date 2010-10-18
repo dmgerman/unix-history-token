@@ -141,11 +141,6 @@ name|defined
 argument_list|(
 name|TE_LINUX
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|TE_NetBSD
-argument_list|)
 end_if
 
 begin_define
@@ -160,12 +155,38 @@ else|#
 directive|else
 end_else
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|TE_NetBSD
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|TARGET_FORMAT
+value|"elf32-hppa-netbsd"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|TARGET_FORMAT
 value|"elf32-hppa"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

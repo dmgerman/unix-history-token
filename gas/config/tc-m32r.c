@@ -351,7 +351,7 @@ specifier|static
 name|int
 name|use_parallel
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
