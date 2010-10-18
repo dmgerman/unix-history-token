@@ -558,17 +558,6 @@ begin_comment
 comment|/* Thread ID. */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|void
-name|boot
-argument_list|(
-name|int
-argument_list|)
-name|__dead2
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|void
@@ -788,7 +777,7 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
-name|boot
+name|kern_reboot
 argument_list|(
 name|uap
 operator|->
@@ -864,7 +853,7 @@ block|}
 else|else
 block|{
 comment|/* No init(8) running, so simply reboot */
-name|boot
+name|kern_reboot
 argument_list|(
 name|RB_NOSYNC
 argument_list|)
@@ -1171,9 +1160,8 @@ comment|/*  * Shutdown the system cleanly to prepare for reboot, halt, or power 
 end_comment
 
 begin_function
-specifier|static
 name|void
-name|boot
+name|kern_reboot
 parameter_list|(
 name|int
 name|howto
@@ -1219,7 +1207,9 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"boot: not running on cpu 0"
+literal|"%s: not running on cpu 0"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2182,7 +2172,7 @@ expr_stmt|;
 name|critical_exit
 argument_list|()
 expr_stmt|;
-name|boot
+name|kern_reboot
 argument_list|(
 name|bootopt
 argument_list|)
