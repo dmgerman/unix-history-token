@@ -188,57 +188,64 @@ end_define
 begin_define
 define|#
 directive|define
-name|SINGLE
+name|PRIVATE
 value|276
 end_define
 
 begin_define
 define|#
 directive|define
-name|MULTIPLE
+name|SINGLE
 value|277
 end_define
 
 begin_define
 define|#
 directive|define
-name|INITINSTANCE
+name|MULTIPLE
 value|278
 end_define
 
 begin_define
 define|#
 directive|define
-name|INITGLOBAL
+name|INITINSTANCE
 value|279
 end_define
 
 begin_define
 define|#
 directive|define
-name|TERMINSTANCE
+name|INITGLOBAL
 value|280
 end_define
 
 begin_define
 define|#
 directive|define
-name|TERMGLOBAL
+name|TERMINSTANCE
 value|281
 end_define
 
 begin_define
 define|#
 directive|define
-name|ID
+name|TERMGLOBAL
 value|282
 end_define
 
 begin_define
 define|#
 directive|define
-name|NUMBER
+name|ID
 value|283
+end_define
+
+begin_define
+define|#
+directive|define
+name|NUMBER
+value|284
 end_define
 
 begin_decl_stmt
