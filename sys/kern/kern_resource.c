@@ -3165,9 +3165,7 @@ name|alimp
 expr_stmt|;
 if|if
 condition|(
-name|td
-operator|->
-name|td_proc
+name|p
 operator|->
 name|p_sysent
 operator|->
@@ -3175,9 +3173,7 @@ name|sv_fixlimit
 operator|!=
 name|NULL
 condition|)
-name|td
-operator|->
-name|td_proc
+name|p
 operator|->
 name|p_sysent
 operator|->
@@ -3285,9 +3281,7 @@ break|break;
 block|}
 if|if
 condition|(
-name|td
-operator|->
-name|td_proc
+name|p
 operator|->
 name|p_sysent
 operator|->
@@ -3295,9 +3289,7 @@ name|sv_fixlimit
 operator|!=
 name|NULL
 condition|)
-name|td
-operator|->
-name|td_proc
+name|p
 operator|->
 name|p_sysent
 operator|->
