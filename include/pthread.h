@@ -375,6 +375,23 @@ name|PTHREAD_MUTEX_DEFAULT
 value|PTHREAD_MUTEX_ERRORCHECK
 end_define
 
+begin_enum
+enum|enum
+name|pthread_rwlocktype_np
+block|{
+name|PTHREAD_RWLOCK_PREFER_READER_NP
+block|,
+name|PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP
+block|,
+name|PTHREAD_RWLOCK_PREFER_WRITER_NP
+block|,
+name|PTHREAD_RWLOCK_DEFAULT_NP
+init|=
+name|PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP
+block|}
+enum|;
+end_enum
+
 begin_struct
 struct|struct
 name|_pthread_cleanup_info
@@ -1225,9 +1242,23 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|pthread_rwlockattr_init
+name|pthread_rwlockattr_destroy
 parameter_list|(
 name|pthread_rwlockattr_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|pthread_rwlockattr_getkind_np
+parameter_list|(
+specifier|const
+name|pthread_rwlockattr_t
+modifier|*
+parameter_list|,
+name|int
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1249,7 +1280,17 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|pthread_rwlockattr_setpshared
+name|pthread_rwlockattr_init
+parameter_list|(
+name|pthread_rwlockattr_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|pthread_rwlockattr_setkind_np
 parameter_list|(
 name|pthread_rwlockattr_t
 modifier|*
@@ -1261,10 +1302,12 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|pthread_rwlockattr_destroy
+name|pthread_rwlockattr_setpshared
 parameter_list|(
 name|pthread_rwlockattr_t
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
