@@ -438,6 +438,8 @@ if|if
 condition|(
 operator|*
 name|argv
+operator|!=
+name|NULL
 condition|)
 block|{
 name|rval
@@ -1546,7 +1548,7 @@ value|( (((c) - ' ')>= 0)&& (((c) - ' ')<= 077 + 1) )
 define|#
 directive|define
 name|OUT_OF_RANGE
-value|do {						\ 	warnx("%s: %s: character out of range: [%d-%d]",		\ 	    infile, outfile, 1 + ' ', 077 + ' ' + 1);			\         return (1);							\ } while (0)
+value|do {						\ 	warnx("%s: %s: character out of range: [%d-%d]",		\ 	    infile, outfile, 1 + ' ', 077 + ' ' + 1);			\ 	return (1);							\ } while (0)
 comment|/* 		 * `i' is used to avoid writing out all the characters 		 * at the end of the file. 		 */
 name|p
 operator|=
