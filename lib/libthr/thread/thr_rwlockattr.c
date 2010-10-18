@@ -308,11 +308,11 @@ condition|(
 name|kind
 operator|!=
 name|PTHREAD_RWLOCK_PREFER_READER_NP
-operator|||
+operator|&&
 name|kind
 operator|!=
 name|PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP
-operator|||
+operator|&&
 name|kind
 operator|!=
 name|PTHREAD_RWLOCK_PREFER_WRITER_NP
