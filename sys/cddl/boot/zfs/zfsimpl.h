@@ -1894,6 +1894,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ZPOOL_CONFIG_IS_LOG
+value|"is_log"
+end_define
+
+begin_define
+define|#
+directive|define
 name|ZPOOL_CONFIG_TIMESTAMP
 value|"timestamp"
 end_define
