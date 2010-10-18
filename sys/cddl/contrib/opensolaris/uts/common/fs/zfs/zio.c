@@ -9002,6 +9002,8 @@ name|zio_handle_device_injection
 argument_list|(
 name|vd
 argument_list|,
+name|zio
+argument_list|,
 name|EIO
 argument_list|)
 expr_stmt|;

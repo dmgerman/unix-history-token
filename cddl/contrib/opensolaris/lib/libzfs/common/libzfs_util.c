@@ -1018,6 +1018,20 @@ argument_list|)
 operator|)
 return|;
 case|case
+name|EZFS_UNPLAYED_LOGS
+case|:
+return|return
+operator|(
+name|dgettext
+argument_list|(
+name|TEXT_DOMAIN
+argument_list|,
+literal|"log device has unplayed intent "
+literal|"logs"
+argument_list|)
+operator|)
+return|;
+case|case
 name|EZFS_UNKNOWN
 case|:
 return|return

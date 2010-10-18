@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -669,6 +669,8 @@ name|svdcount
 parameter_list|,
 name|uint64_t
 name|txg
+parameter_list|,
+name|boolean_t
 parameter_list|)
 function_decl|;
 specifier|extern

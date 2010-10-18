@@ -801,6 +801,19 @@ function_decl|;
 comment|/*  * vdev sync load and sync  */
 specifier|extern
 name|void
+name|vdev_load_log_state
+parameter_list|(
+name|vdev_t
+modifier|*
+name|vd
+parameter_list|,
+name|nvlist_t
+modifier|*
+name|nv
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
 name|vdev_load
 parameter_list|(
 name|vdev_t

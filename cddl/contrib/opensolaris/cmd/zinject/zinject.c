@@ -4,15 +4,8 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_comment
 comment|/*  * ZFS Fault Injector  *  * This userland component takes a set of options and uses libzpool to translate  * from a user-visible object type and name to an internal representation.  * There are two basic types of faults: device faults and data faults.  *  *  * DEVICE FAULTS  *  * Errors can be injected into a particular vdev using the '-d' option.  This  * option takes a path or vdev GUID to uniquely identify the device within a  * pool.  There are two types of errors that can be injected, EIO and ENXIO,  * that can be controlled through the '-e' option.  The default is ENXIO.  For  * EIO failures, any attempt to read data from the device will return EIO, but  * subsequent attempt to reopen the device will succeed.  For ENXIO failures,  * any attempt to read from the device will return EIO, but any attempt to  * reopen the device will also return ENXIO.  * For label faults, the -L option must be specified. This allows faults  * to be injected into either the nvlist or uberblock region of all the labels  * for the specified device.  *  * This form of the command looks like:  *  * 	zinject -d device [-e errno] [-L<uber | nvlist>] pool  *  *  * DATA FAULTS  *  * We begin with a tuple of the form:  *  *<type,level,range,object>  *  * 	type	A string describing the type of data to target.  Each type  * 		implicitly describes how to interpret 'object'. Currently,  * 		the following values are supported:  *  * 		data		User data for a file  * 		dnode		Dnode for a file or directory  *  *		The following MOS objects are special.  Instead of injecting  *		errors on a particular object or blkid, we inject errors across  *		all objects of the given type.  *  * 		mos		Any data in the MOS  * 		mosdir		object directory  * 		config		pool configuration  * 		bplist		blkptr list  * 		spacemap	spacemap  * 		metaslab	metaslab  * 		errlog		persistent error log  *  * 	level	Object level.  Defaults to '0', not applicable to all types.  If  * 		a range is given, this corresponds to the indirect block  * 		corresponding to the specific range.  *  *	range	A numerical range [start,end) within the object.  Defaults to  *		the full size of the file.  *  * 	object	A string describing the logical location of the object.  For  * 		files and directories (currently the only supported types),  * 		this is the path of the object on disk.  *  * This is translated, via libzpool, into the following internal representation:  *  *<type,objset,object,level,range>  *  * These types should be self-explanatory.  This tuple is then passed to the  * kernel via a special ioctl() to initiate fault injection for the given  * object.  Note that 'type' is not strictly necessary for fault injection, but  * is used when translating existing faults into a human-readable string.  *  *  * The command itself takes one of the forms:  *  * 	zinject  * 	zinject<-a | -u pool>  * 	zinject -c<id|all>  * 	zinject [-q]<-t type> [-f freq] [-u] [-a] [-m] [-e errno] [-l level]  *	    [-r range]<object>  * 	zinject [-f freq] [-a] [-m] [-u] -b objset:object:level:start:end pool  *  * With no arguments, the command prints all currently registered injection  * handlers, with their numeric identifiers.  *  * The '-c' option will clear the given handler, or all handlers if 'all' is  * specified.  *  * The '-e' option takes a string describing the errno to simulate.  This must  * be either 'io' or 'checksum'.  In most cases this will result in the same  * behavior, but RAID-Z will produce a different set of ereports for this  * situation.  *  * The '-a', '-u', and '-m' flags toggle internal flush behavior.  If '-a' is  * specified, then the ARC cache is flushed appropriately.  If '-u' is  * specified, then the underlying SPA is unloaded.  Either of these flags can be  * specified independently of any other handlers.  The '-m' flag automatically  * does an unmount and remount of the underlying dataset to aid in flushing the  * cache.  *  * The '-f' flag controls the frequency of errors injected, expressed as a  * integer percentage between 1 and 100.  The default is 100.  *  * The this form is responsible for actually injecting the handler into the  * framework.  It takes the arguments described above, translates them to the  * internal tuple using libzpool, and then issues an ioctl() to register the  * handler.  *  * The final form can target a specific bookmark, regardless of whether a  * human-readable interface has been designed.  It allows developers to specify  * a particular block by number.  */
@@ -316,7 +309,7 @@ literal|"\n"
 literal|"\t\tClear the particular record (if given a numeric ID), or\n"
 literal|"\t\tall records if 'all' is specificed.\n"
 literal|"\n"
-literal|"\tzinject -d device [-e errno] [-L<nvlist|uber>] pool\n"
+literal|"\tzinject -d device [-e errno] [-L<nvlist|uber>] [-F] pool\n"
 literal|"\t\tInject a fault into a particular device or the device's\n"
 literal|"\t\tlabel.  Label injection can either be 'nvlist' or 'uber'.\n"
 literal|"\t\t'errno' can either be 'nxio' (the default) or 'io'.\n"
@@ -1520,7 +1513,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|":ab:d:f:qhc:t:l:mr:e:uL:"
+literal|":ab:d:f:Fqhc:t:l:mr:e:uL:"
 argument_list|)
 operator|)
 operator|!=
@@ -1691,6 +1684,16 @@ literal|1
 operator|)
 return|;
 block|}
+break|break;
+case|case
+literal|'F'
+case|:
+name|record
+operator|.
+name|zi_failfast
+operator|=
+name|B_TRUE
+expr_stmt|;
 break|break;
 case|case
 literal|'h'

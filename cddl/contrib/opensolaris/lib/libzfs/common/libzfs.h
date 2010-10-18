@@ -296,6 +296,9 @@ comment|/* ops not supported on this dataset */
 name|EZFS_ACTIVE_SPARE
 block|,
 comment|/* pool has active shared spare devices */
+name|EZFS_UNPLAYED_LOGS
+block|,
+comment|/* log device has unplayed logs */
 name|EZFS_UNKNOWN
 block|}
 enum|;
