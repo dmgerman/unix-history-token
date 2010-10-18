@@ -948,6 +948,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|pthread_rwlockattr_getkind_np
+value|_pthread_rwlockattr_getkind_np
+end_define
+
+begin_define
+define|#
+directive|define
 name|pthread_rwlockattr_getpshared
 value|_pthread_rwlockattr_getpshared
 end_define
@@ -957,6 +964,13 @@ define|#
 directive|define
 name|pthread_rwlockattr_init
 value|_pthread_rwlockattr_init
+end_define
+
+begin_define
+define|#
+directive|define
+name|pthread_rwlockattr_setkind_np
+value|_pthread_rwlockattr_setkind_np
 end_define
 
 begin_define

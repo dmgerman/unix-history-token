@@ -792,6 +792,12 @@ end_undef
 begin_undef
 undef|#
 directive|undef
+name|pthread_rwlockattr_getkind_np
+end_undef
+
+begin_undef
+undef|#
+directive|undef
 name|pthread_rwlockattr_getpshared
 end_undef
 
@@ -799,6 +805,12 @@ begin_undef
 undef|#
 directive|undef
 name|pthread_rwlockattr_init
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|pthread_rwlockattr_setkind_np
 end_undef
 
 begin_undef
