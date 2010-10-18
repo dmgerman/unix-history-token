@@ -686,30 +686,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ATA_SS_CONWELL_MASK
-define|\
-value|(ATA_SS_DET_MASK|ATA_SS_SPD_MASK|ATA_SS_IPM_MASK)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATA_SS_CONWELL_GEN1
-define|\
-value|(ATA_SS_DET_PHY_ONLINE|ATA_SS_SPD_GEN1|ATA_SS_IPM_ACTIVE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATA_SS_CONWELL_GEN2
-define|\
-value|(ATA_SS_DET_PHY_ONLINE|ATA_SS_SPD_GEN2|ATA_SS_IPM_ACTIVE)
-end_define
-
-begin_define
-define|#
-directive|define
 name|ATA_SERROR
 value|14
 end_define
@@ -3037,6 +3013,10 @@ define|#
 directive|define
 name|ATA_STATUS_IS_LONG
 value|0x400
+define|#
+directive|define
+name|ATA_PERIODIC_POLL
+value|0x800
 name|int
 name|pm_level
 decl_stmt|;
@@ -3147,6 +3127,11 @@ decl_stmt|;
 comment|/* Current settings */
 endif|#
 directive|endif
+name|struct
+name|callout
+name|poll_callout
+decl_stmt|;
+comment|/* Periodic status poll. */
 block|}
 struct|;
 end_struct
@@ -3823,6 +3808,9 @@ name|ata_sata_phy_check_events
 parameter_list|(
 name|device_t
 name|dev
+parameter_list|,
+name|int
+name|port
 parameter_list|)
 function_decl|;
 end_function_decl
