@@ -14674,12 +14674,6 @@ name|dstate
 decl_stmt|,
 name|i
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|pci_do_power_resume
-condition|)
-return|return;
 comment|/* 	 * Set the device to the given state.  If the firmware suggests 	 * a different power state, use it instead.  If power management 	 * is not present, the firmware is responsible for managing 	 * device power.  Skip children who aren't attached since they 	 * are handled separately.  Only manage type 0 devices for now. 	 */
 name|pcib
 operator|=
@@ -14954,6 +14948,10 @@ operator|(
 name|error
 operator|)
 return|;
+if|if
+condition|(
+name|pci_do_power_resume
+condition|)
 name|pci_set_power_children
 argument_list|(
 name|dev
