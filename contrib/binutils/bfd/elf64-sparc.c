@@ -13626,7 +13626,7 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-comment|/* The Solaris native linker silently disregards 	       overflows.  We don't, but this breaks stabs debugging 	       info, whose relocations are only 32-bits wide.  Ignore 	       overflows for discarded entries.  */
+comment|/* The Solaris native linker silently disregards 	       overflows.  We don't, but this breaks stabs debugging 	       info, whose relocations are only 32-bits wide.  Ignore 	       overflows in this case and also for discarded entries.  */
 if|if
 condition|(
 operator|(
@@ -13639,6 +13639,33 @@ operator|==
 name|R_SPARC_DISP32
 operator|)
 operator|&&
+operator|(
+operator|(
+operator|(
+name|input_section
+operator|->
+name|flags
+operator|&
+name|SEC_DEBUGGING
+operator|)
+operator|!=
+literal|0
+operator|&&
+name|strcmp
+argument_list|(
+name|bfd_section_name
+argument_list|(
+name|input_bfd
+argument_list|,
+name|input_section
+argument_list|)
+argument_list|,
+literal|".stab"
+argument_list|)
+operator|==
+literal|0
+operator|)
+operator|||
 name|_bfd_elf_section_offset
 argument_list|(
 name|output_bfd
@@ -13657,6 +13684,7 @@ name|bfd_vma
 operator|)
 operator|-
 literal|1
+operator|)
 condition|)
 break|break;
 if|if

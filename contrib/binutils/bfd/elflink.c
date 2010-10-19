@@ -10722,6 +10722,8 @@ operator|.
 name|def
 operator|.
 name|section
+operator|->
+name|id
 operator|-
 name|h2
 operator|->
@@ -10732,6 +10734,8 @@ operator|.
 name|def
 operator|.
 name|section
+operator|->
+name|id
 decl_stmt|;
 if|if
 condition|(
@@ -11804,6 +11808,12 @@ name|_raw_size
 operator|=
 literal|0
 expr_stmt|;
+name|s
+operator|->
+name|_cooked_size
+operator|=
+literal|0
+expr_stmt|;
 continue|continue;
 block|}
 block|}
@@ -11925,6 +11935,12 @@ comment|/* Clobber the section size so that the warning does 		     not get copi
 name|s
 operator|->
 name|_raw_size
+operator|=
+literal|0
+expr_stmt|;
+name|s
+operator|->
+name|_cooked_size
 operator|=
 literal|0
 expr_stmt|;
@@ -16142,6 +16158,8 @@ name|long
 name|sdiff
 init|=
 name|slook
+operator|->
+name|id
 operator|-
 name|h
 operator|->
@@ -16152,6 +16170,8 @@ operator|.
 name|def
 operator|.
 name|section
+operator|->
+name|id
 decl_stmt|;
 if|if
 condition|(
