@@ -841,11 +841,34 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ACPI_FAILURE
+name|ACPI_SUCCESS
 argument_list|(
 name|status
 argument_list|)
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"set ACPI power state D%d on %s\n"
+argument_list|,
+name|state
+argument_list|,
+name|acpi_name
+argument_list|(
+name|h
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 name|status
 operator|!=
 name|AE_NOT_FOUND
@@ -854,7 +877,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Failed to set ACPI power state D%d on %s: %s\n"
+literal|"failed to set ACPI power state D%d on %s: %s\n"
 argument_list|,
 name|state
 argument_list|,
