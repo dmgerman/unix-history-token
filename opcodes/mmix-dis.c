@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* mmix-dis.c -- Disassemble MMIX instructions.    Copyright 2000, 2001, 2002 Free Software Foundation, Inc.    Written by Hans-Peter Nilsson (hp@bitrange.com)  This file is part of GDB and the GNU binutils.  GDB and the GNU binutils are free software; you can redistribute them and/or modify them under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GDB and the GNU binutils are distributed in the hope that they will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this file; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* mmix-dis.c -- Disassemble MMIX instructions.    Copyright 2000, 2001, 2002 Free Software Foundation, Inc.    Written by Hans-Peter Nilsson (hp@bitrange.com)     This file is part of GDB and the GNU binutils.     GDB and the GNU binutils are free software; you can redistribute    them and/or modify them under the terms of the GNU General Public    License as published by the Free Software Foundation; either version 2,    or (at your option) any later version.     GDB and the GNU binutils are distributed in the hope that they    will be useful, but WITHOUT ANY WARRANTY; without even the implied    warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See    the GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this file; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston,    MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -67,7 +67,7 @@ define|#
 directive|define
 name|FATAL_DEBUG
 define|\
-value|do										\    {										\      fprintf (stderr,								\ 	      _("Internal: Non-debugged code (test-case missing): %s:%d"),	\ 	      __FILE__, __LINE__);						\      abort ();									\    }						\  while (0)
+value|do									\    {									\      fprintf (stderr,							\ 	      _("Internal: Non-debugged code (test-case missing): %s:%d"),\ 	      __FILE__, __LINE__);					\      abort ();								\    }									\  while (0)
 end_define
 
 begin_define
@@ -132,38 +132,6 @@ block|}
 struct|;
 end_struct
 
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|initialize_mmix_dis_info
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
-name|disassemble_info
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|struct
-name|mmix_opcode
-modifier|*
-name|get_opcode
-name|PARAMS
-argument_list|(
-operator|(
-name|unsigned
-name|long
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Initialize a target-specific array in INFO.  */
 end_comment
@@ -173,13 +141,11 @@ specifier|static
 name|bfd_boolean
 name|initialize_mmix_dis_info
 parameter_list|(
-name|info
-parameter_list|)
 name|struct
 name|disassemble_info
 modifier|*
 name|info
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|mmix_dis_info
@@ -547,7 +513,8 @@ operator|->
 name|private_data
 operator|=
 operator|(
-name|PTR
+name|void
+operator|*
 operator|)
 name|minfop
 expr_stmt|;
@@ -569,12 +536,10 @@ name|mmix_opcode
 modifier|*
 name|get_opcode
 parameter_list|(
-name|insn
-parameter_list|)
 name|unsigned
 name|long
 name|insn
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 specifier|const
@@ -949,18 +914,14 @@ begin_function
 name|int
 name|print_insn_mmix
 parameter_list|(
-name|memaddr
-parameter_list|,
-name|info
-parameter_list|)
 name|bfd_vma
 name|memaddr
-decl_stmt|;
+parameter_list|,
 name|struct
 name|disassemble_info
 modifier|*
 name|info
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|char

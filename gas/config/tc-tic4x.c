@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-tic4x.c -- Assemble for the Texas Instruments TMS320C[34]x.    Copyright (C) 1997,1998, 2002, 2003 Free Software Foundation.     Contributed by Michael P. Hayes (m.hayes@elec.canterbury.ac.nz)     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 59 Temple Place - Suite 330,     Boston, MA 02111-1307, USA.  */
+comment|/* tc-tic4x.c -- Assemble for the Texas Instruments TMS320C[34]x.    Copyright (C) 1997,1998, 2002, 2003, 2005 Free Software Foundation.     Contributed by Michael P. Hayes (m.hayes@elec.canterbury.ac.nz)     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 51 Franklin Street - Fifth Floor,     Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -674,7 +674,7 @@ operator|(
 name|char
 operator|*
 operator|,
-name|int
+name|offsetT
 operator|*
 operator|)
 argument_list|)
@@ -1391,19 +1391,6 @@ literal|4
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|const
-name|int
-name|md_reloc_size
-init|=
-name|RELSZ
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Coff headers.  */
-end_comment
-
 begin_comment
 comment|/* This array holds the chars that always start a comment.  If the    pre-processor is disabled, these aren't very useful.  */
 end_comment
@@ -1658,7 +1645,7 @@ name|int
 name|shift
 decl_stmt|;
 comment|/* Shift count.  */
-comment|/* NOTE: Svein Seldal<Svein.Seldal@solidas.com>      The code in this function is altered slightly to support floats      with 31-bits mantissas, thus the documentation below may be a      little bit inaccurate.            By Michael P. Hayes<m.hayes@elec.canterbury.ac.nz>      Here is how a generic floating point number is stored using      flonums (an extension of bignums) where p is a pointer to an      array of LITTLENUMs.       For example 2e-3 is stored with exp = -4 and      bits[0] = 0x0000      bits[1] = 0x0000      bits[2] = 0x4fde      bits[3] = 0x978d      bits[4] = 0x126e      bits[5] = 0x0083      with low =&bits[2], high =&bits[5], and leader =&bits[5].       This number can be written as      0x0083126e978d4fde.00000000 * 65536**-4  or      0x0.0083126e978d4fde        * 65536**0   or      0x0.83126e978d4fde          * 2**-8   = 2e-3       Note that low points to the 65536**0 littlenum (bits[2]) and      leader points to the most significant non-zero littlenum      (bits[5]).       TMS320C3X floating point numbers are a bit of a strange beast.      The 32-bit flavour has the 8 MSBs representing the exponent in      twos complement format (-128 to +127).  There is then a sign bit      followed by 23 bits of mantissa.  The mantissa is expressed in      twos complement format with the binary point after the most      significant non sign bit.  The bit after the binary point is      suppressed since it is the complement of the sign bit.  The      effective mantissa is thus 24 bits.  Zero is represented by an      exponent of -128.       The 16-bit flavour has the 4 MSBs representing the exponent in      twos complement format (-8 to +7).  There is then a sign bit      followed by 11 bits of mantissa.  The mantissa is expressed in      twos complement format with the binary point after the most      significant non sign bit.  The bit after the binary point is      suppressed since it is the complement of the sign bit.  The      effective mantissa is thus 12 bits.  Zero is represented by an      exponent of -8.  For example,       number       norm mant m  x  e  s  i    fraction f      +0.500 =>  1.00000000000 -1 -1  0  1  .00000000000   (1 + 0) * 2^(-1)      +0.999 =>  1.11111111111 -1 -1  0  1  .11111111111   (1 + 0.99) * 2^(-1)      +1.000 =>  1.00000000000  0  0  0  1  .00000000000   (1 + 0) * 2^(0)      +1.500 =>  1.10000000000  0  0  0  1  .10000000000   (1 + 0.5) * 2^(0)      +1.999 =>  1.11111111111  0  0  0  1  .11111111111   (1 + 0.9) * 2^(0)      +2.000 =>  1.00000000000  1  1  0  1  .00000000000   (1 + 0) * 2^(1)      +4.000 =>  1.00000000000  2  2  0  1  .00000000000   (1 + 0) * 2^(2)      -0.500 =>  1.00000000000 -1 -1  1  0  .10000000000   (-2 + 0) * 2^(-2)      -1.000 =>  1.00000000000  0 -1  1  0  .00000000000   (-2 + 0) * 2^(-1)      -1.500 =>  1.10000000000  0  0  1  0  .10000000000   (-2 + 0.5) * 2^(0)      -1.999 =>  1.11111111111  0  0  1  0  .00000000001   (-2 + 0.11) * 2^(0)      -2.000 =>  1.00000000000  1  1  1  0  .00000000000   (-2 + 0) * 2^(0)      -4.000 =>  1.00000000000  2  1  1  0  .00000000000   (-2 + 0) * 2^(1)       where e is the exponent, s is the sign bit, i is the implied bit,      and f is the fraction stored in the mantissa field.       num = (1 + f) * 2^x   =  m * 2^e if s = 0      num = (-2 + f) * 2^x  = -m * 2^e if s = 1      where 0<= f< 1.0  and 1.0<= m< 2.0       The fraction (f) and exponent (e) fields for the TMS320C3X format      can be derived from the normalised mantissa (m) and exponent (x) using:       f = m - 1, e = x       if s = 0      f = 2 - m, e = x       if s = 1 and m != 1.0      f = 0,     e = x - 1   if s = 1 and m = 1.0      f = 0,     e = -8      if m = 0        OK, the other issue we have to consider is rounding since the      mantissa has a much higher potential precision than what we can      represent.  To do this we add half the smallest storable fraction.      We then have to renormalise the number to allow for overflow.       To convert a generic flonum into a TMS320C3X floating point      number, here's what we try to do....       The first thing is to generate a normalised mantissa (m) where      1.0<= m< 2 and to convert the exponent from base 16 to base 2.      We desire the binary point to be placed after the most significant      non zero bit.  This process is done in two steps: firstly, the      littlenum with the most significant non zero bit is located (this      is done for us since leader points to this littlenum) and the      binary point (which is currently after the LSB of the littlenum      pointed to by low) is moved to before the MSB of the littlenum      pointed to by leader.  This requires the exponent to be adjusted      by leader - low + 1.  In the earlier example, the new exponent is      thus -4 + (5 - 2 + 1) = 0 (base 65536).  We now need to convert      the exponent to base 2 by multiplying the exponent by 16 (log2      65536).  The exponent base 2 is thus also zero.       The second step is to hunt for the most significant non zero bit      in the leader littlenum.  We do this by left shifting a copy of      the leader littlenum until bit 16 is set (0x10000) and counting      the number of shifts, S, required.  The number of shifts then has to      be added to correct the exponent (base 2).  For our example, this      will require 9 shifts and thus our normalised exponent (base 2) is      0 + 9 = 9.  Note that the worst case scenario is when the leader      littlenum is 1, thus requiring 16 shifts.       We now have to left shift the other littlenums by the same amount,      propagating the shifted bits into the more significant littlenums.      To save a lot of unnecessary shifting we only have to consider      two or three littlenums, since the greatest number of mantissa      bits required is 24 + 1 rounding bit.  While two littlenums      provide 32 bits of precision, the most significant littlenum      may only contain a single significant bit  and thus an extra      littlenum is required.       Denoting the number of bits in the fraction field as F, we require      G = F + 2 bits (one extra bit is for rounding, the other gets      suppressed).  Say we required S shifts to find the most      significant bit in the leader littlenum, the number of left shifts      required to move this bit into bit position G - 1 is L = G + S - 17.      Note that this shift count may be negative for the short floating      point flavour (where F = 11 and thus G = 13 and potentially S< 3).      If L> 0 we have to shunt the next littlenum into position.  Bit      15 (the MSB) of the next littlenum needs to get moved into position      L - 1 (If L> 15 we need all the bits of this littlenum and      some more from the next one.).  We subtract 16 from L and use this      as the left shift count;  the resultant value we or with the      previous result.  If L> 0, we repeat this operation.   */
+comment|/* NOTE: Svein Seldal<Svein@dev.seldal.com>      The code in this function is altered slightly to support floats      with 31-bits mantissas, thus the documentation below may be a      little bit inaccurate.            By Michael P. Hayes<m.hayes@elec.canterbury.ac.nz>      Here is how a generic floating point number is stored using      flonums (an extension of bignums) where p is a pointer to an      array of LITTLENUMs.       For example 2e-3 is stored with exp = -4 and      bits[0] = 0x0000      bits[1] = 0x0000      bits[2] = 0x4fde      bits[3] = 0x978d      bits[4] = 0x126e      bits[5] = 0x0083      with low =&bits[2], high =&bits[5], and leader =&bits[5].       This number can be written as      0x0083126e978d4fde.00000000 * 65536**-4  or      0x0.0083126e978d4fde        * 65536**0   or      0x0.83126e978d4fde          * 2**-8   = 2e-3       Note that low points to the 65536**0 littlenum (bits[2]) and      leader points to the most significant non-zero littlenum      (bits[5]).       TMS320C3X floating point numbers are a bit of a strange beast.      The 32-bit flavour has the 8 MSBs representing the exponent in      twos complement format (-128 to +127).  There is then a sign bit      followed by 23 bits of mantissa.  The mantissa is expressed in      twos complement format with the binary point after the most      significant non sign bit.  The bit after the binary point is      suppressed since it is the complement of the sign bit.  The      effective mantissa is thus 24 bits.  Zero is represented by an      exponent of -128.       The 16-bit flavour has the 4 MSBs representing the exponent in      twos complement format (-8 to +7).  There is then a sign bit      followed by 11 bits of mantissa.  The mantissa is expressed in      twos complement format with the binary point after the most      significant non sign bit.  The bit after the binary point is      suppressed since it is the complement of the sign bit.  The      effective mantissa is thus 12 bits.  Zero is represented by an      exponent of -8.  For example,       number       norm mant m  x  e  s  i    fraction f      +0.500 =>  1.00000000000 -1 -1  0  1  .00000000000   (1 + 0) * 2^(-1)      +0.999 =>  1.11111111111 -1 -1  0  1  .11111111111   (1 + 0.99) * 2^(-1)      +1.000 =>  1.00000000000  0  0  0  1  .00000000000   (1 + 0) * 2^(0)      +1.500 =>  1.10000000000  0  0  0  1  .10000000000   (1 + 0.5) * 2^(0)      +1.999 =>  1.11111111111  0  0  0  1  .11111111111   (1 + 0.9) * 2^(0)      +2.000 =>  1.00000000000  1  1  0  1  .00000000000   (1 + 0) * 2^(1)      +4.000 =>  1.00000000000  2  2  0  1  .00000000000   (1 + 0) * 2^(2)      -0.500 =>  1.00000000000 -1 -1  1  0  .10000000000   (-2 + 0) * 2^(-2)      -1.000 =>  1.00000000000  0 -1  1  0  .00000000000   (-2 + 0) * 2^(-1)      -1.500 =>  1.10000000000  0  0  1  0  .10000000000   (-2 + 0.5) * 2^(0)      -1.999 =>  1.11111111111  0  0  1  0  .00000000001   (-2 + 0.11) * 2^(0)      -2.000 =>  1.00000000000  1  1  1  0  .00000000000   (-2 + 0) * 2^(0)      -4.000 =>  1.00000000000  2  1  1  0  .00000000000   (-2 + 0) * 2^(1)       where e is the exponent, s is the sign bit, i is the implied bit,      and f is the fraction stored in the mantissa field.       num = (1 + f) * 2^x   =  m * 2^e if s = 0      num = (-2 + f) * 2^x  = -m * 2^e if s = 1      where 0<= f< 1.0  and 1.0<= m< 2.0       The fraction (f) and exponent (e) fields for the TMS320C3X format      can be derived from the normalised mantissa (m) and exponent (x) using:       f = m - 1, e = x       if s = 0      f = 2 - m, e = x       if s = 1 and m != 1.0      f = 0,     e = x - 1   if s = 1 and m = 1.0      f = 0,     e = -8      if m = 0        OK, the other issue we have to consider is rounding since the      mantissa has a much higher potential precision than what we can      represent.  To do this we add half the smallest storable fraction.      We then have to renormalise the number to allow for overflow.       To convert a generic flonum into a TMS320C3X floating point      number, here's what we try to do....       The first thing is to generate a normalised mantissa (m) where      1.0<= m< 2 and to convert the exponent from base 16 to base 2.      We desire the binary point to be placed after the most significant      non zero bit.  This process is done in two steps: firstly, the      littlenum with the most significant non zero bit is located (this      is done for us since leader points to this littlenum) and the      binary point (which is currently after the LSB of the littlenum      pointed to by low) is moved to before the MSB of the littlenum      pointed to by leader.  This requires the exponent to be adjusted      by leader - low + 1.  In the earlier example, the new exponent is      thus -4 + (5 - 2 + 1) = 0 (base 65536).  We now need to convert      the exponent to base 2 by multiplying the exponent by 16 (log2      65536).  The exponent base 2 is thus also zero.       The second step is to hunt for the most significant non zero bit      in the leader littlenum.  We do this by left shifting a copy of      the leader littlenum until bit 16 is set (0x10000) and counting      the number of shifts, S, required.  The number of shifts then has to      be added to correct the exponent (base 2).  For our example, this      will require 9 shifts and thus our normalised exponent (base 2) is      0 + 9 = 9.  Note that the worst case scenario is when the leader      littlenum is 1, thus requiring 16 shifts.       We now have to left shift the other littlenums by the same amount,      propagating the shifted bits into the more significant littlenums.      To save a lot of unnecessary shifting we only have to consider      two or three littlenums, since the greatest number of mantissa      bits required is 24 + 1 rounding bit.  While two littlenums      provide 32 bits of precision, the most significant littlenum      may only contain a single significant bit  and thus an extra      littlenum is required.       Denoting the number of bits in the fraction field as F, we require      G = F + 2 bits (one extra bit is for rounding, the other gets      suppressed).  Say we required S shifts to find the most      significant bit in the leader littlenum, the number of left shifts      required to move this bit into bit position G - 1 is L = G + S - 17.      Note that this shift count may be negative for the short floating      point flavour (where F = 11 and thus G = 13 and potentially S< 3).      If L> 0 we have to shunt the next littlenum into position.  Bit      15 (the MSB) of the next littlenum needs to get moved into position      L - 1 (If L> 15 we need all the bits of this littlenum and      some more from the next one.).  We subtract 16 from L and use this      as the left shift count;  the resultant value we or with the      previous result.  If L> 0, we repeat this operation.   */
 if|if
 condition|(
 name|precision
@@ -2628,7 +2615,7 @@ index|[
 name|i
 index|]
 operator|=
-name|islower
+name|ISLOWER
 argument_list|(
 name|regname
 index|[
@@ -2799,7 +2786,7 @@ name|char
 modifier|*
 name|str
 decl_stmt|;
-name|int
+name|offsetT
 modifier|*
 name|value
 decl_stmt|;
@@ -3167,7 +3154,7 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-name|int
+name|offsetT
 name|size
 decl_stmt|;
 name|segT
@@ -3237,8 +3224,11 @@ condition|)
 block|{
 name|as_bad
 argument_list|(
-literal|".bss size %d< 0!"
+literal|".bss size %ld< 0!"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|size
 argument_list|)
 expr_stmt|;
@@ -3799,7 +3789,7 @@ block|{
 name|char
 name|c
 decl_stmt|;
-name|int
+name|offsetT
 name|value
 decl_stmt|;
 name|char
@@ -3918,7 +3908,7 @@ decl_stmt|;
 name|segT
 name|seg
 decl_stmt|;
-name|int
+name|offsetT
 name|num
 decl_stmt|;
 name|SKIP_WHITESPACE
@@ -4200,6 +4190,9 @@ argument_list|()
 expr_stmt|;
 return|return;
 block|}
+operator|++
+name|input_line_pointer
+expr_stmt|;
 name|symbolP
 operator|=
 name|symbol_find_or_make
@@ -4255,7 +4248,7 @@ decl_stmt|;
 name|segT
 name|seg
 decl_stmt|;
-name|int
+name|offsetT
 name|size
 decl_stmt|,
 name|alignment_flag
@@ -4529,8 +4522,7 @@ name|x
 name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
-name|unsigned
-name|int
+name|offsetT
 name|temp
 decl_stmt|;
 name|input_line_pointer
@@ -4559,8 +4551,11 @@ argument_list|)
 condition|)
 name|as_bad
 argument_list|(
-literal|"This assembler does not support processor generation %d"
+literal|"This assembler does not support processor generation %ld"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|temp
 argument_list|)
 expr_stmt|;
@@ -4570,6 +4565,9 @@ name|tic4x_cpu
 operator|&&
 name|temp
 operator|!=
+operator|(
+name|offsetT
+operator|)
 name|tic4x_cpu
 condition|)
 name|as_warn
@@ -10834,7 +10832,6 @@ name|LITTLENUM_TYPE
 modifier|*
 name|wordP
 decl_stmt|;
-name|unsigned
 name|char
 modifier|*
 name|t
@@ -10977,10 +10974,6 @@ argument_list|(
 name|LITTLENUM_TYPE
 argument_list|)
 expr_stmt|;
-name|t
-operator|=
-name|litP
-expr_stmt|;
 comment|/* This loops outputs the LITTLENUMs in REVERSE order; in accord with      little endian byte order.  */
 comment|/* SES: However it is required to put the words (32-bits) out in the      correct order, hence we write 2 and 2 littlenums in little endian      order, while we keep the original order on successive words. */
 for|for
@@ -11081,7 +11074,7 @@ end_function
 
 begin_function
 name|void
-name|md_apply_fix3
+name|md_apply_fix
 parameter_list|(
 name|fixP
 parameter_list|,
@@ -12113,21 +12106,28 @@ name|unsigned
 name|char
 modifier|*
 name|buf
-init|=
-name|fixP
-operator|->
-name|fx_where
-operator|+
-name|fixP
-operator|->
-name|fx_frag
-operator|->
-name|fr_literal
 decl_stmt|;
 name|unsigned
 name|int
 name|op
 decl_stmt|;
+name|buf
+operator|=
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+name|fixP
+operator|->
+name|fx_frag
+operator|->
+name|fr_literal
+operator|+
+name|fixP
+operator|->
+name|fx_where
+expr_stmt|;
 name|op
 operator|=
 operator|(
@@ -12226,7 +12226,7 @@ name|unsigned
 name|long
 name|nop
 init|=
-name|NOP_OPCODE
+name|TIC_NOP_OPCODE
 decl_stmt|;
 comment|/* Because we are talking lwords, not bytes, adjust alignment to do words */
 name|alignment

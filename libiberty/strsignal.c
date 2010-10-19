@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"config.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ansidecl.h"
 end_include
 
@@ -13,12 +19,6 @@ begin_include
 include|#
 directive|include
 file|"libiberty.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"config.h"
 end_include
 
 begin_comment
@@ -137,35 +137,12 @@ directive|ifndef
 name|NULL
 end_ifndef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ANSI_PROTOTYPES
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|NULL
 value|(void *) 0
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|NULL
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -195,18 +172,15 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|init_signal_tables
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Translation table for signal values.     Note that this table is generally only accessed when it is used at runtime    to initialize signal name and message tables that are indexed by signal    value.     Not all of these signals will exist on all systems.  This table is the only    thing that should have to be updated as new signal numbers are introduced.    It's sort of ugly, but at least its portable. */
@@ -1201,7 +1175,9 @@ begin_function
 specifier|static
 name|void
 name|init_signal_tables
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|const
 name|struct
@@ -1429,7 +1405,9 @@ end_comment
 begin_function
 name|int
 name|signo_max
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|maxsize
@@ -1480,11 +1458,9 @@ name|char
 modifier|*
 name|strsignal
 parameter_list|(
-name|signo
-parameter_list|)
 name|int
 name|signo
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|char
@@ -1617,11 +1593,9 @@ name|char
 modifier|*
 name|strsigno
 parameter_list|(
-name|signo
-parameter_list|)
 name|int
 name|signo
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|char
@@ -1733,13 +1707,11 @@ begin_function
 name|int
 name|strtosigno
 parameter_list|(
-name|name
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|signo
@@ -1842,17 +1814,13 @@ begin_function
 name|void
 name|psignal
 parameter_list|(
-name|signo
-parameter_list|,
-name|message
-parameter_list|)
 name|unsigned
 name|signo
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|message
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1938,7 +1906,9 @@ end_include
 begin_function
 name|int
 name|main
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|signo

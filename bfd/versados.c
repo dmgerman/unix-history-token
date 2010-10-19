@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for VERSAdos-E objects.    Copyright 1995, 1996, 1998, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.    Written by Steve Chamberlain of Cygnus Support<sac@cygnus.com>.     Versados is a Motorola trademark.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for VERSAdos-E objects.    Copyright 1995, 1996, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.    Written by Steve Chamberlain of Cygnus Support<sac@cygnus.com>.     Versados is a Motorola trademark.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
-comment|/*    SUBSECTION    VERSAdos-E relocatable object file format     DESCRIPTION     This module supports reading of VERSAdos relocatable    object files.     A VERSAdos file looks like contains     o Identification Record    o External Symbol Definition Record    o Object Text Record    o End Record   */
+comment|/*    SUBSECTION    VERSAdos-E relocatable object file format     DESCRIPTION     This module supports reading of VERSAdos relocatable    object files.     A VERSAdos file looks like contains     o Identification Record    o External Symbol Definition Record    o Object Text Record    o End Record.  */
 end_comment
 
 begin_include
@@ -30,304 +30,6 @@ include|#
 directive|include
 file|"libiberty.h"
 end_include
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|versados_mkobject
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|versados_scan
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|bfd_target
-modifier|*
-name|versados_object_p
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|asymbol
-modifier|*
-name|versados_new_symbol
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|int
-operator|,
-specifier|const
-name|char
-operator|*
-operator|,
-name|bfd_vma
-operator|,
-name|asection
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|new_symbol_string
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|bfd_target
-modifier|*
-name|versados_object_p
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|versados_pass_2
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|versados_get_section_contents
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|asection
-operator|*
-operator|,
-name|void
-operator|*
-operator|,
-name|file_ptr
-operator|,
-name|bfd_size_type
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|versados_set_section_contents
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|sec_ptr
-operator|,
-specifier|const
-name|void
-operator|*
-operator|,
-name|file_ptr
-operator|,
-name|bfd_size_type
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|versados_sizeof_headers
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|bfd_boolean
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|long
-name|int
-name|versados_get_symtab_upper_bound
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|long
-name|int
-name|versados_canonicalize_symtab
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|asymbol
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|versados_get_symbol_info
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|asymbol
-operator|*
-operator|,
-name|symbol_info
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|versados_print_symbol
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|PTR
-operator|,
-name|asymbol
-operator|*
-operator|,
-name|bfd_print_symbol_type
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|long
-name|versados_get_reloc_upper_bound
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|sec_ptr
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|long
-name|versados_canonicalize_reloc
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|sec_ptr
-operator|,
-name|arelent
-operator|*
-operator|*
-operator|,
-name|asymbol
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
@@ -365,15 +67,15 @@ value|17
 end_define
 
 begin_comment
-comment|/* first symbol has esdid 17 */
+comment|/* First symbol has esdid 17.  */
 end_comment
 
 begin_comment
-comment|/* Per file target dependent information */
+comment|/* Per file target dependent information.  */
 end_comment
 
 begin_comment
-comment|/* one for each section */
+comment|/* One for each section.  */
 end_comment
 
 begin_struct
@@ -384,24 +86,24 @@ name|asection
 modifier|*
 name|section
 decl_stmt|;
-comment|/* ptr to bfd version */
+comment|/* Ptr to bfd version.  */
 name|unsigned
 name|char
 modifier|*
 name|contents
 decl_stmt|;
-comment|/* used to build image */
+comment|/* Used to build image.  */
 name|int
 name|pc
 decl_stmt|;
 name|int
 name|relocs
 decl_stmt|;
-comment|/* reloc count, valid end of pass 1 */
+comment|/* Reloc count, valid end of pass 1.  */
 name|int
 name|donerel
 decl_stmt|;
-comment|/* have relocs been translated */
+comment|/* Have relocs been translated.  */
 block|}
 struct|;
 end_struct
@@ -414,37 +116,37 @@ block|{
 name|int
 name|es_done
 decl_stmt|;
-comment|/* count of symbol index, starts at ES_BASE */
+comment|/* Count of symbol index, starts at ES_BASE.  */
 name|asymbol
 modifier|*
 name|symbols
 decl_stmt|;
-comment|/* pointer to local symbols */
+comment|/* Pointer to local symbols.  */
 name|char
 modifier|*
 name|strings
 decl_stmt|;
-comment|/* strings of all the above */
+comment|/* Strings of all the above.  */
 name|int
 name|stringlen
 decl_stmt|;
-comment|/* len of string table (valid end of pass1) */
+comment|/* Len of string table (valid end of pass1).  */
 name|int
 name|nsecsyms
 decl_stmt|;
-comment|/* number of sections */
+comment|/* Number of sections.  */
 name|int
 name|ndefs
 decl_stmt|;
-comment|/* number of exported symbols (they dont get esdids) */
+comment|/* Number of exported symbols (they dont get esdids).  */
 name|int
 name|nrefs
 decl_stmt|;
-comment|/* number of imported symbols  (valid end of pass1) */
+comment|/* Number of imported symbols  (valid end of pass1).  */
 name|int
 name|ref_idx
 decl_stmt|;
-comment|/* current processed value of the above */
+comment|/* Current processed value of the above.  */
 name|int
 name|def_idx
 decl_stmt|;
@@ -458,11 +160,11 @@ index|[
 literal|16
 index|]
 decl_stmt|;
-comment|/* per section info */
+comment|/* Per section info.  */
 name|int
 name|alert
 decl_stmt|;
-comment|/* to see if we're trampling */
+comment|/* To see if we're trampling.  */
 name|asymbol
 modifier|*
 name|rest
@@ -472,7 +174,7 @@ operator|-
 literal|16
 index|]
 decl_stmt|;
-comment|/* per symbol info */
+comment|/* Per symbol info.  */
 block|}
 name|tdata_type
 typedef|;
@@ -556,18 +258,18 @@ decl_stmt|;
 name|char
 name|type
 decl_stmt|;
-comment|/* record type */
+comment|/* Record type.  */
 name|char
 name|name
 index|[
 literal|10
 index|]
 decl_stmt|;
-comment|/* module name */
+comment|/* Module name.  */
 name|char
 name|rev
 decl_stmt|;
-comment|/* module rev number */
+comment|/* Module rev number.  */
 name|char
 name|lang
 decl_stmt|;
@@ -683,8 +385,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|ESD_XREF_SYM
-value|7
+name|ESD_XDEF_IN_ABS
+value|5
 end_define
 
 begin_define
@@ -697,8 +399,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|ESD_XDEF_IN_ABS
-value|5
+name|ESD_XREF_SYM
+value|7
 end_define
 
 begin_union
@@ -725,116 +427,6 @@ block|}
 union|;
 end_union
 
-begin_decl_stmt
-specifier|static
-name|int
-name|get_record
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-expr|union
-name|ext_any
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|get_4
-name|PARAMS
-argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|get_10
-name|PARAMS
-argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|*
-operator|,
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|process_esd
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-expr|struct
-name|ext_esd
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|get_offset
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-operator|,
-name|unsigned
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|process_otr
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-expr|struct
-name|ext_otr
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Initialize by filling in the hex conversion array.  */
 end_comment
@@ -848,12 +440,10 @@ specifier|static
 name|bfd_boolean
 name|versados_mkobject
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -878,10 +468,6 @@ name|tdata_type
 modifier|*
 name|tdata
 init|=
-operator|(
-name|tdata_type
-operator|*
-operator|)
 name|bfd_alloc
 argument_list|(
 name|abfd
@@ -947,35 +533,25 @@ name|asymbol
 modifier|*
 name|versados_new_symbol
 parameter_list|(
-name|abfd
-parameter_list|,
-name|snum
-parameter_list|,
-name|name
-parameter_list|,
-name|val
-parameter_list|,
-name|sec
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|int
 name|snum
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|,
 name|bfd_vma
 name|val
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|sec
-decl_stmt|;
+parameter_list|)
 block|{
 name|asymbol
 modifier|*
@@ -1031,19 +607,15 @@ specifier|static
 name|int
 name|get_record
 parameter_list|(
-name|abfd
-parameter_list|,
-name|ptr
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|union
 name|ext_any
 modifier|*
 name|ptr
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1104,14 +676,12 @@ specifier|static
 name|int
 name|get_4
 parameter_list|(
-name|pp
-parameter_list|)
 name|unsigned
 name|char
 modifier|*
 modifier|*
 name|pp
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|char
@@ -1171,20 +741,16 @@ specifier|static
 name|void
 name|get_10
 parameter_list|(
-name|pp
-parameter_list|,
-name|name
-parameter_list|)
 name|unsigned
 name|char
 modifier|*
 modifier|*
 name|pp
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -1243,19 +809,15 @@ name|char
 modifier|*
 name|new_symbol_string
 parameter_list|(
-name|abfd
-parameter_list|,
-name|name
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -1310,26 +872,20 @@ specifier|static
 name|void
 name|process_esd
 parameter_list|(
-name|abfd
-parameter_list|,
-name|esd
-parameter_list|,
-name|pass
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|struct
 name|ext_esd
 modifier|*
 name|esd
-decl_stmt|;
+parameter_list|,
 name|int
 name|pass
-decl_stmt|;
+parameter_list|)
 block|{
-comment|/* Read through the ext def for the est entries */
+comment|/* Read through the ext def for the est entries.  */
 name|int
 name|togo
 init|=
@@ -1400,7 +956,7 @@ operator|)
 operator|&
 literal|0xf
 decl_stmt|;
-comment|/* Declare this section */
+comment|/* Declare this section.  */
 name|sprintf
 argument_list|(
 name|name
@@ -1483,7 +1039,6 @@ name|pass
 operator|==
 literal|1
 condition|)
-block|{
 name|VDATA
 argument_list|(
 name|abfd
@@ -1498,7 +1053,6 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
-block|}
 else|else
 block|{
 name|int
@@ -1587,10 +1141,9 @@ case|:
 case|case
 name|ESD_SHRT_REL_SEC
 case|:
-block|{
 name|sec
 operator|->
-name|_raw_size
+name|size
 operator|=
 name|get_4
 argument_list|(
@@ -1604,7 +1157,6 @@ name|flags
 operator||=
 name|SEC_ALLOC
 expr_stmt|;
-block|}
 break|break;
 case|case
 name|ESD_XDEF_IN_ABS
@@ -1658,8 +1210,7 @@ name|pass
 operator|==
 literal|1
 condition|)
-block|{
-comment|/* Just remember the symbol */
+comment|/* Just remember the symbol.  */
 name|VDATA
 argument_list|(
 name|abfd
@@ -1674,7 +1225,6 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
-block|}
 else|else
 block|{
 name|asymbol
@@ -1888,18 +1438,14 @@ specifier|static
 name|int
 name|get_offset
 parameter_list|(
-name|len
-parameter_list|,
-name|ptr
-parameter_list|)
 name|int
 name|len
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|char
 modifier|*
 name|ptr
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|val
@@ -1968,24 +1514,18 @@ specifier|static
 name|void
 name|process_otr
 parameter_list|(
-name|abfd
-parameter_list|,
-name|otr
-parameter_list|,
-name|pass
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|struct
 name|ext_otr
 modifier|*
 name|otr
-decl_stmt|;
+parameter_list|,
 name|int
 name|pass
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|long
@@ -2187,7 +1727,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* A zero esdid means the new pc is the offset given */
+comment|/* A zero esdid means the new pc is the offset given.  */
 name|dst_idx
 operator|+=
 name|get_offset
@@ -2315,7 +1855,7 @@ operator|==
 literal|1
 condition|)
 block|{
-comment|/* this is the first pass over the data, 			     just remember that we need a reloc */
+comment|/* This is the first pass over the data, 			     just remember that we need a reloc.  */
 block|}
 else|else
 block|{
@@ -2354,6 +1894,9 @@ operator|(
 name|asymbol
 operator|*
 operator|*
+operator|)
+operator|(
+name|size_t
 operator|)
 name|esdid
 expr_stmt|;
@@ -2414,7 +1957,7 @@ name|esdid
 operator|->
 name|section
 operator|->
-name|_raw_size
+name|size
 condition|)
 if|if
 condition|(
@@ -2423,7 +1966,7 @@ operator|==
 literal|2
 condition|)
 block|{
-comment|/* absolute code, comes in 16 bit lumps */
+comment|/* Absolute code, comes in 16 bit lumps.  */
 name|contents
 index|[
 name|dst_idx
@@ -2487,17 +2030,12 @@ name|esdid
 operator|->
 name|section
 operator|->
-name|_raw_size
+name|size
 decl_stmt|;
 name|esdid
 operator|->
 name|contents
 operator|=
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
 name|bfd_alloc
 argument_list|(
 name|abfd
@@ -2514,12 +2052,10 @@ specifier|static
 name|bfd_boolean
 name|versados_scan
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|loop
@@ -2672,7 +2208,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-comment|/* Now allocate space for the relocs and sections */
+comment|/* Now allocate space for the relocs and sections.  */
 name|VDATA
 argument_list|(
 name|abfd
@@ -2791,10 +2327,6 @@ name|section
 operator|->
 name|relocation
 operator|=
-operator|(
-name|arelent
-operator|*
-operator|)
 name|bfd_alloc
 argument_list|(
 name|abfd
@@ -2854,7 +2386,7 @@ name|relocs
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Add an entry into the symbol table for it */
+comment|/* Add an entry into the symbol table for it.  */
 name|nsecs
 operator|++
 expr_stmt|;
@@ -2904,10 +2436,6 @@ argument_list|)
 operator|->
 name|symbols
 operator|=
-operator|(
-name|asymbol
-operator|*
-operator|)
 name|bfd_alloc
 argument_list|(
 name|abfd
@@ -2980,7 +2508,7 @@ condition|)
 return|return
 name|FALSE
 return|;
-comment|/* Actually fill in the section symbols,      we stick them at the end of the table */
+comment|/* Actually fill in the section symbols,      we stick them at the end of the table.  */
 for|for
 control|(
 name|j
@@ -3104,7 +2632,7 @@ name|flags
 operator||=
 name|HAS_SYMS
 expr_stmt|;
-comment|/* Set this to nsecs - since we've already planted the section      symbols */
+comment|/* Set this to nsecs - since we've already planted the section      symbols.  */
 name|VDATA
 argument_list|(
 name|abfd
@@ -3140,12 +2668,10 @@ name|bfd_target
 modifier|*
 name|versados_object_p
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ext_vheader
@@ -3322,12 +2848,10 @@ specifier|static
 name|bfd_boolean
 name|versados_pass_2
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 name|union
 name|ext_any
@@ -3373,7 +2897,7 @@ name|es_done
 operator|=
 name|ES_BASE
 expr_stmt|;
-comment|/* read records till we get to where we want to be */
+comment|/* Read records till we get to where we want to be.  */
 while|while
 condition|(
 literal|1
@@ -3453,33 +2977,24 @@ specifier|static
 name|bfd_boolean
 name|versados_get_section_contents
 parameter_list|(
-name|abfd
-parameter_list|,
-name|section
-parameter_list|,
-name|location
-parameter_list|,
-name|offset
-parameter_list|,
-name|count
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|section
-decl_stmt|;
-name|PTR
+parameter_list|,
+name|void
+modifier|*
 name|location
-decl_stmt|;
+parameter_list|,
 name|file_ptr
 name|offset
-decl_stmt|;
+parameter_list|,
 name|bfd_size_type
 name|count
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -3534,38 +3049,29 @@ specifier|static
 name|bfd_boolean
 name|versados_set_section_contents
 parameter_list|(
-name|abfd
-parameter_list|,
-name|section
-parameter_list|,
-name|location
-parameter_list|,
-name|offset
-parameter_list|,
-name|bytes_to_do
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|sec_ptr
 name|section
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 specifier|const
-name|PTR
+name|void
+modifier|*
 name|location
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|file_ptr
 name|offset
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|bfd_size_type
 name|bytes_to_do
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|FALSE
@@ -3578,19 +3084,15 @@ specifier|static
 name|int
 name|versados_sizeof_headers
 parameter_list|(
-name|abfd
-parameter_list|,
-name|exec
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|bfd_boolean
 name|exec
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 literal|0
@@ -3607,12 +3109,10 @@ specifier|static
 name|long
 name|versados_get_symtab_upper_bound
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -3642,19 +3142,15 @@ specifier|static
 name|long
 name|versados_canonicalize_symtab
 parameter_list|(
-name|abfd
-parameter_list|,
-name|alocation
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|asymbol
 modifier|*
 modifier|*
 name|alocation
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|int
@@ -3703,14 +3199,12 @@ operator|,
 name|i
 operator|++
 control|)
-block|{
 operator|*
 name|alocation
 operator|++
 operator|=
 name|s
 expr_stmt|;
-block|}
 operator|*
 name|alocation
 operator|=
@@ -3727,25 +3221,19 @@ specifier|static
 name|void
 name|versados_get_symbol_info
 parameter_list|(
-name|ignore_abfd
-parameter_list|,
-name|symbol
-parameter_list|,
-name|ret
-parameter_list|)
 name|bfd
 modifier|*
-name|ignore_abfd
+name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|asymbol
 modifier|*
 name|symbol
-decl_stmt|;
+parameter_list|,
 name|symbol_info
 modifier|*
 name|ret
-decl_stmt|;
+parameter_list|)
 block|{
 name|bfd_symbol_info
 argument_list|(
@@ -3762,28 +3250,21 @@ specifier|static
 name|void
 name|versados_print_symbol
 parameter_list|(
-name|abfd
-parameter_list|,
-name|afile
-parameter_list|,
-name|symbol
-parameter_list|,
-name|how
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
-name|PTR
+parameter_list|,
+name|void
+modifier|*
 name|afile
-decl_stmt|;
+parameter_list|,
 name|asymbol
 modifier|*
 name|symbol
-decl_stmt|;
+parameter_list|,
 name|bfd_print_symbol_type
 name|how
-decl_stmt|;
+parameter_list|)
 block|{
 name|FILE
 modifier|*
@@ -3821,7 +3302,8 @@ argument_list|(
 name|abfd
 argument_list|,
 operator|(
-name|PTR
+name|void
+operator|*
 operator|)
 name|file
 argument_list|,
@@ -3854,18 +3336,14 @@ specifier|static
 name|long
 name|versados_get_reloc_upper_bound
 parameter_list|(
-name|abfd
-parameter_list|,
-name|asect
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|sec_ptr
 name|asect
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -3890,31 +3368,23 @@ specifier|static
 name|long
 name|versados_canonicalize_reloc
 parameter_list|(
-name|abfd
-parameter_list|,
-name|section
-parameter_list|,
-name|relptr
-parameter_list|,
-name|symbols
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|sec_ptr
 name|section
-decl_stmt|;
+parameter_list|,
 name|arelent
 modifier|*
 modifier|*
 name|relptr
-decl_stmt|;
+parameter_list|,
 name|asymbol
 modifier|*
 modifier|*
 name|symbols
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|int
@@ -3963,7 +3433,7 @@ name|donerel
 operator|=
 literal|1
 expr_stmt|;
-comment|/* translate from indexes to symptr ptrs */
+comment|/* Translate from indexes to symptr ptrs.  */
 for|for
 control|(
 name|count
@@ -3986,6 +3456,9 @@ init|=
 operator|(
 name|int
 operator|)
+operator|(
+name|size_t
+operator|)
 name|src
 index|[
 name|count
@@ -3999,7 +3472,6 @@ name|esdid
 operator|==
 literal|0
 condition|)
-block|{
 name|src
 index|[
 name|count
@@ -4011,7 +3483,6 @@ name|bfd_abs_section
 operator|.
 name|symbol_ptr_ptr
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -4019,8 +3490,8 @@ name|esdid
 operator|<
 name|ES_BASE
 condition|)
-comment|/* Section relative thing */
 block|{
+comment|/* Section relative thing.  */
 name|struct
 name|esdid
 modifier|*
@@ -4036,14 +3507,6 @@ operator|-
 literal|1
 argument_list|)
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|section
-condition|)
-block|{
-comment|/** relocation relative to section which was 		   never declared ! */
-block|}
 name|src
 index|[
 name|count
@@ -4059,7 +3522,6 @@ name|symbol_ptr_ptr
 expr_stmt|;
 block|}
 else|else
-block|{
 name|src
 index|[
 name|count
@@ -4073,7 +3535,6 @@ name|esdid
 operator|-
 name|ES_BASE
 expr_stmt|;
-block|}
 block|}
 block|}
 for|for
@@ -4091,7 +3552,6 @@ condition|;
 name|count
 operator|++
 control|)
-block|{
 operator|*
 name|relptr
 operator|++
@@ -4099,7 +3559,6 @@ operator|=
 name|src
 operator|++
 expr_stmt|;
-block|}
 operator|*
 name|relptr
 operator|=
@@ -4137,6 +3596,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|versados_bfd_is_target_special_symbol
+value|((bfd_boolean (*) (bfd *, asymbol *)) bfd_false)
+end_define
+
+begin_define
+define|#
+directive|define
 name|versados_bfd_is_local_label_name
 value|bfd_generic_is_local_label_name
 end_define
@@ -4153,6 +3619,13 @@ define|#
 directive|define
 name|versados_find_nearest_line
 value|_bfd_nosymbols_find_nearest_line
+end_define
+
+begin_define
+define|#
+directive|define
+name|versados_find_inliner_info
+value|_bfd_nosymbols_find_inliner_info
 end_define
 
 begin_define
@@ -4201,7 +3674,6 @@ begin_define
 define|#
 directive|define
 name|versados_bfd_get_relocated_section_contents
-define|\
 value|bfd_generic_get_relocated_section_contents
 end_define
 
@@ -4229,8 +3701,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|versados_bfd_is_group_section
+value|bfd_generic_is_group_section
+end_define
+
+begin_define
+define|#
+directive|define
 name|versados_bfd_discard_group
 value|bfd_generic_discard_group
+end_define
+
+begin_define
+define|#
+directive|define
+name|versados_section_already_linked
+value|_bfd_generic_section_already_linked
 end_define
 
 begin_define
@@ -4283,21 +3769,21 @@ init|=
 block|{
 literal|"versados"
 block|,
-comment|/* name */
+comment|/* Name.  */
 name|bfd_target_versados_flavour
 block|,
 name|BFD_ENDIAN_BIG
 block|,
-comment|/* target byte order */
+comment|/* Target byte order.  */
 name|BFD_ENDIAN_BIG
 block|,
-comment|/* target headers byte order */
+comment|/* Target headers byte order.  */
 operator|(
 name|HAS_RELOC
 operator||
 name|EXEC_P
 operator||
-comment|/* object flags */
+comment|/* Object flags.  */
 name|HAS_LINENO
 operator||
 name|HAS_DEBUG
@@ -4327,16 +3813,16 @@ operator||
 name|SEC_RELOC
 operator|)
 block|,
-comment|/* section flags */
+comment|/* Section flags.  */
 literal|0
 block|,
-comment|/* leading underscore */
+comment|/* Leading underscore.  */
 literal|' '
 block|,
-comment|/* ar_pad_char */
+comment|/* AR_pad_char.  */
 literal|16
 block|,
-comment|/* ar_max_namelen */
+comment|/* AR_max_namelen.  */
 name|bfd_getb64
 block|,
 name|bfd_getb_signed_64
@@ -4355,7 +3841,7 @@ name|bfd_getb_signed_16
 block|,
 name|bfd_putb16
 block|,
-comment|/* data */
+comment|/* Data.  */
 name|bfd_getb64
 block|,
 name|bfd_getb_signed_64
@@ -4374,13 +3860,13 @@ name|bfd_getb_signed_16
 block|,
 name|bfd_putb16
 block|,
-comment|/* hdrs */
+comment|/* Headers.  */
 block|{
 name|_bfd_dummy_target
 block|,
 name|versados_object_p
 block|,
-comment|/* bfd_check_format */
+comment|/* bfd_check_format.  */
 name|_bfd_dummy_target
 block|,
 name|_bfd_dummy_target
@@ -4397,7 +3883,7 @@ name|bfd_false
 block|,   }
 block|,
 block|{
-comment|/* bfd_write_contents */
+comment|/* bfd_write_contents.  */
 name|bfd_false
 block|,
 name|bfd_false
@@ -4454,10 +3940,7 @@ argument_list|)
 block|,
 name|NULL
 block|,
-operator|(
-name|PTR
-operator|)
-literal|0
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt

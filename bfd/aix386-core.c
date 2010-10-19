@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for AIX on PS/2 core files.    This was based on trad-core.c, which was written by John Gilmore of         Cygnus Support.    Copyright 1988, 1989, 1991, 1992, 1993, 1994, 1996, 1998, 1999, 2000,    2001, 2002, 2004    Free Software Foundation, Inc.    Written by Minh Tran-Le<TRANLE@INTELLICORP.COM>.    Converted to back end form by Ian Lance Taylor<ian@cygnus.com>.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for AIX on PS/2 core files.    This was based on trad-core.c, which was written by John Gilmore of         Cygnus Support.    Copyright 1988, 1989, 1991, 1992, 1993, 1994, 1996, 1998, 1999, 2000,    2001, 2002, 2004    Free Software Foundation, Inc.    Written by Minh Tran-Le<TRANLE@INTELLICORP.COM>.    Converted to back end form by Ian Lance Taylor<ian@cygnus.com>.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -505,7 +505,7 @@ argument_list|(
 name|abfd
 argument_list|)
 operator|->
-name|_raw_size
+name|size
 operator|=
 sizeof|sizeof
 argument_list|(
@@ -588,7 +588,7 @@ argument_list|(
 name|abfd
 argument_list|)
 operator|->
-name|_raw_size
+name|size
 operator|=
 sizeof|sizeof
 argument_list|(
@@ -826,7 +826,7 @@ argument_list|,
 name|n
 argument_list|)
 operator|->
-name|_raw_size
+name|size
 operator|=
 name|core
 operator|->
@@ -943,30 +943,12 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|bfd_boolean
+begin_define
+define|#
+directive|define
 name|aix386_core_file_matches_executable_p
-parameter_list|(
-name|core_bfd
-parameter_list|,
-name|exec_bfd
-parameter_list|)
-name|bfd
-modifier|*
-name|core_bfd
-decl_stmt|;
-name|bfd
-modifier|*
-name|exec_bfd
-decl_stmt|;
-block|{
-comment|/* FIXME: We have no way of telling at this point.  */
-return|return
-name|TRUE
-return|;
-block|}
-end_function
+value|generic_core_file_matches_executable_p
+end_define
 
 begin_comment
 comment|/* If somebody calls any byte-swapping routines, shoot them.  */

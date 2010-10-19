@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-hppa.c -- Assemble for the PA    Copyright 1989, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001,    2002, 2003 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* tc-hppa.c -- Assemble for the PA    Copyright 1989, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001,    2002, 2003, 2004, 2005 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -901,6 +901,10 @@ decl_stmt|;
 comment|/* Nonzero if this subspace contains only code.  */
 name|char
 name|code_only
+decl_stmt|;
+comment|/* Nonzero if this is a comdat subspace.  */
+name|char
+name|comdat
 decl_stmt|;
 comment|/* Nonzero if this is a common subspace.  */
 name|char
@@ -1903,7 +1907,7 @@ end_ifdef
 begin_decl_stmt
 specifier|static
 name|int
-name|log2
+name|exact_log2
 name|PARAMS
 argument_list|(
 operator|(
@@ -2042,6 +2046,8 @@ name|int
 operator|,
 name|int
 operator|,
+name|int
+operator|,
 name|asection
 operator|*
 operator|)
@@ -2062,6 +2068,8 @@ operator|*
 operator|,
 name|char
 operator|*
+operator|,
+name|int
 operator|,
 name|int
 operator|,
@@ -2195,20 +2203,6 @@ name|char
 operator|*
 operator|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|pa_next_subseg
-name|PARAMS
-argument_list|(
-operator|(
-name|sd_chain_struct
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3345,15 +3339,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Nonzero when strict syntax checking is enabled.  Zero otherwise.     Each opcode in the table has a flag which indicates whether or not    strict syntax checking should be enabled for that instruction.  */
+comment|/* Nonzero when strict matching is enabled.  Zero otherwise.     Each opcode in the table has a flag which indicates whether or    not strict matching should be enabled for that instruction.     Mainly, strict causes errors to be ignored when a match failure    occurs.  However, it also affects the parsing of register fields    by pa_parse_number.  */
 end_comment
 
 begin_decl_stmt
 specifier|static
 name|int
 name|strict
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -3419,7 +3411,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* List of registers that are pre-defined:     Each general register has one predefined name of the form    %r<REGNUM> which has the value<REGNUM>.     Space and control registers are handled in a similar manner,    but use %sr<REGNUM> and %cr<REGNUM> as their predefined names.     Likewise for the floating point registers, but of the form    %fr<REGNUM>.  Floating point registers have additional predefined    names with 'L' and 'R' suffixes (e.g. %fr19L, %fr19R) which    again have the value<REGNUM>.     Many registers also have synonyms:     %r26 - %r23 have %arg0 - %arg3 as synonyms    %r28 - %r29 have %ret0 - %ret1 as synonyms    %r30 has %sp as a synonym    %r27 has %dp as a synonym    %r2  has %rp as a synonym     Almost every control register has a synonym; they are not listed    here for brevity.     The table is sorted. Suitable for searching by a binary search.  */
+comment|/* List of registers that are pre-defined:     Each general register has one predefined name of the form    %r<REGNUM> which has the value<REGNUM>.     Space and control registers are handled in a similar manner,    but use %sr<REGNUM> and %cr<REGNUM> as their predefined names.     Likewise for the floating point registers, but of the form    %fr<REGNUM>.  Floating point registers have additional predefined    names with 'L' and 'R' suffixes (e.g. %fr19L, %fr19R) which    again have the value<REGNUM>.     Many registers also have synonyms:     %r26 - %r23 have %arg0 - %arg3 as synonyms    %r28 - %r29 have %ret0 - %ret1 as synonyms    %fr4 - %fr7 have %farg0 - %farg3 as synonyms    %r30 has %sp as a synonym    %r27 has %dp as a synonym    %r2  has %rp as a synonym     Almost every control register has a synonym; they are not listed    here for brevity.     The table is sorted. Suitable for searching by a binary search.  */
 end_comment
 
 begin_decl_stmt
@@ -3626,25 +3618,33 @@ block|,
 block|{
 literal|"%farg0"
 block|,
-literal|5
+literal|4
+operator|+
+name|FP_REG_BASE
 block|}
 block|,
 block|{
 literal|"%farg1"
 block|,
-literal|6
+literal|5
+operator|+
+name|FP_REG_BASE
 block|}
 block|,
 block|{
 literal|"%farg2"
 block|,
-literal|7
+literal|6
+operator|+
+name|FP_REG_BASE
 block|}
 block|,
 block|{
 literal|"%farg3"
 block|,
-literal|8
+literal|7
+operator|+
+name|FP_REG_BASE
 block|}
 block|,
 block|{
@@ -5412,6 +5412,8 @@ literal|0
 block|,
 literal|0
 block|,
+literal|0
+block|,
 literal|24
 block|,
 literal|0x2c
@@ -5433,6 +5435,8 @@ block|,
 literal|1
 block|,
 literal|1
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5472,6 +5476,8 @@ literal|0
 block|,
 literal|0
 block|,
+literal|0
+block|,
 literal|16
 block|,
 literal|0x2c
@@ -5493,6 +5499,8 @@ block|,
 literal|1
 block|,
 literal|1
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5530,6 +5538,8 @@ literal|0
 block|,
 literal|0
 block|,
+literal|0
+block|,
 literal|1
 block|,
 literal|80
@@ -5553,6 +5563,8 @@ block|,
 literal|0
 block|,
 literal|1
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -5777,7 +5789,7 @@ value|{ \     if ((FIELD)> (HIGH) || (FIELD)< (LOW)) \       { \ 	if (! IGNORE) 
 end_define
 
 begin_comment
-comment|/* Variant of CHECK_FIELD for use in md_apply_fix3 and other places where    the current file and line number are not valid.  */
+comment|/* Variant of CHECK_FIELD for use in md_apply_fix and other places where    the current file and line number are not valid.  */
 end_comment
 
 begin_define
@@ -6070,6 +6082,16 @@ operator|=
 name|label_chain
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|OBJ_ELF
+name|dwarf2_emit_label
+argument_list|(
+name|symbol
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -7352,7 +7374,7 @@ literal|'\0'
 expr_stmt|;
 break|break;
 default|default:
-name|as_fatal
+name|as_bad
 argument_list|(
 name|_
 argument_list|(
@@ -7362,6 +7384,7 @@ argument_list|,
 name|str
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 comment|/* Look up the opcode in the has table.  */
 if|if
@@ -7453,15 +7476,13 @@ name|reloc
 operator|=
 name|R_HPPA_NONE
 expr_stmt|;
-comment|/* If this instruction is specific to a particular architecture, 	 then set a new architecture.  */
-comment|/* But do not automatically promote to pa2.0.  The automatic promotion 	 crud is for compatibility with HP's old assemblers only.  */
 if|if
 condition|(
 name|insn
 operator|->
 name|arch
-operator|<
-literal|20
+operator|>=
+name|pa20
 operator|&&
 name|bfd_get_mach
 argument_list|(
@@ -7472,51 +7493,9 @@ name|insn
 operator|->
 name|arch
 condition|)
-block|{
-if|if
-condition|(
-operator|!
-name|bfd_set_arch_mach
-argument_list|(
-name|stdoutput
-argument_list|,
-name|bfd_arch_hppa
-argument_list|,
-name|insn
-operator|->
-name|arch
-argument_list|)
-condition|)
-name|as_warn
-argument_list|(
-name|_
-argument_list|(
-literal|"could not update architecture and machine"
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|bfd_get_mach
-argument_list|(
-name|stdoutput
-argument_list|)
-operator|<
-name|insn
-operator|->
-name|arch
-condition|)
-block|{
-name|match
-operator|=
-name|FALSE
-expr_stmt|;
 goto|goto
 name|failed
 goto|;
-block|}
 comment|/* Build the opcode, checking as we go to make          sure that the operands match.  */
 for|for
 control|(
@@ -8394,13 +8373,13 @@ name|uu
 operator|=
 literal|1
 expr_stmt|;
-comment|/* When in strict mode this is a match failure.  */
 elseif|else
 if|if
 condition|(
 name|strict
 condition|)
 block|{
+comment|/* This is a match failure.  */
 name|s
 operator|--
 expr_stmt|;
@@ -8487,11 +8466,6 @@ operator|==
 literal|','
 condition|)
 block|{
-name|int
-name|found
-init|=
-literal|0
-decl_stmt|;
 name|s
 operator|++
 expr_stmt|;
@@ -8517,9 +8491,9 @@ name|m
 operator|=
 literal|1
 expr_stmt|;
-name|found
-operator|=
-literal|1
+name|s
+operator|+=
+literal|2
 expr_stmt|;
 block|}
 elseif|else
@@ -8545,29 +8519,22 @@ name|m
 operator|=
 literal|1
 expr_stmt|;
-name|found
-operator|=
-literal|1
+name|s
+operator|+=
+literal|2
 expr_stmt|;
 block|}
-comment|/* When in strict mode, pass through for cache op.  */
+elseif|else
 if|if
 condition|(
-operator|!
-name|found
-operator|&&
 name|strict
 condition|)
+comment|/* This is a match failure.  */
 name|s
 operator|--
 expr_stmt|;
 else|else
 block|{
-if|if
-condition|(
-operator|!
-name|found
-condition|)
 name|as_bad
 argument_list|(
 name|_
@@ -8790,7 +8757,7 @@ name|a
 operator|=
 literal|1
 expr_stmt|;
-comment|/* When in strict mode this is a match failure.  */
+comment|/* In strict mode, this is a match failure.  */
 elseif|else
 if|if
 condition|(
@@ -13462,6 +13429,16 @@ comment|/* Handle 14 bit immediate, shifted left three times.  */
 case|case
 literal|'#'
 case|:
+if|if
+condition|(
+name|bfd_get_mach
+argument_list|(
+name|stdoutput
+argument_list|)
+operator|!=
+name|pa20
+condition|)
+break|break;
 name|the_insn
 operator|.
 name|field_selector
@@ -17888,6 +17865,48 @@ expr_stmt|;
 block|}
 break|break;
 block|}
+comment|/* If this instruction is specific to a particular architecture, 	 then set a new architecture.  This automatic promotion crud is 	 for compatibility with HP's old assemblers only.  */
+if|if
+condition|(
+name|match
+operator|==
+name|TRUE
+operator|&&
+name|bfd_get_mach
+argument_list|(
+name|stdoutput
+argument_list|)
+operator|<
+name|insn
+operator|->
+name|arch
+operator|&&
+operator|!
+name|bfd_set_arch_mach
+argument_list|(
+name|stdoutput
+argument_list|,
+name|bfd_arch_hppa
+argument_list|,
+name|insn
+operator|->
+name|arch
+argument_list|)
+condition|)
+block|{
+name|as_warn
+argument_list|(
+name|_
+argument_list|(
+literal|"could not update architecture and machine"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|match
+operator|=
+name|FALSE
+expr_stmt|;
+block|}
 name|failed
 label|:
 comment|/* Check if the args matched.  */
@@ -19938,7 +19957,7 @@ end_comment
 
 begin_function
 name|void
-name|md_apply_fix3
+name|md_apply_fix
 parameter_list|(
 name|fixP
 parameter_list|,
@@ -19959,10 +19978,9 @@ name|seg
 name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
-name|unsigned
 name|char
 modifier|*
-name|buf
+name|fixpos
 decl_stmt|;
 name|struct
 name|hppa_fix_struct
@@ -20083,7 +20101,7 @@ name|fx_done
 operator|=
 literal|1
 expr_stmt|;
-comment|/* There should have been an HPPA specific fixup associated      with the GAS fixup.  */
+comment|/* There should be a HPPA specific fixup associated with the GAS fixup.  */
 name|hppa_fixP
 operator|=
 operator|(
@@ -20124,14 +20142,8 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|buf
+name|fixpos
 operator|=
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
-operator|(
 name|fixP
 operator|->
 name|fx_frag
@@ -20141,15 +20153,44 @@ operator|+
 name|fixP
 operator|->
 name|fx_where
-operator|)
 expr_stmt|;
+if|if
+condition|(
+name|fixP
+operator|->
+name|fx_size
+operator|!=
+literal|4
+operator|||
+name|hppa_fixP
+operator|->
+name|fx_r_format
+operator|==
+literal|32
+condition|)
+block|{
+comment|/* Handle constant output. */
+name|number_to_chars_bigendian
+argument_list|(
+name|fixpos
+argument_list|,
+operator|*
+name|valP
+argument_list|,
+name|fixP
+operator|->
+name|fx_size
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|insn
 operator|=
 name|bfd_get_32
 argument_list|(
 name|stdoutput
 argument_list|,
-name|buf
+name|fixpos
 argument_list|)
 expr_stmt|;
 name|fmt
@@ -21065,7 +21106,7 @@ name|stdoutput
 argument_list|,
 name|insn
 argument_list|,
-name|buf
+name|fixpos
 argument_list|)
 expr_stmt|;
 block|}
@@ -26221,7 +26262,7 @@ expr_stmt|;
 comment|/* If bytes is a power of 2, then update the current subspace's      alignment if necessary.  */
 if|if
 condition|(
-name|log2
+name|exact_log2
 argument_list|(
 name|bytes
 argument_list|)
@@ -26235,7 +26276,7 @@ name|current_subspace
 operator|->
 name|ssd_seg
 argument_list|,
-name|log2
+name|exact_log2
 argument_list|(
 name|bytes
 argument_list|)
@@ -26265,21 +26306,9 @@ name|z
 name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
-name|char
-modifier|*
-name|p
-decl_stmt|;
-name|long
-name|int
-name|temp_fill
-decl_stmt|;
 name|unsigned
 name|int
 name|temp_size
-decl_stmt|;
-name|unsigned
-name|int
-name|i
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -26295,103 +26324,54 @@ operator|=
 name|get_absolute_expression
 argument_list|()
 expr_stmt|;
-comment|/* Always fill with zeros, that's what the HP assembler does.  */
-name|temp_fill
+if|if
+condition|(
+name|temp_size
+operator|>
+literal|0x3FFFFFFF
+condition|)
+block|{
+name|as_bad
+argument_list|(
+name|_
+argument_list|(
+literal|"Argument to .BLOCK/.BLOCKZ must be between 0 and 0x3fffffff"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|temp_size
 operator|=
 literal|0
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Always fill with zeros, that's what the HP assembler does.  */
+name|char
+modifier|*
 name|p
-operator|=
+init|=
 name|frag_var
 argument_list|(
 name|rs_fill
 argument_list|,
-operator|(
-name|int
-operator|)
-name|temp_size
-argument_list|,
-operator|(
-name|int
-operator|)
-name|temp_size
-argument_list|,
-operator|(
-name|relax_substateT
-operator|)
-literal|0
-argument_list|,
-operator|(
-name|symbolS
-operator|*
-operator|)
-literal|0
-argument_list|,
-operator|(
-name|offsetT
-operator|)
 literal|1
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|,
+name|temp_size
 argument_list|,
 name|NULL
 argument_list|)
-expr_stmt|;
-name|memset
-argument_list|(
+decl_stmt|;
+operator|*
 name|p
-argument_list|,
-literal|0
-argument_list|,
-name|temp_size
-argument_list|)
-expr_stmt|;
-comment|/* Convert 2 bytes at a time.  */
-for|for
-control|(
-name|i
 operator|=
 literal|0
-init|;
-name|i
-operator|<
-name|temp_size
-condition|;
-name|i
-operator|+=
-literal|2
-control|)
-block|{
-name|md_number_to_chars
-argument_list|(
-name|p
-operator|+
-name|i
-argument_list|,
-operator|(
-name|valueT
-operator|)
-name|temp_fill
-argument_list|,
-call|(
-name|int
-call|)
-argument_list|(
-operator|(
-name|temp_size
-operator|-
-name|i
-operator|)
-operator|>
-literal|2
-condition|?
-literal|2
-else|:
-operator|(
-name|temp_size
-operator|-
-name|i
-operator|)
-argument_list|)
-argument_list|)
 expr_stmt|;
 block|}
 name|pa_undefine_label
@@ -28053,7 +28033,7 @@ name|S_SET_SEGMENT
 argument_list|(
 name|symbol
 argument_list|,
-name|bfd_und_section_ptr
+name|bfd_com_section_ptr
 argument_list|)
 expr_stmt|;
 name|S_SET_EXTERNAL
@@ -30641,7 +30621,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|log2
+name|exact_log2
 parameter_list|(
 name|value
 parameter_list|)
@@ -31879,6 +31859,8 @@ name|loadable
 decl_stmt|,
 name|code_only
 decl_stmt|,
+name|comdat
+decl_stmt|,
 name|common
 decl_stmt|,
 name|dup_common
@@ -31992,6 +31974,10 @@ expr_stmt|;
 name|loadable
 operator|=
 literal|1
+expr_stmt|;
+name|comdat
+operator|=
+literal|0
 expr_stmt|;
 name|common
 operator|=
@@ -32129,6 +32115,15 @@ name|i
 index|]
 operator|.
 name|loadable
+expr_stmt|;
+name|comdat
+operator|=
+name|pa_def_subspaces
+index|[
+name|i
+index|]
+operator|.
+name|comdat
 expr_stmt|;
 name|common
 operator|=
@@ -32307,7 +32302,7 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|log2
+name|exact_log2
 argument_list|(
 name|alignment
 argument_list|)
@@ -32444,6 +32439,33 @@ expr_stmt|;
 name|loadable
 operator|=
 literal|0
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|strncasecmp
+argument_list|(
+name|name
+argument_list|,
+literal|"comdat"
+argument_list|,
+literal|6
+argument_list|)
+operator|==
+literal|0
+operator|)
+condition|)
+block|{
+operator|*
+name|input_line_pointer
+operator|=
+name|c
+expr_stmt|;
+name|comdat
+operator|=
+literal|1
 expr_stmt|;
 block|}
 elseif|else
@@ -32603,15 +32625,18 @@ name|flags
 operator||=
 name|SEC_CODE
 expr_stmt|;
+comment|/* These flags are used to implement various flavors of initialized 	 common.  The SOM linker discards duplicate subspaces when they 	 have the same "key" symbol name.  This support is more like 	 GNU linkonce than BFD common.  Further, pc-relative relocations 	 are converted to section relative relocations in BFD common 	 sections.  This complicates the handling of relocations in 	 common sections containing text and isn't currently supported 	 correctly in the SOM BFD backend.  */
 if|if
 condition|(
+name|comdat
+operator|||
 name|common
 operator|||
 name|dup_common
 condition|)
 name|flags
 operator||=
-name|SEC_IS_COMMON
+name|SEC_LINK_ONCE
 expr_stmt|;
 name|flags
 operator||=
@@ -32700,7 +32725,7 @@ name|record_alignment
 argument_list|(
 name|section
 argument_list|,
-name|log2
+name|exact_log2
 argument_list|(
 name|alignment
 argument_list|)
@@ -32738,6 +32763,8 @@ name|loadable
 argument_list|,
 name|code_only
 argument_list|,
+name|comdat
+argument_list|,
 name|common
 argument_list|,
 name|dup_common
@@ -32769,6 +32796,8 @@ argument_list|,
 name|loadable
 argument_list|,
 name|code_only
+argument_list|,
+name|comdat
 argument_list|,
 name|common
 argument_list|,
@@ -33342,6 +33371,13 @@ index|[
 name|i
 index|]
 operator|.
+name|comdat
+argument_list|,
+name|pa_def_subspaces
+index|[
+name|i
+index|]
+operator|.
 name|common
 argument_list|,
 name|pa_def_subspaces
@@ -33438,6 +33474,7 @@ name|spnum
 decl_stmt|;
 name|int
 name|loadable
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|int
 name|defined
@@ -33706,6 +33743,8 @@ name|loadable
 parameter_list|,
 name|code_only
 parameter_list|,
+name|comdat
+parameter_list|,
 name|common
 parameter_list|,
 name|dup_common
@@ -33734,14 +33773,22 @@ name|name
 decl_stmt|;
 name|int
 name|loadable
-decl_stmt|,
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|int
 name|code_only
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|int
+name|comdat
 decl_stmt|,
 name|common
 decl_stmt|,
 name|dup_common
-decl_stmt|,
+decl_stmt|;
+name|int
 name|is_zero
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|int
 name|sort
@@ -33751,9 +33798,11 @@ name|access
 decl_stmt|;
 name|int
 name|space_index
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|int
 name|alignment
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|int
 name|quadrant
@@ -33953,6 +34002,12 @@ argument_list|,
 name|sort
 argument_list|,
 name|quadrant
+argument_list|,
+name|comdat
+argument_list|,
+name|common
+argument_list|,
+name|dup_common
 argument_list|)
 expr_stmt|;
 endif|#
@@ -33980,6 +34035,8 @@ parameter_list|,
 name|loadable
 parameter_list|,
 name|code_only
+parameter_list|,
+name|comdat
 parameter_list|,
 name|common
 parameter_list|,
@@ -34009,9 +34066,14 @@ name|name
 decl_stmt|;
 name|int
 name|loadable
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|int
 name|code_only
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+name|int
+name|comdat
 decl_stmt|;
 name|int
 name|common
@@ -34021,6 +34083,7 @@ name|dup_common
 decl_stmt|;
 name|int
 name|zero
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|int
 name|sort
@@ -34030,9 +34093,11 @@ name|access
 decl_stmt|;
 name|int
 name|space_index
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|int
 name|alignment
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 name|int
 name|quadrant
@@ -34069,6 +34134,12 @@ argument_list|,
 name|sort
 argument_list|,
 name|quadrant
+argument_list|,
+name|comdat
+argument_list|,
+name|common
+argument_list|,
+name|dup_common
 argument_list|)
 expr_stmt|;
 endif|#
@@ -34197,7 +34268,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return the space chain entry for the subspace with the name NAME or    NULL if no such subspace exists.     Uses a linear search through all the spaces and subspaces, this may    not be appropriate if we ever being placing each function in its    own subspace.  */
+comment|/* Return the first space chain entry for the subspace with the name    NAME or NULL if no such subspace exists.     When there are multiple subspaces with the same name, switching to    the first (i.e., default) subspace is preferable in most situations.    For example, it wouldn't be desirable to merge COMDAT data with non    COMDAT data.         Uses a linear search through all the spaces and subspaces, this may    not be appropriate if we ever being placing each function in its    own subspace.  */
 end_comment
 
 begin_function
@@ -34501,35 +34572,6 @@ literal|0
 return|;
 return|return
 literal|0
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* FIXME.  Needs documentation.  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|pa_next_subseg
-parameter_list|(
-name|space
-parameter_list|)
-name|sd_chain_struct
-modifier|*
-name|space
-decl_stmt|;
-block|{
-name|space
-operator|->
-name|sd_last_subseg
-operator|++
-expr_stmt|;
-return|return
-name|space
-operator|->
-name|sd_last_subseg
 return|;
 block|}
 end_function
@@ -35140,7 +35182,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* On the PA relocations which involve function symbols must not be    adjusted.  This so that the linker can know when/how to create argument    relocation stubs for indirect calls and calls to static functions.     "T" field selectors create DLT relative fixups for accessing    globals and statics in PIC code; each DLT relative fixup creates    an entry in the DLT table.  The entries contain the address of    the final target (eg accessing "foo" would create a DLT entry    with the address of "foo").     Unfortunately, the HP linker doesn't take into account any addend    when generating the DLT; so accessing $LIT$+8 puts the address of    $LIT$ into the DLT rather than the address of $LIT$+8.     The end result is we can't perform relocation symbol reductions for    any fixup which creates entries in the DLT (eg they use "T" field    selectors).     Reject reductions involving symbols with external scope; such    reductions make life a living hell for object file editors.     FIXME.  Also reject R_HPPA relocations which are 32bits wide in    the code space.  The SOM BFD backend doesn't know how to pull the    right bits out of an instruction.  */
+comment|/* On the PA relocations which involve function symbols must not be    adjusted.  This so that the linker can know when/how to create argument    relocation stubs for indirect calls and calls to static functions.     "T" field selectors create DLT relative fixups for accessing    globals and statics in PIC code; each DLT relative fixup creates    an entry in the DLT table.  The entries contain the address of    the final target (eg accessing "foo" would create a DLT entry    with the address of "foo").     Unfortunately, the HP linker doesn't take into account any addend    when generating the DLT; so accessing $LIT$+8 puts the address of    $LIT$ into the DLT rather than the address of $LIT$+8.     The end result is we can't perform relocation symbol reductions for    any fixup which creates entries in the DLT (eg they use "T" field    selectors).     ??? Reject reductions involving symbols with external scope; such    reductions make life a living hell for object file editors.  */
 end_comment
 
 begin_function
@@ -35154,9 +35196,14 @@ modifier|*
 name|fixp
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|OBJ_ELF
 name|reloc_type
 name|code
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|hppa_fix_struct
 modifier|*
@@ -35173,29 +35220,6 @@ name|fixp
 operator|->
 name|tc_fix_data
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|OBJ_SOM
-comment|/* Reject reductions of symbols in 32bit relocs.  */
-if|if
-condition|(
-name|fixp
-operator|->
-name|fx_r_type
-operator|==
-name|R_HPPA
-operator|&&
-name|hppa_fix
-operator|->
-name|fx_r_format
-operator|==
-literal|32
-condition|)
-return|return
-literal|0
-return|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|OBJ_ELF

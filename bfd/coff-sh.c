@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for Renesas Super-H COFF binaries.    Copyright 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.    Contributed by Cygnus Support.    Written by Steve Chamberlain,<sac@cygnus.com>.    Relaxing code written by Ian Lance Taylor,<ian@cygnus.com>.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for Renesas Super-H COFF binaries.    Copyright 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002,    2003, 2004, 2005 Free Software Foundation, Inc.    Contributed by Cygnus Support.    Written by Steve Chamberlain,<sac@cygnus.com>.    Relaxing code written by Ian Lance Taylor,<ian@cygnus.com>.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -2465,13 +2465,6 @@ name|internal_reloc
 modifier|*
 name|internal_relocs
 decl_stmt|;
-name|struct
-name|internal_reloc
-modifier|*
-name|free_relocs
-init|=
-name|NULL
-decl_stmt|;
 name|bfd_boolean
 name|have_code
 decl_stmt|;
@@ -2486,12 +2479,6 @@ decl_stmt|;
 name|bfd_byte
 modifier|*
 name|contents
-init|=
-name|NULL
-decl_stmt|;
-name|bfd_byte
-modifier|*
-name|free_contents
 init|=
 name|NULL
 decl_stmt|;
@@ -2525,23 +2512,53 @@ condition|)
 return|return
 name|TRUE
 return|;
-comment|/* If this is the first time we have been called for this section,      initialize the cooked size.  */
+if|if
+condition|(
+name|coff_section_data
+argument_list|(
+name|abfd
+argument_list|,
+name|sec
+argument_list|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|bfd_size_type
+name|amt
+init|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|coff_section_tdata
+argument_list|)
+decl_stmt|;
+name|sec
+operator|->
+name|used_by_bfd
+operator|=
+operator|(
+name|PTR
+operator|)
+name|bfd_zalloc
+argument_list|(
+name|abfd
+argument_list|,
+name|amt
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sec
 operator|->
-name|_cooked_size
+name|used_by_bfd
 operator|==
-literal|0
+name|NULL
 condition|)
-name|sec
-operator|->
-name|_cooked_size
-operator|=
-name|sec
-operator|->
-name|_raw_size
-expr_stmt|;
+return|return
+name|FALSE
+return|;
+block|}
 name|internal_relocs
 operator|=
 operator|(
@@ -2581,17 +2598,6 @@ condition|)
 goto|goto
 name|error_return
 goto|;
-if|if
-condition|(
-operator|!
-name|link_info
-operator|->
-name|keep_memory
-condition|)
-name|free_relocs
-operator|=
-name|internal_relocs
-expr_stmt|;
 name|have_code
 operator|=
 name|FALSE
@@ -2684,15 +2690,6 @@ name|abfd
 argument_list|,
 name|sec
 argument_list|)
-operator|!=
-name|NULL
-operator|&&
-name|coff_section_data
-argument_list|(
-name|abfd
-argument_list|,
-name|sec
-argument_list|)
 operator|->
 name|contents
 operator|!=
@@ -2711,51 +2708,17 @@ name|contents
 expr_stmt|;
 else|else
 block|{
-name|contents
-operator|=
-operator|(
-name|bfd_byte
-operator|*
-operator|)
-name|bfd_malloc
-argument_list|(
-name|sec
-operator|->
-name|_raw_size
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|contents
-operator|==
-name|NULL
-condition|)
-goto|goto
-name|error_return
-goto|;
-name|free_contents
-operator|=
-name|contents
-expr_stmt|;
 if|if
 condition|(
 operator|!
-name|bfd_get_section_contents
+name|bfd_malloc_and_get_section
 argument_list|(
 name|abfd
 argument_list|,
 name|sec
 argument_list|,
+operator|&
 name|contents
-argument_list|,
-operator|(
-name|file_ptr
-operator|)
-literal|0
-argument_list|,
-name|sec
-operator|->
-name|_raw_size
 argument_list|)
 condition|)
 goto|goto
@@ -2799,7 +2762,7 @@ name|laddr
 operator|>=
 name|sec
 operator|->
-name|_raw_size
+name|size
 condition|)
 block|{
 call|(
@@ -2807,12 +2770,9 @@ modifier|*
 name|_bfd_error_handler
 call|)
 argument_list|(
-literal|"%s: 0x%lx: warning: bad R_SH_USES offset"
+literal|"%B: 0x%lx: warning: bad R_SH_USES offset"
 argument_list|,
-name|bfd_archive_filename
-argument_list|(
 name|abfd
-argument_list|)
 argument_list|,
 operator|(
 name|unsigned
@@ -2854,12 +2814,9 @@ modifier|*
 name|_bfd_error_handler
 call|)
 argument_list|(
-literal|"%s: 0x%lx: warning: R_SH_USES points to unrecognized insn 0x%x"
+literal|"%B: 0x%lx: warning: R_SH_USES points to unrecognized insn 0x%x"
 argument_list|,
-name|bfd_archive_filename
-argument_list|(
 name|abfd
-argument_list|)
 argument_list|,
 operator|(
 name|unsigned
@@ -2906,7 +2863,7 @@ name|paddr
 operator|>=
 name|sec
 operator|->
-name|_raw_size
+name|size
 condition|)
 block|{
 operator|(
@@ -2915,12 +2872,9 @@ modifier|*
 name|_bfd_error_handler
 call|)
 argument_list|(
-literal|"%s: 0x%lx: warning: bad R_SH_USES load offset"
+literal|"%B: 0x%lx: warning: bad R_SH_USES load offset"
 argument_list|,
-name|bfd_archive_filename
-argument_list|(
 name|abfd
-argument_list|)
 argument_list|,
 operator|(
 name|unsigned
@@ -2984,7 +2938,6 @@ name|r_type
 operator|==
 name|R_SH_IMAGEBASE
 operator|)
-condition|)
 else|#
 directive|else
 operator|&&
@@ -2993,9 +2946,9 @@ operator|->
 name|r_type
 operator|==
 name|R_SH_IMM32
-block|)
 endif|#
 directive|endif
+condition|)
 break|break;
 if|if
 condition|(
@@ -3010,12 +2963,9 @@ modifier|*
 name|_bfd_error_handler
 call|)
 argument_list|(
-literal|"%s: 0x%lx: warning: could not find expected reloc"
+literal|"%B: 0x%lx: warning: could not find expected reloc"
 argument_list|,
-name|bfd_archive_filename
-argument_list|(
 name|abfd
-argument_list|)
 argument_list|,
 operator|(
 name|unsigned
@@ -3092,12 +3042,9 @@ modifier|*
 name|_bfd_error_handler
 call|)
 argument_list|(
-literal|"%s: 0x%lx: warning: symbol in unexpected section"
+literal|"%B: 0x%lx: warning: symbol in unexpected section"
 argument_list|,
-name|bfd_archive_filename
-argument_list|(
 name|abfd
-argument_list|)
 argument_list|,
 operator|(
 name|unsigned
@@ -3291,53 +3238,6 @@ continue|continue;
 block|}
 comment|/* Shorten the function call.  */
 comment|/* For simplicity of coding, we are going to modify the section 	 contents, the section relocs, and the BFD symbol table.  We 	 must tell the rest of the code not to free up this 	 information.  It would be possible to instead create a table 	 of changes which have to be made, as is done in coff-mips.c; 	 that would be more work, but would require less memory when 	 the linker is run.  */
-if|if
-condition|(
-name|coff_section_data
-argument_list|(
-name|abfd
-argument_list|,
-name|sec
-argument_list|)
-operator|==
-name|NULL
-condition|)
-block|{
-name|bfd_size_type
-name|amt
-init|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|coff_section_tdata
-argument_list|)
-decl_stmt|;
-name|sec
-operator|->
-name|used_by_bfd
-operator|=
-operator|(
-name|PTR
-operator|)
-name|bfd_zalloc
-argument_list|(
-name|abfd
-argument_list|,
-name|amt
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sec
-operator|->
-name|used_by_bfd
-operator|==
-name|NULL
-condition|)
-goto|goto
-name|error_return
-goto|;
-block|}
 name|coff_section_data
 argument_list|(
 name|abfd
@@ -3360,10 +3260,6 @@ name|keep_relocs
 operator|=
 name|TRUE
 expr_stmt|;
-name|free_relocs
-operator|=
-name|NULL
-expr_stmt|;
 name|coff_section_data
 argument_list|(
 name|abfd
@@ -3385,10 +3281,6 @@ operator|->
 name|keep_contents
 operator|=
 name|TRUE
-expr_stmt|;
-name|free_contents
-operator|=
-name|NULL
 expr_stmt|;
 name|obj_coff_keep_syms
 argument_list|(
@@ -3594,12 +3486,9 @@ modifier|*
 name|_bfd_error_handler
 call|)
 argument_list|(
-literal|"%s: 0x%lx: warning: could not find expected COUNT reloc"
+literal|"%B: 0x%lx: warning: could not find expected COUNT reloc"
 argument_list|,
-name|bfd_archive_filename
-argument_list|(
 name|abfd
-argument_list|)
 argument_list|,
 operator|(
 name|unsigned
@@ -3627,12 +3516,9 @@ modifier|*
 name|_bfd_error_handler
 call|)
 argument_list|(
-literal|"%s: 0x%lx: warning: bad count"
+literal|"%B: 0x%lx: warning: bad count"
 argument_list|,
-name|bfd_archive_filename
-argument_list|(
 name|abfd
-argument_list|)
 argument_list|,
 operator|(
 name|unsigned
@@ -3685,13 +3571,7 @@ goto|;
 block|}
 comment|/* We've done all we can with that function call.  */
 block|}
-end_function
-
-begin_comment
 comment|/* Look for load and store instructions that we can align on four      byte boundaries.  */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|have_code
@@ -3716,15 +3596,6 @@ name|abfd
 argument_list|,
 name|sec
 argument_list|)
-operator|!=
-name|NULL
-operator|&&
-name|coff_section_data
-argument_list|(
-name|abfd
-argument_list|,
-name|sec
-argument_list|)
 operator|->
 name|contents
 operator|!=
@@ -3743,51 +3614,17 @@ name|contents
 expr_stmt|;
 else|else
 block|{
-name|contents
-operator|=
-operator|(
-name|bfd_byte
-operator|*
-operator|)
-name|bfd_malloc
-argument_list|(
-name|sec
-operator|->
-name|_raw_size
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|contents
-operator|==
-name|NULL
-condition|)
-goto|goto
-name|error_return
-goto|;
-name|free_contents
-operator|=
-name|contents
-expr_stmt|;
 if|if
 condition|(
 operator|!
-name|bfd_get_section_contents
+name|bfd_malloc_and_get_section
 argument_list|(
 name|abfd
 argument_list|,
 name|sec
 argument_list|,
+operator|&
 name|contents
-argument_list|,
-operator|(
-name|file_ptr
-operator|)
-literal|0
-argument_list|,
-name|sec
-operator|->
-name|_raw_size
 argument_list|)
 condition|)
 goto|goto
@@ -3820,53 +3657,6 @@ condition|(
 name|swapped
 condition|)
 block|{
-if|if
-condition|(
-name|coff_section_data
-argument_list|(
-name|abfd
-argument_list|,
-name|sec
-argument_list|)
-operator|==
-name|NULL
-condition|)
-block|{
-name|bfd_size_type
-name|amt
-init|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|coff_section_tdata
-argument_list|)
-decl_stmt|;
-name|sec
-operator|->
-name|used_by_bfd
-operator|=
-operator|(
-name|PTR
-operator|)
-name|bfd_zalloc
-argument_list|(
-name|abfd
-argument_list|,
-name|amt
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sec
-operator|->
-name|used_by_bfd
-operator|==
-name|NULL
-condition|)
-goto|goto
-name|error_return
-goto|;
-block|}
 name|coff_section_data
 argument_list|(
 name|abfd
@@ -3888,10 +3678,6 @@ operator|->
 name|keep_relocs
 operator|=
 name|TRUE
-expr_stmt|;
-name|free_relocs
-operator|=
-name|NULL
 expr_stmt|;
 name|coff_section_data
 argument_list|(
@@ -3915,10 +3701,6 @@ name|keep_contents
 operator|=
 name|TRUE
 expr_stmt|;
-name|free_contents
-operator|=
-name|NULL
-expr_stmt|;
 name|obj_coff_keep_syms
 argument_list|(
 name|abfd
@@ -3928,34 +3710,22 @@ name|TRUE
 expr_stmt|;
 block|}
 block|}
-end_if
-
-begin_if
 if|if
 condition|(
-name|free_relocs
+name|internal_relocs
 operator|!=
 name|NULL
-condition|)
-block|{
-name|free
+operator|&&
+name|internal_relocs
+operator|!=
+name|coff_section_data
 argument_list|(
-name|free_relocs
+name|abfd
+argument_list|,
+name|sec
 argument_list|)
-expr_stmt|;
-name|free_relocs
-operator|=
-name|NULL
-expr_stmt|;
-block|}
-end_if
-
-begin_if
-if|if
-condition|(
-name|free_contents
-operator|!=
-name|NULL
+operator|->
+name|relocs
 condition|)
 block|{
 if|if
@@ -3967,58 +3737,10 @@ name|keep_memory
 condition|)
 name|free
 argument_list|(
-name|free_contents
+name|internal_relocs
 argument_list|)
 expr_stmt|;
 else|else
-block|{
-comment|/* Cache the section contents for coff_link_input_bfd.  */
-if|if
-condition|(
-name|coff_section_data
-argument_list|(
-name|abfd
-argument_list|,
-name|sec
-argument_list|)
-operator|==
-name|NULL
-condition|)
-block|{
-name|bfd_size_type
-name|amt
-init|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|coff_section_tdata
-argument_list|)
-decl_stmt|;
-name|sec
-operator|->
-name|used_by_bfd
-operator|=
-operator|(
-name|PTR
-operator|)
-name|bfd_zalloc
-argument_list|(
-name|abfd
-argument_list|,
-name|amt
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sec
-operator|->
-name|used_by_bfd
-operator|==
-name|NULL
-condition|)
-goto|goto
-name|error_return
-goto|;
 name|coff_section_data
 argument_list|(
 name|abfd
@@ -4028,9 +3750,41 @@ argument_list|)
 operator|->
 name|relocs
 operator|=
-name|NULL
+name|internal_relocs
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|contents
+operator|!=
+name|NULL
+operator|&&
+name|contents
+operator|!=
+name|coff_section_data
+argument_list|(
+name|abfd
+argument_list|,
+name|sec
+argument_list|)
+operator|->
+name|contents
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|link_info
+operator|->
+name|keep_memory
+condition|)
+name|free
+argument_list|(
+name|contents
+argument_list|)
+expr_stmt|;
+else|else
+comment|/* Cache the section contents for coff_link_input_bfd.  */
 name|coff_section_data
 argument_list|(
 name|abfd
@@ -4043,61 +3797,67 @@ operator|=
 name|contents
 expr_stmt|;
 block|}
-block|}
-end_if
-
-begin_return
 return|return
 name|TRUE
 return|;
-end_return
-
-begin_label
 name|error_return
 label|:
-end_label
-
-begin_if
 if|if
 condition|(
-name|free_relocs
+name|internal_relocs
 operator|!=
 name|NULL
+operator|&&
+name|internal_relocs
+operator|!=
+name|coff_section_data
+argument_list|(
+name|abfd
+argument_list|,
+name|sec
+argument_list|)
+operator|->
+name|relocs
 condition|)
 name|free
 argument_list|(
-name|free_relocs
+name|internal_relocs
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_if
 if|if
 condition|(
-name|free_contents
+name|contents
 operator|!=
 name|NULL
+operator|&&
+name|contents
+operator|!=
+name|coff_section_data
+argument_list|(
+name|abfd
+argument_list|,
+name|sec
+argument_list|)
+operator|->
+name|contents
 condition|)
 name|free
 argument_list|(
-name|free_contents
+name|contents
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_return
 return|return
 name|FALSE
 return|;
-end_return
+block|}
+end_function
 
 begin_comment
-unit|}
 comment|/* Delete some bytes from a section while relaxing.  */
 end_comment
 
 begin_function
-unit|static
+specifier|static
 name|bfd_boolean
 name|sh_relax_delete_bytes
 parameter_list|(
@@ -4184,7 +3944,7 @@ name|toaddr
 operator|=
 name|sec
 operator|->
-name|_cooked_size
+name|size
 expr_stmt|;
 name|irel
 operator|=
@@ -4295,7 +4055,7 @@ name|NULL
 condition|)
 name|sec
 operator|->
-name|_cooked_size
+name|size
 operator|-=
 name|count
 expr_stmt|;
@@ -5445,12 +5205,9 @@ modifier|*
 name|_bfd_error_handler
 call|)
 argument_list|(
-literal|"%s: 0x%lx: fatal: reloc overflow while relaxing"
+literal|"%B: 0x%lx: fatal: reloc overflow while relaxing"
 argument_list|,
-name|bfd_archive_filename
-argument_list|(
 name|abfd
-argument_list|)
 argument_list|,
 operator|(
 name|unsigned
@@ -5750,53 +5507,23 @@ name|contents
 expr_stmt|;
 else|else
 block|{
-comment|/* We always cache the section contents.                          Perhaps, if info->keep_memory is FALSE, we                          should free them, if we are permitted to,                          when we leave sh_coff_relax_section.  */
-name|ocontents
-operator|=
-operator|(
-name|bfd_byte
-operator|*
-operator|)
-name|bfd_malloc
-argument_list|(
-name|o
-operator|->
-name|_raw_size
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ocontents
-operator|==
-name|NULL
-condition|)
-return|return
-name|FALSE
-return|;
 if|if
 condition|(
 operator|!
-name|bfd_get_section_contents
+name|bfd_malloc_and_get_section
 argument_list|(
 name|abfd
 argument_list|,
 name|o
 argument_list|,
+operator|&
 name|ocontents
-argument_list|,
-operator|(
-name|file_ptr
-operator|)
-literal|0
-argument_list|,
-name|o
-operator|->
-name|_raw_size
 argument_list|)
 condition|)
 return|return
 name|FALSE
 return|;
+comment|/* We always cache the section contents.                          Perhaps, if info->keep_memory is FALSE, we                          should free them, if we are permitted to,                          when we leave sh_coff_relax_section.  */
 name|coff_section_data
 argument_list|(
 name|abfd
@@ -5900,12 +5627,9 @@ modifier|*
 name|_bfd_error_handler
 call|)
 argument_list|(
-literal|"%s: fatal: generic symbols retrieved before relaxing"
+literal|"%B: fatal: generic symbols retrieved before relaxing"
 argument_list|,
-name|bfd_archive_filename
-argument_list|(
 name|abfd
-argument_list|)
 argument_list|)
 operator|)
 expr_stmt|;
@@ -7038,101 +6762,6 @@ comment|/* sts y1,rn */
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* These sixteen instructions can be handled with one table entry below.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-unit|{ 0x0002, SETS1 | USESSP },
-comment|/* stc sr,rn */
-end_comment
-
-begin_comment
-unit|{ 0x0012, SETS1 | USESSP },
-comment|/* stc gbr,rn */
-end_comment
-
-begin_comment
-unit|{ 0x0022, SETS1 | USESSP },
-comment|/* stc vbr,rn */
-end_comment
-
-begin_comment
-unit|{ 0x0032, SETS1 | USESSP },
-comment|/* stc ssr,rn */
-end_comment
-
-begin_comment
-unit|{ 0x0042, SETS1 | USESSP },
-comment|/* stc spc,rn */
-end_comment
-
-begin_comment
-unit|{ 0x0052, SETS1 | USESSP },
-comment|/* stc mod,rn */
-end_comment
-
-begin_comment
-unit|{ 0x0062, SETS1 | USESSP },
-comment|/* stc rs,rn */
-end_comment
-
-begin_comment
-unit|{ 0x0072, SETS1 | USESSP },
-comment|/* stc re,rn */
-end_comment
-
-begin_comment
-unit|{ 0x0082, SETS1 | USESSP },
-comment|/* stc r0_bank,rn */
-end_comment
-
-begin_comment
-unit|{ 0x0092, SETS1 | USESSP },
-comment|/* stc r1_bank,rn */
-end_comment
-
-begin_comment
-unit|{ 0x00a2, SETS1 | USESSP },
-comment|/* stc r2_bank,rn */
-end_comment
-
-begin_comment
-unit|{ 0x00b2, SETS1 | USESSP },
-comment|/* stc r3_bank,rn */
-end_comment
-
-begin_comment
-unit|{ 0x00c2, SETS1 | USESSP },
-comment|/* stc r4_bank,rn */
-end_comment
-
-begin_comment
-unit|{ 0x00d2, SETS1 | USESSP },
-comment|/* stc r5_bank,rn */
-end_comment
-
-begin_comment
-unit|{ 0x00e2, SETS1 | USESSP },
-comment|/* stc r6_bank,rn */
-end_comment
-
-begin_comment
-unit|{ 0x00f2, SETS1 | USESSP }
-comment|/* stc r7_bank,rn */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -8329,72 +7958,6 @@ operator||
 name|USES1
 block|}
 comment|/* lds.l rm,y1 */
-if|#
-directive|if
-literal|0
-comment|/* These groups sixteen insns can be          handled with one table entry each below.  */
-block|{ 0x4003, STORE | SETS1 | USES1 | USESSP },
-comment|/* stc.l sr,@-rn */
-block|{ 0x4013, STORE | SETS1 | USES1 | USESSP },
-comment|/* stc.l gbr,@-rn */
-block|{ 0x4023, STORE | SETS1 | USES1 | USESSP },
-comment|/* stc.l vbr,@-rn */
-block|{ 0x4033, STORE | SETS1 | USES1 | USESSP },
-comment|/* stc.l ssr,@-rn */
-block|{ 0x4043, STORE | SETS1 | USES1 | USESSP },
-comment|/* stc.l spc,@-rn */
-block|{ 0x4053, STORE | SETS1 | USES1 | USESSP },
-comment|/* stc.l mod,@-rn */
-block|{ 0x4063, STORE | SETS1 | USES1 | USESSP },
-comment|/* stc.l rs,@-rn */
-block|{ 0x4073, STORE | SETS1 | USES1 | USESSP },
-comment|/* stc.l re,@-rn */
-block|{ 0x4083, STORE | SETS1 | USES1 | USESSP },
-comment|/* stc.l r0_bank,@-rn */
-block|..   { 0x40f3, STORE | SETS1 | USES1 | USESSP },
-comment|/* stc.l r7_bank,@-rn */
-block|{ 0x4007, LOAD | SETS1 | SETSSP | USES1 },
-comment|/* ldc.l @rm+,sr */
-block|{ 0x4017, LOAD | SETS1 | SETSSP | USES1 },
-comment|/* ldc.l @rm+,gbr */
-block|{ 0x4027, LOAD | SETS1 | SETSSP | USES1 },
-comment|/* ldc.l @rm+,vbr */
-block|{ 0x4037, LOAD | SETS1 | SETSSP | USES1 },
-comment|/* ldc.l @rm+,ssr */
-block|{ 0x4047, LOAD | SETS1 | SETSSP | USES1 },
-comment|/* ldc.l @rm+,spc */
-block|{ 0x4057, LOAD | SETS1 | SETSSP | USES1 },
-comment|/* ldc.l @rm+,mod */
-block|{ 0x4067, LOAD | SETS1 | SETSSP | USES1 },
-comment|/* ldc.l @rm+,rs */
-block|{ 0x4077, LOAD | SETS1 | SETSSP | USES1 },
-comment|/* ldc.l @rm+,re */
-block|{ 0x4087, LOAD | SETS1 | SETSSP | USES1 },
-comment|/* ldc.l @rm+,r0_bank */
-block|..   { 0x40f7, LOAD | SETS1 | SETSSP | USES1 },
-comment|/* ldc.l @rm+,r7_bank */
-block|{ 0x400e, SETSSP | USES1 },
-comment|/* ldc rm,sr */
-block|{ 0x401e, SETSSP | USES1 },
-comment|/* ldc rm,gbr */
-block|{ 0x402e, SETSSP | USES1 },
-comment|/* ldc rm,vbr */
-block|{ 0x403e, SETSSP | USES1 },
-comment|/* ldc rm,ssr */
-block|{ 0x404e, SETSSP | USES1 },
-comment|/* ldc rm,spc */
-block|{ 0x405e, SETSSP | USES1 },
-comment|/* ldc rm,mod */
-block|{ 0x406e, SETSSP | USES1 },
-comment|/* ldc rm,rs */
-block|{ 0x407e, SETSSP | USES1 }
-comment|/* ldc rm,re */
-block|{ 0x408e, SETSSP | USES1 }
-comment|/* ldc rm,r0_bank */
-block|..   { 0x40fe, SETSSP | USES1 }
-comment|/* ldc rm,r7_bank */
-endif|#
-directive|endif
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -12324,7 +11887,7 @@ name|stop
 operator|=
 name|sec
 operator|->
-name|_cooked_size
+name|size
 expr_stmt|;
 if|if
 condition|(
@@ -12902,12 +12465,9 @@ modifier|*
 name|_bfd_error_handler
 call|)
 argument_list|(
-literal|"%s: 0x%lx: fatal: reloc overflow while relaxing"
+literal|"%B: 0x%lx: fatal: reloc overflow while relaxing"
 argument_list|,
-name|bfd_archive_filename
-argument_list|(
 name|abfd
-argument_list|)
 argument_list|,
 operator|(
 name|unsigned
@@ -13142,12 +12702,9 @@ modifier|*
 name|_bfd_error_handler
 call|)
 argument_list|(
-literal|"%s: illegal symbol index %ld in relocs"
+literal|"%B: illegal symbol index %ld in relocs"
 argument_list|,
-name|bfd_archive_filename
-argument_list|(
 name|input_bfd
-argument_list|)
 argument_list|,
 name|symndx
 argument_list|)
@@ -13546,13 +13103,7 @@ name|NULL
 condition|)
 name|name
 operator|=
-name|h
-operator|->
-name|root
-operator|.
-name|root
-operator|.
-name|string
+name|NULL
 expr_stmt|;
 elseif|else
 if|if
@@ -13633,6 +13184,17 @@ name|reloc_overflow
 call|)
 argument_list|(
 name|info
+argument_list|,
+operator|(
+name|h
+condition|?
+operator|&
+name|h
+operator|->
+name|root
+else|:
+name|NULL
+operator|)
 argument_list|,
 name|name
 argument_list|,
@@ -13820,7 +13382,7 @@ name|size_t
 operator|)
 name|input_section
 operator|->
-name|_raw_size
+name|size
 argument_list|)
 expr_stmt|;
 if|if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Instruction opcode header for ip2k.  THIS FILE IS MACHINE GENERATED WITH CGEN.  Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.  This file is part of the GNU Binutils and/or GDB, the GNU debugger.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Instruction opcode header for ip2k.  THIS FILE IS MACHINE GENERATED WITH CGEN.  Copyright 1996-2005 Free Software Foundation, Inc.  This file is part of the GNU Binutils and/or GDB, the GNU debugger.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -59,6 +59,7 @@ name|buf
 parameter_list|,
 name|value
 parameter_list|)
+define|\
 value|(((* (unsigned char*) (buf))>> 5) % CGEN_DIS_HASH_SIZE)
 end_define
 
@@ -76,42 +77,35 @@ name|CGEN_ASM_HASH
 parameter_list|(
 name|insn
 parameter_list|)
-value|ip2k_asm_hash(insn)
+value|ip2k_asm_hash (insn)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|unsigned
 name|int
 name|ip2k_asm_hash
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-name|insn
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|ip2k_cgen_insn_supported
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|CGEN_CPU_DESC
-operator|,
+parameter_list|,
 specifier|const
 name|CGEN_INSN
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_escape
 end_escape

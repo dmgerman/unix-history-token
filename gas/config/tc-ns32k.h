@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-ns32k.h -- Opcode table for National Semi 32k processor    Copyright 1987, 1992, 1993, 1994, 1995, 1997, 2000, 2002    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* tc-ns32k.h -- Opcode table for National Semi 32k processor    Copyright 1987, 1992, 1993, 1994, 1995, 1997, 2000, 2002, 2005    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_define
@@ -26,26 +26,16 @@ parameter_list|)
 value|md_pcrel_adjust(F)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|md_pcrel_adjust
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|fragS
-operator|*
-name|fragP
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BFD_ASSEMBLER
-end_ifdef
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -68,7 +58,7 @@ name|TARGET_FORMAT
 end_ifndef
 
 begin_comment
-comment|/* Maybe defined in te-*.h */
+comment|/* Maybe defined in te-*.h.  */
 end_comment
 
 begin_define
@@ -76,23 +66,6 @@ define|#
 directive|define
 name|TARGET_FORMAT
 value|"a.out-pc532-mach"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|NO_RELOC
-value|0
 end_define
 
 begin_endif
@@ -112,48 +85,6 @@ include|#
 directive|include
 file|"bit_fix.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|tc_aout_pre_write_hook
-parameter_list|(
-name|x
-parameter_list|)
-value|{;}
-end_define
-
-begin_comment
-comment|/* not used */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|tc_crawl_symbol_chain
-parameter_list|(
-name|a
-parameter_list|)
-value|{;}
-end_define
-
-begin_comment
-comment|/* not used */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|tc_headers_hook
-parameter_list|(
-name|a
-parameter_list|)
-value|{;}
-end_define
-
-begin_comment
-comment|/* not used */
-end_comment
 
 begin_ifdef
 ifdef|#
@@ -237,100 +168,23 @@ name|TC_CONS_FIX_NEW
 value|cons_fix_new_ns32k
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|void
-name|fix_new_ns32k_exp
-name|PARAMS
-argument_list|(
-operator|(
-name|fragS
-operator|*
-operator|,
-name|int
-operator|,
-name|int
-operator|,
-name|expressionS
-operator|*
-operator|,
-name|int
-operator|,
-name|int
-operator|,
-name|bit_fixS
-operator|*
-operator|,
-name|int
-operator|,
-name|fragS
-operator|*
-operator|,
-name|unsigned
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|fix_new_ns32k
-name|PARAMS
-argument_list|(
-operator|(
-name|fragS
-operator|*
-operator|,
-name|int
-operator|,
-name|int
-operator|,
-name|symbolS
-operator|*
-operator|,
-name|long
-operator|,
-name|int
-operator|,
-name|int
-operator|,
-name|bit_fixS
-operator|*
-operator|,
-name|int
-operator|,
-name|fragS
-operator|*
-operator|,
-name|unsigned
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|cons_fix_new_ns32k
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|fragS
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|expressionS
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* The NS32x32 has a non 0 nop instruction which should be used in aligns.  */

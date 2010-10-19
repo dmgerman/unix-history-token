@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Table of relaxations for Xtensa assembly.    Copyright 2003 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 59 Temple Place - Suite 330, Boston,     MA 02111-1307, USA.  */
+comment|/* Table of relaxations for Xtensa assembly.    Copyright 2003, 2004, 2005 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 51 Franklin Street - Fifth Floor, Boston,    MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
-comment|/* This file contains the code for generating runtime data structures    for relaxation pattern matching from statically specified strings.    Each action contains an instruction pattern to match and    preconditions for the match as well as an expansion if the pattern    matches.  The preconditions can specify that two operands are the    same or an operand is a specific constant.  The expansion uses the    bound variables from the pattern to specify that specific operands    from the pattern should be used in the result.       The patterns match a language like:     INSN_PATTERN ::= INSN_TEMPL ( '|' PRECOND )*    INSN_TEMPL   ::= OPCODE ' ' [ OPERAND (',' OPERAND)* ]    OPCODE       ::=  id    OPERAND      ::= CONSTANT | VARIABLE | SPECIALFN '(' VARIABLE ')'    SPECIALFN    ::= 'HI24S' | 'F32MINUS' | 'LOW8'    VARIABLE     ::= '%' id    PRECOND      ::= OPERAND CMPOP OPERAND    CMPOP        ::= '==' | '!='     The replacement language     INSN_REPL      ::= INSN_LABEL_LIT ( ';' INSN_LABEL_LIT )*    INSN_LABEL_LIT ::= INSN_TEMPL                        | 'LABEL' num                        | 'LITERAL' num ' ' VARIABLE     The operands in a PRECOND must be constants or variables bound by    the INSN_PATTERN.     The operands in the INSN_REPL must be constants, variables bound in    the associated INSN_PATTERN, special variables that are bound in    the INSN_REPL by LABEL or LITERAL definitions, or special value    manipulation functions.     A simple example of a replacement pattern:    {"movi.n %as,%imm", "movi %as,%imm"} would convert the narrow    movi.n instruction to the wide movi instruction.     A more complex example of a branch around:    {"beqz %as,%label", "bnez %as,%LABEL0;j %label;LABEL0"}    would convert a branch to a negated branch to the following instruction    with a jump to the original label.        An Xtensa-specific example that generates a literal:    {"movi %at,%imm", "LITERAL0 %imm; l32r %at,%LITERAL0"}    will convert a movi instruction to an l32r of a literal    literal defined in the literal pool.     Even more complex is a conversion of a load with immediate offset    to a load of a freshly generated literal, an explicit add and    a load with 0 offset.  This transformation is only valid, though    when the first and second operands are not the same as specified    by the "| %at!=%as" precondition clause.    {"l32i %at,%as,%imm | %at!=%as",    "LITERAL0 %imm; l32r %at,%LITERAL0; add %at,%at,%as; l32i %at,%at,0"}     There is special case for loop instructions here, but because we do    not currently have the ability to represent the difference of two    symbols, the conversion requires special code in the assembler to    write the operands of the addi/addmi pair representing the    difference of the old and new loop end label.  */
+comment|/* This file contains the code for generating runtime data structures    for relaxation pattern matching from statically specified strings.    Each action contains an instruction pattern to match and    preconditions for the match as well as an expansion if the pattern    matches.  The preconditions can specify that two operands are the    same or an operand is a specific constant or register.  The expansion    uses the bound variables from the pattern to specify that specific    operands from the pattern should be used in the result.     The code determines whether the condition applies to a constant or    a register depending on the type of the operand.  You may get    unexpected results if you don't match the rule against the operand    type correctly.     The patterns match a language like:     INSN_PATTERN ::= INSN_TEMPL ( '|' PRECOND )* ( '?' OPTIONPRED )*    INSN_TEMPL   ::= OPCODE ' ' [ OPERAND (',' OPERAND)* ]    OPCODE       ::=  id    OPERAND      ::= CONSTANT | VARIABLE | SPECIALFN '(' VARIABLE ')'    SPECIALFN    ::= 'HI24S' | 'F32MINUS' | 'LOW8'                     | 'HI16' | 'LOW16'    VARIABLE     ::= '%' id    PRECOND      ::= OPERAND CMPOP OPERAND    CMPOP        ::= '==' | '!='    OPTIONPRED   ::= OPTIONNAME ('+' OPTIONNAME)    OPTIONNAME   ::= '"' id '"'     The replacement language    INSN_REPL      ::= INSN_LABEL_LIT ( ';' INSN_LABEL_LIT )*    INSN_LABEL_LIT ::= INSN_TEMPL                       | 'LABEL' num                       | 'LITERAL' num ' ' VARIABLE     The operands in a PRECOND must be constants or variables bound by    the INSN_PATTERN.     The configuration options define a predicate on the availability of    options which must be TRUE for this rule to be valid.  Examples are    requiring "density" for replacements with density instructions,    requiring "const16" for replacements that require const16    instructions, etc.  The names are interpreted by the assembler to a    truth value for a particular frag.     The operands in the INSN_REPL must be constants, variables bound in    the associated INSN_PATTERN, special variables that are bound in    the INSN_REPL by LABEL or LITERAL definitions, or special value    manipulation functions.     A simple example of a replacement pattern:    {"movi.n %as,%imm", "movi %as,%imm"} would convert the narrow    movi.n instruction to the wide movi instruction.     A more complex example of a branch around:    {"beqz %as,%label", "bnez %as,%LABEL0;j %label;LABEL0"}    would convert a branch to a negated branch to the following instruction    with a jump to the original label.     An Xtensa-specific example that generates a literal:    {"movi %at,%imm", "LITERAL0 %imm; l32r %at,%LITERAL0"}    will convert a movi instruction to an l32r of a literal    literal defined in the literal pool.     Even more complex is a conversion of a load with immediate offset    to a load of a freshly generated literal, an explicit add and    a load with 0 offset.  This transformation is only valid, though    when the first and second operands are not the same as specified    by the "| %at!=%as" precondition clause.    {"l32i %at,%as,%imm | %at!=%as",    "LITERAL0 %imm; l32r %at,%LITERAL0; add %at,%at,%as; l32i %at,%at,0"}     There is special case for loop instructions here, but because we do    not currently have the ability to represent the difference of two    symbols, the conversion requires special code in the assembler to    write the operands of the addi/addmi pair representing the    difference of the old and new loop end label.  */
 end_comment
 
 begin_include
@@ -30,6 +30,30 @@ include|#
 directive|include
 file|<stddef.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|"xtensa-config.h"
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|XCHAL_HAVE_WIDE_BRANCHES
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|XCHAL_HAVE_WIDE_BRANCHES
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Imported from bfd.  */
@@ -117,7 +141,7 @@ modifier|*
 name|operand_name
 decl_stmt|;
 comment|/* If null, then use constant_value.  */
-name|size_t
+name|int
 name|operand_num
 decl_stmt|;
 name|unsigned
@@ -266,6 +290,10 @@ decl_stmt|;
 name|precond_list
 name|preconds
 decl_stmt|;
+name|ReqOptionList
+modifier|*
+name|options
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -343,7 +371,7 @@ modifier|*
 modifier|*
 name|vec
 decl_stmt|;
-name|size_t
+name|int
 name|count
 decl_stmt|;
 block|}
@@ -395,67 +423,73 @@ index|[]
 init|=
 block|{
 block|{
-literal|"add.n %ar,%as,%at"
+literal|"add.n %ar,%as,%at ? IsaUseDensityInstruction"
 block|,
 literal|"add %ar,%as,%at"
 block|}
 block|,
 block|{
-literal|"addi.n %ar,%as,%imm"
+literal|"addi.n %ar,%as,%imm ? IsaUseDensityInstruction"
 block|,
 literal|"addi %ar,%as,%imm"
 block|}
 block|,
 block|{
-literal|"beqz.n %as,%label"
+literal|"beqz.n %as,%label ? IsaUseDensityInstruction"
 block|,
 literal|"beqz %as,%label"
 block|}
 block|,
 block|{
-literal|"bnez.n %as,%label"
+literal|"bnez.n %as,%label ? IsaUseDensityInstruction"
 block|,
 literal|"bnez %as,%label"
 block|}
 block|,
 block|{
-literal|"l32i.n %at,%as,%imm"
+literal|"l32i.n %at,%as,%imm ? IsaUseDensityInstruction"
 block|,
 literal|"l32i %at,%as,%imm"
 block|}
 block|,
 block|{
-literal|"mov.n %at,%as"
+literal|"mov.n %at,%as ? IsaUseDensityInstruction"
 block|,
 literal|"or %at,%as,%as"
 block|}
 block|,
 block|{
-literal|"movi.n %as,%imm"
+literal|"movi.n %as,%imm ? IsaUseDensityInstruction"
 block|,
 literal|"movi %as,%imm"
 block|}
 block|,
 block|{
-literal|"nop.n"
+literal|"nop.n ? IsaUseDensityInstruction ? realnop"
+block|,
+literal|"nop"
+block|}
+block|,
+block|{
+literal|"nop.n ? IsaUseDensityInstruction ? no-realnop"
 block|,
 literal|"or 1,1,1"
 block|}
 block|,
 block|{
-literal|"ret.n"
+literal|"ret.n %as ? IsaUseDensityInstruction"
 block|,
-literal|"ret"
+literal|"ret %as"
 block|}
 block|,
 block|{
-literal|"retw.n"
+literal|"retw.n %as ? IsaUseDensityInstruction"
 block|,
-literal|"retw"
+literal|"retw %as"
 block|}
 block|,
 block|{
-literal|"s32i.n %at,%as,%imm"
+literal|"s32i.n %at,%as,%imm ? IsaUseDensityInstruction"
 block|,
 literal|"s32i %at,%as,%imm"
 block|}
@@ -472,11 +506,17 @@ block|,
 literal|"or %ar,%as,%as"
 block|}
 block|,
-comment|/* Widening with literals */
+comment|/* Widening with literals or const16.  */
 block|{
-literal|"movi %at,%imm"
+literal|"movi %at,%imm ? IsaUseL32R "
 block|,
 literal|"LITERAL0 %imm; l32r %at,%LITERAL0"
+block|}
+block|,
+block|{
+literal|"movi %at,%imm ? IsaUseConst16"
+block|,
+literal|"const16 %at,HI16U(%imm); const16 %at,LOW16U(%imm)"
 block|}
 block|,
 block|{
@@ -492,67 +532,85 @@ block|,
 literal|"addmi %ar,%as,HI24S(%imm); addi %ar,%ar,LOW8(%imm)"
 block|}
 block|,
+comment|/* In the end convert to either an l32r or const16.  */
 block|{
-literal|"addmi %ar,%as,%imm | %ar!=%as"
+literal|"addmi %ar,%as,%imm | %ar!=%as ? IsaUseL32R"
 block|,
 literal|"LITERAL0 %imm; l32r %ar,%LITERAL0; add %ar,%as,%ar"
 block|}
 block|,
+block|{
+literal|"addmi %ar,%as,%imm | %ar!=%as ? IsaUseConst16"
+block|,
+literal|"const16 %ar,HI16U(%imm); const16 %ar,LOW16U(%imm); add %ar,%as,%ar"
+block|}
+block|,
 comment|/* Widening the load instructions with too-large immediates */
 block|{
-literal|"l8ui %at,%as,%imm | %at!=%as"
+literal|"l8ui %at,%as,%imm | %at!=%as ? IsaUseL32R"
 block|,
 literal|"LITERAL0 %imm; l32r %at,%LITERAL0; add %at,%at,%as; l8ui %at,%at,0"
 block|}
 block|,
 block|{
-literal|"l16si %at,%as,%imm | %at!=%as"
+literal|"l16si %at,%as,%imm | %at!=%as ? IsaUseL32R"
 block|,
 literal|"LITERAL0 %imm; l32r %at,%LITERAL0; add %at,%at,%as; l16si %at,%at,0"
 block|}
 block|,
 block|{
-literal|"l16ui %at,%as,%imm | %at!=%as"
+literal|"l16ui %at,%as,%imm | %at!=%as ? IsaUseL32R"
 block|,
 literal|"LITERAL0 %imm; l32r %at,%LITERAL0; add %at,%at,%as; l16ui %at,%at,0"
 block|}
 block|,
-if|#
-directive|if
-literal|0
-comment|/* Xtensa Synchronization Option not yet available */
-block|{"l32ai %at,%as,%imm",    "LITERAL0 %imm; l32r %at,%LITERAL0; add.n %at,%at,%as; l32ai %at,%at,0"},
-endif|#
-directive|endif
-if|#
-directive|if
-literal|0
-comment|/* Xtensa Speculation Option not yet available */
-block|{"l32is %at,%as,%imm",    "LITERAL0 %imm; l32r %at,%LITERAL0; add.n %at,%at,%as; l32is %at,%at,0"},
-endif|#
-directive|endif
 block|{
-literal|"l32i %at,%as,%imm | %at!=%as"
+literal|"l32i %at,%as,%imm | %at!=%as ? IsaUseL32R"
 block|,
 literal|"LITERAL0 %imm; l32r %at,%LITERAL0; add %at,%at,%as; l32i %at,%at,0"
 block|}
 block|,
-comment|/* This is only PART of the loop instruction.  In addition, hard      coded into it's use is a modification of the final operand in the      instruction in bytes 9 and 12.  */
+comment|/* Widening load instructions with const16s.  */
 block|{
-literal|"loop %as,%label"
+literal|"l8ui %at,%as,%imm | %at!=%as ? IsaUseConst16"
+block|,
+literal|"const16 %at,HI16U(%imm); const16 %at,LOW16U(%imm); add %at,%at,%as; l8ui %at,%at,0"
+block|}
+block|,
+block|{
+literal|"l16si %at,%as,%imm | %at!=%as ? IsaUseConst16"
+block|,
+literal|"const16 %at,HI16U(%imm); const16 %at,LOW16U(%imm); add %at,%at,%as; l16si %at,%at,0"
+block|}
+block|,
+block|{
+literal|"l16ui %at,%as,%imm | %at!=%as ? IsaUseConst16"
+block|,
+literal|"const16 %at,HI16U(%imm); const16 %at,LOW16U(%imm); add %at,%at,%as; l16ui %at,%at,0"
+block|}
+block|,
+block|{
+literal|"l32i %at,%as,%imm | %at!=%as ? IsaUseConst16"
+block|,
+literal|"const16 %at,HI16U(%imm); const16 %at,LOW16U(%imm); add %at,%at,%as; l32i %at,%at,0"
+block|}
+block|,
+comment|/* This is only PART of the loop instruction.  In addition,      hardcoded into its use is a modification of the final operand in      the instruction in bytes 9 and 12.  */
+block|{
+literal|"loop %as,%label | %as!=1 ? IsaUseLoops"
 block|,
 literal|"loop %as,%LABEL0;"
-literal|"rsr     %as, 1;"
+literal|"rsr.lend    %as;"
 comment|/* LEND */
-literal|"wsr     %as, 0;"
+literal|"wsr.lbeg    %as;"
 comment|/* LBEG */
 literal|"addi    %as, %as, 0;"
 comment|/* lo8(%label-%LABEL1) */
 literal|"addmi   %as, %as, 0;"
 comment|/* mid8(%label-%LABEL1) */
-literal|"wsr     %as, 1;"
+literal|"wsr.lend    %as;"
 literal|"isync;"
-literal|"rsr     %as, 2;"
+literal|"rsr.lcount    %as;"
 comment|/* LCOUNT */
 literal|"addi    %as, %as, 1;"
 comment|/* density -> addi.n %as, %as, 1 */
@@ -560,22 +618,22 @@ literal|"LABEL0"
 block|}
 block|,
 block|{
-literal|"loopgtz %as,%label"
+literal|"loopgtz %as,%label | %as!=1 ? IsaUseLoops"
 block|,
-literal|"beqz     %as,%label;"
-literal|"bltz     %as,%label;"
+literal|"beqz    %as,%label;"
+literal|"bltz    %as,%label;"
 literal|"loopgtz %as,%LABEL0;"
-literal|"rsr     %as, 1;"
+literal|"rsr.lend    %as;"
 comment|/* LEND */
-literal|"wsr     %as, 0;"
+literal|"wsr.lbeg    %as;"
 comment|/* LBEG */
 literal|"addi    %as, %as, 0;"
 comment|/* lo8(%label-%LABEL1) */
 literal|"addmi   %as, %as, 0;"
 comment|/* mid8(%label-%LABEL1) */
-literal|"wsr     %as, 1;"
+literal|"wsr.lend    %as;"
 literal|"isync;"
-literal|"rsr     %as, 2;"
+literal|"rsr.lcount    %as;"
 comment|/* LCOUNT */
 literal|"addi    %as, %as, 1;"
 comment|/* density -> addi.n %as, %as, 1 */
@@ -583,34 +641,185 @@ literal|"LABEL0"
 block|}
 block|,
 block|{
-literal|"loopnez %as,%label"
+literal|"loopnez %as,%label | %as!=1 ? IsaUseLoops"
 block|,
 literal|"beqz     %as,%label;"
 literal|"loopnez %as,%LABEL0;"
-literal|"rsr     %as, 1;"
+literal|"rsr.lend    %as;"
 comment|/* LEND */
-literal|"wsr     %as, 0;"
+literal|"wsr.lbeg    %as;"
 comment|/* LBEG */
 literal|"addi    %as, %as, 0;"
 comment|/* lo8(%label-%LABEL1) */
 literal|"addmi   %as, %as, 0;"
 comment|/* mid8(%label-%LABEL1) */
-literal|"wsr     %as, 1;"
+literal|"wsr.lend    %as;"
 literal|"isync;"
-literal|"rsr     %as, 2;"
+literal|"rsr.lcount    %as;"
 comment|/* LCOUNT */
 literal|"addi    %as, %as, 1;"
 comment|/* density -> addi.n %as, %as, 1 */
 literal|"LABEL0"
 block|}
 block|,
-if|#
-directive|if
-literal|0
-comment|/* no mechanism here to determine if Density Option is available */
-block|{"beqz %as,%label", "bnez.n %as,%LABEL0;j %label;LABEL0"},   {"bnez %as,%label", "beqz.n %as,%LABEL0;j %label;LABEL0"},
-else|#
-directive|else
+comment|/* Relaxing to wide branches.  Order is important here.  With wide      branches, there is more than one correct relaxation for an      out-of-range branch.  Put the wide branch relaxations first in the      table since they are more efficient than the branch-around      relaxations.  */
+block|{
+literal|"beqz %as,%label ? IsaUseWideBranches"
+block|,
+literal|"WIDE.beqz %as,%label"
+block|}
+block|,
+block|{
+literal|"bnez %as,%label ? IsaUseWideBranches"
+block|,
+literal|"WIDE.bnez %as,%label"
+block|}
+block|,
+block|{
+literal|"bgez %as,%label ? IsaUseWideBranches"
+block|,
+literal|"WIDE.bgez %as,%label"
+block|}
+block|,
+block|{
+literal|"bltz %as,%label ? IsaUseWideBranches"
+block|,
+literal|"WIDE.bltz %as,%label"
+block|}
+block|,
+block|{
+literal|"beqi %as,%imm,%label ? IsaUseWideBranches"
+block|,
+literal|"WIDE.beqi %as,%imm,%label"
+block|}
+block|,
+block|{
+literal|"bnei %as,%imm,%label ? IsaUseWideBranches"
+block|,
+literal|"WIDE.bnei %as,%imm,%label"
+block|}
+block|,
+block|{
+literal|"bgei %as,%imm,%label ? IsaUseWideBranches"
+block|,
+literal|"WIDE.bgei %as,%imm,%label"
+block|}
+block|,
+block|{
+literal|"blti %as,%imm,%label ? IsaUseWideBranches"
+block|,
+literal|"WIDE.blti %as,%imm,%label"
+block|}
+block|,
+block|{
+literal|"bgeui %as,%imm,%label ? IsaUseWideBranches"
+block|,
+literal|"WIDE.bgeui %as,%imm,%label"
+block|}
+block|,
+block|{
+literal|"bltui %as,%imm,%label ? IsaUseWideBranches"
+block|,
+literal|"WIDE.bltui %as,%imm,%label"
+block|}
+block|,
+block|{
+literal|"bbci %as,%imm,%label ? IsaUseWideBranches"
+block|,
+literal|"WIDE.bbci %as,%imm,%label"
+block|}
+block|,
+block|{
+literal|"bbsi %as,%imm,%label ? IsaUseWideBranches"
+block|,
+literal|"WIDE.bbsi %as,%imm,%label"
+block|}
+block|,
+block|{
+literal|"beq %as,%at,%label ? IsaUseWideBranches"
+block|,
+literal|"WIDE.beq %as,%at,%label"
+block|}
+block|,
+block|{
+literal|"bne %as,%at,%label ? IsaUseWideBranches"
+block|,
+literal|"WIDE.bne %as,%at,%label"
+block|}
+block|,
+block|{
+literal|"bge %as,%at,%label ? IsaUseWideBranches"
+block|,
+literal|"WIDE.bge %as,%at,%label"
+block|}
+block|,
+block|{
+literal|"blt %as,%at,%label ? IsaUseWideBranches"
+block|,
+literal|"WIDE.blt %as,%at,%label"
+block|}
+block|,
+block|{
+literal|"bgeu %as,%at,%label ? IsaUseWideBranches"
+block|,
+literal|"WIDE.bgeu %as,%at,%label"
+block|}
+block|,
+block|{
+literal|"bltu %as,%at,%label ? IsaUseWideBranches"
+block|,
+literal|"WIDE.bltu %as,%at,%label"
+block|}
+block|,
+block|{
+literal|"bany %as,%at,%label ? IsaUseWideBranches"
+block|,
+literal|"WIDE.bany %as,%at,%label"
+block|}
+block|,
+block|{
+literal|"bnone %as,%at,%label ? IsaUseWideBranches"
+block|,
+literal|"WIDE.bnone %as,%at,%label"
+block|}
+block|,
+block|{
+literal|"ball %as,%at,%label ? IsaUseWideBranches"
+block|,
+literal|"WIDE.ball %as,%at,%label"
+block|}
+block|,
+block|{
+literal|"bnall %as,%at,%label ? IsaUseWideBranches"
+block|,
+literal|"WIDE.bnall %as,%at,%label"
+block|}
+block|,
+block|{
+literal|"bbc %as,%at,%label ? IsaUseWideBranches"
+block|,
+literal|"WIDE.bbc %as,%at,%label"
+block|}
+block|,
+block|{
+literal|"bbs %as,%at,%label ? IsaUseWideBranches"
+block|,
+literal|"WIDE.bbs %as,%at,%label"
+block|}
+block|,
+comment|/* Widening branch comparisons eq/ne to zero.  Prefer relaxing to narrow      branches if the density option is available.  */
+block|{
+literal|"beqz %as,%label ? IsaUseDensityInstruction"
+block|,
+literal|"bnez.n %as,%LABEL0;j %label;LABEL0"
+block|}
+block|,
+block|{
+literal|"bnez %as,%label ? IsaUseDensityInstruction"
+block|,
+literal|"beqz.n %as,%LABEL0;j %label;LABEL0"
+block|}
+block|,
 block|{
 literal|"beqz %as,%label"
 block|,
@@ -623,8 +832,45 @@ block|,
 literal|"beqz %as,%LABEL0;j %label;LABEL0"
 block|}
 block|,
-endif|#
-directive|endif
+comment|/* Widening expect-taken branches.  */
+block|{
+literal|"beqzt %as,%label ? IsaUsePredictedBranches"
+block|,
+literal|"bnez %as,%LABEL0;j %label;LABEL0"
+block|}
+block|,
+block|{
+literal|"bnezt %as,%label ? IsaUsePredictedBranches"
+block|,
+literal|"beqz %as,%LABEL0;j %label;LABEL0"
+block|}
+block|,
+block|{
+literal|"beqt %as,%at,%label ? IsaUsePredictedBranches"
+block|,
+literal|"bne %as,%at,%LABEL0;j %label;LABEL0"
+block|}
+block|,
+block|{
+literal|"bnet %as,%at,%label ? IsaUsePredictedBranches"
+block|,
+literal|"beq %as,%at,%LABEL0;j %label;LABEL0"
+block|}
+block|,
+comment|/* Widening branches from the Xtensa boolean option.  */
+block|{
+literal|"bt %bs,%label ? IsaUseBooleans"
+block|,
+literal|"bf %bs,%LABEL0;j %label;LABEL0"
+block|}
+block|,
+block|{
+literal|"bf %bs,%label ? IsaUseBooleans"
+block|,
+literal|"bt %bs,%LABEL0;j %label;LABEL0"
+block|}
+block|,
+comment|/* Other branch-around-jump widenings.  */
 block|{
 literal|"bgez %as,%label"
 block|,
@@ -727,24 +973,6 @@ block|,
 literal|"bnone %as,%at,%LABEL0;j %label;LABEL0"
 block|}
 block|,
-if|#
-directive|if
-literal|1
-comment|/* provide relaxations for Boolean Option */
-block|{
-literal|"bt %bs,%label"
-block|,
-literal|"bf %bs,%LABEL0;j %label;LABEL0"
-block|}
-block|,
-block|{
-literal|"bf %bs,%label"
-block|,
-literal|"bt %bs,%LABEL0;j %label;LABEL0"
-block|}
-block|,
-endif|#
-directive|endif
 block|{
 literal|"bnone %as,%at,%label"
 block|,
@@ -775,28 +1003,54 @@ block|,
 literal|"bbc %as,%at,%LABEL0;j %label;LABEL0"
 block|}
 block|,
+comment|/* Expanding calls with literals.  */
 block|{
-literal|"call0 %label"
+literal|"call0 %label,%ar0 ? IsaUseL32R"
 block|,
-literal|"LITERAL0 %label; l32r a0,%LITERAL0; callx0 a0"
+literal|"LITERAL0 %label; l32r a0,%LITERAL0; callx0 a0,%ar0"
 block|}
 block|,
 block|{
-literal|"call4 %label"
+literal|"call4 %label,%ar4 ? IsaUseL32R"
 block|,
-literal|"LITERAL0 %label; l32r a4,%LITERAL0; callx4 a4"
+literal|"LITERAL0 %label; l32r a4,%LITERAL0; callx4 a4,%ar4"
 block|}
 block|,
 block|{
-literal|"call8 %label"
+literal|"call8 %label,%ar8 ? IsaUseL32R"
 block|,
-literal|"LITERAL0 %label; l32r a8,%LITERAL0; callx8 a8"
+literal|"LITERAL0 %label; l32r a8,%LITERAL0; callx8 a8,%ar8"
 block|}
 block|,
 block|{
-literal|"call12 %label"
+literal|"call12 %label,%ar12 ? IsaUseL32R"
 block|,
-literal|"LITERAL0 %label; l32r a12,%LITERAL0; callx12 a12"
+literal|"LITERAL0 %label; l32r a12,%LITERAL0; callx12 a12,%ar12"
+block|}
+block|,
+comment|/* Expanding calls with const16.  */
+block|{
+literal|"call0 %label,%ar0 ? IsaUseConst16"
+block|,
+literal|"const16 a0,HI16U(%label); const16 a0,LOW16U(%label); callx0 a0,%ar0"
+block|}
+block|,
+block|{
+literal|"call4 %label,%ar4 ? IsaUseConst16"
+block|,
+literal|"const16 a4,HI16U(%label); const16 a4,LOW16U(%label); callx4 a4,%ar4"
+block|}
+block|,
+block|{
+literal|"call8 %label,%ar8 ? IsaUseConst16"
+block|,
+literal|"const16 a8,HI16U(%label); const16 a8,LOW16U(%label); callx8 a8,%ar8"
+block|}
+block|,
+block|{
+literal|"call12 %label,%ar12 ? IsaUseConst16"
+block|,
+literal|"const16 a12,HI16U(%label); const16 a12,LOW16U(%label); callx12 a12,%ar12"
 block|}
 block|}
 decl_stmt|;
@@ -820,85 +1074,97 @@ index|[]
 init|=
 block|{
 block|{
-literal|"add %ar,%as,%at"
+literal|"add %ar,%as,%at ? IsaUseDensityInstruction"
 block|,
 literal|"add.n %ar,%as,%at"
 block|}
 block|,
 block|{
-literal|"addi.n %ar,%as,0"
+literal|"addi.n %ar,%as,0 ? IsaUseDensityInstruction"
 block|,
 literal|"mov.n %ar,%as"
 block|}
 block|,
 block|{
-literal|"addi %ar,%as,0"
+literal|"addi %ar,%as,0 ? IsaUseDensityInstruction"
 block|,
 literal|"mov.n %ar,%as"
 block|}
 block|,
 block|{
-literal|"addi %ar,%as,%imm"
+literal|"addi %ar,%as,%imm ? IsaUseDensityInstruction"
 block|,
 literal|"addi.n %ar,%as,%imm"
 block|}
 block|,
 block|{
-literal|"addmi %ar,%as,%imm"
+literal|"addmi %ar,%as,%imm ? IsaUseDensityInstruction"
 block|,
 literal|"addi.n %ar,%as,%imm"
 block|}
 block|,
 block|{
-literal|"beqz %as,%label"
+literal|"beqz %as,%label ? IsaUseDensityInstruction"
 block|,
 literal|"beqz.n %as,%label"
 block|}
 block|,
 block|{
-literal|"bnez %as,%label"
+literal|"bnez %as,%label ? IsaUseDensityInstruction"
 block|,
 literal|"bnez.n %as,%label"
 block|}
 block|,
 block|{
-literal|"l32i %at,%as,%imm"
+literal|"l32i %at,%as,%imm ? IsaUseDensityInstruction"
 block|,
 literal|"l32i.n %at,%as,%imm"
 block|}
 block|,
 block|{
-literal|"movi %as,%imm"
+literal|"movi %as,%imm ? IsaUseDensityInstruction"
 block|,
 literal|"movi.n %as,%imm"
 block|}
 block|,
 block|{
-literal|"or %ar,%as,%at | %as==%at"
+literal|"nop ? realnop ? IsaUseDensityInstruction"
+block|,
+literal|"nop.n"
+block|}
+block|,
+block|{
+literal|"or %ar,%as,%at | %ar==%as | %as==%at ? IsaUseDensityInstruction"
+block|,
+literal|"nop.n"
+block|}
+block|,
+block|{
+literal|"or %ar,%as,%at | %ar!=%as | %as==%at ? IsaUseDensityInstruction"
 block|,
 literal|"mov.n %ar,%as"
 block|}
 block|,
 block|{
-literal|"ret"
+literal|"ret %as ? IsaUseDensityInstruction"
 block|,
-literal|"ret.n"
+literal|"ret.n %as"
 block|}
 block|,
 block|{
-literal|"retw"
+literal|"retw %as ? IsaUseDensityInstruction"
 block|,
-literal|"retw.n"
+literal|"retw.n %as"
 block|}
 block|,
 block|{
-literal|"s32i %at,%as,%imm"
+literal|"s32i %at,%as,%imm ? IsaUseDensityInstruction"
 block|,
 literal|"s32i.n %at,%as,%imm"
 block|}
 block|,
 block|{
-literal|"slli %ar,%as,0"
+literal|"slli %ar,%as,0 ? IsaUseDensityInstruction"
 block|,
 literal|"mov.n %ar,%as"
 block|}
@@ -918,851 +1184,50 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Transition generation helpers.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|void
-name|append_transition
-name|PARAMS
-argument_list|(
-operator|(
-name|TransitionTable
-operator|*
-operator|,
-name|xtensa_opcode
-operator|,
-name|TransitionRule
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|append_condition
-name|PARAMS
-argument_list|(
-operator|(
-name|TransitionRule
-operator|*
-operator|,
-name|Precondition
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|append_value_condition
-name|PARAMS
-argument_list|(
-operator|(
-name|TransitionRule
-operator|*
-operator|,
-name|CmpOp
-operator|,
-name|unsigned
-operator|,
-name|unsigned
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|append_constant_value_condition
-name|PARAMS
-argument_list|(
-operator|(
-name|TransitionRule
-operator|*
-operator|,
-name|CmpOp
-operator|,
-name|unsigned
-operator|,
-name|unsigned
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|append_build_insn
-name|PARAMS
-argument_list|(
-operator|(
-name|TransitionRule
-operator|*
-operator|,
-name|BuildInstr
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|append_op
-name|PARAMS
-argument_list|(
-operator|(
-name|BuildInstr
-operator|*
-operator|,
-name|BuildOp
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|append_literal_op
-name|PARAMS
-argument_list|(
-operator|(
-name|BuildInstr
-operator|*
-operator|,
-name|unsigned
-operator|,
-name|unsigned
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|append_label_op
-name|PARAMS
-argument_list|(
-operator|(
-name|BuildInstr
-operator|*
-operator|,
-name|unsigned
-operator|,
-name|unsigned
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|append_constant_op
-name|PARAMS
-argument_list|(
-operator|(
-name|BuildInstr
-operator|*
-operator|,
-name|unsigned
-operator|,
-name|unsigned
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|append_field_op
-name|PARAMS
-argument_list|(
-operator|(
-name|BuildInstr
-operator|*
-operator|,
-name|unsigned
-operator|,
-name|unsigned
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|append_user_fn_field_op
-name|PARAMS
-argument_list|(
-operator|(
-name|BuildInstr
-operator|*
-operator|,
-name|unsigned
-operator|,
-name|OpType
-operator|,
-name|unsigned
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|long
-name|operand_function_HI24S
-name|PARAMS
-argument_list|(
-operator|(
-name|long
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|long
-name|operand_function_F32MINUS
-name|PARAMS
-argument_list|(
-operator|(
-name|long
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|long
-name|operand_function_LOW8
-name|PARAMS
-argument_list|(
-operator|(
-name|long
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Externally visible functions.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|bfd_boolean
 name|xg_has_userdef_op_fn
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|OpType
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|long
 name|xg_apply_userdef_op_fn
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|OpType
-operator|,
+parameter_list|,
 name|long
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Parsing helpers.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|enter_opname_n
-name|PARAMS
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-name|size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|enter_opname
-name|PARAMS
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Construction and destruction.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|void
-name|init_opname_map
-name|PARAMS
-argument_list|(
-operator|(
-name|opname_map
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|clear_opname_map
-name|PARAMS
-argument_list|(
-operator|(
-name|opname_map
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|init_precond_list
-name|PARAMS
-argument_list|(
-operator|(
-name|precond_list
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|clear_precond_list
-name|PARAMS
-argument_list|(
-operator|(
-name|precond_list
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|init_insn_templ
-name|PARAMS
-argument_list|(
-operator|(
-name|insn_templ
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|clear_insn_templ
-name|PARAMS
-argument_list|(
-operator|(
-name|insn_templ
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|init_insn_pattern
-name|PARAMS
-argument_list|(
-operator|(
-name|insn_pattern
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|clear_insn_pattern
-name|PARAMS
-argument_list|(
-operator|(
-name|insn_pattern
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|init_insn_repl
-name|PARAMS
-argument_list|(
-operator|(
-name|insn_repl
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|clear_insn_repl
-name|PARAMS
-argument_list|(
-operator|(
-name|insn_repl
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|init_split_rec
-name|PARAMS
-argument_list|(
-operator|(
-name|split_rec
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|clear_split_rec
-name|PARAMS
-argument_list|(
-operator|(
-name|split_rec
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Operand and insn_templ helpers.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|same_operand_name
-name|PARAMS
-argument_list|(
-operator|(
-specifier|const
-name|opname_map_e
-operator|*
-operator|,
-specifier|const
-name|opname_map_e
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|opname_map_e
-modifier|*
-name|get_opmatch
-name|PARAMS
-argument_list|(
-operator|(
-name|opname_map
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|op_is_constant
-name|PARAMS
-argument_list|(
-operator|(
-specifier|const
-name|opname_map_e
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|unsigned
-name|op_get_constant
-name|PARAMS
-argument_list|(
-operator|(
-specifier|const
-name|opname_map_e
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|size_t
-name|insn_templ_operand_count
-name|PARAMS
-argument_list|(
-operator|(
-specifier|const
-name|insn_templ
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* parsing helpers.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|skip_white
-name|PARAMS
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|trim_whitespace
-name|PARAMS
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|split_string
-name|PARAMS
-argument_list|(
-operator|(
-name|split_rec
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|,
-name|char
-operator|,
-name|bfd_boolean
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Language parsing.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|parse_insn_pattern
-name|PARAMS
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-name|insn_pattern
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|parse_insn_repl
-name|PARAMS
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-name|insn_repl
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|parse_insn_templ
-name|PARAMS
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-name|insn_templ
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|parse_special_fn
-name|PARAMS
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|parse_precond
-name|PARAMS
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-name|precond_e
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|parse_constant
-name|PARAMS
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-name|unsigned
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|parse_id_constant
-name|PARAMS
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|,
-name|unsigned
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Transition table building code.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|TransitionRule
-modifier|*
-name|build_transition
-name|PARAMS
-argument_list|(
-operator|(
-name|insn_pattern
-operator|*
-operator|,
-name|insn_repl
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|TransitionTable
-modifier|*
-name|build_transition_table
-name|PARAMS
-argument_list|(
-operator|(
-specifier|const
-name|string_pattern_pair
-operator|*
-operator|,
-name|size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_escape
-end_escape
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
+specifier|static
 name|void
 name|append_transition
 parameter_list|(
-name|tt
-parameter_list|,
-name|opcode
-parameter_list|,
-name|t
-parameter_list|)
 name|TransitionTable
 modifier|*
 name|tt
-decl_stmt|;
+parameter_list|,
 name|xtensa_opcode
 name|opcode
-decl_stmt|;
+parameter_list|,
 name|TransitionRule
 modifier|*
 name|t
-decl_stmt|;
+parameter_list|,
+name|transition_cmp_fn
+name|cmp
+parameter_list|)
 block|{
 name|TransitionList
 modifier|*
@@ -1786,7 +1251,8 @@ name|prev
 decl_stmt|;
 name|TransitionList
 modifier|*
-name|nxt
+modifier|*
+name|t_p
 decl_stmt|;
 name|assert
 argument_list|(
@@ -1843,33 +1309,75 @@ name|tl
 expr_stmt|;
 return|return;
 block|}
-name|nxt
+for|for
+control|(
+name|t_p
 operator|=
-name|prev
+operator|&
+name|tt
 operator|->
-name|next
-expr_stmt|;
-while|while
-condition|(
-name|nxt
+name|table
+index|[
+name|opcode
+index|]
+init|;
+operator|(
+operator|*
+name|t_p
+operator|)
 operator|!=
 name|NULL
+condition|;
+name|t_p
+operator|=
+operator|&
+operator|(
+operator|*
+name|t_p
+operator|)
+operator|->
+name|next
+control|)
+block|{
+if|if
+condition|(
+name|cmp
+operator|&&
+name|cmp
+argument_list|(
+name|t
+argument_list|,
+operator|(
+operator|*
+name|t_p
+operator|)
+operator|->
+name|rule
+argument_list|)
+operator|<
+literal|0
 condition|)
 block|{
-name|prev
-operator|=
-name|nxt
-expr_stmt|;
-name|nxt
-operator|=
-name|nxt
+comment|/* Insert it here.  */
+name|tl
 operator|->
 name|next
+operator|=
+operator|*
+name|t_p
 expr_stmt|;
+operator|*
+name|t_p
+operator|=
+name|tl
+expr_stmt|;
+return|return;
 block|}
-name|prev
-operator|->
-name|next
+block|}
+operator|(
+operator|*
+name|t_p
+operator|)
 operator|=
 name|tl
 expr_stmt|;
@@ -1877,21 +1385,18 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|append_condition
 parameter_list|(
-name|tr
-parameter_list|,
-name|cond
-parameter_list|)
 name|TransitionRule
 modifier|*
 name|tr
-decl_stmt|;
+parameter_list|,
 name|Precondition
 modifier|*
 name|cond
-decl_stmt|;
+parameter_list|)
 block|{
 name|PreconditionList
 modifier|*
@@ -1982,30 +1487,23 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|append_value_condition
 parameter_list|(
-name|tr
-parameter_list|,
-name|cmp
-parameter_list|,
-name|op1
-parameter_list|,
-name|op2
-parameter_list|)
 name|TransitionRule
 modifier|*
 name|tr
-decl_stmt|;
+parameter_list|,
 name|CmpOp
 name|cmp
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|op1
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|op2
-decl_stmt|;
+parameter_list|)
 block|{
 name|Precondition
 modifier|*
@@ -2058,30 +1556,23 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|append_constant_value_condition
 parameter_list|(
-name|tr
-parameter_list|,
-name|cmp
-parameter_list|,
-name|op1
-parameter_list|,
-name|cnst
-parameter_list|)
 name|TransitionRule
 modifier|*
 name|tr
-decl_stmt|;
+parameter_list|,
 name|CmpOp
 name|cmp
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|op1
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|cnst
-decl_stmt|;
+parameter_list|)
 block|{
 name|Precondition
 modifier|*
@@ -2134,21 +1625,18 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|append_build_insn
 parameter_list|(
-name|tr
-parameter_list|,
-name|bi
-parameter_list|)
 name|TransitionRule
 modifier|*
 name|tr
-decl_stmt|;
+parameter_list|,
 name|BuildInstr
 modifier|*
 name|bi
-decl_stmt|;
+parameter_list|)
 block|{
 name|BuildInstr
 modifier|*
@@ -2217,21 +1705,18 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|append_op
 parameter_list|(
-name|bi
-parameter_list|,
-name|b_op
-parameter_list|)
 name|BuildInstr
 modifier|*
 name|bi
-decl_stmt|;
+parameter_list|,
 name|BuildOp
 modifier|*
 name|b_op
-decl_stmt|;
+parameter_list|)
 block|{
 name|BuildOp
 modifier|*
@@ -2294,25 +1779,20 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|append_literal_op
 parameter_list|(
-name|bi
-parameter_list|,
-name|op1
-parameter_list|,
-name|litnum
-parameter_list|)
 name|BuildInstr
 modifier|*
 name|bi
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|op1
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|litnum
-decl_stmt|;
+parameter_list|)
 block|{
 name|BuildOp
 modifier|*
@@ -2365,25 +1845,20 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|append_label_op
 parameter_list|(
-name|bi
-parameter_list|,
-name|op1
-parameter_list|,
-name|labnum
-parameter_list|)
 name|BuildInstr
 modifier|*
 name|bi
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|op1
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|labnum
-decl_stmt|;
+parameter_list|)
 block|{
 name|BuildOp
 modifier|*
@@ -2436,25 +1911,20 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|append_constant_op
 parameter_list|(
-name|bi
-parameter_list|,
-name|op1
-parameter_list|,
-name|cnst
-parameter_list|)
 name|BuildInstr
 modifier|*
 name|bi
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|op1
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|cnst
-decl_stmt|;
+parameter_list|)
 block|{
 name|BuildOp
 modifier|*
@@ -2507,25 +1977,20 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|append_field_op
 parameter_list|(
-name|bi
-parameter_list|,
-name|op1
-parameter_list|,
-name|src_op
-parameter_list|)
 name|BuildInstr
 modifier|*
 name|bi
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|op1
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|src_op
-decl_stmt|;
+parameter_list|)
 block|{
 name|BuildOp
 modifier|*
@@ -2582,30 +2047,23 @@ comment|/* These could be generated but are not currently.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|append_user_fn_field_op
 parameter_list|(
-name|bi
-parameter_list|,
-name|op1
-parameter_list|,
-name|typ
-parameter_list|,
-name|src_op
-parameter_list|)
 name|BuildInstr
 modifier|*
 name|bi
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|op1
-decl_stmt|;
+parameter_list|,
 name|OpType
 name|typ
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|src_op
-decl_stmt|;
+parameter_list|)
 block|{
 name|BuildOp
 modifier|*
@@ -2662,14 +2120,13 @@ comment|/* These operand functions are the semantics of user-defined    operand 
 end_comment
 
 begin_function
+specifier|static
 name|long
 name|operand_function_HI24S
 parameter_list|(
-name|a
-parameter_list|)
 name|long
 name|a
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -2704,14 +2161,13 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|long
 name|operand_function_F32MINUS
 parameter_list|(
-name|a
-parameter_list|)
 name|long
 name|a
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -2724,14 +2180,13 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|long
 name|operand_function_LOW8
 parameter_list|(
-name|a
-parameter_list|)
 name|long
 name|a
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -2761,14 +2216,61 @@ block|}
 end_function
 
 begin_function
+specifier|static
+name|long
+name|operand_function_LOW16U
+parameter_list|(
+name|long
+name|a
+parameter_list|)
+block|{
+return|return
+operator|(
+name|a
+operator|&
+literal|0xffff
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|long
+name|operand_function_HI16U
+parameter_list|(
+name|long
+name|a
+parameter_list|)
+block|{
+name|unsigned
+name|long
+name|b
+init|=
+name|a
+operator|&
+literal|0xffff0000
+decl_stmt|;
+return|return
+call|(
+name|long
+call|)
+argument_list|(
+name|b
+operator|>>
+literal|16
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
 name|bfd_boolean
 name|xg_has_userdef_op_fn
 parameter_list|(
-name|op
-parameter_list|)
 name|OpType
 name|op
-decl_stmt|;
+parameter_list|)
 block|{
 switch|switch
 condition|(
@@ -2783,6 +2285,12 @@ name|OP_OPERAND_LOW8
 case|:
 case|case
 name|OP_OPERAND_HI24S
+case|:
+case|case
+name|OP_OPERAND_LOW16U
+case|:
+case|case
+name|OP_OPERAND_HI16U
 case|:
 return|return
 name|TRUE
@@ -2800,16 +2308,12 @@ begin_function
 name|long
 name|xg_apply_userdef_op_fn
 parameter_list|(
-name|op
-parameter_list|,
-name|a
-parameter_list|)
 name|OpType
 name|op
-decl_stmt|;
+parameter_list|,
 name|long
 name|a
-decl_stmt|;
+parameter_list|)
 block|{
 switch|switch
 condition|(
@@ -2843,6 +2347,24 @@ argument_list|(
 name|a
 argument_list|)
 return|;
+case|case
+name|OP_OPERAND_LOW16U
+case|:
+return|return
+name|operand_function_LOW16U
+argument_list|(
+name|a
+argument_list|)
+return|;
+case|case
+name|OP_OPERAND_HI16U
+case|:
+return|return
+name|operand_function_HI16U
+argument_list|(
+name|a
+argument_list|)
+return|;
 default|default:
 break|break;
 block|}
@@ -2857,23 +2379,20 @@ comment|/* Generate a transition table.  */
 end_comment
 
 begin_function
+specifier|static
 specifier|const
 name|char
 modifier|*
 name|enter_opname_n
 parameter_list|(
-name|name
-parameter_list|,
-name|len
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|name
-decl_stmt|;
-name|size_t
+parameter_list|,
+name|int
 name|len
-decl_stmt|;
+parameter_list|)
 block|{
 name|opname_e
 modifier|*
@@ -2905,6 +2424,9 @@ operator|->
 name|opname
 argument_list|)
 operator|==
+operator|(
+name|unsigned
+operator|)
 name|len
 operator|&&
 name|strncmp
@@ -2990,13 +2512,11 @@ name|char
 modifier|*
 name|enter_opname
 parameter_list|(
-name|name
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|)
 block|{
 name|opname_e
 modifier|*
@@ -3056,7 +2576,7 @@ name|op
 operator|->
 name|opname
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|name
 argument_list|)
@@ -3070,15 +2590,14 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|init_opname_map
 parameter_list|(
-name|m
-parameter_list|)
 name|opname_map
 modifier|*
 name|m
-decl_stmt|;
+parameter_list|)
 block|{
 name|m
 operator|->
@@ -3099,15 +2618,14 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|clear_opname_map
 parameter_list|(
-name|m
-parameter_list|)
 name|opname_map
 modifier|*
 name|m
-decl_stmt|;
+parameter_list|)
 block|{
 name|opname_map_e
 modifier|*
@@ -3159,20 +2677,16 @@ specifier|static
 name|bfd_boolean
 name|same_operand_name
 parameter_list|(
+specifier|const
+name|opname_map_e
+modifier|*
 name|m1
 parameter_list|,
+specifier|const
+name|opname_map_e
+modifier|*
 name|m2
 parameter_list|)
-specifier|const
-name|opname_map_e
-modifier|*
-name|m1
-decl_stmt|;
-specifier|const
-name|opname_map_e
-modifier|*
-name|m2
-decl_stmt|;
 block|{
 if|if
 condition|(
@@ -3206,23 +2720,20 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|opname_map_e
 modifier|*
 name|get_opmatch
 parameter_list|(
-name|map
-parameter_list|,
-name|operand_name
-parameter_list|)
 name|opname_map
 modifier|*
 name|map
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|operand_name
-decl_stmt|;
+parameter_list|)
 block|{
 name|opname_map_e
 modifier|*
@@ -3271,16 +2782,15 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|bfd_boolean
 name|op_is_constant
 parameter_list|(
-name|m1
-parameter_list|)
 specifier|const
 name|opname_map_e
 modifier|*
 name|m1
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -3299,13 +2809,11 @@ specifier|static
 name|unsigned
 name|op_get_constant
 parameter_list|(
-name|m1
-parameter_list|)
 specifier|const
 name|opname_map_e
 modifier|*
 name|m1
-decl_stmt|;
+parameter_list|)
 block|{
 name|assert
 argument_list|(
@@ -3325,15 +2833,14 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|init_precond_list
 parameter_list|(
-name|l
-parameter_list|)
 name|precond_list
 modifier|*
 name|l
-decl_stmt|;
+parameter_list|)
 block|{
 name|l
 operator|->
@@ -3354,15 +2861,14 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|clear_precond_list
 parameter_list|(
-name|l
-parameter_list|)
 name|precond_list
 modifier|*
 name|l
-decl_stmt|;
+parameter_list|)
 block|{
 name|precond_e
 modifier|*
@@ -3410,15 +2916,14 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|init_insn_templ
 parameter_list|(
-name|t
-parameter_list|)
 name|insn_templ
 modifier|*
 name|t
-decl_stmt|;
+parameter_list|)
 block|{
 name|t
 operator|->
@@ -3438,15 +2943,14 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|clear_insn_templ
 parameter_list|(
-name|t
-parameter_list|)
 name|insn_templ
 modifier|*
 name|t
-decl_stmt|;
+parameter_list|)
 block|{
 name|clear_opname_map
 argument_list|(
@@ -3460,15 +2964,14 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|init_insn_pattern
 parameter_list|(
-name|p
-parameter_list|)
 name|insn_pattern
 modifier|*
 name|p
-decl_stmt|;
+parameter_list|)
 block|{
 name|init_insn_templ
 argument_list|(
@@ -3486,19 +2989,24 @@ operator|->
 name|preconds
 argument_list|)
 expr_stmt|;
+name|p
+operator|->
+name|options
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|clear_insn_pattern
 parameter_list|(
-name|p
-parameter_list|)
 name|insn_pattern
 modifier|*
 name|p
-decl_stmt|;
+parameter_list|)
 block|{
 name|clear_insn_templ
 argument_list|(
@@ -3520,15 +3028,14 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|init_insn_repl
 parameter_list|(
-name|r
-parameter_list|)
 name|insn_repl
 modifier|*
 name|r
-decl_stmt|;
+parameter_list|)
 block|{
 name|r
 operator|->
@@ -3549,15 +3056,14 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|clear_insn_repl
 parameter_list|(
-name|r
-parameter_list|)
 name|insn_repl
 modifier|*
 name|r
-decl_stmt|;
+parameter_list|)
 block|{
 name|insn_repl_e
 modifier|*
@@ -3609,18 +3115,16 @@ end_function
 
 begin_function
 specifier|static
-name|size_t
+name|int
 name|insn_templ_operand_count
 parameter_list|(
-name|t
-parameter_list|)
 specifier|const
 name|insn_templ
 modifier|*
 name|t
-decl_stmt|;
+parameter_list|)
 block|{
-name|size_t
+name|int
 name|i
 init|=
 literal|0
@@ -3650,8 +3154,8 @@ name|op
 operator|->
 name|next
 operator|,
-operator|++
 name|i
+operator|++
 control|)
 empty_stmt|;
 return|return
@@ -3665,22 +3169,19 @@ comment|/* Convert a string to a number.  E.G.: parse_constant("10",&num) */
 end_comment
 
 begin_function
+specifier|static
 name|bfd_boolean
 name|parse_constant
 parameter_list|(
-name|in
-parameter_list|,
-name|val_p
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|in
-decl_stmt|;
+parameter_list|,
 name|unsigned
 modifier|*
 name|val_p
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|val
@@ -3762,29 +3263,24 @@ comment|/* Match a pattern like "foo1" with    parse_id_constant("foo1", "foo",&
 end_comment
 
 begin_function
+specifier|static
 name|bfd_boolean
 name|parse_id_constant
 parameter_list|(
-name|in
-parameter_list|,
-name|name
-parameter_list|,
-name|val_p
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|in
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|,
 name|unsigned
 modifier|*
 name|val_p
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|namelen
@@ -3862,29 +3358,23 @@ specifier|static
 name|bfd_boolean
 name|parse_special_fn
 parameter_list|(
-name|name
-parameter_list|,
-name|fn_name_p
-parameter_list|,
-name|arg_name_p
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 modifier|*
 name|fn_name_p
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 modifier|*
 name|arg_name_p
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -3978,18 +3468,17 @@ block|}
 end_function
 
 begin_function
+specifier|static
 specifier|const
 name|char
 modifier|*
 name|skip_white
 parameter_list|(
-name|p
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|p
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -4017,15 +3506,14 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|trim_whitespace
 parameter_list|(
-name|in
-parameter_list|)
 name|char
 modifier|*
 name|in
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -4105,39 +3593,32 @@ comment|/* Split a string into component strings where "c" is the    delimiter. 
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|split_string
 parameter_list|(
-name|rec
-parameter_list|,
-name|in
-parameter_list|,
-name|c
-parameter_list|,
-name|elide_whitespace
-parameter_list|)
 name|split_rec
 modifier|*
 name|rec
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|in
-decl_stmt|;
+parameter_list|,
 name|char
 name|c
-decl_stmt|;
+parameter_list|,
 name|bfd_boolean
 name|elide_whitespace
-decl_stmt|;
+parameter_list|)
 block|{
-name|size_t
+name|int
 name|cnt
 init|=
 literal|0
 decl_stmt|;
-name|size_t
+name|int
 name|i
 decl_stmt|;
 specifier|const
@@ -4265,7 +3746,7 @@ name|char
 modifier|*
 name|q
 decl_stmt|;
-name|size_t
+name|int
 name|len
 decl_stmt|;
 name|q
@@ -4305,7 +3786,7 @@ index|[
 name|i
 index|]
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|q
 argument_list|)
@@ -4392,17 +3873,16 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|clear_split_rec
 parameter_list|(
-name|rec
-parameter_list|)
 name|split_rec
 modifier|*
 name|rec
-decl_stmt|;
+parameter_list|)
 block|{
-name|size_t
+name|int
 name|i
 decl_stmt|;
 for|for
@@ -4417,8 +3897,8 @@ name|rec
 operator|->
 name|count
 condition|;
-operator|++
 name|i
+operator|++
 control|)
 name|free
 argument_list|(
@@ -4448,16 +3928,19 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* Initialize a split record.  The split record must be initialized    before split_string is called.  */
+end_comment
+
 begin_function
+specifier|static
 name|void
 name|init_split_rec
 parameter_list|(
-name|rec
-parameter_list|)
 name|split_rec
 modifier|*
 name|rec
-decl_stmt|;
+parameter_list|)
 block|{
 name|rec
 operator|->
@@ -4479,22 +3962,19 @@ comment|/* Parse an instruction template like "insn op1, op2, op3".  */
 end_comment
 
 begin_function
+specifier|static
 name|bfd_boolean
 name|parse_insn_templ
 parameter_list|(
-name|s
-parameter_list|,
-name|t
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|,
 name|insn_templ
 modifier|*
 name|t
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|char
@@ -4503,16 +3983,16 @@ name|p
 init|=
 name|s
 decl_stmt|;
-comment|/* First find the first whitespace.  */
-name|size_t
+name|int
 name|insn_name_len
 decl_stmt|;
 name|split_rec
 name|oprec
 decl_stmt|;
-name|size_t
+name|int
 name|i
 decl_stmt|;
+comment|/* First find the first whitespace.  */
 name|init_split_rec
 argument_list|(
 operator|&
@@ -4758,22 +4238,19 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|bfd_boolean
 name|parse_precond
 parameter_list|(
-name|s
-parameter_list|,
-name|precond
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|,
 name|precond_e
 modifier|*
 name|precond
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* All preconditions are currently of the form:      a == b or a != b or a == k (where k is a constant).      Later we may use some special functions like DENSITY == 1      to identify when density is available.  */
 specifier|const
@@ -4783,7 +4260,7 @@ name|p
 init|=
 name|s
 decl_stmt|;
-name|size_t
+name|int
 name|len
 decl_stmt|;
 name|precond
@@ -4986,43 +4463,547 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|clear_req_or_option_list
+parameter_list|(
+name|ReqOrOption
+modifier|*
+modifier|*
+name|r_p
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|*
+name|r_p
+operator|==
+name|NULL
+condition|)
+return|return;
+name|free
+argument_list|(
+operator|(
+operator|*
+name|r_p
+operator|)
+operator|->
+name|option_name
+argument_list|)
+expr_stmt|;
+name|clear_req_or_option_list
+argument_list|(
+operator|&
+operator|(
+operator|*
+name|r_p
+operator|)
+operator|->
+name|next
+argument_list|)
+expr_stmt|;
+operator|*
+name|r_p
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|clear_req_option_list
+parameter_list|(
+name|ReqOption
+modifier|*
+modifier|*
+name|r_p
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|*
+name|r_p
+operator|==
+name|NULL
+condition|)
+return|return;
+name|clear_req_or_option_list
+argument_list|(
+operator|&
+operator|(
+operator|*
+name|r_p
+operator|)
+operator|->
+name|or_option_terms
+argument_list|)
+expr_stmt|;
+name|clear_req_option_list
+argument_list|(
+operator|&
+operator|(
+operator|*
+name|r_p
+operator|)
+operator|->
+name|next
+argument_list|)
+expr_stmt|;
+operator|*
+name|r_p
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|ReqOrOption
+modifier|*
+name|clone_req_or_option_list
+parameter_list|(
+name|ReqOrOption
+modifier|*
+name|req_or_option
+parameter_list|)
+block|{
+name|ReqOrOption
+modifier|*
+name|new_req_or_option
+decl_stmt|;
+if|if
+condition|(
+name|req_or_option
+operator|==
+name|NULL
+condition|)
+return|return
+name|NULL
+return|;
+name|new_req_or_option
+operator|=
+operator|(
+name|ReqOrOption
+operator|*
+operator|)
+name|xmalloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|ReqOrOption
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|new_req_or_option
+operator|->
+name|option_name
+operator|=
+name|xstrdup
+argument_list|(
+name|req_or_option
+operator|->
+name|option_name
+argument_list|)
+expr_stmt|;
+name|new_req_or_option
+operator|->
+name|is_true
+operator|=
+name|req_or_option
+operator|->
+name|is_true
+expr_stmt|;
+name|new_req_or_option
+operator|->
+name|next
+operator|=
+name|NULL
+expr_stmt|;
+name|new_req_or_option
+operator|->
+name|next
+operator|=
+name|clone_req_or_option_list
+argument_list|(
+name|req_or_option
+operator|->
+name|next
+argument_list|)
+expr_stmt|;
+return|return
+name|new_req_or_option
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|ReqOption
+modifier|*
+name|clone_req_option_list
+parameter_list|(
+name|ReqOption
+modifier|*
+name|req_option
+parameter_list|)
+block|{
+name|ReqOption
+modifier|*
+name|new_req_option
+decl_stmt|;
+if|if
+condition|(
+name|req_option
+operator|==
+name|NULL
+condition|)
+return|return
+name|NULL
+return|;
+name|new_req_option
+operator|=
+operator|(
+name|ReqOption
+operator|*
+operator|)
+name|xmalloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|ReqOption
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|new_req_option
+operator|->
+name|or_option_terms
+operator|=
+name|NULL
+expr_stmt|;
+name|new_req_option
+operator|->
+name|next
+operator|=
+name|NULL
+expr_stmt|;
+name|new_req_option
+operator|->
+name|or_option_terms
+operator|=
+name|clone_req_or_option_list
+argument_list|(
+name|req_option
+operator|->
+name|or_option_terms
+argument_list|)
+expr_stmt|;
+name|new_req_option
+operator|->
+name|next
+operator|=
+name|clone_req_option_list
+argument_list|(
+name|req_option
+operator|->
+name|next
+argument_list|)
+expr_stmt|;
+return|return
+name|new_req_option
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|bfd_boolean
+name|parse_option_cond
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|s
+parameter_list|,
+name|ReqOption
+modifier|*
+name|option
+parameter_list|)
+block|{
+name|int
+name|i
+decl_stmt|;
+name|split_rec
+name|option_term_rec
+decl_stmt|;
+comment|/* All option or conditions are of the form:      optionA + no-optionB + ...      "Ands" are divided by "?".  */
+name|init_split_rec
+argument_list|(
+operator|&
+name|option_term_rec
+argument_list|)
+expr_stmt|;
+name|split_string
+argument_list|(
+operator|&
+name|option_term_rec
+argument_list|,
+name|s
+argument_list|,
+literal|'+'
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|option_term_rec
+operator|.
+name|count
+operator|==
+literal|0
+condition|)
+block|{
+name|clear_split_rec
+argument_list|(
+operator|&
+name|option_term_rec
+argument_list|)
+expr_stmt|;
+return|return
+name|FALSE
+return|;
+block|}
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|option_term_rec
+operator|.
+name|count
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|char
+modifier|*
+name|option_name
+init|=
+name|option_term_rec
+operator|.
+name|vec
+index|[
+name|i
+index|]
+decl_stmt|;
+name|bfd_boolean
+name|is_true
+init|=
+name|TRUE
+decl_stmt|;
+name|ReqOrOption
+modifier|*
+name|req
+decl_stmt|;
+name|ReqOrOption
+modifier|*
+modifier|*
+name|r_p
+decl_stmt|;
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|option_name
+argument_list|,
+literal|"no-"
+argument_list|,
+literal|3
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|option_name
+operator|=
+name|xstrdup
+argument_list|(
+operator|&
+name|option_name
+index|[
+literal|3
+index|]
+argument_list|)
+expr_stmt|;
+name|is_true
+operator|=
+name|FALSE
+expr_stmt|;
+block|}
+else|else
+name|option_name
+operator|=
+name|xstrdup
+argument_list|(
+name|option_name
+argument_list|)
+expr_stmt|;
+name|req
+operator|=
+operator|(
+name|ReqOrOption
+operator|*
+operator|)
+name|xmalloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|ReqOrOption
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|req
+operator|->
+name|option_name
+operator|=
+name|option_name
+expr_stmt|;
+name|req
+operator|->
+name|is_true
+operator|=
+name|is_true
+expr_stmt|;
+name|req
+operator|->
+name|next
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* Append to list.  */
+for|for
+control|(
+name|r_p
+operator|=
+operator|&
+name|option
+operator|->
+name|or_option_terms
+init|;
+operator|(
+operator|*
+name|r_p
+operator|)
+operator|!=
+name|NULL
+condition|;
+name|r_p
+operator|=
+operator|&
+operator|(
+operator|*
+name|r_p
+operator|)
+operator|->
+name|next
+control|)
+empty_stmt|;
+operator|(
+operator|*
+name|r_p
+operator|)
+operator|=
+name|req
+expr_stmt|;
+block|}
+return|return
+name|TRUE
+return|;
+block|}
+end_function
+
 begin_comment
-comment|/* Parse a string like:    "insn op1, op2, op3, op4 | op1 != op2 | op2 == op3 | op4 == 1".    I.E., instruction "insn" with 4 operands where operand 1 and 2 are not    the same and operand 2 and 3 are the same and operand 4 is 1.  */
+comment|/* Parse a string like:    "insn op1, op2, op3, op4 | op1 != op2 | op2 == op3 | op4 == 1".    I.E., instruction "insn" with 4 operands where operand 1 and 2 are not    the same and operand 2 and 3 are the same and operand 4 is 1.     or:     "insn op1 | op1 == 1 / density + boolean / no-useroption".    i.e. instruction "insn" with 1 operands where operand 1 is 1    when "density" or "boolean" options are available and    "useroption" is not available.     Because the current implementation of this parsing scheme uses    split_string, it requires that '|' and '?' are only used as    delimiters for predicates and required options.  */
 end_comment
 
 begin_function
+specifier|static
 name|bfd_boolean
 name|parse_insn_pattern
 parameter_list|(
-name|in
-parameter_list|,
-name|insn
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|in
-decl_stmt|;
+parameter_list|,
 name|insn_pattern
 modifier|*
 name|insn
-decl_stmt|;
+parameter_list|)
 block|{
 name|split_rec
 name|rec
 decl_stmt|;
-name|size_t
+name|split_rec
+name|optionrec
+decl_stmt|;
+name|int
 name|i
 decl_stmt|;
+name|init_insn_pattern
+argument_list|(
+name|insn
+argument_list|)
+expr_stmt|;
+name|init_split_rec
+argument_list|(
+operator|&
+name|optionrec
+argument_list|)
+expr_stmt|;
+name|split_string
+argument_list|(
+operator|&
+name|optionrec
+argument_list|,
+name|in
+argument_list|,
+literal|'?'
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|optionrec
+operator|.
+name|count
+operator|==
+literal|0
+condition|)
+block|{
+name|clear_split_rec
+argument_list|(
+operator|&
+name|optionrec
+argument_list|)
+expr_stmt|;
+return|return
+name|FALSE
+return|;
+block|}
 name|init_split_rec
 argument_list|(
 operator|&
 name|rec
-argument_list|)
-expr_stmt|;
-name|init_insn_pattern
-argument_list|(
-name|insn
 argument_list|)
 expr_stmt|;
 name|split_string
@@ -5030,7 +5011,12 @@ argument_list|(
 operator|&
 name|rec
 argument_list|,
-name|in
+name|optionrec
+operator|.
+name|vec
+index|[
+literal|0
+index|]
 argument_list|,
 literal|'|'
 argument_list|,
@@ -5050,6 +5036,12 @@ name|clear_split_rec
 argument_list|(
 operator|&
 name|rec
+argument_list|)
+expr_stmt|;
+name|clear_split_rec
+argument_list|(
+operator|&
+name|optionrec
 argument_list|)
 expr_stmt|;
 return|return
@@ -5079,6 +5071,12 @@ name|clear_split_rec
 argument_list|(
 operator|&
 name|rec
+argument_list|)
+expr_stmt|;
+name|clear_split_rec
+argument_list|(
+operator|&
+name|optionrec
 argument_list|)
 expr_stmt|;
 return|return
@@ -5139,6 +5137,12 @@ operator|&
 name|rec
 argument_list|)
 expr_stmt|;
+name|clear_split_rec
+argument_list|(
+operator|&
+name|optionrec
+argument_list|)
+expr_stmt|;
 name|clear_insn_pattern
 argument_list|(
 name|insn
@@ -5170,10 +5174,145 @@ operator|->
 name|next
 expr_stmt|;
 block|}
+for|for
+control|(
+name|i
+operator|=
+literal|1
+init|;
+name|i
+operator|<
+name|optionrec
+operator|.
+name|count
+condition|;
+name|i
+operator|++
+control|)
+block|{
+comment|/* Handle the option conditions.  */
+name|ReqOption
+modifier|*
+modifier|*
+name|r_p
+decl_stmt|;
+name|ReqOption
+modifier|*
+name|req_option
+init|=
+operator|(
+name|ReqOption
+operator|*
+operator|)
+name|xmalloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|ReqOption
+argument_list|)
+argument_list|)
+decl_stmt|;
+name|req_option
+operator|->
+name|or_option_terms
+operator|=
+name|NULL
+expr_stmt|;
+name|req_option
+operator|->
+name|next
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|parse_option_cond
+argument_list|(
+name|optionrec
+operator|.
+name|vec
+index|[
+name|i
+index|]
+argument_list|,
+name|req_option
+argument_list|)
+condition|)
+block|{
 name|clear_split_rec
 argument_list|(
 operator|&
 name|rec
+argument_list|)
+expr_stmt|;
+name|clear_split_rec
+argument_list|(
+operator|&
+name|optionrec
+argument_list|)
+expr_stmt|;
+name|clear_insn_pattern
+argument_list|(
+name|insn
+argument_list|)
+expr_stmt|;
+name|clear_req_option_list
+argument_list|(
+operator|&
+name|req_option
+argument_list|)
+expr_stmt|;
+return|return
+name|FALSE
+return|;
+block|}
+comment|/* Append the condition.  */
+for|for
+control|(
+name|r_p
+operator|=
+operator|&
+name|insn
+operator|->
+name|options
+init|;
+operator|(
+operator|*
+name|r_p
+operator|)
+operator|!=
+name|NULL
+condition|;
+name|r_p
+operator|=
+operator|&
+operator|(
+operator|*
+name|r_p
+operator|)
+operator|->
+name|next
+control|)
+empty_stmt|;
+operator|(
+operator|*
+name|r_p
+operator|)
+operator|=
+name|req_option
+expr_stmt|;
+block|}
+name|clear_split_rec
+argument_list|(
+operator|&
+name|rec
+argument_list|)
+expr_stmt|;
+name|clear_split_rec
+argument_list|(
+operator|&
+name|optionrec
 argument_list|)
 expr_stmt|;
 return|return
@@ -5183,28 +5322,25 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|bfd_boolean
 name|parse_insn_repl
 parameter_list|(
-name|in
-parameter_list|,
-name|r_p
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|in
-decl_stmt|;
+parameter_list|,
 name|insn_repl
 modifier|*
 name|r_p
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* This is a list of instruction templates separated by ';'.  */
 name|split_rec
 name|rec
 decl_stmt|;
-name|size_t
+name|int
 name|i
 decl_stmt|;
 name|split_string
@@ -5314,36 +5450,438 @@ block|}
 end_function
 
 begin_function
+specifier|static
+name|bfd_boolean
+name|transition_applies
+parameter_list|(
+name|insn_pattern
+modifier|*
+name|initial_insn
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|from_string
+name|ATTRIBUTE_UNUSED
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|to_string
+name|ATTRIBUTE_UNUSED
+parameter_list|)
+block|{
+name|ReqOption
+modifier|*
+name|req_option
+decl_stmt|;
+for|for
+control|(
+name|req_option
+operator|=
+name|initial_insn
+operator|->
+name|options
+init|;
+name|req_option
+operator|!=
+name|NULL
+condition|;
+name|req_option
+operator|=
+name|req_option
+operator|->
+name|next
+control|)
+block|{
+name|ReqOrOption
+modifier|*
+name|req_or_option
+init|=
+name|req_option
+operator|->
+name|or_option_terms
+decl_stmt|;
+if|if
+condition|(
+name|req_or_option
+operator|==
+name|NULL
+operator|||
+name|req_or_option
+operator|->
+name|next
+operator|!=
+name|NULL
+condition|)
+continue|continue;
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|req_or_option
+operator|->
+name|option_name
+argument_list|,
+literal|"IsaUse"
+argument_list|,
+literal|6
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|bfd_boolean
+name|option_available
+init|=
+name|FALSE
+decl_stmt|;
+name|char
+modifier|*
+name|option_name
+init|=
+name|req_or_option
+operator|->
+name|option_name
+operator|+
+literal|6
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|option_name
+argument_list|,
+literal|"DensityInstruction"
+argument_list|)
+condition|)
+name|option_available
+operator|=
+operator|(
+name|XCHAL_HAVE_DENSITY
+operator|==
+literal|1
+operator|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|option_name
+argument_list|,
+literal|"L32R"
+argument_list|)
+condition|)
+name|option_available
+operator|=
+operator|(
+name|XCHAL_HAVE_L32R
+operator|==
+literal|1
+operator|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|option_name
+argument_list|,
+literal|"Const16"
+argument_list|)
+condition|)
+name|option_available
+operator|=
+operator|(
+name|XCHAL_HAVE_CONST16
+operator|==
+literal|1
+operator|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|option_name
+argument_list|,
+literal|"Loops"
+argument_list|)
+condition|)
+name|option_available
+operator|=
+operator|(
+name|XCHAL_HAVE_LOOPS
+operator|==
+literal|1
+operator|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|option_name
+argument_list|,
+literal|"WideBranches"
+argument_list|)
+condition|)
+name|option_available
+operator|=
+operator|(
+name|XCHAL_HAVE_WIDE_BRANCHES
+operator|==
+literal|1
+operator|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|option_name
+argument_list|,
+literal|"PredictedBranches"
+argument_list|)
+condition|)
+name|option_available
+operator|=
+operator|(
+name|XCHAL_HAVE_PREDICTED_BRANCHES
+operator|==
+literal|1
+operator|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|option_name
+argument_list|,
+literal|"Booleans"
+argument_list|)
+condition|)
+name|option_available
+operator|=
+operator|(
+name|XCHAL_HAVE_BOOLEANS
+operator|==
+literal|1
+operator|)
+expr_stmt|;
+else|else
+name|as_warn
+argument_list|(
+name|_
+argument_list|(
+literal|"invalid configuration option '%s' in transition rule '%s'"
+argument_list|)
+argument_list|,
+name|req_or_option
+operator|->
+name|option_name
+argument_list|,
+name|from_string
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|option_available
+operator|^
+name|req_or_option
+operator|->
+name|is_true
+operator|)
+operator|!=
+literal|0
+condition|)
+return|return
+name|FALSE
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|req_or_option
+operator|->
+name|option_name
+argument_list|,
+literal|"realnop"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|bfd_boolean
+name|nop_available
+init|=
+operator|(
+name|xtensa_opcode_lookup
+argument_list|(
+name|xtensa_default_isa
+argument_list|,
+literal|"nop"
+argument_list|)
+operator|!=
+name|XTENSA_UNDEFINED
+operator|)
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|nop_available
+operator|^
+name|req_or_option
+operator|->
+name|is_true
+operator|)
+operator|!=
+literal|0
+condition|)
+return|return
+name|FALSE
+return|;
+block|}
+block|}
+return|return
+name|TRUE
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|bfd_boolean
+name|wide_branch_opcode
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|opcode_name
+parameter_list|,
+name|char
+modifier|*
+name|suffix
+parameter_list|,
+name|xtensa_opcode
+modifier|*
+name|popcode
+parameter_list|)
+block|{
+name|xtensa_isa
+name|isa
+init|=
+name|xtensa_default_isa
+decl_stmt|;
+name|xtensa_opcode
+name|opcode
+decl_stmt|;
+specifier|static
+name|char
+name|wbr_name_buf
+index|[
+literal|20
+index|]
+decl_stmt|;
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|opcode_name
+argument_list|,
+literal|"WIDE."
+argument_list|,
+literal|5
+argument_list|)
+operator|!=
+literal|0
+condition|)
+return|return
+name|FALSE
+return|;
+name|strcpy
+argument_list|(
+name|wbr_name_buf
+argument_list|,
+name|opcode_name
+operator|+
+literal|5
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|wbr_name_buf
+argument_list|,
+name|suffix
+argument_list|)
+expr_stmt|;
+name|opcode
+operator|=
+name|xtensa_opcode_lookup
+argument_list|(
+name|isa
+argument_list|,
+name|wbr_name_buf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|opcode
+operator|!=
+name|XTENSA_UNDEFINED
+condition|)
+block|{
+operator|*
+name|popcode
+operator|=
+name|opcode
+expr_stmt|;
+return|return
+name|TRUE
+return|;
+block|}
+return|return
+name|FALSE
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|TransitionRule
 modifier|*
 name|build_transition
 parameter_list|(
-name|initial_insn
-parameter_list|,
-name|replace_insns
-parameter_list|,
-name|from_string
-parameter_list|,
-name|to_string
-parameter_list|)
 name|insn_pattern
 modifier|*
 name|initial_insn
-decl_stmt|;
+parameter_list|,
 name|insn_repl
 modifier|*
 name|replace_insns
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|from_string
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|to_string
-decl_stmt|;
+parameter_list|)
 block|{
 name|TransitionRule
 modifier|*
@@ -5416,28 +5954,19 @@ name|XTENSA_UNDEFINED
 condition|)
 block|{
 comment|/* It is OK to not be able to translate some of these opcodes.  */
-if|#
-directive|if
-literal|0
-block|as_warn (_("Invalid opcode '%s' in transition rule '%s'\n"), 	       initial_insn->t.opcode_name, to_string);
-endif|#
-directive|endif
 return|return
 name|NULL
 return|;
 block|}
 if|if
 condition|(
-name|xtensa_num_operands
+name|xtensa_opcode_num_operands
 argument_list|(
 name|isa
 argument_list|,
 name|opcode
 argument_list|)
 operator|!=
-operator|(
-name|int
-operator|)
 name|insn_templ_operand_count
 argument_list|(
 operator|&
@@ -5448,12 +5977,6 @@ argument_list|)
 condition|)
 block|{
 comment|/* This is also OK because there are opcodes that 	 have different numbers of operands on different 	 architecture variations.  */
-if|#
-directive|if
-literal|0
-block|as_fatal (_("opcode %s mismatched operand count %d != expected %d"), 		xtensa_opcode_name (isa, opcode), 		xtensa_num_operands (isa, opcode), 		insn_templ_operand_count (&initial_insn->t));
-endif|#
-directive|endif
 return|return
 name|NULL
 return|;
@@ -5837,7 +6360,7 @@ name|operand_num
 argument_list|,
 name|precond
 operator|->
-name|opval1
+name|opval2
 argument_list|)
 expr_stmt|;
 else|else
@@ -5855,10 +6378,21 @@ name|operand_num
 argument_list|,
 name|precond
 operator|->
-name|opval2
+name|opval1
 argument_list|)
 expr_stmt|;
 block|}
+name|tr
+operator|->
+name|options
+operator|=
+name|clone_req_option_list
+argument_list|(
+name|initial_insn
+operator|->
+name|options
+argument_list|)
+expr_stmt|;
 comment|/* Generate the replacement instructions.  Some of these      "instructions" are actually labels and literals.  The literals      must be defined in order 0..n and a literal must be defined      (e.g., "LITERAL0 %imm") before use (e.g., "%LITERAL0").  The      labels must be defined in order, but they can be used before they      are defined.  Also there are a number of special operands (e.g.,      HI24S).  */
 for|for
 control|(
@@ -5888,7 +6422,7 @@ name|char
 modifier|*
 name|opcode_name
 decl_stmt|;
-name|size_t
+name|int
 name|operand_count
 decl_stmt|;
 name|opname_map_e
@@ -6096,6 +6630,44 @@ name|typ
 operator|=
 name|INSTR_INSTR
 expr_stmt|;
+if|if
+condition|(
+name|wide_branch_opcode
+argument_list|(
+name|opcode_name
+argument_list|,
+literal|".w18"
+argument_list|,
+operator|&
+name|bi
+operator|->
+name|opcode
+argument_list|)
+operator|||
+name|wide_branch_opcode
+argument_list|(
+name|opcode_name
+argument_list|,
+literal|".w15"
+argument_list|,
+operator|&
+name|bi
+operator|->
+name|opcode
+argument_list|)
+condition|)
+name|opcode_name
+operator|=
+name|xtensa_opcode_name
+argument_list|(
+name|isa
+argument_list|,
+name|bi
+operator|->
+name|opcode
+argument_list|)
+expr_stmt|;
+else|else
 name|bi
 operator|->
 name|opcode
@@ -6104,10 +6676,6 @@ name|xtensa_opcode_lookup
 argument_list|(
 name|isa
 argument_list|,
-name|r
-operator|->
-name|t
-operator|.
 name|opcode_name
 argument_list|)
 expr_stmt|;
@@ -6119,13 +6687,27 @@ name|opcode
 operator|==
 name|XTENSA_UNDEFINED
 condition|)
+block|{
+name|as_warn
+argument_list|(
+name|_
+argument_list|(
+literal|"invalid opcode '%s' in transition rule '%s'"
+argument_list|)
+argument_list|,
+name|opcode_name
+argument_list|,
+name|to_string
+argument_list|)
+expr_stmt|;
 return|return
 name|NULL
 return|;
+block|}
 comment|/* Check for the right number of ops.  */
 if|if
 condition|(
-name|xtensa_num_operands
+name|xtensa_opcode_num_operands
 argument_list|(
 name|isa
 argument_list|,
@@ -6148,7 +6730,7 @@ argument_list|)
 argument_list|,
 name|opcode_name
 argument_list|,
-name|xtensa_num_operands
+name|xtensa_opcode_num_operands
 argument_list|(
 name|isa
 argument_list|,
@@ -6479,12 +7061,44 @@ name|typ
 operator|=
 name|OP_OPERAND_F32MINUS
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|fn_name
+argument_list|,
+literal|"LOW16U"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|typ
+operator|=
+name|OP_OPERAND_LOW16U
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|fn_name
+argument_list|,
+literal|"HI16U"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|typ
+operator|=
+name|OP_OPERAND_HI16U
+expr_stmt|;
 else|else
 name|as_fatal
 argument_list|(
 name|_
 argument_list|(
-literal|"unknown user defined function %s"
+literal|"unknown user-defined function %s"
 argument_list|)
 argument_list|,
 name|fn_name
@@ -6627,22 +7241,22 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|TransitionTable
 modifier|*
 name|build_transition_table
 parameter_list|(
-name|transitions
-parameter_list|,
-name|transition_count
-parameter_list|)
 specifier|const
 name|string_pattern_pair
 modifier|*
 name|transitions
-decl_stmt|;
-name|size_t
+parameter_list|,
+name|int
 name|transition_count
-decl_stmt|;
+parameter_list|,
+name|transition_cmp_fn
+name|cmp
+parameter_list|)
 block|{
 name|TransitionTable
 modifier|*
@@ -6653,15 +7267,14 @@ decl_stmt|;
 name|int
 name|num_opcodes
 init|=
-name|xtensa_num_opcodes
+name|xtensa_isa_num_opcodes
 argument_list|(
 name|xtensa_default_isa
 argument_list|)
 decl_stmt|;
 name|int
 name|i
-decl_stmt|;
-name|size_t
+decl_stmt|,
 name|tnum
 decl_stmt|;
 if|if
@@ -6862,6 +7475,19 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+if|if
+condition|(
+name|transition_applies
+argument_list|(
+operator|&
+name|initial_insn
+argument_list|,
+name|from_string
+argument_list|,
+name|to_string
+argument_list|)
+condition|)
+block|{
 name|tr
 operator|=
 name|build_transition
@@ -6890,8 +7516,31 @@ operator|->
 name|opcode
 argument_list|,
 name|tr
+argument_list|,
+name|cmp
 argument_list|)
 expr_stmt|;
+else|else
+block|{
+if|#
+directive|if
+name|TENSILICA_DEBUG
+name|as_warn
+argument_list|(
+name|_
+argument_list|(
+literal|"could not build transition for %s => %s"
+argument_list|)
+argument_list|,
+name|from_string
+argument_list|,
+name|to_string
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+block|}
 name|clear_insn_repl
 argument_list|(
 operator|&
@@ -6919,7 +7568,10 @@ specifier|extern
 name|TransitionTable
 modifier|*
 name|xg_build_widen_table
-parameter_list|()
+parameter_list|(
+name|transition_cmp_fn
+name|cmp
+parameter_list|)
 block|{
 specifier|static
 name|TransitionTable
@@ -6941,6 +7593,8 @@ argument_list|(
 name|widen_spec_list
 argument_list|,
 name|WIDEN_COUNT
+argument_list|,
+name|cmp
 argument_list|)
 expr_stmt|;
 return|return
@@ -6954,7 +7608,10 @@ specifier|extern
 name|TransitionTable
 modifier|*
 name|xg_build_simplify_table
-parameter_list|()
+parameter_list|(
+name|transition_cmp_fn
+name|cmp
+parameter_list|)
 block|{
 specifier|static
 name|TransitionTable
@@ -6976,6 +7633,8 @@ argument_list|(
 name|simplify_spec_list
 argument_list|,
 name|SIMPLIFY_COUNT
+argument_list|,
+name|cmp
 argument_list|)
 expr_stmt|;
 return|return

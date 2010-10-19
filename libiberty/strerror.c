@@ -6,18 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"ansidecl.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"libiberty.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"config.h"
 end_include
 
@@ -49,6 +37,18 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|"ansidecl.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"libiberty.h"
+end_include
 
 begin_include
 include|#
@@ -172,18 +172,15 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|init_error_tables
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Translation table for errno values.  See intro(2) in most UNIX systems    Programmers Reference Manuals.     Note that this table is generally only accessed when it is used at runtime    to initialize errno name and message tables that are indexed by errno    value.     Not all of these errnos will exist on all systems.  This table is the only    thing that should have to be updated as new error numbers are introduced.    It's sort of ugly, but at least its portable. */
@@ -2485,7 +2482,9 @@ begin_function
 specifier|static
 name|void
 name|init_error_tables
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|const
 name|struct
@@ -2713,7 +2712,9 @@ end_comment
 begin_function
 name|int
 name|errno_max
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|maxsize
@@ -2763,11 +2764,9 @@ name|char
 modifier|*
 name|strerror
 parameter_list|(
-name|errnoval
-parameter_list|)
 name|int
 name|errnoval
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|char
@@ -2914,11 +2913,9 @@ name|char
 modifier|*
 name|strerrno
 parameter_list|(
-name|errnoval
-parameter_list|)
 name|int
 name|errnoval
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|char
@@ -3050,13 +3047,11 @@ begin_function
 name|int
 name|strtoerrno
 parameter_list|(
-name|name
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|errnoval
@@ -3189,7 +3184,9 @@ end_include
 begin_function
 name|int
 name|main
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|errn

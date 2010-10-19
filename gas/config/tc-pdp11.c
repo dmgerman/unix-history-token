@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-pdp11.c - pdp11-specific -    Copyright 2001, 2002 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
-end_comment
-
-begin_comment
-comment|/*   Apparently unused functions:     md_convert_frag     md_estimate_size_before_relax     md_create_short_jump     md_create_long_jump */
+comment|/* tc-pdp11.c - pdp11-specific -    Copyright 2001, 2002, 2004, 2005 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -25,72 +21,22 @@ directive|include
 file|"opcode/pdp11.h"
 end_include
 
-begin_decl_stmt
-specifier|static
-name|int
-name|set_option
-name|PARAMS
-argument_list|(
-operator|(
-name|char
-operator|*
-name|arg
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|set_cpu_model
-name|PARAMS
-argument_list|(
-operator|(
-name|char
-operator|*
-name|arg
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|set_machine_model
-name|PARAMS
-argument_list|(
-operator|(
-name|char
-operator|*
-name|arg
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|flonum_gen2vax
-name|PARAMS
-argument_list|(
-operator|(
-name|char
-name|format_letter
-operator|,
+parameter_list|(
+name|int
+parameter_list|,
 name|FLONUM_TYPE
-operator|*
+modifier|*
 name|f
-operator|,
+parameter_list|,
 name|LITTLENUM_TYPE
-operator|*
-name|words
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -107,7 +53,7 @@ value|0
 end_define
 
 begin_comment
-comment|/*  * A representation for PDP-11 machine code.  */
+comment|/* A representation for PDP-11 machine code.  */
 end_comment
 
 begin_struct
@@ -124,11 +70,11 @@ decl_stmt|;
 name|int
 name|additional
 decl_stmt|;
-comment|/* is there an additional word? */
+comment|/* Is there an additional word?  */
 name|int
 name|word
 decl_stmt|;
-comment|/* additional word, if any */
+comment|/* Additional word, if any.  */
 struct|struct
 block|{
 name|bfd_reloc_code_real_type
@@ -148,7 +94,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Instruction set extensions.  *  * If you change this from an array to something else, please update  * the "PDP-11 instruction set extensions" comment in pdp11.h.  */
+comment|/* Instruction set extensions.     If you change this from an array to something else, please update    the "PDP-11 instruction set extensions" comment in pdp11.h.  */
 end_comment
 
 begin_decl_stmt
@@ -161,7 +107,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Assembly options.  */
+comment|/* Assembly options.  */
 end_comment
 
 begin_define
@@ -188,7 +134,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* These chars start a comment anywhere in a source file (except inside    another comment */
+comment|/* These chars start a comment anywhere in a source file (except inside    another comment.  */
 end_comment
 
 begin_decl_stmt
@@ -226,7 +172,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Chars that can be used to separate mant from exp in floating point nums */
+comment|/* Chars that can be used to separate mant from exp in floating point nums.  */
 end_comment
 
 begin_decl_stmt
@@ -240,15 +186,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Chars that mean this number is a floating point constant */
+comment|/* Chars that mean this number is a floating point constant.  */
 end_comment
 
 begin_comment
-comment|/* as in 0f123.456 */
+comment|/* as in 0f123.456.  */
 end_comment
 
 begin_comment
-comment|/* or    0H1.234E-12 (see exp chars above) */
+comment|/* or    0H1.234E-12 (see exp chars above).  */
 end_comment
 
 begin_decl_stmt
@@ -313,11 +259,509 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|hash_control
+modifier|*
+name|insn_hash
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_escape
+end_escape
+
+begin_function
+specifier|static
+name|int
+name|set_option
+parameter_list|(
+name|char
+modifier|*
+name|arg
+parameter_list|)
+block|{
+name|int
+name|yes
+init|=
+literal|1
+decl_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|arg
+argument_list|,
+literal|"all-extensions"
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|arg
+argument_list|,
+literal|"all"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|memset
+argument_list|(
+name|pdp11_extension
+argument_list|,
+operator|~
+literal|0
+argument_list|,
+sizeof|sizeof
+name|pdp11_extension
+argument_list|)
+expr_stmt|;
+name|pdp11_extension
+index|[
+name|PDP11_NONE
+index|]
+operator|=
+literal|0
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|arg
+argument_list|,
+literal|"no-extensions"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|memset
+argument_list|(
+name|pdp11_extension
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+name|pdp11_extension
+argument_list|)
+expr_stmt|;
+name|pdp11_extension
+index|[
+name|PDP11_BASIC
+index|]
+operator|=
+literal|1
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|arg
+argument_list|,
+literal|"no-"
+argument_list|,
+literal|3
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|yes
+operator|=
+literal|0
+expr_stmt|;
+name|arg
+operator|+=
+literal|3
+expr_stmt|;
+block|}
+comment|/* Commersial instructions.  */
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|arg
+argument_list|,
+literal|"cis"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|pdp11_extension
+index|[
+name|PDP11_CIS
+index|]
+operator|=
+name|yes
+expr_stmt|;
+comment|/* Call supervisor mode.  */
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|arg
+argument_list|,
+literal|"csm"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|pdp11_extension
+index|[
+name|PDP11_CSM
+index|]
+operator|=
+name|yes
+expr_stmt|;
+comment|/* Extended instruction set.  */
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|arg
+argument_list|,
+literal|"eis"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|pdp11_extension
+index|[
+name|PDP11_EIS
+index|]
+operator|=
+name|pdp11_extension
+index|[
+name|PDP11_LEIS
+index|]
+operator|=
+name|yes
+expr_stmt|;
+comment|/* KEV11 floating-point.  */
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|arg
+argument_list|,
+literal|"fis"
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|arg
+argument_list|,
+literal|"kev11"
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|arg
+argument_list|,
+literal|"kev-11"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|pdp11_extension
+index|[
+name|PDP11_FIS
+index|]
+operator|=
+name|yes
+expr_stmt|;
+comment|/* FP-11 floating-point.  */
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|arg
+argument_list|,
+literal|"fpp"
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|arg
+argument_list|,
+literal|"fpu"
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|arg
+argument_list|,
+literal|"fp11"
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|arg
+argument_list|,
+literal|"fp-11"
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|arg
+argument_list|,
+literal|"fpj11"
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|arg
+argument_list|,
+literal|"fp-j11"
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|arg
+argument_list|,
+literal|"fpj-11"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|pdp11_extension
+index|[
+name|PDP11_FPP
+index|]
+operator|=
+name|yes
+expr_stmt|;
+comment|/* Limited extended insns.  */
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|arg
+argument_list|,
+literal|"limited-eis"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|pdp11_extension
+index|[
+name|PDP11_LEIS
+index|]
+operator|=
+name|yes
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|pdp11_extension
+index|[
+name|PDP11_LEIS
+index|]
+condition|)
+name|pdp11_extension
+index|[
+name|PDP11_EIS
+index|]
+operator|=
+literal|0
+expr_stmt|;
+block|}
+comment|/* Move from processor type.  */
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|arg
+argument_list|,
+literal|"mfpt"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|pdp11_extension
+index|[
+name|PDP11_MFPT
+index|]
+operator|=
+name|yes
+expr_stmt|;
+comment|/* Multiprocessor insns:  */
+elseif|else
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|arg
+argument_list|,
+literal|"mproc"
+argument_list|,
+literal|5
+argument_list|)
+operator|==
+literal|0
+comment|/* TSTSET, WRTLCK */
+operator|||
+name|strncmp
+argument_list|(
+name|arg
+argument_list|,
+literal|"multiproc"
+argument_list|,
+literal|9
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|pdp11_extension
+index|[
+name|PDP11_MPROC
+index|]
+operator|=
+name|yes
+expr_stmt|;
+comment|/* Move from/to proc status.  */
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|arg
+argument_list|,
+literal|"mxps"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|pdp11_extension
+index|[
+name|PDP11_MXPS
+index|]
+operator|=
+name|yes
+expr_stmt|;
+comment|/* Position-independent code.  */
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|arg
+argument_list|,
+literal|"pic"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|asm_option
+index|[
+name|ASM_OPT_PIC
+index|]
+operator|=
+name|yes
+expr_stmt|;
+comment|/* Set priority level.  */
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|arg
+argument_list|,
+literal|"spl"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|pdp11_extension
+index|[
+name|PDP11_SPL
+index|]
+operator|=
+name|yes
+expr_stmt|;
+comment|/* Microcode instructions:  */
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|arg
+argument_list|,
+literal|"ucode"
+argument_list|)
+operator|==
+literal|0
+comment|/* LDUB, MED, XFC */
+operator|||
+name|strcmp
+argument_list|(
+name|arg
+argument_list|,
+literal|"microcode"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|pdp11_extension
+index|[
+name|PDP11_UCODE
+index|]
+operator|=
+name|yes
+expr_stmt|;
+else|else
+return|return
+literal|0
+return|;
+return|return
+literal|1
+return|;
+block|}
+end_function
+
 begin_function
 specifier|static
 name|void
 name|init_defaults
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|static
 name|int
@@ -348,21 +792,12 @@ block|}
 block|}
 end_function
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|hash_control
-modifier|*
-name|insn_hash
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|void
 name|md_begin
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -410,14 +845,15 @@ index|]
 operator|.
 name|name
 argument_list|,
-call|(
-name|PTR
-call|)
-argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|(
 name|pdp11_opcodes
 operator|+
 name|i
-argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -444,14 +880,15 @@ index|]
 operator|.
 name|name
 argument_list|,
-call|(
-name|PTR
-call|)
-argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|(
 name|pdp11_aliases
 operator|+
 name|i
-argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -461,24 +898,18 @@ begin_function
 name|void
 name|md_number_to_chars
 parameter_list|(
-name|con
-parameter_list|,
-name|value
-parameter_list|,
-name|nbytes
-parameter_list|)
 name|char
 name|con
 index|[]
-decl_stmt|;
+parameter_list|,
 name|valueT
 name|value
-decl_stmt|;
+parameter_list|,
 name|int
 name|nbytes
-decl_stmt|;
+parameter_list|)
 block|{
-comment|/* On a PDP-11, 0x1234 is stored as "\x12\x34", and    * 0x12345678 is stored as "\x56\x78\x12\x34". It's    * anyones guess what 0x123456 would be stored like.    */
+comment|/* On a PDP-11, 0x1234 is stored as "\x12\x34", and      0x12345678 is stored as "\x56\x78\x12\x34". It's      anyones guess what 0x123456 would be stored like.  */
 switch|switch
 condition|(
 name|nbytes
@@ -595,26 +1026,20 @@ end_comment
 
 begin_function
 name|void
-name|md_apply_fix3
+name|md_apply_fix
 parameter_list|(
-name|fixP
-parameter_list|,
-name|valP
-parameter_list|,
-name|seg
-parameter_list|)
 name|fixS
 modifier|*
 name|fixP
-decl_stmt|;
+parameter_list|,
 name|valueT
 modifier|*
 name|valP
-decl_stmt|;
+parameter_list|,
 name|segT
 name|seg
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 name|valueT
 name|code
@@ -660,6 +1085,11 @@ name|code
 operator|=
 name|md_chars_to_number
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 name|buf
 argument_list|,
 name|size
@@ -709,6 +1139,11 @@ expr_stmt|;
 name|shift
 operator|=
 literal|1
+expr_stmt|;
+name|val
+operator|=
+operator|-
+name|val
 expr_stmt|;
 break|break;
 default|default:
@@ -808,7 +1243,7 @@ name|nbytes
 decl_stmt|;
 comment|/* Number of bytes in the input.  */
 block|{
-comment|/* On a PDP-11, 0x1234 is stored as "\x12\x34", and    * 0x12345678 is stored as "\x56\x78\x12\x34". It's    * anyones guess what 0x123456 would be stored like.    */
+comment|/* On a PDP-11, 0x1234 is stored as "\x12\x34", and      0x12345678 is stored as "\x56\x78\x12\x34". It's      anyones guess what 0x123456 would be stored like.  */
 switch|switch
 condition|(
 name|nbytes
@@ -1442,15 +1877,6 @@ name|pc_rel
 operator|=
 literal|0
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* FIXME: what follows is broken badly.  You can't deal with differences      in radix conventions this way, because of symbolic constants, constant      expressions made up of pieces of differing radix, etc.  The only      choices are to change ../expr.c to know about pdp11 conventions, or      to accept the fact that gas will use consistent conventions that differ      from those of traditional pdp11 assemblers.  For now, I've      chosen the latter.   paul koning, 12/23/2001   */
-block|if (operand->reloc.exp.X_op == O_constant)     {       if (*str == '.') 	str++;       else 	{
-comment|/* FIXME: buffer overflow! */
-block|char buf[100]; 	  char *end;  	  sprintf (buf, "%ld", operand->reloc.exp.X_add_number); 	  operand->reloc.exp.X_add_number = strtol (buf,&end, 8); 	}     }
-endif|#
-directive|endif
 return|return
 name|str
 return|;
@@ -1572,10 +1998,10 @@ literal|010
 expr_stmt|;
 block|}
 break|break;
+comment|/* Immediate.  */
 case|case
 literal|'#'
 case|:
-comment|/* immediate */
 case|case
 literal|'$'
 case|:
@@ -1682,7 +2108,7 @@ literal|"Error in expression"
 expr_stmt|;
 break|break;
 block|}
-comment|/* it's a floating literal...  */
+comment|/* It's a floating literal...  */
 name|know
 argument_list|(
 name|operand
@@ -1749,8 +2175,8 @@ operator|=
 literal|027
 expr_stmt|;
 break|break;
+comment|/* label, d(rn), -(rn)  */
 default|default:
-comment|/* label, d(rn), -(rn) */
 block|{
 name|char
 modifier|*
@@ -1861,7 +2287,6 @@ name|str
 operator|!=
 literal|'('
 condition|)
-comment|/* label */
 block|{
 if|if
 condition|(
@@ -1922,10 +2347,10 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
+comment|/* d(rn) */
 name|str
 operator|++
 expr_stmt|;
-comment|/* d(rn) */
 name|str
 operator|=
 name|parse_reg
@@ -2051,7 +2476,6 @@ name|X_add_number
 expr_stmt|;
 block|}
 else|else
-block|{
 name|operand
 operator|->
 name|word
@@ -2064,7 +2488,6 @@ name|exp
 operator|.
 name|X_add_number
 expr_stmt|;
-block|}
 break|break;
 default|default:
 name|BAD_CASE
@@ -2392,12 +2815,10 @@ begin_function
 name|void
 name|md_assemble
 parameter_list|(
-name|instruction_string
-parameter_list|)
 name|char
 modifier|*
 name|instruction_string
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|struct
@@ -2502,12 +2923,6 @@ operator|==
 literal|0
 condition|)
 block|{
-if|#
-directive|if
-literal|0
-block|op1.error = NULL;       op1.additional = FALSE;       op1.reloc.type = BFD_RELOC_NONE;       op1.code = 0;       op1.word = 0;       str = parse_expression (str,&op1);       if (op1.error) 	{ 	  as_bad (op1.error); 	  return; 	}        { 	char *to = frag_more (2);  	md_number_to_chars (to, op1.code, 2); 	if (insn.reloc.type != BFD_RELOC_NONE) 	  fix_new_exp (frag_now, to - frag_now->fr_literal, 2,&insn.reloc.exp, insn.reloc.pc_rel, insn.reloc.type);       }
-else|#
-directive|else
 name|as_bad
 argument_list|(
 name|_
@@ -2518,8 +2933,6 @@ argument_list|,
 name|str
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return;
 block|}
 if|if
@@ -4077,19 +4490,15 @@ begin_function
 name|int
 name|md_estimate_size_before_relax
 parameter_list|(
-name|fragP
-parameter_list|,
-name|segment
-parameter_list|)
 name|fragS
 modifier|*
 name|fragP
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|segT
 name|segment
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 literal|0
@@ -4101,31 +4510,24 @@ begin_function
 name|void
 name|md_convert_frag
 parameter_list|(
-name|headers
-parameter_list|,
-name|seg
-parameter_list|,
-name|fragP
-parameter_list|)
 name|bfd
 modifier|*
 name|headers
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|segT
 name|seg
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|fragS
 modifier|*
 name|fragP
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{ }
 end_function
 
 begin_decl_stmt
-specifier|const
 name|int
 name|md_short_jump_size
 init|=
@@ -4134,7 +4536,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
 name|int
 name|md_long_jump_size
 init|=
@@ -4146,39 +4547,29 @@ begin_function
 name|void
 name|md_create_short_jump
 parameter_list|(
-name|ptr
-parameter_list|,
-name|from_addr
-parameter_list|,
-name|to_addr
-parameter_list|,
-name|frag
-parameter_list|,
-name|to_symbol
-parameter_list|)
 name|char
 modifier|*
 name|ptr
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|addressT
 name|from_addr
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|addressT
 name|to_addr
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|fragS
 modifier|*
 name|frag
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|symbolS
 modifier|*
 name|to_symbol
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{ }
 end_function
 
@@ -4186,524 +4577,30 @@ begin_function
 name|void
 name|md_create_long_jump
 parameter_list|(
-name|ptr
-parameter_list|,
-name|from_addr
-parameter_list|,
-name|to_addr
-parameter_list|,
-name|frag
-parameter_list|,
-name|to_symbol
-parameter_list|)
 name|char
 modifier|*
 name|ptr
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|addressT
 name|from_addr
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|addressT
 name|to_addr
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|fragS
 modifier|*
 name|frag
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|symbolS
 modifier|*
 name|to_symbol
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
-block|{ }
-end_function
-
-begin_function
-specifier|static
-name|int
-name|set_option
-parameter_list|(
-name|arg
 parameter_list|)
-name|char
-modifier|*
-name|arg
-decl_stmt|;
-block|{
-name|int
-name|yes
-init|=
-literal|1
-decl_stmt|;
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|arg
-argument_list|,
-literal|"all-extensions"
-argument_list|)
-operator|==
-literal|0
-operator|||
-name|strcmp
-argument_list|(
-name|arg
-argument_list|,
-literal|"all"
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-name|memset
-argument_list|(
-name|pdp11_extension
-argument_list|,
-operator|~
-literal|0
-argument_list|,
-sizeof|sizeof
-name|pdp11_extension
-argument_list|)
-expr_stmt|;
-name|pdp11_extension
-index|[
-name|PDP11_NONE
-index|]
-operator|=
-literal|0
-expr_stmt|;
-return|return
-literal|1
-return|;
-block|}
-elseif|else
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|arg
-argument_list|,
-literal|"no-extensions"
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-name|memset
-argument_list|(
-name|pdp11_extension
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-name|pdp11_extension
-argument_list|)
-expr_stmt|;
-name|pdp11_extension
-index|[
-name|PDP11_BASIC
-index|]
-operator|=
-literal|1
-expr_stmt|;
-return|return
-literal|1
-return|;
-block|}
-if|if
-condition|(
-name|strncmp
-argument_list|(
-name|arg
-argument_list|,
-literal|"no-"
-argument_list|,
-literal|3
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-name|yes
-operator|=
-literal|0
-expr_stmt|;
-name|arg
-operator|+=
-literal|3
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|arg
-argument_list|,
-literal|"cis"
-argument_list|)
-operator|==
-literal|0
-condition|)
-comment|/* commersial instructions */
-name|pdp11_extension
-index|[
-name|PDP11_CIS
-index|]
-operator|=
-name|yes
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|arg
-argument_list|,
-literal|"csm"
-argument_list|)
-operator|==
-literal|0
-condition|)
-comment|/* call supervisor mode */
-name|pdp11_extension
-index|[
-name|PDP11_CSM
-index|]
-operator|=
-name|yes
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|arg
-argument_list|,
-literal|"eis"
-argument_list|)
-operator|==
-literal|0
-condition|)
-comment|/* extended instruction set */
-name|pdp11_extension
-index|[
-name|PDP11_EIS
-index|]
-operator|=
-name|pdp11_extension
-index|[
-name|PDP11_LEIS
-index|]
-operator|=
-name|yes
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|arg
-argument_list|,
-literal|"fis"
-argument_list|)
-operator|==
-literal|0
-operator|||
-comment|/* KEV11 floating-point */
-name|strcmp
-argument_list|(
-name|arg
-argument_list|,
-literal|"kev11"
-argument_list|)
-operator|==
-literal|0
-operator|||
-name|strcmp
-argument_list|(
-name|arg
-argument_list|,
-literal|"kev-11"
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|pdp11_extension
-index|[
-name|PDP11_FIS
-index|]
-operator|=
-name|yes
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|arg
-argument_list|,
-literal|"fpp"
-argument_list|)
-operator|==
-literal|0
-operator|||
-comment|/* FP-11 floating-point */
-name|strcmp
-argument_list|(
-name|arg
-argument_list|,
-literal|"fpu"
-argument_list|)
-operator|==
-literal|0
-operator|||
-name|strcmp
-argument_list|(
-name|arg
-argument_list|,
-literal|"fp11"
-argument_list|)
-operator|==
-literal|0
-operator|||
-name|strcmp
-argument_list|(
-name|arg
-argument_list|,
-literal|"fp-11"
-argument_list|)
-operator|==
-literal|0
-operator|||
-name|strcmp
-argument_list|(
-name|arg
-argument_list|,
-literal|"fpj11"
-argument_list|)
-operator|==
-literal|0
-operator|||
-name|strcmp
-argument_list|(
-name|arg
-argument_list|,
-literal|"fp-j11"
-argument_list|)
-operator|==
-literal|0
-operator|||
-name|strcmp
-argument_list|(
-name|arg
-argument_list|,
-literal|"fpj-11"
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|pdp11_extension
-index|[
-name|PDP11_FPP
-index|]
-operator|=
-name|yes
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|arg
-argument_list|,
-literal|"limited-eis"
-argument_list|)
-operator|==
-literal|0
-condition|)
-comment|/* limited extended insns */
-block|{
-name|pdp11_extension
-index|[
-name|PDP11_LEIS
-index|]
-operator|=
-name|yes
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|pdp11_extension
-index|[
-name|PDP11_LEIS
-index|]
-condition|)
-name|pdp11_extension
-index|[
-name|PDP11_EIS
-index|]
-operator|=
-literal|0
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|arg
-argument_list|,
-literal|"mfpt"
-argument_list|)
-operator|==
-literal|0
-condition|)
-comment|/* move from processor type */
-name|pdp11_extension
-index|[
-name|PDP11_MFPT
-index|]
-operator|=
-name|yes
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|strncmp
-argument_list|(
-name|arg
-argument_list|,
-literal|"mproc"
-argument_list|,
-literal|5
-argument_list|)
-operator|==
-literal|0
-operator|||
-comment|/* multiprocessor insns: */
-name|strncmp
-argument_list|(
-name|arg
-argument_list|,
-literal|"multiproc"
-argument_list|,
-literal|9
-argument_list|)
-operator|==
-literal|0
-condition|)
-comment|/* TSTSET, WRTLCK */
-name|pdp11_extension
-index|[
-name|PDP11_MPROC
-index|]
-operator|=
-name|yes
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|arg
-argument_list|,
-literal|"mxps"
-argument_list|)
-operator|==
-literal|0
-condition|)
-comment|/* move from/to proc status */
-name|pdp11_extension
-index|[
-name|PDP11_MXPS
-index|]
-operator|=
-name|yes
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|arg
-argument_list|,
-literal|"pic"
-argument_list|)
-operator|==
-literal|0
-condition|)
-comment|/* position-independent code */
-name|asm_option
-index|[
-name|ASM_OPT_PIC
-index|]
-operator|=
-name|yes
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|arg
-argument_list|,
-literal|"spl"
-argument_list|)
-operator|==
-literal|0
-condition|)
-comment|/* set priority level */
-name|pdp11_extension
-index|[
-name|PDP11_SPL
-index|]
-operator|=
-name|yes
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|arg
-argument_list|,
-literal|"ucode"
-argument_list|)
-operator|==
-literal|0
-operator|||
-comment|/* microcode instructions: */
-name|strcmp
-argument_list|(
-name|arg
-argument_list|,
-literal|"microcode"
-argument_list|)
-operator|==
-literal|0
-condition|)
-comment|/* LDUB, MED, XFC */
-name|pdp11_extension
-index|[
-name|PDP11_UCODE
-index|]
-operator|=
-name|yes
-expr_stmt|;
-else|else
-return|return
-literal|0
-return|;
-return|return
-literal|1
-return|;
-block|}
+block|{ }
 end_function
 
 begin_function
@@ -4711,12 +4608,10 @@ specifier|static
 name|int
 name|set_cpu_model
 parameter_list|(
-name|arg
-parameter_list|)
 name|char
 modifier|*
 name|arg
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|buf
@@ -4892,7 +4787,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* allow up to two revision letters */
+comment|/* Allow up to two revision letters.  */
 if|if
 condition|(
 name|arg
@@ -4938,6 +4833,7 @@ argument_list|(
 literal|"no-extensions"
 argument_list|)
 expr_stmt|;
+comment|/* KA11 (11/15/20).  */
 if|if
 condition|(
 name|strncmp
@@ -4951,11 +4847,11 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-comment|/* KA11 (11/15/20) */
 return|return
 literal|1
 return|;
-comment|/* no extensions */
+comment|/* No extensions.  */
+comment|/* KB11 (11/45/50/55/70).  */
 elseif|else
 if|if
 condition|(
@@ -4970,7 +4866,6 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-comment|/* KB11 (11/45/50/55/70) */
 return|return
 name|set_option
 argument_list|(
@@ -4982,6 +4877,7 @@ argument_list|(
 literal|"spl"
 argument_list|)
 return|;
+comment|/* KD11-A (11/35/40).  */
 elseif|else
 if|if
 condition|(
@@ -4996,13 +4892,13 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-comment|/* KD11-A (11/35/40) */
 return|return
 name|set_option
 argument_list|(
 literal|"limited-eis"
 argument_list|)
 return|;
+comment|/* KD11-B (11/05/10).  */
 elseif|else
 if|if
 condition|(
@@ -5016,8 +4912,8 @@ literal|2
 argument_list|)
 operator|==
 literal|0
+comment|/* KD11-D (11/04).  */
 operator|||
-comment|/* KD11-B (11/05/10) */
 name|strncmp
 argument_list|(
 name|buf
@@ -5029,11 +4925,11 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-comment|/* KD11-D (11/04) */
 return|return
 literal|1
 return|;
 comment|/* no extensions */
+comment|/* KD11-E (11/34).  */
 elseif|else
 if|if
 condition|(
@@ -5048,7 +4944,6 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-comment|/* KD11-E (11/34) */
 return|return
 name|set_option
 argument_list|(
@@ -5060,6 +4955,7 @@ argument_list|(
 literal|"mxps"
 argument_list|)
 return|;
+comment|/* KD11-F (11/03).  */
 elseif|else
 if|if
 condition|(
@@ -5073,8 +4969,8 @@ literal|2
 argument_list|)
 operator|==
 literal|0
+comment|/* KD11-H (11/03).  */
 operator|||
-comment|/* KD11-F (11/03) */
 name|strncmp
 argument_list|(
 name|buf
@@ -5085,8 +4981,8 @@ literal|2
 argument_list|)
 operator|==
 literal|0
+comment|/* KD11-Q (11/03).  */
 operator|||
-comment|/* KD11-H (11/03) */
 name|strncmp
 argument_list|(
 name|buf
@@ -5098,7 +4994,6 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-comment|/* KD11-Q (11/03) */
 return|return
 name|set_option
 argument_list|(
@@ -5110,6 +5005,7 @@ argument_list|(
 literal|"mxps"
 argument_list|)
 return|;
+comment|/* KD11-K (11/60).  */
 elseif|else
 if|if
 condition|(
@@ -5124,7 +5020,6 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-comment|/* KD11-K (11/60) */
 return|return
 name|set_option
 argument_list|(
@@ -5141,6 +5036,7 @@ argument_list|(
 literal|"ucode"
 argument_list|)
 return|;
+comment|/* KD11-Z (11/44).  */
 elseif|else
 if|if
 condition|(
@@ -5155,7 +5051,6 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-comment|/* KD11-Z (11/44) */
 return|return
 name|set_option
 argument_list|(
@@ -5182,6 +5077,7 @@ argument_list|(
 literal|"spl"
 argument_list|)
 return|;
+comment|/* F11 (11/23/24).  */
 elseif|else
 if|if
 condition|(
@@ -5196,7 +5092,6 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-comment|/* F11 (11/23/24) */
 return|return
 name|set_option
 argument_list|(
@@ -5213,6 +5108,7 @@ argument_list|(
 literal|"mxps"
 argument_list|)
 return|;
+comment|/* J11 (11/53/73/83/84/93/94).  */
 elseif|else
 if|if
 condition|(
@@ -5227,7 +5123,6 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-comment|/* J11 (11/53/73/83/84/93/94)*/
 return|return
 name|set_option
 argument_list|(
@@ -5259,6 +5154,7 @@ argument_list|(
 literal|"spl"
 argument_list|)
 return|;
+comment|/* T11 (11/21).  */
 elseif|else
 if|if
 condition|(
@@ -5273,7 +5169,6 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-comment|/* T11 (11/21) */
 return|return
 name|set_option
 argument_list|(
@@ -5297,12 +5192,10 @@ specifier|static
 name|int
 name|set_machine_model
 parameter_list|(
-name|arg
-parameter_list|)
 name|char
 modifier|*
 name|arg
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -5399,14 +5292,12 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-comment|/* 11/03 */
 return|return
 name|set_cpu_model
 argument_list|(
 literal|"kd11f"
 argument_list|)
 return|;
-comment|/* KD11-F */
 elseif|else
 if|if
 condition|(
@@ -5419,14 +5310,12 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-comment|/* 11/04 */
 return|return
 name|set_cpu_model
 argument_list|(
 literal|"kd11d"
 argument_list|)
 return|;
-comment|/* KD11-D */
 elseif|else
 if|if
 condition|(
@@ -5439,7 +5328,6 @@ argument_list|)
 operator|==
 literal|0
 operator|||
-comment|/* 11/05 or 11/10 */
 name|strcmp
 argument_list|(
 name|arg
@@ -5455,7 +5343,6 @@ argument_list|(
 literal|"kd11b"
 argument_list|)
 return|;
-comment|/* KD11-B */
 elseif|else
 if|if
 condition|(
@@ -5468,7 +5355,6 @@ argument_list|)
 operator|==
 literal|0
 operator|||
-comment|/* 11/15 or 11/20 */
 name|strcmp
 argument_list|(
 name|arg
@@ -5484,7 +5370,6 @@ argument_list|(
 literal|"ka11"
 argument_list|)
 return|;
-comment|/* KA11 */
 elseif|else
 if|if
 condition|(
@@ -5497,14 +5382,12 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-comment|/* 11/21 */
 return|return
 name|set_cpu_model
 argument_list|(
 literal|"t11"
 argument_list|)
 return|;
-comment|/* T11 */
 elseif|else
 if|if
 condition|(
@@ -5517,7 +5400,6 @@ argument_list|)
 operator|==
 literal|0
 operator|||
-comment|/* 11/23 or 11/24 */
 name|strcmp
 argument_list|(
 name|arg
@@ -5533,7 +5415,6 @@ argument_list|(
 literal|"f11"
 argument_list|)
 return|;
-comment|/* F11 */
 elseif|else
 if|if
 condition|(
@@ -5546,7 +5427,6 @@ argument_list|)
 operator|==
 literal|0
 operator|||
-comment|/* 11/34 or 11/34a */
 name|strcmp
 argument_list|(
 name|arg
@@ -5562,7 +5442,6 @@ argument_list|(
 literal|"kd11e"
 argument_list|)
 return|;
-comment|/* KD11-E */
 elseif|else
 if|if
 condition|(
@@ -5575,7 +5454,6 @@ argument_list|)
 operator|==
 literal|0
 operator|||
-comment|/* 11/35 or 11/40 */
 name|strcmp
 argument_list|(
 name|arg
@@ -5591,7 +5469,6 @@ argument_list|(
 literal|"kd11da"
 argument_list|)
 return|;
-comment|/* KD11-A */
 elseif|else
 if|if
 condition|(
@@ -5604,14 +5481,12 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-comment|/* 11/44 */
 return|return
 name|set_cpu_model
 argument_list|(
 literal|"kd11dz"
 argument_list|)
 return|;
-comment|/* KD11-Z */
 elseif|else
 if|if
 condition|(
@@ -5624,7 +5499,6 @@ argument_list|)
 operator|==
 literal|0
 operator|||
-comment|/* 11/45/50/55/70 */
 name|strcmp
 argument_list|(
 name|arg
@@ -5658,7 +5532,6 @@ argument_list|(
 literal|"kb11"
 argument_list|)
 return|;
-comment|/* KB11 */
 elseif|else
 if|if
 condition|(
@@ -5671,15 +5544,12 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-comment|/* 11/60 */
 return|return
 name|set_cpu_model
 argument_list|(
 literal|"kd11k"
 argument_list|)
 return|;
-comment|/* KD11-K */
-comment|/* FPP? */
 elseif|else
 if|if
 condition|(
@@ -5692,7 +5562,6 @@ argument_list|)
 operator|==
 literal|0
 operator|||
-comment|/* 11/53/73/83/84/93/94 */
 name|strcmp
 argument_list|(
 name|arg
@@ -5744,14 +5613,11 @@ argument_list|(
 literal|"j11"
 argument_list|)
 operator|&&
-comment|/* J11 */
 name|set_option
 argument_list|(
 literal|"fpp"
 argument_list|)
 return|;
-comment|/* All J11 machines come */
-comment|/* with FPP installed.  */
 else|else
 return|return
 literal|0
@@ -5843,24 +5709,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * md_parse_option  *	Invocation line includes a switch not recognized by the base assembler.  *	See if it's a processor-specific option.  */
+comment|/* Invocation line includes a switch not recognized by the base assembler.    See if it's a processor-specific option.  */
 end_comment
 
 begin_function
 name|int
 name|md_parse_option
 parameter_list|(
-name|c
-parameter_list|,
-name|arg
-parameter_list|)
 name|int
 name|c
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|arg
-decl_stmt|;
+parameter_list|)
 block|{
 name|init_defaults
 argument_list|()
@@ -5949,39 +5811,20 @@ break|break;
 default|default:
 break|break;
 block|}
-name|as_bad
-argument_list|(
-literal|"unrecognized option `-%c%s'"
-argument_list|,
-name|c
-argument_list|,
-name|arg
-condition|?
-name|arg
-else|:
-literal|""
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
 block|}
 end_function
 
-begin_comment
-comment|/* One possible way of parsing options.  enum {   OPTION_CSM,   OPTION_CIS,   ... };  struct {   const char *pattern;   int opt;   const char *description; } options;  static struct options extension_opts[] = {   { "Ncsm", OPTION_CSM, 			"allow (disallow) CSM instruction" },   { "Ncis", OPTION_CIS, 			"allow (disallow) commersial instruction set" },   { "Neis", OPTION_EIS, 			"allow (disallow) extended instruction set" },   ...   { "all-extensions", OPTION_ALL_EXTENSIONS, 			"allow all instruction set extensions\n\ 			(this is the default)" },   { "no-extensions", OPTION_NO_EXTENSIONS, 			"disallow all instruction set extensions" },   { "pic", OPTION_PIC, 			"position-independent code" }, };  static struct options cpu_opts[] = {   { "Ka_11_*", OPTION_KA11, "KA11 CPU. ..." },   { "Kb_11_*", OPTION_KB11, "KB11 CPU. ..." },   { "Kd_11_a*", OPTION_KD11A, "KD11-A CPU. ..." },   { "Kd_11_b*", OPTION_KD11B, "KD11-B CPU. ..." },   { "Kd_11_d*", OPTION_KD11D, "KD11-D CPU. ..." },   { "Kd_11_e*", OPTION_KD11E, "KD11-E CPU. ..." },   { "Kd_11_f*", OPTION_KD11F, "KD11-F CPU. ..." },   { "Kd_11_h*", OPTION_KD11H, "KD11-H CPU. ..." },   { "Kd_11_q*", OPTION_KD11Q, "KD11-Q CPU. ..." },   { "Kd_11_z*", OPTION_KD11Z, "KD11-Z CPU. ..." },   { "Df_11_*", OPTION_F11, "F11 CPU. ..." },   { "Dj_11_*", OPTION_J11, "J11 CPU. ..." },   { "Dt_11_*", OPTION_T11, "T11 CPU. ..." }, };  static struct options model_opts[] = {   { "P03", OPTION_PDP11_03, "same as ..." },   { "P04", OPTION_PDP11_04, "same as ..." },   { "P05", OPTION_PDP11_05, "same as ..." },   { "P10", OPTION_PDP11_10, "same as ..." },   { "P15", OPTION_PDP11_15, "same as ..." },   { "P20", OPTION_PDP11_20, "same as ..." },   { "P21", OPTION_PDP11_21, "same as ..." },   { "P24", OPTION_PDP11_24, "same as ..." },   { "P34", OPTION_PDP11_34, "same as ..." },   { "P34a", OPTION_PDP11_34A, "same as ..." },   { "P40", OPTION_PDP11_40, "same as ..." },   { "P44", OPTION_PDP11_44, "same as ..." },   { "P45", OPTION_PDP11_45, "same as ..." },   { "P50", OPTION_PDP11_50, "same as ..." },   { "P53", OPTION_PDP11_53, "same as ..." },   { "P55", OPTION_PDP11_55, "same as ..." },   { "P60", OPTION_PDP11_60, "same as ..." },   { "P70", OPTION_PDP11_70, "same as ..." },   { "P73", OPTION_PDP11_73, "same as ..." },   { "P83", OPTION_PDP11_83, "same as ..." },   { "P84", OPTION_PDP11_84, "same as ..." },   { "P93", OPTION_PDP11_93, "same as ..." },   { "P94", OPTION_PDP11_94, "same as ..." }, };  struct {   const char *title;   struct options *opts;   int num; } all_opts[] = {   { "PDP-11 instruction set extentions",     extension_opts,     sizeof extension_opts / sizeof extension_opts[0] },   { "PDP-11 CPU model options",     cpu_opts,     sizeof cpu_opts / sizeof cpu_opts[0] },   { "PDP-11 machine model options",     model_opts,     sizeof model_opts / sizeof model_opts[0] }, };  int parse_match (char *arg, char *pattern) {   int yes = 1;    while (*pattern)     {       switch (*pattern++) 	{ 	case 'N': 	  if (strncmp (arg, "no-") == 0) 	    { 	      yes = 0; 	      arg += 3; 	    } 	  break;  	case 'K': 	  if (arg[0] == 'k') 	    arg++; 	  break;  	case 'D': 	  if (strncmp (arg, "kd", 2) == 0) 	    arg +=2; 	  break;  	case 'P': 	  if (strncmp (arg, "pdp-11/", 7) == 0) 	    arg += 7; 	  else if (strncmp (arg, "pdp11/", 6) == 0) 	    arg += 6; 	  else if (strncmp (arg, "11/", 3) == 0) 	    arg += 3; 	  break;  	case '_': 	  if (arg[0] == "-") 	    { 	      if (*++arg == 0) 		return 0; 	    } 	  break;  	case '*': 	  return 1;  	default: 	  if (*arg++ != pattern[-1]) 	    return 0; 	}     }    return arg[0] == 0; }  int fprint_opt (stream, pattern)      FILE *stream;      const char *pattern; {   int n;    while (*pattern)     {       switch (*pattern++) 	{ 	case 'N': 	  n += fprintf (stream, "(no-)"); 	  break;  	case 'K': 	  n += fprintf (stream, "k"); 	  break;  	case 'P': 	  n += fprintf (stream "11/"); 	  break;  	case 'D': 	case '_': 	case '*': 	  break;  	default: 	  fputc (pattern[-1], stream); 	  n++; 	}     }    return n; }  int parse_option (char *arg) {   int i, j;    for (i = 0; i< sizeof all_opts / sizeof all_opts[0]; i++)     {       for (j = 0; j< all_opts[i].num; j++) 	{ 	  if (parse_match (arg, all_opts[i].opts[j].pattern)) 	    { 	      set_option (all_opts[i].opts[j].opt); 	      return 1; 	    } 	}     }    return 0; }  static void fprint_space (stream, n)      FILE *stream;      int n; {   while (n--)     fputc (' ', stream); }  void md_show_usage (stream)      FILE *stream; {   int i, j, n;    for (i = 0; i< sizeof all_opts / sizeof all_opts[0]; i++)     {       fprintf (stream "\n%s:\n\n", all_opts[i].title);        for (j = 0; j< all_opts[i].num; j++) 	{ 	  fprintf (stream, "-m"); 	  n = fprintf_opt (stream, all_opts[i].opts[j].pattern); 	  fprint_space (stream, 22 - n); 	  fprintf (stream, "%s\n", all_opts[i].opts[j].description); 	}     } } */
-end_comment
-
 begin_function
 name|void
 name|md_show_usage
 parameter_list|(
-name|stream
-parameter_list|)
 name|FILE
 modifier|*
 name|stream
-decl_stmt|;
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(
@@ -5998,13 +5841,11 @@ name|symbolS
 modifier|*
 name|md_undefined_symbol
 parameter_list|(
-name|name
-parameter_list|)
 name|char
 modifier|*
 name|name
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 literal|0
@@ -6016,17 +5857,13 @@ begin_function
 name|valueT
 name|md_section_align
 parameter_list|(
-name|segment
-parameter_list|,
-name|size
-parameter_list|)
 name|segT
 name|segment
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|valueT
 name|size
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -6045,12 +5882,10 @@ begin_function
 name|long
 name|md_pcrel_from
 parameter_list|(
-name|fixP
-parameter_list|)
 name|fixS
 modifier|*
 name|fixP
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|fixP
@@ -6079,19 +5914,15 @@ name|arelent
 modifier|*
 name|tc_gen_reloc
 parameter_list|(
-name|section
-parameter_list|,
-name|fixp
-parameter_list|)
 name|asection
 modifier|*
 name|section
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|fixS
 modifier|*
 name|fixp
-decl_stmt|;
+parameter_list|)
 block|{
 name|arelent
 modifier|*
@@ -6102,15 +5933,12 @@ name|code
 decl_stmt|;
 name|reloc
 operator|=
-operator|(
-name|arelent
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|arelent
+operator|*
+name|reloc
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -6118,11 +5946,6 @@ name|reloc
 operator|->
 name|sym_ptr_ptr
 operator|=
-operator|(
-name|asymbol
-operator|*
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 sizeof|sizeof
@@ -6158,7 +5981,7 @@ name|fixp
 operator|->
 name|fx_where
 expr_stmt|;
-comment|/* This is taken account for in md_apply_fix3().  */
+comment|/* This is taken account for in md_apply_fix().  */
 name|reloc
 operator|->
 name|addend
@@ -6273,12 +6096,10 @@ begin_function
 name|void
 name|pseudo_bss
 parameter_list|(
-name|c
-parameter_list|)
 name|int
 name|c
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|temp
@@ -6305,12 +6126,10 @@ begin_function
 name|void
 name|pseudo_even
 parameter_list|(
-name|c
-parameter_list|)
 name|int
 name|c
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|alignment
@@ -6336,10 +6155,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* end of tc-pdp11.c */
-end_comment
 
 end_unit
 

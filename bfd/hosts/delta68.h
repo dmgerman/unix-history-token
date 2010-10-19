@@ -34,24 +34,6 @@ name|HOST_TEXT_START_ADDR
 value|u.u_exdata.ux_txtorg
 end_define
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|HOST_STACK_END_ADDR
-value|0x40000000
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_comment
 comment|/* User's stack, copied from sys/param.h  */
 end_comment
@@ -62,11 +44,6 @@ directive|define
 name|HOST_STACK_END_ADDR
 value|USRSTACK
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

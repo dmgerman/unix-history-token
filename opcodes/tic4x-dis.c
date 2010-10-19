@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Print instructions for the Texas TMS320C[34]X, for GDB and GNU Binutils.     Copyright 2002, 2003 Free Software Foundation, Inc.     Contributed by Michael P. Hayes (m.hayes@elec.canterbury.ac.nz)        This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Print instructions for the Texas TMS320C[34]X, for GDB and GNU Binutils.     Copyright 2002, 2003, 2005 Free Software Foundation, Inc.     Contributed by Michael P. Hayes (m.hayes@elec.canterbury.ac.nz)     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston,    MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -53,7 +53,7 @@ value|8
 end_define
 
 begin_comment
-comment|/* Max 8. ops for special instructions */
+comment|/* Max 8. ops for special instructions.  */
 end_comment
 
 begin_typedef
@@ -108,325 +108,15 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|tic4x_pc_offset
-name|PARAMS
-argument_list|(
-operator|(
-name|unsigned
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|tic4x_print_char
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
-name|disassemble_info
-operator|*
-operator|,
-name|char
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|tic4x_print_str
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
-name|disassemble_info
-operator|*
-operator|,
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|tic4x_print_register
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
-name|disassemble_info
-operator|*
-operator|,
-name|unsigned
-name|long
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|tic4x_print_addr
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
-name|disassemble_info
-operator|*
-operator|,
-name|unsigned
-name|long
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|tic4x_print_relative
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
-name|disassemble_info
-operator|*
-operator|,
-name|unsigned
-name|long
-operator|,
-name|long
-operator|,
-name|unsigned
-name|long
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|tic4x_print_ftoa
-name|PARAMS
-argument_list|(
-operator|(
-name|unsigned
-name|int
-operator|,
-name|FILE
-operator|*
-operator|,
-name|fprintf_ftype
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|tic4x_print_direct
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
-name|disassemble_info
-operator|*
-operator|,
-name|unsigned
-name|long
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|tic4x_print_immed
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
-name|disassemble_info
-operator|*
-operator|,
-name|immed_t
-operator|,
-name|unsigned
-name|long
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|tic4x_print_cond
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
-name|disassemble_info
-operator|*
-operator|,
-name|unsigned
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|tic4x_print_indirect
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
-name|disassemble_info
-operator|*
-operator|,
-name|indirect_t
-operator|,
-name|unsigned
-name|long
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|tic4x_print_op
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
-name|disassemble_info
-operator|*
-operator|,
-name|unsigned
-name|long
-operator|,
-name|tic4x_inst_t
-operator|*
-operator|,
-name|unsigned
-name|long
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|tic4x_hash_opcode_special
-name|PARAMS
-argument_list|(
-operator|(
-name|tic4x_inst_t
-operator|*
-operator|*
-operator|,
-specifier|const
-name|tic4x_inst_t
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|tic4x_hash_opcode
-name|PARAMS
-argument_list|(
-operator|(
-name|tic4x_inst_t
-operator|*
-operator|*
-operator|,
-name|tic4x_inst_t
-operator|*
-operator|*
-operator|,
-specifier|const
-name|tic4x_inst_t
-operator|*
-operator|,
-name|unsigned
-name|long
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|tic4x_disassemble
-name|PARAMS
-argument_list|(
-operator|(
-name|unsigned
-name|long
-operator|,
-name|unsigned
-name|long
-operator|,
-expr|struct
-name|disassemble_info
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|print_insn_tic4x
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd_vma
-operator|,
-expr|struct
-name|disassemble_info
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|int
 name|tic4x_pc_offset
 parameter_list|(
-name|op
-parameter_list|)
 name|unsigned
 name|int
 name|op
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* Determine the PC offset for a C[34]x instruction.      This could be simplified using some boolean algebra      but at the expense of readability.  */
 switch|switch
@@ -574,18 +264,14 @@ specifier|static
 name|int
 name|tic4x_print_char
 parameter_list|(
-name|info
-parameter_list|,
-name|ch
-parameter_list|)
 name|struct
 name|disassemble_info
 modifier|*
 name|info
-decl_stmt|;
+parameter_list|,
 name|char
 name|ch
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -620,19 +306,15 @@ specifier|static
 name|int
 name|tic4x_print_str
 parameter_list|(
-name|info
-parameter_list|,
-name|str
-parameter_list|)
 name|struct
 name|disassemble_info
 modifier|*
 name|info
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|str
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -667,19 +349,15 @@ specifier|static
 name|int
 name|tic4x_print_register
 parameter_list|(
-name|info
-parameter_list|,
-name|regno
-parameter_list|)
 name|struct
 name|disassemble_info
 modifier|*
 name|info
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|long
 name|regno
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|tic4x_register_t
@@ -702,11 +380,6 @@ condition|)
 block|{
 name|registertable
 operator|=
-operator|(
-name|tic4x_register_t
-operator|*
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 sizeof|sizeof
@@ -742,14 +415,14 @@ name|regno
 index|]
 operator|=
 operator|(
-name|void
+name|tic4x_register_t
 operator|*
 operator|)
-operator|&
+operator|(
 name|tic3x_registers
-index|[
+operator|+
 name|i
-index|]
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -784,14 +457,14 @@ name|regno
 index|]
 operator|=
 operator|(
-name|void
+name|tic4x_register_t
 operator|*
 operator|)
-operator|&
+operator|(
 name|tic4x_registers
-index|[
+operator|+
 name|i
-index|]
+operator|)
 expr_stmt|;
 block|}
 block|}
@@ -854,19 +527,15 @@ specifier|static
 name|int
 name|tic4x_print_addr
 parameter_list|(
-name|info
-parameter_list|,
-name|addr
-parameter_list|)
 name|struct
 name|disassemble_info
 modifier|*
 name|info
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|long
 name|addr
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -897,30 +566,22 @@ specifier|static
 name|int
 name|tic4x_print_relative
 parameter_list|(
-name|info
-parameter_list|,
-name|pc
-parameter_list|,
-name|offset
-parameter_list|,
-name|opcode
-parameter_list|)
 name|struct
 name|disassemble_info
 modifier|*
 name|info
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|long
 name|pc
-decl_stmt|;
+parameter_list|,
 name|long
 name|offset
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|long
 name|opcode
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|tic4x_print_addr
@@ -945,19 +606,15 @@ specifier|static
 name|int
 name|tic4x_print_direct
 parameter_list|(
-name|info
-parameter_list|,
-name|arg
-parameter_list|)
 name|struct
 name|disassemble_info
 modifier|*
 name|info
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|long
 name|arg
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1000,175 +657,54 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_comment
 comment|/* FIXME: make the floating point stuff not rely on host    floating point arithmetic.  */
 end_comment
 
-begin_function
-name|void
-name|tic4x_print_ftoa
-parameter_list|(
-name|val
-parameter_list|,
-name|stream
-parameter_list|,
-name|pfunc
-parameter_list|)
-name|unsigned
-name|int
-name|val
-decl_stmt|;
-name|FILE
-modifier|*
-name|stream
-decl_stmt|;
-name|fprintf_ftype
-name|pfunc
-decl_stmt|;
-block|{
-name|int
-name|e
-decl_stmt|;
-name|int
-name|s
-decl_stmt|;
-name|int
-name|f
-decl_stmt|;
-name|double
-name|num
-init|=
-literal|0.0
-decl_stmt|;
-name|e
-operator|=
-name|EXTRS
-argument_list|(
-name|val
-argument_list|,
-literal|31
-argument_list|,
-literal|24
-argument_list|)
-expr_stmt|;
-comment|/* exponent */
-if|if
-condition|(
-name|e
-operator|!=
-operator|-
-literal|128
-condition|)
-block|{
-name|s
-operator|=
-name|EXTRU
-argument_list|(
-name|val
-argument_list|,
-literal|23
-argument_list|,
-literal|23
-argument_list|)
-expr_stmt|;
-comment|/* sign bit */
-name|f
-operator|=
-name|EXTRU
-argument_list|(
-name|val
-argument_list|,
-literal|22
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* mantissa */
-if|if
-condition|(
-name|s
-condition|)
-name|f
-operator|+=
-operator|-
-literal|2
-operator|*
-operator|(
-literal|1
-operator|<<
-literal|23
-operator|)
-expr_stmt|;
-else|else
-name|f
-operator|+=
-operator|(
-literal|1
-operator|<<
-literal|23
-operator|)
-expr_stmt|;
-name|num
-operator|=
-name|f
-operator|/
-call|(
-name|double
-call|)
-argument_list|(
-literal|1
-operator|<<
-literal|23
-argument_list|)
-expr_stmt|;
-name|num
-operator|=
-name|ldexp
-argument_list|(
-name|num
-argument_list|,
-name|e
-argument_list|)
-expr_stmt|;
-block|}
-call|(
-modifier|*
-name|pfunc
-call|)
-argument_list|(
-name|stream
-argument_list|,
-literal|"%.9g"
-argument_list|,
-name|num
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+begin_comment
+unit|static void tic4x_print_ftoa (unsigned int val, FILE *stream, fprintf_ftype pfunc) {   int e;   int s;   int f;   double num = 0.0;    e = EXTRS (val, 31, 24);
+comment|/* Exponent.  */
+end_comment
+
+begin_comment
+unit|if (e != -128)     {       s = EXTRU (val, 23, 23);
+comment|/* Sign bit.  */
+end_comment
+
+begin_comment
+unit|f = EXTRU (val, 22, 0);
+comment|/* Mantissa.  */
+end_comment
+
+begin_endif
+unit|if (s) 	f += -2 * (1<< 23);       else 	f += (1<< 23);       num = f / (double)(1<< 23);       num = ldexp (num, e);     }   (*pfunc)(stream, "%.9g", num); }
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
 name|int
 name|tic4x_print_immed
 parameter_list|(
-name|info
-parameter_list|,
-name|type
-parameter_list|,
-name|arg
-parameter_list|)
 name|struct
 name|disassemble_info
 modifier|*
 name|info
-decl_stmt|;
+parameter_list|,
 name|immed_t
 name|type
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|long
 name|arg
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|s
@@ -1215,7 +751,7 @@ name|info
 operator|->
 name|stream
 argument_list|,
-literal|"%d"
+literal|"%ld"
 argument_list|,
 operator|(
 name|long
@@ -1241,7 +777,7 @@ name|info
 operator|->
 name|stream
 argument_list|,
-literal|"%u"
+literal|"%lu"
 argument_list|,
 name|arg
 argument_list|)
@@ -1475,19 +1011,15 @@ specifier|static
 name|int
 name|tic4x_print_cond
 parameter_list|(
-name|info
-parameter_list|,
-name|cond
-parameter_list|)
 name|struct
 name|disassemble_info
 modifier|*
 name|info
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|int
 name|cond
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|tic4x_cond_t
@@ -1510,11 +1042,6 @@ condition|)
 block|{
 name|condtable
 operator|=
-operator|(
-name|tic4x_cond_t
-operator|*
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 sizeof|sizeof
@@ -1550,14 +1077,14 @@ name|cond
 index|]
 operator|=
 operator|(
-name|void
+name|tic4x_cond_t
 operator|*
 operator|)
-operator|&
+operator|(
 name|tic4x_conds
-index|[
+operator|+
 name|i
-index|]
+operator|)
 expr_stmt|;
 block|}
 if|if
@@ -1614,24 +1141,18 @@ specifier|static
 name|int
 name|tic4x_print_indirect
 parameter_list|(
-name|info
-parameter_list|,
-name|type
-parameter_list|,
-name|arg
-parameter_list|)
 name|struct
 name|disassemble_info
 modifier|*
 name|info
-decl_stmt|;
+parameter_list|,
 name|indirect_t
 name|type
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|long
 name|arg
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|int
@@ -1906,31 +1427,23 @@ specifier|static
 name|int
 name|tic4x_print_op
 parameter_list|(
-name|info
-parameter_list|,
-name|instruction
-parameter_list|,
-name|p
-parameter_list|,
-name|pc
-parameter_list|)
 name|struct
 name|disassemble_info
 modifier|*
 name|info
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|long
 name|instruction
-decl_stmt|;
+parameter_list|,
 name|tic4x_inst_t
 modifier|*
 name|p
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|long
 name|pc
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|val
@@ -2025,7 +1538,7 @@ name|s
 operator|+
 literal|1
 expr_stmt|;
-comment|/* Skip past `_' in name */
+comment|/* Skip past `_' in name.  */
 break|break;
 default|default:
 name|tic4x_print_char
@@ -2076,7 +1589,7 @@ block|{
 case|case
 literal|'*'
 case|:
-comment|/* indirect 0--15 */
+comment|/* Indirect 0--15.  */
 if|if
 condition|(
 operator|!
@@ -2103,7 +1616,7 @@ break|break;
 case|case
 literal|'#'
 case|:
-comment|/* only used for ldp, ldpk */
+comment|/* Only used for ldp, ldpk.  */
 name|tic4x_print_immed
 argument_list|(
 name|info
@@ -2124,7 +1637,7 @@ break|break;
 case|case
 literal|'@'
 case|:
-comment|/* direct 0--15 */
+comment|/* Direct 0--15.  */
 name|tic4x_print_direct
 argument_list|(
 name|info
@@ -2143,7 +1656,7 @@ break|break;
 case|case
 literal|'A'
 case|:
-comment|/* address register 24--22 */
+comment|/* Address register 24--22.  */
 if|if
 condition|(
 operator|!
@@ -2217,7 +1730,7 @@ break|break;
 case|case
 literal|'C'
 case|:
-comment|/* indirect (short C4x) 0--7 */
+comment|/* Indirect (short C4x) 0--7.  */
 if|if
 condition|(
 operator|!
@@ -2260,7 +1773,7 @@ break|break;
 case|case
 literal|'E'
 case|:
-comment|/* register 0--7 */
+comment|/* Register 0--7.  */
 case|case
 literal|'e'
 case|:
@@ -2288,7 +1801,7 @@ break|break;
 case|case
 literal|'F'
 case|:
-comment|/* 16-bit float immediate 0--15 */
+comment|/* 16-bit float immediate 0--15.  */
 name|tic4x_print_immed
 argument_list|(
 name|info
@@ -2309,7 +1822,7 @@ break|break;
 case|case
 literal|'i'
 case|:
-comment|/* Extended indirect 0--7 */
+comment|/* Extended indirect 0--7.  */
 if|if
 condition|(
 name|EXTRU
@@ -2350,7 +1863,7 @@ comment|/* Fallthrough */
 case|case
 literal|'I'
 case|:
-comment|/* indirect (short) 0--7 */
+comment|/* Indirect (short) 0--7.  */
 if|if
 condition|(
 operator|!
@@ -2417,7 +1930,7 @@ block|}
 case|case
 literal|'J'
 case|:
-comment|/* indirect (short) 8--15 */
+comment|/* Indirect (short) 8--15.  */
 if|if
 condition|(
 operator|!
@@ -2444,7 +1957,7 @@ break|break;
 case|case
 literal|'G'
 case|:
-comment|/* register 8--15 */
+comment|/* Register 8--15.  */
 case|case
 literal|'g'
 case|:
@@ -2472,7 +1985,7 @@ break|break;
 case|case
 literal|'H'
 case|:
-comment|/* register 16--18 */
+comment|/* Register 16--18.  */
 if|if
 condition|(
 operator|!
@@ -2497,7 +2010,7 @@ break|break;
 case|case
 literal|'K'
 case|:
-comment|/* register 19--21 */
+comment|/* Register 19--21.  */
 if|if
 condition|(
 operator|!
@@ -2522,7 +2035,7 @@ break|break;
 case|case
 literal|'L'
 case|:
-comment|/* register 22--24 */
+comment|/* Register 22--24.  */
 if|if
 condition|(
 operator|!
@@ -2547,7 +2060,7 @@ break|break;
 case|case
 literal|'M'
 case|:
-comment|/* register 22--22 */
+comment|/* Register 22--22.  */
 name|tic4x_print_register
 argument_list|(
 name|info
@@ -2568,7 +2081,7 @@ break|break;
 case|case
 literal|'N'
 case|:
-comment|/* register 23--23 */
+comment|/* Register 23--23.  */
 name|tic4x_print_register
 argument_list|(
 name|info
@@ -2589,7 +2102,7 @@ break|break;
 case|case
 literal|'O'
 case|:
-comment|/* indirect (short C4x) 8--15 */
+comment|/* Indirect (short C4x) 8--15.  */
 if|if
 condition|(
 operator|!
@@ -2627,7 +2140,7 @@ break|break;
 case|case
 literal|'P'
 case|:
-comment|/* displacement 0--15 (used by Bcond and BcondD) */
+comment|/* Displacement 0--15 (used by Bcond and BcondD).  */
 name|tic4x_print_relative
 argument_list|(
 name|info
@@ -2652,7 +2165,7 @@ break|break;
 case|case
 literal|'Q'
 case|:
-comment|/* register 0--15 */
+comment|/* Register 0--15.  */
 case|case
 literal|'q'
 case|:
@@ -2680,7 +2193,7 @@ break|break;
 case|case
 literal|'R'
 case|:
-comment|/* register 16--20 */
+comment|/* Register 16--20.  */
 case|case
 literal|'r'
 case|:
@@ -2708,7 +2221,7 @@ break|break;
 case|case
 literal|'S'
 case|:
-comment|/* 16-bit signed immediate 0--15 */
+comment|/* 16-bit signed immediate 0--15.  */
 name|tic4x_print_immed
 argument_list|(
 name|info
@@ -2729,7 +2242,7 @@ break|break;
 case|case
 literal|'T'
 case|:
-comment|/* 5-bit signed immediate 16--20  (C4x stik) */
+comment|/* 5-bit signed immediate 16--20  (C4x stik).  */
 if|if
 condition|(
 operator|!
@@ -2767,7 +2280,7 @@ break|break;
 case|case
 literal|'U'
 case|:
-comment|/* 16-bit unsigned int immediate 0--15 */
+comment|/* 16-bit unsigned int immediate 0--15.  */
 name|tic4x_print_immed
 argument_list|(
 name|info
@@ -2788,7 +2301,7 @@ break|break;
 case|case
 literal|'V'
 case|:
-comment|/* 5/9-bit unsigned vector 0--4/8 */
+comment|/* 5/9-bit unsigned vector 0--4/8.  */
 name|tic4x_print_immed
 argument_list|(
 name|info
@@ -2826,7 +2339,7 @@ break|break;
 case|case
 literal|'W'
 case|:
-comment|/* 8-bit signed immediate 0--7 */
+comment|/* 8-bit signed immediate 0--7.  */
 if|if
 condition|(
 operator|!
@@ -2858,7 +2371,7 @@ break|break;
 case|case
 literal|'X'
 case|:
-comment|/* expansion register 4--0 */
+comment|/* Expansion register 4--0.  */
 name|val
 operator|=
 name|EXTRU
@@ -2902,7 +2415,7 @@ break|break;
 case|case
 literal|'Y'
 case|:
-comment|/* address register 16--20 */
+comment|/* Address register 16--20.  */
 name|val
 operator|=
 name|EXTRU
@@ -2944,7 +2457,7 @@ break|break;
 case|case
 literal|'Z'
 case|:
-comment|/* expansion register 16--20 */
+comment|/* Expansion register 16--20.  */
 name|val
 operator|=
 name|EXTRU
@@ -2988,7 +2501,7 @@ break|break;
 case|case
 literal|'|'
 case|:
-comment|/* Parallel instruction */
+comment|/* Parallel instruction.  */
 name|tic4x_print_str
 argument_list|(
 name|info
@@ -3048,20 +2561,16 @@ specifier|static
 name|void
 name|tic4x_hash_opcode_special
 parameter_list|(
-name|optable_special
-parameter_list|,
-name|inst
-parameter_list|)
 name|tic4x_inst_t
 modifier|*
 modifier|*
 name|optable_special
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|tic4x_inst_t
 modifier|*
 name|inst
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -3100,14 +2609,14 @@ operator|->
 name|opcode
 condition|)
 block|{
-comment|/* Collision (we have it already) - overwrite */
+comment|/* Collision (we have it already) - overwrite.  */
 name|optable_special
 index|[
 name|i
 index|]
 operator|=
 operator|(
-name|void
+name|tic4x_inst_t
 operator|*
 operator|)
 name|inst
@@ -3137,14 +2646,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* Add the new opcode */
+comment|/* Add the new opcode.  */
 name|optable_special
 index|[
 name|i
 index|]
 operator|=
 operator|(
-name|void
+name|tic4x_inst_t
 operator|*
 operator|)
 name|inst
@@ -3170,34 +2679,26 @@ specifier|static
 name|void
 name|tic4x_hash_opcode
 parameter_list|(
-name|optable
-parameter_list|,
-name|optable_special
-parameter_list|,
-name|inst
-parameter_list|,
-name|tic4x_oplevel
-parameter_list|)
 name|tic4x_inst_t
 modifier|*
 modifier|*
 name|optable
-decl_stmt|;
+parameter_list|,
 name|tic4x_inst_t
 modifier|*
 modifier|*
 name|optable_special
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|tic4x_inst_t
 modifier|*
 name|inst
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|unsigned
 name|long
 name|tic4x_oplevel
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|j
@@ -3228,7 +2729,7 @@ operator|-
 name|TIC4X_HASH_SIZE
 operator|)
 decl_stmt|;
-comment|/* Use a TIC4X_HASH_SIZE bit index as a hash index.  We should      have unique entries so there's no point having a linked list      for each entry? */
+comment|/* Use a TIC4X_HASH_SIZE bit index as a hash index.  We should      have unique entries so there's no point having a linked list      for each entry?  */
 for|for
 control|(
 name|j
@@ -3318,7 +2819,7 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/* Add the instruction already on the list */
+comment|/* Add the instruction already on the list.  */
 name|tic4x_hash_opcode_special
 argument_list|(
 name|optable_special
@@ -3329,7 +2830,7 @@ name|j
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* Add the new instruction */
+comment|/* Add the new instruction.  */
 name|tic4x_hash_opcode_special
 argument_list|(
 name|optable_special
@@ -3344,7 +2845,7 @@ name|j
 index|]
 operator|=
 operator|(
-name|void
+name|tic4x_inst_t
 operator|*
 operator|)
 name|inst
@@ -3362,25 +2863,19 @@ specifier|static
 name|int
 name|tic4x_disassemble
 parameter_list|(
-name|pc
-parameter_list|,
-name|instruction
-parameter_list|,
-name|info
-parameter_list|)
 name|unsigned
 name|long
 name|pc
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|long
 name|instruction
-decl_stmt|;
+parameter_list|,
 name|struct
 name|disassemble_info
 modifier|*
 name|info
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|tic4x_inst_t
@@ -3447,11 +2942,6 @@ condition|)
 block|{
 name|optable
 operator|=
-operator|(
-name|tic4x_inst_t
-operator|*
-operator|*
-operator|)
 name|xcalloc
 argument_list|(
 sizeof|sizeof
@@ -3469,11 +2959,6 @@ argument_list|)
 expr_stmt|;
 name|optable_special
 operator|=
-operator|(
-name|tic4x_inst_t
-operator|*
-operator|*
-operator|)
 name|xcalloc
 argument_list|(
 sizeof|sizeof
@@ -3516,7 +3001,7 @@ argument_list|,
 name|tic4x_oplevel
 argument_list|)
 expr_stmt|;
-comment|/* We now need to remove the insn that are special from the          "normal" optable, to make the disasm search this extra list          for them.       */
+comment|/* We now need to remove the insn that are special from the          "normal" optable, to make the disasm search this extra list          for them.  */
 for|for
 control|(
 name|i
@@ -3658,7 +3143,7 @@ name|info
 operator|->
 name|stream
 argument_list|,
-literal|"%08x"
+literal|"%08lx"
 argument_list|,
 name|instruction
 argument_list|)
@@ -3738,7 +3223,7 @@ name|info
 operator|->
 name|stream
 argument_list|,
-literal|"%08x"
+literal|"%08lx"
 argument_list|,
 name|instruction
 argument_list|)
@@ -3759,18 +3244,14 @@ begin_function
 name|int
 name|print_insn_tic4x
 parameter_list|(
-name|memaddr
-parameter_list|,
-name|info
-parameter_list|)
 name|bfd_vma
 name|memaddr
-decl_stmt|;
+parameter_list|,
 name|struct
 name|disassemble_info
 modifier|*
 name|info
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|status

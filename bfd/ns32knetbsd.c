@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for NetBSD/ns32k a.out-ish binaries.    Copyright 1990, 1991, 1992, 1994, 1995, 1998, 2000, 2001, 2002    Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for NetBSD/ns32k a.out-ish binaries.    Copyright 1990, 1991, 1992, 1994, 1995, 1998, 2000, 2001, 2002, 2005    Free Software Foundation, Inc.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_define
@@ -96,7 +96,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* We can`t use the MYNS macro here for cpp reasons too subtle  * for me -- IWD  */
+comment|/* We can`t use the MYNS macro here for cpp reasons too subtle    for me -- IWD.  */
 end_comment
 
 begin_define
@@ -113,28 +113,23 @@ file|"bfd.h"
 end_include
 
 begin_comment
-comment|/* To ensure following declaration is OK */
+comment|/* To ensure following declaration is OK.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|const
 name|struct
 name|reloc_howto_struct
 modifier|*
 name|MY_bfd_reloc_type_lookup
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-name|abfd
-name|AND
+modifier|*
+parameter_list|,
 name|bfd_reloc_code_real_type
-name|code
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_include
 include|#

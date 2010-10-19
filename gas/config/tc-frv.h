@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-frv.h -- Header file for tc-frv.c.    Copyright 2002 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA. */
+comment|/* tc-frv.h -- Header file for tc-frv.c.    Copyright 2002, 2004, 2005 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 51 Franklin Street - Fifth Floor,    Boston, MA 02110-1301, USA. */
 end_comment
 
 begin_define
@@ -8,27 +8,6 @@ define|#
 directive|define
 name|TC_FRV
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BFD_ASSEMBLER
-end_ifndef
-
-begin_comment
-comment|/* leading space so will compile with cc */
-end_comment
-
-begin_error
-error|#
-directive|error
-error|FRV support requires BFD_ASSEMBLER
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -104,7 +83,7 @@ name|WORKING_DOT_WORD
 end_define
 
 begin_comment
-comment|/* Values passed to md_apply_fix3 don't include the symbol value.  */
+comment|/* Values passed to md_apply_fix don't include the symbol value.  */
 end_comment
 
 begin_define
@@ -374,7 +353,7 @@ name|HANDLE_ALIGN
 parameter_list|(
 name|FRAGP
 parameter_list|)
-value|do						\   if ((FRAGP)->fr_type == rs_align_code) 				\     {									\       valueT count = ((FRAGP)->fr_next->fr_address			\ 		      - ((FRAGP)->fr_address + (FRAGP)->fr_fix));	\       unsigned char *dest = (FRAGP)->fr_literal + (FRAGP)->fr_fix;	\       if ((count& 3) != 0)						\ 	{								\ 	  memset (dest, 0, (count& 3));				\ 	  (FRAGP)->fr_fix += (count& 3);				\ 	  dest += (count& 3);						\ 	  count -= (count& 3);						\ 	}								\       if (count)							\ 	{								\ 	  (FRAGP)->fr_var = 4;						\ 	  *dest++ = 0x80;						\ 	  *dest++ = 0x88;						\ 	  *dest++ = 0x00;						\ 	  *dest++ = 0x00;						\ 	}								\     }									\  while (0)
+value|do						\   if ((FRAGP)->fr_type == rs_align_code) 				\     {									\       valueT count = ((FRAGP)->fr_next->fr_address			\ 		      - ((FRAGP)->fr_address + (FRAGP)->fr_fix));	\       char *dest = (FRAGP)->fr_literal + (FRAGP)->fr_fix;		\       if ((count& 3) != 0)						\ 	{								\ 	  memset (dest, 0, (count& 3));				\ 	  (FRAGP)->fr_fix += (count& 3);				\ 	  dest += (count& 3);						\ 	  count -= (count& 3);						\ 	}								\       if (count)							\ 	{								\ 	  (FRAGP)->fr_var = 4;						\ 	  *dest++ = 0x80;						\ 	  *dest++ = 0x88;						\ 	  *dest++ = 0x00;						\ 	  *dest++ = 0x00;						\ 	}								\     }									\  while (0)
 end_define
 
 end_unit

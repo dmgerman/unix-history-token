@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Motorola 68HC12-specific support for 32-bit ELF    Copyright 1999, 2000, 2002, 2003 Free Software Foundation, Inc.    Contributed by Stephane Carrez (stcarrez@nerim.fr)    (Heavily copied from the D10V port by Martin Hunt (hunt@cygnus.com))  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Motorola 68HC12-specific support for 32-bit ELF    Copyright 1999, 2000, 2002, 2003, 2004 Free Software Foundation, Inc.    Contributed by Stephane Carrez (stcarrez@nerim.fr)    (Heavily copied from the D10V port by Martin Hunt (hunt@cygnus.com))  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -1254,11 +1254,11 @@ name|stub_offset
 operator|=
 name|stub_sec
 operator|->
-name|_raw_size
+name|size
 expr_stmt|;
 name|stub_sec
 operator|->
-name|_raw_size
+name|size
 operator|+=
 literal|7
 expr_stmt|;
@@ -1431,7 +1431,7 @@ name|stub_entry
 operator|->
 name|stub_sec
 operator|->
-name|_raw_size
+name|size
 operator|+=
 literal|7
 expr_stmt|;
@@ -1592,9 +1592,9 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|bfd_elf_special_section
-specifier|const
 name|elf32_m68hc12_special_sections
 index|[]
 init|=
@@ -1614,20 +1614,6 @@ name|SHF_WRITE
 block|}
 block|,
 block|{
-literal|".softregs"
-block|,
-literal|9
-block|,
-literal|0
-block|,
-name|SHT_NOBITS
-block|,
-name|SHF_ALLOC
-operator|+
-name|SHF_WRITE
-block|}
-block|,
-block|{
 literal|".page0"
 block|,
 literal|6
@@ -1635,6 +1621,20 @@ block|,
 literal|0
 block|,
 name|SHT_PROGBITS
+block|,
+name|SHF_ALLOC
+operator|+
+name|SHF_WRITE
+block|}
+block|,
+block|{
+literal|".softregs"
+block|,
+literal|9
+block|,
+literal|0
+block|,
+name|SHT_NOBITS
 block|,
 name|SHF_ALLOC
 operator|+

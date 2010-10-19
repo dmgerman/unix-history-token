@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Declarations and definitions of codes relating to the DWARF symbolic    debugging information format.     Written by Ron Guilmette (rfg@ncd.com)  Copyright 1992, 1993, 1995, 1999 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Declarations and definitions of codes relating to the DWARF symbolic    debugging information format.     Written by Ron Guilmette (rfg@netcom.com)  Copyright 1992, 1993, 1995, 1999, 2005 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -789,7 +789,7 @@ begin_define
 define|#
 directive|define
 name|AT_lo_user
-value|0x8000
+value|0x2000
 end_define
 
 begin_comment
@@ -800,7 +800,7 @@ begin_define
 define|#
 directive|define
 name|AT_hi_user
-value|0xffff
+value|0x3ff0
 end_define
 
 begin_comment
@@ -842,6 +842,11 @@ block|,
 name|OP_ADD
 init|=
 literal|0x07
+block|,
+comment|/* GNU extensions.  */
+name|OP_MULT
+init|=
+literal|0x80
 block|}
 enum|;
 end_enum
@@ -971,7 +976,7 @@ name|FT_label
 init|=
 literal|0x0017
 block|,
-comment|/* GNU extensions        The low order byte must indicate the size (in bytes) for the type.        All of these types will probably break "classic" svr4 SDB */
+comment|/* GNU extensions        The low order byte must indicate the size (in bytes) for the type.        All of these types will probably break "classic" svr4 SDB.  */
 name|FT_long_long
 init|=
 literal|0x8008
@@ -1031,6 +1036,18 @@ block|,
 name|FT_unsigned_int64
 init|=
 literal|0x9b08
+block|,
+name|FT_int128
+init|=
+literal|0x9c10
+block|,
+name|FT_signed_int128
+init|=
+literal|0x9d10
+block|,
+name|FT_unsigned_int128
+init|=
+literal|0x9e10
 block|,
 name|FT_real32
 init|=
@@ -1199,12 +1216,12 @@ name|FMT_CODE
 parameter_list|(
 name|_FUNDAMENTAL_TYPE_P
 parameter_list|,
-name|_UB_CONST_P
-parameter_list|,
 name|_LB_CONST_P
+parameter_list|,
+name|_UB_CONST_P
 parameter_list|)
 define|\
-value|(((_FUNDAMENTAL_TYPE_P) ? 0 : 4)	\   | ((_UB_CONST_P) ? 0 : 2)		\   | ((_LB_CONST_P) ? 0 : 1))
+value|(((_FUNDAMENTAL_TYPE_P) ? 0 : 4)	\   | ((_LB_CONST_P) ? 0 : 2)		\   | ((_UB_CONST_P) ? 0 : 1))
 end_define
 
 begin_comment
@@ -1255,16 +1272,9 @@ name|LANG_MODULA2
 init|=
 literal|0x0000000a
 block|,
-comment|/* GNU extensions */
-name|LANG_CHILL
-init|=
-literal|0x00009af3
-block|,
-comment|/* random value for GNU Chill */
 name|LANG_JAVA
 init|=
-literal|0x00009af4
-comment|/* random value + 1 for GNU Java */
+literal|0x0000000b
 block|}
 enum|;
 end_enum

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.  NOTE: This source is derived from an old version taken from the GNU C Library (glibc).  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.  NOTE: This source is derived from an old version taken from the GNU C Library (glibc).  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifdef
@@ -175,25 +175,19 @@ begin_function
 name|int
 name|fnmatch
 parameter_list|(
-name|pattern
-parameter_list|,
-name|string
-parameter_list|,
-name|flags
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|pattern
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|string
-decl_stmt|;
+parameter_list|,
 name|int
 name|flags
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 specifier|const
@@ -555,7 +549,7 @@ block|{
 comment|/* Nonzero if the sense of the character class is inverted.  */
 specifier|register
 name|int
-name|not
+name|negate
 decl_stmt|;
 if|if
 condition|(
@@ -605,7 +599,7 @@ condition|)
 return|return
 name|FNM_NOMATCH
 return|;
-name|not
+name|negate
 operator|=
 operator|(
 operator|*
@@ -621,7 +615,7 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-name|not
+name|negate
 condition|)
 operator|++
 name|p
@@ -818,7 +812,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|not
+name|negate
 condition|)
 return|return
 name|FNM_NOMATCH
@@ -871,7 +865,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|not
+name|negate
 condition|)
 return|return
 name|FNM_NOMATCH

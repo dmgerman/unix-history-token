@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-tic54x.c -- Assembly code for the Texas Instruments TMS320C54X    Copyright 1999, 2000, 2001, 2002 Free Software Foundation, Inc.    Contributed by Timothy Wall (twall@cygnus.com)     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* tc-tic54x.c -- Assembly code for the Texas Instruments TMS320C54X    Copyright 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006    Free Software Foundation, Inc.    Contributed by Timothy Wall (twall@cygnus.com)     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -496,12 +496,6 @@ block|,
 name|OPTION_CPU_VERSION
 block|}
 block|,
-if|#
-directive|if
-literal|0
-block|{ "mcoff-version",   required_argument,   NULL, OPTION_COFF_VERSION },
-endif|#
-directive|endif
 block|{
 literal|"merrors-to-file"
 block|,
@@ -2615,12 +2609,6 @@ literal|"-mcpu=<CPU version>       Specify the CPU version\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|fprintf (stream, _("-mcoff-version={0|1|2}    Select COFF version\n"));
-endif|#
-directive|endif
 name|fprintf
 argument_list|(
 name|stream
@@ -3705,7 +3693,7 @@ name|bss_section
 operator|->
 name|flags
 operator||=
-name|SEC_BLOCK
+name|SEC_TIC54X_BLOCK
 expr_stmt|;
 name|subseg_set
 argument_list|(
@@ -7103,7 +7091,7 @@ name|blocking_flag
 condition|)
 name|flags
 operator||=
-name|SEC_BLOCK
+name|SEC_TIC54X_BLOCK
 expr_stmt|;
 if|if
 condition|(
@@ -8759,7 +8747,7 @@ name|seg
 operator|->
 name|flags
 operator||=
-name|SEC_CLINK
+name|SEC_TIC54X_CLINK
 expr_stmt|;
 name|demand_empty_rest_of_line
 argument_list|()
@@ -9816,7 +9804,7 @@ name|seg
 operator|->
 name|flags
 operator||=
-name|SEC_BLOCK
+name|SEC_TIC54X_BLOCK
 expr_stmt|;
 name|c
 operator|=
@@ -10844,12 +10832,6 @@ block|,
 literal|'w'
 block|}
 block|,
-if|#
-directive|if
-literal|0
-block|{ "end"      , s_end                    ,          0 },
-endif|#
-directive|endif
 block|{
 literal|"far_mode"
 block|,
@@ -11050,12 +11032,6 @@ block|,
 literal|0
 block|}
 block|,
-if|#
-directive|if
-literal|0
-block|{ "list"     , listing_list             ,          1 },   { "nolist"   , listing_list             ,          0 },
-endif|#
-directive|endif
 block|{
 literal|"long"
 block|,
@@ -11160,12 +11136,6 @@ block|,
 literal|0
 block|}
 block|,
-if|#
-directive|if
-literal|0
-block|{ "page"     , listing_eject            ,          0 },
-endif|#
-directive|endif
 block|{
 literal|"sblock"
 block|,
@@ -11286,12 +11256,6 @@ block|,
 literal|'t'
 block|}
 block|,
-if|#
-directive|if
-literal|0
-block|{ "title"    , listing_title            ,          0 },
-endif|#
-directive|endif
 block|{
 literal|"union"
 block|,
@@ -11342,22 +11306,6 @@ block|}
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* For debugging, strings for each operand type.  */
-end_comment
-
-begin_endif
-unit|static const char *optypes[] = {   "none", "Xmem", "Ymem", "pmad", "dmad", "Smem", "Lmem", "MMR", "PA",   "Sind", "xpmad", "xpmad+", "MMRX", "MMRY",   "SRC1", "SRC", "RND", "DST",   "ARX",   "SHIFT", "SHFT",   "B", "A", "lk", "TS", "k8", "16", "BITC", "CC", "CC2", "CC3", "123", "031",   "k5", "k8u", "ASM", "T", "DP", "ARP", "k3", "lku", "N", "SBIT", "12",   "k9", "TRN", };
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|int
@@ -11581,78 +11529,19 @@ begin_function
 name|void
 name|tic54x_macro_info
 parameter_list|(
-name|info
+name|macro
 parameter_list|)
-name|void
+specifier|const
+name|macro_entry
 modifier|*
-name|info
+name|macro
 decl_stmt|;
 block|{
-struct|struct
-name|formal_struct
-block|{
-name|struct
-name|formal_struct
-modifier|*
-name|next
-decl_stmt|;
-comment|/* Next formal in list  */
-name|sb
-name|name
-decl_stmt|;
-comment|/* Name of the formal  */
-name|sb
-name|def
-decl_stmt|;
-comment|/* The default value  */
-name|sb
-name|actual
-decl_stmt|;
-comment|/* The actual argument (changed on                                    each expansion) */
-name|int
-name|index
-decl_stmt|;
-comment|/* The index of the formal                                    0 .. formal_count - 1 */
-block|}
+specifier|const
+name|formal_entry
 modifier|*
 name|entry
-struct|;
-struct|struct
-name|macro_struct
-block|{
-name|sb
-name|sub
 decl_stmt|;
-comment|/* Substitution text.  */
-name|int
-name|formal_count
-decl_stmt|;
-comment|/* Number of formal args.  */
-name|struct
-name|formal_struct
-modifier|*
-name|formals
-decl_stmt|;
-comment|/* Pointer to list of                                            formal_structs.  */
-name|struct
-name|hash_control
-modifier|*
-name|formal_hash
-decl_stmt|;
-comment|/* Hash table of formals.  */
-block|}
-modifier|*
-name|macro
-struct|;
-name|macro
-operator|=
-operator|(
-expr|struct
-name|macro_struct
-operator|*
-operator|)
-name|info
-expr_stmt|;
 comment|/* Put the formal args into the substitution symbol table.  */
 for|for
 control|(
@@ -23214,6 +23103,9 @@ argument_list|(
 literal|"Invalid subscript (use 1 to %d)"
 argument_list|)
 argument_list|,
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|value
@@ -23257,6 +23149,9 @@ argument_list|(
 literal|"Invalid length (use 0 to %d"
 argument_list|)
 argument_list|,
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|value
@@ -23392,13 +23287,6 @@ block|}
 operator|++
 name|tail
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* Try to replace required whitespace 		     eliminated by the preprocessor; technically, a forced 		     substitution could come anywhere, even mid-symbol, 		     e.g. if x is "0", 'sym:x:end' should result in 'sym0end', 		     but 'sym:x: end' should result in 'sym0 end'. 		     FIXME -- this should really be fixed in the preprocessor, 		     but would require several new states; 		     KEEP_WHITE_AROUND_COLON does part of the job, but isn't 		     complete.  */
-block|if ((is_part_of_name (tail[1])&& tail[1] != '.'&& tail[1] != '$') 		      || tail[1] == '\0' || tail[1] == ',' || tail[1] == '"') 		    ++tail; 		  else 		    *tail = ' ';
-endif|#
-directive|endif
 block|}
 else|else
 comment|/* Restore the character after the symbol end.  */
@@ -24369,6 +24257,8 @@ expr_stmt|;
 name|c_dot_file_symbol
 argument_list|(
 name|filename
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -24410,12 +24300,6 @@ modifier|*
 name|sym
 decl_stmt|;
 block|{
-if|#
-directive|if
-literal|0
-block|static int local_label_count = 0;   const char *name = S_GET_NAME (sym);
-endif|#
-directive|endif
 comment|/* Just in case we need this later; note that this is not necessarily the      same thing as line_label...      When aligning or assigning labels to fields, sometimes the label is      assigned other than the address at which the label appears.      FIXME -- is this really needed? I think all the proper label assignment      is done in tic54x_cons.  */
 name|last_label_seen
 operator|=
@@ -24657,14 +24541,6 @@ name|exp
 name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
-if|#
-directive|if
-literal|0
-block|symbol *sym = (symbol *) hash_find (mmreg_hash, name);
-comment|/* If it's a MMREG, replace it with its constant value.  */
-block|if (sym)     {       exp->X_op = O_constant;       exp->X_add_number = sym->value;       return 1;     }
-endif|#
-directive|endif
 return|return
 literal|0
 return|;
@@ -25075,7 +24951,7 @@ end_comment
 
 begin_function
 name|void
-name|md_apply_fix3
+name|md_apply_fix
 parameter_list|(
 name|fixP
 parameter_list|,
@@ -25331,43 +25207,6 @@ literal|0
 return|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-name|defined
-name|OBJ_COFF
-end_if
-
-begin_function
-name|short
-name|tc_coff_fix2rtype
-parameter_list|(
-name|fixP
-parameter_list|)
-name|fixS
-modifier|*
-name|fixP
-decl_stmt|;
-block|{
-return|return
-operator|(
-name|fixP
-operator|->
-name|fx_r_type
-operator|)
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* OBJ_COFF */
-end_comment
 
 begin_comment
 comment|/* Mostly little-endian, but longwords (4 octets) get MS word stored    first.  */

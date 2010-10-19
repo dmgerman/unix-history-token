@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Instruction printing code for the ARC.    Copyright 1994, 1995, 1997, 1998, 2000, 2001, 2002    Free Software Foundation, Inc.    Contributed by Doug Evans (dje@cygnus.com).     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Instruction printing code for the ARC.    Copyright 1994, 1995, 1997, 1998, 2000, 2001, 2002, 2005    Free Software Foundation, Inc.    Contributed by Doug Evans (dje@cygnus.com).     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston,    MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -86,6 +86,43 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* Classification of the opcodes for the decoder to print     the instructions.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|CLASS_A4_ARITH
+block|,
+name|CLASS_A4_OP3_GENERAL
+block|,
+name|CLASS_A4_FLAG
+block|,
+comment|/* All branches other than JC.  */
+name|CLASS_A4_BRANCH
+block|,
+name|CLASS_A4_JC
+block|,
+comment|/* All loads other than immediate       indexed loads.  */
+name|CLASS_A4_LD0
+block|,
+name|CLASS_A4_LD1
+block|,
+name|CLASS_A4_ST
+block|,
+name|CLASS_A4_SR
+block|,
+comment|/* All single operand instructions.  */
+name|CLASS_A4_OP3_SUBOPC3F
+block|,
+name|CLASS_A4_LR
+block|}
+name|a4_decoding_class
+typedef|;
+end_typedef
 
 begin_define
 define|#
@@ -261,7 +298,7 @@ name|WRITE_FORMAT_LB_Rx_RB
 parameter_list|(
 name|x
 parameter_list|)
-value|WRITE_FORMAT(x,"[","]","","")
+value|WRITE_FORMAT (x, "[","]","","")
 end_define
 
 begin_define
@@ -271,7 +308,7 @@ name|WRITE_FORMAT_x_COMMA_LB
 parameter_list|(
 name|x
 parameter_list|)
-value|WRITE_FORMAT(x,"",",[","",",[")
+value|WRITE_FORMAT (x, "",",[","",",[")
 end_define
 
 begin_define
@@ -281,7 +318,7 @@ name|WRITE_FORMAT_COMMA_x_RB
 parameter_list|(
 name|x
 parameter_list|)
-value|WRITE_FORMAT(x,",","]",",","]")
+value|WRITE_FORMAT (x, ",","]",",","]")
 end_define
 
 begin_define
@@ -291,7 +328,7 @@ name|WRITE_FORMAT_x_RB
 parameter_list|(
 name|x
 parameter_list|)
-value|WRITE_FORMAT(x,"","]","","]")
+value|WRITE_FORMAT (x, "","]","","]")
 end_define
 
 begin_define
@@ -301,7 +338,7 @@ name|WRITE_FORMAT_COMMA_x
 parameter_list|(
 name|x
 parameter_list|)
-value|WRITE_FORMAT(x,",","",",","")
+value|WRITE_FORMAT (x, ",","",",","")
 end_define
 
 begin_define
@@ -311,7 +348,7 @@ name|WRITE_FORMAT_x_COMMA
 parameter_list|(
 name|x
 parameter_list|)
-value|WRITE_FORMAT(x,"",",","",",")
+value|WRITE_FORMAT (x, "",",","",",")
 end_define
 
 begin_define
@@ -321,7 +358,7 @@ name|WRITE_FORMAT_x
 parameter_list|(
 name|x
 parameter_list|)
-value|WRITE_FORMAT(x,"","","","")
+value|WRITE_FORMAT (x, "","","","")
 end_define
 
 begin_define
@@ -398,229 +435,6 @@ literal|"\t; "
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|core_reg_name
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
-name|arcDisState
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|aux_reg_name
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
-name|arcDisState
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|cond_code_name
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
-name|arcDisState
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|instruction_name
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
-name|arcDisState
-operator|*
-operator|,
-name|int
-operator|,
-name|int
-operator|,
-name|int
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|mwerror
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
-name|arcDisState
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|post_address
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
-name|arcDisState
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|write_comments_
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
-name|arcDisState
-operator|*
-operator|,
-name|int
-operator|,
-name|int
-operator|,
-name|long
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|write_instr_name_
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
-name|arcDisState
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|,
-name|int
-operator|,
-name|int
-operator|,
-name|int
-operator|,
-name|int
-operator|,
-name|int
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|dsmOneArcInst
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd_vma
-operator|,
-expr|struct
-name|arcDisState
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|_coreRegName
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|decodeInstr
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd_vma
-operator|,
-name|disassemble_info
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 specifier|const
@@ -628,18 +442,14 @@ name|char
 modifier|*
 name|core_reg_name
 parameter_list|(
-name|state
-parameter_list|,
-name|val
-parameter_list|)
 name|struct
 name|arcDisState
 modifier|*
 name|state
-decl_stmt|;
+parameter_list|,
 name|int
 name|val
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -675,18 +485,14 @@ name|char
 modifier|*
 name|aux_reg_name
 parameter_list|(
-name|state
-parameter_list|,
-name|val
-parameter_list|)
 name|struct
 name|arcDisState
 modifier|*
 name|state
-decl_stmt|;
+parameter_list|,
 name|int
 name|val
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -722,18 +528,14 @@ name|char
 modifier|*
 name|cond_code_name
 parameter_list|(
-name|state
-parameter_list|,
-name|val
-parameter_list|)
 name|struct
 name|arcDisState
 modifier|*
 name|state
-decl_stmt|;
+parameter_list|,
 name|int
 name|val
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -769,29 +571,21 @@ name|char
 modifier|*
 name|instruction_name
 parameter_list|(
-name|state
-parameter_list|,
-name|op1
-parameter_list|,
-name|op2
-parameter_list|,
-name|flags
-parameter_list|)
 name|struct
 name|arcDisState
 modifier|*
 name|state
-decl_stmt|;
+parameter_list|,
 name|int
 name|op1
-decl_stmt|;
+parameter_list|,
 name|int
 name|op2
-decl_stmt|;
+parameter_list|,
 name|int
 modifier|*
 name|flags
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -829,20 +623,16 @@ specifier|static
 name|void
 name|mwerror
 parameter_list|(
-name|state
-parameter_list|,
-name|msg
-parameter_list|)
 name|struct
 name|arcDisState
 modifier|*
 name|state
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|msg
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -878,18 +668,14 @@ name|char
 modifier|*
 name|post_address
 parameter_list|(
-name|state
-parameter_list|,
-name|addr
-parameter_list|)
 name|struct
 name|arcDisState
 modifier|*
 name|state
-decl_stmt|;
+parameter_list|,
 name|int
 name|addr
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|char
@@ -992,54 +778,27 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|void
-name|my_sprintf
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+name|arc_sprintf
+parameter_list|(
+name|struct
 name|arcDisState
-operator|*
-operator|,
-name|char
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|,
-operator|...
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|my_sprintf
-name|VPARAMS
-argument_list|(
-operator|(
-expr|struct
-name|arcDisState
-operator|*
+modifier|*
 name|state
-operator|,
+parameter_list|,
 name|char
-operator|*
+modifier|*
 name|buf
-operator|,
+parameter_list|,
 specifier|const
 name|char
-operator|*
+modifier|*
 name|format
-operator|,
-operator|...
-operator|)
-argument_list|)
+parameter_list|,
+modifier|...
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -1063,41 +822,12 @@ decl_stmt|;
 name|long
 name|auxNum
 decl_stmt|;
-name|VA_OPEN
+name|va_list
+name|ap
+decl_stmt|;
+name|va_start
 argument_list|(
 name|ap
-argument_list|,
-name|format
-argument_list|)
-expr_stmt|;
-name|VA_FIXEDARG
-argument_list|(
-name|ap
-argument_list|,
-expr|struct
-name|arcDisState
-operator|*
-argument_list|,
-name|state
-argument_list|)
-expr_stmt|;
-name|VA_FIXEDARG
-argument_list|(
-name|ap
-argument_list|,
-name|char
-operator|*
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
-name|VA_FIXEDARG
-argument_list|(
-name|ap
-argument_list|,
-specifier|const
-name|char
-operator|*
 argument_list|,
 name|format
 argument_list|)
@@ -1663,7 +1393,7 @@ name|ext
 argument_list|)
 expr_stmt|;
 else|else
-name|my_sprintf
+name|arc_sprintf
 argument_list|(
 name|state
 argument_list|,
@@ -1730,41 +1460,33 @@ name|bp
 operator|=
 literal|0
 expr_stmt|;
-name|VA_CLOSE
+name|va_end
 argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_function
 specifier|static
 name|void
 name|write_comments_
 parameter_list|(
-name|state
-parameter_list|,
-name|shimm
-parameter_list|,
-name|is_limm
-parameter_list|,
-name|limm_value
-parameter_list|)
 name|struct
 name|arcDisState
 modifier|*
 name|state
-decl_stmt|;
+parameter_list|,
 name|int
 name|shimm
-decl_stmt|;
+parameter_list|,
 name|int
 name|is_limm
-decl_stmt|;
+parameter_list|,
 name|long
 name|limm_value
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1884,7 +1606,7 @@ name|write_comments2
 parameter_list|(
 name|x
 parameter_list|)
-value|write_comments_(state, x, is_limm, limm_value)
+value|write_comments_ (state, x, is_limm, limm_value)
 end_define
 
 begin_define
@@ -1892,7 +1614,7 @@ define|#
 directive|define
 name|write_comments
 parameter_list|()
-value|write_comments2(0)
+value|write_comments2 (0)
 end_define
 
 begin_decl_stmt
@@ -1945,50 +1667,34 @@ specifier|static
 name|void
 name|write_instr_name_
 parameter_list|(
-name|state
-parameter_list|,
-name|instrName
-parameter_list|,
-name|cond
-parameter_list|,
-name|condCodeIsPartOfName
-parameter_list|,
-name|flag
-parameter_list|,
-name|signExtend
-parameter_list|,
-name|addrWriteBack
-parameter_list|,
-name|directMem
-parameter_list|)
 name|struct
 name|arcDisState
 modifier|*
 name|state
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|instrName
-decl_stmt|;
+parameter_list|,
 name|int
 name|cond
-decl_stmt|;
+parameter_list|,
 name|int
 name|condCodeIsPartOfName
-decl_stmt|;
+parameter_list|,
 name|int
 name|flag
-decl_stmt|;
+parameter_list|,
 name|int
 name|signExtend
-decl_stmt|;
+parameter_list|,
 name|int
 name|addrWriteBack
-decl_stmt|;
+parameter_list|,
 name|int
 name|directMem
-decl_stmt|;
+parameter_list|)
 block|{
 name|strcpy
 argument_list|(
@@ -2249,25 +1955,21 @@ specifier|static
 name|int
 name|dsmOneArcInst
 parameter_list|(
-name|addr
-parameter_list|,
-name|state
-parameter_list|)
 name|bfd_vma
 name|addr
-decl_stmt|;
+parameter_list|,
 name|struct
 name|arcDisState
 modifier|*
 name|state
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|condCodeIsPartOfName
 init|=
 literal|0
 decl_stmt|;
-name|int
+name|a4_decoding_class
 name|decodingClass
 decl_stmt|;
 specifier|const
@@ -2464,7 +2166,7 @@ literal|0
 expr_stmt|;
 name|decodingClass
 operator|=
-literal|0
+name|CLASS_A4_ARITH
 expr_stmt|;
 comment|/* default!  */
 name|repeatsOp
@@ -2602,7 +2304,7 @@ break|break;
 block|}
 name|decodingClass
 operator|=
-literal|5
+name|CLASS_A4_LD0
 expr_stmt|;
 break|break;
 case|case
@@ -2629,7 +2331,7 @@ literal|"lr"
 expr_stmt|;
 name|decodingClass
 operator|=
-literal|10
+name|CLASS_A4_LR
 expr_stmt|;
 block|}
 else|else
@@ -2708,7 +2410,7 @@ break|break;
 block|}
 name|decodingClass
 operator|=
-literal|6
+name|CLASS_A4_LD1
 expr_stmt|;
 block|}
 break|break;
@@ -2736,7 +2438,7 @@ literal|"sr"
 expr_stmt|;
 name|decodingClass
 operator|=
-literal|8
+name|CLASS_A4_SR
 expr_stmt|;
 block|}
 else|else
@@ -2797,7 +2499,7 @@ break|break;
 block|}
 name|decodingClass
 operator|=
-literal|7
+name|CLASS_A4_ST
 expr_stmt|;
 block|}
 break|break;
@@ -2806,7 +2508,7 @@ name|op_3
 case|:
 name|decodingClass
 operator|=
-literal|1
+name|CLASS_A4_OP3_GENERAL
 expr_stmt|;
 comment|/* default for opcode 3...  */
 switch|switch
@@ -2831,7 +2533,7 @@ literal|"flag"
 expr_stmt|;
 name|decodingClass
 operator|=
-literal|2
+name|CLASS_A4_FLAG
 expr_stmt|;
 break|break;
 case|case
@@ -2904,7 +2606,7 @@ case|:
 block|{
 name|decodingClass
 operator|=
-literal|9
+name|CLASS_A4_OP3_SUBOPC3F
 expr_stmt|;
 switch|switch
 condition|(
@@ -3107,9 +2809,9 @@ operator|==
 name|op_JC
 operator|)
 condition|?
-literal|4
+name|CLASS_A4_JC
 else|:
-literal|3
+name|CLASS_A4_BRANCH
 operator|)
 expr_stmt|;
 name|state
@@ -3151,10 +2853,6 @@ literal|0
 index|]
 argument_list|)
 operator|)
-expr_stmt|;
-name|decodingClass
-operator|=
-literal|0
 expr_stmt|;
 switch|switch
 condition|(
@@ -3254,14 +2952,14 @@ operator|==
 literal|0x7fffffff
 condition|)
 block|{
-comment|/* nop encoded as xor -1, -1, -1  */
+comment|/* NOP encoded as xor -1, -1, -1.   */
 name|instrName
 operator|=
 literal|"nop"
 expr_stmt|;
 name|decodingClass
 operator|=
-literal|9
+name|CLASS_A4_OP3_SUBOPC3F
 expr_stmt|;
 block|}
 else|else
@@ -3361,7 +3059,7 @@ name|decodingClass
 condition|)
 block|{
 case|case
-literal|0
+name|CLASS_A4_ARITH
 case|:
 name|CHECK_FIELD_A
 argument_list|()
@@ -3412,7 +3110,7 @@ expr_stmt|;
 name|WRITE_NOP_COMMENT
 argument_list|()
 expr_stmt|;
-name|my_sprintf
+name|arc_sprintf
 argument_list|(
 name|state
 argument_list|,
@@ -3447,7 +3145,7 @@ argument_list|(
 name|C
 argument_list|)
 expr_stmt|;
-name|my_sprintf
+name|arc_sprintf
 argument_list|(
 name|state
 argument_list|,
@@ -3468,7 +3166,7 @@ argument_list|()
 expr_stmt|;
 break|break;
 case|case
-literal|1
+name|CLASS_A4_OP3_GENERAL
 case|:
 name|CHECK_FIELD_A
 argument_list|()
@@ -3501,7 +3199,7 @@ expr_stmt|;
 name|WRITE_NOP_COMMENT
 argument_list|()
 expr_stmt|;
-name|my_sprintf
+name|arc_sprintf
 argument_list|(
 name|state
 argument_list|,
@@ -3524,7 +3222,7 @@ argument_list|(
 name|B
 argument_list|)
 expr_stmt|;
-name|my_sprintf
+name|arc_sprintf
 argument_list|(
 name|state
 argument_list|,
@@ -3543,7 +3241,7 @@ argument_list|()
 expr_stmt|;
 break|break;
 case|case
-literal|2
+name|CLASS_A4_FLAG
 case|:
 name|CHECK_FIELD_B
 argument_list|()
@@ -3555,7 +3253,7 @@ name|flag
 operator|=
 literal|0
 expr_stmt|;
-comment|/* this is the FLAG instruction -- it's redundant  */
+comment|/* This is the FLAG instruction -- it's redundant.  */
 name|write_instr_name
 argument_list|()
 expr_stmt|;
@@ -3564,7 +3262,7 @@ argument_list|(
 name|B
 argument_list|)
 expr_stmt|;
-name|my_sprintf
+name|arc_sprintf
 argument_list|(
 name|state
 argument_list|,
@@ -3582,7 +3280,7 @@ argument_list|()
 expr_stmt|;
 break|break;
 case|case
-literal|3
+name|CLASS_A4_BRANCH
 case|:
 name|fieldA
 operator|=
@@ -3612,7 +3310,7 @@ operator|)
 operator|>>
 literal|10
 expr_stmt|;
-comment|/* make it signed  */
+comment|/* Make it signed.  */
 name|fieldA
 operator|+=
 name|addr
@@ -3670,8 +3368,8 @@ argument_list|,
 literal|"%s"
 argument_list|)
 expr_stmt|;
-comment|/* address/label name */
-name|my_sprintf
+comment|/* Address/label name.  */
+name|arc_sprintf
 argument_list|(
 name|state
 argument_list|,
@@ -3694,7 +3392,7 @@ argument_list|()
 expr_stmt|;
 break|break;
 case|case
-literal|4
+name|CLASS_A4_JC
 case|:
 comment|/* For op_JC -- jump to address specified. 	 Also covers jump and link--bit 9 of the instr. word 	 selects whether linked, thus "is_linked" is set above.  */
 name|fieldA
@@ -3727,7 +3425,7 @@ operator|)
 operator|&
 literal|0x7F
 expr_stmt|;
-comment|/* flags */
+comment|/* Flags.  */
 name|fieldB
 operator|=
 operator|(
@@ -3753,7 +3451,7 @@ argument_list|(
 name|fieldB
 argument_list|)
 expr_stmt|;
-comment|/* screwy JLcc requires .jd mode to execute correctly 	   * but we pretend it is .nd (no delay slot).  */
+comment|/* Screwy JLcc requires .jd mode to execute correctly 	     but we pretend it is .nd (no delay slot).  */
 if|if
 condition|(
 name|is_linked
@@ -3783,7 +3481,7 @@ name|indirect_call
 else|:
 name|indirect_jump
 expr_stmt|;
-comment|/* We should also treat this as indirect call if NOT linked 	   * but the preceding instruction was a "lr blink,[status]" 	   * and we have a delay slot with "add blink,blink,2". 	   * For now we can't detect such.  */
+comment|/* We should also treat this as indirect call if NOT linked 	     but the preceding instruction was a "lr blink,[status]" 	     and we have a delay slot with "add blink,blink,2". 	     For now we can't detect such.  */
 name|state
 operator|->
 name|register_for_indirect_jump
@@ -3808,7 +3506,7 @@ else|:
 literal|"%s"
 argument_list|)
 expr_stmt|;
-comment|/* address/label name  */
+comment|/* Address/label name.  */
 if|if
 condition|(
 name|fieldA
@@ -3833,7 +3531,7 @@ argument_list|(
 name|B
 argument_list|)
 condition|)
-name|my_sprintf
+name|arc_sprintf
 argument_list|(
 name|state
 argument_list|,
@@ -3849,7 +3547,7 @@ name|fieldA
 argument_list|)
 expr_stmt|;
 else|else
-name|my_sprintf
+name|arc_sprintf
 argument_list|(
 name|state
 argument_list|,
@@ -3874,7 +3572,7 @@ argument_list|()
 expr_stmt|;
 break|break;
 case|case
-literal|5
+name|CLASS_A4_LD0
 case|:
 comment|/* LD instruction. 	 B and C can be regs, or one (both?) can be limm.  */
 name|CHECK_FIELD_A
@@ -4028,7 +3726,7 @@ argument_list|(
 name|C
 argument_list|)
 expr_stmt|;
-name|my_sprintf
+name|arc_sprintf
 argument_list|(
 name|state
 argument_list|,
@@ -4050,7 +3748,7 @@ argument_list|()
 expr_stmt|;
 break|break;
 case|case
-literal|6
+name|CLASS_A4_LD1
 case|:
 comment|/* LD instruction.  */
 name|CHECK_FIELD_B
@@ -4114,7 +3812,7 @@ name|ea_reg1
 operator|=
 name|fieldB
 expr_stmt|;
-comment|/* field B is either a shimm (same as fieldC) or limm (different!) 	 Say ea is not present, so only one of us will do the name lookup.  */
+comment|/* Field B is either a shimm (same as fieldC) or limm (different!) 	 Say ea is not present, so only one of us will do the name lookup.  */
 else|else
 name|state
 operator|->
@@ -4238,7 +3936,7 @@ name|WRITE_FORMAT_RB
 argument_list|()
 expr_stmt|;
 block|}
-name|my_sprintf
+name|arc_sprintf
 argument_list|(
 name|state
 argument_list|,
@@ -4260,7 +3958,7 @@ argument_list|()
 expr_stmt|;
 break|break;
 case|case
-literal|7
+name|CLASS_A4_ST
 case|:
 comment|/* ST instruction.  */
 name|CHECK_FIELD_B
@@ -4320,7 +4018,7 @@ name|ea_reg1
 operator|=
 name|fieldB
 expr_stmt|;
-comment|/* field B is either a shimm (same as fieldA) or limm (different!) 	 Say ea is not present, so only one of us will do the name lookup. 	 (for is_limm we do the name translation here).  */
+comment|/* Field B is either a shimm (same as fieldA) or limm (different!) 	 Say ea is not present, so only one of us will do the name lookup. 	 (for is_limm we do the name translation here).  */
 else|else
 name|state
 operator|->
@@ -4419,7 +4117,7 @@ name|WRITE_FORMAT_RB
 argument_list|()
 expr_stmt|;
 block|}
-name|my_sprintf
+name|arc_sprintf
 argument_list|(
 name|state
 argument_list|,
@@ -4443,7 +4141,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|8
+name|CLASS_A4_SR
 case|:
 comment|/* SR instruction  */
 name|CHECK_FIELD_B
@@ -4473,7 +4171,7 @@ expr_stmt|;
 name|WRITE_FORMAT_RB
 argument_list|()
 expr_stmt|;
-name|my_sprintf
+name|arc_sprintf
 argument_list|(
 name|state
 argument_list|,
@@ -4493,7 +4191,7 @@ argument_list|()
 expr_stmt|;
 break|break;
 case|case
-literal|9
+name|CLASS_A4_OP3_SUBOPC3F
 case|:
 name|write_instr_name
 argument_list|()
@@ -4509,7 +4207,7 @@ literal|'\0'
 expr_stmt|;
 break|break;
 case|case
-literal|10
+name|CLASS_A4_LR
 case|:
 comment|/* LR instruction */
 name|CHECK_FIELD_A
@@ -4539,7 +4237,7 @@ expr_stmt|;
 name|WRITE_FORMAT_RB
 argument_list|()
 expr_stmt|;
-name|my_sprintf
+name|arc_sprintf
 argument_list|(
 name|state
 argument_list|,
@@ -4556,25 +4254,6 @@ argument_list|)
 expr_stmt|;
 name|write_comments
 argument_list|()
-expr_stmt|;
-break|break;
-case|case
-literal|11
-case|:
-name|CHECK_COND
-argument_list|()
-expr_stmt|;
-name|write_instr_name
-argument_list|()
-expr_stmt|;
-name|state
-operator|->
-name|operandBuffer
-index|[
-literal|0
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 break|break;
 default|default:
@@ -4614,18 +4293,14 @@ name|char
 modifier|*
 name|_coreRegName
 parameter_list|(
-name|arg
-parameter_list|,
-name|regval
-parameter_list|)
 name|void
 modifier|*
 name|arg
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|int
 name|regval
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|arcExtMap_coreRegName
@@ -4743,18 +4418,14 @@ specifier|static
 name|int
 name|decodeInstr
 parameter_list|(
-name|address
-parameter_list|,
-name|info
-parameter_list|)
 name|bfd_vma
 name|address
-decl_stmt|;
+parameter_list|,
 comment|/* Address of this instruction.  */
 name|disassemble_info
 modifier|*
 name|info
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|status
@@ -4769,7 +4440,7 @@ name|struct
 name|arcDisState
 name|s
 decl_stmt|;
-comment|/* ARC Disassembler state  */
+comment|/* ARC Disassembler state.  */
 name|void
 modifier|*
 name|stream
@@ -4778,7 +4449,7 @@ name|info
 operator|->
 name|stream
 decl_stmt|;
-comment|/* output stream  */
+comment|/* Output stream.  */
 name|fprintf_ftype
 name|func
 init|=
@@ -4880,8 +4551,8 @@ argument_list|(
 name|buffer
 argument_list|)
 expr_stmt|;
-comment|/* always read second word in case of limm  */
-comment|/* we ignore the result since last insn may not have a limm  */
+comment|/* Always read second word in case of limm.  */
+comment|/* We ignore the result since last insn may not have a limm.  */
 name|status
 operator|=
 call|(
@@ -4966,7 +4637,7 @@ name|instName
 operator|=
 name|_instName
 expr_stmt|;
-comment|/* disassemble  */
+comment|/* Disassemble.  */
 name|bytes
 operator|=
 name|dsmOneArcInst
@@ -4981,7 +4652,7 @@ operator|&
 name|s
 argument_list|)
 expr_stmt|;
-comment|/* display the disassembly instruction  */
+comment|/* Display the disassembly instruction.  */
 call|(
 modifier|*
 name|func
@@ -4989,7 +4660,7 @@ call|)
 argument_list|(
 name|stream
 argument_list|,
-literal|"%08x "
+literal|"%08lx "
 argument_list|,
 name|s
 operator|.

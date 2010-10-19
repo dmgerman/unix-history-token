@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end data structures for NLM (NetWare Loadable Modules) files.    Copyright 1993, 1994, 2001, 2002, 2003 Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end data structures for NLM (NetWare Loadable Modules) files.    Copyright 1993, 1994, 2001, 2002, 2003, 2005 Free Software Foundation, Inc.    Written by Cygnus Support.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -102,179 +102,164 @@ name|symbol_type
 typedef|);
 end_typedef
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|bfd_boolean
 name|nlm_mkobject
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|bfd_boolean
 name|nlm_set_arch_mach
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-operator|,
-expr|enum
+modifier|*
+parameter_list|,
+name|enum
 name|bfd_architecture
-operator|,
+parameter_list|,
 name|unsigned
 name|long
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|extern
 name|void
 name|nlmNAME
-parameter_list|(
+function_decl|(
 name|get_symbol_info
-parameter_list|)
-function_decl|PARAMS
+function_decl|)
 parameter_list|(
-function_decl|(bfd *
-operator|,
-function_decl|asymbol *
-operator|,
-function_decl|symbol_info *
+name|bfd
+modifier|*
+parameter_list|,
+name|asymbol
+modifier|*
+parameter_list|,
+name|symbol_info
+modifier|*
+parameter_list|)
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 specifier|extern
 name|long
 name|nlmNAME
-parameter_list|(
+function_decl|(
 name|get_symtab_upper_bound
-parameter_list|)
-function_decl|PARAMS
+function_decl|)
 parameter_list|(
-function_decl|(bfd *
+name|bfd
+modifier|*
+parameter_list|)
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 specifier|extern
 name|long
 name|nlmNAME
-parameter_list|(
+function_decl|(
 name|canonicalize_symtab
-parameter_list|)
-function_decl|PARAMS
+function_decl|)
 parameter_list|(
-function_decl|(bfd *
-operator|,
-function_decl|asymbol **
+name|bfd
+modifier|*
+parameter_list|,
+name|asymbol
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 specifier|extern
 name|asymbol
 modifier|*
 name|nlmNAME
-parameter_list|(
+function_decl|(
 name|make_empty_symbol
-parameter_list|)
-function_decl|PARAMS
+function_decl|)
 parameter_list|(
-function_decl|(bfd *
+name|bfd
+modifier|*
+parameter_list|)
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 specifier|extern
 name|void
 name|nlmNAME
-parameter_list|(
+function_decl|(
 name|print_symbol
-parameter_list|)
-function_decl|PARAMS
+function_decl|)
 parameter_list|(
-function_decl|(bfd *
-operator|,
-function_decl|PTR
-operator|,
-function_decl|asymbol *
-operator|,
-function_decl|bfd_print_symbol_type
+name|bfd
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|asymbol
+modifier|*
+parameter_list|,
+name|bfd_print_symbol_type
+parameter_list|)
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 specifier|extern
 name|long
 name|nlmNAME
-parameter_list|(
+function_decl|(
 name|get_reloc_upper_bound
-parameter_list|)
-function_decl|PARAMS
+function_decl|)
 parameter_list|(
-function_decl|(bfd *
-operator|,
-function_decl|asection *
+name|bfd
+modifier|*
+parameter_list|,
+name|asection
+modifier|*
+parameter_list|)
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 specifier|extern
 name|long
 name|nlmNAME
-parameter_list|(
+function_decl|(
 name|canonicalize_reloc
-parameter_list|)
-function_decl|PARAMS
+function_decl|)
 parameter_list|(
-function_decl|(bfd *
-operator|,
-function_decl|asection *
-operator|,
-function_decl|arelent **
-operator|,
-function_decl|asymbol **
+name|bfd
+modifier|*
+parameter_list|,
+name|asection
+modifier|*
+parameter_list|,
+name|arelent
+modifier|*
+modifier|*
+parameter_list|,
+name|asymbol
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 specifier|extern
@@ -282,81 +267,74 @@ specifier|const
 name|bfd_target
 modifier|*
 name|nlmNAME
-parameter_list|(
+function_decl|(
 name|object_p
-parameter_list|)
-function_decl|PARAMS
+function_decl|)
 parameter_list|(
-function_decl|(bfd *
+name|bfd
+modifier|*
+parameter_list|)
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 specifier|extern
 name|bfd_boolean
 name|nlmNAME
-parameter_list|(
+function_decl|(
 name|set_arch_mach
-parameter_list|)
-function_decl|PARAMS
+function_decl|)
 parameter_list|(
-function_decl|(bfd *
-operator|,
-function_decl|enum bfd_architecture
-operator|,
-function_decl|unsigned long
+name|bfd
+modifier|*
+parameter_list|,
+name|enum
+name|bfd_architecture
+parameter_list|,
+name|unsigned
+name|long
+parameter_list|)
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 specifier|extern
 name|bfd_boolean
 name|nlmNAME
-parameter_list|(
+function_decl|(
 name|set_section_contents
-parameter_list|)
-function_decl|PARAMS
+function_decl|)
 parameter_list|(
-function_decl|(bfd *
-operator|,
-function_decl|asection *
-operator|,
-function_decl|const PTR
-operator|,
-function_decl|file_ptr
-operator|,
-function_decl|bfd_size_type
+name|bfd
+modifier|*
+parameter_list|,
+name|asection
+modifier|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+name|file_ptr
+parameter_list|,
+name|bfd_size_type
+parameter_list|)
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 specifier|extern
 name|bfd_boolean
 name|nlmNAME
-parameter_list|(
+function_decl|(
 name|write_object_contents
-parameter_list|)
-function_decl|PARAMS
+function_decl|)
 parameter_list|(
-function_decl|(bfd *
+name|bfd
+modifier|*
+parameter_list|)
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
 
 begin_comment
 comment|/* Some private data is stashed away for future use using the tdata pointer    in the bfd structure.  */
@@ -479,7 +457,7 @@ name|nlm_fixed_header
 parameter_list|(
 name|bfd
 parameter_list|)
-value|(nlm_tdata(bfd) -> nlm_fixed_hdr)
+value|(nlm_tdata (bfd) -> nlm_fixed_hdr)
 end_define
 
 begin_define
@@ -489,7 +467,7 @@ name|nlm_variable_header
 parameter_list|(
 name|bfd
 parameter_list|)
-value|(nlm_tdata(bfd) -> nlm_variable_hdr)
+value|(nlm_tdata (bfd) -> nlm_variable_hdr)
 end_define
 
 begin_define
@@ -499,7 +477,7 @@ name|nlm_version_header
 parameter_list|(
 name|bfd
 parameter_list|)
-value|(nlm_tdata(bfd) -> nlm_version_hdr)
+value|(nlm_tdata (bfd) -> nlm_version_hdr)
 end_define
 
 begin_define
@@ -509,7 +487,7 @@ name|nlm_copyright_header
 parameter_list|(
 name|bfd
 parameter_list|)
-value|(nlm_tdata(bfd) -> nlm_copyright_hdr)
+value|(nlm_tdata (bfd) -> nlm_copyright_hdr)
 end_define
 
 begin_define
@@ -519,7 +497,7 @@ name|nlm_extended_header
 parameter_list|(
 name|bfd
 parameter_list|)
-value|(nlm_tdata(bfd) -> nlm_extended_hdr)
+value|(nlm_tdata (bfd) -> nlm_extended_hdr)
 end_define
 
 begin_define
@@ -529,7 +507,7 @@ name|nlm_custom_header
 parameter_list|(
 name|bfd
 parameter_list|)
-value|(nlm_tdata(bfd) -> nlm_custom_hdr)
+value|(nlm_tdata (bfd) -> nlm_custom_hdr)
 end_define
 
 begin_define
@@ -539,7 +517,7 @@ name|nlm_cygnus_ext_header
 parameter_list|(
 name|bfd
 parameter_list|)
-value|(nlm_tdata(bfd) -> nlm_cygnus_ext_hdr)
+value|(nlm_tdata (bfd) -> nlm_cygnus_ext_hdr)
 end_define
 
 begin_define
@@ -549,7 +527,7 @@ name|nlm_get_symbols
 parameter_list|(
 name|bfd
 parameter_list|)
-value|(nlm_tdata(bfd) -> nlm_symbols)
+value|(nlm_tdata (bfd) -> nlm_symbols)
 end_define
 
 begin_define
@@ -561,7 +539,7 @@ name|bfd
 parameter_list|,
 name|p
 parameter_list|)
-value|(nlm_tdata(bfd) -> nlm_symbols = (p))
+value|(nlm_tdata (bfd) -> nlm_symbols = (p))
 end_define
 
 begin_define
@@ -573,7 +551,7 @@ name|bfd
 parameter_list|,
 name|i
 parameter_list|)
-value|(nlm_tdata(bfd) -> nlm_text_low = (i))
+value|(nlm_tdata (bfd) -> nlm_text_low = (i))
 end_define
 
 begin_define
@@ -583,7 +561,7 @@ name|nlm_get_text_low
 parameter_list|(
 name|bfd
 parameter_list|)
-value|(nlm_tdata(bfd) -> nlm_text_low)
+value|(nlm_tdata (bfd) -> nlm_text_low)
 end_define
 
 begin_define
@@ -595,7 +573,7 @@ name|bfd
 parameter_list|,
 name|i
 parameter_list|)
-value|(nlm_tdata(bfd) -> nlm_data_low = (i))
+value|(nlm_tdata (bfd) -> nlm_data_low = (i))
 end_define
 
 begin_define
@@ -605,7 +583,7 @@ name|nlm_get_data_low
 parameter_list|(
 name|bfd
 parameter_list|)
-value|(nlm_tdata(bfd) -> nlm_data_low)
+value|(nlm_tdata (bfd) -> nlm_data_low)
 end_define
 
 begin_define
@@ -615,7 +593,7 @@ name|nlm_relocation_fixups
 parameter_list|(
 name|bfd
 parameter_list|)
-value|(nlm_tdata(bfd) -> nlm_reloc_fixups)
+value|(nlm_tdata (bfd) -> nlm_reloc_fixups)
 end_define
 
 begin_define
@@ -625,7 +603,7 @@ name|nlm_relocation_fixup_secs
 parameter_list|(
 name|bfd
 parameter_list|)
-value|(nlm_tdata(bfd)->nlm_reloc_fixup_secs)
+value|(nlm_tdata (bfd) -> nlm_reloc_fixup_secs)
 end_define
 
 begin_define
@@ -635,8 +613,7 @@ name|nlm_alpha_backend_data
 parameter_list|(
 name|bfd
 parameter_list|)
-define|\
-value|(&nlm_tdata (bfd)->backend_data.alpha_backend_data)
+value|(&nlm_tdata (bfd) -> backend_data.alpha_backend_data)
 end_define
 
 begin_comment
@@ -698,230 +675,206 @@ name|no_uninitialized_data
 decl_stmt|;
 comment|/* Some NLM formats have a prefix on the file.  If this function is      not NULL, it will be called by nlm_object_p.  It should return      TRUE if this file could match this format, and it should leave      the BFD such that a bfd_bread will pick up the fixed header.  */
 name|bfd_boolean
-argument_list|(
-argument|*nlm_backend_object_p
-argument_list|)
-name|PARAMS
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|nlm_backend_object_p
+function_decl|)
+parameter_list|(
 name|bfd
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/* Write out the prefix.  This function may be NULL.  This must      write out the same number of bytes as is in the field      optional_prefix_size.  */
 name|bfd_boolean
-argument_list|(
-argument|*nlm_write_prefix
-argument_list|)
-name|PARAMS
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|nlm_write_prefix
+function_decl|)
+parameter_list|(
 name|bfd
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/* Read a relocation fixup from abfd.  The reloc information is      machine specific.  The second argument is the symbol if this is      an import, or NULL if this is a reloc fixup.  This function      should set the third argument to the section which the reloc      belongs in, and the fourth argument to the reloc itself; it does      not need to fill in the sym_ptr_ptr field for a reloc against an      import symbol.  */
 name|bfd_boolean
 argument_list|(
-argument|*nlm_read_reloc
+operator|*
+name|nlm_read_reloc
 argument_list|)
-name|PARAMS
 argument_list|(
-operator|(
 name|bfd
 operator|*
-operator|,
+argument_list|,
 name|nlmNAME
 argument_list|(
 name|symbol_type
 argument_list|)
 operator|*
-operator|,
+argument_list|,
 name|asection
 operator|*
 operator|*
-operator|,
+argument_list|,
 name|arelent
 operator|*
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* To make objcopy to an i386 NLM work, the i386 backend needs a      chance to work over the relocs.  This is a bit icky.  */
 name|bfd_boolean
-argument_list|(
-argument|*nlm_mangle_relocs
-argument_list|)
-name|PARAMS
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|nlm_mangle_relocs
+function_decl|)
+parameter_list|(
 name|bfd
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|asection
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
-name|PTR
-name|data
-operator|,
+name|void
+modifier|*
+parameter_list|,
 name|bfd_vma
-name|offset
-operator|,
+parameter_list|,
 name|bfd_size_type
-name|count
-operator|)
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 comment|/* Read an import record from abfd.  It would be nice if this      were in a machine-dependent format, but it doesn't seem to be. */
 name|bfd_boolean
 argument_list|(
-argument|*nlm_read_import
+operator|*
+name|nlm_read_import
 argument_list|)
-name|PARAMS
 argument_list|(
-operator|(
 name|bfd
 operator|*
-operator|,
+argument_list|,
 name|nlmNAME
 argument_list|(
 name|symbol_type
 argument_list|)
 operator|*
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Write an import record to abfd. */
 name|bfd_boolean
-argument_list|(
-argument|*nlm_write_import
-argument_list|)
-name|PARAMS
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|nlm_write_import
+function_decl|)
+parameter_list|(
 name|bfd
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|asection
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|arelent
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/* Set the section for a public symbol.  This may be NULL, in which      case a default method will be used.  */
 name|bfd_boolean
 argument_list|(
-argument|*nlm_set_public_section
+operator|*
+name|nlm_set_public_section
 argument_list|)
-name|PARAMS
 argument_list|(
-operator|(
 name|bfd
 operator|*
-operator|,
+argument_list|,
 name|nlmNAME
 argument_list|(
 name|symbol_type
 argument_list|)
 operator|*
-operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Get the offset to write out for a public symbol.  This may be      NULL, in which case a default method will be used.  */
 name|bfd_vma
-argument_list|(
-argument|*nlm_get_public_offset
-argument_list|)
-name|PARAMS
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|nlm_get_public_offset
+function_decl|)
+parameter_list|(
 name|bfd
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|asymbol
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/* Swap the fixed header in and out */
 name|void
-argument_list|(
-argument|*nlm_swap_fhdr_in
-argument_list|)
-name|PARAMS
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|nlm_swap_fhdr_in
+function_decl|)
+parameter_list|(
 name|bfd
-operator|*
-operator|,
-name|PTR
-operator|,
-name|Nlm_Internal_Fixed_Header
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
+modifier|*
+parameter_list|,
 name|void
-argument_list|(
-argument|*nlm_swap_fhdr_out
-argument_list|)
-name|PARAMS
-argument_list|(
-operator|(
+modifier|*
+parameter_list|,
+name|Nlm_Internal_Fixed_Header
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|nlm_swap_fhdr_out
+function_decl|)
+parameter_list|(
 name|bfd
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|nlm_internal_fixed_header
-operator|*
-operator|,
-name|PTR
-operator|)
-argument_list|)
-expr_stmt|;
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/* Write out an external reference.  */
 name|bfd_boolean
-argument_list|(
-argument|*nlm_write_external
-argument_list|)
-name|PARAMS
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|nlm_write_external
+function_decl|)
+parameter_list|(
 name|bfd
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|bfd_size_type
-operator|,
+parameter_list|,
 name|asymbol
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|reloc_and_sec
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
+modifier|*
+parameter_list|)
+function_decl|;
 name|bfd_boolean
-argument_list|(
-argument|*nlm_write_export
-argument_list|)
-name|PARAMS
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|nlm_write_export
+function_decl|)
+parameter_list|(
 name|bfd
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|asymbol
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|bfd_vma
-operator|)
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct
@@ -933,7 +886,6 @@ name|nlm_backend
 parameter_list|(
 name|bfd
 parameter_list|)
-define|\
 value|((struct nlm_backend_data *)((bfd) -> xvec -> backend_data))
 end_define
 
@@ -944,8 +896,7 @@ name|nlm_signature
 parameter_list|(
 name|bfd
 parameter_list|)
-define|\
-value|(nlm_backend(bfd) -> signature)
+value|(nlm_backend (bfd) -> signature)
 end_define
 
 begin_define
@@ -955,8 +906,7 @@ name|nlm_fixed_header_size
 parameter_list|(
 name|bfd
 parameter_list|)
-define|\
-value|(nlm_backend(bfd) -> fixed_header_size)
+value|(nlm_backend (bfd) -> fixed_header_size)
 end_define
 
 begin_define
@@ -966,8 +916,7 @@ name|nlm_optional_prefix_size
 parameter_list|(
 name|bfd
 parameter_list|)
-define|\
-value|(nlm_backend(bfd) -> optional_prefix_size)
+value|(nlm_backend (bfd) -> optional_prefix_size)
 end_define
 
 begin_define
@@ -977,8 +926,7 @@ name|nlm_architecture
 parameter_list|(
 name|bfd
 parameter_list|)
-define|\
-value|(nlm_backend(bfd) -> arch)
+value|(nlm_backend (bfd) -> arch)
 end_define
 
 begin_define
@@ -988,8 +936,7 @@ name|nlm_machine
 parameter_list|(
 name|bfd
 parameter_list|)
-define|\
-value|(nlm_backend(bfd) -> mach)
+value|(nlm_backend (bfd) -> mach)
 end_define
 
 begin_define
@@ -999,8 +946,7 @@ name|nlm_no_uninitialized_data
 parameter_list|(
 name|bfd
 parameter_list|)
-define|\
-value|(nlm_backend(bfd) -> no_uninitialized_data)
+value|(nlm_backend (bfd) -> no_uninitialized_data)
 end_define
 
 begin_define
@@ -1010,8 +956,7 @@ name|nlm_backend_object_p_func
 parameter_list|(
 name|bfd
 parameter_list|)
-define|\
-value|(nlm_backend(bfd) -> nlm_backend_object_p)
+value|(nlm_backend (bfd) -> nlm_backend_object_p)
 end_define
 
 begin_define
@@ -1021,8 +966,7 @@ name|nlm_write_prefix_func
 parameter_list|(
 name|bfd
 parameter_list|)
-define|\
-value|(nlm_backend(bfd) -> nlm_write_prefix)
+value|(nlm_backend (bfd) -> nlm_write_prefix)
 end_define
 
 begin_define
@@ -1032,8 +976,7 @@ name|nlm_read_reloc_func
 parameter_list|(
 name|bfd
 parameter_list|)
-define|\
-value|(nlm_backend(bfd) -> nlm_read_reloc)
+value|(nlm_backend (bfd) -> nlm_read_reloc)
 end_define
 
 begin_define
@@ -1043,8 +986,7 @@ name|nlm_mangle_relocs_func
 parameter_list|(
 name|bfd
 parameter_list|)
-define|\
-value|(nlm_backend(bfd) -> nlm_mangle_relocs)
+value|(nlm_backend (bfd) -> nlm_mangle_relocs)
 end_define
 
 begin_define
@@ -1054,8 +996,7 @@ name|nlm_read_import_func
 parameter_list|(
 name|bfd
 parameter_list|)
-define|\
-value|(nlm_backend(bfd) -> nlm_read_import)
+value|(nlm_backend (bfd) -> nlm_read_import)
 end_define
 
 begin_define
@@ -1065,8 +1006,7 @@ name|nlm_write_import_func
 parameter_list|(
 name|bfd
 parameter_list|)
-define|\
-value|(nlm_backend(bfd) -> nlm_write_import)
+value|(nlm_backend (bfd) -> nlm_write_import)
 end_define
 
 begin_define
@@ -1076,8 +1016,7 @@ name|nlm_set_public_section_func
 parameter_list|(
 name|bfd
 parameter_list|)
-define|\
-value|(nlm_backend(bfd) -> nlm_set_public_section)
+value|(nlm_backend (bfd) -> nlm_set_public_section)
 end_define
 
 begin_define
@@ -1087,8 +1026,7 @@ name|nlm_get_public_offset_func
 parameter_list|(
 name|bfd
 parameter_list|)
-define|\
-value|(nlm_backend(bfd) -> nlm_get_public_offset)
+value|(nlm_backend (bfd) -> nlm_get_public_offset)
 end_define
 
 begin_define
@@ -1098,8 +1036,7 @@ name|nlm_swap_fixed_header_in_func
 parameter_list|(
 name|bfd
 parameter_list|)
-define|\
-value|(nlm_backend(bfd) -> nlm_swap_fhdr_in)
+value|(nlm_backend (bfd) -> nlm_swap_fhdr_in)
 end_define
 
 begin_define
@@ -1109,8 +1046,7 @@ name|nlm_swap_fixed_header_out_func
 parameter_list|(
 name|bfd
 parameter_list|)
-define|\
-value|(nlm_backend(bfd) -> nlm_swap_fhdr_out)
+value|(nlm_backend (bfd) -> nlm_swap_fhdr_out)
 end_define
 
 begin_define
@@ -1120,8 +1056,7 @@ name|nlm_write_external_func
 parameter_list|(
 name|bfd
 parameter_list|)
-define|\
-value|(nlm_backend(bfd) -> nlm_write_external)
+value|(nlm_backend (bfd) -> nlm_write_external)
 end_define
 
 begin_define
@@ -1131,8 +1066,7 @@ name|nlm_write_export_func
 parameter_list|(
 name|bfd
 parameter_list|)
-define|\
-value|(nlm_backend(bfd) -> nlm_write_export)
+value|(nlm_backend (bfd) -> nlm_write_export)
 end_define
 
 begin_comment

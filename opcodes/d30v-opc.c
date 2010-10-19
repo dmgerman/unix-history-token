@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* d30v-opc.c -- D30V opcode list    Copyright 1997, 1998, 1999, 2000 Free Software Foundation, Inc.    Written by Martin Hunt, Cygnus Support  This file is part of GDB, GAS, and the GNU binutils.  GDB, GAS, and the GNU binutils are free software; you can redistribute them and/or modify them under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GDB, GAS, and the GNU binutils are distributed in the hope that they will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this file; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* d30v-opc.c -- D30V opcode list    Copyright 1997, 1998, 1999, 2000, 2005 Free Software Foundation, Inc.    Written by Martin Hunt, Cygnus Support     This file is part of GDB, GAS, and the GNU binutils.     GDB, GAS, and the GNU binutils are free software; you can redistribute    them and/or modify them under the terms of the GNU General Public    License as published by the Free Software Foundation; either version    2, or (at your option) any later version.     GDB, GAS, and the GNU binutils are distributed in the hope that they    will be useful, but WITHOUT ANY WARRANTY; without even the implied    warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See    the GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this file; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston,    MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -22,27 +22,7 @@ file|"opcode/d30v.h"
 end_include
 
 begin_comment
-comment|/* This table is sorted. */
-end_comment
-
-begin_comment
-comment|/* If you add anything, it MUST be in alphabetical order */
-end_comment
-
-begin_comment
-comment|/* The first field is the name the assembler uses when looking */
-end_comment
-
-begin_comment
-comment|/* up orcodes.  The second field is the name the disassembler will use. */
-end_comment
-
-begin_comment
-comment|/* This allows the assembler to assemble references to r63 (for example) */
-end_comment
-
-begin_comment
-comment|/* or "sp".  The disassembler will always use the preferred form (sp) */
+comment|/* This table is sorted.    If you add anything, it MUST be in alphabetical order.    The first field is the name the assembler uses when looking    up orcodes.  The second field is the name the disassembler will use.    This allows the assembler to assemble references to r63 (for example)    or "sp".  The disassembler will always use the preferred form (sp).  */
 end_comment
 
 begin_decl_stmt
@@ -1537,10 +1517,11 @@ end_decl_stmt
 begin_function
 name|int
 name|reg_name_cnt
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
-operator|(
 sizeof|sizeof
 argument_list|(
 name|pre_defined_registers
@@ -1551,17 +1532,12 @@ argument_list|(
 expr|struct
 name|pd_reg
 argument_list|)
-operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* OPCODE TABLE */
-end_comment
-
-begin_comment
-comment|/* The format of this table is defined in opcode/d30v.h */
+comment|/* OPCODE TABLE.    The format of this table is defined in opcode/d30v.h.  */
 end_comment
 
 begin_decl_stmt
@@ -4374,11 +4350,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* now define the operand types */
-end_comment
-
-begin_comment
-comment|/* format is length, bits, position, flags */
+comment|/* Now define the operand types.    Format is length, bits, position, flags.  */
 end_comment
 
 begin_decl_stmt
@@ -4559,7 +4531,7 @@ operator||
 name|OPERAND_SIGNED
 block|}
 block|,
-comment|/* not used */
+comment|/* Not used.  */
 define|#
 directive|define
 name|IMM5S3
@@ -4576,7 +4548,7 @@ operator||
 name|OPERAND_SIGNED
 block|}
 block|,
-comment|/* not used */
+comment|/* Not used.  */
 define|#
 directive|define
 name|IMM6
@@ -4828,7 +4800,7 @@ define|#
 directive|define
 name|PLUS
 value|(ATPAR + 1)
-comment|/* postincrement */
+comment|/* Postincrement.  */
 block|{
 literal|0
 block|,
@@ -4843,7 +4815,7 @@ define|#
 directive|define
 name|MINUS
 value|(PLUS + 1)
-comment|/* postdecrement */
+comment|/* Postdecrement.  */
 block|{
 literal|0
 block|,
@@ -4858,7 +4830,7 @@ define|#
 directive|define
 name|ATMINUS
 value|(MINUS + 1)
-comment|/* predecrement */
+comment|/* Predecrement.  */
 block|{
 literal|0
 block|,
@@ -4873,7 +4845,7 @@ define|#
 directive|define
 name|Ca
 value|(ATMINUS + 1)
-comment|/* control register */
+comment|/* Control register.  */
 block|{
 literal|6
 block|,
@@ -4892,7 +4864,7 @@ define|#
 directive|define
 name|Cb
 value|(Ca + 1)
-comment|/* control register */
+comment|/* Control register.  */
 block|{
 literal|6
 block|,
@@ -4909,7 +4881,7 @@ define|#
 directive|define
 name|CC
 value|(Cb + 1)
-comment|/* condition code (CMPcc and CMPUcc) */
+comment|/* Condition code (CMPcc and CMPUcc).  */
 block|{
 literal|3
 block|,
@@ -4925,7 +4897,7 @@ define|#
 directive|define
 name|Fa2
 value|(CC + 1)
-comment|/* flag register (CMPcc and CMPUcc) */
+comment|/* Flag register (CMPcc and CMPUcc).  */
 block|{
 literal|3
 block|,
@@ -4944,7 +4916,7 @@ define|#
 directive|define
 name|Fake
 value|(Fa2 + 1)
-comment|/* place holder for "id" field in mvfsys and mvtsys */
+comment|/* Place holder for "id" field in mvfsys and mvtsys.  */
 block|{
 literal|6
 block|,
@@ -4959,7 +4931,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* now we need to define the instruction formats */
+comment|/* Now we need to define the instruction formats.  */
 end_comment
 
 begin_decl_stmt

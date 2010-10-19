@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Table of opcodes for the OpenRISC 1000 ISA.    Copyright 2002 Free Software Foundation, Inc.    Contributed by Damjan Lampret (lampret@opencores.org).        This file is part of gen_or1k_isa, or1k, GDB and GAS.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Table of opcodes for the OpenRISC 1000 ISA.    Copyright 2002, 2004, 2005 Free Software Foundation, Inc.    Contributed by Damjan Lampret (lampret@opencores.org).        This file is part of gen_or1k_isa, or1k, GDB and GAS.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston,    MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -59,156 +59,6 @@ include|#
 directive|include
 file|"opcode/or32.h"
 end_include
-
-begin_decl_stmt
-specifier|static
-name|unsigned
-name|long
-name|insn_extract
-name|PARAMS
-argument_list|(
-operator|(
-name|char
-operator|,
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|unsigned
-name|long
-modifier|*
-name|cover_insn
-name|PARAMS
-argument_list|(
-operator|(
-name|unsigned
-name|long
-operator|*
-operator|,
-name|int
-operator|,
-name|unsigned
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|num_ones
-name|PARAMS
-argument_list|(
-operator|(
-name|unsigned
-name|long
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|insn_op_struct
-modifier|*
-name|parse_params
-name|PARAMS
-argument_list|(
-operator|(
-specifier|const
-expr|struct
-name|or32_opcode
-operator|*
-operator|,
-expr|struct
-name|insn_op_struct
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|unsigned
-name|long
-name|or32_extract
-name|PARAMS
-argument_list|(
-operator|(
-name|char
-operator|,
-name|char
-operator|*
-operator|,
-name|unsigned
-name|long
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|or32_print_register
-name|PARAMS
-argument_list|(
-operator|(
-name|char
-operator|,
-name|char
-operator|*
-operator|,
-name|unsigned
-name|long
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|or32_print_immediate
-name|PARAMS
-argument_list|(
-operator|(
-name|char
-operator|,
-name|char
-operator|*
-operator|,
-name|unsigned
-name|long
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|unsigned
-name|long
-name|extend_imm
-name|PARAMS
-argument_list|(
-operator|(
-name|unsigned
-name|long
-operator|,
-name|char
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|const
@@ -3155,7 +3005,7 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* This section should not be defined in or1ksim, since it contains duplicates,        which would cause machine builder to complain.  */
+comment|/* This section should not be defined in or1ksim, since it contains duplicates,      which would cause machine builder to complain.  */
 ifdef|#
 directive|ifdef
 name|HAS_CUST
@@ -3305,7 +3155,7 @@ block|}
 block|,
 endif|#
 directive|endif
-comment|/* Dummy entry, not included in num_opcodes.  This        lets code examine entry i+1 without checking        if we've run off the end of the table.  */
+comment|/* Dummy entry, not included in num_opcodes.  This      lets code examine entry i+1 without checking      if we've run off the end of the table.  */
 block|{
 literal|""
 block|,
@@ -3351,53 +3201,25 @@ name|defined
 name|HAS_DEBUG
 end_if
 
-begin_decl_stmt
-specifier|static
-name|void
-name|debug
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-operator|,
-specifier|const
-name|char
-operator|*
-operator|,
-operator|...
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|void
+name|ATTRIBUTE_PRINTF_2
 name|debug
 parameter_list|(
 name|int
 name|level
+name|ATTRIBUTE_UNUSED
 parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|format
+name|ATTRIBUTE_UNUSED
 parameter_list|,
 modifier|...
 parameter_list|)
-block|{
-comment|/* Just to get rid of warnings.  */
-name|format
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|level
-operator|=
-literal|0
-expr_stmt|;
-block|}
+block|{ }
 end_function
 
 begin_endif
@@ -3440,12 +3262,10 @@ begin_function
 name|int
 name|insn_len
 parameter_list|(
-name|insn_index
-parameter_list|)
 name|int
 name|insn_index
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 literal|4
@@ -3461,11 +3281,9 @@ begin_function
 name|int
 name|letter_signed
 parameter_list|(
-name|l
-parameter_list|)
 name|char
 name|l
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|struct
@@ -3522,11 +3340,9 @@ begin_function
 name|int
 name|letter_range
 parameter_list|(
-name|l
-parameter_list|)
 name|char
 name|l
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|struct
@@ -3713,11 +3529,9 @@ name|char
 modifier|*
 name|insn_name
 parameter_list|(
-name|index
-parameter_list|)
 name|int
 name|index
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -3750,7 +3564,9 @@ end_function
 begin_function
 name|void
 name|l_none
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{ }
 end_function
 
@@ -3768,17 +3584,13 @@ name|unsigned
 name|long
 name|insn_extract
 parameter_list|(
-name|param_ch
-parameter_list|,
-name|enc_initial
-parameter_list|)
 name|char
 name|param_ch
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|enc_initial
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -3939,28 +3751,28 @@ begin_define
 define|#
 directive|define
 name|MAX_AUTOMATA_SIZE
-value|(1200)
+value|1200
 end_define
 
 begin_define
 define|#
 directive|define
 name|MAX_OP_TABLE_SIZE
-value|(1200)
+value|1200
 end_define
 
 begin_define
 define|#
 directive|define
 name|LEAF_FLAG
-value|(0x80000000)
+value|0x80000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|MAX_LEN
-value|(8)
+value|8
 end_define
 
 begin_ifndef
@@ -4056,24 +3868,18 @@ name|long
 modifier|*
 name|cover_insn
 parameter_list|(
-name|cur
-parameter_list|,
-name|pass
-parameter_list|,
-name|mask
-parameter_list|)
 name|unsigned
 name|long
 modifier|*
 name|cur
-decl_stmt|;
+parameter_list|,
 name|int
 name|pass
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|int
 name|mask
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|best_first
@@ -4156,7 +3962,7 @@ name|debug
 argument_list|(
 literal|8
 argument_list|,
-literal|"%08X %08X\n"
+literal|"%08X %08lX\n"
 argument_list|,
 name|mask
 argument_list|,
@@ -4184,11 +3990,16 @@ name|debug
 argument_list|(
 literal|8
 argument_list|,
-literal|"%i>I%i %s\n"
+literal|"%li>I%i %s\n"
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|cur
 operator|-
 name|automata
+argument_list|)
 argument_list|,
 name|last_match
 argument_list|,
@@ -4280,7 +4091,7 @@ name|debug
 argument_list|(
 literal|9
 argument_list|,
-literal|" (%i(%08X& %08X>>%i = %08X, %08X)"
+literal|" (%i(%08lX& %08lX>>%i = %08lX, %08lX)"
 argument_list|,
 name|len
 argument_list|,
@@ -4428,11 +4239,16 @@ name|debug
 argument_list|(
 literal|8
 argument_list|,
-literal|"%i> #### %i<< %i (%i) ####\n"
+literal|"%li> #### %i<< %i (%i) ####\n"
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|cur
 operator|-
 name|automata
+argument_list|)
 argument_list|,
 name|best_len
 argument_list|,
@@ -4596,7 +4412,7 @@ name|debug
 argument_list|(
 literal|9
 argument_list|,
-literal|"%08X %08X %i\n"
+literal|"%08X %08lX %i\n"
 argument_list|,
 name|mask
 argument_list|,
@@ -4634,17 +4450,27 @@ name|debug
 argument_list|(
 literal|8
 argument_list|,
-literal|"%i> #%X -> %u\n"
+literal|"%li> #%X -> %lu\n"
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|next
 operator|-
 name|automata
+argument_list|)
 argument_list|,
 name|i
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|cur
 operator|-
 name|automata
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|*
@@ -4665,11 +4491,16 @@ name|debug
 argument_list|(
 literal|8
 argument_list|,
-literal|"%i> N/A\n"
+literal|"%li> N/A\n"
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|next
 operator|-
 name|automata
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|*
@@ -4698,12 +4529,10 @@ specifier|static
 name|int
 name|num_ones
 parameter_list|(
-name|value
-parameter_list|)
 name|unsigned
 name|long
 name|value
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|c
@@ -4736,7 +4565,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Utility function, which converts parameters from or32_opcode format to more binary form.      Parameters are stored in ti struct.  */
+comment|/* Utility function, which converts parameters from or32_opcode    format to more binary form.  Parameters are stored in ti struct.  */
 end_comment
 
 begin_function
@@ -4746,21 +4575,17 @@ name|insn_op_struct
 modifier|*
 name|parse_params
 parameter_list|(
-name|opcode
-parameter_list|,
-name|cur
-parameter_list|)
 specifier|const
 name|struct
 name|or32_opcode
 modifier|*
 name|opcode
-decl_stmt|;
+parameter_list|,
 name|struct
 name|insn_op_struct
 modifier|*
 name|cur
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -4813,7 +4638,7 @@ name|debug
 argument_list|(
 literal|9
 argument_list|,
-literal|"#%08X %08X\n"
+literal|"#%08lX %08lX\n"
 argument_list|,
 name|cur
 operator|->
@@ -4885,7 +4710,7 @@ name|debug
 argument_list|(
 literal|9
 argument_list|,
-literal|"%s : %08X ------\n"
+literal|"%s : %08lX ------\n"
 argument_list|,
 name|opcode
 operator|->
@@ -5015,7 +4840,7 @@ name|debug
 argument_list|(
 literal|6
 argument_list|,
-literal|"|%08X %08X\n"
+literal|"|%08lX %08lX\n"
 argument_list|,
 name|cur
 operator|->
@@ -5043,7 +4868,7 @@ operator|==
 literal|'('
 condition|)
 block|{
-comment|/* Next param is displacement.  Later we will treat them as one operand.  */
+comment|/* Next param is displacement. 	     Later we will treat them as one operand.  */
 name|cur
 operator|--
 expr_stmt|;
@@ -5065,7 +4890,7 @@ name|debug
 argument_list|(
 literal|9
 argument_list|,
-literal|">%08X %08X\n"
+literal|">%08lX %08lX\n"
 argument_list|,
 name|cur
 operator|->
@@ -5118,7 +4943,7 @@ name|debug
 argument_list|(
 literal|9
 argument_list|,
-literal|">%08X %08X\n"
+literal|">%08lX %08lX\n"
 argument_list|,
 name|cur
 operator|->
@@ -5168,7 +4993,7 @@ name|debug
 argument_list|(
 literal|9
 argument_list|,
-literal|">%08X %08X\n"
+literal|">%08lX %08lX\n"
 argument_list|,
 name|cur
 operator|->
@@ -5245,7 +5070,7 @@ name|debug
 argument_list|(
 literal|9
 argument_list|,
-literal|"#%08X %08X\n"
+literal|"#%08lX %08lX\n"
 argument_list|,
 name|cur
 operator|->
@@ -5272,7 +5097,9 @@ end_comment
 begin_function
 name|void
 name|build_automata
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|unsigned
 name|int
@@ -5290,11 +5117,6 @@ name|cur
 decl_stmt|;
 name|automata
 operator|=
-operator|(
-name|unsigned
-name|long
-operator|*
-operator|)
 name|malloc
 argument_list|(
 name|MAX_AUTOMATA_SIZE
@@ -5308,11 +5130,6 @@ argument_list|)
 expr_stmt|;
 name|ti
 operator|=
-operator|(
-expr|struct
-name|temp_insn_struct
-operator|*
-operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -5466,11 +5283,6 @@ argument_list|)
 expr_stmt|;
 name|op_data
 operator|=
-operator|(
-expr|struct
-name|insn_op_struct
-operator|*
-operator|)
 name|malloc
 argument_list|(
 name|MAX_OP_TABLE_SIZE
@@ -5484,12 +5296,6 @@ argument_list|)
 expr_stmt|;
 name|op_start
 operator|=
-operator|(
-expr|struct
-name|insn_op_struct
-operator|*
-operator|*
-operator|)
 name|malloc
 argument_list|(
 name|or32_num_opcodes
@@ -5574,7 +5380,9 @@ end_function
 begin_function
 name|void
 name|destruct_automata
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|free
 argument_list|(
@@ -5607,12 +5415,10 @@ begin_function
 name|int
 name|insn_decode
 parameter_list|(
-name|insn
-parameter_list|)
 name|unsigned
 name|int
 name|insn
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|long
@@ -5646,11 +5452,16 @@ name|debug
 argument_list|(
 literal|9
 argument_list|,
-literal|"%i "
+literal|"%li "
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|a
 operator|-
 name|automata
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|a
@@ -5687,8 +5498,6 @@ argument_list|(
 literal|9
 argument_list|,
 literal|"XXX\n"
-argument_list|,
-name|i
 argument_list|)
 expr_stmt|;
 return|return
@@ -5790,17 +5599,13 @@ name|unsigned
 name|long
 name|extend_imm
 parameter_list|(
-name|imm
-parameter_list|,
-name|l
-parameter_list|)
 name|unsigned
 name|long
 name|imm
-decl_stmt|;
+parameter_list|,
 name|char
 name|l
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|long
@@ -5868,23 +5673,17 @@ name|unsigned
 name|long
 name|or32_extract
 parameter_list|(
-name|param_ch
-parameter_list|,
-name|enc_initial
-parameter_list|,
-name|insn
-parameter_list|)
 name|char
 name|param_ch
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|enc_initial
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|long
 name|insn
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -6256,23 +6055,17 @@ specifier|static
 name|void
 name|or32_print_register
 parameter_list|(
-name|param_ch
-parameter_list|,
-name|encoding
-parameter_list|,
-name|insn
-parameter_list|)
 name|char
 name|param_ch
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|encoding
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|long
 name|insn
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|regnum
@@ -6309,23 +6102,17 @@ specifier|static
 name|void
 name|or32_print_immediate
 parameter_list|(
-name|param_ch
-parameter_list|,
-name|encoding
-parameter_list|,
-name|insn
-parameter_list|)
 name|char
 name|param_ch
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|encoding
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|long
 name|insn
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|imm
@@ -6409,12 +6196,10 @@ begin_function
 name|int
 name|disassemble_insn
 parameter_list|(
-name|insn
-parameter_list|)
 name|unsigned
 name|long
 name|insn
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|index

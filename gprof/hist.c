@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* hist.c  -  Histogram related operations.     Copyright 2000, 2001, 2002 Free Software Foundation, Inc.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* hist.c  -  Histogram related operations.     Copyright 1999, 2000, 2001, 2002, 2004, 2005    Free Software Foundation, Inc.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_escape
@@ -79,83 +79,68 @@ name|UNITS_TO_CODE
 value|(offset_to_code / sizeof(UNIT))
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|scale_and_align_entries
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|print_header
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|print_line
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|Sym
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|double
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|cmp_time
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|PTR
-operator|,
+parameter_list|,
 specifier|const
 name|PTR
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Declarations of automatically generated functions to output blurbs.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|flat_blurb
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|FILE
-operator|*
+modifier|*
 name|fp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|bfd_vma
@@ -192,6 +177,7 @@ comment|/* Same, but expressed in UNITs.  */
 end_comment
 
 begin_decl_stmt
+name|unsigned
 name|int
 name|hist_num_bins
 init|=
@@ -223,6 +209,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|hist_dimension
 index|[
@@ -234,6 +221,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|hist_dimension_abbrev
 init|=
@@ -369,25 +357,22 @@ begin_function
 name|void
 name|hist_read_rec
 parameter_list|(
-name|ifp
-parameter_list|,
-name|filename
-parameter_list|)
 name|FILE
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|filename
-decl_stmt|;
+parameter_list|)
 block|{
 name|bfd_vma
 name|n_lowpc
 decl_stmt|,
 name|n_highpc
 decl_stmt|;
+name|unsigned
 name|int
 name|i
 decl_stmt|,
@@ -525,9 +510,9 @@ argument_list|(
 argument|SAMPLEDEBUG
 argument_list|,
 argument|printf (
-literal|"[hist_read_rec] n_lowpc 0x%lx n_highpc 0x%lx ncnt %d\n"
+literal|"[hist_read_rec] n_lowpc 0x%lx n_highpc 0x%lx ncnt %u\n"
 argument|, 	       (unsigned long) n_lowpc, (unsigned long) n_highpc, ncnt);        printf (
-literal|"[hist_read_rec] s_lowpc 0x%lx s_highpc 0x%lx nsamples %d\n"
+literal|"[hist_read_rec] s_lowpc 0x%lx s_highpc 0x%lx nsamples %u\n"
 argument|, 	       (unsigned long) s_lowpc, (unsigned long) s_highpc, 	       hist_num_bins);        printf (
 literal|"[hist_read_rec]   lowpc 0x%lx   highpc 0x%lx\n"
 argument|, 	       (unsigned long) lowpc, (unsigned long) highpc)
@@ -549,6 +534,9 @@ name|hist_num_bins
 operator|||
 name|hz
 operator|!=
+operator|(
+name|int
+operator|)
 name|profrate
 condition|)
 block|{
@@ -658,7 +646,7 @@ name|stderr
 argument_list|,
 name|_
 argument_list|(
-literal|"%s: %s: unexpected EOF after reading %d of %d samples\n"
+literal|"%s: %s: unexpected EOF after reading %u of %u samples\n"
 argument_list|)
 argument_list|,
 name|whoami
@@ -741,23 +729,20 @@ begin_function
 name|void
 name|hist_write_hist
 parameter_list|(
-name|ofp
-parameter_list|,
-name|filename
-parameter_list|)
 name|FILE
 modifier|*
 name|ofp
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|filename
-decl_stmt|;
+parameter_list|)
 block|{
 name|UNIT
 name|count
 decl_stmt|;
+name|unsigned
 name|int
 name|i
 decl_stmt|;
@@ -1068,13 +1053,14 @@ name|overlap
 decl_stmt|,
 name|addr
 decl_stmt|;
+name|unsigned
 name|int
 name|bin_count
-decl_stmt|,
-name|i
 decl_stmt|;
 name|unsigned
 name|int
+name|i
+decl_stmt|,
 name|j
 decl_stmt|;
 name|double
@@ -1168,7 +1154,7 @@ name|SAMPLEDEBUG
 argument_list|,
 name|printf
 argument_list|(
-literal|"[assign_samples] bin_low_pc=0x%lx, bin_high_pc=0x%lx, bin_count=%d\n"
+literal|"[assign_samples] bin_low_pc=0x%lx, bin_high_pc=0x%lx, bin_count=%u\n"
 argument_list|,
 call|(
 name|unsigned
@@ -1451,11 +1437,9 @@ specifier|static
 name|void
 name|print_header
 parameter_list|(
-name|prefix
-parameter_list|)
 name|int
 name|prefix
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|unit
@@ -1632,17 +1616,13 @@ specifier|static
 name|void
 name|print_line
 parameter_list|(
-name|sym
-parameter_list|,
-name|scale
-parameter_list|)
 name|Sym
 modifier|*
 name|sym
-decl_stmt|;
+parameter_list|,
 name|double
 name|scale
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1839,18 +1819,14 @@ specifier|static
 name|int
 name|cmp_time
 parameter_list|(
+specifier|const
+name|PTR
 name|lp
 parameter_list|,
+specifier|const
+name|PTR
 name|rp
 parameter_list|)
-specifier|const
-name|PTR
-name|lp
-decl_stmt|;
-specifier|const
-name|PTR
-name|rp
-decl_stmt|;
 block|{
 specifier|const
 name|Sym

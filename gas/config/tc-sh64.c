@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-sh64.c -- Assemble code for the SuperH SH SHcompact and SHmedia.    Copyright 2000, 2001, 2002, 2003 Free Software Foundation.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* tc-sh64.c -- Assemble code for the SuperH SH SHcompact and SHmedia.    Copyright 2000, 2001, 2002, 2003, 2004, 2005 Free Software Foundation.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 51 Franklin Street - Fifth Floor,    Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -66,7 +66,7 @@ value|" DL"
 end_define
 
 begin_comment
-comment|/* See shmedia_md_apply_fix3 and shmedia_md_pcrel_from_section for usage.  */
+comment|/* See shmedia_md_apply_fix and shmedia_md_pcrel_from_section for usage.  */
 end_comment
 
 begin_define
@@ -415,7 +415,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|shmedia_md_apply_fix3
+name|shmedia_md_apply_fix
 parameter_list|(
 name|fixS
 modifier|*
@@ -1106,7 +1106,7 @@ operator|!=
 name|STO_SH5_ISA32
 operator|&&
 operator|(
-name|S_IS_EXTERN
+name|S_IS_EXTERNAL
 argument_list|(
 name|mainsym
 argument_list|)
@@ -1984,13 +1984,13 @@ block|}
 end_function
 
 begin_comment
-comment|/* Hook called from md_apply_fix3 in tc-sh.c.  */
+comment|/* Hook called from md_apply_fix in tc-sh.c.  */
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|shmedia_md_apply_fix3
+name|shmedia_md_apply_fix
 parameter_list|(
 name|fixS
 modifier|*
@@ -2072,7 +2072,7 @@ case|:
 case|case
 name|BFD_RELOC_SH_IMM_HI16
 case|:
-comment|/* Because write.c calls MD_PCREL_FROM_SECTION twice, we need to 	     undo one of the adjustments, if the relocation is not 	     actually for a symbol within the same segment (which we 	     cannot check, because we're not called from md_apply_fix3, so 	     we have to keep the reloc).  FIXME: This is a bug in 	     write.c:fixup_segment affecting most targets that change 	     ordinary relocs to pcrel relocs in md_apply_fix.  */
+comment|/* Because write.c calls MD_PCREL_FROM_SECTION twice, we need to 	     undo one of the adjustments, if the relocation is not 	     actually for a symbol within the same segment (which we 	     cannot check, because we're not called from md_apply_fix, so 	     we have to keep the reloc).  FIXME: This is a bug in 	     write.c:fixup_segment affecting most targets that change 	     ordinary relocs to pcrel relocs in md_apply_fix.  */
 name|fixP
 operator|->
 name|fx_offset
@@ -2264,6 +2264,10 @@ block|{
 comment|/* Emit error for an out-of-range value.  */
 name|shmedia_check_limits
 argument_list|(
+operator|(
+name|offsetT
+operator|*
+operator|)
 name|valp
 argument_list|,
 name|fixP
@@ -2518,6 +2522,37 @@ operator|(
 literal|10
 operator|-
 literal|2
+operator|)
+operator|)
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|BFD_RELOC_SH_IMMS10BY8
+case|:
+name|md_number_to_chars
+argument_list|(
+name|buf
+argument_list|,
+name|insn
+operator||
+operator|(
+operator|(
+name|val
+operator|&
+operator|(
+literal|0x3ff
+operator|<<
+literal|3
+operator|)
+operator|)
+operator|<<
+operator|(
+literal|10
+operator|-
+literal|3
 operator|)
 operator|)
 argument_list|,
@@ -2791,7 +2826,7 @@ argument_list|(
 name|symbolP
 argument_list|)
 operator|||
-name|S_IS_EXTERN
+name|S_IS_EXTERNAL
 argument_list|(
 name|symbolP
 argument_list|)
@@ -11684,9 +11719,19 @@ name|X_op_symbol
 operator|!=
 name|NULL
 condition|)
+block|{
+name|as_bad
+argument_list|(
+name|_
+argument_list|(
+literal|"invalid operand: expression in PT target"
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
 if|if
 condition|(
 name|opjp
@@ -11854,9 +11899,19 @@ name|X_op_symbol
 operator|!=
 name|NULL
 condition|)
+block|{
+name|as_bad
+argument_list|(
+name|_
+argument_list|(
+literal|"invalid operand: expression in PT target"
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
 if|if
 condition|(
 name|opjp
@@ -11935,7 +11990,7 @@ name|insn_loc
 argument_list|)
 expr_stmt|;
 else|else
-comment|/* This reloc-type is just temporary, so we can distinguish 		 PTA from PT.  It is changed in shmedia_md_apply_fix3 to 		 BFD_RELOC_SH_PT_16.  */
+comment|/* This reloc-type is just temporary, so we can distinguish 		 PTA from PT.  It is changed in shmedia_md_apply_fix to 		 BFD_RELOC_SH_PT_16.  */
 name|insn
 operator||=
 name|shmedia_immediate_op
@@ -12566,6 +12621,10 @@ name|TE_NetBSD
 comment|/* For NetBSD, if the ISA is unspecified, always use SHmedia.  */
 if|if
 condition|(
+name|preset_target_arch
+operator|==
+literal|0
+operator|&&
 name|sh64_isa_mode
 operator|==
 name|sh64_isa_unspecified
@@ -12584,6 +12643,10 @@ condition|)
 block|{
 if|if
 condition|(
+name|preset_target_arch
+operator|!=
+literal|0
+operator|||
 name|sh64_isa_mode
 operator|==
 name|sh64_isa_shcompact
@@ -12623,6 +12686,10 @@ directive|ifdef
 name|TE_LINUX
 if|if
 condition|(
+name|preset_target_arch
+operator|==
+literal|0
+operator|&&
 name|sh64_isa_mode
 operator|==
 name|sh64_isa_unspecified
@@ -13580,6 +13647,10 @@ name|expressionS
 modifier|*
 name|exp
 parameter_list|,
+name|enum
+name|expr_mode
+name|mode
+parameter_list|,
 name|char
 modifier|*
 name|cp
@@ -13592,6 +13663,9 @@ function_decl|)
 parameter_list|(
 name|expressionS
 modifier|*
+parameter_list|,
+name|enum
+name|expr_mode
 parameter_list|)
 parameter_list|)
 block|{
@@ -13646,6 +13720,8 @@ name|operandf
 call|)
 argument_list|(
 name|exp
+argument_list|,
+name|expr_normal
 argument_list|)
 expr_stmt|;
 name|parsing_datalabel
@@ -13915,6 +13991,8 @@ argument_list|(
 name|name
 argument_list|,
 name|exp
+argument_list|,
+name|mode
 argument_list|,
 name|cp
 argument_list|)
@@ -14488,6 +14566,80 @@ name|input_line_pointer
 operator|=
 name|eol
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|int
+name|sh64_fake_label
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+block|{
+name|size_t
+name|len
+decl_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|name
+argument_list|,
+name|FAKE_LABEL_NAME
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+literal|1
+return|;
+name|len
+operator|=
+name|strlen
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|len
+operator|>=
+operator|(
+sizeof|sizeof
+argument_list|(
+name|DATALABEL_SUFFIX
+argument_list|)
+operator|-
+literal|1
+operator|)
+condition|)
+return|return
+name|strcmp
+argument_list|(
+operator|&
+name|name
+index|[
+name|len
+operator|-
+sizeof|sizeof
+argument_list|(
+name|DATALABEL_SUFFIX
+argument_list|)
+operator|+
+literal|1
+index|]
+argument_list|,
+name|DATALABEL_SUFFIX
+argument_list|)
+operator|==
+literal|0
+return|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 

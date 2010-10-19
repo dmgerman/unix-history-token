@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-i370.c -- Assembler for the IBM 360/370/390 instruction set.    Loosely based on the ppc files by Linas Vepstas<linas@linas.org> 1998, 99    Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* tc-i370.c -- Assembler for the IBM 360/370/390 instruction set.    Loosely based on the ppc files by Linas Vepstas<linas@linas.org> 1998, 99    Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003,    2004, 2005, 2006 Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_comment
-comment|/* This assembler implements a very hacked version of an elf-like thing  * that gcc emits (when gcc is suitably hacked).  To make it behave more  * HLASM-like, try turning on the -M or --mri flag (as there are various  * similarities between HLASM and the MRI assemblers, such as section  * names, lack of leading . in pseudo-ops, DC and DS, etc ...  */
+comment|/* This assembler implements a very hacked version of an elf-like thing    that gcc emits (when gcc is suitably hacked).  To make it behave more    HLASM-like, try turning on the -M or --mri flag (as there are various    similarities between HLASM and the MRI assemblers, such as section    names, lack of leading . in pseudo-ops, DC and DS, etc.  */
 end_comment
 
 begin_include
@@ -61,7 +61,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* This is the assembler for the System/390 Architecture  */
+comment|/* This is the assembler for the System/390 Architecture.  */
 end_comment
 
 begin_comment
@@ -193,12 +193,10 @@ begin_function
 name|void
 name|md_show_usage
 parameter_list|(
-name|stream
-parameter_list|)
 name|FILE
 modifier|*
 name|stream
-decl_stmt|;
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(
@@ -222,430 +220,6 @@ directive|endif
 block|}
 end_function
 
-begin_escape
-end_escape
-
-begin_decl_stmt
-specifier|static
-name|void
-name|i370_byte
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|i370_tc
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|i370_ebcdic
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|i370_dc
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|i370_ds
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|i370_rmode
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|i370_csect
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|i370_dsect
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|i370_ltorg
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|i370_using
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|i370_drop
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|i370_make_relative
-name|PARAMS
-argument_list|(
-operator|(
-name|expressionS
-operator|*
-name|exp
-operator|,
-name|expressionS
-operator|*
-name|baseaddr
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OBJ_ELF
-end_ifdef
-
-begin_decl_stmt
-specifier|static
-name|bfd_reloc_code_real_type
-name|i370_elf_suffix
-name|PARAMS
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|*
-operator|,
-name|expressionS
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|i370_elf_cons
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|i370_elf_rdata
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|i370_elf_lcomm
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|i370_elf_validate_fix
-name|PARAMS
-argument_list|(
-operator|(
-name|fixS
-operator|*
-operator|,
-name|segT
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_escape
-end_escape
-
-begin_comment
-comment|/* The target specific pseudo-ops which we support.  */
-end_comment
-
-begin_decl_stmt
-specifier|const
-name|pseudo_typeS
-name|md_pseudo_table
-index|[]
-init|=
-block|{
-comment|/* Pseudo-ops which must be overridden.  */
-block|{
-literal|"byte"
-block|,
-name|i370_byte
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"dc"
-block|,
-name|i370_dc
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"ds"
-block|,
-name|i370_ds
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"rmode"
-block|,
-name|i370_rmode
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"csect"
-block|,
-name|i370_csect
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"dsect"
-block|,
-name|i370_dsect
-block|,
-literal|0
-block|}
-block|,
-comment|/* enable ebcdic strings e.g. for 3270 support */
-block|{
-literal|"ebcdic"
-block|,
-name|i370_ebcdic
-block|,
-literal|0
-block|}
-block|,
-ifdef|#
-directive|ifdef
-name|OBJ_ELF
-block|{
-literal|"long"
-block|,
-name|i370_elf_cons
-block|,
-literal|4
-block|}
-block|,
-block|{
-literal|"word"
-block|,
-name|i370_elf_cons
-block|,
-literal|4
-block|}
-block|,
-block|{
-literal|"short"
-block|,
-name|i370_elf_cons
-block|,
-literal|2
-block|}
-block|,
-block|{
-literal|"rdata"
-block|,
-name|i370_elf_rdata
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"rodata"
-block|,
-name|i370_elf_rdata
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"lcomm"
-block|,
-name|i370_elf_lcomm
-block|,
-literal|0
-block|}
-block|,
-endif|#
-directive|endif
-comment|/* This pseudo-op is used even when not generating XCOFF output.  */
-block|{
-literal|"tc"
-block|,
-name|i370_tc
-block|,
-literal|0
-block|}
-block|,
-comment|/* dump the literal pool */
-block|{
-literal|"ltorg"
-block|,
-name|i370_ltorg
-block|,
-literal|0
-block|}
-block|,
-comment|/* support the hlasm-style USING directive */
-block|{
-literal|"using"
-block|,
-name|i370_using
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"drop"
-block|,
-name|i370_drop
-block|,
-literal|0
-block|}
-block|,
-block|{
-name|NULL
-block|,
-name|NULL
-block|,
-literal|0
-block|}
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* ***************************************************************** */
-end_comment
-
 begin_comment
 comment|/* Whether to use user friendly register names.  */
 end_comment
@@ -666,90 +240,11 @@ name|TARGET_REG_NAMES_P
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|register_name
-name|PARAMS
-argument_list|(
-operator|(
-name|expressionS
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|i370_set_cpu
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|i370_insn_t
-name|i370_insert_operand
-name|PARAMS
-argument_list|(
-operator|(
-name|i370_insn_t
-name|insn
-operator|,
-specifier|const
-expr|struct
-name|i370_operand
-operator|*
-name|operand
-operator|,
-name|offsetT
-name|val
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|i370_macro
-name|PARAMS
-argument_list|(
-operator|(
-name|char
-operator|*
-name|str
-operator|,
-specifier|const
-expr|struct
-name|i370_macro
-operator|*
-name|macro
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_escape
 end_escape
 
 begin_comment
-comment|/* Predefined register names if -mregnames */
-end_comment
-
-begin_comment
-comment|/* In general, there are lots of them, in an attempt to be compatible */
-end_comment
-
-begin_comment
-comment|/* with a number of assemblers.                      */
+comment|/* Predefined register names if -mregnames    In general, there are lots of them, in an attempt to be compatible    with a number of assemblers.  */
 end_comment
 
 begin_comment
@@ -790,21 +285,21 @@ block|,
 literal|11
 block|}
 block|,
-comment|/* Argument Pointer */
+comment|/* Argument Pointer.  */
 block|{
 literal|"base"
 block|,
 literal|3
 block|}
 block|,
-comment|/* Base Reg */
+comment|/* Base Reg.  */
 block|{
 literal|"f.0"
 block|,
 literal|0
 block|}
 block|,
-comment|/* Floating point registers */
+comment|/* Floating point registers.  */
 block|{
 literal|"f.2"
 block|,
@@ -853,28 +348,28 @@ block|,
 literal|13
 block|}
 block|,
-comment|/* stack pointer */
+comment|/* Stack pointer.  */
 block|{
 literal|"lr"
 block|,
 literal|14
 block|}
 block|,
-comment|/* Link Register */
+comment|/* Link Register.  */
 block|{
 literal|"pgt"
 block|,
 literal|4
 block|}
 block|,
-comment|/* Page Origin Table Pointer */
+comment|/* Page Origin Table Pointer.  */
 block|{
 literal|"r.0"
 block|,
 literal|0
 block|}
 block|,
-comment|/* General Purpose Registers */
+comment|/* General Purpose Registers.  */
 block|{
 literal|"r.1"
 block|,
@@ -971,56 +466,56 @@ block|,
 literal|11
 block|}
 block|,
-comment|/* Argument Pointer */
+comment|/* Argument Pointer.  */
 block|{
 literal|"r.base"
 block|,
 literal|3
 block|}
 block|,
-comment|/* Base Reg */
+comment|/* Base Reg.  */
 block|{
 literal|"r.dsa"
 block|,
 literal|13
 block|}
 block|,
-comment|/* Stack Pointer */
+comment|/* Stack Pointer.  */
 block|{
 literal|"r.pgt"
 block|,
 literal|4
 block|}
 block|,
-comment|/* Page Origin Table Pointer */
+comment|/* Page Origin Table Pointer.  */
 block|{
 literal|"r.sp"
 block|,
 literal|13
 block|}
 block|,
-comment|/* Stack Pointer */
+comment|/* Stack Pointer.  */
 block|{
 literal|"r.tca"
 block|,
 literal|12
 block|}
 block|,
-comment|/* Pointer to the table of contents */
+comment|/* Pointer to the table of contents.  */
 block|{
 literal|"r.toc"
 block|,
 literal|12
 block|}
 block|,
-comment|/* Pointer to the table of contents */
+comment|/* Pointer to the table of contents.  */
 block|{
 literal|"r0"
 block|,
 literal|0
 block|}
 block|,
-comment|/* More general purpose registers */
+comment|/* More general purpose registers.  */
 block|{
 literal|"r1"
 block|,
@@ -1117,28 +612,28 @@ block|,
 literal|3
 block|}
 block|,
-comment|/* Base Reg */
+comment|/* Base Reg.  */
 block|{
 literal|"rtca"
 block|,
 literal|12
 block|}
 block|,
-comment|/* Pointer to the table of contents */
+comment|/* Pointer to the table of contents.  */
 block|{
 literal|"rtoc"
 block|,
 literal|12
 block|}
 block|,
-comment|/* Pointer to the table of contents */
+comment|/* Pointer to the table of contents.  */
 block|{
 literal|"sp"
 block|,
 literal|13
 block|}
 block|,
-comment|/* Stack Pointer */
+comment|/* Stack Pointer.  */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1154,54 +649,25 @@ begin_comment
 comment|/* Given NAME, find the register number associated with that name, return    the integer value associated with the given name or -1 on failure.  */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|int
-name|reg_name_search
-name|PARAMS
-argument_list|(
-operator|(
-specifier|const
-expr|struct
-name|pd_reg
-operator|*
-operator|,
-name|int
-operator|,
-specifier|const
-name|char
-operator|*
-name|name
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|int
 name|reg_name_search
 parameter_list|(
-name|regs
-parameter_list|,
-name|regcount
-parameter_list|,
-name|name
-parameter_list|)
 specifier|const
 name|struct
 name|pd_reg
 modifier|*
 name|regs
-decl_stmt|;
+parameter_list|,
 name|int
 name|regcount
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|middle
@@ -1299,7 +765,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Summary of register_name().  *  * in:        Input_line_pointer points to 1st char of operand.  *  * out:        An expressionS.  *      The operand may have been a register: in this case, X_op == O_register,  *      X_add_number is set to the register number, and truth is returned.  *        Input_line_pointer->(next non-blank) char after operand, or is in its  *      original state.  */
+comment|/* Summary of register_name().     in:        Input_line_pointer points to 1st char of operand.     out:        An expressionS.         The operand may have been a register: in this case, X_op == O_register,         X_add_number is set to the register number, and truth is returned.           Input_line_pointer->(next non-blank) char after operand, or is in its         original state.  */
 end_comment
 
 begin_function
@@ -1307,12 +773,10 @@ specifier|static
 name|bfd_boolean
 name|register_name
 parameter_list|(
-name|expressionP
-parameter_list|)
 name|expressionS
 modifier|*
 name|expressionP
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|reg_number
@@ -1390,13 +854,11 @@ literal|0
 index|]
 argument_list|)
 condition|)
-block|{
 name|reg_number
 operator|=
 name|get_single_number
 argument_list|()
 expr_stmt|;
-block|}
 else|else
 block|{
 name|c
@@ -1499,7 +961,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The base register to use for opcode with optional operands.  * We define two of these: "text" and "other".  Normally, "text"  * would get used in the .text section for branches, while "other"  * gets used in the .data section for address constants.  *  * The idea of a second base register in a different section  * is foreign to the usual HLASM-style semantics; however, it  * allows us to provide support for dynamically loaded libraries,  * by allowing us to place address constants in a section other  * than the text section. The "other" section need not be the  * .data section, it can be any section that isn't the .text section.  *  * Note that HLASM defines a multiple, concurrent .using semantic  * that we do not: in calculating offsets, it uses either the most  * recent .using directive, or the one with the smallest displacement.  * This allows HLASM to support a quasi-block-scope-like behaviour.  * Handy for people writing assembly by hand ... but not supported  * by us.  */
+comment|/* The base register to use for opcode with optional operands.    We define two of these: "text" and "other".  Normally, "text"    would get used in the .text section for branches, while "other"    gets used in the .data section for address constants.     The idea of a second base register in a different section    is foreign to the usual HLASM-style semantics; however, it    allows us to provide support for dynamically loaded libraries,    by allowing us to place address constants in a section other    than the text section. The "other" section need not be the    .data section, it can be any section that isn't the .text section.     Note that HLASM defines a multiple, concurrent .using semantic    that we do not: in calculating offsets, it uses either the most    recent .using directive, or the one with the smallest displacement.    This allows HLASM to support a quasi-block-scope-like behaviour.    Handy for people writing assembly by hand ... but not supported    by us.  */
 end_comment
 
 begin_decl_stmt
@@ -1523,7 +985,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The base address for address literals */
+comment|/* The base address for address literals.  */
 end_comment
 
 begin_decl_stmt
@@ -1541,7 +1003,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* the "other" section, used only for syntax error detection */
+comment|/* the "other" section, used only for syntax error detection.  */
 end_comment
 
 begin_decl_stmt
@@ -1586,7 +1048,7 @@ name|OBJ_ELF
 end_ifdef
 
 begin_comment
-comment|/* What type of shared library support to use */
+comment|/* What type of shared library support to use.  */
 end_comment
 
 begin_enum
@@ -1611,7 +1073,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Flags to set in the elf header */
+comment|/* Flags to set in the elf header.  */
 end_comment
 
 begin_decl_stmt
@@ -1630,7 +1092,6 @@ name|WORKING_DOT_WORD
 end_ifndef
 
 begin_decl_stmt
-specifier|const
 name|int
 name|md_short_jump_size
 init|=
@@ -1639,7 +1100,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
 name|int
 name|md_long_jump_size
 init|=
@@ -1726,17 +1186,13 @@ begin_function
 name|int
 name|md_parse_option
 parameter_list|(
-name|c
-parameter_list|,
-name|arg
-parameter_list|)
 name|int
 name|c
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|arg
-decl_stmt|;
+parameter_list|)
 block|{
 switch|switch
 condition|(
@@ -1795,7 +1251,7 @@ directive|endif
 case|case
 literal|'m'
 case|:
-comment|/* -m360 mean to assemble for the ancient 360 architecture */
+comment|/* -m360 mean to assemble for the ancient 360 architecture.  */
 if|if
 condition|(
 name|strcmp
@@ -1820,7 +1276,7 @@ name|i370_cpu
 operator|=
 name|I370_OPCODE_360
 expr_stmt|;
-comment|/* -mxa means to assemble for the IBM 370 XA  */
+comment|/* -mxa means to assemble for the IBM 370 XA.  */
 elseif|else
 if|if
 condition|(
@@ -1889,7 +1345,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|OBJ_ELF
-comment|/* -mrelocatable/-mrelocatable-lib -- warn about initializations that require relocation */
+comment|/* -mrelocatable/-mrelocatable-lib -- warn about 	 initializations that require relocation.  */
 elseif|else
 if|if
 condition|(
@@ -1990,7 +1446,9 @@ begin_function
 specifier|static
 name|void
 name|i370_set_cpu
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|const
 name|char
@@ -2006,7 +1464,7 @@ name|default_cpu
 init|=
 name|TARGET_CPU
 decl_stmt|;
-comment|/* override with the superset for the moment.  */
+comment|/* Override with the superset for the moment.  */
 name|i370_cpu
 operator|=
 name|I370_OPCODE_ESA390_SUPERSET
@@ -2080,18 +1538,16 @@ block|}
 end_function
 
 begin_comment
-comment|/* Figure out the BFD architecture to use.  */
-end_comment
-
-begin_comment
-comment|/* hack alert -- specify the different 370 architectures  */
+comment|/* Figure out the BFD architecture to use.    FIXME: specify the different 370 architectures.  */
 end_comment
 
 begin_function
 name|enum
 name|bfd_architecture
 name|i370_arch
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 name|bfd_arch_i370
@@ -2106,9 +1562,10 @@ end_comment
 begin_function
 name|void
 name|md_begin
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
-specifier|register
 specifier|const
 name|struct
 name|i370_opcode
@@ -2190,15 +1647,59 @@ operator|(
 name|op
 operator|->
 name|opcode
+operator|.
+name|i
+index|[
+literal|0
+index|]
 operator|&
 name|op
 operator|->
 name|mask
+operator|.
+name|i
+index|[
+literal|0
+index|]
 operator|)
 operator|==
 name|op
 operator|->
 name|opcode
+operator|.
+name|i
+index|[
+literal|0
+index|]
+operator|&&
+operator|(
+name|op
+operator|->
+name|opcode
+operator|.
+name|i
+index|[
+literal|1
+index|]
+operator|&
+name|op
+operator|->
+name|mask
+operator|.
+name|i
+index|[
+literal|1
+index|]
+operator|)
+operator|==
+name|op
+operator|->
+name|opcode
+operator|.
+name|i
+index|[
+literal|1
+index|]
 argument_list|)
 expr_stmt|;
 if|if
@@ -2230,7 +1731,8 @@ operator|->
 name|name
 argument_list|,
 operator|(
-name|PTR
+name|void
+operator|*
 operator|)
 name|op
 argument_list|)
@@ -2318,7 +1820,8 @@ operator|->
 name|name
 argument_list|,
 operator|(
-name|PTR
+name|void
+operator|*
 operator|)
 name|macro
 argument_list|)
@@ -2370,24 +1873,18 @@ specifier|static
 name|i370_insn_t
 name|i370_insert_operand
 parameter_list|(
-name|insn
-parameter_list|,
-name|operand
-parameter_list|,
-name|val
-parameter_list|)
 name|i370_insn_t
 name|insn
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|struct
 name|i370_operand
 modifier|*
 name|operand
-decl_stmt|;
+parameter_list|,
 name|offsetT
 name|val
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -2401,7 +1898,7 @@ name|char
 modifier|*
 name|errmsg
 decl_stmt|;
-comment|/* used for 48-bit insn's */
+comment|/* Used for 48-bit insn's.  */
 name|errmsg
 operator|=
 name|NULL
@@ -2439,8 +1936,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
-comment|/* this is used only for 16, 32 bit insn's */
+comment|/* This is used only for 16, 32 bit insn's.  */
 name|insn
 operator|.
 name|i
@@ -2473,7 +1969,6 @@ operator|->
 name|shift
 operator|)
 expr_stmt|;
-block|}
 return|return
 name|insn
 return|;
@@ -2498,19 +1993,15 @@ specifier|static
 name|bfd_reloc_code_real_type
 name|i370_elf_suffix
 parameter_list|(
-name|str_p
-parameter_list|,
-name|exp_p
-parameter_list|)
 name|char
 modifier|*
 modifier|*
 name|str_p
-decl_stmt|;
+parameter_list|,
 name|expressionS
 modifier|*
 name|exp_p
-decl_stmt|;
+parameter_list|)
 block|{
 struct|struct
 name|map_bfd
@@ -2563,7 +2054,7 @@ name|str
 parameter_list|,
 name|reloc
 parameter_list|)
-value|{ str, sizeof (str)-1, reloc }
+value|{ str, sizeof (str) - 1, reloc }
 specifier|static
 name|struct
 name|map_bfd
@@ -2571,12 +2062,6 @@ name|mapping
 index|[]
 init|=
 block|{
-if|#
-directive|if
-literal|0
-block|MAP ("l",		BFD_RELOC_LO16),     MAP ("h",		BFD_RELOC_HI16),     MAP ("ha",		BFD_RELOC_HI16_S),
-endif|#
-directive|endif
 comment|/* warnings with -mrelocatable.  */
 name|MAP
 argument_list|(
@@ -2650,7 +2135,6 @@ operator|*
 operator|++
 name|str
 control|)
-block|{
 operator|*
 name|str2
 operator|++
@@ -2660,7 +2144,6 @@ argument_list|(
 name|ch
 argument_list|)
 expr_stmt|;
-block|}
 operator|*
 name|str2
 operator|=
@@ -2855,11 +2338,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Like normal .long/.short/.word, except support @got, etc.  */
-end_comment
-
-begin_comment
-comment|/* clobbers input_line_pointer, checks end-of-line.  */
+comment|/* Like normal .long/.short/.word, except support @got, etc.    Clobbers input_line_pointer, checks end-of-line.  */
 end_comment
 
 begin_function
@@ -2867,13 +2346,10 @@ specifier|static
 name|void
 name|i370_elf_cons
 parameter_list|(
-name|nbytes
-parameter_list|)
-specifier|register
 name|int
 name|nbytes
-decl_stmt|;
-comment|/* 1=.byte, 2=.word, 4=.long */
+parameter_list|)
+comment|/* 1=.byte, 2=.word, 4=.long.  */
 block|{
 name|expressionS
 name|exp
@@ -2967,7 +2443,6 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-specifier|register
 name|char
 modifier|*
 name|p
@@ -4153,7 +3628,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* ebcdic translation tables needed for 3270 support */
+comment|/* EBCDIC translation tables needed for 3270 support.  */
 end_comment
 
 begin_function
@@ -4161,12 +3636,10 @@ specifier|static
 name|void
 name|i370_ebcdic
 parameter_list|(
-name|unused
-parameter_list|)
 name|int
 name|unused
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -4323,7 +3796,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* stub out a couple of routines */
+comment|/* Stub out a couple of routines.  */
 end_comment
 
 begin_function
@@ -4331,12 +3804,10 @@ specifier|static
 name|void
 name|i370_rmode
 parameter_list|(
-name|unused
-parameter_list|)
 name|int
 name|unused
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 name|as_tsktsk
 argument_list|(
@@ -4351,11 +3822,9 @@ specifier|static
 name|void
 name|i370_dsect
 parameter_list|(
-name|sect
-parameter_list|)
 name|int
 name|sect
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -4370,7 +3839,7 @@ index|[]
 init|=
 literal|".data\n"
 decl_stmt|;
-comment|/* Just pretend this is .section .data */
+comment|/* Just pretend this is .section .data.  */
 name|input_line_pointer
 operator|=
 name|section
@@ -4392,12 +3861,10 @@ specifier|static
 name|void
 name|i370_csect
 parameter_list|(
-name|unused
-parameter_list|)
 name|int
 name|unused
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 name|as_tsktsk
 argument_list|(
@@ -4411,7 +3878,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* DC Define Const  is only partially supported.  * For samplecode on what to do, look at i370_elf_cons() above.  * This code handles pseudoops of the style  * DC   D'3.141592653'   # in sysv4, .double 3.14159265  * DC   F'1'             # in sysv4, .long   1  */
+comment|/* DC Define Const  is only partially supported.    For samplecode on what to do, look at i370_elf_cons() above.    This code handles pseudoops of the style    DC   D'3.141592653'   # in sysv4, .double 3.14159265    DC   F'1'             # in sysv4, .long   1.  */
 end_comment
 
 begin_function
@@ -4419,12 +3886,10 @@ specifier|static
 name|void
 name|i370_dc
 parameter_list|(
-name|unused
-parameter_list|)
 name|int
 name|unused
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -4459,7 +3924,7 @@ argument_list|()
 expr_stmt|;
 return|return;
 block|}
-comment|/* figure out the size */
+comment|/* Figure out the size.  */
 name|type
 operator|=
 operator|*
@@ -4510,7 +3975,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* get rid of pesky quotes */
+comment|/* Get rid of pesky quotes.  */
 if|if
 condition|(
 literal|'\''
@@ -4672,7 +4137,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* provide minimal support for DS Define Storage */
+comment|/* Provide minimal support for DS Define Storage.  */
 end_comment
 
 begin_function
@@ -4680,14 +4145,12 @@ specifier|static
 name|void
 name|i370_ds
 parameter_list|(
-name|unused
-parameter_list|)
 name|int
 name|unused
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
-comment|/* DS 0H or DS 0F or DS 0D */
+comment|/* DS 0H or DS 0F or DS 0D.  */
 if|if
 condition|(
 literal|'0'
@@ -4701,7 +4164,7 @@ name|alignment
 init|=
 literal|0
 decl_stmt|;
-comment|/* left shift 1<<align */
+comment|/* Left shift 1<< align.  */
 name|input_line_pointer
 operator|++
 expr_stmt|;
@@ -4765,13 +4228,11 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 name|as_bad
 argument_list|(
 literal|"this DS form not yet supported"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -4784,11 +4245,9 @@ specifier|static
 name|void
 name|i370_elf_rdata
 parameter_list|(
-name|sect
-parameter_list|)
 name|int
 name|sect
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -4803,7 +4262,7 @@ index|[]
 init|=
 literal|".rodata\n"
 decl_stmt|;
-comment|/* Just pretend this is .section .rodata */
+comment|/* Just pretend this is .section .rodata.  */
 name|input_line_pointer
 operator|=
 name|section
@@ -4821,7 +4280,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Pseudo op to make file scope bss items */
+comment|/* Pseudo op to make file scope bss items.  */
 end_comment
 
 begin_function
@@ -4829,23 +4288,18 @@ specifier|static
 name|void
 name|i370_elf_lcomm
 parameter_list|(
-name|unused
-parameter_list|)
 name|int
 name|unused
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|register
 name|char
 modifier|*
 name|name
 decl_stmt|;
-specifier|register
 name|char
 name|c
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
@@ -4853,7 +4307,6 @@ decl_stmt|;
 name|offsetT
 name|size
 decl_stmt|;
-specifier|register
 name|symbolS
 modifier|*
 name|symbolP
@@ -4883,7 +4336,7 @@ operator|=
 name|get_symbol_end
 argument_list|()
 expr_stmt|;
-comment|/* just after name is now '\0' */
+comment|/* Just after name is now '\0'.  */
 name|p
 operator|=
 name|input_line_pointer
@@ -4914,10 +4367,10 @@ argument_list|()
 expr_stmt|;
 return|return;
 block|}
+comment|/* Skip ','.  */
 name|input_line_pointer
 operator|++
 expr_stmt|;
-comment|/* skip ',' */
 if|if
 condition|(
 operator|(
@@ -5077,7 +4530,7 @@ argument_list|()
 expr_stmt|;
 return|return;
 block|}
-comment|/* allocate_bss: */
+comment|/* Allocate_bss:  */
 name|old_sec
 operator|=
 name|now_seg
@@ -5091,7 +4544,7 @@ condition|(
 name|align
 condition|)
 block|{
-comment|/* convert to a power of 2 alignment */
+comment|/* Convert to a power of 2 alignment.  */
 for|for
 control|(
 name|align2
@@ -5256,17 +4709,13 @@ specifier|static
 name|void
 name|i370_elf_validate_fix
 parameter_list|(
-name|fixp
-parameter_list|,
-name|seg
-parameter_list|)
 name|fixS
 modifier|*
 name|fixp
-decl_stmt|;
+parameter_list|,
 name|segT
 name|seg
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -5457,7 +4906,6 @@ name|fx_r_type
 operator|!=
 name|BFD_RELOC_CTOR
 condition|)
-block|{
 name|as_bad_where
 argument_list|(
 name|fixp
@@ -5472,8 +4920,9 @@ literal|"Relocation cannot be done when using -mrelocatable"
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 return|return;
+default|default:
+break|break;
 block|}
 block|}
 end_function
@@ -5503,15 +4952,7 @@ name|LITERAL_POOL_SUPPORT
 end_ifdef
 
 begin_comment
-comment|/* Provide support for literal pools within the text section.  */
-end_comment
-
-begin_comment
-comment|/* Loosely based on similar code from tc-arm.c  */
-end_comment
-
-begin_comment
-comment|/*  * We will use four symbols to locate four parts of the literal pool.  *    These four sections contain 64,32,16 and 8-bit constants; we use  *    four sections so that all memory access can be appropriately aligned.  *    That is, we want to avoid mixing these together so that we don't  *    waste space padding out to alignments.  The four pointers  *    longlong_poolP, word_poolP, etc. point to a symbol labeling the  *    start of each pool part.  *  * lit_pool_num increments from zero to infinity and uniquely id's  *    -- its used to generate the *_poolP symbol name.  */
+comment|/* Provide support for literal pools within the text section.    Loosely based on similar code from tc-arm.c.    We will use four symbols to locate four parts of the literal pool.    These four sections contain 64,32,16 and 8-bit constants; we use    four sections so that all memory access can be appropriately aligned.    That is, we want to avoid mixing these together so that we don't    waste space padding out to alignments.  The four pointers    longlong_poolP, word_poolP, etc. point to a symbol labeling the    start of each pool part.      lit_pool_num increments from zero to infinity and uniquely id's      -- its used to generate the *_poolP symbol name.  */
 end_comment
 
 begin_define
@@ -5564,7 +5005,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Next free entry in the pool */
+comment|/* Next free entry in the pool.  */
 end_comment
 
 begin_decl_stmt
@@ -5578,7 +5019,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 64-bit pool entries */
+comment|/* 64-bit pool entries.  */
 end_comment
 
 begin_decl_stmt
@@ -5592,7 +5033,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 32-bit pool entries */
+comment|/* 32-bit pool entries.  */
 end_comment
 
 begin_decl_stmt
@@ -5606,7 +5047,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 16-bit pool entries */
+comment|/* 16-bit pool entries.  */
 end_comment
 
 begin_decl_stmt
@@ -5620,7 +5061,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 8-bit  pool entries */
+comment|/* 8-bit  pool entries.  */
 end_comment
 
 begin_decl_stmt
@@ -5633,7 +5074,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* create a new, empty symbol */
+comment|/* Create a new, empty symbol.  */
 end_comment
 
 begin_function
@@ -5665,7 +5106,124 @@ block|}
 end_function
 
 begin_comment
-comment|/* add an expression to the literal pool */
+comment|/* Make the first argument an address-relative expression    by subtracting the second argument.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|i370_make_relative
+parameter_list|(
+name|expressionS
+modifier|*
+name|exx
+parameter_list|,
+name|expressionS
+modifier|*
+name|baseaddr
+parameter_list|)
+block|{
+if|if
+condition|(
+name|O_constant
+operator|==
+name|baseaddr
+operator|->
+name|X_op
+condition|)
+block|{
+name|exx
+operator|->
+name|X_op
+operator|=
+name|O_symbol
+expr_stmt|;
+name|exx
+operator|->
+name|X_add_number
+operator|-=
+name|baseaddr
+operator|->
+name|X_add_number
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|O_symbol
+operator|==
+name|baseaddr
+operator|->
+name|X_op
+condition|)
+block|{
+name|exx
+operator|->
+name|X_op
+operator|=
+name|O_subtract
+expr_stmt|;
+name|exx
+operator|->
+name|X_op_symbol
+operator|=
+name|baseaddr
+operator|->
+name|X_add_symbol
+expr_stmt|;
+name|exx
+operator|->
+name|X_add_number
+operator|-=
+name|baseaddr
+operator|->
+name|X_add_number
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|O_uminus
+operator|==
+name|baseaddr
+operator|->
+name|X_op
+condition|)
+block|{
+name|exx
+operator|->
+name|X_op
+operator|=
+name|O_add
+expr_stmt|;
+name|exx
+operator|->
+name|X_op_symbol
+operator|=
+name|baseaddr
+operator|->
+name|X_add_symbol
+expr_stmt|;
+name|exx
+operator|->
+name|X_add_number
+operator|+=
+name|baseaddr
+operator|->
+name|X_add_number
+expr_stmt|;
+block|}
+else|else
+name|as_bad
+argument_list|(
+literal|"Missing or bad .using directive"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Add an expression to the literal pool.  */
 end_comment
 
 begin_function
@@ -5695,7 +5253,7 @@ name|offset_in_pool
 init|=
 literal|0
 decl_stmt|;
-comment|/* start a new pool, if necessary */
+comment|/* Start a new pool, if necessary.  */
 if|if
 condition|(
 literal|8
@@ -5759,9 +5317,7 @@ operator|=
 name|symbol_make_empty
 argument_list|()
 expr_stmt|;
-comment|/* Check if this literal value is already in the pool: */
-comment|/* hack alert -- we should probably be checking expressions    * of type O_symbol as well ...  */
-comment|/* hack alert XXX this is probably(certainly?) broken for O_big,    * which includes 64-bit long-longs ...    */
+comment|/* Check if this literal value is already in the pool.      FIXME: We should probably be checking expressions             of type O_symbol as well.      FIXME: This is probably(certainly?) broken for O_big,             which includes 64-bit long-longs.  */
 while|while
 condition|(
 name|lit_count
@@ -5885,13 +5441,11 @@ name|next_literal_pool_place
 operator|>
 name|MAX_LITERAL_POOL_SIZE
 condition|)
-block|{
 name|as_bad
 argument_list|(
 literal|"Literal Pool Overflow"
 argument_list|)
 expr_stmt|;
-block|}
 name|literals
 index|[
 name|next_literal_pool_place
@@ -5924,7 +5478,6 @@ if|if
 condition|(
 name|name
 condition|)
-block|{
 name|literals
 index|[
 name|next_literal_pool_place
@@ -5937,9 +5490,7 @@ argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|literals
 index|[
 name|next_literal_pool_place
@@ -5949,12 +5500,11 @@ name|sym_name
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 name|next_literal_pool_place
 operator|++
 expr_stmt|;
 block|}
-comment|/* ???_poolP points to the beginning of the literal pool.    * X_add_number is the offset from the beginning of the    * literal pool to this expr minus the location of the most    * recent .using directive.  Thus, the grand total value of the    * expression is the distance from .using to the literal.    */
+comment|/* ???_poolP points to the beginning of the literal pool.      X_add_number is the offset from the beginning of the      literal pool to this expr minus the location of the most      recent .using directive.  Thus, the grand total value of the      expression is the distance from .using to the literal.  */
 if|if
 condition|(
 literal|8
@@ -6018,14 +5568,13 @@ name|X_op_symbol
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* If the user has set up a base reg in another section,    * use that; otherwise use the text section.  */
+comment|/* If the user has set up a base reg in another section,      use that; otherwise use the text section.  */
 if|if
 condition|(
 literal|0
 operator|<
 name|i370_using_other_regno
 condition|)
-block|{
 name|i370_make_relative
 argument_list|(
 name|exx
@@ -6034,9 +5583,7 @@ operator|&
 name|i370_using_other_baseaddr
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|i370_make_relative
 argument_list|(
 name|exx
@@ -6046,80 +5593,44 @@ name|i370_using_text_baseaddr
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 end_function
 
 begin_comment
-comment|/* The symbol setup for the literal pool is done in two steps.  First,  * a symbol that represents the start of the literal pool is created,  * above, in the add_to_pool() routine. This sym ???_poolP.  * However, we don't know what fragment its in until a bit later.  * So we defer the frag_now thing, and the symbol name, until .ltorg time  */
+comment|/* The symbol setup for the literal pool is done in two steps.  First,    a symbol that represents the start of the literal pool is created,    above, in the add_to_pool() routine. This sym ???_poolP.    However, we don't know what fragment its in until a bit later.    So we defer the frag_now thing, and the symbol name, until .ltorg time.  */
 end_comment
 
 begin_comment
-comment|/* Can't use symbol_new here, so have to create a symbol and then at    a later date assign it a value. Thats what these functions do */
+comment|/* Can't use symbol_new here, so have to create a symbol and then at    a later date assign it a value. Thats what these functions do.  */
 end_comment
-
-begin_decl_stmt
-specifier|static
-name|void
-name|symbol_locate
-name|PARAMS
-argument_list|(
-operator|(
-name|symbolS
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|,
-name|segT
-operator|,
-name|valueT
-operator|,
-name|fragS
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 specifier|static
 name|void
 name|symbol_locate
 parameter_list|(
-name|symbolP
-parameter_list|,
-name|name
-parameter_list|,
-name|segment
-parameter_list|,
-name|valu
-parameter_list|,
-name|frag
-parameter_list|)
 name|symbolS
 modifier|*
 name|symbolP
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|name
-decl_stmt|;
-comment|/* It is copied, the caller can modify */
+parameter_list|,
+comment|/* It is copied, the caller can modify.  */
 name|segT
 name|segment
-decl_stmt|;
-comment|/* Segment identifier (SEG_<something>) */
+parameter_list|,
+comment|/* Segment identifier (SEG_<something>).  */
 name|valueT
 name|valu
-decl_stmt|;
-comment|/* Symbol value */
+parameter_list|,
+comment|/* Symbol value.  */
 name|fragS
 modifier|*
 name|frag
-decl_stmt|;
-comment|/* Associated fragment */
+parameter_list|)
+comment|/* Associated fragment.  */
 block|{
 name|size_t
 name|name_length
@@ -6189,7 +5700,7 @@ argument_list|,
 name|frag
 argument_list|)
 expr_stmt|;
-comment|/*    * Link to end of symbol chain.    */
+comment|/* Link to end of symbol chain.  */
 block|{
 specifier|extern
 name|int
@@ -6251,7 +5762,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* i370_addr_offset() will convert operand expressions  * that appear to be absolute into thier base-register  * relative form.  These expressions come in two types:  *  * (1) of the form "* + const" * where "*" means  * relative offset since the last using  * i.e. "*" means ".-using_baseaddr"  *  * (2) labels, which are never absolute, but are always  * relative to the last "using".  Anything with an alpha  * character is considered to be a label (since symbols  * can never be operands), and since we've already handled  * register operands. For example, "BL .L33" branch low  * to .L33 RX form insn frequently terminates for-loops,  */
+comment|/* i370_addr_offset() will convert operand expressions    that appear to be absolute into thier base-register    relative form.  These expressions come in two types:     (1) of the form "* + const" * where "*" means    relative offset since the last using    i.e. "*" means ".-using_baseaddr"     (2) labels, which are never absolute, but are always    relative to the last "using".  Anything with an alpha    character is considered to be a label (since symbols    can never be operands), and since we've already handled    register operands. For example, "BL .L33" branch low    to .L33 RX form insn frequently terminates for-loops.  */
 end_comment
 
 begin_function
@@ -6281,8 +5792,7 @@ name|all_digits
 init|=
 literal|0
 decl_stmt|;
-comment|/* search for a label; anything with an alpha char will do */
-comment|/* local labels consist of N digits followed by either b or f */
+comment|/* Search for a label; anything with an alpha char will do.      Local labels consist of N digits followed by either b or f.  */
 name|lab
 operator|=
 name|input_line_pointer
@@ -6315,12 +5825,10 @@ operator|*
 name|lab
 argument_list|)
 condition|)
-block|{
 name|all_digits
 operator|=
 literal|1
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -6386,7 +5894,7 @@ operator|++
 name|lab
 expr_stmt|;
 block|}
-comment|/* See if operand has a * in it */
+comment|/* See if operand has a * in it.  */
 name|dot
 operator|=
 name|strchr
@@ -6407,7 +5915,7 @@ condition|)
 return|return
 name|FALSE
 return|;
-comment|/* replace * with . and let expr munch on it.  */
+comment|/* Replace * with . and let expr munch on it.  */
 if|if
 condition|(
 name|dot
@@ -6422,8 +5930,7 @@ argument_list|(
 name|exx
 argument_list|)
 expr_stmt|;
-comment|/* OK, now we have to subtract the "using" location  */
-comment|/* normally branches appear in the text section only...  */
+comment|/* OK, now we have to subtract the "using" location.      Normally branches appear in the text section only.  */
 if|if
 condition|(
 literal|0
@@ -6443,7 +5950,6 @@ literal|0
 operator|>
 name|i370_using_other_regno
 condition|)
-block|{
 name|i370_make_relative
 argument_list|(
 name|exx
@@ -6452,9 +5958,7 @@ operator|&
 name|i370_using_text_baseaddr
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|i370_make_relative
 argument_list|(
 name|exx
@@ -6463,8 +5967,7 @@ operator|&
 name|i370_using_other_baseaddr
 argument_list|)
 expr_stmt|;
-block|}
-comment|/* put the * back */
+comment|/* Put the * back.  */
 if|if
 condition|(
 name|dot
@@ -6481,11 +5984,11 @@ block|}
 end_function
 
 begin_comment
-comment|/* handle address constants of various sorts */
+comment|/* Handle address constants of various sorts.  */
 end_comment
 
 begin_comment
-comment|/* The currently supported types are  *    =A(some_symb)  *    =V(some_extern)  *    =X'deadbeef'    hexadecimal  *    =F'1234'        32-bit const int  *    =H'1234'        16-bit const int  */
+comment|/* The currently supported types are       =A(some_symb)       =V(some_extern)       =X'deadbeef'    hexadecimal       =F'1234'        32-bit const int       =H'1234'        16-bit const int.  */
 end_comment
 
 begin_function
@@ -6529,7 +6032,7 @@ name|sym_name
 operator|=
 name|input_line_pointer
 expr_stmt|;
-comment|/* Find the spelling of the operand */
+comment|/* Find the spelling of the operand.  */
 if|if
 condition|(
 name|name
@@ -6547,19 +6050,15 @@ literal|1
 index|]
 argument_list|)
 condition|)
-block|{
 name|name
 operator|=
 operator|++
 name|input_line_pointer
 expr_stmt|;
-block|}
 else|else
-block|{
 return|return
 name|FALSE
 return|;
-block|}
 switch|switch
 condition|(
 name|name
@@ -6571,11 +6070,11 @@ block|{
 case|case
 literal|'A'
 case|:
+comment|/* A == address-of.  */
 case|case
 literal|'V'
 case|:
-comment|/* A == address-of */
-comment|/* V == extern */
+comment|/* V == extern.  */
 operator|++
 name|input_line_pointer
 expr_stmt|;
@@ -6584,7 +6083,7 @@ argument_list|(
 name|exp
 argument_list|)
 expr_stmt|;
-comment|/* we use a simple string name to collapse together        * multiple refrences to the same address literal        */
+comment|/* We use a simple string name to collapse together          multiple refrences to the same address literal.  */
 name|name_len
 operator|=
 name|strcspn
@@ -6643,14 +6142,14 @@ case|:
 case|case
 literal|'E'
 case|:
-comment|/* single-precision float point */
+comment|/* Single-precision float point.  */
 case|case
 literal|'D'
 case|:
-comment|/* double-precision float point */
-comment|/* H == 16-bit fixed-point const; expression must be const */
-comment|/* F == fixed-point const; expression must be const */
-comment|/* X == fixed-point const; expression must be const */
+comment|/* Double-precision float point.  */
+comment|/* H == 16-bit fixed-point const; expression must be const.  */
+comment|/* F == fixed-point const; expression must be const.  */
+comment|/* X == fixed-point const; expression must be const.  */
 if|if
 condition|(
 literal|'H'
@@ -6721,7 +6220,7 @@ name|cons_len
 operator|=
 literal|8
 expr_stmt|;
-comment|/* extract length, if it is present; hack alert -- assume single-digit        * length */
+comment|/* Extract length, if it is present; 	 FIXME: assume single-digit length.  */
 if|if
 condition|(
 literal|'L'
@@ -6732,6 +6231,7 @@ literal|1
 index|]
 condition|)
 block|{
+comment|/* Should work for ASCII and EBCDIC.  */
 name|cons_len
 operator|=
 name|name
@@ -6741,7 +6241,6 @@ index|]
 operator|-
 literal|'0'
 expr_stmt|;
-comment|/* should work for ascii and ebcdic */
 name|input_line_pointer
 operator|+=
 literal|2
@@ -6750,7 +6249,7 @@ block|}
 operator|++
 name|input_line_pointer
 expr_stmt|;
-comment|/* get rid of pesky quotes */
+comment|/* Get rid of pesky quotes.  */
 if|if
 condition|(
 literal|'\''
@@ -6871,7 +6370,7 @@ name|char
 modifier|*
 name|save
 decl_stmt|;
-comment|/* The length of hex constants is specified directly with L, 	   * or implied through the number of hex digits. For example: 	   * =X'AB'       one byte 	   * =X'abcd'     two bytes 	   * =X'000000AB' four bytes 	   * =XL4'AB'     four bytes, left-padded withn zero 	   */
+comment|/* The length of hex constants is specified directly with L, 	     or implied through the number of hex digits. For example: 	     =X'AB'       one byte 	     =X'abcd'     two bytes 	     =X'000000AB' four bytes 	     =XL4'AB'     four bytes, left-padded withn zero.  */
 if|if
 condition|(
 operator|(
@@ -6926,7 +6425,7 @@ operator|/
 literal|2
 expr_stmt|;
 block|}
-comment|/* I believe this works even for =XL8'dada0000beeebaaa' 	   * which should parse out to X_op == O_big 	   * Note that floats and doubles get represented as 	   * 0d3.14159265358979  or 0f 2.7 	   */
+comment|/* I believe this works even for =XL8'dada0000beeebaaa' 	     which should parse out to X_op == O_big 	     Note that floats and doubles get represented as 	     0d3.14159265358979  or 0f 2.7.  */
 name|tmp
 index|[
 literal|0
@@ -6983,7 +6482,7 @@ operator|-
 literal|2
 operator|)
 expr_stmt|;
-comment|/* fix up lengths for floats and doubles */
+comment|/* Fix up lengths for floats and doubles.  */
 if|if
 condition|(
 name|O_big
@@ -6992,7 +6491,6 @@ name|exp
 operator|->
 name|X_op
 condition|)
-block|{
 name|exp
 operator|->
 name|X_add_number
@@ -7002,16 +6500,13 @@ operator|/
 name|CHARS_PER_LITTLENUM
 expr_stmt|;
 block|}
-block|}
 else|else
-block|{
 name|expression
 argument_list|(
 name|exp
 argument_list|)
 expr_stmt|;
-block|}
-comment|/* O_big occurs when more than 4 bytes worth gets parsed */
+comment|/* O_big occurs when more than 4 bytes worth gets parsed.  */
 if|if
 condition|(
 operator|(
@@ -7070,7 +6565,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Dump the contents of the literal pool that we've accumulated so far.  * This aligns the pool to the size of the largest literal in the pool.  */
+comment|/* Dump the contents of the literal pool that we've accumulated so far.    This aligns the pool to the size of the largest literal in the pool.  */
 end_comment
 
 begin_function
@@ -7078,12 +6573,10 @@ specifier|static
 name|void
 name|i370_ltorg
 parameter_list|(
-name|ignore
-parameter_list|)
 name|int
 name|ignore
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|litsize
@@ -7129,7 +6622,6 @@ name|i370_other_section
 operator|==
 name|undefined_section
 condition|)
-block|{
 name|as_bad
 argument_list|(
 literal|".ltorg without prior .using in section %s"
@@ -7139,14 +6631,12 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|i370_other_section
 operator|!=
 name|now_seg
 condition|)
-block|{
 name|as_bad
 argument_list|(
 literal|".ltorg in section %s paired to .using in section %s"
@@ -7160,7 +6650,6 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -7176,12 +6665,9 @@ operator|&&
 operator|!
 name|byte_poolP
 condition|)
-block|{
-comment|/* Nothing to do */
-comment|/* as_tsktsk ("Nothing to put in the pool\n"); */
+comment|/* Nothing to do.  */
 return|return;
-block|}
-comment|/* find largest literal .. 2 4 or 8 */
+comment|/* Find largest literal .. 2 4 or 8.  */
 name|lit_count
 operator|=
 literal|0
@@ -7278,7 +6764,7 @@ name|biggest_align
 operator|=
 literal|1
 expr_stmt|;
-comment|/* Align pool for short, word, double word accesses */
+comment|/* Align pool for short, word, double word accesses.  */
 name|frag_align
 argument_list|(
 name|biggest_align
@@ -7295,8 +6781,8 @@ argument_list|,
 name|biggest_align
 argument_list|)
 expr_stmt|;
-comment|/* Note that the gas listing will print only the first five    * entries in the pool .... wonder how to make it print more ...    */
-comment|/* output largest literals first, then the smaller ones.  */
+comment|/* Note that the gas listing will print only the first five      entries in the pool .... wonder how to make it print more.  */
+comment|/* Output largest literals first, then the smaller ones.  */
 for|for
 control|(
 name|litsize
@@ -7429,7 +6915,7 @@ name|EMIT_ADDR_CONS_SYMBOLS
 ifdef|#
 directive|ifdef
 name|EMIT_ADDR_CONS_SYMBOLS
-comment|/* create a bogus symbol, add it to the pool ... 	       * For the most part, I think this is a useless exercise, 	       * except that having these symbol names in the objects 	       * is vaguely useful for debugging ... 	       */
+comment|/* Create a bogus symbol, add it to the pool ... 	         For the most part, I think this is a useless exercise, 	         except that having these symbol names in the objects 	         is vaguely useful for debugging.  */
 if|if
 condition|(
 name|literals
@@ -7543,7 +7029,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* add support for the HLASM-like USING directive to indicate  * the base register to use ...  we don't support the full  * hlasm semantics for this ... we merely pluck a base address  * and a register number out.  We print a warning if using is  * called multiple times.  I suppose we should check to see  * if the regno is valid ...  */
+comment|/* Add support for the HLASM-like USING directive to indicate    the base register to use ...  we don't support the full    hlasm semantics for this ... we merely pluck a base address    and a register number out.  We print a warning if using is    called multiple times.  I suppose we should check to see    if the regno is valid.  */
 end_comment
 
 begin_function
@@ -7551,12 +7037,10 @@ specifier|static
 name|void
 name|i370_using
 parameter_list|(
-name|ignore
-parameter_list|)
 name|int
 name|ignore
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 name|expressionS
 name|ex
@@ -7570,8 +7054,7 @@ name|char
 modifier|*
 name|star
 decl_stmt|;
-comment|/* if "*" appears in a using, it means "."  */
-comment|/* replace it with "." so that expr doesn't get confused.  */
+comment|/* If "*" appears in a using, it means "."      replace it with "." so that expr doesn't get confused.  */
 name|star
 operator|=
 name|strchr
@@ -7590,7 +7073,7 @@ name|star
 operator|=
 literal|'.'
 expr_stmt|;
-comment|/* the first arg to using will usually be ".", but it can    * be a more complex expression too ...  */
+comment|/* The first arg to using will usually be ".", but it can      be a more complex expression too.  */
 name|expression
 argument_list|(
 operator|&
@@ -7626,13 +7109,11 @@ name|baseaddr
 operator|.
 name|X_op
 condition|)
-block|{
 name|as_bad
 argument_list|(
 literal|".using: base address expression illegal or too complex"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|*
@@ -7643,7 +7124,7 @@ condition|)
 operator|++
 name|input_line_pointer
 expr_stmt|;
-comment|/* the second arg to using had better be a register */
+comment|/* The second arg to using had better be a register.  */
 name|register_name
 argument_list|(
 operator|&
@@ -7707,12 +7188,10 @@ specifier|static
 name|void
 name|i370_drop
 parameter_list|(
-name|ignore
-parameter_list|)
 name|int
 name|ignore
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 name|expressionS
 name|ex
@@ -7757,7 +7236,6 @@ name|iregno
 operator|!=
 name|i370_using_text_regno
 condition|)
-block|{
 name|as_bad
 argument_list|(
 literal|"droping register %d in section %s does not match using register %d"
@@ -7771,7 +7249,6 @@ argument_list|,
 name|i370_using_text_regno
 argument_list|)
 expr_stmt|;
-block|}
 name|i370_using_text_regno
 operator|=
 operator|-
@@ -7792,7 +7269,6 @@ name|iregno
 operator|!=
 name|i370_using_other_regno
 condition|)
-block|{
 name|as_bad
 argument_list|(
 literal|"droping register %d in section %s does not match using register %d"
@@ -7806,14 +7282,12 @@ argument_list|,
 name|i370_using_other_regno
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|i370_other_section
 operator|!=
 name|now_seg
 condition|)
-block|{
 name|as_bad
 argument_list|(
 literal|"droping register %d in section %s previously used in section %s"
@@ -7829,7 +7303,6 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-block|}
 name|i370_using_other_regno
 operator|=
 operator|-
@@ -7844,125 +7317,6 @@ expr_stmt|;
 name|i370_other_section
 operator|=
 name|undefined_section
-expr_stmt|;
-block|}
-block|}
-end_function
-
-begin_comment
-comment|/* Make the first argument an address-relative expression  * by subtracting the second argument.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|i370_make_relative
-parameter_list|(
-name|expressionS
-modifier|*
-name|exx
-parameter_list|,
-name|expressionS
-modifier|*
-name|baseaddr
-parameter_list|)
-block|{
-if|if
-condition|(
-name|O_constant
-operator|==
-name|baseaddr
-operator|->
-name|X_op
-condition|)
-block|{
-name|exx
-operator|->
-name|X_op
-operator|=
-name|O_symbol
-expr_stmt|;
-name|exx
-operator|->
-name|X_add_number
-operator|-=
-name|baseaddr
-operator|->
-name|X_add_number
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|O_symbol
-operator|==
-name|baseaddr
-operator|->
-name|X_op
-condition|)
-block|{
-name|exx
-operator|->
-name|X_op
-operator|=
-name|O_subtract
-expr_stmt|;
-name|exx
-operator|->
-name|X_op_symbol
-operator|=
-name|baseaddr
-operator|->
-name|X_add_symbol
-expr_stmt|;
-name|exx
-operator|->
-name|X_add_number
-operator|-=
-name|baseaddr
-operator|->
-name|X_add_number
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|O_uminus
-operator|==
-name|baseaddr
-operator|->
-name|X_op
-condition|)
-block|{
-name|exx
-operator|->
-name|X_op
-operator|=
-name|O_add
-expr_stmt|;
-name|exx
-operator|->
-name|X_op_symbol
-operator|=
-name|baseaddr
-operator|->
-name|X_add_symbol
-expr_stmt|;
-name|exx
-operator|->
-name|X_add_number
-operator|+=
-name|baseaddr
-operator|->
-name|X_add_number
-expr_stmt|;
-block|}
-else|else
-block|{
-name|as_bad
-argument_list|(
-literal|"Missing or bad .using directive"
-argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -7996,8 +7350,320 @@ begin_define
 define|#
 directive|define
 name|MAX_INSN_FIXUPS
-value|(5)
+value|5
 end_define
+
+begin_comment
+comment|/* Handle a macro.  Gather all the operands, transform them as    described by the macro, and call md_assemble recursively.  All the    operands are separated by commas; we don't accept parentheses    around operands here.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|i370_macro
+parameter_list|(
+name|char
+modifier|*
+name|str
+parameter_list|,
+specifier|const
+name|struct
+name|i370_macro
+modifier|*
+name|macro
+parameter_list|)
+block|{
+name|char
+modifier|*
+name|operands
+index|[
+literal|10
+index|]
+decl_stmt|;
+name|unsigned
+name|int
+name|count
+decl_stmt|;
+name|char
+modifier|*
+name|s
+decl_stmt|;
+name|unsigned
+name|int
+name|len
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|format
+decl_stmt|;
+name|int
+name|arg
+decl_stmt|;
+name|char
+modifier|*
+name|send
+decl_stmt|;
+name|char
+modifier|*
+name|complete
+decl_stmt|;
+comment|/* Gather the users operands into the operands array.  */
+name|count
+operator|=
+literal|0
+expr_stmt|;
+name|s
+operator|=
+name|str
+expr_stmt|;
+while|while
+condition|(
+literal|1
+condition|)
+block|{
+if|if
+condition|(
+name|count
+operator|>=
+sizeof|sizeof
+name|operands
+operator|/
+sizeof|sizeof
+name|operands
+index|[
+literal|0
+index|]
+condition|)
+break|break;
+name|operands
+index|[
+name|count
+operator|++
+index|]
+operator|=
+name|s
+expr_stmt|;
+name|s
+operator|=
+name|strchr
+argument_list|(
+name|s
+argument_list|,
+literal|','
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|s
+operator|==
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+condition|)
+break|break;
+operator|*
+name|s
+operator|++
+operator|=
+literal|'\0'
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|count
+operator|!=
+name|macro
+operator|->
+name|operands
+condition|)
+block|{
+name|as_bad
+argument_list|(
+literal|"wrong number of operands"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/* Work out how large the string must be (the size is unbounded      because it includes user input).  */
+name|len
+operator|=
+literal|0
+expr_stmt|;
+name|format
+operator|=
+name|macro
+operator|->
+name|format
+expr_stmt|;
+while|while
+condition|(
+operator|*
+name|format
+operator|!=
+literal|'\0'
+condition|)
+block|{
+if|if
+condition|(
+operator|*
+name|format
+operator|!=
+literal|'%'
+condition|)
+block|{
+operator|++
+name|len
+expr_stmt|;
+operator|++
+name|format
+expr_stmt|;
+block|}
+else|else
+block|{
+name|arg
+operator|=
+name|strtol
+argument_list|(
+name|format
+operator|+
+literal|1
+argument_list|,
+operator|&
+name|send
+argument_list|,
+literal|10
+argument_list|)
+expr_stmt|;
+name|know
+argument_list|(
+name|send
+operator|!=
+name|format
+operator|&&
+name|arg
+operator|>=
+literal|0
+operator|&&
+operator|(
+name|unsigned
+operator|)
+name|arg
+operator|<
+name|count
+argument_list|)
+expr_stmt|;
+name|len
+operator|+=
+name|strlen
+argument_list|(
+name|operands
+index|[
+name|arg
+index|]
+argument_list|)
+expr_stmt|;
+name|format
+operator|=
+name|send
+expr_stmt|;
+block|}
+block|}
+comment|/* Put the string together.  */
+name|complete
+operator|=
+name|s
+operator|=
+name|alloca
+argument_list|(
+name|len
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+name|format
+operator|=
+name|macro
+operator|->
+name|format
+expr_stmt|;
+while|while
+condition|(
+operator|*
+name|format
+operator|!=
+literal|'\0'
+condition|)
+block|{
+if|if
+condition|(
+operator|*
+name|format
+operator|!=
+literal|'%'
+condition|)
+operator|*
+name|s
+operator|++
+operator|=
+operator|*
+name|format
+operator|++
+expr_stmt|;
+else|else
+block|{
+name|arg
+operator|=
+name|strtol
+argument_list|(
+name|format
+operator|+
+literal|1
+argument_list|,
+operator|&
+name|send
+argument_list|,
+literal|10
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|s
+argument_list|,
+name|operands
+index|[
+name|arg
+index|]
+argument_list|)
+expr_stmt|;
+name|s
+operator|+=
+name|strlen
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+name|format
+operator|=
+name|send
+expr_stmt|;
+block|}
+block|}
+operator|*
+name|s
+operator|=
+literal|'\0'
+expr_stmt|;
+comment|/* Assemble the constructed instruction.  */
+name|md_assemble
+argument_list|(
+name|complete
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/* This routine is called for each instruction to be assembled.  */
@@ -8007,12 +7673,10 @@ begin_function
 name|void
 name|md_assemble
 parameter_list|(
-name|str
-parameter_list|)
 name|char
 modifier|*
 name|str
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -8424,6 +8088,10 @@ name|nwanted
 operator|=
 name|strlen
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|opcode
 operator|->
 name|operands
@@ -8513,7 +8181,7 @@ literal|1
 expr_stmt|;
 block|}
 block|}
-comment|/* Perform some off-by-one hacks on the length field of certain instructions.    * Its such a shame to have to do this, but the problem is that HLASM got    * defined so that the lengths differ by one from the actual machine instructions.    * this code should probably be moved to a special inster-operand routine.    * Sigh. Affected instructions are Compare Logical, Move and Exclusive OR    * hack alert -- aren't *all* SS instructions affected ??    */
+comment|/* Perform some off-by-one hacks on the length field of certain instructions.      Its such a shame to have to do this, but the problem is that HLASM got      defined so that the lengths differ by one from the actual machine instructions.      this code should probably be moved to a special inster-operand routine.      Sigh. Affected instructions are Compare Logical, Move and Exclusive OR      hack alert -- aren't *all* SS instructions affected ??  */
 name|off_by_one
 operator|=
 literal|0
@@ -8766,19 +8434,15 @@ literal|0
 operator|>
 name|i370_using_other_regno
 condition|)
-block|{
 name|basereg
 operator|=
 name|i370_using_text_regno
 expr_stmt|;
-block|}
 else|else
-block|{
 name|basereg
 operator|=
 name|i370_using_other_regno
 expr_stmt|;
-block|}
 block|}
 elseif|else
 if|if
@@ -8792,19 +8456,15 @@ literal|0
 operator|>
 name|i370_using_other_regno
 condition|)
-block|{
 name|basereg
 operator|=
 name|i370_using_text_regno
 expr_stmt|;
-block|}
 else|else
-block|{
 name|basereg
 operator|=
 name|i370_using_other_regno
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -8812,13 +8472,11 @@ literal|0
 operator|>
 name|basereg
 condition|)
-block|{
 name|as_bad
 argument_list|(
 literal|"not using any base register"
 argument_list|)
 expr_stmt|;
-block|}
 name|insn
 operator|=
 name|i370_insert_operand
@@ -8872,7 +8530,7 @@ name|input_line_pointer
 operator|=
 name|str
 expr_stmt|;
-comment|/* register names are only allowed where there are registers ...  */
+comment|/* Register names are only allowed where there are registers.  */
 if|if
 condition|(
 operator|(
@@ -8886,7 +8544,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* quickie hack to get past things like (,r13) */
+comment|/* Quickie hack to get past things like (,r13).  */
 if|if
 condition|(
 name|skip_optional_index
@@ -8917,11 +8575,14 @@ operator|&
 name|ex
 argument_list|)
 condition|)
-block|{
 name|as_bad
 argument_list|(
 literal|"expecting a register for operand %d"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|opindex_ptr
 operator|-
 name|opcode
@@ -8930,11 +8591,11 @@ name|operands
 operator|+
 literal|1
 argument_list|)
+argument_list|)
 expr_stmt|;
 block|}
-block|}
 comment|/* Check for an address constant expression.  */
-comment|/* We will put PSW-relative addresses in the text section,        * and address literals in the .data (or other) section.  */
+comment|/* We will put PSW-relative addresses in the text section,          and address literals in the .data (or other) section.  */
 elseif|else
 if|if
 condition|(
@@ -8976,7 +8637,7 @@ name|input_line_pointer
 operator|=
 name|hold
 expr_stmt|;
-comment|/* perform some off-by-one hacks on the length field of certain instructions.        * Its such a shame to have to do this, but the problem is that HLASM got        * defined so that the programmer specifies a length that is one greater        * than what the machine instruction wants.        * Sigh.        */
+comment|/* Perform some off-by-one hacks on the length field of certain instructions.          Its such a shame to have to do this, but the problem is that HLASM got          defined so that the programmer specifies a length that is one greater          than what the machine instruction wants.  Sigh.  */
 if|if
 condition|(
 name|off_by_one
@@ -8994,13 +8655,11 @@ name|name
 argument_list|)
 operator|)
 condition|)
-block|{
 name|ex
 operator|.
 name|X_add_number
 operator|--
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|ex
@@ -9037,7 +8696,6 @@ name|X_op
 operator|==
 name|O_register
 condition|)
-block|{
 name|insn
 operator|=
 name|i370_insert_operand
@@ -9051,7 +8709,6 @@ operator|.
 name|X_add_number
 argument_list|)
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -9065,7 +8722,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|OBJ_ELF
-comment|/* Allow @HA, @L, @H on constants.            * Well actually, no we don't; there really don't make sense            * (at least not to me) for the i370.  However, this code is            * left here for any dubious future expansion reasons ...  */
+comment|/* Allow @HA, @L, @H on constants.              Well actually, no we don't; there really don't make sense              (at least not to me) for the i370.  However, this code is              left here for any dubious future expansion reasons.  */
 name|char
 modifier|*
 name|orig_str
@@ -9270,7 +8927,7 @@ comment|/* OBJ_ELF */
 else|else
 block|{
 comment|/* We need to generate a fixup for this expression.  */
-comment|/* Typically, the expression will just be a symbol ...            * printf ("insn %s needs fixup for %s \n",            *        opcode->name, ex.X_add_symbol->bsym->name);            */
+comment|/* Typically, the expression will just be a symbol ...                printf ("insn %s needs fixup for %s \n",                     opcode->name, ex.X_add_symbol->bsym->name);  */
 if|if
 condition|(
 name|fc
@@ -9314,7 +8971,7 @@ operator|++
 name|fc
 expr_stmt|;
 block|}
-comment|/* skip over delimiter (close paren, or comma) */
+comment|/* Skip over delimiter (close paren, or comma).  */
 if|if
 condition|(
 operator|(
@@ -9392,7 +9049,6 @@ name|opcode
 operator|->
 name|len
 condition|)
-block|{
 name|md_number_to_chars
 argument_list|(
 name|f
@@ -9409,7 +9065,6 @@ operator|->
 name|len
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 block|{
 name|md_number_to_chars
@@ -9434,7 +9089,6 @@ name|opcode
 operator|->
 name|len
 condition|)
-block|{
 name|md_number_to_chars
 argument_list|(
 operator|(
@@ -9459,10 +9113,9 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 block|{
-comment|/* not used --- don't have any 8 byte instructions */
+comment|/* Not used --- don't have any 8 byte instructions.  */
 name|as_bad
 argument_list|(
 literal|"Internal Error: bad instruction length"
@@ -9492,7 +9145,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Create any fixups.  At this point we do not use a      bfd_reloc_code_real_type, but instead just use the      BFD_RELOC_UNUSED plus the operand index.  This lets us easily      handle fixups for any operand type, although that is admittedly      not a very exciting feature.  We pick a BFD reloc type in      md_apply_fix3.  */
+comment|/* Create any fixups.  At this point we do not use a      bfd_reloc_code_real_type, but instead just use the      BFD_RELOC_UNUSED plus the operand index.  This lets us easily      handle fixups for any operand type, although that is admittedly      not a very exciting feature.  We pick a BFD reloc type in      md_apply_fix.  */
 for|for
 control|(
 name|i
@@ -9723,346 +9376,6 @@ block|}
 block|}
 end_function
 
-begin_comment
-comment|/* Handle a macro.  Gather all the operands, transform them as    described by the macro, and call md_assemble recursively.  All the    operands are separated by commas; we don't accept parentheses    around operands here.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|i370_macro
-parameter_list|(
-name|str
-parameter_list|,
-name|macro
-parameter_list|)
-name|char
-modifier|*
-name|str
-decl_stmt|;
-specifier|const
-name|struct
-name|i370_macro
-modifier|*
-name|macro
-decl_stmt|;
-block|{
-name|char
-modifier|*
-name|operands
-index|[
-literal|10
-index|]
-decl_stmt|;
-name|unsigned
-name|int
-name|count
-decl_stmt|;
-name|char
-modifier|*
-name|s
-decl_stmt|;
-name|unsigned
-name|int
-name|len
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|format
-decl_stmt|;
-name|int
-name|arg
-decl_stmt|;
-name|char
-modifier|*
-name|send
-decl_stmt|;
-name|char
-modifier|*
-name|complete
-decl_stmt|;
-comment|/* Gather the users operands into the operands array.  */
-name|count
-operator|=
-literal|0
-expr_stmt|;
-name|s
-operator|=
-name|str
-expr_stmt|;
-while|while
-condition|(
-literal|1
-condition|)
-block|{
-if|if
-condition|(
-name|count
-operator|>=
-sizeof|sizeof
-name|operands
-operator|/
-sizeof|sizeof
-name|operands
-index|[
-literal|0
-index|]
-condition|)
-break|break;
-name|operands
-index|[
-name|count
-operator|++
-index|]
-operator|=
-name|s
-expr_stmt|;
-name|s
-operator|=
-name|strchr
-argument_list|(
-name|s
-argument_list|,
-literal|','
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|s
-operator|==
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
-condition|)
-break|break;
-operator|*
-name|s
-operator|++
-operator|=
-literal|'\0'
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|count
-operator|!=
-name|macro
-operator|->
-name|operands
-condition|)
-block|{
-name|as_bad
-argument_list|(
-literal|"wrong number of operands"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-comment|/* Work out how large the string must be (the size is unbounded      because it includes user input).  */
-name|len
-operator|=
-literal|0
-expr_stmt|;
-name|format
-operator|=
-name|macro
-operator|->
-name|format
-expr_stmt|;
-while|while
-condition|(
-operator|*
-name|format
-operator|!=
-literal|'\0'
-condition|)
-block|{
-if|if
-condition|(
-operator|*
-name|format
-operator|!=
-literal|'%'
-condition|)
-block|{
-operator|++
-name|len
-expr_stmt|;
-operator|++
-name|format
-expr_stmt|;
-block|}
-else|else
-block|{
-name|arg
-operator|=
-name|strtol
-argument_list|(
-name|format
-operator|+
-literal|1
-argument_list|,
-operator|&
-name|send
-argument_list|,
-literal|10
-argument_list|)
-expr_stmt|;
-name|know
-argument_list|(
-name|send
-operator|!=
-name|format
-operator|&&
-name|arg
-operator|>=
-literal|0
-operator|&&
-name|arg
-operator|<
-name|count
-argument_list|)
-expr_stmt|;
-name|len
-operator|+=
-name|strlen
-argument_list|(
-name|operands
-index|[
-name|arg
-index|]
-argument_list|)
-expr_stmt|;
-name|format
-operator|=
-name|send
-expr_stmt|;
-block|}
-block|}
-comment|/* Put the string together.  */
-name|complete
-operator|=
-name|s
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|alloca
-argument_list|(
-name|len
-operator|+
-literal|1
-argument_list|)
-expr_stmt|;
-name|format
-operator|=
-name|macro
-operator|->
-name|format
-expr_stmt|;
-while|while
-condition|(
-operator|*
-name|format
-operator|!=
-literal|'\0'
-condition|)
-block|{
-if|if
-condition|(
-operator|*
-name|format
-operator|!=
-literal|'%'
-condition|)
-operator|*
-name|s
-operator|++
-operator|=
-operator|*
-name|format
-operator|++
-expr_stmt|;
-else|else
-block|{
-name|arg
-operator|=
-name|strtol
-argument_list|(
-name|format
-operator|+
-literal|1
-argument_list|,
-operator|&
-name|send
-argument_list|,
-literal|10
-argument_list|)
-expr_stmt|;
-name|strcpy
-argument_list|(
-name|s
-argument_list|,
-name|operands
-index|[
-name|arg
-index|]
-argument_list|)
-expr_stmt|;
-name|s
-operator|+=
-name|strlen
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-name|format
-operator|=
-name|send
-expr_stmt|;
-block|}
-block|}
-operator|*
-name|s
-operator|=
-literal|'\0'
-expr_stmt|;
-comment|/* Assemble the constructed instruction.  */
-name|md_assemble
-argument_list|(
-name|complete
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_escape
-end_escape
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* For ELF, add support for SHF_EXCLUDE and SHT_ORDERED */
-end_comment
-
-begin_endif
-unit|int i370_section_letter (letter, ptr_msg)      int letter;      char **ptr_msg; {   if (letter == 'e')     return SHF_EXCLUDE;    *ptr_msg = "Bad .section directive: want a,e,w,x,M,S in string";   return 0; }  int i370_section_word (str, len)     char *str;     size_t len; {   if (len == 7&& strncmp (str, "exclude", 7) == 0)     return SHF_EXCLUDE;    return -1; }  int i370_section_type (str, len)     char *str;     size_t len; {   if (len == 7&& strncmp (str, "ordered", 7) == 0)      return SHT_ORDERED;    return -1; }  int i370_section_flags (flags, attr, type)      int flags;      int attr;      int type; {   if (type == SHT_ORDERED)     flags |= SEC_ALLOC | SEC_LOAD | SEC_SORT_ENTRIES;    if (attr& SHF_EXCLUDE)     flags |= SEC_EXCLUDE;    return flags; }
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* OBJ_ELF */
-end_comment
-
 begin_escape
 end_escape
 
@@ -10079,12 +9392,10 @@ specifier|static
 name|void
 name|i370_byte
 parameter_list|(
-name|ignore
-parameter_list|)
 name|int
 name|ignore
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -10162,12 +9473,10 @@ specifier|static
 name|void
 name|i370_tc
 parameter_list|(
-name|ignore
-parameter_list|)
 name|int
 name|ignore
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* Skip the TOC symbol name.  */
 while|while
@@ -10254,23 +9563,17 @@ name|char
 modifier|*
 name|md_atof
 parameter_list|(
-name|type
-parameter_list|,
-name|litp
-parameter_list|,
-name|sizep
-parameter_list|)
 name|int
 name|type
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|litp
-decl_stmt|;
+parameter_list|,
 name|int
 modifier|*
 name|sizep
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|prec
@@ -10408,22 +9711,16 @@ begin_function
 name|void
 name|md_number_to_chars
 parameter_list|(
-name|buf
-parameter_list|,
-name|val
-parameter_list|,
-name|n
-parameter_list|)
 name|char
 modifier|*
 name|buf
-decl_stmt|;
+parameter_list|,
 name|valueT
 name|val
-decl_stmt|;
+parameter_list|,
 name|int
 name|n
-decl_stmt|;
+parameter_list|)
 block|{
 name|number_to_chars_bigendian
 argument_list|(
@@ -10445,17 +9742,13 @@ begin_function
 name|valueT
 name|md_section_align
 parameter_list|(
-name|seg
-parameter_list|,
-name|addr
-parameter_list|)
 name|asection
 modifier|*
 name|seg
-decl_stmt|;
+parameter_list|,
 name|valueT
 name|addr
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|align
@@ -10498,20 +9791,16 @@ begin_function
 name|int
 name|md_estimate_size_before_relax
 parameter_list|(
-name|fragp
-parameter_list|,
-name|seg
-parameter_list|)
 name|fragS
 modifier|*
 name|fragp
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|seg
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 name|abort
 argument_list|()
@@ -10530,27 +9819,21 @@ begin_function
 name|void
 name|md_convert_frag
 parameter_list|(
-name|abfd
-parameter_list|,
-name|sec
-parameter_list|,
-name|fragp
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|sec
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|fragS
 modifier|*
 name|fragp
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 name|abort
 argument_list|()
@@ -10567,13 +9850,11 @@ name|symbolS
 modifier|*
 name|md_undefined_symbol
 parameter_list|(
-name|name
-parameter_list|)
 name|char
 modifier|*
 name|name
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 literal|0
@@ -10596,18 +9877,14 @@ begin_function
 name|long
 name|md_pcrel_from_section
 parameter_list|(
-name|fixp
-parameter_list|,
-name|sec
-parameter_list|)
 name|fixS
 modifier|*
 name|fixp
-decl_stmt|;
+parameter_list|,
 name|segT
 name|sec
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|fixp
@@ -10624,30 +9901,24 @@ block|}
 end_function
 
 begin_comment
-comment|/* Apply a fixup to the object code.  This is called for all the    fixups we generated by the call to fix_new_exp, above.  In the call    above we used a reloc code which was the largest legal reloc code    plus the operand index.  Here we undo that to recover the operand    index.  At this point all symbol values should be fully resolved,    and we attempt to completely resolve the reloc.  If we can not do    that, we determine the correct reloc code and put it back in the    fixup.     See gas/cgen.c for more sample code and explanations of what's    going on here ... */
+comment|/* Apply a fixup to the object code.  This is called for all the    fixups we generated by the call to fix_new_exp, above.  In the call    above we used a reloc code which was the largest legal reloc code    plus the operand index.  Here we undo that to recover the operand    index.  At this point all symbol values should be fully resolved,    and we attempt to completely resolve the reloc.  If we can not do    that, we determine the correct reloc code and put it back in the    fixup.     See gas/cgen.c for more sample code and explanations of what's    going on here.  */
 end_comment
 
 begin_function
 name|void
-name|md_apply_fix3
+name|md_apply_fix
 parameter_list|(
-name|fixP
-parameter_list|,
-name|valP
-parameter_list|,
-name|seg
-parameter_list|)
 name|fixS
 modifier|*
 name|fixP
-decl_stmt|;
+parameter_list|,
 name|valueT
 modifier|*
 name|valP
-decl_stmt|;
+parameter_list|,
 name|segT
 name|seg
-decl_stmt|;
+parameter_list|)
 block|{
 name|valueT
 name|value
@@ -10669,7 +9940,7 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"\nmd_apply_fix3: symbol %s at 0x%x (%s:%d) val=0x%x addend=0x%x\n"
+literal|"\nmd_apply_fix: symbol %s at 0x%x (%s:%d) val=0x%x addend=0x%x\n"
 argument_list|,
 name|S_GET_NAME
 argument_list|(
@@ -10775,7 +10046,7 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"\nmd_apply_fix3: fixup operand %s at 0x%x in %s:%d addend=0x%x\n"
+literal|"\nmd_apply_fix: fixup operand %s at 0x%x in %s:%d addend=0x%x\n"
 argument_list|,
 name|operand
 operator|->
@@ -10949,12 +10220,6 @@ condition|)
 comment|/* Nothing else to do here.  */
 return|return;
 comment|/* Determine a BFD reloc value based on the operand information. 	 We are only prepared to turn a few of the operands into 	 relocs.  In fact, we support *zero* operand relocations ... 	 Why?  Because we are not expecting the compiler to generate 	 any operands that need relocation.  Due to the 12-bit naturew of 	 i370 addressing, this would be unusual.  */
-if|#
-directive|if
-literal|0
-block|if ((operand->flags& I370_OPERAND_RELATIVE) != 0&& operand->bits == 12&& operand->shift == 0)         fixP->fx_r_type = BFD_RELOC_I370_D12;       else
-endif|#
-directive|endif
 block|{
 name|char
 modifier|*
@@ -11036,7 +10301,7 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"md_apply_fix3: reloc case %d in segment  %s %s:%d\n"
+literal|"md_apply_fix: reloc case %d in segment  %s %s:%d\n"
 argument_list|,
 name|fixP
 operator|->
@@ -11354,19 +10619,15 @@ name|arelent
 modifier|*
 name|tc_gen_reloc
 parameter_list|(
-name|seg
-parameter_list|,
-name|fixp
-parameter_list|)
 name|asection
 modifier|*
 name|seg
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|fixS
 modifier|*
 name|fixp
-decl_stmt|;
+parameter_list|)
 block|{
 name|arelent
 modifier|*
@@ -11374,10 +10635,6 @@ name|reloc
 decl_stmt|;
 name|reloc
 operator|=
-operator|(
-name|arelent
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 sizeof|sizeof
@@ -11390,11 +10647,6 @@ name|reloc
 operator|->
 name|sym_ptr_ptr
 operator|=
-operator|(
-name|asymbol
-operator|*
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 sizeof|sizeof
@@ -11527,6 +10779,174 @@ name|reloc
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* The target specific pseudo-ops which we support.  */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|pseudo_typeS
+name|md_pseudo_table
+index|[]
+init|=
+block|{
+comment|/* Pseudo-ops which must be overridden.  */
+block|{
+literal|"byte"
+block|,
+name|i370_byte
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"dc"
+block|,
+name|i370_dc
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"ds"
+block|,
+name|i370_ds
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"rmode"
+block|,
+name|i370_rmode
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"csect"
+block|,
+name|i370_csect
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"dsect"
+block|,
+name|i370_dsect
+block|,
+literal|0
+block|}
+block|,
+comment|/* enable ebcdic strings e.g. for 3270 support */
+block|{
+literal|"ebcdic"
+block|,
+name|i370_ebcdic
+block|,
+literal|0
+block|}
+block|,
+ifdef|#
+directive|ifdef
+name|OBJ_ELF
+block|{
+literal|"long"
+block|,
+name|i370_elf_cons
+block|,
+literal|4
+block|}
+block|,
+block|{
+literal|"word"
+block|,
+name|i370_elf_cons
+block|,
+literal|4
+block|}
+block|,
+block|{
+literal|"short"
+block|,
+name|i370_elf_cons
+block|,
+literal|2
+block|}
+block|,
+block|{
+literal|"rdata"
+block|,
+name|i370_elf_rdata
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"rodata"
+block|,
+name|i370_elf_rdata
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"lcomm"
+block|,
+name|i370_elf_lcomm
+block|,
+literal|0
+block|}
+block|,
+endif|#
+directive|endif
+comment|/* This pseudo-op is used even when not generating XCOFF output.  */
+block|{
+literal|"tc"
+block|,
+name|i370_tc
+block|,
+literal|0
+block|}
+block|,
+comment|/* dump the literal pool */
+block|{
+literal|"ltorg"
+block|,
+name|i370_ltorg
+block|,
+literal|0
+block|}
+block|,
+comment|/* support the hlasm-style USING directive */
+block|{
+literal|"using"
+block|,
+name|i370_using
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"drop"
+block|,
+name|i370_drop
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 

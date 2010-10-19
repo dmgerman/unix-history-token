@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for Motorola MCore COFF/PE    Copyright 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for Motorola MCore COFF/PE    Copyright 1999, 2000, 2001, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -114,18 +114,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static struct bfd_link_hash_table *coff_mcore_link_hash_table_create   PARAMS ((bfd *));
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -743,22 +731,6 @@ define|\
 value|((mcore_hash_table *) ((info)->hash))
 end_define
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* Create an MCore coff linker hash table.  */
-end_comment
-
-begin_endif
-unit|static struct bfd_link_hash_table * coff_mcore_link_hash_table_create (abfd)      bfd * abfd; {   mcore_hash_table * ret;    ret = (mcore_hash_table *) bfd_malloc ((bfd_size_type) sizeof (* ret));   if (ret == (mcore_hash_table *) NULL)     return NULL;    if (! _bfd_coff_link_hash_table_init       (& ret->root, abfd, _bfd_coff_link_hash_newfunc))     {       free (ret);       return (struct bfd_link_hash_table *) NULL;     }    ret->bfd_of_toc_owner = NULL;   ret->global_toc_size  = 0;   ret->import_table_size = 0;   ret->first_thunk_address = 0;   ret->thunk_size = 0;    return& ret->root.root; }
-endif|#
-directive|endif
-end_endif
-
 begin_escape
 end_escape
 
@@ -932,13 +904,10 @@ name|_bfd_error_handler
 argument_list|(
 name|_
 argument_list|(
-literal|"%s: Relocation %s (%d) is not currently supported.\n"
+literal|"%B: Relocation %s (%d) is not currently supported.\n"
 argument_list|)
 argument_list|,
-name|bfd_archive_filename
-argument_list|(
 name|abfd
-argument_list|)
 argument_list|,
 name|reloc_entry
 operator|->
@@ -1389,13 +1358,10 @@ call|)
 argument_list|(
 name|_
 argument_list|(
-literal|"%s: compiled for a %s system and target is %s.\n"
+literal|"%B: compiled for a %s system and target is %s.\n"
 argument_list|)
 argument_list|,
-name|bfd_archive_filename
-argument_list|(
 name|input_bfd
-argument_list|)
 argument_list|,
 name|bfd_big_endian
 argument_list|(
@@ -1867,13 +1833,10 @@ name|_bfd_error_handler
 argument_list|(
 name|_
 argument_list|(
-literal|"%s: unsupported relocation type 0x%02x"
+literal|"%B: unsupported relocation type 0x%02x"
 argument_list|)
 argument_list|,
-name|bfd_archive_filename
-argument_list|(
 name|input_bfd
-argument_list|)
 argument_list|,
 name|r_type
 argument_list|)
@@ -1889,34 +1852,21 @@ return|;
 case|case
 name|IMAGE_REL_MCORE_ABSOLUTE
 case|:
-name|fprintf
+name|_bfd_error_handler
 argument_list|(
-name|stderr
-argument_list|,
 name|_
 argument_list|(
-literal|"Warning: unsupported reloc %s<file %s, section %s>\n"
+literal|"Warning: unsupported reloc %s<file %B, section %A>\n"
+literal|"sym %ld (%s), r_vaddr %ld (%lx)"
 argument_list|)
+argument_list|,
+name|input_bfd
+argument_list|,
+name|input_section
 argument_list|,
 name|howto
 operator|->
 name|name
-argument_list|,
-name|bfd_archive_filename
-argument_list|(
-name|input_bfd
-argument_list|)
-argument_list|,
-name|input_section
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"sym %ld (%s), r_vaddr %ld (%lx)\n"
 argument_list|,
 name|rel
 operator|->
@@ -2072,6 +2022,17 @@ name|reloc_overflow
 call|)
 argument_list|(
 name|info
+argument_list|,
+operator|(
+name|h
+condition|?
+operator|&
+name|h
+operator|->
+name|root
+else|:
+name|NULL
+operator|)
 argument_list|,
 name|my_name
 argument_list|,

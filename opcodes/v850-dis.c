@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Disassemble V850 instructions.    Copyright 1996, 1997, 1998, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Disassemble V850 instructions.    Copyright 1996, 1997, 1998, 2000, 2001, 2002, 2003, 2005    Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston,    MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -264,49 +264,23 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|disassemble
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd_vma
-operator|,
-expr|struct
-name|disassemble_info
-operator|*
-operator|,
-name|unsigned
-name|long
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|int
 name|disassemble
 parameter_list|(
-name|memaddr
-parameter_list|,
-name|info
-parameter_list|,
-name|insn
-parameter_list|)
 name|bfd_vma
 name|memaddr
-decl_stmt|;
+parameter_list|,
 name|struct
 name|disassemble_info
 modifier|*
 name|info
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|long
 name|insn
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|v850_opcode
@@ -350,7 +324,7 @@ decl_stmt|;
 name|int
 name|target_processor
 decl_stmt|;
-comment|/* Special case: 32 bit MOV */
+comment|/* Special case: 32 bit MOV.  */
 if|if
 condition|(
 operator|(
@@ -373,7 +347,7 @@ literal|2
 else|:
 literal|4
 expr_stmt|;
-comment|/* If this is a two byte insn, then mask off the high bits. */
+comment|/* If this is a two byte insn, then mask off the high bits.  */
 if|if
 condition|(
 name|short_op
@@ -482,7 +456,6 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-comment|/*fprintf (stderr, "match: mask: %x insn: %x, opcode: %x, name: %s\n", op->mask, insn, op->opcode, op->name );*/
 name|memop
 operator|=
 name|op
@@ -637,7 +610,7 @@ operator|)
 operator|)
 expr_stmt|;
 block|}
-comment|/* The first operand is always output without any 		 special handling.  		 For the following arguments:  		   If memop&& opnum == memop + 1, then we need '[' since 		   we're about to output the register used in a memory 		   reference.  		   If memop&& opnum == memop + 2, then we need ']' since 		   we just finished the register in a memory reference.  We 		   also need a ',' before this operand.  		   Else we just need a comma.  		   We may need to output a trailing ']' if the last operand 		   in an instruction is the register for a memory address.   		   The exception (and there's always an exception) is the 		   "jmp" insn which needs square brackets around it's only 		   register argument.  */
+comment|/* The first operand is always output without any 		 special handling.  		 For the following arguments:  		   If memop&& opnum == memop + 1, then we need '[' since 		   we're about to output the register used in a memory 		   reference.  		   If memop&& opnum == memop + 2, then we need ']' since 		   we just finished the register in a memory reference.  We 		   also need a ',' before this operand.  		   Else we just need a comma.  		   We may need to output a trailing ']' if the last operand 		   in an instruction is the register for a memory address.  		   The exception (and there's always an exception) is the 		   "jmp" insn which needs square brackets around it's only 		   register argument.  */
 if|if
 condition|(
 name|memop
@@ -729,7 +702,7 @@ argument_list|,
 literal|", "
 argument_list|)
 expr_stmt|;
-comment|/* extract the flags, ignorng ones which do not effect disassembly output. */
+comment|/* Extract the flags, ignorng ones which 		 do not effect disassembly output. */
 name|flag
 operator|=
 name|operand
@@ -840,7 +813,7 @@ name|info
 operator|->
 name|stream
 argument_list|,
-literal|"%d"
+literal|"%ld"
 argument_list|,
 name|value
 argument_list|)
@@ -857,7 +830,7 @@ name|value
 operator|+
 name|memaddr
 decl_stmt|;
-comment|/* On the v850 the top 8 bits of an address are used by an overlay manager. 		       Thus it may happen that when we are looking for a symbol to match 		       against an address with some of its top bits set, the search fails to 		       turn up an exact match.  In this case we try to find an exact match 		       against a symbol in the lower address space, and if we find one, we 		       use that address.   We only do this for JARL instructions however, as 		       we do not want to misinterpret branch instructions.  */
+comment|/* On the v850 the top 8 bits of an address are used by an 		       overlay manager.  Thus it may happen that when we are 		       looking for a symbol to match against an address with 		       some of its top bits set, the search fails to turn up an 		       exact match.  In this case we try to find an exact match 		       against a symbol in the lower address space, and if we 		       find one, we use that address.   We only do this for 		       JARL instructions however, as we do not want to 		       misinterpret branch instructions.  */
 if|if
 condition|(
 name|operand
@@ -900,12 +873,10 @@ argument_list|,
 name|info
 argument_list|)
 condition|)
-block|{
 name|addr
 operator|&=
 literal|0x00FFFFFF
 expr_stmt|;
-block|}
 block|}
 name|info
 operator|->
@@ -1203,8 +1174,8 @@ operator|&=
 operator|~
 literal|0x10
 expr_stmt|;
+comment|/* Do not include magic bit.  */
 break|break;
-comment|/* Do not include magic bit */
 default|default:
 comment|/* xgettext:c-format */
 name|fprintf
@@ -1454,7 +1425,6 @@ name|first
 operator|+
 literal|1
 condition|)
-block|{
 name|info
 operator|->
 name|fprintf_func
@@ -1473,7 +1443,6 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 if|if
@@ -1574,7 +1543,7 @@ argument_list|(
 name|buffer
 argument_list|)
 expr_stmt|;
-comment|/* If this is a DISPOSE instruction with ff set to 0x10, then shift value up by 16.  */
+comment|/* If this is a DISPOSE instruction with ff 			 set to 0x10, then shift value up by 16.  */
 if|if
 condition|(
 operator|(
@@ -1597,14 +1566,13 @@ name|info
 operator|->
 name|stream
 argument_list|,
-literal|"0x%x"
+literal|"0x%lx"
 argument_list|,
 name|value
 argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 name|info
 operator|->
 name|memory_error_func
@@ -1618,7 +1586,6 @@ argument_list|,
 name|info
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 case|case
 name|V850E_IMMEDIATE32
@@ -1673,7 +1640,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 name|info
 operator|->
 name|memory_error_func
@@ -1687,7 +1653,6 @@ argument_list|,
 name|info
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 block|}
 comment|/* Handle jmp correctly.  */
@@ -1778,7 +1743,7 @@ name|info
 operator|->
 name|stream
 argument_list|,
-literal|".short\t0x%04x"
+literal|".short\t0x%04lx"
 argument_list|,
 name|insn
 argument_list|)
@@ -1792,7 +1757,7 @@ name|info
 operator|->
 name|stream
 argument_list|,
-literal|".long\t0x%08x"
+literal|".long\t0x%08lx"
 argument_list|,
 name|insn
 argument_list|)
@@ -1808,18 +1773,14 @@ begin_function
 name|int
 name|print_insn_v850
 parameter_list|(
-name|memaddr
-parameter_list|,
-name|info
-parameter_list|)
 name|bfd_vma
 name|memaddr
-decl_stmt|;
+parameter_list|,
 name|struct
 name|disassemble_info
 modifier|*
 name|info
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|status

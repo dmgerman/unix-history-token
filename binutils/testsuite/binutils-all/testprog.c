@@ -18,6 +18,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|int
+name|printf
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|int
 name|common
@@ -43,7 +57,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|unsigned
 name|char
 name|string
 index|[]
@@ -55,7 +68,9 @@ end_decl_stmt
 begin_function
 name|int
 name|fn
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 literal|3
@@ -66,7 +81,9 @@ end_function
 begin_function
 name|int
 name|main
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -98,9 +115,7 @@ literal|"failed\n"
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 name|printf
@@ -109,9 +124,7 @@ literal|"ok\n"
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 end_function

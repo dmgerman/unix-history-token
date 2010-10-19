@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ALPHA ELF support for BFD.    Copyright 1996, 1998, 2000 Free Software Foundation, Inc.     By Eric Youngdale,<eric@aib.com>.  No processor supplement available    for this platform.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* ALPHA ELF support for BFD.    Copyright 1996, 1998, 2000, 2001, 2002 Free Software Foundation, Inc.     By Eric Youngdale,<eric@aib.com>.  No processor supplement available    for this platform.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -128,6 +128,17 @@ define|#
 directive|define
 name|STO_ALPHA_STD_GPLOAD
 value|0x88
+end_define
+
+begin_comment
+comment|/* Special values for Elf64_Dyn tag.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DT_ALPHA_PLTRO
+value|DT_LOPROC
 end_define
 
 begin_include
@@ -587,6 +598,13 @@ define|#
 directive|define
 name|LITUSE_ALPHA_TLSLDM
 value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|LITUSE_ALPHA_JSRDIRECT
+value|6
 end_define
 
 begin_endif

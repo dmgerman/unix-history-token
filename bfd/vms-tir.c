@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* vms-tir.c -- BFD back-end for VAX (openVMS/VAX) and    EVAX (openVMS/Alpha) files.    Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.     TIR record handling functions    ETIR record handling functions     go and read the openVMS linker manual (esp. appendix B)    if you don't know what's going on here :-)     Written by Klaus K"ampf (kkaempf@rmi.de)     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* vms-tir.c -- BFD back-end for VAX (openVMS/VAX) and    EVAX (openVMS/Alpha) files.    Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2004, 2005    Free Software Foundation, Inc.     TIR record handling functions    ETIR record handling functions     go and read the openVMS linker manual (esp. appendix B)    if you don't know what's going on here :-)     Written by Klaus K"ampf (kkaempf@rmi.de)     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -37,408 +37,6 @@ directive|include
 file|"vms.h"
 end_include
 
-begin_decl_stmt
-specifier|static
-name|void
-name|image_set_ptr
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|,
-name|int
-name|psect
-operator|,
-name|uquad
-name|offset
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|image_inc_ptr
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|,
-name|uquad
-name|offset
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|image_dump
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|,
-name|unsigned
-name|char
-operator|*
-name|ptr
-operator|,
-name|int
-name|size
-operator|,
-name|int
-name|offset
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|image_write_b
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|,
-name|unsigned
-name|int
-name|value
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|image_write_w
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|,
-name|unsigned
-name|int
-name|value
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|image_write_l
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|,
-name|unsigned
-name|long
-name|value
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|image_write_q
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|,
-name|uquad
-name|value
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|check_section
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|etir_sta
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|int
-operator|,
-name|unsigned
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|etir_sto
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|int
-operator|,
-name|unsigned
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|etir_opr
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|int
-operator|,
-name|unsigned
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|etir_ctl
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|int
-operator|,
-name|unsigned
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|etir_stc
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|int
-operator|,
-name|unsigned
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|asection
-modifier|*
-name|new_section
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|alloc_section
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|unsigned
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|etir_cmd
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|int
-operator|,
-name|unsigned
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|analyze_tir
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|unsigned
-name|char
-operator|*
-operator|,
-name|unsigned
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|analyze_etir
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|unsigned
-name|char
-operator|*
-operator|,
-name|unsigned
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|unsigned
-name|char
-modifier|*
-name|tir_opr
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|unsigned
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|tir_cmd_name
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|cmd_name
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_escape
 end_escape
 
@@ -447,17 +45,13 @@ specifier|static
 name|int
 name|check_section
 parameter_list|(
-name|abfd
-parameter_list|,
-name|size
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|int
 name|size
-decl_stmt|;
+parameter_list|)
 block|{
 name|bfd_size_type
 name|offset
@@ -487,7 +81,7 @@ argument_list|(
 name|image_section
 argument_list|)
 operator|->
-name|_raw_size
+name|size
 condition|)
 block|{
 name|PRIV
@@ -544,7 +138,7 @@ argument_list|(
 name|image_section
 argument_list|)
 operator|->
-name|_raw_size
+name|size
 operator|=
 name|offset
 operator|+
@@ -584,22 +178,16 @@ specifier|static
 name|void
 name|image_set_ptr
 parameter_list|(
-name|abfd
-parameter_list|,
-name|psect
-parameter_list|,
-name|offset
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|int
 name|psect
-decl_stmt|;
+parameter_list|,
 name|uquad
 name|offset
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -657,7 +245,6 @@ index|[
 name|psect
 index|]
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -670,17 +257,13 @@ specifier|static
 name|void
 name|image_inc_ptr
 parameter_list|(
-name|abfd
-parameter_list|,
-name|offset
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|uquad
 name|offset
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -703,7 +286,6 @@ argument_list|)
 operator|+=
 name|offset
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -716,30 +298,22 @@ specifier|static
 name|void
 name|image_dump
 parameter_list|(
-name|abfd
-parameter_list|,
-name|ptr
-parameter_list|,
-name|size
-parameter_list|,
-name|offset
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|char
 modifier|*
 name|ptr
-decl_stmt|;
+parameter_list|,
 name|int
 name|size
-decl_stmt|;
+parameter_list|,
 name|int
 name|offset
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -806,7 +380,6 @@ operator|*
 name|ptr
 operator|++
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -819,18 +392,14 @@ specifier|static
 name|void
 name|image_write_b
 parameter_list|(
-name|abfd
-parameter_list|,
-name|value
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|int
 name|value
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -839,7 +408,7 @@ name|_bfd_vms_debug
 argument_list|(
 literal|6
 argument_list|,
-literal|"image_write_b(%02x)\n"
+literal|"image_write_b (%02x)\n"
 argument_list|,
 operator|(
 name|int
@@ -877,7 +446,6 @@ operator|&
 literal|0xff
 operator|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -890,18 +458,14 @@ specifier|static
 name|void
 name|image_write_w
 parameter_list|(
-name|abfd
-parameter_list|,
-name|value
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|int
 name|value
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -910,7 +474,7 @@ name|_bfd_vms_debug
 argument_list|(
 literal|6
 argument_list|,
-literal|"image_write_w(%04x)\n"
+literal|"image_write_w (%04x)\n"
 argument_list|,
 operator|(
 name|int
@@ -955,7 +519,6 @@ argument_list|)
 operator|+=
 literal|2
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -968,18 +531,14 @@ specifier|static
 name|void
 name|image_write_l
 parameter_list|(
-name|abfd
-parameter_list|,
-name|value
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|long
 name|value
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -1030,7 +589,6 @@ argument_list|)
 operator|+=
 literal|4
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1043,17 +601,13 @@ specifier|static
 name|void
 name|image_write_q
 parameter_list|(
-name|abfd
-parameter_list|,
-name|value
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|uquad
 name|value
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -1101,7 +655,6 @@ argument_list|)
 operator|+=
 literal|8
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1115,11 +668,9 @@ name|char
 modifier|*
 name|cmd_name
 parameter_list|(
-name|cmd
-parameter_list|)
 name|int
 name|cmd
-decl_stmt|;
+parameter_list|)
 block|{
 switch|switch
 condition|(
@@ -1358,24 +909,18 @@ specifier|static
 name|bfd_boolean
 name|etir_sta
 parameter_list|(
-name|abfd
-parameter_list|,
-name|cmd
-parameter_list|,
-name|ptr
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|int
 name|cmd
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|char
 modifier|*
 name|ptr
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -1412,8 +957,7 @@ condition|(
 name|cmd
 condition|)
 block|{
-comment|/* stack */
-comment|/* stack global 	 arg: cs	symbol name  	 stack 32 bit value of symbol (high bits set to 0)  */
+comment|/* stack global 	 arg: cs	symbol name  	 stack 32 bit value of symbol (high bits set to 0).  */
 case|case
 name|ETIR_S_C_STA_GBL
 case|:
@@ -1457,10 +1001,6 @@ if|if
 condition|(
 name|entry
 operator|==
-operator|(
-name|vms_symbol_entry
-operator|*
-operator|)
 name|NULL
 condition|)
 block|{
@@ -1498,7 +1038,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 name|_bfd_vms_push
 argument_list|(
 name|abfd
@@ -1519,9 +1058,8 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 break|break;
-comment|/* stack longword 	 arg: lw	value  	 stack 32 bit value, sign extend to 64 bit  */
+comment|/* stack longword 	 arg: lw	value  	 stack 32 bit value, sign extend to 64 bit.  */
 case|case
 name|ETIR_S_C_STA_LW
 case|:
@@ -1542,7 +1080,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* stack global 	 arg: qw	value  	 stack 64 bit value of symbol	 */
+comment|/* stack global 	 arg: qw	value  	 stack 64 bit value of symbol.  */
 case|case
 name|ETIR_S_C_STA_QW
 case|:
@@ -1563,7 +1101,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* stack psect base plus quadword offset 	 arg: lw	section index 	 qw	signed quadword offset (low 32 bits)  	 stack qw argument and section index 	 (see ETIR_S_C_STO_OFF, ETIR_S_C_CTL_SETRB)  */
+comment|/* stack psect base plus quadword offset 	 arg: lw	section index 	 qw	signed quadword offset (low 32 bits)  	 stack qw argument and section index 	 (see ETIR_S_C_STO_OFF, ETIR_S_C_CTL_SETRB).  */
 case|case
 name|ETIR_S_C_STA_PQ
 case|:
@@ -1707,7 +1245,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*    etir_sto     vms store commands     handle sto_xxx commands in etir section    ptr points to data area in record     see table B-9 of the openVMS linker manual.  */
+comment|/* etir_sto     vms store commands     handle sto_xxx commands in etir section    ptr points to data area in record     see table B-9 of the openVMS linker manual.  */
 end_comment
 
 begin_function
@@ -1715,24 +1253,18 @@ specifier|static
 name|bfd_boolean
 name|etir_sto
 parameter_list|(
-name|abfd
-parameter_list|,
-name|cmd
-parameter_list|,
-name|ptr
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|int
 name|cmd
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|char
 modifier|*
 name|ptr
-decl_stmt|;
+parameter_list|)
 block|{
 name|uquad
 name|dummy
@@ -1775,7 +1307,7 @@ condition|(
 name|cmd
 condition|)
 block|{
-comment|/* store byte: pop stack, write byte 	 arg: -  */
+comment|/* Store byte: pop stack, write byte 	 arg: -.  */
 case|case
 name|ETIR_S_C_STO_B
 case|:
@@ -1789,15 +1321,7 @@ operator|&
 name|psect
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (is_share)
-comment|/* FIXME */
-block|(*_bfd_error_handler) ("%s: byte fixups not supported", 			       cmd_name (cmd));
-endif|#
-directive|endif
-comment|/* FIXME: check top bits */
+comment|/* FIXME: check top bits.  */
 name|image_write_b
 argument_list|(
 name|abfd
@@ -1812,7 +1336,7 @@ literal|0xff
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* store word: pop stack, write word 	 arg: -  */
+comment|/* Store word: pop stack, write word 	 arg: -.  */
 case|case
 name|ETIR_S_C_STO_W
 case|:
@@ -1826,14 +1350,6 @@ operator|&
 name|psect
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (is_share)
-comment|/* FIXME */
-block|(*_bfd_error_handler) ("%s: word fixups not supported", 			       cmd_name (cmd));
-endif|#
-directive|endif
 comment|/* FIXME: check top bits */
 name|image_write_w
 argument_list|(
@@ -1849,7 +1365,7 @@ literal|0xffff
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* store longword: pop stack, write longword 	 arg: -  */
+comment|/* Store longword: pop stack, write longword 	 arg: -.  */
 case|case
 name|ETIR_S_C_STO_LW
 case|:
@@ -1892,7 +1408,7 @@ literal|0xffffffff
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* store quadword: pop stack, write quadword 	 arg: -  */
+comment|/* Store quadword: pop stack, write quadword 	 arg: -.  */
 case|case
 name|ETIR_S_C_STO_QW
 case|:
@@ -1920,6 +1436,7 @@ operator|)
 operator|->
 name|vma
 expr_stmt|;
+comment|/* FIXME: check top bits.  */
 name|image_write_q
 argument_list|(
 name|abfd
@@ -1927,9 +1444,8 @@ argument_list|,
 name|dummy
 argument_list|)
 expr_stmt|;
-comment|/* FIXME: check top bits */
 break|break;
-comment|/* store immediate repeated: pop stack for repeat count 	 arg: lw	byte count 	 da	data  */
+comment|/* Store immediate repeated: pop stack for repeat count 	 arg: lw	byte count 	 da	data.  */
 case|case
 name|ETIR_S_C_STO_IMMR
 case|:
@@ -1979,7 +1495,7 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
-comment|/* store global: write symbol value 	 arg: cs	global symbol name.  */
+comment|/* Store global: write symbol value 	 arg: cs	global symbol name.  */
 case|case
 name|ETIR_S_C_STO_GBL
 case|:
@@ -2023,10 +1539,6 @@ if|if
 condition|(
 name|entry
 operator|==
-operator|(
-name|vms_symbol_entry
-operator|*
-operator|)
 name|NULL
 condition|)
 block|{
@@ -2072,7 +1584,7 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
-comment|/* store code address: write address of entry point 	 arg: cs	global symbol name (procedure).  */
+comment|/* Store code address: write address of entry point 	 arg: cs	global symbol name (procedure).  */
 case|case
 name|ETIR_S_C_STO_CA
 case|:
@@ -2116,10 +1628,6 @@ if|if
 condition|(
 name|entry
 operator|==
-operator|(
-name|vms_symbol_entry
-operator|*
-operator|)
 name|NULL
 condition|)
 block|{
@@ -2146,6 +1654,7 @@ name|FALSE
 return|;
 block|}
 else|else
+comment|/* FIXME, reloc.  */
 name|image_write_q
 argument_list|(
 name|abfd
@@ -2162,7 +1671,6 @@ name|value
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* FIXME, reloc */
 block|}
 break|break;
 comment|/* Store offset to psect: pop stack, add low 32 bits to base of psect 	 arg: none.  */
@@ -2283,10 +1791,6 @@ if|if
 condition|(
 name|entry
 operator|==
-operator|(
-name|vms_symbol_entry
-operator|*
-operator|)
 name|NULL
 condition|)
 block|{
@@ -2423,25 +1927,19 @@ specifier|static
 name|bfd_boolean
 name|etir_opr
 parameter_list|(
-name|abfd
-parameter_list|,
-name|cmd
-parameter_list|,
-name|ptr
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|int
 name|cmd
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|char
 modifier|*
 name|ptr
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 name|long
 name|op1
@@ -2486,12 +1984,12 @@ block|{
 case|case
 name|ETIR_S_C_OPR_NOP
 case|:
-comment|/* no-op  */
+comment|/* No-op.  */
 break|break;
 case|case
 name|ETIR_S_C_OPR_ADD
 case|:
-comment|/* add  */
+comment|/* Add.  */
 name|op1
 operator|=
 operator|(
@@ -2537,7 +2035,7 @@ break|break;
 case|case
 name|ETIR_S_C_OPR_SUB
 case|:
-comment|/* subtract  */
+comment|/* Subtract.  */
 name|op1
 operator|=
 operator|(
@@ -2583,7 +2081,7 @@ break|break;
 case|case
 name|ETIR_S_C_OPR_MUL
 case|:
-comment|/* multiply  */
+comment|/* Multiply.  */
 name|op1
 operator|=
 operator|(
@@ -2629,7 +2127,7 @@ break|break;
 case|case
 name|ETIR_S_C_OPR_DIV
 case|:
-comment|/* divide  */
+comment|/* Divide.  */
 name|op1
 operator|=
 operator|(
@@ -2695,7 +2193,7 @@ break|break;
 case|case
 name|ETIR_S_C_OPR_AND
 case|:
-comment|/* logical and  */
+comment|/* Logical AND.  */
 name|op1
 operator|=
 operator|(
@@ -2741,7 +2239,7 @@ break|break;
 case|case
 name|ETIR_S_C_OPR_IOR
 case|:
-comment|/* logical inclusive or	 */
+comment|/* Logical inclusive OR.  */
 name|op1
 operator|=
 operator|(
@@ -2787,7 +2285,7 @@ break|break;
 case|case
 name|ETIR_S_C_OPR_EOR
 case|:
-comment|/* logical exclusive or  */
+comment|/* Logical exclusive OR.  */
 name|op1
 operator|=
 operator|(
@@ -2833,7 +2331,7 @@ break|break;
 case|case
 name|ETIR_S_C_OPR_NEG
 case|:
-comment|/* negate  */
+comment|/* Negate.  */
 name|op1
 operator|=
 operator|(
@@ -2866,7 +2364,7 @@ break|break;
 case|case
 name|ETIR_S_C_OPR_COM
 case|:
-comment|/* complement  */
+comment|/* Complement.  */
 name|op1
 operator|=
 operator|(
@@ -2901,7 +2399,7 @@ break|break;
 case|case
 name|ETIR_S_C_OPR_ASH
 case|:
-comment|/* arithmetic shift  */
+comment|/* Arithmetic shift.  */
 name|op1
 operator|=
 operator|(
@@ -2932,14 +2430,14 @@ name|op2
 operator|<
 literal|0
 condition|)
-comment|/* shift right */
+comment|/* Shift right.  */
 name|op1
 operator|>>=
 operator|-
 name|op2
 expr_stmt|;
 else|else
-comment|/* shift left */
+comment|/* Shift left.  */
 name|op1
 operator|<<=
 name|op2
@@ -2961,7 +2459,7 @@ break|break;
 case|case
 name|ETIR_S_C_OPR_INSV
 case|:
-comment|/* insert field  */
+comment|/* Insert field.   */
 operator|(
 name|void
 operator|)
@@ -2975,11 +2473,11 @@ expr_stmt|;
 case|case
 name|ETIR_S_C_OPR_USH
 case|:
-comment|/* unsigned shift  */
+comment|/* Unsigned shift.   */
 case|case
 name|ETIR_S_C_OPR_ROT
 case|:
-comment|/* rotate  */
+comment|/* Rotate.  */
 case|case
 name|ETIR_S_C_OPR_REDEF
 case|:
@@ -3008,7 +2506,7 @@ break|break;
 case|case
 name|ETIR_S_C_OPR_SEL
 case|:
-comment|/* select  */
+comment|/* Select.  */
 if|if
 condition|(
 operator|(
@@ -3103,24 +2601,18 @@ specifier|static
 name|bfd_boolean
 name|etir_ctl
 parameter_list|(
-name|abfd
-parameter_list|,
-name|cmd
-parameter_list|,
-name|ptr
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|int
 name|cmd
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|char
 modifier|*
 name|ptr
-decl_stmt|;
+parameter_list|)
 block|{
 name|uquad
 name|dummy
@@ -3163,7 +2655,7 @@ condition|(
 name|cmd
 condition|)
 block|{
-comment|/* set relocation base: pop stack, set image location counter 	 arg: none.  */
+comment|/* Det relocation base: pop stack, set image location counter 	 arg: none.  */
 case|case
 name|ETIR_S_C_CTL_SETRB
 case|:
@@ -3187,7 +2679,7 @@ name|dummy
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* augment relocation base: increment image location counter by offset 	 arg: lw	offset value  */
+comment|/* Augment relocation base: increment image location counter by offset 	 arg: lw	offset value.  */
 case|case
 name|ETIR_S_C_CTL_AUGRB
 case|:
@@ -3206,7 +2698,7 @@ name|dummy
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* define location: pop index, save location counter under index 	 arg: none.  */
+comment|/* Define location: pop index, save location counter under index 	 arg: none.  */
 case|case
 name|ETIR_S_C_CTL_DFLOC
 case|:
@@ -3221,7 +2713,7 @@ argument_list|)
 expr_stmt|;
 comment|/* FIXME */
 break|break;
-comment|/* set location: pop index, restore location counter from index 	 arg: none.  */
+comment|/* Set location: pop index, restore location counter from index 	 arg: none.  */
 case|case
 name|ETIR_S_C_CTL_STLOC
 case|:
@@ -3237,7 +2729,7 @@ argument_list|)
 expr_stmt|;
 comment|/* FIXME */
 break|break;
-comment|/* stack defined location: pop index, push location counter from index 	 arg: none.  */
+comment|/* Stack defined location: pop index, push location counter from index 	 arg: none.  */
 case|case
 name|ETIR_S_C_CTL_STKDL
 case|:
@@ -3251,7 +2743,7 @@ operator|&
 name|psect
 argument_list|)
 expr_stmt|;
-comment|/* FIXME */
+comment|/* FIXME.  */
 break|break;
 default|default:
 call|(
@@ -3276,7 +2768,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* store conditional commands     See table B-12 and B-13 of the openVMS linker manual.  */
+comment|/* Store conditional commands     See table B-12 and B-13 of the openVMS linker manual.  */
 end_comment
 
 begin_function
@@ -3284,25 +2776,19 @@ specifier|static
 name|bfd_boolean
 name|etir_stc
 parameter_list|(
-name|abfd
-parameter_list|,
-name|cmd
-parameter_list|,
-name|ptr
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|int
 name|cmd
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|char
 modifier|*
 name|ptr
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -3480,12 +2966,6 @@ case|case
 name|ETIR_S_C_STC_NBH_PS
 case|:
 comment|/* FIXME */
-if|#
-directive|if
-literal|0
-block|(*_bfd_error_handler) ("%s: not supported", cmd_name (cmd));
-endif|#
-directive|endif
 break|break;
 default|default:
 if|#
@@ -3516,18 +2996,14 @@ name|asection
 modifier|*
 name|new_section
 parameter_list|(
-name|abfd
-parameter_list|,
-name|idx
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|int
 name|idx
-decl_stmt|;
+parameter_list|)
 block|{
 name|asection
 modifier|*
@@ -3588,7 +3064,7 @@ operator|==
 literal|0
 condition|)
 return|return
-literal|0
+name|NULL
 return|;
 name|strcpy
 argument_list|(
@@ -3632,12 +3108,12 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
-literal|0
+name|NULL
 return|;
 block|}
 name|section
 operator|->
-name|_raw_size
+name|size
 operator|=
 literal|0
 expr_stmt|;
@@ -3650,12 +3126,6 @@ expr_stmt|;
 name|section
 operator|->
 name|contents
-operator|=
-literal|0
-expr_stmt|;
-name|section
-operator|->
-name|_cooked_size
 operator|=
 literal|0
 expr_stmt|;
@@ -3682,18 +3152,14 @@ specifier|static
 name|int
 name|alloc_section
 parameter_list|(
-name|abfd
-parameter_list|,
-name|idx
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|int
 name|idx
-decl_stmt|;
+parameter_list|)
 block|{
 name|bfd_size_type
 name|amt
@@ -3731,11 +3197,6 @@ argument_list|(
 name|sections
 argument_list|)
 operator|=
-operator|(
-name|asection
-operator|*
-operator|*
-operator|)
 name|bfd_realloc
 argument_list|(
 name|PRIV
@@ -3906,14 +3367,10 @@ if|if
 condition|(
 name|entry
 operator|==
-operator|(
-name|vms_symbol_entry
-operator|*
-operator|)
 name|NULL
 condition|)
 return|return
-literal|0
+name|NULL
 return|;
 name|_bfd_vms_push
 argument_list|(
@@ -4417,14 +3874,10 @@ if|if
 condition|(
 name|entry
 operator|==
-operator|(
-name|vms_symbol_entry
-operator|*
-operator|)
 name|NULL
 condition|)
 return|return
-literal|0
+name|NULL
 return|;
 call|(
 modifier|*
@@ -4535,14 +3988,10 @@ if|if
 condition|(
 name|entry
 operator|==
-operator|(
-name|vms_symbol_entry
-operator|*
-operator|)
 name|NULL
 condition|)
 return|return
-literal|0
+name|NULL
 return|;
 call|(
 modifier|*
@@ -4656,14 +4105,10 @@ if|if
 condition|(
 name|entry
 operator|==
-operator|(
-name|vms_symbol_entry
-operator|*
-operator|)
 name|NULL
 condition|)
 return|return
-literal|0
+name|NULL
 return|;
 call|(
 modifier|*
@@ -4734,11 +4179,9 @@ name|char
 modifier|*
 name|tir_cmd_name
 parameter_list|(
-name|cmd
-parameter_list|)
 name|int
 name|cmd
-decl_stmt|;
+parameter_list|)
 block|{
 switch|switch
 condition|(
@@ -4918,7 +4361,7 @@ block|{
 case|case
 name|TIR_S_C_STO_SB
 case|:
-comment|/* store signed byte: pop stack, write byte 	 arg: none.  */
+comment|/* Store signed byte: pop stack, write byte 	 arg: none.  */
 name|dummy
 operator|=
 name|_bfd_vms_pop
@@ -4943,7 +4386,7 @@ break|break;
 case|case
 name|TIR_S_C_STO_SW
 case|:
-comment|/* store signed word: pop stack, write word 	 arg: none.  */
+comment|/* Store signed word: pop stack, write word 	 arg: none.  */
 name|dummy
 operator|=
 name|_bfd_vms_pop
@@ -4968,7 +4411,7 @@ break|break;
 case|case
 name|TIR_S_C_STO_LW
 case|:
-comment|/* store longword: pop stack, write longword 	 arg: none.  */
+comment|/* Store longword: pop stack, write longword 	 arg: none.  */
 name|dummy
 operator|=
 name|_bfd_vms_pop
@@ -4993,7 +4436,7 @@ break|break;
 case|case
 name|TIR_S_C_STO_BD
 case|:
-comment|/* store byte displaced: pop stack, sub lc+1, write byte 	 arg: none.  */
+comment|/* Store byte displaced: pop stack, sub lc+1, write byte 	 arg: none.  */
 name|dummy
 operator|=
 name|_bfd_vms_pop
@@ -5036,7 +4479,7 @@ break|break;
 case|case
 name|TIR_S_C_STO_WD
 case|:
-comment|/* store word displaced: pop stack, sub lc+2, write word 	 arg: none.  */
+comment|/* Store word displaced: pop stack, sub lc+2, write word 	 arg: none.  */
 name|dummy
 operator|=
 name|_bfd_vms_pop
@@ -5079,7 +4522,7 @@ break|break;
 case|case
 name|TIR_S_C_STO_LD
 case|:
-comment|/* store long displaced: pop stack, sub lc+4, write long 	 arg: none.  */
+comment|/* Store long displaced: pop stack, sub lc+4, write long 	 arg: none.  */
 name|dummy
 operator|=
 name|_bfd_vms_pop
@@ -5122,7 +4565,7 @@ break|break;
 case|case
 name|TIR_S_C_STO_LI
 case|:
-comment|/* store short literal: pop stack, write byte 	 arg: none.  */
+comment|/* Store short literal: pop stack, write byte 	 arg: none.  */
 name|dummy
 operator|=
 name|_bfd_vms_pop
@@ -5147,7 +4590,7 @@ break|break;
 case|case
 name|TIR_S_C_STO_PIDR
 case|:
-comment|/* store position independent data reference: pop stack, write longword 	 arg: none. 	 FIXME: incomplete !  */
+comment|/* Store position independent data reference: pop stack, write longword 	 arg: none. 	 FIXME: incomplete !  */
 name|dummy
 operator|=
 name|_bfd_vms_pop
@@ -5171,7 +4614,7 @@ break|break;
 case|case
 name|TIR_S_C_STO_PICR
 case|:
-comment|/* store position independent code reference: pop stack, write longword 	 arg: none. 	 FIXME: incomplete !  */
+comment|/* Store position independent code reference: pop stack, write longword 	 arg: none. 	 FIXME: incomplete !  */
 name|dummy
 operator|=
 name|_bfd_vms_pop
@@ -5202,7 +4645,7 @@ break|break;
 case|case
 name|TIR_S_C_STO_RIVB
 case|:
-comment|/* store repeated immediate variable bytes 	 1-byte count n field followed by n bytes of data 	 pop stack, write n bytes<stack> times.  */
+comment|/* Store repeated immediate variable bytes 	 1-byte count n field followed by n bytes of data 	 pop stack, write n bytes<stack> times.  */
 name|size
 operator|=
 operator|*
@@ -5248,7 +4691,7 @@ break|break;
 case|case
 name|TIR_S_C_STO_B
 case|:
-comment|/* store byte from top longword.  */
+comment|/* Store byte from top longword.  */
 name|dummy
 operator|=
 operator|(
@@ -5275,7 +4718,7 @@ break|break;
 case|case
 name|TIR_S_C_STO_W
 case|:
-comment|/* store word from top longword.  */
+comment|/* Store word from top longword.  */
 name|dummy
 operator|=
 operator|(
@@ -5302,7 +4745,7 @@ break|break;
 case|case
 name|TIR_S_C_STO_RB
 case|:
-comment|/* store repeated byte from top longword.  */
+comment|/* Store repeated byte from top longword.  */
 name|size
 operator|=
 operator|(
@@ -5349,7 +4792,7 @@ break|break;
 case|case
 name|TIR_S_C_STO_RW
 case|:
-comment|/* store repeated word from top longword.  */
+comment|/* Store repeated word from top longword.  */
 name|size
 operator|=
 operator|(
@@ -5468,7 +4911,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* stack operator commands    all 32 bit signed arithmetic    all word just like a stack calculator    arguments are popped from stack, results are pushed on stack     See table 7-5 of the VAX/VMS linker manual.  */
+comment|/* Stack operator commands    All 32 bit signed arithmetic    All word just like a stack calculator    Arguments are popped from stack, results are pushed on stack     See table 7-5 of the VAX/VMS linker manual.  */
 end_comment
 
 begin_function
@@ -5478,19 +4921,15 @@ name|char
 modifier|*
 name|tir_opr
 parameter_list|(
-name|abfd
-parameter_list|,
-name|ptr
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|char
 modifier|*
 name|ptr
-decl_stmt|;
+parameter_list|)
 block|{
 name|long
 name|op1
@@ -5512,6 +4951,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* Operation.  */
 switch|switch
 condition|(
 operator|*
@@ -5519,16 +4959,15 @@ name|ptr
 operator|++
 condition|)
 block|{
-comment|/* operation */
 case|case
 name|TIR_S_C_OPR_NOP
 case|:
-comment|/* no-op */
+comment|/* No-op.  */
 break|break;
 case|case
 name|TIR_S_C_OPR_ADD
 case|:
-comment|/* add */
+comment|/* Add.  */
 name|op1
 operator|=
 operator|(
@@ -5574,7 +5013,7 @@ break|break;
 case|case
 name|TIR_S_C_OPR_SUB
 case|:
-comment|/* subtract */
+comment|/* Subtract.  */
 name|op1
 operator|=
 operator|(
@@ -5620,7 +5059,7 @@ break|break;
 case|case
 name|TIR_S_C_OPR_MUL
 case|:
-comment|/* multiply */
+comment|/* Multiply.  */
 name|op1
 operator|=
 operator|(
@@ -5666,7 +5105,7 @@ break|break;
 case|case
 name|TIR_S_C_OPR_DIV
 case|:
-comment|/* divide */
+comment|/* Divide.  */
 name|op1
 operator|=
 operator|(
@@ -5732,7 +5171,7 @@ break|break;
 case|case
 name|TIR_S_C_OPR_AND
 case|:
-comment|/* logical and */
+comment|/* Logical AND.  */
 name|op1
 operator|=
 operator|(
@@ -5778,7 +5217,7 @@ break|break;
 case|case
 name|TIR_S_C_OPR_IOR
 case|:
-comment|/* logical inclusive or */
+comment|/* Logical inclusive OR.  */
 name|op1
 operator|=
 operator|(
@@ -5824,7 +5263,7 @@ break|break;
 case|case
 name|TIR_S_C_OPR_EOR
 case|:
-comment|/* logical exclusive or */
+comment|/* Logical exclusive OR.  */
 name|op1
 operator|=
 operator|(
@@ -5870,7 +5309,7 @@ break|break;
 case|case
 name|TIR_S_C_OPR_NEG
 case|:
-comment|/* negate */
+comment|/* Negate.  */
 name|op1
 operator|=
 operator|(
@@ -5903,7 +5342,7 @@ break|break;
 case|case
 name|TIR_S_C_OPR_COM
 case|:
-comment|/* complement */
+comment|/* Complement.  */
 name|op1
 operator|=
 operator|(
@@ -5938,7 +5377,7 @@ break|break;
 case|case
 name|TIR_S_C_OPR_INSV
 case|:
-comment|/* insert field */
+comment|/* Insert field.  */
 operator|(
 name|void
 operator|)
@@ -5973,7 +5412,7 @@ break|break;
 case|case
 name|TIR_S_C_OPR_ASH
 case|:
-comment|/* arithmetic shift */
+comment|/* Arithmetic shift.  */
 name|op1
 operator|=
 operator|(
@@ -6005,13 +5444,13 @@ argument_list|(
 name|op1
 argument_list|)
 condition|)
-comment|/* shift right */
+comment|/* Shift right.  */
 name|op2
 operator|>>=
 name|op1
 expr_stmt|;
 else|else
-comment|/* shift left */
+comment|/* Shift left.  */
 name|op2
 operator|<<=
 name|op1
@@ -6053,7 +5492,7 @@ break|break;
 case|case
 name|TIR_S_C_OPR_USH
 case|:
-comment|/* unsigned shift */
+comment|/* Unsigned shift.  */
 name|op1
 operator|=
 operator|(
@@ -6085,13 +5524,13 @@ argument_list|(
 name|op1
 argument_list|)
 condition|)
-comment|/* shift right */
+comment|/* Shift right.  */
 name|op2
 operator|>>=
 name|op1
 expr_stmt|;
 else|else
-comment|/* shift left */
+comment|/* Shift left.  */
 name|op2
 operator|<<=
 name|op1
@@ -6133,7 +5572,7 @@ break|break;
 case|case
 name|TIR_S_C_OPR_ROT
 case|:
-comment|/* rotate */
+comment|/* Rotate.  */
 name|op1
 operator|=
 operator|(
@@ -6165,13 +5604,13 @@ argument_list|(
 literal|0
 argument_list|)
 condition|)
-comment|/* shift right */
+comment|/* Shift right.  */
 name|op2
 operator|>>=
 name|op1
 expr_stmt|;
 else|else
-comment|/* shift left */
+comment|/* Shift left.  */
 name|op2
 operator|<<=
 name|op1
@@ -6213,7 +5652,7 @@ break|break;
 case|case
 name|TIR_S_C_OPR_SEL
 case|:
-comment|/* select */
+comment|/* Select.  */
 if|if
 condition|(
 operator|(
@@ -6333,7 +5772,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* control commands     See table 7-6 of the VAX/VMS linker manual.  */
+comment|/* Control commands     See table 7-6 of the VAX/VMS linker manual.  */
 end_comment
 
 begin_function
@@ -6393,6 +5832,10 @@ name|_bfd_vms_pop
 argument_list|(
 name|abfd
 argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
 operator|&
 name|psect
 argument_list|)
@@ -6495,6 +5938,10 @@ name|_bfd_vms_pop
 argument_list|(
 name|abfd
 argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
 operator|&
 name|psect
 argument_list|)
@@ -6530,6 +5977,10 @@ name|_bfd_vms_pop
 argument_list|(
 name|abfd
 argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
 operator|&
 name|psect
 argument_list|)
@@ -6718,8 +6169,8 @@ name|ptr
 operator|&
 literal|0x80
 condition|)
-comment|/* store immediate */
 block|{
+comment|/* Store immediate.  */
 name|i
 operator|=
 literal|128
@@ -6856,24 +6307,18 @@ specifier|static
 name|int
 name|etir_cmd
 parameter_list|(
-name|abfd
-parameter_list|,
-name|cmd
-parameter_list|,
-name|ptr
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|int
 name|cmd
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|char
 modifier|*
 name|ptr
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 struct|struct
@@ -6885,23 +6330,21 @@ name|int
 name|maxcod
 decl_stmt|;
 name|bfd_boolean
-argument_list|(
-argument|*explain
-argument_list|)
-name|PARAMS
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|explain
+function_decl|)
+parameter_list|(
 name|bfd
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|unsigned
 name|char
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
+modifier|*
+parameter_list|)
+function_decl|;
 block|}
 name|etir_table
 index|[]
@@ -7084,25 +6527,19 @@ specifier|static
 name|int
 name|analyze_tir
 parameter_list|(
-name|abfd
-parameter_list|,
-name|ptr
-parameter_list|,
-name|length
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|char
 modifier|*
 name|ptr
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|int
 name|length
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|char
@@ -7171,25 +6608,19 @@ specifier|static
 name|int
 name|analyze_etir
 parameter_list|(
-name|abfd
-parameter_list|,
-name|ptr
-parameter_list|,
-name|length
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|char
 modifier|*
 name|ptr
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|int
 name|length
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|cmd
@@ -7300,17 +6731,13 @@ begin_function
 name|int
 name|_bfd_vms_slurp_tir
 parameter_list|(
-name|abfd
-parameter_list|,
-name|objtype
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|int
 name|objtype
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|result
@@ -7342,7 +6769,7 @@ argument_list|)
 operator|+=
 literal|4
 expr_stmt|;
-comment|/* skip type, size */
+comment|/* Skip type, size.  */
 name|PRIV
 argument_list|(
 name|rec_size
@@ -7381,7 +6808,7 @@ argument_list|)
 operator|+=
 literal|1
 expr_stmt|;
-comment|/* skip type */
+comment|/* Skip type.  */
 name|PRIV
 argument_list|(
 name|rec_size
@@ -7432,18 +6859,14 @@ begin_function
 name|int
 name|_bfd_vms_slurp_dbg
 parameter_list|(
-name|abfd
-parameter_list|,
-name|objtype
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|int
 name|objtype
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -7481,19 +6904,15 @@ begin_function
 name|int
 name|_bfd_vms_slurp_tbt
 parameter_list|(
-name|abfd
-parameter_list|,
-name|objtype
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|int
 name|objtype
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -7521,19 +6940,15 @@ begin_function
 name|int
 name|_bfd_vms_slurp_lnk
 parameter_list|(
-name|abfd
-parameter_list|,
-name|objtype
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|int
 name|objtype
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -7557,100 +6972,153 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* WRITE ETIR SECTION     This is still under construction and therefore not documented.  */
+comment|/* Start ETIR record for section #index at virtual addr offset.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|void
 name|start_etir_record
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
+modifier|*
 name|abfd
-operator|,
+parameter_list|,
 name|int
 name|index
-operator|,
+parameter_list|,
 name|uquad
 name|offset
-operator|,
+parameter_list|,
 name|bfd_boolean
 name|justoffset
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|sto_imm
-name|PARAMS
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|justoffset
+condition|)
+block|{
+comment|/* One ETIR per section.  */
+name|_bfd_vms_output_begin
 argument_list|(
-operator|(
-name|bfd
-operator|*
 name|abfd
-operator|,
-name|vms_section
-operator|*
-name|sptr
-operator|,
-name|bfd_vma
-name|vaddr
-operator|,
-name|int
-name|index
-operator|)
+argument_list|,
+name|EOBJ_S_C_ETIR
+argument_list|,
+operator|-
+literal|1
 argument_list|)
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+name|_bfd_vms_output_push
+argument_list|(
+name|abfd
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Push start offset.  */
+name|_bfd_vms_output_begin
+argument_list|(
+name|abfd
+argument_list|,
+name|ETIR_S_C_STA_PQ
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|_bfd_vms_output_long
+argument_list|(
+name|abfd
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+name|index
+argument_list|)
+expr_stmt|;
+name|_bfd_vms_output_quad
+argument_list|(
+name|abfd
+argument_list|,
+operator|(
+name|uquad
+operator|)
+name|offset
+argument_list|)
+expr_stmt|;
+name|_bfd_vms_output_flush
+argument_list|(
+name|abfd
+argument_list|)
+expr_stmt|;
+comment|/* Start = pop ().  */
+name|_bfd_vms_output_begin
+argument_list|(
+name|abfd
+argument_list|,
+name|ETIR_S_C_CTL_SETRB
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|_bfd_vms_output_flush
+argument_list|(
+name|abfd
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|void
 name|end_etir_record
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
+modifier|*
 name|abfd
-operator|)
+parameter_list|)
+block|{
+name|_bfd_vms_output_pop
+argument_list|(
+name|abfd
 argument_list|)
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+name|_bfd_vms_output_end
+argument_list|(
+name|abfd
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* WRITE ETIR SECTION     This is still under construction and therefore not documented.  */
+end_comment
 
 begin_function
 specifier|static
 name|void
 name|sto_imm
 parameter_list|(
-name|abfd
-parameter_list|,
-name|sptr
-parameter_list|,
-name|vaddr
-parameter_list|,
-name|index
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|vms_section
 modifier|*
 name|sptr
-decl_stmt|;
+parameter_list|,
 name|bfd_vma
 name|vaddr
-decl_stmt|;
+parameter_list|,
 name|int
 name|index
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|size
@@ -7719,11 +7187,11 @@ operator|>
 literal|0
 condition|)
 block|{
+comment|/* Try all the rest.  */
 name|size
 operator|=
 name|ssize
 expr_stmt|;
-comment|/* try all the rest */
 if|if
 condition|(
 name|_bfd_vms_output_check
@@ -7736,7 +7204,7 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* doesn't fit, split ! */
+comment|/* Doesn't fit, split !  */
 name|end_etir_record
 argument_list|(
 name|abfd
@@ -7753,6 +7221,7 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
+comment|/* Get max size.  */
 name|size
 operator|=
 name|_bfd_vms_output_check
@@ -7762,14 +7231,13 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* get max size */
+comment|/* More than what's left ?  */
 if|if
 condition|(
 name|size
 operator|>
 name|ssize
 condition|)
-comment|/* more than what's left ? */
 name|size
 operator|=
 name|ssize
@@ -7860,145 +7328,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* Start ETIR record for section #index at virtual addr offset.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|start_etir_record
-parameter_list|(
-name|abfd
-parameter_list|,
-name|index
-parameter_list|,
-name|offset
-parameter_list|,
-name|justoffset
-parameter_list|)
-name|bfd
-modifier|*
-name|abfd
-decl_stmt|;
-name|int
-name|index
-decl_stmt|;
-name|uquad
-name|offset
-decl_stmt|;
-name|bfd_boolean
-name|justoffset
-decl_stmt|;
-block|{
-if|if
-condition|(
-operator|!
-name|justoffset
-condition|)
-block|{
-name|_bfd_vms_output_begin
-argument_list|(
-name|abfd
-argument_list|,
-name|EOBJ_S_C_ETIR
-argument_list|,
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* one ETIR per section */
-name|_bfd_vms_output_push
-argument_list|(
-name|abfd
-argument_list|)
-expr_stmt|;
-block|}
-name|_bfd_vms_output_begin
-argument_list|(
-name|abfd
-argument_list|,
-name|ETIR_S_C_STA_PQ
-argument_list|,
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* push start offset */
-name|_bfd_vms_output_long
-argument_list|(
-name|abfd
-argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
-name|index
-argument_list|)
-expr_stmt|;
-name|_bfd_vms_output_quad
-argument_list|(
-name|abfd
-argument_list|,
-operator|(
-name|uquad
-operator|)
-name|offset
-argument_list|)
-expr_stmt|;
-name|_bfd_vms_output_flush
-argument_list|(
-name|abfd
-argument_list|)
-expr_stmt|;
-name|_bfd_vms_output_begin
-argument_list|(
-name|abfd
-argument_list|,
-name|ETIR_S_C_CTL_SETRB
-argument_list|,
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* start = pop () */
-name|_bfd_vms_output_flush
-argument_list|(
-name|abfd
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/* End etir record.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|end_etir_record
-parameter_list|(
-name|abfd
-parameter_list|)
-name|bfd
-modifier|*
-name|abfd
-decl_stmt|;
-block|{
-name|_bfd_vms_output_pop
-argument_list|(
-name|abfd
-argument_list|)
-expr_stmt|;
-name|_bfd_vms_output_end
-argument_list|(
-name|abfd
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/* Write section contents for bfd abfd.  */
 end_comment
 
@@ -8006,18 +7335,14 @@ begin_function
 name|int
 name|_bfd_vms_write_tir
 parameter_list|(
-name|abfd
-parameter_list|,
-name|objtype
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|int
 name|objtype
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 name|asection
 modifier|*
@@ -8101,7 +7426,7 @@ call|)
 argument_list|(
 name|section
 operator|->
-name|_raw_size
+name|size
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -8131,7 +7456,6 @@ operator|)
 operator|<=
 literal|0
 condition|)
-block|{
 call|(
 modifier|*
 name|_bfd_error_handler
@@ -8147,7 +7471,6 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-block|}
 if|#
 directive|if
 name|VMS_DEBUG
@@ -8289,10 +7612,10 @@ argument_list|)
 operator|)
 condition|)
 block|{
+comment|/* Virtual addr in section.  */
 name|bfd_vma
 name|vaddr
 decl_stmt|;
-comment|/* Virtual addr in section.  */
 name|sptr
 operator|=
 name|_bfd_get_vms_section
@@ -8356,8 +7679,8 @@ name|sptr
 operator|!=
 name|NULL
 condition|)
-comment|/* one STA_PQ, CTL_SETRB per vms_section */
 block|{
+comment|/* One STA_PQ, CTL_SETRB per vms_section.  */
 if|if
 condition|(
 name|section
@@ -8366,8 +7689,8 @@ name|flags
 operator|&
 name|SEC_RELOC
 condition|)
-comment|/* check for relocs */
 block|{
+comment|/* Check for relocs.  */
 name|arelent
 modifier|*
 modifier|*
@@ -8421,8 +7744,8 @@ name|offset
 operator|<
 name|addr
 condition|)
-comment|/* sptr starts before reloc */
 block|{
+comment|/* Sptr starts before reloc.  */
 name|bfd_size_type
 name|before
 init|=
@@ -8440,8 +7763,8 @@ name|size
 operator|<=
 name|before
 condition|)
-comment|/* complete before */
 block|{
+comment|/* Complete before.  */
 name|sto_imm
 argument_list|(
 name|abfd
@@ -8464,8 +7787,8 @@ expr_stmt|;
 break|break;
 block|}
 else|else
-comment|/* partly before */
 block|{
+comment|/* Partly before.  */
 name|int
 name|after
 init|=
@@ -8529,8 +7852,8 @@ name|offset
 operator|==
 name|addr
 condition|)
-comment|/* sptr starts at reloc */
 block|{
+comment|/* Sptr starts at reloc.  */
 name|asymbol
 modifier|*
 name|sym
@@ -9192,12 +8515,6 @@ name|size
 operator|=
 name|hint_size
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|vms_output_begin (abfd, 						  ETIR_S_C_STO_HINT_GBL, -1); 				vms_output_long (abfd, 						 (unsigned long) (sec->index)); 				vms_output_quad (abfd, (uquad) addr);  				hash = (_bfd_vms_length_hash_symbol 					(abfd, sym->name, EOBJ_S_C_SYMSIZ)); 				vms_output_counted (abfd, hash);  				vms_output_flush (abfd);
-endif|#
-directive|endif
 block|}
 break|break;
 case|case
@@ -9465,12 +8782,12 @@ expr_stmt|;
 block|}
 block|}
 else|else
-comment|/* sptr starts after reloc */
 block|{
+comment|/* Sptr starts after reloc.  */
 name|i
 operator|--
 expr_stmt|;
-comment|/* check next reloc */
+comment|/* Check next reloc.  */
 name|rptr
 operator|++
 expr_stmt|;
@@ -9481,8 +8798,8 @@ name|i
 operator|==
 literal|0
 condition|)
-comment|/* all reloc checked */
 block|{
+comment|/* All reloc checked.  */
 if|if
 condition|(
 name|sptr
@@ -9492,7 +8809,7 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/* dump rest */
+comment|/* Dump rest.  */
 name|sto_imm
 argument_list|(
 name|abfd
@@ -9516,12 +8833,10 @@ block|}
 break|break;
 block|}
 block|}
-comment|/* for (;;) */
 block|}
-comment|/* if SEC_RELOC */
 else|else
-comment|/* no relocs, just dump */
 block|{
+comment|/* No relocs, just dump.  */
 name|sto_imm
 argument_list|(
 name|abfd
@@ -9549,14 +8864,12 @@ operator|->
 name|next
 expr_stmt|;
 block|}
-comment|/* while (sptr != 0) */
 name|end_etir_record
 argument_list|(
 name|abfd
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* has_contents */
 name|section
 operator|=
 name|section
@@ -9585,19 +8898,15 @@ begin_function
 name|int
 name|_bfd_vms_write_tbt
 parameter_list|(
-name|abfd
-parameter_list|,
-name|objtype
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|int
 name|objtype
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -9629,19 +8938,15 @@ begin_function
 name|int
 name|_bfd_vms_write_dbg
 parameter_list|(
-name|abfd
-parameter_list|,
-name|objtype
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|int
 name|objtype
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if

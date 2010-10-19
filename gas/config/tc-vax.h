@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-vax.h -- Header file for tc-vax.c.    Copyright 1987, 1991, 1992, 1993, 1995, 1996, 1997, 2000, 2002    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* tc-vax.h -- Header file for tc-vax.c.    Copyright 1987, 1991, 1992, 1993, 1995, 1996, 1997, 2000, 2002, 2005, 2006    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_define
@@ -103,30 +103,9 @@ end_endif
 begin_define
 define|#
 directive|define
-name|BFD_ARCH
-value|bfd_arch_vax
-end_define
-
-begin_comment
-comment|/* for non-BFD_ASSEMBLER */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|TARGET_ARCH
 value|bfd_arch_vax
 end_define
-
-begin_comment
-comment|/* BFD_ASSEMBLER */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BFD_ASSEMBLER
-end_ifdef
 
 begin_define
 define|#
@@ -134,23 +113,6 @@ directive|define
 name|NO_RELOC
 value|BFD_RELOC_NONE
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|NO_RELOC
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -162,55 +124,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|tc_aout_pre_write_hook
-parameter_list|(
-name|x
-parameter_list|)
-value|{;}
-end_define
-
-begin_comment
-comment|/* not used */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|tc_crawl_symbol_chain
-parameter_list|(
-name|a
-parameter_list|)
-value|{;}
-end_define
-
-begin_comment
-comment|/* not used */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|md_operand
 parameter_list|(
 name|x
 parameter_list|)
 end_define
-
-begin_decl_stmt
-name|long
-name|md_chars_to_number
-name|PARAMS
-argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -229,14 +147,8 @@ name|TC_GENERIC_RELAX_TABLE
 value|md_relax_table
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BFD_ASSEMBLER
-end_ifdef
-
 begin_comment
-comment|/* Values passed to md_apply_fix3 don't include symbol values.  */
+comment|/* Values passed to md_apply_fix don't include symbol values.  */
 end_comment
 
 begin_define
@@ -259,11 +171,6 @@ parameter_list|)
 define|\
 value|((FIX)->fx_r_type != BFD_RELOC_VTABLE_INHERIT		\&& (FIX)->fx_r_type != BFD_RELOC_32_PLT_PCREL		\&& (FIX)->fx_r_type != BFD_RELOC_32_GOT_PCREL		\&& (FIX)->fx_r_type != BFD_RELOC_VTABLE_ENTRY		\&& ((FIX)->fx_pcrel					\ 	     || ((FIX)->fx_subsy != NULL			\&& (S_GET_SEGMENT ((FIX)->fx_subsy)		\ 		     == S_GET_SEGMENT ((FIX)->fx_addsy)))	\ 	     || S_IS_LOCAL ((FIX)->fx_addsy)))
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Local Variables:  * comment-column: 0  * fill-column: 131  * End:  */

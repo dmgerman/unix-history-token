@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* vms.c -- BFD back-end for VAX (openVMS/VAX) and    EVAX (openVMS/Alpha) files.    Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.     Written by Klaus K"ampf (kkaempf@rmi.de)  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* vms.c -- BFD back-end for VAX (openVMS/VAX) and    EVAX (openVMS/Alpha) files.    Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,    2006 Free Software Foundation, Inc.     Written by Klaus K"ampf (kkaempf@rmi.de)     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -33,1316 +33,12 @@ directive|include
 file|"vms.h"
 end_include
 
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|vms_initialize
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|unsigned
-name|int
-name|priv_section_count
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|fill_section_ptr
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
-name|bfd_hash_entry
-operator|*
-operator|,
-name|PTR
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|vms_fixup_sections
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|copy_symbols
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
-name|bfd_hash_entry
-operator|*
-operator|,
-name|PTR
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_reloc_status_type
-name|reloc_nil
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|arelent
-operator|*
-operator|,
-name|asymbol
-operator|*
-operator|,
-name|PTR
-operator|,
-name|asection
-operator|*
-operator|,
-name|bfd
-operator|*
-operator|,
-name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|struct
-name|bfd_target
-modifier|*
-name|vms_object_p
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|struct
-name|bfd_target
-modifier|*
-name|vms_archive_p
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|vms_mkobject
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|vms_write_object_contents
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|vms_close_and_cleanup
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|vms_bfd_free_cached_info
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|vms_new_section_hook
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|,
-name|asection
-operator|*
-name|section
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|vms_get_section_contents
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|,
-name|asection
-operator|*
-name|section
-operator|,
-name|PTR
-name|x1
-operator|,
-name|file_ptr
-name|x2
-operator|,
-name|bfd_size_type
-name|x3
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|vms_get_section_contents_in_window
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|,
-name|asection
-operator|*
-name|section
-operator|,
-name|bfd_window
-operator|*
-name|w
-operator|,
-name|file_ptr
-name|offset
-operator|,
-name|bfd_size_type
-name|count
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|vms_bfd_copy_private_bfd_data
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|src
-operator|,
-name|bfd
-operator|*
-name|dest
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|vms_bfd_copy_private_section_data
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|srcbfd
-operator|,
-name|asection
-operator|*
-name|srcsec
-operator|,
-name|bfd
-operator|*
-name|dstbfd
-operator|,
-name|asection
-operator|*
-name|dstsec
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|vms_bfd_copy_private_symbol_data
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|ibfd
-operator|,
-name|asymbol
-operator|*
-name|isym
-operator|,
-name|bfd
-operator|*
-name|obfd
-operator|,
-name|asymbol
-operator|*
-name|osym
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|vms_bfd_print_private_bfd_data
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|,
-name|void
-operator|*
-name|file
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|vms_core_file_failing_command
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|vms_core_file_failing_signal
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|vms_core_file_matches_executable_p
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|,
-name|bfd
-operator|*
-name|bbfd
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|vms_slurp_armap
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|vms_slurp_extended_name_table
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|vms_construct_extended_name_table
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|,
-name|char
-operator|*
-operator|*
-name|tabloc
-operator|,
-name|bfd_size_type
-operator|*
-name|tablen
-operator|,
-specifier|const
-name|char
-operator|*
-operator|*
-name|name
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|vms_truncate_arname
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|,
-specifier|const
-name|char
-operator|*
-name|pathname
-operator|,
-name|char
-operator|*
-name|arhdr
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|vms_write_armap
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|arch
-operator|,
-name|unsigned
-name|int
-name|elength
-operator|,
-expr|struct
-name|orl
-operator|*
-name|map
-operator|,
-name|unsigned
-name|int
-name|orl_count
-operator|,
-name|int
-name|stridx
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|PTR
-name|vms_read_ar_hdr
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd
-modifier|*
-name|vms_get_elt_at_index
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|,
-name|symindex
-name|index
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd
-modifier|*
-name|vms_openr_next_archived_file
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|arch
-operator|,
-name|bfd
-operator|*
-name|prev
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|vms_update_armap_timestamp
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|vms_generic_stat_arch_elt
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-expr|struct
-name|stat
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|long
-name|vms_get_symtab_upper_bound
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|long
-name|vms_canonicalize_symtab
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|,
-name|asymbol
-operator|*
-operator|*
-name|symbols
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|vms_print_symbol
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|,
-name|PTR
-name|file
-operator|,
-name|asymbol
-operator|*
-name|symbol
-operator|,
-name|bfd_print_symbol_type
-name|how
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|vms_get_symbol_info
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|,
-name|asymbol
-operator|*
-name|symbol
-operator|,
-name|symbol_info
-operator|*
-name|ret
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|vms_bfd_is_local_label_name
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|,
-specifier|const
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|alent
-modifier|*
-name|vms_get_lineno
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|,
-name|asymbol
-operator|*
-name|symbol
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|vms_find_nearest_line
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|,
-name|asection
-operator|*
-name|section
-operator|,
-name|asymbol
-operator|*
-operator|*
-name|symbols
-operator|,
-name|bfd_vma
-name|offset
-operator|,
-specifier|const
-name|char
-operator|*
-operator|*
-name|file
-operator|,
-specifier|const
-name|char
-operator|*
-operator|*
-name|func
-operator|,
-name|unsigned
-name|int
-operator|*
-name|line
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|asymbol
-modifier|*
-name|vms_bfd_make_debug_symbol
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|,
-name|void
-operator|*
-name|ptr
-operator|,
-name|unsigned
-name|long
-name|size
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|long
-name|vms_read_minisymbols
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|,
-name|bfd_boolean
-name|dynamic
-operator|,
-name|PTR
-operator|*
-name|minisymsp
-operator|,
-name|unsigned
-name|int
-operator|*
-name|sizep
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|asymbol
-modifier|*
-name|vms_minisymbol_to_symbol
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|,
-name|bfd_boolean
-name|dynamic
-operator|,
-specifier|const
-name|PTR
-name|minisym
-operator|,
-name|asymbol
-operator|*
-name|sym
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|long
-name|vms_get_reloc_upper_bound
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|,
-name|asection
-operator|*
-name|sect
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|long
-name|vms_canonicalize_reloc
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|,
-name|asection
-operator|*
-name|srcsec
-operator|,
-name|arelent
-operator|*
-operator|*
-name|location
-operator|,
-name|asymbol
-operator|*
-operator|*
-name|symbols
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|struct
-name|reloc_howto_struct
-modifier|*
-name|vms_bfd_reloc_type_lookup
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|,
-name|bfd_reloc_code_real_type
-name|code
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|vms_set_arch_mach
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|,
-expr|enum
-name|bfd_architecture
-name|arch
-operator|,
-name|unsigned
-name|long
-name|mach
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|vms_set_section_contents
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|,
-name|asection
-operator|*
-name|section
-operator|,
-specifier|const
-name|PTR
-name|location
-operator|,
-name|file_ptr
-name|offset
-operator|,
-name|bfd_size_type
-name|count
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|vms_sizeof_headers
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|,
-name|bfd_boolean
-name|reloc
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_byte
-modifier|*
-name|vms_bfd_get_relocated_section_contents
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|,
-expr|struct
-name|bfd_link_info
-operator|*
-name|link_info
-operator|,
-expr|struct
-name|bfd_link_order
-operator|*
-name|link_order
-operator|,
-name|bfd_byte
-operator|*
-name|data
-operator|,
-name|bfd_boolean
-name|relocatable
-operator|,
-name|asymbol
-operator|*
-operator|*
-name|symbols
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|vms_bfd_relax_section
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|,
-name|asection
-operator|*
-name|section
-operator|,
-expr|struct
-name|bfd_link_info
-operator|*
-name|link_info
-operator|,
-name|bfd_boolean
-operator|*
-name|again
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|vms_bfd_gc_sections
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|,
-expr|struct
-name|bfd_link_info
-operator|*
-name|link_info
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|vms_bfd_merge_sections
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|,
-expr|struct
-name|bfd_link_info
-operator|*
-name|link_info
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|bfd_link_hash_table
-modifier|*
-name|vms_bfd_link_hash_table_create
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|vms_bfd_link_hash_table_free
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
-name|bfd_link_hash_table
-operator|*
-name|hash
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|vms_bfd_link_add_symbols
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|,
-expr|struct
-name|bfd_link_info
-operator|*
-name|link_info
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|vms_bfd_final_link
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|,
-expr|struct
-name|bfd_link_info
-operator|*
-name|link_info
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|vms_bfd_link_split_section
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|,
-name|asection
-operator|*
-name|section
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|long
-name|vms_get_dynamic_symtab_upper_bound
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|long
-name|vms_canonicalize_dynamic_symtab
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|,
-name|asymbol
-operator|*
-operator|*
-name|symbols
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|long
-name|vms_get_dynamic_reloc_upper_bound
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|long
-name|vms_canonicalize_dynamic_reloc
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|,
-name|arelent
-operator|*
-operator|*
-name|arel
-operator|,
-name|asymbol
-operator|*
-operator|*
-name|symbols
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|vms_bfd_merge_private_bfd_data
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|ibfd
-operator|,
-name|bfd
-operator|*
-name|obfd
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|vms_bfd_set_private_flags
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|,
-name|flagword
-name|flags
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|vms_bfd_is_target_special_symbol
+value|((bfd_boolean (*) (bfd *, asymbol *)) bfd_false)
+end_define
 
 begin_define
 define|#
@@ -1361,382 +57,59 @@ end_define
 begin_define
 define|#
 directive|define
+name|vms_bfd_is_group_section
+value|bfd_generic_is_group_section
+end_define
+
+begin_define
+define|#
+directive|define
 name|vms_bfd_discard_group
 value|bfd_generic_discard_group
 end_define
 
-begin_escape
-end_escape
+begin_define
+define|#
+directive|define
+name|vms_section_already_linked
+value|_bfd_generic_section_already_linked
+end_define
 
-begin_comment
-comment|/*===========================================================================*/
-end_comment
+begin_define
+define|#
+directive|define
+name|vms_bfd_copy_private_header_data
+value|_bfd_generic_bfd_copy_private_header_data
+end_define
+
+begin_define
+define|#
+directive|define
+name|vms_get_synthetic_symtab
+value|_bfd_nodynamic_get_synthetic_symtab
+end_define
 
 begin_decl_stmt
-specifier|const
-name|bfd_target
-name|vms_alpha_vec
-init|=
-block|{
-literal|"vms-alpha"
-block|,
-comment|/* name */
-name|bfd_target_evax_flavour
-block|,
-name|BFD_ENDIAN_LITTLE
-block|,
-comment|/* data byte order is little */
-name|BFD_ENDIAN_LITTLE
-block|,
-comment|/* header byte order is little */
-operator|(
-name|HAS_RELOC
-operator||
-name|HAS_SYMS
-operator||
-name|WP_TEXT
-operator||
-name|D_PAGED
-operator|)
-block|,
-comment|/* object flags */
-operator|(
-name|SEC_ALLOC
-operator||
-name|SEC_LOAD
-operator||
-name|SEC_RELOC
-operator||
-name|SEC_READONLY
-operator||
-name|SEC_CODE
-operator||
-name|SEC_DATA
-operator||
-name|SEC_HAS_CONTENTS
-operator||
-name|SEC_IN_MEMORY
-operator|)
-block|,
-comment|/* sect flags */
-literal|0
-block|,
-comment|/* symbol_leading_char */
-literal|' '
-block|,
-comment|/* ar_pad_char */
-literal|15
-block|,
-comment|/* ar_max_namelen */
-name|bfd_getl64
-block|,
-name|bfd_getl_signed_64
-block|,
-name|bfd_putl64
-block|,
-name|bfd_getl32
-block|,
-name|bfd_getl_signed_32
-block|,
-name|bfd_putl32
-block|,
-name|bfd_getl16
-block|,
-name|bfd_getl_signed_16
-block|,
-name|bfd_putl16
-block|,
-name|bfd_getl64
-block|,
-name|bfd_getl_signed_64
-block|,
-name|bfd_putl64
-block|,
-name|bfd_getl32
-block|,
-name|bfd_getl_signed_32
-block|,
-name|bfd_putl32
-block|,
-name|bfd_getl16
-block|,
-name|bfd_getl_signed_16
-block|,
-name|bfd_putl16
-block|,
-block|{
-name|_bfd_dummy_target
-block|,
-name|vms_object_p
-block|,
-comment|/* bfd_check_format */
-name|vms_archive_p
-block|,
-name|_bfd_dummy_target
-block|}
-block|,
-block|{
-name|bfd_false
-block|,
-name|vms_mkobject
-block|,
-comment|/* bfd_set_format */
-name|_bfd_generic_mkarchive
-block|,
-name|bfd_false
-block|}
-block|,
-block|{
-name|bfd_false
-block|,
-name|vms_write_object_contents
-block|,
-comment|/* bfd_write_contents */
-name|_bfd_write_archive_contents
-block|,
-name|bfd_false
-block|}
-block|,
-name|BFD_JUMP_TABLE_GENERIC
-argument_list|(
-name|vms
-argument_list|)
-block|,
-name|BFD_JUMP_TABLE_COPY
-argument_list|(
-name|vms
-argument_list|)
-block|,
-name|BFD_JUMP_TABLE_CORE
-argument_list|(
-name|vms
-argument_list|)
-block|,
-name|BFD_JUMP_TABLE_ARCHIVE
-argument_list|(
-name|vms
-argument_list|)
-block|,
-name|BFD_JUMP_TABLE_SYMBOLS
-argument_list|(
-name|vms
-argument_list|)
-block|,
-name|BFD_JUMP_TABLE_RELOCS
-argument_list|(
-name|vms
-argument_list|)
-block|,
-name|BFD_JUMP_TABLE_WRITE
-argument_list|(
-name|vms
-argument_list|)
-block|,
-name|BFD_JUMP_TABLE_LINK
-argument_list|(
-name|vms
-argument_list|)
-block|,
-name|BFD_JUMP_TABLE_DYNAMIC
-argument_list|(
-name|vms
-argument_list|)
-block|,
-name|NULL
-block|,
-operator|(
-name|PTR
-operator|)
-literal|0
-block|}
+specifier|static
+name|unsigned
+name|int
+name|priv_section_count
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 specifier|const
 name|bfd_target
 name|vms_vax_vec
-init|=
-block|{
-literal|"vms-vax"
-block|,
-comment|/* name */
-name|bfd_target_ovax_flavour
-block|,
-name|BFD_ENDIAN_LITTLE
-block|,
-comment|/* data byte order is little */
-name|BFD_ENDIAN_LITTLE
-block|,
-comment|/* header byte order is little */
-operator|(
-name|HAS_RELOC
-operator||
-name|HAS_SYMS
-comment|/* object flags */
-operator||
-name|WP_TEXT
-operator||
-name|D_PAGED
-operator||
-name|HAS_LINENO
-operator||
-name|HAS_DEBUG
-operator||
-name|HAS_LOCALS
-operator|)
-block|,
-operator|(
-name|SEC_ALLOC
-operator||
-name|SEC_LOAD
-operator||
-name|SEC_RELOC
-operator||
-name|SEC_READONLY
-operator||
-name|SEC_CODE
-operator||
-name|SEC_DATA
-operator||
-name|SEC_HAS_CONTENTS
-operator||
-name|SEC_IN_MEMORY
-operator|)
-block|,
-comment|/* sect flags */
-literal|0
-block|,
-comment|/* symbol_leading_char */
-literal|' '
-block|,
-comment|/* ar_pad_char */
-literal|15
-block|,
-comment|/* ar_max_namelen */
-name|bfd_getl64
-block|,
-name|bfd_getl_signed_64
-block|,
-name|bfd_putl64
-block|,
-name|bfd_getl32
-block|,
-name|bfd_getl_signed_32
-block|,
-name|bfd_putl32
-block|,
-name|bfd_getl16
-block|,
-name|bfd_getl_signed_16
-block|,
-name|bfd_putl16
-block|,
-comment|/* data */
-name|bfd_getl64
-block|,
-name|bfd_getl_signed_64
-block|,
-name|bfd_putl64
-block|,
-name|bfd_getl32
-block|,
-name|bfd_getl_signed_32
-block|,
-name|bfd_putl32
-block|,
-name|bfd_getl16
-block|,
-name|bfd_getl_signed_16
-block|,
-name|bfd_putl16
-block|,
-comment|/* hdrs */
-block|{
-name|_bfd_dummy_target
-block|,
-name|vms_object_p
-block|,
-comment|/* bfd_check_format */
-name|vms_archive_p
-block|,
-name|_bfd_dummy_target
-block|}
-block|,
-block|{
-name|bfd_false
-block|,
-name|vms_mkobject
-block|,
-comment|/* bfd_set_format */
-name|_bfd_generic_mkarchive
-block|,
-name|bfd_false
-block|}
-block|,
-block|{
-name|bfd_false
-block|,
-name|vms_write_object_contents
-block|,
-comment|/* bfd_write_contents */
-name|_bfd_write_archive_contents
-block|,
-name|bfd_false
-block|}
-block|,
-name|BFD_JUMP_TABLE_GENERIC
-argument_list|(
-name|vms
-argument_list|)
-block|,
-name|BFD_JUMP_TABLE_COPY
-argument_list|(
-name|vms
-argument_list|)
-block|,
-name|BFD_JUMP_TABLE_CORE
-argument_list|(
-name|vms
-argument_list|)
-block|,
-name|BFD_JUMP_TABLE_ARCHIVE
-argument_list|(
-name|vms
-argument_list|)
-block|,
-name|BFD_JUMP_TABLE_SYMBOLS
-argument_list|(
-name|vms
-argument_list|)
-block|,
-name|BFD_JUMP_TABLE_RELOCS
-argument_list|(
-name|vms
-argument_list|)
-block|,
-name|BFD_JUMP_TABLE_WRITE
-argument_list|(
-name|vms
-argument_list|)
-block|,
-name|BFD_JUMP_TABLE_LINK
-argument_list|(
-name|vms
-argument_list|)
-block|,
-name|BFD_JUMP_TABLE_DYNAMIC
-argument_list|(
-name|vms
-argument_list|)
-block|,
-name|NULL
-block|,
-operator|(
-name|PTR
-operator|)
-literal|0
-block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|bfd_target
+name|vms_alpha_vec
 decl_stmt|;
 end_decl_stmt
 
@@ -1744,11 +117,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*===========================================================================*/
-end_comment
-
-begin_comment
-comment|/* Initialize private data  */
+comment|/* Initialize private data.  */
 end_comment
 
 begin_function
@@ -1756,12 +125,10 @@ specifier|static
 name|bfd_boolean
 name|vms_initialize
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -1794,11 +161,6 @@ name|tdata
 operator|.
 name|any
 operator|=
-operator|(
-expr|struct
-name|vms_private_data_struct
-operator|*
-operator|)
 name|bfd_alloc
 argument_list|(
 name|abfd
@@ -1814,7 +176,7 @@ name|tdata
 operator|.
 name|any
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 name|FALSE
@@ -1827,7 +189,7 @@ argument_list|(
 name|is_vax
 argument_list|)
 operator|=
-literal|0
+name|FALSE
 expr_stmt|;
 else|#
 directive|else
@@ -1836,7 +198,7 @@ argument_list|(
 name|is_vax
 argument_list|)
 operator|=
-literal|1
+name|TRUE
 expr_stmt|;
 endif|#
 directive|endif
@@ -1845,7 +207,7 @@ argument_list|(
 name|vms_buf
 argument_list|)
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|PRIV
 argument_list|(
@@ -1897,11 +259,6 @@ argument_list|(
 name|stack
 argument_list|)
 operator|=
-operator|(
-expr|struct
-name|stack_struct
-operator|*
-operator|)
 name|bfd_alloc
 argument_list|(
 name|abfd
@@ -1916,7 +273,7 @@ argument_list|(
 name|stack
 argument_list|)
 operator|==
-literal|0
+name|NULL
 condition|)
 goto|goto
 name|error_ret1
@@ -1941,11 +298,6 @@ argument_list|(
 name|vms_symbol_table
 argument_list|)
 operator|=
-operator|(
-expr|struct
-name|bfd_hash_table
-operator|*
-operator|)
 name|bfd_alloc
 argument_list|(
 name|abfd
@@ -1960,7 +312,7 @@ argument_list|(
 name|vms_symbol_table
 argument_list|)
 operator|==
-literal|0
+name|NULL
 condition|)
 goto|goto
 name|error_ret1
@@ -1976,6 +328,11 @@ name|vms_symbol_table
 argument_list|)
 argument_list|,
 name|_bfd_vms_hash_newfunc
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|vms_symbol_entry
+argument_list|)
 argument_list|)
 condition|)
 goto|goto
@@ -1996,11 +353,6 @@ argument_list|(
 name|location_stack
 argument_list|)
 operator|=
-operator|(
-expr|struct
-name|location_struct
-operator|*
-operator|)
 name|bfd_alloc
 argument_list|(
 name|abfd
@@ -2015,7 +367,7 @@ argument_list|(
 name|location_stack
 argument_list|)
 operator|==
-literal|0
+name|NULL
 condition|)
 goto|goto
 name|error_ret2
@@ -2052,11 +404,6 @@ argument_list|(
 name|output_buf
 argument_list|)
 operator|=
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
 name|bfd_alloc
 argument_list|(
 name|abfd
@@ -2071,7 +418,7 @@ argument_list|(
 name|output_buf
 argument_list|)
 operator|==
-literal|0
+name|NULL
 condition|)
 goto|goto
 name|error_ret2
@@ -2143,7 +490,7 @@ name|tdata
 operator|.
 name|any
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 return|return
 name|FALSE
@@ -2152,7 +499,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Fill symbol->section with section ptr    symbol->section is filled with the section index for defined symbols    during reading the GSD/EGSD section. But we need the pointer to the    bfd section later.     It has the correct value for referenced (undefined section) symbols     called from bfd_hash_traverse in vms_fixup_sections  */
+comment|/* Fill symbol->section with section ptr    symbol->section is filled with the section index for defined symbols    during reading the GSD/EGSD section. But we need the pointer to the    bfd section later.     It has the correct value for referenced (undefined section) symbols     called from bfd_hash_traverse in vms_fixup_sections.  */
 end_comment
 
 begin_function
@@ -2160,18 +507,15 @@ specifier|static
 name|bfd_boolean
 name|fill_section_ptr
 parameter_list|(
-name|entry
-parameter_list|,
-name|sections
-parameter_list|)
 name|struct
 name|bfd_hash_entry
 modifier|*
 name|entry
-decl_stmt|;
-name|PTR
+parameter_list|,
+name|void
+modifier|*
 name|sections
-decl_stmt|;
+parameter_list|)
 block|{
 name|asection
 modifier|*
@@ -2215,18 +559,20 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* fill forward references (these contain section number, not section ptr).  */
+comment|/* Fill forward references (these contain section number, not section ptr).  */
 if|if
 condition|(
 operator|(
 name|unsigned
 name|int
 operator|)
+operator|(
+name|size_t
+operator|)
 name|sec
 operator|<
 name|priv_section_count
 condition|)
-block|{
 name|sec
 operator|=
 operator|(
@@ -2251,12 +597,15 @@ name|sections
 operator|)
 index|[
 operator|(
+name|unsigned
 name|int
+operator|)
+operator|(
+name|size_t
 operator|)
 name|sec
 index|]
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|strcmp
@@ -2285,7 +634,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Fixup sections    set up all pointers and arrays, counters and sizes are fixed now     we build a private sections vector for easy access since sections    are always referenced by an index number.     alloc PRIV(sections) according to abfd->section_count 	copy abfd->sections to PRIV(sections)  */
+comment|/* Fixup sections    set up all pointers and arrays, counters and sizes are fixed now     we build a private sections vector for easy access since sections    are always referenced by an index number.     alloc PRIV(sections) according to abfd->section_count 	copy abfd->sections to PRIV(sections).  */
 end_comment
 
 begin_function
@@ -2293,12 +642,10 @@ specifier|static
 name|bfd_boolean
 name|vms_fixup_sections
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -2310,8 +657,8 @@ condition|)
 return|return
 name|TRUE
 return|;
-comment|/*    * traverse symbol table and fill in all section pointers    */
-comment|/* can't provide section count as argument to fill_section_ptr().  */
+comment|/* Traverse symbol table and fill in all section pointers.  */
+comment|/* Can't provide section count as argument to fill_section_ptr().  */
 name|priv_section_count
 operator|=
 name|PRIV
@@ -2328,15 +675,12 @@ argument_list|)
 argument_list|,
 name|fill_section_ptr
 argument_list|,
-call|(
-name|PTR
-call|)
-argument_list|(
+operator|(
 name|PRIV
 argument_list|(
 name|sections
 argument_list|)
-argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|PRIV
@@ -2352,9 +696,8 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*===========================================================================*/
-end_comment
+begin_escape
+end_escape
 
 begin_comment
 comment|/* Check the format for a file being read.    Return a (bfd_target *) if it's an object file or zero if not.  */
@@ -2368,12 +711,10 @@ name|bfd_target
 modifier|*
 name|vms_object_p
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|err
@@ -2389,16 +730,17 @@ name|bfd_target
 modifier|*
 name|target_vector
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 specifier|const
 name|bfd_arch_info_type
 modifier|*
 name|arch
 init|=
-literal|0
+name|NULL
 decl_stmt|;
-name|PTR
+name|void
+modifier|*
 name|tdata_save
 init|=
 name|abfd
@@ -2422,7 +764,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_object_p(%p)\n"
+literal|"vms_object_p (%p)\n"
 argument_list|,
 name|abfd
 argument_list|)
@@ -2562,7 +904,7 @@ if|if
 condition|(
 name|target_vector
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 if|if
@@ -2789,7 +1131,7 @@ goto|goto
 name|err_wrong_format
 goto|;
 block|}
-comment|/* set arch_info to vax  */
+comment|/* Set arch_info to vax.  */
 name|arch
 operator|=
 name|bfd_scan_arch
@@ -2802,7 +1144,7 @@ argument_list|(
 name|is_vax
 argument_list|)
 operator|=
-literal|1
+name|TRUE
 expr_stmt|;
 if|#
 directive|if
@@ -2826,7 +1168,7 @@ operator|&
 name|vms_alpha_vec
 condition|)
 block|{
-comment|/* set arch_info to alpha  */
+comment|/* Set arch_info to alpha.   */
 name|arch
 operator|=
 name|bfd_scan_arch
@@ -2839,7 +1181,7 @@ argument_list|(
 name|is_vax
 argument_list|)
 operator|=
-literal|0
+name|FALSE
 expr_stmt|;
 if|#
 directive|if
@@ -2858,7 +1200,7 @@ if|if
 condition|(
 name|arch
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 if|#
@@ -2957,13 +1299,11 @@ name|bfd_target
 modifier|*
 name|vms_archive_p
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -2972,7 +1312,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_archive_p(%p)\n"
+literal|"vms_archive_p (%p)\n"
 argument_list|,
 name|abfd
 argument_list|)
@@ -2980,7 +1320,7 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
-literal|0
+name|NULL
 return|;
 block|}
 end_function
@@ -2994,12 +1334,10 @@ specifier|static
 name|bfd_boolean
 name|vms_mkobject
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -3008,7 +1346,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_mkobject(%p)\n"
+literal|"vms_mkobject (%p)\n"
 argument_list|,
 name|abfd
 argument_list|)
@@ -3024,7 +1362,7 @@ name|abfd
 argument_list|)
 condition|)
 return|return
-literal|0
+name|FALSE
 return|;
 block|{
 ifdef|#
@@ -3058,7 +1396,7 @@ if|if
 condition|(
 name|arch
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|bfd_set_error
@@ -3067,7 +1405,7 @@ name|bfd_error_wrong_format
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|FALSE
 return|;
 block|}
 name|abfd
@@ -3092,12 +1430,10 @@ specifier|static
 name|bfd_boolean
 name|vms_write_object_contents
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -3106,7 +1442,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_write_object_contents(%p)\n"
+literal|"vms_write_object_contents (%p)\n"
 argument_list|,
 name|abfd
 argument_list|)
@@ -3338,7 +1674,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-- 4.1, generic -----------------------------------------------------------*/
+comment|/* 4.1, generic.  */
 end_comment
 
 begin_comment
@@ -3350,12 +1686,10 @@ specifier|static
 name|bfd_boolean
 name|vms_close_and_cleanup
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -3364,7 +1698,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_close_and_cleanup(%p)\n"
+literal|"vms_close_and_cleanup (%p)\n"
 argument_list|,
 name|abfd
 argument_list|)
@@ -3375,7 +1709,7 @@ if|if
 condition|(
 name|abfd
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 name|TRUE
@@ -3463,13 +1797,11 @@ specifier|static
 name|bfd_boolean
 name|vms_bfd_free_cached_info
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -3478,7 +1810,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_bfd_free_cached_info(%p)\n"
+literal|"vms_bfd_free_cached_info (%p)\n"
 argument_list|,
 name|abfd
 argument_list|)
@@ -3500,18 +1832,14 @@ specifier|static
 name|bfd_boolean
 name|vms_new_section_hook
 parameter_list|(
-name|abfd
-parameter_list|,
-name|section
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|section
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* Count hasn't been incremented yet.  */
 name|unsigned
@@ -3585,11 +1913,6 @@ argument_list|(
 name|sections
 argument_list|)
 operator|=
-operator|(
-name|asection
-operator|*
-operator|*
-operator|)
 name|bfd_realloc
 argument_list|(
 name|PRIV
@@ -3607,7 +1930,7 @@ argument_list|(
 name|sections
 argument_list|)
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 name|FALSE
@@ -3684,38 +2007,29 @@ specifier|static
 name|bfd_boolean
 name|vms_get_section_contents
 parameter_list|(
-name|abfd
-parameter_list|,
-name|section
-parameter_list|,
-name|buf
-parameter_list|,
-name|offset
-parameter_list|,
-name|buf_size
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|section
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
-name|PTR
+parameter_list|,
+name|void
+modifier|*
 name|buf
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|file_ptr
 name|offset
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|bfd_size_type
 name|buf_size
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -3724,7 +2038,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_get_section_contents(%p, %s, %p, off %ld, size %d)\n"
+literal|"vms_get_section_contents (%p, %s, %p, off %ld, size %d)\n"
 argument_list|,
 name|abfd
 argument_list|,
@@ -3744,7 +2058,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* shouldn't be called, since all sections are IN_MEMORY  */
+comment|/* Shouldn't be called, since all sections are IN_MEMORY.  */
 return|return
 name|FALSE
 return|;
@@ -3752,7 +2066,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Read the contents of a section.    buf points to a buffer of buf_size bytes to be filled with    section data (starting at offset into section)  */
+comment|/* Read the contents of a section.    buf points to a buffer of buf_size bytes to be filled with    section data (starting at offset into section).  */
 end_comment
 
 begin_function
@@ -3760,39 +2074,29 @@ specifier|static
 name|bfd_boolean
 name|vms_get_section_contents_in_window
 parameter_list|(
-name|abfd
-parameter_list|,
-name|section
-parameter_list|,
-name|w
-parameter_list|,
-name|offset
-parameter_list|,
-name|count
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|section
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|bfd_window
 modifier|*
 name|w
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|file_ptr
 name|offset
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|bfd_size_type
 name|count
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -3801,7 +2105,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_get_section_contents_in_window(%p, %s, %p, off %ld, count %d)\n"
+literal|"vms_get_section_contents_in_window (%p, %s, %p, off %ld, count %d)\n"
 argument_list|,
 name|abfd
 argument_list|,
@@ -3821,7 +2125,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* shouldn't be called, since all sections are IN_MEMORY  */
+comment|/* Shouldn't be called, since all sections are IN_MEMORY.  */
 return|return
 name|FALSE
 return|;
@@ -3829,7 +2133,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-- Part 4.2, copy private data --------------------------------------------*/
+comment|/* Part 4.2, copy private data.  */
 end_comment
 
 begin_comment
@@ -3841,20 +2145,16 @@ specifier|static
 name|bfd_boolean
 name|vms_bfd_copy_private_bfd_data
 parameter_list|(
+name|bfd
+modifier|*
 name|src
+name|ATTRIBUTE_UNUSED
 parameter_list|,
+name|bfd
+modifier|*
 name|dest
+name|ATTRIBUTE_UNUSED
 parameter_list|)
-name|bfd
-modifier|*
-name|src
-name|ATTRIBUTE_UNUSED
-decl_stmt|;
-name|bfd
-modifier|*
-name|dest
-name|ATTRIBUTE_UNUSED
-decl_stmt|;
 block|{
 if|#
 directive|if
@@ -3863,7 +2163,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_bfd_copy_private_bfd_data(%p, %p)\n"
+literal|"vms_bfd_copy_private_bfd_data (%p, %p)\n"
 argument_list|,
 name|src
 argument_list|,
@@ -3887,20 +2187,16 @@ specifier|static
 name|bfd_boolean
 name|vms_bfd_merge_private_bfd_data
 parameter_list|(
+name|bfd
+modifier|*
 name|ibfd
+name|ATTRIBUTE_UNUSED
 parameter_list|,
+name|bfd
+modifier|*
 name|obfd
+name|ATTRIBUTE_UNUSED
 parameter_list|)
-name|bfd
-modifier|*
-name|ibfd
-name|ATTRIBUTE_UNUSED
-decl_stmt|;
-name|bfd
-modifier|*
-name|obfd
-name|ATTRIBUTE_UNUSED
-decl_stmt|;
 block|{
 if|#
 directive|if
@@ -3909,7 +2205,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_bfd_merge_private_bfd_data(%p, %p)\n"
+literal|"vms_bfd_merge_private_bfd_data (%p, %p)\n"
 argument_list|,
 name|ibfd
 argument_list|,
@@ -3933,19 +2229,15 @@ specifier|static
 name|bfd_boolean
 name|vms_bfd_set_private_flags
 parameter_list|(
-name|abfd
-parameter_list|,
-name|flags
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|flagword
 name|flags
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -3954,7 +2246,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_bfd_set_private_flags(%p, %lx)\n"
+literal|"vms_bfd_set_private_flags (%p, %lx)\n"
 argument_list|,
 name|abfd
 argument_list|,
@@ -3981,34 +2273,26 @@ specifier|static
 name|bfd_boolean
 name|vms_bfd_copy_private_section_data
 parameter_list|(
+name|bfd
+modifier|*
 name|srcbfd
+name|ATTRIBUTE_UNUSED
 parameter_list|,
+name|asection
+modifier|*
 name|srcsec
+name|ATTRIBUTE_UNUSED
 parameter_list|,
+name|bfd
+modifier|*
 name|dstbfd
+name|ATTRIBUTE_UNUSED
 parameter_list|,
+name|asection
+modifier|*
 name|dstsec
+name|ATTRIBUTE_UNUSED
 parameter_list|)
-name|bfd
-modifier|*
-name|srcbfd
-name|ATTRIBUTE_UNUSED
-decl_stmt|;
-name|asection
-modifier|*
-name|srcsec
-name|ATTRIBUTE_UNUSED
-decl_stmt|;
-name|bfd
-modifier|*
-name|dstbfd
-name|ATTRIBUTE_UNUSED
-decl_stmt|;
-name|asection
-modifier|*
-name|dstsec
-name|ATTRIBUTE_UNUSED
-decl_stmt|;
 block|{
 if|#
 directive|if
@@ -4017,7 +2301,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_bfd_copy_private_section_data(%p, %s, %p, %s)\n"
+literal|"vms_bfd_copy_private_section_data (%p, %s, %p, %s)\n"
 argument_list|,
 name|srcbfd
 argument_list|,
@@ -4049,34 +2333,26 @@ specifier|static
 name|bfd_boolean
 name|vms_bfd_copy_private_symbol_data
 parameter_list|(
+name|bfd
+modifier|*
 name|ibfd
+name|ATTRIBUTE_UNUSED
 parameter_list|,
+name|asymbol
+modifier|*
 name|isym
+name|ATTRIBUTE_UNUSED
 parameter_list|,
+name|bfd
+modifier|*
 name|obfd
+name|ATTRIBUTE_UNUSED
 parameter_list|,
+name|asymbol
+modifier|*
 name|osym
+name|ATTRIBUTE_UNUSED
 parameter_list|)
-name|bfd
-modifier|*
-name|ibfd
-name|ATTRIBUTE_UNUSED
-decl_stmt|;
-name|asymbol
-modifier|*
-name|isym
-name|ATTRIBUTE_UNUSED
-decl_stmt|;
-name|bfd
-modifier|*
-name|obfd
-name|ATTRIBUTE_UNUSED
-decl_stmt|;
-name|asymbol
-modifier|*
-name|osym
-name|ATTRIBUTE_UNUSED
-decl_stmt|;
 block|{
 if|#
 directive|if
@@ -4085,7 +2361,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_bfd_copy_private_symbol_data(%p, %s, %p, %s)\n"
+literal|"vms_bfd_copy_private_symbol_data (%p, %s, %p, %s)\n"
 argument_list|,
 name|ibfd
 argument_list|,
@@ -4109,7 +2385,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-- Part 4.3, core file ----------------------------------------------------*/
+comment|/* Part 4.3, core file.  */
 end_comment
 
 begin_comment
@@ -4122,13 +2398,11 @@ name|char
 modifier|*
 name|vms_core_file_failing_command
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -4137,7 +2411,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_core_file_failing_command(%p)\n"
+literal|"vms_core_file_failing_command (%p)\n"
 argument_list|,
 name|abfd
 argument_list|)
@@ -4145,7 +2419,7 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
-literal|0
+name|NULL
 return|;
 block|}
 end_function
@@ -4159,13 +2433,11 @@ specifier|static
 name|int
 name|vms_core_file_failing_signal
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -4174,7 +2446,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_core_file_failing_signal(%p)\n"
+literal|"vms_core_file_failing_signal (%p)\n"
 argument_list|,
 name|abfd
 argument_list|)
@@ -4196,20 +2468,16 @@ specifier|static
 name|bfd_boolean
 name|vms_core_file_matches_executable_p
 parameter_list|(
+name|bfd
+modifier|*
 name|abfd
+name|ATTRIBUTE_UNUSED
 parameter_list|,
+name|bfd
+modifier|*
 name|bbfd
+name|ATTRIBUTE_UNUSED
 parameter_list|)
-name|bfd
-modifier|*
-name|abfd
-name|ATTRIBUTE_UNUSED
-decl_stmt|;
-name|bfd
-modifier|*
-name|bbfd
-name|ATTRIBUTE_UNUSED
-decl_stmt|;
 block|{
 if|#
 directive|if
@@ -4218,7 +2486,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_core_file_matches_executable_p(%p, %p)\n"
+literal|"vms_core_file_matches_executable_p (%p, %p)\n"
 argument_list|,
 name|abfd
 argument_list|,
@@ -4234,7 +2502,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-- Part 4.4, archive ------------------------------------------------------*/
+comment|/* Part 4.4, archive.  */
 end_comment
 
 begin_comment
@@ -4246,13 +2514,11 @@ specifier|static
 name|bfd_boolean
 name|vms_slurp_armap
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -4261,7 +2527,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_slurp_armap(%p)\n"
+literal|"vms_slurp_armap (%p)\n"
 argument_list|,
 name|abfd
 argument_list|)
@@ -4283,13 +2549,11 @@ specifier|static
 name|bfd_boolean
 name|vms_slurp_extended_name_table
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -4298,7 +2562,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_slurp_extended_name_table(%p)\n"
+literal|"vms_slurp_extended_name_table (%p)\n"
 argument_list|,
 name|abfd
 argument_list|)
@@ -4320,37 +2584,29 @@ specifier|static
 name|bfd_boolean
 name|vms_construct_extended_name_table
 parameter_list|(
-name|abfd
-parameter_list|,
-name|tabloc
-parameter_list|,
-name|tablen
-parameter_list|,
-name|name
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|tabloc
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|bfd_size_type
 modifier|*
 name|tablen
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 modifier|*
 name|name
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -4359,7 +2615,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_construct_extended_name_table(%p)\n"
+literal|"vms_construct_extended_name_table (%p)\n"
 argument_list|,
 name|abfd
 argument_list|)
@@ -4373,7 +2629,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Truncate the name of an archive to match system-dependent restrictions  */
+comment|/* Truncate the name of an archive to match system-dependent restrictions.  */
 end_comment
 
 begin_function
@@ -4381,28 +2637,22 @@ specifier|static
 name|void
 name|vms_truncate_arname
 parameter_list|(
-name|abfd
-parameter_list|,
-name|pathname
-parameter_list|,
-name|arhdr
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|pathname
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|arhdr
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -4411,7 +2661,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_truncate_arname(%p, %s, %s)\n"
+literal|"vms_truncate_arname (%p, %s, %s)\n"
 argument_list|,
 name|abfd
 argument_list|,
@@ -4427,7 +2677,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ???	write archive map  */
+comment|/* ???	write archive map.  */
 end_comment
 
 begin_function
@@ -4435,41 +2685,31 @@ specifier|static
 name|bfd_boolean
 name|vms_write_armap
 parameter_list|(
-name|arch
-parameter_list|,
-name|elength
-parameter_list|,
-name|map
-parameter_list|,
-name|orl_count
-parameter_list|,
-name|stridx
-parameter_list|)
 name|bfd
 modifier|*
 name|arch
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|int
 name|elength
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|struct
 name|orl
 modifier|*
 name|map
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|int
 name|orl_count
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|int
 name|stridx
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -4478,7 +2718,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_write_armap(%p, %d, %p, %d %d)\n"
+literal|"vms_write_armap (%p, %d, %p, %d %d)\n"
 argument_list|,
 name|arch
 argument_list|,
@@ -4505,16 +2745,15 @@ end_comment
 
 begin_function
 specifier|static
-name|PTR
+name|void
+modifier|*
 name|vms_read_ar_hdr
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -4523,7 +2762,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_read_ar_hdr(%p)\n"
+literal|"vms_read_ar_hdr (%p)\n"
 argument_list|,
 name|abfd
 argument_list|)
@@ -4531,10 +2770,7 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
-operator|(
-name|PTR
-operator|)
-literal|0
+name|NULL
 return|;
 block|}
 end_function
@@ -4549,20 +2785,16 @@ name|bfd
 modifier|*
 name|vms_openr_next_archived_file
 parameter_list|(
+name|bfd
+modifier|*
 name|arch
+name|ATTRIBUTE_UNUSED
 parameter_list|,
+name|bfd
+modifier|*
 name|prev
+name|ATTRIBUTE_UNUSED
 parameter_list|)
-name|bfd
-modifier|*
-name|arch
-name|ATTRIBUTE_UNUSED
-decl_stmt|;
-name|bfd
-modifier|*
-name|prev
-name|ATTRIBUTE_UNUSED
-decl_stmt|;
 block|{
 if|#
 directive|if
@@ -4571,7 +2803,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_openr_next_archived_file(%p, %p)\n"
+literal|"vms_openr_next_archived_file (%p, %p)\n"
 argument_list|,
 name|arch
 argument_list|,
@@ -4596,17 +2828,13 @@ name|bfd
 modifier|*
 name|vms_get_elt_at_index
 parameter_list|(
-name|abfd
-parameter_list|,
-name|index
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|symindex
 name|index
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -4615,7 +2843,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_get_elt_at_index(%p, %p)\n"
+literal|"vms_get_elt_at_index (%p, %p)\n"
 argument_list|,
 name|abfd
 argument_list|,
@@ -4636,7 +2864,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ???    -> bfd_generic_stat_arch_elt  */
+comment|/* ???    -> bfd_generic_stat_arch_elt.  */
 end_comment
 
 begin_function
@@ -4644,19 +2872,15 @@ specifier|static
 name|int
 name|vms_generic_stat_arch_elt
 parameter_list|(
-name|abfd
-parameter_list|,
-name|st
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|struct
 name|stat
 modifier|*
 name|st
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -4665,7 +2889,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_generic_stat_arch_elt(%p, %p)\n"
+literal|"vms_generic_stat_arch_elt (%p, %p)\n"
 argument_list|,
 name|abfd
 argument_list|,
@@ -4686,7 +2910,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This is a new function in bfd 2.5  */
+comment|/* This is a new function in bfd 2.5.  */
 end_comment
 
 begin_function
@@ -4694,13 +2918,11 @@ specifier|static
 name|bfd_boolean
 name|vms_update_armap_timestamp
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -4709,7 +2931,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_update_armap_timestamp(%p)\n"
+literal|"vms_update_armap_timestamp (%p)\n"
 argument_list|,
 name|abfd
 argument_list|)
@@ -4723,7 +2945,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-- Part 4.5, symbols --------------------------------------------------------*/
+comment|/* Part 4.5, symbols.  */
 end_comment
 
 begin_comment
@@ -4735,12 +2957,10 @@ specifier|static
 name|long
 name|vms_get_symtab_upper_bound
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -4749,7 +2969,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_get_symtab_upper_bound(%p), %d symbols\n"
+literal|"vms_get_symtab_upper_bound (%p), %d symbols\n"
 argument_list|,
 name|abfd
 argument_list|,
@@ -4781,7 +3001,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Copy symbols from hash table to symbol vector     called from bfd_hash_traverse in vms_canonicalize_symtab    init counter to 0 if entry == 0  */
+comment|/* Copy symbols from hash table to symbol vector     called from bfd_hash_traverse in vms_canonicalize_symtab    init counter to 0 if entry == 0.  */
 end_comment
 
 begin_function
@@ -4789,18 +3009,15 @@ specifier|static
 name|bfd_boolean
 name|copy_symbols
 parameter_list|(
-name|entry
-parameter_list|,
-name|arg
-parameter_list|)
 name|struct
 name|bfd_hash_entry
 modifier|*
 name|entry
-decl_stmt|;
-name|PTR
+parameter_list|,
+name|void
+modifier|*
 name|arg
-decl_stmt|;
+parameter_list|)
 block|{
 name|bfd
 modifier|*
@@ -4818,7 +3035,7 @@ name|entry
 operator|==
 name|NULL
 condition|)
-comment|/* init counter */
+comment|/* Init counter.  */
 name|PRIV
 argument_list|(
 name|symnum
@@ -4827,7 +3044,7 @@ operator|=
 literal|0
 expr_stmt|;
 else|else
-comment|/* fill vector, inc counter */
+comment|/* Fill vector, inc counter.  */
 name|PRIV
 argument_list|(
 name|symcache
@@ -4857,7 +3074,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Read the symbols from the BFD abfd, and fills in the vector    location with pointers to the symbols and a trailing NULL.     return # of symbols read  */
+comment|/* Read the symbols from the BFD abfd, and fills in the vector    location with pointers to the symbols and a trailing NULL.     Return number of symbols read.   */
 end_comment
 
 begin_function
@@ -4865,19 +3082,15 @@ specifier|static
 name|long
 name|vms_canonicalize_symtab
 parameter_list|(
-name|abfd
-parameter_list|,
-name|symbols
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|asymbol
 modifier|*
 modifier|*
 name|symbols
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -4886,30 +3099,22 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_canonicalize_symtab(%p,<ret>)\n"
+literal|"vms_canonicalize_symtab (%p,<ret>)\n"
 argument_list|,
 name|abfd
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* init counter */
-operator|(
-name|void
-operator|)
+comment|/* Init counter.  */
 name|copy_symbols
 argument_list|(
-operator|(
-expr|struct
-name|bfd_hash_entry
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|,
 name|abfd
 argument_list|)
 expr_stmt|;
-comment|/* traverse table and fill symbols vector */
+comment|/* Traverse table and fill symbols vector.  */
 name|PRIV
 argument_list|(
 name|symcache
@@ -4926,9 +3131,6 @@ argument_list|)
 argument_list|,
 name|copy_symbols
 argument_list|,
-operator|(
-name|PTR
-operator|)
 name|abfd
 argument_list|)
 expr_stmt|;
@@ -4952,7 +3154,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Print symbol to file according to how. how is one of    bfd_print_symbol_name	just print the name    bfd_print_symbol_more	print more (???)    bfd_print_symbol_all	print all we know, which is not much right now :-)  */
+comment|/* Print symbol to file according to how. how is one of    bfd_print_symbol_name	just print the name    bfd_print_symbol_more	print more (???)    bfd_print_symbol_all	print all we know, which is not much right now :-).  */
 end_comment
 
 begin_function
@@ -4960,28 +3162,21 @@ specifier|static
 name|void
 name|vms_print_symbol
 parameter_list|(
-name|abfd
-parameter_list|,
-name|file
-parameter_list|,
-name|symbol
-parameter_list|,
-name|how
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
-name|PTR
+parameter_list|,
+name|void
+modifier|*
 name|file
-decl_stmt|;
+parameter_list|,
 name|asymbol
 modifier|*
 name|symbol
-decl_stmt|;
+parameter_list|,
 name|bfd_print_symbol_type
 name|how
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -4990,7 +3185,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_print_symbol(%p, %p, %p, %d)\n"
+literal|"vms_print_symbol (%p, %p, %p, %d)\n"
 argument_list|,
 name|abfd
 argument_list|,
@@ -5049,9 +3244,6 @@ name|bfd_print_symbol_vandf
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|PTR
-operator|)
 name|file
 argument_list|,
 name|symbol
@@ -5077,12 +3269,11 @@ expr_stmt|;
 block|}
 break|break;
 block|}
-return|return;
 block|}
 end_function
 
 begin_comment
-comment|/* Return information about symbol in ret.     fill type, value and name    type: 	A	absolute 	B	bss segment symbol 	C	common symbol 	D	data segment symbol 	f	filename 	t	a static function symbol 	T	text segment symbol 	U	undefined 	-	debug  */
+comment|/* Return information about symbol in ret.     fill type, value and name    type: 	A	absolute 	B	bss segment symbol 	C	common symbol 	D	data segment symbol 	f	filename 	t	a static function symbol 	T	text segment symbol 	U	undefined 	-	debug.  */
 end_comment
 
 begin_function
@@ -5090,25 +3281,19 @@ specifier|static
 name|void
 name|vms_get_symbol_info
 parameter_list|(
-name|abfd
-parameter_list|,
-name|symbol
-parameter_list|,
-name|ret
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|asymbol
 modifier|*
 name|symbol
-decl_stmt|;
+parameter_list|,
 name|symbol_info
 modifier|*
 name|ret
-decl_stmt|;
+parameter_list|)
 block|{
 name|asection
 modifier|*
@@ -5121,7 +3306,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_get_symbol_info(%p, %p, %p)\n"
+literal|"vms_get_symbol_info (%p, %p, %p)\n"
 argument_list|,
 name|abfd
 argument_list|,
@@ -5142,7 +3327,7 @@ if|if
 condition|(
 name|ret
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return;
 if|if
@@ -5298,7 +3483,6 @@ name|symbol
 operator|->
 name|name
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5311,20 +3495,16 @@ specifier|static
 name|bfd_boolean
 name|vms_bfd_is_local_label_name
 parameter_list|(
-name|abfd
-parameter_list|,
-name|name
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -5333,7 +3513,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_bfd_is_local_label_name(%p, %s)\n"
+literal|"vms_bfd_is_local_label_name (%p, %s)\n"
 argument_list|,
 name|abfd
 argument_list|,
@@ -5354,7 +3534,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Get source line number for symbol  */
+comment|/* Get source line number for symbol.  */
 end_comment
 
 begin_function
@@ -5363,20 +3543,16 @@ name|alent
 modifier|*
 name|vms_get_lineno
 parameter_list|(
-name|abfd
-parameter_list|,
-name|symbol
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|asymbol
 modifier|*
 name|symbol
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -5385,7 +3561,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_get_lineno(%p, %p)\n"
+literal|"vms_get_lineno (%p, %p)\n"
 argument_list|,
 name|abfd
 argument_list|,
@@ -5395,7 +3571,7 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
-literal|0
+name|NULL
 return|;
 block|}
 end_function
@@ -5409,60 +3585,46 @@ specifier|static
 name|bfd_boolean
 name|vms_find_nearest_line
 parameter_list|(
-name|abfd
-parameter_list|,
-name|section
-parameter_list|,
-name|symbols
-parameter_list|,
-name|offset
-parameter_list|,
-name|file
-parameter_list|,
-name|func
-parameter_list|,
-name|line
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|section
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|asymbol
 modifier|*
 modifier|*
 name|symbols
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|bfd_vma
 name|offset
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 modifier|*
 name|file
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 modifier|*
 name|func
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|int
 modifier|*
 name|line
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -5471,7 +3633,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_find_nearest_line(%p, %s, %p, %ld,<ret>,<ret>,<ret>)\n"
+literal|"vms_find_nearest_line (%p, %s, %p, %ld,<ret>,<ret>,<ret>)\n"
 argument_list|,
 name|abfd
 argument_list|,
@@ -5496,6 +3658,57 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|bfd_boolean
+name|vms_find_inliner_info
+parameter_list|(
+name|bfd
+modifier|*
+name|abfd
+name|ATTRIBUTE_UNUSED
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|file
+name|ATTRIBUTE_UNUSED
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|func
+name|ATTRIBUTE_UNUSED
+parameter_list|,
+name|unsigned
+name|int
+modifier|*
+name|line
+name|ATTRIBUTE_UNUSED
+parameter_list|)
+block|{
+if|#
+directive|if
+name|VMS_DEBUG
+name|vms_debug
+argument_list|(
+literal|1
+argument_list|,
+literal|"vms_find_inliner_info (%p,<ret>,<ret>,<ret>)\n"
+argument_list|,
+name|abfd
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+return|return
+name|FALSE
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/* Back-door to allow format-aware applications to create debug symbols    while using BFD for everything else.  Currently used by the assembler    when creating COFF files.  */
 end_comment
@@ -5506,27 +3719,21 @@ name|asymbol
 modifier|*
 name|vms_bfd_make_debug_symbol
 parameter_list|(
-name|abfd
-parameter_list|,
-name|ptr
-parameter_list|,
-name|size
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|void
 modifier|*
 name|ptr
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|long
 name|size
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -5535,7 +3742,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_bfd_make_debug_symbol(%p, %p, %ld)\n"
+literal|"vms_bfd_make_debug_symbol (%p, %p, %ld)\n"
 argument_list|,
 name|abfd
 argument_list|,
@@ -5547,7 +3754,7 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
-literal|0
+name|NULL
 return|;
 block|}
 end_function
@@ -5561,30 +3768,23 @@ specifier|static
 name|long
 name|vms_read_minisymbols
 parameter_list|(
-name|abfd
-parameter_list|,
-name|dynamic
-parameter_list|,
-name|minisymsp
-parameter_list|,
-name|sizep
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|bfd_boolean
 name|dynamic
-decl_stmt|;
-name|PTR
+parameter_list|,
+name|void
+modifier|*
 modifier|*
 name|minisymsp
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|int
 modifier|*
 name|sizep
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -5593,7 +3793,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_read_minisymbols(%p, %d, %p, %d)\n"
+literal|"vms_read_minisymbols (%p, %d, %p, %d)\n"
 argument_list|,
 name|abfd
 argument_list|,
@@ -5632,29 +3832,22 @@ name|asymbol
 modifier|*
 name|vms_minisymbol_to_symbol
 parameter_list|(
-name|abfd
-parameter_list|,
-name|dynamic
-parameter_list|,
-name|minisym
-parameter_list|,
-name|sym
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|bfd_boolean
 name|dynamic
-decl_stmt|;
+parameter_list|,
 specifier|const
-name|PTR
+name|void
+modifier|*
 name|minisym
-decl_stmt|;
+parameter_list|,
 name|asymbol
 modifier|*
 name|sym
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -5663,7 +3856,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_minisymbol_to_symbol(%p, %d, %p, %p)\n"
+literal|"vms_minisymbol_to_symbol (%p, %d, %p, %p)\n"
 argument_list|,
 name|abfd
 argument_list|,
@@ -5692,7 +3885,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-- Part 4.6, relocations --------------------------------------------------*/
+comment|/* Part 4.6, relocations.  */
 end_comment
 
 begin_comment
@@ -5704,20 +3897,16 @@ specifier|static
 name|long
 name|vms_get_reloc_upper_bound
 parameter_list|(
-name|abfd
-parameter_list|,
-name|section
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|section
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -5726,7 +3915,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_get_reloc_upper_bound(%p, %s)\n"
+literal|"vms_get_reloc_upper_bound (%p, %s)\n"
 argument_list|,
 name|abfd
 argument_list|,
@@ -5753,36 +3942,28 @@ specifier|static
 name|long
 name|vms_canonicalize_reloc
 parameter_list|(
-name|abfd
-parameter_list|,
-name|section
-parameter_list|,
-name|location
-parameter_list|,
-name|symbols
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|section
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|arelent
 modifier|*
 modifier|*
 name|location
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|asymbol
 modifier|*
 modifier|*
 name|symbols
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -5791,7 +3972,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_canonicalize_reloc(%p, %s,<ret>,<ret>)\n"
+literal|"vms_canonicalize_reloc (%p, %s,<ret>,<ret>)\n"
 argument_list|,
 name|abfd
 argument_list|,
@@ -5808,12 +3989,11 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*---------------------------------------------------------------------------*/
-end_comment
+begin_escape
+end_escape
 
 begin_comment
-comment|/* this is just copied from ecoff-alpha, needs to be fixed probably */
+comment|/* This is just copied from ecoff-alpha, needs to be fixed probably.  */
 end_comment
 
 begin_comment
@@ -5825,55 +4005,42 @@ specifier|static
 name|bfd_reloc_status_type
 name|reloc_nil
 parameter_list|(
-name|abfd
-parameter_list|,
-name|reloc
-parameter_list|,
-name|sym
-parameter_list|,
-name|data
-parameter_list|,
-name|sec
-parameter_list|,
-name|output_bfd
-parameter_list|,
-name|error_message
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|arelent
 modifier|*
 name|reloc
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|asymbol
 modifier|*
 name|sym
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
-name|PTR
+parameter_list|,
+name|void
+modifier|*
 name|data
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|sec
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|bfd
 modifier|*
 name|output_bfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|error_message
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -5882,7 +4049,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"reloc_nil(abfd %p, output_bfd %p)\n"
+literal|"reloc_nil (abfd %p, output_bfd %p)\n"
 argument_list|,
 name|abfd
 argument_list|,
@@ -5951,7 +4118,7 @@ argument_list|,
 name|data
 argument_list|)
 expr_stmt|;
-comment|/*  _bfd_hexdump (2, data, bfd_get_reloc_size(reloc->howto),0); */
+comment|/*  _bfd_hexdump (2, data, bfd_get_reloc_size (reloc->howto), 0); */
 endif|#
 directive|endif
 return|return
@@ -5982,603 +4149,603 @@ name|HOWTO
 argument_list|(
 name|ALPHA_R_IGNORE
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|0
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|8
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|TRUE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_dont
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 name|reloc_nil
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"IGNORE"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|TRUE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask */
 literal|0
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|TRUE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PC rel offset.  */
 comment|/* A 64 bit reference to a symbol.  */
 name|HOWTO
 argument_list|(
 name|ALPHA_R_REFQUAD
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|4
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|64
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_bitfield
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 name|reloc_nil
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"REFQUAD"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|TRUE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 name|MINUS_ONE
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 name|MINUS_ONE
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PC rel offset.  */
 comment|/* A 21 bit branch.  The native assembler generates these for      branches within the text segment, and also fills in the PC      relative offset in the instruction.  */
 name|HOWTO
 argument_list|(
 name|ALPHA_R_BRADDR
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|2
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|21
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|TRUE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_signed
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 name|reloc_nil
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"BRADDR"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|TRUE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0x1fffff
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 literal|0x1fffff
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PC rel offset.  */
 comment|/* A hint for a jump to a register.  */
 name|HOWTO
 argument_list|(
 name|ALPHA_R_HINT
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|2
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|1
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|14
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|TRUE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_dont
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 name|reloc_nil
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"HINT"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|TRUE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0x3fff
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 literal|0x3fff
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PC rel offset.  */
 comment|/* 16 bit PC relative offset.  */
 name|HOWTO
 argument_list|(
 name|ALPHA_R_SREL16
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|1
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|16
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|TRUE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_signed
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 name|reloc_nil
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"SREL16"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|TRUE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0xffff
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 literal|0xffff
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PC rel offset.  */
 comment|/* 32 bit PC relative offset.  */
 name|HOWTO
 argument_list|(
 name|ALPHA_R_SREL32
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|32
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|TRUE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_signed
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 name|reloc_nil
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"SREL32"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|TRUE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0xffffffff
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 literal|0xffffffff
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PC rel offset.  */
 comment|/* A 64 bit PC relative offset.  */
 name|HOWTO
 argument_list|(
 name|ALPHA_R_SREL64
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|4
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|64
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|TRUE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_signed
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 name|reloc_nil
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"SREL64"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|TRUE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 name|MINUS_ONE
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 name|MINUS_ONE
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PC rel offset.  */
 comment|/* Push a value on the reloc evaluation stack.  */
 name|HOWTO
 argument_list|(
 name|ALPHA_R_OP_PUSH
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|0
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|0
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_dont
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 name|reloc_nil
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"OP_PUSH"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|FALSE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 literal|0
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PC rel offset.  */
 comment|/* Store the value from the stack at the given address.  Store it in      a bitfield of size r_size starting at bit position r_offset.  */
 name|HOWTO
 argument_list|(
 name|ALPHA_R_OP_STORE
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|4
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|64
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_dont
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 name|reloc_nil
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"OP_STORE"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|FALSE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 name|MINUS_ONE
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PC rel offset.  */
 comment|/* Subtract the reloc address from the value on the top of the      relocation stack.  */
 name|HOWTO
 argument_list|(
 name|ALPHA_R_OP_PSUB
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|0
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|0
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_dont
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 name|reloc_nil
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"OP_PSUB"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|FALSE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 literal|0
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PC rel offset.  */
 comment|/* Shift the value on the top of the relocation stack right by the      given value.  */
 name|HOWTO
 argument_list|(
 name|ALPHA_R_OP_PRSHIFT
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|0
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|0
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_dont
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 name|reloc_nil
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"OP_PRSHIFT"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|FALSE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 literal|0
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PC rel offset.  */
 comment|/* Hack. Linkage is done by linker.  */
 name|HOWTO
 argument_list|(
 name|ALPHA_R_LINKAGE
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|8
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|256
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_dont
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 name|reloc_nil
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"LINKAGE"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|FALSE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 literal|0
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PC rel offset.  */
 comment|/* A 32 bit reference to a symbol.  */
 name|HOWTO
 argument_list|(
 name|ALPHA_R_REFLONG
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|32
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_bitfield
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 name|reloc_nil
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"REFLONG"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|TRUE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0xffffffff
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 literal|0xffffffff
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PC rel offset.  */
 comment|/* A 64 bit reference to a procedure, written as 32 bit value.  */
 name|HOWTO
 argument_list|(
 name|ALPHA_R_CODEADDR
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|4
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|64
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_signed
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 name|reloc_nil
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"CODEADDR"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|FALSE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0xffffffff
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 literal|0xffffffff
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PC rel offset.  */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -6595,18 +4762,14 @@ name|reloc_howto_struct
 modifier|*
 name|vms_bfd_reloc_type_lookup
 parameter_list|(
-name|abfd
-parameter_list|,
-name|code
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|bfd_reloc_code_real_type
 name|code
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|alpha_type
@@ -6618,7 +4781,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_bfd_reloc_type_lookup(%p, %d)\t"
+literal|"vms_bfd_reloc_type_lookup (%p, %d)\t"
 argument_list|,
 name|abfd
 argument_list|,
@@ -6732,12 +4895,6 @@ name|code
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-specifier|const
-expr|struct
-name|reloc_howto_struct
-operator|*
-operator|)
 name|NULL
 return|;
 block|}
@@ -6771,7 +4928,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-- Part 4.7, writing an object file ---------------------------------------*/
+comment|/* Part 4.7, writing an object file.  */
 end_comment
 
 begin_comment
@@ -6783,26 +4940,20 @@ specifier|static
 name|bfd_boolean
 name|vms_set_arch_mach
 parameter_list|(
-name|abfd
-parameter_list|,
-name|arch
-parameter_list|,
-name|mach
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|enum
 name|bfd_architecture
 name|arch
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|long
 name|mach
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -6811,7 +4962,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_set_arch_mach(%p, %d, %ld)\n"
+literal|"vms_set_arch_mach (%p, %d, %ld)\n"
 argument_list|,
 name|abfd
 argument_list|,
@@ -6846,34 +4997,25 @@ specifier|static
 name|bfd_boolean
 name|vms_set_section_contents
 parameter_list|(
-name|abfd
-parameter_list|,
-name|section
-parameter_list|,
-name|location
-parameter_list|,
-name|offset
-parameter_list|,
-name|count
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|section
-decl_stmt|;
+parameter_list|,
 specifier|const
-name|PTR
+name|void
+modifier|*
 name|location
-decl_stmt|;
+parameter_list|,
 name|file_ptr
 name|offset
-decl_stmt|;
+parameter_list|,
 name|bfd_size_type
 name|count
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -6882,7 +5024,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_set_section_contents(%p, sec %s, loc %p, off %ld, count %d)\n"
+literal|"vms_set_section_contents (%p, sec %s, loc %p, off %ld, count %d)\n"
 argument_list|,
 name|abfd
 argument_list|,
@@ -6908,21 +5050,14 @@ name|vms_debug
 argument_list|(
 literal|2
 argument_list|,
-literal|"secraw %d, seccooked %d\n"
+literal|"size %d\n"
 argument_list|,
 operator|(
 name|int
 operator|)
 name|section
 operator|->
-name|_raw_size
-argument_list|,
-operator|(
-name|int
-operator|)
-name|section
-operator|->
-name|_cooked_size
+name|size
 argument_list|)
 expr_stmt|;
 endif|#
@@ -6945,7 +5080,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-- Part 4.8, linker -------------------------------------------------------*/
+comment|/* Part 4.8, linker.  */
 end_comment
 
 begin_comment
@@ -6957,19 +5092,15 @@ specifier|static
 name|int
 name|vms_sizeof_headers
 parameter_list|(
-name|abfd
-parameter_list|,
-name|reloc
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|bfd_boolean
 name|reloc
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -6978,7 +5109,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_sizeof_headers(%p, %s)\n"
+literal|"vms_sizeof_headers (%p, %s)\n"
 argument_list|,
 name|abfd
 argument_list|,
@@ -7009,50 +5140,38 @@ name|bfd_byte
 modifier|*
 name|vms_bfd_get_relocated_section_contents
 parameter_list|(
-name|abfd
-parameter_list|,
-name|link_info
-parameter_list|,
-name|link_order
-parameter_list|,
-name|data
-parameter_list|,
-name|relocatable
-parameter_list|,
-name|symbols
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|struct
 name|bfd_link_info
 modifier|*
 name|link_info
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|struct
 name|bfd_link_order
 modifier|*
 name|link_order
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|bfd_byte
 modifier|*
 name|data
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|bfd_boolean
 name|relocatable
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|asymbol
 modifier|*
 modifier|*
 name|symbols
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -7061,7 +5180,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_bfd_get_relocated_section_contents(%p, %p, %p, %p, %s, %p)\n"
+literal|"vms_bfd_get_relocated_section_contents (%p, %p, %p, %p, %s, %p)\n"
 argument_list|,
 name|abfd
 argument_list|,
@@ -7085,7 +5204,7 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
-literal|0
+name|NULL
 return|;
 block|}
 end_function
@@ -7099,35 +5218,27 @@ specifier|static
 name|bfd_boolean
 name|vms_bfd_relax_section
 parameter_list|(
-name|abfd
-parameter_list|,
-name|section
-parameter_list|,
-name|link_info
-parameter_list|,
-name|again
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|section
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|struct
 name|bfd_link_info
 modifier|*
 name|link_info
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|bfd_boolean
 modifier|*
 name|again
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -7136,7 +5247,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_bfd_relax_section(%p, %s, %p,<ret>)\n"
+literal|"vms_bfd_relax_section (%p, %s, %p,<ret>)\n"
 argument_list|,
 name|abfd
 argument_list|,
@@ -7160,21 +5271,17 @@ specifier|static
 name|bfd_boolean
 name|vms_bfd_gc_sections
 parameter_list|(
-name|abfd
-parameter_list|,
-name|link_info
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|struct
 name|bfd_link_info
 modifier|*
 name|link_info
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -7183,7 +5290,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_bfd_gc_sections(%p, %p)\n"
+literal|"vms_bfd_gc_sections (%p, %p)\n"
 argument_list|,
 name|abfd
 argument_list|,
@@ -7203,21 +5310,17 @@ specifier|static
 name|bfd_boolean
 name|vms_bfd_merge_sections
 parameter_list|(
-name|abfd
-parameter_list|,
-name|link_info
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|struct
 name|bfd_link_info
 modifier|*
 name|link_info
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -7226,7 +5329,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_bfd_merge_sections(%p, %p)\n"
+literal|"vms_bfd_merge_sections (%p, %p)\n"
 argument_list|,
 name|abfd
 argument_list|,
@@ -7252,13 +5355,11 @@ name|bfd_link_hash_table
 modifier|*
 name|vms_bfd_link_hash_table_create
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -7267,7 +5368,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_bfd_link_hash_table_create(%p)\n"
+literal|"vms_bfd_link_hash_table_create (%p)\n"
 argument_list|,
 name|abfd
 argument_list|)
@@ -7275,7 +5376,7 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
-literal|0
+name|NULL
 return|;
 block|}
 end_function
@@ -7289,14 +5390,12 @@ specifier|static
 name|void
 name|vms_bfd_link_hash_table_free
 parameter_list|(
-name|hash
-parameter_list|)
 name|struct
 name|bfd_link_hash_table
 modifier|*
 name|hash
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -7305,7 +5404,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_bfd_link_hash_table_free(%p)\n"
+literal|"vms_bfd_link_hash_table_free (%p)\n"
 argument_list|,
 name|abfd
 argument_list|)
@@ -7324,21 +5423,17 @@ specifier|static
 name|bfd_boolean
 name|vms_bfd_link_add_symbols
 parameter_list|(
-name|abfd
-parameter_list|,
-name|link_info
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|struct
 name|bfd_link_info
 modifier|*
 name|link_info
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -7347,7 +5442,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_bfd_link_add_symbols(%p, %p)\n"
+literal|"vms_bfd_link_add_symbols (%p, %p)\n"
 argument_list|,
 name|abfd
 argument_list|,
@@ -7371,21 +5466,17 @@ specifier|static
 name|bfd_boolean
 name|vms_bfd_final_link
 parameter_list|(
-name|abfd
-parameter_list|,
-name|link_info
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|struct
 name|bfd_link_info
 modifier|*
 name|link_info
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -7394,7 +5485,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_bfd_final_link(%p, %p)\n"
+literal|"vms_bfd_final_link (%p, %p)\n"
 argument_list|,
 name|abfd
 argument_list|,
@@ -7418,20 +5509,16 @@ specifier|static
 name|bfd_boolean
 name|vms_bfd_link_split_section
 parameter_list|(
-name|abfd
-parameter_list|,
-name|section
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|section
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -7440,7 +5527,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_bfd_link_split_section(%p, %s)\n"
+literal|"vms_bfd_link_split_section (%p, %s)\n"
 argument_list|,
 name|abfd
 argument_list|,
@@ -7458,7 +5545,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-- Part 4.9, dynamic symbols and relocations ------------------------------*/
+comment|/* Part 4.9, dynamic symbols and relocations.  */
 end_comment
 
 begin_comment
@@ -7470,13 +5557,11 @@ specifier|static
 name|long
 name|vms_get_dynamic_symtab_upper_bound
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -7485,7 +5570,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_get_dynamic_symtab_upper_bound(%p)\n"
+literal|"vms_get_dynamic_symtab_upper_bound (%p)\n"
 argument_list|,
 name|abfd
 argument_list|)
@@ -7503,20 +5588,16 @@ specifier|static
 name|bfd_boolean
 name|vms_bfd_print_private_bfd_data
 parameter_list|(
-name|abfd
-parameter_list|,
-name|file
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|void
 modifier|*
 name|file
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -7525,7 +5606,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_bfd_print_private_bfd_data(%p)\n"
+literal|"vms_bfd_print_private_bfd_data (%p)\n"
 argument_list|,
 name|abfd
 argument_list|)
@@ -7533,7 +5614,7 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
-literal|0
+name|FALSE
 return|;
 block|}
 end_function
@@ -7547,21 +5628,17 @@ specifier|static
 name|long
 name|vms_canonicalize_dynamic_symtab
 parameter_list|(
-name|abfd
-parameter_list|,
-name|symbols
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|asymbol
 modifier|*
 modifier|*
 name|symbols
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -7570,7 +5647,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_canonicalize_dynamic_symtab(%p,<ret>)\n"
+literal|"vms_canonicalize_dynamic_symtab (%p,<ret>)\n"
 argument_list|,
 name|abfd
 argument_list|)
@@ -7592,13 +5669,11 @@ specifier|static
 name|long
 name|vms_get_dynamic_reloc_upper_bound
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -7607,7 +5682,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_get_dynamic_reloc_upper_bound(%p)\n"
+literal|"vms_get_dynamic_reloc_upper_bound (%p)\n"
 argument_list|,
 name|abfd
 argument_list|)
@@ -7629,29 +5704,23 @@ specifier|static
 name|long
 name|vms_canonicalize_dynamic_reloc
 parameter_list|(
-name|abfd
-parameter_list|,
-name|arel
-parameter_list|,
-name|symbols
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|arelent
 modifier|*
 modifier|*
 name|arel
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|asymbol
 modifier|*
 modifier|*
 name|symbols
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -7660,7 +5729,7 @@ name|vms_debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"vms_canonicalize_dynamic_reloc(%p)\n"
+literal|"vms_canonicalize_dynamic_reloc (%p)\n"
 argument_list|,
 name|abfd
 argument_list|)
@@ -7672,6 +5741,371 @@ literal|0L
 return|;
 block|}
 end_function
+
+begin_escape
+end_escape
+
+begin_decl_stmt
+specifier|const
+name|bfd_target
+name|vms_alpha_vec
+init|=
+block|{
+literal|"vms-alpha"
+block|,
+comment|/* Name.  */
+name|bfd_target_evax_flavour
+block|,
+name|BFD_ENDIAN_LITTLE
+block|,
+comment|/* Data byte order is little.  */
+name|BFD_ENDIAN_LITTLE
+block|,
+comment|/* Header byte order is little.  */
+operator|(
+name|HAS_RELOC
+operator||
+name|HAS_SYMS
+operator||
+name|WP_TEXT
+operator||
+name|D_PAGED
+operator|)
+block|,
+comment|/* Object flags.  */
+operator|(
+name|SEC_ALLOC
+operator||
+name|SEC_LOAD
+operator||
+name|SEC_RELOC
+operator||
+name|SEC_READONLY
+operator||
+name|SEC_CODE
+operator||
+name|SEC_DATA
+operator||
+name|SEC_HAS_CONTENTS
+operator||
+name|SEC_IN_MEMORY
+operator|)
+block|,
+comment|/* Sect flags.  */
+literal|0
+block|,
+comment|/* Symbol_leading_char.  */
+literal|' '
+block|,
+comment|/* AR_pad_char.  */
+literal|15
+block|,
+comment|/* AR_max_namelen.  */
+name|bfd_getl64
+block|,
+name|bfd_getl_signed_64
+block|,
+name|bfd_putl64
+block|,
+name|bfd_getl32
+block|,
+name|bfd_getl_signed_32
+block|,
+name|bfd_putl32
+block|,
+name|bfd_getl16
+block|,
+name|bfd_getl_signed_16
+block|,
+name|bfd_putl16
+block|,
+name|bfd_getl64
+block|,
+name|bfd_getl_signed_64
+block|,
+name|bfd_putl64
+block|,
+name|bfd_getl32
+block|,
+name|bfd_getl_signed_32
+block|,
+name|bfd_putl32
+block|,
+name|bfd_getl16
+block|,
+name|bfd_getl_signed_16
+block|,
+name|bfd_putl16
+block|,
+block|{
+name|_bfd_dummy_target
+block|,
+name|vms_object_p
+block|,
+comment|/* bfd_check_format.  */
+name|vms_archive_p
+block|,
+name|_bfd_dummy_target
+block|}
+block|,
+block|{
+name|bfd_false
+block|,
+name|vms_mkobject
+block|,
+comment|/* bfd_set_format.  */
+name|_bfd_generic_mkarchive
+block|,
+name|bfd_false
+block|}
+block|,
+block|{
+name|bfd_false
+block|,
+name|vms_write_object_contents
+block|,
+comment|/* bfd_write_contents.  */
+name|_bfd_write_archive_contents
+block|,
+name|bfd_false
+block|}
+block|,
+name|BFD_JUMP_TABLE_GENERIC
+argument_list|(
+name|vms
+argument_list|)
+block|,
+name|BFD_JUMP_TABLE_COPY
+argument_list|(
+name|vms
+argument_list|)
+block|,
+name|BFD_JUMP_TABLE_CORE
+argument_list|(
+name|vms
+argument_list|)
+block|,
+name|BFD_JUMP_TABLE_ARCHIVE
+argument_list|(
+name|vms
+argument_list|)
+block|,
+name|BFD_JUMP_TABLE_SYMBOLS
+argument_list|(
+name|vms
+argument_list|)
+block|,
+name|BFD_JUMP_TABLE_RELOCS
+argument_list|(
+name|vms
+argument_list|)
+block|,
+name|BFD_JUMP_TABLE_WRITE
+argument_list|(
+name|vms
+argument_list|)
+block|,
+name|BFD_JUMP_TABLE_LINK
+argument_list|(
+name|vms
+argument_list|)
+block|,
+name|BFD_JUMP_TABLE_DYNAMIC
+argument_list|(
+name|vms
+argument_list|)
+block|,
+name|NULL
+block|,
+name|NULL
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|bfd_target
+name|vms_vax_vec
+init|=
+block|{
+literal|"vms-vax"
+block|,
+comment|/* Name.  */
+name|bfd_target_ovax_flavour
+block|,
+name|BFD_ENDIAN_LITTLE
+block|,
+comment|/* Data byte order is little.  */
+name|BFD_ENDIAN_LITTLE
+block|,
+comment|/* Header byte order is little.  */
+operator|(
+name|HAS_RELOC
+operator||
+name|HAS_SYMS
+comment|/* Object flags.  */
+operator||
+name|WP_TEXT
+operator||
+name|D_PAGED
+operator||
+name|HAS_LINENO
+operator||
+name|HAS_DEBUG
+operator||
+name|HAS_LOCALS
+operator|)
+block|,
+operator|(
+name|SEC_ALLOC
+operator||
+name|SEC_LOAD
+operator||
+name|SEC_RELOC
+operator||
+name|SEC_READONLY
+operator||
+name|SEC_CODE
+operator||
+name|SEC_DATA
+operator||
+name|SEC_HAS_CONTENTS
+operator||
+name|SEC_IN_MEMORY
+operator|)
+block|,
+comment|/* Sect flags.  */
+literal|0
+block|,
+comment|/* Symbol_leading_char.  */
+literal|' '
+block|,
+comment|/* AR_pad_char.  */
+literal|15
+block|,
+comment|/* AR_max_namelen.  */
+name|bfd_getl64
+block|,
+name|bfd_getl_signed_64
+block|,
+name|bfd_putl64
+block|,
+name|bfd_getl32
+block|,
+name|bfd_getl_signed_32
+block|,
+name|bfd_putl32
+block|,
+name|bfd_getl16
+block|,
+name|bfd_getl_signed_16
+block|,
+name|bfd_putl16
+block|,
+comment|/* Data.  */
+name|bfd_getl64
+block|,
+name|bfd_getl_signed_64
+block|,
+name|bfd_putl64
+block|,
+name|bfd_getl32
+block|,
+name|bfd_getl_signed_32
+block|,
+name|bfd_putl32
+block|,
+name|bfd_getl16
+block|,
+name|bfd_getl_signed_16
+block|,
+name|bfd_putl16
+block|,
+comment|/* Headers.  */
+block|{
+name|_bfd_dummy_target
+block|,
+name|vms_object_p
+block|,
+comment|/* bfd_check_format.  */
+name|vms_archive_p
+block|,
+name|_bfd_dummy_target
+block|}
+block|,
+block|{
+name|bfd_false
+block|,
+name|vms_mkobject
+block|,
+comment|/* bfd_set_format.  */
+name|_bfd_generic_mkarchive
+block|,
+name|bfd_false
+block|}
+block|,
+block|{
+name|bfd_false
+block|,
+name|vms_write_object_contents
+block|,
+comment|/* bfd_write_contents.  */
+name|_bfd_write_archive_contents
+block|,
+name|bfd_false
+block|}
+block|,
+name|BFD_JUMP_TABLE_GENERIC
+argument_list|(
+name|vms
+argument_list|)
+block|,
+name|BFD_JUMP_TABLE_COPY
+argument_list|(
+name|vms
+argument_list|)
+block|,
+name|BFD_JUMP_TABLE_CORE
+argument_list|(
+name|vms
+argument_list|)
+block|,
+name|BFD_JUMP_TABLE_ARCHIVE
+argument_list|(
+name|vms
+argument_list|)
+block|,
+name|BFD_JUMP_TABLE_SYMBOLS
+argument_list|(
+name|vms
+argument_list|)
+block|,
+name|BFD_JUMP_TABLE_RELOCS
+argument_list|(
+name|vms
+argument_list|)
+block|,
+name|BFD_JUMP_TABLE_WRITE
+argument_list|(
+name|vms
+argument_list|)
+block|,
+name|BFD_JUMP_TABLE_LINK
+argument_list|(
+name|vms
+argument_list|)
+block|,
+name|BFD_JUMP_TABLE_DYNAMIC
+argument_list|(
+name|vms
+argument_list|)
+block|,
+name|NULL
+block|,
+name|NULL
+block|}
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 

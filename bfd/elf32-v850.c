@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* V850-specific support for 32-bit ELF    Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004    Free Software Foundation, Inc.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* V850-specific support for 32-bit ELF    Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston,    MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -63,2326 +63,6 @@ parameter_list|)
 value|((((x)& 0xffffff) ^ 0x800000) - 0x800000)
 end_define
 
-begin_decl_stmt
-specifier|static
-name|reloc_howto_type
-modifier|*
-name|v850_elf_reloc_type_lookup
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|,
-name|bfd_reloc_code_real_type
-name|code
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|v850_elf_info_to_howto_rel
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|arelent
-operator|*
-operator|,
-name|Elf_Internal_Rela
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|v850_elf_info_to_howto_rela
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|arelent
-operator|*
-operator|,
-name|Elf_Internal_Rela
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_reloc_status_type
-name|v850_elf_reloc
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|arelent
-operator|*
-operator|,
-name|asymbol
-operator|*
-operator|,
-name|PTR
-operator|,
-name|asection
-operator|*
-operator|,
-name|bfd
-operator|*
-operator|,
-name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|v850_elf_is_local_label_name
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|v850_elf_relocate_section
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-expr|struct
-name|bfd_link_info
-operator|*
-operator|,
-name|bfd
-operator|*
-operator|,
-name|asection
-operator|*
-operator|,
-name|bfd_byte
-operator|*
-operator|,
-name|Elf_Internal_Rela
-operator|*
-operator|,
-name|Elf_Internal_Sym
-operator|*
-operator|,
-name|asection
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_reloc_status_type
-name|v850_elf_perform_relocation
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|unsigned
-name|int
-operator|,
-name|bfd_vma
-operator|,
-name|bfd_byte
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|v850_elf_check_relocs
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-expr|struct
-name|bfd_link_info
-operator|*
-operator|,
-name|asection
-operator|*
-operator|,
-specifier|const
-name|Elf_Internal_Rela
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|remember_hi16s_reloc
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|bfd_vma
-operator|,
-name|bfd_byte
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_byte
-modifier|*
-name|find_remembered_hi16s_reloc
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd_vma
-operator|,
-name|bfd_boolean
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_reloc_status_type
-name|v850_elf_final_link_relocate
-name|PARAMS
-argument_list|(
-operator|(
-name|reloc_howto_type
-operator|*
-operator|,
-name|bfd
-operator|*
-operator|,
-name|bfd
-operator|*
-operator|,
-name|asection
-operator|*
-operator|,
-name|bfd_byte
-operator|*
-operator|,
-name|bfd_vma
-operator|,
-name|bfd_vma
-operator|,
-name|bfd_vma
-operator|,
-expr|struct
-name|bfd_link_info
-operator|*
-operator|,
-name|asection
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|v850_elf_object_p
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|v850_elf_fake_sections
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|Elf_Internal_Shdr
-operator|*
-operator|,
-name|asection
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|v850_elf_final_write_processing
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|bfd_boolean
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|v850_elf_set_private_flags
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|flagword
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|v850_elf_merge_private_bfd_data
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|bfd
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|v850_elf_print_private_bfd_data
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|PTR
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|v850_elf_section_from_bfd_section
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|asection
-operator|*
-operator|,
-name|int
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|v850_elf_symbol_processing
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|asymbol
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|v850_elf_add_symbol_hook
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-expr|struct
-name|bfd_link_info
-operator|*
-operator|,
-name|Elf_Internal_Sym
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|*
-operator|,
-name|flagword
-operator|*
-operator|,
-name|asection
-operator|*
-operator|*
-operator|,
-name|bfd_vma
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|v850_elf_link_output_symbol_hook
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
-name|bfd_link_info
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|,
-name|Elf_Internal_Sym
-operator|*
-operator|,
-name|asection
-operator|*
-operator|,
-expr|struct
-name|elf_link_hash_entry
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|v850_elf_section_from_shdr
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|Elf_Internal_Shdr
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|v850_elf_gc_sweep_hook
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-expr|struct
-name|bfd_link_info
-operator|*
-operator|,
-name|asection
-operator|*
-operator|,
-specifier|const
-name|Elf_Internal_Rela
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|asection
-modifier|*
-name|v850_elf_gc_mark_hook
-name|PARAMS
-argument_list|(
-operator|(
-name|asection
-operator|*
-operator|,
-expr|struct
-name|bfd_link_info
-operator|*
-operator|,
-name|Elf_Internal_Rela
-operator|*
-operator|,
-expr|struct
-name|elf_link_hash_entry
-operator|*
-operator|,
-name|Elf_Internal_Sym
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_reloc_status_type
-name|v850_elf_ignore_reloc
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|arelent
-operator|*
-operator|,
-name|asymbol
-operator|*
-operator|,
-name|PTR
-operator|,
-name|asection
-operator|*
-operator|,
-name|bfd
-operator|*
-operator|,
-name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|v850_elf_relax_delete_bytes
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|asection
-operator|*
-operator|,
-name|bfd_vma
-operator|,
-name|bfd_vma
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|v850_elf_relax_section
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|asection
-operator|*
-operator|,
-expr|struct
-name|bfd_link_info
-operator|*
-operator|,
-name|bfd_boolean
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Note: It is REQUIRED that the 'type' value of each entry    in this array match the index of the entry in the array.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|reloc_howto_type
-name|v850_elf_howto_table
-index|[]
-init|=
-block|{
-comment|/* This reloc does nothing.  */
-name|HOWTO
-argument_list|(
-name|R_V850_NONE
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|32
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_bitfield
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_V850_NONE"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* A PC relative 9 bit branch.  */
-name|HOWTO
-argument_list|(
-name|R_V850_9_PCREL
-argument_list|,
-comment|/* type */
-literal|2
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|26
-argument_list|,
-comment|/* bitsize */
-name|TRUE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_bitfield
-argument_list|,
-comment|/* complain_on_overflow */
-name|v850_elf_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_V850_9_PCREL"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0x00ffffff
-argument_list|,
-comment|/* src_mask */
-literal|0x00ffffff
-argument_list|,
-comment|/* dst_mask */
-name|TRUE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* A PC relative 22 bit branch.  */
-name|HOWTO
-argument_list|(
-name|R_V850_22_PCREL
-argument_list|,
-comment|/* type */
-literal|2
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|22
-argument_list|,
-comment|/* bitsize */
-name|TRUE
-argument_list|,
-comment|/* pc_relative */
-literal|7
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_signed
-argument_list|,
-comment|/* complain_on_overflow */
-name|v850_elf_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_V850_22_PCREL"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0x07ffff80
-argument_list|,
-comment|/* src_mask */
-literal|0x07ffff80
-argument_list|,
-comment|/* dst_mask */
-name|TRUE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* High 16 bits of symbol value.  */
-name|HOWTO
-argument_list|(
-name|R_V850_HI16_S
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|1
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|16
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|v850_elf_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_V850_HI16_S"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0xffff
-argument_list|,
-comment|/* src_mask */
-literal|0xffff
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* High 16 bits of symbol value.  */
-name|HOWTO
-argument_list|(
-name|R_V850_HI16
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|1
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|16
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|v850_elf_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_V850_HI16"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0xffff
-argument_list|,
-comment|/* src_mask */
-literal|0xffff
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* Low 16 bits of symbol value.  */
-name|HOWTO
-argument_list|(
-name|R_V850_LO16
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|1
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|16
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|v850_elf_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_V850_LO16"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0xffff
-argument_list|,
-comment|/* src_mask */
-literal|0xffff
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* Simple 32bit reloc.  */
-name|HOWTO
-argument_list|(
-name|R_V850_ABS32
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|32
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|v850_elf_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_V850_ABS32"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0xffffffff
-argument_list|,
-comment|/* src_mask */
-literal|0xffffffff
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* Simple 16bit reloc.  */
-name|HOWTO
-argument_list|(
-name|R_V850_16
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|1
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|16
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_V850_16"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0xffff
-argument_list|,
-comment|/* src_mask */
-literal|0xffff
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* Simple 8bit reloc.	 */
-name|HOWTO
-argument_list|(
-name|R_V850_8
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|0
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|8
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_V850_8"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0xff
-argument_list|,
-comment|/* src_mask */
-literal|0xff
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* 16 bit offset from the short data area pointer.  */
-name|HOWTO
-argument_list|(
-name|R_V850_SDA_16_16_OFFSET
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|1
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|16
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|v850_elf_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_V850_SDA_16_16_OFFSET"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0xffff
-argument_list|,
-comment|/* src_mask */
-literal|0xffff
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* 15 bit offset from the short data area pointer.  */
-name|HOWTO
-argument_list|(
-name|R_V850_SDA_15_16_OFFSET
-argument_list|,
-comment|/* type */
-literal|1
-argument_list|,
-comment|/* rightshift */
-literal|1
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|16
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|1
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|v850_elf_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_V850_SDA_15_16_OFFSET"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0xfffe
-argument_list|,
-comment|/* src_mask */
-literal|0xfffe
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* 16 bit offset from the zero data area pointer.  */
-name|HOWTO
-argument_list|(
-name|R_V850_ZDA_16_16_OFFSET
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|1
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|16
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|v850_elf_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_V850_ZDA_16_16_OFFSET"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0xffff
-argument_list|,
-comment|/* src_mask */
-literal|0xffff
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* 15 bit offset from the zero data area pointer.  */
-name|HOWTO
-argument_list|(
-name|R_V850_ZDA_15_16_OFFSET
-argument_list|,
-comment|/* type */
-literal|1
-argument_list|,
-comment|/* rightshift */
-literal|1
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|16
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|1
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|v850_elf_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_V850_ZDA_15_16_OFFSET"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0xfffe
-argument_list|,
-comment|/* src_mask */
-literal|0xfffe
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* 6 bit offset from the tiny data area pointer.  */
-name|HOWTO
-argument_list|(
-name|R_V850_TDA_6_8_OFFSET
-argument_list|,
-comment|/* type */
-literal|2
-argument_list|,
-comment|/* rightshift */
-literal|1
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|8
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|1
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|v850_elf_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_V850_TDA_6_8_OFFSET"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0x7e
-argument_list|,
-comment|/* src_mask */
-literal|0x7e
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* 8 bit offset from the tiny data area pointer.  */
-name|HOWTO
-argument_list|(
-name|R_V850_TDA_7_8_OFFSET
-argument_list|,
-comment|/* type */
-literal|1
-argument_list|,
-comment|/* rightshift */
-literal|1
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|8
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|v850_elf_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_V850_TDA_7_8_OFFSET"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0x7f
-argument_list|,
-comment|/* src_mask */
-literal|0x7f
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* 7 bit offset from the tiny data area pointer.  */
-name|HOWTO
-argument_list|(
-name|R_V850_TDA_7_7_OFFSET
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|1
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|7
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|v850_elf_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_V850_TDA_7_7_OFFSET"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0x7f
-argument_list|,
-comment|/* src_mask */
-literal|0x7f
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* 16 bit offset from the tiny data area pointer!  */
-name|HOWTO
-argument_list|(
-name|R_V850_TDA_16_16_OFFSET
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|1
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|16
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|v850_elf_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_V850_TDA_16_16_OFFSET"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0xffff
-argument_list|,
-comment|/* src_mask */
-literal|0xfff
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* 5 bit offset from the tiny data area pointer.  */
-name|HOWTO
-argument_list|(
-name|R_V850_TDA_4_5_OFFSET
-argument_list|,
-comment|/* type */
-literal|1
-argument_list|,
-comment|/* rightshift */
-literal|1
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|5
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|v850_elf_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_V850_TDA_4_5_OFFSET"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0x0f
-argument_list|,
-comment|/* src_mask */
-literal|0x0f
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* 4 bit offset from the tiny data area pointer.  */
-name|HOWTO
-argument_list|(
-name|R_V850_TDA_4_4_OFFSET
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|1
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|4
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|v850_elf_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_V850_TDA_4_4_OFFSET"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0x0f
-argument_list|,
-comment|/* src_mask */
-literal|0x0f
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* 16 bit offset from the short data area pointer.  */
-name|HOWTO
-argument_list|(
-name|R_V850_SDA_16_16_SPLIT_OFFSET
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|16
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|v850_elf_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_V850_SDA_16_16_SPLIT_OFFSET"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0xfffe0020
-argument_list|,
-comment|/* src_mask */
-literal|0xfffe0020
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* 16 bit offset from the zero data area pointer.  */
-name|HOWTO
-argument_list|(
-name|R_V850_ZDA_16_16_SPLIT_OFFSET
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|16
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|v850_elf_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_V850_ZDA_16_16_SPLIT_OFFSET"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0xfffe0020
-argument_list|,
-comment|/* src_mask */
-literal|0xfffe0020
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* 6 bit offset from the call table base pointer.  */
-name|HOWTO
-argument_list|(
-name|R_V850_CALLT_6_7_OFFSET
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|1
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|7
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|v850_elf_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_V850_CALLT_6_7_OFFSET"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0x3f
-argument_list|,
-comment|/* src_mask */
-literal|0x3f
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* 16 bit offset from the call table base pointer.  */
-name|HOWTO
-argument_list|(
-name|R_V850_CALLT_16_16_OFFSET
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|1
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|16
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|v850_elf_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_V850_CALLT_16_16_OFFSET"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0xffff
-argument_list|,
-comment|/* src_mask */
-literal|0xffff
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* GNU extension to record C++ vtable hierarchy */
-name|HOWTO
-argument_list|(
-name|R_V850_GNU_VTINHERIT
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|0
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|NULL
-argument_list|,
-comment|/* special_function */
-literal|"R_V850_GNU_VTINHERIT"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* GNU extension to record C++ vtable member usage */
-name|HOWTO
-argument_list|(
-name|R_V850_GNU_VTENTRY
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|0
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|_bfd_elf_rel_vtable_reloc_fn
-argument_list|,
-comment|/* special_function */
-literal|"R_V850_GNU_VTENTRY"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* Indicates a .longcall pseudo-op.  The compiler will generate a .longcall      pseudo-op when it finds a function call which can be relaxed.  */
-name|HOWTO
-argument_list|(
-name|R_V850_LONGCALL
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|32
-argument_list|,
-comment|/* bitsize */
-name|TRUE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_signed
-argument_list|,
-comment|/* complain_on_overflow */
-name|v850_elf_ignore_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_V850_LONGCALL"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0
-argument_list|,
-comment|/* dst_mask */
-name|TRUE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* Indicates a .longjump pseudo-op.  The compiler will generate a      .longjump pseudo-op when it finds a branch which can be relaxed.  */
-name|HOWTO
-argument_list|(
-name|R_V850_LONGJUMP
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|32
-argument_list|,
-comment|/* bitsize */
-name|TRUE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_signed
-argument_list|,
-comment|/* complain_on_overflow */
-name|v850_elf_ignore_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_V850_LONGJUMP"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0
-argument_list|,
-comment|/* dst_mask */
-name|TRUE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-name|HOWTO
-argument_list|(
-name|R_V850_ALIGN
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|1
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|0
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_unsigned
-argument_list|,
-comment|/* complain_on_overflow */
-name|v850_elf_ignore_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_V850_ALIGN"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0
-argument_list|,
-comment|/* dst_mask */
-name|TRUE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* Simple pc-relative 32bit reloc.  */
-name|HOWTO
-argument_list|(
-name|R_V850_REL32
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|32
-argument_list|,
-comment|/* bitsize */
-name|TRUE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|v850_elf_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_V850_REL32"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0xffffffff
-argument_list|,
-comment|/* src_mask */
-literal|0xffffffff
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Map BFD reloc types to V850 ELF reloc types.  */
-end_comment
-
-begin_struct
-struct|struct
-name|v850_elf_reloc_map
-block|{
-comment|/* BFD_RELOC_V850_CALLT_16_16_OFFSET is 258, which will not fix in an      unsigned char.  */
-name|bfd_reloc_code_real_type
-name|bfd_reloc_val
-decl_stmt|;
-name|unsigned
-name|int
-name|elf_reloc_val
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|struct
-name|v850_elf_reloc_map
-name|v850_elf_reloc_map
-index|[]
-init|=
-block|{
-block|{
-name|BFD_RELOC_NONE
-block|,
-name|R_V850_NONE
-block|}
-block|,
-block|{
-name|BFD_RELOC_V850_9_PCREL
-block|,
-name|R_V850_9_PCREL
-block|}
-block|,
-block|{
-name|BFD_RELOC_V850_22_PCREL
-block|,
-name|R_V850_22_PCREL
-block|}
-block|,
-block|{
-name|BFD_RELOC_HI16_S
-block|,
-name|R_V850_HI16_S
-block|}
-block|,
-block|{
-name|BFD_RELOC_HI16
-block|,
-name|R_V850_HI16
-block|}
-block|,
-block|{
-name|BFD_RELOC_LO16
-block|,
-name|R_V850_LO16
-block|}
-block|,
-block|{
-name|BFD_RELOC_32
-block|,
-name|R_V850_ABS32
-block|}
-block|,
-block|{
-name|BFD_RELOC_32_PCREL
-block|,
-name|R_V850_REL32
-block|}
-block|,
-block|{
-name|BFD_RELOC_16
-block|,
-name|R_V850_16
-block|}
-block|,
-block|{
-name|BFD_RELOC_8
-block|,
-name|R_V850_8
-block|}
-block|,
-block|{
-name|BFD_RELOC_V850_SDA_16_16_OFFSET
-block|,
-name|R_V850_SDA_16_16_OFFSET
-block|}
-block|,
-block|{
-name|BFD_RELOC_V850_SDA_15_16_OFFSET
-block|,
-name|R_V850_SDA_15_16_OFFSET
-block|}
-block|,
-block|{
-name|BFD_RELOC_V850_ZDA_16_16_OFFSET
-block|,
-name|R_V850_ZDA_16_16_OFFSET
-block|}
-block|,
-block|{
-name|BFD_RELOC_V850_ZDA_15_16_OFFSET
-block|,
-name|R_V850_ZDA_15_16_OFFSET
-block|}
-block|,
-block|{
-name|BFD_RELOC_V850_TDA_6_8_OFFSET
-block|,
-name|R_V850_TDA_6_8_OFFSET
-block|}
-block|,
-block|{
-name|BFD_RELOC_V850_TDA_7_8_OFFSET
-block|,
-name|R_V850_TDA_7_8_OFFSET
-block|}
-block|,
-block|{
-name|BFD_RELOC_V850_TDA_7_7_OFFSET
-block|,
-name|R_V850_TDA_7_7_OFFSET
-block|}
-block|,
-block|{
-name|BFD_RELOC_V850_TDA_16_16_OFFSET
-block|,
-name|R_V850_TDA_16_16_OFFSET
-block|}
-block|,
-block|{
-name|BFD_RELOC_V850_TDA_4_5_OFFSET
-block|,
-name|R_V850_TDA_4_5_OFFSET
-block|}
-block|,
-block|{
-name|BFD_RELOC_V850_TDA_4_4_OFFSET
-block|,
-name|R_V850_TDA_4_4_OFFSET
-block|}
-block|,
-block|{
-name|BFD_RELOC_V850_SDA_16_16_SPLIT_OFFSET
-block|,
-name|R_V850_SDA_16_16_SPLIT_OFFSET
-block|}
-block|,
-block|{
-name|BFD_RELOC_V850_ZDA_16_16_SPLIT_OFFSET
-block|,
-name|R_V850_ZDA_16_16_SPLIT_OFFSET
-block|}
-block|,
-block|{
-name|BFD_RELOC_V850_CALLT_6_7_OFFSET
-block|,
-name|R_V850_CALLT_6_7_OFFSET
-block|}
-block|,
-block|{
-name|BFD_RELOC_V850_CALLT_16_16_OFFSET
-block|,
-name|R_V850_CALLT_16_16_OFFSET
-block|}
-block|,
-block|{
-name|BFD_RELOC_VTABLE_INHERIT
-block|,
-name|R_V850_GNU_VTINHERIT
-block|}
-block|,
-block|{
-name|BFD_RELOC_VTABLE_ENTRY
-block|,
-name|R_V850_GNU_VTENTRY
-block|}
-block|,
-block|{
-name|BFD_RELOC_V850_LONGCALL
-block|,
-name|R_V850_LONGCALL
-block|}
-block|,
-block|{
-name|BFD_RELOC_V850_LONGJUMP
-block|,
-name|R_V850_LONGJUMP
-block|}
-block|,
-block|{
-name|BFD_RELOC_V850_ALIGN
-block|,
-name|R_V850_ALIGN
-block|}
-block|,  }
-decl_stmt|;
-end_decl_stmt
-
-begin_escape
-end_escape
-
-begin_comment
-comment|/* Map a bfd relocation into the appropriate howto structure.  */
-end_comment
-
-begin_function
-specifier|static
-name|reloc_howto_type
-modifier|*
-name|v850_elf_reloc_type_lookup
-parameter_list|(
-name|abfd
-parameter_list|,
-name|code
-parameter_list|)
-name|bfd
-modifier|*
-name|abfd
-name|ATTRIBUTE_UNUSED
-decl_stmt|;
-name|bfd_reloc_code_real_type
-name|code
-decl_stmt|;
-block|{
-name|unsigned
-name|int
-name|i
-decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-name|ARRAY_SIZE
-argument_list|(
-name|v850_elf_reloc_map
-argument_list|)
-init|;
-name|i
-operator|--
-condition|;
-control|)
-if|if
-condition|(
-name|v850_elf_reloc_map
-index|[
-name|i
-index|]
-operator|.
-name|bfd_reloc_val
-operator|==
-name|code
-condition|)
-block|{
-name|unsigned
-name|int
-name|elf_reloc_val
-init|=
-name|v850_elf_reloc_map
-index|[
-name|i
-index|]
-operator|.
-name|elf_reloc_val
-decl_stmt|;
-name|BFD_ASSERT
-argument_list|(
-name|v850_elf_howto_table
-index|[
-name|elf_reloc_val
-index|]
-operator|.
-name|type
-operator|==
-name|elf_reloc_val
-argument_list|)
-expr_stmt|;
-return|return
-name|v850_elf_howto_table
-operator|+
-name|elf_reloc_val
-return|;
-block|}
-return|return
-name|NULL
-return|;
-block|}
-end_function
-
-begin_escape
-end_escape
-
-begin_comment
-comment|/* Set the howto pointer for an V850 ELF reloc.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|v850_elf_info_to_howto_rel
-parameter_list|(
-name|abfd
-parameter_list|,
-name|cache_ptr
-parameter_list|,
-name|dst
-parameter_list|)
-name|bfd
-modifier|*
-name|abfd
-name|ATTRIBUTE_UNUSED
-decl_stmt|;
-name|arelent
-modifier|*
-name|cache_ptr
-decl_stmt|;
-name|Elf_Internal_Rela
-modifier|*
-name|dst
-decl_stmt|;
-block|{
-name|unsigned
-name|int
-name|r_type
-decl_stmt|;
-name|r_type
-operator|=
-name|ELF32_R_TYPE
-argument_list|(
-name|dst
-operator|->
-name|r_info
-argument_list|)
-expr_stmt|;
-name|BFD_ASSERT
-argument_list|(
-name|r_type
-operator|<
-operator|(
-name|unsigned
-name|int
-operator|)
-name|R_V850_max
-argument_list|)
-expr_stmt|;
-name|cache_ptr
-operator|->
-name|howto
-operator|=
-operator|&
-name|v850_elf_howto_table
-index|[
-name|r_type
-index|]
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/* Set the howto pointer for a V850 ELF reloc (type RELA).  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|v850_elf_info_to_howto_rela
-parameter_list|(
-name|abfd
-parameter_list|,
-name|cache_ptr
-parameter_list|,
-name|dst
-parameter_list|)
-name|bfd
-modifier|*
-name|abfd
-name|ATTRIBUTE_UNUSED
-decl_stmt|;
-name|arelent
-modifier|*
-name|cache_ptr
-decl_stmt|;
-name|Elf_Internal_Rela
-modifier|*
-name|dst
-decl_stmt|;
-block|{
-name|unsigned
-name|int
-name|r_type
-decl_stmt|;
-name|r_type
-operator|=
-name|ELF32_R_TYPE
-argument_list|(
-name|dst
-operator|->
-name|r_info
-argument_list|)
-expr_stmt|;
-name|BFD_ASSERT
-argument_list|(
-name|r_type
-operator|<
-operator|(
-name|unsigned
-name|int
-operator|)
-name|R_V850_max
-argument_list|)
-expr_stmt|;
-name|cache_ptr
-operator|->
-name|howto
-operator|=
-operator|&
-name|v850_elf_howto_table
-index|[
-name|r_type
-index|]
-expr_stmt|;
-block|}
-end_function
-
-begin_escape
-end_escape
-
 begin_comment
 comment|/* Look through the relocs for a section during the first phase, and    allocate space in the global offset table or procedure linkage    table.  */
 end_comment
@@ -2392,32 +72,24 @@ specifier|static
 name|bfd_boolean
 name|v850_elf_check_relocs
 parameter_list|(
-name|abfd
-parameter_list|,
-name|info
-parameter_list|,
-name|sec
-parameter_list|,
-name|relocs
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|struct
 name|bfd_link_info
 modifier|*
 name|info
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|sec
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|Elf_Internal_Rela
 modifier|*
 name|relocs
-decl_stmt|;
+parameter_list|)
 block|{
 name|bfd_boolean
 name|ret
@@ -2466,12 +138,7 @@ name|char
 modifier|*
 name|common
 init|=
-operator|(
-specifier|const
-name|char
-operator|*
-operator|)
-literal|0
+name|NULL
 decl_stmt|;
 if|if
 condition|(
@@ -2485,23 +152,13 @@ return|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|fprintf
+name|_bfd_error_handler
 argument_list|(
-name|stderr
-argument_list|,
-literal|"v850_elf_check_relocs called for section %s in %s\n"
-argument_list|,
-name|bfd_get_section_name
-argument_list|(
-name|abfd
+literal|"v850_elf_check_relocs called for section %A in %B"
 argument_list|,
 name|sec
-argument_list|)
 argument_list|,
-name|bfd_archive_filename
-argument_list|(
 name|abfd
-argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2589,6 +246,7 @@ operator|=
 name|NULL
 expr_stmt|;
 else|else
+block|{
 name|h
 operator|=
 name|sym_hashes
@@ -2600,6 +258,42 @@ operator|->
 name|sh_info
 index|]
 expr_stmt|;
+while|while
+condition|(
+name|h
+operator|->
+name|root
+operator|.
+name|type
+operator|==
+name|bfd_link_hash_indirect
+operator|||
+name|h
+operator|->
+name|root
+operator|.
+name|type
+operator|==
+name|bfd_link_hash_warning
+condition|)
+name|h
+operator|=
+operator|(
+expr|struct
+name|elf_link_hash_entry
+operator|*
+operator|)
+name|h
+operator|->
+name|root
+operator|.
+name|u
+operator|.
+name|i
+operator|.
+name|link
+expr_stmt|;
+block|}
 name|r_type
 operator|=
 operator|(
@@ -2636,6 +330,9 @@ name|R_V850_HI16
 case|:
 case|case
 name|R_V850_LO16
+case|:
+case|case
+name|R_V850_LO16_SPLIT_OFFSET
 case|:
 case|case
 name|R_V850_ABS32
@@ -3177,23 +874,17 @@ specifier|static
 name|void
 name|remember_hi16s_reloc
 parameter_list|(
-name|abfd
-parameter_list|,
-name|addend
-parameter_list|,
-name|address
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|bfd_vma
 name|addend
-decl_stmt|;
+parameter_list|,
 name|bfd_byte
 modifier|*
 name|address
-decl_stmt|;
+parameter_list|)
 block|{
 name|hi16s_location
 modifier|*
@@ -3219,10 +910,6 @@ name|NULL
 condition|)
 name|free_hi16s
 operator|=
-operator|(
-name|hi16s_location
-operator|*
-operator|)
 name|bfd_zalloc
 argument_list|(
 name|abfd
@@ -3283,7 +970,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* XXX - Assume that all counter entries differ only in their low 16 bits.  */
+comment|/* XXX: Assume that all counter entries differ only in their low 16 bits.  */
 for|for
 control|(
 name|entry
@@ -3311,7 +998,6 @@ operator|=
 literal|0x10000
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -3321,17 +1007,13 @@ name|bfd_byte
 modifier|*
 name|find_remembered_hi16s_reloc
 parameter_list|(
-name|addend
-parameter_list|,
-name|already_found
-parameter_list|)
 name|bfd_vma
 name|addend
-decl_stmt|;
+parameter_list|,
 name|bfd_boolean
 modifier|*
 name|already_found
-decl_stmt|;
+parameter_list|)
 block|{
 name|hi16s_location
 modifier|*
@@ -3452,6 +1134,189 @@ block|}
 end_function
 
 begin_comment
+comment|/* Calculate the final operand value for a R_V850_LO16 or    R_V850_LO16_SPLIT_OFFSET.  *INSN is the current operand value and    ADDEND is the sum of the relocation symbol and offset.  Store the    operand value in *INSN and return true on success.     The assembler has already done some of this: If the value stored in    the instruction has its 15th bit set, (counting from zero) then the    assembler will have added 1 to the value stored in the associated    HI16S reloc.  So for example, these relocations:         movhi hi( fred ), r0, r1        movea lo( fred ), r1, r1     will store 0 in the value fields for the MOVHI and MOVEA instructions    and addend will be the address of fred, but for these instructions:         movhi hi( fred + 0x123456), r0, r1        movea lo( fred + 0x123456), r1, r1     the value stored in the MOVHI instruction will be 0x12 and the value    stored in the MOVEA instruction will be 0x3456.  If however the    instructions were:         movhi hi( fred + 0x10ffff), r0, r1        movea lo( fred + 0x10ffff), r1, r1     then the value stored in the MOVHI instruction would be 0x11 (not    0x10) and the value stored in the MOVEA instruction would be 0xffff.    Thus (assuming for the moment that the addend is 0), at run time the    MOVHI instruction loads 0x110000 into r1, then the MOVEA instruction    adds 0xffffffff (sign extension!) producing 0x10ffff.  Similarly if    the instructions were:         movhi hi( fred - 1), r0, r1        movea lo( fred - 1), r1, r1     then 0 is stored in the MOVHI instruction and -1 is stored in the    MOVEA instruction.     Overflow can occur if the addition of the value stored in the    instruction plus the addend sets the 15th bit when before it was clear.    This is because the 15th bit will be sign extended into the high part,    thus reducing its value by one, but since the 15th bit was originally    clear, the assembler will not have added 1 to the previous HI16S reloc    to compensate for this effect.  For example:        movhi hi( fred + 0x123456), r0, r1       movea lo( fred + 0x123456), r1, r1     The value stored in HI16S reloc is 0x12, the value stored in the LO16    reloc is 0x3456.  If we assume that the address of fred is 0x00007000    then the relocations become:       HI16S: 0x0012 + (0x00007000>> 16)    = 0x12      LO16:  0x3456 + (0x00007000& 0xffff) = 0xa456     but when the instructions are executed, the MOVEA instruction's value    is signed extended, so the sum becomes:  	0x00120000       + 0xffffa456       ------------ 	0x0011a456    but 'fred + 0x123456' = 0x0012a456     Note that if the 15th bit was set in the value stored in the LO16    reloc, then we do not have to do anything:        movhi hi( fred + 0x10ffff), r0, r1       movea lo( fred + 0x10ffff), r1, r1        HI16S:  0x0011 + (0x00007000>> 16)    = 0x11       LO16:   0xffff + (0x00007000& 0xffff) = 0x6fff  	0x00110000       + 0x00006fff       ------------ 	0x00116fff  = fred + 0x10ffff = 0x7000 + 0x10ffff     Overflow can also occur if the computation carries into the 16th bit    and it also results in the 15th bit having the same value as the 15th    bit of the original value.   What happens is that the HI16S reloc    will have already examined the 15th bit of the original value and    added 1 to the high part if the bit is set.  This compensates for the    sign extension of 15th bit of the result of the computation.  But now    there is a carry into the 16th bit, and this has not been allowed for.     So, for example if fred is at address 0xf000:       movhi hi( fred + 0xffff), r0, r1    [bit 15 of the offset is set]      movea lo( fred + 0xffff), r1, r1       HI16S: 0x0001 + (0x0000f000>> 16)    = 0x0001      LO16:  0xffff + (0x0000f000& 0xffff) = 0xefff   (carry into bit 16 is lost)         0x00010000      + 0xffffefff      ------------        0x0000efff   but 'fred + 0xffff' = 0x0001efff     Similarly, if the 15th bit remains clear, but overflow occurs into    the 16th bit then (assuming the address of fred is 0xf000):       movhi hi( fred + 0x7000), r0, r1    [bit 15 of the offset is clear]      movea lo( fred + 0x7000), r1, r1       HI16S: 0x0000 + (0x0000f000>> 16)    = 0x0000      LO16:  0x7000 + (0x0000f000& 0xffff) = 0x6fff  (carry into bit 16 is lost)         0x00000000      + 0x00006fff      ------------        0x00006fff   but 'fred + 0x7000' = 0x00016fff     Note - there is no need to change anything if a carry occurs, and the    15th bit changes its value from being set to being clear, as the HI16S    reloc will have already added in 1 to the high part for us:       movhi hi( fred + 0xffff), r0, r1     [bit 15 of the offset is set]      movea lo( fred + 0xffff), r1, r1       HI16S: 0x0001 + (0x00007000>> 16)      LO16:  0xffff + (0x00007000& 0xffff) = 0x6fff  (carry into bit 16 is lost)         0x00010000      + 0x00006fff   (bit 15 not set, so the top half is zero)      ------------        0x00016fff   which is right (assuming that fred is at 0x7000)     but if the 15th bit goes from being clear to being set, then we must    once again handle overflow:       movhi hi( fred + 0x7000), r0, r1     [bit 15 of the offset is clear]      movea lo( fred + 0x7000), r1, r1       HI16S: 0x0000 + (0x0000ffff>> 16)      LO16:  0x7000 + (0x0000ffff& 0xffff) = 0x6fff  (carry into bit 16)         0x00000000      + 0x00006fff   (bit 15 not set, so the top half is zero)      ------------        0x00006fff   which is wrong (assuming that fred is at 0xffff).  */
+end_comment
+
+begin_function
+specifier|static
+name|bfd_boolean
+name|v850_elf_perform_lo16_relocation
+parameter_list|(
+name|bfd
+modifier|*
+name|abfd
+parameter_list|,
+name|unsigned
+name|long
+modifier|*
+name|insn
+parameter_list|,
+name|unsigned
+name|long
+name|addend
+parameter_list|)
+block|{
+define|#
+directive|define
+name|BIT15_SET
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& 0x8000)
+define|#
+directive|define
+name|OVERFLOWS
+parameter_list|(
+name|a
+parameter_list|,
+name|i
+parameter_list|)
+value|((((a)& 0xffff) + (i))> 0xffff)
+if|if
+condition|(
+operator|(
+name|BIT15_SET
+argument_list|(
+operator|*
+name|insn
+operator|+
+name|addend
+argument_list|)
+operator|&&
+operator|!
+name|BIT15_SET
+argument_list|(
+name|addend
+argument_list|)
+operator|)
+operator|||
+operator|(
+name|OVERFLOWS
+argument_list|(
+name|addend
+argument_list|,
+operator|*
+name|insn
+argument_list|)
+operator|&&
+operator|(
+operator|(
+operator|!
+name|BIT15_SET
+argument_list|(
+operator|*
+name|insn
+argument_list|)
+operator|)
+operator|||
+operator|(
+name|BIT15_SET
+argument_list|(
+name|addend
+argument_list|)
+operator|)
+operator|)
+operator|)
+condition|)
+block|{
+name|bfd_boolean
+name|already_updated
+decl_stmt|;
+name|bfd_byte
+modifier|*
+name|hi16s_address
+init|=
+name|find_remembered_hi16s_reloc
+argument_list|(
+name|addend
+argument_list|,
+operator|&
+name|already_updated
+argument_list|)
+decl_stmt|;
+comment|/* Amend the matching HI16_S relocation.  */
+if|if
+condition|(
+name|hi16s_address
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|already_updated
+condition|)
+block|{
+name|unsigned
+name|long
+name|hi_insn
+init|=
+name|bfd_get_16
+argument_list|(
+name|abfd
+argument_list|,
+name|hi16s_address
+argument_list|)
+decl_stmt|;
+name|hi_insn
+operator|+=
+literal|1
+expr_stmt|;
+name|bfd_put_16
+argument_list|(
+name|abfd
+argument_list|,
+name|hi_insn
+argument_list|,
+name|hi16s_address
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|_
+argument_list|(
+literal|"FAILED to find previous HI16 reloc\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+name|FALSE
+return|;
+block|}
+block|}
+undef|#
+directive|undef
+name|OVERFLOWS
+undef|#
+directive|undef
+name|BIT15_SET
+comment|/* Do not complain if value has top bit set, as this has been      anticipated.  */
+operator|*
+name|insn
+operator|=
+operator|(
+operator|*
+name|insn
+operator|+
+name|addend
+operator|)
+operator|&
+literal|0xffff
+expr_stmt|;
+return|return
+name|TRUE
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* FIXME:  The code here probably ought to be removed and the code in reloc.c    allowed to do its stuff instead.  At least for most of the relocs, anyway.  */
 end_comment
 
@@ -3460,33 +1325,29 @@ specifier|static
 name|bfd_reloc_status_type
 name|v850_elf_perform_relocation
 parameter_list|(
-name|abfd
-parameter_list|,
-name|r_type
-parameter_list|,
-name|addend
-parameter_list|,
-name|address
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|int
 name|r_type
-decl_stmt|;
+parameter_list|,
 name|bfd_vma
 name|addend
-decl_stmt|;
+parameter_list|,
 name|bfd_byte
 modifier|*
 name|address
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|long
 name|insn
+decl_stmt|;
+name|unsigned
+name|long
+name|result
 decl_stmt|;
 name|bfd_signed_vma
 name|saddend
@@ -3502,7 +1363,6 @@ name|r_type
 condition|)
 block|{
 default|default:
-comment|/* fprintf (stderr, "reloc type %d not SUPPORTED\n", r_type ); */
 return|return
 name|bfd_reloc_notsupported
 return|;
@@ -3766,11 +1626,6 @@ break|break;
 case|case
 name|R_V850_LO16
 case|:
-comment|/* Calculate the sum of the value stored in the instruction and the 	 addend and check for overflow from the low 16 bits into the high 	 16 bits.  The assembler has already done some of this:  If the 	 value stored in the instruction has its 15th bit set, (counting 	 from zero) then the assembler will have added 1 to the value 	 stored in the associated HI16S reloc.  So for example, these 	 relocations:  	     movhi hi( fred ), r0, r1 	     movea lo( fred ), r1, r1  	 will store 0 in the value fields for the MOVHI and MOVEA instructions 	 and addend will be the address of fred, but for these instructions:  	     movhi hi( fred + 0x123456), r0, r1 	     movea lo( fred + 0x123456), r1, r1  	 the value stored in the MOVHI instruction will be 0x12 and the value 	 stored in the MOVEA instruction will be 0x3456.  If however the 	 instructions were:  	     movhi hi( fred + 0x10ffff), r0, r1 	     movea lo( fred + 0x10ffff), r1, r1  	 then the value stored in the MOVHI instruction would be 0x11 (not 	 0x10) and the value stored in the MOVEA instruction would be 0xffff. 	 Thus (assuming for the moment that the addend is 0), at run time the 	 MOVHI instruction loads 0x110000 into r1, then the MOVEA instruction 	 adds 0xffffffff (sign extension!) producing 0x10ffff.  Similarly if 	 the instructions were:  	     movhi hi( fred - 1), r0, r1 	     movea lo( fred - 1), r1, r1  	 then 0 is stored in the MOVHI instruction and -1 is stored in the 	 MOVEA instruction.  	 Overflow can occur if the addition of the value stored in the 	 instruction plus the addend sets the 15th bit when before it was clear. 	 This is because the 15th bit will be sign extended into the high part, 	 thus reducing its value by one, but since the 15th bit was originally 	 clear, the assembler will not have added 1 to the previous HI16S reloc 	 to compensate for this effect.  For example:  	    movhi hi( fred + 0x123456), r0, r1 	    movea lo( fred + 0x123456), r1, r1  	 The value stored in HI16S reloc is 0x12, the value stored in the LO16 	 reloc is 0x3456.  If we assume that the address of fred is 0x00007000 	 then the relocations become:  	   HI16S: 0x0012 + (0x00007000>> 16)    = 0x12 	   LO16:  0x3456 + (0x00007000& 0xffff) = 0xa456  	 but when the instructions are executed, the MOVEA instruction's value 	 is signed extended, so the sum becomes:  	      0x00120000 	    + 0xffffa456 	    ------------ 	      0x0011a456    but 'fred + 0x123456' = 0x0012a456  	 Note that if the 15th bit was set in the value stored in the LO16 	 reloc, then we do not have to do anything:  	    movhi hi( fred + 0x10ffff), r0, r1 	    movea lo( fred + 0x10ffff), r1, r1  	    HI16S:  0x0011 + (0x00007000>> 16)    = 0x11 	    LO16:   0xffff + (0x00007000& 0xffff) = 0x6fff  	      0x00110000 	    + 0x00006fff 	    ------------ 	      0x00116fff  = fred + 0x10ffff = 0x7000 + 0x10ffff  	 Overflow can also occur if the computation carries into the 16th bit 	 and it also results in the 15th bit having the same value as the 15th 	 bit of the original value.   What happens is that the HI16S reloc 	 will have already examined the 15th bit of the original value and 	 added 1 to the high part if the bit is set.  This compensates for the 	 sign extension of 15th bit of the result of the computation.  But now 	 there is a carry into the 16th bit, and this has not been allowed for.  	 So, for example if fred is at address 0xf000:  	   movhi hi( fred + 0xffff), r0, r1    [bit 15 of the offset is set] 	   movea lo( fred + 0xffff), r1, r1  	   HI16S: 0x0001 + (0x0000f000>> 16)    = 0x0001 	   LO16:  0xffff + (0x0000f000& 0xffff) = 0xefff   (carry into bit 16 is lost)  	     0x00010000 	   + 0xffffefff 	   ------------ 	     0x0000efff   but 'fred + 0xffff' = 0x0001efff  	 Similarly, if the 15th bit remains clear, but overflow occurs into 	 the 16th bit then (assuming the address of fred is 0xf000):  	   movhi hi( fred + 0x7000), r0, r1    [bit 15 of the offset is clear] 	   movea lo( fred + 0x7000), r1, r1  	   HI16S: 0x0000 + (0x0000f000>> 16)    = 0x0000 	   LO16:  0x7000 + (0x0000f000& 0xffff) = 0x6fff  (carry into bit 16 is lost)  	     0x00000000 	   + 0x00006fff 	   ------------ 	     0x00006fff   but 'fred + 0x7000' = 0x00016fff  	 Note - there is no need to change anything if a carry occurs, and the 	 15th bit changes its value from being set to being clear, as the HI16S 	 reloc will have already added in 1 to the high part for us:  	   movhi hi( fred + 0xffff), r0, r1     [bit 15 of the offset is set] 	   movea lo( fred + 0xffff), r1, r1  	   HI16S: 0x0001 + (0x00007000>> 16) 	   LO16:  0xffff + (0x00007000& 0xffff) = 0x6fff  (carry into bit 16 is lost)  	     0x00010000 	   + 0x00006fff   (bit 15 not set, so the top half is zero) 	   ------------ 	     0x00016fff   which is right (assuming that fred is at 0x7000)  	 but if the 15th bit goes from being clear to being set, then we must 	 once again handle overflow:  	   movhi hi( fred + 0x7000), r0, r1     [bit 15 of the offset is clear] 	   movea lo( fred + 0x7000), r1, r1  	   HI16S: 0x0000 + (0x0000ffff>> 16) 	   LO16:  0x7000 + (0x0000ffff& 0xffff) = 0x6fff  (carry into bit 16)  	     0x00000000 	   + 0x00006fff   (bit 15 not set, so the top half is zero) 	   ------------ 	     0x00006fff   which is wrong (assuming that fred is at 0xffff).  */
-block|{
-name|long
-name|result
-decl_stmt|;
 name|insn
 operator|=
 name|bfd_get_16
@@ -3780,152 +1635,23 @@ argument_list|,
 name|address
 argument_list|)
 expr_stmt|;
-name|result
-operator|=
-name|insn
-operator|+
-name|addend
-expr_stmt|;
-define|#
-directive|define
-name|BIT15_SET
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)& 0x8000)
-define|#
-directive|define
-name|OVERFLOWS
-parameter_list|(
-name|a
-parameter_list|,
-name|i
-parameter_list|)
-value|((((a)& 0xffff) + (i))> 0xffff)
 if|if
 condition|(
-operator|(
-name|BIT15_SET
-argument_list|(
-name|result
-argument_list|)
-operator|&&
 operator|!
-name|BIT15_SET
+name|v850_elf_perform_lo16_relocation
 argument_list|(
-name|addend
-argument_list|)
-operator|)
-operator|||
-operator|(
-name|OVERFLOWS
-argument_list|(
-name|addend
-argument_list|,
-name|insn
-argument_list|)
-operator|&&
-operator|(
-operator|(
-operator|!
-name|BIT15_SET
-argument_list|(
-name|insn
-argument_list|)
-operator|)
-operator|||
-operator|(
-name|BIT15_SET
-argument_list|(
-name|addend
-argument_list|)
-operator|)
-operator|)
-operator|)
-condition|)
-block|{
-name|bfd_boolean
-name|already_updated
-decl_stmt|;
-name|bfd_byte
-modifier|*
-name|hi16s_address
-init|=
-name|find_remembered_hi16s_reloc
-argument_list|(
-name|addend
+name|abfd
 argument_list|,
 operator|&
-name|already_updated
+name|insn
+argument_list|,
+name|addend
 argument_list|)
-decl_stmt|;
-comment|/* Amend the matching HI16_S relocation.  */
-if|if
-condition|(
-name|hi16s_address
-operator|!=
-name|NULL
 condition|)
-block|{
-if|if
-condition|(
-operator|!
-name|already_updated
-condition|)
-block|{
-name|insn
-operator|=
-name|bfd_get_16
-argument_list|(
-name|abfd
-argument_list|,
-name|hi16s_address
-argument_list|)
-expr_stmt|;
-name|insn
-operator|+=
-literal|1
-expr_stmt|;
-name|bfd_put_16
-argument_list|(
-name|abfd
-argument_list|,
-operator|(
-name|bfd_vma
-operator|)
-name|insn
-argument_list|,
-name|hi16s_address
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-else|else
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|_
-argument_list|(
-literal|"FAILED to find previous HI16 reloc\n"
-argument_list|)
-argument_list|)
-expr_stmt|;
 return|return
 name|bfd_reloc_overflow
 return|;
-block|}
-block|}
-comment|/* Do not complain if value has top bit set, as this has been anticipated.  */
-name|insn
-operator|=
-name|result
-operator|&
-literal|0xffff
-expr_stmt|;
 break|break;
-block|}
 case|case
 name|R_V850_8
 case|:
@@ -4014,7 +1740,6 @@ break|break;
 case|case
 name|R_V850_16
 case|:
-comment|/* drop through */
 case|case
 name|R_V850_SDA_16_16_OFFSET
 case|:
@@ -4424,6 +2149,99 @@ name|addend
 expr_stmt|;
 break|break;
 case|case
+name|R_V850_LO16_SPLIT_OFFSET
+case|:
+name|insn
+operator|=
+name|bfd_get_32
+argument_list|(
+name|abfd
+argument_list|,
+name|address
+argument_list|)
+expr_stmt|;
+name|result
+operator|=
+operator|(
+operator|(
+name|insn
+operator|&
+literal|0xfffe0000
+operator|)
+operator|>>
+literal|16
+operator|)
+operator||
+operator|(
+operator|(
+name|insn
+operator|&
+literal|0x20
+operator|)
+operator|>>
+literal|5
+operator|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|v850_elf_perform_lo16_relocation
+argument_list|(
+name|abfd
+argument_list|,
+operator|&
+name|result
+argument_list|,
+name|addend
+argument_list|)
+condition|)
+return|return
+name|bfd_reloc_overflow
+return|;
+name|insn
+operator|=
+operator|(
+operator|(
+operator|(
+name|result
+operator|<<
+literal|16
+operator|)
+operator|&
+literal|0xfffe0000
+operator|)
+operator||
+operator|(
+operator|(
+name|result
+operator|<<
+literal|5
+operator|)
+operator|&
+literal|0x20
+operator|)
+operator||
+operator|(
+name|insn
+operator|&
+operator|~
+literal|0xfffe0020
+operator|)
+operator|)
+expr_stmt|;
+name|bfd_put_32
+argument_list|(
+name|abfd
+argument_list|,
+name|insn
+argument_list|,
+name|address
+argument_list|)
+expr_stmt|;
+return|return
+name|bfd_reloc_ok
+return|;
+case|case
 name|R_V850_ZDA_16_16_SPLIT_OFFSET
 case|:
 case|case
@@ -4630,51 +2448,38 @@ specifier|static
 name|bfd_reloc_status_type
 name|v850_elf_reloc
 parameter_list|(
-name|abfd
-parameter_list|,
-name|reloc
-parameter_list|,
-name|symbol
-parameter_list|,
-name|data
-parameter_list|,
-name|isection
-parameter_list|,
-name|obfd
-parameter_list|,
-name|err
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|arelent
 modifier|*
 name|reloc
-decl_stmt|;
+parameter_list|,
 name|asymbol
 modifier|*
 name|symbol
-decl_stmt|;
-name|PTR
+parameter_list|,
+name|void
+modifier|*
 name|data
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|isection
-decl_stmt|;
+parameter_list|,
 name|bfd
 modifier|*
 name|obfd
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|err
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 name|long
 name|relocation
@@ -4684,10 +2489,6 @@ if|if
 condition|(
 name|obfd
 operator|!=
-operator|(
-name|bfd
-operator|*
-operator|)
 name|NULL
 operator|&&
 operator|(
@@ -4763,9 +2564,12 @@ name|reloc
 operator|->
 name|address
 operator|>
+name|bfd_get_section_limit
+argument_list|(
+name|abfd
+argument_list|,
 name|isection
-operator|->
-name|_cooked_size
+argument_list|)
 condition|)
 return|return
 name|bfd_reloc_outofrange
@@ -4828,17 +2632,6 @@ name|reloc
 operator|->
 name|addend
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* Since this reloc is going to be processed later on, we should 	 not make it pc-relative here.  To test this, try assembling and 	 linking this program:  	 	.text 		.globl _start 		nop 	_start:         	jr foo  	        .section ".foo","ax" 		nop 	foo:         	nop      */
-block|if (reloc->howto->pc_relative)     {
-comment|/* Here the variable relocation holds the final address of the 	 symbol we are relocating against, plus any addend.  */
-block|relocation -= isection->output_section->vma + isection->output_offset;
-comment|/* Deal with pcrel_offset.  */
-block|relocation -= reloc->address;     }
-endif|#
-directive|endif
 name|reloc
 operator|->
 name|addend
@@ -4860,52 +2653,39 @@ specifier|static
 name|bfd_reloc_status_type
 name|v850_elf_ignore_reloc
 parameter_list|(
-name|abfd
-parameter_list|,
-name|reloc_entry
-parameter_list|,
-name|symbol
-parameter_list|,
-name|data
-parameter_list|,
-name|input_section
-parameter_list|,
-name|output_bfd
-parameter_list|,
-name|error_message
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|arelent
 modifier|*
 name|reloc_entry
-decl_stmt|;
+parameter_list|,
 name|asymbol
 modifier|*
 name|symbol
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
-name|PTR
+parameter_list|,
+name|void
+modifier|*
 name|data
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|input_section
-decl_stmt|;
+parameter_list|,
 name|bfd
 modifier|*
 name|output_bfd
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|error_message
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -4927,6 +2707,1731 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Note: It is REQUIRED that the 'type' value of each entry    in this array match the index of the entry in the array.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|reloc_howto_type
+name|v850_elf_howto_table
+index|[]
+init|=
+block|{
+comment|/* This reloc does nothing.  */
+name|HOWTO
+argument_list|(
+name|R_V850_NONE
+argument_list|,
+comment|/* Type.  */
+literal|0
+argument_list|,
+comment|/* Rightshift.  */
+literal|2
+argument_list|,
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
+literal|32
+argument_list|,
+comment|/* Bitsize.  */
+name|FALSE
+argument_list|,
+comment|/* PC_relative.  */
+literal|0
+argument_list|,
+comment|/* Bitpos.  */
+name|complain_overflow_bitfield
+argument_list|,
+comment|/* Complain_on_overflow.  */
+name|bfd_elf_generic_reloc
+argument_list|,
+comment|/* Special_function.  */
+literal|"R_V850_NONE"
+argument_list|,
+comment|/* Name.  */
+name|FALSE
+argument_list|,
+comment|/* Partial_inplace.  */
+literal|0
+argument_list|,
+comment|/* Src_mask.  */
+literal|0
+argument_list|,
+comment|/* Dst_mask.  */
+name|FALSE
+argument_list|)
+block|,
+comment|/* PCrel_offset.  */
+comment|/* A PC relative 9 bit branch.  */
+name|HOWTO
+argument_list|(
+name|R_V850_9_PCREL
+argument_list|,
+comment|/* Type.  */
+literal|2
+argument_list|,
+comment|/* Rightshift.  */
+literal|2
+argument_list|,
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
+literal|26
+argument_list|,
+comment|/* Bitsize.  */
+name|TRUE
+argument_list|,
+comment|/* PC_relative.  */
+literal|0
+argument_list|,
+comment|/* Bitpos.  */
+name|complain_overflow_bitfield
+argument_list|,
+comment|/* Complain_on_overflow.  */
+name|v850_elf_reloc
+argument_list|,
+comment|/* Special_function.  */
+literal|"R_V850_9_PCREL"
+argument_list|,
+comment|/* Name.  */
+name|FALSE
+argument_list|,
+comment|/* Partial_inplace.  */
+literal|0x00ffffff
+argument_list|,
+comment|/* Src_mask.  */
+literal|0x00ffffff
+argument_list|,
+comment|/* Dst_mask.  */
+name|TRUE
+argument_list|)
+block|,
+comment|/* PCrel_offset.  */
+comment|/* A PC relative 22 bit branch.  */
+name|HOWTO
+argument_list|(
+name|R_V850_22_PCREL
+argument_list|,
+comment|/* Type.  */
+literal|2
+argument_list|,
+comment|/* Rightshift.  */
+literal|2
+argument_list|,
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
+literal|22
+argument_list|,
+comment|/* Bitsize.  */
+name|TRUE
+argument_list|,
+comment|/* PC_relative.  */
+literal|7
+argument_list|,
+comment|/* Bitpos.  */
+name|complain_overflow_signed
+argument_list|,
+comment|/* Complain_on_overflow.  */
+name|v850_elf_reloc
+argument_list|,
+comment|/* Special_function.  */
+literal|"R_V850_22_PCREL"
+argument_list|,
+comment|/* Name.  */
+name|FALSE
+argument_list|,
+comment|/* Partial_inplace.  */
+literal|0x07ffff80
+argument_list|,
+comment|/* Src_mask.  */
+literal|0x07ffff80
+argument_list|,
+comment|/* Dst_mask.  */
+name|TRUE
+argument_list|)
+block|,
+comment|/* PCrel_offset.  */
+comment|/* High 16 bits of symbol value.  */
+name|HOWTO
+argument_list|(
+name|R_V850_HI16_S
+argument_list|,
+comment|/* Type.  */
+literal|0
+argument_list|,
+comment|/* Rightshift.  */
+literal|1
+argument_list|,
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
+literal|16
+argument_list|,
+comment|/* Bitsize.  */
+name|FALSE
+argument_list|,
+comment|/* PC_relative.  */
+literal|0
+argument_list|,
+comment|/* Bitpos.  */
+name|complain_overflow_dont
+argument_list|,
+comment|/* Complain_on_overflow.  */
+name|v850_elf_reloc
+argument_list|,
+comment|/* Special_function.  */
+literal|"R_V850_HI16_S"
+argument_list|,
+comment|/* Name.  */
+name|FALSE
+argument_list|,
+comment|/* Partial_inplace.  */
+literal|0xffff
+argument_list|,
+comment|/* Src_mask.  */
+literal|0xffff
+argument_list|,
+comment|/* Dst_mask.  */
+name|FALSE
+argument_list|)
+block|,
+comment|/* PCrel_offset.  */
+comment|/* High 16 bits of symbol value.  */
+name|HOWTO
+argument_list|(
+name|R_V850_HI16
+argument_list|,
+comment|/* Type.  */
+literal|0
+argument_list|,
+comment|/* Rightshift.  */
+literal|1
+argument_list|,
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
+literal|16
+argument_list|,
+comment|/* Bitsize.  */
+name|FALSE
+argument_list|,
+comment|/* PC_relative.  */
+literal|0
+argument_list|,
+comment|/* Bitpos.  */
+name|complain_overflow_dont
+argument_list|,
+comment|/* Complain_on_overflow.  */
+name|v850_elf_reloc
+argument_list|,
+comment|/* Special_function.  */
+literal|"R_V850_HI16"
+argument_list|,
+comment|/* Name.  */
+name|FALSE
+argument_list|,
+comment|/* Partial_inplace.  */
+literal|0xffff
+argument_list|,
+comment|/* Src_mask.  */
+literal|0xffff
+argument_list|,
+comment|/* Dst_mask.  */
+name|FALSE
+argument_list|)
+block|,
+comment|/* PCrel_offset.  */
+comment|/* Low 16 bits of symbol value.  */
+name|HOWTO
+argument_list|(
+name|R_V850_LO16
+argument_list|,
+comment|/* Type.  */
+literal|0
+argument_list|,
+comment|/* Rightshift.  */
+literal|1
+argument_list|,
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
+literal|16
+argument_list|,
+comment|/* Bitsize.  */
+name|FALSE
+argument_list|,
+comment|/* PC_relative.  */
+literal|0
+argument_list|,
+comment|/* Bitpos.  */
+name|complain_overflow_dont
+argument_list|,
+comment|/* Complain_on_overflow.  */
+name|v850_elf_reloc
+argument_list|,
+comment|/* Special_function.  */
+literal|"R_V850_LO16"
+argument_list|,
+comment|/* Name.  */
+name|FALSE
+argument_list|,
+comment|/* Partial_inplace.  */
+literal|0xffff
+argument_list|,
+comment|/* Src_mask.  */
+literal|0xffff
+argument_list|,
+comment|/* Dst_mask.  */
+name|FALSE
+argument_list|)
+block|,
+comment|/* PCrel_offset.  */
+comment|/* Simple 32bit reloc.  */
+name|HOWTO
+argument_list|(
+name|R_V850_ABS32
+argument_list|,
+comment|/* Type.  */
+literal|0
+argument_list|,
+comment|/* Rightshift.  */
+literal|2
+argument_list|,
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
+literal|32
+argument_list|,
+comment|/* Bitsize.  */
+name|FALSE
+argument_list|,
+comment|/* PC_relative.  */
+literal|0
+argument_list|,
+comment|/* Bitpos.  */
+name|complain_overflow_dont
+argument_list|,
+comment|/* Complain_on_overflow.  */
+name|v850_elf_reloc
+argument_list|,
+comment|/* Special_function.  */
+literal|"R_V850_ABS32"
+argument_list|,
+comment|/* Name.  */
+name|FALSE
+argument_list|,
+comment|/* Partial_inplace.  */
+literal|0xffffffff
+argument_list|,
+comment|/* Src_mask.  */
+literal|0xffffffff
+argument_list|,
+comment|/* Dst_mask.  */
+name|FALSE
+argument_list|)
+block|,
+comment|/* PCrel_offset.  */
+comment|/* Simple 16bit reloc.  */
+name|HOWTO
+argument_list|(
+name|R_V850_16
+argument_list|,
+comment|/* Type.  */
+literal|0
+argument_list|,
+comment|/* Rightshift.  */
+literal|1
+argument_list|,
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
+literal|16
+argument_list|,
+comment|/* Bitsize.  */
+name|FALSE
+argument_list|,
+comment|/* PC_relative.  */
+literal|0
+argument_list|,
+comment|/* Bitpos.  */
+name|complain_overflow_dont
+argument_list|,
+comment|/* Complain_on_overflow.  */
+name|bfd_elf_generic_reloc
+argument_list|,
+comment|/* Special_function.  */
+literal|"R_V850_16"
+argument_list|,
+comment|/* Name.  */
+name|FALSE
+argument_list|,
+comment|/* Partial_inplace.  */
+literal|0xffff
+argument_list|,
+comment|/* Src_mask.  */
+literal|0xffff
+argument_list|,
+comment|/* Dst_mask.  */
+name|FALSE
+argument_list|)
+block|,
+comment|/* PCrel_offset.  */
+comment|/* Simple 8bit reloc.	 */
+name|HOWTO
+argument_list|(
+name|R_V850_8
+argument_list|,
+comment|/* Type.  */
+literal|0
+argument_list|,
+comment|/* Rightshift.  */
+literal|0
+argument_list|,
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
+literal|8
+argument_list|,
+comment|/* Bitsize.  */
+name|FALSE
+argument_list|,
+comment|/* PC_relative.  */
+literal|0
+argument_list|,
+comment|/* Bitpos.  */
+name|complain_overflow_dont
+argument_list|,
+comment|/* Complain_on_overflow.  */
+name|bfd_elf_generic_reloc
+argument_list|,
+comment|/* Special_function.  */
+literal|"R_V850_8"
+argument_list|,
+comment|/* Name.  */
+name|FALSE
+argument_list|,
+comment|/* Partial_inplace.  */
+literal|0xff
+argument_list|,
+comment|/* Src_mask.  */
+literal|0xff
+argument_list|,
+comment|/* Dst_mask.  */
+name|FALSE
+argument_list|)
+block|,
+comment|/* PCrel_offset.  */
+comment|/* 16 bit offset from the short data area pointer.  */
+name|HOWTO
+argument_list|(
+name|R_V850_SDA_16_16_OFFSET
+argument_list|,
+comment|/* Type.  */
+literal|0
+argument_list|,
+comment|/* Rightshift.  */
+literal|1
+argument_list|,
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
+literal|16
+argument_list|,
+comment|/* Bitsize.  */
+name|FALSE
+argument_list|,
+comment|/* PC_relative.  */
+literal|0
+argument_list|,
+comment|/* Bitpos.  */
+name|complain_overflow_dont
+argument_list|,
+comment|/* Complain_on_overflow.  */
+name|v850_elf_reloc
+argument_list|,
+comment|/* Special_function.  */
+literal|"R_V850_SDA_16_16_OFFSET"
+argument_list|,
+comment|/* Name.  */
+name|FALSE
+argument_list|,
+comment|/* Partial_inplace.  */
+literal|0xffff
+argument_list|,
+comment|/* Src_mask.  */
+literal|0xffff
+argument_list|,
+comment|/* Dst_mask.  */
+name|FALSE
+argument_list|)
+block|,
+comment|/* PCrel_offset.  */
+comment|/* 15 bit offset from the short data area pointer.  */
+name|HOWTO
+argument_list|(
+name|R_V850_SDA_15_16_OFFSET
+argument_list|,
+comment|/* Type.  */
+literal|1
+argument_list|,
+comment|/* Rightshift.  */
+literal|1
+argument_list|,
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
+literal|16
+argument_list|,
+comment|/* Bitsize.  */
+name|FALSE
+argument_list|,
+comment|/* PC_relative.  */
+literal|1
+argument_list|,
+comment|/* Bitpos.  */
+name|complain_overflow_dont
+argument_list|,
+comment|/* Complain_on_overflow.  */
+name|v850_elf_reloc
+argument_list|,
+comment|/* Special_function.  */
+literal|"R_V850_SDA_15_16_OFFSET"
+argument_list|,
+comment|/* Name.  */
+name|FALSE
+argument_list|,
+comment|/* Partial_inplace.  */
+literal|0xfffe
+argument_list|,
+comment|/* Src_mask.  */
+literal|0xfffe
+argument_list|,
+comment|/* Dst_mask.  */
+name|FALSE
+argument_list|)
+block|,
+comment|/* PCrel_offset.  */
+comment|/* 16 bit offset from the zero data area pointer.  */
+name|HOWTO
+argument_list|(
+name|R_V850_ZDA_16_16_OFFSET
+argument_list|,
+comment|/* Type.  */
+literal|0
+argument_list|,
+comment|/* Rightshift.  */
+literal|1
+argument_list|,
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
+literal|16
+argument_list|,
+comment|/* Bitsize.  */
+name|FALSE
+argument_list|,
+comment|/* PC_relative.  */
+literal|0
+argument_list|,
+comment|/* Bitpos.  */
+name|complain_overflow_dont
+argument_list|,
+comment|/* Complain_on_overflow.  */
+name|v850_elf_reloc
+argument_list|,
+comment|/* Special_function.  */
+literal|"R_V850_ZDA_16_16_OFFSET"
+argument_list|,
+comment|/* Name.  */
+name|FALSE
+argument_list|,
+comment|/* Partial_inplace.  */
+literal|0xffff
+argument_list|,
+comment|/* Src_mask.  */
+literal|0xffff
+argument_list|,
+comment|/* Dst_mask.  */
+name|FALSE
+argument_list|)
+block|,
+comment|/* PCrel_offset.  */
+comment|/* 15 bit offset from the zero data area pointer.  */
+name|HOWTO
+argument_list|(
+name|R_V850_ZDA_15_16_OFFSET
+argument_list|,
+comment|/* Type.  */
+literal|1
+argument_list|,
+comment|/* Rightshift.  */
+literal|1
+argument_list|,
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
+literal|16
+argument_list|,
+comment|/* Bitsize.  */
+name|FALSE
+argument_list|,
+comment|/* PC_relative.  */
+literal|1
+argument_list|,
+comment|/* Bitpos.  */
+name|complain_overflow_dont
+argument_list|,
+comment|/* Complain_on_overflow.  */
+name|v850_elf_reloc
+argument_list|,
+comment|/* Special_function.  */
+literal|"R_V850_ZDA_15_16_OFFSET"
+argument_list|,
+comment|/* Name.  */
+name|FALSE
+argument_list|,
+comment|/* Partial_inplace.  */
+literal|0xfffe
+argument_list|,
+comment|/* Src_mask.  */
+literal|0xfffe
+argument_list|,
+comment|/* Dst_mask.  */
+name|FALSE
+argument_list|)
+block|,
+comment|/* PCrel_offset.  */
+comment|/* 6 bit offset from the tiny data area pointer.  */
+name|HOWTO
+argument_list|(
+name|R_V850_TDA_6_8_OFFSET
+argument_list|,
+comment|/* Type.  */
+literal|2
+argument_list|,
+comment|/* Rightshift.  */
+literal|1
+argument_list|,
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
+literal|8
+argument_list|,
+comment|/* Bitsize.  */
+name|FALSE
+argument_list|,
+comment|/* PC_relative.  */
+literal|1
+argument_list|,
+comment|/* Bitpos.  */
+name|complain_overflow_dont
+argument_list|,
+comment|/* Complain_on_overflow.  */
+name|v850_elf_reloc
+argument_list|,
+comment|/* Special_function.  */
+literal|"R_V850_TDA_6_8_OFFSET"
+argument_list|,
+comment|/* Name.  */
+name|FALSE
+argument_list|,
+comment|/* Partial_inplace.  */
+literal|0x7e
+argument_list|,
+comment|/* Src_mask.  */
+literal|0x7e
+argument_list|,
+comment|/* Dst_mask.  */
+name|FALSE
+argument_list|)
+block|,
+comment|/* PCrel_offset.  */
+comment|/* 8 bit offset from the tiny data area pointer.  */
+name|HOWTO
+argument_list|(
+name|R_V850_TDA_7_8_OFFSET
+argument_list|,
+comment|/* Type.  */
+literal|1
+argument_list|,
+comment|/* Rightshift.  */
+literal|1
+argument_list|,
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
+literal|8
+argument_list|,
+comment|/* Bitsize.  */
+name|FALSE
+argument_list|,
+comment|/* PC_relative.  */
+literal|0
+argument_list|,
+comment|/* Bitpos.  */
+name|complain_overflow_dont
+argument_list|,
+comment|/* Complain_on_overflow.  */
+name|v850_elf_reloc
+argument_list|,
+comment|/* Special_function.  */
+literal|"R_V850_TDA_7_8_OFFSET"
+argument_list|,
+comment|/* Name.  */
+name|FALSE
+argument_list|,
+comment|/* Partial_inplace.  */
+literal|0x7f
+argument_list|,
+comment|/* Src_mask.  */
+literal|0x7f
+argument_list|,
+comment|/* Dst_mask.  */
+name|FALSE
+argument_list|)
+block|,
+comment|/* PCrel_offset.  */
+comment|/* 7 bit offset from the tiny data area pointer.  */
+name|HOWTO
+argument_list|(
+name|R_V850_TDA_7_7_OFFSET
+argument_list|,
+comment|/* Type.  */
+literal|0
+argument_list|,
+comment|/* Rightshift.  */
+literal|1
+argument_list|,
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
+literal|7
+argument_list|,
+comment|/* Bitsize.  */
+name|FALSE
+argument_list|,
+comment|/* PC_relative.  */
+literal|0
+argument_list|,
+comment|/* Bitpos.  */
+name|complain_overflow_dont
+argument_list|,
+comment|/* Complain_on_overflow.  */
+name|v850_elf_reloc
+argument_list|,
+comment|/* Special_function.  */
+literal|"R_V850_TDA_7_7_OFFSET"
+argument_list|,
+comment|/* Name.  */
+name|FALSE
+argument_list|,
+comment|/* Partial_inplace.  */
+literal|0x7f
+argument_list|,
+comment|/* Src_mask.  */
+literal|0x7f
+argument_list|,
+comment|/* Dst_mask.  */
+name|FALSE
+argument_list|)
+block|,
+comment|/* PCrel_offset.  */
+comment|/* 16 bit offset from the tiny data area pointer!  */
+name|HOWTO
+argument_list|(
+name|R_V850_TDA_16_16_OFFSET
+argument_list|,
+comment|/* Type.  */
+literal|0
+argument_list|,
+comment|/* Rightshift.  */
+literal|1
+argument_list|,
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
+literal|16
+argument_list|,
+comment|/* Bitsize.  */
+name|FALSE
+argument_list|,
+comment|/* PC_relative.  */
+literal|0
+argument_list|,
+comment|/* Bitpos.  */
+name|complain_overflow_dont
+argument_list|,
+comment|/* Complain_on_overflow.  */
+name|v850_elf_reloc
+argument_list|,
+comment|/* Special_function.  */
+literal|"R_V850_TDA_16_16_OFFSET"
+argument_list|,
+comment|/* Name.  */
+name|FALSE
+argument_list|,
+comment|/* Partial_inplace.  */
+literal|0xffff
+argument_list|,
+comment|/* Src_mask.  */
+literal|0xfff
+argument_list|,
+comment|/* Dst_mask.  */
+name|FALSE
+argument_list|)
+block|,
+comment|/* PCrel_offset.  */
+comment|/* 5 bit offset from the tiny data area pointer.  */
+name|HOWTO
+argument_list|(
+name|R_V850_TDA_4_5_OFFSET
+argument_list|,
+comment|/* Type.  */
+literal|1
+argument_list|,
+comment|/* Rightshift.  */
+literal|1
+argument_list|,
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
+literal|5
+argument_list|,
+comment|/* Bitsize.  */
+name|FALSE
+argument_list|,
+comment|/* PC_relative.  */
+literal|0
+argument_list|,
+comment|/* Bitpos.  */
+name|complain_overflow_dont
+argument_list|,
+comment|/* Complain_on_overflow.  */
+name|v850_elf_reloc
+argument_list|,
+comment|/* Special_function.  */
+literal|"R_V850_TDA_4_5_OFFSET"
+argument_list|,
+comment|/* Name.  */
+name|FALSE
+argument_list|,
+comment|/* Partial_inplace.  */
+literal|0x0f
+argument_list|,
+comment|/* Src_mask.  */
+literal|0x0f
+argument_list|,
+comment|/* Dst_mask.  */
+name|FALSE
+argument_list|)
+block|,
+comment|/* PCrel_offset.  */
+comment|/* 4 bit offset from the tiny data area pointer.  */
+name|HOWTO
+argument_list|(
+name|R_V850_TDA_4_4_OFFSET
+argument_list|,
+comment|/* Type.  */
+literal|0
+argument_list|,
+comment|/* Rightshift.  */
+literal|1
+argument_list|,
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
+literal|4
+argument_list|,
+comment|/* Bitsize.  */
+name|FALSE
+argument_list|,
+comment|/* PC_relative.  */
+literal|0
+argument_list|,
+comment|/* Bitpos.  */
+name|complain_overflow_dont
+argument_list|,
+comment|/* Complain_on_overflow.  */
+name|v850_elf_reloc
+argument_list|,
+comment|/* Special_function.  */
+literal|"R_V850_TDA_4_4_OFFSET"
+argument_list|,
+comment|/* Name.  */
+name|FALSE
+argument_list|,
+comment|/* Partial_inplace.  */
+literal|0x0f
+argument_list|,
+comment|/* Src_mask.  */
+literal|0x0f
+argument_list|,
+comment|/* Dst_mask.  */
+name|FALSE
+argument_list|)
+block|,
+comment|/* PCrel_offset.  */
+comment|/* 16 bit offset from the short data area pointer.  */
+name|HOWTO
+argument_list|(
+name|R_V850_SDA_16_16_SPLIT_OFFSET
+argument_list|,
+comment|/* Type.  */
+literal|0
+argument_list|,
+comment|/* Rightshift.  */
+literal|2
+argument_list|,
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
+literal|16
+argument_list|,
+comment|/* Bitsize.  */
+name|FALSE
+argument_list|,
+comment|/* PC_relative.  */
+literal|0
+argument_list|,
+comment|/* Bitpos.  */
+name|complain_overflow_dont
+argument_list|,
+comment|/* Complain_on_overflow.  */
+name|v850_elf_reloc
+argument_list|,
+comment|/* Special_function.  */
+literal|"R_V850_SDA_16_16_SPLIT_OFFSET"
+argument_list|,
+comment|/* Name.  */
+name|FALSE
+argument_list|,
+comment|/* Partial_inplace.  */
+literal|0xfffe0020
+argument_list|,
+comment|/* Src_mask.  */
+literal|0xfffe0020
+argument_list|,
+comment|/* Dst_mask.  */
+name|FALSE
+argument_list|)
+block|,
+comment|/* PCrel_offset.  */
+comment|/* 16 bit offset from the zero data area pointer.  */
+name|HOWTO
+argument_list|(
+name|R_V850_ZDA_16_16_SPLIT_OFFSET
+argument_list|,
+comment|/* Type.  */
+literal|0
+argument_list|,
+comment|/* Rightshift.  */
+literal|2
+argument_list|,
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
+literal|16
+argument_list|,
+comment|/* Bitsize.  */
+name|FALSE
+argument_list|,
+comment|/* PC_relative.  */
+literal|0
+argument_list|,
+comment|/* Bitpos.  */
+name|complain_overflow_dont
+argument_list|,
+comment|/* Complain_on_overflow.  */
+name|v850_elf_reloc
+argument_list|,
+comment|/* Special_function.  */
+literal|"R_V850_ZDA_16_16_SPLIT_OFFSET"
+argument_list|,
+comment|/* Name.  */
+name|FALSE
+argument_list|,
+comment|/* Partial_inplace.  */
+literal|0xfffe0020
+argument_list|,
+comment|/* Src_mask.  */
+literal|0xfffe0020
+argument_list|,
+comment|/* Dst_mask.  */
+name|FALSE
+argument_list|)
+block|,
+comment|/* PCrel_offset.  */
+comment|/* 6 bit offset from the call table base pointer.  */
+name|HOWTO
+argument_list|(
+name|R_V850_CALLT_6_7_OFFSET
+argument_list|,
+comment|/* Type.  */
+literal|0
+argument_list|,
+comment|/* Rightshift.  */
+literal|1
+argument_list|,
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
+literal|7
+argument_list|,
+comment|/* Bitsize.  */
+name|FALSE
+argument_list|,
+comment|/* PC_relative.  */
+literal|0
+argument_list|,
+comment|/* Bitpos.  */
+name|complain_overflow_dont
+argument_list|,
+comment|/* Complain_on_overflow.  */
+name|v850_elf_reloc
+argument_list|,
+comment|/* Special_function.  */
+literal|"R_V850_CALLT_6_7_OFFSET"
+argument_list|,
+comment|/* Name.  */
+name|FALSE
+argument_list|,
+comment|/* Partial_inplace.  */
+literal|0x3f
+argument_list|,
+comment|/* Src_mask.  */
+literal|0x3f
+argument_list|,
+comment|/* Dst_mask.  */
+name|FALSE
+argument_list|)
+block|,
+comment|/* PCrel_offset.  */
+comment|/* 16 bit offset from the call table base pointer.  */
+name|HOWTO
+argument_list|(
+name|R_V850_CALLT_16_16_OFFSET
+argument_list|,
+comment|/* Type.  */
+literal|0
+argument_list|,
+comment|/* Rightshift.  */
+literal|1
+argument_list|,
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
+literal|16
+argument_list|,
+comment|/* Bitsize.  */
+name|FALSE
+argument_list|,
+comment|/* PC_relative.  */
+literal|0
+argument_list|,
+comment|/* Bitpos.  */
+name|complain_overflow_dont
+argument_list|,
+comment|/* Complain_on_overflow.  */
+name|v850_elf_reloc
+argument_list|,
+comment|/* Special_function.  */
+literal|"R_V850_CALLT_16_16_OFFSET"
+argument_list|,
+comment|/* Name.  */
+name|FALSE
+argument_list|,
+comment|/* Partial_inplace.  */
+literal|0xffff
+argument_list|,
+comment|/* Src_mask.  */
+literal|0xffff
+argument_list|,
+comment|/* Dst_mask.  */
+name|FALSE
+argument_list|)
+block|,
+comment|/* PCrel_offset.  */
+comment|/* GNU extension to record C++ vtable hierarchy */
+name|HOWTO
+argument_list|(
+name|R_V850_GNU_VTINHERIT
+argument_list|,
+comment|/* Type.  */
+literal|0
+argument_list|,
+comment|/* Rightshift.  */
+literal|2
+argument_list|,
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
+literal|0
+argument_list|,
+comment|/* Bitsize.  */
+name|FALSE
+argument_list|,
+comment|/* PC_relative.  */
+literal|0
+argument_list|,
+comment|/* Bitpos.  */
+name|complain_overflow_dont
+argument_list|,
+comment|/* Complain_on_overflow.  */
+name|NULL
+argument_list|,
+comment|/* Special_function.  */
+literal|"R_V850_GNU_VTINHERIT"
+argument_list|,
+comment|/* Name.  */
+name|FALSE
+argument_list|,
+comment|/* Partial_inplace.  */
+literal|0
+argument_list|,
+comment|/* Src_mask.  */
+literal|0
+argument_list|,
+comment|/* Dst_mask.  */
+name|FALSE
+argument_list|)
+block|,
+comment|/* PCrel_offset.  */
+comment|/* GNU extension to record C++ vtable member usage */
+name|HOWTO
+argument_list|(
+name|R_V850_GNU_VTENTRY
+argument_list|,
+comment|/* Type.  */
+literal|0
+argument_list|,
+comment|/* Rightshift.  */
+literal|2
+argument_list|,
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
+literal|0
+argument_list|,
+comment|/* Bitsize.  */
+name|FALSE
+argument_list|,
+comment|/* PC_relative.  */
+literal|0
+argument_list|,
+comment|/* Bitpos.  */
+name|complain_overflow_dont
+argument_list|,
+comment|/* Complain_on_overflow.  */
+name|_bfd_elf_rel_vtable_reloc_fn
+argument_list|,
+comment|/* Special_function.  */
+literal|"R_V850_GNU_VTENTRY"
+argument_list|,
+comment|/* Name.  */
+name|FALSE
+argument_list|,
+comment|/* Partial_inplace.  */
+literal|0
+argument_list|,
+comment|/* Src_mask.  */
+literal|0
+argument_list|,
+comment|/* Dst_mask.  */
+name|FALSE
+argument_list|)
+block|,
+comment|/* PCrel_offset.  */
+comment|/* Indicates a .longcall pseudo-op.  The compiler will generate a .longcall      pseudo-op when it finds a function call which can be relaxed.  */
+name|HOWTO
+argument_list|(
+name|R_V850_LONGCALL
+argument_list|,
+comment|/* Type.  */
+literal|0
+argument_list|,
+comment|/* Rightshift.  */
+literal|2
+argument_list|,
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
+literal|32
+argument_list|,
+comment|/* Bitsize.  */
+name|TRUE
+argument_list|,
+comment|/* PC_relative.  */
+literal|0
+argument_list|,
+comment|/* Bitpos.  */
+name|complain_overflow_signed
+argument_list|,
+comment|/* Complain_on_overflow.  */
+name|v850_elf_ignore_reloc
+argument_list|,
+comment|/* Special_function.  */
+literal|"R_V850_LONGCALL"
+argument_list|,
+comment|/* Name.  */
+name|FALSE
+argument_list|,
+comment|/* Partial_inplace.  */
+literal|0
+argument_list|,
+comment|/* Src_mask.  */
+literal|0
+argument_list|,
+comment|/* Dst_mask.  */
+name|TRUE
+argument_list|)
+block|,
+comment|/* PCrel_offset.  */
+comment|/* Indicates a .longjump pseudo-op.  The compiler will generate a      .longjump pseudo-op when it finds a branch which can be relaxed.  */
+name|HOWTO
+argument_list|(
+name|R_V850_LONGJUMP
+argument_list|,
+comment|/* Type.  */
+literal|0
+argument_list|,
+comment|/* Rightshift.  */
+literal|2
+argument_list|,
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
+literal|32
+argument_list|,
+comment|/* Bitsize.  */
+name|TRUE
+argument_list|,
+comment|/* PC_relative.  */
+literal|0
+argument_list|,
+comment|/* Bitpos.  */
+name|complain_overflow_signed
+argument_list|,
+comment|/* Complain_on_overflow.  */
+name|v850_elf_ignore_reloc
+argument_list|,
+comment|/* Special_function.  */
+literal|"R_V850_LONGJUMP"
+argument_list|,
+comment|/* Name.  */
+name|FALSE
+argument_list|,
+comment|/* Partial_inplace.  */
+literal|0
+argument_list|,
+comment|/* Src_mask.  */
+literal|0
+argument_list|,
+comment|/* Dst_mask.  */
+name|TRUE
+argument_list|)
+block|,
+comment|/* PCrel_offset.  */
+name|HOWTO
+argument_list|(
+name|R_V850_ALIGN
+argument_list|,
+comment|/* Type.  */
+literal|0
+argument_list|,
+comment|/* Rightshift.  */
+literal|1
+argument_list|,
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
+literal|0
+argument_list|,
+comment|/* Bitsize.  */
+name|FALSE
+argument_list|,
+comment|/* PC_relative.  */
+literal|0
+argument_list|,
+comment|/* Bitpos.  */
+name|complain_overflow_unsigned
+argument_list|,
+comment|/* Complain_on_overflow.  */
+name|v850_elf_ignore_reloc
+argument_list|,
+comment|/* Special_function.  */
+literal|"R_V850_ALIGN"
+argument_list|,
+comment|/* Name.  */
+name|FALSE
+argument_list|,
+comment|/* Partial_inplace.  */
+literal|0
+argument_list|,
+comment|/* Src_mask.  */
+literal|0
+argument_list|,
+comment|/* Dst_mask.  */
+name|TRUE
+argument_list|)
+block|,
+comment|/* PCrel_offset.  */
+comment|/* Simple pc-relative 32bit reloc.  */
+name|HOWTO
+argument_list|(
+name|R_V850_REL32
+argument_list|,
+comment|/* Type.  */
+literal|0
+argument_list|,
+comment|/* Rightshift.  */
+literal|2
+argument_list|,
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
+literal|32
+argument_list|,
+comment|/* Bitsize.  */
+name|TRUE
+argument_list|,
+comment|/* PC_relative.  */
+literal|0
+argument_list|,
+comment|/* Bitpos.  */
+name|complain_overflow_dont
+argument_list|,
+comment|/* Complain_on_overflow.  */
+name|v850_elf_reloc
+argument_list|,
+comment|/* Special_function.  */
+literal|"R_V850_REL32"
+argument_list|,
+comment|/* Name.  */
+name|FALSE
+argument_list|,
+comment|/* Partial_inplace.  */
+literal|0xffffffff
+argument_list|,
+comment|/* Src_mask.  */
+literal|0xffffffff
+argument_list|,
+comment|/* Dst_mask.  */
+name|FALSE
+argument_list|)
+block|,
+comment|/* PCrel_offset.  */
+comment|/* An ld.bu version of R_V850_LO16.  */
+name|HOWTO
+argument_list|(
+name|R_V850_LO16_SPLIT_OFFSET
+argument_list|,
+comment|/* Type.  */
+literal|0
+argument_list|,
+comment|/* Rightshift.  */
+literal|2
+argument_list|,
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
+literal|16
+argument_list|,
+comment|/* Bitsize.  */
+name|FALSE
+argument_list|,
+comment|/* PC_relative.  */
+literal|0
+argument_list|,
+comment|/* Bitpos.  */
+name|complain_overflow_dont
+argument_list|,
+comment|/* Complain_on_overflow.  */
+name|v850_elf_reloc
+argument_list|,
+comment|/* Special_function.  */
+literal|"R_V850_LO16_SPLIT_OFFSET"
+argument_list|,
+comment|/* Name.  */
+name|FALSE
+argument_list|,
+comment|/* Partial_inplace.  */
+literal|0xfffe0020
+argument_list|,
+comment|/* Src_mask.  */
+literal|0xfffe0020
+argument_list|,
+comment|/* Dst_mask.  */
+name|FALSE
+argument_list|)
+block|,
+comment|/* PCrel_offset.  */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Map BFD reloc types to V850 ELF reloc types.  */
+end_comment
+
+begin_struct
+struct|struct
+name|v850_elf_reloc_map
+block|{
+comment|/* BFD_RELOC_V850_CALLT_16_16_OFFSET is 258, which will not fix in an      unsigned char.  */
+name|bfd_reloc_code_real_type
+name|bfd_reloc_val
+decl_stmt|;
+name|unsigned
+name|int
+name|elf_reloc_val
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|struct
+name|v850_elf_reloc_map
+name|v850_elf_reloc_map
+index|[]
+init|=
+block|{
+block|{
+name|BFD_RELOC_NONE
+block|,
+name|R_V850_NONE
+block|}
+block|,
+block|{
+name|BFD_RELOC_V850_9_PCREL
+block|,
+name|R_V850_9_PCREL
+block|}
+block|,
+block|{
+name|BFD_RELOC_V850_22_PCREL
+block|,
+name|R_V850_22_PCREL
+block|}
+block|,
+block|{
+name|BFD_RELOC_HI16_S
+block|,
+name|R_V850_HI16_S
+block|}
+block|,
+block|{
+name|BFD_RELOC_HI16
+block|,
+name|R_V850_HI16
+block|}
+block|,
+block|{
+name|BFD_RELOC_LO16
+block|,
+name|R_V850_LO16
+block|}
+block|,
+block|{
+name|BFD_RELOC_32
+block|,
+name|R_V850_ABS32
+block|}
+block|,
+block|{
+name|BFD_RELOC_32_PCREL
+block|,
+name|R_V850_REL32
+block|}
+block|,
+block|{
+name|BFD_RELOC_16
+block|,
+name|R_V850_16
+block|}
+block|,
+block|{
+name|BFD_RELOC_8
+block|,
+name|R_V850_8
+block|}
+block|,
+block|{
+name|BFD_RELOC_V850_SDA_16_16_OFFSET
+block|,
+name|R_V850_SDA_16_16_OFFSET
+block|}
+block|,
+block|{
+name|BFD_RELOC_V850_SDA_15_16_OFFSET
+block|,
+name|R_V850_SDA_15_16_OFFSET
+block|}
+block|,
+block|{
+name|BFD_RELOC_V850_ZDA_16_16_OFFSET
+block|,
+name|R_V850_ZDA_16_16_OFFSET
+block|}
+block|,
+block|{
+name|BFD_RELOC_V850_ZDA_15_16_OFFSET
+block|,
+name|R_V850_ZDA_15_16_OFFSET
+block|}
+block|,
+block|{
+name|BFD_RELOC_V850_TDA_6_8_OFFSET
+block|,
+name|R_V850_TDA_6_8_OFFSET
+block|}
+block|,
+block|{
+name|BFD_RELOC_V850_TDA_7_8_OFFSET
+block|,
+name|R_V850_TDA_7_8_OFFSET
+block|}
+block|,
+block|{
+name|BFD_RELOC_V850_TDA_7_7_OFFSET
+block|,
+name|R_V850_TDA_7_7_OFFSET
+block|}
+block|,
+block|{
+name|BFD_RELOC_V850_TDA_16_16_OFFSET
+block|,
+name|R_V850_TDA_16_16_OFFSET
+block|}
+block|,
+block|{
+name|BFD_RELOC_V850_TDA_4_5_OFFSET
+block|,
+name|R_V850_TDA_4_5_OFFSET
+block|}
+block|,
+block|{
+name|BFD_RELOC_V850_TDA_4_4_OFFSET
+block|,
+name|R_V850_TDA_4_4_OFFSET
+block|}
+block|,
+block|{
+name|BFD_RELOC_V850_LO16_SPLIT_OFFSET
+block|,
+name|R_V850_LO16_SPLIT_OFFSET
+block|}
+block|,
+block|{
+name|BFD_RELOC_V850_SDA_16_16_SPLIT_OFFSET
+block|,
+name|R_V850_SDA_16_16_SPLIT_OFFSET
+block|}
+block|,
+block|{
+name|BFD_RELOC_V850_ZDA_16_16_SPLIT_OFFSET
+block|,
+name|R_V850_ZDA_16_16_SPLIT_OFFSET
+block|}
+block|,
+block|{
+name|BFD_RELOC_V850_CALLT_6_7_OFFSET
+block|,
+name|R_V850_CALLT_6_7_OFFSET
+block|}
+block|,
+block|{
+name|BFD_RELOC_V850_CALLT_16_16_OFFSET
+block|,
+name|R_V850_CALLT_16_16_OFFSET
+block|}
+block|,
+block|{
+name|BFD_RELOC_VTABLE_INHERIT
+block|,
+name|R_V850_GNU_VTINHERIT
+block|}
+block|,
+block|{
+name|BFD_RELOC_VTABLE_ENTRY
+block|,
+name|R_V850_GNU_VTENTRY
+block|}
+block|,
+block|{
+name|BFD_RELOC_V850_LONGCALL
+block|,
+name|R_V850_LONGCALL
+block|}
+block|,
+block|{
+name|BFD_RELOC_V850_LONGJUMP
+block|,
+name|R_V850_LONGJUMP
+block|}
+block|,
+block|{
+name|BFD_RELOC_V850_ALIGN
+block|,
+name|R_V850_ALIGN
+block|}
+block|,  }
+decl_stmt|;
+end_decl_stmt
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* Map a bfd relocation into the appropriate howto structure.  */
+end_comment
+
+begin_function
+specifier|static
+name|reloc_howto_type
+modifier|*
+name|v850_elf_reloc_type_lookup
+parameter_list|(
+name|bfd
+modifier|*
+name|abfd
+name|ATTRIBUTE_UNUSED
+parameter_list|,
+name|bfd_reloc_code_real_type
+name|code
+parameter_list|)
+block|{
+name|unsigned
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+name|ARRAY_SIZE
+argument_list|(
+name|v850_elf_reloc_map
+argument_list|)
+init|;
+name|i
+operator|--
+condition|;
+control|)
+if|if
+condition|(
+name|v850_elf_reloc_map
+index|[
+name|i
+index|]
+operator|.
+name|bfd_reloc_val
+operator|==
+name|code
+condition|)
+block|{
+name|unsigned
+name|int
+name|elf_reloc_val
+init|=
+name|v850_elf_reloc_map
+index|[
+name|i
+index|]
+operator|.
+name|elf_reloc_val
+decl_stmt|;
+name|BFD_ASSERT
+argument_list|(
+name|v850_elf_howto_table
+index|[
+name|elf_reloc_val
+index|]
+operator|.
+name|type
+operator|==
+name|elf_reloc_val
+argument_list|)
+expr_stmt|;
+return|return
+name|v850_elf_howto_table
+operator|+
+name|elf_reloc_val
+return|;
+block|}
+return|return
+name|NULL
+return|;
+block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* Set the howto pointer for an V850 ELF reloc.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|v850_elf_info_to_howto_rel
+parameter_list|(
+name|bfd
+modifier|*
+name|abfd
+name|ATTRIBUTE_UNUSED
+parameter_list|,
+name|arelent
+modifier|*
+name|cache_ptr
+parameter_list|,
+name|Elf_Internal_Rela
+modifier|*
+name|dst
+parameter_list|)
+block|{
+name|unsigned
+name|int
+name|r_type
+decl_stmt|;
+name|r_type
+operator|=
+name|ELF32_R_TYPE
+argument_list|(
+name|dst
+operator|->
+name|r_info
+argument_list|)
+expr_stmt|;
+name|BFD_ASSERT
+argument_list|(
+name|r_type
+operator|<
+operator|(
+name|unsigned
+name|int
+operator|)
+name|R_V850_max
+argument_list|)
+expr_stmt|;
+name|cache_ptr
+operator|->
+name|howto
+operator|=
+operator|&
+name|v850_elf_howto_table
+index|[
+name|r_type
+index|]
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Set the howto pointer for a V850 ELF reloc (type RELA).  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|v850_elf_info_to_howto_rela
+parameter_list|(
+name|bfd
+modifier|*
+name|abfd
+name|ATTRIBUTE_UNUSED
+parameter_list|,
+name|arelent
+modifier|*
+name|cache_ptr
+parameter_list|,
+name|Elf_Internal_Rela
+modifier|*
+name|dst
+parameter_list|)
+block|{
+name|unsigned
+name|int
+name|r_type
+decl_stmt|;
+name|r_type
+operator|=
+name|ELF32_R_TYPE
+argument_list|(
+name|dst
+operator|->
+name|r_info
+argument_list|)
+expr_stmt|;
+name|BFD_ASSERT
+argument_list|(
+name|r_type
+operator|<
+operator|(
+name|unsigned
+name|int
+operator|)
+name|R_V850_max
+argument_list|)
+expr_stmt|;
+name|cache_ptr
+operator|->
+name|howto
+operator|=
+operator|&
+name|v850_elf_howto_table
+index|[
+name|r_type
+index|]
+expr_stmt|;
+block|}
+end_function
+
 begin_escape
 end_escape
 
@@ -4935,20 +4440,16 @@ specifier|static
 name|bfd_boolean
 name|v850_elf_is_local_label_name
 parameter_list|(
-name|abfd
-parameter_list|,
-name|name
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -5048,71 +4549,49 @@ specifier|static
 name|bfd_reloc_status_type
 name|v850_elf_final_link_relocate
 parameter_list|(
-name|howto
-parameter_list|,
-name|input_bfd
-parameter_list|,
-name|output_bfd
-parameter_list|,
-name|input_section
-parameter_list|,
-name|contents
-parameter_list|,
-name|offset
-parameter_list|,
-name|value
-parameter_list|,
-name|addend
-parameter_list|,
-name|info
-parameter_list|,
-name|sym_sec
-parameter_list|,
-name|is_local
-parameter_list|)
 name|reloc_howto_type
 modifier|*
 name|howto
-decl_stmt|;
+parameter_list|,
 name|bfd
 modifier|*
 name|input_bfd
-decl_stmt|;
+parameter_list|,
 name|bfd
 modifier|*
 name|output_bfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|input_section
-decl_stmt|;
+parameter_list|,
 name|bfd_byte
 modifier|*
 name|contents
-decl_stmt|;
+parameter_list|,
 name|bfd_vma
 name|offset
-decl_stmt|;
+parameter_list|,
 name|bfd_vma
 name|value
-decl_stmt|;
+parameter_list|,
 name|bfd_vma
 name|addend
-decl_stmt|;
+parameter_list|,
 name|struct
 name|bfd_link_info
 modifier|*
 name|info
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|sym_sec
-decl_stmt|;
+parameter_list|,
 name|int
 name|is_local
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|int
@@ -5203,7 +4682,7 @@ condition|)
 return|return
 name|bfd_reloc_overflow
 return|;
-comment|/* Only the bottom 24 bits of the PC are valid */
+comment|/* Only the bottom 24 bits of the PC are valid.  */
 name|value
 operator|=
 name|SEXT24
@@ -5240,6 +4719,9 @@ name|R_V850_HI16
 case|:
 case|case
 name|R_V850_LO16
+case|:
+case|case
+name|R_V850_LO16_SPLIT_OFFSET
 case|:
 case|case
 name|R_V850_16
@@ -5328,11 +4810,6 @@ if|if
 condition|(
 name|h
 operator|==
-operator|(
-expr|struct
-name|bfd_link_hash_entry
-operator|*
-operator|)
 name|NULL
 operator|||
 name|h
@@ -5450,11 +4927,6 @@ if|if
 condition|(
 name|h
 operator|==
-operator|(
-expr|struct
-name|bfd_link_hash_entry
-operator|*
-operator|)
 name|NULL
 operator|||
 name|h
@@ -5541,11 +5013,6 @@ if|if
 condition|(
 name|h
 operator|==
-operator|(
-expr|struct
-name|bfd_link_hash_entry
-operator|*
-operator|)
 name|NULL
 operator|||
 name|h
@@ -5641,11 +5108,6 @@ if|if
 condition|(
 name|h
 operator|==
-operator|(
-expr|struct
-name|bfd_link_hash_entry
-operator|*
-operator|)
 name|NULL
 operator|||
 name|h
@@ -5769,56 +5231,40 @@ specifier|static
 name|bfd_boolean
 name|v850_elf_relocate_section
 parameter_list|(
-name|output_bfd
-parameter_list|,
-name|info
-parameter_list|,
-name|input_bfd
-parameter_list|,
-name|input_section
-parameter_list|,
-name|contents
-parameter_list|,
-name|relocs
-parameter_list|,
-name|local_syms
-parameter_list|,
-name|local_sections
-parameter_list|)
 name|bfd
 modifier|*
 name|output_bfd
-decl_stmt|;
+parameter_list|,
 name|struct
 name|bfd_link_info
 modifier|*
 name|info
-decl_stmt|;
+parameter_list|,
 name|bfd
 modifier|*
 name|input_bfd
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|input_section
-decl_stmt|;
+parameter_list|,
 name|bfd_byte
 modifier|*
 name|contents
-decl_stmt|;
+parameter_list|,
 name|Elf_Internal_Rela
 modifier|*
 name|relocs
-decl_stmt|;
+parameter_list|,
 name|Elf_Internal_Sym
 modifier|*
 name|local_syms
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 modifier|*
 name|local_sections
-decl_stmt|;
+parameter_list|)
 block|{
 name|Elf_Internal_Shdr
 modifier|*
@@ -5864,39 +5310,6 @@ argument_list|(
 name|input_bfd
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sym_hashes
-operator|==
-name|NULL
-condition|)
-block|{
-name|info
-operator|->
-name|callbacks
-operator|->
-name|warning
-argument_list|(
-name|info
-argument_list|,
-literal|"no hash table available"
-argument_list|,
-name|NULL
-argument_list|,
-name|input_bfd
-argument_list|,
-name|input_section
-argument_list|,
-operator|(
-name|bfd_vma
-operator|)
-literal|0
-argument_list|)
-expr_stmt|;
-return|return
-name|FALSE
-return|;
-block|}
 comment|/* Reset the list of remembered HI16S relocs to empty.  */
 name|free_hi16s
 operator|=
@@ -6047,12 +5460,6 @@ argument_list|,
 name|rel
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|{ 	    char * name;  	    name = bfd_elf_string_from_elf_section (input_bfd, symtab_hdr->sh_link, sym->st_name); 	    name = (name == NULL) ? "<none>" : name; 	    fprintf (stderr, "local: sec: %s, sym: %s (%d), value: %x + %x + %x addend %x\n", 		     sec->name, name, sym->st_name, 		     sec->output_section->vma, sec->output_offset, sym->st_value, rel->r_addend); 	  }
-endif|#
-directive|endif
 block|}
 else|else
 block|{
@@ -6061,6 +5468,40 @@ name|unresolved_reloc
 decl_stmt|,
 name|warned
 decl_stmt|;
+comment|/* Note - this check is delayed until now as it is possible and 	     valid to have a file without any symbols but with relocs that 	     can be processed.  */
+if|if
+condition|(
+name|sym_hashes
+operator|==
+name|NULL
+condition|)
+block|{
+name|info
+operator|->
+name|callbacks
+operator|->
+name|warning
+argument_list|(
+name|info
+argument_list|,
+literal|"no hash table available"
+argument_list|,
+name|NULL
+argument_list|,
+name|input_bfd
+argument_list|,
+name|input_section
+argument_list|,
+operator|(
+name|bfd_vma
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+return|return
+name|FALSE
+return|;
+block|}
 name|RELOC_FOR_GLOBAL_SYMBOL
 argument_list|(
 name|info
@@ -6140,12 +5581,7 @@ name|char
 modifier|*
 name|msg
 init|=
-operator|(
-specifier|const
-name|char
-operator|*
-operator|)
-literal|0
+name|NULL
 decl_stmt|;
 if|if
 condition|(
@@ -6225,6 +5661,17 @@ name|reloc_overflow
 call|)
 argument_list|(
 name|info
+argument_list|,
+operator|(
+name|h
+condition|?
+operator|&
+name|h
+operator|->
+name|root
+else|:
+name|NULL
+operator|)
 argument_list|,
 name|name
 argument_list|,
@@ -6423,36 +5870,28 @@ specifier|static
 name|bfd_boolean
 name|v850_elf_gc_sweep_hook
 parameter_list|(
-name|abfd
-parameter_list|,
-name|info
-parameter_list|,
-name|sec
-parameter_list|,
-name|relocs
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|struct
 name|bfd_link_info
 modifier|*
 name|info
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|sec
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|Elf_Internal_Rela
 modifier|*
 name|relocs
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* No got and plt entries for v850-elf.  */
 return|return
@@ -6467,39 +5906,29 @@ name|asection
 modifier|*
 name|v850_elf_gc_mark_hook
 parameter_list|(
-name|sec
-parameter_list|,
-name|info
-parameter_list|,
-name|rel
-parameter_list|,
-name|h
-parameter_list|,
-name|sym
-parameter_list|)
 name|asection
 modifier|*
 name|sec
-decl_stmt|;
+parameter_list|,
 name|struct
 name|bfd_link_info
 modifier|*
 name|info
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|Elf_Internal_Rela
 modifier|*
 name|rel
-decl_stmt|;
+parameter_list|,
 name|struct
 name|elf_link_hash_entry
 modifier|*
 name|h
-decl_stmt|;
+parameter_list|,
 name|Elf_Internal_Sym
 modifier|*
 name|sym
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -6601,12 +6030,10 @@ specifier|static
 name|bfd_boolean
 name|v850_elf_object_p
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 switch|switch
 condition|(
@@ -6676,18 +6103,14 @@ specifier|static
 name|void
 name|v850_elf_final_write_processing
 parameter_list|(
-name|abfd
-parameter_list|,
-name|linker
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|bfd_boolean
 name|linker
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|long
@@ -6758,17 +6181,13 @@ specifier|static
 name|bfd_boolean
 name|v850_elf_set_private_flags
 parameter_list|(
-name|abfd
-parameter_list|,
-name|flags
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|flagword
 name|flags
-decl_stmt|;
+parameter_list|)
 block|{
 name|BFD_ASSERT
 argument_list|(
@@ -6819,18 +6238,14 @@ specifier|static
 name|bfd_boolean
 name|v850_elf_merge_private_bfd_data
 parameter_list|(
+name|bfd
+modifier|*
 name|ibfd
 parameter_list|,
+name|bfd
+modifier|*
 name|obfd
 parameter_list|)
-name|bfd
-modifier|*
-name|ibfd
-decl_stmt|;
-name|bfd
-modifier|*
-name|obfd
-decl_stmt|;
 block|{
 name|flagword
 name|out_flags
@@ -7052,13 +6467,10 @@ name|_bfd_error_handler
 argument_list|(
 name|_
 argument_list|(
-literal|"%s: Architecture mismatch with previous modules"
+literal|"%B: Architecture mismatch with previous modules"
 argument_list|)
 argument_list|,
-name|bfd_archive_filename
-argument_list|(
 name|ibfd
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -7077,17 +6489,14 @@ specifier|static
 name|bfd_boolean
 name|v850_elf_print_private_bfd_data
 parameter_list|(
-name|abfd
-parameter_list|,
-name|ptr
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
-name|PTR
+parameter_list|,
+name|void
+modifier|*
 name|ptr
-decl_stmt|;
+parameter_list|)
 block|{
 name|FILE
 modifier|*
@@ -7283,25 +6692,19 @@ specifier|static
 name|bfd_boolean
 name|v850_elf_section_from_bfd_section
 parameter_list|(
-name|abfd
-parameter_list|,
-name|sec
-parameter_list|,
-name|retval
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|sec
-decl_stmt|;
+parameter_list|,
 name|int
 modifier|*
 name|retval
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -7387,18 +6790,14 @@ specifier|static
 name|void
 name|v850_elf_symbol_processing
 parameter_list|(
-name|abfd
-parameter_list|,
-name|asym
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|asymbol
 modifier|*
 name|asym
-decl_stmt|;
+parameter_list|)
 block|{
 name|elf_symbol_type
 modifier|*
@@ -7761,55 +7160,41 @@ specifier|static
 name|bfd_boolean
 name|v850_elf_add_symbol_hook
 parameter_list|(
-name|abfd
-parameter_list|,
-name|info
-parameter_list|,
-name|sym
-parameter_list|,
-name|namep
-parameter_list|,
-name|flagsp
-parameter_list|,
-name|secp
-parameter_list|,
-name|valp
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|struct
 name|bfd_link_info
 modifier|*
 name|info
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|Elf_Internal_Sym
 modifier|*
 name|sym
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 modifier|*
 name|namep
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|flagword
 modifier|*
 name|flagsp
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 modifier|*
 name|secp
-decl_stmt|;
+parameter_list|,
 name|bfd_vma
 modifier|*
 name|valp
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|int
@@ -7976,42 +7361,32 @@ specifier|static
 name|bfd_boolean
 name|v850_elf_link_output_symbol_hook
 parameter_list|(
-name|info
-parameter_list|,
-name|name
-parameter_list|,
-name|sym
-parameter_list|,
-name|input_sec
-parameter_list|,
-name|h
-parameter_list|)
 name|struct
 name|bfd_link_info
 modifier|*
 name|info
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|name
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|Elf_Internal_Sym
 modifier|*
 name|sym
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|input_sec
-decl_stmt|;
+parameter_list|,
 name|struct
 name|elf_link_hash_entry
 modifier|*
 name|h
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* If we see a common symbol, which implies a relocatable link, then      if a symbol was in a special common section in an input file, mark      it as a special common in the output file.  */
 if|if
@@ -8094,25 +7469,22 @@ specifier|static
 name|bfd_boolean
 name|v850_elf_section_from_shdr
 parameter_list|(
-name|abfd
-parameter_list|,
-name|hdr
-parameter_list|,
-name|name
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|Elf_Internal_Shdr
 modifier|*
 name|hdr
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|,
+name|int
+name|shindex
+parameter_list|)
 block|{
 comment|/* There ought to be a place to keep ELF backend specific flags, but      at the moment there isn't one.  We just keep track of the      sections by their name, instead.  */
 if|if
@@ -8125,6 +7497,8 @@ argument_list|,
 name|hdr
 argument_list|,
 name|name
+argument_list|,
+name|shindex
 argument_list|)
 condition|)
 return|return
@@ -8190,27 +7564,20 @@ specifier|static
 name|bfd_boolean
 name|v850_elf_fake_sections
 parameter_list|(
-name|abfd
-parameter_list|,
-name|hdr
-parameter_list|,
-name|sec
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|Elf_Internal_Shdr
 modifier|*
 name|hdr
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|sec
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|register
 specifier|const
 name|char
 modifier|*
@@ -8236,14 +7603,12 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 name|hdr
 operator|->
 name|sh_type
 operator|=
 name|SHT_V850_SCOMMON
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -8256,14 +7621,12 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 name|hdr
 operator|->
 name|sh_type
 operator|=
 name|SHT_V850_TCOMMON
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -8297,33 +7660,23 @@ specifier|static
 name|bfd_boolean
 name|v850_elf_relax_delete_bytes
 parameter_list|(
-name|abfd
-parameter_list|,
-name|sec
-parameter_list|,
-name|addr
-parameter_list|,
-name|toaddr
-parameter_list|,
-name|count
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|sec
-decl_stmt|;
+parameter_list|,
 name|bfd_vma
 name|addr
-decl_stmt|;
+parameter_list|,
 name|bfd_vma
 name|toaddr
-decl_stmt|;
+parameter_list|,
 name|int
 name|count
-decl_stmt|;
+parameter_list|)
 block|{
 name|Elf_Internal_Shdr
 modifier|*
@@ -9677,31 +9030,23 @@ specifier|static
 name|bfd_boolean
 name|v850_elf_relax_section
 parameter_list|(
-name|abfd
-parameter_list|,
-name|sec
-parameter_list|,
-name|link_info
-parameter_list|,
-name|again
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|sec
-decl_stmt|;
+parameter_list|,
 name|struct
 name|bfd_link_info
 modifier|*
 name|link_info
-decl_stmt|;
+parameter_list|,
 name|bfd_boolean
 modifier|*
 name|again
-decl_stmt|;
+parameter_list|)
 block|{
 name|Elf_Internal_Shdr
 modifier|*
@@ -9785,23 +9130,6 @@ condition|)
 return|return
 name|TRUE
 return|;
-comment|/* If this is the first time we have been called      for this section, initialize the cooked size.  */
-if|if
-condition|(
-name|sec
-operator|->
-name|_cooked_size
-operator|==
-literal|0
-condition|)
-name|sec
-operator|->
-name|_cooked_size
-operator|=
-name|sec
-operator|->
-name|_raw_size
-expr_stmt|;
 name|symtab_hdr
 operator|=
 operator|&
@@ -9821,15 +9149,8 @@ name|abfd
 argument_list|,
 name|sec
 argument_list|,
-operator|(
-name|PTR
-operator|)
 name|NULL
 argument_list|,
-operator|(
-name|Elf_Internal_Rela
-operator|*
-operator|)
 name|NULL
 argument_list|,
 name|link_info
@@ -9861,14 +9182,14 @@ name|addr
 operator|<
 name|sec
 operator|->
-name|_cooked_size
+name|size
 condition|)
 block|{
 name|toaddr
 operator|=
 name|sec
 operator|->
-name|_cooked_size
+name|size
 expr_stmt|;
 for|for
 control|(
@@ -10225,47 +9546,17 @@ name|contents
 expr_stmt|;
 else|else
 block|{
-name|contents
-operator|=
-operator|(
-name|bfd_byte
-operator|*
-operator|)
-name|bfd_malloc
-argument_list|(
-name|sec
-operator|->
-name|_raw_size
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|contents
-operator|==
-name|NULL
-condition|)
-goto|goto
-name|error_return
-goto|;
 if|if
 condition|(
 operator|!
-name|bfd_get_section_contents
+name|bfd_malloc_and_get_section
 argument_list|(
 name|abfd
 argument_list|,
 name|sec
 argument_list|,
+operator|&
 name|contents
-argument_list|,
-operator|(
-name|file_ptr
-operator|)
-literal|0
-argument_list|,
-name|sec
-operator|->
-name|_raw_size
 argument_list|)
 condition|)
 goto|goto
@@ -10367,7 +9658,7 @@ name|bfd_vma
 operator|)
 name|sec
 operator|->
-name|_raw_size
+name|size
 condition|)
 block|{
 name|insn
@@ -11527,7 +10818,7 @@ name|bfd_vma
 operator|)
 name|sec
 operator|->
-name|_raw_size
+name|size
 condition|)
 block|{
 name|insn
@@ -12688,11 +11979,11 @@ name|align_pad_size
 argument_list|,
 name|sec
 operator|->
-name|_cooked_size
+name|size
 argument_list|,
 name|sec
 operator|->
-name|_cooked_size
+name|size
 operator|-
 name|align_pad_size
 argument_list|)
@@ -12701,7 +11992,7 @@ endif|#
 directive|endif
 name|sec
 operator|->
-name|_cooked_size
+name|size
 operator|-=
 name|align_pad_size
 expr_stmt|;
@@ -12793,20 +12084,35 @@ end_function
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|bfd_elf_special_section
-specifier|const
 name|v850_elf_special_sections
 index|[]
 init|=
 block|{
 block|{
-literal|".sdata"
+literal|".call_table_data"
 block|,
-literal|6
+literal|16
 block|,
-operator|-
-literal|2
+literal|0
+block|,
+name|SHT_PROGBITS
+block|,
+operator|(
+name|SHF_ALLOC
+operator|+
+name|SHF_WRITE
+operator|)
+block|}
+block|,
+block|{
+literal|".call_table_text"
+block|,
+literal|16
+block|,
+literal|0
 block|,
 name|SHT_PROGBITS
 block|,
@@ -12815,7 +12121,7 @@ name|SHF_ALLOC
 operator|+
 name|SHF_WRITE
 operator|+
-name|SHF_V850_GPREL
+name|SHF_EXECINSTR
 operator|)
 block|}
 block|,
@@ -12833,6 +12139,23 @@ operator|(
 name|SHF_ALLOC
 operator|+
 name|SHF_V850_GPREL
+operator|)
+block|}
+block|,
+block|{
+literal|".rozdata"
+block|,
+literal|8
+block|,
+operator|-
+literal|2
+block|,
+name|SHT_PROGBITS
+block|,
+operator|(
+name|SHF_ALLOC
+operator|+
+name|SHF_V850_R0REL
 operator|)
 block|}
 block|,
@@ -12875,7 +12198,7 @@ operator|)
 block|}
 block|,
 block|{
-literal|".tdata"
+literal|".sdata"
 block|,
 literal|6
 block|,
@@ -12889,7 +12212,7 @@ name|SHF_ALLOC
 operator|+
 name|SHF_WRITE
 operator|+
-name|SHF_V850_EPREL
+name|SHF_V850_GPREL
 operator|)
 block|}
 block|,
@@ -12932,7 +12255,7 @@ operator|)
 block|}
 block|,
 block|{
-literal|".zdata"
+literal|".tdata"
 block|,
 literal|6
 block|,
@@ -12946,24 +12269,7 @@ name|SHF_ALLOC
 operator|+
 name|SHF_WRITE
 operator|+
-name|SHF_V850_R0REL
-operator|)
-block|}
-block|,
-block|{
-literal|".rozdata"
-block|,
-literal|8
-block|,
-operator|-
-literal|2
-block|,
-name|SHT_PROGBITS
-block|,
-operator|(
-name|SHF_ALLOC
-operator|+
-name|SHF_V850_R0REL
+name|SHF_V850_EPREL
 operator|)
 block|}
 block|,
@@ -13006,27 +12312,12 @@ operator|)
 block|}
 block|,
 block|{
-literal|".call_table_data"
+literal|".zdata"
 block|,
-literal|16
+literal|6
 block|,
-literal|0
-block|,
-name|SHT_PROGBITS
-block|,
-operator|(
-name|SHF_ALLOC
-operator|+
-name|SHF_WRITE
-operator|)
-block|}
-block|,
-block|{
-literal|".call_table_text"
-block|,
-literal|16
-block|,
-literal|0
+operator|-
+literal|2
 block|,
 name|SHT_PROGBITS
 block|,
@@ -13035,7 +12326,7 @@ name|SHF_ALLOC
 operator|+
 name|SHF_WRITE
 operator|+
-name|SHF_EXECINSTR
+name|SHF_V850_R0REL
 operator|)
 block|}
 block|,
@@ -13091,6 +12382,17 @@ directive|define
 name|ELF_MACHINE_ALT1
 value|EM_CYGNUS_V850
 end_define
+
+begin_define
+define|#
+directive|define
+name|ELF_MACHINE_ALT2
+value|EM_V800
+end_define
+
+begin_comment
+comment|/* This is the value used by the GreenHills toolchain.  */
+end_comment
 
 begin_define
 define|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* obstack.h - object stack macros    Copyright 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1996, 1997, 1998,    1999, 2000    Free Software Foundation, Inc.      NOTE: The canonical source of this file is maintained with the GNU C Library.    Bugs can be reported to bug-glibc@gnu.org.     This program is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by the    Free Software Foundation; either version 2, or (at your option) any    later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,    USA.  */
+comment|/* obstack.h - object stack macros    Copyright 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1996, 1997, 1998,    1999, 2000, 2001, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.      NOTE: The canonical source of this file is maintained with the GNU C Library.    Bugs can be reported to bug-glibc@gnu.org.     This program is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by the    Free Software Foundation; either version 2, or (at your option) any    later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301,    USA.  */
 end_comment
 
 begin_comment
@@ -101,12 +101,6 @@ name|HAVE_STRING_H
 include|#
 directive|include
 file|<string.h>
-if|#
-directive|if
-name|defined
-name|__STDC__
-operator|&&
-name|__STDC__
 define|#
 directive|define
 name|_obstack_memcpy
@@ -118,21 +112,6 @@ parameter_list|,
 name|N
 parameter_list|)
 value|memcpy ((To), (From), (N))
-else|#
-directive|else
-define|#
-directive|define
-name|_obstack_memcpy
-parameter_list|(
-name|To
-parameter_list|,
-name|From
-parameter_list|,
-name|N
-parameter_list|)
-value|memcpy ((To), (char *)(From), (N))
-endif|#
-directive|endif
 else|#
 directive|else
 ifdef|#
@@ -227,12 +206,6 @@ name|int
 name|alignment_mask
 decl_stmt|;
 comment|/* Mask of alignment for each object. */
-if|#
-directive|if
-name|defined
-name|__STDC__
-operator|&&
-name|__STDC__
 comment|/* These prototypes vary based on `use_extra_arg', and we use      casts to the prototypeless function type in all assignments,      but having prototypes here quiets -Wstrict-prototypes.  */
 name|struct
 name|_obstack_chunk
@@ -267,33 +240,6 @@ modifier|*
 name|extra_arg
 decl_stmt|;
 comment|/* first arg for chunk alloc/dealloc funcs */
-else|#
-directive|else
-name|struct
-name|_obstack_chunk
-modifier|*
-function_decl|(
-modifier|*
-name|chunkfun
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* User's fcn to allocate a chunk.  */
-name|void
-function_decl|(
-modifier|*
-name|freefun
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* User's function to free a chunk.  */
-name|char
-modifier|*
-name|extra_arg
-decl_stmt|;
-comment|/* first arg for chunk alloc/dealloc funcs */
-endif|#
-directive|endif
 name|unsigned
 name|use_extra_arg
 range|:
@@ -315,12 +261,6 @@ comment|/* No longer used, as we now call the failed 				   handler on error, bu
 block|}
 struct|;
 comment|/* Declare the external functions we use; they are in obstack.c.  */
-if|#
-directive|if
-name|defined
-name|__STDC__
-operator|&&
-name|__STDC__
 specifier|extern
 name|void
 name|_obstack_newchunk
@@ -424,41 +364,6 @@ name|obstack
 modifier|*
 parameter_list|)
 function_decl|;
-else|#
-directive|else
-specifier|extern
-name|void
-name|_obstack_newchunk
-parameter_list|()
-function_decl|;
-specifier|extern
-name|void
-name|_obstack_free
-parameter_list|()
-function_decl|;
-specifier|extern
-name|int
-name|_obstack_begin
-parameter_list|()
-function_decl|;
-specifier|extern
-name|int
-name|_obstack_begin_1
-parameter_list|()
-function_decl|;
-specifier|extern
-name|int
-name|_obstack_memory_used
-parameter_list|()
-function_decl|;
-endif|#
-directive|endif
-if|#
-directive|if
-name|defined
-name|__STDC__
-operator|&&
-name|__STDC__
 comment|/* Do the function-declarations after the structs    but before defining the macros.  */
 name|void
 name|obstack_init
@@ -746,17 +651,7 @@ modifier|*
 name|obstack
 parameter_list|)
 function_decl|;
-endif|#
-directive|endif
-comment|/* __STDC__ */
-comment|/* Non-ANSI C cannot really support alternative functions for these macros,    so we do not declare them.  */
 comment|/* Error handler called when `obstack_chunk_alloc' failed to allocate    more memory.  This can be set to a user defined function.  The    default action is to print a message and abort.  */
-if|#
-directive|if
-name|defined
-name|__STDC__
-operator|&&
-name|__STDC__
 specifier|extern
 name|void
 function_decl|(
@@ -767,18 +662,6 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-else|#
-directive|else
-specifier|extern
-name|void
-function_decl|(
-modifier|*
-name|obstack_alloc_failed_handler
-function_decl|)
-parameter_list|()
-function_decl|;
-endif|#
-directive|endif
 comment|/* Exit value used when `print_and_abort' is used.  */
 specifier|extern
 name|int
@@ -817,12 +700,6 @@ name|h
 parameter_list|)
 value|((h)->alignment_mask)
 comment|/* To prevent prototype warnings provide complete argument list in    standard C version.  */
-if|#
-directive|if
-name|defined
-name|__STDC__
-operator|&&
-name|__STDC__
 define|#
 directive|define
 name|obstack_init
@@ -895,82 +772,6 @@ name|newfreefun
 parameter_list|)
 define|\
 value|((h) -> freefun = (void (*)(void *, struct _obstack_chunk *)) (newfreefun))
-else|#
-directive|else
-define|#
-directive|define
-name|obstack_init
-parameter_list|(
-name|h
-parameter_list|)
-define|\
-value|_obstack_begin ((h), 0, 0, \ 		  (void *(*) ()) obstack_chunk_alloc, (void (*) ()) obstack_chunk_free)
-define|#
-directive|define
-name|obstack_begin
-parameter_list|(
-name|h
-parameter_list|,
-name|size
-parameter_list|)
-define|\
-value|_obstack_begin ((h), (size), 0, \ 		  (void *(*) ()) obstack_chunk_alloc, (void (*) ()) obstack_chunk_free)
-define|#
-directive|define
-name|obstack_specify_allocation
-parameter_list|(
-name|h
-parameter_list|,
-name|size
-parameter_list|,
-name|alignment
-parameter_list|,
-name|chunkfun
-parameter_list|,
-name|freefun
-parameter_list|)
-define|\
-value|_obstack_begin ((h), (size), (alignment), \ 		    (void *(*) ()) (chunkfun), (void (*) ()) (freefun))
-define|#
-directive|define
-name|obstack_specify_allocation_with_arg
-parameter_list|(
-name|h
-parameter_list|,
-name|size
-parameter_list|,
-name|alignment
-parameter_list|,
-name|chunkfun
-parameter_list|,
-name|freefun
-parameter_list|,
-name|arg
-parameter_list|)
-define|\
-value|_obstack_begin_1 ((h), (size), (alignment), \ 		    (void *(*) ()) (chunkfun), (void (*) ()) (freefun), (arg))
-define|#
-directive|define
-name|obstack_chunkfun
-parameter_list|(
-name|h
-parameter_list|,
-name|newchunkfun
-parameter_list|)
-define|\
-value|((h) -> chunkfun = (struct _obstack_chunk *(*)()) (newchunkfun))
-define|#
-directive|define
-name|obstack_freefun
-parameter_list|(
-name|h
-parameter_list|,
-name|newfreefun
-parameter_list|)
-define|\
-value|((h) -> freefun = (void (*)()) (newfreefun))
-endif|#
-directive|endif
 define|#
 directive|define
 name|obstack_1grow_fast
@@ -1195,7 +996,7 @@ parameter_list|,
 name|OBJ
 parameter_list|)
 define|\
-value|__extension__								\ ({ struct obstack *__o = (OBSTACK);					\    void *__obj = (OBJ);							\    if (__obj> (void *)__o->chunk&& __obj< (void *)__o->chunk_limit)  \      __o->next_free = __o->object_base = __obj;				\    else (obstack_free) (__o, __obj); })
+value|__extension__								\ ({ struct obstack *__o = (OBSTACK);					\    void *__obj = (void *) (OBJ);					\    if (__obj> (void *)__o->chunk&& __obj< (void *)__o->chunk_limit)  \      __o->next_free = __o->object_base = (char *) __obj;		\    else (obstack_free) (__o, __obj); })
 else|#
 directive|else
 comment|/* not __GNUC__ or not __STDC__ */
@@ -1360,12 +1161,6 @@ name|h
 parameter_list|)
 define|\
 value|( ((h)->next_free == (h)->object_base					\    ? (((h)->maybe_empty_object = 1), 0)					\    : 0),								\   (h)->temp = __PTR_TO_INT ((h)->object_base),				\   (h)->next_free							\     = __INT_TO_PTR ((__PTR_TO_INT ((h)->next_free)+(h)->alignment_mask)	\& ~ ((h)->alignment_mask)),				\   (((h)->next_free - (char *) (h)->chunk				\> (h)->chunk_limit - (char *) (h)->chunk)				\    ? ((h)->next_free = (h)->chunk_limit) : 0),				\   (h)->object_base = (h)->next_free,					\   __INT_TO_PTR ((h)->temp))
-if|#
-directive|if
-name|defined
-name|__STDC__
-operator|&&
-name|__STDC__
 define|#
 directive|define
 name|obstack_free
@@ -1376,20 +1171,6 @@ name|obj
 parameter_list|)
 define|\
 value|( (h)->temp = (char *) (obj) - (char *) (h)->chunk,			\   (((h)->temp> 0&& (h)->temp< (h)->chunk_limit - (char *) (h)->chunk)\    ? (int) ((h)->next_free = (h)->object_base				\ 	    = (h)->temp + (char *) (h)->chunk)				\    : (((obstack_free) ((h), (h)->temp + (char *) (h)->chunk), 0), 0)))
-else|#
-directive|else
-define|#
-directive|define
-name|obstack_free
-parameter_list|(
-name|h
-parameter_list|,
-name|obj
-parameter_list|)
-define|\
-value|( (h)->temp = (char *) (obj) - (char *) (h)->chunk,			\   (((h)->temp> 0&& (h)->temp< (h)->chunk_limit - (char *) (h)->chunk)\    ? (int) ((h)->next_free = (h)->object_base				\ 	    = (h)->temp + (char *) (h)->chunk)				\    : (_obstack_free ((h), (h)->temp + (char *) (h)->chunk), 0)))
-endif|#
-directive|endif
 endif|#
 directive|endif
 comment|/* not __GNUC__ or not __STDC__ */

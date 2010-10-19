@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* vms-misc.c -- Miscellaneous functions for VAX (openVMS/VAX) and    EVAX (openVMS/Alpha) files.    Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.     Written by Klaus K"ampf (kkaempf@rmi.de)  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* vms-misc.c -- Miscellaneous functions for VAX (openVMS/VAX) and    EVAX (openVMS/Alpha) files.    Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.     Written by Klaus K"ampf (kkaempf@rmi.de)     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_if
@@ -50,59 +50,8 @@ directive|include
 file|"vms.h"
 end_include
 
-begin_decl_stmt
-specifier|static
-name|vms_section
-modifier|*
-name|add_new_contents
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|sec_ptr
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|hash_string
-name|PARAMS
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|asymbol
-modifier|*
-name|new_symbol
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*-----------------------------------------------------------------------------*/
-end_comment
+begin_escape
+end_escape
 
 begin_if
 if|#
@@ -111,18 +60,12 @@ name|VMS_DEBUG
 end_if
 
 begin_comment
-comment|/* debug functions */
+comment|/* Debug functions.  */
 end_comment
 
 begin_comment
-comment|/* debug function for all vms extensions    evaluates environment variable VMS_DEBUG for a    numerical value on the first call    all error levels below this value are printed     levels:    1	toplevel bfd calls (functions from the bfd vector)    2	functions called by bfd calls    ...    9	almost everything     level is also indentation level. Indentation is performed    if level> 0 	*/
+comment|/* Debug function for all vms extensions    evaluates environment variable VMS_DEBUG for a    numerical value on the first call    all error levels below this value are printed     levels:    1	toplevel bfd calls (functions from the bfd vector)    2	functions called by bfd calls    ...    9	almost everything     level is also indentation level. Indentation is performed    if level> 0.  */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
 
 begin_function
 name|void
@@ -267,218 +210,31 @@ argument_list|(
 name|args
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
-begin_else
-else|#
-directive|else
-end_else
-
 begin_comment
-comment|/* not __STDC__ */
-end_comment
-
-begin_function
-name|void
-name|_bfd_vms_debug
-parameter_list|(
-name|level
-parameter_list|,
-name|format
-parameter_list|,
-name|a1
-parameter_list|,
-name|a2
-parameter_list|,
-name|a3
-parameter_list|,
-name|a4
-parameter_list|,
-name|a5
-parameter_list|,
-name|a6
-parameter_list|)
-name|int
-name|level
-decl_stmt|;
-name|char
-modifier|*
-name|format
-decl_stmt|;
-name|long
-name|a1
-decl_stmt|;
-name|long
-name|a2
-decl_stmt|;
-name|long
-name|a3
-decl_stmt|;
-name|long
-name|a4
-decl_stmt|;
-name|long
-name|a5
-decl_stmt|;
-name|long
-name|a6
-decl_stmt|;
-block|{
-specifier|static
-name|int
-name|min_level
-init|=
-operator|-
-literal|1
-decl_stmt|;
-specifier|static
-name|FILE
-modifier|*
-name|output
-init|=
-name|NULL
-decl_stmt|;
-name|char
-modifier|*
-name|eptr
-decl_stmt|;
-if|if
-condition|(
-name|min_level
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
-if|if
-condition|(
-operator|(
-name|eptr
-operator|=
-name|getenv
-argument_list|(
-literal|"VMS_DEBUG"
-argument_list|)
-operator|)
-operator|!=
-name|NULL
-condition|)
-block|{
-name|min_level
-operator|=
-name|atoi
-argument_list|(
-name|eptr
-argument_list|)
-expr_stmt|;
-name|output
-operator|=
-name|stderr
-expr_stmt|;
-block|}
-else|else
-name|min_level
-operator|=
-literal|0
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|output
-operator|==
-name|NULL
-condition|)
-return|return;
-if|if
-condition|(
-name|level
-operator|>
-name|min_level
-condition|)
-return|return;
-while|while
-condition|(
-operator|--
-name|level
-operator|>
-literal|0
-condition|)
-name|fprintf
-argument_list|(
-name|output
-argument_list|,
-literal|" "
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|output
-argument_list|,
-name|format
-argument_list|,
-name|a1
-argument_list|,
-name|a2
-argument_list|,
-name|a3
-argument_list|,
-name|a4
-argument_list|,
-name|a5
-argument_list|,
-name|a6
-argument_list|)
-expr_stmt|;
-name|fflush
-argument_list|(
-name|output
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __STDC__ */
-end_comment
-
-begin_comment
-comment|/* a debug function    hex dump 'size' bytes starting at 'ptr'  */
+comment|/* A debug function    hex dump 'size' bytes starting at 'ptr'.  */
 end_comment
 
 begin_function
 name|void
 name|_bfd_hexdump
 parameter_list|(
-name|level
-parameter_list|,
-name|ptr
-parameter_list|,
-name|size
-parameter_list|,
-name|offset
-parameter_list|)
 name|int
 name|level
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|char
 modifier|*
 name|ptr
-decl_stmt|;
+parameter_list|,
 name|int
 name|size
-decl_stmt|;
+parameter_list|,
 name|int
 name|offset
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|char
@@ -651,7 +407,6 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -664,11 +419,11 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* hash functions     These are needed when reading an object file.  */
+comment|/* Hash functions     These are needed when reading an object file.  */
 end_comment
 
 begin_comment
-comment|/* allocate new vms_hash_entry    keep the symbol name and a pointer to the bfd symbol in the table  */
+comment|/* Allocate new vms_hash_entry    keep the symbol name and a pointer to the bfd symbol in the table.  */
 end_comment
 
 begin_function
@@ -677,27 +432,21 @@ name|bfd_hash_entry
 modifier|*
 name|_bfd_vms_hash_newfunc
 parameter_list|(
-name|entry
-parameter_list|,
-name|table
-parameter_list|,
-name|string
-parameter_list|)
 name|struct
 name|bfd_hash_entry
 modifier|*
 name|entry
-decl_stmt|;
+parameter_list|,
 name|struct
 name|bfd_hash_table
 modifier|*
 name|table
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|string
-decl_stmt|;
+parameter_list|)
 block|{
 name|vms_symbol_entry
 modifier|*
@@ -710,7 +459,7 @@ name|vms_debug
 argument_list|(
 literal|5
 argument_list|,
-literal|"_bfd_vms_hash_newfunc(%p, %p, %s)\n"
+literal|"_bfd_vms_hash_newfunc (%p, %p, %s)\n"
 argument_list|,
 name|entry
 argument_list|,
@@ -725,11 +474,6 @@ if|if
 condition|(
 name|entry
 operator|==
-operator|(
-expr|struct
-name|bfd_hash_entry
-operator|*
-operator|)
 name|NULL
 condition|)
 block|{
@@ -753,10 +497,6 @@ if|if
 condition|(
 name|ret
 operator|==
-operator|(
-name|vms_symbol_entry
-operator|*
-operator|)
 name|NULL
 condition|)
 block|{
@@ -766,11 +506,6 @@ name|bfd_error_no_memory
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-expr|struct
-name|bfd_hash_entry
-operator|*
-operator|)
 name|NULL
 return|;
 block|}
@@ -818,10 +553,6 @@ name|ret
 operator|->
 name|symbol
 operator|=
-operator|(
-name|asymbol
-operator|*
-operator|)
 name|NULL
 expr_stmt|;
 return|return
@@ -839,7 +570,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* object file input functions */
+comment|/* Object file input functions.  */
 end_comment
 
 begin_comment
@@ -850,32 +581,24 @@ begin_function
 name|void
 name|_bfd_vms_get_header_values
 parameter_list|(
-name|abfd
-parameter_list|,
-name|buf
-parameter_list|,
-name|type
-parameter_list|,
-name|length
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|char
 modifier|*
 name|buf
-decl_stmt|;
+parameter_list|,
 name|int
 modifier|*
 name|type
-decl_stmt|;
+parameter_list|,
 name|int
 modifier|*
 name|length
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -939,24 +662,21 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-return|return;
 block|}
 end_function
 
 begin_comment
-comment|/* Get next record from object file to vms_buf    set PRIV(buf_size) and return it     this is a little tricky since it should be portable.     the openVMS object file has 'variable length' which means that    read() returns data in chunks of (hopefully) correct and expected    size. The linker (and other tools on vms) depend on that. Unix doesn't    know about 'formatted' files, so reading and writing such an object    file in a unix environment is not trivial.     With the tool 'file' (available on all vms ftp sites), one    can view and change the attributes of a file. Changing from    'variable length' to 'fixed length, 512 bytes' reveals the    record length at the first 2 bytes of every record. The same    happens during the transfer of object files from vms to unix,    at least with ucx, dec's implementation of tcp/ip.     The vms format repeats the length at bytes 2& 3 of every record.     On the first call (file_format == FF_UNKNOWN) we check if    the first and the third byte pair (!) of the record match.    If they do it's an object file in an unix environment or with    wrong attributes (FF_FOREIGN), else we should be in a vms    environment where read() returns the record size (FF_NATIVE).     reading is always done in 2 steps.    first just the record header is read and the length extracted    by get_header_values    then the read buffer is adjusted and the remaining bytes are    read in.     all file i/o is always done on even file positions  */
+comment|/* Get next record from object file to vms_buf.    Set PRIV(buf_size) and return it     This is a little tricky since it should be portable.     The openVMS object file has 'variable length' which means that    read() returns data in chunks of (hopefully) correct and expected    size. The linker (and other tools on vms) depend on that. Unix doesn't    know about 'formatted' files, so reading and writing such an object    file in a unix environment is not trivial.     With the tool 'file' (available on all vms ftp sites), one    can view and change the attributes of a file. Changing from    'variable length' to 'fixed length, 512 bytes' reveals the    record length at the first 2 bytes of every record. The same    happens during the transfer of object files from vms to unix,    at least with ucx, dec's implementation of tcp/ip.     The vms format repeats the length at bytes 2& 3 of every record.     On the first call (file_format == FF_UNKNOWN) we check if    the first and the third byte pair (!) of the record match.    If they do it's an object file in an unix environment or with    wrong attributes (FF_FOREIGN), else we should be in a vms    environment where read() returns the record size (FF_NATIVE).     Reading is always done in 2 steps.    First just the record header is read and the length extracted    by get_header_values,    then the read buffer is adjusted and the remaining bytes are    read in.     All file i/o is always done on even file positions.  */
 end_comment
 
 begin_function
 name|int
 name|_bfd_vms_get_record
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|test_len
@@ -982,7 +702,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* minimum is 6 bytes on Alpha      (2 bytes length, 2 bytes record id, 2 bytes length repeated)       on VAX there's no length information in the record      so start with OBJ_S_C_MAXRECSIZ  */
+comment|/* Minimum is 6 bytes on Alpha      (2 bytes length, 2 bytes record id, 2 bytes length repeated)       On the VAX there's no length information in the record      so start with OBJ_S_C_MAXRECSIZ.   */
 if|if
 condition|(
 name|PRIV
@@ -1026,11 +746,6 @@ argument_list|(
 name|vms_buf
 argument_list|)
 operator|=
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
 name|bfd_malloc
 argument_list|(
 name|amt
@@ -1079,12 +794,12 @@ name|test_len
 operator|=
 literal|6
 expr_stmt|;
-comment|/* probe 6 bytes */
+comment|/* Probe 6 bytes.  */
 name|test_start
 operator|=
 literal|2
 expr_stmt|;
-comment|/* where the record starts */
+comment|/* Where the record starts.  */
 break|break;
 case|case
 name|FF_NATIVE
@@ -1112,7 +827,7 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
-comment|/* skip odd alignment byte  */
+comment|/* Skip odd alignment byte.  */
 if|if
 condition|(
 name|bfd_tell
@@ -1153,7 +868,7 @@ literal|0
 return|;
 block|}
 block|}
-comment|/* read the record header on Alpha.  */
+comment|/* Read the record header on Alpha.  */
 if|if
 condition|(
 operator|(
@@ -1194,7 +909,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* check file format on first call  */
+comment|/* Check file format on first call.  */
 if|if
 condition|(
 name|PRIV
@@ -1205,7 +920,7 @@ operator|==
 name|FF_UNKNOWN
 condition|)
 block|{
-comment|/* record length repeats ? */
+comment|/* Record length repeats ?  */
 if|if
 condition|(
 name|vms_buf
@@ -1236,7 +951,7 @@ argument_list|)
 operator|=
 name|FF_FOREIGN
 expr_stmt|;
-comment|/* Y: foreign environment */
+comment|/* Y: foreign environment.  */
 name|test_start
 operator|=
 literal|2
@@ -1251,7 +966,7 @@ argument_list|)
 operator|=
 name|FF_NATIVE
 expr_stmt|;
-comment|/* N: native environment */
+comment|/* N: native environment.  */
 name|test_start
 operator|=
 literal|0
@@ -1314,9 +1029,9 @@ name|vms_buf
 expr_stmt|;
 block|}
 else|else
-comment|/* Alpha  */
 block|{
-comment|/* extract vms record length  */
+comment|/* Alpha.   */
+comment|/* Extract vms record length.  */
 name|_bfd_vms_get_header_values
 argument_list|(
 name|abfd
@@ -1353,7 +1068,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* that's what the linker manual says  */
+comment|/* That's what the linker manual says.  */
 if|if
 condition|(
 name|PRIV
@@ -1373,7 +1088,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* adjust the buffer  */
+comment|/* Adjust the buffer.  */
 if|if
 condition|(
 name|PRIV
@@ -1392,12 +1107,6 @@ argument_list|(
 name|vms_buf
 argument_list|)
 operator|=
-operator|(
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
 name|bfd_realloc
 argument_list|(
 name|vms_buf
@@ -1410,7 +1119,6 @@ argument_list|(
 name|rec_length
 argument_list|)
 argument_list|)
-operator|)
 expr_stmt|;
 name|vms_buf
 operator|=
@@ -1440,7 +1148,7 @@ name|rec_length
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* read the remaining record  */
+comment|/* Read the remaining record.  */
 name|remaining
 operator|=
 name|PRIV
@@ -1534,19 +1242,17 @@ block|}
 end_function
 
 begin_comment
-comment|/* get next vms record from file    update vms_rec and rec_length to new (remaining) values  */
+comment|/* Get next vms record from file    update vms_rec and rec_length to new (remaining) values.  */
 end_comment
 
 begin_function
 name|int
 name|_bfd_vms_next_record
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -1579,7 +1285,6 @@ argument_list|)
 operator|>
 literal|0
 condition|)
-block|{
 name|PRIV
 argument_list|(
 name|vms_rec
@@ -1590,7 +1295,6 @@ argument_list|(
 name|rec_size
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 block|{
 if|if
@@ -1675,7 +1379,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 name|_bfd_vms_get_header_values
 argument_list|(
 name|abfd
@@ -1698,7 +1401,6 @@ name|rec_size
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|PRIV
 argument_list|(
 name|rec_length
@@ -1762,18 +1464,14 @@ name|char
 modifier|*
 name|_bfd_vms_save_sized_string
 parameter_list|(
-name|str
-parameter_list|,
-name|size
-parameter_list|)
 name|unsigned
 name|char
 modifier|*
 name|str
-decl_stmt|;
+parameter_list|,
 name|int
 name|size
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -1796,7 +1494,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-literal|0
+name|NULL
 return|;
 name|strncpy
 argument_list|(
@@ -1836,13 +1534,11 @@ name|char
 modifier|*
 name|_bfd_vms_save_counted_string
 parameter_list|(
-name|ptr
-parameter_list|)
 name|unsigned
 name|char
 modifier|*
 name|ptr
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|len
@@ -1866,33 +1562,27 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* stack routines for vms ETIR commands */
+comment|/* Stack routines for vms ETIR commands.  */
 end_comment
 
 begin_comment
-comment|/* Push value and section index  */
+comment|/* Push value and section index.  */
 end_comment
 
 begin_function
 name|void
 name|_bfd_vms_push
 parameter_list|(
-name|abfd
-parameter_list|,
-name|val
-parameter_list|,
-name|psect
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|uquad
 name|val
-decl_stmt|;
+parameter_list|,
 name|int
 name|psect
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|int
@@ -1905,7 +1595,7 @@ name|vms_debug
 argument_list|(
 literal|4
 argument_list|,
-literal|"<push %016lx(%d) at %d>\n"
+literal|"<push %016lx (%d) at %d>\n"
 argument_list|,
 name|val
 argument_list|,
@@ -2002,30 +1692,25 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
 begin_comment
-comment|/* Pop value and section index  */
+comment|/* Pop value and section index.  */
 end_comment
 
 begin_function
 name|uquad
 name|_bfd_vms_pop
 parameter_list|(
-name|abfd
-parameter_list|,
-name|psect
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|int
 modifier|*
 name|psect
-decl_stmt|;
+parameter_list|)
 block|{
 name|uquad
 name|value
@@ -2161,7 +1846,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* object file output functions */
+comment|/* Object file output functions.  */
 end_comment
 
 begin_comment
@@ -2169,7 +1854,7 @@ comment|/* GAS tends to write sections in little chunks (bfd_set_section_content
 end_comment
 
 begin_comment
-comment|/* Add a new vms_section structure to vms_section_table    - forward chaining -  */
+comment|/* Add a new vms_section structure to vms_section_table    - forward chaining -.  */
 end_comment
 
 begin_function
@@ -2178,17 +1863,13 @@ name|vms_section
 modifier|*
 name|add_new_contents
 parameter_list|(
-name|abfd
-parameter_list|,
-name|section
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|sec_ptr
 name|section
-decl_stmt|;
+parameter_list|)
 block|{
 name|vms_section
 modifier|*
@@ -2220,10 +1901,6 @@ name|sptr
 return|;
 name|newptr
 operator|=
-operator|(
-name|vms_section
-operator|*
-operator|)
 name|bfd_alloc
 argument_list|(
 name|abfd
@@ -2241,10 +1918,6 @@ if|if
 condition|(
 name|newptr
 operator|==
-operator|(
-name|vms_section
-operator|*
-operator|)
 name|NULL
 condition|)
 return|return
@@ -2254,18 +1927,13 @@ name|newptr
 operator|->
 name|contents
 operator|=
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
 name|bfd_alloc
 argument_list|(
 name|abfd
 argument_list|,
 name|section
 operator|->
-name|_raw_size
+name|size
 argument_list|)
 expr_stmt|;
 if|if
@@ -2274,11 +1942,6 @@ name|newptr
 operator|->
 name|contents
 operator|==
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
 name|NULL
 condition|)
 return|return
@@ -2296,7 +1959,7 @@ name|size
 operator|=
 name|section
 operator|->
-name|_raw_size
+name|size
 expr_stmt|;
 name|newptr
 operator|->
@@ -2330,33 +1993,24 @@ begin_function
 name|bfd_boolean
 name|_bfd_save_vms_section
 parameter_list|(
-name|abfd
-parameter_list|,
-name|section
-parameter_list|,
-name|data
-parameter_list|,
-name|offset
-parameter_list|,
-name|count
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|sec_ptr
 name|section
-decl_stmt|;
+parameter_list|,
 specifier|const
-name|PTR
+name|void
+modifier|*
 name|data
-decl_stmt|;
+parameter_list|,
 name|file_ptr
 name|offset
-decl_stmt|;
+parameter_list|,
 name|bfd_size_type
 name|count
-decl_stmt|;
+parameter_list|)
 block|{
 name|vms_section
 modifier|*
@@ -2441,17 +2095,13 @@ name|vms_section
 modifier|*
 name|_bfd_get_vms_section
 parameter_list|(
-name|abfd
-parameter_list|,
-name|index
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|int
 name|index
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -2485,33 +2135,27 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Object output routines  */
+comment|/* Object output routines.   */
 end_comment
 
 begin_comment
-comment|/* Begin new record or record header    write 2 bytes rectype    write 2 bytes record length (filled in at flush)    write 2 bytes header type (ommitted if rechead == -1)  */
+comment|/* Begin new record or record header    write 2 bytes rectype    write 2 bytes record length (filled in at flush)    write 2 bytes header type (ommitted if rechead == -1).   */
 end_comment
 
 begin_function
 name|void
 name|_bfd_vms_output_begin
 parameter_list|(
-name|abfd
-parameter_list|,
-name|rectype
-parameter_list|,
-name|rechead
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|int
 name|rectype
-decl_stmt|;
+parameter_list|,
 name|int
 name|rechead
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -2520,7 +2164,7 @@ name|vms_debug
 argument_list|(
 literal|6
 argument_list|,
-literal|"_bfd_vms_output_begin(type %d, head %d)\n"
+literal|"_bfd_vms_output_begin (type %d, head %d)\n"
 argument_list|,
 name|rectype
 argument_list|,
@@ -2540,7 +2184,7 @@ operator|)
 name|rectype
 argument_list|)
 expr_stmt|;
-comment|/* save current output position to fill in length later  */
+comment|/* Save current output position to fill in length later.   */
 if|if
 condition|(
 name|PRIV
@@ -2577,6 +2221,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* Placeholder for length.  */
 name|_bfd_vms_output_short
 argument_list|(
 name|abfd
@@ -2584,7 +2229,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* placeholder for length */
 if|if
 condition|(
 name|rechead
@@ -2603,29 +2247,24 @@ operator|)
 name|rechead
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
 begin_comment
-comment|/* Set record/subrecord alignment  */
+comment|/* Set record/subrecord alignment.   */
 end_comment
 
 begin_function
 name|void
 name|_bfd_vms_output_alignment
 parameter_list|(
-name|abfd
-parameter_list|,
-name|alignto
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|int
 name|alignto
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -2634,7 +2273,7 @@ name|vms_debug
 argument_list|(
 literal|6
 argument_list|,
-literal|"_bfd_vms_output_alignment(%d)\n"
+literal|"_bfd_vms_output_alignment (%d)\n"
 argument_list|,
 name|alignto
 argument_list|)
@@ -2648,24 +2287,21 @@ argument_list|)
 operator|=
 name|alignto
 expr_stmt|;
-return|return;
 block|}
 end_function
 
 begin_comment
-comment|/* Prepare for subrecord fields  */
+comment|/* Prepare for subrecord fields.  */
 end_comment
 
 begin_function
 name|void
 name|_bfd_vms_output_push
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -2674,7 +2310,7 @@ name|vms_debug
 argument_list|(
 literal|6
 argument_list|,
-literal|"vms_output_push(pushed_size = %d)\n"
+literal|"vms_output_push (pushed_size = %d)\n"
 argument_list|,
 name|PRIV
 argument_list|(
@@ -2700,24 +2336,21 @@ argument_list|(
 name|output_size
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
 begin_comment
-comment|/* End of subrecord fields  */
+comment|/* End of subrecord fields.   */
 end_comment
 
 begin_function
 name|void
 name|_bfd_vms_output_pop
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -2726,7 +2359,7 @@ name|vms_debug
 argument_list|(
 literal|6
 argument_list|,
-literal|"vms_output_pop(pushed_size = %d)\n"
+literal|"vms_output_pop (pushed_size = %d)\n"
 argument_list|,
 name|PRIV
 argument_list|(
@@ -2778,24 +2411,21 @@ name|push_level
 argument_list|)
 operator|--
 expr_stmt|;
-return|return;
 block|}
 end_function
 
 begin_comment
-comment|/* Flush unwritten output, ends current record  */
+comment|/* Flush unwritten output, ends current record.  */
 end_comment
 
 begin_function
 name|void
 name|_bfd_vms_output_flush
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|real_size
@@ -2818,7 +2448,7 @@ name|vms_debug
 argument_list|(
 literal|6
 argument_list|,
-literal|"_bfd_vms_output_flush(real_size = %d, pushed_size %d at lenpos %d)\n"
+literal|"_bfd_vms_output_flush (real_size = %d, pushed_size %d at lenpos %d)\n"
 argument_list|,
 name|real_size
 argument_list|,
@@ -2921,18 +2551,11 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* this is why I *love* vms: inconsistency :-} 	 alignment is added to the subrecord length 	 but not to the record length  */
-block|if (PRIV (push_level)> 0)
-endif|#
-directive|endif
 name|length
 operator|++
 expr_stmt|;
 block|}
-comment|/* put length to buffer  */
+comment|/* Put length to buffer.  */
 name|PRIV
 argument_list|(
 name|output_size
@@ -2967,7 +2590,7 @@ block|{
 ifndef|#
 directive|ifndef
 name|VMS
-comment|/* write length first, see FF_FOREIGN in the input routines */
+comment|/* Write length first, see FF_FOREIGN in the input routines.  */
 name|fwrite
 argument_list|(
 name|PRIV
@@ -3043,24 +2666,21 @@ name|output_size
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
 begin_comment
-comment|/* End record output  */
+comment|/* End record output.   */
 end_comment
 
 begin_function
 name|void
 name|_bfd_vms_output_end
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -3079,29 +2699,24 @@ argument_list|(
 name|abfd
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
 begin_comment
-comment|/* check remaining buffer size     return what's left.  */
+comment|/* Check remaining buffer size     Return what's left.  */
 end_comment
 
 begin_function
 name|int
 name|_bfd_vms_output_check
 parameter_list|(
-name|abfd
-parameter_list|,
-name|size
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|int
 name|size
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -3110,7 +2725,7 @@ name|vms_debug
 argument_list|(
 literal|6
 argument_list|,
-literal|"_bfd_vms_output_check(%d)\n"
+literal|"_bfd_vms_output_check (%d)\n"
 argument_list|,
 name|size
 argument_list|)
@@ -3137,25 +2752,21 @@ block|}
 end_function
 
 begin_comment
-comment|/* Output byte (8 bit) value  */
+comment|/* Output byte (8 bit) value.  */
 end_comment
 
 begin_function
 name|void
 name|_bfd_vms_output_byte
 parameter_list|(
-name|abfd
-parameter_list|,
-name|value
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|int
 name|value
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -3164,7 +2775,7 @@ name|vms_debug
 argument_list|(
 literal|6
 argument_list|,
-literal|"_bfd_vms_output_byte(%02x)\n"
+literal|"_bfd_vms_output_byte (%02x)\n"
 argument_list|,
 name|value
 argument_list|)
@@ -3197,30 +2808,25 @@ argument_list|)
 operator|+=
 literal|1
 expr_stmt|;
-return|return;
 block|}
 end_function
 
 begin_comment
-comment|/* Output short (16 bit) value  */
+comment|/* Output short (16 bit) value.  */
 end_comment
 
 begin_function
 name|void
 name|_bfd_vms_output_short
 parameter_list|(
-name|abfd
-parameter_list|,
-name|value
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|int
 name|value
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -3265,30 +2871,25 @@ argument_list|)
 operator|+=
 literal|2
 expr_stmt|;
-return|return;
 block|}
 end_function
 
 begin_comment
-comment|/* Output long (32 bit) value  */
+comment|/* Output long (32 bit) value.  */
 end_comment
 
 begin_function
 name|void
 name|_bfd_vms_output_long
 parameter_list|(
-name|abfd
-parameter_list|,
-name|value
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|long
 name|value
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -3331,29 +2932,24 @@ argument_list|)
 operator|+=
 literal|4
 expr_stmt|;
-return|return;
 block|}
 end_function
 
 begin_comment
-comment|/* Output quad (64 bit) value  */
+comment|/* Output quad (64 bit) value.  */
 end_comment
 
 begin_function
 name|void
 name|_bfd_vms_output_quad
 parameter_list|(
-name|abfd
-parameter_list|,
-name|value
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|uquad
 name|value
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -3362,7 +2958,7 @@ name|vms_debug
 argument_list|(
 literal|6
 argument_list|,
-literal|"_bfd_vms_output_quad(%016lx)\n"
+literal|"_bfd_vms_output_quad (%016lx)\n"
 argument_list|,
 name|value
 argument_list|)
@@ -3393,30 +2989,25 @@ argument_list|)
 operator|+=
 literal|8
 expr_stmt|;
-return|return;
 block|}
 end_function
 
 begin_comment
-comment|/* Output c-string as counted string  */
+comment|/* Output c-string as counted string.  */
 end_comment
 
 begin_function
 name|void
 name|_bfd_vms_output_counted
 parameter_list|(
-name|abfd
-parameter_list|,
-name|value
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|value
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|len
@@ -3428,7 +3019,7 @@ name|vms_debug
 argument_list|(
 literal|6
 argument_list|,
-literal|"_bfd_vms_output_counted(%s)\n"
+literal|"_bfd_vms_output_counted (%s)\n"
 argument_list|,
 name|value
 argument_list|)
@@ -3513,31 +3104,25 @@ block|}
 end_function
 
 begin_comment
-comment|/* Output character area  */
+comment|/* Output character area.  */
 end_comment
 
 begin_function
 name|void
 name|_bfd_vms_output_dump
 parameter_list|(
-name|abfd
-parameter_list|,
-name|data
-parameter_list|,
-name|length
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|char
 modifier|*
 name|data
-decl_stmt|;
+parameter_list|,
 name|int
 name|length
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -3546,7 +3131,7 @@ name|vms_debug
 argument_list|(
 literal|6
 argument_list|,
-literal|"_bfd_vms_output_dump(%d)\n"
+literal|"_bfd_vms_output_dump (%d)\n"
 argument_list|,
 name|length
 argument_list|)
@@ -3587,34 +3172,27 @@ argument_list|)
 operator|+=
 name|length
 expr_stmt|;
-return|return;
 block|}
 end_function
 
 begin_comment
-comment|/* Output count bytes of value  */
+comment|/* Output count bytes of value.  */
 end_comment
 
 begin_function
 name|void
 name|_bfd_vms_output_fill
 parameter_list|(
-name|abfd
-parameter_list|,
-name|value
-parameter_list|,
-name|count
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|int
 name|value
-decl_stmt|;
+parameter_list|,
 name|int
 name|count
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -3623,7 +3201,7 @@ name|vms_debug
 argument_list|(
 literal|6
 argument_list|,
-literal|"_bfd_vms_output_fill(val %02x times %d)\n"
+literal|"_bfd_vms_output_fill (val %02x times %d)\n"
 argument_list|,
 name|value
 argument_list|,
@@ -3666,12 +3244,11 @@ argument_list|)
 operator|+=
 name|count
 expr_stmt|;
-return|return;
 block|}
 end_function
 
 begin_comment
-comment|/* this hash routine borrowed from GNU-EMACS, and strengthened slightly  ERY*/
+comment|/* This hash routine borrowed from GNU-EMACS, and strengthened slightly.  ERY.  */
 end_comment
 
 begin_function
@@ -3679,15 +3256,12 @@ specifier|static
 name|int
 name|hash_string
 parameter_list|(
-name|ptr
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|ptr
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|register
 specifier|const
 name|unsigned
 name|char
@@ -3701,7 +3275,6 @@ operator|*
 operator|)
 name|ptr
 decl_stmt|;
-specifier|register
 specifier|const
 name|unsigned
 name|char
@@ -3715,12 +3288,10 @@ argument_list|(
 name|ptr
 argument_list|)
 decl_stmt|;
-specifier|register
 name|unsigned
 name|char
 name|c
 decl_stmt|;
-specifier|register
 name|int
 name|hash
 init|=
@@ -3779,24 +3350,18 @@ name|char
 modifier|*
 name|_bfd_vms_length_hash_symbol
 parameter_list|(
-name|abfd
-parameter_list|,
-name|in
-parameter_list|,
-name|maxlen
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|in
-decl_stmt|;
+parameter_list|,
 name|int
 name|maxlen
-decl_stmt|;
+parameter_list|)
 block|{
 name|long
 name|int
@@ -3856,11 +3421,11 @@ name|maxlen
 operator|=
 name|EOBJ_S_C_SYMSIZ
 expr_stmt|;
+comment|/* Save this for later.  */
 name|new_name
 operator|=
 name|out
 expr_stmt|;
-comment|/* save this for later.  */
 comment|/* We may need to truncate the symbol, save the hash for later.  */
 name|in_len
 operator|=
@@ -3895,12 +3460,10 @@ name|in_len
 operator|<=
 name|maxlen
 condition|)
-block|{
 name|i
 operator|=
 name|in_len
 expr_stmt|;
-block|}
 else|else
 block|{
 if|if
@@ -4033,18 +3596,14 @@ name|asymbol
 modifier|*
 name|new_symbol
 parameter_list|(
-name|abfd
-parameter_list|,
-name|name
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|)
 block|{
 name|asymbol
 modifier|*
@@ -4112,18 +3671,14 @@ name|vms_symbol_entry
 modifier|*
 name|_bfd_vms_enter_symbol
 parameter_list|(
-name|abfd
-parameter_list|,
-name|name
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|)
 block|{
 name|vms_symbol_entry
 modifier|*

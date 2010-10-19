@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* SuperH SH64-specific support for 32-bit ELF    Copyright 2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* SuperH SH64-specific support for 32-bit ELF    Copyright 2000, 2001, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_define
@@ -266,6 +266,8 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -430,6 +432,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|elf_backend_section_flags
+value|sh64_elf_section_flags
+end_define
+
+begin_define
+define|#
+directive|define
 name|bfd_elf32_new_section_hook
 value|sh64_elf_new_section_hook
 end_define
@@ -489,6 +498,12 @@ begin_define
 define|#
 directive|define
 name|INCLUDE_SHMEDIA
+end_define
+
+begin_define
+define|#
+directive|define
+name|SH_TARGET_ALREADY_DEFINED
 end_define
 
 begin_include
@@ -677,10 +692,6 @@ argument_list|)
 operator|->
 name|e_flags
 decl_stmt|;
-name|asection
-modifier|*
-name|cranges
-decl_stmt|;
 switch|switch
 condition|(
 name|flags
@@ -712,42 +723,58 @@ return|return
 name|FALSE
 return|;
 block|}
-comment|/* We also need to set SEC_DEBUGGING on an incoming .cranges section.      We could have used elf_backend_section_flags if it had given us the      section name; the bfd_section member in the header argument is not      set at the point of the call.  FIXME: Find out whether that is by      undocumented design or a bug.  */
-name|cranges
-operator|=
-name|bfd_get_section_by_name
-argument_list|(
-name|abfd
-argument_list|,
-name|SH64_CRANGES_SECTION_NAME
-argument_list|)
-expr_stmt|;
+return|return
+name|TRUE
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|bfd_boolean
+name|sh64_elf_section_flags
+parameter_list|(
+name|flagword
+modifier|*
+name|flags
+parameter_list|,
+specifier|const
+name|Elf_Internal_Shdr
+modifier|*
+name|hdr
+parameter_list|)
+block|{
 if|if
 condition|(
-name|cranges
-operator|!=
+name|hdr
+operator|->
+name|bfd_section
+operator|==
 name|NULL
-operator|&&
-operator|!
-name|bfd_set_section_flags
-argument_list|(
-name|abfd
-argument_list|,
-name|cranges
-argument_list|,
-name|bfd_get_section_flags
-argument_list|(
-name|abfd
-argument_list|,
-name|cranges
-argument_list|)
-operator||
-name|SEC_DEBUGGING
-argument_list|)
 condition|)
 return|return
 name|FALSE
 return|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|hdr
+operator|->
+name|bfd_section
+operator|->
+name|name
+argument_list|,
+name|SH64_CRANGES_SECTION_NAME
+argument_list|)
+operator|==
+literal|0
+condition|)
+operator|*
+name|flags
+operator||=
+name|SEC_DEBUGGING
+expr_stmt|;
 return|return
 name|TRUE
 return|;
@@ -1085,7 +1112,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Handle a SH64-specific section when reading an object file.  This    is called when elfcode.h finds a section with an unknown type.     We only recognize SHT_SH5_CR_SORTED, on the .cranges section.  */
+comment|/* Handle a SH64-specific section when reading an object file.  This    is called when bfd_section_from_shdr finds a section with an unknown    type.     We only recognize SHT_SH5_CR_SORTED, on the .cranges section.  */
 end_comment
 
 begin_function
@@ -1104,6 +1131,9 @@ specifier|const
 name|char
 modifier|*
 name|name
+parameter_list|,
+name|int
+name|shindex
 parameter_list|)
 block|{
 name|flagword
@@ -1159,6 +1189,8 @@ argument_list|,
 name|hdr
 argument_list|,
 name|name
+argument_list|,
+name|shindex
 argument_list|)
 condition|)
 return|return
@@ -1684,10 +1716,9 @@ name|bh
 expr_stmt|;
 name|h
 operator|->
-name|elf_link_hash_flags
-operator|&=
-operator|~
-name|ELF_LINK_NON_ELF
+name|non_elf
+operator|=
+literal|0
 expr_stmt|;
 name|h
 operator|->
@@ -2288,15 +2319,12 @@ call|)
 argument_list|(
 name|_
 argument_list|(
-literal|"%s: error: unaligned relocation type %d at %08x reloc %08x\n"
+literal|"%B: error: unaligned relocation type %d at %08x reloc %p\n"
 argument_list|)
 argument_list|,
-name|bfd_get_filename
-argument_list|(
 name|input_section
 operator|->
 name|owner
-argument_list|)
 argument_list|,
 name|ELF32_R_TYPE
 argument_list|(
@@ -2312,9 +2340,6 @@ name|rel
 operator|->
 name|r_offset
 argument_list|,
-operator|(
-name|unsigned
-operator|)
 name|relocation
 argument_list|)
 expr_stmt|;
@@ -2412,20 +2437,11 @@ operator|<
 name|vma
 condition|)
 return|return;
-comment|/* FIXME: section->reloc_done isn't set properly; a generic buglet      preventing us from using bfd_get_section_size_after_reloc.  */
 name|size
 operator|=
 name|section
 operator|->
-name|_cooked_size
-condition|?
-name|section
-operator|->
-name|_cooked_size
-else|:
-name|section
-operator|->
-name|_raw_size
+name|size
 expr_stmt|;
 if|if
 condition|(
@@ -2516,25 +2532,11 @@ block|{
 name|bfd_vma
 name|incoming_cranges_size
 init|=
-operator|(
-operator|(
 name|cranges
 operator|->
-name|_cooked_size
-operator|!=
-literal|0
-condition|?
-name|cranges
-operator|->
-name|_cooked_size
-else|:
-name|cranges
-operator|->
-name|_raw_size
-operator|)
+name|size
 operator|-
 name|ld_generated_cranges_size
-operator|)
 decl_stmt|;
 if|if
 condition|(
@@ -2681,21 +2683,9 @@ block|{
 name|bfd_size_type
 name|cranges_size
 init|=
-operator|(
 name|cranges
 operator|->
-name|_cooked_size
-operator|!=
-literal|0
-condition|?
-name|cranges
-operator|->
-name|_cooked_size
-else|:
-name|cranges
-operator|->
-name|_raw_size
-operator|)
+name|size
 decl_stmt|;
 comment|/* We know we always have these in memory at this time.  */
 name|BFD_ASSERT
@@ -2892,9 +2882,9 @@ end_function
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|bfd_elf_special_section
-specifier|const
 name|sh64_elf_special_sections
 index|[]
 init|=

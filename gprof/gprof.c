@@ -103,32 +103,13 @@ begin_decl_stmt
 specifier|static
 name|void
 name|usage
-name|PARAMS
 argument_list|(
-operator|(
 name|FILE
 operator|*
-operator|,
+argument_list|,
 name|int
-operator|)
 argument_list|)
 name|ATTRIBUTE_NORETURN
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-decl|main
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-operator|,
-name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -312,13 +293,6 @@ end_decl_stmt
 begin_comment
 comment|/* profile filename */
 end_comment
-
-begin_decl_stmt
-name|bfd
-modifier|*
-name|abfd
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * Functions that get excluded by default:  */
@@ -791,17 +765,13 @@ specifier|static
 name|void
 name|usage
 parameter_list|(
-name|stream
-parameter_list|,
-name|status
-parameter_list|)
 name|FILE
 modifier|*
 name|stream
-decl_stmt|;
+parameter_list|,
 name|int
 name|status
-decl_stmt|;
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(
@@ -809,7 +779,7 @@ name|stream
 argument_list|,
 name|_
 argument_list|(
-literal|"\ Usage: %s [-[abcDhilLsTvwxyz]] [-[ACeEfFJnNOpPqQZ][name]] [-I dirs]\n\ 	[-d[num]] [-k from/to] [-m min-count] [-t table-length]\n\ 	[--[no-]annotated-source[=name]] [--[no-]exec-counts[=name]]\n\ 	[--[no-]flat-profile[=name]] [--[no-]graph[=name]]\n\ 	[--[no-]time=name] [--all-lines] [--brief] [--debug[=level]]\n\ 	[--function-ordering] [--file-ordering]\n\ 	[--directory-path=dirs] [--display-unused-functions]\n\ 	[--file-format=name] [--file-info] [--help] [--line] [--min-count=n]\n\ 	[--no-static] [--print-path] [--separate-files]\n\ 	[--static-call-graph] [--sum] [--table-length=len] [--traditional]\n\ 	[--version] [--width=n] [--ignore-non-functions]\n\ 	[--demangle[=STYLE]] [--no-demangle]\n\ 	[image-file] [profile-file...]\n"
+literal|"\ Usage: %s [-[abcDhilLsTvwxyz]] [-[ACeEfFJnNOpPqQZ][name]] [-I dirs]\n\ 	[-d[num]] [-k from/to] [-m min-count] [-t table-length]\n\ 	[--[no-]annotated-source[=name]] [--[no-]exec-counts[=name]]\n\ 	[--[no-]flat-profile[=name]] [--[no-]graph[=name]]\n\ 	[--[no-]time=name] [--all-lines] [--brief] [--debug[=level]]\n\ 	[--function-ordering] [--file-ordering]\n\ 	[--directory-path=dirs] [--display-unused-functions]\n\ 	[--file-format=name] [--file-info] [--help] [--line] [--min-count=n]\n\ 	[--no-static] [--print-path] [--separate-files]\n\ 	[--static-call-graph] [--sum] [--table-length=len] [--traditional]\n\ 	[--version] [--width=n] [--ignore-non-functions]\n\ 	[--demangle[=STYLE]] [--no-demangle] [@FILE]\n\ 	[image-file] [profile-file...]\n"
 argument_list|)
 argument_list|,
 name|whoami
@@ -845,18 +815,14 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|argv
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -915,6 +881,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|ENABLE_NLS
 name|bindtextdomain
 argument_list|(
 name|PACKAGE
@@ -927,6 +896,8 @@ argument_list|(
 name|PACKAGE
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|whoami
 operator|=
 name|argv
@@ -937,6 +908,15 @@ expr_stmt|;
 name|xmalloc_set_program_name
 argument_list|(
 name|whoami
+argument_list|)
+expr_stmt|;
+name|expandargv
+argument_list|(
+operator|&
+name|argc
+argument_list|,
+operator|&
+name|argv
 argument_list|)
 expr_stmt|;
 while|while
@@ -1849,19 +1829,17 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* --sum implies --line, otherwise we'd lose b-b counts in gmon.sum */
+comment|/* --sum implies --line, otherwise we'd lose basic block counts in        gmon.sum */
 if|if
 condition|(
 name|output_style
 operator|&
 name|STYLE_SUMMARY_FILE
 condition|)
-block|{
 name|line_granularity
 operator|=
 literal|1
 expr_stmt|;
-block|}
 comment|/* append value of GPROF_PATH to source search list if set: */
 name|str
 operator|=
@@ -1878,7 +1856,6 @@ if|if
 condition|(
 name|str
 condition|)
-block|{
 name|search_list_append
 argument_list|(
 operator|&
@@ -1887,14 +1864,12 @@ argument_list|,
 name|str
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|optind
 operator|<
 name|argc
 condition|)
-block|{
 name|a_out_name
 operator|=
 name|argv
@@ -1903,14 +1878,12 @@ name|optind
 operator|++
 index|]
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|optind
 operator|<
 name|argc
 condition|)
-block|{
 name|gmon_name
 operator|=
 name|argv
@@ -1919,8 +1892,7 @@ name|optind
 operator|++
 index|]
 expr_stmt|;
-block|}
-comment|/*    * Turn off default functions:    */
+comment|/* Turn off default functions.  */
 for|for
 control|(
 name|sp
@@ -1963,78 +1935,35 @@ name|EXCL_FLAT
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*    * For line-by-line profiling, also want to keep those    * functions off the flat profile:    */
-if|if
-condition|(
-name|line_granularity
-condition|)
-block|{
-for|for
-control|(
-name|sp
-operator|=
-operator|&
-name|default_excluded_list
-index|[
-literal|0
-index|]
-init|;
-operator|*
-name|sp
-condition|;
-name|sp
-operator|++
-control|)
-block|{
-name|sym_id_add
-argument_list|(
-operator|*
-name|sp
-argument_list|,
-name|EXCL_FLAT
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-comment|/*    * Read symbol table from core file:    */
+comment|/* Read symbol table from core file.  */
 name|core_init
 argument_list|(
 name|a_out_name
 argument_list|)
 expr_stmt|;
-comment|/*    * If we should ignore direct function calls, we need to load    * to core's text-space:    */
+comment|/* If we should ignore direct function calls, we need to load to      core's text-space.  */
 if|if
 condition|(
 name|ignore_direct_calls
 condition|)
-block|{
 name|core_get_text_space
 argument_list|(
 name|core_bfd
 argument_list|)
 expr_stmt|;
-block|}
-comment|/*    * Create symbols from core image:    */
+comment|/* Create symbols from core image.  */
 if|if
 condition|(
 name|line_granularity
 condition|)
-block|{
 name|core_create_line_syms
-argument_list|(
-name|core_bfd
-argument_list|)
+argument_list|()
 expr_stmt|;
-block|}
 else|else
-block|{
 name|core_create_function_syms
-argument_list|(
-name|core_bfd
-argument_list|)
+argument_list|()
 expr_stmt|;
-block|}
-comment|/*    * Translate sym specs into syms:    */
+comment|/* Translate sym specs into syms.  */
 name|sym_id_parse
 argument_list|()
 expr_stmt|;
@@ -2045,43 +1974,6 @@ operator|==
 name|FF_PROF
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|PROF_SUPPORT_IMPLEMENTED
-comment|/*        * Get information about mon.out file(s):        */
-do|do
-block|{
-name|mon_out_read
-argument_list|(
-name|gmon_name
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|optind
-operator|<
-name|argc
-condition|)
-block|{
-name|gmon_name
-operator|=
-name|argv
-index|[
-name|optind
-index|]
-expr_stmt|;
-block|}
-block|}
-do|while
-condition|(
-name|optind
-operator|++
-operator|<
-name|argc
-condition|)
-do|;
-else|#
-directive|else
 name|fprintf
 argument_list|(
 name|stderr
@@ -2099,12 +1991,10 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 else|else
 block|{
-comment|/*        * Get information about gmon.out file(s):        */
+comment|/* Get information about gmon.out file(s).  */
 do|do
 block|{
 name|gmon_out_read
@@ -2118,7 +2008,6 @@ name|optind
 operator|<
 name|argc
 condition|)
-block|{
 name|gmon_name
 operator|=
 name|argv
@@ -2126,7 +2015,6 @@ index|[
 name|optind
 index|]
 expr_stmt|;
-block|}
 block|}
 do|while
 condition|(
@@ -2137,7 +2025,7 @@ name|argc
 condition|)
 do|;
 block|}
-comment|/*    * If user did not specify output style, try to guess something    * reasonable:    */
+comment|/* If user did not specify output style, try to guess something      reasonable.  */
 if|if
 condition|(
 name|output_style
@@ -2155,28 +2043,24 @@ operator||
 name|INPUT_CALL_GRAPH
 operator|)
 condition|)
-block|{
 name|output_style
 operator|=
 name|STYLE_FLAT_PROFILE
 operator||
 name|STYLE_CALL_GRAPH
 expr_stmt|;
-block|}
 else|else
-block|{
 name|output_style
 operator|=
 name|STYLE_EXEC_COUNTS
 expr_stmt|;
-block|}
 name|output_style
 operator|&=
 operator|~
 name|user_specified
 expr_stmt|;
 block|}
-comment|/*    * Dump a gmon.sum file if requested (before any other processing!):    */
+comment|/* Dump a gmon.sum file if requested (before any other      processing!)  */
 if|if
 condition|(
 name|output_style
@@ -2214,7 +2098,7 @@ name|cg_assemble
 argument_list|()
 expr_stmt|;
 block|}
-comment|/* do some simple sanity checks: */
+comment|/* Do some simple sanity checks.  */
 if|if
 condition|(
 operator|(
@@ -2283,7 +2167,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* output whatever user whishes to see: */
+comment|/* Output whatever user whishes to see.  */
 if|if
 condition|(
 name|cg
@@ -2297,12 +2181,12 @@ operator|&&
 name|bsd_style_output
 condition|)
 block|{
+comment|/* Print the dynamic profile.  */
 name|cg_print
 argument_list|(
 name|cg
 argument_list|)
 expr_stmt|;
-comment|/* print the dynamic profile */
 block|}
 if|if
 condition|(
@@ -2311,10 +2195,10 @@ operator|&
 name|STYLE_FLAT_PROFILE
 condition|)
 block|{
+comment|/* Print the flat profile.  */
 name|hist_print
 argument_list|()
 expr_stmt|;
-comment|/* print the flat profile */
 block|}
 if|if
 condition|(
@@ -2333,12 +2217,12 @@ operator|!
 name|bsd_style_output
 condition|)
 block|{
+comment|/* Print the dynamic profile.  */
 name|cg_print
 argument_list|(
 name|cg
 argument_list|)
 expr_stmt|;
-comment|/* print the dynamic profile */
 block|}
 name|cg_print_index
 argument_list|()
@@ -2350,44 +2234,36 @@ name|output_style
 operator|&
 name|STYLE_EXEC_COUNTS
 condition|)
-block|{
 name|print_exec_counts
 argument_list|()
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|output_style
 operator|&
 name|STYLE_ANNOTATED_SOURCE
 condition|)
-block|{
 name|print_annotated_source
 argument_list|()
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|output_style
 operator|&
 name|STYLE_FUNCTION_ORDER
 condition|)
-block|{
 name|cg_print_function_ordering
 argument_list|()
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|output_style
 operator|&
 name|STYLE_FILE_ORDER
 condition|)
-block|{
 name|cg_print_file_ordering
 argument_list|()
 expr_stmt|;
-block|}
 return|return
 literal|0
 return|;
@@ -2398,11 +2274,9 @@ begin_function
 name|void
 name|done
 parameter_list|(
-name|status
-parameter_list|)
 name|int
 name|status
-decl_stmt|;
+parameter_list|)
 block|{
 name|exit
 argument_list|(

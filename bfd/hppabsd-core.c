@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for HPPA BSD core files.    Copyright 1993, 1994, 1995, 1998, 1999, 2001, 2002, 2003, 2004    Free Software Foundation, Inc.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Written by the Center for Software Science at the University of Utah    and by Cygnus Support.     The core file structure for the Utah 4.3BSD and OSF1 ports on the    PA is a mix between traditional cores and hpux cores -- just    different enough that supporting this format would tend to add    gross hacks to trad-core.c or hpux-core.c.  So instead we keep any    gross hacks isolated to this file.  */
+comment|/* BFD back-end for HPPA BSD core files.    Copyright 1993, 1994, 1995, 1998, 1999, 2001, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.     Written by the Center for Software Science at the University of Utah    and by Cygnus Support.     The core file structure for the Utah 4.3BSD and OSF1 ports on the    PA is a mix between traditional cores and hpux cores -- just    different enough that supporting this format would tend to add    gross hacks to trad-core.c or hpux-core.c.  So instead we keep any    gross hacks isolated to this file.  */
 end_comment
 
 begin_comment
@@ -153,22 +153,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
+begin_define
+define|#
+directive|define
 name|hppabsd_core_core_file_matches_executable_p
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|bfd
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+value|generic_core_file_matches_executable_p
+end_define
 
 begin_decl_stmt
 specifier|static
@@ -290,7 +280,7 @@ name|name
 parameter_list|,
 name|flags
 parameter_list|,
-name|_raw_size
+name|size
 parameter_list|,
 name|offset
 parameter_list|,
@@ -309,7 +299,7 @@ name|flagword
 name|flags
 decl_stmt|;
 name|bfd_size_type
-name|_raw_size
+name|size
 decl_stmt|;
 name|file_ptr
 name|offset
@@ -348,9 +338,9 @@ name|flags
 expr_stmt|;
 name|asect
 operator|->
-name|_raw_size
+name|size
 operator|=
-name|_raw_size
+name|size
 expr_stmt|;
 name|asect
 operator|->
@@ -481,31 +471,15 @@ return|;
 block|}
 comment|/* Sanity checks.  Make sure the size of the core file matches the      the size computed from information within the core itself.  */
 block|{
-name|FILE
-modifier|*
-name|stream
-init|=
-name|bfd_cache_lookup
-argument_list|(
-name|abfd
-argument_list|)
-decl_stmt|;
 name|struct
 name|stat
 name|statbuf
 decl_stmt|;
 if|if
 condition|(
-name|stream
-operator|==
-name|NULL
-operator|||
-name|fstat
+name|bfd_stat
 argument_list|(
-name|fileno
-argument_list|(
-name|stream
-argument_list|)
+name|abfd
 argument_list|,
 operator|&
 name|statbuf
@@ -513,16 +487,9 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|bfd_set_error
-argument_list|(
-name|bfd_error_system_call
-argument_list|)
-expr_stmt|;
 return|return
 name|NULL
 return|;
-block|}
 if|if
 condition|(
 name|NBPG
@@ -888,33 +855,6 @@ argument_list|)
 return|;
 block|}
 end_function
-
-begin_function
-specifier|static
-name|bfd_boolean
-name|hppabsd_core_core_file_matches_executable_p
-parameter_list|(
-name|core_bfd
-parameter_list|,
-name|exec_bfd
-parameter_list|)
-name|bfd
-modifier|*
-name|core_bfd
-decl_stmt|,
-decl|*
-name|exec_bfd
-decl_stmt|;
-end_function
-
-begin_block
-block|{
-comment|/* There's no way to know this...  */
-return|return
-name|TRUE
-return|;
-block|}
-end_block
 
 begin_escape
 end_escape

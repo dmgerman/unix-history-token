@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* GAS interface for targets using CGEN: Cpu tools GENerator.    Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free Software    Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* GAS interface for targets using CGEN: Cpu tools GENerator.    Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free Software    Foundation, 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -601,7 +601,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Default routine to record a fixup.    This is a cover function to fix_new.    It exists because we record INSN with the fixup.     FRAG and WHERE are their respective arguments to fix_new_exp.    LENGTH is in bits.    OPINFO is something the caller chooses to help in reloc determination.     At this point we do not use a bfd_reloc_code_real_type for    operands residing in the insn, but instead just use the    operand index.  This lets us easily handle fixups for any    operand type.  We pick a BFD reloc type in md_apply_fix3.  */
+comment|/* Default routine to record a fixup.    This is a cover function to fix_new.    It exists because we record INSN with the fixup.     FRAG and WHERE are their respective arguments to fix_new_exp.    LENGTH is in bits.    OPINFO is something the caller chooses to help in reloc determination.     At this point we do not use a bfd_reloc_code_real_type for    operands residing in the insn, but instead just use the    operand index.  This lets us easily handle fixups for any    operand type.  We pick a BFD reloc type in md_apply_fix.  */
 end_comment
 
 begin_function
@@ -725,7 +725,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Default routine to record a fixup given an expression.    This is a cover function to fix_new_exp.    It exists because we record INSN with the fixup.     FRAG and WHERE are their respective arguments to fix_new_exp.    LENGTH is in bits.    OPINFO is something the caller chooses to help in reloc determination.     At this point we do not use a bfd_reloc_code_real_type for    operands residing in the insn, but instead just use the    operand index.  This lets us easily handle fixups for any    operand type.  We pick a BFD reloc type in md_apply_fix3.  */
+comment|/* Default routine to record a fixup given an expression.    This is a cover function to fix_new_exp.    It exists because we record INSN with the fixup.     FRAG and WHERE are their respective arguments to fix_new_exp.    LENGTH is in bits.    OPINFO is something the caller chooses to help in reloc determination.     At this point we do not use a bfd_reloc_code_real_type for    operands residing in the insn, but instead just use the    operand index.  This lets us easily handle fixups for any    operand type.  We pick a BFD reloc type in md_apply_fix.  */
 end_comment
 
 begin_function
@@ -928,6 +928,10 @@ modifier|*
 specifier|volatile
 name|resultP_1
 decl_stmt|;
+specifier|volatile
+name|int
+name|opinfo_1
+decl_stmt|;
 else|#
 directive|else
 specifier|static
@@ -940,6 +944,9 @@ name|enum
 name|cgen_parse_operand_result
 modifier|*
 name|resultP_1
+decl_stmt|;
+name|int
+name|opinfo_1
 decl_stmt|;
 endif|#
 directive|endif
@@ -981,6 +988,10 @@ operator|*
 operator|)
 operator|*
 name|strP
+expr_stmt|;
+name|opinfo_1
+operator|=
+name|opinfo
 expr_stmt|;
 comment|/* We rely on md_operand to longjmp back to us.      This is done via gas_cgen_md_operand.  */
 if|if
@@ -1044,6 +1055,21 @@ name|input_line_pointer
 operator|=
 name|hold
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TC_CGEN_PARSE_FIX_EXP
+name|opinfo_1
+operator|=
+name|TC_CGEN_PARSE_FIX_EXP
+argument_list|(
+name|opinfo_1
+argument_list|,
+operator|&
+name|exp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* FIXME: Need to check `want'.  */
 switch|switch
 condition|(
@@ -1087,6 +1113,15 @@ break|break;
 case|case
 name|O_constant
 case|:
+if|if
+condition|(
+name|want
+operator|==
+name|CGEN_PARSE_OPERAND_SYMBOLIC
+condition|)
+goto|goto
+name|de_fault
+goto|;
 operator|*
 name|valueP
 operator|=
@@ -1116,12 +1151,14 @@ operator|=
 name|CGEN_PARSE_OPERAND_RESULT_REGISTER
 expr_stmt|;
 break|break;
+name|de_fault
+label|:
 default|default:
 name|queue_fixup
 argument_list|(
 name|opindex
 argument_list|,
-name|opinfo
+name|opinfo_1
 argument_list|,
 operator|&
 name|exp
@@ -1521,6 +1558,11 @@ name|cgen_put_insn_value
 argument_list|(
 name|gas_cgen_cpu_desc
 argument_list|,
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 name|f
 argument_list|,
 name|length
@@ -1692,7 +1734,7 @@ end_comment
 
 begin_function
 name|void
-name|gas_cgen_md_apply_fix3
+name|gas_cgen_md_apply_fix
 parameter_list|(
 name|fixP
 parameter_list|,
@@ -1914,6 +1956,11 @@ name|cgen_get_insn_value
 argument_list|(
 name|cd
 argument_list|,
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 name|where
 argument_list|,
 name|CGEN_INSN_BITSIZE
@@ -1949,6 +1996,11 @@ name|cgen_put_insn_value
 argument_list|(
 name|cd
 argument_list|,
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 name|where
 argument_list|,
 name|CGEN_INSN_BITSIZE
@@ -1976,6 +2028,11 @@ name|opindex
 argument_list|,
 name|fields
 argument_list|,
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 name|where
 argument_list|,
 operator|(

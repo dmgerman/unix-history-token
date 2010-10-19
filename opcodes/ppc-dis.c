@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ppc-dis.c -- Disassemble PowerPC instructions    Copyright 1994, 1995, 2000, 2001, 2002, 2003, 2004    Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support  This file is part of GDB, GAS, and the GNU binutils.  GDB, GAS, and the GNU binutils are free software; you can redistribute them and/or modify them under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GDB, GAS, and the GNU binutils are distributed in the hope that they will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this file; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* ppc-dis.c -- Disassemble PowerPC instructions    Copyright 1994, 1995, 2000, 2001, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support  This file is part of GDB, GAS, and the GNU binutils.  GDB, GAS, and the GNU binutils are free software; you can redistribute them and/or modify them under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GDB, GAS, and the GNU binutils are distributed in the hope that they will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this file; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -49,18 +49,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_struct
-struct|struct
-name|dis_private
-block|{
-comment|/* Stash the result of parsing disassembler_options here.  */
-name|int
-name|dialect
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_comment
 comment|/* Determine which set of machines to disassemble for.  PPC403/601 or    BookE.  For convenience, also disassemble instructions supported    by the AltiVec vector unit.  */
 end_comment
@@ -80,8 +68,6 @@ name|int
 name|dialect
 init|=
 name|PPC_OPCODE_PPC
-operator||
-name|PPC_OPCODE_ALTIVEC
 decl_stmt|;
 if|if
 condition|(
@@ -144,9 +130,9 @@ operator|!=
 name|NULL
 operator|)
 condition|)
-block|{
 name|dialect
 operator||=
+operator|(
 name|PPC_OPCODE_BOOKE
 operator||
 name|PPC_OPCODE_SPE
@@ -162,14 +148,8 @@ operator||
 name|PPC_OPCODE_CACHELCK
 operator||
 name|PPC_OPCODE_RFMCI
+operator|)
 expr_stmt|;
-comment|/* efs* and AltiVec conflict.  */
-name|dialect
-operator|&=
-operator|~
-name|PPC_OPCODE_ALTIVEC
-expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -188,18 +168,36 @@ argument_list|)
 operator|!=
 name|NULL
 condition|)
-block|{
 name|dialect
 operator||=
 name|PPC_OPCODE_EFS
 expr_stmt|;
-comment|/* efs* and AltiVec conflict.  */
+elseif|else
+if|if
+condition|(
+name|info
+operator|->
+name|disassembler_options
+operator|&&
+name|strstr
+argument_list|(
+name|info
+operator|->
+name|disassembler_options
+argument_list|,
+literal|"e300"
+argument_list|)
+operator|!=
+name|NULL
+condition|)
 name|dialect
-operator|&=
-operator|~
-name|PPC_OPCODE_ALTIVEC
+operator||=
+name|PPC_OPCODE_E300
+operator||
+name|PPC_OPCODE_CLASSIC
+operator||
+name|PPC_OPCODE_COMMON
 expr_stmt|;
-block|}
 else|else
 name|dialect
 operator||=
@@ -211,6 +209,8 @@ operator||
 name|PPC_OPCODE_CLASSIC
 operator||
 name|PPC_OPCODE_COMMON
+operator||
+name|PPC_OPCODE_ALTIVEC
 operator|)
 expr_stmt|;
 if|if
@@ -233,6 +233,29 @@ condition|)
 name|dialect
 operator||=
 name|PPC_OPCODE_POWER4
+expr_stmt|;
+if|if
+condition|(
+name|info
+operator|->
+name|disassembler_options
+operator|&&
+name|strstr
+argument_list|(
+name|info
+operator|->
+name|disassembler_options
+argument_list|,
+literal|"power5"
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+name|dialect
+operator||=
+name|PPC_OPCODE_POWER4
+operator||
+name|PPC_OPCODE_POWER5
 expr_stmt|;
 if|if
 condition|(
@@ -299,20 +322,16 @@ operator||=
 name|PPC_OPCODE_64
 expr_stmt|;
 block|}
-operator|(
-operator|(
-expr|struct
-name|dis_private
-operator|*
-operator|)
-operator|&
 name|info
 operator|->
 name|private_data
-operator|)
-operator|->
-name|dialect
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
+operator|+
 name|dialect
 expr_stmt|;
 return|return
@@ -342,18 +361,18 @@ name|int
 name|dialect
 init|=
 operator|(
-operator|(
-expr|struct
-name|dis_private
+name|char
 operator|*
 operator|)
-operator|&
 name|info
 operator|->
 name|private_data
+operator|-
+operator|(
+name|char
+operator|*
 operator|)
-operator|->
-name|dialect
+literal|0
 decl_stmt|;
 return|return
 name|print_insn_powerpc
@@ -391,18 +410,18 @@ name|int
 name|dialect
 init|=
 operator|(
-operator|(
-expr|struct
-name|dis_private
+name|char
 operator|*
 operator|)
-operator|&
 name|info
 operator|->
 name|private_data
+operator|-
+operator|(
+name|char
+operator|*
 operator|)
-operator|->
-name|dialect
+literal|0
 decl_stmt|;
 return|return
 name|print_insn_powerpc
@@ -1196,7 +1215,7 @@ name|info
 operator|->
 name|stream
 argument_list|,
-literal|"cr%d"
+literal|"cr%ld"
 argument_list|,
 name|value
 argument_list|)
@@ -1420,6 +1439,13 @@ name|fprintf
 argument_list|(
 name|stream
 argument_list|,
+literal|"  e300                     Disassemble the e300 instructions\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
 literal|"  e500|e500x2              Disassemble the e500 instructions\n"
 argument_list|)
 expr_stmt|;
@@ -1435,6 +1461,13 @@ argument_list|(
 name|stream
 argument_list|,
 literal|"  power4                   Disassemble the Power4 instructions\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+literal|"  power5                   Disassemble the Power5 instructions\n"
 argument_list|)
 expr_stmt|;
 name|fprintf

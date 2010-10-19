@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* vms-hdr.c -- BFD back-end for VMS/VAX (openVMS/VAX) and    EVAX (openVMS/Alpha) files.    Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.     HDR record handling functions    EMH record handling functions    and    EOM record handling functions    EEOM record handling functions     Written by Klaus K"ampf (kkaempf@rmi.de)  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* vms-hdr.c -- BFD back-end for VMS/VAX (openVMS/VAX) and    EVAX (openVMS/Alpha) files.    Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2005    Free Software Foundation, Inc.     HDR record handling functions    EMH record handling functions    and    EOM record handling functions    EEOM record handling functions     Written by Klaus K"ampf (kkaempf@rmi.de)     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -62,44 +62,21 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|static
-name|unsigned
-name|char
-modifier|*
-name|get_vms_time_string
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/*---------------------------------------------------------------------------*/
-end_comment
-
-begin_comment
-comment|/* Read& process emh record    return 0 on success, -1 on error  */
+comment|/* Read& process emh record    return 0 on success, -1 on error.  */
 end_comment
 
 begin_function
 name|int
 name|_bfd_vms_slurp_hdr
 parameter_list|(
-name|abfd
-parameter_list|,
-name|objtype
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|int
 name|objtype
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|char
@@ -193,7 +170,7 @@ block|{
 case|case
 name|MHD_S_C_MHD
 case|:
-comment|/* 	 * module header 	 */
+comment|/* Module header.  */
 name|PRIV
 argument_list|(
 name|hdr_data
@@ -284,7 +261,6 @@ break|break;
 case|case
 name|MHD_S_C_LNM
 case|:
-comment|/* 	 * 	 */
 name|PRIV
 argument_list|(
 name|hdr_data
@@ -308,7 +284,6 @@ break|break;
 case|case
 name|MHD_S_C_SRC
 case|:
-comment|/* 	 * 	 */
 name|PRIV
 argument_list|(
 name|hdr_data
@@ -332,7 +307,6 @@ break|break;
 case|case
 name|MHD_S_C_TTL
 case|:
-comment|/* 	 * 	 */
 name|PRIV
 argument_list|(
 name|hdr_data
@@ -354,26 +328,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|MHD_S_C_CPR
-case|:
-comment|/* 	 * 	 */
-break|break;
-case|case
-name|MHD_S_C_MTC
-case|:
-comment|/* 	 * 	 */
-break|break;
-case|case
-name|MHD_S_C_GTX
-case|:
-comment|/* 	 * 	 */
-break|break;
-case|case
 name|EMH_S_C_MHD
 operator|+
 name|EVAX_OFFSET
 case|:
-comment|/* 	 * module header 	 */
+comment|/* Module header.  */
 name|PRIV
 argument_list|(
 name|hdr_data
@@ -494,7 +453,6 @@ name|EMH_S_C_LNM
 operator|+
 name|EVAX_OFFSET
 case|:
-comment|/* 	 * 	 */
 name|PRIV
 argument_list|(
 name|hdr_data
@@ -520,7 +478,6 @@ name|EMH_S_C_SRC
 operator|+
 name|EVAX_OFFSET
 case|:
-comment|/* 	 * 	 */
 name|PRIV
 argument_list|(
 name|hdr_data
@@ -546,7 +503,6 @@ name|EMH_S_C_TTL
 operator|+
 name|EVAX_OFFSET
 case|:
-comment|/* 	 * 	 */
 name|PRIV
 argument_list|(
 name|hdr_data
@@ -568,25 +524,29 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|MHD_S_C_CPR
+case|:
+case|case
+name|MHD_S_C_MTC
+case|:
+case|case
+name|MHD_S_C_GTX
+case|:
+case|case
 name|EMH_S_C_CPR
 operator|+
 name|EVAX_OFFSET
 case|:
-comment|/* 	 * 	 */
-break|break;
 case|case
 name|EMH_S_C_MTC
 operator|+
 name|EVAX_OFFSET
 case|:
-comment|/* 	 * 	 */
-break|break;
 case|case
 name|EMH_S_C_GTX
 operator|+
 name|EVAX_OFFSET
 case|:
-comment|/* 	 * 	 */
 break|break;
 default|default:
 name|bfd_set_error
@@ -599,7 +559,6 @@ operator|-
 literal|1
 return|;
 block|}
-comment|/* switch */
 return|return
 literal|0
 return|;
@@ -607,15 +566,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*-----------------------------------------------------------------------------*/
-end_comment
-
-begin_comment
 comment|/* Output routines.  */
 end_comment
 
 begin_comment
-comment|/* Manufacture a VMS like time on a unix based system.    stolen from obj-vms.c  */
+comment|/* Manufacture a VMS like time on a unix based system.    stolen from obj-vms.c.  */
 end_comment
 
 begin_function
@@ -624,7 +579,9 @@ name|unsigned
 name|char
 modifier|*
 name|get_vms_time_string
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|static
 name|unsigned
@@ -698,6 +655,10 @@ literal|0
 expr_stmt|;
 name|sprintf
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|tbuf
 argument_list|,
 literal|"%2s-%3s-%s %s"
@@ -785,24 +746,20 @@ block|}
 end_function
 
 begin_comment
-comment|/* write object header for bfd abfd  */
+comment|/* Write object header for bfd abfd.  */
 end_comment
 
 begin_function
 name|int
 name|_bfd_vms_write_hdr
 parameter_list|(
-name|abfd
-parameter_list|,
-name|objtype
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|int
 name|objtype
-decl_stmt|;
+parameter_list|)
 block|{
 name|asymbol
 modifier|*
@@ -843,15 +800,13 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-comment|/* MHD */
+comment|/* MHD.  */
 if|if
 condition|(
 name|objtype
-operator|==
+operator|!=
 name|OBJ_S_C_HDR
 condition|)
-block|{     }
-else|else
 block|{
 name|_bfd_vms_output_begin
 argument_list|(
@@ -901,7 +856,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* strip path and suffix information */
+comment|/* Strip path and suffix information.  */
 name|char
 modifier|*
 name|fname
@@ -921,10 +876,6 @@ argument_list|)
 expr_stmt|;
 name|fname
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|alloca
 argument_list|(
 name|strlen
@@ -980,7 +931,7 @@ name|fout
 operator|=
 name|fname
 expr_stmt|;
-comment|/* strip .obj suffix  */
+comment|/* Strip .obj suffix.  */
 name|fptr
 operator|=
 name|strrchr
@@ -1110,7 +1061,7 @@ argument_list|(
 name|abfd
 argument_list|)
 expr_stmt|;
-comment|/* LMN */
+comment|/* LMN.  */
 name|_bfd_vms_output_begin
 argument_list|(
 name|abfd
@@ -1139,7 +1090,7 @@ argument_list|(
 name|abfd
 argument_list|)
 expr_stmt|;
-comment|/* SRC */
+comment|/* SRC.  */
 name|_bfd_vms_output_begin
 argument_list|(
 name|abfd
@@ -1304,7 +1255,7 @@ argument_list|(
 name|abfd
 argument_list|)
 expr_stmt|;
-comment|/* TTL */
+comment|/* TTL.  */
 name|_bfd_vms_output_begin
 argument_list|(
 name|abfd
@@ -1333,7 +1284,7 @@ argument_list|(
 name|abfd
 argument_list|)
 expr_stmt|;
-comment|/* CPR */
+comment|/* CPR.  */
 name|_bfd_vms_output_begin
 argument_list|(
 name|abfd
@@ -1369,28 +1320,20 @@ block|}
 end_function
 
 begin_comment
-comment|/*-----------------------------------------------------------------------------*/
-end_comment
-
-begin_comment
-comment|/* Process EOM/EEOM record    return 0 on success, -1 on error  */
+comment|/* Process EOM/EEOM record    return 0 on success, -1 on error.  */
 end_comment
 
 begin_function
 name|int
 name|_bfd_vms_slurp_eom
 parameter_list|(
-name|abfd
-parameter_list|,
-name|objtype
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|int
 name|objtype
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|char
@@ -1584,24 +1527,20 @@ block|}
 end_function
 
 begin_comment
-comment|/* Write eom record for bfd abfd  */
+comment|/* Write eom record for bfd abfd.  */
 end_comment
 
 begin_function
 name|int
 name|_bfd_vms_write_eom
 parameter_list|(
-name|abfd
-parameter_list|,
-name|objtype
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|int
 name|objtype
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -1654,7 +1593,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* completion code */
+comment|/* Completion code.  */
 name|_bfd_vms_output_byte
 argument_list|(
 name|abfd
@@ -1662,7 +1601,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* fill byte */
+comment|/* Fill byte.  */
 if|if
 condition|(
 name|bfd_get_start_address

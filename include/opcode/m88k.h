@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Table of opcodes for the Motorola M88k family.    Copyright 1989, 1990, 1991, 1993, 2001 Free Software Foundation, Inc.  This file is part of GDB and GAS.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Table of opcodes for the Motorola M88k family.    Copyright 1989, 1990, 1991, 1993, 2001, 2002    Free Software Foundation, Inc.  This file is part of GDB and GAS.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -563,112 +563,112 @@ end_comment
 begin_define
 define|#
 directive|define
-name|mode
+name|psr_mode
 value|31
 end_define
 
 begin_define
 define|#
 directive|define
-name|rbo
+name|psr_rbo
 value|30
 end_define
 
 begin_define
 define|#
 directive|define
-name|ser
+name|psr_ser
 value|29
 end_define
 
 begin_define
 define|#
 directive|define
-name|carry
+name|psr_carry
 value|28
 end_define
 
 begin_define
 define|#
 directive|define
-name|sf7m
+name|psr_sf7m
 value|11
 end_define
 
 begin_define
 define|#
 directive|define
-name|sf6m
+name|psr_sf6m
 value|10
 end_define
 
 begin_define
 define|#
 directive|define
-name|sf5m
+name|psr_sf5m
 value|9
 end_define
 
 begin_define
 define|#
 directive|define
-name|sf4m
+name|psr_sf4m
 value|8
 end_define
 
 begin_define
 define|#
 directive|define
-name|sf3m
+name|psr_sf3m
 value|7
 end_define
 
 begin_define
 define|#
 directive|define
-name|sf2m
+name|psr_sf2m
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|sf1m
+name|psr_sf1m
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|mam
+name|psr_mam
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|inm
+name|psr_inm
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|exm
+name|psr_exm
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|trm
+name|psr_trm
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|ovfm
+name|psr_ovfm
 value|0
 end_define
 

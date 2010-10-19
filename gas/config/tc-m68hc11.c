@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-m68hc11.c -- Assembler code for the Motorola 68HC11& 68HC12.    Copyright 1999, 2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.    Written by Stephane Carrez (stcarrez@nerim.fr)     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* tc-m68hc11.c -- Assembler code for the Motorola 68HC11& 68HC12.    Copyright 1999, 2000, 2001, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.    Written by Stephane Carrez (stcarrez@nerim.fr)     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 51 Franklin Street - Fifth Floor,    Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -10576,12 +10576,11 @@ modifier|*
 name|op_start
 decl_stmt|,
 modifier|*
-name|save
+name|op_end
 decl_stmt|;
-name|unsigned
 name|char
 modifier|*
-name|op_end
+name|save
 decl_stmt|;
 name|char
 name|name
@@ -10637,9 +10636,7 @@ name|unsigned
 name|char
 operator|*
 operator|)
-operator|(
 name|str
-operator|)
 init|;
 operator|*
 name|op_end
@@ -11051,6 +11048,10 @@ name|input_line_pointer
 expr_stmt|;
 name|input_line_pointer
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|op_end
 expr_stmt|;
 if|if
@@ -14022,7 +14023,7 @@ end_function
 
 begin_function
 name|void
-name|md_apply_fix3
+name|md_apply_fix
 parameter_list|(
 name|fixS
 modifier|*
@@ -14260,12 +14261,6 @@ case|:
 case|case
 name|BFD_RELOC_M68HC11_PAGE
 case|:
-if|#
-directive|if
-literal|0
-block|bfd_putb8 ((bfd_vma) value, (unsigned char *) where);
-endif|#
-directive|endif
 operator|(
 operator|(
 name|bfd_byte
@@ -14286,12 +14281,6 @@ break|break;
 case|case
 name|BFD_RELOC_8_PCREL
 case|:
-if|#
-directive|if
-literal|0
-block|bfd_putb8 ((bfd_vma) value, (unsigned char *) where);
-endif|#
-directive|endif
 operator|(
 operator|(
 name|bfd_byte

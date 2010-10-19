@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD backend for core files which use the ptrace_user structure    Copyright 1993, 1994, 1995, 1996, 1998, 1999, 2001, 2002, 2003, 2004    Free Software Foundation, Inc.    The structure of this file is based on trad-core.c written by John Gilmore    of Cygnus Support.    Modified to work with the ptrace_user structure by Kevin A. Buettner.    (Longterm it may be better to merge this file with trad-core.c)  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD backend for core files which use the ptrace_user structure    Copyright 1993, 1994, 1995, 1996, 1998, 1999, 2001, 2002, 2003, 2004    Free Software Foundation, Inc.    The structure of this file is based on trad-core.c written by John Gilmore    of Cygnus Support.    Modified to work with the ptrace_user structure by Kevin A. Buettner.    (Longterm it may be better to merge this file with trad-core.c)  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifdef
@@ -164,23 +164,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|bfd_boolean
+begin_define
+define|#
+directive|define
 name|ptrace_unix_core_file_matches_executable_p
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|core_bfd
-operator|,
-name|bfd
-operator|*
-name|exec_bfd
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+value|generic_core_file_matches_executable_p
+end_define
 
 begin_decl_stmt
 specifier|static
@@ -435,7 +424,7 @@ argument_list|(
 name|abfd
 argument_list|)
 operator|->
-name|_raw_size
+name|size
 operator|=
 name|u
 operator|.
@@ -446,7 +435,7 @@ argument_list|(
 name|abfd
 argument_list|)
 operator|->
-name|_raw_size
+name|size
 operator|=
 name|u
 operator|.
@@ -457,7 +446,7 @@ argument_list|(
 name|abfd
 argument_list|)
 operator|->
-name|_raw_size
+name|size
 operator|=
 sizeof|sizeof
 argument_list|(
@@ -679,32 +668,6 @@ name|sig_num
 return|;
 block|}
 end_function
-
-begin_function
-name|bfd_boolean
-name|ptrace_unix_core_file_matches_executable_p
-parameter_list|(
-name|core_bfd
-parameter_list|,
-name|exec_bfd
-parameter_list|)
-name|bfd
-modifier|*
-name|core_bfd
-decl_stmt|,
-decl|*
-name|exec_bfd
-decl_stmt|;
-end_function
-
-begin_block
-block|{
-comment|/* FIXME: Use pt_timdat field of the ptrace_user structure to match      the date of the executable */
-return|return
-name|TRUE
-return|;
-block|}
-end_block
 
 begin_escape
 end_escape

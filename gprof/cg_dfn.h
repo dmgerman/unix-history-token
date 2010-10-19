@@ -33,20 +33,17 @@ begin_comment
 comment|/*  * Depth-first numbering of a call-graph.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|cg_dfn
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|Sym
-operator|*
+modifier|*
 name|root
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

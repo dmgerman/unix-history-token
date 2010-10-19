@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Assembler interface for targets using CGEN. -*- C -*-    CGEN: Cpu tools GENerator  THIS FILE IS MACHINE GENERATED WITH CGEN. - the resultant file is machine generated, cgen-asm.in isn't  Copyright 1996, 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.  This file is part of the GNU Binutils and GDB, the GNU debugger.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Assembler interface for targets using CGEN. -*- C -*-    CGEN: Cpu tools GENerator     THIS FILE IS MACHINE GENERATED WITH CGEN.    - the resultant file is machine generated, cgen-asm.in isn't     Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2005    Free Software Foundation, Inc.     This file is part of the GNU Binutils and GDB, the GNU debugger.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation, Inc.,    51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -144,65 +144,6 @@ begin_comment
 comment|/* -- asm.c */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|PARSE_FUNC_DECL
-parameter_list|(
-name|name
-parameter_list|)
-define|\
-value|static const char *name PARAMS ((CGEN_CPU_DESC, const char **, int, long *))
-end_define
-
-begin_expr_stmt
-name|PARSE_FUNC_DECL
-argument_list|(
-name|parse_fr
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|PARSE_FUNC_DECL
-argument_list|(
-name|parse_addr16
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|PARSE_FUNC_DECL
-argument_list|(
-name|parse_addr16_p
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|PARSE_FUNC_DECL
-argument_list|(
-name|parse_addr16_cjp
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|PARSE_FUNC_DECL
-argument_list|(
-name|parse_lit8
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|PARSE_FUNC_DECL
-argument_list|(
-name|parse_bit3
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_function
 specifier|static
 specifier|const
@@ -210,30 +151,23 @@ name|char
 modifier|*
 name|parse_fr
 parameter_list|(
-name|cd
-parameter_list|,
-name|strp
-parameter_list|,
-name|opindex
-parameter_list|,
-name|valuep
-parameter_list|)
 name|CGEN_CPU_DESC
 name|cd
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 modifier|*
 name|strp
-decl_stmt|;
+parameter_list|,
 name|int
 name|opindex
-decl_stmt|;
+parameter_list|,
+name|unsigned
 name|long
 modifier|*
 name|valuep
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|char
@@ -272,8 +206,7 @@ name|afteroffset
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* Check here to see if you're about to try parsing a w as the first arg */
-comment|/* and return an error if you are.                                       */
+comment|/* Check here to see if you're about to try parsing a w as the first arg      and return an error if you are.  */
 if|if
 condition|(
 operator|(
@@ -335,8 +268,7 @@ name|strp
 argument_list|)
 condition|)
 block|{
-comment|/* We've been passed a w.  Return with an error message so that  */
-comment|/* cgen will try the next parsing option.                        */
+comment|/* We've been passed a w.  Return with an error message so that 	     cgen will try the next parsing option.  */
 name|errmsg
 operator|=
 name|_
@@ -355,7 +287,6 @@ name|old_strp
 expr_stmt|;
 block|}
 comment|/* Attempt parse as register keyword. */
-comment|/* old_strp = *strp; */
 name|errmsg
 operator|=
 name|cgen_parse_keyword
@@ -367,6 +298,10 @@ argument_list|,
 operator|&
 name|ip2k_cgen_opval_register_names
 argument_list|,
+operator|(
+name|long
+operator|*
+operator|)
 name|valuep
 argument_list|)
 expr_stmt|;
@@ -376,9 +311,7 @@ operator|*
 name|strp
 operator|!=
 name|NULL
-condition|)
-if|if
-condition|(
+operator|&&
 name|errmsg
 operator|==
 name|NULL
@@ -386,7 +319,7 @@ condition|)
 return|return
 name|errmsg
 return|;
-comment|/* Attempt to parse for "(IP)" */
+comment|/* Attempt to parse for "(IP)".  */
 name|afteroffset
 operator|=
 name|strstr
@@ -403,8 +336,7 @@ name|afteroffset
 operator|==
 name|NULL
 condition|)
-block|{
-comment|/* Make sure it's not in lower case */
+comment|/* Make sure it's not in lower case.  */
 name|afteroffset
 operator|=
 name|strstr
@@ -415,7 +347,6 @@ argument_list|,
 literal|"(ip)"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|afteroffset
@@ -431,7 +362,7 @@ operator|*
 name|strp
 condition|)
 block|{
-comment|/* Invalid offset present.*/
+comment|/* Invalid offset present.  */
 name|errmsg
 operator|=
 name|_
@@ -464,9 +395,8 @@ name|errmsg
 return|;
 block|}
 block|}
-comment|/* Attempt to parse for DP. ex: mov w, offset(DP)  */
-comment|/*                              mov offset(DP),w   */
-comment|/* Try parsing it as an address and see what comes back */
+comment|/* Attempt to parse for DP. ex: mov w, offset(DP)                                   mov offset(DP),w   */
+comment|/* Try parsing it as an address and see what comes back.  */
 name|afteroffset
 operator|=
 name|strstr
@@ -483,8 +413,7 @@ name|afteroffset
 operator|==
 name|NULL
 condition|)
-block|{
-comment|/* Maybe it's in lower case */
+comment|/* Maybe it's in lower case.  */
 name|afteroffset
 operator|=
 name|strstr
@@ -495,7 +424,6 @@ argument_list|,
 literal|"(dp)"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|afteroffset
@@ -511,7 +439,7 @@ operator|*
 name|strp
 condition|)
 block|{
-comment|/* No offset present. Use 0 by default. */
+comment|/* No offset present. Use 0 by default.  */
 name|tempvalue
 operator|=
 literal|0
@@ -522,7 +450,6 @@ name|NULL
 expr_stmt|;
 block|}
 else|else
-block|{
 name|errmsg
 operator|=
 name|cgen_parse_address
@@ -542,7 +469,6 @@ operator|&
 name|tempvalue
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|errmsg
@@ -557,7 +483,7 @@ operator|<=
 literal|127
 condition|)
 block|{
-comment|/* Value is ok.  Fix up the first 2 bits and return */
+comment|/* Value is ok.  Fix up the first 2 bits and return.  */
 operator|*
 name|valuep
 operator|=
@@ -570,14 +496,14 @@ name|strp
 operator|+=
 literal|4
 expr_stmt|;
-comment|/* skip over the (DP) in *strp */
+comment|/* Skip over the (DP) in *strp.  */
 return|return
 name|errmsg
 return|;
 block|}
 else|else
 block|{
-comment|/* Found something there in front of (DP) but it's out 		 of range. */
+comment|/* Found something there in front of (DP) but it's out 		 of range.  */
 name|errmsg
 operator|=
 name|_
@@ -591,8 +517,7 @@ return|;
 block|}
 block|}
 block|}
-comment|/* Attempt to parse for SP. ex: mov w, offset(SP)  */
-comment|/*                              mov offset(SP), w  */
+comment|/* Attempt to parse for SP. ex: mov w, offset(SP)                                   mov offset(SP), w.  */
 name|afteroffset
 operator|=
 name|strstr
@@ -609,8 +534,7 @@ name|afteroffset
 operator|==
 name|NULL
 condition|)
-block|{
-comment|/* Maybe it's in lower case. */
+comment|/* Maybe it's in lower case.  */
 name|afteroffset
 operator|=
 name|strstr
@@ -621,7 +545,6 @@ argument_list|,
 literal|"(sp)"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|afteroffset
@@ -637,7 +560,7 @@ operator|*
 name|strp
 condition|)
 block|{
-comment|/* No offset present. Use 0 by default. */
+comment|/* No offset present. Use 0 by default.  */
 name|tempvalue
 operator|=
 literal|0
@@ -648,7 +571,6 @@ name|NULL
 expr_stmt|;
 block|}
 else|else
-block|{
 name|errmsg
 operator|=
 name|cgen_parse_address
@@ -668,7 +590,6 @@ operator|&
 name|tempvalue
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|errmsg
@@ -683,7 +604,7 @@ operator|<=
 literal|127
 condition|)
 block|{
-comment|/* Value is ok.  Fix up the first 2 bits and return */
+comment|/* Value is ok.  Fix up the first 2 bits and return.  */
 operator|*
 name|valuep
 operator|=
@@ -696,14 +617,14 @@ name|strp
 operator|+=
 literal|4
 expr_stmt|;
-comment|/* skip over the (SP) in *strp */
+comment|/* Skip over the (SP) in *strp.  */
 return|return
 name|errmsg
 return|;
 block|}
 else|else
 block|{
-comment|/* Found something there in front of (SP) but it's out 		 of range. */
+comment|/* Found something there in front of (SP) but it's out 		 of range.  */
 name|errmsg
 operator|=
 name|_
@@ -717,7 +638,7 @@ return|;
 block|}
 block|}
 block|}
-comment|/* Attempt to parse as an address. */
+comment|/* Attempt to parse as an address.  */
 operator|*
 name|strp
 operator|=
@@ -754,7 +675,7 @@ name|valuep
 operator|=
 name|value
 expr_stmt|;
-comment|/* if a parenthesis is found, warn about invalid form */
+comment|/* If a parenthesis is found, warn about invalid form.  */
 if|if
 condition|(
 operator|*
@@ -763,7 +684,6 @@ name|strp
 operator|==
 literal|'('
 condition|)
-block|{
 name|errmsg
 operator|=
 name|_
@@ -771,8 +691,7 @@ argument_list|(
 literal|"illegal use of parentheses"
 argument_list|)
 expr_stmt|;
-block|}
-comment|/* if a numeric value is specified, ensure that it is between 	 1 and 255 */
+comment|/* If a numeric value is specified, ensure that it is between 	 1 and 255.  */
 elseif|else
 if|if
 condition|(
@@ -813,30 +732,23 @@ name|char
 modifier|*
 name|parse_addr16
 parameter_list|(
-name|cd
-parameter_list|,
-name|strp
-parameter_list|,
-name|opindex
-parameter_list|,
-name|valuep
-parameter_list|)
 name|CGEN_CPU_DESC
 name|cd
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 modifier|*
 name|strp
-decl_stmt|;
+parameter_list|,
 name|int
 name|opindex
-decl_stmt|;
+parameter_list|,
+name|unsigned
 name|long
 modifier|*
 name|valuep
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|char
@@ -884,7 +796,7 @@ name|BFD_RELOC_IP2K_LO8DATA
 expr_stmt|;
 else|else
 block|{
-comment|/* Something is very wrong. opindex has to be one of the above. */
+comment|/* Something is very wrong. opindex has to be one of the above.  */
 name|errmsg
 operator|=
 name|_
@@ -922,7 +834,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* We either have a relocation or a number now. */
+comment|/* We either have a relocation or a number now.  */
 if|if
 condition|(
 name|result_type
@@ -930,7 +842,7 @@ operator|==
 name|CGEN_PARSE_OPERAND_RESULT_NUMBER
 condition|)
 block|{
-comment|/* We got a number back. */
+comment|/* We got a number back.  */
 if|if
 condition|(
 name|code
@@ -942,7 +854,7 @@ operator|>>=
 literal|8
 expr_stmt|;
 else|else
-comment|/* code = BFD_RELOC_IP2K_LOW8DATA */
+comment|/* code = BFD_RELOC_IP2K_LOW8DATA.  */
 name|value
 operator|&=
 literal|0x00FF
@@ -965,143 +877,25 @@ specifier|static
 specifier|const
 name|char
 modifier|*
-name|parse_addr16_p
-parameter_list|(
-name|cd
-parameter_list|,
-name|strp
-parameter_list|,
-name|opindex
-parameter_list|,
-name|valuep
-parameter_list|)
-name|CGEN_CPU_DESC
-name|cd
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-modifier|*
-name|strp
-decl_stmt|;
-name|int
-name|opindex
-decl_stmt|;
-name|long
-modifier|*
-name|valuep
-decl_stmt|;
-block|{
-specifier|const
-name|char
-modifier|*
-name|errmsg
-decl_stmt|;
-name|enum
-name|cgen_parse_operand_result
-name|result_type
-decl_stmt|;
-name|bfd_reloc_code_real_type
-name|code
-init|=
-name|BFD_RELOC_IP2K_PAGE3
-decl_stmt|;
-name|bfd_vma
-name|value
-decl_stmt|;
-name|errmsg
-operator|=
-name|cgen_parse_address
-argument_list|(
-name|cd
-argument_list|,
-name|strp
-argument_list|,
-name|opindex
-argument_list|,
-name|code
-argument_list|,
-operator|&
-name|result_type
-argument_list|,
-operator|&
-name|value
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|errmsg
-operator|==
-name|NULL
-condition|)
-block|{
-if|if
-condition|(
-name|result_type
-operator|==
-name|CGEN_PARSE_OPERAND_RESULT_NUMBER
-condition|)
-operator|*
-name|valuep
-operator|=
-operator|(
-name|value
-operator|>>
-literal|13
-operator|)
-operator|&
-literal|0x7
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|result_type
-operator|==
-name|CGEN_PARSE_OPERAND_RESULT_QUEUED
-condition|)
-operator|*
-name|valuep
-operator|=
-name|value
-expr_stmt|;
-block|}
-return|return
-name|errmsg
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|const
-name|char
-modifier|*
 name|parse_addr16_cjp
 parameter_list|(
-name|cd
-parameter_list|,
-name|strp
-parameter_list|,
-name|opindex
-parameter_list|,
-name|valuep
-parameter_list|)
 name|CGEN_CPU_DESC
 name|cd
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 modifier|*
 name|strp
-decl_stmt|;
+parameter_list|,
 name|int
 name|opindex
-decl_stmt|;
+parameter_list|,
+name|unsigned
 name|long
 modifier|*
 name|valuep
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|char
@@ -1212,7 +1006,7 @@ operator|)
 operator|&
 literal|0x1FFF
 expr_stmt|;
-comment|/* Should mask be 1FFF? */
+comment|/* Should mask be 1FFF?  */
 elseif|else
 if|if
 condition|(
@@ -1281,30 +1075,22 @@ name|char
 modifier|*
 name|parse_lit8
 parameter_list|(
-name|cd
-parameter_list|,
-name|strp
-parameter_list|,
-name|opindex
-parameter_list|,
-name|valuep
-parameter_list|)
 name|CGEN_CPU_DESC
 name|cd
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 modifier|*
 name|strp
-decl_stmt|;
+parameter_list|,
 name|int
 name|opindex
-decl_stmt|;
+parameter_list|,
 name|long
 modifier|*
 name|valuep
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|char
@@ -1323,7 +1109,7 @@ decl_stmt|;
 name|bfd_vma
 name|value
 decl_stmt|;
-comment|/* Parse %OP relocating operators. */
+comment|/* Parse %OP relocating operators.  */
 if|if
 condition|(
 name|strncmp
@@ -1524,7 +1310,7 @@ name|errmsg
 operator|=
 name|_
 argument_list|(
-literal|"%operator operand is not a symbol"
+literal|"percent-operator operand is not a symbol"
 argument_list|)
 expr_stmt|;
 operator|*
@@ -1549,7 +1335,7 @@ argument_list|,
 name|valuep
 argument_list|)
 expr_stmt|;
-comment|/* Truncate to eight bits to accept both signed and unsigned input. */
+comment|/* Truncate to eight bits to accept both signed and unsigned input.  */
 if|if
 condition|(
 name|errmsg
@@ -1575,30 +1361,23 @@ name|char
 modifier|*
 name|parse_bit3
 parameter_list|(
-name|cd
-parameter_list|,
-name|strp
-parameter_list|,
-name|opindex
-parameter_list|,
-name|valuep
-parameter_list|)
 name|CGEN_CPU_DESC
 name|cd
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 modifier|*
 name|strp
-decl_stmt|;
+parameter_list|,
 name|int
 name|opindex
-decl_stmt|;
+parameter_list|,
+name|unsigned
 name|long
 modifier|*
 name|valuep
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|char
@@ -1698,7 +1477,7 @@ expr_stmt|;
 block|}
 name|errmsg
 operator|=
-name|cgen_parse_signed_integer
+name|cgen_parse_unsigned_integer
 argument_list|(
 name|cd
 argument_list|,
@@ -1723,10 +1502,6 @@ condition|)
 block|{
 name|value
 operator|=
-operator|(
-name|unsigned
-name|long
-operator|)
 operator|*
 name|valuep
 expr_stmt|;
@@ -1827,29 +1602,26 @@ begin_comment
 comment|/* -- dis.c */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|const
 name|char
 modifier|*
 name|ip2k_cgen_parse_operand
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|CGEN_CPU_DESC
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|*
-operator|,
+modifier|*
+modifier|*
+parameter_list|,
 name|CGEN_FIELDS
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Main entry point for operand parsing.     This function is basically just a big switch statement.  Earlier versions    used tables to look up the function to use, but    - if the table contains both assembler and disassembler functions then      the disassembler contains much of the assembler and vice-versa,    - there's a lot of inlining possibilities as things grow,    - using a switch statement avoids the function call overhead.     This function could be moved into `parse_insn_normal', but keeping it    separate makes clear the interface between `parse_insn_normal' and each of    the handlers.  */
@@ -1861,30 +1633,22 @@ name|char
 modifier|*
 name|ip2k_cgen_parse_operand
 parameter_list|(
-name|cd
-parameter_list|,
-name|opindex
-parameter_list|,
-name|strp
-parameter_list|,
-name|fields
-parameter_list|)
 name|CGEN_CPU_DESC
 name|cd
-decl_stmt|;
+parameter_list|,
 name|int
 name|opindex
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 modifier|*
 name|strp
-decl_stmt|;
+parameter_list|,
 name|CGEN_FIELDS
 modifier|*
 name|fields
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|char
@@ -1916,10 +1680,17 @@ name|strp
 argument_list|,
 name|IP2K_OPERAND_ADDR16CJP
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|*
+operator|)
+operator|(
 operator|&
 name|fields
 operator|->
 name|f_addr16cjp
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1936,10 +1707,17 @@ name|strp
 argument_list|,
 name|IP2K_OPERAND_ADDR16H
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|*
+operator|)
+operator|(
 operator|&
 name|fields
 operator|->
 name|f_imm8
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1956,10 +1734,17 @@ name|strp
 argument_list|,
 name|IP2K_OPERAND_ADDR16L
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|*
+operator|)
+operator|(
 operator|&
 name|fields
 operator|->
 name|f_imm8
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1976,10 +1761,17 @@ name|strp
 argument_list|,
 name|IP2K_OPERAND_ADDR16P
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|*
+operator|)
+operator|(
 operator|&
 name|fields
 operator|->
 name|f_page3
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1996,10 +1788,17 @@ name|strp
 argument_list|,
 name|IP2K_OPERAND_BITNO
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|*
+operator|)
+operator|(
 operator|&
 name|fields
 operator|->
 name|f_bitno
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2016,8 +1815,15 @@ name|strp
 argument_list|,
 name|IP2K_OPERAND_CBIT
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|*
+operator|)
+operator|(
 operator|&
 name|junk
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2034,8 +1840,15 @@ name|strp
 argument_list|,
 name|IP2K_OPERAND_DCBIT
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|*
+operator|)
+operator|(
 operator|&
 name|junk
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2052,10 +1865,17 @@ name|strp
 argument_list|,
 name|IP2K_OPERAND_FR
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|*
+operator|)
+operator|(
 operator|&
 name|fields
 operator|->
 name|f_reg
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2072,10 +1892,16 @@ name|strp
 argument_list|,
 name|IP2K_OPERAND_LIT8
 argument_list|,
+operator|(
+name|long
+operator|*
+operator|)
+operator|(
 operator|&
 name|fields
 operator|->
 name|f_imm8
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2092,8 +1918,15 @@ name|strp
 argument_list|,
 name|IP2K_OPERAND_PABITS
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|*
+operator|)
+operator|(
 operator|&
 name|junk
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2110,10 +1943,17 @@ name|strp
 argument_list|,
 name|IP2K_OPERAND_RETI3
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|*
+operator|)
+operator|(
 operator|&
 name|fields
 operator|->
 name|f_reti3
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2130,8 +1970,15 @@ name|strp
 argument_list|,
 name|IP2K_OPERAND_ZBIT
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|*
+operator|)
+operator|(
 operator|&
 name|junk
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2176,11 +2023,9 @@ begin_function
 name|void
 name|ip2k_cgen_init_asm
 parameter_list|(
-name|cd
-parameter_list|)
 name|CGEN_CPU_DESC
 name|cd
-decl_stmt|;
+parameter_list|)
 block|{
 name|ip2k_cgen_init_opcode_table
 argument_list|(
@@ -3476,54 +3321,6 @@ return|;
 block|}
 block|}
 end_function
-
-begin_escape
-end_escape
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* This calls back to GAS which we can't do without care.  */
-end_comment
-
-begin_comment
-comment|/* Record each member of OPVALS in the assembler's symbol table.    This lets GAS parse registers for us.    ??? Interesting idea but not currently used.  */
-end_comment
-
-begin_comment
-comment|/* Record each member of OPVALS in the assembler's symbol table.    FIXME: Not currently used.  */
-end_comment
-
-begin_if
-unit|void ip2k_cgen_asm_hash_keywords (CGEN_CPU_DESC cd, CGEN_KEYWORD *opvals) {   CGEN_KEYWORD_SEARCH search = cgen_keyword_search_init (opvals, NULL);   const CGEN_KEYWORD_ENTRY * ke;    while ((ke = cgen_keyword_search_next (& search)) != NULL)     {
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* Unnecessary, should be done in the search routine.  */
-end_comment
-
-begin_endif
-unit|if (! ip2k_cgen_opval_supported (ke)) 	continue;
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-unit|cgen_asm_record_register (cd, ke->name, ke->value);     } }
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* 0 */
-end_comment
 
 end_unit
 

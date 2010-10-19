@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright 1998, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.    Contributed by David Mosberger-Tang<davidm@hpl.hp.com>  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Copyright 1998, 1999, 2000, 2001, 2002, 2003, 2005, 2006    Free Software Foundation, Inc.    Contributed by David Mosberger-Tang<davidm@hpl.hp.com>  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -509,6 +509,113 @@ operator|*
 name|valuep
 operator|=
 name|value
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|ins_immu5b
+parameter_list|(
+specifier|const
+name|struct
+name|ia64_operand
+modifier|*
+name|self
+parameter_list|,
+name|ia64_insn
+name|value
+parameter_list|,
+name|ia64_insn
+modifier|*
+name|code
+parameter_list|)
+block|{
+if|if
+condition|(
+name|value
+operator|<
+literal|32
+operator|||
+name|value
+operator|>
+literal|63
+condition|)
+return|return
+literal|"value must be between 32 and 63"
+return|;
+return|return
+name|ins_immu
+argument_list|(
+name|self
+argument_list|,
+name|value
+operator|-
+literal|32
+argument_list|,
+name|code
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|ext_immu5b
+parameter_list|(
+specifier|const
+name|struct
+name|ia64_operand
+modifier|*
+name|self
+parameter_list|,
+name|ia64_insn
+name|code
+parameter_list|,
+name|ia64_insn
+modifier|*
+name|valuep
+parameter_list|)
+block|{
+specifier|const
+name|char
+modifier|*
+name|result
+decl_stmt|;
+name|result
+operator|=
+name|ext_immu
+argument_list|(
+name|self
+argument_list|,
+name|code
+argument_list|,
+name|valuep
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
+condition|)
+return|return
+name|result
+return|;
+operator|*
+name|valuep
+operator|=
+operator|*
+name|valuep
+operator|+
+literal|32
 expr_stmt|;
 return|return
 literal|0
@@ -2921,6 +3028,30 @@ comment|/* R3_2 */
 literal|"a general register r0-r3"
 block|}
 block|,
+comment|/* memory operands: */
+block|{
+name|IND
+block|,
+name|ins_reg
+block|,
+name|ext_reg
+block|,
+literal|""
+block|,
+block|{
+block|{
+literal|7
+block|,
+literal|20
+block|}
+block|}
+block|,
+literal|0
+block|,
+comment|/* MR3 */
+literal|"a memory address"
+block|}
+block|,
 comment|/* indirect operands: */
 block|{
 name|IND
@@ -3035,29 +3166,6 @@ literal|0
 block|,
 comment|/* IBR_R3 */
 literal|"an ibr register"
-block|}
-block|,
-block|{
-name|IND
-block|,
-name|ins_reg
-block|,
-name|ext_reg
-block|,
-literal|""
-block|,
-block|{
-block|{
-literal|7
-block|,
-literal|20
-block|}
-block|}
-block|,
-literal|0
-block|,
-comment|/* MR3 */
-literal|"an indirect memory address"
 block|}
 block|,
 block|{
@@ -3427,6 +3535,29 @@ name|UDEC
 block|,
 comment|/* IMMU2 */
 literal|"a 2-bit unsigned (0-3)"
+block|}
+block|,
+block|{
+name|ABS
+block|,
+name|ins_immu5b
+block|,
+name|ext_immu5b
+block|,
+literal|0
+block|,
+block|{
+block|{
+literal|5
+block|,
+literal|14
+block|}
+block|}
+block|,
+name|UDEC
+block|,
+comment|/* IMMU5b */
+literal|"a 5-bit unsigned (32 + (0-31))"
 block|}
 block|,
 block|{

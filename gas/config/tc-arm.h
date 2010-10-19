@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* This file is tc-arm.h    Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2004    Free Software Foundation, Inc.    Contributed by Richard Earnshaw (rwe@pegasus.esprit.ec.org) 	Modified by David Taylor (dtaylor@armltd.co.uk)     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* This file is tc-arm.h    Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003,    2004 Free Software Foundation, Inc.    Contributed by Richard Earnshaw (rwe@pegasus.esprit.ec.org) 	Modified by David Taylor (dtaylor@armltd.co.uk)     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_define
@@ -46,13 +46,6 @@ define|#
 directive|define
 name|TARGET_ARCH
 value|bfd_arch_arm
-end_define
-
-begin_define
-define|#
-directive|define
-name|AOUT_MACHTYPE
-value|0
 end_define
 
 begin_define
@@ -313,16 +306,64 @@ end_define
 begin_define
 define|#
 directive|define
-name|md_convert_frag
+name|md_relax_frag
 parameter_list|(
-name|b
+name|segment
 parameter_list|,
-name|s
+name|fragp
 parameter_list|,
-name|f
+name|stretch
 parameter_list|)
-value|{ as_fatal (_("arm convert_frag\n")); }
+define|\
+value|arm_relax_frag(segment, fragp, stretch)
 end_define
+
+begin_function_decl
+specifier|extern
+name|int
+name|arm_relax_frag
+parameter_list|(
+name|asection
+modifier|*
+parameter_list|,
+name|struct
+name|frag
+modifier|*
+parameter_list|,
+name|long
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|md_optimize_expr
+parameter_list|(
+name|l
+parameter_list|,
+name|o
+parameter_list|,
+name|r
+parameter_list|)
+value|arm_optimize_expr (l, o, r)
+end_define
+
+begin_function_decl
+specifier|extern
+name|int
+name|arm_optimize_expr
+parameter_list|(
+name|expressionS
+modifier|*
+parameter_list|,
+name|operatorT
+parameter_list|,
+name|expressionS
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -364,6 +405,34 @@ parameter_list|)
 value|arm_frob_label (S)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OBJ_ELF
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|md_end
+value|arm_md_end
+end_define
+
+begin_function_decl
+specifier|extern
+name|void
+name|arm_md_end
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* NOTE: The fake label creation in stabs.c:s_stab_generic() has    deliberately not been updated to mark assembler created stabs    symbols as Thumb.  */
 end_comment
@@ -372,7 +441,7 @@ begin_define
 define|#
 directive|define
 name|TC_FIX_TYPE
-value|PTR
+value|int
 end_define
 
 begin_define
@@ -382,7 +451,7 @@ name|TC_INIT_FIX_DATA
 parameter_list|(
 name|FIX
 parameter_list|)
-value|((FIX)->tc_fix_data = NULL)
+value|((FIX)->tc_fix_data = 0)
 end_define
 
 begin_comment
@@ -562,20 +631,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|tc_aout_pre_write_hook
-parameter_list|(
-name|x
-parameter_list|)
-value|{;}
-end_define
-
-begin_comment
-comment|/* not used */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|LISTING_HEADER
 value|"ARM GAS "
 end_define
@@ -594,7 +649,7 @@ name|LOCAL_LABEL
 parameter_list|(
 name|name
 parameter_list|)
-value|(name[0] == '.'&& (name[1] == 'L'))
+value|(name[0] == '.'&& name[1] == 'L')
 end_define
 
 begin_define
@@ -616,7 +671,24 @@ parameter_list|(
 name|FIX
 parameter_list|)
 define|\
-value|(!(FIX)->fx_pcrel					\    || (FIX)->fx_plt					\    || (FIX)->fx_r_type == BFD_RELOC_ARM_GOT12		\    || (FIX)->fx_r_type == BFD_RELOC_ARM_GOT32		\    || (FIX)->fx_r_type == BFD_RELOC_32			\    || TC_FORCE_RELOCATION (FIX))
+value|(!(FIX)->fx_pcrel					\    || (FIX)->fx_plt					\    || (FIX)->fx_r_type == BFD_RELOC_ARM_GOT32		\    || (FIX)->fx_r_type == BFD_RELOC_32			\    || TC_FORCE_RELOCATION (FIX))
+end_define
+
+begin_comment
+comment|/* Force output of R_ARM_REL32 relocations against thumb function symbols.    This is needed to ensure the low bit is handled correctly.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TC_FORCE_RELOCATION_SUB_SAME
+parameter_list|(
+name|FIX
+parameter_list|,
+name|SEG
+parameter_list|)
+define|\
+value|(THUMB_IS_FUNC ((FIX)->fx_addsy)		\    || !SEG_NORMAL (SEG))
 end_define
 
 begin_define
@@ -719,6 +791,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|md_elf_section_type
+parameter_list|(
+name|str
+parameter_list|,
+name|len
+parameter_list|)
+value|arm_elf_section_type (str, len)
+end_define
+
+begin_define
+define|#
+directive|define
 name|GLOBAL_OFFSET_TABLE_NAME
 value|"_GLOBAL_OFFSET_TABLE_"
 end_define
@@ -726,15 +810,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|LOCAL_LABEL_PREFIX
-value|'.'
-end_define
-
-begin_define
-define|#
-directive|define
 name|TC_SEGMENT_INFO_TYPE
-value|enum mstate
+value|struct arm_segment_info_type
 end_define
 
 begin_enum
@@ -754,6 +831,73 @@ name|MAP_THUMB
 block|}
 enum|;
 end_enum
+
+begin_struct
+struct|struct
+name|arm_segment_info_type
+block|{
+name|enum
+name|mstate
+name|mapstate
+decl_stmt|;
+name|unsigned
+name|int
+name|marked_pr_dependency
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* We want .cfi_* pseudo-ops for generating unwind info.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TARGET_USE_CFIPOP
+value|1
+end_define
+
+begin_comment
+comment|/* The lr register is r14.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DWARF2_DEFAULT_RETURN_COLUMN
+value|14
+end_define
+
+begin_comment
+comment|/* Registers are generally saved at negative offsets to the CFA.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DWARF2_CIE_DATA_ALIGNMENT
+value|-4
+end_define
+
+begin_comment
+comment|/* CFI hooks.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|tc_regname_to_dw2regnum
+value|tc_arm_regname_to_dw2regnum
+end_define
+
+begin_define
+define|#
+directive|define
+name|tc_cfi_frame_initial_instructions
+value|tc_arm_frame_initial_instructions
+end_define
 
 begin_else
 else|#
@@ -804,7 +948,7 @@ value|arm_fix_adjustable (FIX)
 end_define
 
 begin_comment
-comment|/* Values passed to md_apply_fix3 don't include the symbol value.  */
+comment|/* Values passed to md_apply_fix don't include the symbol value.  */
 end_comment
 
 begin_define
@@ -835,6 +979,32 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|MD_PCREL_FROM_SECTION
+parameter_list|(
+name|F
+parameter_list|,
+name|S
+parameter_list|)
+value|md_pcrel_from_section(F,S)
+end_define
+
+begin_function_decl
+specifier|extern
+name|long
+name|md_pcrel_from_section
+parameter_list|(
+name|struct
+name|fix
+modifier|*
+parameter_list|,
+name|segT
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|extern
@@ -1021,6 +1191,43 @@ parameter_list|(
 name|struct
 name|fix
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|arm_elf_section_type
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|tc_arm_regname_to_dw2regnum
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|regname
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|tc_arm_frame_initial_instructions
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

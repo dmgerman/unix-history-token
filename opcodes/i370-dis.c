@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* i370-dis.c -- Disassemble Instruction 370 (ESA/390) instructions    Copyright 1994, 2000, 2003 Free Software Foundation, Inc.    PowerPC version written by Ian Lance Taylor, Cygnus Support    Rewritten for i370 ESA/390 support by Linas Vepstas<linas@linas.org>  This file is part of GDB, GAS, and the GNU binutils.  GDB, GAS, and the GNU binutils are free software; you can redistribute them and/or modify them under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GDB, GAS, and the GNU binutils are distributed in the hope that they will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this file; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* i370-dis.c -- Disassemble Instruction 370 (ESA/390) instructions    Copyright 1994, 2000, 2003, 2005 Free Software Foundation, Inc.    PowerPC version written by Ian Lance Taylor, Cygnus Support    Rewritten for i370 ESA/390 support by Linas Vepstas<linas@linas.org>     This file is part of GDB, GAS, and the GNU binutils.     GDB, GAS, and the GNU binutils are free software; you can redistribute    them and/or modify them under the terms of the GNU General Public    License as published by the Free Software Foundation; either version    2, or (at your option) any later version.     GDB, GAS, and the GNU binutils are distributed in the hope that they    will be useful, but WITHOUT ANY WARRANTY; without even the implied    warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See    the GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this file; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston,    MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -28,7 +28,7 @@ file|"opcode/i370.h"
 end_include
 
 begin_comment
-comment|/* This file provides several disassembler functions, all of which use    the disassembler interface defined in dis-asm.h. */
+comment|/* This file provides several disassembler functions, all of which use    the disassembler interface defined in dis-asm.h.  */
 end_comment
 
 begin_function
@@ -112,7 +112,7 @@ operator|-
 literal|1
 return|;
 block|}
-comment|/* Cast the bytes into the insn (in a host-endian indep way) */
+comment|/* Cast the bytes into the insn (in a host-endian indep way).  */
 name|insn
 operator|.
 name|i
@@ -369,7 +369,7 @@ index|]
 condition|)
 continue|continue;
 block|}
-comment|/* Found a match.  adjust a tad */
+comment|/* Found a match.  adjust a tad.  */
 if|if
 condition|(
 literal|2
@@ -550,7 +550,6 @@ name|NULL
 argument_list|)
 expr_stmt|;
 else|else
-block|{
 name|value
 operator|=
 operator|(
@@ -578,7 +577,6 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
-block|}
 comment|/* Print the operand as directed by the flags.  */
 if|if
 condition|(

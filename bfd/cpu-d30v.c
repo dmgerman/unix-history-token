@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD support for the Mitsubishi D30V processor    Copyright 1997, 2002 Free Software Foundation, Inc.    Contributed by Martin Hunt (hunt@cygnus.com).  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD support for the Mitsubishi D30V processor    Copyright 1997, 2002, 2005 Free Software Foundation, Inc.    Contributed by Martin Hunt (hunt@cygnus.com).     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston,    MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -29,13 +29,13 @@ init|=
 block|{
 literal|32
 block|,
-comment|/* bits in a word */
+comment|/* Bits in a word.  */
 literal|32
 block|,
-comment|/* bits in an address */
+comment|/* Bits in an address.  */
 literal|8
 block|,
-comment|/* bits in a byte */
+comment|/* Bits in a byte.  */
 name|bfd_arch_d30v
 block|,
 literal|0
@@ -46,7 +46,7 @@ literal|"d30v"
 block|,
 literal|4
 block|,
-comment|/* section alignment power */
+comment|/* Section alignment power.  */
 name|TRUE
 block|,
 name|bfd_default_compatible

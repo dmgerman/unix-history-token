@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD support for the ns32k architecture.    Copyright 1990, 1991, 1994, 1995, 1998, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.    Almost totally rewritten by Ian Dall from initial work    by Andrew Cagney.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD support for the ns32k architecture.    Copyright 1990, 1991, 1994, 1995, 1998, 1999, 2000, 2001, 2002, 2003,    2004, 2005 Free Software Foundation, Inc.    Almost totally rewritten by Ian Dall from initial work    by Andrew Cagney.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -850,9 +850,12 @@ name|reloc_entry
 operator|->
 name|address
 operator|>
+name|bfd_get_section_limit
+argument_list|(
+name|abfd
+argument_list|,
 name|input_section
-operator|->
-name|_cooked_size
+argument_list|)
 condition|)
 return|return
 name|bfd_reloc_outofrange
@@ -1022,9 +1025,6 @@ operator|==
 name|bfd_target_coff_flavour
 condition|)
 block|{
-if|#
-directive|if
-literal|1
 comment|/* For m68k-coff, the addend was being subtracted twice during 		 relocation with -r.  Removing the line below this comment 		 fixes that problem; see PR 2953.  		 However, Ian wrote the following, regarding removing the line 		 below, which explains why it is still enabled:  --djm  		 If you put a patch like that into BFD you need to check all 		 the COFF linkers.  I am fairly certain that patch will break 		 coff-i386 (e.g., SCO); see coff_i386_reloc in coff-i386.c 		 where I worked around the problem in a different way.  There 		 may very well be a reason that the code works as it does.  		 Hmmm.  The first obvious point is that bfd_perform_relocation 		 should not have any tests that depend upon the flavour.  It's 		 seem like entirely the wrong place for such a thing.  The 		 second obvious point is that the current code ignores the 		 reloc addend when producing relocatable output for COFF. 		 That's peculiar.  In fact, I really have no idea what the 		 point of the line you want to remove is.  		 A typical COFF reloc subtracts the old value of the symbol 		 and adds in the new value to the location in the object file 		 (if it's a pc relative reloc it adds the difference between 		 the symbol value and the location).  When relocating we need 		 to preserve that property.  		 BFD handles this by setting the addend to the negative of the 		 old value of the symbol.  Unfortunately it handles common 		 symbols in a non-standard way (it doesn't subtract the old 		 value) but that's a different story (we can't change it 		 without losing backward compatibility with old object files) 		 (coff-i386 does subtract the old value, to be compatible with 		 existing coff-i386 targets, like SCO).  		 So everything works fine when not producing relocatable 		 output.  When we are producing relocatable output, logically 		 we should do exactly what we do when not producing 		 relocatable output.  Therefore, your patch is correct.  In 		 fact, it should probably always just set reloc_entry->addend 		 to 0 for all cases, since it is, in fact, going to add the 		 value into the object file.  This won't hurt the COFF code, 		 which doesn't use the addend; I'm not sure what it will do 		 to other formats (the thing to check for would be whether 		 any formats both use the addend and set partial_inplace).  		 When I wanted to make coff-i386 produce relocatable output, 		 I ran into the problem that you are running into: I wanted 		 to remove that line.  Rather than risk it, I made the 		 coff-i386 relocs use a special function; it's coff_i386_reloc 		 in coff-i386.c.  The function specifically adds the addend 		 field into the object file, knowing that bfd_perform_relocation 		 is not going to.  If you remove that line, then coff-i386.c 		 will wind up adding the addend field in twice.  It's trivial 		 to fix; it just needs to be done.  		 The problem with removing the line is just that it may break 		 some working code.  With BFD it's hard to be sure of anything. 		 The right way to deal with this is simply to build and test at 		 least all the supported COFF targets.  It should be 		 straightforward if time and disk space consuming.  For each 		 target: 		   1) build the linker 		   2) generate some executable, and link it using -r (I would 		      probably use paranoia.o and link against newlib/libc.a, 		      which for all the supported targets would be available in 		      /usr/cygnus/progressive/H-host/target/lib/libc.a). 		   3) make the change to reloc.c 		   4) rebuild the linker 		   5) repeat step 2 		   6) if the resulting object files are the same, you have at 		      least made it no worse 		   7) if they are different you have to figure out which 		      version is right.  */
 name|relocation
 operator|-=
@@ -1032,8 +1032,6 @@ name|reloc_entry
 operator|->
 name|addend
 expr_stmt|;
-endif|#
-directive|endif
 name|reloc_entry
 operator|->
 name|addend
@@ -2549,9 +2547,12 @@ if|if
 condition|(
 name|address
 operator|>
+name|bfd_get_section_limit
+argument_list|(
+name|input_bfd
+argument_list|,
 name|input_section
-operator|->
-name|_cooked_size
+argument_list|)
 condition|)
 return|return
 name|bfd_reloc_outofrange

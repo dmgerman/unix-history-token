@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* i370-specific support for 32-bit ELF    Copyright 1994, 1995, 1996, 1997, 1998, 2000, 2001, 2002, 2003, 2004    Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support.    Hacked by Linas Vepstas for i370 linas@linas.org  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* i370-specific support for 32-bit ELF    Copyright 1994, 1995, 1996, 1997, 1998, 2000, 2001, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support.    Hacked by Linas Vepstas for i370 linas@linas.org     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston,    MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
-comment|/* This file is based on a preliminary PowerPC ELF ABI.    But its been hacked on for the IBM 360/370 architectures.    Basically, the 31bit relocation works, and just about everything    else is a wild card.  In particular, don't expect shared libs or    dynamic loading to work ...  its never been tested ... */
+comment|/* This file is based on a preliminary PowerPC ELF ABI.    But its been hacked on for the IBM 360/370 architectures.    Basically, the 31bit relocation works, and just about everything    else is a wild card.  In particular, don't expect shared libs or    dynamic loading to work ...  its never been tested.  */
 end_comment
 
 begin_include
@@ -236,7 +236,7 @@ name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
-comment|/* 31-bit PC relative */
+comment|/* 31-bit PC relative.  */
 name|HOWTO
 argument_list|(
 name|R_I370_REL31
@@ -279,7 +279,7 @@ name|TRUE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
-comment|/* 32-bit PC relative */
+comment|/* 32-bit PC relative.  */
 name|HOWTO
 argument_list|(
 name|R_I370_REL32
@@ -365,7 +365,7 @@ name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
-comment|/* 12-bit PC relative */
+comment|/* 12-bit PC relative.  */
 name|HOWTO
 argument_list|(
 name|R_I370_REL12
@@ -451,7 +451,7 @@ name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
-comment|/* 8-bit PC relative */
+comment|/* 8-bit PC relative.  */
 name|HOWTO
 argument_list|(
 name|R_I370_REL8
@@ -587,78 +587,6 @@ end_decl_stmt
 begin_escape
 end_escape
 
-begin_decl_stmt
-specifier|static
-name|void
-name|i370_elf_howto_init
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|reloc_howto_type
-modifier|*
-name|i370_elf_reloc_type_lookup
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|bfd_reloc_code_real_type
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|i370_elf_info_to_howto
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|,
-name|arelent
-operator|*
-name|cache_ptr
-operator|,
-name|Elf_Internal_Rela
-operator|*
-name|dst
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|i370_elf_set_private_flags
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|flagword
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_escape
-end_escape
-
 begin_comment
 comment|/* Initialize the i370_elf_howto_table, so that linear accesses can be done.  */
 end_comment
@@ -667,7 +595,9 @@ begin_function
 specifier|static
 name|void
 name|i370_elf_howto_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|unsigned
 name|int
@@ -742,27 +672,20 @@ block|}
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_function
 specifier|static
 name|reloc_howto_type
 modifier|*
 name|i370_elf_reloc_type_lookup
 parameter_list|(
-name|abfd
-parameter_list|,
-name|code
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|bfd_reloc_code_real_type
 name|code
-decl_stmt|;
+parameter_list|)
 block|{
 name|enum
 name|i370_reloc_type
@@ -778,7 +701,7 @@ index|[
 name|R_I370_ADDR31
 index|]
 condition|)
-comment|/* Initialize howto table if needed */
+comment|/* Initialize howto table if needed.  */
 name|i370_elf_howto_init
 argument_list|()
 expr_stmt|;
@@ -792,10 +715,6 @@ condition|)
 block|{
 default|default:
 return|return
-operator|(
-name|reloc_howto_type
-operator|*
-operator|)
 name|NULL
 return|;
 case|case
@@ -863,237 +782,6 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|i370_elf_merge_private_bfd_data
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|bfd
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|i370_elf_relocate_section
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-expr|struct
-name|bfd_link_info
-operator|*
-name|info
-operator|,
-name|bfd
-operator|*
-operator|,
-name|asection
-operator|*
-operator|,
-name|bfd_byte
-operator|*
-operator|,
-name|Elf_Internal_Rela
-operator|*
-name|relocs
-operator|,
-name|Elf_Internal_Sym
-operator|*
-name|local_syms
-operator|,
-name|asection
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|i370_elf_post_process_headers
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-expr|struct
-name|bfd_link_info
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|i370_elf_create_dynamic_sections
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-expr|struct
-name|bfd_link_info
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|i370_elf_section_from_shdr
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|Elf_Internal_Shdr
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|i370_elf_fake_sections
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|Elf_Internal_Shdr
-operator|*
-operator|,
-name|asection
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|i370_elf_check_relocs
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-expr|struct
-name|bfd_link_info
-operator|*
-operator|,
-name|asection
-operator|*
-operator|,
-specifier|const
-name|Elf_Internal_Rela
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|i370_elf_adjust_dynamic_symbol
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
-name|bfd_link_info
-operator|*
-operator|,
-expr|struct
-name|elf_link_hash_entry
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|i370_elf_adjust_dynindx
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
-name|elf_link_hash_entry
-operator|*
-operator|,
-name|PTR
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|i370_elf_size_dynamic_sections
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-expr|struct
-name|bfd_link_info
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|i370_elf_finish_dynamic_sections
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-expr|struct
-name|bfd_link_info
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* The name of the dynamic interpreter.  This is put in the .interp     section.  */
 end_comment
@@ -1114,25 +802,19 @@ specifier|static
 name|void
 name|i370_elf_info_to_howto
 parameter_list|(
-name|abfd
-parameter_list|,
-name|cache_ptr
-parameter_list|,
-name|dst
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|arelent
 modifier|*
 name|cache_ptr
-decl_stmt|;
+parameter_list|,
 name|Elf_Internal_Rela
 modifier|*
 name|dst
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1142,7 +824,7 @@ index|[
 name|R_I370_ADDR31
 index|]
 condition|)
-comment|/* Initialize howto table */
+comment|/* Initialize howto table.  */
 name|i370_elf_howto_init
 argument_list|()
 expr_stmt|;
@@ -1180,7 +862,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* hack alert --  the following several routines look generic to me ...  * why are we bothering with them ???  */
+comment|/* Hack alert --  the following several routines look generic to me ...    why are we bothering with them ?  */
 end_comment
 
 begin_comment
@@ -1192,17 +874,13 @@ specifier|static
 name|bfd_boolean
 name|i370_elf_set_private_flags
 parameter_list|(
-name|abfd
-parameter_list|,
-name|flags
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|flagword
 name|flags
-decl_stmt|;
+parameter_list|)
 block|{
 name|BFD_ASSERT
 argument_list|(
@@ -1245,7 +923,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Merge backend specific data from an object file to the output    object file when linking */
+comment|/* Merge backend specific data from an object file to the output    object file when linking.  */
 end_comment
 
 begin_function
@@ -1253,18 +931,14 @@ specifier|static
 name|bfd_boolean
 name|i370_elf_merge_private_bfd_data
 parameter_list|(
+name|bfd
+modifier|*
 name|ibfd
 parameter_list|,
+name|bfd
+modifier|*
 name|obfd
 parameter_list|)
-name|bfd
-modifier|*
-name|ibfd
-decl_stmt|;
-name|bfd
-modifier|*
-name|obfd
-decl_stmt|;
 block|{
 name|flagword
 name|old_flags
@@ -1317,7 +991,7 @@ argument_list|(
 name|obfd
 argument_list|)
 condition|)
-comment|/* First call, no flags set */
+comment|/* First call, no flags set.  */
 block|{
 name|elf_flags_init
 argument_list|(
@@ -1343,22 +1017,19 @@ name|new_flags
 operator|==
 name|old_flags
 condition|)
-comment|/* Compatible flags are ok */
+comment|/* Compatible flags are ok.  */
 empty_stmt|;
 else|else
-comment|/* Incompatible flags */
+comment|/* Incompatible flags.  */
 block|{
 call|(
 modifier|*
 name|_bfd_error_handler
 call|)
 argument_list|(
-literal|"%s: uses different e_flags (0x%lx) fields than previous modules (0x%lx)"
+literal|"%B: uses different e_flags (0x%lx) fields than previous modules (0x%lx)"
 argument_list|,
-name|bfd_archive_filename
-argument_list|(
 name|ibfd
-argument_list|)
 argument_list|,
 operator|(
 name|long
@@ -1394,7 +1065,7 @@ comment|/* Handle an i370 specific section when reading an object file.  This   
 end_comment
 
 begin_comment
-comment|/* XXX hack alert bogus This routine is mostly all junk and almost  * certainly does the wrong thing.  Its here simply because it does  * just enough to allow glibc-2.1 ld.so to compile& link.  */
+comment|/* XXX hack alert bogus This routine is mostly all junk and almost    certainly does the wrong thing.  Its here simply because it does    just enough to allow glibc-2.1 ld.so to compile& link.  */
 end_comment
 
 begin_function
@@ -1402,25 +1073,22 @@ specifier|static
 name|bfd_boolean
 name|i370_elf_section_from_shdr
 parameter_list|(
-name|abfd
-parameter_list|,
-name|hdr
-parameter_list|,
-name|name
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|Elf_Internal_Shdr
 modifier|*
 name|hdr
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|,
+name|int
+name|shindex
+parameter_list|)
 block|{
 name|asection
 modifier|*
@@ -1439,6 +1107,8 @@ argument_list|,
 name|hdr
 argument_list|,
 name|name
+argument_list|,
+name|shindex
 argument_list|)
 condition|)
 return|return
@@ -1506,7 +1176,7 @@ comment|/* Set up any other section flags and such that may be necessary.  */
 end_comment
 
 begin_comment
-comment|/* XXX hack alert bogus This routine is mostly all junk and almost  * certainly does the wrong thing.  Its here simply because it does  * just enough to allow glibc-2.1 ld.so to compile& link.  */
+comment|/* XXX hack alert bogus This routine is mostly all junk and almost    certainly does the wrong thing.  Its here simply because it does    just enough to allow glibc-2.1 ld.so to compile& link.  */
 end_comment
 
 begin_function
@@ -1514,25 +1184,19 @@ specifier|static
 name|bfd_boolean
 name|i370_elf_fake_sections
 parameter_list|(
-name|abfd
-parameter_list|,
-name|shdr
-parameter_list|,
-name|asect
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|Elf_Internal_Shdr
 modifier|*
 name|shdr
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|asect
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1541,10 +1205,14 @@ name|asect
 operator|->
 name|flags
 operator|&
+operator|(
+name|SEC_GROUP
+operator||
 name|SEC_EXCLUDE
 operator|)
-operator|!=
-literal|0
+operator|)
+operator|==
+name|SEC_EXCLUDE
 condition|)
 name|shdr
 operator|->
@@ -1584,7 +1252,7 @@ comment|/* We have to create .dynsbss and .rela.sbss here so that they get mappe
 end_comment
 
 begin_comment
-comment|/* XXX hack alert bogus This routine is mostly all junk and almost  * certainly does the wrong thing.  Its here simply because it does  * just enough to allow glibc-2.1 ld.so to compile& link.  */
+comment|/* XXX hack alert bogus This routine is mostly all junk and almost    certainly does the wrong thing.  Its here simply because it does    just enough to allow glibc-2.1 ld.so to compile& link.  */
 end_comment
 
 begin_function
@@ -1592,21 +1260,16 @@ specifier|static
 name|bfd_boolean
 name|i370_elf_create_dynamic_sections
 parameter_list|(
-name|abfd
-parameter_list|,
-name|info
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|struct
 name|bfd_link_info
 modifier|*
 name|info
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|register
 name|asection
 modifier|*
 name|s
@@ -1643,11 +1306,15 @@ operator|)
 expr_stmt|;
 name|s
 operator|=
-name|bfd_make_section
+name|bfd_make_section_with_flags
 argument_list|(
 name|abfd
 argument_list|,
 literal|".dynsbss"
+argument_list|,
+name|SEC_ALLOC
+operator||
+name|SEC_LINKER_CREATED
 argument_list|)
 expr_stmt|;
 if|if
@@ -1655,16 +1322,6 @@ condition|(
 name|s
 operator|==
 name|NULL
-operator|||
-operator|!
-name|bfd_set_section_flags
-argument_list|(
-name|abfd
-argument_list|,
-name|s
-argument_list|,
-name|SEC_ALLOC
-argument_list|)
 condition|)
 return|return
 name|FALSE
@@ -1679,11 +1336,15 @@ condition|)
 block|{
 name|s
 operator|=
-name|bfd_make_section
+name|bfd_make_section_with_flags
 argument_list|(
 name|abfd
 argument_list|,
 literal|".rela.sbss"
+argument_list|,
+name|flags
+operator||
+name|SEC_READONLY
 argument_list|)
 expr_stmt|;
 if|if
@@ -1691,18 +1352,6 @@ condition|(
 name|s
 operator|==
 name|NULL
-operator|||
-operator|!
-name|bfd_set_section_flags
-argument_list|(
-name|abfd
-argument_list|,
-name|s
-argument_list|,
-name|flags
-operator||
-name|SEC_READONLY
-argument_list|)
 operator|||
 operator|!
 name|bfd_set_section_alignment
@@ -1718,14 +1367,18 @@ return|return
 name|FALSE
 return|;
 block|}
-comment|/* xxx beats me, seem to need a rela.text ...  */
+comment|/* XXX beats me, seem to need a rela.text ...  */
 name|s
 operator|=
-name|bfd_make_section
+name|bfd_make_section_with_flags
 argument_list|(
 name|abfd
 argument_list|,
 literal|".rela.text"
+argument_list|,
+name|flags
+operator||
+name|SEC_READONLY
 argument_list|)
 expr_stmt|;
 if|if
@@ -1733,18 +1386,6 @@ condition|(
 name|s
 operator|==
 name|NULL
-operator|||
-operator|!
-name|bfd_set_section_flags
-argument_list|(
-name|abfd
-argument_list|,
-name|s
-argument_list|,
-name|flags
-operator||
-name|SEC_READONLY
-argument_list|)
 operator|||
 operator|!
 name|bfd_set_section_alignment
@@ -1770,7 +1411,7 @@ comment|/* Adjust a symbol defined by a dynamic object and referenced by a    re
 end_comment
 
 begin_comment
-comment|/* XXX hack alert bogus This routine is mostly all junk and almost  * certainly does the wrong thing.  Its here simply because it does  * just enough to allow glibc-2.1 ld.so to compile& link.  */
+comment|/* XXX hack alert bogus This routine is mostly all junk and almost    certainly does the wrong thing.  Its here simply because it does    just enough to allow glibc-2.1 ld.so to compile& link.  */
 end_comment
 
 begin_function
@@ -1778,20 +1419,16 @@ specifier|static
 name|bfd_boolean
 name|i370_elf_adjust_dynamic_symbol
 parameter_list|(
-name|info
-parameter_list|,
-name|h
-parameter_list|)
 name|struct
 name|bfd_link_info
 modifier|*
 name|info
-decl_stmt|;
+parameter_list|,
 name|struct
 name|elf_link_hash_entry
 modifier|*
 name|h
-decl_stmt|;
+parameter_list|)
 block|{
 name|bfd
 modifier|*
@@ -1840,50 +1477,31 @@ operator|!=
 name|NULL
 operator|&&
 operator|(
-operator|(
 name|h
 operator|->
-name|elf_link_hash_flags
-operator|&
-name|ELF_LINK_HASH_NEEDS_PLT
-operator|)
+name|needs_plt
 operator|||
 name|h
 operator|->
+name|u
+operator|.
 name|weakdef
 operator|!=
 name|NULL
 operator|||
 operator|(
-operator|(
 name|h
 operator|->
-name|elf_link_hash_flags
-operator|&
-name|ELF_LINK_HASH_DEF_DYNAMIC
-operator|)
-operator|!=
-literal|0
+name|def_dynamic
 operator|&&
-operator|(
 name|h
 operator|->
-name|elf_link_hash_flags
-operator|&
-name|ELF_LINK_HASH_REF_REGULAR
-operator|)
-operator|!=
-literal|0
+name|ref_regular
 operator|&&
-operator|(
+operator|!
 name|h
 operator|->
-name|elf_link_hash_flags
-operator|&
-name|ELF_LINK_HASH_DEF_REGULAR
-operator|)
-operator|==
-literal|0
+name|def_regular
 operator|)
 operator|)
 argument_list|)
@@ -1906,7 +1524,7 @@ argument_list|)
 expr_stmt|;
 name|s
 operator|->
-name|_raw_size
+name|size
 operator|+=
 sizeof|sizeof
 argument_list|(
@@ -1918,6 +1536,8 @@ if|if
 condition|(
 name|h
 operator|->
+name|u
+operator|.
 name|weakdef
 operator|!=
 name|NULL
@@ -1927,6 +1547,8 @@ name|BFD_ASSERT
 argument_list|(
 name|h
 operator|->
+name|u
+operator|.
 name|weakdef
 operator|->
 name|root
@@ -1937,6 +1559,8 @@ name|bfd_link_hash_defined
 operator|||
 name|h
 operator|->
+name|u
+operator|.
 name|weakdef
 operator|->
 name|root
@@ -1958,6 +1582,8 @@ name|section
 operator|=
 name|h
 operator|->
+name|u
+operator|.
 name|weakdef
 operator|->
 name|root
@@ -1980,6 +1606,8 @@ name|value
 operator|=
 name|h
 operator|->
+name|u
+operator|.
 name|weakdef
 operator|->
 name|root
@@ -2005,6 +1633,38 @@ condition|)
 return|return
 name|TRUE
 return|;
+if|if
+condition|(
+name|h
+operator|->
+name|size
+operator|==
+literal|0
+condition|)
+block|{
+call|(
+modifier|*
+name|_bfd_error_handler
+call|)
+argument_list|(
+name|_
+argument_list|(
+literal|"dynamic variable `%s' is zero size"
+argument_list|)
+argument_list|,
+name|h
+operator|->
+name|root
+operator|.
+name|root
+operator|.
+name|string
+argument_list|)
+expr_stmt|;
+return|return
+name|TRUE
+return|;
+block|}
 comment|/* We must allocate the symbol in our .dynbss section, which will      become part of the .bss section of the executable.  There will be      an entry for this symbol in the .dynsym section.  The dynamic      object will contain position independent code, so all references      from the dynamic object to this symbol will go through the global      offset table.  The dynamic linker will use the .dynsym entry to      determine the address it must put in the global offset table, so      both the dynamic object and the regular object will refer to the      same memory location for the variable.       Of course, if the symbol is sufficiently small, we must instead      allocate it in .sbss.  FIXME: It would be better to do this if and      only if there were actually SDAREL relocs for that symbol.  */
 if|if
 condition|(
@@ -2108,7 +1768,7 @@ argument_list|)
 expr_stmt|;
 name|srel
 operator|->
-name|_raw_size
+name|size
 operator|+=
 sizeof|sizeof
 argument_list|(
@@ -2117,9 +1777,9 @@ argument_list|)
 expr_stmt|;
 name|h
 operator|->
-name|elf_link_hash_flags
-operator||=
-name|ELF_LINK_HASH_NEEDS_COPY
+name|needs_copy
+operator|=
+literal|1
 expr_stmt|;
 block|}
 comment|/* We need to figure out the alignment required for this symbol.  I      have no idea how ELF linkers handle this.  */
@@ -2145,13 +1805,13 @@ expr_stmt|;
 comment|/* Apply the required alignment.  */
 name|s
 operator|->
-name|_raw_size
+name|size
 operator|=
 name|BFD_ALIGN
 argument_list|(
 name|s
 operator|->
-name|_raw_size
+name|size
 argument_list|,
 call|(
 name|bfd_size_type
@@ -2216,12 +1876,12 @@ name|value
 operator|=
 name|s
 operator|->
-name|_raw_size
+name|size
 expr_stmt|;
 comment|/* Increment the section size to make room for the symbol.  */
 name|s
 operator|->
-name|_raw_size
+name|size
 operator|+=
 name|h
 operator|->
@@ -2241,7 +1901,7 @@ comment|/* Increment the index of a dynamic symbol by a given amount.  Called   
 end_comment
 
 begin_comment
-comment|/* XXX hack alert bogus This routine is mostly all junk and almost  * certainly does the wrong thing.  Its here simply because it does  * just enough to allow glibc-2.1 ld.so to compile& link.  */
+comment|/* XXX hack alert bogus This routine is mostly all junk and almost    certainly does the wrong thing.  Its here simply because it does    just enough to allow glibc-2.1 ld.so to compile& link.  */
 end_comment
 
 begin_function
@@ -2249,18 +1909,15 @@ specifier|static
 name|bfd_boolean
 name|i370_elf_adjust_dynindx
 parameter_list|(
-name|h
-parameter_list|,
-name|cparg
-parameter_list|)
 name|struct
 name|elf_link_hash_entry
 modifier|*
 name|h
-decl_stmt|;
-name|PTR
+parameter_list|,
+name|void
+modifier|*
 name|cparg
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 modifier|*
@@ -2348,7 +2005,7 @@ comment|/* Set the sizes of the dynamic sections.  */
 end_comment
 
 begin_comment
-comment|/* XXX hack alert bogus This routine is mostly all junk and almost  * certainly does the wrong thing.  Its here simply because it does  * just enough to allow glibc-2.1 ld.so to compile& link.  */
+comment|/* XXX hack alert bogus This routine is mostly all junk and almost    certainly does the wrong thing.  Its here simply because it does    just enough to allow glibc-2.1 ld.so to compile& link.  */
 end_comment
 
 begin_function
@@ -2356,19 +2013,15 @@ specifier|static
 name|bfd_boolean
 name|i370_elf_size_dynamic_sections
 parameter_list|(
-name|output_bfd
-parameter_list|,
-name|info
-parameter_list|)
 name|bfd
 modifier|*
 name|output_bfd
-decl_stmt|;
+parameter_list|,
 name|struct
 name|bfd_link_info
 modifier|*
 name|info
-decl_stmt|;
+parameter_list|)
 block|{
 name|bfd
 modifier|*
@@ -2451,7 +2104,7 @@ argument_list|)
 expr_stmt|;
 name|s
 operator|->
-name|_raw_size
+name|size
 operator|=
 sizeof|sizeof
 name|ELF_DYNAMIC_INTERPRETER
@@ -2487,11 +2140,7 @@ literal|".rela.sdata2"
 block|,
 literal|".rela.sbss"
 block|,
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+name|NULL
 block|}
 decl_stmt|;
 name|char
@@ -2508,11 +2157,7 @@ init|;
 operator|*
 name|p
 operator|!=
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+name|NULL
 condition|;
 name|p
 operator|++
@@ -2536,7 +2181,7 @@ name|NULL
 condition|)
 name|s
 operator|->
-name|_raw_size
+name|size
 operator|=
 literal|0
 expr_stmt|;
@@ -2579,9 +2224,6 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-name|bfd_boolean
-name|strip
-decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -2605,10 +2247,6 @@ argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
-name|strip
-operator|=
-name|FALSE
-expr_stmt|;
 if|if
 condition|(
 name|strcmp
@@ -2621,29 +2259,15 @@ operator|==
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|s
-operator|->
-name|_raw_size
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* Strip this section if we don't need it; see the                  comment below.  */
-name|strip
-operator|=
-name|TRUE
-expr_stmt|;
-block|}
-else|else
-block|{
 comment|/* Remember whether there is a PLT.  */
 name|plt
 operator|=
-name|TRUE
+name|s
+operator|->
+name|size
+operator|!=
+literal|0
 expr_stmt|;
-block|}
 block|}
 elseif|else
 if|if
@@ -2664,18 +2288,10 @@ if|if
 condition|(
 name|s
 operator|->
-name|_raw_size
-operator|==
+name|size
+operator|!=
 literal|0
 condition|)
-block|{
-comment|/* If we don't need this section, strip it from the 		 output file.  This is mostly to handle .rela.bss and 		 .rela.plt.  We must create both sections in 		 create_dynamic_sections, because they must be created 		 before the linker maps input sections to output 		 sections.  The linker does that before 		 adjust_dynamic_symbol is called, and it is that 		 function which decides whether anything needs to go 		 into these sections.  */
-name|strip
-operator|=
-name|TRUE
-expr_stmt|;
-block|}
-else|else
 block|{
 name|asection
 modifier|*
@@ -2782,6 +2398,24 @@ literal|".sdata2"
 argument_list|)
 operator|!=
 literal|0
+operator|&&
+name|strcmp
+argument_list|(
+name|name
+argument_list|,
+literal|".dynbss"
+argument_list|)
+operator|!=
+literal|0
+operator|&&
+name|strcmp
+argument_list|(
+name|name
+argument_list|,
+literal|".dynsbss"
+argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
 comment|/* It's not one of our sections, so don't allocate space.  */
@@ -2789,94 +2423,47 @@ continue|continue;
 block|}
 if|if
 condition|(
-name|strip
-condition|)
-block|{
-name|asection
-modifier|*
-modifier|*
-name|spp
-decl_stmt|;
-for|for
-control|(
-name|spp
-operator|=
-operator|&
 name|s
 operator|->
-name|output_section
-operator|->
-name|owner
-operator|->
-name|sections
-init|;
-operator|*
-name|spp
-operator|!=
-name|NULL
-condition|;
-name|spp
-operator|=
-operator|&
-operator|(
-operator|*
-name|spp
-operator|)
-operator|->
-name|next
-control|)
-block|{
-if|if
-condition|(
-operator|*
-name|spp
+name|size
 operator|==
-name|s
-operator|->
-name|output_section
+literal|0
 condition|)
 block|{
-name|bfd_section_list_remove
-argument_list|(
+comment|/* If we don't need this section, strip it from the 	     output file.  This is mostly to handle .rela.bss and 	     .rela.plt.  We must create both sections in 	     create_dynamic_sections, because they must be created 	     before the linker maps input sections to output 	     sections.  The linker does that before 	     adjust_dynamic_symbol is called, and it is that 	     function which decides whether anything needs to go 	     into these sections.  */
 name|s
 operator|->
-name|output_section
-operator|->
-name|owner
-argument_list|,
-name|spp
-argument_list|)
+name|flags
+operator||=
+name|SEC_EXCLUDE
 expr_stmt|;
-operator|--
-name|s
-operator|->
-name|output_section
-operator|->
-name|owner
-operator|->
-name|section_count
-expr_stmt|;
-break|break;
-block|}
-block|}
 continue|continue;
 block|}
+if|if
+condition|(
+operator|(
+name|s
+operator|->
+name|flags
+operator|&
+name|SEC_HAS_CONTENTS
+operator|)
+operator|==
+literal|0
+condition|)
+continue|continue;
 comment|/* Allocate memory for the section contents.  */
 name|s
 operator|->
 name|contents
 operator|=
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|bfd_zalloc
 argument_list|(
 name|dynobj
 argument_list|,
 name|s
 operator|->
-name|_raw_size
+name|size
 argument_list|)
 expr_stmt|;
 if|if
@@ -2886,12 +2473,6 @@ operator|->
 name|contents
 operator|==
 name|NULL
-operator|&&
-name|s
-operator|->
-name|_raw_size
-operator|!=
-literal|0
 condition|)
 return|return
 name|FALSE
@@ -3144,9 +2725,6 @@ argument_list|)
 argument_list|,
 name|i370_elf_adjust_dynindx
 argument_list|,
-operator|(
-name|PTR
-operator|)
 operator|&
 name|c
 argument_list|)
@@ -3175,7 +2753,7 @@ comment|/* Look through the relocs for a section during the first phase, and    
 end_comment
 
 begin_comment
-comment|/* XXX hack alert bogus This routine is mostly all junk and almost  * certainly does the wrong thing.  Its here simply because it does  * just enough to allow glibc-2.1 ld.so to compile& link.  */
+comment|/* XXX hack alert bogus This routine is mostly all junk and almost    certainly does the wrong thing.  Its here simply because it does    just enough to allow glibc-2.1 ld.so to compile& link.  */
 end_comment
 
 begin_function
@@ -3183,32 +2761,24 @@ specifier|static
 name|bfd_boolean
 name|i370_elf_check_relocs
 parameter_list|(
-name|abfd
-parameter_list|,
-name|info
-parameter_list|,
-name|sec
-parameter_list|,
-name|relocs
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|struct
 name|bfd_link_info
 modifier|*
 name|info
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|sec
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|Elf_Internal_Rela
 modifier|*
 name|relocs
-decl_stmt|;
+parameter_list|)
 block|{
 name|bfd
 modifier|*
@@ -3254,23 +2824,13 @@ return|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|fprintf
+name|_bfd_error_handler
 argument_list|(
-name|stderr
-argument_list|,
-literal|"i370_elf_check_relocs called for section %s in %s\n"
-argument_list|,
-name|bfd_get_section_name
-argument_list|(
-name|abfd
+literal|"i370_elf_check_relocs called for section %A in %B"
 argument_list|,
 name|sec
-argument_list|)
 argument_list|,
-name|bfd_archive_filename
-argument_list|(
 name|abfd
-argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3365,6 +2925,7 @@ operator|=
 name|NULL
 expr_stmt|;
 else|else
+block|{
 name|h
 operator|=
 name|sym_hashes
@@ -3376,6 +2937,42 @@ operator|->
 name|sh_info
 index|]
 expr_stmt|;
+while|while
+condition|(
+name|h
+operator|->
+name|root
+operator|.
+name|type
+operator|==
+name|bfd_link_hash_indirect
+operator|||
+name|h
+operator|->
+name|root
+operator|.
+name|type
+operator|==
+name|bfd_link_hash_warning
+condition|)
+name|h
+operator|=
+operator|(
+expr|struct
+name|elf_link_hash_entry
+operator|*
+operator|)
+name|h
+operator|->
+name|root
+operator|.
+name|u
+operator|.
+name|i
+operator|.
+name|link
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|info
@@ -3512,15 +3109,6 @@ block|{
 name|flagword
 name|flags
 decl_stmt|;
-name|sreloc
-operator|=
-name|bfd_make_section
-argument_list|(
-name|dynobj
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
 name|flags
 operator|=
 operator|(
@@ -3551,21 +3139,22 @@ name|SEC_ALLOC
 operator||
 name|SEC_LOAD
 expr_stmt|;
+name|sreloc
+operator|=
+name|bfd_make_section_with_flags
+argument_list|(
+name|dynobj
+argument_list|,
+name|name
+argument_list|,
+name|flags
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sreloc
 operator|==
 name|NULL
-operator|||
-operator|!
-name|bfd_set_section_flags
-argument_list|(
-name|dynobj
-argument_list|,
-name|sreloc
-argument_list|,
-name|flags
-argument_list|)
 operator|||
 operator|!
 name|bfd_set_section_alignment
@@ -3584,7 +3173,7 @@ block|}
 block|}
 name|sreloc
 operator|->
-name|_raw_size
+name|size
 operator|+=
 sizeof|sizeof
 argument_list|(
@@ -3608,7 +3197,7 @@ comment|/* Finish up the dynamic sections.  */
 end_comment
 
 begin_comment
-comment|/* XXX hack alert bogus This routine is mostly all junk and almost  * certainly does the wrong thing.  Its here simply because it does  * just enough to allow glibc-2.1 ld.so to compile& link.  */
+comment|/* XXX hack alert bogus This routine is mostly all junk and almost    certainly does the wrong thing.  Its here simply because it does    just enough to allow glibc-2.1 ld.so to compile& link.  */
 end_comment
 
 begin_function
@@ -3616,19 +3205,15 @@ specifier|static
 name|bfd_boolean
 name|i370_elf_finish_dynamic_sections
 parameter_list|(
-name|output_bfd
-parameter_list|,
-name|info
-parameter_list|)
 name|bfd
 modifier|*
 name|output_bfd
-decl_stmt|;
+parameter_list|,
 name|struct
 name|bfd_link_info
 modifier|*
 name|info
-decl_stmt|;
+parameter_list|)
 block|{
 name|asection
 modifier|*
@@ -3741,7 +3326,7 @@ name|contents
 operator|+
 name|sdyn
 operator|->
-name|_raw_size
+name|size
 operator|)
 expr_stmt|;
 for|for
@@ -3882,15 +3467,6 @@ operator|->
 name|vma
 expr_stmt|;
 else|else
-block|{
-if|if
-condition|(
-name|s
-operator|->
-name|_cooked_size
-operator|!=
-literal|0
-condition|)
 name|dyn
 operator|.
 name|d_un
@@ -3899,20 +3475,8 @@ name|d_val
 operator|=
 name|s
 operator|->
-name|_cooked_size
+name|size
 expr_stmt|;
-else|else
-name|dyn
-operator|.
-name|d_un
-operator|.
-name|d_val
-operator|=
-name|s
-operator|->
-name|_raw_size
-expr_stmt|;
-block|}
 block|}
 name|bfd_elf32_swap_dyn_out
 argument_list|(
@@ -3927,11 +3491,15 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* Add a blrl instruction at _GLOBAL_OFFSET_TABLE_-4 so that a function can      easily find the address of the _GLOBAL_OFFSET_TABLE_.  */
-comment|/* XXX this is clearly very wrong for the 370 arch */
 if|if
 condition|(
 name|sgot
+operator|&&
+name|sgot
+operator|->
+name|size
+operator|!=
+literal|0
 condition|)
 block|{
 name|unsigned
@@ -3943,19 +3511,6 @@ name|sgot
 operator|->
 name|contents
 decl_stmt|;
-name|bfd_put_32
-argument_list|(
-name|output_bfd
-argument_list|,
-operator|(
-name|bfd_vma
-operator|)
-literal|0x4e800021
-comment|/* blrl */
-argument_list|,
-name|contents
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sdyn
@@ -3972,8 +3527,6 @@ operator|)
 literal|0
 argument_list|,
 name|contents
-operator|+
-literal|4
 argument_list|)
 expr_stmt|;
 else|else
@@ -3992,8 +3545,6 @@ operator|->
 name|output_offset
 argument_list|,
 name|contents
-operator|+
-literal|4
 argument_list|)
 expr_stmt|;
 name|elf_section_data
@@ -4190,20 +3741,14 @@ argument_list|,
 operator|&
 name|sym
 argument_list|,
-operator|(
-name|PTR
-operator|)
 name|esym
 argument_list|,
-operator|(
-name|PTR
-operator|)
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Set the sh_info field of the output .dynsym section to the          index of the first global symbol.  */
+comment|/* Set the sh_info field of the output .dynsym section to the 	 index of the first global symbol.  */
 name|elf_section_data
 argument_list|(
 name|sdynsym
@@ -4238,56 +3783,40 @@ specifier|static
 name|bfd_boolean
 name|i370_elf_relocate_section
 parameter_list|(
-name|output_bfd
-parameter_list|,
-name|info
-parameter_list|,
-name|input_bfd
-parameter_list|,
-name|input_section
-parameter_list|,
-name|contents
-parameter_list|,
-name|relocs
-parameter_list|,
-name|local_syms
-parameter_list|,
-name|local_sections
-parameter_list|)
 name|bfd
 modifier|*
 name|output_bfd
-decl_stmt|;
+parameter_list|,
 name|struct
 name|bfd_link_info
 modifier|*
 name|info
-decl_stmt|;
+parameter_list|,
 name|bfd
 modifier|*
 name|input_bfd
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|input_section
-decl_stmt|;
+parameter_list|,
 name|bfd_byte
 modifier|*
 name|contents
-decl_stmt|;
+parameter_list|,
 name|Elf_Internal_Rela
 modifier|*
 name|relocs
-decl_stmt|;
+parameter_list|,
 name|Elf_Internal_Sym
 modifier|*
 name|local_syms
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 modifier|*
 name|local_sections
-decl_stmt|;
+parameter_list|)
 block|{
 name|Elf_Internal_Shdr
 modifier|*
@@ -4366,23 +3895,13 @@ return|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|fprintf
+name|_bfd_error_handler
 argument_list|(
-name|stderr
+literal|"i370_elf_relocate_section called for %B section %A, %ld relocations%s"
 argument_list|,
-literal|"i370_elf_relocate_section called for %s section %s, %ld relocations%s\n"
-argument_list|,
-name|bfd_archive_filename
-argument_list|(
-name|input_bfd
-argument_list|)
-argument_list|,
-name|bfd_section_name
-argument_list|(
 name|input_bfd
 argument_list|,
 name|input_section
-argument_list|)
 argument_list|,
 operator|(
 name|long
@@ -4412,7 +3931,7 @@ index|[
 name|R_I370_ADDR31
 index|]
 condition|)
-comment|/* Initialize howto table if needed */
+comment|/* Initialize howto table if needed.  */
 name|i370_elf_howto_init
 argument_list|()
 expr_stmt|;
@@ -4472,45 +3991,27 @@ name|Elf_Internal_Sym
 modifier|*
 name|sym
 init|=
-operator|(
-name|Elf_Internal_Sym
-operator|*
-operator|)
-literal|0
+name|NULL
 decl_stmt|;
 name|asection
 modifier|*
 name|sec
 init|=
-operator|(
-name|asection
-operator|*
-operator|)
-literal|0
+name|NULL
 decl_stmt|;
 name|struct
 name|elf_link_hash_entry
 modifier|*
 name|h
 init|=
-operator|(
-expr|struct
-name|elf_link_hash_entry
-operator|*
-operator|)
-literal|0
+name|NULL
 decl_stmt|;
 specifier|const
 name|char
 modifier|*
 name|sym_name
 init|=
-operator|(
-specifier|const
-name|char
-operator|*
-operator|)
-literal|0
+name|NULL
 decl_stmt|;
 name|reloc_howto_type
 modifier|*
@@ -4523,7 +4024,7 @@ decl_stmt|;
 name|bfd_vma
 name|relocation
 decl_stmt|;
-comment|/* Unknown relocation handling */
+comment|/* Unknown relocation handling.  */
 if|if
 condition|(
 operator|(
@@ -4551,12 +4052,9 @@ modifier|*
 name|_bfd_error_handler
 call|)
 argument_list|(
-literal|"%s: unknown relocation type %d"
+literal|"%B: unknown relocation type %d"
 argument_list|,
-name|bfd_archive_filename
-argument_list|(
 name|input_bfd
-argument_list|)
 argument_list|,
 operator|(
 name|int
@@ -4751,15 +4249,10 @@ operator|-
 literal|1
 operator|)
 operator|||
-operator|(
+operator|!
 name|h
 operator|->
-name|elf_link_hash_flags
-operator|&
-name|ELF_LINK_HASH_DEF_REGULAR
-operator|)
-operator|==
-literal|0
+name|def_regular
 operator|)
 operator|&&
 operator|(
@@ -4790,13 +4283,11 @@ operator|==
 name|R_I370_RELATIVE
 operator|)
 condition|)
-block|{
-comment|/* In these cases, we don't need the relocation                      value.  We check specially because in some                      obscure cases sec->output_section will be NULL.  */
+comment|/* In these cases, we don't need the relocation 		   value.  We check specially because in some 		   obscure cases sec->output_section will be NULL.  */
 name|relocation
 operator|=
 literal|0
 expr_stmt|;
-block|}
 else|else
 name|relocation
 operator|=
@@ -4934,12 +4425,9 @@ modifier|*
 name|_bfd_error_handler
 call|)
 argument_list|(
-literal|"%s: unknown relocation type %d for symbol %s"
+literal|"%B: unknown relocation type %d for symbol %s"
 argument_list|,
-name|bfd_archive_filename
-argument_list|(
 name|input_bfd
-argument_list|)
 argument_list|,
 operator|(
 name|int
@@ -4966,7 +4454,7 @@ operator|)
 name|R_I370_NONE
 case|:
 continue|continue;
-comment|/* Relocations that may need to be propagated if this is a shared            object.  */
+comment|/* Relocations that may need to be propagated if this is a shared 	   object.  */
 case|case
 operator|(
 name|int
@@ -4996,8 +4484,8 @@ operator|==
 literal|0
 condition|)
 break|break;
-comment|/* fall through */
-comment|/* Relocations that always need to be propagated if this is a shared            object.  */
+comment|/* Fall through.  */
+comment|/* Relocations that always need to be propagated if this is a shared 	   object.  */
 case|case
 operator|(
 name|int
@@ -5065,7 +4553,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* When generating a shared object, these relocations                  are copied into the output file to be resolved at run                  time.  */
+comment|/* When generating a shared object, these relocations 		 are copied into the output file to be resolved at run 		 time.  */
 if|if
 condition|(
 name|sreloc
@@ -5242,7 +4730,7 @@ sizeof|sizeof
 name|outrel
 argument_list|)
 expr_stmt|;
-comment|/* h->dynindx may be -1 if this symbol was marked to                  become local.  */
+comment|/* h->dynindx may be -1 if this symbol was marked to 		 become local.  */
 elseif|else
 if|if
 condition|(
@@ -5265,15 +4753,10 @@ operator|-
 literal|1
 operator|)
 operator|||
-operator|(
+operator|!
 name|h
 operator|->
-name|elf_link_hash_flags
-operator|&
-name|ELF_LINK_HASH_DEF_REGULAR
-operator|)
-operator|==
-literal|0
+name|def_regular
 operator|)
 condition|)
 block|{
@@ -5495,7 +4978,7 @@ argument_list|,
 name|loc
 argument_list|)
 expr_stmt|;
-comment|/* This reloc will be computed at runtime, so there's no                  need to do anything now, unless this is a RELATIVE                  reloc in an unallocated section.  */
+comment|/* This reloc will be computed at runtime, so there's no 		 need to do anything now, unless this is a RELATIVE 		 reloc in an unallocated section.  */
 if|if
 condition|(
 name|skip
@@ -5542,12 +5025,9 @@ modifier|*
 name|_bfd_error_handler
 call|)
 argument_list|(
-literal|"%s: Relocation %s is not yet supported for symbol %s."
+literal|"%B: Relocation %s is not yet supported for symbol %s."
 argument_list|,
-name|bfd_archive_filename
-argument_list|(
 name|input_bfd
-argument_list|)
 argument_list|,
 name|i370_elf_howto_table
 index|[
@@ -5662,13 +5142,7 @@ name|NULL
 condition|)
 name|name
 operator|=
-name|h
-operator|->
-name|root
-operator|.
-name|root
-operator|.
-name|string
+name|NULL
 expr_stmt|;
 else|else
 block|{
@@ -5722,6 +5196,17 @@ call|)
 argument_list|(
 name|info
 argument_list|,
+operator|(
+name|h
+condition|?
+operator|&
+name|h
+operator|->
+name|root
+else|:
+name|NULL
+operator|)
+argument_list|,
 name|name
 argument_list|,
 name|howto
@@ -5768,26 +5253,22 @@ specifier|static
 name|void
 name|i370_elf_post_process_headers
 parameter_list|(
-name|abfd
-parameter_list|,
-name|link_info
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|struct
 name|bfd_link_info
 modifier|*
 name|link_info
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 name|Elf_Internal_Ehdr
 modifier|*
 name|i_ehdrp
 decl_stmt|;
-comment|/* Elf file header, internal form */
+comment|/* Elf file header, internal form.  */
 name|i_ehdrp
 operator|=
 name|elf_elfheader
@@ -5880,13 +5361,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|elf_backend_got_symbol_offset
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
 name|elf_backend_rela_normal
 value|1
 end_define
@@ -5920,7 +5394,7 @@ value|i370_elf_relocate_section
 end_define
 
 begin_comment
-comment|/* dynamic loader support is mostly broken; just enough here to be able to  * link glibc's ld.so without errors.  */
+comment|/* Dynamic loader support is mostly broken; just enough here to be able to    link glibc's ld.so without errors.  */
 end_comment
 
 begin_define
@@ -5972,10 +5446,6 @@ name|elf_backend_check_relocs
 value|i370_elf_check_relocs
 end_define
 
-begin_comment
-comment|/* #define elf_backend_add_symbol_hook		i370_elf_add_symbol_hook #define elf_backend_finish_dynamic_symbol	i370_elf_finish_dynamic_symbol #define elf_backend_additional_program_headers	i370_elf_additional_program_headers #define elf_backend_modify_segment_map		i370_elf_modify_segment_map */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -5983,24 +5453,13 @@ name|elf_backend_post_process_headers
 value|i370_elf_post_process_headers
 end_define
 
-begin_decl_stmt
-specifier|static
-name|int
-name|i370_noop
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|int
 name|i370_noop
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 literal|1
@@ -6009,7 +5468,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* we need to define these at least as no-ops to link glibc ld.so */
+comment|/* We need to define these at least as no-ops to link glibc ld.so.  */
 end_comment
 
 begin_define
@@ -6017,7 +5476,7 @@ define|#
 directive|define
 name|elf_backend_add_symbol_hook
 define|\
-value|(bfd_boolean (*) \      PARAMS ((bfd *, struct bfd_link_info *, Elf_Internal_Sym *, \ 	      const char **, flagword *, asection **, bfd_vma *))) i370_noop
+value|(bfd_boolean (*) \      (bfd *, struct bfd_link_info *, Elf_Internal_Sym *, \       const char **, flagword *, asection **, bfd_vma *)) i370_noop
 end_define
 
 begin_define
@@ -6025,7 +5484,7 @@ define|#
 directive|define
 name|elf_backend_finish_dynamic_symbol
 define|\
-value|(bfd_boolean (*) \      PARAMS ((bfd *, struct bfd_link_info *, struct elf_link_hash_entry *, \ 	      Elf_Internal_Sym *))) i370_noop
+value|(bfd_boolean (*) \      (bfd *, struct bfd_link_info *, struct elf_link_hash_entry *, \       Elf_Internal_Sym *)) i370_noop
 end_define
 
 begin_define
@@ -6033,7 +5492,7 @@ define|#
 directive|define
 name|elf_backend_additional_program_headers
 define|\
-value|(int (*) PARAMS ((bfd *))) i370_noop
+value|(int (*) (bfd *)) i370_noop
 end_define
 
 begin_define
@@ -6041,7 +5500,7 @@ define|#
 directive|define
 name|elf_backend_modify_segment_map
 define|\
-value|(bfd_boolean (*) PARAMS ((bfd *, struct bfd_link_info *))) i370_noop
+value|(bfd_boolean (*) (bfd *, struct bfd_link_info *)) i370_noop
 end_define
 
 begin_include

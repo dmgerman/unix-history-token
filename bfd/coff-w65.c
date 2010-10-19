@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for WDC 65816 COFF binaries.    Copyright 1995, 1996, 1997, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.    Written by Steve Chamberlain,<sac@cygnus.com>.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for WDC 65816 COFF binaries.    Copyright 1995, 1996, 1997, 1999, 2000, 2001, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.    Written by Steve Chamberlain,<sac@cygnus.com>.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -1511,23 +1511,19 @@ decl_stmt|;
 name|bfd_vma
 name|dot
 init|=
-name|link_order
-operator|->
-name|offset
-operator|+
+operator|(
 name|dst_address
 operator|+
-name|link_order
+name|input_section
 operator|->
-name|u
-operator|.
-name|indirect
-operator|.
-name|section
+name|output_offset
+operator|+
+name|input_section
 operator|->
 name|output_section
 operator|->
 name|vma
+operator|)
 decl_stmt|;
 name|gap
 operator|-=
@@ -1561,6 +1557,8 @@ name|reloc_overflow
 call|)
 argument_list|(
 name|link_info
+argument_list|,
+name|NULL
 argument_list|,
 name|bfd_asymbol_name
 argument_list|(
@@ -1636,23 +1634,19 @@ decl_stmt|;
 name|bfd_vma
 name|dot
 init|=
-name|link_order
-operator|->
-name|offset
-operator|+
+operator|(
 name|dst_address
 operator|+
-name|link_order
+name|input_section
 operator|->
-name|u
-operator|.
-name|indirect
-operator|.
-name|section
+name|output_offset
+operator|+
+name|input_section
 operator|->
 name|output_section
 operator|->
 name|vma
+operator|)
 decl_stmt|;
 comment|/* This wraps within the page, so ignore the relativeness, look at the 	   high part.  */
 if|if
@@ -1684,6 +1678,8 @@ name|reloc_overflow
 call|)
 argument_list|(
 name|link_info
+argument_list|,
+name|NULL
 argument_list|,
 name|bfd_asymbol_name
 argument_list|(

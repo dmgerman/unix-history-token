@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-mn10300.h -- Header file for tc-mn10300.c.    Copyright 1996, 1997, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* tc-mn10300.h -- Header file for tc-mn10300.c.    Copyright 1996, 1997, 2000, 2001, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_define
@@ -15,23 +15,6 @@ directive|define
 name|TARGET_BYTES_BIG_ENDIAN
 value|0
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BFD_ASSEMBLER
-end_ifndef
-
-begin_error
-error|#
-directive|error
-error|MN10300 support requires BFD_ASSEMBLER
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -66,10 +49,12 @@ name|name
 parameter_list|,
 name|exprP
 parameter_list|,
+name|mode
+parameter_list|,
 name|nextcharP
 parameter_list|)
 define|\
-value|mn10300_parse_name ((name), (exprP), (nextcharP))
+value|mn10300_parse_name ((name), (exprP), (mode), (nextcharP))
 end_define
 
 begin_decl_stmt
@@ -84,6 +69,9 @@ operator|*
 operator|,
 name|expressionS
 operator|*
+operator|,
+expr|enum
+name|expr_mode
 operator|,
 name|char
 operator|*
@@ -267,6 +255,10 @@ begin_comment
 comment|/* Don't bother to adjust relocs.  */
 end_comment
 
+begin_comment
+comment|/* #define tc_fix_adjustable(FIX) 0 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -274,12 +266,8 @@ name|tc_fix_adjustable
 parameter_list|(
 name|FIX
 parameter_list|)
-value|0
+value|mn10300_fix_adjustable (FIX)
 end_define
-
-begin_comment
-comment|/* #define tc_fix_adjustable(FIX) mn10300_fix_adjustable (FIX) */
-end_comment
 
 begin_decl_stmt
 specifier|extern

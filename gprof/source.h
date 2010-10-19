@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* source.h     Copyright 2000, 2001, 2002 Free Software Foundation, Inc.  This file is part of GNU Binutils.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* source.h     Copyright 2000, 2001, 2002, 2004 Free Software Foundation, Inc.  This file is part of GNU Binutils.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_escape
@@ -100,81 +100,73 @@ begin_comment
 comment|/* Returns pointer to source file descriptor for PATH/FILENAME.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|Source_File
 modifier|*
 name|source_file_lookup_path
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|Source_File
 modifier|*
 name|source_file_lookup_name
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Read source file SF output annotated source.  The annotation is at    MAX_WIDTH characters wide and for each source-line an annotation is    obtained by invoking function ANNOTE.  ARG is an argument passed to    ANNOTE that is left uninterpreted by annotate_source().     Returns a pointer to the output file (which maybe stdout) such    that summary statistics can be printed.  If the returned file    is not stdout, it should be closed when done with it.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|FILE
 modifier|*
 name|annotate_source
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|Source_File
-operator|*
+modifier|*
 name|sf
-operator|,
+parameter_list|,
 name|unsigned
 name|int
 name|max_width
-operator|,
+parameter_list|,
 name|void
-argument_list|(
-argument|*annote
-argument_list|)
-operator|(
+function_decl|(
+modifier|*
+name|annote
+function_decl|)
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|unsigned
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|PTR
 name|arg
-operator|)
-operator|,
+parameter_list|)
+parameter_list|,
 name|PTR
 name|arg
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

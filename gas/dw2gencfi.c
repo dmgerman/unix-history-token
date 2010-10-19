@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* dw2gencfi.c - Support for generating Dwarf2 CFI information.    Copyright 2003 Free Software Foundation, Inc.    Contributed by Michal Ludvig<mludvig@suse.cz>     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* dw2gencfi.c - Support for generating Dwarf2 CFI information.    Copyright 2003, 2004, 2005, 2006 Free Software Foundation, Inc.    Contributed by Michal Ludvig<mludvig@suse.cz>     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -94,35 +94,12 @@ directive|ifndef
 name|EH_FRAME_ALIGNMENT
 end_ifndef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BFD_ASSEMBLER
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|EH_FRAME_ALIGNMENT
 value|(bfd_get_arch_size (stdoutput) == 64 ? 3 : 2)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|EH_FRAME_ALIGNMENT
-value|2
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -257,6 +234,10 @@ name|unsigned
 name|int
 name|return_column
 decl_stmt|;
+name|unsigned
+name|int
+name|signal_frame
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -277,6 +258,10 @@ decl_stmt|;
 name|unsigned
 name|int
 name|return_column
+decl_stmt|;
+name|unsigned
+name|int
+name|signal_frame
 decl_stmt|;
 name|struct
 name|cfi_insn_data
@@ -1166,6 +1151,15 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|as_bad
+argument_list|(
+name|_
+argument_list|(
+literal|"CFI state restore without previous remember"
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1246,6 +1240,13 @@ define|#
 directive|define
 name|CFI_escape
 value|0x103
+end_define
+
+begin_define
+define|#
+directive|define
+name|CFI_signal_frame
+value|0x104
 end_define
 
 begin_decl_stmt
@@ -1392,6 +1393,14 @@ literal|0
 block|}
 block|,
 block|{
+literal|"cfi_signal_frame"
+block|,
+name|dot_cfi
+block|,
+name|CFI_signal_frame
+block|}
+block|,
+block|{
 name|NULL
 block|,
 name|NULL
@@ -1531,7 +1540,7 @@ return|;
 block|}
 endif|#
 directive|endif
-name|expression
+name|expression_and_evaluate
 argument_list|(
 operator|&
 name|exp
@@ -1623,6 +1632,9 @@ argument_list|(
 literal|"CFI instruction used without previous .cfi_startproc"
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|ignore_rest_of_line
+argument_list|()
 expr_stmt|;
 return|return;
 block|}
@@ -1800,6 +1812,12 @@ break|break;
 case|case
 name|DW_CFA_restore
 case|:
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
 name|reg1
 operator|=
 name|cfi_parse_reg
@@ -1810,10 +1828,31 @@ argument_list|(
 name|reg1
 argument_list|)
 expr_stmt|;
+name|SKIP_WHITESPACE
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|input_line_pointer
+operator|!=
+literal|','
+condition|)
+break|break;
+operator|++
+name|input_line_pointer
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|DW_CFA_undefined
 case|:
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
 name|reg1
 operator|=
 name|cfi_parse_reg
@@ -1824,6 +1863,21 @@ argument_list|(
 name|reg1
 argument_list|)
 expr_stmt|;
+name|SKIP_WHITESPACE
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|input_line_pointer
+operator|!=
+literal|','
+condition|)
+break|break;
+operator|++
+name|input_line_pointer
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|DW_CFA_same_value
@@ -1874,6 +1928,16 @@ name|cfi_add_CFA_insn
 argument_list|(
 name|DW_CFA_GNU_window_save
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CFI_signal_frame
+case|:
+name|cur_fde_data
+operator|->
+name|signal_frame
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 default|default:
@@ -1927,6 +1991,9 @@ argument_list|(
 literal|"CFI instruction used without previous .cfi_startproc"
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|ignore_rest_of_line
+argument_list|()
 expr_stmt|;
 return|return;
 block|}
@@ -2028,6 +2095,12 @@ name|esc
 operator|=
 name|head
 expr_stmt|;
+operator|--
+name|input_line_pointer
+expr_stmt|;
+name|demand_empty_rest_of_line
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -2058,6 +2131,9 @@ argument_list|(
 literal|"previous CFI entry not closed (missing .cfi_endproc)"
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|ignore_rest_of_line
+argument_list|()
 expr_stmt|;
 return|return;
 block|}
@@ -2125,6 +2201,10 @@ block|}
 name|demand_empty_rest_of_line
 argument_list|()
 expr_stmt|;
+name|cur_cfa_offset
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2160,6 +2240,9 @@ literal|".cfi_endproc without corresponding .cfi_startproc"
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|ignore_rest_of_line
+argument_list|()
+expr_stmt|;
 return|return;
 block|}
 name|cfi_end_fde
@@ -2167,6 +2250,9 @@ argument_list|(
 name|symbol_temp_new_now
 argument_list|()
 argument_list|)
+expr_stmt|;
+name|demand_empty_rest_of_line
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -2575,9 +2661,11 @@ operator|.
 name|reg
 argument_list|)
 expr_stmt|;
-name|out_uleb128
+name|out_sleb128
 argument_list|(
 name|offset
+operator|/
+name|DWARF2_CIE_DATA_ALIGNMENT
 argument_list|)
 expr_stmt|;
 block|}
@@ -2658,6 +2746,8 @@ expr_stmt|;
 name|out_sleb128
 argument_list|(
 name|offset
+operator|/
+name|DWARF2_CIE_DATA_ALIGNMENT
 argument_list|)
 expr_stmt|;
 block|}
@@ -2979,7 +3069,7 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|/* Length */
+comment|/* Length.  */
 name|symbol_set_value_now
 argument_list|(
 name|after_size_address
@@ -2990,22 +3080,33 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* CIE id */
+comment|/* CIE id.  */
 name|out_one
 argument_list|(
 name|DW_CIE_VERSION
 argument_list|)
 expr_stmt|;
-comment|/* Version */
+comment|/* Version.  */
 name|out_one
 argument_list|(
 literal|'z'
 argument_list|)
 expr_stmt|;
-comment|/* Augmentation */
+comment|/* Augmentation.  */
 name|out_one
 argument_list|(
 literal|'R'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cie
+operator|->
+name|signal_frame
+condition|)
+name|out_one
+argument_list|(
+literal|'S'
 argument_list|)
 expr_stmt|;
 name|out_one
@@ -3018,13 +3119,20 @@ argument_list|(
 name|DWARF2_LINE_MIN_INSN_LENGTH
 argument_list|)
 expr_stmt|;
-comment|/* Code alignment */
+comment|/* Code alignment.  */
 name|out_sleb128
 argument_list|(
 name|DWARF2_CIE_DATA_ALIGNMENT
 argument_list|)
 expr_stmt|;
-comment|/* Data alignment */
+comment|/* Data alignment.  */
+if|if
+condition|(
+name|DW_CIE_VERSION
+operator|==
+literal|1
+condition|)
+comment|/* Return column.  */
 name|out_one
 argument_list|(
 name|cie
@@ -3032,13 +3140,20 @@ operator|->
 name|return_column
 argument_list|)
 expr_stmt|;
-comment|/* Return column */
+else|else
+name|out_uleb128
+argument_list|(
+name|cie
+operator|->
+name|return_column
+argument_list|)
+expr_stmt|;
 name|out_uleb128
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Augmentation size */
+comment|/* Augmentation size.  */
 if|#
 directive|if
 name|defined
@@ -3097,7 +3212,7 @@ name|frag_align
 argument_list|(
 literal|2
 argument_list|,
-literal|0
+name|DW_CFA_nop
 argument_list|,
 literal|0
 argument_list|)
@@ -3186,7 +3301,7 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|/* Length */
+comment|/* Length.  */
 name|symbol_set_value_now
 argument_list|(
 name|after_size_address
@@ -3214,7 +3329,7 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|/* CIE offset */
+comment|/* CIE offset.  */
 ifdef|#
 directive|ifdef
 name|DIFF_EXPR_OK
@@ -3241,7 +3356,7 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|/* Code offset */
+comment|/* Code offset.  */
 else|#
 directive|else
 name|exp
@@ -3275,7 +3390,7 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|/* Code offset */
+comment|/* Code offset.  */
 else|#
 directive|else
 name|emit_expr
@@ -3286,7 +3401,7 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|/* Code offset */
+comment|/* Code offset.  */
 endif|#
 directive|endif
 name|exp
@@ -3313,7 +3428,7 @@ name|fde
 operator|->
 name|start_address
 expr_stmt|;
-comment|/* Code length */
+comment|/* Code length.  */
 name|emit_expr
 argument_list|(
 operator|&
@@ -3327,7 +3442,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Augmentation size */
+comment|/* Augmentation size.  */
 for|for
 control|(
 init|;
@@ -3348,7 +3463,7 @@ name|frag_align
 argument_list|(
 name|align
 argument_list|,
-literal|0
+name|DW_CFA_nop
 argument_list|,
 literal|0
 argument_list|)
@@ -3417,6 +3532,14 @@ operator|!=
 name|fde
 operator|->
 name|return_column
+operator|||
+name|cie
+operator|->
+name|signal_frame
+operator|!=
+name|fde
+operator|->
+name|signal_frame
 condition|)
 continue|continue;
 for|for
@@ -3479,7 +3602,10 @@ block|{
 case|case
 name|DW_CFA_advance_loc
 case|:
-comment|/* We reached the first advance in the FDE, but did not 		 reach the end of the CIE list.  */
+case|case
+name|DW_CFA_remember_state
+case|:
+comment|/* We reached the first advance/remember in the FDE, 		 but did not reach the end of the CIE list.  */
 goto|goto
 name|fail
 goto|;
@@ -3642,7 +3768,7 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-comment|/* Success if we reached the end of the CIE list, and we've either 	 run out of FDE entries or we've encountered an advance.  */
+comment|/* Success if we reached the end of the CIE list, and we've either 	 run out of FDE entries or we've encountered an advance, 	 remember, or escape.  */
 if|if
 condition|(
 name|i
@@ -3660,6 +3786,18 @@ operator|->
 name|insn
 operator|==
 name|DW_CFA_advance_loc
+operator|||
+name|j
+operator|->
+name|insn
+operator|==
+name|DW_CFA_remember_state
+operator|||
+name|j
+operator|->
+name|insn
+operator|==
+name|CFI_escape
 operator|)
 condition|)
 block|{
@@ -3707,6 +3845,14 @@ name|return_column
 expr_stmt|;
 name|cie
 operator|->
+name|signal_frame
+operator|=
+name|fde
+operator|->
+name|signal_frame
+expr_stmt|;
+name|cie
+operator|->
 name|first
 operator|=
 name|fde
@@ -3736,6 +3882,18 @@ operator|->
 name|insn
 operator|==
 name|DW_CFA_advance_loc
+operator|||
+name|i
+operator|->
+name|insn
+operator|==
+name|DW_CFA_remember_state
+operator|||
+name|i
+operator|->
+name|insn
+operator|==
+name|CFI_escape
 condition|)
 break|break;
 name|cie
@@ -3817,9 +3975,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|BFD_ASSEMBLER
 name|bfd_set_section_flags
 argument_list|(
 name|stdoutput
@@ -3835,8 +3990,6 @@ operator||
 name|SEC_READONLY
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|subseg_set
 argument_list|(
 name|cfi_seg

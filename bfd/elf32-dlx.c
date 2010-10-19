@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* DLX specific support for 32-bit ELF    Copyright 2002, 2003 Free Software Foundation, Inc.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* DLX specific support for 32-bit ELF    Copyright 2002, 2003, 2004, 2005 Free Software Foundation, Inc.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston,    MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -32,211 +32,6 @@ include|#
 directive|include
 file|"elf/dlx.h"
 end_include
-
-begin_decl_stmt
-name|int
-name|set_dlx_skip_hi16_flag
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|elf32_dlx_check_relocs
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-expr|struct
-name|bfd_link_info
-operator|*
-operator|,
-name|asection
-operator|*
-operator|,
-specifier|const
-name|Elf_Internal_Rela
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|elf32_dlx_info_to_howto
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|arelent
-operator|*
-operator|,
-name|Elf_Internal_Rela
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|elf32_dlx_info_to_howto_rel
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|arelent
-operator|*
-operator|,
-name|Elf_Internal_Rela
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_reloc_status_type
-name|elf32_dlx_relocate16
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|arelent
-operator|*
-operator|,
-name|asymbol
-operator|*
-operator|,
-name|PTR
-operator|,
-name|asection
-operator|*
-operator|,
-name|bfd
-operator|*
-operator|,
-name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_reloc_status_type
-name|elf32_dlx_relocate26
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|arelent
-operator|*
-operator|,
-name|asymbol
-operator|*
-operator|,
-name|PTR
-operator|,
-name|asection
-operator|*
-operator|,
-name|bfd
-operator|*
-operator|,
-name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|reloc_howto_type
-modifier|*
-name|elf32_dlx_reloc_type_lookup
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|bfd_reloc_code_real_type
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_reloc_status_type
-name|_bfd_dlx_elf_hi16_reloc
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|arelent
-operator|*
-operator|,
-name|asymbol
-operator|*
-operator|,
-name|PTR
-operator|,
-name|asection
-operator|*
-operator|,
-name|bfd
-operator|*
-operator|,
-name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|reloc_howto_type
-modifier|*
-name|dlx_rtype_to_howto
-name|PARAMS
-argument_list|(
-operator|(
-name|unsigned
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
@@ -273,531 +68,6 @@ name|elf_backend_check_relocs
 value|elf32_dlx_check_relocs
 end_define
 
-begin_decl_stmt
-specifier|static
-name|reloc_howto_type
-name|dlx_elf_howto_table
-index|[]
-init|=
-block|{
-comment|/* No relocation.  */
-name|HOWTO
-argument_list|(
-name|R_DLX_NONE
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|0
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|0
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_DLX_NONE"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* 8 bit relocation.  */
-name|HOWTO
-argument_list|(
-name|R_DLX_RELOC_8
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|0
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|8
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_DLX_RELOC_8"
-argument_list|,
-comment|/* name */
-name|TRUE
-argument_list|,
-comment|/* partial_inplace */
-literal|0xff
-argument_list|,
-comment|/* src_mask */
-literal|0xff
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* 16 bit relocation.  */
-name|HOWTO
-argument_list|(
-name|R_DLX_RELOC_16
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|1
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|16
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_DLX_RELOC_16"
-argument_list|,
-comment|/* name */
-name|TRUE
-argument_list|,
-comment|/* partial_inplace */
-literal|0xffff
-argument_list|,
-comment|/* src_mask */
-literal|0xffff
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-if|#
-directive|if
-literal|0
-comment|/* 26 bit jump address.  */
-block|HOWTO (R_DLX_RELOC_26,
-comment|/* type */
-block|0,
-comment|/* rightshift */
-block|2,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-block|26,
-comment|/* bitsize */
-block|FALSE,
-comment|/* pc_relative */
-block|0,
-comment|/* bitpos */
-block|complain_overflow_dont,
-comment|/* complain_on_overflow */
-comment|/* This needs complex overflow detection, because the upper four 	      bits must match the PC + 4.  */
-block|bfd_elf_generic_reloc,
-comment|/* special_function */
-block|"R_DLX_RELOC_26",
-comment|/* name */
-block|TRUE,
-comment|/* partial_inplace */
-block|0x3ffffff,
-comment|/* src_mask */
-block|0x3ffffff,
-comment|/* dst_mask */
-block|FALSE),
-comment|/* pcrel_offset */
-endif|#
-directive|endif
-comment|/* 32 bit relocation.  */
-name|HOWTO
-argument_list|(
-name|R_DLX_RELOC_32
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|32
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_DLX_RELOC_32"
-argument_list|,
-comment|/* name */
-name|TRUE
-argument_list|,
-comment|/* partial_inplace */
-literal|0xffffffff
-argument_list|,
-comment|/* src_mask */
-literal|0xffffffff
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* GNU extension to record C++ vtable hierarchy */
-name|HOWTO
-argument_list|(
-name|R_DLX_GNU_VTINHERIT
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|0
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|NULL
-argument_list|,
-comment|/* special_function */
-literal|"R_DLX_GNU_VTINHERIT"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* GNU extension to record C++ vtable member usage */
-name|HOWTO
-argument_list|(
-argument|R_DLX_GNU_VTENTRY
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|0
-argument_list|,
-comment|/* bitsize */
-argument|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-argument|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-argument|_bfd_elf_rel_vtable_reloc_fn
-argument_list|,
-comment|/* special_function */
-literal|"R_DLX_GNU_VTENTRY"
-argument_list|,
-comment|/* name */
-argument|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0
-argument_list|,
-comment|/* dst_mask */
-argument|FALSE
-argument_list|)
-comment|/* pcrel_offset */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* 16 bit offset for pc-relative branches.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|reloc_howto_type
-name|elf_dlx_gnu_rel16_s2
-init|=
-name|HOWTO
-argument_list|(
-name|R_DLX_RELOC_16_PCREL
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|1
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|16
-argument_list|,
-comment|/* bitsize */
-name|TRUE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_signed
-argument_list|,
-comment|/* complain_on_overflow */
-name|elf32_dlx_relocate16
-argument_list|,
-comment|/* special_function */
-literal|"R_DLX_RELOC_16_PCREL"
-argument_list|,
-comment|/* name */
-name|TRUE
-argument_list|,
-comment|/* partial_inplace */
-literal|0xffff
-argument_list|,
-comment|/* src_mask */
-literal|0xffff
-argument_list|,
-comment|/* dst_mask */
-name|TRUE
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* pcrel_offset */
-end_comment
-
-begin_comment
-comment|/* 26 bit offset for pc-relative branches.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|reloc_howto_type
-name|elf_dlx_gnu_rel26_s2
-init|=
-name|HOWTO
-argument_list|(
-name|R_DLX_RELOC_26_PCREL
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|26
-argument_list|,
-comment|/* bitsize */
-name|TRUE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|elf32_dlx_relocate26
-argument_list|,
-comment|/* special_function */
-literal|"R_DLX_RELOC_26_PCREL"
-argument_list|,
-comment|/* name */
-name|TRUE
-argument_list|,
-comment|/* partial_inplace */
-literal|0xffff
-argument_list|,
-comment|/* src_mask */
-literal|0xffff
-argument_list|,
-comment|/* dst_mask */
-name|TRUE
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* pcrel_offset */
-end_comment
-
-begin_comment
-comment|/* High 16 bits of symbol value.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|reloc_howto_type
-name|elf_dlx_reloc_16_hi
-init|=
-name|HOWTO
-argument_list|(
-name|R_DLX_RELOC_16_HI
-argument_list|,
-comment|/* type */
-literal|16
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|32
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|_bfd_dlx_elf_hi16_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_DLX_RELOC_16_HI"
-argument_list|,
-comment|/* name */
-name|TRUE
-argument_list|,
-comment|/* partial_inplace */
-literal|0xFFFF
-argument_list|,
-comment|/* src_mask */
-literal|0xffff
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* pcrel_offset */
-end_comment
-
-begin_comment
-comment|/* Low 16 bits of symbol value.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|reloc_howto_type
-name|elf_dlx_reloc_16_lo
-init|=
-name|HOWTO
-argument_list|(
-name|R_DLX_RELOC_16_LO
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|1
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|16
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_DLX_RELOC_16_LO"
-argument_list|,
-comment|/* name */
-name|TRUE
-argument_list|,
-comment|/* partial_inplace */
-literal|0xffff
-argument_list|,
-comment|/* src_mask */
-literal|0xffff
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* pcrel_offset */
-end_comment
-
 begin_comment
 comment|/* The gas default behavior is not to preform the %hi modifier so that the    GNU assembler can have the lower 16 bits offset placed in the insn, BUT    we do like the gas to indicate it is %hi reloc type so when we in the link    loader phase we can have the corrected hi16 vale replace the buggous lo16    value that was placed there by gas.  */
 end_comment
@@ -811,15 +81,23 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|extern
+name|int
+name|set_dlx_skip_hi16_flag
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|int
 name|set_dlx_skip_hi16_flag
 parameter_list|(
-name|flag
-parameter_list|)
 name|int
 name|flag
-decl_stmt|;
+parameter_list|)
 block|{
 name|skip_dlx_elf_hi16_reloc
 operator|=
@@ -836,48 +114,35 @@ specifier|static
 name|bfd_reloc_status_type
 name|_bfd_dlx_elf_hi16_reloc
 parameter_list|(
-name|abfd
-parameter_list|,
-name|reloc_entry
-parameter_list|,
-name|symbol
-parameter_list|,
-name|data
-parameter_list|,
-name|input_section
-parameter_list|,
-name|output_bfd
-parameter_list|,
-name|error_message
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|arelent
 modifier|*
 name|reloc_entry
-decl_stmt|;
+parameter_list|,
 name|asymbol
 modifier|*
 name|symbol
-decl_stmt|;
-name|PTR
+parameter_list|,
+name|void
+modifier|*
 name|data
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|input_section
-decl_stmt|;
+parameter_list|,
 name|bfd
 modifier|*
 name|output_bfd
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|error_message
-decl_stmt|;
+parameter_list|)
 block|{
 name|bfd_reloc_status_type
 name|ret
@@ -886,12 +151,6 @@ name|bfd_vma
 name|relocation
 decl_stmt|;
 comment|/* If the skip flag is set then we simply do the generic relocating, this      is more of a hack for dlx gas/gld, so we do not need to do the %hi/%lo      fixup like mips gld did.   */
-if|#
-directive|if
-literal|0
-block|printf ("DEBUG: skip_dlx_elf_hi16_reloc = 0x%08x\n", skip_dlx_elf_hi16_reloc);
-endif|#
-directive|endif
 if|if
 condition|(
 name|skip_dlx_elf_hi16_reloc
@@ -979,12 +238,6 @@ name|ret
 operator|=
 name|bfd_reloc_undefined
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|{     unsigned long vallo, val;      vallo = bfd_get_16 (abfd, (bfd_byte *) data + reloc_entry->address);     printf ("DEBUG: The relocation address = 0x%08x\n", reloc_entry->address);     printf ("DEBUG: The symbol        = 0x%08x\n", vallo);     printf ("DEBUG: The symbol name   = %s\n", bfd_asymbol_name (symbol));     printf ("DEBUG: The symbol->value = 0x%08x\n", symbol->value);     printf ("DEBUG: The vma           = 0x%08x\n", symbol->section->output_section->vma);     printf ("DEBUG: The output_offset = 0x%08x\n", symbol->section->output_offset);     printf ("DEBUG: The input_offset  = 0x%08x\n", input_section->output_offset);     printf ("DEBUG: The input_vma     = 0x%08x\n", input_section->vma);     printf ("DEBUG: The addend        = 0x%08x\n", reloc_entry->addend);   }
-endif|#
-directive|endif
 name|relocation
 operator|=
 operator|(
@@ -1049,19 +302,16 @@ name|reloc_entry
 operator|->
 name|address
 operator|>
+name|bfd_get_section_limit
+argument_list|(
+name|abfd
+argument_list|,
 name|input_section
-operator|->
-name|_cooked_size
+argument_list|)
 condition|)
 return|return
 name|bfd_reloc_outofrange
 return|;
-if|#
-directive|if
-literal|0
-block|printf ("DEBUG: The finial relocation value = 0x%08x\n", relocation);
-endif|#
-directive|endif
 name|bfd_put_16
 argument_list|(
 name|abfd
@@ -1105,49 +355,36 @@ specifier|static
 name|bfd_reloc_status_type
 name|elf32_dlx_relocate16
 parameter_list|(
-name|abfd
-parameter_list|,
-name|reloc_entry
-parameter_list|,
-name|symbol
-parameter_list|,
-name|data
-parameter_list|,
-name|input_section
-parameter_list|,
-name|output_bfd
-parameter_list|,
-name|error_message
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|arelent
 modifier|*
 name|reloc_entry
-decl_stmt|;
+parameter_list|,
 name|asymbol
 modifier|*
 name|symbol
-decl_stmt|;
-name|PTR
+parameter_list|,
+name|void
+modifier|*
 name|data
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|input_section
-decl_stmt|;
+parameter_list|,
 name|bfd
 modifier|*
 name|output_bfd
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|error_message
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|long
@@ -1183,7 +420,7 @@ argument_list|,
 name|error_message
 argument_list|)
 return|;
-comment|/* Check undefined section and undefined symbols  */
+comment|/* Check undefined section and undefined symbols.  */
 if|if
 condition|(
 name|bfd_is_und_section
@@ -1204,7 +441,7 @@ condition|)
 return|return
 name|bfd_reloc_undefined
 return|;
-comment|/* Can not support a long jump to sections other then .text   */
+comment|/* Can not support a long jump to sections other then .text.  */
 if|if
 condition|(
 name|strcmp
@@ -1351,12 +588,6 @@ operator|)
 operator|-
 name|vallo
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|printf ("DEBUG elf32_dlx_relocate: We are here\n");   printf ("DEBUG: The insn            = 0x%08x\n", insn);   printf ("DEBUG: The vallo           = 0x%08x\n", vallo);   printf ("DEBUG: The val             = 0x%08x\n", val);   printf ("DEBUG: The symbol name     = %s\n", bfd_asymbol_name (symbol));   printf ("DEBUG: The symbol->value   = 0x%08x\n", symbol->value);   printf ("DEBUG: The vma             = 0x%08x\n", symbol->section->output_section->vma);   printf ("DEBUG: The lma             = 0x%08x\n", symbol->section->output_section->lma);   printf ("DEBUG: The alignment_power = 0x%08x\n", symbol->section->output_section->alignment_power);   printf ("DEBUG: The output_offset   = 0x%08x\n", symbol->section->output_offset);   printf ("DEBUG: The addend          = 0x%08x\n", reloc_entry->addend);
-endif|#
-directive|endif
 if|if
 condition|(
 name|abs
@@ -1414,49 +645,36 @@ specifier|static
 name|bfd_reloc_status_type
 name|elf32_dlx_relocate26
 parameter_list|(
-name|abfd
-parameter_list|,
-name|reloc_entry
-parameter_list|,
-name|symbol
-parameter_list|,
-name|data
-parameter_list|,
-name|input_section
-parameter_list|,
-name|output_bfd
-parameter_list|,
-name|error_message
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|arelent
 modifier|*
 name|reloc_entry
-decl_stmt|;
+parameter_list|,
 name|asymbol
 modifier|*
 name|symbol
-decl_stmt|;
-name|PTR
+parameter_list|,
+name|void
+modifier|*
 name|data
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|input_section
-decl_stmt|;
+parameter_list|,
 name|bfd
 modifier|*
 name|output_bfd
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|error_message
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|long
@@ -1660,12 +878,6 @@ operator|)
 operator|-
 name|vallo
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|printf ("DEBUG elf32_dlx_relocate26: We are here\n");   printf ("DEBUG: The insn          = 0x%08x\n", insn);   printf ("DEBUG: The vallo         = 0x%08x\n", vallo);   printf ("DEBUG: The val           = 0x%08x\n", val);   printf ("DEBUG: The abs(val)      = 0x%08x\n", abs (val));   printf ("DEBUG: The symbol name   = %s\n", bfd_asymbol_name (symbol));   printf ("DEBUG: The symbol->value = 0x%08x\n", symbol->value);   printf ("DEBUG: The vma           = 0x%08x\n", symbol->section->output_section->vma);   printf ("DEBUG: The output_offset = 0x%08x\n", symbol->section->output_offset);   printf ("DEBUG: The input_vma     = 0x%08x\n", input_section->output_section->vma);   printf ("DEBUG: The input_offset  = 0x%08x\n", input_section->output_offset);   printf ("DEBUG: The input_name    = %s\n", input_section->name);   printf ("DEBUG: The addend        = 0x%08x\n", reloc_entry->addend);
-endif|#
-directive|endif
 if|if
 condition|(
 name|abs
@@ -1718,6 +930,498 @@ return|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|static
+name|reloc_howto_type
+name|dlx_elf_howto_table
+index|[]
+init|=
+block|{
+comment|/* No relocation.  */
+name|HOWTO
+argument_list|(
+name|R_DLX_NONE
+argument_list|,
+comment|/* Type. */
+literal|0
+argument_list|,
+comment|/* Rightshift.  */
+literal|0
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long).  */
+literal|0
+argument_list|,
+comment|/* Bitsize.  */
+name|FALSE
+argument_list|,
+comment|/* PC_relative.  */
+literal|0
+argument_list|,
+comment|/* Bitpos.  */
+name|complain_overflow_dont
+argument_list|,
+comment|/* Complain_on_overflow.  */
+name|bfd_elf_generic_reloc
+argument_list|,
+comment|/* Special_function.  */
+literal|"R_DLX_NONE"
+argument_list|,
+comment|/* Name.  */
+name|FALSE
+argument_list|,
+comment|/* Partial_inplace.  */
+literal|0
+argument_list|,
+comment|/* Src_mask.  */
+literal|0
+argument_list|,
+comment|/* Dst_mask.  */
+name|FALSE
+argument_list|)
+block|,
+comment|/* PCrel_offset.  */
+comment|/* 8 bit relocation.  */
+name|HOWTO
+argument_list|(
+name|R_DLX_RELOC_8
+argument_list|,
+comment|/* Type. */
+literal|0
+argument_list|,
+comment|/* Rightshift.  */
+literal|0
+argument_list|,
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
+literal|8
+argument_list|,
+comment|/* Bitsize.  */
+name|FALSE
+argument_list|,
+comment|/* PC_relative.  */
+literal|0
+argument_list|,
+comment|/* Bitpos.  */
+name|complain_overflow_dont
+argument_list|,
+comment|/* Complain_on_overflow.  */
+name|bfd_elf_generic_reloc
+argument_list|,
+comment|/* Special_function.  */
+literal|"R_DLX_RELOC_8"
+argument_list|,
+comment|/* Name.  */
+name|TRUE
+argument_list|,
+comment|/* Partial_inplace.  */
+literal|0xff
+argument_list|,
+comment|/* Src_mask.  */
+literal|0xff
+argument_list|,
+comment|/* Dst_mask.  */
+name|FALSE
+argument_list|)
+block|,
+comment|/* PCrel_offset.  */
+comment|/* 16 bit relocation.  */
+name|HOWTO
+argument_list|(
+name|R_DLX_RELOC_16
+argument_list|,
+comment|/* Type. */
+literal|0
+argument_list|,
+comment|/* Rightshift.  */
+literal|1
+argument_list|,
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
+literal|16
+argument_list|,
+comment|/* Bitsize.  */
+name|FALSE
+argument_list|,
+comment|/* PC_relative.  */
+literal|0
+argument_list|,
+comment|/* Bitpos.  */
+name|complain_overflow_dont
+argument_list|,
+comment|/* Complain_on_overflow.  */
+name|bfd_elf_generic_reloc
+argument_list|,
+comment|/* Special_function.  */
+literal|"R_DLX_RELOC_16"
+argument_list|,
+comment|/* Name.  */
+name|TRUE
+argument_list|,
+comment|/* Partial_inplace.  */
+literal|0xffff
+argument_list|,
+comment|/* Src_mask.  */
+literal|0xffff
+argument_list|,
+comment|/* Dst_mask.  */
+name|FALSE
+argument_list|)
+block|,
+comment|/* PCrel_offset.  */
+comment|/* 32 bit relocation.  */
+name|HOWTO
+argument_list|(
+name|R_DLX_RELOC_32
+argument_list|,
+comment|/* Type. */
+literal|0
+argument_list|,
+comment|/* Rightshift.  */
+literal|2
+argument_list|,
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
+literal|32
+argument_list|,
+comment|/* Bitsize.  */
+name|FALSE
+argument_list|,
+comment|/* PC_relative.  */
+literal|0
+argument_list|,
+comment|/* Bitpos.  */
+name|complain_overflow_dont
+argument_list|,
+comment|/* Complain_on_overflow.  */
+name|bfd_elf_generic_reloc
+argument_list|,
+comment|/* Special_function.  */
+literal|"R_DLX_RELOC_32"
+argument_list|,
+comment|/* Name.  */
+name|TRUE
+argument_list|,
+comment|/* Partial_inplace.  */
+literal|0xffffffff
+argument_list|,
+comment|/* Src_mask.  */
+literal|0xffffffff
+argument_list|,
+comment|/* Dst_mask.  */
+name|FALSE
+argument_list|)
+block|,
+comment|/* PCrel_offset.  */
+comment|/* GNU extension to record C++ vtable hierarchy.  */
+name|HOWTO
+argument_list|(
+name|R_DLX_GNU_VTINHERIT
+argument_list|,
+comment|/* Type. */
+literal|0
+argument_list|,
+comment|/* Rightshift.  */
+literal|2
+argument_list|,
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
+literal|0
+argument_list|,
+comment|/* Bitsize.  */
+name|FALSE
+argument_list|,
+comment|/* PC_relative.  */
+literal|0
+argument_list|,
+comment|/* Bitpos.  */
+name|complain_overflow_dont
+argument_list|,
+comment|/* Complain_on_overflow.  */
+name|NULL
+argument_list|,
+comment|/* Special_function.  */
+literal|"R_DLX_GNU_VTINHERIT"
+argument_list|,
+comment|/* Name.  */
+name|FALSE
+argument_list|,
+comment|/* Partial_inplace.  */
+literal|0
+argument_list|,
+comment|/* Src_mask.  */
+literal|0
+argument_list|,
+comment|/* Dst_mask.  */
+name|FALSE
+argument_list|)
+block|,
+comment|/* PCrel_offset.  */
+comment|/* GNU extension to record C++ vtable member usage.  */
+name|HOWTO
+argument_list|(
+argument|R_DLX_GNU_VTENTRY
+argument_list|,
+comment|/* Type. */
+literal|0
+argument_list|,
+comment|/* Rightshift.  */
+literal|2
+argument_list|,
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
+literal|0
+argument_list|,
+comment|/* Bitsize.  */
+argument|FALSE
+argument_list|,
+comment|/* PC_relative.  */
+literal|0
+argument_list|,
+comment|/* Bitpos.  */
+argument|complain_overflow_dont
+argument_list|,
+comment|/* Complain_on_overflow.  */
+argument|_bfd_elf_rel_vtable_reloc_fn
+argument_list|,
+comment|/* Special_function.  */
+literal|"R_DLX_GNU_VTENTRY"
+argument_list|,
+comment|/* Name.  */
+argument|FALSE
+argument_list|,
+comment|/* Partial_inplace.  */
+literal|0
+argument_list|,
+comment|/* Src_mask.  */
+literal|0
+argument_list|,
+comment|/* Dst_mask.  */
+argument|FALSE
+argument_list|)
+comment|/* PCrel_offset.  */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 16 bit offset for pc-relative branches.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|reloc_howto_type
+name|elf_dlx_gnu_rel16_s2
+init|=
+name|HOWTO
+argument_list|(
+name|R_DLX_RELOC_16_PCREL
+argument_list|,
+comment|/* Type. */
+literal|0
+argument_list|,
+comment|/* Rightshift.  */
+literal|1
+argument_list|,
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
+literal|16
+argument_list|,
+comment|/* Bitsize.  */
+name|TRUE
+argument_list|,
+comment|/* PC_relative.  */
+literal|0
+argument_list|,
+comment|/* Bitpos.  */
+name|complain_overflow_signed
+argument_list|,
+comment|/* Complain_on_overflow.  */
+name|elf32_dlx_relocate16
+argument_list|,
+comment|/* Special_function.  */
+literal|"R_DLX_RELOC_16_PCREL"
+argument_list|,
+comment|/* Name.  */
+name|TRUE
+argument_list|,
+comment|/* Partial_inplace.  */
+literal|0xffff
+argument_list|,
+comment|/* Src_mask.  */
+literal|0xffff
+argument_list|,
+comment|/* Dst_mask.  */
+name|TRUE
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* PCrel_offset.  */
+end_comment
+
+begin_comment
+comment|/* 26 bit offset for pc-relative branches.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|reloc_howto_type
+name|elf_dlx_gnu_rel26_s2
+init|=
+name|HOWTO
+argument_list|(
+name|R_DLX_RELOC_26_PCREL
+argument_list|,
+comment|/* Type. */
+literal|0
+argument_list|,
+comment|/* Rightshift.  */
+literal|2
+argument_list|,
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
+literal|26
+argument_list|,
+comment|/* Bitsize.  */
+name|TRUE
+argument_list|,
+comment|/* PC_relative.  */
+literal|0
+argument_list|,
+comment|/* Bitpos.  */
+name|complain_overflow_dont
+argument_list|,
+comment|/* Complain_on_overflow.  */
+name|elf32_dlx_relocate26
+argument_list|,
+comment|/* Special_function.  */
+literal|"R_DLX_RELOC_26_PCREL"
+argument_list|,
+comment|/* Name.  */
+name|TRUE
+argument_list|,
+comment|/* Partial_inplace.  */
+literal|0xffff
+argument_list|,
+comment|/* Src_mask.  */
+literal|0xffff
+argument_list|,
+comment|/* Dst_mask.  */
+name|TRUE
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* PCrel_offset.  */
+end_comment
+
+begin_comment
+comment|/* High 16 bits of symbol value.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|reloc_howto_type
+name|elf_dlx_reloc_16_hi
+init|=
+name|HOWTO
+argument_list|(
+name|R_DLX_RELOC_16_HI
+argument_list|,
+comment|/* Type. */
+literal|16
+argument_list|,
+comment|/* Rightshift.  */
+literal|2
+argument_list|,
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
+literal|32
+argument_list|,
+comment|/* Bitsize.  */
+name|FALSE
+argument_list|,
+comment|/* PC_relative.  */
+literal|0
+argument_list|,
+comment|/* Bitpos.  */
+name|complain_overflow_dont
+argument_list|,
+comment|/* Complain_on_overflow.  */
+name|_bfd_dlx_elf_hi16_reloc
+argument_list|,
+comment|/* Special_function.  */
+literal|"R_DLX_RELOC_16_HI"
+argument_list|,
+comment|/* Name.  */
+name|TRUE
+argument_list|,
+comment|/* Partial_inplace.  */
+literal|0xFFFF
+argument_list|,
+comment|/* Src_mask.  */
+literal|0xffff
+argument_list|,
+comment|/* Dst_mask.  */
+name|FALSE
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* PCrel_offset.  */
+end_comment
+
+begin_comment
+comment|/* Low 16 bits of symbol value.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|reloc_howto_type
+name|elf_dlx_reloc_16_lo
+init|=
+name|HOWTO
+argument_list|(
+name|R_DLX_RELOC_16_LO
+argument_list|,
+comment|/* Type. */
+literal|0
+argument_list|,
+comment|/* Rightshift.  */
+literal|1
+argument_list|,
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
+literal|16
+argument_list|,
+comment|/* Bitsize.  */
+name|FALSE
+argument_list|,
+comment|/* PC_relative.  */
+literal|0
+argument_list|,
+comment|/* Bitpos.  */
+name|complain_overflow_dont
+argument_list|,
+comment|/* Complain_on_overflow.  */
+name|bfd_elf_generic_reloc
+argument_list|,
+comment|/* Special_function.  */
+literal|"R_DLX_RELOC_16_LO"
+argument_list|,
+comment|/* Name.  */
+name|TRUE
+argument_list|,
+comment|/* Partial_inplace.  */
+literal|0xffff
+argument_list|,
+comment|/* Src_mask.  */
+literal|0xffff
+argument_list|,
+comment|/* Dst_mask.  */
+name|FALSE
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* PCrel_offset.  */
+end_comment
+
 begin_comment
 comment|/* A mapping from BFD reloc types to DLX ELF reloc types.    Stolen from elf32-mips.c.     More about this table - for dlx elf relocation we do not really    need this table, if we have a rtype defined in this table will    caused tc_gen_relocate confused and die on us, but if we remove    this table it will caused more problem, so for now simple solution    is to remove those entries which may cause problem.  */
 end_comment
@@ -1758,12 +1462,6 @@ block|,
 name|R_DLX_RELOC_16
 block|}
 block|,
-if|#
-directive|if
-literal|0
-block|{ BFD_RELOC_DLX_JMP26,      R_DLX_RELOC_26_PCREL },
-endif|#
-directive|endif
 block|{
 name|BFD_RELOC_32
 block|,
@@ -1806,32 +1504,24 @@ specifier|static
 name|bfd_boolean
 name|elf32_dlx_check_relocs
 parameter_list|(
-name|abfd
-parameter_list|,
-name|info
-parameter_list|,
-name|sec
-parameter_list|,
-name|relocs
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|struct
 name|bfd_link_info
 modifier|*
 name|info
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|sec
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|Elf_Internal_Rela
 modifier|*
 name|relocs
-decl_stmt|;
+parameter_list|)
 block|{
 name|Elf_Internal_Shdr
 modifier|*
@@ -1963,6 +1653,7 @@ operator|=
 name|NULL
 expr_stmt|;
 else|else
+block|{
 name|h
 operator|=
 name|sym_hashes
@@ -1974,6 +1665,42 @@ operator|->
 name|sh_info
 index|]
 expr_stmt|;
+while|while
+condition|(
+name|h
+operator|->
+name|root
+operator|.
+name|type
+operator|==
+name|bfd_link_hash_indirect
+operator|||
+name|h
+operator|->
+name|root
+operator|.
+name|type
+operator|==
+name|bfd_link_hash_warning
+condition|)
+name|h
+operator|=
+operator|(
+expr|struct
+name|elf_link_hash_entry
+operator|*
+operator|)
+name|h
+operator|->
+name|root
+operator|.
+name|u
+operator|.
+name|i
+operator|.
+name|link
+expr_stmt|;
+block|}
 switch|switch
 condition|(
 name|ELF32_R_TYPE
@@ -2050,18 +1777,14 @@ name|reloc_howto_type
 modifier|*
 name|elf32_dlx_reloc_type_lookup
 parameter_list|(
-name|abfd
-parameter_list|,
-name|code
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|bfd_reloc_code_real_type
 name|code
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|int
@@ -2167,12 +1890,10 @@ name|reloc_howto_type
 modifier|*
 name|dlx_rtype_to_howto
 parameter_list|(
-name|r_type
-parameter_list|)
 name|unsigned
 name|int
 name|r_type
-decl_stmt|;
+parameter_list|)
 block|{
 switch|switch
 condition|(
@@ -2240,27 +1961,21 @@ specifier|static
 name|void
 name|elf32_dlx_info_to_howto
 parameter_list|(
-name|abfd
-parameter_list|,
-name|cache_ptr
-parameter_list|,
-name|dst
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|arelent
 modifier|*
 name|cache_ptr
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|Elf_Internal_Rela
 modifier|*
 name|dst
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 name|abort
 argument_list|()
@@ -2273,25 +1988,19 @@ specifier|static
 name|void
 name|elf32_dlx_info_to_howto_rel
 parameter_list|(
-name|abfd
-parameter_list|,
-name|cache_ptr
-parameter_list|,
-name|dst
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|arelent
 modifier|*
 name|cache_ptr
-decl_stmt|;
+parameter_list|,
 name|Elf_Internal_Rela
 modifier|*
 name|dst
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|int

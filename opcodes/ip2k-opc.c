@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Instruction opcode table for ip2k.  THIS FILE IS MACHINE GENERATED WITH CGEN.  Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.  This file is part of the GNU Binutils and/or GDB, the GNU debugger.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Instruction opcode table for ip2k.  THIS FILE IS MACHINE GENERATED WITH CGEN.  Copyright 1996-2005 Free Software Foundation, Inc.  This file is part of the GNU Binutils and/or GDB, the GNU debugger.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -56,7 +56,7 @@ file|"safe-ctype.h"
 end_include
 
 begin_comment
-comment|/* A better hash function for instruction mnemonics. */
+comment|/* A better hash function for instruction mnemonics.  */
 end_comment
 
 begin_function
@@ -64,13 +64,11 @@ name|unsigned
 name|int
 name|ip2k_asm_hash
 parameter_list|(
-name|insn
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|insn
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|int
@@ -130,25 +128,21 @@ block|}
 end_function
 
 begin_comment
-comment|/* Special check to ensure that instruction exists for given machine. */
+comment|/* Special check to ensure that instruction exists for given machine.  */
 end_comment
 
 begin_function
 name|int
 name|ip2k_cgen_insn_supported
 parameter_list|(
-name|cd
-parameter_list|,
-name|insn
-parameter_list|)
 name|CGEN_CPU_DESC
 name|cd
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|CGEN_INSN
 modifier|*
 name|insn
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|machs
@@ -172,7 +166,6 @@ literal|1
 return|;
 return|return
 operator|(
-operator|(
 name|machs
 operator|&
 name|cd
@@ -181,7 +174,6 @@ name|machs
 operator|)
 operator|!=
 literal|0
-operator|)
 return|;
 block|}
 end_function
@@ -197,69 +189,57 @@ begin_comment
 comment|/* The hash functions are recorded here to help keep assembler code out of    the disassembler and vice versa.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|asm_hash_insn_p
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|CGEN_INSN
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|unsigned
 name|int
 name|asm_hash_insn
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|dis_hash_insn_p
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|CGEN_INSN
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|unsigned
 name|int
 name|dis_hash_insn
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|CGEN_INSN_INT
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Instruction formats.  */
@@ -321,6 +301,7 @@ specifier|static
 specifier|const
 name|CGEN_IFMT
 name|ifmt_empty
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 literal|0
@@ -343,6 +324,7 @@ specifier|static
 specifier|const
 name|CGEN_IFMT
 name|ifmt_jmp
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 literal|16
@@ -379,6 +361,7 @@ specifier|static
 specifier|const
 name|CGEN_IFMT
 name|ifmt_sb
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 literal|16
@@ -422,6 +405,7 @@ specifier|static
 specifier|const
 name|CGEN_IFMT
 name|ifmt_xorw_l
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 literal|16
@@ -465,6 +449,7 @@ specifier|static
 specifier|const
 name|CGEN_IFMT
 name|ifmt_loadl_a
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 literal|16
@@ -508,6 +493,7 @@ specifier|static
 specifier|const
 name|CGEN_IFMT
 name|ifmt_loadh_a
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 literal|16
@@ -551,6 +537,7 @@ specifier|static
 specifier|const
 name|CGEN_IFMT
 name|ifmt_addcfr_w
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 literal|16
@@ -594,6 +581,7 @@ specifier|static
 specifier|const
 name|CGEN_IFMT
 name|ifmt_speed
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 literal|16
@@ -630,6 +618,7 @@ specifier|static
 specifier|const
 name|CGEN_IFMT
 name|ifmt_ireadi
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 literal|16
@@ -666,6 +655,7 @@ specifier|static
 specifier|const
 name|CGEN_IFMT
 name|ifmt_page
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 literal|16
@@ -709,6 +699,7 @@ specifier|static
 specifier|const
 name|CGEN_IFMT
 name|ifmt_reti
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 literal|16
@@ -4137,6 +4128,7 @@ specifier|static
 specifier|const
 name|CGEN_IFMT
 name|ifmt_sc
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 literal|16
@@ -4180,6 +4172,7 @@ specifier|static
 specifier|const
 name|CGEN_IFMT
 name|ifmt_snc
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 literal|16
@@ -4223,6 +4216,7 @@ specifier|static
 specifier|const
 name|CGEN_IFMT
 name|ifmt_sz
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 literal|16
@@ -4266,6 +4260,7 @@ specifier|static
 specifier|const
 name|CGEN_IFMT
 name|ifmt_snz
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 literal|16
@@ -4309,6 +4304,7 @@ specifier|static
 specifier|const
 name|CGEN_IFMT
 name|ifmt_skip
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 literal|16
@@ -4352,6 +4348,7 @@ specifier|static
 specifier|const
 name|CGEN_IFMT
 name|ifmt_skipb
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 literal|16
@@ -4555,11 +4552,17 @@ name|ALIAS
 argument_list|)
 block|,
 block|{
+block|{
+block|{
 operator|(
 literal|1
 operator|<<
 name|MACH_BASE
 operator|)
+block|,
+literal|0
+block|}
+block|}
 block|}
 block|}
 block|}
@@ -4584,11 +4587,17 @@ name|ALIAS
 argument_list|)
 block|,
 block|{
+block|{
+block|{
 operator|(
 literal|1
 operator|<<
 name|MACH_BASE
 operator|)
+block|,
+literal|0
+block|}
+block|}
 block|}
 block|}
 block|}
@@ -4613,11 +4622,17 @@ name|ALIAS
 argument_list|)
 block|,
 block|{
+block|{
+block|{
 operator|(
 literal|1
 operator|<<
 name|MACH_BASE
 operator|)
+block|,
+literal|0
+block|}
+block|}
 block|}
 block|}
 block|}
@@ -4642,11 +4657,17 @@ name|ALIAS
 argument_list|)
 block|,
 block|{
+block|{
+block|{
 operator|(
 literal|1
 operator|<<
 name|MACH_BASE
 operator|)
+block|,
+literal|0
+block|}
+block|}
 block|}
 block|}
 block|}
@@ -4676,11 +4697,17 @@ name|ALIAS
 argument_list|)
 block|,
 block|{
+block|{
+block|{
 operator|(
 literal|1
 operator|<<
 name|MACH_BASE
 operator|)
+block|,
+literal|0
+block|}
+block|}
 block|}
 block|}
 block|}
@@ -4710,11 +4737,17 @@ name|ALIAS
 argument_list|)
 block|,
 block|{
+block|{
+block|{
 operator|(
 literal|1
 operator|<<
 name|MACH_BASE
 operator|)
+block|,
+literal|0
+block|}
+block|}
 block|}
 block|}
 block|}
@@ -5188,22 +5221,6 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
-specifier|static
-name|void
-name|set_fields_bitsize
-name|PARAMS
-argument_list|(
-operator|(
-name|CGEN_FIELDS
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Set the recorded length of the insn in the CGEN_FIELDS struct.  */
 end_comment
@@ -5213,17 +5230,13 @@ specifier|static
 name|void
 name|set_fields_bitsize
 parameter_list|(
-name|fields
-parameter_list|,
-name|size
-parameter_list|)
 name|CGEN_FIELDS
 modifier|*
 name|fields
-decl_stmt|;
+parameter_list|,
 name|int
 name|size
-decl_stmt|;
+parameter_list|)
 block|{
 name|CGEN_FIELDS_BITSIZE
 argument_list|(
@@ -5243,11 +5256,9 @@ begin_function
 name|void
 name|ip2k_cgen_init_opcode_table
 parameter_list|(
-name|cd
-parameter_list|)
 name|CGEN_CPU_DESC
 name|cd
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -5296,10 +5307,6 @@ name|CGEN_INSN
 modifier|*
 name|insns
 init|=
-operator|(
-name|CGEN_INSN
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 name|num_macros

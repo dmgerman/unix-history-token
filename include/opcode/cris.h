@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* cris.h -- Header file for CRIS opcode and register tables.    Copyright (C) 2000, 2001 Free Software Foundation, Inc.    Contributed by Axis Communications AB, Lund, Sweden.    Originally written for GAS 1.38.1 by Mikael Asker.    Updated, BFDized and GNUified by Hans-Peter Nilsson.  This file is part of GAS, GDB and the GNU binutils.  GAS, GDB, and GNU binutils is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GAS, GDB, and GNU binutils are distributed in the hope that they will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* cris.h -- Header file for CRIS opcode and register tables.    Copyright (C) 2000, 2001, 2004 Free Software Foundation, Inc.    Contributed by Axis Communications AB, Lund, Sweden.    Originally written for GAS 1.38.1 by Mikael Asker.    Updated, BFDized and GNUified by Hans-Peter Nilsson.  This file is part of GAS, GDB and the GNU binutils.  GAS, GDB, and GNU binutils is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GAS, GDB, and GNU binutils are distributed in the hope that they will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -75,16 +75,13 @@ begin_enum
 enum|enum
 name|cris_insn_version_usage
 block|{
-comment|/* Any version. */
+comment|/* Any version.  */
 name|cris_ver_version_all
 init|=
 literal|0
 block|,
 comment|/* Indeterminate (intended for disassembly only, or obsolete).  */
 name|cris_ver_warning
-block|,
-comment|/* Simulator only (reserved).  */
-name|cris_ver_sim
 block|,
 comment|/* Only for v0..3 (Etrax 1..4).  */
 name|cris_ver_v0_3
@@ -98,8 +95,26 @@ block|,
 comment|/* Only for v8 or higher (ETRAX 100, ETRAX 100 LX).  */
 name|cris_ver_v8p
 block|,
-comment|/* Only for v10 or higher (ETRAX 100 LX).      Of course some or all these of may change to cris_ver_v10p if/when      there's a new revision. */
+comment|/* Only for v0..10.  FIXME: Not sure what to do with this.  */
+name|cris_ver_sim_v0_10
+block|,
+comment|/* Only for v0..10.  */
+name|cris_ver_v0_10
+block|,
+comment|/* Only for v3..10.  (ETRAX 4, ETRAX 100 and ETRAX 100 LX).  */
+name|cris_ver_v3_10
+block|,
+comment|/* Only for v8..10 (ETRAX 100 and ETRAX 100 LX).  */
+name|cris_ver_v8_10
+block|,
+comment|/* Only for v10 (ETRAX 100 LX) and same series.  */
+name|cris_ver_v10
+block|,
+comment|/* Only for v10 (ETRAX 100 LX) and same series.  */
 name|cris_ver_v10p
+block|,
+comment|/* Only for v32 or higher (codename GUINNESS).      Of course some or all these of may change to cris_ver_v32p if/when      there's a new revision. */
+name|cris_ver_v32p
 block|}
 enum|;
 end_enum
@@ -149,6 +164,68 @@ specifier|const
 name|struct
 name|cris_spec_reg
 name|cris_spec_regs
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Support registers (kind of special too, but not named as such).  */
+end_comment
+
+begin_struct
+struct|struct
+name|cris_support_reg
+block|{
+specifier|const
+name|char
+modifier|*
+specifier|const
+name|name
+decl_stmt|;
+name|unsigned
+name|int
+name|number
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|cris_support_reg
+name|cris_support_regs
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_struct
+struct|struct
+name|cris_cond15
+block|{
+comment|/* The name of the condition.  */
+specifier|const
+name|char
+modifier|*
+specifier|const
+name|name
+decl_stmt|;
+comment|/* What CPU version this condition name applies to.  */
+name|enum
+name|cris_insn_version_usage
+name|applicable_version
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|cris_cond15
+name|cris_conds15
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -531,9 +608,53 @@ end_define
 begin_define
 define|#
 directive|define
-name|ADD_PC_INCR_OPCODE
+name|MOVE_M_TO_PREG_OPCODE
+value|0x0a30
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOVE_M_TO_PREG_ZBITS
+value|0x01c0
+end_define
+
+begin_comment
+comment|/* BDAP.D N,PC.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOVE_PC_INCR_OPCODE_PREFIX
 define|\
-value|(0xfa00 + (2<< 4) + AUTOINCR_BIT * 0x0100 + REG_PC)
+value|(((BDAP_INCR_HIGH | (REG_PC<< 4))<< 8) | BDAP_PC_LOW | (2<< 4))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOVE_PC_INCR_OPCODE_SUFFIX
+define|\
+value|(MOVE_M_TO_PREG_OPCODE | REG_PC | (AUTOINCR_BIT<< 8))
+end_define
+
+begin_define
+define|#
+directive|define
+name|JUMP_PC_INCR_OPCODE_V32
+value|(0x0DBF)
+end_define
+
+begin_comment
+comment|/* BA DWORD (V32).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BA_DWORD_OPCODE
+value|(0x0EBF)
 end_define
 
 begin_comment
@@ -551,7 +672,57 @@ begin_define
 define|#
 directive|define
 name|NOP_Z_BITS
-value|(0xFAF0)
+value|(0xFFFF ^ NOP_OPCODE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NOP_OPCODE_V32
+value|(0x05B0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NOP_Z_BITS_V32
+value|(0xFFFF ^ NOP_OPCODE_V32)
+end_define
+
+begin_comment
+comment|/* For the compatibility mode, let's use "MOVE R0,P0".  Doesn't affect    registers or flags.  Unfortunately shuts off interrupts for one cycle    for< v32, but there doesn't seem to be any alternative without that    effect.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NOP_OPCODE_COMMON
+value|(0x630)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NOP_OPCODE_ZBITS_COMMON
+value|(0xffff& ~NOP_OPCODE_COMMON)
+end_define
+
+begin_comment
+comment|/* LAPC.D  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LAPC_DWORD_OPCODE
+value|(0x0D7F)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LAPC_DWORD_Z_BITS
+value|(0x0fff& ~LAPC_DWORD_OPCODE)
 end_define
 
 begin_comment
@@ -571,7 +742,13 @@ block|,
 comment|/* Indicated by size of special register.  */
 name|SIZE_SPEC_REG
 block|,
-comment|/* Indicated by size field.  */
+comment|/* Indicated by size field, signed.  */
+name|SIZE_FIELD_SIGNED
+block|,
+comment|/* Indicated by size field, unsigned.  */
+name|SIZE_FIELD_UNSIGNED
+block|,
+comment|/* Indicated by size field, no sign implied.  */
 name|SIZE_FIELD
 block|}
 enum|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Internal format of COFF object file data structures, for GNU BFD.    This file is part of BFD, the Binary File Descriptor library.        Copyright 2001 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.        This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Internal format of COFF object file data structures, for GNU BFD.    This file is part of BFD, the Binary File Descriptor library.        Copyright 1999, 2000, 2001, 2002, 2003, 2004. 2005    Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.        This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -2680,6 +2680,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|R_SECREL32
+value|11
+end_define
+
+begin_define
+define|#
+directive|define
 name|R_RELBYTE
 value|15
 end_define
@@ -3127,6 +3134,36 @@ end_define
 
 begin_comment
 comment|/* djnz displacement */
+end_comment
+
+begin_comment
+comment|/* Z80 modes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_OFF8
+value|0x32
+end_define
+
+begin_comment
+comment|/* 8 bit signed abs, for (i[xy]+d) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_IMM24
+value|0x33
+end_define
+
+begin_comment
+comment|/* 24 bit abs */
+end_comment
+
+begin_comment
+comment|/* R_JR, R_IMM8, R_IMM16, R_IMM32 - as for Z8k */
 end_comment
 
 begin_comment

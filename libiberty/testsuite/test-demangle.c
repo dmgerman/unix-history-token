@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Demangler test program,    Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.    Written by Zack Weinberg<zack@codesourcery.com     This file is part of GNU libiberty.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Demangler test program,    Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.    Written by Zack Weinberg<zack@codesourcery.com     This file is part of GNU libiberty.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifdef
@@ -43,6 +43,40 @@ include|#
 directive|include
 file|"demangle.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STRING_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|HAVE_STDLIB_H
+end_if
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct
@@ -304,7 +338,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* The tester operates on a data file consisting of groups of lines:    options    input to be demangled    expected output     Supported options:      --format=<name>     Sets the demangling style.      --no-params         There are two lines of expected output; the first                          is with DMGL_PARAMS, the second is without it.      --is-v3-ctor        Calls is_gnu_v3_mangled_ctor on input; expected                          output is an integer representing ctor_kind.      --is-v3-dtor        Likewise, but for dtors.     For compatibility, just in case it matters, the options line may be    empty, to mean --format=auto.  If it doesn't start with --, then it    may contain only a format name. */
+comment|/* The tester operates on a data file consisting of groups of lines:    options    input to be demangled    expected output     Supported options:      --format=<name>     Sets the demangling style.      --no-params         There are two lines of expected output; the first                          is with DMGL_PARAMS, the second is without it.      --is-v3-ctor        Calls is_gnu_v3_mangled_ctor on input; expected                          output is an integer representing ctor_kind.      --is-v3-dtor        Likewise, but for dtors.      --ret-postfix       Passes the DMGL_RET_POSTFIX option     For compatibility, just in case it matters, the options line may be    empty, to mean --format=auto.  If it doesn't start with --, then it    may contain only a format name. */
 end_comment
 
 begin_function
@@ -327,6 +361,8 @@ block|{
 name|enum
 name|demangling_styles
 name|style
+init|=
+name|auto_demangling
 decl_stmt|;
 name|int
 name|no_params
@@ -336,6 +372,9 @@ name|is_v3_ctor
 decl_stmt|;
 name|int
 name|is_v3_dtor
+decl_stmt|;
+name|int
+name|ret_postfix
 decl_stmt|;
 name|struct
 name|line
@@ -440,6 +479,10 @@ name|tests
 operator|++
 expr_stmt|;
 name|no_params
+operator|=
+literal|0
+expr_stmt|;
+name|ret_postfix
 operator|=
 literal|0
 expr_stmt|;
@@ -690,6 +733,22 @@ name|is_v3_dtor
 operator|=
 literal|1
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|opt
+argument_list|,
+literal|"--ret-postfix"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|ret_postfix
+operator|=
+literal|1
+expr_stmt|;
 else|else
 block|{
 name|printf
@@ -851,6 +910,14 @@ operator||
 name|DMGL_ANSI
 operator||
 name|DMGL_TYPES
+operator||
+operator|(
+name|ret_postfix
+condition|?
+name|DMGL_RET_POSTFIX
+else|:
+literal|0
+operator|)
 argument_list|)
 expr_stmt|;
 if|if

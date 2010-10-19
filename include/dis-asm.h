@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Interface between the opcode library and its callers.     Copyright 2001, 2002, 2003 Free Software Foundation, Inc.        This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.        Written by Cygnus Support, 1993.     The opcode library (libopcodes.a) provides instruction decoders for    a large variety of instruction sets, callable with an identical    interface, for making instruction-processing programs more independent    of the instruction set being processed.  */
+comment|/* Interface between the opcode library and its callers.     Copyright 1999, 2000, 2001, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor,    Boston, MA 02110-1301, USA.     Written by Cygnus Support, 1993.     The opcode library (libopcodes.a) provides instruction decoders for    a large variety of instruction sets, callable with an identical    interface, for making instruction-processing programs more independent    of the instruction set being processed.  */
 end_comment
 
 begin_ifndef
@@ -35,21 +35,21 @@ directive|include
 file|"bfd.h"
 typedef|typedef
 name|int
-function_decl|(
-modifier|*
-name|fprintf_ftype
-function_decl|)
-parameter_list|(
+argument_list|(
+argument|*fprintf_ftype
+argument_list|)
+operator|(
 name|void
-modifier|*
-parameter_list|,
+operator|*
+operator|,
 specifier|const
 name|char
-modifier|*
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|;
+operator|*
+operator|,
+operator|...
+operator|)
+name|ATTRIBUTE_FPTR_PRINTF_2
+expr_stmt|;
 enum|enum
 name|dis_insn_type
 block|{
@@ -78,7 +78,7 @@ name|dis_dref2
 comment|/* Two data references in instruction */
 block|}
 enum|;
-comment|/* This struct is passed into the instruction decoding routine,     and is passed back out into each callback.  The various fields are used    for conveying information from your main routine into your callbacks,    for passing information into the instruction decoders (such as the    addresses of the callback functions), or for passing information    back from the instruction decoders to their callers.     It must be initialized before it is first passed; this can be done    by hand, or using one of the initialization macros below.  */
+comment|/* This struct is passed into the instruction decoding routine,    and is passed back out into each callback.  The various fields are used    for conveying information from your main routine into your callbacks,    for passing information into the instruction decoders (such as the    addresses of the callback functions), or for passing information    back from the instruction decoders to their callers.     It must be initialized before it is first passed; this can be done    by hand, or using one of the initialization macros below.  */
 typedef|typedef
 struct|struct
 name|disassemble_info
@@ -116,8 +116,8 @@ name|bfd_endian
 name|endian
 decl_stmt|;
 comment|/* An arch/mach-specific bitmask of selected instruction subsets, mainly      for processors with run-time-switchable instruction sets.  The default,      zero, means that there is no constraint.  CGEN-based opcodes ports      may use ISA_foo masks.  */
-name|unsigned
-name|long
+name|void
+modifier|*
 name|insn_sets
 decl_stmt|;
 comment|/* Some targets need information about the current section to accurately      display insns.  If this is NULL, the target disassembler function      will have to make its best guess.  */
@@ -265,10 +265,24 @@ name|enum
 name|bfd_endian
 name|display_endian
 decl_stmt|;
-comment|/* Number of octets per incremented target address       Normally one, but some DSPs have byte sizes of 16 or 32 bits.  */
+comment|/* Number of octets per incremented target address      Normally one, but some DSPs have byte sizes of 16 or 32 bits.  */
 name|unsigned
 name|int
 name|octets_per_byte
+decl_stmt|;
+comment|/* The number of zeroes we want to see at the end of a section before we      start skipping them.  */
+name|unsigned
+name|int
+name|skip_zeroes
+decl_stmt|;
+comment|/* The number of zeroes to skip at the end of a section.  If the number      of zeroes at the end is between SKIP_ZEROES_AT_END and SKIP_ZEROES,      they will be disassembled.  If there are fewer than      SKIP_ZEROES_AT_END, they will be skipped.  This is a heuristic      attempt to avoid disassembling zeroes inserted by section      alignment.  */
+name|unsigned
+name|int
+name|skip_zeroes_at_end
+decl_stmt|;
+comment|/* Whether the disassembler always needs the relocations.  */
+name|bfd_boolean
+name|disassembler_needs_relocs
 decl_stmt|;
 comment|/* Results from instruction decoders.  Not all decoders yet support      this information.  This info is set each time an instruction is      decoded, and is only valid for the last such instruction.       To determine whether this decoder supports this information, set      insn_info_valid to 0, decode an instruction, then check it.  */
 name|char
@@ -420,6 +434,16 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|int
+name|print_insn_z80
+parameter_list|(
+name|bfd_vma
+parameter_list|,
+name|disassemble_info
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
 name|print_insn_z8001
 parameter_list|(
 name|bfd_vma
@@ -520,27 +544,17 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|int
-name|print_insn_big_a29k
-parameter_list|(
-name|bfd_vma
-parameter_list|,
-name|disassemble_info
-modifier|*
-parameter_list|)
-function_decl|;
-specifier|extern
-name|int
-name|print_insn_little_a29k
-parameter_list|(
-name|bfd_vma
-parameter_list|,
-name|disassemble_info
-modifier|*
-parameter_list|)
-function_decl|;
-specifier|extern
-name|int
 name|print_insn_avr
+parameter_list|(
+name|bfd_vma
+parameter_list|,
+name|disassemble_info
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|print_insn_bfin
 parameter_list|(
 name|bfd_vma
 parameter_list|,
@@ -650,6 +664,26 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|int
+name|print_insn_maxq_little
+parameter_list|(
+name|bfd_vma
+parameter_list|,
+name|disassemble_info
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|print_insn_maxq_big
+parameter_list|(
+name|bfd_vma
+parameter_list|,
+name|disassemble_info
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
 name|print_insn_mcore
 parameter_list|(
 name|bfd_vma
@@ -690,6 +724,16 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|int
+name|print_insn_mt
+parameter_list|(
+name|bfd_vma
+parameter_list|,
+name|disassemble_info
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
 name|print_insn_msp430
 parameter_list|(
 name|bfd_vma
@@ -701,6 +745,16 @@ function_decl|;
 specifier|extern
 name|int
 name|print_insn_ns32k
+parameter_list|(
+name|bfd_vma
+parameter_list|,
+name|disassemble_info
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|print_insn_crx
 parameter_list|(
 name|bfd_vma
 parameter_list|,
@@ -939,6 +993,26 @@ modifier|*
 parameter_list|)
 function_decl|;
 specifier|extern
+name|int
+name|print_insn_xc16x
+parameter_list|(
+name|bfd_vma
+parameter_list|,
+name|disassemble_info
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|print_insn_m32c
+parameter_list|(
+name|bfd_vma
+parameter_list|,
+name|disassemble_info
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
 name|disassembler_ftype
 name|arc_get_disassembler
 parameter_list|(
@@ -1019,6 +1093,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+specifier|const
 modifier|*
 modifier|*
 parameter_list|)

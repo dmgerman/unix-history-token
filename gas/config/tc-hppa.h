@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-hppa.h -- Header file for the PA    Copyright 1989, 1993, 1994, 1995, 1997, 1998, 1999, 2000, 2001, 2002,    2003 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 1, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* tc-hppa.h -- Header file for the PA    Copyright 1989, 1993, 1994, 1995, 1997, 1998, 1999, 2000, 2001, 2002,    2003, 2004, 2005 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 1, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -411,30 +411,6 @@ name|tc_symbol_chars
 value|hppa_symbol_chars
 end_define
 
-begin_comment
-comment|/* The PA does not need support for either of these.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|tc_crawl_symbol_chain
-parameter_list|(
-name|headers
-parameter_list|)
-value|{;}
-end_define
-
-begin_define
-define|#
-directive|define
-name|tc_headers_hook
-parameter_list|(
-name|headers
-parameter_list|)
-value|{;}
-end_define
-
 begin_define
 define|#
 directive|define
@@ -473,23 +449,7 @@ value|cons_fix_new_hppa
 end_define
 
 begin_comment
-comment|/* On the PA, an equal sign often appears as a condition or nullification    completer in an instruction.  This can be detected by checking the    previous character, if the character is a comma, then the equal is    being used as part of an instruction.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TC_EQUAL_IN_INSN
-parameter_list|(
-name|C
-parameter_list|,
-name|PTR
-parameter_list|)
-value|((C) == ',')
-end_define
-
-begin_comment
-comment|/* Similarly for an exclamation point.  It is used in FP comparison    instructions and as an end of line marker.  When used in an instruction    it will always follow a comma.  */
+comment|/* On the PA, an exclamation point can appear in an instruction.  It is    used in FP comparison instructions and as an end of line marker.    When used in an instruction it will always follow a comma.  */
 end_comment
 
 begin_define
@@ -545,7 +505,7 @@ value|hppa_force_relocation (FIX)
 end_define
 
 begin_comment
-comment|/* Values passed to md_apply_fix3 don't include the symbol value.  */
+comment|/* Values passed to md_apply_fix don't include the symbol value.  */
 end_comment
 
 begin_define

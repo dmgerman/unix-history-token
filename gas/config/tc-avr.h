@@ -1,24 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* This file is tc-avr.h    Copyright 1999, 2000, 2001, 2002 Free Software Foundation, Inc.     Contributed by Denis Chertykov<denisc@overta.ru>     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* This file is tc-avr.h    Copyright 1999, 2000, 2001, 2002, 2005 Free Software Foundation, Inc.     Contributed by Denis Chertykov<denisc@overta.ru>     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BFD_ASSEMBLER
-end_ifndef
-
-begin_error
-error|#
-directive|error
-error|AVR support requires BFD_ASSEMBLER
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* By convention, you should define this macro in the `.h' file.  For    example, `tc-m68k.h' defines `TC_M68K'.  You might have to use this    if it is necessary to add CPU specific code to the object format    file.  */
@@ -110,19 +93,18 @@ name|EXPR
 parameter_list|,
 name|N
 parameter_list|)
-value|avr_parse_cons_expression (EXPR,N)
+value|avr_parse_cons_expression (EXPR, N)
 end_define
 
 begin_function_decl
+specifier|extern
 name|void
 name|avr_parse_cons_expression
 parameter_list|(
 name|expressionS
 modifier|*
-name|exp
 parameter_list|,
 name|int
-name|nbytes
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -144,26 +126,23 @@ name|N
 parameter_list|,
 name|EXP
 parameter_list|)
-value|avr_cons_fix_new(FRAG,WHERE,N,EXP)
+value|avr_cons_fix_new (FRAG, WHERE, N, EXP)
 end_define
 
 begin_function_decl
+specifier|extern
 name|void
 name|avr_cons_fix_new
 parameter_list|(
 name|fragS
 modifier|*
-name|frag
 parameter_list|,
 name|int
-name|where
 parameter_list|,
 name|int
-name|nbytes
 parameter_list|,
 name|expressionS
 modifier|*
-name|exp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -211,7 +190,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* Values passed to md_apply_fix3 don't include the symbol value.  */
+comment|/* Values passed to md_apply_fix don't include the symbol value.  */
 end_comment
 
 begin_define
@@ -237,25 +216,22 @@ name|FIX
 parameter_list|,
 name|SEC
 parameter_list|)
-value|md_pcrel_from_section(FIX, SEC)
+value|md_pcrel_from_section (FIX, SEC)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|long
 name|md_pcrel_from_section
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|fix
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|segT
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* The number of bytes to put into a word in a listing.  This affects    the way the bytes are clumped together in the listing.  For    example, a value of 2 might print `1234 5678' where a value of 1    would print `12 34 56 78'.  The default value is 4.  */
@@ -293,6 +269,25 @@ parameter_list|,
 name|P2VAR
 parameter_list|)
 value|(P2VAR) = 0
+end_define
+
+begin_comment
+comment|/* We don't want gas to fixup the following program memory related relocations.    We will need them in case that we want to do linker relaxation.    We could in principle keep these fixups in gas when not relaxing.    However, there is no serious performance penilty when making the linker    make the fixup work.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TC_VALIDATE_FIX
+parameter_list|(
+name|FIXP
+parameter_list|,
+name|SEG
+parameter_list|,
+name|SKIP
+parameter_list|)
+define|\
+value|if (   (FIXP->fx_r_type == BFD_RELOC_AVR_7_PCREL          \       || FIXP->fx_r_type == BFD_RELOC_AVR_13_PCREL         \       || FIXP->fx_r_type == BFD_RELOC_AVR_LO8_LDI_PM       \       || FIXP->fx_r_type == BFD_RELOC_AVR_HI8_LDI_PM       \       || FIXP->fx_r_type == BFD_RELOC_AVR_HH8_LDI_PM       \       || FIXP->fx_r_type == BFD_RELOC_AVR_16_PM)           \&& (FIXP->fx_addsy))                                  \    {                                                       \      goto SKIP;                                            \    }
 end_define
 
 end_unit

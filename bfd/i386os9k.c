@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for os9000 i386 binaries.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1998, 1999, 2001, 2002    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for os9000 i386 binaries.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1998, 1999, 2001, 2002,    2004, 2005 Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -377,31 +377,6 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* Swaps the information in an internal exec header structure into the    supplied buffer ready for writing to disk.  */
-end_comment
-
-begin_comment
-unit|void os9k_swap_exec_header_out   PARAMS ((bfd *, struct internal_exec *, struct mh_com *));  void os9k_swap_exec_header_out (abfd, execp, raw_bytes)      bfd *abfd;      struct internal_exec *execp;      mh_com *raw_bytes; {   mh_com *bytes = (mh_com *) raw_bytes;
-comment|/* Now fill in fields in the raw data, from the fields in the exec struct. */
-end_comment
-
-begin_endif
-unit|H_PUT_32 (abfd, execp->a_info, bytes->e_info);   H_PUT_32 (abfd, execp->a_text, bytes->e_text);   H_PUT_32 (abfd, execp->a_data, bytes->e_data);   H_PUT_32 (abfd, execp->a_bss, bytes->e_bss);   H_PUT_32 (abfd, execp->a_syms, bytes->e_syms);   H_PUT_32 (abfd, execp->a_entry, bytes->e_entry);   H_PUT_32 (abfd, execp->a_trsize, bytes->e_trsize);   H_PUT_32 (abfd, execp->a_drsize, bytes->e_drsize);   H_PUT_32 (abfd, execp->a_tload, bytes->e_tload);   H_PUT_32 (abfd, execp->a_dload, bytes->e_dload);   bytes->e_talign[0] = execp->a_talign;   bytes->e_dalign[0] = execp->a_dalign;   bytes->e_balign[0] = execp->a_balign;   bytes->e_relaxable[0] = execp->a_relaxable; }
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* 0 */
-end_comment
-
 begin_function
 specifier|static
 specifier|const
@@ -655,7 +630,7 @@ argument_list|(
 name|abfd
 argument_list|)
 operator|->
-name|_raw_size
+name|size
 operator|=
 name|execp
 operator|->
@@ -748,41 +723,6 @@ name|xvec
 return|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-unit|struct bout_data_struct {   struct aoutdata a;   struct internal_exec e; };  static bfd_boolean os9k_mkobject (abfd)      bfd *abfd; {   struct bout_data_struct *rawptr;   bfd_size_type amt = sizeof (struct bout_data_struct);    rawptr = (struct bout_data_struct *) bfd_zalloc (abfd, amt);   if (rawptr == NULL)     return FALSE;    abfd->tdata.bout_data = rawptr;   exec_hdr (abfd) =&rawptr->e;    obj_textsec (abfd) = (asection *) NULL;   obj_datasec (abfd) = (asection *) NULL;   obj_bsssec (abfd) = (asection *) NULL;    return TRUE; }  static bfd_boolean os9k_write_object_contents (abfd)      bfd *abfd; {   struct external_exec swapped_hdr;    if (! aout_32_make_sections (abfd))     return FALSE;    exec_hdr (abfd)->a_info = BMAGIC;    exec_hdr (abfd)->a_text = obj_textsec (abfd)->_raw_size;   exec_hdr (abfd)->a_data = obj_datasec (abfd)->_raw_size;   exec_hdr (abfd)->a_bss = obj_bsssec (abfd)->_raw_size;   exec_hdr (abfd)->a_syms = bfd_get_symcount (abfd) * sizeof (struct nlist);   exec_hdr (abfd)->a_entry = bfd_get_start_address (abfd);   exec_hdr (abfd)->a_trsize = ((obj_textsec (abfd)->reloc_count) * 			       sizeof (struct relocation_info));   exec_hdr (abfd)->a_drsize = ((obj_datasec (abfd)->reloc_count) * 			       sizeof (struct relocation_info));    exec_hdr (abfd)->a_talign = obj_textsec (abfd)->alignment_power;   exec_hdr (abfd)->a_dalign = obj_datasec (abfd)->alignment_power;   exec_hdr (abfd)->a_balign = obj_bsssec (abfd)->alignment_power;    exec_hdr (abfd)->a_tload = obj_textsec (abfd)->vma;   exec_hdr (abfd)->a_dload = obj_datasec (abfd)->vma;    bout_swap_exec_header_out (abfd, exec_hdr (abfd),&swapped_hdr);    if (bfd_seek (abfd, (file_ptr) 0, SEEK_SET) != 0       || bfd_bwrite ((PTR)& swapped_hdr, (bfd_size_type) EXEC_BYTES_SIZE, 		    abfd) != EXEC_BYTES_SIZE)     return FALSE;
-comment|/* Now write out reloc info, followed by syms and strings.  */
-end_comment
-
-begin_escape
-unit|if (bfd_get_symcount (abfd) != 0)     {       if (bfd_seek (abfd, (file_ptr) (N_SYMOFF (*exec_hdr (abfd))), SEEK_SET) 	  != 0) 	return FALSE;        if (!aout_32_write_syms (abfd)) 	return FALSE;        if (bfd_seek (abfd, (file_ptr) (N_TROFF (*exec_hdr (abfd))), SEEK_SET) 	  != 0) 	return FALSE;        if (!b_out_squirt_out_relocs (abfd, obj_textsec (abfd))) 	return FALSE;       if (bfd_seek (abfd, (file_ptr) (N_DROFF (*exec_hdr (abfd))), SEEK_SET) 	  != 0) 	return FALSE;        if (!b_out_squirt_out_relocs (abfd, obj_datasec (abfd))) 	return FALSE;     }   return TRUE; }
-end_escape
-
-begin_comment
-unit|static bfd_boolean os9k_set_section_contents (abfd, section, location, offset, count)      bfd *abfd;      sec_ptr section;      unsigned char *location;      file_ptr offset;      int count; {    if (! abfd->output_has_begun)     {
-comment|/* set by bfd.c handler */
-end_comment
-
-begin_comment
-unit|if (! aout_32_make_sections (abfd)) 	return FALSE;        obj_textsec (abfd)->filepos = sizeof (struct internal_exec);       obj_datasec (abfd)->filepos = obj_textsec (abfd)->filepos 	+ obj_textsec (abfd)->_raw_size;      }
-comment|/* Regardless, once we know what we're doing, we might as well get going.  */
-end_comment
-
-begin_endif
-unit|if (bfd_seek (abfd, section->filepos + offset, SEEK_SET) != 0)     return FALSE;    if (count != 0)     return bfd_bwrite ((PTR) location, (bfd_size_type) count, abfd) == count;    return TRUE; }
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* 0 */
-end_comment
 
 begin_function
 specifier|static
@@ -877,8 +817,23 @@ end_define
 begin_define
 define|#
 directive|define
+name|os9k_bfd_is_group_section
+value|bfd_generic_is_group_section
+end_define
+
+begin_define
+define|#
+directive|define
 name|os9k_bfd_discard_group
 value|bfd_generic_discard_group
+end_define
+
+begin_define
+define|#
+directive|define
+name|os9k_section_already_linked
+define|\
+value|_bfd_generic_section_already_linked
 end_define
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Disassemble WDC 65816 instructions.    Copyright 1995, 1998, 2000, 2001, 2002 Free Software Foundation, Inc.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Disassemble WDC 65816 instructions.    Copyright 1995, 1998, 2000, 2001, 2002, 2005    Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston,    MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -63,61 +63,22 @@ name|local_info
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|void
-name|print_operand
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-operator|,
-name|char
-operator|*
-operator|,
-name|unsigned
-name|int
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static char *lname[] = { "r0","r1","r2","r3","r4","r5","r6","r7","s0" };  static char * findname (val)      unsigned int val; {   if (val>= 0x10&& val<= 0x20)     return lname[(val - 0x10) / 2];   return 0; }
-endif|#
-directive|endif
-end_endif
-
 begin_function
 specifier|static
 name|void
 name|print_operand
 parameter_list|(
-name|lookup
-parameter_list|,
-name|format
-parameter_list|,
-name|args
-parameter_list|)
 name|int
 name|lookup
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|format
-decl_stmt|;
-name|unsigned
+parameter_list|,
 name|int
 modifier|*
 name|args
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|val
@@ -160,13 +121,6 @@ if|if
 condition|(
 name|lookup
 condition|)
-block|{
-if|#
-directive|if
-literal|0
-block|name = findname (val); 	      if (name) 		fpr (stream, "%s", name); 	      else
-endif|#
-directive|endif
 name|local_info
 operator|->
 name|print_address_func
@@ -176,7 +130,6 @@ argument_list|,
 name|local_info
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 name|fpr
 argument_list|(
@@ -208,18 +161,14 @@ begin_function
 name|int
 name|print_insn_w65
 parameter_list|(
-name|memaddr
-parameter_list|,
-name|info
-parameter_list|)
 name|bfd_vma
 name|memaddr
-decl_stmt|;
+parameter_list|,
 name|struct
 name|disassemble_info
 modifier|*
 name|info
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|status
@@ -291,7 +240,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 name|status
 operator|=
 name|info
@@ -311,7 +259,6 @@ argument_list|,
 name|info
 argument_list|)
 expr_stmt|;
-block|}
 for|for
 control|(
 name|op

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD backend for CRIS a.out binaries.    Copyright 2000, 2001, 2002, 2003 Free Software Foundation, Inc.    Contributed by Axis Communications AB.    Written by Hans-Peter Nilsson.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD backend for CRIS a.out binaries.    Copyright 2000, 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.    Contributed by Axis Communications AB.    Written by Hans-Peter Nilsson.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -166,25 +166,22 @@ begin_define
 define|#
 directive|define
 name|MY_write_object_contents
-value|MY(write_object_contents)
+value|MY (write_object_contents)
 end_define
 
 begin_function_decl
 specifier|static
 name|bfd_boolean
 name|MY
-parameter_list|(
+function_decl|(
 name|write_object_contents
-parameter_list|)
-function_decl|PARAMS
+function_decl|)
 parameter_list|(
-function_decl|(bfd *
+name|bfd
+modifier|*
+parameter_list|)
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
 
 begin_comment
 comment|/* Forward this, so we can use a pointer to it in PARAMS.  */
@@ -200,88 +197,87 @@ begin_define
 define|#
 directive|define
 name|MY_swap_ext_reloc_out
-value|MY(swap_ext_reloc_out)
+value|MY (swap_ext_reloc_out)
 end_define
 
 begin_function_decl
 specifier|static
 name|void
 name|MY
-parameter_list|(
+function_decl|(
 name|swap_ext_reloc_out
-parameter_list|)
-function_decl|PARAMS
+function_decl|)
 parameter_list|(
-function_decl|(bfd *
-operator|,
-function_decl|arelent *
-operator|,
-function_decl|struct reloc_ext_external *
+name|bfd
+modifier|*
+parameter_list|,
+name|arelent
+modifier|*
+parameter_list|,
+name|struct
+name|reloc_ext_external
+modifier|*
+parameter_list|)
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
 
 begin_define
 define|#
 directive|define
 name|MY_swap_ext_reloc_in
-value|MY(swap_ext_reloc_in)
+value|MY (swap_ext_reloc_in)
 end_define
 
 begin_function_decl
 specifier|static
 name|void
 name|MY
-parameter_list|(
+function_decl|(
 name|swap_ext_reloc_in
-parameter_list|)
-function_decl|PARAMS
+function_decl|)
 parameter_list|(
-function_decl|(bfd *
-operator|,
-function_decl|struct 					   reloc_ext_external *
-operator|,
-function_decl|arelent *
-operator|,
-function_decl|asymbol **
-operator|,
-function_decl|bfd_size_type
+name|bfd
+modifier|*
+parameter_list|,
+name|struct
+name|reloc_ext_external
+modifier|*
+parameter_list|,
+name|arelent
+modifier|*
+parameter_list|,
+name|asymbol
+modifier|*
+modifier|*
+parameter_list|,
+name|bfd_size_type
+parameter_list|)
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
 
 begin_define
 define|#
 directive|define
 name|MY_set_sizes
-value|MY(set_sizes)
+value|MY (set_sizes)
 end_define
 
 begin_function_decl
 specifier|static
 name|bfd_boolean
 name|MY
-parameter_list|(
+function_decl|(
 name|set_sizes
-parameter_list|)
-function_decl|PARAMS
+function_decl|)
 parameter_list|(
-function_decl|(bfd *
+name|bfd
+modifier|*
+parameter_list|)
+function_decl|;
 end_function_decl
 
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-comment|/* To set back reloc_size to ext, we make MY(set_sizes) be called    through this construct.  Note that MY_set_arch_mach is only called    through SET_ARCH_MACH.  The default bfd_default_set_arch_mach will    not call set_sizes.  */
+comment|/* To set back reloc_size to ext, we make MY (set_sizes) be called    through this construct.  Note that MY_set_arch_mach is only called    through SET_ARCH_MACH.  The default bfd_default_set_arch_mach will    not call set_sizes.  */
 end_comment
 
 begin_define
@@ -385,12 +381,10 @@ function|(
 name|write_object_contents
 function|)
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|external_exec
@@ -470,25 +464,19 @@ function|(
 name|swap_ext_reloc_out
 function|)
 parameter_list|(
-name|abfd
-parameter_list|,
-name|g
-parameter_list|,
-name|natptr
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|arelent
 modifier|*
 name|g
-decl_stmt|;
+parameter_list|,
 name|struct
 name|reloc_ext_external
 modifier|*
 name|natptr
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|r_index
@@ -792,37 +780,27 @@ function|(
 name|swap_ext_reloc_in
 function|)
 parameter_list|(
-name|abfd
-parameter_list|,
-name|bytes
-parameter_list|,
-name|cache_ptr
-parameter_list|,
-name|symbols
-parameter_list|,
-name|symcount
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|struct
 name|reloc_ext_external
 modifier|*
 name|bytes
-decl_stmt|;
+parameter_list|,
 name|arelent
 modifier|*
 name|cache_ptr
-decl_stmt|;
+parameter_list|,
 name|asymbol
 modifier|*
 modifier|*
 name|symbols
-decl_stmt|;
+parameter_list|,
 name|bfd_size_type
 name|symcount
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|int
@@ -946,13 +924,10 @@ call|)
 argument_list|(
 name|_
 argument_list|(
-literal|"%s: Invalid relocation type imported: %d"
+literal|"%B: Invalid relocation type imported: %d"
 argument_list|)
 argument_list|,
-name|bfd_archive_filename
-argument_list|(
 name|abfd
-argument_list|)
 argument_list|,
 name|r_type
 argument_list|)
@@ -987,13 +962,10 @@ call|)
 argument_list|(
 name|_
 argument_list|(
-literal|"%s: Bad relocation record imported: %d"
+literal|"%B: Bad relocation record imported: %d"
 argument_list|)
 argument_list|,
-name|bfd_archive_filename
-argument_list|(
 name|abfd
-argument_list|)
 argument_list|,
 name|r_index
 argument_list|)
@@ -1041,12 +1013,10 @@ function|(
 name|set_sizes
 function|)
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* Just as the default in aout-target.h (with some #ifdefs folded)...  */
 name|adata
@@ -1098,10 +1068,6 @@ name|TRUE
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * Local variables:  * eval: (c-set-style "gnu")  * indent-tabs-mode: t  * End:  */
-end_comment
 
 end_unit
 

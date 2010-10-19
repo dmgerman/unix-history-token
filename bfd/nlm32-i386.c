@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Support for 32-bit i386 NLM (NetWare Loadable Module)    Copyright 1993, 1994, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Support for 32-bit i386 NLM (NetWare Loadable Module)    Copyright 1993, 1994, 2000, 2001, 2002, 2003, 2005    Free Software Foundation, Inc.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -47,120 +47,6 @@ directive|include
 file|"libnlm.h"
 end_include
 
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|nlm_i386_read_reloc
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|nlmNAME
-argument_list|(
-name|symbol_type
-argument_list|)
-operator|*
-operator|,
-name|asection
-operator|*
-operator|*
-operator|,
-name|arelent
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|nlm_i386_write_import
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|asection
-operator|*
-operator|,
-name|arelent
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|nlm_i386_mangle_relocs
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|asection
-operator|*
-operator|,
-specifier|const
-name|PTR
-operator|,
-name|bfd_vma
-operator|,
-name|bfd_size_type
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|nlm_i386_read_import
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|nlmNAME
-argument_list|(
-name|symbol_type
-argument_list|)
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|nlm_i386_write_external
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|bfd_size_type
-operator|,
-name|asymbol
-operator|*
-operator|,
-expr|struct
-name|reloc_and_sec
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Adjust the reloc location by an absolute value.  */
 end_comment
@@ -174,47 +60,47 @@ name|HOWTO
 argument_list|(
 literal|0
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|32
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_bitfield
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 literal|0
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"32"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|TRUE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0xffffffff
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 literal|0xffffffff
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|FALSE
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* pcrel_offset */
+comment|/* PR rel_offset.  */
 end_comment
 
 begin_comment
@@ -230,47 +116,47 @@ name|HOWTO
 argument_list|(
 literal|1
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|32
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|TRUE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_signed
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 literal|0
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"DISP32"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|TRUE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0xffffffff
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 literal|0xffffffff
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|TRUE
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* pcrel_offset */
+comment|/* PR rel_offset.  */
 end_comment
 
 begin_comment
@@ -282,46 +168,26 @@ specifier|static
 name|bfd_boolean
 name|nlm_i386_read_reloc
 argument_list|(
-name|abfd
-argument_list|,
-name|sym
-argument_list|,
-name|secp
-argument_list|,
-name|rel
-argument_list|)
 name|bfd
-modifier|*
+operator|*
 name|abfd
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
+argument_list|,
 name|nlmNAME
 argument_list|(
 name|symbol_type
 argument_list|)
 operator|*
 name|sym
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+argument_list|,
 name|asection
-modifier|*
-modifier|*
+operator|*
+operator|*
 name|secp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+argument_list|,
 name|arelent
-modifier|*
+operator|*
 name|rel
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+argument_list|)
 block|{
 name|bfd_byte
 name|temp
@@ -530,7 +396,7 @@ return|return
 name|TRUE
 return|;
 block|}
-end_block
+end_decl_stmt
 
 begin_comment
 comment|/* Write a NetWare i386 reloc.  */
@@ -541,24 +407,18 @@ specifier|static
 name|bfd_boolean
 name|nlm_i386_write_import
 parameter_list|(
-name|abfd
-parameter_list|,
-name|sec
-parameter_list|,
-name|rel
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|sec
-decl_stmt|;
+parameter_list|,
 name|arelent
 modifier|*
 name|rel
-decl_stmt|;
+parameter_list|)
 block|{
 name|asymbol
 modifier|*
@@ -842,34 +702,24 @@ specifier|static
 name|bfd_boolean
 name|nlm_i386_mangle_relocs
 parameter_list|(
-name|abfd
-parameter_list|,
-name|sec
-parameter_list|,
-name|data
-parameter_list|,
-name|offset
-parameter_list|,
-name|count
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|sec
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|PTR
 name|data
-decl_stmt|;
+parameter_list|,
 name|bfd_vma
 name|offset
-decl_stmt|;
+parameter_list|,
 name|bfd_size_type
 name|count
-decl_stmt|;
+parameter_list|)
 block|{
 name|arelent
 modifier|*
@@ -1256,7 +1106,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Read a NetWare i386 import record */
+comment|/* Read a NetWare i386 import record.  */
 end_comment
 
 begin_decl_stmt
@@ -1264,50 +1114,40 @@ specifier|static
 name|bfd_boolean
 name|nlm_i386_read_import
 argument_list|(
+name|bfd
+operator|*
 name|abfd
 argument_list|,
-name|sym
-argument_list|)
-name|bfd
-modifier|*
-name|abfd
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
 name|nlmNAME
 argument_list|(
 name|symbol_type
 argument_list|)
 operator|*
 name|sym
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+argument_list|)
 block|{
 name|struct
 name|nlm_relent
 modifier|*
 name|nlm_relocs
 decl_stmt|;
-comment|/* relocation records for symbol */
+comment|/* Relocation records for symbol.  */
 name|bfd_size_type
 name|rcount
 decl_stmt|;
-comment|/* number of relocs */
+comment|/* Number of relocs.  */
 name|bfd_byte
 name|temp
 index|[
 name|NLM_TARGET_LONG_SIZE
 index|]
 decl_stmt|;
-comment|/* temporary 32-bit value */
+comment|/* Temporary 32-bit value.  */
 name|unsigned
 name|char
 name|symlength
 decl_stmt|;
-comment|/* length of symbol name */
+comment|/* Length of symbol name.  */
 name|char
 modifier|*
 name|name
@@ -1316,9 +1156,6 @@ if|if
 condition|(
 name|bfd_bread
 argument_list|(
-operator|(
-name|PTR
-operator|)
 operator|&
 name|symlength
 argument_list|,
@@ -1434,9 +1271,6 @@ if|if
 condition|(
 name|bfd_bread
 argument_list|(
-operator|(
-name|PTR
-operator|)
 name|temp
 argument_list|,
 operator|(
@@ -1469,12 +1303,6 @@ argument_list|)
 expr_stmt|;
 name|nlm_relocs
 operator|=
-operator|(
-operator|(
-expr|struct
-name|nlm_relent
-operator|*
-operator|)
 name|bfd_alloc
 argument_list|(
 name|abfd
@@ -1487,7 +1315,6 @@ expr|struct
 name|nlm_relent
 argument_list|)
 argument_list|)
-operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -1562,7 +1389,7 @@ return|return
 name|TRUE
 return|;
 block|}
-end_block
+end_decl_stmt
 
 begin_comment
 comment|/* Write out an external reference.  */
@@ -1573,30 +1400,22 @@ specifier|static
 name|bfd_boolean
 name|nlm_i386_write_external
 parameter_list|(
-name|abfd
-parameter_list|,
-name|count
-parameter_list|,
-name|sym
-parameter_list|,
-name|relocs
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|bfd_size_type
 name|count
-decl_stmt|;
+parameter_list|,
 name|asymbol
 modifier|*
 name|sym
-decl_stmt|;
+parameter_list|,
 name|struct
 name|reloc_and_sec
 modifier|*
 name|relocs
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|int
@@ -1712,7 +1531,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 if|if
 condition|(
 operator|!
@@ -1738,7 +1556,6 @@ condition|)
 return|return
 name|FALSE
 return|;
-block|}
 return|return
 name|TRUE
 return|;
@@ -1768,7 +1585,7 @@ argument_list|)
 block|,
 literal|0
 block|,
-comment|/* optional_prefix_size */
+comment|/* Optional_prefix_size.  */
 name|bfd_arch_i386
 block|,
 literal|0
@@ -1777,10 +1594,10 @@ name|FALSE
 block|,
 literal|0
 block|,
-comment|/* backend_object_p */
+comment|/* Backend_object_p.  */
 literal|0
 block|,
-comment|/* write_prefix_func */
+comment|/* Write_prefix_func.  */
 name|nlm_i386_read_reloc
 block|,
 name|nlm_i386_mangle_relocs
@@ -1791,10 +1608,10 @@ name|nlm_i386_write_import
 block|,
 literal|0
 block|,
-comment|/* set_public_section */
+comment|/* Set_public_section.  */
 literal|0
 block|,
-comment|/* get_public_offset */
+comment|/* Set_public_offset.  */
 name|nlm_swap_fixed_header_in
 block|,
 name|nlm_swap_fixed_header_out
@@ -1803,7 +1620,7 @@ name|nlm_i386_write_external
 block|,
 literal|0
 block|,
-comment|/* write_export */
+comment|/* Write_export.  */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1819,14 +1636,14 @@ begin_define
 define|#
 directive|define
 name|TARGET_LITTLE_SYM
-value|nlmNAME(i386_vec)
+value|nlmNAME (i386_vec)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TARGET_BACKEND_DATA
-value|&nlm32_i386_backend
+value|& nlm32_i386_backend
 end_define
 
 begin_include

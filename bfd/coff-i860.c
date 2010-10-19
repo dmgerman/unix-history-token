@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for Intel i860 COFF files.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.    Created mostly by substituting "860" for "386" in coff-i386.c    Harry Dolan<dolan@ssd.intel.com>, October 1995  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for Intel i860 COFF files.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1999, 2000, 2001, 2002,    2003, 2004, 2005 Free Software Foundation, Inc.    Created mostly by substituting "860" for "386" in coff-i386.c    Harry Dolan<dolan@ssd.intel.com>, October 1995  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -1416,38 +1416,6 @@ begin_comment
 comment|/* Compute the addend of a reloc.  If the reloc is to a common symbol,    the object file contains the value of the common symbol.  By the    time this is called, the linker may be using a different symbol    from a different object file with a different value.  Therefore, we    hack wildly to locate the original symbol from this file so that we    can make the correct adjustment.  This macro sets coffsym to the    symbol from the original file, and uses it to set the addend value    correctly.  If this is not a common symbol, the usual addend    calculation is done, except that an additional tweak is needed for    PC relative relocs.    FIXME: This macro refers to symbols and asect; these are from the    calling function, not the macro arguments.  */
 end_comment
 
-begin_comment
-comment|/* FIXME: This was copied from the i386 version originally but    appears to be wrong for i860.  For now we'll do nothing.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|CALC_ADDEND
-parameter_list|(
-name|abfd
-parameter_list|,
-name|ptr
-parameter_list|,
-name|reloc
-parameter_list|,
-name|cache_ptr
-parameter_list|)
-define|\
-value|{								\     coff_symbol_type *coffsym = (coff_symbol_type *) NULL;	\     if (ptr&& bfd_asymbol_bfd (ptr) != abfd)			\       coffsym = (obj_symbols (abfd)				\ 	         + (cache_ptr->sym_ptr_ptr - symbols));		\     else if (ptr)						\       coffsym = coff_symbol_from (abfd, ptr);			\     if (coffsym != (coff_symbol_type *) NULL			\&& coffsym->native->u.syment.n_scnum == 0)		\       cache_ptr->addend = - coffsym->native->u.syment.n_value;	\     else if (ptr&& bfd_asymbol_bfd (ptr) == abfd		\&& ptr->section != (asection *) NULL)		\       cache_ptr->addend = - (ptr->section->vma + ptr->value);	\     else							\       cache_ptr->addend = 0;					\     if (ptr&& howto_table[reloc.r_type].pc_relative)		\       cache_ptr->addend += asect->vma;				\   }
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -1462,11 +1430,6 @@ parameter_list|,
 name|cache_ptr
 parameter_list|)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* We use the special COFF backend linker.  */
@@ -1895,13 +1858,10 @@ call|)
 argument_list|(
 name|_
 argument_list|(
-literal|"%s: warning: illegal symbol index %ld in relocs"
+literal|"%B: warning: illegal symbol index %ld in relocs"
 argument_list|)
 argument_list|,
-name|bfd_archive_filename
-argument_list|(
 name|abfd
-argument_list|)
 argument_list|,
 name|dst
 operator|->

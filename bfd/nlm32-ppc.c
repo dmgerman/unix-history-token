@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Support for 32-bit PowerPC NLM (NetWare Loadable Module)    Copyright 1994, 1995, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Support for 32-bit PowerPC NLM (NetWare Loadable Module)    Copyright 1994, 1995, 1999, 2000, 2001, 2002, 2003, 2004,    2005 Free Software Foundation, Inc.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -51,240 +51,6 @@ directive|include
 file|"libnlm.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OLDFORMAT
-end_ifdef
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|nlm_powerpc_backend_object_p
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|nlm_powerpc_write_prefix
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|nlm_powerpc_read_reloc
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|nlmNAME
-argument_list|(
-name|symbol_type
-argument_list|)
-operator|*
-operator|,
-name|asection
-operator|*
-operator|*
-operator|,
-name|arelent
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|nlm_powerpc_mangle_relocs
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|asection
-operator|*
-operator|,
-specifier|const
-name|PTR
-operator|,
-name|bfd_vma
-operator|,
-name|bfd_size_type
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|nlm_powerpc_read_import
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|nlmNAME
-argument_list|(
-name|symbol_type
-argument_list|)
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OLDFORMAT
-end_ifdef
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|nlm_powerpc_write_reloc
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|asection
-operator|*
-operator|,
-name|arelent
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|nlm_powerpc_write_import
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|asection
-operator|*
-operator|,
-name|arelent
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|nlm_powerpc_write_external
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|bfd_size_type
-operator|,
-name|asymbol
-operator|*
-operator|,
-expr|struct
-name|reloc_and_sec
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|OLDFORMAT
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|nlm_powerpc_set_public_section
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|nlmNAME
-argument_list|(
-name|symbol_type
-argument_list|)
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_vma
-name|nlm_powerpc_get_public_offset
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|asymbol
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_escape
 end_escape
 
@@ -307,12 +73,10 @@ specifier|static
 name|bfd_boolean
 name|nlm_powerpc_backend_object_p
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|nlm32_powerpc_external_prefix_header
@@ -322,9 +86,6 @@ if|if
 condition|(
 name|bfd_bread
 argument_list|(
-operator|(
-name|PTR
-operator|)
 operator|&
 name|s
 argument_list|,
@@ -390,12 +151,10 @@ specifier|static
 name|bfd_boolean
 name|nlm_powerpc_write_prefix
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|nlm32_powerpc_external_prefix_header
@@ -453,9 +212,6 @@ if|if
 condition|(
 name|bfd_bwrite
 argument_list|(
-operator|(
-name|PTR
-operator|)
 operator|&
 name|s
 argument_list|,
@@ -480,306 +236,6 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* OLDFORMAT */
-end_comment
-
-begin_escape
-end_escape
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|OLDFORMAT
-end_ifndef
-
-begin_comment
-comment|/* There is only one type of reloc in a PowerPC NLM.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|reloc_howto_type
-name|nlm_powerpc_howto
-init|=
-name|HOWTO
-argument_list|(
-literal|0
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|32
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_bitfield
-argument_list|,
-comment|/* complain_on_overflow */
-literal|0
-argument_list|,
-comment|/* special_function */
-literal|"32"
-argument_list|,
-comment|/* name */
-name|TRUE
-argument_list|,
-comment|/* partial_inplace */
-literal|0xffffffff
-argument_list|,
-comment|/* src_mask */
-literal|0xffffffff
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* pcrel_offset */
-end_comment
-
-begin_comment
-comment|/* Read a PowerPC NLM reloc.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|nlm_powerpc_read_reloc
-argument_list|(
-name|abfd
-argument_list|,
-name|sym
-argument_list|,
-name|secp
-argument_list|,
-name|rel
-argument_list|)
-name|bfd
-modifier|*
-name|abfd
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|nlmNAME
-argument_list|(
-name|symbol_type
-argument_list|)
-operator|*
-name|sym
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-name|asection
-modifier|*
-modifier|*
-name|secp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|arelent
-modifier|*
-name|rel
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-name|bfd_byte
-name|temp
-index|[
-literal|4
-index|]
-decl_stmt|;
-name|bfd_vma
-name|val
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|name
-decl_stmt|;
-if|if
-condition|(
-name|bfd_bread
-argument_list|(
-name|temp
-argument_list|,
-operator|(
-name|bfd_size_type
-operator|)
-sizeof|sizeof
-argument_list|(
-name|temp
-argument_list|)
-argument_list|,
-name|abfd
-argument_list|)
-operator|!=
-sizeof|sizeof
-argument_list|(
-name|temp
-argument_list|)
-condition|)
-return|return
-name|FALSE
-return|;
-name|val
-operator|=
-name|bfd_get_32
-argument_list|(
-name|abfd
-argument_list|,
-name|temp
-argument_list|)
-expr_stmt|;
-comment|/* The value is a word offset into either the code or data segment.      This is the location which needs to be adjusted.       The high bit is 0 if the value is an offset into the data      segment, or 1 if the value is an offset into the text segment.       If this is a relocation fixup rather than an imported symbol (the      sym argument is NULL), then the second most significant bit is 0      if the address of the data segment should be added to the      location addressed by the value, or 1 if the address of the text      segment should be added.       If this is an imported symbol, the second most significant bit is      not used and must be 0.  */
-if|if
-condition|(
-operator|(
-name|val
-operator|&
-name|NLM_HIBIT
-operator|)
-operator|==
-literal|0
-condition|)
-name|name
-operator|=
-name|NLM_INITIALIZED_DATA_NAME
-expr_stmt|;
-else|else
-block|{
-name|name
-operator|=
-name|NLM_CODE_NAME
-expr_stmt|;
-name|val
-operator|&=
-operator|~
-name|NLM_HIBIT
-expr_stmt|;
-block|}
-operator|*
-name|secp
-operator|=
-name|bfd_get_section_by_name
-argument_list|(
-name|abfd
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sym
-operator|==
-name|NULL
-condition|)
-block|{
-if|if
-condition|(
-operator|(
-name|val
-operator|&
-operator|(
-name|NLM_HIBIT
-operator|>>
-literal|1
-operator|)
-operator|)
-operator|==
-literal|0
-condition|)
-name|name
-operator|=
-name|NLM_INITIALIZED_DATA_NAME
-expr_stmt|;
-else|else
-block|{
-name|name
-operator|=
-name|NLM_CODE_NAME
-expr_stmt|;
-name|val
-operator|&=
-operator|~
-operator|(
-name|NLM_HIBIT
-operator|>>
-literal|1
-operator|)
-expr_stmt|;
-block|}
-name|rel
-operator|->
-name|sym_ptr_ptr
-operator|=
-name|bfd_get_section_by_name
-argument_list|(
-name|abfd
-argument_list|,
-name|name
-argument_list|)
-operator|->
-name|symbol_ptr_ptr
-expr_stmt|;
-block|}
-name|rel
-operator|->
-name|howto
-operator|=
-operator|&
-name|nlm_powerpc_howto
-expr_stmt|;
-name|rel
-operator|->
-name|address
-operator|=
-name|val
-operator|<<
-literal|2
-expr_stmt|;
-name|rel
-operator|->
-name|addend
-operator|=
-literal|0
-expr_stmt|;
-return|return
-name|TRUE
-return|;
-block|}
-end_block
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* OLDFORMAT */
-end_comment
-
 begin_comment
 comment|/* This reloc handling is only applicable to the old format.  */
 end_comment
@@ -800,303 +256,303 @@ name|HOWTO
 argument_list|(
 literal|0
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|32
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_bitfield
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 literal|0
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"R_POS"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|TRUE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0xffffffff
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 literal|0xffffffff
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PC rel offset.  */
 comment|/* 32 bit relocation, but store negative value.  */
 name|HOWTO
 argument_list|(
 literal|1
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 operator|-
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|32
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_bitfield
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 literal|0
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"R_NEG"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|TRUE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0xffffffff
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 literal|0xffffffff
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PC rel offset.  */
 comment|/* 32 bit PC relative relocation.  */
 name|HOWTO
 argument_list|(
 literal|2
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|32
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|TRUE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_signed
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 literal|0
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"R_REL"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|TRUE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0xffffffff
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 literal|0xffffffff
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PC rel offset.  */
 comment|/* 16 bit TOC relative relocation.  */
 name|HOWTO
 argument_list|(
 literal|3
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|1
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|16
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_signed
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 literal|0
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"R_TOC"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|TRUE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0xffff
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 literal|0xffff
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PC rel offset.  */
 comment|/* I don't really know what this is.  */
 name|HOWTO
 argument_list|(
 literal|4
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|1
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|32
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_bitfield
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 literal|0
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"R_RTB"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|TRUE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0xffffffff
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 literal|0xffffffff
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PC rel offset.  */
 comment|/* External TOC relative symbol.  */
 name|HOWTO
 argument_list|(
 literal|5
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|16
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_bitfield
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 literal|0
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"R_GL"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|TRUE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0xffff
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 literal|0xffff
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PC rel offset.  */
 comment|/* Local TOC relative symbol.  */
 name|HOWTO
 argument_list|(
 literal|6
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|16
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_bitfield
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 literal|0
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"R_TCL"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|TRUE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0xffff
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 literal|0xffff
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PC rel offset.  */
 block|{
 literal|7
 block|}
@@ -1106,44 +562,44 @@ name|HOWTO
 argument_list|(
 literal|8
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|26
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_bitfield
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 literal|0
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"R_BA"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|TRUE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0x3fffffc
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 literal|0x3fffffc
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PC rel offset.  */
 block|{
 literal|9
 block|}
@@ -1153,44 +609,44 @@ name|HOWTO
 argument_list|(
 literal|0xa
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|26
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|TRUE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_signed
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 literal|0
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"R_BR"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|TRUE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0x3fffffc
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 literal|0x3fffffc
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PC rel offset.  */
 block|{
 literal|0xb
 block|}
@@ -1200,87 +656,87 @@ name|HOWTO
 argument_list|(
 literal|0xc
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|16
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_bitfield
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 literal|0
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"R_RL"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|TRUE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0xffff
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 literal|0xffff
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PC rel offset.  */
 comment|/* Load address.  */
 name|HOWTO
 argument_list|(
 literal|0xd
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|16
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_bitfield
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 literal|0
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"R_RLA"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|TRUE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0xffff
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 literal|0xffff
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PC rel offset.  */
 block|{
 literal|0xe
 block|}
@@ -1290,44 +746,44 @@ name|HOWTO
 argument_list|(
 literal|0xf
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|32
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_bitfield
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 literal|0
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"R_REF"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|FALSE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 literal|0
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PC rel offset.  */
 block|{
 literal|0x10
 block|}
@@ -1341,430 +797,430 @@ name|HOWTO
 argument_list|(
 literal|0x12
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|16
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_bitfield
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 literal|0
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"R_TRL"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|TRUE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0xffff
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 literal|0xffff
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PC rel offset.  */
 comment|/* TOC relative load address.  */
 name|HOWTO
 argument_list|(
 literal|0x13
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|16
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_bitfield
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 literal|0
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"R_TRLA"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|TRUE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0xffff
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 literal|0xffff
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PC rel offset.  */
 comment|/* Modifiable relative branch.  */
 name|HOWTO
 argument_list|(
 literal|0x14
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|1
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|32
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_bitfield
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 literal|0
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"R_RRTBI"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|TRUE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0xffffffff
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 literal|0xffffffff
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PC rel offset.  */
 comment|/* Modifiable absolute branch.  */
 name|HOWTO
 argument_list|(
 literal|0x15
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|1
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|32
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_bitfield
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 literal|0
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"R_RRTBA"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|TRUE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0xffffffff
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 literal|0xffffffff
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PC rel offset.  */
 comment|/* Modifiable call absolute indirect.  */
 name|HOWTO
 argument_list|(
 literal|0x16
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|16
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_bitfield
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 literal|0
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"R_CAI"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|TRUE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0xffff
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 literal|0xffff
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PC rel offset.  */
 comment|/* Modifiable call relative.  */
 name|HOWTO
 argument_list|(
 literal|0x17
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|16
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_bitfield
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 literal|0
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"R_REL"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|TRUE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0xffff
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 literal|0xffff
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PC rel offset.  */
 comment|/* Modifiable branch absolute.  */
 name|HOWTO
 argument_list|(
 literal|0x18
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|16
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_bitfield
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 literal|0
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"R_RBA"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|TRUE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0xffff
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 literal|0xffff
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PC rel offset.  */
 comment|/* Modifiable branch absolute.  */
 name|HOWTO
 argument_list|(
 literal|0x19
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|16
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_bitfield
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 literal|0
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"R_RBAC"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|TRUE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0xffff
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 literal|0xffff
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PC rel offset.  */
 comment|/* Modifiable branch relative.  */
 name|HOWTO
 argument_list|(
 literal|0x1a
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|26
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_signed
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 literal|0
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"R_REL"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|TRUE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0xffff
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 literal|0xffff
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PC rel offset.  */
 comment|/* Modifiable branch absolute.  */
 name|HOWTO
 argument_list|(
 literal|0x1b
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|16
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 argument|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 argument|complain_overflow_bitfield
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 literal|0
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"R_REL"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 argument|TRUE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0xffff
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 literal|0xffff
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 argument|FALSE
 argument_list|)
-comment|/* pcrel_offset */
+comment|/* PC rel offset.  */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1785,46 +1241,26 @@ specifier|static
 name|bfd_boolean
 name|nlm_powerpc_read_reloc
 argument_list|(
-name|abfd
-argument_list|,
-name|sym
-argument_list|,
-name|secp
-argument_list|,
-name|rel
-argument_list|)
 name|bfd
-modifier|*
+operator|*
 name|abfd
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
+argument_list|,
 name|nlmNAME
 argument_list|(
 name|symbol_type
 argument_list|)
 operator|*
 name|sym
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+argument_list|,
 name|asection
-modifier|*
-modifier|*
+operator|*
+operator|*
 name|secp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+argument_list|,
 name|arelent
-modifier|*
+operator|*
 name|rel
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+argument_list|)
 block|{
 name|struct
 name|nlm32_powerpc_external_reloc
@@ -1956,15 +1392,13 @@ name|sym
 operator|!=
 name|NULL
 condition|)
-block|{
-comment|/* This is an import.  sym_ptr_ptr is filled in by 	 nlm_canonicalize_reloc.  */
+comment|/* This is an import.  sym_ptr_ptr is filled in by        nlm_canonicalize_reloc.  */
 name|rel
 operator|->
 name|sym_ptr_ptr
 operator|=
 name|NULL
 expr_stmt|;
-block|}
 else|else
 block|{
 name|asection
@@ -2137,12 +1571,9 @@ name|data_sec
 expr_stmt|;
 name|l_vaddr
 operator|-=
-name|bfd_section_size
-argument_list|(
-name|abfd
-argument_list|,
 name|code_sec
-argument_list|)
+operator|->
+name|size
 expr_stmt|;
 block|}
 else|else
@@ -2166,7 +1597,269 @@ return|return
 name|TRUE
 return|;
 block|}
-end_block
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* not OLDFORMAT */
+end_comment
+
+begin_comment
+comment|/* There is only one type of reloc in a PowerPC NLM.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|reloc_howto_type
+name|nlm_powerpc_howto
+init|=
+name|HOWTO
+argument_list|(
+literal|0
+argument_list|,
+comment|/* Type.  */
+literal|0
+argument_list|,
+comment|/* Rightshift.  */
+literal|2
+argument_list|,
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
+literal|32
+argument_list|,
+comment|/* Bitsize.  */
+name|FALSE
+argument_list|,
+comment|/* PC relative.  */
+literal|0
+argument_list|,
+comment|/* Bitpos.  */
+name|complain_overflow_bitfield
+argument_list|,
+comment|/* Complain_on_overflow.  */
+literal|0
+argument_list|,
+comment|/* Special_function.  */
+literal|"32"
+argument_list|,
+comment|/* Name.  */
+name|TRUE
+argument_list|,
+comment|/* Partial_inplace.  */
+literal|0xffffffff
+argument_list|,
+comment|/* Source mask.  */
+literal|0xffffffff
+argument_list|,
+comment|/* Dest mask.  */
+name|FALSE
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* PC rel_offset.  */
+end_comment
+
+begin_comment
+comment|/* Read a PowerPC NLM reloc.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|bfd_boolean
+name|nlm_powerpc_read_reloc
+argument_list|(
+name|bfd
+operator|*
+name|abfd
+argument_list|,
+name|nlmNAME
+argument_list|(
+name|symbol_type
+argument_list|)
+operator|*
+name|sym
+argument_list|,
+name|asection
+operator|*
+operator|*
+name|secp
+argument_list|,
+name|arelent
+operator|*
+name|rel
+argument_list|)
+block|{
+name|bfd_byte
+name|temp
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|bfd_vma
+name|val
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|name
+decl_stmt|;
+if|if
+condition|(
+name|bfd_bread
+argument_list|(
+name|temp
+argument_list|,
+operator|(
+name|bfd_size_type
+operator|)
+sizeof|sizeof
+argument_list|(
+name|temp
+argument_list|)
+argument_list|,
+name|abfd
+argument_list|)
+operator|!=
+sizeof|sizeof
+argument_list|(
+name|temp
+argument_list|)
+condition|)
+return|return
+name|FALSE
+return|;
+name|val
+operator|=
+name|bfd_get_32
+argument_list|(
+name|abfd
+argument_list|,
+name|temp
+argument_list|)
+expr_stmt|;
+comment|/* The value is a word offset into either the code or data segment.      This is the location which needs to be adjusted.       The high bit is 0 if the value is an offset into the data      segment, or 1 if the value is an offset into the text segment.       If this is a relocation fixup rather than an imported symbol (the      sym argument is NULL), then the second most significant bit is 0      if the address of the data segment should be added to the      location addressed by the value, or 1 if the address of the text      segment should be added.       If this is an imported symbol, the second most significant bit is      not used and must be 0.  */
+if|if
+condition|(
+operator|(
+name|val
+operator|&
+name|NLM_HIBIT
+operator|)
+operator|==
+literal|0
+condition|)
+name|name
+operator|=
+name|NLM_INITIALIZED_DATA_NAME
+expr_stmt|;
+else|else
+block|{
+name|name
+operator|=
+name|NLM_CODE_NAME
+expr_stmt|;
+name|val
+operator|&=
+operator|~
+name|NLM_HIBIT
+expr_stmt|;
+block|}
+operator|*
+name|secp
+operator|=
+name|bfd_get_section_by_name
+argument_list|(
+name|abfd
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sym
+operator|==
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|val
+operator|&
+operator|(
+name|NLM_HIBIT
+operator|>>
+literal|1
+operator|)
+operator|)
+operator|==
+literal|0
+condition|)
+name|name
+operator|=
+name|NLM_INITIALIZED_DATA_NAME
+expr_stmt|;
+else|else
+block|{
+name|name
+operator|=
+name|NLM_CODE_NAME
+expr_stmt|;
+name|val
+operator|&=
+operator|~
+operator|(
+name|NLM_HIBIT
+operator|>>
+literal|1
+operator|)
+expr_stmt|;
+block|}
+name|rel
+operator|->
+name|sym_ptr_ptr
+operator|=
+name|bfd_get_section_by_name
+argument_list|(
+name|abfd
+argument_list|,
+name|name
+argument_list|)
+operator|->
+name|symbol_ptr_ptr
+expr_stmt|;
+block|}
+name|rel
+operator|->
+name|howto
+operator|=
+operator|&
+name|nlm_powerpc_howto
+expr_stmt|;
+name|rel
+operator|->
+name|address
+operator|=
+name|val
+operator|<<
+literal|2
+expr_stmt|;
+name|rel
+operator|->
+name|addend
+operator|=
+literal|0
+expr_stmt|;
+return|return
+name|TRUE
+return|;
+block|}
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -2174,7 +1867,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* OLDFORMAT */
+comment|/* not OLDFORMAT */
 end_comment
 
 begin_comment
@@ -2186,39 +1879,30 @@ specifier|static
 name|bfd_boolean
 name|nlm_powerpc_mangle_relocs
 parameter_list|(
-name|abfd
-parameter_list|,
-name|sec
-parameter_list|,
-name|data
-parameter_list|,
-name|offset
-parameter_list|,
-name|count
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|sec
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 specifier|const
-name|PTR
+name|void
+modifier|*
 name|data
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|bfd_vma
 name|offset
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|bfd_size_type
 name|count
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|TRUE
@@ -2235,50 +1919,40 @@ specifier|static
 name|bfd_boolean
 name|nlm_powerpc_read_import
 argument_list|(
+name|bfd
+operator|*
 name|abfd
 argument_list|,
-name|sym
-argument_list|)
-name|bfd
-modifier|*
-name|abfd
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
 name|nlmNAME
 argument_list|(
 name|symbol_type
 argument_list|)
 operator|*
 name|sym
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+argument_list|)
 block|{
 name|struct
 name|nlm_relent
 modifier|*
 name|nlm_relocs
 decl_stmt|;
-comment|/* relocation records for symbol */
+comment|/* Relocation records for symbol.  */
 name|bfd_size_type
 name|rcount
 decl_stmt|;
-comment|/* number of relocs */
+comment|/* Number of relocs.  */
 name|bfd_byte
 name|temp
 index|[
 name|NLM_TARGET_LONG_SIZE
 index|]
 decl_stmt|;
-comment|/* temporary 32-bit value */
+comment|/* Temporary 32-bit value.  */
 name|unsigned
 name|char
 name|symlength
 decl_stmt|;
-comment|/* length of symbol name */
+comment|/* Length of symbol name.  */
 name|char
 modifier|*
 name|name
@@ -2287,9 +1961,6 @@ if|if
 condition|(
 name|bfd_bread
 argument_list|(
-operator|(
-name|PTR
-operator|)
 operator|&
 name|symlength
 argument_list|,
@@ -2405,9 +2076,6 @@ if|if
 condition|(
 name|bfd_bread
 argument_list|(
-operator|(
-name|PTR
-operator|)
 name|temp
 argument_list|,
 operator|(
@@ -2440,12 +2108,6 @@ argument_list|)
 expr_stmt|;
 name|nlm_relocs
 operator|=
-operator|(
-operator|(
-expr|struct
-name|nlm_relent
-operator|*
-operator|)
 name|bfd_alloc
 argument_list|(
 name|abfd
@@ -2458,17 +2120,11 @@ expr|struct
 name|nlm_relent
 argument_list|)
 argument_list|)
-operator|)
 expr_stmt|;
 if|if
 condition|(
 name|nlm_relocs
 operator|==
-operator|(
-expr|struct
-name|nlm_relent
-operator|*
-operator|)
 name|NULL
 condition|)
 return|return
@@ -2539,7 +2195,7 @@ return|return
 name|TRUE
 return|;
 block|}
-end_block
+end_decl_stmt
 
 begin_ifndef
 ifndef|#
@@ -2556,24 +2212,18 @@ specifier|static
 name|bfd_boolean
 name|nlm_powerpc_write_import
 parameter_list|(
-name|abfd
-parameter_list|,
-name|sec
-parameter_list|,
-name|rel
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|sec
-decl_stmt|;
+parameter_list|,
 name|arelent
 modifier|*
 name|rel
-decl_stmt|;
+parameter_list|)
 block|{
 name|asymbol
 modifier|*
@@ -2849,29 +2499,21 @@ specifier|static
 name|bfd_boolean
 name|nlm_powerpc_write_reloc
 parameter_list|(
-name|abfd
-parameter_list|,
-name|sec
-parameter_list|,
-name|rel
-parameter_list|,
-name|indx
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|sec
-decl_stmt|;
+parameter_list|,
 name|arelent
 modifier|*
 name|rel
-decl_stmt|;
+parameter_list|,
 name|int
 name|indx
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|nlm32_powerpc_external_reloc
@@ -3268,12 +2910,9 @@ literal|1
 expr_stmt|;
 name|address
 operator|+=
-name|bfd_section_size
-argument_list|(
-name|abfd
-argument_list|,
 name|code_sec
-argument_list|)
+operator|->
+name|size
 expr_stmt|;
 block|}
 else|else
@@ -3346,24 +2985,18 @@ specifier|static
 name|bfd_boolean
 name|nlm_powerpc_write_import
 parameter_list|(
-name|abfd
-parameter_list|,
-name|sec
-parameter_list|,
-name|rel
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|sec
-decl_stmt|;
+parameter_list|,
 name|arelent
 modifier|*
 name|rel
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|nlm_powerpc_write_reloc
@@ -3399,30 +3032,22 @@ specifier|static
 name|bfd_boolean
 name|nlm_powerpc_write_external
 parameter_list|(
-name|abfd
-parameter_list|,
-name|count
-parameter_list|,
-name|sym
-parameter_list|,
-name|relocs
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|bfd_size_type
 name|count
-decl_stmt|;
+parameter_list|,
 name|asymbol
 modifier|*
 name|sym
-decl_stmt|;
+parameter_list|,
 name|struct
 name|reloc_and_sec
 modifier|*
 name|relocs
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|int
@@ -3644,27 +3269,17 @@ specifier|static
 name|bfd_boolean
 name|nlm_powerpc_set_public_section
 argument_list|(
+name|bfd
+operator|*
 name|abfd
 argument_list|,
-name|sym
-argument_list|)
-name|bfd
-modifier|*
-name|abfd
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
 name|nlmNAME
 argument_list|(
 name|symbol_type
 argument_list|)
 operator|*
 name|sym
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+argument_list|)
 block|{
 if|if
 condition|(
@@ -3709,7 +3324,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 name|sym
 operator|->
 name|symbol
@@ -3723,7 +3337,6 @@ argument_list|,
 name|NLM_INITIALIZED_DATA_NAME
 argument_list|)
 expr_stmt|;
-block|}
 name|sym
 operator|->
 name|symbol
@@ -3736,7 +3349,7 @@ return|return
 name|TRUE
 return|;
 block|}
-end_block
+end_decl_stmt
 
 begin_comment
 comment|/* Get the offset to write out for a public symbol.  */
@@ -3747,18 +3360,14 @@ specifier|static
 name|bfd_vma
 name|nlm_powerpc_get_public_offset
 parameter_list|(
-name|abfd
-parameter_list|,
-name|sym
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|asymbol
 modifier|*
 name|sym
-decl_stmt|;
+parameter_list|)
 block|{
 name|bfd_vma
 name|offset
@@ -3882,7 +3491,7 @@ directive|ifndef
 name|OLDFORMAT
 literal|0
 block|,
-comment|/* optional_prefix_size */
+comment|/* Optional_prefix_size.  */
 else|#
 directive|else
 sizeof|sizeof
@@ -3904,10 +3513,10 @@ directive|ifndef
 name|OLDFORMAT
 literal|0
 block|,
-comment|/* backend_object_p */
+comment|/* Backend_object_p.  */
 literal|0
 block|,
-comment|/* write_prefix */
+comment|/* Write_prefix.  */
 else|#
 directive|else
 name|nlm_powerpc_backend_object_p
@@ -3935,10 +3544,10 @@ else|#
 directive|else
 literal|0
 block|,
-comment|/* set_public_section */
+comment|/* Set_public_section.  */
 literal|0
 block|,
-comment|/* get_public_offset */
+comment|/* Get_public_offset.  */
 endif|#
 directive|endif
 name|nlm_swap_fixed_header_in
@@ -3949,7 +3558,7 @@ name|nlm_powerpc_write_external
 block|,
 literal|0
 block|,
-comment|/* write_export */
+comment|/* Write_export.  */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3965,14 +3574,14 @@ begin_define
 define|#
 directive|define
 name|TARGET_BIG_SYM
-value|nlmNAME(powerpc_vec)
+value|nlmNAME (powerpc_vec)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TARGET_BACKEND_DATA
-value|&nlm32_powerpc_backend
+value|& nlm32_powerpc_backend
 end_define
 
 begin_include

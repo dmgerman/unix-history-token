@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Motorola 68HC11-specific support for 32-bit ELF    Copyright 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.    Contributed by Stephane Carrez (stcarrez@nerim.fr)    (Heavily copied from the D10V port by Martin Hunt (hunt@cygnus.com))  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Motorola 68HC11-specific support for 32-bit ELF    Copyright 1999, 2000, 2001, 2002, 2003, 2004    Free Software Foundation, Inc.    Contributed by Stephane Carrez (stcarrez@nerim.fr)    (Heavily copied from the D10V port by Martin Hunt (hunt@cygnus.com))  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -1325,11 +1325,11 @@ name|stub_offset
 operator|=
 name|stub_sec
 operator|->
-name|_raw_size
+name|size
 expr_stmt|;
 name|stub_sec
 operator|->
-name|_raw_size
+name|size
 operator|+=
 literal|10
 expr_stmt|;
@@ -1538,7 +1538,7 @@ name|stub_entry
 operator|->
 name|stub_sec
 operator|->
-name|_raw_size
+name|size
 operator|+=
 literal|10
 expr_stmt|;
@@ -2533,23 +2533,6 @@ condition|)
 return|return
 name|TRUE
 return|;
-comment|/* If this is the first time we have been called for this section,      initialize the cooked size.  */
-if|if
-condition|(
-name|sec
-operator|->
-name|_cooked_size
-operator|==
-literal|0
-condition|)
-name|sec
-operator|->
-name|_cooked_size
-operator|=
-name|sec
-operator|->
-name|_raw_size
-expr_stmt|;
 name|symtab_hdr
 operator|=
 operator|&
@@ -2762,51 +2745,17 @@ expr_stmt|;
 else|else
 block|{
 comment|/* Go get them off disk.  */
-name|contents
-operator|=
-operator|(
-name|bfd_byte
-operator|*
-operator|)
-name|bfd_malloc
-argument_list|(
-name|sec
-operator|->
-name|_raw_size
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|contents
-operator|==
-name|NULL
-condition|)
-goto|goto
-name|error_return
-goto|;
-name|free_contents
-operator|=
-name|contents
-expr_stmt|;
 if|if
 condition|(
 operator|!
-name|bfd_get_section_contents
+name|bfd_malloc_and_get_section
 argument_list|(
 name|abfd
 argument_list|,
 name|sec
 argument_list|,
+operator|&
 name|contents
-argument_list|,
-operator|(
-name|file_ptr
-operator|)
-literal|0
-argument_list|,
-name|sec
-operator|->
-name|_raw_size
 argument_list|)
 condition|)
 goto|goto
@@ -2861,7 +2810,7 @@ literal|2
 operator|>=
 name|sec
 operator|->
-name|_cooked_size
+name|size
 condition|)
 continue|continue;
 comment|/* See if the next instruction is an unconditional pc-relative 	     branch, more often than not this test will fail, so we 	     test it first to speed things up.  */
@@ -3235,7 +3184,7 @@ name|r_offset
 operator|==
 name|sec
 operator|->
-name|_cooked_size
+name|size
 condition|)
 continue|continue;
 name|prev_insn_group
@@ -3624,7 +3573,7 @@ name|old_sec_size
 init|=
 name|sec
 operator|->
-name|_cooked_size
+name|size
 decl_stmt|;
 comment|/* Note that we've changed the relocation contents, etc.  */
 name|elf_section_data
@@ -3714,7 +3663,7 @@ if|if
 condition|(
 name|sec
 operator|->
-name|_cooked_size
+name|size
 operator|!=
 name|old_sec_size
 condition|)
@@ -4357,7 +4306,7 @@ name|toaddr
 operator|=
 name|sec
 operator|->
-name|_cooked_size
+name|size
 expr_stmt|;
 name|irel
 operator|=
@@ -4403,7 +4352,7 @@ argument_list|)
 expr_stmt|;
 name|sec
 operator|->
-name|_cooked_size
+name|size
 operator|-=
 name|count
 expr_stmt|;
@@ -4932,9 +4881,9 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|bfd_elf_special_section
-specifier|const
 name|elf32_m68hc11_special_sections
 index|[]
 init|=
@@ -4954,20 +4903,6 @@ name|SHF_WRITE
 block|}
 block|,
 block|{
-literal|".softregs"
-block|,
-literal|9
-block|,
-literal|0
-block|,
-name|SHT_NOBITS
-block|,
-name|SHF_ALLOC
-operator|+
-name|SHF_WRITE
-block|}
-block|,
-block|{
 literal|".page0"
 block|,
 literal|6
@@ -4975,6 +4910,20 @@ block|,
 literal|0
 block|,
 name|SHT_PROGBITS
+block|,
+name|SHF_ALLOC
+operator|+
+name|SHF_WRITE
+block|}
+block|,
+block|{
+literal|".softregs"
+block|,
+literal|9
+block|,
+literal|0
+block|,
+name|SHT_NOBITS
 block|,
 name|SHF_ALLOC
 operator|+

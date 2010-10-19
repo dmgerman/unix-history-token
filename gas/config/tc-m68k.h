@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* This file is tc-m68k.h    Copyright 1987, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997,    1998, 1999, 2000, 2001, 2002, 2003, 2004    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* This file is tc-m68k.h    Copyright 1987, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997,    1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_define
@@ -10,22 +10,11 @@ name|TC_M68K
 value|1
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ANSI_PROTOTYPES
-end_ifdef
-
 begin_struct_decl
 struct_decl|struct
 name|fix
 struct_decl|;
 end_struct_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -169,24 +158,6 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|TE_LYNX
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|TARGET_FORMAT
-value|"coff-m68k-lynx"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|TE_AUX
 end_ifdef
 
@@ -241,131 +212,9 @@ end_endif
 begin_define
 define|#
 directive|define
-name|BFD_ARCH
-value|bfd_arch_m68k
-end_define
-
-begin_comment
-comment|/* for non-BFD_ASSEMBLER */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|TARGET_ARCH
 value|bfd_arch_m68k
 end_define
-
-begin_comment
-comment|/* BFD_ASSEMBLER */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|COFF_FLAGS
-value|F_AR32W
-end_define
-
-begin_define
-define|#
-directive|define
-name|TC_COUNT_RELOC
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)->fx_addsy||(x)->fx_subsy)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TC_COFF_FIX2RTYPE
-parameter_list|(
-name|FIX
-parameter_list|)
-value|tc_coff_fix2rtype(FIX)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TC_COFF_SIZEMACHDEP
-parameter_list|(
-name|frag
-parameter_list|)
-value|tc_coff_sizemachdep(frag)
-end_define
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|tc_coff_sizemachdep
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
-name|frag
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TE_SUN3
-end_ifdef
-
-begin_comment
-comment|/* This variable contains the value to write out at the beginning of    the a.out file.  The 2<<16 means that this is a 68020 file instead    of an old-style 68000 file */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DEFAULT_MAGIC_NUMBER_FOR_OBJECT_FILE
-value|(2<<16|OMAGIC);
-end_define
-
-begin_comment
-comment|/* Magic byte for file header */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* TE_SUN3 */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|AOUT_MACHTYPE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|AOUT_MACHTYPE
-value|m68k_aout_machtype
-end_define
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|m68k_aout_machtype
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -382,48 +231,6 @@ modifier|*
 name|m68k_comment_chars
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|tc_crawl_symbol_chain
-parameter_list|(
-name|a
-parameter_list|)
-value|{;}
-end_define
-
-begin_comment
-comment|/* not used */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|tc_headers_hook
-parameter_list|(
-name|a
-parameter_list|)
-value|{;}
-end_define
-
-begin_comment
-comment|/* not used */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|tc_aout_pre_write_hook
-parameter_list|(
-name|x
-parameter_list|)
-value|{;}
-end_define
-
-begin_comment
-comment|/* not used */
-end_comment
 
 begin_define
 define|#
@@ -518,31 +325,6 @@ name|OBJ_ELF
 argument_list|)
 end_if
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BFD_ASSEMBLER
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|LOCAL_LABEL
-parameter_list|(
-name|name
-parameter_list|)
-value|(name[0] == '.' \&& (name[1] == 'L' || name[1] == '.'))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! BFD_ASSEMBLER */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -633,51 +415,20 @@ name|NO_PSEUDO_DOT
 value|1
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BFD_ASSEMBLER
-end_ifndef
-
-begin_undef
-undef|#
-directive|undef
-name|LOCAL_LABEL
-end_undef
-
-begin_define
-define|#
-directive|define
-name|LOCAL_LABEL
-parameter_list|(
-name|name
-parameter_list|)
-define|\
-value|(name[0] == '.' || (name[0] == 'L'&& name[1] == '%'))
-end_define
-
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|m68k_mri_mode_change
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -689,19 +440,16 @@ parameter_list|)
 value|m68k_mri_mode_change (i)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|m68k_conditional_pseudoop
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|pseudo_typeS
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -713,19 +461,16 @@ parameter_list|)
 value|m68k_conditional_pseudoop (pop)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|m68k_frob_label
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|symbolS
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -737,18 +482,15 @@ parameter_list|)
 value|m68k_frob_label (sym)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|m68k_flush_pending_output
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -758,25 +500,16 @@ parameter_list|()
 value|m68k_flush_pending_output ()
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|m68k_frob_symbol
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|symbolS
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BFD_ASSEMBLER
-end_ifdef
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -856,20 +589,17 @@ parameter_list|)
 value|tc_m68k_fix_adjustable(X)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|tc_m68k_fix_adjustable
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|fix
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Target *-*-elf implies an embedded target.  No shared libs.    *-*-uclinux also requires special casing to prevent GAS from    generating unsupported R_68K_PC16 relocs.  */
@@ -884,7 +614,7 @@ value|((strcmp (TARGET_OS, "elf") != 0)&& (strcmp (TARGET_OS, "uclinux") != 0))
 end_define
 
 begin_comment
-comment|/* Values passed to md_apply_fix3 don't include symbol values.  */
+comment|/* Values passed to md_apply_fix don't include symbol values.  */
 end_comment
 
 begin_define
@@ -904,100 +634,20 @@ name|elf_tc_final_processing
 value|m68k_elf_final_processing
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|m68k_elf_final_processing
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* ! BFD_ASSEMBLER */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|tc_frob_coff_symbol
 parameter_list|(
-name|sym
+name|void
 parameter_list|)
-value|m68k_frob_symbol (sym)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NO_RELOC
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|RELAX_RELOC_ABS8
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|RELAX_RELOC_ABS16
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|RELAX_RELOC_ABS32
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|RELAX_RELOC_PC8
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|RELAX_RELOC_PC16
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|RELAX_RELOC_PC32
-value|0
-end_define
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* ! BFD_ASSEMBLER */
-end_comment
 
 begin_define
 define|#
@@ -1005,39 +655,16 @@ directive|define
 name|DIFF_EXPR_OK
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|void
-name|m68k_init_after_args
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|tc_init_after_args
-value|m68k_init_after_args
-end_define
-
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|m68k_parse_long_option
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -1053,13 +680,6 @@ name|md_operand
 parameter_list|(
 name|x
 parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TARGET_WORD_SIZE
-value|32
 end_define
 
 begin_define

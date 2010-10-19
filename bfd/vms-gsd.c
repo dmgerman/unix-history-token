@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* vms-gsd.c -- BFD back-end for VAX (openVMS/VAX) and    EVAX (openVMS/Alpha) files.    Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.     go and read the openVMS linker manual (esp. appendix B)    if you don't know what's going on here :-)     Written by Klaus K"ampf (kkaempf@rmi.de)  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* vms-gsd.c -- BFD back-end for VAX (openVMS/VAX) and    EVAX (openVMS/Alpha) files.    Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.     go and read the openVMS linker manual (esp. appendix B)    if you don't know what's going on here :-)     Written by Klaus K"ampf (kkaempf@rmi.de)     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -34,11 +34,7 @@ file|"vms.h"
 end_include
 
 begin_comment
-comment|/*-----------------------------------------------------------------------------*/
-end_comment
-
-begin_comment
-comment|/* typical sections for vax object files  */
+comment|/* Typical sections for vax object files.  */
 end_comment
 
 begin_define
@@ -63,7 +59,7 @@ value|"$ADDRESS_DATA"
 end_define
 
 begin_comment
-comment|/* typical sections for evax object files  */
+comment|/* Typical sections for evax object files.  */
 end_comment
 
 begin_define
@@ -144,27 +140,27 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-comment|/* name of section */
+comment|/* Name of section.  */
 name|int
 name|vflags_always
 decl_stmt|;
 name|flagword
 name|flags_always
 decl_stmt|;
-comment|/* flags we set always */
+comment|/* Flags we set always.  */
 name|int
 name|vflags_hassize
 decl_stmt|;
 name|flagword
 name|flags_hassize
 decl_stmt|;
-comment|/* flags we set if the section has a size> 0 */
+comment|/* Flags we set if the section has a size> 0.  */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/* These flags are deccrtl/vaxcrtl (openVMS 6.2 VAX) compatible  */
+comment|/* These flags are deccrtl/vaxcrtl (openVMS 6.2 VAX) compatible.  */
 end_comment
 
 begin_decl_stmt
@@ -351,7 +347,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* These flags are deccrtl/vaxcrtl (openVMS 6.2 Alpha) compatible  */
+comment|/* These flags are deccrtl/vaxcrtl (openVMS 6.2 Alpha) compatible.  */
 end_comment
 
 begin_decl_stmt
@@ -749,51 +745,8 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|flagword
-name|vms_secflag_by_name
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-expr|struct
-name|sec_flags_struct
-operator|*
-operator|,
-name|char
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|flagword
-name|vms_esecflag_by_name
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
-name|sec_flags_struct
-operator|*
-operator|,
-name|char
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/* Retrieve bfd section flags by name and size  */
+comment|/* Retrieve bfd section flags by name and size.  */
 end_comment
 
 begin_function
@@ -801,30 +754,22 @@ specifier|static
 name|flagword
 name|vms_secflag_by_name
 parameter_list|(
-name|abfd
-parameter_list|,
-name|section_flags
-parameter_list|,
-name|name
-parameter_list|,
-name|hassize
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|struct
 name|sec_flags_struct
 modifier|*
 name|section_flags
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|,
 name|int
 name|hassize
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -929,7 +874,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Retrieve vms section flags by name and size  */
+comment|/* Retrieve vms section flags by name and size.  */
 end_comment
 
 begin_function
@@ -937,24 +882,18 @@ specifier|static
 name|flagword
 name|vms_esecflag_by_name
 parameter_list|(
-name|section_flags
-parameter_list|,
-name|name
-parameter_list|,
-name|hassize
-parameter_list|)
 name|struct
 name|sec_flags_struct
 modifier|*
 name|section_flags
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|,
 name|int
 name|hassize
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -1039,19 +978,11 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*-----------------------------------------------------------------------------*/
-end_comment
-
 begin_if
 if|#
 directive|if
 name|VMS_DEBUG
 end_if
-
-begin_comment
-comment|/* debug */
-end_comment
 
 begin_struct
 struct|struct
@@ -1069,7 +1000,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Convert flag to printable string  */
+comment|/* Convert flag to printable string.  */
 end_comment
 
 begin_function
@@ -1078,18 +1009,14 @@ name|char
 modifier|*
 name|flag2str
 parameter_list|(
-name|flagdesc
-parameter_list|,
-name|flags
-parameter_list|)
 name|struct
 name|flagdescstruct
 modifier|*
 name|flagdesc
-decl_stmt|;
+parameter_list|,
 name|flagword
 name|flags
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|char
@@ -1174,32 +1101,24 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*-----------------------------------------------------------------------------*/
+comment|/* Input routines.  */
 end_comment
 
 begin_comment
-comment|/* input routines */
-end_comment
-
-begin_comment
-comment|/* Process GSD/EGSD record    return 0 on success, -1 on error  */
+comment|/* Process GSD/EGSD record    return 0 on success, -1 on error.  */
 end_comment
 
 begin_function
 name|int
 name|_bfd_vms_slurp_gsd
 parameter_list|(
-name|abfd
-parameter_list|,
-name|objtype
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|int
 name|objtype
-decl_stmt|;
+parameter_list|)
 block|{
 if|#
 directive|if
@@ -1425,7 +1344,7 @@ argument_list|)
 operator|+=
 literal|8
 expr_stmt|;
-comment|/* skip type, size, l_temp */
+comment|/* Skip type, size, l_temp.  */
 name|PRIV
 argument_list|(
 name|rec_size
@@ -1458,7 +1377,7 @@ operator|-
 literal|1
 return|;
 block|}
-comment|/* calculate base address for each section  */
+comment|/* Calculate base address for each section.  */
 name|base_addr
 operator|=
 literal|0L
@@ -1492,13 +1411,11 @@ name|objtype
 operator|==
 name|OBJ_S_C_GSD
 condition|)
-block|{
 name|gsd_type
 operator|=
 operator|*
 name|vms_rec
 expr_stmt|;
-block|}
 else|else
 block|{
 name|_bfd_vms_get_header_values
@@ -1542,7 +1459,7 @@ case|case
 name|GSD_S_C_PSC
 case|:
 block|{
-comment|/* 	       * program section definition 	       */
+comment|/* Program section definition.  */
 name|asection
 modifier|*
 name|old_section
@@ -1582,7 +1499,7 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/* check for temporary section from TIR record.  */
+comment|/* Check for temporary section from TIR record.  */
 if|if
 condition|(
 name|psect_idx
@@ -1661,7 +1578,7 @@ argument_list|)
 expr_stmt|;
 name|section
 operator|->
-name|_raw_size
+name|size
 operator|=
 name|bfd_getl32
 argument_list|(
@@ -1683,7 +1600,7 @@ name|name
 argument_list|,
 name|section
 operator|->
-name|_raw_size
+name|size
 operator|>
 literal|0
 argument_list|)
@@ -1795,9 +1712,9 @@ name|base_addr
 operator|+=
 name|section
 operator|->
-name|_raw_size
+name|size
 expr_stmt|;
-comment|/* global section is common symbol  */
+comment|/* Global section is common symbol.  */
 if|if
 condition|(
 name|old_flags
@@ -1818,10 +1735,6 @@ if|if
 condition|(
 name|entry
 operator|==
-operator|(
-name|vms_symbol_entry
-operator|*
-operator|)
 name|NULL
 condition|)
 block|{
@@ -1866,7 +1779,7 @@ name|BSF_OLD_COMMON
 operator|)
 expr_stmt|;
 block|}
-comment|/* copy saved contents if old_section set  */
+comment|/* Copy saved contents if old_section set.  */
 if|if
 condition|(
 name|old_section
@@ -1886,11 +1799,11 @@ if|if
 condition|(
 name|section
 operator|->
-name|_raw_size
+name|size
 operator|<
 name|old_section
 operator|->
-name|_raw_size
+name|size
 condition|)
 block|{
 call|(
@@ -1913,7 +1826,7 @@ name|long
 operator|)
 name|old_section
 operator|->
-name|_raw_size
+name|size
 argument_list|,
 name|section
 operator|->
@@ -1925,7 +1838,7 @@ name|long
 operator|)
 name|section
 operator|->
-name|_raw_size
+name|size
 argument_list|)
 expr_stmt|;
 return|return
@@ -1938,23 +1851,17 @@ if|if
 condition|(
 name|section
 operator|->
-name|_raw_size
+name|size
 operator|>
 name|old_section
 operator|->
-name|_raw_size
+name|size
 condition|)
 block|{
 name|section
 operator|->
 name|contents
 operator|=
-operator|(
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
 name|bfd_realloc
 argument_list|(
 name|old_section
@@ -1963,9 +1870,8 @@ name|contents
 argument_list|,
 name|section
 operator|->
-name|_raw_size
+name|size
 argument_list|)
-operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -1994,19 +1900,12 @@ name|section
 operator|->
 name|contents
 operator|=
-operator|(
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
 name|bfd_zmalloc
 argument_list|(
 name|section
 operator|->
-name|_raw_size
+name|size
 argument_list|)
-operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -2028,14 +1927,6 @@ literal|1
 return|;
 block|}
 block|}
-name|section
-operator|->
-name|_cooked_size
-operator|=
-name|section
-operator|->
-name|_raw_size
-expr_stmt|;
 if|#
 directive|if
 name|VMS_DEBUG
@@ -2069,7 +1960,7 @@ literal|"%d bytes at 0x%08lx (mem %p)\n"
 argument_list|,
 name|section
 operator|->
-name|_raw_size
+name|size
 argument_list|,
 name|section
 operator|->
@@ -2114,7 +2005,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*FALLTHRU*/
+comment|/* Fall through.  */
 case|case
 name|GSD_S_C_SYM
 case|:
@@ -2131,7 +2022,7 @@ name|value_offset
 init|=
 literal|0
 decl_stmt|;
-comment|/* 	       * symbol specification (definition or reference) 	       */
+comment|/* Symbol specification (definition or reference).  */
 if|#
 directive|if
 name|VMS_DEBUG
@@ -2213,7 +2104,7 @@ name|old_flags
 operator|&
 name|GSY_S_M_DEF
 condition|)
-comment|/* symbol definition */
+comment|/* Symbol definition.  */
 name|name_offset
 operator|=
 literal|9
@@ -2237,7 +2128,7 @@ name|old_flags
 operator|&
 name|GSY_S_M_DEF
 condition|)
-comment|/* symbol definition */
+comment|/* Symbol definition.  */
 name|name_offset
 operator|=
 literal|10
@@ -2253,7 +2144,7 @@ literal|6
 expr_stmt|;
 break|break;
 block|}
-comment|/* save symbol in vms_symbol_table */
+comment|/* Save symbol in vms_symbol_table.  */
 name|entry
 operator|=
 name|_bfd_vms_enter_symbol
@@ -2272,10 +2163,6 @@ if|if
 condition|(
 name|entry
 operator|==
-operator|(
-name|vms_symbol_entry
-operator|*
-operator|)
 name|NULL
 condition|)
 block|{
@@ -2301,8 +2188,8 @@ name|old_flags
 operator|&
 name|GSY_S_M_DEF
 condition|)
-comment|/* symbol definition */
 block|{
+comment|/* Symbol definition.  */
 name|int
 name|psect
 decl_stmt|;
@@ -2360,6 +2247,9 @@ operator|(
 name|asection
 operator|*
 operator|)
+operator|(
+name|size_t
+operator|)
 name|psect
 expr_stmt|;
 if|#
@@ -2404,8 +2294,8 @@ endif|#
 directive|endif
 block|}
 else|else
-comment|/* symbol reference */
 block|{
+comment|/* Symbol reference.  */
 name|symbol
 operator|->
 name|section
@@ -2645,7 +2535,7 @@ operator|+
 name|EVAX_OFFSET
 case|:
 block|{
-comment|/* program section definition  */
+comment|/* Program section definition.  */
 name|name
 operator|=
 name|_bfd_vms_save_counted_string
@@ -2684,7 +2574,7 @@ argument_list|)
 expr_stmt|;
 name|section
 operator|->
-name|_raw_size
+name|size
 operator|=
 name|bfd_getl32
 argument_list|(
@@ -2693,7 +2583,7 @@ operator|+
 literal|8
 argument_list|)
 expr_stmt|;
-comment|/* allocation */
+comment|/* Allocation.  */
 name|new_flags
 operator|=
 name|vms_secflag_by_name
@@ -2706,7 +2596,7 @@ name|name
 argument_list|,
 name|section
 operator|->
-name|_raw_size
+name|size
 operator|>
 literal|0
 argument_list|)
@@ -2791,25 +2681,18 @@ name|base_addr
 operator|+=
 name|section
 operator|->
-name|_raw_size
+name|size
 expr_stmt|;
 name|section
 operator|->
 name|contents
 operator|=
-operator|(
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
 name|bfd_zmalloc
 argument_list|(
 name|section
 operator|->
-name|_raw_size
+name|size
 argument_list|)
-operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -2823,14 +2706,6 @@ return|return
 operator|-
 literal|1
 return|;
-name|section
-operator|->
-name|_cooked_size
-operator|=
-name|section
-operator|->
-name|_raw_size
-expr_stmt|;
 if|#
 directive|if
 name|VMS_DEBUG
@@ -2864,7 +2739,7 @@ literal|"%d bytes at 0x%08lx (mem %p)\n"
 argument_list|,
 name|section
 operator|->
-name|_raw_size
+name|size
 argument_list|,
 name|section
 operator|->
@@ -2885,7 +2760,7 @@ operator|+
 name|EVAX_OFFSET
 case|:
 block|{
-comment|/* symbol specification (definition or reference)  */
+comment|/* Symbol specification (definition or reference).  */
 name|symbol
 operator|=
 name|bfd_make_empty_symbol
@@ -2935,8 +2810,8 @@ index|]
 operator|&
 name|EGSY_S_V_DEF
 condition|)
-comment|/* symbol definition */
 block|{
+comment|/* Symbol definition.  */
 name|symbol
 operator|->
 name|name
@@ -2954,13 +2829,11 @@ name|old_flags
 operator|&
 name|EGSY_S_V_NORM
 condition|)
-block|{
-comment|/* proc def */
+comment|/* Proc def.  */
 name|new_flags
 operator||=
 name|BSF_FUNCTION
 expr_stmt|;
-block|}
 name|symbol
 operator|->
 name|value
@@ -3031,8 +2904,8 @@ endif|#
 directive|endif
 block|}
 else|else
-comment|/* symbol reference */
 block|{
+comment|/* Symbol reference.  */
 name|symbol
 operator|->
 name|name
@@ -3091,7 +2964,7 @@ name|flags
 operator|=
 name|new_flags
 expr_stmt|;
-comment|/* save symbol in vms_symbol_table  */
+comment|/* Save symbol in vms_symbol_table.  */
 name|entry
 operator|=
 operator|(
@@ -3118,10 +2991,6 @@ if|if
 condition|(
 name|entry
 operator|==
-operator|(
-name|vms_symbol_entry
-operator|*
-operator|)
 name|NULL
 condition|)
 block|{
@@ -3141,14 +3010,10 @@ name|entry
 operator|->
 name|symbol
 operator|!=
-operator|(
-name|asymbol
-operator|*
-operator|)
 name|NULL
 condition|)
 block|{
-comment|/* FIXME ?, DEC C generates this */
+comment|/* FIXME ?, DEC C generates this.  */
 if|#
 directive|if
 name|VMS_DEBUG
@@ -3218,7 +3083,6 @@ operator|-
 literal|1
 return|;
 block|}
-comment|/* switch */
 name|PRIV
 argument_list|(
 name|rec_size
@@ -3234,7 +3098,6 @@ operator|+=
 name|gsd_size
 expr_stmt|;
 block|}
-comment|/* while (recsize> 0) */
 if|if
 condition|(
 name|abfd
@@ -3256,33 +3119,25 @@ block|}
 end_function
 
 begin_comment
-comment|/*-----------------------------------------------------------------------------*/
+comment|/* Output routines.  */
 end_comment
 
 begin_comment
-comment|/* output routines */
-end_comment
-
-begin_comment
-comment|/* Write section and symbol directory of bfd abfd  */
+comment|/* Write section and symbol directory of bfd abfd.  */
 end_comment
 
 begin_function
 name|int
 name|_bfd_vms_write_gsd
 parameter_list|(
-name|abfd
-parameter_list|,
-name|objtype
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|int
 name|objtype
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 name|asection
 modifier|*
@@ -3333,7 +3188,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* output sections  */
+comment|/* Output sections.  */
 name|section
 operator|=
 name|abfd
@@ -3356,7 +3211,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* egsd is quadword aligned  */
+comment|/* Egsd is quadword aligned.  */
 name|_bfd_vms_output_alignment
 argument_list|(
 name|abfd
@@ -3381,12 +3236,12 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* Prepare output for subrecords.  */
 name|_bfd_vms_output_push
 argument_list|(
 name|abfd
 argument_list|)
 expr_stmt|;
-comment|/* prepare output for subrecords */
 while|while
 condition|(
 name|section
@@ -3416,12 +3271,12 @@ name|int
 operator|)
 name|section
 operator|->
-name|_raw_size
+name|size
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 13 bytes egsd, max 31 chars name -> should be 44 bytes */
+comment|/* 13 bytes egsd, max 31 chars name -> should be 44 bytes.  */
 if|if
 condition|(
 name|_bfd_vms_output_check
@@ -3461,14 +3316,14 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* Prepare output for subrecords.  */
 name|_bfd_vms_output_push
 argument_list|(
 name|abfd
 argument_list|)
 expr_stmt|;
-comment|/* prepare output for subrecords */
 block|}
-comment|/* Create dummy sections to keep consecutive indices */
+comment|/* Create dummy sections to keep consecutive indices.  */
 while|while
 condition|(
 name|section
@@ -3830,7 +3685,6 @@ argument_list|(
 name|section
 argument_list|)
 condition|)
-block|{
 name|new_flags
 operator|=
 operator|(
@@ -3849,9 +3703,7 @@ operator||
 name|EGPS_S_V_COM
 operator|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|new_flags
 operator|=
 name|vms_esecflag_by_name
@@ -3862,12 +3714,11 @@ name|sname
 argument_list|,
 name|section
 operator|->
-name|_raw_size
+name|size
 operator|>
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
 name|_bfd_vms_output_short
 argument_list|(
 name|abfd
@@ -3885,7 +3736,7 @@ name|long
 operator|)
 name|section
 operator|->
-name|_raw_size
+name|size
 argument_list|)
 expr_stmt|;
 name|_bfd_vms_output_counted
@@ -3913,7 +3764,7 @@ operator|->
 name|next
 expr_stmt|;
 block|}
-comment|/* output symbols  */
+comment|/* Output symbols.  */
 if|#
 directive|if
 name|VMS_DEBUG
@@ -4036,7 +3887,7 @@ operator|)
 operator|==
 literal|0
 operator|)
-comment|/* not xdef */
+comment|/* Not xdef...  */
 operator|&&
 operator|(
 operator|!
@@ -4048,10 +3899,10 @@ name|section
 argument_list|)
 operator|)
 condition|)
-comment|/* and not xref */
+comment|/* ...and not xref.  */
 continue|continue;
-comment|/* dont output */
-comment|/* 13 bytes egsd, max 64 chars name -> should be 77 bytes  */
+comment|/* Dont output.  */
+comment|/* 13 bytes egsd, max 64 chars name -> should be 77 bytes.  */
 if|if
 condition|(
 name|_bfd_vms_output_check
@@ -4091,12 +3942,12 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* Prepare output for subrecords.  */
 name|_bfd_vms_output_push
 argument_list|(
 name|abfd
 argument_list|)
 expr_stmt|;
-comment|/* prepare output for subrecords */
 block|}
 name|_bfd_vms_output_begin
 argument_list|(
@@ -4108,6 +3959,7 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* Data type, alignment.  */
 name|_bfd_vms_output_short
 argument_list|(
 name|abfd
@@ -4115,7 +3967,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* data type, alignment */
 name|new_flags
 operator|=
 literal|0
@@ -4139,7 +3990,6 @@ operator|->
 name|section
 argument_list|)
 condition|)
-comment|/* .comm  */
 name|new_flags
 operator||=
 operator|(
@@ -4211,8 +4061,8 @@ operator||
 name|BSF_WEAK
 operator|)
 condition|)
-comment|/* symbol definition */
 block|{
+comment|/* Symbol definition.  */
 name|uquad
 name|code_address
 init|=

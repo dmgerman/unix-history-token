@@ -23,21 +23,19 @@ directive|ifdef
 name|HAVE_ON_EXIT
 end_ifdef
 
-begin_function_decl
+begin_function
 name|int
 name|atexit
+parameter_list|(
+name|void
 function_decl|(
+modifier|*
 name|f
 function_decl|)
+parameter_list|(
 name|void
-argument_list|(
-argument|*f
-argument_list|)
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_block
+parameter_list|)
+parameter_list|)
 block|{
 comment|/* If the system doesn't provide a definition for atexit, use on_exit      if the system provides that.  */
 name|on_exit
@@ -51,7 +49,7 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#

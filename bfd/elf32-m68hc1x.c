@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Motorola 68HC11/HC12-specific support for 32-bit ELF    Copyright 1999, 2000, 2001, 2002, 2003, 2004    Free Software Foundation, Inc.    Contributed by Stephane Carrez (stcarrez@nerim.fr)  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Motorola 68HC11/HC12-specific support for 32-bit ELF    Copyright 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006    Free Software Foundation, Inc.    Contributed by Stephane Carrez (stcarrez@nerim.fr)  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -269,6 +269,12 @@ argument_list|,
 name|abfd
 argument_list|,
 name|_bfd_elf_link_hash_newfunc
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|elf_link_hash_entry
+argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -332,6 +338,12 @@ operator|->
 name|stub_hash_table
 argument_list|,
 name|stub_hash_newfunc
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|elf32_m68hc11_stub_hash_entry
+argument_list|)
 argument_list|)
 condition|)
 return|return
@@ -605,15 +617,12 @@ call|)
 argument_list|(
 name|_
 argument_list|(
-literal|"%s: cannot create stub entry %s"
+literal|"%B: cannot create stub entry %s"
 argument_list|)
 argument_list|,
-name|bfd_archive_filename
-argument_list|(
 name|section
 operator|->
 name|owner
-argument_list|)
 argument_list|,
 name|stub_name
 argument_list|)
@@ -1028,7 +1037,7 @@ name|tramp_section
 operator|=
 name|text_section
 expr_stmt|;
-comment|/* We can't use output_bfd->section_count here to find the top output      section index as some sections may have been removed, and      _bfd_strip_section_from_output doesn't renumber the indices.  */
+comment|/* We can't use output_bfd->section_count here to find the top output      section index as some sections may have been removed, and      strip_excluded_output_sections doesn't renumber the indices.  */
 for|for
 control|(
 name|section
@@ -1891,6 +1900,14 @@ operator|.
 name|type
 operator|==
 name|bfd_link_hash_defweak
+operator|||
+name|hash
+operator|->
+name|root
+operator|.
+name|type
+operator|==
+name|bfd_link_hash_new
 condition|)
 block|{
 if|if
@@ -2119,13 +2136,7 @@ control|)
 block|{
 name|stub_sec
 operator|->
-name|_raw_size
-operator|=
-literal|0
-expr_stmt|;
-name|stub_sec
-operator|->
-name|_cooked_size
+name|size
 operator|=
 literal|0
 expr_stmt|;
@@ -2512,7 +2523,7 @@ name|size
 operator|=
 name|stub_sec
 operator|->
-name|_raw_size
+name|size
 expr_stmt|;
 name|stub_sec
 operator|->
@@ -2549,7 +2560,7 @@ name|FALSE
 return|;
 name|stub_sec
 operator|->
-name|_raw_size
+name|size
 operator|=
 literal|0
 expr_stmt|;
@@ -3397,9 +3408,12 @@ name|reloc_entry
 operator|->
 name|address
 operator|>
+name|bfd_get_section_limit
+argument_list|(
+name|abfd
+argument_list|,
 name|input_section
-operator|->
-name|_cooked_size
+argument_list|)
 condition|)
 return|return
 name|bfd_reloc_outofrange
@@ -3716,6 +3730,7 @@ operator|=
 name|NULL
 expr_stmt|;
 else|else
+block|{
 name|h
 operator|=
 name|sym_hashes
@@ -3727,6 +3742,42 @@ operator|->
 name|sh_info
 index|]
 expr_stmt|;
+while|while
+condition|(
+name|h
+operator|->
+name|root
+operator|.
+name|type
+operator|==
+name|bfd_link_hash_indirect
+operator|||
+name|h
+operator|->
+name|root
+operator|.
+name|type
+operator|==
+name|bfd_link_hash_warning
+condition|)
+name|h
+operator|=
+operator|(
+expr|struct
+name|elf_link_hash_entry
+operator|*
+operator|)
+name|h
+operator|->
+name|root
+operator|.
+name|u
+operator|.
+name|i
+operator|.
+name|link
+expr_stmt|;
+block|}
 switch|switch
 condition|(
 name|ELF32_R_TYPE
@@ -4265,6 +4316,8 @@ specifier|const
 name|char
 modifier|*
 name|name
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|m68hc11_page_info
@@ -4363,6 +4416,8 @@ name|sec
 decl_stmt|;
 name|bfd_vma
 name|relocation
+init|=
+literal|0
 decl_stmt|;
 name|bfd_reloc_status_type
 name|r
@@ -4383,6 +4438,8 @@ name|insn_page
 decl_stmt|;
 name|bfd_boolean
 name|is_far
+init|=
+name|FALSE
 decl_stmt|;
 name|r_symndx
 operator|=
@@ -5032,6 +5089,8 @@ call|)
 argument_list|(
 name|info
 argument_list|,
+name|NULL
+argument_list|,
 name|name
 argument_list|,
 name|howto
@@ -5448,14 +5507,11 @@ call|)
 argument_list|(
 name|_
 argument_list|(
-literal|"%s: linking files compiled for 16-bit integers (-mshort) "
+literal|"%B: linking files compiled for 16-bit integers (-mshort) "
 literal|"and others for 32-bit integers"
 argument_list|)
 argument_list|,
-name|bfd_archive_filename
-argument_list|(
 name|ibfd
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|ok
@@ -5485,14 +5541,11 @@ call|)
 argument_list|(
 name|_
 argument_list|(
-literal|"%s: linking files compiled for 32-bit double (-fshort-double) "
+literal|"%B: linking files compiled for 32-bit double (-fshort-double) "
 literal|"and others for 64-bit double"
 argument_list|)
 argument_list|,
-name|bfd_archive_filename
-argument_list|(
 name|ibfd
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|ok
@@ -5519,14 +5572,11 @@ call|)
 argument_list|(
 name|_
 argument_list|(
-literal|"%s: linking files compiled for HCS12 with "
+literal|"%B: linking files compiled for HCS12 with "
 literal|"others compiled for HC12"
 argument_list|)
 argument_list|,
-name|bfd_archive_filename
-argument_list|(
 name|ibfd
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|ok
@@ -5596,13 +5646,10 @@ call|)
 argument_list|(
 name|_
 argument_list|(
-literal|"%s: uses different e_flags (0x%lx) fields than previous modules (0x%lx)"
+literal|"%B: uses different e_flags (0x%lx) fields than previous modules (0x%lx)"
 argument_list|)
 argument_list|,
-name|bfd_archive_filename
-argument_list|(
 name|ibfd
-argument_list|)
 argument_list|,
 operator|(
 name|unsigned

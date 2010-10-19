@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* m68k-parse.h -- header file for m68k assembler    Copyright 1987, 1991, 1992, 1993, 1994, 1995, 1996, 1999, 2000,    2003 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* m68k-parse.h -- header file for m68k assembler    Copyright 1987, 1991, 1992, 1993, 1994, 1995, 1996, 1999, 2000,    2003, 2004, 2005 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -149,7 +149,22 @@ block|,
 comment|/* Condition code Reg */
 name|ACC
 block|,
-comment|/* Accumulator Reg */
+comment|/* Accumulator Reg0 (EMAC or ACC on MAC).  */
+name|ACC1
+block|,
+comment|/* Accumulator Reg 1 (EMAC).  */
+name|ACC2
+block|,
+comment|/* Accumulator Reg 2 (EMAC).  */
+name|ACC3
+block|,
+comment|/* Accumulator Reg 3 (EMAC).  */
+name|ACCEXT01
+block|,
+comment|/* Accumulator extension 0&1 (EMAC).  */
+name|ACCEXT23
+block|,
+comment|/* Accumulator extension 2&3 (EMAC).  */
 name|MACSR
 block|,
 comment|/* MAC Status Reg */
@@ -262,6 +277,9 @@ block|,
 name|RAMBAR
 block|,
 comment|/* mcf528x added these.  */
+name|MBAR2
+block|,
+comment|/* mcf5249 added this.  */
 name|MBAR
 block|,
 define|#
@@ -601,6 +619,12 @@ name|POST
 block|,
 name|PRE
 block|,
+name|LSH
+block|,
+comment|/* MAC/EMAC scalefactor '<<'.  */
+name|RSH
+block|,
+comment|/* MAC/EMAC scalefactor '>>'.  */
 name|REGLST
 block|}
 enum|;
@@ -650,6 +674,10 @@ name|struct
 name|m68k_exp
 name|odisp
 decl_stmt|;
+comment|/* Is a trailing '&' added to an<ea>? (for MAC/EMAC mask addressing).  */
+name|int
+name|trailing_ampersand
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -667,23 +695,20 @@ begin_comment
 comment|/* The parsing function.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|m68k_ip_op
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|m68k_op
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Whether register prefixes are optional.  */

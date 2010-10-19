@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* D10V-specific support for 32-bit ELF    Copyright 1996, 1998, 1999, 2000, 2001, 2002, 2003, 2004    Free Software Foundation, Inc.    Contributed by Martin Hunt (hunt@cygnus.com).  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* D10V-specific support for 32-bit ELF    Copyright 1996, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.    Contributed by Martin Hunt (hunt@cygnus.com).     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston,    MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -33,203 +33,6 @@ directive|include
 file|"elf/d10v.h"
 end_include
 
-begin_decl_stmt
-specifier|static
-name|reloc_howto_type
-modifier|*
-name|bfd_elf32_bfd_reloc_type_lookup
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-name|abfd
-operator|,
-name|bfd_reloc_code_real_type
-name|code
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|d10v_info_to_howto_rel
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|arelent
-operator|*
-operator|,
-name|Elf_Internal_Rela
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|asection
-modifier|*
-name|elf32_d10v_gc_mark_hook
-name|PARAMS
-argument_list|(
-operator|(
-name|asection
-operator|*
-operator|,
-expr|struct
-name|bfd_link_info
-operator|*
-operator|,
-name|Elf_Internal_Rela
-operator|*
-operator|,
-expr|struct
-name|elf_link_hash_entry
-operator|*
-operator|,
-name|Elf_Internal_Sym
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|elf32_d10v_gc_sweep_hook
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-expr|struct
-name|bfd_link_info
-operator|*
-operator|,
-name|asection
-operator|*
-operator|,
-specifier|const
-name|Elf_Internal_Rela
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|elf32_d10v_check_relocs
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-expr|struct
-name|bfd_link_info
-operator|*
-operator|,
-name|asection
-operator|*
-operator|,
-specifier|const
-name|Elf_Internal_Rela
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_vma
-name|extract_rel_addend
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|bfd_byte
-operator|*
-operator|,
-name|reloc_howto_type
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|insert_rel_addend
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|bfd_byte
-operator|*
-operator|,
-name|reloc_howto_type
-operator|*
-operator|,
-name|bfd_vma
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|elf32_d10v_relocate_section
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-expr|struct
-name|bfd_link_info
-operator|*
-operator|,
-name|bfd
-operator|*
-operator|,
-name|asection
-operator|*
-operator|,
-name|bfd_byte
-operator|*
-operator|,
-name|Elf_Internal_Rela
-operator|*
-operator|,
-name|Elf_Internal_Sym
-operator|*
-operator|,
-name|asection
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Use REL instead of RELA to save space.  */
 end_comment
@@ -253,390 +56,388 @@ name|HOWTO
 argument_list|(
 name|R_D10V_NONE
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|32
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC_relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_dont
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 name|bfd_elf_generic_reloc
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"R_D10V_NONE"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|FALSE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0
 argument_list|,
-comment|/* src_mask */
+comment|/* Src_mask.  */
 literal|0
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dst_mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
-comment|/* An PC Relative 10-bit relocation, shifted by 2  */
-comment|/* right container */
+comment|/* PCrel_offset.  */
+comment|/* An PC Relative 10-bit relocation, shifted by 2, right container.  */
 name|HOWTO
 argument_list|(
 name|R_D10V_10_PCREL_R
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|2
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|7
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
+literal|8
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|TRUE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC_relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
-name|complain_overflow_bitfield
+comment|/* Bitpos.  */
+name|complain_overflow_signed
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 name|bfd_elf_generic_reloc
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"R_D10V_10_PCREL_R"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|FALSE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0xff
 argument_list|,
-comment|/* src_mask */
+comment|/* Src_mask.  */
 literal|0xff
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dst_mask.  */
 name|TRUE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
-comment|/* An PC Relative 10-bit relocation, shifted by 2  */
-comment|/* left container */
+comment|/* PCrel_offset.  */
+comment|/* An PC Relative 10-bit relocation, shifted by 2, left container.  */
 name|HOWTO
 argument_list|(
 name|R_D10V_10_PCREL_L
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|2
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|7
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
+literal|8
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|TRUE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC_relative.  */
 literal|15
 argument_list|,
-comment|/* bitpos */
-name|complain_overflow_bitfield
+comment|/* Bitpos.  */
+name|complain_overflow_signed
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 name|bfd_elf_generic_reloc
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"R_D10V_10_PCREL_L"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|FALSE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0x07f8000
 argument_list|,
-comment|/* src_mask */
+comment|/* Src_mask.  */
 literal|0x07f8000
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dst_mask.  */
 name|TRUE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
-comment|/* A 16 bit absolute relocation */
+comment|/* PCrel_offset.  */
+comment|/* A 16 bit absolute relocation.  */
 name|HOWTO
 argument_list|(
 name|R_D10V_16
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|1
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|16
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC_relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_dont
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 name|bfd_elf_generic_reloc
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"R_D10V_16"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|FALSE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0xffff
 argument_list|,
-comment|/* src_mask */
+comment|/* Src_mask.  */
 literal|0xffff
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dst_mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
-comment|/* An 18 bit absolute relocation, right shifted 2 */
+comment|/* PCrel_offset.  */
+comment|/* An 18 bit absolute relocation, right shifted 2.  */
 name|HOWTO
 argument_list|(
 name|R_D10V_18
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|2
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|1
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|16
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC_relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_dont
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 name|bfd_elf_generic_reloc
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"R_D10V_18"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|FALSE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0xffff
 argument_list|,
-comment|/* src_mask */
+comment|/* Src_mask.  */
 literal|0xffff
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dst_mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
-comment|/* A relative 18 bit relocation, right shifted by 2  */
+comment|/* PCrel_offset.  */
+comment|/* A relative 18 bit relocation, right shifted by 2.  */
 name|HOWTO
 argument_list|(
 name|R_D10V_18_PCREL
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|2
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|15
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
+literal|16
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|TRUE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC_relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
-name|complain_overflow_bitfield
+comment|/* Bitpos.  */
+name|complain_overflow_signed
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 name|bfd_elf_generic_reloc
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"R_D10V_18_PCREL"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|FALSE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0xffff
 argument_list|,
-comment|/* src_mask */
+comment|/* Src_mask.  */
 literal|0xffff
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dst_mask.  */
 name|TRUE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
-comment|/* A 32 bit absolute relocation */
+comment|/* PCrel_offset.  */
+comment|/* A 32 bit absolute relocation.  */
 name|HOWTO
 argument_list|(
 name|R_D10V_32
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|32
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC_relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_dont
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 name|bfd_elf_generic_reloc
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"R_D10V_32"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|FALSE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0xffffffff
 argument_list|,
-comment|/* src_mask */
+comment|/* Src_mask.  */
 literal|0xffffffff
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dst_mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
-comment|/* GNU extension to record C++ vtable hierarchy */
+comment|/* PCrel_offset.  */
+comment|/* GNU extension to record C++ vtable hierarchy.  */
 name|HOWTO
 argument_list|(
 name|R_D10V_GNU_VTINHERIT
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|0
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC_relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_dont
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 name|NULL
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"R_D10V_GNU_VTINHERIT"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|FALSE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0
 argument_list|,
-comment|/* src_mask */
+comment|/* Src_mask.  */
 literal|0
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dst_mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
-comment|/* GNU extension to record C++ vtable member usage */
+comment|/* PCrel_offset.  */
+comment|/* GNU extension to record C++ vtable member usage.  */
 name|HOWTO
 argument_list|(
 name|R_D10V_GNU_VTENTRY
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|0
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC_relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_dont
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 name|_bfd_elf_rel_vtable_reloc_fn
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"R_D10V_GNU_VTENTRY"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|FALSE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0
 argument_list|,
-comment|/* src_mask */
+comment|/* Src_mask.  */
 literal|0
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dst_mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PCrel_offset.  */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -722,7 +523,7 @@ name|BFD_RELOC_VTABLE_ENTRY
 block|,
 name|R_D10V_GNU_VTENTRY
 block|}
-block|,   }
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -732,18 +533,14 @@ name|reloc_howto_type
 modifier|*
 name|bfd_elf32_bfd_reloc_type_lookup
 parameter_list|(
-name|abfd
-parameter_list|,
-name|code
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|bfd_reloc_code_real_type
 name|code
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|int
@@ -771,7 +568,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 if|if
 condition|(
 name|d10v_reloc_map
@@ -795,7 +591,6 @@ operator|.
 name|elf_reloc_val
 index|]
 return|;
-block|}
 return|return
 name|NULL
 return|;
@@ -811,25 +606,19 @@ specifier|static
 name|void
 name|d10v_info_to_howto_rel
 parameter_list|(
-name|abfd
-parameter_list|,
-name|cache_ptr
-parameter_list|,
-name|dst
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|arelent
 modifier|*
 name|cache_ptr
-decl_stmt|;
+parameter_list|,
 name|Elf_Internal_Rela
 modifier|*
 name|dst
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|int
@@ -874,39 +663,29 @@ name|asection
 modifier|*
 name|elf32_d10v_gc_mark_hook
 parameter_list|(
-name|sec
-parameter_list|,
-name|info
-parameter_list|,
-name|rel
-parameter_list|,
-name|h
-parameter_list|,
-name|sym
-parameter_list|)
 name|asection
 modifier|*
 name|sec
-decl_stmt|;
+parameter_list|,
 name|struct
 name|bfd_link_info
 modifier|*
 name|info
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|Elf_Internal_Rela
 modifier|*
 name|rel
-decl_stmt|;
+parameter_list|,
 name|struct
 name|elf_link_hash_entry
 modifier|*
 name|h
-decl_stmt|;
+parameter_list|,
 name|Elf_Internal_Sym
 modifier|*
 name|sym
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1004,38 +783,30 @@ specifier|static
 name|bfd_boolean
 name|elf32_d10v_gc_sweep_hook
 parameter_list|(
-name|abfd
-parameter_list|,
-name|info
-parameter_list|,
-name|sec
-parameter_list|,
-name|relocs
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|struct
 name|bfd_link_info
 modifier|*
 name|info
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|sec
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|Elf_Internal_Rela
 modifier|*
 name|relocs
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
-comment|/* we don't use got and plt entries for d10v */
+comment|/* We don't use got and plt entries for d10v.  */
 return|return
 name|TRUE
 return|;
@@ -1051,32 +822,24 @@ specifier|static
 name|bfd_boolean
 name|elf32_d10v_check_relocs
 parameter_list|(
-name|abfd
-parameter_list|,
-name|info
-parameter_list|,
-name|sec
-parameter_list|,
-name|relocs
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|struct
 name|bfd_link_info
 modifier|*
 name|info
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|sec
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|Elf_Internal_Rela
 modifier|*
 name|relocs
-decl_stmt|;
+parameter_list|)
 block|{
 name|Elf_Internal_Shdr
 modifier|*
@@ -1208,6 +971,7 @@ operator|=
 name|NULL
 expr_stmt|;
 else|else
+block|{
 name|h
 operator|=
 name|sym_hashes
@@ -1219,6 +983,42 @@ operator|->
 name|sh_info
 index|]
 expr_stmt|;
+while|while
+condition|(
+name|h
+operator|->
+name|root
+operator|.
+name|type
+operator|==
+name|bfd_link_hash_indirect
+operator|||
+name|h
+operator|->
+name|root
+operator|.
+name|type
+operator|==
+name|bfd_link_hash_warning
+condition|)
+name|h
+operator|=
+operator|(
+expr|struct
+name|elf_link_hash_entry
+operator|*
+operator|)
+name|h
+operator|->
+name|root
+operator|.
+name|u
+operator|.
+name|i
+operator|.
+name|link
+expr_stmt|;
+block|}
 switch|switch
 condition|(
 name|ELF32_R_TYPE
@@ -1290,24 +1090,18 @@ specifier|static
 name|bfd_vma
 name|extract_rel_addend
 parameter_list|(
-name|abfd
-parameter_list|,
-name|where
-parameter_list|,
-name|howto
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|bfd_byte
 modifier|*
 name|where
-decl_stmt|;
+parameter_list|,
 name|reloc_howto_type
 modifier|*
 name|howto
-decl_stmt|;
+parameter_list|)
 block|{
 name|bfd_vma
 name|insn
@@ -1454,29 +1248,21 @@ specifier|static
 name|void
 name|insert_rel_addend
 parameter_list|(
-name|abfd
-parameter_list|,
-name|where
-parameter_list|,
-name|howto
-parameter_list|,
-name|addend
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|bfd_byte
 modifier|*
 name|where
-decl_stmt|;
+parameter_list|,
 name|reloc_howto_type
 modifier|*
 name|howto
-decl_stmt|;
+parameter_list|,
 name|bfd_vma
 name|addend
-decl_stmt|;
+parameter_list|)
 block|{
 name|bfd_vma
 name|insn
@@ -1608,56 +1394,40 @@ specifier|static
 name|bfd_boolean
 name|elf32_d10v_relocate_section
 parameter_list|(
-name|output_bfd
-parameter_list|,
-name|info
-parameter_list|,
-name|input_bfd
-parameter_list|,
-name|input_section
-parameter_list|,
-name|contents
-parameter_list|,
-name|relocs
-parameter_list|,
-name|local_syms
-parameter_list|,
-name|local_sections
-parameter_list|)
 name|bfd
 modifier|*
 name|output_bfd
-decl_stmt|;
+parameter_list|,
 name|struct
 name|bfd_link_info
 modifier|*
 name|info
-decl_stmt|;
+parameter_list|,
 name|bfd
 modifier|*
 name|input_bfd
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|input_section
-decl_stmt|;
+parameter_list|,
 name|bfd_byte
 modifier|*
 name|contents
-decl_stmt|;
+parameter_list|,
 name|Elf_Internal_Rela
 modifier|*
 name|relocs
-decl_stmt|;
+parameter_list|,
 name|Elf_Internal_Sym
 modifier|*
 name|local_syms
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 modifier|*
 name|local_sections
-decl_stmt|;
+parameter_list|)
 block|{
 name|Elf_Internal_Shdr
 modifier|*
@@ -2184,6 +1954,17 @@ name|reloc_overflow
 call|)
 argument_list|(
 name|info
+argument_list|,
+operator|(
+name|h
+condition|?
+operator|&
+name|h
+operator|->
+name|root
+else|:
+name|NULL
+operator|)
 argument_list|,
 name|name
 argument_list|,

@@ -79,6 +79,7 @@ argument_list|()
 expr_stmt|;
 name|Foo
 argument_list|(
+specifier|const
 name|char
 operator|*
 name|message

@@ -33,51 +33,17 @@ name|GMON_HDRSIZE_BSD44_64
 value|(8 + 8 + 4 + 4 + 4 + (3 * 4))
 end_define
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
 begin_comment
-comment|/* For documentation purposes only.  */
+comment|/* *INDENT-OFF* */
 end_comment
 
 begin_comment
-unit|struct raw_phdr     {       char low_pc[sizeof(void *)];
-comment|/* base pc address of sample buffer */
+comment|/* For documentation purposes only.     struct raw_phdr     {       char low_pc[sizeof(void *)];   -- base pc address of sample buffer       char high_pc[sizeof(void *)];  -- max pc address of sampled buffer       char ncnt[4];		     -- size of sample buffer (plus this 				        header)        char version[4];		     -- version number       char profrate[4];		     -- profiling clock rate       char spare[3*4];		     -- reserved     }; */
 end_comment
 
 begin_comment
-unit|char high_pc[sizeof(void *)];
-comment|/* max pc address of sampled buffer */
+comment|/* *INDENT-ON* */
 end_comment
-
-begin_comment
-unit|char ncnt[4];
-comment|/* size of sample buffer (plus this 				      header) */
-end_comment
-
-begin_comment
-unit|char version[4];
-comment|/* version number */
-end_comment
-
-begin_comment
-unit|char profrate[4];
-comment|/* profiling clock rate */
-end_comment
-
-begin_comment
-unit|char spare[3*4];
-comment|/* reserved */
-end_comment
-
-begin_endif
-unit|};
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -139,60 +105,17 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
 begin_comment
-comment|/* For documentation purposes only.  */
+comment|/* *INDENT-OFF* */
 end_comment
 
 begin_comment
-unit|struct old_raw_phdr     {       char low_pc[sizeof(void *)];
-comment|/* base pc address of sample buffer */
+comment|/* For documentation purposes only.    struct old_raw_phdr     {       char low_pc[sizeof(void *)];  -- base pc address of sample buffer       char high_pc[sizeof(void *)]  -- max pc address of sampled buffer       char ncnt[4];		    -- size of sample buffer (plus this 				       header)        if defined (__alpha__)&& defined (__osf__)       char pad[4];		    -- DEC's OSF v3.0 uses 4 bytes of padding 				    -- to bring the header to a size that is a 				    -- multiple of 8.       endif     }; */
 end_comment
 
 begin_comment
-unit|char high_pc[sizeof(void *)];
-comment|/* max pc address of sampled buffer */
+comment|/* *INDENT-ON* */
 end_comment
-
-begin_comment
-unit|char ncnt[4];
-comment|/* size of sample buffer (plus this 				      header) */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__alpha__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|__osf__
-argument_list|)
-end_if
-
-begin_comment
-comment|/*        * DEC's OSF v3.0 uses 4 bytes of padding to bring the header to        * a size that is a multiple of 8.        */
-end_comment
-
-begin_endif
-unit|char pad[4];
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-unit|};
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Histogram counters are unsigned shorts:  */
@@ -268,21 +191,17 @@ begin_comment
 comment|/*  * A raw arc, with pointers to the calling site and the called site  * and a count.  Everything is defined in terms of characters so  * as to get a packed representation (otherwise, different compilers  * might introduce different padding):  */
 end_comment
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
 begin_comment
-comment|/* For documentation purposes only.  */
+comment|/* *INDENT-OFF* */
 end_comment
 
-begin_endif
-unit|struct raw_arc     {       char from_pc[sizeof(void *)];       char self_pc[sizeof(void *)];       char count[sizeof(long)];     };
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* For documentation purposes only.    struct raw_arc     {       char from_pc[sizeof(void *)];       char self_pc[sizeof(void *)];       char count[sizeof(long)];     }; */
+end_comment
+
+begin_comment
+comment|/* *INDENT-ON* */
+end_comment
 
 begin_comment
 comment|/*  * General rounding functions:  */

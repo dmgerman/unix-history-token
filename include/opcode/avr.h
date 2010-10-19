@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Opcode table for the Atmel AVR micro controllers.     Copyright 2000 Free Software Foundation, Inc.    Contributed by Denis Chertykov<denisc@overta.ru>        This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Opcode table for the Atmel AVR micro controllers.     Copyright 2000, 2001, 2004, 2006 Free Software Foundation, Inc.    Contributed by Denis Chertykov<denisc@overta.ru>        This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_define
@@ -11,7 +11,7 @@ value|0x0001
 end_define
 
 begin_comment
-comment|/* in the beginning there was ... */
+comment|/* In the beginning there was ...  */
 end_comment
 
 begin_define
@@ -66,7 +66,7 @@ value|0x0040
 end_define
 
 begin_comment
-comment|/* device has new core (MUL, MOVW, ...) */
+comment|/* device has new core (MUL, FMUL, ...) */
 end_comment
 
 begin_define
@@ -127,8 +127,26 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AVR_ISA_MOVW
+value|0x1000
+end_define
+
+begin_comment
+comment|/* device has MOVW */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|AVR_ISA_TINY1
 value|(AVR_ISA_1200 | AVR_ISA_LPM)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AVR_ISA_PWMx
+value|(AVR_ISA_M8   | AVR_ISA_BRK)
 end_define
 
 begin_define
@@ -141,8 +159,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|AVR_ISA_TINY2
+value|(AVR_ISA_2xxx | AVR_ISA_MOVW | AVR_ISA_LPMX | \                        AVR_ISA_SPM  | AVR_ISA_BRK)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AVR_ISA_M8
-value|(AVR_ISA_2xxx | AVR_ISA_MUL | AVR_ISA_LPMX | AVR_ISA_SPM)
+value|(AVR_ISA_2xxx | AVR_ISA_MUL | AVR_ISA_MOVW | \                        AVR_ISA_LPMX | AVR_ISA_SPM)
 end_define
 
 begin_define
@@ -163,14 +188,14 @@ begin_define
 define|#
 directive|define
 name|AVR_ISA_M161
-value|(AVR_ISA_M603 | AVR_ISA_MUL | AVR_ISA_LPMX | AVR_ISA_SPM)
+value|(AVR_ISA_M603 | AVR_ISA_MUL | AVR_ISA_MOVW | \                        AVR_ISA_LPMX | AVR_ISA_SPM)
 end_define
 
 begin_define
 define|#
 directive|define
 name|AVR_ISA_94K
-value|(AVR_ISA_M603 | AVR_ISA_MUL | AVR_ISA_LPMX)
+value|(AVR_ISA_M603 | AVR_ISA_MUL | AVR_ISA_MOVW | AVR_ISA_LPMX)
 end_define
 
 begin_define
@@ -2015,7 +2040,7 @@ literal|"00000001ddddrrrr"
 argument_list|,
 literal|1
 argument_list|,
-argument|AVR_ISA_MUL
+argument|AVR_ISA_MOVW
 argument_list|,
 literal|0x0100
 argument_list|)

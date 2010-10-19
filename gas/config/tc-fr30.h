@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-fr30.h -- Header file for tc-fr30.c.    Copyright 1998, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* tc-fr30.h -- Header file for tc-fr30.c.    Copyright 1998, 1999, 2000, 2001, 2002, 2003, 2005    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 51 Franklin Street - Fifth Floor,    Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_define
@@ -8,27 +8,6 @@ define|#
 directive|define
 name|TC_FR30
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BFD_ASSEMBLER
-end_ifndef
-
-begin_comment
-comment|/* leading space so will compile with cc */
-end_comment
-
-begin_error
-error|#
-directive|error
-error|FR30 support requires BFD_ASSEMBLER
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -80,7 +59,7 @@ name|DIFF_EXPR_OK
 end_define
 
 begin_comment
-comment|/* .-foo gets turned into PC relative relocs */
+comment|/* .-foo gets turned into PC relative relocs.  */
 end_comment
 
 begin_comment
@@ -94,7 +73,7 @@ name|WORKING_DOT_WORD
 end_define
 
 begin_comment
-comment|/* Values passed to md_apply_fix3 don't include the symbol value.  */
+comment|/* Values passed to md_apply_fix don't include the symbol value.  */
 end_comment
 
 begin_define
@@ -110,8 +89,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|md_apply_fix3
-value|gas_cgen_md_apply_fix3
+name|md_apply_fix
+value|gas_cgen_md_apply_fix
 end_define
 
 begin_define
@@ -130,20 +109,17 @@ name|fix
 struct_decl|;
 end_struct_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|bfd_boolean
 name|fr30_fix_adjustable
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|fix
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -168,22 +144,19 @@ parameter_list|)
 value|md_pcrel_from_section (FIX, SEC)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|long
 name|md_pcrel_from_section
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|fix
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|segT
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* For 8 vs 16 vs 32 bit branch selection.  */
@@ -223,19 +196,16 @@ define|\
 value|((character) != ':' ? 0 : (character = fr30_is_colon_insn (s)) ? 0 : ((character = ':'), 1))
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|char
 name|fr30_is_colon_insn
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 end_unit
 

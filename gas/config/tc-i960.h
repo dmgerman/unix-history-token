@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-i960.h - Basic 80960 instruction formats.    Copyright 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1997, 1998, 1999,    2000, 2002, 2003    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2,    or (at your option) any later version.     GAS is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See    the GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* tc-i960.h - Basic 80960 instruction formats.    Copyright 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1997, 1998, 1999,    2000, 2001, 2002, 2003    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2,    or (at your option) any later version.     GAS is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See    the GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -65,12 +65,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SYMBOLS_NEED_BACKPOINTERS
-end_define
-
-begin_define
-define|#
-directive|define
 name|LOCAL_LABELS_FB
 value|1
 end_define
@@ -88,28 +82,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BFD_ARCH
-value|bfd_arch_i960
-end_define
-
-begin_define
-define|#
-directive|define
-name|COFF_FLAGS
-value|F_AR32WR
-end_define
-
-begin_define
-define|#
-directive|define
 name|COFF_MAGIC
 value|I960ROMAGIC
-end_define
-
-begin_define
-define|#
-directive|define
-name|OBJ_COFF_SECTION_HEADER_HAS_ALIGNMENT
 end_define
 
 begin_define
@@ -118,61 +92,6 @@ directive|define
 name|OBJ_COFF_MAX_AUXENTRIES
 value|(2)
 end_define
-
-begin_define
-define|#
-directive|define
-name|TC_COUNT_RELOC
-parameter_list|(
-name|FIX
-parameter_list|)
-value|(!(FIX)->fx_done)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TC_COFF_FIX2RTYPE
-parameter_list|(
-name|FIX
-parameter_list|)
-value|tc_coff_fix2rtype (FIX)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TC_COFF_SIZEMACHDEP
-parameter_list|(
-name|FRAGP
-parameter_list|)
-value|tc_coff_sizemachdep (FRAGP)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TC_COFF_SET_MACHINE
-parameter_list|(
-name|HDRS
-parameter_list|)
-value|tc_headers_hook (HDRS)
-end_define
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|tc_coff_sizemachdep
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
-name|frag
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* MEANING OF 'n_other' in the symbol record.  *  * If non-zero, the 'n_other' fields indicates either a leaf procedure or  * a system procedure, as follows:  *  *	1<= n_other<= 32 :  *		The symbol is the entry point to a system procedure.  *		'n_value' is the address of the entry, as for any other  *		procedure.  The system procedure number (which can be used in  *		a 'calls' instruction) is (n_other-1).  These entries come from  *		'.sysproc' directives.  *  *	n_other == N_CALLNAME  *		the symbol is the 'call' entry point to a leaf procedure.  *		The *next* symbol in the symbol table must be the corresponding  *		'bal' entry point to the procedure (see following).  These  *		entries come from '.leafproc' directives in which two different  *		symbols are specified (the first one is represented here).  *  *  *	n_other == N_BALNAME  *		the symbol is the 'bal' entry point to a leaf procedure.  *		These entries result from '.leafproc' directives in which only  *		one symbol is specified, or in which the same symbol is  *		specified twice.  *  * Note that an N_CALLNAME entry *must* have a corresponding N_BALNAME entry,  * but not every N_BALNAME entry must have an N_CALLNAME entry.  */
@@ -423,7 +342,7 @@ name|OBJ_ELF
 end_ifndef
 
 begin_comment
-comment|/* Values passed to md_apply_fix3 sometimes include symbol values.  */
+comment|/* Values passed to md_apply_fix sometimes include symbol values.  */
 end_comment
 
 begin_define
@@ -442,7 +361,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* Values passed to md_apply_fix3 don't include the symbol value.  */
+comment|/* Values passed to md_apply_fix don't include the symbol value.  */
 end_comment
 
 begin_define
@@ -537,12 +456,6 @@ parameter_list|(
 name|FRAG
 parameter_list|)
 value|i960_handle_align (FRAG)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NEED_FX_R_TYPE
 end_define
 
 begin_define

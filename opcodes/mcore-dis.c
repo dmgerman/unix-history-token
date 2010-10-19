@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Disassemble Motorola M*Core instructions.    Copyright 1993, 1999, 2000, 2002 Free Software Foundation, Inc.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Disassemble Motorola M*Core instructions.    Copyright 1993, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -849,8 +849,12 @@ name|fprintf
 argument_list|(
 name|stream
 argument_list|,
-literal|"\t0x%x"
+literal|"\t0x%lx"
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|memaddr
 operator|+
 literal|2
@@ -860,6 +864,7 @@ name|val
 operator|<<
 literal|1
 operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -939,7 +944,7 @@ name|fprintf
 argument_list|(
 name|stream
 argument_list|,
-literal|"\t%s, 0x%x"
+literal|"\t%s, 0x%lx"
 argument_list|,
 name|grname
 index|[
@@ -952,6 +957,10 @@ operator|&
 literal|0xF
 index|]
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|memaddr
 operator|-
 operator|(
@@ -959,6 +968,7 @@ name|val
 operator|<<
 literal|1
 operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1112,7 +1122,7 @@ name|fprintf
 argument_list|(
 name|stream
 argument_list|,
-literal|"\t%s, 0x%X"
+literal|"\t%s, 0x%lX"
 argument_list|,
 name|grname
 index|[
@@ -1138,9 +1148,12 @@ name|fprintf
 argument_list|(
 name|stream
 argument_list|,
-literal|"\t// from address pool at 0x%x"
+literal|"\t// from address pool at 0x%lx"
 argument_list|,
-operator|(
+call|(
+name|long
+call|)
+argument_list|(
 name|memaddr
 operator|+
 literal|2
@@ -1154,7 +1167,7 @@ operator|)
 operator|<<
 literal|2
 operator|)
-operator|)
+argument_list|)
 operator|&
 literal|0xFFFFFFFC
 argument_list|)
@@ -1310,7 +1323,7 @@ name|fprintf
 argument_list|(
 name|stream
 argument_list|,
-literal|"\t0x%X"
+literal|"\t0x%lX"
 argument_list|,
 name|val
 argument_list|)
@@ -1350,9 +1363,12 @@ name|fprintf
 argument_list|(
 name|stream
 argument_list|,
-literal|"\t// from address pool at 0x%x"
+literal|"\t// from address pool at 0x%lx"
 argument_list|,
-operator|(
+call|(
+name|long
+call|)
+argument_list|(
 name|memaddr
 operator|+
 literal|2
@@ -1366,7 +1382,7 @@ operator|)
 operator|<<
 literal|2
 operator|)
-operator|)
+argument_list|)
 operator|&
 literal|0xFFFFFFFC
 argument_list|)

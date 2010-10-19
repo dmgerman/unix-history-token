@@ -6,7 +6,7 @@ name|vms
 end_undef
 
 begin_comment
-comment|/* vms.h -- Header file for VMS (Alpha and Vax) support.    Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.     Written by Klaus K"ampf (kkaempf@rmi.de)  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* vms.h -- Header file for VMS (Alpha and Vax) support.    Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2005    Free Software Foundation, Inc.     Written by Klaus K"ampf (kkaempf@rmi.de)     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -548,7 +548,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* Minimum store code		*/
+comment|/* Minimum store code.		*/
 end_comment
 
 begin_define
@@ -559,7 +559,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* Stack global symbol value	*/
+comment|/* Stack global symbol value.	*/
 end_comment
 
 begin_define
@@ -570,7 +570,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Stack longword		*/
+comment|/* Stack longword.		*/
 end_comment
 
 begin_define
@@ -581,7 +581,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* Stack quadword		*/
+comment|/* Stack quadword.		*/
 end_comment
 
 begin_define
@@ -592,7 +592,7 @@ value|3
 end_define
 
 begin_comment
-comment|/* Stack psect base plus quadword offset  */
+comment|/* Stack psect base plus quadword offset.  */
 end_comment
 
 begin_define
@@ -603,7 +603,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* Stack literal		*/
+comment|/* Stack literal.		*/
 end_comment
 
 begin_define
@@ -614,7 +614,7 @@ value|5
 end_define
 
 begin_comment
-comment|/* Stack module			*/
+comment|/* Stack module.		*/
 end_comment
 
 begin_define
@@ -625,7 +625,7 @@ value|6
 end_define
 
 begin_comment
-comment|/* Check Arguments		*/
+comment|/* Check Arguments.		*/
 end_comment
 
 begin_define
@@ -636,7 +636,7 @@ value|6
 end_define
 
 begin_comment
-comment|/* Maximum stack code		*/
+comment|/* Maximum stack code.		*/
 end_comment
 
 begin_define
@@ -647,7 +647,7 @@ value|50
 end_define
 
 begin_comment
-comment|/* Minimum store code		*/
+comment|/* Minimum store code.		*/
 end_comment
 
 begin_define
@@ -658,7 +658,7 @@ value|50
 end_define
 
 begin_comment
-comment|/* Store byte			*/
+comment|/* Store byte.			*/
 end_comment
 
 begin_define
@@ -669,7 +669,7 @@ value|51
 end_define
 
 begin_comment
-comment|/* Store word			*/
+comment|/* Store word.			*/
 end_comment
 
 begin_define
@@ -680,7 +680,7 @@ value|52
 end_define
 
 begin_comment
-comment|/* Store longword		*/
+comment|/* Store longword.		*/
 end_comment
 
 begin_define
@@ -691,7 +691,7 @@ value|53
 end_define
 
 begin_comment
-comment|/* Store quadword		*/
+comment|/* Store quadword.		*/
 end_comment
 
 begin_define
@@ -702,7 +702,7 @@ value|54
 end_define
 
 begin_comment
-comment|/* Store immediate Repeated	*/
+comment|/* Store immediate Repeated.	*/
 end_comment
 
 begin_define
@@ -713,7 +713,7 @@ value|55
 end_define
 
 begin_comment
-comment|/* Store global			*/
+comment|/* Store global.		*/
 end_comment
 
 begin_define
@@ -724,7 +724,7 @@ value|56
 end_define
 
 begin_comment
-comment|/* Store code address		*/
+comment|/* Store code address.		*/
 end_comment
 
 begin_define
@@ -735,7 +735,7 @@ value|57
 end_define
 
 begin_comment
-comment|/* Store relative branch	*/
+comment|/* Store relative branch.	*/
 end_comment
 
 begin_define
@@ -746,7 +746,7 @@ value|58
 end_define
 
 begin_comment
-comment|/* Store absolute branch	*/
+comment|/* Store absolute branch.	*/
 end_comment
 
 begin_define
@@ -757,7 +757,7 @@ value|59
 end_define
 
 begin_comment
-comment|/* Store offset within psect	*/
+comment|/* Store offset within psect.	*/
 end_comment
 
 begin_define
@@ -768,7 +768,7 @@ value|61
 end_define
 
 begin_comment
-comment|/* Store immediate		*/
+comment|/* Store immediate.		*/
 end_comment
 
 begin_define
@@ -779,7 +779,7 @@ value|62
 end_define
 
 begin_comment
-comment|/* Store global Longword	*/
+comment|/* Store global Longword.	*/
 end_comment
 
 begin_define
@@ -790,7 +790,7 @@ value|63
 end_define
 
 begin_comment
-comment|/* STO_LP_PSB not valid in level 2 use STC_LP_PSB			*/
+comment|/* STO_LP_PSB not valid in level 2 use STC_LP_PSB.  */
 end_comment
 
 begin_define
@@ -801,7 +801,7 @@ value|64
 end_define
 
 begin_comment
-comment|/* Store 14 bit HINT at global address */
+comment|/* Store 14 bit HINT at global address.  */
 end_comment
 
 begin_define
@@ -823,7 +823,7 @@ value|65
 end_define
 
 begin_comment
-comment|/* Maximum store code		*/
+comment|/* Maximum store code.		*/
 end_comment
 
 begin_define
@@ -834,7 +834,7 @@ value|100
 end_define
 
 begin_comment
-comment|/* Minimum operate code		*/
+comment|/* Minimum operate code.	*/
 end_comment
 
 begin_define
@@ -845,7 +845,7 @@ value|100
 end_define
 
 begin_comment
-comment|/* No-op			*/
+comment|/* No-op.			*/
 end_comment
 
 begin_define
@@ -856,7 +856,7 @@ value|101
 end_define
 
 begin_comment
-comment|/* Add				*/
+comment|/* Add.				*/
 end_comment
 
 begin_define
@@ -867,7 +867,7 @@ value|102
 end_define
 
 begin_comment
-comment|/* Subtract			*/
+comment|/* Subtract.			*/
 end_comment
 
 begin_define
@@ -878,7 +878,7 @@ value|103
 end_define
 
 begin_comment
-comment|/* Multiply			*/
+comment|/* Multiply.			*/
 end_comment
 
 begin_define
@@ -889,7 +889,7 @@ value|104
 end_define
 
 begin_comment
-comment|/* Divide			*/
+comment|/* Divide.			*/
 end_comment
 
 begin_define
@@ -900,7 +900,7 @@ value|105
 end_define
 
 begin_comment
-comment|/* Logical AND			*/
+comment|/* Logical AND.			*/
 end_comment
 
 begin_define
@@ -911,7 +911,7 @@ value|106
 end_define
 
 begin_comment
-comment|/* Logical inclusive OR		*/
+comment|/* Logical inclusive OR.	*/
 end_comment
 
 begin_define
@@ -922,7 +922,7 @@ value|107
 end_define
 
 begin_comment
-comment|/* Logical exclusive OR		*/
+comment|/* Logical exclusive OR.	*/
 end_comment
 
 begin_define
@@ -933,7 +933,7 @@ value|108
 end_define
 
 begin_comment
-comment|/* Negate			*/
+comment|/* Negate.			*/
 end_comment
 
 begin_define
@@ -944,7 +944,7 @@ value|109
 end_define
 
 begin_comment
-comment|/* Complement			*/
+comment|/* Complement.			*/
 end_comment
 
 begin_define
@@ -955,7 +955,7 @@ value|110
 end_define
 
 begin_comment
-comment|/* Insert bit field		*/
+comment|/* Insert bit field.		*/
 end_comment
 
 begin_define
@@ -966,7 +966,7 @@ value|111
 end_define
 
 begin_comment
-comment|/* Arithmetic shift		*/
+comment|/* Arithmetic shift.		*/
 end_comment
 
 begin_define
@@ -977,7 +977,7 @@ value|112
 end_define
 
 begin_comment
-comment|/* Unsigned shift		*/
+comment|/* Unsigned shift.		*/
 end_comment
 
 begin_define
@@ -988,7 +988,7 @@ value|113
 end_define
 
 begin_comment
-comment|/* Rotate			*/
+comment|/* Rotate.			*/
 end_comment
 
 begin_define
@@ -999,7 +999,7 @@ value|114
 end_define
 
 begin_comment
-comment|/* Select one of three longwords on top of stack  */
+comment|/* Select one of three longwords on top of stack.   */
 end_comment
 
 begin_define
@@ -1010,7 +1010,7 @@ value|115
 end_define
 
 begin_comment
-comment|/* Redefine this symbol after pass 2  */
+comment|/* Redefine this symbol after pass 2.  */
 end_comment
 
 begin_define
@@ -1021,7 +1021,7 @@ value|116
 end_define
 
 begin_comment
-comment|/* Define a literal		*/
+comment|/* Define a literal.		*/
 end_comment
 
 begin_define
@@ -1032,7 +1032,7 @@ value|116
 end_define
 
 begin_comment
-comment|/* Maximum operate code		*/
+comment|/* Maximum operate code.	*/
 end_comment
 
 begin_define
@@ -1043,7 +1043,7 @@ value|150
 end_define
 
 begin_comment
-comment|/* Minimum control code		*/
+comment|/* Minimum control code.	*/
 end_comment
 
 begin_define
@@ -1054,7 +1054,7 @@ value|150
 end_define
 
 begin_comment
-comment|/* Set relocation base		*/
+comment|/* Set relocation base.		*/
 end_comment
 
 begin_define
@@ -1065,7 +1065,7 @@ value|151
 end_define
 
 begin_comment
-comment|/* Augment relocation base	*/
+comment|/* Augment relocation base.	*/
 end_comment
 
 begin_define
@@ -1076,7 +1076,7 @@ value|152
 end_define
 
 begin_comment
-comment|/* Define debug location	*/
+comment|/* Define debug location.	*/
 end_comment
 
 begin_define
@@ -1087,7 +1087,7 @@ value|153
 end_define
 
 begin_comment
-comment|/* Set debug location		*/
+comment|/* Set debug location.		*/
 end_comment
 
 begin_define
@@ -1098,7 +1098,7 @@ value|154
 end_define
 
 begin_comment
-comment|/* Stack debug location		*/
+comment|/* Stack debug location.	*/
 end_comment
 
 begin_define
@@ -1109,7 +1109,7 @@ value|154
 end_define
 
 begin_comment
-comment|/* Maximum control code		*/
+comment|/* Maximum control code.	*/
 end_comment
 
 begin_define
@@ -1120,7 +1120,7 @@ value|200
 end_define
 
 begin_comment
-comment|/* Minimum store-conditional code    */
+comment|/* Minimum store-conditional code.   */
 end_comment
 
 begin_define
@@ -1131,7 +1131,7 @@ value|200
 end_define
 
 begin_comment
-comment|/* Store-conditional Linkage Pair    */
+comment|/* Store-conditional Linkage Pair.   */
 end_comment
 
 begin_define
@@ -1142,7 +1142,7 @@ value|201
 end_define
 
 begin_comment
-comment|/* Store-conditional Linkage Pair with Procedure Signature */
+comment|/* Store-conditional Linkage Pair with Procedure Signature.  */
 end_comment
 
 begin_define
@@ -1153,7 +1153,7 @@ value|202
 end_define
 
 begin_comment
-comment|/* Store-conditional Address at global address */
+comment|/* Store-conditional Address at global address.  */
 end_comment
 
 begin_define
@@ -1164,7 +1164,7 @@ value|203
 end_define
 
 begin_comment
-comment|/* Store-conditional Code Address at global address */
+comment|/* Store-conditional Code Address at global address.  */
 end_comment
 
 begin_define
@@ -1175,7 +1175,7 @@ value|204
 end_define
 
 begin_comment
-comment|/* Store-conditional Address at psect + offset */
+comment|/* Store-conditional Address at psect + offset.  */
 end_comment
 
 begin_define
@@ -1186,7 +1186,7 @@ value|205
 end_define
 
 begin_comment
-comment|/* Store-conditional NOP at address of global */
+comment|/* Store-conditional NOP at address of global.  */
 end_comment
 
 begin_define
@@ -1197,7 +1197,7 @@ value|206
 end_define
 
 begin_comment
-comment|/* Store-conditional NOP at pect + offset */
+comment|/* Store-conditional NOP at pect + offset.  */
 end_comment
 
 begin_define
@@ -1208,7 +1208,7 @@ value|207
 end_define
 
 begin_comment
-comment|/* Store-conditional BSR at global address */
+comment|/* Store-conditional BSR at global address.  */
 end_comment
 
 begin_define
@@ -1219,7 +1219,7 @@ value|208
 end_define
 
 begin_comment
-comment|/* Store-conditional BSR at pect + offset */
+comment|/* Store-conditional BSR at pect + offset.  */
 end_comment
 
 begin_define
@@ -1230,7 +1230,7 @@ value|209
 end_define
 
 begin_comment
-comment|/* Store-conditional LDA at global address */
+comment|/* Store-conditional LDA at global address.  */
 end_comment
 
 begin_define
@@ -1241,7 +1241,7 @@ value|210
 end_define
 
 begin_comment
-comment|/* Store-conditional LDA at psect + offset */
+comment|/* Store-conditional LDA at psect + offset.  */
 end_comment
 
 begin_define
@@ -1252,7 +1252,7 @@ value|211
 end_define
 
 begin_comment
-comment|/* Store-conditional BSR or Hint at global address */
+comment|/* Store-conditional BSR or Hint at global address.  */
 end_comment
 
 begin_define
@@ -1263,7 +1263,7 @@ value|212
 end_define
 
 begin_comment
-comment|/* Store-conditional BSR or Hint at pect + offset */
+comment|/* Store-conditional BSR or Hint at pect + offset.  */
 end_comment
 
 begin_define
@@ -1274,7 +1274,7 @@ value|213
 end_define
 
 begin_comment
-comment|/* Store-conditional NOP,BSR or HINT at global address */
+comment|/* Store-conditional NOP,BSR or HINT at global address.  */
 end_comment
 
 begin_define
@@ -1285,7 +1285,7 @@ value|214
 end_define
 
 begin_comment
-comment|/* Store-conditional NOP,BSR or HINT at psect + offset */
+comment|/* Store-conditional NOP,BSR or HINT at psect + offset.  */
 end_comment
 
 begin_define
@@ -1296,7 +1296,7 @@ value|214
 end_define
 
 begin_comment
-comment|/* Maximum store-conditional code    */
+comment|/* Maximum store-conditional code.   */
 end_comment
 
 begin_comment
@@ -1444,7 +1444,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* Offset to first entry in record	*/
+comment|/* Offset to first entry in record.	*/
 end_comment
 
 begin_define
@@ -1455,7 +1455,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* Offset to first entry in record	*/
+comment|/* Offset to first entry in record.	*/
 end_comment
 
 begin_define
@@ -1466,7 +1466,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* Psect definition			*/
+comment|/* Psect definition.			*/
 end_comment
 
 begin_define
@@ -1477,7 +1477,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Symbol specification			*/
+comment|/* Symbol specification.		*/
 end_comment
 
 begin_define
@@ -1488,7 +1488,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* Random entity check			*/
+comment|/* Random entity check.			*/
 end_comment
 
 begin_define
@@ -1499,7 +1499,7 @@ value|5
 end_define
 
 begin_comment
-comment|/* Shareable image psect definition	*/
+comment|/* Shareable image psect definition.	*/
 end_comment
 
 begin_define
@@ -1510,7 +1510,7 @@ value|6
 end_define
 
 begin_comment
-comment|/* Vectored (dual-valued) versions of SYM, */
+comment|/* Vectored (dual-valued) versions of SYM.  */
 end_comment
 
 begin_define
@@ -1521,7 +1521,7 @@ value|7
 end_define
 
 begin_comment
-comment|/* Masked versions of SYM,		*/
+comment|/* Masked versions of SYM.		*/
 end_comment
 
 begin_define
@@ -1532,7 +1532,7 @@ value|8
 end_define
 
 begin_comment
-comment|/* EGST - gst version of SYM		*/
+comment|/* EGST - gst version of SYM.		*/
 end_comment
 
 begin_define
@@ -1543,7 +1543,7 @@ value|8
 end_define
 
 begin_comment
-comment|/* Maximum entry type defined		*/
+comment|/* Maximum entry type defined.		*/
 end_comment
 
 begin_define
@@ -1820,7 +1820,7 @@ value|2
 end_define
 
 begin_comment
-comment|/*  *	Debugger symbol definitions:  These are done by hand, as no  *					machine-readable version seems  *					to be available.  */
+comment|/* Debugger symbol definitions:  These are done by hand,    as no machine-readable version seems to be available.  */
 end_comment
 
 begin_define
@@ -1831,7 +1831,7 @@ value|7
 end_define
 
 begin_comment
-comment|/* Language == "C"	*/
+comment|/* Language == "C".	*/
 end_comment
 
 begin_define
@@ -1842,7 +1842,7 @@ value|15
 end_define
 
 begin_comment
-comment|/* Language == "C++"	*/
+comment|/* Language == "C++".	*/
 end_comment
 
 begin_define
@@ -1860,7 +1860,7 @@ value|155
 end_define
 
 begin_comment
-comment|/* Source file		*/
+comment|/* Source file.		*/
 end_comment
 
 begin_define
@@ -1878,7 +1878,7 @@ value|176
 end_define
 
 begin_comment
-comment|/* Beginning of block	*/
+comment|/* Beginning of block.	*/
 end_comment
 
 begin_define
@@ -1889,7 +1889,7 @@ value|177
 end_define
 
 begin_comment
-comment|/* End of block	*/
+comment|/* End of block.	*/
 end_comment
 
 begin_define
@@ -1914,7 +1914,7 @@ value|185
 end_define
 
 begin_comment
-comment|/* Line Number		*/
+comment|/* Line Number.		*/
 end_comment
 
 begin_define
@@ -1939,7 +1939,7 @@ value|188
 end_define
 
 begin_comment
-comment|/* Beginning of module	*/
+comment|/* Beginning of module. */
 end_comment
 
 begin_define
@@ -1950,7 +1950,7 @@ value|189
 end_define
 
 begin_comment
-comment|/* End of module	*/
+comment|/* End of module.	*/
 end_comment
 
 begin_define
@@ -1961,7 +1961,7 @@ value|190
 end_define
 
 begin_comment
-comment|/* Beginning of routine	*/
+comment|/* Beginning of routine.*/
 end_comment
 
 begin_define
@@ -1972,7 +1972,7 @@ value|191
 end_define
 
 begin_comment
-comment|/* End of routine	*/
+comment|/* End of routine.	*/
 end_comment
 
 begin_define
@@ -1983,7 +1983,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Incr PC	*/
+comment|/* Incr PC.		*/
 end_comment
 
 begin_define
@@ -1994,7 +1994,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* Incr Line #	*/
+comment|/* Incr Line #. 	*/
 end_comment
 
 begin_define
@@ -2005,7 +2005,7 @@ value|3
 end_define
 
 begin_comment
-comment|/* Incr Line #	*/
+comment|/* Incr Line #. 	*/
 end_comment
 
 begin_define
@@ -2051,7 +2051,7 @@ value|9
 end_define
 
 begin_comment
-comment|/* Set Line #	*/
+comment|/* Set Line #.		*/
 end_comment
 
 begin_define
@@ -2090,7 +2090,7 @@ value|14
 end_define
 
 begin_comment
-comment|/* End of lines	*/
+comment|/* End of lines.	*/
 end_comment
 
 begin_define
@@ -2101,7 +2101,7 @@ value|15
 end_define
 
 begin_comment
-comment|/* End of lines	*/
+comment|/* End of lines.	*/
 end_comment
 
 begin_define
@@ -2112,7 +2112,7 @@ value|16
 end_define
 
 begin_comment
-comment|/* Set PC	*/
+comment|/* Set PC.		*/
 end_comment
 
 begin_define
@@ -2123,7 +2123,7 @@ value|17
 end_define
 
 begin_comment
-comment|/* Incr PC	*/
+comment|/* Incr PC.		*/
 end_comment
 
 begin_define
@@ -2134,7 +2134,7 @@ value|18
 end_define
 
 begin_comment
-comment|/* Incr Line #	*/
+comment|/* Incr Line #.		*/
 end_comment
 
 begin_define
@@ -2145,7 +2145,7 @@ value|19
 end_define
 
 begin_comment
-comment|/* Set Line #	*/
+comment|/* Set Line #.		*/
 end_comment
 
 begin_define
@@ -2156,7 +2156,7 @@ value|20
 end_define
 
 begin_comment
-comment|/* Set Line #	*/
+comment|/* Set Line #.		*/
 end_comment
 
 begin_define
@@ -2167,11 +2167,11 @@ value|21
 end_define
 
 begin_comment
-comment|/* End of lines	*/
+comment|/* End of lines.	*/
 end_comment
 
 begin_comment
-comment|/* these are used with DST_S_C_SOURCE */
+comment|/* These are used with DST_S_C_SOURCE */
 end_comment
 
 begin_define
@@ -2182,7 +2182,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Declare source file */
+comment|/* Declare source file.  */
 end_comment
 
 begin_define
@@ -2193,7 +2193,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* Set source file */
+comment|/* Set source file.	 */
 end_comment
 
 begin_define
@@ -2204,7 +2204,7 @@ value|3
 end_define
 
 begin_comment
-comment|/* Set record, longword value */
+comment|/* Set record, longword value.  */
 end_comment
 
 begin_define
@@ -2215,7 +2215,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* Set record, word value */
+comment|/* Set record, word value.  */
 end_comment
 
 begin_define
@@ -2226,7 +2226,7 @@ value|10
 end_define
 
 begin_comment
-comment|/* # of line, word counter */
+comment|/* # of line, word counter.  */
 end_comment
 
 begin_define
@@ -2237,7 +2237,7 @@ value|11
 end_define
 
 begin_comment
-comment|/* # of line, byte counter */
+comment|/* # of line, byte counter.  */
 end_comment
 
 begin_define
@@ -2248,11 +2248,11 @@ value|16
 end_define
 
 begin_comment
-comment|/* ^L counts as a record */
+comment|/* ^L counts as a record.  */
 end_comment
 
 begin_comment
-comment|/* the following are the codes for the various data types.  Anything not on  * the list is included under 'advanced_type'  */
+comment|/* The following are the codes for the various data types.  Anything not on    the list is included under 'advanced_type'.  */
 end_comment
 
 begin_define
@@ -2326,7 +2326,7 @@ value|0x0b
 end_define
 
 begin_comment
-comment|/* D_float double */
+comment|/* D_float double.  */
 end_comment
 
 begin_define
@@ -2337,7 +2337,7 @@ value|0x0c
 end_define
 
 begin_comment
-comment|/* 2xF_float complex float */
+comment|/* 2xF_float complex float.  */
 end_comment
 
 begin_define
@@ -2348,7 +2348,7 @@ value|0x0d
 end_define
 
 begin_comment
-comment|/* 2xD_float complex double */
+comment|/* 2xD_float complex double.  */
 end_comment
 
 begin_define
@@ -2359,7 +2359,7 @@ value|0x1b
 end_define
 
 begin_comment
-comment|/* G_float double */
+comment|/* G_float double.  */
 end_comment
 
 begin_define
@@ -2370,7 +2370,7 @@ value|0x1d
 end_define
 
 begin_comment
-comment|/* 2xG_float complex double */
+comment|/* 2xG_float complex double.  */
 end_comment
 
 begin_define
@@ -2388,7 +2388,7 @@ value|0xa3
 end_define
 
 begin_comment
-comment|/*  Some of these are just for future reference.  [pr]  */
+comment|/*  Some of these are just for future reference.  [pr].  */
 end_comment
 
 begin_define
@@ -2399,7 +2399,7 @@ value|0x01
 end_define
 
 begin_comment
-comment|/* unsigned, aligned bit field */
+comment|/* Unsigned, aligned bit field.  */
 end_comment
 
 begin_define
@@ -2410,7 +2410,7 @@ value|0x22
 end_define
 
 begin_comment
-comment|/* unsigned, unaligned bit field */
+comment|/* Unsigned, unaligned bit field.  */
 end_comment
 
 begin_define
@@ -2421,7 +2421,7 @@ value|0x29
 end_define
 
 begin_comment
-comment|/* signed, aligned bit field */
+comment|/* Signed, aligned bit field.  */
 end_comment
 
 begin_define
@@ -2432,7 +2432,7 @@ value|0x2a
 end_define
 
 begin_comment
-comment|/* signed, unaligned bit field */
+comment|/* Signed, unaligned bit field.  */
 end_comment
 
 begin_define
@@ -2443,7 +2443,7 @@ value|0x2e
 end_define
 
 begin_comment
-comment|/* asciz ('\0' terminated) string */
+comment|/* Asciz ('\0' terminated) string.  */
 end_comment
 
 begin_define
@@ -2454,7 +2454,7 @@ value|0x38
 end_define
 
 begin_comment
-comment|/* wchar_t */
+comment|/* Wchar_t.  */
 end_comment
 
 begin_comment
@@ -2469,7 +2469,7 @@ value|0x01
 end_define
 
 begin_comment
-comment|/* static (fixed length) */
+comment|/* Static (fixed length).  */
 end_comment
 
 begin_define
@@ -2480,7 +2480,7 @@ value|0x02
 end_define
 
 begin_comment
-comment|/* dynamic string (not via malloc!) */
+comment|/* Dynamic string (not via malloc!).  */
 end_comment
 
 begin_define
@@ -2491,7 +2491,7 @@ value|0x04
 end_define
 
 begin_comment
-comment|/* array */
+comment|/* Array.  */
 end_comment
 
 begin_define
@@ -2502,11 +2502,11 @@ value|0x0d
 end_define
 
 begin_comment
-comment|/* unaligned bit string */
+comment|/* Unaligned bit string.  */
 end_comment
 
 begin_comment
-comment|/*  These are the codes that are used to generate the definitions of struct  *  union and enum records  */
+comment|/*  These are the codes that are used to generate the definitions of struct     union and enum records.  */
 end_comment
 
 begin_define
@@ -2563,11 +2563,11 @@ value|0xaf
 end_define
 
 begin_comment
-comment|/* type specification */
+comment|/* Type specification.  */
 end_comment
 
 begin_comment
-comment|/* These codes are used in the generation of the symbol definition records  */
+comment|/* These codes are used in the generation of the symbol definition records.  */
 end_comment
 
 begin_define
@@ -2578,7 +2578,7 @@ value|0x80
 end_define
 
 begin_comment
-comment|/* struct definition only */
+comment|/* Struct definition only.  */
 end_comment
 
 begin_define
@@ -2589,7 +2589,7 @@ value|0xfa
 end_define
 
 begin_comment
-comment|/* descriptor used */
+comment|/* Descriptor used.  */
 end_comment
 
 begin_define
@@ -2600,7 +2600,7 @@ value|0xfb
 end_define
 
 begin_comment
-comment|/* trailing value specified */
+comment|/* Trailing value specified.  */
 end_comment
 
 begin_define
@@ -2611,7 +2611,7 @@ value|0xfd
 end_define
 
 begin_comment
-comment|/* value spec follows */
+comment|/* Value spec follows.  */
 end_comment
 
 begin_define
@@ -2622,7 +2622,7 @@ value|0xff
 end_define
 
 begin_comment
-comment|/* value contains bit offset */
+comment|/* Value contains bit offset.  */
 end_comment
 
 begin_define
@@ -2661,7 +2661,7 @@ value|0x0c
 end_define
 
 begin_comment
-comment|/* R12 */
+comment|/* R12.  */
 end_comment
 
 begin_define
@@ -2672,7 +2672,7 @@ value|0x0d
 end_define
 
 begin_comment
-comment|/* R13 */
+comment|/* R13.  */
 end_comment
 
 begin_define
@@ -2683,7 +2683,7 @@ value|0x0e
 end_define
 
 begin_comment
-comment|/* R14 */
+comment|/* R14.  */
 end_comment
 
 begin_define
@@ -2694,7 +2694,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* offset of valkind field */
+comment|/* Offset of valkind field.  */
 end_comment
 
 begin_define
@@ -2705,7 +2705,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* offset to indirect bit */
+comment|/* Offset to indirect bit.  */
 end_comment
 
 begin_define
@@ -2716,7 +2716,7 @@ value|3
 end_define
 
 begin_comment
-comment|/* offset to displacement bit */
+comment|/* Offset to displacement bit.  */
 end_comment
 
 begin_define
@@ -2727,7 +2727,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* offset to register number */
+comment|/* Offset to register number.  */
 end_comment
 
 begin_define
@@ -2763,7 +2763,7 @@ value|(DST_K_VALKIND_ADDR|DST_M_DISP|(DST_K_REG_VAX_FP<<DST_V_REGNUM))
 end_define
 
 begin_comment
-comment|/* Kinds of value specifications  */
+comment|/* Kinds of value specifications.   */
 end_comment
 
 begin_define
@@ -2774,11 +2774,11 @@ value|3
 end_define
 
 begin_comment
-comment|/* split lifetime */
+comment|/* Split lifetime.  */
 end_comment
 
 begin_comment
-comment|/* Kinds of type specifications  */
+comment|/* Kinds of type specifications.  */
 end_comment
 
 begin_define
@@ -2789,7 +2789,7 @@ value|0x01
 end_define
 
 begin_comment
-comment|/* atomic type specification */
+comment|/* Atomic type specification.  */
 end_comment
 
 begin_define
@@ -2800,7 +2800,7 @@ value|0x02
 end_define
 
 begin_comment
-comment|/* descriptor type spec */
+comment|/* Descriptor type spec.  */
 end_comment
 
 begin_define
@@ -2811,7 +2811,7 @@ value|0x03
 end_define
 
 begin_comment
-comment|/* indirect type specification */
+comment|/* Indirect type specification.  */
 end_comment
 
 begin_define
@@ -2822,7 +2822,7 @@ value|0x04
 end_define
 
 begin_comment
-comment|/* typed pointer type spec */
+comment|/* Typed pointer type spec.  */
 end_comment
 
 begin_define
@@ -2833,7 +2833,7 @@ value|0x05
 end_define
 
 begin_comment
-comment|/* pointer type spec */
+comment|/* Pointer type spec.  */
 end_comment
 
 begin_define
@@ -2844,7 +2844,7 @@ value|0x07
 end_define
 
 begin_comment
-comment|/* array type spec */
+comment|/* Array type spec.  */
 end_comment
 
 begin_define
@@ -2855,11 +2855,11 @@ value|0x0e
 end_define
 
 begin_comment
-comment|/* novel length type spec */
+comment|/* Novel length type spec.  */
 end_comment
 
 begin_comment
-comment|/*  These are the codes that are used in the suffix records to determine the  *  actual data type  */
+comment|/* These are the codes that are used in the suffix records to determine the    actual data type.  */
 end_comment
 
 begin_define
@@ -2972,7 +2972,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* Main header record		*/
+comment|/* Main header record.		*/
 end_comment
 
 begin_define
@@ -2983,7 +2983,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Language name and version	*/
+comment|/* Language name and version.	*/
 end_comment
 
 begin_define
@@ -2994,7 +2994,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* Source file specification	*/
+comment|/* Source file specification.	*/
 end_comment
 
 begin_define
@@ -3005,7 +3005,7 @@ value|3
 end_define
 
 begin_comment
-comment|/* Title text of module		*/
+comment|/* Title text of module.	*/
 end_comment
 
 begin_define
@@ -3016,7 +3016,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* Copyright notice		*/
+comment|/* Copyright notice.		*/
 end_comment
 
 begin_define
@@ -3027,7 +3027,7 @@ value|5
 end_define
 
 begin_comment
-comment|/* Maintenance status		*/
+comment|/* Maintenance status.		*/
 end_comment
 
 begin_define
@@ -3038,7 +3038,7 @@ value|6
 end_define
 
 begin_comment
-comment|/* General text			*/
+comment|/* General text.		*/
 end_comment
 
 begin_define
@@ -3049,277 +3049,208 @@ value|6
 end_define
 
 begin_comment
-comment|/* Maximum allowable type	*/
+comment|/* Maximum allowable type.	*/
 end_comment
 
 begin_comment
 comment|/* vms.c.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|asymbol
 modifier|*
 name|_bfd_vms_make_empty_symbol
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-name|abfd
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* vms-gsd.c.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|_bfd_vms_slurp_gsd
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-name|abfd
-operator|,
+modifier|*
+parameter_list|,
 name|int
-name|objtype
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|_bfd_vms_write_gsd
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-name|abfd
-operator|,
+modifier|*
+parameter_list|,
 name|int
-name|objtype
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* vms-mhd.c.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|_bfd_vms_slurp_hdr
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-name|abfd
-operator|,
+modifier|*
+parameter_list|,
 name|int
-name|objtype
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|_bfd_vms_write_hdr
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-name|abfd
-operator|,
+modifier|*
+parameter_list|,
 name|int
-name|objtype
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|_bfd_vms_slurp_eom
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-name|abfd
-operator|,
+modifier|*
+parameter_list|,
 name|int
-name|objtype
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|_bfd_vms_write_eom
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-name|abfd
-operator|,
+modifier|*
+parameter_list|,
 name|int
-name|objtype
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* vms-tir.c.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|_bfd_vms_slurp_tir
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-name|abfd
-operator|,
+modifier|*
+parameter_list|,
 name|int
-name|objtype
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|_bfd_vms_slurp_dbg
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-name|abfd
-operator|,
+modifier|*
+parameter_list|,
 name|int
-name|objtype
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|_bfd_vms_slurp_tbt
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-name|abfd
-operator|,
+modifier|*
+parameter_list|,
 name|int
-name|objtype
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|_bfd_vms_slurp_lnk
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-name|abfd
-operator|,
+modifier|*
+parameter_list|,
 name|int
-name|objtype
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|_bfd_vms_write_tir
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-name|abfd
-operator|,
+modifier|*
+parameter_list|,
 name|int
-name|objtype
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|_bfd_vms_write_tbt
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-name|abfd
-operator|,
+modifier|*
+parameter_list|,
 name|int
-name|objtype
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|_bfd_vms_write_dbg
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-name|abfd
-operator|,
+modifier|*
+parameter_list|,
 name|int
-name|objtype
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/* The r_type field in a reloc is one of the following values.  */
+comment|/* The r_type field in a reloc is one of he following values.  */
 end_comment
 
 begin_define
@@ -3432,7 +3363,7 @@ value|0
 end_define
 
 begin_comment
-comment|/*VAX module header record		*/
+comment|/* VAX moule header record.		*/
 end_comment
 
 begin_define
@@ -3443,7 +3374,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*VAX global symbol definition record	*/
+comment|/* VAX glbal symbol definition record.	*/
 end_comment
 
 begin_define
@@ -3454,7 +3385,7 @@ value|2
 end_define
 
 begin_comment
-comment|/*VAX text information record		*/
+comment|/* VAX tet information record.		*/
 end_comment
 
 begin_define
@@ -3465,7 +3396,7 @@ value|3
 end_define
 
 begin_comment
-comment|/*VAX end of module record		*/
+comment|/* VAX en of module record.		*/
 end_comment
 
 begin_define
@@ -3476,7 +3407,7 @@ value|4
 end_define
 
 begin_comment
-comment|/*VAX Debugger information record	*/
+comment|/* VAX Deugger information record.	*/
 end_comment
 
 begin_define
@@ -3487,7 +3418,7 @@ value|5
 end_define
 
 begin_comment
-comment|/*VAX Traceback information record	*/
+comment|/* VAX Trceback information record.	*/
 end_comment
 
 begin_define
@@ -3498,7 +3429,7 @@ value|6
 end_define
 
 begin_comment
-comment|/*VAX linker options record		*/
+comment|/* VAX liker options record.		*/
 end_comment
 
 begin_define
@@ -3509,7 +3440,7 @@ value|7
 end_define
 
 begin_comment
-comment|/*VAX end of module word-psect record	*/
+comment|/* VAX en of module word-psect record.	*/
 end_comment
 
 begin_define
@@ -3520,7 +3451,7 @@ value|7
 end_define
 
 begin_comment
-comment|/*VAX Last assigned record type		*/
+comment|/* VAX Lat assigned record type.	*/
 end_comment
 
 begin_define
@@ -3531,7 +3462,7 @@ value|8
 end_define
 
 begin_comment
-comment|/*EVAX module header record		*/
+comment|/* EVAX mdule header record.		*/
 end_comment
 
 begin_define
@@ -3542,7 +3473,7 @@ value|9
 end_define
 
 begin_comment
-comment|/*EVAX end of module record		*/
+comment|/* EVAX ed of module record.		*/
 end_comment
 
 begin_define
@@ -3553,7 +3484,7 @@ value|10
 end_define
 
 begin_comment
-comment|/*EVAX global symbol definition record  */
+comment|/* EVAX gobal symbol definition record.*/
 end_comment
 
 begin_define
@@ -3564,7 +3495,7 @@ value|11
 end_define
 
 begin_comment
-comment|/*EVAX text information record		*/
+comment|/* EVAX txt information record.	*/
 end_comment
 
 begin_define
@@ -3575,7 +3506,7 @@ value|12
 end_define
 
 begin_comment
-comment|/*EVAX Debugger information record	*/
+comment|/* EVAX Dbugger information record.	*/
 end_comment
 
 begin_define
@@ -3586,7 +3517,7 @@ value|13
 end_define
 
 begin_comment
-comment|/*EVAX Traceback information record	*/
+comment|/* EVAX Taceback information record.	*/
 end_comment
 
 begin_define
@@ -3597,7 +3528,7 @@ value|13
 end_define
 
 begin_comment
-comment|/*EVAX Last assigned record type	*/
+comment|/* EVAX Lst assigned record type.	*/
 end_comment
 
 begin_define
@@ -3636,7 +3567,7 @@ value|2048
 end_define
 
 begin_comment
-comment|/*Maximum legal record size         */
+comment|/* Maximu legal record size.           */
 end_comment
 
 begin_define
@@ -3647,7 +3578,7 @@ value|8192
 end_define
 
 begin_comment
-comment|/*Maximum legal record size         */
+comment|/* Maximu legal record size.           */
 end_comment
 
 begin_define
@@ -3658,7 +3589,7 @@ value|0
 end_define
 
 begin_comment
-comment|/*Structure level                   */
+comment|/* Structre level.                     */
 end_comment
 
 begin_define
@@ -3669,7 +3600,7 @@ value|2
 end_define
 
 begin_comment
-comment|/*Structure level                   */
+comment|/* Structre level.                     */
 end_comment
 
 begin_define
@@ -3680,7 +3611,7 @@ value|31
 end_define
 
 begin_comment
-comment|/*Maximum symbol length		*/
+comment|/* Maximu symbol length.		*/
 end_comment
 
 begin_define
@@ -3691,7 +3622,7 @@ value|64
 end_define
 
 begin_comment
-comment|/*Maximum symbol length		*/
+comment|/* Maximu symbol length.		*/
 end_comment
 
 begin_define
@@ -3702,7 +3633,7 @@ value|31
 end_define
 
 begin_comment
-comment|/*Maximum section name length		*/
+comment|/* Maximu section name length.		*/
 end_comment
 
 begin_define
@@ -3713,7 +3644,7 @@ value|-1
 end_define
 
 begin_comment
-comment|/*Maximum repeat count on store commands  */
+comment|/* Maximu repeat count on store commands.  */
 end_comment
 
 begin_define
@@ -3724,7 +3655,7 @@ value|-1
 end_define
 
 begin_comment
-comment|/*Maximum repeat count on store commands  */
+comment|/* Maximu repeat count on store commands.  */
 end_comment
 
 begin_define
@@ -3735,7 +3666,7 @@ value|9
 end_define
 
 begin_comment
-comment|/*Maximum p-sect alignment          */
+comment|/* Maximu p-sect alignment.            */
 end_comment
 
 begin_define
@@ -3746,7 +3677,7 @@ value|16
 end_define
 
 begin_comment
-comment|/*Maximum p-sect alignment          */
+comment|/* Maximu p-sect alignment.            */
 end_comment
 
 begin_define
@@ -3757,7 +3688,7 @@ value|256
 end_define
 
 begin_comment
-comment|/*type offset for EVAX codes in switch  */
+comment|/* Type ofset for EVAX codes in switch.  */
 end_comment
 
 begin_comment
@@ -3837,24 +3768,19 @@ name|vms_section
 typedef|;
 end_typedef
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|vms_section
 modifier|*
 name|_bfd_get_vms_section
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-name|abfd
-operator|,
+modifier|*
+parameter_list|,
 name|int
-name|index
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_typedef
 typedef|typedef
@@ -3880,7 +3806,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* vms module header  */
+comment|/* VMS module header.  */
 end_comment
 
 begin_struct
@@ -3928,7 +3854,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* vms end of module  */
+comment|/* VMS end of module.  */
 end_comment
 
 begin_struct
@@ -3993,7 +3919,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* stack value for push/pop commands  */
+comment|/* Stack value for push/pop commands.  */
 end_comment
 
 begin_struct
@@ -4018,7 +3944,7 @@ value|8192
 end_define
 
 begin_comment
-comment|/* location stack definitions for CTL_DFLOC, CTL_STLOC, and CTL_STKDL  */
+comment|/* location stack definitions for CTL_DFLC, CTL_STLOC, and CTL_STKDL  */
 end_comment
 
 begin_struct
@@ -4054,41 +3980,41 @@ begin_struct
 struct|struct
 name|vms_private_data_struct
 block|{
-name|int
+name|bfd_boolean
 name|is_vax
 decl_stmt|;
 name|bfd_boolean
 name|fixup_done
 decl_stmt|;
-comment|/* Flag to indicate if all 					   section pointers and PRIV(sections) 					   are set up correctly  */
+comment|/* Flag to indicate if all 					   section pointers and PRIV(sections) 					   are set up correctly.  */
 name|unsigned
 name|char
 modifier|*
 name|vms_buf
 decl_stmt|;
-comment|/* buffer to record  */
+comment|/* Buffer to record.  */
 name|int
 name|buf_size
 decl_stmt|;
-comment|/* max size of buffer  */
+comment|/* Max size of buffer.  */
 name|unsigned
 name|char
 modifier|*
 name|vms_rec
 decl_stmt|;
-comment|/* actual record ptr  */
+comment|/* Actual record ptr.  */
 name|int
 name|rec_length
 decl_stmt|;
-comment|/* remaining record length  */
+comment|/* Remaining record length.  */
 name|int
 name|rec_size
 decl_stmt|;
-comment|/* actual record size  */
+comment|/* Actual record size.  */
 name|int
 name|rec_type
 decl_stmt|;
-comment|/* actual record type  */
+comment|/* Actual record type.  */
 name|enum
 name|file_format_enum
 name|file_format
@@ -4097,33 +4023,33 @@ name|struct
 name|hdr_struc
 name|hdr_data
 decl_stmt|;
-comment|/* data from HDR/EMH record  */
+comment|/* Data from HDR/EMH record.  */
 name|struct
 name|eom_struc
 name|eom_data
 decl_stmt|;
-comment|/* data from EOM/EEOM record  */
+comment|/* Data from EOM/EEOM record.  */
 name|unsigned
 name|int
 name|section_count
 decl_stmt|;
-comment|/* # of sections in following array  */
+comment|/* # of sections in following array.  */
 name|asection
 modifier|*
 modifier|*
 name|sections
 decl_stmt|;
-comment|/* array of GSD/EGSD sections  */
+comment|/* Array of GSD/EGSD sections.  */
 name|int
 name|gsd_sym_count
 decl_stmt|;
-comment|/* # of GSD/EGSD symbols  */
+comment|/* # of GSD/EGSD symbols.  */
 name|asymbol
 modifier|*
 modifier|*
 name|symbols
 decl_stmt|;
-comment|/* vector of GSD/EGSD symbols  */
+comment|/* Vector of GSD/EGSD symbols.  */
 name|struct
 name|proc_value
 modifier|*
@@ -4167,13 +4093,13 @@ name|asection
 modifier|*
 name|image_section
 decl_stmt|;
-comment|/* section for image_ptr  */
+comment|/* Section for image_ptr.  */
 name|unsigned
 name|char
 modifier|*
 name|image_ptr
 decl_stmt|;
-comment|/* a pointer to section->contents */
+comment|/* A pointer to section->contents.  */
 name|unsigned
 name|char
 name|pdsc
@@ -4181,14 +4107,14 @@ index|[
 literal|8
 index|]
 decl_stmt|;
-comment|/* procedure descriptor */
-comment|/* Output routine storage  */
+comment|/* Procedure descriptor.  */
+comment|/* Output routine storage.  */
 name|unsigned
 name|char
 modifier|*
 name|output_buf
 decl_stmt|;
-comment|/* output data  */
+comment|/* Output data.  */
 name|int
 name|push_level
 decl_stmt|;
@@ -4204,19 +4130,19 @@ decl_stmt|;
 name|int
 name|output_alignment
 decl_stmt|;
-comment|/* linkage index counter    used by conditional store commands (ETIR_S_C_STC_)  */
+comment|/* Linkage index counter		       used by conditional store commands (TIR_S_C_STC_).   */
 name|int
 name|vms_linkage_index
 decl_stmt|;
-comment|/* see tc-alpha.c of gas for a description.  */
+comment|/* see tc-alpha.c of gas for a descripton.  */
 name|int
 name|flag_hash_long_names
 decl_stmt|;
-comment|/* -+, hash instead of truncate */
+comment|/* -+, hash instead of truncate.  */
 name|int
 name|flag_show_after_trunc
 decl_stmt|;
-comment|/* -H, show hashing/truncation */
+comment|/* -H, shw hashing/truncation.  */
 block|}
 struct|;
 end_struct
@@ -4228,7 +4154,7 @@ name|PRIV
 parameter_list|(
 name|name
 parameter_list|)
-value|((struct vms_private_data_struct *)abfd->tdata.any)->name
+value|((struct vms_private_data_struct *) abfd->tdata.any)->name
 end_define
 
 begin_define
@@ -4248,46 +4174,35 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|_bfd_vms_debug
-name|PARAMS
 argument_list|(
-operator|(
 name|int
-name|level
-operator|,
+argument_list|,
 name|char
 operator|*
-name|format
-operator|,
+argument_list|,
 operator|...
-operator|)
 argument_list|)
+name|ATTRIBUTE_PRINTF_2
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|_bfd_hexdump
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-name|level
-operator|,
+parameter_list|,
 name|unsigned
 name|char
-operator|*
-name|ptr
-operator|,
+modifier|*
+parameter_list|,
 name|int
-name|size
-operator|,
+parameter_list|,
 name|int
-name|offset
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -4301,496 +4216,368 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|struct
 name|bfd_hash_entry
 modifier|*
 name|_bfd_vms_hash_newfunc
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|bfd_hash_entry
-operator|*
-name|entry
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|bfd_hash_table
-operator|*
-name|table
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|char
-operator|*
-name|string
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|_bfd_vms_get_header_values
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-name|abfd
-operator|,
+modifier|*
+parameter_list|,
 name|unsigned
 name|char
-operator|*
-name|buf
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|*
-name|type
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|*
-name|length
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|_bfd_vms_get_record
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-name|abfd
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+name|abf
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|_bfd_vms_next_record
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-name|abfd
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+name|abf
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|char
 modifier|*
 name|_bfd_vms_save_sized_string
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|unsigned
 name|char
-operator|*
-name|str
-operator|,
+modifier|*
+parameter_list|,
 name|int
-name|size
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|char
 modifier|*
 name|_bfd_vms_save_counted_string
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|unsigned
 name|char
-operator|*
-name|ptr
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|_bfd_vms_push
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-name|abfd
-operator|,
+modifier|*
+parameter_list|,
 name|uquad
-name|val
-operator|,
+parameter_list|,
 name|int
-name|psect
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|uquad
 name|_bfd_vms_pop
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-name|abfd
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|*
-name|psect
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|bfd_boolean
 name|_bfd_save_vms_section
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-name|abfd
-operator|,
+modifier|*
+parameter_list|,
 name|asection
-operator|*
-name|section
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
-name|PTR
-name|data
-operator|,
+name|void
+modifier|*
+parameter_list|,
 name|file_ptr
-name|offset
-operator|,
+parameter_list|,
 name|bfd_size_type
-name|count
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|_bfd_vms_output_begin
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-name|abfd
-operator|,
+modifier|*
+parameter_list|,
 name|int
-name|rectype
-operator|,
+parameter_list|,
 name|int
-name|rechead
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|_bfd_vms_output_alignment
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-name|abfd
-operator|,
+modifier|*
+parameter_list|,
 name|int
-name|alignto
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|_bfd_vms_output_push
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-name|abfd
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|_bfd_vms_output_pop
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-name|abfd
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|_bfd_vms_output_flush
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-name|abfd
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|_bfd_vms_output_end
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-name|abfd
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|_bfd_vms_output_check
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-name|abfd
-operator|,
+modifier|*
+parameter_list|,
 name|int
-name|size
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|_bfd_vms_output_byte
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-name|abfd
-operator|,
+modifier|*
+parameter_list|,
 name|unsigned
-name|int
-name|value
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|_bfd_vms_output_short
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-name|abfd
-operator|,
+modifier|*
+parameter_list|,
 name|unsigned
-name|int
-name|value
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|_bfd_vms_output_long
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-name|abfd
-operator|,
+modifier|*
+parameter_list|,
 name|unsigned
 name|long
-name|value
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|_bfd_vms_output_quad
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-name|abfd
-operator|,
+modifier|*
+parameter_list|,
 name|uquad
-name|value
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|_bfd_vms_output_counted
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-name|abfd
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-name|value
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|_bfd_vms_output_dump
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-name|abfd
-operator|,
+modifier|*
+parameter_list|,
 name|unsigned
 name|char
-operator|*
-name|data
-operator|,
+modifier|*
+parameter_list|,
 name|int
-name|length
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|_bfd_vms_output_fill
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-name|abfd
-operator|,
+modifier|*
+parameter_list|,
 name|int
-name|value
-operator|,
+parameter_list|,
 name|int
-name|length
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|char
 modifier|*
 name|_bfd_vms_length_hash_symbol
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-name|abfd
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|char
-operator|*
-name|in
-operator|,
+modifier|*
+parameter_list|,
 name|int
-name|maxlen
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|vms_symbol_entry
 modifier|*
 name|_bfd_vms_enter_symbol
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-name|abfd
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-name|name
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

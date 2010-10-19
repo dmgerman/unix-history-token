@@ -91,36 +91,17 @@ name|Jxx_FUNC_JSR_COROUTINE
 value|3
 end_define
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
 begin_comment
-comment|/* Here to document only.  We can't use this when cross compiling as    the bitfield layout might not be the same as native.  */
+comment|/* *INDENT-OFF* */
 end_comment
 
 begin_comment
-unit|typedef union   {     struct       { 	unsigned other:26; 	unsigned op_code:6;       }     a;
-comment|/* any format */
+comment|/* Here to document only.  We can't use this when cross compiling as    the bitfield layout might not be the same as native.     typedef union      {        struct          { 	   unsigned other:26; 	   unsigned op_code:6;          }        a;				-- any format        struct          { 	   int disp:21; 	   unsigned ra:5; 	   unsigned op_code:6;          }        b;				-- branch format        struct          { 	   int hint:14; 	   unsigned func:2; 	   unsigned rb:5; 	   unsigned ra:5; 	   unsigned op_code:6;          }        j;				-- jump format      }     alpha_Instruction; */
 end_comment
 
 begin_comment
-unit|struct       { 	int disp:21; 	unsigned ra:5; 	unsigned op_code:6;       }     b;
-comment|/* branch format */
+comment|/* *INDENT-ON* */
 end_comment
-
-begin_comment
-unit|struct       { 	int hint:14; 	unsigned func:2; 	unsigned rb:5; 	unsigned ra:5; 	unsigned op_code:6;       }     j;
-comment|/* jump format */
-end_comment
-
-begin_endif
-unit|} alpha_Instruction;
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -129,22 +110,19 @@ name|indirect_child
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|alpha_find_call
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|Sym
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|bfd_vma
-operator|,
+parameter_list|,
 name|bfd_vma
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * On the Alpha we can only detect PC relative calls, which are  * usually generated for calls to functions within the same  * object file only.  This is still better than nothing, however.  * (In particular it should be possible to find functions that  *  potentially call integer division routines, for example.)  */
@@ -154,22 +132,16 @@ begin_function
 name|void
 name|alpha_find_call
 parameter_list|(
-name|parent
-parameter_list|,
-name|p_lowpc
-parameter_list|,
-name|p_highpc
-parameter_list|)
 name|Sym
 modifier|*
 name|parent
-decl_stmt|;
+parameter_list|,
 name|bfd_vma
 name|p_lowpc
-decl_stmt|;
+parameter_list|,
 name|bfd_vma
 name|p_highpc
-decl_stmt|;
+parameter_list|)
 block|{
 name|bfd_vma
 name|pc

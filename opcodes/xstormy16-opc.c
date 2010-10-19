@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Instruction opcode table for xstormy16.  THIS FILE IS MACHINE GENERATED WITH CGEN.  Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.  This file is part of the GNU Binutils and/or GDB, the GNU debugger.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Instruction opcode table for xstormy16.  THIS FILE IS MACHINE GENERATED WITH CGEN.  Copyright 1996-2005 Free Software Foundation, Inc.  This file is part of the GNU Binutils and/or GDB, the GNU debugger.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -49,69 +49,57 @@ begin_comment
 comment|/* The hash functions are recorded here to help keep assembler code out of    the disassembler and vice versa.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|asm_hash_insn_p
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|CGEN_INSN
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|unsigned
 name|int
 name|asm_hash_insn
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|dis_hash_insn_p
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|CGEN_INSN
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|unsigned
 name|int
 name|dis_hash_insn
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|CGEN_INSN_INT
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Instruction formats.  */
@@ -173,6 +161,7 @@ specifier|static
 specifier|const
 name|CGEN_IFMT
 name|ifmt_empty
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 literal|0
@@ -195,6 +184,7 @@ specifier|static
 specifier|const
 name|CGEN_IFMT
 name|ifmt_movlmemimm
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 literal|32
@@ -252,6 +242,7 @@ specifier|static
 specifier|const
 name|CGEN_IFMT
 name|ifmt_movhmemimm
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 literal|32
@@ -309,6 +300,7 @@ specifier|static
 specifier|const
 name|CGEN_IFMT
 name|ifmt_movlgrmem
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 literal|16
@@ -359,6 +351,7 @@ specifier|static
 specifier|const
 name|CGEN_IFMT
 name|ifmt_movhgrmem
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 literal|16
@@ -409,6 +402,7 @@ specifier|static
 specifier|const
 name|CGEN_IFMT
 name|ifmt_movgrgri
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 literal|16
@@ -473,6 +467,7 @@ specifier|static
 specifier|const
 name|CGEN_IFMT
 name|ifmt_movgrgrii
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 literal|32
@@ -551,6 +546,7 @@ specifier|static
 specifier|const
 name|CGEN_IFMT
 name|ifmt_movgrgr
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 literal|16
@@ -601,6 +597,7 @@ specifier|static
 specifier|const
 name|CGEN_IFMT
 name|ifmt_movwimm8
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 literal|16
@@ -644,6 +641,7 @@ specifier|static
 specifier|const
 name|CGEN_IFMT
 name|ifmt_movwgrimm8
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 literal|16
@@ -694,6 +692,7 @@ specifier|static
 specifier|const
 name|CGEN_IFMT
 name|ifmt_movwgrimm16
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 literal|32
@@ -751,6 +750,7 @@ specifier|static
 specifier|const
 name|CGEN_IFMT
 name|ifmt_movlowgr
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 literal|16
@@ -801,6 +801,7 @@ specifier|static
 specifier|const
 name|CGEN_IFMT
 name|ifmt_movfgrgrii
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 literal|32
@@ -886,6 +887,7 @@ specifier|static
 specifier|const
 name|CGEN_IFMT
 name|ifmt_addgrimm4
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 literal|16
@@ -936,6 +938,7 @@ specifier|static
 specifier|const
 name|CGEN_IFMT
 name|ifmt_incgrimm2
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 literal|16
@@ -993,6 +996,7 @@ specifier|static
 specifier|const
 name|CGEN_IFMT
 name|ifmt_set1lmemimm
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 literal|16
@@ -1043,6 +1047,7 @@ specifier|static
 specifier|const
 name|CGEN_IFMT
 name|ifmt_set1hmemimm
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 literal|16
@@ -1093,6 +1098,7 @@ specifier|static
 specifier|const
 name|CGEN_IFMT
 name|ifmt_bccgrgr
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 literal|32
@@ -1157,6 +1163,7 @@ specifier|static
 specifier|const
 name|CGEN_IFMT
 name|ifmt_bccgrimm8
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 literal|32
@@ -1221,6 +1228,7 @@ specifier|static
 specifier|const
 name|CGEN_IFMT
 name|ifmt_bccimm16
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 literal|32
@@ -1271,6 +1279,7 @@ specifier|static
 specifier|const
 name|CGEN_IFMT
 name|ifmt_bngrimm4
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 literal|32
@@ -1335,6 +1344,7 @@ specifier|static
 specifier|const
 name|CGEN_IFMT
 name|ifmt_bngrgr
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 literal|32
@@ -1399,6 +1409,7 @@ specifier|static
 specifier|const
 name|CGEN_IFMT
 name|ifmt_bnlmemimm
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 literal|32
@@ -1463,6 +1474,7 @@ specifier|static
 specifier|const
 name|CGEN_IFMT
 name|ifmt_bnhmemimm
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 literal|32
@@ -1527,6 +1539,7 @@ specifier|static
 specifier|const
 name|CGEN_IFMT
 name|ifmt_bcc
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 literal|16
@@ -1570,6 +1583,7 @@ specifier|static
 specifier|const
 name|CGEN_IFMT
 name|ifmt_br
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 literal|16
@@ -1613,6 +1627,7 @@ specifier|static
 specifier|const
 name|CGEN_IFMT
 name|ifmt_jmp
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 literal|16
@@ -1670,6 +1685,7 @@ specifier|static
 specifier|const
 name|CGEN_IFMT
 name|ifmt_jmpf
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 literal|32
@@ -1713,6 +1729,7 @@ specifier|static
 specifier|const
 name|CGEN_IFMT
 name|ifmt_iret
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 literal|16
@@ -7676,6 +7693,7 @@ specifier|static
 specifier|const
 name|CGEN_IFMT
 name|ifmt_movimm8
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 literal|16
@@ -7719,6 +7737,7 @@ specifier|static
 specifier|const
 name|CGEN_IFMT
 name|ifmt_movgrimm8
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 literal|16
@@ -7769,6 +7788,7 @@ specifier|static
 specifier|const
 name|CGEN_IFMT
 name|ifmt_movgrimm16
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 literal|32
@@ -7826,6 +7846,7 @@ specifier|static
 specifier|const
 name|CGEN_IFMT
 name|ifmt_incgr
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 literal|16
@@ -7883,6 +7904,7 @@ specifier|static
 specifier|const
 name|CGEN_IFMT
 name|ifmt_decgr
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 literal|16
@@ -8100,11 +8122,17 @@ name|ALIAS
 argument_list|)
 block|,
 block|{
+block|{
+block|{
 operator|(
 literal|1
 operator|<<
 name|MACH_BASE
 operator|)
+block|,
+literal|0
+block|}
+block|}
 block|}
 block|}
 block|}
@@ -8129,11 +8157,17 @@ name|ALIAS
 argument_list|)
 block|,
 block|{
+block|{
+block|{
 operator|(
 literal|1
 operator|<<
 name|MACH_BASE
 operator|)
+block|,
+literal|0
+block|}
+block|}
 block|}
 block|}
 block|}
@@ -8158,11 +8192,17 @@ name|ALIAS
 argument_list|)
 block|,
 block|{
+block|{
+block|{
 operator|(
 literal|1
 operator|<<
 name|MACH_BASE
 operator|)
+block|,
+literal|0
+block|}
+block|}
 block|}
 block|}
 block|}
@@ -8187,11 +8227,17 @@ name|ALIAS
 argument_list|)
 block|,
 block|{
+block|{
+block|{
 operator|(
 literal|1
 operator|<<
 name|MACH_BASE
 operator|)
+block|,
+literal|0
+block|}
+block|}
 block|}
 block|}
 block|}
@@ -8216,11 +8262,17 @@ name|ALIAS
 argument_list|)
 block|,
 block|{
+block|{
+block|{
 operator|(
 literal|1
 operator|<<
 name|MACH_BASE
 operator|)
+block|,
+literal|0
+block|}
+block|}
 block|}
 block|}
 block|}
@@ -8727,22 +8779,6 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
-specifier|static
-name|void
-name|set_fields_bitsize
-name|PARAMS
-argument_list|(
-operator|(
-name|CGEN_FIELDS
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Set the recorded length of the insn in the CGEN_FIELDS struct.  */
 end_comment
@@ -8752,17 +8788,13 @@ specifier|static
 name|void
 name|set_fields_bitsize
 parameter_list|(
-name|fields
-parameter_list|,
-name|size
-parameter_list|)
 name|CGEN_FIELDS
 modifier|*
 name|fields
-decl_stmt|;
+parameter_list|,
 name|int
 name|size
-decl_stmt|;
+parameter_list|)
 block|{
 name|CGEN_FIELDS_BITSIZE
 argument_list|(
@@ -8782,11 +8814,9 @@ begin_function
 name|void
 name|xstormy16_cgen_init_opcode_table
 parameter_list|(
-name|cd
-parameter_list|)
 name|CGEN_CPU_DESC
 name|cd
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -8835,10 +8865,6 @@ name|CGEN_INSN
 modifier|*
 name|insns
 init|=
-operator|(
-name|CGEN_INSN
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 name|num_macros

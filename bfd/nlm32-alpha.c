@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Support for 32-bit Alpha NLM (NetWare Loadable Module)    Copyright 1993, 1994, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Support for 32-bit Alpha NLM (NetWare Loadable Module)    Copyright 1993, 1994, 2000, 2001, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -51,185 +51,6 @@ directive|include
 file|"libnlm.h"
 end_include
 
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|nlm_alpha_backend_object_p
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|nlm_alpha_write_prefix
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|nlm_alpha_read_reloc
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|nlmNAME
-argument_list|(
-name|symbol_type
-argument_list|)
-operator|*
-operator|,
-name|asection
-operator|*
-operator|*
-operator|,
-name|arelent
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|nlm_alpha_mangle_relocs
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|asection
-operator|*
-operator|,
-specifier|const
-name|PTR
-operator|,
-name|bfd_vma
-operator|,
-name|bfd_size_type
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|nlm_alpha_read_import
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|nlmNAME
-argument_list|(
-name|symbol_type
-argument_list|)
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|nlm_alpha_write_import
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|asection
-operator|*
-operator|,
-name|arelent
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|nlm_alpha_set_public_section
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|nlmNAME
-argument_list|(
-name|symbol_type
-argument_list|)
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_vma
-name|nlm_alpha_get_public_offset
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|asymbol
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|nlm_alpha_write_external
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|bfd_size_type
-operator|,
-name|asymbol
-operator|*
-operator|,
-expr|struct
-name|reloc_and_sec
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_escape
 end_escape
 
@@ -242,12 +63,10 @@ specifier|static
 name|bfd_boolean
 name|nlm_alpha_backend_object_p
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|nlm32_alpha_external_prefix_header
@@ -260,9 +79,6 @@ if|if
 condition|(
 name|bfd_bread
 argument_list|(
-operator|(
-name|PTR
-operator|)
 operator|&
 name|s
 argument_list|,
@@ -341,12 +157,10 @@ specifier|static
 name|bfd_boolean
 name|nlm_alpha_write_prefix
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|nlm32_alpha_external_prefix_header
@@ -401,9 +215,6 @@ if|if
 condition|(
 name|bfd_bwrite
 argument_list|(
-operator|(
-name|PTR
-operator|)
 operator|&
 name|s
 argument_list|,
@@ -457,746 +268,746 @@ name|HOWTO
 argument_list|(
 name|ALPHA_R_IGNORE
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|0
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|8
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC_relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_dont
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 literal|0
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"IGNORE"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|FALSE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 literal|0
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PCrel_offset.  */
 comment|/* A 32 bit reference to a symbol.  */
 name|HOWTO
 argument_list|(
 name|ALPHA_R_REFLONG
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|32
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC_relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_bitfield
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 literal|0
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"REFLONG"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|TRUE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0xffffffff
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 literal|0xffffffff
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PCrel_offset.  */
 comment|/* A 64 bit reference to a symbol.  */
 name|HOWTO
 argument_list|(
 name|ALPHA_R_REFQUAD
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|4
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|64
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC_relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_bitfield
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 literal|0
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"REFQUAD"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|TRUE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 name|ONES
 argument_list|(
 literal|64
 argument_list|)
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 name|ONES
 argument_list|(
 literal|64
 argument_list|)
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PCrel_offset.  */
 comment|/* A 32 bit GP relative offset.  This is just like REFLONG except      that when the value is used the value of the gp register will be      added in.  */
 name|HOWTO
 argument_list|(
 name|ALPHA_R_GPREL32
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|32
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC_relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_bitfield
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 literal|0
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"GPREL32"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|TRUE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0xffffffff
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 literal|0xffffffff
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PCrel_offset.  */
 comment|/* Used for an instruction that refers to memory off the GP      register.  The offset is 16 bits of the 32 bit instruction.  This      reloc always seems to be against the .lita section.  */
 name|HOWTO
 argument_list|(
 name|ALPHA_R_LITERAL
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|16
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC_relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_signed
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 literal|0
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"LITERAL"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|TRUE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0xffff
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 literal|0xffff
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PCrel_offset.  */
 comment|/* This reloc only appears immediately following a LITERAL reloc.      It identifies a use of the literal.  It seems that the linker can      use this to eliminate a portion of the .lita section.  The symbol      index is special: 1 means the literal address is in the base      register of a memory format instruction; 2 means the literal      address is in the byte offset register of a byte-manipulation      instruction; 3 means the literal address is in the target      register of a jsr instruction.  This does not actually do any      relocation.  */
 name|HOWTO
 argument_list|(
 name|ALPHA_R_LITUSE
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|32
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC_relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_dont
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 literal|0
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"LITUSE"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|FALSE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 literal|0
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PCrel_offset.  */
 comment|/* Load the gp register.  This is always used for a ldah instruction      which loads the upper 16 bits of the gp register.  The next reloc      will be an IGNORE reloc which identifies the location of the lda      instruction which loads the lower 16 bits.  The symbol index of      the GPDISP instruction appears to actually be the number of bytes      between the ldah and lda instructions.  This gives two different      ways to determine where the lda instruction is; I don't know why      both are used.  The value to use for the relocation is the      difference between the GP value and the current location; the      load will always be done against a register holding the current      address.  */
 name|HOWTO
 argument_list|(
 name|ALPHA_R_GPDISP
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|16
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|16
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|TRUE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC_relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_dont
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 literal|0
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"GPDISP"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|TRUE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0xffff
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 literal|0xffff
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|TRUE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PCrel_offset.  */
 comment|/* A 21 bit branch.  The native assembler generates these for      branches within the text segment, and also fills in the PC      relative offset in the instruction.  It seems to me that this      reloc, unlike the others, is not partial_inplace.  */
 name|HOWTO
 argument_list|(
 name|ALPHA_R_BRADDR
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|2
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|21
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|TRUE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC_relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_signed
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 literal|0
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"BRADDR"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|FALSE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 literal|0x1fffff
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PCrel_offset.  */
 comment|/* A hint for a jump to a register.  */
 name|HOWTO
 argument_list|(
 name|ALPHA_R_HINT
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|2
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|14
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC_relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_dont
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 literal|0
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"HINT"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|TRUE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0x3fff
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 literal|0x3fff
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PCrel_offset.  */
 comment|/* 16 bit PC relative offset.  */
 name|HOWTO
 argument_list|(
 name|ALPHA_R_SREL16
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|1
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|16
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|TRUE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC_relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_signed
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 literal|0
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"SREL16"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|TRUE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0xffff
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 literal|0xffff
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PCrel_offset.  */
 comment|/* 32 bit PC relative offset.  */
 name|HOWTO
 argument_list|(
 name|ALPHA_R_SREL32
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|2
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|32
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|TRUE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC_relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_signed
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 literal|0
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"SREL32"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|TRUE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0xffffffff
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 literal|0xffffffff
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PCrel_offset.  */
 comment|/* A 64 bit PC relative offset.  */
 name|HOWTO
 argument_list|(
 name|ALPHA_R_SREL64
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|4
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|64
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|TRUE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC_relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_signed
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 literal|0
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"SREL64"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|TRUE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 name|ONES
 argument_list|(
 literal|64
 argument_list|)
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 name|ONES
 argument_list|(
 literal|64
 argument_list|)
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PCrel_offset.  */
 comment|/* Push a value on the reloc evaluation stack.  */
 name|HOWTO
 argument_list|(
 name|ALPHA_R_OP_PUSH
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|0
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|0
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC_relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_dont
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 literal|0
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"OP_PUSH"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|FALSE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 literal|0
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PCrel_offset.  */
 comment|/* Store the value from the stack at the given address.  Store it in      a bitfield of size r_size starting at bit position r_offset.  */
 name|HOWTO
 argument_list|(
 name|ALPHA_R_OP_STORE
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|4
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|64
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC_relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_dont
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 literal|0
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"OP_STORE"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|FALSE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 name|ONES
 argument_list|(
 literal|64
 argument_list|)
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PCrel_offset.  */
 comment|/* Subtract the reloc address from the value on the top of the      relocation stack.  */
 name|HOWTO
 argument_list|(
 name|ALPHA_R_OP_PSUB
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|0
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|0
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC_relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_dont
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 literal|0
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"OP_PSUB"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|FALSE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 literal|0
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PCrel_offset.  */
 comment|/* Shift the value on the top of the relocation stack right by the      given value.  */
 name|HOWTO
 argument_list|(
 name|ALPHA_R_OP_PRSHIFT
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|0
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|0
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC_relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_dont
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 literal|0
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"OP_PRSHIFT"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|FALSE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 literal|0
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|FALSE
 argument_list|)
 block|,
-comment|/* pcrel_offset */
+comment|/* PCrel_offset.  */
 comment|/* Adjust the GP value for a new range in the object file.  */
 name|HOWTO
 argument_list|(
 argument|ALPHA_R_GPVALUE
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|0
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|0
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 argument|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC_relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 argument|complain_overflow_dont
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 literal|0
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"GPVALUE"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 argument|FALSE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 literal|0
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 argument|FALSE
 argument_list|)
-comment|/* pcrel_offset */
+comment|/* PCrel_offset.  */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1210,47 +1021,47 @@ name|HOWTO
 argument_list|(
 name|ALPHA_R_NW_RELOC
 argument_list|,
-comment|/* type */
+comment|/* Type.  */
 literal|0
 argument_list|,
-comment|/* rightshift */
+comment|/* Rightshift.  */
 literal|0
 argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
+comment|/* Size (0 = byte, 1 = short, 2 = long).  */
 literal|0
 argument_list|,
-comment|/* bitsize */
+comment|/* Bitsize.  */
 name|FALSE
 argument_list|,
-comment|/* pc_relative */
+comment|/* PC_relative.  */
 literal|0
 argument_list|,
-comment|/* bitpos */
+comment|/* Bitpos.  */
 name|complain_overflow_dont
 argument_list|,
-comment|/* complain_on_overflow */
+comment|/* Complain_on_overflow.  */
 literal|0
 argument_list|,
-comment|/* special_function */
+comment|/* Special_function.  */
 literal|"NW_RELOC"
 argument_list|,
-comment|/* name */
+comment|/* Name.  */
 name|FALSE
 argument_list|,
-comment|/* partial_inplace */
+comment|/* Partial_inplace.  */
 literal|0
 argument_list|,
-comment|/* src_mask */
+comment|/* Source mask.  */
 literal|0
 argument_list|,
-comment|/* dst_mask */
+comment|/* Dest mask.  */
 name|FALSE
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* pcrel_offset */
+comment|/* PCrel_offset.  */
 end_comment
 
 begin_comment
@@ -1262,46 +1073,26 @@ specifier|static
 name|bfd_boolean
 name|nlm_alpha_read_reloc
 argument_list|(
-name|abfd
-argument_list|,
-name|sym
-argument_list|,
-name|secp
-argument_list|,
-name|rel
-argument_list|)
 name|bfd
-modifier|*
+operator|*
 name|abfd
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
+argument_list|,
 name|nlmNAME
 argument_list|(
 name|symbol_type
 argument_list|)
 operator|*
 name|sym
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+argument_list|,
 name|asection
-modifier|*
-modifier|*
+operator|*
+operator|*
 name|secp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+argument_list|,
 name|arelent
-modifier|*
+operator|*
 name|rel
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+argument_list|)
 block|{
 specifier|static
 name|bfd_vma
@@ -1644,12 +1435,9 @@ name|ALPHA_R_NW_RELOC
 operator|||
 name|r_vaddr
 operator|<
-name|bfd_section_size
-argument_list|(
-name|abfd
-argument_list|,
 name|code_sec
-argument_list|)
+operator|->
+name|size
 condition|)
 block|{
 operator|*
@@ -1677,12 +1465,9 @@ name|address
 operator|=
 name|r_vaddr
 operator|-
-name|bfd_section_size
-argument_list|(
-name|abfd
-argument_list|,
 name|code_sec
-argument_list|)
+operator|->
+name|size
 expr_stmt|;
 block|}
 comment|/* We must adjust the addend based on the type.  */
@@ -1956,7 +1741,7 @@ return|return
 name|TRUE
 return|;
 block|}
-end_block
+end_decl_stmt
 
 begin_comment
 comment|/* Mangle Alpha NLM relocs for output.  */
@@ -1967,39 +1752,30 @@ specifier|static
 name|bfd_boolean
 name|nlm_alpha_mangle_relocs
 parameter_list|(
-name|abfd
-parameter_list|,
-name|sec
-parameter_list|,
-name|data
-parameter_list|,
-name|offset
-parameter_list|,
-name|count
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|sec
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 specifier|const
-name|PTR
+name|void
+modifier|*
 name|data
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|bfd_vma
 name|offset
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|bfd_size_type
 name|count
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|TRUE
@@ -2008,7 +1784,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Read an ALPHA NLM import record */
+comment|/* Read an ALPHA NLM import record.  */
 end_comment
 
 begin_decl_stmt
@@ -2016,50 +1792,40 @@ specifier|static
 name|bfd_boolean
 name|nlm_alpha_read_import
 argument_list|(
+name|bfd
+operator|*
 name|abfd
 argument_list|,
-name|sym
-argument_list|)
-name|bfd
-modifier|*
-name|abfd
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
 name|nlmNAME
 argument_list|(
 name|symbol_type
 argument_list|)
 operator|*
 name|sym
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+argument_list|)
 block|{
 name|struct
 name|nlm_relent
 modifier|*
 name|nlm_relocs
 decl_stmt|;
-comment|/* relocation records for symbol */
+comment|/* Relocation records for symbol.  */
 name|bfd_size_type
 name|rcount
 decl_stmt|;
-comment|/* number of relocs */
+comment|/* Number of relocs.  */
 name|bfd_byte
 name|temp
 index|[
 name|NLM_TARGET_LONG_SIZE
 index|]
 decl_stmt|;
-comment|/* temporary 32-bit value */
+comment|/* Temporary 32-bit value.  */
 name|unsigned
 name|char
 name|symlength
 decl_stmt|;
-comment|/* length of symbol name */
+comment|/* Length of symbol name.  */
 name|char
 modifier|*
 name|name
@@ -2071,9 +1837,6 @@ if|if
 condition|(
 name|bfd_bread
 argument_list|(
-operator|(
-name|PTR
-operator|)
 operator|&
 name|symlength
 argument_list|,
@@ -2189,9 +1952,6 @@ if|if
 condition|(
 name|bfd_bread
 argument_list|(
-operator|(
-name|PTR
-operator|)
 name|temp
 argument_list|,
 operator|(
@@ -2234,11 +1994,6 @@ argument_list|)
 expr_stmt|;
 name|nlm_relocs
 operator|=
-operator|(
-expr|struct
-name|nlm_relent
-operator|*
-operator|)
 name|bfd_alloc
 argument_list|(
 name|abfd
@@ -2319,7 +2074,7 @@ return|return
 name|TRUE
 return|;
 block|}
-end_block
+end_decl_stmt
 
 begin_comment
 comment|/* Write an Alpha NLM reloc.  */
@@ -2330,24 +2085,18 @@ specifier|static
 name|bfd_boolean
 name|nlm_alpha_write_import
 parameter_list|(
-name|abfd
-parameter_list|,
-name|sec
-parameter_list|,
-name|rel
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|sec
-decl_stmt|;
+parameter_list|,
 name|arelent
 modifier|*
 name|rel
-decl_stmt|;
+parameter_list|)
 block|{
 name|asymbol
 modifier|*
@@ -2422,17 +2171,14 @@ literal|0
 condition|)
 name|r_vaddr
 operator|+=
-name|bfd_section_size
-argument_list|(
-name|abfd
-argument_list|,
 name|bfd_get_section_by_name
 argument_list|(
 name|abfd
 argument_list|,
 name|NLM_CODE_NAME
 argument_list|)
-argument_list|)
+operator|->
+name|size
 expr_stmt|;
 if|if
 condition|(
@@ -2566,7 +2312,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* r_type == ALPHA_R_NW_RELOC */
+comment|/* r_type == ALPHA_R_NW_RELOC.  */
 name|r_vaddr
 operator|=
 name|rel
@@ -2761,27 +2507,17 @@ specifier|static
 name|bfd_boolean
 name|nlm_alpha_set_public_section
 argument_list|(
+name|bfd
+operator|*
 name|abfd
 argument_list|,
-name|sym
-argument_list|)
-name|bfd
-modifier|*
-name|abfd
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
 name|nlmNAME
 argument_list|(
 name|symbol_type
 argument_list|)
 operator|*
 name|sym
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+argument_list|)
 block|{
 name|asection
 modifier|*
@@ -2816,12 +2552,9 @@ name|symbol
 operator|.
 name|value
 operator|<
-name|bfd_section_size
-argument_list|(
-name|abfd
-argument_list|,
 name|code_sec
-argument_list|)
+operator|->
+name|size
 condition|)
 block|{
 name|sym
@@ -2857,23 +2590,17 @@ name|symbol
 operator|.
 name|value
 operator|-=
-name|bfd_section_size
-argument_list|(
-name|abfd
-argument_list|,
 name|code_sec
-argument_list|)
+operator|->
+name|size
 expr_stmt|;
 comment|/* The data segment had better be aligned.  */
 name|BFD_ASSERT
 argument_list|(
 operator|(
-name|bfd_section_size
-argument_list|(
-name|abfd
-argument_list|,
 name|code_sec
-argument_list|)
+operator|->
+name|size
 operator|&
 literal|0xf
 operator|)
@@ -2886,7 +2613,7 @@ return|return
 name|TRUE
 return|;
 block|}
-end_block
+end_decl_stmt
 
 begin_comment
 comment|/* Get the offset to write out for a public symbol.  */
@@ -2897,19 +2624,15 @@ specifier|static
 name|bfd_vma
 name|nlm_alpha_get_public_offset
 parameter_list|(
-name|abfd
-parameter_list|,
-name|sym
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|asymbol
 modifier|*
 name|sym
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|bfd_asymbol_value
@@ -2932,30 +2655,22 @@ specifier|static
 name|bfd_boolean
 name|nlm_alpha_write_external
 parameter_list|(
-name|abfd
-parameter_list|,
-name|count
-parameter_list|,
-name|sym
-parameter_list|,
-name|relocs
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|bfd_size_type
 name|count
-decl_stmt|;
+parameter_list|,
 name|asymbol
 modifier|*
 name|sym
-decl_stmt|;
+parameter_list|,
 name|struct
 name|reloc_and_sec
 modifier|*
 name|relocs
-decl_stmt|;
+parameter_list|)
 block|{
 name|bfd_size_type
 name|i
@@ -3109,10 +2824,6 @@ name|nlm_alpha_write_import
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|asection
-operator|*
-operator|)
 name|NULL
 argument_list|,
 operator|&
@@ -3146,10 +2857,6 @@ name|nlm_alpha_write_import
 argument_list|(
 name|abfd
 argument_list|,
-operator|(
-name|asection
-operator|*
-operator|)
 name|NULL
 argument_list|,
 operator|&
@@ -3172,7 +2879,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 if|if
 condition|(
 operator|!
@@ -3198,7 +2904,6 @@ condition|)
 return|return
 name|FALSE
 return|;
-block|}
 return|return
 name|TRUE
 return|;
@@ -3238,7 +2943,7 @@ literal|0
 block|,
 name|TRUE
 block|,
-comment|/* no uninitialized data permitted by Alpha NetWare.  */
+comment|/* No uninitialized data permitted by Alpha NetWare.  */
 name|nlm_alpha_backend_object_p
 block|,
 name|nlm_alpha_write_prefix
@@ -3263,7 +2968,7 @@ name|nlm_alpha_write_external
 block|,
 literal|0
 block|,
-comment|/* write_export */
+comment|/* Write_export.  */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3279,14 +2984,14 @@ begin_define
 define|#
 directive|define
 name|TARGET_LITTLE_SYM
-value|nlmNAME(alpha_vec)
+value|nlmNAME (alpha_vec)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TARGET_BACKEND_DATA
-value|&nlm32_alpha_backend
+value|& nlm32_alpha_backend
 end_define
 
 begin_include

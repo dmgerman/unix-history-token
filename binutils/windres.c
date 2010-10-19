@@ -1,11 +1,46 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* windres.c -- a program to manipulate Windows resources    Copyright 1997, 1998, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* windres.c -- a program to manipulate Windows resources    Copyright 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_comment
 comment|/* This program can read and write Windows resources in various    formats.  In particular, it can act like the rc resource compiler    program, and it can act like the cvtres res to COFF conversion    program.     It is based on information taken from the following sources:     * Microsoft documentation.     * The rcl program, written by Gunther Ebert<gunther.ebert@ixos-leipzig.de>.     * The res2coff program, written by Pedro A. Aranda<paag@tid.es>.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_UNISTD_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<assert.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
 
 begin_include
 include|#
@@ -47,18 +82,6 @@ begin_include
 include|#
 directive|include
 file|"windres.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<assert.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<time.h>
 end_include
 
 begin_comment
@@ -2747,7 +2770,7 @@ name|fatal
 argument_list|(
 name|_
 argument_list|(
-literal|"can not determine type of file `%s'; use the -I option"
+literal|"can not determine type of file `%s'; use the -J option"
 argument_list|)
 argument_list|,
 name|filename
@@ -2820,7 +2843,7 @@ name|stream
 argument_list|,
 name|_
 argument_list|(
-literal|"\   -r                           Ignored for compatibility with rc\n\   -h --help                    Print this help message\n\   -V --version                 Print version information\n"
+literal|"\   -r                           Ignored for compatibility with rc\n\   @<file>                      Read options from<file>\n\   -h --help                    Print this help message\n\   -V --version                 Print version information\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3380,6 +3403,15 @@ expr_stmt|;
 name|xmalloc_set_program_name
 argument_list|(
 name|program_name
+argument_list|)
+expr_stmt|;
+name|expandargv
+argument_list|(
+operator|&
+name|argc
+argument_list|,
+operator|&
+name|argv
 argument_list|)
 expr_stmt|;
 name|bfd_init

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-mn10300.c -- Assembler code for the Matsushita 10300    Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* tc-mn10300.c -- Assembler code for the Matsushita 10300    Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,    2006  Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 51 Franklin Street - Fifth Floor,    Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -146,6 +146,7 @@ name|md_relax_table
 index|[]
 init|=
 block|{
+comment|/* The plus values for the bCC and fBCC instructions in the table below      are because the branch instruction is translated into a jump      instruction that is now +2 or +3 bytes further on in memory, and the      correct size of jump instruction must be selected.  */
 comment|/* bCC relaxing  */
 block|{
 literal|0x7f
@@ -160,9 +161,13 @@ block|}
 block|,
 block|{
 literal|0x7fff
+operator|+
+literal|2
 block|,
 operator|-
 literal|0x8000
+operator|+
+literal|2
 block|,
 literal|5
 block|,
@@ -180,7 +185,7 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* bCC relaxing (uncommon cases)  */
+comment|/* bCC relaxing (uncommon cases for 3byte length instructions)  */
 block|{
 literal|0x7f
 block|,
@@ -194,9 +199,13 @@ block|}
 block|,
 block|{
 literal|0x7fff
+operator|+
+literal|3
 block|,
 operator|-
 literal|0x8000
+operator|+
+literal|3
 block|,
 literal|6
 block|,
@@ -308,9 +317,13 @@ block|}
 block|,
 block|{
 literal|0x7fff
+operator|+
+literal|3
 block|,
 operator|-
 literal|0x8000
+operator|+
+literal|3
 block|,
 literal|6
 block|,
@@ -7956,6 +7969,19 @@ operator|>
 literal|0
 condition|)
 block|{
+comment|/* On a 64-bit host the size of an 'int' is not the same 	 as the size of a pointer, so we need a union to convert 	 the opindex field of the fr_cgen structure into a char * 	 so that it can be stored in the frag.  We do not have 	 to worry about loosing accuracy as we are not going to 	 be even close to the 32bit limit of the int.  */
+union|union
+block|{
+name|int
+name|opindex
+decl_stmt|;
+name|char
+modifier|*
+name|ptr
+decl_stmt|;
+block|}
+name|opindex_converter
+union|;
 name|int
 name|type
 decl_stmt|;
@@ -8068,6 +8094,17 @@ name|type
 operator|=
 literal|3
 expr_stmt|;
+name|opindex_converter
+operator|.
+name|opindex
+operator|=
+name|fixups
+index|[
+literal|0
+index|]
+operator|.
+name|opindex
+expr_stmt|;
 name|f
 operator|=
 name|frag_var
@@ -8100,16 +8137,9 @@ name|exp
 operator|.
 name|X_add_number
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|fixups
-index|[
-literal|0
-index|]
+name|opindex_converter
 operator|.
-name|opindex
+name|ptr
 argument_list|)
 expr_stmt|;
 comment|/* This is pretty hokey.  We basically just care about the 	 opcode, so we have to write out the first word big endian.  	 The exception is "call", which has two operands that we 	 care about.  	 The first operand (the register list) happens to be in the 	 first instruction word, and will be in the right place if 	 we output the first word in big endian mode.  	 The second operand (stack size) is in the extension word, 	 and we want it to appear as the first character in the extension 	 word (as it appears in memory).  Luckily, writing the extension 	 word in big endian format will do what we want.  */
@@ -10191,7 +10221,7 @@ end_function
 
 begin_function
 name|void
-name|md_apply_fix3
+name|md_apply_fix
 parameter_list|(
 name|fixP
 parameter_list|,
@@ -10260,7 +10290,7 @@ condition|)
 name|abort
 argument_list|()
 expr_stmt|;
-comment|/* The value we are passed in *valuep includes the symbol values.      Since we are using BFD_ASSEMBLER, if we are doing this relocation      the code in write.c is going to call bfd_install_relocation, which      is also going to use the symbol value.  That means that if the      reloc is fully resolved we want to use *valuep since      bfd_install_relocation is not being used.       However, if the reloc is not fully resolved we do not want to use      *valuep, and must use fx_offset instead.  However, if the reloc      is PC relative, we do want to use *valuep since it includes the      result of md_pcrel_from.  */
+comment|/* The value we are passed in *valuep includes the symbol values.      If we are doing this relocation the code in write.c is going to      call bfd_install_relocation, which is also going to use the symbol      value.  That means that if the reloc is fully resolved we want to      use *valuep since bfd_install_relocation is not being used.       However, if the reloc is not fully resolved we do not want to use      *valuep, and must use fx_offset instead.  However, if the reloc      is PC relative, we do want to use *valuep since it includes the      result of md_pcrel_from.  */
 if|if
 condition|(
 name|fixP
@@ -10489,6 +10519,49 @@ condition|)
 return|return
 literal|0
 return|;
+comment|/* Likewise, do not adjust symbols that won't be merged, or debug      symbols, because they too break relaxation.  We do want to adjust      other mergable symbols, like .rodata, because code relaxations      need section-relative symbols to properly relax them.  */
+if|if
+condition|(
+operator|!
+operator|(
+name|S_GET_SEGMENT
+argument_list|(
+name|fixp
+operator|->
+name|fx_addsy
+argument_list|)
+operator|->
+name|flags
+operator|&
+name|SEC_MERGE
+operator|)
+condition|)
+return|return
+literal|0
+return|;
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|S_GET_SEGMENT
+argument_list|(
+name|fixp
+operator|->
+name|fx_addsy
+argument_list|)
+operator|->
+name|name
+argument_list|,
+literal|".debug"
+argument_list|,
+literal|6
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+literal|0
+return|;
 return|return
 literal|1
 return|;
@@ -10677,68 +10750,30 @@ name|offsetT
 operator|)
 name|max
 condition|)
-block|{
-specifier|const
-name|char
-modifier|*
-name|err
-init|=
+name|as_warn_value_out_of_range
+argument_list|(
 name|_
 argument_list|(
-literal|"operand out of range (%s not between %ld and %ld)"
+literal|"operand"
 argument_list|)
-decl_stmt|;
-name|char
-name|buf
-index|[
-literal|100
-index|]
-decl_stmt|;
-name|sprint_value
-argument_list|(
-name|buf
 argument_list|,
 name|test
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|file
-operator|==
+argument_list|,
 operator|(
-name|char
-operator|*
+name|offsetT
 operator|)
-name|NULL
-condition|)
-name|as_warn
-argument_list|(
-name|err
-argument_list|,
-name|buf
-argument_list|,
 name|min
 argument_list|,
+operator|(
+name|offsetT
+operator|)
 name|max
-argument_list|)
-expr_stmt|;
-else|else
-name|as_warn_where
-argument_list|(
+argument_list|,
 name|file
 argument_list|,
 name|line
-argument_list|,
-name|err
-argument_list|,
-name|buf
-argument_list|,
-name|min
-argument_list|,
-name|max
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -11530,6 +11565,8 @@ name|name
 parameter_list|,
 name|exprP
 parameter_list|,
+name|mode
+parameter_list|,
 name|nextcharP
 parameter_list|)
 name|char
@@ -11540,6 +11577,10 @@ decl_stmt|;
 name|expressionS
 modifier|*
 name|exprP
+decl_stmt|;
+name|enum
+name|expr_mode
+name|mode
 decl_stmt|;
 name|char
 modifier|*
@@ -11612,6 +11653,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|mode
+operator|!=
+name|expr_defer
+operator|&&
 name|segment
 operator|==
 name|absolute_section
@@ -11644,6 +11689,10 @@ block|}
 elseif|else
 if|if
 condition|(
+name|mode
+operator|!=
+name|expr_defer
+operator|&&
 name|segment
 operator|==
 name|reg_section

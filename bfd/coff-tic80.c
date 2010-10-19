@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for Texas Instruments TMS320C80 Multimedia Video Processor (MVP).    Copyright 1996, 1997, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.     Written by Fred Fish (fnf@cygnus.com)     There is nothing new under the sun. This file draws a lot on other    coff files.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for Texas Instruments TMS320C80 Multimedia Video Processor (MVP).    Copyright 1996, 1997, 1999, 2000, 2001, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.     Written by Fred Fish (fnf@cygnus.com)     There is nothing new under the sun. This file draws a lot on other    coff files.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -26,6 +26,31 @@ include|#
 directive|include
 file|"libbfd.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_CONST
+end_ifdef
+
+begin_comment
+comment|/* Newlib-based hosts define _CONST as a STDC-safe alias for const,   but to the tic80 toolchain it means something altogether different.   Since sysdep.h will have pulled in stdio.h and hence _ansi.h which   contains this definition, we must undef it before including the    tic80-specific definition. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|_CONST
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _CONST */
+end_comment
 
 begin_include
 include|#
@@ -2596,13 +2621,12 @@ call|)
 argument_list|(
 name|_
 argument_list|(
-literal|"%s: bad reloc address 0x%lx in section `%s'"
+literal|"%B: bad reloc address 0x%lx in section `%A'"
 argument_list|)
 argument_list|,
-name|bfd_archive_filename
-argument_list|(
 name|input_bfd
-argument_list|)
+argument_list|,
+name|input_section
 argument_list|,
 operator|(
 name|unsigned
@@ -2611,13 +2635,6 @@ operator|)
 name|rel
 operator|->
 name|r_vaddr
-argument_list|,
-name|bfd_get_section_name
-argument_list|(
-name|input_bfd
-argument_list|,
-name|input_section
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2660,13 +2677,7 @@ name|NULL
 condition|)
 name|name
 operator|=
-name|h
-operator|->
-name|root
-operator|.
-name|root
-operator|.
-name|string
+name|NULL
 expr_stmt|;
 else|else
 block|{
@@ -2705,6 +2716,17 @@ name|reloc_overflow
 call|)
 argument_list|(
 name|info
+argument_list|,
+operator|(
+name|h
+condition|?
+operator|&
+name|h
+operator|->
+name|root
+else|:
+name|NULL
+operator|)
 argument_list|,
 name|name
 argument_list|,
@@ -2745,6 +2767,25 @@ end_function
 
 begin_escape
 end_escape
+
+begin_comment
+comment|/* Clear the r_reserved field in relocs.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SWAP_OUT_RELOC_EXTRA
+parameter_list|(
+name|abfd
+parameter_list|,
+name|src
+parameter_list|,
+name|dst
+parameter_list|)
+define|\
+value|do \     { \       dst->r_reserved[0] = 0; \       dst->r_reserved[1] = 0; \     } \   while (0)
+end_define
 
 begin_define
 define|#

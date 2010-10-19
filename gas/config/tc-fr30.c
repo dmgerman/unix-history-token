@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-fr30.c -- Assembler for the Fujitsu FR30.    Copyright 1998, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* tc-fr30.c -- Assembler for the Fujitsu FR30.    Copyright 1998, 1999, 2000, 2001, 2002, 2003, 2005    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 51 Franklin Street - Fifth Floor,    Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -240,19 +240,15 @@ begin_function
 name|int
 name|md_parse_option
 parameter_list|(
-name|c
-parameter_list|,
-name|arg
-parameter_list|)
 name|int
 name|c
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|arg
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 switch|switch
 condition|(
@@ -274,12 +270,10 @@ begin_function
 name|void
 name|md_show_usage
 parameter_list|(
-name|stream
-parameter_list|)
 name|FILE
 modifier|*
 name|stream
-decl_stmt|;
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(
@@ -330,7 +324,9 @@ end_escape
 begin_function
 name|void
 name|md_begin
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|/* Initialize the `cgen' interface.  */
 comment|/* Set the machine number and endian.  */
@@ -369,12 +365,10 @@ begin_function
 name|void
 name|md_assemble
 parameter_list|(
-name|str
-parameter_list|)
 name|char
 modifier|*
 name|str
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|int
@@ -506,12 +500,10 @@ begin_function
 name|void
 name|md_operand
 parameter_list|(
-name|expressionP
-parameter_list|)
 name|expressionS
 modifier|*
 name|expressionP
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -537,16 +529,12 @@ begin_function
 name|valueT
 name|md_section_align
 parameter_list|(
-name|segment
-parameter_list|,
-name|size
-parameter_list|)
 name|segT
 name|segment
-decl_stmt|;
+parameter_list|,
 name|valueT
 name|size
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|align
@@ -588,16 +576,14 @@ name|symbolS
 modifier|*
 name|md_undefined_symbol
 parameter_list|(
-name|name
-parameter_list|)
 name|char
 modifier|*
 name|name
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
-literal|0
+name|NULL
 return|;
 block|}
 end_function
@@ -692,33 +678,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-unit|long fr30_relax_frag (segment, fragP, stretch)      segT    segment;      fragS * fragP;      long    stretch; {
-comment|/* Address of branch insn.  */
-end_comment
-
-begin_comment
-unit|long address = fragP->fr_address + fragP->fr_fix - 2;   long growth = 0;
-comment|/* Keep 32 bit insns aligned on 32 bit boundaries.  */
-end_comment
-
-begin_comment
-unit|if (fragP->fr_subtype == 2)     {       if ((address& 3) != 0) 	{ 	  fragP->fr_subtype = 3; 	  growth = 2; 	}     }   else if (fragP->fr_subtype == 3)     {       if ((address& 3) == 0) 	{ 	  fragP->fr_subtype = 2; 	  growth = -2; 	}     }   else     {       growth = relax_frag (segment, fragP, stretch);
-comment|/* Long jump on odd halfword boundary?  */
-end_comment
-
-begin_endif
-unit|if (fragP->fr_subtype == 2&& (address& 3) != 0) 	{ 	  fragP->fr_subtype = 3; 	  growth += 2; 	}     }    return growth; }
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* Return an initial guess of the length by which a fragment must grow to    hold a branch to reach its destination.    Also updates fr_type/fr_subtype as necessary.     Called just before doing relaxation.    Any symbol that is now undefined will not become defined.    The guess for fr_var is ACTUALLY the growth beyond fr_fix.    Whatever we do to grow fr_fix or fr_var contributes to our returned value.    Although it may not be explicit in the frag, pretend fr_var starts with a    0 value.  */
 end_comment
@@ -727,17 +686,13 @@ begin_function
 name|int
 name|md_estimate_size_before_relax
 parameter_list|(
-name|fragP
-parameter_list|,
-name|segment
-parameter_list|)
 name|fragS
 modifier|*
 name|fragP
-decl_stmt|;
+parameter_list|,
 name|segT
 name|segment
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* The only thing we have to handle here are symbols outside of the      current segment.  They may be undefined or in a different segment in      which case linker scripts may place them anywhere.      However, we can't finish the fragment here and emit the reloc as insn      alignment requirements may move the insn about.  */
 if|if
@@ -752,12 +707,6 @@ operator|!=
 name|segment
 condition|)
 block|{
-if|#
-directive|if
-literal|0
-block|int    old_fr_fix = fragP->fr_fix;
-endif|#
-directive|endif
 comment|/* The symbol is undefined in this segment. 	 Change the relaxation subtype to the max allowable and leave 	 all further handling to md_convert_frag.  */
 name|fragP
 operator|->
@@ -765,24 +714,6 @@ name|fr_subtype
 operator|=
 literal|2
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* Can't use this, but leave in for illustration.  */
-comment|/* Change 16 bit insn to 32 bit insn.  */
-block|fragP->fr_opcode[0] |= 0x80;
-comment|/* Increase known (fixed) size of fragment.  */
-block|fragP->fr_fix += 2;
-comment|/* Create a relocation for it.  */
-block|fix_new (fragP, old_fr_fix, 4, 	       fragP->fr_symbol, 	       fragP->fr_offset, 1
-comment|/* pcrel */
-block|,
-comment|/* FIXME: Can't use a real BFD reloc here. 		  gas_cgen_md_apply_fix3 can't handle it.  */
-block|BFD_RELOC_FR30_26_PCREL);
-comment|/* Mark this fragment as finished.  */
-block|frag_wane (fragP);       return fragP->fr_fix - old_fr_fix;
-else|#
-directive|else
 block|{
 specifier|const
 name|CGEN_INSN
@@ -871,8 +802,6 @@ return|return
 literal|2
 return|;
 block|}
-endif|#
-directive|endif
 block|}
 comment|/* Return the size of the variable part of the frag.  */
 return|return
@@ -896,65 +825,21 @@ begin_function
 name|void
 name|md_convert_frag
 parameter_list|(
-name|abfd
-parameter_list|,
-name|sec
-parameter_list|,
-name|fragP
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|segT
 name|sec
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|fragS
 modifier|*
 name|fragP
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
-block|{
-if|#
-directive|if
-literal|0
-block|char * opcode;   char * displacement;   int    target_address;   int    opcode_address;   int    extension;   int    addend;    opcode = fragP->fr_opcode;
-comment|/* Address opcode resides at in file space.  */
-block|opcode_address = fragP->fr_address + fragP->fr_fix - 2;    switch (fragP->fr_subtype)     {     case 1 :       extension = 0;       displacement =& opcode[1];       break;     case 2 :       opcode[0] |= 0x80;       extension = 2;       displacement =& opcode[1];       break;     case 3 :       opcode[2] = opcode[0] | 0x80;       md_number_to_chars (opcode, PAR_NOP_INSN, 2);       opcode_address += 2;       extension = 4;       displacement =& opcode[3];       break;     default :       abort ();     }    if (S_GET_SEGMENT (fragP->fr_symbol) != sec)     {
-comment|/* symbol must be resolved by linker */
-block|if (fragP->fr_offset& 3) 	as_warn (_("Addend to unresolved symbol not on word boundary."));       addend = fragP->fr_offset>> 2;     }   else     {
-comment|/* Address we want to reach in file space.  */
-block|target_address = S_GET_VALUE (fragP->fr_symbol) + fragP->fr_offset;       addend = (target_address - (opcode_address& -4))>> 2;     }
-comment|/* Create a relocation for symbols that must be resolved by the linker.      Otherwise output the completed insn.  */
-block|if (S_GET_SEGMENT (fragP->fr_symbol) != sec)     {       assert (fragP->fr_subtype != 1);       assert (fragP->fr_cgen.insn != 0);       gas_cgen_record_fixup (fragP,
-comment|/* Offset of branch insn in frag.  */
-block|fragP->fr_fix + extension - 4, 			     fragP->fr_cgen.insn, 			     4
-comment|/*length*/
-block|,
-comment|/* FIXME: quick hack */
-if|#
-directive|if
-literal|0
-block|CGEN_OPERAND_ENTRY (fragP->fr_cgen.opindex),
-else|#
-directive|else
-block|CGEN_OPERAND_ENTRY (FR30_OPERAND_DISP24),
-endif|#
-directive|endif
-block|fragP->fr_cgen.opinfo, 			     fragP->fr_symbol, fragP->fr_offset);     }
-define|#
-directive|define
-name|SIZE_FROM_RELAX_STATE
-parameter_list|(
-name|n
 parameter_list|)
-value|((n) == 1 ? 1 : 3)
-block|md_number_to_chars (displacement, (valueT) addend, 		      SIZE_FROM_RELAX_STATE (fragP->fr_subtype));    fragP->fr_fix += extension;
-endif|#
-directive|endif
-block|}
+block|{ }
 end_function
 
 begin_escape
@@ -972,17 +857,13 @@ begin_function
 name|long
 name|md_pcrel_from_section
 parameter_list|(
-name|fixP
-parameter_list|,
-name|sec
-parameter_list|)
 name|fixS
 modifier|*
 name|fixP
-decl_stmt|;
+parameter_list|,
 name|segT
 name|sec
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1015,12 +896,10 @@ operator|!=
 name|sec
 operator|)
 condition|)
-block|{
-comment|/* The symbol is undefined (or is defined but not in this section). 	 Let the linker figure it out.  */
+comment|/* The symbol is undefined (or is defined but not in this section).        Let the linker figure it out.  */
 return|return
 literal|0
 return|;
-block|}
 return|return
 operator|(
 name|fixP
@@ -1048,27 +927,21 @@ begin_function
 name|bfd_reloc_code_real_type
 name|md_cgen_lookup_reloc
 parameter_list|(
-name|insn
-parameter_list|,
-name|operand
-parameter_list|,
-name|fixP
-parameter_list|)
 specifier|const
 name|CGEN_INSN
 modifier|*
 name|insn
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|CGEN_OPERAND
 modifier|*
 name|operand
-decl_stmt|;
+parameter_list|,
 name|fixS
 modifier|*
 name|fixP
-decl_stmt|;
+parameter_list|)
 block|{
 switch|switch
 condition|(
@@ -1144,7 +1017,7 @@ return|return
 name|BFD_RELOC_FR30_20
 return|;
 default|default :
-comment|/* avoid -Wall warning */
+comment|/* Avoid -Wall warning.  */
 break|break;
 block|}
 return|return
@@ -1164,22 +1037,16 @@ begin_function
 name|void
 name|md_number_to_chars
 parameter_list|(
-name|buf
-parameter_list|,
-name|val
-parameter_list|,
-name|n
-parameter_list|)
 name|char
 modifier|*
 name|buf
-decl_stmt|;
+parameter_list|,
 name|valueT
 name|val
-decl_stmt|;
+parameter_list|,
 name|int
 name|n
-decl_stmt|;
+parameter_list|)
 block|{
 name|number_to_chars_bigendian
 argument_list|(
@@ -1198,7 +1065,7 @@ comment|/* Turn a string in input_line_pointer into a floating point constant of
 end_comment
 
 begin_comment
-comment|/* Equal to MAX_PRECISION in atof-ieee.c */
+comment|/* Equal to MAX_PRECISION in atof-ieee.c.  */
 end_comment
 
 begin_define
@@ -1213,23 +1080,17 @@ name|char
 modifier|*
 name|md_atof
 parameter_list|(
+name|int
 name|type
 parameter_list|,
-name|litP
-parameter_list|,
-name|sizeP
-parameter_list|)
-name|char
-name|type
-decl_stmt|;
 name|char
 modifier|*
 name|litP
-decl_stmt|;
+parameter_list|,
 name|int
 modifier|*
 name|sizeP
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -1379,29 +1240,14 @@ begin_comment
 comment|/* Worker function for fr30_is_colon_insn().  */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|char
-name|restore_colon
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|char
 name|restore_colon
 parameter_list|(
-name|advance_i_l_p_by
-parameter_list|)
 name|int
 name|advance_i_l_p_by
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|c
@@ -1440,12 +1286,10 @@ begin_function
 name|char
 name|fr30_is_colon_insn
 parameter_list|(
-name|start
-parameter_list|)
 name|char
 modifier|*
 name|start
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -1453,7 +1297,7 @@ name|i_l_p
 init|=
 name|input_line_pointer
 decl_stmt|;
-comment|/* Check to see if the symbol parsed so far is 'ldi'  */
+comment|/* Check to see if the symbol parsed so far is 'ldi'.  */
 if|if
 condition|(
 operator|(
@@ -1695,7 +1539,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* Check to see if the text following the colon is '8' */
+comment|/* Check to see if the text following the colon is '8'.  */
 if|if
 condition|(
 name|i_l_p
@@ -1727,7 +1571,7 @@ argument_list|(
 literal|2
 argument_list|)
 return|;
-comment|/* Check to see if the text following the colon is '20' */
+comment|/* Check to see if the text following the colon is '20'.  */
 elseif|else
 if|if
 condition|(
@@ -1767,7 +1611,7 @@ argument_list|(
 literal|3
 argument_list|)
 return|;
-comment|/* Check to see if the text following the colon is '32' */
+comment|/* Check to see if the text following the colon is '32'.  */
 elseif|else
 if|if
 condition|(
@@ -1817,14 +1661,12 @@ begin_function
 name|bfd_boolean
 name|fr30_fix_adjustable
 parameter_list|(
-name|fixP
-parameter_list|)
 name|fixS
 modifier|*
 name|fixP
-decl_stmt|;
+parameter_list|)
 block|{
-comment|/* We need the symbol name for the VTABLE entries */
+comment|/* We need the symbol name for the VTABLE entries.  */
 if|if
 condition|(
 name|fixP

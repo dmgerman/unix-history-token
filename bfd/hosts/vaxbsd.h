@@ -9,37 +9,6 @@ begin_comment
 comment|/* No command name in core file */
 end_comment
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_undef
-undef|#
-directive|undef
-name|ALIGN
-end_undef
-
-begin_comment
-comment|/* They use it, we use it too */
-end_comment
-
-begin_comment
-comment|/* Does not exist on BSD 4.3, it uses machine/machparam.h.    Whatever it is, it's included by<sys/param.h>, which trad-core.c,    the only place that uses this (I think), already includes.  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<machine/param.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_undef
 undef|#
 directive|undef

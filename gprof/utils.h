@@ -11,35 +11,29 @@ directive|define
 name|utils_h
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|print_name_only
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|Sym
-operator|*
+modifier|*
 name|self
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|print_name
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|Sym
-operator|*
+modifier|*
 name|self
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

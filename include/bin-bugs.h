@@ -9,7 +9,7 @@ begin_define
 define|#
 directive|define
 name|REPORT_BUGS_TO
-value|"bug-binutils@gnu.org"
+value|"<URL:http://www.sourceware.org/bugzilla/>"
 end_define
 
 begin_endif

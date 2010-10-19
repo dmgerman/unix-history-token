@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for PPCbug boot records.    Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.    Written by Michael Meissner, Cygnus Support,<meissner@cygnus.com>  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for PPCbug boot records.    Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004    Free Software Foundation, Inc.    Written by Michael Meissner, Cygnus Support,<meissner@cygnus.com>  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -871,7 +871,7 @@ literal|0
 expr_stmt|;
 name|sec
 operator|->
-name|_raw_size
+name|size
 operator|=
 name|statbuf
 operator|.
@@ -1385,7 +1385,7 @@ name|value
 operator|=
 name|sec
 operator|->
-name|_raw_size
+name|size
 expr_stmt|;
 name|syms
 index|[
@@ -1449,7 +1449,7 @@ name|value
 operator|=
 name|sec
 operator|->
-name|_raw_size
+name|size
 expr_stmt|;
 name|syms
 index|[
@@ -1567,6 +1567,14 @@ end_function
 begin_define
 define|#
 directive|define
+name|ppcboot_bfd_is_target_special_symbol
+define|\
+value|((bfd_boolean (*) (bfd *, asymbol *)) bfd_false)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ppcboot_bfd_is_local_label_name
 value|bfd_generic_is_local_label_name
 end_define
@@ -1583,6 +1591,13 @@ define|#
 directive|define
 name|ppcboot_find_nearest_line
 value|_bfd_nosymbols_find_nearest_line
+end_define
+
+begin_define
+define|#
+directive|define
+name|ppcboot_find_inliner_info
+value|_bfd_nosymbols_find_inliner_info
 end_define
 
 begin_define
@@ -2379,8 +2394,23 @@ end_define
 begin_define
 define|#
 directive|define
+name|ppcboot_bfd_is_group_section
+value|bfd_generic_is_group_section
+end_define
+
+begin_define
+define|#
+directive|define
 name|ppcboot_bfd_discard_group
 value|bfd_generic_discard_group
+end_define
+
+begin_define
+define|#
+directive|define
+name|ppcboot_section_already_linked
+define|\
+value|_bfd_generic_section_already_linked
 end_define
 
 begin_define
@@ -2459,6 +2489,13 @@ define|#
 directive|define
 name|ppcboot_bfd_copy_private_symbol_data
 value|_bfd_generic_bfd_copy_private_symbol_data
+end_define
+
+begin_define
+define|#
+directive|define
+name|ppcboot_bfd_copy_private_header_data
+value|_bfd_generic_bfd_copy_private_header_data
 end_define
 
 begin_define

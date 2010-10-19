@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD i370 CPU definition    Copyright 1994, 1995, 1996, 1998, 1999, 2000, 2002    Free Software Foundation, Inc.    Contributed by Ian Lance Taylor, Cygnus Support.    Hacked by Linas Vepstas<linas@linas.org> in 1998, 1999  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD i370 CPU definition    Copyright 1994, 1995, 1996, 1998, 1999, 2000, 2002, 2005    Free Software Foundation, Inc.    Contributed by Ian Lance Taylor, Cygnus Support.    Hacked by Linas Vepstas<linas@linas.org> in 1998, 1999     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston,    MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -29,22 +29,22 @@ name|arch_info_struct
 index|[]
 init|=
 block|{
-comment|/* hack alert: old old machines are really 16 and 24 bit arch ...  */
+comment|/* Hack alert: old old machines are really 16 and 24 bit arch ...  */
 block|{
 literal|32
 block|,
-comment|/* 32 bits in a word */
+comment|/* 32 bits in a word.  */
 literal|32
 block|,
-comment|/* 32 bits in an address */
+comment|/* 32 bits in an address.  */
 literal|8
 block|,
-comment|/* 8 bits in a byte */
+comment|/* 8 bits in a byte.  */
 name|bfd_arch_i370
 block|,
 literal|360
 block|,
-comment|/* for the 360 */
+comment|/* For the 360.  */
 literal|"i370"
 block|,
 literal|"i370:360"
@@ -53,7 +53,7 @@ literal|3
 block|,
 name|FALSE
 block|,
-comment|/* not the default */
+comment|/* Not the default.  */
 name|bfd_default_compatible
 block|,
 name|bfd_default_scan
@@ -68,18 +68,18 @@ block|,
 block|{
 literal|32
 block|,
-comment|/* 32 bits in a word */
+comment|/* 32 bits in a word.  */
 literal|32
 block|,
-comment|/* 32 bits in an address */
+comment|/* 32 bits in an address.  */
 literal|8
 block|,
-comment|/* 8 bits in a byte */
+comment|/* 8 bits in a byte.  */
 name|bfd_arch_i370
 block|,
 literal|370
 block|,
-comment|/* for the 370 */
+comment|/* For the 370.  */
 literal|"i370"
 block|,
 literal|"i370:370"
@@ -88,7 +88,7 @@ literal|3
 block|,
 name|FALSE
 block|,
-comment|/* not the default */
+comment|/* Not the default.  */
 name|bfd_default_compatible
 block|,
 name|bfd_default_scan
@@ -107,18 +107,18 @@ init|=
 block|{
 literal|32
 block|,
-comment|/* 32 bits in a word */
+comment|/* 32 bits in a word.  */
 literal|32
 block|,
-comment|/* 32 bits in an address */
+comment|/* 32 bits in an address.  */
 literal|8
 block|,
-comment|/* 8 bits in a byte */
+comment|/* 8 bits in a byte.  */
 name|bfd_arch_i370
 block|,
 literal|0
 block|,
-comment|/* for the 360/370 common architecture */
+comment|/* For the 360/370 common architecture.  */
 literal|"i370"
 block|,
 literal|"i370:common"
@@ -127,7 +127,7 @@ literal|3
 block|,
 name|TRUE
 block|,
-comment|/* the default */
+comment|/* The default.  */
 name|bfd_default_compatible
 block|,
 name|bfd_default_scan

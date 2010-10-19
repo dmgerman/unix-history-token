@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-tic54x.h -- Header file for tc-tic54x.c    Copyright 1999, 2000, 2001 Free Software Foundation, Inc.    Contributed by Timothy Wall (twall@alum.mit.edu)     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* tc-tic54x.h -- Header file for tc-tic54x.c    Copyright 1999, 2000, 2001 Free Software Foundation, Inc.    Contributed by Timothy Wall (twall@alum.mit.edu)     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -44,13 +44,6 @@ define|#
 directive|define
 name|TARGET_ARCH
 value|bfd_arch_tic54x
-end_define
-
-begin_define
-define|#
-directive|define
-name|BFD_ARCH
-value|TARGET_ARCH
 end_define
 
 begin_define
@@ -123,16 +116,6 @@ define|#
 directive|define
 name|KEEP_WHITE_AROUND_COLON
 value|1
-end_define
-
-begin_comment
-comment|/* We need the extra field in the fixup struct to put the relocation in.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NEED_FX_R_TYPE
 end_define
 
 begin_struct
@@ -343,6 +326,8 @@ name|s
 parameter_list|,
 name|e
 parameter_list|,
+name|m
+parameter_list|,
 name|c
 parameter_list|)
 value|tic54x_parse_name(s,e)
@@ -433,6 +418,12 @@ parameter_list|)
 value|tic54x_macro_info(args)
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|macro_struct
+struct_decl|;
+end_struct_decl
+
 begin_decl_stmt
 specifier|extern
 name|void
@@ -440,9 +431,10 @@ name|tic54x_macro_info
 name|PARAMS
 argument_list|(
 operator|(
-name|void
+specifier|const
+expr|struct
+name|macro_struct
 operator|*
-name|macro
 operator|)
 argument_list|)
 decl_stmt|;

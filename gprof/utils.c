@@ -53,12 +53,10 @@ begin_function
 name|int
 name|print_name_only
 parameter_list|(
-name|self
-parameter_list|)
 name|Sym
 modifier|*
 name|self
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|char
@@ -312,12 +310,10 @@ begin_function
 name|void
 name|print_name
 parameter_list|(
-name|self
-parameter_list|)
 name|Sym
 modifier|*
 name|self
-decl_stmt|;
+parameter_list|)
 block|{
 name|print_name_only
 argument_list|(

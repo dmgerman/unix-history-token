@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for OpenRISC 1000 COFF binaries.    Copyright 2002, 2003 Free Software Foundation, Inc.    Contributed by Ivan Guzvinec<ivang@opencores.org>     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for OpenRISC 1000 COFF binaries.    Copyright 2002, 2003, 2004, 2005 Free Software Foundation, Inc.    Contributed by Ivan Guzvinec<ivang@opencores.org>     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_define
@@ -593,19 +593,7 @@ name|reloc_entry
 operator|->
 name|addend
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if ((signed_value& ~0x3ffff) == 0)         {
-comment|/* Absolute jmp/call.  */
-block|insn |= (1<<24);
-comment|/* Make it absolute.  */
-comment|/* FIXME: Should we change r_type to R_IABS.  */
-block|}       else
-endif|#
-directive|endif
-block|{
-comment|/* Relative jmp/call, so subtract from the value the              address of the place we're coming from.  */
+comment|/* Relative jmp/call, so subtract from the value the 	 address of the place we're coming from.  */
 name|signed_value
 operator|-=
 operator|(
@@ -638,7 +626,6 @@ condition|)
 return|return
 name|bfd_reloc_overflow
 return|;
-block|}
 name|signed_value
 operator|>>=
 literal|2
@@ -2046,15 +2033,6 @@ name|signed_value
 operator|+=
 name|val
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if ((signed_value& ~0x3ffff) == 0)             {
-comment|/* We can use an absolute jump.  */
-block|insn |= (1<< 24);             }           else
-endif|#
-directive|endif
-block|{
 comment|/* Make the destination PC relative.  */
 name|signed_value
 operator|-=
@@ -2100,7 +2078,6 @@ name|signed_value
 operator|=
 literal|0
 expr_stmt|;
-block|}
 block|}
 comment|/* Put the adjusted value back into the instruction.  */
 name|signed_value
@@ -2365,13 +2342,7 @@ name|NULL
 condition|)
 name|name
 operator|=
-name|h
-operator|->
-name|root
-operator|.
-name|root
-operator|.
-name|string
+name|NULL
 expr_stmt|;
 elseif|else
 if|if
@@ -2463,6 +2434,17 @@ name|reloc_overflow
 call|)
 argument_list|(
 name|info
+argument_list|,
+operator|(
+name|h
+condition|?
+operator|&
+name|h
+operator|->
+name|root
+else|:
+name|NULL
+operator|)
 argument_list|,
 name|name
 argument_list|,

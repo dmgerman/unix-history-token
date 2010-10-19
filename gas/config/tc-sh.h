@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* This file is tc-sh.h    Copyright 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002,    2003 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* This file is tc-sh.h    Copyright 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002,    2003, 2004, 2005 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 51 Franklin Street - Fifth Floor,    Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_define
@@ -15,12 +15,6 @@ directive|define
 name|TARGET_ARCH
 value|bfd_arch_sh
 end_define
-
-begin_if
-if|#
-directive|if
-name|ANSI_PROTOTYPES
-end_if
 
 begin_comment
 comment|/* The type fixS is defined (to struct fix) in write.h, but write.h uses    definitions from this file.  To avoid problems with including write.h    after the "right" definitions, don't; just forward-declare struct fix    here.  */
@@ -43,11 +37,6 @@ struct_decl|struct
 name|internal_reloc
 struct_decl|;
 end_struct_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Whether -relax was used.  */
@@ -167,43 +156,6 @@ begin_comment
 comment|/* This macro decides whether a particular reloc is an entry in a    switch table.  It is used when relaxing, because the linker needs    to know about all such entries so that it can adjust them if    necessary.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BFD_ASSEMBLER
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|SWITCH_TABLE_CONS
-parameter_list|(
-name|FIX
-parameter_list|)
-value|(0)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|SWITCH_TABLE_CONS
-parameter_list|(
-name|FIX
-parameter_list|)
-define|\
-value|((FIX)->fx_r_type == 0				\&& ((FIX)->fx_size == 2				\        || (FIX)->fx_size == 1				\        || (FIX)->fx_size == 4))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -212,7 +164,7 @@ parameter_list|(
 name|FIX
 parameter_list|)
 define|\
-value|((FIX)->fx_addsy != NULL				\&& (FIX)->fx_subsy != NULL				\&& S_GET_SEGMENT ((FIX)->fx_addsy) == text_section	\&& S_GET_SEGMENT ((FIX)->fx_subsy) == text_section	\&& ((FIX)->fx_r_type == BFD_RELOC_32			\        || (FIX)->fx_r_type == BFD_RELOC_16		\        || (FIX)->fx_r_type == BFD_RELOC_8		\        || SWITCH_TABLE_CONS (FIX)))
+value|((FIX)->fx_addsy != NULL				\&& (FIX)->fx_subsy != NULL				\&& S_GET_SEGMENT ((FIX)->fx_addsy) == text_section	\&& S_GET_SEGMENT ((FIX)->fx_subsy) == text_section	\&& ((FIX)->fx_r_type == BFD_RELOC_32			\        || (FIX)->fx_r_type == BFD_RELOC_16		\        || (FIX)->fx_r_type == BFD_RELOC_8))
 end_define
 
 begin_define
@@ -342,7 +294,8 @@ specifier|extern
 name|void
 name|sh_frob_label
 parameter_list|(
-name|void
+name|symbolS
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -354,7 +307,7 @@ name|tc_frob_label
 parameter_list|(
 name|sym
 parameter_list|)
-value|sh_frob_label ()
+value|sh_frob_label (sym)
 end_define
 
 begin_comment
@@ -379,35 +332,12 @@ parameter_list|()
 value|sh_flush_pending_output ()
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BFD_ASSEMBLER
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|tc_frob_file_before_adjust
 value|sh_frob_file
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|tc_frob_file
-value|sh_frob_file
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|extern
@@ -432,91 +362,9 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DO_NOT_STRIP
-value|0
-end_define
-
-begin_comment
-comment|/* This macro translates between an internal fix and a coff reloc type.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TC_COFF_FIX2RTYPE
-parameter_list|(
-name|fix
-parameter_list|)
-value|((fix)->fx_r_type)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BFD_ARCH
-value|TARGET_ARCH
-end_define
-
-begin_define
-define|#
-directive|define
 name|COFF_MAGIC
 value|(!target_big_endian ? SH_ARCH_MAGIC_LITTLE : SH_ARCH_MAGIC_BIG)
 end_define
-
-begin_comment
-comment|/* We need to write out relocs which have not been completed.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TC_COUNT_RELOC
-parameter_list|(
-name|fix
-parameter_list|)
-value|((fix)->fx_addsy != NULL)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TC_RELOC_MANGLE
-parameter_list|(
-name|seg
-parameter_list|,
-name|fix
-parameter_list|,
-name|int
-parameter_list|,
-name|paddr
-parameter_list|)
-define|\
-value|sh_coff_reloc_mangle ((seg), (fix), (int), (paddr))
-end_define
-
-begin_function_decl
-specifier|extern
-name|void
-name|sh_coff_reloc_mangle
-parameter_list|(
-name|struct
-name|segment_info_struct
-modifier|*
-parameter_list|,
-name|struct
-name|fix
-modifier|*
-parameter_list|,
-name|struct
-name|internal_reloc
-modifier|*
-parameter_list|,
-name|unsigned
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_define
 define|#
@@ -535,43 +383,9 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NEED_FX_R_TYPE
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
 name|TC_KEEP_FX_OFFSET
 value|1
 end_define
-
-begin_define
-define|#
-directive|define
-name|TC_COFF_SIZEMACHDEP
-parameter_list|(
-name|frag
-parameter_list|)
-value|tc_coff_sizemachdep(frag)
-end_define
-
-begin_function_decl
-specifier|extern
-name|int
-name|tc_coff_sizemachdep
-parameter_list|(
-name|fragS
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BFD_ASSEMBLER
-end_ifdef
 
 begin_define
 define|#
@@ -582,26 +396,6 @@ name|SEG
 parameter_list|)
 value|segment_name (SEG)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|SEG_NAME
-parameter_list|(
-name|SEG
-parameter_list|)
-value|obj_segment_name (SEG)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* We align most sections to a 16 byte boundary.  */
@@ -677,6 +471,20 @@ define|#
 directive|define
 name|TARGET_FORMAT
 value|(!target_big_endian ? "elf32-shl-nbsd" : "elf32-sh-nbsd")
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+name|TARGET_SYMBIAN
+end_elif
+
+begin_define
+define|#
+directive|define
+name|TARGET_FORMAT
+value|(!target_big_endian ? "elf32-shl-symbian" : "elf32-sh-symbian")
 end_define
 
 begin_else
@@ -764,7 +572,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Values passed to md_apply_fix3 don't include symbol values.  */
+comment|/* Values passed to md_apply_fix don't include symbol values.  */
 end_comment
 
 begin_define
@@ -847,10 +655,12 @@ name|name
 parameter_list|,
 name|exprP
 parameter_list|,
+name|mode
+parameter_list|,
 name|nextcharP
 parameter_list|)
 define|\
-value|sh_parse_name ((name), (exprP), (nextcharP))
+value|sh_parse_name ((name), (exprP), (mode), (nextcharP))
 end_define
 
 begin_function_decl
@@ -865,6 +675,10 @@ parameter_list|,
 name|expressionS
 modifier|*
 name|exprP
+parameter_list|,
+name|enum
+name|expr_mode
+name|mode
 parameter_list|,
 name|char
 modifier|*

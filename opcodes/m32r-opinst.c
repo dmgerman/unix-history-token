@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Semantic operand instances for m32r.  THIS FILE IS MACHINE GENERATED WITH CGEN.  Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.  This file is part of the GNU Binutils and/or GDB, the GNU debugger.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Semantic operand instances for m32r.  THIS FILE IS MACHINE GENERATED WITH CGEN.  Copyright 1996-2005 Free Software Foundation, Inc.  This file is part of the GNU Binutils and/or GDB, the GNU debugger.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -128,6 +128,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_empty_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -172,6 +173,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_add_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -273,6 +275,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_add3_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -374,6 +377,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_and3_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -475,6 +479,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_or3_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -576,6 +581,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_addi_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -677,6 +683,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_addv_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -794,6 +801,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_addv3_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -911,6 +919,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_addx_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -1044,6 +1053,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_bc8_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -1139,6 +1149,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_bc24_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -1234,6 +1245,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_beq_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -1351,6 +1363,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_beqz_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -1449,6 +1462,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_bl8_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -1560,6 +1574,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_bl24_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -1671,6 +1686,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_bcl8_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -1798,6 +1814,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_bcl24_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -1925,6 +1942,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_bra8_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -2004,6 +2022,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_bra24_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -2083,6 +2102,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_cmp_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -2181,6 +2201,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_cmpi_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -2279,6 +2300,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_cmpz_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -2358,6 +2380,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_div_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -2459,6 +2482,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_jc_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -2554,6 +2578,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_jl_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -2665,6 +2690,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_jmp_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -2744,6 +2770,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_ld_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -2842,6 +2869,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_ld_d_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -2959,6 +2987,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_ldb_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -3057,6 +3086,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_ldb_d_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -3174,6 +3204,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_ldh_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -3272,6 +3303,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_ldh_d_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -3389,6 +3421,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_ld_plus_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -3506,6 +3539,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_ld24_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -3588,6 +3622,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_ldi8_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -3670,6 +3705,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_ldi16_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -3752,6 +3788,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_lock_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -3866,6 +3903,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_machi_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -3980,6 +4018,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_machi_a_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -4100,6 +4139,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_mulhi_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -4198,6 +4238,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_mulhi_a_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -4299,6 +4340,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_mv_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -4381,6 +4423,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_mvfachi_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -4460,6 +4503,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_mvfachi_a_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -4542,6 +4586,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_mvfc_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -4624,6 +4669,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_mvtachi_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -4719,6 +4765,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_mvtachi_a_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -4820,6 +4867,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_mvtc_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -4902,6 +4950,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_nop_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -4946,6 +4995,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_rac_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -5022,6 +5072,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_rac_dsi_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -5123,6 +5174,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_rte_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -5295,6 +5347,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_seth_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -5377,6 +5430,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_sll3_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -5478,6 +5532,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_slli_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -5579,6 +5634,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_st_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -5677,6 +5733,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_st_d_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -5794,6 +5851,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_stb_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -5892,6 +5950,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_stb_d_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -6009,6 +6068,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_sth_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -6107,6 +6167,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_sth_d_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -6224,6 +6285,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_st_plus_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -6341,6 +6403,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_sth_plus_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -6458,6 +6521,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_stb_plus_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -6575,6 +6639,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_trap_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -6798,6 +6863,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_unlock_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -6928,6 +6994,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_satb_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -7010,6 +7077,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_sat_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -7108,6 +7176,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_sadd_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -7200,6 +7269,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_macwu1_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -7314,6 +7384,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_mulwu1_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -7412,6 +7483,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_sc_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -7472,6 +7544,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_clrpsw_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -7567,6 +7640,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_setpsw_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -7646,6 +7720,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_bset_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{
@@ -7779,6 +7854,7 @@ specifier|const
 name|CGEN_OPINST
 name|sfmt_btst_ops
 index|[]
+name|ATTRIBUTE_UNUSED
 init|=
 block|{
 block|{

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for ns32k a.out-ish binaries.    Copyright 1990, 1991, 1992, 1994, 1995, 1996, 1998, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.    Contributed by Ian Dall (idall@eleceng.adelaide.edu.au).     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for ns32k a.out-ish binaries.    Copyright 1990, 1991, 1992, 1994, 1995, 1996, 1998, 1999, 2000, 2001,    2002, 2003, 2005 Free Software Foundation, Inc.    Contributed by Ian Dall (idall@eleceng.adelaide.edu.au).     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -39,34 +39,32 @@ begin_function_decl
 name|reloc_howto_type
 modifier|*
 name|MYNS
-parameter_list|(
+function_decl|(
 name|bfd_reloc_type_lookup
-parameter_list|)
-function_decl|PARAMS
+function_decl|)
 parameter_list|(
-function_decl|(bfd *abfd AND 	  bfd_reloc_code_real_type code
+name|bfd
+modifier|*
+name|abfd
+parameter_list|,
+name|bfd_reloc_code_real_type
+parameter_list|)
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 name|bfd_boolean
 name|MYNS
-parameter_list|(
+function_decl|(
 name|write_object_contents
-parameter_list|)
-function_decl|PARAMS
+function_decl|)
 parameter_list|(
-function_decl|(bfd *abfd
+name|bfd
+modifier|*
+name|abfd
+parameter_list|)
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
 
 begin_comment
 comment|/* Avoid multiple definitions from aoutx if supporting    standard a.out format(s) as well as this one.  */
@@ -84,17 +82,14 @@ parameter_list|)
 value|CONCAT3 (ns32kaout,_32_,y)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|bfd_ns32k_arch
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_include
 include|#
@@ -109,121 +104,22 @@ name|MY
 parameter_list|(
 name|OP
 parameter_list|)
-value|MYNS(OP)
+value|MYNS (OP)
 end_define
 
 begin_define
 define|#
 directive|define
 name|MY_swap_std_reloc_in
-value|MY(swap_std_reloc_in)
+value|MY (swap_std_reloc_in)
 end_define
 
 begin_define
 define|#
 directive|define
 name|MY_swap_std_reloc_out
-value|MY(swap_std_reloc_out)
+value|MY (swap_std_reloc_out)
 end_define
-
-begin_decl_stmt
-specifier|static
-name|void
-name|MY_swap_std_reloc_in
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-expr|struct
-name|reloc_std_external
-operator|*
-operator|,
-name|arelent
-operator|*
-operator|,
-name|asymbol
-operator|*
-operator|*
-operator|,
-name|bfd_size_type
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|MY_swap_std_reloc_out
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|arelent
-operator|*
-operator|,
-expr|struct
-name|reloc_std_external
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|reloc_howto_type
-modifier|*
-name|MY
-parameter_list|(
-name|reloc_howto
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-operator|,
-function_decl|struct reloc_std_external *
-operator|,
-function_decl|int *
-operator|,
-function_decl|int *
-operator|,
-function_decl|int *
-end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
-name|void
-name|MY
-parameter_list|(
-name|put_reloc
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-operator|,
-function_decl|int
-operator|,
-function_decl|int
-operator|,
-function_decl|bfd_vma
-operator|,
-function_decl|reloc_howto_type *
-operator|,
-function_decl|struct reloc_std_external *
-end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
 
 begin_comment
 comment|/* The ns32k series is ah, unusual, when it comes to relocation.    There are three storage methods for relocatable objects.  There    are displacements, immediate operands and ordinary twos complement    data. Of these, only the last fits into the standard relocation    scheme.  Immediate operands are stored huffman encoded and    immediate operands are stored big endian (where as the natural byte    order is little endian for this architecture).     Note that the ns32k displacement storage method is orthogonal to    whether the relocation is pc relative or not. The "displacement"    storage scheme is used for essentially all address constants. The    displacement can be relative to zero (absolute displacement),    relative to the pc (pc relative), the stack pointer, the frame    pointer, the static base register and general purpose register etc.     For example:     sym1: .long .	 # pc relative 2's complement    sym1: .long foo	 # 2's complement not pc relative     self:  movd @self, r0 # pc relative displacement           movd foo, r0   # non pc relative displacement     self:  movd self, r0  # pc relative immediate           movd foo, r0   # non pc relative immediate     In addition, for historical reasons the encoding of the relocation types    in the a.out format relocation entries is such that even the relocation    methods which are standard are not encoded the standard way.  */
@@ -238,7 +134,6 @@ argument_list|)
 decl|[]
 init|=
 block|{
-comment|/* type           rs   size bsz  pcrel bitpos ovrf                  sf name          part_inpl readmask setmask pcdone */
 comment|/* ns32k immediate operands.  */
 name|HOWTO
 argument_list|(
@@ -763,7 +658,7 @@ literal|0xffffffff
 argument_list|,
 name|FALSE
 argument_list|)
-block|,   }
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -774,7 +669,7 @@ name|CTOR_TABLE_RELOC_HOWTO
 parameter_list|(
 name|BFD
 parameter_list|)
-value|(MY(howto_table) + 14)
+value|(MY (howto_table) + 14)
 end_define
 
 begin_define
@@ -806,6 +701,7 @@ value|5
 end_define
 
 begin_function
+specifier|static
 name|reloc_howto_type
 modifier|*
 name|MY
@@ -813,38 +709,28 @@ function|(
 name|reloc_howto
 function|)
 parameter_list|(
-name|abfd
-parameter_list|,
-name|rel
-parameter_list|,
-name|r_index
-parameter_list|,
-name|r_extern
-parameter_list|,
-name|r_pcrel
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|struct
 name|reloc_std_external
 modifier|*
 name|rel
-decl_stmt|;
+parameter_list|,
 name|int
 modifier|*
 name|r_index
-decl_stmt|;
+parameter_list|,
 name|int
 modifier|*
 name|r_extern
-decl_stmt|;
+parameter_list|,
 name|int
 modifier|*
 name|r_pcrel
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|int
@@ -853,7 +739,6 @@ decl_stmt|;
 name|int
 name|r_ns32k_type
 decl_stmt|;
-comment|/*  BFD_ASSERT(bfd_header_little_endian (abfd)); */
 operator|*
 name|r_index
 operator|=
@@ -998,50 +883,39 @@ parameter_list|,
 name|PC
 parameter_list|)
 define|\
-value|MY(reloc_howto) (BFD, REL,&IN,&EX,&PC)
+value|MY (reloc_howto) (BFD, REL,&IN,&EX,&PC)
 end_define
 
 begin_function
+specifier|static
 name|void
 name|MY
 function|(
 name|put_reloc
 function|)
 parameter_list|(
-name|abfd
-parameter_list|,
-name|r_extern
-parameter_list|,
-name|r_index
-parameter_list|,
-name|value
-parameter_list|,
-name|howto
-parameter_list|,
-name|reloc
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|int
 name|r_extern
-decl_stmt|;
+parameter_list|,
 name|int
 name|r_index
-decl_stmt|;
+parameter_list|,
 name|bfd_vma
 name|value
-decl_stmt|;
+parameter_list|,
 name|reloc_howto_type
 modifier|*
 name|howto
-decl_stmt|;
+parameter_list|,
 name|struct
 name|reloc_std_external
 modifier|*
 name|reloc
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|int
@@ -1094,7 +968,6 @@ operator|)
 operator|/
 literal|6
 expr_stmt|;
-comment|/*  BFD_ASSERT (bfd_header_little_endian (abfd)); */
 name|reloc
 operator|->
 name|r_index
@@ -1182,7 +1055,7 @@ parameter_list|,
 name|RELOC
 parameter_list|)
 define|\
-value|MY(put_reloc) (BFD, EXT, IDX, VAL, HOWTO, RELOC)
+value|MY (put_reloc) (BFD, EXT, IDX, VAL, HOWTO, RELOC)
 end_define
 
 begin_define
@@ -1205,6 +1078,48 @@ name|MY_relocate_contents
 value|_bfd_ns32k_relocate_contents
 end_define
 
+begin_function_decl
+specifier|static
+name|void
+name|MY_swap_std_reloc_in
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|,
+name|struct
+name|reloc_std_external
+modifier|*
+parameter_list|,
+name|arelent
+modifier|*
+parameter_list|,
+name|asymbol
+modifier|*
+modifier|*
+parameter_list|,
+name|bfd_size_type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|MY_swap_std_reloc_out
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|,
+name|arelent
+modifier|*
+parameter_list|,
+name|struct
+name|reloc_std_external
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_include
 include|#
 directive|include
@@ -1219,17 +1134,13 @@ function|(
 name|bfd_reloc_type_lookup
 function|)
 parameter_list|(
-name|abfd
-parameter_list|,
-name|code
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|bfd_reloc_code_real_type
 name|code
-decl_stmt|;
+parameter_list|)
 block|{
 define|#
 directive|define
@@ -1239,7 +1150,7 @@ name|i
 parameter_list|,
 name|j
 parameter_list|)
-value|case i: return&MY(howto_table)[j]
+value|case i: return&MY (howto_table)[j]
 name|int
 name|ext
 init|=
@@ -1417,10 +1328,6 @@ argument_list|)
 expr_stmt|;
 default|default:
 return|return
-operator|(
-name|reloc_howto_type
-operator|*
-operator|)
 name|NULL
 return|;
 block|}
@@ -1435,38 +1342,28 @@ specifier|static
 name|void
 name|MY_swap_std_reloc_in
 parameter_list|(
-name|abfd
-parameter_list|,
-name|bytes
-parameter_list|,
-name|cache_ptr
-parameter_list|,
-name|symbols
-parameter_list|,
-name|symcount
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|struct
 name|reloc_std_external
 modifier|*
 name|bytes
-decl_stmt|;
+parameter_list|,
 name|arelent
 modifier|*
 name|cache_ptr
-decl_stmt|;
+parameter_list|,
 name|asymbol
 modifier|*
 modifier|*
 name|symbols
-decl_stmt|;
+parameter_list|,
 name|bfd_size_type
 name|symcount
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|r_index
@@ -1537,25 +1434,19 @@ specifier|static
 name|void
 name|MY_swap_std_reloc_out
 parameter_list|(
-name|abfd
-parameter_list|,
-name|g
-parameter_list|,
-name|natptr
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|arelent
 modifier|*
 name|g
-decl_stmt|;
+parameter_list|,
 name|struct
 name|reloc_std_external
 modifier|*
 name|natptr
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|r_index
@@ -1720,29 +1611,21 @@ begin_function
 name|bfd_reloc_status_type
 name|_bfd_ns32k_relocate_contents
 parameter_list|(
-name|howto
-parameter_list|,
-name|input_bfd
-parameter_list|,
-name|relocation
-parameter_list|,
-name|location
-parameter_list|)
 name|reloc_howto_type
 modifier|*
 name|howto
-decl_stmt|;
+parameter_list|,
 name|bfd
 modifier|*
 name|input_bfd
-decl_stmt|;
+parameter_list|,
 name|bfd_vma
 name|relocation
-decl_stmt|;
+parameter_list|,
 name|bfd_byte
 modifier|*
 name|location
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|r_ns32k_type
@@ -1759,35 +1642,31 @@ operator|/
 literal|6
 decl_stmt|;
 name|bfd_vma
-argument_list|(
-argument|*get_data
-argument_list|)
-name|PARAMS
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|get_data
+function_decl|)
+parameter_list|(
 name|bfd_byte
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 name|void
-argument_list|(
-argument|*put_data
-argument_list|)
-name|PARAMS
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|put_data
+function_decl|)
+parameter_list|(
 name|bfd_vma
-operator|,
+parameter_list|,
 name|bfd_byte
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 switch|switch
 condition|(
 name|r_ns32k_type
@@ -1832,7 +1711,6 @@ argument_list|,
 name|location
 argument_list|)
 return|;
-comment|/* NOT REACHED */
 break|break;
 default|default:
 return|return

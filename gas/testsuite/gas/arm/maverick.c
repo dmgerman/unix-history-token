@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (C) 2000, 2003 Free Software Foundation    Contributed by Alexandre Oliva<aoliva@cygnus.com>     This file is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Copyright (C) 2000, 2003 Free Software Foundation    Contributed by Alexandre Oliva<aoliva@cygnus.com>     This file is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -268,7 +268,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* The sign of an offset is actually used to determined whether the    absolute value of the offset should be added or subtracted, so we    must adjust negative values so that they do not overflow: -256 is    not valid, but -0 is distinct from +0.  */
+comment|/* The sign of an offset is actually used to determined whether the    absolute value of the offset should be added or subtracted, so we    must adjust negative values so that they do not overflow: -1024 is    not valid, but -0 is distinct from +0.  */
 end_comment
 
 begin_function
@@ -294,10 +294,10 @@ decl_stmt|;
 name|char
 name|value
 index|[
-literal|6
+literal|9
 index|]
 decl_stmt|;
-comment|/* Values less that -255 or between -3 and 0 are problematical.      The assembler performs translations on the addressing modes      for these values, meaning that we cannot just recreate the      disassembler string in the LDST macro without knowing what      value had been generated in off8s.  */
+comment|/* Zero values are problematical.      The assembler performs translations on the addressing modes      for these values, meaning that we cannot just recreate the      disassembler string in the LDST macro without knowing what      value had been generated in off8s.  */
 do|do
 block|{
 name|val
@@ -311,22 +311,19 @@ block|}
 do|while
 condition|(
 name|val
-operator|<
+operator|==
 operator|-
-literal|255
-operator|||
-operator|(
-name|val
-operator|>
-operator|-
-literal|4
-operator|&&
-name|val
-operator|<
 literal|1
-operator|)
+operator|||
+name|val
+operator|==
+literal|0
 condition|)
 do|;
+name|val
+operator|<<=
+literal|2
+expr_stmt|;
 if|if
 condition|(
 name|val
@@ -337,12 +334,9 @@ block|{
 name|val
 operator|=
 operator|-
+literal|4
+operator|-
 name|val
-expr_stmt|;
-name|val
-operator|&=
-operator|~
-literal|3
 expr_stmt|;
 name|sprintf
 argument_list|(
@@ -380,24 +374,17 @@ argument_list|(
 name|value
 argument_list|)
 expr_stmt|;
-name|val
-operator|>>=
-literal|2
-expr_stmt|;
 name|data
 operator|->
 name|bits
 operator|=
 name|val
+operator|>>
+literal|2
 expr_stmt|;
 block|}
 else|else
 block|{
-name|val
-operator|&=
-operator|~
-literal|3
-expr_stmt|;
 name|sprintf
 argument_list|(
 name|value
@@ -420,15 +407,15 @@ argument_list|(
 name|value
 argument_list|)
 expr_stmt|;
-name|val
-operator|>>=
-literal|2
-expr_stmt|;
 name|data
 operator|->
 name|bits
 operator|=
+operator|(
 name|val
+operator|>>
+literal|2
+operator|)
 operator||
 operator|(
 literal|1
@@ -1005,6 +992,29 @@ value|MCRC2 (mv ## insname, cpnum, 0, 1, opcode2, \ 	 armreg (12), mvreg (regDSP
 end_define
 
 begin_comment
+comment|/* Move between coprocessor registers. A two operand CDP insn.   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCC2
+parameter_list|(
+name|insname
+parameter_list|,
+name|opcode1
+parameter_list|,
+name|opcode2
+parameter_list|,
+name|reg1spec
+parameter_list|,
+name|reg2spec
+parameter_list|)
+define|\
+value|mv_insn (insname, , \ 	   ((14<< 24) | ((opcode1)<< 20) | \ 	    (4<< 8) | ((opcode2)<< 5)), \ 	   reg1spec, comma, reg2spec)
+end_define
+
+begin_comment
 comment|/* Define a move from a DSP register to a DSP accumulator.  */
 end_comment
 
@@ -1020,7 +1030,7 @@ parameter_list|,
 name|regDSPname
 parameter_list|)
 define|\
-value|MCRC2 (mv ## insname, 6, 0, 1, opcode2, acreg (0), mvreg (regDSPname, 16))
+value|MCC2 (mv ## insname, 2, opcode2, acreg (12), mvreg (regDSPname, 16))
 end_define
 
 begin_comment
@@ -1039,7 +1049,7 @@ parameter_list|,
 name|regDSPname
 parameter_list|)
 define|\
-value|MCRC2 (mv ## insname, 6, 0, 0, opcode2, mvreg (regDSPname, 0), acreg (16))
+value|MCC2 (mv ## insname, 1, opcode2, mvreg (regDSPname, 12), acreg (16))
 end_define
 
 begin_comment
@@ -1461,7 +1471,7 @@ name|al32
 argument_list|,
 literal|32al
 argument_list|,
-literal|0
+literal|2
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1473,7 +1483,7 @@ name|am32
 argument_list|,
 literal|32am
 argument_list|,
-literal|1
+literal|3
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1485,7 +1495,7 @@ name|ah32
 argument_list|,
 literal|32ah
 argument_list|,
-literal|2
+literal|4
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1497,7 +1507,7 @@ name|a32
 argument_list|,
 literal|32a
 argument_list|,
-literal|3
+literal|5
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1509,21 +1519,17 @@ name|a64
 argument_list|,
 literal|64a
 argument_list|,
-literal|4
+literal|6
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|MCRC2
+name|MCC2
 argument_list|(
 name|mvsc32
 argument_list|,
-literal|4
-argument_list|,
-literal|1
-argument_list|,
-literal|0
+literal|2
 argument_list|,
 literal|7
 argument_list|,
@@ -1540,13 +1546,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|MCRC2
+name|MCC2
 argument_list|(
 name|mv32sc
-argument_list|,
-literal|4
-argument_list|,
-literal|0
 argument_list|,
 literal|1
 argument_list|,

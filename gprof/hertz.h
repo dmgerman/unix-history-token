@@ -26,18 +26,15 @@ begin_comment
 comment|/*  * Discover the tick frequency of the machine if something goes wrong,  * we return HZ_WRONG, an impossible sampling frequency.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|hertz
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

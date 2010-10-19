@@ -717,12 +717,9 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|done
-name|PARAMS
 argument_list|(
-operator|(
 name|int
 name|status
-operator|)
 argument_list|)
 name|ATTRIBUTE_NORETURN
 decl_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Xtensa configuration settings.    Copyright (C) 2001,2002,2003 Free Software Foundation, Inc.    Contributed by Bob Wilson (bwilson@tensilica.com) at Tensilica.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Xtensa configuration settings.    Copyright (C) 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.    Contributed by Bob Wilson (bwilson@tensilica.com) at Tensilica.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -100,6 +100,19 @@ end_define
 begin_undef
 undef|#
 directive|undef
+name|XSHAL_USE_ABSOLUTE_LITERALS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|XSHAL_USE_ABSOLUTE_LITERALS
+value|0
+end_define
+
+begin_undef
+undef|#
+directive|undef
 name|XCHAL_HAVE_MAC16
 end_undef
 
@@ -133,6 +146,19 @@ begin_define
 define|#
 directive|define
 name|XCHAL_HAVE_MUL32
+value|0
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|XCHAL_HAVE_MUL32_HIGH
+end_undef
+
+begin_define
+define|#
+directive|define
+name|XCHAL_HAVE_MUL32_HIGH
 value|0
 end_define
 
@@ -290,6 +316,32 @@ define|#
 directive|define
 name|XCHAL_HAVE_WINDOWED
 value|1
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|XCHAL_HAVE_WIDE_BRANCHES
+end_undef
+
+begin_define
+define|#
+directive|define
+name|XCHAL_HAVE_WIDE_BRANCHES
+value|0
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|XCHAL_HAVE_PREDICTED_BRANCHES
+end_undef
+
+begin_define
+define|#
+directive|define
+name|XCHAL_HAVE_PREDICTED_BRANCHES
+value|0
 end_define
 
 begin_undef
@@ -464,27 +516,14 @@ end_define
 begin_undef
 undef|#
 directive|undef
-name|XCHAL_EXTRA_SA_SIZE
+name|XCHAL_INST_FETCH_WIDTH
 end_undef
 
 begin_define
 define|#
 directive|define
-name|XCHAL_EXTRA_SA_SIZE
-value|0
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|XCHAL_EXTRA_SA_ALIGN
-end_undef
-
-begin_define
-define|#
-directive|define
-name|XCHAL_EXTRA_SA_ALIGN
-value|1
+name|XCHAL_INST_FETCH_WIDTH
+value|4
 end_define
 
 begin_endif

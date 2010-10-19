@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for linux flavored sparc a.out binaries.    Copyright 1992, 1993, 1994, 1995, 1996, 1997, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for linux flavored sparc a.out binaries.    Copyright 1992, 1993, 1994, 1995, 1996, 1997, 1999, 2000, 2001, 2002,    2003, 2004, 2006 Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_define
@@ -889,6 +889,12 @@ argument_list|,
 name|abfd
 argument_list|,
 name|linux_link_hash_newfunc
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|linux_link_hash_entry
+argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -1212,7 +1218,7 @@ name|FALSE
 return|;
 name|s
 operator|->
-name|_raw_size
+name|size
 operator|=
 literal|0
 expr_stmt|;
@@ -2447,7 +2453,7 @@ condition|)
 block|{
 name|s
 operator|->
-name|_raw_size
+name|size
 operator|=
 name|linux_hash_table
 argument_list|(
@@ -2460,7 +2466,7 @@ literal|1
 expr_stmt|;
 name|s
 operator|->
-name|_raw_size
+name|size
 operator|*=
 literal|8
 expr_stmt|;
@@ -2478,7 +2484,7 @@ name|output_bfd
 argument_list|,
 name|s
 operator|->
-name|_raw_size
+name|size
 argument_list|)
 expr_stmt|;
 if|if
@@ -3382,14 +3388,14 @@ name|contents
 argument_list|,
 name|s
 operator|->
-name|_raw_size
+name|size
 argument_list|,
 name|output_bfd
 argument_list|)
 operator|!=
 name|s
 operator|->
-name|_raw_size
+name|size
 condition|)
 return|return
 name|FALSE

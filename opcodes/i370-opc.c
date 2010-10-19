@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* i370-opc.c -- Instruction 370 (ESA/390) architecture opcode list    Copyright 1994, 1999, 2000, 2001, 2003 Free Software Foundation, Inc.    PowerPC version written by Ian Lance Taylor, Cygnus Support    Rewritten for i370 ESA/390 support by Linas Vepstas<linas@linas.org> 1998, 1999  This file is part of GDB, GAS, and the GNU binutils.  GDB, GAS, and the GNU binutils are free software; you can redistribute them and/or modify them under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GDB, GAS, and the GNU binutils are distributed in the hope that they will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this file; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* i370-opc.c -- Instruction 370 (ESA/390) architecture opcode list    Copyright 1994, 1999, 2000, 2001, 2003, 2005 Free Software Foundation, Inc.    PowerPC version written by Ian Lance Taylor, Cygnus Support    Rewritten for i370 ESA/390 support by Linas Vepstas<linas@linas.org> 1998, 1999     This file is part of GDB, GAS, and the GNU binutils.     GDB, GAS, and the GNU binutils are free software; you can redistribute    them and/or modify them under the terms of the GNU General Public    License as published by the Free Software Foundation; either version    2, or (at your option) any later version.     GDB, GAS, and the GNU binutils are distributed in the hope that they    will be useful, but WITHOUT ANY WARRANTY; without even the implied    warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See    the GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this file; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -29,104 +29,227 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Local insertion and extraction functions.  */
+comment|/* The functions used to insert and extract complicated operands.  */
 end_comment
 
-begin_function_decl
+begin_function
 specifier|static
 name|i370_insn_t
 name|insert_ss_b2
 parameter_list|(
 name|i370_insn_t
+name|insn
 parameter_list|,
 name|long
+name|value
 parameter_list|,
 specifier|const
 name|char
 modifier|*
 modifier|*
+name|errmsg
+name|ATTRIBUTE_UNUSED
 parameter_list|)
-function_decl|;
-end_function_decl
+block|{
+name|insn
+operator|.
+name|i
+index|[
+literal|1
+index|]
+operator||=
+operator|(
+name|value
+operator|&
+literal|0xf
+operator|)
+operator|<<
+literal|28
+expr_stmt|;
+return|return
+name|insn
+return|;
+block|}
+end_function
 
-begin_function_decl
+begin_function
 specifier|static
 name|i370_insn_t
 name|insert_ss_d2
 parameter_list|(
 name|i370_insn_t
+name|insn
 parameter_list|,
 name|long
+name|value
 parameter_list|,
 specifier|const
 name|char
 modifier|*
 modifier|*
+name|errmsg
+name|ATTRIBUTE_UNUSED
 parameter_list|)
-function_decl|;
-end_function_decl
+block|{
+name|insn
+operator|.
+name|i
+index|[
+literal|1
+index|]
+operator||=
+operator|(
+name|value
+operator|&
+literal|0xfff
+operator|)
+operator|<<
+literal|16
+expr_stmt|;
+return|return
+name|insn
+return|;
+block|}
+end_function
 
-begin_function_decl
+begin_function
 specifier|static
 name|i370_insn_t
 name|insert_rxf_r3
 parameter_list|(
 name|i370_insn_t
+name|insn
 parameter_list|,
 name|long
+name|value
 parameter_list|,
 specifier|const
 name|char
 modifier|*
 modifier|*
+name|errmsg
+name|ATTRIBUTE_UNUSED
 parameter_list|)
-function_decl|;
-end_function_decl
+block|{
+name|insn
+operator|.
+name|i
+index|[
+literal|1
+index|]
+operator||=
+operator|(
+name|value
+operator|&
+literal|0xf
+operator|)
+operator|<<
+literal|28
+expr_stmt|;
+return|return
+name|insn
+return|;
+block|}
+end_function
 
-begin_function_decl
+begin_function
 specifier|static
 name|long
 name|extract_ss_b2
 parameter_list|(
 name|i370_insn_t
+name|insn
 parameter_list|,
 name|int
 modifier|*
+name|invalid
+name|ATTRIBUTE_UNUSED
 parameter_list|)
-function_decl|;
-end_function_decl
+block|{
+return|return
+operator|(
+name|insn
+operator|.
+name|i
+index|[
+literal|1
+index|]
+operator|>>
+literal|28
+operator|)
+operator|&
+literal|0xf
+return|;
+block|}
+end_function
 
-begin_function_decl
+begin_function
 specifier|static
 name|long
 name|extract_ss_d2
 parameter_list|(
 name|i370_insn_t
+name|insn
 parameter_list|,
 name|int
 modifier|*
+name|invalid
+name|ATTRIBUTE_UNUSED
 parameter_list|)
-function_decl|;
-end_function_decl
+block|{
+return|return
+operator|(
+name|insn
+operator|.
+name|i
+index|[
+literal|1
+index|]
+operator|>>
+literal|16
+operator|)
+operator|&
+literal|0xfff
+return|;
+block|}
+end_function
 
-begin_function_decl
+begin_function
 specifier|static
 name|long
 name|extract_rxf_r3
 parameter_list|(
 name|i370_insn_t
+name|insn
 parameter_list|,
 name|int
 modifier|*
+name|invalid
+name|ATTRIBUTE_UNUSED
 parameter_list|)
-function_decl|;
-end_function_decl
+block|{
+return|return
+operator|(
+name|insn
+operator|.
+name|i
+index|[
+literal|1
+index|]
+operator|>>
+literal|28
+operator|)
+operator|&
+literal|0xf
+return|;
+block|}
+end_function
 
 begin_escape
 end_escape
 
 begin_comment
-comment|/* The operands table.    The fields are bits, shift, insert, extract, flags, name.    The types:    I370_OPERAND_GPR register, must name a register, must be present    I370_OPERAND_RELATIVE displacement or legnth field, must be present    I370_OPERAND_BASE base register; if present, must name a register                       if absent, should take value of zero    I370_OPERAND_INDEX index register; if present, must name a register                       if absent, should take value of zero    I370_OPERAND_OPTIONAL other optional operand (usuall reg?) */
+comment|/* The operands table.    The fields are bits, shift, insert, extract, flags, name.    The types:    I370_OPERAND_GPR register, must name a register, must be present    I370_OPERAND_RELATIVE displacement or legnth field, must be present    I370_OPERAND_BASE base register; if present, must name a register                       if absent, should take value of zero    I370_OPERAND_INDEX index register; if present, must name a register                       if absent, should take value of zero    I370_OPERAND_OPTIONAL other optional operand (usuall reg?).  */
 end_comment
 
 begin_decl_stmt
@@ -912,226 +1035,9 @@ name|I370_OPERAND_RELATIVE
 block|,
 literal|"SS D2"
 block|}
-block|,   }
+block|,    }
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* The functions used to insert and extract complicated operands.  */
-end_comment
-
-begin_function
-specifier|static
-name|i370_insn_t
-name|insert_ss_b2
-parameter_list|(
-name|i370_insn_t
-name|insn
-parameter_list|,
-name|long
-name|value
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-modifier|*
-name|errmsg
-name|ATTRIBUTE_UNUSED
-parameter_list|)
-block|{
-name|insn
-operator|.
-name|i
-index|[
-literal|1
-index|]
-operator||=
-operator|(
-name|value
-operator|&
-literal|0xf
-operator|)
-operator|<<
-literal|28
-expr_stmt|;
-return|return
-name|insn
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|i370_insn_t
-name|insert_ss_d2
-parameter_list|(
-name|i370_insn_t
-name|insn
-parameter_list|,
-name|long
-name|value
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-modifier|*
-name|errmsg
-name|ATTRIBUTE_UNUSED
-parameter_list|)
-block|{
-name|insn
-operator|.
-name|i
-index|[
-literal|1
-index|]
-operator||=
-operator|(
-name|value
-operator|&
-literal|0xfff
-operator|)
-operator|<<
-literal|16
-expr_stmt|;
-return|return
-name|insn
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|i370_insn_t
-name|insert_rxf_r3
-parameter_list|(
-name|i370_insn_t
-name|insn
-parameter_list|,
-name|long
-name|value
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-modifier|*
-name|errmsg
-name|ATTRIBUTE_UNUSED
-parameter_list|)
-block|{
-name|insn
-operator|.
-name|i
-index|[
-literal|1
-index|]
-operator||=
-operator|(
-name|value
-operator|&
-literal|0xf
-operator|)
-operator|<<
-literal|28
-expr_stmt|;
-return|return
-name|insn
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|long
-name|extract_ss_b2
-parameter_list|(
-name|i370_insn_t
-name|insn
-parameter_list|,
-name|int
-modifier|*
-name|invalid
-name|ATTRIBUTE_UNUSED
-parameter_list|)
-block|{
-return|return
-operator|(
-name|insn
-operator|.
-name|i
-index|[
-literal|1
-index|]
-operator|>>
-literal|28
-operator|)
-operator|&
-literal|0xf
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|long
-name|extract_ss_d2
-parameter_list|(
-name|i370_insn_t
-name|insn
-parameter_list|,
-name|int
-modifier|*
-name|invalid
-name|ATTRIBUTE_UNUSED
-parameter_list|)
-block|{
-return|return
-operator|(
-name|insn
-operator|.
-name|i
-index|[
-literal|1
-index|]
-operator|>>
-literal|16
-operator|)
-operator|&
-literal|0xfff
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|long
-name|extract_rxf_r3
-parameter_list|(
-name|i370_insn_t
-name|insn
-parameter_list|,
-name|int
-modifier|*
-name|invalid
-name|ATTRIBUTE_UNUSED
-parameter_list|)
-block|{
-return|return
-operator|(
-name|insn
-operator|.
-name|i
-index|[
-literal|1
-index|]
-operator|>>
-literal|28
-operator|)
-operator|&
-literal|0xf
-return|;
-block|}
-end_function
 
 begin_escape
 end_escape
@@ -1151,7 +1057,7 @@ name|OPS
 parameter_list|(
 name|x
 parameter_list|)
-value|((((unsigned short)(x))& 0xff)<< 8)
+value|((((unsigned short) (x))& 0xff)<< 8)
 end_define
 
 begin_define
@@ -1172,7 +1078,7 @@ name|XOPS
 parameter_list|(
 name|x
 parameter_list|)
-value|((((unsigned short)(x))& 0xff)<< 24)
+value|((((unsigned short) (x))& 0xff)<< 24)
 end_define
 
 begin_define
@@ -1193,7 +1099,7 @@ name|SOPS
 parameter_list|(
 name|x
 parameter_list|)
-value|((((unsigned short)(x))& 0xffff)<< 16)
+value|((((unsigned short) (x))& 0xffff)<< 16)
 end_define
 
 begin_define
@@ -1214,7 +1120,7 @@ name|EOPS
 parameter_list|(
 name|x
 parameter_list|)
-value|(((unsigned short)(x))& 0xffff)
+value|(((unsigned short) (x))& 0xffff)
 end_define
 
 begin_define
@@ -1235,7 +1141,7 @@ name|ROPS
 parameter_list|(
 name|x
 parameter_list|)
-value|(((((unsigned short)(x))& 0xff0)<< 20) | \                  ((((unsigned short)(x))& 0x00f)<< 16))
+value|(((((unsigned short) (x))& 0xff0)<< 20) | \                  ((((unsigned short) (x))& 0x00f)<< 16))
 end_define
 
 begin_define
@@ -1245,9 +1151,8 @@ name|ROPS_MASK
 value|ROPS (0xfff)
 end_define
 
-begin_comment
-comment|/* --------------------------------------------------------- */
-end_comment
+begin_escape
+end_escape
 
 begin_comment
 comment|/* An E form instruction.  */
@@ -1286,7 +1191,7 @@ parameter_list|,
 name|r2
 parameter_list|)
 define|\
-value|(OPS (op) | ((((unsigned short)(r1))& 0xf)<< 4) |   \               ((((unsigned short)(r2))& 0xf) ))
+value|(OPS (op) | ((((unsigned short) (r1))& 0xf)<< 4) |   \               ((((unsigned short) (r2))& 0xf) ))
 end_define
 
 begin_define
@@ -1310,7 +1215,7 @@ parameter_list|,
 name|i
 parameter_list|)
 define|\
-value|(OPS (op) | (((unsigned short)(i))& 0xff))
+value|(OPS (op) | (((unsigned short) (i))& 0xff))
 end_define
 
 begin_define
@@ -1336,7 +1241,7 @@ parameter_list|,
 name|r2
 parameter_list|)
 define|\
-value|(SOPS (op) | ((((unsigned short)(r1))& 0xf)<< 4) |   \                ((((unsigned short)(r2))& 0xf) ))
+value|(SOPS (op) | ((((unsigned short) (r1))& 0xf)<< 4) |   \                ((((unsigned short) (r2))& 0xf) ))
 end_define
 
 begin_define
@@ -1364,7 +1269,7 @@ parameter_list|,
 name|r2
 parameter_list|)
 define|\
-value|(SOPS (op) | ((((unsigned short)(r3))& 0xf)<< 12) |   \                ((((unsigned short)(r1))& 0xf)<< 4)  |   \                ((((unsigned short)(r2))& 0xf) ))
+value|(SOPS (op) | ((((unsigned short) (r3))& 0xf)<< 12) |   \                ((((unsigned short) (r1))& 0xf)<< 4)  |   \                ((((unsigned short) (r2))& 0xf) ))
 end_define
 
 begin_define
@@ -1394,7 +1299,7 @@ parameter_list|,
 name|d2
 parameter_list|)
 define|\
-value|(XOPS(op) | ((((unsigned short)(r1))& 0xf)<< 20) |  \               ((((unsigned short)(x2))& 0xf)<< 16) |  \               ((((unsigned short)(b2))& 0xf)<< 12) |  \               ((((unsigned short)(d2))& 0xfff)))
+value|(XOPS(op) | ((((unsigned short) (r1))& 0xf)<< 20) |  \               ((((unsigned short) (x2))& 0xf)<< 16) |  \               ((((unsigned short) (b2))& 0xf)<< 12) |  \               ((((unsigned short) (d2))& 0xfff)))
 end_define
 
 begin_define
@@ -1424,7 +1329,7 @@ parameter_list|,
 name|d2
 parameter_list|)
 define|\
-value|(XOPS(op) | ((((unsigned short)(r1))& 0xf)<< 20) |  \               ((((unsigned short)(x2))& 0xf)<< 16) |  \               ((((unsigned short)(b2))& 0xf)<< 12) |  \               ((((unsigned short)(d2))& 0xfff)))
+value|(XOPS(op) | ((((unsigned short) (r1))& 0xf)<< 20) |  \               ((((unsigned short) (x2))& 0xf)<< 16) |  \               ((((unsigned short) (b2))& 0xf)<< 12) |  \               ((((unsigned short) (d2))& 0xfff)))
 end_define
 
 begin_define
@@ -1446,7 +1351,7 @@ parameter_list|(
 name|op
 parameter_list|)
 define|\
-value|((((unsigned short)(op))& 0xff)<< 16 )
+value|((((unsigned short) (op))& 0xff)<< 16 )
 end_define
 
 begin_define
@@ -1476,7 +1381,7 @@ parameter_list|,
 name|d2
 parameter_list|)
 define|\
-value|(XOPS(op) | ((((unsigned short)(r1))& 0xf)<< 20) |  \               ((((unsigned short)(x2))& 0xf)<< 16) |  \               ((((unsigned short)(b2))& 0xf)<< 12) |  \               ((((unsigned short)(d2))& 0xfff)))
+value|(XOPS(op) | ((((unsigned short) (r1))& 0xf)<< 20) |  \               ((((unsigned short) (x2))& 0xf)<< 16) |  \               ((((unsigned short) (b2))& 0xf)<< 12) |  \               ((((unsigned short) (d2))& 0xfff)))
 end_define
 
 begin_define
@@ -1500,7 +1405,7 @@ parameter_list|,
 name|r3
 parameter_list|)
 define|\
-value|(((((unsigned short)(r3))& 0xf)<< 28 ) | \                ((((unsigned short)(op))& 0xff)<< 16 ))
+value|(((((unsigned short) (r3))& 0xf)<< 28 ) | \                ((((unsigned short) (op))& 0xff)<< 16 ))
 end_define
 
 begin_define
@@ -1530,7 +1435,7 @@ parameter_list|,
 name|d2
 parameter_list|)
 define|\
-value|(XOPS(op) | ((((unsigned short)(r1))& 0xf)<< 20) |  \               ((((unsigned short)(b3))& 0xf)<< 16) |  \               ((((unsigned short)(b2))& 0xf)<< 12) |  \               ((((unsigned short)(d2))& 0xfff)))
+value|(XOPS(op) | ((((unsigned short) (r1))& 0xf)<< 20) |  \               ((((unsigned short) (b3))& 0xf)<< 16) |  \               ((((unsigned short) (b2))& 0xf)<< 12) |  \               ((((unsigned short) (d2))& 0xfff)))
 end_define
 
 begin_define
@@ -1558,7 +1463,7 @@ parameter_list|,
 name|i2
 parameter_list|)
 define|\
-value|(XOPS(op) | ((((unsigned short)(r1))& 0xf)<< 20) |  \               ((((unsigned short)(r3))& 0xf)<< 16) |  \               ((((unsigned short)(i2))& 0xffff)))
+value|(XOPS(op) | ((((unsigned short) (r1))& 0xf)<< 20) |  \               ((((unsigned short) (r3))& 0xf)<< 16) |  \               ((((unsigned short) (i2))& 0xffff)))
 end_define
 
 begin_define
@@ -1584,7 +1489,7 @@ parameter_list|,
 name|i2
 parameter_list|)
 define|\
-value|(ROPS(op) | ((((unsigned short)(r1))& 0xf)<< 20) |  \               ((((unsigned short)(i2))& 0xffff)))
+value|(ROPS(op) | ((((unsigned short) (r1))& 0xf)<< 20) |  \               ((((unsigned short) (i2))& 0xffff)))
 end_define
 
 begin_define
@@ -1612,7 +1517,7 @@ parameter_list|,
 name|d1
 parameter_list|)
 define|\
-value|(XOPS(op) | ((((unsigned short)(i2))& 0xff)<< 16) |  \               ((((unsigned short)(b1))& 0xf)<< 12) |  \               ((((unsigned short)(d1))& 0xfff)))
+value|(XOPS(op) | ((((unsigned short) (i2))& 0xff)<< 16) |  \               ((((unsigned short) (b1))& 0xf)<< 12) |  \               ((((unsigned short) (d1))& 0xfff)))
 end_define
 
 begin_define
@@ -1666,7 +1571,7 @@ parameter_list|,
 name|d1
 parameter_list|)
 define|\
-value|(XOPS(op) | ((((unsigned short)(l))& 0xff)<< 16) |  \               ((((unsigned short)(b1))& 0xf)<< 12) |  \               ((((unsigned short)(d1))& 0xfff)))
+value|(XOPS(op) | ((((unsigned short) (l))& 0xff)<< 16) |  \               ((((unsigned short) (b1))& 0xf)<< 12) |  \               ((((unsigned short) (d1))& 0xfff)))
 end_define
 
 begin_comment
@@ -1683,7 +1588,7 @@ parameter_list|,
 name|d2
 parameter_list|)
 define|\
-value|( ((((unsigned short)(b1))& 0xf)<< 28) |  \               ((((unsigned short)(d1))& 0xfff)<< 16 ))
+value|( ((((unsigned short) (b1))& 0xf)<< 28) |  \               ((((unsigned short) (d1))& 0xfff)<< 16 ))
 end_define
 
 begin_define
@@ -1709,7 +1614,7 @@ parameter_list|,
 name|d1
 parameter_list|)
 define|\
-value|(SOPS(op) | ((((unsigned short)(b1))& 0xf)<< 12) |  \               ((((unsigned short)(d1))& 0xfff)))
+value|(SOPS(op) | ((((unsigned short) (b1))& 0xf)<< 12) |  \               ((((unsigned short) (d1))& 0xfff)))
 end_define
 
 begin_comment
@@ -1726,7 +1631,7 @@ parameter_list|,
 name|d2
 parameter_list|)
 define|\
-value|( ((((unsigned short)(b1))& 0xf)<< 28) |  \               ((((unsigned short)(d1))& 0xfff)<< 16 ))
+value|( ((((unsigned short) (b1))& 0xf)<< 28) |  \               ((((unsigned short) (d1))& 0xfff)<< 16 ))
 end_define
 
 begin_define
@@ -4107,7 +4012,7 @@ name|RR_R2
 block|}
 block|}
 block|,
-comment|/* unusual RR formats */
+comment|/* Unusual RR formats.  */
 block|{
 literal|"svc"
 block|,
@@ -4141,7 +4046,7 @@ name|RR_I
 block|}
 block|}
 block|,
-comment|/* RRE form instructions */
+comment|/* RRE form instructions.  */
 block|{
 literal|"adbr"
 block|,
@@ -7939,7 +7844,7 @@ name|RRE_R2
 block|}
 block|}
 block|,
-comment|/* RRF form instructions */
+comment|/* RRF form instructions.  */
 block|{
 literal|"cfdbr"
 block|,
@@ -8637,7 +8542,7 @@ name|RRF_R2
 block|}
 block|}
 block|,
-comment|/* RX form instructions */
+comment|/* RX form instructions.  */
 block|{
 literal|"a"
 block|,
@@ -10933,7 +10838,7 @@ name|RX_B2
 block|}
 block|}
 block|,
-comment|/* RXE form instructions */
+comment|/* RXE form instructions.  */
 block|{
 literal|"adb"
 block|,
@@ -12278,7 +12183,7 @@ name|RX_B2
 block|}
 block|}
 block|,
-comment|/* RXF form instructions */
+comment|/* RXF form instructions.  */
 block|{
 literal|"madb"
 block|,
@@ -12487,7 +12392,7 @@ name|RX_B2
 block|}
 block|}
 block|,
-comment|/* RS form instructions */
+comment|/* RS form instructions.  */
 block|{
 literal|"bxh"
 block|,
@@ -13253,7 +13158,7 @@ name|RS_B2
 block|}
 block|}
 block|,
-comment|/* RS form instructions with blank R3 and optional B2 (shift left/right) */
+comment|/* RS form instructions with blank R3 and optional B2 (shift left/right).  */
 block|{
 literal|"sla"
 block|,
@@ -13598,7 +13503,7 @@ name|RS_B2_OPT
 block|}
 block|}
 block|,
-comment|/* RSI form instructions */
+comment|/* RSI form instructions.  */
 block|{
 literal|"brxh"
 block|,
@@ -13681,7 +13586,7 @@ name|RSI_I2
 block|}
 block|}
 block|,
-comment|/* RI form instructions */
+comment|/* RI form instructions.  */
 block|{
 literal|"ahi"
 block|,
@@ -14015,7 +13920,7 @@ name|RI_I2
 block|}
 block|}
 block|,
-comment|/* SI form instructions */
+comment|/* SI form instructions.  */
 block|{
 literal|"cli"
 block|,
@@ -14385,7 +14290,7 @@ name|SI_I2
 block|}
 block|}
 block|,
-comment|/* S form instructions */
+comment|/* S form instructions.  */
 block|{
 literal|"cfc"
 block|,
@@ -15811,7 +15716,7 @@ name|S_B2
 block|}
 block|}
 block|,
-comment|/* SS form instructions */
+comment|/* SS form instructions.  */
 block|{
 literal|"ap"
 block|,
@@ -16937,7 +16842,7 @@ name|SS_B2
 block|}
 block|}
 block|,
-comment|/* SSE form instructions */
+comment|/* SSE form instructions.  */
 block|{
 literal|"lasp"
 block|,

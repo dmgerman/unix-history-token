@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-dlx.h -- Assemble for the DLX    Copyright 2002, 2003 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* tc-dlx.h -- Assemble for the DLX    Copyright 2002, 2003, 2005 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -12,23 +12,6 @@ define|#
 directive|define
 name|TC_DLX
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BFD_ASSEMBLER
-end_ifndef
-
-begin_error
-error|#
-directive|error
-error|DLX support requires BFD_ASSEMBLER
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -85,35 +68,47 @@ name|LEX_DOLLAR
 value|1
 end_define
 
-begin_comment
-comment|/* #define md_operand(x) */
-end_comment
-
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|dlx_pop_insert
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|set_dlx_skip_hi16_flag
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|dlx_unrecognized_line
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|bfd_boolean
+name|md_dlx_fix_adjustable
+parameter_list|(
+name|struct
+name|fix
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -160,61 +155,6 @@ parameter_list|)
 value|dlx_unrecognized_line (c)
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|dlx_unrecognized_line
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|tc_headers_hook
-parameter_list|(
-name|a
-parameter_list|)
-value|;
-end_define
-
-begin_comment
-comment|/* not used */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|tc_headers_hook
-parameter_list|(
-name|a
-parameter_list|)
-value|;
-end_define
-
-begin_comment
-comment|/* not used */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|tc_crawl_symbol_chain
-parameter_list|(
-name|a
-parameter_list|)
-value|;
-end_define
-
-begin_comment
-comment|/* not used */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -226,59 +166,14 @@ value|;
 end_define
 
 begin_comment
-comment|/* not used */
+comment|/* Not used.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|AOUT_MACHTYPE
-value|101
-end_define
-
-begin_define
-define|#
-directive|define
-name|TC_COFF_FIX2RTYPE
-parameter_list|(
-name|fix_ptr
-parameter_list|)
-value|tc_coff_fix2rtype (fix_ptr)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BFD_ARCH
-value|bfd_arch_dlx
-end_define
 
 begin_define
 define|#
 directive|define
 name|COFF_MAGIC
 value|DLXMAGIC
-end_define
-
-begin_comment
-comment|/* Should the reloc be output ? 	on the 29k, this is true only if there is a symbol attached. 	on the h8, this is always true, since no fixup is done         on dlx, I have no idea!! but lets keep it here just for fun. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TC_COUNT_RELOC
-parameter_list|(
-name|x
-parameter_list|)
-value|(x->fx_addsy)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TC_CONS_RELOC
-value|BFD_RELOC_32_PCREL
 end_define
 
 begin_comment
@@ -302,23 +197,8 @@ parameter_list|)
 value|md_dlx_fix_adjustable (FIX)
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|bfd_boolean
-name|md_dlx_fix_adjustable
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
-name|fix
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/* Values passed to md_apply_fix3 don't include the symbol value.  */
+comment|/* Values passed to md_apply_fix don't include the symbol value.  */
 end_comment
 
 begin_define
@@ -329,12 +209,6 @@ parameter_list|(
 name|FIX
 parameter_list|)
 value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|NEED_FX_R_TYPE
 end_define
 
 begin_comment
@@ -371,15 +245,15 @@ name|LOCAL_LABELS_DOLLAR
 value|0
 end_define
 
+begin_comment
+comment|/* .-foo gets turned into PC relative relocs.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|DIFF_EXPR_OK
 end_define
-
-begin_comment
-comment|/* .-foo gets turned into PC relative relocs */
-end_comment
 
 end_unit
 

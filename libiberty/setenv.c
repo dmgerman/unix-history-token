@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (C) 1992, 1995, 1996, 1997, 2002 Free Software Foundation, Inc.    This file based on setenv.c in the GNU C Library.     The GNU C Library is free software; you can redistribute it and/or    modify it under the terms of the GNU Library General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     The GNU C Library is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    Library General Public License for more details.     You should have received a copy of the GNU Library General Public    License along with the GNU C Library; see the file COPYING.LIB.  If not,    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Copyright (C) 1992, 1995, 1996, 1997, 2002 Free Software Foundation, Inc.    This file based on setenv.c in the GNU C Library.     The GNU C Library is free software; you can redistribute it and/or    modify it under the terms of the GNU Library General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     The GNU C Library is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    Library General Public License for more details.     You should have received a copy of the GNU Library General Public    License along with the GNU C Library; see the file COPYING.LIB.  If not,    write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,    Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -235,25 +235,19 @@ begin_function
 name|int
 name|setenv
 parameter_list|(
-name|name
-parameter_list|,
-name|value
-parameter_list|,
-name|replace
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|value
-decl_stmt|;
+parameter_list|,
 name|int
 name|replace
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|char
@@ -437,6 +431,10 @@ index|[
 name|size
 index|]
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|malloc
 argument_list|(
 name|namelen
@@ -593,8 +591,12 @@ block|{
 comment|/* The existing string is too short; malloc a new one.  */
 name|char
 modifier|*
-name|new
+name|new_string
 init|=
+operator|(
+name|char
+operator|*
+operator|)
 name|malloc
 argument_list|(
 name|namelen
@@ -606,7 +608,7 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-name|new
+name|new_string
 operator|==
 name|NULL
 condition|)
@@ -621,7 +623,7 @@ block|}
 operator|*
 name|ep
 operator|=
-name|new
+name|new_string
 expr_stmt|;
 block|}
 name|memcpy
@@ -675,13 +677,11 @@ begin_function
 name|void
 name|unsetenv
 parameter_list|(
-name|name
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|size_t

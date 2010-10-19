@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for RISC iX (Acorn, arm) binaries.    Copyright 1994, 1995, 1996, 1997, 1998, 2000, 2001, 2002    Free Software Foundation, Inc.    Contributed by Richard Earnshaw (rwe@pegasus.esprit.ec.org)  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for RISC iX (Acorn, arm) binaries.    Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2004,    2005 Free Software Foundation, Inc.    Contributed by Richard Earnshaw (rwe@pegasus.esprit.ec.org)     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -50,137 +50,93 @@ begin_comment
 comment|/* Common combinations.  */
 end_comment
 
+begin_comment
+comment|/* Demand load (impure text).  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|IMAGIC
-value|(MF_IMPURE|ZMAGIC)
+value|(MF_IMPURE | ZMAGIC)
 end_define
 
 begin_comment
-comment|/* Demand load (impure text) */
+comment|/* OMAGIC with large header.    May contain a ref to a shared lib required by the object.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SPOMAGIC
-value|(MF_USES_SL|OMAGIC)
+value|(MF_USES_SL | OMAGIC)
 end_define
 
 begin_comment
-comment|/* OMAGIC with large header */
-end_comment
-
-begin_comment
-comment|/* -- may contain a ref to a */
-end_comment
-
-begin_comment
-comment|/* shared lib required by the */
-end_comment
-
-begin_comment
-comment|/* object.  */
+comment|/* A reference to a shared library.    The text portion of the object contains "overflow text" from    the shared library to be linked in with an object.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SLOMAGIC
-value|(MF_IS_SL|OMAGIC)
+value|(MF_IS_SL | OMAGIC)
 end_define
 
 begin_comment
-comment|/* A reference to a shared library */
-end_comment
-
-begin_comment
-comment|/* The text portion of the object */
-end_comment
-
-begin_comment
-comment|/* contains "overflow text" from */
-end_comment
-
-begin_comment
-comment|/* the shared library to be linked */
-end_comment
-
-begin_comment
-comment|/* in with an object */
+comment|/* Sqeezed demand paged.    NOTE: This interpretation of QMAGIC seems to be at variance    with that used on other architectures.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|QMAGIC
-value|(MF_SQUEEZED|ZMAGIC)
+value|(MF_SQUEEZED | ZMAGIC)
 end_define
 
 begin_comment
-comment|/* Sqeezed demand paged.  */
-end_comment
-
-begin_comment
-comment|/* NOTE: This interpretation of */
-end_comment
-
-begin_comment
-comment|/* QMAGIC seems to be at variance */
-end_comment
-
-begin_comment
-comment|/* With that used on other */
-end_comment
-
-begin_comment
-comment|/* architectures.  */
+comment|/* Program which uses sl.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SPZMAGIC
-value|(MF_USES_SL|ZMAGIC)
+value|(MF_USES_SL | ZMAGIC)
 end_define
 
 begin_comment
-comment|/* program which uses sl */
+comment|/* Sqeezed ditto.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SPQMAGIC
-value|(MF_USES_SL|QMAGIC)
+value|(MF_USES_SL | QMAGIC)
 end_define
 
 begin_comment
-comment|/* sqeezed ditto */
+comment|/* Shared lib part of prog.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SLZMAGIC
-value|(MF_IS_SL|ZMAGIC)
+value|(MF_IS_SL | ZMAGIC)
 end_define
 
 begin_comment
-comment|/* shared lib part of prog */
+comment|/* Sl which uses another.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SLPZMAGIC
-value|(MF_USES_SL|SLZMAGIC)
+value|(MF_USES_SL | SLZMAGIC)
 end_define
-
-begin_comment
-comment|/* sl which uses another */
-end_comment
 
 begin_define
 define|#
@@ -193,7 +149,7 @@ value|((x).a_info& MF_USES_SL)
 end_define
 
 begin_comment
-comment|/* Only a pure OMAGIC file has the minimal header */
+comment|/* Only a pure OMAGIC file has the minimal header.  */
 end_comment
 
 begin_define
@@ -299,7 +255,7 @@ name|N_BADMAG
 parameter_list|(
 name|x
 parameter_list|)
-value|((((x).a_info& ~007200) != ZMAGIC)&& \                      (((x).a_info& ~006000) != OMAGIC)&& \                      ((x).a_info != NMAGIC))
+value|((((x).a_info& ~007200) != ZMAGIC) \&& (((x).a_info& ~006000) != OMAGIC) \&& ((x).a_info != NMAGIC))
 end_define
 
 begin_define
@@ -341,10 +297,10 @@ name|execp
 parameter_list|)
 define|\
 value|{									    \     bfd_size_type text_size;
-comment|/* dummy vars */
-value|\     file_ptr text_end;							    \     if (adata(abfd).magic == undecided_magic)				    \       NAME(aout,adjust_sizes_and_vmas) (abfd,&text_size,&text_end);	    \     									    \     execp->a_syms = bfd_get_symcount (abfd) * EXTERNAL_NLIST_SIZE;	    \     execp->a_entry = bfd_get_start_address (abfd);			    \     									    \     execp->a_trsize = ((obj_textsec (abfd)->reloc_count) *		    \ 		       obj_reloc_entry_size (abfd));			    \     execp->a_drsize = ((obj_datasec (abfd)->reloc_count) *		    \ 		       obj_reloc_entry_size (abfd));			    \     NAME(aout,swap_exec_header_out) (abfd, execp,&exec_bytes);		    \     									    \     if (bfd_seek (abfd, (file_ptr) 0, SEEK_SET) != 0			    \ 	|| bfd_bwrite ((PTR)&exec_bytes, (bfd_size_type) EXEC_BYTES_SIZE,   \ 		      abfd) != EXEC_BYTES_SIZE)				    \       return FALSE;							    \
-comment|/* Now write out reloc info, followed by syms and strings */
-value|\ 									    \     if (bfd_get_outsymbols (abfd) != (asymbol **) NULL			    \&& bfd_get_symcount (abfd) != 0)				    \       {									    \ 	if (bfd_seek (abfd, (file_ptr) (N_SYMOFF(*execp)), SEEK_SET) != 0)  \ 	  return FALSE;							    \ 									    \ 	if (! NAME(aout,write_syms) (abfd)) return FALSE;		    \ 									    \ 	if (bfd_seek (abfd, (file_ptr) (N_TRELOFF(*execp)), SEEK_SET) != 0) \ 	  return FALSE;							    \ 									    \ 	if (! riscix_squirt_out_relocs (abfd, obj_textsec (abfd)))	    \ 	  return FALSE;							    \ 	if (bfd_seek (abfd, (file_ptr) (N_DRELOFF(*execp)), SEEK_SET) != 0) \ 	  return FALSE;							    \ 									    \ 	if (!NAME(aout,squirt_out_relocs) (abfd, obj_datasec (abfd)))	    \ 	  return FALSE;							    \       }									    \   }
+comment|/* Dummy vars.  */
+value|\     file_ptr text_end;							    \     									    \     if (adata (abfd).magic == undecided_magic)				    \       NAME (aout, adjust_sizes_and_vmas) (abfd,& text_size,& text_end);   \     									    \     execp->a_syms = bfd_get_symcount (abfd) * EXTERNAL_NLIST_SIZE;	    \     execp->a_entry = bfd_get_start_address (abfd);			    \     									    \     execp->a_trsize = ((obj_textsec (abfd)->reloc_count) *		    \ 		       obj_reloc_entry_size (abfd));			    \     execp->a_drsize = ((obj_datasec (abfd)->reloc_count) *		    \ 		       obj_reloc_entry_size (abfd));			    \     NAME (aout, swap_exec_header_out) (abfd, execp,& exec_bytes);	    \     									    \     if (bfd_seek (abfd, (file_ptr) 0, SEEK_SET) != 0			    \ 	|| bfd_bwrite ((void *)& exec_bytes, (bfd_size_type) EXEC_BYTES_SIZE,  \ 		      abfd) != EXEC_BYTES_SIZE)				    \       return FALSE;							    \
+comment|/* Now write out reloc info, followed by syms and strings.  */
+value|\ 									    \     if (bfd_get_outsymbols (abfd) != NULL			    	    \&& bfd_get_symcount (abfd) != 0)				    \       {									    \ 	if (bfd_seek (abfd, (file_ptr) (N_SYMOFF (* execp)), SEEK_SET) != 0)\ 	  return FALSE;							    \ 									    \ 	if (! NAME (aout, write_syms) (abfd))				    \           return FALSE;							    \ 									    \ 	if (bfd_seek (abfd, (file_ptr) (N_TRELOFF (* execp)), SEEK_SET) != 0)\ 	  return FALSE;							    \ 									    \ 	if (! riscix_squirt_out_relocs (abfd, obj_textsec (abfd)))	    \ 	  return FALSE;							    \ 	if (bfd_seek (abfd, (file_ptr) (N_DRELOFF (* execp)), SEEK_SET) != 0)\ 	  return FALSE;							    \ 									    \ 	if (!NAME (aout, squirt_out_relocs) (abfd, obj_datasec (abfd)))	    \ 	  return FALSE;							    \       }									    \   }
 end_define
 
 begin_include
@@ -359,192 +315,97 @@ directive|include
 file|"aout/aout64.h"
 end_include
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|bfd_reloc_status_type
 name|riscix_fix_pcrel_26_done
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-operator|,
+modifier|*
+name|abfd
+name|ATTRIBUTE_UNUSED
+parameter_list|,
 name|arelent
-operator|*
-operator|,
+modifier|*
+name|reloc_entry
+name|ATTRIBUTE_UNUSED
+parameter_list|,
 name|asymbol
-operator|*
-operator|,
-name|PTR
-operator|,
+modifier|*
+name|symbol
+name|ATTRIBUTE_UNUSED
+parameter_list|,
+name|void
+modifier|*
+name|data
+name|ATTRIBUTE_UNUSED
+parameter_list|,
 name|asection
-operator|*
-operator|,
+modifier|*
+name|input_section
+name|ATTRIBUTE_UNUSED
+parameter_list|,
 name|bfd
-operator|*
-operator|,
+modifier|*
+name|output_bfd
+name|ATTRIBUTE_UNUSED
+parameter_list|,
 name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+modifier|*
+name|error_message
+name|ATTRIBUTE_UNUSED
+parameter_list|)
+block|{
+comment|/* This is dead simple at present.  */
+return|return
+name|bfd_reloc_ok
+return|;
+block|}
+end_function
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|bfd_reloc_status_type
 name|riscix_fix_pcrel_26
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bfd
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|arelent
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|asymbol
-operator|*
-operator|,
-name|PTR
-operator|,
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
 name|asection
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|bfd
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
 specifier|const
 name|bfd_target
 modifier|*
-name|MY
+name|riscix_callback
 parameter_list|(
-name|object_p
+name|bfd
+modifier|*
 parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_decl_stmt
-name|reloc_howto_type
-modifier|*
-name|riscix_reloc_type_lookup
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|bfd_reloc_code_real_type
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|riscix_swap_std_reloc_out
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|arelent
-operator|*
-operator|,
-expr|struct
-name|reloc_std_external
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|bfd_boolean
-name|riscix_squirt_out_relocs
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|asection
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|long
-name|MY
-parameter_list|(
-name|canonicalize_reloc
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-operator|,
-function_decl|sec_ptr
-operator|,
-function_decl|arelent **
-operator|,
-function_decl|asymbol **
-end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_decl_stmt
-specifier|const
-name|bfd_target
-modifier|*
-name|riscix_some_aout_object_p
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-expr|struct
-name|internal_exec
-operator|*
-operator|,
-specifier|const
-name|bfd_target
-operator|*
-call|(
-modifier|*
-call|)
-argument_list|(
-name|bfd
-operator|*
-argument_list|)
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -553,7 +414,7 @@ name|riscix_std_reloc_howto
 index|[]
 init|=
 block|{
-comment|/* type              rs size bsz  pcrel bitpos ovrf                     sf name     part_inpl readmask  setmask    pcdone */
+comment|/* Type              rs size bsz  pcrel bitpos ovrf                     sf name     part_inpl readmask  setmask    pcdone */
 name|HOWTO
 argument_list|(
 literal|0
@@ -866,113 +727,38 @@ end_define
 begin_function
 specifier|static
 name|bfd_reloc_status_type
-name|riscix_fix_pcrel_26_done
-parameter_list|(
-name|abfd
-parameter_list|,
-name|reloc_entry
-parameter_list|,
-name|symbol
-parameter_list|,
-name|data
-parameter_list|,
-name|input_section
-parameter_list|,
-name|output_bfd
-parameter_list|,
-name|error_message
-parameter_list|)
-name|bfd
-modifier|*
-name|abfd
-name|ATTRIBUTE_UNUSED
-decl_stmt|;
-name|arelent
-modifier|*
-name|reloc_entry
-name|ATTRIBUTE_UNUSED
-decl_stmt|;
-name|asymbol
-modifier|*
-name|symbol
-name|ATTRIBUTE_UNUSED
-decl_stmt|;
-name|PTR
-name|data
-name|ATTRIBUTE_UNUSED
-decl_stmt|;
-name|asection
-modifier|*
-name|input_section
-name|ATTRIBUTE_UNUSED
-decl_stmt|;
-name|bfd
-modifier|*
-name|output_bfd
-name|ATTRIBUTE_UNUSED
-decl_stmt|;
-name|char
-modifier|*
-modifier|*
-name|error_message
-name|ATTRIBUTE_UNUSED
-decl_stmt|;
-block|{
-comment|/* This is dead simple at present.  */
-return|return
-name|bfd_reloc_ok
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|bfd_reloc_status_type
 name|riscix_fix_pcrel_26
 parameter_list|(
-name|abfd
-parameter_list|,
-name|reloc_entry
-parameter_list|,
-name|symbol
-parameter_list|,
-name|data
-parameter_list|,
-name|input_section
-parameter_list|,
-name|output_bfd
-parameter_list|,
-name|error_message
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|arelent
 modifier|*
 name|reloc_entry
-decl_stmt|;
+parameter_list|,
 name|asymbol
 modifier|*
 name|symbol
-decl_stmt|;
-name|PTR
+parameter_list|,
+name|void
+modifier|*
 name|data
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|input_section
-decl_stmt|;
+parameter_list|,
 name|bfd
 modifier|*
 name|output_bfd
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|error_message
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 name|bfd_vma
 name|relocation
@@ -1005,7 +791,7 @@ name|flag
 init|=
 name|bfd_reloc_ok
 decl_stmt|;
-comment|/* If this is an undefined symbol, return error */
+comment|/* If this is an undefined symbol, return error.  */
 if|if
 condition|(
 name|symbol
@@ -1047,10 +833,6 @@ name|name
 operator|&&
 name|output_bfd
 operator|!=
-operator|(
-name|bfd
-operator|*
-operator|)
 name|NULL
 condition|)
 return|return
@@ -1076,7 +858,7 @@ operator|)
 operator|-
 literal|0x02000000
 expr_stmt|;
-comment|/* Sign extend */
+comment|/* Sign extend.  */
 name|relocation
 operator|+=
 name|symbol
@@ -1134,7 +916,7 @@ condition|)
 return|return
 name|bfd_reloc_overflow
 return|;
-comment|/* Check for overflow */
+comment|/* Check for overflow.  */
 if|if
 condition|(
 name|relocation
@@ -1231,21 +1013,18 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|reloc_howto_type
 modifier|*
 name|riscix_reloc_type_lookup
 parameter_list|(
-name|abfd
-parameter_list|,
-name|code
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|bfd_reloc_code_real_type
 name|code
-decl_stmt|;
+parameter_list|)
 block|{
 define|#
 directive|define
@@ -1282,10 +1061,6 @@ expr_stmt|;
 break|break;
 default|default:
 return|return
-operator|(
-name|reloc_howto_type
-operator|*
-operator|)
 name|NULL
 return|;
 block|}
@@ -1338,10 +1113,6 @@ argument_list|)
 expr_stmt|;
 default|default:
 return|return
-operator|(
-name|reloc_howto_type
-operator|*
-operator|)
 name|NULL
 return|;
 block|}
@@ -1397,45 +1168,24 @@ name|MY_object_p
 value|riscix_object_p
 end_define
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|bfd_target
-modifier|*
-name|riscix_callback
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_function
+specifier|static
 name|void
 name|riscix_swap_std_reloc_out
 parameter_list|(
-name|abfd
-parameter_list|,
-name|g
-parameter_list|,
-name|natptr
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|arelent
 modifier|*
 name|g
-decl_stmt|;
+parameter_list|,
 name|struct
 name|reloc_std_external
 modifier|*
 name|natptr
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|r_index
@@ -1497,7 +1247,7 @@ name|howto
 operator|->
 name|size
 expr_stmt|;
-comment|/* Size as a power of two */
+comment|/* Size as a power of two.  */
 if|if
 condition|(
 name|r_length
@@ -1526,8 +1276,8 @@ name|howto
 operator|->
 name|pc_relative
 expr_stmt|;
-comment|/* Relative to PC? */
-comment|/* For RISC iX, in pc-relative relocs the r_pcrel bit means that the      relocation has been done already (Only for the 26-bit one I think)???!!!      */
+comment|/* Relative to PC?  */
+comment|/* For RISC iX, in pc-relative relocs the r_pcrel bit means that the      relocation has been done already (Only for the 26-bit one I think)?  */
 if|if
 condition|(
 name|r_length
@@ -1542,15 +1292,8 @@ literal|0
 else|:
 literal|1
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* For a standard reloc, the addend is in the object file.  */
-block|r_addend = g->addend + (*(g->sym_ptr_ptr))->section->output_section->vma;
-endif|#
-directive|endif
-comment|/* name was clobbered by aout_write_syms to be symbol index */
-comment|/* If this relocation is relative to a symbol then set the      r_index to the symbols index, and the r_extern bit.       Absolute symbols can come in in two ways, either as an offset      from the abs section, or as a symbol which has an abs value.      check for that here      */
+comment|/* Name was clobbered by aout_write_syms to be symbol index.  */
+comment|/* If this relocation is relative to a symbol then set the      r_index to the symbols index, and the r_extern bit.       Absolute symbols can come in in two ways, either as an offset      from the abs section, or as a symbol which has an abs value.      check for that here.  */
 if|if
 condition|(
 name|bfd_is_com_section
@@ -1578,7 +1321,7 @@ operator|==
 name|sym
 condition|)
 block|{
-comment|/* Whoops, looked like an abs symbol, but is really an offset 	     from the abs section */
+comment|/* Whoops, looked like an abs symbol, but is really an offset 	     from the abs section.  */
 name|r_index
 operator|=
 literal|0
@@ -1590,7 +1333,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Fill in symbol */
+comment|/* Fill in symbol.  */
 name|r_extern
 operator|=
 literal|1
@@ -1612,7 +1355,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* Just an ordinary section */
+comment|/* Just an ordinary section.  */
 name|r_extern
 operator|=
 literal|0
@@ -1624,7 +1367,7 @@ operator|->
 name|target_index
 expr_stmt|;
 block|}
-comment|/* now the fun stuff */
+comment|/* Now the fun stuff.  */
 if|if
 condition|(
 name|bfd_header_big_endian
@@ -1781,21 +1524,18 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|bfd_boolean
 name|riscix_squirt_out_relocs
 parameter_list|(
-name|abfd
-parameter_list|,
-name|section
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|section
-decl_stmt|;
+parameter_list|)
 block|{
 name|arelent
 modifier|*
@@ -1850,11 +1590,6 @@ name|count
 expr_stmt|;
 name|native
 operator|=
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
 name|bfd_zalloc
 argument_list|(
 name|abfd
@@ -1916,7 +1651,8 @@ condition|(
 name|bfd_bwrite
 argument_list|(
 operator|(
-name|PTR
+name|void
+operator|*
 operator|)
 name|native
 argument_list|,
@@ -1953,41 +1689,34 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This is just like the standard aoutx.h version but we need to do our  * own mapping of external reloc type values to howto entries.  */
+comment|/* This is just like the standard aoutx.h version but we need to do our    own mapping of external reloc type values to howto entries.  */
 end_comment
 
 begin_function
+specifier|static
 name|long
 name|MY
 function|(
 name|canonicalize_reloc
 function|)
 parameter_list|(
-name|abfd
-parameter_list|,
-name|section
-parameter_list|,
-name|relptr
-parameter_list|,
-name|symbols
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|sec_ptr
 name|section
-decl_stmt|;
+parameter_list|,
 name|arelent
 modifier|*
 modifier|*
 name|relptr
-decl_stmt|;
+parameter_list|,
 name|asymbol
 modifier|*
 modifier|*
 name|symbols
-decl_stmt|;
+parameter_list|)
 block|{
 name|arelent
 modifier|*
@@ -2142,7 +1871,7 @@ name|section
 operator|->
 name|relocation
 expr_stmt|;
-comment|/* fix up howto entries */
+comment|/* Fix up howto entries.  */
 for|for
 control|(
 name|count
@@ -2213,51 +1942,34 @@ begin_comment
 comment|/* This is the same as NAME(aout,some_aout_object_p), but has different    expansions of the macro definitions.  */
 end_comment
 
-begin_decl_stmt
+begin_function
+specifier|static
 specifier|const
 name|bfd_target
 modifier|*
 name|riscix_some_aout_object_p
-argument_list|(
-name|abfd
-argument_list|,
-name|execp
-argument_list|,
-name|callback_to_real_object_p
-argument_list|)
+parameter_list|(
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|struct
 name|internal_exec
 modifier|*
 name|execp
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
+parameter_list|,
 specifier|const
 name|bfd_target
-operator|*
-operator|(
-operator|*
+modifier|*
+function_decl|(
+modifier|*
 name|callback_to_real_object_p
-operator|)
-name|PARAMS
-argument_list|(
-operator|(
+function_decl|)
+parameter_list|(
 name|bfd
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+modifier|*
+parameter_list|)
+parameter_list|)
 block|{
 name|struct
 name|aout_data_struct
@@ -2283,11 +1995,6 @@ argument_list|)
 decl_stmt|;
 name|rawptr
 operator|=
-operator|(
-expr|struct
-name|aout_data_struct
-operator|*
-operator|)
 name|bfd_zalloc
 argument_list|(
 name|abfd
@@ -2302,7 +2009,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-literal|0
+name|NULL
 return|;
 name|oldrawptr
 operator|=
@@ -2352,6 +2059,7 @@ name|rawptr
 operator|->
 name|e
 expr_stmt|;
+comment|/* Copy in the internal_exec struct.  */
 operator|*
 operator|(
 name|abfd
@@ -2368,7 +2076,6 @@ operator|=
 operator|*
 name|execp
 expr_stmt|;
-comment|/* Copy in the internal_exec 						   struct */
 name|execp
 operator|=
 name|abfd
@@ -2381,7 +2088,7 @@ name|a
 operator|.
 name|hdr
 expr_stmt|;
-comment|/* Set the file flags */
+comment|/* Set the file flags.  */
 name|abfd
 operator|->
 name|flags
@@ -2404,7 +2111,7 @@ name|flags
 operator||=
 name|HAS_RELOC
 expr_stmt|;
-comment|/* Setting of EXEC_P has been deferred to the bottom of this function */
+comment|/* Setting of EXEC_P has been deferred to the bottom of this function.  */
 if|if
 condition|(
 name|execp
@@ -2437,6 +2144,7 @@ name|flags
 operator||=
 name|DYNAMIC
 expr_stmt|;
+comment|/* Squeezed files aren't supported (yet)!  */
 if|if
 condition|(
 operator|(
@@ -2449,7 +2157,6 @@ operator|)
 operator|!=
 literal|0
 condition|)
-comment|/* Squeezed files aren't supported 					     (yet)! */
 block|{
 name|bfd_set_error
 argument_list|(
@@ -2473,8 +2180,8 @@ operator|)
 operator|!=
 literal|0
 condition|)
-comment|/* Nor are shared libraries */
 block|{
+comment|/* Nor are shared libraries.  */
 name|bfd_set_error
 argument_list|(
 name|bfd_error_wrong_format
@@ -2563,12 +2270,10 @@ operator|=
 name|o_magic
 expr_stmt|;
 else|else
-block|{
-comment|/* Should have been checked with N_BADMAG before this routine          was called.  */
+comment|/* Should have been checked with N_BADMAG before this routine        was called.  */
 name|abort
 argument_list|()
 expr_stmt|;
-block|}
 name|bfd_get_start_address
 argument_list|(
 name|abfd
@@ -2583,10 +2288,6 @@ argument_list|(
 name|abfd
 argument_list|)
 operator|=
-operator|(
-name|aout_symbol_type
-operator|*
-operator|)
 name|NULL
 expr_stmt|;
 name|bfd_get_symcount
@@ -2662,7 +2363,7 @@ argument_list|(
 name|abfd
 argument_list|)
 operator|->
-name|_raw_size
+name|size
 operator|=
 name|execp
 operator|->
@@ -2673,7 +2374,7 @@ argument_list|(
 name|abfd
 argument_list|)
 operator|->
-name|_raw_size
+name|size
 operator|=
 name|execp
 operator|->
@@ -2783,7 +2484,7 @@ name|defined
 argument_list|(
 name|STAT_FOR_EXEC
 argument_list|)
-comment|/* The original heuristic doesn't work in some important cases. The    * a.out file has no information about the text start address. For    * files (like kernels) linked to non-standard addresses (ld -Ttext    * nnn) the entry point may not be between the default text start    * (obj_textsec(abfd)->vma) and (obj_textsec(abfd)->vma) + text size    * This is not just a mach issue. Many kernels are loaded at non    * standard addresses.    */
+comment|/* The original heuristic doesn't work in some important cases. The      a.out file has no information about the text start address. For      files (like kernels) linked to non-standard addresses (ld -Ttext      nnn) the entry point may not be between the default text start      (obj_textsec(abfd)->vma) and (obj_textsec(abfd)->vma) + text size      This is not just a mach issue. Many kernels are loaded at non      standard addresses.  */
 block|{
 name|struct
 name|stat
@@ -2885,7 +2586,7 @@ argument_list|(
 name|abfd
 argument_list|)
 operator|->
-name|_raw_size
+name|size
 operator|)
 condition|)
 name|abfd
@@ -2900,9 +2601,9 @@ comment|/* MACH */
 if|if
 condition|(
 name|result
+operator|==
+name|NULL
 condition|)
-block|{     }
-else|else
 block|{
 name|free
 argument_list|(
@@ -2922,7 +2623,7 @@ return|return
 name|result
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
@@ -2934,23 +2635,21 @@ function|(
 name|object_p
 function|)
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|external_exec
 name|exec_bytes
 decl_stmt|;
-comment|/* Raw exec header from file */
+comment|/* Raw exec header from file.  */
 name|struct
 name|internal_exec
 name|exec
 decl_stmt|;
-comment|/* Cleaned-up exec header */
+comment|/* Cleaned-up exec header.  */
 specifier|const
 name|bfd_target
 modifier|*
@@ -2961,7 +2660,8 @@ condition|(
 name|bfd_bread
 argument_list|(
 operator|(
-name|PTR
+name|void
+operator|*
 operator|)
 operator|&
 name|exec_bytes
@@ -2990,7 +2690,7 @@ name|bfd_error_wrong_format
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|NULL
 return|;
 block|}
 name|exec
@@ -3014,7 +2714,7 @@ name|exec
 argument_list|)
 condition|)
 return|return
-literal|0
+name|NULL
 return|;
 ifdef|#
 directive|ifdef
@@ -3033,7 +2733,7 @@ argument_list|)
 operator|)
 condition|)
 return|return
-literal|0
+name|NULL
 return|;
 endif|#
 directive|endif

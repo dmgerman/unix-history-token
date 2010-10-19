@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Multiple object format emulation.    Copyright 1995, 1996, 1997, 1999, 2000, 2002    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* Multiple object format emulation.    Copyright 1995, 1996, 1997, 1999, 2000, 2002, 2004    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -67,9 +67,11 @@ directive|define
 name|obj_app_file
 parameter_list|(
 name|NAME
+parameter_list|,
+name|APPFILE
 parameter_list|)
 define|\
-value|(this_format->app_file				\ 	 ? (*this_format->app_file) (NAME)		\ 	 : (void) 0)
+value|(this_format->app_file				\ 	 ? (*this_format->app_file) (NAME, APPFILE)	\ 	 : (void) 0)
 end_define
 
 begin_define
@@ -331,6 +333,13 @@ define|#
 directive|define
 name|EMIT_SECTION_SYMBOLS
 value|(this_format->emit_section_symbols)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FAKE_LABEL_NAME
+value|(this_emulation->fake_label_name)
 end_define
 
 begin_ifdef

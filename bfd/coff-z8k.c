@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for Zilog Z800n COFF binaries.    Copyright 1992, 1993, 1994, 1995, 1997, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.    Contributed by Cygnus Support.    Written by Steve Chamberlain,<sac@cygnus.com>.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for Zilog Z800n COFF binaries.    Copyright 1992, 1993, 1994, 1995, 1997, 1999, 2000, 2001, 2002, 2003,    2004, 2005 Free Software Foundation, Inc.    Contributed by Cygnus Support.    Written by Steve Chamberlain,<sac@cygnus.com>.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -241,7 +241,7 @@ name|HOWTO
 argument_list|(
 name|R_JR
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 literal|0
 argument_list|,
@@ -259,9 +259,9 @@ literal|"r_jr"
 argument_list|,
 name|TRUE
 argument_list|,
-literal|0
+literal|0xff
 argument_list|,
-literal|0
+literal|0xff
 argument_list|,
 name|TRUE
 argument_list|)
@@ -295,9 +295,9 @@ literal|"r_disp7"
 argument_list|,
 name|TRUE
 argument_list|,
-literal|0
+literal|0x7f
 argument_list|,
-literal|0
+literal|0x7f
 argument_list|,
 name|TRUE
 argument_list|)
@@ -313,7 +313,7 @@ name|HOWTO
 argument_list|(
 name|R_CALLR
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 literal|1
 argument_list|,
@@ -340,40 +340,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* Turn a howto into a reloc number */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|coff_z8k_select_reloc
-parameter_list|(
-name|reloc_howto_type
-modifier|*
-name|howto
-parameter_list|)
-block|{
-return|return
-name|howto
-operator|->
-name|type
-return|;
-block|}
-end_function
-
-begin_define
-define|#
-directive|define
-name|SELECT_RELOC
-parameter_list|(
-name|x
-parameter_list|,
-name|howto
-parameter_list|)
-value|x.r_type = coff_z8k_select_reloc(howto)
-end_define
-
 begin_define
 define|#
 directive|define
@@ -392,7 +358,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Customize coffcode.h */
+comment|/* Customize coffcode.h.  */
 end_comment
 
 begin_define
@@ -568,6 +534,93 @@ name|relocentry
 parameter_list|)
 value|rtype2howto (internal, relocentry)
 end_define
+
+begin_function
+specifier|static
+name|reloc_howto_type
+modifier|*
+name|coff_z8k_reloc_type_lookup
+parameter_list|(
+name|bfd
+modifier|*
+name|abfd
+name|ATTRIBUTE_UNUSED
+parameter_list|,
+name|bfd_reloc_code_real_type
+name|code
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|code
+condition|)
+block|{
+case|case
+name|BFD_RELOC_8
+case|:
+return|return
+operator|&
+name|r_imm8
+return|;
+case|case
+name|BFD_RELOC_16
+case|:
+return|return
+operator|&
+name|r_da
+return|;
+case|case
+name|BFD_RELOC_32
+case|:
+return|return
+operator|&
+name|r_imm32
+return|;
+case|case
+name|BFD_RELOC_8_PCREL
+case|:
+return|return
+operator|&
+name|r_jr
+return|;
+case|case
+name|BFD_RELOC_16_PCREL
+case|:
+return|return
+operator|&
+name|r_rel16
+return|;
+case|case
+name|BFD_RELOC_Z8K_DISP7
+case|:
+return|return
+operator|&
+name|r_disp7
+return|;
+case|case
+name|BFD_RELOC_Z8K_CALLR
+case|:
+return|return
+operator|&
+name|r_callr
+return|;
+case|case
+name|BFD_RELOC_Z8K_IMM4L
+case|:
+return|return
+operator|&
+name|r_imm4l
+return|;
+default|default:
+name|BFD_FAIL
+argument_list|()
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+block|}
+end_function
 
 begin_comment
 comment|/* Perform any necessary magic to the addend in a reloc entry.  */
@@ -1016,12 +1069,12 @@ name|bfd_vma
 name|dot
 init|=
 operator|(
-name|link_order
-operator|->
-name|offset
-operator|+
 operator|*
 name|dst_ptr
+operator|+
+name|input_section
+operator|->
+name|output_offset
 operator|+
 name|input_section
 operator|->
@@ -1079,6 +1132,8 @@ name|reloc_overflow
 call|)
 argument_list|(
 name|link_info
+argument_list|,
+name|NULL
 argument_list|,
 name|bfd_asymbol_name
 argument_list|(
@@ -1160,12 +1215,12 @@ name|bfd_vma
 name|dot
 init|=
 operator|(
-name|link_order
-operator|->
-name|offset
-operator|+
 operator|*
 name|dst_ptr
+operator|+
+name|input_section
+operator|->
+name|output_offset
 operator|+
 name|input_section
 operator|->
@@ -1223,6 +1278,8 @@ name|reloc_overflow
 call|)
 argument_list|(
 name|link_info
+argument_list|,
+name|NULL
 argument_list|,
 name|bfd_asymbol_name
 argument_list|(
@@ -1323,12 +1380,12 @@ name|bfd_vma
 name|dot
 init|=
 operator|(
-name|link_order
-operator|->
-name|offset
-operator|+
 operator|*
 name|dst_ptr
+operator|+
+name|input_section
+operator|->
+name|output_offset
 operator|+
 name|input_section
 operator|->
@@ -1381,6 +1438,8 @@ name|reloc_overflow
 call|)
 argument_list|(
 name|link_info
+argument_list|,
+name|NULL
 argument_list|,
 name|bfd_asymbol_name
 argument_list|(
@@ -1487,12 +1546,12 @@ name|bfd_vma
 name|dot
 init|=
 operator|(
-name|link_order
-operator|->
-name|offset
-operator|+
 operator|*
 name|dst_ptr
+operator|+
+name|input_section
+operator|->
+name|output_offset
 operator|+
 name|input_section
 operator|->
@@ -1536,6 +1595,8 @@ name|reloc_overflow
 call|)
 argument_list|(
 name|link_info
+argument_list|,
+name|NULL
 argument_list|,
 name|bfd_asymbol_name
 argument_list|(
@@ -1617,6 +1678,13 @@ name|coff_reloc16_extra_cases
 value|extra_case
 end_define
 
+begin_define
+define|#
+directive|define
+name|coff_bfd_reloc_type_lookup
+value|coff_z8k_reloc_type_lookup
+end_define
+
 begin_include
 include|#
 directive|include
@@ -1629,12 +1697,6 @@ directive|undef
 name|coff_bfd_get_relocated_section_contents
 end_undef
 
-begin_undef
-undef|#
-directive|undef
-name|coff_bfd_relax_section
-end_undef
-
 begin_define
 define|#
 directive|define
@@ -1642,6 +1704,12 @@ name|coff_bfd_get_relocated_section_contents
 define|\
 value|bfd_coff_reloc16_get_relocated_section_contents
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|coff_bfd_relax_section
+end_undef
 
 begin_define
 define|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-cris.h -- Header file for tc-cris.c, the CRIS GAS port.    Copyright 2000, 2001, 2002 Free Software Foundation, Inc.     Contributed by Axis Communications AB, Lund, Sweden.    Originally written for GAS 1.38.1 by Mikael Asker.    Updates, BFDizing, GNUifying and ELF by Hans-Peter Nilsson.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the    Free Software Foundation, 59 Temple Place - Suite 330, Boston,    MA 02111-1307, USA.  */
+comment|/* tc-cris.h -- Header file for tc-cris.c, the CRIS GAS port.    Copyright 2000, 2001, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.     Contributed by Axis Communications AB, Lund, Sweden.    Originally written for GAS 1.38.1 by Mikael Asker.    Updates, BFDizing, GNUifying and ELF by Hans-Peter Nilsson.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the    Free Software Foundation, 51 Franklin Street - Fifth Floor, Boston,    MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -27,20 +27,17 @@ begin_comment
 comment|/* Multi-target support is always on.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 specifier|const
 name|char
 modifier|*
 name|cris_target_format
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -54,6 +51,24 @@ define|#
 directive|define
 name|TARGET_ARCH
 value|bfd_arch_cris
+end_define
+
+begin_function_decl
+specifier|extern
+name|unsigned
+name|int
+name|cris_mach
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|TARGET_MACH
+value|(cris_mach ())
 end_define
 
 begin_define
@@ -179,22 +194,6 @@ name|md_number_to_chars
 value|number_to_chars_littleendian
 end_define
 
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|int
-name|md_short_jump_size
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|int
-name|md_long_jump_size
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* There's no use having different functions for this; the sizes are the    same.  Note that we can't #define md_short_jump_size here.  */
 end_comment
@@ -223,22 +222,19 @@ name|TC_GENERIC_RELAX_TABLE
 value|md_cris_relax_table
 end_define
 
-begin_decl_stmt
+begin_function_decl
 name|long
 name|cris_relax_frag
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|segT
-operator|,
+parameter_list|,
 name|fragS
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|long
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* GAS only handles relaxations for pc-relative data targeting addresses    in the same segment, so we have to handle the rest on our own.  */
@@ -269,20 +265,17 @@ parameter_list|)
 value|md_cris_force_relocation (FIX)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|md_cris_force_relocation
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|fix
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -323,6 +316,20 @@ name|FIX
 parameter_list|)
 define|\
 value|((FIX)->fx_r_type != BFD_RELOC_VTABLE_INHERIT		\&& (FIX)->fx_r_type != BFD_RELOC_VTABLE_ENTRY		\&& (! IS_CRIS_PIC_RELOC ((FIX)->fx_r_type)		\       || (FIX)->fx_r_type == BFD_RELOC_CRIS_32_GOTREL))
+end_define
+
+begin_comment
+comment|/* FIXME: This *should* be a redundant definition, as the    TC_FORCE_RELOCATION* definitions already told about the cases where    we *don't* want the symbol value calculated.  Here we seem to answer    the "are you sure" question.  It certainly has very little to do with    whether the symbol value is passed to md_apply_fix.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MD_APPLY_SYM_VALUE
+parameter_list|(
+name|FIX
+parameter_list|)
+value|0
 end_define
 
 begin_comment
@@ -399,22 +406,19 @@ name|broken_word
 struct_decl|;
 end_struct_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|tc_cris_check_adjusted_broken_word
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|offsetT
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|broken_word
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -442,6 +446,7 @@ name|SIZE
 parameter_list|,
 name|P2VAR
 parameter_list|)
+value|do { } while (0)
 end_define
 
 begin_comment

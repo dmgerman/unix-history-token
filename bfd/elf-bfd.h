@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end data structures for ELF files.    Copyright 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001,    2002, 2003, 2004 Free Software Foundation, Inc.    Written by Cygnus Support.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end data structures for ELF files.    Copyright 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001,    2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.    Written by Cygnus Support.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -248,53 +248,6 @@ comment|/* ??? Note that this is consistently used as a synonym for tests      a
 name|long
 name|dynindx
 decl_stmt|;
-comment|/* String table index in .dynstr if this is a dynamic symbol.  */
-name|unsigned
-name|long
-name|dynstr_index
-decl_stmt|;
-comment|/* Hash value of the name computed using the ELF hash function.  */
-name|unsigned
-name|long
-name|elf_hash_value
-decl_stmt|;
-comment|/* If this is a weak defined symbol from a dynamic object, this      field points to a defined symbol with the same value, if there is      one.  Otherwise it is NULL.  */
-name|struct
-name|elf_link_hash_entry
-modifier|*
-name|weakdef
-decl_stmt|;
-comment|/* Version information.  */
-union|union
-block|{
-comment|/* This field is used for a symbol which is not defined in a        regular object.  It points to the version information read in        from the dynamic object.  */
-name|Elf_Internal_Verdef
-modifier|*
-name|verdef
-decl_stmt|;
-comment|/* This field is used for a symbol which is defined in a regular        object.  It is set up in size_dynamic_sections.  It points to        the version information we should write out for this symbol.  */
-name|struct
-name|bfd_elf_version_tree
-modifier|*
-name|vertree
-decl_stmt|;
-block|}
-name|verinfo
-union|;
-comment|/* Virtual table entry use information.  This array is nominally of size      size/sizeof(target_void_pointer), though we have to be able to assume      and track a size while the symbol is still undefined.  It is indexed      via offset/sizeof(target_void_pointer).  */
-name|size_t
-name|vtable_entries_size
-decl_stmt|;
-name|bfd_boolean
-modifier|*
-name|vtable_entries_used
-decl_stmt|;
-comment|/* Virtual table derivation info.  */
-name|struct
-name|elf_link_hash_entry
-modifier|*
-name|vtable_parent
-decl_stmt|;
 comment|/* If this symbol requires an entry in the global offset table, the      processor specific backend uses this field to track usage and      final offset.  Two schemes are supported:  The first assumes that      a symbol may only have one GOT entry, and uses REFCOUNT until      size_dynamic_sections, at which point the contents of the .got is      fixed.  Afterward, if OFFSET is -1, then the symbol does not      require a global offset table entry.  The second scheme allows      multiple GOT entries per symbol, managed via a linked list      pointed to by GLIST.  */
 union|union
 name|gotplt_union
@@ -328,99 +281,189 @@ name|bfd_size_type
 name|size
 decl_stmt|;
 comment|/* Symbol type (STT_NOTYPE, STT_OBJECT, etc.).  */
-name|char
+name|unsigned
+name|int
 name|type
+range|:
+literal|8
 decl_stmt|;
 comment|/* Symbol st_other value, symbol visibility.  */
 name|unsigned
-name|char
+name|int
 name|other
-decl_stmt|;
-comment|/* Some flags; legal values follow.  */
-name|unsigned
-name|short
-name|elf_link_hash_flags
+range|:
+literal|8
 decl_stmt|;
 comment|/* Symbol is referenced by a non-shared object.  */
-define|#
-directive|define
-name|ELF_LINK_HASH_REF_REGULAR
-value|01
+name|unsigned
+name|int
+name|ref_regular
+range|:
+literal|1
+decl_stmt|;
 comment|/* Symbol is defined by a non-shared object.  */
-define|#
-directive|define
-name|ELF_LINK_HASH_DEF_REGULAR
-value|02
+name|unsigned
+name|int
+name|def_regular
+range|:
+literal|1
+decl_stmt|;
 comment|/* Symbol is referenced by a shared object.  */
-define|#
-directive|define
-name|ELF_LINK_HASH_REF_DYNAMIC
-value|04
+name|unsigned
+name|int
+name|ref_dynamic
+range|:
+literal|1
+decl_stmt|;
 comment|/* Symbol is defined by a shared object.  */
-define|#
-directive|define
-name|ELF_LINK_HASH_DEF_DYNAMIC
-value|010
+name|unsigned
+name|int
+name|def_dynamic
+range|:
+literal|1
+decl_stmt|;
 comment|/* Symbol has a non-weak reference from a non-shared object.  */
-define|#
-directive|define
-name|ELF_LINK_HASH_REF_REGULAR_NONWEAK
-value|020
+name|unsigned
+name|int
+name|ref_regular_nonweak
+range|:
+literal|1
+decl_stmt|;
 comment|/* Dynamic symbol has been adjustd.  */
-define|#
-directive|define
-name|ELF_LINK_HASH_DYNAMIC_ADJUSTED
-value|040
+name|unsigned
+name|int
+name|dynamic_adjusted
+range|:
+literal|1
+decl_stmt|;
 comment|/* Symbol needs a copy reloc.  */
-define|#
-directive|define
-name|ELF_LINK_HASH_NEEDS_COPY
-value|0100
+name|unsigned
+name|int
+name|needs_copy
+range|:
+literal|1
+decl_stmt|;
 comment|/* Symbol needs a procedure linkage table entry.  */
-define|#
-directive|define
-name|ELF_LINK_HASH_NEEDS_PLT
-value|0200
+name|unsigned
+name|int
+name|needs_plt
+range|:
+literal|1
+decl_stmt|;
 comment|/* Symbol appears in a non-ELF input file.  */
-define|#
-directive|define
-name|ELF_LINK_NON_ELF
-value|0400
+name|unsigned
+name|int
+name|non_elf
+range|:
+literal|1
+decl_stmt|;
 comment|/* Symbol should be marked as hidden in the version information.  */
-define|#
-directive|define
-name|ELF_LINK_HIDDEN
-value|01000
+name|unsigned
+name|int
+name|hidden
+range|:
+literal|1
+decl_stmt|;
 comment|/* Symbol was forced to local scope due to a version script file.  */
-define|#
-directive|define
-name|ELF_LINK_FORCED_LOCAL
-value|02000
+name|unsigned
+name|int
+name|forced_local
+range|:
+literal|1
+decl_stmt|;
 comment|/* Symbol was marked during garbage collection.  */
-define|#
-directive|define
-name|ELF_LINK_HASH_MARK
-value|04000
+name|unsigned
+name|int
+name|mark
+range|:
+literal|1
+decl_stmt|;
 comment|/* Symbol is referenced by a non-GOT/non-PLT relocation.  This is      not currently set by all the backends.  */
-define|#
-directive|define
-name|ELF_LINK_NON_GOT_REF
-value|010000
-comment|/* Symbol has a definition in a shared object.  */
-define|#
-directive|define
-name|ELF_LINK_DYNAMIC_DEF
-value|020000
+name|unsigned
+name|int
+name|non_got_ref
+range|:
+literal|1
+decl_stmt|;
+comment|/* Symbol has a definition in a shared object.      FIXME: There is no real need for this field if def_dynamic is never      cleared and all places that test def_dynamic also test def_regular.  */
+name|unsigned
+name|int
+name|dynamic_def
+range|:
+literal|1
+decl_stmt|;
 comment|/* Symbol is weak in all shared objects.  */
-define|#
-directive|define
-name|ELF_LINK_DYNAMIC_WEAK
-value|040000
+name|unsigned
+name|int
+name|dynamic_weak
+range|:
+literal|1
+decl_stmt|;
 comment|/* Symbol is referenced with a relocation where C/C++ pointer equality      matters.  */
-define|#
-directive|define
-name|ELF_LINK_POINTER_EQUALITY_NEEDED
-value|0100000
+name|unsigned
+name|int
+name|pointer_equality_needed
+range|:
+literal|1
+decl_stmt|;
+comment|/* String table index in .dynstr if this is a dynamic symbol.  */
+name|unsigned
+name|long
+name|dynstr_index
+decl_stmt|;
+union|union
+block|{
+comment|/* If this is a weak defined symbol from a dynamic object, this        field points to a defined symbol with the same value, if there is        one.  Otherwise it is NULL.  */
+name|struct
+name|elf_link_hash_entry
+modifier|*
+name|weakdef
+decl_stmt|;
+comment|/* Hash value of the name computed using the ELF hash function.        Used part way through size_dynamic_sections, after we've finished        with weakdefs.  */
+name|unsigned
+name|long
+name|elf_hash_value
+decl_stmt|;
+block|}
+name|u
+union|;
+comment|/* Version information.  */
+union|union
+block|{
+comment|/* This field is used for a symbol which is not defined in a        regular object.  It points to the version information read in        from the dynamic object.  */
+name|Elf_Internal_Verdef
+modifier|*
+name|verdef
+decl_stmt|;
+comment|/* This field is used for a symbol which is defined in a regular        object.  It is set up in size_dynamic_sections.  It points to        the version information we should write out for this symbol.  */
+name|struct
+name|bfd_elf_version_tree
+modifier|*
+name|vertree
+decl_stmt|;
+block|}
+name|verinfo
+union|;
+struct|struct
+block|{
+comment|/* Virtual table entry use information.  This array is nominally of size        size/sizeof(target_void_pointer), though we have to be able to assume        and track a size while the symbol is still undefined.  It is indexed        via offset/sizeof(target_void_pointer).  */
+name|size_t
+name|size
+decl_stmt|;
+name|bfd_boolean
+modifier|*
+name|used
+decl_stmt|;
+comment|/* Virtual table derivation info.  */
+name|struct
+name|elf_link_hash_entry
+modifier|*
+name|parent
+decl_stmt|;
+block|}
+modifier|*
+name|vtable
+struct|;
 block|}
 struct|;
 end_struct
@@ -457,6 +500,21 @@ name|H
 parameter_list|)
 define|\
 value|_bfd_elf_symbol_refs_local_p (H, INFO, 1)
+end_define
+
+begin_comment
+comment|/* Common symbols that are turned into definitions don't have the    DEF_REGULAR flag set, so they might appear to be undefined.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ELF_COMMON_DEF_P
+parameter_list|(
+name|H
+parameter_list|)
+define|\
+value|(!(H)->def_regular							\&& !(H)->def_dynamic							\&& (H)->root.type == bfd_link_hash_defined)
 end_define
 
 begin_comment
@@ -542,26 +600,22 @@ name|unsigned
 name|char
 name|version
 decl_stmt|;
-name|unsigned
 name|char
 name|augmentation
 index|[
 literal|20
 index|]
 decl_stmt|;
-name|unsigned
-name|int
+name|bfd_vma
 name|code_align
 decl_stmt|;
-name|int
+name|bfd_signed_vma
 name|data_align
 decl_stmt|;
-name|unsigned
-name|int
+name|bfd_vma
 name|ra_column
 decl_stmt|;
-name|unsigned
-name|int
+name|bfd_vma
 name|augmentation_size
 decl_stmt|;
 name|struct
@@ -608,17 +662,19 @@ begin_struct
 struct|struct
 name|eh_cie_fde
 block|{
-name|unsigned
-name|int
-name|offset
+comment|/* For FDEs, this points to the CIE used.  */
+name|struct
+name|eh_cie_fde
+modifier|*
+name|cie_inf
 decl_stmt|;
 name|unsigned
 name|int
 name|size
 decl_stmt|;
-name|asection
-modifier|*
-name|sec
+name|unsigned
+name|int
+name|offset
 decl_stmt|;
 name|unsigned
 name|int
@@ -637,31 +693,49 @@ name|char
 name|lsda_offset
 decl_stmt|;
 name|unsigned
-name|char
+name|int
 name|cie
 range|:
 literal|1
 decl_stmt|;
 name|unsigned
-name|char
+name|int
 name|removed
 range|:
 literal|1
 decl_stmt|;
 name|unsigned
-name|char
+name|int
+name|add_augmentation_size
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|int
+name|add_fde_encoding
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|int
 name|make_relative
 range|:
 literal|1
 decl_stmt|;
 name|unsigned
-name|char
+name|int
 name|make_lsda_relative
 range|:
 literal|1
 decl_stmt|;
 name|unsigned
-name|char
+name|int
+name|need_lsda_relative
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|int
 name|per_encoding_relative
 range|:
 literal|1
@@ -719,13 +793,14 @@ name|asection
 modifier|*
 name|last_cie_sec
 decl_stmt|;
+name|struct
+name|eh_cie_fde
+modifier|*
+name|last_cie_inf
+decl_stmt|;
 name|asection
 modifier|*
 name|hdr_sec
-decl_stmt|;
-name|unsigned
-name|int
-name|last_cie_offset
 decl_stmt|;
 name|unsigned
 name|int
@@ -741,6 +816,9 @@ decl_stmt|;
 comment|/* TRUE if .eh_frame_hdr should contain the sorted search table.      We build it if we successfully read all .eh_frame input sections      and recognize them.  */
 name|bfd_boolean
 name|table
+decl_stmt|;
+name|bfd_boolean
+name|offsets_adjusted
 decl_stmt|;
 block|}
 struct|;
@@ -767,15 +845,23 @@ name|bfd
 modifier|*
 name|dynobj
 decl_stmt|;
-comment|/* The value to use when initialising got.refcount/offset and      plt.refcount/offset in an elf_link_hash_entry.  Set to zero when      the values are refcounts.  Set to init_offset in      size_dynamic_sections when the values may be offsets.  */
+comment|/* The value to use when initialising got.refcount/offset and      plt.refcount/offset in an elf_link_hash_entry.  Set to zero when      the values are refcounts.  Set to init_got_offset/init_plt_offset      in size_dynamic_sections when the values may be offsets.  */
 name|union
 name|gotplt_union
-name|init_refcount
+name|init_got_refcount
+decl_stmt|;
+name|union
+name|gotplt_union
+name|init_plt_refcount
 decl_stmt|;
 comment|/* The value to use for got.refcount/offset and plt.refcount/offset      when the values may be offsets.  Normally (bfd_vma) -1.  */
 name|union
 name|gotplt_union
-name|init_offset
+name|init_got_offset
+decl_stmt|;
+name|union
+name|gotplt_union
+name|init_plt_offset
 decl_stmt|;
 comment|/* The number of symbols found in the link which must be put into      the .dynsym section.  */
 name|bfd_size_type
@@ -803,15 +889,21 @@ name|elf_link_hash_entry
 modifier|*
 name|hgot
 decl_stmt|;
-comment|/* A pointer to information used to link stabs in sections.  */
-name|void
+comment|/* The _PROCEDURE_LINKAGE_TABLE_ symbol.  */
+name|struct
+name|elf_link_hash_entry
 modifier|*
-name|stab_info
+name|hplt
 decl_stmt|;
 comment|/* A pointer to information used to merge SEC_MERGE sections.  */
 name|void
 modifier|*
 name|merge_info
+decl_stmt|;
+comment|/* Used to link stabs in sections.  */
+name|struct
+name|stab_info
+name|stab_info
 decl_stmt|;
 comment|/* Used by eh_frame code when editing .eh_frame.  */
 name|struct
@@ -843,6 +935,10 @@ name|struct
 name|elf_link_loaded_list
 modifier|*
 name|loaded
+decl_stmt|;
+comment|/* True if this target has relocatable executables, so needs dynamic      section symbols.  */
+name|bfd_boolean
+name|is_relocatable_executable
 decl_stmt|;
 block|}
 struct|;
@@ -1363,6 +1459,21 @@ block|}
 struct|;
 end_struct
 
+begin_enum
+enum|enum
+name|action_discarded
+block|{
+name|COMPLAIN
+init|=
+literal|1
+block|,
+name|PRETEND
+init|=
+literal|2
+block|}
+enum|;
+end_enum
+
 begin_struct
 struct|struct
 name|elf_backend_data
@@ -1379,6 +1490,14 @@ decl_stmt|;
 comment|/* The maximum page size for this backend.  */
 name|bfd_vma
 name|maxpagesize
+decl_stmt|;
+comment|/* The minimum page size for this backend.  An input object will not be      considered page aligned unless its sections are correctly aligned for      pages at least this large.  May be smaller than maxpagesize.  */
+name|bfd_vma
+name|minpagesize
+decl_stmt|;
+comment|/* The BFD flags applied to sections created for dynamic linking.  */
+name|flagword
+name|dynamic_sec_flags
 decl_stmt|;
 comment|/* A function to translate an ELF RELA relocation to a BFD arelent      structure.  */
 name|void
@@ -1484,6 +1603,27 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
+comment|/* A function to return the linker hash table entry of a symbol that      might be satisfied by an archive symbol.  */
+name|struct
+name|elf_link_hash_entry
+modifier|*
+function_decl|(
+modifier|*
+name|elf_backend_archive_symbol_lookup
+function_decl|)
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|,
+name|struct
+name|bfd_link_info
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/* Return true if local section symbols should have a non-null st_name.      NULL implies false.  */
 name|bfd_boolean
 function_decl|(
@@ -1525,9 +1665,11 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
-comment|/* A function to convert machine dependent section header flags to      BFD internal section header flags.  */
+comment|/* A function to convert machine dependent ELF section header flags to      BFD internal section header flags.  */
 name|bfd_boolean
 function_decl|(
 modifier|*
@@ -1537,7 +1679,25 @@ parameter_list|(
 name|flagword
 modifier|*
 parameter_list|,
+specifier|const
 name|Elf_Internal_Shdr
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* A function that returns a struct containing ELF section flags and      type for the given BFD section.   */
+specifier|const
+name|struct
+name|bfd_elf_special_section
+modifier|*
+function_decl|(
+modifier|*
+name|get_sec_type_attr
+function_decl|)
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|,
+name|asection
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1555,6 +1715,10 @@ name|Elf_Internal_Phdr
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 comment|/* A function to set up the ELF section header for a BFD section in      preparation for writing it out.  This is where the flags and type      fields are set for unusual sections.  */
@@ -1675,6 +1839,27 @@ modifier|*
 name|info
 parameter_list|)
 function_decl|;
+comment|/* When creating a shared library, determine whether to omit the      dynamic symbol for the section.  */
+name|bfd_boolean
+function_decl|(
+modifier|*
+name|elf_backend_omit_section_dynsym
+function_decl|)
+parameter_list|(
+name|bfd
+modifier|*
+name|output_bfd
+parameter_list|,
+name|struct
+name|bfd_link_info
+modifier|*
+name|info
+parameter_list|,
+name|asection
+modifier|*
+name|osec
+parameter_list|)
+function_decl|;
 comment|/* The CHECK_RELOCS function is called by the add_symbols phase of      the ELF backend linker.  It is called once for each section with      relocs of an object file, just after the symbols for the object      file have been added to the global linker hash table.  The      function must look through the relocs and do any special handling      required.  This generally means allocating space in the global      offset table, and perhaps allocating space for a reloc.  The      relocs are always passed as Rela structures; if the section      actually uses Rel structures, the r_addend field will always be      zero.  */
 name|bfd_boolean
 function_decl|(
@@ -1699,6 +1884,23 @@ specifier|const
 name|Elf_Internal_Rela
 modifier|*
 name|relocs
+parameter_list|)
+function_decl|;
+comment|/* The CHECK_DIRECTIVES function is called once per input file by      the add_symbols phase of the ELF backend linker.  The function      must inspect the bfd and create any additional symbols according      to any custom directives in the bfd.  */
+name|bfd_boolean
+function_decl|(
+modifier|*
+name|check_directives
+function_decl|)
+parameter_list|(
+name|bfd
+modifier|*
+name|abfd
+parameter_list|,
+name|struct
+name|bfd_link_info
+modifier|*
+name|info
 parameter_list|)
 function_decl|;
 comment|/* The ADJUST_DYNAMIC_SYMBOL function is called by the ELF backend      linker for every symbol which is defined by a dynamic object and      referenced by a regular object.  This is called after all the      input files have been seen, but before the SIZE_DYNAMIC_SECTIONS      function has been called.  The hash table entry should be      bfd_link_hash_defined ore bfd_link_hash_defweak, and it should be      defined in a section from a dynamic object.  Dynamic object      sections are not included in the final link, and this function is      responsible for changing the value to something which the rest of      the link can deal with.  This will normally involve adding an      entry to the .plt or .got or some such section, and setting the      symbol to point to that.  */
@@ -1893,6 +2095,23 @@ name|bfd_link_info
 modifier|*
 parameter_list|)
 function_decl|;
+comment|/* This function is called during section garbage collection to      mark sections that define global symbols.  */
+name|bfd_boolean
+function_decl|(
+modifier|*
+name|gc_mark_dynamic_ref
+function_decl|)
+parameter_list|(
+name|struct
+name|elf_link_hash_entry
+modifier|*
+name|h
+parameter_list|,
+name|void
+modifier|*
+name|inf
+parameter_list|)
+function_decl|;
 comment|/* This function is called during section gc to discover the section a      particular relocation refers to.  */
 name|asection
 modifier|*
@@ -2029,9 +2248,8 @@ modifier|*
 name|elf_backend_copy_indirect_symbol
 function_decl|)
 parameter_list|(
-specifier|const
 name|struct
-name|elf_backend_data
+name|bfd_link_info
 modifier|*
 parameter_list|,
 name|struct
@@ -2061,6 +2279,22 @@ parameter_list|,
 name|bfd_boolean
 parameter_list|)
 function_decl|;
+comment|/* A function to do additional symbol fixup, called by      _bfd_elf_fix_symbol_flags.  */
+name|bfd_boolean
+function_decl|(
+modifier|*
+name|elf_backend_fixup_symbol
+function_decl|)
+parameter_list|(
+name|struct
+name|bfd_link_info
+modifier|*
+parameter_list|,
+name|struct
+name|elf_link_hash_entry
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/* Merge the backend specific symbol attribute.  */
 name|void
 function_decl|(
@@ -2081,6 +2315,18 @@ parameter_list|,
 name|bfd_boolean
 parameter_list|)
 function_decl|;
+comment|/* Decide whether an undefined symbol is special and can be ignored.      This is the case for OPTIONAL symbols on IRIX.  */
+name|bfd_boolean
+function_decl|(
+modifier|*
+name|elf_backend_ignore_undef_symbol
+function_decl|)
+parameter_list|(
+name|struct
+name|elf_link_hash_entry
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/* Emit relocations.  Overrides default routine for emitting relocs,      except during a relocatable link, or if all relocs are being emitted.  */
 name|bfd_boolean
 function_decl|(
@@ -2098,6 +2344,11 @@ name|Elf_Internal_Shdr
 modifier|*
 parameter_list|,
 name|Elf_Internal_Rela
+modifier|*
+parameter_list|,
+name|struct
+name|elf_link_hash_entry
+modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2214,6 +2465,33 @@ modifier|*
 name|elf_backend_ignore_discarded_relocs
 function_decl|)
 parameter_list|(
+name|asection
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* What to do when ld finds relocations against symbols defined in      discarded sections.  */
+name|unsigned
+name|int
+function_decl|(
+modifier|*
+name|action_discarded
+function_decl|)
+parameter_list|(
+name|asection
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* This function returns the width of FDE pointers in bytes, or 0 if      that can't be determined for some reason.  The default definition      goes by the bfd's EI_CLASS.  */
+name|unsigned
+name|int
+function_decl|(
+modifier|*
+name|elf_backend_eh_frame_address_size
+function_decl|)
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|,
 name|asection
 modifier|*
 parameter_list|)
@@ -2364,7 +2642,7 @@ parameter_list|(
 name|bfd_vma
 name|vma
 parameter_list|,
-name|char
+name|bfd_byte
 modifier|*
 name|myaddr
 parameter_list|,
@@ -2373,6 +2651,154 @@ name|len
 parameter_list|)
 parameter_list|)
 function_decl|;
+comment|/* This function is used by `_bfd_elf_get_synthetic_symtab';      see elf.c.  */
+name|bfd_vma
+function_decl|(
+modifier|*
+name|plt_sym_val
+function_decl|)
+parameter_list|(
+name|bfd_vma
+parameter_list|,
+specifier|const
+name|asection
+modifier|*
+parameter_list|,
+specifier|const
+name|arelent
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* Is symbol defined in common section?  */
+name|bfd_boolean
+function_decl|(
+modifier|*
+name|common_definition
+function_decl|)
+parameter_list|(
+name|Elf_Internal_Sym
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* Return a common section index for section.  */
+name|unsigned
+name|int
+function_decl|(
+modifier|*
+name|common_section_index
+function_decl|)
+parameter_list|(
+name|asection
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* Return a common section for section.  */
+name|asection
+modifier|*
+function_decl|(
+modifier|*
+name|common_section
+function_decl|)
+parameter_list|(
+name|asection
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* Return TRUE if we can merge 2 definitions.  */
+name|bfd_boolean
+function_decl|(
+modifier|*
+name|merge_symbol
+function_decl|)
+parameter_list|(
+name|struct
+name|bfd_link_info
+modifier|*
+parameter_list|,
+name|struct
+name|elf_link_hash_entry
+modifier|*
+modifier|*
+parameter_list|,
+name|struct
+name|elf_link_hash_entry
+modifier|*
+parameter_list|,
+name|Elf_Internal_Sym
+modifier|*
+parameter_list|,
+name|asection
+modifier|*
+modifier|*
+parameter_list|,
+name|bfd_vma
+modifier|*
+parameter_list|,
+name|unsigned
+name|int
+modifier|*
+parameter_list|,
+name|bfd_boolean
+modifier|*
+parameter_list|,
+name|bfd_boolean
+modifier|*
+parameter_list|,
+name|bfd_boolean
+modifier|*
+parameter_list|,
+name|bfd_boolean
+modifier|*
+parameter_list|,
+name|bfd_boolean
+modifier|*
+parameter_list|,
+name|bfd_boolean
+modifier|*
+parameter_list|,
+name|bfd_boolean
+modifier|*
+parameter_list|,
+name|bfd_boolean
+modifier|*
+parameter_list|,
+name|bfd
+modifier|*
+parameter_list|,
+name|asection
+modifier|*
+modifier|*
+parameter_list|,
+name|bfd_boolean
+modifier|*
+parameter_list|,
+name|bfd_boolean
+modifier|*
+parameter_list|,
+name|bfd_boolean
+modifier|*
+parameter_list|,
+name|bfd_boolean
+modifier|*
+parameter_list|,
+name|bfd
+modifier|*
+parameter_list|,
+name|asection
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* Used to handle bad SHF_LINK_ORDER input.  */
+name|bfd_error_handler_type
+name|link_order_error_handler
+decl_stmt|;
+comment|/* Name of the PLT relocation section.  */
+specifier|const
+name|char
+modifier|*
+name|relplt_name
+decl_stmt|;
 comment|/* Alternate EM_xxxx machine codes for this backend.  */
 name|int
 name|elf_machine_alt1
@@ -2386,16 +2812,12 @@ name|elf_size_info
 modifier|*
 name|s
 decl_stmt|;
-comment|/* An array of target specific special section map.  */
+comment|/* An array of target specific special sections.  */
 specifier|const
 name|struct
 name|bfd_elf_special_section
 modifier|*
 name|special_sections
-decl_stmt|;
-comment|/* offset of the _GLOBAL_OFFSET_TABLE_ symbol from the start of the      .got section */
-name|bfd_vma
-name|got_symbol_offset
 decl_stmt|;
 comment|/* The size in bytes of the header for the GOT.  This includes the      so-called reserved entries on some systems.  */
 name|bfd_vma
@@ -2529,7 +2951,7 @@ name|unsigned
 name|int
 name|rel_count2
 decl_stmt|;
-comment|/* The ELF section number of this section.  Only used for an output      file.  */
+comment|/* The ELF section number of this section.  */
 name|int
 name|this_idx
 decl_stmt|;
@@ -2544,6 +2966,11 @@ decl_stmt|;
 comment|/* Used by the backend linker when generating a shared library to      record the dynamic symbol index for a section symbol      corresponding to this section.  A value of 0 means that there is      no dynamic symbol for this section.  */
 name|int
 name|dynindx
+decl_stmt|;
+comment|/* A pointer to the linked-to section for SHF_LINK_ORDER.  */
+name|asection
+modifier|*
+name|linked_to
 decl_stmt|;
 comment|/* Used by the backend linker to store the symbol hash table entries      associated with relocs against global symbols.  */
 name|struct
@@ -2584,6 +3011,11 @@ decl_stmt|;
 block|}
 name|group
 union|;
+comment|/* Optional information about section group; NULL if it doesn't      belongs to any section group. */
+name|asection
+modifier|*
+name|sec_group
+decl_stmt|;
 comment|/* A linked list of sections in the group.  Circular when used by      the linker.  */
 name|asection
 modifier|*
@@ -2605,7 +3037,17 @@ name|elf_section_data
 parameter_list|(
 name|sec
 parameter_list|)
-value|((struct bfd_elf_section_data*)sec->used_by_bfd)
+value|((struct bfd_elf_section_data*)(sec)->used_by_bfd)
+end_define
+
+begin_define
+define|#
+directive|define
+name|elf_linked_to_section
+parameter_list|(
+name|sec
+parameter_list|)
+value|(elf_section_data(sec)->linked_to)
 end_define
 
 begin_define
@@ -2658,6 +3100,16 @@ parameter_list|)
 value|(elf_section_data(sec)->next_in_group)
 end_define
 
+begin_define
+define|#
+directive|define
+name|elf_sec_group
+parameter_list|(
+name|sec
+parameter_list|)
+value|(elf_section_data(sec)->sec_group)
+end_define
+
 begin_comment
 comment|/* Return TRUE if section has been discarded.  */
 end_comment
@@ -2670,7 +3122,7 @@ parameter_list|(
 name|sec
 parameter_list|)
 define|\
-value|(!bfd_is_abs_section (sec)					\&& bfd_is_abs_section ((sec)->output_section)		\&& sec->sec_info_type != ELF_INFO_TYPE_MERGE			\&& sec->sec_info_type != ELF_INFO_TYPE_JUST_SYMS)
+value|(!bfd_is_abs_section (sec)					\&& bfd_is_abs_section ((sec)->output_section)		\&& (sec)->sec_info_type != ELF_INFO_TYPE_MERGE		\&& (sec)->sec_info_type != ELF_INFO_TYPE_JUST_SYMS)
 end_define
 
 begin_define
@@ -3001,6 +3453,10 @@ comment|/* Segment flags for the PT_GNU_STACK segment.  */
 name|unsigned
 name|int
 name|stack_flags
+decl_stmt|;
+comment|/* Should the PT_GNU_RELRO segment be emitted?  */
+name|bfd_boolean
+name|relro
 decl_stmt|;
 comment|/* Symbol version definitions in external objects.  */
 name|Elf_Internal_Verdef
@@ -3580,12 +4036,18 @@ specifier|extern
 specifier|const
 name|char
 modifier|*
-name|bfd_elf_local_sym_name
+name|bfd_elf_sym_name
 parameter_list|(
 name|bfd
 modifier|*
 parameter_list|,
+name|Elf_Internal_Shdr
+modifier|*
+parameter_list|,
 name|Elf_Internal_Sym
+modifier|*
+parameter_list|,
+name|asection
 modifier|*
 parameter_list|)
 function_decl|;
@@ -3638,19 +4100,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_define
-define|#
-directive|define
-name|elf_string_from_elf_strtab
-parameter_list|(
-name|abfd
-parameter_list|,
-name|strindex
-parameter_list|)
-define|\
-value|bfd_elf_string_from_elf_section (abfd, elf_elfheader(abfd)->e_shstrndx, \ 				   strindex)
-end_define
-
 begin_function_decl
 specifier|extern
 name|void
@@ -3679,6 +4128,21 @@ name|void
 modifier|*
 parameter_list|,
 name|bfd_vma
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|unsigned
+name|int
+name|_bfd_elf_eh_frame_address_size
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|,
+name|asection
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3907,6 +4371,8 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3971,9 +4437,8 @@ specifier|extern
 name|void
 name|_bfd_elf_link_hash_copy_indirect
 parameter_list|(
-specifier|const
 name|struct
-name|elf_backend_data
+name|bfd_link_info
 modifier|*
 parameter_list|,
 name|struct
@@ -4001,6 +4466,22 @@ name|elf_link_hash_entry
 modifier|*
 parameter_list|,
 name|bfd_boolean
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|bfd_boolean
+name|_bfd_elf_link_hash_fixup_symbol
+parameter_list|(
+name|struct
+name|bfd_link_info
+modifier|*
+parameter_list|,
+name|struct
+name|elf_link_hash_entry
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4036,6 +4517,9 @@ specifier|const
 name|char
 operator|*
 argument_list|)
+argument_list|,
+name|unsigned
+name|int
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -4047,6 +4531,8 @@ name|_bfd_elf_slurp_version_tables
 parameter_list|(
 name|bfd
 modifier|*
+parameter_list|,
+name|bfd_boolean
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4069,7 +4555,45 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|bfd_boolean
-name|bfd_elf_discard_group
+name|_bfd_elf_match_sections_by_type
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|,
+specifier|const
+name|asection
+modifier|*
+parameter_list|,
+name|bfd
+modifier|*
+parameter_list|,
+specifier|const
+name|asection
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|bfd_boolean
+name|bfd_elf_is_group_section
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|bfd_section
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|_bfd_elf_section_already_linked
 parameter_list|(
 name|bfd
 modifier|*
@@ -4100,6 +4624,18 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|asection
+modifier|*
+name|_bfd_elf_check_kept_section
+parameter_list|(
+name|asection
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|void
 name|_bfd_elf_link_just_syms
 parameter_list|(
@@ -4108,6 +4644,20 @@ modifier|*
 parameter_list|,
 name|struct
 name|bfd_link_info
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|bfd_boolean
+name|_bfd_elf_copy_private_header_data
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|,
+name|bfd
 modifier|*
 parameter_list|)
 function_decl|;
@@ -4128,6 +4678,38 @@ name|bfd
 modifier|*
 parameter_list|,
 name|asymbol
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|_bfd_generic_init_private_section_data
+define|\
+value|_bfd_elf_init_private_section_data
+end_define
+
+begin_function_decl
+specifier|extern
+name|bfd_boolean
+name|_bfd_elf_init_private_section_data
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|,
+name|asection
+modifier|*
+parameter_list|,
+name|bfd
+modifier|*
+parameter_list|,
+name|asection
+modifier|*
+parameter_list|,
+name|struct
+name|bfd_link_info
 modifier|*
 parameter_list|)
 function_decl|;
@@ -4239,6 +4821,33 @@ name|long
 name|_bfd_elf_canonicalize_dynamic_symtab
 parameter_list|(
 name|bfd
+modifier|*
+parameter_list|,
+name|asymbol
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|long
+name|_bfd_elf_get_synthetic_symtab
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|,
+name|long
+parameter_list|,
+name|asymbol
+modifier|*
+modifier|*
+parameter_list|,
+name|long
+parameter_list|,
+name|asymbol
+modifier|*
 modifier|*
 parameter_list|,
 name|asymbol
@@ -4422,6 +5031,65 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|bfd_boolean
+name|_bfd_elf_find_line
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|,
+name|asymbol
+modifier|*
+modifier|*
+parameter_list|,
+name|asymbol
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+parameter_list|,
+name|unsigned
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|_bfd_generic_find_line
+value|_bfd_elf_find_line
+end_define
+
+begin_function_decl
+specifier|extern
+name|bfd_boolean
+name|_bfd_elf_find_inliner_info
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+parameter_list|,
+name|unsigned
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
@@ -4488,13 +5156,35 @@ specifier|const
 name|struct
 name|bfd_elf_special_section
 modifier|*
+name|_bfd_elf_get_special_section
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|bfd_elf_special_section
+modifier|*
+parameter_list|,
+name|unsigned
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+specifier|const
+name|struct
+name|bfd_elf_special_section
+modifier|*
 name|_bfd_elf_get_sec_type_attr
 parameter_list|(
 name|bfd
 modifier|*
 parameter_list|,
-specifier|const
-name|char
+name|asection
 modifier|*
 parameter_list|)
 function_decl|;
@@ -4807,6 +5497,10 @@ parameter_list|(
 name|bfd
 modifier|*
 parameter_list|,
+name|struct
+name|bfd_link_info
+modifier|*
+parameter_list|,
 name|asection
 modifier|*
 parameter_list|,
@@ -4887,6 +5581,10 @@ modifier|*
 modifier|*
 parameter_list|,
 name|bfd_vma
+modifier|*
+parameter_list|,
+name|unsigned
+name|int
 modifier|*
 parameter_list|,
 name|struct
@@ -5082,6 +5780,24 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|bfd_boolean
+name|_bfd_elf_link_omit_section_dynsym
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|,
+name|struct
+name|bfd_link_info
+modifier|*
+parameter_list|,
+name|asection
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|bfd_boolean
 name|_bfd_elf_create_dynamic_sections
 parameter_list|(
 name|bfd
@@ -5111,15 +5827,23 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|unsigned
-name|long
-name|_bfd_elf_link_renumber_dynsyms
+name|struct
+name|elf_link_hash_entry
+modifier|*
+name|_bfd_elf_define_linkage_sym
 parameter_list|(
 name|bfd
 modifier|*
 parameter_list|,
 name|struct
 name|bfd_link_info
+modifier|*
+parameter_list|,
+name|asection
+modifier|*
+parameter_list|,
+specifier|const
+name|char
 modifier|*
 parameter_list|)
 function_decl|;
@@ -5216,6 +5940,11 @@ modifier|*
 parameter_list|,
 name|Elf_Internal_Rela
 modifier|*
+parameter_list|,
+name|struct
+name|elf_link_hash_entry
+modifier|*
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5298,6 +6027,33 @@ name|bfd_link_info
 modifier|*
 parameter_list|,
 name|bfd_boolean
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|bfd_boolean
+name|bfd_elf_match_symbols_in_sections
+parameter_list|(
+name|asection
+modifier|*
+name|sec1
+parameter_list|,
+name|asection
+modifier|*
+name|sec2
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|bfd_boolean
+name|_bfd_elf_setup_sections
+parameter_list|(
+name|bfd
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5970,6 +6726,27 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|struct
+name|elf_link_hash_entry
+modifier|*
+name|_bfd_elf_archive_symbol_lookup
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|,
+name|struct
+name|bfd_link_info
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|bfd_boolean
 name|bfd_elf_link_add_symbols
 parameter_list|(
@@ -6045,6 +6822,52 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|bfd_boolean
+name|_bfd_elf_common_definition
+parameter_list|(
+name|Elf_Internal_Sym
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|unsigned
+name|int
+name|_bfd_elf_common_section_index
+parameter_list|(
+name|asection
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|asection
+modifier|*
+name|_bfd_elf_common_section
+parameter_list|(
+name|asection
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|_bfd_dwarf2_cleanup_debug_info
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|bfd_reloc_status_type
 name|_bfd_elf_rel_vtable_reloc_fn
 parameter_list|(
@@ -6085,6 +6908,23 @@ parameter_list|,
 name|struct
 name|bfd_link_info
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|bfd_boolean
+name|bfd_elf_gc_mark_dynamic_ref_symbol
+parameter_list|(
+name|struct
+name|elf_link_hash_entry
+modifier|*
+name|h
+parameter_list|,
+name|void
+modifier|*
+name|inf
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -6147,6 +6987,45 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|bfd_boolean
+name|_bfd_elf_gc_mark
+parameter_list|(
+name|struct
+name|bfd_link_info
+modifier|*
+parameter_list|,
+name|asection
+modifier|*
+parameter_list|,
+name|asection
+modifier|*
+function_decl|(
+modifier|*
+function_decl|)
+parameter_list|(
+name|asection
+modifier|*
+parameter_list|,
+name|struct
+name|bfd_link_info
+modifier|*
+parameter_list|,
+name|Elf_Internal_Rela
+modifier|*
+parameter_list|,
+name|struct
+name|elf_link_hash_entry
+modifier|*
+parameter_list|,
+name|Elf_Internal_Sym
+modifier|*
+parameter_list|)
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|bfd_boolean
 name|bfd_elf_gc_common_finalize_got_offsets
 parameter_list|(
 name|bfd
@@ -6182,6 +7061,22 @@ parameter_list|(
 name|bfd_vma
 parameter_list|,
 name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|struct
+name|elf_segment_map
+modifier|*
+name|_bfd_elf_make_dynamic_segment
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|,
+name|asection
 modifier|*
 parameter_list|)
 function_decl|;
@@ -6398,7 +7293,7 @@ function_decl|)
 parameter_list|(
 name|bfd_vma
 parameter_list|,
-name|char
+name|bfd_byte
 modifier|*
 parameter_list|,
 name|int
@@ -6432,7 +7327,7 @@ function_decl|)
 parameter_list|(
 name|bfd_vma
 parameter_list|,
-name|char
+name|bfd_byte
 modifier|*
 parameter_list|,
 name|int
@@ -6440,6 +7335,17 @@ parameter_list|)
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* Large common section.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|asection
+name|_bfd_elf_large_com_section
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* SH ELF specific routine.  */
@@ -6472,7 +7378,7 @@ parameter_list|,
 name|H
 parameter_list|)
 define|\
-value|((DYN)								\&& ((SHARED)								\        || ((H)->elf_link_hash_flags& ELF_LINK_FORCED_LOCAL) == 0)	\&& ((H)->dynindx != -1						\        || ((H)->elf_link_hash_flags& ELF_LINK_FORCED_LOCAL) != 0))
+value|((DYN)								\&& ((SHARED) || !(H)->forced_local)					\&& ((H)->dynindx != -1 || (H)->forced_local))
 end_define
 
 begin_comment

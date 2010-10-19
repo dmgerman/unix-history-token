@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* CPU data header for fr30.  THIS FILE IS MACHINE GENERATED WITH CGEN.  Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.  This file is part of the GNU Binutils and/or GDB, the GNU debugger.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* CPU data header for fr30.  THIS FILE IS MACHINE GENERATED WITH CGEN.  Copyright 1996-2005 Free Software Foundation, Inc.  This file is part of the GNU Binutils and/or GDB, the GNU debugger.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -14,6 +14,12 @@ define|#
 directive|define
 name|FR30_CPU_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"opcode/cgen-bitset.h"
+end_include
 
 begin_define
 define|#
@@ -594,16 +600,6 @@ begin_comment
 comment|/* Ifield support.  */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|struct
-name|cgen_ifld
-name|fr30_cgen_ifld_table
-index|[]
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Ifield attribute indices.  */
 end_comment
@@ -652,6 +648,80 @@ define|#
 directive|define
 name|CGEN_IFLD_NBOOL_ATTRS
 value|(CGEN_IFLD_END_NBOOLS - CGEN_IFLD_START_NBOOLS - 1)
+end_define
+
+begin_comment
+comment|/* cgen_ifld attribute accessor macros.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CGEN_ATTR_CGEN_IFLD_MACH_VALUE
+parameter_list|(
+name|attrs
+parameter_list|)
+value|((attrs)->nonbool[CGEN_IFLD_MACH-CGEN_IFLD_START_NBOOLS-1].nonbitset)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CGEN_ATTR_CGEN_IFLD_VIRTUAL_VALUE
+parameter_list|(
+name|attrs
+parameter_list|)
+value|(((attrs)->bool& (1<< CGEN_IFLD_VIRTUAL)) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CGEN_ATTR_CGEN_IFLD_PCREL_ADDR_VALUE
+parameter_list|(
+name|attrs
+parameter_list|)
+value|(((attrs)->bool& (1<< CGEN_IFLD_PCREL_ADDR)) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CGEN_ATTR_CGEN_IFLD_ABS_ADDR_VALUE
+parameter_list|(
+name|attrs
+parameter_list|)
+value|(((attrs)->bool& (1<< CGEN_IFLD_ABS_ADDR)) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CGEN_ATTR_CGEN_IFLD_RESERVED_VALUE
+parameter_list|(
+name|attrs
+parameter_list|)
+value|(((attrs)->bool& (1<< CGEN_IFLD_RESERVED)) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CGEN_ATTR_CGEN_IFLD_SIGN_OPT_VALUE
+parameter_list|(
+name|attrs
+parameter_list|)
+value|(((attrs)->bool& (1<< CGEN_IFLD_SIGN_OPT)) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CGEN_ATTR_CGEN_IFLD_SIGNED_VALUE
+parameter_list|(
+name|attrs
+parameter_list|)
+value|(((attrs)->bool& (1<< CGEN_IFLD_SIGNED)) != 0)
 end_define
 
 begin_comment
@@ -807,6 +877,60 @@ value|(CGEN_HW_END_NBOOLS - CGEN_HW_START_NBOOLS - 1)
 end_define
 
 begin_comment
+comment|/* cgen_hw attribute accessor macros.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CGEN_ATTR_CGEN_HW_MACH_VALUE
+parameter_list|(
+name|attrs
+parameter_list|)
+value|((attrs)->nonbool[CGEN_HW_MACH-CGEN_HW_START_NBOOLS-1].nonbitset)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CGEN_ATTR_CGEN_HW_VIRTUAL_VALUE
+parameter_list|(
+name|attrs
+parameter_list|)
+value|(((attrs)->bool& (1<< CGEN_HW_VIRTUAL)) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CGEN_ATTR_CGEN_HW_CACHE_ADDR_VALUE
+parameter_list|(
+name|attrs
+parameter_list|)
+value|(((attrs)->bool& (1<< CGEN_HW_CACHE_ADDR)) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CGEN_ATTR_CGEN_HW_PC_VALUE
+parameter_list|(
+name|attrs
+parameter_list|)
+value|(((attrs)->bool& (1<< CGEN_HW_PC)) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CGEN_ATTR_CGEN_HW_PROFILE_VALUE
+parameter_list|(
+name|attrs
+parameter_list|)
+value|(((attrs)->bool& (1<< CGEN_HW_PROFILE)) != 0)
+end_define
+
+begin_comment
 comment|/* Enum declaration for fr30 hardware types.  */
 end_comment
 
@@ -932,6 +1056,110 @@ define|#
 directive|define
 name|CGEN_OPERAND_NBOOL_ATTRS
 value|(CGEN_OPERAND_END_NBOOLS - CGEN_OPERAND_START_NBOOLS - 1)
+end_define
+
+begin_comment
+comment|/* cgen_operand attribute accessor macros.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CGEN_ATTR_CGEN_OPERAND_MACH_VALUE
+parameter_list|(
+name|attrs
+parameter_list|)
+value|((attrs)->nonbool[CGEN_OPERAND_MACH-CGEN_OPERAND_START_NBOOLS-1].nonbitset)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CGEN_ATTR_CGEN_OPERAND_VIRTUAL_VALUE
+parameter_list|(
+name|attrs
+parameter_list|)
+value|(((attrs)->bool& (1<< CGEN_OPERAND_VIRTUAL)) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CGEN_ATTR_CGEN_OPERAND_PCREL_ADDR_VALUE
+parameter_list|(
+name|attrs
+parameter_list|)
+value|(((attrs)->bool& (1<< CGEN_OPERAND_PCREL_ADDR)) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CGEN_ATTR_CGEN_OPERAND_ABS_ADDR_VALUE
+parameter_list|(
+name|attrs
+parameter_list|)
+value|(((attrs)->bool& (1<< CGEN_OPERAND_ABS_ADDR)) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CGEN_ATTR_CGEN_OPERAND_SIGN_OPT_VALUE
+parameter_list|(
+name|attrs
+parameter_list|)
+value|(((attrs)->bool& (1<< CGEN_OPERAND_SIGN_OPT)) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CGEN_ATTR_CGEN_OPERAND_SIGNED_VALUE
+parameter_list|(
+name|attrs
+parameter_list|)
+value|(((attrs)->bool& (1<< CGEN_OPERAND_SIGNED)) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CGEN_ATTR_CGEN_OPERAND_NEGATIVE_VALUE
+parameter_list|(
+name|attrs
+parameter_list|)
+value|(((attrs)->bool& (1<< CGEN_OPERAND_NEGATIVE)) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CGEN_ATTR_CGEN_OPERAND_RELAX_VALUE
+parameter_list|(
+name|attrs
+parameter_list|)
+value|(((attrs)->bool& (1<< CGEN_OPERAND_RELAX)) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CGEN_ATTR_CGEN_OPERAND_SEM_ONLY_VALUE
+parameter_list|(
+name|attrs
+parameter_list|)
+value|(((attrs)->bool& (1<< CGEN_OPERAND_SEM_ONLY)) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CGEN_ATTR_CGEN_OPERAND_HASH_PREFIX_VALUE
+parameter_list|(
+name|attrs
+parameter_list|)
+value|(((attrs)->bool& (1<< CGEN_OPERAND_HASH_PREFIX)) != 0)
 end_define
 
 begin_comment
@@ -1130,6 +1358,130 @@ value|(CGEN_INSN_END_NBOOLS - CGEN_INSN_START_NBOOLS - 1)
 end_define
 
 begin_comment
+comment|/* cgen_insn attribute accessor macros.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CGEN_ATTR_CGEN_INSN_MACH_VALUE
+parameter_list|(
+name|attrs
+parameter_list|)
+value|((attrs)->nonbool[CGEN_INSN_MACH-CGEN_INSN_START_NBOOLS-1].nonbitset)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CGEN_ATTR_CGEN_INSN_ALIAS_VALUE
+parameter_list|(
+name|attrs
+parameter_list|)
+value|(((attrs)->bool& (1<< CGEN_INSN_ALIAS)) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CGEN_ATTR_CGEN_INSN_VIRTUAL_VALUE
+parameter_list|(
+name|attrs
+parameter_list|)
+value|(((attrs)->bool& (1<< CGEN_INSN_VIRTUAL)) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CGEN_ATTR_CGEN_INSN_UNCOND_CTI_VALUE
+parameter_list|(
+name|attrs
+parameter_list|)
+value|(((attrs)->bool& (1<< CGEN_INSN_UNCOND_CTI)) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CGEN_ATTR_CGEN_INSN_COND_CTI_VALUE
+parameter_list|(
+name|attrs
+parameter_list|)
+value|(((attrs)->bool& (1<< CGEN_INSN_COND_CTI)) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CGEN_ATTR_CGEN_INSN_SKIP_CTI_VALUE
+parameter_list|(
+name|attrs
+parameter_list|)
+value|(((attrs)->bool& (1<< CGEN_INSN_SKIP_CTI)) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CGEN_ATTR_CGEN_INSN_DELAY_SLOT_VALUE
+parameter_list|(
+name|attrs
+parameter_list|)
+value|(((attrs)->bool& (1<< CGEN_INSN_DELAY_SLOT)) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CGEN_ATTR_CGEN_INSN_RELAXABLE_VALUE
+parameter_list|(
+name|attrs
+parameter_list|)
+value|(((attrs)->bool& (1<< CGEN_INSN_RELAXABLE)) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CGEN_ATTR_CGEN_INSN_RELAXED_VALUE
+parameter_list|(
+name|attrs
+parameter_list|)
+value|(((attrs)->bool& (1<< CGEN_INSN_RELAXED)) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CGEN_ATTR_CGEN_INSN_NO_DIS_VALUE
+parameter_list|(
+name|attrs
+parameter_list|)
+value|(((attrs)->bool& (1<< CGEN_INSN_NO_DIS)) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CGEN_ATTR_CGEN_INSN_PBB_VALUE
+parameter_list|(
+name|attrs
+parameter_list|)
+value|(((attrs)->bool& (1<< CGEN_INSN_PBB)) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CGEN_ATTR_CGEN_INSN_NOT_IN_DELAY_SLOT_VALUE
+parameter_list|(
+name|attrs
+parameter_list|)
+value|(((attrs)->bool& (1<< CGEN_INSN_NOT_IN_DELAY_SLOT)) != 0)
+end_define
+
+begin_comment
 comment|/* cgen.h uses things we just defined.  */
 end_comment
 
@@ -1138,6 +1490,16 @@ include|#
 directive|include
 file|"opcode/cgen.h"
 end_include
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|cgen_ifld
+name|fr30_cgen_ifld_table
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Attributes.  */
@@ -1229,6 +1591,15 @@ begin_decl_stmt
 specifier|extern
 name|CGEN_KEYWORD
 name|fr30_cgen_opval_h_r15
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|CGEN_HW_ENTRY
+name|fr30_cgen_hw_table
+index|[]
 decl_stmt|;
 end_decl_stmt
 

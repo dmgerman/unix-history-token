@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* This file is tc-h8300.h    Copyright 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996,    1997, 1998, 2000, 2002, 2003    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* This file is tc-h8300.h    Copyright 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996,    1997, 1998, 2000, 2001, 2002, 2003, 2005    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_define
@@ -23,12 +23,6 @@ name|TARGET_ARCH
 value|bfd_arch_h8300
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BFD_ASSEMBLER
-end_ifdef
-
 begin_comment
 comment|/* Fixup debug sections since we will never relax them.  */
 end_comment
@@ -42,11 +36,6 @@ name|seg
 parameter_list|)
 value|(seg->flags& SEC_ALLOC)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -90,12 +79,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|ANSI_PROTOTYPES
-end_if
-
 begin_struct_decl
 struct_decl|struct
 name|fix
@@ -108,36 +91,10 @@ name|internal_reloc
 struct_decl|;
 end_struct_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
 name|WORKING_DOT_WORD
-end_define
-
-begin_comment
-comment|/* This macro translates between an internal fix and a coff reloc type.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TC_COFF_FIX2RTYPE
-parameter_list|(
-name|fixP
-parameter_list|)
-value|abort ();
-end_define
-
-begin_define
-define|#
-directive|define
-name|BFD_ARCH
-value|bfd_arch_h8300
 end_define
 
 begin_define
@@ -145,16 +102,6 @@ define|#
 directive|define
 name|COFF_MAGIC
 value|( Smode&& Nmode ? 0x8304 : Hmode&& Nmode ? 0x8303 : Smode ? 0x8302 : Hmode ? 0x8301 : 0x8300)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TC_COUNT_RELOC
-parameter_list|(
-name|x
-parameter_list|)
-value|(1)
 end_define
 
 begin_define
@@ -176,40 +123,6 @@ end_define
 begin_comment
 comment|/* not used */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|TC_RELOC_MANGLE
-parameter_list|(
-name|s
-parameter_list|,
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|tc_reloc_mangle(a,b,c)
-end_define
-
-begin_function_decl
-specifier|extern
-name|void
-name|tc_reloc_mangle
-parameter_list|(
-name|struct
-name|fix
-modifier|*
-parameter_list|,
-name|struct
-name|internal_reloc
-modifier|*
-parameter_list|,
-name|bfd_vma
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/* No shared lib support, so we don't need to ensure externally    visible symbols can be overridden.  */
@@ -349,29 +262,8 @@ end_endif
 begin_define
 define|#
 directive|define
-name|TC_CONS_RELOC
-value|(Hmode ? R_RELLONG: R_RELWORD)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DO_NOT_STRIP
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
 name|LISTING_HEADER
 value|"Renesas H8/300 GAS "
-end_define
-
-begin_define
-define|#
-directive|define
-name|NEED_FX_R_TYPE
-value|1
 end_define
 
 begin_ifndef

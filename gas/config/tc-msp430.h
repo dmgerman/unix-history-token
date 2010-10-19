@@ -1,24 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* This file is tc-msp430.h    Copyright (C) 2002 Free Software Foundation, Inc.     Contributed by Dmitry Diky<diwil@mail.ru>     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* This file is tc-msp430.h    Copyright (C) 2002, 2004, 2005 Free Software Foundation, Inc.     Contributed by Dmitry Diky<diwil@mail.ru>     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BFD_ASSEMBLER
-end_ifndef
-
-begin_error
-error|#
-directive|error
-error|MSP430 support requires BFD_ASSEMBLER
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -156,22 +139,19 @@ begin_comment
 comment|/*   If you define this macro, it should return the offset between the      address of a PC relative fixup and the position from which the PC      relative adjustment should be made.  On many processors, the base      of a PC relative instruction is the next instruction, so this      macro would return the length of an instruction.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|long
 name|md_pcrel_from_section
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|fix
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|segT
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -210,6 +190,73 @@ end_define
 begin_comment
 comment|/*   An `.lcomm' directive with no explicit alignment parameter will      use this macro to set P2VAR to the alignment that a request for      SIZE bytes will have.  The alignment is expressed as a power of      two.  If no alignment should take place, the macro definition      should do nothing.  Some targets define a `.bss' directive that is      also affected by this macro.  The default definition will set      P2VAR to the truncated power of two of sizes up to eight bytes.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|md_relax_frag
+parameter_list|(
+name|SEG
+parameter_list|,
+name|FRAGP
+parameter_list|,
+name|STRETCH
+parameter_list|)
+define|\
+value|msp430_relax_frag (SEG, FRAGP, STRETCH)
+end_define
+
+begin_function_decl
+specifier|extern
+name|long
+name|msp430_relax_frag
+parameter_list|(
+name|segT
+parameter_list|,
+name|fragS
+modifier|*
+parameter_list|,
+name|long
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|TC_FORCE_RELOCATION_LOCAL
+parameter_list|(
+name|FIX
+parameter_list|)
+define|\
+value|msp430_force_relocation_local(FIX)
+end_define
+
+begin_function_decl
+specifier|extern
+name|int
+name|msp430_force_relocation_local
+parameter_list|(
+name|struct
+name|fix
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|msp430_enable_relax
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|msp430_enable_polys
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 
