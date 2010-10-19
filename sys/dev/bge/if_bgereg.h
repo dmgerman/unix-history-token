@@ -14359,6 +14359,10 @@ define|#
 directive|define
 name|BGE_FLAG_RX_ALIGNBUG
 value|0x04000000
+define|#
+directive|define
+name|BGE_FLAG_SHORT_DMA_BUG
+value|0x08000000
 name|uint32_t
 name|bge_phy_flags
 decl_stmt|;
