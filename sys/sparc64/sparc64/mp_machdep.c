@@ -1427,7 +1427,7 @@ argument_list|(
 name|clock
 argument_list|)
 condition|)
-name|hardclock_use_stick
+name|tick_et_use_stick
 operator|=
 literal|1
 expr_stmt|;
