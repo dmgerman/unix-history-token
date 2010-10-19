@@ -3200,6 +3200,15 @@ goto|;
 block|}
 if|if
 condition|(
+name|strcmp
+argument_list|(
+name|fs
+argument_list|,
+literal|"zfs"
+argument_list|)
+operator|!=
+literal|0
+operator|&&
 name|dev
 index|[
 literal|0
