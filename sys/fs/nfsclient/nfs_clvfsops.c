@@ -487,7 +487,7 @@ parameter_list|,
 name|uint8_t
 modifier|*
 parameter_list|,
-name|int
+name|size_t
 modifier|*
 parameter_list|,
 name|struct
@@ -8161,7 +8161,7 @@ name|uint8_t
 modifier|*
 name|fhp
 parameter_list|,
-name|int
+name|size_t
 modifier|*
 name|fhlenp
 parameter_list|,
@@ -8212,6 +8212,9 @@ condition|)
 operator|*
 name|fhlenp
 operator|=
+operator|(
+name|size_t
+operator|)
 name|np
 operator|->
 name|n_fhp
