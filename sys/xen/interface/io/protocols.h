@@ -36,6 +36,13 @@ name|XEN_IO_PROTO_ABI_IA64
 value|"ia64-abi"
 end_define
 
+begin_define
+define|#
+directive|define
+name|XEN_IO_PROTO_ABI_POWERPC64
+value|"powerpc64-abi"
+end_define
+
 begin_if
 if|#
 directive|if
@@ -82,6 +89,22 @@ define|#
 directive|define
 name|XEN_IO_PROTO_ABI_NATIVE
 value|XEN_IO_PROTO_ABI_IA64
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__powerpc64__
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|XEN_IO_PROTO_ABI_NATIVE
+value|XEN_IO_PROTO_ABI_POWERPC64
 end_define
 
 begin_else

@@ -97,14 +97,36 @@ value|3
 end_define
 
 begin_comment
-comment|/*  * Maximum scatter/gather segments per request.  * This is carefully chosen so that sizeof(blkif_ring_t)<= PAGE_SIZE.  * NB. This could be 12 if the ring indexes weren't stored in the same page.  */
+comment|/*  * Maximum scatter/gather segments associated with a request header block.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BLKIF_MAX_SEGMENTS_PER_HEADER_BLOCK
+value|11
+end_define
+
+begin_comment
+comment|/*  * Maximum scatter/gather segments associated with a segment block.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BLKIF_MAX_SEGMENTS_PER_SEGMENT_BLOCK
+value|14
+end_define
+
+begin_comment
+comment|/*  * Maximum scatter/gather segments per request (header + segment blocks).  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|BLKIF_MAX_SEGMENTS_PER_REQUEST
-value|11
+value|255
 end_define
 
 begin_struct
@@ -125,6 +147,14 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|blkif_request_segment
+name|blkif_request_segment_t
+typedef|;
+end_typedef
 
 begin_struct
 struct|struct
@@ -154,7 +184,7 @@ name|struct
 name|blkif_request_segment
 name|seg
 index|[
-name|BLKIF_MAX_SEGMENTS_PER_REQUEST
+name|BLKIF_MAX_SEGMENTS_PER_HEADER_BLOCK
 index|]
 decl_stmt|;
 block|}
@@ -255,6 +285,19 @@ end_expr_stmt
 begin_define
 define|#
 directive|define
+name|BLKRING_GET_SG_REQUEST
+parameter_list|(
+name|_r
+parameter_list|,
+name|_idx
+parameter_list|)
+define|\
+value|((struct blkif_request_segment *)RING_GET_REQUEST(_r, _idx))
+end_define
+
+begin_define
+define|#
+directive|define
 name|VDISK_CDROM
 value|0x1
 end_define
@@ -271,6 +314,23 @@ define|#
 directive|define
 name|VDISK_READONLY
 value|0x4
+end_define
+
+begin_comment
+comment|/*  * The number of ring request blocks required to handle an I/O  * request containing _segs segments.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BLKIF_SEGS_TO_BLOCKS
+parameter_list|(
+name|_segs
+parameter_list|)
+define|\
+value|((((_segs - BLKIF_MAX_SEGMENTS_PER_HEADER_BLOCK)		\ 	 + (BLKIF_MAX_SEGMENTS_PER_SEGMENT_BLOCK - 1))			\         / BLKIF_MAX_SEGMENTS_PER_SEGMENT_BLOCK) +
+comment|/*header_block*/
+value|1)
 end_define
 
 begin_endif

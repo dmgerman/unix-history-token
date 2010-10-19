@@ -86,7 +86,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<xen/xenbus/xenbusvar.h>
+file|<xen/xenstore/xenstorevar.h>
 end_include
 
 begin_include
@@ -1633,7 +1633,7 @@ end_function
 begin_decl_stmt
 specifier|static
 name|struct
-name|xenbus_watch
+name|xs_watch
 name|target_watch
 init|=
 block|{
@@ -1655,7 +1655,7 @@ name|void
 name|watch_target
 parameter_list|(
 name|struct
-name|xenbus_watch
+name|xs_watch
 modifier|*
 name|watch
 parameter_list|,
@@ -1680,9 +1680,9 @@ name|err
 decl_stmt|;
 name|err
 operator|=
-name|xenbus_scanf
+name|xs_scanf
 argument_list|(
-name|XBT_NIL
+name|XST_NIL
 argument_list|,
 literal|"memory"
 argument_list|,
@@ -1734,7 +1734,7 @@ name|err
 decl_stmt|;
 name|err
 operator|=
-name|register_xenbus_watch
+name|xs_register_watch
 argument_list|(
 operator|&
 name|target_watch

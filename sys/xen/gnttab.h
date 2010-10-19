@@ -39,6 +39,13 @@ directive|include
 file|<xen/features.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|GNTTAB_LIST_END
+value|GRANT_REF_INVALID
+end_define
+
 begin_struct
 struct|struct
 name|gnttab_free_callback
@@ -131,6 +138,24 @@ parameter_list|,
 name|void
 modifier|*
 name|page
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Eventually end access through the given array of grant references.  * Access will be ended immediately iff the grant entry is not in use,  * otherwise it will happen some time later  */
+end_comment
+
+begin_function_decl
+name|void
+name|gnttab_end_foreign_access_references
+parameter_list|(
+name|u_int
+name|count
+parameter_list|,
+name|grant_ref_t
+modifier|*
+name|refs
 parameter_list|)
 function_decl|;
 end_function_decl
