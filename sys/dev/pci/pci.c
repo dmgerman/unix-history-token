@@ -14674,7 +14674,7 @@ name|dstate
 decl_stmt|,
 name|i
 decl_stmt|;
-comment|/* 	 * Set the device to the given state.  If the firmware suggests 	 * a different power state, use it instead.  If power management 	 * is not present, the firmware is responsible for managing 	 * device power.  Skip children who aren't attached since they 	 * are handled separately.  Only manage type 0 devices for now. 	 */
+comment|/* 	 * Set the device to the given state.  If the firmware suggests 	 * a different power state, use it instead.  If power management 	 * is not present, the firmware is responsible for managing 	 * device power.  Skip children who aren't attached since they 	 * are handled separately. 	 */
 name|pcib
 operator|=
 name|device_get_parent
@@ -14720,18 +14720,6 @@ name|device_is_attached
 argument_list|(
 name|child
 argument_list|)
-operator|&&
-operator|(
-name|dinfo
-operator|->
-name|cfg
-operator|.
-name|hdrtype
-operator|&
-name|PCIM_HDRTYPE
-operator|)
-operator|==
-name|PCIM_HDRTYPE_NORMAL
 operator|&&
 name|PCIB_POWER_FOR_SLEEP
 argument_list|(
