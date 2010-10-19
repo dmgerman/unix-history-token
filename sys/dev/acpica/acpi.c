@@ -1657,51 +1657,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Power devices off and on in suspend and resume.  XXX Remove once tested. */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|acpi_do_powerstate
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"debug.acpi.do_powerstate"
-argument_list|,
-operator|&
-name|acpi_do_powerstate
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_debug_acpi
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|do_powerstate
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|acpi_do_powerstate
-argument_list|,
-literal|1
-argument_list|,
-literal|"Turn off devices when suspending."
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* Reset system clock while resuming.  XXX Remove once tested. */
 end_comment
 
@@ -3527,12 +3482,6 @@ name|i
 decl_stmt|,
 name|numdevs
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|acpi_do_powerstate
-condition|)
-return|return;
 if|if
 condition|(
 name|device_get_children
@@ -7135,16 +7084,6 @@ decl_stmt|;
 name|ACPI_STATUS
 name|status
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|acpi_do_powerstate
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 name|h
 operator|=
 name|acpi_get_handle
