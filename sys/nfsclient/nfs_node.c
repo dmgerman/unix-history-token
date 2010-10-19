@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/fnv_hash.h>
 end_include
 
@@ -99,6 +105,12 @@ begin_include
 include|#
 directive|include
 file|<nfs/nfsproto.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<nfs/nfs_lock.h>
 end_include
 
 begin_include

@@ -2162,6 +2162,9 @@ comment|/* do we have any PHY events ? */
 name|ata_sata_phy_check_events
 argument_list|(
 name|dev
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 block|}

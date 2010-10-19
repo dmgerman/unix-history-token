@@ -18,7 +18,7 @@ end_define
 begin_decl_stmt
 specifier|extern
 name|u_int
-name|hardclock_use_stick
+name|tick_et_use_stick
 decl_stmt|;
 end_decl_stmt
 

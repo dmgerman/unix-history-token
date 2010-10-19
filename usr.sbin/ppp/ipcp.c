@@ -1836,11 +1836,27 @@ return|;
 block|}
 block|}
 else|else
+block|{
 name|umask
 argument_list|(
 name|mask
 argument_list|)
 expr_stmt|;
+name|log_Printf
+argument_list|(
+name|LogERROR
+argument_list|,
+literal|"fopen(\"%s\", \"w\") failed: %s\n"
+argument_list|,
+name|_PATH_RESCONF
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 literal|1
 return|;

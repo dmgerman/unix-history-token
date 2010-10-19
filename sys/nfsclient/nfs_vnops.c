@@ -1019,24 +1019,6 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|vop_advlock_t
-modifier|*
-name|nfs_advlock_p
-init|=
-name|nfs_dolock
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|vop_reclaim_t
-modifier|*
-name|nfs_reclaim_p
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define

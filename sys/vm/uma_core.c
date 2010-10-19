@@ -10117,6 +10117,14 @@ operator|->
 name|uz_name
 argument_list|)
 expr_stmt|;
+comment|/* uma_zfree(..., NULL) does nothing, to match free(9). */
+if|if
+condition|(
+name|item
+operator|==
+name|NULL
+condition|)
+return|return;
 if|if
 condition|(
 name|zone

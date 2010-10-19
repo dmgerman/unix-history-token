@@ -74,7 +74,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* boot() has been called. */
+comment|/* kern_reboot() has been called. */
 end_comment
 
 begin_decl_stmt
@@ -2382,6 +2382,16 @@ end_function_decl
 begin_comment
 comment|/* Finalize the world */
 end_comment
+
+begin_decl_stmt
+name|void
+name|kern_reboot
+argument_list|(
+name|int
+argument_list|)
+name|__dead2
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|void

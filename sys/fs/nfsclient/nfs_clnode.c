@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -107,6 +113,12 @@ directive|include
 file|<fs/nfsclient/nfs.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<nfs/nfs_lock.h>
+end_include
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -134,15 +146,6 @@ end_expr_stmt
 begin_decl_stmt
 name|uma_zone_t
 name|newnfsnode_zone
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|vop_reclaim_t
-modifier|*
-name|ncl_reclaim_p
-init|=
-name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -965,9 +968,11 @@ expr_stmt|;
 comment|/* 	 * If the NLM is running, give it a chance to abort pending 	 * locks. 	 */
 if|if
 condition|(
-name|ncl_reclaim_p
+name|nfs_reclaim_p
+operator|!=
+name|NULL
 condition|)
-name|ncl_reclaim_p
+name|nfs_reclaim_p
 argument_list|(
 name|ap
 argument_list|)

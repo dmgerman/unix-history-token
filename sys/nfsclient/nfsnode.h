@@ -542,7 +542,7 @@ value|(((T1)->tv_sec != (T2)->tv_sec) || ((T1)->tv_nsec != (T2)->tv_nsec))
 end_define
 
 begin_comment
-comment|/*  * NFS iod threads can be in one of these three states once spawned.  * NFSIOD_NOT_AVAILABLE - Cannot be assigned an I/O operation at this time.  * NFSIOD_AVAILABLE - Available to be assigned an I/O operation.  * NFSIOD_CREATED_FOR_NFS_ASYNCIO - Newly created for nfs_asyncio() and  *	will be used by the thread that called nfs_asyncio().  */
+comment|/*  * NFS iod threads can be in one of these two states once spawned.  * NFSIOD_NOT_AVAILABLE - Cannot be assigned an I/O operation at this time.  * NFSIOD_AVAILABLE - Available to be assigned an I/O operation.  */
 end_comment
 
 begin_enum
@@ -556,10 +556,6 @@ block|,
 name|NFSIOD_AVAILABLE
 init|=
 literal|1
-block|,
-name|NFSIOD_CREATED_FOR_NFS_ASYNCIO
-init|=
-literal|2
 block|, }
 enum|;
 end_enum
@@ -633,22 +629,6 @@ specifier|extern
 name|struct
 name|buf_ops
 name|buf_ops_nfs
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|vop_advlock_t
-modifier|*
-name|nfs_advlock_p
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|vop_reclaim_t
-modifier|*
-name|nfs_reclaim_p
 decl_stmt|;
 end_decl_stmt
 

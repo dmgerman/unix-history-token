@@ -297,7 +297,7 @@ end_expr_stmt
 
 begin_decl_stmt
 name|u_int
-name|hardclock_use_stick
+name|tick_et_use_stick
 init|=
 literal|0
 decl_stmt|;
@@ -310,16 +310,16 @@ name|_machdep_tick
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|hardclock_use_stick
+name|tick_et_use_stick
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
-name|hardclock_use_stick
+name|tick_et_use_stick
 argument_list|,
 literal|0
 argument_list|,
-literal|"hardclock uses STICK instead of TICK timer"
+literal|"tick event timer uses STICK instead of TICK"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -474,7 +474,21 @@ begin_function_decl
 specifier|static
 specifier|inline
 name|void
-name|tick_hardclock_periodic
+name|tick_process
+parameter_list|(
+name|struct
+name|trapframe
+modifier|*
+name|tf
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+specifier|inline
+name|void
+name|tick_process_periodic
 parameter_list|(
 name|struct
 name|trapframe
@@ -489,20 +503,6 @@ name|tick_increment
 parameter_list|,
 name|u_long
 name|adj
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-specifier|inline
-name|void
-name|tick_process
-parameter_list|(
-name|struct
-name|trapframe
-modifier|*
-name|tf
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -618,7 +618,7 @@ block|}
 comment|/* 	 * Given that the STICK timers typically are driven at rather low 	 * frequencies they shouldn't be used except when really necessary. 	 */
 if|if
 condition|(
-name|hardclock_use_stick
+name|tick_et_use_stick
 operator|!=
 literal|0
 condition|)
@@ -840,7 +840,7 @@ name|tick_et
 operator|.
 name|et_name
 operator|=
-name|hardclock_use_stick
+name|tick_et_use_stick
 condition|?
 literal|"stick"
 else|:
@@ -866,7 +866,7 @@ name|tick_et
 operator|.
 name|et_frequency
 operator|=
-name|hardclock_use_stick
+name|tick_et_use_stick
 condition|?
 name|sclock
 else|:
@@ -962,6 +962,9 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
+name|critical_enter
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|tick_et
@@ -1004,11 +1007,14 @@ operator|=
 name|oldframe
 expr_stmt|;
 block|}
+name|critical_exit
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * NB: the sequence of reading the (S)TICK register, calculating the value  * of the next tick and writing it to the (S)TICK_COMPARE register must not  * be interrupted, not even by an IPI, otherwise a value that is in the past  * could be written in the worst case, causing hardclock to stop.  */
+comment|/*  * NB: the sequence of reading the (S)TICK register, calculating the value  * of the next tick and writing it to the (S)TICK_COMPARE register must not  * be interrupted, not even by an IPI, otherwise a value that is in the past  * could be written in the worst case, causing the periodic timer to stop.  */
 end_comment
 
 begin_function
@@ -1083,7 +1089,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|tick_hardclock_periodic
+name|tick_process_periodic
 argument_list|(
 name|tf
 argument_list|,
@@ -1181,7 +1187,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|tick_hardclock_periodic
+name|tick_process_periodic
 argument_list|(
 name|tf
 argument_list|,
@@ -1277,7 +1283,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|tick_hardclock_periodic
+name|tick_process_periodic
 argument_list|(
 name|tf
 argument_list|,
@@ -1309,7 +1315,7 @@ begin_function
 specifier|static
 specifier|inline
 name|void
-name|tick_hardclock_periodic
+name|tick_process_periodic
 parameter_list|(
 name|struct
 name|trapframe
@@ -1769,7 +1775,7 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|hardclock_use_stick
+name|tick_et_use_stick
 operator|!=
 literal|0
 condition|)
@@ -1819,7 +1825,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|hardclock_use_stick
+name|tick_et_use_stick
 operator|!=
 literal|0
 condition|)
