@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/time.h>
 end_include
 
@@ -2583,8 +2589,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%u.%09lu"
+literal|"%jd.%09lu"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|juggle_results
 index|[
 name|j
@@ -2658,8 +2667,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%u.%09lu"
+literal|"%jd.%09lu"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|process_results
 index|[
 name|j
@@ -2733,8 +2745,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%u.%09lu"
+literal|"%jd.%09lu"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|thread_results
 index|[
 name|j
