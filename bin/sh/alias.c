@@ -104,7 +104,7 @@ value|39
 end_define
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|struct
 name|alias
 modifier|*
@@ -116,14 +116,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|int
 name|aliases
 decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|setalias
 parameter_list|(
@@ -139,7 +139,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|int
 name|unalias
 parameter_list|(
@@ -151,7 +151,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|struct
 name|alias
 modifier|*
@@ -166,7 +166,7 @@ function_decl|;
 end_function_decl
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|setalias
 parameter_list|(
@@ -369,7 +369,7 @@ block|}
 end_function
 
 begin_function
-name|STATIC
+specifier|static
 name|int
 name|unalias
 parameter_list|(
@@ -1176,7 +1176,7 @@ block|}
 end_function
 
 begin_function
-name|STATIC
+specifier|static
 name|struct
 name|alias
 modifier|*

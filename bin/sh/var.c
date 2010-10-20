@@ -301,21 +301,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|struct
 name|var
 name|voptind
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-name|STATIC
+begin_decl_stmt
+specifier|static
 specifier|const
-expr|struct
+name|struct
 name|varinit
 name|varinit
 index|[]
-operator|=
+init|=
 block|{
 ifndef|#
 directive|ifndef
@@ -459,11 +459,11 @@ block|,
 name|NULL
 block|}
 block|}
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|struct
 name|var
 modifier|*
@@ -475,7 +475,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|struct
 name|var
 modifier|*
@@ -490,7 +490,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|int
 name|varequal
 parameter_list|(
@@ -506,7 +506,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|int
 name|localevar
 parameter_list|(
@@ -1096,7 +1096,7 @@ block|}
 end_function
 
 begin_function
-name|STATIC
+specifier|static
 name|int
 name|localevar
 parameter_list|(
@@ -3857,7 +3857,7 @@ comment|/*  * Find the appropriate entry in the hash table from the name.  */
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|struct
 name|var
 modifier|*
@@ -3924,7 +3924,7 @@ comment|/*  * Returns true if the two strings specify the same varable.  The fir
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|int
 name|varequal
 parameter_list|(

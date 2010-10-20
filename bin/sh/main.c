@@ -245,7 +245,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|read_profile
 parameter_list|(
@@ -257,7 +257,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|char
 modifier|*
 name|find_dot_file
@@ -912,7 +912,7 @@ comment|/*  * Read /etc/profile or .profile.  Return on error.  */
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|read_profile
 parameter_list|(
@@ -1041,7 +1041,7 @@ comment|/*  * Take commands from a file.  To be compatible we should do a path  
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|char
 modifier|*
 name|find_dot_file

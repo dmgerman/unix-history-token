@@ -334,7 +334,7 @@ comment|/* buffer for top level input file */
 end_comment
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|struct
 name|parsefile
 modifier|*
@@ -383,7 +383,7 @@ comment|/* cookie for editline package */
 end_comment
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|pushfile
 parameter_list|(
@@ -1700,7 +1700,7 @@ comment|/*  * To handle the "." command, a stack of input files is used.  Pushfi
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|pushfile
 parameter_list|(

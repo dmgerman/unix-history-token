@@ -611,7 +611,7 @@ block|}
 end_function
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|char
 name|out_junk
 index|[

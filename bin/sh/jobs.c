@@ -234,7 +234,7 @@ file|"mystring.h"
 end_include
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|struct
 name|job
 modifier|*
@@ -247,7 +247,7 @@ comment|/* array of jobs */
 end_comment
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|int
 name|njobs
 decl_stmt|;
@@ -278,7 +278,7 @@ name|JOBS
 end_if
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|struct
 name|job
 modifier|*
@@ -291,7 +291,7 @@ comment|/* most recently used job list */
 end_comment
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|pid_t
 name|initialpgrp
 decl_stmt|;
@@ -360,7 +360,7 @@ name|JOBS
 end_if
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|restartjob
 parameter_list|(
@@ -377,7 +377,7 @@ directive|endif
 end_endif
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|freejob
 parameter_list|(
@@ -389,7 +389,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|struct
 name|job
 modifier|*
@@ -402,7 +402,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|pid_t
 name|dowait
 parameter_list|(
@@ -416,7 +416,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|pid_t
 name|waitproc
 parameter_list|(
@@ -429,7 +429,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|cmdtxt
 parameter_list|(
@@ -441,7 +441,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|cmdputs
 parameter_list|(
@@ -459,7 +459,7 @@ name|JOBS
 end_if
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|setcurjob
 parameter_list|(
@@ -471,7 +471,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|deljob
 parameter_list|(
@@ -483,7 +483,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|struct
 name|job
 modifier|*
@@ -502,7 +502,7 @@ directive|endif
 end_endif
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|showjob
 parameter_list|(
@@ -1170,7 +1170,7 @@ block|}
 end_block
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|restartjob
 parameter_list|(
@@ -1428,7 +1428,7 @@ block|}
 end_function
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|showjob
 parameter_list|(
@@ -2149,7 +2149,7 @@ comment|/*  * Mark a job structure as unused.  */
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|freejob
 parameter_list|(
@@ -2561,7 +2561,7 @@ comment|/*  * Convert a job name to a job structure.  */
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|struct
 name|job
 modifier|*
@@ -3457,7 +3457,7 @@ name|JOBS
 end_if
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|setcurjob
 parameter_list|(
@@ -3555,7 +3555,7 @@ block|}
 end_function
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|deljob
 parameter_list|(
@@ -3637,7 +3637,7 @@ comment|/*  * Return the most recently used job that isn't `nj', and preferably 
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|struct
 name|job
 modifier|*
@@ -4613,7 +4613,7 @@ comment|/*  * Wait for a process to terminate.  */
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|pid_t
 name|dowait
 parameter_list|(
@@ -5189,7 +5189,7 @@ comment|/*  * Do a wait system call.  If job control is compiled in, we accept  
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|pid_t
 name|waitproc
 parameter_list|(
@@ -5351,7 +5351,7 @@ comment|/*  * Return a string identifying a command (to be printed by the  * job
 end_comment
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|char
 modifier|*
 name|cmdnextc
@@ -5359,7 +5359,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|int
 name|cmdnleft
 decl_stmt|;
@@ -5419,7 +5419,7 @@ block|}
 end_function
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|cmdtxt
 parameter_list|(
@@ -6111,7 +6111,7 @@ block|}
 end_function
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|cmdputs
 parameter_list|(

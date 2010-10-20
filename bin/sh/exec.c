@@ -265,7 +265,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|struct
 name|tblentry
 modifier|*
@@ -277,7 +277,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|int
 name|builtinloc
 init|=
@@ -303,7 +303,7 @@ comment|/* Last exec error */
 end_comment
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|tryexec
 parameter_list|(
@@ -322,7 +322,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|printentry
 parameter_list|(
@@ -336,7 +336,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|struct
 name|tblentry
 modifier|*
@@ -352,7 +352,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|STATIC
+specifier|static
 name|void
 name|delete_cmd_entry
 parameter_list|(
@@ -568,7 +568,7 @@ block|}
 end_function
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|tryexec
 parameter_list|(
@@ -1141,7 +1141,7 @@ block|}
 end_function
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|printentry
 parameter_list|(
@@ -2664,7 +2664,7 @@ comment|/*  * Locate a command in the command hash table.  If "add" is nonzero, 
 end_comment
 
 begin_decl_stmt
-name|STATIC
+specifier|static
 name|struct
 name|tblentry
 modifier|*
@@ -2674,7 +2674,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|STATIC
+specifier|static
 name|struct
 name|tblentry
 modifier|*
@@ -2859,7 +2859,7 @@ comment|/*  * Delete the command entry returned on the last lookup.  */
 end_comment
 
 begin_function
-name|STATIC
+specifier|static
 name|void
 name|delete_cmd_entry
 parameter_list|(

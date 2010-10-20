@@ -22,7 +22,7 @@ file|<inttypes.h>
 end_include
 
 begin_comment
-comment|/*  * The follow should be set to reflect the type of system you have:  *	JOBS -> 1 if you have Berkeley job control, 0 otherwise.  *	define DEBUG=1 to compile in debugging (set global "debug" to turn on)  *	define DEBUG=2 to compile in and turn on debugging.  *  * When debugging is on, debugging info will be written to $HOME/trace and  * a quit signal will generate a core dump.  */
+comment|/*  * The follow should be set to reflect the type of system you have:  *	JOBS -> 1 if you have Berkeley job control, 0 otherwise.  *	define DEBUG=1 to compile in debugging (set global "debug" to turn on)  *	define DEBUG=2 to compile in and turn on debugging.  *  * When debugging is on, debugging info will be written to ./trace and  * a quit signal will generate a core dump.  */
 end_comment
 
 begin_define
@@ -85,13 +85,6 @@ modifier|*
 name|pointer
 typedef|;
 end_typedef
-
-begin_define
-define|#
-directive|define
-name|STATIC
-value|static
-end_define
 
 begin_define
 define|#
