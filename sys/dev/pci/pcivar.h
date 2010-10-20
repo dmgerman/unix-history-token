@@ -80,15 +80,15 @@ comment|/* PCI power management capabilities */
 name|uint8_t
 name|pp_status
 decl_stmt|;
-comment|/* config space address of PCI power status reg */
+comment|/* conf. space addr. of PM control/status reg */
 name|uint8_t
-name|pp_pmcsr
+name|pp_bse
 decl_stmt|;
-comment|/* config space address of PMCSR reg */
+comment|/* conf. space addr. of PM BSE reg */
 name|uint8_t
 name|pp_data
 decl_stmt|;
-comment|/* config space address of PCI power data reg */
+comment|/* conf. space addr. of PM data reg */
 block|}
 struct|;
 end_struct

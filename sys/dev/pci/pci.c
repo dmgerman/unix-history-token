@@ -3172,11 +3172,11 @@ name|cfg
 operator|->
 name|pp
 operator|.
-name|pp_pmcsr
+name|pp_bse
 operator|=
 name|ptr
 operator|+
-name|PCIR_POWER_PMCSR
+name|PCIR_POWER_BSE
 expr_stmt|;
 if|if
 condition|(
