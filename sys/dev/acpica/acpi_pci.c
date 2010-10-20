@@ -802,6 +802,8 @@ condition|(
 name|old_state
 operator|<
 name|state
+operator|&&
+name|pci_do_power_suspend
 condition|)
 block|{
 name|error
