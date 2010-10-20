@@ -2032,8 +2032,6 @@ condition|(
 name|error
 operator|==
 literal|0
-operator|&&
-name|pci_do_power_resume
 condition|)
 block|{
 name|dstate
