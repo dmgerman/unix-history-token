@@ -4227,8 +4227,6 @@ operator|!=
 literal|0
 operator|)
 decl_stmt|;
-comment|//device_printf(dev, "irq cause %02x EDMA %d IEC %08x\n",
-comment|//    arg->cause, edma, ATA_INL(ch->r_mem, EDMA_IEC));
 comment|/* New item in response queue. */
 if|if
 condition|(
@@ -4268,8 +4266,6 @@ argument_list|,
 name|EDMA_IEC
 argument_list|)
 expr_stmt|;
-comment|//device_printf(dev, "irq cause %02x EDMA %d IEC %08x\n",
-comment|//    arg->cause, edma, iec);
 if|if
 condition|(
 name|iec
@@ -4299,7 +4295,6 @@ argument_list|,
 name|serr
 argument_list|)
 expr_stmt|;
-comment|//device_printf(dev, "SERR %08x\n", serr);
 block|}
 comment|/* EDMA self-disabled due to error. */
 if|if
@@ -4360,7 +4355,6 @@ argument_list|,
 name|SATA_FISIC
 argument_list|)
 expr_stmt|;
-comment|//device_printf(dev, "FISIC %08x\n", fisic);
 block|}
 if|if
 condition|(
@@ -4572,7 +4566,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|//device_printf(dev, "err slot %d port %d\n", ccs, port);
 name|mvs_requeue_frozen
 argument_list|(
 name|dev
@@ -4975,8 +4968,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|//	device_printf(dev, "Legacy intr status %02x\n",
-comment|//	    status);
 if|if
 condition|(
 name|slot
@@ -5425,7 +5416,6 @@ argument_list|,
 name|ATA_IREASON
 argument_list|)
 expr_stmt|;
-comment|//device_printf(dev, "status %02x, ireason %02x, length %d\n", status, ireason, length);
 switch|switch
 condition|(
 operator|(
@@ -5460,7 +5450,6 @@ return|return;
 case|case
 name|ATAPI_P_WRITE
 case|:
-comment|//device_printf(dev, "ATAPI WRITE\n");
 if|if
 condition|(
 operator|(
@@ -5563,7 +5552,6 @@ return|return;
 case|case
 name|ATAPI_P_READ
 case|:
-comment|//device_printf(dev, "ATAPI READ\n");
 if|if
 condition|(
 operator|(
@@ -5665,13 +5653,6 @@ return|return;
 case|case
 name|ATAPI_P_DONEDRQ
 case|:
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"ATAPI DONEDRQ\n"
-argument_list|)
-expr_stmt|;
 name|device_printf
 argument_list|(
 name|dev
@@ -5794,7 +5775,6 @@ case|:
 case|case
 name|ATAPI_P_DONE
 case|:
-comment|//device_printf(dev, "ATAPI ABORT/DONE\n");
 if|if
 condition|(
 name|status
@@ -5817,7 +5797,8 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"unknown transfer phase (status %02x, ireason %02x)\n"
+literal|"unknown transfer phase"
+literal|" (status %02x, ireason %02x)\n"
 argument_list|,
 name|status
 argument_list|,
@@ -7896,8 +7877,6 @@ operator|==
 name|XPT_ATA_IO
 condition|)
 block|{
-comment|//		device_printf(dev, "%d Legacy command %02x size %d\n",
-comment|//		    port, ccb->ataio.cmd.command, ccb->ataio.dxfer_len);
 name|mvs_tfd_write
 argument_list|(
 name|dev
@@ -8103,9 +8082,6 @@ block|}
 block|}
 else|else
 block|{
-comment|//		device_printf(dev, "%d ATAPI command %02x size %d dma %d\n",
-comment|//		    port, ccb->csio.cdb_io.cdb_bytes[0], ccb->csio.dxfer_len,
-comment|//		    ch->basic_dma);
 name|ch
 operator|->
 name|donecount
@@ -8625,8 +8601,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|//	device_printf(dev, "%d EDMA command %02x size %d slot %d tag %d\n",
-comment|//	    port, ccb->ataio.cmd.command, ccb->ataio.dxfer_len, slot->slot, slot->tag);
 comment|/* Get address of the prepared EPRD */
 name|eprd
 operator|=
@@ -10097,7 +10071,6 @@ decl_stmt|;
 name|int
 name|lastto
 decl_stmt|;
-comment|//device_printf(dev, "cmd done status %d\n", et);
 name|bus_dmamap_sync
 argument_list|(
 name|ch
