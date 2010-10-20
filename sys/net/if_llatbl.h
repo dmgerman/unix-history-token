@@ -751,14 +751,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|lltable_drain
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|void		lltable_drain(int);
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|int
