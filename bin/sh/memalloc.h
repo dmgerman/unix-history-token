@@ -230,7 +230,7 @@ name|c
 parameter_list|,
 name|p
 parameter_list|)
-value|(--sstrnleft>= 0? (*p++ = (c)) : (p = growstackstr(), *p++ = (c)))
+value|(--sstrnleft>= 0? (*p++ = (c)) : (p = growstackstr(), --sstrnleft, *p++ = (c)))
 end_define
 
 begin_define
@@ -256,6 +256,10 @@ name|p
 parameter_list|)
 value|(--sstrnleft, *p++ = (c))
 end_define
+
+begin_comment
+comment|/*  * STACKSTRNUL's use is where we want to be able to turn a stack  * (non-sentinel, character counting string) into a C string,  * and later pretend the NUL is not there.  * Note: Because of STACKSTRNUL's semantics, STACKSTRNUL cannot be used  * on a stack that will grabstackstr()ed.  */
+end_comment
 
 begin_define
 define|#
