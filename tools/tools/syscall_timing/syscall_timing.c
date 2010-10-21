@@ -224,13 +224,13 @@ block|}
 end_function
 
 begin_function
-name|uint64_t
+name|uintmax_t
 name|test_getuid
 parameter_list|(
-name|uint64_t
+name|uintmax_t
 name|num
 parameter_list|,
-name|uint64_t
+name|uintmax_t
 name|int_arg
 parameter_list|,
 specifier|const
@@ -239,7 +239,7 @@ modifier|*
 name|path
 parameter_list|)
 block|{
-name|uint64_t
+name|uintmax_t
 name|i
 decl_stmt|;
 comment|/* 	 * Thread-local data should require no locking if system 	 * call is MPSAFE. 	 */
@@ -281,13 +281,13 @@ block|}
 end_function
 
 begin_function
-name|uint64_t
+name|uintmax_t
 name|test_getppid
 parameter_list|(
-name|uint64_t
+name|uintmax_t
 name|num
 parameter_list|,
-name|uint64_t
+name|uintmax_t
 name|int_arg
 parameter_list|,
 specifier|const
@@ -296,7 +296,7 @@ modifier|*
 name|path
 parameter_list|)
 block|{
-name|uint64_t
+name|uintmax_t
 name|i
 decl_stmt|;
 comment|/* 	 * This is process-local, but can change, so will require a 	 * lock. 	 */
@@ -338,13 +338,13 @@ block|}
 end_function
 
 begin_function
-name|uint64_t
+name|uintmax_t
 name|test_clock_gettime
 parameter_list|(
-name|uint64_t
+name|uintmax_t
 name|num
 parameter_list|,
-name|uint64_t
+name|uintmax_t
 name|int_arg
 parameter_list|,
 specifier|const
@@ -357,7 +357,7 @@ name|struct
 name|timespec
 name|ts
 decl_stmt|;
-name|uint64_t
+name|uintmax_t
 name|i
 decl_stmt|;
 name|benchmark_start
@@ -406,13 +406,13 @@ block|}
 end_function
 
 begin_function
-name|uint64_t
+name|uintmax_t
 name|test_pipe
 parameter_list|(
-name|uint64_t
+name|uintmax_t
 name|num
 parameter_list|,
-name|uint64_t
+name|uintmax_t
 name|int_arg
 parameter_list|,
 specifier|const
@@ -532,13 +532,13 @@ block|}
 end_function
 
 begin_function
-name|uint64_t
+name|uintmax_t
 name|test_socket_stream
 parameter_list|(
-name|uint64_t
+name|uintmax_t
 name|num
 parameter_list|,
-name|uint64_t
+name|uintmax_t
 name|int_arg
 parameter_list|,
 specifier|const
@@ -547,7 +547,7 @@ modifier|*
 name|path
 parameter_list|)
 block|{
-name|uint64_t
+name|uintmax_t
 name|i
 decl_stmt|,
 name|so
@@ -648,13 +648,13 @@ block|}
 end_function
 
 begin_function
-name|uint64_t
+name|uintmax_t
 name|test_socket_dgram
 parameter_list|(
-name|uint64_t
+name|uintmax_t
 name|num
 parameter_list|,
-name|uint64_t
+name|uintmax_t
 name|int_arg
 parameter_list|,
 specifier|const
@@ -663,7 +663,7 @@ modifier|*
 name|path
 parameter_list|)
 block|{
-name|uint64_t
+name|uintmax_t
 name|i
 decl_stmt|,
 name|so
@@ -764,13 +764,13 @@ block|}
 end_function
 
 begin_function
-name|uint64_t
+name|uintmax_t
 name|test_socketpair_stream
 parameter_list|(
-name|uint64_t
+name|uintmax_t
 name|num
 parameter_list|,
-name|uint64_t
+name|uintmax_t
 name|int_arg
 parameter_list|,
 specifier|const
@@ -779,7 +779,7 @@ modifier|*
 name|path
 parameter_list|)
 block|{
-name|uint64_t
+name|uintmax_t
 name|i
 decl_stmt|;
 name|int
@@ -903,13 +903,13 @@ block|}
 end_function
 
 begin_function
-name|uint64_t
+name|uintmax_t
 name|test_socketpair_dgram
 parameter_list|(
-name|uint64_t
+name|uintmax_t
 name|num
 parameter_list|,
-name|uint64_t
+name|uintmax_t
 name|int_arg
 parameter_list|,
 specifier|const
@@ -918,7 +918,7 @@ modifier|*
 name|path
 parameter_list|)
 block|{
-name|uint64_t
+name|uintmax_t
 name|i
 decl_stmt|;
 name|int
@@ -1042,13 +1042,13 @@ block|}
 end_function
 
 begin_function
-name|uint64_t
+name|uintmax_t
 name|test_open_close
 parameter_list|(
-name|uint64_t
+name|uintmax_t
 name|num
 parameter_list|,
-name|uint64_t
+name|uintmax_t
 name|int_arg
 parameter_list|,
 specifier|const
@@ -1057,7 +1057,7 @@ modifier|*
 name|path
 parameter_list|)
 block|{
-name|uint64_t
+name|uintmax_t
 name|i
 decl_stmt|;
 name|int
@@ -1158,13 +1158,13 @@ block|}
 end_function
 
 begin_function
-name|uint64_t
+name|uintmax_t
 name|test_open_read_close
 parameter_list|(
-name|uint64_t
+name|uintmax_t
 name|num
 parameter_list|,
-name|uint64_t
+name|uintmax_t
 name|int_arg
 parameter_list|,
 specifier|const
@@ -1179,7 +1179,7 @@ index|[
 name|int_arg
 index|]
 decl_stmt|;
-name|uint64_t
+name|uintmax_t
 name|i
 decl_stmt|;
 name|int
@@ -1304,13 +1304,13 @@ block|}
 end_function
 
 begin_function
-name|uint64_t
+name|uintmax_t
 name|test_dup
 parameter_list|(
-name|uint64_t
+name|uintmax_t
 name|num
 parameter_list|,
-name|uint64_t
+name|uintmax_t
 name|int_arg
 parameter_list|,
 specifier|const
@@ -1429,13 +1429,13 @@ block|}
 end_function
 
 begin_function
-name|uint64_t
+name|uintmax_t
 name|test_shmfd
 parameter_list|(
-name|uint64_t
+name|uintmax_t
 name|num
 parameter_list|,
-name|uint64_t
+name|uintmax_t
 name|int_arg
 parameter_list|,
 specifier|const
@@ -1444,7 +1444,7 @@ modifier|*
 name|path
 parameter_list|)
 block|{
-name|uint64_t
+name|uintmax_t
 name|i
 decl_stmt|,
 name|shmfd
@@ -1548,13 +1548,13 @@ block|}
 end_function
 
 begin_function
-name|uint64_t
+name|uintmax_t
 name|test_fstat_shmfd
 parameter_list|(
-name|uint64_t
+name|uintmax_t
 name|num
 parameter_list|,
-name|uint64_t
+name|uintmax_t
 name|int_arg
 parameter_list|,
 specifier|const
@@ -1567,7 +1567,7 @@ name|struct
 name|stat
 name|sb
 decl_stmt|;
-name|uint64_t
+name|uintmax_t
 name|i
 decl_stmt|,
 name|shmfd
@@ -1670,13 +1670,13 @@ block|}
 end_function
 
 begin_function
-name|uint64_t
+name|uintmax_t
 name|test_fork
 parameter_list|(
-name|uint64_t
+name|uintmax_t
 name|num
 parameter_list|,
-name|uint64_t
+name|uintmax_t
 name|int_arg
 parameter_list|,
 specifier|const
@@ -1688,7 +1688,7 @@ block|{
 name|pid_t
 name|pid
 decl_stmt|;
-name|uint64_t
+name|uintmax_t
 name|i
 decl_stmt|;
 name|pid
@@ -1828,13 +1828,13 @@ block|}
 end_function
 
 begin_function
-name|uint64_t
+name|uintmax_t
 name|test_vfork
 parameter_list|(
-name|uint64_t
+name|uintmax_t
 name|num
 parameter_list|,
-name|uint64_t
+name|uintmax_t
 name|int_arg
 parameter_list|,
 specifier|const
@@ -1846,7 +1846,7 @@ block|{
 name|pid_t
 name|pid
 decl_stmt|;
-name|uint64_t
+name|uintmax_t
 name|i
 decl_stmt|;
 name|pid
@@ -2017,13 +2017,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|uint64_t
+name|uintmax_t
 name|test_fork_exec
 parameter_list|(
-name|uint64_t
+name|uintmax_t
 name|num
 parameter_list|,
-name|uint64_t
+name|uintmax_t
 name|int_arg
 parameter_list|,
 specifier|const
@@ -2035,7 +2035,7 @@ block|{
 name|pid_t
 name|pid
 decl_stmt|;
-name|uint64_t
+name|uintmax_t
 name|i
 decl_stmt|;
 name|pid
@@ -2209,13 +2209,13 @@ block|}
 end_function
 
 begin_function
-name|uint64_t
+name|uintmax_t
 name|test_vfork_exec
 parameter_list|(
-name|uint64_t
+name|uintmax_t
 name|num
 parameter_list|,
-name|uint64_t
+name|uintmax_t
 name|int_arg
 parameter_list|,
 specifier|const
@@ -2227,7 +2227,7 @@ block|{
 name|pid_t
 name|pid
 decl_stmt|;
-name|uint64_t
+name|uintmax_t
 name|i
 decl_stmt|;
 name|pid
@@ -2401,13 +2401,13 @@ block|}
 end_function
 
 begin_function
-name|uint64_t
+name|uintmax_t
 name|test_chroot
 parameter_list|(
-name|uint64_t
+name|uintmax_t
 name|num
 parameter_list|,
-name|uint64_t
+name|uintmax_t
 name|int_arg
 parameter_list|,
 specifier|const
@@ -2416,7 +2416,7 @@ modifier|*
 name|path
 parameter_list|)
 block|{
-name|uint64_t
+name|uintmax_t
 name|i
 decl_stmt|;
 if|if
@@ -2488,13 +2488,13 @@ block|}
 end_function
 
 begin_function
-name|uint64_t
+name|uintmax_t
 name|test_setuid
 parameter_list|(
-name|uint64_t
+name|uintmax_t
 name|num
 parameter_list|,
-name|uint64_t
+name|uintmax_t
 name|int_arg
 parameter_list|,
 specifier|const
@@ -2506,7 +2506,7 @@ block|{
 name|uid_t
 name|uid
 decl_stmt|;
-name|uint64_t
+name|uintmax_t
 name|i
 decl_stmt|;
 name|uid
@@ -2591,22 +2591,22 @@ name|char
 modifier|*
 name|t_name
 decl_stmt|;
-name|uint64_t
+name|uintmax_t
 function_decl|(
 modifier|*
 name|t_func
 function_decl|)
 parameter_list|(
-name|uint64_t
+name|uintmax_t
 parameter_list|,
-name|uint64_t
+name|uintmax_t
 parameter_list|,
 specifier|const
 name|char
 modifier|*
 parameter_list|)
 function_decl|;
-name|uint64_t
+name|uintmax_t
 name|t_int
 decl_stmt|;
 block|}
@@ -2952,7 +2952,7 @@ name|j
 decl_stmt|,
 name|k
 decl_stmt|;
-name|uint64_t
+name|uintmax_t
 name|iterations
 decl_stmt|,
 name|loops
@@ -3174,7 +3174,7 @@ expr_stmt|;
 if|if
 condition|(
 name|argc
-operator|!=
+operator|<
 literal|1
 condition|)
 name|usage
@@ -3195,7 +3195,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Clock resolution: %ju.%08ju\n"
+literal|"Clock resolution: %ju.%09ju\n"
 argument_list|,
 operator|(
 name|uintmax_t
@@ -3231,8 +3231,10 @@ name|j
 operator|++
 control|)
 block|{
-name|uint64_t
+name|uintmax_t
 name|calls
+decl_stmt|,
+name|nsecsperit
 decl_stmt|;
 name|the_test
 operator|=
@@ -3378,32 +3380,32 @@ name|calls
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Note.  This assumes that each iteration takes less than 		 * a second, and that our total nanoseconds doesn't exceed 		 * the room in our arithmetic unit.  Fine for system calls, 		 * but not for long things. 		 */
+name|nsecsperit
+operator|=
 name|ts_end
 operator|.
 name|tv_sec
-operator|*=
+operator|*
 literal|1000000000
-operator|/
+expr_stmt|;
+name|nsecsperit
+operator|+=
+name|ts_end
+operator|.
+name|tv_nsec
+expr_stmt|;
+name|nsecsperit
+operator|/=
 name|calls
 expr_stmt|;
 name|printf
 argument_list|(
 literal|"0.%09ju\n"
 argument_list|,
-call|(
+operator|(
 name|uintmax_t
-call|)
-argument_list|(
-name|ts_end
-operator|.
-name|tv_sec
-operator|+
-name|ts_end
-operator|.
-name|tv_nsec
-operator|/
-name|calls
-argument_list|)
+operator|)
+name|nsecsperit
 argument_list|)
 expr_stmt|;
 block|}
