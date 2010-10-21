@@ -236,7 +236,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|string_arg
+name|path
 parameter_list|)
 block|{
 name|uint64_t
@@ -293,7 +293,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|string_arg
+name|path
 parameter_list|)
 block|{
 name|uint64_t
@@ -350,7 +350,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|string_arg
+name|path
 parameter_list|)
 block|{
 name|struct
@@ -418,7 +418,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|string_arg
+name|path
 parameter_list|)
 block|{
 name|int
@@ -544,7 +544,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|string_arg
+name|path
 parameter_list|)
 block|{
 name|uint64_t
@@ -660,7 +660,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|string_arg
+name|path
 parameter_list|)
 block|{
 name|uint64_t
@@ -776,7 +776,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|string_arg
+name|path
 parameter_list|)
 block|{
 name|uint64_t
@@ -915,7 +915,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|string_arg
+name|path
 parameter_list|)
 block|{
 name|uint64_t
@@ -1054,16 +1054,9 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|string_arg
+name|path
 parameter_list|)
 block|{
-specifier|const
-name|char
-modifier|*
-name|path
-init|=
-name|string_arg
-decl_stmt|;
 name|uint64_t
 name|i
 decl_stmt|;
@@ -1177,7 +1170,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|string_arg
+name|path
 parameter_list|)
 block|{
 name|char
@@ -1196,7 +1189,7 @@ name|fd
 operator|=
 name|open
 argument_list|(
-name|string_arg
+name|path
 argument_list|,
 name|O_RDONLY
 argument_list|)
@@ -1214,7 +1207,7 @@ literal|1
 argument_list|,
 literal|"test_open_close: %s"
 argument_list|,
-name|string_arg
+name|path
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1260,7 +1253,7 @@ name|fd
 operator|=
 name|open
 argument_list|(
-name|string_arg
+name|path
 argument_list|,
 name|O_RDONLY
 argument_list|)
@@ -1278,7 +1271,7 @@ literal|1
 argument_list|,
 literal|"test_open_close: %s"
 argument_list|,
-name|string_arg
+name|path
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1323,7 +1316,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|string_arg
+name|path
 parameter_list|)
 block|{
 name|int
@@ -1448,7 +1441,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|string_arg
+name|path
 parameter_list|)
 block|{
 name|uint64_t
@@ -1567,7 +1560,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|string_arg
+name|path
 parameter_list|)
 block|{
 name|struct
@@ -1689,7 +1682,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|string_arg
+name|path
 parameter_list|)
 block|{
 name|pid_t
@@ -1847,7 +1840,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|string_arg
+name|path
 parameter_list|)
 block|{
 name|pid_t
@@ -2036,7 +2029,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|string_arg
+name|path
 parameter_list|)
 block|{
 name|pid_t
@@ -2228,7 +2221,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|string_arg
+name|path
 parameter_list|)
 block|{
 name|pid_t
@@ -2420,7 +2413,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|string_arg
+name|path
 parameter_list|)
 block|{
 name|uint64_t
@@ -2507,7 +2500,7 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|string_arg
+name|path
 parameter_list|)
 block|{
 name|uid_t
@@ -2616,11 +2609,6 @@ function_decl|;
 name|uint64_t
 name|t_int
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|t_string
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -2715,36 +2703,15 @@ name|PF_INET
 block|}
 block|,
 block|{
-literal|"open_close_devnull"
+literal|"open_close"
 block|,
 name|test_open_close
-block|,
-operator|.
-name|t_string
-operator|=
-literal|"/dev/null"
 block|}
 block|,
 block|{
-literal|"open_close_devzero"
-block|,
-name|test_open_close
-block|,
-operator|.
-name|t_string
-operator|=
-literal|"/dev/zero"
-block|}
-block|,
-block|{
-literal|"open_read_close_devzero_1"
+literal|"open_read_close_1"
 block|,
 name|test_open_read_close
-block|,
-operator|.
-name|t_string
-operator|=
-literal|"/dev/zero"
 block|,
 operator|.
 name|t_int
@@ -2753,14 +2720,9 @@ literal|1
 block|}
 block|,
 block|{
-literal|"open_read_close_devzero_10"
+literal|"open_read_close_10"
 block|,
 name|test_open_read_close
-block|,
-operator|.
-name|t_string
-operator|=
-literal|"/dev/zero"
 block|,
 operator|.
 name|t_int
@@ -2769,14 +2731,9 @@ literal|10
 block|}
 block|,
 block|{
-literal|"open_read_close_devzero_100"
+literal|"open_read_close_100"
 block|,
 name|test_open_read_close
-block|,
-operator|.
-name|t_string
-operator|=
-literal|"/dev/zero"
 block|,
 operator|.
 name|t_int
@@ -2785,14 +2742,9 @@ literal|100
 block|}
 block|,
 block|{
-literal|"open_read_close_devzero_1000"
+literal|"open_read_close_1000"
 block|,
 name|test_open_read_close
-block|,
-operator|.
-name|t_string
-operator|=
-literal|"/dev/zero"
 block|,
 operator|.
 name|t_int
@@ -2801,14 +2753,9 @@ literal|1000
 block|}
 block|,
 block|{
-literal|"open_read_close_devzero_10000"
+literal|"open_read_close_10000"
 block|,
 name|test_open_read_close
-block|,
-operator|.
-name|t_string
-operator|=
-literal|"/dev/zero"
 block|,
 operator|.
 name|t_int
@@ -2817,14 +2764,9 @@ literal|10000
 block|}
 block|,
 block|{
-literal|"open_read_close_devzero_100000"
+literal|"open_read_close_100000"
 block|,
 name|test_open_read_close
-block|,
-operator|.
-name|t_string
-operator|=
-literal|"/dev/zero"
 block|,
 operator|.
 name|t_int
@@ -2926,7 +2868,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"syscall_timing [-i iterations] [-l loops] "
-literal|"[-s seconds] test\n"
+literal|"[-p path] [-s seconds] test\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -2988,6 +2930,11 @@ name|test
 modifier|*
 name|the_test
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|path
+decl_stmt|;
 name|long
 name|long
 name|ll
@@ -3022,6 +2969,10 @@ name|loops
 operator|=
 literal|0
 expr_stmt|;
+name|path
+operator|=
+name|NULL
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -3033,7 +2984,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"i:l:s:"
+literal|"i:l:p:s:"
 argument_list|)
 operator|)
 operator|!=
@@ -3120,6 +3071,14 @@ expr_stmt|;
 name|loops
 operator|=
 name|ll
+expr_stmt|;
+break|break;
+case|case
+literal|'p'
+case|:
+name|path
+operator|=
+name|optarg
 expr_stmt|;
 break|break;
 case|case
@@ -3341,9 +3300,7 @@ name|the_test
 operator|->
 name|t_int
 argument_list|,
-name|the_test
-operator|->
-name|t_string
+name|path
 argument_list|)
 expr_stmt|;
 name|calls
@@ -3376,9 +3333,7 @@ name|the_test
 operator|->
 name|t_int
 argument_list|,
-name|the_test
-operator|->
-name|t_string
+name|path
 argument_list|)
 expr_stmt|;
 name|timespecsub
