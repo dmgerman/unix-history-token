@@ -411,6 +411,13 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
+name|G_ELI_CRYPTO_UNKNOWN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
 name|G_ELI_CRYPTO_HW
 value|1
 end_define
