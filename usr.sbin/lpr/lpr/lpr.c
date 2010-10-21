@@ -1930,7 +1930,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%d %d"
+literal|"%u %u"
 argument_list|,
 name|statb
 operator|.
