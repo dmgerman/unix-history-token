@@ -7629,7 +7629,7 @@ argument|frm[
 literal|1
 argument|]
 argument_list|,
-argument|return
+argument|break
 argument_list|)
 empty_stmt|;
 switch|switch
