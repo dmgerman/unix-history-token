@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-i386.h -- Header file for tc-i386.c    Copyright 1989, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001, 2002, 2003, 2004    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* tc-i386.h -- Header file for tc-i386.c    Copyright 1989, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -16,39 +16,11 @@ name|TC_I386
 value|1
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BFD_ASSEMBLER
-end_ifndef
-
-begin_error
-error|#
-directive|error
-error|So, do you know what you are doing?
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ANSI_PROTOTYPES
-end_ifdef
-
 begin_struct_decl
 struct_decl|struct
 name|fix
 struct_decl|;
 end_struct_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -56,24 +28,6 @@ directive|define
 name|TARGET_BYTES_BIG_ENDIAN
 value|0
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TE_LYNX
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|TARGET_FORMAT
-value|"coff-i386-lynx"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -89,19 +43,16 @@ name|TARGET_MACH
 value|(i386_mach ())
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|unsigned
 name|long
 name|i386_mach
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_ifdef
 ifdef|#
@@ -240,6 +191,22 @@ define|#
 directive|define
 name|ELF_TARGET_FORMAT
 value|"elf32-i386-freebsd"
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|TE_VXWORKS
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|ELF_TARGET_FORMAT
+value|"elf32-i386-vxworks"
 end_define
 
 begin_endif
@@ -436,6 +403,22 @@ define|#
 directive|define
 name|tc_symbol_chars
 value|extra_symbol_chars
+end_define
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|i386_comment_chars
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|tc_comment_chars
+value|i386_comment_chars
 end_define
 
 begin_define
@@ -708,77 +691,6 @@ name|END_OF_INSN
 value|'\0'
 end_define
 
-begin_comment
-comment|/* Intel Syntax */
-end_comment
-
-begin_comment
-comment|/* Values 0-4 map onto scale factor */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BYTE_PTR
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|WORD_PTR
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|DWORD_PTR
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|QWORD_PTR
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|XWORD_PTR
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|SHORT
-value|5
-end_define
-
-begin_define
-define|#
-directive|define
-name|OFFSET_FLAT
-value|6
-end_define
-
-begin_define
-define|#
-directive|define
-name|FLAT
-value|7
-end_define
-
-begin_define
-define|#
-directive|define
-name|NONE_FOUND
-value|8
-end_define
-
 begin_typedef
 typedef|typedef
 struct|struct
@@ -875,29 +787,59 @@ value|0x800
 comment|/* MMX support required */
 define|#
 directive|define
-name|CpuSSE
+name|CpuMMX2
 value|0x1000
+comment|/* extended MMX support (with SSE or 3DNow!Ext) required */
+define|#
+directive|define
+name|CpuSSE
+value|0x2000
 comment|/* Streaming SIMD extensions required */
 define|#
 directive|define
 name|CpuSSE2
-value|0x2000
+value|0x4000
 comment|/* Streaming SIMD extensions 2 required */
 define|#
 directive|define
 name|Cpu3dnow
-value|0x4000
+value|0x8000
 comment|/* 3dnow! support required */
 define|#
 directive|define
+name|Cpu3dnowA
+value|0x10000
+comment|/* 3dnow!Extensions support required */
+define|#
+directive|define
+name|CpuSSE3
+value|0x20000
+comment|/* Streaming SIMD extensions 3 required */
+define|#
+directive|define
 name|CpuPNI
-value|0x8000
+value|CpuSSE3
 comment|/* Prescott New Instructions required */
 define|#
 directive|define
 name|CpuPadLock
-value|0x10000
+value|0x40000
 comment|/* VIA PadLock required */
+define|#
+directive|define
+name|CpuSVME
+value|0x80000
+comment|/* AMD Secure Virtual Machine Ext-s required */
+define|#
+directive|define
+name|CpuVMX
+value|0x100000
+comment|/* VMX Instructions required */
+define|#
+directive|define
+name|CpuMNI
+value|0x200000
+comment|/* Merom New Instructions required */
 comment|/* These flags are set by gas depending on the flag_code.  */
 define|#
 directive|define
@@ -913,7 +855,7 @@ comment|/* The default value for unknown CPUs - enable all features to avoid pro
 define|#
 directive|define
 name|CpuUnknownFlags
-value|(Cpu086|Cpu186|Cpu286|Cpu386|Cpu486|Cpu586|Cpu686|CpuP4|CpuSledgehammer|CpuMMX|CpuSSE|CpuSSE2|CpuPNI|Cpu3dnow|CpuK6|CpuAthlon|CpuPadLock)
+value|(Cpu086|Cpu186|Cpu286|Cpu386|Cpu486|Cpu586|Cpu686 \ 	|CpuP4|CpuSledgehammer|CpuMMX|CpuMMX2|CpuSSE|CpuSSE2|CpuPNI|CpuVMX \ 	|Cpu3dnow|Cpu3dnowA|CpuK6|CpuAthlon|CpuPadLock|CpuSVME|CpuMNI)
 comment|/* the bits in opcode_modifier are used to generate the final opcode from      the base_opcode.  These bits also are used to detect alternate forms of      the same instruction */
 name|unsigned
 name|int
@@ -1552,11 +1494,27 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
+name|OBJ_ELF
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|OBJ_MAYBE_ELF
+argument_list|)
+operator|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
 name|LEX_AT
-end_ifndef
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -1585,6 +1543,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1624,11 +1587,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -1701,7 +1659,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Values passed to md_apply_fix3 don't include the symbol value.  */
+comment|/* Values passed to md_apply_fix don't include the symbol value.  */
 end_comment
 
 begin_define
@@ -1773,13 +1731,37 @@ define|\
 value|(!(FIX)->fx_pcrel					\    || (FIX)->fx_plt					\    || (FIX)->fx_r_type == BFD_RELOC_386_PLT32		\    || (FIX)->fx_r_type == BFD_RELOC_386_GOT32		\    || (FIX)->fx_r_type == BFD_RELOC_386_GOTPC		\    || TC_FORCE_RELOCATION (FIX))
 end_define
 
+begin_function_decl
+specifier|extern
+name|int
+name|i386_parse_name
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|expressionS
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
-name|md_operand
+name|md_parse_name
 parameter_list|(
-name|x
+name|s
+parameter_list|,
+name|e
+parameter_list|,
+name|m
+parameter_list|,
+name|c
 parameter_list|)
+value|i386_parse_name (s, e, c)
 end_define
 
 begin_decl_stmt
@@ -2000,6 +1982,141 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|md_elf_section_type
+parameter_list|(
+name|str
+parameter_list|,
+name|len
+parameter_list|)
+value|i386_elf_section_type (str, len)
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|i386_elf_section_type
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+name|size_t
+name|len
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Support for SHF_X86_64_LARGE */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|x86_64_section_word
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|size_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|x86_64_section_letter
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+name|letter
+operator|,
+name|char
+operator|*
+operator|*
+name|ptr_msg
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|md_elf_section_letter
+parameter_list|(
+name|LETTER
+parameter_list|,
+name|PTR_MSG
+parameter_list|)
+value|x86_64_section_letter (LETTER, PTR_MSG)
+end_define
+
+begin_define
+define|#
+directive|define
+name|md_elf_section_word
+parameter_list|(
+name|STR
+parameter_list|,
+name|LEN
+parameter_list|)
+value|x86_64_section_word (STR, LEN)
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TE_PE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|O_secrel
+value|O_md1
+end_define
+
+begin_define
+define|#
+directive|define
+name|TC_DWARF2_EMIT_OFFSET
+value|tc_pe_dwarf2_emit_offset
+end_define
+
+begin_function_decl
+name|void
+name|tc_pe_dwarf2_emit_offset
+parameter_list|(
+name|symbolS
+modifier|*
+parameter_list|,
+name|unsigned
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* TE_PE */
+end_comment
 
 begin_endif
 endif|#

@@ -68,27 +68,46 @@ begin_comment
 comment|/* These variables are used by the ASTRDUP implementation that relies    on C_alloca.  */
 end_comment
 
-begin_decl_stmt
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
+
+begin_extern
+extern|extern
+literal|"C"
+block|{
+endif|#
+directive|endif
+comment|/* __cplusplus */
 specifier|const
 name|char
 modifier|*
 name|libiberty_optr
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|libiberty_nptr
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|unsigned
 name|long
 name|libiberty_len
 decl_stmt|;
-end_decl_stmt
+ifdef|#
+directive|ifdef
+name|__cplusplus
+block|}
+end_extern
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __cplusplus */
+end_comment
 
 begin_comment
 comment|/* If your stack is a linked list of frames, you have to    provide an "address metric" ADDRESS_FUNCTION macro.  */
@@ -240,7 +259,9 @@ begin_function
 specifier|static
 name|void
 name|find_stack_direction
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|static
 name|char
@@ -393,11 +414,9 @@ begin_function
 name|PTR
 name|C_alloca
 parameter_list|(
-name|size
-parameter_list|)
 name|size_t
 name|size
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|auto
 name|char
@@ -529,11 +548,14 @@ comment|/* No allocation required.  */
 comment|/* Allocate combined header + user data storage.  */
 block|{
 specifier|register
-name|PTR
-name|new
+name|void
+modifier|*
+name|new_storage
 init|=
-name|xmalloc
+name|XNEWVEC
 argument_list|(
+name|char
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|header
@@ -545,7 +567,7 @@ decl_stmt|;
 comment|/* Address of header.  */
 if|if
 condition|(
-name|new
+name|new_storage
 operator|==
 literal|0
 condition|)
@@ -557,7 +579,7 @@ operator|(
 name|header
 operator|*
 operator|)
-name|new
+name|new_storage
 operator|)
 operator|->
 name|h
@@ -571,7 +593,7 @@ operator|(
 name|header
 operator|*
 operator|)
-name|new
+name|new_storage
 operator|)
 operator|->
 name|h
@@ -586,7 +608,7 @@ operator|(
 name|header
 operator|*
 operator|)
-name|new
+name|new_storage
 expr_stmt|;
 comment|/* User storage begins just after header.  */
 return|return
@@ -598,7 +620,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|new
+name|new_storage
 operator|+
 sizeof|sizeof
 argument_list|(

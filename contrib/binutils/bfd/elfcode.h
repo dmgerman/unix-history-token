@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ELF executable support for BFD.    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001, 2002, 2003 Free Software Foundation, Inc.     Written by Fred Fish @ Cygnus Support, from information published    in "UNIX System V Release 4, Programmers Guide: ANSI C and    Programming Support Tools".  Sufficient support for gdb.     Rewritten by Mark Eichin @ Cygnus Support, from information    published in "System V Application Binary Interface", chapters 4    and 5, as well as the various "Processor Supplement" documents    derived from it. Added support for assembler and other object file    utilities.  Further work done by Ken Raeburn (Cygnus Support), Michael    Meissner (Open Software Foundation), and Peter Hoogenboom (University    of Utah) to finish and extend this.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* ELF executable support for BFD.    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.     Written by Fred Fish @ Cygnus Support, from information published    in "UNIX System V Release 4, Programmers Guide: ANSI C and    Programming Support Tools".  Sufficient support for gdb.     Rewritten by Mark Eichin @ Cygnus Support, from information    published in "System V Application Binary Interface", chapters 4    and 5, as well as the various "Processor Supplement" documents    derived from it. Added support for assembler and other object file    utilities.  Further work done by Ken Raeburn (Cygnus Support), Michael    Meissner (Open Software Foundation), and Peter Hoogenboom (University    of Utah) to finish and extend this.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
-comment|/* Problems and other issues to resolve.     (1)	BFD expects there to be some fixed number of "sections" in         the object file.  I.E. there is a "section_count" variable in the 	bfd structure which contains the number of sections.  However, ELF 	supports multiple "views" of a file.  In particular, with current 	implementations, executable files typically have two tables, a 	program header table and a section header table, both of which 	partition the executable.  	In ELF-speak, the "linking view" of the file uses the section header 	table to access "sections" within the file, and the "execution view" 	uses the program header table to access "segments" within the file. 	"Segments" typically may contain all the data from one or more 	"sections".  	Note that the section header table is optional in ELF executables, 	but it is this information that is most useful to gdb.  If the 	section header table is missing, then gdb should probably try 	to make do with the program header table.  (FIXME)     (2)  The code in this file is compiled twice, once in 32-bit mode and 	once in 64-bit mode.  More of it should be made size-independent 	and moved into elf.c.     (3)	ELF section symbols are handled rather sloppily now.  This should 	be cleaned up, and ELF section symbols reconciled with BFD section 	symbols.     (4)  We need a published spec for 64-bit ELF.  We've got some stuff here 	that we're using for SPARC V9 64-bit chips, but don't assume that 	it's cast in stone.  */
+comment|/* Problems and other issues to resolve.     (1)	BFD expects there to be some fixed number of "sections" in 	the object file.  I.E. there is a "section_count" variable in the 	bfd structure which contains the number of sections.  However, ELF 	supports multiple "views" of a file.  In particular, with current 	implementations, executable files typically have two tables, a 	program header table and a section header table, both of which 	partition the executable.  	In ELF-speak, the "linking view" of the file uses the section header 	table to access "sections" within the file, and the "execution view" 	uses the program header table to access "segments" within the file. 	"Segments" typically may contain all the data from one or more 	"sections".  	Note that the section header table is optional in ELF executables, 	but it is this information that is most useful to gdb.  If the 	section header table is missing, then gdb should probably try 	to make do with the program header table.  (FIXME)     (2)  The code in this file is compiled twice, once in 32-bit mode and 	once in 64-bit mode.  More of it should be made size-independent 	and moved into elf.c.     (3)	ELF section symbols are handled rather sloppily now.  This should 	be cleaned up, and ELF section symbols reconciled with BFD section 	symbols.     (4)  We need a published spec for 64-bit ELF.  We've got some stuff here 	that we're using for SPARC V9 64-bit chips, but don't assume that 	it's cast in stone.  */
 end_comment
 
 begin_include
@@ -251,6 +251,14 @@ directive|define
 name|elf_canonicalize_dynamic_symtab
 define|\
 value|NAME(bfd_elf,canonicalize_dynamic_symtab)
+end_define
+
+begin_define
+define|#
+directive|define
+name|elf_get_synthetic_symtab
+define|\
+value|NAME(bfd_elf,get_synthetic_symtab)
 end_define
 
 begin_define
@@ -2573,6 +2581,55 @@ block|}
 end_function
 
 begin_comment
+comment|/* Determines if a given section index is valid.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|bfd_boolean
+name|valid_section_index_p
+parameter_list|(
+name|unsigned
+name|index
+parameter_list|,
+name|unsigned
+name|num_sections
+parameter_list|)
+block|{
+comment|/* Note: We allow SHN_UNDEF as a valid section index.  */
+if|if
+condition|(
+name|index
+operator|<
+name|SHN_LORESERVE
+operator|||
+name|index
+operator|>
+name|SHN_HIRESERVE
+condition|)
+return|return
+name|index
+operator|<
+name|num_sections
+return|;
+comment|/* We disallow the use of reserved indcies, except for those      with OS or Application specific meaning.  The test make use      of the knowledge that:        SHN_LORESERVE == SHN_LOPROC      and        SHN_HIPROC == SHN_LOOS - 1  */
+comment|/* XXX - Should we allow SHN_XINDEX as a valid index here ?  */
+return|return
+operator|(
+name|index
+operator|>=
+name|SHN_LOPROC
+operator|&&
+name|index
+operator|<=
+name|SHN_HIOS
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* Check to see if the file associated with ABFD matches the target vector    that ABFD points to.     Note that we may be called several times with the same ABFD, but different    target vectors, most of which will not match.  We have to avoid leaving    any side effects in ABFD, or any data it points to (like tdata), if the    file does not match the target vector.  */
 end_comment
 
@@ -2612,11 +2669,6 @@ name|unsigned
 name|int
 name|shindex
 decl_stmt|;
-name|char
-modifier|*
-name|shstrtab
-decl_stmt|;
-comment|/* Internal copy of section header stringtab */
 specifier|const
 name|struct
 name|elf_backend_data
@@ -2866,7 +2918,7 @@ condition|)
 goto|goto
 name|got_wrong_format_error
 goto|;
-comment|/* As a simple sanity check, verify that the what BFD thinks is the      size of each section header table entry actually matches the size      recorded in the file, but only if there are any sections.  */
+comment|/* As a simple sanity check, verify that what BFD thinks is the      size of each section header table entry actually matches the size      recorded in the file, but only if there are any sections.  */
 if|if
 condition|(
 name|i_ehdrp
@@ -3144,16 +3196,6 @@ goto|goto
 name|got_no_match
 goto|;
 block|}
-comment|/* Remember the entry point specified in the ELF file header.  */
-name|bfd_set_start_address
-argument_list|(
-name|abfd
-argument_list|,
-name|i_ehdrp
-operator|->
-name|e_entry
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|i_ehdrp
@@ -3163,6 +3205,25 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|bfd_signed_vma
+name|where
+init|=
+name|i_ehdrp
+operator|->
+name|e_shoff
+decl_stmt|;
+if|if
+condition|(
+name|where
+operator|!=
+operator|(
+name|file_ptr
+operator|)
+name|where
+condition|)
+goto|goto
+name|got_wrong_format_error
+goto|;
 comment|/* Seek to the section header table in the file.  */
 if|if
 condition|(
@@ -3173,9 +3234,7 @@ argument_list|,
 operator|(
 name|file_ptr
 operator|)
-name|i_ehdrp
-operator|->
-name|e_shoff
+name|where
 argument_list|,
 name|SEEK_SET
 argument_list|)
@@ -3227,6 +3286,7 @@ name|e_shnum
 operator|==
 name|SHN_UNDEF
 condition|)
+block|{
 name|i_ehdrp
 operator|->
 name|e_shnum
@@ -3235,6 +3295,26 @@ name|i_shdr
 operator|.
 name|sh_size
 expr_stmt|;
+if|if
+condition|(
+name|i_ehdrp
+operator|->
+name|e_shnum
+operator|!=
+name|i_shdr
+operator|.
+name|sh_size
+operator|||
+name|i_ehdrp
+operator|->
+name|e_shnum
+operator|==
+literal|0
+condition|)
+goto|goto
+name|got_wrong_format_error
+goto|;
+block|}
 comment|/* And similarly for the string table index.  */
 if|if
 condition|(
@@ -3244,6 +3324,7 @@ name|e_shstrndx
 operator|==
 name|SHN_XINDEX
 condition|)
+block|{
 name|i_ehdrp
 operator|->
 name|e_shstrndx
@@ -3252,6 +3333,181 @@ name|i_shdr
 operator|.
 name|sh_link
 expr_stmt|;
+if|if
+condition|(
+name|i_ehdrp
+operator|->
+name|e_shstrndx
+operator|!=
+name|i_shdr
+operator|.
+name|sh_link
+condition|)
+goto|goto
+name|got_wrong_format_error
+goto|;
+block|}
+comment|/* Sanity check that we can read all of the section headers. 	 It ought to be good enough to just read the last one.  */
+if|if
+condition|(
+name|i_ehdrp
+operator|->
+name|e_shnum
+operator|!=
+literal|1
+condition|)
+block|{
+comment|/* Check that we don't have a totally silly number of sections.  */
+if|if
+condition|(
+name|i_ehdrp
+operator|->
+name|e_shnum
+operator|>
+operator|(
+name|unsigned
+name|int
+operator|)
+operator|-
+literal|1
+operator|/
+sizeof|sizeof
+argument_list|(
+name|x_shdr
+argument_list|)
+operator|||
+name|i_ehdrp
+operator|->
+name|e_shnum
+operator|>
+operator|(
+name|unsigned
+name|int
+operator|)
+operator|-
+literal|1
+operator|/
+sizeof|sizeof
+argument_list|(
+name|i_shdr
+argument_list|)
+condition|)
+goto|goto
+name|got_wrong_format_error
+goto|;
+name|where
+operator|+=
+operator|(
+name|i_ehdrp
+operator|->
+name|e_shnum
+operator|-
+literal|1
+operator|)
+operator|*
+sizeof|sizeof
+argument_list|(
+name|x_shdr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|where
+operator|!=
+operator|(
+name|file_ptr
+operator|)
+name|where
+condition|)
+goto|goto
+name|got_wrong_format_error
+goto|;
+if|if
+condition|(
+operator|(
+name|bfd_size_type
+operator|)
+name|where
+operator|<=
+name|i_ehdrp
+operator|->
+name|e_shoff
+condition|)
+goto|goto
+name|got_wrong_format_error
+goto|;
+if|if
+condition|(
+name|bfd_seek
+argument_list|(
+name|abfd
+argument_list|,
+operator|(
+name|file_ptr
+operator|)
+name|where
+argument_list|,
+name|SEEK_SET
+argument_list|)
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|got_no_match
+goto|;
+if|if
+condition|(
+name|bfd_bread
+argument_list|(
+operator|&
+name|x_shdr
+argument_list|,
+sizeof|sizeof
+name|x_shdr
+argument_list|,
+name|abfd
+argument_list|)
+operator|!=
+sizeof|sizeof
+argument_list|(
+name|x_shdr
+argument_list|)
+condition|)
+goto|goto
+name|got_no_match
+goto|;
+comment|/* Back to where we were.  */
+name|where
+operator|=
+name|i_ehdrp
+operator|->
+name|e_shoff
+operator|+
+sizeof|sizeof
+argument_list|(
+name|x_shdr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bfd_seek
+argument_list|(
+name|abfd
+argument_list|,
+operator|(
+name|file_ptr
+operator|)
+name|where
+argument_list|,
+name|SEEK_SET
+argument_list|)
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|got_no_match
+goto|;
+block|}
 block|}
 comment|/* Allocate space for a copy of the section header table in      internal form.  */
 if|if
@@ -3503,6 +3759,74 @@ operator|+
 name|shindex
 argument_list|)
 expr_stmt|;
+comment|/* Sanity check sh_link and sh_info.  */
+if|if
+condition|(
+operator|!
+name|valid_section_index_p
+argument_list|(
+name|i_shdrp
+index|[
+name|shindex
+index|]
+operator|.
+name|sh_link
+argument_list|,
+name|num_sec
+argument_list|)
+condition|)
+goto|goto
+name|got_wrong_format_error
+goto|;
+if|if
+condition|(
+operator|(
+operator|(
+name|i_shdrp
+index|[
+name|shindex
+index|]
+operator|.
+name|sh_flags
+operator|&
+name|SHF_INFO_LINK
+operator|)
+operator|||
+name|i_shdrp
+index|[
+name|shindex
+index|]
+operator|.
+name|sh_type
+operator|==
+name|SHT_RELA
+operator|||
+name|i_shdrp
+index|[
+name|shindex
+index|]
+operator|.
+name|sh_type
+operator|==
+name|SHT_REL
+operator|)
+operator|&&
+operator|!
+name|valid_section_index_p
+argument_list|(
+name|i_shdrp
+index|[
+name|shindex
+index|]
+operator|.
+name|sh_info
+argument_list|,
+name|num_sec
+argument_list|)
+condition|)
+goto|goto
+name|got_wrong_format_error
+goto|;
 comment|/* If the section is loaded, but not page aligned, clear 	     D_PAGED.  */
 if|if
 condition|(
@@ -3557,7 +3881,7 @@ operator|)
 operator|%
 name|ebd
 operator|->
-name|maxpagesize
+name|minpagesize
 operator|)
 operator|!=
 literal|0
@@ -3572,33 +3896,65 @@ name|D_PAGED
 expr_stmt|;
 block|}
 block|}
+comment|/* A further sanity check.  */
 if|if
 condition|(
 name|i_ehdrp
 operator|->
-name|e_shstrndx
-operator|&&
-name|i_ehdrp
-operator|->
-name|e_shoff
+name|e_shnum
+operator|!=
+literal|0
 condition|)
 block|{
 if|if
 condition|(
 operator|!
-name|bfd_section_from_shdr
+name|valid_section_index_p
 argument_list|(
-name|abfd
-argument_list|,
 name|i_ehdrp
 operator|->
 name|e_shstrndx
+argument_list|,
+name|elf_numsections
+argument_list|(
+name|abfd
+argument_list|)
 argument_list|)
 condition|)
-goto|goto
-name|got_no_match
-goto|;
+block|{
+comment|/* PR 2257: 	     We used to just goto got_wrong_format_error here 	     but there are binaries in existance for which this test 	     will prevent the binutils from working with them at all. 	     So we are kind, and reset the string index value to 0 	     so that at least some processing can be done.  */
+name|i_ehdrp
+operator|->
+name|e_shstrndx
+operator|=
+name|SHN_UNDEF
+expr_stmt|;
+name|_bfd_error_handler
+argument_list|(
+name|_
+argument_list|(
+literal|"warning: %s has a corrupt string table index - ignoring"
+argument_list|)
+argument_list|,
+name|abfd
+operator|->
+name|filename
+argument_list|)
+expr_stmt|;
 block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|i_ehdrp
+operator|->
+name|e_shstrndx
+operator|!=
+name|SHN_UNDEF
+condition|)
+goto|goto
+name|got_wrong_format_error
+goto|;
 comment|/* Read in the program headers.  */
 if|if
 condition|(
@@ -3749,8 +4105,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Read in the string table containing the names of the sections.  We      will need the base pointer to this table later.  */
-comment|/* We read this inline now, so that we don't have to go through      bfd_section_from_shdr with it (since this particular strtab is      used to find all of the ELF section names.) */
 if|if
 condition|(
 name|i_ehdrp
@@ -3762,31 +4116,14 @@ operator|&&
 name|i_ehdrp
 operator|->
 name|e_shoff
+operator|!=
+literal|0
 condition|)
 block|{
 name|unsigned
 name|int
 name|num_sec
 decl_stmt|;
-name|shstrtab
-operator|=
-name|bfd_elf_get_str_section
-argument_list|(
-name|abfd
-argument_list|,
-name|i_ehdrp
-operator|->
-name|e_shstrndx
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|shstrtab
-condition|)
-goto|goto
-name|got_no_match
-goto|;
 comment|/* Once all of the section headers have been read and converted, we 	 can start processing them.  Note that the first section header is 	 a dummy placeholder entry, so we ignore it.  */
 name|num_sec
 operator|=
@@ -3839,6 +4176,18 @@ operator|-
 name|SHN_LORESERVE
 expr_stmt|;
 block|}
+comment|/* Set up ELF sections for SHF_GROUP and SHF_LINK_ORDER.  */
+if|if
+condition|(
+operator|!
+name|_bfd_elf_setup_sections
+argument_list|(
+name|abfd
+argument_list|)
+condition|)
+goto|goto
+name|got_wrong_format_error
+goto|;
 block|}
 comment|/* Let the backend double check the format and override global      information.  */
 if|if
@@ -3865,6 +4214,16 @@ goto|goto
 name|got_wrong_format_error
 goto|;
 block|}
+comment|/* Remember the entry point specified in the ELF file header.  */
+name|bfd_set_start_address
+argument_list|(
+name|abfd
+argument_list|,
+name|i_ehdrp
+operator|->
+name|e_entry
+argument_list|)
+expr_stmt|;
 comment|/* If we have created any reloc sections that are associated with      debugging sections, mark the reloc sections as debugging as well.  */
 for|for
 control|(
@@ -4124,6 +4483,16 @@ operator|->
 name|reloc_count
 operator|==
 literal|0
+condition|)
+return|return;
+comment|/* If we have opened an existing file for update, reloc_count may be      set even though we are not linking.  In that case we have nothing      to do.  */
+if|if
+condition|(
+name|sec
+operator|->
+name|orelocation
+operator|==
+name|NULL
 condition|)
 return|return;
 name|rela_hdr
@@ -5020,6 +5389,8 @@ operator|!
 name|_bfd_elf_slurp_version_tables
 argument_list|(
 name|abfd
+argument_list|,
+name|FALSE
 argument_list|)
 condition|)
 return|return
@@ -5172,7 +5543,7 @@ argument_list|,
 name|symcount
 argument_list|)
 expr_stmt|;
-comment|/* Slurp in the symbols without the version information,              since that is more helpful than just quitting.  */
+comment|/* Slurp in the symbols without the version information, 	     since that is more helpful than just quitting.  */
 name|verhdr
 operator|=
 name|NULL
@@ -5320,17 +5691,15 @@ name|symbol
 operator|.
 name|name
 operator|=
-name|bfd_elf_string_from_elf_section
+name|bfd_elf_sym_name
 argument_list|(
 name|abfd
 argument_list|,
 name|hdr
-operator|->
-name|sh_link
 argument_list|,
 name|isym
-operator|->
-name|st_name
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|sym
@@ -5472,7 +5841,7 @@ name|section
 operator|=
 name|bfd_abs_section_ptr
 expr_stmt|;
-comment|/* If this is a relocatable file, then the symbol value is              already section relative.  */
+comment|/* If this is a relocatable file, then the symbol value is 	     already section relative.  */
 if|if
 condition|(
 operator|(
@@ -5624,6 +5993,18 @@ operator|.
 name|flags
 operator||=
 name|BSF_OBJECT
+expr_stmt|;
+break|break;
+case|case
+name|STT_TLS
+case|:
+name|sym
+operator|->
+name|symbol
+operator|.
+name|flags
+operator||=
+name|BSF_THREAD_LOCAL
 expr_stmt|;
 break|break;
 block|}
@@ -5845,7 +6226,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Read  relocations for ASECT from REL_HDR.  There are RELOC_COUNT of    them.  */
+comment|/* Read relocations for ASECT from REL_HDR.  There are RELOC_COUNT of    them.  */
 end_comment
 
 begin_function
@@ -6190,9 +6571,6 @@ name|asymbol
 modifier|*
 modifier|*
 name|ps
-decl_stmt|,
-modifier|*
-name|s
 decl_stmt|;
 name|ps
 operator|=
@@ -6207,40 +6585,11 @@ argument_list|)
 operator|-
 literal|1
 expr_stmt|;
-name|s
-operator|=
-operator|*
-name|ps
-expr_stmt|;
-comment|/* Canonicalize ELF section symbols.  FIXME: Why?  */
-if|if
-condition|(
-operator|(
-name|s
-operator|->
-name|flags
-operator|&
-name|BSF_SECTION_SYM
-operator|)
-operator|==
-literal|0
-condition|)
 name|relent
 operator|->
 name|sym_ptr_ptr
 operator|=
 name|ps
-expr_stmt|;
-else|else
-name|relent
-operator|->
-name|sym_ptr_ptr
-operator|=
-name|s
-operator|->
-name|section
-operator|->
-name|symbol_ptr_ptr
 expr_stmt|;
 block|}
 name|relent
@@ -6509,7 +6858,7 @@ if|if
 condition|(
 name|asect
 operator|->
-name|_raw_size
+name|size
 operator|==
 literal|0
 condition|)
@@ -7206,7 +7555,7 @@ argument_list|)
 argument_list|(
 name|bfd_vma
 argument_list|,
-name|char
+name|bfd_byte
 operator|*
 argument_list|,
 name|int
@@ -7244,7 +7593,7 @@ decl_stmt|;
 name|int
 name|contents_size
 decl_stmt|;
-name|char
+name|bfd_byte
 modifier|*
 name|contents
 decl_stmt|;
@@ -7266,7 +7615,7 @@ argument_list|(
 name|ehdr_vma
 argument_list|,
 operator|(
-name|char
+name|bfd_byte
 operator|*
 operator|)
 operator|&
@@ -7489,7 +7838,7 @@ operator|.
 name|e_phoff
 argument_list|,
 operator|(
-name|char
+name|bfd_byte
 operator|*
 operator|)
 name|x_phdrs
@@ -7587,6 +7936,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+comment|/* IA-64 vDSO may have two mappings for one segment, where one mapping 	 is executable only, and one is read only.  We must not use the 	 executable one.  */
 if|if
 condition|(
 name|i_phdrs
@@ -7597,6 +7947,17 @@ operator|.
 name|p_type
 operator|==
 name|PT_LOAD
+operator|&&
+operator|(
+name|i_phdrs
+index|[
+name|i
+index|]
+operator|.
+name|p_flags
+operator|&
+name|PF_R
+operator|)
 condition|)
 block|{
 name|bfd_vma
@@ -7861,6 +8222,7 @@ condition|;
 operator|++
 name|i
 control|)
+comment|/* IA-64 vDSO may have two mappings for one segment, where one mapping        is executable only, and one is read only.  We must not use the        executable one.  */
 if|if
 condition|(
 name|i_phdrs
@@ -7871,6 +8233,17 @@ operator|.
 name|p_type
 operator|==
 name|PT_LOAD
+operator|&&
+operator|(
+name|i_phdrs
+index|[
+name|i
+index|]
+operator|.
+name|p_flags
+operator|&
+name|PF_R
+operator|)
 condition|)
 block|{
 name|bfd_vma

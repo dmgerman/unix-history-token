@@ -13,23 +13,22 @@ directive|include
 file|"ansidecl.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|fork
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|int
 name|vfork
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 operator|(

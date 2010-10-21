@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* x86_64 ELF support for BFD.    Copyright (C) 2000, 2002 Free Software Foundation, Inc.    Contributed by Jan Hubicka<jh@suse.cz>     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* x86_64 ELF support for BFD.    Copyright (C) 2000, 2001, 2002, 2004, 2005, 2006    Free Software Foundation, Inc.    Contributed by Jan Hubicka<jh@suse.cz>     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -155,7 +155,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/* 32 bit signed pc relative                                                  offset to GOT */
+comment|/* 32 bit signed pc relative                                                  offset to GOT entry */
 end_comment
 
 begin_macro
@@ -343,6 +343,153 @@ end_comment
 begin_macro
 name|RELOC_NUMBER
 argument_list|(
+argument|R_X86_64_PC64
+argument_list|,
+literal|24
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* PC relative 64 bit */
+end_comment
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_X86_64_GOTOFF64
+argument_list|,
+literal|25
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* 64 bit offset to GOT */
+end_comment
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_X86_64_GOTPC32
+argument_list|,
+literal|26
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* 32 bit signed pc relative                                                  offset to GOT */
+end_comment
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_X86_64_GOT64
+argument_list|,
+literal|27
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* 64 bit GOT entry offset */
+end_comment
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_X86_64_GOTPCREL64
+argument_list|,
+literal|28
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* 64 bit signed pc relative      						 offset to GOT entry */
+end_comment
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_X86_64_GOTPC64
+argument_list|,
+literal|29
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* 64 bit signed pc relative      						 offset to GOT */
+end_comment
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_X86_64_GOTPLT64
+argument_list|,
+literal|30
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* like GOT64, but indicates      						 that PLT entry is needed */
+end_comment
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_X86_64_PLTOFF64
+argument_list|,
+literal|31
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* 64 bit GOT relative offset      						 to PLT entry */
+end_comment
+
+begin_comment
+comment|/* 32 .. 33 */
+end_comment
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_X86_64_GOTPC32_TLSDESC
+argument_list|,
+literal|34
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* 32 bit signed pc relative 						 offset to TLS descriptor 						 in the GOT.  */
+end_comment
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_X86_64_TLSDESC_CALL
+argument_list|,
+literal|35
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* Relaxable call through TLS 						 descriptor.  */
+end_comment
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_X86_64_TLSDESC
+argument_list|,
+literal|36
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* 2x64-bit TLS descriptor.  */
+end_comment
+
+begin_macro
+name|RELOC_NUMBER
+argument_list|(
 argument|R_X86_64_GNU_VTINHERIT
 argument_list|,
 literal|250
@@ -372,6 +519,39 @@ argument_list|(
 argument|R_X86_64_max
 argument_list|)
 end_macro
+
+begin_comment
+comment|/* Processor specific section types.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHT_X86_64_UNWIND
+value|0x70000001
+end_define
+
+begin_comment
+comment|/* unwind information */
+end_comment
+
+begin_comment
+comment|/* Like SHN_COMMON but the symbol will be allocated in the .lbss    section.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHN_X86_64_LCOMMON
+value|0xff02
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHF_X86_64_LARGE
+value|0x10000000
+end_define
 
 begin_endif
 endif|#

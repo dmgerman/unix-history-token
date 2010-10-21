@@ -20,6 +20,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|"ansidecl.h"
+end_include
+
 begin_comment
 comment|/* On some systems (such as WindISS), you must include<sys/types.h>    to get the definition of "pid_t" before you include<sys/wait.h>.  */
 end_comment
@@ -51,21 +57,17 @@ begin_function
 name|pid_t
 name|waitpid
 parameter_list|(
-name|pid
-parameter_list|,
-name|stat_loc
-parameter_list|,
-name|options
-parameter_list|)
 name|pid_t
 name|pid
-decl_stmt|;
+parameter_list|,
 name|int
 modifier|*
 name|stat_loc
-decl_stmt|,
+parameter_list|,
+name|int
 name|options
-decl_stmt|;
+name|ATTRIBUTE_UNUSED
+parameter_list|)
 block|{
 for|for
 control|(

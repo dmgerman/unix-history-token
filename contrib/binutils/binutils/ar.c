@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ar.c - Archive modify and extract.    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001, 2002, 2003, 2004    Free Software Foundation, Inc.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* ar.c - Archive modify and extract.    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_escape
@@ -130,13 +130,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|BUFSIZE
-value|8192
-end_define
-
 begin_comment
 comment|/* Kludge declaration from BFD!  This is ugly!  FIXME!  XXX */
 end_comment
@@ -254,18 +247,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static void do_quick_append   (const char *archive_filename, char **files_to_append);
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 specifier|static
 name|void
@@ -368,6 +349,7 @@ comment|/** Globals and flags */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|mri_mode
 decl_stmt|;
@@ -1087,6 +1069,16 @@ literal|"  [V]          - display the version number\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|s
+argument_list|,
+name|_
+argument_list|(
+literal|"  @<file>      - read options from<file>\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|ar_emul_usage
 argument_list|(
 name|s
@@ -1124,7 +1116,7 @@ name|s
 argument_list|,
 name|_
 argument_list|(
-literal|" The options are:\n\   -h --help                    Print this help message\n\   -V --version                 Print version information\n"
+literal|" The options are:\n\   @<file>                      Read options from<file>\n\   -h --help                    Print this help message\n\   -V --version                 Print version information\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1438,7 +1430,7 @@ argument_list|(
 name|output_file
 argument_list|)
 expr_stmt|;
-name|unlink
+name|unlink_if_ordinary
 argument_list|(
 name|output_filename
 argument_list|)
@@ -1591,6 +1583,15 @@ expr_stmt|;
 name|xmalloc_set_program_name
 argument_list|(
 name|program_name
+argument_list|)
+expr_stmt|;
+name|expandargv
+argument_list|(
+operator|&
+name|argc
+argument_list|,
+operator|&
+name|argv
 argument_list|)
 expr_stmt|;
 if|if
@@ -2446,6 +2447,7 @@ name|bfd
 modifier|*
 name|arch
 decl_stmt|;
+comment|/* We don't use do_quick_append any more.  Too many systems 	 expect ar to always rebuild the symbol table even when q is 	 used.  */
 comment|/* We can't write an armap when using ar q, so just do ar r          instead.  */
 if|if
 condition|(
@@ -2609,16 +2611,6 @@ name|argc
 operator|-
 name|arg_index
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* We don't use do_quick_append any more.  Too many systems          expect ar to always rebuild the symbol table even when q is          used.  */
-comment|/* We can't do a quick append if we need to construct an 	 extended name table, because do_quick_append won't be able to 	 rebuild the name table.  Unfortunately, at this point we 	 don't actually know the maximum name length permitted by this 	 object file format.  So, we guess.  FIXME.  */
-block|if (operation == quick_append&& ! ar_truncate) 	{ 	  char **chk;  	  for (chk = files; chk != NULL&& *chk != '\0'; chk++) 	    { 	      if (strlen (normalize (*chk, (bfd *) NULL))> 14) 		{ 		  operation = replace; 		  break; 		} 	    } 	}        if (operation == quick_append) 	{
-comment|/* Note that quick appending to a non-existent archive creates it, 	     even if there are no files to append.  */
-block|do_quick_append (inarch_filename, files); 	  xexit (0); 	}
-endif|#
-directive|endif
 name|arch
 operator|=
 name|open_inarch
@@ -3696,6 +3688,16 @@ if|if
 condition|(
 name|preserve_dates
 condition|)
+block|{
+comment|/* Set access time to modification time.  Only st_mtime is 	 initialized by bfd_stat_arch_elt.  */
+name|buf
+operator|.
+name|st_atime
+operator|=
+name|buf
+operator|.
+name|st_mtime
+expr_stmt|;
 name|set_times
 argument_list|(
 name|bfd_get_filename
@@ -3707,6 +3709,7 @@ operator|&
 name|buf
 argument_list|)
 expr_stmt|;
+block|}
 name|free
 argument_list|(
 name|cbuf
@@ -3714,80 +3717,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* We don't use this anymore.  Too many systems expect ar to rebuild    the symbol table even when q is used.  */
-end_comment
-
-begin_comment
-comment|/* Just do it quickly; don't worry about dups, armap, or anything like that */
-end_comment
-
-begin_if
-unit|static void do_quick_append (const char *archive_filename, char **files_to_append) {   FILE *ofile, *ifile;   char *buf = xmalloc (BUFSIZE);   long tocopy, thistime;   bfd *temp;   struct stat sbuf;   bfd_boolean newfile = FALSE;   bfd_set_error (bfd_error_no_error);    if (stat (archive_filename,&sbuf) != 0)     {
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__GO32__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__DJGPP__
-argument_list|)
-end_if
-
-begin_comment
-comment|/* FIXME: I don't understand why this fragment was ifndef'ed 	 away for __GO32__; perhaps it was in the days of DJGPP v1.x. 	 stat() works just fine in v2.x, so I think this should be 	 removed.  For now, I enable it for DJGPP v2.  	 (And yes, I know this is all unused, but somebody, someday, 	 might wish to resurrect this again... -- EZ.  */
-end_comment
-
-begin_comment
-comment|/* KLUDGE ALERT! Temporary fix until I figger why    stat() is wrong ... think it's buried in GO32's IDT - Jax  */
-end_comment
-
-begin_endif
-unit|if (errno != ENOENT) 	bfd_fatal (archive_filename);
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-unit|newfile = TRUE;     }    ofile = fopen (archive_filename, FOPEN_AUB);   if (ofile == NULL)     {       perror (program_name);       xexit (1);     }    temp = bfd_openr (archive_filename, NULL);   if (temp == NULL)     {       bfd_fatal (archive_filename);     }   if (!newfile)     {       if (!bfd_check_format (temp, bfd_archive))
-comment|/* xgettext:c-format */
-end_comment
-
-begin_comment
-unit|fatal (_("%s is not an archive"), archive_filename);     }   else     {       fwrite (ARMAG, 1, SARMAG, ofile);       if (!silent_create)
-comment|/* xgettext:c-format */
-end_comment
-
-begin_comment
-unit|non_fatal (_("creating %s"), archive_filename);     }    if (ar_truncate)     temp->flags |= BFD_TRADITIONAL_FORMAT;
-comment|/* assume it's an archive, go straight to the end, sans $200 */
-end_comment
-
-begin_comment
-unit|fseek (ofile, 0, 2);    for (; files_to_append&& *files_to_append; ++files_to_append)     {       struct ar_hdr *hdr = bfd_special_undocumented_glue (temp, *files_to_append);       if (hdr == NULL) 	{ 	  bfd_fatal (*files_to_append); 	}        BFD_SEND (temp, _bfd_truncate_arname, (temp, *files_to_append, (char *) hdr));        ifile = fopen (*files_to_append, FOPEN_RB);       if (ifile == NULL) 	{ 	  bfd_nonfatal (*files_to_append); 	}        if (stat (*files_to_append,&sbuf) != 0) 	{ 	  bfd_nonfatal (*files_to_append); 	}        tocopy = sbuf.st_size;
-comment|/* XXX should do error-checking! */
-end_comment
-
-begin_endif
-unit|fwrite (hdr, 1, sizeof (struct ar_hdr), ofile);        while (tocopy> 0) 	{ 	  thistime = tocopy; 	  if (thistime> BUFSIZE) 	    thistime = BUFSIZE; 	  fread (buf, 1, thistime, ifile); 	  fwrite (buf, 1, thistime, ofile); 	  tocopy -= thistime; 	}       fclose (ifile);       if ((sbuf.st_size % 2) == 1) 	putc ('\012', ofile);     }   fclose (ofile);   bfd_close (temp);   free (buf); }
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* 0 */
-end_comment
 
 begin_function
 specifier|static
@@ -4565,7 +4494,7 @@ modifier|*
 modifier|*
 name|after_bfd
 decl_stmt|;
-comment|/* New entries go after this one */
+comment|/* New entries go after this one.  */
 name|bfd
 modifier|*
 name|current
@@ -4796,14 +4725,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|get_file_size
-argument_list|(
-operator|*
-name|files_to_move
-argument_list|)
-operator|>
-literal|0
-operator|&&
 name|ar_emul_append
 argument_list|(
 name|after_bfd

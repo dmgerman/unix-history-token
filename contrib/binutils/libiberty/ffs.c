@@ -7,12 +7,10 @@ begin_function
 name|int
 name|ffs
 parameter_list|(
-name|valu
-parameter_list|)
 specifier|register
 name|int
 name|valu
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|int

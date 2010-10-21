@@ -3,7 +3,7 @@ begin_define
 define|#
 directive|define
 name|BFD_VERSION_DATE
-value|20050317
+value|20070807
 end_define
 
 begin_define

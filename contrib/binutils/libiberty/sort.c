@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Sorting algorithms.    Copyright (C) 2000 Free Software Foundation, Inc.    Contributed by Mark Mitchell<mark@codesourcery.com>.  This file is part of GNU CC.     GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Sorting algorithms.    Copyright (C) 2000 Free Software Foundation, Inc.    Contributed by Mark Mitchell<mark@codesourcery.com>.  This file is part of GNU CC.     GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifdef
@@ -126,25 +126,19 @@ begin_function
 name|void
 name|sort_pointers
 parameter_list|(
-name|n
-parameter_list|,
-name|pointers
-parameter_list|,
-name|work
-parameter_list|)
 name|size_t
 name|n
-decl_stmt|;
+parameter_list|,
 name|void
 modifier|*
 modifier|*
 name|pointers
-decl_stmt|;
+parameter_list|,
 name|void
 modifier|*
 modifier|*
 name|work
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* The type of a single digit.  This can be any unsigned integral      type.  When changing this, DIGIT_MAX should be changed as       well.  */
 typedef|typedef
@@ -503,11 +497,9 @@ name|void
 modifier|*
 name|xmalloc
 parameter_list|(
-name|n
-parameter_list|)
 name|size_t
 name|n
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|malloc
@@ -573,28 +565,22 @@ literal|10
 expr_stmt|;
 name|pointers
 operator|=
-name|xmalloc
-argument_list|(
-name|k
-operator|*
-sizeof|sizeof
+name|XNEWVEC
 argument_list|(
 name|void
 operator|*
-argument_list|)
+argument_list|,
+name|k
 argument_list|)
 expr_stmt|;
 name|work
 operator|=
-name|xmalloc
-argument_list|(
-name|k
-operator|*
-sizeof|sizeof
+name|XNEWVEC
 argument_list|(
 name|void
 operator|*
-argument_list|)
+argument_list|,
+name|k
 argument_list|)
 expr_stmt|;
 for|for

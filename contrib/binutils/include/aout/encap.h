@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Yet Another Try at encapsulating bsd object files in coff.    Copyright 1988, 1989, 1991 Free Software Foundation, Inc.    Written by Pace Willisson 12/9/88     This file is obsolete.  It needs to be converted to just define a bunch    of stuff that BFD can use to do coff-encapsulated files.  --gnu@cygnus.com  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Yet Another Try at encapsulating bsd object files in coff.    Copyright 1988, 1989, 1991 Free Software Foundation, Inc.    Written by Pace Willisson 12/9/88     This file is obsolete.  It needs to be converted to just define a bunch    of stuff that BFD can use to do coff-encapsulated files.  --gnu@cygnus.com  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -156,17 +156,6 @@ end_define
 
 begin_comment
 comment|/* MC68MAGIC */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|COFF_MAGIC_A29K
-value|0x17A
-end_define
-
-begin_comment
-comment|/* Used by asm29k cross-tools */
 end_comment
 
 begin_ifdef

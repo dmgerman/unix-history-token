@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* dwarf2dbg.h - DWARF2 debug support    Copyright 1999, 2000 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* dwarf2dbg.h - DWARF2 debug support    Copyright 1999, 2000, 2002, 2003 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -24,24 +24,30 @@ end_include
 begin_define
 define|#
 directive|define
-name|DWARF2_FLAG_BEGIN_STMT
+name|DWARF2_FLAG_IS_STMT
 value|(1<< 0)
 end_define
-
-begin_comment
-comment|/* beginning of statement */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|DWARF2_FLAG_BEGIN_BLOCK
+name|DWARF2_FLAG_BASIC_BLOCK
 value|(1<< 1)
 end_define
 
-begin_comment
-comment|/* beginning of basic block */
-end_comment
+begin_define
+define|#
+directive|define
+name|DWARF2_FLAG_PROLOGUE_END
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DWARF2_FLAG_EPILOGUE_BEGIN
+value|(1<< 3)
+end_define
 
 begin_struct
 struct|struct
@@ -58,6 +64,10 @@ decl_stmt|;
 name|unsigned
 name|int
 name|column
+decl_stmt|;
+name|unsigned
+name|int
+name|isa
 decl_stmt|;
 name|unsigned
 name|int
@@ -99,6 +109,21 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Implements the .loc_mark_labels {0,1} directive.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|dwarf2_directive_loc_mark_labels
+parameter_list|(
+name|int
+name|dummy
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Returns the current source information.  If .file directives have    been encountered, the info for the corresponding source file is    returned.  Otherwise, the info for the assembly source file is    returned.  */
 end_comment
 
@@ -111,6 +136,22 @@ name|struct
 name|dwarf2_line_info
 modifier|*
 name|l
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* A hook to allow the target backend to inform the line number state     machine of isa changes when assembler debug info is enabled.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|dwarf2_set_isa
+parameter_list|(
+name|unsigned
+name|int
+name|isa
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -148,6 +189,31 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* Should be called for each code label.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|dwarf2_emit_label
+parameter_list|(
+name|symbolS
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* True when we're supposed to set the basic block mark whenever a label    is seen.  Unless the target is doing Something Weird, just call     dwarf2_emit_label.  */
+end_comment
+
+begin_decl_stmt
+name|bfd_boolean
+name|dwarf2_loc_mark_labels
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|extern

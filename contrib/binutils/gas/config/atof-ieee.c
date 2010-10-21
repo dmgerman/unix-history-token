@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* atof_ieee.c - turn a Flonum into an IEEE floating point number    Copyright 1987, 1992, 1994, 1996, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* atof_ieee.c - turn a Flonum into an IEEE floating point number    Copyright 1987, 1992, 1994, 1996, 1997, 1998, 1999, 2000, 2001, 2005    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -17,46 +17,6 @@ begin_decl_stmt
 specifier|extern
 name|FLONUM_TYPE
 name|generic_floating_point_number
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|next_bits
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|unget_bits
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|make_invalid_floating_point_number
-name|PARAMS
-argument_list|(
-operator|(
-name|LITTLENUM_TYPE
-operator|*
-operator|)
-argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -81,35 +41,35 @@ begin_define
 define|#
 directive|define
 name|MAX_PRECISION
-value|(5)
+value|5
 end_define
 
 begin_define
 define|#
 directive|define
 name|F_PRECISION
-value|(2)
+value|2
 end_define
 
 begin_define
 define|#
 directive|define
 name|D_PRECISION
-value|(4)
+value|4
 end_define
 
 begin_define
 define|#
 directive|define
 name|X_PRECISION
-value|(5)
+value|5
 end_define
 
 begin_define
 define|#
 directive|define
 name|P_PRECISION
-value|(5)
+value|5
 end_define
 
 begin_comment
@@ -120,7 +80,7 @@ begin_define
 define|#
 directive|define
 name|GUARD
-value|(2)
+value|2
 end_define
 
 begin_ifndef
@@ -252,11 +212,9 @@ specifier|static
 name|int
 name|next_bits
 parameter_list|(
-name|number_of_bits
-parameter_list|)
 name|int
 name|number_of_bits
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|return_value
@@ -267,9 +225,7 @@ operator|!
 name|littlenums_left
 condition|)
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 if|if
 condition|(
@@ -363,11 +319,9 @@ specifier|static
 name|void
 name|unget_bits
 parameter_list|(
-name|num
-parameter_list|)
 name|int
 name|num
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -426,12 +380,10 @@ specifier|static
 name|void
 name|make_invalid_floating_point_number
 parameter_list|(
-name|words
-parameter_list|)
 name|LITTLENUM_TYPE
 modifier|*
 name|words
-decl_stmt|;
+parameter_list|)
 block|{
 name|as_bad
 argument_list|(
@@ -538,25 +490,19 @@ name|char
 modifier|*
 name|atof_ieee
 parameter_list|(
-name|str
-parameter_list|,
-name|what_kind
-parameter_list|,
-name|words
-parameter_list|)
 name|char
 modifier|*
 name|str
-decl_stmt|;
+parameter_list|,
 comment|/* Text to convert to binary.  */
 name|int
 name|what_kind
-decl_stmt|;
+parameter_list|,
 comment|/* 'd', 'f', 'g', 'h'.  */
 name|LITTLENUM_TYPE
 modifier|*
 name|words
-decl_stmt|;
+parameter_list|)
 comment|/* Build the binary here.  */
 block|{
 comment|/* Extra bits for zeroed low-order bits.      The 1st MAX_PRECISION are zeroed, the last contain flonum bits.  */
@@ -773,9 +719,7 @@ name|words
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|NULL
-operator|)
 return|;
 block|}
 name|gen_to_words
@@ -806,22 +750,16 @@ begin_function
 name|int
 name|gen_to_words
 parameter_list|(
-name|words
-parameter_list|,
-name|precision
-parameter_list|,
-name|exponent_bits
-parameter_list|)
 name|LITTLENUM_TYPE
 modifier|*
 name|words
-decl_stmt|;
+parameter_list|,
 name|int
 name|precision
-decl_stmt|;
+parameter_list|,
 name|long
 name|exponent_bits
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|return_value
@@ -2436,12 +2374,6 @@ literal|1
 operator|)
 operator|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|make_invalid_floating_point_number (words); 	  return return_value;
-endif|#
-directive|endif
 block|}
 block|}
 return|return
@@ -2449,26 +2381,6 @@ name|return_value
 return|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* Unused.  */
-end_comment
-
-begin_comment
-comment|/* This routine is a real kludge.  Someone really should do it better,    but I'm too lazy, and I don't understand this stuff all too well    anyway. (JF)  */
-end_comment
-
-begin_endif
-unit|static void int_to_gen (x)      long x; {   char buf[20];   char *bufp;    sprintf (buf, "%ld", x);   bufp =&buf[0];   if (atof_generic (&bufp, ".", EXP_CHARS,&generic_floating_point_number))     as_bad (_("Error converting number to floating point (Exponent overflow?)")); }
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#

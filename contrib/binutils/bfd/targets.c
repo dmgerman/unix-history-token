@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generic target-file-type support for the BFD library.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002, 2003, 2004    Free Software Foundation, Inc.    Written by Cygnus Support.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generic target-file-type support for the BFD library.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.    Written by Cygnus Support.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -28,24 +28,20 @@ file|"fnmatch.h"
 end_include
 
 begin_comment
+comment|/*    It's okay to see some: #if 0    directives in this source file, as targets.c uses them to exclude    certain BFD vectors.  This comment is specially formatted to catch    users who grep for ^#if 0, so please keep it this way! */
+end_comment
+
+begin_comment
 comment|/* SECTION 	Targets  DESCRIPTION 	Each port of BFD to a different machine requires the creation 	of a target back end. All the back end provides to the root 	part of BFD is a structure containing pointers to functions 	which perform certain low level operations on files. BFD 	translates the applications's requests through a pointer into 	calls to the back end routines.  	When a file is opened with<<bfd_openr>>, its format and 	target are unknown. BFD uses various mechanisms to determine 	how to interpret the file. The operations performed are:  	o Create a BFD by calling the internal routine<<_bfd_new_bfd>>, then call<<bfd_find_target>> with the 	target string supplied to<<bfd_openr>> and the new BFD pointer.  	o If a null target string was provided to<<bfd_find_target>>, 	look up the environment variable<<GNUTARGET>> and use 	that as the target string.  	o If the target string is still<<NULL>>, or the target string is<<default>>, then use the first item in the target vector 	as the target type, and set<<target_defaulted>> in the BFD to 	cause<<bfd_check_format>> to loop through all the targets. 	@xref{bfd_target}.  @xref{Formats}.  	o Otherwise, inspect the elements in the target vector 	one by one, until a match on target name is found. When found, 	use it.  	o Otherwise return the error<<bfd_error_invalid_target>> to<<bfd_openr>>.  	o<<bfd_openr>> attempts to open the file using<<bfd_open_file>>, and returns the BFD.  	Once the BFD has been opened and the target selected, the file 	format may be determined. This is done by calling<<bfd_check_format>> on the BFD with a suggested format. 	If<<target_defaulted>> has been set, each possible target 	type is tried to see if it recognizes the specified format.<<bfd_check_format>> returns<<TRUE>> when the caller guesses right. @menu @* bfd_target:: @end menu */
 end_comment
 
 begin_comment
-comment|/*  INODE 	bfd_target,  , Targets, Targets DOCDD SUBSECTION 	bfd_target  DESCRIPTION 	This structure contains everything that BFD knows about a 	target. It includes things like its byte order, name, and which 	routines to call to do various operations.  	Every BFD points to a target structure with its<<xvec>> 	member.  	The macros below are used to dispatch to functions through the<<bfd_target>> vector. They are used in a number of macros further 	down in @file{bfd.h}, and are also used when calling various 	routines by hand inside the BFD implementation.  The @var{arglist} 	argument must be parenthesized; it contains all the arguments 	to the called function.  	They make the documentation (more) unpleasant to read, so if 	someone wants to fix this and not break the above, please do.  .#define BFD_SEND(bfd, message, arglist) \ .  ((*((bfd)->xvec->message)) arglist) . .#ifdef DEBUG_BFD_SEND .#undef BFD_SEND .#define BFD_SEND(bfd, message, arglist) \ .  (((bfd)&& (bfd)->xvec&& (bfd)->xvec->message) ? \ .    ((*((bfd)->xvec->message)) arglist) : \ .    (bfd_assert (__FILE__,__LINE__), NULL)) .#endif  	For operations which index on the BFD format:  .#define BFD_SEND_FMT(bfd, message, arglist) \ .  (((bfd)->xvec->message[(int) ((bfd)->format)]) arglist) . .#ifdef DEBUG_BFD_SEND .#undef BFD_SEND_FMT .#define BFD_SEND_FMT(bfd, message, arglist) \ .  (((bfd)&& (bfd)->xvec&& (bfd)->xvec->message) ? \ .   (((bfd)->xvec->message[(int) ((bfd)->format)]) arglist) : \ .   (bfd_assert (__FILE__,__LINE__), NULL)) .#endif . 	This is the structure which defines the type of BFD this is.  The<<xvec>> member of the struct<<bfd>> itself points here.  Each 	module that implements access to a different target under BFD, 	defines one of these.  	FIXME, these names should be rationalised with the names of 	the entry points which call them. Too bad we can't have one 	macro to define them both!  .enum bfd_flavour .{ .  bfd_target_unknown_flavour, .  bfd_target_aout_flavour, .  bfd_target_coff_flavour, .  bfd_target_ecoff_flavour, .  bfd_target_xcoff_flavour, .  bfd_target_elf_flavour, .  bfd_target_ieee_flavour, .  bfd_target_nlm_flavour, .  bfd_target_oasys_flavour, .  bfd_target_tekhex_flavour, .  bfd_target_srec_flavour, .  bfd_target_ihex_flavour, .  bfd_target_som_flavour, .  bfd_target_os9k_flavour, .  bfd_target_versados_flavour, .  bfd_target_msdos_flavour, .  bfd_target_ovax_flavour, .  bfd_target_evax_flavour, .  bfd_target_mmo_flavour, .  bfd_target_mach_o_flavour, .  bfd_target_pef_flavour, .  bfd_target_pef_xlib_flavour, .  bfd_target_sym_flavour .}; . .enum bfd_endian { BFD_ENDIAN_BIG, BFD_ENDIAN_LITTLE, BFD_ENDIAN_UNKNOWN }; . .{* Forward declaration.  *} .typedef struct bfd_link_info _bfd_link_info; . .typedef struct bfd_target .{ .  {* Identifies the kind of target, e.g., SunOS4, Ultrix, etc.  *} .  char *name; . . {* The "flavour" of a back end is a general indication about .    the contents of a file.  *} .  enum bfd_flavour flavour; . .  {* The order of bytes within the data area of a file.  *} .  enum bfd_endian byteorder; . . {* The order of bytes within the header parts of a file.  *} .  enum bfd_endian header_byteorder; . .  {* A mask of all the flags which an executable may have set - .     from the set<<BFD_NO_FLAGS>>,<<HAS_RELOC>>, ...<<D_PAGED>>.  *} .  flagword object_flags; . . {* A mask of all the flags which a section may have set - from .    the set<<SEC_NO_FLAGS>>,<<SEC_ALLOC>>, ...<<SET_NEVER_LOAD>>.  *} .  flagword section_flags; . . {* The character normally found at the front of a symbol. .    (if any), perhaps `_'.  *} .  char symbol_leading_char; . . {* The pad character for file names within an archive header.  *} .  char ar_pad_char; . .  {* The maximum number of characters in an archive header.  *} .  unsigned short ar_max_namelen; . .  {* Entries for byte swapping for data. These are different from the .     other entry points, since they don't take a BFD asthe first argument. .     Certain other handlers could do the same.  *} .  bfd_uint64_t   (*bfd_getx64) (const void *); .  bfd_int64_t    (*bfd_getx_signed_64) (const void *); .  void           (*bfd_putx64) (bfd_uint64_t, void *); .  bfd_vma        (*bfd_getx32) (const void *); .  bfd_signed_vma (*bfd_getx_signed_32) (const void *); .  void           (*bfd_putx32) (bfd_vma, void *); .  bfd_vma        (*bfd_getx16) (const void *); .  bfd_signed_vma (*bfd_getx_signed_16) (const void *); .  void           (*bfd_putx16) (bfd_vma, void *); . .  {* Byte swapping for the headers.  *} .  bfd_uint64_t   (*bfd_h_getx64) (const void *); .  bfd_int64_t    (*bfd_h_getx_signed_64) (const void *); .  void           (*bfd_h_putx64) (bfd_uint64_t, void *); .  bfd_vma        (*bfd_h_getx32) (const void *); .  bfd_signed_vma (*bfd_h_getx_signed_32) (const void *); .  void           (*bfd_h_putx32) (bfd_vma, void *); .  bfd_vma        (*bfd_h_getx16) (const void *); .  bfd_signed_vma (*bfd_h_getx_signed_16) (const void *); .  void           (*bfd_h_putx16) (bfd_vma, void *); . .  {* Format dependent routines: these are vectors of entry points .     within the target vector structure, one for each format to check.  *} . .  {* Check the format of a file being read.  Return a<<bfd_target *>> or zero.  *} .  const struct bfd_target *(*_bfd_check_format[bfd_type_end]) (bfd *); . .  {* Set the format of a file being written.  *} .  bfd_boolean (*_bfd_set_format[bfd_type_end]) (bfd *); . .  {* Write cached information into a file being written, at<<bfd_close>>.  *} .  bfd_boolean (*_bfd_write_contents[bfd_type_end]) (bfd *); . The general target vector.  These vectors are initialized using the BFD_JUMP_TABLE macros. . .  {* Generic entry points.  *} .#define BFD_JUMP_TABLE_GENERIC(NAME) \ .  NAME##_close_and_cleanup, \ .  NAME##_bfd_free_cached_info, \ .  NAME##_new_section_hook, \ .  NAME##_get_section_contents, \ .  NAME##_get_section_contents_in_window . .  {* Called when the BFD is being closed to do any necessary cleanup.  *} .  bfd_boolean (*_close_and_cleanup) (bfd *); .  {* Ask the BFD to free all cached information.  *} .  bfd_boolean (*_bfd_free_cached_info) (bfd *); .  {* Called when a new section is created.  *} .  bfd_boolean (*_new_section_hook) (bfd *, sec_ptr); .  {* Read the contents of a section.  *} .  bfd_boolean (*_bfd_get_section_contents) .    (bfd *, sec_ptr, void *, file_ptr, bfd_size_type); .  bfd_boolean (*_bfd_get_section_contents_in_window) .    (bfd *, sec_ptr, bfd_window *, file_ptr, bfd_size_type); . .  {* Entry points to copy private data.  *} .#define BFD_JUMP_TABLE_COPY(NAME) \ .  NAME##_bfd_copy_private_bfd_data, \ .  NAME##_bfd_merge_private_bfd_data, \ .  NAME##_bfd_copy_private_section_data, \ .  NAME##_bfd_copy_private_symbol_data, \ .  NAME##_bfd_set_private_flags, \ .  NAME##_bfd_print_private_bfd_data . .  {* Called to copy BFD general private data from one object file .     to another.  *} .  bfd_boolean (*_bfd_copy_private_bfd_data) (bfd *, bfd *); .  {* Called to merge BFD general private data from one object file .     to a common output file when linking.  *} .  bfd_boolean (*_bfd_merge_private_bfd_data) (bfd *, bfd *); .  {* Called to copy BFD private section data from one object file .     to another.  *} .  bfd_boolean (*_bfd_copy_private_section_data) .    (bfd *, sec_ptr, bfd *, sec_ptr); .  {* Called to copy BFD private symbol data from one symbol .     to another.  *} .  bfd_boolean (*_bfd_copy_private_symbol_data) .    (bfd *, asymbol *, bfd *, asymbol *); .  {* Called to set private backend flags.  *} .  bfd_boolean (*_bfd_set_private_flags) (bfd *, flagword); . .  {* Called to print private BFD data.  *} .  bfd_boolean (*_bfd_print_private_bfd_data) (bfd *, void *); . .  {* Core file entry points.  *} .#define BFD_JUMP_TABLE_CORE(NAME) \ .  NAME##_core_file_failing_command, \ .  NAME##_core_file_failing_signal, \ .  NAME##_core_file_matches_executable_p . .  char *      (*_core_file_failing_command) (bfd *); .  int         (*_core_file_failing_signal) (bfd *); .  bfd_boolean (*_core_file_matches_executable_p) (bfd *, bfd *); . .  {* Archive entry points.  *} .#define BFD_JUMP_TABLE_ARCHIVE(NAME) \ .  NAME##_slurp_armap, \ .  NAME##_slurp_extended_name_table, \ .  NAME##_construct_extended_name_table, \ .  NAME##_truncate_arname, \ .  NAME##_write_armap, \ .  NAME##_read_ar_hdr, \ .  NAME##_openr_next_archived_file, \ .  NAME##_get_elt_at_index, \ .  NAME##_generic_stat_arch_elt, \ .  NAME##_update_armap_timestamp . .  bfd_boolean (*_bfd_slurp_armap) (bfd *); .  bfd_boolean (*_bfd_slurp_extended_name_table) (bfd *); .  bfd_boolean (*_bfd_construct_extended_name_table) .    (bfd *, char **, bfd_size_type *, const char **); .  void        (*_bfd_truncate_arname) (bfd *, const char *, char *); .  bfd_boolean (*write_armap) .    (bfd *, unsigned int, struct orl *, unsigned int, int); .  void *      (*_bfd_read_ar_hdr_fn) (bfd *); .  bfd *       (*openr_next_archived_file) (bfd *, bfd *); .#define bfd_get_elt_at_index(b,i) BFD_SEND (b, _bfd_get_elt_at_index, (b,i)) .  bfd *       (*_bfd_get_elt_at_index) (bfd *, symindex); .  int         (*_bfd_stat_arch_elt) (bfd *, struct stat *); .  bfd_boolean (*_bfd_update_armap_timestamp) (bfd *); . .  {* Entry points used for symbols.  *} .#define BFD_JUMP_TABLE_SYMBOLS(NAME) \ .  NAME##_get_symtab_upper_bound, \ .  NAME##_canonicalize_symtab, \ .  NAME##_make_empty_symbol, \ .  NAME##_print_symbol, \ .  NAME##_get_symbol_info, \ .  NAME##_bfd_is_local_label_name, \ .  NAME##_get_lineno, \ .  NAME##_find_nearest_line, \ .  NAME##_bfd_make_debug_symbol, \ .  NAME##_read_minisymbols, \ .  NAME##_minisymbol_to_symbol . .  long        (*_bfd_get_symtab_upper_bound) (bfd *); .  long        (*_bfd_canonicalize_symtab) .    (bfd *, struct bfd_symbol **); .  struct bfd_symbol * .              (*_bfd_make_empty_symbol) (bfd *); .  void        (*_bfd_print_symbol) .    (bfd *, void *, struct bfd_symbol *, bfd_print_symbol_type); .#define bfd_print_symbol(b,p,s,e) BFD_SEND (b, _bfd_print_symbol, (b,p,s,e)) .  void        (*_bfd_get_symbol_info) .    (bfd *, struct bfd_symbol *, symbol_info *); .#define bfd_get_symbol_info(b,p,e) BFD_SEND (b, _bfd_get_symbol_info, (b,p,e)) .  bfd_boolean (*_bfd_is_local_label_name) (bfd *, const char *); . .  alent *     (*_get_lineno) (bfd *, struct bfd_symbol *); .  bfd_boolean (*_bfd_find_nearest_line) .    (bfd *, struct bfd_section *, struct bfd_symbol **, bfd_vma, .     const char **, const char **, unsigned int *); . {* Back-door to allow format-aware applications to create debug symbols .    while using BFD for everything else.  Currently used by the assembler .    when creating COFF files.  *} .  asymbol *   (*_bfd_make_debug_symbol) .    (bfd *, void *, unsigned long size); .#define bfd_read_minisymbols(b, d, m, s) \ .  BFD_SEND (b, _read_minisymbols, (b, d, m, s)) .  long        (*_read_minisymbols) .    (bfd *, bfd_boolean, void **, unsigned int *); .#define bfd_minisymbol_to_symbol(b, d, m, f) \ .  BFD_SEND (b, _minisymbol_to_symbol, (b, d, m, f)) .  asymbol *   (*_minisymbol_to_symbol) .    (bfd *, bfd_boolean, const void *, asymbol *); . .  {* Routines for relocs.  *} .#define BFD_JUMP_TABLE_RELOCS(NAME) \ .  NAME##_get_reloc_upper_bound, \ .  NAME##_canonicalize_reloc, \ .  NAME##_bfd_reloc_type_lookup . .  long        (*_get_reloc_upper_bound) (bfd *, sec_ptr); .  long        (*_bfd_canonicalize_reloc) .    (bfd *, sec_ptr, arelent **, struct bfd_symbol **); .  {* See documentation on reloc types.  *} .  reloc_howto_type * .              (*reloc_type_lookup) (bfd *, bfd_reloc_code_real_type); . .  {* Routines used when writing an object file.  *} .#define BFD_JUMP_TABLE_WRITE(NAME) \ .  NAME##_set_arch_mach, \ .  NAME##_set_section_contents . .  bfd_boolean (*_bfd_set_arch_mach) .    (bfd *, enum bfd_architecture, unsigned long); .  bfd_boolean (*_bfd_set_section_contents) .    (bfd *, sec_ptr, const void *, file_ptr, bfd_size_type); . .  {* Routines used by the linker.  *} .#define BFD_JUMP_TABLE_LINK(NAME) \ .  NAME##_sizeof_headers, \ .  NAME##_bfd_get_relocated_section_contents, \ .  NAME##_bfd_relax_section, \ .  NAME##_bfd_link_hash_table_create, \ .  NAME##_bfd_link_hash_table_free, \ .  NAME##_bfd_link_add_symbols, \ .  NAME##_bfd_link_just_syms, \ .  NAME##_bfd_final_link, \ .  NAME##_bfd_link_split_section, \ .  NAME##_bfd_gc_sections, \ .  NAME##_bfd_merge_sections, \ .  NAME##_bfd_discard_group . .  int         (*_bfd_sizeof_headers) (bfd *, bfd_boolean); .  bfd_byte *  (*_bfd_get_relocated_section_contents) .    (bfd *, struct bfd_link_info *, struct bfd_link_order *, .     bfd_byte *, bfd_boolean, struct bfd_symbol **); . .  bfd_boolean (*_bfd_relax_section) .    (bfd *, struct bfd_section *, struct bfd_link_info *, bfd_boolean *); . .  {* Create a hash table for the linker.  Different backends store .     different information in this table.  *} .  struct bfd_link_hash_table * .              (*_bfd_link_hash_table_create) (bfd *); . .  {* Release the memory associated with the linker hash table.  *} .  void        (*_bfd_link_hash_table_free) (struct bfd_link_hash_table *); . .  {* Add symbols from this object file into the hash table.  *} .  bfd_boolean (*_bfd_link_add_symbols) (bfd *, struct bfd_link_info *); . .  {* Indicate that we are only retrieving symbol values from this section.  *} .  void        (*_bfd_link_just_syms) (asection *, struct bfd_link_info *); . .  {* Do a link based on the link_order structures attached to each .     section of the BFD.  *} .  bfd_boolean (*_bfd_final_link) (bfd *, struct bfd_link_info *); . .  {* Should this section be split up into smaller pieces during linking.  *} .  bfd_boolean (*_bfd_link_split_section) (bfd *, struct bfd_section *); . .  {* Remove sections that are not referenced from the output.  *} .  bfd_boolean (*_bfd_gc_sections) (bfd *, struct bfd_link_info *); . .  {* Attempt to merge SEC_MERGE sections.  *} .  bfd_boolean (*_bfd_merge_sections) (bfd *, struct bfd_link_info *); . .  {* Discard members of a group.  *} .  bfd_boolean (*_bfd_discard_group) (bfd *, struct bfd_section *); . .  {* Routines to handle dynamic symbols and relocs.  *} .#define BFD_JUMP_TABLE_DYNAMIC(NAME) \ .  NAME##_get_dynamic_symtab_upper_bound, \ .  NAME##_canonicalize_dynamic_symtab, \ .  NAME##_get_dynamic_reloc_upper_bound, \ .  NAME##_canonicalize_dynamic_reloc . .  {* Get the amount of memory required to hold the dynamic symbols.  *} .  long        (*_bfd_get_dynamic_symtab_upper_bound) (bfd *); .  {* Read in the dynamic symbols.  *} .  long        (*_bfd_canonicalize_dynamic_symtab) .    (bfd *, struct bfd_symbol **); .  {* Get the amount of memory required to hold the dynamic relocs.  *} .  long        (*_bfd_get_dynamic_reloc_upper_bound) (bfd *); .  {* Read in the dynamic relocs.  *} .  long        (*_bfd_canonicalize_dynamic_reloc) .    (bfd *, arelent **, struct bfd_symbol **); .  A pointer to an alternative bfd_target in case the current one is not satisfactory.  This can happen when the target cpu supports both big and little endian code, and target chosen by the linker has the wrong endianness.  The function open_output() in ld/ldlang.c uses this field to find an alternative output format that is suitable.  .  {* Opposite endian version of this target.  *} .  const struct bfd_target * alternative_target; .  .  {* Data for use by back-end routines, which isn't .     generic enough to belong in this structure.  *} .  const void *backend_data; . .} bfd_target; . */
+comment|/*  INODE 	bfd_target,  , Targets, Targets DOCDD SUBSECTION 	bfd_target  DESCRIPTION 	This structure contains everything that BFD knows about a 	target. It includes things like its byte order, name, and which 	routines to call to do various operations.  	Every BFD points to a target structure with its<<xvec>> 	member.  	The macros below are used to dispatch to functions through the<<bfd_target>> vector. They are used in a number of macros further 	down in @file{bfd.h}, and are also used when calling various 	routines by hand inside the BFD implementation.  The @var{arglist} 	argument must be parenthesized; it contains all the arguments 	to the called function.  	They make the documentation (more) unpleasant to read, so if 	someone wants to fix this and not break the above, please do.  .#define BFD_SEND(bfd, message, arglist) \ .  ((*((bfd)->xvec->message)) arglist) . .#ifdef DEBUG_BFD_SEND .#undef BFD_SEND .#define BFD_SEND(bfd, message, arglist) \ .  (((bfd)&& (bfd)->xvec&& (bfd)->xvec->message) ? \ .    ((*((bfd)->xvec->message)) arglist) : \ .    (bfd_assert (__FILE__,__LINE__), NULL)) .#endif  	For operations which index on the BFD format:  .#define BFD_SEND_FMT(bfd, message, arglist) \ .  (((bfd)->xvec->message[(int) ((bfd)->format)]) arglist) . .#ifdef DEBUG_BFD_SEND .#undef BFD_SEND_FMT .#define BFD_SEND_FMT(bfd, message, arglist) \ .  (((bfd)&& (bfd)->xvec&& (bfd)->xvec->message) ? \ .   (((bfd)->xvec->message[(int) ((bfd)->format)]) arglist) : \ .   (bfd_assert (__FILE__,__LINE__), NULL)) .#endif . 	This is the structure which defines the type of BFD this is.  The<<xvec>> member of the struct<<bfd>> itself points here.  Each 	module that implements access to a different target under BFD, 	defines one of these.  	FIXME, these names should be rationalised with the names of 	the entry points which call them. Too bad we can't have one 	macro to define them both!  .enum bfd_flavour .{ .  bfd_target_unknown_flavour, .  bfd_target_aout_flavour, .  bfd_target_coff_flavour, .  bfd_target_ecoff_flavour, .  bfd_target_xcoff_flavour, .  bfd_target_elf_flavour, .  bfd_target_ieee_flavour, .  bfd_target_nlm_flavour, .  bfd_target_oasys_flavour, .  bfd_target_tekhex_flavour, .  bfd_target_srec_flavour, .  bfd_target_ihex_flavour, .  bfd_target_som_flavour, .  bfd_target_os9k_flavour, .  bfd_target_versados_flavour, .  bfd_target_msdos_flavour, .  bfd_target_ovax_flavour, .  bfd_target_evax_flavour, .  bfd_target_mmo_flavour, .  bfd_target_mach_o_flavour, .  bfd_target_pef_flavour, .  bfd_target_pef_xlib_flavour, .  bfd_target_sym_flavour .}; . .enum bfd_endian { BFD_ENDIAN_BIG, BFD_ENDIAN_LITTLE, BFD_ENDIAN_UNKNOWN }; . .{* Forward declaration.  *} .typedef struct bfd_link_info _bfd_link_info; . .typedef struct bfd_target .{ .  {* Identifies the kind of target, e.g., SunOS4, Ultrix, etc.  *} .  char *name; . . {* The "flavour" of a back end is a general indication about .    the contents of a file.  *} .  enum bfd_flavour flavour; . .  {* The order of bytes within the data area of a file.  *} .  enum bfd_endian byteorder; . . {* The order of bytes within the header parts of a file.  *} .  enum bfd_endian header_byteorder; . .  {* A mask of all the flags which an executable may have set - .     from the set<<BFD_NO_FLAGS>>,<<HAS_RELOC>>, ...<<D_PAGED>>.  *} .  flagword object_flags; . . {* A mask of all the flags which a section may have set - from .    the set<<SEC_NO_FLAGS>>,<<SEC_ALLOC>>, ...<<SET_NEVER_LOAD>>.  *} .  flagword section_flags; . . {* The character normally found at the front of a symbol. .    (if any), perhaps `_'.  *} .  char symbol_leading_char; . . {* The pad character for file names within an archive header.  *} .  char ar_pad_char; . .  {* The maximum number of characters in an archive header.  *} .  unsigned short ar_max_namelen; . .  {* Entries for byte swapping for data. These are different from the .     other entry points, since they don't take a BFD as the first argument. .     Certain other handlers could do the same.  *} .  bfd_uint64_t   (*bfd_getx64) (const void *); .  bfd_int64_t    (*bfd_getx_signed_64) (const void *); .  void           (*bfd_putx64) (bfd_uint64_t, void *); .  bfd_vma        (*bfd_getx32) (const void *); .  bfd_signed_vma (*bfd_getx_signed_32) (const void *); .  void           (*bfd_putx32) (bfd_vma, void *); .  bfd_vma        (*bfd_getx16) (const void *); .  bfd_signed_vma (*bfd_getx_signed_16) (const void *); .  void           (*bfd_putx16) (bfd_vma, void *); . .  {* Byte swapping for the headers.  *} .  bfd_uint64_t   (*bfd_h_getx64) (const void *); .  bfd_int64_t    (*bfd_h_getx_signed_64) (const void *); .  void           (*bfd_h_putx64) (bfd_uint64_t, void *); .  bfd_vma        (*bfd_h_getx32) (const void *); .  bfd_signed_vma (*bfd_h_getx_signed_32) (const void *); .  void           (*bfd_h_putx32) (bfd_vma, void *); .  bfd_vma        (*bfd_h_getx16) (const void *); .  bfd_signed_vma (*bfd_h_getx_signed_16) (const void *); .  void           (*bfd_h_putx16) (bfd_vma, void *); . .  {* Format dependent routines: these are vectors of entry points .     within the target vector structure, one for each format to check.  *} . .  {* Check the format of a file being read.  Return a<<bfd_target *>> or zero.  *} .  const struct bfd_target *(*_bfd_check_format[bfd_type_end]) (bfd *); . .  {* Set the format of a file being written.  *} .  bfd_boolean (*_bfd_set_format[bfd_type_end]) (bfd *); . .  {* Write cached information into a file being written, at<<bfd_close>>.  *} .  bfd_boolean (*_bfd_write_contents[bfd_type_end]) (bfd *); . The general target vector.  These vectors are initialized using the BFD_JUMP_TABLE macros. . .  {* Generic entry points.  *} .#define BFD_JUMP_TABLE_GENERIC(NAME) \ .  NAME##_close_and_cleanup, \ .  NAME##_bfd_free_cached_info, \ .  NAME##_new_section_hook, \ .  NAME##_get_section_contents, \ .  NAME##_get_section_contents_in_window . .  {* Called when the BFD is being closed to do any necessary cleanup.  *} .  bfd_boolean (*_close_and_cleanup) (bfd *); .  {* Ask the BFD to free all cached information.  *} .  bfd_boolean (*_bfd_free_cached_info) (bfd *); .  {* Called when a new section is created.  *} .  bfd_boolean (*_new_section_hook) (bfd *, sec_ptr); .  {* Read the contents of a section.  *} .  bfd_boolean (*_bfd_get_section_contents) .    (bfd *, sec_ptr, void *, file_ptr, bfd_size_type); .  bfd_boolean (*_bfd_get_section_contents_in_window) .    (bfd *, sec_ptr, bfd_window *, file_ptr, bfd_size_type); . .  {* Entry points to copy private data.  *} .#define BFD_JUMP_TABLE_COPY(NAME) \ .  NAME##_bfd_copy_private_bfd_data, \ .  NAME##_bfd_merge_private_bfd_data, \ .  _bfd_generic_init_private_section_data, \ .  NAME##_bfd_copy_private_section_data, \ .  NAME##_bfd_copy_private_symbol_data, \ .  NAME##_bfd_copy_private_header_data, \ .  NAME##_bfd_set_private_flags, \ .  NAME##_bfd_print_private_bfd_data . .  {* Called to copy BFD general private data from one object file .     to another.  *} .  bfd_boolean (*_bfd_copy_private_bfd_data) (bfd *, bfd *); .  {* Called to merge BFD general private data from one object file .     to a common output file when linking.  *} .  bfd_boolean (*_bfd_merge_private_bfd_data) (bfd *, bfd *); .  {* Called to initialize BFD private section data from one object file .     to another.  *} .#define bfd_init_private_section_data(ibfd, isec, obfd, osec, link_info) \ .  BFD_SEND (obfd, _bfd_init_private_section_data, (ibfd, isec, obfd, osec, link_info)) .  bfd_boolean (*_bfd_init_private_section_data) .    (bfd *, sec_ptr, bfd *, sec_ptr, struct bfd_link_info *); .  {* Called to copy BFD private section data from one object file .     to another.  *} .  bfd_boolean (*_bfd_copy_private_section_data) .    (bfd *, sec_ptr, bfd *, sec_ptr); .  {* Called to copy BFD private symbol data from one symbol .     to another.  *} .  bfd_boolean (*_bfd_copy_private_symbol_data) .    (bfd *, asymbol *, bfd *, asymbol *); .  {* Called to copy BFD private header data from one object file .     to another.  *} .  bfd_boolean (*_bfd_copy_private_header_data) .    (bfd *, bfd *); .  {* Called to set private backend flags.  *} .  bfd_boolean (*_bfd_set_private_flags) (bfd *, flagword); . .  {* Called to print private BFD data.  *} .  bfd_boolean (*_bfd_print_private_bfd_data) (bfd *, void *); . .  {* Core file entry points.  *} .#define BFD_JUMP_TABLE_CORE(NAME) \ .  NAME##_core_file_failing_command, \ .  NAME##_core_file_failing_signal, \ .  NAME##_core_file_matches_executable_p . .  char *      (*_core_file_failing_command) (bfd *); .  int         (*_core_file_failing_signal) (bfd *); .  bfd_boolean (*_core_file_matches_executable_p) (bfd *, bfd *); . .  {* Archive entry points.  *} .#define BFD_JUMP_TABLE_ARCHIVE(NAME) \ .  NAME##_slurp_armap, \ .  NAME##_slurp_extended_name_table, \ .  NAME##_construct_extended_name_table, \ .  NAME##_truncate_arname, \ .  NAME##_write_armap, \ .  NAME##_read_ar_hdr, \ .  NAME##_openr_next_archived_file, \ .  NAME##_get_elt_at_index, \ .  NAME##_generic_stat_arch_elt, \ .  NAME##_update_armap_timestamp . .  bfd_boolean (*_bfd_slurp_armap) (bfd *); .  bfd_boolean (*_bfd_slurp_extended_name_table) (bfd *); .  bfd_boolean (*_bfd_construct_extended_name_table) .    (bfd *, char **, bfd_size_type *, const char **); .  void        (*_bfd_truncate_arname) (bfd *, const char *, char *); .  bfd_boolean (*write_armap) .    (bfd *, unsigned int, struct orl *, unsigned int, int); .  void *      (*_bfd_read_ar_hdr_fn) (bfd *); .  bfd *       (*openr_next_archived_file) (bfd *, bfd *); .#define bfd_get_elt_at_index(b,i) BFD_SEND (b, _bfd_get_elt_at_index, (b,i)) .  bfd *       (*_bfd_get_elt_at_index) (bfd *, symindex); .  int         (*_bfd_stat_arch_elt) (bfd *, struct stat *); .  bfd_boolean (*_bfd_update_armap_timestamp) (bfd *); . .  {* Entry points used for symbols.  *} .#define BFD_JUMP_TABLE_SYMBOLS(NAME) \ .  NAME##_get_symtab_upper_bound, \ .  NAME##_canonicalize_symtab, \ .  NAME##_make_empty_symbol, \ .  NAME##_print_symbol, \ .  NAME##_get_symbol_info, \ .  NAME##_bfd_is_local_label_name, \ .  NAME##_bfd_is_target_special_symbol, \ .  NAME##_get_lineno, \ .  NAME##_find_nearest_line, \ .  _bfd_generic_find_line, \ .  NAME##_find_inliner_info, \ .  NAME##_bfd_make_debug_symbol, \ .  NAME##_read_minisymbols, \ .  NAME##_minisymbol_to_symbol . .  long        (*_bfd_get_symtab_upper_bound) (bfd *); .  long        (*_bfd_canonicalize_symtab) .    (bfd *, struct bfd_symbol **); .  struct bfd_symbol * .              (*_bfd_make_empty_symbol) (bfd *); .  void        (*_bfd_print_symbol) .    (bfd *, void *, struct bfd_symbol *, bfd_print_symbol_type); .#define bfd_print_symbol(b,p,s,e) BFD_SEND (b, _bfd_print_symbol, (b,p,s,e)) .  void        (*_bfd_get_symbol_info) .    (bfd *, struct bfd_symbol *, symbol_info *); .#define bfd_get_symbol_info(b,p,e) BFD_SEND (b, _bfd_get_symbol_info, (b,p,e)) .  bfd_boolean (*_bfd_is_local_label_name) (bfd *, const char *); .  bfd_boolean (*_bfd_is_target_special_symbol) (bfd *, asymbol *); .  alent *     (*_get_lineno) (bfd *, struct bfd_symbol *); .  bfd_boolean (*_bfd_find_nearest_line) .    (bfd *, struct bfd_section *, struct bfd_symbol **, bfd_vma, .     const char **, const char **, unsigned int *); .  bfd_boolean (*_bfd_find_line) .    (bfd *, struct bfd_symbol **, struct bfd_symbol *, .     const char **, unsigned int *); .  bfd_boolean (*_bfd_find_inliner_info) .    (bfd *, const char **, const char **, unsigned int *); . {* Back-door to allow format-aware applications to create debug symbols .    while using BFD for everything else.  Currently used by the assembler .    when creating COFF files.  *} .  asymbol *   (*_bfd_make_debug_symbol) .    (bfd *, void *, unsigned long size); .#define bfd_read_minisymbols(b, d, m, s) \ .  BFD_SEND (b, _read_minisymbols, (b, d, m, s)) .  long        (*_read_minisymbols) .    (bfd *, bfd_boolean, void **, unsigned int *); .#define bfd_minisymbol_to_symbol(b, d, m, f) \ .  BFD_SEND (b, _minisymbol_to_symbol, (b, d, m, f)) .  asymbol *   (*_minisymbol_to_symbol) .    (bfd *, bfd_boolean, const void *, asymbol *); . .  {* Routines for relocs.  *} .#define BFD_JUMP_TABLE_RELOCS(NAME) \ .  NAME##_get_reloc_upper_bound, \ .  NAME##_canonicalize_reloc, \ .  NAME##_bfd_reloc_type_lookup . .  long        (*_get_reloc_upper_bound) (bfd *, sec_ptr); .  long        (*_bfd_canonicalize_reloc) .    (bfd *, sec_ptr, arelent **, struct bfd_symbol **); .  {* See documentation on reloc types.  *} .  reloc_howto_type * .              (*reloc_type_lookup) (bfd *, bfd_reloc_code_real_type); . .  {* Routines used when writing an object file.  *} .#define BFD_JUMP_TABLE_WRITE(NAME) \ .  NAME##_set_arch_mach, \ .  NAME##_set_section_contents . .  bfd_boolean (*_bfd_set_arch_mach) .    (bfd *, enum bfd_architecture, unsigned long); .  bfd_boolean (*_bfd_set_section_contents) .    (bfd *, sec_ptr, const void *, file_ptr, bfd_size_type); . .  {* Routines used by the linker.  *} .#define BFD_JUMP_TABLE_LINK(NAME) \ .  NAME##_sizeof_headers, \ .  NAME##_bfd_get_relocated_section_contents, \ .  NAME##_bfd_relax_section, \ .  NAME##_bfd_link_hash_table_create, \ .  NAME##_bfd_link_hash_table_free, \ .  NAME##_bfd_link_add_symbols, \ .  NAME##_bfd_link_just_syms, \ .  NAME##_bfd_final_link, \ .  NAME##_bfd_link_split_section, \ .  NAME##_bfd_gc_sections, \ .  NAME##_bfd_merge_sections, \ .  NAME##_bfd_is_group_section, \ .  NAME##_bfd_discard_group, \ .  NAME##_section_already_linked \ . .  int         (*_bfd_sizeof_headers) (bfd *, bfd_boolean); .  bfd_byte *  (*_bfd_get_relocated_section_contents) .    (bfd *, struct bfd_link_info *, struct bfd_link_order *, .     bfd_byte *, bfd_boolean, struct bfd_symbol **); . .  bfd_boolean (*_bfd_relax_section) .    (bfd *, struct bfd_section *, struct bfd_link_info *, bfd_boolean *); . .  {* Create a hash table for the linker.  Different backends store .     different information in this table.  *} .  struct bfd_link_hash_table * .              (*_bfd_link_hash_table_create) (bfd *); . .  {* Release the memory associated with the linker hash table.  *} .  void        (*_bfd_link_hash_table_free) (struct bfd_link_hash_table *); . .  {* Add symbols from this object file into the hash table.  *} .  bfd_boolean (*_bfd_link_add_symbols) (bfd *, struct bfd_link_info *); . .  {* Indicate that we are only retrieving symbol values from this section.  *} .  void        (*_bfd_link_just_syms) (asection *, struct bfd_link_info *); . .  {* Do a link based on the link_order structures attached to each .     section of the BFD.  *} .  bfd_boolean (*_bfd_final_link) (bfd *, struct bfd_link_info *); . .  {* Should this section be split up into smaller pieces during linking.  *} .  bfd_boolean (*_bfd_link_split_section) (bfd *, struct bfd_section *); . .  {* Remove sections that are not referenced from the output.  *} .  bfd_boolean (*_bfd_gc_sections) (bfd *, struct bfd_link_info *); . .  {* Attempt to merge SEC_MERGE sections.  *} .  bfd_boolean (*_bfd_merge_sections) (bfd *, struct bfd_link_info *); . .  {* Is this section a member of a group?  *} .  bfd_boolean (*_bfd_is_group_section) (bfd *, const struct bfd_section *); . .  {* Discard members of a group.  *} .  bfd_boolean (*_bfd_discard_group) (bfd *, struct bfd_section *); . .  {* Check if SEC has been already linked during a reloceatable or .     final link.  *} .  void (*_section_already_linked) (bfd *, struct bfd_section *); . .  {* Routines to handle dynamic symbols and relocs.  *} .#define BFD_JUMP_TABLE_DYNAMIC(NAME) \ .  NAME##_get_dynamic_symtab_upper_bound, \ .  NAME##_canonicalize_dynamic_symtab, \ .  NAME##_get_synthetic_symtab, \ .  NAME##_get_dynamic_reloc_upper_bound, \ .  NAME##_canonicalize_dynamic_reloc . .  {* Get the amount of memory required to hold the dynamic symbols.  *} .  long        (*_bfd_get_dynamic_symtab_upper_bound) (bfd *); .  {* Read in the dynamic symbols.  *} .  long        (*_bfd_canonicalize_dynamic_symtab) .    (bfd *, struct bfd_symbol **); .  {* Create synthetized symbols.  *} .  long        (*_bfd_get_synthetic_symtab) .    (bfd *, long, struct bfd_symbol **, long, struct bfd_symbol **, .     struct bfd_symbol **); .  {* Get the amount of memory required to hold the dynamic relocs.  *} .  long        (*_bfd_get_dynamic_reloc_upper_bound) (bfd *); .  {* Read in the dynamic relocs.  *} .  long        (*_bfd_canonicalize_dynamic_reloc) .    (bfd *, arelent **, struct bfd_symbol **); .  A pointer to an alternative bfd_target in case the current one is not satisfactory.  This can happen when the target cpu supports both big and little endian code, and target chosen by the linker has the wrong endianness.  The function open_output() in ld/ldlang.c uses this field to find an alternative output format that is suitable.  .  {* Opposite endian version of this target.  *} .  const struct bfd_target * alternative_target; .  .  {* Data for use by back-end routines, which isn't .     generic enough to belong in this structure.  *} .  const void *backend_data; . .} bfd_target; . */
 end_comment
 
 begin_comment
 comment|/* All known xvecs (even those that don't compile on all systems).    Alphabetized for easy reference.    They are listed a second time below, since    we can't intermix extern's and initializers.  */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|bfd_target
-name|a29kcoff_big_vec
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -251,6 +247,22 @@ begin_decl_stmt
 specifier|extern
 specifier|const
 name|bfd_target
+name|bfd_elf32_bfin_vec
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|bfd_target
+name|bfd_elf32_bfinfdpic_vec
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|bfd_target
 name|bfd_elf32_big_generic_vec
 decl_stmt|;
 end_decl_stmt
@@ -267,7 +279,7 @@ begin_decl_stmt
 specifier|extern
 specifier|const
 name|bfd_target
-name|bfd_elf32_bigarm_oabi_vec
+name|bfd_elf32_bigarm_vec
 decl_stmt|;
 end_decl_stmt
 
@@ -275,7 +287,15 @@ begin_decl_stmt
 specifier|extern
 specifier|const
 name|bfd_target
-name|bfd_elf32_bigarm_vec
+name|bfd_elf32_bigarm_symbian_vec
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|bfd_target
+name|bfd_elf32_bigarm_vxworks_vec
 decl_stmt|;
 end_decl_stmt
 
@@ -291,7 +311,31 @@ begin_decl_stmt
 specifier|extern
 specifier|const
 name|bfd_target
+name|bfd_elf32_bigmips_vxworks_vec
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|bfd_target
+name|bfd_elf32_cr16c_vec
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|bfd_target
 name|bfd_elf32_cris_vec
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|bfd_target
+name|bfd_elf32_crx_vec
 decl_stmt|;
 end_decl_stmt
 
@@ -395,6 +439,14 @@ begin_decl_stmt
 specifier|extern
 specifier|const
 name|bfd_target
+name|bfd_elf32_i386_vxworks_vec
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|bfd_target
 name|bfd_elf32_i386_vec
 decl_stmt|;
 end_decl_stmt
@@ -475,14 +527,6 @@ begin_decl_stmt
 specifier|extern
 specifier|const
 name|bfd_target
-name|bfd_elf32_littlearm_oabi_vec
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|bfd_target
 name|bfd_elf32_littlearm_vec
 decl_stmt|;
 end_decl_stmt
@@ -491,7 +535,39 @@ begin_decl_stmt
 specifier|extern
 specifier|const
 name|bfd_target
+name|bfd_elf32_littlearm_symbian_vec
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|bfd_target
+name|bfd_elf32_littlearm_vxworks_vec
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|bfd_target
 name|bfd_elf32_littlemips_vec
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|bfd_target
+name|bfd_elf32_littlemips_vxworks_vec
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|bfd_target
+name|bfd_elf32_m32c_vec
 decl_stmt|;
 end_decl_stmt
 
@@ -595,6 +671,14 @@ begin_decl_stmt
 specifier|extern
 specifier|const
 name|bfd_target
+name|bfd_elf32_mt_vec
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|bfd_target
 name|bfd_elf32_msp430_vec
 decl_stmt|;
 end_decl_stmt
@@ -683,6 +767,14 @@ begin_decl_stmt
 specifier|extern
 specifier|const
 name|bfd_target
+name|bfd_elf32_powerpc_vxworks_vec
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|bfd_target
 name|bfd_elf32_s390_vec
 decl_stmt|;
 end_decl_stmt
@@ -763,6 +855,14 @@ begin_decl_stmt
 specifier|extern
 specifier|const
 name|bfd_target
+name|bfd_elf32_shl_symbian_vec
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|bfd_target
 name|bfd_elf32_shlin_vec
 decl_stmt|;
 end_decl_stmt
@@ -788,6 +888,14 @@ specifier|extern
 specifier|const
 name|bfd_target
 name|bfd_elf32_sparc_vec
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|bfd_target
+name|bfd_elf32_sparc_vxworks_vec
 decl_stmt|;
 end_decl_stmt
 
@@ -828,6 +936,14 @@ specifier|extern
 specifier|const
 name|bfd_target
 name|bfd_elf32_vax_vec
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|bfd_target
+name|bfd_elf32_xc16x_vec
 decl_stmt|;
 end_decl_stmt
 
@@ -1387,22 +1503,6 @@ begin_decl_stmt
 specifier|extern
 specifier|const
 name|bfd_target
-name|m68klynx_aout_vec
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|bfd_target
-name|m68klynx_coff_vec
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|bfd_target
 name|m68knetbsd_vec
 decl_stmt|;
 end_decl_stmt
@@ -1435,6 +1535,14 @@ begin_decl_stmt
 specifier|extern
 specifier|const
 name|bfd_target
+name|m88kopenbsd_vec
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|bfd_target
 name|mach_o_be_vec
 decl_stmt|;
 end_decl_stmt
@@ -1452,6 +1560,14 @@ specifier|extern
 specifier|const
 name|bfd_target
 name|mach_o_fat_vec
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|bfd_target
+name|maxqcoff_vec
 decl_stmt|;
 end_decl_stmt
 
@@ -1947,6 +2063,14 @@ begin_decl_stmt
 specifier|extern
 specifier|const
 name|bfd_target
+name|z80coff_vec
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|bfd_target
 name|z8kcoff_vec
 decl_stmt|;
 end_decl_stmt
@@ -2123,9 +2247,6 @@ endif|#
 directive|endif
 comment|/* This list is alphabetized to make it easy to compare 	   with other vector lists -- the decls above and 	   the case statement in configure.in. 	   Vectors that don't compile on all systems, or aren't finished, 	   should have an entry here with #if 0 around it, to show that 	   it wasn't omitted by mistake.  */
 operator|&
-name|a29kcoff_big_vec
-block|,
-operator|&
 name|a_out_adobe_vec
 block|,
 ifdef|#
@@ -2213,6 +2334,12 @@ directive|endif
 operator|&
 name|bfd_elf32_avr_vec
 block|,
+operator|&
+name|bfd_elf32_bfin_vec
+block|,
+operator|&
+name|bfd_elf32_bfinfdpic_vec
+block|,
 comment|/* This, and other vectors, may not be used in any *.mt configuration. 	   But that does not mean they are unnecessary.  If configured with 	   --enable-targets=all, objdump or gdb should be able to examine 	   the file even if we don't recognize the machine type.  */
 operator|&
 name|bfd_elf32_big_generic_vec
@@ -2221,16 +2348,28 @@ operator|&
 name|bfd_elf32_bigarc_vec
 block|,
 operator|&
-name|bfd_elf32_bigarm_oabi_vec
+name|bfd_elf32_bigarm_vec
 block|,
 operator|&
-name|bfd_elf32_bigarm_vec
+name|bfd_elf32_bigarm_symbian_vec
+block|,
+operator|&
+name|bfd_elf32_bigarm_vxworks_vec
 block|,
 operator|&
 name|bfd_elf32_bigmips_vec
 block|,
 operator|&
+name|bfd_elf32_bigmips_vxworks_vec
+block|,
+operator|&
+name|bfd_elf32_cr16c_vec
+block|,
+operator|&
 name|bfd_elf32_cris_vec
+block|,
+operator|&
+name|bfd_elf32_crx_vec
 block|,
 operator|&
 name|bfd_elf32_d10v_vec
@@ -2269,6 +2408,9 @@ operator|&
 name|bfd_elf32_i386_freebsd_vec
 block|,
 operator|&
+name|bfd_elf32_i386_vxworks_vec
+block|,
+operator|&
 name|bfd_elf32_i386_vec
 block|,
 operator|&
@@ -2286,9 +2428,14 @@ literal|0
 block|&bfd_elf32_ia64_big_vec,
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|BFD64
 operator|&
 name|bfd_elf32_ia64_hpux_big_vec
 block|,
+endif|#
+directive|endif
 operator|&
 name|bfd_elf32_ip2k_vec
 block|,
@@ -2302,13 +2449,22 @@ operator|&
 name|bfd_elf32_littlearc_vec
 block|,
 operator|&
-name|bfd_elf32_littlearm_oabi_vec
-block|,
-operator|&
 name|bfd_elf32_littlearm_vec
 block|,
 operator|&
+name|bfd_elf32_littlearm_symbian_vec
+block|,
+operator|&
+name|bfd_elf32_littlearm_vxworks_vec
+block|,
+operator|&
 name|bfd_elf32_littlemips_vec
+block|,
+operator|&
+name|bfd_elf32_littlemips_vxworks_vec
+block|,
+operator|&
+name|bfd_elf32_m32c_vec
 block|,
 operator|&
 name|bfd_elf32_m32r_vec
@@ -2347,6 +2503,9 @@ operator|&
 name|bfd_elf32_mn10300_vec
 block|,
 operator|&
+name|bfd_elf32_mt_vec
+block|,
+operator|&
 name|bfd_elf32_msp430_vec
 block|,
 ifdef|#
@@ -2382,6 +2541,9 @@ operator|&
 name|bfd_elf32_powerpc_vec
 block|,
 operator|&
+name|bfd_elf32_powerpc_vxworks_vec
+block|,
+operator|&
 name|bfd_elf32_powerpcle_vec
 block|,
 operator|&
@@ -2395,6 +2557,9 @@ name|bfd_elf32_shblin_vec
 block|,
 operator|&
 name|bfd_elf32_shl_vec
+block|,
+operator|&
+name|bfd_elf32_shl_symbian_vec
 block|,
 operator|&
 name|bfd_elf32_shlin_vec
@@ -2432,6 +2597,9 @@ operator|&
 name|bfd_elf32_sparc_vec
 block|,
 operator|&
+name|bfd_elf32_sparc_vxworks_vec
+block|,
+operator|&
 name|bfd_elf32_tradbigmips_vec
 block|,
 operator|&
@@ -2445,6 +2613,9 @@ name|bfd_elf32_v850_vec
 block|,
 operator|&
 name|bfd_elf32_vax_vec
+block|,
+operator|&
+name|bfd_elf32_xc16x_vec
 block|,
 operator|&
 name|bfd_elf32_xstormy16_vec
@@ -2688,12 +2859,6 @@ block|&m68klinux_vec,
 endif|#
 directive|endif
 operator|&
-name|m68klynx_aout_vec
-block|,
-operator|&
-name|m68klynx_coff_vec
-block|,
-operator|&
 name|m68knetbsd_vec
 block|,
 operator|&
@@ -2706,6 +2871,9 @@ operator|&
 name|m88kmach3_vec
 block|,
 operator|&
+name|m88kopenbsd_vec
+block|,
+operator|&
 name|mach_o_be_vec
 block|,
 operator|&
@@ -2713,6 +2881,9 @@ name|mach_o_le_vec
 block|,
 operator|&
 name|mach_o_fat_vec
+block|,
+operator|&
+name|maxqcoff_vec
 block|,
 operator|&
 name|mcore_pe_big_vec
@@ -2924,6 +3095,9 @@ name|w65_vec
 block|,
 operator|&
 name|we32kcoff_vec
+block|,
+operator|&
+name|z80coff_vec
 block|,
 operator|&
 name|z8kcoff_vec

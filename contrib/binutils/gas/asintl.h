@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* asintl.h - gas-specific header for gettext code.    Copyright 1998, 1999, 2000 Free Software Foundation, Inc.     Written by Tom Tromey<tromey@cygnus.com>     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* asintl.h - gas-specific header for gettext code.    Copyright 1998, 1999, 2000, 2005 Free Software Foundation, Inc.     Written by Tom Tromey<tromey@cygnus.com>     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_ifdef
@@ -8,6 +8,33 @@ ifdef|#
 directive|ifdef
 name|HAVE_LOCALE_H
 end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ENABLE_NLS
+end_ifndef
+
+begin_comment
+comment|/* The Solaris version of locale.h always includes libintl.h.  If we have       been configured with --disable-nls then ENABLE_NLS will not be defined       and the dummy definitions of bindtextdomain (et al) below will conflict       with the defintions in libintl.h.  So we define these values to prevent       the bogus inclusion of libintl.h.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_LIBINTL_H
+end_define
+
+begin_define
+define|#
+directive|define
+name|_LIBGETTEXT_H
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#

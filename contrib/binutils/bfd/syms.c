@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generic symbol-table support for the BFD library.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002, 2003    Free Software Foundation, Inc.    Written by Cygnus Support.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generic symbol-table support for the BFD library.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002, 2003, 2004    Free Software Foundation, Inc.    Written by Cygnus Support.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -93,6 +93,8 @@ name|BSF_GLOBAL
 operator||
 name|BSF_WEAK
 operator||
+name|BSF_FILE
+operator||
 name|BSF_SECTION_SYM
 operator|)
 operator|)
@@ -128,6 +130,10 @@ end_function
 
 begin_comment
 comment|/* FUNCTION 	bfd_is_local_label_name  SYNOPSIS         bfd_boolean bfd_is_local_label_name (bfd *abfd, const char *name);  DESCRIPTION 	Return TRUE if a symbol with the name @var{name} in the BFD 	@var{abfd} is a compiler generated local label, else return 	FALSE.  This just checks whether the name has the form of a 	local label.  .#define bfd_is_local_label_name(abfd, name) \ .  BFD_SEND (abfd, _bfd_is_local_label_name, (abfd, name)) . */
+end_comment
+
+begin_comment
+comment|/* FUNCTION 	bfd_is_target_special_symbol  SYNOPSIS         bfd_boolean bfd_is_target_special_symbol (bfd *abfd, asymbol *sym);  DESCRIPTION 	Return TRUE iff a symbol @var{sym} in the BFD @var{abfd} is something 	special to the particular target represented by the BFD.  Such symbols 	should normally not be mentioned to the user.  .#define bfd_is_target_special_symbol(abfd, sym) \ .  BFD_SEND (abfd, _bfd_is_target_special_symbol, (abfd, sym)) . */
 end_comment
 
 begin_comment
@@ -1692,19 +1698,47 @@ return|;
 block|}
 name|stabsize
 operator|=
+operator|(
 name|info
 operator|->
 name|stabsec
 operator|->
-name|_raw_size
+name|rawsize
+condition|?
+name|info
+operator|->
+name|stabsec
+operator|->
+name|rawsize
+else|:
+name|info
+operator|->
+name|stabsec
+operator|->
+name|size
+operator|)
 expr_stmt|;
 name|strsize
 operator|=
+operator|(
 name|info
 operator|->
 name|strsec
 operator|->
-name|_raw_size
+name|rawsize
+condition|?
+name|info
+operator|->
+name|strsec
+operator|->
+name|rawsize
+else|:
+name|info
+operator|->
+name|strsec
+operator|->
+name|size
+operator|)
 expr_stmt|;
 block|}
 else|else
@@ -1805,19 +1839,47 @@ return|;
 block|}
 name|stabsize
 operator|=
+operator|(
 name|info
 operator|->
 name|stabsec
 operator|->
-name|_raw_size
+name|rawsize
+condition|?
+name|info
+operator|->
+name|stabsec
+operator|->
+name|rawsize
+else|:
+name|info
+operator|->
+name|stabsec
+operator|->
+name|size
+operator|)
 expr_stmt|;
 name|strsize
 operator|=
+operator|(
 name|info
 operator|->
 name|strsec
 operator|->
-name|_raw_size
+name|rawsize
+condition|?
+name|info
+operator|->
+name|strsec
+operator|->
+name|rawsize
+else|:
+name|info
+operator|->
+name|strsec
+operator|->
+name|size
+operator|)
 expr_stmt|;
 name|info
 operator|->
@@ -1873,9 +1935,6 @@ name|info
 operator|->
 name|stabs
 argument_list|,
-operator|(
-name|bfd_vma
-operator|)
 literal|0
 argument_list|,
 name|stabsize
@@ -1894,9 +1953,6 @@ name|info
 operator|->
 name|strs
 argument_list|,
-operator|(
-name|bfd_vma
-operator|)
 literal|0
 argument_list|,
 name|strsize
@@ -2027,6 +2083,18 @@ operator|=
 operator|*
 name|pr
 expr_stmt|;
+comment|/* Ignore R_*_NONE relocs.  */
+if|if
+condition|(
+name|r
+operator|->
+name|howto
+operator|->
+name|dst_mask
+operator|==
+literal|0
+condition|)
+continue|continue;
 if|if
 condition|(
 name|r

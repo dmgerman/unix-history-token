@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* dllwrap.c -- wrapper for DLLTOOL and GCC to generate PE style DLLs    Copyright 1998, 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.    Contributed by Mumit Khan (khan@xraylith.wisc.edu).     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* dllwrap.c -- wrapper for DLLTOOL and GCC to generate PE style DLLs    Copyright 1998, 1999, 2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.    Contributed by Mumit Khan (khan@xraylith.wisc.edu).     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -94,33 +94,11 @@ directive|include
 file|<sys/stat.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ANSI_PROTOTYPES
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<stdarg.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<varargs.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -466,7 +444,7 @@ begin_decl_stmt
 specifier|static
 name|char
 modifier|*
-name|program_name
+name|prog_name
 decl_stmt|;
 end_decl_stmt
 
@@ -610,36 +588,47 @@ modifier|*
 parameter_list|,
 name|va_list
 parameter_list|)
-function_decl|;
+function_decl|ATTRIBUTE_PRINTF
+parameter_list|(
+function_decl|1
+operator|,
+function_decl|0
 end_function_decl
 
-begin_function_decl
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_decl_stmt
 specifier|static
 name|void
 name|inform
-parameter_list|(
+argument_list|(
 specifier|const
 name|char
-modifier|*
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+argument_list|,
+operator|...
+argument_list|)
+name|ATTRIBUTE_PRINTF_1
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
 name|warn
-parameter_list|(
+argument_list|(
 specifier|const
 name|char
-modifier|*
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+argument_list|,
+operator|...
+argument_list|)
+name|ATTRIBUTE_PRINTF_1
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -717,7 +706,7 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|program_name
+name|prog_name
 operator|!=
 name|NULL
 condition|)
@@ -727,7 +716,7 @@ name|stderr
 argument_list|,
 literal|"%s: "
 argument_list|,
-name|program_name
+name|prog_name
 argument_list|)
 expr_stmt|;
 name|vfprintf
@@ -1036,20 +1025,25 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|prog_name
+name|name
 parameter_list|)
 block|{
 name|char
 modifier|*
 name|cmd
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|dash
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|slash
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|cp
 decl_stmt|;
@@ -1065,7 +1059,7 @@ for|for
 control|(
 name|cp
 operator|=
-name|program_name
+name|prog_name
 init|;
 operator|*
 name|cp
@@ -1143,24 +1137,22 @@ name|dash
 operator|!=
 name|NULL
 condition|)
-block|{
-comment|/* First, try looking for a prefixed PROG_NAME in the          PROGRAM_NAME directory, with the same prefix as PROGRAM_NAME.  */
+comment|/* First, try looking for a prefixed NAME in the        PROG_NAME directory, with the same prefix as PROG_NAME.  */
 name|cmd
 operator|=
 name|look_for_prog
 argument_list|(
-name|prog_name
+name|name
 argument_list|,
-name|program_name
+name|prog_name
 argument_list|,
 name|dash
 operator|-
-name|program_name
+name|prog_name
 operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|slash
@@ -1171,40 +1163,36 @@ name|cmd
 operator|==
 name|NULL
 condition|)
-block|{
-comment|/* Next, try looking for a PROG_NAME in the same directory as          that of this program.  */
+comment|/* Next, try looking for a NAME in the same directory as        that of this program.  */
 name|cmd
 operator|=
 name|look_for_prog
 argument_list|(
-name|prog_name
+name|name
 argument_list|,
-name|program_name
+name|prog_name
 argument_list|,
 name|slash
 operator|-
-name|program_name
+name|prog_name
 operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|cmd
 operator|==
 name|NULL
 condition|)
-block|{
-comment|/* Just return PROG_NAME as is.  */
+comment|/* Just return NAME as is.  */
 name|cmd
 operator|=
 name|xstrdup
 argument_list|(
-name|prog_name
+name|name
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 name|cmd
 return|;
@@ -1676,7 +1664,7 @@ operator|*
 operator|)
 name|argv
 argument_list|,
-name|program_name
+name|prog_name
 argument_list|,
 name|temp_base
 argument_list|,
@@ -1710,7 +1698,7 @@ name|stderr
 argument_list|,
 literal|"%s: "
 argument_list|,
-name|program_name
+name|prog_name
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -2042,7 +2030,7 @@ argument_list|(
 literal|"Usage %s<option(s)><object-file(s)>\n"
 argument_list|)
 argument_list|,
-name|program_name
+name|prog_name
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -2052,6 +2040,16 @@ argument_list|,
 name|_
 argument_list|(
 literal|"  Generic options:\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|file
+argument_list|,
+name|_
+argument_list|(
+literal|"   @<file>                Read options from<file>\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2104,7 +2102,7 @@ argument_list|(
 literal|"  Options for %s:\n"
 argument_list|)
 argument_list|,
-name|program_name
+name|prog_name
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -3062,7 +3060,7 @@ name|image_base_str
 init|=
 literal|0
 decl_stmt|;
-name|program_name
+name|prog_name
 operator|=
 name|argv
 index|[
@@ -3114,6 +3112,15 @@ expr_stmt|;
 name|textdomain
 argument_list|(
 name|PACKAGE
+argument_list|)
+expr_stmt|;
+name|expandargv
+argument_list|(
+operator|&
+name|argc
+argument_list|,
+operator|&
+name|argv
 argument_list|)
 expr_stmt|;
 name|saved_argv
@@ -3348,7 +3355,7 @@ name|OPTION_VERSION
 case|:
 name|print_version
 argument_list|(
-name|program_name
+name|prog_name
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3638,7 +3645,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* sanity checks.  */
+comment|/* Sanity checks.  */
 if|if
 condition|(
 operator|!
@@ -3791,7 +3798,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* set the target platform.  */
+comment|/* Set the target platform.  */
 if|if
 condition|(
 name|strstr
@@ -3824,7 +3831,7 @@ name|which_target
 operator|=
 name|UNKNOWN_TARGET
 expr_stmt|;
-comment|/* re-create the command lines as a string, taking care to quote stuff.  */
+comment|/* Re-create the command lines as a string, taking care to quote stuff.  */
 name|dlltool_cmdline
 operator|=
 name|dyn_string_new
@@ -3836,7 +3843,6 @@ if|if
 condition|(
 name|verbose
 condition|)
-block|{
 name|dyn_string_append_cstr
 argument_list|(
 name|dlltool_cmdline
@@ -3844,7 +3850,6 @@ argument_list|,
 literal|" -v"
 argument_list|)
 expr_stmt|;
-block|}
 name|dyn_string_append_cstr
 argument_list|(
 name|dlltool_cmdline
@@ -4273,7 +4278,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*    * Step pre-1. If no --def<EXPORT_DEF> is specified, then create it    * and then pass it on.    */
+comment|/* Step pre-1. If no --def<EXPORT_DEF> is specified,      then create it and then pass it on.  */
 if|if
 condition|(
 operator|!
@@ -4560,7 +4565,7 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*    * Step 1. Call GCC/LD to create base relocation file. If using GCC, the    * driver command line will look like the following:    *    *    % gcc -Wl,--dll --Wl,--base-file,foo.base [rest of command line]    *    * If the user does not specify a base name, create temporary one that    * is deleted at exit.    *    */
+comment|/* Step 1. Call GCC/LD to create base relocation file. If using GCC, the      driver command line will look like the following:              % gcc -Wl,--dll --Wl,--base-file,foo.base [rest of command line]           If the user does not specify a base name, create temporary one that      is deleted at exit.  */
 if|if
 condition|(
 operator|!
@@ -4743,7 +4748,7 @@ name|step1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*    * Step 2. generate the exp file by running dlltool.    * dlltool command line will look like the following:    *    *    % dlltool -Wl,--dll --Wl,--base-file,foo.base [rest of command line]    *    * If the user does not specify a base name, create temporary one that    * is deleted at exit.    *    */
+comment|/* Step 2. generate the exp file by running dlltool.      dlltool command line will look like the following:              % dlltool -Wl,--dll --Wl,--base-file,foo.base [rest of command line]           If the user does not specify a base name, create temporary one that      is deleted at exit.  */
 if|if
 condition|(
 operator|!
@@ -4768,9 +4773,14 @@ operator|(
 name|p
 operator|)
 condition|?
+call|(
+name|size_t
+call|)
+argument_list|(
 name|p
 operator|-
 name|dll_name
+argument_list|)
 else|:
 name|strlen
 argument_list|(

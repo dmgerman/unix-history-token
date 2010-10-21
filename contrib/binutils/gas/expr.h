@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* expr.h -> header file for expr.c    Copyright 1987, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* expr.h -> header file for expr.c    Copyright 1987, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2002, 2003 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -231,6 +231,19 @@ name|expressionS
 typedef|;
 end_typedef
 
+begin_enum
+enum|enum
+name|expr_mode
+block|{
+name|expr_evaluate
+block|,
+name|expr_normal
+block|,
+name|expr_defer
+block|}
+enum|;
+end_enum
+
 begin_comment
 comment|/* "result" should be type (expressionS *).  */
 end_comment
@@ -242,7 +255,27 @@ name|expression
 parameter_list|(
 name|result
 parameter_list|)
-value|expr (0, result)
+value|expr (0, result, expr_normal)
+end_define
+
+begin_define
+define|#
+directive|define
+name|expression_and_evaluate
+parameter_list|(
+name|result
+parameter_list|)
+value|expr (0, result, expr_evaluate)
+end_define
+
+begin_define
+define|#
+directive|define
+name|deferred_expression
+parameter_list|(
+name|result
+parameter_list|)
+value|expr (0, result, expr_defer)
 end_define
 
 begin_comment
@@ -326,11 +359,12 @@ name|segT
 name|expr
 parameter_list|(
 name|int
-name|rank
 parameter_list|,
 name|expressionS
 modifier|*
-name|resultP
+parameter_list|,
+name|enum
+name|expr_mode
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -393,40 +427,19 @@ begin_function_decl
 specifier|extern
 name|symbolS
 modifier|*
-name|expr_build_unary
-parameter_list|(
-name|operatorT
-parameter_list|,
-name|symbolS
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|symbolS
-modifier|*
-name|expr_build_binary
-parameter_list|(
-name|operatorT
-parameter_list|,
-name|symbolS
-modifier|*
-parameter_list|,
-name|symbolS
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|symbolS
-modifier|*
 name|expr_build_dot
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|resolve_expression
+parameter_list|(
+name|expressionS
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

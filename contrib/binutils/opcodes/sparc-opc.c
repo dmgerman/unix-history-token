@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Table of opcodes for the sparc.    Copyright 1989, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2002, 2004    Free Software Foundation, Inc.  This file is part of the BFD library.  BFD is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  BFD is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this software; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.	*/
+comment|/* Table of opcodes for the sparc.    Copyright 1989, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2002, 2004, 2005    Free Software Foundation, Inc.     This file is part of the BFD library.     BFD is free software; you can redistribute it and/or modify it under    the terms of the GNU General Public License as published by the Free    Software Foundation; either version 2, or (at your option) any later    version.     BFD is distributed in the hope that it will be useful, but WITHOUT ANY    WARRANTY; without even the implied warranty of MERCHANTABILITY or    FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License    for more details.     You should have received a copy of the GNU General Public License    along with this software; see the file COPYING.  If not, write to    the Free Software Foundation, 51 Franklin Street - Fifth Floor,    Boston, MA 02110-1301, USA.	*/
 end_comment
 
 begin_comment
@@ -97,7 +97,7 @@ value|(MASK_V6 | MASK_V7 | MASK_V8 | MASK_SPARCLET \ 			 | MASK_SPARCLITE | MASK
 end_define
 
 begin_comment
-comment|/* v6 insns not supported on the sparclet */
+comment|/* v6 insns not supported on the sparclet.  */
 end_comment
 
 begin_define
@@ -161,7 +161,7 @@ value|(MASK_V9B)
 end_define
 
 begin_comment
-comment|/* v6 insns not supported by v9 */
+comment|/* v6 insns not supported by v9.  */
 end_comment
 
 begin_define
@@ -172,7 +172,7 @@ value|(MASK_V6 | MASK_V7 | MASK_V8 \ 			 | MASK_SPARCLET | MASK_SPARCLITE)
 end_define
 
 begin_comment
-comment|/* v9a instructions which would appear to be aliases to v9's impdep's    otherwise */
+comment|/* v9a instructions which would appear to be aliases to v9's impdep's    otherwise.  */
 end_comment
 
 begin_define
@@ -305,13 +305,11 @@ name|enum
 name|sparc_opcode_arch_val
 name|sparc_opcode_lookup_arch
 parameter_list|(
-name|name
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|struct
@@ -336,7 +334,6 @@ condition|;
 operator|++
 name|p
 control|)
-block|{
 if|if
 condition|(
 name|strcmp
@@ -365,7 +362,6 @@ literal|0
 index|]
 operator|)
 return|;
-block|}
 return|return
 name|SPARC_OPCODE_ARCH_BAD
 return|;
@@ -386,7 +382,7 @@ name|COND
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x)&0xf)<<25)
+value|(((x)& 0xf)<< 25)
 end_define
 
 begin_comment
@@ -402,7 +398,7 @@ name|x
 parameter_list|,
 name|i_or_f
 parameter_list|)
-value|((((i_or_f)&1)<<18)|(((x)>>11)&(0xf<<14)))
+value|((((i_or_f)& 1)<< 18) | (((x)>> 11)& (0xf<< 14)))
 end_define
 
 begin_comment
@@ -420,7 +416,7 @@ name|RCOND
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x)&0x7)<<10)
+value|(((x)& 0x7)<< 10)
 end_define
 
 begin_comment
@@ -431,112 +427,112 @@ begin_define
 define|#
 directive|define
 name|CONDA
-value|(COND(0x8))
+value|(COND (0x8))
 end_define
 
 begin_define
 define|#
 directive|define
 name|CONDCC
-value|(COND(0xd))
+value|(COND (0xd))
 end_define
 
 begin_define
 define|#
 directive|define
 name|CONDCS
-value|(COND(0x5))
+value|(COND (0x5))
 end_define
 
 begin_define
 define|#
 directive|define
 name|CONDE
-value|(COND(0x1))
+value|(COND (0x1))
 end_define
 
 begin_define
 define|#
 directive|define
 name|CONDG
-value|(COND(0xa))
+value|(COND (0xa))
 end_define
 
 begin_define
 define|#
 directive|define
 name|CONDGE
-value|(COND(0xb))
+value|(COND (0xb))
 end_define
 
 begin_define
 define|#
 directive|define
 name|CONDGU
-value|(COND(0xc))
+value|(COND (0xc))
 end_define
 
 begin_define
 define|#
 directive|define
 name|CONDL
-value|(COND(0x3))
+value|(COND (0x3))
 end_define
 
 begin_define
 define|#
 directive|define
 name|CONDLE
-value|(COND(0x2))
+value|(COND (0x2))
 end_define
 
 begin_define
 define|#
 directive|define
 name|CONDLEU
-value|(COND(0x4))
+value|(COND (0x4))
 end_define
 
 begin_define
 define|#
 directive|define
 name|CONDN
-value|(COND(0x0))
+value|(COND (0x0))
 end_define
 
 begin_define
 define|#
 directive|define
 name|CONDNE
-value|(COND(0x9))
+value|(COND (0x9))
 end_define
 
 begin_define
 define|#
 directive|define
 name|CONDNEG
-value|(COND(0x6))
+value|(COND (0x6))
 end_define
 
 begin_define
 define|#
 directive|define
 name|CONDPOS
-value|(COND(0xe))
+value|(COND (0xe))
 end_define
 
 begin_define
 define|#
 directive|define
 name|CONDVC
-value|(COND(0xf))
+value|(COND (0xf))
 end_define
 
 begin_define
 define|#
 directive|define
 name|CONDVS
-value|(COND(0x7))
+value|(COND (0x7))
 end_define
 
 begin_define
@@ -571,112 +567,112 @@ begin_define
 define|#
 directive|define
 name|FCONDA
-value|(COND(0x8))
+value|(COND (0x8))
 end_define
 
 begin_define
 define|#
 directive|define
 name|FCONDE
-value|(COND(0x9))
+value|(COND (0x9))
 end_define
 
 begin_define
 define|#
 directive|define
 name|FCONDG
-value|(COND(0x6))
+value|(COND (0x6))
 end_define
 
 begin_define
 define|#
 directive|define
 name|FCONDGE
-value|(COND(0xb))
+value|(COND (0xb))
 end_define
 
 begin_define
 define|#
 directive|define
 name|FCONDL
-value|(COND(0x4))
+value|(COND (0x4))
 end_define
 
 begin_define
 define|#
 directive|define
 name|FCONDLE
-value|(COND(0xd))
+value|(COND (0xd))
 end_define
 
 begin_define
 define|#
 directive|define
 name|FCONDLG
-value|(COND(0x2))
+value|(COND (0x2))
 end_define
 
 begin_define
 define|#
 directive|define
 name|FCONDN
-value|(COND(0x0))
+value|(COND (0x0))
 end_define
 
 begin_define
 define|#
 directive|define
 name|FCONDNE
-value|(COND(0x1))
+value|(COND (0x1))
 end_define
 
 begin_define
 define|#
 directive|define
 name|FCONDO
-value|(COND(0xf))
+value|(COND (0xf))
 end_define
 
 begin_define
 define|#
 directive|define
 name|FCONDU
-value|(COND(0x7))
+value|(COND (0x7))
 end_define
 
 begin_define
 define|#
 directive|define
 name|FCONDUE
-value|(COND(0xa))
+value|(COND (0xa))
 end_define
 
 begin_define
 define|#
 directive|define
 name|FCONDUG
-value|(COND(0x5))
+value|(COND (0x5))
 end_define
 
 begin_define
 define|#
 directive|define
 name|FCONDUGE
-value|(COND(0xc))
+value|(COND (0xc))
 end_define
 
 begin_define
 define|#
 directive|define
 name|FCONDUL
-value|(COND(0x3))
+value|(COND (0x3))
 end_define
 
 begin_define
 define|#
 directive|define
 name|FCONDULE
-value|(COND(0xe))
+value|(COND (0xe))
 end_define
 
 begin_define
@@ -708,7 +704,7 @@ begin_define
 define|#
 directive|define
 name|XCC
-value|(1<<12)
+value|(1<< 12)
 end_define
 
 begin_comment
@@ -722,7 +718,7 @@ name|FCC
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x)&0x3)<<11)
+value|(((x)& 0x3)<< 11)
 end_define
 
 begin_comment
@@ -736,7 +732,7 @@ name|FBFCC
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x)&0x3)<<20)
+value|(((x)& 0x3)<< 20)
 end_define
 
 begin_comment
@@ -747,7 +743,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* The order of the opcodes in the table is significant: 	 	* The assembler requires that all instances of the same mnemonic must 	be consecutive.	If they aren't, the assembler will bomb at runtime.  	* The disassembler should not care about the order of the opcodes.  */
+comment|/* The order of the opcodes in the table is significant:  	* The assembler requires that all instances of the same mnemonic must 	be consecutive.	If they aren't, the assembler will bomb at runtime.  	* The disassembler should not care about the order of the opcodes.  */
 end_comment
 
 begin_comment
@@ -16686,6 +16682,206 @@ name|v9
 block|}
 block|,
 block|{
+literal|"allclean"
+block|,
+name|F3
+argument_list|(
+literal|2
+argument_list|,
+literal|0x31
+argument_list|,
+literal|0
+argument_list|)
+operator||
+name|RD
+argument_list|(
+literal|2
+argument_list|)
+block|,
+name|F3
+argument_list|(
+operator|~
+literal|2
+argument_list|,
+operator|~
+literal|0x31
+argument_list|,
+operator|~
+literal|0
+argument_list|)
+operator||
+name|RD
+argument_list|(
+operator|~
+literal|2
+argument_list|)
+operator||
+name|RS1_G0
+operator||
+name|SIMM13
+argument_list|(
+operator|~
+literal|0
+argument_list|)
+block|,
+literal|""
+block|,
+literal|0
+block|,
+name|v9
+block|}
+block|,
+block|{
+literal|"otherw"
+block|,
+name|F3
+argument_list|(
+literal|2
+argument_list|,
+literal|0x31
+argument_list|,
+literal|0
+argument_list|)
+operator||
+name|RD
+argument_list|(
+literal|3
+argument_list|)
+block|,
+name|F3
+argument_list|(
+operator|~
+literal|2
+argument_list|,
+operator|~
+literal|0x31
+argument_list|,
+operator|~
+literal|0
+argument_list|)
+operator||
+name|RD
+argument_list|(
+operator|~
+literal|3
+argument_list|)
+operator||
+name|RS1_G0
+operator||
+name|SIMM13
+argument_list|(
+operator|~
+literal|0
+argument_list|)
+block|,
+literal|""
+block|,
+literal|0
+block|,
+name|v9
+block|}
+block|,
+block|{
+literal|"normalw"
+block|,
+name|F3
+argument_list|(
+literal|2
+argument_list|,
+literal|0x31
+argument_list|,
+literal|0
+argument_list|)
+operator||
+name|RD
+argument_list|(
+literal|4
+argument_list|)
+block|,
+name|F3
+argument_list|(
+operator|~
+literal|2
+argument_list|,
+operator|~
+literal|0x31
+argument_list|,
+operator|~
+literal|0
+argument_list|)
+operator||
+name|RD
+argument_list|(
+operator|~
+literal|4
+argument_list|)
+operator||
+name|RS1_G0
+operator||
+name|SIMM13
+argument_list|(
+operator|~
+literal|0
+argument_list|)
+block|,
+literal|""
+block|,
+literal|0
+block|,
+name|v9
+block|}
+block|,
+block|{
+literal|"invalw"
+block|,
+name|F3
+argument_list|(
+literal|2
+argument_list|,
+literal|0x31
+argument_list|,
+literal|0
+argument_list|)
+operator||
+name|RD
+argument_list|(
+literal|5
+argument_list|)
+block|,
+name|F3
+argument_list|(
+operator|~
+literal|2
+argument_list|,
+operator|~
+literal|0x31
+argument_list|,
+operator|~
+literal|0
+argument_list|)
+operator||
+name|RD
+argument_list|(
+operator|~
+literal|5
+argument_list|)
+operator||
+name|RS1_G0
+operator||
+name|SIMM13
+argument_list|(
+operator|~
+literal|0
+argument_list|)
+block|,
+literal|""
+block|,
+literal|0
+block|,
+name|v9
+block|}
+block|,
+block|{
 literal|"sir"
 block|,
 name|F3
@@ -22815,6 +23011,216 @@ name|v9
 block|}
 block|,
 comment|/* wrpr i,%priv */
+block|{
+literal|"rdhpr"
+block|,
+name|F3
+argument_list|(
+literal|2
+argument_list|,
+literal|0x29
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|F3
+argument_list|(
+operator|~
+literal|2
+argument_list|,
+operator|~
+literal|0x29
+argument_list|,
+operator|~
+literal|0
+argument_list|)
+operator||
+name|SIMM13
+argument_list|(
+operator|~
+literal|0
+argument_list|)
+block|,
+literal|"$,d"
+block|,
+literal|0
+block|,
+name|v9
+block|}
+block|,
+comment|/* rdhpr %hpriv,r */
+block|{
+literal|"wrhpr"
+block|,
+name|F3
+argument_list|(
+literal|2
+argument_list|,
+literal|0x33
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|F3
+argument_list|(
+operator|~
+literal|2
+argument_list|,
+operator|~
+literal|0x33
+argument_list|,
+operator|~
+literal|0
+argument_list|)
+block|,
+literal|"1,2,%"
+block|,
+literal|0
+block|,
+name|v9
+block|}
+block|,
+comment|/* wrhpr r1,r2,%hpriv */
+block|{
+literal|"wrhpr"
+block|,
+name|F3
+argument_list|(
+literal|2
+argument_list|,
+literal|0x33
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|F3
+argument_list|(
+operator|~
+literal|2
+argument_list|,
+operator|~
+literal|0x33
+argument_list|,
+operator|~
+literal|0
+argument_list|)
+operator||
+name|SIMM13
+argument_list|(
+operator|~
+literal|0
+argument_list|)
+block|,
+literal|"1,%"
+block|,
+literal|0
+block|,
+name|v9
+block|}
+block|,
+comment|/* wrhpr r1,%hpriv */
+block|{
+literal|"wrhpr"
+block|,
+name|F3
+argument_list|(
+literal|2
+argument_list|,
+literal|0x33
+argument_list|,
+literal|1
+argument_list|)
+block|,
+name|F3
+argument_list|(
+operator|~
+literal|2
+argument_list|,
+operator|~
+literal|0x33
+argument_list|,
+operator|~
+literal|1
+argument_list|)
+block|,
+literal|"1,i,%"
+block|,
+literal|0
+block|,
+name|v9
+block|}
+block|,
+comment|/* wrhpr r1,i,%hpriv */
+block|{
+literal|"wrhpr"
+block|,
+name|F3
+argument_list|(
+literal|2
+argument_list|,
+literal|0x33
+argument_list|,
+literal|1
+argument_list|)
+block|,
+name|F3
+argument_list|(
+operator|~
+literal|2
+argument_list|,
+operator|~
+literal|0x33
+argument_list|,
+operator|~
+literal|1
+argument_list|)
+block|,
+literal|"i,1,%"
+block|,
+name|F_ALIAS
+block|,
+name|v9
+block|}
+block|,
+comment|/* wrhpr i,r1,%hpriv */
+block|{
+literal|"wrhpr"
+block|,
+name|F3
+argument_list|(
+literal|2
+argument_list|,
+literal|0x33
+argument_list|,
+literal|1
+argument_list|)
+block|,
+name|F3
+argument_list|(
+operator|~
+literal|2
+argument_list|,
+operator|~
+literal|0x33
+argument_list|,
+operator|~
+literal|1
+argument_list|)
+operator||
+name|RS1
+argument_list|(
+operator|~
+literal|0
+argument_list|)
+block|,
+literal|"i,%"
+block|,
+literal|0
+block|,
+name|v9
+block|}
+block|,
+comment|/* wrhpr i,%hpriv */
 comment|/* ??? This group seems wrong.  A three operand move?  */
 block|{
 literal|"mov"
@@ -29550,7 +29956,7 @@ parameter_list|,
 name|arch
 parameter_list|)
 define|\
-value|{ opcode, (mask), ANNUL|(lose), "l",    flags|F_DELAYED, arch }, \  { opcode, (mask)|ANNUL, (lose), ",a l", flags|F_DELAYED, arch }
+value|{ opcode, (mask), ANNUL | (lose), "l",    flags | F_DELAYED, arch }, \  { opcode, (mask) | ANNUL, (lose), ",a l", flags | F_DELAYED, arch }
 comment|/* Floating point branches.  */
 define|#
 directive|define
@@ -29565,7 +29971,7 @@ parameter_list|,
 name|flags
 parameter_list|)
 define|\
-value|{ opcode, (mask), ANNUL|(lose), "l",    flags|F_DELAYED|F_FBR, v6 }, \  { opcode, (mask)|ANNUL, (lose), ",a l", flags|F_DELAYED|F_FBR, v6 }
+value|{ opcode, (mask), ANNUL | (lose), "l",    flags | F_DELAYED | F_FBR, v6 }, \  { opcode, (mask) | ANNUL, (lose), ",a l", flags | F_DELAYED | F_FBR, v6 }
 comment|/* V9 extended floating point branches.  */
 define|#
 directive|define
@@ -38681,63 +39087,21 @@ begin_comment
 comment|/* Look up NAME in TABLE.  */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|int
-name|lookup_name
-name|PARAMS
-argument_list|(
-operator|(
-specifier|const
-name|arg
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|lookup_value
-name|PARAMS
-argument_list|(
-operator|(
-specifier|const
-name|arg
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|int
 name|lookup_name
 parameter_list|(
-name|table
-parameter_list|,
-name|name
-parameter_list|)
 specifier|const
 name|arg
 modifier|*
 name|table
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|arg
@@ -38793,18 +39157,14 @@ name|char
 modifier|*
 name|lookup_value
 parameter_list|(
-name|table
-parameter_list|,
-name|value
-parameter_list|)
 specifier|const
 name|arg
 modifier|*
 name|table
-decl_stmt|;
+parameter_list|,
 name|int
 name|value
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|arg
@@ -38838,11 +39198,7 @@ operator|->
 name|name
 return|;
 return|return
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+name|NULL
 return|;
 block|}
 end_function
@@ -39050,13 +39406,11 @@ begin_function
 name|int
 name|sparc_encode_asi
 parameter_list|(
-name|name
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|lookup_name
@@ -39079,11 +39433,9 @@ name|char
 modifier|*
 name|sparc_decode_asi
 parameter_list|(
-name|value
-parameter_list|)
 name|int
 name|value
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|lookup_value
@@ -39169,13 +39521,11 @@ begin_function
 name|int
 name|sparc_encode_membar
 parameter_list|(
-name|name
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|lookup_name
@@ -39198,11 +39548,9 @@ name|char
 modifier|*
 name|sparc_decode_membar
 parameter_list|(
-name|value
-parameter_list|)
 name|int
 name|value
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|lookup_value
@@ -39282,13 +39630,11 @@ begin_function
 name|int
 name|sparc_encode_prefetch
 parameter_list|(
-name|name
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|lookup_name
@@ -39311,11 +39657,9 @@ name|char
 modifier|*
 name|sparc_decode_prefetch
 parameter_list|(
-name|value
-parameter_list|)
 name|int
 name|value
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|lookup_value
@@ -39401,13 +39745,11 @@ begin_function
 name|int
 name|sparc_encode_sparclet_cpreg
 parameter_list|(
-name|name
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|lookup_name
@@ -39430,11 +39772,9 @@ name|char
 modifier|*
 name|sparc_decode_sparclet_cpreg
 parameter_list|(
-name|value
-parameter_list|)
 name|int
 name|value
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|lookup_value
