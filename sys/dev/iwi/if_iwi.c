@@ -7681,6 +7681,8 @@ operator|->
 name|ni_associd
 operator|=
 name|associd
+operator|&
+literal|0x3fff
 expr_stmt|;
 if|if
 condition|(
