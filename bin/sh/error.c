@@ -236,7 +236,7 @@ name|void
 parameter_list|)
 block|{
 name|sigset_t
-name|sigset
+name|sigs
 decl_stmt|;
 comment|/* 	 * The !in_dotrap here is safe.  The only way we can arrive here 	 * with in_dotrap set is that a trap handler set SIGINT to SIG_DFL 	 * and killed itself. 	 */
 if|if
@@ -259,7 +259,7 @@ expr_stmt|;
 name|sigemptyset
 argument_list|(
 operator|&
-name|sigset
+name|sigs
 argument_list|)
 expr_stmt|;
 name|sigprocmask
@@ -267,7 +267,7 @@ argument_list|(
 name|SIG_SETMASK
 argument_list|,
 operator|&
-name|sigset
+name|sigs
 argument_list|,
 name|NULL
 argument_list|)
