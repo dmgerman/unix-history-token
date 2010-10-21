@@ -821,34 +821,7 @@ return|return
 name|EOPNOTSUPP
 return|;
 block|}
-if|if
-condition|(
-name|data
-operator|->
-name|chainevh
-condition|)
-return|return
-operator|(
-name|data
-operator|->
-name|chainevh
-argument_list|(
-name|mod
-argument_list|,
-name|what
-argument_list|,
-name|data
-operator|->
-name|chainarg
-argument_list|)
-operator|)
-return|;
-else|else
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+comment|/* NOTREACHED */
 block|}
 end_function
 
