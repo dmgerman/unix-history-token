@@ -3331,8 +3331,6 @@ name|usage
 argument_list|()
 expr_stmt|;
 comment|/* 		 * Run one warmup, then do the real thing (loops) times. 		 */
-name|calls
-operator|=
 name|the_test
 operator|->
 name|t_func
@@ -3348,6 +3346,10 @@ operator|->
 name|t_string
 argument_list|)
 expr_stmt|;
+name|calls
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|k
@@ -3362,6 +3364,8 @@ name|k
 operator|++
 control|)
 block|{
+name|calls
+operator|=
 name|the_test
 operator|->
 name|t_func
