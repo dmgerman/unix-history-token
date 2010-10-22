@@ -4848,10 +4848,6 @@ block|}
 block|}
 end_function
 
-begin_comment
-comment|/*  * Perform pathname generation and remove control characters.  * At this point, the only control characters should be CTLESC and CTLQUOTEMARK.  * The results are stored in the list exparg.  */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|char
@@ -4868,6 +4864,10 @@ directive|define
 name|expdir_end
 value|(expdir + sizeof(expdir))
 end_define
+
+begin_comment
+comment|/*  * Perform pathname generation and remove control characters.  * At this point, the only control characters should be CTLESC and CTLQUOTEMARK.  * The results are stored in the list exparg.  */
+end_comment
 
 begin_function
 specifier|static
