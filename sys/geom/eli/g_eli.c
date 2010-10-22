@@ -4644,6 +4644,16 @@ name|softc
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_ekeys
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* The sc_ekeys field can be NULL is device is suspended. */
 name|bzero
 argument_list|(
 name|sc
@@ -4674,6 +4684,7 @@ argument_list|,
 name|M_ELI
 argument_list|)
 expr_stmt|;
+block|}
 name|bzero
 argument_list|(
 name|sc
