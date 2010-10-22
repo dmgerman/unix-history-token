@@ -5926,7 +5926,7 @@ name|unit
 operator|.
 name|dwarf_frame_size
 operator|=
-name|bfd_get_section_size_before_reloc
+name|bfd_get_section_size
 argument_list|(
 name|dwarf_eh_frame_section
 argument_list|)
@@ -6042,7 +6042,7 @@ name|unit
 operator|.
 name|dwarf_frame_size
 operator|=
-name|bfd_get_section_size_before_reloc
+name|bfd_get_section_size
 argument_list|(
 name|dwarf_frame_section
 argument_list|)

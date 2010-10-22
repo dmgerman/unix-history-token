@@ -5127,7 +5127,7 @@ argument_list|)
 expr_stmt|;
 name|section_size
 operator|=
-name|bfd_get_section_size_before_reloc
+name|bfd_get_section_size
 argument_list|(
 name|section
 argument_list|)

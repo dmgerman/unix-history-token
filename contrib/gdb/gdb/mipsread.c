@@ -899,7 +899,7 @@ condition|)
 return|return;
 name|sym_secsize
 operator|=
-name|bfd_get_section_size_before_reloc
+name|bfd_get_section_size
 argument_list|(
 name|si
 operator|.
@@ -908,7 +908,7 @@ argument_list|)
 expr_stmt|;
 name|str_secsize
 operator|=
-name|bfd_get_section_size_before_reloc
+name|bfd_get_section_size
 argument_list|(
 name|si
 operator|.
@@ -917,7 +917,7 @@ argument_list|)
 expr_stmt|;
 name|dyninfo_secsize
 operator|=
-name|bfd_get_section_size_before_reloc
+name|bfd_get_section_size
 argument_list|(
 name|si
 operator|.
@@ -926,7 +926,7 @@ argument_list|)
 expr_stmt|;
 name|got_secsize
 operator|=
-name|bfd_get_section_size_before_reloc
+name|bfd_get_section_size
 argument_list|(
 name|si
 operator|.

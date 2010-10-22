@@ -209,7 +209,7 @@ name|ei
 operator|->
 name|dbsize
 operator|=
-name|bfd_get_section_size_before_reloc
+name|bfd_get_section_size
 argument_list|(
 name|sectp
 argument_list|)
@@ -242,7 +242,7 @@ name|ei
 operator|->
 name|lnsize
 operator|=
-name|bfd_get_section_size_before_reloc
+name|bfd_get_section_size
 argument_list|(
 name|sectp
 argument_list|)
