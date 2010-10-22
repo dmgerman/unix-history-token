@@ -1432,43 +1432,6 @@ block|}
 struct|;
 end_struct
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__amd64__
-argument_list|)
-end_if
-
-begin_struct
-struct|struct
-name|ifconf32
-block|{
-name|int
-name|ifc_len
-decl_stmt|;
-comment|/* size of associated buffer */
-union|union
-block|{
-name|u_int
-name|ifcu_buf
-decl_stmt|;
-name|u_int
-name|ifcu_req
-decl_stmt|;
-block|}
-name|ifc_ifcu
-union|;
-block|}
-struct|;
-end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * interface groups  */
 end_comment

@@ -2033,7 +2033,7 @@ name|error
 operator|==
 literal|0
 operator|&&
-name|pci_do_power_resume
+name|pci_do_power_suspend
 condition|)
 block|{
 name|dstate

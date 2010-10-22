@@ -184,13 +184,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|setpgid
-argument_list|(
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|execvp
 argument_list|(
 name|command

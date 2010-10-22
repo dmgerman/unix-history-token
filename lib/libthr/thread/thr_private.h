@@ -948,9 +948,6 @@ block|{
 name|int
 name|pshared
 decl_stmt|;
-name|int
-name|kind
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -967,12 +964,6 @@ name|struct
 name|pthread
 modifier|*
 name|owner
-decl_stmt|;
-name|int
-name|recurse
-decl_stmt|;
-name|int
-name|kind
 decl_stmt|;
 block|}
 struct|;

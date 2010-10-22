@@ -240,6 +240,11 @@ name|crp
 parameter_list|)
 block|{
 name|struct
+name|g_eli_softc
+modifier|*
+name|sc
+decl_stmt|;
+name|struct
 name|bio
 modifier|*
 name|bp
@@ -385,6 +390,16 @@ operator|(
 literal|0
 operator|)
 return|;
+name|sc
+operator|=
+name|bp
+operator|->
+name|bio_to
+operator|->
+name|geom
+operator|->
+name|softc
+expr_stmt|;
 if|if
 condition|(
 name|bp
@@ -394,11 +409,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|struct
-name|g_eli_softc
-modifier|*
-name|sc
-decl_stmt|;
 name|u_int
 name|i
 decl_stmt|,
@@ -428,16 +438,6 @@ decl_stmt|,
 name|corsize
 decl_stmt|;
 comment|/* 		 * Verify data integrity based on calculated and read HMACs. 		 */
-name|sc
-operator|=
-name|bp
-operator|->
-name|bio_to
-operator|->
-name|geom
-operator|->
-name|softc
-expr_stmt|;
 comment|/* Sectorsize of decrypted provider eg. 4096. */
 name|decr_secsize
 operator|=
@@ -807,6 +807,16 @@ operator|->
 name|bio_error
 argument_list|)
 expr_stmt|;
+name|atomic_subtract_int
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_inflight
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -973,6 +983,16 @@ operator|(
 literal|0
 operator|)
 return|;
+name|sc
+operator|=
+name|bp
+operator|->
+name|bio_to
+operator|->
+name|geom
+operator|->
+name|softc
+expr_stmt|;
 if|if
 condition|(
 name|bp
@@ -1036,22 +1056,22 @@ operator|->
 name|bio_error
 argument_list|)
 expr_stmt|;
+name|atomic_subtract_int
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_inflight
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
 block|}
-name|sc
-operator|=
-name|bp
-operator|->
-name|bio_to
-operator|->
-name|geom
-operator|->
-name|softc
-expr_stmt|;
 name|cp
 operator|=
 name|LIST_FIRST
@@ -1641,7 +1661,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This is the main function responsible for cryptography (ie. communication  * with crypto(9) subsystem).  */
+comment|/*  * This is the main function responsible for cryptography (ie. communication  * with crypto(9) subsystem).  *  * BIO_READ:  *	g_eli_start -> g_eli_auth_read -> g_io_request -> g_eli_read_done -> G_ELI_AUTH_RUN -> g_eli_auth_read_done -> g_io_deliver  * BIO_WRITE:  *	g_eli_start -> G_ELI_AUTH_RUN -> g_eli_auth_write_done -> g_io_request -> g_eli_write_done -> g_io_deliver  */
 end_comment
 
 begin_function

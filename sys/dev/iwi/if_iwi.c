@@ -7629,7 +7629,7 @@ argument|frm[
 literal|1
 argument|]
 argument_list|,
-argument|return
+argument|break
 argument_list|)
 empty_stmt|;
 switch|switch
@@ -7681,6 +7681,8 @@ operator|->
 name|ni_associd
 operator|=
 name|associd
+operator|&
+literal|0x3fff
 expr_stmt|;
 if|if
 condition|(

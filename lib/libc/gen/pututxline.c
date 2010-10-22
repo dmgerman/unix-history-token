@@ -207,7 +207,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|utx_active_add
 parameter_list|(
 specifier|const
@@ -245,7 +245,11 @@ name|fp
 operator|==
 name|NULL
 condition|)
-return|return;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 while|while
 condition|(
 name|fread
@@ -395,6 +399,11 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -433,7 +442,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-literal|0
+literal|1
 operator|)
 return|;
 while|while
@@ -564,7 +573,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|utx_lastlogin_add
 parameter_list|(
 specifier|const
@@ -596,7 +605,11 @@ name|fp
 operator|==
 name|NULL
 condition|)
-return|return;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 while|while
 condition|(
 name|fread
@@ -671,6 +684,11 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -750,7 +768,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|utx_log_add
 parameter_list|(
 specifier|const
@@ -878,7 +896,11 @@ name|fd
 operator|<
 literal|0
 condition|)
-return|return;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 name|_writev
 argument_list|(
 name|fd
@@ -893,6 +915,11 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -912,6 +939,11 @@ block|{
 name|struct
 name|futx
 name|fu
+decl_stmt|;
+name|int
+name|bad
+init|=
+literal|0
 decl_stmt|;
 name|utx_to_futx
 argument_list|(
@@ -951,12 +983,16 @@ break|break;
 case|case
 name|USER_PROCESS
 case|:
+name|bad
+operator||=
 name|utx_active_add
 argument_list|(
 operator|&
 name|fu
 argument_list|)
 expr_stmt|;
+name|bad
+operator||=
 name|utx_lastlogin_add
 argument_list|(
 operator|&
@@ -968,12 +1004,13 @@ if|#
 directive|if
 literal|0
 comment|/* XXX: Are these records of any use to us? */
-block|case INIT_PROCESS: 	case LOGIN_PROCESS: 		utx_active_add(&fu); 		break;
+block|case INIT_PROCESS: 	case LOGIN_PROCESS: 		bad |= utx_active_add(&fu); 		break;
 endif|#
 directive|endif
 case|case
 name|DEAD_PROCESS
 case|:
+comment|/* 		 * In case writing a logout entry fails, never attempt 		 * to write it to utx.log.  The logout entry's ut_id 		 * might be invalid. 		 */
 if|if
 condition|(
 name|utx_active_remove
@@ -997,6 +1034,8 @@ name|NULL
 operator|)
 return|;
 block|}
+name|bad
+operator||=
 name|utx_log_add
 argument_list|(
 operator|&
@@ -1005,6 +1044,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|bad
+condition|?
+name|NULL
+else|:
 name|futx_to_utx
 argument_list|(
 operator|&

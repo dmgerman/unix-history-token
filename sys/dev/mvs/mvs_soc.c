@@ -1691,7 +1691,6 @@ argument_list|,
 name|CHIP_SOC_MIC
 argument_list|)
 expr_stmt|;
-comment|//device_printf(ctlr->dev, "irq MIC:%08x\n", ic);
 if|if
 condition|(
 operator|(

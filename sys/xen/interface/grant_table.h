@@ -222,6 +222,13 @@ name|grant_ref_t
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|GRANT_REF_INVALID
+value|0xffffffff
+end_define
+
 begin_comment
 comment|/*  * Handle to track a mapping created via a grant reference.  */
 end_comment

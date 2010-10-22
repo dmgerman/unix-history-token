@@ -643,6 +643,35 @@ name|xlr_boot1_info
 operator|.
 name|cpu_online_map
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|SMP
+comment|/* Uniprocessor! */
+if|if
+condition|(
+name|cpu_map
+operator|!=
+literal|0x1
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"WARNING: Starting uniprocessor kernel on cpumask [0x%lx]!\n"
+literal|"WARNING: Other CPUs will be unused.\n"
+argument_list|,
+operator|(
+name|u_long
+operator|)
+name|cpu_map
+argument_list|)
+expr_stmt|;
+name|cpu_map
+operator|=
+literal|0x1
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|core0_thr_mask
 operator|=
 name|cpu_map
@@ -731,13 +760,11 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-comment|/* setup hardware processor id to cpu id mapping */
 name|xlr_hw_thread_mask
 operator|=
-name|xlr_boot1_info
-operator|.
-name|cpu_online_map
+name|cpu_map
 expr_stmt|;
+comment|/* setup hardware processor id to cpu id mapping */
 for|for
 control|(
 name|i

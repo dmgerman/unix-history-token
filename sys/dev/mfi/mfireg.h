@@ -3268,6 +3268,14 @@ block|,
 name|MFI_PD_STATE_ONLINE
 init|=
 literal|0x18
+block|,
+name|MFI_PD_STATE_COPYBACK
+init|=
+literal|0x20
+block|,
+name|MFI_PD_STATE_SYSTEM
+init|=
+literal|0x40
 block|}
 enum|;
 end_enum

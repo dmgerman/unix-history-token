@@ -4226,7 +4226,7 @@ operator|(
 name|sc
 operator|->
 name|port_type
-operator|!=
+operator|==
 name|XLR_XGMII
 operator|)
 condition|?

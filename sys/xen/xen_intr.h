@@ -275,11 +275,12 @@ name|char
 modifier|*
 name|devname
 parameter_list|,
-name|driver_filter_t
-name|filter
-parameter_list|,
 name|driver_intr_t
 name|handler
+parameter_list|,
+name|void
+modifier|*
+name|arg
 parameter_list|,
 name|unsigned
 name|long

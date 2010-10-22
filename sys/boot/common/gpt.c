@@ -134,7 +134,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Buffer below 64kB passed on gptread(), which can hold at least  * one sector od data (512 bytes).  */
+comment|/*  * Buffer below 64kB passed on gptread(), which can hold at least  * one sector of data (512 bytes).  */
 end_comment
 
 begin_decl_stmt
@@ -179,7 +179,7 @@ decl_stmt|;
 name|daddr_t
 name|slba
 decl_stmt|;
-comment|/* 	 * We need to update the following for both primary and backup GPT: 	 * 1. Sector on disk that contains curent partition. 	 * 2. Partition table checksum. 	 * 3. Header checksum. 	 * 4. Header on disk. 	 */
+comment|/* 	 * We need to update the following for both primary and backup GPT: 	 * 1. Sector on disk that contains current partition. 	 * 2. Partition table checksum. 	 * 3. Header checksum. 	 * 4. Header on disk. 	 */
 name|entries_per_sec
 operator|=
 name|DEV_BSIZE

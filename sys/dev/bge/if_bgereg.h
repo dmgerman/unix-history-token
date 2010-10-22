@@ -4401,6 +4401,13 @@ name|BGE_TXMODE_LONGPAUSE_ENABLE
 value|0x00000040
 end_define
 
+begin_define
+define|#
+directive|define
+name|BGE_TXMODE_MBUF_LOCKUP_FIX
+value|0x00000100
+end_define
+
 begin_comment
 comment|/* Transmit MAC status register */
 end_comment
@@ -5099,6 +5106,13 @@ define|#
 directive|define
 name|BGE_SDI_STATS_INCREMENT_MASK
 value|0x0C10
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_ISO_PKT_TX
+value|0x0C20
 end_define
 
 begin_define
@@ -14359,6 +14373,10 @@ define|#
 directive|define
 name|BGE_FLAG_RX_ALIGNBUG
 value|0x04000000
+define|#
+directive|define
+name|BGE_FLAG_SHORT_DMA_BUG
+value|0x08000000
 name|uint32_t
 name|bge_phy_flags
 decl_stmt|;
