@@ -5976,7 +5976,7 @@ name|info
 operator|->
 name|stream
 argument_list|,
-literal|"0x%x"
+literal|"0x%lx"
 argument_list|,
 operator|(
 name|l
