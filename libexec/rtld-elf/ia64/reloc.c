@@ -706,7 +706,7 @@ argument_list|,
 operator|&
 name|defobj
 argument_list|,
-name|false
+name|true
 argument_list|,
 name|cache
 argument_list|)
@@ -717,10 +717,20 @@ name|def
 operator|==
 name|NULL
 condition|)
+block|{
+comment|/* 			 * XXX r_debug_state is problematic and find_symdef() 			 * returns NULL for it. This probably has something to 			 * do with symbol versioning (r_debug_state is in the 			 * symbol map). If we return -1 in that case we abort 			 * relocating rtld, which typically is fatal. So, for 			 * now just skip the symbol when we're relocating 			 * rtld. We don't care about r_debug_state unless we 			 * are being debugged. 			 */
+if|if
+condition|(
+name|obj
+operator|!=
+name|obj_rtld
+condition|)
 return|return
 operator|-
 literal|1
 return|;
+break|break;
+block|}
 if|if
 condition|(
 name|def
