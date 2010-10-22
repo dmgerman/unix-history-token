@@ -5111,6 +5111,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|BGE_ISO_PKT_TX
+value|0x0C20
+end_define
+
+begin_define
+define|#
+directive|define
 name|BGE_LOCSTATS_COS0
 value|0x0C80
 end_define
