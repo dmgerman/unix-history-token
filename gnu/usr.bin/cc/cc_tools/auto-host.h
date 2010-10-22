@@ -2922,9 +2922,23 @@ directive|ifndef
 name|USED_FOR_TARGET
 end_ifndef
 
-begin_comment
-comment|/* #undef HAVE_LD_NO_DOT_SYMS */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64_
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|HAVE_LD_NO_DOT_SYMS
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
