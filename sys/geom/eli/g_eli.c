@@ -6187,6 +6187,27 @@ name|sc_ealgo
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|sbuf_printf
+argument_list|(
+name|sb
+argument_list|,
+literal|"%s<State>%s</State>\n"
+argument_list|,
+name|indent
+argument_list|,
+operator|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|G_ELI_FLAG_SUSPEND
+operator|)
+condition|?
+literal|"SUSPENDED"
+else|:
+literal|"ACTIVE"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
