@@ -670,7 +670,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Perform variable substitution and command substitution on an argument,  * placing the resulting list of arguments in arglist.  If EXP_FULL is true,  * perform splitting and file name expansion.  When arglist is NULL, perform  * here document expansion.  */
+comment|/*  * Perform expansions on an argument, placing the resulting list of arguments  * in arglist.  Parameter expansion, command substitution and arithmetic  * expansion are always performed; additional expansions can be requested  * via flag (EXP_*).  * The result is left in the stack string.  * When arglist is NULL, perform here document expansion.  A partial result  * may be written to herefd, which is then not included in the stack string.  *  * Caution: this function uses global state and is not reentrant.  * However, a new invocation after an interrupted invocation is safe  * and will reset the global state for the new call.  */
 end_comment
 
 begin_function
@@ -938,7 +938,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Perform variable and command substitution.  If EXP_FULL is set, output CTLESC  * characters to allow for further processing.  Otherwise treat  * $@ like $* since no splitting will be performed.  */
+comment|/*  * Perform parameter expansion, command substitution and arithmetic  * expansion, and tilde expansion if requested via EXP_TILDE/EXP_VARTILDE.  * Processing ends at a CTLENDVAR character as well as '\0'.  * This is used to expand word in ${var+word} etc.  * If EXP_FULL, EXP_CASE or EXP_REDIR are set, keep and/or generate CTLESC  * characters to allow for further processing.  * If EXP_FULL is set, also preserve CTLQUOTEMARK characters.  */
 end_comment
 
 begin_function
@@ -1023,7 +1023,6 @@ case|:
 case|case
 name|CTLENDVAR
 case|:
-comment|/* ??? */
 goto|goto
 name|breakloop
 goto|;
@@ -1221,6 +1220,10 @@ label|:
 empty_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Perform tilde expansion, placing the result in the stack string and  * returning the next position in the input string to process.  */
+end_comment
 
 begin_function
 name|STATIC
@@ -1679,7 +1682,7 @@ decl_stmt|;
 name|int
 name|quoted
 decl_stmt|;
-comment|/* 	 * This routine is slightly over-complicated for 	 * efficiency.  First we make sure there is 	 * enough space for the result, which may be bigger 	 * than the expression if we add exponentiation.  Next we 	 * scan backwards looking for the start of arithmetic.  If the 	 * next previous character is a CTLESC character, then we 	 * have to rescan starting from the beginning since CTLESC 	 * characters have to be processed left to right. 	 */
+comment|/* 	 * This routine is slightly over-complicated for 	 * efficiency.  First we make sure there is 	 * enough space for the result, which may be bigger 	 * than the expression.  Next we 	 * scan backwards looking for the start of arithmetic.  If the 	 * next previous character is a CTLESC character, then we 	 * have to rescan starting from the beginning since CTLESC 	 * characters have to be processed left to right. 	 */
 name|CHECKSTRSPACE
 argument_list|(
 name|DIGITS
@@ -1888,7 +1891,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Expand stuff in backwards quotes.  */
+comment|/*  * Perform command substitution.  */
 end_comment
 
 begin_function
@@ -4390,7 +4393,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Break the argument string into pieces based upon IFS and add the  * strings to the argument list.  The regions of the string to be  * searched for IFS characters have been stored by recordregion.  */
+comment|/*  * Break the argument string into pieces based upon IFS and add the  * strings to the argument list.  The regions of the string to be  * searched for IFS characters have been stored by recordregion.  * CTLESC characters are preserved but have little effect in this pass  * other than escaping CTL* characters.  In particular, they do not escape  * IFS characters: that should be done with the ifsregion mechanism.  * CTLQUOTEMARK characters are used to preserve empty quoted strings.  * This pass treats them as a regular character, making the string non-empty.  * Later, they are removed along with the other CTL* characters.  */
 end_comment
 
 begin_function
@@ -4837,10 +4840,6 @@ block|}
 block|}
 end_function
 
-begin_comment
-comment|/*  * Expand shell metacharacters.  At this point, the only control characters  * should be escapes.  The results are stored in the list exparg.  */
-end_comment
-
 begin_decl_stmt
 name|STATIC
 name|char
@@ -4857,6 +4856,10 @@ directive|define
 name|expdir_end
 value|(expdir + sizeof(expdir))
 end_define
+
+begin_comment
+comment|/*  * Perform pathname generation and remove control characters.  * At this point, the only control characters should be CTLESC and CTLQUOTEMARK.  * The results are stored in the list exparg.  */
+end_comment
 
 begin_function
 name|STATIC
@@ -6788,7 +6791,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Remove any CTLESC characters from a string.  */
+comment|/*  * Remove any CTLESC and CTLQUOTEMARK characters from a string.  */
 end_comment
 
 begin_function
