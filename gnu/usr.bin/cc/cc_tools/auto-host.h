@@ -1068,7 +1068,7 @@ begin_define
 define|#
 directive|define
 name|HAVE_COMDAT_GROUP
-value|0
+value|1
 end_define
 
 begin_endif
@@ -2538,9 +2538,12 @@ directive|ifndef
 name|USED_FOR_TARGET
 end_ifndef
 
-begin_comment
-comment|/* #undef HAVE_GAS_WEAKREF */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_GAS_WEAKREF
+value|1
+end_define
 
 begin_endif
 endif|#
@@ -3004,9 +3007,12 @@ directive|ifndef
 name|USED_FOR_TARGET
 end_ifndef
 
-begin_comment
-comment|/* #undef HAVE_LD_SYSROOT */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_LD_SYSROOT
+value|1
+end_define
 
 begin_endif
 endif|#
