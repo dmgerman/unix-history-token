@@ -844,6 +844,8 @@ name|sav
 operator|->
 name|sah
 operator|->
+name|route_cache
+operator|.
 name|sa_route
 expr_stmt|;
 if|if
