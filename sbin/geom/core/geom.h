@@ -95,6 +95,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|G_TYPE_MULTI
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_TYPE_NUMMASK
+value|0xff00
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_TYPE_NUMSHIFT
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
 name|G_OPT_MAX
 value|16
 end_define
@@ -122,11 +143,48 @@ end_define
 begin_define
 define|#
 directive|define
+name|G_OPT_ISMULTI
+parameter_list|(
+name|opt
+parameter_list|)
+value|((opt)->go_type& G_TYPE_MULTI)
+end_define
+
+begin_define
+define|#
+directive|define
 name|G_OPT_TYPE
 parameter_list|(
 name|opt
 parameter_list|)
 value|((opt)->go_type& G_TYPE_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_OPT_NUM
+parameter_list|(
+name|opt
+parameter_list|)
+value|(((opt)->go_type& G_TYPE_NUMMASK)>> G_TYPE_NUMSHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_OPT_NUMINC
+parameter_list|(
+name|opt
+parameter_list|)
+value|((opt)->go_type += (1<< G_TYPE_NUMSHIFT))
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_VAL_OPTIONAL
+value|((void *)-1)
 end_define
 
 begin_define
