@@ -8404,6 +8404,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 comment|/* Disable interrupts. */
 name|CSR_WRITE_4
@@ -8428,6 +8429,19 @@ literal|0
 condition|;
 control|)
 block|{
+if|if
+condition|(
+operator|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+operator|)
+operator|==
+literal|0
+condition|)
+break|break;
 if|if
 condition|(
 name|status
@@ -8530,6 +8544,15 @@ name|SIS_ISR
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+condition|)
+block|{
 comment|/* Re-enable interrupts. */
 name|CSR_WRITE_4
 argument_list|(
@@ -8556,6 +8579,7 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+block|}
 name|SIS_UNLOCK
 argument_list|(
 name|sc
