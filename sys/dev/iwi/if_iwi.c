@@ -7629,7 +7629,7 @@ argument|frm[
 literal|1
 argument|]
 argument_list|,
-argument|break
+argument|return
 argument_list|)
 empty_stmt|;
 switch|switch
@@ -8175,6 +8175,8 @@ argument_list|(
 operator|*
 name|assoc
 argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|ieee80211_new_state
