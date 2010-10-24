@@ -4151,11 +4151,6 @@ argument_list|,
 literal|"transfer complete\n"
 argument_list|)
 expr_stmt|;
-name|ifp
-operator|->
-name|if_opackets
-operator|++
-expr_stmt|;
 comment|/* FALLTHROUGH */
 case|case
 name|USB_ST_SETUP
@@ -4326,6 +4321,12 @@ operator|->
 name|m_pkthdr
 operator|.
 name|len
+expr_stmt|;
+comment|/* 			 * XXX 			 * Update TX packet counter here. This is not 			 * correct way but it seems that there is no way 			 * to know how many packets are sent at the end 			 * of transfer because controller combines 			 * multiple writes into single one if there is 			 * room in TX buffer of controller. 			 */
+name|ifp
+operator|->
+name|if_opackets
+operator|++
 expr_stmt|;
 comment|/* 			 * if there's a BPF listener, bounce a copy 			 * of this frame to him: 			 */
 name|BPF_MTAP
