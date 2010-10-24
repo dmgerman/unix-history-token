@@ -3931,8 +3931,6 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
-name|err
-operator|=
 name|uether_rxbuf
 argument_list|(
 name|ue
@@ -3957,9 +3955,6 @@ expr_stmt|;
 block|}
 block|}
 else|else
-block|{
-name|err
-operator|=
 name|uether_rxbuf
 argument_list|(
 name|ue
@@ -3971,7 +3966,6 @@ argument_list|,
 name|actlen
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|err
