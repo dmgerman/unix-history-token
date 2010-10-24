@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  |	ee (easy editor)  |  |	An easy to use, simple screen oriented editor.  |  |	written by Hugh Mahon  |  |  |      Copyright (c) 2009, Hugh Mahon  |      All rights reserved.  |        |      Redistribution and use in source and binary forms, with or without  |      modification, are permitted provided that the following conditions  |      are met:  |        |          * Redistributions of source code must retain the above copyright  |            notice, this list of conditions and the following disclaimer.  |          * Redistributions in binary form must reproduce the above  |            copyright notice, this list of conditions and the following  |            disclaimer in the documentation and/or other materials provided  |            with the distribution.  |        |      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  |      "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  |      LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  |      FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE  |      COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,  |      INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  |      BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  |      LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  |      CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  |      LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  |      ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  |      POSSIBILITY OF SUCH DAMAGE.  |  |     -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-  |  |	This editor was purposely developed to be simple, both in   |	interface and implementation.  This editor was developed to   |	address a specific audience: the user who is new to computers   |	(especially UNIX).  |	  |	ee is not aimed at technical users; for that reason more   |	complex features were intentionally left out.  In addition,   |	ee is intended to be compiled by people with little computer   |	experience, which means that it needs to be small, relatively   |	simple in implementation, and portable.  |  |	This software and documentation contains  |	proprietary information which is protected by  |	copyright.  All rights are reserved.  |  |	$Header: /home/hugh/sources/old_ae/RCS/ee.c,v 1.102 2009/02/17 03:22:50 hugh Exp hugh $  |  */
+comment|/*  |	ee (easy editor)  |  |	An easy to use, simple screen oriented editor.  |  |	written by Hugh Mahon  |  |  |      Copyright (c) 2009, Hugh Mahon  |      All rights reserved.  |        |      Redistribution and use in source and binary forms, with or without  |      modification, are permitted provided that the following conditions  |      are met:  |        |          * Redistributions of source code must retain the above copyright  |            notice, this list of conditions and the following disclaimer.  |          * Redistributions in binary form must reproduce the above  |            copyright notice, this list of conditions and the following  |            disclaimer in the documentation and/or other materials provided  |            with the distribution.  |        |      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  |      "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  |      LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  |      FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE  |      COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,  |      INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  |      BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  |      LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  |      CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  |      LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  |      ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  |      POSSIBILITY OF SUCH DAMAGE.  |  |     -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-  |  |	This editor was purposely developed to be simple, both in   |	interface and implementation.  This editor was developed to   |	address a specific audience: the user who is new to computers   |	(especially UNIX).  |	  |	ee is not aimed at technical users; for that reason more   |	complex features were intentionally left out.  In addition,   |	ee is intended to be compiled by people with little computer   |	experience, which means that it needs to be small, relatively   |	simple in implementation, and portable.  |  |	This software and documentation contains  |	proprietary information which is protected by  |	copyright.  All rights are reserved.  |  |	$Header: /home/hugh/sources/old_ae/RCS/ee.c,v 1.104 2010/06/04 01:55:31 hugh Exp hugh $  |  */
 end_comment
 
 begin_include
@@ -39,7 +39,7 @@ name|version
 init|=
 literal|"@(#) ee, version "
 name|EE_VERSION
-literal|" $Revision: 1.102 $"
+literal|" $Revision: 1.104 $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2086,7 +2086,6 @@ name|P_
 argument_list|(
 operator|(
 name|char
-operator|*
 name|direction
 operator|,
 name|int
@@ -5408,9 +5407,17 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
 name|scr_horz
 operator|<
 name|horiz_offset
+operator|)
+operator|&&
+operator|(
+name|horiz_offset
+operator|>
+literal|0
+operator|)
 condition|)
 block|{
 name|horiz_offset
@@ -5436,9 +5443,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|absolute_lin
-operator|--
-expr_stmt|;
 name|text_changes
 operator|=
 name|TRUE
@@ -7548,7 +7552,7 @@ condition|)
 comment|/* control n	*/
 name|move_rel
 argument_list|(
-literal|"d"
+literal|'d'
 argument_list|,
 name|max
 argument_list|(
@@ -7583,7 +7587,7 @@ condition|)
 comment|/* control p	*/
 name|move_rel
 argument_list|(
-literal|"u"
+literal|'u'
 argument_list|,
 name|max
 argument_list|(
@@ -7819,7 +7823,7 @@ condition|)
 comment|/* control g	*/
 name|move_rel
 argument_list|(
-literal|"u"
+literal|'u'
 argument_list|,
 name|max
 argument_list|(
@@ -8042,7 +8046,7 @@ condition|)
 comment|/* control v	*/
 name|move_rel
 argument_list|(
-literal|"d"
+literal|'d'
 argument_list|,
 name|max
 argument_list|(
@@ -9042,7 +9046,7 @@ name|KEY_NPAGE
 condition|)
 name|move_rel
 argument_list|(
-literal|"d"
+literal|'d'
 argument_list|,
 name|max
 argument_list|(
@@ -9065,7 +9069,7 @@ name|KEY_PPAGE
 condition|)
 name|move_rel
 argument_list|(
-literal|"u"
+literal|'u'
 argument_list|,
 name|max
 argument_list|(
@@ -11181,10 +11185,9 @@ modifier|*
 name|ptr
 decl_stmt|;
 name|char
-modifier|*
 name|direction
 init|=
-literal|"d"
+literal|'\0'
 decl_stmt|;
 name|struct
 name|text
@@ -11275,7 +11278,7 @@ name|prev_line
 expr_stmt|;
 name|direction
 operator|=
-literal|"u"
+literal|'u'
 expr_stmt|;
 block|}
 while|while
@@ -11302,7 +11305,7 @@ operator|++
 expr_stmt|;
 name|direction
 operator|=
-literal|"d"
+literal|'d'
 expr_stmt|;
 name|t_line
 operator|=
@@ -11338,13 +11341,9 @@ else|else
 block|{
 if|if
 condition|(
-operator|!
-name|strcmp
-argument_list|(
 name|direction
-argument_list|,
-literal|"d"
-argument_list|)
+operator|!=
+literal|'d'
 condition|)
 block|{
 name|absolute_lin
@@ -12228,7 +12227,7 @@ literal|1
 expr_stmt|;
 name|move_rel
 argument_list|(
-literal|"d"
+literal|'d'
 argument_list|,
 name|line_num
 argument_list|)
@@ -14201,7 +14200,7 @@ condition|)
 block|{
 name|move_rel
 argument_list|(
-literal|"d"
+literal|'d'
 argument_list|,
 name|lines_moved
 argument_list|)
@@ -14497,12 +14496,12 @@ else|else
 block|{
 name|right
 argument_list|(
-name|FALSE
+name|TRUE
 argument_list|)
 expr_stmt|;
 name|delete
 argument_list|(
-name|FALSE
+name|TRUE
 argument_list|)
 expr_stmt|;
 block|}
@@ -15412,7 +15411,6 @@ name|lines
 parameter_list|)
 comment|/* move relative to current line	*/
 name|char
-modifier|*
 name|direction
 decl_stmt|;
 name|int
@@ -15428,7 +15426,6 @@ name|tmp
 decl_stmt|;
 if|if
 condition|(
-operator|*
 name|direction
 operator|==
 literal|'u'
