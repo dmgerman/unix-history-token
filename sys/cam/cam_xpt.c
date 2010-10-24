@@ -12663,6 +12663,8 @@ operator|->
 name|ccb_h
 operator|.
 name|timeout
+operator|*
+literal|10
 expr_stmt|;
 name|sim
 operator|=
@@ -12750,7 +12752,7 @@ condition|)
 block|{
 name|DELAY
 argument_list|(
-literal|1000
+literal|100
 argument_list|)
 expr_stmt|;
 operator|(
@@ -12845,7 +12847,7 @@ condition|)
 break|break;
 name|DELAY
 argument_list|(
-literal|1000
+literal|100
 argument_list|)
 expr_stmt|;
 block|}
