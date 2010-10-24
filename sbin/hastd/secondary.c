@@ -1169,25 +1169,15 @@ operator|<
 literal|0
 condition|)
 block|{
-name|pjdlog_errno
+name|pjdlog_exit
 argument_list|(
-name|LOG_WARNING
+name|EX_TEMPFAIL
 argument_list|,
 literal|"Unable to send activemap to %s"
 argument_list|,
 name|res
 operator|->
 name|hr_remoteaddr
-argument_list|)
-expr_stmt|;
-name|nv_free
-argument_list|(
-name|nvout
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|EX_TEMPFAIL
 argument_list|)
 expr_stmt|;
 block|}
