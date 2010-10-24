@@ -1191,6 +1191,17 @@ name|EX_TEMPFAIL
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|map
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|map
+argument_list|)
+expr_stmt|;
 name|nv_free
 argument_list|(
 name|nvout
