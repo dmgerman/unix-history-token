@@ -466,6 +466,21 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|pthread_condattr_destroy
+argument_list|(
+operator|&
+name|attr
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|error
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

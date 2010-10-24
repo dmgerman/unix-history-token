@@ -2962,6 +2962,11 @@ name|res
 argument_list|)
 expr_stmt|;
 block|}
+name|nv_free
+argument_list|(
+name|nvin
+argument_list|)
+expr_stmt|;
 name|pjdlog_info
 argument_list|(
 literal|"Connected to %s."
