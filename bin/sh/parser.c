@@ -156,6 +156,16 @@ directive|include
 file|"eval.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"exec.h"
+end_include
+
+begin_comment
+comment|/* to check for special builtins */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -3091,6 +3101,9 @@ name|n
 init|=
 name|NULL
 decl_stmt|;
+name|int
+name|special
+decl_stmt|;
 comment|/* If we don't have any redirections already, then we must reset */
 comment|/* rpp to be the address of the local redir variable.  */
 if|if
@@ -3290,6 +3303,29 @@ operator|->
 name|narg
 operator|.
 name|text
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|find_builtin
+argument_list|(
+name|n
+operator|->
+name|narg
+operator|.
+name|text
+argument_list|,
+operator|&
+name|special
+argument_list|)
+operator|>=
+literal|0
+operator|&&
+name|special
+condition|)
+name|synerror
+argument_list|(
+literal|"Cannot override a special builtin with a function"
 argument_list|)
 expr_stmt|;
 name|n
