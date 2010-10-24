@@ -693,6 +693,8 @@ operator|->
 name|mii_media_active
 operator||=
 name|IFM_10_T
+operator||
+name|IFM_HDX
 expr_stmt|;
 break|break;
 case|case
@@ -715,6 +717,8 @@ operator|->
 name|mii_media_active
 operator||=
 name|IFM_100_TX
+operator||
+name|IFM_HDX
 expr_stmt|;
 break|break;
 case|case
@@ -737,6 +741,8 @@ operator|->
 name|mii_media_active
 operator||=
 name|IFM_100_T4
+operator||
+name|IFM_HDX
 expr_stmt|;
 break|break;
 case|case
