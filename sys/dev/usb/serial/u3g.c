@@ -2942,6 +2942,15 @@ name|U3G_DEV
 argument_list|(
 name|QUALCOMMINC
 argument_list|,
+name|E2000
+argument_list|,
+name|U3GINIT_SCSIEJECT
+argument_list|)
+block|,
+name|U3G_DEV
+argument_list|(
+name|QUALCOMMINC
+argument_list|,
 name|E2002
 argument_list|,
 literal|0
