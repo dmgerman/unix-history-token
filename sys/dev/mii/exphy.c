@@ -375,29 +375,6 @@ name|ma
 operator|->
 name|mii_data
 expr_stmt|;
-comment|/* 	 * The 3Com PHY can never be isolated, so never allow non-zero 	 * instances! 	 */
-if|if
-condition|(
-name|mii
-operator|->
-name|mii_instance
-operator|!=
-literal|0
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"ignoring this PHY, non-zero instance\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
 name|LIST_INSERT_HEAD
 argument_list|(
 operator|&
@@ -417,6 +394,7 @@ operator|=
 name|mii
 operator|->
 name|mii_instance
+operator|++
 expr_stmt|;
 name|sc
 operator|->
@@ -438,11 +416,7 @@ name|mii_pdata
 operator|=
 name|mii
 expr_stmt|;
-name|mii
-operator|->
-name|mii_instance
-operator|++
-expr_stmt|;
+comment|/* 	 * The 3Com PHY can never be isolated. 	 */
 name|sc
 operator|->
 name|mii_flags
@@ -550,36 +524,6 @@ name|int
 name|cmd
 parameter_list|)
 block|{
-name|struct
-name|ifmedia_entry
-modifier|*
-name|ife
-init|=
-name|mii
-operator|->
-name|mii_media
-operator|.
-name|ifm_cur
-decl_stmt|;
-comment|/* 	 * We can't isolate the 3Com PHY, so it has to be the only one! 	 */
-if|if
-condition|(
-name|IFM_INST
-argument_list|(
-name|ife
-operator|->
-name|ifm_media
-argument_list|)
-operator|!=
-name|sc
-operator|->
-name|mii_inst
-condition|)
-name|panic
-argument_list|(
-literal|"exphy_service: can't isolate 3Com PHY"
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|cmd

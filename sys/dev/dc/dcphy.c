@@ -494,6 +494,7 @@ operator|=
 name|mii
 operator|->
 name|mii_instance
+operator|++
 expr_stmt|;
 name|sc
 operator|->
@@ -523,11 +524,6 @@ operator||=
 name|MIIF_NOISOLATE
 operator||
 name|MIIF_NOLOOP
-expr_stmt|;
-name|mii
-operator|->
-name|mii_instance
-operator|++
 expr_stmt|;
 comment|/*dcphy_reset(sc);*/
 name|dc_sc
@@ -728,48 +724,10 @@ block|{
 case|case
 name|MII_POLLSTAT
 case|:
-comment|/* 		 * If we're not polling our PHY instance, just return. 		 */
-if|if
-condition|(
-name|IFM_INST
-argument_list|(
-name|ife
-operator|->
-name|ifm_media
-argument_list|)
-operator|!=
-name|sc
-operator|->
-name|mii_inst
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 break|break;
 case|case
 name|MII_MEDIACHG
 case|:
-comment|/* 		 * If the media indicates a different PHY instance, 		 * isolate ourselves. 		 */
-if|if
-condition|(
-name|IFM_INST
-argument_list|(
-name|ife
-operator|->
-name|ifm_media
-argument_list|)
-operator|!=
-name|sc
-operator|->
-name|mii_inst
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 comment|/* 		 * If the interface is not up, don't do anything. 		 */
 if|if
 condition|(
@@ -1033,25 +991,6 @@ break|break;
 case|case
 name|MII_TICK
 case|:
-comment|/* 		 * If we're not currently selected, just return. 		 */
-if|if
-condition|(
-name|IFM_INST
-argument_list|(
-name|ife
-operator|->
-name|ifm_media
-argument_list|)
-operator|!=
-name|sc
-operator|->
-name|mii_inst
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 comment|/* 		 * Is the interface even up? 		 */
 if|if
 condition|(
