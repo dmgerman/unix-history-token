@@ -2570,7 +2570,7 @@ condition|)
 block|{
 name|ifp
 operator|->
-name|if_ierrors
+name|if_iqdrops
 operator|++
 expr_stmt|;
 return|return
