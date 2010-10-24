@@ -787,6 +787,13 @@ name|mii_media_active
 operator||=
 name|IFM_FDX
 expr_stmt|;
+else|else
+name|mii
+operator|->
+name|mii_media_active
+operator||=
+name|IFM_HDX
+expr_stmt|;
 block|}
 else|else
 name|mii
