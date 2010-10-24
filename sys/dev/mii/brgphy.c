@@ -928,6 +928,7 @@ operator|=
 name|mii
 operator|->
 name|mii_instance
+operator|++
 expr_stmt|;
 name|sc
 operator|->
@@ -949,12 +950,7 @@ name|mii_pdata
 operator|=
 name|mii
 expr_stmt|;
-name|sc
-operator|->
-name|mii_anegticks
-operator|=
-name|MII_ANEGTICKS_GIGE
-expr_stmt|;
+comment|/* 	 * At least some variants wedge when isolating, at least some also 	 * don't support loopback. 	 */
 name|sc
 operator|->
 name|mii_flags
@@ -963,10 +959,11 @@ name|MIIF_NOISOLATE
 operator||
 name|MIIF_NOLOOP
 expr_stmt|;
-name|mii
+name|sc
 operator|->
-name|mii_instance
-operator|++
+name|mii_anegticks
+operator|=
+name|MII_ANEGTICKS_GIGE
 expr_stmt|;
 comment|/* Initialize brgphy_softc structure */
 name|bsc
@@ -1334,25 +1331,6 @@ parameter_list|,
 name|c
 parameter_list|)
 value|ifmedia_add(&mii->mii_media, (m), (c), NULL)
-comment|/* Create an instance of Ethernet media. */
-name|ADD
-argument_list|(
-name|IFM_MAKEWORD
-argument_list|(
-name|IFM_ETHER
-argument_list|,
-name|IFM_NONE
-argument_list|,
-literal|0
-argument_list|,
-name|sc
-operator|->
-name|mii_inst
-argument_list|)
-argument_list|,
-name|BMCR_ISO
-argument_list|)
-expr_stmt|;
 comment|/* Add the supported media types */
 if|if
 condition|(
@@ -1706,11 +1684,6 @@ operator|.
 name|ifm_cur
 decl_stmt|;
 name|int
-name|error
-init|=
-literal|0
-decl_stmt|;
-name|int
 name|val
 decl_stmt|;
 switch|switch
@@ -1721,62 +1694,10 @@ block|{
 case|case
 name|MII_POLLSTAT
 case|:
-comment|/* If we're not polling our PHY instance, just return. */
-if|if
-condition|(
-name|IFM_INST
-argument_list|(
-name|ife
-operator|->
-name|ifm_media
-argument_list|)
-operator|!=
-name|sc
-operator|->
-name|mii_inst
-condition|)
-goto|goto
-name|brgphy_service_exit
-goto|;
 break|break;
 case|case
 name|MII_MEDIACHG
 case|:
-comment|/* 		 * If the media indicates a different PHY instance, 		 * isolate ourselves. 		 */
-if|if
-condition|(
-name|IFM_INST
-argument_list|(
-name|ife
-operator|->
-name|ifm_media
-argument_list|)
-operator|!=
-name|sc
-operator|->
-name|mii_inst
-condition|)
-block|{
-name|PHY_WRITE
-argument_list|(
-name|sc
-argument_list|,
-name|MII_BMCR
-argument_list|,
-name|PHY_READ
-argument_list|(
-name|sc
-argument_list|,
-name|MII_BMCR
-argument_list|)
-operator||
-name|BMCR_ISO
-argument_list|)
-expr_stmt|;
-goto|goto
-name|brgphy_service_exit
-goto|;
-block|}
 comment|/* If the interface is not up, don't do anything. */
 if|if
 condition|(
@@ -1853,35 +1774,16 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|error
-operator|=
+return|return
+operator|(
 name|EINVAL
-expr_stmt|;
-goto|goto
-name|brgphy_service_exit
-goto|;
+operator|)
+return|;
 block|}
 break|break;
 case|case
 name|MII_TICK
 case|:
-comment|/* Bail if we're not currently selected. */
-if|if
-condition|(
-name|IFM_INST
-argument_list|(
-name|ife
-operator|->
-name|ifm_media
-argument_list|)
-operator|!=
-name|sc
-operator|->
-name|mii_inst
-condition|)
-goto|goto
-name|brgphy_service_exit
-goto|;
 comment|/* Bail if the interface isn't up. */
 if|if
 condition|(
@@ -1897,9 +1799,11 @@ operator|)
 operator|==
 literal|0
 condition|)
-goto|goto
-name|brgphy_service_exit
-goto|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* Bail if autoneg isn't in process. */
 if|if
 condition|(
@@ -2107,11 +2011,9 @@ argument_list|,
 name|cmd
 argument_list|)
 expr_stmt|;
-name|brgphy_service_exit
-label|:
 return|return
 operator|(
-name|error
+literal|0
 operator|)
 return|;
 block|}

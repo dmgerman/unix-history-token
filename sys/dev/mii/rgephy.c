@@ -458,6 +458,7 @@ operator|=
 name|mii
 operator|->
 name|mii_instance
+operator|++
 expr_stmt|;
 name|sc
 operator|->
@@ -478,11 +479,6 @@ operator|->
 name|mii_pdata
 operator|=
 name|mii
-expr_stmt|;
-name|mii
-operator|->
-name|mii_instance
-operator|++
 expr_stmt|;
 name|rsc
 operator|->
@@ -525,7 +521,7 @@ value|printf("%s%s", sep, s); sep = ", "
 if|#
 directive|if
 literal|0
-block|ADD(IFM_MAKEWORD(IFM_ETHER, IFM_100_TX, IFM_LOOP, sc->mii_inst), 	    BMCR_LOOP|BMCR_S100);
+block|ADD(IFM_MAKEWORD(IFM_ETHER, IFM_100_TX, IFM_LOOP, sc->mii_inst), 	    MII_MEDIA_100_TX);
 endif|#
 directive|endif
 name|sc
@@ -701,70 +697,10 @@ block|{
 case|case
 name|MII_POLLSTAT
 case|:
-comment|/* 		 * If we're not polling our PHY instance, just return. 		 */
-if|if
-condition|(
-name|IFM_INST
-argument_list|(
-name|ife
-operator|->
-name|ifm_media
-argument_list|)
-operator|!=
-name|sc
-operator|->
-name|mii_inst
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 break|break;
 case|case
 name|MII_MEDIACHG
 case|:
-comment|/* 		 * If the media indicates a different PHY instance, 		 * isolate ourselves. 		 */
-if|if
-condition|(
-name|IFM_INST
-argument_list|(
-name|ife
-operator|->
-name|ifm_media
-argument_list|)
-operator|!=
-name|sc
-operator|->
-name|mii_inst
-condition|)
-block|{
-name|reg
-operator|=
-name|PHY_READ
-argument_list|(
-name|sc
-argument_list|,
-name|MII_BMCR
-argument_list|)
-expr_stmt|;
-name|PHY_WRITE
-argument_list|(
-name|sc
-argument_list|,
-name|MII_BMCR
-argument_list|,
-name|reg
-operator||
-name|BMCR_ISO
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
 comment|/* 		 * If the interface is not up, don't do anything. 		 */
 if|if
 condition|(
@@ -1076,25 +1012,6 @@ break|break;
 case|case
 name|MII_TICK
 case|:
-comment|/* 		 * If we're not currently selected, just return. 		 */
-if|if
-condition|(
-name|IFM_INST
-argument_list|(
-name|ife
-operator|->
-name|ifm_media
-argument_list|)
-operator|!=
-name|sc
-operator|->
-name|mii_inst
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 comment|/* 		 * Is the interface even up? 		 */
 if|if
 condition|(
