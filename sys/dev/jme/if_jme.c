@@ -9060,6 +9060,26 @@ name|ENOBUFS
 operator|)
 return|;
 block|}
+comment|/* 		 * Reset IP checksum and recompute TCP pseudo 		 * checksum that NDIS specification requires. 		 */
+name|ip
+operator|=
+operator|(
+expr|struct
+name|ip
+operator|*
+operator|)
+operator|(
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+name|char
+operator|*
+argument_list|)
+operator|+
+name|ip_off
+operator|)
+expr_stmt|;
 name|tcp
 operator|=
 operator|(
@@ -9079,7 +9099,6 @@ operator|+
 name|poff
 operator|)
 expr_stmt|;
-comment|/* 		 * Reset IP checksum and recompute TCP pseudo 		 * checksum that NDIS specification requires. 		 */
 name|ip
 operator|->
 name|ip_sum
