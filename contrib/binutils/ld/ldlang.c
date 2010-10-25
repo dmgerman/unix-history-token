@@ -18425,10 +18425,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|newdot
-operator|!=
-name|dot
-operator|&&
 operator|!
 name|output_section_statement
 operator|->
@@ -18455,7 +18451,13 @@ operator|=
 name|newdot
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|newdot
+operator|!=
+name|dot
+condition|)
 block|{
 comment|/* Insert a pad after this statement.  We can't 		       put the pad before when relaxing, in case the 		       assignment references dot.  */
 name|insert_pad
