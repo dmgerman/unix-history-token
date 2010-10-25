@@ -22539,6 +22539,14 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|hdr
+operator|->
+name|sh_size
+operator|!=
+literal|0
+condition|)
 operator|(
 call|(
 modifier|*

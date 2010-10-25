@@ -372,9 +372,17 @@ name|all_input_readonly
 range|:
 literal|1
 decl_stmt|;
+comment|/* If this section should be ignored.  */
 name|unsigned
 name|int
 name|ignored
+range|:
+literal|1
+decl_stmt|;
+comment|/* If there is a symbol relative to this section.  */
+name|unsigned
+name|int
+name|section_relative_symbol
 range|:
 literal|1
 decl_stmt|;
