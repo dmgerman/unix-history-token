@@ -463,7 +463,7 @@ name|void
 parameter_list|)
 block|{
 name|register_t
-name|savecrit
+name|saveintr
 decl_stmt|;
 name|u_int
 name|mxcsr
@@ -472,7 +472,7 @@ name|u_short
 name|control
 decl_stmt|;
 comment|/* 	 * It is too early for critical_enter() to work on AP. 	 */
-name|savecrit
+name|saveintr
 operator|=
 name|intr_disable
 argument_list|()
@@ -572,7 +572,7 @@ argument_list|()
 expr_stmt|;
 name|intr_restore
 argument_list|(
-name|savecrit
+name|saveintr
 argument_list|)
 expr_stmt|;
 block|}

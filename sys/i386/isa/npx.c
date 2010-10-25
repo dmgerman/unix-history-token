@@ -1296,7 +1296,7 @@ name|savefpu
 name|dummy
 decl_stmt|;
 name|register_t
-name|savecrit
+name|saveintr
 decl_stmt|;
 name|u_short
 name|control
@@ -1308,7 +1308,7 @@ name|hw_float
 condition|)
 return|return;
 comment|/* 	 * fninit has the same h/w bugs as fnsave.  Use the detoxified 	 * fnsave to throw away any junk in the fpu.  npxsave() initializes 	 * the fpu and sets fpcurthread = NULL as important side effects. 	 * 	 * It is too early for critical_enter() to work on AP. 	 */
-name|savecrit
+name|saveintr
 operator|=
 name|intr_disable
 argument_list|()
@@ -1349,7 +1349,7 @@ argument_list|()
 expr_stmt|;
 name|intr_restore
 argument_list|(
-name|savecrit
+name|saveintr
 argument_list|)
 expr_stmt|;
 block|}
