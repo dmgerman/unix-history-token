@@ -534,7 +534,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|tdnam
+name|tdev
 parameter_list|(
 name|KINFO
 modifier|*
@@ -547,7 +547,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|tdev
+name|tdnam
 parameter_list|(
 name|KINFO
 modifier|*
