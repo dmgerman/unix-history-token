@@ -3640,8 +3640,8 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|u_int
-name|eflags
+name|register_t
+name|saveintr
 decl_stmt|;
 name|int
 name|ccr2_test
@@ -3657,12 +3657,9 @@ name|ccr2
 decl_stmt|,
 name|ccr3
 decl_stmt|;
-name|eflags
+name|saveintr
 operator|=
-name|read_eflags
-argument_list|()
-expr_stmt|;
-name|disable_intr
+name|intr_disable
 argument_list|()
 expr_stmt|;
 name|ccr2
@@ -3787,9 +3784,9 @@ operator|=
 literal|0x00ff
 expr_stmt|;
 comment|/* Old 486SLC/DLC and TI486SXLC/SXL */
-name|write_eflags
+name|intr_restore
 argument_list|(
-name|eflags
+name|saveintr
 argument_list|)
 expr_stmt|;
 block|}
