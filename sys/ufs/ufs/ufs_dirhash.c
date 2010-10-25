@@ -285,6 +285,10 @@ literal|1024
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* NOTE: initial value. It is 						   tuned in ufsdirhash_init() */
+end_comment
+
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
@@ -5633,6 +5637,26 @@ name|void
 name|ufsdirhash_init
 parameter_list|()
 block|{
+name|ufs_dirhashmaxmem
+operator|=
+name|lmax
+argument_list|(
+name|roundup
+argument_list|(
+name|hibufspace
+operator|/
+literal|64
+argument_list|,
+name|PAGE_SIZE
+argument_list|)
+argument_list|,
+literal|2
+operator|*
+literal|1024
+operator|*
+literal|1024
+argument_list|)
+expr_stmt|;
 name|ufsdirhash_zone
 operator|=
 name|uma_zcreate
