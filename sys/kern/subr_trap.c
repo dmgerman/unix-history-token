@@ -282,7 +282,6 @@ name|p_flag
 operator|&
 name|P_PROFIL
 condition|)
-block|{
 name|addupc_task
 argument_list|(
 name|td
@@ -299,7 +298,6 @@ operator|*
 name|psratio
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Let the scheduler adjust our priority etc. 	 */
 name|sched_userret
 argument_list|(
