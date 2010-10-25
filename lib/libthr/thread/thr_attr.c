@@ -209,7 +209,7 @@ name|pthread
 operator|==
 name|NULL
 operator|||
-name|dst_attr
+name|dstattr
 operator|==
 name|NULL
 operator|||
