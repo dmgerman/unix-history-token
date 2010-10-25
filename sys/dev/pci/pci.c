@@ -14052,11 +14052,14 @@ block|}
 comment|/* Disable interrupts */
 name|offs
 operator|=
-name|bus_read_1
+name|EHCI_CAPLENGTH
+argument_list|(
+name|bus_read_4
 argument_list|(
 name|res
 argument_list|,
-name|EHCI_CAPLENGTH
+name|EHCI_CAPLEN_HCIVERSION
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|bus_write_4
