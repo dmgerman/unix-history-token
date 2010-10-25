@@ -22760,7 +22760,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Local lock unlock. Unlock all byte ranges that are no longer locked  * by NFSv4.  */
+comment|/*  * Local lock unlock. Unlock all byte ranges that are no longer locked  * by NFSv4. To do this, unlock any subranges of first-->end that  * do not overlap with the byte ranges of any lock in the lfp->lf_lock  * list. This list has all locks for the file held by other  *<clientid, lockowner> tuples. The list is ordered by increasing  * lo_first value, but may have entries that overlap each other, for  * the case of read locks.  */
 end_comment
 
 begin_function
@@ -22796,6 +22796,8 @@ name|uint64_t
 name|first
 decl_stmt|,
 name|end
+decl_stmt|,
+name|prevfirst
 decl_stmt|;
 name|first
 operator|=
@@ -22813,6 +22815,10 @@ name|init_end
 condition|)
 block|{
 comment|/* Loop through all nfs locks, adjusting first and end */
+name|prevfirst
+operator|=
+literal|0
+expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|lop
@@ -22822,6 +22828,40 @@ argument_list|,
 argument|lo_lckfile
 argument_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|prevfirst
+operator|<=
+name|lop
+operator|->
+name|lo_first
+argument_list|,
+operator|(
+literal|"nfsv4 locks out of order"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|lop
+operator|->
+name|lo_first
+operator|<
+name|lop
+operator|->
+name|lo_end
+argument_list|,
+operator|(
+literal|"nfsv4 bogus lock"
+operator|)
+argument_list|)
+expr_stmt|;
+name|prevfirst
+operator|=
+name|lop
+operator|->
+name|lo_first
+expr_stmt|;
 if|if
 condition|(
 name|first
@@ -22836,7 +22876,7 @@ name|lop
 operator|->
 name|lo_end
 condition|)
-comment|/* Overlaps initial part */
+comment|/* 				 * Overlaps with initial part, so trim 				 * off that initial part by moving first past 				 * it. 				 */
 name|first
 operator|=
 name|lop
@@ -22855,23 +22895,26 @@ operator|&&
 name|lop
 operator|->
 name|lo_first
-operator|>=
+operator|>
 name|first
 condition|)
-comment|/* Begins before end and past first */
+block|{
+comment|/* 				 * This lock defines the end of the 				 * segment to unlock, so set end to the 				 * start of it and break out of the loop. 				 */
 name|end
 operator|=
 name|lop
 operator|->
 name|lo_first
 expr_stmt|;
+break|break;
+block|}
 if|if
 condition|(
 name|first
 operator|>=
 name|end
 condition|)
-comment|/* shrunk to 0 so this iteration is done */
+comment|/* 				 * There is no segment left to do, so 				 * break out of this loop and then exit 				 * the outer while() since first will be set 				 * to end, which must equal init_end here. 				 */
 break|break;
 block|}
 if|if
@@ -22916,7 +22959,7 @@ name|end
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* and move on to the rest of the range */
+comment|/* 		 * Now move past this segment and look for any further 		 * segment in the range, if there is one. 		 */
 name|first
 operator|=
 name|end
