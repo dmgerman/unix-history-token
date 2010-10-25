@@ -3573,7 +3573,7 @@ name|inq_buf
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Note that although the size of the inquiry buffer is the full 	 * 256 bytes specified in the SCSI spec, we only tell the device 	 * that we have allocated SHORT_INQUIRY_LENGTH bytes.  There are 	 * two reasons for this: 	 * 	 *  - The SCSI spec says that when a length field is only 1 byte, 	 *    a value of 0 will be interpreted as 256.  Therefore 	 *    scsi_inquiry() will convert an inq_len (which is passed in as 	 *    a u_int32_t, but the field in the CDB is only 1 byte) of 256 	 *    to 0.  Evidently, very few devices meet the spec in that 	 *    regard.  Some devices, like many Seagate disks, take the 0 as  	 *    0, and don't return any data.  One Pioneer DVD-R drive 	 *    returns more data than the command asked for. 	 * 	 *    So, since there are numerous devices that just don't work 	 *    right with the full inquiry size, we don't send the full size. 	 *  	 *  - The second reason not to use the full inquiry data length is 	 *    that we don't need it here.  The only reason we issue a 	 *    standard inquiry is to get the vendor name, device name, 	 *    and revision so scsi_print_inquiry() can print them. 	 * 	 * If, at some point in the future, more inquiry data is needed for 	 * some reason, this code should use a procedure similar to the 	 * probe code.  i.e., issue a short inquiry, and determine from 	 * the additional length passed back from the device how much 	 * inquiry data the device supports.  Once the amount the device 	 * supports is determined, issue an inquiry for that amount and no 	 * more. 	 * 	 * KDM, 2/18/2000 	 */
+comment|/* 	 * Note that although the size of the inquiry buffer is the full 	 * 256 bytes specified in the SCSI spec, we only tell the device 	 * that we have allocated SHORT_INQUIRY_LENGTH bytes.  There are 	 * two reasons for this: 	 * 	 *  - The SCSI spec says that when a length field is only 1 byte, 	 *    a value of 0 will be interpreted as 256.  Therefore 	 *    scsi_inquiry() will convert an inq_len (which is passed in as 	 *    a u_int32_t, but the field in the CDB is only 1 byte) of 256 	 *    to 0.  Evidently, very few devices meet the spec in that 	 *    regard.  Some devices, like many Seagate disks, take the 0 as 	 *    0, and don't return any data.  One Pioneer DVD-R drive 	 *    returns more data than the command asked for. 	 * 	 *    So, since there are numerous devices that just don't work 	 *    right with the full inquiry size, we don't send the full size. 	 * 	 *  - The second reason not to use the full inquiry data length is 	 *    that we don't need it here.  The only reason we issue a 	 *    standard inquiry is to get the vendor name, device name, 	 *    and revision so scsi_print_inquiry() can print them. 	 * 	 * If, at some point in the future, more inquiry data is needed for 	 * some reason, this code should use a procedure similar to the 	 * probe code.  i.e., issue a short inquiry, and determine from 	 * the additional length passed back from the device how much 	 * inquiry data the device supports.  Once the amount the device 	 * supports is determined, issue an inquiry for that amount and no 	 * more. 	 * 	 * KDM, 2/18/2000 	 */
 name|scsi_inquiry
 argument_list|(
 operator|&
@@ -5922,7 +5922,7 @@ block|}
 name|printf
 argument_list|(
 literal|"\nFeature                      "
-literal|"Support  Enable    Value           Vendor\n"
+literal|"Support  Enabled   Value           Vendor\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -6088,32 +6088,9 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|parm
-operator|->
-name|satacapabilities
-operator|&&
-name|parm
-operator|->
-name|satacapabilities
-operator|!=
-literal|0xffff
-condition|)
-block|{
 name|printf
 argument_list|(
-literal|"Native Command Queuing (NCQ)   %s	"
-argument_list|,
-name|parm
-operator|->
-name|satacapabilities
-operator|&
-name|ATA_SUPPORT_NCQ
-condition|?
-literal|"yes"
-else|:
-literal|"no"
+literal|"Native Command Queuing (NCQ)   "
 argument_list|)
 expr_stmt|;
 if|if
@@ -6121,13 +6098,21 @@ condition|(
 name|parm
 operator|->
 name|satacapabilities
+operator|!=
+literal|0xffff
+operator|&&
+operator|(
+name|parm
+operator|->
+name|satacapabilities
 operator|&
 name|ATA_SUPPORT_NCQ
+operator|)
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"	%d tags\n"
+literal|"yes		%d tags\n"
 argument_list|,
 name|ATA_QUEUE_LEN
 argument_list|(
@@ -6143,10 +6128,9 @@ block|}
 else|else
 name|printf
 argument_list|(
-literal|"\n"
+literal|"no\n"
 argument_list|)
 expr_stmt|;
-block|}
 name|printf
 argument_list|(
 literal|"SMART                          %s	%s\n"
@@ -6265,7 +6249,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"advanced power management      %s	%s	%d/0x%02X\n"
+literal|"advanced power management      %s	%s"
 argument_list|,
 name|parm
 operator|->
@@ -6290,6 +6274,22 @@ condition|?
 literal|"yes"
 else|:
 literal|"no"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|parm
+operator|->
+name|support
+operator|.
+name|command2
+operator|&
+name|ATA_SUPPORT_APM
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"	%d/0x%02X\n"
 argument_list|,
 name|parm
 operator|->
@@ -6300,10 +6300,16 @@ operator|->
 name|apm_value
 argument_list|)
 expr_stmt|;
+block|}
+else|else
 name|printf
 argument_list|(
-literal|"automatic acoustic management  %s	%s	"
-literal|"%d/0x%02X	%d/0x%02X\n"
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"automatic acoustic management  %s	%s"
 argument_list|,
 name|parm
 operator|->
@@ -6328,6 +6334,22 @@ condition|?
 literal|"yes"
 else|:
 literal|"no"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|parm
+operator|->
+name|support
+operator|.
+name|command2
+operator|&
+name|ATA_SUPPORT_AUTOACOUSTIC
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"	%d/0x%02X	%d/0x%02X\n"
 argument_list|,
 name|ATA_ACOUSTIC_CURRENT
 argument_list|(
@@ -6356,6 +6378,13 @@ name|parm
 operator|->
 name|acoustic
 argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|printf
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -6418,7 +6447,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"write-read-verify              %s	%s	%d/0x%x\n"
+literal|"write-read-verify              %s	%s"
 argument_list|,
 name|parm
 operator|->
@@ -6439,6 +6468,20 @@ condition|?
 literal|"yes"
 else|:
 literal|"no"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|parm
+operator|->
+name|support2
+operator|&
+name|ATA_SUPPORT_WRITEREADVERIFY
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"	%d/0x%x\n"
 argument_list|,
 name|parm
 operator|->
@@ -6447,6 +6490,13 @@ argument_list|,
 name|parm
 operator|->
 name|wrv_mode
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|printf
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -9838,7 +9888,7 @@ goto|goto
 name|defect_bailout
 goto|;
 block|}
-comment|/* 	 * XXX KDM  I should probably clean up the printout format for the 	 * disk defects.  	 */
+comment|/* 	 * XXX KDM  I should probably clean up the printout format for the 	 * disk defects. 	 */
 switch|switch
 condition|(
 name|returned_format
@@ -10319,7 +10369,7 @@ literal|0
 end_if
 
 begin_endif
-unit|void reassignblocks(struct cam_device *device, u_int32_t *blocks, int num_blocks) { 	union ccb *ccb; 	 	ccb = cam_getccb(device);  	cam_freeccb(ccb); }
+unit|void reassignblocks(struct cam_device *device, u_int32_t *blocks, int num_blocks) { 	union ccb *ccb;  	ccb = cam_getccb(device);  	cam_freeccb(ccb); }
 endif|#
 directive|endif
 end_endif
@@ -14462,7 +14512,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get a path inquiry CCB for the specified device.    */
+comment|/*  * Get a path inquiry CCB for the specified device.  */
 end_comment
 
 begin_function
@@ -14668,7 +14718,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get a get device CCB for the specified device.    */
+comment|/*  * Get a get device CCB for the specified device.  */
 end_comment
 
 begin_function
@@ -21486,7 +21536,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Ahh, getopt(3) is a pain. 	 * 	 * This is a gross hack.  There really aren't many other good 	 * options (excuse the pun) for parsing options in a situation like 	 * this.  getopt is kinda braindead, so you end up having to run 	 * through the options twice, and give each invocation of getopt 	 * the option string for the other invocation. 	 *  	 * You would think that you could just have two groups of options. 	 * The first group would get parsed by the first invocation of 	 * getopt, and the second group would get parsed by the second 	 * invocation of getopt.  It doesn't quite work out that way.  When 	 * the first invocation of getopt finishes, it leaves optind pointing 	 * to the argument _after_ the first argument in the second group. 	 * So when the second invocation of getopt comes around, it doesn't 	 * recognize the first argument it gets and then bails out. 	 *  	 * A nice alternative would be to have a flag for getopt that says 	 * "just keep parsing arguments even when you encounter an unknown 	 * argument", but there isn't one.  So there's no real clean way to 	 * easily parse two sets of arguments without having one invocation 	 * of getopt know about the other. 	 *  	 * Without this hack, the first invocation of getopt would work as 	 * long as the generic arguments are first, but the second invocation 	 * (in the subfunction) would fail in one of two ways.  In the case 	 * where you don't set optreset, it would fail because optind may be 	 * pointing to the argument after the one it should be pointing at. 	 * In the case where you do set optreset, and reset optind, it would 	 * fail because getopt would run into the first set of options, which 	 * it doesn't understand. 	 * 	 * All of this would "sort of" work if you could somehow figure out 	 * whether optind had been incremented one option too far.  The 	 * mechanics of that, however, are more daunting than just giving 	 * both invocations all of the expect options for either invocation. 	 *  	 * Needless to say, I wouldn't mind if someone invented a better 	 * (non-GPL!) command line parsing interface than getopt.  I 	 * wouldn't mind if someone added more knobs to getopt to make it 	 * work better.  Who knows, I may talk myself into doing it someday, 	 * if the standards weenies let me.  As it is, it just leads to 	 * hackery like this and causes people to avoid it in some cases. 	 *  	 * KDM, September 8th, 1998 	 */
+comment|/* 	 * Ahh, getopt(3) is a pain. 	 * 	 * This is a gross hack.  There really aren't many other good 	 * options (excuse the pun) for parsing options in a situation like 	 * this.  getopt is kinda braindead, so you end up having to run 	 * through the options twice, and give each invocation of getopt 	 * the option string for the other invocation. 	 * 	 * You would think that you could just have two groups of options. 	 * The first group would get parsed by the first invocation of 	 * getopt, and the second group would get parsed by the second 	 * invocation of getopt.  It doesn't quite work out that way.  When 	 * the first invocation of getopt finishes, it leaves optind pointing 	 * to the argument _after_ the first argument in the second group. 	 * So when the second invocation of getopt comes around, it doesn't 	 * recognize the first argument it gets and then bails out. 	 * 	 * A nice alternative would be to have a flag for getopt that says 	 * "just keep parsing arguments even when you encounter an unknown 	 * argument", but there isn't one.  So there's no real clean way to 	 * easily parse two sets of arguments without having one invocation 	 * of getopt know about the other. 	 * 	 * Without this hack, the first invocation of getopt would work as 	 * long as the generic arguments are first, but the second invocation 	 * (in the subfunction) would fail in one of two ways.  In the case 	 * where you don't set optreset, it would fail because optind may be 	 * pointing to the argument after the one it should be pointing at. 	 * In the case where you do set optreset, and reset optind, it would 	 * fail because getopt would run into the first set of options, which 	 * it doesn't understand. 	 * 	 * All of this would "sort of" work if you could somehow figure out 	 * whether optind had been incremented one option too far.  The 	 * mechanics of that, however, are more daunting than just giving 	 * both invocations all of the expect options for either invocation. 	 * 	 * Needless to say, I wouldn't mind if someone invented a better 	 * (non-GPL!) command line parsing interface than getopt.  I 	 * wouldn't mind if someone added more knobs to getopt to make it 	 * work better.  Who knows, I may talk myself into doing it someday, 	 * if the standards weenies let me.  As it is, it just leads to 	 * hackery like this and causes people to avoid it in some cases. 	 * 	 * KDM, September 8th, 1998 	 */
 if|if
 condition|(
 name|subopt
