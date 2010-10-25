@@ -335,6 +335,12 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* Geometry is fixed. */
+name|int
+name|gpt_corrupt
+range|:
+literal|1
+decl_stmt|;
+comment|/* Table is corrupt. */
 block|}
 struct|;
 end_struct
@@ -495,6 +501,13 @@ name|G_PART_PARM_ATTRIB
 value|0x2000
 end_define
 
+begin_define
+define|#
+directive|define
+name|G_PART_PARM_FORCE
+value|0x4000
+end_define
+
 begin_struct
 struct|struct
 name|g_part_parms
@@ -564,6 +577,10 @@ specifier|const
 name|char
 modifier|*
 name|gpp_attrib
+decl_stmt|;
+name|unsigned
+name|int
+name|gpp_force
 decl_stmt|;
 block|}
 struct|;
