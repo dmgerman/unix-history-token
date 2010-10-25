@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/signalvar.h>
 end_include
 
@@ -1210,15 +1216,16 @@ name|curthread
 operator|->
 name|td_proc
 expr_stmt|;
-name|tidhash_remove
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
 comment|/* A module may be waiting for us to exit. */
 name|wakeup
 argument_list|(
 name|curthread
+argument_list|)
+expr_stmt|;
+name|rw_wlock
+argument_list|(
+operator|&
+name|tidhash_lock
 argument_list|)
 expr_stmt|;
 name|PROC_LOCK
@@ -1240,6 +1247,12 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|rw_wunlock
+argument_list|(
+operator|&
+name|tidhash_lock
+argument_list|)
+expr_stmt|;
 name|kproc_exit
 argument_list|(
 literal|0
@@ -1247,6 +1260,19 @@ argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED. */
 block|}
+name|LIST_REMOVE
+argument_list|(
+name|curthread
+argument_list|,
+name|td_hash
+argument_list|)
+expr_stmt|;
+name|rw_wunlock
+argument_list|(
+operator|&
+name|tidhash_lock
+argument_list|)
+expr_stmt|;
 name|PROC_SLOCK
 argument_list|(
 name|p

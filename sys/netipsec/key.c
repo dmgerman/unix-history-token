@@ -13085,6 +13085,8 @@ if|if
 condition|(
 name|sah
 operator|->
+name|route_cache
+operator|.
 name|sa_route
 operator|.
 name|ro_rt
@@ -13094,6 +13096,8 @@ name|RTFREE
 argument_list|(
 name|sah
 operator|->
+name|route_cache
+operator|.
 name|sa_route
 operator|.
 name|ro_rt
@@ -13101,6 +13105,8 @@ argument_list|)
 expr_stmt|;
 name|sah
 operator|->
+name|route_cache
+operator|.
 name|sa_route
 operator|.
 name|ro_rt
@@ -36542,6 +36548,8 @@ operator|=
 operator|&
 name|sah
 operator|->
+name|route_cache
+operator|.
 name|sa_route
 expr_stmt|;
 if|if

@@ -37,6 +37,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|USB_HAVE_DEVCTL
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|USB_HAVE_BUSDMA
 value|1
 end_define

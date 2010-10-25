@@ -1133,16 +1133,13 @@ name|y
 decl_stmt|,
 name|z
 decl_stmt|;
-name|u_long
-name|eflags
+name|register_t
+name|saveintr
 decl_stmt|;
 comment|/* 	 * Grab the HW state as quickly and compactly as we can.  Disable 	 * interrupts to avoid measuring our interrupt service time on 	 * hw with quality clock sources. 	 */
-name|eflags
+name|saveintr
 operator|=
-name|read_eflags
-argument_list|()
-expr_stmt|;
-name|disable_intr
+name|intr_disable
 argument_list|()
 expr_stmt|;
 name|x
@@ -1172,9 +1169,9 @@ literal|2
 index|]
 expr_stmt|;
 comment|/* timer1 */
-name|write_eflags
+name|intr_restore
 argument_list|(
-name|eflags
+name|saveintr
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Order is important here.  We need to check the state of the GPIO 	 * pin first, in order to avoid reading timer 1 right before the 	 * state change.  Technically pps_a may be zero in which case we 	 * harmlessly read the REVID register and the contents of pps_d is 	 * of no concern. 	 */

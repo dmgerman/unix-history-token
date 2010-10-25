@@ -847,15 +847,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|mii_anar
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|mii_down
 parameter_list|(
@@ -894,17 +885,6 @@ name|mii_pollstat
 parameter_list|(
 name|struct
 name|mii_data
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|mii_add_media
-parameter_list|(
-name|struct
-name|mii_softc
 modifier|*
 parameter_list|)
 function_decl|;

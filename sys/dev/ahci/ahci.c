@@ -6946,6 +6946,14 @@ operator|->
 name|mtx
 argument_list|)
 expr_stmt|;
+name|mtx_destroy
+argument_list|(
+operator|&
+name|ch
+operator|->
+name|mtx
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error

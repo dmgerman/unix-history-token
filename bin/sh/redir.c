@@ -1028,6 +1028,9 @@ operator|=
 literal|1
 expr_stmt|;
 else|else
+block|{
+if|if
+condition|(
 name|dup2
 argument_list|(
 name|redir
@@ -1038,7 +1041,26 @@ name|dupfd
 argument_list|,
 name|fd
 argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|"%d: %s"
+argument_list|,
+name|redir
+operator|->
+name|ndup
+operator|.
+name|dupfd
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{

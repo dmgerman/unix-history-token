@@ -3312,9 +3312,6 @@ decl_stmt|;
 name|sigset_t
 name|mask
 decl_stmt|;
-name|g_gate_load
-argument_list|()
-expr_stmt|;
 name|foreground
 operator|=
 name|false
@@ -3412,6 +3409,9 @@ name|pjdlog_debug_set
 argument_list|(
 name|debuglevel
 argument_list|)
+expr_stmt|;
+name|g_gate_load
+argument_list|()
 expr_stmt|;
 name|pfh
 operator|=

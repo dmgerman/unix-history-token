@@ -2860,7 +2860,7 @@ name|hibufspace
 operator|-
 name|MAXBSIZE
 expr_stmt|;
-comment|/* 	 * Note: The 16 MB upper limit for hirunningspace was chosen 	 * arbitrarily and may need further tuning. It corresponds to 	 * 128 outstanding write IO requests (if IO size is 128 KiB), 	 * which fits with many RAID controllers' tagged queuing limits. 	 * The lower 1 MB limit is the historical upper limit for 	 * hirunningspace. 	 */
+comment|/* 	 * Note: The 16 MiB upper limit for hirunningspace was chosen 	 * arbitrarily and may need further tuning. It corresponds to 	 * 128 outstanding write IO requests (if IO size is 128 KiB), 	 * which fits with many RAID controllers' tagged queuing limits. 	 * The lower 1 MiB limit is the historical upper limit for 	 * hirunningspace. 	 */
 name|hirunningspace
 operator|=
 name|lmax
@@ -2892,9 +2892,13 @@ name|lorunningspace
 operator|=
 name|roundup
 argument_list|(
+operator|(
 name|hirunningspace
-operator|/
+operator|*
 literal|2
+operator|)
+operator|/
+literal|3
 argument_list|,
 name|MAXBSIZE
 argument_list|)

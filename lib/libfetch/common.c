@@ -1254,14 +1254,14 @@ name|int
 name|verbose
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|WITH_SSL
 name|int
 name|ret
 decl_stmt|,
 name|ssl_err
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|WITH_SSL
 comment|/* Init the SSL library and context */
 if|if
 condition|(

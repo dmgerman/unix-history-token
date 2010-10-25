@@ -202,6 +202,12 @@ literal|"these terminate a word"
 block|}
 block|,
 block|{
+literal|"CIGN"
+block|,
+literal|"character should be ignored"
+block|}
+block|,
+block|{
 name|NULL
 block|,
 name|NULL
@@ -1167,7 +1173,7 @@ name|add
 argument_list|(
 literal|"\""
 argument_list|,
-literal|"CDQUOTE"
+literal|"CIGN"
 argument_list|)
 expr_stmt|;
 name|add

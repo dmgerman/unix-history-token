@@ -772,6 +772,10 @@ begin_struct
 struct|struct
 name|pthread_attr
 block|{
+define|#
+directive|define
+name|pthread_attr_start_copy
+value|sched_policy
 name|int
 name|sched_policy
 decl_stmt|;
@@ -802,6 +806,10 @@ decl_stmt|;
 name|size_t
 name|guardsize_attr
 decl_stmt|;
+define|#
+directive|define
+name|pthread_attr_end_copy
+value|cpuset
 name|cpuset_t
 modifier|*
 name|cpuset

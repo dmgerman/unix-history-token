@@ -8685,7 +8685,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Choose de-pipeline mode for BCM5906 A1. */
+comment|/* Choose de-pipeline mode for BCM5906 A0, A1 and A2. */
 if|if
 condition|(
 name|sc
@@ -8693,12 +8693,27 @@ operator|->
 name|bge_asicrev
 operator|==
 name|BGE_ASICREV_BCM5906
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|sc
 operator|->
-name|bge_chiprev
+name|bge_chipid
+operator|==
+name|BGE_CHIPID_BCM5906_A0
+operator|||
+name|sc
+operator|->
+name|bge_chipid
 operator|==
 name|BGE_CHIPID_BCM5906_A1
+operator|||
+name|sc
+operator|->
+name|bge_chipid
+operator|==
+name|BGE_CHIPID_BCM5906_A2
 condition|)
 name|CSR_WRITE_4
 argument_list|(
@@ -8721,6 +8736,7 @@ operator||
 literal|2
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * The BD ring replenish thresholds control how often the 	 * hardware fetches new BD's from the producer rings in host 	 * memory.  Setting the value too low on a busy system can 	 * starve the hardware and recue the throughpout. 	 * 	 * Set the BD ring replentish thresholds. The recommended 	 * values are 1/8th the number of descriptors allocated to 	 * each ring. 	 * XXX The 5754 requires a lower threshold, so it might be a 	 * requirement of all 575x family chips.  The Linux driver sets 	 * the lower threshold for all 5705 family chips as well, but there 	 * are reports that it might not need to be so strict. 	 * 	 * XXX Linux does some extra fiddling here for the 5906 parts as 	 * well. 	 */
 if|if
 condition|(

@@ -151,6 +151,7 @@ define|#
 directive|define
 name|PIC_RETURN
 parameter_list|()
+value|j ra
 end_define
 
 begin_endif

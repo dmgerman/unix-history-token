@@ -326,13 +326,6 @@ argument_list|,
 literal|"mambocons"
 argument_list|)
 expr_stmt|;
-name|tty_makealias
-argument_list|(
-name|tp
-argument_list|,
-literal|"mambocons"
-argument_list|)
-expr_stmt|;
 name|polltime
 operator|=
 literal|1
