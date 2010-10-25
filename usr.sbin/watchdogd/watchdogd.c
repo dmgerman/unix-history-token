@@ -24,6 +24,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<sys/mman.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -516,6 +522,24 @@ expr_stmt|;
 name|pidfile_write
 argument_list|(
 name|pfh
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|madvise
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|MADV_PROTECT
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|warn
+argument_list|(
+literal|"madvise failed"
 argument_list|)
 expr_stmt|;
 name|watchdog_loop
