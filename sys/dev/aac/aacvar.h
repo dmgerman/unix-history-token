@@ -1147,7 +1147,7 @@ name|AAC_STATE_SUSPEND
 value|(1<<0)
 define|#
 directive|define
-name|AAC_STATE_OPEN
+name|AAC_STATE_UNUSED0
 value|(1<<1)
 define|#
 directive|define
@@ -1157,9 +1157,6 @@ define|#
 directive|define
 name|AAC_STATE_AIF_SLEEPER
 value|(1<<3)
-name|int
-name|aac_open_cnt
-decl_stmt|;
 name|struct
 name|FsaRevision
 name|aac_revision
