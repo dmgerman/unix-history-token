@@ -529,6 +529,17 @@ name|SND_VOL_0DB_PCM
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.snd.vpc_0db"
+argument_list|,
+operator|&
+name|chn_vol_0db_pcm
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|void
