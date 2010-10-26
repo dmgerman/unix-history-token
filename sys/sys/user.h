@@ -207,7 +207,7 @@ begin_define
 define|#
 directive|define
 name|KI_NSPARE_PTR
-value|7
+value|6
 end_define
 
 begin_ifndef
@@ -696,6 +696,12 @@ modifier|*
 name|ki_udata
 decl_stmt|;
 comment|/* User convenience pointer */
+name|struct
+name|thread
+modifier|*
+name|ki_tdaddr
+decl_stmt|;
+comment|/* address of thread */
 comment|/* 	 * When adding new variables, take space for pointers from the 	 * front of ki_spareptrs, and longs from the end of ki_sparelongs. 	 * That way the spare room from both arrays will remain contiguous. 	 */
 name|void
 modifier|*
