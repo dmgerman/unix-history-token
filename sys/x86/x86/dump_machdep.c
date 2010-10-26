@@ -762,7 +762,7 @@ literal|1
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  chunk %d: %jdMB (%jd pages)"
+literal|"  chunk %d: %juMB (%ju pages)"
 argument_list|,
 name|seqnr
 argument_list|,
@@ -818,7 +818,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|" %jd"
+literal|" %ju"
 argument_list|,
 operator|(
 name|uintmax_t
