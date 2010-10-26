@@ -23,6 +23,10 @@ name|IEEE80211_RATECTL_SAMPLE
 init|=
 literal|3
 block|,
+name|IEEE80211_RATECTL_NONE
+init|=
+literal|4
+block|,
 name|IEEE80211_RATECTL_MAX
 block|}
 enum|;
