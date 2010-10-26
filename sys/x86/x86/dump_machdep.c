@@ -74,12 +74,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/_inttypes.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/elf.h>
 end_include
 
@@ -768,19 +762,21 @@ literal|1
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  chunk %d: %"
-name|PRIu64
-literal|"MB (%"
-name|PRIu64
-literal|" pages)"
+literal|"  chunk %d: %jdMB (%jd pages)"
 argument_list|,
 name|seqnr
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|PG2MB
 argument_list|(
 name|pgs
 argument_list|)
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|pgs
 argument_list|)
 expr_stmt|;
@@ -822,9 +818,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|" %"
-name|PRIu64
+literal|" %jd"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|PG2MB
 argument_list|(
 name|pgs
