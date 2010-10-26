@@ -1321,9 +1321,7 @@ name|gctl_ro_param
 argument_list|(
 name|req
 argument_list|,
-name|opt
-operator|->
-name|go_name
+name|optname
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1424,9 +1422,7 @@ name|gctl_ro_param
 argument_list|(
 name|req
 argument_list|,
-name|opt
-operator|->
-name|go_name
+name|optname
 argument_list|,
 operator|-
 literal|1
@@ -1466,9 +1462,7 @@ name|gctl_ro_param
 argument_list|(
 name|req
 argument_list|,
-name|opt
-operator|->
-name|go_name
+name|optname
 argument_list|,
 operator|-
 literal|1
@@ -1533,9 +1527,7 @@ name|gctl_ro_param
 argument_list|(
 name|req
 argument_list|,
-name|opt
-operator|->
-name|go_name
+name|optname
 argument_list|,
 sizeof|sizeof
 argument_list|(
