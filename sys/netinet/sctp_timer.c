@@ -2305,6 +2305,9 @@ name|win_probe
 parameter_list|,
 name|int
 name|num_marked
+parameter_list|,
+name|int
+name|num_abandoned
 parameter_list|)
 block|{
 if|if
@@ -2365,7 +2368,11 @@ operator|==
 literal|0
 operator|)
 operator|&&
+operator|(
 name|num_marked
+operator|||
+name|num_abandoned
+operator|)
 condition|)
 block|{
 comment|/* We don't apply penalty to window probe scenarios */
@@ -2706,6 +2713,10 @@ parameter_list|,
 name|int
 modifier|*
 name|num_marked
+parameter_list|,
+name|int
+modifier|*
+name|num_abandoned
 parameter_list|)
 block|{
 comment|/* 	 * Mark all chunks (well not all) that were sent to *net for 	 * retransmission. Move them to alt for there destination as well... 	 * We only mark chunks that have been outstanding long enough to 	 * have received feed-back. 	 */
@@ -2716,11 +2727,6 @@ name|chk
 decl_stmt|,
 modifier|*
 name|tp2
-decl_stmt|,
-modifier|*
-name|could_be_sent
-init|=
-name|NULL
 decl_stmt|;
 name|struct
 name|sctp_nets
@@ -2737,6 +2743,9 @@ name|tv
 decl_stmt|;
 name|int
 name|cur_rtt
+decl_stmt|;
+name|int
+name|cnt_abandoned
 decl_stmt|;
 name|int
 name|audit_tf
@@ -3009,6 +3018,10 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Now on to each chunk */
+name|cnt_abandoned
+operator|=
+literal|0
+expr_stmt|;
 name|num_mk
 operator|=
 name|cnt_mk
@@ -3467,6 +3480,9 @@ argument_list|,
 name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
+name|cnt_abandoned
+operator|++
+expr_stmt|;
 block|}
 continue|continue;
 block|}
@@ -3529,6 +3545,9 @@ operator|)
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
 argument_list|)
+expr_stmt|;
+name|cnt_abandoned
+operator|++
 expr_stmt|;
 block|}
 continue|continue;
@@ -3891,6 +3910,9 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|THIS_SHOULD_NOT_BE_DONE
 block|}
 elseif|else
 if|if
@@ -3907,6 +3929,8 @@ name|could_be_sent
 operator|=
 name|chk
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
@@ -4045,6 +4069,11 @@ name|num_marked
 operator|=
 name|num_mk
 expr_stmt|;
+operator|*
+name|num_abandoned
+operator|=
+name|cnt_abandoned
+expr_stmt|;
 comment|/* 	 * Now check for a ECN Echo that may be stranded And include the 	 * cnt_mk'd to have all resends in the control queue. 	 */
 name|TAILQ_FOREACH
 argument_list|(
@@ -4144,6 +4173,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|THIS_SHOULD_NOT_BE_DONE
 if|if
 condition|(
 operator|(
@@ -4181,6 +4213,8 @@ operator|=
 name|SCTP_DATAGRAM_RESEND
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|stcb
@@ -4626,6 +4660,8 @@ name|int
 name|win_probe
 decl_stmt|,
 name|num_mk
+decl_stmt|,
+name|num_abandoned
 decl_stmt|;
 if|if
 condition|(
@@ -4867,6 +4903,14 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|num_mk
+operator|=
+literal|0
+expr_stmt|;
+name|num_abandoned
+operator|=
+literal|0
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -4882,6 +4926,9 @@ name|win_probe
 argument_list|,
 operator|&
 name|num_mk
+argument_list|,
+operator|&
+name|num_abandoned
 argument_list|)
 expr_stmt|;
 comment|/* FR Loss recovery just ended with the T3. */
@@ -4931,6 +4978,8 @@ argument_list|,
 name|win_probe
 argument_list|,
 name|num_mk
+argument_list|,
+name|num_abandoned
 argument_list|)
 expr_stmt|;
 if|if
@@ -5544,6 +5593,8 @@ argument_list|,
 literal|1
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -5968,6 +6019,8 @@ argument_list|,
 literal|1
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|alt
@@ -6174,6 +6227,8 @@ operator|->
 name|whoTo
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -6525,6 +6580,8 @@ operator|->
 name|whoTo
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -7567,6 +7624,8 @@ argument_list|,
 name|net
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|)

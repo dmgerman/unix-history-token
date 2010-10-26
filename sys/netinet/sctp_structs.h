@@ -2223,6 +2223,10 @@ name|unsigned
 name|int
 name|cnt_on_reasm_queue
 decl_stmt|;
+name|unsigned
+name|int
+name|fwd_tsn_cnt
+decl_stmt|;
 comment|/* amount of data (bytes) currently in flight (on all destinations) */
 name|unsigned
 name|int

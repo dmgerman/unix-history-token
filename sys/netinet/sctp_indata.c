@@ -230,12 +230,20 @@ name|sctp_sbspace_sub
 argument_list|(
 name|calc
 argument_list|,
-operator|(
+call|(
 name|uint32_t
-operator|)
+call|)
+argument_list|(
 name|asoc
 operator|->
 name|size_on_reasm_queue
+operator|+
+name|asoc
+operator|->
+name|cnt_on_reasm_queue
+operator|*
+name|MSIZE
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|calc
@@ -244,12 +252,20 @@ name|sctp_sbspace_sub
 argument_list|(
 name|calc
 argument_list|,
-operator|(
+call|(
 name|uint32_t
-operator|)
+call|)
+argument_list|(
 name|asoc
 operator|->
 name|size_on_all_streams
+operator|+
+name|asoc
+operator|->
+name|cnt_on_all_streams
+operator|*
+name|MSIZE
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -16393,6 +16409,26 @@ condition|)
 block|{
 comment|/* either a RESEND, ACKED, or MARKED */
 comment|/* skip */
+if|if
+condition|(
+name|tp1
+operator|->
+name|sent
+operator|==
+name|SCTP_FORWARD_TSN_SKIP
+condition|)
+block|{
+comment|/* Continue strikin FWD-TSN chunks */
+name|tp1
+operator|->
+name|rec
+operator|.
+name|data
+operator|.
+name|fwd_tsn_cnt
+operator|++
+expr_stmt|;
+block|}
 name|tp1
 operator|=
 name|TAILQ_NEXT
@@ -17657,12 +17693,6 @@ name|tp1
 operator|->
 name|sent
 operator|!=
-name|SCTP_DATAGRAM_ACKED
-operator|&&
-name|tp1
-operator|->
-name|sent
-operator|!=
 name|SCTP_DATAGRAM_RESEND
 condition|)
 block|{
@@ -17831,21 +17861,11 @@ block|}
 comment|/* 		 * Ok now if this chunk is marked to drop it we can clean up 		 * the chunk, advance our peer ack point and we can check 		 * the next chunk. 		 */
 if|if
 condition|(
-operator|(
 name|tp1
 operator|->
 name|sent
 operator|==
 name|SCTP_FORWARD_TSN_SKIP
-operator|)
-operator|||
-operator|(
-name|tp1
-operator|->
-name|sent
-operator|==
-name|SCTP_DATAGRAM_ACKED
-operator|)
 condition|)
 block|{
 comment|/* advance PeerAckPoint goes forward */
@@ -18519,7 +18539,7 @@ operator|+
 operator|(
 name|asoc
 operator|->
-name|sent_queue_cnt
+name|total_flight_count
 operator|*
 name|SCTP_BASE_SYSCTL
 argument_list|(
@@ -19825,7 +19845,7 @@ operator|+
 operator|(
 name|asoc
 operator|->
-name|sent_queue_cnt
+name|total_flight_count
 operator|*
 name|SCTP_BASE_SYSCTL
 argument_list|(
@@ -20904,15 +20924,6 @@ name|lchk
 condition|)
 block|{
 comment|/* try to FR fwd-tsn's that get lost too */
-name|lchk
-operator|->
-name|rec
-operator|.
-name|data
-operator|.
-name|fwd_tsn_cnt
-operator|++
-expr_stmt|;
 if|if
 condition|(
 name|lchk
@@ -20922,7 +20933,7 @@ operator|.
 name|data
 operator|.
 name|fwd_tsn_cnt
-operator|>
+operator|>=
 literal|3
 condition|)
 block|{
@@ -20932,16 +20943,6 @@ name|stcb
 argument_list|,
 name|asoc
 argument_list|)
-expr_stmt|;
-name|lchk
-operator|->
-name|rec
-operator|.
-name|data
-operator|.
-name|fwd_tsn_cnt
-operator|=
-literal|0
 expr_stmt|;
 block|}
 block|}
@@ -24379,7 +24380,7 @@ argument_list|,
 operator|(
 name|asoc
 operator|->
-name|sent_queue_cnt
+name|total_flight_count
 operator|*
 name|SCTP_BASE_SYSCTL
 argument_list|(
@@ -24410,7 +24411,7 @@ operator|+
 operator|(
 name|asoc
 operator|->
-name|sent_queue_cnt
+name|total_flight_count
 operator|*
 name|SCTP_BASE_SYSCTL
 argument_list|(
@@ -24990,15 +24991,6 @@ name|lchk
 condition|)
 block|{
 comment|/* try to FR fwd-tsn's that get lost too */
-name|lchk
-operator|->
-name|rec
-operator|.
-name|data
-operator|.
-name|fwd_tsn_cnt
-operator|++
-expr_stmt|;
 if|if
 condition|(
 name|lchk
@@ -25008,7 +25000,7 @@ operator|.
 name|data
 operator|.
 name|fwd_tsn_cnt
-operator|>
+operator|>=
 literal|3
 condition|)
 block|{
@@ -25018,16 +25010,6 @@ name|stcb
 argument_list|,
 name|asoc
 argument_list|)
-expr_stmt|;
-name|lchk
-operator|->
-name|rec
-operator|.
-name|data
-operator|.
-name|fwd_tsn_cnt
-operator|=
-literal|0
 expr_stmt|;
 block|}
 block|}
