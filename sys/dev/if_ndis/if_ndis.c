@@ -8040,12 +8040,6 @@ break|break;
 default|default:
 break|break;
 block|}
-comment|/* Notify possible listners of interface change. */
-name|rt_ifmsg
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 end_function
