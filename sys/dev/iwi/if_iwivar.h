@@ -551,6 +551,10 @@ name|task
 name|sc_opstask
 decl_stmt|;
 comment|/* scan / auth processing */
+name|struct
+name|task
+name|sc_monitortask
+decl_stmt|;
 name|unsigned
 name|int
 name|sc_softled
