@@ -1038,7 +1038,7 @@ decl_stmt|;
 comment|/* flags for supported features */
 define|#
 directive|define
-name|INITFLAGS_NEW_COMM_SUPPORTED
+name|AAC_INITFLAGS_NEW_COMM_SUPPORTED
 value|1
 name|u_int32_t
 name|MaxIoCommands
@@ -3205,6 +3205,10 @@ name|ST_REMOTE
 init|=
 literal|71
 block|,
+name|ST_NOT_READY
+init|=
+literal|72
+block|,
 name|ST_BADHANDLE
 init|=
 literal|10001
@@ -3248,6 +3252,10 @@ block|,
 name|ST_STALEACL
 init|=
 literal|10011
+block|,
+name|ST_BUS_RESET
+init|=
+literal|20001
 block|}
 name|AAC_FSAStatus
 typedef|;
