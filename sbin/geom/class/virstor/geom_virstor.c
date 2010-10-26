@@ -135,37 +135,19 @@ name|G_VIRSTOR_VERSION
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|intmax_t
-name|chunk_size
-init|=
-literal|4
-operator|*
-literal|1024
-operator|*
-literal|1024
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|GVIRSTOR_CHUNK_SIZE
+value|"4M"
+end_define
 
-begin_comment
-comment|/* in kB (default: 4 MB) */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|intmax_t
-name|vir_size
-init|=
-literal|2ULL
-operator|<<
-literal|40
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* in MB (default: 2 TB) */
-end_comment
+begin_define
+define|#
+directive|define
+name|GVIRSTOR_VIR_SIZE
+value|"2T"
+end_define
 
 begin_if
 if|#
@@ -271,8 +253,7 @@ literal|'m'
 block|,
 literal|"chunk_size"
 block|,
-operator|&
-name|chunk_size
+name|GVIRSTOR_CHUNK_SIZE
 block|,
 name|G_TYPE_NUMBER
 block|}
@@ -282,8 +263,7 @@ literal|'s'
 block|,
 literal|"vir_size"
 block|,
-operator|&
-name|vir_size
+name|GVIRSTOR_VIR_SIZE
 block|,
 name|G_TYPE_NUMBER
 block|}

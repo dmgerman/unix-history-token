@@ -117,16 +117,6 @@ name|G_JOURNAL_VERSION
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|intmax_t
-name|default_jsize
-init|=
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|void
@@ -260,8 +250,7 @@ literal|'s'
 block|,
 literal|"jsize"
 block|,
-operator|&
-name|default_jsize
+literal|"-1"
 block|,
 name|G_TYPE_NUMBER
 block|}

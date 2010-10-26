@@ -111,14 +111,12 @@ name|G_STRIPE_VERSION
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|intmax_t
-name|default_stripesize
-init|=
-literal|65536
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|GSTRIPE_STRIPESIZE
+value|"65536"
+end_define
 
 begin_function_decl
 specifier|static
@@ -211,8 +209,7 @@ literal|'s'
 block|,
 literal|"stripesize"
 block|,
-operator|&
-name|default_stripesize
+name|GSTRIPE_STRIPESIZE
 block|,
 name|G_TYPE_NUMBER
 block|}
@@ -290,8 +287,7 @@ literal|'s'
 block|,
 literal|"stripesize"
 block|,
-operator|&
-name|default_stripesize
+name|GSTRIPE_STRIPESIZE
 block|,
 name|G_TYPE_NUMBER
 block|}

@@ -88,15 +88,12 @@ begin_comment
 comment|/*  * storage for parameters used by this geom class.  * Right now only the scheduler name is used.  */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|char
-name|algo
-index|[]
-init|=
-literal|"rr"
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|GSCHED_ALGO
+value|"rr"
+end_define
 
 begin_comment
 comment|/* default scheduler */
@@ -191,7 +188,7 @@ expr_stmt|;
 else|else
 name|reqalgo
 operator|=
-name|algo
+name|GSCHED_ALGO
 expr_stmt|;
 name|snprintf
 argument_list|(
@@ -252,7 +249,7 @@ literal|'a'
 block|,
 literal|"algo"
 block|,
-name|algo
+name|GSCHED_ALGO
 block|,
 name|G_TYPE_STRING
 block|}
@@ -279,7 +276,7 @@ literal|'a'
 block|,
 literal|"algo"
 block|,
-name|algo
+name|GSCHED_ALGO
 block|,
 name|G_TYPE_STRING
 block|}
@@ -304,7 +301,7 @@ literal|'a'
 block|,
 literal|"algo"
 block|,
-name|algo
+name|GSCHED_ALGO
 block|,
 name|G_TYPE_STRING
 block|}
