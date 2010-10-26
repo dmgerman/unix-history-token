@@ -259,6 +259,12 @@ begin_comment
 comment|/*  * Per-SIM data structure  */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|aac_cam
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|aac_sim
@@ -279,6 +285,11 @@ name|struct
 name|aac_softc
 modifier|*
 name|aac_sc
+decl_stmt|;
+name|struct
+name|aac_cam
+modifier|*
+name|aac_cam
 decl_stmt|;
 name|TAILQ_ENTRY
 argument_list|(
@@ -1489,6 +1500,25 @@ name|u_int32_t
 name|aac_max_sectors
 decl_stmt|;
 comment|/* max. I/O size from host (blocks) */
+define|#
+directive|define
+name|AAC_CAM_TARGET_WILDCARD
+value|~0
+name|void
+function_decl|(
+modifier|*
+name|cam_rescan_cb
+function_decl|)
+parameter_list|(
+name|struct
+name|aac_softc
+modifier|*
+parameter_list|,
+name|uint32_t
+parameter_list|,
+name|uint32_t
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct
