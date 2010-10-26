@@ -88,5 +88,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|elf_backend_post_process_headers
+value|elf_fbsd_post_process_headers
+end_define
+
 end_unit
 
