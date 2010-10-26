@@ -1040,6 +1040,14 @@ define|#
 directive|define
 name|AAC_INITFLAGS_NEW_COMM_SUPPORTED
 value|1
+define|#
+directive|define
+name|AAC_INITFLAGS_DRIVER_USES_UTC_TIME
+value|0x10
+define|#
+directive|define
+name|AAC_INITFLAGS_DRIVER_SUPPORTS_PM
+value|0x20
 name|u_int32_t
 name|MaxIoCommands
 decl_stmt|;
@@ -2649,6 +2657,39 @@ comment|/* Some cluster event */
 name|AifEnDiskSetEvent
 block|,
 comment|/* A disk set event occured. */
+name|AifEnContainerScsiEvent
+block|,
+comment|/* a container event with no. and scsi id */
+name|AifEnPicBatteryEvent
+block|,
+comment|/* An event gen. by pic_battery.c for an ABM */
+name|AifEnExpEvent
+block|,
+comment|/* Exp. Event Type to replace CTPopUp messages */
+name|AifEnRAID6RebuildDone
+block|,
+comment|/* RAID6 rebuild finished */
+name|AifEnSensorOverHeat
+block|,
+comment|/* Heat Sensor indicate overheat */
+name|AifEnSensorCoolDown
+block|,
+comment|/* Heat Sensor ind. cooled down after overheat */
+name|AifFeatureKeysModified
+block|,
+comment|/* notif. of updated feature keys */
+name|AifApplicationExpirationEvent
+block|,
+comment|/* notif. on app. expiration status */
+name|AifEnBackgroundConsistencyCheck
+block|,
+comment|/* BCC notif. for NEC - DDTS 94700 */
+name|AifEnAddJBOD
+block|,
+comment|/* A new JBOD type drive was created (30) */
+name|AifEnDeleteJBOD
+block|,
+comment|/* A JBOD type drive was deleted (31) */
 name|AifDriverNotifyStart
 init|=
 literal|199
