@@ -3331,9 +3331,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+ifdef|#
+directive|ifdef
+name|INET6
 operator|!
 name|isip6
 operator|&&
+endif|#
+directive|endif
 operator|*
 name|ep
 operator|==
@@ -3363,10 +3368,15 @@ operator|||
 name|prefix
 operator|>
 operator|(
+ifdef|#
+directive|ifdef
+name|INET6
 name|isip6
 condition|?
 literal|128
 else|:
+endif|#
+directive|endif
 literal|32
 operator|)
 condition|)
@@ -3375,10 +3385,15 @@ name|jail_warnx
 argument_list|(
 name|j
 argument_list|,
+ifdef|#
+directive|ifdef
+name|INET6
 name|isip6
 condition|?
 literal|"ip6.addr: bad prefixlen \"%s\""
 else|:
+endif|#
+directive|endif
 literal|"ip4.addr: bad netmask \"%s\""
 argument_list|,
 name|cs
