@@ -17,7 +17,7 @@ name|fspec
 decl_stmt|;
 comment|/* block special device to mount */
 name|struct
-name|export_args
+name|oexport_args
 name|export
 decl_stmt|;
 comment|/* network export info */
