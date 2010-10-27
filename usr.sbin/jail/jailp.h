@@ -162,6 +162,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PF_CONV
+value|0x40
+end_define
+
+begin_comment
+comment|/* Parameter duplicated in converted form */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|JF_START
 value|0x0001
 end_define
@@ -432,18 +443,21 @@ comment|/* Get jail IP address(es) from hostname */
 name|IP_MOUNT
 block|,
 comment|/* Mount points in fstab(5) form */
-name|IP_MOUNT_FSTAB
-block|,
-comment|/* A standard fstab(5) file */
 name|IP_MOUNT_DEVFS
 block|,
 comment|/* Mount /dev under prison root */
 name|IP_MOUNT_DEVFS_RULESET
 block|,
 comment|/* Ruleset for the devfs mount */
+name|IP_MOUNT_FSTAB
+block|,
+comment|/* A standard fstab(5) file */
 name|IP_STOP_TIMEOUT
 block|,
 comment|/* Time to wait after sending SIGTERM */
+name|IP_VNET_INTERFACE
+block|,
+comment|/* Assign interface(s) to vnet jail */
 name|IP__IP4_IFADDR
 block|,
 comment|/* Copy of ip4.addr with interface/netmask */
@@ -455,10 +469,21 @@ block|,
 comment|/* Copy of ip6.addr with interface/prefixlen */
 endif|#
 directive|endif
-name|IP_VNET_INTERFACE
+name|KP_ALLOW_CHFLAGS
 block|,
-comment|/* Assign interface(s) to vnet jail */
-name|KP_HOSTNAME
+name|KP_ALLOW_MOUNT
+block|,
+name|KP_ALLOW_RAW_SOCKETS
+block|,
+name|KP_ALLOW_SET_HOSTNAME
+block|,
+name|KP_ALLOW_SOCKET_AF
+block|,
+name|KP_ALLOW_SYSVIPC
+block|,
+name|KP_ENFORCE_STATFS
+block|,
+name|KP_HOST_HOSTNAME
 block|,
 name|KP_IP4_ADDR
 block|,
@@ -476,6 +501,8 @@ block|,
 name|KP_PATH
 block|,
 name|KP_PERSIST
+block|,
+name|KP_SECURELEVEL
 block|,
 name|KP_VNET
 block|,
@@ -916,25 +943,14 @@ name|cfparam
 modifier|*
 name|p
 parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|name
+name|enum
+name|intparam
+name|ipnum
 parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|value
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|find_intparams
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl
