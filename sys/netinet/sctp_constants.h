@@ -4333,6 +4333,20 @@ name|SCTP_TIME_WAIT
 value|60
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCTP_SEND_BUFFER_SPLITTING
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_RECV_BUFFER_SPLITTING
+value|0x00000002
+end_define
+
 begin_comment
 comment|/* The system retains a cache of free chunks such to  * cut down on calls the memory allocation system. There  * is a per association limit of free items and a overall  * system limit. If either one gets hit then the resource  * stops being cached.  */
 end_comment
