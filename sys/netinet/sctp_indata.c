@@ -3241,6 +3241,7 @@ name|control
 operator|->
 name|whoFrom
 condition|)
+block|{
 name|sctp_free_remote_addr
 argument_list|(
 name|control
@@ -3254,6 +3255,7 @@ name|whoFrom
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 name|sctp_free_a_readq
 argument_list|(
 name|stcb
@@ -22752,17 +22754,13 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|(
-name|TAILQ_FIRST
+name|TAILQ_EMPTY
 argument_list|(
 operator|&
 name|asoc
 operator|->
 name|sent_queue
 argument_list|)
-operator|==
-name|NULL
-operator|)
 operator|&&
 operator|(
 name|asoc
@@ -27096,7 +27094,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|TAILQ_FIRST
+operator|!
+name|TAILQ_EMPTY
 argument_list|(
 operator|&
 name|asoc
