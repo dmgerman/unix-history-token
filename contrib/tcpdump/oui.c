@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/oui.c,v 1.8.2.1 2008-01-09 09:44:39 hannes Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/oui.c,v 1.9 2008-01-09 09:40:47 hannes Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,6 +66,7 @@ comment|/* FIXME complete OUI list using a script */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|struct
 name|tok
 name|oui_values
@@ -164,6 +165,7 @@ comment|/*  * SMI Network Management Private Enterprise Codes for organizations.
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|struct
 name|tok
 name|smi_values

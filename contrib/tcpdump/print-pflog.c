@@ -111,6 +111,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"extract.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"interface.h"
 end_include
 
@@ -376,8 +382,9 @@ name|subrulenr
 decl_stmt|;
 name|rulenr
 operator|=
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|hdr
 operator|->
 name|rulenr
@@ -385,8 +392,9 @@ argument_list|)
 expr_stmt|;
 name|subrulenr
 operator|=
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|hdr
 operator|->
 name|subrulenr

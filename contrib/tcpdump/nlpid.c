@@ -62,6 +62,7 @@ file|"nlpid.h"
 end_include
 
 begin_decl_stmt
+specifier|const
 name|struct
 name|tok
 name|nlpid_values

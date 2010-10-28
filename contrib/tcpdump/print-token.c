@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"extract.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"addrtoname.h"
 end_include
 
@@ -461,6 +467,24 @@ name|ehdr
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|caplen
+operator|<
+name|TOKEN_HDRLEN
+operator|+
+literal|2
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"[|token-ring]"
+argument_list|)
+expr_stmt|;
+return|return
+name|hdr_len
+return|;
+block|}
 name|route_len
 operator|=
 name|RIF_LENGTH
@@ -468,6 +492,26 @@ argument_list|(
 name|trp
 argument_list|)
 expr_stmt|;
+name|hdr_len
+operator|+=
+name|route_len
+expr_stmt|;
+if|if
+condition|(
+name|caplen
+operator|<
+name|hdr_len
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"[|token-ring]"
+argument_list|)
+expr_stmt|;
+return|return
+name|hdr_len
+return|;
+block|}
 if|if
 condition|(
 name|vflag
@@ -541,8 +585,9 @@ name|printf
 argument_list|(
 literal|"rt = %x"
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|trp
 operator|->
 name|token_rcf
@@ -569,8 +614,9 @@ name|printf
 argument_list|(
 literal|":%x"
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
+operator|&
 name|trp
 operator|->
 name|token_rseg
@@ -622,10 +668,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Skip over token ring MAC header and routing information */
-name|hdr_len
-operator|+=
-name|route_len
-expr_stmt|;
 name|length
 operator|-=
 name|hdr_len
