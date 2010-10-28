@@ -1821,10 +1821,10 @@ name|assign_cpu
 condition|)
 return|return
 operator|(
-name|cpu_apic_ids
-index|[
-literal|0
-index|]
+name|PCPU_GET
+argument_list|(
+name|apic_id
+argument_list|)
 operator|)
 return|;
 name|mtx_lock_spin
