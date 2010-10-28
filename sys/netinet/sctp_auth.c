@@ -2532,7 +2532,7 @@ name|key_id
 argument_list|,
 literal|0
 argument_list|,
-name|SCTP_SO_NOT_LOCKED
+name|SCTP_SO_LOCKED
 argument_list|)
 expr_stmt|;
 name|SCTPDBG
