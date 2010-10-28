@@ -5828,6 +5828,7 @@ name|category
 operator|==
 name|TSTATE_VAR_OLD
 operator|||
+operator|(
 name|state
 index|[
 name|level
@@ -5836,6 +5837,16 @@ operator|.
 name|category
 operator|==
 name|TSTATE_VAR_NEW
+operator|&&
+name|state
+index|[
+name|level
+index|]
+operator|.
+name|syntax
+operator|==
+name|BASESYNTAX
+operator|)
 operator|)
 condition|)
 block|{
