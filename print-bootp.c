@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-bootp.c,v 1.88 2007-09-20 15:04:45 hannes Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-bootp.c,v 1.89 2008-04-22 09:45:08 hannes Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2856,14 +2856,6 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|bp
-operator|+=
-name|len
-expr_stmt|;
-name|len
-operator|=
-literal|0
-expr_stmt|;
 break|break;
 block|}
 name|tag
@@ -2909,14 +2901,6 @@ name|TAG_OPT_OVERLOAD
 argument_list|,
 name|len
 argument_list|)
-expr_stmt|;
-name|bp
-operator|+=
-name|len
-expr_stmt|;
-name|len
-operator|=
-literal|0
 expr_stmt|;
 break|break;
 block|}
@@ -3091,14 +3075,6 @@ name|TAG_CLIENT_ID
 argument_list|,
 name|len
 argument_list|)
-expr_stmt|;
-name|bp
-operator|+=
-name|len
-expr_stmt|;
-name|len
-operator|=
-literal|0
 expr_stmt|;
 break|break;
 block|}

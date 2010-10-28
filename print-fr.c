@@ -1007,7 +1007,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ether_encap_print
+name|ethertype_print
 argument_list|(
 name|extracted_ethertype
 argument_list|,
@@ -1028,9 +1028,6 @@ operator|-
 name|addr_len
 operator|-
 name|ETHERTYPE_LEN
-argument_list|,
-operator|&
-name|extracted_ethertype
 argument_list|)
 operator|==
 literal|0
@@ -1193,9 +1190,6 @@ argument_list|,
 name|length
 argument_list|,
 name|length
-argument_list|,
-operator|&
-name|extracted_ethertype
 argument_list|,
 literal|0
 argument_list|)

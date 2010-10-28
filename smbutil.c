@@ -4295,6 +4295,8 @@ comment|/* Server Error Messages */
 end_comment
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|err_code_struct
 name|server_msgs
 index|[]
@@ -4573,6 +4575,8 @@ comment|/* Hard Error Messages */
 end_comment
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|err_code_struct
 name|hard_msgs
 index|[]

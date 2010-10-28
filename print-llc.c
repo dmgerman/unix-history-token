@@ -1177,8 +1177,6 @@ name|caplen
 operator|-
 literal|3
 argument_list|,
-name|extracted_ethertype
-argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
@@ -1581,10 +1579,6 @@ parameter_list|,
 name|u_int
 name|caplen
 parameter_list|,
-name|u_short
-modifier|*
-name|extracted_ethertype
-parameter_list|,
 name|u_int
 name|bridge_pad
 parameter_list|)
@@ -1748,7 +1742,7 @@ case|:
 comment|/* 		 * This is an encapsulated Ethernet packet, 		 * or a packet bridged by some piece of 		 * Cisco hardware; the protocol ID is 		 * an Ethernet protocol type. 		 */
 name|ret
 operator|=
-name|ether_encap_print
+name|ethertype_print
 argument_list|(
 name|et
 argument_list|,
@@ -1757,8 +1751,6 @@ argument_list|,
 name|length
 argument_list|,
 name|caplen
-argument_list|,
-name|extracted_ethertype
 argument_list|)
 expr_stmt|;
 if|if
@@ -1784,7 +1776,7 @@ block|{
 comment|/* 			 * No, I have no idea why Apple used one 			 * of their own OUIs, rather than 			 * 0x000000, and an Ethernet packet 			 * type, for Appletalk data packets, 			 * but used 0x000000 and an Ethernet 			 * packet type for AARP packets. 			 */
 name|ret
 operator|=
-name|ether_encap_print
+name|ethertype_print
 argument_list|(
 name|et
 argument_list|,
@@ -1793,8 +1785,6 @@ argument_list|,
 name|length
 argument_list|,
 name|caplen
-argument_list|,
-name|extracted_ethertype
 argument_list|)
 expr_stmt|;
 if|if
@@ -1940,6 +1930,10 @@ argument_list|,
 name|length
 argument_list|,
 name|caplen
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return

@@ -1066,14 +1066,14 @@ literal|"reply %s is-at %s"
 argument_list|,
 name|AT
 argument_list|(
-name|pdaddr
+name|psaddr
 argument_list|)
 argument_list|,
 name|etheraddr_string
 argument_list|(
 name|ap
 operator|->
-name|hdaddr
+name|hsaddr
 argument_list|)
 argument_list|)
 expr_stmt|;

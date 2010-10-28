@@ -5,6 +5,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|struct
 name|tok
 name|ipproto_values

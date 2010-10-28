@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/bootp.h,v 1.18 2007-08-21 21:59:11 guy Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/bootp.h,v 1.19 2008-04-22 09:46:03 hannes Exp $ (LBL) */
 end_comment
 
 begin_comment
@@ -38,7 +38,7 @@ comment|/* seconds since boot began */
 name|u_int16_t
 name|bp_flags
 decl_stmt|;
-comment|/* flags - see bootp_flag_values[] in print-bootp.c */
+comment|/* flags - see bootp_flag_values[] 					   in print-bootp.c */
 name|struct
 name|in_addr
 name|bp_ciaddr

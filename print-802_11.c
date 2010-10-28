@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-802_11.c,v 1.47.2.2 2007-12-29 23:25:28 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-802_11.c,v 1.49 2007-12-29 23:25:02 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -117,7 +117,7 @@ parameter_list|(
 name|p
 parameter_list|)
 define|\
-value|switch (p.ssid_status) { \ 	case TRUNCATED: \ 		return 0; \ 	case PRESENT: \ 		printf(" ("); \ 		fn_print(p.ssid.ssid, NULL); \ 		printf(")"); \ 		break; \ 	case NOT_PRESENT: \ 		break; \ 	}
+value|if (p.ssid_present) { \ 		printf(" ("); \ 		fn_print(p.ssid.ssid, NULL); \ 		printf(")"); \ 	}
 end_define
 
 begin_define
@@ -143,7 +143,7 @@ parameter_list|(
 name|p
 parameter_list|)
 define|\
-value|switch (p.rates_status) { \ 	case TRUNCATED: \ 		return 0; \ 	case PRESENT: \ 		do { \ 			int z; \ 			const char *sep = " ["; \ 			for (z = 0; z< p.rates.length ; z++) { \ 				PRINT_RATE(sep, p.rates.rate[z], \ 					(p.rates.rate[z]& 0x80 ? "*" : "")); \ 				sep = " "; \ 			} \ 			if (p.rates.length != 0) \ 				printf(" Mbit]"); \ 		} while (0); \ 		break; \ 	case NOT_PRESENT: \ 		break; \ 	}
+value|if (p.rates_present) { \ 		int z; \ 		const char *sep = " ["; \ 		for (z = 0; z< p.rates.length ; z++) { \ 			PRINT_RATE(sep, p.rates.rate[z], \ 				(p.rates.rate[z]& 0x80 ? "*" : "")); \ 			sep = " "; \ 		} \ 		if (p.rates.length != 0) \ 			printf(" Mbit]"); \ 	}
 end_define
 
 begin_define
@@ -154,7 +154,84 @@ parameter_list|(
 name|p
 parameter_list|)
 define|\
-value|switch (p.ds_status) { \ 	case TRUNCATED: \ 		return 0; \ 	case PRESENT: \ 		printf(" CH: %u", p.ds.channel); \ 		break; \ 	case NOT_PRESENT: \ 		break; \ 	} \ 	printf("%s", \ 	    CAPABILITY_PRIVACY(p.capability_info) ? ", PRIVACY" : "" );
+value|if (p.ds_present) \ 		printf(" CH: %u", p.ds.channel); \ 	printf("%s", \ 	    CAPABILITY_PRIVACY(p.capability_info) ? ", PRIVACY" : "" );
+end_define
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|int
+name|ieee80211_htrates
+index|[
+literal|16
+index|]
+init|=
+block|{
+literal|13
+block|,
+comment|/* IFM_IEEE80211_MCS0 */
+literal|26
+block|,
+comment|/* IFM_IEEE80211_MCS1 */
+literal|39
+block|,
+comment|/* IFM_IEEE80211_MCS2 */
+literal|52
+block|,
+comment|/* IFM_IEEE80211_MCS3 */
+literal|78
+block|,
+comment|/* IFM_IEEE80211_MCS4 */
+literal|104
+block|,
+comment|/* IFM_IEEE80211_MCS5 */
+literal|117
+block|,
+comment|/* IFM_IEEE80211_MCS6 */
+literal|130
+block|,
+comment|/* IFM_IEEE80211_MCS7 */
+literal|26
+block|,
+comment|/* IFM_IEEE80211_MCS8 */
+literal|52
+block|,
+comment|/* IFM_IEEE80211_MCS9 */
+literal|78
+block|,
+comment|/* IFM_IEEE80211_MCS10 */
+literal|104
+block|,
+comment|/* IFM_IEEE80211_MCS11 */
+literal|156
+block|,
+comment|/* IFM_IEEE80211_MCS12 */
+literal|208
+block|,
+comment|/* IFM_IEEE80211_MCS13 */
+literal|234
+block|,
+comment|/* IFM_IEEE80211_MCS14 */
+literal|260
+block|,
+comment|/* IFM_IEEE80211_MCS15 */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|PRINT_HT_RATE
+parameter_list|(
+name|_sep
+parameter_list|,
+name|_r
+parameter_list|,
+name|_suf
+parameter_list|)
+define|\
+value|printf("%s%.1f%s", _sep, (.5 * ieee80211_htrates[(_r)& 0xf]), _suf)
 end_define
 
 begin_decl_stmt
@@ -193,65 +270,185 @@ init|=
 block|{
 literal|"Succesful"
 block|,
-comment|/*  0  */
+comment|/*  0 */
 literal|"Unspecified failure"
 block|,
-comment|/*  1  */
+comment|/*  1 */
 literal|"Reserved"
 block|,
-comment|/*  2  */
+comment|/*  2 */
 literal|"Reserved"
 block|,
-comment|/*  3  */
+comment|/*  3 */
 literal|"Reserved"
 block|,
-comment|/*  4  */
+comment|/*  4 */
 literal|"Reserved"
 block|,
-comment|/*  5  */
+comment|/*  5 */
 literal|"Reserved"
 block|,
-comment|/*  6  */
+comment|/*  6 */
 literal|"Reserved"
 block|,
-comment|/*  7  */
+comment|/*  7 */
 literal|"Reserved"
 block|,
-comment|/*  8  */
+comment|/*  8 */
 literal|"Reserved"
 block|,
-comment|/*  9  */
-literal|"Cannot Support all requested capabilities in the Capability Information field"
+comment|/*  9 */
+literal|"Cannot Support all requested capabilities in the Capability "
+literal|"Information field"
 block|,
-comment|/*  10  */
-literal|"Reassociation denied due to inability to confirm that association exists"
+comment|/* 10 */
+literal|"Reassociation denied due to inability to confirm that association "
+literal|"exists"
 block|,
-comment|/*  11  */
-literal|"Association denied due to reason outside the scope of the standard"
+comment|/* 11 */
+literal|"Association denied due to reason outside the scope of the "
+literal|"standard"
 block|,
-comment|/*  12  */
-literal|"Responding station does not support the specified authentication algorithm "
+comment|/* 12 */
+literal|"Responding station does not support the specified authentication "
+literal|"algorithm "
 block|,
-comment|/*  13  */
+comment|/* 13 */
 literal|"Received an Authentication frame with authentication transaction "
-expr|\
 literal|"sequence number out of expected sequence"
 block|,
-comment|/*  14  */
+comment|/* 14 */
 literal|"Authentication rejected because of challenge failure"
 block|,
-comment|/*  15 */
-literal|"Authentication rejected due to timeout waiting for next frame in sequence"
+comment|/* 15 */
+literal|"Authentication rejected due to timeout waiting for next frame in "
+literal|"sequence"
 block|,
-comment|/*  16 */
-literal|"Association denied because AP is unable to handle additional associated stations"
+comment|/* 16 */
+literal|"Association denied because AP is unable to handle additional"
+literal|"associated stations"
 block|,
-comment|/*  17 */
-literal|"Association denied due to requesting station not supporting all of the "
-expr|\
-literal|"data rates in BSSBasicRateSet parameter"
+comment|/* 17 */
+literal|"Association denied due to requesting station not supporting all of "
+literal|"the data rates in BSSBasicRateSet parameter"
 block|,
-comment|/*  18 */
+comment|/* 18 */
+literal|"Association denied due to requesting station not supporting "
+literal|"short preamble operation"
+block|,
+comment|/* 19 */
+literal|"Association denied due to requesting station not supporting "
+literal|"PBCC encoding"
+block|,
+comment|/* 20 */
+literal|"Association denied due to requesting station not supporting "
+literal|"channel agility"
+block|,
+comment|/* 21 */
+literal|"Association request rejected because Spectrum Management "
+literal|"capability is required"
+block|,
+comment|/* 22 */
+literal|"Association request rejected because the information in the "
+literal|"Power Capability element is unacceptable"
+block|,
+comment|/* 23 */
+literal|"Association request rejected because the information in the "
+literal|"Supported Channels element is unacceptable"
+block|,
+comment|/* 24 */
+literal|"Association denied due to requesting station not supporting "
+literal|"short slot operation"
+block|,
+comment|/* 25 */
+literal|"Association denied due to requesting station not supporting "
+literal|"DSSS-OFDM operation"
+block|,
+comment|/* 26 */
+literal|"Association denied because the requested STA does not support HT "
+literal|"features"
+block|,
+comment|/* 27 */
+literal|"Reserved"
+block|,
+comment|/* 28 */
+literal|"Association denied because the requested STA does not support "
+literal|"the PCO transition time required by the AP"
+block|,
+comment|/* 29 */
+literal|"Reserved"
+block|,
+comment|/* 30 */
+literal|"Reserved"
+block|,
+comment|/* 31 */
+literal|"Unspecified, QoS-related failure"
+block|,
+comment|/* 32 */
+literal|"Association denied due to QAP having insufficient bandwidth "
+literal|"to handle another QSTA"
+block|,
+comment|/* 33 */
+literal|"Association denied due to excessive frame loss rates and/or "
+literal|"poor conditions on current operating channel"
+block|,
+comment|/* 34 */
+literal|"Association (with QBSS) denied due to requesting station not "
+literal|"supporting the QoS facility"
+block|,
+comment|/* 35 */
+literal|"Association denied due to requesting station not supporting "
+literal|"Block Ack"
+block|,
+comment|/* 36 */
+literal|"The request has been declined"
+block|,
+comment|/* 37 */
+literal|"The request has not been successful as one or more parameters "
+literal|"have invalid values"
+block|,
+comment|/* 38 */
+literal|"The TS has not been created because the request cannot be honored. "
+literal|"However, a suggested TSPEC is provided so that the initiating QSTA"
+literal|"may attempt to set another TS with the suggested changes to the "
+literal|"TSPEC"
+block|,
+comment|/* 39 */
+literal|"Invalid Information Element"
+block|,
+comment|/* 40 */
+literal|"Group Cipher is not valid"
+block|,
+comment|/* 41 */
+literal|"Pairwise Cipher is not valid"
+block|,
+comment|/* 42 */
+literal|"AKMP is not valid"
+block|,
+comment|/* 43 */
+literal|"Unsupported RSN IE version"
+block|,
+comment|/* 44 */
+literal|"Invalid RSN IE Capabilities"
+block|,
+comment|/* 45 */
+literal|"Cipher suite is rejected per security policy"
+block|,
+comment|/* 46 */
+literal|"The TS has not been created. However, the HC may be capable of "
+literal|"creating a TS, in response to a request, after the time indicated "
+literal|"in the TS Delay element"
+block|,
+comment|/* 47 */
+literal|"Direct Link is not allowed in the BSS by policy"
+block|,
+comment|/* 48 */
+literal|"Destination STA is not present within this QBSS."
+block|,
+comment|/* 49 */
+literal|"The Destination STA is not a QSTA."
+block|,
+comment|/* 50 */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -281,13 +478,15 @@ comment|/* 1 */
 literal|"Previous authentication no longer valid"
 block|,
 comment|/* 2 */
-literal|"Deauthenticated because sending station is leaving (or has left) IBSS or ESS"
+literal|"Deauthenticated because sending station is leaving (or has left) "
+literal|"IBSS or ESS"
 block|,
 comment|/* 3 */
 literal|"Disassociated due to inactivity"
 block|,
 comment|/* 4 */
-literal|"Disassociated because AP is unable to handle all currently associated stations"
+literal|"Disassociated because AP is unable to handle all currently "
+literal|" associated stations"
 block|,
 comment|/* 5 */
 literal|"Class 2 frame received from nonauthenticated station"
@@ -296,12 +495,136 @@ comment|/* 6 */
 literal|"Class 3 frame received from nonassociated station"
 block|,
 comment|/* 7 */
-literal|"Disassociated because sending station is leaving (or has left) BSS"
+literal|"Disassociated because sending station is leaving "
+literal|"(or has left) BSS"
 block|,
 comment|/* 8 */
-literal|"Station requesting (re)association is not authenticated with responding station"
+literal|"Station requesting (re)association is not authenticated with "
+literal|"responding station"
 block|,
 comment|/* 9 */
+literal|"Disassociated because the information in the Power Capability "
+literal|"element is unacceptable"
+block|,
+comment|/* 10 */
+literal|"Disassociated because the information in the SupportedChannels "
+literal|"element is unacceptable"
+block|,
+comment|/* 11 */
+literal|"Invalid Information Element"
+block|,
+comment|/* 12 */
+literal|"Reserved"
+block|,
+comment|/* 13 */
+literal|"Michael MIC failure"
+block|,
+comment|/* 14 */
+literal|"4-Way Handshake timeout"
+block|,
+comment|/* 15 */
+literal|"Group key update timeout"
+block|,
+comment|/* 16 */
+literal|"Information element in 4-Way Handshake different from (Re)Association"
+literal|"Request/Probe Response/Beacon"
+block|,
+comment|/* 17 */
+literal|"Group Cipher is not valid"
+block|,
+comment|/* 18 */
+literal|"AKMP is not valid"
+block|,
+comment|/* 20 */
+literal|"Unsupported RSN IE version"
+block|,
+comment|/* 21 */
+literal|"Invalid RSN IE Capabilities"
+block|,
+comment|/* 22 */
+literal|"IEEE 802.1X Authentication failed"
+block|,
+comment|/* 23 */
+literal|"Cipher suite is rejected per security policy"
+block|,
+comment|/* 24 */
+literal|"Reserved"
+block|,
+comment|/* 25 */
+literal|"Reserved"
+block|,
+comment|/* 26 */
+literal|"Reserved"
+block|,
+comment|/* 27 */
+literal|"Reserved"
+block|,
+comment|/* 28 */
+literal|"Reserved"
+block|,
+comment|/* 29 */
+literal|"Reserved"
+block|,
+comment|/* 30 */
+literal|"TS deleted because QoS AP lacks sufficient bandwidth for this "
+literal|"QoS STA due to a change in BSS service characteristics or "
+literal|"operational mode (e.g. an HT BSS change from 40 MHz channel "
+literal|"to 20 MHz channel)"
+block|,
+comment|/* 31 */
+literal|"Disassociated for unspecified, QoS-related reason"
+block|,
+comment|/* 32 */
+literal|"Disassociated because QoS AP lacks sufficient bandwidth for this "
+literal|"QoS STA"
+block|,
+comment|/* 33 */
+literal|"Disassociated because of excessive number of frames that need to be "
+literal|"acknowledged, but are not acknowledged for AP transmissions "
+literal|"and/or poor channel conditions"
+block|,
+comment|/* 34 */
+literal|"Disassociated because STA is transmitting outside the limits "
+literal|"of its TXOPs"
+block|,
+comment|/* 35 */
+literal|"Requested from peer STA as the STA is leaving the BSS "
+literal|"(or resetting)"
+block|,
+comment|/* 36 */
+literal|"Requested from peer STA as it does not want to use the "
+literal|"mechanism"
+block|,
+comment|/* 37 */
+literal|"Requested from peer STA as the STA received frames using the "
+literal|"mechanism for which a set up is required"
+block|,
+comment|/* 38 */
+literal|"Requested from peer STA due to time out"
+block|,
+comment|/* 39 */
+literal|"Reserved"
+block|,
+comment|/* 40 */
+literal|"Reserved"
+block|,
+comment|/* 41 */
+literal|"Reserved"
+block|,
+comment|/* 42 */
+literal|"Reserved"
+block|,
+comment|/* 43 */
+literal|"Reserved"
+block|,
+comment|/* 44 */
+literal|"Peer STA does not support the requested cipher suite"
+block|,
+comment|/* 45 */
+literal|"Association denied due to requesting STA not supporting HT "
+literal|"features"
+block|,
+comment|/* 46 */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -378,7 +701,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|parse_elements
 parameter_list|(
 name|struct
@@ -393,50 +716,78 @@ name|p
 parameter_list|,
 name|int
 name|offset
+parameter_list|,
+name|u_int
+name|length
 parameter_list|)
 block|{
+name|struct
+name|ssid_t
+name|ssid
+decl_stmt|;
+name|struct
+name|challenge_t
+name|challenge
+decl_stmt|;
+name|struct
+name|rates_t
+name|rates
+decl_stmt|;
+name|struct
+name|ds_t
+name|ds
+decl_stmt|;
+name|struct
+name|cf_t
+name|cf
+decl_stmt|;
+name|struct
+name|tim_t
+name|tim
+decl_stmt|;
 comment|/* 	 * We haven't seen any elements yet. 	 */
 name|pbody
 operator|->
-name|challenge_status
+name|challenge_present
 operator|=
-name|NOT_PRESENT
+literal|0
 expr_stmt|;
 name|pbody
 operator|->
-name|ssid_status
+name|ssid_present
 operator|=
-name|NOT_PRESENT
+literal|0
 expr_stmt|;
 name|pbody
 operator|->
-name|rates_status
+name|rates_present
 operator|=
-name|NOT_PRESENT
+literal|0
 expr_stmt|;
 name|pbody
 operator|->
-name|ds_status
+name|ds_present
 operator|=
-name|NOT_PRESENT
+literal|0
 expr_stmt|;
 name|pbody
 operator|->
-name|cf_status
+name|cf_present
 operator|=
-name|NOT_PRESENT
+literal|0
 expr_stmt|;
 name|pbody
 operator|->
-name|tim_status
+name|tim_present
 operator|=
-name|NOT_PRESENT
+literal|0
 expr_stmt|;
-for|for
-control|(
-init|;
-condition|;
-control|)
+while|while
+condition|(
+name|length
+operator|!=
+literal|0
+condition|)
 block|{
 if|if
 condition|(
@@ -453,7 +804,18 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-return|return;
+return|return
+literal|0
+return|;
+if|if
+condition|(
+name|length
+operator|<
+literal|1
+condition|)
+return|return
+literal|0
+return|;
 switch|switch
 condition|(
 operator|*
@@ -467,13 +829,6 @@ block|{
 case|case
 name|E_SSID
 case|:
-comment|/* Present, possibly truncated */
-name|pbody
-operator|->
-name|ssid_status
-operator|=
-name|TRUNCATED
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -489,12 +844,21 @@ argument_list|,
 literal|2
 argument_list|)
 condition|)
-return|return;
+return|return
+literal|0
+return|;
+if|if
+condition|(
+name|length
+operator|<
+literal|2
+condition|)
+return|return
+literal|0
+return|;
 name|memcpy
 argument_list|(
 operator|&
-name|pbody
-operator|->
 name|ssid
 argument_list|,
 name|p
@@ -508,10 +872,12 @@ name|offset
 operator|+=
 literal|2
 expr_stmt|;
+name|length
+operator|-=
+literal|2
+expr_stmt|;
 if|if
 condition|(
-name|pbody
-operator|->
 name|ssid
 operator|.
 name|length
@@ -521,16 +887,12 @@ condition|)
 block|{
 if|if
 condition|(
-name|pbody
-operator|->
 name|ssid
 operator|.
 name|length
 operator|>
 sizeof|sizeof
 argument_list|(
-name|pbody
-operator|->
 name|ssid
 operator|.
 name|ssid
@@ -538,7 +900,9 @@ argument_list|)
 operator|-
 literal|1
 condition|)
-return|return;
+return|return
+literal|0
+return|;
 if|if
 condition|(
 operator|!
@@ -551,19 +915,28 @@ operator|+
 name|offset
 operator|)
 argument_list|,
-name|pbody
-operator|->
 name|ssid
 operator|.
 name|length
 argument_list|)
 condition|)
-return|return;
+return|return
+literal|0
+return|;
+if|if
+condition|(
+name|length
+operator|<
+name|ssid
+operator|.
+name|length
+condition|)
+return|return
+literal|0
+return|;
 name|memcpy
 argument_list|(
 operator|&
-name|pbody
-operator|->
 name|ssid
 operator|.
 name|ssid
@@ -572,8 +945,6 @@ name|p
 operator|+
 name|offset
 argument_list|,
-name|pbody
-operator|->
 name|ssid
 operator|.
 name|length
@@ -581,21 +952,21 @@ argument_list|)
 expr_stmt|;
 name|offset
 operator|+=
-name|pbody
-operator|->
+name|ssid
+operator|.
+name|length
+expr_stmt|;
+name|length
+operator|-=
 name|ssid
 operator|.
 name|length
 expr_stmt|;
 block|}
-name|pbody
-operator|->
 name|ssid
 operator|.
 name|ssid
 index|[
-name|pbody
-operator|->
 name|ssid
 operator|.
 name|length
@@ -603,24 +974,32 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* Present and not truncated */
+comment|/* 			 * Present and not truncated. 			 * 			 * If we haven't already seen an SSID IE, 			 * copy this one, otherwise ignore this one, 			 * so we later report the first one we saw. 			 */
+if|if
+condition|(
+operator|!
 name|pbody
 operator|->
-name|ssid_status
+name|ssid_present
+condition|)
+block|{
+name|pbody
+operator|->
+name|ssid
 operator|=
-name|PRESENT
+name|ssid
 expr_stmt|;
+name|pbody
+operator|->
+name|ssid_present
+operator|=
+literal|1
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|E_CHALLENGE
 case|:
-comment|/* Present, possibly truncated */
-name|pbody
-operator|->
-name|challenge_status
-operator|=
-name|TRUNCATED
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -636,12 +1015,21 @@ argument_list|,
 literal|2
 argument_list|)
 condition|)
-return|return;
+return|return
+literal|0
+return|;
+if|if
+condition|(
+name|length
+operator|<
+literal|2
+condition|)
+return|return
+literal|0
+return|;
 name|memcpy
 argument_list|(
 operator|&
-name|pbody
-operator|->
 name|challenge
 argument_list|,
 name|p
@@ -655,10 +1043,12 @@ name|offset
 operator|+=
 literal|2
 expr_stmt|;
+name|length
+operator|-=
+literal|2
+expr_stmt|;
 if|if
 condition|(
-name|pbody
-operator|->
 name|challenge
 operator|.
 name|length
@@ -668,16 +1058,12 @@ condition|)
 block|{
 if|if
 condition|(
-name|pbody
-operator|->
 name|challenge
 operator|.
 name|length
 operator|>
 sizeof|sizeof
 argument_list|(
-name|pbody
-operator|->
 name|challenge
 operator|.
 name|text
@@ -685,7 +1071,9 @@ argument_list|)
 operator|-
 literal|1
 condition|)
-return|return;
+return|return
+literal|0
+return|;
 if|if
 condition|(
 operator|!
@@ -698,19 +1086,28 @@ operator|+
 name|offset
 operator|)
 argument_list|,
-name|pbody
-operator|->
 name|challenge
 operator|.
 name|length
 argument_list|)
 condition|)
-return|return;
+return|return
+literal|0
+return|;
+if|if
+condition|(
+name|length
+operator|<
+name|challenge
+operator|.
+name|length
+condition|)
+return|return
+literal|0
+return|;
 name|memcpy
 argument_list|(
 operator|&
-name|pbody
-operator|->
 name|challenge
 operator|.
 name|text
@@ -719,8 +1116,6 @@ name|p
 operator|+
 name|offset
 argument_list|,
-name|pbody
-operator|->
 name|challenge
 operator|.
 name|length
@@ -728,21 +1123,21 @@ argument_list|)
 expr_stmt|;
 name|offset
 operator|+=
-name|pbody
-operator|->
+name|challenge
+operator|.
+name|length
+expr_stmt|;
+name|length
+operator|-=
 name|challenge
 operator|.
 name|length
 expr_stmt|;
 block|}
-name|pbody
-operator|->
 name|challenge
 operator|.
 name|text
 index|[
-name|pbody
-operator|->
 name|challenge
 operator|.
 name|length
@@ -750,24 +1145,32 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* Present and not truncated */
+comment|/* 			 * Present and not truncated. 			 * 			 * If we haven't already seen a challenge IE, 			 * copy this one, otherwise ignore this one, 			 * so we later report the first one we saw. 			 */
+if|if
+condition|(
+operator|!
 name|pbody
 operator|->
-name|challenge_status
+name|challenge_present
+condition|)
+block|{
+name|pbody
+operator|->
+name|challenge
 operator|=
-name|PRESENT
+name|challenge
 expr_stmt|;
+name|pbody
+operator|->
+name|challenge_present
+operator|=
+literal|1
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|E_RATES
 case|:
-comment|/* Present, possibly truncated */
-name|pbody
-operator|->
-name|rates_status
-operator|=
-name|TRUNCATED
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -783,15 +1186,22 @@ argument_list|,
 literal|2
 argument_list|)
 condition|)
-return|return;
+return|return
+literal|0
+return|;
+if|if
+condition|(
+name|length
+operator|<
+literal|2
+condition|)
+return|return
+literal|0
+return|;
 name|memcpy
 argument_list|(
 operator|&
-operator|(
-name|pbody
-operator|->
 name|rates
-operator|)
 argument_list|,
 name|p
 operator|+
@@ -804,10 +1214,12 @@ name|offset
 operator|+=
 literal|2
 expr_stmt|;
+name|length
+operator|-=
+literal|2
+expr_stmt|;
 if|if
 condition|(
-name|pbody
-operator|->
 name|rates
 operator|.
 name|length
@@ -817,20 +1229,18 @@ condition|)
 block|{
 if|if
 condition|(
-name|pbody
-operator|->
 name|rates
 operator|.
 name|length
 operator|>
 sizeof|sizeof
-name|pbody
-operator|->
 name|rates
 operator|.
 name|rate
 condition|)
-return|return;
+return|return
+literal|0
+return|;
 if|if
 condition|(
 operator|!
@@ -843,19 +1253,28 @@ operator|+
 name|offset
 operator|)
 argument_list|,
-name|pbody
-operator|->
 name|rates
 operator|.
 name|length
 argument_list|)
 condition|)
-return|return;
+return|return
+literal|0
+return|;
+if|if
+condition|(
+name|length
+operator|<
+name|rates
+operator|.
+name|length
+condition|)
+return|return
+literal|0
+return|;
 name|memcpy
 argument_list|(
 operator|&
-name|pbody
-operator|->
 name|rates
 operator|.
 name|rate
@@ -864,8 +1283,6 @@ name|p
 operator|+
 name|offset
 argument_list|,
-name|pbody
-operator|->
 name|rates
 operator|.
 name|length
@@ -873,31 +1290,49 @@ argument_list|)
 expr_stmt|;
 name|offset
 operator|+=
-name|pbody
-operator|->
+name|rates
+operator|.
+name|length
+expr_stmt|;
+name|length
+operator|-=
 name|rates
 operator|.
 name|length
 expr_stmt|;
 block|}
-comment|/* Present and not truncated */
+comment|/* 			 * Present and not truncated. 			 * 			 * If we haven't already seen a rates IE, 			 * copy this one if it's not zero-length, 			 * otherwise ignore this one, so we later 			 * report the first one we saw. 			 * 			 * We ignore zero-length rates IEs as some 			 * devices seem to put a zero-length rates 			 * IE, followed by an SSID IE, followed by 			 * a non-zero-length rates IE into frames, 			 * even though IEEE Std 802.11-2007 doesn't 			 * seem to indicate that a zero-length rates 			 * IE is valid. 			 */
+if|if
+condition|(
+operator|!
 name|pbody
 operator|->
-name|rates_status
+name|rates_present
+operator|&&
+name|rates
+operator|.
+name|length
+operator|!=
+literal|0
+condition|)
+block|{
+name|pbody
+operator|->
+name|rates
 operator|=
-name|PRESENT
+name|rates
 expr_stmt|;
+name|pbody
+operator|->
+name|rates_present
+operator|=
+literal|1
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|E_DS
 case|:
-comment|/* Present, possibly truncated */
-name|pbody
-operator|->
-name|ds_status
-operator|=
-name|TRUNCATED
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -913,12 +1348,21 @@ argument_list|,
 literal|3
 argument_list|)
 condition|)
-return|return;
+return|return
+literal|0
+return|;
+if|if
+condition|(
+name|length
+operator|<
+literal|3
+condition|)
+return|return
+literal|0
+return|;
 name|memcpy
 argument_list|(
 operator|&
-name|pbody
-operator|->
 name|ds
 argument_list|,
 name|p
@@ -932,24 +1376,36 @@ name|offset
 operator|+=
 literal|3
 expr_stmt|;
-comment|/* Present and not truncated */
+name|length
+operator|-=
+literal|3
+expr_stmt|;
+comment|/* 			 * Present and not truncated. 			 * 			 * If we haven't already seen a DS IE, 			 * copy this one, otherwise ignore this one, 			 * so we later report the first one we saw. 			 */
+if|if
+condition|(
+operator|!
 name|pbody
 operator|->
-name|ds_status
+name|ds_present
+condition|)
+block|{
+name|pbody
+operator|->
+name|ds
 operator|=
-name|PRESENT
+name|ds
 expr_stmt|;
+name|pbody
+operator|->
+name|ds_present
+operator|=
+literal|1
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|E_CF
 case|:
-comment|/* Present, possibly truncated */
-name|pbody
-operator|->
-name|cf_status
-operator|=
-name|TRUNCATED
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -965,12 +1421,21 @@ argument_list|,
 literal|8
 argument_list|)
 condition|)
-return|return;
+return|return
+literal|0
+return|;
+if|if
+condition|(
+name|length
+operator|<
+literal|8
+condition|)
+return|return
+literal|0
+return|;
 name|memcpy
 argument_list|(
 operator|&
-name|pbody
-operator|->
 name|cf
 argument_list|,
 name|p
@@ -984,24 +1449,36 @@ name|offset
 operator|+=
 literal|8
 expr_stmt|;
-comment|/* Present and not truncated */
+name|length
+operator|-=
+literal|8
+expr_stmt|;
+comment|/* 			 * Present and not truncated. 			 * 			 * If we haven't already seen a CF IE, 			 * copy this one, otherwise ignore this one, 			 * so we later report the first one we saw. 			 */
+if|if
+condition|(
+operator|!
 name|pbody
 operator|->
-name|cf_status
+name|cf_present
+condition|)
+block|{
+name|pbody
+operator|->
+name|cf
 operator|=
-name|PRESENT
+name|cf
 expr_stmt|;
+name|pbody
+operator|->
+name|cf_present
+operator|=
+literal|1
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|E_TIM
 case|:
-comment|/* Present, possibly truncated */
-name|pbody
-operator|->
-name|tim_status
-operator|=
-name|TRUNCATED
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1017,12 +1494,21 @@ argument_list|,
 literal|2
 argument_list|)
 condition|)
-return|return;
+return|return
+literal|0
+return|;
+if|if
+condition|(
+name|length
+operator|<
+literal|2
+condition|)
+return|return
+literal|0
+return|;
 name|memcpy
 argument_list|(
 operator|&
-name|pbody
-operator|->
 name|tim
 argument_list|,
 name|p
@@ -1034,6 +1520,10 @@ argument_list|)
 expr_stmt|;
 name|offset
 operator|+=
+literal|2
+expr_stmt|;
+name|length
+operator|-=
 literal|2
 expr_stmt|;
 if|if
@@ -1051,12 +1541,21 @@ argument_list|,
 literal|3
 argument_list|)
 condition|)
-return|return;
+return|return
+literal|0
+return|;
+if|if
+condition|(
+name|length
+operator|<
+literal|3
+condition|)
+return|return
+literal|0
+return|;
 name|memcpy
 argument_list|(
 operator|&
-name|pbody
-operator|->
 name|tim
 operator|.
 name|count
@@ -1072,10 +1571,12 @@ name|offset
 operator|+=
 literal|3
 expr_stmt|;
+name|length
+operator|-=
+literal|3
+expr_stmt|;
 if|if
 condition|(
-name|pbody
-operator|->
 name|tim
 operator|.
 name|length
@@ -1085,8 +1586,6 @@ condition|)
 break|break;
 if|if
 condition|(
-name|pbody
-operator|->
 name|tim
 operator|.
 name|length
@@ -1097,13 +1596,13 @@ operator|(
 name|int
 operator|)
 sizeof|sizeof
-name|pbody
-operator|->
 name|tim
 operator|.
 name|bitmap
 condition|)
-return|return;
+return|return
+literal|0
+return|;
 if|if
 condition|(
 operator|!
@@ -1116,8 +1615,6 @@ operator|+
 name|offset
 operator|)
 argument_list|,
-name|pbody
-operator|->
 name|tim
 operator|.
 name|length
@@ -1125,11 +1622,29 @@ operator|-
 literal|3
 argument_list|)
 condition|)
-return|return;
+return|return
+literal|0
+return|;
+if|if
+condition|(
+name|length
+operator|<
+call|(
+name|u_int
+call|)
+argument_list|(
+name|tim
+operator|.
+name|length
+operator|-
+literal|3
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
 name|memcpy
 argument_list|(
-name|pbody
-operator|->
 name|tim
 operator|.
 name|bitmap
@@ -1137,8 +1652,6 @@ argument_list|,
 name|p
 operator|+
 operator|(
-name|pbody
-operator|->
 name|tim
 operator|.
 name|length
@@ -1147,8 +1660,6 @@ literal|3
 operator|)
 argument_list|,
 operator|(
-name|pbody
-operator|->
 name|tim
 operator|.
 name|length
@@ -1159,27 +1670,48 @@ argument_list|)
 expr_stmt|;
 name|offset
 operator|+=
-name|pbody
-operator|->
 name|tim
 operator|.
 name|length
 operator|-
 literal|3
 expr_stmt|;
-comment|/* Present and not truncated */
+name|length
+operator|-=
+name|tim
+operator|.
+name|length
+operator|-
+literal|3
+expr_stmt|;
+comment|/* 			 * Present and not truncated. 			 * 			 * If we haven't already seen a TIM IE, 			 * copy this one, otherwise ignore this one, 			 * so we later report the first one we saw. 			 */
+if|if
+condition|(
+operator|!
 name|pbody
 operator|->
-name|tim_status
+name|tim_present
+condition|)
+block|{
+name|pbody
+operator|->
+name|tim
 operator|=
-name|PRESENT
+name|tim
 expr_stmt|;
+name|pbody
+operator|->
+name|tim_present
+operator|=
+literal|1
+expr_stmt|;
+block|}
 break|break;
 default|default:
 if|#
 directive|if
 literal|0
-block|printf("(1) unhandled element_id (%d)  ", 			    *(p + offset) );
+block|printf("(1) unhandled element_id (%d)  ", 			    *(p + offset));
 endif|#
 directive|endif
 if|if
@@ -1197,7 +1729,18 @@ argument_list|,
 literal|2
 argument_list|)
 condition|)
-return|return;
+return|return
+literal|0
+return|;
+if|if
+condition|(
+name|length
+operator|<
+literal|2
+condition|)
+return|return
+literal|0
+return|;
 if|if
 condition|(
 operator|!
@@ -1222,9 +1765,47 @@ literal|1
 operator|)
 argument_list|)
 condition|)
-return|return;
+return|return
+literal|0
+return|;
+if|if
+condition|(
+name|length
+operator|<
+call|(
+name|u_int
+call|)
+argument_list|(
+operator|*
+operator|(
+name|p
+operator|+
+name|offset
+operator|+
+literal|1
+operator|)
+operator|+
+literal|2
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
 name|offset
 operator|+=
+operator|*
+operator|(
+name|p
+operator|+
+name|offset
+operator|+
+literal|1
+operator|)
+operator|+
+literal|2
+expr_stmt|;
+name|length
+operator|-=
 operator|*
 operator|(
 name|p
@@ -1239,6 +1820,10 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+comment|/* No problems found. */
+return|return
+literal|1
+return|;
 block|}
 end_function
 
@@ -1255,6 +1840,9 @@ specifier|const
 name|u_char
 modifier|*
 name|p
+parameter_list|,
+name|u_int
+name|length
 parameter_list|)
 block|{
 name|struct
@@ -1265,6 +1853,9 @@ name|int
 name|offset
 init|=
 literal|0
+decl_stmt|;
+name|int
+name|ret
 decl_stmt|;
 name|memset
 argument_list|(
@@ -1297,6 +1888,19 @@ condition|)
 return|return
 literal|0
 return|;
+if|if
+condition|(
+name|length
+operator|<
+name|IEEE802_11_TSTAMP_LEN
+operator|+
+name|IEEE802_11_BCNINT_LEN
+operator|+
+name|IEEE802_11_CAPINFO_LEN
+condition|)
+return|return
+literal|0
+return|;
 name|memcpy
 argument_list|(
 operator|&
@@ -1311,6 +1915,10 @@ argument_list|)
 expr_stmt|;
 name|offset
 operator|+=
+name|IEEE802_11_TSTAMP_LEN
+expr_stmt|;
+name|length
+operator|-=
 name|IEEE802_11_TSTAMP_LEN
 expr_stmt|;
 name|pbody
@@ -1328,6 +1936,10 @@ name|offset
 operator|+=
 name|IEEE802_11_BCNINT_LEN
 expr_stmt|;
+name|length
+operator|-=
+name|IEEE802_11_BCNINT_LEN
+expr_stmt|;
 name|pbody
 operator|.
 name|capability_info
@@ -1343,6 +1955,12 @@ name|offset
 operator|+=
 name|IEEE802_11_CAPINFO_LEN
 expr_stmt|;
+name|length
+operator|-=
+name|IEEE802_11_CAPINFO_LEN
+expr_stmt|;
+name|ret
+operator|=
 name|parse_elements
 argument_list|(
 operator|&
@@ -1351,6 +1969,8 @@ argument_list|,
 name|p
 argument_list|,
 name|offset
+argument_list|,
+name|length
 argument_list|)
 expr_stmt|;
 name|PRINT_SSID
@@ -1385,7 +2005,7 @@ name|pbody
 argument_list|)
 expr_stmt|;
 return|return
-literal|1
+name|ret
 return|;
 block|}
 end_function
@@ -1399,6 +2019,9 @@ specifier|const
 name|u_char
 modifier|*
 name|p
+parameter_list|,
+name|u_int
+name|length
 parameter_list|)
 block|{
 name|struct
@@ -1409,6 +2032,9 @@ name|int
 name|offset
 init|=
 literal|0
+decl_stmt|;
+name|int
+name|ret
 decl_stmt|;
 name|memset
 argument_list|(
@@ -1439,6 +2065,17 @@ condition|)
 return|return
 literal|0
 return|;
+if|if
+condition|(
+name|length
+operator|<
+name|IEEE802_11_CAPINFO_LEN
+operator|+
+name|IEEE802_11_LISTENINT_LEN
+condition|)
+return|return
+literal|0
+return|;
 name|pbody
 operator|.
 name|capability_info
@@ -1450,6 +2087,10 @@ argument_list|)
 expr_stmt|;
 name|offset
 operator|+=
+name|IEEE802_11_CAPINFO_LEN
+expr_stmt|;
+name|length
+operator|-=
 name|IEEE802_11_CAPINFO_LEN
 expr_stmt|;
 name|pbody
@@ -1467,6 +2108,12 @@ name|offset
 operator|+=
 name|IEEE802_11_LISTENINT_LEN
 expr_stmt|;
+name|length
+operator|-=
+name|IEEE802_11_LISTENINT_LEN
+expr_stmt|;
+name|ret
+operator|=
 name|parse_elements
 argument_list|(
 operator|&
@@ -1475,6 +2122,8 @@ argument_list|,
 name|p
 argument_list|,
 name|offset
+argument_list|,
+name|length
 argument_list|)
 expr_stmt|;
 name|PRINT_SSID
@@ -1488,7 +2137,7 @@ name|pbody
 argument_list|)
 expr_stmt|;
 return|return
-literal|1
+name|ret
 return|;
 block|}
 end_function
@@ -1502,6 +2151,9 @@ specifier|const
 name|u_char
 modifier|*
 name|p
+parameter_list|,
+name|u_int
+name|length
 parameter_list|)
 block|{
 name|struct
@@ -1512,6 +2164,9 @@ name|int
 name|offset
 init|=
 literal|0
+decl_stmt|;
+name|int
+name|ret
 decl_stmt|;
 name|memset
 argument_list|(
@@ -1544,6 +2199,19 @@ condition|)
 return|return
 literal|0
 return|;
+if|if
+condition|(
+name|length
+operator|<
+name|IEEE802_11_CAPINFO_LEN
+operator|+
+name|IEEE802_11_STATUS_LEN
+operator|+
+name|IEEE802_11_AID_LEN
+condition|)
+return|return
+literal|0
+return|;
 name|pbody
 operator|.
 name|capability_info
@@ -1555,6 +2223,10 @@ argument_list|)
 expr_stmt|;
 name|offset
 operator|+=
+name|IEEE802_11_CAPINFO_LEN
+expr_stmt|;
+name|length
+operator|-=
 name|IEEE802_11_CAPINFO_LEN
 expr_stmt|;
 name|pbody
@@ -1572,6 +2244,10 @@ name|offset
 operator|+=
 name|IEEE802_11_STATUS_LEN
 expr_stmt|;
+name|length
+operator|-=
+name|IEEE802_11_STATUS_LEN
+expr_stmt|;
 name|pbody
 operator|.
 name|aid
@@ -1587,6 +2263,12 @@ name|offset
 operator|+=
 name|IEEE802_11_AID_LEN
 expr_stmt|;
+name|length
+operator|-=
+name|IEEE802_11_AID_LEN
+expr_stmt|;
+name|ret
+operator|=
 name|parse_elements
 argument_list|(
 operator|&
@@ -1595,6 +2277,8 @@ argument_list|,
 name|p
 argument_list|,
 name|offset
+argument_list|,
+name|length
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1646,7 +2330,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
-literal|1
+name|ret
 return|;
 block|}
 end_function
@@ -1660,6 +2344,9 @@ specifier|const
 name|u_char
 modifier|*
 name|p
+parameter_list|,
+name|u_int
+name|length
 parameter_list|)
 block|{
 name|struct
@@ -1670,6 +2357,9 @@ name|int
 name|offset
 init|=
 literal|0
+decl_stmt|;
+name|int
+name|ret
 decl_stmt|;
 name|memset
 argument_list|(
@@ -1702,6 +2392,19 @@ condition|)
 return|return
 literal|0
 return|;
+if|if
+condition|(
+name|length
+operator|<
+name|IEEE802_11_CAPINFO_LEN
+operator|+
+name|IEEE802_11_LISTENINT_LEN
+operator|+
+name|IEEE802_11_AP_LEN
+condition|)
+return|return
+literal|0
+return|;
 name|pbody
 operator|.
 name|capability_info
@@ -1713,6 +2416,10 @@ argument_list|)
 expr_stmt|;
 name|offset
 operator|+=
+name|IEEE802_11_CAPINFO_LEN
+expr_stmt|;
+name|length
+operator|-=
 name|IEEE802_11_CAPINFO_LEN
 expr_stmt|;
 name|pbody
@@ -1728,6 +2435,10 @@ argument_list|)
 expr_stmt|;
 name|offset
 operator|+=
+name|IEEE802_11_LISTENINT_LEN
+expr_stmt|;
+name|length
+operator|-=
 name|IEEE802_11_LISTENINT_LEN
 expr_stmt|;
 name|memcpy
@@ -1748,6 +2459,12 @@ name|offset
 operator|+=
 name|IEEE802_11_AP_LEN
 expr_stmt|;
+name|length
+operator|-=
+name|IEEE802_11_AP_LEN
+expr_stmt|;
+name|ret
+operator|=
 name|parse_elements
 argument_list|(
 operator|&
@@ -1756,6 +2473,8 @@ argument_list|,
 name|p
 argument_list|,
 name|offset
+argument_list|,
+name|length
 argument_list|)
 expr_stmt|;
 name|PRINT_SSID
@@ -1776,7 +2495,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-literal|1
+name|ret
 return|;
 block|}
 end_function
@@ -1790,6 +2509,9 @@ specifier|const
 name|u_char
 modifier|*
 name|p
+parameter_list|,
+name|u_int
+name|length
 parameter_list|)
 block|{
 comment|/* Same as a Association Reponse */
@@ -1797,6 +2519,8 @@ return|return
 name|handle_assoc_response
 argument_list|(
 name|p
+argument_list|,
+name|length
 argument_list|)
 return|;
 block|}
@@ -1811,6 +2535,9 @@ specifier|const
 name|u_char
 modifier|*
 name|p
+parameter_list|,
+name|u_int
+name|length
 parameter_list|)
 block|{
 name|struct
@@ -1821,6 +2548,9 @@ name|int
 name|offset
 init|=
 literal|0
+decl_stmt|;
+name|int
+name|ret
 decl_stmt|;
 name|memset
 argument_list|(
@@ -1835,6 +2565,8 @@ name|pbody
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|ret
+operator|=
 name|parse_elements
 argument_list|(
 operator|&
@@ -1843,6 +2575,8 @@ argument_list|,
 name|p
 argument_list|,
 name|offset
+argument_list|,
+name|length
 argument_list|)
 expr_stmt|;
 name|PRINT_SSID
@@ -1856,7 +2590,7 @@ name|pbody
 argument_list|)
 expr_stmt|;
 return|return
-literal|1
+name|ret
 return|;
 block|}
 end_function
@@ -1870,6 +2604,9 @@ specifier|const
 name|u_char
 modifier|*
 name|p
+parameter_list|,
+name|u_int
+name|length
 parameter_list|)
 block|{
 name|struct
@@ -1880,6 +2617,9 @@ name|int
 name|offset
 init|=
 literal|0
+decl_stmt|;
+name|int
+name|ret
 decl_stmt|;
 name|memset
 argument_list|(
@@ -1912,6 +2652,19 @@ condition|)
 return|return
 literal|0
 return|;
+if|if
+condition|(
+name|length
+operator|<
+name|IEEE802_11_TSTAMP_LEN
+operator|+
+name|IEEE802_11_BCNINT_LEN
+operator|+
+name|IEEE802_11_CAPINFO_LEN
+condition|)
+return|return
+literal|0
+return|;
 name|memcpy
 argument_list|(
 operator|&
@@ -1926,6 +2679,10 @@ argument_list|)
 expr_stmt|;
 name|offset
 operator|+=
+name|IEEE802_11_TSTAMP_LEN
+expr_stmt|;
+name|length
+operator|-=
 name|IEEE802_11_TSTAMP_LEN
 expr_stmt|;
 name|pbody
@@ -1943,6 +2700,10 @@ name|offset
 operator|+=
 name|IEEE802_11_BCNINT_LEN
 expr_stmt|;
+name|length
+operator|-=
+name|IEEE802_11_BCNINT_LEN
+expr_stmt|;
 name|pbody
 operator|.
 name|capability_info
@@ -1958,6 +2719,12 @@ name|offset
 operator|+=
 name|IEEE802_11_CAPINFO_LEN
 expr_stmt|;
+name|length
+operator|-=
+name|IEEE802_11_CAPINFO_LEN
+expr_stmt|;
+name|ret
+operator|=
 name|parse_elements
 argument_list|(
 operator|&
@@ -1966,6 +2733,8 @@ argument_list|,
 name|p
 argument_list|,
 name|offset
+argument_list|,
+name|length
 argument_list|)
 expr_stmt|;
 name|PRINT_SSID
@@ -1984,7 +2753,7 @@ name|pbody
 argument_list|)
 expr_stmt|;
 return|return
-literal|1
+name|ret
 return|;
 block|}
 end_function
@@ -2013,6 +2782,9 @@ specifier|const
 name|u_char
 modifier|*
 name|p
+parameter_list|,
+name|u_int
+name|length
 parameter_list|)
 block|{
 name|struct
@@ -2042,6 +2814,15 @@ name|p
 argument_list|,
 name|IEEE802_11_REASON_LEN
 argument_list|)
+condition|)
+return|return
+literal|0
+return|;
+if|if
+condition|(
+name|length
+operator|<
+name|IEEE802_11_REASON_LEN
 condition|)
 return|return
 literal|0
@@ -2092,6 +2873,9 @@ specifier|const
 name|u_char
 modifier|*
 name|p
+parameter_list|,
+name|u_int
+name|length
 parameter_list|)
 block|{
 name|struct
@@ -2102,6 +2886,9 @@ name|int
 name|offset
 init|=
 literal|0
+decl_stmt|;
+name|int
+name|ret
 decl_stmt|;
 name|memset
 argument_list|(
@@ -2130,6 +2917,15 @@ condition|)
 return|return
 literal|0
 return|;
+if|if
+condition|(
+name|length
+operator|<
+literal|6
+condition|)
+return|return
+literal|0
+return|;
 name|pbody
 operator|.
 name|auth_alg
@@ -2141,6 +2937,10 @@ argument_list|)
 expr_stmt|;
 name|offset
 operator|+=
+literal|2
+expr_stmt|;
+name|length
+operator|-=
 literal|2
 expr_stmt|;
 name|pbody
@@ -2158,6 +2958,10 @@ name|offset
 operator|+=
 literal|2
 expr_stmt|;
+name|length
+operator|-=
+literal|2
+expr_stmt|;
 name|pbody
 operator|.
 name|status_code
@@ -2173,6 +2977,12 @@ name|offset
 operator|+=
 literal|2
 expr_stmt|;
+name|length
+operator|-=
+literal|2
+expr_stmt|;
+name|ret
+operator|=
 name|parse_elements
 argument_list|(
 operator|&
@@ -2181,6 +2991,8 @@ argument_list|,
 name|p
 argument_list|,
 name|offset
+argument_list|,
+name|length
 argument_list|)
 expr_stmt|;
 if|if
@@ -2270,7 +3082,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
-literal|1
+name|ret
 return|;
 block|}
 name|printf
@@ -2329,7 +3141,7 @@ literal|""
 argument_list|)
 expr_stmt|;
 return|return
-literal|1
+name|ret
 return|;
 block|}
 end_function
@@ -2349,6 +3161,9 @@ specifier|const
 name|u_char
 modifier|*
 name|p
+parameter_list|,
+name|u_int
+name|length
 parameter_list|)
 block|{
 name|struct
@@ -2394,6 +3209,15 @@ condition|)
 return|return
 literal|0
 return|;
+if|if
+condition|(
+name|length
+operator|<
+name|IEEE802_11_REASON_LEN
+condition|)
+return|return
+literal|0
+return|;
 name|pbody
 operator|.
 name|reason_code
@@ -2405,6 +3229,10 @@ argument_list|)
 expr_stmt|;
 name|offset
 operator|+=
+name|IEEE802_11_REASON_LEN
+expr_stmt|;
+name|length
+operator|-=
 name|IEEE802_11_REASON_LEN
 expr_stmt|;
 name|reason
@@ -2462,6 +3290,340 @@ return|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|PRINT_HT_ACTION
+parameter_list|(
+name|v
+parameter_list|)
+value|(\ 	(v) == 0 ? printf("TxChWidth") : \ 	(v) == 1 ? printf("MIMOPwrSave") : \ 		   printf("Act#%d", (v)) \ )
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRINT_BA_ACTION
+parameter_list|(
+name|v
+parameter_list|)
+value|(\ 	(v) == 0 ? printf("ADDBA Request") : \ 	(v) == 1 ? printf("ADDBA Response") : \ 	(v) == 2 ? printf("DELBA") : \ 		   printf("Act#%d", (v)) \ )
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRINT_MESHLINK_ACTION
+parameter_list|(
+name|v
+parameter_list|)
+value|(\ 	(v) == 0 ? printf("Request") : \ 	(v) == 1 ? printf("Report") : \ 		   printf("Act#%d", (v)) \ )
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRINT_MESHPEERING_ACTION
+parameter_list|(
+name|v
+parameter_list|)
+value|(\ 	(v) == 0 ? printf("Open") : \ 	(v) == 1 ? printf("Confirm") : \ 	(v) == 2 ? printf("Close") : \ 		   printf("Act#%d", (v)) \ )
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRINT_MESHPATH_ACTION
+parameter_list|(
+name|v
+parameter_list|)
+value|(\ 	(v) == 0 ? printf("Request") : \ 	(v) == 1 ? printf("Report") : \ 	(v) == 2 ? printf("Error") : \ 	(v) == 3 ? printf("RootAnnouncement") : \ 		   printf("Act#%d", (v)) \ )
+end_define
+
+begin_function
+specifier|static
+name|int
+name|handle_action
+parameter_list|(
+specifier|const
+name|struct
+name|mgmt_header_t
+modifier|*
+name|pmh
+parameter_list|,
+specifier|const
+name|u_char
+modifier|*
+name|p
+parameter_list|,
+name|u_int
+name|length
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|TTEST2
+argument_list|(
+operator|*
+name|p
+argument_list|,
+literal|2
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
+if|if
+condition|(
+name|length
+operator|<
+literal|2
+condition|)
+return|return
+literal|0
+return|;
+if|if
+condition|(
+name|eflag
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|": "
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|" (%s): "
+argument_list|,
+name|etheraddr_string
+argument_list|(
+name|pmh
+operator|->
+name|sa
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+switch|switch
+condition|(
+name|p
+index|[
+literal|0
+index|]
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|printf
+argument_list|(
+literal|"Spectrum Management Act#%d"
+argument_list|,
+name|p
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|printf
+argument_list|(
+literal|"QoS Act#%d"
+argument_list|,
+name|p
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+name|printf
+argument_list|(
+literal|"DLS Act#%d"
+argument_list|,
+name|p
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|3
+case|:
+name|printf
+argument_list|(
+literal|"BA "
+argument_list|)
+expr_stmt|;
+name|PRINT_BA_ACTION
+argument_list|(
+name|p
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|7
+case|:
+name|printf
+argument_list|(
+literal|"HT "
+argument_list|)
+expr_stmt|;
+name|PRINT_HT_ACTION
+argument_list|(
+name|p
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|13
+case|:
+name|printf
+argument_list|(
+literal|"MeshLMetric "
+argument_list|)
+expr_stmt|;
+name|PRINT_MESHLINK_ACTION
+argument_list|(
+name|p
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|15
+case|:
+name|printf
+argument_list|(
+literal|"Interwork Act#%d"
+argument_list|,
+name|p
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|16
+case|:
+name|printf
+argument_list|(
+literal|"Resource Act#%d"
+argument_list|,
+name|p
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|17
+case|:
+name|printf
+argument_list|(
+literal|"Proxy Act#%d"
+argument_list|,
+name|p
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|30
+case|:
+name|printf
+argument_list|(
+literal|"MeshPeering "
+argument_list|)
+expr_stmt|;
+name|PRINT_MESHPEERING_ACTION
+argument_list|(
+name|p
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|32
+case|:
+name|printf
+argument_list|(
+literal|"MeshPath "
+argument_list|)
+expr_stmt|;
+name|PRINT_MESHPATH_ACTION
+argument_list|(
+name|p
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|127
+case|:
+name|printf
+argument_list|(
+literal|"Vendor Act#%d"
+argument_list|,
+name|p
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|printf
+argument_list|(
+literal|"Reserved(%d) Act#%d"
+argument_list|,
+name|p
+index|[
+literal|0
+index|]
+argument_list|,
+name|p
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+return|return
+literal|1
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*********************************************************************************  * Print Body funcs  *********************************************************************************/
 end_comment
@@ -2484,6 +3646,9 @@ specifier|const
 name|u_char
 modifier|*
 name|p
+parameter_list|,
+name|u_int
+name|length
 parameter_list|)
 block|{
 switch|switch
@@ -2506,6 +3671,8 @@ return|return
 name|handle_assoc_request
 argument_list|(
 name|p
+argument_list|,
+name|length
 argument_list|)
 return|;
 case|case
@@ -2520,6 +3687,8 @@ return|return
 name|handle_assoc_response
 argument_list|(
 name|p
+argument_list|,
+name|length
 argument_list|)
 return|;
 case|case
@@ -2534,6 +3703,8 @@ return|return
 name|handle_reassoc_request
 argument_list|(
 name|p
+argument_list|,
+name|length
 argument_list|)
 return|;
 case|case
@@ -2548,6 +3719,8 @@ return|return
 name|handle_reassoc_response
 argument_list|(
 name|p
+argument_list|,
+name|length
 argument_list|)
 return|;
 case|case
@@ -2562,6 +3735,8 @@ return|return
 name|handle_probe_request
 argument_list|(
 name|p
+argument_list|,
+name|length
 argument_list|)
 return|;
 case|case
@@ -2576,6 +3751,8 @@ return|return
 name|handle_probe_response
 argument_list|(
 name|p
+argument_list|,
+name|length
 argument_list|)
 return|;
 case|case
@@ -2590,6 +3767,8 @@ return|return
 name|handle_beacon
 argument_list|(
 name|p
+argument_list|,
+name|length
 argument_list|)
 return|;
 case|case
@@ -2616,6 +3795,8 @@ return|return
 name|handle_disassoc
 argument_list|(
 name|p
+argument_list|,
+name|length
 argument_list|)
 return|;
 case|case
@@ -2686,6 +3867,8 @@ return|return
 name|handle_auth
 argument_list|(
 name|p
+argument_list|,
+name|length
 argument_list|)
 return|;
 case|case
@@ -2702,6 +3885,27 @@ argument_list|(
 name|pmh
 argument_list|,
 name|p
+argument_list|,
+name|length
+argument_list|)
+return|;
+break|break;
+case|case
+name|ST_ACTION
+case|:
+name|printf
+argument_list|(
+literal|"Action"
+argument_list|)
+expr_stmt|;
+return|return
+name|handle_action
+argument_list|(
+name|pmh
+argument_list|,
+name|p
+argument_list|,
+name|length
 argument_list|)
 return|;
 break|break;
@@ -2749,6 +3953,163 @@ name|fc
 argument_list|)
 condition|)
 block|{
+case|case
+name|CTRL_CONTROL_WRAPPER
+case|:
+name|printf
+argument_list|(
+literal|"Control Wrapper"
+argument_list|)
+expr_stmt|;
+comment|/* XXX - requires special handling */
+break|break;
+case|case
+name|CTRL_BAR
+case|:
+name|printf
+argument_list|(
+literal|"BAR"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|TTEST2
+argument_list|(
+operator|*
+name|p
+argument_list|,
+name|CTRL_BAR_HDRLEN
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
+if|if
+condition|(
+operator|!
+name|eflag
+condition|)
+name|printf
+argument_list|(
+literal|" RA:%s TA:%s CTL(%x) SEQ(%u) "
+argument_list|,
+name|etheraddr_string
+argument_list|(
+operator|(
+operator|(
+specifier|const
+expr|struct
+name|ctrl_bar_t
+operator|*
+operator|)
+name|p
+operator|)
+operator|->
+name|ra
+argument_list|)
+argument_list|,
+name|etheraddr_string
+argument_list|(
+operator|(
+operator|(
+specifier|const
+expr|struct
+name|ctrl_bar_t
+operator|*
+operator|)
+name|p
+operator|)
+operator|->
+name|ta
+argument_list|)
+argument_list|,
+name|EXTRACT_LE_16BITS
+argument_list|(
+operator|&
+operator|(
+operator|(
+operator|(
+specifier|const
+expr|struct
+name|ctrl_bar_t
+operator|*
+operator|)
+name|p
+operator|)
+operator|->
+name|ctl
+operator|)
+argument_list|)
+argument_list|,
+name|EXTRACT_LE_16BITS
+argument_list|(
+operator|&
+operator|(
+operator|(
+operator|(
+specifier|const
+expr|struct
+name|ctrl_bar_t
+operator|*
+operator|)
+name|p
+operator|)
+operator|->
+name|seq
+operator|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CTRL_BA
+case|:
+name|printf
+argument_list|(
+literal|"BA"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|TTEST2
+argument_list|(
+operator|*
+name|p
+argument_list|,
+name|CTRL_BA_HDRLEN
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
+if|if
+condition|(
+operator|!
+name|eflag
+condition|)
+name|printf
+argument_list|(
+literal|" RA:%s "
+argument_list|,
+name|etheraddr_string
+argument_list|(
+operator|(
+operator|(
+specifier|const
+expr|struct
+name|ctrl_ba_t
+operator|*
+operator|)
+name|p
+operator|)
+operator|->
+name|ra
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 name|CTRL_PS_POLL
 case|:
@@ -3631,6 +4992,105 @@ argument_list|)
 condition|)
 block|{
 case|case
+name|CTRL_BAR
+case|:
+name|printf
+argument_list|(
+literal|" RA:%s TA:%s CTL(%x) SEQ(%u) "
+argument_list|,
+name|etheraddr_string
+argument_list|(
+operator|(
+operator|(
+specifier|const
+expr|struct
+name|ctrl_bar_t
+operator|*
+operator|)
+name|p
+operator|)
+operator|->
+name|ra
+argument_list|)
+argument_list|,
+name|etheraddr_string
+argument_list|(
+operator|(
+operator|(
+specifier|const
+expr|struct
+name|ctrl_bar_t
+operator|*
+operator|)
+name|p
+operator|)
+operator|->
+name|ta
+argument_list|)
+argument_list|,
+name|EXTRACT_LE_16BITS
+argument_list|(
+operator|&
+operator|(
+operator|(
+operator|(
+specifier|const
+expr|struct
+name|ctrl_bar_t
+operator|*
+operator|)
+name|p
+operator|)
+operator|->
+name|ctl
+operator|)
+argument_list|)
+argument_list|,
+name|EXTRACT_LE_16BITS
+argument_list|(
+operator|&
+operator|(
+operator|(
+operator|(
+specifier|const
+expr|struct
+name|ctrl_bar_t
+operator|*
+operator|)
+name|p
+operator|)
+operator|->
+name|seq
+operator|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CTRL_BA
+case|:
+name|printf
+argument_list|(
+literal|"RA:%s "
+argument_list|,
+name|etheraddr_string
+argument_list|(
+operator|(
+operator|(
+specifier|const
+expr|struct
+name|ctrl_ba_t
+operator|*
+operator|)
+name|p
+operator|)
+operator|->
+name|ra
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|CTRL_PS_POLL
 case|:
 name|printf
@@ -3883,6 +5343,12 @@ argument_list|)
 condition|)
 block|{
 case|case
+name|CTRL_BAR
+case|:
+return|return
+name|CTRL_BAR_HDRLEN
+return|;
+case|case
 name|CTRL_PS_POLL
 case|:
 return|return
@@ -3979,13 +5445,54 @@ block|}
 block|}
 end_function
 
+begin_function
+specifier|static
+name|int
+name|extract_mesh_header_length
+parameter_list|(
+specifier|const
+name|u_char
+modifier|*
+name|p
+parameter_list|)
+block|{
+return|return
+operator|(
+name|p
+index|[
+literal|0
+index|]
+operator|&
+operator|~
+literal|3
+operator|)
+condition|?
+literal|0
+else|:
+literal|6
+operator|*
+operator|(
+literal|1
+operator|+
+operator|(
+name|p
+index|[
+literal|0
+index|]
+operator|&
+literal|3
+operator|)
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Print the 802.11 MAC header if eflag is set, and set "*srcp" and "*dstp"  * to point to the source and destination MAC addresses in any case if  * "srcp" and "dstp" aren't null.  */
 end_comment
 
 begin_function
 specifier|static
-specifier|inline
 name|void
 name|ieee_802_11_hdr_print
 parameter_list|(
@@ -3996,6 +5503,12 @@ specifier|const
 name|u_char
 modifier|*
 name|p
+parameter_list|,
+name|u_int
+name|hdrlen
+parameter_list|,
+name|u_int
+name|meshdrlen
 parameter_list|,
 specifier|const
 name|u_int8_t
@@ -4125,6 +5638,120 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|meshdrlen
+operator|!=
+literal|0
+condition|)
+block|{
+specifier|const
+name|struct
+name|meshcntl_t
+modifier|*
+name|mc
+init|=
+operator|(
+specifier|const
+expr|struct
+name|meshcntl_t
+operator|*
+operator|)
+operator|&
+name|p
+index|[
+name|hdrlen
+operator|-
+name|meshdrlen
+index|]
+decl_stmt|;
+name|int
+name|ae
+init|=
+name|mc
+operator|->
+name|flags
+operator|&
+literal|3
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"MeshData (AE %d TTL %u seq %u"
+argument_list|,
+name|ae
+argument_list|,
+name|mc
+operator|->
+name|ttl
+argument_list|,
+name|EXTRACT_LE_32BITS
+argument_list|(
+name|mc
+operator|->
+name|seq
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ae
+operator|>
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|" A4:%s"
+argument_list|,
+name|etheraddr_string
+argument_list|(
+name|mc
+operator|->
+name|addr4
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ae
+operator|>
+literal|1
+condition|)
+name|printf
+argument_list|(
+literal|" A5:%s"
+argument_list|,
+name|etheraddr_string
+argument_list|(
+name|mc
+operator|->
+name|addr5
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ae
+operator|>
+literal|2
+condition|)
+name|printf
+argument_list|(
+literal|" A6:%s"
+argument_list|,
+name|etheraddr_string
+argument_list|(
+name|mc
+operator|->
+name|addr6
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|") "
+argument_list|)
+expr_stmt|;
+block|}
 switch|switch
 condition|(
 name|FC_TYPE
@@ -4243,17 +5870,24 @@ name|u_int
 name|length
 parameter_list|,
 name|u_int
-name|caplen
+name|orig_caplen
 parameter_list|,
 name|int
 name|pad
+parameter_list|,
+name|u_int
+name|fcslen
 parameter_list|)
 block|{
 name|u_int16_t
 name|fc
 decl_stmt|;
 name|u_int
+name|caplen
+decl_stmt|,
 name|hdrlen
+decl_stmt|,
+name|meshdrlen
 decl_stmt|;
 specifier|const
 name|u_int8_t
@@ -4266,6 +5900,54 @@ decl_stmt|;
 name|u_short
 name|extracted_ethertype
 decl_stmt|;
+name|caplen
+operator|=
+name|orig_caplen
+expr_stmt|;
+comment|/* Remove FCS, if present */
+if|if
+condition|(
+name|length
+operator|<
+name|fcslen
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"[|802.11]"
+argument_list|)
+expr_stmt|;
+return|return
+name|caplen
+return|;
+block|}
+name|length
+operator|-=
+name|fcslen
+expr_stmt|;
+if|if
+condition|(
+name|caplen
+operator|>
+name|length
+condition|)
+block|{
+comment|/* Amount of FCS in actual packet data, if any */
+name|fcslen
+operator|=
+name|caplen
+operator|-
+name|length
+expr_stmt|;
+name|caplen
+operator|-=
+name|fcslen
+expr_stmt|;
+name|snapend
+operator|-=
+name|fcslen
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|caplen
@@ -4279,7 +5961,7 @@ literal|"[|802.11]"
 argument_list|)
 expr_stmt|;
 return|return
-name|caplen
+name|orig_caplen
 return|;
 block|}
 name|fc
@@ -4311,6 +5993,43 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|FC_TYPE
+argument_list|(
+name|fc
+argument_list|)
+operator|==
+name|T_DATA
+operator|&&
+name|DATA_FRAME_IS_QOS
+argument_list|(
+name|FC_SUBTYPE
+argument_list|(
+name|fc
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|meshdrlen
+operator|=
+name|extract_mesh_header_length
+argument_list|(
+name|p
+operator|+
+name|hdrlen
+argument_list|)
+expr_stmt|;
+name|hdrlen
+operator|+=
+name|meshdrlen
+expr_stmt|;
+block|}
+else|else
+name|meshdrlen
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
 name|caplen
 operator|<
 name|hdrlen
@@ -4330,6 +6049,10 @@ argument_list|(
 name|fc
 argument_list|,
 name|p
+argument_list|,
+name|hdrlen
+argument_list|,
+name|meshdrlen
 argument_list|,
 operator|&
 name|src
@@ -4382,6 +6105,8 @@ name|hdrlen
 operator|)
 argument_list|,
 name|p
+argument_list|,
+name|length
 argument_list|)
 condition|)
 block|{
@@ -4502,6 +6227,10 @@ name|p
 operator|-
 name|hdrlen
 argument_list|,
+name|hdrlen
+argument_list|,
+name|meshdrlen
+argument_list|,
 name|NULL
 argument_list|,
 name|NULL
@@ -4591,8 +6320,290 @@ operator|->
 name|caplen
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 return|;
+block|}
+end_function
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CHAN_FHSS
+define|\
+value|(IEEE80211_CHAN_2GHZ | IEEE80211_CHAN_GFSK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CHAN_A
+define|\
+value|(IEEE80211_CHAN_5GHZ | IEEE80211_CHAN_OFDM)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CHAN_B
+define|\
+value|(IEEE80211_CHAN_2GHZ | IEEE80211_CHAN_CCK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CHAN_PUREG
+define|\
+value|(IEEE80211_CHAN_2GHZ | IEEE80211_CHAN_OFDM)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CHAN_G
+define|\
+value|(IEEE80211_CHAN_2GHZ | IEEE80211_CHAN_DYN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_CHAN_FHSS
+parameter_list|(
+name|flags
+parameter_list|)
+define|\
+value|((flags& IEEE80211_CHAN_FHSS) == IEEE80211_CHAN_FHSS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_CHAN_A
+parameter_list|(
+name|flags
+parameter_list|)
+define|\
+value|((flags& IEEE80211_CHAN_A) == IEEE80211_CHAN_A)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_CHAN_B
+parameter_list|(
+name|flags
+parameter_list|)
+define|\
+value|((flags& IEEE80211_CHAN_B) == IEEE80211_CHAN_B)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_CHAN_PUREG
+parameter_list|(
+name|flags
+parameter_list|)
+define|\
+value|((flags& IEEE80211_CHAN_PUREG) == IEEE80211_CHAN_PUREG)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_CHAN_G
+parameter_list|(
+name|flags
+parameter_list|)
+define|\
+value|((flags& IEEE80211_CHAN_G) == IEEE80211_CHAN_G)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_CHAN_ANYG
+parameter_list|(
+name|flags
+parameter_list|)
+define|\
+value|(IS_CHAN_PUREG(flags) || IS_CHAN_G(flags))
+end_define
+
+begin_function
+specifier|static
+name|void
+name|print_chaninfo
+parameter_list|(
+name|int
+name|freq
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+block|{
+name|printf
+argument_list|(
+literal|"%u MHz"
+argument_list|,
+name|freq
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|IS_CHAN_FHSS
+argument_list|(
+name|flags
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|" FHSS"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|IS_CHAN_A
+argument_list|(
+name|flags
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|flags
+operator|&
+name|IEEE80211_CHAN_HALF
+condition|)
+name|printf
+argument_list|(
+literal|" 11a/10Mhz"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|flags
+operator|&
+name|IEEE80211_CHAN_QUARTER
+condition|)
+name|printf
+argument_list|(
+literal|" 11a/5Mhz"
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|" 11a"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|IS_CHAN_ANYG
+argument_list|(
+name|flags
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|flags
+operator|&
+name|IEEE80211_CHAN_HALF
+condition|)
+name|printf
+argument_list|(
+literal|" 11g/10Mhz"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|flags
+operator|&
+name|IEEE80211_CHAN_QUARTER
+condition|)
+name|printf
+argument_list|(
+literal|" 11g/5Mhz"
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|" 11g"
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|IS_CHAN_B
+argument_list|(
+name|flags
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|" 11b"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|IEEE80211_CHAN_TURBO
+condition|)
+name|printf
+argument_list|(
+literal|" Turbo"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|IEEE80211_CHAN_HT20
+condition|)
+name|printf
+argument_list|(
+literal|" ht/20"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|flags
+operator|&
+name|IEEE80211_CHAN_HT40D
+condition|)
+name|printf
+argument_list|(
+literal|" ht/40-"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|flags
+operator|&
+name|IEEE80211_CHAN_HT40U
+condition|)
+name|printf
+argument_list|(
+literal|" ht/40+"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" "
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -4609,9 +6620,9 @@ parameter_list|,
 name|u_int32_t
 name|bit
 parameter_list|,
-name|int
+name|u_int8_t
 modifier|*
-name|pad
+name|flags
 parameter_list|)
 block|{
 union|union
@@ -4638,6 +6649,10 @@ block|}
 name|u
 union|,
 name|u2
+union|,
+name|u3
+union|,
+name|u4
 union|;
 name|int
 name|rc
@@ -4662,18 +6677,12 @@ operator|.
 name|u8
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+operator|*
+name|flags
+operator|=
 name|u
 operator|.
 name|u8
-operator|&
-name|IEEE80211_RADIOTAP_F_DATAPAD
-condition|)
-operator|*
-name|pad
-operator|=
-literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -4825,11 +6834,84 @@ name|u64
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|IEEE80211_RADIOTAP_XCHANNEL
+case|:
+name|rc
+operator|=
+name|cpack_uint32
+argument_list|(
+name|s
+argument_list|,
+operator|&
+name|u
+operator|.
+name|u32
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rc
+operator|!=
+literal|0
+condition|)
+break|break;
+name|rc
+operator|=
+name|cpack_uint16
+argument_list|(
+name|s
+argument_list|,
+operator|&
+name|u2
+operator|.
+name|u16
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rc
+operator|!=
+literal|0
+condition|)
+break|break;
+name|rc
+operator|=
+name|cpack_uint8
+argument_list|(
+name|s
+argument_list|,
+operator|&
+name|u3
+operator|.
+name|u8
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rc
+operator|!=
+literal|0
+condition|)
+break|break;
+name|rc
+operator|=
+name|cpack_uint8
+argument_list|(
+name|s
+argument_list|,
+operator|&
+name|u4
+operator|.
+name|u8
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
-comment|/* this bit indicates a field whose 		 * size we do not know, so we cannot 		 * proceed. 		 */
+comment|/* this bit indicates a field whose 		 * size we do not know, so we cannot 		 * proceed.  Just print the bit number. 		 */
 name|printf
 argument_list|(
-literal|"[0x%08x] "
+literal|"[bit %u] "
 argument_list|,
 name|bit
 argument_list|)
@@ -4863,26 +6945,11 @@ block|{
 case|case
 name|IEEE80211_RADIOTAP_CHANNEL
 case|:
-name|printf
+name|print_chaninfo
 argument_list|(
-literal|"%u MHz "
-argument_list|,
 name|u
 operator|.
 name|u16
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|u2
-operator|.
-name|u16
-operator|!=
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|"(0x%04x) "
 argument_list|,
 name|u2
 operator|.
@@ -4918,6 +6985,26 @@ break|break;
 case|case
 name|IEEE80211_RADIOTAP_RATE
 case|:
+if|if
+condition|(
+name|u
+operator|.
+name|u8
+operator|&
+literal|0x80
+condition|)
+name|PRINT_HT_RATE
+argument_list|(
+literal|""
+argument_list|,
+name|u
+operator|.
+name|u8
+argument_list|,
+literal|" Mb/s "
+argument_list|)
+expr_stmt|;
+else|else
 name|PRINT_RATE
 argument_list|(
 literal|""
@@ -5139,6 +7226,21 @@ name|u64
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|IEEE80211_RADIOTAP_XCHANNEL
+case|:
+name|print_chaninfo
+argument_list|(
+name|u2
+operator|.
+name|u16
+argument_list|,
+name|u
+operator|.
+name|u32
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 return|return
 literal|0
@@ -5204,7 +7306,7 @@ name|BIT
 parameter_list|(
 name|n
 parameter_list|)
-value|(1<< n)
+value|(1U<< n)
 define|#
 directive|define
 name|IS_EXTENDED
@@ -5249,8 +7351,14 @@ decl_stmt|;
 name|u_int
 name|len
 decl_stmt|;
+name|u_int8_t
+name|flags
+decl_stmt|;
 name|int
 name|pad
+decl_stmt|;
+name|u_int
+name|fcslen
 decl_stmt|;
 if|if
 condition|(
@@ -5404,8 +7512,18 @@ return|return
 name|caplen
 return|;
 block|}
+comment|/* Assume no flags */
+name|flags
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Assume no Atheros padding between 802.11 header and body */
 name|pad
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Assume no FCS at end of frame */
+name|fcslen
 operator|=
 literal|0
 expr_stmt|;
@@ -5489,7 +7607,7 @@ argument_list|,
 name|bit
 argument_list|,
 operator|&
-name|pad
+name|flags
 argument_list|)
 operator|!=
 literal|0
@@ -5499,6 +7617,28 @@ name|out
 goto|;
 block|}
 block|}
+if|if
+condition|(
+name|flags
+operator|&
+name|IEEE80211_RADIOTAP_F_DATAPAD
+condition|)
+name|pad
+operator|=
+literal|1
+expr_stmt|;
+comment|/* Atheros padding */
+if|if
+condition|(
+name|flags
+operator|&
+name|IEEE80211_RADIOTAP_F_FCS
+condition|)
+name|fcslen
+operator|=
+literal|4
+expr_stmt|;
+comment|/* FCS at end of packet */
 name|out
 label|:
 return|return
@@ -5519,6 +7659,8 @@ operator|-
 name|len
 argument_list|,
 name|pad
+argument_list|,
+name|fcslen
 argument_list|)
 return|;
 undef|#
@@ -5636,6 +7778,8 @@ argument_list|,
 name|caplen
 operator|-
 name|caphdr_len
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -5783,6 +7927,8 @@ argument_list|,
 name|caplen
 operator|-
 name|PRISM_HDR_LEN
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|)

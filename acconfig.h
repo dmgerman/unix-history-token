@@ -10,16 +10,6 @@ expr|@
 end_expr_stmt
 
 begin_comment
-comment|/* Define if you have SSLeay 0.9.0b with the buggy cast128. */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|HAVE_BUGGY_CAST128
-end_undef
-
-begin_comment
 comment|/* Define if you enable IPv6 support */
 end_comment
 
@@ -40,16 +30,6 @@ name|LIBSMI
 end_undef
 
 begin_comment
-comment|/* Define if you have the<smi.h> header file.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|HAVE_SMI_H
-end_undef
-
-begin_comment
 comment|/* define if you have struct __res_state_ext */
 end_comment
 
@@ -67,26 +47,6 @@ begin_undef
 undef|#
 directive|undef
 name|HAVE_NEW_RES_STATE
-end_undef
-
-begin_comment
-comment|/*  * define if struct ether_header.ether_dhost is a struct with ether_addr_octet  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ETHER_HEADER_HAS_EA
-end_undef
-
-begin_comment
-comment|/* define if struct ether_arp contains arp_xsha */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ETHER_ARP_HAS_X
 end_undef
 
 begin_comment
@@ -140,26 +100,6 @@ name|HAVE_INADDRSZ
 end_undef
 
 begin_comment
-comment|/* define if this is a development version, to use additional prototypes. */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|HAVE_OS_PROTO_H
-end_undef
-
-begin_comment
-comment|/* define if<unistd.h> defines __P() */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|HAVE_PORTABLE_PROTOTYPE
-end_undef
-
-begin_comment
 comment|/* define if RES_USE_INET6 is defined */
 end_comment
 
@@ -167,16 +107,6 @@ begin_undef
 undef|#
 directive|undef
 name|HAVE_RES_USE_INET6
-end_undef
-
-begin_comment
-comment|/* define if struct sockaddr has the sa_len member */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|HAVE_SOCKADDR_SA_LEN
 end_undef
 
 begin_comment
@@ -300,46 +230,6 @@ name|HAVE_GETRPCBYNUMBER
 end_undef
 
 begin_comment
-comment|/* define if unaligned memory accesses fail */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|LBL_ALIGN
-end_undef
-
-begin_comment
-comment|/* The successful return value from signal (?)XXX */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|RETSIGVAL
-end_undef
-
-begin_comment
-comment|/* Define this on IRIX */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|_BSD_SIGNALS
-end_undef
-
-begin_comment
-comment|/* For HP/UX ANSI compiler? */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|_HPUX_SOURCE
-end_undef
-
-begin_comment
 comment|/* AIX hack. */
 end_comment
 
@@ -385,16 +275,6 @@ begin_undef
 undef|#
 directive|undef
 name|TCPDUMP_DO_SMB
-end_undef
-
-begin_comment
-comment|/* Long story short: aclocal.m4 depends on autoconf 2.13  * implementation details wrt "const"; newer versions  * have different implementation details so for now we  * put "const" here.  This may cause duplicate definitions  * in config.h but that should be OK since they're the same.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|const
 end_undef
 
 begin_comment
