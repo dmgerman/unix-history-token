@@ -551,6 +551,23 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|sctp_move_chunks_from_net
+parameter_list|(
+name|struct
+name|sctp_tcb
+modifier|*
+name|stcb
+parameter_list|,
+name|struct
+name|sctp_nets
+modifier|*
+name|net
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|sctp_output
 parameter_list|(

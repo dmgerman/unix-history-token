@@ -19480,6 +19480,7 @@ name|sp
 operator|->
 name|net
 condition|)
+block|{
 name|sctp_free_remote_addr
 argument_list|(
 name|sp
@@ -19493,6 +19494,7 @@ name|net
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 comment|/* Free the chunk */
 name|sctp_free_a_strmoq
 argument_list|(
@@ -24734,6 +24736,12 @@ name|sp
 operator|->
 name|act_flags
 expr_stmt|;
+if|if
+condition|(
+name|sp
+operator|->
+name|net
+condition|)
 name|chk
 operator|->
 name|whoTo
@@ -24741,6 +24749,17 @@ operator|=
 name|sp
 operator|->
 name|net
+expr_stmt|;
+else|else
+name|chk
+operator|->
+name|whoTo
+operator|=
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|primary_destination
 expr_stmt|;
 name|atomic_add_int
 argument_list|(
