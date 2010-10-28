@@ -5030,15 +5030,10 @@ name|asoc
 operator|->
 name|sctp_cmt_on_off
 operator|=
-operator|(
-name|uint8_t
-operator|)
-name|SCTP_BASE_SYSCTL
-argument_list|(
+name|m
+operator|->
 name|sctp_cmt_on_off
-argument_list|)
 expr_stmt|;
-comment|/* EY Init nr_sack variable */
 name|asoc
 operator|->
 name|sctp_nr_sack_on_off
@@ -5051,7 +5046,6 @@ argument_list|(
 name|sctp_nr_sack_on_off
 argument_list|)
 expr_stmt|;
-comment|/* JRS 5/21/07 - Init CMT PF variables */
 name|asoc
 operator|->
 name|sctp_cmt_pf

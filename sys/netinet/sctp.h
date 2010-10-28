@@ -510,17 +510,6 @@ value|0x00001201
 end_define
 
 begin_comment
-comment|/* EY - NR_SACK on/off socket option */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTP_NR_SACK_ON_OFF
-value|0x00001300
-end_define
-
-begin_comment
 comment|/* JRS - Pluggable Congestion Control Socket option */
 end_comment
 
