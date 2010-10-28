@@ -1166,13 +1166,6 @@ name|int
 name|cmd
 parameter_list|)
 block|{
-name|struct
-name|sctp_ifa
-modifier|*
-name|ifap
-init|=
-name|NULL
-decl_stmt|;
 name|uint32_t
 name|ifa_flags
 init|=
@@ -1351,8 +1344,9 @@ operator|==
 name|RTM_ADD
 condition|)
 block|{
-name|ifap
-operator|=
+operator|(
+name|void
+operator|)
 name|sctp_add_addr_to_vrf
 argument_list|(
 name|SCTP_DEFAULT_VRFID
