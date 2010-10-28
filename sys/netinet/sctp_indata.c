@@ -16320,8 +16320,6 @@ block|{
 comment|/* Is it expired? */
 if|if
 condition|(
-comment|/* 				 * TODO sctp_constants.h needs alternative 				 * time macros when _KERNEL is undefined. 				 */
-operator|(
 name|timevalcmp
 argument_list|(
 operator|&
@@ -16338,7 +16336,6 @@ name|timetodrop
 argument_list|,
 operator|>
 argument_list|)
-operator|)
 condition|)
 block|{
 comment|/* Yes so drop it */

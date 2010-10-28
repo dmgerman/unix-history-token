@@ -28412,7 +28412,7 @@ expr_stmt|;
 comment|/* Here we must move to the sent queue and mark */
 if|if
 condition|(
-name|PR_SCTP_TTL_ENABLED
+name|PR_SCTP_BUF_ENABLED
 argument_list|(
 name|chk
 operator|->
