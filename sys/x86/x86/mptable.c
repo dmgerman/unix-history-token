@@ -134,6 +134,28 @@ begin_comment
 comment|/* _MP_ */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__amd64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MAX_LAPIC_ID
+value|63
+end_define
+
+begin_comment
+comment|/* Max local APIC ID for HTT fixup */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -144,6 +166,11 @@ end_define
 begin_comment
 comment|/* Max local APIC ID for HTT fixup */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
