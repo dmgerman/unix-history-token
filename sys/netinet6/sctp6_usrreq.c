@@ -258,11 +258,16 @@ name|vrf_id
 init|=
 literal|0
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|IPSEC
 name|struct
 name|inpcb
 modifier|*
 name|in6p_ip
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|sctp_chunkhdr
 modifier|*
@@ -1125,6 +1130,10 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|IPSEC
+comment|/* 	 * Check AH/ESP integrity. 	 */
 name|in6p_ip
 operator|=
 operator|(
@@ -1134,10 +1143,6 @@ operator|*
 operator|)
 name|in6p
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|IPSEC
-comment|/* 	 * Check AH/ESP integrity. 	 */
 if|if
 condition|(
 name|in6p_ip
@@ -3903,11 +3908,6 @@ modifier|*
 name|inp
 decl_stmt|;
 name|struct
-name|inpcb
-modifier|*
-name|in_inp
-decl_stmt|;
-name|struct
 name|in6pcb
 modifier|*
 name|inp6
@@ -3979,15 +3979,6 @@ return|return
 name|EINVAL
 return|;
 block|}
-name|in_inp
-operator|=
-operator|(
-expr|struct
-name|inpcb
-operator|*
-operator|)
-name|inp
-expr_stmt|;
 name|inp6
 operator|=
 operator|(
