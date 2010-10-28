@@ -2327,14 +2327,14 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_INITIAL_CWND_DESC
-value|"Initial congestion window in MTU"
+value|"Initial congestion window in MTUs"
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCTPCTL_INITIAL_CWND_MIN
-value|2
+value|1
 end_define
 
 begin_define
