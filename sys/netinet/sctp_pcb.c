@@ -2125,11 +2125,7 @@ directive|ifdef
 name|INVARIANTS
 name|panic
 argument_list|(
-literal|"No memory for IFN:%u"
-argument_list|,
-name|sctp_ifnp
-operator|->
-name|ifn_index
+literal|"No memory for IFN"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -27211,10 +27207,12 @@ block|}
 endif|#
 directive|endif
 default|default:
-name|sa
-operator|=
-name|NULL
-expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 break|break;
 block|}
 block|}

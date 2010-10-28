@@ -2516,6 +2516,9 @@ name|struct
 name|sctp_nets
 modifier|*
 name|r_net
+decl_stmt|,
+modifier|*
+name|f_net
 decl_stmt|;
 name|struct
 name|timeval
@@ -2863,7 +2866,7 @@ operator|&=
 operator|~
 name|SCTP_ADDR_REQ_PRIMARY
 expr_stmt|;
-name|r_net
+name|f_net
 operator|=
 name|TAILQ_FIRST
 argument_list|(
@@ -2877,13 +2880,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|r_net
+name|f_net
 operator|!=
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|primary_destination
+name|r_net
 condition|)
 block|{
 comment|/* 				 * first one on the list is NOT the primary 				 * sctp_cmpaddr() is much more efficent if 				 * the primary is the first on the list, 				 * make it so. 				 */
@@ -2896,11 +2895,7 @@ name|asoc
 operator|.
 name|nets
 argument_list|,
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|primary_destination
+name|r_net
 argument_list|,
 name|sctp_next
 argument_list|)
@@ -2914,11 +2909,7 @@ name|asoc
 operator|.
 name|nets
 argument_list|,
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|primary_destination
+name|r_net
 argument_list|,
 name|sctp_next
 argument_list|)
@@ -23577,6 +23568,22 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|stcb
+operator|==
+name|NULL
+condition|)
+block|{
+name|SCTPDBG
+argument_list|(
+name|SCTP_DEBUG_INDATA1
+argument_list|,
+literal|"No stcb when processing NR-SACK chunk\n"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
 operator|(
 name|stcb
 operator|->
@@ -23601,22 +23608,6 @@ block|{
 goto|goto
 name|unknown_chunk
 goto|;
-block|}
-if|if
-condition|(
-name|stcb
-operator|==
-name|NULL
-condition|)
-block|{
-name|SCTPDBG
-argument_list|(
-name|SCTP_DEBUG_INDATA1
-argument_list|,
-literal|"No stcb when processing NR-SACK chunk\n"
-argument_list|)
-expr_stmt|;
-break|break;
 block|}
 if|if
 condition|(

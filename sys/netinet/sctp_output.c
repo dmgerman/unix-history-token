@@ -47639,6 +47639,15 @@ argument_list|,
 name|sctp_next
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tp1
+operator|==
+name|NULL
+condition|)
+block|{
+break|break;
+block|}
 name|at
 operator|=
 name|tp1
@@ -47646,6 +47655,8 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|at
+operator|&&
 name|SCTP_BASE_SYSCTL
 argument_list|(
 name|sctp_logging_level
@@ -47681,6 +47692,10 @@ operator|=
 name|at
 expr_stmt|;
 comment|/*- 			 * last now points to last one I can report, update 			 * peer ack point 			 */
+if|if
+condition|(
+name|last
+condition|)
 name|advance_peer_ack_point
 operator|=
 name|last
@@ -47824,6 +47839,13 @@ argument_list|,
 name|sctp_next
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tp1
+operator|==
+name|NULL
+condition|)
+break|break;
 if|if
 condition|(
 name|at
@@ -51301,6 +51323,10 @@ name|udphdr
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|iph_out
+condition|)
 name|udp
 operator|->
 name|uh_sum
