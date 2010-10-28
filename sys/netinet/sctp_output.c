@@ -53710,7 +53710,10 @@ case|:
 case|case
 name|SCTP_ABORT_ASSOCIATION
 case|:
-comment|/*- 			 * we don't respond with an PKT-DROP to an ABORT 			 * or PKT-DROP 			 */
+case|case
+name|SCTP_INITIATION_ACK
+case|:
+comment|/** 			 * We don't respond with an PKT-DROP to an ABORT 			 * or PKT-DROP. We also do not respond to an 			 * INIT-ACK, because we can't know if the initiation 			 * tag is correct or not. 			 */
 name|sctp_free_a_chunk
 argument_list|(
 name|stcb
