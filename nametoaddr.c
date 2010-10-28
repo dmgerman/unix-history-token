@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/nametoaddr.c,v 1.82.2.1 2008/02/06 10:21:47 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/nametoaddr.c,v 1.83 2008-02-06 10:21:30 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,6 +36,29 @@ begin_include
 include|#
 directive|include
 file|"config.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DECNETLIB
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netdnet/dnetdb.h>
 end_include
 
 begin_endif
@@ -106,27 +129,6 @@ end_endif
 begin_comment
 comment|/* WIN32 */
 end_comment
-
-begin_comment
-comment|/*  * XXX - why was this included even on UNIX?  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__MINGW32__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"IP6_misc.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#

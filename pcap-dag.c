@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-dag.c,v 1.31.2.8 2008-04-14 20:41:51 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-dag.c,v 1.39 2008-04-14 20:40:58 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1513,6 +1513,18 @@ case|:
 case|case
 name|TYPE_MC_HDLC
 case|:
+case|case
+name|TYPE_MC_RAW_CHANNEL
+case|:
+case|case
+name|TYPE_MC_RAW
+case|:
+case|case
+name|TYPE_MC_AAL2
+case|:
+case|case
+name|TYPE_COLOR_MC_HDLC_POS
+case|:
 name|packet_len
 operator|+=
 literal|4
@@ -2137,6 +2149,9 @@ break|break;
 case|case
 name|TYPE_IPV4
 case|:
+case|case
+name|TYPE_IPV6
+case|:
 name|packet_len
 operator|=
 name|ntohs
@@ -2165,6 +2180,28 @@ name|packet_len
 expr_stmt|;
 block|}
 break|break;
+comment|/* These types have no matching 'native' DLT, but can be used with DLT_ERF above */
+case|case
+name|TYPE_MC_RAW
+case|:
+case|case
+name|TYPE_MC_RAW_CHANNEL
+case|:
+case|case
+name|TYPE_IP_COUNTER
+case|:
+case|case
+name|TYPE_TCP_FLOW_COUNTER
+case|:
+case|case
+name|TYPE_INFINIBAND
+case|:
+case|case
+name|TYPE_RAW_LINK
+case|:
+case|case
+name|TYPE_INFINIBAND_LINK
+case|:
 default|default:
 comment|/* Unhandled ERF type. 				 * Ignore rather than generating error 				 */
 continue|continue;
@@ -3427,6 +3464,16 @@ operator|.
 name|stat
 operator|.
 name|ps_recv
+operator|=
+literal|0
+expr_stmt|;
+name|handle
+operator|->
+name|md
+operator|.
+name|stat
+operator|.
+name|ps_ifdrop
 operator|=
 literal|0
 expr_stmt|;
@@ -4753,6 +4800,9 @@ break|break;
 case|case
 name|TYPE_IPV4
 case|:
+case|case
+name|TYPE_IPV6
+case|:
 if|if
 condition|(
 operator|!
@@ -4786,11 +4836,14 @@ case|case
 name|TYPE_INFINIBAND
 case|:
 case|case
-name|TYPE_IPV6
+name|TYPE_RAW_LINK
+case|:
+case|case
+name|TYPE_INFINIBAND_LINK
 case|:
 default|default:
 comment|/* Libpcap cannot deal with these types yet */
-comment|/* Add no DLTs, but still covered by DLT_ERF */
+comment|/* Add no 'native' DLTs, but still covered by DLT_ERF */
 break|break;
 block|}
 comment|/* switch */
