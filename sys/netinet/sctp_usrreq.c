@@ -342,24 +342,6 @@ operator|=
 name|nxtsz
 expr_stmt|;
 comment|/* now off to subtract IP_DF flag if needed */
-ifdef|#
-directive|ifdef
-name|SCTP_PRINT_FOR_B_AND_M
-name|SCTP_PRINTF
-argument_list|(
-literal|"sctp_pathmtu_adjust called inp:%p stcb:%p net:%p nxtsz:%d\n"
-argument_list|,
-name|inp
-argument_list|,
-name|stcb
-argument_list|,
-name|net
-argument_list|,
-name|nxtsz
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|overhead
 operator|=
 name|IP_HDR_SIZE
@@ -854,18 +836,6 @@ operator|>
 name|nxtsz
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_PRINT_FOR_B_AND_M
-name|SCTP_PRINTF
-argument_list|(
-literal|"notify_mbuf (ICMP) calls sctp_pathmtu_adjust mtu:%d\n"
-argument_list|,
-name|nxtsz
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|sctp_pathmtu_adjustment
 argument_list|(
 name|inp
@@ -18408,20 +18378,6 @@ operator|.
 name|smallest_mtu
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_PRINT_FOR_B_AND_M
-name|SCTP_PRINTF
-argument_list|(
-literal|"SCTP_PMTU_DISABLE calls sctp_pathmtu_adjustment:%d\n"
-argument_list|,
-name|net
-operator|->
-name|mtu
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|sctp_pathmtu_adjustment
 argument_list|(
 name|inp
@@ -18706,20 +18662,6 @@ operator|.
 name|smallest_mtu
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_PRINT_FOR_B_AND_M
-name|SCTP_PRINTF
-argument_list|(
-literal|"SCTP_PMTU_DISABLE calls sctp_pathmtu_adjustment:%d\n"
-argument_list|,
-name|net
-operator|->
-name|mtu
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|sctp_pathmtu_adjustment
 argument_list|(
 name|inp

@@ -17864,18 +17864,6 @@ name|mtu
 operator|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_PRINT_FOR_B_AND_M
-name|SCTP_PRINTF
-argument_list|(
-literal|"sctp_mtu_size_reset called after ip_output mtu-change:%d\n"
-argument_list|,
-name|mtu
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|sctp_mtu_size_reset
 argument_list|(
 name|inp
@@ -19829,18 +19817,6 @@ name|mtu
 operator|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_PRINT_FOR_B_AND_M
-name|SCTP_PRINTF
-argument_list|(
-literal|"sctp_mtu_size_reset called after ip6_output mtu-change:%d\n"
-argument_list|,
-name|mtu
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|sctp_mtu_size_reset
 argument_list|(
 name|inp
@@ -19910,23 +19886,6 @@ name|linkmtu
 operator|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_PRINT_FOR_B_AND_M
-name|SCTP_PRINTF
-argument_list|(
-literal|"sctp_mtu_size_reset called via ifp ND_IFINFO() linkmtu:%d\n"
-argument_list|,
-name|ND_IFINFO
-argument_list|(
-name|ifp
-argument_list|)
-operator|->
-name|linkmtu
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|sctp_mtu_size_reset
 argument_list|(
 name|inp

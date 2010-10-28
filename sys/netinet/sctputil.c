@@ -5677,20 +5677,6 @@ name|m
 operator|->
 name|sctp_frag_point
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SCTP_PRINT_FOR_B_AND_M
-name|SCTP_PRINTF
-argument_list|(
-literal|"smallest_mtu init'd with asoc to :%d\n"
-argument_list|,
-name|asoc
-operator|->
-name|smallest_mtu
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|asoc
 operator|->
 name|minrto
@@ -12729,22 +12715,6 @@ name|eff_mtu
 decl_stmt|,
 name|ovh
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|SCTP_PRINT_FOR_B_AND_M
-name|SCTP_PRINTF
-argument_list|(
-literal|"sctp_mtu_size_reset(%p, asoc:%p mtu:%d\n"
-argument_list|,
-name|inp
-argument_list|,
-name|asoc
-argument_list|,
-name|mtu
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|asoc
 operator|->
 name|smallest_mtu

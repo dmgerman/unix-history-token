@@ -17894,20 +17894,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|SCTP_PRINT_FOR_B_AND_M
-name|SCTP_PRINTF
-argument_list|(
-literal|"We have found an interface mtu of %d\n"
-argument_list|,
-name|net
-operator|->
-name|mtu
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|net
@@ -17956,18 +17942,6 @@ operator|.
 name|ro_rt
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SCTP_PRINT_FOR_B_AND_M
-name|SCTP_PRINTF
-argument_list|(
-literal|"The route mtu is %d\n"
-argument_list|,
-name|rmtu
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|rmtu
@@ -18017,20 +17991,6 @@ operator|==
 name|SCTP_ALLOC_ASOC
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_PRINT_FOR_B_AND_M
-name|SCTP_PRINTF
-argument_list|(
-literal|"New assoc sets mtu to :%d\n"
-argument_list|,
-name|net
-operator|->
-name|mtu
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|stcb
 operator|->
 name|asoc
@@ -18129,26 +18089,6 @@ operator|->
 name|mtu
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_PRINT_FOR_B_AND_M
-name|SCTP_PRINTF
-argument_list|(
-literal|"new address mtu:%d smaller than smallest:%d\n"
-argument_list|,
-name|net
-operator|->
-name|mtu
-argument_list|,
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|smallest_mtu
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|stcb
 operator|->
 name|asoc
