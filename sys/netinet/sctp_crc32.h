@@ -40,10 +40,15 @@ name|defined
 argument_list|(
 name|_KERNEL
 argument_list|)
-operator|||
+end_if
+
+begin_if
+if|#
+directive|if
+operator|!
 name|defined
 argument_list|(
-name|__Userspace__
+name|SCTP_WITH_NO_CSUM
 argument_list|)
 end_if
 
@@ -59,6 +64,11 @@ name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void

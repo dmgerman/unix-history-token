@@ -1975,7 +1975,7 @@ parameter_list|,
 name|vrf_id
 parameter_list|)
 define|\
-value|{ \ 	int o_flgs = 0; \ 	if (stcb&& stcb->sctp_ep&& stcb->sctp_ep->sctp_socket) { \ 		o_flgs = IP_RAWOUTPUT | (stcb->sctp_ep->sctp_socket->so_options& SO_DONTROUTE); \ 	} else { \ 		o_flgs = IP_RAWOUTPUT; \ 	} \ 	result = ip_output(o_pak, NULL, ro, o_flgs, 0, NULL); \ }
+value|{ \ 	int o_flgs = IP_RAWOUTPUT; \ 	struct sctp_tcb *local_stcb = stcb; \ 	if (local_stcb&& \ 	    local_stcb->sctp_ep&& \ 	    local_stcb->sctp_ep->sctp_socket) \ 		o_flgs |= local_stcb->sctp_ep->sctp_socket->so_options& SO_DONTROUTE; \ 	result = ip_output(o_pak, NULL, ro, o_flgs, 0, NULL); \ }
 end_define
 
 begin_define
@@ -1996,7 +1996,7 @@ parameter_list|,
 name|vrf_id
 parameter_list|)
 define|\
-value|{ \  	if (stcb&& stcb->sctp_ep) \ 		result = ip6_output(o_pak, \ 				    ((struct in6pcb *)(stcb->sctp_ep))->in6p_outputopts, \ 				    (ro), 0, 0, ifp, NULL); \ 	else \ 		result = ip6_output(o_pak, NULL, (ro), 0, 0, ifp, NULL); \ }
+value|{ \ 	struct sctp_tcb *local_stcb = stcb; \ 	if (local_stcb&& local_stcb->sctp_ep) \ 		result = ip6_output(o_pak, \ 				    ((struct in6pcb *)(local_stcb->sctp_ep))->in6p_outputopts, \ 				    (ro), 0, 0, ifp, NULL); \ 	else \ 		result = ip6_output(o_pak, NULL, (ro), 0, 0, ifp, NULL); \ }
 end_define
 
 begin_function_decl

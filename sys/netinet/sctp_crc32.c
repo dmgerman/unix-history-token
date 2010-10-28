@@ -348,32 +348,6 @@ return|;
 block|}
 end_function
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function
-name|uint32_t
-name|sctp_calculate_cksum
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-name|m
-parameter_list|,
-name|uint32_t
-name|offset
-parameter_list|)
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
 begin_endif
 endif|#
 directive|endif
@@ -396,6 +370,19 @@ name|uint32_t
 name|offset
 parameter_list|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SCTP_WITH_NO_CSUM
+argument_list|)
+name|panic
+argument_list|(
+literal|"sctp_delayed_cksum() called when using no SCTP CRC."
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|struct
 name|ip
 modifier|*
@@ -499,6 +486,8 @@ operator|)
 operator|=
 name|checksum
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
