@@ -79,22 +79,11 @@ directive|include
 file|<sys/kernel.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__amd64__
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<sys/linker.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -156,28 +145,11 @@ directive|include
 file|<machine/pmap.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__amd64__
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<machine/metadata.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/pc/bios.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -189,6 +161,12 @@ begin_include
 include|#
 directive|include
 file|<machine/resource.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/pc/bios.h>
 end_include
 
 begin_ifdef
@@ -268,14 +246,14 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|RMAN_BUS_SPACE_IO
+name|BUS_SPACE_IO
 value|AMD64_BUS_SPACE_IO
 end_define
 
 begin_define
 define|#
 directive|define
-name|RMAN_BUS_SPACE_MEM
+name|BUS_SPACE_MEM
 value|AMD64_BUS_SPACE_MEM
 end_define
 
@@ -287,14 +265,14 @@ end_else
 begin_define
 define|#
 directive|define
-name|RMAN_BUS_SPACE_IO
+name|BUS_SPACE_IO
 value|I386_BUS_SPACE_IO
 end_define
 
 begin_define
 define|#
 directive|define
-name|RMAN_BUS_SPACE_MEM
+name|BUS_SPACE_MEM
 value|I386_BUS_SPACE_MEM
 end_define
 
@@ -302,6 +280,13 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|ELF_KERN_STR
+value|("elf"__XSTRING(__ELF_WORD_SIZE)" kernel")
+end_define
 
 begin_expr_stmt
 specifier|static
@@ -2020,7 +2005,7 @@ name|rman_set_bustag
 argument_list|(
 name|r
 argument_list|,
-name|RMAN_BUS_SPACE_IO
+name|BUS_SPACE_IO
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2087,7 +2072,7 @@ name|rman_set_bustag
 argument_list|(
 name|r
 argument_list|,
-name|RMAN_BUS_SPACE_MEM
+name|BUS_SPACE_MEM
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -3143,12 +3128,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__amd64__
-end_ifdef
-
 begin_function
 specifier|static
 name|int
@@ -3174,6 +3153,10 @@ name|resource
 modifier|*
 name|res
 decl_stmt|;
+name|vm_paddr_t
+modifier|*
+name|p
+decl_stmt|;
 name|caddr_t
 name|kmdp
 decl_stmt|;
@@ -3182,6 +3165,8 @@ name|smapsize
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|i
 decl_stmt|,
 name|rid
 decl_stmt|;
@@ -3203,9 +3188,15 @@ name|kmdp
 operator|=
 name|preload_search_by_type
 argument_list|(
-literal|"elf64 kernel"
+name|ELF_KERN_STR
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|kmdp
+operator|!=
+name|NULL
+condition|)
 name|smapbase
 operator|=
 operator|(
@@ -3222,6 +3213,18 @@ operator||
 name|MODINFOMD_SMAP
 argument_list|)
 expr_stmt|;
+else|else
+name|smapbase
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|smapbase
+operator|!=
+name|NULL
+condition|)
+block|{
 name|smapsize
 operator|=
 operator|*
@@ -3353,38 +3356,6 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function
-specifier|static
-name|int
-name|ram_attach
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|)
-block|{
-name|struct
-name|resource
-modifier|*
-name|res
-decl_stmt|;
-name|vm_paddr_t
-modifier|*
-name|p
-decl_stmt|;
-name|int
-name|error
-decl_stmt|,
-name|i
-decl_stmt|,
-name|rid
-decl_stmt|;
 comment|/* 	 * We use the dump_avail[] array rather than phys_avail[] for 	 * the memory map as phys_avail[] contains holes for kernel 	 * memory, page 0, the message buffer, and the dcons buffer. 	 * We test the end address in the loop instead of the start 	 * since the start address for the first segment is 0. 	 * 	 * XXX: It would be preferable to use the SMAP if it exists 	 * instead since if the SMAP is very fragmented we may not 	 * include some memory regions in dump_avail[] and phys_avail[]. 	 */
 for|for
 control|(
@@ -3506,11 +3477,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
