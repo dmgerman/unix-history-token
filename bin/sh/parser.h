@@ -71,6 +71,17 @@ name|CTLQUOTEMARK
 value|'\210'
 end_define
 
+begin_define
+define|#
+directive|define
+name|CTLQUOTEEND
+value|'\211'
+end_define
+
+begin_comment
+comment|/* only for ${v+-...} */
+end_comment
+
 begin_comment
 comment|/* variable substitution byte (follows CTLVAR) */
 end_comment
