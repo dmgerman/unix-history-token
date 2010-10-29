@@ -2160,6 +2160,152 @@ value|215
 end_define
 
 begin_comment
+comment|/*   * David Gibson<david@gibson.dropbear.id.au> requested this for  * captures from the Linux kernel /dev/input/eventN devices. This  * is used to communicate keystrokes and mouse movements from the  * Linux kernel to display systems, such as Xorg.   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_LINUX_EVDEV
+value|216
+end_define
+
+begin_comment
+comment|/*  * GSM Um and Abis interfaces, preceded by a "gsmtap" header.  *  * Requested by Harald Welte<laforge@gnumonks.org>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_GSMTAP_UM
+value|217
+end_define
+
+begin_define
+define|#
+directive|define
+name|DLT_GSMTAP_ABIS
+value|218
+end_define
+
+begin_comment
+comment|/*  * MPLS, with an MPLS label as the link-layer header.  * Requested by Michele Marchetto<michele@openbsd.org> on behalf  * of OpenBSD.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_MPLS
+value|219
+end_define
+
+begin_comment
+comment|/*  * USB packets, beginning with a Linux USB header, with the USB header  * padded to 64 bytes; required for memory-mapped access.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_USB_LINUX_MMAPPED
+value|220
+end_define
+
+begin_comment
+comment|/*  * DECT packets, with a pseudo-header; requested by  * Matthias Wenzel<tcpdump@mazzoo.de>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_DECT
+value|221
+end_define
+
+begin_comment
+comment|/*  * From: "Lidwa, Eric (GSFC-582.0)[SGT INC]"<eric.lidwa-1@nasa.gov>  * Date: Mon, 11 May 2009 11:18:30 -0500  *  * DLT_AOS. We need it for AOS Space Data Link Protocol.  *   I have already written dissectors for but need an OK from  *   legal before I can submit a patch.  *  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_AOS
+value|222
+end_define
+
+begin_comment
+comment|/*  * Wireless HART (Highway Addressable Remote Transducer)  * From the HART Communication Foundation  * IES/PAS 62591  *  * Requested by Sam Roberts<vieuxtech@gmail.com>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_WIHART
+value|223
+end_define
+
+begin_comment
+comment|/*  * Fibre Channel FC-2 frames, beginning with a Frame_Header.  * Requested by Kahou Lei<kahou82@gmail.com>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_FC_2
+value|224
+end_define
+
+begin_comment
+comment|/*  * Fibre Channel FC-2 frames, beginning with an encoding of the  * SOF, and ending with an encoding of the EOF.  *  * The encodings represent the frame delimiters as 4-byte sequences  * representing the corresponding ordered sets, with K28.5  * represented as 0xBC, and the D symbols as the corresponding  * byte values; for example, SOFi2, which is K28.5 - D21.5 - D1.2 - D21.2,  * is represented as 0xBC 0xB5 0x55 0x55.  *  * Requested by Kahou Lei<kahou82@gmail.com>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_FC_2_WITH_FRAME_DELIMS
+value|225
+end_define
+
+begin_comment
+comment|/*  * Solaris ipnet pseudo-header; requested by Darren Reed<Darren.Reed@Sun.COM>.  *  * The pseudo-header starts with a one-byte version number; for version 2,  * the pseudo-header is:  *  * struct dl_ipnetinfo {  *     u_int8_t   dli_version;  *     u_int8_t   dli_family;  *     u_int16_t  dli_htype;  *     u_int32_t  dli_pktlen;  *     u_int32_t  dli_ifindex;  *     u_int32_t  dli_grifindex;  *     u_int32_t  dli_zsrc;  *     u_int32_t  dli_zdst;  * };  *  * dli_version is 2 for the current version of the pseudo-header.  *  * dli_family is a Solaris address family value, so it's 2 for IPv4  * and 26 for IPv6.  *  * dli_htype is a "hook type" - 0 for incoming packets, 1 for outgoing  * packets, and 2 for packets arriving from another zone on the same  * machine.  *  * dli_pktlen is the length of the packet data following the pseudo-header  * (so the captured length minus dli_pktlen is the length of the  * pseudo-header, assuming the entire pseudo-header was captured).  *  * dli_ifindex is the interface index of the interface on which the  * packet arrived.  *  * dli_grifindex is the group interface index number (for IPMP interfaces).  *  * dli_zsrc is the zone identifier for the source of the packet.  *  * dli_zdst is the zone identifier for the destination of the packet.  *  * A zone number of 0 is the global zone; a zone number of 0xffffffff  * means that the packet arrived from another host on the network, not  * from another zone on the same machine.  *  * An IPv4 or IPv6 datagram follows the pseudo-header; dli_family indicates  * which of those it is.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_IPNET
+value|226
+end_define
+
+begin_comment
+comment|/*  * CAN (Controller Area Network) frames, with a pseudo-header as supplied  * by Linux SocketCAN.  See Documentation/networking/can.txt in the Linux  * source.  *  * Requested by Felix Obenhuber<felix@obenhuber.de>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_CAN_SOCKETCAN
+value|227
+end_define
+
+begin_comment
+comment|/*  * Raw IPv4/IPv6; different from DLT_RAW in that the DLT_ value specifies  * whether it's v4 or v6.  Requested by Darren Reed<Darren.Reed@Sun.COM>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_IPV4
+value|228
+end_define
+
+begin_define
+define|#
+directive|define
+name|DLT_IPV6
+value|229
+end_define
+
+begin_comment
 comment|/*  * DLT and savefile link type values are split into a class and  * a member of that class.  A class value of 0 indicates a regular  * DLT_/LINKTYPE_ value.  */
 end_comment
 
