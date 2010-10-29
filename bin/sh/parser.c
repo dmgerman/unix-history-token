@@ -427,6 +427,8 @@ modifier|*
 name|list
 parameter_list|(
 name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -946,6 +948,8 @@ return|return
 name|list
 argument_list|(
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 return|;
 block|}
@@ -960,6 +964,9 @@ name|list
 parameter_list|(
 name|int
 name|nlflag
+parameter_list|,
+name|int
+name|erflag
 parameter_list|)
 block|{
 name|union
@@ -1265,6 +1272,8 @@ default|default:
 if|if
 condition|(
 name|nlflag
+operator|||
+name|erflag
 condition|)
 name|synexpect
 argument_list|(
@@ -1815,6 +1824,8 @@ operator|=
 name|list
 argument_list|(
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 operator|==
@@ -1846,6 +1857,8 @@ name|ifpart
 operator|=
 name|list
 argument_list|(
+literal|0
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
@@ -1907,6 +1920,8 @@ operator|=
 name|list
 argument_list|(
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 operator|==
@@ -1939,6 +1954,8 @@ operator|=
 name|list
 argument_list|(
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -1956,6 +1973,8 @@ name|elsepart
 operator|=
 name|list
 argument_list|(
+literal|0
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
@@ -2042,6 +2061,8 @@ operator|=
 name|list
 argument_list|(
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 operator|==
@@ -2099,6 +2120,8 @@ name|ch2
 operator|=
 name|list
 argument_list|(
+literal|0
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
@@ -2432,6 +2455,8 @@ operator|=
 name|list
 argument_list|(
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2742,6 +2767,8 @@ operator|=
 name|list
 argument_list|(
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|checkkwd
@@ -2843,6 +2870,8 @@ operator|=
 name|list
 argument_list|(
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|n1
@@ -2877,6 +2906,8 @@ name|n1
 operator|=
 name|list
 argument_list|(
+literal|0
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
@@ -5083,6 +5114,8 @@ operator|=
 name|list
 argument_list|(
 literal|0
+argument_list|,
+name|oldstyle
 argument_list|)
 expr_stmt|;
 if|if
