@@ -949,7 +949,7 @@ name|list
 argument_list|(
 literal|1
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 return|;
 block|}
@@ -989,9 +989,11 @@ literal|2
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|nlflag
-operator|==
-literal|0
+operator|&&
+operator|!
+name|erflag
 operator|&&
 name|tokendlist
 index|[
@@ -1240,6 +1242,12 @@ literal|2
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|nlflag
+operator|&&
+operator|!
+name|erflag
+operator|&&
 name|tokendlist
 index|[
 name|peektoken
