@@ -1007,6 +1007,10 @@ modifier|*
 name|nif
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|BROKEN
+comment|/* dma-free freezes at least some Apple ethernet controllers */
 name|OF_call_method
 argument_list|(
 literal|"dma-free"
@@ -1022,6 +1026,8 @@ argument_list|,
 name|MAXPHYS
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|OF_close
 argument_list|(
 name|netinstance
