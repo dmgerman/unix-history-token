@@ -3304,7 +3304,7 @@ name|funclinno
 operator|=
 name|plinno
 expr_stmt|;
-comment|/* 			 * - Require plain text. 			 * - Functions with '/' cannot be called. 			 */
+comment|/* 			 * - Require plain text. 			 * - Functions with '/' cannot be called. 			 * - Reject name=(). 			 * - Reject ksh extended glob patterns. 			 */
 if|if
 condition|(
 operator|!
@@ -3328,6 +3328,29 @@ operator|.
 name|text
 argument_list|,
 literal|'/'
+argument_list|)
+operator|||
+name|strchr
+argument_list|(
+literal|"!%*+-=?@}~"
+argument_list|,
+name|n
+operator|->
+name|narg
+operator|.
+name|text
+index|[
+name|strlen
+argument_list|(
+name|n
+operator|->
+name|narg
+operator|.
+name|text
+argument_list|)
+operator|-
+literal|1
+index|]
 argument_list|)
 condition|)
 name|synerror
