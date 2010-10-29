@@ -7519,11 +7519,9 @@ name|dh
 operator|->
 name|prime_len
 argument_list|,
-name|wpabuf_put
+name|wpabuf_mhead
 argument_list|(
 name|shared
-argument_list|,
-name|shared_len
 argument_list|)
 argument_list|,
 operator|&
@@ -7549,6 +7547,13 @@ return|return
 name|NULL
 return|;
 block|}
+name|wpabuf_put
+argument_list|(
+name|shared
+argument_list|,
+name|shared_len
+argument_list|)
+expr_stmt|;
 name|wpa_hexdump_buf_key
 argument_list|(
 name|MSG_DEBUG

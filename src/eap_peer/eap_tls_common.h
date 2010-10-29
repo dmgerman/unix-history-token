@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * EAP peer: EAP-TLS/PEAP/TTLS/FAST common functions  * Copyright (c) 2004-2006, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * EAP peer: EAP-TLS/PEAP/TTLS/FAST common functions  * Copyright (c) 2004-2009, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
 end_comment
 
 begin_ifndef
@@ -30,13 +30,10 @@ modifier|*
 name|conn
 decl_stmt|;
 comment|/** 	 * tls_out - TLS message to be sent out in fragments 	 */
-name|u8
+name|struct
+name|wpabuf
 modifier|*
 name|tls_out
-decl_stmt|;
-comment|/** 	 * tls_out_len - Total length of the outgoing TLS message 	 */
-name|size_t
-name|tls_out_len
 decl_stmt|;
 comment|/** 	 * tls_out_pos - The current position in the outgoing TLS message 	 */
 name|size_t
@@ -47,13 +44,10 @@ name|size_t
 name|tls_out_limit
 decl_stmt|;
 comment|/** 	 * tls_in - Received TLS message buffer for re-assembly 	 */
-name|u8
+name|struct
+name|wpabuf
 modifier|*
 name|tls_in
-decl_stmt|;
-comment|/** 	 * tls_in_len - Number of bytes of the received TLS message in tls_in 	 */
-name|size_t
-name|tls_in_len
 decl_stmt|;
 comment|/** 	 * tls_in_left - Number of remaining bytes in the incoming TLS message 	 */
 name|size_t
@@ -75,7 +69,7 @@ comment|/** 	 * tls_ia - Whether TLS/IA is enabled for this TLS connection 	 */
 name|int
 name|tls_ia
 decl_stmt|;
-comment|/** 	 * eap - Pointer to EAP state machine allocated with eap_peer_sm_init() 	 */
+comment|/** 	 * eap - EAP state machine allocated with eap_peer_sm_init() 	 */
 name|struct
 name|eap_sm
 modifier|*
@@ -113,7 +107,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|EAP_PEAP_VERSION_MASK
+name|EAP_TLS_VERSION_MASK
 value|0x07
 end_define
 
@@ -189,36 +183,6 @@ name|label
 parameter_list|,
 name|size_t
 name|len
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|const
-name|u8
-modifier|*
-name|eap_peer_tls_data_reassemble
-parameter_list|(
-name|struct
-name|eap_ssl_data
-modifier|*
-name|data
-parameter_list|,
-specifier|const
-name|u8
-modifier|*
-name|in_data
-parameter_list|,
-name|size_t
-name|in_len
-parameter_list|,
-name|size_t
-modifier|*
-name|out_len
-parameter_list|,
-name|int
-modifier|*
-name|need_more_input
 parameter_list|)
 function_decl|;
 end_function_decl

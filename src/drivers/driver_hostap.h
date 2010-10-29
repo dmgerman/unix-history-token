@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant - driver interaction with Linux Host AP driver  * Copyright (c) 2003-2005, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * Driver interaction with Linux Host AP driver  * Copyright (c) 2002-2006, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
 end_comment
 
 begin_ifndef
@@ -15,6 +15,14 @@ directive|define
 name|HOSTAP_DRIVER_H
 end_define
 
+begin_comment
+comment|/* netdevice private ioctls (used, e.g., with iwpriv from user space) */
+end_comment
+
+begin_comment
+comment|/* New wireless extensions API - SET/GET convention (even ioctl numbers are  * root only)  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -25,8 +33,103 @@ end_define
 begin_define
 define|#
 directive|define
+name|PRISM2_IOCTL_GET_PRISM2_PARAM
+value|(SIOCIWFIRSTPRIV + 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRISM2_IOCTL_WRITEMIF
+value|(SIOCIWFIRSTPRIV + 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRISM2_IOCTL_READMIF
+value|(SIOCIWFIRSTPRIV + 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRISM2_IOCTL_MONITOR
+value|(SIOCIWFIRSTPRIV + 4)
+end_define
+
+begin_define
+define|#
+directive|define
 name|PRISM2_IOCTL_RESET
 value|(SIOCIWFIRSTPRIV + 6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRISM2_IOCTL_INQUIRE
+value|(SIOCIWFIRSTPRIV + 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRISM2_IOCTL_WDS_ADD
+value|(SIOCIWFIRSTPRIV + 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRISM2_IOCTL_WDS_DEL
+value|(SIOCIWFIRSTPRIV + 12)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRISM2_IOCTL_SET_RID_WORD
+value|(SIOCIWFIRSTPRIV + 14)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRISM2_IOCTL_MACCMD
+value|(SIOCIWFIRSTPRIV + 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRISM2_IOCTL_ADDMAC
+value|(SIOCIWFIRSTPRIV + 18)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRISM2_IOCTL_DELMAC
+value|(SIOCIWFIRSTPRIV + 20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRISM2_IOCTL_KICKMAC
+value|(SIOCIWFIRSTPRIV + 22)
+end_define
+
+begin_comment
+comment|/* following are not in SIOCGIWPRIV list; check permission in the driver code  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRISM2_IOCTL_DOWNLOAD
+value|(SIOCDEVPRIVATE + 13)
 end_define
 
 begin_define
@@ -201,6 +304,144 @@ literal|40
 block|, }
 enum|;
 end_enum
+
+begin_enum
+enum|enum
+block|{
+name|HOSTAP_ANTSEL_DO_NOT_TOUCH
+init|=
+literal|0
+block|,
+name|HOSTAP_ANTSEL_DIVERSITY
+init|=
+literal|1
+block|,
+name|HOSTAP_ANTSEL_LOW
+init|=
+literal|2
+block|,
+name|HOSTAP_ANTSEL_HIGH
+init|=
+literal|3
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/* PRISM2_IOCTL_MACCMD ioctl() subcommands: */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|AP_MAC_CMD_POLICY_OPEN
+init|=
+literal|0
+block|,
+name|AP_MAC_CMD_POLICY_ALLOW
+init|=
+literal|1
+block|,
+name|AP_MAC_CMD_POLICY_DENY
+init|=
+literal|2
+block|,
+name|AP_MAC_CMD_FLUSH
+init|=
+literal|3
+block|,
+name|AP_MAC_CMD_KICKALL
+init|=
+literal|4
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/* PRISM2_IOCTL_DOWNLOAD ioctl() dl_cmd: */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|PRISM2_DOWNLOAD_VOLATILE
+init|=
+literal|1
+comment|/* RAM */
+block|,
+comment|/* Note! Old versions of prism2_srec have a fatal error in CRC-16 	 * calculation, which will corrupt all non-volatile downloads. 	 * PRISM2_DOWNLOAD_NON_VOLATILE used to be 2, but it is now 3 to 	 * prevent use of old versions of prism2_srec for non-volatile 	 * download. */
+name|PRISM2_DOWNLOAD_NON_VOLATILE
+init|=
+literal|3
+comment|/* FLASH */
+block|,
+name|PRISM2_DOWNLOAD_VOLATILE_GENESIS
+init|=
+literal|4
+comment|/* RAM in Genesis mode */
+block|,
+comment|/* Persistent versions of volatile download commands (keep firmware 	 * data in memory and automatically re-download after hw_reset */
+name|PRISM2_DOWNLOAD_VOLATILE_PERSISTENT
+init|=
+literal|5
+block|,
+name|PRISM2_DOWNLOAD_VOLATILE_GENESIS_PERSISTENT
+init|=
+literal|6
+block|, }
+enum|;
+end_enum
+
+begin_struct
+struct|struct
+name|prism2_download_param
+block|{
+name|u32
+name|dl_cmd
+decl_stmt|;
+name|u32
+name|start_addr
+decl_stmt|;
+name|u32
+name|num_areas
+decl_stmt|;
+struct|struct
+name|prism2_download_area
+block|{
+name|u32
+name|addr
+decl_stmt|;
+comment|/* wlan card address */
+name|u32
+name|len
+decl_stmt|;
+name|caddr_t
+name|ptr
+decl_stmt|;
+comment|/* pointer to data in user space */
+block|}
+name|data
+index|[
+literal|0
+index|]
+struct|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|PRISM2_MAX_DOWNLOAD_AREA_LEN
+value|131072
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRISM2_MAX_DOWNLOAD_LEN
+value|262144
+end_define
 
 begin_comment
 comment|/* PRISM2_IOCTL_HOSTAPD ioctl() cmd: */
@@ -462,14 +703,14 @@ begin_define
 define|#
 directive|define
 name|HOSTAP_CRYPT_FLAG_SET_TX_KEY
-value|0x01
+value|BIT(0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|HOSTAP_CRYPT_FLAG_PERMANENT
-value|0x02
+value|BIT(1)
 end_define
 
 begin_define

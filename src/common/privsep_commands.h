@@ -23,8 +23,6 @@ name|PRIVSEP_CMD_REGISTER
 block|,
 name|PRIVSEP_CMD_UNREGISTER
 block|,
-name|PRIVSEP_CMD_SET_WPA
-block|,
 name|PRIVSEP_CMD_SCAN
 block|,
 name|PRIVSEP_CMD_GET_SCAN_RESULTS
@@ -46,8 +44,6 @@ block|,
 name|PRIVSEP_CMD_L2_NOTIFY_AUTH_START
 block|,
 name|PRIVSEP_CMD_L2_SEND
-block|,
-name|PRIVSEP_CMD_SET_MODE
 block|,
 name|PRIVSEP_CMD_SET_COUNTRY
 block|, }
@@ -163,8 +159,6 @@ block|,
 name|PRIVSEP_EVENT_FT_RESPONSE
 block|,
 name|PRIVSEP_EVENT_RX_EAPOL
-block|,
-name|PRIVSEP_EVENT_STA_RX
 block|, }
 enum|;
 end_enum

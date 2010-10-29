@@ -138,10 +138,6 @@ begin_struct
 struct|struct
 name|eloop_data
 block|{
-name|void
-modifier|*
-name|user_data
-decl_stmt|;
 name|int
 name|max_sock
 decl_stmt|,
@@ -194,8 +190,6 @@ name|int
 name|eloop_init
 parameter_list|(
 name|void
-modifier|*
-name|user_data
 parameter_list|)
 block|{
 name|memset
@@ -210,12 +204,6 @@ argument_list|(
 name|eloop
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|eloop
-operator|.
-name|user_data
-operator|=
-name|user_data
 expr_stmt|;
 return|return
 literal|0
@@ -1695,22 +1683,6 @@ name|sock
 parameter_list|)
 block|{
 comment|/* 	 * TODO: wait for the file descriptor to have something available for 	 * reading 	 */
-block|}
-end_function
-
-begin_function
-name|void
-modifier|*
-name|eloop_get_user_data
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-name|eloop
-operator|.
-name|user_data
-return|;
 block|}
 end_function
 

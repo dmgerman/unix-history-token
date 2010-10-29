@@ -36,7 +36,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"privsep_commands.h"
+file|"common/privsep_commands.h"
 end_include
 
 begin_struct

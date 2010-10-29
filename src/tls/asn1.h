@@ -365,6 +365,26 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|asn1_parse_oid
+parameter_list|(
+specifier|const
+name|u8
+modifier|*
+name|buf
+parameter_list|,
+name|size_t
+name|len
+parameter_list|,
+name|struct
+name|asn1_oid
+modifier|*
+name|oid
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|asn1_get_oid
 parameter_list|(
 specifier|const

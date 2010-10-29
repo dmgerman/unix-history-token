@@ -557,10 +557,16 @@ specifier|static
 name|int
 name|wpa_driver_atmel_set_key
 parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|ifname
+parameter_list|,
 name|void
 modifier|*
 name|priv
 parameter_list|,
+name|enum
 name|wpa_alg
 name|alg
 parameter_list|,
@@ -915,32 +921,6 @@ end_function
 begin_function
 specifier|static
 name|int
-name|wpa_driver_atmel_set_drop_unencrypted
-parameter_list|(
-name|void
-modifier|*
-name|priv
-parameter_list|,
-name|int
-name|enabled
-parameter_list|)
-block|{
-comment|/* FIX */
-name|printf
-argument_list|(
-literal|"wpa_driver_atmel_set_drop_unencrypted - not yet "
-literal|"implemented\n"
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
 name|wpa_driver_atmel_mlme
 parameter_list|(
 name|void
@@ -1178,7 +1158,7 @@ comment|/* Atmel driver uses specific values for each cipher suite */
 end_comment
 
 begin_endif
-unit|static int convertSuiteToDriver(wpa_cipher suite) {     u8 suite_type;          switch(suite) {         case CIPHER_NONE:                 suite_type =  0;                 break;         case CIPHER_WEP40:                 suite_type =  1;                 break;         case CIPHER_TKIP:                 suite_type = 2;                 break;         case CIPHER_WEP104:                 suite_type = 5;                 break;         case CIPHER_CCMP:                 suite_type = 3;                 break;         default:                 suite_type = 2;     }          return suite_type;  }
+unit|static int convertSuiteToDriver(enum wpa_cipher suite) {     u8 suite_type;          switch(suite) {         case CIPHER_NONE:                 suite_type =  0;                 break;         case CIPHER_WEP40:                 suite_type =  1;                 break;         case CIPHER_TKIP:                 suite_type = 2;                 break;         case CIPHER_WEP104:                 suite_type = 5;                 break;         case CIPHER_CCMP:                 suite_type = 3;                 break;         default:                 suite_type = 2;     }          return suite_type;  }
 endif|#
 directive|endif
 end_endif
@@ -1357,13 +1337,10 @@ name|void
 modifier|*
 name|priv
 parameter_list|,
-specifier|const
-name|u8
+name|struct
+name|wpa_driver_scan_params
 modifier|*
-name|ssid
-parameter_list|,
-name|size_t
-name|ssid_len
+name|params
 parameter_list|)
 block|{
 name|struct
@@ -1380,9 +1357,7 @@ name|drv
 operator|->
 name|wext
 argument_list|,
-name|ssid
-argument_list|,
-name|ssid_len
+name|params
 argument_list|)
 return|;
 block|}
@@ -1581,6 +1556,13 @@ return|return
 name|NULL
 return|;
 block|}
+name|wpa_driver_atmel_set_wpa
+argument_list|(
+name|drv
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 return|return
 name|drv
 return|;
@@ -1604,6 +1586,13 @@ name|drv
 init|=
 name|priv
 decl_stmt|;
+name|wpa_driver_atmel_set_wpa
+argument_list|(
+name|drv
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|wpa_driver_wext_deinit
 argument_list|(
 name|drv
@@ -1654,11 +1643,6 @@ operator|=
 name|wpa_driver_atmel_get_ssid
 block|,
 operator|.
-name|set_wpa
-operator|=
-name|wpa_driver_atmel_set_wpa
-block|,
-operator|.
 name|set_key
 operator|=
 name|wpa_driver_atmel_set_key
@@ -1679,12 +1663,7 @@ operator|=
 name|wpa_driver_atmel_set_countermeasures
 block|,
 operator|.
-name|set_drop_unencrypted
-operator|=
-name|wpa_driver_atmel_set_drop_unencrypted
-block|,
-operator|.
-name|scan
+name|scan2
 operator|=
 name|wpa_driver_atmel_scan
 block|,

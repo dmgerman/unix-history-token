@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * SHA1 hash implementation and interface functions  * Copyright (c) 2003-2005, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * SHA1 hash implementation and interface functions  * Copyright (c) 2003-2009, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
 end_comment
 
 begin_ifndef
@@ -23,7 +23,7 @@ value|20
 end_define
 
 begin_function_decl
-name|void
+name|int
 name|hmac_sha1_vector
 parameter_list|(
 specifier|const
@@ -56,7 +56,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|hmac_sha1
 parameter_list|(
 specifier|const
@@ -83,7 +83,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|sha1_prf
 parameter_list|(
 specifier|const
@@ -118,7 +118,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|sha1_t_prf
 parameter_list|(
 specifier|const
@@ -189,7 +189,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|pbkdf2_sha1
 parameter_list|(
 specifier|const
@@ -217,78 +217,6 @@ name|buflen
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CONFIG_CRYPTO_INTERNAL
-end_ifdef
-
-begin_struct_decl
-struct_decl|struct
-name|SHA1Context
-struct_decl|;
-end_struct_decl
-
-begin_function_decl
-name|void
-name|SHA1Init
-parameter_list|(
-name|struct
-name|SHA1Context
-modifier|*
-name|context
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|SHA1Update
-parameter_list|(
-name|struct
-name|SHA1Context
-modifier|*
-name|context
-parameter_list|,
-specifier|const
-name|void
-modifier|*
-name|data
-parameter_list|,
-name|u32
-name|len
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|SHA1Final
-parameter_list|(
-name|unsigned
-name|char
-name|digest
-index|[
-literal|20
-index|]
-parameter_list|,
-name|struct
-name|SHA1Context
-modifier|*
-name|context
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* CONFIG_CRYPTO_INTERNAL */
-end_comment
 
 begin_endif
 endif|#

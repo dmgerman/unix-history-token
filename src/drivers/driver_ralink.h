@@ -264,6 +264,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|RT_OID_WPS_PROBE_REQ_IE
+value|0x0625
+end_define
+
+begin_define
+define|#
+directive|define
 name|PACKED
 value|__attribute__ ((packed))
 end_define
@@ -324,7 +331,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|RT_REPORT_AP_INFO
+name|RT_INTERFACE_UP
 value|0x0108
 end_define
 

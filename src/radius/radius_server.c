@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * hostapd / RADIUS authentication server  * Copyright (c) 2005-2008, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * RADIUS authentication server  * Copyright (c) 2005-2009, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
 end_comment
 
 begin_include
@@ -36,12 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"defs.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"eap_server/eap.h"
 end_include
 
@@ -51,6 +45,10 @@ directive|include
 file|"radius_server.h"
 end_include
 
+begin_comment
+comment|/**  * RADIUS_SESSION_TIMEOUT - Session timeout in seconds  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -58,12 +56,20 @@ name|RADIUS_SESSION_TIMEOUT
 value|60
 end_define
 
+begin_comment
+comment|/**  * RADIUS_MAX_SESSION - Maximum number of active sessions  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|RADIUS_MAX_SESSION
 value|100
 end_define
+
+begin_comment
+comment|/**  * RADIUS_MAX_MSG_LEN - Maximum message length for incoming RADIUS messages  */
+end_comment
 
 begin_define
 define|#
@@ -91,6 +97,10 @@ struct_decl|struct
 name|radius_server_data
 struct_decl|;
 end_struct_decl
+
+begin_comment
+comment|/**  * struct radius_server_counters - RADIUS server statistics counters  */
+end_comment
 
 begin_struct
 struct|struct
@@ -129,6 +139,10 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/**  * struct radius_session - Internal RADIUS server data for a session  */
+end_comment
 
 begin_struct
 struct|struct
@@ -200,6 +214,10 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/**  * struct radius_client - Internal RADIUS server data for a client  */
+end_comment
+
 begin_struct
 struct|struct
 name|radius_client
@@ -251,83 +269,108 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/**  * struct radius_server_data - Internal RADIUS server data  */
+end_comment
+
 begin_struct
 struct|struct
 name|radius_server_data
 block|{
+comment|/** 	 * auth_sock - Socket for RADIUS authentication messages 	 */
 name|int
 name|auth_sock
 decl_stmt|;
+comment|/** 	 * clients - List of authorized RADIUS clients 	 */
 name|struct
 name|radius_client
 modifier|*
 name|clients
 decl_stmt|;
+comment|/** 	 * next_sess_id - Next session identifier 	 */
 name|unsigned
 name|int
 name|next_sess_id
 decl_stmt|;
+comment|/** 	 * conf_ctx - Context pointer for callbacks 	 * 	 * This is used as the ctx argument in get_eap_user() calls. 	 */
 name|void
 modifier|*
 name|conf_ctx
 decl_stmt|;
+comment|/** 	 * num_sess - Number of active sessions 	 */
 name|int
 name|num_sess
 decl_stmt|;
+comment|/** 	 * eap_sim_db_priv - EAP-SIM/AKA database context 	 * 	 * This is passed to the EAP-SIM/AKA server implementation as a 	 * callback context. 	 */
 name|void
 modifier|*
 name|eap_sim_db_priv
 decl_stmt|;
+comment|/** 	 * ssl_ctx - TLS context 	 * 	 * This is passed to the EAP server implementation as a callback 	 * context for TLS operations. 	 */
 name|void
 modifier|*
 name|ssl_ctx
 decl_stmt|;
+comment|/** 	 * pac_opaque_encr_key - PAC-Opaque encryption key for EAP-FAST 	 * 	 * This parameter is used to set a key for EAP-FAST to encrypt the 	 * PAC-Opaque data. It can be set to %NULL if EAP-FAST is not used. If 	 * set, must point to a 16-octet key. 	 */
 name|u8
 modifier|*
 name|pac_opaque_encr_key
 decl_stmt|;
+comment|/** 	 * eap_fast_a_id - EAP-FAST authority identity (A-ID) 	 * 	 * If EAP-FAST is not used, this can be set to %NULL. In theory, this 	 * is a variable length field, but due to some existing implementations 	 * requiring A-ID to be 16 octets in length, it is recommended to use 	 * that length for the field to provide interoperability with deployed 	 * peer implementations. 	 */
 name|u8
 modifier|*
 name|eap_fast_a_id
 decl_stmt|;
+comment|/** 	 * eap_fast_a_id_len - Length of eap_fast_a_id buffer in octets 	 */
 name|size_t
 name|eap_fast_a_id_len
 decl_stmt|;
+comment|/** 	 * eap_fast_a_id_info - EAP-FAST authority identifier information 	 * 	 * This A-ID-Info contains a user-friendly name for the A-ID. For 	 * example, this could be the enterprise and server names in 	 * human-readable format. This field is encoded as UTF-8. If EAP-FAST 	 * is not used, this can be set to %NULL. 	 */
 name|char
 modifier|*
 name|eap_fast_a_id_info
 decl_stmt|;
+comment|/** 	 * eap_fast_prov - EAP-FAST provisioning modes 	 * 	 * 0 = provisioning disabled, 1 = only anonymous provisioning allowed, 	 * 2 = only authenticated provisioning allowed, 3 = both provisioning 	 * modes allowed. 	 */
 name|int
 name|eap_fast_prov
 decl_stmt|;
+comment|/** 	 * pac_key_lifetime - EAP-FAST PAC-Key lifetime in seconds 	 * 	 * This is the hard limit on how long a provisioned PAC-Key can be 	 * used. 	 */
 name|int
 name|pac_key_lifetime
 decl_stmt|;
+comment|/** 	 * pac_key_refresh_time - EAP-FAST PAC-Key refresh time in seconds 	 * 	 * This is a soft limit on the PAC-Key. The server will automatically 	 * generate a new PAC-Key when this number of seconds (or fewer) of the 	 * lifetime remains. 	 */
 name|int
 name|pac_key_refresh_time
 decl_stmt|;
+comment|/** 	 * eap_sim_aka_result_ind - EAP-SIM/AKA protected success indication 	 * 	 * This controls whether the protected success/failure indication 	 * (AT_RESULT_IND) is used with EAP-SIM and EAP-AKA. 	 */
 name|int
 name|eap_sim_aka_result_ind
 decl_stmt|;
+comment|/** 	 * tnc - Trusted Network Connect (TNC) 	 * 	 * This controls whether TNC is enabled and will be required before the 	 * peer is allowed to connect. Note: This is only used with EAP-TTLS 	 * and EAP-FAST. If any other EAP method is enabled, the peer will be 	 * allowed to connect without TNC. 	 */
 name|int
 name|tnc
 decl_stmt|;
+comment|/** 	 * wps - Wi-Fi Protected Setup context 	 * 	 * If WPS is used with an external RADIUS server (which is quite 	 * unlikely configuration), this is used to provide a pointer to WPS 	 * context data. Normally, this can be set to %NULL. 	 */
 name|struct
 name|wps_context
 modifier|*
 name|wps
 decl_stmt|;
+comment|/** 	 * ipv6 - Whether to enable IPv6 support in the RADIUS server 	 */
 name|int
 name|ipv6
 decl_stmt|;
+comment|/** 	 * start_time - Timestamp of server start 	 */
 name|struct
 name|os_time
 name|start_time
 decl_stmt|;
+comment|/** 	 * counters - Statistics counters for server operations 	 * 	 * These counters are the sum over all clients. 	 */
 name|struct
 name|radius_server_counters
 name|counters
 decl_stmt|;
+comment|/** 	 * get_eap_user - Callback for fetching EAP user information 	 * @ctx: Context data from conf_ctx 	 * @identity: User identity 	 * @identity_len: identity buffer length in octets 	 * @phase2: Whether this is for Phase 2 identity 	 * @user: Data structure for filling in the user information 	 * Returns: 0 on success, -1 on failure 	 * 	 * This is used to fetch information from user database. The callback 	 * will fill in information about allowed EAP methods and the user 	 * password. The password field will be an allocated copy of the 	 * password data and RADIUS server will free it after use. 	 */
 name|int
 function_decl|(
 modifier|*
@@ -355,12 +398,19 @@ modifier|*
 name|user
 parameter_list|)
 function_decl|;
+comment|/** 	 * eap_req_id_text - Optional data for EAP-Request/Identity 	 * 	 * This can be used to configure an optional, displayable message that 	 * will be sent in EAP-Request/Identity. This string can contain an 	 * ASCII-0 character (nul) to separate network infromation per RFC 	 * 4284. The actual string length is explicit provided in 	 * eap_req_id_text_len since nul character will not be used as a string 	 * terminator. 	 */
 name|char
 modifier|*
 name|eap_req_id_text
 decl_stmt|;
+comment|/** 	 * eap_req_id_text_len - Length of eap_req_id_text buffer in octets 	 */
 name|size_t
 name|eap_req_id_text_len
+decl_stmt|;
+comment|/* 	 * msg_ctx - Context data for wpa_msg() calls 	 */
+name|void
+modifier|*
+name|msg_ctx
 decl_stmt|;
 block|}
 struct|;
@@ -731,13 +781,6 @@ operator|->
 name|eap
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sess
-operator|->
-name|last_msg
-condition|)
-block|{
 name|radius_msg_free
 argument_list|(
 name|sess
@@ -745,14 +788,6 @@ operator|->
 name|last_msg
 argument_list|)
 expr_stmt|;
-name|os_free
-argument_list|(
-name|sess
-operator|->
-name|last_msg
-argument_list|)
-expr_stmt|;
-block|}
 name|os_free
 argument_list|(
 name|sess
@@ -760,13 +795,6 @@ operator|->
 name|last_from_addr
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sess
-operator|->
-name|last_reply
-condition|)
-block|{
 name|radius_msg_free
 argument_list|(
 name|sess
@@ -774,14 +802,6 @@ operator|->
 name|last_reply
 argument_list|)
 expr_stmt|;
-name|os_free
-argument_list|(
-name|sess
-operator|->
-name|last_reply
-argument_list|)
-expr_stmt|;
-block|}
 name|os_free
 argument_list|(
 name|sess
@@ -1336,6 +1356,14 @@ name|ssl_ctx
 expr_stmt|;
 name|eap_conf
 operator|.
+name|msg_ctx
+operator|=
+name|data
+operator|->
+name|msg_ctx
+expr_stmt|;
+name|eap_conf
+operator|.
 name|eap_sim_db_priv
 operator|=
 name|data
@@ -1557,6 +1585,16 @@ name|unsigned
 name|int
 name|sess_id
 decl_stmt|;
+name|struct
+name|radius_hdr
+modifier|*
+name|hdr
+init|=
+name|radius_msg_get_hdr
+argument_list|(
+name|request
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
 name|sess
@@ -1623,8 +1661,6 @@ name|radius_msg_new
 argument_list|(
 name|code
 argument_list|,
-name|request
-operator|->
 name|hdr
 operator|->
 name|identifier
@@ -1779,8 +1815,6 @@ name|radius_msg_add_mppe_keys
 argument_list|(
 name|msg
 argument_list|,
-name|request
-operator|->
 name|hdr
 operator|->
 name|authenticator
@@ -1848,11 +1882,6 @@ argument_list|(
 name|msg
 argument_list|)
 expr_stmt|;
-name|os_free
-argument_list|(
-name|msg
-argument_list|)
-expr_stmt|;
 return|return
 name|NULL
 return|;
@@ -1875,8 +1904,6 @@ name|client
 operator|->
 name|shared_secret_len
 argument_list|,
-name|request
-operator|->
 name|hdr
 operator|->
 name|authenticator
@@ -1948,6 +1975,21 @@ name|struct
 name|eap_hdr
 name|eapfail
 decl_stmt|;
+name|struct
+name|wpabuf
+modifier|*
+name|buf
+decl_stmt|;
+name|struct
+name|radius_hdr
+modifier|*
+name|hdr
+init|=
+name|radius_msg_get_hdr
+argument_list|(
+name|request
+argument_list|)
+decl_stmt|;
 name|RADIUS_DEBUG
 argument_list|(
 literal|"Reject invalid request from %s:%d"
@@ -1963,8 +2005,6 @@ name|radius_msg_new
 argument_list|(
 name|RADIUS_CODE_ACCESS_REJECT
 argument_list|,
-name|request
-operator|->
 name|hdr
 operator|->
 name|identifier
@@ -2070,11 +2110,6 @@ argument_list|(
 name|msg
 argument_list|)
 expr_stmt|;
-name|os_free
-argument_list|(
-name|msg
-argument_list|)
-expr_stmt|;
 return|return
 operator|-
 literal|1
@@ -2098,8 +2133,6 @@ name|client
 operator|->
 name|shared_secret_len
 argument_list|,
-name|request
-operator|->
 name|hdr
 operator|->
 name|authenticator
@@ -2141,6 +2174,13 @@ operator|.
 name|access_rejects
 operator|++
 expr_stmt|;
+name|buf
+operator|=
+name|radius_msg_get_buf
+argument_list|(
+name|msg
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sendto
@@ -2149,13 +2189,15 @@ name|data
 operator|->
 name|auth_sock
 argument_list|,
-name|msg
-operator|->
+name|wpabuf_head
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
-name|msg
-operator|->
-name|buf_used
+name|wpabuf_len
+argument_list|(
+name|buf
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -2188,11 +2230,6 @@ literal|1
 expr_stmt|;
 block|}
 name|radius_msg_free
-argument_list|(
-name|msg
-argument_list|)
-expr_stmt|;
-name|os_free
 argument_list|(
 name|msg
 argument_list|)
@@ -2461,9 +2498,10 @@ name|sess
 operator|->
 name|last_identifier
 operator|==
+name|radius_msg_get_hdr
+argument_list|(
 name|msg
-operator|->
-name|hdr
+argument_list|)
 operator|->
 name|identifier
 operator|&&
@@ -2473,9 +2511,10 @@ name|sess
 operator|->
 name|last_authenticator
 argument_list|,
+name|radius_msg_get_hdr
+argument_list|(
 name|msg
-operator|->
-name|hdr
+argument_list|)
 operator|->
 name|authenticator
 argument_list|,
@@ -2513,6 +2552,20 @@ operator|->
 name|last_reply
 condition|)
 block|{
+name|struct
+name|wpabuf
+modifier|*
+name|buf
+decl_stmt|;
+name|buf
+operator|=
+name|radius_msg_get_buf
+argument_list|(
+name|sess
+operator|->
+name|last_reply
+argument_list|)
+expr_stmt|;
 name|res
 operator|=
 name|sendto
@@ -2521,17 +2574,15 @@ name|data
 operator|->
 name|auth_sock
 argument_list|,
-name|sess
-operator|->
-name|last_reply
-operator|->
+name|wpabuf_head
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
-name|sess
-operator|->
-name|last_reply
-operator|->
-name|buf_used
+name|wpabuf_len
+argument_list|(
+name|buf
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -2763,13 +2814,6 @@ name|eap
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-name|sess
-operator|->
-name|last_msg
-condition|)
-block|{
 name|radius_msg_free
 argument_list|(
 name|sess
@@ -2777,14 +2821,6 @@ operator|->
 name|last_msg
 argument_list|)
 expr_stmt|;
-name|os_free
-argument_list|(
-name|sess
-operator|->
-name|last_msg
-argument_list|)
-expr_stmt|;
-block|}
 name|sess
 operator|->
 name|last_msg
@@ -2900,6 +2936,16 @@ condition|(
 name|reply
 condition|)
 block|{
+name|struct
+name|wpabuf
+modifier|*
+name|buf
+decl_stmt|;
+name|struct
+name|radius_hdr
+modifier|*
+name|hdr
+decl_stmt|;
 name|RADIUS_DEBUG
 argument_list|(
 literal|"Reply to %s:%d"
@@ -2924,9 +2970,10 @@ expr_stmt|;
 block|}
 switch|switch
 condition|(
+name|radius_msg_get_hdr
+argument_list|(
 name|reply
-operator|->
-name|hdr
+argument_list|)
 operator|->
 name|code
 condition|)
@@ -2986,6 +3033,13 @@ operator|++
 expr_stmt|;
 break|break;
 block|}
+name|buf
+operator|=
+name|radius_msg_get_buf
+argument_list|(
+name|reply
+argument_list|)
+expr_stmt|;
 name|res
 operator|=
 name|sendto
@@ -2994,13 +3048,15 @@ name|data
 operator|->
 name|auth_sock
 argument_list|,
-name|reply
-operator|->
+name|wpabuf_head
+argument_list|(
 name|buf
+argument_list|)
 argument_list|,
-name|reply
-operator|->
-name|buf_used
+name|wpabuf_len
+argument_list|(
+name|buf
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -3027,13 +3083,6 @@ literal|"sendto[RADIUS SRV]"
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|sess
-operator|->
-name|last_reply
-condition|)
-block|{
 name|radius_msg_free
 argument_list|(
 name|sess
@@ -3041,14 +3090,6 @@ operator|->
 name|last_reply
 argument_list|)
 expr_stmt|;
-name|os_free
-argument_list|(
-name|sess
-operator|->
-name|last_reply
-argument_list|)
-expr_stmt|;
-block|}
 name|sess
 operator|->
 name|last_reply
@@ -3061,12 +3102,17 @@ name|last_from_port
 operator|=
 name|from_port
 expr_stmt|;
+name|hdr
+operator|=
+name|radius_msg_get_hdr
+argument_list|(
+name|msg
+argument_list|)
+expr_stmt|;
 name|sess
 operator|->
 name|last_identifier
 operator|=
-name|msg
-operator|->
 name|hdr
 operator|->
 name|identifier
@@ -3077,8 +3123,6 @@ name|sess
 operator|->
 name|last_authenticator
 argument_list|,
-name|msg
-operator|->
 name|hdr
 operator|->
 name|authenticator
@@ -3548,9 +3592,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|radius_msg_get_hdr
+argument_list|(
 name|msg
-operator|->
-name|hdr
+argument_list|)
 operator|->
 name|code
 operator|!=
@@ -3561,9 +3606,10 @@ name|RADIUS_DEBUG
 argument_list|(
 literal|"Unexpected RADIUS code %d"
 argument_list|,
+name|radius_msg_get_hdr
+argument_list|(
 name|msg
-operator|->
-name|hdr
+argument_list|)
 operator|->
 name|code
 argument_list|)
@@ -3681,22 +3727,11 @@ return|return;
 comment|/* msg was stored with the session */
 name|fail
 label|:
-if|if
-condition|(
-name|msg
-condition|)
-block|{
 name|radius_msg_free
 argument_list|(
 name|msg
 argument_list|)
 expr_stmt|;
-name|os_free
-argument_list|(
-name|msg
-argument_list|)
-expr_stmt|;
-block|}
 name|os_free
 argument_list|(
 name|buf
@@ -4974,6 +5009,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * radius_server_init - Initialize RADIUS server  * @conf: Configuration for the RADIUS server  * Returns: Pointer to private RADIUS server context or %NULL on failure  *  * This initializes a RADIUS server instance and returns a context pointer that  * will be used in other calls to the RADIUS server module. The server can be  * deinitialize by calling radius_server_deinit().  */
+end_comment
+
 begin_function
 name|struct
 name|radius_server_data
@@ -5067,6 +5106,14 @@ operator|=
 name|conf
 operator|->
 name|ssl_ctx
+expr_stmt|;
+name|data
+operator|->
+name|msg_ctx
+operator|=
+name|conf
+operator|->
+name|msg_ctx
 expr_stmt|;
 name|data
 operator|->
@@ -5407,6 +5454,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * radius_server_deinit - Deinitialize RADIUS server  * @data: RADIUS server context from radius_server_init()  */
+end_comment
+
 begin_function
 name|void
 name|radius_server_deinit
@@ -5492,6 +5543,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/**  * radius_server_get_mib - Get RADIUS server MIB information  * @data: RADIUS server context from radius_server_init()  * @buf: Buffer for returning the MIB data in text format  * @buflen: buf length in octets  * Returns: Number of octets written into buf  */
+end_comment
 
 begin_function
 name|int
@@ -6154,6 +6209,10 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/**  * radius_server_eap_pending_cb - Pending EAP data notification  * @data: RADIUS server context from radius_server_init()  * @ctx: Pending EAP context pointer  *  * This function is used to notify EAP server module that a pending operation  * has been completed and processing of the EAP session can proceed.  */
+end_comment
+
 begin_function
 name|void
 name|radius_server_eap_pending_cb
@@ -6334,11 +6393,6 @@ condition|)
 return|return;
 comment|/* msg was stored with the session */
 name|radius_msg_free
-argument_list|(
-name|msg
-argument_list|)
-expr_stmt|;
-name|os_free
 argument_list|(
 name|msg
 argument_list|)

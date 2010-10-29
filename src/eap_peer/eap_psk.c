@@ -18,19 +18,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"eap_peer/eap_i.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"aes_wrap.h"
+file|"crypto/aes_wrap.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"eap_common/eap_psk_common.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"eap_i.h"
 end_include
 
 begin_struct

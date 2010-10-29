@@ -18,37 +18,37 @@ end_include
 begin_include
 include|#
 directive|include
-file|"eap_common/eap_defs.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sha1.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sha256.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"crypto.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"aes_wrap.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"wpabuf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"crypto/aes_wrap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"crypto/crypto.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"crypto/sha1.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"crypto/sha256.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"eap_common/eap_defs.h"
 end_include
 
 begin_include
@@ -1333,11 +1333,19 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|EAP_AKA_PRIME
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|EAP_SERVER_AKA_PRIME
+argument_list|)
+end_if
 
 begin_function
 specifier|static
@@ -2710,7 +2718,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* EAP_AKA_PRIME */
+comment|/* EAP_AKA_PRIME || EAP_SERVER_AKA_PRIME */
 end_comment
 
 begin_function
@@ -4435,9 +4443,17 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|EAP_AKA_PRIME
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|EAP_SERVER_AKA_PRIME
+argument_list|)
 case|case
 name|EAP_SIM_AT_KDF_INPUT
 case|:
@@ -4669,7 +4685,7 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
-comment|/* EAP_AKA_PRIME */
+comment|/* EAP_AKA_PRIME || EAP_SERVER_AKA_PRIME */
 default|default:
 if|if
 condition|(
@@ -5149,9 +5165,17 @@ name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|EAP_AKA_PRIME
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|EAP_SERVER_AKA_PRIME
+argument_list|)
 if|if
 condition|(
 name|k_aut
@@ -5213,7 +5237,7 @@ block|}
 elseif|else
 endif|#
 directive|endif
-comment|/* EAP_AKA_PRIME */
+comment|/* EAP_AKA_PRIME || EAP_SERVER_AKA_PRIME */
 if|if
 condition|(
 name|k_aut

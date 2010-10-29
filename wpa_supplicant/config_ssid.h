@@ -18,7 +18,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"defs.h"
+file|"common/defs.h"
 end_include
 
 begin_include
@@ -250,10 +250,24 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* IEEE8021X_EAPOL */
-comment|/** 	 * mode - IEEE 802.11 operation mode (Infrastucture/IBSS) 	 * 	 * 0 = infrastructure (Managed) mode, i.e., associate with an AP. 	 * 	 * 1 = IBSS (ad-hoc, peer-to-peer) 	 * 	 * Note: IBSS can only be used with key_mgmt NONE (plaintext and 	 * static WEP) and key_mgmt=WPA-NONE (fixed group key TKIP/CCMP). In 	 * addition, ap_scan has to be set to 2 for IBSS. WPA-None requires 	 * following network block options: proto=WPA, key_mgmt=WPA-NONE, 	 * pairwise=NONE, group=TKIP (or CCMP, but not both), and psk must also 	 * be set (either directly or using ASCII passphrase). 	 */
-name|int
+comment|/** 	 * mode - IEEE 802.11 operation mode (Infrastucture/IBSS) 	 * 	 * 0 = infrastructure (Managed) mode, i.e., associate with an AP. 	 * 	 * 1 = IBSS (ad-hoc, peer-to-peer) 	 * 	 * 2 = AP (access point) 	 * 	 * Note: IBSS can only be used with key_mgmt NONE (plaintext and 	 * static WEP) and key_mgmt=WPA-NONE (fixed group key TKIP/CCMP). In 	 * addition, ap_scan has to be set to 2 for IBSS. WPA-None requires 	 * following network block options: proto=WPA, key_mgmt=WPA-NONE, 	 * pairwise=NONE, group=TKIP (or CCMP, but not both), and psk must also 	 * be set (either directly or using ASCII passphrase). 	 */
+enum|enum
+name|wpas_mode
+block|{
+name|WPAS_MODE_INFRA
+init|=
+literal|0
+block|,
+name|WPAS_MODE_IBSS
+init|=
+literal|1
+block|,
+name|WPAS_MODE_AP
+init|=
+literal|2
+block|, 	}
 name|mode
-decl_stmt|;
+enum|;
 comment|/** 	 * disabled - Whether this network is currently disabled 	 * 	 * 0 = this network can be used (default). 	 * 1 = this network block is disabled (can be enabled through 	 * ctrl_iface, e.g., with wpa_cli or wpa_gui). 	 */
 name|int
 name|disabled
@@ -271,22 +285,10 @@ ifdef|#
 directive|ifdef
 name|CONFIG_IEEE80211W
 comment|/** 	 * ieee80211w - Whether management frame protection is enabled 	 * 	 * This value is used to configure policy for management frame 	 * protection (IEEE 802.11w). 0 = disabled, 1 = optional, 2 = required. 	 */
-enum|enum
-block|{
-name|NO_IEEE80211W
-init|=
-literal|0
-block|,
-name|IEEE80211W_OPTIONAL
-init|=
-literal|1
-block|,
-name|IEEE80211W_REQUIRED
-init|=
-literal|2
-block|}
+name|enum
+name|mfp_options
 name|ieee80211w
-enum|;
+decl_stmt|;
 endif|#
 directive|endif
 comment|/* CONFIG_IEEE80211W */
@@ -297,6 +299,21 @@ decl_stmt|;
 comment|/** 	 * wpa_ptk_rekey - Maximum lifetime for PTK in seconds 	 * 	 * This value can be used to enforce rekeying of PTK to mitigate some 	 * attacks against TKIP deficiencies. 	 */
 name|int
 name|wpa_ptk_rekey
+decl_stmt|;
+comment|/** 	 * scan_freq - Array of frequencies to scan or %NULL for all 	 * 	 * This is an optional zero-terminated array of frequencies in 	 * megahertz (MHz) to include in scan requests when searching for this 	 * network. This can be used to speed up scanning when the network is 	 * known to not use all possible channels. 	 */
+name|int
+modifier|*
+name|scan_freq
+decl_stmt|;
+comment|/** 	 * bgscan - Background scan and roaming parameters or %NULL if none 	 * 	 * This is an optional set of parameters for background scanning and 	 * roaming within a network (ESS) in following format: 	 *<bgscan module name>:<module parameters> 	 */
+name|char
+modifier|*
+name|bgscan
+decl_stmt|;
+comment|/** 	 * freq_list - Array of allowed frequencies or %NULL for all 	 * 	 * This is an optional zero-terminated array of frequencies in 	 * megahertz (MHz) to allow for selecting the BSS. If set, scan results 	 * that do not match any of the specified frequencies are not 	 * considered when selecting a BSS. 	 */
+name|int
+modifier|*
+name|freq_list
 decl_stmt|;
 block|}
 struct|;

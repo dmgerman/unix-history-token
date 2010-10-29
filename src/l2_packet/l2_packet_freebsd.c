@@ -9,11 +9,19 @@ directive|include
 file|"includes.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__APPLE__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__GLIBC__
+argument_list|)
+end_if
 
 begin_include
 include|#

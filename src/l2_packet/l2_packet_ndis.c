@@ -529,7 +529,55 @@ operator|==
 name|ERROR_IO_PENDING
 condition|)
 block|{
-comment|/* For now, just assume that the packet will be sent in 			 * time before the next write happens. This could be 			 * cleaned up at some point to actually wait for 			 * completion before starting new writes. 			 */
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"L2(NDISUIO): Wait for pending "
+literal|"write to complete"
+argument_list|)
+expr_stmt|;
+name|res
+operator|=
+name|GetOverlappedResult
+argument_list|(
+name|driver_ndis_get_ndisuio_handle
+argument_list|()
+argument_list|,
+operator|&
+name|overlapped
+argument_list|,
+operator|&
+name|written
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|res
+condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"L2(NDISUIO): "
+literal|"GetOverlappedResult failed: %d"
+argument_list|,
+operator|(
+name|int
+operator|)
+name|GetLastError
+argument_list|()
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 return|return
 literal|0
 return|;

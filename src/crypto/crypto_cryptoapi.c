@@ -101,12 +101,6 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|CONFIG_TLS_INTERNAL
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|__MINGW32_VERSION
 end_ifdef
 
@@ -257,15 +251,6 @@ end_endif
 
 begin_comment
 comment|/* __MINGW32_VERSION */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* CONFIG_TLS_INTERNAL */
 end_comment
 
 begin_function
@@ -612,7 +597,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|md4_vector
 parameter_list|(
 name|size_t
@@ -634,6 +619,7 @@ modifier|*
 name|mac
 parameter_list|)
 block|{
+return|return
 name|cryptoapi_hash_vector
 argument_list|(
 name|CALG_MD4
@@ -648,7 +634,7 @@ name|len
 argument_list|,
 name|mac
 argument_list|)
-expr_stmt|;
+return|;
 block|}
 end_function
 
@@ -1018,14 +1004,8 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|EAP_TLS_FUNCS
-end_ifdef
-
 begin_function
-name|void
+name|int
 name|md5_vector
 parameter_list|(
 name|size_t
@@ -1047,6 +1027,7 @@ modifier|*
 name|mac
 parameter_list|)
 block|{
+return|return
 name|cryptoapi_hash_vector
 argument_list|(
 name|CALG_MD5
@@ -1061,12 +1042,12 @@ name|len
 argument_list|,
 name|mac
 argument_list|)
-expr_stmt|;
+return|;
 block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|sha1_vector
 parameter_list|(
 name|size_t
@@ -1088,6 +1069,7 @@ modifier|*
 name|mac
 parameter_list|)
 block|{
+return|return
 name|cryptoapi_hash_vector
 argument_list|(
 name|CALG_SHA
@@ -1102,7 +1084,7 @@ name|len
 argument_list|,
 name|mac
 argument_list|)
-expr_stmt|;
+return|;
 block|}
 end_function
 
@@ -1670,12 +1652,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CONFIG_TLS_INTERNAL
-end_ifdef
 
 begin_struct
 struct|struct
@@ -3023,6 +2999,11 @@ name|key
 parameter_list|,
 name|size_t
 name|len
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|passwd
 parameter_list|)
 block|{
 comment|/* TODO */
@@ -3523,23 +3504,50 @@ parameter_list|)
 block|{ }
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* CONFIG_TLS_INTERNAL */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* EAP_TLS_FUNCS */
-end_comment
+begin_function
+name|int
+name|crypto_mod_exp
+parameter_list|(
+specifier|const
+name|u8
+modifier|*
+name|base
+parameter_list|,
+name|size_t
+name|base_len
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|power
+parameter_list|,
+name|size_t
+name|power_len
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|modulus
+parameter_list|,
+name|size_t
+name|modulus_len
+parameter_list|,
+name|u8
+modifier|*
+name|result
+parameter_list|,
+name|size_t
+modifier|*
+name|result_len
+parameter_list|)
+block|{
+comment|/* TODO */
+return|return
+operator|-
+literal|1
+return|;
+block|}
+end_function
 
 end_unit
 

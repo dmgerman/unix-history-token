@@ -19,6 +19,10 @@ begin_struct
 struct|struct
 name|hostapd_ip_addr
 block|{
+name|int
+name|af
+decl_stmt|;
+comment|/* AF_INET / AF_INET6 */
 union|union
 block|{
 name|struct
@@ -35,13 +39,15 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* CONFIG_IPV6 */
+name|u8
+name|max_len
+index|[
+literal|16
+index|]
+decl_stmt|;
 block|}
 name|u
 union|;
-name|int
-name|af
-decl_stmt|;
-comment|/* AF_INET / AF_INET6 */
 block|}
 struct|;
 end_struct

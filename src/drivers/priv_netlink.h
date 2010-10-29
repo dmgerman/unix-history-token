@@ -218,6 +218,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|NLMSG_HDRLEN
+value|((int) NLMSG_ALIGN(sizeof(struct nlmsghdr)))
+end_define
+
+begin_define
+define|#
+directive|define
 name|NLMSG_LENGTH
 parameter_list|(
 name|len
@@ -228,11 +235,57 @@ end_define
 begin_define
 define|#
 directive|define
+name|NLMSG_SPACE
+parameter_list|(
+name|len
+parameter_list|)
+value|NLMSG_ALIGN(NLMSG_LENGTH(len))
+end_define
+
+begin_define
+define|#
+directive|define
 name|NLMSG_DATA
 parameter_list|(
 name|nlh
 parameter_list|)
 value|((void*) (((char*) nlh) + NLMSG_LENGTH(0)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|NLMSG_NEXT
+parameter_list|(
+name|nlh
+parameter_list|,
+name|len
+parameter_list|)
+value|((len) -= NLMSG_ALIGN((nlh)->nlmsg_len), \ 			     (struct nlmsghdr *) \ 			     (((char *)(nlh)) + NLMSG_ALIGN((nlh)->nlmsg_len)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|NLMSG_OK
+parameter_list|(
+name|nlh
+parameter_list|,
+name|len
+parameter_list|)
+value|((len)>= (int) sizeof(struct nlmsghdr)&& \ 			   (nlh)->nlmsg_len>= sizeof(struct nlmsghdr)&& \ 			   (int) (nlh)->nlmsg_len<= (len))
+end_define
+
+begin_define
+define|#
+directive|define
+name|NLMSG_PAYLOAD
+parameter_list|(
+name|nlh
+parameter_list|,
+name|len
+parameter_list|)
+value|((nlh)->nlmsg_len - NLMSG_SPACE((len)))
 end_define
 
 begin_define

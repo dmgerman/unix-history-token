@@ -170,9 +170,9 @@ name|int
 name|pmksa_cache_list
 parameter_list|(
 name|struct
-name|wpa_sm
+name|rsn_pmksa_cache
 modifier|*
-name|sm
+name|pmksa
 parameter_list|,
 name|char
 modifier|*
@@ -441,9 +441,9 @@ name|int
 name|pmksa_cache_list
 parameter_list|(
 name|struct
-name|wpa_sm
+name|rsn_pmksa_cache
 modifier|*
-name|sm
+name|pmksa
 parameter_list|,
 name|char
 modifier|*

@@ -365,6 +365,11 @@ parameter_list|()
 function_decl|;
 name|virtual
 name|void
+name|peersDialog
+parameter_list|()
+function_decl|;
+name|virtual
+name|void
 name|tabChanged
 parameter_list|(
 name|int
@@ -450,6 +455,10 @@ name|ScanResults
 modifier|*
 name|scanres
 decl_stmt|;
+name|Peers
+modifier|*
+name|peers
+decl_stmt|;
 name|bool
 name|networkMayHaveChanged
 decl_stmt|;
@@ -533,6 +542,14 @@ name|QSystemTrayIcon
 modifier|*
 name|tray_icon
 decl_stmt|;
+name|QString
+name|wpaStateTranslate
+parameter_list|(
+name|char
+modifier|*
+name|state
+parameter_list|)
+function_decl|;
 name|void
 name|createTrayIcon
 parameter_list|(
