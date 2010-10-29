@@ -655,6 +655,8 @@ literal|0
 decl_stmt|;
 name|mode_t
 name|file_mode
+init|=
+literal|0
 decl_stmt|;
 name|KASSERT
 argument_list|(
