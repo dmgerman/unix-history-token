@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-null.c,v 1.21.4.1 2008-04-04 19:39:06 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-null.c,v 1.22 2008-04-04 19:37:45 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -95,11 +95,16 @@ end_decl_stmt
 begin_function
 name|pcap_t
 modifier|*
-name|pcap_activate
+name|pcap_create
 parameter_list|(
-name|pcap_t
+specifier|const
+name|char
 modifier|*
-name|p
+name|device
+parameter_list|,
+name|char
+modifier|*
+name|ebuf
 parameter_list|)
 block|{
 operator|(
@@ -107,9 +112,7 @@ name|void
 operator|)
 name|strlcpy
 argument_list|(
-name|p
-operator|->
-name|errbuf
+name|ebuf
 argument_list|,
 name|nosup
 argument_list|,

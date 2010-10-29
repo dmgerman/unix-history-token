@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/etherent.c,v 1.23 2006/10/04 18:09:22 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/etherent.c,v 1.23 2006-10-04 18:09:22 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,11 +43,87 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WIN32
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<pcap-stdinc.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* WIN32 */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|HAVE_INTTYPES_H
+end_if
+
+begin_include
+include|#
+directive|include
+file|<inttypes.h>
+end_include
+
+begin_elif
+elif|#
+directive|elif
+name|HAVE_STDINT_H
+end_elif
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_BITYPES_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/bitypes.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
 file|<sys/types.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* WIN32 */
+end_comment
 
 begin_include
 include|#

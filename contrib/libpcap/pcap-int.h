@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994, 1995, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the Computer Systems  *	Engineering Group at Lawrence Berkeley Laboratory.  * 4. Neither the name of the University nor of the Laboratory may be used  *    to endorse or promote products derived from this software without  *    specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  * @(#) $Header: /tcpdump/master/libpcap/pcap-int.h,v 1.85.2.9 2008-09-16 00:21:08 guy Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1994, 1995, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the Computer Systems  *	Engineering Group at Lawrence Berkeley Laboratory.  * 4. Neither the name of the University nor of the Laboratory may be used  *    to endorse or promote products derived from this software without  *    specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * @(#) $Header: /tcpdump/master/libpcap/pcap-int.h,v 1.94 2008-09-16 00:20:23 guy Exp $ (LBL)  */
 end_comment
 
 begin_ifndef
@@ -47,6 +47,10 @@ name|WIN32
 include|#
 directive|include
 file|<Packet32.h>
+specifier|extern
+name|CRITICAL_SECTION
+name|g_PcapCompileCriticalSection
+decl_stmt|;
 endif|#
 directive|endif
 comment|/* WIN32 */
@@ -59,6 +63,14 @@ file|<fcntl.h>
 include|#
 directive|include
 file|<io.h>
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|HAVE_SNF_API
+include|#
+directive|include
+file|<snf.h>
 endif|#
 directive|endif
 if|#
@@ -119,6 +131,24 @@ modifier|*
 name|rfile
 decl_stmt|;
 name|int
+function_decl|(
+modifier|*
+name|next_packet_op
+function_decl|)
+parameter_list|(
+name|pcap_t
+modifier|*
+parameter_list|,
+name|struct
+name|pcap_pkthdr
+modifier|*
+parameter_list|,
+name|u_char
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+name|int
 name|swapped
 decl_stmt|;
 name|size_t
@@ -133,10 +163,22 @@ decl_stmt|;
 name|int
 name|version_minor
 decl_stmt|;
-name|u_char
-modifier|*
-name|base
+name|bpf_u_int32
+name|ifcount
 decl_stmt|;
+comment|/* number of interfaces seen in this capture */
+name|u_int
+name|tsresol
+decl_stmt|;
+comment|/* time stamp resolution */
+name|u_int
+name|tsscale
+decl_stmt|;
+comment|/* scaling factor for resolution -> microseconds */
+name|u_int64_t
+name|tsoffset
+decl_stmt|;
+comment|/* time stamp offset */
 block|}
 struct|;
 comment|/*  * Used when doing a live capture.  */
@@ -182,9 +224,9 @@ name|timeout
 decl_stmt|;
 comment|/* timeout for buffering */
 name|int
-name|must_clear
+name|must_do_on_close
 decl_stmt|;
-comment|/* stuff we must clear when we close */
+comment|/* stuff we must do when we close */
 name|struct
 name|pcap
 modifier|*
@@ -218,6 +260,20 @@ name|bpf_u_int32
 name|oldmode
 decl_stmt|;
 comment|/* mode to restore when turning monitor mode off */
+name|char
+modifier|*
+name|mondevice
+decl_stmt|;
+comment|/* mac80211 monitor device we created */
+name|u_char
+modifier|*
+name|mmapbuf
+decl_stmt|;
+comment|/* memory-mapped region pointer */
+name|size_t
+name|mmapbuflen
+decl_stmt|;
+comment|/* size of region */
 name|u_int
 name|tp_version
 decl_stmt|;
@@ -226,6 +282,15 @@ name|u_int
 name|tp_hdrlen
 decl_stmt|;
 comment|/* hdrlen of tpacket_hdr for mmaped ring */
+name|u_char
+modifier|*
+name|oneshot_buffer
+decl_stmt|;
+comment|/* buffer for copy of packet */
+name|long
+name|proc_dropped
+decl_stmt|;
+comment|/* packets reported dropped by /proc/net/dev */
 endif|#
 directive|endif
 comment|/* linux */
@@ -285,6 +350,26 @@ directive|endif
 comment|/* HAVE_DAG_API */
 ifdef|#
 directive|ifdef
+name|HAVE_SNF_API
+name|snf_handle_t
+name|snf_handle
+decl_stmt|;
+comment|/* opaque device handle */
+name|snf_ring_t
+name|snf_ring
+decl_stmt|;
+comment|/* opaque device ring handle */
+name|int
+name|snf_timeout
+decl_stmt|;
+name|int
+name|snf_boardnum
+decl_stmt|;
+endif|#
+directive|endif
+comment|/*HAVE_SNF_API*/
+ifdef|#
+directive|ifdef
 name|HAVE_ZEROCOPY_BPF
 comment|/*         * Zero-copy read buffer -- for zero-copy BPF.  'buffer' above will         * alternative between these two actual mmap'd buffers as required.         * As there is a header on the front size of the mmap'd buffer, only         * some of the buffer is exposed to libpcap as a whole via bufsize;         * zbufsize is the true size.  zbuffer tracks the current zbuf         * assocated with buffer so that it can be used to decide which the         * next buffer to read will be.         */
 name|u_char
@@ -321,17 +406,22 @@ directive|endif
 comment|/* HAVE_ZEROCOPY_BPF */
 block|}
 struct|;
-comment|/*  * Stuff to clear when we close.  */
+comment|/*  * Stuff to do when we close.  */
 define|#
 directive|define
 name|MUST_CLEAR_PROMISC
 value|0x00000001
-comment|/* promiscuous mode */
+comment|/* clear promiscuous mode */
 define|#
 directive|define
 name|MUST_CLEAR_RFMON
 value|0x00000002
-comment|/* rfmon (monitor) mode */
+comment|/* clear rfmon (monitor) mode */
+define|#
+directive|define
+name|MUST_DELETE_MONIF
+value|0x00000004
+comment|/* delete monitor-mode interface */
 struct|struct
 name|pcap_opt
 block|{
@@ -691,7 +781,7 @@ name|struct
 name|pcap_opt
 name|opt
 decl_stmt|;
-comment|/* 	 * Read buffer -- for file descriptor read buffer model. 	 */
+comment|/* 	 * Read buffer. 	 */
 name|int
 name|bufsize
 decl_stmt|;
@@ -705,42 +795,6 @@ name|bp
 decl_stmt|;
 name|int
 name|cc
-decl_stmt|;
-name|int
-name|to_ms
-decl_stmt|;
-comment|/* 	 * Zero-copy read buffer -- for zero-copy BPF.  'buffer' above will 	 * alternative between these two actual mmap'd buffers as required. 	 * As there is a header on the front size of the mmap'd buffer, only 	 * some of the buffer is exposed to libpcap as a whole via bufsize; 	 * zbufsize is the true size.  zbuffer tracks the current zbuf 	 * assocated with buffer so that it can be used to decide which the 	 * next buffer to read will be. 	 */
-name|u_char
-modifier|*
-name|zbuf1
-decl_stmt|,
-modifier|*
-name|zbuf2
-decl_stmt|,
-modifier|*
-name|zbuffer
-decl_stmt|;
-name|u_int
-name|zbufsize
-decl_stmt|;
-name|u_int
-name|timeout
-decl_stmt|;
-name|u_int
-name|zerocopy
-decl_stmt|;
-name|u_int
-name|interrupted
-decl_stmt|;
-name|struct
-name|timespec
-name|firstsel
-decl_stmt|;
-comment|/* 	 * If there's currently a buffer being actively processed, then it is 	 * referenced here; 'buffer' is also pointed at it, but offset by the 	 * size of the header. 	 */
-name|struct
-name|bpf_zbuf_header
-modifier|*
-name|bzh
 decl_stmt|;
 comment|/* 	 * Place holder for pcap_next(). 	 */
 name|u_char
@@ -781,6 +835,10 @@ name|setnonblock_op
 decl_stmt|;
 name|stats_op_t
 name|stats_op
+decl_stmt|;
+comment|/* 	 * Routine to use as callback for pcap_next()/pcap_next_ex(). 	 */
+name|pcap_handler
+name|oneshot_callback
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -890,6 +948,27 @@ name|pkt_type
 decl_stmt|;
 block|}
 struct|;
+comment|/*  * User data structure for the one-shot callback used for pcap_next()  * and pcap_next_ex().  */
+struct|struct
+name|oneshot_userdata
+block|{
+name|struct
+name|pcap_pkthdr
+modifier|*
+name|hdr
+decl_stmt|;
+specifier|const
+name|u_char
+modifier|*
+modifier|*
+name|pkt
+decl_stmt|;
+name|pcap_t
+modifier|*
+name|pd
+decl_stmt|;
+block|}
+struct|;
 name|int
 name|yylex
 parameter_list|(
@@ -960,6 +1039,65 @@ directive|endif
 include|#
 directive|include
 file|<stdarg.h>
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|HAVE_SNPRINTF
+argument_list|)
+define|#
+directive|define
+name|snprintf
+value|pcap_snprintf
+specifier|extern
+name|int
+name|snprintf
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+endif|#
+directive|endif
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|HAVE_VSNPRINTF
+argument_list|)
+define|#
+directive|define
+name|vsnprintf
+value|pcap_vsnprintf
+specifier|extern
+name|int
+name|vsnprintf
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|va_list
+name|ap
+parameter_list|)
+function_decl|;
+endif|#
+directive|endif
 comment|/*  * Routines that most pcap implementations can use for non-blocking mode.  */
 if|#
 directive|if

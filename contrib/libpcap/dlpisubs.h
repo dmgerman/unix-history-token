@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * @(#) $Header: /tcpdump/master/libpcap/dlpisubs.h,v 1.1.2.2 2008-04-04 19:39:05 guy Exp $  */
+comment|/*  * @(#) $Header: /tcpdump/master/libpcap/dlpisubs.h,v 1.2 2008-04-04 19:37:45 guy Exp $  */
 end_comment
 
 begin_ifndef
