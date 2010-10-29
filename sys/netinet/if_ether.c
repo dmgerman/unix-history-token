@@ -1460,7 +1460,6 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* XXXXX 	 */
 name|retry
 label|:
 name|IF_AFDATA_RLOCK
