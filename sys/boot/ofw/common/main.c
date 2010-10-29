@@ -117,6 +117,18 @@ name|HEAP_SIZE
 value|0x80000
 end_define
 
+begin_define
+define|#
+directive|define
+name|OF_puts
+parameter_list|(
+name|fd
+parameter_list|,
+name|text
+parameter_list|)
+value|OF_write(fd, text, strlen(text))
+end_define
+
 begin_function
 name|void
 name|init_heap
@@ -127,6 +139,9 @@ block|{
 name|void
 modifier|*
 name|base
+decl_stmt|;
+name|ihandle_t
+name|stdout
 decl_stmt|;
 if|if
 condition|(
@@ -146,8 +161,25 @@ operator|)
 literal|0xffffffff
 condition|)
 block|{
-name|printf
+name|OF_getprop
 argument_list|(
+name|chosen
+argument_list|,
+literal|"stdout"
+argument_list|,
+operator|&
+name|stdout
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|stdout
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|OF_puts
+argument_list|(
+name|stdout
+argument_list|,
 literal|"Heap memory claim failed!\n"
 argument_list|)
 expr_stmt|;
