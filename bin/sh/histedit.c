@@ -1231,7 +1231,7 @@ break|break;
 default|default:
 name|error
 argument_list|(
-literal|"too many args"
+literal|"too many arguments"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1351,7 +1351,7 @@ argument_list|)
 expr_stmt|;
 name|error
 argument_list|(
-literal|"can't allocate stdio buffer for temp"
+literal|"Out of space"
 argument_list|)
 expr_stmt|;
 block|}

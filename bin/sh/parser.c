@@ -8216,7 +8216,7 @@ name|char
 name|internal_error
 index|[]
 init|=
-literal|"<internal prompt error>"
+literal|"??"
 decl_stmt|;
 comment|/* 	 * Select prompt format. 	 */
 switch|switch

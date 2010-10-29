@@ -5315,7 +5315,7 @@ literal|0
 condition|)
 name|error
 argument_list|(
-literal|"commandcmd() called while it should not be"
+literal|"commandcmd bad call"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Do nothing successfully if no command was specified; 	 * ksh also does this. 	 */
