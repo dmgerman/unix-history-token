@@ -1899,8 +1899,6 @@ operator|->
 name|la_expire
 operator|=
 name|time_second
-operator|+
-name|V_arpt_down
 expr_stmt|;
 name|canceled
 operator|=
