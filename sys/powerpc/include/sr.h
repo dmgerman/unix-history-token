@@ -78,35 +78,12 @@ begin_comment
 comment|/* Kernel segment register usage */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__powerpc64__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|USER_SR
-value|63
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
 name|USER_SR
 value|12
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

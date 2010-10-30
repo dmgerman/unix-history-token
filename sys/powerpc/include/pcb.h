@@ -145,10 +145,6 @@ name|usr_segm
 decl_stmt|;
 comment|/* Base address */
 name|register_t
-name|usr_esid
-decl_stmt|;
-comment|/* USER_SR segment */
-name|register_t
 name|usr_vsid
 decl_stmt|;
 comment|/* USER_SR segment */

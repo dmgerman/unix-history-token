@@ -1059,10 +1059,50 @@ ifdef|#
 directive|ifdef
 name|__powerpc64__
 case|case
-name|EXC_ISE
-case|:
-case|case
 name|EXC_DSE
+case|:
+if|if
+condition|(
+operator|(
+name|frame
+operator|->
+name|cpu
+operator|.
+name|aim
+operator|.
+name|dar
+operator|&
+name|SEGMENT_MASK
+operator|)
+operator|==
+name|USER_ADDR
+condition|)
+block|{
+asm|__asm __volatile ("slbmte %0, %1" ::
+literal|"r"
+operator|(
+name|td
+operator|->
+name|td_pcb
+operator|->
+name|pcb_cpu
+operator|.
+name|aim
+operator|.
+name|usr_vsid
+operator|)
+operator|,
+literal|"r"
+operator|(
+name|USER_SLB_SLBE
+operator|)
+block|)
+empty_stmt|;
+return|return;
+block|}
+comment|/* FALLTHROUGH */
+case|case
+name|EXC_ISE
 case|:
 if|if
 condition|(
@@ -1120,6 +1160,9 @@ name|frame
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_if
 if|if
 condition|(
 name|sig
@@ -1190,6 +1233,9 @@ name|ksi
 argument_list|)
 expr_stmt|;
 block|}
+end_if
+
+begin_expr_stmt
 name|userret
 argument_list|(
 name|td
@@ -1197,6 +1243,9 @@ argument_list|,
 name|frame
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|mtx_assert
 argument_list|(
 operator|&
@@ -1205,11 +1254,10 @@ argument_list|,
 name|MA_NOTOWNED
 argument_list|)
 expr_stmt|;
-block|}
-end_function
+end_expr_stmt
 
 begin_function
-specifier|static
+unit|}  static
 name|void
 name|trap_fatal
 parameter_list|(
