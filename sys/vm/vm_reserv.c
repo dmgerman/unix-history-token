@@ -562,7 +562,7 @@ argument_list|(
 operator|&
 name|sbuf
 argument_list|,
-literal|"%5.5d: %6.6dK, %6.6d\n"
+literal|"%5d: %6dK, %6d\n"
 argument_list|,
 name|level
 argument_list|,
