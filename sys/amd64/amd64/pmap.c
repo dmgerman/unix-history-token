@@ -22316,6 +22316,10 @@ condition|(
 name|len
 operator|<
 name|NBPDP
+operator|&&
+name|base
+operator|<
+name|dmaplimit
 condition|)
 block|{
 name|va
