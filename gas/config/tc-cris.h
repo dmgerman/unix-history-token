@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-cris.h -- Header file for tc-cris.c, the CRIS GAS port.    Copyright 2000, 2001, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.     Contributed by Axis Communications AB, Lund, Sweden.    Originally written for GAS 1.38.1 by Mikael Asker.    Updates, BFDizing, GNUifying and ELF by Hans-Peter Nilsson.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the    Free Software Foundation, 51 Franklin Street - Fifth Floor, Boston,    MA 02110-1301, USA.  */
+comment|/* tc-cris.h -- Header file for tc-cris.c, the CRIS GAS port.    Copyright 2000, 2001, 2002, 2003, 2004, 2005, 2007    Free Software Foundation, Inc.     Contributed by Axis Communications AB, Lund, Sweden.    Originally written for GAS 1.38.1 by Mikael Asker.    Updates, BFDizing, GNUifying and ELF by Hans-Peter Nilsson.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the    Free Software Foundation, 51 Franklin Street - Fifth Floor, Boston,    MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -289,7 +289,7 @@ value|((RTYPE) == BFD_RELOC_CRIS_16_GOT			\    || (RTYPE) == BFD_RELOC_CRIS_32_G
 end_define
 
 begin_comment
-comment|/* Make sure we don't resolve fixups for which we want to emit dynamic    relocations.  FIXME: Set fx_plt instead of using IS_CRIS_PIC_RELOC.  */
+comment|/* Make sure we don't resolve fixups for which we want to emit dynamic    relocations.  */
 end_comment
 
 begin_define
@@ -300,7 +300,7 @@ parameter_list|(
 name|FIX
 parameter_list|)
 define|\
-value|(!(FIX)->fx_pcrel					\    || (FIX)->fx_plt					\    || IS_CRIS_PIC_RELOC ((FIX)->fx_r_type)		\    || TC_FORCE_RELOCATION (FIX))
+value|(!(FIX)->fx_pcrel					\    || IS_CRIS_PIC_RELOC ((FIX)->fx_r_type)		\    || TC_FORCE_RELOCATION (FIX))
 end_define
 
 begin_comment

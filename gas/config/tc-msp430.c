@@ -1,25 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-msp430.c -- Assembler code for the Texas Instruments MSP430    Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.   Contributed by Dmitry Diky<diwil@mail.ru>    This file is part of GAS, the GNU Assembler.    GAS is free software; you can redistribute it and/or modify   it under the terms of the GNU General Public License as published by   the Free Software Foundation; either version 2, or (at your option)   any later version.    GAS is distributed in the hope that it will be useful,   but WITHOUT ANY WARRANTY; without even the implied warranty of   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the   GNU General Public License for more details.    You should have received a copy of the GNU General Public License   along with GAS; see the file COPYING.  If not, write to   the Free Software Foundation, 51 Franklin Street - Fifth Floor,   Boston, MA 02110-1301, USA.  */
+comment|/* tc-msp430.c -- Assembler code for the Texas Instruments MSP430    Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007   Free Software Foundation, Inc.   Contributed by Dmitry Diky<diwil@mail.ru>    This file is part of GAS, the GNU Assembler.    GAS is free software; you can redistribute it and/or modify   it under the terms of the GNU General Public License as published by   the Free Software Foundation; either version 2, or (at your option)   any later version.    GAS is distributed in the hope that it will be useful,   but WITHOUT ANY WARRANTY; without even the implied warranty of   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the   GNU General Public License for more details.    You should have received a copy of the GNU General Public License   along with GAS; see the file COPYING.  If not, write to   the Free Software Foundation, 51 Franklin Street - Fifth Floor,   Boston, MA 02110-1301, USA.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
 
 begin_include
 include|#
@@ -64,7 +46,7 @@ file|"dwarf2dbg.h"
 end_include
 
 begin_comment
-comment|/*    We will disable polymorphs by default because it is dangerous.    The potencial problem here is the following: assume we got the    following code:  	jump .l1 	nop 	jump  subroutine	; external symbol       .l1: 	nop 	ret        In case of assembly time relaxation we'll get: 	0: jmp .l1<.text +0x08> (reloc deleted) 	2: nop 	4: br subroutine     .l1: 	8: nop 	10: ret     If the 'subroutine' wiys thin +-1024 bytes range then linker    will produce 	0: jmp .text +0x08 	2: nop 	4: jmp subroutine 	.l1: 	6: nop 	8: ret	; 'jmp .text +0x08' will land here. WRONG!!!      The workaround is the following:    1. Declare global var enable_polymorphs which set to 1 via option -mP.    2. Declare global var enable_relax	which set to 1 via option -mQ.     If polymorphs are enabled, and relax isn't, treat all jumps as long jumps,    do not delete any relocs and leave them for linker.        If relax is enabled, relax at assembly time and kill relocs as necessary.  */
+comment|/*    We will disable polymorphs by default because it is dangerous.    The potential problem here is the following: assume we got the    following code:  	jump .l1 	nop 	jump  subroutine	; external symbol       .l1: 	nop 	ret        In case of assembly time relaxation we'll get: 	0: jmp .l1<.text +0x08> (reloc deleted) 	2: nop 	4: br subroutine     .l1: 	8: nop 	10: ret     If the 'subroutine' wiys thin +-1024 bytes range then linker    will produce 	0: jmp .text +0x08 	2: nop 	4: jmp subroutine 	.l1: 	6: nop 	8: ret	; 'jmp .text +0x08' will land here. WRONG!!!      The workaround is the following:    1. Declare global var enable_polymorphs which set to 1 via option -mP.    2. Declare global var enable_relax	which set to 1 via option -mQ.     If polymorphs are enabled, and relax isn't, treat all jumps as long jumps,    do not delete any relocs and leave them for linker.        If relax is enabled, relax at assembly time and kill relocs as necessary.  */
 end_comment
 
 begin_decl_stmt
@@ -440,7 +422,7 @@ name|char
 name|line_separator_chars
 index|[]
 init|=
-literal|""
+literal|"{"
 decl_stmt|;
 end_decl_stmt
 
@@ -1983,7 +1965,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Extract one word from FROM and copy it to TO. Delimeters are ",;\n"  */
+comment|/* Extract one word from FROM and copy it to TO. Delimiters are ",;\n"  */
 end_comment
 
 begin_function
@@ -8082,10 +8064,6 @@ operator|!
 name|fixp
 operator|->
 name|fx_pcrel
-operator|||
-name|fixp
-operator|->
-name|fx_plt
 operator|||
 name|generic_force_reloc
 argument_list|(

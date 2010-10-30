@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* SuperH SH64-specific support for 32-bit ELF    Copyright 2000, 2001, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
+comment|/* SuperH SH64-specific support for 32-bit ELF    Copyright 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007    Free Software Foundation, Inc.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_define
@@ -12,13 +12,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"bfd.h"
+file|"sysdep.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sysdep.h"
+file|"bfd.h"
 end_include
 
 begin_include
@@ -530,6 +530,14 @@ modifier|*
 name|sec
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
+name|sec
+operator|->
+name|used_by_bfd
+condition|)
+block|{
 name|struct
 name|_sh64_elf_section_data
 modifier|*
@@ -546,11 +554,6 @@ argument_list|)
 decl_stmt|;
 name|sdata
 operator|=
-operator|(
-expr|struct
-name|_sh64_elf_section_data
-operator|*
-operator|)
 name|bfd_zalloc
 argument_list|(
 name|abfd
@@ -573,6 +576,7 @@ name|used_by_bfd
 operator|=
 name|sdata
 expr_stmt|;
+block|}
 return|return
 name|_bfd_elf_new_section_hook
 argument_list|(
@@ -2821,17 +2825,25 @@ name|definition
 parameter_list|,
 name|bfd_boolean
 name|dynamic
+name|ATTRIBUTE_UNUSED
 parameter_list|)
 block|{
 if|if
 condition|(
+operator|(
 name|isym
 operator|->
 name|st_other
+operator|&
+operator|~
+name|ELF_ST_VISIBILITY
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+operator|)
 operator|!=
 literal|0
-operator|&&
-name|dynamic
 condition|)
 block|{
 name|unsigned
@@ -2890,9 +2902,10 @@ index|[]
 init|=
 block|{
 block|{
+name|STRING_COMMA_LEN
+argument_list|(
 literal|".cranges"
-block|,
-literal|8
+argument_list|)
 block|,
 literal|0
 block|,
@@ -3046,6 +3059,12 @@ end_define
 begin_undef
 undef|#
 directive|undef
+name|ELF_COMMONPAGESIZE
+end_undef
+
+begin_undef
+undef|#
+directive|undef
 name|elf_symbol_leading_char
 end_undef
 
@@ -3142,6 +3161,19 @@ define|#
 directive|define
 name|elf32_bed
 value|elf32_sh64_lin_bed
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|ELF_COMMONPAGESIZE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ELF_COMMONPAGESIZE
+value|0x1000
 end_define
 
 begin_include

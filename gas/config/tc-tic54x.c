@@ -10,19 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<limits.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
 end_include
 
 begin_include
@@ -10451,17 +10439,16 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"Can't open macro library file '%s' for reading."
+literal|"can't open macro library file '%s' for reading: %s"
 argument_list|)
 argument_list|,
 name|path
-argument_list|)
-expr_stmt|;
-name|as_perror
+argument_list|,
+name|bfd_errmsg
 argument_list|(
-literal|"%s"
-argument_list|,
-name|path
+name|bfd_get_error
+argument_list|()
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ignore_rest_of_line

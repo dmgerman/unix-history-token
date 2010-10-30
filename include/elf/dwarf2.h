@@ -1932,6 +1932,10 @@ name|DW_OP_GNU_push_tls_address
 init|=
 literal|0xe0
 block|,
+name|DW_OP_GNU_uninit
+init|=
+literal|0xf0
+block|,
 comment|/* HP extensions.  */
 name|DW_OP_HP_unknown
 init|=

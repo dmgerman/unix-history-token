@@ -53,6 +53,16 @@ directive|ifndef
 name|XCOFF_TEST
 end_ifndef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SHARED
+end_ifdef
+
+begin_comment
+comment|/* SHARED is defined if we are compiling with -fpic/-fPIC.  */
+end_comment
+
 begin_decl_stmt
 name|int
 name|overriddenvar
@@ -61,6 +71,27 @@ operator|-
 literal|1
 decl_stmt|;
 end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* Without -fpic, newer versions of gcc assume that we are not    compiling for a shared library, and thus that overriddenvar is    local.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|overriddenvar
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -214,6 +245,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SHARED
+end_ifdef
+
 begin_function
 name|int
 name|shlib_overriddencall2
@@ -224,6 +261,11 @@ literal|7
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1257,6 +1299,12 @@ directive|ifdef
 name|PROTECTED_TEST
 end_ifdef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SHARED
+end_ifdef
+
 begin_decl_stmt
 name|int
 name|shared_data
@@ -1264,6 +1312,23 @@ init|=
 literal|100
 decl_stmt|;
 end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|shared_data
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int

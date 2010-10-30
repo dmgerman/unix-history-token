@@ -84,15 +84,22 @@ end_comment
 begin_define
 define|#
 directive|define
+name|fido_a
+value|0x200
+end_define
+
+begin_define
+define|#
+directive|define
 name|m68k_mask
-value|0x1ff
+value|0x3ff
 end_define
 
 begin_define
 define|#
 directive|define
 name|mcfmac
-value|0x200
+value|0x400
 end_define
 
 begin_comment
@@ -103,7 +110,7 @@ begin_define
 define|#
 directive|define
 name|mcfemac
-value|0x400
+value|0x800
 end_define
 
 begin_comment
@@ -114,7 +121,7 @@ begin_define
 define|#
 directive|define
 name|cfloat
-value|0x800
+value|0x1000
 end_define
 
 begin_comment
@@ -125,7 +132,7 @@ begin_define
 define|#
 directive|define
 name|mcfhwdiv
-value|0x1000
+value|0x2000
 end_define
 
 begin_comment
@@ -136,7 +143,7 @@ begin_define
 define|#
 directive|define
 name|mcfisa_a
-value|0x2000
+value|0x4000
 end_define
 
 begin_comment
@@ -147,7 +154,7 @@ begin_define
 define|#
 directive|define
 name|mcfisa_aa
-value|0x4000
+value|0x8000
 end_define
 
 begin_comment
@@ -158,7 +165,7 @@ begin_define
 define|#
 directive|define
 name|mcfisa_b
-value|0x8000
+value|0x10000
 end_define
 
 begin_comment
@@ -168,8 +175,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|mcfisa_c
+value|0x20000
+end_define
+
+begin_comment
+comment|/* ColdFire ISA_C.  */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|mcfusp
-value|0x10000
+value|0x40000
 end_define
 
 begin_comment
@@ -180,7 +198,7 @@ begin_define
 define|#
 directive|define
 name|mcf_mask
-value|0x1f200
+value|0x7e400
 end_define
 
 begin_comment
@@ -212,7 +230,7 @@ begin_define
 define|#
 directive|define
 name|m68010up
-value|(m68010 | cpu32 | m68020up)
+value|(m68010 | cpu32 | fido_a | m68020up)
 end_define
 
 begin_define
@@ -305,11 +323,11 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* We store four bytes of opcode for all opcodes because that is the    most any of them need.  The actual length of an instruction is    always at least 2 bytes, and is as much longer as necessary to hold    the operands it has.     The match field is a mask saying which bits must match particular    opcode in order for an instruction to be an instance of that    opcode.     The args field is a string containing two characters for each    operand of the instruction.  The first specifies the kind of    operand; the second, the place it is stored.  */
+comment|/* We store four bytes of opcode for all opcodes because that is the    most any of them need.  The actual length of an instruction is    always at least 2 bytes, and is as much longer as necessary to hold    the operands it has.     The match field is a mask saying which bits must match particular    opcode in order for an instruction to be an instance of that    opcode.     The args field is a string containing two characters for each    operand of the instruction.  The first specifies the kind of    operand; the second, the place it is stored.     If the first char of args is '.', it indicates that the opcode is    two words.  This is only necessary when the match field does not    have any bits set in the second opcode word.  Such a '.' is skipped    for operand processing.  */
 end_comment
 
 begin_comment
-comment|/* Kinds of operands:    Characters used: AaBbCcDdEeFfGgHIiJkLlMmnOopQqRrSsTtU VvWwXxYyZz01234|*~%;@!&$?/<>#^+-     D  data register only.  Stored as 3 bits.    A  address register only.  Stored as 3 bits.    a  address register indirect only.  Stored as 3 bits.    R  either kind of register.  Stored as 4 bits.    r  either kind of register indirect only.  Stored as 4 bits.       At the moment, used only for cas2 instruction.    F  floating point coprocessor register only.   Stored as 3 bits.    O  an offset (or width): immediate data 0-31 or data register.       Stored as 6 bits in special format for BF... insns.    +  autoincrement only.  Stored as 3 bits (number of the address register).    -  autodecrement only.  Stored as 3 bits (number of the address register).    Q  quick immediate data.  Stored as 3 bits.       This matches an immediate operand only when value is in range 1 .. 8.    M  moveq immediate data.  Stored as 8 bits.       This matches an immediate operand only when value is in range -128..127    T  trap vector immediate data.  Stored as 4 bits.     k  K-factor for fmove.p instruction.   Stored as a 7-bit constant or       a three bit register offset, depending on the field type.     #  immediate data.  Stored in special places (b, w or l)       which say how many bits to store.    ^  immediate data for floating point instructions.   Special places       are offset by 2 bytes from '#'...    B  pc-relative address, converted to an offset       that is treated as immediate data.    d  displacement and register.  Stores the register as 3 bits       and stores the displacement in the entire second word.     C  the CCR.  No need to store it; this is just for filtering validity.    S  the SR.  No need to store, just as with CCR.    U  the USP.  No need to store, just as with CCR.    E  the MAC ACC.  No need to store, just as with CCR.    e  the EMAC ACC[0123].    G  the MAC/EMAC MACSR.  No need to store, just as with CCR.    g  the EMAC ACCEXT{01,23}.    H  the MASK.  No need to store, just as with CCR.    i  the MAC/EMAC scale factor.     I  Coprocessor ID.   Not printed if 1.   The Coprocessor ID is always       extracted from the 'd' field of word one, which means that an extended       coprocessor opcode can be skipped using the 'i' place, if needed.     s  System Control register for the floating point coprocessor.     J  Misc register for movec instruction, stored in 'j' format. 	Possible values: 	0x000	SFC	Source Function Code reg	[60, 40, 30, 20, 10] 	0x001	DFC	Data Function Code reg		[60, 40, 30, 20, 10] 	0x002   CACR    Cache Control Register          [60, 40, 30, 20, mcf] 	0x003	TC	MMU Translation Control		[60, 40] 	0x004	ITT0	Instruction Transparent 				Translation reg 0	[60, 40] 	0x005	ITT1	Instruction Transparent 				Translation reg 1	[60, 40] 	0x006	DTT0	Data Transparent 				Translation reg 0	[60, 40] 	0x007	DTT1	Data Transparent 				Translation reg 1	[60, 40] 	0x008	BUSCR	Bus Control Register		[60] 	0x800	USP	User Stack Pointer		[60, 40, 30, 20, 10]         0x801   VBR     Vector Base reg                 [60, 40, 30, 20, 10, mcf] 	0x802	CAAR	Cache Address Register		[        30, 20] 	0x803	MSP	Master Stack Pointer		[    40, 30, 20] 	0x804	ISP	Interrupt Stack Pointer		[    40, 30, 20] 	0x805	MMUSR	MMU Status reg			[    40] 	0x806	URP	User Root Pointer		[60, 40] 	0x807	SRP	Supervisor Root Pointer		[60, 40] 	0x808	PCR	Processor Configuration reg	[60] 	0xC00	ROMBAR	ROM Base Address Register	[520X] 	0xC04	RAMBAR0	RAM Base Address Register 0	[520X] 	0xC05	RAMBAR1	RAM Base Address Register 0	[520X] 	0xC0F	MBAR0	RAM Base Address Register 0	[520X]         0xC04   FLASHBAR FLASH Base Address Register    [mcf528x]         0xC05   RAMBAR  Static RAM Base Address Register [mcf528x]      L  Register list of the type d0-d7/a0-a7 etc.        (New!  Improved!  Can also hold fp0-fp7, as well!)        The assembler tries to see if the registers match the insn by        looking at where the insn wants them stored.      l  Register list like L, but with all the bits reversed.        Used for going the other way. . .      c  cache identifier which may be "nc" for no cache, "ic"        for instruction cache, "dc" for data cache, or "bc"        for both caches.  Used in cinv and cpush.  Always        stored in position "d".      u  Any register, with ``upper'' or ``lower'' specification.  Used        in the mac instructions with size word.   The remainder are all stored as 6 bits using an address mode and a  register number; they differ in which addressing modes they match.     *  all					(modes 0-6,7.0-4)    ~  alterable memory				(modes 2-6,7.0,7.1)    						(not 0,1,7.2-4)    %  alterable					(modes 0-6,7.0,7.1) 						(not 7.2-4)    ;  data					(modes 0,2-6,7.0-4) 						(not 1)    @  data, but not immediate			(modes 0,2-6,7.0-3) 						(not 1,7.4)    !  control					(modes 2,5,6,7.0-3) 						(not 0,1,3,4,7.4)&  alterable control				(modes 2,5,6,7.0,7.1) 						(not 0,1,3,4,7.2-4)    $  alterable data				(modes 0,2-6,7.0,7.1) 						(not 1,7.2-4)    ?  alterable control, or data register	(modes 0,2,5,6,7.0,7.1) 						(not 1,3,4,7.2-4)    /  control, or data register			(modes 0,2,5,6,7.0-3) 						(not 1,3,4,7.4)>  *save operands				(modes 2,4,5,6,7.0,7.1) 						(not 0,1,3,7.2-4)<  *restore operands				(modes 2,3,5,6,7.0-3) 						(not 0,1,4,7.4)     coldfire move operands:    m  						(modes 0-4)    n						(modes 5,7.2)    o						(modes 6,7.0,7.1,7.3,7.4)    p						(modes 0-5)     coldfire bset/bclr/btst/mulsl/mulul operands:    q						(modes 0,2-5)    v						(modes 0,2-5,7.0,7.1)    b                                            (modes 0,2-5,7.2)    w                                            (modes 2-5,7.2)    y						(modes 2,5)    z						(modes 2,5,7.2)    x  mov3q immediate operand.    4						(modes 2,3,4,5)   */
+comment|/* Kinds of operands:    Characters used: AaBbCcDdEeFfGgHIiJjKkLlMmnOopQqRrSsTtUuVvWwXxYyZz01234|*~%;@!&$?/<>#^+-     D  data register only.  Stored as 3 bits.    A  address register only.  Stored as 3 bits.    a  address register indirect only.  Stored as 3 bits.    R  either kind of register.  Stored as 4 bits.    r  either kind of register indirect only.  Stored as 4 bits.       At the moment, used only for cas2 instruction.    F  floating point coprocessor register only.   Stored as 3 bits.    O  an offset (or width): immediate data 0-31 or data register.       Stored as 6 bits in special format for BF... insns.    +  autoincrement only.  Stored as 3 bits (number of the address register).    -  autodecrement only.  Stored as 3 bits (number of the address register).    Q  quick immediate data.  Stored as 3 bits.       This matches an immediate operand only when value is in range 1 .. 8.    M  moveq immediate data.  Stored as 8 bits.       This matches an immediate operand only when value is in range -128..127    T  trap vector immediate data.  Stored as 4 bits.     k  K-factor for fmove.p instruction.   Stored as a 7-bit constant or       a three bit register offset, depending on the field type.     #  immediate data.  Stored in special places (b, w or l)       which say how many bits to store.    ^  immediate data for floating point instructions.   Special places       are offset by 2 bytes from '#'...    B  pc-relative address, converted to an offset       that is treated as immediate data.    d  displacement and register.  Stores the register as 3 bits       and stores the displacement in the entire second word.     C  the CCR.  No need to store it; this is just for filtering validity.    S  the SR.  No need to store, just as with CCR.    U  the USP.  No need to store, just as with CCR.    E  the MAC ACC.  No need to store, just as with CCR.    e  the EMAC ACC[0123].    G  the MAC/EMAC MACSR.  No need to store, just as with CCR.    g  the EMAC ACCEXT{01,23}.    H  the MASK.  No need to store, just as with CCR.    i  the MAC/EMAC scale factor.     I  Coprocessor ID.   Not printed if 1.   The Coprocessor ID is always       extracted from the 'd' field of word one, which means that an extended       coprocessor opcode can be skipped using the 'i' place, if needed.     s  System Control register for the floating point coprocessor.     J  Misc register for movec instruction, stored in 'j' format. 	Possible values: 	0x000	SFC	Source Function Code reg	[60, 40, 30, 20, 10] 	0x001	DFC	Data Function Code reg		[60, 40, 30, 20, 10] 	0x002   CACR    Cache Control Register          [60, 40, 30, 20, mcf] 	0x003	TC	MMU Translation Control		[60, 40] 	0x004	ITT0	Instruction Transparent 				Translation reg 0	[60, 40] 	0x005	ITT1	Instruction Transparent 				Translation reg 1	[60, 40] 	0x006	DTT0	Data Transparent 				Translation reg 0	[60, 40] 	0x007	DTT1	Data Transparent 				Translation reg 1	[60, 40] 	0x008	BUSCR	Bus Control Register		[60] 	0x800	USP	User Stack Pointer		[60, 40, 30, 20, 10]         0x801   VBR     Vector Base reg                 [60, 40, 30, 20, 10, mcf] 	0x802	CAAR	Cache Address Register		[        30, 20] 	0x803	MSP	Master Stack Pointer		[    40, 30, 20] 	0x804	ISP	Interrupt Stack Pointer		[    40, 30, 20] 	0x805	MMUSR	MMU Status reg			[    40] 	0x806	URP	User Root Pointer		[60, 40] 	0x807	SRP	Supervisor Root Pointer		[60, 40] 	0x808	PCR	Processor Configuration reg	[60] 	0xC00	ROMBAR	ROM Base Address Register	[520X] 	0xC04	RAMBAR0	RAM Base Address Register 0	[520X] 	0xC05	RAMBAR1	RAM Base Address Register 0	[520X] 	0xC0F	MBAR0	RAM Base Address Register 0	[520X]         0xC04   FLASHBAR FLASH Base Address Register    [mcf528x]         0xC05   RAMBAR  Static RAM Base Address Register [mcf528x]      L  Register list of the type d0-d7/a0-a7 etc.        (New!  Improved!  Can also hold fp0-fp7, as well!)        The assembler tries to see if the registers match the insn by        looking at where the insn wants them stored.      l  Register list like L, but with all the bits reversed.        Used for going the other way. . .      c  cache identifier which may be "nc" for no cache, "ic"        for instruction cache, "dc" for data cache, or "bc"        for both caches.  Used in cinv and cpush.  Always        stored in position "d".      u  Any register, with ``upper'' or ``lower'' specification.  Used        in the mac instructions with size word.   The remainder are all stored as 6 bits using an address mode and a  register number; they differ in which addressing modes they match.     *  all					(modes 0-6,7.0-4)    ~  alterable memory				(modes 2-6,7.0,7.1)    						(not 0,1,7.2-4)    %  alterable					(modes 0-6,7.0,7.1) 						(not 7.2-4)    ;  data					(modes 0,2-6,7.0-4) 						(not 1)    @  data, but not immediate			(modes 0,2-6,7.0-3) 						(not 1,7.4)    !  control					(modes 2,5,6,7.0-3) 						(not 0,1,3,4,7.4)&  alterable control				(modes 2,5,6,7.0,7.1) 						(not 0,1,3,4,7.2-4)    $  alterable data				(modes 0,2-6,7.0,7.1) 						(not 1,7.2-4)    ?  alterable control, or data register	(modes 0,2,5,6,7.0,7.1) 						(not 1,3,4,7.2-4)    /  control, or data register			(modes 0,2,5,6,7.0-3) 						(not 1,3,4,7.4)>  *save operands				(modes 2,4,5,6,7.0,7.1) 						(not 0,1,3,7.2-4)<  *restore operands				(modes 2,3,5,6,7.0-3) 						(not 0,1,4,7.4)     coldfire move operands:    m  						(modes 0-4)    n						(modes 5,7.2)    o						(modes 6,7.0,7.1,7.3,7.4)    p						(modes 0-5)     coldfire bset/bclr/btst/mulsl/mulul operands:    q						(modes 0,2-5)    v						(modes 0,2-5,7.0,7.1)    b                                            (modes 0,2-5,7.2)    w                                            (modes 2-5,7.2)    y						(modes 2,5)    z						(modes 2,5,7.2)    x  mov3q immediate operand.    j  coprocessor ET operand.    K  coprocessor command number.    4						(modes 2,3,4,5)   */
 end_comment
 
 begin_comment
@@ -321,7 +339,7 @@ comment|/* I didn't use much imagination in choosing the    following codes, so 
 end_comment
 
 begin_comment
-comment|/* Places to put an operand, for non-general operands:    Characters used: BbCcDdFfGgHhIijkLlMmNnostWw123456789/     s  source, low bits of first word.    d  dest, shifted 9 in first word    1  second word, shifted 12    2  second word, shifted 6    3  second word, shifted 0    4  third word, shifted 12    5  third word, shifted 6    6  third word, shifted 0    7  second word, shifted 7    8  second word, shifted 10    9  second word, shifted 5    D  store in both place 1 and place 3; for divul and divsl.    B  first word, low byte, for branch displacements    W  second word (entire), for branch displacements    L  second and third words (entire), for branch displacements       (also overloaded for move16)    b  second word, low byte    w  second word (entire) [variable word/long branch offset for dbra]    W  second word (entire) (must be signed 16 bit value)    l  second and third word (entire)    g  variable branch offset for bra and similar instructions.       The place to store depends on the magnitude of offset.    t  store in both place 7 and place 8; for floating point operations    c  branch offset for cpBcc operations.       The place to store is word two if bit six of word one is zero,       and words two and three if bit six of word one is one.    i  Increment by two, to skip over coprocessor extended operands.   Only       works with the 'I' format.    k  Dynamic K-factor field.   Bits 6-4 of word 2, used as a register number.       Also used for dynamic fmovem instruction.    C  floating point coprocessor constant - 7 bits.  Also used for static       K-factors...    j  Movec register #, stored in 12 low bits of second word.    m  For M[S]ACx; 4 bits split with MSB shifted 6 bits in first word       and remaining 3 bits of register shifted 9 bits in first word.       Indicate upper/lower in 1 bit shifted 7 bits in second word.       Use with `R' or `u' format.    n  `m' withouth upper/lower indication. (For M[S]ACx; 4 bits split       with MSB shifted 6 bits in first word and remaining 3 bits of       register shifted 9 bits in first word.  No upper/lower       indication is done.)  Use with `R' or `u' format.    o  For M[S]ACw; 4 bits shifted 12 in second word (like `1').       Indicate upper/lower in 1 bit shifted 7 bits in second word.       Use with `R' or `u' format.    M  For M[S]ACw; 4 bits in low bits of first word.  Indicate       upper/lower in 1 bit shifted 6 bits in second word.  Use with       `R' or `u' format.    N  For M[S]ACw; 4 bits in low bits of second word.  Indicate       upper/lower in 1 bit shifted 6 bits in second word.  Use with       `R' or `u' format.    h  shift indicator (scale factor), 1 bit shifted 10 in second word   Places to put operand, for general operands:    d  destination, shifted 6 bits in first word    b  source, at low bit of first word, and immediate uses one byte    w  source, at low bit of first word, and immediate uses two bytes    l  source, at low bit of first word, and immediate uses four bytes    s  source, at low bit of first word.       Used sometimes in contexts where immediate is not allowed anyway.    f  single precision float, low bit of 1st word, immediate uses 4 bytes    F  double precision float, low bit of 1st word, immediate uses 8 bytes    x  extended precision float, low bit of 1st word, immediate uses 12 bytes    p  packed float, low bit of 1st word, immediate uses 12 bytes    G  EMAC accumulator, load  (bit 4 2nd word, !bit8 first word)    H  EMAC accumulator, non load  (bit 4 2nd word, bit 8 first word)    F  EMAC ACCx    f  EMAC ACCy    I  MAC/EMAC scale factor    /  Like 's', but set 2nd word, bit 5 if trailing_ampersand set    ]  first word, bit 10 */
+comment|/* Places to put an operand, for non-general operands:    Characters used: BbCcDdFfGgHhIijkLlMmNnostWw123456789/     s  source, low bits of first word.    d  dest, shifted 9 in first word    1  second word, shifted 12    2  second word, shifted 6    3  second word, shifted 0    4  third word, shifted 12    5  third word, shifted 6    6  third word, shifted 0    7  second word, shifted 7    8  second word, shifted 10    9  second word, shifted 5    E  second word, shifted 9    D  store in both place 1 and place 3; for divul and divsl.    B  first word, low byte, for branch displacements    W  second word (entire), for branch displacements    L  second and third words (entire), for branch displacements       (also overloaded for move16)    b  second word, low byte    w  second word (entire) [variable word/long branch offset for dbra]    W  second word (entire) (must be signed 16 bit value)    l  second and third word (entire)    g  variable branch offset for bra and similar instructions.       The place to store depends on the magnitude of offset.    t  store in both place 7 and place 8; for floating point operations    c  branch offset for cpBcc operations.       The place to store is word two if bit six of word one is zero,       and words two and three if bit six of word one is one.    i  Increment by two, to skip over coprocessor extended operands.   Only       works with the 'I' format.    k  Dynamic K-factor field.   Bits 6-4 of word 2, used as a register number.       Also used for dynamic fmovem instruction.    C  floating point coprocessor constant - 7 bits.  Also used for static       K-factors...    j  Movec register #, stored in 12 low bits of second word.    m  For M[S]ACx; 4 bits split with MSB shifted 6 bits in first word       and remaining 3 bits of register shifted 9 bits in first word.       Indicate upper/lower in 1 bit shifted 7 bits in second word.       Use with `R' or `u' format.    n  `m' withouth upper/lower indication. (For M[S]ACx; 4 bits split       with MSB shifted 6 bits in first word and remaining 3 bits of       register shifted 9 bits in first word.  No upper/lower       indication is done.)  Use with `R' or `u' format.    o  For M[S]ACw; 4 bits shifted 12 in second word (like `1').       Indicate upper/lower in 1 bit shifted 7 bits in second word.       Use with `R' or `u' format.    M  For M[S]ACw; 4 bits in low bits of first word.  Indicate       upper/lower in 1 bit shifted 6 bits in second word.  Use with       `R' or `u' format.    N  For M[S]ACw; 4 bits in low bits of second word.  Indicate       upper/lower in 1 bit shifted 6 bits in second word.  Use with       `R' or `u' format.    h  shift indicator (scale factor), 1 bit shifted 10 in second word   Places to put operand, for general operands:    d  destination, shifted 6 bits in first word    b  source, at low bit of first word, and immediate uses one byte    w  source, at low bit of first word, and immediate uses two bytes    l  source, at low bit of first word, and immediate uses four bytes    s  source, at low bit of first word.       Used sometimes in contexts where immediate is not allowed anyway.    f  single precision float, low bit of 1st word, immediate uses 4 bytes    F  double precision float, low bit of 1st word, immediate uses 8 bytes    x  extended precision float, low bit of 1st word, immediate uses 12 bytes    p  packed float, low bit of 1st word, immediate uses 12 bytes    G  EMAC accumulator, load  (bit 4 2nd word, !bit8 first word)    H  EMAC accumulator, non load  (bit 4 2nd word, bit 8 first word)    F  EMAC ACCx    f  EMAC ACCy    I  MAC/EMAC scale factor    /  Like 's', but set 2nd word, bit 5 if trailing_ampersand set    ]  first word, bit 10 */
 end_comment
 
 begin_decl_stmt

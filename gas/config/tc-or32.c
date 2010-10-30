@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Assembly backend for the OpenRISC 1000.    Copyright (C) 2002, 2003, 2005 Free Software Foundation, Inc.    Contributed by Damjan Lampret<lampret@opencores.org>.    Modified bu Johan Rydberg,<johan.rydberg@netinsight.se>.    Based upon a29k port.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 51 Franklin Street - Fifth Floor,    Boston, MA 02110-1301, USA.  */
+comment|/* Assembly backend for the OpenRISC 1000.    Copyright (C) 2002, 2003, 2005, 2007    Free Software Foundation, Inc.    Contributed by Damjan Lampret<lampret@opencores.org>.    Modified bu Johan Rydberg,<johan.rydberg@netinsight.se>.    Based upon a29k port.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 51 Franklin Street - Fifth Floor,    Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -2340,24 +2340,6 @@ operator|=
 name|t_val
 expr_stmt|;
 comment|/* Remember value for emit_reloc.  */
-name|know
-argument_list|(
-name|fixP
-operator|->
-name|fx_size
-operator|==
-literal|4
-argument_list|)
-expr_stmt|;
-name|know
-argument_list|(
-name|fixP
-operator|->
-name|fx_r_type
-operator|<
-name|BFD_RELOC_NONE
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|fixP

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-maxq.c -- assembler code for a MAXQ chip.     Copyright 2004, 2005 Free Software Foundation, Inc.     Contributed by HCL Technologies Pvt. Ltd.     Author: Vineet Sharma(vineets@noida.hcltech.com) Inderpreet    S.(inderpreetb@noida.hcltech.com)     This file is part of GAS.     GAS is free software; you can redistribute it and/or modify it under the    terms of the GNU General Public License as published by the Free Software    Foundation; either version 2, or (at your option) any later version.     GAS is distributed in the hope that it will be useful, but WITHOUT ANY    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more    details.     You should have received a copy of the GNU General Public License along    with GAS; see the file COPYING.  If not, write to the Free Software    Foundation, 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
+comment|/* tc-maxq.c -- assembler code for a MAXQ chip.     Copyright 2004, 2005, 2006 Free Software Foundation, Inc.     Contributed by HCL Technologies Pvt. Ltd.     Author: Vineet Sharma(vineets@noida.hcltech.com) Inderpreet    S.(inderpreetb@noida.hcltech.com)     This file is part of GAS.     GAS is free software; you can redistribute it and/or modify it under the    terms of the GNU General Public License as published by the Free Software    Foundation; either version 2, or (at your option) any later version.     GAS is distributed in the hope that it will be useful, but WITHOUT ANY    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more    details.     You should have received a copy of the GNU General Public License along    with GAS; see the file COPYING.  If not, write to the Free Software    Foundation, 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -57,23 +57,6 @@ directive|define
 name|MAXQ10S
 value|1
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_STRING_H
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|"string.h"
-end_include
 
 begin_endif
 endif|#
@@ -1585,7 +1568,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* GAS will call this for every rs_machine_dependent fragment. The    instruction is compleated using the data from the relaxation pass. It may    also create any necessary relocations.  */
+comment|/* GAS will call this for every rs_machine_dependent fragment. The    instruction is completed using the data from the relaxation pass. It may    also create any necessary relocations.  */
 end_comment
 
 begin_function
@@ -2511,7 +2494,7 @@ value|(PFX_INSN[1] = x)
 end_define
 
 begin_comment
-comment|/* This function sets the PFX value coresponding to the specs. Source    Destination Index Selection ---------------------------------- Write To|    SourceRegRange | Dest Addr Range    ------------------------------------------------------ PFX[0] | 0h-Fh |    0h-7h PFX[1] | 10h-1Fh | 0h-7h PFX[2] | 0h-Fh | 8h-Fh PFX[3] | 10h-1Fh |    8h-Fh PFX[4] | 0h-Fh | 10h-17h PFX[5] | 10h-1Fh | 10h-17h PFX[6] | 0h-Fh |     18h-1Fh PFX[7] | 0h-Fh | 18h-1Fh */
+comment|/* This function sets the PFX value corresponding to the specs. Source    Destination Index Selection ---------------------------------- Write To|    SourceRegRange | Dest Addr Range    ------------------------------------------------------ PFX[0] | 0h-Fh |    0h-7h PFX[1] | 10h-1Fh | 0h-7h PFX[2] | 0h-Fh | 8h-Fh PFX[3] | 10h-1Fh |    8h-Fh PFX[4] | 0h-Fh | 10h-17h PFX[5] | 10h-1Fh | 10h-17h PFX[6] | 0h-Fh |     18h-1Fh PFX[7] | 0h-Fh | 18h-1Fh */
 end_comment
 
 begin_function
@@ -4765,7 +4748,7 @@ return|return
 literal|1
 return|;
 block|}
-comment|/* Check For Sign Charcater.  */
+comment|/* Check For Sign Character.  */
 name|sign_val
 operator|=
 literal|0
@@ -6966,7 +6949,7 @@ return|return
 literal|1
 return|;
 block|}
-comment|/* Get the origanal string.  */
+comment|/* Get the original string.  */
 name|memcpy
 argument_list|(
 name|op_string
@@ -14390,7 +14373,7 @@ name|match_filters
 argument_list|()
 condition|)
 return|return;
-comment|/* Check for the approprate PFX register.  */
+comment|/* Check for the appropriate PFX register.  */
 name|set_prefix
 argument_list|()
 expr_stmt|;

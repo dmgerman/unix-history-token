@@ -47,6 +47,8 @@ block|,
 name|S390_OPCODE_Z990
 block|,
 name|S390_OPCODE_Z9_109
+block|,
+name|S390_OPCODE_Z9_EC
 block|}
 enum|;
 end_enum

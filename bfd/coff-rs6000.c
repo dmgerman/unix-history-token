@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for IBM RS/6000 "XCOFF" files.    Copyright 1990-1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006    Free Software Foundation, Inc.    FIXME: Can someone provide a transliteration of this name into ASCII?    Using the following chars caused a compiler warning on HIUX (so I replaced    them with octal escapes), and isn't useful without an understanding of what    character set it is.    Written by Metin G. Ozisik, Mimi Ph\373\364ng-Th\345o V\365,      and John Gilmore.    Archive support from Damon A. Permezel.    Contributed by IBM Corporation and Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
+comment|/* BFD back-end for IBM RS/6000 "XCOFF" files.    Copyright 1990-1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007    Free Software Foundation, Inc.    Written by Metin G. Ozisik, Mimi Phuong-Thao Vo, and John Gilmore.    Archive support from Damon A. Permezel.    Contributed by IBM Corporation and Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"bfd.h"
+file|"sysdep.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sysdep.h"
+file|"bfd.h"
 end_include
 
 begin_include
@@ -253,7 +253,9 @@ operator|(
 name|bfd
 operator|*
 operator|,
-name|bfd_boolean
+expr|struct
+name|bfd_link_info
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -488,6 +490,13 @@ define|#
 directive|define
 name|coff_bfd_reloc_type_lookup
 value|_bfd_xcoff_reloc_type_lookup
+end_define
+
+begin_define
+define|#
+directive|define
+name|coff_bfd_reloc_name_lookup
+value|_bfd_xcoff_reloc_name_lookup
 end_define
 
 begin_ifdef
@@ -4988,6 +4997,89 @@ block|}
 block|}
 end_function
 
+begin_function
+specifier|static
+name|reloc_howto_type
+modifier|*
+name|_bfd_xcoff_reloc_name_lookup
+parameter_list|(
+name|bfd
+modifier|*
+name|abfd
+name|ATTRIBUTE_UNUSED
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|r_name
+parameter_list|)
+block|{
+name|unsigned
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+sizeof|sizeof
+argument_list|(
+name|xcoff_howto_table
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|xcoff_howto_table
+index|[
+literal|0
+index|]
+argument_list|)
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|xcoff_howto_table
+index|[
+name|i
+index|]
+operator|.
+name|name
+operator|!=
+name|NULL
+operator|&&
+name|strcasecmp
+argument_list|(
+name|xcoff_howto_table
+index|[
+name|i
+index|]
+operator|.
+name|name
+argument_list|,
+name|r_name
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|&
+name|xcoff_howto_table
+index|[
+name|i
+index|]
+return|;
+return|return
+name|NULL
+return|;
+block|}
+end_function
+
 begin_escape
 end_escape
 
@@ -7785,7 +7877,7 @@ name|sub
 operator|=
 name|sub
 operator|->
-name|next
+name|archive_next
 expr_stmt|;
 block|}
 for|for
@@ -8496,7 +8588,7 @@ name|current_bfd
 operator|=
 name|current_bfd
 operator|->
-name|next
+name|archive_next
 expr_stmt|;
 if|if
 condition|(
@@ -8894,7 +8986,7 @@ name|current_bfd
 operator|=
 name|current_bfd
 operator|->
-name|next
+name|archive_next
 expr_stmt|;
 if|if
 condition|(
@@ -9000,7 +9092,7 @@ name|current_bfd
 operator|=
 name|current_bfd
 operator|->
-name|next
+name|archive_next
 expr_stmt|;
 if|if
 condition|(
@@ -9355,7 +9447,7 @@ name|current_bfd
 operator|=
 name|current_bfd
 operator|->
-name|next
+name|archive_next
 expr_stmt|;
 if|if
 condition|(
@@ -9461,7 +9553,7 @@ name|current_bfd
 operator|=
 name|current_bfd
 operator|->
-name|next
+name|archive_next
 expr_stmt|;
 if|if
 condition|(
@@ -9731,7 +9823,7 @@ name|sub
 operator|=
 name|sub
 operator|->
-name|next
+name|archive_next
 control|)
 block|{
 operator|++
@@ -9835,7 +9927,7 @@ name|sub
 operator|=
 name|sub
 operator|->
-name|next
+name|archive_next
 operator|,
 name|i
 operator|++
@@ -10734,7 +10826,7 @@ name|sub
 operator|=
 name|sub
 operator|->
-name|next
+name|archive_next
 control|)
 block|{
 specifier|const
@@ -11095,7 +11187,7 @@ name|current_bfd
 operator|=
 name|current_bfd
 operator|->
-name|next
+name|archive_next
 operator|,
 name|count
 operator|++
@@ -11195,7 +11287,7 @@ name|current_bfd
 operator|=
 name|current_bfd
 operator|->
-name|next
+name|archive_next
 operator|,
 name|i
 operator|++
@@ -11905,7 +11997,7 @@ name|current_bfd
 operator|=
 name|current_bfd
 operator|->
-name|next
+name|archive_next
 control|)
 block|{
 specifier|const
@@ -12138,18 +12230,16 @@ begin_function
 name|int
 name|_bfd_xcoff_sizeof_headers
 parameter_list|(
-name|abfd
-parameter_list|,
-name|reloc
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
-name|bfd_boolean
-name|reloc
+parameter_list|,
+name|struct
+name|bfd_link_info
+modifier|*
+name|info
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|size
@@ -19023,6 +19113,8 @@ name|coff_canonicalize_reloc
 block|,
 name|_bfd_xcoff_reloc_type_lookup
 block|,
+name|_bfd_xcoff_reloc_name_lookup
+block|,
 comment|/* Write */
 name|coff_set_arch_mach
 block|,
@@ -19617,6 +19709,8 @@ block|,
 name|coff_canonicalize_reloc
 block|,
 name|_bfd_xcoff_reloc_type_lookup
+block|,
+name|_bfd_xcoff_reloc_name_lookup
 block|,
 comment|/* Write */
 name|coff_set_arch_mach

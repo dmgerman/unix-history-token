@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* libbfd.h -- Declarations used by bfd library *implementation*.    (This include file is not for users of the library.)     Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006    Free Software Foundation, Inc.     Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
+comment|/* libbfd.h -- Declarations used by bfd library *implementation*.    (This include file is not for users of the library.)     Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007    Free Software Foundation, Inc.     Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -577,6 +577,16 @@ end_function_decl
 
 begin_function_decl
 name|bfd_boolean
+name|_bfd_free_cached_info
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bfd_boolean
 name|bfd_false
 parameter_list|(
 name|bfd
@@ -912,13 +922,19 @@ name|_bfd_generic_bfd_free_cached_info
 value|bfd_true
 end_define
 
-begin_define
-define|#
-directive|define
+begin_function_decl
+specifier|extern
+name|bfd_boolean
 name|_bfd_generic_new_section_hook
-define|\
-value|((bfd_boolean (*) (bfd *, asection *)) bfd_true)
-end_define
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|,
+name|asection
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|extern
@@ -1466,21 +1482,41 @@ begin_comment
 comment|/* Routines to use for BFD_JUMP_TABLE_RELOCS when there is no reloc    support.  Use BFD_JUMP_TABLE_RELOCS (_bfd_norelocs).  */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_function_decl
+specifier|extern
+name|long
 name|_bfd_norelocs_get_reloc_upper_bound
-define|\
-value|((long (*) (bfd *, asection *)) _bfd_n1)
-end_define
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|,
+name|asection
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_define
-define|#
-directive|define
+begin_function_decl
+specifier|extern
+name|long
 name|_bfd_norelocs_canonicalize_reloc
-define|\
-value|((long (*) (bfd *, asection *, arelent **, asymbol **)) _bfd_n1)
-end_define
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|,
+name|asection
+modifier|*
+parameter_list|,
+name|arelent
+modifier|*
+modifier|*
+parameter_list|,
+name|asymbol
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -1488,6 +1524,14 @@ directive|define
 name|_bfd_norelocs_bfd_reloc_type_lookup
 define|\
 value|((reloc_howto_type *(*) (bfd *, bfd_reloc_code_real_type)) bfd_nullvoidptr)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_bfd_norelocs_bfd_reloc_name_lookup
+define|\
+value|((reloc_howto_type *(*) (bfd *, const char *)) bfd_nullvoidptr)
 end_define
 
 begin_comment
@@ -1551,7 +1595,8 @@ begin_define
 define|#
 directive|define
 name|_bfd_nolink_sizeof_headers
-value|((int (*) (bfd *, bfd_boolean)) bfd_0)
+define|\
+value|((int (*) (bfd *, struct bfd_link_info *)) bfd_0)
 end_define
 
 begin_define
@@ -1655,7 +1700,7 @@ define|#
 directive|define
 name|_bfd_nolink_section_already_linked
 define|\
-value|((void (*) (bfd *, struct bfd_section *)) bfd_void)
+value|((void (*) (bfd *, struct bfd_section *, struct bfd_link_info *)) bfd_void)
 end_define
 
 begin_comment
@@ -2318,6 +2363,10 @@ parameter_list|,
 name|struct
 name|bfd_section
 modifier|*
+parameter_list|,
+name|struct
+name|bfd_link_info
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2440,6 +2489,30 @@ name|bfd_vma
 parameter_list|,
 name|bfd_byte
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Clear a given location using a given howto.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|_bfd_clear_contents
+parameter_list|(
+name|reloc_howto_type
+modifier|*
+name|howto
+parameter_list|,
+name|bfd
+modifier|*
+name|input_bfd
+parameter_list|,
+name|bfd_byte
+modifier|*
+name|location
 parameter_list|)
 function_decl|;
 end_function_decl

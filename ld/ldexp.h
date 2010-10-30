@@ -49,6 +49,10 @@ block|{
 name|int
 name|node_code
 decl_stmt|;
+name|unsigned
+name|int
+name|lineno
+decl_stmt|;
 enum|enum
 block|{
 name|etree_binary

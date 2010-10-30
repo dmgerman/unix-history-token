@@ -1,18 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* dwarf.c -- display DWARF contents of a BFD binary file    Copyright 2005, 2006    Free Software Foundation, Inc.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
+comment|/* dwarf.c -- display DWARF contents of a BFD binary file    Copyright 2005, 2006, 2007    Free Software Foundation, Inc.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|"sysdep.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"dwarf.h"
+file|"libiberty.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"bfd.h"
 end_include
 
 begin_include
@@ -24,7 +30,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"libiberty.h"
+file|"elf/dwarf2.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"dwarf.h"
 end_include
 
 begin_decl_stmt
@@ -4031,6 +4043,15 @@ literal|"DW_OP_call_ref"
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|DW_OP_form_tls_address
+case|:
+name|printf
+argument_list|(
+literal|"DW_OP_form_tls_address"
+argument_list|)
+expr_stmt|;
+break|break;
 comment|/* GNU extensions.  */
 case|case
 name|DW_OP_GNU_push_tls_address
@@ -5207,15 +5228,7 @@ condition|(
 name|uvalue
 condition|)
 block|{
-case|case
-name|DW_LANG_C
-case|:
-name|printf
-argument_list|(
-literal|"(non-ANSI C)"
-argument_list|)
-expr_stmt|;
-break|break;
+comment|/* Ordered by the numeric value of these constants.  */
 case|case
 name|DW_LANG_C89
 case|:
@@ -5226,11 +5239,47 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|DW_LANG_C
+case|:
+name|printf
+argument_list|(
+literal|"(non-ANSI C)"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|DW_LANG_Ada83
+case|:
+name|printf
+argument_list|(
+literal|"(Ada)"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|DW_LANG_C_plus_plus
 case|:
 name|printf
 argument_list|(
 literal|"(C++)"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|DW_LANG_Cobol74
+case|:
+name|printf
+argument_list|(
+literal|"(Cobol 74)"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|DW_LANG_Cobol85
+case|:
+name|printf
+argument_list|(
+literal|"(Cobol 85)"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5253,15 +5302,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|DW_LANG_Modula2
-case|:
-name|printf
-argument_list|(
-literal|"(Modula 2)"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
 name|DW_LANG_Pascal83
 case|:
 name|printf
@@ -5271,33 +5311,24 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|DW_LANG_Ada83
+name|DW_LANG_Modula2
 case|:
 name|printf
 argument_list|(
-literal|"(Ada)"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|DW_LANG_Cobol74
-case|:
-name|printf
-argument_list|(
-literal|"(Cobol 74)"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|DW_LANG_Cobol85
-case|:
-name|printf
-argument_list|(
-literal|"(Cobol 85)"
+literal|"(Modula 2)"
 argument_list|)
 expr_stmt|;
 break|break;
 comment|/* DWARF 2.1 values.	*/
+case|case
+name|DW_LANG_Java
+case|:
+name|printf
+argument_list|(
+literal|"(Java)"
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 name|DW_LANG_C99
 case|:
@@ -5325,6 +5356,52 @@ literal|"(Fortran 95)"
 argument_list|)
 expr_stmt|;
 break|break;
+comment|/* DWARF 3 values.  */
+case|case
+name|DW_LANG_PLI
+case|:
+name|printf
+argument_list|(
+literal|"(PLI)"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|DW_LANG_ObjC
+case|:
+name|printf
+argument_list|(
+literal|"(Objective C)"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|DW_LANG_ObjC_plus_plus
+case|:
+name|printf
+argument_list|(
+literal|"(Objective C++)"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|DW_LANG_UPC
+case|:
+name|printf
+argument_list|(
+literal|"(Unified Parallel C)"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|DW_LANG_D
+case|:
+name|printf
+argument_list|(
+literal|"(D)"
+argument_list|)
+expr_stmt|;
+break|break;
 comment|/* MIPS extension.  */
 case|case
 name|DW_LANG_Mips_Assembler
@@ -5346,6 +5423,24 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+if|if
+condition|(
+name|uvalue
+operator|>=
+name|DW_LANG_lo_user
+operator|&&
+name|uvalue
+operator|<=
+name|DW_LANG_hi_user
+condition|)
+name|printf
+argument_list|(
+literal|"(implementation defined: %lx)"
+argument_list|,
+name|uvalue
+argument_list|)
+expr_stmt|;
+else|else
 name|printf
 argument_list|(
 literal|"(Unknown: %lx)"
@@ -6988,14 +7083,6 @@ name|start
 operator|-
 name|section_begin
 expr_stmt|;
-name|start
-operator|+=
-name|compunit
-operator|.
-name|cu_length
-operator|+
-name|initial_length_size
-expr_stmt|;
 name|cu_abbrev_offset_ptr
 operator|=
 name|hdrptr
@@ -7138,10 +7225,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|tags
-operator|=
-name|hdrptr
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -7209,6 +7292,51 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|cu_offset
+operator|+
+name|compunit
+operator|.
+name|cu_length
+operator|+
+name|initial_length_size
+operator|>
+name|section
+operator|->
+name|size
+condition|)
+block|{
+name|warn
+argument_list|(
+name|_
+argument_list|(
+literal|"Debug info is corrupted, length is invalid (section is %lu bytes)\n"
+argument_list|)
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+name|section
+operator|->
+name|size
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+name|tags
+operator|=
+name|hdrptr
+expr_stmt|;
+name|start
+operator|+=
+name|compunit
+operator|.
+name|cu_length
+operator|+
+name|initial_length_size
+expr_stmt|;
+if|if
+condition|(
 name|compunit
 operator|.
 name|cu_version
@@ -7236,6 +7364,43 @@ name|free_abbrevs
 argument_list|()
 expr_stmt|;
 comment|/* Process the abbrevs used by this compilation unit. DWARF 	 sections under Mach-O have non-zero addresses.  */
+if|if
+condition|(
+name|compunit
+operator|.
+name|cu_abbrev_offset
+operator|>=
+name|debug_displays
+index|[
+name|abbrev
+index|]
+operator|.
+name|section
+operator|.
+name|size
+condition|)
+name|warn
+argument_list|(
+name|_
+argument_list|(
+literal|"Debug info is corrupted, abbrev offset is invalid (section is %lu bytes)\n"
+argument_list|)
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+name|debug_displays
+index|[
+name|abbrev
+index|]
+operator|.
+name|section
+operator|.
+name|size
+argument_list|)
+expr_stmt|;
+else|else
 name|process_abbrev_section
 argument_list|(
 operator|(
@@ -7345,6 +7510,35 @@ name|level
 expr_stmt|;
 continue|continue;
 block|}
+if|if
+condition|(
+operator|!
+name|do_loc
+condition|)
+name|printf
+argument_list|(
+name|_
+argument_list|(
+literal|"<%d><%lx>: Abbrev Number: %lu"
+argument_list|)
+argument_list|,
+name|level
+argument_list|,
+call|(
+name|unsigned
+name|long
+call|)
+argument_list|(
+name|tags
+operator|-
+name|section_begin
+operator|-
+name|bytes_read
+argument_list|)
+argument_list|,
+name|abbrev_number
+argument_list|)
+expr_stmt|;
 comment|/* Scan through the abbreviation list until we reach the 	     correct entry.  */
 for|for
 control|(
@@ -7374,6 +7568,23 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|do_loc
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+block|}
 name|warn
 argument_list|(
 name|_
@@ -7397,24 +7608,8 @@ name|printf
 argument_list|(
 name|_
 argument_list|(
-literal|"<%d><%lx>: Abbrev Number: %lu (%s)\n"
+literal|" (%s)\n"
 argument_list|)
-argument_list|,
-name|level
-argument_list|,
-call|(
-name|unsigned
-name|long
-call|)
-argument_list|(
-name|tags
-operator|-
-name|section_begin
-operator|-
-name|bytes_read
-argument_list|)
-argument_list|,
-name|abbrev_number
 argument_list|,
 name|get_TAG_name
 argument_list|(
@@ -7449,9 +7644,6 @@ case|case
 name|DW_TAG_entry_point
 case|:
 case|case
-name|DW_TAG_inlined_subroutine
-case|:
-case|case
 name|DW_TAG_subprogram
 case|:
 name|need_base_address
@@ -7481,6 +7673,28 @@ name|attr
 operator|->
 name|next
 control|)
+block|{
+if|if
+condition|(
+operator|!
+name|do_loc
+condition|)
+comment|/* Show the offset from where the tag was extracted.  */
+name|printf
+argument_list|(
+literal|"<%2lx>"
+argument_list|,
+call|(
+name|unsigned
+name|long
+call|)
+argument_list|(
+name|tags
+operator|-
+name|section_begin
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|tags
 operator|=
 name|read_and_display_attr
@@ -7516,6 +7730,7 @@ argument_list|,
 name|do_loc
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|entry
@@ -10070,6 +10285,15 @@ index|[
 name|first
 index|]
 operator|.
+name|num_loc_offsets
+operator|>
+literal|0
+operator|&&
+name|debug_information
+index|[
+name|first
+index|]
+operator|.
 name|loc_offsets
 index|[
 literal|0
@@ -10961,6 +11185,10 @@ name|unsigned
 name|long
 name|address
 decl_stmt|;
+name|unsigned
+name|char
+name|address_size
+decl_stmt|;
 name|int
 name|excess
 decl_stmt|;
@@ -11178,11 +11406,62 @@ operator|.
 name|ar_segment_size
 argument_list|)
 expr_stmt|;
+name|address_size
+operator|=
+name|arange
+operator|.
+name|ar_pointer_size
+operator|+
+name|arange
+operator|.
+name|ar_segment_size
+expr_stmt|;
+comment|/* The DWARF spec does not require that the address size be a power 	 of two, but we do.  This will have to change if we ever encounter 	 an uneven architecture.  */
+if|if
+condition|(
+operator|(
+name|address_size
+operator|&
+operator|(
+name|address_size
+operator|-
+literal|1
+operator|)
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|warn
+argument_list|(
+name|_
+argument_list|(
+literal|"Pointer size + Segment size is not a power of two.\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+name|address_size
+operator|>
+literal|4
+condition|)
 name|printf
 argument_list|(
 name|_
 argument_list|(
-literal|"\n    Address  Length\n"
+literal|"\n    Address            Length\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+name|_
+argument_list|(
+literal|"\n    Address    Length\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -11190,7 +11469,7 @@ name|ranges
 operator|=
 name|hdrptr
 expr_stmt|;
-comment|/* Must pad to an alignment boundary that is twice the pointer size.  */
+comment|/* Must pad to an alignment boundary that is twice the address size.  */
 name|excess
 operator|=
 operator|(
@@ -11202,9 +11481,7 @@ operator|%
 operator|(
 literal|2
 operator|*
-name|arange
-operator|.
-name|ar_pointer_size
+name|address_size
 operator|)
 expr_stmt|;
 if|if
@@ -11216,9 +11493,7 @@ operator|+=
 operator|(
 literal|2
 operator|*
-name|arange
-operator|.
-name|ar_pointer_size
+name|address_size
 operator|)
 operator|-
 name|excess
@@ -11237,9 +11512,7 @@ name|ranges
 operator|+
 literal|2
 operator|*
-name|arange
-operator|.
-name|ar_pointer_size
+name|address_size
 operator|<=
 name|start
 condition|)
@@ -11250,16 +11523,12 @@ name|byte_get
 argument_list|(
 name|ranges
 argument_list|,
-name|arange
-operator|.
-name|ar_pointer_size
+name|address_size
 argument_list|)
 expr_stmt|;
 name|ranges
 operator|+=
-name|arange
-operator|.
-name|ar_pointer_size
+name|address_size
 expr_stmt|;
 name|length
 operator|=
@@ -11267,20 +11536,32 @@ name|byte_get
 argument_list|(
 name|ranges
 argument_list|,
-name|arange
-operator|.
-name|ar_pointer_size
+name|address_size
 argument_list|)
 expr_stmt|;
 name|ranges
 operator|+=
-name|arange
-operator|.
-name|ar_pointer_size
+name|address_size
 expr_stmt|;
+if|if
+condition|(
+name|address_size
+operator|>
+literal|4
+condition|)
 name|printf
 argument_list|(
-literal|"    %8.8lx %lu\n"
+literal|"    0x%16.16lx 0x%lx\n"
+argument_list|,
+name|address
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"    0x%8.8lx 0x%lx\n"
 argument_list|,
 name|address
 argument_list|,
@@ -11578,6 +11859,15 @@ expr_stmt|;
 comment|/* DWARF sections under Mach-O have non-zero addresses.  */
 if|if
 condition|(
+name|debug_information
+index|[
+name|first
+index|]
+operator|.
+name|num_range_lists
+operator|>
+literal|0
+operator|&&
 name|debug_information
 index|[
 name|first
@@ -12801,9 +13091,7 @@ name|section_start
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return
-literal|1
-return|;
+continue|continue;
 block|}
 if|if
 condition|(
@@ -12853,6 +13141,35 @@ name|length
 operator|+
 name|initial_length_size
 expr_stmt|;
+if|if
+condition|(
+name|block_end
+operator|>
+name|end
+condition|)
+block|{
+name|warn
+argument_list|(
+literal|"Invalid length %#08lx in FDE at %#08lx\n"
+argument_list|,
+name|length
+argument_list|,
+call|(
+name|unsigned
+name|long
+call|)
+argument_list|(
+name|saved_start
+operator|-
+name|section_start
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|block_end
+operator|=
+name|end
+expr_stmt|;
+block|}
 name|cie_id
 operator|=
 name|byte_get
@@ -13512,7 +13829,7 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"Invalid CIE pointer %08lx in FDE at %08lx\n"
+literal|"Invalid CIE pointer %#08lx in FDE at %#08lx\n"
 argument_list|,
 name|cie_id
 argument_list|,
@@ -13526,10 +13843,6 @@ operator|-
 name|section_start
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|start
-operator|=
-name|block_end
 expr_stmt|;
 name|fc
 operator|->
@@ -16001,11 +16314,32 @@ name|data_factor
 expr_stmt|;
 break|break;
 default|default:
+if|if
+condition|(
+name|op
+operator|>=
+name|DW_CFA_lo_user
+operator|&&
+name|op
+operator|<=
+name|DW_CFA_hi_user
+condition|)
+name|printf
+argument_list|(
+name|_
+argument_list|(
+literal|"  DW_CFA_??? (User defined call frame op: %#x)\n"
+argument_list|)
+argument_list|,
+name|op
+argument_list|)
+expr_stmt|;
+else|else
 name|warn
 argument_list|(
 name|_
 argument_list|(
-literal|"unsupported or unknown DW_CFA_%d\n"
+literal|"unsupported or unknown Dwarf Call Frame Instruction number: %#x\n"
 argument_list|)
 argument_list|,
 name|op

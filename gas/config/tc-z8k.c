@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-z8k.c -- Assemble code for the Zilog Z800n    Copyright 1992, 1993, 1994, 1995, 1996, 1998, 2000, 2001, 2002, 2003,    2005 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
+comment|/* tc-z8k.c -- Assemble code for the Zilog Z800n    Copyright 1992, 1993, 1994, 1995, 1996, 1998, 2000, 2001, 2002, 2003,    2005, 2006 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -10,19 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"as.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"bfd.h"
 end_include
 
 begin_include
@@ -815,6 +803,10 @@ name|the_interrupt
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Determine register number.  src points to the ascii number    (after "rl", "rh", "r", "rr", or "rq").  If a character    outside the set of {0,',',')','('} follows the number,    return NULL to indicate that it's not a valid register    number.  */
+end_comment
+
 begin_function
 specifier|static
 name|char
@@ -831,6 +823,11 @@ modifier|*
 name|src
 parameter_list|)
 block|{
+name|unsigned
+name|int
+name|new_reg
+decl_stmt|;
+comment|/* src[0] is already known to be a digit.  */
 if|if
 condition|(
 name|ISDIGIT
@@ -842,8 +839,7 @@ index|]
 argument_list|)
 condition|)
 block|{
-operator|*
-name|reg
+name|new_reg
 operator|=
 operator|(
 name|src
@@ -863,16 +859,14 @@ index|]
 operator|-
 literal|'0'
 expr_stmt|;
-return|return
 name|src
-operator|+
+operator|+=
 literal|2
-return|;
+expr_stmt|;
 block|}
 else|else
 block|{
-operator|*
-name|reg
+name|new_reg
 operator|=
 operator|(
 name|src
@@ -883,12 +877,52 @@ operator|-
 literal|'0'
 operator|)
 expr_stmt|;
+name|src
+operator|+=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|src
+index|[
+literal|0
+index|]
+operator|!=
+literal|0
+operator|&&
+name|src
+index|[
+literal|0
+index|]
+operator|!=
+literal|','
+operator|&&
+name|src
+index|[
+literal|0
+index|]
+operator|!=
+literal|'('
+operator|&&
+name|src
+index|[
+literal|0
+index|]
+operator|!=
+literal|')'
+condition|)
+return|return
+name|NULL
+return|;
+operator|*
+name|reg
+operator|=
+name|new_reg
+expr_stmt|;
 return|return
 name|src
-operator|+
-literal|1
 return|;
-block|}
 block|}
 end_function
 
@@ -924,7 +958,7 @@ name|char
 modifier|*
 name|res
 init|=
-literal|0
+name|NULL
 decl_stmt|;
 name|char
 name|regno
@@ -1067,7 +1101,7 @@ operator|>
 literal|'9'
 condition|)
 return|return
-name|res
+name|NULL
 return|;
 comment|/* Assume no register name but a label starting with 'rr'.  */
 operator|*
@@ -1086,6 +1120,16 @@ operator|+
 literal|2
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|res
+operator|==
+name|NULL
+condition|)
+return|return
+name|NULL
+return|;
+comment|/* Not a valid register name.  */
 name|regno
 operator|=
 operator|*
@@ -1159,7 +1203,7 @@ operator|>
 literal|'9'
 condition|)
 return|return
-name|res
+name|NULL
 return|;
 comment|/* Assume no register name but a label starting with 'rh'.  */
 operator|*
@@ -1178,6 +1222,16 @@ operator|+
 literal|2
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|res
+operator|==
+name|NULL
+condition|)
+return|return
+name|NULL
+return|;
+comment|/* Not a valid register name.  */
 name|regno
 operator|=
 operator|*
@@ -1235,7 +1289,7 @@ operator|>
 literal|'9'
 condition|)
 return|return
-name|res
+name|NULL
 return|;
 comment|/* Assume no register name but a label starting with 'rl'.  */
 operator|*
@@ -1254,6 +1308,16 @@ operator|+
 literal|2
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|res
+operator|==
+name|NULL
+condition|)
+return|return
+name|NULL
+return|;
+comment|/* Not a valid register name.  */
 name|regno
 operator|=
 operator|*
@@ -1316,7 +1380,7 @@ operator|>
 literal|'9'
 condition|)
 return|return
-name|res
+name|NULL
 return|;
 comment|/* Assume no register name but a label starting with 'rq'.  */
 operator|*
@@ -1335,6 +1399,16 @@ operator|+
 literal|2
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|res
+operator|==
+name|NULL
+condition|)
+return|return
+name|NULL
+return|;
+comment|/* Not a valid register name.  */
 name|regno
 operator|=
 operator|*
@@ -1392,7 +1466,7 @@ operator|>
 literal|'9'
 condition|)
 return|return
-name|res
+name|NULL
 return|;
 comment|/* Assume no register name but a label starting with 'r'.  */
 operator|*
@@ -1411,6 +1485,16 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|res
+operator|==
+name|NULL
+condition|)
+return|return
+name|NULL
+return|;
+comment|/* Not a valid register name.  */
 name|regno
 operator|=
 operator|*

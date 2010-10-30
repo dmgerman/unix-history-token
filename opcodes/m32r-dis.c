@@ -265,7 +265,7 @@ parameter_list|,
 name|length
 parameter_list|)
 define|\
-value|do								\     {								\       if (CGEN_BOOL_ATTR ((attrs), CGEN_OPERAND_HASH_PREFIX))	\         (*info->fprintf_func) (info->stream, "#");		\     }								\   while (0)
+value|do								\     {								\       if (CGEN_BOOL_ATTR ((attrs), CGEN_OPERAND_HASH_PREFIX))	\ 	(*info->fprintf_func) (info->stream, "#");		\     }								\   while (0)
 end_define
 
 begin_comment

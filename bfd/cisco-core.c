@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for CISCO crash dumps.    Copyright 1994, 1997, 1999, 2000, 2001, 2002, 2004    Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
+comment|/* BFD back-end for CISCO crash dumps.    Copyright 1994, 1997, 1999, 2000, 2001, 2002, 2004, 2006, 2007    Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"bfd.h"
+file|"sysdep.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sysdep.h"
+file|"bfd.h"
 end_include
 
 begin_include
@@ -350,7 +350,7 @@ decl_stmt|;
 name|crashinfo_external
 name|crashinfo
 decl_stmt|;
-name|int
+name|bfd_size_type
 name|nread
 decl_stmt|;
 name|unsigned
@@ -374,6 +374,9 @@ name|statbuf
 decl_stmt|;
 name|bfd_size_type
 name|amt
+decl_stmt|;
+name|flagword
+name|flags
 decl_stmt|;
 if|if
 condition|(
@@ -1056,13 +1059,23 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* Create a ".data" section that maps the entire file, which is      essentially a dump of the target system's RAM.  */
+name|flags
+operator|=
+name|SEC_ALLOC
+operator||
+name|SEC_LOAD
+operator||
+name|SEC_HAS_CONTENTS
+expr_stmt|;
 name|asect
 operator|=
-name|bfd_make_section_anyway
+name|bfd_make_section_anyway_with_flags
 argument_list|(
 name|abfd
 argument_list|,
 literal|".data"
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 if|if
@@ -1074,16 +1087,6 @@ condition|)
 goto|goto
 name|error_return
 goto|;
-name|asect
-operator|->
-name|flags
-operator|=
-name|SEC_ALLOC
-operator||
-name|SEC_LOAD
-operator||
-name|SEC_HAS_CONTENTS
-expr_stmt|;
 comment|/* The size of memory is the size of the core file itself.  */
 name|asect
 operator|->
@@ -1106,13 +1109,19 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Create a ".crash" section to allow access to the saved      crash information.  */
+name|flags
+operator|=
+name|SEC_HAS_CONTENTS
+expr_stmt|;
 name|asect
 operator|=
-name|bfd_make_section_anyway
+name|bfd_make_section_anyway_with_flags
 argument_list|(
 name|abfd
 argument_list|,
 literal|".crash"
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 if|if
@@ -1124,12 +1133,6 @@ condition|)
 goto|goto
 name|error_return
 goto|;
-name|asect
-operator|->
-name|flags
-operator|=
-name|SEC_HAS_CONTENTS
-expr_stmt|;
 name|asect
 operator|->
 name|vma
@@ -1154,11 +1157,13 @@ expr_stmt|;
 comment|/* Create a ".reg" section to allow access to the saved      registers.  */
 name|asect
 operator|=
-name|bfd_make_section_anyway
+name|bfd_make_section_anyway_with_flags
 argument_list|(
 name|abfd
 argument_list|,
 literal|".reg"
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 if|if
@@ -1170,12 +1175,6 @@ condition|)
 goto|goto
 name|error_return
 goto|;
-name|asect
-operator|->
-name|flags
-operator|=
-name|SEC_HAS_CONTENTS
-expr_stmt|;
 name|asect
 operator|->
 name|vma

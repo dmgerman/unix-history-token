@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* bfin-defs.h ADI Blackfin gas header file    Copyright 2005    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
+comment|/* bfin-defs.h ADI Blackfin gas header file    Copyright 2005, 2006    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -14,18 +14,6 @@ define|#
 directive|define
 name|BFIN_PARSE_H
 end_define
-
-begin_include
-include|#
-directive|include
-file|<bfd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"as.h"
-end_include
 
 begin_define
 define|#
@@ -1395,15 +1383,6 @@ parameter_list|(
 name|int
 parameter_list|,
 name|SYMBOL_T
-parameter_list|)
-function_decl|;
-specifier|extern
-name|void
-name|bfin_equals
-parameter_list|(
-name|Expr_Node
-modifier|*
-name|sym
 parameter_list|)
 function_decl|;
 comment|/* Defined in bfin-lex.l.  */

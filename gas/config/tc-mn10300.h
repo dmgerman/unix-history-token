@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-mn10300.h -- Header file for tc-mn10300.c.    Copyright 1996, 1997, 2000, 2001, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
+comment|/* tc-mn10300.h -- Header file for tc-mn10300.c.    Copyright 1996, 1997, 2000, 2001, 2002, 2003, 2004, 2005, 2007    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_define
@@ -32,12 +32,23 @@ end_define
 begin_define
 define|#
 directive|define
-name|TC_RELOC_RTSYM_LOC_FIXUP
+name|TC_FORCE_RELOCATION
 parameter_list|(
 name|FIX
 parameter_list|)
 define|\
-value|((FIX)->fx_r_type != BFD_RELOC_32_PLT_PCREL			\&& (FIX)->fx_r_type != BFD_RELOC_MN10300_GOT32		\&& (FIX)->fx_r_type != BFD_RELOC_32_GOT_PCREL		\&& ((FIX)->fx_addsy == NULL					\        || (! S_IS_EXTERNAL ((FIX)->fx_addsy)			\&& ! S_IS_WEAK ((FIX)->fx_addsy)			\&& S_IS_DEFINED ((FIX)->fx_addsy)			\&& ! S_IS_COMMON ((FIX)->fx_addsy))))
+value|(generic_force_reloc (FIX))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TC_FORCE_RELOCATION_LOCAL
+parameter_list|(
+name|FIX
+parameter_list|)
+define|\
+value|(!(FIX)->fx_pcrel					\    || (FIX)->fx_r_type == BFD_RELOC_32_PLT_PCREL	\    || (FIX)->fx_r_type == BFD_RELOC_MN10300_GOT32	\    || (FIX)->fx_r_type == BFD_RELOC_32_GOT_PCREL	\    || TC_FORCE_RELOCATION (FIX))
 end_define
 
 begin_define

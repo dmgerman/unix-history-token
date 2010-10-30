@@ -208,12 +208,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|"bin-bugs.h"
-end_include
-
 begin_define
 define|#
 directive|define
@@ -601,17 +595,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* demangle symbol names? */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|bfd_boolean
-name|discard_underscores
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* discard leading underscores? */
 end_comment
 
 begin_decl_stmt

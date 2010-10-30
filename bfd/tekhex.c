@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD backend for Extended Tektronix Hex Format  objects.    Copyright 1992, 1993, 1994, 1995, 1996, 1998, 1999, 2000, 2001, 2002,    2003, 2004 Free Software Foundation, Inc.    Written by Steve Chamberlain of Cygnus Support<sac@cygnus.com>.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
+comment|/* BFD backend for Extended Tektronix Hex Format  objects.    Copyright 1992, 1993, 1994, 1995, 1996, 1998, 1999, 2000, 2001, 2002,    2003, 2004, 2007 Free Software Foundation, Inc.    Written by Steve Chamberlain of Cygnus Support<sac@cygnus.com>.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -10,13 +10,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"bfd.h"
+file|"sysdep.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sysdep.h"
+file|"bfd.h"
 end_include
 
 begin_include
@@ -1293,6 +1293,7 @@ name|section
 operator|->
 name|vma
 expr_stmt|;
+break|break;
 block|}
 default|default:
 return|return
@@ -1362,9 +1363,9 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|abort
-argument_list|()
-expr_stmt|;
+return|return
+name|FALSE
+return|;
 while|while
 condition|(
 operator|!
@@ -1372,16 +1373,10 @@ name|eof
 condition|)
 block|{
 name|char
-name|buffer
+name|src
 index|[
 name|MAXCHUNK
 index|]
-decl_stmt|;
-name|char
-modifier|*
-name|src
-init|=
-name|buffer
 decl_stmt|;
 name|char
 name|type
@@ -1444,9 +1439,6 @@ condition|(
 name|eof
 condition|)
 break|break;
-name|src
-operator|++
-expr_stmt|;
 comment|/* Fetch the type and the length and the checksum.  */
 if|if
 condition|(
@@ -1464,10 +1456,9 @@ argument_list|)
 operator|!=
 literal|5
 condition|)
-name|abort
-argument_list|()
-expr_stmt|;
-comment|/* FIXME.  */
+return|return
+name|FALSE
+return|;
 name|type
 operator|=
 name|src
@@ -1496,7 +1487,7 @@ index|]
 argument_list|)
 condition|)
 break|break;
-comment|/* Already read five char.  */
+comment|/* Already read five chars.  */
 name|chars_on_line
 operator|=
 name|HEX
@@ -1506,6 +1497,15 @@ argument_list|)
 operator|-
 literal|5
 expr_stmt|;
+if|if
+condition|(
+name|chars_on_line
+operator|>=
+name|MAXCHUNK
+condition|)
+return|return
+name|FALSE
+return|;
 if|if
 condition|(
 name|bfd_bread
@@ -1522,10 +1522,9 @@ argument_list|)
 operator|!=
 name|chars_on_line
 condition|)
-name|abort
-argument_list|()
-expr_stmt|;
-comment|/* FIXME.  */
+return|return
+name|FALSE
+return|;
 comment|/* Put a null at the end.  */
 name|src
 index|[
@@ -2725,9 +2724,6 @@ modifier|*
 name|abfd
 parameter_list|)
 block|{
-name|int
-name|bytes_written
-decl_stmt|;
 name|char
 name|buffer
 index|[
@@ -2750,10 +2746,6 @@ name|d
 decl_stmt|;
 name|tekhex_init
 argument_list|()
-expr_stmt|;
-name|bytes_written
-operator|=
-literal|0
 expr_stmt|;
 comment|/* And the raw data.  */
 for|for
@@ -3227,8 +3219,10 @@ modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
 parameter_list|,
-name|bfd_boolean
-name|exec
+name|struct
+name|bfd_link_info
+modifier|*
+name|info
 name|ATTRIBUTE_UNUSED
 parameter_list|)
 block|{

@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD library support routines for the AVR architecture.    Copyright 1999, 2000, 2002, 2006 Free Software Foundation, Inc.    Contributed by Denis Chertykov<denisc@overta.ru>     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
+comment|/* BFD library support routines for the AVR architecture.    Copyright 1999, 2000, 2002, 2006, 2007 Free Software Foundation, Inc.    Contributed by Denis Chertykov<denisc@overta.ru>     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"bfd.h"
+file|"sysdep.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sysdep.h"
+file|"bfd.h"
 end_include
 
 begin_include
@@ -240,9 +240,27 @@ name|N
 argument_list|(
 literal|22
 argument_list|,
-argument|bfd_mach_avr5
+name|bfd_mach_avr5
 argument_list|,
 literal|"avr:5"
+argument_list|,
+name|FALSE
+argument_list|,
+operator|&
+name|arch_info_struct
+index|[
+literal|5
+index|]
+argument_list|)
+block|,
+comment|/* ATmega256x.  */
+name|N
+argument_list|(
+literal|22
+argument_list|,
+argument|bfd_mach_avr6
+argument_list|,
+literal|"avr:6"
 argument_list|,
 argument|FALSE
 argument_list|,

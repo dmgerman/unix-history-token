@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* This file is tc-sh.h    Copyright 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002,    2003, 2004, 2005 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 51 Franklin Street - Fifth Floor,    Boston, MA 02110-1301, USA.  */
+comment|/* This file is tc-sh.h    Copyright 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002,    2003, 2004, 2005, 2006, 2007 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 51 Franklin Street - Fifth Floor,    Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_define
@@ -93,6 +93,51 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* We need to optimize expr with taking account of rs_align_test    frags.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OBJ_ELF
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|md_optimize_expr
+parameter_list|(
+name|l
+parameter_list|,
+name|o
+parameter_list|,
+name|r
+parameter_list|)
+value|sh_optimize_expr (l, o, r)
+end_define
+
+begin_function_decl
+specifier|extern
+name|int
+name|sh_optimize_expr
+parameter_list|(
+name|expressionS
+modifier|*
+parameter_list|,
+name|operatorT
+parameter_list|,
+name|expressionS
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* When relaxing, we need to generate relocations for alignment    directives.  */
@@ -220,6 +265,21 @@ name|segT
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* SH_COUNT relocs are allowed outside of frag.    The target is also buggy and sets fix size too large for other relocs.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TC_FX_SIZE_SLACK
+parameter_list|(
+name|FIX
+parameter_list|)
+define|\
+value|((FIX)->fx_r_type == BFD_RELOC_SH_COUNT ? -1 : 2)
+end_define
 
 begin_define
 define|#
@@ -487,6 +547,22 @@ name|TARGET_FORMAT
 value|(!target_big_endian ? "elf32-shl-symbian" : "elf32-sh-symbian")
 end_define
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|TE_VXWORKS
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|TARGET_FORMAT
+value|(!target_big_endian ? "elf32-shl-vxworks" : "elf32-sh-vxworks")
+end_define
+
 begin_else
 else|#
 directive|else
@@ -597,7 +673,7 @@ parameter_list|(
 name|FIX
 parameter_list|)
 define|\
-value|(!(FIX)->fx_pcrel					\    || (FIX)->fx_plt					\    || (FIX)->fx_r_type == BFD_RELOC_32_PLT_PCREL	\    || (FIX)->fx_r_type == BFD_RELOC_32_GOT_PCREL	\    || (FIX)->fx_r_type == BFD_RELOC_SH_GOTPC		\    || TC_FORCE_RELOCATION (FIX))
+value|(!(FIX)->fx_pcrel					\    || (FIX)->fx_r_type == BFD_RELOC_32_PLT_PCREL	\    || (FIX)->fx_r_type == BFD_RELOC_32_GOT_PCREL	\    || (FIX)->fx_r_type == BFD_RELOC_SH_GOTPC		\    || TC_FORCE_RELOCATION (FIX))
 end_define
 
 begin_define
@@ -768,7 +844,6 @@ specifier|extern
 name|int
 name|sh_regname_to_dw2regnum
 parameter_list|(
-specifier|const
 name|char
 modifier|*
 name|regname
@@ -798,7 +873,7 @@ begin_define
 define|#
 directive|define
 name|DWARF2_CIE_DATA_ALIGNMENT
-value|-4
+value|(-4)
 end_define
 
 begin_endif

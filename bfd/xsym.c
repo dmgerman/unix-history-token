@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* xSYM symbol-file support for BFD.    Copyright 1999, 2000, 2001, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
+comment|/* xSYM symbol-file support for BFD.    Copyright 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007    Free Software Foundation, Inc.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"sysdep.h"
+end_include
 
 begin_include
 include|#
@@ -13,12 +19,6 @@ begin_include
 include|#
 directive|include
 file|"bfd.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sysdep.h"
 end_include
 
 begin_include
@@ -102,27 +102,6 @@ define|#
 directive|define
 name|bfd_sym_minisymbol_to_symbol
 value|_bfd_generic_minisymbol_to_symbol
-end_define
-
-begin_define
-define|#
-directive|define
-name|bfd_sym_get_reloc_upper_bound
-value|_bfd_norelocs_get_reloc_upper_bound
-end_define
-
-begin_define
-define|#
-directive|define
-name|bfd_sym_canonicalize_reloc
-value|_bfd_norelocs_canonicalize_reloc
-end_define
-
-begin_define
-define|#
-directive|define
-name|bfd_sym_bfd_reloc_type_lookup
-value|_bfd_norelocs_bfd_reloc_type_lookup
 end_define
 
 begin_define
@@ -10977,11 +10956,13 @@ literal|1
 return|;
 name|bfdsec
 operator|=
-name|bfd_make_section_anyway
+name|bfd_make_section_anyway_with_flags
 argument_list|(
 name|abfd
 argument_list|,
 name|name
+argument_list|,
+name|SEC_HAS_CONTENTS
 argument_list|)
 expr_stmt|;
 if|if
@@ -11023,12 +11004,6 @@ operator|->
 name|alignment_power
 operator|=
 literal|0
-expr_stmt|;
-name|bfdsec
-operator|->
-name|flags
-operator|=
-name|SEC_HAS_CONTENTS
 expr_stmt|;
 name|abfd
 operator|->
@@ -11195,29 +11170,12 @@ return|;
 block|}
 end_function
 
-begin_function
-name|asymbol
-modifier|*
+begin_define
+define|#
+directive|define
 name|bfd_sym_make_empty_symbol
-parameter_list|(
-name|bfd
-modifier|*
-name|abfd
-parameter_list|)
-block|{
-return|return
-name|bfd_alloc
-argument_list|(
-name|abfd
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|asymbol
-argument_list|)
-argument_list|)
-return|;
-block|}
-end_function
+value|_bfd_generic_make_empty_symbol
+end_define
 
 begin_function
 name|void
@@ -11294,8 +11252,10 @@ modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
 parameter_list|,
-name|bfd_boolean
-name|exec
+name|struct
+name|bfd_link_info
+modifier|*
+name|info
 name|ATTRIBUTE_UNUSED
 parameter_list|)
 block|{
@@ -11469,7 +11429,7 @@ argument_list|)
 block|,
 name|BFD_JUMP_TABLE_RELOCS
 argument_list|(
-name|bfd_sym
+name|_bfd_norelocs
 argument_list|)
 block|,
 name|BFD_JUMP_TABLE_WRITE

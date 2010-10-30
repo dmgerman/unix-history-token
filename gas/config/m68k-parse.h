@@ -214,11 +214,17 @@ block|,
 name|ROMBAR
 block|,
 comment|/* mcf5200 added these.  */
+name|RAMBAR_ALT
+block|,
+comment|/* Some CF chips have RAMBAR using 				   RAMBAR0's number */
 name|RAMBAR0
 block|,
 name|RAMBAR1
 block|,
 name|MMUBAR
+block|,
+comment|/* mcfv4e added these.  */
+name|ROMBAR0
 block|,
 comment|/* mcfv4e added these.  */
 name|ROMBAR1
@@ -282,10 +288,18 @@ block|,
 comment|/* mcf5249 added this.  */
 name|MBAR
 block|,
+name|ASID
+block|,
+comment|/* m5475.  */
+name|CAC
+block|,
+comment|/* fido added this.  */
+name|MBB
+block|,
 define|#
 directive|define
 name|last_movec_reg
-value|MBAR
+value|MBB
 comment|/* End of movec ordering constraints.  */
 name|FPI
 block|,

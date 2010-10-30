@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-ia64.c -- Assembler for the HP/Intel IA-64 architecture.    Copyright 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006    Free Software Foundation, Inc.    Contributed by David Mosberger-Tang<davidm@hpl.hp.com>     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 51 Franklin Street - Fifth Floor,    Boston, MA 02110-1301, USA.  */
+comment|/* tc-ia64.c -- Assembler for the HP/Intel IA-64 architecture.    Copyright 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007    Free Software Foundation, Inc.    Contributed by David Mosberger-Tang<davidm@hpl.hp.com>     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 51 Franklin Street - Fifth Floor,    Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -27719,9 +27719,14 @@ operator|++
 name|i
 control|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|name
+argument_list|)
 argument_list|,
 literal|"%s%u"
 argument_list|,
@@ -32626,7 +32631,7 @@ argument_list|(
 name|first
 operator|>=
 literal|0
-operator|&
+operator|&&
 name|first
 operator|<
 name|NUM_SLOTS
@@ -33852,9 +33857,14 @@ argument_list|(
 literal|"emit_one_bundle: unexpected dynamic op"
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|mnemonic
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|mnemonic
+argument_list|)
 argument_list|,
 literal|"%s.%c"
 argument_list|,
@@ -34395,18 +34405,6 @@ operator|=
 name|ifix
 operator|->
 name|opnd
-expr_stmt|;
-name|fix
-operator|->
-name|fx_plt
-operator|=
-operator|(
-name|fix
-operator|->
-name|fx_r_type
-operator|==
-name|BFD_RELOC_IA64_PLTOFF22
-operator|)
 expr_stmt|;
 name|fix
 operator|->
@@ -50178,9 +50176,14 @@ name|path
 operator|!=
 literal|0
 condition|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|pathmsg
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pathmsg
+argument_list|)
 argument_list|,
 literal|" when entry is at label '%s'"
 argument_list|,
@@ -50206,9 +50209,14 @@ name|index
 operator|>=
 literal|0
 condition|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|indexmsg
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|indexmsg
+argument_list|)
 argument_list|,
 literal|", specific resource number is %d"
 argument_list|,
@@ -50217,9 +50225,14 @@ operator|->
 name|index
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|msg
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|msg
+argument_list|)
 argument_list|,
 literal|"Use of '%s' %s %s dependency '%s' (%s)%s%s"
 argument_list|,
@@ -55311,7 +55324,7 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-comment|/* The orignale name of the symbol.  */
+comment|/* The original name of the symbol.  */
 block|}
 struct|;
 end_struct

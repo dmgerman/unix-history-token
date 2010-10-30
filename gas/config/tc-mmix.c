@@ -1,17 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-mmix.c -- Assembler for Don Knuth's MMIX.    Copyright (C) 2001, 2002, 2003, 2004, 2005 Free Software Foundation.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 51 Franklin Street - Fifth Floor,    Boston, MA 02110-1301, USA.  */
+comment|/* tc-mmix.c -- Assembler for Don Knuth's MMIX.    Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006    Free Software Foundation.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 51 Franklin Street - Fifth Floor,    Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
 comment|/* Knuth's assembler mmixal does not provide a relocatable format; mmo is    to be considered a final link-format.  In the final link, we make mmo,    but for relocatable files, we use ELF.     One goal is to provide a superset of what mmixal does, including    compatible syntax, but the main purpose is to serve GCC.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
 
 begin_include
 include|#
@@ -29,12 +23,6 @@ begin_include
 include|#
 directive|include
 file|"subsegs.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"bfd.h"
 end_include
 
 begin_include

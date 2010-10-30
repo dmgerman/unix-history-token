@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Disassembler code for CRIS.    Copyright 2000, 2001, 2002, 2004, 2005 Free Software Foundation, Inc.    Contributed by Axis Communications AB, Lund, Sweden.    Written by Hans-Peter Nilsson.     This file is part of the GNU binutils and GDB, the GNU debugger.     This program is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by the    Free Software Foundation; either version 2, or (at your option) any later    version.     This program is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for    more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston,    MA 02110-1301, USA.  */
+comment|/* Disassembler code for CRIS.    Copyright 2000, 2001, 2002, 2004, 2005, 2006 Free Software Foundation, Inc.    Contributed by Axis Communications AB, Lund, Sweden.    Written by Hans-Peter Nilsson.     This file is part of the GNU binutils and GDB, the GNU debugger.     This program is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by the    Free Software Foundation; either version 2, or (at your option) any later    version.     This program is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for    more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston,    MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -2727,18 +2727,14 @@ condition|)
 block|{
 if|if
 condition|(
-name|strncmp
+name|CONST_STRNEQ
 argument_list|(
 name|opcodep
 operator|->
 name|name
 argument_list|,
 literal|"jsr"
-argument_list|,
-literal|3
 argument_list|)
-operator|==
-literal|0
 condition|)
 comment|/* It's "jsr" or "jsrc".  */
 name|info
@@ -5184,18 +5180,14 @@ condition|)
 block|{
 if|if
 condition|(
-name|strncmp
+name|CONST_STRNEQ
 argument_list|(
 name|opcodep
 operator|->
 name|name
 argument_list|,
 literal|"sub"
-argument_list|,
-literal|3
 argument_list|)
-operator|==
-literal|0
 condition|)
 name|case_offset
 operator|=
@@ -5205,18 +5197,14 @@ comment|/* It could also be an "add", if there are negative case-values.  */
 elseif|else
 if|if
 condition|(
-name|strncmp
+name|CONST_STRNEQ
 argument_list|(
 name|opcodep
 operator|->
 name|name
 argument_list|,
 literal|"add"
-argument_list|,
-literal|3
 argument_list|)
-operator|==
-literal|0
 condition|)
 comment|/* The first case is the negated operand to the add.  */
 name|case_offset
@@ -5228,18 +5216,14 @@ comment|/* A bound insn will tell us the number of cases.  */
 elseif|else
 if|if
 condition|(
-name|strncmp
+name|CONST_STRNEQ
 argument_list|(
 name|opcodep
 operator|->
 name|name
 argument_list|,
 literal|"bound"
-argument_list|,
-literal|5
 argument_list|)
-operator|==
-literal|0
 condition|)
 name|no_of_case_offsets
 operator|=

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* m68hc11-dis.c -- Motorola 68HC11& 68HC12 disassembly    Copyright 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.    Written by Stephane Carrez (stcarrez@nerim.fr)  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
+comment|/* m68hc11-dis.c -- Motorola 68HC11& 68HC12 disassembly    Copyright 1999, 2000, 2001, 2002, 2003, 2006    Free Software Foundation, Inc.    Written by Stephane Carrez (stcarrez@nerim.fr)  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -3424,7 +3424,7 @@ name|info
 operator|->
 name|stream
 argument_list|,
-literal|"; Error, format: %x"
+literal|"; Error, format: %lx"
 argument_list|,
 name|format
 argument_list|)
@@ -3450,7 +3450,7 @@ name|info
 operator|->
 name|stream
 argument_list|,
-literal|"; Error, size: %d expect %d"
+literal|"; Error, size: %ld expect %d"
 argument_list|,
 name|pos
 argument_list|,

@@ -177,6 +177,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|O_BINARY
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|O_BINARY
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  @deftypefn Replacement int mkstemps (char *@var{pattern}, int @var{suffix_len})  Generate a unique temporary file name from @var{pattern}. @var{pattern} has the form:  @example    @var{path}/ccXXXXXX@var{suffix} @end example  @var{suffix_len} tells us how long @var{suffix} is (it can be zero length).  The last six characters of @var{pattern} before @var{suffix} must be @samp{XXXXXX}; they are replaced with a string that makes the filename unique.  Returns a file descriptor open on the file for reading and writing.  @end deftypefn  */
 end_comment
@@ -439,6 +457,8 @@ name|open
 argument_list|(
 name|pattern
 argument_list|,
+name|O_BINARY
+operator||
 name|O_RDWR
 operator||
 name|O_CREAT

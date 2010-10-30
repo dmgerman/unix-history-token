@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Table of relaxations for Xtensa assembly.    Copyright 2003, 2004, 2005 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 51 Franklin Street - Fifth Floor, Boston,    MA 02110-1301, USA.  */
+comment|/* Table of relaxations for Xtensa assembly.    Copyright 2003, 2004, 2005, 2007 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 51 Franklin Street - Fifth Floor, Boston,    MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
-comment|/* This file contains the code for generating runtime data structures    for relaxation pattern matching from statically specified strings.    Each action contains an instruction pattern to match and    preconditions for the match as well as an expansion if the pattern    matches.  The preconditions can specify that two operands are the    same or an operand is a specific constant or register.  The expansion    uses the bound variables from the pattern to specify that specific    operands from the pattern should be used in the result.     The code determines whether the condition applies to a constant or    a register depending on the type of the operand.  You may get    unexpected results if you don't match the rule against the operand    type correctly.     The patterns match a language like:     INSN_PATTERN ::= INSN_TEMPL ( '|' PRECOND )* ( '?' OPTIONPRED )*    INSN_TEMPL   ::= OPCODE ' ' [ OPERAND (',' OPERAND)* ]    OPCODE       ::=  id    OPERAND      ::= CONSTANT | VARIABLE | SPECIALFN '(' VARIABLE ')'    SPECIALFN    ::= 'HI24S' | 'F32MINUS' | 'LOW8'                     | 'HI16' | 'LOW16'    VARIABLE     ::= '%' id    PRECOND      ::= OPERAND CMPOP OPERAND    CMPOP        ::= '==' | '!='    OPTIONPRED   ::= OPTIONNAME ('+' OPTIONNAME)    OPTIONNAME   ::= '"' id '"'     The replacement language    INSN_REPL      ::= INSN_LABEL_LIT ( ';' INSN_LABEL_LIT )*    INSN_LABEL_LIT ::= INSN_TEMPL                       | 'LABEL' num                       | 'LITERAL' num ' ' VARIABLE     The operands in a PRECOND must be constants or variables bound by    the INSN_PATTERN.     The configuration options define a predicate on the availability of    options which must be TRUE for this rule to be valid.  Examples are    requiring "density" for replacements with density instructions,    requiring "const16" for replacements that require const16    instructions, etc.  The names are interpreted by the assembler to a    truth value for a particular frag.     The operands in the INSN_REPL must be constants, variables bound in    the associated INSN_PATTERN, special variables that are bound in    the INSN_REPL by LABEL or LITERAL definitions, or special value    manipulation functions.     A simple example of a replacement pattern:    {"movi.n %as,%imm", "movi %as,%imm"} would convert the narrow    movi.n instruction to the wide movi instruction.     A more complex example of a branch around:    {"beqz %as,%label", "bnez %as,%LABEL0;j %label;LABEL0"}    would convert a branch to a negated branch to the following instruction    with a jump to the original label.     An Xtensa-specific example that generates a literal:    {"movi %at,%imm", "LITERAL0 %imm; l32r %at,%LITERAL0"}    will convert a movi instruction to an l32r of a literal    literal defined in the literal pool.     Even more complex is a conversion of a load with immediate offset    to a load of a freshly generated literal, an explicit add and    a load with 0 offset.  This transformation is only valid, though    when the first and second operands are not the same as specified    by the "| %at!=%as" precondition clause.    {"l32i %at,%as,%imm | %at!=%as",    "LITERAL0 %imm; l32r %at,%LITERAL0; add %at,%at,%as; l32i %at,%at,0"}     There is special case for loop instructions here, but because we do    not currently have the ability to represent the difference of two    symbols, the conversion requires special code in the assembler to    write the operands of the addi/addmi pair representing the    difference of the old and new loop end label.  */
+comment|/* This file contains the code for generating runtime data structures    for relaxation pattern matching from statically specified strings.    Each action contains an instruction pattern to match and    preconditions for the match as well as an expansion if the pattern    matches.  The preconditions can specify that two operands are the    same or an operand is a specific constant or register.  The expansion    uses the bound variables from the pattern to specify that specific    operands from the pattern should be used in the result.     The code determines whether the condition applies to a constant or    a register depending on the type of the operand.  You may get    unexpected results if you don't match the rule against the operand    type correctly.     The patterns match a language like:     INSN_PATTERN ::= INSN_TEMPL ( '|' PRECOND )* ( '?' OPTIONPRED )*    INSN_TEMPL   ::= OPCODE ' ' [ OPERAND (',' OPERAND)* ]    OPCODE       ::=  id    OPERAND      ::= CONSTANT | VARIABLE | SPECIALFN '(' VARIABLE ')'    SPECIALFN    ::= 'HI24S' | 'F32MINUS' | 'LOW8'                     | 'HI16' | 'LOW16'    VARIABLE     ::= '%' id    PRECOND      ::= OPERAND CMPOP OPERAND    CMPOP        ::= '==' | '!='    OPTIONPRED   ::= OPTIONNAME ('+' OPTIONNAME)    OPTIONNAME   ::= '"' id '"'     The replacement language    INSN_REPL      ::= INSN_LABEL_LIT ( ';' INSN_LABEL_LIT )*    INSN_LABEL_LIT ::= INSN_TEMPL                       | 'LABEL'                       | 'LITERAL' VARIABLE     The operands in a PRECOND must be constants or variables bound by    the INSN_PATTERN.     The configuration options define a predicate on the availability of    options which must be TRUE for this rule to be valid.  Examples are    requiring "density" for replacements with density instructions,    requiring "const16" for replacements that require const16    instructions, etc.  The names are interpreted by the assembler to a    truth value for a particular frag.     The operands in the INSN_REPL must be constants, variables bound in    the associated INSN_PATTERN, special variables that are bound in    the INSN_REPL by LABEL or LITERAL definitions, or special value    manipulation functions.     A simple example of a replacement pattern:    {"movi.n %as,%imm", "movi %as,%imm"} would convert the narrow    movi.n instruction to the wide movi instruction.     A more complex example of a branch around:    {"beqz %as,%label", "bnez %as,%LABEL;j %label;LABEL"}    would convert a branch to a negated branch to the following instruction    with a jump to the original label.     An Xtensa-specific example that generates a literal:    {"movi %at,%imm", "LITERAL %imm; l32r %at,%LITERAL"}    will convert a movi instruction to an l32r of a literal    literal defined in the literal pool.     Even more complex is a conversion of a load with immediate offset    to a load of a freshly generated literal, an explicit add and    a load with 0 offset.  This transformation is only valid, though    when the first and second operands are not the same as specified    by the "| %at!=%as" precondition clause.    {"l32i %at,%as,%imm | %at!=%as",    "LITERAL %imm; l32r %at,%LITERAL; add %at,%at,%as; l32i %at,%at,0"}     There is special case for loop instructions here, but because we do    not currently have the ability to represent the difference of two    symbols, the conversion requires special code in the assembler to    write the operands of the addi/addmi pair representing the    difference of the old and new loop end label.  */
 end_comment
 
 begin_include
@@ -412,7 +412,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* The widen_spec_list is a list of valid substitutions that generate    wider representations.  These are generally used to specify    replacements for instructions whose immediates do not fit their    encodings.  A valid transition may require multiple steps of    one-to-one instruction replacements with a final multiple    instruction replacement.  As an example, here are the transitions    required to replace an 'addi.n' with an 'addi', 'addmi'.       addi.n a4, 0x1010      => addi a4, 0x1010      => addmi a4, 0x1010      => addmi a4, 0x1000, addi a4, 0x10.  */
+comment|/* The widen_spec_list is a list of valid substitutions that generate    wider representations.  These are generally used to specify    replacements for instructions whose immediates do not fit their    encodings.  A valid transition may require multiple steps of    one-to-one instruction replacements with a final multiple    instruction replacement.  As an example, here are the transitions    required to replace an 'addi.n' with an 'addi', 'addmi'.       addi.n a4, 0x1010      => addi a4, 0x1010      => addmi a4, 0x1010      => addmi a4, 0x1000, addi a4, 0x10.       See the comments in xg_assembly_relax for some important details    regarding how these chains must be built.  */
 end_comment
 
 begin_decl_stmt
@@ -510,7 +510,7 @@ comment|/* Widening with literals or const16.  */
 block|{
 literal|"movi %at,%imm ? IsaUseL32R "
 block|,
-literal|"LITERAL0 %imm; l32r %at,%LITERAL0"
+literal|"LITERAL %imm; l32r %at,%LITERAL"
 block|}
 block|,
 block|{
@@ -536,7 +536,7 @@ comment|/* In the end convert to either an l32r or const16.  */
 block|{
 literal|"addmi %ar,%as,%imm | %ar!=%as ? IsaUseL32R"
 block|,
-literal|"LITERAL0 %imm; l32r %ar,%LITERAL0; add %ar,%as,%ar"
+literal|"LITERAL %imm; l32r %ar,%LITERAL; add %ar,%as,%ar"
 block|}
 block|,
 block|{
@@ -549,25 +549,25 @@ comment|/* Widening the load instructions with too-large immediates */
 block|{
 literal|"l8ui %at,%as,%imm | %at!=%as ? IsaUseL32R"
 block|,
-literal|"LITERAL0 %imm; l32r %at,%LITERAL0; add %at,%at,%as; l8ui %at,%at,0"
+literal|"LITERAL %imm; l32r %at,%LITERAL; add %at,%at,%as; l8ui %at,%at,0"
 block|}
 block|,
 block|{
 literal|"l16si %at,%as,%imm | %at!=%as ? IsaUseL32R"
 block|,
-literal|"LITERAL0 %imm; l32r %at,%LITERAL0; add %at,%at,%as; l16si %at,%at,0"
+literal|"LITERAL %imm; l32r %at,%LITERAL; add %at,%at,%as; l16si %at,%at,0"
 block|}
 block|,
 block|{
 literal|"l16ui %at,%as,%imm | %at!=%as ? IsaUseL32R"
 block|,
-literal|"LITERAL0 %imm; l32r %at,%LITERAL0; add %at,%at,%as; l16ui %at,%at,0"
+literal|"LITERAL %imm; l32r %at,%LITERAL; add %at,%at,%as; l16ui %at,%at,0"
 block|}
 block|,
 block|{
 literal|"l32i %at,%as,%imm | %at!=%as ? IsaUseL32R"
 block|,
-literal|"LITERAL0 %imm; l32r %at,%LITERAL0; add %at,%at,%as; l32i %at,%at,0"
+literal|"LITERAL %imm; l32r %at,%LITERAL; add %at,%at,%as; l32i %at,%at,0"
 block|}
 block|,
 comment|/* Widening load instructions with const16s.  */
@@ -599,7 +599,7 @@ comment|/* This is only PART of the loop instruction.  In addition,      hardcod
 block|{
 literal|"loop %as,%label | %as!=1 ? IsaUseLoops"
 block|,
-literal|"loop %as,%LABEL0;"
+literal|"loop %as,%LABEL;"
 literal|"rsr.lend    %as;"
 comment|/* LEND */
 literal|"wsr.lbeg    %as;"
@@ -614,7 +614,7 @@ literal|"rsr.lcount    %as;"
 comment|/* LCOUNT */
 literal|"addi    %as, %as, 1;"
 comment|/* density -> addi.n %as, %as, 1 */
-literal|"LABEL0"
+literal|"LABEL"
 block|}
 block|,
 block|{
@@ -622,7 +622,7 @@ literal|"loopgtz %as,%label | %as!=1 ? IsaUseLoops"
 block|,
 literal|"beqz    %as,%label;"
 literal|"bltz    %as,%label;"
-literal|"loopgtz %as,%LABEL0;"
+literal|"loopgtz %as,%LABEL;"
 literal|"rsr.lend    %as;"
 comment|/* LEND */
 literal|"wsr.lbeg    %as;"
@@ -637,14 +637,14 @@ literal|"rsr.lcount    %as;"
 comment|/* LCOUNT */
 literal|"addi    %as, %as, 1;"
 comment|/* density -> addi.n %as, %as, 1 */
-literal|"LABEL0"
+literal|"LABEL"
 block|}
 block|,
 block|{
 literal|"loopnez %as,%label | %as!=1 ? IsaUseLoops"
 block|,
 literal|"beqz     %as,%label;"
-literal|"loopnez %as,%LABEL0;"
+literal|"loopnez %as,%LABEL;"
 literal|"rsr.lend    %as;"
 comment|/* LEND */
 literal|"wsr.lbeg    %as;"
@@ -659,7 +659,7 @@ literal|"rsr.lcount    %as;"
 comment|/* LCOUNT */
 literal|"addi    %as, %as, 1;"
 comment|/* density -> addi.n %as, %as, 1 */
-literal|"LABEL0"
+literal|"LABEL"
 block|}
 block|,
 comment|/* Relaxing to wide branches.  Order is important here.  With wide      branches, there is more than one correct relaxation for an      out-of-range branch.  Put the wide branch relaxations first in the      table since they are more efficient than the branch-around      relaxations.  */
@@ -811,221 +811,377 @@ comment|/* Widening branch comparisons eq/ne to zero.  Prefer relaxing to narrow
 block|{
 literal|"beqz %as,%label ? IsaUseDensityInstruction"
 block|,
-literal|"bnez.n %as,%LABEL0;j %label;LABEL0"
+literal|"bnez.n %as,%LABEL;j %label;LABEL"
 block|}
 block|,
 block|{
 literal|"bnez %as,%label ? IsaUseDensityInstruction"
 block|,
-literal|"beqz.n %as,%LABEL0;j %label;LABEL0"
+literal|"beqz.n %as,%LABEL;j %label;LABEL"
 block|}
 block|,
 block|{
 literal|"beqz %as,%label"
 block|,
-literal|"bnez %as,%LABEL0;j %label;LABEL0"
+literal|"bnez %as,%LABEL;j %label;LABEL"
 block|}
 block|,
 block|{
 literal|"bnez %as,%label"
 block|,
-literal|"beqz %as,%LABEL0;j %label;LABEL0"
+literal|"beqz %as,%LABEL;j %label;LABEL"
+block|}
+block|,
+block|{
+literal|"WIDE.beqz %as,%label ? IsaUseDensityInstruction"
+block|,
+literal|"bnez.n %as,%LABEL;j %label;LABEL"
+block|}
+block|,
+block|{
+literal|"WIDE.bnez %as,%label ? IsaUseDensityInstruction"
+block|,
+literal|"beqz.n %as,%LABEL;j %label;LABEL"
+block|}
+block|,
+block|{
+literal|"WIDE.beqz %as,%label"
+block|,
+literal|"bnez %as,%LABEL;j %label;LABEL"
+block|}
+block|,
+block|{
+literal|"WIDE.bnez %as,%label"
+block|,
+literal|"beqz %as,%LABEL;j %label;LABEL"
 block|}
 block|,
 comment|/* Widening expect-taken branches.  */
 block|{
 literal|"beqzt %as,%label ? IsaUsePredictedBranches"
 block|,
-literal|"bnez %as,%LABEL0;j %label;LABEL0"
+literal|"bnez %as,%LABEL;j %label;LABEL"
 block|}
 block|,
 block|{
 literal|"bnezt %as,%label ? IsaUsePredictedBranches"
 block|,
-literal|"beqz %as,%LABEL0;j %label;LABEL0"
+literal|"beqz %as,%LABEL;j %label;LABEL"
 block|}
 block|,
 block|{
 literal|"beqt %as,%at,%label ? IsaUsePredictedBranches"
 block|,
-literal|"bne %as,%at,%LABEL0;j %label;LABEL0"
+literal|"bne %as,%at,%LABEL;j %label;LABEL"
 block|}
 block|,
 block|{
 literal|"bnet %as,%at,%label ? IsaUsePredictedBranches"
 block|,
-literal|"beq %as,%at,%LABEL0;j %label;LABEL0"
+literal|"beq %as,%at,%LABEL;j %label;LABEL"
 block|}
 block|,
 comment|/* Widening branches from the Xtensa boolean option.  */
 block|{
 literal|"bt %bs,%label ? IsaUseBooleans"
 block|,
-literal|"bf %bs,%LABEL0;j %label;LABEL0"
+literal|"bf %bs,%LABEL;j %label;LABEL"
 block|}
 block|,
 block|{
 literal|"bf %bs,%label ? IsaUseBooleans"
 block|,
-literal|"bt %bs,%LABEL0;j %label;LABEL0"
+literal|"bt %bs,%LABEL;j %label;LABEL"
 block|}
 block|,
 comment|/* Other branch-around-jump widenings.  */
 block|{
 literal|"bgez %as,%label"
 block|,
-literal|"bltz %as,%LABEL0;j %label;LABEL0"
+literal|"bltz %as,%LABEL;j %label;LABEL"
 block|}
 block|,
 block|{
 literal|"bltz %as,%label"
 block|,
-literal|"bgez %as,%LABEL0;j %label;LABEL0"
+literal|"bgez %as,%LABEL;j %label;LABEL"
 block|}
 block|,
 block|{
 literal|"beqi %as,%imm,%label"
 block|,
-literal|"bnei %as,%imm,%LABEL0;j %label;LABEL0"
+literal|"bnei %as,%imm,%LABEL;j %label;LABEL"
 block|}
 block|,
 block|{
 literal|"bnei %as,%imm,%label"
 block|,
-literal|"beqi %as,%imm,%LABEL0;j %label;LABEL0"
+literal|"beqi %as,%imm,%LABEL;j %label;LABEL"
 block|}
 block|,
 block|{
 literal|"bgei %as,%imm,%label"
 block|,
-literal|"blti %as,%imm,%LABEL0;j %label;LABEL0"
+literal|"blti %as,%imm,%LABEL;j %label;LABEL"
 block|}
 block|,
 block|{
 literal|"blti %as,%imm,%label"
 block|,
-literal|"bgei %as,%imm,%LABEL0;j %label;LABEL0"
+literal|"bgei %as,%imm,%LABEL;j %label;LABEL"
 block|}
 block|,
 block|{
 literal|"bgeui %as,%imm,%label"
 block|,
-literal|"bltui %as,%imm,%LABEL0;j %label;LABEL0"
+literal|"bltui %as,%imm,%LABEL;j %label;LABEL"
 block|}
 block|,
 block|{
 literal|"bltui %as,%imm,%label"
 block|,
-literal|"bgeui %as,%imm,%LABEL0;j %label;LABEL0"
+literal|"bgeui %as,%imm,%LABEL;j %label;LABEL"
 block|}
 block|,
 block|{
 literal|"bbci %as,%imm,%label"
 block|,
-literal|"bbsi %as,%imm,%LABEL0;j %label;LABEL0"
+literal|"bbsi %as,%imm,%LABEL;j %label;LABEL"
 block|}
 block|,
 block|{
 literal|"bbsi %as,%imm,%label"
 block|,
-literal|"bbci %as,%imm,%LABEL0;j %label;LABEL0"
+literal|"bbci %as,%imm,%LABEL;j %label;LABEL"
 block|}
 block|,
 block|{
 literal|"beq %as,%at,%label"
 block|,
-literal|"bne %as,%at,%LABEL0;j %label;LABEL0"
+literal|"bne %as,%at,%LABEL;j %label;LABEL"
 block|}
 block|,
 block|{
 literal|"bne %as,%at,%label"
 block|,
-literal|"beq %as,%at,%LABEL0;j %label;LABEL0"
+literal|"beq %as,%at,%LABEL;j %label;LABEL"
 block|}
 block|,
 block|{
 literal|"bge %as,%at,%label"
 block|,
-literal|"blt %as,%at,%LABEL0;j %label;LABEL0"
+literal|"blt %as,%at,%LABEL;j %label;LABEL"
 block|}
 block|,
 block|{
 literal|"blt %as,%at,%label"
 block|,
-literal|"bge %as,%at,%LABEL0;j %label;LABEL0"
+literal|"bge %as,%at,%LABEL;j %label;LABEL"
 block|}
 block|,
 block|{
 literal|"bgeu %as,%at,%label"
 block|,
-literal|"bltu %as,%at,%LABEL0;j %label;LABEL0"
+literal|"bltu %as,%at,%LABEL;j %label;LABEL"
 block|}
 block|,
 block|{
 literal|"bltu %as,%at,%label"
 block|,
-literal|"bgeu %as,%at,%LABEL0;j %label;LABEL0"
+literal|"bgeu %as,%at,%LABEL;j %label;LABEL"
 block|}
 block|,
 block|{
 literal|"bany %as,%at,%label"
 block|,
-literal|"bnone %as,%at,%LABEL0;j %label;LABEL0"
+literal|"bnone %as,%at,%LABEL;j %label;LABEL"
 block|}
 block|,
 block|{
 literal|"bnone %as,%at,%label"
 block|,
-literal|"bany %as,%at,%LABEL0;j %label;LABEL0"
+literal|"bany %as,%at,%LABEL;j %label;LABEL"
 block|}
 block|,
 block|{
 literal|"ball %as,%at,%label"
 block|,
-literal|"bnall %as,%at,%LABEL0;j %label;LABEL0"
+literal|"bnall %as,%at,%LABEL;j %label;LABEL"
 block|}
 block|,
 block|{
 literal|"bnall %as,%at,%label"
 block|,
-literal|"ball %as,%at,%LABEL0;j %label;LABEL0"
+literal|"ball %as,%at,%LABEL;j %label;LABEL"
 block|}
 block|,
 block|{
 literal|"bbc %as,%at,%label"
 block|,
-literal|"bbs %as,%at,%LABEL0;j %label;LABEL0"
+literal|"bbs %as,%at,%LABEL;j %label;LABEL"
 block|}
 block|,
 block|{
 literal|"bbs %as,%at,%label"
 block|,
-literal|"bbc %as,%at,%LABEL0;j %label;LABEL0"
+literal|"bbc %as,%at,%LABEL;j %label;LABEL"
+block|}
+block|,
+block|{
+literal|"WIDE.bgez %as,%label"
+block|,
+literal|"bltz %as,%LABEL;j %label;LABEL"
+block|}
+block|,
+block|{
+literal|"WIDE.bltz %as,%label"
+block|,
+literal|"bgez %as,%LABEL;j %label;LABEL"
+block|}
+block|,
+block|{
+literal|"WIDE.beqi %as,%imm,%label"
+block|,
+literal|"bnei %as,%imm,%LABEL;j %label;LABEL"
+block|}
+block|,
+block|{
+literal|"WIDE.bnei %as,%imm,%label"
+block|,
+literal|"beqi %as,%imm,%LABEL;j %label;LABEL"
+block|}
+block|,
+block|{
+literal|"WIDE.bgei %as,%imm,%label"
+block|,
+literal|"blti %as,%imm,%LABEL;j %label;LABEL"
+block|}
+block|,
+block|{
+literal|"WIDE.blti %as,%imm,%label"
+block|,
+literal|"bgei %as,%imm,%LABEL;j %label;LABEL"
+block|}
+block|,
+block|{
+literal|"WIDE.bgeui %as,%imm,%label"
+block|,
+literal|"bltui %as,%imm,%LABEL;j %label;LABEL"
+block|}
+block|,
+block|{
+literal|"WIDE.bltui %as,%imm,%label"
+block|,
+literal|"bgeui %as,%imm,%LABEL;j %label;LABEL"
+block|}
+block|,
+block|{
+literal|"WIDE.bbci %as,%imm,%label"
+block|,
+literal|"bbsi %as,%imm,%LABEL;j %label;LABEL"
+block|}
+block|,
+block|{
+literal|"WIDE.bbsi %as,%imm,%label"
+block|,
+literal|"bbci %as,%imm,%LABEL;j %label;LABEL"
+block|}
+block|,
+block|{
+literal|"WIDE.beq %as,%at,%label"
+block|,
+literal|"bne %as,%at,%LABEL;j %label;LABEL"
+block|}
+block|,
+block|{
+literal|"WIDE.bne %as,%at,%label"
+block|,
+literal|"beq %as,%at,%LABEL;j %label;LABEL"
+block|}
+block|,
+block|{
+literal|"WIDE.bge %as,%at,%label"
+block|,
+literal|"blt %as,%at,%LABEL;j %label;LABEL"
+block|}
+block|,
+block|{
+literal|"WIDE.blt %as,%at,%label"
+block|,
+literal|"bge %as,%at,%LABEL;j %label;LABEL"
+block|}
+block|,
+block|{
+literal|"WIDE.bgeu %as,%at,%label"
+block|,
+literal|"bltu %as,%at,%LABEL;j %label;LABEL"
+block|}
+block|,
+block|{
+literal|"WIDE.bltu %as,%at,%label"
+block|,
+literal|"bgeu %as,%at,%LABEL;j %label;LABEL"
+block|}
+block|,
+block|{
+literal|"WIDE.bany %as,%at,%label"
+block|,
+literal|"bnone %as,%at,%LABEL;j %label;LABEL"
+block|}
+block|,
+block|{
+literal|"WIDE.bnone %as,%at,%label"
+block|,
+literal|"bany %as,%at,%LABEL;j %label;LABEL"
+block|}
+block|,
+block|{
+literal|"WIDE.ball %as,%at,%label"
+block|,
+literal|"bnall %as,%at,%LABEL;j %label;LABEL"
+block|}
+block|,
+block|{
+literal|"WIDE.bnall %as,%at,%label"
+block|,
+literal|"ball %as,%at,%LABEL;j %label;LABEL"
+block|}
+block|,
+block|{
+literal|"WIDE.bbc %as,%at,%label"
+block|,
+literal|"bbs %as,%at,%LABEL;j %label;LABEL"
+block|}
+block|,
+block|{
+literal|"WIDE.bbs %as,%at,%label"
+block|,
+literal|"bbc %as,%at,%LABEL;j %label;LABEL"
 block|}
 block|,
 comment|/* Expanding calls with literals.  */
 block|{
 literal|"call0 %label,%ar0 ? IsaUseL32R"
 block|,
-literal|"LITERAL0 %label; l32r a0,%LITERAL0; callx0 a0,%ar0"
+literal|"LITERAL %label; l32r a0,%LITERAL; callx0 a0,%ar0"
 block|}
 block|,
 block|{
 literal|"call4 %label,%ar4 ? IsaUseL32R"
 block|,
-literal|"LITERAL0 %label; l32r a4,%LITERAL0; callx4 a4,%ar4"
+literal|"LITERAL %label; l32r a4,%LITERAL; callx4 a4,%ar4"
 block|}
 block|,
 block|{
 literal|"call8 %label,%ar8 ? IsaUseL32R"
 block|,
-literal|"LITERAL0 %label; l32r a8,%LITERAL0; callx8 a8,%ar8"
+literal|"LITERAL %label; l32r a8,%LITERAL; callx8 a8,%ar8"
 block|}
 block|,
 block|{
 literal|"call12 %label,%ar12 ? IsaUseL32R"
 block|,
-literal|"LITERAL0 %label; l32r a12,%LITERAL0; callx12 a12,%ar12"
+literal|"LITERAL %label; l32r a12,%LITERAL; callx12 a12,%ar12"
 block|}
 block|,
 comment|/* Expanding calls with const16.  */
@@ -1789,9 +1945,6 @@ name|bi
 parameter_list|,
 name|unsigned
 name|op1
-parameter_list|,
-name|unsigned
-name|litnum
 parameter_list|)
 block|{
 name|BuildOp
@@ -1826,7 +1979,7 @@ name|b_op
 operator|->
 name|op_data
 operator|=
-name|litnum
+literal|0
 expr_stmt|;
 name|b_op
 operator|->
@@ -1855,9 +2008,6 @@ name|bi
 parameter_list|,
 name|unsigned
 name|op1
-parameter_list|,
-name|unsigned
-name|labnum
 parameter_list|)
 block|{
 name|BuildOp
@@ -1892,7 +2042,7 @@ name|b_op
 operator|->
 name|op_data
 operator|=
-name|labnum
+literal|0
 expr_stmt|;
 name|b_op
 operator|->
@@ -3254,101 +3404,6 @@ name|val
 expr_stmt|;
 return|return
 name|TRUE
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* Match a pattern like "foo1" with    parse_id_constant("foo1", "foo",&num).    This may also be used to just match a number.  */
-end_comment
-
-begin_function
-specifier|static
-name|bfd_boolean
-name|parse_id_constant
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|in
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|,
-name|unsigned
-modifier|*
-name|val_p
-parameter_list|)
-block|{
-name|unsigned
-name|namelen
-init|=
-literal|0
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|p
-decl_stmt|;
-if|if
-condition|(
-name|in
-operator|==
-name|NULL
-condition|)
-return|return
-name|FALSE
-return|;
-if|if
-condition|(
-name|name
-operator|!=
-name|NULL
-condition|)
-name|namelen
-operator|=
-name|strlen
-argument_list|(
-name|name
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|name
-operator|!=
-name|NULL
-operator|&&
-name|strncmp
-argument_list|(
-name|in
-argument_list|,
-name|name
-argument_list|,
-name|namelen
-argument_list|)
-operator|!=
-literal|0
-condition|)
-return|return
-name|FALSE
-return|;
-name|p
-operator|=
-operator|&
-name|in
-index|[
-name|namelen
-index|]
-expr_stmt|;
-return|return
-name|parse_constant
-argument_list|(
-name|p
-argument_list|,
-name|val_p
-argument_list|)
 return|;
 block|}
 end_function
@@ -5913,26 +5968,38 @@ name|insn_repl_e
 modifier|*
 name|r
 decl_stmt|;
-name|unsigned
-name|label_count
-init|=
-literal|0
-decl_stmt|;
-name|unsigned
-name|max_label_count
-init|=
-literal|0
-decl_stmt|;
-name|bfd_boolean
-name|has_label
-init|=
-name|FALSE
-decl_stmt|;
-name|unsigned
-name|literal_count
-init|=
-literal|0
-decl_stmt|;
+if|if
+condition|(
+operator|!
+name|wide_branch_opcode
+argument_list|(
+name|initial_insn
+operator|->
+name|t
+operator|.
+name|opcode_name
+argument_list|,
+literal|".w18"
+argument_list|,
+operator|&
+name|opcode
+argument_list|)
+operator|&&
+operator|!
+name|wide_branch_opcode
+argument_list|(
+name|initial_insn
+operator|->
+name|t
+operator|.
+name|opcode_name
+argument_list|,
+literal|".w15"
+argument_list|,
+operator|&
+name|opcode
+argument_list|)
+condition|)
 name|opcode
 operator|=
 name|xtensa_opcode_lookup
@@ -6193,7 +6260,6 @@ name|op1
 operator|==
 name|NULL
 condition|)
-block|{
 name|as_fatal
 argument_list|(
 name|_
@@ -6216,10 +6282,6 @@ argument_list|,
 name|from_string
 argument_list|)
 expr_stmt|;
-return|return
-name|NULL
-return|;
-block|}
 block|}
 if|if
 condition|(
@@ -6250,7 +6312,6 @@ name|op2
 operator|==
 name|NULL
 condition|)
-block|{
 name|as_fatal
 argument_list|(
 name|_
@@ -6273,10 +6334,6 @@ argument_list|,
 name|from_string
 argument_list|)
 expr_stmt|;
-return|return
-name|NULL
-return|;
-block|}
 block|}
 if|if
 condition|(
@@ -6288,7 +6345,6 @@ name|op2
 operator|==
 name|NULL
 condition|)
-block|{
 name|as_fatal
 argument_list|(
 name|_
@@ -6307,10 +6363,6 @@ argument_list|,
 name|from_string
 argument_list|)
 expr_stmt|;
-return|return
-name|NULL
-return|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -6393,7 +6445,7 @@ operator|->
 name|options
 argument_list|)
 expr_stmt|;
-comment|/* Generate the replacement instructions.  Some of these      "instructions" are actually labels and literals.  The literals      must be defined in order 0..n and a literal must be defined      (e.g., "LITERAL0 %imm") before use (e.g., "%LITERAL0").  The      labels must be defined in order, but they can be used before they      are defined.  Also there are a number of special operands (e.g.,      HI24S).  */
+comment|/* Generate the replacement instructions.  Some of these      "instructions" are actually labels and literals.  There can be at      most one literal and at most one label.  A literal must be defined      (e.g., "LITERAL %imm") before use (e.g., "%LITERAL").  The labels      can be used before they are defined.  Also there are a number of      special operands (e.g., HI24S).  */
 for|for
 control|(
 name|r
@@ -6429,11 +6481,6 @@ name|opname_map_e
 modifier|*
 name|op
 decl_stmt|;
-name|unsigned
-name|idnum
-init|=
-literal|0
-decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -6464,12 +6511,6 @@ name|tr
 argument_list|,
 name|bi
 argument_list|)
-expr_stmt|;
-name|bi
-operator|->
-name|id
-operator|=
-literal|0
 expr_stmt|;
 name|bi
 operator|->
@@ -6509,15 +6550,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|parse_id_constant
+name|strcmp
 argument_list|(
 name|opcode_name
 argument_list|,
 literal|"LITERAL"
-argument_list|,
-operator|&
-name|idnum
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|bi
@@ -6525,29 +6565,6 @@ operator|->
 name|typ
 operator|=
 name|INSTR_LITERAL_DEF
-expr_stmt|;
-name|bi
-operator|->
-name|id
-operator|=
-name|idnum
-expr_stmt|;
-if|if
-condition|(
-name|idnum
-operator|!=
-name|literal_count
-condition|)
-name|as_fatal
-argument_list|(
-name|_
-argument_list|(
-literal|"generated literals must be numbered consecutively"
-argument_list|)
-argument_list|)
-expr_stmt|;
-operator|++
-name|literal_count
 expr_stmt|;
 if|if
 condition|(
@@ -6567,15 +6584,14 @@ block|}
 elseif|else
 if|if
 condition|(
-name|parse_id_constant
+name|strcmp
 argument_list|(
 name|opcode_name
 argument_list|,
 literal|"LABEL"
-argument_list|,
-operator|&
-name|idnum
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|bi
@@ -6583,29 +6599,6 @@ operator|->
 name|typ
 operator|=
 name|INSTR_LABEL_DEF
-expr_stmt|;
-name|bi
-operator|->
-name|id
-operator|=
-name|idnum
-expr_stmt|;
-if|if
-condition|(
-name|idnum
-operator|!=
-name|label_count
-condition|)
-name|as_fatal
-argument_list|(
-name|_
-argument_list|(
-literal|"generated labels must be numbered consecutively"
-argument_list|)
-argument_list|)
-expr_stmt|;
-operator|++
-name|label_count
 expr_stmt|;
 if|if
 condition|(
@@ -6791,40 +6784,17 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|parse_id_constant
+name|strcmp
 argument_list|(
 name|op
 operator|->
 name|operand_name
 argument_list|,
 literal|"%LITERAL"
-argument_list|,
-operator|&
-name|idnum
 argument_list|)
+operator|==
+literal|0
 condition|)
-block|{
-if|if
-condition|(
-name|idnum
-operator|>=
-name|literal_count
-condition|)
-name|as_fatal
-argument_list|(
-name|_
-argument_list|(
-literal|"opcode %s: replacement "
-literal|"literal %d>= literal_count(%d)"
-argument_list|)
-argument_list|,
-name|opcode_name
-argument_list|,
-name|idnum
-argument_list|,
-name|literal_count
-argument_list|)
-expr_stmt|;
 name|append_literal_op
 argument_list|(
 name|bi
@@ -6832,41 +6802,22 @@ argument_list|,
 name|op
 operator|->
 name|operand_num
-argument_list|,
-name|idnum
 argument_list|)
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
-name|parse_id_constant
+name|strcmp
 argument_list|(
 name|op
 operator|->
 name|operand_name
 argument_list|,
 literal|"%LABEL"
-argument_list|,
-operator|&
-name|idnum
 argument_list|)
+operator|==
+literal|0
 condition|)
-block|{
-name|has_label
-operator|=
-name|TRUE
-expr_stmt|;
-if|if
-condition|(
-name|idnum
-operator|>
-name|max_label_count
-condition|)
-name|max_label_count
-operator|=
-name|idnum
-expr_stmt|;
 name|append_label_op
 argument_list|(
 name|bi
@@ -6874,21 +6825,27 @@ argument_list|,
 name|op
 operator|->
 name|operand_num
-argument_list|,
-name|idnum
 argument_list|)
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
-name|parse_id_constant
+name|op
+operator|->
+name|operand_name
+index|[
+literal|0
+index|]
+operator|==
+literal|'a'
+operator|&&
+name|parse_constant
 argument_list|(
 name|op
 operator|->
 name|operand_name
-argument_list|,
-literal|"a"
+operator|+
+literal|1
 argument_list|,
 operator|&
 name|idnum
@@ -6944,7 +6901,6 @@ name|orig_op
 operator|==
 name|NULL
 condition|)
-block|{
 name|as_fatal
 argument_list|(
 name|_
@@ -6961,19 +6917,6 @@ argument_list|,
 name|to_string
 argument_list|)
 expr_stmt|;
-name|append_constant_op
-argument_list|(
-name|bi
-argument_list|,
-name|op
-operator|->
-name|operand_num
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-else|else
 name|append_field_op
 argument_list|(
 name|bi
@@ -7124,7 +7067,6 @@ name|orig_op
 operator|==
 name|NULL
 condition|)
-block|{
 name|as_fatal
 argument_list|(
 name|_
@@ -7141,19 +7083,6 @@ argument_list|,
 name|to_string
 argument_list|)
 expr_stmt|;
-name|append_constant_op
-argument_list|(
-name|bi
-argument_list|,
-name|op
-operator|->
-name|operand_num
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-else|else
 name|append_user_fn_field_op
 argument_list|(
 name|bi
@@ -7171,7 +7100,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 name|as_fatal
 argument_list|(
 name|_
@@ -7188,51 +7116,7 @@ argument_list|,
 name|to_string
 argument_list|)
 expr_stmt|;
-name|append_constant_op
-argument_list|(
-name|bi
-argument_list|,
-name|op
-operator|->
-name|operand_num
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 block|}
-block|}
-block|}
-if|if
-condition|(
-name|has_label
-operator|&&
-name|max_label_count
-operator|>=
-name|label_count
-condition|)
-block|{
-name|as_fatal
-argument_list|(
-name|_
-argument_list|(
-literal|"opcode %s: replacement label %d>= label_count(%d)"
-argument_list|)
-argument_list|,
-name|xtensa_opcode_name
-argument_list|(
-name|isa
-argument_list|,
-name|opcode
-argument_list|)
-argument_list|,
-name|max_label_count
-argument_list|,
-name|label_count
-argument_list|)
-expr_stmt|;
-return|return
-name|NULL
-return|;
 block|}
 return|return
 name|tr
@@ -7414,7 +7298,6 @@ operator|&
 name|initial_insn
 argument_list|)
 condition|)
-block|{
 name|as_fatal
 argument_list|(
 name|_
@@ -7425,14 +7308,6 @@ argument_list|,
 name|from_string
 argument_list|)
 expr_stmt|;
-name|clear_insn_pattern
-argument_list|(
-operator|&
-name|initial_insn
-argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
 name|init_insn_repl
 argument_list|(
 operator|&
@@ -7450,7 +7325,6 @@ operator|&
 name|replace_insns
 argument_list|)
 condition|)
-block|{
 name|as_fatal
 argument_list|(
 name|_
@@ -7461,20 +7335,6 @@ argument_list|,
 name|to_string
 argument_list|)
 expr_stmt|;
-name|clear_insn_pattern
-argument_list|(
-operator|&
-name|initial_insn
-argument_list|)
-expr_stmt|;
-name|clear_insn_repl
-argument_list|(
-operator|&
-name|replace_insns
-argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
 if|if
 condition|(
 name|transition_applies

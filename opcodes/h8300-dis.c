@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Disassemble h8300 instructions.    Copyright 1993, 1994, 1996, 1998, 2000, 2001, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston,    MA 02110-1301, USA.  */
+comment|/* Disassemble h8300 instructions.    Copyright 1993, 1994, 1996, 1998, 2000, 2001, 2002, 2003, 2004, 2005, 2006    Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston,    MA 02110-1301, USA.  */
 end_comment
 
 begin_define
@@ -1919,6 +1919,7 @@ name|qi
 operator|->
 name|opcode
 decl_stmt|;
+specifier|const
 name|op_type
 modifier|*
 name|nib
@@ -3636,20 +3637,17 @@ return|;
 block|}
 if|if
 condition|(
-name|strncmp
+name|CONST_STRNEQ
 argument_list|(
 name|q
 operator|->
 name|name
 argument_list|,
 literal|"mova"
-argument_list|,
-literal|4
 argument_list|)
-operator|==
-literal|0
 condition|)
 block|{
+specifier|const
 name|op_type
 modifier|*
 name|args
@@ -3851,6 +3849,7 @@ return|;
 block|}
 comment|/* Fill in the args.  */
 block|{
+specifier|const
 name|op_type
 modifier|*
 name|args

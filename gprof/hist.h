@@ -18,64 +18,43 @@ directive|define
 name|hist_h
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|bfd_vma
-name|s_lowpc
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Lowpc from the profile file.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|bfd_vma
-name|s_highpc
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Highpc from the profile file.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
+begin_typedef
+typedef|typedef
+struct|struct
+name|histogram
+block|{
 name|bfd_vma
 name|lowpc
-decl_stmt|,
+decl_stmt|;
+name|bfd_vma
 name|highpc
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Range profiled, in UNIT's.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
 name|unsigned
 name|int
-name|hist_num_bins
+name|num_bins
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Number of histogram bins.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
 name|int
 modifier|*
-name|hist_sample
+name|sample
+decl_stmt|;
+comment|/* Histogram samples (shorts in the file!).  */
+block|}
+name|histogram
+typedef|;
+end_typedef
+
+begin_decl_stmt
+name|histogram
+modifier|*
+name|histograms
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* Code histogram.  */
-end_comment
+begin_decl_stmt
+name|unsigned
+name|num_histograms
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Scale factor converting samples to pc values:    each sample covers HIST_SCALE bytes.  */
@@ -134,6 +113,41 @@ name|void
 name|hist_print
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Checks if ADDRESS is within the range of addresses for which    we have histogram data.  Returns 1 if so and 0 otherwise.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|hist_check_address
+parameter_list|(
+name|unsigned
+name|address
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Given a range of addresses for a symbol, find a histogram record     that intersects with this range, and clips the range to that    histogram record, modifying *P_LOWPC and *P_HIGHPC.        If no intersection is found, *P_LOWPC and *P_HIGHPC will be set to    one unspecified value.  If more that one intersection is found,    an error is emitted.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|hist_clip_symbol_address
+parameter_list|(
+name|bfd_vma
+modifier|*
+name|p_lowpc
+parameter_list|,
+name|bfd_vma
+modifier|*
+name|p_highpc
 parameter_list|)
 function_decl|;
 end_function_decl

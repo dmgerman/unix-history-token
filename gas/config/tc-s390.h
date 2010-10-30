@@ -336,7 +336,6 @@ name|tc_s390_regname_to_dw2regnum
 name|PARAMS
 argument_list|(
 operator|(
-specifier|const
 name|char
 operator|*
 name|regname

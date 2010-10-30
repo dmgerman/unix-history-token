@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Support for 32-bit SPARC NLM (NetWare Loadable Module)    Copyright 1993, 1994, 1999, 2000, 2001, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
+comment|/* Support for 32-bit SPARC NLM (NetWare Loadable Module)    Copyright 1993, 1994, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006,    2007 Free Software Foundation, Inc.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"bfd.h"
+file|"sysdep.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sysdep.h"
+file|"bfd.h"
 end_include
 
 begin_include
@@ -1049,14 +1049,22 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s:  address = %08lx, addend = %08lx, type = %d, howto = %08lx\n"
+literal|"%s:  address = %08lx, addend = %08lx, type = %u, howto = %p\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|rel
 operator|->
 name|address
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|rel
 operator|->
 name|addend
@@ -1263,12 +1271,20 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s:  val = %08lx, addend = %08lx, type = %d\n"
+literal|"%s:  val = %08lx, addend = %08lx, type = %u\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|val
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|rel
 operator|->
 name|addend
@@ -1806,10 +1822,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s:<%x, 1>\n\t"
+literal|"%s:<%lx, 1>\n\t"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
+call|(
+name|unsigned
+name|long
+call|)
+argument_list|(
 name|base
 operator|+
 operator|(
@@ -1820,6 +1841,7 @@ name|sym_ptr_ptr
 operator|)
 operator|->
 name|value
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2117,10 +2139,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s:<%x, %d, %s>\n"
+literal|"%s:<%lx, %u, %s>\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|value
 argument_list|,
 name|strlen

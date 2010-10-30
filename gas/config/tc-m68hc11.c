@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-m68hc11.c -- Assembler code for the Motorola 68HC11& 68HC12.    Copyright 1999, 2000, 2001, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.    Written by Stephane Carrez (stcarrez@nerim.fr)     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 51 Franklin Street - Fifth Floor,    Boston, MA 02110-1301, USA.  */
+comment|/* tc-m68hc11.c -- Assembler code for the Motorola 68HC11& 68HC12.    Copyright 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007    Free Software Foundation, Inc.    Written by Stephane Carrez (stcarrez@nerim.fr)     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 51 Franklin Street - Fifth Floor,    Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -1168,7 +1168,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|short
-name|flag_fixed_branchs
+name|flag_fixed_branches
 init|=
 literal|0
 decl_stmt|;
@@ -1436,6 +1436,16 @@ directive|define
 name|OPTION_FORCE_LONG_BRANCH
 value|(OPTION_MD_BASE)
 block|{
+literal|"force-long-branches"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+name|OPTION_FORCE_LONG_BRANCH
+block|}
+block|,
+block|{
 literal|"force-long-branchs"
 block|,
 name|no_argument
@@ -1445,10 +1455,21 @@ block|,
 name|OPTION_FORCE_LONG_BRANCH
 block|}
 block|,
+comment|/* Misspelt version kept for backwards compatibility.  */
 define|#
 directive|define
-name|OPTION_SHORT_BRANCHS
+name|OPTION_SHORT_BRANCHES
 value|(OPTION_MD_BASE + 1)
+block|{
+literal|"short-branches"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+name|OPTION_SHORT_BRANCHES
+block|}
+block|,
 block|{
 literal|"short-branchs"
 block|,
@@ -1456,9 +1477,10 @@ name|no_argument
 block|,
 name|NULL
 block|,
-name|OPTION_SHORT_BRANCHS
+name|OPTION_SHORT_BRANCHES
 block|}
 block|,
+comment|/* Misspelt version kept for backwards compatibility.  */
 define|#
 directive|define
 name|OPTION_STRICT_DIRECT_MODE
@@ -1714,7 +1736,7 @@ name|stream
 argument_list|,
 name|_
 argument_list|(
-literal|"\ Motorola 68HC11/68HC12/68HCS12 options:\n\   -m68hc11 | -m68hc12 |\n\   -m68hcs12               specify the processor [default %s]\n\   -mshort                 use 16-bit int ABI (default)\n\   -mlong                  use 32-bit int ABI\n\   -mshort-double          use 32-bit double ABI\n\   -mlong-double           use 64-bit double ABI (default)\n\   --force-long-branchs    always turn relative branchs into absolute ones\n\   -S,--short-branchs      do not turn relative branchs into absolute ones\n\                           when the offset is out of range\n\   --strict-direct-mode    do not turn the direct mode into extended mode\n\                           when the instruction does not support direct mode\n\   --print-insn-syntax     print the syntax of instruction in case of error\n\   --print-opcodes         print the list of instructions with syntax\n\   --generate-example      generate an example of each instruction\n\                           (used for testing)\n"
+literal|"\ Motorola 68HC11/68HC12/68HCS12 options:\n\   -m68hc11 | -m68hc12 |\n\   -m68hcs12               specify the processor [default %s]\n\   -mshort                 use 16-bit int ABI (default)\n\   -mlong                  use 32-bit int ABI\n\   -mshort-double          use 32-bit double ABI\n\   -mlong-double           use 64-bit double ABI (default)\n\   --force-long-branches   always turn relative branches into absolute ones\n\   -S,--short-branches     do not turn relative branches into absolute ones\n\                           when the offset is out of range\n\   --strict-direct-mode    do not turn the direct mode into extended mode\n\                           when the instruction does not support direct mode\n\   --print-insn-syntax     print the syntax of instruction in case of error\n\   --print-opcodes         print the list of instructions with syntax\n\   --generate-example      generate an example of each instruction\n\                           (used for testing)\n"
 argument_list|)
 argument_list|,
 name|default_cpu
@@ -1967,12 +1989,12 @@ condition|)
 block|{
 comment|/* -S means keep external to 2 bit offset rather than 16 bit one.  */
 case|case
-name|OPTION_SHORT_BRANCHS
+name|OPTION_SHORT_BRANCHES
 case|:
 case|case
 literal|'S'
 case|:
-name|flag_fixed_branchs
+name|flag_fixed_branches
 operator|=
 literal|1
 expr_stmt|;
@@ -6321,7 +6343,7 @@ name|frag_now
 operator|->
 name|fr_literal
 argument_list|,
-literal|2
+literal|3
 argument_list|,
 name|oper
 argument_list|,
@@ -6622,7 +6644,7 @@ name|jmp_mode
 operator|==
 literal|1
 operator|||
-name|flag_fixed_branchs
+name|flag_fixed_branches
 operator|==
 literal|0
 operator|)
@@ -6646,7 +6668,7 @@ argument_list|,
 name|frag_now_fix
 argument_list|()
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 operator|&
 name|abs_symbol
@@ -6962,7 +6984,7 @@ argument_list|,
 name|frag_now_fix
 argument_list|()
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 operator|&
 name|abs_symbol
@@ -7039,7 +7061,7 @@ argument_list|,
 name|frag_now_fix
 argument_list|()
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 operator|&
 name|abs_symbol
@@ -7058,7 +7080,7 @@ name|jmp_mode
 operator|==
 literal|0
 operator|&&
-name|flag_fixed_branchs
+name|flag_fixed_branches
 condition|)
 block|{
 name|opcode
@@ -7533,7 +7555,7 @@ name|jmp_mode
 operator|==
 literal|1
 operator|||
-name|flag_fixed_branchs
+name|flag_fixed_branches
 operator|==
 literal|0
 operator|)
@@ -7681,7 +7703,7 @@ name|jmp_mode
 operator|==
 literal|0
 operator|&&
-name|flag_fixed_branchs
+name|flag_fixed_branches
 condition|)
 block|{
 name|fixup8
@@ -9042,7 +9064,7 @@ argument_list|,
 name|frag_now_fix
 argument_list|()
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 operator|&
 name|abs_symbol
@@ -10601,6 +10623,8 @@ index|]
 decl_stmt|;
 name|int
 name|nb_operands
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|branch_optimize
@@ -10717,7 +10741,7 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-comment|/* If it's not recognized, look for 'jbsr' and 'jbxx'.  These are      pseudo insns for relative branch.  For these branchs, we always      optimize them (turned into absolute branchs) even if --short-branchs      is given.  */
+comment|/* If it's not recognized, look for 'jbsr' and 'jbxx'.  These are      pseudo insns for relative branch.  For these branches, we always      optimize them (turned into absolute branches) even if --short-branches      is given.  */
 if|if
 condition|(
 name|opc
@@ -11656,7 +11680,7 @@ argument_list|,
 name|frag_now_fix
 argument_list|()
 argument_list|,
-literal|2
+literal|0
 argument_list|,
 operator|&
 name|ex
@@ -13179,7 +13203,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|flag_fixed_branchs
+name|flag_fixed_branches
 condition|)
 name|as_bad_where
 argument_list|(

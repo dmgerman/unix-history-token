@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-s390.c -- Assemble for the S390    Copyright 2000, 2001, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
+comment|/* tc-s390.c -- Assemble for the S390    Copyright 2000, 2001, 2002, 2003, 2004, 2005, 2006    Free Software Foundation, Inc.    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
 
 begin_include
 include|#
@@ -1765,6 +1759,24 @@ condition|)
 name|current_cpu
 operator|=
 name|S390_OPCODE_Z9_109
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|arg
+operator|+
+literal|5
+argument_list|,
+literal|"z9-ec"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|current_cpu
+operator|=
+name|S390_OPCODE_Z9_EC
 expr_stmt|;
 else|else
 block|{
@@ -9958,7 +9970,6 @@ begin_function
 name|int
 name|tc_s390_regname_to_dw2regnum
 parameter_list|(
-specifier|const
 name|char
 modifier|*
 name|regname

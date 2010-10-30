@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* vms-hdr.c -- BFD back-end for VMS/VAX (openVMS/VAX) and    EVAX (openVMS/Alpha) files.    Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2005    Free Software Foundation, Inc.     HDR record handling functions    EMH record handling functions    and    EOM record handling functions    EEOM record handling functions     Written by Klaus K"ampf (kkaempf@rmi.de)     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
+comment|/* vms-hdr.c -- BFD back-end for VMS/VAX (openVMS/VAX) and    EVAX (openVMS/Alpha) files.    Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2005, 2006,    2007 Free Software Foundation, Inc.     HDR record handling functions    EMH record handling functions    and    EOM record handling functions    EEOM record handling functions     Written by Klaus K"ampf (kkaempf@rmi.de)     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"sysdep.h"
+end_include
 
 begin_include
 include|#
@@ -13,12 +19,6 @@ begin_include
 include|#
 directive|include
 file|"bfdver.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sysdep.h"
 end_include
 
 begin_include
@@ -1080,9 +1080,10 @@ name|unsigned
 name|char
 operator|*
 operator|)
+name|STRING_COMMA_LEN
+argument_list|(
 literal|"GAS proGIS"
-argument_list|,
-literal|10
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|_bfd_vms_output_flush
@@ -1136,7 +1137,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|strncmp
+name|CONST_STRNEQ
 argument_list|(
 operator|(
 name|char
@@ -1147,11 +1148,7 @@ operator|->
 name|name
 argument_list|,
 literal|"<CASE:"
-argument_list|,
-literal|6
 argument_list|)
-operator|==
-literal|0
 condition|)
 block|{
 name|PRIV
@@ -1245,9 +1242,10 @@ name|unsigned
 name|char
 operator|*
 operator|)
+name|STRING_COMMA_LEN
+argument_list|(
 literal|"noname"
-argument_list|,
-literal|6
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|_bfd_vms_output_flush
@@ -1274,9 +1272,10 @@ name|unsigned
 name|char
 operator|*
 operator|)
+name|STRING_COMMA_LEN
+argument_list|(
 literal|"TTL"
-argument_list|,
-literal|3
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|_bfd_vms_output_flush

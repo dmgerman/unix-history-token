@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generic ECOFF (Extended-COFF) routines.    Copyright 1990, 1991, 1993, 1994, 1995, 1996, 1998, 1999, 2000, 2001,    2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.    Original version by Per Bothner.    Full support added by Ian Lance Taylor, ian@cygnus.com.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
+comment|/* Generic ECOFF (Extended-COFF) routines.    Copyright 1990, 1991, 1993, 1994, 1995, 1996, 1998, 1999, 2000, 2001,    2002, 2003, 2004, 2005, 2006, 2007 Free Software Foundation, Inc.    Original version by Per Bothner.    Full support added by Ian Lance Taylor, ian@cygnus.com.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"bfd.h"
+file|"sysdep.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sysdep.h"
+file|"bfd.h"
 end_include
 
 begin_include
@@ -533,7 +533,6 @@ parameter_list|(
 name|bfd
 modifier|*
 name|abfd
-name|ATTRIBUTE_UNUSED
 parameter_list|,
 name|asection
 modifier|*
@@ -744,7 +743,12 @@ break|break;
 block|}
 comment|/* Probably any other section name is SEC_NEVER_LOAD, but I'm      uncertain about .init on some systems and I don't know how shared      libraries work.  */
 return|return
-name|TRUE
+name|_bfd_generic_new_section_hook
+argument_list|(
+name|abfd
+argument_list|,
+name|section
+argument_list|)
 return|;
 block|}
 end_function
@@ -8192,8 +8196,10 @@ name|bfd
 modifier|*
 name|abfd
 parameter_list|,
-name|bfd_boolean
-name|reloc
+name|struct
+name|bfd_link_info
+modifier|*
+name|info
 name|ATTRIBUTE_UNUSED
 parameter_list|)
 block|{
@@ -8502,7 +8508,7 @@ name|_bfd_ecoff_sizeof_headers
 argument_list|(
 name|abfd
 argument_list|,
-name|FALSE
+name|NULL
 argument_list|)
 expr_stmt|;
 name|file_sofar
@@ -10401,7 +10407,7 @@ name|_bfd_ecoff_sizeof_headers
 argument_list|(
 name|abfd
 argument_list|,
-name|FALSE
+name|NULL
 argument_list|)
 expr_stmt|;
 else|else
@@ -12676,13 +12682,11 @@ return|;
 comment|/* Irix 4.0.5F apparently can use either an ECOFF armap or a      standard COFF armap.  We could move the ECOFF armap stuff into      bfd_slurp_armap, but that seems inappropriate since no other      target uses this format.  Instead, we check directly for a COFF      armap.  */
 if|if
 condition|(
-name|strneq
+name|CONST_STRNEQ
 argument_list|(
 name|nextname
 argument_list|,
 literal|"/               "
-argument_list|,
-literal|16
 argument_list|)
 condition|)
 return|return
@@ -13902,6 +13906,8 @@ name|int
 name|hash
 decl_stmt|,
 name|rehash
+init|=
+literal|0
 decl_stmt|;
 comment|/* Advance firstreal to the file position of this archive 	 element.  */
 if|if
@@ -13943,7 +13949,7 @@ name|current
 operator|=
 name|current
 operator|->
-name|next
+name|archive_next
 expr_stmt|;
 block|}
 do|while
@@ -16808,6 +16814,8 @@ name|int
 name|hash
 decl_stmt|,
 name|rehash
+init|=
+literal|0
 decl_stmt|;
 name|unsigned
 name|int

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* This file is tc-avr.h    Copyright 1999, 2000, 2001, 2002, 2005 Free Software Foundation, Inc.     Contributed by Denis Chertykov<denisc@overta.ru>     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
+comment|/* This file is tc-avr.h    Copyright 1999, 2000, 2001, 2002, 2005, 2006, 2007    Free Software Foundation, Inc.     Contributed by Denis Chertykov<denisc@overta.ru>     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -245,7 +245,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* AVR port uses `$' as a logical line separator */
+comment|/* AVR port uses `$' as a logical line separator.  */
 end_comment
 
 begin_define
@@ -272,7 +272,7 @@ value|(P2VAR) = 0
 end_define
 
 begin_comment
-comment|/* We don't want gas to fixup the following program memory related relocations.    We will need them in case that we want to do linker relaxation.    We could in principle keep these fixups in gas when not relaxing.    However, there is no serious performance penilty when making the linker    make the fixup work.  */
+comment|/* We don't want gas to fixup the following program memory related relocations.    We will need them in case that we want to do linker relaxation.    We could in principle keep these fixups in gas when not relaxing.    However, there is no serious performance penilty when making the linker    make the fixup work.  Check also that fx_addsy is not NULL, in order to make    sure that the fixup refers to some sort of lable.  */
 end_comment
 
 begin_define
@@ -287,7 +287,21 @@ parameter_list|,
 name|SKIP
 parameter_list|)
 define|\
-value|if (   (FIXP->fx_r_type == BFD_RELOC_AVR_7_PCREL          \       || FIXP->fx_r_type == BFD_RELOC_AVR_13_PCREL         \       || FIXP->fx_r_type == BFD_RELOC_AVR_LO8_LDI_PM       \       || FIXP->fx_r_type == BFD_RELOC_AVR_HI8_LDI_PM       \       || FIXP->fx_r_type == BFD_RELOC_AVR_HH8_LDI_PM       \       || FIXP->fx_r_type == BFD_RELOC_AVR_16_PM)           \&& (FIXP->fx_addsy))                                  \    {                                                       \      goto SKIP;                                            \    }
+value|if (   (FIXP->fx_r_type == BFD_RELOC_AVR_7_PCREL           \        || FIXP->fx_r_type == BFD_RELOC_AVR_13_PCREL          \        || FIXP->fx_r_type == BFD_RELOC_AVR_LO8_LDI_PM        \        || FIXP->fx_r_type == BFD_RELOC_AVR_LO8_LDI_GS        \        || FIXP->fx_r_type == BFD_RELOC_AVR_HI8_LDI_PM        \        || FIXP->fx_r_type == BFD_RELOC_AVR_HI8_LDI_GS        \        || FIXP->fx_r_type == BFD_RELOC_AVR_HH8_LDI_PM        \        || FIXP->fx_r_type == BFD_RELOC_AVR_LO8_LDI_PM_NEG    \        || FIXP->fx_r_type == BFD_RELOC_AVR_HI8_LDI_PM_NEG    \        || FIXP->fx_r_type == BFD_RELOC_AVR_HH8_LDI_PM_NEG    \        || FIXP->fx_r_type == BFD_RELOC_AVR_16_PM)            \&& (FIXP->fx_addsy))			             \     {                                                        \       goto SKIP;                                             \    }
+end_define
+
+begin_comment
+comment|/* This target is buggy, and sets fix size too large.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TC_FX_SIZE_SLACK
+parameter_list|(
+name|FIX
+parameter_list|)
+value|2
 end_define
 
 end_unit

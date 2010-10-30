@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for AIX on PS/2 core files.    This was based on trad-core.c, which was written by John Gilmore of         Cygnus Support.    Copyright 1988, 1989, 1991, 1992, 1993, 1994, 1996, 1998, 1999, 2000,    2001, 2002, 2004    Free Software Foundation, Inc.    Written by Minh Tran-Le<TRANLE@INTELLICORP.COM>.    Converted to back end form by Ian Lance Taylor<ian@cygnus.com>.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
+comment|/* BFD back-end for AIX on PS/2 core files.    This was based on trad-core.c, which was written by John Gilmore of         Cygnus Support.    Copyright 1988, 1989, 1991, 1992, 1993, 1994, 1996, 1998, 1999, 2000,    2001, 2002, 2004, 2006, 2007    Free Software Foundation, Inc.    Written by Minh Tran-Le<TRANLE@INTELLICORP.COM>.    Converted to back end form by Ian Lance Taylor<ian@cygnus.com>.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"bfd.h"
+file|"sysdep.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sysdep.h"
+file|"bfd.h"
 end_include
 
 begin_include
@@ -277,6 +277,9 @@ block|}
 modifier|*
 name|mergem
 struct|;
+name|flagword
+name|flags
+decl_stmt|;
 name|amt
 operator|=
 sizeof|sizeof
@@ -467,16 +470,22 @@ operator|=
 name|core
 expr_stmt|;
 comment|/* Create the sections.  */
+name|flags
+operator|=
+name|SEC_HAS_CONTENTS
+expr_stmt|;
 name|core_regsec
 argument_list|(
 name|abfd
 argument_list|)
 operator|=
-name|bfd_make_section_anyway
+name|bfd_make_section_anyway_with_flags
 argument_list|(
 name|abfd
 argument_list|,
 literal|".reg"
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 if|if
@@ -491,15 +500,6 @@ condition|)
 goto|goto
 name|loser
 goto|;
-name|core_regsec
-argument_list|(
-name|abfd
-argument_list|)
-operator|->
-name|flags
-operator|=
-name|SEC_HAS_CONTENTS
-expr_stmt|;
 name|core_regsec
 argument_list|(
 name|abfd
@@ -549,16 +549,22 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+name|flags
+operator|=
+name|SEC_HAS_CONTENTS
+expr_stmt|;
 name|core_reg2sec
 argument_list|(
 name|abfd
 argument_list|)
 operator|=
-name|bfd_make_section_anyway
+name|bfd_make_section_anyway_with_flags
 argument_list|(
 name|abfd
 argument_list|,
 literal|".reg2"
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 if|if
@@ -574,15 +580,6 @@ comment|/* bfd_release frees everything allocated after it's arg.  */
 goto|goto
 name|loser
 goto|;
-name|core_reg2sec
-argument_list|(
-name|abfd
-argument_list|)
-operator|->
-name|flags
-operator|=
-name|SEC_HAS_CONTENTS
-expr_stmt|;
 name|core_reg2sec
 argument_list|(
 name|abfd
@@ -787,11 +784,13 @@ argument_list|,
 name|n
 argument_list|)
 operator|=
-name|bfd_make_section_anyway
+name|bfd_make_section_anyway_with_flags
 argument_list|(
 name|abfd
 argument_list|,
 name|sname
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 if|if
@@ -808,17 +807,6 @@ condition|)
 goto|goto
 name|loser
 goto|;
-name|core_section
-argument_list|(
-name|abfd
-argument_list|,
-name|n
-argument_list|)
-operator|->
-name|flags
-operator|=
-name|flags
-expr_stmt|;
 name|core_section
 argument_list|(
 name|abfd

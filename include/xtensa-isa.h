@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Interface definition for configurable Xtensa ISA support.    Copyright 2003, 2004, 2005 Free Software Foundation, Inc.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
+comment|/* Interface definition for configurable Xtensa ISA support.    Copyright 2003, 2004, 2005, 2006 Free Software Foundation, Inc.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -27,11 +27,6 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-comment|/* Use the statically-linked version for the GNU tools.  */
-define|#
-directive|define
-name|STATIC_LIBISA
-value|1
 comment|/* Version number: This is intended to help support code that works with    versions of this library from multiple Xtensa releases.  */
 define|#
 directive|define
@@ -94,7 +89,7 @@ name|XTENSA_UNDEFINED
 value|-1
 comment|/* Overview of using this interface to decode/encode instructions:     Each Xtensa instruction is associated with a particular instruction    format, where the format defines a fixed number of slots for    operations.  The formats for the core Xtensa ISA have only one slot,    but FLIX instructions may have multiple slots.  Within each slot,    there is a single opcode and some number of associated operands.     The encoding and decoding functions operate on instruction buffers,    not on the raw bytes of the instructions.  The same instruction    buffer data structure is used for both entire instructions and    individual slots in those instructions -- the contents of a slot need    to be extracted from or inserted into the buffer for the instruction    as a whole.     Decoding an instruction involves first finding the format, which    identifies the number of slots, and then decoding each slot    separately.  A slot is decoded by finding the opcode and then using    the opcode to determine how many operands there are.  For example:     xtensa_insnbuf_from_chars    xtensa_format_decode    for each slot {      xtensa_format_get_slot      xtensa_opcode_decode      for each operand {        xtensa_operand_get_field        xtensa_operand_decode      }    }     Encoding an instruction is roughly the same procedure in reverse:     xtensa_format_encode    for each slot {      xtensa_opcode_encode      for each operand {        xtensa_operand_encode        xtensa_operand_set_field      }      xtensa_format_set_slot    }    xtensa_insnbuf_to_chars */
 comment|/* Error handling.  */
-comment|/* Error codes.  The code for the most recent error condition can be    retrieved with the "errno" function.  For any result other than    xtensa_isa_ok, an error message containing additional information    about the problem can be retrieved using the "error_msg" function.    The error messages are stored in an internal buffer, which should not    should be freed and may be overwritten by subsequent operations.  */
+comment|/* Error codes.  The code for the most recent error condition can be    retrieved with the "errno" function.  For any result other than    xtensa_isa_ok, an error message containing additional information    about the problem can be retrieved using the "error_msg" function.    The error messages are stored in an internal buffer, which should    not be freed and may be overwritten by subsequent operations.  */
 typedef|typedef
 enum|enum
 name|xtensa_isa_status_enum

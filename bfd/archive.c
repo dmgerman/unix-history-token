@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for archive files (libraries).    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.    Written by Cygnus Support.  Mostly Gumby Henkel-Wallace's fault.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
+comment|/* BFD back-end for archive files (libraries).    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007    Free Software Foundation, Inc.    Written by Cygnus Support.  Mostly Gumby Henkel-Wallace's fault.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -22,13 +22,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"bfd.h"
+file|"sysdep.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sysdep.h"
+file|"bfd.h"
 end_include
 
 begin_include
@@ -2072,16 +2072,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|bfd_boolean
-name|fail
-decl_stmt|;
 name|first
 operator|->
 name|target_defaulted
-operator|=
-name|FALSE
-expr_stmt|;
-name|fail
 operator|=
 name|FALSE
 expr_stmt|;
@@ -3171,27 +3164,21 @@ name|FALSE
 return|;
 if|if
 condition|(
-operator|!
-name|strncmp
+name|CONST_STRNEQ
 argument_list|(
 name|nextname
 argument_list|,
 literal|"__.SYMDEF       "
-argument_list|,
-literal|16
 argument_list|)
 operator|||
-operator|!
-name|strncmp
+name|CONST_STRNEQ
 argument_list|(
 name|nextname
 argument_list|,
 literal|"__.SYMDEF/      "
-argument_list|,
-literal|16
 argument_list|)
 condition|)
-comment|/* old Linux archives */
+comment|/* Old Linux archives.  */
 return|return
 name|do_slurp_bsd_armap
 argument_list|(
@@ -3201,14 +3188,11 @@ return|;
 elseif|else
 if|if
 condition|(
-operator|!
-name|strncmp
+name|CONST_STRNEQ
 argument_list|(
 name|nextname
 argument_list|,
 literal|"/               "
-argument_list|,
-literal|16
 argument_list|)
 condition|)
 return|return
@@ -3220,14 +3204,11 @@ return|;
 elseif|else
 if|if
 condition|(
-operator|!
-name|strncmp
+name|CONST_STRNEQ
 argument_list|(
 name|nextname
 argument_list|,
 literal|"/SYM64/         "
-argument_list|,
-literal|16
 argument_list|)
 condition|)
 block|{
@@ -3402,24 +3383,18 @@ name|FALSE
 return|;
 if|if
 condition|(
-operator|!
-name|strncmp
+name|CONST_STRNEQ
 argument_list|(
 name|nextname
 argument_list|,
 literal|"__.SYMDEF       "
-argument_list|,
-literal|16
 argument_list|)
 operator|||
-operator|!
-name|strncmp
+name|CONST_STRNEQ
 argument_list|(
 name|nextname
 argument_list|,
 literal|"__.SYMDEF/      "
-argument_list|,
-literal|16
 argument_list|)
 condition|)
 comment|/* Old Linux archives.  */
@@ -3431,13 +3406,12 @@ argument_list|)
 return|;
 if|if
 condition|(
-name|strncmp
+operator|!
+name|CONST_STRNEQ
 argument_list|(
 name|nextname
 argument_list|,
 literal|"/               "
-argument_list|,
-literal|16
 argument_list|)
 condition|)
 block|{
@@ -3826,27 +3800,21 @@ name|FALSE
 return|;
 if|if
 condition|(
-name|strncmp
+operator|!
+name|CONST_STRNEQ
 argument_list|(
 name|nextname
 argument_list|,
 literal|"ARFILENAMES/    "
-argument_list|,
-literal|16
 argument_list|)
-operator|!=
-literal|0
 operator|&&
-name|strncmp
+operator|!
+name|CONST_STRNEQ
 argument_list|(
 name|nextname
 argument_list|,
 literal|"//              "
-argument_list|,
-literal|16
 argument_list|)
-operator|!=
-literal|0
 condition|)
 block|{
 name|bfd_ardata
@@ -4581,7 +4549,7 @@ name|current
 operator|=
 name|current
 operator|->
-name|next
+name|archive_next
 control|)
 block|{
 specifier|const
@@ -4816,7 +4784,7 @@ name|current
 operator|=
 name|current
 operator|->
-name|next
+name|archive_next
 control|)
 block|{
 specifier|const
@@ -5027,7 +4995,7 @@ name|cnt
 operator|>=
 literal|0
 condition|;
-operator|++
+operator|--
 name|cnt
 operator|,
 name|id
@@ -6381,12 +6349,14 @@ operator|->
 name|archive_head
 init|;
 name|current
+operator|!=
+name|NULL
 condition|;
 name|current
 operator|=
 name|current
 operator|->
-name|next
+name|archive_next
 control|)
 block|{
 comment|/* This check is checking the bfds for the objects we're reading 	 from (which are usually either an object file or archive on 	 disk), not the archive entries we're writing to.  We don't 	 actually create bfds for the archive members, we just copy 	 them byte-wise when we write out the archive.  */
@@ -6403,9 +6373,9 @@ argument_list|(
 name|bfd_error_invalid_operation
 argument_list|)
 expr_stmt|;
-return|return
-name|FALSE
-return|;
+goto|goto
+name|input_err
+goto|;
 block|}
 if|if
 condition|(
@@ -6437,9 +6407,9 @@ name|current
 operator|->
 name|arelt_data
 condition|)
-return|return
-name|FALSE
-return|;
+goto|goto
+name|input_err
+goto|;
 comment|/* Put in the file name.  */
 name|BFD_SEND
 argument_list|(
@@ -6737,12 +6707,14 @@ operator|->
 name|archive_head
 init|;
 name|current
+operator|!=
+name|NULL
 condition|;
 name|current
 operator|=
 name|current
 operator|->
-name|next
+name|archive_next
 control|)
 block|{
 name|char
@@ -6811,9 +6783,9 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-return|return
-name|FALSE
-return|;
+goto|goto
+name|input_err
+goto|;
 while|while
 condition|(
 name|remaining
@@ -6862,12 +6834,12 @@ name|bfd_error_system_call
 condition|)
 name|bfd_set_error
 argument_list|(
-name|bfd_error_malformed_archive
+name|bfd_error_file_truncated
 argument_list|)
 expr_stmt|;
-return|return
-name|FALSE
-return|;
+goto|goto
+name|input_err
+goto|;
 block|}
 if|if
 condition|(
@@ -6967,6 +6939,21 @@ do|;
 block|}
 return|return
 name|TRUE
+return|;
+name|input_err
+label|:
+name|bfd_set_error
+argument_list|(
+name|bfd_error_on_input
+argument_list|,
+name|current
+argument_list|,
+name|bfd_get_error
+argument_list|()
+argument_list|)
+expr_stmt|;
+return|return
+name|FALSE
 return|;
 block|}
 end_function
@@ -7143,7 +7130,7 @@ name|arch
 operator|->
 name|archive_head
 operator|->
-name|next
+name|archive_next
 expr_stmt|;
 comment|/* Map over each element.  */
 for|for
@@ -7162,7 +7149,7 @@ name|current
 operator|=
 name|current
 operator|->
-name|next
+name|archive_next
 operator|,
 name|elt_no
 operator|++
@@ -8038,7 +8025,7 @@ name|current
 operator|=
 name|current
 operator|->
-name|next
+name|archive_next
 expr_stmt|;
 block|}
 do|while
@@ -8789,7 +8776,7 @@ name|current
 operator|=
 name|current
 operator|->
-name|next
+name|archive_next
 expr_stmt|;
 block|}
 comment|/* Now write the strings themselves.  */

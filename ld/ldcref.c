@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ldcref.c -- output a cross reference table    Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2006    Free Software Foundation, Inc.    Written by Ian Lance Taylor<ian@cygnus.com>  This file is part of GLD, the Gnu Linker.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
+comment|/* ldcref.c -- output a cross reference table    Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2006,    2007 Free Software Foundation, Inc.    Written by Ian Lance Taylor<ian@cygnus.com>  This file is part of GLD, the Gnu Linker.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -10,13 +10,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"bfd.h"
+file|"sysdep.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sysdep.h"
+file|"bfd.h"
 end_include
 
 begin_include
@@ -29,6 +29,12 @@ begin_include
 include|#
 directive|include
 file|"libiberty.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"demangle.h"
 end_include
 
 begin_include
@@ -124,6 +130,7 @@ name|bfd_hash_entry
 name|root
 decl_stmt|;
 comment|/* The demangled name.  */
+specifier|const
 name|char
 modifier|*
 name|demangled
@@ -333,6 +340,14 @@ specifier|static
 name|unsigned
 name|int
 name|old_size
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|unsigned
+name|int
+name|old_count
 decl_stmt|;
 end_decl_stmt
 
@@ -985,6 +1000,14 @@ name|root
 operator|.
 name|size
 expr_stmt|;
+name|old_count
+operator|=
+name|cref_table
+operator|.
+name|root
+operator|.
+name|count
+expr_stmt|;
 name|old_symcount
 operator|=
 name|cref_symcount
@@ -1208,6 +1231,14 @@ operator|.
 name|size
 operator|=
 name|old_size
+expr_stmt|;
+name|cref_table
+operator|.
+name|root
+operator|.
+name|count
+operator|=
+name|old_count
 expr_stmt|;
 name|memcpy
 argument_list|(
@@ -1451,14 +1482,38 @@ name|h
 operator|->
 name|demangled
 operator|=
-name|demangle
+name|bfd_demangle
 argument_list|(
+name|output_bfd
+argument_list|,
 name|h
 operator|->
 name|root
 operator|.
 name|string
+argument_list|,
+name|DMGL_ANSI
+operator||
+name|DMGL_PARAMS
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|h
+operator|->
+name|demangled
+operator|==
+name|NULL
+condition|)
+name|h
+operator|->
+name|demangled
+operator|=
+name|h
+operator|->
+name|root
+operator|.
+name|string
 expr_stmt|;
 operator|*
 operator|*
@@ -3306,6 +3361,18 @@ operator|)
 operator|)
 operator|!=
 literal|0
+operator|&&
+name|bfd_get_section
+argument_list|(
+operator|*
+name|q
+operator|->
+name|sym_ptr_ptr
+argument_list|)
+operator|==
+name|info
+operator|->
+name|defsec
 operator|)
 operator|)
 operator|&&
@@ -3331,7 +3398,6 @@ literal|0
 else|:
 operator|(
 operator|(
-operator|(
 operator|*
 name|q
 operator|->
@@ -3344,19 +3410,6 @@ name|BSF_SECTION_SYM
 operator|)
 operator|!=
 literal|0
-operator|&&
-name|bfd_get_section
-argument_list|(
-operator|*
-name|q
-operator|->
-name|sym_ptr_ptr
-argument_list|)
-operator|==
-name|info
-operator|->
-name|defsec
-operator|)
 operator|)
 condition|)
 block|{

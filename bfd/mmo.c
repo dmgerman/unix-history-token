@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for mmo objects (MMIX-specific object-format).    Copyright 2001, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.    Written by Hans-Peter Nilsson (hp@bitrange.com).    Infrastructure and other bits originally copied from srec.c and    binary.c.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
+comment|/* BFD back-end for mmo objects (MMIX-specific object-format).    Copyright 2001, 2002, 2003, 2004, 2005, 2006, 2007    Free Software Foundation, Inc.    Written by Hans-Peter Nilsson (hp@bitrange.com).    Infrastructure and other bits originally copied from srec.c and    binary.c.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -10,13 +10,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"bfd.h"
+file|"sysdep.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sysdep.h"
+file|"bfd.h"
 end_include
 
 begin_include
@@ -973,20 +973,8 @@ parameter_list|(
 name|bfd
 modifier|*
 parameter_list|,
-name|bfd_boolean
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|long
-name|mmo_get_reloc_upper_bound
-parameter_list|(
-name|bfd
-modifier|*
-parameter_list|,
-name|asection
+name|struct
+name|bfd_link_info
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1324,27 +1312,6 @@ name|bfd_boolean
 name|mmo_write_object_contents
 parameter_list|(
 name|bfd
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|long
-name|mmo_canonicalize_reloc
-parameter_list|(
-name|bfd
-modifier|*
-parameter_list|,
-name|sec_ptr
-parameter_list|,
-name|arelent
-modifier|*
-modifier|*
-parameter_list|,
-name|asymbol
-modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
@@ -7526,7 +7493,7 @@ name|struct
 name|stat
 name|statbuf
 decl_stmt|;
-name|long
+name|file_ptr
 name|curpos
 init|=
 name|bfd_tell
@@ -7892,14 +7859,21 @@ parameter_list|(
 name|bfd
 modifier|*
 name|abfd
-name|ATTRIBUTE_UNUSED
 parameter_list|,
 name|asection
 modifier|*
 name|newsect
 parameter_list|)
 block|{
-comment|/* We zero-fill all fields and assume NULL is represented by an all      zero-bit pattern.  */
+if|if
+condition|(
+operator|!
+name|newsect
+operator|->
+name|used_by_bfd
+condition|)
+block|{
+comment|/* We zero-fill all fields and assume NULL is represented by an all 	 zero-bit pattern.  */
 name|newsect
 operator|->
 name|used_by_bfd
@@ -7925,6 +7899,7 @@ condition|)
 return|return
 name|FALSE
 return|;
+block|}
 comment|/* Always align to at least 32-bit words.  */
 name|newsect
 operator|->
@@ -7933,7 +7908,12 @@ operator|=
 literal|2
 expr_stmt|;
 return|return
-name|TRUE
+name|_bfd_generic_new_section_hook
+argument_list|(
+name|abfd
+argument_list|,
+name|newsect
+argument_list|)
 return|;
 block|}
 end_function
@@ -8812,8 +8792,10 @@ modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
 parameter_list|,
-name|bfd_boolean
-name|exec
+name|struct
+name|bfd_link_info
+modifier|*
+name|info
 name|ATTRIBUTE_UNUSED
 parameter_list|)
 block|{
@@ -9604,21 +9586,14 @@ block|}
 elseif|else
 if|if
 condition|(
-name|strncmp
+name|CONST_STRNEQ
 argument_list|(
 name|sec
 operator|->
 name|name
 argument_list|,
 name|MMIX_OTHER_SPEC_SECTION_PREFIX
-argument_list|,
-name|strlen
-argument_list|(
-name|MMIX_OTHER_SPEC_SECTION_PREFIX
 argument_list|)
-argument_list|)
-operator|==
-literal|0
 condition|)
 block|{
 name|int
@@ -12445,76 +12420,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return the size of a NULL pointer, so we support linking in an mmo    object.  */
-end_comment
-
-begin_function
-specifier|static
-name|long
-name|mmo_get_reloc_upper_bound
-parameter_list|(
-name|bfd
-modifier|*
-name|abfd
-name|ATTRIBUTE_UNUSED
-parameter_list|,
-name|asection
-modifier|*
-name|sec
-name|ATTRIBUTE_UNUSED
-parameter_list|)
-block|{
-return|return
-sizeof|sizeof
-argument_list|(
-name|void
-operator|*
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* Similarly canonicalize relocs to empty, filling in the terminating NULL    pointer.  */
-end_comment
-
-begin_function
-name|long
-name|mmo_canonicalize_reloc
-parameter_list|(
-name|bfd
-modifier|*
-name|abfd
-name|ATTRIBUTE_UNUSED
-parameter_list|,
-name|sec_ptr
-name|section
-name|ATTRIBUTE_UNUSED
-parameter_list|,
-name|arelent
-modifier|*
-modifier|*
-name|relptr
-parameter_list|,
-name|asymbol
-modifier|*
-modifier|*
-name|symbols
-name|ATTRIBUTE_UNUSED
-parameter_list|)
-block|{
-operator|*
-name|relptr
-operator|=
-name|NULL
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/* If there's anything in particular in a mmo bfd that we want to free,    make this a real function.  Only do this if you see major memory    thrashing; zealous free:ing will cause unwanted behavior, especially if    you "free" memory allocated with "bfd_alloc", or even "bfd_release" a    block allocated with "bfd_alloc"; they're really allocated from an    obstack, and we don't know what was allocated there since this    particular allocation.  */
 end_comment
 
@@ -12718,17 +12623,6 @@ directive|define
 name|mmo_section_already_linked
 define|\
 value|_bfd_generic_section_already_linked
-end_define
-
-begin_comment
-comment|/* objcopy will be upset if we return -1 from bfd_get_reloc_upper_bound by    using BFD_JUMP_TABLE_RELOCS (_bfd_norelocs) rather than 0.  FIXME: Most    likely a bug in the _bfd_norelocs definition.     On the other hand, we smuggle in an mmo object (because setting up ELF    is too cumbersome) when linking (from other formats, presumably ELF) to    represent the g255 entry.  We need to link that object, so need to say    it has no relocs.  Upper bound for the size of the relocation table is    the size of a NULL pointer, and we support "canonicalization" for that    pointer.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|mmo_bfd_reloc_type_lookup
-value|_bfd_norelocs_bfd_reloc_type_lookup
 end_define
 
 begin_comment
@@ -12938,10 +12832,9 @@ argument_list|(
 name|mmo
 argument_list|)
 block|,
-comment|/* We have to provide a valid method for getting relocs, returning zero,      so we can't say BFD_JUMP_TABLE_RELOCS (_bfd_norelocs).  */
 name|BFD_JUMP_TABLE_RELOCS
 argument_list|(
-name|mmo
+name|_bfd_norelocs
 argument_list|)
 block|,
 name|BFD_JUMP_TABLE_WRITE

@@ -113,6 +113,17 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|comment_start
+init|=
+literal|"0x"
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|int
@@ -656,7 +667,7 @@ operator|)
 operator|*
 literal|2
 expr_stmt|;
-comment|/* See PR binutils/2545.  Ideally we would like to display the hex 	 value of the address only once, but this would mean recoding 	 objdump_print_address() which would affect many targets.  */
+comment|/* See PR binutils/2454.  Ideally we would like to display the hex 	 value of the address only once, but this would mean recoding 	 objdump_print_address() which would affect many targets.  */
 name|sprintf
 argument_list|(
 name|buf
@@ -675,7 +686,7 @@ name|sprintf
 argument_list|(
 name|comment
 argument_list|,
-literal|"0x"
+name|comment_start
 argument_list|)
 expr_stmt|;
 break|break;
@@ -729,7 +740,7 @@ name|sprintf
 argument_list|(
 name|comment
 argument_list|,
-literal|"0x"
+name|comment_start
 argument_list|)
 expr_stmt|;
 block|}
@@ -788,7 +799,7 @@ name|sprintf
 argument_list|(
 name|comment
 argument_list|,
-literal|"0x"
+name|comment_start
 argument_list|)
 expr_stmt|;
 block|}
@@ -1263,6 +1274,19 @@ name|unsigned
 name|int
 name|nopcodes
 decl_stmt|;
+comment|/* PR 4045: Try to avoid duplicating the 0x prefix that 	 objdump_print_addr() will put on addresses when there 	 is no symbol table available.  */
+if|if
+condition|(
+name|info
+operator|->
+name|symtab_size
+operator|==
+literal|0
+condition|)
+name|comment_start
+operator|=
+literal|" "
+expr_stmt|;
 name|nopcodes
 operator|=
 sizeof|sizeof

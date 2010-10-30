@@ -889,14 +889,11 @@ literal|255
 argument_list|)
 end_macro
 
-begin_macro
+begin_expr_stmt
 name|END_RELOC_NUMBERS
 argument_list|(
-argument|R_PPC_max
+name|R_PPC_max
 argument_list|)
-end_macro
-
-begin_define
 define|#
 directive|define
 name|IS_PPC_TLS_RELOC
@@ -905,85 +902,51 @@ name|R
 parameter_list|)
 define|\
 value|((R)>= R_PPC_TLS&& (R)<= R_PPC_GOT_DTPREL16_HA)
-end_define
-
-begin_comment
 comment|/* Specify the value of _GLOBAL_OFFSET_TABLE_.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|DT_PPC_GOT
 value|DT_LOPROC
-end_define
-
-begin_comment
 comment|/* Processor specific flags for the ELF header e_flags field.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|EF_PPC_EMB
 value|0x80000000
-end_define
-
-begin_comment
 comment|/* PowerPC embedded flag.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|EF_PPC_RELOCATABLE
 value|0x00010000
-end_define
-
-begin_comment
 comment|/* PowerPC -mrelocatable flag.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|EF_PPC_RELOCATABLE_LIB
 value|0x00008000
-end_define
-
-begin_comment
 comment|/* PowerPC -mrelocatable-lib flag.  */
-end_comment
-
-begin_comment
 comment|/* Processor specific section headers, sh_type field.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|SHT_ORDERED
 value|SHT_HIPROC
-end_define
-
-begin_comment
 comment|/* Link editor is to sort the \ 						   entries in this section \ 						   based on the address \ 						   specified in the associated \ 						   symbol table entry.  */
-end_comment
-
-begin_comment
 comment|/* Processor specific section flags, sh_flags field.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|SHF_EXCLUDE
 value|0x80000000
-end_define
-
-begin_comment
 comment|/* Link editor is to exclude \ 						   this section from executable \ 						   and shared objects that it \ 						   builds when those objects \ 						   are not to be furhter \ 						   relocated.  */
-end_comment
+comment|/* Object attribute tags.  */
+expr|enum
+block|{
+comment|/* 0-3 are generic.  */
+name|Tag_GNU_Power_ABI_FP
+operator|=
+literal|4
+block|,
+comment|/* Value 1 for hard-float, 2 for 			       soft-float; 0 for not tagged or not 			       using any ABIs affected by the 			       differences.  */
+block|}
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#

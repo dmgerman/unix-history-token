@@ -26,31 +26,6 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|BFD_ASSEMBLER
-end_ifdef
-
-begin_comment
-comment|/* Fixup debug sections since we will never relax them.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TC_LINKRELAX_FIXUP
-parameter_list|(
-name|seg
-parameter_list|)
-value|(seg->flags& SEC_ALLOC)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|OBJ_ELF
 end_ifdef
 

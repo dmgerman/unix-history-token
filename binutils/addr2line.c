@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* addr2line.c -- convert addresses to line number and function name    Copyright 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2006    Free Software Foundation, Inc.    Contributed by Ulrich Lauther<Ulrich.Lauther@mchp.siemens.de>     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
+comment|/* addr2line.c -- convert addresses to line number and function name    Copyright 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2006, 2007    Free Software Foundation, Inc.    Contributed by Ulrich Lauther<Ulrich.Lauther@mchp.siemens.de>     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -10,13 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"config.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
+file|"sysdep.h"
 end_include
 
 begin_include
@@ -47,12 +41,6 @@ begin_include
 include|#
 directive|include
 file|"bucomm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"budemang.h"
 end_include
 
 begin_decl_stmt
@@ -316,26 +304,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|void
-name|process_file
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_escape
 end_escape
 
@@ -407,6 +375,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|REPORT_BUGS_TO
+index|[
+literal|0
+index|]
+operator|&&
 name|status
 operator|==
 literal|0
@@ -958,13 +931,23 @@ condition|)
 block|{
 name|alloc
 operator|=
-name|demangle
+name|bfd_demangle
 argument_list|(
 name|abfd
 argument_list|,
 name|name
+argument_list|,
+name|DMGL_ANSI
+operator||
+name|DMGL_PARAMS
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|alloc
+operator|!=
+name|NULL
+condition|)
 name|name
 operator|=
 name|alloc
@@ -1081,12 +1064,12 @@ block|}
 end_function
 
 begin_comment
-comment|/* Process a file.  */
+comment|/* Process a file.  Returns an exit value for main().  */
 end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|process_file
 parameter_list|(
 specifier|const
@@ -1127,7 +1110,9 @@ argument_list|)
 operator|<
 literal|1
 condition|)
-return|return;
+return|return
+literal|1
+return|;
 name|abfd
 operator|=
 name|bfd_openr
@@ -1288,6 +1273,9 @@ argument_list|(
 name|abfd
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -1599,6 +1587,7 @@ name|argc
 operator|-
 name|optind
 expr_stmt|;
+return|return
 name|process_file
 argument_list|(
 name|file_name
@@ -1607,9 +1596,6 @@ name|section_name
 argument_list|,
 name|target
 argument_list|)
-expr_stmt|;
-return|return
-literal|0
 return|;
 block|}
 end_function

@@ -132,6 +132,10 @@ comment|/* Whether next_input_name was allocated using malloc.  */
 name|int
 name|next_input_name_allocated
 decl_stmt|;
+comment|/* If not -1, stderr pipe from the last process.  */
+name|int
+name|stderr_pipe
+decl_stmt|;
 comment|/* Number of child processes.  */
 name|int
 name|count
@@ -165,6 +169,11 @@ comment|/* FILE created by pex_read_output.  */
 name|FILE
 modifier|*
 name|read_output
+decl_stmt|;
+comment|/* FILE created by pex_read_err.  */
+name|FILE
+modifier|*
+name|read_err
 decl_stmt|;
 comment|/* Number of temporary files to remove.  */
 name|int
@@ -240,7 +249,7 @@ name|int
 comment|/* binary */
 parameter_list|)
 function_decl|;
-comment|/* Execute a child process.  FLAGS, EXECUTABLE, ARGV, ERR are from      pex_run.  IN, OUT, ERRDES are each a descriptor, from open_read,      open_write, or pipe, or they are one of STDIN_FILE_NO,      STDOUT_FILE_NO or STDERR_FILE_NO; if not STD*_FILE_NO, they      should be closed.  The function should handle the      PEX_STDERR_TO_STDOUT flag.  Return>= 0 on success, or -1 on      error and set *ERRMSG and *ERR.  */
+comment|/* Execute a child process.  FLAGS, EXECUTABLE, ARGV, ERR are from      pex_run.  IN, OUT, ERRDES, TOCLOSE are all descriptors, from      open_read, open_write, or pipe, or they are one of STDIN_FILE_NO,      STDOUT_FILE_NO or STDERR_FILE_NO; if IN, OUT, and ERRDES are not      STD*_FILE_NO, they should be closed.  If the descriptor TOCLOSE      is not -1, and the system supports pipes, TOCLOSE should be      closed in the child process.  The function should handle the      PEX_STDERR_TO_STDOUT flag.  Return>= 0 on success, or -1 on      error and set *ERRMSG and *ERR.  */
 name|long
 function_decl|(
 modifier|*
@@ -265,6 +274,12 @@ specifier|const
 modifier|*
 comment|/* argv */
 parameter_list|,
+name|char
+modifier|*
+specifier|const
+modifier|*
+comment|/* env */
+parameter_list|,
 name|int
 comment|/* in */
 parameter_list|,
@@ -273,6 +288,9 @@ comment|/* out */
 parameter_list|,
 name|int
 comment|/* errdes */
+parameter_list|,
+name|int
+comment|/* toclose */
 parameter_list|,
 specifier|const
 name|char

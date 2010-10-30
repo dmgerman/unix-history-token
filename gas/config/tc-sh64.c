@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-sh64.c -- Assemble code for the SuperH SH SHcompact and SHmedia.    Copyright 2000, 2001, 2002, 2003, 2004, 2005 Free Software Foundation.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 51 Franklin Street - Fifth Floor,    Boston, MA 02110-1301, USA.  */
+comment|/* tc-sh64.c -- Assemble code for the SuperH SH SHcompact and SHmedia.    Copyright 2000, 2001, 2002, 2003, 2004, 2005, 2006    Free Software Foundation.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 51 Franklin Street - Fifth Floor,    Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -12,12 +12,6 @@ define|#
 directive|define
 name|HAVE_SH64
 end_define
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
 
 begin_include
 include|#
@@ -6259,7 +6253,7 @@ name|msg
 operator|=
 name|_
 argument_list|(
-literal|"invalid operand, not an 16-bit unsigned value: %d"
+literal|"invalid operand, not a 16-bit unsigned value: %d"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -13005,17 +12999,6 @@ name|sec
 name|ATTRIBUTE_UNUSED
 parameter_list|)
 block|{
-name|know
-argument_list|(
-name|fixP
-operator|->
-name|fx_frag
-operator|->
-name|fr_type
-operator|==
-name|rs_machine_dependent
-argument_list|)
-expr_stmt|;
 comment|/* Use the ISA for the instruction to decide which offset to use.  We      can glean it from the fisup type.  */
 switch|switch
 condition|(

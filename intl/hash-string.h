@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Implements a string hashing function.    Copyright (C) 1995, 1997 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU Library General Public    License along with the GNU C Library; see the file COPYING.LIB.  If not,    write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,    Boston, MA 02110-1301, USA.  */
+comment|/* Description of GNU message catalog format: string hashing function.    Copyright (C) 1995, 1997, 1998, 2000, 2001 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify it    under the terms of the GNU Library General Public License as published    by the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    Library General Public License for more details.     You should have received a copy of the GNU Library General Public    License along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301,    USA.  */
 end_comment
 
 begin_comment
@@ -17,6 +17,17 @@ begin_if
 if|#
 directive|if
 name|__STDC__
+operator|||
+name|defined
+name|__GNUC__
+operator|||
+name|defined
+name|__SUNPRO_C
+operator|||
+name|defined
+name|__cplusplus
+operator|||
+name|__PROTOTYPES
 end_if
 
 begin_define
@@ -73,6 +84,7 @@ begin_decl_stmt
 specifier|static
 name|unsigned
 name|long
+name|int
 name|hash_string
 name|PARAMS
 argument_list|(
@@ -91,6 +103,7 @@ specifier|static
 specifier|inline
 name|unsigned
 name|long
+name|int
 name|hash_string
 parameter_list|(
 name|str_param
@@ -137,6 +150,7 @@ operator|+=
 operator|(
 name|unsigned
 name|long
+name|int
 operator|)
 operator|*
 name|str
@@ -150,6 +164,7 @@ operator|(
 operator|(
 name|unsigned
 name|long
+name|int
 operator|)
 literal|0xf
 operator|<<

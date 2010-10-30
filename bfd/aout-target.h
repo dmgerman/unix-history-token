@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Define a target vector and some small routines for a variant of a.out.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
+comment|/* Define a target vector and some small routines for a variant of a.out.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002, 2003, 2004, 2005, 2007    Free Software Foundation, Inc.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -58,6 +58,27 @@ name|bfd
 operator|*
 argument_list|,
 name|bfd_reloc_code_real_type
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|reloc_howto_type
+modifier|*
+name|NAME
+argument_list|(
+name|aout
+argument_list|,
+name|reloc_name_lookup
+argument_list|)
+argument_list|(
+name|bfd
+operator|*
+argument_list|,
+specifier|const
+name|char
+operator|*
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -2279,6 +2300,24 @@ define|#
 directive|define
 name|MY_bfd_reloc_type_lookup
 value|NAME (aout, reloc_type_lookup)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MY_bfd_reloc_name_lookup
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MY_bfd_reloc_name_lookup
+value|NAME (aout, reloc_name_lookup)
 end_define
 
 begin_endif

@@ -158,7 +158,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The instruction is permitted to contain an = character.  */
+comment|/* Almost all instructions of Blackfin contain an = character.  */
 end_comment
 
 begin_define
@@ -170,22 +170,8 @@ name|C
 parameter_list|,
 name|NAME
 parameter_list|)
-value|(bfin_name_is_register (NAME) ? 1 : 0)
+value|1
 end_define
-
-begin_decl_stmt
-specifier|extern
-name|bfd_boolean
-name|bfin_name_is_register
-name|PARAMS
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
@@ -314,6 +300,20 @@ parameter_list|(
 name|FIX
 parameter_list|)
 value|0
+end_define
+
+begin_comment
+comment|/* This target is buggy, and sets fix size too large.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TC_FX_SIZE_SLACK
+parameter_list|(
+name|FIX
+parameter_list|)
+value|2
 end_define
 
 begin_comment

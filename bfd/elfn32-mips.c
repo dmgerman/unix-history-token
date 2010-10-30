@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* MIPS-specific support for 32-bit ELF    Copyright 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002,    2003, 2004, 2005 Free Software Foundation, Inc.     Most of the information added by Ian Lance Taylor, Cygnus Support,<ian@cygnus.com>.    N32/64 ABI support added by Mark Mitchell, CodeSourcery, LLC.<mark@codesourcery.com>    Traditional MIPS targets support added by Koundinya.K, Dansk Data    Elektronik& Operations Research Group.<kk@ddeorg.soft.net>  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
+comment|/* MIPS-specific support for 32-bit ELF    Copyright 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002,    2003, 2004, 2005, 2007 Free Software Foundation, Inc.     Most of the information added by Ian Lance Taylor, Cygnus Support,<ian@cygnus.com>.    N32/64 ABI support added by Mark Mitchell, CodeSourcery, LLC.<mark@codesourcery.com>    Traditional MIPS targets support added by Koundinya.K, Dansk Data    Elektronik& Operations Research Group.<kk@ddeorg.soft.net>  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -10,13 +10,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"bfd.h"
+file|"sysdep.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sysdep.h"
+file|"bfd.h"
 end_include
 
 begin_include
@@ -259,36 +259,6 @@ begin_function_decl
 specifier|static
 name|bfd_reloc_status_type
 name|mips_elf_shift6_reloc
-parameter_list|(
-name|bfd
-modifier|*
-parameter_list|,
-name|arelent
-modifier|*
-parameter_list|,
-name|asymbol
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|,
-name|asection
-modifier|*
-parameter_list|,
-name|bfd
-modifier|*
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|bfd_reloc_status_type
-name|mips16_jump_reloc
 parameter_list|(
 name|bfd
 modifier|*
@@ -2369,6 +2339,49 @@ name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
+comment|/* 32 bit relocation with no addend.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_GLOB_DAT
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|32
+argument_list|,
+comment|/* bitsize */
+name|FALSE
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_dont
+argument_list|,
+comment|/* complain_on_overflow */
+name|_bfd_mips_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_GLOB_DAT"
+argument_list|,
+comment|/* name */
+name|FALSE
+argument_list|,
+comment|/* partial_inplace */
+literal|0x0
+argument_list|,
+comment|/* src_mask */
+literal|0xffffffff
+argument_list|,
+comment|/* dst_mask */
+name|FALSE
+argument_list|)
+block|,
+comment|/* pcrel_offset */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -4277,6 +4290,49 @@ name|FALSE
 argument_list|)
 block|,
 comment|/* pcrel_offset */
+comment|/* 32 bit relocation with no addend.  */
+name|HOWTO
+argument_list|(
+name|R_MIPS_GLOB_DAT
+argument_list|,
+comment|/* type */
+literal|0
+argument_list|,
+comment|/* rightshift */
+literal|2
+argument_list|,
+comment|/* size (0 = byte, 1 = short, 2 = long) */
+literal|32
+argument_list|,
+comment|/* bitsize */
+name|FALSE
+argument_list|,
+comment|/* pc_relative */
+literal|0
+argument_list|,
+comment|/* bitpos */
+name|complain_overflow_dont
+argument_list|,
+comment|/* complain_on_overflow */
+name|_bfd_mips_elf_generic_reloc
+argument_list|,
+comment|/* special_function */
+literal|"R_MIPS_GLOB_DAT"
+argument_list|,
+comment|/* name */
+name|FALSE
+argument_list|,
+comment|/* partial_inplace */
+literal|0x0
+argument_list|,
+comment|/* src_mask */
+literal|0xffffffff
+argument_list|,
+comment|/* dst_mask */
+name|FALSE
+argument_list|)
+block|,
+comment|/* pcrel_offset */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -4313,7 +4369,7 @@ name|complain_overflow_dont
 argument_list|,
 comment|/* complain_on_overflow */
 comment|/* This needs complex overflow 				   detection, because the upper four 				   bits must match the PC.  */
-name|mips16_jump_reloc
+name|_bfd_mips_elf_generic_reloc
 argument_list|,
 comment|/* special_function */
 literal|"R_MIPS16_26"
@@ -4509,7 +4565,7 @@ name|complain_overflow_dont
 argument_list|,
 comment|/* complain_on_overflow */
 comment|/* This needs complex overflow 				   detection, because the upper four 				   bits must match the PC.  */
-name|mips16_jump_reloc
+name|_bfd_mips_elf_generic_reloc
 argument_list|,
 comment|/* special_function */
 literal|"R_MIPS16_26"
@@ -5974,93 +6030,6 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Handle a mips16 jump.  */
-end_comment
-
-begin_function
-specifier|static
-name|bfd_reloc_status_type
-name|mips16_jump_reloc
-parameter_list|(
-name|bfd
-modifier|*
-name|abfd
-name|ATTRIBUTE_UNUSED
-parameter_list|,
-name|arelent
-modifier|*
-name|reloc_entry
-name|ATTRIBUTE_UNUSED
-parameter_list|,
-name|asymbol
-modifier|*
-name|symbol
-name|ATTRIBUTE_UNUSED
-parameter_list|,
-name|void
-modifier|*
-name|data
-name|ATTRIBUTE_UNUSED
-parameter_list|,
-name|asection
-modifier|*
-name|input_section
-parameter_list|,
-name|bfd
-modifier|*
-name|output_bfd
-name|ATTRIBUTE_UNUSED
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|error_message
-name|ATTRIBUTE_UNUSED
-parameter_list|)
-block|{
-specifier|static
-name|bfd_boolean
-name|warned
-init|=
-name|FALSE
-decl_stmt|;
-comment|/* FIXME.  */
-if|if
-condition|(
-operator|!
-name|warned
-condition|)
-call|(
-modifier|*
-name|_bfd_error_handler
-call|)
-argument_list|(
-name|_
-argument_list|(
-literal|"Linking mips16 objects into %s format is not supported"
-argument_list|)
-argument_list|,
-name|bfd_get_target
-argument_list|(
-name|input_section
-operator|->
-name|output_section
-operator|->
-name|owner
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|warned
-operator|=
-name|TRUE
-expr_stmt|;
-return|return
-name|bfd_reloc_undefined
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/* Handle a mips16 GP relative reloc.  */
 end_comment
 
@@ -6793,6 +6762,217 @@ return|return
 name|NULL
 return|;
 block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|reloc_howto_type
+modifier|*
+name|bfd_elf32_bfd_reloc_name_lookup
+parameter_list|(
+name|bfd
+modifier|*
+name|abfd
+name|ATTRIBUTE_UNUSED
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|r_name
+parameter_list|)
+block|{
+name|unsigned
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+operator|(
+sizeof|sizeof
+argument_list|(
+name|elf_mips_howto_table_rela
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|elf_mips_howto_table_rela
+index|[
+literal|0
+index|]
+argument_list|)
+operator|)
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|elf_mips_howto_table_rela
+index|[
+name|i
+index|]
+operator|.
+name|name
+operator|!=
+name|NULL
+operator|&&
+name|strcasecmp
+argument_list|(
+name|elf_mips_howto_table_rela
+index|[
+name|i
+index|]
+operator|.
+name|name
+argument_list|,
+name|r_name
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|&
+name|elf_mips_howto_table_rela
+index|[
+name|i
+index|]
+return|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+operator|(
+sizeof|sizeof
+argument_list|(
+name|elf_mips16_howto_table_rela
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|elf_mips16_howto_table_rela
+index|[
+literal|0
+index|]
+argument_list|)
+operator|)
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|elf_mips16_howto_table_rela
+index|[
+name|i
+index|]
+operator|.
+name|name
+operator|!=
+name|NULL
+operator|&&
+name|strcasecmp
+argument_list|(
+name|elf_mips16_howto_table_rela
+index|[
+name|i
+index|]
+operator|.
+name|name
+argument_list|,
+name|r_name
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|&
+name|elf_mips16_howto_table_rela
+index|[
+name|i
+index|]
+return|;
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|elf_mips_gnu_vtinherit_howto
+operator|.
+name|name
+argument_list|,
+name|r_name
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|&
+name|elf_mips_gnu_vtinherit_howto
+return|;
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|elf_mips_gnu_vtentry_howto
+operator|.
+name|name
+argument_list|,
+name|r_name
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|&
+name|elf_mips_gnu_vtentry_howto
+return|;
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|elf_mips_gnu_rel16_s2
+operator|.
+name|name
+argument_list|,
+name|r_name
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|&
+name|elf_mips_gnu_rel16_s2
+return|;
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|elf_mips_gnu_rela16_s2
+operator|.
+name|name
+argument_list|,
+name|r_name
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|&
+name|elf_mips_gnu_rela16_s2
+return|;
+return|return
+name|NULL
+return|;
 block|}
 end_function
 
@@ -7757,6 +7937,14 @@ end_define
 begin_define
 define|#
 directive|define
+name|elf_backend_merge_symbol_attribute
+define|\
+value|_bfd_mips_elf_merge_symbol_attribute
+end_define
+
+begin_define
+define|#
+directive|define
 name|elf_backend_adjust_dynamic_symbol
 define|\
 value|_bfd_mips_elf_adjust_dynamic_symbol
@@ -7776,6 +7964,13 @@ directive|define
 name|elf_backend_size_dynamic_sections
 define|\
 value|_bfd_mips_elf_size_dynamic_sections
+end_define
+
+begin_define
+define|#
+directive|define
+name|elf_backend_init_index_section
+value|_bfd_elf_init_1_index_section
 end_define
 
 begin_define
@@ -8062,14 +8257,17 @@ name|TARGET_BIG_NAME
 value|"elf32-nbigmips"
 end_define
 
-begin_comment
-comment|/* The SVR4 MIPS ABI says that this should be 0x10000, but Irix 5 uses    a value of 0x1000, and we are compatible.    FIXME: How does this affect NewABI?  */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|ELF_MAXPAGESIZE
+value|0x10000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ELF_COMMONPAGESIZE
 value|0x1000
 end_define
 
@@ -8113,6 +8311,12 @@ directive|undef
 name|ELF_MAXPAGESIZE
 end_undef
 
+begin_undef
+undef|#
+directive|undef
+name|ELF_COMMONPAGESIZE
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -8141,15 +8345,18 @@ name|TARGET_BIG_NAME
 value|"elf32-ntradbigmips"
 end_define
 
-begin_comment
-comment|/* The SVR4 MIPS ABI says that this should be 0x10000, and Linux uses    page sizes of up to that limit, so we need to respect it.  */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|ELF_MAXPAGESIZE
 value|0x10000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ELF_COMMONPAGESIZE
+value|0x1000
 end_define
 
 begin_define

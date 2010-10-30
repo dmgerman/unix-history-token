@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* nlmconv.c -- NLM conversion program    Copyright 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002,    2003, 2004, 2005 Free Software Foundation, Inc.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
+comment|/* nlmconv.c -- NLM conversion program    Copyright 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002,    2003, 2004, 2005, 2006, 2007 Free Software Foundation, Inc.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -42,6 +42,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|"sysdep.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"bfd.h"
 end_include
 
@@ -49,12 +55,6 @@ begin_include
 include|#
 directive|include
 file|"libiberty.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"bucomm.h"
 end_include
 
 begin_include
@@ -137,6 +137,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|"bucomm.h"
+end_include
 
 begin_comment
 comment|/* If strerror is just a macro, we want to use the one from libiberty    since it will handle undefined values.  */
@@ -3503,7 +3509,7 @@ literal|"help section"
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|LITMEMCPY
 argument_list|(
 name|nlm_extended_header
 argument_list|(
@@ -3513,8 +3519,6 @@ operator|->
 name|stamp
 argument_list|,
 literal|"MeSsAgEs"
-argument_list|,
-literal|8
 argument_list|)
 expr_stmt|;
 block|}
@@ -3627,7 +3631,7 @@ literal|"message section"
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|LITMEMCPY
 argument_list|(
 name|nlm_extended_header
 argument_list|(
@@ -3637,8 +3641,6 @@ operator|->
 name|stamp
 argument_list|,
 literal|"MeSsAgEs"
-argument_list|,
-literal|8
 argument_list|)
 expr_stmt|;
 block|}
@@ -3838,7 +3840,7 @@ literal|"rpc section"
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|LITMEMCPY
 argument_list|(
 name|nlm_extended_header
 argument_list|(
@@ -3848,8 +3850,6 @@ operator|->
 name|stamp
 argument_list|,
 literal|"MeSsAgEs"
-argument_list|,
-literal|8
 argument_list|)
 expr_stmt|;
 block|}
@@ -4140,7 +4140,7 @@ literal|"shared section"
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|LITMEMCPY
 argument_list|(
 name|nlm_extended_header
 argument_list|(
@@ -4150,8 +4150,6 @@ operator|->
 name|stamp
 argument_list|,
 literal|"MeSsAgEs"
-argument_list|,
-literal|8
 argument_list|)
 expr_stmt|;
 block|}
@@ -4160,18 +4158,15 @@ block|}
 comment|/* Check whether a version was given.  */
 if|if
 condition|(
-name|strncmp
+operator|!
+name|CONST_STRNEQ
 argument_list|(
 name|version_hdr
 operator|->
 name|stamp
 argument_list|,
 literal|"VeRsIoN#"
-argument_list|,
-literal|8
 argument_list|)
-operator|!=
-literal|0
 condition|)
 name|non_fatal
 argument_list|(
@@ -4182,7 +4177,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* At least for now, always create an extended header, because that      is what NLMLINK does.  */
-name|strncpy
+name|LITMEMCPY
 argument_list|(
 name|nlm_extended_header
 argument_list|(
@@ -4192,11 +4187,9 @@ operator|->
 name|stamp
 argument_list|,
 literal|"MeSsAgEs"
-argument_list|,
-literal|8
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|LITMEMCPY
 argument_list|(
 name|nlm_cygnus_ext_header
 argument_list|(
@@ -4206,8 +4199,6 @@ operator|->
 name|stamp
 argument_list|,
 literal|"CyGnUsEx"
-argument_list|,
-literal|8
 argument_list|)
 expr_stmt|;
 comment|/* If the date was not given, force it in.  */
@@ -4300,15 +4291,13 @@ name|tm_year
 operator|+
 literal|1900
 expr_stmt|;
-name|strncpy
+name|LITMEMCPY
 argument_list|(
 name|version_hdr
 operator|->
 name|stamp
 argument_list|,
 literal|"VeRsIoN#"
-argument_list|,
-literal|8
 argument_list|)
 expr_stmt|;
 block|}
@@ -5519,6 +5508,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|REPORT_BUGS_TO
+index|[
+literal|0
+index|]
+operator|&&
 name|status
 operator|==
 literal|0
@@ -8422,10 +8416,6 @@ continue|continue;
 comment|/* Make a new undefined symbol with the same name but without 	 the leading `.'.  */
 name|newsym
 operator|=
-operator|(
-name|asymbol
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 sizeof|sizeof
@@ -8442,10 +8432,6 @@ name|sym
 expr_stmt|;
 name|newname
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|xmalloc
 argument_list|(
 name|strlen

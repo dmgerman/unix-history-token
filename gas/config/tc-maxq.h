@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-maxq.h -- Header file for the asssembler(MAXQ)     Copyright 2004, 2005  Free Software Foundation, Inc.     Contributed by HCL Technologies Pvt. Ltd.     Written by Vineet Sharma(vineets@noida.hcltech.com) Inderpreet    S.(inderpreetb@noida.hcltech.com)     This file is part of GAS.     GAS is free software; you can redistribute it and/or modify it under the    terms of the GNU General Public License as published by the Free Software    Foundation; either version 2, or (at your option) any later version.     GAS is distributed in the hope that it will be useful, but WITHOUT ANY    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more    details.     You should have received a copy of the GNU General Public License along    with GAS; see the file COPYING.  If not, write to the Free Software    Foundation, 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
+comment|/* tc-maxq.h -- Header file for the assembler(MAXQ)     Copyright 2004, 2005  Free Software Foundation, Inc.     Contributed by HCL Technologies Pvt. Ltd.     Written by Vineet Sharma(vineets@noida.hcltech.com) Inderpreet    S.(inderpreetb@noida.hcltech.com)     This file is part of GAS.     GAS is free software; you can redistribute it and/or modify it under the    terms of the GNU General Public License as published by the Free Software    Foundation; either version 2, or (at your option) any later version.     GAS is distributed in the hope that it will be useful, but WITHOUT ANY    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more    details.     You should have received a copy of the GNU General Public License along    with GAS; see the file COPYING.  If not, write to the Free Software    Foundation, 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -390,7 +390,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* If this macro is defined, it is a pointer to a NULL terminated list of    chracters which may appear in an operand. GAS already assumes that all    alphanumeric chracters, and '$', '.', and '_' may appear in an    operand("symbol_char"in app.c). This macro may be defined to treat    additional chracters as appearing in an operand. This affects the way in    which GAS removes whitespaces before passing the string to md_assemble.  */
+comment|/* If this macro is defined, it is a pointer to a NULL terminated list of    characters which may appear in an operand. GAS already assumes that all    alphanumeric characters, and '$', '.', and '_' may appear in an    operand("symbol_char"in app.c). This macro may be defined to treat    additional characters as appearing in an operand. This affects the way in    which GAS removes whitespaces before passing the string to md_assemble.  */
 end_comment
 
 begin_define

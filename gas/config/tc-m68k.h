@@ -772,7 +772,6 @@ specifier|extern
 name|int
 name|tc_m68k_regname_to_dw2regnum
 parameter_list|(
-specifier|const
 name|char
 modifier|*
 name|regname

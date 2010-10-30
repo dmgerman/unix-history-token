@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ELF support for BFD.    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001, 2002, 2003, 2004, 2005, 2006    Free Software Foundation, Inc.     Written by Fred Fish @ Cygnus Support, from information published    in "UNIX System V Release 4, Programmers Guide: ANSI C and    Programming Support Tools".     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
+comment|/* ELF support for BFD.    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001, 2002, 2003, 2004, 2005, 2006, 2007    Free Software Foundation, Inc.     Written by Fred Fish @ Cygnus Support, from information published    in "UNIX System V Release 4, Programmers Guide: ANSI C and    Programming Support Tools".     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -742,6 +742,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|EM_SPU
+value|23
+end_define
+
+begin_comment
+comment|/* Sony/Toshiba/IBM SPU */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|EM_V800
 value|36
 end_define
@@ -1458,6 +1469,28 @@ begin_comment
 comment|/* National Semiconductor CRX */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|EM_CR16
+value|115
+end_define
+
+begin_comment
+comment|/* National Semiconductor CompactRISC - CR16 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_SCORE
+value|135
+end_define
+
+begin_comment
+comment|/* Sunplus Score */
+end_comment
+
 begin_comment
 comment|/* If it is necessary to assign new unofficial EM_* values, please pick large    random numbers (0x8523, 0xa7f2, etc.) to minimize the chances of collision    with official or non-GNU unofficial values.     NOTE: Do not just increment the most recent number by one.    Somebody else somewhere will do exactly the same thing, and you    will have a collision.  Instead, pick a random number.     Normally, each entity or maintainer responsible for a machine with an    unofficial e_machine number should eventually ask registry@caldera.com for    an officially blessed number to be added to the list above.	*/
 end_comment
@@ -1750,6 +1783,17 @@ directive|define
 name|EM_NIOS32
 value|0xFEBB
 end_define
+
+begin_define
+define|#
+directive|define
+name|EM_CYGNUS_MEP
+value|0xF00D
+end_define
+
+begin_comment
+comment|/* Toshiba MeP */
+end_comment
 
 begin_comment
 comment|/* See the above comment before you add a new EM_* value here.  */
@@ -2239,6 +2283,28 @@ end_define
 
 begin_comment
 comment|/* Last of OS specific semantics */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHT_GNU_ATTRIBUTES
+value|0x6ffffff5
+end_define
+
+begin_comment
+comment|/* Object attributes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHT_GNU_HASH
+value|0x6ffffff6
+end_define
+
+begin_comment
+comment|/* GNU style symbol hash table */
 end_comment
 
 begin_define
@@ -2864,7 +2930,7 @@ value|ELF_ST_INFO
 end_define
 
 begin_comment
-comment|/* This macro disassembles and assembles a symbol's visibility into    the st_other field.  The STV_ defines specificy the actual visibility.  */
+comment|/* This macro disassembles and assembles a symbol's visibility into    the st_other field.  The STV_ defines specify the actual visibility.  */
 end_comment
 
 begin_define
@@ -3058,6 +3124,28 @@ end_define
 
 begin_comment
 comment|/* Thread local data object */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STT_RELC
+value|8
+end_define
+
+begin_comment
+comment|/* Complex relocation expression */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STT_SRELC
+value|9
+end_define
+
+begin_comment
+comment|/* Signed Complex relocation expression */
 end_comment
 
 begin_define
@@ -3570,7 +3658,7 @@ begin_define
 define|#
 directive|define
 name|DT_ENCODING
-value|31
+value|32
 end_define
 
 begin_define
@@ -3733,6 +3821,13 @@ define|#
 directive|define
 name|DT_ADDRRNGLO
 value|0x6ffffe00
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_GNU_HASH
+value|0x6ffffef5
 end_define
 
 begin_define

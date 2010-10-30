@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Renesas / SuperH SH specific support for 32-bit ELF    Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,    2006 Free Software Foundation, Inc.    Contributed by Ian Lance Taylor, Cygnus Support.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
+comment|/* Renesas / SuperH SH specific support for 32-bit ELF    Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,    2006, 2007 Free Software Foundation, Inc.    Contributed by Ian Lance Taylor, Cygnus Support.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"bfd.h"
+file|"sysdep.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sysdep.h"
+file|"bfd.h"
 end_include
 
 begin_include
@@ -31,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|"elf-bfd.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"elf-vxworks.h"
 end_include
 
 begin_include
@@ -238,6 +244,37 @@ name|ELF_DYNAMIC_INTERPRETER
 value|"/usr/lib/libc.so.1"
 end_define
 
+begin_define
+define|#
+directive|define
+name|MINUS_ONE
+value|((bfd_vma) 0 - 1)
+end_define
+
+begin_escape
+end_escape
+
+begin_define
+define|#
+directive|define
+name|SH_PARTIAL32
+value|TRUE
+end_define
+
+begin_define
+define|#
+directive|define
+name|SH_SRC_MASK32
+value|0xffffffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|SH_ELF_RELOC
+value|sh_elf_reloc
+end_define
+
 begin_decl_stmt
 specifier|static
 name|reloc_howto_type
@@ -245,5224 +282,142 @@ name|sh_elf_howto_table
 index|[]
 init|=
 block|{
-comment|/* No relocation.  */
-name|HOWTO
-argument_list|(
-name|R_SH_NONE
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|0
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|0
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|sh_elf_ignore_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_NONE"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* 32 bit absolute relocation.  Setting partial_inplace to TRUE and      src_mask to a non-zero value is similar to the COFF toolchain.  */
-name|HOWTO
-argument_list|(
-name|R_SH_DIR32
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|32
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_bitfield
-argument_list|,
-comment|/* complain_on_overflow */
-name|sh_elf_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_DIR32"
-argument_list|,
-comment|/* name */
-name|TRUE
-argument_list|,
-comment|/* partial_inplace */
-literal|0xffffffff
-argument_list|,
-comment|/* src_mask */
-literal|0xffffffff
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* 32 bit PC relative relocation.  */
-name|HOWTO
-argument_list|(
-name|R_SH_REL32
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|32
-argument_list|,
-comment|/* bitsize */
-name|TRUE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_signed
-argument_list|,
-comment|/* complain_on_overflow */
-name|sh_elf_ignore_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_REL32"
-argument_list|,
-comment|/* name */
-name|TRUE
-argument_list|,
-comment|/* partial_inplace */
-literal|0xffffffff
-argument_list|,
-comment|/* src_mask */
-literal|0xffffffff
-argument_list|,
-comment|/* dst_mask */
-name|TRUE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* 8 bit PC relative branch divided by 2.  */
-name|HOWTO
-argument_list|(
-name|R_SH_DIR8WPN
-argument_list|,
-comment|/* type */
-literal|1
-argument_list|,
-comment|/* rightshift */
-literal|1
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|8
-argument_list|,
-comment|/* bitsize */
-name|TRUE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_signed
-argument_list|,
-comment|/* complain_on_overflow */
-name|sh_elf_ignore_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_DIR8WPN"
-argument_list|,
-comment|/* name */
-name|TRUE
-argument_list|,
-comment|/* partial_inplace */
-literal|0xff
-argument_list|,
-comment|/* src_mask */
-literal|0xff
-argument_list|,
-comment|/* dst_mask */
-name|TRUE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* 12 bit PC relative branch divided by 2.  */
-comment|/* This cannot be partial_inplace because relaxation can't know the      eventual value of a symbol.  */
-name|HOWTO
-argument_list|(
-name|R_SH_IND12W
-argument_list|,
-comment|/* type */
-literal|1
-argument_list|,
-comment|/* rightshift */
-literal|1
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|12
-argument_list|,
-comment|/* bitsize */
-name|TRUE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_signed
-argument_list|,
-comment|/* complain_on_overflow */
-name|NULL
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_IND12W"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0x0
-argument_list|,
-comment|/* src_mask */
-literal|0xfff
-argument_list|,
-comment|/* dst_mask */
-name|TRUE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* 8 bit unsigned PC relative divided by 4.  */
-name|HOWTO
-argument_list|(
-name|R_SH_DIR8WPL
-argument_list|,
-comment|/* type */
-literal|2
-argument_list|,
-comment|/* rightshift */
-literal|1
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|8
-argument_list|,
-comment|/* bitsize */
-name|TRUE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_unsigned
-argument_list|,
-comment|/* complain_on_overflow */
-name|sh_elf_ignore_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_DIR8WPL"
-argument_list|,
-comment|/* name */
-name|TRUE
-argument_list|,
-comment|/* partial_inplace */
-literal|0xff
-argument_list|,
-comment|/* src_mask */
-literal|0xff
-argument_list|,
-comment|/* dst_mask */
-name|TRUE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* 8 bit unsigned PC relative divided by 2.  */
-name|HOWTO
-argument_list|(
-name|R_SH_DIR8WPZ
-argument_list|,
-comment|/* type */
-literal|1
-argument_list|,
-comment|/* rightshift */
-literal|1
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|8
-argument_list|,
-comment|/* bitsize */
-name|TRUE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_unsigned
-argument_list|,
-comment|/* complain_on_overflow */
-name|sh_elf_ignore_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_DIR8WPZ"
-argument_list|,
-comment|/* name */
-name|TRUE
-argument_list|,
-comment|/* partial_inplace */
-literal|0xff
-argument_list|,
-comment|/* src_mask */
-literal|0xff
-argument_list|,
-comment|/* dst_mask */
-name|TRUE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* 8 bit GBR relative.  FIXME: This only makes sense if we have some      special symbol for the GBR relative area, and that is not      implemented.  */
-name|HOWTO
-argument_list|(
-name|R_SH_DIR8BP
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|1
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|8
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_unsigned
-argument_list|,
-comment|/* complain_on_overflow */
-name|sh_elf_ignore_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_DIR8BP"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0xff
-argument_list|,
-comment|/* dst_mask */
-name|TRUE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* 8 bit GBR relative divided by 2.  FIXME: This only makes sense if      we have some special symbol for the GBR relative area, and that      is not implemented.  */
-name|HOWTO
-argument_list|(
-name|R_SH_DIR8W
-argument_list|,
-comment|/* type */
-literal|1
-argument_list|,
-comment|/* rightshift */
-literal|1
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|8
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_unsigned
-argument_list|,
-comment|/* complain_on_overflow */
-name|sh_elf_ignore_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_DIR8W"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0xff
-argument_list|,
-comment|/* dst_mask */
-name|TRUE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* 8 bit GBR relative divided by 4.  FIXME: This only makes sense if      we have some special symbol for the GBR relative area, and that      is not implemented.  */
-name|HOWTO
-argument_list|(
-name|R_SH_DIR8L
-argument_list|,
-comment|/* type */
-literal|2
-argument_list|,
-comment|/* rightshift */
-literal|1
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|8
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_unsigned
-argument_list|,
-comment|/* complain_on_overflow */
-name|sh_elf_ignore_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_DIR8L"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0xff
-argument_list|,
-comment|/* dst_mask */
-name|TRUE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* 8 bit PC relative divided by 2 - but specified in a very odd way.  */
-name|HOWTO
-argument_list|(
-name|R_SH_LOOP_START
-argument_list|,
-comment|/* type */
-literal|1
-argument_list|,
-comment|/* rightshift */
-literal|1
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|8
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_signed
-argument_list|,
-comment|/* complain_on_overflow */
-name|sh_elf_ignore_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_LOOP_START"
-argument_list|,
-comment|/* name */
-name|TRUE
-argument_list|,
-comment|/* partial_inplace */
-literal|0xff
-argument_list|,
-comment|/* src_mask */
-literal|0xff
-argument_list|,
-comment|/* dst_mask */
-name|TRUE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* 8 bit PC relative divided by 2 - but specified in a very odd way.  */
-name|HOWTO
-argument_list|(
-name|R_SH_LOOP_END
-argument_list|,
-comment|/* type */
-literal|1
-argument_list|,
-comment|/* rightshift */
-literal|1
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|8
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_signed
-argument_list|,
-comment|/* complain_on_overflow */
-name|sh_elf_ignore_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_LOOP_END"
-argument_list|,
-comment|/* name */
-name|TRUE
-argument_list|,
-comment|/* partial_inplace */
-literal|0xff
-argument_list|,
-comment|/* src_mask */
-literal|0xff
-argument_list|,
-comment|/* dst_mask */
-name|TRUE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-name|EMPTY_HOWTO
-argument_list|(
-literal|12
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|13
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|14
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|15
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|16
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|17
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|18
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|19
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|20
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|21
-argument_list|)
-block|,
-comment|/* The remaining relocs are a GNU extension used for relaxing.  The      final pass of the linker never needs to do anything with any of      these relocs.  Any required operations are handled by the      relaxation code.  */
-comment|/* GNU extension to record C++ vtable hierarchy */
-name|HOWTO
-argument_list|(
-name|R_SH_GNU_VTINHERIT
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|0
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|NULL
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_GNU_VTINHERIT"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* GNU extension to record C++ vtable member usage */
-name|HOWTO
-argument_list|(
-name|R_SH_GNU_VTENTRY
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|0
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|_bfd_elf_rel_vtable_reloc_fn
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_GNU_VTENTRY"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* An 8 bit switch table entry.  This is generated for an expression      such as ``.word L1 - L2''.  The offset holds the difference      between the reloc address and L2.  */
-name|HOWTO
-argument_list|(
-name|R_SH_SWITCH8
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|0
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|8
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_unsigned
-argument_list|,
-comment|/* complain_on_overflow */
-name|sh_elf_ignore_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_SWITCH8"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0
-argument_list|,
-comment|/* dst_mask */
-name|TRUE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* A 16 bit switch table entry.  This is generated for an expression      such as ``.word L1 - L2''.  The offset holds the difference      between the reloc address and L2.  */
-name|HOWTO
-argument_list|(
-name|R_SH_SWITCH16
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|1
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|16
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_unsigned
-argument_list|,
-comment|/* complain_on_overflow */
-name|sh_elf_ignore_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_SWITCH16"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0
-argument_list|,
-comment|/* dst_mask */
-name|TRUE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* A 32 bit switch table entry.  This is generated for an expression      such as ``.long L1 - L2''.  The offset holds the difference      between the reloc address and L2.  */
-name|HOWTO
-argument_list|(
-name|R_SH_SWITCH32
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|32
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_unsigned
-argument_list|,
-comment|/* complain_on_overflow */
-name|sh_elf_ignore_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_SWITCH32"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0
-argument_list|,
-comment|/* dst_mask */
-name|TRUE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* Indicates a .uses pseudo-op.  The compiler will generate .uses      pseudo-ops when it finds a function call which can be relaxed.      The offset field holds the PC relative offset to the instruction      which loads the register used in the function call.  */
-name|HOWTO
-argument_list|(
-name|R_SH_USES
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|1
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|0
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_unsigned
-argument_list|,
-comment|/* complain_on_overflow */
-name|sh_elf_ignore_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_USES"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0
-argument_list|,
-comment|/* dst_mask */
-name|TRUE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* The assembler will generate this reloc for addresses referred to      by the register loads associated with USES relocs.  The offset      field holds the number of times the address is referenced in the      object file.  */
-name|HOWTO
-argument_list|(
-name|R_SH_COUNT
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|1
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|0
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_unsigned
-argument_list|,
-comment|/* complain_on_overflow */
-name|sh_elf_ignore_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_COUNT"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0
-argument_list|,
-comment|/* dst_mask */
-name|TRUE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* Indicates an alignment statement.  The offset field is the power      of 2 to which subsequent portions of the object file must be      aligned.  */
-name|HOWTO
-argument_list|(
-name|R_SH_ALIGN
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|1
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|0
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_unsigned
-argument_list|,
-comment|/* complain_on_overflow */
-name|sh_elf_ignore_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_ALIGN"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0
-argument_list|,
-comment|/* dst_mask */
-name|TRUE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* The assembler will generate this reloc before a block of      instructions.  A section should be processed as assuming it      contains data, unless this reloc is seen.  */
-name|HOWTO
-argument_list|(
-name|R_SH_CODE
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|1
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|0
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_unsigned
-argument_list|,
-comment|/* complain_on_overflow */
-name|sh_elf_ignore_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_CODE"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0
-argument_list|,
-comment|/* dst_mask */
-name|TRUE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* The assembler will generate this reloc after a block of      instructions when it sees data that is not instructions.  */
-name|HOWTO
-argument_list|(
-name|R_SH_DATA
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|1
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|0
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_unsigned
-argument_list|,
-comment|/* complain_on_overflow */
-name|sh_elf_ignore_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_DATA"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0
-argument_list|,
-comment|/* dst_mask */
-name|TRUE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* The assembler generates this reloc for each label within a block      of instructions.  This permits the linker to avoid swapping      instructions which are the targets of branches.  */
-name|HOWTO
-argument_list|(
-name|R_SH_LABEL
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|1
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|0
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_unsigned
-argument_list|,
-comment|/* complain_on_overflow */
-name|sh_elf_ignore_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_LABEL"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0
-argument_list|,
-comment|/* dst_mask */
-name|TRUE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* The next 12 are only supported via linking in SHC-generated objects.  */
-name|HOWTO
-argument_list|(
-name|R_SH_DIR16
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|1
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|16
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_DIR16"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0xffff
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-name|HOWTO
-argument_list|(
-name|R_SH_DIR8
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|0
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|8
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_DIR8"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0xff
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-name|HOWTO
-argument_list|(
-name|R_SH_DIR8UL
-argument_list|,
-comment|/* type */
-literal|2
-argument_list|,
-comment|/* rightshift */
-literal|0
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|8
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_unsigned
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_DIR8UL"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0xff
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-name|HOWTO
-argument_list|(
-name|R_SH_DIR8UW
-argument_list|,
-comment|/* type */
-literal|1
-argument_list|,
-comment|/* rightshift */
-literal|0
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|8
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_unsigned
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_DIR8UW"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0xff
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-name|HOWTO
-argument_list|(
-name|R_SH_DIR8U
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|0
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|8
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_unsigned
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_DIR8U"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0xff
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-name|HOWTO
-argument_list|(
-name|R_SH_DIR8SW
-argument_list|,
-comment|/* type */
-literal|1
-argument_list|,
-comment|/* rightshift */
-literal|0
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|8
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_signed
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_DIR8SW"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0xff
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-name|HOWTO
-argument_list|(
-name|R_SH_DIR8S
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|0
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|8
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_signed
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_DIR8S"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0xff
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-name|HOWTO
-argument_list|(
-name|R_SH_DIR4UL
-argument_list|,
-comment|/* type */
-literal|2
-argument_list|,
-comment|/* rightshift */
-literal|0
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|4
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_unsigned
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_DIR4UL"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0x0f
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-name|HOWTO
-argument_list|(
-name|R_SH_DIR4UW
-argument_list|,
-comment|/* type */
-literal|1
-argument_list|,
-comment|/* rightshift */
-literal|0
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|4
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_unsigned
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_DIR4UW"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0x0f
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-name|HOWTO
-argument_list|(
-name|R_SH_DIR4U
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|0
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|4
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_unsigned
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_DIR4U"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0x0f
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-name|HOWTO
-argument_list|(
-name|R_SH_PSHA
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|1
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|7
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|4
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_signed
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_PSHA"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0x0f
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-name|HOWTO
-argument_list|(
-name|R_SH_PSHL
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|1
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|7
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|4
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_signed
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_PSHL"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0x0f
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-ifdef|#
-directive|ifdef
-name|INCLUDE_SHMEDIA
-comment|/* Used in SHLLI.L and SHLRI.L.  */
-name|HOWTO
-argument_list|(
-name|R_SH_DIR5U
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|5
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|10
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_unsigned
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_DIR5U"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0xfc00
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* Used in SHARI, SHLLI et al.  */
-name|HOWTO
-argument_list|(
-name|R_SH_DIR6U
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|6
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|10
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_unsigned
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_DIR6U"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0xfc00
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* Used in BxxI, LDHI.L et al.  */
-name|HOWTO
-argument_list|(
-name|R_SH_DIR6S
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|6
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|10
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_signed
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_DIR6S"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0xfc00
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* Used in ADDI, ANDI et al.  */
-name|HOWTO
-argument_list|(
-name|R_SH_DIR10S
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|10
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|10
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_signed
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_DIR10S"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0xffc00
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* Used in LD.UW, ST.W et al.	 */
-name|HOWTO
-argument_list|(
-name|R_SH_DIR10SW
-argument_list|,
-comment|/* type */
-literal|1
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|11
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|10
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_signed
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_DIR10SW"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0xffc00
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* Used in LD.L, FLD.S et al.	 */
-name|HOWTO
-argument_list|(
-name|R_SH_DIR10SL
-argument_list|,
-comment|/* type */
-literal|2
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|12
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|10
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_signed
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_DIR10SL"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0xffc00
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* Used in FLD.D, FST.P et al.  */
-name|HOWTO
-argument_list|(
-name|R_SH_DIR10SQ
-argument_list|,
-comment|/* type */
-literal|3
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|13
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|10
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_signed
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_DIR10SQ"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0xffc00
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-else|#
-directive|else
-name|EMPTY_HOWTO
-argument_list|(
-literal|45
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|46
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|47
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|48
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|49
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|50
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|51
-argument_list|)
-block|,
-endif|#
-directive|endif
-name|EMPTY_HOWTO
-argument_list|(
-literal|52
-argument_list|)
-block|,
-name|HOWTO
-argument_list|(
-name|R_SH_DIR16S
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|1
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|16
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_signed
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_DIR16S"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0xffff
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-name|EMPTY_HOWTO
-argument_list|(
-literal|54
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|55
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|56
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|57
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|58
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|59
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|60
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|61
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|62
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|63
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|64
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|65
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|66
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|67
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|68
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|69
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|70
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|71
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|72
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|73
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|74
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|75
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|76
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|77
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|78
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|79
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|80
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|81
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|82
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|83
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|84
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|85
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|86
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|87
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|88
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|89
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|90
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|91
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|92
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|93
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|94
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|95
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|96
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|97
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|98
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|99
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|100
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|101
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|102
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|103
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|104
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|105
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|106
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|107
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|108
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|109
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|110
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|111
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|112
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|113
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|114
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|115
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|116
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|117
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|118
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|119
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|120
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|121
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|122
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|123
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|124
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|125
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|126
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|127
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|128
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|129
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|130
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|131
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|132
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|133
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|134
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|135
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|136
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|137
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|138
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|139
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|140
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|141
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|142
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|143
-argument_list|)
-block|,
-name|HOWTO
-argument_list|(
-name|R_SH_TLS_GD_32
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|32
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_bitfield
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* */
-literal|"R_SH_TLS_GD_32"
-argument_list|,
-comment|/* name */
-name|TRUE
-argument_list|,
-comment|/* partial_inplace */
-literal|0xffffffff
-argument_list|,
-comment|/* src_mask */
-literal|0xffffffff
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-name|HOWTO
-argument_list|(
-name|R_SH_TLS_LD_32
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|32
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_bitfield
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* */
-literal|"R_SH_TLS_LD_32"
-argument_list|,
-comment|/* name */
-name|TRUE
-argument_list|,
-comment|/* partial_inplace */
-literal|0xffffffff
-argument_list|,
-comment|/* src_mask */
-literal|0xffffffff
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-name|HOWTO
-argument_list|(
-name|R_SH_TLS_LDO_32
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|32
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_bitfield
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* */
-literal|"R_SH_TLS_LDO_32"
-argument_list|,
-comment|/* name */
-name|TRUE
-argument_list|,
-comment|/* partial_inplace */
-literal|0xffffffff
-argument_list|,
-comment|/* src_mask */
-literal|0xffffffff
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-name|HOWTO
-argument_list|(
-name|R_SH_TLS_IE_32
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|32
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_bitfield
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* */
-literal|"R_SH_TLS_IE_32"
-argument_list|,
-comment|/* name */
-name|TRUE
-argument_list|,
-comment|/* partial_inplace */
-literal|0xffffffff
-argument_list|,
-comment|/* src_mask */
-literal|0xffffffff
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-name|HOWTO
-argument_list|(
-name|R_SH_TLS_LE_32
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|32
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_bitfield
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* */
-literal|"R_SH_TLS_LE_32"
-argument_list|,
-comment|/* name */
-name|TRUE
-argument_list|,
-comment|/* partial_inplace */
-literal|0xffffffff
-argument_list|,
-comment|/* src_mask */
-literal|0xffffffff
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-name|HOWTO
-argument_list|(
-name|R_SH_TLS_DTPMOD32
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|32
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_bitfield
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* */
-literal|"R_SH_TLS_DTPMOD32"
-argument_list|,
-comment|/* name */
-name|TRUE
-argument_list|,
-comment|/* partial_inplace */
-literal|0xffffffff
-argument_list|,
-comment|/* src_mask */
-literal|0xffffffff
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-name|HOWTO
-argument_list|(
-name|R_SH_TLS_DTPOFF32
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|32
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_bitfield
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* */
-literal|"R_SH_TLS_DTPOFF32"
-argument_list|,
-comment|/* name */
-name|TRUE
-argument_list|,
-comment|/* partial_inplace */
-literal|0xffffffff
-argument_list|,
-comment|/* src_mask */
-literal|0xffffffff
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-name|HOWTO
-argument_list|(
-name|R_SH_TLS_TPOFF32
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|32
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_bitfield
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* */
-literal|"R_SH_TLS_TPOFF32"
-argument_list|,
-comment|/* name */
-name|TRUE
-argument_list|,
-comment|/* partial_inplace */
-literal|0xffffffff
-argument_list|,
-comment|/* src_mask */
-literal|0xffffffff
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-name|EMPTY_HOWTO
-argument_list|(
-literal|152
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|153
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|154
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|155
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|156
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|157
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|158
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|159
-argument_list|)
-block|,
-name|HOWTO
-argument_list|(
-name|R_SH_GOT32
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|32
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_bitfield
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* */
-literal|"R_SH_GOT32"
-argument_list|,
-comment|/* name */
-name|TRUE
-argument_list|,
-comment|/* partial_inplace */
-literal|0xffffffff
-argument_list|,
-comment|/* src_mask */
-literal|0xffffffff
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-name|HOWTO
-argument_list|(
-name|R_SH_PLT32
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|32
-argument_list|,
-comment|/* bitsize */
-name|TRUE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_bitfield
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* */
-literal|"R_SH_PLT32"
-argument_list|,
-comment|/* name */
-name|TRUE
-argument_list|,
-comment|/* partial_inplace */
-literal|0xffffffff
-argument_list|,
-comment|/* src_mask */
-literal|0xffffffff
-argument_list|,
-comment|/* dst_mask */
-name|TRUE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-name|HOWTO
-argument_list|(
-name|R_SH_COPY
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|32
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_bitfield
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* */
-literal|"R_SH_COPY"
-argument_list|,
-comment|/* name */
-name|TRUE
-argument_list|,
-comment|/* partial_inplace */
-literal|0xffffffff
-argument_list|,
-comment|/* src_mask */
-literal|0xffffffff
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-name|HOWTO
-argument_list|(
-name|R_SH_GLOB_DAT
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|32
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_bitfield
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* */
-literal|"R_SH_GLOB_DAT"
-argument_list|,
-comment|/* name */
-name|TRUE
-argument_list|,
-comment|/* partial_inplace */
-literal|0xffffffff
-argument_list|,
-comment|/* src_mask */
-literal|0xffffffff
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-name|HOWTO
-argument_list|(
-name|R_SH_JMP_SLOT
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|32
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_bitfield
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* */
-literal|"R_SH_JMP_SLOT"
-argument_list|,
-comment|/* name */
-name|TRUE
-argument_list|,
-comment|/* partial_inplace */
-literal|0xffffffff
-argument_list|,
-comment|/* src_mask */
-literal|0xffffffff
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-name|HOWTO
-argument_list|(
-name|R_SH_RELATIVE
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|32
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_bitfield
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* */
-literal|"R_SH_RELATIVE"
-argument_list|,
-comment|/* name */
-name|TRUE
-argument_list|,
-comment|/* partial_inplace */
-literal|0xffffffff
-argument_list|,
-comment|/* src_mask */
-literal|0xffffffff
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-name|HOWTO
-argument_list|(
-name|R_SH_GOTOFF
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|32
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_bitfield
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* */
-literal|"R_SH_GOTOFF"
-argument_list|,
-comment|/* name */
-name|TRUE
-argument_list|,
-comment|/* partial_inplace */
-literal|0xffffffff
-argument_list|,
-comment|/* src_mask */
-literal|0xffffffff
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-name|HOWTO
-argument_list|(
-name|R_SH_GOTPC
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|32
-argument_list|,
-comment|/* bitsize */
-name|TRUE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_bitfield
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* */
-literal|"R_SH_GOTPC"
-argument_list|,
-comment|/* name */
-name|TRUE
-argument_list|,
-comment|/* partial_inplace */
-literal|0xffffffff
-argument_list|,
-comment|/* src_mask */
-literal|0xffffffff
-argument_list|,
-comment|/* dst_mask */
-name|TRUE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-name|HOWTO
-argument_list|(
-name|R_SH_GOTPLT32
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|32
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_bitfield
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* */
-literal|"R_SH_GOTPLT32"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0xffffffff
-argument_list|,
-comment|/* src_mask */
-literal|0xffffffff
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-ifdef|#
-directive|ifdef
-name|INCLUDE_SHMEDIA
-comment|/* Used in MOVI and SHORI (x& 65536).  */
-name|HOWTO
-argument_list|(
-name|R_SH_GOT_LOW16
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|64
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|10
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_GOT_LOW16"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0x3fffc00
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* Used in MOVI and SHORI ((x>> 16)& 65536).  */
-name|HOWTO
-argument_list|(
-name|R_SH_GOT_MEDLOW16
-argument_list|,
-comment|/* type */
-literal|16
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|64
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|10
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_GOT_MEDLOW16"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0x3fffc00
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* Used in MOVI and SHORI ((x>> 32)& 65536).  */
-name|HOWTO
-argument_list|(
-name|R_SH_GOT_MEDHI16
-argument_list|,
-comment|/* type */
-literal|32
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|64
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|10
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_GOT_MEDHI16"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0x3fffc00
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* Used in MOVI and SHORI ((x>> 48)& 65536).  */
-name|HOWTO
-argument_list|(
-name|R_SH_GOT_HI16
-argument_list|,
-comment|/* type */
-literal|48
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|64
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|10
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_GOT_HI16"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0x3fffc00
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* Used in MOVI and SHORI (x& 65536).  */
-name|HOWTO
-argument_list|(
-name|R_SH_GOTPLT_LOW16
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|64
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|10
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_GOTPLT_LOW16"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0x3fffc00
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* Used in MOVI and SHORI ((x>> 16)& 65536).  */
-name|HOWTO
-argument_list|(
-name|R_SH_GOTPLT_MEDLOW16
-argument_list|,
-comment|/* type */
-literal|16
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|64
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|10
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_GOTPLT_MEDLOW16"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0x3fffc00
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* Used in MOVI and SHORI ((x>> 32)& 65536).  */
-name|HOWTO
-argument_list|(
-name|R_SH_GOTPLT_MEDHI16
-argument_list|,
-comment|/* type */
-literal|32
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|64
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|10
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_GOTPLT_MEDHI16"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0x3fffc00
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* Used in MOVI and SHORI ((x>> 48)& 65536).  */
-name|HOWTO
-argument_list|(
-name|R_SH_GOTPLT_HI16
-argument_list|,
-comment|/* type */
-literal|48
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|64
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|10
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_GOTPLT_HI16"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0x3fffc00
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* Used in MOVI and SHORI (x& 65536).  */
-name|HOWTO
-argument_list|(
-name|R_SH_PLT_LOW16
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|64
-argument_list|,
-comment|/* bitsize */
-name|TRUE
-argument_list|,
-comment|/* pc_relative */
-literal|10
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_PLT_LOW16"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0x3fffc00
-argument_list|,
-comment|/* dst_mask */
-name|TRUE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* Used in MOVI and SHORI ((x>> 16)& 65536).  */
-name|HOWTO
-argument_list|(
-name|R_SH_PLT_MEDLOW16
-argument_list|,
-comment|/* type */
-literal|16
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|64
-argument_list|,
-comment|/* bitsize */
-name|TRUE
-argument_list|,
-comment|/* pc_relative */
-literal|10
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_PLT_MEDLOW16"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0x3fffc00
-argument_list|,
-comment|/* dst_mask */
-name|TRUE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* Used in MOVI and SHORI ((x>> 32)& 65536).  */
-name|HOWTO
-argument_list|(
-name|R_SH_PLT_MEDHI16
-argument_list|,
-comment|/* type */
-literal|32
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|64
-argument_list|,
-comment|/* bitsize */
-name|TRUE
-argument_list|,
-comment|/* pc_relative */
-literal|10
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_PLT_MEDHI16"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0x3fffc00
-argument_list|,
-comment|/* dst_mask */
-name|TRUE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* Used in MOVI and SHORI ((x>> 48)& 65536).  */
-name|HOWTO
-argument_list|(
-name|R_SH_PLT_HI16
-argument_list|,
-comment|/* type */
-literal|48
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|64
-argument_list|,
-comment|/* bitsize */
-name|TRUE
-argument_list|,
-comment|/* pc_relative */
-literal|10
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_PLT_HI16"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0x3fffc00
-argument_list|,
-comment|/* dst_mask */
-name|TRUE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* Used in MOVI and SHORI (x& 65536).  */
-name|HOWTO
-argument_list|(
-name|R_SH_GOTOFF_LOW16
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|64
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|10
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_GOTOFF_LOW16"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0x3fffc00
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* Used in MOVI and SHORI ((x>> 16)& 65536).  */
-name|HOWTO
-argument_list|(
-name|R_SH_GOTOFF_MEDLOW16
-argument_list|,
-comment|/* type */
-literal|16
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|64
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|10
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_GOTOFF_MEDLOW16"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0x3fffc00
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* Used in MOVI and SHORI ((x>> 32)& 65536).  */
-name|HOWTO
-argument_list|(
-name|R_SH_GOTOFF_MEDHI16
-argument_list|,
-comment|/* type */
-literal|32
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|64
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|10
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_GOTOFF_MEDHI16"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0x3fffc00
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* Used in MOVI and SHORI ((x>> 48)& 65536).  */
-name|HOWTO
-argument_list|(
-name|R_SH_GOTOFF_HI16
-argument_list|,
-comment|/* type */
-literal|48
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|64
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|10
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_GOTOFF_HI16"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0x3fffc00
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* Used in MOVI and SHORI (x& 65536).  */
-name|HOWTO
-argument_list|(
-name|R_SH_GOTPC_LOW16
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|64
-argument_list|,
-comment|/* bitsize */
-name|TRUE
-argument_list|,
-comment|/* pc_relative */
-literal|10
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_GOTPC_LOW16"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0x3fffc00
-argument_list|,
-comment|/* dst_mask */
-name|TRUE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* Used in MOVI and SHORI ((x>> 16)& 65536).  */
-name|HOWTO
-argument_list|(
-name|R_SH_GOTPC_MEDLOW16
-argument_list|,
-comment|/* type */
-literal|16
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|64
-argument_list|,
-comment|/* bitsize */
-name|TRUE
-argument_list|,
-comment|/* pc_relative */
-literal|10
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_GOTPC_MEDLOW16"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0x3fffc00
-argument_list|,
-comment|/* dst_mask */
-name|TRUE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* Used in MOVI and SHORI ((x>> 32)& 65536).  */
-name|HOWTO
-argument_list|(
-name|R_SH_GOTPC_MEDHI16
-argument_list|,
-comment|/* type */
-literal|32
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|64
-argument_list|,
-comment|/* bitsize */
-name|TRUE
-argument_list|,
-comment|/* pc_relative */
-literal|10
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_GOTPC_MEDHI16"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0x3fffc00
-argument_list|,
-comment|/* dst_mask */
-name|TRUE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* Used in MOVI and SHORI ((x>> 48)& 65536).  */
-name|HOWTO
-argument_list|(
-name|R_SH_GOTPC_HI16
-argument_list|,
-comment|/* type */
-literal|48
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|64
-argument_list|,
-comment|/* bitsize */
-name|TRUE
-argument_list|,
-comment|/* pc_relative */
-literal|10
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_GOTPC_HI16"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0x3fffc00
-argument_list|,
-comment|/* dst_mask */
-name|TRUE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* Used in LD.L, FLD.S et al.	 */
-name|HOWTO
-argument_list|(
-name|R_SH_GOT10BY4
-argument_list|,
-comment|/* type */
-literal|2
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|12
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|10
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_signed
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_GOT10BY4"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0xffc00
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* Used in LD.L, FLD.S et al.	 */
-name|HOWTO
-argument_list|(
-name|R_SH_GOTPLT10BY4
-argument_list|,
-comment|/* type */
-literal|2
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|12
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|10
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_signed
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_GOTPLT10BY4"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0xffc00
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* Used in FLD.D, FST.P et al.  */
-name|HOWTO
-argument_list|(
-name|R_SH_GOT10BY8
-argument_list|,
-comment|/* type */
-literal|3
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|13
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|10
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_signed
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_GOT10BY8"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0xffc00
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* Used in FLD.D, FST.P et al.  */
-name|HOWTO
-argument_list|(
-name|R_SH_GOTPLT10BY8
-argument_list|,
-comment|/* type */
-literal|3
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|13
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|10
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_signed
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_GOTPLT10BY8"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0xffc00
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-name|HOWTO
-argument_list|(
-name|R_SH_COPY64
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|4
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|64
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_COPY64"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-operator|(
-operator|(
-name|bfd_vma
-operator|)
-literal|0
-operator|)
-operator|-
-literal|1
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-name|HOWTO
-argument_list|(
-name|R_SH_GLOB_DAT64
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|4
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|64
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_GLOB_DAT64"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-operator|(
-operator|(
-name|bfd_vma
-operator|)
-literal|0
-operator|)
-operator|-
-literal|1
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-name|HOWTO
-argument_list|(
-name|R_SH_JMP_SLOT64
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|4
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|64
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_JMP_SLOT64"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-operator|(
-operator|(
-name|bfd_vma
-operator|)
-literal|0
-operator|)
-operator|-
-literal|1
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-name|HOWTO
-argument_list|(
-name|R_SH_RELATIVE64
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|4
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|64
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_RELATIVE64"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-operator|(
-operator|(
-name|bfd_vma
-operator|)
-literal|0
-operator|)
-operator|-
-literal|1
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-name|EMPTY_HOWTO
-argument_list|(
-literal|197
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|198
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|199
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|200
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|201
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|202
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|203
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|204
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|205
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|206
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|207
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|208
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|209
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|210
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|211
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|212
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|213
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|214
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|215
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|216
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|217
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|218
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|219
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|220
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|221
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|222
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|223
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|224
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|225
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|226
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|227
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|228
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|229
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|230
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|231
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|232
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|233
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|234
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|235
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|236
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|237
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|238
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|239
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|240
-argument_list|)
-block|,
-name|EMPTY_HOWTO
-argument_list|(
-literal|241
-argument_list|)
-block|,
-comment|/* Relocations for SHmedia code.  None of these are partial_inplace or      use the field being relocated (except R_SH_PT_16).  */
-comment|/* The assembler will generate this reloc before a block of SHmedia      instructions.  A section should be processed as assuming it contains      data, unless this reloc is seen.  Note that a block of SHcompact      instructions are instead preceded by R_SH_CODE.      This is currently not implemented, but should be used for SHmedia      linker relaxation.  */
-name|HOWTO
-argument_list|(
-name|R_SH_SHMEDIA_CODE
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|1
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|0
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_unsigned
-argument_list|,
-comment|/* complain_on_overflow */
-name|sh_elf_ignore_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_SHMEDIA_CODE"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* The assembler will generate this reloc at a PTA or PTB instruction,      and the linker checks the right type of target, or changes a PTA to a      PTB, if the original insn was PT.  */
-name|HOWTO
-argument_list|(
-name|R_SH_PT_16
-argument_list|,
-comment|/* type */
-literal|2
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|18
-argument_list|,
-comment|/* bitsize */
-name|TRUE
-argument_list|,
-comment|/* pc_relative */
-literal|10
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_signed
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_PT_16"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0x3fffc00
-argument_list|,
-comment|/* dst_mask */
-name|TRUE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* Used in unexpanded MOVI.  */
-name|HOWTO
-argument_list|(
-name|R_SH_IMMS16
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|16
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|10
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_signed
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_IMMS16"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0x3fffc00
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* Used in SHORI.  */
-name|HOWTO
-argument_list|(
-name|R_SH_IMMU16
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|16
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|10
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_unsigned
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_IMMU16"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0x3fffc00
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* Used in MOVI and SHORI (x& 65536).  */
-name|HOWTO
-argument_list|(
-name|R_SH_IMM_LOW16
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|64
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|10
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_IMM_LOW16"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0x3fffc00
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* Used in MOVI and SHORI ((x - $)& 65536).  */
-name|HOWTO
-argument_list|(
-name|R_SH_IMM_LOW16_PCREL
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|64
-argument_list|,
-comment|/* bitsize */
-name|TRUE
-argument_list|,
-comment|/* pc_relative */
-literal|10
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_IMM_LOW16_PCREL"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0x3fffc00
-argument_list|,
-comment|/* dst_mask */
-name|TRUE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* Used in MOVI and SHORI ((x>> 16)& 65536).  */
-name|HOWTO
-argument_list|(
-name|R_SH_IMM_MEDLOW16
-argument_list|,
-comment|/* type */
-literal|16
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|64
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|10
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_IMM_MEDLOW16"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0x3fffc00
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* Used in MOVI and SHORI (((x - $)>> 16)& 65536).  */
-name|HOWTO
-argument_list|(
-name|R_SH_IMM_MEDLOW16_PCREL
-argument_list|,
-comment|/* type */
-literal|16
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|64
-argument_list|,
-comment|/* bitsize */
-name|TRUE
-argument_list|,
-comment|/* pc_relative */
-literal|10
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_IMM_MEDLOW16_PCREL"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0x3fffc00
-argument_list|,
-comment|/* dst_mask */
-name|TRUE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* Used in MOVI and SHORI ((x>> 32)& 65536).  */
-name|HOWTO
-argument_list|(
-name|R_SH_IMM_MEDHI16
-argument_list|,
-comment|/* type */
-literal|32
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|64
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|10
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_IMM_MEDHI16"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0x3fffc00
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* Used in MOVI and SHORI (((x - $)>> 32)& 65536).  */
-name|HOWTO
-argument_list|(
-name|R_SH_IMM_MEDHI16_PCREL
-argument_list|,
-comment|/* type */
-literal|32
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|64
-argument_list|,
-comment|/* bitsize */
-name|TRUE
-argument_list|,
-comment|/* pc_relative */
-literal|10
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_IMM_MEDHI16_PCREL"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0x3fffc00
-argument_list|,
-comment|/* dst_mask */
-name|TRUE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* Used in MOVI and SHORI ((x>> 48)& 65536).  */
-name|HOWTO
-argument_list|(
-name|R_SH_IMM_HI16
-argument_list|,
-comment|/* type */
-literal|48
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|64
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|10
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_IMM_HI16"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0x3fffc00
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* Used in MOVI and SHORI (((x - $)>> 48)& 65536).  */
-name|HOWTO
-argument_list|(
-name|R_SH_IMM_HI16_PCREL
-argument_list|,
-comment|/* type */
-literal|48
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|64
-argument_list|,
-comment|/* bitsize */
-name|TRUE
-argument_list|,
-comment|/* pc_relative */
-literal|10
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_IMM_HI16_PCREL"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-literal|0x3fffc00
-argument_list|,
-comment|/* dst_mask */
-name|TRUE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* For the .uaquad pseudo.  */
-name|HOWTO
-argument_list|(
-name|R_SH_64
-argument_list|,
-comment|/* type */
-literal|0
-argument_list|,
-comment|/* rightshift */
-literal|4
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|64
-argument_list|,
-comment|/* bitsize */
-name|FALSE
-argument_list|,
-comment|/* pc_relative */
-literal|0
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_64"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-operator|(
-operator|(
-name|bfd_vma
-operator|)
-literal|0
-operator|)
-operator|-
-literal|1
-argument_list|,
-comment|/* dst_mask */
-name|FALSE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-comment|/* For the .uaquad pseudo, (x - $).  */
-name|HOWTO
-argument_list|(
-name|R_SH_64_PCREL
-argument_list|,
-comment|/* type */
-literal|48
-argument_list|,
-comment|/* rightshift */
-literal|2
-argument_list|,
-comment|/* size (0 = byte, 1 = short, 2 = long) */
-literal|64
-argument_list|,
-comment|/* bitsize */
-name|TRUE
-argument_list|,
-comment|/* pc_relative */
-literal|10
-argument_list|,
-comment|/* bitpos */
-name|complain_overflow_dont
-argument_list|,
-comment|/* complain_on_overflow */
-name|bfd_elf_generic_reloc
-argument_list|,
-comment|/* special_function */
-literal|"R_SH_64_PCREL"
-argument_list|,
-comment|/* name */
-name|FALSE
-argument_list|,
-comment|/* partial_inplace */
-literal|0
-argument_list|,
-comment|/* src_mask */
-operator|(
-operator|(
-name|bfd_vma
-operator|)
-literal|0
-operator|)
-operator|-
-literal|1
-argument_list|,
-comment|/* dst_mask */
-name|TRUE
-argument_list|)
-block|,
-comment|/* pcrel_offset */
-endif|#
-directive|endif
+include|#
+directive|include
+file|"elf32-sh-relocs.h"
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|SH_PARTIAL32
+value|FALSE
+end_define
+
+begin_define
+define|#
+directive|define
+name|SH_SRC_MASK32
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SH_ELF_RELOC
+value|bfd_elf_generic_reloc
+end_define
+
+begin_decl_stmt
+specifier|static
+name|reloc_howto_type
+name|sh_vxworks_howto_table
+index|[]
+init|=
+block|{
+include|#
+directive|include
+file|"elf32-sh-relocs.h"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* Return true if OUTPUT_BFD is a VxWorks object.  */
+end_comment
+
+begin_function
+specifier|static
+name|bfd_boolean
+name|vxworks_object_p
+parameter_list|(
+name|bfd
+modifier|*
+name|abfd
+name|ATTRIBUTE_UNUSED
+parameter_list|)
+block|{
+if|#
+directive|if
+operator|!
+name|defined
+name|INCLUDE_SHMEDIA
+operator|&&
+operator|!
+name|defined
+name|SH_TARGET_ALREADY_DEFINED
+specifier|extern
+specifier|const
+name|bfd_target
+name|bfd_elf32_shlvxworks_vec
+decl_stmt|;
+specifier|extern
+specifier|const
+name|bfd_target
+name|bfd_elf32_shvxworks_vec
+decl_stmt|;
+return|return
+operator|(
+name|abfd
+operator|->
+name|xvec
+operator|==
+operator|&
+name|bfd_elf32_shlvxworks_vec
+operator|||
+name|abfd
+operator|->
+name|xvec
+operator|==
+operator|&
+name|bfd_elf32_shvxworks_vec
+operator|)
+return|;
+else|#
+directive|else
+return|return
+name|FALSE
+return|;
+endif|#
+directive|endif
+block|}
+end_function
+
+begin_comment
+comment|/* Return the howto table for ABFD.  */
+end_comment
+
+begin_function
+specifier|static
+name|reloc_howto_type
+modifier|*
+name|get_howto_table
+parameter_list|(
+name|bfd
+modifier|*
+name|abfd
+parameter_list|)
+block|{
+if|if
+condition|(
+name|vxworks_object_p
+argument_list|(
+name|abfd
+argument_list|)
+condition|)
+return|return
+name|sh_vxworks_howto_table
+return|;
+return|return
+name|sh_elf_howto_table
+return|;
+block|}
+end_function
 
 begin_function
 specifier|static
@@ -6918,7 +1873,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Given a BFD reloc code, return the howto structure for the    corresponding SH ELf reloc.  */
+comment|/* Given a BFD reloc code, return the howto structure for the    corresponding SH ELF reloc.  */
 end_comment
 
 begin_function
@@ -6930,7 +1885,6 @@ parameter_list|(
 name|bfd
 modifier|*
 name|abfd
-name|ATTRIBUTE_UNUSED
 parameter_list|,
 name|bfd_reloc_code_real_type
 name|code
@@ -6975,9 +1929,11 @@ operator|==
 name|code
 condition|)
 return|return
-operator|&
-name|sh_elf_howto_table
-index|[
+name|get_howto_table
+argument_list|(
+name|abfd
+argument_list|)
+operator|+
 operator|(
 name|int
 operator|)
@@ -6987,6 +1943,159 @@ name|i
 index|]
 operator|.
 name|elf_reloc_val
+return|;
+block|}
+return|return
+name|NULL
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|reloc_howto_type
+modifier|*
+name|sh_elf_reloc_name_lookup
+parameter_list|(
+name|bfd
+modifier|*
+name|abfd
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|r_name
+parameter_list|)
+block|{
+name|unsigned
+name|int
+name|i
+decl_stmt|;
+if|if
+condition|(
+name|vxworks_object_p
+argument_list|(
+name|abfd
+argument_list|)
+condition|)
+block|{
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+operator|(
+sizeof|sizeof
+argument_list|(
+name|sh_vxworks_howto_table
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|sh_vxworks_howto_table
+index|[
+literal|0
+index|]
+argument_list|)
+operator|)
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|sh_vxworks_howto_table
+index|[
+name|i
+index|]
+operator|.
+name|name
+operator|!=
+name|NULL
+operator|&&
+name|strcasecmp
+argument_list|(
+name|sh_vxworks_howto_table
+index|[
+name|i
+index|]
+operator|.
+name|name
+argument_list|,
+name|r_name
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|&
+name|sh_vxworks_howto_table
+index|[
+name|i
+index|]
+return|;
+block|}
+else|else
+block|{
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+operator|(
+sizeof|sizeof
+argument_list|(
+name|sh_elf_howto_table
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|sh_elf_howto_table
+index|[
+literal|0
+index|]
+argument_list|)
+operator|)
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|sh_elf_howto_table
+index|[
+name|i
+index|]
+operator|.
+name|name
+operator|!=
+name|NULL
+operator|&&
+name|strcasecmp
+argument_list|(
+name|sh_elf_howto_table
+index|[
+name|i
+index|]
+operator|.
+name|name
+argument_list|,
+name|r_name
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|&
+name|sh_elf_howto_table
+index|[
+name|i
 index|]
 return|;
 block|}
@@ -7008,7 +2117,6 @@ parameter_list|(
 name|bfd
 modifier|*
 name|abfd
-name|ATTRIBUTE_UNUSED
 parameter_list|,
 name|arelent
 modifier|*
@@ -7102,11 +2210,12 @@ name|cache_ptr
 operator|->
 name|howto
 operator|=
-operator|&
-name|sh_elf_howto_table
-index|[
+name|get_howto_table
+argument_list|(
+name|abfd
+argument_list|)
+operator|+
 name|r
-index|]
 expr_stmt|;
 block|}
 end_function
@@ -7880,6 +2989,18 @@ name|output_offset
 operator|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|get_howto_table
+argument_list|(
+name|abfd
+argument_list|)
+index|[
+name|R_SH_DIR32
+index|]
+operator|.
+name|partial_inplace
+condition|)
 name|symval
 operator|+=
 name|bfd_get_32
@@ -7890,6 +3011,13 @@ name|contents
 operator|+
 name|paddr
 argument_list|)
+expr_stmt|;
+else|else
+name|symval
+operator|+=
+name|irelfn
+operator|->
+name|r_addend
 expr_stmt|;
 comment|/* See if this function call can be shortened.  */
 name|foff
@@ -7916,6 +3044,7 @@ literal|4
 operator|)
 operator|)
 expr_stmt|;
+comment|/* A branch to an address beyond ours might be increased by an 	 .align that doesn't move when bytes behind us are deleted. 	 So, we add some slop in this calculation to allow for 	 that.  */
 if|if
 condition|(
 name|foff
@@ -7926,6 +3055,8 @@ operator|||
 name|foff
 operator|>=
 literal|0x1000
+operator|-
+literal|8
 condition|)
 block|{
 comment|/* After all that work, we can't shorten this function call.  */
@@ -8006,6 +3137,20 @@ name|r_addend
 operator|=
 operator|-
 literal|4
+expr_stmt|;
+comment|/* When we calculated the symbol "value" we had an offset in the 	 DIR32's word in memory (we read and add it above).  However, 	 the jsr we create does NOT have this offset encoded, so we 	 have to add it to the addend to preserve it.  */
+name|irel
+operator|->
+name|r_addend
+operator|+=
+name|bfd_get_32
+argument_list|(
+name|abfd
+argument_list|,
+name|contents
+operator|+
+name|paddr
+argument_list|)
 expr_stmt|;
 comment|/* See if there is another R_SH_USES reloc referring to the same 	 register load.  */
 for|for
@@ -9136,6 +4281,19 @@ block|{
 name|bfd_vma
 name|val
 decl_stmt|;
+if|if
+condition|(
+name|get_howto_table
+argument_list|(
+name|abfd
+argument_list|)
+index|[
+name|R_SH_DIR32
+index|]
+operator|.
+name|partial_inplace
+condition|)
+block|{
 name|val
 operator|=
 name|bfd_get_32
@@ -9176,6 +4334,36 @@ operator|+
 name|nraddr
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|val
+operator|=
+name|isym
+operator|->
+name|st_value
+operator|+
+name|irel
+operator|->
+name|r_addend
+expr_stmt|;
+if|if
+condition|(
+name|val
+operator|>
+name|addr
+operator|&&
+name|val
+operator|<
+name|toaddr
+condition|)
+name|irel
+operator|->
+name|r_addend
+operator|-=
+name|count
+expr_stmt|;
+block|}
 block|}
 block|}
 name|start
@@ -11584,6 +6772,67 @@ end_comment
 begin_escape
 end_escape
 
+begin_comment
+comment|/* Describes one of the various PLT styles.  */
+end_comment
+
+begin_struct
+struct|struct
+name|elf_sh_plt_info
+block|{
+comment|/* The template for the first PLT entry, or NULL if there is no special      first entry.  */
+specifier|const
+name|bfd_byte
+modifier|*
+name|plt0_entry
+decl_stmt|;
+comment|/* The size of PLT0_ENTRY in bytes, or 0 if PLT0_ENTRY is NULL.  */
+name|bfd_vma
+name|plt0_entry_size
+decl_stmt|;
+comment|/* Index I is the offset into PLT0_ENTRY of a pointer to      _GLOBAL_OFFSET_TABLE_ + I * 4.  The value is MINUS_ONE      if there is no such pointer.  */
+name|bfd_vma
+name|plt0_got_fields
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* The template for a symbol's PLT entry.  */
+specifier|const
+name|bfd_byte
+modifier|*
+name|symbol_entry
+decl_stmt|;
+comment|/* The size of SYMBOL_ENTRY in bytes.  */
+name|bfd_vma
+name|symbol_entry_size
+decl_stmt|;
+comment|/* Byte offsets of fields in SYMBOL_ENTRY.  Not all fields are used      on all targets.  The comments by each member indicate the value      that the field must hold.  */
+struct|struct
+block|{
+name|bfd_vma
+name|got_entry
+decl_stmt|;
+comment|/* the address of the symbol's .got.plt entry */
+name|bfd_vma
+name|plt
+decl_stmt|;
+comment|/* .plt (or a branch to .plt on VxWorks) */
+name|bfd_vma
+name|reloc_offset
+decl_stmt|;
+comment|/* the offset of the symbol's JMP_SLOT reloc */
+block|}
+name|symbol_fields
+struct|;
+comment|/* The offset of the resolver stub from the start of SYMBOL_ENTRY.  */
+name|bfd_vma
+name|symbol_resolve_offset
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -11597,7 +6846,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PLT_ENTRY_SIZE
+name|ELF_PLT_ENTRY_SIZE
 value|64
 end_define
 
@@ -11611,7 +6860,7 @@ specifier|const
 name|bfd_byte
 name|elf_sh_plt0_entry_be
 index|[
-name|PLT_ENTRY_SIZE
+name|ELF_PLT_ENTRY_SIZE
 index|]
 init|=
 block|{
@@ -11769,7 +7018,7 @@ specifier|const
 name|bfd_byte
 name|elf_sh_plt0_entry_le
 index|[
-name|PLT_ENTRY_SIZE
+name|ELF_PLT_ENTRY_SIZE
 index|]
 init|=
 block|{
@@ -11931,7 +7180,7 @@ specifier|const
 name|bfd_byte
 name|elf_sh_plt_entry_be
 index|[
-name|PLT_ENTRY_SIZE
+name|ELF_PLT_ENTRY_SIZE
 index|]
 init|=
 block|{
@@ -12089,7 +7338,7 @@ specifier|const
 name|bfd_byte
 name|elf_sh_plt_entry_le
 index|[
-name|PLT_ENTRY_SIZE
+name|ELF_PLT_ENTRY_SIZE
 index|]
 init|=
 block|{
@@ -12251,7 +7500,7 @@ specifier|const
 name|bfd_byte
 name|elf_sh_pic_plt_entry_be
 index|[
-name|PLT_ENTRY_SIZE
+name|ELF_PLT_ENTRY_SIZE
 index|]
 init|=
 block|{
@@ -12409,7 +7658,7 @@ specifier|const
 name|bfd_byte
 name|elf_sh_pic_plt_entry_le
 index|[
-name|PLT_ENTRY_SIZE
+name|ELF_PLT_ENTRY_SIZE
 index|]
 init|=
 block|{
@@ -12564,57 +7813,143 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|bfd_byte
-modifier|*
-name|elf_sh_plt0_entry
+name|struct
+name|elf_sh_plt_info
+name|elf_sh_plts
+index|[
+literal|2
+index|]
+index|[
+literal|2
+index|]
+init|=
+block|{
+block|{
+block|{
+comment|/* Big-endian non-PIC.  */
+name|elf_sh_plt0_entry_be
+block|,
+name|ELF_PLT_ENTRY_SIZE
+block|,
+block|{
+literal|0
+block|,
+name|MINUS_ONE
+block|,
+name|MINUS_ONE
+block|}
+block|,
+name|elf_sh_plt_entry_be
+block|,
+name|ELF_PLT_ENTRY_SIZE
+block|,
+block|{
+literal|0
+block|,
+literal|32
+block|,
+literal|48
+block|}
+block|,
+literal|33
+comment|/* includes ISA encoding */
+block|}
+block|,
+block|{
+comment|/* Little-endian non-PIC.  */
+name|elf_sh_plt0_entry_le
+block|,
+name|ELF_PLT_ENTRY_SIZE
+block|,
+block|{
+literal|0
+block|,
+name|MINUS_ONE
+block|,
+name|MINUS_ONE
+block|}
+block|,
+name|elf_sh_plt_entry_le
+block|,
+name|ELF_PLT_ENTRY_SIZE
+block|,
+block|{
+literal|0
+block|,
+literal|32
+block|,
+literal|48
+block|}
+block|,
+literal|33
+comment|/* includes ISA encoding */
+block|}
+block|,   }
+block|,
+block|{
+block|{
+comment|/* Big-endian PIC.  */
+name|elf_sh_plt0_entry_be
+block|,
+name|ELF_PLT_ENTRY_SIZE
+block|,
+block|{
+name|MINUS_ONE
+block|,
+name|MINUS_ONE
+block|,
+name|MINUS_ONE
+block|}
+block|,
+name|elf_sh_pic_plt_entry_be
+block|,
+name|ELF_PLT_ENTRY_SIZE
+block|,
+block|{
+literal|0
+block|,
+name|MINUS_ONE
+block|,
+literal|52
+block|}
+block|,
+literal|33
+comment|/* includes ISA encoding */
+block|}
+block|,
+block|{
+comment|/* Little-endian PIC.  */
+name|elf_sh_plt0_entry_le
+block|,
+name|ELF_PLT_ENTRY_SIZE
+block|,
+block|{
+name|MINUS_ONE
+block|,
+name|MINUS_ONE
+block|,
+name|MINUS_ONE
+block|}
+block|,
+name|elf_sh_pic_plt_entry_le
+block|,
+name|ELF_PLT_ENTRY_SIZE
+block|,
+block|{
+literal|0
+block|,
+name|MINUS_ONE
+block|,
+literal|52
+block|}
+block|,
+literal|33
+comment|/* includes ISA encoding */
+block|}
+block|,   }
+block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|bfd_byte
-modifier|*
-name|elf_sh_plt_entry
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|bfd_byte
-modifier|*
-name|elf_sh_pic_plt_entry
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Return size of a PLT entry.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|elf_sh_sizeof_plt
-parameter_list|(
-name|info
-parameter_list|)
-value|PLT_ENTRY_SIZE
-end_define
-
-begin_comment
-comment|/* Return offset of the PLT0 address in an absolute PLT entry.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|elf_sh_plt_plt0_offset
-parameter_list|(
-name|info
-parameter_list|)
-value|32
-end_define
 
 begin_comment
 comment|/* Return offset of the linker in PLT0 entry.  */
@@ -12631,60 +7966,21 @@ value|0
 end_define
 
 begin_comment
-comment|/* Return offset of the trampoline in PLT entry */
+comment|/* Install a 32-bit PLT field starting at ADDR, which occurs in OUTPUT_BFD.    VALUE is the field's value and CODE_P is true if VALUE refers to code,    not data.     On SH64, each 32-bit field is loaded by a movi/shori pair.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|elf_sh_plt_temp_offset
-parameter_list|(
-name|info
-parameter_list|)
-value|33
-end_define
-
-begin_comment
-comment|/* Add one because it's SHmedia.  */
-end_comment
-
-begin_comment
-comment|/* Return offset of the symbol in PLT entry.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|elf_sh_plt_symbol_offset
-parameter_list|(
-name|info
-parameter_list|)
-value|0
-end_define
-
-begin_comment
-comment|/* Return offset of the relocation in PLT entry.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|elf_sh_plt_reloc_offset
-parameter_list|(
-name|info
-parameter_list|)
-value|(info->shared ? 52 : 44)
-end_define
 
 begin_function
 specifier|inline
 specifier|static
 name|void
-name|movi_shori_putval
+name|install_plt_field
 parameter_list|(
 name|bfd
 modifier|*
 name|output_bfd
+parameter_list|,
+name|bfd_boolean
+name|code_p
 parameter_list|,
 name|unsigned
 name|long
@@ -12695,6 +7991,10 @@ modifier|*
 name|addr
 parameter_list|)
 block|{
+name|value
+operator||=
+name|code_p
+expr_stmt|;
 name|bfd_put_32
 argument_list|(
 name|output_bfd
@@ -12750,6 +8050,44 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* Return the type of PLT associated with ABFD.  PIC_P is true if    the object is position-independent.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|const
+name|struct
+name|elf_sh_plt_info
+modifier|*
+name|get_plt_info
+parameter_list|(
+name|bfd
+modifier|*
+name|abfd
+name|ATTRIBUTE_UNUSED
+parameter_list|,
+name|bfd_boolean
+name|pic_p
+parameter_list|)
+block|{
+return|return
+operator|&
+name|elf_sh_plts
+index|[
+name|pic_p
+index|]
+index|[
+operator|!
+name|bfd_big_endian
+argument_list|(
+name|abfd
+argument_list|)
+index|]
+return|;
+block|}
+end_function
+
 begin_else
 else|#
 directive|else
@@ -12762,7 +8100,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PLT_ENTRY_SIZE
+name|ELF_PLT_ENTRY_SIZE
 value|28
 end_define
 
@@ -12780,7 +8118,7 @@ specifier|const
 name|bfd_byte
 name|elf_sh_plt0_entry_be
 index|[
-name|PLT_ENTRY_SIZE
+name|ELF_PLT_ENTRY_SIZE
 index|]
 init|=
 block|{
@@ -12862,7 +8200,7 @@ specifier|const
 name|bfd_byte
 name|elf_sh_plt0_entry_le
 index|[
-name|PLT_ENTRY_SIZE
+name|ELF_PLT_ENTRY_SIZE
 index|]
 init|=
 block|{
@@ -12948,7 +8286,7 @@ specifier|const
 name|bfd_byte
 name|elf_sh_plt_entry_be
 index|[
-name|PLT_ENTRY_SIZE
+name|ELF_PLT_ENTRY_SIZE
 index|]
 init|=
 block|{
@@ -12961,7 +8299,7 @@ literal|0x60
 block|,
 literal|0x02
 block|,
-comment|/* mov.l @r0,r0 */
+comment|/* mov.l @(r0,r12),r0 */
 literal|0xd1
 block|,
 literal|0x02
@@ -13029,7 +8367,7 @@ specifier|const
 name|bfd_byte
 name|elf_sh_plt_entry_le
 index|[
-name|PLT_ENTRY_SIZE
+name|ELF_PLT_ENTRY_SIZE
 index|]
 init|=
 block|{
@@ -13114,7 +8452,7 @@ specifier|const
 name|bfd_byte
 name|elf_sh_pic_plt_entry_be
 index|[
-name|PLT_ENTRY_SIZE
+name|ELF_PLT_ENTRY_SIZE
 index|]
 init|=
 block|{
@@ -13195,7 +8533,7 @@ specifier|const
 name|bfd_byte
 name|elf_sh_pic_plt_entry_le
 index|[
-name|PLT_ENTRY_SIZE
+name|ELF_PLT_ENTRY_SIZE
 index|]
 init|=
 block|{
@@ -13273,9 +8611,193 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
+name|struct
+name|elf_sh_plt_info
+name|elf_sh_plts
+index|[
+literal|2
+index|]
+index|[
+literal|2
+index|]
+init|=
+block|{
+block|{
+block|{
+comment|/* Big-endian non-PIC.  */
+name|elf_sh_plt0_entry_be
+block|,
+name|ELF_PLT_ENTRY_SIZE
+block|,
+block|{
+name|MINUS_ONE
+block|,
+literal|24
+block|,
+literal|20
+block|}
+block|,
+name|elf_sh_plt_entry_be
+block|,
+name|ELF_PLT_ENTRY_SIZE
+block|,
+block|{
+literal|20
+block|,
+literal|16
+block|,
+literal|24
+block|}
+block|,
+literal|8
+block|}
+block|,
+block|{
+comment|/* Little-endian non-PIC.  */
+name|elf_sh_plt0_entry_le
+block|,
+name|ELF_PLT_ENTRY_SIZE
+block|,
+block|{
+name|MINUS_ONE
+block|,
+literal|24
+block|,
+literal|20
+block|}
+block|,
+name|elf_sh_plt_entry_le
+block|,
+name|ELF_PLT_ENTRY_SIZE
+block|,
+block|{
+literal|20
+block|,
+literal|16
+block|,
+literal|24
+block|}
+block|,
+literal|8
+block|}
+block|,   }
+block|,
+block|{
+block|{
+comment|/* Big-endian PIC.  */
+name|elf_sh_plt0_entry_be
+block|,
+name|ELF_PLT_ENTRY_SIZE
+block|,
+block|{
+name|MINUS_ONE
+block|,
+name|MINUS_ONE
+block|,
+name|MINUS_ONE
+block|}
+block|,
+name|elf_sh_pic_plt_entry_be
+block|,
+name|ELF_PLT_ENTRY_SIZE
+block|,
+block|{
+literal|20
+block|,
+name|MINUS_ONE
+block|,
+literal|24
+block|}
+block|,
+literal|8
+block|}
+block|,
+block|{
+comment|/* Little-endian PIC.  */
+name|elf_sh_plt0_entry_le
+block|,
+name|ELF_PLT_ENTRY_SIZE
+block|,
+block|{
+name|MINUS_ONE
+block|,
+name|MINUS_ONE
+block|,
+name|MINUS_ONE
+block|}
+block|,
+name|elf_sh_pic_plt_entry_le
+block|,
+name|ELF_PLT_ENTRY_SIZE
+block|,
+block|{
+literal|20
+block|,
+name|MINUS_ONE
+block|,
+literal|24
+block|}
+block|,
+literal|8
+block|}
+block|,   }
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|VXWORKS_PLT_HEADER_SIZE
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|VXWORKS_PLT_ENTRY_SIZE
+value|24
+end_define
+
+begin_decl_stmt
+specifier|static
+specifier|const
 name|bfd_byte
-modifier|*
-name|elf_sh_plt0_entry
+name|vxworks_sh_plt0_entry_be
+index|[
+name|VXWORKS_PLT_HEADER_SIZE
+index|]
+init|=
+block|{
+literal|0xd1
+block|,
+literal|0x01
+block|,
+comment|/* mov.l @(8,pc),r1 */
+literal|0x61
+block|,
+literal|0x12
+block|,
+comment|/* mov.l @r1,r1 */
+literal|0x41
+block|,
+literal|0x2b
+block|,
+comment|/* jmp @r1 */
+literal|0x00
+block|,
+literal|0x09
+block|,
+comment|/* nop */
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+comment|/* 0: replaced with _GLOBAL_OFFSET_TABLE+8.  */
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -13283,8 +8805,41 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|bfd_byte
-modifier|*
-name|elf_sh_plt_entry
+name|vxworks_sh_plt0_entry_le
+index|[
+name|VXWORKS_PLT_HEADER_SIZE
+index|]
+init|=
+block|{
+literal|0x01
+block|,
+literal|0xd1
+block|,
+comment|/* mov.l @(8,pc),r1 */
+literal|0x12
+block|,
+literal|0x61
+block|,
+comment|/* mov.l @r1,r1 */
+literal|0x2b
+block|,
+literal|0x41
+block|,
+comment|/* jmp @r1 */
+literal|0x09
+block|,
+literal|0x00
+block|,
+comment|/* nop */
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+comment|/* 0: replaced with _GLOBAL_OFFSET_TABLE+8.  */
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -13292,113 +8847,599 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|bfd_byte
-modifier|*
-name|elf_sh_pic_plt_entry
+name|vxworks_sh_plt_entry_be
+index|[
+name|VXWORKS_PLT_ENTRY_SIZE
+index|]
+init|=
+block|{
+literal|0xd0
+block|,
+literal|0x01
+block|,
+comment|/* mov.l @(8,pc),r0 */
+literal|0x60
+block|,
+literal|0x02
+block|,
+comment|/* mov.l @r0,r0 */
+literal|0x40
+block|,
+literal|0x2b
+block|,
+comment|/* jmp @r0 */
+literal|0x00
+block|,
+literal|0x09
+block|,
+comment|/* nop */
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+comment|/* 0: replaced with address of this symbol in .got.  */
+literal|0xd0
+block|,
+literal|0x01
+block|,
+comment|/* mov.l @(8,pc),r0 */
+literal|0xa0
+block|,
+literal|0x00
+block|,
+comment|/* bra PLT (We need to fix the offset.)  */
+literal|0x00
+block|,
+literal|0x09
+block|,
+comment|/* nop */
+literal|0x00
+block|,
+literal|0x09
+block|,
+comment|/* nop */
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+comment|/* 1: replaced with offset into relocation table.  */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|bfd_byte
+name|vxworks_sh_plt_entry_le
+index|[
+name|VXWORKS_PLT_ENTRY_SIZE
+index|]
+init|=
+block|{
+literal|0x01
+block|,
+literal|0xd0
+block|,
+comment|/* mov.l @(8,pc),r0 */
+literal|0x02
+block|,
+literal|0x60
+block|,
+comment|/* mov.l @r0,r0 */
+literal|0x2b
+block|,
+literal|0x40
+block|,
+comment|/* jmp @r0 */
+literal|0x09
+block|,
+literal|0x00
+block|,
+comment|/* nop */
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+comment|/* 0: replaced with address of this symbol in .got.  */
+literal|0x01
+block|,
+literal|0xd0
+block|,
+comment|/* mov.l @(8,pc),r0 */
+literal|0x00
+block|,
+literal|0xa0
+block|,
+comment|/* bra PLT (We need to fix the offset.)  */
+literal|0x09
+block|,
+literal|0x00
+block|,
+comment|/* nop */
+literal|0x09
+block|,
+literal|0x00
+block|,
+comment|/* nop */
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+comment|/* 1: replaced with offset into relocation table.  */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|bfd_byte
+name|vxworks_sh_pic_plt_entry_be
+index|[
+name|VXWORKS_PLT_ENTRY_SIZE
+index|]
+init|=
+block|{
+literal|0xd0
+block|,
+literal|0x01
+block|,
+comment|/* mov.l @(8,pc),r0 */
+literal|0x00
+block|,
+literal|0xce
+block|,
+comment|/* mov.l @(r0,r12),r0 */
+literal|0x40
+block|,
+literal|0x2b
+block|,
+comment|/* jmp @r0 */
+literal|0x00
+block|,
+literal|0x09
+block|,
+comment|/* nop */
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+comment|/* 0: replaced with offset of this symbol in .got.  */
+literal|0xd0
+block|,
+literal|0x01
+block|,
+comment|/* mov.l @(8,pc),r0 */
+literal|0x51
+block|,
+literal|0xc2
+block|,
+comment|/* mov.l @(8,r12),r1 */
+literal|0x41
+block|,
+literal|0x2b
+block|,
+comment|/* jmp @r1 */
+literal|0x00
+block|,
+literal|0x09
+block|,
+comment|/* nop */
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+comment|/* 1: replaced with offset into relocation table.  */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|bfd_byte
+name|vxworks_sh_pic_plt_entry_le
+index|[
+name|VXWORKS_PLT_ENTRY_SIZE
+index|]
+init|=
+block|{
+literal|0x01
+block|,
+literal|0xd0
+block|,
+comment|/* mov.l @(8,pc),r0 */
+literal|0xce
+block|,
+literal|0x00
+block|,
+comment|/* mov.l @(r0,r12),r0 */
+literal|0x2b
+block|,
+literal|0x40
+block|,
+comment|/* jmp @r0 */
+literal|0x09
+block|,
+literal|0x00
+block|,
+comment|/* nop */
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+comment|/* 0: replaced with offset of this symbol in .got.  */
+literal|0x01
+block|,
+literal|0xd0
+block|,
+comment|/* mov.l @(8,pc),r0 */
+literal|0xc2
+block|,
+literal|0x51
+block|,
+comment|/* mov.l @(8,r12),r1 */
+literal|0x2b
+block|,
+literal|0x41
+block|,
+comment|/* jmp @r1 */
+literal|0x09
+block|,
+literal|0x00
+block|,
+comment|/* nop */
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+comment|/* 1: replaced with offset into relocation table.  */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|struct
+name|elf_sh_plt_info
+name|vxworks_sh_plts
+index|[
+literal|2
+index|]
+index|[
+literal|2
+index|]
+init|=
+block|{
+block|{
+block|{
+comment|/* Big-endian non-PIC.  */
+name|vxworks_sh_plt0_entry_be
+block|,
+name|VXWORKS_PLT_HEADER_SIZE
+block|,
+block|{
+name|MINUS_ONE
+block|,
+name|MINUS_ONE
+block|,
+literal|8
+block|}
+block|,
+name|vxworks_sh_plt_entry_be
+block|,
+name|VXWORKS_PLT_ENTRY_SIZE
+block|,
+block|{
+literal|8
+block|,
+literal|14
+block|,
+literal|20
+block|}
+block|,
+literal|12
+block|}
+block|,
+block|{
+comment|/* Little-endian non-PIC.  */
+name|vxworks_sh_plt0_entry_le
+block|,
+name|VXWORKS_PLT_HEADER_SIZE
+block|,
+block|{
+name|MINUS_ONE
+block|,
+name|MINUS_ONE
+block|,
+literal|8
+block|}
+block|,
+name|vxworks_sh_plt_entry_le
+block|,
+name|VXWORKS_PLT_ENTRY_SIZE
+block|,
+block|{
+literal|8
+block|,
+literal|14
+block|,
+literal|20
+block|}
+block|,
+literal|12
+block|}
+block|,   }
+block|,
+block|{
+block|{
+comment|/* Big-endian PIC.  */
+name|NULL
+block|,
+literal|0
+block|,
+block|{
+name|MINUS_ONE
+block|,
+name|MINUS_ONE
+block|,
+name|MINUS_ONE
+block|}
+block|,
+name|vxworks_sh_pic_plt_entry_be
+block|,
+name|VXWORKS_PLT_ENTRY_SIZE
+block|,
+block|{
+literal|8
+block|,
+name|MINUS_ONE
+block|,
+literal|20
+block|}
+block|,
+literal|12
+block|}
+block|,
+block|{
+comment|/* Little-endian PIC.  */
+name|NULL
+block|,
+literal|0
+block|,
+block|{
+name|MINUS_ONE
+block|,
+name|MINUS_ONE
+block|,
+name|MINUS_ONE
+block|}
+block|,
+name|vxworks_sh_pic_plt_entry_le
+block|,
+name|VXWORKS_PLT_ENTRY_SIZE
+block|,
+block|{
+literal|8
+block|,
+name|MINUS_ONE
+block|,
+literal|20
+block|}
+block|,
+literal|12
+block|}
+block|,   }
+block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Return size of a PLT entry.  */
+comment|/* Return the type of PLT associated with ABFD.  PIC_P is true if    the object is position-independent.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|elf_sh_sizeof_plt
+begin_function
+specifier|static
+specifier|const
+name|struct
+name|elf_sh_plt_info
+modifier|*
+name|get_plt_info
 parameter_list|(
-name|info
+name|bfd
+modifier|*
+name|abfd
+name|ATTRIBUTE_UNUSED
+parameter_list|,
+name|bfd_boolean
+name|pic_p
 parameter_list|)
-value|PLT_ENTRY_SIZE
-end_define
+block|{
+if|if
+condition|(
+name|vxworks_object_p
+argument_list|(
+name|abfd
+argument_list|)
+condition|)
+return|return
+operator|&
+name|vxworks_sh_plts
+index|[
+name|pic_p
+index|]
+index|[
+operator|!
+name|bfd_big_endian
+argument_list|(
+name|abfd
+argument_list|)
+index|]
+return|;
+return|return
+operator|&
+name|elf_sh_plts
+index|[
+name|pic_p
+index|]
+index|[
+operator|!
+name|bfd_big_endian
+argument_list|(
+name|abfd
+argument_list|)
+index|]
+return|;
+block|}
+end_function
 
 begin_comment
-comment|/* Return offset of the PLT0 address in an absolute PLT entry.  */
+comment|/* Install a 32-bit PLT field starting at ADDR, which occurs in OUTPUT_BFD.    VALUE is the field's value and CODE_P is true if VALUE refers to code,    not data.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|elf_sh_plt_plt0_offset
+begin_function
+specifier|inline
+specifier|static
+name|void
+name|install_plt_field
 parameter_list|(
-name|info
+name|bfd
+modifier|*
+name|output_bfd
+parameter_list|,
+name|bfd_boolean
+name|code_p
+name|ATTRIBUTE_UNUSED
+parameter_list|,
+name|unsigned
+name|long
+name|value
+parameter_list|,
+name|bfd_byte
+modifier|*
+name|addr
 parameter_list|)
-value|16
-end_define
-
-begin_comment
-comment|/* Return offset of the linker in PLT0 entry.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|elf_sh_plt0_linker_offset
-parameter_list|(
-name|info
-parameter_list|)
-value|20
-end_define
-
-begin_comment
-comment|/* Return offset of the GOT id in PLT0 entry.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|elf_sh_plt0_gotid_offset
-parameter_list|(
-name|info
-parameter_list|)
-value|24
-end_define
-
-begin_comment
-comment|/* Return offset of the temporary in PLT entry */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|elf_sh_plt_temp_offset
-parameter_list|(
-name|info
-parameter_list|)
-value|8
-end_define
-
-begin_comment
-comment|/* Return offset of the symbol in PLT entry.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|elf_sh_plt_symbol_offset
-parameter_list|(
-name|info
-parameter_list|)
-value|20
-end_define
-
-begin_comment
-comment|/* Return offset of the relocation in PLT entry.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|elf_sh_plt_reloc_offset
-parameter_list|(
-name|info
-parameter_list|)
-value|24
-end_define
+block|{
+name|bfd_put_32
+argument_list|(
+name|output_bfd
+argument_list|,
+name|value
+argument_list|,
+name|addr
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* Return the index of the PLT entry at byte offset OFFSET.  */
+end_comment
+
+begin_function
+specifier|static
+name|bfd_vma
+name|get_plt_index
+parameter_list|(
+specifier|const
+name|struct
+name|elf_sh_plt_info
+modifier|*
+name|info
+parameter_list|,
+name|bfd_vma
+name|offset
+parameter_list|)
+block|{
+return|return
+operator|(
+name|offset
+operator|-
+name|info
+operator|->
+name|plt0_entry_size
+operator|)
+operator|/
+name|info
+operator|->
+name|symbol_entry_size
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Do the inverse operation.  */
+end_comment
+
+begin_function
+specifier|static
+name|bfd_vma
+name|get_plt_offset
+parameter_list|(
+specifier|const
+name|struct
+name|elf_sh_plt_info
+modifier|*
+name|info
+parameter_list|,
+name|bfd_vma
+name|index
+parameter_list|)
+block|{
+return|return
+name|info
+operator|->
+name|plt0_entry_size
+operator|+
+operator|(
+name|index
+operator|*
+name|info
+operator|->
+name|symbol_entry_size
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/* The sh linker needs to keep track of the number of relocs that it    decides to copy as dynamic relocs in check_relocs for each symbol.    This is so that it can later discard them if they are found to be    unnecessary.  We store the information in a field extending the    regular ELF linker hash table.  */
@@ -13548,6 +9589,17 @@ modifier|*
 name|abfd
 parameter_list|)
 block|{
+if|if
+condition|(
+name|abfd
+operator|->
+name|tdata
+operator|.
+name|any
+operator|==
+name|NULL
+condition|)
+block|{
 name|bfd_size_type
 name|amt
 init|=
@@ -13583,8 +9635,12 @@ condition|)
 return|return
 name|FALSE
 return|;
+block|}
 return|return
-name|TRUE
+name|bfd_elf_mkobject
+argument_list|(
+name|abfd
+argument_list|)
 return|;
 block|}
 end_function
@@ -13630,6 +9686,11 @@ name|asection
 modifier|*
 name|srelbss
 decl_stmt|;
+comment|/* The (unloaded but important) VxWorks .rela.plt.unloaded section.  */
+name|asection
+modifier|*
+name|srelplt2
+decl_stmt|;
 comment|/* Small local sym to section mapping cache.  */
 name|struct
 name|sym_sec_cache
@@ -13647,6 +9708,17 @@ decl_stmt|;
 block|}
 name|tls_ldm_got
 union|;
+comment|/* The type of PLT to use.  */
+specifier|const
+name|struct
+name|elf_sh_plt_info
+modifier|*
+name|plt_info
+decl_stmt|;
+comment|/* True if the target system is VxWorks.  */
+name|bfd_boolean
+name|vxworks_p
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -13991,6 +10063,12 @@ name|NULL
 expr_stmt|;
 name|ret
 operator|->
+name|srelplt2
+operator|=
+name|NULL
+expr_stmt|;
+name|ret
+operator|->
 name|sym_sec
 operator|.
 name|abfd
@@ -14004,6 +10082,21 @@ operator|.
 name|refcount
 operator|=
 literal|0
+expr_stmt|;
+name|ret
+operator|->
+name|plt_info
+operator|=
+name|NULL
+expr_stmt|;
+name|ret
+operator|->
+name|vxworks_p
+operator|=
+name|vxworks_object_p
+argument_list|(
+name|abfd
+argument_list|)
 expr_stmt|;
 return|return
 operator|&
@@ -14760,6 +10853,32 @@ name|FALSE
 return|;
 block|}
 block|}
+if|if
+condition|(
+name|htab
+operator|->
+name|vxworks_p
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|elf_vxworks_create_dynamic_sections
+argument_list|(
+name|abfd
+argument_list|,
+name|info
+argument_list|,
+operator|&
+name|htab
+operator|->
+name|srelplt2
+argument_list|)
+condition|)
+return|return
+name|FALSE
+return|;
+block|}
 return|return
 name|TRUE
 return|;
@@ -14807,10 +10926,6 @@ decl_stmt|;
 name|asection
 modifier|*
 name|s
-decl_stmt|;
-name|unsigned
-name|int
-name|power_of_two
 decl_stmt|;
 name|htab
 operator|=
@@ -15274,121 +11389,13 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* We need to figure out the alignment required for this symbol.  I      have no idea how ELF linkers handle this.  */
-name|power_of_two
-operator|=
-name|bfd_log2
-argument_list|(
-name|h
-operator|->
-name|size
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|power_of_two
-operator|>
-literal|3
-condition|)
-name|power_of_two
-operator|=
-literal|3
-expr_stmt|;
-comment|/* Apply the required alignment.  */
-name|s
-operator|->
-name|size
-operator|=
-name|BFD_ALIGN
-argument_list|(
-name|s
-operator|->
-name|size
-argument_list|,
-call|(
-name|bfd_size_type
-call|)
-argument_list|(
-literal|1
-operator|<<
-name|power_of_two
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|power_of_two
-operator|>
-name|bfd_get_section_alignment
-argument_list|(
-name|htab
-operator|->
-name|root
-operator|.
-name|dynobj
-argument_list|,
-name|s
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-operator|!
-name|bfd_set_section_alignment
-argument_list|(
-name|htab
-operator|->
-name|root
-operator|.
-name|dynobj
-argument_list|,
-name|s
-argument_list|,
-name|power_of_two
-argument_list|)
-condition|)
 return|return
-name|FALSE
-return|;
-block|}
-comment|/* Define the symbol as being at this point in the section.  */
+name|_bfd_elf_adjust_dynamic_copy
+argument_list|(
 name|h
-operator|->
-name|root
-operator|.
-name|u
-operator|.
-name|def
-operator|.
-name|section
-operator|=
+argument_list|,
 name|s
-expr_stmt|;
-name|h
-operator|->
-name|root
-operator|.
-name|u
-operator|.
-name|def
-operator|.
-name|value
-operator|=
-name|s
-operator|->
-name|size
-expr_stmt|;
-comment|/* Increment the section size to make room for the symbol.  */
-name|s
-operator|->
-name|size
-operator|+=
-name|h
-operator|->
-name|size
-expr_stmt|;
-return|return
-name|TRUE
+argument_list|)
 return|;
 block|}
 end_function
@@ -15658,7 +11665,11 @@ name|s
 operator|->
 name|size
 operator|+=
-name|PLT_ENTRY_SIZE
+name|htab
+operator|->
+name|plt_info
+operator|->
+name|plt0_entry_size
 expr_stmt|;
 name|h
 operator|->
@@ -15718,7 +11729,11 @@ name|s
 operator|->
 name|size
 operator|+=
-name|PLT_ENTRY_SIZE
+name|htab
+operator|->
+name|plt_info
+operator|->
+name|symbol_entry_size
 expr_stmt|;
 comment|/* We also need to make an entry in the .got.plt section, which 	     will be placed in the .got section by the linker script.  */
 name|htab
@@ -15741,6 +11756,60 @@ argument_list|(
 name|Elf32_External_Rela
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|htab
+operator|->
+name|vxworks_p
+operator|&&
+operator|!
+name|info
+operator|->
+name|shared
+condition|)
+block|{
+comment|/* VxWorks executables have a second set of relocations 		 for each PLT entry.  They go in a separate relocation 		 section, which is processed by the kernel loader.  */
+comment|/* There is a relocation for the initial PLT entry: 		 an R_SH_DIR32 relocation for _GLOBAL_OFFSET_TABLE_.  */
+if|if
+condition|(
+name|h
+operator|->
+name|plt
+operator|.
+name|offset
+operator|==
+name|htab
+operator|->
+name|plt_info
+operator|->
+name|plt0_entry_size
+condition|)
+name|htab
+operator|->
+name|srelplt2
+operator|->
+name|size
+operator|+=
+sizeof|sizeof
+argument_list|(
+name|Elf32_External_Rela
+argument_list|)
+expr_stmt|;
+comment|/* There are two extra relocations for each subsequent 		 PLT entry: an R_SH_DIR32 relocation for the GOT entry, 		 and an R_SH_DIR32 relocation for the PLT entry.  */
+name|htab
+operator|->
+name|srelplt2
+operator|->
+name|size
+operator|+=
+sizeof|sizeof
+argument_list|(
+name|Elf32_External_Rela
+argument_list|)
+operator|*
+literal|2
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -16585,6 +12654,47 @@ block|}
 end_function
 
 begin_comment
+comment|/* This function is called after all the input files have been read,    and the input sections have been assigned to output sections.    It's a convenient place to determine the PLT style.  */
+end_comment
+
+begin_function
+specifier|static
+name|bfd_boolean
+name|sh_elf_always_size_sections
+parameter_list|(
+name|bfd
+modifier|*
+name|output_bfd
+parameter_list|,
+name|struct
+name|bfd_link_info
+modifier|*
+name|info
+parameter_list|)
+block|{
+name|sh_elf_hash_table
+argument_list|(
+name|info
+argument_list|)
+operator|->
+name|plt_info
+operator|=
+name|get_plt_info
+argument_list|(
+name|output_bfd
+argument_list|,
+name|info
+operator|->
+name|shared
+argument_list|)
+expr_stmt|;
+return|return
+name|TRUE
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* Set the sizes of the dynamic sections.  */
 end_comment
 
@@ -17162,7 +13272,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|strncmp
+name|CONST_STRNEQ
 argument_list|(
 name|bfd_get_section_name
 argument_list|(
@@ -17172,11 +13282,7 @@ name|s
 argument_list|)
 argument_list|,
 literal|".rela"
-argument_list|,
-literal|5
 argument_list|)
-operator|==
-literal|0
 condition|)
 block|{
 if|if
@@ -17192,6 +13298,12 @@ operator|!=
 name|htab
 operator|->
 name|srelplt
+operator|&&
+name|s
+operator|!=
+name|htab
+operator|->
+name|srelplt2
 condition|)
 name|relocs
 operator|=
@@ -17843,7 +13955,10 @@ return|;
 block|}
 name|howto
 operator|=
-name|sh_elf_howto_table
+name|get_howto_table
+argument_list|(
+name|output_bfd
+argument_list|)
 operator|+
 name|r_type
 expr_stmt|;
@@ -17955,18 +14070,26 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
+name|sec
+operator|!=
+name|NULL
+operator|&&
+name|elf_discarded_section
+argument_list|(
+name|sec
+argument_list|)
+condition|)
+comment|/* Handled below.  */
+empty_stmt|;
+elseif|else
+if|if
+condition|(
 name|info
 operator|->
 name|relocatable
 condition|)
 block|{
 comment|/* This is a relocatable link.  We don't have to change 		 anything, unless the reloc is against a section symbol, 		 in which case we have to adjust according to where the 		 section symbol winds up in the output section.  */
-name|sym
-operator|=
-name|local_syms
-operator|+
-name|r_symndx
-expr_stmt|;
 if|if
 condition|(
 name|ELF_ST_TYPE
@@ -17995,10 +14118,6 @@ operator|+=
 name|sec
 operator|->
 name|output_offset
-operator|+
-name|sym
-operator|->
-name|st_value
 expr_stmt|;
 continue|continue;
 block|}
@@ -18197,14 +14316,10 @@ block|}
 else|else
 block|{
 comment|/* FIXME: Ought to make use of the RELOC_FOR_GLOBAL_SYMBOL macro.  */
-comment|/* Section symbol are never (?) placed in the hash table, so 	     we can just ignore hash relocations when creating a 	     relocatable object file.  */
-if|if
-condition|(
-name|info
-operator|->
-name|relocatable
-condition|)
-continue|continue;
+name|relocation
+operator|=
+literal|0
+expr_stmt|;
 name|h
 operator|=
 name|sym_hashes
@@ -18566,59 +14681,16 @@ name|GOT_TLS_GD
 operator|)
 operator|)
 condition|)
-name|relocation
-operator|=
-literal|0
-expr_stmt|;
+empty_stmt|;
 elseif|else
 if|if
 condition|(
 name|sec
 operator|->
 name|output_section
-operator|==
+operator|!=
 name|NULL
 condition|)
-block|{
-call|(
-modifier|*
-name|_bfd_error_handler
-call|)
-argument_list|(
-name|_
-argument_list|(
-literal|"%B(%A+0x%lx): unresolvable %s relocation against symbol `%s'"
-argument_list|)
-argument_list|,
-name|input_bfd
-argument_list|,
-name|input_section
-argument_list|,
-operator|(
-name|long
-operator|)
-name|rel
-operator|->
-name|r_offset
-argument_list|,
-name|howto
-operator|->
-name|name
-argument_list|,
-name|h
-operator|->
-name|root
-operator|.
-name|root
-operator|.
-name|string
-argument_list|)
-expr_stmt|;
-return|return
-name|FALSE
-return|;
-block|}
-else|else
 name|relocation
 operator|=
 operator|(
@@ -18661,6 +14733,53 @@ name|seen_stt_datalabel
 operator|)
 operator|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|info
+operator|->
+name|relocatable
+condition|)
+block|{
+call|(
+modifier|*
+name|_bfd_error_handler
+call|)
+argument_list|(
+name|_
+argument_list|(
+literal|"%B(%A+0x%lx): unresolvable %s relocation against symbol `%s'"
+argument_list|)
+argument_list|,
+name|input_bfd
+argument_list|,
+name|input_section
+argument_list|,
+operator|(
+name|long
+operator|)
+name|rel
+operator|->
+name|r_offset
+argument_list|,
+name|howto
+operator|->
+name|name
+argument_list|,
+name|h
+operator|->
+name|root
+operator|.
+name|root
+operator|.
+name|string
+argument_list|)
+expr_stmt|;
+return|return
+name|FALSE
+return|;
+block|}
 block|}
 elseif|else
 if|if
@@ -18673,10 +14792,7 @@ name|type
 operator|==
 name|bfd_link_hash_undefweak
 condition|)
-name|relocation
-operator|=
-literal|0
-expr_stmt|;
+empty_stmt|;
 elseif|else
 if|if
 condition|(
@@ -18695,11 +14811,15 @@ argument_list|)
 operator|==
 name|STV_DEFAULT
 condition|)
-name|relocation
-operator|=
-literal|0
-expr_stmt|;
-else|else
+empty_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|info
+operator|->
+name|relocatable
+condition|)
 block|{
 if|if
 condition|(
@@ -18747,12 +14867,55 @@ condition|)
 return|return
 name|FALSE
 return|;
-name|relocation
+block|}
+block|}
+if|if
+condition|(
+name|sec
+operator|!=
+name|NULL
+operator|&&
+name|elf_discarded_section
+argument_list|(
+name|sec
+argument_list|)
+condition|)
+block|{
+comment|/* For relocs against symbols from removed linkonce sections, 	     or sections discarded by a linker script, we just want the 	     section contents zeroed.  Avoid any special processing.  */
+name|_bfd_clear_contents
+argument_list|(
+name|howto
+argument_list|,
+name|input_bfd
+argument_list|,
+name|contents
+operator|+
+name|rel
+operator|->
+name|r_offset
+argument_list|)
+expr_stmt|;
+name|rel
+operator|->
+name|r_info
 operator|=
 literal|0
 expr_stmt|;
+name|rel
+operator|->
+name|r_addend
+operator|=
+literal|0
+expr_stmt|;
+continue|continue;
 block|}
-block|}
+if|if
+condition|(
+name|info
+operator|->
+name|relocatable
+condition|)
+continue|continue;
 switch|switch
 condition|(
 operator|(
@@ -19378,16 +15541,12 @@ name|FALSE
 return|;
 name|BFD_ASSERT
 argument_list|(
-name|strncmp
+name|CONST_STRNEQ
 argument_list|(
 name|name
 argument_list|,
 literal|".rela"
-argument_list|,
-literal|5
 argument_list|)
-operator|==
-literal|0
 operator|&&
 name|strcmp
 argument_list|(
@@ -19555,6 +15714,11 @@ name|outrel
 operator|.
 name|r_addend
 operator|=
+operator|(
+name|howto
+operator|->
+name|partial_inplace
+condition|?
 name|bfd_get_32
 argument_list|(
 name|input_bfd
@@ -19565,6 +15729,9 @@ name|rel
 operator|->
 name|r_offset
 argument_list|)
+else|:
+name|addend
+operator|)
 expr_stmt|;
 block|}
 ifdef|#
@@ -19657,7 +15824,9 @@ condition|)
 block|{
 name|relocate
 operator|=
-name|TRUE
+name|howto
+operator|->
+name|partial_inplace
 expr_stmt|;
 name|outrel
 operator|.
@@ -19668,23 +15837,6 @@ argument_list|(
 literal|0
 argument_list|,
 name|R_SH_RELATIVE
-argument_list|)
-expr_stmt|;
-name|outrel
-operator|.
-name|r_addend
-operator|=
-name|relocation
-operator|+
-name|bfd_get_32
-argument_list|(
-name|input_bfd
-argument_list|,
-name|contents
-operator|+
-name|rel
-operator|->
-name|r_offset
 argument_list|)
 expr_stmt|;
 block|}
@@ -19713,12 +15865,22 @@ argument_list|,
 name|R_SH_DIR32
 argument_list|)
 expr_stmt|;
+block|}
 name|outrel
 operator|.
 name|r_addend
 operator|=
 name|relocation
-operator|+
+expr_stmt|;
+name|outrel
+operator|.
+name|r_addend
+operator|+=
+operator|(
+name|howto
+operator|->
+name|partial_inplace
+condition|?
 name|bfd_get_32
 argument_list|(
 name|input_bfd
@@ -19729,8 +15891,10 @@ name|rel
 operator|->
 name|r_offset
 argument_list|)
+else|:
+name|addend
+operator|)
 expr_stmt|;
-block|}
 block|}
 name|loc
 operator|=
@@ -19867,25 +16031,23 @@ operator|->
 name|output_offset
 operator|+
 operator|(
-operator|(
+name|get_plt_index
+argument_list|(
+name|htab
+operator|->
+name|plt_info
+argument_list|,
 name|h
 operator|->
 name|plt
 operator|.
 name|offset
-operator|/
-name|elf_sh_sizeof_plt
-argument_list|(
-name|info
 argument_list|)
-operator|-
-literal|1
 operator|+
 literal|3
 operator|)
 operator|*
 literal|4
-operator|)
 operator|)
 expr_stmt|;
 ifdef|#
@@ -22576,16 +18738,12 @@ name|FALSE
 return|;
 name|BFD_ASSERT
 argument_list|(
-name|strncmp
+name|CONST_STRNEQ
 argument_list|(
 name|name
 argument_list|,
 literal|".rela"
-argument_list|,
-literal|5
 argument_list|)
-operator|==
-literal|0
 operator|&&
 name|strcmp
 argument_list|(
@@ -23532,7 +19690,6 @@ name|struct
 name|bfd_link_info
 modifier|*
 name|info
-name|ATTRIBUTE_UNUSED
 parameter_list|,
 name|Elf_Internal_Rela
 modifier|*
@@ -23554,7 +19711,6 @@ name|h
 operator|!=
 name|NULL
 condition|)
-block|{
 switch|switch
 condition|(
 name|ELF32_R_TYPE
@@ -23571,112 +19727,23 @@ case|:
 case|case
 name|R_SH_GNU_VTENTRY
 case|:
-break|break;
-default|default:
-ifdef|#
-directive|ifdef
-name|INCLUDE_SHMEDIA
-while|while
-condition|(
-name|h
-operator|->
-name|root
-operator|.
-name|type
-operator|==
-name|bfd_link_hash_indirect
-operator|&&
-name|h
-operator|->
-name|root
-operator|.
-name|u
-operator|.
-name|i
-operator|.
-name|link
-condition|)
-name|h
-operator|=
-operator|(
-expr|struct
-name|elf_link_hash_entry
-operator|*
-operator|)
-name|h
-operator|->
-name|root
-operator|.
-name|u
-operator|.
-name|i
-operator|.
-name|link
-expr_stmt|;
-endif|#
-directive|endif
-switch|switch
-condition|(
-name|h
-operator|->
-name|root
-operator|.
-name|type
-condition|)
-block|{
-case|case
-name|bfd_link_hash_defined
-case|:
-case|case
-name|bfd_link_hash_defweak
-case|:
-return|return
-name|h
-operator|->
-name|root
-operator|.
-name|u
-operator|.
-name|def
-operator|.
-name|section
-return|;
-case|case
-name|bfd_link_hash_common
-case|:
-return|return
-name|h
-operator|->
-name|root
-operator|.
-name|u
-operator|.
-name|c
-operator|.
-name|p
-operator|->
-name|section
-return|;
-default|default:
-break|break;
-block|}
-block|}
-block|}
-else|else
-return|return
-name|bfd_section_from_elf_index
-argument_list|(
-name|sec
-operator|->
-name|owner
-argument_list|,
-name|sym
-operator|->
-name|st_shndx
-argument_list|)
-return|;
 return|return
 name|NULL
+return|;
+block|}
+return|return
+name|_bfd_elf_gc_mark_hook
+argument_list|(
+name|sec
+argument_list|,
+name|info
+argument_list|,
+name|rel
+argument_list|,
+name|h
+argument_list|,
+name|sym
+argument_list|)
 return|;
 block|}
 end_function
@@ -26199,16 +22266,12 @@ name|FALSE
 return|;
 name|BFD_ASSERT
 argument_list|(
-name|strncmp
+name|CONST_STRNEQ
 argument_list|(
 name|name
 argument_list|,
 literal|".rela"
-argument_list|,
-literal|5
 argument_list|)
-operator|==
-literal|0
 operator|&&
 name|strcmp
 argument_list|(
@@ -26837,6 +22900,14 @@ condition|)
 return|return
 name|TRUE
 return|;
+comment|/* Copy object attributes.  */
+name|_bfd_elf_copy_obj_attributes
+argument_list|(
+name|ibfd
+argument_list|,
+name|obfd
+argument_list|)
+expr_stmt|;
 return|return
 name|sh_elf_set_private_flags
 argument_list|(
@@ -27196,18 +23267,18 @@ expr_stmt|;
 comment|/* Get the index in the procedure linkage table which 	 corresponds to this symbol.  This is the index of this symbol 	 in all the symbols for which we are making plt entries.  The 	 first entry in the procedure linkage table is reserved.  */
 name|plt_index
 operator|=
+name|get_plt_index
+argument_list|(
+name|htab
+operator|->
+name|plt_info
+argument_list|,
 name|h
 operator|->
 name|plt
 operator|.
 name|offset
-operator|/
-name|elf_sh_sizeof_plt
-argument_list|(
-name|info
 argument_list|)
-operator|-
-literal|1
 expr_stmt|;
 comment|/* Get the offset into the .got table of the entry that 	 corresponds to this function.  Each .got entry is 4 bytes. 	 The first three are reserved.  */
 name|got_offset
@@ -27236,75 +23307,44 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* Fill in the entry in the procedure linkage table.  */
+name|memcpy
+argument_list|(
+name|splt
+operator|->
+name|contents
+operator|+
+name|h
+operator|->
+name|plt
+operator|.
+name|offset
+argument_list|,
+name|htab
+operator|->
+name|plt_info
+operator|->
+name|symbol_entry
+argument_list|,
+name|htab
+operator|->
+name|plt_info
+operator|->
+name|symbol_entry_size
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-operator|!
 name|info
 operator|->
 name|shared
 condition|)
-block|{
-if|if
-condition|(
-name|elf_sh_plt_entry
-operator|==
-name|NULL
-condition|)
-block|{
-name|elf_sh_plt_entry
-operator|=
-operator|(
-name|bfd_big_endian
-argument_list|(
-name|output_bfd
-argument_list|)
-condition|?
-name|elf_sh_plt_entry_be
-else|:
-name|elf_sh_plt_entry_le
-operator|)
-expr_stmt|;
-block|}
-name|memcpy
-argument_list|(
-name|splt
-operator|->
-name|contents
-operator|+
-name|h
-operator|->
-name|plt
-operator|.
-name|offset
-argument_list|,
-name|elf_sh_plt_entry
-argument_list|,
-name|elf_sh_sizeof_plt
-argument_list|(
-name|info
-argument_list|)
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INCLUDE_SHMEDIA
-name|movi_shori_putval
+name|install_plt_field
 argument_list|(
 name|output_bfd
 argument_list|,
-operator|(
-name|sgot
-operator|->
-name|output_section
-operator|->
-name|vma
-operator|+
-name|sgot
-operator|->
-name|output_offset
-operator|+
+name|FALSE
+argument_list|,
 name|got_offset
-operator|)
 argument_list|,
 operator|(
 name|splt
@@ -27317,176 +23357,231 @@ name|plt
 operator|.
 name|offset
 operator|+
-name|elf_sh_plt_symbol_offset
-argument_list|(
-name|info
-argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* Set bottom bit because its for a branch to SHmedia */
-name|movi_shori_putval
-argument_list|(
-name|output_bfd
-argument_list|,
-operator|(
-name|splt
+name|htab
 operator|->
-name|output_section
+name|plt_info
 operator|->
-name|vma
-operator|+
-name|splt
-operator|->
-name|output_offset
-operator|)
-operator||
-literal|1
-argument_list|,
-operator|(
-name|splt
-operator|->
-name|contents
-operator|+
-name|h
-operator|->
-name|plt
+name|symbol_fields
 operator|.
-name|offset
-operator|+
-name|elf_sh_plt_plt0_offset
-argument_list|(
-name|info
-argument_list|)
+name|got_entry
 operator|)
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|bfd_put_32
-argument_list|(
-name|output_bfd
-argument_list|,
-operator|(
-name|sgot
-operator|->
-name|output_section
-operator|->
-name|vma
-operator|+
-name|sgot
-operator|->
-name|output_offset
-operator|+
-name|got_offset
-operator|)
-argument_list|,
-operator|(
-name|splt
-operator|->
-name|contents
-operator|+
-name|h
-operator|->
-name|plt
-operator|.
-name|offset
-operator|+
-name|elf_sh_plt_symbol_offset
-argument_list|(
-name|info
-argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
-name|bfd_put_32
-argument_list|(
-name|output_bfd
-argument_list|,
-operator|(
-name|splt
-operator|->
-name|output_section
-operator|->
-name|vma
-operator|+
-name|splt
-operator|->
-name|output_offset
-operator|)
-argument_list|,
-operator|(
-name|splt
-operator|->
-name|contents
-operator|+
-name|h
-operator|->
-name|plt
-operator|.
-name|offset
-operator|+
-name|elf_sh_plt_plt0_offset
-argument_list|(
-name|info
-argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-block|}
 else|else
 block|{
+name|install_plt_field
+argument_list|(
+name|output_bfd
+argument_list|,
+name|FALSE
+argument_list|,
+operator|(
+name|sgot
+operator|->
+name|output_section
+operator|->
+name|vma
+operator|+
+name|sgot
+operator|->
+name|output_offset
+operator|+
+name|got_offset
+operator|)
+argument_list|,
+operator|(
+name|splt
+operator|->
+name|contents
+operator|+
+name|h
+operator|->
+name|plt
+operator|.
+name|offset
+operator|+
+name|htab
+operator|->
+name|plt_info
+operator|->
+name|symbol_fields
+operator|.
+name|got_entry
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|elf_sh_pic_plt_entry
-operator|==
-name|NULL
+name|htab
+operator|->
+name|vxworks_p
 condition|)
 block|{
-name|elf_sh_pic_plt_entry
+name|unsigned
+name|int
+name|reachable_plts
+decl_stmt|,
+name|plts_per_4k
+decl_stmt|;
+name|int
+name|distance
+decl_stmt|;
+comment|/* Divide the PLT into groups.  The first group contains 		 REACHABLE_PLTS entries and the other groups contain 		 PLTS_PER_4K entries.  Entries in the first group can 		 branch directly to .plt; those in later groups branch 		 to the last element of the previous group.  */
+comment|/* ??? It would be better to create multiple copies of 		 the common resolver stub.  */
+name|reachable_plts
 operator|=
 operator|(
-name|bfd_big_endian
+operator|(
+literal|4096
+operator|-
+name|htab
+operator|->
+name|plt_info
+operator|->
+name|plt0_entry_size
+operator|-
+operator|(
+name|htab
+operator|->
+name|plt_info
+operator|->
+name|symbol_fields
+operator|.
+name|plt
+operator|+
+literal|4
+operator|)
+operator|)
+operator|/
+name|htab
+operator|->
+name|plt_info
+operator|->
+name|symbol_entry_size
+operator|)
+operator|+
+literal|1
+expr_stmt|;
+name|plts_per_4k
+operator|=
+operator|(
+literal|4096
+operator|/
+name|htab
+operator|->
+name|plt_info
+operator|->
+name|symbol_entry_size
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|plt_index
+operator|<
+name|reachable_plts
+condition|)
+name|distance
+operator|=
+operator|-
+operator|(
+name|h
+operator|->
+name|plt
+operator|.
+name|offset
+operator|+
+name|htab
+operator|->
+name|plt_info
+operator|->
+name|symbol_fields
+operator|.
+name|plt
+operator|)
+expr_stmt|;
+else|else
+name|distance
+operator|=
+operator|-
+operator|(
+operator|(
+operator|(
+name|plt_index
+operator|-
+name|reachable_plts
+operator|)
+operator|%
+name|plts_per_4k
+operator|+
+literal|1
+operator|)
+operator|*
+name|htab
+operator|->
+name|plt_info
+operator|->
+name|symbol_entry_size
+operator|)
+expr_stmt|;
+comment|/* Install the 'bra' with this offset.  */
+name|bfd_put_16
 argument_list|(
 name|output_bfd
-argument_list|)
-condition|?
-name|elf_sh_pic_plt_entry_be
-else|:
-name|elf_sh_pic_plt_entry_le
+argument_list|,
+literal|0xa000
+operator||
+operator|(
+literal|0x0fff
+operator|&
+operator|(
+operator|(
+name|distance
+operator|-
+literal|4
 operator|)
+operator|/
+literal|2
+operator|)
+operator|)
+argument_list|,
+operator|(
+name|splt
+operator|->
+name|contents
+operator|+
+name|h
+operator|->
+name|plt
+operator|.
+name|offset
+operator|+
+name|htab
+operator|->
+name|plt_info
+operator|->
+name|symbol_fields
+operator|.
+name|plt
+operator|)
+argument_list|)
 expr_stmt|;
 block|}
-name|memcpy
-argument_list|(
-name|splt
-operator|->
-name|contents
-operator|+
-name|h
-operator|->
-name|plt
-operator|.
-name|offset
-argument_list|,
-name|elf_sh_pic_plt_entry
-argument_list|,
-name|elf_sh_sizeof_plt
-argument_list|(
-name|info
-argument_list|)
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INCLUDE_SHMEDIA
-name|movi_shori_putval
+else|else
+name|install_plt_field
 argument_list|(
 name|output_bfd
 argument_list|,
-name|got_offset
+name|TRUE
+argument_list|,
+name|splt
+operator|->
+name|output_section
+operator|->
+name|vma
+operator|+
+name|splt
+operator|->
+name|output_offset
 argument_list|,
 operator|(
 name|splt
@@ -27499,41 +23594,16 @@ name|plt
 operator|.
 name|offset
 operator|+
-name|elf_sh_plt_symbol_offset
-argument_list|(
-name|info
-argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|bfd_put_32
-argument_list|(
-name|output_bfd
-argument_list|,
-name|got_offset
-argument_list|,
-operator|(
-name|splt
+name|htab
 operator|->
-name|contents
-operator|+
-name|h
+name|plt_info
 operator|->
-name|plt
+name|symbol_fields
 operator|.
-name|offset
-operator|+
-name|elf_sh_plt_symbol_offset
-argument_list|(
-name|info
-argument_list|)
+name|plt
 operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 ifdef|#
 directive|ifdef
@@ -27550,12 +23620,11 @@ name|GOT_BIAS
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|INCLUDE_SHMEDIA
-name|movi_shori_putval
+name|install_plt_field
 argument_list|(
 name|output_bfd
+argument_list|,
+name|FALSE
 argument_list|,
 name|plt_index
 operator|*
@@ -27575,46 +23644,16 @@ name|plt
 operator|.
 name|offset
 operator|+
-name|elf_sh_plt_reloc_offset
-argument_list|(
-name|info
-argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|bfd_put_32
-argument_list|(
-name|output_bfd
-argument_list|,
-name|plt_index
-operator|*
-sizeof|sizeof
-argument_list|(
-name|Elf32_External_Rela
-argument_list|)
-argument_list|,
-operator|(
-name|splt
+name|htab
 operator|->
-name|contents
-operator|+
-name|h
+name|plt_info
 operator|->
-name|plt
+name|symbol_fields
 operator|.
-name|offset
-operator|+
-name|elf_sh_plt_reloc_offset
-argument_list|(
-name|info
-argument_list|)
+name|reloc_offset
 operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* Fill in the entry in the global offset table.  */
 name|bfd_put_32
 argument_list|(
@@ -27637,10 +23676,11 @@ name|plt
 operator|.
 name|offset
 operator|+
-name|elf_sh_plt_temp_offset
-argument_list|(
-name|info
-argument_list|)
+name|htab
+operator|->
+name|plt_info
+operator|->
+name|symbol_resolve_offset
 operator|)
 argument_list|,
 name|sgot
@@ -27722,6 +23762,174 @@ argument_list|,
 name|loc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|htab
+operator|->
+name|vxworks_p
+operator|&&
+operator|!
+name|info
+operator|->
+name|shared
+condition|)
+block|{
+comment|/* Create the .rela.plt.unloaded relocations for this PLT entry. 	     Begin by pointing LOC to the first such relocation.  */
+name|loc
+operator|=
+operator|(
+name|htab
+operator|->
+name|srelplt2
+operator|->
+name|contents
+operator|+
+operator|(
+name|plt_index
+operator|*
+literal|2
+operator|+
+literal|1
+operator|)
+operator|*
+sizeof|sizeof
+argument_list|(
+name|Elf32_External_Rela
+argument_list|)
+operator|)
+expr_stmt|;
+comment|/* Create a .rela.plt.unloaded R_SH_DIR32 relocation 	     for the PLT entry's pointer to the .got.plt entry.  */
+name|rel
+operator|.
+name|r_offset
+operator|=
+operator|(
+name|htab
+operator|->
+name|splt
+operator|->
+name|output_section
+operator|->
+name|vma
+operator|+
+name|htab
+operator|->
+name|splt
+operator|->
+name|output_offset
+operator|+
+name|h
+operator|->
+name|plt
+operator|.
+name|offset
+operator|+
+name|htab
+operator|->
+name|plt_info
+operator|->
+name|symbol_fields
+operator|.
+name|got_entry
+operator|)
+expr_stmt|;
+name|rel
+operator|.
+name|r_info
+operator|=
+name|ELF32_R_INFO
+argument_list|(
+name|htab
+operator|->
+name|root
+operator|.
+name|hgot
+operator|->
+name|indx
+argument_list|,
+name|R_SH_DIR32
+argument_list|)
+expr_stmt|;
+name|rel
+operator|.
+name|r_addend
+operator|=
+name|got_offset
+expr_stmt|;
+name|bfd_elf32_swap_reloca_out
+argument_list|(
+name|output_bfd
+argument_list|,
+operator|&
+name|rel
+argument_list|,
+name|loc
+argument_list|)
+expr_stmt|;
+name|loc
+operator|+=
+sizeof|sizeof
+argument_list|(
+name|Elf32_External_Rela
+argument_list|)
+expr_stmt|;
+comment|/* Create a .rela.plt.unloaded R_SH_DIR32 relocation for 	     the .got.plt entry, which initially points to .plt.  */
+name|rel
+operator|.
+name|r_offset
+operator|=
+operator|(
+name|htab
+operator|->
+name|sgotplt
+operator|->
+name|output_section
+operator|->
+name|vma
+operator|+
+name|htab
+operator|->
+name|sgotplt
+operator|->
+name|output_offset
+operator|+
+name|got_offset
+operator|)
+expr_stmt|;
+name|rel
+operator|.
+name|r_info
+operator|=
+name|ELF32_R_INFO
+argument_list|(
+name|htab
+operator|->
+name|root
+operator|.
+name|hplt
+operator|->
+name|indx
+argument_list|,
+name|R_SH_DIR32
+argument_list|)
+expr_stmt|;
+name|rel
+operator|.
+name|r_addend
+operator|=
+literal|0
+expr_stmt|;
+name|bfd_elf32_swap_reloc_out
+argument_list|(
+name|output_bfd
+argument_list|,
+operator|&
+name|rel
+argument_list|,
+name|loc
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -28387,7 +24595,7 @@ name|loc
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Mark _DYNAMIC and _GLOBAL_OFFSET_TABLE_ as absolute.  */
+comment|/* Mark _DYNAMIC and _GLOBAL_OFFSET_TABLE_ as absolute.  On VxWorks,      _GLOBAL_OFFSET_TABLE_ is not absolute: it is relative to the      ".got" section.  */
 if|if
 condition|(
 name|strcmp
@@ -28405,6 +24613,12 @@ argument_list|)
 operator|==
 literal|0
 operator|||
+operator|(
+operator|!
+name|htab
+operator|->
+name|vxworks_p
+operator|&&
 name|h
 operator|==
 name|htab
@@ -28412,6 +24626,7 @@ operator|->
 name|root
 operator|.
 name|hgot
+operator|)
 condition|)
 name|sym
 operator|->
@@ -28844,118 +25059,77 @@ operator|->
 name|size
 operator|>
 literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|info
+operator|&&
+name|htab
 operator|->
-name|shared
+name|plt_info
+operator|->
+name|plt0_entry
 condition|)
 block|{
-if|if
-condition|(
-name|elf_sh_pic_plt_entry
-operator|==
-name|NULL
-condition|)
-block|{
-name|elf_sh_pic_plt_entry
-operator|=
-operator|(
-name|bfd_big_endian
-argument_list|(
-name|output_bfd
-argument_list|)
-condition|?
-name|elf_sh_pic_plt_entry_be
-else|:
-name|elf_sh_pic_plt_entry_le
-operator|)
-expr_stmt|;
-block|}
+name|unsigned
+name|int
+name|i
+decl_stmt|;
 name|memcpy
 argument_list|(
 name|splt
 operator|->
 name|contents
 argument_list|,
-name|elf_sh_pic_plt_entry
+name|htab
+operator|->
+name|plt_info
+operator|->
+name|plt0_entry
 argument_list|,
-name|elf_sh_sizeof_plt
-argument_list|(
-name|info
-argument_list|)
+name|htab
+operator|->
+name|plt_info
+operator|->
+name|plt0_entry_size
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|ARRAY_SIZE
+argument_list|(
+name|htab
+operator|->
+name|plt_info
+operator|->
+name|plt0_got_fields
+argument_list|)
+condition|;
+name|i
+operator|++
+control|)
 if|if
 condition|(
-name|elf_sh_plt0_entry
-operator|==
-name|NULL
+name|htab
+operator|->
+name|plt_info
+operator|->
+name|plt0_got_fields
+index|[
+name|i
+index|]
+operator|!=
+name|MINUS_ONE
 condition|)
-block|{
-name|elf_sh_plt0_entry
-operator|=
+name|install_plt_field
+argument_list|(
+name|output_bfd
+argument_list|,
+name|FALSE
+argument_list|,
 operator|(
-name|bfd_big_endian
-argument_list|(
-name|output_bfd
-argument_list|)
-condition|?
-name|elf_sh_plt0_entry_be
-else|:
-name|elf_sh_plt0_entry_le
-operator|)
-expr_stmt|;
-block|}
-name|memcpy
-argument_list|(
-name|splt
-operator|->
-name|contents
-argument_list|,
-name|elf_sh_plt0_entry
-argument_list|,
-name|PLT_ENTRY_SIZE
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INCLUDE_SHMEDIA
-name|movi_shori_putval
-argument_list|(
-name|output_bfd
-argument_list|,
-name|sgot
-operator|->
-name|output_section
-operator|->
-name|vma
-operator|+
-name|sgot
-operator|->
-name|output_offset
-argument_list|,
-name|splt
-operator|->
-name|contents
-operator|+
-name|elf_sh_plt0_gotplt_offset
-argument_list|(
-name|info
-argument_list|)
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|bfd_put_32
-argument_list|(
-name|output_bfd
-argument_list|,
 name|sgot
 operator|->
 name|output_section
@@ -28966,46 +25140,227 @@ name|sgot
 operator|->
 name|output_offset
 operator|+
+operator|(
+name|i
+operator|*
 literal|4
+operator|)
+operator|)
 argument_list|,
+operator|(
 name|splt
 operator|->
 name|contents
 operator|+
-name|elf_sh_plt0_gotid_offset
-argument_list|(
-name|info
-argument_list|)
+name|htab
+operator|->
+name|plt_info
+operator|->
+name|plt0_got_fields
+index|[
+name|i
+index|]
+operator|)
 argument_list|)
 expr_stmt|;
-name|bfd_put_32
-argument_list|(
-name|output_bfd
-argument_list|,
-name|sgot
+if|if
+condition|(
+name|htab
+operator|->
+name|vxworks_p
+condition|)
+block|{
+comment|/* Finalize the .rela.plt.unloaded contents.  */
+name|Elf_Internal_Rela
+name|rel
+decl_stmt|;
+name|bfd_byte
+modifier|*
+name|loc
+decl_stmt|;
+comment|/* Create a .rela.plt.unloaded R_SH_DIR32 relocation for the 		 first PLT entry's pointer to _GLOBAL_OFFSET_TABLE_ + 8.  */
+name|loc
+operator|=
+name|htab
+operator|->
+name|srelplt2
+operator|->
+name|contents
+expr_stmt|;
+name|rel
+operator|.
+name|r_offset
+operator|=
+operator|(
+name|splt
 operator|->
 name|output_section
 operator|->
 name|vma
 operator|+
-name|sgot
+name|splt
 operator|->
 name|output_offset
 operator|+
-literal|8
+name|htab
+operator|->
+name|plt_info
+operator|->
+name|plt0_got_fields
+index|[
+literal|2
+index|]
+operator|)
+expr_stmt|;
+name|rel
+operator|.
+name|r_info
+operator|=
+name|ELF32_R_INFO
+argument_list|(
+name|htab
+operator|->
+name|root
+operator|.
+name|hgot
+operator|->
+name|indx
 argument_list|,
-name|splt
+name|R_SH_DIR32
+argument_list|)
+expr_stmt|;
+name|rel
+operator|.
+name|r_addend
+operator|=
+literal|8
+expr_stmt|;
+name|bfd_elf32_swap_reloca_out
+argument_list|(
+name|output_bfd
+argument_list|,
+operator|&
+name|rel
+argument_list|,
+name|loc
+argument_list|)
+expr_stmt|;
+name|loc
+operator|+=
+sizeof|sizeof
+argument_list|(
+name|Elf32_External_Rela
+argument_list|)
+expr_stmt|;
+comment|/* Fix up the remaining .rela.plt.unloaded relocations. 		 They may have the wrong symbol index for _G_O_T_ or 		 _P_L_T_ depending on the order in which symbols were 		 output.  */
+while|while
+condition|(
+name|loc
+operator|<
+name|htab
+operator|->
+name|srelplt2
 operator|->
 name|contents
 operator|+
-name|elf_sh_plt0_linker_offset
+name|htab
+operator|->
+name|srelplt2
+operator|->
+name|size
+condition|)
+block|{
+comment|/* The PLT entry's pointer to the .got.plt slot.  */
+name|bfd_elf32_swap_reloc_in
 argument_list|(
-name|info
-argument_list|)
+name|output_bfd
+argument_list|,
+name|loc
+argument_list|,
+operator|&
+name|rel
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+name|rel
+operator|.
+name|r_info
+operator|=
+name|ELF32_R_INFO
+argument_list|(
+name|htab
+operator|->
+name|root
+operator|.
+name|hgot
+operator|->
+name|indx
+argument_list|,
+name|R_SH_DIR32
+argument_list|)
+expr_stmt|;
+name|bfd_elf32_swap_reloc_out
+argument_list|(
+name|output_bfd
+argument_list|,
+operator|&
+name|rel
+argument_list|,
+name|loc
+argument_list|)
+expr_stmt|;
+name|loc
+operator|+=
+sizeof|sizeof
+argument_list|(
+name|Elf32_External_Rela
+argument_list|)
+expr_stmt|;
+comment|/* The .got.plt slot's pointer to .plt.  */
+name|bfd_elf32_swap_reloc_in
+argument_list|(
+name|output_bfd
+argument_list|,
+name|loc
+argument_list|,
+operator|&
+name|rel
+argument_list|)
+expr_stmt|;
+name|rel
+operator|.
+name|r_info
+operator|=
+name|ELF32_R_INFO
+argument_list|(
+name|htab
+operator|->
+name|root
+operator|.
+name|hplt
+operator|->
+name|indx
+argument_list|,
+name|R_SH_DIR32
+argument_list|)
+expr_stmt|;
+name|bfd_elf32_swap_reloc_out
+argument_list|(
+name|output_bfd
+argument_list|,
+operator|&
+name|rel
+argument_list|,
+name|loc
+argument_list|)
+expr_stmt|;
+name|loc
+operator|+=
+sizeof|sizeof
+argument_list|(
+name|Elf32_External_Rela
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 comment|/* UnixWare sets the entsize of .plt to 4, although that doesn't 	     really seem like the right value.  */
 name|elf_section_data
@@ -29450,18 +25805,44 @@ name|rel
 name|ATTRIBUTE_UNUSED
 parameter_list|)
 block|{
+specifier|const
+name|struct
+name|elf_sh_plt_info
+modifier|*
+name|plt_info
+decl_stmt|;
+name|plt_info
+operator|=
+name|get_plt_info
+argument_list|(
+name|plt
+operator|->
+name|owner
+argument_list|,
+operator|(
+name|plt
+operator|->
+name|owner
+operator|->
+name|flags
+operator|&
+name|DYNAMIC
+operator|)
+operator|!=
+literal|0
+argument_list|)
+expr_stmt|;
 return|return
 name|plt
 operator|->
 name|vma
 operator|+
-operator|(
+name|get_plt_offset
+argument_list|(
+name|plt_info
+argument_list|,
 name|i
-operator|+
-literal|1
-operator|)
-operator|*
-name|PLT_ENTRY_SIZE
+argument_list|)
 return|;
 block|}
 end_function
@@ -29563,6 +25944,14 @@ define|#
 directive|define
 name|bfd_elf32_bfd_reloc_type_lookup
 value|sh_elf_reloc_type_lookup
+end_define
+
+begin_define
+define|#
+directive|define
+name|bfd_elf32_bfd_reloc_name_lookup
+define|\
+value|sh_elf_reloc_name_lookup
 end_define
 
 begin_define
@@ -29688,9 +26077,25 @@ end_define
 begin_define
 define|#
 directive|define
+name|elf_backend_always_size_sections
+define|\
+value|sh_elf_always_size_sections
+end_define
+
+begin_define
+define|#
+directive|define
 name|elf_backend_size_dynamic_sections
 define|\
 value|sh_elf_size_dynamic_sections
+end_define
+
+begin_define
+define|#
+directive|define
+name|elf_backend_omit_section_dynsym
+define|\
+value|((bfd_boolean (*) (bfd *, struct bfd_link_info *, asection *)) bfd_true)
 end_define
 
 begin_define
@@ -29855,6 +26260,12 @@ end_define
 begin_undef
 undef|#
 directive|undef
+name|ELF_COMMONPAGESIZE
+end_undef
+
+begin_undef
+undef|#
+directive|undef
 name|elf_symbol_leading_char
 end_undef
 
@@ -29943,6 +26354,19 @@ end_define
 begin_undef
 undef|#
 directive|undef
+name|ELF_COMMONPAGESIZE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ELF_COMMONPAGESIZE
+value|0x1000
+end_define
+
+begin_undef
+undef|#
+directive|undef
 name|elf_backend_grok_prstatus
 end_undef
 
@@ -29978,6 +26402,195 @@ directive|define
 name|elf32_bed
 value|elf32_sh_lin_bed
 end_define
+
+begin_include
+include|#
+directive|include
+file|"elf32-target.h"
+end_include
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_BIG_SYM
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_BIG_SYM
+value|bfd_elf32_shvxworks_vec
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_BIG_NAME
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_BIG_NAME
+value|"elf32-sh-vxworks"
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_LITTLE_SYM
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_LITTLE_SYM
+value|bfd_elf32_shlvxworks_vec
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_LITTLE_NAME
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_LITTLE_NAME
+value|"elf32-shl-vxworks"
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|elf32_bed
+end_undef
+
+begin_define
+define|#
+directive|define
+name|elf32_bed
+value|elf32_sh_vxworks_bed
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|elf_backend_want_plt_sym
+end_undef
+
+begin_define
+define|#
+directive|define
+name|elf_backend_want_plt_sym
+value|1
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|elf_symbol_leading_char
+end_undef
+
+begin_define
+define|#
+directive|define
+name|elf_symbol_leading_char
+value|'_'
+end_define
+
+begin_define
+define|#
+directive|define
+name|elf_backend_want_got_underscore
+value|1
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|elf_backend_grok_prstatus
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|elf_backend_grok_psinfo
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|elf_backend_add_symbol_hook
+end_undef
+
+begin_define
+define|#
+directive|define
+name|elf_backend_add_symbol_hook
+value|elf_vxworks_add_symbol_hook
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|elf_backend_link_output_symbol_hook
+end_undef
+
+begin_define
+define|#
+directive|define
+name|elf_backend_link_output_symbol_hook
+define|\
+value|elf_vxworks_link_output_symbol_hook
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|elf_backend_emit_relocs
+end_undef
+
+begin_define
+define|#
+directive|define
+name|elf_backend_emit_relocs
+value|elf_vxworks_emit_relocs
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|elf_backend_final_write_processing
+end_undef
+
+begin_define
+define|#
+directive|define
+name|elf_backend_final_write_processing
+define|\
+value|elf_vxworks_final_write_processing
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|ELF_MAXPAGESIZE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ELF_MAXPAGESIZE
+value|0x1000
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|ELF_COMMONPAGESIZE
+end_undef
 
 begin_include
 include|#

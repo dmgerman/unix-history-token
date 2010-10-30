@@ -648,10 +648,14 @@ name|XTENSA_PROP_INSN_NO_REORDER
 value|0x00000080
 end_define
 
+begin_comment
+comment|/* Historically, NO_TRANSFORM was a property of instructions,     but it should apply to literals under certain circumstances.  */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|XTENSA_PROP_INSN_NO_TRANSFORM
+name|XTENSA_PROP_NO_TRANSFORM
 value|0x00000100
 end_define
 

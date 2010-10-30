@@ -1434,10 +1434,12 @@ begin_function
 name|bfd_boolean
 name|frag_offset_fixed_p
 parameter_list|(
+specifier|const
 name|fragS
 modifier|*
 name|frag1
 parameter_list|,
+specifier|const
 name|fragS
 modifier|*
 name|frag2
@@ -1447,6 +1449,7 @@ modifier|*
 name|offset
 parameter_list|)
 block|{
+specifier|const
 name|fragS
 modifier|*
 name|frag

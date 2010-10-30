@@ -4635,7 +4635,7 @@ name|fprintf_fn
 argument_list|(
 name|stream
 argument_list|,
-literal|"\t! 0x"
+literal|"\t! "
 argument_list|)
 expr_stmt|;
 call|(
@@ -4656,7 +4656,7 @@ name|fprintf_fn
 argument_list|(
 name|stream
 argument_list|,
-literal|"\t! 0x%x"
+literal|"\t! %x"
 argument_list|,
 name|val
 argument_list|)

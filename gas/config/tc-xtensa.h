@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-xtensa.h -- Header file for tc-xtensa.c.    Copyright (C) 2003, 2004, 2005 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
+comment|/* tc-xtensa.h -- Header file for tc-xtensa.c.    Copyright (C) 2003, 2004, 2005, 2007 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -129,13 +129,16 @@ block|,
 comment|/* The last instruction in this fragment (at->fr_opcode) can be      freely replaced with a single wider instruction if a future      alignment desires or needs it.  */
 name|RELAX_IMMED
 block|,
-comment|/* The last instruction in this fragment (at->fr_opcode) contains      the value defined by fr_symbol (fr_offset = 0).  If the value      does not fit, use the specified expansion.  This is similar to      "NARROW", except that these may not be expanded in order to align      code.  */
+comment|/* The last instruction in this fragment (at->fr_opcode) contains      an immediate or symbol.  If the value does not fit, relax the      opcode using expansions from the relax table.  */
 name|RELAX_IMMED_STEP1
 block|,
-comment|/* The last instruction in this fragment (at->fr_opcode) contains a      literal.  It has already been expanded at least 1 step.  */
+comment|/* The last instruction in this fragment (at->fr_opcode) contains a      literal.  It has already been expanded 1 step.  */
 name|RELAX_IMMED_STEP2
 block|,
-comment|/* The last instruction in this fragment (at->fr_opcode) contains a      literal.  It has already been expanded at least 2 steps.  */
+comment|/* The last instruction in this fragment (at->fr_opcode) contains a      literal.  It has already been expanded 2 steps.  */
+name|RELAX_IMMED_STEP3
+block|,
+comment|/* The last instruction in this fragment (at->fr_opcode) contains a      literal.  It has already been expanded 3 steps.  */
 name|RELAX_SLOTS
 block|,
 comment|/* There are instructions within the last VLIW instruction that need      relaxation.  Find the relaxation based on the slot info in      xtensa_frag_type.  Relaxations that deal with particular opcodes      are slot-based (e.g., converting a MOVI to an L32R).  Relaxations      that deal with entire instructions, such as alignment, are not      slot-based.  */
@@ -148,6 +151,9 @@ comment|/* This marks the location as unreachable.  The assembler may widen or  
 name|RELAX_MAYBE_UNREACHABLE
 block|,
 comment|/* This marks the location as possibly unreachable.  These are placed      after a branch that may be relaxed into a branch and jump. If the      branch is relaxed, then this frag will be converted to a      RELAX_UNREACHABLE frag.  */
+name|RELAX_ORG
+block|,
+comment|/* This marks the location as having previously been an rs_org frag.        rs_org frags are converted to fill-zero frags immediately after      relaxation.  However, we need to remember where they were so we can      prevent the linker from changing the size of any frag between the      section start and the org frag.  */
 name|RELAX_NONE
 block|}
 enum|;
@@ -161,7 +167,7 @@ begin_define
 define|#
 directive|define
 name|RELAX_IMMED_MAXSTEPS
-value|(RELAX_IMMED_STEP2 - RELAX_IMMED)
+value|(RELAX_IMMED_STEP3 - RELAX_IMMED)
 end_define
 
 begin_struct
@@ -276,7 +282,7 @@ name|is_aligning_branch
 range|:
 literal|1
 decl_stmt|;
-comment|/* For text fragments that can generate literals at relax time, this      variable points to the frag where the literal will be stored.  For      literal frags, this variable points to the nearest literal pool      location frag.  This literal frag will be moved to after this      location.  */
+comment|/* For text fragments that can generate literals at relax time, this      variable points to the frag where the literal will be stored.  For      literal frags, this variable points to the nearest literal pool      location frag.  This literal frag will be moved to after this      location.  For RELAX_LITERAL_POOL_BEGIN frags, this field points      to the frag immediately before the corresponding RELAX_LITERAL_POOL_END      frag, to make moving frags for this literal pool efficient.  */
 name|fragS
 modifier|*
 name|literal_frag
@@ -996,6 +1002,17 @@ parameter_list|,
 name|FRCHAIN
 parameter_list|)
 value|0
+end_define
+
+begin_comment
+comment|/* Use line number format that is amenable to linker relaxation.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DWARF2_USE_FIXED_ADVANCE_PC
+value|(linkrelax != 0)
 end_define
 
 begin_comment

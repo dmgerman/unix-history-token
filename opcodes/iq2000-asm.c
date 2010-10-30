@@ -2232,6 +2232,12 @@ name|parse_operand
 operator|=
 name|iq2000_cgen_parse_operand
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CGEN_ASM_INIT_HOOK
+name|CGEN_ASM_INIT_HOOK
+endif|#
+directive|endif
 block|}
 end_function
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Instruction building/extraction support for mt. -*- C -*-     THIS FILE IS MACHINE GENERATED WITH CGEN: Cpu tools GENerator.    - the resultant file is machine generated, cgen-ibld.in isn't     Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2005    Free Software Foundation, Inc.     This file is part of the GNU Binutils and GDB, the GNU debugger.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation, Inc.,    51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
+comment|/* Instruction building/extraction support for mt. -*- C -*-     THIS FILE IS MACHINE GENERATED WITH CGEN: Cpu tools GENerator.    - the resultant file is machine generated, cgen-ibld.in isn't     Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2005, 2006    Free Software Foundation, Inc.     This file is part of the GNU Binutils and GDB, the GNU debugger.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation, Inc.,    51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -735,13 +735,45 @@ name|maxval
 init|=
 name|mask
 decl_stmt|;
-if|if
-condition|(
+name|unsigned
+name|long
+name|val
+init|=
 operator|(
 name|unsigned
 name|long
 operator|)
 name|value
+decl_stmt|;
+comment|/* For hosts with a word size> 32 check to see if value has been sign 	 extended beyond 32 bits.  If so then ignore these higher sign bits 	 as the user is attempting to store a 32-bit signed value into an 	 unsigned 32-bit field which is allowed.  */
+if|if
+condition|(
+expr|sizeof
+operator|(
+name|unsigned
+name|long
+operator|)
+operator|>
+literal|4
+operator|&&
+operator|(
+operator|(
+name|value
+operator|>>
+literal|32
+operator|)
+operator|==
+operator|-
+literal|1
+operator|)
+condition|)
+name|val
+operator|&=
+literal|0xFFFFFFFF
+expr_stmt|;
+if|if
+condition|(
+name|val
 operator|>
 name|maxval
 condition|)
@@ -753,10 +785,10 @@ name|errbuf
 argument_list|,
 name|_
 argument_list|(
-literal|"operand out of range (%lu not between 0 and %lu)"
+literal|"operand out of range (0x%lx not between 0 and 0x%lx)"
 argument_list|)
 argument_list|,
-name|value
+name|val
 argument_list|,
 name|maxval
 argument_list|)
@@ -1677,9 +1709,7 @@ block|{
 if|if
 condition|(
 name|word_offset
-operator|==
-literal|0
-operator|&&
+operator|+
 name|word_length
 operator|>
 name|total_length
@@ -1687,6 +1717,8 @@ condition|)
 name|word_length
 operator|=
 name|total_length
+operator|-
+name|word_offset
 expr_stmt|;
 block|}
 comment|/* Does the value reside in INSN_VALUE, and at the right alignment?  */

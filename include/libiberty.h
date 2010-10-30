@@ -155,6 +155,22 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
+comment|/* Write argv to an @-file, inserting necessary quoting.  */
+specifier|extern
+name|int
+name|writeargv
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|*
+operator|,
+name|FILE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
 comment|/* Return the last component of a path name.  Note that we can't use a    prototype here because the parameter is declared inconsistently    across different systems, sometimes as "char *" and sometimes as    "const char *" */
 comment|/* HAVE_DECL_* is a three-state macro: undefined, 0 or 1.  If it is    undefined, we haven't run the autoconf check so provide the    declaration without arguments.  If it is 0, we checked and failed    to find the declaration so provide a fully prototyped one.  If it    is 1, we found it so don't provide any declaration at all.  */
 if|#
@@ -421,6 +437,26 @@ specifier|extern
 name|char
 modifier|*
 name|make_relative_prefix
+argument_list|(
+specifier|const
+name|char
+operator|*
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|)
+name|ATTRIBUTE_MALLOC
+decl_stmt|;
+comment|/* Generate a relocated path to some installation directory without    attempting to follow any soft links.  Allocates    return value using malloc.  */
+specifier|extern
+name|char
+modifier|*
+name|make_relative_prefix_ignore_links
 argument_list|(
 specifier|const
 name|char
@@ -899,6 +935,16 @@ define|#
 directive|define
 name|PEX_BINARY_OUTPUT
 value|0x20
+comment|/* Capture stderr to a pipe.  The output can be read by    calling pex_read_err and reading from the returned    FILE object.  This flag may be specified only for    the last program in a pipeline.       This flag is supported only on Unix and Windows.  */
+define|#
+directive|define
+name|PEX_STDERR_TO_PIPE
+value|0x40
+comment|/* Capture stderr in binary mode.  This flag is ignored    on Unix.  */
+define|#
+directive|define
+name|PEX_BINARY_ERROR
+value|0x80
 comment|/* Execute one program.  Returns NULL on success.  On error returns an    error string (typically just the name of a system call); the error    string is statically allocated.     OBJ		Returned by pex_init.     FLAGS	As above.     EXECUTABLE	The program to execute.     ARGV		NULL terminated array of arguments to pass to the program.     OUTNAME	Sets the output file name as follows:  		PEX_SUFFIX set (OUTNAME may not be NULL): 		  TEMPBASE parameter to pex_init not NULL: 		    Output file name is the concatenation of TEMPBASE 		    and OUTNAME. 		  TEMPBASE is NULL: 		    Output file name is a random file name ending in 		    OUTNAME. 		PEX_SUFFIX not set: 		  OUTNAME not NULL: 		    Output file name is OUTNAME. 		  OUTNAME NULL, TEMPBASE not NULL: 		    Output file name is randomly chosen using 		    TEMPBASE. 		  OUTNAME NULL, TEMPBASE NULL: 		    Output file name is randomly chosen.  		If PEX_LAST is not set, the output file name is the    		name to use for a temporary file holding stdout, if    		any (there will not be a file if PEX_USE_PIPES is set    		and the system supports pipes).  If a file is used, it    		will be removed when no longer needed unless    		PEX_SAVE_TEMPS is set.  		If PEX_LAST is set, and OUTNAME is not NULL, standard    		output is written to the output file name.  The file    		will not be removed.  If PEX_LAST and PEX_SUFFIX are    		both set, TEMPBASE may not be NULL.     ERRNAME	If not NULL, this is the name of a file to which 		standard error is written.  If NULL, standard error of 		the program is standard error of the caller.     ERR		On an error return, *ERR is set to an errno value, or    		to 0 if there is no relevant errno. */
 specifier|extern
 specifier|const
@@ -940,11 +986,12 @@ modifier|*
 name|err
 parameter_list|)
 function_decl|;
-comment|/* Return a `FILE' pointer FP for the standard input of the first    program in the pipeline; FP is opened for writing.  You must have    passed `PEX_USE_PIPES' to the `pex_init' call that returned OBJ.    You must close FP yourself with `fclose' to indicate that the    pipeline's input is complete.     The file descriptor underlying FP is marked not to be inherited by    child processes.     This call is not supported on systems which do not support pipes;    it returns with an error.  (We could implement it by writing a    temporary file, but then you would need to write all your data and    close FP before your first call to `pex_run' -- and that wouldn't    work on systems that do support pipes: the pipe would fill up, and    you would block.  So there isn't any easy way to conceal the    differences between the two types of systems.)     If you call both `pex_write_input' and `pex_read_output', be    careful to avoid deadlock.  If the output pipe fills up, so that    each program in the pipeline is waiting for the next to read more    data, and you fill the input pipe by writing more data to FP, then    there is no way to make progress: the only process that could read    data from the output pipe is you, but you are blocked on the input    pipe.  */
+comment|/* As for pex_run (), but takes an extra parameter to enable the    environment for the child process to be specified.     ENV		The environment for the child process, specified as 		an array of character pointers.  Each element of the 		array should point to a string of the form VAR=VALUE,                 with the exception of the last element which must be                 a null pointer. */
 specifier|extern
-name|FILE
+specifier|const
+name|char
 modifier|*
-name|pex_write_input
+name|pex_run_in_environment
 parameter_list|(
 name|struct
 name|pex_obj
@@ -952,7 +999,38 @@ modifier|*
 name|obj
 parameter_list|,
 name|int
-name|binary
+name|flags
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|executable
+parameter_list|,
+name|char
+modifier|*
+specifier|const
+modifier|*
+name|argv
+parameter_list|,
+name|char
+modifier|*
+specifier|const
+modifier|*
+name|env
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|outname
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|errname
+parameter_list|,
+name|int
+modifier|*
+name|err
 parameter_list|)
 function_decl|;
 comment|/* Return a stream for a temporary file to pass to the first program    in the pipeline as input.  The file name is chosen as for pex_run.    pex_run closes the file automatically; don't close it yourself.  */
@@ -995,6 +1073,20 @@ specifier|extern
 name|FILE
 modifier|*
 name|pex_read_output
+parameter_list|(
+name|struct
+name|pex_obj
+modifier|*
+parameter_list|,
+name|int
+name|binary
+parameter_list|)
+function_decl|;
+comment|/* Read the standard error of the last program to be executed.    pex_run can not be called after this.  BINARY should be non-zero if    the file should be opened in binary mode; this is ignored on Unix.    Returns NULL on error.  Don't call fclose on the returned FILE; it    will be closed by pex_free.  */
+specifier|extern
+name|FILE
+modifier|*
+name|pex_read_err
 parameter_list|(
 name|struct
 name|pex_obj

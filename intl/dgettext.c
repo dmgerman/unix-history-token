@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Implementation of the dgettext(3) function    Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
+comment|/* Implementation of the dgettext(3) function.    Copyright (C) 1995-1997, 2000-2003 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify it    under the terms of the GNU Library General Public License as published    by the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    Library General Public License for more details.     You should have received a copy of the GNU Library General Public    License along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301,    USA.  */
 end_comment
 
 begin_ifdef
@@ -20,26 +20,17 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-name|HAVE_LOCALE_H
-operator|||
-name|defined
-name|_LIBC
-end_if
+begin_include
+include|#
+directive|include
+file|"gettextP.h"
+end_include
 
 begin_include
 include|#
 directive|include
 file|<locale.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -61,7 +52,7 @@ end_else
 begin_include
 include|#
 directive|include
-file|"libgettext.h"
+file|"libgnuintl.h"
 end_include
 
 begin_endif
@@ -94,7 +85,7 @@ begin_define
 define|#
 directive|define
 name|DCGETTEXT
-value|__dcgettext
+value|INTUSE(__dcgettext)
 end_define
 
 begin_else
@@ -106,14 +97,14 @@ begin_define
 define|#
 directive|define
 name|DGETTEXT
-value|dgettext__
+value|libintl_dgettext
 end_define
 
 begin_define
 define|#
 directive|define
 name|DCGETTEXT
-value|dcgettext__
+value|libintl_dcgettext
 end_define
 
 begin_endif

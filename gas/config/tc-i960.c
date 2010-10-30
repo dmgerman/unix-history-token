@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-i960.c - All the i80960-specific stuff    Copyright 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002, 2003, 2005    Free Software Foundation, Inc.     This file is part of GAS.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
+comment|/* tc-i960.c - All the i80960-specific stuff    Copyright 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002, 2003, 2005, 2006    Free Software Foundation, Inc.     This file is part of GAS.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -10,12 +10,6 @@ end_comment
 begin_comment
 comment|/* There are 4 different lengths of (potentially) symbol-based displacements    in the 80960 instruction set, each of which could require address fix-ups    and (in the case of external symbols) emission of relocation directives:     32-bit (MEMB)         This is a standard length for the base assembler and requires no         special action.     13-bit (COBR)         This is a non-standard length, but the base assembler has a         hook for bit field address fixups: the fixS structure can         point to a descriptor of the field, in which case our         md_number_to_field() routine gets called to process it.          I made the hook a little cleaner by having fix_new() (in the base         assembler) return a pointer to the fixS in question.  And I made it a         little simpler by storing the field size (in this case 13) instead of         of a pointer to another structure:  80960 displacements are ALWAYS         stored in the low-order bits of a 4-byte word.          Since the target of a COBR cannot be external, no relocation         directives for this size displacement have to be generated.         But the base assembler had to be modified to issue error         messages if the symbol did turn out to be external.     24-bit (CTRL)         Fixups are handled as for the 13-bit case (except that 24 is stored         in the fixS).          The relocation directive generated is the same as that for the 32-bit         displacement, except that it's PC-relative (the 32-bit displacement         never is).   The i80960 version of the linker needs a mod to         distinguish and handle the 24-bit case.     12-bit (MEMA)         MEMA formats are always promoted to MEMB (32-bit) if the displacement         is based on a symbol, because it could be relocated at link time.         The only time we use the 12-bit format is if an absolute value of         less than 4096 is specified, in which case we need neither a fixup nor         a relocation directive.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
 
 begin_include
 include|#

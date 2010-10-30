@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* sb.h - header file for string buffer manipulation routines    Copyright 1994, 1995, 2000, 2003 Free Software Foundation, Inc.     Written by Steve and Judy Chamberlain of Cygnus Support,       sac@cygnus.com     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
+comment|/* sb.h - header file for string buffer manipulation routines    Copyright 1994, 1995, 2000, 2003, 2006 Free Software Foundation, Inc.     Written by Steve and Judy Chamberlain of Cygnus Support,       sac@cygnus.com     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -14,18 +14,6 @@ define|#
 directive|define
 name|SB_H
 end_define
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ansidecl.h"
-end_include
 
 begin_comment
 comment|/* String blocks     I had a couple of choices when deciding upon this data structure.    gas uses null terminated strings for all its internal work.  This    often means that parts of the program that want to examine    substrings have to manipulate the data in the string to do the    right thing (a common operation is to single out a bit of text by    saving away the character after it, nulling it out, operating on    the substring and then replacing the character which was under the    null).  This is a pain and I remember a load of problems that I had with    code in gas which almost got this right.  Also, it's harder to grow and    allocate null terminated strings efficiently.     Obstacks provide all the functionality needed, but are too    complicated, hence the sb.     An sb is allocated by the caller, and is initialized to point to an    sb_element.  sb_elements are kept on a free lists, and used when    needed, replaced onto the free list when unused.  */
@@ -95,26 +83,6 @@ index|]
 decl_stmt|;
 block|}
 name|sb_element
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* The free list.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|sb_element
-modifier|*
-name|size
-index|[
-name|sb_max_power_two
-index|]
-decl_stmt|;
-block|}
-name|sb_list_vector
 typedef|;
 end_typedef
 

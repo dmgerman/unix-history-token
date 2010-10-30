@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* as.h - global header file    Copyright 1987, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
+comment|/* as.h - global header file    Copyright 1987, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -24,12 +24,6 @@ begin_include
 include|#
 directive|include
 file|"config.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"bin-bugs.h"
 end_include
 
 begin_comment
@@ -991,15 +985,11 @@ directive|ifndef
 name|FOPEN_WB
 end_ifndef
 
-begin_if
-if|#
-directive|if
-name|defined
-name|GO32
-operator|||
-name|defined
-name|__MINGW32__
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_BINARY_FOPEN
+end_ifdef
 
 begin_include
 include|#
@@ -1207,11 +1197,34 @@ begin_comment
 comment|/* COMMON now defined */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ENABLE_CHECKING
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ENABLE_CHECKING
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|ENABLE_CHECKING
+operator|||
+name|defined
+argument_list|(
 name|DEBUG
-end_ifdef
+argument_list|)
+end_if
 
 begin_ifndef
 ifndef|#
@@ -2376,21 +2389,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|as_perror
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|as_where
 parameter_list|(
 name|char
@@ -2455,6 +2453,20 @@ name|new_logical_line
 parameter_list|(
 name|char
 modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|new_logical_line_flags
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|)
@@ -2597,12 +2609,6 @@ name|symbol
 name|symbolS
 typedef|;
 end_typedef
-
-begin_struct_decl
-struct_decl|struct
-name|relax_type
-struct_decl|;
-end_struct_decl
 
 begin_typedef
 typedef|typedef

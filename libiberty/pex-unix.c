@@ -1317,6 +1317,13 @@ modifier|*
 specifier|const
 modifier|*
 parameter_list|,
+name|char
+modifier|*
+specifier|const
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
 name|int
 parameter_list|,
 name|int
@@ -1655,7 +1662,7 @@ name|writeerr
 parameter_list|(
 name|s
 parameter_list|)
-value|write (STDERR_FILE_NO, s, strlen (s))
+value|(void) write (STDERR_FILE_NO, s, strlen (s))
 name|writeerr
 argument_list|(
 name|obj
@@ -1714,6 +1721,15 @@ begin_comment
 comment|/* Execute a child.  */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+modifier|*
+name|environ
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|long
@@ -1738,6 +1754,12 @@ specifier|const
 modifier|*
 name|argv
 parameter_list|,
+name|char
+modifier|*
+specifier|const
+modifier|*
+name|env
+parameter_list|,
 name|int
 name|in
 parameter_list|,
@@ -1746,6 +1768,9 @@ name|out
 parameter_list|,
 name|int
 name|errdes
+parameter_list|,
+name|int
+name|toclose
 parameter_list|,
 specifier|const
 name|char
@@ -1994,6 +2019,34 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|toclose
+operator|>=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|close
+argument_list|(
+name|toclose
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|pex_child_error
+argument_list|(
+name|obj
+argument_list|,
+name|executable
+argument_list|,
+literal|"close"
+argument_list|,
+name|errno
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 operator|(
 name|flags
 operator|&
@@ -2026,6 +2079,19 @@ name|errno
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|env
+condition|)
+name|environ
+operator|=
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
+name|env
+expr_stmt|;
 if|if
 condition|(
 operator|(

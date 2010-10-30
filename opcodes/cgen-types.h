@@ -18,7 +18,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<stdint.h>
+file|"../bfd/bfd_stdint.h"
 end_include
 
 begin_typedef

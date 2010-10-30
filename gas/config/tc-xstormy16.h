@@ -224,5 +224,19 @@ name|DWARF2_LINE_MIN_INSN_LENGTH
 value|2
 end_define
 
+begin_comment
+comment|/* This target is buggy, and sets fix size too large.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TC_FX_SIZE_SLACK
+parameter_list|(
+name|FIX
+parameter_list|)
+value|2
+end_define
+
 end_unit
 

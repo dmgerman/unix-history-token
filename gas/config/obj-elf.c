@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ELF object file format    Copyright 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2,    or (at your option) any later version.     GAS is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See    the GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
+comment|/* ELF object file format    Copyright 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001, 2002, 2003, 2004, 2005, 2006, 2007    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2,    or (at your option) any later version.     GAS is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See    the GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_define
@@ -170,6 +170,23 @@ begin_include
 include|#
 directive|include
 file|"elf/x86-64.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TC_MEP
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"elf/mep.h"
 end_include
 
 begin_endif
@@ -2569,6 +2586,30 @@ name|override
 operator|=
 name|TRUE
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TC_ALPHA
+comment|/* A section on Alpha may have SHF_ALPHA_GPREL.  */
+elseif|else
+if|if
+condition|(
+operator|(
+name|attr
+operator|&
+operator|~
+name|ssect
+operator|->
+name|attr
+operator|)
+operator|==
+name|SHF_ALPHA_GPREL
+condition|)
+name|override
+operator|=
+name|TRUE
+expr_stmt|;
+endif|#
+directive|endif
 else|else
 block|{
 if|if
@@ -5461,9 +5502,6 @@ name|note_secp
 init|=
 name|NULL
 decl_stmt|;
-name|int
-name|len
-decl_stmt|;
 name|SKIP_WHITESPACE
 argument_list|()
 expr_stmt|;
@@ -5475,6 +5513,10 @@ operator|==
 literal|'\"'
 condition|)
 block|{
+name|unsigned
+name|int
+name|len
+decl_stmt|;
 operator|++
 name|input_line_pointer
 expr_stmt|;
@@ -5518,7 +5560,7 @@ name|input_line_pointer
 operator|=
 name|c
 expr_stmt|;
-comment|/* create the .note section */
+comment|/* Create the .note section.  */
 name|note_secp
 operator|=
 name|subseg_new
@@ -5539,39 +5581,30 @@ operator||
 name|SEC_READONLY
 argument_list|)
 expr_stmt|;
-comment|/* process the version string */
+comment|/* Process the version string.  */
 name|len
 operator|=
 name|strlen
 argument_list|(
 name|name
 argument_list|)
+operator|+
+literal|1
 expr_stmt|;
+comment|/* PR 3456: Although the name field is padded out to an 4-byte 	 boundary, the namesz field should not be adjusted.  */
 name|i_note
 operator|.
 name|namesz
 operator|=
-operator|(
-operator|(
 name|len
-operator|+
-literal|1
-operator|)
-operator|+
-literal|3
-operator|)
-operator|&
-operator|~
-literal|3
 expr_stmt|;
-comment|/* round this to word boundary */
 name|i_note
 operator|.
 name|descsz
 operator|=
 literal|0
 expr_stmt|;
-comment|/* no description */
+comment|/* No description.  */
 name|i_note
 operator|.
 name|type
@@ -5667,15 +5700,15 @@ operator|=
 name|frag_more
 argument_list|(
 name|len
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|memcpy
 argument_list|(
 name|p
 argument_list|,
 name|name
+argument_list|,
+name|len
 argument_list|)
 expr_stmt|;
 name|frag_align
@@ -5696,7 +5729,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 name|as_bad
 argument_list|(
 name|_
@@ -5705,7 +5737,6 @@ literal|"expected quoted string"
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|demand_empty_rest_of_line
 argument_list|()
 expr_stmt|;
@@ -6658,7 +6689,16 @@ begin_comment
 comment|/* This function is called by the ECOFF code.  It is supposed to    record the external symbol information so that the backend can    write it out correctly.  The ELF backend doesn't actually handle    this at the moment, so we do it ourselves.  We save the information    in the symbol.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OBJ_MAYBE_ELF
+end_ifdef
+
 begin_function
+specifier|static
+endif|#
+directive|endif
 name|void
 name|elf_ecoff_set_ext
 parameter_list|(
@@ -7856,6 +7896,11 @@ name|fr_fix
 operator|=
 name|frag_now_fix_octets
 argument_list|()
+expr_stmt|;
+name|frag_wane
+argument_list|(
+name|frag_now
+argument_list|)
 expr_stmt|;
 block|}
 ifdef|#

@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-d10v.c -- Assembler code for the Mitsubishi D10V    Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2005    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 51 Franklin Street - Fifth Floor,    Boston, MA 02110-1301, USA.  */
+comment|/* tc-d10v.c -- Assembler code for the Mitsubishi D10V    Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2005, 2006, 2007    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 51 Franklin Street - Fifth Floor,    Boston, MA 02110-1301, USA.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
 
 begin_include
 include|#
@@ -6664,10 +6658,6 @@ index|[
 literal|6
 index|]
 decl_stmt|;
-name|unsigned
-name|long
-name|insn
-decl_stmt|;
 comment|/* Drop leading whitespace.  */
 while|while
 condition|(
@@ -6773,16 +6763,10 @@ name|opcode
 operator|==
 name|NULL
 condition|)
-name|as_fatal
-argument_list|(
-name|_
-argument_list|(
-literal|"unknown opcode: %s"
-argument_list|)
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
 name|save
 operator|=
 name|input_line_pointer
@@ -6821,8 +6805,7 @@ name|input_line_pointer
 operator|=
 name|save
 expr_stmt|;
-name|insn
-operator|=
+return|return
 name|build_insn
 argument_list|(
 operator|(
@@ -6834,9 +6817,6 @@ name|myops
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-return|return
-name|insn
 return|;
 block|}
 end_function
@@ -8034,7 +8014,7 @@ name|as_fatal
 argument_list|(
 name|_
 argument_list|(
-literal|"can't find opcode "
+literal|"can't find previous opcode "
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -8080,21 +8060,22 @@ name|extype
 operator|!=
 name|PACK_UNSPEC
 condition|)
-block|{
 name|etype
 operator|=
 name|extype
 expr_stmt|;
-return|return;
-block|}
-name|as_fatal
+else|else
+name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"can't find opcode "
+literal|"could not assemble: %s"
 argument_list|)
+argument_list|,
+name|str
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 if|if
 condition|(

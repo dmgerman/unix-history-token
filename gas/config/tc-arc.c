@@ -6,18 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"libiberty.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"as.h"
 end_include
 

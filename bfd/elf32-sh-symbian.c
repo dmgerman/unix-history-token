@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Renesas / SuperH specific support for Symbian 32-bit ELF files    Copyright 2004, 2005    Free Software Foundation, Inc.    Contributed by Red Hat     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
+comment|/* Renesas / SuperH specific support for Symbian 32-bit ELF files    Copyright 2004, 2005, 2006    Free Software Foundation, Inc.    Contributed by Red Hat     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -34,13 +34,13 @@ file|"elf32-sh.c"
 end_include
 
 begin_comment
-comment|//#define DEBUG 1
+comment|//#define SYMBIAN_DEBUG 1
 end_comment
 
 begin_define
 define|#
 directive|define
-name|DEBUG
+name|SYMBIAN_DEBUG
 value|0
 end_define
 
@@ -73,7 +73,7 @@ value|"AS "
 end_define
 
 begin_comment
-comment|/* Macro to advance 's' until either it reaches 'e' or the    character pointed to by 's' is equal to 'c'.  If 'e' is    reached and DEBUG is enabled then the error message 'm'    is displayed.  */
+comment|/* Macro to advance 's' until either it reaches 'e' or the    character pointed to by 's' is equal to 'c'.  If 'e' is    reached and SYMBIAN_DEBUG is enabled then the error message 'm'    is displayed.  */
 end_comment
 
 begin_define
@@ -90,7 +90,7 @@ parameter_list|,
 name|m
 parameter_list|)
 define|\
-value|do								\     {								\       while (s< e&& *s != c)					\ 	++ s;							\       if (s>= e)						\ 	{							\           if (DEBUG)						\ 	    fprintf (stderr, "Corrupt directive: %s\n", m);	\ 	  result = FALSE;					\ 	}							\     }								\   while (0);							\   if (!result)							\      break;
+value|do								\     {								\       while (s< e&& *s != c)					\ 	++ s;							\       if (s>= e)						\ 	{							\           if (SYMBIAN_DEBUG)					\ 	    fprintf (stderr, "Corrupt directive: %s\n", m);	\ 	  result = FALSE;					\ 	}							\     }								\   while (0);							\   if (!result)							\      break;
 end_define
 
 begin_comment
@@ -113,11 +113,11 @@ parameter_list|,
 name|m
 parameter_list|)
 define|\
-value|do								\     {								\       while (s< e&& *s != c1&& *s != c2)			\ 	++ s;							\       if (s>= e)						\ 	{							\           if (DEBUG)						\ 	    fprintf (stderr, "Corrupt directive: %s\n", m);	\ 	  result = FALSE;					\ 	}							\     }								\   while (0);							\   if (!result)							\      break;
+value|do								\     {								\       while (s< e&& *s != c1&& *s != c2)			\ 	++ s;							\       if (s>= e)						\ 	{							\           if (SYMBIAN_DEBUG)					\ 	    fprintf (stderr, "Corrupt directive: %s\n", m);	\ 	  result = FALSE;					\ 	}							\     }								\   while (0);							\   if (!result)							\      break;
 end_define
 
 begin_comment
-comment|/* Macro to advance 's' until either it reaches 'e' or the    character pointed to by 's' is not equal to 'c'.  If 'e'    is reached and DEBUG is enabled then the error message    'm' is displayed.  */
+comment|/* Macro to advance 's' until either it reaches 'e' or the    character pointed to by 's' is not equal to 'c'.  If 'e'    is reached and SYMBIAN_DEBUG is enabled then the error message    'm' is displayed.  */
 end_comment
 
 begin_define
@@ -134,7 +134,7 @@ parameter_list|,
 name|m
 parameter_list|)
 define|\
-value|do								\     {								\       while (s< e&& *s == c)					\ 	++ s;							\       if (s>= e)						\ 	{							\           if (DEBUG)						\ 	    fprintf (stderr, "Corrupt directive: %s\n", m);	\ 	  result = FALSE;					\ 	}							\     }								\   while (0);							\   if (!result)							\      break;
+value|do								\     {								\       while (s< e&& *s == c)					\ 	++ s;							\       if (s>= e)						\ 	{							\           if (SYMBIAN_DEBUG)					\ 	    fprintf (stderr, "Corrupt directive: %s\n", m);	\ 	  result = FALSE;					\ 	}							\     }								\   while (0);							\   if (!result)							\      break;
 end_define
 
 begin_typedef
@@ -217,7 +217,7 @@ name|node
 decl_stmt|;
 if|if
 condition|(
-name|DEBUG
+name|SYMBIAN_DEBUG
 condition|)
 name|fprintf
 argument_list|(
@@ -314,7 +314,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|DEBUG
+name|SYMBIAN_DEBUG
 condition|)
 name|fprintf
 argument_list|(
@@ -350,7 +350,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|DEBUG
+name|SYMBIAN_DEBUG
 condition|)
 name|fprintf
 argument_list|(
@@ -401,7 +401,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|DEBUG
+name|SYMBIAN_DEBUG
 condition|)
 name|fprintf
 argument_list|(
@@ -526,7 +526,7 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|DEBUG
+name|SYMBIAN_DEBUG
 condition|)
 name|fprintf
 argument_list|(
@@ -561,7 +561,7 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|DEBUG
+name|SYMBIAN_DEBUG
 condition|)
 name|fprintf
 argument_list|(
@@ -702,16 +702,12 @@ literal|'I'
 case|:
 if|if
 condition|(
-name|strncmp
+operator|!
+name|CONST_STRNEQ
 argument_list|(
 name|s
 argument_list|,
 name|DIRECTIVE_IMPORT
-argument_list|,
-name|strlen
-argument_list|(
-name|DIRECTIVE_IMPORT
-argument_list|)
 argument_list|)
 condition|)
 name|result
@@ -831,26 +827,22 @@ name|new_name_end
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Check to see if 'AS '... is present.  If se we have an IMPORT AS 		 directive, otherwise we have an IMPORT directive.  */
+comment|/* Check to see if 'AS '... is present.  If so we have an 		 IMPORT AS directive, otherwise we have an IMPORT directive.  */
 if|if
 condition|(
-name|strncmp
+operator|!
+name|CONST_STRNEQ
 argument_list|(
 name|s
 argument_list|,
 name|DIRECTIVE_AS
-argument_list|,
-name|strlen
-argument_list|(
-name|DIRECTIVE_AS
-argument_list|)
 argument_list|)
 condition|)
 block|{
 comment|/* Skip the new-line at the end of the name.  */
 if|if
 condition|(
-name|DEBUG
+name|SYMBIAN_DEBUG
 operator|&&
 name|name_end_char
 operator|!=
@@ -888,7 +880,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|DEBUG
+name|SYMBIAN_DEBUG
 condition|)
 name|fprintf
 argument_list|(
@@ -982,7 +974,7 @@ literal|'\n'
 condition|)
 if|if
 condition|(
-name|DEBUG
+name|SYMBIAN_DEBUG
 condition|)
 name|fprintf
 argument_list|(
@@ -1021,7 +1013,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|DEBUG
+name|SYMBIAN_DEBUG
 condition|)
 name|fprintf
 argument_list|(
@@ -1057,16 +1049,12 @@ literal|'E'
 case|:
 if|if
 condition|(
-name|strncmp
+operator|!
+name|CONST_STRNEQ
 argument_list|(
 name|s
 argument_list|,
 name|DIRECTIVE_EXPORT
-argument_list|,
-name|strlen
-argument_list|(
-name|DIRECTIVE_EXPORT
-argument_list|)
 argument_list|)
 condition|)
 name|result
@@ -1164,7 +1152,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|DEBUG
+name|SYMBIAN_DEBUG
 condition|)
 name|fprintf
 argument_list|(
@@ -1204,7 +1192,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|DEBUG
+name|SYMBIAN_DEBUG
 condition|)
 name|fprintf
 argument_list|(
@@ -1600,7 +1588,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|DEBUG
+name|SYMBIAN_DEBUG
 condition|)
 name|fprintf
 argument_list|(
@@ -1795,7 +1783,7 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-name|DEBUG
+name|SYMBIAN_DEBUG
 condition|)
 name|fprintf
 argument_list|(
@@ -1844,7 +1832,7 @@ name|num_local_syms
 expr_stmt|;
 if|if
 condition|(
-name|DEBUG
+name|SYMBIAN_DEBUG
 condition|)
 name|fprintf
 argument_list|(
@@ -1900,7 +1888,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|DEBUG
+name|SYMBIAN_DEBUG
 condition|)
 name|fprintf
 argument_list|(
@@ -1979,7 +1967,7 @@ name|num_local_syms
 expr_stmt|;
 if|if
 condition|(
-name|DEBUG
+name|SYMBIAN_DEBUG
 condition|)
 name|fprintf
 argument_list|(
@@ -2212,7 +2200,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|DEBUG
+name|SYMBIAN_DEBUG
 condition|)
 name|fprintf
 argument_list|(
