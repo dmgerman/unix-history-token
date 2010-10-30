@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: rbtdb.c,v 1.270.12.16.8.3 2010/02/26 00:24:39 marka Exp $ */
+comment|/* $Id: rbtdb.c,v 1.270.12.16.10.3 2010/08/13 07:25:21 marka Exp $ */
 end_comment
 
 begin_comment
@@ -1487,9 +1487,6 @@ name|future_version
 decl_stmt|;
 name|rbtdb_versionlist_t
 name|open_versions
-decl_stmt|;
-name|isc_boolean_t
-name|overmem
 decl_stmt|;
 name|isc_task_t
 modifier|*
@@ -13973,6 +13970,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Find node of the NSEC/NSEC3 record that is 'name'.  */
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -20834,9 +20835,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|isc_mem_isovermem
+argument_list|(
 name|rbtdb
 operator|->
-name|overmem
+name|common
+operator|.
+name|mctx
+argument_list|)
 condition|)
 block|{
 name|isc_uint32_t
@@ -20866,7 +20872,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Note that 'log' can be true IFF rbtdb->overmem is also true. 		 * rbtdb->overmem can currently only be true for cache 		 * databases -- hence all of the "overmem cache" log strings. 		 */
+comment|/* 		 * Note that 'log' can be true IFF overmem is also true. 		 * overmem can currently only be true for cache 		 * databases -- hence all of the "overmem cache" log strings. 		 */
 name|log
 operator|=
 name|ISC_TF
@@ -21059,9 +21065,14 @@ block|}
 elseif|else
 if|if
 condition|(
+name|isc_mem_isovermem
+argument_list|(
 name|rbtdb
 operator|->
-name|overmem
+name|common
+operator|.
+name|mctx
+argument_list|)
 operator|&&
 name|log
 condition|)
@@ -21118,29 +21129,18 @@ name|isc_boolean_t
 name|overmem
 parameter_list|)
 block|{
-name|dns_rbtdb_t
-modifier|*
-name|rbtdb
-init|=
-operator|(
-name|dns_rbtdb_t
-operator|*
-operator|)
-name|db
-decl_stmt|;
-if|if
-condition|(
-name|IS_CACHE
+comment|/* This is an empty callback.  See adb.c:water() */
+name|UNUSED
 argument_list|(
-name|rbtdb
+name|db
 argument_list|)
-condition|)
-name|rbtdb
-operator|->
-name|overmem
-operator|=
-name|overmem
 expr_stmt|;
+name|UNUSED
+argument_list|(
+name|overmem
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -25544,6 +25544,11 @@ name|tree_locked
 init|=
 name|ISC_FALSE
 decl_stmt|;
+name|isc_boolean_t
+name|cache_is_overmem
+init|=
+name|ISC_FALSE
+decl_stmt|;
 name|REQUIRE
 argument_list|(
 name|VALID_RBTDB
@@ -26000,18 +26005,29 @@ expr_stmt|;
 comment|/* 	 * If we're adding a delegation type or the DB is a cache in an overmem 	 * state, hold an exclusive lock on the tree.  In the latter case 	 * the lock does not necessarily have to be acquired but it will help 	 * purge stale entries more effectively. 	 */
 if|if
 condition|(
-name|delegating
-operator|||
-operator|(
 name|IS_CACHE
 argument_list|(
 name|rbtdb
 argument_list|)
 operator|&&
+name|isc_mem_isovermem
+argument_list|(
 name|rbtdb
 operator|->
-name|overmem
-operator|)
+name|common
+operator|.
+name|mctx
+argument_list|)
+condition|)
+name|cache_is_overmem
+operator|=
+name|ISC_TRUE
+expr_stmt|;
+if|if
+condition|(
+name|delegating
+operator|||
+name|cache_is_overmem
 condition|)
 block|{
 name|tree_locked
@@ -26031,14 +26047,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|IS_CACHE
-argument_list|(
-name|rbtdb
-argument_list|)
-operator|&&
-name|rbtdb
-operator|->
-name|overmem
+name|cache_is_overmem
 condition|)
 name|overmem_purge
 argument_list|(
@@ -31362,12 +31371,6 @@ operator|->
 name|attributes
 operator|=
 literal|0
-expr_stmt|;
-name|rbtdb
-operator|->
-name|overmem
-operator|=
-name|ISC_FALSE
 expr_stmt|;
 name|rbtdb
 operator|->
