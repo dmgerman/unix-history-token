@@ -4455,6 +4455,22 @@ expr_stmt|;
 block|}
 name|charged
 label|:
+comment|/* Expand the kernel pmap, if necessary. */
+if|if
+condition|(
+name|map
+operator|==
+name|kernel_map
+operator|&&
+name|end
+operator|>
+name|kernel_vm_end
+condition|)
+name|pmap_growkernel
+argument_list|(
+name|end
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|object
@@ -4949,8 +4965,6 @@ name|vm_map_entry_t
 name|entry
 decl_stmt|;
 name|vm_offset_t
-name|end
-decl_stmt|,
 name|st
 decl_stmt|;
 comment|/* 	 * Request must fit within min/max VM address and must avoid 	 * address wrap. 	 */
@@ -5004,9 +5018,11 @@ name|addr
 operator|=
 name|start
 expr_stmt|;
-goto|goto
-name|found
-goto|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 comment|/* 	 * After splay, if start comes before root node, then there 	 * must be a gap from start to the root. 	 */
 name|map
@@ -5040,9 +5056,11 @@ name|addr
 operator|=
 name|start
 expr_stmt|;
-goto|goto
-name|found
-goto|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 comment|/* 	 * Root is the last node that might begin its gap before 	 * start, and this is the last comparison where address 	 * wrap might be a problem. 	 */
 name|st
@@ -5089,9 +5107,11 @@ name|addr
 operator|=
 name|st
 expr_stmt|;
-goto|goto
-name|found
-goto|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 comment|/* With max_free, can immediately tell if no solution. */
 name|entry
@@ -5166,9 +5186,11 @@ name|entry
 operator|->
 name|end
 expr_stmt|;
-goto|goto
-name|found
-goto|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 else|else
 name|entry
@@ -5184,43 +5206,6 @@ argument_list|(
 literal|"vm_map_findspace: max_free corrupt"
 argument_list|)
 expr_stmt|;
-name|found
-label|:
-comment|/* Expand the kernel pmap, if necessary. */
-if|if
-condition|(
-name|map
-operator|==
-name|kernel_map
-condition|)
-block|{
-name|end
-operator|=
-name|round_page
-argument_list|(
-operator|*
-name|addr
-operator|+
-name|length
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|end
-operator|>
-name|kernel_vm_end
-condition|)
-name|pmap_growkernel
-argument_list|(
-name|end
-argument_list|)
-expr_stmt|;
-block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
