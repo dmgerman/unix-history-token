@@ -597,31 +597,6 @@ begin_comment
 comment|/* ratio of negative entries */
 end_comment
 
-begin_comment
-comment|/* _debug sysctl left for backward compatibility */
-end_comment
-
-begin_expr_stmt
-name|SYSCTL_ULONG
-argument_list|(
-name|_debug
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|ncnegfactor
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|ncnegfactor
-argument_list|,
-literal|0
-argument_list|,
-literal|""
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_expr_stmt
 name|SYSCTL_ULONG
 argument_list|(
