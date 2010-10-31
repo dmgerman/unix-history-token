@@ -398,9 +398,9 @@ name|GTCR_ADV_MS
 expr_stmt|;
 break|break;
 default|default:
-name|panic
+name|printf
 argument_list|(
-literal|"mii_phy_setmedia: MASTER on wrong media"
+literal|"mii_phy_setmedia: MASTER on wrong media\n"
 argument_list|)
 expr_stmt|;
 block|}
