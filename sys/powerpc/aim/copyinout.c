@@ -310,16 +310,7 @@ operator|==
 name|vsid
 condition|)
 return|return;
-asm|__asm __volatile ("sync; mtsr %0,%1; sync; isync" :: "n"(USER_SR),
-literal|"r"
-operator|(
-name|vsid
-operator|)
-block|)
-function|;
-end_function
-
-begin_expr_stmt
+asm|__asm __volatile("isync");
 name|curthread
 operator|->
 name|td_pcb
@@ -332,27 +323,31 @@ name|usr_vsid
 operator|=
 name|vsid
 expr_stmt|;
-end_expr_stmt
+asm|__asm __volatile("mtsr %0,%1; isync" :: "n"(USER_SR), "r"(vsid));
+block|}
+end_function
 
 begin_endif
-unit|}
 endif|#
 directive|endif
 end_endif
 
-begin_macro
-unit|int
+begin_function
+name|int
 name|copyout
-argument_list|(
-argument|const void *kaddr
-argument_list|,
-argument|void *udaddr
-argument_list|,
-argument|size_t len
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|kaddr
+parameter_list|,
+name|void
+modifier|*
+name|udaddr
+parameter_list|,
+name|size_t
+name|len
+parameter_list|)
 block|{
 name|struct
 name|thread
@@ -520,7 +515,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|int
