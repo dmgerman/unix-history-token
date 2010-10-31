@@ -452,6 +452,14 @@ comment|/* #undef NEED_PTHREAD_SCOPE_SYSTEM */
 end_comment
 
 begin_comment
+comment|/* Define if building universal (internal helper macro) */
+end_comment
+
+begin_comment
+comment|/* #undef AC_APPLE_UNIVERSAL_BUILD */
+end_comment
+
+begin_comment
 comment|/* Define if recvmsg() does not meet all of the BSD socket API specifications.    */
 end_comment
 
@@ -952,6 +960,17 @@ value|""
 end_define
 
 begin_comment
+comment|/* Define to the home page for this package. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKAGE_URL
+value|""
+end_define
+
+begin_comment
 comment|/* Define to the version of this package. */
 end_comment
 
@@ -1012,8 +1031,15 @@ comment|/* #undef WITH_IDN */
 end_comment
 
 begin_comment
-comment|/* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most    significant byte first (like Motorola and SPARC, unlike Intel and VAX). */
+comment|/* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most    significant byte first (like Motorola and SPARC, unlike Intel). */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+name|AC_APPLE_UNIVERSAL_BUILD
+end_if
 
 begin_if
 if|#
@@ -1029,17 +1055,30 @@ name|WORDS_BIGENDIAN
 value|1
 end_define
 
-begin_elif
-elif|#
-directive|elif
-operator|!
-name|defined
-name|__LITTLE_ENDIAN__
-end_elif
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|WORDS_BIGENDIAN
+end_ifndef
 
 begin_comment
-comment|/* # undef WORDS_BIGENDIAN */
+comment|/* #  undef WORDS_BIGENDIAN */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
