@@ -193,9 +193,9 @@ argument_list|)
 expr_stmt|;
 name|IF_DB_PRINTF
 argument_list|(
-literal|"%d"
+literal|"%u"
 argument_list|,
-name|if_index_reserved
+name|if_timer
 argument_list|)
 expr_stmt|;
 name|IF_DB_PRINTF
