@@ -1519,27 +1519,6 @@ operator|&
 operator|~
 name|user_deny
 expr_stmt|;
-if|#
-directive|if
-literal|1
-comment|/* 	 * This is a workaround for what looks like a bug in ZFS - trivial 	 * ACL for mode 0077 should look like this: 	 * 	 *    owner@:rwxp----------:------:deny 	 *    owner@:------aARWcCos:------:allow 	 *    group@:rwxp--a-R-c--s:------:allow 	 * everyone@:rwxp--a-R-c--s:------:allow 	 * 	 * Instead, ZFS makes it like this: 	 * 	 *    owner@:rwx-----------:------:deny 	 *    owner@:------aARWcCos:------:allow 	 *    group@:rwxp--a-R-c--s:------:allow 	 * everyone@:rwxp--a-R-c--s:------:allow 	 */
-name|user_allow_first
-operator|&=
-operator|~
-name|ACL_APPEND_DATA
-expr_stmt|;
-name|user_deny
-operator|&=
-operator|~
-name|ACL_APPEND_DATA
-expr_stmt|;
-name|group_deny
-operator|&=
-operator|~
-name|ACL_APPEND_DATA
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|user_allow_first
