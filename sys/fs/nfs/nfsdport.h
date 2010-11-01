@@ -296,7 +296,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|(&nfslockhash[(*((u_int32_t *)((f)->fh_fid.fid_data))) % NFSLOCKHASHSIZE])
+value|(&nfslockhash[nfsrv_hashfh(f) % NFSLOCKHASHSIZE])
 end_define
 
 begin_define

@@ -6192,6 +6192,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|nfsrv_hashfh
+parameter_list|(
+name|fhandle_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* nfs_commonkrpc.c */
 end_comment
