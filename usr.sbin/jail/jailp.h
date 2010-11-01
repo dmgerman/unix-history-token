@@ -239,30 +239,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|JF_CHECKINT
+name|JF_PARAMS
 value|0x0040
 end_define
 
 begin_comment
-comment|/* Checked internal parameters */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|JF_IPPARAMS
-value|0x0080
-end_define
-
-begin_comment
-comment|/* Looked up jail hostname for IP_HOSTNAME */
+comment|/* Parameters checked and imported */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|JF_RDTUN
-value|0x0100
+value|0x0080
 end_define
 
 begin_comment
@@ -273,7 +262,7 @@ begin_define
 define|#
 directive|define
 name|JF_IFUP
-value|0x0200
+value|0x0100
 end_define
 
 begin_comment
@@ -284,7 +273,7 @@ begin_define
 define|#
 directive|define
 name|JF_MOUNTED
-value|0x0400
+value|0x0200
 end_define
 
 begin_comment
@@ -295,7 +284,7 @@ begin_define
 define|#
 directive|define
 name|JF_PERSIST
-value|0x0800
+value|0x0400
 end_define
 
 begin_comment
@@ -306,7 +295,7 @@ begin_define
 define|#
 directive|define
 name|JF_TIMEOUT
-value|0x1000
+value|0x0800
 end_define
 
 begin_comment
@@ -317,7 +306,7 @@ begin_define
 define|#
 directive|define
 name|JF_RUNQ
-value|0x2000
+value|0x1000
 end_define
 
 begin_comment
@@ -328,7 +317,7 @@ begin_define
 define|#
 directive|define
 name|JF_BACKGROUND
-value|0x4000
+value|0x2000
 end_define
 
 begin_comment
@@ -958,19 +947,6 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|check_intparams
-parameter_list|(
-name|struct
-name|cfjail
-modifier|*
-name|j
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
 name|bool_param
 parameter_list|(
 specifier|const
@@ -1019,7 +995,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|ip_params
+name|check_intparams
 parameter_list|(
 name|struct
 name|cfjail
