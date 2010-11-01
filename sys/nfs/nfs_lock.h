@@ -170,6 +170,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|extern
+name|vop_advlock_t
+modifier|*
+name|nfs_advlock_p
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|vop_reclaim_t
+modifier|*
+name|nfs_reclaim_p
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif

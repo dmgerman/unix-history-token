@@ -253,15 +253,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-name|vop_advlock_t
-modifier|*
-name|ncl_advlock_p
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Ifdef for FreeBSD-current merged buffer cache. It is unfortunate that these  * calls are not in getblk() and brelse() so that they would not be necessary  * here.  */
 end_comment
@@ -15583,11 +15574,13 @@ else|else
 block|{
 if|if
 condition|(
-name|ncl_advlock_p
+name|nfs_advlock_p
+operator|!=
+name|NULL
 condition|)
 name|error
 operator|=
-name|ncl_advlock_p
+name|nfs_advlock_p
 argument_list|(
 name|ap
 argument_list|)

@@ -165,13 +165,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nfsclient/nfs.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<nfsclient/nfsnode.h>
+file|<nfs/nfs_lock.h>
 end_include
 
 begin_include
@@ -10035,6 +10029,22 @@ argument_list|(
 name|nfslockd
 argument_list|,
 name|nfs
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|nfslockd
+argument_list|,
+name|nfslock
 argument_list|,
 literal|1
 argument_list|,
