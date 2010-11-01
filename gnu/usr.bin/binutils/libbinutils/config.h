@@ -39,7 +39,7 @@ comment|/* #undef C_ALLOCA */
 end_comment
 
 begin_comment
-comment|/* Define to 1 if NLS is requested */
+comment|/* Define to 1 if translation of program messages to the user's native    language is requested. */
 end_comment
 
 begin_comment
@@ -74,22 +74,6 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE_ALLOCA_H */
-end_comment
-
-begin_comment
-comment|/* Define to 1 if you have the<argz.h> header file. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_ARGZ_H */
-end_comment
-
-begin_comment
-comment|/* Define to 1 if you have the `dcgettext' function. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_DCGETTEXT */
 end_comment
 
 begin_comment
@@ -203,6 +187,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the<dlfcn.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DLFCN_H
+value|1
+end_define
+
+begin_comment
 comment|/* Does the platform use an executable suffix? */
 end_comment
 
@@ -230,17 +225,6 @@ comment|/* #undef HAVE_FOPEN64 */
 end_comment
 
 begin_comment
-comment|/* Define to 1 if you have the `getcwd' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_GETCWD
-value|1
-end_define
-
-begin_comment
 comment|/* Define to 1 if you have the `getc_unlocked' function. */
 end_comment
 
@@ -250,25 +234,6 @@ directive|define
 name|HAVE_GETC_UNLOCKED
 value|1
 end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `getpagesize' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_GETPAGESIZE
-value|1
-end_define
-
-begin_comment
-comment|/* Define as 1 if you have gettext and don't want to use GNU gettext. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_GETTEXT */
-end_comment
 
 begin_comment
 comment|/* Does<utime.h> define struct utimbuf? */
@@ -282,6 +247,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the iconv() function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_ICONV */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<inttypes.h> header file. */
 end_comment
 
@@ -289,17 +262,6 @@ begin_define
 define|#
 directive|define
 name|HAVE_INTTYPES_H
-value|1
-end_define
-
-begin_comment
-comment|/* Define if your locale.h file contains LC_MESSAGES. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_LC_MESSAGES
 value|1
 end_define
 
@@ -315,25 +277,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the<locale.h> header file. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_LOCALE_H
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the<malloc.h> header file. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_MALLOC_H */
-end_comment
-
-begin_comment
 comment|/* Define to 1 if you have the<memory.h> header file. */
 end_comment
 
@@ -345,46 +288,24 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have a working `mmap' system call. */
+comment|/* Define to 1 if you have the `mkdtemp' function. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_MMAP
+name|HAVE_MKDTEMP
 value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the `munmap' function. */
+comment|/* Define to 1 if you have the `mkstemp' function. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_MUNMAP
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the<nl_types.h> header file. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_NL_TYPES_H
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `putenv' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_PUTENV
+name|HAVE_MKSTEMP
 value|1
 end_define
 
@@ -396,28 +317,6 @@ begin_define
 define|#
 directive|define
 name|HAVE_SBRK
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `setenv' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_SETENV
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `setlocale' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_SETLOCALE
 value|1
 end_define
 
@@ -459,39 +358,6 @@ begin_define
 define|#
 directive|define
 name|HAVE_STDLIB_H
-value|1
-end_define
-
-begin_comment
-comment|/* Define if you have the stpcpy function */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_STPCPY
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `strcasecmp' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_STRCASECMP
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `strchr' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_STRCHR
 value|1
 end_define
 
@@ -628,36 +494,23 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the<values.h> header file. */
+comment|/* Define as const if the declaration of iconv() needs const. */
 end_comment
 
 begin_comment
-comment|/* #undef HAVE_VALUES_H */
+comment|/* #undef ICONV_CONST */
 end_comment
 
 begin_comment
-comment|/* Define to 1 if you have the `__argz_count' function. */
+comment|/* Define to the sub-directory in which libtool stores uninstalled libraries.    */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE___ARGZ_COUNT */
-end_comment
-
-begin_comment
-comment|/* Define to 1 if you have the `__argz_next' function. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE___ARGZ_NEXT */
-end_comment
-
-begin_comment
-comment|/* Define to 1 if you have the `__argz_stringify' function. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE___ARGZ_STRINGIFY */
-end_comment
+begin_define
+define|#
+directive|define
+name|LT_OBJDIR
+value|".libs/"
+end_define
 
 begin_comment
 comment|/* Name of package */
@@ -776,7 +629,7 @@ comment|/* Version number of package */
 end_comment
 
 begin_comment
-comment|/* #define VERSION "2.17" */
+comment|/* #define VERSION "2.17.50" */
 end_comment
 
 begin_comment
@@ -818,49 +671,6 @@ end_comment
 
 begin_comment
 comment|/* #undef _LARGEFILE64_SOURCE */
-end_comment
-
-begin_comment
-comment|/* Define to empty if `const' does not conform to ANSI C. */
-end_comment
-
-begin_comment
-comment|/* #undef const */
-end_comment
-
-begin_comment
-comment|/* Define to `__inline__' or `__inline' if that's what the C compiler    calls it, or to nothing if 'inline' is not supported under any name.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__cplusplus
-end_ifndef
-
-begin_comment
-comment|/* #undef inline */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Define to `long' if<sys/types.h> does not define. */
-end_comment
-
-begin_comment
-comment|/* #undef off_t */
-end_comment
-
-begin_comment
-comment|/* Define to `unsigned' if<sys/types.h> does not define. */
-end_comment
-
-begin_comment
-comment|/* #undef size_t */
 end_comment
 
 end_unit
