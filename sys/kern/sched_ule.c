@@ -11521,18 +11521,6 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
-specifier|static
-name|size_t
-name|_kern_cpuset_size
-init|=
-sizeof|sizeof
-argument_list|(
-name|cpuset_t
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
@@ -11860,31 +11848,6 @@ argument_list|,
 literal|"A"
 argument_list|,
 literal|"XML dump of detected CPU topology"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/*   * Return the size of cpuset_t at the kernel level  *  * XXX (gcooper): replace ULONG with SIZE once CTLTYPE_SIZE is implemented.  */
-end_comment
-
-begin_expr_stmt
-name|SYSCTL_ULONG
-argument_list|(
-name|_kern_sched
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|cpusetsize
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|_kern_cpuset_size
-argument_list|,
-literal|0
-argument_list|,
-literal|"Kernel-level cpuset_t struct size"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

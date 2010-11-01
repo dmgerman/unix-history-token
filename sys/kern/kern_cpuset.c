@@ -215,6 +215,33 @@ name|cpuset_zero
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Return the size of cpuset_t at the kernel level */
+end_comment
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern_sched
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|cpusetsize
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cpuset_t
+argument_list|)
+argument_list|,
+literal|"sizeof(cpuset_t)"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 name|cpuset_t
 modifier|*
