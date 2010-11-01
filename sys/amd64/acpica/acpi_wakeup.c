@@ -104,7 +104,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<machine/apicreg.h>
+file|<x86/apicreg.h>
 end_include
 
 begin_include
