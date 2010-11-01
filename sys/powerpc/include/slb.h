@@ -157,6 +157,24 @@ name|SLBE_ESID_SHIFT
 value|28
 end_define
 
+begin_comment
+comment|/*  * User segment for copyin/out  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USER_SLB_SLOT
+value|63
+end_define
+
+begin_define
+define|#
+directive|define
+name|USER_SLB_SLBE
+value|(((USER_ADDR>> ADDR_SR_SHFT)<< SLBE_ESID_SHIFT) | \ 			SLBE_VALID | USER_SLB_SLOT)
+end_define
+
 begin_struct
 struct|struct
 name|slb

@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-win32.c,v 1.34.2.8 2008-05-21 22:11:26 gianluca Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-win32.c,v 1.42 2008-05-21 22:15:25 gianluca Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -255,6 +255,47 @@ comment|/* length of bpf header (this struct 					   plus alignment padding) */
 block|}
 struct|;
 end_struct
+
+begin_decl_stmt
+name|CRITICAL_SECTION
+name|g_PcapCompileCriticalSection
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|BOOL
+name|WINAPI
+name|DllMain
+parameter_list|(
+name|HANDLE
+name|hinstDLL
+parameter_list|,
+name|DWORD
+name|dwReason
+parameter_list|,
+name|LPVOID
+name|lpvReserved
+parameter_list|)
+block|{
+if|if
+condition|(
+name|dwReason
+operator|==
+name|DLL_PROCESS_ATTACH
+condition|)
+block|{
+name|InitializeCriticalSection
+argument_list|(
+operator|&
+name|g_PcapCompileCriticalSection
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+name|TRUE
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/* Start winsock */

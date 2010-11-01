@@ -21,7 +21,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-dlpi.c,v 1.116.2.11 2008-04-14 20:41:51 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-dlpi.c,v 1.128 2008-12-02 16:20:23 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -782,6 +782,20 @@ name|ctlbuf
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * Cast a buffer to "union DL_primitives" without provoking warnings  * from the compiler.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAKE_DL_PRIMITIVES
+parameter_list|(
+name|ptr
+parameter_list|)
+value|((union DL_primitives *)(void *)(ptr))
+end_define
 
 begin_function
 specifier|static
@@ -1898,12 +1912,10 @@ name|infop
 operator|=
 operator|&
 operator|(
-operator|(
-expr|union
-name|DL_primitives
-operator|*
-operator|)
+name|MAKE_DL_PRIMITIVES
+argument_list|(
 name|buf
+argument_list|)
 operator|)
 operator|->
 name|info_ack
@@ -2567,12 +2579,10 @@ name|infop
 operator|=
 operator|&
 operator|(
-operator|(
-expr|union
-name|DL_primitives
-operator|*
-operator|)
+name|MAKE_DL_PRIMITIVES
+argument_list|(
 name|buf
+argument_list|)
 operator|)
 operator|->
 name|info_ack
@@ -2637,6 +2647,9 @@ goto|;
 block|}
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_BUFMOD_H
 name|ss
 operator|=
 name|p
@@ -2715,9 +2728,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|HAVE_SYS_BUFMOD_H
 comment|/* Push and configure bufmod. */
 if|if
 condition|(
@@ -3733,14 +3743,12 @@ return|;
 block|}
 name|dlp
 operator|=
-operator|(
-expr|union
-name|DL_primitives
-operator|*
-operator|)
+name|MAKE_DL_PRIMITIVES
+argument_list|(
 name|ctl
 operator|.
 name|buf
+argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
@@ -5041,12 +5049,10 @@ name|dlen
 decl_stmt|;
 name|dlp
 operator|=
-operator|(
-expr|union
-name|DL_primitives
-operator|*
-operator|)
+name|MAKE_DL_PRIMITIVES
+argument_list|(
 name|buf
+argument_list|)
 expr_stmt|;
 name|dlp
 operator|->
@@ -5754,12 +5760,16 @@ name|ebuf
 argument_list|,
 name|PCAP_ERRBUF_SIZE
 argument_list|,
-literal|"get_dlpi_ppa: hpppa ack too small (%d< %d)"
+literal|"get_dlpi_ppa: hpppa ack too small (%d< %lu)"
 argument_list|,
 name|ctl
 operator|.
 name|len
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|dlp
 operator|->
 name|dl_length

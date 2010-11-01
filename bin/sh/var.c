@@ -3816,7 +3816,7 @@ expr_stmt|;
 else|else
 name|error
 argument_list|(
-literal|"List assignment not implemented"
+literal|"too many arguments"
 argument_list|)
 expr_stmt|;
 return|return

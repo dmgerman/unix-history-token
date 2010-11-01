@@ -148,7 +148,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/mca.h>
+file|<x86/mca.h>
 end_include
 
 begin_include

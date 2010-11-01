@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/oui.h,v 1.7.2.1 2008-01-09 09:44:39 hannes Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/oui.h,v 1.8 2008-01-09 09:40:47 hannes Exp $ (LBL) */
 end_comment
 
 begin_comment
@@ -9,6 +9,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|struct
 name|tok
 name|oui_values
@@ -18,6 +19,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|struct
 name|tok
 name|smi_values

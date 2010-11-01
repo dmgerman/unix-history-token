@@ -120,7 +120,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/apicreg.h>
+file|<x86/apicreg.h>
 end_include
 
 begin_include
@@ -156,7 +156,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/mca.h>
+file|<x86/mca.h>
 end_include
 
 begin_include

@@ -2994,14 +2994,10 @@ name|length
 parameter_list|)
 block|{
 specifier|const
-name|u_int16_t
+name|u_char
 modifier|*
 name|ptr
 init|=
-operator|(
-name|u_int16_t
-operator|*
-operator|)
 name|dat
 decl_stmt|;
 name|u_int
@@ -3035,10 +3031,12 @@ name|flag_o
 operator|=
 name|FALSE
 expr_stmt|;
-name|TCHECK
+name|TCHECK2
 argument_list|(
 operator|*
 name|ptr
+argument_list|,
+literal|2
 argument_list|)
 expr_stmt|;
 comment|/* Flags& Version */
@@ -3200,7 +3198,8 @@ literal|"]"
 argument_list|)
 expr_stmt|;
 name|ptr
-operator|++
+operator|+=
+literal|2
 expr_stmt|;
 name|cnt
 operator|+=
@@ -3211,10 +3210,12 @@ condition|(
 name|flag_l
 condition|)
 block|{
-name|TCHECK
+name|TCHECK2
 argument_list|(
 operator|*
 name|ptr
+argument_list|,
+literal|2
 argument_list|)
 expr_stmt|;
 comment|/* Length */
@@ -3226,7 +3227,8 @@ name|ptr
 argument_list|)
 expr_stmt|;
 name|ptr
-operator|++
+operator|+=
+literal|2
 expr_stmt|;
 name|cnt
 operator|+=
@@ -3240,10 +3242,12 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|TCHECK
+name|TCHECK2
 argument_list|(
 operator|*
 name|ptr
+argument_list|,
+literal|2
 argument_list|)
 expr_stmt|;
 comment|/* Tunnel ID */
@@ -3258,16 +3262,19 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 name|ptr
-operator|++
+operator|+=
+literal|2
 expr_stmt|;
 name|cnt
 operator|+=
 literal|2
 expr_stmt|;
-name|TCHECK
+name|TCHECK2
 argument_list|(
 operator|*
 name|ptr
+argument_list|,
+literal|2
 argument_list|)
 expr_stmt|;
 comment|/* Session ID */
@@ -3282,7 +3289,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 name|ptr
-operator|++
+operator|+=
+literal|2
 expr_stmt|;
 name|cnt
 operator|+=
@@ -3293,10 +3301,12 @@ condition|(
 name|flag_s
 condition|)
 block|{
-name|TCHECK
+name|TCHECK2
 argument_list|(
 operator|*
 name|ptr
+argument_list|,
+literal|2
 argument_list|)
 expr_stmt|;
 comment|/* Ns */
@@ -3311,16 +3321,19 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 name|ptr
-operator|++
+operator|+=
+literal|2
 expr_stmt|;
 name|cnt
 operator|+=
 literal|2
 expr_stmt|;
-name|TCHECK
+name|TCHECK2
 argument_list|(
 operator|*
 name|ptr
+argument_list|,
+literal|2
 argument_list|)
 expr_stmt|;
 comment|/* Nr */
@@ -3335,7 +3348,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 name|ptr
-operator|++
+operator|+=
+literal|2
 expr_stmt|;
 name|cnt
 operator|+=
@@ -3347,10 +3361,12 @@ condition|(
 name|flag_o
 condition|)
 block|{
-name|TCHECK
+name|TCHECK2
 argument_list|(
 operator|*
 name|ptr
+argument_list|,
+literal|2
 argument_list|)
 expr_stmt|;
 comment|/* Offset Size */
@@ -3362,17 +3378,12 @@ name|ptr
 argument_list|)
 expr_stmt|;
 name|ptr
-operator|++
-expr_stmt|;
-name|ptr
 operator|+=
+operator|(
+literal|2
+operator|+
 name|pad
-operator|/
-sizeof|sizeof
-argument_list|(
-operator|*
-name|ptr
-argument_list|)
+operator|)
 expr_stmt|;
 name|cnt
 operator|+=
@@ -3462,10 +3473,6 @@ else|else
 block|{
 name|l2tp_avp_print
 argument_list|(
-operator|(
-name|u_char
-operator|*
-operator|)
 name|ptr
 argument_list|,
 name|length
@@ -3484,10 +3491,6 @@ argument_list|)
 expr_stmt|;
 name|ppp_print
 argument_list|(
-operator|(
-name|u_char
-operator|*
-operator|)
 name|ptr
 argument_list|,
 name|length

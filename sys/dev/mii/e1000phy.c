@@ -872,7 +872,7 @@ name|sc
 operator|->
 name|mii_flags
 operator|&
-name|MIIF_MACPRIV0
+name|MIIF_PHYPRIV0
 operator|)
 operator|!=
 literal|0

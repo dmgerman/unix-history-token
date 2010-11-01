@@ -200,7 +200,7 @@ name|bus_space_tag
 name|SBUS_io_space_tag
 init|=
 block|{
-name|BUS_SPACE_IO
+name|BUS_SPACE_TAG_IO
 block|,
 comment|/* direct bus access methods */
 block|{
@@ -271,7 +271,7 @@ name|bus_space_tag
 name|SBUS_mem_space_tag
 init|=
 block|{
-name|BUS_SPACE_MEM
+name|BUS_SPACE_TAG_MEM
 block|,
 comment|/* direct bus access methods */
 block|{
@@ -398,7 +398,7 @@ name|bus_space_tag
 name|NEPC_io_space_tag
 init|=
 block|{
-name|BUS_SPACE_IO
+name|BUS_SPACE_TAG_IO
 block|,
 comment|/* direct bus access methods */
 block|{
@@ -469,7 +469,7 @@ name|bus_space_tag
 name|NEPC_mem_space_tag
 init|=
 block|{
-name|BUS_SPACE_MEM
+name|BUS_SPACE_TAG_MEM
 block|,
 comment|/* direct bus access methods */
 block|{
@@ -996,7 +996,7 @@ name|bs_tag
 condition|)
 block|{
 case|case
-name|BUS_SPACE_IO
+name|BUS_SPACE_TAG_IO
 case|:
 if|if
 condition|(
@@ -1035,7 +1035,7 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-name|BUS_SPACE_MEM
+name|BUS_SPACE_TAG_MEM
 case|:
 if|if
 condition|(
@@ -1107,7 +1107,7 @@ name|bs_tag
 condition|)
 block|{
 case|case
-name|BUS_SPACE_IO
+name|BUS_SPACE_TAG_IO
 case|:
 if|if
 condition|(
@@ -1197,7 +1197,7 @@ return|;
 block|}
 break|break;
 case|case
-name|BUS_SPACE_MEM
+name|BUS_SPACE_TAG_MEM
 case|:
 break|break;
 block|}

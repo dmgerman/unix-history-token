@@ -3926,12 +3926,11 @@ name|_SC_PAGE_SIZE
 argument_list|)
 condition|)
 block|{
-name|gctl_error
+name|fprintf
 argument_list|(
-name|req
+name|stderr
 argument_list|,
-literal|"warning: Using sectorsize bigger than "
-literal|"the page size!"
+literal|"warning: Using sectorsize bigger than the page size!\n"
 argument_list|)
 expr_stmt|;
 block|}

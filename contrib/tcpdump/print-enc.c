@@ -21,7 +21,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-enc.c,v 1.4.4.1 2008-02-06 10:34:15 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-enc.c,v 1.6 2008-11-18 07:35:32 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,6 +63,12 @@ begin_include
 include|#
 directive|include
 file|"interface.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extract.h"
 end_include
 
 begin_include
@@ -205,11 +211,9 @@ name|printf
 argument_list|(
 literal|"SPI 0x%08x: "
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
+operator|&
 name|hdr
 operator|->
 name|spi
@@ -264,6 +268,7 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
+comment|/*INET6*/
 block|}
 name|out
 label|:

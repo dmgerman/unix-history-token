@@ -791,12 +791,17 @@ expr_stmt|;
 comment|/* Set kernel VSID to deterministic value */
 name|slbv
 operator|=
-name|va_to_vsid
+operator|(
+name|KERNEL_VSID
 argument_list|(
-name|kernel_pmap
-argument_list|,
+operator|(
+name|uintptr_t
+operator|)
 name|va
+operator|>>
+name|ADDR_SR_SHFT
 argument_list|)
+operator|)
 operator|<<
 name|SLBV_VSID_SHIFT
 expr_stmt|;
@@ -1737,12 +1742,12 @@ argument_list|(
 name|slb
 argument_list|)
 expr_stmt|;
-comment|/* Check for an unused slot, abusing the USER_SR slot as a full flag */
+comment|/* Check for an unused slot, abusing the user slot as a full flag */
 if|if
 condition|(
 name|slbcache
 index|[
-name|USER_SR
+name|USER_SLB_SLOT
 index|]
 operator|.
 name|slbe
@@ -1758,7 +1763,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|USER_SR
+name|USER_SLB_SLOT
 condition|;
 name|i
 operator|++
@@ -1786,11 +1791,11 @@ if|if
 condition|(
 name|i
 operator|==
-name|USER_SR
+name|USER_SLB_SLOT
 condition|)
 name|slbcache
 index|[
-name|USER_SR
+name|USER_SLB_SLOT
 index|]
 operator|.
 name|slbe
@@ -1833,7 +1838,7 @@ if|if
 condition|(
 name|i
 operator|==
-name|USER_SR
+name|USER_SLB_SLOT
 condition|)
 continue|continue;
 if|if

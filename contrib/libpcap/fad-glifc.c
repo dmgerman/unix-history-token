@@ -21,7 +21,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/fad-glifc.c,v 1.6.2.1 2008/01/30 09:36:09 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/fad-glifc.c,v 1.7 2008-01-30 09:35:48 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 

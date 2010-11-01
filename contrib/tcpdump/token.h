@@ -62,7 +62,7 @@ name|BROADCAST
 parameter_list|(
 name|trp
 parameter_list|)
-value|((ntohs((trp)->token_rcf)& 0xE000)>> 13)
+value|((EXTRACT_16BITS(&(trp)->token_rcf)& 0xE000)>> 13)
 end_define
 
 begin_define
@@ -72,7 +72,7 @@ name|RIF_LENGTH
 parameter_list|(
 name|trp
 parameter_list|)
-value|((ntohs((trp)->token_rcf)& 0x1f00)>> 8)
+value|((EXTRACT_16BITS(&(trp)->token_rcf)& 0x1f00)>> 8)
 end_define
 
 begin_define
@@ -82,7 +82,7 @@ name|DIRECTION
 parameter_list|(
 name|trp
 parameter_list|)
-value|((ntohs((trp)->token_rcf)& 0x0080)>> 7)
+value|((EXTRACT_16BITS(&(trp)->token_rcf)& 0x0080)>> 7)
 end_define
 
 begin_define
@@ -92,7 +92,7 @@ name|LARGEST_FRAME
 parameter_list|(
 name|trp
 parameter_list|)
-value|((ntohs((trp)->token_rcf)& 0x0070)>> 4)
+value|((EXTRACT_16BITS(&(trp)->token_rcf)& 0x0070)>> 4)
 end_define
 
 begin_define
@@ -104,7 +104,7 @@ name|trp
 parameter_list|,
 name|x
 parameter_list|)
-value|((ntohs((trp)->token_rseg[x])& 0xfff0)>> 4)
+value|((EXTRACT_16BITS(&(trp)->token_rseg[x])& 0xfff0)>> 4)
 end_define
 
 begin_define
@@ -116,7 +116,7 @@ name|trp
 parameter_list|,
 name|x
 parameter_list|)
-value|((ntohs((trp)->token_rseg[x])& 0x000f))
+value|((EXTRACT_16BITS(&(trp)->token_rseg[x])& 0x000f))
 end_define
 
 begin_define

@@ -131,20 +131,8 @@ modifier|*
 name|slb
 decl_stmt|;
 name|register_t
-name|esid
-decl_stmt|,
-name|vsid
-decl_stmt|,
-name|slb1
-decl_stmt|,
-name|slb2
+name|slbv
 decl_stmt|;
-name|esid
-operator|=
-name|USER_ADDR
-operator|>>
-name|ADDR_SR_SHFT
-expr_stmt|;
 comment|/* Try lockless look-up first */
 name|slb
 operator|=
@@ -171,7 +159,7 @@ argument_list|(
 name|pm
 argument_list|)
 expr_stmt|;
-name|vsid
+name|slbv
 operator|=
 name|va_to_vsid
 argument_list|(
@@ -182,6 +170,8 @@ name|vm_offset_t
 operator|)
 name|addr
 argument_list|)
+operator|<<
+name|SLBV_VSID_SHIFT
 expr_stmt|;
 name|PMAP_UNLOCK
 argument_list|(
@@ -191,33 +181,54 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|vsid
+name|slbv
 operator|=
 name|slb
 operator|->
 name|slbv
-operator|>>
-name|SLBV_VSID_SHIFT
 expr_stmt|;
 block|}
-name|slb1
-operator|=
-name|vsid
-operator|<<
-name|SLBV_VSID_SHIFT
+comment|/* Mark segment no-execute */
+name|slbv
+operator||=
+name|SLBV_N
 expr_stmt|;
-name|slb2
-operator|=
+comment|/* If we have already set this VSID, we can just return */
+if|if
+condition|(
+name|curthread
+operator|->
+name|td_pcb
+operator|->
+name|pcb_cpu
+operator|.
+name|aim
+operator|.
+name|usr_vsid
+operator|==
+name|slbv
+condition|)
+return|return;
+asm|__asm __volatile ("isync; slbie %0; slbmte %1, %2; isync" ::
+literal|"r"
 operator|(
-name|esid
-operator|<<
-name|SLBE_ESID_SHIFT
+name|USER_ADDR
 operator|)
-operator||
-name|SLBE_VALID
-operator||
-name|USER_SR
-expr_stmt|;
+operator|,
+literal|"r"
+operator|(
+name|slbv
+operator|)
+operator|,
+literal|"r"
+operator|(
+name|USER_SLB_SLBE
+operator|)
+block|)
+function|;
+end_function
+
+begin_expr_stmt
 name|curthread
 operator|->
 name|td_pcb
@@ -235,23 +246,20 @@ name|addr
 operator|>>
 name|ADDR_SR_SHFT
 expr_stmt|;
-asm|__asm __volatile ("slbie %0; slbmte %1, %2" :: "r"(esid<< 28),
-literal|"r"
-operator|(
-name|slb1
-operator|)
-operator|,
-literal|"r"
-operator|(
-name|slb2
-operator|)
-block|)
-function|;
-end_function
+end_expr_stmt
 
 begin_expr_stmt
-name|isync
-argument_list|()
+name|curthread
+operator|->
+name|td_pcb
+operator|->
+name|pcb_cpu
+operator|.
+name|aim
+operator|.
+name|usr_vsid
+operator|=
+name|slbv
 expr_stmt|;
 end_expr_stmt
 
@@ -291,13 +299,41 @@ operator|)
 name|addr
 argument_list|)
 expr_stmt|;
-name|isync
-argument_list|()
+comment|/* If we have already set this VSID, we can just return */
+if|if
+condition|(
+name|curthread
+operator|->
+name|td_pcb
+operator|->
+name|pcb_cpu
+operator|.
+name|aim
+operator|.
+name|usr_vsid
+operator|==
+name|vsid
+condition|)
+return|return;
+comment|/* Mark segment no-execute */
+name|vsid
+operator||=
+name|SR_N
 expr_stmt|;
-asm|__asm __volatile ("mtsr %0,%1" :: "n"(USER_SR), "r"(vsid));
-name|isync
-argument_list|()
+asm|__asm __volatile("isync");
+name|curthread
+operator|->
+name|td_pcb
+operator|->
+name|pcb_cpu
+operator|.
+name|aim
+operator|.
+name|usr_vsid
+operator|=
+name|vsid
 expr_stmt|;
+asm|__asm __volatile("mtsr %0,%1; isync" :: "n"(USER_SR), "r"(vsid));
 block|}
 end_function
 

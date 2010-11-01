@@ -32,7 +32,7 @@ name|elsieid
 index|[]
 name|__unused
 init|=
-literal|"@(#)asctime.c	8.2"
+literal|"@(#)asctime.c	8.5"
 decl_stmt|;
 end_decl_stmt
 
@@ -320,6 +320,26 @@ decl_stmt|;
 if|if
 condition|(
 name|timeptr
+operator|==
+name|NULL
+condition|)
+block|{
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
+return|return
+name|strcpy
+argument_list|(
+name|buf
+argument_list|,
+literal|"??? ??? ?? ??:??:?? ????\n"
+argument_list|)
+return|;
+block|}
+if|if
+condition|(
+name|timeptr
 operator|->
 name|tm_wday
 operator|<
@@ -448,21 +468,14 @@ name|buf
 operator|==
 name|buf_asctime
 condition|)
-block|{
-operator|(
-name|void
-operator|)
+return|return
 name|strcpy
 argument_list|(
 name|buf
 argument_list|,
 name|result
 argument_list|)
-expr_stmt|;
-return|return
-name|buf
 return|;
-block|}
 else|else
 block|{
 ifdef|#

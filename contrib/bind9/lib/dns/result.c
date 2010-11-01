@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007, 2008, 2010  Internet Systems Conso
 end_comment
 
 begin_comment
-comment|/* $Id: result.c,v 1.125.122.2 2010/02/25 10:57:12 tbox Exp $ */
+comment|/* $Id: result.c,v 1.125.124.1 2010/03/03 22:06:39 marka Exp $ */
 end_comment
 
 begin_comment

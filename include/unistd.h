@@ -1788,6 +1788,13 @@ name|_SC_NPROCESSORS_ONLN
 value|58
 end_define
 
+begin_define
+define|#
+directive|define
+name|_SC_CPUSET_SIZE
+value|122
+end_define
+
 begin_endif
 endif|#
 directive|endif

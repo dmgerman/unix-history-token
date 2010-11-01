@@ -444,6 +444,9 @@ name|uint8_t
 name|mask
 parameter_list|)
 block|{
+name|int
+name|error
+decl_stmt|;
 name|uint8_t
 name|changes
 decl_stmt|,
@@ -589,6 +592,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to set volume properties"
@@ -596,7 +603,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -668,6 +675,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"mfi_open"
@@ -675,7 +686,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -697,6 +708,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Invalid volume: %s"
@@ -709,7 +724,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -728,6 +743,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to fetch volume properties"
@@ -735,7 +754,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -1427,14 +1446,14 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to set volume properties"
 argument_list|)
-expr_stmt|;
-name|error
-operator|=
-name|errno
 expr_stmt|;
 block|}
 block|}
@@ -1497,6 +1516,8 @@ name|mfi_ld_props
 name|props
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|fd
 decl_stmt|;
 name|uint8_t
@@ -1563,6 +1584,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"mfi_open"
@@ -1570,7 +1595,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -1592,6 +1617,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Invalid volume: %s"
@@ -1604,7 +1633,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -1623,6 +1652,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to fetch volume properties"
@@ -1630,7 +1663,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -1696,6 +1729,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to set volume properties"
@@ -1703,7 +1740,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -1751,6 +1788,8 @@ name|mfi_ld_info
 name|info
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|fd
 decl_stmt|;
 name|uint8_t
@@ -1796,6 +1835,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"mfi_open"
@@ -1803,7 +1846,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -1825,6 +1868,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Invalid volume: %s"
@@ -1837,7 +1884,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -1859,6 +1906,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to fetch info for volume %s"
@@ -1873,7 +1924,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}

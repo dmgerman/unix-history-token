@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-snoop.c,v 1.55.2.3 2008-04-14 20:41:52 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-snoop.c,v 1.59 2008-12-02 16:25:14 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -993,7 +993,7 @@ goto|;
 block|}
 if|if
 condition|(
-name|handle
+name|p
 operator|->
 name|opt
 operator|.
@@ -1003,7 +1003,7 @@ literal|0
 condition|)
 name|v
 operator|=
-name|handle
+name|p
 operator|->
 name|opt
 operator|.
@@ -1849,6 +1849,11 @@ operator|)
 return|;
 name|bad
 label|:
+name|pcap_cleanup_live_common
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|PCAP_ERROR

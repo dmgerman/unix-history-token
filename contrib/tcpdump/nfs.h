@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/nfs.h,v 1.8.2.1 2007-11-18 03:24:55 guy Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/nfs.h,v 1.9 2007-11-18 03:24:38 guy Exp $ (LBL) */
 end_comment
 
 begin_comment
@@ -1119,6 +1119,13 @@ define|#
 directive|define
 name|NFSV3ACCESS_EXECUTE
 value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFSV3ACCESS_FULL
+value|0x3f
 end_define
 
 begin_define

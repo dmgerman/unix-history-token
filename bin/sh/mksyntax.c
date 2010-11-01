@@ -1416,6 +1416,15 @@ index|]
 operator|=
 literal|"CCTL"
 expr_stmt|;
+name|syntax
+index|[
+name|base
+operator|+
+name|CTLQUOTEEND
+index|]
+operator|=
+literal|"CCTL"
+expr_stmt|;
 block|}
 end_function
 

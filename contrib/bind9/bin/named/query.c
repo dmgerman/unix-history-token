@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: query.c,v 1.313.20.16 2009/12/30 08:34:29 jinmei Exp $ */
+comment|/* $Id: query.c,v 1.313.20.16.10.2 2010/06/26 23:46:14 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -206,6 +206,12 @@ begin_include
 include|#
 directive|include
 file|<named/client.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<named/globals.h>
 end_include
 
 begin_include
@@ -8388,6 +8394,9 @@ name|version
 parameter_list|,
 name|isc_boolean_t
 name|zero_ttl
+parameter_list|,
+name|isc_boolean_t
+name|isassociated
 parameter_list|)
 block|{
 name|dns_name_t
@@ -8443,6 +8452,27 @@ name|node
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* 	 * Don't add the SOA record for test which set "-T nosoa". 	 */
+if|if
+condition|(
+name|ns_g_nosoa
+operator|&&
+operator|(
+operator|!
+name|WANTDNSSEC
+argument_list|(
+name|client
+argument_list|)
+operator|||
+operator|!
+name|isassociated
+operator|)
+condition|)
+return|return
+operator|(
+name|ISC_R_SUCCESS
+operator|)
+return|;
 comment|/* 	 * Get resources and make 'name' be the database origin. 	 */
 name|result
 operator|=
@@ -18696,6 +18726,11 @@ argument_list|,
 name|version
 argument_list|,
 name|ISC_FALSE
+argument_list|,
+name|dns_rdataset_isassociated
+argument_list|(
+name|rdataset
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -18837,6 +18872,11 @@ argument_list|,
 name|version
 argument_list|,
 name|ISC_TRUE
+argument_list|,
+name|dns_rdataset_isassociated
+argument_list|(
+name|rdataset
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -18851,6 +18891,11 @@ argument_list|,
 name|version
 argument_list|,
 name|ISC_FALSE
+argument_list|,
+name|dns_rdataset_isassociated
+argument_list|(
+name|rdataset
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -20262,6 +20307,8 @@ argument_list|,
 name|db
 argument_list|,
 name|version
+argument_list|,
+name|ISC_FALSE
 argument_list|,
 name|ISC_FALSE
 argument_list|)

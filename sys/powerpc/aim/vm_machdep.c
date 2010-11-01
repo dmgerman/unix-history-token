@@ -652,16 +652,6 @@ name|usr_vsid
 operator|=
 literal|0
 expr_stmt|;
-name|pcb
-operator|->
-name|pcb_cpu
-operator|.
-name|aim
-operator|.
-name|usr_esid
-operator|=
-literal|0
-expr_stmt|;
 comment|/* Setup to release spin count in fork_exit(). */
 name|td2
 operator|->

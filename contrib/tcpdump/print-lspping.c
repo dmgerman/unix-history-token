@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-lspping.c,v 1.18.2.1 2008-01-28 13:48:16 hannes Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-lspping.c,v 1.20 2008-01-28 14:20:43 hannes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -95,6 +95,12 @@ begin_include
 include|#
 directive|include
 file|"l2vpn.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"oui.h"
 end_include
 
 begin_comment
@@ -386,8 +392,36 @@ end_define
 begin_define
 define|#
 directive|define
-name|LSPPING_TLV_ERROR_CODE
+name|LSPPING_TLV_VENDOR_ENTERPRISE
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|LSPPING_TLV_VENDOR_ENTERPRISE_LEN
 value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|LSPPING_TLV_INTERFACE_LABEL_STACK
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|LSPPING_TLV_ERROR_CODE
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|LSPPING_TLV_REPLY_TOS_BYTE
+value|10
 end_define
 
 begin_define
@@ -449,6 +483,24 @@ literal|"Error Code"
 block|}
 block|,
 block|{
+name|LSPPING_TLV_VENDOR_ENTERPRISE
+block|,
+literal|"Vendor Enterprise Code"
+block|}
+block|,
+block|{
+name|LSPPING_TLV_INTERFACE_LABEL_STACK
+block|,
+literal|"Interface Label Stack"
+block|}
+block|,
+block|{
+name|LSPPING_TLV_REPLY_TOS_BYTE
+block|,
+literal|"Reply TOS Byte"
+block|}
+block|,
+block|{
 name|LSPPING_TLV_BFD_DISCRIMINATOR
 block|,
 literal|"BFD Discriminator"
@@ -457,7 +509,7 @@ block|,
 block|{
 name|LSPPING_TLV_VENDOR_PRIVATE
 block|,
-literal|"Vendor Enterprise Code"
+literal|"Vendor Private Code"
 block|}
 block|,
 block|{
@@ -2905,6 +2957,52 @@ name|tptr
 argument_list|)
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+name|LSPPING_TLV_VENDOR_ENTERPRISE
+case|:
+block|{
+name|u_int32_t
+name|vendor_id
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|TTEST2
+argument_list|(
+operator|*
+name|tptr
+argument_list|,
+name|LSPPING_TLV_VENDOR_ENTERPRISE_LEN
+argument_list|)
+condition|)
+goto|goto
+name|trunc
+goto|;
+name|vendor_id
+operator|=
+name|EXTRACT_32BITS
+argument_list|(
+name|tlv_tptr
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n\t    Vendor: %s (0x%04x)"
+argument_list|,
+name|tok2str
+argument_list|(
+name|smi_values
+argument_list|,
+literal|"Unknown"
+argument_list|,
+name|vendor_id
+argument_list|)
+argument_list|,
+name|vendor_id
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 comment|/*              *  FIXME those are the defined TLVs that lack a decoder              *  you are welcome to contribute code ;-)              */
 case|case

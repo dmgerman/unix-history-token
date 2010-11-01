@@ -17,7 +17,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-pf.c,v 1.94.2.3 2008-04-14 20:41:52 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-pf.c,v 1.97 2008-04-14 20:40:58 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1894,6 +1894,11 @@ operator|)
 return|;
 name|bad
 label|:
+name|pcap_cleanup_live_common
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|PCAP_ERROR

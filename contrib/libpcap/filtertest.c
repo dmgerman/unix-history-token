@@ -29,7 +29,7 @@ name|rcsid
 index|[]
 name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/filtertest.c,v 1.2 2005/08/08 17:50:13 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/filtertest.c,v 1.2 2005-08-08 17:50:13 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -101,6 +101,12 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
 end_include
 
 begin_include
@@ -769,6 +775,11 @@ decl_stmt|;
 name|int
 name|dlt
 decl_stmt|;
+name|bpf_u_int32
+name|netmask
+init|=
+name|PCAP_NETMASK_UNKNOWN
+decl_stmt|;
 name|char
 modifier|*
 name|cmdbuf
@@ -860,7 +871,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"dF:Os:"
+literal|"dF:m:Os:"
 argument_list|)
 operator|)
 operator|!=
@@ -896,6 +907,39 @@ operator|=
 literal|0
 expr_stmt|;
 break|break;
+case|case
+literal|'m'
+case|:
+block|{
+name|in_addr_t
+name|addr
+decl_stmt|;
+name|addr
+operator|=
+name|inet_addr
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|addr
+operator|==
+name|INADDR_NONE
+condition|)
+name|error
+argument_list|(
+literal|"invalid netmask %s"
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+name|netmask
+operator|=
+name|addr
+expr_stmt|;
+break|break;
+block|}
 case|case
 literal|'s'
 case|:
@@ -1058,7 +1102,7 @@ name|cmdbuf
 argument_list|,
 name|Oflag
 argument_list|,
-literal|0
+name|netmask
 argument_list|)
 operator|<
 literal|0
@@ -1124,7 +1168,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [-dO] [ -F file ] [ -s snaplen ] dlt [ expression ]\n"
+literal|"Usage: %s [-dO] [ -F file ] [ -m netmask] [ -s snaplen ] dlt [ expression ]\n"
 argument_list|,
 name|program_name
 argument_list|)
