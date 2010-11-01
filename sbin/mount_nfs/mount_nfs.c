@@ -860,7 +860,7 @@ literal|'a'
 case|:
 name|printf
 argument_list|(
-literal|"-a deprecated, use -o readhead=<value>\n"
+literal|"-a deprecated, use -o readahead=<value>\n"
 argument_list|)
 expr_stmt|;
 name|build_iovec
