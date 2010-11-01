@@ -12,23 +12,7 @@ comment|/* config.in.  Generated from configure.in by autoheader.  */
 end_comment
 
 begin_comment
-comment|/* Define to one of `_getb67', `GETB67', `getb67' for Cray-2 and Cray-YMP    systems. This function is required for `alloca.c' support on those systems.    */
-end_comment
-
-begin_comment
-comment|/* #undef CRAY_STACKSEG_END */
-end_comment
-
-begin_comment
-comment|/* Define to 1 if using `alloca.c'. */
-end_comment
-
-begin_comment
-comment|/* #undef C_ALLOCA */
-end_comment
-
-begin_comment
-comment|/* Define to 1 if NLS is requested */
+comment|/* Define to 1 if translation of program messages to the user's native    language is requested. */
 end_comment
 
 begin_comment
@@ -41,41 +25,6 @@ end_comment
 
 begin_comment
 comment|/* #undef EXTRA_SHLIB_EXTENSION */
-end_comment
-
-begin_comment
-comment|/* Define to 1 if you have `alloca', as a function or macro. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_ALLOCA
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have<alloca.h> and it should be used (not on Ultrix).    */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_ALLOCA_H */
-end_comment
-
-begin_comment
-comment|/* Define to 1 if you have the<argz.h> header file. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_ARGZ_H */
-end_comment
-
-begin_comment
-comment|/* Define to 1 if you have the `dcgettext' function. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_DCGETTEXT */
 end_comment
 
 begin_comment
@@ -156,6 +105,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the<dlfcn.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DLFCN_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<elf-hints.h> header file. */
 end_comment
 
@@ -165,36 +125,6 @@ directive|define
 name|HAVE_ELF_HINTS_H
 value|1
 end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `getcwd' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_GETCWD
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `getpagesize' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_GETPAGESIZE
-value|1
-end_define
-
-begin_comment
-comment|/* Define as 1 if you have gettext and don't want to use GNU gettext. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_GETTEXT */
-end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `glob' function. */
@@ -219,17 +149,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if your locale.h file contains LC_MESSAGES. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_LC_MESSAGES
-value|1
-end_define
-
-begin_comment
 comment|/* Define to 1 if you have the<limits.h> header file. */
 end_comment
 
@@ -239,25 +158,6 @@ directive|define
 name|HAVE_LIMITS_H
 value|1
 end_define
-
-begin_comment
-comment|/* Define to 1 if you have the<locale.h> header file. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_LOCALE_H
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the<malloc.h> header file. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_MALLOC_H */
-end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<memory.h> header file. */
@@ -271,24 +171,13 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have a working `mmap' system call. */
+comment|/* Define to 1 if you have the `mkstemp' function. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_MMAP
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `munmap' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_MUNMAP
+name|HAVE_MKSTEMP
 value|1
 end_define
 
@@ -299,28 +188,6 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_NDIR_H */
 end_comment
-
-begin_comment
-comment|/* Define to 1 if you have the<nl_types.h> header file. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_NL_TYPES_H
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `putenv' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_PUTENV
-value|1
-end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `realpath' function. */
@@ -345,28 +212,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the `setenv' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_SETENV
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `setlocale' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_SETLOCALE
-value|1
-end_define
-
-begin_comment
 comment|/* Define to 1 if you have the<stdint.h> header file. */
 end_comment
 
@@ -385,39 +230,6 @@ begin_define
 define|#
 directive|define
 name|HAVE_STDLIB_H
-value|1
-end_define
-
-begin_comment
-comment|/* Define if you have the stpcpy function */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_STPCPY
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `strcasecmp' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_STRCASECMP
-value|1
-end_define
-
-begin_comment
-comment|/* Define to 1 if you have the `strchr' function. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_STRCHR
 value|1
 end_define
 
@@ -504,36 +316,26 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the<values.h> header file. */
+comment|/* Define to 1 if you have the `waitpid' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_VALUES_H */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_WAITPID
+value|1
+end_define
 
 begin_comment
-comment|/* Define to 1 if you have the `__argz_count' function. */
+comment|/* Define to the sub-directory in which libtool stores uninstalled libraries.    */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE___ARGZ_COUNT */
-end_comment
-
-begin_comment
-comment|/* Define to 1 if you have the `__argz_next' function. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE___ARGZ_NEXT */
-end_comment
-
-begin_comment
-comment|/* Define to 1 if you have the `__argz_stringify' function. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE___ARGZ_STRINGIFY */
-end_comment
+begin_define
+define|#
+directive|define
+name|LT_OBJDIR
+value|".libs/"
+end_define
 
 begin_comment
 comment|/* Name of package */
@@ -602,11 +404,11 @@ value|""
 end_define
 
 begin_comment
-comment|/* If using the C implementation of alloca, define if you know the    direction of stack growth for your system; otherwise it will be    automatically deduced at run-time. 	STACK_DIRECTION> 0 => grows toward higher addresses 	STACK_DIRECTION< 0 => grows toward lower addresses 	STACK_DIRECTION = 0 => direction of growth unknown */
+comment|/* The size of a `long', as computed by sizeof. */
 end_comment
 
 begin_comment
-comment|/* #undef STACK_DIRECTION */
+comment|/* #undef SIZEOF_LONG */
 end_comment
 
 begin_comment
@@ -633,7 +435,7 @@ comment|/* Version number of package */
 end_comment
 
 begin_comment
-comment|/* #define VERSION "2.17" */
+comment|/* #define VERSION "2.17.50" */
 end_comment
 
 begin_comment
@@ -646,49 +448,6 @@ directive|define
 name|YYTEXT_POINTER
 value|1
 end_define
-
-begin_comment
-comment|/* Define to empty if `const' does not conform to ANSI C. */
-end_comment
-
-begin_comment
-comment|/* #undef const */
-end_comment
-
-begin_comment
-comment|/* Define to `__inline__' or `__inline' if that's what the C compiler    calls it, or to nothing if 'inline' is not supported under any name.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__cplusplus
-end_ifndef
-
-begin_comment
-comment|/* #undef inline */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Define to `long' if<sys/types.h> does not define. */
-end_comment
-
-begin_comment
-comment|/* #undef off_t */
-end_comment
-
-begin_comment
-comment|/* Define to `unsigned' if<sys/types.h> does not define. */
-end_comment
-
-begin_comment
-comment|/* #undef size_t */
-end_comment
 
 end_unit
 
