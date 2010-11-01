@@ -7768,6 +7768,8 @@ operator|->
 name|ni_associd
 operator|=
 name|associd
+operator|&
+literal|0x3fff
 expr_stmt|;
 if|if
 condition|(
@@ -8187,6 +8189,8 @@ argument_list|(
 operator|*
 name|assoc
 argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|ieee80211_new_state
