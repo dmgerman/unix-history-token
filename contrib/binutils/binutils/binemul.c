@@ -166,7 +166,7 @@ operator|*
 name|after_bfd
 operator|)
 operator|->
-name|next
+name|archive_next
 operator|=
 name|temp
 expr_stmt|;
@@ -273,7 +273,7 @@ operator|*
 name|after_bfd
 operator|)
 operator|->
-name|next
+name|archive_next
 operator|=
 name|temp
 expr_stmt|;

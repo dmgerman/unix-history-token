@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* This file is tc-arm.h    Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003,    2004 Free Software Foundation, Inc.    Contributed by Richard Earnshaw (rwe@pegasus.esprit.ec.org) 	Modified by David Taylor (dtaylor@armltd.co.uk)     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
+comment|/* This file is tc-arm.h    Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003,    2004, 2005, 2006, 2007 Free Software Foundation, Inc.    Contributed by Richard Earnshaw (rwe@pegasus.esprit.ec.org) 	Modified by David Taylor (dtaylor@armltd.co.uk)     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_define
@@ -234,6 +234,20 @@ name|TARGET_FORMAT
 value|(target_big_endian ? "epoc-pe-arm-big" : "epoc-pe-arm-little")
 end_define
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+name|TE_WINCE
+end_elif
+
+begin_define
+define|#
+directive|define
+name|TARGET_FORMAT
+value|(target_big_endian ? "pe-arm-wince-big" : "pe-arm-wince-little")
+end_define
+
 begin_else
 else|#
 directive|else
@@ -428,6 +442,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|bfd_boolean
+name|arm_is_eabi
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
@@ -552,6 +575,32 @@ parameter_list|)
 value|(ARM_GET_FLAG (s)& ARM_FLAG_INTERWORK)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OBJ_ELF
+end_ifdef
+
+begin_comment
+comment|/* For ELF objects THUMB_IS_FUNC is inferred from    ARM_IS_TUMB and the function type.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|THUMB_IS_FUNC
+parameter_list|(
+name|s
+parameter_list|)
+define|\
+value|((arm_is_eabi () \&& (ARM_IS_THUMB (s)) \&& (symbol_get_bfdsym (s)->flags& BSF_FUNCTION)) \    || (ARM_GET_FLAG (s)& THUMB_FLAG_FUNC))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -561,6 +610,11 @@ name|s
 parameter_list|)
 value|(ARM_GET_FLAG (s)& THUMB_FLAG_FUNC)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -597,6 +651,43 @@ name|t
 parameter_list|)
 value|((t) ? ARM_SET_FLAG (s, THUMB_FLAG_FUNC)    : ARM_RESET_FLAG (s, THUMB_FLAG_FUNC))
 end_define
+
+begin_function_decl
+name|void
+name|arm_copy_symbol_attributes
+parameter_list|(
+name|symbolS
+modifier|*
+parameter_list|,
+name|symbolS
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TC_COPY_SYMBOL_ATTRIBUTES
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TC_COPY_SYMBOL_ATTRIBUTES
+parameter_list|(
+name|DEST
+parameter_list|,
+name|SRC
+parameter_list|)
+define|\
+value|(arm_copy_symbol_attributes (DEST, SRC))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -671,7 +762,7 @@ parameter_list|(
 name|FIX
 parameter_list|)
 define|\
-value|(!(FIX)->fx_pcrel					\    || (FIX)->fx_plt					\    || (FIX)->fx_r_type == BFD_RELOC_ARM_GOT32		\    || (FIX)->fx_r_type == BFD_RELOC_32			\    || TC_FORCE_RELOCATION (FIX))
+value|(!(FIX)->fx_pcrel					\    || (FIX)->fx_r_type == BFD_RELOC_ARM_GOT32		\    || (FIX)->fx_r_type == BFD_RELOC_32			\    || TC_FORCE_RELOCATION (FIX))
 end_define
 
 begin_comment
@@ -755,18 +846,40 @@ define|\
 value|if (FILL == NULL&& (N) != 0&& ! need_pass_2&& subseg_text_p (now_seg))	\     {										\       arm_frag_align_code (N, MAX);						\       goto LABEL;								\     }
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OBJ_ELF
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|DWARF2_LINE_MIN_INSN_LENGTH
 value|2
 end_define
+
+begin_comment
+comment|/* The lr register is r14.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DWARF2_DEFAULT_RETURN_COLUMN
+value|14
+end_define
+
+begin_comment
+comment|/* Registers are generally saved at negative offsets to the CFA.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DWARF2_CIE_DATA_ALIGNMENT
+value|(-4)
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OBJ_ELF
+end_ifdef
 
 begin_define
 define|#
@@ -814,6 +927,20 @@ name|TC_SEGMENT_INFO_TYPE
 value|struct arm_segment_info_type
 end_define
 
+begin_comment
+comment|/* This is not really an alignment operation, but it's something we    need to do at the same time: whenever we are figuring out the    alignment for data, we should check whether a $d symbol is    necessary.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|md_cons_align
+parameter_list|(
+name|nbytes
+parameter_list|)
+value|mapping_state (MAP_DATA)
+end_define
+
 begin_enum
 enum|enum
 name|mstate
@@ -831,6 +958,16 @@ name|MAP_THUMB
 block|}
 enum|;
 end_enum
+
+begin_function_decl
+name|void
+name|mapping_state
+parameter_list|(
+name|enum
+name|mstate
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_struct
 struct|struct
@@ -857,28 +994,6 @@ define|#
 directive|define
 name|TARGET_USE_CFIPOP
 value|1
-end_define
-
-begin_comment
-comment|/* The lr register is r14.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DWARF2_DEFAULT_RETURN_COLUMN
-value|14
-end_define
-
-begin_comment
-comment|/* Registers are generally saved at negative offsets to the CFA.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DWARF2_CIE_DATA_ALIGNMENT
-value|-4
 end_define
 
 begin_comment
@@ -1214,7 +1329,6 @@ specifier|extern
 name|int
 name|tc_arm_regname_to_dw2regnum
 parameter_list|(
-specifier|const
 name|char
 modifier|*
 name|regname
@@ -1231,6 +1345,48 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TE_PE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|O_secrel
+value|O_md1
+end_define
+
+begin_define
+define|#
+directive|define
+name|TC_DWARF2_EMIT_OFFSET
+value|tc_pe_dwarf2_emit_offset
+end_define
+
+begin_function_decl
+name|void
+name|tc_pe_dwarf2_emit_offset
+parameter_list|(
+name|symbolS
+modifier|*
+parameter_list|,
+name|unsigned
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* TE_PE */
+end_comment
 
 end_unit
 

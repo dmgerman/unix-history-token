@@ -39,6 +39,8 @@ name|input_mri_script
 block|,
 name|input_version_script
 block|,
+name|input_dynamic_list
+block|,
 name|input_defsym
 block|}
 name|input_type

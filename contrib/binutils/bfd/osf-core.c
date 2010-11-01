@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for OSF/1 core files.    Copyright 1993, 1994, 1995, 1998, 1999, 2001, 2002, 2003, 2004    Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
+comment|/* BFD back-end for OSF/1 core files.    Copyright 1993, 1994, 1995, 1998, 1999, 2001, 2002, 2003, 2004, 2006,    2007 Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -10,13 +10,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"bfd.h"
+file|"sysdep.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sysdep.h"
+file|"bfd.h"
 end_include
 
 begin_include
@@ -243,11 +243,13 @@ name|asect
 decl_stmt|;
 name|asect
 operator|=
-name|bfd_make_section_anyway
+name|bfd_make_section_anyway_with_flags
 argument_list|(
 name|abfd
 argument_list|,
 name|name
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 if|if
@@ -258,12 +260,6 @@ condition|)
 return|return
 name|NULL
 return|;
-name|asect
-operator|->
-name|flags
-operator|=
-name|flags
-expr_stmt|;
 name|asect
 operator|->
 name|size
@@ -357,18 +353,15 @@ name|NULL
 return|;
 if|if
 condition|(
-name|strncmp
+operator|!
+name|CONST_STRNEQ
 argument_list|(
 name|core_header
 operator|.
 name|magic
 argument_list|,
 literal|"Core"
-argument_list|,
-literal|4
 argument_list|)
-operator|!=
-literal|0
 condition|)
 return|return
 name|NULL

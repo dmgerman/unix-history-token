@@ -1181,15 +1181,7 @@ literal|2
 index|]
 decl_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|__GNUC__
-name|__attribute__
-typedef|((
-name|packed
-typedef|))
-endif|#
-directive|endif
+name|ATTRIBUTE_PACKED
 name|Elf_External_Versym
 typedef|;
 end_typedef

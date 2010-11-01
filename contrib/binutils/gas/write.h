@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* write.h    Copyright 1987, 1992, 1993, 1994, 1995, 1996, 1997, 1999, 2000, 2001,    2002, 2003, 2005, 2006 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
+comment|/* write.h    Copyright 1987, 1992, 1993, 1994, 1995, 1996, 1997, 1999, 2000, 2001,    2002, 2003, 2005, 2006, 2007    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -14,39 +14,6 @@ define|#
 directive|define
 name|__write_h__
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|TC_I960
-end_ifndef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|hpux
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|EXEC_MACHINE_TYPE
-value|HP9000S200_ID
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* TC_I960 */
-end_comment
 
 begin_comment
 comment|/* This is the name of a fake symbol which will never appear in the    assembler output.  S_IS_LOCAL detects it because of the \001.  */
@@ -85,37 +52,27 @@ struct|struct
 name|fix
 block|{
 comment|/* These small fields are grouped together for compactness of      this structure, and efficiency of access on some architectures.  */
-comment|/* pc-relative offset adjust (only used by m68k) */
-name|char
-name|fx_pcrel_adjust
-decl_stmt|;
-comment|/* How many bytes are involved? */
-name|unsigned
-name|char
-name|fx_size
-decl_stmt|;
 comment|/* Is this a pc-relative relocation?  */
 name|unsigned
 name|fx_pcrel
 range|:
 literal|1
 decl_stmt|;
-comment|/* Is this a relocation to a procedure linkage table entry?  If so,      some of the reductions we try to apply are invalid.  A better way      might be to represent PLT entries with different kinds of      symbols, and use normal relocations (with undefined symbols);      look into it for version 2.6.  */
-name|unsigned
-name|fx_plt
-range|:
-literal|1
-decl_stmt|;
 comment|/* Is this value an immediate displacement?  */
-comment|/* Only used on i960 and ns32k; merge it into TC_FIX_TYPE sometime.  */
+comment|/* Only used on ns32k; merge it into TC_FIX_TYPE sometime.  */
 name|unsigned
 name|fx_im_disp
 range|:
 literal|2
 decl_stmt|;
-comment|/* A bit for the CPU specific code.      This probably can be folded into tc_fix_data, below.  */
+comment|/* Some bits for the CPU specific code.  */
 name|unsigned
 name|fx_tcbit
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|fx_tcbit2
 range|:
 literal|1
 decl_stmt|;
@@ -136,6 +93,15 @@ name|unsigned
 name|fx_signed
 range|:
 literal|1
+decl_stmt|;
+comment|/* pc-relative offset adjust (only used by m68k and m68hc11) */
+name|char
+name|fx_pcrel_adjust
+decl_stmt|;
+comment|/* How many bytes are involved? */
+name|unsigned
+name|char
+name|fx_size
 decl_stmt|;
 comment|/* Which frag does this fix apply to?  */
 name|fragS
@@ -207,6 +173,16 @@ comment|/* Target specific data, usually reloc number.  */
 name|int
 name|opinfo
 decl_stmt|;
+comment|/* Which ifield this fixup applies to. */
+name|struct
+name|cgen_maybe_multi_ifield
+modifier|*
+name|field
+decl_stmt|;
+comment|/* is this field is the MSB field in a set? */
+name|int
+name|msb_field_p
+decl_stmt|;
 block|}
 name|fx_cgen
 struct|;
@@ -233,6 +209,68 @@ name|fixS
 typedef|;
 end_typedef
 
+begin_struct
+struct|struct
+name|reloc_list
+block|{
+name|struct
+name|reloc_list
+modifier|*
+name|next
+decl_stmt|;
+union|union
+block|{
+struct|struct
+block|{
+name|symbolS
+modifier|*
+name|offset_sym
+decl_stmt|;
+name|reloc_howto_type
+modifier|*
+name|howto
+decl_stmt|;
+name|symbolS
+modifier|*
+name|sym
+decl_stmt|;
+name|bfd_vma
+name|addend
+decl_stmt|;
+block|}
+name|a
+struct|;
+struct|struct
+block|{
+name|asection
+modifier|*
+name|sec
+decl_stmt|;
+name|asymbol
+modifier|*
+name|s
+decl_stmt|;
+name|arelent
+name|r
+decl_stmt|;
+block|}
+name|b
+struct|;
+block|}
+name|u
+union|;
+name|char
+modifier|*
+name|file
+decl_stmt|;
+name|unsigned
+name|int
+name|line
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -257,16 +295,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|long
-name|string_byte_count
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|section_alignment
-index|[]
+name|struct
+name|reloc_list
+modifier|*
+name|reloc_list
 decl_stmt|;
 end_decl_stmt
 

@@ -431,9 +431,11 @@ begin_function_decl
 name|bfd_boolean
 name|frag_offset_fixed_p
 parameter_list|(
+specifier|const
 name|fragS
 modifier|*
 parameter_list|,
+specifier|const
 name|fragS
 modifier|*
 parameter_list|,

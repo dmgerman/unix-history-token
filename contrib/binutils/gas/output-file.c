@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* output-file.c -  Deal with the output file    Copyright 1987, 1990, 1991, 1992, 1993, 1994, 1996, 1998, 1999, 2001,    2003, 2004, 2005 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
+comment|/* output-file.c -  Deal with the output file    Copyright 1987, 1990, 1991, 1992, 1993, 1994, 1996, 1998, 1999, 2001,    2003, 2004, 2005, 2006 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
 
 begin_include
 include|#
@@ -38,12 +32,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|"bfd.h"
-end_include
 
 begin_decl_stmt
 name|bfd
@@ -103,37 +91,42 @@ argument_list|)
 operator|)
 condition|)
 block|{
-if|if
-condition|(
+name|bfd_error_type
+name|err
+init|=
 name|bfd_get_error
 argument_list|()
+decl_stmt|;
+if|if
+condition|(
+name|err
 operator|==
 name|bfd_error_invalid_target
 condition|)
-name|as_perror
+name|as_fatal
 argument_list|(
 name|_
 argument_list|(
-literal|"Selected target format '%s' unknown"
+literal|"selected target format '%s' unknown"
 argument_list|)
 argument_list|,
 name|TARGET_FORMAT
 argument_list|)
 expr_stmt|;
 else|else
-name|as_perror
+name|as_fatal
 argument_list|(
 name|_
 argument_list|(
-literal|"FATAL: can't create %s"
+literal|"can't create %s: %s"
 argument_list|)
 argument_list|,
 name|name
-argument_list|)
-expr_stmt|;
-name|exit
+argument_list|,
+name|bfd_errmsg
 argument_list|(
-name|EXIT_FAILURE
+name|err
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -175,43 +168,50 @@ modifier|*
 name|filename
 parameter_list|)
 block|{
-comment|/* Close the bfd.  */
+name|bfd_boolean
+name|res
+decl_stmt|;
 if|if
 condition|(
+name|stdoutput
+operator|==
+name|NULL
+condition|)
+return|return;
+comment|/* Close the bfd.  */
+name|res
+operator|=
 name|bfd_close
 argument_list|(
 name|stdoutput
 argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-name|bfd_perror
-argument_list|(
-name|filename
-argument_list|)
 expr_stmt|;
-name|as_perror
-argument_list|(
-name|_
-argument_list|(
-literal|"FATAL: can't close %s\n"
-argument_list|)
-argument_list|,
-name|filename
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
-expr_stmt|;
-block|}
+comment|/* Prevent an infinite loop - if the close failed we will call as_fatal      which will call xexit() which may call this function again...  */
 name|stdoutput
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* Trust nobody!  */
+if|if
+condition|(
+operator|!
+name|res
+condition|)
+name|as_fatal
+argument_list|(
+name|_
+argument_list|(
+literal|"can't close %s: %s"
+argument_list|)
+argument_list|,
+name|filename
+argument_list|,
+name|bfd_errmsg
+argument_list|(
+name|bfd_get_error
+argument_list|()
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

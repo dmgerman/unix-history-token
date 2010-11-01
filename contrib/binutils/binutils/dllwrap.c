@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* dllwrap.c -- wrapper for DLLTOOL and GCC to generate PE style DLLs    Copyright 1998, 1999, 2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.    Contributed by Mumit Khan (khan@xraylith.wisc.edu).     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
+comment|/* dllwrap.c -- wrapper for DLLTOOL and GCC to generate PE style DLLs    Copyright 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2007    Free Software Foundation, Inc.    Contributed by Mumit Khan (khan@xraylith.wisc.edu).     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -35,22 +35,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_CONFIG_H
-end_ifdef
-
 begin_include
 include|#
 directive|include
-file|"config.h"
+file|"sysdep.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -62,12 +51,6 @@ begin_include
 include|#
 directive|include
 file|"libiberty.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"bucomm.h"
 end_include
 
 begin_include
@@ -85,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"bucomm.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<time.h>
 end_include
 
@@ -92,12 +81,6 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdarg.h>
 end_include
 
 begin_ifdef
@@ -2400,6 +2383,29 @@ argument_list|(
 name|file
 argument_list|,
 literal|"\n\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|REPORT_BUGS_TO
+index|[
+literal|0
+index|]
+operator|&&
+name|status
+operator|==
+literal|0
+condition|)
+name|fprintf
+argument_list|(
+name|file
+argument_list|,
+name|_
+argument_list|(
+literal|"Report bugs to %s\n"
+argument_list|)
+argument_list|,
+name|REPORT_BUGS_TO
 argument_list|)
 expr_stmt|;
 name|exit

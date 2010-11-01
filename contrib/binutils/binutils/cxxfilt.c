@@ -1,24 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Demangler for GNU C++ - main program    Copyright 1989, 1991, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002, 2003, 2005 Free Software Foundation, Inc.    Written by James Clark (jjc@jclark.uucp)    Rewritten by Fred Fish (fnf@cygnus.com) for ARM and Lucid demangling    Modified by Satish Pai (pai@apollo.hp.com) for HP demangling     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it under    the terms of the GNU General Public License as published by the Free    Software Foundation; either version 2, or (at your option) any later    version.     GCC is distributed in the hope that it will be useful, but WITHOUT ANY    WARRANTY; without even the implied warranty of MERCHANTABILITY or    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License    for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
+comment|/* Demangler for GNU C++ - main program    Copyright 1989, 1991, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002, 2003, 2005, 2007 Free Software Foundation, Inc.    Written by James Clark (jjc@jclark.uucp)    Rewritten by Fred Fish (fnf@cygnus.com) for ARM and Lucid demangling    Modified by Satish Pai (pai@apollo.hp.com) for HP demangling     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it under    the terms of the GNU General Public License as published by the Free    Software Foundation; either version 2, or (at your option) any later    version.     GCC is distributed in the hope that it will be useful, but WITHOUT ANY    WARRANTY; without even the implied warranty of MERCHANTABILITY or    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License    for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"config.h"
+file|"sysdep.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"bfd.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"bucomm.h"
 end_include
 
 begin_include
@@ -43,6 +37,12 @@ begin_include
 include|#
 directive|include
 file|"safe-ctype.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"bucomm.h"
 end_include
 
 begin_decl_stmt
@@ -412,6 +412,29 @@ argument_list|(
 name|stream
 argument_list|,
 literal|"\   [@<file>]                   Read extra options from<file>\n\   [-h|--help]                 Display this information\n\   [-v|--version]              Show the version information\n\ Demangled names are displayed to stdout.\n\ If a name cannot be demangled it is just echoed to stdout.\n\ If no names are provided on the command line, stdin is read.\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|REPORT_BUGS_TO
+index|[
+literal|0
+index|]
+operator|&&
+name|status
+operator|==
+literal|0
+condition|)
+name|fprintf
+argument_list|(
+name|stream
+argument_list|,
+name|_
+argument_list|(
+literal|"Report bugs to %s.\n"
+argument_list|)
+argument_list|,
+name|REPORT_BUGS_TO
 argument_list|)
 expr_stmt|;
 name|exit

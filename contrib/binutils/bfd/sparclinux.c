@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for linux flavored sparc a.out binaries.    Copyright 1992, 1993, 1994, 1995, 1996, 1997, 1999, 2000, 2001, 2002,    2003, 2004, 2006 Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
+comment|/* BFD back-end for linux flavored sparc a.out binaries.    Copyright 1992, 1993, 1994, 1995, 1996, 1997, 1999, 2000, 2001, 2002,    2003, 2004, 2006, 2007 Free Software Foundation, Inc.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301,    USA.  */
 end_comment
 
 begin_define
@@ -54,13 +54,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"bfd.h"
+file|"sysdep.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sysdep.h"
+file|"bfd.h"
 end_include
 
 begin_include
@@ -347,8 +347,7 @@ name|IS_GOT_SYM
 parameter_list|(
 name|name
 parameter_list|)
-define|\
-value|(strncmp (name, GOT_REF_PREFIX, sizeof GOT_REF_PREFIX - 1) == 0)
+value|(CONST_STRNEQ (name, GOT_REF_PREFIX))
 end_define
 
 begin_comment
@@ -380,8 +379,7 @@ name|IS_PLT_SYM
 parameter_list|(
 name|name
 parameter_list|)
-define|\
-value|(strncmp (name, PLT_REF_PREFIX, sizeof PLT_REF_PREFIX - 1) == 0)
+value|(CONST_STRNEQ (name, PLT_REF_PREFIX))
 end_define
 
 begin_comment
@@ -1180,11 +1178,13 @@ expr_stmt|;
 comment|/* We choose to use the name ".linux-dynamic" for the fixup table.      Why not?  */
 name|s
 operator|=
-name|bfd_make_section
+name|bfd_make_section_with_flags
 argument_list|(
 name|abfd
 argument_list|,
 literal|".linux-dynamic"
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 if|if
@@ -1192,16 +1192,6 @@ condition|(
 name|s
 operator|==
 name|NULL
-operator|||
-operator|!
-name|bfd_set_section_flags
-argument_list|(
-name|abfd
-argument_list|,
-name|s
-argument_list|,
-name|flags
-argument_list|)
 operator|||
 operator|!
 name|bfd_set_section_alignment
@@ -1634,18 +1624,15 @@ specifier|static
 name|bfd_boolean
 name|linux_tally_symbols
 parameter_list|(
-name|h
-parameter_list|,
-name|data
-parameter_list|)
 name|struct
 name|linux_link_hash_entry
 modifier|*
 name|h
-decl_stmt|;
-name|PTR
+parameter_list|,
+name|void
+modifier|*
 name|data
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|bfd_link_info
@@ -1724,7 +1711,7 @@ name|type
 operator|==
 name|bfd_link_hash_undefined
 operator|&&
-name|strncmp
+name|CONST_STRNEQ
 argument_list|(
 name|h
 operator|->
@@ -1737,14 +1724,7 @@ operator|.
 name|string
 argument_list|,
 name|NEEDS_SHRLIB
-argument_list|,
-sizeof|sizeof
-name|NEEDS_SHRLIB
-operator|-
-literal|1
 argument_list|)
-operator|==
-literal|0
 condition|)
 block|{
 specifier|const

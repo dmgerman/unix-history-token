@@ -14987,7 +14987,10 @@ decl_stmt|;
 name|char
 name|buf
 index|[
-literal|10
+name|INTBUF_SIZE
+operator|+
+literal|5
+comment|/* 'int%u_t' */
 index|]
 decl_stmt|;
 name|unsigned

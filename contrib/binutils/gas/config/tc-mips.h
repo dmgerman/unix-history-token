@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-mips.h -- header file for tc-mips.c.    Copyright 1993, 1994, 1995, 1996, 1997, 2000, 2001, 2002, 2003, 2004    Free Software Foundation, Inc.    Contributed by the OSF and Ralph Campbell.    Written by Keith Knowles and Ralph Campbell, working independently.    Modified for ECOFF support by Ian Lance Taylor of Cygnus Support.     This file is part of GAS.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
+comment|/* tc-mips.h -- header file for tc-mips.c.    Copyright 1993, 1994, 1995, 1996, 1997, 2000, 2001, 2002, 2003, 2004,    2005, 2006 Free Software Foundation, Inc.    Contributed by the OSF and Ralph Campbell.    Written by Keith Knowles and Ralph Campbell, working independently.    Modified for ECOFF support by Ian Lance Taylor of Cygnus Support.     This file is part of GAS.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -184,6 +184,30 @@ define|#
 directive|define
 name|MAX_MEM_FOR_RS_ALIGN_CODE
 value|(1 + 2)
+end_define
+
+begin_struct_decl
+struct_decl|struct
+name|insn_label_list
+struct_decl|;
+end_struct_decl
+
+begin_define
+define|#
+directive|define
+name|TC_SEGMENT_INFO_TYPE
+value|struct insn_label_list *
+end_define
+
+begin_comment
+comment|/* This field is nonzero if the symbol is the target of a MIPS16 jump.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TC_SYMFIELD_TYPE
+value|int
 end_define
 
 begin_comment
@@ -626,6 +650,12 @@ parameter_list|()
 value|mips_enable_auto_align()
 end_define
 
+begin_enum_decl
+enum_decl|enum
+name|dwarf2_format
+enum_decl|;
+end_enum_decl
+
 begin_function_decl
 specifier|extern
 name|enum
@@ -692,6 +722,25 @@ end_function_decl
 begin_define
 define|#
 directive|define
+name|tc_regname_to_dw2regnum
+value|tc_mips_regname_to_dw2regnum
+end_define
+
+begin_function_decl
+specifier|extern
+name|int
+name|tc_mips_regname_to_dw2regnum
+parameter_list|(
+name|char
+modifier|*
+name|regname
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
 name|DWARF2_DEFAULT_RETURN_COLUMN
 value|31
 end_define
@@ -700,7 +749,7 @@ begin_define
 define|#
 directive|define
 name|DWARF2_CIE_DATA_ALIGNMENT
-value|-4
+value|(-4)
 end_define
 
 begin_endif

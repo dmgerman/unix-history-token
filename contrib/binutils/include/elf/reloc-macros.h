@@ -158,7 +158,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* RELOC_MACROS_H */
+comment|/* _RELOC_MACROS_H */
 end_comment
 
 end_unit

@@ -1143,7 +1143,9 @@ parameter_list|(
 name|bfd
 modifier|*
 parameter_list|,
-name|bfd_boolean
+name|struct
+name|bfd_link_info
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

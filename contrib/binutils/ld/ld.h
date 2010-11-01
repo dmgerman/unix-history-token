@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ld.h -- general linker header file    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001, 2002, 2003, 2004, 2005, 2006    Free Software Foundation, Inc.     This file is part of GLD, the Gnu Linker.     GLD is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GLD is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GLD; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
+comment|/* ld.h -- general linker header file    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001, 2002, 2003, 2004, 2005, 2006, 2007    Free Software Foundation, Inc.     This file is part of GLD, the Gnu Linker.     GLD is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GLD is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GLD; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -398,12 +398,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|"bin-bugs.h"
-end_include
-
 begin_comment
 comment|/* Look in this environment name for the linker to pretend to be */
 end_comment
@@ -629,6 +623,73 @@ decl_stmt|;
 name|bfd_boolean
 name|relax
 decl_stmt|;
+comment|/* If TRUE, build MIPS embedded PIC relocation tables in the output      file.  */
+name|bfd_boolean
+name|embedded_relocs
+decl_stmt|;
+comment|/* If TRUE, force generation of a file with a .exe file.  */
+name|bfd_boolean
+name|force_exe_suffix
+decl_stmt|;
+comment|/* If TRUE, generate a cross reference report.  */
+name|bfd_boolean
+name|cref
+decl_stmt|;
+comment|/* If TRUE (which is the default), warn about mismatched input      files.  */
+name|bfd_boolean
+name|warn_mismatch
+decl_stmt|;
+comment|/* Warn on attempting to open an incompatible library during a library      search.  */
+name|bfd_boolean
+name|warn_search_mismatch
+decl_stmt|;
+comment|/* If TRUE (the default) check section addresses, once compute,      fpor overlaps.  */
+name|bfd_boolean
+name|check_section_addresses
+decl_stmt|;
+comment|/* If TRUE allow the linking of input files in an unknown architecture      assuming that the user knows what they are doing.  This was the old      behaviour of the linker.  The new default behaviour is to reject such      input files.  */
+name|bfd_boolean
+name|accept_unknown_input_arch
+decl_stmt|;
+comment|/* Big or little endian as set on command line.  */
+enum|enum
+block|{
+name|ENDIAN_UNSET
+init|=
+literal|0
+block|,
+name|ENDIAN_BIG
+block|,
+name|ENDIAN_LITTLE
+block|}
+name|endian
+enum|;
+comment|/* -Bsymbolic and -Bsymbolic-functions, as set on command line.  */
+enum|enum
+block|{
+name|symbolic_unset
+init|=
+literal|0
+block|,
+name|symbolic
+block|,
+name|symbolic_functions
+block|,     }
+name|symbolic
+enum|;
+comment|/* --dynamic-list, --dynamic-list-cpp-new, --dynamic-list-cpp-typeinfo      and --dynamic-list FILE, as set on command line.  */
+enum|enum
+block|{
+name|dynamic_list_unset
+init|=
+literal|0
+block|,
+name|dynamic_list_data
+block|,
+name|dynamic_list
+block|}
+name|dynamic_list
+enum|;
 comment|/* Name of runtime interpreter to invoke.  */
 name|char
 modifier|*
@@ -649,35 +710,6 @@ name|char
 modifier|*
 name|rpath_link
 decl_stmt|;
-comment|/* Big or little endian as set on command line.  */
-enum|enum
-block|{
-name|ENDIAN_UNSET
-init|=
-literal|0
-block|,
-name|ENDIAN_BIG
-block|,
-name|ENDIAN_LITTLE
-block|}
-name|endian
-enum|;
-comment|/* If TRUE, build MIPS embedded PIC relocation tables in the output      file.  */
-name|bfd_boolean
-name|embedded_relocs
-decl_stmt|;
-comment|/* If TRUE, force generation of a file with a .exe file.  */
-name|bfd_boolean
-name|force_exe_suffix
-decl_stmt|;
-comment|/* If TRUE, generate a cross reference report.  */
-name|bfd_boolean
-name|cref
-decl_stmt|;
-comment|/* If TRUE (which is the default), warn about mismatched input      files.  */
-name|bfd_boolean
-name|warn_mismatch
-decl_stmt|;
 comment|/* Name of shared object whose symbol table should be filtered with      this shared object.  From the --filter option.  */
 name|char
 modifier|*
@@ -694,17 +726,10 @@ name|char
 modifier|*
 name|version_exports_section
 decl_stmt|;
-comment|/* If TRUE (the default) check section addresses, once compute,      fpor overlaps.  */
-name|bfd_boolean
-name|check_section_addresses
-decl_stmt|;
-comment|/* If TRUE allow the linking of input files in an unknown architecture      assuming that the user knows what they are doing.  This was the old      behaviour of the linker.  The new default behaviour is to reject such      input files.  */
-name|bfd_boolean
-name|accept_unknown_input_arch
-decl_stmt|;
-comment|/* If TRUE reduce memory overheads, at the expense of speed.      This will cause map file generation to use an O(N^2) algorithm.  */
-name|bfd_boolean
-name|reduce_memory_overheads
+comment|/* Default linker script.  */
+name|char
+modifier|*
+name|default_script
 decl_stmt|;
 block|}
 name|args_type
@@ -729,9 +754,6 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|bfd_size_type
-name|specified_data_size
-decl_stmt|;
 name|bfd_boolean
 name|magic_demand_paged
 decl_stmt|;
@@ -781,6 +803,21 @@ decl_stmt|;
 name|bfd_boolean
 name|text_read_only
 decl_stmt|;
+name|bfd_boolean
+name|stats
+decl_stmt|;
+comment|/* If set, orphan input sections will be mapped to separate output      sections.  */
+name|bfd_boolean
+name|unique_orphan_sections
+decl_stmt|;
+comment|/* If set, only search library directories explicitly selected      on the command line.  */
+name|bfd_boolean
+name|only_cmd_line_lib_dirs
+decl_stmt|;
+comment|/* The rpath separation character.  Usually ':'.  */
+name|char
+name|rpath_separator
+decl_stmt|;
 name|char
 modifier|*
 name|map_filename
@@ -789,13 +826,6 @@ name|FILE
 modifier|*
 name|map_file
 decl_stmt|;
-name|bfd_boolean
-name|stats
-decl_stmt|;
-comment|/* If set, orphan input sections will be mapped to separate output      sections.  */
-name|bfd_boolean
-name|unique_orphan_sections
-decl_stmt|;
 name|unsigned
 name|int
 name|split_by_reloc
@@ -803,13 +833,20 @@ decl_stmt|;
 name|bfd_size_type
 name|split_by_file
 decl_stmt|;
-comment|/* If set, only search library directories explicitly selected      on the command line.  */
-name|bfd_boolean
-name|only_cmd_line_lib_dirs
+name|bfd_size_type
+name|specified_data_size
 decl_stmt|;
 comment|/* The size of the hash table to use.  */
 name|bfd_size_type
 name|hash_table_size
+decl_stmt|;
+comment|/* The maximum page size for ELF.  */
+name|bfd_vma
+name|maxpagesize
+decl_stmt|;
+comment|/* The common page size for ELF.  */
+name|bfd_vma
+name|commonpagesize
 decl_stmt|;
 block|}
 name|ld_config_type

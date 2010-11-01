@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* SPARC ELF specific backend routines.    Copyright 2005 Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
+comment|/* SPARC ELF specific backend routines.    Copyright 2005, 2007 Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -161,22 +161,6 @@ name|void
 modifier|*
 parameter_list|)
 function_decl|;
-name|void
-function_decl|(
-modifier|*
-name|append_rela
-function_decl|)
-parameter_list|(
-name|bfd
-modifier|*
-parameter_list|,
-name|asection
-modifier|*
-parameter_list|,
-name|Elf_Internal_Rela
-modifier|*
-parameter_list|)
-function_decl|;
 name|bfd_vma
 function_decl|(
 modifier|*
@@ -295,6 +279,22 @@ name|bfd
 modifier|*
 parameter_list|,
 name|bfd_reloc_code_real_type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|reloc_howto_type
+modifier|*
+name|_bfd_sparc_elf_reloc_name_lookup
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

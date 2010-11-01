@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Defs for interface to demanglers.    Copyright 1992, 1993, 1994, 1995, 1996, 1997, 1998, 2000, 2001, 2002,    2003, 2004 Free Software Foundation, Inc.        This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor,    Boston, MA 02110-1301, USA.  */
+comment|/* Defs for interface to demanglers.    Copyright 1992, 1993, 1994, 1995, 1996, 1997, 1998, 2000, 2001, 2002,    2003, 2004, 2005, 2007 Free Software Foundation, Inc.        This program is free software; you can redistribute it and/or    modify it under the terms of the GNU Library General Public License    as published by the Free Software Foundation; either version 2, or    (at your option) any later version.     In addition to the permissions in the GNU Library General Public    License, the Free Software Foundation gives you unlimited    permission to link the compiled version of this file into    combinations with other programs, and to distribute those    combinations without any restriction coming from the use of this    file.  (The Library Public License restrictions do apply in other    respects; for example, they cover modification of the file, and    distribution when not linked into a combined executable.)     This program is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    Library General Public License for more details.     You should have received a copy of the GNU Library General Public    License along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_if
@@ -349,7 +349,45 @@ modifier|*
 name|name
 parameter_list|)
 function_decl|;
-comment|/* V3 ABI demangling entry points, defined in cp-demangle.c.  */
+comment|/* Callback typedef for allocation-less demangler interfaces. */
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|demangle_callbackref
+function_decl|)
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* V3 ABI demangling entry points, defined in cp-demangle.c.  Callback    variants return non-zero on success, zero on error.  char* variants    return a string allocated by malloc on success, NULL on error.  */
+specifier|extern
+name|int
+name|cplus_demangle_v3_callback
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|mangled
+parameter_list|,
+name|int
+name|options
+parameter_list|,
+name|demangle_callbackref
+name|callback
+parameter_list|,
+name|void
+modifier|*
+name|opaque
+parameter_list|)
+function_decl|;
 specifier|extern
 name|char
 modifier|*
@@ -362,6 +400,23 @@ name|mangled
 parameter_list|,
 name|int
 name|options
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|java_demangle_v3_callback
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|mangled
+parameter_list|,
+name|demangle_callbackref
+name|callback
+parameter_list|,
+name|void
+modifier|*
+name|opaque
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -918,6 +973,28 @@ parameter_list|,
 name|size_t
 modifier|*
 name|p_allocated_size
+parameter_list|)
+function_decl|;
+comment|/* This function takes a struct demangle_component tree and passes back    a demangled string in one or more calls to a callback function.    The first argument is DMGL_* options.  The second is the tree to    demangle.  The third is a pointer to a callback function; on each call    this receives an element of the demangled string, its length, and an    opaque value.  The fourth is the opaque value passed to the callback.    The callback is called once or more to return the full demangled    string.  The demangled element string is always nul-terminated, though    its length is also provided for convenience.  In contrast to    cplus_demangle_print(), this function does not allocate heap memory    to grow output strings (except perhaps where alloca() is implemented    by malloc()), and so is normally safe for use where the heap has been    corrupted.  On success, this function returns 1; on failure, 0.  */
+specifier|extern
+name|int
+name|cplus_demangle_print_callback
+parameter_list|(
+name|int
+name|options
+parameter_list|,
+specifier|const
+name|struct
+name|demangle_component
+modifier|*
+name|tree
+parameter_list|,
+name|demangle_callbackref
+name|callback
+parameter_list|,
+name|void
+modifier|*
+name|opaque
 parameter_list|)
 function_decl|;
 ifdef|#

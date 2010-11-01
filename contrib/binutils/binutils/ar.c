@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ar.c - Archive modify and extract.    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
+comment|/* ar.c - Archive modify and extract.    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001, 2002, 2003, 2004, 2005, 2006, 2007    Free Software Foundation, Inc.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_escape
@@ -9,6 +9,12 @@ end_escape
 begin_comment
 comment|/*    Bugs: should use getopt the way tar does (complete w/optional -) and    should have long options too. GNU ar used to check file against filesystem    in quick_update and replace operations (would check mtime). Doesn't warn    when name truncated. No way to specify pos_end. Error messages should be    more consistent.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"sysdep.h"
+end_include
 
 begin_include
 include|#
@@ -31,12 +37,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"bucomm.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"aout/ar.h"
 end_include
 
@@ -44,6 +44,12 @@ begin_include
 include|#
 directive|include
 file|"libbfd.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"bucomm.h"
 end_include
 
 begin_include
@@ -307,7 +313,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|ranlib_only
 parameter_list|(
 specifier|const
@@ -320,7 +326,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|ranlib_touch
 parameter_list|(
 specifier|const
@@ -614,7 +620,7 @@ name|head
 operator|=
 name|arch
 operator|->
-name|next
+name|archive_next
 init|;
 name|head
 condition|;
@@ -622,7 +628,7 @@ name|head
 operator|=
 name|head
 operator|->
-name|next
+name|archive_next
 control|)
 block|{
 name|PROGRESS
@@ -668,7 +674,7 @@ name|head
 operator|=
 name|arch
 operator|->
-name|next
+name|archive_next
 init|;
 name|head
 condition|;
@@ -676,7 +682,7 @@ name|head
 operator|=
 name|head
 operator|->
-name|next
+name|archive_next
 control|)
 block|{
 name|PROGRESS
@@ -1125,11 +1131,16 @@ name|list_supported_targets
 argument_list|(
 name|program_name
 argument_list|,
-name|stderr
+name|s
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|REPORT_BUGS_TO
+index|[
+literal|0
+index|]
+operator|&&
 name|help
 condition|)
 name|fprintf
@@ -1865,6 +1876,11 @@ condition|(
 name|is_ranlib
 condition|)
 block|{
+name|int
+name|status
+init|=
+literal|0
+decl_stmt|;
 name|bfd_boolean
 name|touch
 init|=
@@ -1943,7 +1959,7 @@ argument_list|)
 operator|==
 literal|0
 operator|||
-name|strncmp
+name|CONST_STRNEQ
 argument_list|(
 name|argv
 index|[
@@ -1951,11 +1967,7 @@ literal|1
 index|]
 argument_list|,
 literal|"--v"
-argument_list|,
-literal|3
 argument_list|)
-operator|==
-literal|0
 condition|)
 name|print_version
 argument_list|(
@@ -2001,6 +2013,8 @@ condition|(
 operator|!
 name|touch
 condition|)
+name|status
+operator||=
 name|ranlib_only
 argument_list|(
 name|argv
@@ -2010,6 +2024,8 @@ index|]
 argument_list|)
 expr_stmt|;
 else|else
+name|status
+operator||=
 name|ranlib_touch
 argument_list|(
 name|argv
@@ -2024,7 +2040,7 @@ expr_stmt|;
 block|}
 name|xexit
 argument_list|(
-literal|0
+name|status
 argument_list|)
 expr_stmt|;
 block|}
@@ -2477,7 +2493,8 @@ name|write_armap
 operator|==
 literal|1
 condition|)
-block|{
+name|xexit
+argument_list|(
 name|ranlib_only
 argument_list|(
 name|argv
@@ -2485,13 +2502,8 @@ index|[
 name|arg_index
 index|]
 argument_list|)
-expr_stmt|;
-name|xexit
-argument_list|(
-literal|0
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|operation
@@ -3093,7 +3105,7 @@ operator|&
 operator|(
 name|arch
 operator|->
-name|next
+name|archive_next
 operator|)
 expr_stmt|;
 comment|/* Read all the contents right away, regardless.  */
@@ -3135,7 +3147,7 @@ operator|=
 operator|&
 name|next_one
 operator|->
-name|next
+name|archive_next
 expr_stmt|;
 block|}
 operator|*
@@ -3173,7 +3185,7 @@ modifier|*
 name|abfd
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|ncopied
 init|=
 literal|0
@@ -3191,7 +3203,7 @@ name|struct
 name|stat
 name|buf
 decl_stmt|;
-name|long
+name|size_t
 name|size
 decl_stmt|;
 if|if
@@ -3263,10 +3275,10 @@ operator|<
 name|size
 condition|)
 block|{
-name|int
+name|size_t
 name|nread
 decl_stmt|;
-name|int
+name|size_t
 name|tocopy
 init|=
 name|size
@@ -3320,6 +3332,12 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* fwrite in mingw32 may return int instead of size_t. Cast the 	 return value to size_t to avoid comparison between signed and 	 unsigned values.  */
+if|if
+condition|(
+operator|(
+name|size_t
+operator|)
 name|fwrite
 argument_list|(
 name|cbuf
@@ -3329,6 +3347,18 @@ argument_list|,
 name|nread
 argument_list|,
 name|stdout
+argument_list|)
+operator|!=
+name|nread
+condition|)
+name|fatal
+argument_list|(
+literal|"stdout: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ncopied
@@ -3370,17 +3400,17 @@ argument_list|(
 name|BUFSIZE
 argument_list|)
 decl_stmt|;
-name|int
+name|size_t
 name|nread
 decl_stmt|,
 name|tocopy
 decl_stmt|;
-name|long
+name|size_t
 name|ncopied
 init|=
 literal|0
 decl_stmt|;
-name|long
+name|size_t
 name|size
 decl_stmt|;
 name|struct
@@ -3418,26 +3448,6 @@ operator|=
 name|buf
 operator|.
 name|st_size
-expr_stmt|;
-if|if
-condition|(
-name|size
-operator|<
-literal|0
-condition|)
-comment|/* xgettext:c-format */
-name|fatal
-argument_list|(
-name|_
-argument_list|(
-literal|"stat returns negative size for %s"
-argument_list|)
-argument_list|,
-name|bfd_get_filename
-argument_list|(
-name|abfd
-argument_list|)
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3637,6 +3647,12 @@ operator|=
 name|ostream
 expr_stmt|;
 block|}
+comment|/* fwrite in mingw32 may return int instead of size_t. Cast 	   the return value to size_t to avoid comparison between 	   signed and unsigned values.  */
+if|if
+condition|(
+operator|(
+name|size_t
+operator|)
 name|fwrite
 argument_list|(
 name|cbuf
@@ -3646,6 +3662,20 @@ argument_list|,
 name|nread
 argument_list|,
 name|ostream
+argument_list|)
+operator|!=
+name|nread
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: %s"
+argument_list|,
+name|output_filename
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ncopied
@@ -3745,7 +3775,7 @@ name|contents_head
 init|=
 name|iarch
 operator|->
-name|next
+name|archive_next
 decl_stmt|;
 name|old_name
 operator|=
@@ -3777,6 +3807,17 @@ operator|=
 name|make_tempname
 argument_list|(
 name|old_name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|new_name
+operator|==
+name|NULL
+condition|)
+name|bfd_fatal
+argument_list|(
+literal|"could not create temporary file whilst writing archive"
 argument_list|)
 expr_stmt|;
 name|output_filename
@@ -3992,7 +4033,7 @@ operator|*
 name|after_bfd
 operator|)
 operator|->
-name|next
+name|archive_next
 operator|)
 expr_stmt|;
 block|}
@@ -4012,7 +4053,7 @@ operator|*
 name|after_bfd
 operator|)
 operator|->
-name|next
+name|archive_next
 control|)
 if|if
 condition|(
@@ -4045,7 +4086,7 @@ operator|*
 name|after_bfd
 operator|)
 operator|->
-name|next
+name|archive_next
 expr_stmt|;
 break|break;
 block|}
@@ -4139,7 +4180,7 @@ operator|&
 operator|(
 name|arch
 operator|->
-name|next
+name|archive_next
 operator|)
 expr_stmt|;
 while|while
@@ -4216,7 +4257,7 @@ operator|*
 name|current_ptr_ptr
 operator|)
 operator|->
-name|next
+name|archive_next
 operator|)
 expr_stmt|;
 goto|goto
@@ -4233,7 +4274,7 @@ operator|*
 name|current_ptr_ptr
 operator|)
 operator|->
-name|next
+name|archive_next
 operator|)
 expr_stmt|;
 block|}
@@ -4326,7 +4367,7 @@ operator|&
 operator|(
 name|arch
 operator|->
-name|next
+name|archive_next
 operator|)
 expr_stmt|;
 while|while
@@ -4372,7 +4413,7 @@ name|current_ptr_ptr
 operator|=
 name|current_ptr
 operator|->
-name|next
+name|archive_next
 expr_stmt|;
 comment|/* Now glue to end */
 name|after_bfd
@@ -4382,7 +4423,7 @@ argument_list|(
 operator|&
 name|arch
 operator|->
-name|next
+name|archive_next
 argument_list|,
 name|pos_end
 argument_list|,
@@ -4401,7 +4442,7 @@ name|current_ptr
 expr_stmt|;
 name|current_ptr
 operator|->
-name|next
+name|archive_next
 operator|=
 name|link
 expr_stmt|;
@@ -4430,7 +4471,7 @@ operator|*
 name|current_ptr_ptr
 operator|)
 operator|->
-name|next
+name|archive_next
 operator|)
 expr_stmt|;
 block|}
@@ -4523,7 +4564,7 @@ operator|=
 operator|&
 name|arch
 operator|->
-name|next
+name|archive_next
 expr_stmt|;
 while|while
 condition|(
@@ -4655,7 +4696,7 @@ argument_list|(
 operator|&
 name|arch
 operator|->
-name|next
+name|archive_next
 argument_list|,
 name|pos_after
 argument_list|,
@@ -4686,7 +4727,7 @@ operator|*
 name|current_ptr
 operator|)
 operator|->
-name|next
+name|archive_next
 expr_stmt|;
 name|changed
 operator|=
@@ -4703,7 +4744,7 @@ operator|&
 operator|(
 name|current
 operator|->
-name|next
+name|archive_next
 operator|)
 expr_stmt|;
 block|}
@@ -4716,7 +4757,7 @@ argument_list|(
 operator|&
 name|arch
 operator|->
-name|next
+name|archive_next
 argument_list|,
 name|pos_end
 argument_list|,
@@ -4765,7 +4806,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|ranlib_only
 parameter_list|(
 specifier|const
@@ -4787,7 +4828,9 @@ argument_list|)
 operator|<
 literal|1
 condition|)
-return|return;
+return|return
+literal|1
+return|;
 name|write_armap
 operator|=
 literal|1
@@ -4821,6 +4864,9 @@ argument_list|(
 name|arch
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -4830,7 +4876,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|ranlib_touch
 parameter_list|(
 specifier|const
@@ -4871,7 +4917,9 @@ argument_list|)
 operator|<
 literal|1
 condition|)
-return|return;
+return|return
+literal|1
+return|;
 name|f
 operator|=
 name|open
@@ -5013,6 +5061,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+return|return
+literal|0
+return|;
 block|}
 end_function
 

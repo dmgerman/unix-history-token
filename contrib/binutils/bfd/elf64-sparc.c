@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* SPARC-specific support for 64-bit ELF    Copyright 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002,    2003, 2004, 2005 Free Software Foundation, Inc.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
+comment|/* SPARC-specific support for 64-bit ELF    Copyright 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002,    2003, 2004, 2005, 2007 Free Software Foundation, Inc.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"bfd.h"
+file|"sysdep.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sysdep.h"
+file|"bfd.h"
 end_include
 
 begin_include
@@ -3490,6 +3490,13 @@ name|ELF_MAXPAGESIZE
 value|0x100000
 end_define
 
+begin_define
+define|#
+directive|define
+name|ELF_COMMONPAGESIZE
+value|0x2000
+end_define
+
 begin_comment
 comment|/* This is the official ABI value.  */
 end_comment
@@ -3659,6 +3666,14 @@ end_define
 begin_define
 define|#
 directive|define
+name|bfd_elf64_bfd_reloc_name_lookup
+define|\
+value|_bfd_sparc_elf_reloc_name_lookup
+end_define
+
+begin_define
+define|#
+directive|define
 name|bfd_elf64_bfd_relax_section
 define|\
 value|_bfd_sparc_elf_relax_section
@@ -3771,6 +3786,14 @@ end_define
 begin_define
 define|#
 directive|define
+name|elf_backend_init_index_section
+define|\
+value|_bfd_elf_init_1_index_section
+end_define
+
+begin_define
+define|#
+directive|define
 name|elf_backend_can_gc_sections
 value|1
 end_define
@@ -3826,6 +3849,81 @@ define|#
 directive|define
 name|elf_backend_plt_alignment
 value|8
+end_define
+
+begin_include
+include|#
+directive|include
+file|"elf64-target.h"
+end_include
+
+begin_comment
+comment|/* FreeBSD support */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_BIG_SYM
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_BIG_SYM
+value|bfd_elf64_sparc_freebsd_vec
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_BIG_NAME
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_BIG_NAME
+value|"elf64-sparc-freebsd"
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|ELF_OSABI
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ELF_OSABI
+value|ELFOSABI_FREEBSD
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|elf_backend_post_process_headers
+end_undef
+
+begin_define
+define|#
+directive|define
+name|elf_backend_post_process_headers
+value|_bfd_elf_set_osabi
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|elf64_bed
+end_undef
+
+begin_define
+define|#
+directive|define
+name|elf64_bed
+value|elf64_sparc_fbsd_bed
 end_define
 
 begin_include

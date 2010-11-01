@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Low-level I/O routines for BFDs.     Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.     Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
+comment|/* Low-level I/O routines for BFDs.     Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007    Free Software Foundation, Inc.     Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"sysdep.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
 end_include
 
 begin_include
@@ -19,12 +25,6 @@ begin_include
 include|#
 directive|include
 file|"libbfd.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<limits.h>
 end_include
 
 begin_ifndef
@@ -275,6 +275,43 @@ block|{
 name|size_t
 name|nread
 decl_stmt|;
+comment|/* If this is an archive element, don't read past the end of      this element.  */
+if|if
+condition|(
+name|abfd
+operator|->
+name|arelt_data
+operator|!=
+name|NULL
+condition|)
+block|{
+name|size_t
+name|maxbytes
+init|=
+operator|(
+operator|(
+expr|struct
+name|areltdata
+operator|*
+operator|)
+name|abfd
+operator|->
+name|arelt_data
+operator|)
+operator|->
+name|parsed_size
+decl_stmt|;
+if|if
+condition|(
+name|size
+operator|>
+name|maxbytes
+condition|)
+name|size
+operator|=
+name|maxbytes
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
@@ -1350,11 +1387,11 @@ block|}
 end_function
 
 begin_comment
-comment|/* FUNCTION 	bfd_get_size  SYNOPSIS 	long bfd_get_size (bfd *abfd);  DESCRIPTION 	Return the file size (as read from file system) for the file 	associated with BFD @var{abfd}.  	The initial motivation for, and use of, this routine is not 	so we can get the exact size of the object the BFD applies to, since 	that might not be generally possible (archive members for example). 	It would be ideal if someone could eventually modify 	it so that such results were guaranteed.  	Instead, we want to ask questions like "is this NNN byte sized 	object I'm about to try read from file offset YYY reasonable?" 	As as example of where we might do this, some object formats 	use string tables for which the first<<sizeof (long)>> bytes of the 	table contain the size of the table itself, including the size bytes. 	If an application tries to read what it thinks is one of these 	string tables, without some way to validate the size, and for 	some reason the size is wrong (byte swapping error, wrong location 	for the string table, etc.), the only clue is likely to be a read 	error when it tries to read the table, or a "virtual memory 	exhausted" error when it tries to allocate 15 bazillon bytes 	of space for the 15 bazillon byte table it is about to read. 	This function at least allows us to answer the question, "is the 	size reasonable?". */
+comment|/* FUNCTION 	bfd_get_size  SYNOPSIS 	file_ptr bfd_get_size (bfd *abfd);  DESCRIPTION 	Return the file size (as read from file system) for the file 	associated with BFD @var{abfd}.  	The initial motivation for, and use of, this routine is not 	so we can get the exact size of the object the BFD applies to, since 	that might not be generally possible (archive members for example). 	It would be ideal if someone could eventually modify 	it so that such results were guaranteed.  	Instead, we want to ask questions like "is this NNN byte sized 	object I'm about to try read from file offset YYY reasonable?" 	As as example of where we might do this, some object formats 	use string tables for which the first<<sizeof (long)>> bytes of the 	table contain the size of the table itself, including the size bytes. 	If an application tries to read what it thinks is one of these 	string tables, without some way to validate the size, and for 	some reason the size is wrong (byte swapping error, wrong location 	for the string table, etc.), the only clue is likely to be a read 	error when it tries to read the table, or a "virtual memory 	exhausted" error when it tries to allocate 15 bazillon bytes 	of space for the 15 bazillon byte table it is about to read. 	This function at least allows us to answer the question, "is the 	size reasonable?". */
 end_comment
 
 begin_function
-name|long
+name|file_ptr
 name|bfd_get_size
 parameter_list|(
 name|bfd

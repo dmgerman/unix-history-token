@@ -304,6 +304,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ARM_CEXT_IWMMXT2
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* Intel Wireless MMX technology coprocessor version 2.   */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|FPU_ENDIAN_PURE
 value|0x80000000
 end_define
@@ -387,6 +398,28 @@ end_define
 
 begin_comment
 comment|/* ARM10E VFPr1.	      */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FPU_VFP_EXT_V3
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* VFPv3 insns.	              */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FPU_NEON_EXT_V1
+value|0x00800000
+end_define
+
+begin_comment
+comment|/* Neon (SIMD) insns.	      */
 end_comment
 
 begin_comment
@@ -627,6 +660,14 @@ end_define
 begin_define
 define|#
 directive|define
+name|ARM_ARCH_IWMMXT2
+define|\
+value|ARM_FEATURE (ARM_AEXT_V5TE, ARM_CEXT_XSCALE | ARM_CEXT_IWMMXT | ARM_CEXT_IWMMXT2)
+end_define
+
+begin_define
+define|#
+directive|define
 name|FPU_VFP_V1xD
 value|(FPU_VFP_EXT_V1xD | FPU_ENDIAN_PURE)
 end_define
@@ -648,8 +689,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|FPU_VFP_V3
+value|(FPU_VFP_V2 | FPU_VFP_EXT_V3)
+end_define
+
+begin_define
+define|#
+directive|define
 name|FPU_VFP_HARD
-value|(FPU_VFP_EXT_V1xD | FPU_VFP_EXT_V1 | FPU_VFP_EXT_V2)
+value|(FPU_VFP_EXT_V1xD | FPU_VFP_EXT_V1 | FPU_VFP_EXT_V2 \                          | FPU_VFP_EXT_V3 | FPU_NEON_EXT_V1)
 end_define
 
 begin_define
@@ -703,6 +751,28 @@ define|#
 directive|define
 name|FPU_ARCH_VFP_V2
 value|ARM_FEATURE (0, FPU_VFP_V2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FPU_ARCH_VFP_V3
+value|ARM_FEATURE (0, FPU_VFP_V3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FPU_ARCH_NEON_V1
+value|ARM_FEATURE (0, FPU_NEON_EXT_V1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FPU_ARCH_VFP_V3_PLUS_NEON_V1
+define|\
+value|ARM_FEATURE (0, FPU_VFP_V3 | FPU_NEON_EXT_V1)
 end_define
 
 begin_define

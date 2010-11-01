@@ -1,31 +1,20 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* strings -- print the strings of printable characters in files    Copyright 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001,    2002, 2003, 2004, 2005 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
+comment|/* strings -- print the strings of printable characters in files    Copyright 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001,    2002, 2003, 2004, 2005, 2006, 2007 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_escape
 end_escape
 
 begin_comment
-comment|/* Usage: strings [options] file...     Options:    --all    -a    -		Do not scan only the initialized data section of object files.     --print-file-name    -f		Print the name of the file before each string.     --bytes=min-len    -n min-len    -min-len	Print graphic char sequences, MIN-LEN or more bytes long, 		that are followed by a NUL or a newline.  Default is 4.     --radix={o,x,d}    -t {o,x,d}	Print the offset within the file before each string, 		in octal/hex/decimal.     -o		Like -to.  (Some other implementations have -o like -to, 		others like -td.  We chose one arbitrarily.)     --encoding={s,S,b,l,B,L}    -e {s,S,b,l,B,L} 		Select character encoding: 7-bit-character, 8-bit-character, 		bigendian 16-bit, littleendian 16-bit, bigendian 32-bit, 		littleendian 32-bit.     --target=BFDNAME 		Specify a non-default object file format.     --help    -h		Print the usage message on the standard output.     --version    -v		Print the program version number.     Written by Richard Stallman<rms@gnu.ai.mit.edu>    and David MacKenzie<djm@gnu.ai.mit.edu>.  */
+comment|/* Usage: strings [options] file...     Options:    --all    -a    -		Do not scan only the initialized data section of object files.     --print-file-name    -f		Print the name of the file before each string.     --bytes=min-len    -n min-len    -min-len	Print graphic char sequences, MIN-LEN or more bytes long, 		that are followed by a NUL or a newline.  Default is 4.     --radix={o,x,d}    -t {o,x,d}	Print the offset within the file before each string, 		in octal/hex/decimal.     -o		Like -to.  (Some other implementations have -o like -to, 		others like -td.  We chose one arbitrarily.)     --encoding={s,S,b,l,B,L}    -e {s,S,b,l,B,L} 		Select character encoding: 7-bit-character, 8-bit-character, 		bigendian 16-bit, littleendian 16-bit, bigendian 32-bit, 		littleendian 32-bit.     --target=BFDNAME    -T {bfdname} 		Specify a non-default object file format.     --help    -h		Print the usage message on the standard output.     --version    -v		Print the program version number.     Written by Richard Stallman<rms@gnu.ai.mit.edu>    and David MacKenzie<djm@gnu.ai.mit.edu>.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_CONFIG_H
-end_ifdef
 
 begin_include
 include|#
 directive|include
-file|"config.h"
+file|"sysdep.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -36,25 +25,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"getopt.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"bucomm.h"
 end_include
 
 begin_include
@@ -73,6 +44,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"bucomm.h"
 end_include
 
 begin_comment
@@ -770,7 +747,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"afhHn:ot:e:Vv0123456789"
+literal|"afhHn:ot:e:T:Vv0123456789"
 argument_list|,
 name|long_options
 argument_list|,
@@ -2729,6 +2706,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|REPORT_BUGS_TO
+index|[
+literal|0
+index|]
+operator|&&
 name|status
 operator|==
 literal|0

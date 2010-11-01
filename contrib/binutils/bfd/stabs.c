@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Stabs in sections linking support.    Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,    2006 Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
+comment|/* Stabs in sections linking support.    Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,    2006, 2007 Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -10,13 +10,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"bfd.h"
+file|"sysdep.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sysdep.h"
+file|"bfd.h"
 end_include
 
 begin_include
@@ -444,35 +444,19 @@ name|TRUE
 return|;
 if|if
 condition|(
-operator|(
-name|stabsec
-operator|->
-name|output_section
-operator|!=
-name|NULL
-operator|&&
 name|bfd_is_abs_section
 argument_list|(
 name|stabsec
 operator|->
 name|output_section
 argument_list|)
-operator|)
 operator|||
-operator|(
-name|stabstrsec
-operator|->
-name|output_section
-operator|!=
-name|NULL
-operator|&&
 name|bfd_is_abs_section
 argument_list|(
 name|stabstrsec
 operator|->
 name|output_section
 argument_list|)
-operator|)
 condition|)
 comment|/* At least one of the sections is being discarded from the        link, so we should just ignore them.  */
 return|return
@@ -491,6 +475,9 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|flagword
+name|flags
+decl_stmt|;
 comment|/* Initialize the stabs information we need to keep track of.  */
 name|first
 operator|=
@@ -553,15 +540,29 @@ condition|)
 goto|goto
 name|error_return
 goto|;
+name|flags
+operator|=
+operator|(
+name|SEC_HAS_CONTENTS
+operator||
+name|SEC_READONLY
+operator||
+name|SEC_DEBUGGING
+operator||
+name|SEC_LINKER_CREATED
+operator|)
+expr_stmt|;
 name|sinfo
 operator|->
 name|stabstr
 operator|=
-name|bfd_make_section_anyway
+name|bfd_make_section_anyway_with_flags
 argument_list|(
 name|abfd
 argument_list|,
 literal|".stabstr"
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 if|if
@@ -575,22 +576,6 @@ condition|)
 goto|goto
 name|error_return
 goto|;
-name|sinfo
-operator|->
-name|stabstr
-operator|->
-name|flags
-operator||=
-operator|(
-name|SEC_HAS_CONTENTS
-operator||
-name|SEC_READONLY
-operator||
-name|SEC_DEBUGGING
-operator||
-name|SEC_LINKER_CREATED
-operator|)
-expr_stmt|;
 block|}
 comment|/* Initialize the information we are going to store for this .stab      section.  */
 name|count
@@ -1628,12 +1613,16 @@ operator|->
 name|flags
 operator||=
 name|SEC_EXCLUDE
+operator||
+name|SEC_KEEP
 expr_stmt|;
 name|stabstrsec
 operator|->
 name|flags
 operator||=
 name|SEC_EXCLUDE
+operator||
+name|SEC_KEEP
 expr_stmt|;
 name|sinfo
 operator|->
@@ -2203,6 +2192,8 @@ operator|->
 name|flags
 operator||=
 name|SEC_EXCLUDE
+operator||
+name|SEC_KEEP
 expr_stmt|;
 comment|/* Recalculate the `cumulative_skips' array now that stabs have been      deleted for this section.  */
 if|if

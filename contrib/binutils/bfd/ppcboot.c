@@ -1,11 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for PPCbug boot records.    Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004    Free Software Foundation, Inc.    Written by Michael Meissner, Cygnus Support,<meissner@cygnus.com>  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
+comment|/* BFD back-end for PPCbug boot records.    Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2006,    2007 Free Software Foundation, Inc.    Written by Michael Meissner, Cygnus Support,<meissner@cygnus.com>  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
 comment|/* This is a BFD backend which may be used to write PowerPCBug boot objects.    It may only be used for output, not input.  The intention is that this may    be used as an output format for objcopy in order to generate raw binary    data.     This is very simple.  The only complication is that the real data    will start at some address X, and in some cases we will not want to    include X zeroes just to get to that point.  Since the start    address is not meaningful for this object file format, we use it    instead to indicate the number of zeroes to skip at the start of    the file.  objcopy cooperates by specially setting the start    address to zero by default.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"sysdep.h"
+end_include
 
 begin_include
 include|#
@@ -17,12 +23,6 @@ begin_include
 include|#
 directive|include
 file|"bfd.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sysdep.h"
 end_include
 
 begin_include
@@ -405,22 +405,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
-name|ppcboot_sizeof_headers
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|bfd_boolean
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|bfd_boolean
 name|ppcboot_bfd_print_private_bfd_data
 name|PARAMS
@@ -614,6 +598,9 @@ decl_stmt|;
 name|ppcboot_data_t
 modifier|*
 name|tdata
+decl_stmt|;
+name|flagword
+name|flags
 decl_stmt|;
 name|BFD_ASSERT
 argument_list|(
@@ -831,26 +818,6 @@ operator|=
 name|PPCBOOT_SYMS
 expr_stmt|;
 comment|/* One data section.  */
-name|sec
-operator|=
-name|bfd_make_section
-argument_list|(
-name|abfd
-argument_list|,
-literal|".data"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sec
-operator|==
-name|NULL
-condition|)
-return|return
-name|NULL
-return|;
-name|sec
-operator|->
 name|flags
 operator|=
 name|SEC_ALLOC
@@ -863,6 +830,26 @@ name|SEC_CODE
 operator||
 name|SEC_HAS_CONTENTS
 expr_stmt|;
+name|sec
+operator|=
+name|bfd_make_section_with_flags
+argument_list|(
+name|abfd
+argument_list|,
+literal|".data"
+argument_list|,
+name|flags
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sec
+operator|==
+name|NULL
+condition|)
+return|return
+name|NULL
+return|;
 name|sec
 operator|->
 name|vma
@@ -1621,29 +1608,6 @@ name|ppcboot_minisymbol_to_symbol
 value|_bfd_generic_minisymbol_to_symbol
 end_define
 
-begin_define
-define|#
-directive|define
-name|ppcboot_get_reloc_upper_bound
-define|\
-value|((long (*) PARAMS ((bfd *, asection *))) bfd_0l)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ppcboot_canonicalize_reloc
-define|\
-value|((long (*) PARAMS ((bfd *, asection *, arelent **, asymbol **))) bfd_0l)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ppcboot_bfd_reloc_type_lookup
-value|_bfd_norelocs_bfd_reloc_type_lookup
-end_define
-
 begin_escape
 end_escape
 
@@ -1803,19 +1767,17 @@ specifier|static
 name|int
 name|ppcboot_sizeof_headers
 parameter_list|(
-name|abfd
-parameter_list|,
-name|exec
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
-name|bfd_boolean
-name|exec
+parameter_list|,
+name|struct
+name|bfd_link_info
+modifier|*
+name|info
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 sizeof|sizeof
@@ -2658,7 +2620,7 @@ argument_list|)
 block|,
 name|BFD_JUMP_TABLE_RELOCS
 argument_list|(
-name|ppcboot
+name|_bfd_norelocs
 argument_list|)
 block|,
 name|BFD_JUMP_TABLE_WRITE

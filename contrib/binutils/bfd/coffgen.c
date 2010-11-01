@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Support for the generic parts of COFF, for BFD.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.    Written by Cygnus Support.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
+comment|/* Support for the generic parts of COFF, for BFD.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002, 2003, 2004, 2005, 2007    Free Software Foundation, Inc.    Written by Cygnus Support.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -14,13 +14,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"bfd.h"
+file|"sysdep.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sysdep.h"
+file|"bfd.h"
 end_include
 
 begin_include
@@ -8825,6 +8825,44 @@ operator|.
 name|n_numaux
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BFD64
+comment|/* fprintf_vma() on a 64-bit enabled host will always print a 64-bit 	     value, but really we want to display the address in the target's 	     address size.  Since we do not have a field in the bfd structure 	     to tell us this, we take a guess, based on the target's name.  */
+if|if
+condition|(
+name|strstr
+argument_list|(
+name|bfd_get_target
+argument_list|(
+name|abfd
+argument_list|)
+argument_list|,
+literal|"64"
+argument_list|)
+operator|==
+name|NULL
+condition|)
+name|fprintf
+argument_list|(
+name|file
+argument_list|,
+literal|"%08lx"
+argument_list|,
+call|(
+name|unsigned
+name|long
+call|)
+argument_list|(
+name|val
+operator|&
+literal|0xffffffff
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+endif|#
+directive|endif
 name|fprintf_vma
 argument_list|(
 name|file
@@ -10438,8 +10476,10 @@ name|bfd
 modifier|*
 name|abfd
 parameter_list|,
-name|bfd_boolean
-name|reloc
+name|struct
+name|bfd_link_info
+modifier|*
+name|info
 parameter_list|)
 block|{
 name|size_t
@@ -10448,7 +10488,9 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|reloc
+name|info
+operator|->
+name|relocatable
 condition|)
 name|size
 operator|=

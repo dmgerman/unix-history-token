@@ -524,11 +524,20 @@ argument_list|)
 end_macro
 
 begin_macro
+name|RELOC_NUMBER
+argument_list|(
+argument|R_MIPS_GLOB_DAT
+argument_list|,
+literal|51
+argument_list|)
+end_macro
+
+begin_macro
 name|FAKE_RELOC
 argument_list|(
 argument|R_MIPS_max
 argument_list|,
-literal|51
+literal|52
 argument_list|)
 end_macro
 
@@ -3838,6 +3847,23 @@ end_define
 
 begin_escape
 end_escape
+
+begin_comment
+comment|/* Object attribute tags.  */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+comment|/* 0-3 are generic.  */
+name|Tag_GNU_MIPS_ABI_FP
+init|=
+literal|4
+block|,
+comment|/* Value 1 for hard-float -mdouble-float, 2 			      for hard-float -msingle-float, 3 for 			      soft-float; 0 for not tagged or not 			      using any ABIs affected by the 			      differences.  */
+block|}
+enum|;
+end_enum
 
 begin_endif
 endif|#

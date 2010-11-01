@@ -1370,6 +1370,16 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
+name|s_vendor_attribute
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
 name|s_weakref
 parameter_list|(
 name|int

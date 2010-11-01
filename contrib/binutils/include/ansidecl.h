@@ -1444,6 +1444,136 @@ comment|/* ATTRIBUTE_ALIGNED_ALIGNOF */
 end_comment
 
 begin_comment
+comment|/* Useful for structures whose layout must much some binary specification    regardless of the alignment and padding qualities of the compiler.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATTRIBUTE_PACKED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_PACKED
+value|__attribute__ ((packed))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Attribute `hot' and `cold' was valid as of gcc 4.3.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATTRIBUTE_COLD
+end_ifndef
+
+begin_if
+if|#
+directive|if
+operator|(
+name|GCC_VERSION
+operator|>=
+literal|4003
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_COLD
+value|__attribute__ ((__cold__))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_COLD
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* GNUC>= 4.3 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ATTRIBUTE_COLD */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATTRIBUTE_HOT
+end_ifndef
+
+begin_if
+if|#
+directive|if
+operator|(
+name|GCC_VERSION
+operator|>=
+literal|4003
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_HOT
+value|__attribute__ ((__hot__))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_HOT
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* GNUC>= 4.3 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ATTRIBUTE_HOT */
+end_comment
+
+begin_comment
 comment|/* We use __extension__ in some places to suppress -pedantic warnings    about GCC extensions.  This feature didn't work properly before    gcc 2.8.  */
 end_comment
 

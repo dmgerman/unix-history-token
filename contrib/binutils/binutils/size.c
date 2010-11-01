@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* size.c -- report size of various sections of an executable file.    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
+comment|/* size.c -- report size of various sections of an executable file.    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001, 2002, 2003, 2004, 2005, 2006, 2007 Free Software Foundation, Inc.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_escape
@@ -13,13 +13,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"bfd.h"
+file|"sysdep.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"bucomm.h"
+file|"bfd.h"
 end_include
 
 begin_include
@@ -32,6 +32,12 @@ begin_include
 include|#
 directive|include
 file|"getopt.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"bucomm.h"
 end_include
 
 begin_ifndef
@@ -384,6 +390,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|REPORT_BUGS_TO
+index|[
+literal|0
+index|]
+operator|&&
 name|status
 operator|==
 literal|0
@@ -1305,7 +1316,13 @@ argument_list|)
 operator|<
 literal|1
 condition|)
+block|{
+name|return_code
+operator|=
+literal|1
+expr_stmt|;
 return|return;
+block|}
 name|file
 operator|=
 name|bfd_openr

@@ -3552,7 +3552,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return the name of the weak symbol corresponding to an    alterate symbol.  */
+comment|/* Return the name of the weak symbol corresponding to an    alternate symbol.  */
 end_comment
 
 begin_function
@@ -5731,7 +5731,7 @@ name|flags
 operator||=
 name|SEC_LOAD
 expr_stmt|;
-comment|/* Note - the READONLY flag is set here, even for the 'x' 		     attrbiute in order to be compatible with the MSVC 		     linker.  */
+comment|/* Note - the READONLY flag is set here, even for the 'x' 		     attribute in order to be compatible with the MSVC 		     linker.  */
 if|if
 condition|(
 operator|!

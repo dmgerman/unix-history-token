@@ -360,6 +360,10 @@ argument|R_68K_max
 argument_list|)
 end_macro
 
+begin_comment
+comment|/* We use the top 24 bits to encode information about the    architecture variant.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -381,14 +385,29 @@ name|EF_M68K_CFV4E
 value|0x00008000
 end_define
 
+begin_define
+define|#
+directive|define
+name|EF_M68K_FIDO
+value|0x02000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|EF_M68K_ARCH_MASK
+define|\
+value|(EF_M68K_M68000 | EF_M68K_CPU32 | EF_M68K_CFV4E | EF_M68K_FIDO)
+end_define
+
 begin_comment
-comment|/* We use the bottom 8 bits to encode information about the    coldfire variant.  */
+comment|/* We use the bottom 8 bits to encode information about the    coldfire variant.  If we use any of these bits, the top 24 bits are    either 0 or EF_M68K_CFV4E.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|EF_M68K_ISA_MASK
+name|EF_M68K_CF_ISA_MASK
 value|0x0F
 end_define
 
@@ -399,7 +418,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EF_M68K_ISA_A_NODIV
+name|EF_M68K_CF_ISA_A_NODIV
 value|0x01
 end_define
 
@@ -410,21 +429,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EF_M68K_ISA_A
+name|EF_M68K_CF_ISA_A
 value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
-name|EF_M68K_ISA_A_PLUS
+name|EF_M68K_CF_ISA_A_PLUS
 value|0x03
 end_define
 
 begin_define
 define|#
 directive|define
-name|EF_M68K_ISA_B_NOUSP
+name|EF_M68K_CF_ISA_B_NOUSP
 value|0x04
 end_define
 
@@ -435,28 +454,28 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EF_M68K_ISA_B
+name|EF_M68K_CF_ISA_B
 value|0x05
 end_define
 
 begin_define
 define|#
 directive|define
-name|EF_M68K_ISA_C
+name|EF_M68K_CF_ISA_C
 value|0x06
 end_define
 
 begin_define
 define|#
 directive|define
-name|EF_M68K_MAC_MASK
+name|EF_M68K_CF_MAC_MASK
 value|0x30
 end_define
 
 begin_define
 define|#
 directive|define
-name|EF_M68K_MAC
+name|EF_M68K_CF_MAC
 value|0x10
 end_define
 
@@ -467,7 +486,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EF_M68K_EMAC
+name|EF_M68K_CF_EMAC
 value|0x20
 end_define
 
@@ -478,7 +497,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EF_M68K_EMAC_B
+name|EF_M68K_CF_EMAC_B
 value|0x30
 end_define
 
@@ -489,7 +508,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EF_M68K_FLOAT
+name|EF_M68K_CF_FLOAT
 value|0x40
 end_define
 

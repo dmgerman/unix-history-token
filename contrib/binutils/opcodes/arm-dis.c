@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Instruction printing code for the ARM    Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004    Free Software Foundation, Inc.    Contributed by Richard Earnshaw (rwe@pegasus.esprit.ec.org)    Modification by James G. Smith (jsmith@cygnus.co.uk)     This file is part of libopcodes.     This program is free software; you can redistribute it and/or modify it under    the terms of the GNU General Public License as published by the Free    Software Foundation; either version 2 of the License, or (at your option)    any later version.     This program is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for    more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
+comment|/* Instruction printing code for the ARM    Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004    2007, Free Software Foundation, Inc.    Contributed by Richard Earnshaw (rwe@pegasus.esprit.ec.org)    Modification by James G. Smith (jsmith@cygnus.co.uk)     This file is part of libopcodes.     This program is free software; you can redistribute it and/or modify it under    the terms of the GNU General Public License as published by the Free    Software Foundation; either version 2 of the License, or (at your option)    any later version.     This program is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for    more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -31,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|"safe-ctype.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"floatformat.h"
 end_include
 
 begin_comment
@@ -170,7 +176,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* print_insn_coprocessor recognizes the following format control codes:     %%			%     %c			print condition code (always bits 28-31)    %A			print address for ldc/stc/ldf/stf instruction    %I                   print cirrus signed shift immediate: bits 0..3|4..6    %F			print the COUNT field of a LFM/SFM instruction.    %P			print floating point precision in arithmetic insn    %Q			print floating point precision in ldf/stf insn    %R			print floating point rounding mode     %<bitfield>r		print as an ARM register    %<bitfield>d		print the bitfield in decimal    %<bitfield>x		print the bitfield in hex    %<bitfield>X		print the bitfield as 1 hex digit without leading "0x"    %<bitfield>f		print a floating point constant if>7 else a 			floating point register    %<bitfield>w         print as an iWMMXt width field - [bhwd]ss/us    %<bitfield>g         print as an iWMMXt 64-bit register    %<bitfield>G         print as an iWMMXt general purpose or control register     %<code>y		print a single precision VFP reg. 			  Codes: 0=>Sm, 1=>Sd, 2=>Sn, 3=>multi-list, 4=>Sm pair    %<code>z		print a double precision VFP reg 			  Codes: 0=>Dm, 1=>Dd, 2=>Dn, 3=>multi-list    %<bitnum>'c		print specified char iff bit is one    %<bitnum>`c		print specified char iff bit is zero    %<bitnum>?ab		print a if bit is one else print b     %L			print as an iWMMXt N/M width field.    %Z			print the Immediate of a WSHUFH instruction.    %l			like 'A' except use byte offsets for 'B'& 'H' 			versions.  */
+comment|/* print_insn_coprocessor recognizes the following format control codes:     %%			%     %c			print condition code (always bits 28-31 in ARM mode)    %q			print shifter argument    %u			print condition code (unconditional in ARM mode)    %A			print address for ldc/stc/ldf/stf instruction    %B			print vstm/vldm register list    %C			print vstr/vldr address operand    %I                   print cirrus signed shift immediate: bits 0..3|4..6    %F			print the COUNT field of a LFM/SFM instruction.    %P			print floating point precision in arithmetic insn    %Q			print floating point precision in ldf/stf insn    %R			print floating point rounding mode     %<bitfield>r		print as an ARM register    %<bitfield>d		print the bitfield in decimal    %<bitfield>k		print immediate for VFPv3 conversion instruction    %<bitfield>x		print the bitfield in hex    %<bitfield>X		print the bitfield as 1 hex digit without leading "0x"    %<bitfield>f		print a floating point constant if>7 else a 			floating point register    %<bitfield>w         print as an iWMMXt width field - [bhwd]ss/us    %<bitfield>g         print as an iWMMXt 64-bit register    %<bitfield>G         print as an iWMMXt general purpose or control register    %<bitfield>D		print as a NEON D register    %<bitfield>Q		print as a NEON Q register     %y<code>		print a single precision VFP reg. 			  Codes: 0=>Sm, 1=>Sd, 2=>Sn, 3=>multi-list, 4=>Sm pair    %z<code>		print a double precision VFP reg 			  Codes: 0=>Dm, 1=>Dd, 2=>Dn, 3=>multi-list     %<bitfield>'c	print specified char iff bitfield is all ones    %<bitfield>`c	print specified char iff bitfield is all zeroes    %<bitfield>?ab...    select from array of values in big endian order        %L			print as an iWMMXt N/M width field.    %Z			print the Immediate of a WSHUFH instruction.    %l			like 'A' except use byte offsets for 'B'& 'H' 			versions.    %i			print 5-bit immediate in bits 8,3..0 			(print "32" when 0)    %r			print register offset address for wldt/wstr instruction */
 end_comment
 
 begin_comment
@@ -245,7 +251,7 @@ value|0x0e130130
 define|#
 directive|define
 name|IWMMXT_INSN_COUNT
-value|47
+value|73
 block|{
 name|ARM_CEXT_IWMMXT
 block|,
@@ -389,6 +395,26 @@ block|,
 block|{
 name|ARM_CEXT_XSCALE
 block|,
+literal|0x0e130190
+block|,
+literal|0x0f3f0fff
+block|,
+literal|"torvsc%22-23w%c\t%12-15r"
+block|}
+block|,
+block|{
+name|ARM_CEXT_XSCALE
+block|,
+literal|0x0e2001c0
+block|,
+literal|0x0f300fff
+block|,
+literal|"wabs%22-23w%c\t%12-15g, %16-19g"
+block|}
+block|,
+block|{
+name|ARM_CEXT_XSCALE
+block|,
 literal|0x0e0001c0
 block|,
 literal|0x0f300fff
@@ -404,6 +430,26 @@ block|,
 literal|0x0f000ff0
 block|,
 literal|"wadd%20-23w%c\t%12-15g, %16-19g, %0-3g"
+block|}
+block|,
+block|{
+name|ARM_CEXT_XSCALE
+block|,
+literal|0x0e2001a0
+block|,
+literal|0x0f300ff0
+block|,
+literal|"waddbhus%22?ml%c\t%12-15g, %16-19g, %0-3g"
+block|}
+block|,
+block|{
+name|ARM_CEXT_XSCALE
+block|,
+literal|0x0ea001a0
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"waddsubhx%c\t%12-15g, %16-19g, %0-3g"
 block|}
 block|,
 block|{
@@ -449,6 +495,16 @@ block|,
 block|{
 name|ARM_CEXT_XSCALE
 block|,
+literal|0x0e400000
+block|,
+literal|0x0fe00ff0
+block|,
+literal|"wavg4%20'r%c\t%12-15g, %16-19g, %0-3g"
+block|}
+block|,
+block|{
+name|ARM_CEXT_XSCALE
+block|,
 literal|0x0e000060
 block|,
 literal|0x0f300ff0
@@ -464,6 +520,16 @@ block|,
 literal|0x0f100ff0
 block|,
 literal|"wcmpgt%21?su%22-23w%c\t%12-15g, %16-19g, %0-3g"
+block|}
+block|,
+block|{
+name|ARM_CEXT_XSCALE
+block|,
+literal|0xfc500100
+block|,
+literal|0xfe500f00
+block|,
+literal|"wldrd\t%12-15g, %r"
 block|}
 block|,
 block|{
@@ -501,9 +567,19 @@ name|ARM_CEXT_XSCALE
 block|,
 literal|0x0e800100
 block|,
+literal|0x0fc00ff0
+block|,
+literal|"wmadd%21?su%20'x%c\t%12-15g, %16-19g, %0-3g"
+block|}
+block|,
+block|{
+name|ARM_CEXT_XSCALE
+block|,
+literal|0x0ec00100
+block|,
 literal|0x0fd00ff0
 block|,
-literal|"wmadd%21?su%c\t%12-15g, %16-19g, %0-3g"
+literal|"wmadd%21?sun%c\t%12-15g, %16-19g, %0-3g"
 block|}
 block|,
 block|{
@@ -514,6 +590,36 @@ block|,
 literal|0x0f100ff0
 block|,
 literal|"wmax%21?su%22-23w%c\t%12-15g, %16-19g, %0-3g"
+block|}
+block|,
+block|{
+name|ARM_CEXT_XSCALE
+block|,
+literal|0x0e000080
+block|,
+literal|0x0f100fe0
+block|,
+literal|"wmerge%c\t%12-15g, %16-19g, %0-3g, #%21-23d"
+block|}
+block|,
+block|{
+name|ARM_CEXT_XSCALE
+block|,
+literal|0x0e0000a0
+block|,
+literal|0x0f800ff0
+block|,
+literal|"wmia%21?tb%20?tb%22'n%c\t%12-15g, %16-19g, %0-3g"
+block|}
+block|,
+block|{
+name|ARM_CEXT_XSCALE
+block|,
+literal|0x0e800120
+block|,
+literal|0x0f800ff0
+block|,
+literal|"wmiaw%21?tb%20?tb%22'n%c\t%12-15g, %16-19g, %0-3g"
 block|}
 block|,
 block|{
@@ -533,7 +639,77 @@ literal|0x0e000100
 block|,
 literal|0x0fc00ff0
 block|,
-literal|"wmul%21?su%20?ml%c\t%12-15g, %16-19g, %0-3g"
+literal|"wmul%21?su%20?ml%23'r%c\t%12-15g, %16-19g, %0-3g"
+block|}
+block|,
+block|{
+name|ARM_CEXT_XSCALE
+block|,
+literal|0x0ed00100
+block|,
+literal|0x0fd00ff0
+block|,
+literal|"wmul%21?sumr%c\t%12-15g, %16-19g, %0-3g"
+block|}
+block|,
+block|{
+name|ARM_CEXT_XSCALE
+block|,
+literal|0x0ee000c0
+block|,
+literal|0x0fe00ff0
+block|,
+literal|"wmulwsm%20`r%c\t%12-15g, %16-19g, %0-3g"
+block|}
+block|,
+block|{
+name|ARM_CEXT_XSCALE
+block|,
+literal|0x0ec000c0
+block|,
+literal|0x0fe00ff0
+block|,
+literal|"wmulwum%20`r%c\t%12-15g, %16-19g, %0-3g"
+block|}
+block|,
+block|{
+name|ARM_CEXT_XSCALE
+block|,
+literal|0x0eb000c0
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"wmulwl%c\t%12-15g, %16-19g, %0-3g"
+block|}
+block|,
+block|{
+name|ARM_CEXT_XSCALE
+block|,
+literal|0x0e8000a0
+block|,
+literal|0x0f800ff0
+block|,
+literal|"wqmia%21?tb%20?tb%22'n%c\t%12-15g, %16-19g, %0-3g"
+block|}
+block|,
+block|{
+name|ARM_CEXT_XSCALE
+block|,
+literal|0x0e100080
+block|,
+literal|0x0fd00ff0
+block|,
+literal|"wqmulm%21'r%c\t%12-15g, %16-19g, %0-3g"
+block|}
+block|,
+block|{
+name|ARM_CEXT_XSCALE
+block|,
+literal|0x0ec000e0
+block|,
+literal|0x0fd00ff0
+block|,
+literal|"wqmulwm%21'r%c\t%12-15g, %16-19g, %0-3g"
 block|}
 block|,
 block|{
@@ -559,21 +735,31 @@ block|,
 block|{
 name|ARM_CEXT_XSCALE
 block|,
-literal|0x0e300040
+literal|0xfe300040
 block|,
-literal|0x0f300ff0
+literal|0xff300ef0
 block|,
-literal|"wror%22-23w%8'g%c\t%12-15g, %16-19g, %0-3g"
+literal|"wror%22-23w\t%12-15g, %16-19g, #%i"
 block|}
 block|,
 block|{
 name|ARM_CEXT_XSCALE
 block|,
-literal|0x0e300148
+literal|0x0e300040
 block|,
-literal|0x0f300ffc
+literal|0x0f300ff0
 block|,
-literal|"wror%22-23w%8'g%c\t%12-15g, %16-19g, %0-3G"
+literal|"wror%22-23w%c\t%12-15g, %16-19g, %0-3g"
+block|}
+block|,
+block|{
+name|ARM_CEXT_XSCALE
+block|,
+literal|0x0e300140
+block|,
+literal|0x0f300ff0
+block|,
+literal|"wror%22-23wg%c\t%12-15g, %16-19g, %0-3G"
 block|}
 block|,
 block|{
@@ -599,6 +785,16 @@ block|,
 block|{
 name|ARM_CEXT_XSCALE
 block|,
+literal|0xfe100040
+block|,
+literal|0xff300ef0
+block|,
+literal|"wsll%22-23w\t%12-15g, %16-19g, #%i"
+block|}
+block|,
+block|{
+name|ARM_CEXT_XSCALE
+block|,
 literal|0x0e100040
 block|,
 literal|0x0f300ff0
@@ -614,6 +810,16 @@ block|,
 literal|0x0f300ffc
 block|,
 literal|"wsll%22-23w%8'g%c\t%12-15g, %16-19g, %0-3G"
+block|}
+block|,
+block|{
+name|ARM_CEXT_XSCALE
+block|,
+literal|0xfe000040
+block|,
+literal|0xff300ef0
+block|,
+literal|"wsra%22-23w\t%12-15g, %16-19g, #%i"
 block|}
 block|,
 block|{
@@ -639,6 +845,16 @@ block|,
 block|{
 name|ARM_CEXT_XSCALE
 block|,
+literal|0xfe200040
+block|,
+literal|0xff300ef0
+block|,
+literal|"wsrl%22-23w\t%12-15g, %16-19g, #%i"
+block|}
+block|,
+block|{
+name|ARM_CEXT_XSCALE
+block|,
 literal|0x0e200040
 block|,
 literal|0x0f300ff0
@@ -654,6 +870,16 @@ block|,
 literal|0x0f300ffc
 block|,
 literal|"wsrl%22-23w%8'g%c\t%12-15g, %16-19g, %0-3G"
+block|}
+block|,
+block|{
+name|ARM_CEXT_XSCALE
+block|,
+literal|0xfc400100
+block|,
+literal|0xfe500f00
+block|,
+literal|"wstrd\t%12-15g, %r"
 block|}
 block|,
 block|{
@@ -689,11 +915,51 @@ block|,
 block|{
 name|ARM_CEXT_XSCALE
 block|,
+literal|0x0ed001c0
+block|,
+literal|0x0ff00ff0
+block|,
+literal|"wsubaddhx%c\t%12-15g, %16-19g, %0-3g"
+block|}
+block|,
+block|{
+name|ARM_CEXT_XSCALE
+block|,
+literal|0x0e1001c0
+block|,
+literal|0x0f300ff0
+block|,
+literal|"wabsdiff%22-23w%c\t%12-15g, %16-19g, %0-3g"
+block|}
+block|,
+block|{
+name|ARM_CEXT_XSCALE
+block|,
 literal|0x0e0000c0
 block|,
-literal|0x0f100fff
+literal|0x0fd00fff
 block|,
-literal|"wunpckeh%21?su%22-23w%c\t%12-15g, %16-19g"
+literal|"wunpckeh%21?sub%c\t%12-15g, %16-19g"
+block|}
+block|,
+block|{
+name|ARM_CEXT_XSCALE
+block|,
+literal|0x0e4000c0
+block|,
+literal|0x0fd00fff
+block|,
+literal|"wunpckeh%21?suh%c\t%12-15g, %16-19g"
+block|}
+block|,
+block|{
+name|ARM_CEXT_XSCALE
+block|,
+literal|0x0e8000c0
+block|,
+literal|0x0fd00fff
+block|,
+literal|"wunpckeh%21?suw%c\t%12-15g, %16-19g"
 block|}
 block|,
 block|{
@@ -1167,307 +1433,209 @@ block|,
 literal|"lfm%c\t%12-14f, %F, %A"
 block|}
 block|,
-comment|/* Floating point coprocessor (VFP) instructions */
+comment|/* Register load/store */
 block|{
-name|FPU_VFP_EXT_V1
+name|FPU_NEON_EXT_V1
 block|,
-literal|0x0eb00bc0
+literal|0x0d200b00
 block|,
-literal|0x0fff0ff0
+literal|0x0fb00f01
 block|,
-literal|"fabsd%c\t%1z, %0z"
+literal|"vstmdb%c\t%16-19r%21'!, %B"
 block|}
 block|,
 block|{
-name|FPU_VFP_EXT_V1xD
-block|,
-literal|0x0eb00ac0
-block|,
-literal|0x0fbf0fd0
-block|,
-literal|"fabss%c\t%1y, %0y"
-block|}
-block|,
-block|{
-name|FPU_VFP_EXT_V1
-block|,
-literal|0x0e300b00
-block|,
-literal|0x0ff00ff0
-block|,
-literal|"faddd%c\t%1z, %2z, %0z"
-block|}
-block|,
-block|{
-name|FPU_VFP_EXT_V1xD
-block|,
-literal|0x0e300a00
-block|,
-literal|0x0fb00f50
-block|,
-literal|"fadds%c\t%1y, %2y, %0y"
-block|}
-block|,
-block|{
-name|FPU_VFP_EXT_V1
-block|,
-literal|0x0eb40b40
-block|,
-literal|0x0fff0f70
-block|,
-literal|"fcmp%7'ed%c\t%1z, %0z"
-block|}
-block|,
-block|{
-name|FPU_VFP_EXT_V1xD
-block|,
-literal|0x0eb40a40
-block|,
-literal|0x0fbf0f50
-block|,
-literal|"fcmp%7'es%c\t%1y, %0y"
-block|}
-block|,
-block|{
-name|FPU_VFP_EXT_V1
-block|,
-literal|0x0eb50b40
-block|,
-literal|0x0fff0f70
-block|,
-literal|"fcmp%7'ezd%c\t%1z"
-block|}
-block|,
-block|{
-name|FPU_VFP_EXT_V1xD
-block|,
-literal|0x0eb50a40
-block|,
-literal|0x0fbf0f70
-block|,
-literal|"fcmp%7'ezs%c\t%1y"
-block|}
-block|,
-block|{
-name|FPU_VFP_EXT_V1
-block|,
-literal|0x0eb00b40
-block|,
-literal|0x0fff0ff0
-block|,
-literal|"fcpyd%c\t%1z, %0z"
-block|}
-block|,
-block|{
-name|FPU_VFP_EXT_V1xD
-block|,
-literal|0x0eb00a40
-block|,
-literal|0x0fbf0fd0
-block|,
-literal|"fcpys%c\t%1y, %0y"
-block|}
-block|,
-block|{
-name|FPU_VFP_EXT_V1
-block|,
-literal|0x0eb70ac0
-block|,
-literal|0x0fff0fd0
-block|,
-literal|"fcvtds%c\t%1z, %0y"
-block|}
-block|,
-block|{
-name|FPU_VFP_EXT_V1
-block|,
-literal|0x0eb70bc0
-block|,
-literal|0x0fbf0ff0
-block|,
-literal|"fcvtsd%c\t%1y, %0z"
-block|}
-block|,
-block|{
-name|FPU_VFP_EXT_V1
-block|,
-literal|0x0e800b00
-block|,
-literal|0x0ff00ff0
-block|,
-literal|"fdivd%c\t%1z, %2z, %0z"
-block|}
-block|,
-block|{
-name|FPU_VFP_EXT_V1xD
-block|,
-literal|0x0e800a00
-block|,
-literal|0x0fb00f50
-block|,
-literal|"fdivs%c\t%1y, %2y, %0y"
-block|}
-block|,
-block|{
-name|FPU_VFP_EXT_V1
-block|,
-literal|0x0d100b00
-block|,
-literal|0x0f700f00
-block|,
-literal|"fldd%c\t%1z, %A"
-block|}
-block|,
-block|{
-name|FPU_VFP_EXT_V1xD
-block|,
-literal|0x0c900b00
-block|,
-literal|0x0fd00f00
-block|,
-literal|"fldmia%0?xd%c\t%16-19r%21'!, %3z"
-block|}
-block|,
-block|{
-name|FPU_VFP_EXT_V1xD
+name|FPU_NEON_EXT_V1
 block|,
 literal|0x0d300b00
 block|,
-literal|0x0ff00f00
+literal|0x0fb00f01
 block|,
-literal|"fldmdb%0?xd%c\t%16-19r!, %3z"
+literal|"vldmdb%c\t%16-19r%21'!, %B"
 block|}
 block|,
 block|{
-name|FPU_VFP_EXT_V1xD
+name|FPU_NEON_EXT_V1
 block|,
-literal|0x0d100a00
+literal|0x0c800b00
+block|,
+literal|0x0f900f01
+block|,
+literal|"vstmia%c\t%16-19r%21'!, %B"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0x0c900b00
+block|,
+literal|0x0f900f01
+block|,
+literal|"vldmia%c\t%16-19r%21'!, %B"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0x0d000b00
 block|,
 literal|0x0f300f00
 block|,
-literal|"flds%c\t%1y, %A"
+literal|"vstr%c\t%12-15,22D, %C"
 block|}
 block|,
 block|{
-name|FPU_VFP_EXT_V1xD
+name|FPU_NEON_EXT_V1
 block|,
-literal|0x0c900a00
+literal|0x0d100b00
 block|,
-literal|0x0f900f00
+literal|0x0f300f00
 block|,
-literal|"fldmias%c\t%16-19r%21'!, %3y"
+literal|"vldr%c\t%12-15,22D, %C"
+block|}
+block|,
+comment|/* Data transfer between ARM and NEON registers */
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0x0e800b10
+block|,
+literal|0x0ff00f70
+block|,
+literal|"vdup%c.32\t%16-19,7D, %12-15r"
 block|}
 block|,
 block|{
-name|FPU_VFP_EXT_V1xD
+name|FPU_NEON_EXT_V1
 block|,
-literal|0x0d300a00
+literal|0x0e800b30
 block|,
-literal|0x0fb00f00
+literal|0x0ff00f70
 block|,
-literal|"fldmdbs%c\t%16-19r!, %3y"
+literal|"vdup%c.16\t%16-19,7D, %12-15r"
 block|}
 block|,
 block|{
-name|FPU_VFP_EXT_V1
+name|FPU_NEON_EXT_V1
 block|,
-literal|0x0e000b00
+literal|0x0ea00b10
 block|,
-literal|0x0ff00ff0
+literal|0x0ff00f70
 block|,
-literal|"fmacd%c\t%1z, %2z, %0z"
+literal|"vdup%c.32\t%16-19,7Q, %12-15r"
 block|}
 block|,
 block|{
-name|FPU_VFP_EXT_V1xD
+name|FPU_NEON_EXT_V1
 block|,
-literal|0x0e000a00
+literal|0x0ea00b30
 block|,
-literal|0x0fb00f50
+literal|0x0ff00f70
 block|,
-literal|"fmacs%c\t%1y, %2y, %0y"
+literal|"vdup%c.16\t%16-19,7Q, %12-15r"
 block|}
 block|,
 block|{
-name|FPU_VFP_EXT_V1
+name|FPU_NEON_EXT_V1
 block|,
-literal|0x0e200b10
+literal|0x0ec00b10
 block|,
-literal|0x0ff00fff
+literal|0x0ff00f70
 block|,
-literal|"fmdhr%c\t%2z, %12-15r"
+literal|"vdup%c.8\t%16-19,7D, %12-15r"
 block|}
 block|,
 block|{
-name|FPU_VFP_EXT_V1
+name|FPU_NEON_EXT_V1
 block|,
-literal|0x0e000b10
+literal|0x0ee00b10
 block|,
-literal|0x0ff00fff
+literal|0x0ff00f70
 block|,
-literal|"fmdlr%c\t%2z, %12-15r"
+literal|"vdup%c.8\t%16-19,7Q, %12-15r"
 block|}
 block|,
 block|{
-name|FPU_VFP_EXT_V2
+name|FPU_NEON_EXT_V1
 block|,
 literal|0x0c400b10
 block|,
-literal|0x0ff00ff0
+literal|0x0ff00fd0
 block|,
-literal|"fmdrr%c\t%0z, %12-15r, %16-19r"
+literal|"vmov%c\t%0-3,5D, %12-15r, %16-19r"
 block|}
 block|,
 block|{
-name|FPU_VFP_EXT_V1
-block|,
-literal|0x0e300b10
-block|,
-literal|0x0ff00fff
-block|,
-literal|"fmrdh%c\t%12-15r, %2z"
-block|}
-block|,
-block|{
-name|FPU_VFP_EXT_V1
-block|,
-literal|0x0e100b10
-block|,
-literal|0x0ff00fff
-block|,
-literal|"fmrdl%c\t%12-15r, %2z"
-block|}
-block|,
-block|{
-name|FPU_VFP_EXT_V1
+name|FPU_NEON_EXT_V1
 block|,
 literal|0x0c500b10
 block|,
-literal|0x0ff00ff0
-block|,
-literal|"fmrrd%c\t%12-15r, %16-19r, %0z"
-block|}
-block|,
-block|{
-name|FPU_VFP_EXT_V2
-block|,
-literal|0x0c500a10
-block|,
 literal|0x0ff00fd0
 block|,
-literal|"fmrrs%c\t%12-15r, %16-19r, %4y"
+literal|"vmov%c\t%12-15r, %16-19r, %0-3,5D"
 block|}
 block|,
 block|{
-name|FPU_VFP_EXT_V1xD
+name|FPU_NEON_EXT_V1
 block|,
-literal|0x0e100a10
+literal|0x0e000b10
 block|,
-literal|0x0ff00f7f
+literal|0x0fd00f70
 block|,
-literal|"fmrs%c\t%12-15r, %2y"
+literal|"vmov%c.32\t%16-19,7D[%21d], %12-15r"
 block|}
 block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0x0e100b10
+block|,
+literal|0x0f500f70
+block|,
+literal|"vmov%c.32\t%12-15r, %16-19,7D[%21d]"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0x0e000b30
+block|,
+literal|0x0fd00f30
+block|,
+literal|"vmov%c.16\t%16-19,7D[%6,21d], %12-15r"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0x0e100b30
+block|,
+literal|0x0f500f30
+block|,
+literal|"vmov%c.%23?us16\t%12-15r, %16-19,7D[%6,21d]"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0x0e400b10
+block|,
+literal|0x0fd00f10
+block|,
+literal|"vmov%c.8\t%16-19,7D[%5,6,21d], %12-15r"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0x0e500b10
+block|,
+literal|0x0f500f10
+block|,
+literal|"vmov%c.%23?us8\t%12-15r, %16-19,7D[%5,6,21d]"
+block|}
+block|,
+comment|/* Floating point coprocessor (VFP) instructions */
 block|{
 name|FPU_VFP_EXT_V1xD
 block|,
@@ -1476,126 +1644,6 @@ block|,
 literal|0x0fffffff
 block|,
 literal|"fmstat%c"
-block|}
-block|,
-block|{
-name|FPU_VFP_EXT_V1xD
-block|,
-literal|0x0ef00a10
-block|,
-literal|0x0fff0fff
-block|,
-literal|"fmrx%c\t%12-15r, fpsid"
-block|}
-block|,
-block|{
-name|FPU_VFP_EXT_V1xD
-block|,
-literal|0x0ef10a10
-block|,
-literal|0x0fff0fff
-block|,
-literal|"fmrx%c\t%12-15r, fpscr"
-block|}
-block|,
-block|{
-name|FPU_VFP_EXT_V1xD
-block|,
-literal|0x0ef80a10
-block|,
-literal|0x0fff0fff
-block|,
-literal|"fmrx%c\t%12-15r, fpexc"
-block|}
-block|,
-block|{
-name|FPU_VFP_EXT_V1xD
-block|,
-literal|0x0ef90a10
-block|,
-literal|0x0fff0fff
-block|,
-literal|"fmrx%c\t%12-15r, fpinst\t@ Impl def"
-block|}
-block|,
-block|{
-name|FPU_VFP_EXT_V1xD
-block|,
-literal|0x0efa0a10
-block|,
-literal|0x0fff0fff
-block|,
-literal|"fmrx%c\t%12-15r, fpinst2\t@ Impl def"
-block|}
-block|,
-block|{
-name|FPU_VFP_EXT_V1xD
-block|,
-literal|0x0ef00a10
-block|,
-literal|0x0ff00fff
-block|,
-literal|"fmrx%c\t%12-15r,<impl def 0x%16-19x>"
-block|}
-block|,
-block|{
-name|FPU_VFP_EXT_V1
-block|,
-literal|0x0e100b00
-block|,
-literal|0x0ff00ff0
-block|,
-literal|"fmscd%c\t%1z, %2z, %0z"
-block|}
-block|,
-block|{
-name|FPU_VFP_EXT_V1xD
-block|,
-literal|0x0e100a00
-block|,
-literal|0x0fb00f50
-block|,
-literal|"fmscs%c\t%1y, %2y, %0y"
-block|}
-block|,
-block|{
-name|FPU_VFP_EXT_V1xD
-block|,
-literal|0x0e000a10
-block|,
-literal|0x0ff00f7f
-block|,
-literal|"fmsr%c\t%2y, %12-15r"
-block|}
-block|,
-block|{
-name|FPU_VFP_EXT_V2
-block|,
-literal|0x0c400a10
-block|,
-literal|0x0ff00fd0
-block|,
-literal|"fmsrr%c\t%12-15r, %16-19r, %4y"
-block|}
-block|,
-block|{
-name|FPU_VFP_EXT_V1
-block|,
-literal|0x0e200b00
-block|,
-literal|0x0ff00ff0
-block|,
-literal|"fmuld%c\t%1z, %2z, %0z"
-block|}
-block|,
-block|{
-name|FPU_VFP_EXT_V1xD
-block|,
-literal|0x0e200a00
-block|,
-literal|0x0fb00f50
-block|,
-literal|"fmuls%c\t%1y, %2y, %0y"
 block|}
 block|,
 block|{
@@ -1616,6 +1664,26 @@ block|,
 literal|0x0fff0fff
 block|,
 literal|"fmxr%c\tfpscr, %12-15r"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1xD
+block|,
+literal|0x0ee60a10
+block|,
+literal|0x0fff0fff
+block|,
+literal|"fmxr%c\tmvfr1, %12-15r"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1xD
+block|,
+literal|0x0ee70a10
+block|,
+literal|0x0fff0fff
+block|,
+literal|"fmxr%c\tmvfr0, %12-15r"
 block|}
 block|,
 block|{
@@ -1651,21 +1719,211 @@ block|,
 block|{
 name|FPU_VFP_EXT_V1xD
 block|,
-literal|0x0ee00a10
+literal|0x0ef00a10
 block|,
-literal|0x0ff00fff
+literal|0x0fff0fff
 block|,
-literal|"fmxr%c\t<impl def 0x%16-19x>, %12-15r"
+literal|"fmrx%c\t%12-15r, fpsid"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1xD
+block|,
+literal|0x0ef10a10
+block|,
+literal|0x0fff0fff
+block|,
+literal|"fmrx%c\t%12-15r, fpscr"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1xD
+block|,
+literal|0x0ef60a10
+block|,
+literal|0x0fff0fff
+block|,
+literal|"fmrx%c\t%12-15r, mvfr1"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1xD
+block|,
+literal|0x0ef70a10
+block|,
+literal|0x0fff0fff
+block|,
+literal|"fmrx%c\t%12-15r, mvfr0"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1xD
+block|,
+literal|0x0ef80a10
+block|,
+literal|0x0fff0fff
+block|,
+literal|"fmrx%c\t%12-15r, fpexc"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1xD
+block|,
+literal|0x0ef90a10
+block|,
+literal|0x0fff0fff
+block|,
+literal|"fmrx%c\t%12-15r, fpinst\t@ Impl def"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1xD
+block|,
+literal|0x0efa0a10
+block|,
+literal|0x0fff0fff
+block|,
+literal|"fmrx%c\t%12-15r, fpinst2\t@ Impl def"
 block|}
 block|,
 block|{
 name|FPU_VFP_EXT_V1
 block|,
-literal|0x0eb10b40
+literal|0x0e000b10
 block|,
-literal|0x0fff0ff0
+literal|0x0ff00fff
 block|,
-literal|"fnegd%c\t%1z, %0z"
+literal|"fmdlr%c\t%z2, %12-15r"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1
+block|,
+literal|0x0e100b10
+block|,
+literal|0x0ff00fff
+block|,
+literal|"fmrdl%c\t%12-15r, %z2"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1
+block|,
+literal|0x0e200b10
+block|,
+literal|0x0ff00fff
+block|,
+literal|"fmdhr%c\t%z2, %12-15r"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1
+block|,
+literal|0x0e300b10
+block|,
+literal|0x0ff00fff
+block|,
+literal|"fmrdh%c\t%12-15r, %z2"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1xD
+block|,
+literal|0x0ee00a10
+block|,
+literal|0x0ff00fff
+block|,
+literal|"fmxr%c\t<impl def %16-19x>, %12-15r"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1xD
+block|,
+literal|0x0ef00a10
+block|,
+literal|0x0ff00fff
+block|,
+literal|"fmrx%c\t%12-15r,<impl def %16-19x>"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1xD
+block|,
+literal|0x0e000a10
+block|,
+literal|0x0ff00f7f
+block|,
+literal|"fmsr%c\t%y2, %12-15r"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1xD
+block|,
+literal|0x0e100a10
+block|,
+literal|0x0ff00f7f
+block|,
+literal|"fmrs%c\t%12-15r, %y2"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1xD
+block|,
+literal|0x0eb50a40
+block|,
+literal|0x0fbf0f70
+block|,
+literal|"fcmp%7'ezs%c\t%y1"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1
+block|,
+literal|0x0eb50b40
+block|,
+literal|0x0fbf0f70
+block|,
+literal|"fcmp%7'ezd%c\t%z1"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1xD
+block|,
+literal|0x0eb00a40
+block|,
+literal|0x0fbf0fd0
+block|,
+literal|"fcpys%c\t%y1, %y0"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1xD
+block|,
+literal|0x0eb00ac0
+block|,
+literal|0x0fbf0fd0
+block|,
+literal|"fabss%c\t%y1, %y0"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1
+block|,
+literal|0x0eb00b40
+block|,
+literal|0x0fbf0fd0
+block|,
+literal|"fcpyd%c\t%z1, %z0"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1
+block|,
+literal|0x0eb00bc0
+block|,
+literal|0x0fbf0fd0
+block|,
+literal|"fabsd%c\t%z1, %z0"
 block|}
 block|,
 block|{
@@ -1675,97 +1933,7 @@ literal|0x0eb10a40
 block|,
 literal|0x0fbf0fd0
 block|,
-literal|"fnegs%c\t%1y, %0y"
-block|}
-block|,
-block|{
-name|FPU_VFP_EXT_V1
-block|,
-literal|0x0e000b40
-block|,
-literal|0x0ff00ff0
-block|,
-literal|"fnmacd%c\t%1z, %2z, %0z"
-block|}
-block|,
-block|{
-name|FPU_VFP_EXT_V1xD
-block|,
-literal|0x0e000a40
-block|,
-literal|0x0fb00f50
-block|,
-literal|"fnmacs%c\t%1y, %2y, %0y"
-block|}
-block|,
-block|{
-name|FPU_VFP_EXT_V1
-block|,
-literal|0x0e100b40
-block|,
-literal|0x0ff00ff0
-block|,
-literal|"fnmscd%c\t%1z, %2z, %0z"
-block|}
-block|,
-block|{
-name|FPU_VFP_EXT_V1xD
-block|,
-literal|0x0e100a40
-block|,
-literal|0x0fb00f50
-block|,
-literal|"fnmscs%c\t%1y, %2y, %0y"
-block|}
-block|,
-block|{
-name|FPU_VFP_EXT_V1
-block|,
-literal|0x0e200b40
-block|,
-literal|0x0ff00ff0
-block|,
-literal|"fnmuld%c\t%1z, %2z, %0z"
-block|}
-block|,
-block|{
-name|FPU_VFP_EXT_V1xD
-block|,
-literal|0x0e200a40
-block|,
-literal|0x0fb00f50
-block|,
-literal|"fnmuls%c\t%1y, %2y, %0y"
-block|}
-block|,
-block|{
-name|FPU_VFP_EXT_V1
-block|,
-literal|0x0eb80bc0
-block|,
-literal|0x0fff0fd0
-block|,
-literal|"fsitod%c\t%1z, %0y"
-block|}
-block|,
-block|{
-name|FPU_VFP_EXT_V1xD
-block|,
-literal|0x0eb80ac0
-block|,
-literal|0x0fbf0fd0
-block|,
-literal|"fsitos%c\t%1y, %0y"
-block|}
-block|,
-block|{
-name|FPU_VFP_EXT_V1
-block|,
-literal|0x0eb10bc0
-block|,
-literal|0x0fff0ff0
-block|,
-literal|"fsqrtd%c\t%1z, %0z"
+literal|"fnegs%c\t%y1, %y0"
 block|}
 block|,
 block|{
@@ -1775,117 +1943,47 @@ literal|0x0eb10ac0
 block|,
 literal|0x0fbf0fd0
 block|,
-literal|"fsqrts%c\t%1y, %0y"
+literal|"fsqrts%c\t%y1, %y0"
 block|}
 block|,
 block|{
 name|FPU_VFP_EXT_V1
 block|,
-literal|0x0d000b00
+literal|0x0eb10b40
 block|,
-literal|0x0f700f00
+literal|0x0fbf0fd0
 block|,
-literal|"fstd%c\t%1z, %A"
-block|}
-block|,
-block|{
-name|FPU_VFP_EXT_V1xD
-block|,
-literal|0x0c800b00
-block|,
-literal|0x0fd00f00
-block|,
-literal|"fstmia%0?xd%c\t%16-19r%21'!, %3z"
-block|}
-block|,
-block|{
-name|FPU_VFP_EXT_V1xD
-block|,
-literal|0x0d200b00
-block|,
-literal|0x0ff00f00
-block|,
-literal|"fstmdb%0?xd%c\t%16-19r!, %3z"
-block|}
-block|,
-block|{
-name|FPU_VFP_EXT_V1xD
-block|,
-literal|0x0d000a00
-block|,
-literal|0x0f300f00
-block|,
-literal|"fsts%c\t%1y, %A"
-block|}
-block|,
-block|{
-name|FPU_VFP_EXT_V1xD
-block|,
-literal|0x0c800a00
-block|,
-literal|0x0f900f00
-block|,
-literal|"fstmias%c\t%16-19r%21'!, %3y"
-block|}
-block|,
-block|{
-name|FPU_VFP_EXT_V1xD
-block|,
-literal|0x0d200a00
-block|,
-literal|0x0fb00f00
-block|,
-literal|"fstmdbs%c\t%16-19r!, %3y"
+literal|"fnegd%c\t%z1, %z0"
 block|}
 block|,
 block|{
 name|FPU_VFP_EXT_V1
 block|,
-literal|0x0e300b40
+literal|0x0eb10bc0
 block|,
-literal|0x0ff00ff0
+literal|0x0fbf0fd0
 block|,
-literal|"fsubd%c\t%1z, %2z, %0z"
-block|}
-block|,
-block|{
-name|FPU_VFP_EXT_V1xD
-block|,
-literal|0x0e300a40
-block|,
-literal|0x0fb00f50
-block|,
-literal|"fsubs%c\t%1y, %2y, %0y"
+literal|"fsqrtd%c\t%z1, %z0"
 block|}
 block|,
 block|{
 name|FPU_VFP_EXT_V1
 block|,
-literal|0x0ebc0b40
+literal|0x0eb70ac0
 block|,
-literal|0x0fbe0f70
+literal|0x0fbf0fd0
 block|,
-literal|"fto%16?sui%7'zd%c\t%1y, %0z"
-block|}
-block|,
-block|{
-name|FPU_VFP_EXT_V1xD
-block|,
-literal|0x0ebc0a40
-block|,
-literal|0x0fbe0f50
-block|,
-literal|"fto%16?sui%7'zs%c\t%1y, %0y"
+literal|"fcvtds%c\t%z1, %y0"
 block|}
 block|,
 block|{
 name|FPU_VFP_EXT_V1
 block|,
-literal|0x0eb80b40
+literal|0x0eb70bc0
 block|,
-literal|0x0fff0fd0
+literal|0x0fbf0fd0
 block|,
-literal|"fuitod%c\t%1z, %0y"
+literal|"fcvtsd%c\t%y1, %z0"
 block|}
 block|,
 block|{
@@ -1895,7 +1993,477 @@ literal|0x0eb80a40
 block|,
 literal|0x0fbf0fd0
 block|,
-literal|"fuitos%c\t%1y, %0y"
+literal|"fuitos%c\t%y1, %y0"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1xD
+block|,
+literal|0x0eb80ac0
+block|,
+literal|0x0fbf0fd0
+block|,
+literal|"fsitos%c\t%y1, %y0"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1
+block|,
+literal|0x0eb80b40
+block|,
+literal|0x0fbf0fd0
+block|,
+literal|"fuitod%c\t%z1, %y0"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1
+block|,
+literal|0x0eb80bc0
+block|,
+literal|0x0fbf0fd0
+block|,
+literal|"fsitod%c\t%z1, %y0"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1xD
+block|,
+literal|0x0eb40a40
+block|,
+literal|0x0fbf0f50
+block|,
+literal|"fcmp%7'es%c\t%y1, %y0"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1
+block|,
+literal|0x0eb40b40
+block|,
+literal|0x0fbf0f50
+block|,
+literal|"fcmp%7'ed%c\t%z1, %z0"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V3
+block|,
+literal|0x0eba0a40
+block|,
+literal|0x0fbe0f50
+block|,
+literal|"f%16?us%7?lhtos%c\t%y1, #%5,0-3k"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V3
+block|,
+literal|0x0eba0b40
+block|,
+literal|0x0fbe0f50
+block|,
+literal|"f%16?us%7?lhtod%c\t%z1, #%5,0-3k"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1xD
+block|,
+literal|0x0ebc0a40
+block|,
+literal|0x0fbe0f50
+block|,
+literal|"fto%16?sui%7'zs%c\t%y1, %y0"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1
+block|,
+literal|0x0ebc0b40
+block|,
+literal|0x0fbe0f50
+block|,
+literal|"fto%16?sui%7'zd%c\t%y1, %z0"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V3
+block|,
+literal|0x0ebe0a40
+block|,
+literal|0x0fbe0f50
+block|,
+literal|"fto%16?us%7?lhs%c\t%y1, #%5,0-3k"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V3
+block|,
+literal|0x0ebe0b40
+block|,
+literal|0x0fbe0f50
+block|,
+literal|"fto%16?us%7?lhd%c\t%z1, #%5,0-3k"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1
+block|,
+literal|0x0c500b10
+block|,
+literal|0x0fb00ff0
+block|,
+literal|"fmrrd%c\t%12-15r, %16-19r, %z0"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V3
+block|,
+literal|0x0eb00a00
+block|,
+literal|0x0fb00ff0
+block|,
+literal|"fconsts%c\t%y1, #%0-3,16-19d"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V3
+block|,
+literal|0x0eb00b00
+block|,
+literal|0x0fb00ff0
+block|,
+literal|"fconstd%c\t%z1, #%0-3,16-19d"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V2
+block|,
+literal|0x0c400a10
+block|,
+literal|0x0ff00fd0
+block|,
+literal|"fmsrr%c\t%y4, %12-15r, %16-19r"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V2
+block|,
+literal|0x0c400b10
+block|,
+literal|0x0ff00fd0
+block|,
+literal|"fmdrr%c\t%z0, %12-15r, %16-19r"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V2
+block|,
+literal|0x0c500a10
+block|,
+literal|0x0ff00fd0
+block|,
+literal|"fmrrs%c\t%12-15r, %16-19r, %y4"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1xD
+block|,
+literal|0x0e000a00
+block|,
+literal|0x0fb00f50
+block|,
+literal|"fmacs%c\t%y1, %y2, %y0"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1xD
+block|,
+literal|0x0e000a40
+block|,
+literal|0x0fb00f50
+block|,
+literal|"fnmacs%c\t%y1, %y2, %y0"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1
+block|,
+literal|0x0e000b00
+block|,
+literal|0x0fb00f50
+block|,
+literal|"fmacd%c\t%z1, %z2, %z0"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1
+block|,
+literal|0x0e000b40
+block|,
+literal|0x0fb00f50
+block|,
+literal|"fnmacd%c\t%z1, %z2, %z0"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1xD
+block|,
+literal|0x0e100a00
+block|,
+literal|0x0fb00f50
+block|,
+literal|"fmscs%c\t%y1, %y2, %y0"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1xD
+block|,
+literal|0x0e100a40
+block|,
+literal|0x0fb00f50
+block|,
+literal|"fnmscs%c\t%y1, %y2, %y0"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1
+block|,
+literal|0x0e100b00
+block|,
+literal|0x0fb00f50
+block|,
+literal|"fmscd%c\t%z1, %z2, %z0"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1
+block|,
+literal|0x0e100b40
+block|,
+literal|0x0fb00f50
+block|,
+literal|"fnmscd%c\t%z1, %z2, %z0"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1xD
+block|,
+literal|0x0e200a00
+block|,
+literal|0x0fb00f50
+block|,
+literal|"fmuls%c\t%y1, %y2, %y0"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1xD
+block|,
+literal|0x0e200a40
+block|,
+literal|0x0fb00f50
+block|,
+literal|"fnmuls%c\t%y1, %y2, %y0"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1
+block|,
+literal|0x0e200b00
+block|,
+literal|0x0fb00f50
+block|,
+literal|"fmuld%c\t%z1, %z2, %z0"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1
+block|,
+literal|0x0e200b40
+block|,
+literal|0x0fb00f50
+block|,
+literal|"fnmuld%c\t%z1, %z2, %z0"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1xD
+block|,
+literal|0x0e300a00
+block|,
+literal|0x0fb00f50
+block|,
+literal|"fadds%c\t%y1, %y2, %y0"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1xD
+block|,
+literal|0x0e300a40
+block|,
+literal|0x0fb00f50
+block|,
+literal|"fsubs%c\t%y1, %y2, %y0"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1
+block|,
+literal|0x0e300b00
+block|,
+literal|0x0fb00f50
+block|,
+literal|"faddd%c\t%z1, %z2, %z0"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1
+block|,
+literal|0x0e300b40
+block|,
+literal|0x0fb00f50
+block|,
+literal|"fsubd%c\t%z1, %z2, %z0"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1xD
+block|,
+literal|0x0e800a00
+block|,
+literal|0x0fb00f50
+block|,
+literal|"fdivs%c\t%y1, %y2, %y0"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1
+block|,
+literal|0x0e800b00
+block|,
+literal|0x0fb00f50
+block|,
+literal|"fdivd%c\t%z1, %z2, %z0"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1xD
+block|,
+literal|0x0d200a00
+block|,
+literal|0x0fb00f00
+block|,
+literal|"fstmdbs%c\t%16-19r!, %y3"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1xD
+block|,
+literal|0x0d200b00
+block|,
+literal|0x0fb00f00
+block|,
+literal|"fstmdb%0?xd%c\t%16-19r!, %z3"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1xD
+block|,
+literal|0x0d300a00
+block|,
+literal|0x0fb00f00
+block|,
+literal|"fldmdbs%c\t%16-19r!, %y3"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1xD
+block|,
+literal|0x0d300b00
+block|,
+literal|0x0fb00f00
+block|,
+literal|"fldmdb%0?xd%c\t%16-19r!, %z3"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1xD
+block|,
+literal|0x0d000a00
+block|,
+literal|0x0f300f00
+block|,
+literal|"fsts%c\t%y1, %A"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1
+block|,
+literal|0x0d000b00
+block|,
+literal|0x0f300f00
+block|,
+literal|"fstd%c\t%z1, %A"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1xD
+block|,
+literal|0x0d100a00
+block|,
+literal|0x0f300f00
+block|,
+literal|"flds%c\t%y1, %A"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1
+block|,
+literal|0x0d100b00
+block|,
+literal|0x0f300f00
+block|,
+literal|"fldd%c\t%z1, %A"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1xD
+block|,
+literal|0x0c800a00
+block|,
+literal|0x0f900f00
+block|,
+literal|"fstmias%c\t%16-19r%21'!, %y3"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1xD
+block|,
+literal|0x0c800b00
+block|,
+literal|0x0f900f00
+block|,
+literal|"fstmia%0?xd%c\t%16-19r%21'!, %z3"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1xD
+block|,
+literal|0x0c900a00
+block|,
+literal|0x0f900f00
+block|,
+literal|"fldmias%c\t%16-19r%21'!, %y3"
+block|}
+block|,
+block|{
+name|FPU_VFP_EXT_V1xD
+block|,
+literal|0x0c900b00
+block|,
+literal|0x0f900f00
+block|,
+literal|"fldmia%0?xd%c\t%16-19r%21'!, %z3"
 block|}
 block|,
 comment|/* Cirrus coprocessor instructions.  */
@@ -2797,7 +3365,7 @@ literal|0x0c000000
 block|,
 literal|0x0e100000
 block|,
-literal|"stc%c%22'l\t%8-11d, cr%12-15d, %A"
+literal|"stc%22'l%c\t%8-11d, cr%12-15d, %A"
 block|}
 block|,
 block|{
@@ -2807,7 +3375,7 @@ literal|0x0c100000
 block|,
 literal|0x0e100000
 block|,
-literal|"ldc%c%22'l\t%8-11d, cr%12-15d, %A"
+literal|"ldc%22'l%c\t%8-11d, cr%12-15d, %A"
 block|}
 block|,
 comment|/* V6 coprocessor instructions */
@@ -2818,7 +3386,7 @@ literal|0xfc500000
 block|,
 literal|0xfff00000
 block|,
-literal|"mrrc2\t%8-11d, %4-7d, %12-15r, %16-19r, cr%0-3d"
+literal|"mrrc2%c\t%8-11d, %4-7d, %12-15r, %16-19r, cr%0-3d"
 block|}
 block|,
 block|{
@@ -2828,7 +3396,7 @@ literal|0xfc400000
 block|,
 literal|0xfff00000
 block|,
-literal|"mcrr2\t%8-11d, %4-7d, %12-15r, %16-19r, cr%0-3d"
+literal|"mcrr2%c\t%8-11d, %4-7d, %12-15r, %16-19r, cr%0-3d"
 block|}
 block|,
 comment|/* V5 coprocessor instructions */
@@ -2839,7 +3407,7 @@ literal|0xfc100000
 block|,
 literal|0xfe100000
 block|,
-literal|"ldc2%22'l\t%8-11d, cr%12-15d, %A"
+literal|"ldc2%22'l%c\t%8-11d, cr%12-15d, %A"
 block|}
 block|,
 block|{
@@ -2849,7 +3417,7 @@ literal|0xfc000000
 block|,
 literal|0xfe100000
 block|,
-literal|"stc2%22'l\t%8-11d, cr%12-15d, %A"
+literal|"stc2%22'l%c\t%8-11d, cr%12-15d, %A"
 block|}
 block|,
 block|{
@@ -2859,7 +3427,7 @@ literal|0xfe000000
 block|,
 literal|0xff000010
 block|,
-literal|"cdp2\t%8-11d, %20-23d, cr%12-15d, cr%16-19d, cr%0-3d, {%5-7d}"
+literal|"cdp2%c\t%8-11d, %20-23d, cr%12-15d, cr%16-19d, cr%0-3d, {%5-7d}"
 block|}
 block|,
 block|{
@@ -2869,7 +3437,7 @@ literal|0xfe000010
 block|,
 literal|0xff100010
 block|,
-literal|"mcr2\t%8-11d, %21-23d, %12-15r, cr%16-19d, cr%0-3d, {%5-7d}"
+literal|"mcr2%c\t%8-11d, %21-23d, %12-15r, cr%16-19d, cr%0-3d, {%5-7d}"
 block|}
 block|,
 block|{
@@ -2879,7 +3447,2267 @@ literal|0xfe100010
 block|,
 literal|0xff100010
 block|,
-literal|"mrc2\t%8-11d, %21-23d, %12-15r, cr%16-19d, cr%0-3d, {%5-7d}"
+literal|"mrc2%c\t%8-11d, %21-23d, %12-15r, cr%16-19d, cr%0-3d, {%5-7d}"
+block|}
+block|,
+block|{
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Neon opcode table:  This does not encode the top byte -- that is    checked by the print_insn_neon routine, as it depends on whether we are    doing thumb32 or arm32 disassembly.  */
+end_comment
+
+begin_comment
+comment|/* print_insn_neon recognizes the following format control codes:     %%			%     %c			print condition code    %A			print v{st,ld}[1234] operands    %B			print v{st,ld}[1234] any one operands    %C			print v{st,ld}[1234] single->all operands    %D			print scalar    %E			print vmov, vmvn, vorr, vbic encoded constant    %F			print vtbl,vtbx register list     %<bitfield>r		print as an ARM register    %<bitfield>d		print the bitfield in decimal    %<bitfield>e         print the 2^N - bitfield in decimal    %<bitfield>D		print as a NEON D register    %<bitfield>Q		print as a NEON Q register    %<bitfield>R		print as a NEON D or Q register    %<bitfield>Sn	print byte scaled width limited by n    %<bitfield>Tn	print short scaled width limited by n    %<bitfield>Un	print long scaled width limited by n        %<bitfield>'c	print specified char iff bitfield is all ones    %<bitfield>`c	print specified char iff bitfield is all zeroes    %<bitfield>?ab...    select from array of values in big endian order  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|struct
+name|opcode32
+name|neon_opcodes
+index|[]
+init|=
+block|{
+comment|/* Extract */
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2b00840
+block|,
+literal|0xffb00850
+block|,
+literal|"vext%c.8\t%12-15,22R, %16-19,7R, %0-3,5R, #%8-11d"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2b00000
+block|,
+literal|0xffb00810
+block|,
+literal|"vext%c.8\t%12-15,22R, %16-19,7R, %0-3,5R, #%8-11d"
+block|}
+block|,
+comment|/* Move data element to all lanes */
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3b40c00
+block|,
+literal|0xffb70f90
+block|,
+literal|"vdup%c.32\t%12-15,22R, %0-3,5D[%19d]"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3b20c00
+block|,
+literal|0xffb30f90
+block|,
+literal|"vdup%c.16\t%12-15,22R, %0-3,5D[%18-19d]"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3b10c00
+block|,
+literal|0xffb10f90
+block|,
+literal|"vdup%c.8\t%12-15,22R, %0-3,5D[%17-19d]"
+block|}
+block|,
+comment|/* Table lookup */
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3b00800
+block|,
+literal|0xffb00c50
+block|,
+literal|"vtbl%c.8\t%12-15,22D, %F, %0-3,5D"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3b00840
+block|,
+literal|0xffb00c50
+block|,
+literal|"vtbx%c.8\t%12-15,22D, %F, %0-3,5D"
+block|}
+block|,
+comment|/* Two registers, miscellaneous */
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2880a10
+block|,
+literal|0xfebf0fd0
+block|,
+literal|"vmovl%c.%24?us8\t%12-15,22Q, %0-3,5D"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2900a10
+block|,
+literal|0xfebf0fd0
+block|,
+literal|"vmovl%c.%24?us16\t%12-15,22Q, %0-3,5D"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2a00a10
+block|,
+literal|0xfebf0fd0
+block|,
+literal|"vmovl%c.%24?us32\t%12-15,22Q, %0-3,5D"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3b00500
+block|,
+literal|0xffbf0f90
+block|,
+literal|"vcnt%c.8\t%12-15,22R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3b00580
+block|,
+literal|0xffbf0f90
+block|,
+literal|"vmvn%c\t%12-15,22R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3b20000
+block|,
+literal|0xffbf0f90
+block|,
+literal|"vswp%c\t%12-15,22R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3b20200
+block|,
+literal|0xffb30fd0
+block|,
+literal|"vmovn%c.i%18-19T2\t%12-15,22D, %0-3,5Q"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3b20240
+block|,
+literal|0xffb30fd0
+block|,
+literal|"vqmovun%c.s%18-19T2\t%12-15,22D, %0-3,5Q"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3b20280
+block|,
+literal|0xffb30fd0
+block|,
+literal|"vqmovn%c.s%18-19T2\t%12-15,22D, %0-3,5Q"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3b202c0
+block|,
+literal|0xffb30fd0
+block|,
+literal|"vqmovn%c.u%18-19T2\t%12-15,22D, %0-3,5Q"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3b20300
+block|,
+literal|0xffb30fd0
+block|,
+literal|"vshll%c.i%18-19S2\t%12-15,22Q, %0-3,5D, #%18-19S2"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3bb0400
+block|,
+literal|0xffbf0e90
+block|,
+literal|"vrecpe%c.%8?fu%18-19S2\t%12-15,22R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3bb0480
+block|,
+literal|0xffbf0e90
+block|,
+literal|"vrsqrte%c.%8?fu%18-19S2\t%12-15,22R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3b00000
+block|,
+literal|0xffb30f90
+block|,
+literal|"vrev64%c.%18-19S2\t%12-15,22R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3b00080
+block|,
+literal|0xffb30f90
+block|,
+literal|"vrev32%c.%18-19S2\t%12-15,22R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3b00100
+block|,
+literal|0xffb30f90
+block|,
+literal|"vrev16%c.%18-19S2\t%12-15,22R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3b00400
+block|,
+literal|0xffb30f90
+block|,
+literal|"vcls%c.s%18-19S2\t%12-15,22R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3b00480
+block|,
+literal|0xffb30f90
+block|,
+literal|"vclz%c.i%18-19S2\t%12-15,22R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3b00700
+block|,
+literal|0xffb30f90
+block|,
+literal|"vqabs%c.s%18-19S2\t%12-15,22R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3b00780
+block|,
+literal|0xffb30f90
+block|,
+literal|"vqneg%c.s%18-19S2\t%12-15,22R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3b20080
+block|,
+literal|0xffb30f90
+block|,
+literal|"vtrn%c.%18-19S2\t%12-15,22R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3b20100
+block|,
+literal|0xffb30f90
+block|,
+literal|"vuzp%c.%18-19S2\t%12-15,22R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3b20180
+block|,
+literal|0xffb30f90
+block|,
+literal|"vzip%c.%18-19S2\t%12-15,22R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3b10000
+block|,
+literal|0xffb30b90
+block|,
+literal|"vcgt%c.%10?fs%18-19S2\t%12-15,22R, %0-3,5R, #0"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3b10080
+block|,
+literal|0xffb30b90
+block|,
+literal|"vcge%c.%10?fs%18-19S2\t%12-15,22R, %0-3,5R, #0"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3b10100
+block|,
+literal|0xffb30b90
+block|,
+literal|"vceq%c.%10?fi%18-19S2\t%12-15,22R, %0-3,5R, #0"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3b10180
+block|,
+literal|0xffb30b90
+block|,
+literal|"vcle%c.%10?fs%18-19S2\t%12-15,22R, %0-3,5R, #0"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3b10200
+block|,
+literal|0xffb30b90
+block|,
+literal|"vclt%c.%10?fs%18-19S2\t%12-15,22R, %0-3,5R, #0"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3b10300
+block|,
+literal|0xffb30b90
+block|,
+literal|"vabs%c.%10?fs%18-19S2\t%12-15,22R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3b10380
+block|,
+literal|0xffb30b90
+block|,
+literal|"vneg%c.%10?fs%18-19S2\t%12-15,22R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3b00200
+block|,
+literal|0xffb30f10
+block|,
+literal|"vpaddl%c.%7?us%18-19S2\t%12-15,22R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3b00600
+block|,
+literal|0xffb30f10
+block|,
+literal|"vpadal%c.%7?us%18-19S2\t%12-15,22R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3b30600
+block|,
+literal|0xffb30e10
+block|,
+literal|"vcvt%c.%7-8?usff%18-19Sa.%7-8?ffus%18-19Sa\t%12-15,22R, %0-3,5R"
+block|}
+block|,
+comment|/* Three registers of the same length */
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2000110
+block|,
+literal|0xffb00f10
+block|,
+literal|"vand%c\t%12-15,22R, %16-19,7R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2100110
+block|,
+literal|0xffb00f10
+block|,
+literal|"vbic%c\t%12-15,22R, %16-19,7R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2200110
+block|,
+literal|0xffb00f10
+block|,
+literal|"vorr%c\t%12-15,22R, %16-19,7R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2300110
+block|,
+literal|0xffb00f10
+block|,
+literal|"vorn%c\t%12-15,22R, %16-19,7R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3000110
+block|,
+literal|0xffb00f10
+block|,
+literal|"veor%c\t%12-15,22R, %16-19,7R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3100110
+block|,
+literal|0xffb00f10
+block|,
+literal|"vbsl%c\t%12-15,22R, %16-19,7R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3200110
+block|,
+literal|0xffb00f10
+block|,
+literal|"vbit%c\t%12-15,22R, %16-19,7R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3300110
+block|,
+literal|0xffb00f10
+block|,
+literal|"vbif%c\t%12-15,22R, %16-19,7R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2000d00
+block|,
+literal|0xffa00f10
+block|,
+literal|"vadd%c.f%20U0\t%12-15,22R, %16-19,7R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2000d10
+block|,
+literal|0xffa00f10
+block|,
+literal|"vmla%c.f%20U0\t%12-15,22R, %16-19,7R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2000e00
+block|,
+literal|0xffa00f10
+block|,
+literal|"vceq%c.f%20U0\t%12-15,22R, %16-19,7R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2000f00
+block|,
+literal|0xffa00f10
+block|,
+literal|"vmax%c.f%20U0\t%12-15,22R, %16-19,7R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2000f10
+block|,
+literal|0xffa00f10
+block|,
+literal|"vrecps%c.f%20U0\t%12-15,22R, %16-19,7R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2200d00
+block|,
+literal|0xffa00f10
+block|,
+literal|"vsub%c.f%20U0\t%12-15,22R, %16-19,7R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2200d10
+block|,
+literal|0xffa00f10
+block|,
+literal|"vmls%c.f%20U0\t%12-15,22R, %16-19,7R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2200f00
+block|,
+literal|0xffa00f10
+block|,
+literal|"vmin%c.f%20U0\t%12-15,22R, %16-19,7R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2200f10
+block|,
+literal|0xffa00f10
+block|,
+literal|"vrsqrts%c.f%20U0\t%12-15,22R, %16-19,7R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3000d00
+block|,
+literal|0xffa00f10
+block|,
+literal|"vpadd%c.f%20U0\t%12-15,22R, %16-19,7R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3000d10
+block|,
+literal|0xffa00f10
+block|,
+literal|"vmul%c.f%20U0\t%12-15,22R, %16-19,7R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3000e00
+block|,
+literal|0xffa00f10
+block|,
+literal|"vcge%c.f%20U0\t%12-15,22R, %16-19,7R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3000e10
+block|,
+literal|0xffa00f10
+block|,
+literal|"vacge%c.f%20U0\t%12-15,22R, %16-19,7R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3000f00
+block|,
+literal|0xffa00f10
+block|,
+literal|"vpmax%c.f%20U0\t%12-15,22R, %16-19,7R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3200d00
+block|,
+literal|0xffa00f10
+block|,
+literal|"vabd%c.f%20U0\t%12-15,22R, %16-19,7R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3200e00
+block|,
+literal|0xffa00f10
+block|,
+literal|"vcgt%c.f%20U0\t%12-15,22R, %16-19,7R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3200e10
+block|,
+literal|0xffa00f10
+block|,
+literal|"vacgt%c.f%20U0\t%12-15,22R, %16-19,7R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3200f00
+block|,
+literal|0xffa00f10
+block|,
+literal|"vpmin%c.f%20U0\t%12-15,22R, %16-19,7R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2000800
+block|,
+literal|0xff800f10
+block|,
+literal|"vadd%c.i%20-21S3\t%12-15,22R, %16-19,7R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2000810
+block|,
+literal|0xff800f10
+block|,
+literal|"vtst%c.%20-21S2\t%12-15,22R, %16-19,7R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2000900
+block|,
+literal|0xff800f10
+block|,
+literal|"vmla%c.i%20-21S2\t%12-15,22R, %16-19,7R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2000b00
+block|,
+literal|0xff800f10
+block|,
+literal|"vqdmulh%c.s%20-21S6\t%12-15,22R, %16-19,7R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2000b10
+block|,
+literal|0xff800f10
+block|,
+literal|"vpadd%c.i%20-21S2\t%12-15,22R, %16-19,7R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3000800
+block|,
+literal|0xff800f10
+block|,
+literal|"vsub%c.i%20-21S3\t%12-15,22R, %16-19,7R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3000810
+block|,
+literal|0xff800f10
+block|,
+literal|"vceq%c.i%20-21S2\t%12-15,22R, %16-19,7R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3000900
+block|,
+literal|0xff800f10
+block|,
+literal|"vmls%c.i%20-21S2\t%12-15,22R, %16-19,7R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3000b00
+block|,
+literal|0xff800f10
+block|,
+literal|"vqrdmulh%c.s%20-21S6\t%12-15,22R, %16-19,7R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2000000
+block|,
+literal|0xfe800f10
+block|,
+literal|"vhadd%c.%24?us%20-21S2\t%12-15,22R, %16-19,7R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2000010
+block|,
+literal|0xfe800f10
+block|,
+literal|"vqadd%c.%24?us%20-21S3\t%12-15,22R, %16-19,7R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2000100
+block|,
+literal|0xfe800f10
+block|,
+literal|"vrhadd%c.%24?us%20-21S2\t%12-15,22R, %16-19,7R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2000200
+block|,
+literal|0xfe800f10
+block|,
+literal|"vhsub%c.%24?us%20-21S2\t%12-15,22R, %16-19,7R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2000210
+block|,
+literal|0xfe800f10
+block|,
+literal|"vqsub%c.%24?us%20-21S3\t%12-15,22R, %16-19,7R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2000300
+block|,
+literal|0xfe800f10
+block|,
+literal|"vcgt%c.%24?us%20-21S2\t%12-15,22R, %16-19,7R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2000310
+block|,
+literal|0xfe800f10
+block|,
+literal|"vcge%c.%24?us%20-21S2\t%12-15,22R, %16-19,7R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2000400
+block|,
+literal|0xfe800f10
+block|,
+literal|"vshl%c.%24?us%20-21S3\t%12-15,22R, %0-3,5R, %16-19,7R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2000410
+block|,
+literal|0xfe800f10
+block|,
+literal|"vqshl%c.%24?us%20-21S3\t%12-15,22R, %0-3,5R, %16-19,7R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2000500
+block|,
+literal|0xfe800f10
+block|,
+literal|"vrshl%c.%24?us%20-21S3\t%12-15,22R, %0-3,5R, %16-19,7R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2000510
+block|,
+literal|0xfe800f10
+block|,
+literal|"vqrshl%c.%24?us%20-21S3\t%12-15,22R, %0-3,5R, %16-19,7R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2000600
+block|,
+literal|0xfe800f10
+block|,
+literal|"vmax%c.%24?us%20-21S2\t%12-15,22R, %16-19,7R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2000610
+block|,
+literal|0xfe800f10
+block|,
+literal|"vmin%c.%24?us%20-21S2\t%12-15,22R, %16-19,7R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2000700
+block|,
+literal|0xfe800f10
+block|,
+literal|"vabd%c.%24?us%20-21S2\t%12-15,22R, %16-19,7R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2000710
+block|,
+literal|0xfe800f10
+block|,
+literal|"vaba%c.%24?us%20-21S2\t%12-15,22R, %16-19,7R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2000910
+block|,
+literal|0xfe800f10
+block|,
+literal|"vmul%c.%24?pi%20-21S2\t%12-15,22R, %16-19,7R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2000a00
+block|,
+literal|0xfe800f10
+block|,
+literal|"vpmax%c.%24?us%20-21S2\t%12-15,22R, %16-19,7R, %0-3,5R"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2000a10
+block|,
+literal|0xfe800f10
+block|,
+literal|"vpmin%c.%24?us%20-21S2\t%12-15,22R, %16-19,7R, %0-3,5R"
+block|}
+block|,
+comment|/* One register and an immediate value */
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800e10
+block|,
+literal|0xfeb80fb0
+block|,
+literal|"vmov%c.i8\t%12-15,22R, %E"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800e30
+block|,
+literal|0xfeb80fb0
+block|,
+literal|"vmov%c.i64\t%12-15,22R, %E"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800f10
+block|,
+literal|0xfeb80fb0
+block|,
+literal|"vmov%c.f32\t%12-15,22R, %E"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800810
+block|,
+literal|0xfeb80db0
+block|,
+literal|"vmov%c.i16\t%12-15,22R, %E"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800830
+block|,
+literal|0xfeb80db0
+block|,
+literal|"vmvn%c.i16\t%12-15,22R, %E"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800910
+block|,
+literal|0xfeb80db0
+block|,
+literal|"vorr%c.i16\t%12-15,22R, %E"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800930
+block|,
+literal|0xfeb80db0
+block|,
+literal|"vbic%c.i16\t%12-15,22R, %E"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800c10
+block|,
+literal|0xfeb80eb0
+block|,
+literal|"vmov%c.i32\t%12-15,22R, %E"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800c30
+block|,
+literal|0xfeb80eb0
+block|,
+literal|"vmvn%c.i32\t%12-15,22R, %E"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800110
+block|,
+literal|0xfeb809b0
+block|,
+literal|"vorr%c.i32\t%12-15,22R, %E"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800130
+block|,
+literal|0xfeb809b0
+block|,
+literal|"vbic%c.i32\t%12-15,22R, %E"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800010
+block|,
+literal|0xfeb808b0
+block|,
+literal|"vmov%c.i32\t%12-15,22R, %E"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800030
+block|,
+literal|0xfeb808b0
+block|,
+literal|"vmvn%c.i32\t%12-15,22R, %E"
+block|}
+block|,
+comment|/* Two registers and a shift amount */
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2880810
+block|,
+literal|0xffb80fd0
+block|,
+literal|"vshrn%c.i16\t%12-15,22D, %0-3,5Q, #%16-18e"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2880850
+block|,
+literal|0xffb80fd0
+block|,
+literal|"vrshrn%c.i16\t%12-15,22D, %0-3,5Q, #%16-18e"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2880810
+block|,
+literal|0xfeb80fd0
+block|,
+literal|"vqshrun%c.s16\t%12-15,22D, %0-3,5Q, #%16-18e"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2880850
+block|,
+literal|0xfeb80fd0
+block|,
+literal|"vqrshrun%c.s16\t%12-15,22D, %0-3,5Q, #%16-18e"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2880910
+block|,
+literal|0xfeb80fd0
+block|,
+literal|"vqshrn%c.%24?us16\t%12-15,22D, %0-3,5Q, #%16-18e"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2880950
+block|,
+literal|0xfeb80fd0
+block|,
+literal|"vqrshrn%c.%24?us16\t%12-15,22D, %0-3,5Q, #%16-18e"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2880a10
+block|,
+literal|0xfeb80fd0
+block|,
+literal|"vshll%c.%24?us8\t%12-15,22D, %0-3,5Q, #%16-18d"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2900810
+block|,
+literal|0xffb00fd0
+block|,
+literal|"vshrn%c.i32\t%12-15,22D, %0-3,5Q, #%16-19e"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2900850
+block|,
+literal|0xffb00fd0
+block|,
+literal|"vrshrn%c.i32\t%12-15,22D, %0-3,5Q, #%16-19e"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2880510
+block|,
+literal|0xffb80f90
+block|,
+literal|"vshl%c.%24?us8\t%12-15,22R, %0-3,5R, #%16-18d"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3880410
+block|,
+literal|0xffb80f90
+block|,
+literal|"vsri%c.8\t%12-15,22R, %0-3,5R, #%16-18e"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3880510
+block|,
+literal|0xffb80f90
+block|,
+literal|"vsli%c.8\t%12-15,22R, %0-3,5R, #%16-18d"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3880610
+block|,
+literal|0xffb80f90
+block|,
+literal|"vqshlu%c.s8\t%12-15,22R, %0-3,5R, #%16-18d"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2900810
+block|,
+literal|0xfeb00fd0
+block|,
+literal|"vqshrun%c.s32\t%12-15,22D, %0-3,5Q, #%16-19e"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2900850
+block|,
+literal|0xfeb00fd0
+block|,
+literal|"vqrshrun%c.s32\t%12-15,22D, %0-3,5Q, #%16-19e"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2900910
+block|,
+literal|0xfeb00fd0
+block|,
+literal|"vqshrn%c.%24?us32\t%12-15,22D, %0-3,5Q, #%16-19e"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2900950
+block|,
+literal|0xfeb00fd0
+block|,
+literal|"vqrshrn%c.%24?us32\t%12-15,22D, %0-3,5Q, #%16-19e"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2900a10
+block|,
+literal|0xfeb00fd0
+block|,
+literal|"vshll%c.%24?us16\t%12-15,22D, %0-3,5Q, #%16-19d"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2880010
+block|,
+literal|0xfeb80f90
+block|,
+literal|"vshr%c.%24?us8\t%12-15,22R, %0-3,5R, #%16-18e"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2880110
+block|,
+literal|0xfeb80f90
+block|,
+literal|"vsra%c.%24?us8\t%12-15,22R, %0-3,5R, #%16-18e"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2880210
+block|,
+literal|0xfeb80f90
+block|,
+literal|"vrshr%c.%24?us8\t%12-15,22R, %0-3,5R, #%16-18e"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2880310
+block|,
+literal|0xfeb80f90
+block|,
+literal|"vrsra%c.%24?us8\t%12-15,22R, %0-3,5R, #%16-18e"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2880710
+block|,
+literal|0xfeb80f90
+block|,
+literal|"vqshl%c.%24?us8\t%12-15,22R, %0-3,5R, #%16-18d"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2a00810
+block|,
+literal|0xffa00fd0
+block|,
+literal|"vshrn%c.i64\t%12-15,22D, %0-3,5Q, #%16-20e"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2a00850
+block|,
+literal|0xffa00fd0
+block|,
+literal|"vrshrn%c.i64\t%12-15,22D, %0-3,5Q, #%16-20e"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2900510
+block|,
+literal|0xffb00f90
+block|,
+literal|"vshl%c.%24?us16\t%12-15,22R, %0-3,5R, #%16-19d"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3900410
+block|,
+literal|0xffb00f90
+block|,
+literal|"vsri%c.16\t%12-15,22R, %0-3,5R, #%16-19e"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3900510
+block|,
+literal|0xffb00f90
+block|,
+literal|"vsli%c.16\t%12-15,22R, %0-3,5R, #%16-19d"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3900610
+block|,
+literal|0xffb00f90
+block|,
+literal|"vqshlu%c.s16\t%12-15,22R, %0-3,5R, #%16-19d"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2a00a10
+block|,
+literal|0xfea00fd0
+block|,
+literal|"vshll%c.%24?us32\t%12-15,22D, %0-3,5Q, #%16-20d"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2900010
+block|,
+literal|0xfeb00f90
+block|,
+literal|"vshr%c.%24?us16\t%12-15,22R, %0-3,5R, #%16-19e"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2900110
+block|,
+literal|0xfeb00f90
+block|,
+literal|"vsra%c.%24?us16\t%12-15,22R, %0-3,5R, #%16-19e"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2900210
+block|,
+literal|0xfeb00f90
+block|,
+literal|"vrshr%c.%24?us16\t%12-15,22R, %0-3,5R, #%16-19e"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2900310
+block|,
+literal|0xfeb00f90
+block|,
+literal|"vrsra%c.%24?us16\t%12-15,22R, %0-3,5R, #%16-19e"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2900710
+block|,
+literal|0xfeb00f90
+block|,
+literal|"vqshl%c.%24?us16\t%12-15,22R, %0-3,5R, #%16-19d"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800810
+block|,
+literal|0xfec00fd0
+block|,
+literal|"vqshrun%c.s64\t%12-15,22D, %0-3,5Q, #%16-20e"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800850
+block|,
+literal|0xfec00fd0
+block|,
+literal|"vqrshrun%c.s64\t%12-15,22D, %0-3,5Q, #%16-20e"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800910
+block|,
+literal|0xfec00fd0
+block|,
+literal|"vqshrn%c.%24?us64\t%12-15,22D, %0-3,5Q, #%16-20e"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800950
+block|,
+literal|0xfec00fd0
+block|,
+literal|"vqrshrn%c.%24?us64\t%12-15,22D, %0-3,5Q, #%16-20e"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2a00510
+block|,
+literal|0xffa00f90
+block|,
+literal|"vshl%c.%24?us32\t%12-15,22R, %0-3,5R, #%16-20d"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3a00410
+block|,
+literal|0xffa00f90
+block|,
+literal|"vsri%c.32\t%12-15,22R, %0-3,5R, #%16-20e"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3a00510
+block|,
+literal|0xffa00f90
+block|,
+literal|"vsli%c.32\t%12-15,22R, %0-3,5R, #%16-20d"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3a00610
+block|,
+literal|0xffa00f90
+block|,
+literal|"vqshlu%c.s32\t%12-15,22R, %0-3,5R, #%16-20d"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2a00010
+block|,
+literal|0xfea00f90
+block|,
+literal|"vshr%c.%24?us32\t%12-15,22R, %0-3,5R, #%16-20e"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2a00110
+block|,
+literal|0xfea00f90
+block|,
+literal|"vsra%c.%24?us32\t%12-15,22R, %0-3,5R, #%16-20e"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2a00210
+block|,
+literal|0xfea00f90
+block|,
+literal|"vrshr%c.%24?us32\t%12-15,22R, %0-3,5R, #%16-20e"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2a00310
+block|,
+literal|0xfea00f90
+block|,
+literal|"vrsra%c.%24?us32\t%12-15,22R, %0-3,5R, #%16-20e"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2a00710
+block|,
+literal|0xfea00f90
+block|,
+literal|"vqshl%c.%24?us32\t%12-15,22R, %0-3,5R, #%16-20d"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800590
+block|,
+literal|0xff800f90
+block|,
+literal|"vshl%c.%24?us64\t%12-15,22R, %0-3,5R, #%16-21d"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3800490
+block|,
+literal|0xff800f90
+block|,
+literal|"vsri%c.64\t%12-15,22R, %0-3,5R, #%16-21e"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3800590
+block|,
+literal|0xff800f90
+block|,
+literal|"vsli%c.64\t%12-15,22R, %0-3,5R, #%16-21d"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3800690
+block|,
+literal|0xff800f90
+block|,
+literal|"vqshlu%c.s64\t%12-15,22R, %0-3,5R, #%16-21d"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800090
+block|,
+literal|0xfe800f90
+block|,
+literal|"vshr%c.%24?us64\t%12-15,22R, %0-3,5R, #%16-21e"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800190
+block|,
+literal|0xfe800f90
+block|,
+literal|"vsra%c.%24?us64\t%12-15,22R, %0-3,5R, #%16-21e"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800290
+block|,
+literal|0xfe800f90
+block|,
+literal|"vrshr%c.%24?us64\t%12-15,22R, %0-3,5R, #%16-21e"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800390
+block|,
+literal|0xfe800f90
+block|,
+literal|"vrsra%c.%24?us64\t%12-15,22R, %0-3,5R, #%16-21e"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800790
+block|,
+literal|0xfe800f90
+block|,
+literal|"vqshl%c.%24?us64\t%12-15,22R, %0-3,5R, #%16-21d"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2a00e10
+block|,
+literal|0xfea00e90
+block|,
+literal|"vcvt%c.%24,8?usff32.%24,8?ffus32\t%12-15,22R, %0-3,5R, #%16-20e"
+block|}
+block|,
+comment|/* Three registers of different lengths */
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800e00
+block|,
+literal|0xfea00f50
+block|,
+literal|"vmull%c.p%20S0\t%12-15,22Q, %16-19,7D, %0-3,5D"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800400
+block|,
+literal|0xff800f50
+block|,
+literal|"vaddhn%c.i%20-21T2\t%12-15,22D, %16-19,7Q, %0-3,5Q"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800600
+block|,
+literal|0xff800f50
+block|,
+literal|"vsubhn%c.i%20-21T2\t%12-15,22D, %16-19,7Q, %0-3,5Q"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800900
+block|,
+literal|0xff800f50
+block|,
+literal|"vqdmlal%c.s%20-21S6\t%12-15,22Q, %16-19,7D, %0-3,5D"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800b00
+block|,
+literal|0xff800f50
+block|,
+literal|"vqdmlsl%c.s%20-21S6\t%12-15,22Q, %16-19,7D, %0-3,5D"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800d00
+block|,
+literal|0xff800f50
+block|,
+literal|"vqdmull%c.s%20-21S6\t%12-15,22Q, %16-19,7D, %0-3,5D"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3800400
+block|,
+literal|0xff800f50
+block|,
+literal|"vraddhn%c.i%20-21T2\t%12-15,22D, %16-19,7Q, %0-3,5Q"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3800600
+block|,
+literal|0xff800f50
+block|,
+literal|"vrsubhn%c.i%20-21T2\t%12-15,22D, %16-19,7Q, %0-3,5Q"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800000
+block|,
+literal|0xfe800f50
+block|,
+literal|"vaddl%c.%24?us%20-21S2\t%12-15,22Q, %16-19,7D, %0-3,5D"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800100
+block|,
+literal|0xfe800f50
+block|,
+literal|"vaddw%c.%24?us%20-21S2\t%12-15,22Q, %16-19,7Q, %0-3,5D"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800200
+block|,
+literal|0xfe800f50
+block|,
+literal|"vsubl%c.%24?us%20-21S2\t%12-15,22Q, %16-19,7D, %0-3,5D"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800300
+block|,
+literal|0xfe800f50
+block|,
+literal|"vsubw%c.%24?us%20-21S2\t%12-15,22Q, %16-19,7Q, %0-3,5D"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800500
+block|,
+literal|0xfe800f50
+block|,
+literal|"vabal%c.%24?us%20-21S2\t%12-15,22Q, %16-19,7D, %0-3,5D"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800700
+block|,
+literal|0xfe800f50
+block|,
+literal|"vabdl%c.%24?us%20-21S2\t%12-15,22Q, %16-19,7D, %0-3,5D"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800800
+block|,
+literal|0xfe800f50
+block|,
+literal|"vmlal%c.%24?us%20-21S2\t%12-15,22Q, %16-19,7D, %0-3,5D"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800a00
+block|,
+literal|0xfe800f50
+block|,
+literal|"vmlsl%c.%24?us%20-21S2\t%12-15,22Q, %16-19,7D, %0-3,5D"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800c00
+block|,
+literal|0xfe800f50
+block|,
+literal|"vmull%c.%24?us%20-21S2\t%12-15,22Q, %16-19,7D, %0-3,5D"
+block|}
+block|,
+comment|/* Two registers and a scalar */
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800040
+block|,
+literal|0xff800f50
+block|,
+literal|"vmla%c.i%20-21S6\t%12-15,22D, %16-19,7D, %D"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800140
+block|,
+literal|0xff800f50
+block|,
+literal|"vmla%c.f%20-21Sa\t%12-15,22D, %16-19,7D, %D"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800340
+block|,
+literal|0xff800f50
+block|,
+literal|"vqdmlal%c.s%20-21S6\t%12-15,22Q, %16-19,7D, %D"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800440
+block|,
+literal|0xff800f50
+block|,
+literal|"vmls%c.i%20-21S6\t%12-15,22D, %16-19,7D, %D"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800540
+block|,
+literal|0xff800f50
+block|,
+literal|"vmls%c.f%20-21S6\t%12-15,22D, %16-19,7D, %D"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800740
+block|,
+literal|0xff800f50
+block|,
+literal|"vqdmlsl%c.s%20-21S6\t%12-15,22Q, %16-19,7D, %D"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800840
+block|,
+literal|0xff800f50
+block|,
+literal|"vmul%c.i%20-21S6\t%12-15,22D, %16-19,7D, %D"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800940
+block|,
+literal|0xff800f50
+block|,
+literal|"vmul%c.f%20-21Sa\t%12-15,22D, %16-19,7D, %D"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800b40
+block|,
+literal|0xff800f50
+block|,
+literal|"vqdmull%c.s%20-21S6\t%12-15,22Q, %16-19,7D, %D"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800c40
+block|,
+literal|0xff800f50
+block|,
+literal|"vqdmulh%c.s%20-21S6\t%12-15,22D, %16-19,7D, %D"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800d40
+block|,
+literal|0xff800f50
+block|,
+literal|"vqrdmulh%c.s%20-21S6\t%12-15,22D, %16-19,7D, %D"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3800040
+block|,
+literal|0xff800f50
+block|,
+literal|"vmla%c.i%20-21S6\t%12-15,22Q, %16-19,7Q, %D"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3800140
+block|,
+literal|0xff800f50
+block|,
+literal|"vmla%c.f%20-21Sa\t%12-15,22Q, %16-19,7Q, %D"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3800440
+block|,
+literal|0xff800f50
+block|,
+literal|"vmls%c.i%20-21S6\t%12-15,22Q, %16-19,7Q, %D"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3800540
+block|,
+literal|0xff800f50
+block|,
+literal|"vmls%c.f%20-21Sa\t%12-15,22Q, %16-19,7Q, %D"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3800840
+block|,
+literal|0xff800f50
+block|,
+literal|"vmul%c.i%20-21S6\t%12-15,22Q, %16-19,7Q, %D"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3800940
+block|,
+literal|0xff800f50
+block|,
+literal|"vmul%c.f%20-21Sa\t%12-15,22Q, %16-19,7Q, %D"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3800c40
+block|,
+literal|0xff800f50
+block|,
+literal|"vqdmulh%c.s%20-21S6\t%12-15,22Q, %16-19,7Q, %D"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf3800d40
+block|,
+literal|0xff800f50
+block|,
+literal|"vqrdmulh%c.s%20-21S6\t%12-15,22Q, %16-19,7Q, %D"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800240
+block|,
+literal|0xfe800f50
+block|,
+literal|"vmlal%c.%24?us%20-21S6\t%12-15,22Q, %16-19,7D, %D"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800640
+block|,
+literal|0xfe800f50
+block|,
+literal|"vmlsl%c.%24?us%20-21S6\t%12-15,22Q, %16-19,7D, %D"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf2800a40
+block|,
+literal|0xfe800f50
+block|,
+literal|"vmull%c.%24?us%20-21S6\t%12-15,22Q, %16-19,7D, %D"
+block|}
+block|,
+comment|/* Element and structure load/store */
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf4a00fc0
+block|,
+literal|0xffb00fc0
+block|,
+literal|"vld4%c.32\t%C"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf4a00c00
+block|,
+literal|0xffb00f00
+block|,
+literal|"vld1%c.%6-7S2\t%C"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf4a00d00
+block|,
+literal|0xffb00f00
+block|,
+literal|"vld2%c.%6-7S2\t%C"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf4a00e00
+block|,
+literal|0xffb00f00
+block|,
+literal|"vld3%c.%6-7S2\t%C"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf4a00f00
+block|,
+literal|0xffb00f00
+block|,
+literal|"vld4%c.%6-7S2\t%C"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf4000200
+block|,
+literal|0xff900f00
+block|,
+literal|"v%21?ls%21?dt1%c.%6-7S3\t%A"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf4000300
+block|,
+literal|0xff900f00
+block|,
+literal|"v%21?ls%21?dt2%c.%6-7S2\t%A"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf4000400
+block|,
+literal|0xff900f00
+block|,
+literal|"v%21?ls%21?dt3%c.%6-7S2\t%A"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf4000500
+block|,
+literal|0xff900f00
+block|,
+literal|"v%21?ls%21?dt3%c.%6-7S2\t%A"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf4000600
+block|,
+literal|0xff900f00
+block|,
+literal|"v%21?ls%21?dt1%c.%6-7S3\t%A"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf4000700
+block|,
+literal|0xff900f00
+block|,
+literal|"v%21?ls%21?dt1%c.%6-7S3\t%A"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf4000800
+block|,
+literal|0xff900f00
+block|,
+literal|"v%21?ls%21?dt2%c.%6-7S2\t%A"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf4000900
+block|,
+literal|0xff900f00
+block|,
+literal|"v%21?ls%21?dt2%c.%6-7S2\t%A"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf4000a00
+block|,
+literal|0xff900f00
+block|,
+literal|"v%21?ls%21?dt1%c.%6-7S3\t%A"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf4000000
+block|,
+literal|0xff900e00
+block|,
+literal|"v%21?ls%21?dt4%c.%6-7S2\t%A"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf4800000
+block|,
+literal|0xff900300
+block|,
+literal|"v%21?ls%21?dt1%c.%10-11S2\t%B"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf4800100
+block|,
+literal|0xff900300
+block|,
+literal|"v%21?ls%21?dt2%c.%10-11S2\t%B"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf4800200
+block|,
+literal|0xff900300
+block|,
+literal|"v%21?ls%21?dt3%c.%10-11S2\t%B"
+block|}
+block|,
+block|{
+name|FPU_NEON_EXT_V1
+block|,
+literal|0xf4800300
+block|,
+literal|0xff900300
+block|,
+literal|"v%21?ls%21?dt4%c.%10-11S2\t%B"
 block|}
 block|,
 block|{
@@ -2900,7 +5728,7 @@ comment|/* Opcode tables: ARM, 16-bit Thumb, 32-bit Thumb.  All three are partia
 end_comment
 
 begin_comment
-comment|/* print_insn_arm recognizes the following format control codes:     %%			%     %a			print address for ldr/str instruction    %s                   print address for ldr/str halfword/signextend instruction    %b			print branch destination    %c			print condition code (always bits 28-31)    %m			print register mask for ldm/stm instruction    %o			print operand2 (immediate or register + shift)    %p			print 'p' iff bits 12-15 are 15    %t			print 't' iff bit 21 set and bit 24 clear    %B			print arm BLX(1) destination    %C			print the PSR sub type.    %U			print barrier type.    %P			print address for pli instruction.     %<bitfield>r		print as an ARM register    %<bitfield>d		print the bitfield in decimal    %<bitfield>W         print the bitfield plus one in decimal     %<bitfield>x		print the bitfield in hex    %<bitfield>X		print the bitfield as 1 hex digit without leading "0x"     %<bitnum>'c		print specified char iff bit is one    %<bitnum>`c		print specified char iff bit is zero    %<bitnum>?ab		print a if bit is one else print b     %e                   print arm SMI operand (bits 0..7,8..19).    %E			print the LSB and WIDTH fields of a BFI or BFC instruction.    %V                   print the 16-bit immediate field of a MOVT or MOVW instruction.  */
+comment|/* print_insn_arm recognizes the following format control codes:     %%			%     %a			print address for ldr/str instruction    %s                   print address for ldr/str halfword/signextend instruction    %b			print branch destination    %c			print condition code (always bits 28-31)    %m			print register mask for ldm/stm instruction    %o			print operand2 (immediate or register + shift)    %p			print 'p' iff bits 12-15 are 15    %t			print 't' iff bit 21 set and bit 24 clear    %B			print arm BLX(1) destination    %C			print the PSR sub type.    %U			print barrier type.    %P			print address for pli instruction.     %<bitfield>r		print as an ARM register    %<bitfield>d		print the bitfield in decimal    %<bitfield>W         print the bitfield plus one in decimal     %<bitfield>x		print the bitfield in hex    %<bitfield>X		print the bitfield as 1 hex digit without leading "0x"        %<bitfield>'c	print specified char iff bitfield is all ones    %<bitfield>`c	print specified char iff bitfield is all zeroes    %<bitfield>?ab...    select from array of values in big endian order     %e                   print arm SMI operand (bits 0..7,8..19).    %E			print the LSB and WIDTH fields of a BFI or BFC instruction.    %V                   print the 16-bit immediate field of a MOVT or MOVW instruction.  */
 end_comment
 
 begin_decl_stmt
@@ -2942,7 +5770,7 @@ literal|0x00000090
 block|,
 literal|0x0fe000f0
 block|,
-literal|"mul%c%20's\t%16-19r, %0-3r, %8-11r"
+literal|"mul%20's%c\t%16-19r, %0-3r, %8-11r"
 block|}
 block|,
 block|{
@@ -2952,7 +5780,7 @@ literal|0x00200090
 block|,
 literal|0x0fe000f0
 block|,
-literal|"mla%c%20's\t%16-19r, %0-3r, %8-11r, %12-15r"
+literal|"mla%20's%c\t%16-19r, %0-3r, %8-11r, %12-15r"
 block|}
 block|,
 block|{
@@ -2962,7 +5790,7 @@ literal|0x01000090
 block|,
 literal|0x0fb00ff0
 block|,
-literal|"swp%c%22'b\t%12-15r, %0-3r, [%16-19r]"
+literal|"swp%22'b%c\t%12-15r, %0-3r, [%16-19r]"
 block|}
 block|,
 block|{
@@ -2972,7 +5800,7 @@ literal|0x00800090
 block|,
 literal|0x0fa000f0
 block|,
-literal|"%22?sumull%c%20's\t%12-15r, %16-19r, %0-3r, %8-11r"
+literal|"%22?sumull%20's%c\t%12-15r, %16-19r, %0-3r, %8-11r"
 block|}
 block|,
 block|{
@@ -2982,7 +5810,7 @@ literal|0x00a00090
 block|,
 literal|0x0fa000f0
 block|,
-literal|"%22?sumlal%c%20's\t%12-15r, %16-19r, %0-3r, %8-11r"
+literal|"%22?sumlal%20's%c\t%12-15r, %16-19r, %0-3r, %8-11r"
 block|}
 block|,
 comment|/* V7 instructions.  */
@@ -3074,7 +5902,7 @@ literal|0x006000b0
 block|,
 literal|0x0f7000f0
 block|,
-literal|"str%cht\t%12-15r, %s"
+literal|"strht%c\t%12-15r, %s"
 block|}
 block|,
 block|{
@@ -3084,7 +5912,7 @@ literal|0x00300090
 block|,
 literal|0x0f300090
 block|,
-literal|"ldr%c%6's%5?hbt\t%12-15r, %s"
+literal|"ldr%6's%5?hbt%c\t%12-15r, %s"
 block|}
 block|,
 block|{
@@ -3110,7 +5938,7 @@ block|,
 block|{
 name|ARM_EXT_V6T2
 block|,
-literal|0x03ff0f30
+literal|0x06ff0f30
 block|,
 literal|0x0fff0ff0
 block|,
@@ -3266,7 +6094,7 @@ name|ARM_EXT_V6
 block|,
 literal|0xf1080000
 block|,
-literal|0xfffdfe3f
+literal|0xfffffe3f
 block|,
 literal|"cpsie\t%8'a%7'i%6'f"
 block|}
@@ -3274,9 +6102,9 @@ block|,
 block|{
 name|ARM_EXT_V6
 block|,
-literal|0xf1080000
+literal|0xf10a0000
 block|,
-literal|0xfffdfe20
+literal|0xfffffe20
 block|,
 literal|"cpsie\t%8'a%7'i%6'f,#%0-4d"
 block|}
@@ -3286,7 +6114,7 @@ name|ARM_EXT_V6
 block|,
 literal|0xf10C0000
 block|,
-literal|0xfffdfe3f
+literal|0xfffffe3f
 block|,
 literal|"cpsid\t%8'a%7'i%6'f"
 block|}
@@ -3294,9 +6122,9 @@ block|,
 block|{
 name|ARM_EXT_V6
 block|,
-literal|0xf10C0000
+literal|0xf10e0000
 block|,
-literal|0xfffdfe20
+literal|0xfffffe20
 block|,
 literal|"cpsid\t%8'a%7'i%6'f,#%0-4d"
 block|}
@@ -3328,7 +6156,7 @@ literal|0x06800010
 block|,
 literal|0x0ff00070
 block|,
-literal|"pkhbt%c\t%12-15r, %16-19r, %0-3r, LSL #%7-11d"
+literal|"pkhbt%c\t%12-15r, %16-19r, %0-3r, lsl #%7-11d"
 block|}
 block|,
 block|{
@@ -3338,7 +6166,7 @@ literal|0x06800050
 block|,
 literal|0x0ff00ff0
 block|,
-literal|"pkhtb%c\t%12-15r, %16-19r, %0-3r, ASR #32"
+literal|"pkhtb%c\t%12-15r, %16-19r, %0-3r, asr #32"
 block|}
 block|,
 block|{
@@ -3348,7 +6176,7 @@ literal|0x06800050
 block|,
 literal|0x0ff00070
 block|,
-literal|"pkhtb%c\t%12-15r, %16-19r, %0-3r, ASR #%7-11d"
+literal|"pkhtb%c\t%12-15r, %16-19r, %0-3r, asr #%7-11d"
 block|}
 block|,
 block|{
@@ -3768,7 +6596,7 @@ literal|0x06bf0070
 block|,
 literal|0x0fff0ff0
 block|,
-literal|"sxth%c %12-15r,%0-3r"
+literal|"sxth%c\t%12-15r, %0-3r"
 block|}
 block|,
 block|{
@@ -3778,7 +6606,7 @@ literal|0x06bf0470
 block|,
 literal|0x0fff0ff0
 block|,
-literal|"sxth%c %12-15r,%0-3r, ROR #8"
+literal|"sxth%c\t%12-15r, %0-3r, ror #8"
 block|}
 block|,
 block|{
@@ -3788,7 +6616,7 @@ literal|0x06bf0870
 block|,
 literal|0x0fff0ff0
 block|,
-literal|"sxth%c %12-15r,%0-3r, ROR #16"
+literal|"sxth%c\t%12-15r, %0-3r, ror #16"
 block|}
 block|,
 block|{
@@ -3798,7 +6626,7 @@ literal|0x06bf0c70
 block|,
 literal|0x0fff0ff0
 block|,
-literal|"sxth%c %12-15r,%0-3r, ROR #24"
+literal|"sxth%c\t%12-15r, %0-3r, ror #24"
 block|}
 block|,
 block|{
@@ -3808,7 +6636,7 @@ literal|0x068f0070
 block|,
 literal|0x0fff0ff0
 block|,
-literal|"sxtb16%c %12-15r,%0-3r"
+literal|"sxtb16%c\t%12-15r, %0-3r"
 block|}
 block|,
 block|{
@@ -3818,7 +6646,7 @@ literal|0x068f0470
 block|,
 literal|0x0fff0ff0
 block|,
-literal|"sxtb16%c %12-15r,%0-3r, ROR #8"
+literal|"sxtb16%c\t%12-15r, %0-3r, ror #8"
 block|}
 block|,
 block|{
@@ -3828,7 +6656,7 @@ literal|0x068f0870
 block|,
 literal|0x0fff0ff0
 block|,
-literal|"sxtb16%c %12-15r,%0-3r, ROR #16"
+literal|"sxtb16%c\t%12-15r, %0-3r, ror #16"
 block|}
 block|,
 block|{
@@ -3838,7 +6666,7 @@ literal|0x068f0c70
 block|,
 literal|0x0fff0ff0
 block|,
-literal|"sxtb16%c %12-15r,%0-3r, ROR #24"
+literal|"sxtb16%c\t%12-15r, %0-3r, ror #24"
 block|}
 block|,
 block|{
@@ -3848,7 +6676,7 @@ literal|0x06af0070
 block|,
 literal|0x0fff0ff0
 block|,
-literal|"sxtb%c %12-15r,%0-3r"
+literal|"sxtb%c\t%12-15r, %0-3r"
 block|}
 block|,
 block|{
@@ -3858,7 +6686,7 @@ literal|0x06af0470
 block|,
 literal|0x0fff0ff0
 block|,
-literal|"sxtb%c %12-15r,%0-3r, ROR #8"
+literal|"sxtb%c\t%12-15r, %0-3r, ror #8"
 block|}
 block|,
 block|{
@@ -3868,7 +6696,7 @@ literal|0x06af0870
 block|,
 literal|0x0fff0ff0
 block|,
-literal|"sxtb%c %12-15r,%0-3r, ROR #16"
+literal|"sxtb%c\t%12-15r, %0-3r, ror #16"
 block|}
 block|,
 block|{
@@ -3878,7 +6706,7 @@ literal|0x06af0c70
 block|,
 literal|0x0fff0ff0
 block|,
-literal|"sxtb%c %12-15r,%0-3r, ROR #24"
+literal|"sxtb%c\t%12-15r, %0-3r, ror #24"
 block|}
 block|,
 block|{
@@ -3888,7 +6716,7 @@ literal|0x06ff0070
 block|,
 literal|0x0fff0ff0
 block|,
-literal|"uxth%c %12-15r,%0-3r"
+literal|"uxth%c\t%12-15r, %0-3r"
 block|}
 block|,
 block|{
@@ -3898,7 +6726,7 @@ literal|0x06ff0470
 block|,
 literal|0x0fff0ff0
 block|,
-literal|"uxth%c %12-15r,%0-3r, ROR #8"
+literal|"uxth%c\t%12-15r, %0-3r, ror #8"
 block|}
 block|,
 block|{
@@ -3908,7 +6736,7 @@ literal|0x06ff0870
 block|,
 literal|0x0fff0ff0
 block|,
-literal|"uxth%c %12-15r,%0-3r, ROR #16"
+literal|"uxth%c\t%12-15r, %0-3r, ror #16"
 block|}
 block|,
 block|{
@@ -3918,7 +6746,7 @@ literal|0x06ff0c70
 block|,
 literal|0x0fff0ff0
 block|,
-literal|"uxth%c %12-15r,%0-3r, ROR #24"
+literal|"uxth%c\t%12-15r, %0-3r, ror #24"
 block|}
 block|,
 block|{
@@ -3928,7 +6756,7 @@ literal|0x06cf0070
 block|,
 literal|0x0fff0ff0
 block|,
-literal|"uxtb16%c %12-15r,%0-3r"
+literal|"uxtb16%c\t%12-15r, %0-3r"
 block|}
 block|,
 block|{
@@ -3938,7 +6766,7 @@ literal|0x06cf0470
 block|,
 literal|0x0fff0ff0
 block|,
-literal|"uxtb16%c %12-15r,%0-3r, ROR #8"
+literal|"uxtb16%c\t%12-15r, %0-3r, ror #8"
 block|}
 block|,
 block|{
@@ -3948,7 +6776,7 @@ literal|0x06cf0870
 block|,
 literal|0x0fff0ff0
 block|,
-literal|"uxtb16%c %12-15r,%0-3r, ROR #16"
+literal|"uxtb16%c\t%12-15r, %0-3r, ror #16"
 block|}
 block|,
 block|{
@@ -3958,7 +6786,7 @@ literal|0x06cf0c70
 block|,
 literal|0x0fff0ff0
 block|,
-literal|"uxtb16%c %12-15r,%0-3r, ROR #24"
+literal|"uxtb16%c\t%12-15r, %0-3r, ror #24"
 block|}
 block|,
 block|{
@@ -3968,7 +6796,7 @@ literal|0x06ef0070
 block|,
 literal|0x0fff0ff0
 block|,
-literal|"uxtb%c %12-15r,%0-3r"
+literal|"uxtb%c\t%12-15r, %0-3r"
 block|}
 block|,
 block|{
@@ -3978,7 +6806,7 @@ literal|0x06ef0470
 block|,
 literal|0x0fff0ff0
 block|,
-literal|"uxtb%c %12-15r,%0-3r, ROR #8"
+literal|"uxtb%c\t%12-15r, %0-3r, ror #8"
 block|}
 block|,
 block|{
@@ -3988,7 +6816,7 @@ literal|0x06ef0870
 block|,
 literal|0x0fff0ff0
 block|,
-literal|"uxtb%c %12-15r,%0-3r, ROR #16"
+literal|"uxtb%c\t%12-15r, %0-3r, ror #16"
 block|}
 block|,
 block|{
@@ -3998,7 +6826,7 @@ literal|0x06ef0c70
 block|,
 literal|0x0fff0ff0
 block|,
-literal|"uxtb%c %12-15r,%0-3r, ROR #24"
+literal|"uxtb%c\t%12-15r, %0-3r, ror #24"
 block|}
 block|,
 block|{
@@ -4018,7 +6846,7 @@ literal|0x06b00470
 block|,
 literal|0x0ff00ff0
 block|,
-literal|"sxtah%c\t%12-15r, %16-19r, %0-3r, ROR #8"
+literal|"sxtah%c\t%12-15r, %16-19r, %0-3r, ror #8"
 block|}
 block|,
 block|{
@@ -4028,7 +6856,7 @@ literal|0x06b00870
 block|,
 literal|0x0ff00ff0
 block|,
-literal|"sxtah%c\t%12-15r, %16-19r, %0-3r, ROR #16"
+literal|"sxtah%c\t%12-15r, %16-19r, %0-3r, ror #16"
 block|}
 block|,
 block|{
@@ -4038,7 +6866,7 @@ literal|0x06b00c70
 block|,
 literal|0x0ff00ff0
 block|,
-literal|"sxtah%c\t%12-15r, %16-19r, %0-3r, ROR #24"
+literal|"sxtah%c\t%12-15r, %16-19r, %0-3r, ror #24"
 block|}
 block|,
 block|{
@@ -4058,7 +6886,7 @@ literal|0x06800470
 block|,
 literal|0x0ff00ff0
 block|,
-literal|"sxtab16%c\t%12-15r, %16-19r, %0-3r, ROR #8"
+literal|"sxtab16%c\t%12-15r, %16-19r, %0-3r, ror #8"
 block|}
 block|,
 block|{
@@ -4068,7 +6896,7 @@ literal|0x06800870
 block|,
 literal|0x0ff00ff0
 block|,
-literal|"sxtab16%c\t%12-15r, %16-19r, %0-3r, ROR #16"
+literal|"sxtab16%c\t%12-15r, %16-19r, %0-3r, ror #16"
 block|}
 block|,
 block|{
@@ -4078,7 +6906,7 @@ literal|0x06800c70
 block|,
 literal|0x0ff00ff0
 block|,
-literal|"sxtab16%c\t%12-15r, %16-19r, %0-3r, ROR #24"
+literal|"sxtab16%c\t%12-15r, %16-19r, %0-3r, ror #24"
 block|}
 block|,
 block|{
@@ -4098,7 +6926,7 @@ literal|0x06a00470
 block|,
 literal|0x0ff00ff0
 block|,
-literal|"sxtab%c\t%12-15r, %16-19r, %0-3r, ROR #8"
+literal|"sxtab%c\t%12-15r, %16-19r, %0-3r, ror #8"
 block|}
 block|,
 block|{
@@ -4108,7 +6936,7 @@ literal|0x06a00870
 block|,
 literal|0x0ff00ff0
 block|,
-literal|"sxtab%c\t%12-15r, %16-19r, %0-3r, ROR #16"
+literal|"sxtab%c\t%12-15r, %16-19r, %0-3r, ror #16"
 block|}
 block|,
 block|{
@@ -4118,7 +6946,7 @@ literal|0x06a00c70
 block|,
 literal|0x0ff00ff0
 block|,
-literal|"sxtab%c\t%12-15r, %16-19r, %0-3r, ROR #24"
+literal|"sxtab%c\t%12-15r, %16-19r, %0-3r, ror #24"
 block|}
 block|,
 block|{
@@ -4138,7 +6966,7 @@ literal|0x06f00470
 block|,
 literal|0x0ff00ff0
 block|,
-literal|"uxtah%c\t%12-15r, %16-19r, %0-3r, ROR #8"
+literal|"uxtah%c\t%12-15r, %16-19r, %0-3r, ror #8"
 block|}
 block|,
 block|{
@@ -4148,7 +6976,7 @@ literal|0x06f00870
 block|,
 literal|0x0ff00ff0
 block|,
-literal|"uxtah%c\t%12-15r, %16-19r, %0-3r, ROR #16"
+literal|"uxtah%c\t%12-15r, %16-19r, %0-3r, ror #16"
 block|}
 block|,
 block|{
@@ -4158,7 +6986,7 @@ literal|0x06f00c70
 block|,
 literal|0x0ff00ff0
 block|,
-literal|"uxtah%c\t%12-15r, %16-19r, %0-3r, ROR #24"
+literal|"uxtah%c\t%12-15r, %16-19r, %0-3r, ror #24"
 block|}
 block|,
 block|{
@@ -4178,7 +7006,7 @@ literal|0x06c00470
 block|,
 literal|0x0ff00ff0
 block|,
-literal|"uxtab16%c\t%12-15r, %16-19r, %0-3r, ROR #8"
+literal|"uxtab16%c\t%12-15r, %16-19r, %0-3r, ror #8"
 block|}
 block|,
 block|{
@@ -4188,7 +7016,7 @@ literal|0x06c00870
 block|,
 literal|0x0ff00ff0
 block|,
-literal|"uxtab16%c\t%12-15r, %16-19r, %0-3r, ROR #16"
+literal|"uxtab16%c\t%12-15r, %16-19r, %0-3r, ror #16"
 block|}
 block|,
 block|{
@@ -4218,7 +7046,7 @@ literal|0x06e00470
 block|,
 literal|0x0ff00ff0
 block|,
-literal|"uxtab%c\t%12-15r, %16-19r, %0-3r, ROR #8"
+literal|"uxtab%c\t%12-15r, %16-19r, %0-3r, ror #8"
 block|}
 block|,
 block|{
@@ -4228,7 +7056,7 @@ literal|0x06e00870
 block|,
 literal|0x0ff00ff0
 block|,
-literal|"uxtab%c\t%12-15r, %16-19r, %0-3r, ROR #16"
+literal|"uxtab%c\t%12-15r, %16-19r, %0-3r, ror #16"
 block|}
 block|,
 block|{
@@ -4238,7 +7066,7 @@ literal|0x06e00c70
 block|,
 literal|0x0ff00ff0
 block|,
-literal|"uxtab%c\t%12-15r, %16-19r, %0-3r, ROR #24"
+literal|"uxtab%c\t%12-15r, %16-19r, %0-3r, ror #24"
 block|}
 block|,
 block|{
@@ -4358,7 +7186,7 @@ literal|0xf84d0500
 block|,
 literal|0xfe5fffe0
 block|,
-literal|"srs%23?id%24?ba\t#%0-4d%21'!"
+literal|"srs%23?id%24?ba\t%16-19r%21'!, #%0-4d"
 block|}
 block|,
 block|{
@@ -4378,7 +7206,7 @@ literal|0x06a00010
 block|,
 literal|0x0fe00070
 block|,
-literal|"ssat%c\t%12-15r, #%16-20W, %0-3r, LSL #%7-11d"
+literal|"ssat%c\t%12-15r, #%16-20W, %0-3r, lsl #%7-11d"
 block|}
 block|,
 block|{
@@ -4388,7 +7216,7 @@ literal|0x06a00050
 block|,
 literal|0x0fe00070
 block|,
-literal|"ssat%c\t%12-15r, #%16-20W, %0-3r, ASR #%7-11d"
+literal|"ssat%c\t%12-15r, #%16-20W, %0-3r, asr #%7-11d"
 block|}
 block|,
 block|{
@@ -4458,7 +7286,7 @@ literal|0x06e00010
 block|,
 literal|0x0fe00070
 block|,
-literal|"usat%c\t%12-15r, #%16-20d, %0-3r, LSL #%7-11d"
+literal|"usat%c\t%12-15r, #%16-20d, %0-3r, lsl #%7-11d"
 block|}
 block|,
 block|{
@@ -4468,7 +7296,7 @@ literal|0x06e00050
 block|,
 literal|0x0fe00070
 block|,
-literal|"usat%c\t%12-15r, #%16-20d, %0-3r, ASR #%7-11d"
+literal|"usat%c\t%12-15r, #%16-20d, %0-3r, asr #%7-11d"
 block|}
 block|,
 block|{
@@ -4541,7 +7369,7 @@ literal|0x000000d0
 block|,
 literal|0x0e1000f0
 block|,
-literal|"ldr%cd\t%12-15r, %s"
+literal|"ldrd%c\t%12-15r, %s"
 block|}
 block|,
 block|{
@@ -4551,7 +7379,7 @@ literal|0x000000f0
 block|,
 literal|0x0e1000f0
 block|,
-literal|"str%cd\t%12-15r, %s"
+literal|"strd%c\t%12-15r, %s"
 block|}
 block|,
 block|{
@@ -4772,7 +7600,7 @@ literal|0x00000090
 block|,
 literal|0x0e100090
 block|,
-literal|"str%c%6's%5?hb\t%12-15r, %s"
+literal|"str%6's%5?hb%c\t%12-15r, %s"
 block|}
 block|,
 block|{
@@ -4782,7 +7610,7 @@ literal|0x00100090
 block|,
 literal|0x0e100090
 block|,
-literal|"ldr%c%6's%5?hb\t%12-15r, %s"
+literal|"ldr%6's%5?hb%c\t%12-15r, %s"
 block|}
 block|,
 block|{
@@ -4792,7 +7620,7 @@ literal|0x00000000
 block|,
 literal|0x0de00000
 block|,
-literal|"and%c%20's\t%12-15r, %16-19r, %o"
+literal|"and%20's%c\t%12-15r, %16-19r, %o"
 block|}
 block|,
 block|{
@@ -4802,7 +7630,7 @@ literal|0x00200000
 block|,
 literal|0x0de00000
 block|,
-literal|"eor%c%20's\t%12-15r, %16-19r, %o"
+literal|"eor%20's%c\t%12-15r, %16-19r, %o"
 block|}
 block|,
 block|{
@@ -4812,7 +7640,7 @@ literal|0x00400000
 block|,
 literal|0x0de00000
 block|,
-literal|"sub%c%20's\t%12-15r, %16-19r, %o"
+literal|"sub%20's%c\t%12-15r, %16-19r, %o"
 block|}
 block|,
 block|{
@@ -4822,7 +7650,7 @@ literal|0x00600000
 block|,
 literal|0x0de00000
 block|,
-literal|"rsb%c%20's\t%12-15r, %16-19r, %o"
+literal|"rsb%20's%c\t%12-15r, %16-19r, %o"
 block|}
 block|,
 block|{
@@ -4832,7 +7660,7 @@ literal|0x00800000
 block|,
 literal|0x0de00000
 block|,
-literal|"add%c%20's\t%12-15r, %16-19r, %o"
+literal|"add%20's%c\t%12-15r, %16-19r, %o"
 block|}
 block|,
 block|{
@@ -4842,7 +7670,7 @@ literal|0x00a00000
 block|,
 literal|0x0de00000
 block|,
-literal|"adc%c%20's\t%12-15r, %16-19r, %o"
+literal|"adc%20's%c\t%12-15r, %16-19r, %o"
 block|}
 block|,
 block|{
@@ -4852,7 +7680,7 @@ literal|0x00c00000
 block|,
 literal|0x0de00000
 block|,
-literal|"sbc%c%20's\t%12-15r, %16-19r, %o"
+literal|"sbc%20's%c\t%12-15r, %16-19r, %o"
 block|}
 block|,
 block|{
@@ -4862,7 +7690,7 @@ literal|0x00e00000
 block|,
 literal|0x0de00000
 block|,
-literal|"rsc%c%20's\t%12-15r, %16-19r, %o"
+literal|"rsc%20's%c\t%12-15r, %16-19r, %o"
 block|}
 block|,
 block|{
@@ -4892,7 +7720,7 @@ literal|0x01000000
 block|,
 literal|0x0de00000
 block|,
-literal|"tst%c%p\t%16-19r, %o"
+literal|"tst%p%c\t%16-19r, %o"
 block|}
 block|,
 block|{
@@ -4902,7 +7730,7 @@ literal|0x01200000
 block|,
 literal|0x0de00000
 block|,
-literal|"teq%c%p\t%16-19r, %o"
+literal|"teq%p%c\t%16-19r, %o"
 block|}
 block|,
 block|{
@@ -4912,7 +7740,7 @@ literal|0x01400000
 block|,
 literal|0x0de00000
 block|,
-literal|"cmp%c%p\t%16-19r, %o"
+literal|"cmp%p%c\t%16-19r, %o"
 block|}
 block|,
 block|{
@@ -4922,7 +7750,7 @@ literal|0x01600000
 block|,
 literal|0x0de00000
 block|,
-literal|"cmn%c%p\t%16-19r, %o"
+literal|"cmn%p%c\t%16-19r, %o"
 block|}
 block|,
 block|{
@@ -4932,7 +7760,17 @@ literal|0x01800000
 block|,
 literal|0x0de00000
 block|,
-literal|"orr%c%20's\t%12-15r, %16-19r, %o"
+literal|"orr%20's%c\t%12-15r, %16-19r, %o"
+block|}
+block|,
+block|{
+name|ARM_EXT_V1
+block|,
+literal|0x03a00000
+block|,
+literal|0x0fef0000
+block|,
+literal|"mov%20's%c\t%12-15r, %o"
 block|}
 block|,
 block|{
@@ -4940,9 +7778,59 @@ name|ARM_EXT_V1
 block|,
 literal|0x01a00000
 block|,
-literal|0x0de00000
+literal|0x0def0ff0
 block|,
-literal|"mov%c%20's\t%12-15r, %o"
+literal|"mov%20's%c\t%12-15r, %0-3r"
+block|}
+block|,
+block|{
+name|ARM_EXT_V1
+block|,
+literal|0x01a00000
+block|,
+literal|0x0def0060
+block|,
+literal|"lsl%20's%c\t%12-15r, %q"
+block|}
+block|,
+block|{
+name|ARM_EXT_V1
+block|,
+literal|0x01a00020
+block|,
+literal|0x0def0060
+block|,
+literal|"lsr%20's%c\t%12-15r, %q"
+block|}
+block|,
+block|{
+name|ARM_EXT_V1
+block|,
+literal|0x01a00040
+block|,
+literal|0x0def0060
+block|,
+literal|"asr%20's%c\t%12-15r, %q"
+block|}
+block|,
+block|{
+name|ARM_EXT_V1
+block|,
+literal|0x01a00060
+block|,
+literal|0x0def0ff0
+block|,
+literal|"rrx%20's%c\t%12-15r, %0-3r"
+block|}
+block|,
+block|{
+name|ARM_EXT_V1
+block|,
+literal|0x01a00060
+block|,
+literal|0x0def0060
+block|,
+literal|"ror%20's%c\t%12-15r, %q"
 block|}
 block|,
 block|{
@@ -4952,7 +7840,7 @@ literal|0x01c00000
 block|,
 literal|0x0de00000
 block|,
-literal|"bic%c%20's\t%12-15r, %16-19r, %o"
+literal|"bic%20's%c\t%12-15r, %16-19r, %o"
 block|}
 block|,
 block|{
@@ -4962,7 +7850,17 @@ literal|0x01e00000
 block|,
 literal|0x0de00000
 block|,
-literal|"mvn%c%20's\t%12-15r, %o"
+literal|"mvn%20's%c\t%12-15r, %o"
+block|}
+block|,
+block|{
+name|ARM_EXT_V1
+block|,
+literal|0x052d0004
+block|,
+literal|0x0fff0fff
+block|,
+literal|"push%c\t{%12-15r}\t\t; (str%c %12-15r, %a)"
 block|}
 block|,
 block|{
@@ -4972,7 +7870,7 @@ literal|0x04000000
 block|,
 literal|0x0e100000
 block|,
-literal|"str%c%22'b%t\t%12-15r, %a"
+literal|"str%22'b%t%c\t%12-15r, %a"
 block|}
 block|,
 block|{
@@ -4982,7 +7880,7 @@ literal|0x06000000
 block|,
 literal|0x0e100ff0
 block|,
-literal|"str%c%22'b%t\t%12-15r, %a"
+literal|"str%22'b%t%c\t%12-15r, %a"
 block|}
 block|,
 block|{
@@ -4992,7 +7890,7 @@ literal|0x04000000
 block|,
 literal|0x0c100010
 block|,
-literal|"str%c%22'b%t\t%12-15r, %a"
+literal|"str%22'b%t%c\t%12-15r, %a"
 block|}
 block|,
 block|{
@@ -5008,11 +7906,41 @@ block|,
 block|{
 name|ARM_EXT_V1
 block|,
+literal|0x049d0004
+block|,
+literal|0x0fff0fff
+block|,
+literal|"pop%c\t{%12-15r}\t\t; (ldr%c %12-15r, %a)"
+block|}
+block|,
+block|{
+name|ARM_EXT_V1
+block|,
 literal|0x04100000
 block|,
 literal|0x0c100000
 block|,
-literal|"ldr%c%22'b%t\t%12-15r, %a"
+literal|"ldr%22'b%t%c\t%12-15r, %a"
+block|}
+block|,
+block|{
+name|ARM_EXT_V1
+block|,
+literal|0x092d0000
+block|,
+literal|0x0fff0000
+block|,
+literal|"push%c\t%m"
+block|}
+block|,
+block|{
+name|ARM_EXT_V1
+block|,
+literal|0x08800000
+block|,
+literal|0x0ff00000
+block|,
+literal|"stm%c\t%16-19r%21'!, %m%22'^"
 block|}
 block|,
 block|{
@@ -5022,7 +7950,27 @@ literal|0x08000000
 block|,
 literal|0x0e100000
 block|,
-literal|"stm%c%23?id%24?ba\t%16-19r%21'!, %m%22'^"
+literal|"stm%23?id%24?ba%c\t%16-19r%21'!, %m%22'^"
+block|}
+block|,
+block|{
+name|ARM_EXT_V1
+block|,
+literal|0x08bd0000
+block|,
+literal|0x0fff0000
+block|,
+literal|"pop%c\t%m"
+block|}
+block|,
+block|{
+name|ARM_EXT_V1
+block|,
+literal|0x08900000
+block|,
+literal|0x0f900000
+block|,
+literal|"ldm%c\t%16-19r%21'!, %m%22'^"
 block|}
 block|,
 block|{
@@ -5032,7 +7980,7 @@ literal|0x08100000
 block|,
 literal|0x0e100000
 block|,
-literal|"ldm%c%23?id%24?ba\t%16-19r%21'!, %m%22'^"
+literal|"ldm%23?id%24?ba%c\t%16-19r%21'!, %m%22'^"
 block|}
 block|,
 block|{
@@ -5080,7 +8028,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* print_insn_thumb16 recognizes the following format control codes:     %S                   print Thumb register (bits 3..5 as high number if bit 6 set)    %D                   print Thumb register (bits 0..2 as high number if bit 7 set)    %<bitfield>I         print bitfield as a signed decimal    				(top bit of range being the sign bit)    %N                   print Thumb register mask (with LR)    %O                   print Thumb register mask (with PC)    %M                   print Thumb register mask    %b			print CZB's 6-bit unsigned branch destination    %s			print Thumb right-shift immediate (6..10; 0 == 32).    %<bitfield>r		print bitfield as an ARM register    %<bitfield>d		print bitfield as a decimal    %<bitfield>H         print (bitfield * 2) as a decimal    %<bitfield>W         print (bitfield * 4) as a decimal    %<bitfield>a         print (bitfield * 4) as a pc-rel offset + decoded symbol    %<bitfield>B         print Thumb branch destination (signed displacement)    %<bitfield>c         print bitfield as a condition code    %<bitnum>'c		print specified char iff bit is one    %<bitnum>?ab		print a if bit is one else print b.  */
+comment|/* print_insn_thumb16 recognizes the following format control codes:     %S                   print Thumb register (bits 3..5 as high number if bit 6 set)    %D                   print Thumb register (bits 0..2 as high number if bit 7 set)    %<bitfield>I         print bitfield as a signed decimal    				(top bit of range being the sign bit)    %N                   print Thumb register mask (with LR)    %O                   print Thumb register mask (with PC)    %M                   print Thumb register mask    %b			print CZB's 6-bit unsigned branch destination    %s			print Thumb right-shift immediate (6..10; 0 == 32).    %c			print the condition code    %C			print the condition code, or "s" if not conditional    %x			print warning if conditional an not at end of IT block"    %X			print "\t; unpredictable<IT:code>" if conditional    %I			print IT instruction suffix and operands    %<bitfield>r		print bitfield as an ARM register    %<bitfield>d		print bitfield as a decimal    %<bitfield>H         print (bitfield * 2) as a decimal    %<bitfield>W         print (bitfield * 4) as a decimal    %<bitfield>a         print (bitfield * 4) as a pc-rel offset + decoded symbol    %<bitfield>B         print Thumb branch destination (signed displacement)    %<bitfield>c         print bitfield as a condition code    %<bitnum>'c		print specified char iff bit is one    %<bitnum>?ab		print a if bit is one else print b.  */
 end_comment
 
 begin_decl_stmt
@@ -5101,7 +8049,7 @@ literal|0xbf00
 block|,
 literal|0xffff
 block|,
-literal|"nop"
+literal|"nop%c"
 block|}
 block|,
 block|{
@@ -5111,7 +8059,7 @@ literal|0xbf10
 block|,
 literal|0xffff
 block|,
-literal|"yield"
+literal|"yield%c"
 block|}
 block|,
 block|{
@@ -5121,7 +8069,7 @@ literal|0xbf20
 block|,
 literal|0xffff
 block|,
-literal|"wfe"
+literal|"wfe%c"
 block|}
 block|,
 block|{
@@ -5131,7 +8079,7 @@ literal|0xbf30
 block|,
 literal|0xffff
 block|,
-literal|"wfi"
+literal|"wfi%c"
 block|}
 block|,
 block|{
@@ -5141,7 +8089,7 @@ literal|0xbf40
 block|,
 literal|0xffff
 block|,
-literal|"sev"
+literal|"sev%c"
 block|}
 block|,
 block|{
@@ -5151,7 +8099,7 @@ literal|0xbf00
 block|,
 literal|0xff0f
 block|,
-literal|"nop\t{%4-7d}"
+literal|"nop%c\t{%4-7d}"
 block|}
 block|,
 comment|/* ARM V6T2 instructions.  */
@@ -5162,7 +8110,7 @@ literal|0xb900
 block|,
 literal|0xfd00
 block|,
-literal|"cbnz\t%0-2r, %b"
+literal|"cbnz\t%0-2r, %b%X"
 block|}
 block|,
 block|{
@@ -5172,77 +8120,17 @@ literal|0xb100
 block|,
 literal|0xfd00
 block|,
-literal|"cbz\t%0-2r, %b"
+literal|"cbz\t%0-2r, %b%X"
 block|}
 block|,
 block|{
 name|ARM_EXT_V6T2
 block|,
-literal|0xbf08
+literal|0xbf00
 block|,
-literal|0xff0f
+literal|0xff00
 block|,
-literal|"it\t%4-7c"
-block|}
-block|,
-block|{
-name|ARM_EXT_V6T2
-block|,
-literal|0xbf14
-block|,
-literal|0xff17
-block|,
-literal|"it%3?te\t%4-7c"
-block|}
-block|,
-block|{
-name|ARM_EXT_V6T2
-block|,
-literal|0xbf04
-block|,
-literal|0xff17
-block|,
-literal|"it%3?et\t%4-7c"
-block|}
-block|,
-block|{
-name|ARM_EXT_V6T2
-block|,
-literal|0xbf12
-block|,
-literal|0xff13
-block|,
-literal|"it%3?te%2?te\t%4-7c"
-block|}
-block|,
-block|{
-name|ARM_EXT_V6T2
-block|,
-literal|0xbf02
-block|,
-literal|0xff13
-block|,
-literal|"it%3?et%2?et\t%4-7c"
-block|}
-block|,
-block|{
-name|ARM_EXT_V6T2
-block|,
-literal|0xbf11
-block|,
-literal|0xff11
-block|,
-literal|"it%3?te%2?te%1?te\t%4-7c"
-block|}
-block|,
-block|{
-name|ARM_EXT_V6T2
-block|,
-literal|0xbf01
-block|,
-literal|0xff11
-block|,
-literal|"it%3?et%2?et%1?et\t%4-7c"
+literal|"it%I%X"
 block|}
 block|,
 comment|/* ARM V6.  */
@@ -5253,7 +8141,7 @@ literal|0xb660
 block|,
 literal|0xfff8
 block|,
-literal|"cpsie\t%2'a%1'i%0'f"
+literal|"cpsie\t%2'a%1'i%0'f%X"
 block|}
 block|,
 block|{
@@ -5263,7 +8151,7 @@ literal|0xb670
 block|,
 literal|0xfff8
 block|,
-literal|"cpsid\t%2'a%1'i%0'f"
+literal|"cpsid\t%2'a%1'i%0'f%X"
 block|}
 block|,
 block|{
@@ -5273,7 +8161,7 @@ literal|0x4600
 block|,
 literal|0xffc0
 block|,
-literal|"mov\t%0-2r, %3-5r"
+literal|"mov%c\t%0-2r, %3-5r"
 block|}
 block|,
 block|{
@@ -5283,7 +8171,7 @@ literal|0xba00
 block|,
 literal|0xffc0
 block|,
-literal|"rev\t%0-2r, %3-5r"
+literal|"rev%c\t%0-2r, %3-5r"
 block|}
 block|,
 block|{
@@ -5293,7 +8181,7 @@ literal|0xba40
 block|,
 literal|0xffc0
 block|,
-literal|"rev16\t%0-2r, %3-5r"
+literal|"rev16%c\t%0-2r, %3-5r"
 block|}
 block|,
 block|{
@@ -5303,7 +8191,7 @@ literal|0xbac0
 block|,
 literal|0xffc0
 block|,
-literal|"revsh\t%0-2r, %3-5r"
+literal|"revsh%c\t%0-2r, %3-5r"
 block|}
 block|,
 block|{
@@ -5313,7 +8201,7 @@ literal|0xb650
 block|,
 literal|0xfff7
 block|,
-literal|"setend\t%3?ble"
+literal|"setend\t%3?ble%X"
 block|}
 block|,
 block|{
@@ -5323,7 +8211,7 @@ literal|0xb200
 block|,
 literal|0xffc0
 block|,
-literal|"sxth\t%0-2r, %3-5r"
+literal|"sxth%c\t%0-2r, %3-5r"
 block|}
 block|,
 block|{
@@ -5333,7 +8221,7 @@ literal|0xb240
 block|,
 literal|0xffc0
 block|,
-literal|"sxtb\t%0-2r, %3-5r"
+literal|"sxtb%c\t%0-2r, %3-5r"
 block|}
 block|,
 block|{
@@ -5343,7 +8231,7 @@ literal|0xb280
 block|,
 literal|0xffc0
 block|,
-literal|"uxth\t%0-2r, %3-5r"
+literal|"uxth%c\t%0-2r, %3-5r"
 block|}
 block|,
 block|{
@@ -5353,7 +8241,7 @@ literal|0xb2c0
 block|,
 literal|0xffc0
 block|,
-literal|"uxtb\t%0-2r, %3-5r"
+literal|"uxtb%c\t%0-2r, %3-5r"
 block|}
 block|,
 comment|/* ARM V5 ISA extends Thumb.  */
@@ -5367,6 +8255,7 @@ block|,
 literal|"bkpt\t%0-7x"
 block|}
 block|,
+comment|/* Is always unconditional.  */
 comment|/* This is BLX(2).  BLX(1) is a 32-bit instruction.  */
 block|{
 name|ARM_EXT_V5T
@@ -5375,7 +8264,7 @@ literal|0x4780
 block|,
 literal|0xff87
 block|,
-literal|"blx\t%3-6r"
+literal|"blx%c\t%3-6r%x"
 block|}
 block|,
 comment|/* note: 4 bit register number.  */
@@ -5387,7 +8276,7 @@ literal|0x46C0
 block|,
 literal|0xFFFF
 block|,
-literal|"nop\t\t\t(mov r8, r8)"
+literal|"nop%c\t\t\t(mov r8, r8)"
 block|}
 block|,
 comment|/* Format 4.  */
@@ -5398,7 +8287,7 @@ literal|0x4000
 block|,
 literal|0xFFC0
 block|,
-literal|"ands\t%0-2r, %3-5r"
+literal|"and%C\t%0-2r, %3-5r"
 block|}
 block|,
 block|{
@@ -5408,7 +8297,7 @@ literal|0x4040
 block|,
 literal|0xFFC0
 block|,
-literal|"eors\t%0-2r, %3-5r"
+literal|"eor%C\t%0-2r, %3-5r"
 block|}
 block|,
 block|{
@@ -5418,7 +8307,7 @@ literal|0x4080
 block|,
 literal|0xFFC0
 block|,
-literal|"lsls\t%0-2r, %3-5r"
+literal|"lsl%C\t%0-2r, %3-5r"
 block|}
 block|,
 block|{
@@ -5428,7 +8317,7 @@ literal|0x40C0
 block|,
 literal|0xFFC0
 block|,
-literal|"lsrs\t%0-2r, %3-5r"
+literal|"lsr%C\t%0-2r, %3-5r"
 block|}
 block|,
 block|{
@@ -5438,7 +8327,7 @@ literal|0x4100
 block|,
 literal|0xFFC0
 block|,
-literal|"asrs\t%0-2r, %3-5r"
+literal|"asr%C\t%0-2r, %3-5r"
 block|}
 block|,
 block|{
@@ -5448,7 +8337,7 @@ literal|0x4140
 block|,
 literal|0xFFC0
 block|,
-literal|"adcs\t%0-2r, %3-5r"
+literal|"adc%C\t%0-2r, %3-5r"
 block|}
 block|,
 block|{
@@ -5458,7 +8347,7 @@ literal|0x4180
 block|,
 literal|0xFFC0
 block|,
-literal|"sbcs\t%0-2r, %3-5r"
+literal|"sbc%C\t%0-2r, %3-5r"
 block|}
 block|,
 block|{
@@ -5468,7 +8357,7 @@ literal|0x41C0
 block|,
 literal|0xFFC0
 block|,
-literal|"rors\t%0-2r, %3-5r"
+literal|"ror%C\t%0-2r, %3-5r"
 block|}
 block|,
 block|{
@@ -5478,7 +8367,7 @@ literal|0x4200
 block|,
 literal|0xFFC0
 block|,
-literal|"tst\t%0-2r, %3-5r"
+literal|"tst%c\t%0-2r, %3-5r"
 block|}
 block|,
 block|{
@@ -5488,7 +8377,7 @@ literal|0x4240
 block|,
 literal|0xFFC0
 block|,
-literal|"negs\t%0-2r, %3-5r"
+literal|"neg%C\t%0-2r, %3-5r"
 block|}
 block|,
 block|{
@@ -5498,7 +8387,7 @@ literal|0x4280
 block|,
 literal|0xFFC0
 block|,
-literal|"cmp\t%0-2r, %3-5r"
+literal|"cmp%c\t%0-2r, %3-5r"
 block|}
 block|,
 block|{
@@ -5508,7 +8397,7 @@ literal|0x42C0
 block|,
 literal|0xFFC0
 block|,
-literal|"cmn\t%0-2r, %3-5r"
+literal|"cmn%c\t%0-2r, %3-5r"
 block|}
 block|,
 block|{
@@ -5518,7 +8407,7 @@ literal|0x4300
 block|,
 literal|0xFFC0
 block|,
-literal|"orrs\t%0-2r, %3-5r"
+literal|"orr%C\t%0-2r, %3-5r"
 block|}
 block|,
 block|{
@@ -5528,7 +8417,7 @@ literal|0x4340
 block|,
 literal|0xFFC0
 block|,
-literal|"muls\t%0-2r, %3-5r"
+literal|"mul%C\t%0-2r, %3-5r"
 block|}
 block|,
 block|{
@@ -5538,7 +8427,7 @@ literal|0x4380
 block|,
 literal|0xFFC0
 block|,
-literal|"bics\t%0-2r, %3-5r"
+literal|"bic%C\t%0-2r, %3-5r"
 block|}
 block|,
 block|{
@@ -5548,7 +8437,7 @@ literal|0x43C0
 block|,
 literal|0xFFC0
 block|,
-literal|"mvns\t%0-2r, %3-5r"
+literal|"mvn%C\t%0-2r, %3-5r"
 block|}
 block|,
 comment|/* format 13 */
@@ -5559,7 +8448,7 @@ literal|0xB000
 block|,
 literal|0xFF80
 block|,
-literal|"add\tsp, #%0-6W"
+literal|"add%c\tsp, #%0-6W"
 block|}
 block|,
 block|{
@@ -5569,7 +8458,7 @@ literal|0xB080
 block|,
 literal|0xFF80
 block|,
-literal|"sub\tsp, #%0-6W"
+literal|"sub%c\tsp, #%0-6W"
 block|}
 block|,
 comment|/* format 5 */
@@ -5580,7 +8469,7 @@ literal|0x4700
 block|,
 literal|0xFF80
 block|,
-literal|"bx\t%S"
+literal|"bx%c\t%S%x"
 block|}
 block|,
 block|{
@@ -5590,7 +8479,7 @@ literal|0x4400
 block|,
 literal|0xFF00
 block|,
-literal|"add\t%D, %S"
+literal|"add%c\t%D, %S"
 block|}
 block|,
 block|{
@@ -5600,7 +8489,7 @@ literal|0x4500
 block|,
 literal|0xFF00
 block|,
-literal|"cmp\t%D, %S"
+literal|"cmp%c\t%D, %S"
 block|}
 block|,
 block|{
@@ -5610,7 +8499,7 @@ literal|0x4600
 block|,
 literal|0xFF00
 block|,
-literal|"mov\t%D, %S"
+literal|"mov%c\t%D, %S"
 block|}
 block|,
 comment|/* format 14 */
@@ -5621,7 +8510,7 @@ literal|0xB400
 block|,
 literal|0xFE00
 block|,
-literal|"push\t%N"
+literal|"push%c\t%N"
 block|}
 block|,
 block|{
@@ -5631,7 +8520,7 @@ literal|0xBC00
 block|,
 literal|0xFE00
 block|,
-literal|"pop\t%O"
+literal|"pop%c\t%O"
 block|}
 block|,
 comment|/* format 2 */
@@ -5642,7 +8531,7 @@ literal|0x1800
 block|,
 literal|0xFE00
 block|,
-literal|"adds\t%0-2r, %3-5r, %6-8r"
+literal|"add%C\t%0-2r, %3-5r, %6-8r"
 block|}
 block|,
 block|{
@@ -5652,7 +8541,7 @@ literal|0x1A00
 block|,
 literal|0xFE00
 block|,
-literal|"subs\t%0-2r, %3-5r, %6-8r"
+literal|"sub%C\t%0-2r, %3-5r, %6-8r"
 block|}
 block|,
 block|{
@@ -5662,7 +8551,7 @@ literal|0x1C00
 block|,
 literal|0xFE00
 block|,
-literal|"adds\t%0-2r, %3-5r, #%6-8d"
+literal|"add%C\t%0-2r, %3-5r, #%6-8d"
 block|}
 block|,
 block|{
@@ -5672,7 +8561,7 @@ literal|0x1E00
 block|,
 literal|0xFE00
 block|,
-literal|"subs\t%0-2r, %3-5r, #%6-8d"
+literal|"sub%C\t%0-2r, %3-5r, #%6-8d"
 block|}
 block|,
 comment|/* format 8 */
@@ -5683,7 +8572,7 @@ literal|0x5200
 block|,
 literal|0xFE00
 block|,
-literal|"strh\t%0-2r, [%3-5r, %6-8r]"
+literal|"strh%c\t%0-2r, [%3-5r, %6-8r]"
 block|}
 block|,
 block|{
@@ -5693,7 +8582,7 @@ literal|0x5A00
 block|,
 literal|0xFE00
 block|,
-literal|"ldrh\t%0-2r, [%3-5r, %6-8r]"
+literal|"ldrh%c\t%0-2r, [%3-5r, %6-8r]"
 block|}
 block|,
 block|{
@@ -5703,7 +8592,7 @@ literal|0x5600
 block|,
 literal|0xF600
 block|,
-literal|"ldrs%11?hb\t%0-2r, [%3-5r, %6-8r]"
+literal|"ldrs%11?hb%c\t%0-2r, [%3-5r, %6-8r]"
 block|}
 block|,
 comment|/* format 7 */
@@ -5714,7 +8603,7 @@ literal|0x5000
 block|,
 literal|0xFA00
 block|,
-literal|"str%10'b\t%0-2r, [%3-5r, %6-8r]"
+literal|"str%10'b%c\t%0-2r, [%3-5r, %6-8r]"
 block|}
 block|,
 block|{
@@ -5724,7 +8613,7 @@ literal|0x5800
 block|,
 literal|0xFA00
 block|,
-literal|"ldr%10'b\t%0-2r, [%3-5r, %6-8r]"
+literal|"ldr%10'b%c\t%0-2r, [%3-5r, %6-8r]"
 block|}
 block|,
 comment|/* format 1 */
@@ -5735,7 +8624,7 @@ literal|0x0000
 block|,
 literal|0xF800
 block|,
-literal|"lsls\t%0-2r, %3-5r, #%6-10d"
+literal|"lsl%C\t%0-2r, %3-5r, #%6-10d"
 block|}
 block|,
 block|{
@@ -5745,7 +8634,7 @@ literal|0x0800
 block|,
 literal|0xF800
 block|,
-literal|"lsrs\t%0-2r, %3-5r, %s"
+literal|"lsr%C\t%0-2r, %3-5r, %s"
 block|}
 block|,
 block|{
@@ -5755,7 +8644,7 @@ literal|0x1000
 block|,
 literal|0xF800
 block|,
-literal|"asrs\t%0-2r, %3-5r, %s"
+literal|"asr%C\t%0-2r, %3-5r, %s"
 block|}
 block|,
 comment|/* format 3 */
@@ -5766,7 +8655,7 @@ literal|0x2000
 block|,
 literal|0xF800
 block|,
-literal|"movs\t%8-10r, #%0-7d"
+literal|"mov%C\t%8-10r, #%0-7d"
 block|}
 block|,
 block|{
@@ -5776,7 +8665,7 @@ literal|0x2800
 block|,
 literal|0xF800
 block|,
-literal|"cmp\t%8-10r, #%0-7d"
+literal|"cmp%c\t%8-10r, #%0-7d"
 block|}
 block|,
 block|{
@@ -5786,7 +8675,7 @@ literal|0x3000
 block|,
 literal|0xF800
 block|,
-literal|"adds\t%8-10r, #%0-7d"
+literal|"add%C\t%8-10r, #%0-7d"
 block|}
 block|,
 block|{
@@ -5796,7 +8685,7 @@ literal|0x3800
 block|,
 literal|0xF800
 block|,
-literal|"subs\t%8-10r, #%0-7d"
+literal|"sub%C\t%8-10r, #%0-7d"
 block|}
 block|,
 comment|/* format 6 */
@@ -5807,7 +8696,7 @@ literal|0x4800
 block|,
 literal|0xF800
 block|,
-literal|"ldr\t%8-10r, [pc, #%0-7W]\t(%0-7a)"
+literal|"ldr%c\t%8-10r, [pc, #%0-7W]\t(%0-7a)"
 block|}
 block|,
 comment|/* TODO: Disassemble PC relative "LDR rD,=<symbolic>" */
@@ -5819,7 +8708,7 @@ literal|0x6000
 block|,
 literal|0xF800
 block|,
-literal|"str\t%0-2r, [%3-5r, #%6-10W]"
+literal|"str%c\t%0-2r, [%3-5r, #%6-10W]"
 block|}
 block|,
 block|{
@@ -5829,7 +8718,7 @@ literal|0x6800
 block|,
 literal|0xF800
 block|,
-literal|"ldr\t%0-2r, [%3-5r, #%6-10W]"
+literal|"ldr%c\t%0-2r, [%3-5r, #%6-10W]"
 block|}
 block|,
 block|{
@@ -5839,7 +8728,7 @@ literal|0x7000
 block|,
 literal|0xF800
 block|,
-literal|"strb\t%0-2r, [%3-5r, #%6-10d]"
+literal|"strb%c\t%0-2r, [%3-5r, #%6-10d]"
 block|}
 block|,
 block|{
@@ -5849,7 +8738,7 @@ literal|0x7800
 block|,
 literal|0xF800
 block|,
-literal|"ldrb\t%0-2r, [%3-5r, #%6-10d]"
+literal|"ldrb%c\t%0-2r, [%3-5r, #%6-10d]"
 block|}
 block|,
 comment|/* format 10 */
@@ -5860,7 +8749,7 @@ literal|0x8000
 block|,
 literal|0xF800
 block|,
-literal|"strh\t%0-2r, [%3-5r, #%6-10H]"
+literal|"strh%c\t%0-2r, [%3-5r, #%6-10H]"
 block|}
 block|,
 block|{
@@ -5870,7 +8759,7 @@ literal|0x8800
 block|,
 literal|0xF800
 block|,
-literal|"ldrh\t%0-2r, [%3-5r, #%6-10H]"
+literal|"ldrh%c\t%0-2r, [%3-5r, #%6-10H]"
 block|}
 block|,
 comment|/* format 11 */
@@ -5881,7 +8770,7 @@ literal|0x9000
 block|,
 literal|0xF800
 block|,
-literal|"str\t%8-10r, [sp, #%0-7W]"
+literal|"str%c\t%8-10r, [sp, #%0-7W]"
 block|}
 block|,
 block|{
@@ -5891,7 +8780,7 @@ literal|0x9800
 block|,
 literal|0xF800
 block|,
-literal|"ldr\t%8-10r, [sp, #%0-7W]"
+literal|"ldr%c\t%8-10r, [sp, #%0-7W]"
 block|}
 block|,
 comment|/* format 12 */
@@ -5902,7 +8791,7 @@ literal|0xA000
 block|,
 literal|0xF800
 block|,
-literal|"add\t%8-10r, pc, #%0-7W\t(adr %8-10r,%0-7a)"
+literal|"add%c\t%8-10r, pc, #%0-7W\t(adr %8-10r, %0-7a)"
 block|}
 block|,
 block|{
@@ -5912,7 +8801,7 @@ literal|0xA800
 block|,
 literal|0xF800
 block|,
-literal|"add\t%8-10r, sp, #%0-7W"
+literal|"add%c\t%8-10r, sp, #%0-7W"
 block|}
 block|,
 comment|/* format 15 */
@@ -5923,7 +8812,7 @@ literal|0xC000
 block|,
 literal|0xF800
 block|,
-literal|"stmia\t%8-10r!, %M"
+literal|"stmia%c\t%8-10r!, %M"
 block|}
 block|,
 block|{
@@ -5933,7 +8822,7 @@ literal|0xC800
 block|,
 literal|0xF800
 block|,
-literal|"ldmia\t%8-10r!, %M"
+literal|"ldmia%c\t%8-10r!, %M"
 block|}
 block|,
 comment|/* format 17 */
@@ -5944,10 +8833,20 @@ literal|0xDF00
 block|,
 literal|0xFF00
 block|,
-literal|"svc\t%0-7d"
+literal|"svc%c\t%0-7d"
 block|}
 block|,
 comment|/* format 16 */
+block|{
+name|ARM_EXT_V4T
+block|,
+literal|0xDE00
+block|,
+literal|0xFE00
+block|,
+literal|"undefined"
+block|}
+block|,
 block|{
 name|ARM_EXT_V4T
 block|,
@@ -5955,7 +8854,7 @@ literal|0xD000
 block|,
 literal|0xF000
 block|,
-literal|"b%8-11c.n\t%0-7B"
+literal|"b%8-11c.n\t%0-7B%X"
 block|}
 block|,
 comment|/* format 18 */
@@ -5966,7 +8865,7 @@ literal|0xE000
 block|,
 literal|0xF800
 block|,
-literal|"b.n\t%0-10B"
+literal|"b%c.n\t%0-10B%x"
 block|}
 block|,
 comment|/* The E800 .. FFFF range is unconditionally redirected to the      32-bit table, because even in pre-V6T2 ISAs, BL and BLX(1) pairs      are processed via that table.  Thus, we can never encounter a      bare "second half of BL/BLX(1)" instruction here.  */
@@ -5994,7 +8893,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Thumb32 opcodes use the same table structure as the ARM opcodes.    We adopt the convention that hw1 is the high 16 bits of .value and    .mask, hw2 the low 16 bits.     print_insn_thumb32 recognizes the following format control codes:         %%		%         %I		print a 12-bit immediate from hw1[10],hw2[14:12,7:0]        %M		print a modified 12-bit immediate (same location)        %J		print a 16-bit immediate from hw1[3:0,10],hw2[14:12,7:0]        %K		print a 16-bit immediate from hw2[3:0],hw1[3:0],hw2[11:4]        %S		print a possibly-shifted Rm         %a		print the address of a plain load/store        %w		print the width and signedness of a core load/store        %m		print register mask for ldm/stm         %E		print the lsb and width fields of a bfc/bfi instruction        %F		print the lsb and width fields of a sbfx/ubfx instruction        %b		print a conditional branch offset        %B		print an unconditional branch offset        %s		print the shift field of an SSAT instruction        %R		print the rotation field of an SXT instruction        %U		print barrier type.        %P		print address for pli instruction.         %<bitfield>d	print bitfield in decimal        %<bitfield>W	print bitfield*4 in decimal        %<bitfield>r	print bitfield as an ARM register        %<bitfield>c	print bitfield as a condition code         %<bitnum>'c	print "c" iff bit is one        %<bitnum>`c	print "c" iff bit is zero        %<bitnum>?ab	print "a" if bit is one, else "b"     With one exception at the bottom (done because BL and BLX(1) need    to come dead last), this table was machine-sorted first in    decreasing order of number of bits set in the mask, then in    increasing numeric order of mask, then in increasing numeric order    of opcode.  This order is not the clearest for a human reader, but    is guaranteed never to catch a special-case bit pattern with a more    general mask, which is important, because this instruction encoding    makes heavy use of special-case bit patterns.  */
+comment|/* Thumb32 opcodes use the same table structure as the ARM opcodes.    We adopt the convention that hw1 is the high 16 bits of .value and    .mask, hw2 the low 16 bits.     print_insn_thumb32 recognizes the following format control codes:         %%		%         %I		print a 12-bit immediate from hw1[10],hw2[14:12,7:0]        %M		print a modified 12-bit immediate (same location)        %J		print a 16-bit immediate from hw1[3:0,10],hw2[14:12,7:0]        %K		print a 16-bit immediate from hw2[3:0],hw1[3:0],hw2[11:4]        %S		print a possibly-shifted Rm         %a		print the address of a plain load/store        %w		print the width and signedness of a core load/store        %m		print register mask for ldm/stm         %E		print the lsb and width fields of a bfc/bfi instruction        %F		print the lsb and width fields of a sbfx/ubfx instruction        %b		print a conditional branch offset        %B		print an unconditional branch offset        %s		print the shift field of an SSAT instruction        %R		print the rotation field of an SXT instruction        %U		print barrier type.        %P		print address for pli instruction.        %c		print the condition code        %x		print warning if conditional an not at end of IT block"        %X		print "\t; unpredictable<IT:code>" if conditional         %<bitfield>d	print bitfield in decimal        %<bitfield>W	print bitfield*4 in decimal        %<bitfield>r	print bitfield as an ARM register        %<bitfield>c	print bitfield as a condition code         %<bitfield>'c	print specified char iff bitfield is all ones        %<bitfield>`c	print specified char iff bitfield is all zeroes        %<bitfield>?ab... select from array of values in big endian order     With one exception at the bottom (done because BL and BLX(1) need    to come dead last), this table was machine-sorted first in    decreasing order of number of bits set in the mask, then in    increasing numeric order of mask, then in increasing numeric order    of opcode.  This order is not the clearest for a human reader, but    is guaranteed never to catch a special-case bit pattern with a more    general mask, which is important, because this instruction encoding    makes heavy use of special-case bit patterns.  */
 end_comment
 
 begin_decl_stmt
@@ -6014,7 +8913,7 @@ literal|0xf910f000
 block|,
 literal|0xff70f000
 block|,
-literal|"pli\t%a"
+literal|"pli%c\t%a"
 block|}
 block|,
 block|{
@@ -6024,7 +8923,7 @@ literal|0xf3af80f0
 block|,
 literal|0xfffffff0
 block|,
-literal|"dbg\t#%0-3d"
+literal|"dbg%c\t#%0-3d"
 block|}
 block|,
 block|{
@@ -6034,7 +8933,7 @@ literal|0xf3bf8f50
 block|,
 literal|0xfffffff0
 block|,
-literal|"dmb\t%U"
+literal|"dmb%c\t%U"
 block|}
 block|,
 block|{
@@ -6044,7 +8943,7 @@ literal|0xf3bf8f40
 block|,
 literal|0xfffffff0
 block|,
-literal|"dsb\t%U"
+literal|"dsb%c\t%U"
 block|}
 block|,
 block|{
@@ -6054,7 +8953,7 @@ literal|0xf3bf8f60
 block|,
 literal|0xfffffff0
 block|,
-literal|"isb\t%U"
+literal|"isb%c\t%U"
 block|}
 block|,
 block|{
@@ -6064,7 +8963,7 @@ literal|0xfb90f0f0
 block|,
 literal|0xfff0f0f0
 block|,
-literal|"sdiv\t%8-11r, %16-19r, %0-3r"
+literal|"sdiv%c\t%8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -6074,7 +8973,7 @@ literal|0xfbb0f0f0
 block|,
 literal|0xfff0f0f0
 block|,
-literal|"udiv\t%8-11r, %16-19r, %0-3r"
+literal|"udiv%c\t%8-11r, %16-19r, %0-3r"
 block|}
 block|,
 comment|/* Instructions defined in the basic V6T2 set.  */
@@ -6085,7 +8984,7 @@ literal|0xf3af8000
 block|,
 literal|0xffffffff
 block|,
-literal|"nop.w"
+literal|"nop%c.w"
 block|}
 block|,
 block|{
@@ -6095,7 +8994,7 @@ literal|0xf3af8001
 block|,
 literal|0xffffffff
 block|,
-literal|"yield.w"
+literal|"yield%c.w"
 block|}
 block|,
 block|{
@@ -6105,7 +9004,7 @@ literal|0xf3af8002
 block|,
 literal|0xffffffff
 block|,
-literal|"wfe.w"
+literal|"wfe%c.w"
 block|}
 block|,
 block|{
@@ -6115,7 +9014,7 @@ literal|0xf3af8003
 block|,
 literal|0xffffffff
 block|,
-literal|"wfi.w"
+literal|"wfi%c.w"
 block|}
 block|,
 block|{
@@ -6125,7 +9024,7 @@ literal|0xf3af9004
 block|,
 literal|0xffffffff
 block|,
-literal|"sev.w"
+literal|"sev%c.w"
 block|}
 block|,
 block|{
@@ -6135,7 +9034,7 @@ literal|0xf3af8000
 block|,
 literal|0xffffff00
 block|,
-literal|"nop.w\t{%0-7d}"
+literal|"nop%c.w\t{%0-7d}"
 block|}
 block|,
 block|{
@@ -6145,7 +9044,7 @@ literal|0xf3bf8f2f
 block|,
 literal|0xffffffff
 block|,
-literal|"clrex"
+literal|"clrex%c"
 block|}
 block|,
 block|{
@@ -6155,7 +9054,7 @@ literal|0xf3af8400
 block|,
 literal|0xffffff1f
 block|,
-literal|"cpsie.w\t%7'a%6'i%5'f"
+literal|"cpsie.w\t%7'a%6'i%5'f%X"
 block|}
 block|,
 block|{
@@ -6165,7 +9064,7 @@ literal|0xf3af8600
 block|,
 literal|0xffffff1f
 block|,
-literal|"cpsid.w\t%7'a%6'i%5'f"
+literal|"cpsid.w\t%7'a%6'i%5'f%X"
 block|}
 block|,
 block|{
@@ -6175,7 +9074,7 @@ literal|0xf3c08f00
 block|,
 literal|0xfff0ffff
 block|,
-literal|"bxj\t%16-19r"
+literal|"bxj%c\t%16-19r%x"
 block|}
 block|,
 block|{
@@ -6185,7 +9084,7 @@ literal|0xe810c000
 block|,
 literal|0xffd0ffff
 block|,
-literal|"rfedb\t%16-19r%21'!"
+literal|"rfedb%c\t%16-19r%21'!"
 block|}
 block|,
 block|{
@@ -6195,7 +9094,7 @@ literal|0xe990c000
 block|,
 literal|0xffd0ffff
 block|,
-literal|"rfeia\t%16-19r%21'!"
+literal|"rfeia%c\t%16-19r%21'!"
 block|}
 block|,
 block|{
@@ -6205,7 +9104,7 @@ literal|0xf3ef8000
 block|,
 literal|0xffeff000
 block|,
-literal|"mrs\t%8-11r, %D"
+literal|"mrs%c\t%8-11r, %D"
 block|}
 block|,
 block|{
@@ -6215,7 +9114,7 @@ literal|0xf3af8100
 block|,
 literal|0xffffffe0
 block|,
-literal|"cps\t#%0-4d"
+literal|"cps\t#%0-4d%X"
 block|}
 block|,
 block|{
@@ -6225,7 +9124,7 @@ literal|0xe8d0f000
 block|,
 literal|0xfff0fff0
 block|,
-literal|"tbb\t[%16-19r, %0-3r]"
+literal|"tbb%c\t[%16-19r, %0-3r]%x"
 block|}
 block|,
 block|{
@@ -6235,7 +9134,7 @@ literal|0xe8d0f010
 block|,
 literal|0xfff0fff0
 block|,
-literal|"tbh\t[%16-19r, %0-3r, lsl #1]"
+literal|"tbh%c\t[%16-19r, %0-3r, lsl #1]%x"
 block|}
 block|,
 block|{
@@ -6245,7 +9144,7 @@ literal|0xf3af8500
 block|,
 literal|0xffffff00
 block|,
-literal|"cpsie\t%7'a%6'i%5'f, #%0-4d"
+literal|"cpsie\t%7'a%6'i%5'f, #%0-4d%X"
 block|}
 block|,
 block|{
@@ -6255,7 +9154,7 @@ literal|0xf3af8700
 block|,
 literal|0xffffff00
 block|,
-literal|"cpsid\t%7'a%6'i%5'f, #%0-4d"
+literal|"cpsid\t%7'a%6'i%5'f, #%0-4d%X"
 block|}
 block|,
 block|{
@@ -6265,7 +9164,7 @@ literal|0xf3de8f00
 block|,
 literal|0xffffff00
 block|,
-literal|"subs\tpc, lr, #%0-7d"
+literal|"subs%c\tpc, lr, #%0-7d"
 block|}
 block|,
 block|{
@@ -6275,7 +9174,7 @@ literal|0xf3808000
 block|,
 literal|0xffe0f000
 block|,
-literal|"msr\t%C, %16-19r"
+literal|"msr%c\t%C, %16-19r"
 block|}
 block|,
 block|{
@@ -6285,7 +9184,7 @@ literal|0xe8500f00
 block|,
 literal|0xfff00fff
 block|,
-literal|"ldrex\t%12-15r, [%16-19r]"
+literal|"ldrex%c\t%12-15r, [%16-19r]"
 block|}
 block|,
 block|{
@@ -6295,7 +9194,7 @@ literal|0xe8d00f4f
 block|,
 literal|0xfff00fef
 block|,
-literal|"ldrex%4?hb\t%12-15r, [%16-19r]"
+literal|"ldrex%4?hb%c\t%12-15r, [%16-19r]"
 block|}
 block|,
 block|{
@@ -6305,7 +9204,7 @@ literal|0xe800c000
 block|,
 literal|0xffd0ffe0
 block|,
-literal|"srsdb\t#%0-4d%21'!"
+literal|"srsdb%c\t%16-19r%21'!, #%0-4d"
 block|}
 block|,
 block|{
@@ -6315,7 +9214,7 @@ literal|0xe980c000
 block|,
 literal|0xffd0ffe0
 block|,
-literal|"srsia\t#%0-4d%21'!"
+literal|"srsia%c\t%16-19r%21'!, #%0-4d"
 block|}
 block|,
 block|{
@@ -6325,7 +9224,7 @@ literal|0xfa0ff080
 block|,
 literal|0xfffff0c0
 block|,
-literal|"sxth.w\t%8-11r, %0-3r%R"
+literal|"sxth%c.w\t%8-11r, %0-3r%R"
 block|}
 block|,
 block|{
@@ -6335,7 +9234,7 @@ literal|0xfa1ff080
 block|,
 literal|0xfffff0c0
 block|,
-literal|"uxth.w\t%8-11r, %0-3r%R"
+literal|"uxth%c.w\t%8-11r, %0-3r%R"
 block|}
 block|,
 block|{
@@ -6345,7 +9244,7 @@ literal|0xfa2ff080
 block|,
 literal|0xfffff0c0
 block|,
-literal|"sxtb16\t%8-11r, %0-3r%R"
+literal|"sxtb16%c\t%8-11r, %0-3r%R"
 block|}
 block|,
 block|{
@@ -6355,7 +9254,7 @@ literal|0xfa3ff080
 block|,
 literal|0xfffff0c0
 block|,
-literal|"uxtb16\t%8-11r, %0-3r%R"
+literal|"uxtb16%c\t%8-11r, %0-3r%R"
 block|}
 block|,
 block|{
@@ -6365,7 +9264,7 @@ literal|0xfa4ff080
 block|,
 literal|0xfffff0c0
 block|,
-literal|"sxtb.w\t%8-11r, %0-3r%R"
+literal|"sxtb%c.w\t%8-11r, %0-3r%R"
 block|}
 block|,
 block|{
@@ -6375,7 +9274,7 @@ literal|0xfa5ff080
 block|,
 literal|0xfffff0c0
 block|,
-literal|"uxtb.w\t%8-11r, %0-3r%R"
+literal|"uxtb%c.w\t%8-11r, %0-3r%R"
 block|}
 block|,
 block|{
@@ -6385,7 +9284,7 @@ literal|0xe8400000
 block|,
 literal|0xfff000ff
 block|,
-literal|"strex\t%8-11r, %12-15r, [%16-19r]"
+literal|"strex%c\t%8-11r, %12-15r, [%16-19r]"
 block|}
 block|,
 block|{
@@ -6395,7 +9294,7 @@ literal|0xe8d0007f
 block|,
 literal|0xfff000ff
 block|,
-literal|"ldrexd\t%12-15r, %8-11r, [%16-19r]"
+literal|"ldrexd%c\t%12-15r, %8-11r, [%16-19r]"
 block|}
 block|,
 block|{
@@ -6405,7 +9304,7 @@ literal|0xfa80f000
 block|,
 literal|0xfff0f0f0
 block|,
-literal|"sadd8\t%8-11r, %16-19r, %0-3r"
+literal|"sadd8%c\t%8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -6415,7 +9314,7 @@ literal|0xfa80f010
 block|,
 literal|0xfff0f0f0
 block|,
-literal|"qadd8\t%8-11r, %16-19r, %0-3r"
+literal|"qadd8%c\t%8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -6425,7 +9324,7 @@ literal|0xfa80f020
 block|,
 literal|0xfff0f0f0
 block|,
-literal|"shadd8\t%8-11r, %16-19r, %0-3r"
+literal|"shadd8%c\t%8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -6435,7 +9334,7 @@ literal|0xfa80f040
 block|,
 literal|0xfff0f0f0
 block|,
-literal|"uadd8\t%8-11r, %16-19r, %0-3r"
+literal|"uadd8%c\t%8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -6445,7 +9344,7 @@ literal|0xfa80f050
 block|,
 literal|0xfff0f0f0
 block|,
-literal|"uqadd8\t%8-11r, %16-19r, %0-3r"
+literal|"uqadd8%c\t%8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -6455,7 +9354,7 @@ literal|0xfa80f060
 block|,
 literal|0xfff0f0f0
 block|,
-literal|"uhadd8\t%8-11r, %16-19r, %0-3r"
+literal|"uhadd8%c\t%8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -6465,7 +9364,7 @@ literal|0xfa80f080
 block|,
 literal|0xfff0f0f0
 block|,
-literal|"qadd\t%8-11r, %0-3r, %16-19r"
+literal|"qadd%c\t%8-11r, %0-3r, %16-19r"
 block|}
 block|,
 block|{
@@ -6475,7 +9374,7 @@ literal|0xfa80f090
 block|,
 literal|0xfff0f0f0
 block|,
-literal|"qdadd\t%8-11r, %0-3r, %16-19r"
+literal|"qdadd%c\t%8-11r, %0-3r, %16-19r"
 block|}
 block|,
 block|{
@@ -6485,7 +9384,7 @@ literal|0xfa80f0a0
 block|,
 literal|0xfff0f0f0
 block|,
-literal|"qsub\t%8-11r, %0-3r, %16-19r"
+literal|"qsub%c\t%8-11r, %0-3r, %16-19r"
 block|}
 block|,
 block|{
@@ -6495,7 +9394,7 @@ literal|0xfa80f0b0
 block|,
 literal|0xfff0f0f0
 block|,
-literal|"qdsub\t%8-11r, %0-3r, %16-19r"
+literal|"qdsub%c\t%8-11r, %0-3r, %16-19r"
 block|}
 block|,
 block|{
@@ -6505,7 +9404,7 @@ literal|0xfa90f000
 block|,
 literal|0xfff0f0f0
 block|,
-literal|"sadd16\t%8-11r, %16-19r, %0-3r"
+literal|"sadd16%c\t%8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -6515,7 +9414,7 @@ literal|0xfa90f010
 block|,
 literal|0xfff0f0f0
 block|,
-literal|"qadd16\t%8-11r, %16-19r, %0-3r"
+literal|"qadd16%c\t%8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -6525,7 +9424,7 @@ literal|0xfa90f020
 block|,
 literal|0xfff0f0f0
 block|,
-literal|"shadd16\t%8-11r, %16-19r, %0-3r"
+literal|"shadd16%c\t%8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -6535,7 +9434,7 @@ literal|0xfa90f040
 block|,
 literal|0xfff0f0f0
 block|,
-literal|"uadd16\t%8-11r, %16-19r, %0-3r"
+literal|"uadd16%c\t%8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -6545,7 +9444,7 @@ literal|0xfa90f050
 block|,
 literal|0xfff0f0f0
 block|,
-literal|"uqadd16\t%8-11r, %16-19r, %0-3r"
+literal|"uqadd16%c\t%8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -6555,7 +9454,7 @@ literal|0xfa90f060
 block|,
 literal|0xfff0f0f0
 block|,
-literal|"uhadd16\t%8-11r, %16-19r, %0-3r"
+literal|"uhadd16%c\t%8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -6565,7 +9464,7 @@ literal|0xfa90f080
 block|,
 literal|0xfff0f0f0
 block|,
-literal|"rev.w\t%8-11r, %16-19r"
+literal|"rev%c.w\t%8-11r, %16-19r"
 block|}
 block|,
 block|{
@@ -6575,7 +9474,7 @@ literal|0xfa90f090
 block|,
 literal|0xfff0f0f0
 block|,
-literal|"rev16.w\t%8-11r, %16-19r"
+literal|"rev16%c.w\t%8-11r, %16-19r"
 block|}
 block|,
 block|{
@@ -6585,7 +9484,7 @@ literal|0xfa90f0a0
 block|,
 literal|0xfff0f0f0
 block|,
-literal|"rbit\t%8-11r, %16-19r"
+literal|"rbit%c\t%8-11r, %16-19r"
 block|}
 block|,
 block|{
@@ -6595,7 +9494,7 @@ literal|0xfa90f0b0
 block|,
 literal|0xfff0f0f0
 block|,
-literal|"revsh.w\t%8-11r, %16-19r"
+literal|"revsh%c.w\t%8-11r, %16-19r"
 block|}
 block|,
 block|{
@@ -6605,7 +9504,7 @@ literal|0xfaa0f000
 block|,
 literal|0xfff0f0f0
 block|,
-literal|"saddsubx\t%8-11r, %16-19r, %0-3r"
+literal|"saddsubx%c\t%8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -6615,7 +9514,7 @@ literal|0xfaa0f010
 block|,
 literal|0xfff0f0f0
 block|,
-literal|"qaddsubx\t%8-11r, %16-19r, %0-3r"
+literal|"qaddsubx%c\t%8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -6625,7 +9524,7 @@ literal|0xfaa0f020
 block|,
 literal|0xfff0f0f0
 block|,
-literal|"shaddsubx\t%8-11r, %16-19r, %0-3r"
+literal|"shaddsubx%c\t%8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -6635,7 +9534,7 @@ literal|0xfaa0f040
 block|,
 literal|0xfff0f0f0
 block|,
-literal|"uaddsubx\t%8-11r, %16-19r, %0-3r"
+literal|"uaddsubx%c\t%8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -6645,7 +9544,7 @@ literal|0xfaa0f050
 block|,
 literal|0xfff0f0f0
 block|,
-literal|"uqaddsubx\t%8-11r, %16-19r, %0-3r"
+literal|"uqaddsubx%c\t%8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -6655,7 +9554,7 @@ literal|0xfaa0f060
 block|,
 literal|0xfff0f0f0
 block|,
-literal|"uhaddsubx\t%8-11r, %16-19r, %0-3r"
+literal|"uhaddsubx%c\t%8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -6665,7 +9564,7 @@ literal|0xfaa0f080
 block|,
 literal|0xfff0f0f0
 block|,
-literal|"sel\t%8-11r, %16-19r, %0-3r"
+literal|"sel%c\t%8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -6675,7 +9574,7 @@ literal|0xfab0f080
 block|,
 literal|0xfff0f0f0
 block|,
-literal|"clz\t%8-11r, %16-19r"
+literal|"clz%c\t%8-11r, %16-19r"
 block|}
 block|,
 block|{
@@ -6685,7 +9584,7 @@ literal|0xfac0f000
 block|,
 literal|0xfff0f0f0
 block|,
-literal|"ssub8\t%8-11r, %16-19r, %0-3r"
+literal|"ssub8%c\t%8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -6695,7 +9594,7 @@ literal|0xfac0f010
 block|,
 literal|0xfff0f0f0
 block|,
-literal|"qsub8\t%8-11r, %16-19r, %0-3r"
+literal|"qsub8%c\t%8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -6705,7 +9604,7 @@ literal|0xfac0f020
 block|,
 literal|0xfff0f0f0
 block|,
-literal|"shsub8\t%8-11r, %16-19r, %0-3r"
+literal|"shsub8%c\t%8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -6715,7 +9614,7 @@ literal|0xfac0f040
 block|,
 literal|0xfff0f0f0
 block|,
-literal|"usub8\t%8-11r, %16-19r, %0-3r"
+literal|"usub8%c\t%8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -6725,7 +9624,7 @@ literal|0xfac0f050
 block|,
 literal|0xfff0f0f0
 block|,
-literal|"uqsub8\t%8-11r, %16-19r, %0-3r"
+literal|"uqsub8%c\t%8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -6735,7 +9634,7 @@ literal|0xfac0f060
 block|,
 literal|0xfff0f0f0
 block|,
-literal|"uhsub8\t%8-11r, %16-19r, %0-3r"
+literal|"uhsub8%c\t%8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -6745,7 +9644,7 @@ literal|0xfad0f000
 block|,
 literal|0xfff0f0f0
 block|,
-literal|"ssub16\t%8-11r, %16-19r, %0-3r"
+literal|"ssub16%c\t%8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -6755,7 +9654,7 @@ literal|0xfad0f010
 block|,
 literal|0xfff0f0f0
 block|,
-literal|"qsub16\t%8-11r, %16-19r, %0-3r"
+literal|"qsub16%c\t%8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -6765,7 +9664,7 @@ literal|0xfad0f020
 block|,
 literal|0xfff0f0f0
 block|,
-literal|"shsub16\t%8-11r, %16-19r, %0-3r"
+literal|"shsub16%c\t%8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -6775,7 +9674,7 @@ literal|0xfad0f040
 block|,
 literal|0xfff0f0f0
 block|,
-literal|"usub16\t%8-11r, %16-19r, %0-3r"
+literal|"usub16%c\t%8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -6785,7 +9684,7 @@ literal|0xfad0f050
 block|,
 literal|0xfff0f0f0
 block|,
-literal|"uqsub16\t%8-11r, %16-19r, %0-3r"
+literal|"uqsub16%c\t%8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -6795,7 +9694,7 @@ literal|0xfad0f060
 block|,
 literal|0xfff0f0f0
 block|,
-literal|"uhsub16\t%8-11r, %16-19r, %0-3r"
+literal|"uhsub16%c\t%8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -6805,7 +9704,7 @@ literal|0xfae0f000
 block|,
 literal|0xfff0f0f0
 block|,
-literal|"ssubaddx\t%8-11r, %16-19r, %0-3r"
+literal|"ssubaddx%c\t%8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -6815,7 +9714,7 @@ literal|0xfae0f010
 block|,
 literal|0xfff0f0f0
 block|,
-literal|"qsubaddx\t%8-11r, %16-19r, %0-3r"
+literal|"qsubaddx%c\t%8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -6825,7 +9724,7 @@ literal|0xfae0f020
 block|,
 literal|0xfff0f0f0
 block|,
-literal|"shsubaddx\t%8-11r, %16-19r, %0-3r"
+literal|"shsubaddx%c\t%8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -6835,7 +9734,7 @@ literal|0xfae0f040
 block|,
 literal|0xfff0f0f0
 block|,
-literal|"usubaddx\t%8-11r, %16-19r, %0-3r"
+literal|"usubaddx%c\t%8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -6845,7 +9744,7 @@ literal|0xfae0f050
 block|,
 literal|0xfff0f0f0
 block|,
-literal|"uqsubaddx\t%8-11r, %16-19r, %0-3r"
+literal|"uqsubaddx%c\t%8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -6855,7 +9754,7 @@ literal|0xfae0f060
 block|,
 literal|0xfff0f0f0
 block|,
-literal|"uhsubaddx\t%8-11r, %16-19r, %0-3r"
+literal|"uhsubaddx%c\t%8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -6865,7 +9764,7 @@ literal|0xfb00f000
 block|,
 literal|0xfff0f0f0
 block|,
-literal|"mul.w\t%8-11r, %16-19r, %0-3r"
+literal|"mul%c.w\t%8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -6875,7 +9774,7 @@ literal|0xfb70f000
 block|,
 literal|0xfff0f0f0
 block|,
-literal|"usad8\t%8-11r, %16-19r, %0-3r"
+literal|"usad8%c\t%8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -6885,7 +9784,7 @@ literal|0xfa00f000
 block|,
 literal|0xffe0f0f0
 block|,
-literal|"lsl%20's.w\t%8-11r, %16-19r, %0-3r"
+literal|"lsl%20's%c.w\t%8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -6895,7 +9794,7 @@ literal|0xfa20f000
 block|,
 literal|0xffe0f0f0
 block|,
-literal|"lsr%20's.w\t%8-11r, %16-19r, %0-3r"
+literal|"lsr%20's%c.w\t%8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -6905,7 +9804,7 @@ literal|0xfa40f000
 block|,
 literal|0xffe0f0f0
 block|,
-literal|"asr%20's.w\t%8-11r, %16-19r, %0-3r"
+literal|"asr%20's%c.w\t%8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -6915,7 +9814,7 @@ literal|0xfa60f000
 block|,
 literal|0xffe0f0f0
 block|,
-literal|"ror%20's.w\t%8-11r, %16-19r, %0-3r"
+literal|"ror%20's%c.w\t%8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -6925,7 +9824,7 @@ literal|0xe8c00f40
 block|,
 literal|0xfff00fe0
 block|,
-literal|"strex%4?hb\t%0-3r, %12-15r, [%16-19r]"
+literal|"strex%4?hb%c\t%0-3r, %12-15r, [%16-19r]"
 block|}
 block|,
 block|{
@@ -6935,7 +9834,7 @@ literal|0xf3200000
 block|,
 literal|0xfff0f0e0
 block|,
-literal|"ssat16\t%8-11r, #%0-4d, %16-19r"
+literal|"ssat16%c\t%8-11r, #%0-4d, %16-19r"
 block|}
 block|,
 block|{
@@ -6945,7 +9844,7 @@ literal|0xf3a00000
 block|,
 literal|0xfff0f0e0
 block|,
-literal|"usat16\t%8-11r, #%0-4d, %16-19r"
+literal|"usat16%c\t%8-11r, #%0-4d, %16-19r"
 block|}
 block|,
 block|{
@@ -6955,7 +9854,7 @@ literal|0xfb20f000
 block|,
 literal|0xfff0f0e0
 block|,
-literal|"smuad%4'x\t%8-11r, %16-19r, %0-3r"
+literal|"smuad%4'x%c\t%8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -6965,7 +9864,7 @@ literal|0xfb30f000
 block|,
 literal|0xfff0f0e0
 block|,
-literal|"smulw%4?tb\t%8-11r, %16-19r, %0-3r"
+literal|"smulw%4?tb%c\t%8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -6975,7 +9874,7 @@ literal|0xfb40f000
 block|,
 literal|0xfff0f0e0
 block|,
-literal|"smusd%4'x\t%8-11r, %16-19r, %0-3r"
+literal|"smusd%4'x%c\t%8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -6985,7 +9884,7 @@ literal|0xfb50f000
 block|,
 literal|0xfff0f0e0
 block|,
-literal|"smmul%4'r\t%8-11r, %16-19r, %0-3r"
+literal|"smmul%4'r%c\t%8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -6995,7 +9894,7 @@ literal|0xfa00f080
 block|,
 literal|0xfff0f0c0
 block|,
-literal|"sxtah\t%8-11r, %16-19r, %0-3r%R"
+literal|"sxtah%c\t%8-11r, %16-19r, %0-3r%R"
 block|}
 block|,
 block|{
@@ -7005,7 +9904,7 @@ literal|0xfa10f080
 block|,
 literal|0xfff0f0c0
 block|,
-literal|"uxtah\t%8-11r, %16-19r, %0-3r%R"
+literal|"uxtah%c\t%8-11r, %16-19r, %0-3r%R"
 block|}
 block|,
 block|{
@@ -7015,7 +9914,7 @@ literal|0xfa20f080
 block|,
 literal|0xfff0f0c0
 block|,
-literal|"sxtab16\t%8-11r, %16-19r, %0-3r%R"
+literal|"sxtab16%c\t%8-11r, %16-19r, %0-3r%R"
 block|}
 block|,
 block|{
@@ -7025,7 +9924,7 @@ literal|0xfa30f080
 block|,
 literal|0xfff0f0c0
 block|,
-literal|"uxtab16\t%8-11r, %16-19r, %0-3r%R"
+literal|"uxtab16%c\t%8-11r, %16-19r, %0-3r%R"
 block|}
 block|,
 block|{
@@ -7035,7 +9934,7 @@ literal|0xfa40f080
 block|,
 literal|0xfff0f0c0
 block|,
-literal|"sxtab\t%8-11r, %16-19r, %0-3r%R"
+literal|"sxtab%c\t%8-11r, %16-19r, %0-3r%R"
 block|}
 block|,
 block|{
@@ -7045,7 +9944,7 @@ literal|0xfa50f080
 block|,
 literal|0xfff0f0c0
 block|,
-literal|"uxtab\t%8-11r, %16-19r, %0-3r%R"
+literal|"uxtab%c\t%8-11r, %16-19r, %0-3r%R"
 block|}
 block|,
 block|{
@@ -7055,7 +9954,7 @@ literal|0xfb10f000
 block|,
 literal|0xfff0f0c0
 block|,
-literal|"smul%5?tb%4?tb\t%8-11r, %16-19r, %0-3r"
+literal|"smul%5?tb%4?tb%c\t%8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -7065,7 +9964,7 @@ literal|0xf36f0000
 block|,
 literal|0xffff8020
 block|,
-literal|"bfc\t%8-11r, %E"
+literal|"bfc%c\t%8-11r, %E"
 block|}
 block|,
 block|{
@@ -7075,7 +9974,7 @@ literal|0xea100f00
 block|,
 literal|0xfff08f00
 block|,
-literal|"tst.w\t%16-19r, %S"
+literal|"tst%c.w\t%16-19r, %S"
 block|}
 block|,
 block|{
@@ -7085,7 +9984,7 @@ literal|0xea900f00
 block|,
 literal|0xfff08f00
 block|,
-literal|"teq\t%16-19r, %S"
+literal|"teq%c\t%16-19r, %S"
 block|}
 block|,
 block|{
@@ -7095,7 +9994,7 @@ literal|0xeb100f00
 block|,
 literal|0xfff08f00
 block|,
-literal|"cmn.w\t%16-19r, %S"
+literal|"cmn%c.w\t%16-19r, %S"
 block|}
 block|,
 block|{
@@ -7105,7 +10004,7 @@ literal|0xebb00f00
 block|,
 literal|0xfff08f00
 block|,
-literal|"cmp.w\t%16-19r, %S"
+literal|"cmp%c.w\t%16-19r, %S"
 block|}
 block|,
 block|{
@@ -7115,7 +10014,7 @@ literal|0xf0100f00
 block|,
 literal|0xfbf08f00
 block|,
-literal|"tst.w\t%16-19r, %M"
+literal|"tst%c.w\t%16-19r, %M"
 block|}
 block|,
 block|{
@@ -7125,7 +10024,7 @@ literal|0xf0900f00
 block|,
 literal|0xfbf08f00
 block|,
-literal|"teq\t%16-19r, %M"
+literal|"teq%c\t%16-19r, %M"
 block|}
 block|,
 block|{
@@ -7135,7 +10034,7 @@ literal|0xf1100f00
 block|,
 literal|0xfbf08f00
 block|,
-literal|"cmn.w\t%16-19r, %M"
+literal|"cmn%c.w\t%16-19r, %M"
 block|}
 block|,
 block|{
@@ -7145,7 +10044,7 @@ literal|0xf1b00f00
 block|,
 literal|0xfbf08f00
 block|,
-literal|"cmp.w\t%16-19r, %M"
+literal|"cmp%c.w\t%16-19r, %M"
 block|}
 block|,
 block|{
@@ -7155,7 +10054,7 @@ literal|0xea4f0000
 block|,
 literal|0xffef8000
 block|,
-literal|"mov%20's.w\t%8-11r, %S"
+literal|"mov%20's%c.w\t%8-11r, %S"
 block|}
 block|,
 block|{
@@ -7165,7 +10064,7 @@ literal|0xea6f0000
 block|,
 literal|0xffef8000
 block|,
-literal|"mvn%20's.w\t%8-11r, %S"
+literal|"mvn%20's%c.w\t%8-11r, %S"
 block|}
 block|,
 block|{
@@ -7175,7 +10074,7 @@ literal|0xe8c00070
 block|,
 literal|0xfff000f0
 block|,
-literal|"strexd\t%0-3r, %12-15r, %8-11r, [%16-19r]"
+literal|"strexd%c\t%0-3r, %12-15r, %8-11r, [%16-19r]"
 block|}
 block|,
 block|{
@@ -7185,7 +10084,7 @@ literal|0xfb000000
 block|,
 literal|0xfff000f0
 block|,
-literal|"mla\t%8-11r, %16-19r, %0-3r, %12-15r"
+literal|"mla%c\t%8-11r, %16-19r, %0-3r, %12-15r"
 block|}
 block|,
 block|{
@@ -7195,7 +10094,7 @@ literal|0xfb000010
 block|,
 literal|0xfff000f0
 block|,
-literal|"mls\t%8-11r, %16-19r, %0-3r, %12-15r"
+literal|"mls%c\t%8-11r, %16-19r, %0-3r, %12-15r"
 block|}
 block|,
 block|{
@@ -7205,7 +10104,7 @@ literal|0xfb700000
 block|,
 literal|0xfff000f0
 block|,
-literal|"usada8\t%8-11r, %16-19r, %0-3r, %12-15r"
+literal|"usada8%c\t%8-11r, %16-19r, %0-3r, %12-15r"
 block|}
 block|,
 block|{
@@ -7215,7 +10114,7 @@ literal|0xfb800000
 block|,
 literal|0xfff000f0
 block|,
-literal|"smull\t%12-15r, %8-11r, %16-19r, %0-3r"
+literal|"smull%c\t%12-15r, %8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -7225,7 +10124,7 @@ literal|0xfba00000
 block|,
 literal|0xfff000f0
 block|,
-literal|"umull\t%12-15r, %8-11r, %16-19r, %0-3r"
+literal|"umull%c\t%12-15r, %8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -7235,7 +10134,7 @@ literal|0xfbc00000
 block|,
 literal|0xfff000f0
 block|,
-literal|"smlal\t%12-15r, %8-11r, %16-19r, %0-3r"
+literal|"smlal%c\t%12-15r, %8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -7245,7 +10144,7 @@ literal|0xfbe00000
 block|,
 literal|0xfff000f0
 block|,
-literal|"umlal\t%12-15r, %8-11r, %16-19r, %0-3r"
+literal|"umlal%c\t%12-15r, %8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -7255,7 +10154,7 @@ literal|0xfbe00060
 block|,
 literal|0xfff000f0
 block|,
-literal|"umaal\t%12-15r, %8-11r, %16-19r, %0-3r"
+literal|"umaal%c\t%12-15r, %8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -7265,7 +10164,7 @@ literal|0xe8500f00
 block|,
 literal|0xfff00f00
 block|,
-literal|"ldrex\t%12-15r, [%16-19r, #%0-7W]"
+literal|"ldrex%c\t%12-15r, [%16-19r, #%0-7W]"
 block|}
 block|,
 block|{
@@ -7275,7 +10174,7 @@ literal|0xf7f08000
 block|,
 literal|0xfff0f000
 block|,
-literal|"smc\t%K"
+literal|"smc%c\t%K"
 block|}
 block|,
 block|{
@@ -7285,7 +10184,7 @@ literal|0xf04f0000
 block|,
 literal|0xfbef8000
 block|,
-literal|"mov%20's.w\t%8-11r, %M"
+literal|"mov%20's%c.w\t%8-11r, %M"
 block|}
 block|,
 block|{
@@ -7295,7 +10194,7 @@ literal|0xf06f0000
 block|,
 literal|0xfbef8000
 block|,
-literal|"mvn%20's.w\t%8-11r, %M"
+literal|"mvn%20's%c.w\t%8-11r, %M"
 block|}
 block|,
 block|{
@@ -7305,7 +10204,7 @@ literal|0xf810f000
 block|,
 literal|0xff70f000
 block|,
-literal|"pld\t%a"
+literal|"pld%c\t%a"
 block|}
 block|,
 block|{
@@ -7315,7 +10214,7 @@ literal|0xfb200000
 block|,
 literal|0xfff000e0
 block|,
-literal|"smlad%4'x\t%8-11r, %16-19r, %0-3r, %12-15r"
+literal|"smlad%4'x%c\t%8-11r, %16-19r, %0-3r, %12-15r"
 block|}
 block|,
 block|{
@@ -7325,7 +10224,7 @@ literal|0xfb300000
 block|,
 literal|0xfff000e0
 block|,
-literal|"smlaw%4?tb\t%8-11r, %16-19r, %0-3r, %12-15r"
+literal|"smlaw%4?tb%c\t%8-11r, %16-19r, %0-3r, %12-15r"
 block|}
 block|,
 block|{
@@ -7335,7 +10234,7 @@ literal|0xfb400000
 block|,
 literal|0xfff000e0
 block|,
-literal|"smlsd%4'x\t%8-11r, %16-19r, %0-3r, %12-15r"
+literal|"smlsd%4'x%c\t%8-11r, %16-19r, %0-3r, %12-15r"
 block|}
 block|,
 block|{
@@ -7345,7 +10244,7 @@ literal|0xfb500000
 block|,
 literal|0xfff000e0
 block|,
-literal|"smmla%4'r\t%8-11r, %16-19r, %0-3r, %12-15r"
+literal|"smmla%4'r%c\t%8-11r, %16-19r, %0-3r, %12-15r"
 block|}
 block|,
 block|{
@@ -7355,7 +10254,7 @@ literal|0xfb600000
 block|,
 literal|0xfff000e0
 block|,
-literal|"smmls%4'r\t%8-11r, %16-19r, %0-3r, %12-15r"
+literal|"smmls%4'r%c\t%8-11r, %16-19r, %0-3r, %12-15r"
 block|}
 block|,
 block|{
@@ -7365,7 +10264,7 @@ literal|0xfbc000c0
 block|,
 literal|0xfff000e0
 block|,
-literal|"smlald%4'x\t%12-15r, %8-11r, %16-19r, %0-3r"
+literal|"smlald%4'x%c\t%12-15r, %8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -7375,7 +10274,7 @@ literal|0xfbd000c0
 block|,
 literal|0xfff000e0
 block|,
-literal|"smlsld%4'x\t%12-15r, %8-11r, %16-19r, %0-3r"
+literal|"smlsld%4'x%c\t%12-15r, %8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -7385,7 +10284,7 @@ literal|0xeac00000
 block|,
 literal|0xfff08030
 block|,
-literal|"pkhbt\t%8-11r, %16-19r, %S"
+literal|"pkhbt%c\t%8-11r, %16-19r, %S"
 block|}
 block|,
 block|{
@@ -7395,7 +10294,7 @@ literal|0xeac00020
 block|,
 literal|0xfff08030
 block|,
-literal|"pkhtb\t%8-11r, %16-19r, %S"
+literal|"pkhtb%c\t%8-11r, %16-19r, %S"
 block|}
 block|,
 block|{
@@ -7405,7 +10304,7 @@ literal|0xf3400000
 block|,
 literal|0xfff08020
 block|,
-literal|"sbfx\t%8-11r, %16-19r, %F"
+literal|"sbfx%c\t%8-11r, %16-19r, %F"
 block|}
 block|,
 block|{
@@ -7415,7 +10314,7 @@ literal|0xf3c00000
 block|,
 literal|0xfff08020
 block|,
-literal|"ubfx\t%8-11r, %16-19r, %F"
+literal|"ubfx%c\t%8-11r, %16-19r, %F"
 block|}
 block|,
 block|{
@@ -7425,7 +10324,7 @@ literal|0xf8000e00
 block|,
 literal|0xff900f00
 block|,
-literal|"str%wt\t%12-15r, %a"
+literal|"str%wt%c\t%12-15r, %a"
 block|}
 block|,
 block|{
@@ -7435,7 +10334,7 @@ literal|0xfb100000
 block|,
 literal|0xfff000c0
 block|,
-literal|"smla%5?tb%4?tb\t%8-11r, %16-19r, %0-3r, %12-15r"
+literal|"smla%5?tb%4?tb%c\t%8-11r, %16-19r, %0-3r, %12-15r"
 block|}
 block|,
 block|{
@@ -7445,7 +10344,7 @@ literal|0xfbc00080
 block|,
 literal|0xfff000c0
 block|,
-literal|"smlal%5?tb%4?tb\t%12-15r, %8-11r, %16-19r, %0-3r"
+literal|"smlal%5?tb%4?tb%c\t%12-15r, %8-11r, %16-19r, %0-3r"
 block|}
 block|,
 block|{
@@ -7455,7 +10354,7 @@ literal|0xf3600000
 block|,
 literal|0xfff08020
 block|,
-literal|"bfi\t%8-11r, %16-19r, %E"
+literal|"bfi%c\t%8-11r, %16-19r, %E"
 block|}
 block|,
 block|{
@@ -7465,7 +10364,7 @@ literal|0xf8100e00
 block|,
 literal|0xfe900f00
 block|,
-literal|"ldr%wt\t%12-15r, %a"
+literal|"ldr%wt%c\t%12-15r, %a"
 block|}
 block|,
 block|{
@@ -7475,7 +10374,7 @@ literal|0xf3000000
 block|,
 literal|0xffd08020
 block|,
-literal|"ssat\t%8-11r, #%0-4d, %16-19r%s"
+literal|"ssat%c\t%8-11r, #%0-4d, %16-19r%s"
 block|}
 block|,
 block|{
@@ -7485,7 +10384,7 @@ literal|0xf3800000
 block|,
 literal|0xffd08020
 block|,
-literal|"usat\t%8-11r, #%0-4d, %16-19r%s"
+literal|"usat%c\t%8-11r, #%0-4d, %16-19r%s"
 block|}
 block|,
 block|{
@@ -7495,7 +10394,7 @@ literal|0xf2000000
 block|,
 literal|0xfbf08000
 block|,
-literal|"addw\t%8-11r, %16-19r, %I"
+literal|"addw%c\t%8-11r, %16-19r, %I"
 block|}
 block|,
 block|{
@@ -7505,7 +10404,7 @@ literal|0xf2400000
 block|,
 literal|0xfbf08000
 block|,
-literal|"movw\t%8-11r, %J"
+literal|"movw%c\t%8-11r, %J"
 block|}
 block|,
 block|{
@@ -7515,7 +10414,7 @@ literal|0xf2a00000
 block|,
 literal|0xfbf08000
 block|,
-literal|"subw\t%8-11r, %16-19r, %I"
+literal|"subw%c\t%8-11r, %16-19r, %I"
 block|}
 block|,
 block|{
@@ -7525,7 +10424,7 @@ literal|0xf2c00000
 block|,
 literal|0xfbf08000
 block|,
-literal|"movt\t%8-11r, %J"
+literal|"movt%c\t%8-11r, %J"
 block|}
 block|,
 block|{
@@ -7535,7 +10434,7 @@ literal|0xea000000
 block|,
 literal|0xffe08000
 block|,
-literal|"and%20's.w\t%8-11r, %16-19r, %S"
+literal|"and%20's%c.w\t%8-11r, %16-19r, %S"
 block|}
 block|,
 block|{
@@ -7545,7 +10444,7 @@ literal|0xea200000
 block|,
 literal|0xffe08000
 block|,
-literal|"bic%20's.w\t%8-11r, %16-19r, %S"
+literal|"bic%20's%c.w\t%8-11r, %16-19r, %S"
 block|}
 block|,
 block|{
@@ -7555,7 +10454,7 @@ literal|0xea400000
 block|,
 literal|0xffe08000
 block|,
-literal|"orr%20's.w\t%8-11r, %16-19r, %S"
+literal|"orr%20's%c.w\t%8-11r, %16-19r, %S"
 block|}
 block|,
 block|{
@@ -7565,7 +10464,7 @@ literal|0xea600000
 block|,
 literal|0xffe08000
 block|,
-literal|"orn%20's\t%8-11r, %16-19r, %S"
+literal|"orn%20's%c\t%8-11r, %16-19r, %S"
 block|}
 block|,
 block|{
@@ -7575,7 +10474,7 @@ literal|0xea800000
 block|,
 literal|0xffe08000
 block|,
-literal|"eor%20's.w\t%8-11r, %16-19r, %S"
+literal|"eor%20's%c.w\t%8-11r, %16-19r, %S"
 block|}
 block|,
 block|{
@@ -7585,7 +10484,7 @@ literal|0xeb000000
 block|,
 literal|0xffe08000
 block|,
-literal|"add%20's.w\t%8-11r, %16-19r, %S"
+literal|"add%20's%c.w\t%8-11r, %16-19r, %S"
 block|}
 block|,
 block|{
@@ -7595,7 +10494,7 @@ literal|0xeb400000
 block|,
 literal|0xffe08000
 block|,
-literal|"adc%20's.w\t%8-11r, %16-19r, %S"
+literal|"adc%20's%c.w\t%8-11r, %16-19r, %S"
 block|}
 block|,
 block|{
@@ -7605,7 +10504,7 @@ literal|0xeb600000
 block|,
 literal|0xffe08000
 block|,
-literal|"sbc%20's.w\t%8-11r, %16-19r, %S"
+literal|"sbc%20's%c.w\t%8-11r, %16-19r, %S"
 block|}
 block|,
 block|{
@@ -7615,7 +10514,7 @@ literal|0xeba00000
 block|,
 literal|0xffe08000
 block|,
-literal|"sub%20's.w\t%8-11r, %16-19r, %S"
+literal|"sub%20's%c.w\t%8-11r, %16-19r, %S"
 block|}
 block|,
 block|{
@@ -7625,7 +10524,7 @@ literal|0xebc00000
 block|,
 literal|0xffe08000
 block|,
-literal|"rsb%20's\t%8-11r, %16-19r, %S"
+literal|"rsb%20's%c\t%8-11r, %16-19r, %S"
 block|}
 block|,
 block|{
@@ -7635,7 +10534,7 @@ literal|0xe8400000
 block|,
 literal|0xfff00000
 block|,
-literal|"strex\t%8-11r, %12-15r, [%16-19r, #%0-7W]"
+literal|"strex%c\t%8-11r, %12-15r, [%16-19r, #%0-7W]"
 block|}
 block|,
 block|{
@@ -7645,7 +10544,7 @@ literal|0xf0000000
 block|,
 literal|0xfbe08000
 block|,
-literal|"and%20's.w\t%8-11r, %16-19r, %M"
+literal|"and%20's%c.w\t%8-11r, %16-19r, %M"
 block|}
 block|,
 block|{
@@ -7655,7 +10554,7 @@ literal|0xf0200000
 block|,
 literal|0xfbe08000
 block|,
-literal|"bic%20's.w\t%8-11r, %16-19r, %M"
+literal|"bic%20's%c.w\t%8-11r, %16-19r, %M"
 block|}
 block|,
 block|{
@@ -7665,7 +10564,7 @@ literal|0xf0400000
 block|,
 literal|0xfbe08000
 block|,
-literal|"orr%20's.w\t%8-11r, %16-19r, %M"
+literal|"orr%20's%c.w\t%8-11r, %16-19r, %M"
 block|}
 block|,
 block|{
@@ -7675,7 +10574,7 @@ literal|0xf0600000
 block|,
 literal|0xfbe08000
 block|,
-literal|"orn%20's\t%8-11r, %16-19r, %M"
+literal|"orn%20's%c\t%8-11r, %16-19r, %M"
 block|}
 block|,
 block|{
@@ -7685,7 +10584,7 @@ literal|0xf0800000
 block|,
 literal|0xfbe08000
 block|,
-literal|"eor%20's.w\t%8-11r, %16-19r, %M"
+literal|"eor%20's%c.w\t%8-11r, %16-19r, %M"
 block|}
 block|,
 block|{
@@ -7695,7 +10594,7 @@ literal|0xf1000000
 block|,
 literal|0xfbe08000
 block|,
-literal|"add%20's.w\t%8-11r, %16-19r, %M"
+literal|"add%20's%c.w\t%8-11r, %16-19r, %M"
 block|}
 block|,
 block|{
@@ -7705,7 +10604,7 @@ literal|0xf1400000
 block|,
 literal|0xfbe08000
 block|,
-literal|"adc%20's.w\t%8-11r, %16-19r, %M"
+literal|"adc%20's%c.w\t%8-11r, %16-19r, %M"
 block|}
 block|,
 block|{
@@ -7715,7 +10614,7 @@ literal|0xf1600000
 block|,
 literal|0xfbe08000
 block|,
-literal|"sbc%20's.w\t%8-11r, %16-19r, %M"
+literal|"sbc%20's%c.w\t%8-11r, %16-19r, %M"
 block|}
 block|,
 block|{
@@ -7725,7 +10624,7 @@ literal|0xf1a00000
 block|,
 literal|0xfbe08000
 block|,
-literal|"sub%20's.w\t%8-11r, %16-19r, %M"
+literal|"sub%20's%c.w\t%8-11r, %16-19r, %M"
 block|}
 block|,
 block|{
@@ -7735,7 +10634,7 @@ literal|0xf1c00000
 block|,
 literal|0xfbe08000
 block|,
-literal|"rsb%20's\t%8-11r, %16-19r, %M"
+literal|"rsb%20's%c\t%8-11r, %16-19r, %M"
 block|}
 block|,
 block|{
@@ -7745,7 +10644,7 @@ literal|0xe8800000
 block|,
 literal|0xffd00000
 block|,
-literal|"stmia.w\t%16-19r%21'!, %m"
+literal|"stmia%c.w\t%16-19r%21'!, %m"
 block|}
 block|,
 block|{
@@ -7755,7 +10654,7 @@ literal|0xe8900000
 block|,
 literal|0xffd00000
 block|,
-literal|"ldmia.w\t%16-19r%21'!, %m"
+literal|"ldmia%c.w\t%16-19r%21'!, %m"
 block|}
 block|,
 block|{
@@ -7765,7 +10664,7 @@ literal|0xe9000000
 block|,
 literal|0xffd00000
 block|,
-literal|"stmdb\t%16-19r%21'!, %m"
+literal|"stmdb%c\t%16-19r%21'!, %m"
 block|}
 block|,
 block|{
@@ -7775,7 +10674,7 @@ literal|0xe9100000
 block|,
 literal|0xffd00000
 block|,
-literal|"ldmdb\t%16-19r%21'!, %m"
+literal|"ldmdb%c\t%16-19r%21'!, %m"
 block|}
 block|,
 block|{
@@ -7785,7 +10684,7 @@ literal|0xe9c00000
 block|,
 literal|0xffd000ff
 block|,
-literal|"strd\t%12-15r, %8-11r, [%16-19r]"
+literal|"strd%c\t%12-15r, %8-11r, [%16-19r]"
 block|}
 block|,
 block|{
@@ -7795,7 +10694,7 @@ literal|0xe9d00000
 block|,
 literal|0xffd000ff
 block|,
-literal|"ldrd\t%12-15r, %8-11r, [%16-19r]"
+literal|"ldrd%c\t%12-15r, %8-11r, [%16-19r]"
 block|}
 block|,
 block|{
@@ -7805,7 +10704,7 @@ literal|0xe9400000
 block|,
 literal|0xff500000
 block|,
-literal|"strd\t%12-15r, %8-11r, [%16-19r, #%23`-%0-7W]"
+literal|"strd%c\t%12-15r, %8-11r, [%16-19r, #%23`-%0-7W]%21'!"
 block|}
 block|,
 block|{
@@ -7815,7 +10714,27 @@ literal|0xe9500000
 block|,
 literal|0xff500000
 block|,
-literal|"ldrd\t%12-15r, %8-11r, [%16-19r, #%23`-%0-7W]"
+literal|"ldrd%c\t%12-15r, %8-11r, [%16-19r, #%23`-%0-7W]%21'!"
+block|}
+block|,
+block|{
+name|ARM_EXT_V6T2
+block|,
+literal|0xe8600000
+block|,
+literal|0xff700000
+block|,
+literal|"strd%c\t%12-15r, %8-11r, [%16-19r], #%23`-%0-7W"
+block|}
+block|,
+block|{
+name|ARM_EXT_V6T2
+block|,
+literal|0xe8700000
+block|,
+literal|0xff700000
+block|,
+literal|"ldrd%c\t%12-15r, %8-11r, [%16-19r], #%23`-%0-7W"
 block|}
 block|,
 block|{
@@ -7825,7 +10744,7 @@ literal|0xf8000000
 block|,
 literal|0xff100000
 block|,
-literal|"str%w.w\t%12-15r, %a"
+literal|"str%w%c.w\t%12-15r, %a"
 block|}
 block|,
 block|{
@@ -7835,7 +10754,7 @@ literal|0xf8100000
 block|,
 literal|0xfe100000
 block|,
-literal|"ldr%w.w\t%12-15r, %a"
+literal|"ldr%w%c.w\t%12-15r, %a"
 block|}
 block|,
 comment|/* Filter out Bcc with cond=E or F, which are used for other instructions.  */
@@ -7866,7 +10785,7 @@ literal|0xf0008000
 block|,
 literal|0xf800d000
 block|,
-literal|"b%22-25c.w\t%b"
+literal|"b%22-25c.w\t%b%X"
 block|}
 block|,
 block|{
@@ -7876,7 +10795,7 @@ literal|0xf0009000
 block|,
 literal|0xf800d000
 block|,
-literal|"b.w\t%B"
+literal|"b%c.w\t%B%x"
 block|}
 block|,
 comment|/* These have been 32-bit since the invention of Thumb.  */
@@ -7887,7 +10806,7 @@ literal|0xf000c000
 block|,
 literal|0xf800d000
 block|,
-literal|"blx\t%B"
+literal|"blx%c\t%B%x"
 block|}
 block|,
 block|{
@@ -7897,7 +10816,7 @@ literal|0xf000d000
 block|,
 literal|0xf800d000
 block|,
-literal|"bl\t%B"
+literal|"bl%c\t%B%x"
 block|}
 block|,
 comment|/* Fallback.  */
@@ -7962,9 +10881,11 @@ literal|"gt"
 block|,
 literal|"le"
 block|,
-literal|""
+literal|"al"
 block|,
 literal|"<und>"
+block|,
+literal|""
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -8332,7 +11253,7 @@ literal|"b"
 block|,
 literal|"bus"
 block|,
-literal|"b"
+literal|"bc"
 block|,
 literal|"bss"
 block|,
@@ -8340,7 +11261,7 @@ literal|"h"
 block|,
 literal|"hus"
 block|,
-literal|"h"
+literal|"hc"
 block|,
 literal|"hss"
 block|,
@@ -8348,7 +11269,7 @@ literal|"w"
 block|,
 literal|"wus"
 block|,
-literal|"w"
+literal|"wc"
 block|,
 literal|"wss"
 block|,
@@ -8356,7 +11277,7 @@ literal|"d"
 block|,
 literal|"dus"
 block|,
-literal|"d"
+literal|"dc"
 block|,
 literal|"dss"
 block|}
@@ -8490,6 +11411,89 @@ name|FALSE
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Current IT instruction state.  This contains the same state as the IT    bits in the CPSR.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|unsigned
+name|int
+name|ifthen_state
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* IT state for the next instruction.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|unsigned
+name|int
+name|ifthen_next_state
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* The address of the insn for which the IT state is valid.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|bfd_vma
+name|ifthen_address
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|IFTHEN_COND
+value|((ifthen_state>> 4)& 0xf)
+end_define
+
+begin_comment
+comment|/* Cached mapping symbol state.  */
+end_comment
+
+begin_enum
+enum|enum
+name|map_type
+block|{
+name|MAP_ARM
+block|,
+name|MAP_THUMB
+block|,
+name|MAP_DATA
+block|}
+enum|;
+end_enum
+
+begin_decl_stmt
+name|enum
+name|map_type
+name|last_type
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|last_mapping_sym
+init|=
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bfd_vma
+name|last_mapping_addr
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_escape
 end_escape
 
@@ -8597,6 +11601,207 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Decode a bitfield of the form matching regexp (N(-N)?,)*N(-N)?.    Returns pointer to following character of the format string and    fills in *VALUEP and *WIDTHP with the extracted value and number of    bits extracted.  WIDTHP can be NULL. */
+end_comment
+
+begin_function
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|arm_decode_bitfield
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|ptr
+parameter_list|,
+name|unsigned
+name|long
+name|insn
+parameter_list|,
+name|unsigned
+name|long
+modifier|*
+name|valuep
+parameter_list|,
+name|int
+modifier|*
+name|widthp
+parameter_list|)
+block|{
+name|unsigned
+name|long
+name|value
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|width
+init|=
+literal|0
+decl_stmt|;
+do|do
+block|{
+name|int
+name|start
+decl_stmt|,
+name|end
+decl_stmt|;
+name|int
+name|bits
+decl_stmt|;
+for|for
+control|(
+name|start
+operator|=
+literal|0
+init|;
+operator|*
+name|ptr
+operator|>=
+literal|'0'
+operator|&&
+operator|*
+name|ptr
+operator|<=
+literal|'9'
+condition|;
+name|ptr
+operator|++
+control|)
+name|start
+operator|=
+name|start
+operator|*
+literal|10
+operator|+
+operator|*
+name|ptr
+operator|-
+literal|'0'
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|ptr
+operator|==
+literal|'-'
+condition|)
+for|for
+control|(
+name|end
+operator|=
+literal|0
+operator|,
+name|ptr
+operator|++
+init|;
+operator|*
+name|ptr
+operator|>=
+literal|'0'
+operator|&&
+operator|*
+name|ptr
+operator|<=
+literal|'9'
+condition|;
+name|ptr
+operator|++
+control|)
+name|end
+operator|=
+name|end
+operator|*
+literal|10
+operator|+
+operator|*
+name|ptr
+operator|-
+literal|'0'
+expr_stmt|;
+else|else
+name|end
+operator|=
+name|start
+expr_stmt|;
+name|bits
+operator|=
+name|end
+operator|-
+name|start
+expr_stmt|;
+if|if
+condition|(
+name|bits
+operator|<
+literal|0
+condition|)
+name|abort
+argument_list|()
+expr_stmt|;
+name|value
+operator||=
+operator|(
+operator|(
+name|insn
+operator|>>
+name|start
+operator|)
+operator|&
+operator|(
+operator|(
+literal|2ul
+operator|<<
+name|bits
+operator|)
+operator|-
+literal|1
+operator|)
+operator|)
+operator|<<
+name|width
+expr_stmt|;
+name|width
+operator|+=
+name|bits
+operator|+
+literal|1
+expr_stmt|;
+block|}
+do|while
+condition|(
+operator|*
+name|ptr
+operator|++
+operator|==
+literal|','
+condition|)
+do|;
+operator|*
+name|valuep
+operator|=
+name|value
+expr_stmt|;
+if|if
+condition|(
+name|widthp
+condition|)
+operator|*
+name|widthp
+operator|=
+name|width
+expr_stmt|;
+return|return
+name|ptr
+operator|-
+literal|1
+return|;
+block|}
+end_function
+
 begin_function
 specifier|static
 name|void
@@ -8611,6 +11816,9 @@ parameter_list|,
 name|void
 modifier|*
 name|stream
+parameter_list|,
+name|int
+name|print_shift
 parameter_list|)
 block|{
 name|func
@@ -8699,6 +11907,10 @@ operator|=
 literal|32
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|print_shift
+condition|)
 name|func
 argument_list|(
 name|stream
@@ -8713,8 +11925,22 @@ argument_list|,
 name|amount
 argument_list|)
 expr_stmt|;
-block|}
 else|else
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|", #%d"
+argument_list|,
+name|amount
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|print_shift
+condition|)
 name|func
 argument_list|(
 name|stream
@@ -8744,6 +11970,25 @@ literal|8
 index|]
 argument_list|)
 expr_stmt|;
+else|else
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|", %s"
+argument_list|,
+name|arm_regnames
+index|[
+operator|(
+name|given
+operator|&
+literal|0xf00
+operator|)
+operator|>>
+literal|8
+index|]
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
@@ -8757,6 +12002,9 @@ specifier|static
 name|bfd_boolean
 name|print_insn_coprocessor
 parameter_list|(
+name|bfd_vma
+name|pc
+parameter_list|,
 name|struct
 name|disassemble_info
 modifier|*
@@ -8798,6 +12046,9 @@ name|unsigned
 name|long
 name|value
 decl_stmt|;
+name|int
+name|cond
+decl_stmt|;
 for|for
 control|(
 name|insn
@@ -8831,6 +12082,12 @@ operator|->
 name|mach
 operator|!=
 name|bfd_mach_arm_iWMMXt
+operator|&&
+name|info
+operator|->
+name|mach
+operator|!=
+name|bfd_mach_arm_iWMMXt2
 condition|)
 name|insn
 operator|=
@@ -8864,6 +12121,19 @@ name|value
 operator||=
 literal|0xe0000000
 expr_stmt|;
+if|if
+condition|(
+name|ifthen_state
+condition|)
+name|cond
+operator|=
+name|IFTHEN_COND
+expr_stmt|;
+else|else
+name|cond
+operator|=
+literal|16
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -8878,10 +12148,39 @@ operator|)
 operator|==
 literal|0xf0000000
 condition|)
+block|{
 name|mask
 operator||=
 literal|0xf0000000
 expr_stmt|;
+name|cond
+operator|=
+literal|16
+expr_stmt|;
+block|}
+else|else
+block|{
+name|cond
+operator|=
+operator|(
+name|given
+operator|>>
+literal|28
+operator|)
+operator|&
+literal|0xf
+expr_stmt|;
+if|if
+condition|(
+name|cond
+operator|==
+literal|0xe
+condition|)
+name|cond
+operator|=
+literal|16
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -9105,6 +12404,221 @@ expr_stmt|;
 block|}
 break|break;
 case|case
+literal|'B'
+case|:
+block|{
+name|int
+name|regno
+init|=
+operator|(
+operator|(
+name|given
+operator|>>
+literal|12
+operator|)
+operator|&
+literal|0xf
+operator|)
+operator||
+operator|(
+operator|(
+name|given
+operator|>>
+operator|(
+literal|22
+operator|-
+literal|4
+operator|)
+operator|)
+operator|&
+literal|0x10
+operator|)
+decl_stmt|;
+name|int
+name|offset
+init|=
+operator|(
+name|given
+operator|>>
+literal|1
+operator|)
+operator|&
+literal|0x3f
+decl_stmt|;
+if|if
+condition|(
+name|offset
+operator|==
+literal|1
+condition|)
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"{d%d}"
+argument_list|,
+name|regno
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|regno
+operator|+
+name|offset
+operator|>
+literal|32
+condition|)
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"{d%d-<overflow reg d%d>}"
+argument_list|,
+name|regno
+argument_list|,
+name|regno
+operator|+
+name|offset
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+else|else
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"{d%d-d%d}"
+argument_list|,
+name|regno
+argument_list|,
+name|regno
+operator|+
+name|offset
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
+literal|'C'
+case|:
+block|{
+name|int
+name|rn
+init|=
+operator|(
+name|given
+operator|>>
+literal|16
+operator|)
+operator|&
+literal|0xf
+decl_stmt|;
+name|int
+name|offset
+init|=
+operator|(
+name|given
+operator|&
+literal|0xff
+operator|)
+operator|*
+literal|4
+decl_stmt|;
+name|int
+name|add
+init|=
+operator|(
+name|given
+operator|>>
+literal|23
+operator|)
+operator|&
+literal|1
+decl_stmt|;
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"[%s"
+argument_list|,
+name|arm_regnames
+index|[
+name|rn
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|offset
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|add
+condition|)
+name|offset
+operator|=
+operator|-
+name|offset
+expr_stmt|;
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|", #%d"
+argument_list|,
+name|offset
+argument_list|)
+expr_stmt|;
+block|}
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"]"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rn
+operator|==
+literal|15
+condition|)
+block|{
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"\t; "
+argument_list|)
+expr_stmt|;
+comment|/* FIXME: Unsure if info->bytes_per_chunk is the                                right thing to use here.  */
+name|info
+operator|->
+name|print_address_func
+argument_list|(
+name|offset
+operator|+
+name|pc
+operator|+
+name|info
+operator|->
+name|bytes_per_chunk
+operator|*
+literal|2
+argument_list|,
+name|info
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+break|break;
+case|case
 literal|'c'
 case|:
 name|func
@@ -9115,13 +12629,7 @@ literal|"%s"
 argument_list|,
 name|arm_conditional
 index|[
-operator|(
-name|given
-operator|>>
-literal|28
-operator|)
-operator|&
-literal|0xf
+name|cond
 index|]
 argument_list|)
 expr_stmt|;
@@ -9423,90 +12931,26 @@ literal|'9'
 case|:
 block|{
 name|int
-name|bitstart
-init|=
-operator|*
-name|c
-operator|++
-operator|-
-literal|'0'
+name|width
 decl_stmt|;
-name|int
-name|bitend
-init|=
-literal|0
+name|unsigned
+name|long
+name|value
 decl_stmt|;
-while|while
-condition|(
-operator|*
 name|c
-operator|>=
-literal|'0'
-operator|&&
-operator|*
-name|c
-operator|<=
-literal|'9'
-condition|)
-name|bitstart
 operator|=
-operator|(
-name|bitstart
-operator|*
-literal|10
-operator|)
-operator|+
-operator|*
+name|arm_decode_bitfield
+argument_list|(
 name|c
-operator|++
-operator|-
-literal|'0'
-expr_stmt|;
-switch|switch
-condition|(
-operator|*
-name|c
-condition|)
-block|{
-case|case
-literal|'-'
-case|:
-name|c
-operator|++
-expr_stmt|;
-while|while
-condition|(
-operator|*
-name|c
-operator|>=
-literal|'0'
-operator|&&
-operator|*
-name|c
-operator|<=
-literal|'9'
-condition|)
-name|bitend
-operator|=
-operator|(
-name|bitend
-operator|*
-literal|10
-operator|)
-operator|+
-operator|*
-name|c
-operator|++
-operator|-
-literal|'0'
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|bitend
-condition|)
-name|abort
-argument_list|()
+argument_list|,
+name|given
+argument_list|,
+operator|&
+name|value
+argument_list|,
+operator|&
+name|width
+argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
@@ -9517,30 +12961,6 @@ block|{
 case|case
 literal|'r'
 case|:
-block|{
-name|long
-name|reg
-decl_stmt|;
-name|reg
-operator|=
-name|given
-operator|>>
-name|bitstart
-expr_stmt|;
-name|reg
-operator|&=
-operator|(
-literal|2
-operator|<<
-operator|(
-name|bitend
-operator|-
-name|bitstart
-operator|)
-operator|)
-operator|-
-literal|1
-expr_stmt|;
 name|func
 argument_list|(
 name|stream
@@ -9549,46 +12969,100 @@ literal|"%s"
 argument_list|,
 name|arm_regnames
 index|[
-name|reg
+name|value
 index|]
 argument_list|)
 expr_stmt|;
-block|}
+break|break;
+case|case
+literal|'D'
+case|:
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"d%ld"
+argument_list|,
+name|value
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'Q'
+case|:
+if|if
+condition|(
+name|value
+operator|&
+literal|1
+condition|)
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"<illegal reg q%ld.5>"
+argument_list|,
+name|value
+operator|>>
+literal|1
+argument_list|)
+expr_stmt|;
+else|else
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"q%ld"
+argument_list|,
+name|value
+operator|>>
+literal|1
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 literal|'d'
 case|:
-block|{
-name|long
-name|reg
-decl_stmt|;
-name|reg
-operator|=
-name|given
-operator|>>
-name|bitstart
-expr_stmt|;
-name|reg
-operator|&=
-operator|(
-literal|2
-operator|<<
-operator|(
-name|bitend
-operator|-
-name|bitstart
-operator|)
-operator|)
-operator|-
-literal|1
-expr_stmt|;
 name|func
 argument_list|(
 name|stream
 argument_list|,
 literal|"%ld"
 argument_list|,
-name|reg
+name|value
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'k'
+case|:
+block|{
+name|int
+name|from
+init|=
+operator|(
+name|given
+operator|&
+operator|(
+literal|1
+operator|<<
+literal|7
+operator|)
+operator|)
+condition|?
+literal|32
+else|:
+literal|16
+decl_stmt|;
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"%ld"
+argument_list|,
+name|from
+operator|-
+name|value
 argument_list|)
 expr_stmt|;
 block|}
@@ -9596,33 +13070,9 @@ break|break;
 case|case
 literal|'f'
 case|:
-block|{
-name|long
-name|reg
-decl_stmt|;
-name|reg
-operator|=
-name|given
-operator|>>
-name|bitstart
-expr_stmt|;
-name|reg
-operator|&=
-operator|(
-literal|2
-operator|<<
-operator|(
-name|bitend
-operator|-
-name|bitstart
-operator|)
-operator|)
-operator|-
-literal|1
-expr_stmt|;
 if|if
 condition|(
-name|reg
+name|value
 operator|>
 literal|7
 condition|)
@@ -9634,7 +13084,7 @@ literal|"#%s"
 argument_list|,
 name|arm_fp_const
 index|[
-name|reg
+name|value
 operator|&
 literal|7
 index|]
@@ -9647,52 +13097,18 @@ name|stream
 argument_list|,
 literal|"f%ld"
 argument_list|,
-name|reg
+name|value
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'w'
 case|:
-block|{
-name|long
-name|reg
-decl_stmt|;
 if|if
 condition|(
-name|bitstart
-operator|!=
-name|bitend
-condition|)
-block|{
-name|reg
-operator|=
-name|given
-operator|>>
-name|bitstart
-expr_stmt|;
-name|reg
-operator|&=
-operator|(
-literal|2
-operator|<<
-operator|(
-name|bitend
-operator|-
-name|bitstart
-operator|)
-operator|)
-operator|-
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|bitend
-operator|-
-name|bitstart
+name|width
 operator|==
-literal|1
+literal|2
 condition|)
 name|func
 argument_list|(
@@ -9702,7 +13118,7 @@ literal|"%s"
 argument_list|,
 name|iwmmxt_wwnames
 index|[
-name|reg
+name|value
 index|]
 argument_list|)
 expr_stmt|;
@@ -9715,79 +13131,14 @@ literal|"%s"
 argument_list|,
 name|iwmmxt_wwssnames
 index|[
-name|reg
+name|value
 index|]
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|reg
-operator|=
-operator|(
-operator|(
-operator|(
-name|given
-operator|>>
-literal|8
-operator|)
-operator|&
-literal|0x1
-operator|)
-operator||
-operator|(
-operator|(
-name|given
-operator|>>
-literal|22
-operator|)
-operator|&
-literal|0x1
-operator|)
-operator|)
-expr_stmt|;
-name|func
-argument_list|(
-name|stream
-argument_list|,
-literal|"%s"
-argument_list|,
-name|iwmmxt_wwnames
-index|[
-name|reg
-index|]
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 break|break;
 case|case
 literal|'g'
 case|:
-block|{
-name|long
-name|reg
-decl_stmt|;
-name|reg
-operator|=
-name|given
-operator|>>
-name|bitstart
-expr_stmt|;
-name|reg
-operator|&=
-operator|(
-literal|2
-operator|<<
-operator|(
-name|bitend
-operator|-
-name|bitstart
-operator|)
-operator|)
-operator|-
-literal|1
-expr_stmt|;
 name|func
 argument_list|(
 name|stream
@@ -9796,39 +13147,14 @@ literal|"%s"
 argument_list|,
 name|iwmmxt_regnames
 index|[
-name|reg
+name|value
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'G'
 case|:
-block|{
-name|long
-name|reg
-decl_stmt|;
-name|reg
-operator|=
-name|given
-operator|>>
-name|bitstart
-expr_stmt|;
-name|reg
-operator|&=
-operator|(
-literal|2
-operator|<<
-operator|(
-name|bitend
-operator|-
-name|bitstart
-operator|)
-operator|)
-operator|-
-literal|1
-expr_stmt|;
 name|func
 argument_list|(
 name|stream
@@ -9837,11 +13163,108 @@ literal|"%s"
 argument_list|,
 name|iwmmxt_cregnames
 index|[
-name|reg
+name|value
 index|]
 argument_list|)
 expr_stmt|;
-block|}
+break|break;
+case|case
+literal|'x'
+case|:
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"0x%lx"
+argument_list|,
+name|value
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'`'
+case|:
+name|c
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|value
+operator|==
+literal|0
+condition|)
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"%c"
+argument_list|,
+operator|*
+name|c
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'\''
+case|:
+name|c
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|value
+operator|==
+operator|(
+operator|(
+literal|1ul
+operator|<<
+name|width
+operator|)
+operator|-
+literal|1
+operator|)
+condition|)
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"%c"
+argument_list|,
+operator|*
+name|c
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'?'
+case|:
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"%c"
+argument_list|,
+name|c
+index|[
+operator|(
+literal|1
+operator|<<
+name|width
+operator|)
+operator|-
+operator|(
+name|int
+operator|)
+name|value
+index|]
+argument_list|)
+expr_stmt|;
+name|c
+operator|+=
+literal|1
+operator|<<
+name|width
+expr_stmt|;
 break|break;
 default|default:
 name|abort
@@ -9861,6 +13284,7 @@ name|single
 init|=
 operator|*
 name|c
+operator|++
 operator|==
 literal|'y'
 decl_stmt|;
@@ -9869,11 +13293,12 @@ name|regno
 decl_stmt|;
 switch|switch
 condition|(
-name|bitstart
+operator|*
+name|c
 condition|)
 block|{
 case|case
-literal|4
+literal|'4'
 case|:
 comment|/* Sm pair */
 name|func
@@ -9885,7 +13310,7 @@ argument_list|)
 expr_stmt|;
 comment|/* Fall through.  */
 case|case
-literal|0
+literal|'0'
 case|:
 comment|/* Sm, Dm */
 name|regno
@@ -9914,9 +13339,24 @@ operator|&
 literal|1
 expr_stmt|;
 block|}
+else|else
+name|regno
+operator|+=
+operator|(
+operator|(
+name|given
+operator|>>
+literal|5
+operator|)
+operator|&
+literal|1
+operator|)
+operator|<<
+literal|4
+expr_stmt|;
 break|break;
 case|case
-literal|1
+literal|'1'
 case|:
 comment|/* Sd, Dd */
 name|regno
@@ -9949,9 +13389,24 @@ operator|&
 literal|1
 expr_stmt|;
 block|}
+else|else
+name|regno
+operator|+=
+operator|(
+operator|(
+name|given
+operator|>>
+literal|22
+operator|)
+operator|&
+literal|1
+operator|)
+operator|<<
+literal|4
+expr_stmt|;
 break|break;
 case|case
-literal|2
+literal|'2'
 case|:
 comment|/* Sn, Dn */
 name|regno
@@ -9984,9 +13439,24 @@ operator|&
 literal|1
 expr_stmt|;
 block|}
+else|else
+name|regno
+operator|+=
+operator|(
+operator|(
+name|given
+operator|>>
+literal|7
+operator|)
+operator|&
+literal|1
+operator|)
+operator|<<
+literal|4
+expr_stmt|;
 break|break;
 case|case
-literal|3
+literal|'3'
 case|:
 comment|/* List */
 name|func
@@ -10026,6 +13496,21 @@ operator|&
 literal|1
 expr_stmt|;
 block|}
+else|else
+name|regno
+operator|+=
+operator|(
+operator|(
+name|given
+operator|>>
+literal|22
+operator|)
+operator|&
+literal|1
+operator|)
+operator|<<
+literal|4
+expr_stmt|;
 break|break;
 default|default:
 name|abort
@@ -10049,9 +13534,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|bitstart
+operator|*
+name|c
 operator|==
-literal|3
+literal|'3'
 condition|)
 block|{
 name|int
@@ -10106,9 +13592,10 @@ block|}
 elseif|else
 if|if
 condition|(
-name|bitstart
+operator|*
+name|c
 operator|==
-literal|4
+literal|'4'
 condition|)
 name|func
 argument_list|(
@@ -10126,119 +13613,6 @@ name|regno
 operator|+
 literal|1
 argument_list|)
-expr_stmt|;
-break|break;
-block|}
-break|break;
-case|case
-literal|'`'
-case|:
-name|c
-operator|++
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|given
-operator|&
-operator|(
-literal|1
-operator|<<
-name|bitstart
-operator|)
-operator|)
-operator|==
-literal|0
-condition|)
-name|func
-argument_list|(
-name|stream
-argument_list|,
-literal|"%c"
-argument_list|,
-operator|*
-name|c
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|'\''
-case|:
-name|c
-operator|++
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|given
-operator|&
-operator|(
-literal|1
-operator|<<
-name|bitstart
-operator|)
-operator|)
-operator|!=
-literal|0
-condition|)
-name|func
-argument_list|(
-name|stream
-argument_list|,
-literal|"%c"
-argument_list|,
-operator|*
-name|c
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|'?'
-case|:
-operator|++
-name|c
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|given
-operator|&
-operator|(
-literal|1
-operator|<<
-name|bitstart
-operator|)
-operator|)
-operator|!=
-literal|0
-condition|)
-name|func
-argument_list|(
-name|stream
-argument_list|,
-literal|"%c"
-argument_list|,
-operator|*
-name|c
-operator|++
-argument_list|)
-expr_stmt|;
-else|else
-name|func
-argument_list|(
-name|stream
-argument_list|,
-literal|"%c"
-argument_list|,
-operator|*
-operator|++
-name|c
-argument_list|)
-expr_stmt|;
-break|break;
-default|default:
-name|abort
-argument_list|()
 expr_stmt|;
 block|}
 break|break;
@@ -10467,6 +13841,253 @@ argument_list|(
 name|stream
 argument_list|,
 literal|"]"
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
+literal|'r'
+case|:
+block|{
+name|int
+name|imm4
+init|=
+operator|(
+name|given
+operator|>>
+literal|4
+operator|)
+operator|&
+literal|0xf
+decl_stmt|;
+name|int
+name|puw_bits
+init|=
+operator|(
+operator|(
+name|given
+operator|>>
+literal|22
+operator|)
+operator|&
+literal|6
+operator|)
+operator||
+operator|(
+operator|(
+name|given
+operator|>>
+literal|21
+operator|)
+operator|&
+literal|1
+operator|)
+decl_stmt|;
+name|int
+name|ubit
+init|=
+operator|(
+name|given
+operator|>>
+literal|23
+operator|)
+operator|&
+literal|1
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|rm
+init|=
+name|arm_regnames
+index|[
+name|given
+operator|&
+literal|0xf
+index|]
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|rn
+init|=
+name|arm_regnames
+index|[
+operator|(
+name|given
+operator|>>
+literal|16
+operator|)
+operator|&
+literal|0xf
+index|]
+decl_stmt|;
+switch|switch
+condition|(
+name|puw_bits
+condition|)
+block|{
+case|case
+literal|1
+case|:
+comment|/* fall through */
+case|case
+literal|3
+case|:
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"[%s], %c%s"
+argument_list|,
+name|rn
+argument_list|,
+name|ubit
+condition|?
+literal|'+'
+else|:
+literal|'-'
+argument_list|,
+name|rm
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|imm4
+condition|)
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|", lsl #%d"
+argument_list|,
+name|imm4
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|4
+case|:
+comment|/* fall through */
+case|case
+literal|5
+case|:
+comment|/* fall through */
+case|case
+literal|6
+case|:
+comment|/* fall through */
+case|case
+literal|7
+case|:
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"[%s, %c%s"
+argument_list|,
+name|rn
+argument_list|,
+name|ubit
+condition|?
+literal|'+'
+else|:
+literal|'-'
+argument_list|,
+name|rm
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|imm4
+operator|>
+literal|0
+condition|)
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|", lsl #%d"
+argument_list|,
+name|imm4
+argument_list|)
+expr_stmt|;
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"]"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|puw_bits
+operator|==
+literal|5
+operator|||
+name|puw_bits
+operator|==
+literal|7
+condition|)
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"!"
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"INVALID"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+break|break;
+case|case
+literal|'i'
+case|:
+block|{
+name|long
+name|imm5
+decl_stmt|;
+name|imm5
+operator|=
+operator|(
+operator|(
+name|given
+operator|&
+literal|0x100
+operator|)
+operator|>>
+literal|4
+operator|)
+operator||
+operator|(
+name|given
+operator|&
+literal|0xf
+operator|)
+expr_stmt|;
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"%ld"
+argument_list|,
+operator|(
+name|imm5
+operator|==
+literal|0
+operator|)
+condition|?
+literal|32
+else|:
+name|imm5
 argument_list|)
 expr_stmt|;
 block|}
@@ -10771,6 +14392,8 @@ argument_list|,
 name|func
 argument_list|,
 name|stream
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -10886,11 +14509,2507 @@ argument_list|,
 name|func
 argument_list|,
 name|stream
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
 block|}
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/* Print one neon instruction on INFO->STREAM.    Return TRUE if the instuction matched, FALSE if this is not a    recognised neon instruction.  */
+end_comment
+
+begin_function
+specifier|static
+name|bfd_boolean
+name|print_insn_neon
+parameter_list|(
+name|struct
+name|disassemble_info
+modifier|*
+name|info
+parameter_list|,
+name|long
+name|given
+parameter_list|,
+name|bfd_boolean
+name|thumb
+parameter_list|)
+block|{
+specifier|const
+name|struct
+name|opcode32
+modifier|*
+name|insn
+decl_stmt|;
+name|void
+modifier|*
+name|stream
+init|=
+name|info
+operator|->
+name|stream
+decl_stmt|;
+name|fprintf_ftype
+name|func
+init|=
+name|info
+operator|->
+name|fprintf_func
+decl_stmt|;
+if|if
+condition|(
+name|thumb
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|given
+operator|&
+literal|0xef000000
+operator|)
+operator|==
+literal|0xef000000
+condition|)
+block|{
+comment|/* move bit 28 to bit 24 to translate Thumb2 to ARM encoding.  */
+name|unsigned
+name|long
+name|bit28
+init|=
+name|given
+operator|&
+operator|(
+literal|1
+operator|<<
+literal|28
+operator|)
+decl_stmt|;
+name|given
+operator|&=
+literal|0x00ffffff
+expr_stmt|;
+if|if
+condition|(
+name|bit28
+condition|)
+name|given
+operator||=
+literal|0xf3000000
+expr_stmt|;
+else|else
+name|given
+operator||=
+literal|0xf2000000
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|given
+operator|&
+literal|0xff000000
+operator|)
+operator|==
+literal|0xf9000000
+condition|)
+name|given
+operator|^=
+literal|0xf9000000
+operator|^
+literal|0xf4000000
+expr_stmt|;
+else|else
+return|return
+name|FALSE
+return|;
+block|}
+for|for
+control|(
+name|insn
+operator|=
+name|neon_opcodes
+init|;
+name|insn
+operator|->
+name|assembler
+condition|;
+name|insn
+operator|++
+control|)
+block|{
+if|if
+condition|(
+operator|(
+name|given
+operator|&
+name|insn
+operator|->
+name|mask
+operator|)
+operator|==
+name|insn
+operator|->
+name|value
+condition|)
+block|{
+specifier|const
+name|char
+modifier|*
+name|c
+decl_stmt|;
+for|for
+control|(
+name|c
+operator|=
+name|insn
+operator|->
+name|assembler
+init|;
+operator|*
+name|c
+condition|;
+name|c
+operator|++
+control|)
+block|{
+if|if
+condition|(
+operator|*
+name|c
+operator|==
+literal|'%'
+condition|)
+block|{
+switch|switch
+condition|(
+operator|*
+operator|++
+name|c
+condition|)
+block|{
+case|case
+literal|'%'
+case|:
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"%%"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'c'
+case|:
+if|if
+condition|(
+name|thumb
+operator|&&
+name|ifthen_state
+condition|)
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"%s"
+argument_list|,
+name|arm_conditional
+index|[
+name|IFTHEN_COND
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'A'
+case|:
+block|{
+specifier|static
+specifier|const
+name|unsigned
+name|char
+name|enc
+index|[
+literal|16
+index|]
+init|=
+block|{
+literal|0x4
+block|,
+literal|0x14
+block|,
+comment|/* st4 0,1 */
+literal|0x4
+block|,
+comment|/* st1 2 */
+literal|0x4
+block|,
+comment|/* st2 3 */
+literal|0x3
+block|,
+comment|/* st3 4 */
+literal|0x13
+block|,
+comment|/* st3 5 */
+literal|0x3
+block|,
+comment|/* st1 6 */
+literal|0x1
+block|,
+comment|/* st1 7 */
+literal|0x2
+block|,
+comment|/* st2 8 */
+literal|0x12
+block|,
+comment|/* st2 9 */
+literal|0x2
+block|,
+comment|/* st1 10 */
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|}
+decl_stmt|;
+name|int
+name|rd
+init|=
+operator|(
+operator|(
+name|given
+operator|>>
+literal|12
+operator|)
+operator|&
+literal|0xf
+operator|)
+operator||
+operator|(
+operator|(
+operator|(
+name|given
+operator|>>
+literal|22
+operator|)
+operator|&
+literal|1
+operator|)
+operator|<<
+literal|4
+operator|)
+decl_stmt|;
+name|int
+name|rn
+init|=
+operator|(
+operator|(
+name|given
+operator|>>
+literal|16
+operator|)
+operator|&
+literal|0xf
+operator|)
+decl_stmt|;
+name|int
+name|rm
+init|=
+operator|(
+operator|(
+name|given
+operator|>>
+literal|0
+operator|)
+operator|&
+literal|0xf
+operator|)
+decl_stmt|;
+name|int
+name|align
+init|=
+operator|(
+operator|(
+name|given
+operator|>>
+literal|4
+operator|)
+operator|&
+literal|0x3
+operator|)
+decl_stmt|;
+name|int
+name|type
+init|=
+operator|(
+operator|(
+name|given
+operator|>>
+literal|8
+operator|)
+operator|&
+literal|0xf
+operator|)
+decl_stmt|;
+name|int
+name|n
+init|=
+name|enc
+index|[
+name|type
+index|]
+operator|&
+literal|0xf
+decl_stmt|;
+name|int
+name|stride
+init|=
+operator|(
+name|enc
+index|[
+name|type
+index|]
+operator|>>
+literal|4
+operator|)
+operator|+
+literal|1
+decl_stmt|;
+name|int
+name|ix
+decl_stmt|;
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"{"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|stride
+operator|>
+literal|1
+condition|)
+for|for
+control|(
+name|ix
+operator|=
+literal|0
+init|;
+name|ix
+operator|!=
+name|n
+condition|;
+name|ix
+operator|++
+control|)
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"%sd%d"
+argument_list|,
+name|ix
+condition|?
+literal|","
+else|:
+literal|""
+argument_list|,
+name|rd
+operator|+
+name|ix
+operator|*
+name|stride
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|n
+operator|==
+literal|1
+condition|)
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"d%d"
+argument_list|,
+name|rd
+argument_list|)
+expr_stmt|;
+else|else
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"d%d-d%d"
+argument_list|,
+name|rd
+argument_list|,
+name|rd
+operator|+
+name|n
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"}, [%s"
+argument_list|,
+name|arm_regnames
+index|[
+name|rn
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|align
+condition|)
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|", :%d"
+argument_list|,
+literal|32
+operator|<<
+name|align
+argument_list|)
+expr_stmt|;
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"]"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rm
+operator|==
+literal|0xd
+condition|)
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"!"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|rm
+operator|!=
+literal|0xf
+condition|)
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|", %s"
+argument_list|,
+name|arm_regnames
+index|[
+name|rm
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
+literal|'B'
+case|:
+block|{
+name|int
+name|rd
+init|=
+operator|(
+operator|(
+name|given
+operator|>>
+literal|12
+operator|)
+operator|&
+literal|0xf
+operator|)
+operator||
+operator|(
+operator|(
+operator|(
+name|given
+operator|>>
+literal|22
+operator|)
+operator|&
+literal|1
+operator|)
+operator|<<
+literal|4
+operator|)
+decl_stmt|;
+name|int
+name|rn
+init|=
+operator|(
+operator|(
+name|given
+operator|>>
+literal|16
+operator|)
+operator|&
+literal|0xf
+operator|)
+decl_stmt|;
+name|int
+name|rm
+init|=
+operator|(
+operator|(
+name|given
+operator|>>
+literal|0
+operator|)
+operator|&
+literal|0xf
+operator|)
+decl_stmt|;
+name|int
+name|idx_align
+init|=
+operator|(
+operator|(
+name|given
+operator|>>
+literal|4
+operator|)
+operator|&
+literal|0xf
+operator|)
+decl_stmt|;
+name|int
+name|align
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|size
+init|=
+operator|(
+operator|(
+name|given
+operator|>>
+literal|10
+operator|)
+operator|&
+literal|0x3
+operator|)
+decl_stmt|;
+name|int
+name|idx
+init|=
+name|idx_align
+operator|>>
+operator|(
+name|size
+operator|+
+literal|1
+operator|)
+decl_stmt|;
+name|int
+name|length
+init|=
+operator|(
+operator|(
+name|given
+operator|>>
+literal|8
+operator|)
+operator|&
+literal|3
+operator|)
+operator|+
+literal|1
+decl_stmt|;
+name|int
+name|stride
+init|=
+literal|1
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+if|if
+condition|(
+name|length
+operator|>
+literal|1
+operator|&&
+name|size
+operator|>
+literal|0
+condition|)
+name|stride
+operator|=
+operator|(
+name|idx_align
+operator|&
+operator|(
+literal|1
+operator|<<
+name|size
+operator|)
+operator|)
+condition|?
+literal|2
+else|:
+literal|1
+expr_stmt|;
+switch|switch
+condition|(
+name|length
+condition|)
+block|{
+case|case
+literal|1
+case|:
+block|{
+name|int
+name|amask
+init|=
+operator|(
+literal|1
+operator|<<
+name|size
+operator|)
+operator|-
+literal|1
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|idx_align
+operator|&
+operator|(
+literal|1
+operator|<<
+name|size
+operator|)
+operator|)
+operator|!=
+literal|0
+condition|)
+return|return
+name|FALSE
+return|;
+if|if
+condition|(
+name|size
+operator|>
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|idx_align
+operator|&
+name|amask
+operator|)
+operator|==
+name|amask
+condition|)
+name|align
+operator|=
+literal|8
+operator|<<
+name|size
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|(
+name|idx_align
+operator|&
+name|amask
+operator|)
+operator|!=
+literal|0
+condition|)
+return|return
+name|FALSE
+return|;
+block|}
+block|}
+break|break;
+case|case
+literal|2
+case|:
+if|if
+condition|(
+name|size
+operator|==
+literal|2
+operator|&&
+operator|(
+name|idx_align
+operator|&
+literal|2
+operator|)
+operator|!=
+literal|0
+condition|)
+return|return
+name|FALSE
+return|;
+name|align
+operator|=
+operator|(
+name|idx_align
+operator|&
+literal|1
+operator|)
+condition|?
+literal|16
+operator|<<
+name|size
+else|:
+literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|3
+case|:
+if|if
+condition|(
+operator|(
+name|size
+operator|==
+literal|2
+operator|&&
+operator|(
+name|idx_align
+operator|&
+literal|3
+operator|)
+operator|!=
+literal|0
+operator|)
+operator|||
+operator|(
+name|idx_align
+operator|&
+literal|1
+operator|)
+operator|!=
+literal|0
+condition|)
+return|return
+name|FALSE
+return|;
+break|break;
+case|case
+literal|4
+case|:
+if|if
+condition|(
+name|size
+operator|==
+literal|2
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|idx_align
+operator|&
+literal|3
+operator|)
+operator|==
+literal|3
+condition|)
+return|return
+name|FALSE
+return|;
+name|align
+operator|=
+operator|(
+name|idx_align
+operator|&
+literal|3
+operator|)
+operator|*
+literal|64
+expr_stmt|;
+block|}
+else|else
+name|align
+operator|=
+operator|(
+name|idx_align
+operator|&
+literal|1
+operator|)
+condition|?
+literal|32
+operator|<<
+name|size
+else|:
+literal|0
+expr_stmt|;
+break|break;
+default|default:
+name|abort
+argument_list|()
+expr_stmt|;
+block|}
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"{"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|length
+condition|;
+name|i
+operator|++
+control|)
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"%sd%d[%d]"
+argument_list|,
+operator|(
+name|i
+operator|==
+literal|0
+operator|)
+condition|?
+literal|""
+else|:
+literal|","
+argument_list|,
+name|rd
+operator|+
+name|i
+operator|*
+name|stride
+argument_list|,
+name|idx
+argument_list|)
+expr_stmt|;
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"}, [%s"
+argument_list|,
+name|arm_regnames
+index|[
+name|rn
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|align
+condition|)
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|", :%d"
+argument_list|,
+name|align
+argument_list|)
+expr_stmt|;
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"]"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rm
+operator|==
+literal|0xd
+condition|)
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"!"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|rm
+operator|!=
+literal|0xf
+condition|)
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|", %s"
+argument_list|,
+name|arm_regnames
+index|[
+name|rm
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
+literal|'C'
+case|:
+block|{
+name|int
+name|rd
+init|=
+operator|(
+operator|(
+name|given
+operator|>>
+literal|12
+operator|)
+operator|&
+literal|0xf
+operator|)
+operator||
+operator|(
+operator|(
+operator|(
+name|given
+operator|>>
+literal|22
+operator|)
+operator|&
+literal|1
+operator|)
+operator|<<
+literal|4
+operator|)
+decl_stmt|;
+name|int
+name|rn
+init|=
+operator|(
+operator|(
+name|given
+operator|>>
+literal|16
+operator|)
+operator|&
+literal|0xf
+operator|)
+decl_stmt|;
+name|int
+name|rm
+init|=
+operator|(
+operator|(
+name|given
+operator|>>
+literal|0
+operator|)
+operator|&
+literal|0xf
+operator|)
+decl_stmt|;
+name|int
+name|align
+init|=
+operator|(
+operator|(
+name|given
+operator|>>
+literal|4
+operator|)
+operator|&
+literal|0x1
+operator|)
+decl_stmt|;
+name|int
+name|size
+init|=
+operator|(
+operator|(
+name|given
+operator|>>
+literal|6
+operator|)
+operator|&
+literal|0x3
+operator|)
+decl_stmt|;
+name|int
+name|type
+init|=
+operator|(
+operator|(
+name|given
+operator|>>
+literal|8
+operator|)
+operator|&
+literal|0x3
+operator|)
+decl_stmt|;
+name|int
+name|n
+init|=
+name|type
+operator|+
+literal|1
+decl_stmt|;
+name|int
+name|stride
+init|=
+operator|(
+operator|(
+name|given
+operator|>>
+literal|5
+operator|)
+operator|&
+literal|0x1
+operator|)
+decl_stmt|;
+name|int
+name|ix
+decl_stmt|;
+if|if
+condition|(
+name|stride
+operator|&&
+operator|(
+name|n
+operator|==
+literal|1
+operator|)
+condition|)
+name|n
+operator|++
+expr_stmt|;
+else|else
+name|stride
+operator|++
+expr_stmt|;
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"{"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|stride
+operator|>
+literal|1
+condition|)
+for|for
+control|(
+name|ix
+operator|=
+literal|0
+init|;
+name|ix
+operator|!=
+name|n
+condition|;
+name|ix
+operator|++
+control|)
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"%sd%d[]"
+argument_list|,
+name|ix
+condition|?
+literal|","
+else|:
+literal|""
+argument_list|,
+name|rd
+operator|+
+name|ix
+operator|*
+name|stride
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|n
+operator|==
+literal|1
+condition|)
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"d%d[]"
+argument_list|,
+name|rd
+argument_list|)
+expr_stmt|;
+else|else
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"d%d[]-d%d[]"
+argument_list|,
+name|rd
+argument_list|,
+name|rd
+operator|+
+name|n
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"}, [%s"
+argument_list|,
+name|arm_regnames
+index|[
+name|rn
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|align
+condition|)
+block|{
+name|int
+name|align
+init|=
+operator|(
+literal|8
+operator|*
+operator|(
+name|type
+operator|+
+literal|1
+operator|)
+operator|)
+operator|<<
+name|size
+decl_stmt|;
+if|if
+condition|(
+name|type
+operator|==
+literal|3
+condition|)
+name|align
+operator|=
+operator|(
+name|size
+operator|>
+literal|1
+operator|)
+condition|?
+name|align
+operator|>>
+literal|1
+else|:
+name|align
+expr_stmt|;
+if|if
+condition|(
+name|type
+operator|==
+literal|2
+operator|||
+operator|(
+name|type
+operator|==
+literal|0
+operator|&&
+operator|!
+name|size
+operator|)
+condition|)
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|", :<bad align %d>"
+argument_list|,
+name|align
+argument_list|)
+expr_stmt|;
+else|else
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|", :%d"
+argument_list|,
+name|align
+argument_list|)
+expr_stmt|;
+block|}
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"]"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rm
+operator|==
+literal|0xd
+condition|)
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"!"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|rm
+operator|!=
+literal|0xf
+condition|)
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|", %s"
+argument_list|,
+name|arm_regnames
+index|[
+name|rm
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
+literal|'D'
+case|:
+block|{
+name|int
+name|raw_reg
+init|=
+operator|(
+name|given
+operator|&
+literal|0xf
+operator|)
+operator||
+operator|(
+operator|(
+name|given
+operator|>>
+literal|1
+operator|)
+operator|&
+literal|0x10
+operator|)
+decl_stmt|;
+name|int
+name|size
+init|=
+operator|(
+name|given
+operator|>>
+literal|20
+operator|)
+operator|&
+literal|3
+decl_stmt|;
+name|int
+name|reg
+init|=
+name|raw_reg
+operator|&
+operator|(
+operator|(
+literal|4
+operator|<<
+name|size
+operator|)
+operator|-
+literal|1
+operator|)
+decl_stmt|;
+name|int
+name|ix
+init|=
+name|raw_reg
+operator|>>
+name|size
+operator|>>
+literal|2
+decl_stmt|;
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"d%d[%d]"
+argument_list|,
+name|reg
+argument_list|,
+name|ix
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
+literal|'E'
+case|:
+comment|/* Neon encoded constant for mov, mvn, vorr, vbic */
+block|{
+name|int
+name|bits
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|cmode
+init|=
+operator|(
+name|given
+operator|>>
+literal|8
+operator|)
+operator|&
+literal|0xf
+decl_stmt|;
+name|int
+name|op
+init|=
+operator|(
+name|given
+operator|>>
+literal|5
+operator|)
+operator|&
+literal|0x1
+decl_stmt|;
+name|unsigned
+name|long
+name|value
+init|=
+literal|0
+decl_stmt|,
+name|hival
+init|=
+literal|0
+decl_stmt|;
+name|unsigned
+name|shift
+decl_stmt|;
+name|int
+name|size
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|isfloat
+init|=
+literal|0
+decl_stmt|;
+name|bits
+operator||=
+operator|(
+operator|(
+name|given
+operator|>>
+literal|24
+operator|)
+operator|&
+literal|1
+operator|)
+operator|<<
+literal|7
+expr_stmt|;
+name|bits
+operator||=
+operator|(
+operator|(
+name|given
+operator|>>
+literal|16
+operator|)
+operator|&
+literal|7
+operator|)
+operator|<<
+literal|4
+expr_stmt|;
+name|bits
+operator||=
+operator|(
+operator|(
+name|given
+operator|>>
+literal|0
+operator|)
+operator|&
+literal|15
+operator|)
+operator|<<
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|cmode
+operator|<
+literal|8
+condition|)
+block|{
+name|shift
+operator|=
+operator|(
+name|cmode
+operator|>>
+literal|1
+operator|)
+operator|&
+literal|3
+expr_stmt|;
+name|value
+operator|=
+operator|(
+name|unsigned
+name|long
+operator|)
+name|bits
+operator|<<
+operator|(
+literal|8
+operator|*
+name|shift
+operator|)
+expr_stmt|;
+name|size
+operator|=
+literal|32
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|cmode
+operator|<
+literal|12
+condition|)
+block|{
+name|shift
+operator|=
+operator|(
+name|cmode
+operator|>>
+literal|1
+operator|)
+operator|&
+literal|1
+expr_stmt|;
+name|value
+operator|=
+operator|(
+name|unsigned
+name|long
+operator|)
+name|bits
+operator|<<
+operator|(
+literal|8
+operator|*
+name|shift
+operator|)
+expr_stmt|;
+name|size
+operator|=
+literal|16
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|cmode
+operator|<
+literal|14
+condition|)
+block|{
+name|shift
+operator|=
+operator|(
+name|cmode
+operator|&
+literal|1
+operator|)
+operator|+
+literal|1
+expr_stmt|;
+name|value
+operator|=
+operator|(
+name|unsigned
+name|long
+operator|)
+name|bits
+operator|<<
+operator|(
+literal|8
+operator|*
+name|shift
+operator|)
+expr_stmt|;
+name|value
+operator||=
+operator|(
+literal|1ul
+operator|<<
+operator|(
+literal|8
+operator|*
+name|shift
+operator|)
+operator|)
+operator|-
+literal|1
+expr_stmt|;
+name|size
+operator|=
+literal|32
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|cmode
+operator|==
+literal|14
+condition|)
+block|{
+if|if
+condition|(
+name|op
+condition|)
+block|{
+comment|/* bit replication into bytes */
+name|int
+name|ix
+decl_stmt|;
+name|unsigned
+name|long
+name|mask
+decl_stmt|;
+name|value
+operator|=
+literal|0
+expr_stmt|;
+name|hival
+operator|=
+literal|0
+expr_stmt|;
+for|for
+control|(
+name|ix
+operator|=
+literal|7
+init|;
+name|ix
+operator|>=
+literal|0
+condition|;
+name|ix
+operator|--
+control|)
+block|{
+name|mask
+operator|=
+operator|(
+operator|(
+name|bits
+operator|>>
+name|ix
+operator|)
+operator|&
+literal|1
+operator|)
+condition|?
+literal|0xff
+else|:
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|ix
+operator|<=
+literal|3
+condition|)
+name|value
+operator|=
+operator|(
+name|value
+operator|<<
+literal|8
+operator|)
+operator||
+name|mask
+expr_stmt|;
+else|else
+name|hival
+operator|=
+operator|(
+name|hival
+operator|<<
+literal|8
+operator|)
+operator||
+name|mask
+expr_stmt|;
+block|}
+name|size
+operator|=
+literal|64
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* byte replication */
+name|value
+operator|=
+operator|(
+name|unsigned
+name|long
+operator|)
+name|bits
+expr_stmt|;
+name|size
+operator|=
+literal|8
+expr_stmt|;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|op
+condition|)
+block|{
+comment|/* floating point encoding */
+name|int
+name|tmp
+decl_stmt|;
+name|value
+operator|=
+call|(
+name|unsigned
+name|long
+call|)
+argument_list|(
+name|bits
+operator|&
+literal|0x7f
+argument_list|)
+operator|<<
+literal|19
+expr_stmt|;
+name|value
+operator||=
+call|(
+name|unsigned
+name|long
+call|)
+argument_list|(
+name|bits
+operator|&
+literal|0x80
+argument_list|)
+operator|<<
+literal|24
+expr_stmt|;
+name|tmp
+operator|=
+name|bits
+operator|&
+literal|0x40
+condition|?
+literal|0x3c
+else|:
+literal|0x40
+expr_stmt|;
+name|value
+operator||=
+operator|(
+name|unsigned
+name|long
+operator|)
+name|tmp
+operator|<<
+literal|24
+expr_stmt|;
+name|size
+operator|=
+literal|32
+expr_stmt|;
+name|isfloat
+operator|=
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"<illegal constant %.8x:%x:%x>"
+argument_list|,
+name|bits
+argument_list|,
+name|cmode
+argument_list|,
+name|op
+argument_list|)
+expr_stmt|;
+name|size
+operator|=
+literal|32
+expr_stmt|;
+break|break;
+block|}
+switch|switch
+condition|(
+name|size
+condition|)
+block|{
+case|case
+literal|8
+case|:
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"#%ld\t; 0x%.2lx"
+argument_list|,
+name|value
+argument_list|,
+name|value
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|16
+case|:
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"#%ld\t; 0x%.4lx"
+argument_list|,
+name|value
+argument_list|,
+name|value
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|32
+case|:
+if|if
+condition|(
+name|isfloat
+condition|)
+block|{
+name|unsigned
+name|char
+name|valbytes
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|double
+name|fvalue
+decl_stmt|;
+comment|/* Do this a byte at a time so we don't have to                                    worry about the host's endianness.  */
+name|valbytes
+index|[
+literal|0
+index|]
+operator|=
+name|value
+operator|&
+literal|0xff
+expr_stmt|;
+name|valbytes
+index|[
+literal|1
+index|]
+operator|=
+operator|(
+name|value
+operator|>>
+literal|8
+operator|)
+operator|&
+literal|0xff
+expr_stmt|;
+name|valbytes
+index|[
+literal|2
+index|]
+operator|=
+operator|(
+name|value
+operator|>>
+literal|16
+operator|)
+operator|&
+literal|0xff
+expr_stmt|;
+name|valbytes
+index|[
+literal|3
+index|]
+operator|=
+operator|(
+name|value
+operator|>>
+literal|24
+operator|)
+operator|&
+literal|0xff
+expr_stmt|;
+name|floatformat_to_double
+argument_list|(
+operator|&
+name|floatformat_ieee_single_little
+argument_list|,
+name|valbytes
+argument_list|,
+operator|&
+name|fvalue
+argument_list|)
+expr_stmt|;
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"#%.7g\t; 0x%.8lx"
+argument_list|,
+name|fvalue
+argument_list|,
+name|value
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"#%ld\t; 0x%.8lx"
+argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
+operator|(
+name|value
+operator|&
+literal|0x80000000
+operator|)
+condition|?
+name|value
+operator||
+operator|~
+literal|0xffffffffl
+else|:
+name|value
+argument_list|)
+argument_list|,
+name|value
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|64
+case|:
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"#0x%.8lx%.8lx"
+argument_list|,
+name|hival
+argument_list|,
+name|value
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|abort
+argument_list|()
+expr_stmt|;
+block|}
+block|}
+break|break;
+case|case
+literal|'F'
+case|:
+block|{
+name|int
+name|regno
+init|=
+operator|(
+operator|(
+name|given
+operator|>>
+literal|16
+operator|)
+operator|&
+literal|0xf
+operator|)
+operator||
+operator|(
+operator|(
+name|given
+operator|>>
+operator|(
+literal|7
+operator|-
+literal|4
+operator|)
+operator|)
+operator|&
+literal|0x10
+operator|)
+decl_stmt|;
+name|int
+name|num
+init|=
+operator|(
+name|given
+operator|>>
+literal|8
+operator|)
+operator|&
+literal|0x3
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|num
+condition|)
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"{d%d}"
+argument_list|,
+name|regno
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|num
+operator|+
+name|regno
+operator|>=
+literal|32
+condition|)
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"{d%d-<overflow reg d%d}"
+argument_list|,
+name|regno
+argument_list|,
+name|regno
+operator|+
+name|num
+argument_list|)
+expr_stmt|;
+else|else
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"{d%d-d%d}"
+argument_list|,
+name|regno
+argument_list|,
+name|regno
+operator|+
+name|num
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
+literal|'0'
+case|:
+case|case
+literal|'1'
+case|:
+case|case
+literal|'2'
+case|:
+case|case
+literal|'3'
+case|:
+case|case
+literal|'4'
+case|:
+case|case
+literal|'5'
+case|:
+case|case
+literal|'6'
+case|:
+case|case
+literal|'7'
+case|:
+case|case
+literal|'8'
+case|:
+case|case
+literal|'9'
+case|:
+block|{
+name|int
+name|width
+decl_stmt|;
+name|unsigned
+name|long
+name|value
+decl_stmt|;
+name|c
+operator|=
+name|arm_decode_bitfield
+argument_list|(
+name|c
+argument_list|,
+name|given
+argument_list|,
+operator|&
+name|value
+argument_list|,
+operator|&
+name|width
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+operator|*
+name|c
+condition|)
+block|{
+case|case
+literal|'r'
+case|:
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"%s"
+argument_list|,
+name|arm_regnames
+index|[
+name|value
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'d'
+case|:
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"%ld"
+argument_list|,
+name|value
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'e'
+case|:
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"%ld"
+argument_list|,
+operator|(
+literal|1ul
+operator|<<
+name|width
+operator|)
+operator|-
+name|value
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'S'
+case|:
+case|case
+literal|'T'
+case|:
+case|case
+literal|'U'
+case|:
+comment|/* various width encodings */
+block|{
+name|int
+name|base
+init|=
+literal|8
+operator|<<
+operator|(
+operator|*
+name|c
+operator|-
+literal|'S'
+operator|)
+decl_stmt|;
+comment|/* 8,16 or 32 */
+name|int
+name|limit
+decl_stmt|;
+name|unsigned
+name|low
+decl_stmt|,
+name|high
+decl_stmt|;
+name|c
+operator|++
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|c
+operator|>=
+literal|'0'
+operator|&&
+operator|*
+name|c
+operator|<=
+literal|'9'
+condition|)
+name|limit
+operator|=
+operator|*
+name|c
+operator|-
+literal|'0'
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|*
+name|c
+operator|>=
+literal|'a'
+operator|&&
+operator|*
+name|c
+operator|<=
+literal|'f'
+condition|)
+name|limit
+operator|=
+operator|*
+name|c
+operator|-
+literal|'a'
+operator|+
+literal|10
+expr_stmt|;
+else|else
+name|abort
+argument_list|()
+expr_stmt|;
+name|low
+operator|=
+name|limit
+operator|>>
+literal|2
+expr_stmt|;
+name|high
+operator|=
+name|limit
+operator|&
+literal|3
+expr_stmt|;
+if|if
+condition|(
+name|value
+operator|<
+name|low
+operator|||
+name|value
+operator|>
+name|high
+condition|)
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"<illegal width %d>"
+argument_list|,
+name|base
+operator|<<
+name|value
+argument_list|)
+expr_stmt|;
+else|else
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"%d"
+argument_list|,
+name|base
+operator|<<
+name|value
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
+literal|'R'
+case|:
+if|if
+condition|(
+name|given
+operator|&
+operator|(
+literal|1
+operator|<<
+literal|6
+operator|)
+condition|)
+goto|goto
+name|Q
+goto|;
+comment|/* FALLTHROUGH */
+case|case
+literal|'D'
+case|:
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"d%ld"
+argument_list|,
+name|value
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'Q'
+case|:
+name|Q
+label|:
+if|if
+condition|(
+name|value
+operator|&
+literal|1
+condition|)
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"<illegal reg q%ld.5>"
+argument_list|,
+name|value
+operator|>>
+literal|1
+argument_list|)
+expr_stmt|;
+else|else
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"q%ld"
+argument_list|,
+name|value
+operator|>>
+literal|1
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'`'
+case|:
+name|c
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|value
+operator|==
+literal|0
+condition|)
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"%c"
+argument_list|,
+operator|*
+name|c
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'\''
+case|:
+name|c
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|value
+operator|==
+operator|(
+operator|(
+literal|1ul
+operator|<<
+name|width
+operator|)
+operator|-
+literal|1
+operator|)
+condition|)
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"%c"
+argument_list|,
+operator|*
+name|c
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'?'
+case|:
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"%c"
+argument_list|,
+name|c
+index|[
+operator|(
+literal|1
+operator|<<
+name|width
+operator|)
+operator|-
+operator|(
+name|int
+operator|)
+name|value
+index|]
+argument_list|)
+expr_stmt|;
+name|c
+operator|+=
+literal|1
+operator|<<
+name|width
+expr_stmt|;
+break|break;
+default|default:
+name|abort
+argument_list|()
+expr_stmt|;
+block|}
+break|break;
+default|default:
+name|abort
+argument_list|()
+expr_stmt|;
+block|}
+block|}
+block|}
+else|else
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"%c"
+argument_list|,
+operator|*
+name|c
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+name|TRUE
+return|;
+block|}
+block|}
+return|return
+name|FALSE
+return|;
 block|}
 end_function
 
@@ -10939,6 +17058,20 @@ decl_stmt|;
 if|if
 condition|(
 name|print_insn_coprocessor
+argument_list|(
+name|pc
+argument_list|,
+name|info
+argument_list|,
+name|given
+argument_list|,
+name|FALSE
+argument_list|)
+condition|)
+return|return;
+if|if
+condition|(
+name|print_insn_neon
 argument_list|(
 name|info
 argument_list|,
@@ -11488,6 +17621,20 @@ break|break;
 case|case
 literal|'c'
 case|:
+if|if
+condition|(
+operator|(
+operator|(
+name|given
+operator|>>
+literal|28
+operator|)
+operator|&
+literal|0xf
+operator|)
+operator|!=
+literal|0xe
+condition|)
 name|func
 argument_list|(
 name|stream
@@ -11592,6 +17739,21 @@ expr_stmt|;
 block|}
 break|break;
 case|case
+literal|'q'
+case|:
+name|arm_decode_shift
+argument_list|(
+name|given
+argument_list|,
+name|func
+argument_list|,
+name|stream
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'o'
 case|:
 if|if
@@ -11669,6 +17831,8 @@ argument_list|,
 name|func
 argument_list|,
 name|stream
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 break|break;
@@ -12115,90 +18279,26 @@ literal|'9'
 case|:
 block|{
 name|int
-name|bitstart
-init|=
-operator|*
-name|c
-operator|++
-operator|-
-literal|'0'
+name|width
 decl_stmt|;
-name|int
-name|bitend
-init|=
-literal|0
+name|unsigned
+name|long
+name|value
 decl_stmt|;
-while|while
-condition|(
-operator|*
 name|c
-operator|>=
-literal|'0'
-operator|&&
-operator|*
-name|c
-operator|<=
-literal|'9'
-condition|)
-name|bitstart
 operator|=
-operator|(
-name|bitstart
-operator|*
-literal|10
-operator|)
-operator|+
-operator|*
+name|arm_decode_bitfield
+argument_list|(
 name|c
-operator|++
-operator|-
-literal|'0'
-expr_stmt|;
-switch|switch
-condition|(
-operator|*
-name|c
-condition|)
-block|{
-case|case
-literal|'-'
-case|:
-name|c
-operator|++
-expr_stmt|;
-while|while
-condition|(
-operator|*
-name|c
-operator|>=
-literal|'0'
-operator|&&
-operator|*
-name|c
-operator|<=
-literal|'9'
-condition|)
-name|bitend
-operator|=
-operator|(
-name|bitend
-operator|*
-literal|10
-operator|)
-operator|+
-operator|*
-name|c
-operator|++
-operator|-
-literal|'0'
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|bitend
-condition|)
-name|abort
-argument_list|()
+argument_list|,
+name|given
+argument_list|,
+operator|&
+name|value
+argument_list|,
+operator|&
+name|width
+argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
@@ -12209,30 +18309,6 @@ block|{
 case|case
 literal|'r'
 case|:
-block|{
-name|long
-name|reg
-decl_stmt|;
-name|reg
-operator|=
-name|given
-operator|>>
-name|bitstart
-expr_stmt|;
-name|reg
-operator|&=
-operator|(
-literal|2
-operator|<<
-operator|(
-name|bitend
-operator|-
-name|bitstart
-operator|)
-operator|)
-operator|-
-literal|1
-expr_stmt|;
 name|func
 argument_list|(
 name|stream
@@ -12241,127 +18317,67 @@ literal|"%s"
 argument_list|,
 name|arm_regnames
 index|[
-name|reg
+name|value
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'d'
 case|:
-block|{
-name|long
-name|reg
-decl_stmt|;
-name|reg
-operator|=
-name|given
-operator|>>
-name|bitstart
-expr_stmt|;
-name|reg
-operator|&=
-operator|(
-literal|2
-operator|<<
-operator|(
-name|bitend
-operator|-
-name|bitstart
-operator|)
-operator|)
-operator|-
-literal|1
-expr_stmt|;
 name|func
 argument_list|(
 name|stream
 argument_list|,
 literal|"%ld"
 argument_list|,
-name|reg
+name|value
 argument_list|)
 expr_stmt|;
-block|}
+break|break;
+case|case
+literal|'b'
+case|:
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"%ld"
+argument_list|,
+name|value
+operator|*
+literal|8
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 literal|'W'
 case|:
-block|{
-name|long
-name|reg
-decl_stmt|;
-name|reg
-operator|=
-name|given
-operator|>>
-name|bitstart
-expr_stmt|;
-name|reg
-operator|&=
-operator|(
-literal|2
-operator|<<
-operator|(
-name|bitend
-operator|-
-name|bitstart
-operator|)
-operator|)
-operator|-
-literal|1
-expr_stmt|;
 name|func
 argument_list|(
 name|stream
 argument_list|,
 literal|"%ld"
 argument_list|,
-name|reg
+name|value
 operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'x'
 case|:
-block|{
-name|long
-name|reg
-decl_stmt|;
-name|reg
-operator|=
-name|given
-operator|>>
-name|bitstart
-expr_stmt|;
-name|reg
-operator|&=
-operator|(
-literal|2
-operator|<<
-operator|(
-name|bitend
-operator|-
-name|bitstart
-operator|)
-operator|)
-operator|-
-literal|1
-expr_stmt|;
 name|func
 argument_list|(
 name|stream
 argument_list|,
 literal|"0x%08lx"
 argument_list|,
-name|reg
+name|value
 argument_list|)
 expr_stmt|;
-comment|/* Some SWI instructions have special 				     meanings.  */
+comment|/* Some SWI instructions have special 			       meanings.  */
 if|if
 condition|(
 operator|(
@@ -12397,53 +18413,21 @@ argument_list|,
 literal|"\t; IMBRange"
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'X'
 case|:
-block|{
-name|long
-name|reg
-decl_stmt|;
-name|reg
-operator|=
-name|given
-operator|>>
-name|bitstart
-expr_stmt|;
-name|reg
-operator|&=
-operator|(
-literal|2
-operator|<<
-operator|(
-name|bitend
-operator|-
-name|bitstart
-operator|)
-operator|)
-operator|-
-literal|1
-expr_stmt|;
 name|func
 argument_list|(
 name|stream
 argument_list|,
 literal|"%01lx"
 argument_list|,
-name|reg
+name|value
 operator|&
 literal|0xf
 argument_list|)
 expr_stmt|;
-block|}
-break|break;
-default|default:
-name|abort
-argument_list|()
-expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'`'
@@ -12453,15 +18437,7 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|given
-operator|&
-operator|(
-literal|1
-operator|<<
-name|bitstart
-operator|)
-operator|)
+name|value
 operator|==
 literal|0
 condition|)
@@ -12484,17 +18460,17 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
+name|value
+operator|==
 operator|(
-name|given
-operator|&
 operator|(
-literal|1
+literal|1ul
 operator|<<
-name|bitstart
+name|width
 operator|)
+operator|-
+literal|1
 operator|)
-operator|!=
-literal|0
 condition|)
 name|func
 argument_list|(
@@ -12510,45 +18486,32 @@ break|break;
 case|case
 literal|'?'
 case|:
-operator|++
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"%c"
+argument_list|,
 name|c
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|given
-operator|&
+index|[
 operator|(
 literal|1
 operator|<<
-name|bitstart
+name|width
 operator|)
+operator|-
+operator|(
+name|int
 operator|)
-operator|!=
-literal|0
-condition|)
-name|func
-argument_list|(
-name|stream
-argument_list|,
-literal|"%c"
-argument_list|,
-operator|*
-name|c
-operator|++
+name|value
+index|]
 argument_list|)
 expr_stmt|;
-else|else
-name|func
-argument_list|(
-name|stream
-argument_list|,
-literal|"%c"
-argument_list|,
-operator|*
-operator|++
 name|c
-argument_list|)
+operator|+=
+literal|1
+operator|<<
+name|width
 expr_stmt|;
 break|break;
 default|default:
@@ -12867,6 +18830,158 @@ argument_list|(
 name|stream
 argument_list|,
 literal|"%%"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'c'
+case|:
+if|if
+condition|(
+name|ifthen_state
+condition|)
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"%s"
+argument_list|,
+name|arm_conditional
+index|[
+name|IFTHEN_COND
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'C'
+case|:
+if|if
+condition|(
+name|ifthen_state
+condition|)
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"%s"
+argument_list|,
+name|arm_conditional
+index|[
+name|IFTHEN_COND
+index|]
+argument_list|)
+expr_stmt|;
+else|else
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"s"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'I'
+case|:
+block|{
+name|unsigned
+name|int
+name|tmp
+decl_stmt|;
+name|ifthen_next_state
+operator|=
+name|given
+operator|&
+literal|0xff
+expr_stmt|;
+for|for
+control|(
+name|tmp
+operator|=
+name|given
+operator|<<
+literal|1
+init|;
+name|tmp
+operator|&
+literal|0xf
+condition|;
+name|tmp
+operator|<<=
+literal|1
+control|)
+name|func
+argument_list|(
+name|stream
+argument_list|,
+operator|(
+operator|(
+name|given
+operator|^
+name|tmp
+operator|)
+operator|&
+literal|0x10
+operator|)
+condition|?
+literal|"e"
+else|:
+literal|"t"
+argument_list|)
+expr_stmt|;
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"\t%s"
+argument_list|,
+name|arm_conditional
+index|[
+operator|(
+name|given
+operator|>>
+literal|4
+operator|)
+operator|&
+literal|0xf
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
+literal|'x'
+case|:
+if|if
+condition|(
+name|ifthen_next_state
+condition|)
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"\t; unpredictable branch in IT block\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'X'
+case|:
+if|if
+condition|(
+name|ifthen_state
+condition|)
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"\t; unpredictable<IT:%s>"
+argument_list|,
+name|arm_conditional
+index|[
+name|IFTHEN_COND
+index|]
 argument_list|)
 expr_stmt|;
 break|break;
@@ -13518,22 +19633,6 @@ break|break;
 case|case
 literal|'c'
 case|:
-block|{
-comment|/* Must print 0xE as 'al' to distinguish 				 unconditional B from conditional BAL.  */
-if|if
-condition|(
-name|reg
-operator|==
-literal|0xE
-condition|)
-name|func
-argument_list|(
-name|stream
-argument_list|,
-literal|"al"
-argument_list|)
-expr_stmt|;
-else|else
 name|func
 argument_list|(
 name|stream
@@ -13546,7 +19645,6 @@ name|reg
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 default|default:
 name|abort
@@ -13810,6 +19908,20 @@ if|if
 condition|(
 name|print_insn_coprocessor
 argument_list|(
+name|pc
+argument_list|,
+name|info
+argument_list|,
+name|given
+argument_list|,
+name|TRUE
+argument_list|)
+condition|)
+return|return;
+if|if
+condition|(
+name|print_insn_neon
+argument_list|(
 name|info
 argument_list|,
 name|given
@@ -13900,6 +20012,61 @@ argument_list|(
 name|stream
 argument_list|,
 literal|"%%"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'c'
+case|:
+if|if
+condition|(
+name|ifthen_state
+condition|)
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"%s"
+argument_list|,
+name|arm_conditional
+index|[
+name|IFTHEN_COND
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'x'
+case|:
+if|if
+condition|(
+name|ifthen_next_state
+condition|)
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"\t; unpredictable branch in IT block\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'X'
+case|:
+if|if
+condition|(
+name|ifthen_state
+condition|)
+name|func
+argument_list|(
+name|stream
+argument_list|,
+literal|"\t; unpredictable<IT:%s>"
+argument_list|,
+name|arm_conditional
+index|[
+name|IFTHEN_COND
+index|]
 argument_list|)
 expr_stmt|;
 break|break;
@@ -15813,125 +21980,26 @@ literal|'9'
 case|:
 block|{
 name|int
-name|bitstart
-init|=
-operator|*
-name|c
-operator|++
-operator|-
-literal|'0'
-decl_stmt|;
-name|int
-name|bitend
-init|=
-literal|0
+name|width
 decl_stmt|;
 name|unsigned
-name|int
+name|long
 name|val
 decl_stmt|;
-while|while
-condition|(
-operator|*
 name|c
-operator|>=
-literal|'0'
-operator|&&
-operator|*
-name|c
-operator|<=
-literal|'9'
-condition|)
-name|bitstart
 operator|=
-operator|(
-name|bitstart
-operator|*
-literal|10
-operator|)
-operator|+
-operator|*
+name|arm_decode_bitfield
+argument_list|(
 name|c
-operator|++
-operator|-
-literal|'0'
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|c
-operator|==
-literal|'-'
-condition|)
-block|{
-name|c
-operator|++
-expr_stmt|;
-while|while
-condition|(
-operator|*
-name|c
-operator|>=
-literal|'0'
-operator|&&
-operator|*
-name|c
-operator|<=
-literal|'9'
-condition|)
-name|bitend
-operator|=
-operator|(
-name|bitend
-operator|*
-literal|10
-operator|)
-operator|+
-operator|*
-name|c
-operator|++
-operator|-
-literal|'0'
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|bitend
-condition|)
-name|abort
-argument_list|()
-expr_stmt|;
-name|val
-operator|=
+argument_list|,
 name|given
-operator|>>
-name|bitstart
-expr_stmt|;
-name|val
-operator|&=
-operator|(
-literal|2
-operator|<<
-operator|(
-name|bitend
-operator|-
-name|bitstart
-operator|)
-operator|)
-operator|-
-literal|1
-expr_stmt|;
-block|}
-else|else
-name|val
-operator|=
-operator|(
-name|given
-operator|>>
-name|bitstart
-operator|)
+argument_list|,
 operator|&
-literal|1
+name|val
+argument_list|,
+operator|&
+name|width
+argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
@@ -15946,7 +22014,7 @@ name|func
 argument_list|(
 name|stream
 argument_list|,
-literal|"%u"
+literal|"%lu"
 argument_list|,
 name|val
 argument_list|)
@@ -15959,7 +22027,7 @@ name|func
 argument_list|(
 name|stream
 argument_list|,
-literal|"%u"
+literal|"%lu"
 argument_list|,
 name|val
 operator|*
@@ -15986,20 +22054,6 @@ break|break;
 case|case
 literal|'c'
 case|:
-if|if
-condition|(
-name|val
-operator|==
-literal|0xE
-condition|)
-name|func
-argument_list|(
-name|stream
-argument_list|,
-literal|"al"
-argument_list|)
-expr_stmt|;
-else|else
 name|func
 argument_list|(
 name|stream
@@ -16016,9 +22070,22 @@ break|break;
 case|case
 literal|'\''
 case|:
+name|c
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|val
+operator|==
+operator|(
+operator|(
+literal|1ul
+operator|<<
+name|width
+operator|)
+operator|-
+literal|1
+operator|)
 condition|)
 name|func
 argument_list|(
@@ -16026,23 +22093,22 @@ name|stream
 argument_list|,
 literal|"%c"
 argument_list|,
+operator|*
 name|c
-index|[
-literal|1
-index|]
 argument_list|)
-expr_stmt|;
-name|c
-operator|++
 expr_stmt|;
 break|break;
 case|case
 literal|'`'
 case|:
+name|c
+operator|++
+expr_stmt|;
 if|if
 condition|(
-operator|!
 name|val
+operator|==
+literal|0
 condition|)
 name|func
 argument_list|(
@@ -16050,14 +22116,9 @@ name|stream
 argument_list|,
 literal|"%c"
 argument_list|,
+operator|*
 name|c
-index|[
-literal|1
-index|]
 argument_list|)
-expr_stmt|;
-name|c
-operator|++
 expr_stmt|;
 break|break;
 case|case
@@ -16069,22 +22130,26 @@ name|stream
 argument_list|,
 literal|"%c"
 argument_list|,
-name|val
-condition|?
 name|c
 index|[
+operator|(
 literal|1
-index|]
-else|:
-name|c
-index|[
-literal|2
+operator|<<
+name|width
+operator|)
+operator|-
+operator|(
+name|int
+operator|)
+name|val
 index|]
 argument_list|)
 expr_stmt|;
 name|c
 operator|+=
-literal|2
+literal|1
+operator|<<
+name|width
 expr_stmt|;
 break|break;
 default|default:
@@ -16106,6 +22171,94 @@ comment|/* No match.  */
 name|abort
 argument_list|()
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Print data bytes on INFO->STREAM.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|print_insn_data
+parameter_list|(
+name|bfd_vma
+name|pc
+name|ATTRIBUTE_UNUSED
+parameter_list|,
+name|struct
+name|disassemble_info
+modifier|*
+name|info
+parameter_list|,
+name|long
+name|given
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|info
+operator|->
+name|bytes_per_chunk
+condition|)
+block|{
+case|case
+literal|1
+case|:
+name|info
+operator|->
+name|fprintf_func
+argument_list|(
+name|info
+operator|->
+name|stream
+argument_list|,
+literal|".byte\t0x%02lx"
+argument_list|,
+name|given
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+name|info
+operator|->
+name|fprintf_func
+argument_list|(
+name|info
+operator|->
+name|stream
+argument_list|,
+literal|".short\t0x%04lx"
+argument_list|,
+name|given
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|4
+case|:
+name|info
+operator|->
+name|fprintf_func
+argument_list|(
+name|info
+operator|->
+name|stream
+argument_list|,
+literal|".word\t0x%08lx"
+argument_list|,
+name|given
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|abort
+argument_list|()
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -16184,13 +22337,11 @@ condition|)
 return|return;
 if|if
 condition|(
-name|strneq
+name|CONST_STRNEQ
 argument_list|(
 name|option
 argument_list|,
 literal|"reg-names-"
-argument_list|,
-literal|10
 argument_list|)
 condition|)
 block|{
@@ -16265,13 +22416,11 @@ block|}
 elseif|else
 if|if
 condition|(
-name|strneq
+name|CONST_STRNEQ
 argument_list|(
 name|option
 argument_list|,
 literal|"force-thumb"
-argument_list|,
-literal|11
 argument_list|)
 condition|)
 name|force_thumb
@@ -16281,13 +22430,11 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|strneq
+name|CONST_STRNEQ
 argument_list|(
 name|option
 argument_list|,
 literal|"no-force-thumb"
-argument_list|,
-literal|14
 argument_list|)
 condition|)
 name|force_thumb
@@ -16395,6 +22542,511 @@ block|}
 end_function
 
 begin_comment
+comment|/* Search back through the insn stream to determine if this instruction is    conditionally executed.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|find_ifthen_state
+parameter_list|(
+name|bfd_vma
+name|pc
+parameter_list|,
+name|struct
+name|disassemble_info
+modifier|*
+name|info
+parameter_list|,
+name|bfd_boolean
+name|little
+parameter_list|)
+block|{
+name|unsigned
+name|char
+name|b
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|unsigned
+name|int
+name|insn
+decl_stmt|;
+name|int
+name|status
+decl_stmt|;
+comment|/* COUNT is twice the number of instructions seen.  It will be odd if we      just crossed an instruction boundary.  */
+name|int
+name|count
+decl_stmt|;
+name|int
+name|it_count
+decl_stmt|;
+name|unsigned
+name|int
+name|seen_it
+decl_stmt|;
+name|bfd_vma
+name|addr
+decl_stmt|;
+name|ifthen_address
+operator|=
+name|pc
+expr_stmt|;
+name|ifthen_state
+operator|=
+literal|0
+expr_stmt|;
+name|addr
+operator|=
+name|pc
+expr_stmt|;
+name|count
+operator|=
+literal|1
+expr_stmt|;
+name|it_count
+operator|=
+literal|0
+expr_stmt|;
+name|seen_it
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Scan backwards looking for IT instructions, keeping track of where      instruction boundaries are.  We don't know if something is actually an      IT instruction until we find a definite instruction boundary.  */
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
+if|if
+condition|(
+name|addr
+operator|==
+literal|0
+operator|||
+name|info
+operator|->
+name|symbol_at_address_func
+argument_list|(
+name|addr
+argument_list|,
+name|info
+argument_list|)
+condition|)
+block|{
+comment|/* A symbol must be on an instruction boundary, and will not 	     be within an IT block.  */
+if|if
+condition|(
+name|seen_it
+operator|&&
+operator|(
+name|count
+operator|&
+literal|1
+operator|)
+condition|)
+break|break;
+return|return;
+block|}
+name|addr
+operator|-=
+literal|2
+expr_stmt|;
+name|status
+operator|=
+name|info
+operator|->
+name|read_memory_func
+argument_list|(
+name|addr
+argument_list|,
+operator|(
+name|bfd_byte
+operator|*
+operator|)
+name|b
+argument_list|,
+literal|2
+argument_list|,
+name|info
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|status
+condition|)
+return|return;
+if|if
+condition|(
+name|little
+condition|)
+name|insn
+operator|=
+operator|(
+name|b
+index|[
+literal|0
+index|]
+operator|)
+operator||
+operator|(
+name|b
+index|[
+literal|1
+index|]
+operator|<<
+literal|8
+operator|)
+expr_stmt|;
+else|else
+name|insn
+operator|=
+operator|(
+name|b
+index|[
+literal|1
+index|]
+operator|)
+operator||
+operator|(
+name|b
+index|[
+literal|0
+index|]
+operator|<<
+literal|8
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|seen_it
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|insn
+operator|&
+literal|0xf800
+operator|)
+operator|<
+literal|0xe800
+condition|)
+block|{
+comment|/* Addr + 2 is an instruction boundary.  See if this matches 	         the expected boundary based on the position of the last 		 IT candidate.  */
+if|if
+condition|(
+name|count
+operator|&
+literal|1
+condition|)
+break|break;
+name|seen_it
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+operator|(
+name|insn
+operator|&
+literal|0xff00
+operator|)
+operator|==
+literal|0xbf00
+operator|&&
+operator|(
+name|insn
+operator|&
+literal|0xf
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* This could be an IT instruction.  */
+name|seen_it
+operator|=
+name|insn
+expr_stmt|;
+name|it_count
+operator|=
+name|count
+operator|>>
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
+name|insn
+operator|&
+literal|0xf800
+operator|)
+operator|>=
+literal|0xe800
+condition|)
+name|count
+operator|++
+expr_stmt|;
+else|else
+name|count
+operator|=
+operator|(
+name|count
+operator|+
+literal|2
+operator|)
+operator||
+literal|1
+expr_stmt|;
+comment|/* IT blocks contain at most 4 instructions.  */
+if|if
+condition|(
+name|count
+operator|>=
+literal|8
+operator|&&
+operator|!
+name|seen_it
+condition|)
+return|return;
+block|}
+comment|/* We found an IT instruction.  */
+name|ifthen_state
+operator|=
+operator|(
+name|seen_it
+operator|&
+literal|0xe0
+operator|)
+operator||
+operator|(
+operator|(
+name|seen_it
+operator|<<
+name|it_count
+operator|)
+operator|&
+literal|0x1f
+operator|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|ifthen_state
+operator|&
+literal|0xf
+operator|)
+operator|==
+literal|0
+condition|)
+name|ifthen_state
+operator|=
+literal|0
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Try to infer the code type (Arm or Thumb) from a symbol.    Returns nonzero if *MAP_TYPE was set.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|get_sym_code_type
+parameter_list|(
+name|struct
+name|disassemble_info
+modifier|*
+name|info
+parameter_list|,
+name|int
+name|n
+parameter_list|,
+name|enum
+name|map_type
+modifier|*
+name|map_type
+parameter_list|)
+block|{
+name|elf_symbol_type
+modifier|*
+name|es
+decl_stmt|;
+name|unsigned
+name|int
+name|type
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|name
+decl_stmt|;
+name|es
+operator|=
+operator|*
+operator|(
+name|elf_symbol_type
+operator|*
+operator|*
+operator|)
+operator|(
+name|info
+operator|->
+name|symtab
+operator|+
+name|n
+operator|)
+expr_stmt|;
+name|type
+operator|=
+name|ELF_ST_TYPE
+argument_list|(
+name|es
+operator|->
+name|internal_elf_sym
+operator|.
+name|st_info
+argument_list|)
+expr_stmt|;
+comment|/* If the symbol has function type then use that.  */
+if|if
+condition|(
+name|type
+operator|==
+name|STT_FUNC
+operator|||
+name|type
+operator|==
+name|STT_ARM_TFUNC
+condition|)
+block|{
+operator|*
+name|map_type
+operator|=
+operator|(
+name|type
+operator|==
+name|STT_ARM_TFUNC
+operator|)
+condition|?
+name|MAP_THUMB
+else|:
+name|MAP_ARM
+expr_stmt|;
+return|return
+name|TRUE
+return|;
+block|}
+comment|/* Check for mapping symbols.  */
+name|name
+operator|=
+name|bfd_asymbol_name
+argument_list|(
+name|info
+operator|->
+name|symtab
+index|[
+name|n
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|name
+index|[
+literal|0
+index|]
+operator|==
+literal|'$'
+operator|&&
+operator|(
+name|name
+index|[
+literal|1
+index|]
+operator|==
+literal|'a'
+operator|||
+name|name
+index|[
+literal|1
+index|]
+operator|==
+literal|'t'
+operator|||
+name|name
+index|[
+literal|1
+index|]
+operator|==
+literal|'d'
+operator|)
+operator|&&
+operator|(
+name|name
+index|[
+literal|2
+index|]
+operator|==
+literal|0
+operator|||
+name|name
+index|[
+literal|2
+index|]
+operator|==
+literal|'.'
+operator|)
+condition|)
+block|{
+operator|*
+name|map_type
+operator|=
+operator|(
+operator|(
+name|name
+index|[
+literal|1
+index|]
+operator|==
+literal|'a'
+operator|)
+condition|?
+name|MAP_ARM
+else|:
+operator|(
+name|name
+index|[
+literal|1
+index|]
+operator|==
+literal|'t'
+operator|)
+condition|?
+name|MAP_THUMB
+else|:
+name|MAP_DATA
+operator|)
+expr_stmt|;
+return|return
+name|TRUE
+return|;
+block|}
+return|return
+name|FALSE
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* NOTE: There are no checks in these routines that    the relevant number of data bytes exist.  */
 end_comment
 
@@ -16430,9 +23082,19 @@ name|status
 decl_stmt|;
 name|int
 name|is_thumb
+init|=
+name|FALSE
 decl_stmt|;
 name|int
+name|is_data
+init|=
+name|FALSE
+decl_stmt|;
+name|unsigned
+name|int
 name|size
+init|=
+literal|4
 decl_stmt|;
 name|void
 function_decl|(
@@ -16449,6 +23111,11 @@ parameter_list|,
 name|long
 parameter_list|)
 function_decl|;
+name|bfd_boolean
+name|found
+init|=
+name|FALSE
+decl_stmt|;
 if|if
 condition|(
 name|info
@@ -16471,15 +23138,343 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+comment|/* First check the full symtab for a mapping symbol, even if there      are no usable non-mapping symbols for this address.  */
+if|if
+condition|(
+name|info
+operator|->
+name|symtab
+operator|!=
+name|NULL
+operator|&&
+name|bfd_asymbol_flavour
+argument_list|(
+operator|*
+name|info
+operator|->
+name|symtab
+argument_list|)
+operator|==
+name|bfd_target_elf_flavour
+condition|)
+block|{
+name|bfd_vma
+name|addr
+decl_stmt|;
+name|int
+name|n
+decl_stmt|;
+name|int
+name|last_sym
+init|=
+operator|-
+literal|1
+decl_stmt|;
+name|enum
+name|map_type
+name|type
+init|=
+name|MAP_ARM
+decl_stmt|;
+if|if
+condition|(
+name|pc
+operator|<=
+name|last_mapping_addr
+condition|)
+name|last_mapping_sym
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|is_thumb
 operator|=
-name|force_thumb
+operator|(
+name|last_type
+operator|==
+name|MAP_THUMB
+operator|)
+expr_stmt|;
+name|found
+operator|=
+name|FALSE
+expr_stmt|;
+comment|/* Start scanning at the start of the function, or wherever 	 we finished last time.  */
+name|n
+operator|=
+name|info
+operator|->
+name|symtab_pos
+operator|+
+literal|1
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|is_thumb
+name|n
+operator|<
+name|last_mapping_sym
+condition|)
+name|n
+operator|=
+name|last_mapping_sym
+expr_stmt|;
+comment|/* Scan up to the location being disassembled.  */
+for|for
+control|(
+init|;
+name|n
+operator|<
+name|info
+operator|->
+name|symtab_size
+condition|;
+name|n
+operator|++
+control|)
+block|{
+name|addr
+operator|=
+name|bfd_asymbol_value
+argument_list|(
+name|info
+operator|->
+name|symtab
+index|[
+name|n
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|addr
+operator|>
+name|pc
+condition|)
+break|break;
+if|if
+condition|(
+operator|(
+name|info
+operator|->
+name|section
+operator|==
+name|NULL
+operator|||
+name|info
+operator|->
+name|section
+operator|==
+name|info
+operator|->
+name|symtab
+index|[
+name|n
+index|]
+operator|->
+name|section
+operator|)
 operator|&&
+name|get_sym_code_type
+argument_list|(
+name|info
+argument_list|,
+name|n
+argument_list|,
+operator|&
+name|type
+argument_list|)
+condition|)
+block|{
+name|last_sym
+operator|=
+name|n
+expr_stmt|;
+name|found
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+operator|!
+name|found
+condition|)
+block|{
+name|n
+operator|=
+name|info
+operator|->
+name|symtab_pos
+expr_stmt|;
+if|if
+condition|(
+name|n
+operator|<
+name|last_mapping_sym
+operator|-
+literal|1
+condition|)
+name|n
+operator|=
+name|last_mapping_sym
+operator|-
+literal|1
+expr_stmt|;
+comment|/* No mapping symbol found at this address.  Look backwards 	     for a preceeding one.  */
+for|for
+control|(
+init|;
+name|n
+operator|>=
+literal|0
+condition|;
+name|n
+operator|--
+control|)
+block|{
+if|if
+condition|(
+name|get_sym_code_type
+argument_list|(
+name|info
+argument_list|,
+name|n
+argument_list|,
+operator|&
+name|type
+argument_list|)
+condition|)
+block|{
+name|last_sym
+operator|=
+name|n
+expr_stmt|;
+name|found
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+block|}
+block|}
+block|}
+name|last_mapping_sym
+operator|=
+name|last_sym
+expr_stmt|;
+name|last_type
+operator|=
+name|type
+expr_stmt|;
+name|is_thumb
+operator|=
+operator|(
+name|last_type
+operator|==
+name|MAP_THUMB
+operator|)
+expr_stmt|;
+name|is_data
+operator|=
+operator|(
+name|last_type
+operator|==
+name|MAP_DATA
+operator|)
+expr_stmt|;
+comment|/* Look a little bit ahead to see if we should print out 	 two or four bytes of data.  If there's a symbol, 	 mapping or otherwise, after two bytes then don't 	 print more.  */
+if|if
+condition|(
+name|is_data
+condition|)
+block|{
+name|size
+operator|=
+literal|4
+operator|-
+operator|(
+name|pc
+operator|&
+literal|3
+operator|)
+expr_stmt|;
+for|for
+control|(
+name|n
+operator|=
+name|last_sym
+operator|+
+literal|1
+init|;
+name|n
+operator|<
+name|info
+operator|->
+name|symtab_size
+condition|;
+name|n
+operator|++
+control|)
+block|{
+name|addr
+operator|=
+name|bfd_asymbol_value
+argument_list|(
+name|info
+operator|->
+name|symtab
+index|[
+name|n
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|addr
+operator|>
+name|pc
+condition|)
+block|{
+if|if
+condition|(
+name|addr
+operator|-
+name|pc
+operator|<
+name|size
+condition|)
+name|size
+operator|=
+name|addr
+operator|-
+name|pc
+expr_stmt|;
+break|break;
+block|}
+block|}
+comment|/* If the next symbol is after three bytes, we need to 	     print only part of the data, so that we can use either 	     .byte or .short.  */
+if|if
+condition|(
+name|size
+operator|==
+literal|3
+condition|)
+name|size
+operator|=
+operator|(
+name|pc
+operator|&
+literal|1
+operator|)
+condition|?
+literal|1
+else|:
+literal|2
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
 name|info
 operator|->
 name|symbols
@@ -16591,8 +23586,12 @@ name|symbols
 argument_list|)
 operator|==
 name|bfd_target_elf_flavour
+operator|&&
+operator|!
+name|found
 condition|)
 block|{
+comment|/* If no mapping symbol has been found then fall back to the type 	     of the function symbol.  */
 name|elf_symbol_type
 modifier|*
 name|es
@@ -16642,6 +23641,14 @@ operator|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|force_thumb
+condition|)
+name|is_thumb
+operator|=
+name|TRUE
+expr_stmt|;
 name|info
 operator|->
 name|display_endian
@@ -16658,6 +23665,112 @@ name|bytes_per_line
 operator|=
 literal|4
 expr_stmt|;
+if|if
+condition|(
+name|is_data
+condition|)
+block|{
+name|int
+name|i
+decl_stmt|;
+comment|/* size was already set above.  */
+name|info
+operator|->
+name|bytes_per_chunk
+operator|=
+name|size
+expr_stmt|;
+name|printer
+operator|=
+name|print_insn_data
+expr_stmt|;
+name|status
+operator|=
+name|info
+operator|->
+name|read_memory_func
+argument_list|(
+name|pc
+argument_list|,
+operator|(
+name|bfd_byte
+operator|*
+operator|)
+name|b
+argument_list|,
+name|size
+argument_list|,
+name|info
+argument_list|)
+expr_stmt|;
+name|given
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|little
+condition|)
+for|for
+control|(
+name|i
+operator|=
+name|size
+operator|-
+literal|1
+init|;
+name|i
+operator|>=
+literal|0
+condition|;
+name|i
+operator|--
+control|)
+name|given
+operator|=
+name|b
+index|[
+name|i
+index|]
+operator||
+operator|(
+name|given
+operator|<<
+literal|8
+operator|)
+expr_stmt|;
+else|else
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+operator|(
+name|int
+operator|)
+name|size
+condition|;
+name|i
+operator|++
+control|)
+name|given
+operator|=
+name|b
+index|[
+name|i
+index|]
+operator||
+operator|(
+name|given
+operator|<<
+literal|8
+operator|)
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 operator|!
@@ -16971,6 +24084,60 @@ literal|4
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|ifthen_address
+operator|!=
+name|pc
+condition|)
+name|find_ifthen_state
+argument_list|(
+name|pc
+argument_list|,
+name|info
+argument_list|,
+name|little
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ifthen_state
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|ifthen_state
+operator|&
+literal|0xf
+operator|)
+operator|==
+literal|0x8
+condition|)
+name|ifthen_next_state
+operator|=
+literal|0
+expr_stmt|;
+else|else
+name|ifthen_next_state
+operator|=
+operator|(
+name|ifthen_state
+operator|&
+literal|0xe0
+operator|)
+operator||
+operator|(
+operator|(
+name|ifthen_state
+operator|&
+literal|0xf
+operator|)
+operator|<<
+literal|1
+operator|)
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -17015,6 +24182,20 @@ argument_list|,
 name|given
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|is_thumb
+condition|)
+block|{
+name|ifthen_state
+operator|=
+name|ifthen_next_state
+expr_stmt|;
+name|ifthen_address
+operator|+=
+name|size
+expr_stmt|;
+block|}
 return|return
 name|size
 return|;

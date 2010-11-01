@@ -1,29 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* input_file.c - Deal with Input Files -    Copyright 1987, 1990, 1991, 1992, 1993, 1994, 1995, 1999, 2000, 2001,    2002, 2003, 2005    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
+comment|/* input_file.c - Deal with Input Files -    Copyright 1987, 1990, 1991, 1992, 1993, 1994, 1995, 1999, 2000, 2001,    2002, 2003, 2005, 2006    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_comment
 comment|/* Confines all details of reading source bytes to this module.    All O/S specific crocks should live here.    What we lose in "efficiency" we gain in modularity.    Note we don't need to #include the "as.h" file. No common coupling!  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
 
 begin_include
 include|#
@@ -400,19 +382,19 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|bfd_set_error
-argument_list|(
-name|bfd_error_system_call
-argument_list|)
-expr_stmt|;
-name|as_perror
+name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"Can't open %s for reading"
+literal|"can't open %s for reading: %s"
 argument_list|)
 argument_list|,
 name|file_name
+argument_list|,
+name|xstrerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -432,19 +414,19 @@ name|f_in
 argument_list|)
 condition|)
 block|{
-name|bfd_set_error
-argument_list|(
-name|bfd_error_system_call
-argument_list|)
-expr_stmt|;
-name|as_perror
+name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"Can't open %s for reading"
+literal|"can't read from %s: %s"
 argument_list|)
 argument_list|,
 name|file_name
+argument_list|,
+name|xstrerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|fclose
@@ -480,17 +462,20 @@ operator|==
 literal|'N'
 condition|)
 block|{
+if|if
+condition|(
 name|fgets
 argument_list|(
 name|buf
 argument_list|,
-literal|80
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|,
 name|f_in
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|&&
 operator|!
 name|strncmp
 argument_list|(
@@ -548,17 +533,20 @@ operator|==
 literal|'A'
 condition|)
 block|{
+if|if
+condition|(
 name|fgets
 argument_list|(
 name|buf
 argument_list|,
-literal|80
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|,
 name|f_in
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|&&
 operator|!
 name|strncmp
 argument_list|(
@@ -714,19 +702,19 @@ operator|<
 literal|0
 condition|)
 block|{
-name|bfd_set_error
-argument_list|(
-name|bfd_error_system_call
-argument_list|)
-expr_stmt|;
-name|as_perror
+name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"Can't read from %s"
+literal|"can't read from %s: %s"
 argument_list|)
 argument_list|,
 name|file_name
+argument_list|,
+name|xstrerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|size
@@ -817,19 +805,19 @@ operator|<
 literal|0
 condition|)
 block|{
-name|bfd_set_error
-argument_list|(
-name|bfd_error_system_call
-argument_list|)
-expr_stmt|;
-name|as_perror
+name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|"Can't read from %s"
+literal|"can't read from %s: %s"
 argument_list|)
 argument_list|,
 name|file_name
+argument_list|,
+name|xstrerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|size
@@ -856,23 +844,21 @@ argument_list|(
 name|f_in
 argument_list|)
 condition|)
-block|{
-name|bfd_set_error
-argument_list|(
-name|bfd_error_system_call
-argument_list|)
-expr_stmt|;
-name|as_perror
+name|as_warn
 argument_list|(
 name|_
 argument_list|(
-literal|"Can't close %s"
+literal|"can't close %s: %s"
 argument_list|)
 argument_list|,
 name|file_name
+argument_list|,
+name|xstrerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|f_in
 operator|=
 operator|(

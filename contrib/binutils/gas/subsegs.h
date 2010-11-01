@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* subsegs.h -> subsegs.c    Copyright 1987, 1992, 1993, 1994, 1995, 1996, 1998, 2000, 2003, 2005    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
+comment|/* subsegs.h -> subsegs.c    Copyright 1987, 1992, 1993, 1994, 1995, 1996, 1998, 2000, 2003, 2005,    2006 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -12,6 +12,12 @@ include|#
 directive|include
 file|"obstack.h"
 end_include
+
+begin_struct_decl
+struct_decl|struct
+name|frch_cfi_data
+struct_decl|;
+end_struct_decl
 
 begin_struct
 struct|struct
@@ -37,10 +43,6 @@ modifier|*
 name|frch_next
 decl_stmt|;
 comment|/* next in chain of struct frchain-s */
-name|segT
-name|frch_seg
-decl_stmt|;
-comment|/* SEG_TEXT or SEG_DATA.  */
 name|subsegT
 name|frch_subseg
 decl_stmt|;
@@ -65,6 +67,11 @@ modifier|*
 name|frch_frag_now
 decl_stmt|;
 comment|/* frag_now for this subsegment */
+name|struct
+name|frch_cfi_data
+modifier|*
+name|frch_cfi_data
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -76,18 +83,6 @@ name|frchain
 name|frchainS
 typedef|;
 end_typedef
-
-begin_comment
-comment|/* All subsegments' chains hang off here.  NULL means no frchains yet.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|frchainS
-modifier|*
-name|frchain_root
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* Frchain we are assembling into now.  That is, the current segment's    frag chain, even if it contains no (complete) frags.  */
@@ -196,16 +191,16 @@ name|segment_info_type
 typedef|;
 end_typedef
 
-begin_function_decl
-specifier|extern
-name|segment_info_type
-modifier|*
+begin_define
+define|#
+directive|define
 name|seg_info
 parameter_list|(
-name|segT
+name|sec
 parameter_list|)
-function_decl|;
-end_function_decl
+define|\
+value|((segment_info_type *) bfd_get_section_userdata (stdoutput, sec))
+end_define
 
 begin_function_decl
 specifier|extern

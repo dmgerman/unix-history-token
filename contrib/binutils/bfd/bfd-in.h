@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Main header file for the bfd library -- portable access to object files.     Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006    Free Software Foundation, Inc.     Contributed by Cygnus Support.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
+comment|/* Main header file for the bfd library -- portable access to object files.     Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007    Free Software Foundation, Inc.     Contributed by Cygnus Support.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -73,6 +73,43 @@ endif|#
 directive|endif
 endif|#
 directive|endif
+comment|/* This is a utility macro to handle the situation where the code    wants to place a constant string into the code, followed by a    comma and then the length of the string.  Doing this by hand    is error prone, so using this macro is safer.  The macro will    also safely handle the case where a NULL is passed as the arg.  */
+define|#
+directive|define
+name|STRING_COMMA_LEN
+parameter_list|(
+name|STR
+parameter_list|)
+value|(STR), ((STR) ? sizeof (STR) - 1 : 0)
+comment|/* Unfortunately it is not possible to use the STRING_COMMA_LEN macro    to create the arguments to another macro, since the preprocessor    will mis-count the number of arguments to the outer macro (by not    evaluating STRING_COMMA_LEN and so missing the comma).  This is a    problem for example when trying to use STRING_COMMA_LEN to build    the arguments to the strncmp() macro.  Hence this alternative    definition of strncmp is provided here.        Note - these macros do NOT work if STR2 is not a constant string.  */
+define|#
+directive|define
+name|CONST_STRNEQ
+parameter_list|(
+name|STR1
+parameter_list|,
+name|STR2
+parameter_list|)
+value|(strncmp ((STR1), (STR2), sizeof (STR2) - 1) == 0)
+comment|/* strcpy() can have a similar problem, but since we know we are      copying a constant string, we can use memcpy which will be faster      since there is no need to check for a NUL byte inside STR.  We      can also save time if we do not need to copy the terminating NUL.  */
+define|#
+directive|define
+name|LITMEMCPY
+parameter_list|(
+name|DEST
+parameter_list|,
+name|STR2
+parameter_list|)
+value|memcpy ((DEST), (STR2), sizeof (STR2) - 1)
+define|#
+directive|define
+name|LITSTRCPY
+parameter_list|(
+name|DEST
+parameter_list|,
+name|STR2
+parameter_list|)
+value|memcpy ((DEST), (STR2), sizeof (STR2))
 comment|/* The word size used by BFD on the host.  This may be 64 with a 32    bit target if the host is 64 bit, or if other 64 bit targets have    been selected with --enable-targets, or if --enable-64-bit-bfd.  */
 define|#
 directive|define
@@ -821,11 +858,19 @@ name|sec
 parameter_list|)
 define|\
 value|(((sec)->rawsize ? (sec)->rawsize : (sec)->size) \    / bfd_octets_per_byte (bfd))
-typedef|typedef
-name|struct
+comment|/* Return TRUE if section has been discarded.  */
+define|#
+directive|define
+name|elf_discarded_section
+parameter_list|(
+name|sec
+parameter_list|)
+define|\
+value|(!bfd_is_abs_section (sec)					\&& bfd_is_abs_section ((sec)->output_section)		\&& (sec)->sec_info_type != ELF_INFO_TYPE_MERGE		\&& (sec)->sec_info_type != ELF_INFO_TYPE_JUST_SYMS)
+comment|/* Forward define.  */
+struct_decl|struct
 name|stat
-name|stat_type
-typedef|;
+struct_decl|;
 typedef|typedef
 enum|enum
 name|bfd_print_symbol
@@ -922,16 +967,6 @@ modifier|*
 modifier|*
 name|table
 decl_stmt|;
-comment|/* The number of slots in the hash table.  */
-name|unsigned
-name|int
-name|size
-decl_stmt|;
-comment|/* The size of elements.  */
-name|unsigned
-name|int
-name|entsize
-decl_stmt|;
 comment|/* A function used to create new elements in the hash table.  The      first entry is itself a pointer to an element.  When this      function is first invoked, this pointer will be NULL.  However,      having the pointer permits a hierarchy of method functions to be      built each of which calls the function in the superclass.  Thus      each function should be written to allocate a new block of memory      only if the argument is NULL.  */
 name|struct
 name|bfd_hash_entry
@@ -958,6 +993,28 @@ comment|/* An objalloc for this hash table.  This is a struct objalloc *,      b
 name|void
 modifier|*
 name|memory
+decl_stmt|;
+comment|/* The number of slots in the hash table.  */
+name|unsigned
+name|int
+name|size
+decl_stmt|;
+comment|/* The number of entries in the hash table.  */
+name|unsigned
+name|int
+name|count
+decl_stmt|;
+comment|/* The size of elements.  */
+name|unsigned
+name|int
+name|entsize
+decl_stmt|;
+comment|/* If non-zero, don't grow the hash table.  */
+name|unsigned
+name|int
+name|frozen
+range|:
+literal|1
 decl_stmt|;
 block|}
 struct|;
@@ -2286,7 +2343,8 @@ parameter_list|(
 name|bfd
 modifier|*
 parameter_list|,
-name|int
+name|enum
+name|dynamic_lib_link_class
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -2923,6 +2981,64 @@ modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
+comment|/* ARM VFP11 erratum workaround support.  */
+typedef|typedef
+enum|enum
+block|{
+name|BFD_ARM_VFP11_FIX_DEFAULT
+block|,
+name|BFD_ARM_VFP11_FIX_NONE
+block|,
+name|BFD_ARM_VFP11_FIX_SCALAR
+block|,
+name|BFD_ARM_VFP11_FIX_VECTOR
+block|}
+name|bfd_arm_vfp11_fix
+typedef|;
+specifier|extern
+name|void
+name|bfd_elf32_arm_init_maps
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|bfd_elf32_arm_set_vfp11_fix
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|,
+name|struct
+name|bfd_link_info
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|bfd_boolean
+name|bfd_elf32_arm_vfp11_erratum_scan
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|,
+name|struct
+name|bfd_link_info
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|bfd_elf32_arm_vfp11_fix_veneer_locations
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|,
+name|struct
+name|bfd_link_info
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/* ARM Interworking support.  Called from linker.  */
 specifier|extern
 name|bfd_boolean
@@ -3015,13 +3131,14 @@ parameter_list|,
 name|struct
 name|bfd_link_info
 modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 name|void
 name|bfd_elf32_arm_set_target_relocs
 parameter_list|(
+name|bfd
+modifier|*
+parameter_list|,
 name|struct
 name|bfd_link_info
 modifier|*
@@ -3030,6 +3147,12 @@ name|int
 parameter_list|,
 name|char
 modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|bfd_arm_vfp11_fix
 parameter_list|,
 name|int
 parameter_list|,
@@ -3061,14 +3184,44 @@ modifier|*
 parameter_list|)
 function_decl|;
 comment|/* ELF ARM mapping symbol support */
+define|#
+directive|define
+name|BFD_ARM_SPECIAL_SYM_TYPE_MAP
+value|(1<< 0)
+define|#
+directive|define
+name|BFD_ARM_SPECIAL_SYM_TYPE_TAG
+value|(1<< 1)
+define|#
+directive|define
+name|BFD_ARM_SPECIAL_SYM_TYPE_OTHER
+value|(1<< 2)
+define|#
+directive|define
+name|BFD_ARM_SPECIAL_SYM_TYPE_ANY
+value|(~0)
 specifier|extern
 name|bfd_boolean
-name|bfd_is_arm_mapping_symbol_name
+name|bfd_is_arm_special_symbol_name
 parameter_list|(
 specifier|const
 name|char
 modifier|*
 name|name
+parameter_list|,
+name|int
+name|type
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|bfd_elf32_arm_set_byteswap_code
+parameter_list|(
+name|struct
+name|bfd_link_info
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 comment|/* ARM Note section processing.  */

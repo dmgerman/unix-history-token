@@ -603,6 +603,23 @@ literal|16
 block|,
 name|S390_OPERAND_OPTIONAL
 block|}
+block|,
+define|#
+directive|define
+name|RO_28
+value|43
+comment|/* optional GPR starting at position 28 */
+block|{
+literal|4
+block|,
+literal|28
+block|,
+operator|(
+name|S390_OPERAND_GPR
+operator||
+name|S390_OPERAND_OPTIONAL
+operator|)
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -894,12 +911,60 @@ end_comment
 begin_define
 define|#
 directive|define
+name|INSTR_RRE_FR
+value|4, { F_24,R_28,0,0,0,0 }
+end_define
+
+begin_comment
+comment|/* e.g. ldgr  */
+end_comment
+
+begin_comment
+comment|/* Actually efpc and sfpc do not take an optional operand.    This is just a workaround for existing code e.g. glibc.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INSTR_RRE_RR_OPT
+value|4, { R_24,RO_28,0,0,0,0 }
+end_define
+
+begin_comment
+comment|/* efpc, sfpc */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|INSTR_RRF_F0FF
 value|4, { F_16,F_24,F_28,0,0,0 }
 end_define
 
 begin_comment
 comment|/* e.g. madbr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INSTR_RRF_F0FF2
+value|4, { F_24,F_16,F_28,0,0,0 }
+end_define
+
+begin_comment
+comment|/* e.g. cpsdr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INSTR_RRF_F0FR
+value|4, { F_24,F_16,R_28,0,0,0 }
+end_define
+
+begin_comment
+comment|/* e.g. iedtr */
 end_comment
 
 begin_define
@@ -943,14 +1008,14 @@ value|4, { F_24,U4_16,F_28,0,0,0 }
 end_define
 
 begin_comment
-comment|/* e.g. cfxbr */
+comment|/* e.g. fixr  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|INSTR_RRF_U0FR
-value|4, { F_24,U4_16,R_28,0,0,0 }
+name|INSTR_RRF_U0RF
+value|4, { R_24,U4_16,F_28,0,0,0 }
 end_define
 
 begin_comment
@@ -960,12 +1025,34 @@ end_comment
 begin_define
 define|#
 directive|define
-name|INSTR_RRF_U0FR
-value|4, { F_24,U4_16,R_28,0,0,0 }
+name|INSTR_RRF_UUFF
+value|4, { F_24,U4_16,F_28,U4_20,0,0 }
 end_define
 
 begin_comment
-comment|/* e.g. cfxbr */
+comment|/* e.g. fidtr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INSTR_RRF_0UFF
+value|4, { F_24,F_28,U4_20,0,0,0 }
+end_define
+
+begin_comment
+comment|/* e.g. ldetr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INSTR_RRF_FFFU
+value|4, { F_24,F_16,F_28,U4_20,0,0 }
+end_define
+
+begin_comment
+comment|/* e.g. qadtr */
 end_comment
 
 begin_define
@@ -1043,6 +1130,17 @@ end_define
 
 begin_comment
 comment|/* e.g. bcr   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INSTR_RRR_F0FF
+value|4, { F_24,F_28,F_16,0,0,0 }
+end_define
+
+begin_comment
+comment|/* e.g. ddtr  */
 end_comment
 
 begin_define
@@ -1356,6 +1454,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|INSTR_SS_L2RDRD
+value|6, { D_20,B_16,D_36,L8_8,B_32,0     }
+end_define
+
+begin_comment
+comment|/* e.g. pka   */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|INSTR_SS_LIRDRD
 value|6, { D_20,L4_8,B_16,D_36,B_32,U4_12 }
 end_define
@@ -1598,7 +1707,35 @@ end_define
 begin_define
 define|#
 directive|define
+name|MASK_RRE_FR
+value|{ 0xff, 0xff, 0xff, 0x00, 0x00, 0x00 }
+end_define
+
+begin_define
+define|#
+directive|define
+name|MASK_RRE_RR_OPT
+value|{ 0xff, 0xff, 0xff, 0x00, 0x00, 0x00 }
+end_define
+
+begin_define
+define|#
+directive|define
 name|MASK_RRF_F0FF
+value|{ 0xff, 0xff, 0x0f, 0x00, 0x00, 0x00 }
+end_define
+
+begin_define
+define|#
+directive|define
+name|MASK_RRF_F0FF2
+value|{ 0xff, 0xff, 0x0f, 0x00, 0x00, 0x00 }
+end_define
+
+begin_define
+define|#
+directive|define
+name|MASK_RRF_F0FR
 value|{ 0xff, 0xff, 0x0f, 0x00, 0x00, 0x00 }
 end_define
 
@@ -1633,15 +1770,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|MASK_RRF_U0FR
+name|MASK_RRF_U0RF
 value|{ 0xff, 0xff, 0x0f, 0x00, 0x00, 0x00 }
 end_define
 
 begin_define
 define|#
 directive|define
-name|MASK_RRF_U0FR
-value|{ 0xff, 0xff, 0x0f, 0x00, 0x00, 0x00 }
+name|MASK_RRF_UUFF
+value|{ 0xff, 0xff, 0x00, 0x00, 0x00, 0x00 }
+end_define
+
+begin_define
+define|#
+directive|define
+name|MASK_RRF_0UFF
+value|{ 0xff, 0xff, 0xf0, 0x00, 0x00, 0x00 }
+end_define
+
+begin_define
+define|#
+directive|define
+name|MASK_RRF_FFFU
+value|{ 0xff, 0xff, 0x00, 0x00, 0x00, 0x00 }
 end_define
 
 begin_define
@@ -1691,6 +1842,13 @@ define|#
 directive|define
 name|MASK_RR_UR
 value|{ 0xff, 0x00, 0x00, 0x00, 0x00, 0x00 }
+end_define
+
+begin_define
+define|#
+directive|define
+name|MASK_RRR_F0FF
+value|{ 0xff, 0xff, 0x0f, 0x00, 0x00, 0x00 }
 end_define
 
 begin_define
@@ -1892,6 +2050,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MASK_SS_L2RDRD
+value|{ 0xff, 0x00, 0x00, 0x00, 0x00, 0x00 }
+end_define
+
+begin_define
+define|#
+directive|define
 name|MASK_SS_LIRDRD
 value|{ 0xff, 0x00, 0x00, 0x00, 0x00, 0x00 }
 end_define
@@ -1942,7 +2107,7 @@ begin_define
 define|#
 directive|define
 name|MASK_SSF_RRDRD
-value|{ 0xff, 0x00, 0x00, 0x00, 0x00, 0x00 }
+value|{ 0xff, 0x0f, 0x00, 0x00, 0x00, 0x00 }
 end_define
 
 begin_comment
