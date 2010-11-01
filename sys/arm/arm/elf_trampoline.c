@@ -765,7 +765,7 @@ name|unsigned
 name|int
 name|pc
 decl_stmt|;
-asm|__asm __volatile("adr %0, _start\n"
+asm|__asm __volatile("mov %0, pc\n"
 block|:
 literal|"=r"
 operator|(
@@ -807,6 +807,37 @@ decl_stmt|;
 name|unsigned
 name|int
 name|tmp_sp
+decl_stmt|;
+name|uint32_t
+name|src_addr
+init|=
+operator|(
+name|uint32_t
+operator|)
+operator|&
+name|_start
+operator|-
+name|PHYSADDR
+operator|+
+name|FLASHADDR
+operator|+
+operator|(
+name|pc
+operator|-
+name|FLASHADDR
+operator|-
+operator|(
+operator|(
+name|uint32_t
+operator|)
+operator|&
+name|_startC
+operator|-
+name|PHYSADDR
+operator|)
+operator|)
+operator|&
+literal|0xfffff000
 decl_stmt|;
 name|target_addr
 operator|=
@@ -853,7 +884,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|pc
+name|src_addr
 argument_list|,
 operator|(
 name|unsigned
