@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__MACHINE_MCA_H__
+name|__X86_MCA_H__
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__MACHINE_MCA_H__
+name|__X86_MCA_H__
 end_define
 
 begin_struct
@@ -109,7 +109,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !__MACHINE_MCA_H__ */
+comment|/* !__X86_MCA_H__ */
 end_comment
 
 end_unit
