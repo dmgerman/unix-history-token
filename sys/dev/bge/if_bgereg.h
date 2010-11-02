@@ -4401,6 +4401,13 @@ name|BGE_TXMODE_LONGPAUSE_ENABLE
 value|0x00000040
 end_define
 
+begin_define
+define|#
+directive|define
+name|BGE_TXMODE_MBUF_LOCKUP_FIX
+value|0x00000100
+end_define
+
 begin_comment
 comment|/* Transmit MAC status register */
 end_comment
