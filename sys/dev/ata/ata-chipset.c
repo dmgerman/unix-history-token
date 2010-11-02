@@ -11237,7 +11237,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|0x00
+literal|2
 block|,
 name|ATA_WDMA2
 block|,
@@ -11251,7 +11251,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|0x00
+literal|2
 block|,
 name|ATA_WDMA2
 block|,
@@ -11265,7 +11265,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|0x00
+literal|2
 block|,
 name|ATA_UDMA2
 block|,
@@ -11279,7 +11279,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|0x00
+literal|2
 block|,
 name|ATA_UDMA2
 block|,
@@ -11293,7 +11293,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|0x00
+literal|2
 block|,
 name|ATA_UDMA2
 block|,
@@ -11307,7 +11307,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|0x00
+literal|2
 block|,
 name|ATA_UDMA2
 block|,
@@ -11321,7 +11321,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|0x00
+literal|2
 block|,
 name|ATA_UDMA4
 block|,
@@ -11335,7 +11335,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|0x00
+literal|2
 block|,
 name|ATA_UDMA4
 block|,
@@ -11349,7 +11349,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|0x00
+literal|2
 block|,
 name|ATA_UDMA5
 block|,
@@ -11363,7 +11363,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|0x00
+literal|2
 block|,
 name|ATA_UDMA5
 block|,
@@ -11377,7 +11377,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|0x00
+literal|2
 block|,
 name|ATA_UDMA5
 block|,
@@ -11391,7 +11391,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|0x00
+literal|2
 block|,
 name|ATA_UDMA5
 block|,
@@ -11405,7 +11405,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|0x00
+literal|2
 block|,
 name|ATA_UDMA5
 block|,
@@ -11419,7 +11419,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|0x00
+literal|2
 block|,
 name|ATA_UDMA5
 block|,
@@ -11433,7 +11433,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|0x00
+literal|2
 block|,
 name|ATA_UDMA5
 block|,
@@ -11447,7 +11447,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|0x00
+literal|2
 block|,
 name|ATA_SA150
 block|,
@@ -11461,7 +11461,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|0x00
+literal|2
 block|,
 name|ATA_SA150
 block|,
@@ -11475,7 +11475,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|0x00
+literal|2
 block|,
 name|ATA_UDMA5
 block|,
@@ -11489,7 +11489,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|0x00
+literal|2
 block|,
 name|ATA_SA150
 block|,
@@ -11503,7 +11503,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|0x00
+literal|2
 block|,
 name|ATA_SA150
 block|,
@@ -11517,7 +11517,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|0x00
+literal|2
 block|,
 name|ATA_UDMA5
 block|,
@@ -11531,7 +11531,7 @@ literal|0
 block|,
 name|AHCI
 block|,
-literal|0x00
+literal|0
 block|,
 name|ATA_SA150
 block|,
@@ -11545,7 +11545,7 @@ literal|0
 block|,
 name|AHCI
 block|,
-literal|0x00
+literal|0
 block|,
 name|ATA_SA150
 block|,
@@ -11559,7 +11559,7 @@ literal|0
 block|,
 name|AHCI
 block|,
-literal|0x00
+literal|0
 block|,
 name|ATA_SA150
 block|,
@@ -11573,7 +11573,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|0x00
+literal|1
 block|,
 name|ATA_UDMA5
 block|,
@@ -11587,7 +11587,7 @@ literal|0
 block|,
 name|AHCI
 block|,
-literal|0x00
+literal|0
 block|,
 name|ATA_SA300
 block|,
@@ -11601,7 +11601,7 @@ literal|0
 block|,
 name|AHCI
 block|,
-literal|0x00
+literal|0
 block|,
 name|ATA_SA300
 block|,
@@ -11615,7 +11615,7 @@ literal|0
 block|,
 name|AHCI
 block|,
-literal|0x00
+literal|0
 block|,
 name|ATA_SA300
 block|,
@@ -11629,7 +11629,7 @@ literal|0
 block|,
 name|AHCI
 block|,
-literal|0x00
+literal|0
 block|,
 name|ATA_SA300
 block|,
@@ -11643,7 +11643,7 @@ literal|0
 block|,
 name|AHCI
 block|,
-literal|0x00
+literal|0
 block|,
 name|ATA_SA300
 block|,
@@ -11657,7 +11657,7 @@ literal|0
 block|,
 name|AHCI
 block|,
-literal|0x00
+literal|0
 block|,
 name|ATA_SA300
 block|,
@@ -11671,7 +11671,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|0x00
+literal|1
 block|,
 name|ATA_UDMA5
 block|,
@@ -11685,7 +11685,7 @@ literal|0
 block|,
 name|AHCI
 block|,
-literal|0x00
+literal|0
 block|,
 name|ATA_SA300
 block|,
@@ -11699,7 +11699,7 @@ literal|0
 block|,
 name|AHCI
 block|,
-literal|0x00
+literal|0
 block|,
 name|ATA_SA300
 block|,
@@ -11713,7 +11713,7 @@ literal|0
 block|,
 name|AHCI
 block|,
-literal|0x00
+literal|0
 block|,
 name|ATA_SA300
 block|,
@@ -11727,7 +11727,7 @@ literal|0
 block|,
 name|AHCI
 block|,
-literal|0x00
+literal|0
 block|,
 name|ATA_SA300
 block|,
@@ -11741,7 +11741,7 @@ literal|0
 block|,
 name|AHCI
 block|,
-literal|0x00
+literal|0
 block|,
 name|ATA_SA300
 block|,
@@ -11755,7 +11755,7 @@ literal|0
 block|,
 name|AHCI
 block|,
-literal|0x00
+literal|0
 block|,
 name|ATA_SA300
 block|,
@@ -11769,7 +11769,7 @@ literal|0
 block|,
 name|AHCI
 block|,
-literal|0x00
+literal|0
 block|,
 name|ATA_SA300
 block|,
@@ -11783,7 +11783,7 @@ literal|0
 block|,
 name|AHCI
 block|,
-literal|0x00
+literal|0
 block|,
 name|ATA_SA300
 block|,
@@ -11797,7 +11797,7 @@ literal|0
 block|,
 name|AHCI
 block|,
-literal|0x00
+literal|0
 block|,
 name|ATA_SA300
 block|,
@@ -11811,7 +11811,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|0x00
+literal|1
 block|,
 name|ATA_UDMA5
 block|,
@@ -11825,7 +11825,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|0x00
+literal|0
 block|,
 name|ATA_SA150
 block|,
@@ -11839,7 +11839,7 @@ literal|0
 block|,
 name|AHCI
 block|,
-literal|0x00
+literal|0
 block|,
 name|ATA_SA300
 block|,
@@ -11853,7 +11853,7 @@ literal|0
 block|,
 name|AHCI
 block|,
-literal|0x00
+literal|0
 block|,
 name|ATA_SA300
 block|,
@@ -11867,7 +11867,7 @@ literal|0
 block|,
 name|AHCI
 block|,
-literal|0x00
+literal|0
 block|,
 name|ATA_SA300
 block|,
@@ -11881,7 +11881,7 @@ literal|0
 block|,
 name|AHCI
 block|,
-literal|0x00
+literal|0
 block|,
 name|ATA_SA300
 block|,
@@ -11895,7 +11895,7 @@ literal|0
 block|,
 name|AHCI
 block|,
-literal|0x00
+literal|0
 block|,
 name|ATA_SA300
 block|,
@@ -11909,7 +11909,7 @@ literal|0
 block|,
 name|AHCI
 block|,
-literal|0x00
+literal|0
 block|,
 name|ATA_SA300
 block|,
@@ -11923,7 +11923,7 @@ literal|0
 block|,
 name|AHCI
 block|,
-literal|0x00
+literal|0
 block|,
 name|ATA_SA300
 block|,
@@ -11937,7 +11937,7 @@ literal|0
 block|,
 name|AHCI
 block|,
-literal|0x00
+literal|0
 block|,
 name|ATA_SA300
 block|,
@@ -11951,7 +11951,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|0x00
+literal|2
 block|,
 name|ATA_SA150
 block|,
@@ -12162,6 +12162,16 @@ operator|<
 name|ATA_SA150
 condition|)
 block|{
+name|ctlr
+operator|->
+name|channels
+operator|=
+name|ctlr
+operator|->
+name|chip
+operator|->
+name|cfg2
+expr_stmt|;
 name|ctlr
 operator|->
 name|allocate
