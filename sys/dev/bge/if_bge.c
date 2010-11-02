@@ -6131,6 +6131,7 @@ name|bge_jumbo
 operator|=
 literal|0
 expr_stmt|;
+comment|/* Enable the jumbo receive producer ring. */
 name|rcb
 operator|=
 operator|&
@@ -7824,6 +7825,8 @@ name|val
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|limit
 decl_stmt|;
 comment|/* 	 * Initialize the memory window pointer register so that 	 * we can access the first 32K of internal NIC RAM. This will 	 * allow us to set up the TX send ring RCBs and the RX return 	 * ring RCBs, plus other things which live in NIC memory. 	 */
 name|CSR_WRITE_4
@@ -8182,7 +8185,8 @@ name|ENXIO
 operator|)
 return|;
 block|}
-comment|/* Initialize the standard RX ring control block */
+comment|/* 	 * Summary of rings supported by the controller: 	 * 	 * Standard Receive Producer Ring 	 * - This ring is used to feed receive buffers for "standard" 	 *   sized frames (typically 1536 bytes) to the controller. 	 * 	 * Jumbo Receive Producer Ring 	 * - This ring is used to feed receive buffers for jumbo sized 	 *   frames (i.e. anything bigger than the "standard" frames) 	 *   to the controller. 	 * 	 * Mini Receive Producer Ring 	 * - This ring is used to feed receive buffers for "mini" 	 *   sized frames to the controller. 	 * - This feature required external memory for the controller 	 *   but was never used in a production system.  Should always 	 *   be disabled. 	 * 	 * Receive Return Ring 	 * - After the controller has placed an incoming frame into a 	 *   receive buffer that buffer is moved into a receive return 	 *   ring.  The driver is then responsible to passing the 	 *   buffer up to the stack.  Many versions of the controller 	 *   support multiple RR rings. 	 * 	 * Send Ring 	 * - This ring is used for outgoing frames.  Many versions of 	 *   the controller support multiple send rings. 	 */
+comment|/* Initialize the standard receive producer ring control block. */
 name|rcb
 operator|=
 operator|&
@@ -8248,6 +8252,8 @@ argument_list|(
 name|sc
 argument_list|)
 condition|)
+block|{
+comment|/* 		 * Bits 31-16: Programmable ring size (512, 256, 128, 64, 32) 		 * Bits 15-2 : Reserved (should be 0) 		 * Bit 1     : 1 = Ring Disabled, 0 = Ring Enabled 		 * Bit 0     : Reserved 		 */
 name|rcb
 operator|->
 name|bge_maxlen_flags
@@ -8259,7 +8265,10 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
+comment|/* 		 * Ring size is always XXX entries 		 * Bits 31-16: Maximum RX frame size 		 * Bits 15-2 : Reserved (should be 0) 		 * Bit 1     : 1 = Ring Disabled, 0 = Ring Enabled 		 * Bit 0     : Reserved 		 */
 name|rcb
 operator|->
 name|bge_maxlen_flags
@@ -8271,12 +8280,14 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 name|rcb
 operator|->
 name|bge_nicaddr
 operator|=
 name|BGE_STD_RX_RINGS
 expr_stmt|;
+comment|/* Write the standard receive producer ring control block. */
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -8325,7 +8336,17 @@ operator|->
 name|bge_nicaddr
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Initialize the jumbo RX ring control block 	 * We set the 'ring disabled' bit in the flags 	 * field until we're actually ready to start 	 * using this ring (i.e. once we set the MTU 	 * high enough to require it). 	 */
+comment|/* Reset the standard receive producer ring producer index. */
+name|bge_writembx
+argument_list|(
+name|sc
+argument_list|,
+name|BGE_MBX_RX_STD_PROD_LO
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Initialize the jumbo RX producer ring control 	 * block.  We set the 'ring disabled' bit in the 	 * flags field until we're actually ready to start 	 * using this ring (i.e. once we set the MTU 	 * high enough to require it). 	 */
 if|if
 condition|(
 name|BGE_IS_JUMBO_CAPABLE
@@ -8345,6 +8366,7 @@ name|bge_info
 operator|.
 name|bge_jumbo_rx_rcb
 expr_stmt|;
+comment|/* Get the jumbo receive producer ring RCB parameters. */
 name|rcb
 operator|->
 name|bge_hostaddr
@@ -8437,6 +8459,7 @@ operator|.
 name|bge_addr_lo
 argument_list|)
 expr_stmt|;
+comment|/* Program the jumbo receive producer ring RCB parameters. */
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -8459,7 +8482,26 @@ operator|->
 name|bge_nicaddr
 argument_list|)
 expr_stmt|;
-comment|/* Set up dummy disabled mini ring RCB */
+comment|/* Reset the jumbo receive producer ring producer index. */
+name|bge_writembx
+argument_list|(
+name|sc
+argument_list|,
+name|BGE_MBX_RX_JUMBO_PROD_LO
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Disable the mini receive producer ring RCB. */
+if|if
+condition|(
+name|BGE_IS_5700_FAMILY
+argument_list|(
+name|sc
+argument_list|)
+condition|)
+block|{
 name|rcb
 operator|=
 operator|&
@@ -8493,8 +8535,18 @@ operator|->
 name|bge_maxlen_flags
 argument_list|)
 expr_stmt|;
+comment|/* Reset the mini receive producer ring producer index. */
+name|bge_writembx
+argument_list|(
+name|sc
+argument_list|,
+name|BGE_MBX_RX_MINI_PROD_LO
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
-comment|/* 	 * Set the BD ring replentish thresholds. The recommended 	 * values are 1/8th the number of descriptors allocated to 	 * each ring. 	 * XXX The 5754 requires a lower threshold, so it might be a 	 * requirement of all 575x family chips.  The Linux driver sets 	 * the lower threshold for all 5705 family chips as well, but there 	 * are reports that it might not need to be so strict. 	 * 	 * XXX Linux does some extra fiddling here for the 5906 parts as 	 * well. 	 */
+comment|/* 	 * The BD ring replenish thresholds control how often the 	 * hardware fetches new BD's from the producer rings in host 	 * memory.  Setting the value too low on a busy system can 	 * starve the hardware and recue the throughpout. 	 * 	 * Set the BD ring replentish thresholds. The recommended 	 * values are 1/8th the number of descriptors allocated to 	 * each ring. 	 * XXX The 5754 requires a lower threshold, so it might be a 	 * requirement of all 575x family chips.  The Linux driver sets 	 * the lower threshold for all 5705 family chips as well, but there 	 * are reports that it might not need to be so strict. 	 * 	 * XXX Linux does some extra fiddling here for the 5906 parts as 	 * well. 	 */
 if|if
 condition|(
 name|BGE_IS_5705_PLUS
@@ -8540,7 +8592,25 @@ operator|/
 literal|8
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Disable all unused send rings by setting the 'ring disabled' 	 * bit in the flags field of all the TX send ring control blocks. 	 * These are located in NIC memory. 	 */
+comment|/* 	 * Disable all send rings by setting the 'ring disabled' bit 	 * in the flags field of all the TX send ring control blocks, 	 * located in NIC memory. 	 */
+if|if
+condition|(
+operator|!
+name|BGE_IS_5705_PLUS
+argument_list|(
+name|sc
+argument_list|)
+condition|)
+comment|/* 5700 to 5704 had 16 send rings. */
+name|limit
+operator|=
+name|BGE_TX_RINGS_EXTSSRAM_MAX
+expr_stmt|;
+else|else
+name|limit
+operator|=
+literal|1
+expr_stmt|;
 name|vrcb
 operator|=
 name|BGE_MEMWIN_START
@@ -8555,7 +8625,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|BGE_TX_RINGS_EXTSSRAM_MAX
+name|limit
 condition|;
 name|i
 operator|++
@@ -8597,7 +8667,7 @@ name|bge_rcb
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Configure TX RCB 0 (we use only the first ring) */
+comment|/* Configure send ring RCB 0 (we use only the first ring) */
 name|vrcb
 operator|=
 name|BGE_MEMWIN_START
@@ -8661,16 +8731,6 @@ name|BGE_TX_RING_CNT
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|BGE_IS_5705_PLUS
-argument_list|(
-name|sc
-argument_list|)
-operator|)
-condition|)
 name|RCB_WRITE_4
 argument_list|(
 name|sc
@@ -8687,7 +8747,38 @@ literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Disable all unused RX return rings */
+comment|/* 	 * Disable all receive return rings by setting the 	 * 'ring diabled' bit in the flags field of all the receive 	 * return ring control blocks, located in NIC memory. 	 */
+if|if
+condition|(
+operator|!
+name|BGE_IS_5705_PLUS
+argument_list|(
+name|sc
+argument_list|)
+condition|)
+name|limit
+operator|=
+name|BGE_RX_RINGS_MAX
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|sc
+operator|->
+name|bge_asicrev
+operator|==
+name|BGE_ASICREV_BCM5755
+condition|)
+name|limit
+operator|=
+literal|4
+expr_stmt|;
+else|else
+name|limit
+operator|=
+literal|1
+expr_stmt|;
+comment|/* Disable all receive return rings. */
 name|vrcb
 operator|=
 name|BGE_MEMWIN_START
@@ -8702,7 +8793,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|BGE_RX_RINGS_MAX
+name|limit
 condition|;
 name|i
 operator|++
@@ -8742,14 +8833,7 @@ name|vrcb
 argument_list|,
 name|bge_maxlen_flags
 argument_list|,
-name|BGE_RCB_MAXLEN_FLAGS
-argument_list|(
-name|sc
-operator|->
-name|bge_return_ring_cnt
-argument_list|,
 name|BGE_RCB_FLAG_RING_DISABLED
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|RCB_WRITE_4
@@ -8792,50 +8876,7 @@ name|bge_rcb
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Initialize RX ring indexes */
-name|bge_writembx
-argument_list|(
-name|sc
-argument_list|,
-name|BGE_MBX_RX_STD_PROD_LO
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|BGE_IS_JUMBO_CAPABLE
-argument_list|(
-name|sc
-argument_list|)
-condition|)
-name|bge_writembx
-argument_list|(
-name|sc
-argument_list|,
-name|BGE_MBX_RX_JUMBO_PROD_LO
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|bge_asicrev
-operator|==
-name|BGE_ASICREV_BCM5700
-condition|)
-name|bge_writembx
-argument_list|(
-name|sc
-argument_list|,
-name|BGE_MBX_RX_MINI_PROD_LO
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Set up RX return ring 0 	 * Note that the NIC address for RX return rings is 0x00000000. 	 * The return rings live entirely within the host, so the 	 * nicaddr field in the RCB isn't used. 	 */
+comment|/* 	 * Set up receive return ring 0.  Note that the NIC address 	 * for RX return rings is 0x0.  The return rings live entirely 	 * within the host, so the nicaddr field in the RCB isn't used. 	 */
 name|vrcb
 operator|=
 name|BGE_MEMWIN_START
@@ -8891,7 +8932,7 @@ name|vrcb
 argument_list|,
 name|bge_nicaddr
 argument_list|,
-literal|0x00000000
+literal|0
 argument_list|)
 expr_stmt|;
 name|RCB_WRITE_4
