@@ -406,6 +406,13 @@ begin_comment
 comment|/* Extended capability */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|BMSR_DEFCAPMASK
+value|0xffffffff
+end_define
+
 begin_comment
 comment|/*  * Note that the EXTSTAT bit indicates that there is extended status  * info available in register 15, but 802.3 section 22.2.4.3 also  * states that that all 1000 Mb/s capable PHYs will set this bit to 1.  */
 end_comment
