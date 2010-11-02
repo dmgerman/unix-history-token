@@ -1853,9 +1853,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: %s must be optional, mandatory or standard\n"
+literal|"%s: \"%s\" %s must be optional, mandatory or standard\n"
 argument_list|,
 name|fname
+argument_list|,
+name|wd
 argument_list|,
 name|this
 argument_list|)
