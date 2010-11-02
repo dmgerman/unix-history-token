@@ -8563,6 +8563,13 @@ name|BGE_WDMAMODE_STATUS_TAG_FIX
 value|0x20000000
 end_define
 
+begin_define
+define|#
+directive|define
+name|BGE_WDMAMODE_BURST_ALL_DATA
+value|0xC0000000
+end_define
+
 begin_comment
 comment|/* Write DMA status register */
 end_comment
