@@ -507,6 +507,16 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|DECLARE_GEOM_CLASS
+argument_list|(
+name|g_cf_class
+argument_list|,
+name|g_cf
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Device methods */
 end_comment
