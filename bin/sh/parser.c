@@ -202,6 +202,31 @@ value|128
 end_define
 
 begin_comment
+comment|/* values of checkkwd variable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHKALIAS
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHKKWD
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHKNL
+value|0x4
+end_define
+
+begin_comment
 comment|/* values returned by readtoken */
 end_comment
 
@@ -403,19 +428,6 @@ name|struct
 name|parser_temp
 modifier|*
 name|parser_temp
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* XXX When 'noaliases' is set to one, no alias expansion takes place. */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|noaliases
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -988,7 +1000,11 @@ name|tok
 decl_stmt|;
 name|checkkwd
 operator|=
-literal|2
+name|CHKNL
+operator||
+name|CHKKWD
+operator||
+name|CHKALIAS
 expr_stmt|;
 if|if
 condition|(
@@ -1304,7 +1320,11 @@ expr_stmt|;
 block|}
 name|checkkwd
 operator|=
-literal|2
+name|CHKNL
+operator||
+name|CHKKWD
+operator||
+name|CHKALIAS
 expr_stmt|;
 if|if
 condition|(
@@ -1531,7 +1551,11 @@ literal|0
 expr_stmt|;
 name|checkkwd
 operator|=
-literal|2
+name|CHKNL
+operator||
+name|CHKKWD
+operator||
+name|CHKALIAS
 expr_stmt|;
 name|TRACE
 argument_list|(
@@ -1652,7 +1676,11 @@ argument_list|)
 expr_stmt|;
 name|checkkwd
 operator|=
-literal|2
+name|CHKNL
+operator||
+name|CHKKWD
+operator||
+name|CHKALIAS
 expr_stmt|;
 name|t
 operator|=
@@ -1808,7 +1836,11 @@ name|t
 decl_stmt|;
 name|checkkwd
 operator|=
-literal|2
+name|CHKNL
+operator||
+name|CHKKWD
+operator||
+name|CHKALIAS
 expr_stmt|;
 name|redir
 operator|=
@@ -2080,7 +2112,9 @@ argument_list|)
 expr_stmt|;
 name|checkkwd
 operator|=
-literal|1
+name|CHKKWD
+operator||
+name|CHKALIAS
 expr_stmt|;
 break|break;
 case|case
@@ -2213,7 +2247,9 @@ argument_list|)
 expr_stmt|;
 name|checkkwd
 operator|=
-literal|1
+name|CHKKWD
+operator||
+name|CHKALIAS
 expr_stmt|;
 break|break;
 block|}
@@ -2485,7 +2521,11 @@ expr_stmt|;
 block|}
 name|checkkwd
 operator|=
-literal|2
+name|CHKNL
+operator||
+name|CHKKWD
+operator||
+name|CHKALIAS
 expr_stmt|;
 if|if
 condition|(
@@ -2547,7 +2587,9 @@ argument_list|)
 expr_stmt|;
 name|checkkwd
 operator|=
-literal|1
+name|CHKKWD
+operator||
+name|CHKALIAS
 expr_stmt|;
 break|break;
 case|case
@@ -2675,14 +2717,11 @@ name|ncase
 operator|.
 name|cases
 expr_stmt|;
-name|noaliases
-operator|=
-literal|1
-expr_stmt|;
-comment|/* turn off alias expansion */
 name|checkkwd
 operator|=
-literal|2
+name|CHKNL
+operator||
+name|CHKKWD
 operator|,
 name|readtoken
 argument_list|()
@@ -2784,12 +2823,14 @@ name|backquote
 operator|=
 name|backquotelist
 expr_stmt|;
-if|if
-condition|(
 name|checkkwd
 operator|=
-literal|2
-operator|,
+name|CHKNL
+operator||
+name|CHKKWD
+expr_stmt|;
+if|if
+condition|(
 name|readtoken
 argument_list|()
 operator|!=
@@ -2823,10 +2864,6 @@ name|lasttoken
 operator|!=
 name|TRP
 condition|)
-name|noaliases
-operator|=
-literal|0
-operator|,
 name|synexpect
 argument_list|(
 name|TRP
@@ -2847,7 +2884,11 @@ argument_list|)
 expr_stmt|;
 name|checkkwd
 operator|=
-literal|2
+name|CHKNL
+operator||
+name|CHKKWD
+operator||
+name|CHKALIAS
 expr_stmt|;
 if|if
 condition|(
@@ -2867,10 +2908,6 @@ name|t
 operator|!=
 name|TENDCASE
 condition|)
-name|noaliases
-operator|=
-literal|0
-operator|,
 name|synexpect
 argument_list|(
 name|TENDCASE
@@ -2879,7 +2916,9 @@ expr_stmt|;
 else|else
 name|checkkwd
 operator|=
-literal|2
+name|CHKNL
+operator||
+name|CHKKWD
 operator|,
 name|readtoken
 argument_list|()
@@ -2895,11 +2934,6 @@ operator|.
 name|next
 expr_stmt|;
 block|}
-name|noaliases
-operator|=
-literal|0
-expr_stmt|;
-comment|/* reset alias expansion */
 operator|*
 name|cpp
 operator|=
@@ -2907,7 +2941,9 @@ name|NULL
 expr_stmt|;
 name|checkkwd
 operator|=
-literal|1
+name|CHKKWD
+operator||
+name|CHKALIAS
 expr_stmt|;
 break|break;
 case|case
@@ -2970,7 +3006,9 @@ argument_list|)
 expr_stmt|;
 name|checkkwd
 operator|=
-literal|1
+name|CHKKWD
+operator||
+name|CHKALIAS
 expr_stmt|;
 break|break;
 case|case
@@ -2999,7 +3037,9 @@ argument_list|)
 expr_stmt|;
 name|checkkwd
 operator|=
-literal|1
+name|CHKKWD
+operator||
+name|CHKALIAS
 expr_stmt|;
 break|break;
 comment|/* Handle an empty command like other simple commands.  */
@@ -4134,11 +4174,6 @@ block|{
 name|int
 name|t
 decl_stmt|;
-name|int
-name|savecheckkwd
-init|=
-name|checkkwd
-decl_stmt|;
 name|struct
 name|alias
 modifier|*
@@ -4161,23 +4196,14 @@ operator|=
 name|xxreadtoken
 argument_list|()
 expr_stmt|;
+comment|/* 	 * eat newlines 	 */
 if|if
 condition|(
 name|checkkwd
+operator|&
+name|CHKNL
 condition|)
 block|{
-comment|/* 		 * eat newlines 		 */
-if|if
-condition|(
-name|checkkwd
-operator|==
-literal|2
-condition|)
-block|{
-name|checkkwd
-operator|=
-literal|0
-expr_stmt|;
 while|while
 condition|(
 name|t
@@ -4195,12 +4221,7 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-else|else
-name|checkkwd
-operator|=
-literal|0
-expr_stmt|;
-comment|/* 		 * check for keywords and aliases 		 */
+comment|/* 	 * check for keywords and aliases 	 */
 if|if
 condition|(
 name|t
@@ -4218,6 +4239,12 @@ specifier|const
 modifier|*
 name|pp
 decl_stmt|;
+if|if
+condition|(
+name|checkkwd
+operator|&
+name|CHKKWD
+condition|)
 for|for
 control|(
 name|pp
@@ -4278,9 +4305,9 @@ block|}
 block|}
 if|if
 condition|(
-name|noaliases
-operator|==
-literal|0
+name|checkkwd
+operator|&
+name|CHKALIAS
 operator|&&
 operator|(
 name|ap
@@ -4312,10 +4339,6 @@ argument_list|,
 name|ap
 argument_list|)
 expr_stmt|;
-name|checkkwd
-operator|=
-name|savecheckkwd
-expr_stmt|;
 goto|goto
 name|top
 goto|;
@@ -4323,19 +4346,16 @@ block|}
 block|}
 name|out
 label|:
+if|if
+condition|(
+name|t
+operator|!=
+name|TNOT
+condition|)
 name|checkkwd
 operator|=
-operator|(
-name|t
-operator|==
-name|TNOT
-operator|)
-condition|?
-name|savecheckkwd
-else|:
 literal|0
 expr_stmt|;
-block|}
 ifdef|#
 directive|ifdef
 name|DEBUG
