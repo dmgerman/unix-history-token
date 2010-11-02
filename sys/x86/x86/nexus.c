@@ -3396,17 +3396,9 @@ operator|+=
 literal|2
 control|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|PAE
-argument_list|)
 comment|/* 		 * Resources use long's to track resources, so we can't 		 * include memory regions above 4GB. 		 */
 if|if
 condition|(
