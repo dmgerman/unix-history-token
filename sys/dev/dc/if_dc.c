@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * DEC "tulip" clone ethernet driver. Supports the DEC/Intel 21143  * series chips and several workalikes including the following:  *  * Macronix 98713/98715/98725/98727/98732 PMAC (www.macronix.com)  * Macronix/Lite-On 82c115 PNIC II (www.macronix.com)  * Lite-On 82c168/82c169 PNIC (www.litecom.com)  * ASIX Electronics AX88140A (www.asix.com.tw)  * ASIX Electronics AX88141 (www.asix.com.tw)  * ADMtek AL981 (www.admtek.com.tw)  * ADMtek AN985 (www.admtek.com.tw)  * Netgear FA511 (www.netgear.com) Appears to be rebadged ADMTek AN985  * Davicom DM9100, DM9102, DM9102A (www.davicom8.com)  * Accton EN1217 (www.accton.com)  * Xircom X3201 (www.xircom.com)  * Abocom FE2500  * Conexant LANfinity (www.conexant.com)  * 3Com OfficeConnect 10/100B 3CSOHO100B (www.3com.com)  *  * Datasheets for the 21143 are available at developer.intel.com.  * Datasheets for the clone parts can be found at their respective sites.  * (Except for the PNIC; see www.freebsd.org/~wpaul/PNIC/pnic.ps.gz.)  * The PNIC II is essentially a Macronix 98715A chip; the only difference  * worth noting is that its multicast hash table is only 128 bits wide  * instead of 512.  *  * Written by Bill Paul<wpaul@ee.columbia.edu>  * Electrical Engineering Department  * Columbia University, New York City  */
+comment|/*  * DEC "tulip" clone ethernet driver. Supports the DEC/Intel 21143  * series chips and several workalikes including the following:  *  * Macronix 98713/98715/98725/98727/98732 PMAC (www.macronix.com)  * Macronix/Lite-On 82c115 PNIC II (www.macronix.com)  * Lite-On 82c168/82c169 PNIC (www.litecom.com)  * ASIX Electronics AX88140A (www.asix.com.tw)  * ASIX Electronics AX88141 (www.asix.com.tw)  * ADMtek AL981 (www.admtek.com.tw)  * ADMtek AN983 (www.admtek.com.tw)  * ADMtek cardbus AN985 (www.admtek.com.tw)  * Netgear FA511 (www.netgear.com) Appears to be rebadged ADMTek cardbus AN985  * Davicom DM9100, DM9102, DM9102A (www.davicom8.com)  * Accton EN1217 (www.accton.com)  * Xircom X3201 (www.xircom.com)  * Abocom FE2500  * Conexant LANfinity (www.conexant.com)  * 3Com OfficeConnect 10/100B 3CSOHO100B (www.3com.com)  *  * Datasheets for the 21143 are available at developer.intel.com.  * Datasheets for the clone parts can be found at their respective sites.  * (Except for the PNIC; see www.freebsd.org/~wpaul/PNIC/pnic.ps.gz.)  * The PNIC II is essentially a Macronix 98715A chip; the only difference  * worth noting is that its multicast hash table is only 128 bits wide  * instead of 512.  *  * Written by Bill Paul<wpaul@ee.columbia.edu>  * Electrical Engineering Department  * Columbia University, New York City  */
 end_comment
 
 begin_comment
@@ -381,12 +381,25 @@ name|DC_DEVID
 argument_list|(
 name|DC_VENDORID_ADMTEK
 argument_list|,
+name|DC_DEVICEID_AN983
+argument_list|)
+block|,
+literal|0
+block|,
+literal|"ADMtek AN983 10/100BaseTX"
+block|}
+block|,
+block|{
+name|DC_DEVID
+argument_list|(
+name|DC_VENDORID_ADMTEK
+argument_list|,
 name|DC_DEVICEID_AN985
 argument_list|)
 block|,
 literal|0
 block|,
-literal|"ADMtek AN985 10/100BaseTX"
+literal|"ADMtek AN985 cardBus 10/100BaseTX or clone"
 block|}
 block|,
 block|{
@@ -413,19 +426,6 @@ block|,
 literal|0
 block|,
 literal|"ADMtek ADM9513 10/100BaseTX"
-block|}
-block|,
-block|{
-name|DC_DEVID
-argument_list|(
-name|DC_VENDORID_ADMTEK
-argument_list|,
-name|DC_DEVICEID_FA511
-argument_list|)
-block|,
-literal|0
-block|,
-literal|"Netgear FA511 10/100BaseTX"
 block|}
 block|,
 block|{
@@ -3790,7 +3790,7 @@ name|frame
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Note: both the AL981 and AN985 have internal PHYs, 	 * however the AL981 provides direct access to the PHY 	 * registers while the AN985 uses a serial MII interface. 	 * The AN985's MII interface is also buggy in that you 	 * can read from any MII address (0 to 31), but only address 1 	 * behaves normally. To deal with both cases, we pretend 	 * that the PHY is at MII address 1. 	 */
+comment|/* 	 * Note: both the AL981 and AN983 have internal PHYs, 	 * however the AL981 provides direct access to the PHY 	 * registers while the AN983 uses a serial MII interface. 	 * The AN983's MII interface is also buggy in that you 	 * can read from any MII address (0 to 31), but only address 1 	 * behaves normally. To deal with both cases, we pretend 	 * that the PHY is at MII address 1. 	 */
 if|if
 condition|(
 name|DC_IS_ADMTEK
@@ -9251,6 +9251,14 @@ name|DC_DEVID
 argument_list|(
 name|DC_VENDORID_ADMTEK
 argument_list|,
+name|DC_DEVICEID_AN983
+argument_list|)
+case|:
+case|case
+name|DC_DEVID
+argument_list|(
+name|DC_VENDORID_ADMTEK
+argument_list|,
 name|DC_DEVICEID_AN985
 argument_list|)
 case|:
@@ -9276,14 +9284,6 @@ argument_list|(
 name|DC_VENDORID_DLINK
 argument_list|,
 name|DC_DEVICEID_DRP32TXD
-argument_list|)
-case|:
-case|case
-name|DC_DEVID
-argument_list|(
-name|DC_VENDORID_ADMTEK
-argument_list|,
-name|DC_DEVICEID_FA511
 argument_list|)
 case|:
 case|case
@@ -9370,7 +9370,7 @@ name|sc
 operator|->
 name|dc_type
 operator|=
-name|DC_TYPE_AN985
+name|DC_TYPE_AN983
 expr_stmt|;
 name|sc
 operator|->
@@ -10074,7 +10074,7 @@ case|case
 name|DC_TYPE_AL981
 case|:
 case|case
-name|DC_TYPE_AN985
+name|DC_TYPE_AN983
 case|:
 name|reg
 operator|=
