@@ -3913,10 +3913,6 @@ name|arch_maphint
 operator|=
 name|sparc64_maphint
 expr_stmt|;
-comment|/* 	 * Probe for a console. 	 */
-name|cons_probe
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|init_heap
@@ -3928,12 +3924,8 @@ operator|)
 operator|-
 literal|1
 condition|)
-name|panic
-argument_list|(
-literal|"%s: can't claim heap"
-argument_list|,
-name|__func__
-argument_list|)
+name|OF_exit
+argument_list|()
 expr_stmt|;
 name|setheap
 argument_list|(
@@ -3953,6 +3945,10 @@ operator|+
 name|HEAPSZ
 operator|)
 argument_list|)
+expr_stmt|;
+comment|/* 	 * Probe for a console. 	 */
+name|cons_probe
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
