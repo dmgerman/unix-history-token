@@ -20692,7 +20692,10 @@ name|abfd
 argument_list|,
 name|line_ptr
 argument_list|,
-name|NULL
+operator|&
+name|cu
+operator|->
+name|header
 argument_list|,
 operator|&
 name|bytes_read
