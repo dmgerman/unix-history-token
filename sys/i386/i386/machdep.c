@@ -9760,7 +9760,7 @@ condition|(
 name|smap
 operator|->
 name|base
-operator|>=
+operator|>
 literal|0xffffffff
 condition|)
 block|{
