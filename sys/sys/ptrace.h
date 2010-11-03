@@ -18,7 +18,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/_sigset.h>
+file|<sys/signal.h>
 end_include
 
 begin_include
@@ -490,6 +490,11 @@ directive|define
 name|PL_FLAG_EXEC
 value|0x10
 comment|/* exec(2) succeeded */
+define|#
+directive|define
+name|PL_FLAG_SI
+value|0x20
+comment|/* siginfo is valid */
 name|sigset_t
 name|pl_sigmask
 decl_stmt|;
@@ -498,6 +503,11 @@ name|sigset_t
 name|pl_siglist
 decl_stmt|;
 comment|/* LWP pending signal */
+name|struct
+name|__siginfo
+name|pl_siginfo
+decl_stmt|;
+comment|/* siginfo for signal */
 block|}
 struct|;
 end_struct
