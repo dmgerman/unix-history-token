@@ -488,6 +488,18 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+if|if
+condition|(
+name|octeon_has_feature
+argument_list|(
+name|OCTEON_FEATURE_PCIE
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 comment|/* XXX Check sysinfo flag.  */
 name|device_set_desc
 argument_list|(
