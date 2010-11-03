@@ -134,6 +134,8 @@ literal|5
 index|]
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|fd
 decl_stmt|,
 name|comma
@@ -170,6 +172,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"mfi_open"
@@ -177,7 +183,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -196,6 +202,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to get controller info"
@@ -203,7 +213,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -620,6 +630,8 @@ name|uint8_t
 name|status
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|fd
 decl_stmt|;
 if|if
@@ -654,6 +666,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"mfi_open"
@@ -661,7 +677,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -712,6 +728,10 @@ literal|0
 operator|)
 return|;
 block|}
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to get capacity info"
@@ -719,7 +739,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -749,6 +769,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to get design info"
@@ -756,7 +780,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -1257,6 +1281,8 @@ modifier|*
 name|p
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|fd
 decl_stmt|,
 name|i
@@ -1295,6 +1321,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"mfi_open"
@@ -1302,7 +1332,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -1320,6 +1350,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to get config"
@@ -1327,7 +1361,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -1880,15 +1914,17 @@ name|struct
 name|mfi_ld_info
 name|info
 decl_stmt|;
+name|int
+name|error
+decl_stmt|,
+name|fd
+decl_stmt|;
 name|u_int
 name|i
 decl_stmt|,
 name|len
 decl_stmt|,
 name|state_len
-decl_stmt|;
-name|int
-name|fd
 decl_stmt|;
 if|if
 condition|(
@@ -1922,6 +1958,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"mfi_open"
@@ -1929,7 +1969,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -1949,6 +1989,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to get volume list"
@@ -1956,7 +2000,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -2131,6 +2175,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to get info for volume %d"
@@ -2151,7 +2199,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -2332,6 +2380,8 @@ decl_stmt|,
 name|state_len
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|fd
 decl_stmt|;
 if|if
@@ -2366,6 +2416,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"mfi_open"
@@ -2373,7 +2427,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -2392,6 +2446,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to get drive list"
@@ -2399,7 +2457,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -2462,6 +2520,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to fetch info for drive %u"
@@ -2478,7 +2540,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -2569,6 +2631,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to fetch info for drive %u"
@@ -2585,7 +2651,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -2808,6 +2874,8 @@ name|mfi_info_component
 name|header
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|fd
 decl_stmt|;
 name|u_int
@@ -2845,6 +2913,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"mfi_open"
@@ -2852,7 +2924,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -2871,6 +2943,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to get controller info"
@@ -2878,7 +2954,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}

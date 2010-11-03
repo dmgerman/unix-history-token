@@ -226,13 +226,11 @@ name|mfi_pd_list
 modifier|*
 name|list
 decl_stmt|;
-name|uint8_t
-name|encl
-decl_stmt|,
-name|slot
-decl_stmt|;
 name|long
 name|val
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 name|u_int
 name|i
@@ -240,6 +238,11 @@ decl_stmt|;
 name|char
 modifier|*
 name|cp
+decl_stmt|;
+name|uint8_t
+name|encl
+decl_stmt|,
+name|slot
 decl_stmt|;
 comment|/* Look for a raw device id first. */
 name|val
@@ -463,6 +466,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to fetch drive list"
@@ -470,7 +477,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -1465,6 +1472,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"mfi_open"
@@ -1472,7 +1483,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -1515,6 +1526,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to fetch info for drive %u"
@@ -1524,7 +1539,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -1605,6 +1620,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to set drive %u to %s"
@@ -1619,7 +1638,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -1912,6 +1931,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"mfi_open"
@@ -1919,7 +1942,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -1965,6 +1988,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to fetch info for drive %u"
@@ -1974,7 +2001,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -1988,7 +2015,7 @@ operator|!=
 name|MFI_PD_STATE_REBUILD
 condition|)
 block|{
-name|warn
+name|warnx
 argument_list|(
 literal|"Drive %d is not in the REBUILD state"
 argument_list|,
@@ -2038,6 +2065,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to start rebuild on drive %u"
@@ -2047,7 +2078,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -2148,6 +2179,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"mfi_open"
@@ -2155,7 +2190,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -2201,6 +2236,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to fetch info for drive %u"
@@ -2210,7 +2249,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -2274,6 +2313,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to abort rebuild on drive %u"
@@ -2283,7 +2326,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -2378,6 +2421,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"mfi_open"
@@ -2385,7 +2432,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -2431,6 +2478,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to fetch info for drive %u"
@@ -2440,7 +2491,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -2734,6 +2785,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"mfi_open"
@@ -2741,7 +2796,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -2787,6 +2842,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to fetch info for drive %u"
@@ -2796,7 +2855,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -2836,6 +2895,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to %s clear on drive %u"
@@ -2853,7 +2916,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -3032,6 +3095,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"mfi_open"
@@ -3039,7 +3106,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -3114,6 +3181,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to %s locate on drive %u"
@@ -3131,7 +3202,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
