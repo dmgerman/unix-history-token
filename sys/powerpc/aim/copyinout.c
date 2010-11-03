@@ -294,6 +294,11 @@ operator|)
 name|addr
 argument_list|)
 expr_stmt|;
+comment|/* Mark segment no-execute */
+name|vsid
+operator||=
+name|SR_N
+expr_stmt|;
 comment|/* If we have already set this VSID, we can just return */
 if|if
 condition|(
@@ -310,11 +315,6 @@ operator|==
 name|vsid
 condition|)
 return|return;
-comment|/* Mark segment no-execute */
-name|vsid
-operator||=
-name|SR_N
-expr_stmt|;
 asm|__asm __volatile("isync");
 name|curthread
 operator|->

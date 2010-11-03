@@ -2193,6 +2193,9 @@ name|td_frame
 operator|=
 name|frame
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__powerpc64__
 comment|/* 	 * Speculatively restore last user SLB segment, which we know is 	 * invalid already, since we are likely to do copyin()/copyout(). 	 */
 asm|__asm __volatile ("slbmte %0, %1; isync" ::
 literal|"r"
@@ -2215,6 +2218,11 @@ operator|)
 block|)
 function|;
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|error
