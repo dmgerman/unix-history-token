@@ -537,6 +537,9 @@ decl_stmt|;
 name|size_t
 name|ti_stksize
 decl_stmt|;
+name|siginfo_t
+name|ti_siginfo
+decl_stmt|;
 block|}
 name|td_thrinfo_t
 typedef|;
