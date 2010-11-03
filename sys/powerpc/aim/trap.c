@@ -2193,6 +2193,30 @@ name|td_frame
 operator|=
 name|frame
 expr_stmt|;
+comment|/* 	 * Speculatively restore last user SLB segment, which we know is 	 * invalid already, since we are likely to do copyin()/copyout(). 	 */
+asm|__asm __volatile ("slbmte %0, %1; isync" ::
+literal|"r"
+operator|(
+name|td
+operator|->
+name|td_pcb
+operator|->
+name|pcb_cpu
+operator|.
+name|aim
+operator|.
+name|usr_vsid
+operator|)
+operator|,
+literal|"r"
+operator|(
+name|USER_SLB_SLBE
+operator|)
+block|)
+function|;
+end_function
+
+begin_expr_stmt
 name|error
 operator|=
 name|syscallenter
@@ -2203,6 +2227,9 @@ operator|&
 name|sa
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|syscallret
 argument_list|(
 name|td
@@ -2213,17 +2240,17 @@ operator|&
 name|sa
 argument_list|)
 expr_stmt|;
-block|}
-end_function
+end_expr_stmt
 
 begin_ifdef
+unit|}
 ifdef|#
 directive|ifdef
 name|__powerpc64__
 end_ifdef
 
 begin_function
-specifier|static
+unit|static
 name|int
 name|handle_slb_spill
 parameter_list|(
@@ -2543,9 +2570,6 @@ name|p_vmspace
 operator|->
 name|vm_map
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__powerpc64__
 name|user_sr
 operator|=
 name|td
@@ -2558,23 +2582,6 @@ name|aim
 operator|.
 name|usr_segm
 expr_stmt|;
-else|#
-directive|else
-asm|__asm ("mfsr %0, %1"
-block|:
-literal|"=r"
-operator|(
-name|user_sr
-operator|)
-operator|:
-literal|"K"
-operator|(
-name|USER_SR
-operator|)
-block|)
-empty_stmt|;
-endif|#
-directive|endif
 name|eva
 operator|&=
 name|ADDR_PIDX
@@ -2596,9 +2603,6 @@ name|kernel_map
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_expr_stmt
 name|va
 operator|=
 name|trunc_page
@@ -2606,9 +2610,6 @@ argument_list|(
 name|eva
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|map
@@ -2679,9 +2680,6 @@ name|VM_FAULT_NORMAL
 argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_if
 if|if
 condition|(
 name|rv
@@ -2693,9 +2691,6 @@ operator|(
 literal|0
 operator|)
 return|;
-end_if
-
-begin_if
 if|if
 condition|(
 operator|!
@@ -2711,27 +2706,25 @@ operator|(
 literal|0
 operator|)
 return|;
-end_if
-
-begin_return
 return|return
 operator|(
 name|SIGSEGV
 operator|)
 return|;
-end_return
+block|}
+end_function
 
-begin_macro
-unit|}  int
+begin_function
+name|int
 name|badaddr
-argument_list|(
-argument|void *addr
-argument_list|,
-argument|size_t size
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|void
+modifier|*
+name|addr
+parameter_list|,
+name|size_t
+name|size
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -2746,7 +2739,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|int

@@ -209,26 +209,7 @@ operator|==
 name|slbv
 condition|)
 return|return;
-asm|__asm __volatile ("isync; slbie %0; slbmte %1, %2; isync" ::
-literal|"r"
-operator|(
-name|USER_ADDR
-operator|)
-operator|,
-literal|"r"
-operator|(
-name|slbv
-operator|)
-operator|,
-literal|"r"
-operator|(
-name|USER_SLB_SLBE
-operator|)
-block|)
-function|;
-end_function
-
-begin_expr_stmt
+asm|__asm __volatile("isync");
 name|curthread
 operator|->
 name|td_pcb
@@ -246,9 +227,6 @@ name|addr
 operator|>>
 name|ADDR_SR_SHFT
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|curthread
 operator|->
 name|td_pcb
@@ -261,7 +239,24 @@ name|usr_vsid
 operator|=
 name|slbv
 expr_stmt|;
-end_expr_stmt
+asm|__asm __volatile ("slbie %0; slbmte %1, %2; isync" ::
+literal|"r"
+operator|(
+name|USER_ADDR
+operator|)
+operator|,
+literal|"r"
+operator|(
+name|slbv
+operator|)
+operator|,
+literal|"r"
+operator|(
+name|USER_SLB_SLBE
+operator|)
+block|)
+function|;
+end_function
 
 begin_else
 unit|}
@@ -321,6 +316,23 @@ operator||=
 name|SR_N
 expr_stmt|;
 asm|__asm __volatile("isync");
+name|curthread
+operator|->
+name|td_pcb
+operator|->
+name|pcb_cpu
+operator|.
+name|aim
+operator|.
+name|usr_segm
+operator|=
+operator|(
+name|uintptr_t
+operator|)
+name|addr
+operator|>>
+name|ADDR_SR_SHFT
+expr_stmt|;
 name|curthread
 operator|->
 name|td_pcb
