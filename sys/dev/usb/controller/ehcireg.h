@@ -172,28 +172,33 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EHCI_CAPLENGTH
+name|EHCI_CAPLEN_HCIVERSION
 value|0x00
 end_define
 
 begin_comment
-comment|/* RO Capability register length field */
-end_comment
-
-begin_comment
-comment|/* reserved			0x01 */
+comment|/* RO Capability register length 					 * (least-significant byte) and  					 * interface version number (two 					 * most significant) 					 */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|EHCI_HCIVERSION
-value|0x02
+name|EHCI_CAPLENGTH
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& 0xff)
 end_define
 
-begin_comment
-comment|/* RO Interface version number */
-end_comment
+begin_define
+define|#
+directive|define
+name|EHCI_HCIVERSION
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> 16)& 0xffff)
+end_define
 
 begin_define
 define|#
