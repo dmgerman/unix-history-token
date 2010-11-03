@@ -18,25 +18,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"md5.h"
+file|"crypto/md5.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sha1.h"
+file|"crypto/sha1.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"crypto/tls.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"x509v3.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"tls.h"
 end_include
 
 begin_include

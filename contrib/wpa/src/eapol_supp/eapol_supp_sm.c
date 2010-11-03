@@ -18,13 +18,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"eapol_supp_sm.h"
+file|"state_machine.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"eap_peer/eap.h"
+file|"wpabuf.h"
 end_include
 
 begin_include
@@ -36,31 +36,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|"eapol_common.h"
+file|"crypto/crypto.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"md5.h"
+file|"crypto/md5.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"rc4.h"
+file|"common/eapol_common.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"state_machine.h"
+file|"eap_peer/eap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"wpabuf.h"
+file|"eapol_supp_sm.h"
 end_include
 
 begin_define
@@ -677,6 +677,32 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|eapol_sm_set_port_authorized
+parameter_list|(
+name|struct
+name|eapol_sm
+modifier|*
+name|sm
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|eapol_sm_set_port_unauthorized
+parameter_list|(
+name|struct
+name|eapol_sm
+modifier|*
+name|sm
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Port Timers state machine - implemented as a function that will be called  * once a second as a registered event loop timeout */
 end_comment
@@ -970,6 +996,11 @@ name|suppPortStatus
 operator|=
 name|Unauthorized
 expr_stmt|;
+name|eapol_sm_set_port_unauthorized
+argument_list|(
+name|sm
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
@@ -1014,6 +1045,11 @@ operator|->
 name|suppPortStatus
 operator|=
 name|Unauthorized
+expr_stmt|;
+name|eapol_sm_set_port_unauthorized
+argument_list|(
+name|sm
+argument_list|)
 expr_stmt|;
 name|sm
 operator|->
@@ -1231,6 +1267,11 @@ name|suppPortStatus
 operator|=
 name|Unauthorized
 expr_stmt|;
+name|eapol_sm_set_port_unauthorized
+argument_list|(
+name|sm
+argument_list|)
+expr_stmt|;
 name|sm
 operator|->
 name|cb_status
@@ -1263,6 +1304,11 @@ operator|->
 name|suppPortStatus
 operator|=
 name|Authorized
+expr_stmt|;
+name|eapol_sm_set_port_authorized
+argument_list|(
+name|sm
+argument_list|)
 expr_stmt|;
 name|sm
 operator|->
@@ -1324,6 +1370,11 @@ name|suppPortStatus
 operator|=
 name|Authorized
 expr_stmt|;
+name|eapol_sm_set_port_authorized
+argument_list|(
+name|sm
+argument_list|)
+expr_stmt|;
 name|sm
 operator|->
 name|sPortMode
@@ -1356,6 +1407,11 @@ operator|->
 name|suppPortStatus
 operator|=
 name|Unauthorized
+expr_stmt|;
+name|eapol_sm_set_port_unauthorized
+argument_list|(
+name|sm
+argument_list|)
 expr_stmt|;
 name|sm
 operator|->
@@ -3802,6 +3858,80 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|eapol_sm_set_port_authorized
+parameter_list|(
+name|struct
+name|eapol_sm
+modifier|*
+name|sm
+parameter_list|)
+block|{
+if|if
+condition|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|port_cb
+condition|)
+name|sm
+operator|->
+name|ctx
+operator|->
+name|port_cb
+argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|ctx
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|eapol_sm_set_port_unauthorized
+parameter_list|(
+name|struct
+name|eapol_sm
+modifier|*
+name|sm
+parameter_list|)
+block|{
+if|if
+condition|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|port_cb
+condition|)
+name|sm
+operator|->
+name|ctx
+operator|->
+name|port_cb
+argument_list|(
+name|sm
+operator|->
+name|ctx
+operator|->
+name|ctx
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/**  * eapol_sm_step - EAPOL state machine step function  * @sm: Pointer to EAPOL state machine allocated with eapol_sm_init()  *  * This function is called to notify the state machine about changed external  * variables. It will step through the EAPOL state machines in loop to process  * all triggered state changes.  */
 end_comment
@@ -5824,6 +5954,11 @@ name|suppPortStatus
 operator|=
 name|Authorized
 expr_stmt|;
+name|eapol_sm_set_port_authorized
+argument_list|(
+name|sm
+argument_list|)
+expr_stmt|;
 name|sm
 operator|->
 name|portValid
@@ -5950,6 +6085,11 @@ operator|->
 name|suppPortStatus
 operator|=
 name|Unauthorized
+expr_stmt|;
+name|eapol_sm_set_port_unauthorized
+argument_list|(
+name|sm
+argument_list|)
 expr_stmt|;
 comment|/* Make sure we do not start sending EAPOL-Start frames first, but 	 * instead move to RESTART state to start EAPOL authentication. */
 name|sm
@@ -7134,9 +7274,6 @@ name|conf
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|EAP_TLS_OPENSSL
 name|conf
 operator|.
 name|opensc_engine_path
@@ -7161,9 +7298,6 @@ name|ctx
 operator|->
 name|pkcs11_module_path
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* EAP_TLS_OPENSSL */
 name|conf
 operator|.
 name|wps

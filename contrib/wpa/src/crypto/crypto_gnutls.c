@@ -28,7 +28,7 @@ file|"crypto.h"
 end_include
 
 begin_function
-name|void
+name|int
 name|md4_vector
 parameter_list|(
 name|size_t
@@ -75,7 +75,10 @@ argument_list|)
 operator|!=
 name|GPG_ERR_NO_ERROR
 condition|)
-return|return;
+return|return
+operator|-
+literal|1
+return|;
 for|for
 control|(
 name|i
@@ -134,6 +137,9 @@ argument_list|(
 name|hd
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -279,7 +285,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|md5_vector
 parameter_list|(
 name|size_t
@@ -326,7 +332,10 @@ argument_list|)
 operator|!=
 name|GPG_ERR_NO_ERROR
 condition|)
-return|return;
+return|return
+operator|-
+literal|1
+return|;
 for|for
 control|(
 name|i
@@ -385,11 +394,14 @@ argument_list|(
 name|hd
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|sha1_vector
 parameter_list|(
 name|size_t
@@ -436,7 +448,10 @@ argument_list|)
 operator|!=
 name|GPG_ERR_NO_ERROR
 condition|)
-return|return;
+return|return
+operator|-
+literal|1
+return|;
 for|for
 control|(
 name|i
@@ -495,51 +510,11 @@ argument_list|(
 name|hd
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|CONFIG_NO_FIPS186_2_PRF
-end_ifndef
-
-begin_function
-name|int
-name|fips186_2_prf
-parameter_list|(
-specifier|const
-name|u8
-modifier|*
-name|seed
-parameter_list|,
-name|size_t
-name|seed_len
-parameter_list|,
-name|u8
-modifier|*
-name|x
-parameter_list|,
-name|size_t
-name|xlen
-parameter_list|)
-block|{
-comment|/* FIX: how to do this with libgcrypt? */
 return|return
-operator|-
-literal|1
+literal|0
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* CONFIG_NO_FIPS186_2_PRF */
-end_comment
 
 begin_function
 name|void

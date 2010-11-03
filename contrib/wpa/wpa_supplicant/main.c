@@ -42,6 +42,22 @@ directive|include
 file|"wpa_supplicant_i.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"driver_i.h"
+end_include
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|wpa_driver_ops
+modifier|*
+name|wpa_drivers
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -57,35 +73,12 @@ name|printf
 argument_list|(
 literal|"%s\n\n%s\n"
 literal|"usage:\n"
-literal|"  wpa_supplicant [-BddhKLqq"
-ifdef|#
-directive|ifdef
-name|CONFIG_DEBUG_SYSLOG
-literal|"s"
-endif|#
-directive|endif
-comment|/* CONFIG_DEBUG_SYSLOG */
-literal|"t"
-ifdef|#
-directive|ifdef
-name|CONFIG_CTRL_IFACE_DBUS
-literal|"u"
-endif|#
-directive|endif
-comment|/* CONFIG_CTRL_IFACE_DBUS */
-literal|"vW] [-P<pid file>] "
+literal|"  wpa_supplicant [-BddhKLqqstuvW] [-P<pid file>] "
 literal|"[-g<global ctrl>] \\\n"
 literal|"        -i<ifname> -c<config file> [-C<ctrl>] [-D<driver>] "
 literal|"[-p<driver_param>] \\\n"
-literal|"        [-b<br_ifname>]"
-ifdef|#
-directive|ifdef
-name|CONFIG_DEBUG_FILE
-literal|" [-f<debug file>]"
-endif|#
-directive|endif
-comment|/* CONFIG_DEBUG_FILE */
-literal|" \\\n"
+literal|"        [-b<br_ifname>] [-f<debug file>] \\\n"
+literal|"        [-o<override driver>] [-O<override ctrl>] \\\n"
 literal|"        [-N -i<ifname> -c<conf> [-C<ctrl>] "
 literal|"[-D<driver>] \\\n"
 literal|"        [-p<driver_param>] [-b<br_ifname>] ...]\n"
@@ -103,7 +96,7 @@ name|i
 operator|=
 literal|0
 init|;
-name|wpa_supplicant_drivers
+name|wpa_drivers
 index|[
 name|i
 index|]
@@ -116,14 +109,14 @@ name|printf
 argument_list|(
 literal|"  %s = %s\n"
 argument_list|,
-name|wpa_supplicant_drivers
+name|wpa_drivers
 index|[
 name|i
 index|]
 operator|->
 name|name
 argument_list|,
-name|wpa_supplicant_drivers
+name|wpa_drivers
 index|[
 name|i
 index|]
@@ -144,40 +137,62 @@ literal|"  -c = Configuration file\n"
 literal|"  -C = ctrl_interface parameter (only used if -c is not)\n"
 literal|"  -i = interface name\n"
 literal|"  -d = increase debugging verbosity (-dd even more)\n"
-literal|"  -D = driver name\n"
+literal|"  -D = driver name (can be multiple drivers: nl80211,wext)\n"
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|CONFIG_DEBUG_FILE
+name|printf
+argument_list|(
 literal|"  -f = log output to debug file instead of stdout\n"
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* CONFIG_DEBUG_FILE */
+name|printf
+argument_list|(
 literal|"  -g = global ctrl_interface\n"
 literal|"  -K = include keys (passwords, etc.) in debug output\n"
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|CONFIG_DEBUG_SYSLOG
+name|printf
+argument_list|(
 literal|"  -s = log output to syslog instead of stdout\n"
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* CONFIG_DEBUG_SYSLOG */
+name|printf
+argument_list|(
 literal|"  -t = include timestamp in debug messages\n"
 literal|"  -h = show this help text\n"
 literal|"  -L = show license (GPL and BSD)\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
+literal|"  -o = override driver parameter for new interfaces\n"
+literal|"  -O = override ctrl_interface parameter for new interfaces\n"
 literal|"  -p = driver parameters\n"
 literal|"  -P = PID file\n"
 literal|"  -q = decrease debugging verbosity (-qq even less)\n"
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
-name|CONFIG_CTRL_IFACE_DBUS
+name|CONFIG_DBUS
+name|printf
+argument_list|(
 literal|"  -u = enable DBus control interface\n"
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
-comment|/* CONFIG_CTRL_IFACE_DBUS */
+comment|/* CONFIG_DBUS */
+name|printf
+argument_list|(
 literal|"  -v = show version\n"
 literal|"  -W = wait for a control interface monitor before starting\n"
 literal|"  -N = start describing new interface\n"
@@ -188,12 +203,12 @@ argument_list|(
 literal|"example:\n"
 literal|"  wpa_supplicant -D%s -iwlan0 -c/etc/wpa_supplicant.conf\n"
 argument_list|,
-name|wpa_supplicant_drivers
+name|wpa_drivers
 index|[
 name|i
 index|]
 condition|?
-name|wpa_supplicant_drivers
+name|wpa_drivers
 index|[
 name|i
 index|]
@@ -419,7 +434,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"b:Bc:C:D:df:g:hi:KLNp:P:qstuvW"
+literal|"b:Bc:C:D:df:g:hi:KLNo:O:p:P:qstuvW"
 argument_list|)
 expr_stmt|;
 if|if
@@ -583,6 +598,26 @@ goto|goto
 name|out
 goto|;
 case|case
+literal|'o'
+case|:
+name|params
+operator|.
+name|override_driver
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'O'
+case|:
+name|params
+operator|.
+name|override_ctrl_interface
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
 literal|'p'
 case|:
 name|iface
@@ -647,7 +682,7 @@ expr_stmt|;
 break|break;
 ifdef|#
 directive|ifdef
-name|CONFIG_CTRL_IFACE_DBUS
+name|CONFIG_DBUS
 case|case
 literal|'u'
 case|:
@@ -660,7 +695,7 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
-comment|/* CONFIG_CTRL_IFACE_DBUS */
+comment|/* CONFIG_DBUS */
 case|case
 literal|'v'
 case|:

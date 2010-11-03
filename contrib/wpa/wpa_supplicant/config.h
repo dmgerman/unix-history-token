@@ -67,6 +67,13 @@ name|DEFAULT_FAST_REAUTH
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|DEFAULT_BSS_MAX_COUNT
+value|200
+end_define
+
 begin_include
 include|#
 directive|include
@@ -120,9 +127,6 @@ comment|/** 	 * fast_reauth - EAP fast re-authentication (session resumption) 	 
 name|int
 name|fast_reauth
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|EAP_TLS_OPENSSL
 comment|/** 	 * opensc_engine_path - Path to the OpenSSL engine for opensc 	 * 	 * This is an OpenSSL specific configuration option for loading OpenSC 	 * engine (engine_opensc.so); if %NULL, this engine is not loaded. 	 */
 name|char
 modifier|*
@@ -138,9 +142,6 @@ name|char
 modifier|*
 name|pkcs11_module_path
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* EAP_TLS_OPENSSL */
 comment|/** 	 * driver_param - Driver interface parameters 	 * 	 * This text string is passed to the selected driver interface with the 	 * optional struct wpa_driver_ops::set_param() handler. This can be 	 * used to configure driver specific options without having to add new 	 * driver interface functionality. 	 */
 name|char
 modifier|*
@@ -208,6 +209,11 @@ name|char
 modifier|*
 name|device_type
 decl_stmt|;
+comment|/** 	 * config_methods - Config Methods 	 * 	 * This is a space-separated list of supported WPS configuration 	 * methods. For example, "label display push_button keypad". 	 * Available methods: usba ethernet label display ext_nfc_token 	 * int_nfc_token nfc_interface push_button keypad. 	 */
+name|char
+modifier|*
+name|config_methods
+decl_stmt|;
 comment|/** 	 * os_version - OS Version (WPS) 	 * 4-octet operating system version number 	 */
 name|u8
 name|os_version
@@ -225,6 +231,15 @@ decl_stmt|;
 comment|/** 	 * wps_cred_processing - Credential processing 	 * 	 *   0 = process received credentials internally 	 *   1 = do not process received credentials; just pass them over 	 *	ctrl_iface to external program(s) 	 *   2 = process received credentials internally and pass them over 	 *	ctrl_iface to external program(s) 	 */
 name|int
 name|wps_cred_processing
+decl_stmt|;
+comment|/** 	 * bss_max_count - Maximum number of BSS entries to keep in memory 	 */
+name|unsigned
+name|int
+name|bss_max_count
+decl_stmt|;
+comment|/** 	 * filter_ssids - SSID-based scan result filtering 	 * 	 *   0 = do not filter scan results 	 *   1 = only include configured SSIDs in scan results/BSS table 	 */
+name|int
+name|filter_ssids
 decl_stmt|;
 block|}
 struct|;
@@ -344,6 +359,23 @@ end_function_decl
 begin_function_decl
 name|char
 modifier|*
+modifier|*
+name|wpa_config_get_all
+parameter_list|(
+name|struct
+name|wpa_ssid
+modifier|*
+name|ssid
+parameter_list|,
+name|int
+name|get_keys
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
 name|wpa_config_get
 parameter_list|(
 name|struct
@@ -402,6 +434,18 @@ name|struct
 name|wpa_ssid
 modifier|*
 name|ssid
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|wpa_config_update_prio_list
+parameter_list|(
+name|struct
+name|wpa_config
+modifier|*
+name|config
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * hostapd / EAP-TLS/PEAP/TTLS/FAST common functions  * Copyright (c) 2004-2008, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * EAP-TLS/PEAP/TTLS/FAST server common functions  * Copyright (c) 2004-2009, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
 end_comment
 
 begin_ifndef
@@ -15,21 +15,45 @@ directive|define
 name|EAP_TLS_COMMON_H
 end_define
 
+begin_comment
+comment|/**  * struct eap_ssl_data - TLS data for EAP methods  */
+end_comment
+
 begin_struct
 struct|struct
 name|eap_ssl_data
 block|{
+comment|/** 	 * conn - TLS connection context data from tls_connection_init() 	 */
 name|struct
 name|tls_connection
 modifier|*
 name|conn
 decl_stmt|;
+comment|/** 	 * tls_out - TLS message to be sent out in fragments 	 */
+name|struct
+name|wpabuf
+modifier|*
+name|tls_out
+decl_stmt|;
+comment|/** 	 * tls_out_pos - The current position in the outgoing TLS message 	 */
+name|size_t
+name|tls_out_pos
+decl_stmt|;
+comment|/** 	 * tls_out_limit - Maximum fragment size for outgoing TLS messages 	 */
 name|size_t
 name|tls_out_limit
 decl_stmt|;
+comment|/** 	 * tls_in - Received TLS message buffer for re-assembly 	 */
+name|struct
+name|wpabuf
+modifier|*
+name|tls_in
+decl_stmt|;
+comment|/** 	 * phase2 - Whether this TLS connection is used in EAP phase 2 (tunnel) 	 */
 name|int
 name|phase2
 decl_stmt|;
+comment|/** 	 * eap - EAP state machine allocated with eap_server_sm_init() 	 */
 name|struct
 name|eap_sm
 modifier|*
@@ -45,19 +69,6 @@ name|WAIT_FRAG_ACK
 block|}
 name|state
 enum|;
-name|struct
-name|wpabuf
-modifier|*
-name|in_buf
-decl_stmt|;
-name|struct
-name|wpabuf
-modifier|*
-name|out_buf
-decl_stmt|;
-name|size_t
-name|out_used
-decl_stmt|;
 name|struct
 name|wpabuf
 name|tmpbuf
@@ -246,12 +257,10 @@ modifier|*
 name|data
 parameter_list|,
 specifier|const
-name|u8
+name|struct
+name|wpabuf
 modifier|*
 name|plain
-parameter_list|,
-name|size_t
-name|plain_len
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -18,7 +18,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"rc4.h"
+file|"crypto.h"
 end_include
 
 begin_define
@@ -33,12 +33,8 @@ parameter_list|)
 value|do { u8 t = S[a]; S[a] = S[b]; S[b] = t; } while(0)
 end_define
 
-begin_comment
-comment|/**  * rc4 - XOR RC4 stream to given data with skip-stream-start  * @key: RC4 key  * @keylen: RC4 key length  * @skip: number of bytes to skip from the beginning of the RC4 stream  * @data: data to be XOR'ed with RC4 stream  * @data_len: buf length  *  * Generate RC4 pseudo random stream for the given key, skip beginning of the  * stream, and XOR the end result with the data buffer to perform RC4  * encryption/decryption.  */
-end_comment
-
 begin_function
-name|void
+name|int
 name|rc4_skip
 parameter_list|(
 specifier|const
@@ -284,6 +280,9 @@ literal|0xff
 index|]
 expr_stmt|;
 block|}
+return|return
+literal|0
+return|;
 block|}
 end_function
 

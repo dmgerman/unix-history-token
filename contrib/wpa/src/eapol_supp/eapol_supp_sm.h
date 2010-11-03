@@ -18,7 +18,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"defs.h"
+file|"common/defs.h"
 end_include
 
 begin_typedef
@@ -267,9 +267,6 @@ modifier|*
 name|ctx
 parameter_list|)
 function_decl|;
-ifdef|#
-directive|ifdef
-name|EAP_TLS_OPENSSL
 comment|/** 	 * opensc_engine_path - Path to the OpenSSL engine for opensc 	 * 	 * This is an OpenSSL specific configuration option for loading OpenSC 	 * engine (engine_opensc.so); if %NULL, this engine is not loaded. 	 */
 specifier|const
 name|char
@@ -288,9 +285,6 @@ name|char
 modifier|*
 name|pkcs11_module_path
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* EAP_TLS_OPENSSL */
 comment|/** 	 * wps - WPS context data 	 * 	 * This is only used by EAP-WSC and can be left %NULL if not available. 	 */
 name|struct
 name|wps_context
@@ -317,6 +311,21 @@ specifier|const
 name|char
 modifier|*
 name|txt
+parameter_list|)
+function_decl|;
+comment|/** 	 * port_cb - Set port authorized/unauthorized callback (optional) 	 * @ctx: Callback context (ctx) 	 * @authorized: Whether the supplicant port is now in authorized state 	 */
+name|void
+function_decl|(
+modifier|*
+name|port_cb
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|ctx
+parameter_list|,
+name|int
+name|authorized
 parameter_list|)
 function_decl|;
 block|}

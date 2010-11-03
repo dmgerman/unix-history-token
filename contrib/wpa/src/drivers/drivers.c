@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant / driver interface list  * Copyright (c) 2004-2005, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * Driver interface list  * Copyright (c) 2004-2005, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
 end_comment
 
 begin_include
@@ -88,33 +88,6 @@ end_endif
 
 begin_comment
 comment|/* CONFIG_DRIVER_HOSTAP */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CONFIG_DRIVER_PRISM54
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|wpa_driver_ops
-name|wpa_driver_prism54_ops
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* driver_prism54.c */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* CONFIG_DRIVER_PRISM54 */
 end_comment
 
 begin_ifdef
@@ -444,33 +417,6 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|CONFIG_DRIVER_PS3
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|wpa_driver_ops
-name|wpa_driver_ps3_ops
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* driver_ps3.c */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* CONFIG_DRIVER_PS3 */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|CONFIG_DRIVER_IPHONE
 end_ifdef
 
@@ -522,11 +468,65 @@ begin_comment
 comment|/* CONFIG_DRIVER_ROBOSWITCH */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CONFIG_DRIVER_ATHEROS
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|wpa_driver_ops
+name|wpa_driver_atheros_ops
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* driver_atheros.c */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CONFIG_DRIVER_ATHEROS */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CONFIG_DRIVER_NONE
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|wpa_driver_ops
+name|wpa_driver_none_ops
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* driver_none.c */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CONFIG_DRIVER_NONE */
+end_comment
+
 begin_decl_stmt
 name|struct
 name|wpa_driver_ops
 modifier|*
-name|wpa_supplicant_drivers
+name|wpa_drivers
 index|[]
 init|=
 block|{
@@ -557,15 +557,6 @@ block|,
 endif|#
 directive|endif
 comment|/* CONFIG_DRIVER_HOSTAP */
-ifdef|#
-directive|ifdef
-name|CONFIG_DRIVER_PRISM54
-operator|&
-name|wpa_driver_prism54_ops
-block|,
-endif|#
-directive|endif
-comment|/* CONFIG_DRIVER_PRISM54 */
 ifdef|#
 directive|ifdef
 name|CONFIG_DRIVER_HERMES
@@ -676,15 +667,6 @@ directive|endif
 comment|/* CONFIG_DRIVER_OSX */
 ifdef|#
 directive|ifdef
-name|CONFIG_DRIVER_PS3
-operator|&
-name|wpa_driver_ps3_ops
-block|,
-endif|#
-directive|endif
-comment|/* CONFIG_DRIVER_PS3 */
-ifdef|#
-directive|ifdef
 name|CONFIG_DRIVER_IPHONE
 operator|&
 name|wpa_driver_iphone_ops
@@ -701,6 +683,24 @@ block|,
 endif|#
 directive|endif
 comment|/* CONFIG_DRIVER_ROBOSWITCH */
+ifdef|#
+directive|ifdef
+name|CONFIG_DRIVER_ATHEROS
+operator|&
+name|wpa_driver_atheros_ops
+block|,
+endif|#
+directive|endif
+comment|/* CONFIG_DRIVER_ATHEROS */
+ifdef|#
+directive|ifdef
+name|CONFIG_DRIVER_NONE
+operator|&
+name|wpa_driver_none_ops
+block|,
+endif|#
+directive|endif
+comment|/* CONFIG_DRIVER_NONE */
 name|NULL
 block|}
 decl_stmt|;

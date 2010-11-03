@@ -18,19 +18,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"sha1.h"
+file|"crypto/crypto.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"md5.h"
+file|"crypto/md5.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"crypto.h"
+file|"crypto/sha1.h"
 end_include
 
 begin_include

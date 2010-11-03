@@ -566,6 +566,12 @@ decl_stmt|;
 name|Boolean
 name|start_reauth
 decl_stmt|;
+name|u8
+name|peer_addr
+index|[
+name|ETH_ALEN
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct

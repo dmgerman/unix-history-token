@@ -273,7 +273,7 @@ name|EAP_VENDOR_IETF
 argument_list|,
 name|EAP_TYPE_TNC
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 name|code
 argument_list|,
@@ -299,6 +299,14 @@ return|return
 name|NULL
 return|;
 block|}
+name|wpabuf_put_u8
+argument_list|(
+name|msg
+argument_list|,
+name|EAP_TNC_VERSION
+argument_list|)
+expr_stmt|;
+comment|/* Flags */
 name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
@@ -1193,8 +1201,8 @@ block|{
 if|if
 condition|(
 name|len
-operator|!=
-literal|0
+operator|>
+literal|1
 condition|)
 block|{
 name|wpa_printf

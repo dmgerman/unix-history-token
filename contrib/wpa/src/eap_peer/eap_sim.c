@@ -18,6 +18,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"pcsc_funcs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"crypto/milenage.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"eap_peer/eap_i.h"
 end_include
 
@@ -30,35 +42,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|"pcsc_funcs.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"eap_common/eap_sim_common.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CONFIG_SIM_SIMULATOR
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"hlr_auc_gw/milenage.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* CONFIG_SIM_SIMULATOR */
-end_comment
 
 begin_struct
 struct|struct

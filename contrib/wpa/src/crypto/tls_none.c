@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant / SSL/TLS interface functions for no TLS case  * Copyright (c) 2004, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * SSL/TLS interface functions for no TLS case  * Copyright (c) 2004-2009, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
 end_comment
 
 begin_include
@@ -53,12 +53,6 @@ name|ssl_ctx
 parameter_list|)
 block|{ }
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|EAP_TLS_NONE
-end_ifdef
 
 begin_function
 name|int
@@ -329,7 +323,8 @@ block|}
 end_function
 
 begin_function
-name|u8
+name|struct
+name|wpabuf
 modifier|*
 name|tls_connection_handshake
 parameter_list|(
@@ -343,25 +338,16 @@ modifier|*
 name|conn
 parameter_list|,
 specifier|const
-name|u8
+name|struct
+name|wpabuf
 modifier|*
 name|in_data
 parameter_list|,
-name|size_t
-name|in_len
-parameter_list|,
-name|size_t
-modifier|*
-name|out_len
-parameter_list|,
-name|u8
+name|struct
+name|wpabuf
 modifier|*
 modifier|*
 name|appl_data
-parameter_list|,
-name|size_t
-modifier|*
-name|appl_data_len
 parameter_list|)
 block|{
 return|return
@@ -371,7 +357,8 @@ block|}
 end_function
 
 begin_function
-name|u8
+name|struct
+name|wpabuf
 modifier|*
 name|tls_connection_server_handshake
 parameter_list|(
@@ -385,16 +372,16 @@ modifier|*
 name|conn
 parameter_list|,
 specifier|const
-name|u8
+name|struct
+name|wpabuf
 modifier|*
 name|in_data
 parameter_list|,
-name|size_t
-name|in_len
-parameter_list|,
-name|size_t
+name|struct
+name|wpabuf
 modifier|*
-name|out_len
+modifier|*
+name|appl_data
 parameter_list|)
 block|{
 return|return
@@ -404,7 +391,9 @@ block|}
 end_function
 
 begin_function
-name|int
+name|struct
+name|wpabuf
+modifier|*
 name|tls_connection_encrypt
 parameter_list|(
 name|void
@@ -417,30 +406,22 @@ modifier|*
 name|conn
 parameter_list|,
 specifier|const
-name|u8
+name|struct
+name|wpabuf
 modifier|*
 name|in_data
-parameter_list|,
-name|size_t
-name|in_len
-parameter_list|,
-name|u8
-modifier|*
-name|out_data
-parameter_list|,
-name|size_t
-name|out_len
 parameter_list|)
 block|{
 return|return
-operator|-
-literal|1
+name|NULL
 return|;
 block|}
 end_function
 
 begin_function
-name|int
+name|struct
+name|wpabuf
+modifier|*
 name|tls_connection_decrypt
 parameter_list|(
 name|void
@@ -453,24 +434,14 @@ modifier|*
 name|conn
 parameter_list|,
 specifier|const
-name|u8
+name|struct
+name|wpabuf
 modifier|*
 name|in_data
-parameter_list|,
-name|size_t
-name|in_len
-parameter_list|,
-name|u8
-modifier|*
-name|out_data
-parameter_list|,
-name|size_t
-name|out_len
 parameter_list|)
 block|{
 return|return
-operator|-
-literal|1
+name|NULL
 return|;
 block|}
 end_function
@@ -699,7 +670,9 @@ block|}
 end_function
 
 begin_function
-name|int
+name|struct
+name|wpabuf
+modifier|*
 name|tls_connection_ia_send_phase_finished
 parameter_list|(
 name|void
@@ -713,18 +686,10 @@ name|conn
 parameter_list|,
 name|int
 name|final
-parameter_list|,
-name|u8
-modifier|*
-name|out_data
-parameter_list|,
-name|size_t
-name|out_len
 parameter_list|)
 block|{
 return|return
-operator|-
-literal|1
+name|NULL
 return|;
 block|}
 end_function
@@ -778,15 +743,6 @@ literal|1
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* EAP_TLS_NONE */
-end_comment
 
 end_unit
 
