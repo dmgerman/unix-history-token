@@ -1463,6 +1463,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|BGE_CHIPID_BCM5906_A0
+value|0xc000
+end_define
+
+begin_define
+define|#
+directive|define
 name|BGE_CHIPID_BCM5906_A1
 value|0xc001
 end_define
@@ -5106,6 +5113,13 @@ define|#
 directive|define
 name|BGE_SDI_STATS_INCREMENT_MASK
 value|0x0C10
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_ISO_PKT_TX
+value|0x0C20
 end_define
 
 begin_define
@@ -14366,6 +14380,10 @@ define|#
 directive|define
 name|BGE_FLAG_RX_ALIGNBUG
 value|0x04000000
+define|#
+directive|define
+name|BGE_FLAG_SHORT_DMA_BUG
+value|0x08000000
 name|uint32_t
 name|bge_phy_flags
 decl_stmt|;
