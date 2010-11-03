@@ -425,6 +425,16 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|freebsd32_syscallnames
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|void
@@ -733,7 +743,22 @@ operator||
 name|SV_IA32
 operator||
 name|SV_ILP32
-block|}
+block|,
+operator|.
+name|sv_set_syscall_retval
+operator|=
+name|ia32_set_syscall_retval
+block|,
+operator|.
+name|sv_fetch_syscall_args
+operator|=
+name|ia32_fetch_syscall_args
+block|,
+operator|.
+name|sv_syscallnames
+operator|=
+name|freebsd32_syscallnames
+block|, }
 decl_stmt|;
 end_decl_stmt
 

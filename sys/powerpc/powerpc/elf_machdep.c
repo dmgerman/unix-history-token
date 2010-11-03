@@ -277,7 +277,22 @@ operator|=
 name|SV_ABI_FREEBSD
 operator||
 name|SV_ILP32
-block|}
+block|,
+operator|.
+name|sv_set_syscall_retval
+operator|=
+name|cpu_set_syscall_retval
+block|,
+operator|.
+name|sv_fetch_syscall_args
+operator|=
+name|cpu_fetch_syscall_args
+block|,
+operator|.
+name|sv_syscallnames
+operator|=
+name|syscallnames
+block|, }
 decl_stmt|;
 end_decl_stmt
 

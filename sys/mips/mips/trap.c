@@ -1135,15 +1135,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|syscallnames
-index|[]
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Handle an exception.  * Called from MipsKernGenException() or MipsUserGenException()  * when a processor trap occurs.  * In the case of a kernel trap, we return the pc where to resume if  * p->p_addr->u_pcb.pcb_onfault is set, otherwise, return old pc.  */
 end_comment

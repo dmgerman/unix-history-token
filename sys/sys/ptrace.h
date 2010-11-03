@@ -475,6 +475,21 @@ directive|define
 name|PL_FLAG_BOUND
 value|0x02
 comment|/* M:N bound thread */
+define|#
+directive|define
+name|PL_FLAG_SCE
+value|0x04
+comment|/* syscall enter point */
+define|#
+directive|define
+name|PL_FLAG_SCX
+value|0x08
+comment|/* syscall leave point */
+define|#
+directive|define
+name|PL_FLAG_EXEC
+value|0x10
+comment|/* exec(2) succeeded */
 name|sigset_t
 name|pl_sigmask
 decl_stmt|;
