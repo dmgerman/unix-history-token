@@ -10826,6 +10826,7 @@ comment|/* 	 * Return immediately if not a valid mapping 	 */
 if|if
 condition|(
 operator|!
+operator|(
 name|battable
 index|[
 name|idx
@@ -10834,6 +10835,7 @@ operator|.
 name|batu
 operator|&
 name|BAT_Vs
+operator|)
 condition|)
 return|return
 operator|(
