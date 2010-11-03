@@ -6193,7 +6193,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|uint32_t
 name|nfsrv_hashfh
 parameter_list|(
 name|fhandle_t
