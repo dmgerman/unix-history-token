@@ -3107,6 +3107,8 @@ literal|"cuaU%d"
 argument_list|,
 name|ucom
 operator|->
+name|sc_super
+operator|->
 name|sc_unit
 argument_list|)
 expr_stmt|;
@@ -3124,15 +3126,13 @@ literal|"cuaU%d.%d"
 argument_list|,
 name|ucom
 operator|->
-name|sc_unit
-operator|-
-name|ucom
+name|sc_super
 operator|->
-name|sc_local_unit
+name|sc_unit
 argument_list|,
 name|ucom
 operator|->
-name|sc_local_unit
+name|sc_subunit
 argument_list|)
 expr_stmt|;
 block|}
@@ -3290,10 +3290,6 @@ argument_list|,
 name|sc
 operator|->
 name|sc_ucom
-argument_list|,
-name|sc
-operator|->
-name|sc_ttys
 argument_list|)
 expr_stmt|;
 for|for
@@ -7169,15 +7165,17 @@ name|UHSO_DPRINTF
 argument_list|(
 literal|3
 argument_list|,
-literal|"unit=%d, local_unit=%d\n"
+literal|"unit=%d, subunit=%d\n"
 argument_list|,
 name|ucom
+operator|->
+name|sc_super
 operator|->
 name|sc_unit
 argument_list|,
 name|ucom
 operator|->
-name|sc_local_unit
+name|sc_subunit
 argument_list|)
 expr_stmt|;
 if|if
@@ -7198,7 +7196,7 @@ name|sc_tty
 index|[
 name|ucom
 operator|->
-name|sc_local_unit
+name|sc_subunit
 index|]
 operator|.
 name|ht_open
@@ -7313,7 +7311,7 @@ name|sc_tty
 index|[
 name|ucom
 operator|->
-name|sc_local_unit
+name|sc_subunit
 index|]
 operator|.
 name|ht_open
@@ -7328,7 +7326,7 @@ name|sc_tty
 index|[
 name|ucom
 operator|->
-name|sc_local_unit
+name|sc_subunit
 index|]
 operator|.
 name|ht_xfer
@@ -7437,7 +7435,7 @@ literal|"local unit %d\n"
 argument_list|,
 name|ucom
 operator|->
-name|sc_local_unit
+name|sc_subunit
 argument_list|)
 expr_stmt|;
 name|usbd_transfer_start
@@ -7458,7 +7456,7 @@ name|sc_tty
 index|[
 name|ucom
 operator|->
-name|sc_local_unit
+name|sc_subunit
 index|]
 operator|.
 name|ht_xfer
@@ -7473,7 +7471,7 @@ name|sc_tty
 index|[
 name|ucom
 operator|->
-name|sc_local_unit
+name|sc_subunit
 index|]
 argument_list|)
 expr_stmt|;
@@ -7485,7 +7483,7 @@ name|sc_tty
 index|[
 name|ucom
 operator|->
-name|sc_local_unit
+name|sc_subunit
 index|]
 operator|.
 name|ht_xfer
@@ -7562,7 +7560,7 @@ name|sc_tty
 index|[
 name|ucom
 operator|->
-name|sc_local_unit
+name|sc_subunit
 index|]
 operator|.
 name|ht_xfer

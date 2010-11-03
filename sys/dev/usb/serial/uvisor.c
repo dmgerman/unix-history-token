@@ -1607,8 +1607,6 @@ operator|&
 name|sc
 operator|->
 name|sc_ucom
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|usbd_transfer_unsetup

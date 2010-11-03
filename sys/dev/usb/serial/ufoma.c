@@ -2157,7 +2157,7 @@ operator|&
 operator|(
 name|sc
 operator|->
-name|sc_ucom
+name|sc_super_ucom
 operator|.
 name|sc_unit
 operator|)
@@ -2219,8 +2219,6 @@ operator|&
 name|sc
 operator|->
 name|sc_ucom
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|usbd_transfer_unsetup

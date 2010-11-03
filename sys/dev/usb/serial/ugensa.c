@@ -1249,10 +1249,6 @@ argument_list|,
 name|sc
 operator|->
 name|sc_ucom
-argument_list|,
-name|sc
-operator|->
-name|sc_niface
 argument_list|)
 expr_stmt|;
 for|for

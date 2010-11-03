@@ -1365,10 +1365,6 @@ argument_list|,
 name|sc
 operator|->
 name|sc_ucom
-argument_list|,
-name|sc
-operator|->
-name|sc_numser
 argument_list|)
 expr_stmt|;
 name|usbd_transfer_unsetup
