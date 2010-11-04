@@ -20950,7 +20950,11 @@ operator|)
 condition|)
 name|sc
 operator|=
+operator|(
 name|t
+operator|+
+literal|4
+operator|)
 operator|/
 literal|5
 expr_stmt|;
@@ -20958,7 +20962,7 @@ elseif|else
 if|if
 condition|(
 name|t
-operator|==
+operator|<=
 operator|(
 literal|252
 operator|*
@@ -20969,22 +20973,6 @@ comment|/* special encoding for 21 minutes */
 name|sc
 operator|=
 literal|252
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|t
-operator|<
-operator|(
-literal|30
-operator|*
-literal|60
-operator|)
-condition|)
-comment|/* no encoding exists for 22-29 minutes, so set to 30 mins */
-name|sc
-operator|=
-literal|241
 expr_stmt|;
 elseif|else
 if|if
@@ -21001,7 +20989,11 @@ operator|)
 condition|)
 name|sc
 operator|=
+operator|(
 name|t
+operator|-
+literal|1
+operator|)
 operator|/
 operator|(
 literal|30
@@ -21009,7 +21001,7 @@ operator|*
 literal|60
 operator|)
 operator|+
-literal|240
+literal|241
 expr_stmt|;
 else|else
 name|sc
