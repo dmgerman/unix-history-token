@@ -3424,22 +3424,6 @@ operator|.
 name|as_buf
 expr_stmt|;
 comment|/* 	 * See if registry key is already in a list of known keys 	 * included with the driver. 	 */
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|502113
-name|TAILQ_FOREACH
-argument_list|(
-argument|e
-argument_list|,
-argument|&sc->ndis_ctx
-argument_list|,
-argument|link
-argument_list|)
-block|{
-else|#
-directive|else
 name|TAILQ_FOREACH
 argument_list|(
 argument|e
@@ -3449,8 +3433,6 @@ argument_list|,
 argument|link
 argument_list|)
 block|{
-endif|#
-directive|endif
 name|oidp
 operator|=
 name|e
@@ -3575,6 +3557,9 @@ operator|=
 name|NDIS_STATUS_FAILURE
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|ndis_status
 name|ndis_decode_parm
@@ -3709,6 +3694,9 @@ name|NDIS_STATUS_SUCCESS
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|NdisWriteConfiguration
@@ -3856,22 +3844,6 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* See if the key already exists. */
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|502113
-name|TAILQ_FOREACH
-argument_list|(
-argument|e
-argument_list|,
-argument|&sc->ndis_ctx
-argument_list|,
-argument|link
-argument_list|)
-block|{
-else|#
-directive|else
 name|TAILQ_FOREACH
 argument_list|(
 argument|e
@@ -3881,8 +3853,6 @@ argument_list|,
 argument|link
 argument_list|)
 block|{
-endif|#
-directive|endif
 name|oidp
 operator|=
 name|e
@@ -3952,6 +3922,9 @@ operator|=
 name|NDIS_STATUS_SUCCESS
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|NdisCloseConfiguration
@@ -4051,7 +4024,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*  * Initialize a Windows spinlock.  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|NdisAllocateSpinLock
@@ -4078,7 +4057,13 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Destroy a Windows spinlock. This is a no-op for now. There are two reasons  * for this. One is that it's sort of superfluous: we don't have to do anything  * special to deallocate the spinlock. The other is that there are some buggy  * drivers which call NdisFreeSpinLock() _after_ calling NdisFreeMemory() on  * the block of memory in which the spinlock resides. (Yes, ADMtek, I'm  * talking to you.)  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|NdisFreeSpinLock
@@ -4110,7 +4095,13 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+end_function
+
+begin_comment
 comment|/*  * Acquire a spinlock from IRQL<= DISPATCH_LEVEL.  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|NdisAcquireSpinLock
@@ -4136,7 +4127,13 @@ name|nsl_kirql
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Release a spinlock from IRQL == DISPATCH_LEVEL.  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|NdisReleaseSpinLock
@@ -4161,7 +4158,13 @@ name|nsl_kirql
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Acquire a spinlock when already running at IRQL == DISPATCH_LEVEL.  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|NdisDprAcquireSpinLock
@@ -4182,7 +4185,13 @@ name|nsl_spinlock
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Release a spinlock without leaving IRQL == DISPATCH_LEVEL.  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|NdisDprReleaseSpinLock
@@ -4203,6 +4212,9 @@ name|nsl_spinlock
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|NdisInitializeReadWriteLock
@@ -4242,6 +4254,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|NdisAcquireReadWriteLock
@@ -4297,6 +4312,9 @@ index|]
 operator|++
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|NdisReleaseReadWriteLock
@@ -4355,6 +4373,9 @@ index|]
 operator|--
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|uint32_t
 name|NdisReadPciSlotInformation
@@ -4474,6 +4495,9 @@ name|len
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|uint32_t
 name|NdisWritePciSlotInformation
@@ -4592,11 +4616,20 @@ name|len
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * The errorlog routine uses a variable argument list, so we  * have to declare it this way.  */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|ERRMSGLEN
 value|512
+end_define
+
+begin_function
 specifier|static
 name|void
 name|NdisWriteErrorLogEntry
@@ -4886,6 +4919,9 @@ name|as
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|ndis_map_cb
@@ -4986,6 +5022,9 @@ operator|=
 name|nseg
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|NdisMStartBufferPhysicalMapping
@@ -5141,6 +5180,9 @@ operator|.
 name|nma_cnt
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|NdisMCompleteBufferPhysicalMapping
@@ -5241,7 +5283,13 @@ name|map
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * This is an older (?) timer init routine which doesn't  * accept a miniport context handle. Serialized miniports should  * never call this function.  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|NdisInitializeTimer
@@ -5295,6 +5343,9 @@ name|KDPC_IMPORTANCE_LOW
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|ndis_timercall
@@ -5381,7 +5432,13 @@ name|nmb_lock
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * For a long time I wondered why there were two NDIS timer initialization  * routines, and why this one needed an NDIS_MINIPORT_TIMER and the  * MiniportAdapterHandle. The NDIS_MINIPORT_TIMER has its own callout  * function and context pointers separate from those in the DPC, which  * allows for another level of indirection: when the timer fires, we  * can have our own timer function invoked, and from there we can call  * the driver's function. But why go to all that trouble? Then it hit  * me: for serialized miniports, the timer callouts are not re-entrant.  * By trapping the callouts and having access to the MiniportAdapterHandle,  * we can protect the driver callouts by acquiring the NDIS serialization  * lock. This is essential for allowing serialized miniports to work  * correctly on SMP systems. On UP hosts, setting IRQL to DISPATCH_LEVEL  * is enough to prevent other threads from pre-empting you, but with  * SMP, you must acquire a lock as well, otherwise the other CPU is  * free to clobber you.  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|NdisMInitializeTimer
@@ -5495,7 +5552,13 @@ operator|->
 name|nmt_kdpc
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * In Windows, there's both an NdisMSetTimer() and an NdisSetTimer(),  * but the former is just a macro wrapper around the latter.  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|NdisSetTimer
@@ -5537,6 +5600,9 @@ name|nt_kdpc
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|NdisMSetPeriodicTimer
@@ -5579,7 +5645,13 @@ name|nmt_kdpc
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Technically, this is really NdisCancelTimer(), but we also  * (ab)use it for NdisMCancelTimer(), since in our implementation  * we don't need the extra info in the ndis_miniport_timer  * structure just to cancel a timer.  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|NdisMCancelTimer
@@ -5609,6 +5681,9 @@ name|nt_ktimer
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|NdisMQueryAdapterResources
@@ -5735,6 +5810,9 @@ operator|=
 name|NDIS_STATUS_SUCCESS
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|ndis_status
 name|NdisMRegisterIoPortRange
@@ -5852,6 +5930,9 @@ name|NDIS_STATUS_SUCCESS
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|NdisMDeregisterIoPortRange
@@ -5878,6 +5959,9 @@ modifier|*
 name|offset
 decl_stmt|;
 block|{ }
+end_function
+
+begin_function
 specifier|static
 name|void
 name|NdisReadNetworkAddress
@@ -5969,32 +6053,6 @@ name|NDIS_STATUS_FAILURE
 expr_stmt|;
 return|return;
 block|}
-ifdef|#
-directive|ifdef
-name|IFP2ENADDR
-if|if
-condition|(
-name|bcmp
-argument_list|(
-name|IFP2ENADDR
-argument_list|(
-name|sc
-operator|->
-name|ifp
-argument_list|)
-argument_list|,
-name|empty
-argument_list|,
-name|ETHER_ADDR_LEN
-argument_list|)
-operator|==
-literal|0
-condition|)
-elif|#
-directive|elif
-name|__FreeBSD_version
-operator|>=
-literal|700000
 if|if
 condition|(
 name|sc
@@ -6021,27 +6079,6 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-else|#
-directive|else
-if|if
-condition|(
-name|bcmp
-argument_list|(
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
-argument_list|,
-name|empty
-argument_list|,
-name|ETHER_ADDR_LEN
-argument_list|)
-operator|==
-literal|0
-condition|)
-endif|#
-directive|endif
 operator|*
 name|status
 operator|=
@@ -6049,24 +6086,6 @@ name|NDIS_STATUS_FAILURE
 expr_stmt|;
 else|else
 block|{
-ifdef|#
-directive|ifdef
-name|IFP2ENADDR
-operator|*
-name|addr
-operator|=
-name|IFP2ENADDR
-argument_list|(
-name|sc
-operator|->
-name|ifp
-argument_list|)
-expr_stmt|;
-elif|#
-directive|elif
-name|__FreeBSD_version
-operator|>=
-literal|700000
 operator|*
 name|addr
 operator|=
@@ -6077,19 +6096,6 @@ operator|->
 name|ifp
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-operator|*
-name|addr
-operator|=
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
-expr_stmt|;
-endif|#
-directive|endif
 operator|*
 name|addrlen
 operator|=
@@ -6102,6 +6108,9 @@ name|NDIS_STATUS_SUCCESS
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_function
 specifier|static
 name|ndis_status
 name|NdisQueryMapRegisterCount
@@ -6129,6 +6138,9 @@ name|NDIS_STATUS_SUCCESS
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|ndis_status
 name|NdisMAllocateMapRegisters
@@ -6321,6 +6333,9 @@ name|NDIS_STATUS_SUCCESS
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|NdisMFreeMapRegisters
@@ -6408,6 +6423,9 @@ name|ndis_mtag
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|ndis_mapshared_cb
@@ -6464,7 +6482,13 @@ operator|.
 name|ds_addr
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * This maps to bus_dmamem_alloc().  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|NdisMAllocateSharedMemory
@@ -6766,6 +6790,9 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_struct
 struct|struct
 name|ndis_allocwork
 block|{
@@ -6785,6 +6812,9 @@ name|na_iw
 decl_stmt|;
 block|}
 struct|;
+end_struct
+
+begin_function
 specifier|static
 name|void
 name|ndis_asyncmem_complete
@@ -6923,6 +6953,9 @@ name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|ndis_status
 name|NdisMAllocateSharedMemoryAsync
@@ -7072,6 +7105,9 @@ name|NDIS_STATUS_PENDING
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|NdisMFreeSharedMemory
@@ -7303,6 +7339,9 @@ name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|ndis_status
 name|NdisMMapIoSpace
@@ -7373,6 +7412,9 @@ name|NDIS_STATUS_SUCCESS
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|NdisMUnmapIoSpace
@@ -7402,6 +7444,9 @@ name|len
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|uint32_t
 name|NdisGetCacheFillSize
@@ -7415,6 +7460,9 @@ literal|128
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|uint32_t
 name|NdisMGetDmaAlignment
@@ -7431,7 +7479,13 @@ literal|16
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * NDIS has two methods for dealing with NICs that support DMA.  * One is to just pass packets to the driver and let it call  * NdisMStartBufferPhysicalMapping() to map each buffer in the packet  * all by itself, and the other is to let the NDIS library handle the  * buffer mapping internally, and hand the driver an already populated  * scatter/gather fragment list. If the driver calls  * NdisMInitializeScatterGatherDma(), it wants to use the latter  * method.  */
+end_comment
+
+begin_function
 specifier|static
 name|ndis_status
 name|NdisMInitializeScatterGatherDma
@@ -7554,6 +7608,9 @@ name|NDIS_STATUS_SUCCESS
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 name|void
 name|NdisAllocatePacketPool
 parameter_list|(
@@ -7762,6 +7819,9 @@ operator|=
 name|NDIS_STATUS_SUCCESS
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|void
 name|NdisAllocatePacketPoolEx
 parameter_list|(
@@ -7810,6 +7870,9 @@ argument_list|)
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 name|uint32_t
 name|NdisPacketPoolUsage
 parameter_list|(
@@ -7847,6 +7910,9 @@ argument_list|)
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 name|void
 name|NdisFreePacketPool
 parameter_list|(
@@ -7977,6 +8043,9 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|void
 name|NdisAllocatePacket
 parameter_list|(
@@ -8178,6 +8247,9 @@ operator|=
 name|NDIS_STATUS_SUCCESS
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|void
 name|NdisFreePacket
 parameter_list|(
@@ -8292,6 +8364,9 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|NdisUnchainBufferAtFront
@@ -8389,6 +8464,9 @@ name|mdl_next
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|NdisUnchainBufferAtBack
@@ -8513,7 +8591,13 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*  * The NDIS "buffer" is really an MDL (memory descriptor list)  * which is used to describe a buffer in a way that allows it  * to mapped into different contexts. We have to be careful how  * we handle them: in some versions of Windows, the NdisFreeBuffer()  * routine is an actual function in the NDIS API, but in others  * it's just a macro wrapper around IoFreeMdl(). There's really  * no way to use the 'descnum' parameter to count how many  * "buffers" are allocated since in order to use IoFreeMdl() to  * dispose of a buffer, we have to use IoAllocateMdl() to allocate  * them, and IoAllocateMdl() just grabs them out of the heap.  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|NdisAllocateBufferPool
@@ -8548,6 +8632,9 @@ operator|=
 name|NDIS_STATUS_SUCCESS
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|NdisFreeBufferPool
@@ -8558,6 +8645,9 @@ name|ndis_handle
 name|pool
 decl_stmt|;
 block|{ }
+end_function
+
+begin_function
 specifier|static
 name|void
 name|NdisAllocateBuffer
@@ -8641,6 +8731,9 @@ operator|=
 name|NDIS_STATUS_SUCCESS
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|NdisFreeBuffer
@@ -8658,7 +8751,13 @@ name|buf
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/* Aw c'mon. */
+end_comment
+
+begin_function
 specifier|static
 name|uint32_t
 name|NdisBufferLength
@@ -8679,7 +8778,13 @@ argument_list|)
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Get the virtual address and length of a buffer.  * Note: the vaddr argument is optional.  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|NdisQueryBuffer
@@ -8727,7 +8832,13 @@ name|buf
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/* Same as above -- we don't care about the priority. */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|NdisQueryBufferSafe
@@ -8780,7 +8891,13 @@ name|buf
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/* Damnit Microsoft!! How many ways can you do the same thing?! */
+end_comment
+
+begin_function
 specifier|static
 name|void
 modifier|*
@@ -8802,6 +8919,9 @@ argument_list|)
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 modifier|*
@@ -8828,6 +8948,9 @@ argument_list|)
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|NdisAdjustBufferLength
@@ -8852,6 +8975,9 @@ operator|=
 name|len
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|uint32_t
 name|NdisInterlockedIncrement
@@ -8881,6 +9007,9 @@ name|addend
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|uint32_t
 name|NdisInterlockedDecrement
@@ -8910,6 +9039,9 @@ name|addend
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|NdisInitializeEvent
@@ -8935,6 +9067,9 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|NdisSetEvent
@@ -8959,6 +9094,9 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|NdisResetEvent
@@ -8979,6 +9117,9 @@ name|ne_event
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|uint8_t
 name|NdisWaitEvent
@@ -9050,6 +9191,9 @@ name|TRUE
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|ndis_status
 name|NdisUnicodeStringToAnsiString
@@ -9107,6 +9251,9 @@ name|NDIS_STATUS_SUCCESS
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|ndis_status
 name|NdisAnsiStringToUnicodeString
@@ -9164,6 +9311,9 @@ name|NDIS_STATUS_SUCCESS
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|ndis_status
 name|NdisMPciAssignResources
@@ -9226,6 +9376,9 @@ name|NDIS_STATUS_SUCCESS
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|uint8_t
 name|ndis_intr
@@ -9369,6 +9522,9 @@ name|is_our_intr
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|ndis_intrhand
@@ -9541,6 +9697,9 @@ name|ni_dpccountlock
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|ndis_status
 name|NdisMRegisterInterrupt
@@ -9785,6 +9944,9 @@ name|NDIS_STATUS_SUCCESS
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|NdisMDeregisterInterrupt
@@ -9873,6 +10035,9 @@ name|ni_dpcevt
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|NdisMRegisterAdapterShutdownHandler
@@ -9952,6 +10117,9 @@ operator|=
 name|shutdownctx
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|NdisMDeregisterAdapterShutdownHandler
@@ -10020,6 +10188,9 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|uint32_t
 name|NDIS_BUFFER_TO_SPAN_PAGES
@@ -10073,6 +10244,9 @@ argument_list|)
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|NdisGetBufferPhysicalArraySize
@@ -10106,6 +10280,9 @@ name|buf
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|NdisQueryBufferOffset
@@ -10153,6 +10330,9 @@ name|buf
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|void
 name|NdisMSleep
 parameter_list|(
@@ -10217,6 +10397,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_function
 specifier|static
 name|uint32_t
 name|NdisReadPcmciaAttributeMemory
@@ -10356,6 +10539,9 @@ name|i
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|uint32_t
 name|NdisWritePcmciaAttributeMemory
@@ -10495,6 +10681,9 @@ name|i
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|list_entry
 modifier|*
@@ -10584,6 +10773,9 @@ name|flink
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|list_entry
 modifier|*
@@ -10665,6 +10857,9 @@ name|entry
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|list_entry
 modifier|*
@@ -10754,6 +10949,9 @@ name|blink
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|uint8_t
 name|NdisMSynchronizeWithInterrupt
@@ -10792,6 +10990,9 @@ argument_list|)
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|NdisGetCurrentSystemTime
@@ -10809,7 +11010,13 @@ name|tval
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Return the number of milliseconds since the system booted.  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|NdisGetSystemUpTime
@@ -10847,6 +11054,9 @@ operator|*
 literal|1000
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|NdisInitializeString
@@ -10886,6 +11096,9 @@ name|TRUE
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|NdisFreeString
@@ -10903,6 +11116,9 @@ name|str
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|ndis_status
 name|NdisMRemoveMiniport
@@ -10920,6 +11136,9 @@ name|NDIS_STATUS_SUCCESS
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|NdisInitAnsiString
@@ -10945,6 +11164,9 @@ name|src
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|NdisInitUnicodeString
@@ -10970,6 +11192,9 @@ name|src
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|NdisMGetDeviceProperty
@@ -11065,6 +11290,9 @@ operator|->
 name|nmb_nextdeviceobj
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|NdisGetFirstBufferFromPacket
@@ -11189,6 +11417,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|NdisGetFirstBufferFromPacketSafe
@@ -11245,6 +11476,9 @@ name|totlen
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|ndis_find_sym
@@ -11463,6 +11697,9 @@ literal|0
 operator|)
 return|;
 block|}
+end_function
+
+begin_struct
 struct|struct
 name|ndis_checkmodule
 block|{
@@ -11476,7 +11713,13 @@ name|fh
 decl_stmt|;
 block|}
 struct|;
+end_struct
+
+begin_comment
 comment|/*  * See if a single module contains the symbols for a specified file.  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|NdisCheckModule
@@ -11594,7 +11837,13 @@ literal|1
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/* can also return NDIS_STATUS_RESOURCES/NDIS_STATUS_ERROR_READING_FILE */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|NdisOpenFile
@@ -12105,6 +12354,9 @@ operator|=
 name|NDIS_STATUS_SUCCESS
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|NdisMapFile
@@ -12380,6 +12632,9 @@ name|nf_map
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|NdisUnmapFile
@@ -12433,6 +12688,9 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|NdisCloseFile
@@ -12581,6 +12839,9 @@ name|fh
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|uint8_t
 name|NdisSystemProcessorCount
@@ -12592,6 +12853,9 @@ name|mp_ncpus
 operator|)
 return|;
 block|}
+end_function
+
+begin_typedef
 typedef|typedef
 name|void
 function_decl|(
@@ -12602,6 +12866,9 @@ parameter_list|(
 name|ndis_handle
 parameter_list|)
 function_decl|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|void
 function_decl|(
@@ -12619,6 +12886,9 @@ parameter_list|,
 name|uint32_t
 parameter_list|)
 function_decl|;
+end_typedef
+
+begin_function
 specifier|static
 name|void
 name|NdisMIndicateStatusComplete
@@ -12658,6 +12928,9 @@ name|adapter
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|NdisMIndicateStatus
@@ -12719,7 +12992,13 @@ name|slen
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * The DDK documentation says that you should use IoQueueWorkItem()  * instead of ExQueueWorkItem(). The problem is, IoQueueWorkItem()  * is fundamentally incompatible with NdisScheduleWorkItem(), which  * depends on the API semantics of ExQueueWorkItem(). In our world,  * ExQueueWorkItem() is implemented on top of IoAllocateQueueItem()  * anyway.  *  * There are actually three distinct APIs here. NdisScheduleWorkItem()  * takes a pointer to an NDIS_WORK_ITEM. ExQueueWorkItem() takes a pointer  * to a WORK_QUEUE_ITEM. And finally, IoQueueWorkItem() takes a pointer  * to an opaque work item thingie which you get from IoAllocateWorkItem().  * An NDIS_WORK_ITEM is not the same as a WORK_QUEUE_ITEM. However,  * the NDIS_WORK_ITEM has some opaque storage at the end of it, and we  * (ab)use this storage as a WORK_QUEUE_ITEM, which is what we submit  * to ExQueueWorkItem().  *  * Got all that? (Sheesh.)  */
+end_comment
+
+begin_function
 name|ndis_status
 name|NdisScheduleWorkItem
 parameter_list|(
@@ -12773,6 +13052,9 @@ name|NDIS_STATUS_SUCCESS
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|NdisCopyFromPacketToPacket
@@ -13148,6 +13430,9 @@ operator|=
 name|copied
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|NdisCopyFromPacketToPacketSafe
@@ -13207,6 +13492,9 @@ name|cpylen
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|NdisIMCopySendPerPacketInfo
@@ -13243,6 +13531,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|ndis_status
 name|NdisMRegisterDevice
@@ -13336,6 +13627,9 @@ name|status
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|ndis_status
 name|NdisMDeregisterDevice
@@ -13357,6 +13651,9 @@ name|NDIS_STATUS_SUCCESS
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|ndis_status
 name|NdisMQueryAdapterInstanceName
@@ -13439,6 +13736,9 @@ name|NDIS_STATUS_SUCCESS
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|NdisMRegisterUnloadHandler
@@ -13455,6 +13755,9 @@ modifier|*
 name|func
 decl_stmt|;
 block|{ }
+end_function
+
+begin_function
 specifier|static
 name|void
 name|dummy
@@ -13466,7 +13769,13 @@ literal|"NDIS dummy called...\n"
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Note: a couple of entries in this table specify the  * number of arguments as "foo + 1". These are routines  * that accept a 64-bit argument, passed by value. On  * x86, these arguments consume two longwords on the stack,  * so we lie and say there's one additional argument so  * that the wrapping routines will do the right thing.  */
+end_comment
+
+begin_decl_stmt
 name|image_patch_table
 name|ndis_functbl
 index|[]
@@ -14370,7 +14679,7 @@ name|NULL
 block|}
 block|}
 decl_stmt|;
-end_function
+end_decl_stmt
 
 end_unit
 
