@@ -9542,7 +9542,7 @@ literal|"port=%u "
 if|#
 directive|if
 name|USB_HAVE_UGEN
-literal|"parent=%s\n"
+literal|"parent=%s"
 endif|#
 directive|endif
 literal|""
@@ -9740,7 +9740,7 @@ literal|"interface=%d "
 literal|"endpoints=%d "
 literal|"intclass=0x%02x "
 literal|"intsubclass=0x%02x "
-literal|"intprotocol=0x%02x\n"
+literal|"intprotocol=0x%02x"
 argument_list|,
 if|#
 directive|if
