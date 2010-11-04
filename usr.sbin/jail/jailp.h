@@ -458,6 +458,9 @@ block|,
 comment|/* Copy of ip6.addr with interface/prefixlen */
 endif|#
 directive|endif
+name|IP__MOUNT_FROM_FSTAB
+block|,
+comment|/* Line from mount.fstab file */
 name|KP_ALLOW_CHFLAGS
 block|,
 name|KP_ALLOW_MOUNT

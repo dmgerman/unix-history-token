@@ -1574,7 +1574,7 @@ name|j
 argument_list|,
 name|NULL
 argument_list|,
-name|IP_MOUNT_FSTAB
+name|IP__MOUNT_FROM_FSTAB
 argument_list|)
 condition|)
 while|while
@@ -2090,13 +2090,13 @@ argument_list|,
 operator|&
 name|plimit
 argument_list|,
-name|IP_MOUNT_FSTAB
+name|IP__MOUNT_FROM_FSTAB
 argument_list|)
 condition|)
 continue|continue;
 comment|/* FALLTHROUGH */
 case|case
-name|IP_MOUNT_FSTAB
+name|IP__MOUNT_FROM_FSTAB
 case|:
 if|if
 condition|(
@@ -2620,13 +2620,13 @@ argument_list|,
 operator|&
 name|plimit
 argument_list|,
-name|IP_MOUNT_FSTAB
+name|IP__MOUNT_FROM_FSTAB
 argument_list|)
 condition|)
 continue|continue;
 comment|/* FALLTHROUGH */
 case|case
-name|IP_MOUNT_FSTAB
+name|IP__MOUNT_FROM_FSTAB
 case|:
 if|if
 condition|(
