@@ -263,7 +263,15 @@ init|=
 block|{
 literal|"/* allocate initial stack or double stack size, up to YYMAXDEPTH */"
 block|,
+literal|"#if defined(__cplusplus) || __STDC__"
+block|,
+literal|"static int yygrowstack(void)"
+block|,
+literal|"#else"
+block|,
 literal|"static int yygrowstack()"
+block|,
+literal|"#endif"
 block|,
 literal|"{"
 block|,
