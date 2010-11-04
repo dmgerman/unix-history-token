@@ -396,6 +396,26 @@ end_function_decl
 
 begin_function_decl
 name|usb_error_t
+name|usbd_req_warm_reset_port
+parameter_list|(
+name|struct
+name|usb_device
+modifier|*
+name|udev
+parameter_list|,
+name|struct
+name|mtx
+modifier|*
+name|mtx
+parameter_list|,
+name|uint8_t
+name|port
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|usb_error_t
 name|usbd_req_set_address
 parameter_list|(
 name|struct
