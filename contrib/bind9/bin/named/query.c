@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: query.c,v 1.257.18.53 2009/12/30 08:55:48 jinmei Exp $ */
+comment|/* $Id: query.c,v 1.257.18.55 2010/07/03 23:45:26 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -19605,6 +19605,29 @@ expr_stmt|;
 return|return;
 block|}
 block|}
+comment|/* 	 * Turn on minimal response for DNSKEY and DS queries. 	 */
+if|if
+condition|(
+name|qtype
+operator|==
+name|dns_rdatatype_dnskey
+operator|||
+name|qtype
+operator|==
+name|dns_rdatatype_ds
+condition|)
+name|client
+operator|->
+name|query
+operator|.
+name|attributes
+operator||=
+operator|(
+name|NS_QUERYATTR_NOAUTHORITY
+operator||
+name|NS_QUERYATTR_NOADDITIONAL
+operator|)
+expr_stmt|;
 comment|/* 	 * If the client has requested that DNSSEC checking be disabled, 	 * allow lookups to return pending data and instruct the resolver 	 * to return data before validation has completed. 	 * 	 * We don't need to set DNS_DBFIND_PENDINGOK when validation is 	 * disabled as there will be no pending data. 	 */
 if|if
 condition|(
