@@ -6332,7 +6332,7 @@ name|xl_flags
 operator|&
 name|XL_FLAG_PHYOK
 operator|)
-operator|!=
+operator|==
 literal|0
 condition|)
 name|phy
