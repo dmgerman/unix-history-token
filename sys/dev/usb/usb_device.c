@@ -9356,14 +9356,13 @@ name|USB_HAVE_UGEN
 literal|"%s "
 endif|#
 directive|endif
+literal|"at port=%u "
 literal|"vendor=0x%04x "
 literal|"product=0x%04x "
 literal|"devclass=0x%02x "
 literal|"devsubclass=0x%02x "
 literal|"sernum=\"%s\" "
 literal|"release=0x%04x "
-literal|"at "
-literal|"port=%u "
 if|#
 directive|if
 name|USB_HAVE_UGEN
@@ -9383,6 +9382,10 @@ name|ugen_name
 argument_list|,
 endif|#
 directive|endif
+name|udev
+operator|->
+name|port_no
+argument_list|,
 name|UGETW
 argument_list|(
 name|udev
@@ -9426,10 +9429,6 @@ name|ddesc
 operator|.
 name|bcdDevice
 argument_list|)
-argument_list|,
-name|udev
-operator|->
-name|port_no
 if|#
 directive|if
 name|USB_HAVE_UGEN
