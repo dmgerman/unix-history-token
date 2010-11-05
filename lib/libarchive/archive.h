@@ -1559,24 +1559,22 @@ modifier|*
 parameter_list|)
 function_decl|;
 comment|/* Release all resources and destroy the object. */
-comment|/* Note that archive_read_finish will call archive_read_close for you. */
-if|#
-directive|if
-name|ARCHIVE_VERSION_NUMBER
-operator|<
-literal|2000000
-comment|/* Erroneously declared to return void in libarchive 1.x */
+comment|/* Note that archive_read_free will call archive_read_close for you. */
 name|__LA_DECL
-name|void
-name|archive_read_finish
+name|int
+name|archive_read_free
 parameter_list|(
 name|struct
 name|archive
 modifier|*
 parameter_list|)
 function_decl|;
-else|#
-directive|else
+if|#
+directive|if
+name|ARCHIVE_VERSION_NUMBER
+operator|<
+literal|4000000
+comment|/* Synonym for archive_read_free() for backwards compatibility. */
 name|__LA_DECL
 name|int
 name|archive_read_finish
@@ -1588,7 +1586,7 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
-comment|/*-  * To create an archive:  *   1) Ask archive_write_new for a archive writer object.  *   2) Set any global properties.  In particular, you should set  *      the compression and format to use.  *   3) Call archive_write_open to open the file (most people  *       will use archive_write_open_file or archive_write_open_fd,  *       which provide convenient canned I/O callbacks for you).  *   4) For each entry:  *      - construct an appropriate struct archive_entry structure  *      - archive_write_header to write the header  *      - archive_write_data to write the entry data  *   5) archive_write_close to close the output  *   6) archive_write_finish to cleanup the writer and release resources  */
+comment|/*-  * To create an archive:  *   1) Ask archive_write_new for a archive writer object.  *   2) Set any global properties.  In particular, you should set  *      the compression and format to use.  *   3) Call archive_write_open to open the file (most people  *       will use archive_write_open_file or archive_write_open_fd,  *       which provide convenient canned I/O callbacks for you).  *   4) For each entry:  *      - construct an appropriate struct archive_entry structure  *      - archive_write_header to write the header  *      - archive_write_data to write the entry data  *   5) archive_write_close to close the output  *   6) archive_write_free to cleanup the writer and release resources  */
 name|__LA_DECL
 name|struct
 name|archive
@@ -2064,25 +2062,22 @@ name|archive
 modifier|*
 parameter_list|)
 function_decl|;
-if|#
-directive|if
-name|ARCHIVE_VERSION_NUMBER
-operator|<
-literal|2000000
-comment|/* Return value was incorrect in libarchive 1.x. */
+comment|/* This can fail if the archive wasn't already closed, in which case  * archive_write_free() will implicitly call archive_write_close(). */
 name|__LA_DECL
-name|void
-name|archive_write_finish
+name|int
+name|archive_write_free
 parameter_list|(
 name|struct
 name|archive
 modifier|*
 parameter_list|)
 function_decl|;
-else|#
-directive|else
-comment|/* Libarchive 2.x and later returns an error if this fails. */
-comment|/* It can fail if the archive wasn't already closed, in which case  * archive_write_finish() will implicitly call archive_write_close(). */
+if|#
+directive|if
+name|ARCHIVE_VERSION_NUMBER
+operator|<
+literal|4000000
+comment|/* Synonym for archive_write_free() for backwards compatibility. */
 name|__LA_DECL
 name|int
 name|archive_write_finish
@@ -2143,7 +2138,7 @@ modifier|*
 name|s
 parameter_list|)
 function_decl|;
-comment|/*-  * ARCHIVE_WRITE_DISK API  *  * To create objects on disk:  *   1) Ask archive_write_disk_new for a new archive_write_disk object.  *   2) Set any global properties.  In particular, you probably  *      want to set the options.  *   3) For each entry:  *      - construct an appropriate struct archive_entry structure  *      - archive_write_header to create the file/dir/etc on disk  *      - archive_write_data to write the entry data  *   4) archive_write_finish to cleanup the writer and release resources  *  * In particular, you can use this in conjunction with archive_read()  * to pull entries out of an archive and create them on disk.  */
+comment|/*-  * ARCHIVE_WRITE_DISK API  *  * To create objects on disk:  *   1) Ask archive_write_disk_new for a new archive_write_disk object.  *   2) Set any global properties.  In particular, you probably  *      want to set the options.  *   3) For each entry:  *      - construct an appropriate struct archive_entry structure  *      - archive_write_header to create the file/dir/etc on disk  *      - archive_write_data to write the entry data  *   4) archive_write_free to cleanup the writer and release resources  *  * In particular, you can use this in conjunction with archive_read()  * to pull entries out of an archive and create them on disk.  */
 name|__LA_DECL
 name|struct
 name|archive

@@ -194,7 +194,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|_archive_read_finish
+name|_archive_read_free
 parameter_list|(
 name|struct
 name|archive
@@ -232,9 +232,9 @@ condition|)
 block|{
 name|av
 operator|.
-name|archive_finish
+name|archive_free
 operator|=
-name|_archive_read_finish
+name|_archive_read_free
 expr_stmt|;
 name|av
 operator|.
@@ -3460,7 +3460,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|_archive_read_finish
+name|_archive_read_free
 parameter_list|(
 name|struct
 name|archive
@@ -3499,7 +3499,7 @@ name|ARCHIVE_READ_MAGIC
 argument_list|,
 name|ARCHIVE_STATE_ANY
 argument_list|,
-literal|"archive_read_finish"
+literal|"archive_read_free"
 argument_list|)
 expr_stmt|;
 if|if
