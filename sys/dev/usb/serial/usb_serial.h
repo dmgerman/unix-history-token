@@ -742,6 +742,19 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|ucom_set_pnpinfo_usb
+parameter_list|(
+name|struct
+name|ucom_super_softc
+modifier|*
+parameter_list|,
+name|device_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ucom_status_change
 parameter_list|(
 name|struct

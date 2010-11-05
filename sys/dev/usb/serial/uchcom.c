@@ -1621,6 +1621,16 @@ goto|goto
 name|detach
 goto|;
 block|}
+name|ucom_set_pnpinfo_usb
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_super_ucom
+argument_list|,
+name|dev
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
