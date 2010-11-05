@@ -3457,7 +3457,9 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|newres
+name|link
+operator|->
+name|l_prs_template
 operator|.
 name|Type
 operator|==
