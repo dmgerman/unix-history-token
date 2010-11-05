@@ -965,6 +965,34 @@ argument_list|,
 name|vp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|NFS_ISV4
+argument_list|(
+name|vp
+argument_list|)
+operator|&&
+name|vp
+operator|->
+name|v_type
+operator|==
+name|VREG
+condition|)
+comment|/* 		 * Since mmap()'d files do I/O after VOP_CLOSE(), the NFSv4 		 * Close operations are delayed until ncl_inactive(). 		 * However, since VOP_INACTIVE() is not guaranteed to be 		 * called, we need to do it again here. 		 */
+operator|(
+name|void
+operator|)
+name|nfsrpc_close
+argument_list|(
+name|vp
+argument_list|,
+literal|1
+argument_list|,
+name|ap
+operator|->
+name|a_td
+argument_list|)
+expr_stmt|;
 comment|/* 	 * If the NLM is running, give it a chance to abort pending 	 * locks. 	 */
 if|if
 condition|(
