@@ -575,12 +575,6 @@ name|tty
 modifier|*
 name|sc_tty
 decl_stmt|;
-name|char
-name|sc_devname
-index|[
-literal|10
-index|]
-decl_stmt|;
 name|struct
 name|mtx
 modifier|*

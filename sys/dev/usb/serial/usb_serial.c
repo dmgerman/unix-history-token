@@ -1099,7 +1099,7 @@ operator|=
 literal|0
 init|;
 name|subunit
-operator|!=
+operator|<
 name|ssc
 operator|->
 name|sc_subunits
@@ -1200,7 +1200,7 @@ expr_stmt|;
 block|}
 name|DPRINTF
 argument_list|(
-literal|"tp = %p, unit = %d, subunits = %d, device name subunit 0 = %s\n"
+literal|"tp = %p, unit = %d, subunits = %d\n"
 argument_list|,
 name|sc
 operator|->
@@ -1213,13 +1213,6 @@ argument_list|,
 name|ssc
 operator|->
 name|sc_subunits
-argument_list|,
-name|sc
-index|[
-literal|0
-index|]
-operator|.
-name|sc_devname
 argument_list|)
 expr_stmt|;
 return|return
@@ -1267,7 +1260,7 @@ operator|=
 literal|0
 init|;
 name|subunit
-operator|<=
+operator|<
 name|ssc
 operator|->
 name|sc_subunits
@@ -1352,7 +1345,7 @@ decl_stmt|;
 name|char
 name|buf
 index|[
-literal|10
+literal|32
 index|]
 decl_stmt|;
 comment|/* temporary TTY device name buffer */
