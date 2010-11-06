@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2007-2009, Centre for Advanced Internet Architectur
 end_comment
 
 begin_comment
-comment|/******************************************************  * Statistical Information For TCP Research (SIFTR)  *  * A FreeBSD kernel module that adds very basic intrumentation to the  * TCP stack, allowing internal stats to be recorded to a log file  * for experimental, debugging and performance analysis purposes.  *  * SIFTR was first released in 2007 by James Healy and Lawrence Stewart whilst  * working on the NewTCP research project at Swinburne University's Centre for  * Advanced Internet Architectures, Melbourne, Australia, which was made  * possible in part by a grant from the Cisco University Research Program Fund  * at Community Foundation Silicon Valley. More details are available at:  *   http://caia.swin.edu.au/urp/newtcp/  *  * Work on SIFTR v1.2.x was sponsored by the FreeBSD Foundation as part of  * the "Enhancing the FreeBSD TCP Implementation" project 2008-2009.  * More details are available at:  *   http://www.freebsdfoundation.org/  *   http://caia.swin.edu.au/freebsd/etcp09/  *  * Lawrence Stewart is the current maintainer, and all contact regarding  * SIFTR should be directed to him via email: lastewart@swin.edu.au  *  * Initial release date: June 2007  * Most recent update: June 2010  ******************************************************/
+comment|/******************************************************  * Statistical Information For TCP Research (SIFTR)  *  * A FreeBSD kernel module that adds very basic intrumentation to the  * TCP stack, allowing internal stats to be recorded to a log file  * for experimental, debugging and performance analysis purposes.  *  * SIFTR was first released in 2007 by James Healy and Lawrence Stewart whilst  * working on the NewTCP research project at Swinburne University's Centre for  * Advanced Internet Architectures, Melbourne, Australia, which was made  * possible in part by a grant from the Cisco University Research Program Fund  * at Community Foundation Silicon Valley. More details are available at:  *   http://caia.swin.edu.au/urp/newtcp/  *  * Work on SIFTR v1.2.x was sponsored by the FreeBSD Foundation as part of  * the "Enhancing the FreeBSD TCP Implementation" project 2008-2009.  * More details are available at:  *   http://www.freebsdfoundation.org/  *   http://caia.swin.edu.au/freebsd/etcp09/  *  * Lawrence Stewart is the current maintainer, and all contact regarding  * SIFTR should be directed to him via email: lastewart@swin.edu.au  *  * Initial release date: June 2007  * Most recent update: September 2010  ******************************************************/
 end_comment
 
 begin_include
@@ -232,7 +232,7 @@ begin_define
 define|#
 directive|define
 name|V_BACKCOMPAT
-value|3
+value|4
 end_define
 
 begin_define
@@ -668,6 +668,10 @@ decl_stmt|;
 comment|/* Number of bytes inflight that we are waiting on ACKs for. */
 name|u_int
 name|sent_inflight_bytes
+decl_stmt|;
+comment|/* Number of segments currently in the reassembly queue. */
+name|int
+name|t_segqlen
 decl_stmt|;
 comment|/* Link to next pkt_node in the list. */
 name|STAILQ_ENTRY
@@ -1690,7 +1694,7 @@ name|MAX_LOG_MSG_LEN
 argument_list|,
 literal|"%c,0x%08x,%zd.%06ld,%x:%x:%x:%x:%x:%x:%x:%x,%u,%x:%x:%x:"
 literal|"%x:%x:%x:%x:%x,%u,%ld,%ld,%ld,%ld,%ld,%u,%u,%u,%u,%u,%u,"
-literal|"%u,%d,%u,%u,%u,%u,%u\n"
+literal|"%u,%d,%u,%u,%u,%u,%u,%u\n"
 argument_list|,
 name|direction
 index|[
@@ -1960,6 +1964,10 @@ argument_list|,
 name|pkt_node
 operator|->
 name|sent_inflight_bytes
+argument_list|,
+name|pkt_node
+operator|->
+name|t_segqlen
 argument_list|)
 expr_stmt|;
 block|}
@@ -2119,7 +2127,7 @@ argument_list|,
 name|MAX_LOG_MSG_LEN
 argument_list|,
 literal|"%c,0x%08x,%jd.%06ld,%u.%u.%u.%u,%u,%u.%u.%u.%u,%u,%ld,%ld,"
-literal|"%ld,%ld,%ld,%u,%u,%u,%u,%u,%u,%u,%d,%u,%u,%u,%u,%u\n"
+literal|"%ld,%ld,%ld,%u,%u,%u,%u,%u,%u,%u,%d,%u,%u,%u,%u,%u,%u\n"
 argument_list|,
 name|direction
 index|[
@@ -2288,6 +2296,10 @@ argument_list|,
 name|pkt_node
 operator|->
 name|sent_inflight_bytes
+argument_list|,
+name|pkt_node
+operator|->
+name|t_segqlen
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -3384,6 +3396,14 @@ operator|-
 name|tp
 operator|->
 name|snd_una
+expr_stmt|;
+name|pn
+operator|->
+name|t_segqlen
+operator|=
+name|tp
+operator|->
+name|t_segqlen
 expr_stmt|;
 comment|/* We've finished accessing the tcb so release the lock. */
 if|if
