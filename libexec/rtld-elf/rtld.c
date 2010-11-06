@@ -6687,6 +6687,13 @@ block|{
 name|DoneList
 name|donelist
 decl_stmt|;
+if|if
+condition|(
+name|root
+operator|->
+name|dag_inited
+condition|)
+return|return;
 name|donelist_init
 argument_list|(
 operator|&
@@ -6702,6 +6709,12 @@ argument_list|,
 operator|&
 name|donelist
 argument_list|)
+expr_stmt|;
+name|root
+operator|->
+name|dag_inited
+operator|=
+name|true
 expr_stmt|;
 block|}
 end_function
@@ -6739,11 +6752,6 @@ name|obj
 argument_list|)
 condition|)
 return|return;
-name|obj
-operator|->
-name|refcount
-operator|++
-expr_stmt|;
 name|objlist_push_tail
 argument_list|(
 operator|&
@@ -10093,6 +10101,11 @@ argument_list|(
 name|obj
 argument_list|)
 expr_stmt|;
+name|ref_dag
+argument_list|(
+name|obj
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|result
@@ -10195,7 +10208,12 @@ block|}
 block|}
 else|else
 block|{
-comment|/* Bump the reference counts for objects on this DAG. */
+comment|/* 	     * Bump the reference counts for objects on this DAG.  If 	     * this is the first dlopen() call for the object that was 	     * already loaded as a dependency, initialize the dag 	     * starting at it. 	     */
+name|init_dag
+argument_list|(
+name|obj
+argument_list|)
+expr_stmt|;
 name|ref_dag
 argument_list|(
 name|obj
@@ -15060,6 +15078,13 @@ name|Objlist_Entry
 modifier|*
 name|elm
 decl_stmt|;
+name|assert
+argument_list|(
+name|root
+operator|->
+name|dag_inited
+argument_list|)
+expr_stmt|;
 name|STAILQ_FOREACH
 argument_list|(
 argument|elm
@@ -15092,6 +15117,13 @@ name|Objlist_Entry
 modifier|*
 name|elm
 decl_stmt|;
+name|assert
+argument_list|(
+name|root
+operator|->
+name|dag_inited
+argument_list|)
+expr_stmt|;
 name|STAILQ_FOREACH
 argument_list|(
 argument|elm

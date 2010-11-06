@@ -18,12 +18,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"crypto.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"asn1.h"
 end_include
 
@@ -99,12 +93,6 @@ comment|/* 1 / q mod p; CRT coefficient */
 block|}
 struct|;
 end_struct
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|EAP_TLS_FUNCS
-end_ifdef
 
 begin_function
 specifier|static
@@ -923,15 +911,6 @@ name|NULL
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* EAP_TLS_FUNCS */
-end_comment
 
 begin_comment
 comment|/**  * crypto_rsa_get_modulus_len - Get the modulus length of the RSA key  * @key: RSA key  * Returns: Modulus length of the key  */

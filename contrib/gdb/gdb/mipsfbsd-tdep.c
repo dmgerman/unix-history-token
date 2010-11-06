@@ -688,6 +688,31 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|core_fns
+name|mipsfbsd_elfcore_fns
+init|=
+block|{
+name|bfd_target_elf_flavour
+block|,
+comment|/* core_flavour */
+name|default_check_format
+block|,
+comment|/* check_format */
+name|default_core_sniffer
+block|,
+comment|/* core_sniffer */
+name|fetch_elfcore_registers
+block|,
+comment|/* core_read_registers */
+name|NULL
+comment|/* next */
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * MIPSFBSD Offsets  * 0x7fff0000    User high mem -> USRSTACK [64K]  *   * 0x7ffefff0    ps_strings    -> 16 bytes  *  * 0x7ffeffec    sigcode       -> 44 bytes  *  * 0x7ffeffc4    sigcode end   env strings etc start  */
 end_comment
@@ -2066,6 +2091,18 @@ argument_list|,
 name|GDB_OSABI_FREEBSD_ELF
 argument_list|,
 name|mipsfbsd_init_abi
+argument_list|)
+expr_stmt|;
+name|add_core_fns
+argument_list|(
+operator|&
+name|mipsfbsd_core_fns
+argument_list|)
+expr_stmt|;
+name|add_core_fns
+argument_list|(
+operator|&
+name|mipsfbsd_elfcore_fns
 argument_list|)
 expr_stmt|;
 block|}

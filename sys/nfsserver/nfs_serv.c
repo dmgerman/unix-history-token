@@ -17221,6 +17221,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|usevget
+operator|&&
 name|vp
 operator|==
 name|nvp

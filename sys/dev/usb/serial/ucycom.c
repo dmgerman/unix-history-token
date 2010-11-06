@@ -1328,6 +1328,16 @@ goto|goto
 name|detach
 goto|;
 block|}
+name|ucom_set_pnpinfo_usb
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_super_ucom
+argument_list|,
+name|dev
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|urd_ptr
@@ -1405,8 +1415,6 @@ operator|&
 name|sc
 operator|->
 name|sc_ucom
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|usbd_transfer_unsetup

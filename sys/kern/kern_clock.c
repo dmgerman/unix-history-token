@@ -884,7 +884,7 @@ operator|++
 expr_stmt|;
 name|pause
 argument_list|(
-literal|"allproc_lock deadlkres"
+literal|"allproc"
 argument_list|,
 name|sleepfreq
 operator|*
@@ -1157,7 +1157,7 @@ expr_stmt|;
 comment|/* Sleep for sleepfreq seconds. */
 name|pause
 argument_list|(
-literal|"deadlkres"
+literal|"-"
 argument_list|,
 name|sleepfreq
 operator|*

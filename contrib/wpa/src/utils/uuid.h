@@ -69,22 +69,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|uuid_gen_mac_addr
-parameter_list|(
-specifier|const
-name|u8
-modifier|*
-name|mac_addr
-parameter_list|,
-name|u8
-modifier|*
-name|uuid
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif

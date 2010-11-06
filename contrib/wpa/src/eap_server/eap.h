@@ -18,7 +18,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"defs.h"
+file|"common/defs.h"
 end_include
 
 begin_include
@@ -297,6 +297,10 @@ name|ssl_ctx
 decl_stmt|;
 name|void
 modifier|*
+name|msg_ctx
+decl_stmt|;
+name|void
+modifier|*
 name|eap_sim_db_priv
 decl_stmt|;
 name|Boolean
@@ -345,6 +349,11 @@ name|struct
 name|wpabuf
 modifier|*
 name|assoc_wps_ie
+decl_stmt|;
+specifier|const
+name|u8
+modifier|*
+name|peer_addr
 decl_stmt|;
 block|}
 struct|;

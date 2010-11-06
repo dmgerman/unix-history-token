@@ -3166,8 +3166,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|,
-name|i
-decl_stmt|,
 name|rid
 decl_stmt|;
 comment|/* Retrieve the system memory map from the loader. */
@@ -3287,6 +3285,22 @@ operator|==
 literal|0
 condition|)
 continue|continue;
+ifdef|#
+directive|ifdef
+name|__i386__
+comment|/* 			 * Resources use long's to track resources, so 			 * we can't include memory regions above 4GB. 			 */
+if|if
+condition|(
+name|smap
+operator|->
+name|base
+operator|>
+operator|~
+literal|0ul
+condition|)
+continue|continue;
+endif|#
+directive|endif
 name|error
 operator|=
 name|bus_set_resource
@@ -3356,10 +3370,10 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * We use the dump_avail[] array rather than phys_avail[] for 	 * the memory map as phys_avail[] contains holes for kernel 	 * memory, page 0, the message buffer, and the dcons buffer. 	 * We test the end address in the loop instead of the start 	 * since the start address for the first segment is 0. 	 * 	 * XXX: It would be preferable to use the SMAP if it exists 	 * instead since if the SMAP is very fragmented we may not 	 * include some memory regions in dump_avail[] and phys_avail[]. 	 */
+comment|/* 	 * If the system map is not available, fall back to using 	 * dump_avail[].  We use the dump_avail[] array rather than 	 * phys_avail[] for the memory map as phys_avail[] contains 	 * holes for kernel memory, page 0, the message buffer, and 	 * the dcons buffer.  We test the end address in the loop 	 * instead of the start since the start address for the first 	 * segment is 0. 	 */
 for|for
 control|(
-name|i
+name|rid
 operator|=
 literal|0
 operator|,
@@ -3374,7 +3388,7 @@ index|]
 operator|!=
 literal|0
 condition|;
-name|i
+name|rid
 operator|++
 operator|,
 name|p
@@ -3382,10 +3396,6 @@ operator|+=
 literal|2
 control|)
 block|{
-name|rid
-operator|=
-name|i
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|PAE
@@ -3396,7 +3406,7 @@ name|p
 index|[
 literal|0
 index|]
-operator|>=
+operator|>
 operator|~
 literal|0ul
 condition|)
@@ -3437,7 +3447,7 @@ name|panic
 argument_list|(
 literal|"ram_attach: resource %d failed set with %d"
 argument_list|,
-name|i
+name|rid
 argument_list|,
 name|error
 argument_list|)
@@ -3466,7 +3476,7 @@ name|panic
 argument_list|(
 literal|"ram_attach: resource %d failed to attach"
 argument_list|,
-name|i
+name|rid
 argument_list|)
 expr_stmt|;
 block|}

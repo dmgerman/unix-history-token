@@ -781,13 +781,6 @@ begin_comment
 comment|/*  * Start standard softclock thread.  */
 end_comment
 
-begin_decl_stmt
-name|void
-modifier|*
-name|softclock_ih
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|void
@@ -836,19 +829,15 @@ argument_list|,
 name|INTR_MPSAFE
 argument_list|,
 operator|&
-name|softclock_ih
+name|cc
+operator|->
+name|cc_cookie
 argument_list|)
 condition|)
 name|panic
 argument_list|(
 literal|"died while creating standard software ithreads"
 argument_list|)
-expr_stmt|;
-name|cc
-operator|->
-name|cc_cookie
-operator|=
-name|softclock_ih
 expr_stmt|;
 ifdef|#
 directive|ifdef

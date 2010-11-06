@@ -27,6 +27,15 @@ directive|include
 file|<syslog.h>
 end_include
 
+begin_decl_stmt
+specifier|static
+name|int
+name|wpa_debug_syslog
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -80,14 +89,6 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|wpa_debug_timestamp
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|wpa_debug_syslog
 init|=
 literal|0
 decl_stmt|;
@@ -180,6 +181,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CONFIG_DEBUG_SYSLOG
+end_ifdef
+
 begin_function
 name|void
 name|wpa_debug_open_syslog
@@ -187,9 +194,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|CONFIG_DEBUG_SYSLOG
 name|openlog
 argument_list|(
 literal|"wpa_supplicant"
@@ -204,8 +208,6 @@ expr_stmt|;
 name|wpa_debug_syslog
 operator|++
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -216,9 +218,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|CONFIG_DEBUG_SYSLOG
 if|if
 condition|(
 name|wpa_debug_syslog
@@ -226,16 +225,8 @@ condition|)
 name|closelog
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CONFIG_DEBUG_SYSLOG
-end_ifdef
 
 begin_function
 specifier|static
@@ -1791,6 +1782,27 @@ argument_list|,
 name|buf
 argument_list|,
 name|len
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|addr
+condition|)
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"hostapd_logger: STA "
+name|MACSTR
+literal|" - %s"
+argument_list|,
+name|MAC2STR
+argument_list|(
+name|addr
+argument_list|)
+argument_list|,
+name|buf
 argument_list|)
 expr_stmt|;
 else|else

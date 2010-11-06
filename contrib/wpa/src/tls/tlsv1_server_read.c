@@ -18,25 +18,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"md5.h"
+file|"crypto/md5.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sha1.h"
+file|"crypto/sha1.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"crypto/tls.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"x509v3.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"tls.h"
 end_include
 
 begin_include
@@ -2248,9 +2248,6 @@ modifier|*
 name|end
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|EAP_FAST
 specifier|const
 name|u8
 modifier|*
@@ -2635,16 +2632,6 @@ block|}
 return|return
 literal|0
 return|;
-else|#
-directive|else
-comment|/* EAP_FAST */
-return|return
-operator|-
-literal|1
-return|;
-endif|#
-directive|endif
-comment|/* EAP_FAST */
 block|}
 end_function
 

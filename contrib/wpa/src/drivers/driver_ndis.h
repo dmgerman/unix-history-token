@@ -186,6 +186,9 @@ name|int
 name|wired
 decl_stmt|;
 name|int
+name|native80211
+decl_stmt|;
+name|int
 name|mode
 decl_stmt|;
 name|int

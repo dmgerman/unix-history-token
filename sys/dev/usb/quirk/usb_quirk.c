@@ -736,6 +736,19 @@ argument_list|,
 name|UQ_HID_IGNORE
 argument_list|)
 block|,
+name|USB_QUIRK
+argument_list|(
+name|MEGATEC
+argument_list|,
+name|UPS
+argument_list|,
+literal|0x0000
+argument_list|,
+literal|0xffff
+argument_list|,
+name|UQ_HID_IGNORE
+argument_list|)
+block|,
 comment|/* Devices which should be ignored by both ukbd and uhid */
 name|USB_QUIRK
 argument_list|(

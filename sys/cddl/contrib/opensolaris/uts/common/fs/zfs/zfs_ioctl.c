@@ -15989,6 +15989,24 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+comment|/* 	 * Check if we have sufficient kernel memory allocated 	 * for the zfs_cmd_t request.  Bail out if not so we 	 * will not access undefined memory region. 	 */
+if|if
+condition|(
+name|IOCPARM_LEN
+argument_list|(
+name|cmd
+argument_list|)
+operator|<
+sizeof|sizeof
+argument_list|(
+name|zfs_cmd_t
+argument_list|)
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 name|vec
 operator|=
 name|ZFS_IOC

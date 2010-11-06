@@ -5209,6 +5209,10 @@ argument_list|(
 name|tncs_global_data
 argument_list|)
 expr_stmt|;
+name|tncs_global_data
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 end_function
 
