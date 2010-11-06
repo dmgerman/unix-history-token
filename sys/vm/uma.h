@@ -846,6 +846,20 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Obtains the approximate current number of items allocated from a zone  *  * Arguments:  *	zone  The zone to obtain the current allocation count from  *  * Return:  *	int  The approximate current number of items allocated from the zone  */
+end_comment
+
+begin_function_decl
+name|int
+name|uma_zone_get_cur
+parameter_list|(
+name|uma_zone_t
+name|zone
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * The following two routines (uma_zone_set_init/fini)  * are used to set the backend init/fini pair which acts on an  * object as it becomes allocated and is placed in a slab within  * the specified zone's backing keg.  These should probably not  * be changed once allocations have already begun, but only be set  * immediately upon zone creation.  */
 end_comment
 
