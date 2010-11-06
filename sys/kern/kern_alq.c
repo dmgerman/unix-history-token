@@ -867,7 +867,7 @@ name|ALD_LOCK
 argument_list|()
 expr_stmt|;
 block|}
-name|kproc_exit
+name|kthread_exit
 argument_list|(
 literal|0
 argument_list|)
