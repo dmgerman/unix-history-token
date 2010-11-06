@@ -781,6 +781,20 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Obtains the effective limit on the number of items in a zone  *  * Arguments:  *	zone  The zone to obtain the effective limit from  *  * Return:  *	0  No limit  *	int  The effective limit of the zone  */
+end_comment
+
+begin_function_decl
+name|int
+name|uma_zone_get_max
+parameter_list|(
+name|uma_zone_t
+name|zone
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * The following two routines (uma_zone_set_init/fini)  * are used to set the backend init/fini pair which acts on an  * object as it becomes allocated and is placed in a slab within  * the specified zone's backing keg.  These should probably not  * be changed once allocations have already begun and only  * immediately upon zone creation.  */
 end_comment
 
