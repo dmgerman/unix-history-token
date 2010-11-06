@@ -347,36 +347,6 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|tcp_reass_maxqlen
-init|=
-literal|48
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_net_inet_tcp_reass
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|maxqlen
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|tcp_reass_maxqlen
-argument_list|,
-literal|0
-argument_list|,
-literal|"Maximum number of TCP Segments per individual Reassembly Queue"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
 name|tcp_reass_overflows
 init|=
 literal|0
@@ -742,7 +712,7 @@ condition|)
 goto|goto
 name|present
 goto|;
-comment|/* 	 * Limit the number of segments in the reassembly queue to prevent 	 * holding on to too many segments (and thus running out of mbufs). 	 * Make sure to let the missing segment through which caused this 	 * queue. 	 */
+comment|/* 	 * Limit the number of segments that can be queued to reduce the 	 * potential for mbuf exhaustion. For best performance, we want to be 	 * able to queue a full window's worth of segments. The size of the 	 * socket receive buffer determines our advertised window and grows 	 * automatically when socket buffer autotuning is enabled. Use it as the 	 * basis for our queue limit. 	 * Always let the missing segment through which caused this queue. 	 * NB: Access to the socket buffer is left intentionally unlocked as we 	 * can tolerate stale information here. 	 * 	 * XXXLAS: Using sbspace(so->so_rcv) instead of so->so_rcv.sb_hiwat 	 * should work but causes packets to be dropped when they shouldn't. 	 * Investigate why and re-evaluate the below limit after the behaviour 	 * is understood. 	 */
 if|if
 condition|(
 name|th
@@ -757,7 +727,19 @@ name|tp
 operator|->
 name|t_segqlen
 operator|>=
-name|tcp_reass_maxqlen
+operator|(
+name|so
+operator|->
+name|so_rcv
+operator|.
+name|sb_hiwat
+operator|/
+name|tp
+operator|->
+name|t_maxseg
+operator|)
+operator|+
+literal|1
 condition|)
 block|{
 name|tcp_reass_overflows
