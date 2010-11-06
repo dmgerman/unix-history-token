@@ -1770,9 +1770,6 @@ name|IEEE80211_C_TXFRAG
 comment|/* handle tx frags */
 endif|#
 directive|endif
-operator||
-name|IEEE80211_C_RATECTL
-comment|/* use ratectl */
 expr_stmt|;
 name|bands
 operator|=
