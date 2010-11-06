@@ -952,11 +952,7 @@ name|alq
 operator|->
 name|aq_flags
 operator|&
-operator|(
-name|AQ_FLUSHING
-operator||
 name|AQ_ACTIVE
-operator|)
 condition|)
 block|{
 name|alq
