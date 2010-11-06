@@ -3870,6 +3870,11 @@ name|state
 operator|->
 name|ro
 operator|=
+operator|(
+expr|struct
+name|route
+operator|*
+operator|)
 operator|&
 name|isr
 operator|->
@@ -3877,7 +3882,9 @@ name|sav
 operator|->
 name|sah
 operator|->
-name|sa_route
+name|route_cache
+operator|.
+name|sin6_route
 expr_stmt|;
 name|state
 operator|->
