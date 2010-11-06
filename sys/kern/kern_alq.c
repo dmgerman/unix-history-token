@@ -756,7 +756,7 @@ operator|&&
 operator|!
 name|ald_shutingdown
 condition|)
-name|msleep
+name|mtx_sleep
 argument_list|(
 operator|&
 name|ald_active
@@ -894,7 +894,7 @@ argument_list|()
 expr_stmt|;
 block|}
 comment|/* At this point, all ALQs are flushed and shutdown. */
-comment|/* 	 * Wake ald_daemon so that it exits. It won't be able to do 	 * anything until we msleep because we hold the ald_mtx. 	 */
+comment|/* 	 * Wake ald_daemon so that it exits. It won't be able to do 	 * anything until we mtx_sleep because we hold the ald_mtx. 	 */
 name|wakeup
 argument_list|(
 operator|&
@@ -902,7 +902,7 @@ name|ald_active
 argument_list|)
 expr_stmt|;
 comment|/* Wait for ald_daemon to exit. */
-name|msleep
+name|mtx_sleep
 argument_list|(
 name|ald_proc
 argument_list|,
