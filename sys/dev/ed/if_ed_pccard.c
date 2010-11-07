@@ -2836,7 +2836,7 @@ operator|==
 name|ED_CHIP_TYPE_DL10022
 condition|)
 block|{
-comment|/* Probe for an MII bus, but ignore errors. */
+comment|/* Try to attach an MII bus, but ignore errors. */
 name|ed_pccard_dl100xx_mii_reset
 argument_list|(
 name|sc
@@ -2845,7 +2845,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|mii_phy_probe
+name|mii_attach
 argument_list|(
 name|dev
 argument_list|,
@@ -2854,9 +2854,21 @@ name|sc
 operator|->
 name|miibus
 argument_list|,
+name|sc
+operator|->
+name|ifp
+argument_list|,
 name|ed_ifmedia_upd
 argument_list|,
 name|ed_ifmedia_sts
+argument_list|,
+name|BMSR_DEFCAPMASK
+argument_list|,
+name|MII_PHY_ANY
+argument_list|,
+name|MII_OFFSET_ANY
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -2875,12 +2887,9 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|error
 operator|=
-name|mii_phy_probe
+name|mii_attach
 argument_list|(
 name|dev
 argument_list|,
@@ -2889,11 +2898,26 @@ name|sc
 operator|->
 name|miibus
 argument_list|,
+name|sc
+operator|->
+name|ifp
+argument_list|,
 name|ed_ifmedia_upd
 argument_list|,
 name|ed_ifmedia_sts
+argument_list|,
+name|BMSR_DEFCAPMASK
+argument_list|,
+name|MII_PHY_ANY
+argument_list|,
+name|MII_OFFSET_ANY
+argument_list|,
+literal|0
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 operator|!=
 literal|0
 condition|)
@@ -2902,7 +2926,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Missing mii!\n"
+literal|"attaching PHYs failed\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2925,12 +2949,9 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|error
 operator|=
-name|mii_phy_probe
+name|mii_attach
 argument_list|(
 name|dev
 argument_list|,
@@ -2939,11 +2960,26 @@ name|sc
 operator|->
 name|miibus
 argument_list|,
+name|sc
+operator|->
+name|ifp
+argument_list|,
 name|ed_ifmedia_upd
 argument_list|,
 name|ed_ifmedia_sts
+argument_list|,
+name|BMSR_DEFCAPMASK
+argument_list|,
+name|MII_PHY_ANY
+argument_list|,
+name|MII_OFFSET_ANY
+argument_list|,
+literal|0
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 operator|!=
 literal|0
 condition|)
@@ -2952,7 +2988,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Missing mii!\n"
+literal|"attaching PHYs failed\n"
 argument_list|)
 expr_stmt|;
 goto|goto

@@ -1562,18 +1562,6 @@ decl_stmt|;
 name|int
 name|ruereg
 decl_stmt|;
-if|if
-condition|(
-name|phy
-operator|!=
-literal|0
-condition|)
-comment|/* RTL8150 supports PHY == 0, only */
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 switch|switch
 condition|(
 name|reg
@@ -1721,18 +1709,6 @@ decl_stmt|;
 name|int
 name|ruereg
 decl_stmt|;
-if|if
-condition|(
-name|phy
-operator|!=
-literal|0
-condition|)
-comment|/* RTL8150 supports PHY == 0, only */
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 switch|switch
 condition|(
 name|reg
@@ -2386,6 +2362,8 @@ modifier|*
 name|ed
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|i
 decl_stmt|;
 name|struct
@@ -2421,6 +2399,10 @@ literal|0
 argument_list|)
 condition|)
 block|{
+name|error
+operator|=
+name|ENXIO
+expr_stmt|;
 name|device_printf
 argument_list|(
 name|sc
@@ -2465,6 +2447,10 @@ condition|(
 name|err
 condition|)
 block|{
+name|error
+operator|=
+name|ENXIO
+expr_stmt|;
 name|device_printf
 argument_list|(
 name|sc
@@ -2568,6 +2554,10 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|error
+operator|=
+name|ENXIO
+expr_stmt|;
 name|device_printf
 argument_list|(
 name|sc
@@ -2738,6 +2728,10 @@ condition|(
 name|err
 condition|)
 block|{
+name|error
+operator|=
+name|ENXIO
+expr_stmt|;
 name|device_printf
 argument_list|(
 name|sc
@@ -2769,6 +2763,10 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|error
+operator|=
+name|ENXIO
+expr_stmt|;
 name|device_printf
 argument_list|(
 name|sc
@@ -2852,10 +2850,10 @@ name|ifq_maxlen
 operator|=
 name|IFQ_MAXLEN
 expr_stmt|;
-comment|/* MII setup */
-if|if
-condition|(
-name|mii_phy_probe
+comment|/* 	 * MII setup 	 * RTL8150 supports PHY == 0 only 	 */
+name|error
+operator|=
+name|mii_attach
 argument_list|(
 name|self
 argument_list|,
@@ -2864,10 +2862,26 @@ name|sc
 operator|->
 name|rue_miibus
 argument_list|,
+name|ifp
+argument_list|,
 name|rue_ifmedia_upd
 argument_list|,
 name|rue_ifmedia_sts
+argument_list|,
+name|BMSR_DEFCAPMASK
+argument_list|,
+literal|0
+argument_list|,
+name|MII_OFFSET_ANY
+argument_list|,
+literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
 condition|)
 block|{
 name|device_printf
@@ -2876,7 +2890,7 @@ name|sc
 operator|->
 name|rue_dev
 argument_list|,
-literal|"MII without any PHY!\n"
+literal|"attaching PHYs failed\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2957,7 +2971,7 @@ expr_stmt|;
 name|error
 label|:
 return|return
-name|ENXIO
+name|error
 return|;
 block|}
 end_function

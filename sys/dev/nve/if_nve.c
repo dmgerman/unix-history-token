@@ -2871,17 +2871,17 @@ name|if_capenable
 operator||=
 name|IFCAP_VLAN_MTU
 expr_stmt|;
-comment|/* Probe device for MII interface to PHY */
+comment|/* Attach device for MII interface to PHY */
 name|DEBUGOUT
 argument_list|(
 name|NVE_DEBUG_INIT
 argument_list|,
-literal|"nve: do mii_phy_probe\n"
+literal|"nve: do mii_attach\n"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|mii_phy_probe
+name|error
+operator|=
+name|mii_attach
 argument_list|(
 name|dev
 argument_list|,
@@ -2890,22 +2890,34 @@ name|sc
 operator|->
 name|miibus
 argument_list|,
+name|ifp
+argument_list|,
 name|nve_ifmedia_upd
 argument_list|,
 name|nve_ifmedia_sts
+argument_list|,
+name|BMSR_DEFCAPMASK
+argument_list|,
+name|MII_PHY_ANY
+argument_list|,
+name|MII_OFFSET_ANY
+argument_list|,
+literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
 condition|)
 block|{
 name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"MII without any phy!\n"
+literal|"attaching PHYs failed\n"
 argument_list|)
-expr_stmt|;
-name|error
-operator|=
-name|ENXIO
 expr_stmt|;
 goto|goto
 name|fail
@@ -2924,8 +2936,6 @@ name|error
 operator|=
 name|bus_setup_intr
 argument_list|(
-name|sc
-operator|->
 name|dev
 argument_list|,
 name|sc
@@ -2955,8 +2965,6 @@ condition|)
 block|{
 name|device_printf
 argument_list|(
-name|sc
-operator|->
 name|dev
 argument_list|,
 literal|"couldn't set up interrupt handler\n"

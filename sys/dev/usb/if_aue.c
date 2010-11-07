@@ -3248,6 +3248,8 @@ modifier|*
 name|ed
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|i
 decl_stmt|;
 name|sc
@@ -3747,9 +3749,9 @@ name|if_snd
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Do MII setup. 	 * NOTE: Doing this causes child devices to be attached to us, 	 * which we would normally disconnect at in the detach routine 	 * using device_delete_child(). However the USB code is set up 	 * such that when this driver is removed, all children devices 	 * are removed as well. In effect, the USB code ends up detaching 	 * all of our children for us, so we don't have to do is ourselves 	 * in aue_detach(). It's important to point this out since if 	 * we *do* try to detach the child devices ourselves, we will 	 * end up getting the children deleted twice, which will crash 	 * the system. 	 */
-if|if
-condition|(
-name|mii_phy_probe
+name|error
+operator|=
+name|mii_attach
 argument_list|(
 name|self
 argument_list|,
@@ -3758,17 +3760,33 @@ name|sc
 operator|->
 name|aue_miibus
 argument_list|,
+name|ifp
+argument_list|,
 name|aue_ifmedia_upd
 argument_list|,
 name|aue_ifmedia_sts
+argument_list|,
+name|BMSR_DEFCAPMASK
+argument_list|,
+name|MII_PHY_ANY
+argument_list|,
+name|MII_OFFSET_ANY
+argument_list|,
+literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
 condition|)
 block|{
 name|device_printf
 argument_list|(
 name|self
 argument_list|,
-literal|"MII without any PHY!\n"
+literal|"attaching PHYs failed\n"
 argument_list|)
 expr_stmt|;
 name|if_free
@@ -3806,7 +3824,7 @@ name|aue_taskqueue
 argument_list|)
 expr_stmt|;
 return|return
-name|ENXIO
+name|error
 return|;
 block|}
 name|sc
