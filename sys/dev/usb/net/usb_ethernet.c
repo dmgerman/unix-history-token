@@ -1007,7 +1007,7 @@ expr_stmt|;
 comment|/* device_xxx() depends on this */
 name|error
 operator|=
-name|mii_phy_probe
+name|mii_attach
 argument_list|(
 name|ue
 operator|->
@@ -1018,6 +1018,8 @@ name|ue
 operator|->
 name|ue_miibus
 argument_list|,
+name|ifp
+argument_list|,
 name|ue_ifmedia_upd
 argument_list|,
 name|ue
@@ -1025,6 +1027,14 @@ operator|->
 name|ue_methods
 operator|->
 name|ue_mii_sts
+argument_list|,
+name|BMSR_DEFCAPMASK
+argument_list|,
+name|MII_PHY_ANY
+argument_list|,
+name|MII_OFFSET_ANY
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
@@ -1044,7 +1054,7 @@ name|ue
 operator|->
 name|ue_dev
 argument_list|,
-literal|"MII without any PHY\n"
+literal|"attaching PHYs failed\n"
 argument_list|)
 expr_stmt|;
 goto|goto

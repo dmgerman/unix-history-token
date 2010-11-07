@@ -4181,9 +4181,9 @@ name|fail
 goto|;
 block|}
 comment|/* Do MII setup. */
-if|if
-condition|(
-name|mii_phy_probe
+name|error
+operator|=
+name|mii_attach
 argument_list|(
 name|dev
 argument_list|,
@@ -4192,22 +4192,34 @@ name|sc
 operator|->
 name|sf_miibus
 argument_list|,
+name|ifp
+argument_list|,
 name|sf_ifmedia_upd
 argument_list|,
 name|sf_ifmedia_sts
+argument_list|,
+name|BMSR_DEFCAPMASK
+argument_list|,
+name|MII_PHY_ANY
+argument_list|,
+name|MII_OFFSET_ANY
+argument_list|,
+literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
 condition|)
 block|{
 name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"MII without any phy!\n"
+literal|"attaching PHYs failed\n"
 argument_list|)
-expr_stmt|;
-name|error
-operator|=
-name|ENXIO
 expr_stmt|;
 goto|goto
 name|fail
