@@ -557,7 +557,7 @@ argument_list|(
 operator|&
 name|sbuf
 argument_list|,
-literal|"  %2.2d (%6.6dK)"
+literal|"  %2d (%6dK)"
 argument_list|,
 name|oind
 argument_list|,
@@ -601,7 +601,7 @@ argument_list|(
 operator|&
 name|sbuf
 argument_list|,
-literal|"  |  %6.6d"
+literal|"  |  %6d"
 argument_list|,
 name|fl
 index|[
