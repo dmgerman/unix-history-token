@@ -1232,6 +1232,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * sctp_find_alternate_net() returns a non-NULL pointer as long  * the argument net is non-NULL.  */
+end_comment
+
 begin_function
 name|struct
 name|sctp_nets
@@ -2152,6 +2156,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+comment|/* sa_ignore NO_NULL_CHK */
 if|if
 condition|(
 operator|(
@@ -2176,7 +2181,6 @@ operator|!=
 name|NULL
 operator|)
 operator|&&
-comment|/* sa_ignore NO_NULL_CHK */
 operator|(
 operator|!
 operator|(
@@ -4742,15 +4746,11 @@ block|{
 comment|/* 		 * CMT: Using RTX_SSTHRESH policy for CMT. If CMT is being 		 * used, then pick dest with largest ssthresh for any 		 * retransmission. 		 */
 name|alt
 operator|=
-name|net
-expr_stmt|;
-name|alt
-operator|=
 name|sctp_find_alternate_net
 argument_list|(
 name|stcb
 argument_list|,
-name|alt
+name|net
 argument_list|,
 literal|1
 argument_list|)
@@ -5546,13 +5546,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|alt
-operator|!=
-name|NULL
-operator|)
-operator|&&
-operator|(
 name|alt
 operator|!=
 name|stcb
@@ -5560,7 +5553,6 @@ operator|->
 name|asoc
 operator|.
 name|primary_destination
-operator|)
 condition|)
 block|{
 name|sctp_move_chunks_from_net
@@ -6853,7 +6845,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * For the shutdown and shutdown-ack, we do not keep one around on the  * control queue. This means we must generate a new one and call the general  * chunk output routine, AFTER having done threshold management.  */
+comment|/*  * For the shutdown and shutdown-ack, we do not keep one around on the  * control queue. This means we must generate a new one and call the general  * chunk output routine, AFTER having done threshold management.  * It is assumed that net is non-NULL.  */
 end_comment
 
 begin_function
@@ -6907,6 +6899,19 @@ literal|1
 operator|)
 return|;
 block|}
+name|sctp_backoff_on_timeout
+argument_list|(
+name|stcb
+argument_list|,
+name|net
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* second select an alternative */
 name|alt
 operator|=
@@ -6920,11 +6925,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* third generate a shutdown into the queue for out net */
-if|if
-condition|(
-name|alt
-condition|)
-block|{
 name|sctp_send_shutdown
 argument_list|(
 name|stcb
@@ -6932,16 +6932,6 @@ argument_list|,
 name|alt
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* 		 * if alt is NULL, there is no dest to send to?? 		 */
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
 comment|/* fourth restart timer */
 name|sctp_timer_start
 argument_list|(
@@ -7013,6 +7003,19 @@ literal|1
 operator|)
 return|;
 block|}
+name|sctp_backoff_on_timeout
+argument_list|(
+name|stcb
+argument_list|,
+name|net
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* second select an alternative */
 name|alt
 operator|=
