@@ -1215,6 +1215,13 @@ parameter_list|)
 value|(((b)&8)?IXP425_GPIO_GPIT2R:IXP425_GPIO_GPIT1R)
 end_define
 
+begin_define
+define|#
+directive|define
+name|IXP4XX_GPIO_PINS
+value|16
+end_define
+
 begin_comment
 comment|/*  * Expansion Bus Configuration Space.  */
 end_comment
