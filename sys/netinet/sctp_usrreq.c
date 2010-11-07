@@ -749,7 +749,7 @@ block|{
 comment|/* 		 * old type router that does not tell us what the next size 		 * mtu is. Rats we will have to guess (in a educated fashion 		 * of course) 		 */
 name|nxtsz
 operator|=
-name|find_next_best_mtu
+name|sctp_get_prev_mtu
 argument_list|(
 name|totsz
 argument_list|)
