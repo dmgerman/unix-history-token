@@ -2664,6 +2664,8 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|,
+name|flags
+decl_stmt|,
 name|i
 decl_stmt|;
 name|uint16_t
@@ -3563,12 +3565,31 @@ name|PC_PhyLnkPolarity
 operator|)
 expr_stmt|;
 comment|/* Set up MII bus. */
+name|flags
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
-operator|(
+name|sc
+operator|->
+name|sc_rev
+operator|>=
+literal|0x40
+operator|&&
+name|sc
+operator|->
+name|sc_rev
+operator|<=
+literal|0x4e
+condition|)
+name|flags
+operator||=
+name|MIIF_MACPRIV0
+expr_stmt|;
 name|error
 operator|=
-name|mii_phy_probe
+name|mii_attach
 argument_list|(
 name|sc
 operator|->
@@ -3579,11 +3600,24 @@ name|sc
 operator|->
 name|sc_miibus
 argument_list|,
+name|ifp
+argument_list|,
 name|stge_mediachange
 argument_list|,
 name|stge_mediastatus
+argument_list|,
+name|BMSR_DEFCAPMASK
+argument_list|,
+name|MII_PHY_ANY
+argument_list|,
+name|MII_OFFSET_ANY
+argument_list|,
+name|flags
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 operator|!=
 literal|0
 condition|)
@@ -3594,7 +3628,7 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"no PHY found!\n"
+literal|"attaching PHYs failed\n"
 argument_list|)
 expr_stmt|;
 goto|goto

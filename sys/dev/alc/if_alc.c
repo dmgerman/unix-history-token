@@ -1522,19 +1522,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|phy
-operator|!=
-name|sc
-operator|->
-name|alc_phyaddr
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 comment|/* 	 * For AR8132 fast ethernet controller, do not report 1000baseT 	 * capability to mii(4). Even though AR8132 uses the same 	 * model/revision number of F1 gigabit PHY, the PHY has no 	 * ability to establish 1000baseT link. 	 */
 if|if
 condition|(
@@ -1695,19 +1682,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|phy
-operator|!=
-name|sc
-operator|->
-name|alc_phyaddr
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -5356,12 +5330,9 @@ operator|->
 name|if_capabilities
 expr_stmt|;
 comment|/* Set up MII bus. */
-if|if
-condition|(
-operator|(
 name|error
 operator|=
-name|mii_phy_probe
+name|mii_attach
 argument_list|(
 name|dev
 argument_list|,
@@ -5370,11 +5341,26 @@ name|sc
 operator|->
 name|alc_miibus
 argument_list|,
+name|ifp
+argument_list|,
 name|alc_mediachange
 argument_list|,
 name|alc_mediastatus
+argument_list|,
+name|BMSR_DEFCAPMASK
+argument_list|,
+name|sc
+operator|->
+name|alc_phyaddr
+argument_list|,
+name|MII_OFFSET_ANY
+argument_list|,
+literal|0
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 operator|!=
 literal|0
 condition|)
@@ -5383,7 +5369,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"no PHY found!\n"
+literal|"attaching PHYs failed\n"
 argument_list|)
 expr_stmt|;
 goto|goto

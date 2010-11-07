@@ -111,10 +111,6 @@ directive|include
 file|<machine/bus.h>
 end_include
 
-begin_comment
-comment|/* #include<dev/vge/if_vgereg.h> */
-end_comment
-
 begin_function_decl
 specifier|static
 name|int
@@ -428,6 +424,15 @@ argument_list|,
 name|sc
 argument_list|,
 name|mii_list
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|mii_flags
+operator|=
+name|miibus_get_flags
+argument_list|(
+name|dev
 argument_list|)
 expr_stmt|;
 name|sc

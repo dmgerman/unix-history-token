@@ -1511,7 +1511,6 @@ argument_list|,
 name|eaddr
 argument_list|)
 expr_stmt|;
-comment|/* NB: must be setup prior to invoking mii code */
 name|sc
 operator|->
 name|sc_ifp
@@ -1523,9 +1522,9 @@ argument_list|(
 name|IFT_ETHER
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|mii_phy_probe
+name|error
+operator|=
+name|mii_attach
 argument_list|(
 name|dev
 argument_list|,
@@ -1534,23 +1533,40 @@ name|sc
 operator|->
 name|sc_mii
 argument_list|,
+name|ifp
+argument_list|,
 name|npe_ifmedia_update
 argument_list|,
 name|npe_ifmedia_status
+argument_list|,
+name|BMSR_DEFCAPMASK
+argument_list|,
+name|sc
+operator|->
+name|sc_phy
+argument_list|,
+name|MII_OFFSET_ANY
+argument_list|,
+literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
 condition|)
 block|{
 name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Cannot find my PHY.\n"
+literal|"attaching PHYs failed\n"
 argument_list|)
 expr_stmt|;
+return|return
 name|error
-operator|=
-name|ENXIO
-expr_stmt|;
+return|;
 goto|goto
 name|out
 goto|;
@@ -8127,18 +8143,6 @@ decl_stmt|;
 name|uint32_t
 name|v
 decl_stmt|;
-if|if
-condition|(
-name|phy
-operator|!=
-name|sc
-operator|->
-name|sc_phy
-condition|)
-comment|/* XXX no auto-detect */
-return|return
-literal|0xffff
-return|;
 name|v
 operator|=
 operator|(
@@ -8239,16 +8243,6 @@ decl_stmt|;
 name|uint32_t
 name|v
 decl_stmt|;
-if|if
-condition|(
-name|phy
-operator|!=
-name|sc
-operator|->
-name|sc_phy
-condition|)
-comment|/* XXX */
-return|return;
 name|v
 operator|=
 operator|(

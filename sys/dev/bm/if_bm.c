@@ -2765,10 +2765,10 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* setup MII */
+comment|/* 	 * Setup MII 	 * On Apple BMAC controllers, we end up in a weird state of 	 * partially-completed autonegotiation on boot.  So we force 	 * autonegotation to try again. 	 */
 name|error
 operator|=
-name|mii_phy_probe
+name|mii_attach
 argument_list|(
 name|dev
 argument_list|,
@@ -2777,9 +2777,19 @@ name|sc
 operator|->
 name|sc_miibus
 argument_list|,
+name|ifp
+argument_list|,
 name|bm_ifmedia_upd
 argument_list|,
 name|bm_ifmedia_sts
+argument_list|,
+name|BMSR_DEFCAPMASK
+argument_list|,
+name|MII_PHY_ANY
+argument_list|,
+name|MII_OFFSET_ANY
+argument_list|,
+name|MIIF_FORCEANEG
 argument_list|)
 expr_stmt|;
 if|if
@@ -2788,15 +2798,20 @@ name|error
 operator|!=
 literal|0
 condition|)
+block|{
 name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"PHY probe failed: %d\n"
-argument_list|,
-name|error
+literal|"attaching PHYs failed\n"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
 name|sc
 operator|->
 name|sc_mii
