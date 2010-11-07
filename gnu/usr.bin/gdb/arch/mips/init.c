@@ -836,6 +836,9 @@ expr_stmt|;
 name|_initialize_solib
 argument_list|()
 expr_stmt|;
+name|_initialize_thread_db
+argument_list|()
+expr_stmt|;
 name|_initialize_svr4_solib
 argument_list|()
 expr_stmt|;
