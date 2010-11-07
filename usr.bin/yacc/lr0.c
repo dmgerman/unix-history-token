@@ -363,7 +363,9 @@ begin_function
 specifier|static
 name|void
 name|allocate_itemsets
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|short
 modifier|*
@@ -540,7 +542,9 @@ begin_function
 specifier|static
 name|void
 name|allocate_storage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|allocate_itemsets
 argument_list|()
@@ -582,7 +586,9 @@ begin_function
 specifier|static
 name|void
 name|append_states
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -709,7 +715,9 @@ begin_function
 specifier|static
 name|void
 name|free_storage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|FREE
 argument_list|(
@@ -753,7 +761,9 @@ begin_function
 specifier|static
 name|void
 name|generate_states
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|allocate_storage
 argument_list|()
@@ -840,11 +850,9 @@ specifier|static
 name|int
 name|get_state
 parameter_list|(
-name|symbol
-parameter_list|)
 name|int
 name|symbol
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|key
@@ -1064,7 +1072,9 @@ begin_function
 specifier|static
 name|void
 name|initialize_states
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -1211,7 +1221,9 @@ begin_function
 specifier|static
 name|void
 name|new_itemsets
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -1344,11 +1356,9 @@ name|core
 modifier|*
 name|new_state
 parameter_list|(
-name|symbol
-parameter_list|)
 name|int
 name|symbol
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|n
@@ -1514,22 +1524,22 @@ comment|/* show_cores is used for debugging */
 end_comment
 
 begin_comment
-unit|show_cores() {     core *p;     int i, j, k, n;     int itemno;      k = 0;     for (p = first_state; p; ++k, p = p->next)     { 	if (k) printf("\n"); 	printf("state %d, number = %d, accessing symbol = %s\n", 		k, p->number, symbol_name[p->accessing_symbol]); 	n = p->nitems; 	for (i = 0; i< n; ++i) 	{ 	    itemno = p->items[i]; 	    printf("%4d  ", itemno); 	    j = itemno; 	    while (ritem[j]>= 0) ++j; 	    printf("%s :", symbol_name[rlhs[-ritem[j]]]); 	    j = rrhs[-ritem[j]]; 	    while (j< itemno) 		printf(" %s", symbol_name[ritem[j++]]); 	    printf(" ."); 	    while (ritem[j]>= 0) 		printf(" %s", symbol_name[ritem[j++]]); 	    printf("\n"); 	    fflush(stdout); 	}     } }
+unit|show_cores(void) {     core *p;     int i, j, k, n;     int itemno;      k = 0;     for (p = first_state; p; ++k, p = p->next)     { 	if (k) printf("\n"); 	printf("state %d, number = %d, accessing symbol = %s\n", 		k, p->number, symbol_name[p->accessing_symbol]); 	n = p->nitems; 	for (i = 0; i< n; ++i) 	{ 	    itemno = p->items[i]; 	    printf("%4d  ", itemno); 	    j = itemno; 	    while (ritem[j]>= 0) ++j; 	    printf("%s :", symbol_name[rlhs[-ritem[j]]]); 	    j = rrhs[-ritem[j]]; 	    while (j< itemno) 		printf(" %s", symbol_name[ritem[j++]]); 	    printf(" ."); 	    while (ritem[j]>= 0) 		printf(" %s", symbol_name[ritem[j++]]); 	    printf("\n"); 	    fflush(stdout); 	}     } }
 comment|/* show_ritems is used for debugging */
 end_comment
 
 begin_comment
-unit|show_ritems() {     int i;      for (i = 0; i< nitems; ++i) 	printf("ritem[%d] = %d\n", i, ritem[i]); }
+unit|show_ritems(void) {     int i;      for (i = 0; i< nitems; ++i) 	printf("ritem[%d] = %d\n", i, ritem[i]); }
 comment|/* show_rrhs is used for debugging */
 end_comment
 
 begin_comment
-unit|show_rrhs() {     int i;      for (i = 0; i< nrules; ++i) 	printf("rrhs[%d] = %d\n", i, rrhs[i]); }
+unit|show_rrhs(void) {     int i;      for (i = 0; i< nrules; ++i) 	printf("rrhs[%d] = %d\n", i, rrhs[i]); }
 comment|/* show_shifts is used for debugging */
 end_comment
 
 begin_endif
-unit|show_shifts() {     shifts *p;     int i, j, k;      k = 0;     for (p = first_shift; p; ++k, p = p->next)     { 	if (k) printf("\n"); 	printf("shift %d, number = %d, nshifts = %d\n", k, p->number, 		p->nshifts); 	j = p->nshifts; 	for (i = 0; i< j; ++i) 	    printf("\t%d\n", p->shift[i]);     } }
+unit|show_shifts(void) {     shifts *p;     int i, j, k;      k = 0;     for (p = first_shift; p; ++k, p = p->next)     { 	if (k) printf("\n"); 	printf("shift %d, number = %d, nshifts = %d\n", k, p->number, 		p->nshifts); 	j = p->nshifts; 	for (i = 0; i< j; ++i) 	    printf("\t%d\n", p->shift[i]);     } }
 endif|#
 directive|endif
 end_endif
@@ -1538,7 +1548,9 @@ begin_function
 specifier|static
 name|void
 name|save_shifts
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|shifts
 modifier|*
@@ -1664,7 +1676,9 @@ begin_function
 specifier|static
 name|void
 name|save_reductions
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|short
 modifier|*
@@ -1850,7 +1864,9 @@ begin_function
 specifier|static
 name|void
 name|set_derives
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -1993,7 +2009,9 @@ begin_function
 specifier|static
 name|void
 name|print_derives
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -2081,7 +2099,9 @@ begin_function
 specifier|static
 name|void
 name|set_nullable
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -2287,7 +2307,7 @@ literal|0
 end_if
 
 begin_endif
-unit|free_nullable() {     FREE(nullable); }
+unit|free_nullable(void) {     FREE(nullable); }
 endif|#
 directive|endif
 end_endif
@@ -2295,7 +2315,9 @@ end_endif
 begin_function
 name|void
 name|lr0
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|set_derives
 argument_list|()
