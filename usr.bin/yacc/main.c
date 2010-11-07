@@ -727,7 +727,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"b:dlo:p:rtv"
+literal|"b:dlo:p:rtvy"
 argument_list|)
 operator|)
 operator|!=
@@ -803,6 +803,11 @@ name|vflag
 operator|=
 literal|1
 expr_stmt|;
+break|break;
+case|case
+literal|'y'
+case|:
+comment|/* for bison compatibility -- byacc is already POSIX compatible */
 break|break;
 default|default:
 name|usage
