@@ -20790,6 +20790,11 @@ operator|.
 name|primary_destination
 argument_list|)
 expr_stmt|;
+name|sctp_stop_timers_for_shutdown
+argument_list|(
+name|stcb
+argument_list|)
+expr_stmt|;
 name|sctp_timer_start
 argument_list|(
 name|SCTP_TIMER_TYPE_SHUTDOWNACK
@@ -23994,6 +23999,11 @@ operator|->
 name|asoc
 operator|.
 name|primary_destination
+argument_list|)
+expr_stmt|;
+name|sctp_stop_timers_for_shutdown
+argument_list|(
+name|stcb
 argument_list|)
 expr_stmt|;
 name|sctp_timer_start
