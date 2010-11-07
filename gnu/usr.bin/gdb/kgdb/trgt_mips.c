@@ -101,11 +101,22 @@ directive|include
 file|<mips-tdep.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CROSS_DEBUGGER
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<machine/pcb.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -122,6 +133,9 @@ name|regno
 name|__unused
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|CROSS_DEBUGGER
 name|struct
 name|kthr
 modifier|*
@@ -401,6 +415,8 @@ name|PCB_REG_PC
 index|]
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -436,6 +452,12 @@ name|objfile
 parameter_list|)
 block|{ }
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CROSS_DEBUGGER
+end_ifndef
 
 begin_struct
 struct|struct
@@ -1064,6 +1086,11 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|const
 name|struct
@@ -1077,6 +1104,9 @@ modifier|*
 name|next_frame
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|CROSS_DEBUGGER
 name|char
 modifier|*
 name|pname
@@ -1170,6 +1200,8 @@ operator|&
 name|kgdb_trgt_trapframe_unwind
 operator|)
 return|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|NULL
