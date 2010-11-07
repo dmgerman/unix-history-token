@@ -297,9 +297,9 @@ literal|"        newsize = YYMAXDEPTH;"
 block|,
 literal|"    i = yyssp - yyss;"
 block|,
-literal|"    newss = yyss ? (short *)realloc(yyss, newsize * sizeof *newss) :"
+literal|"    newss = yyss ? realloc(yyss, newsize * sizeof *newss) :"
 block|,
-literal|"      (short *)malloc(newsize * sizeof *newss);"
+literal|"      malloc(newsize * sizeof *newss);"
 block|,
 literal|"    if (newss == NULL)"
 block|,
@@ -309,9 +309,9 @@ literal|"    yyss = newss;"
 block|,
 literal|"    yyssp = newss + i;"
 block|,
-literal|"    newvs = yyvs ? (YYSTYPE *)realloc(yyvs, newsize * sizeof *newvs) :"
+literal|"    newvs = yyvs ? realloc(yyvs, newsize * sizeof *newvs) :"
 block|,
-literal|"      (YYSTYPE *)malloc(newsize * sizeof *newvs);"
+literal|"      malloc(newsize * sizeof *newvs);"
 block|,
 literal|"    if (newvs == NULL)"
 block|,

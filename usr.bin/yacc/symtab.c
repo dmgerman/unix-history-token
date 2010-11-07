@@ -201,11 +201,7 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|=
-operator|(
-name|bucket
-operator|*
-operator|)
-name|MALLOC
+name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -238,7 +234,7 @@ name|bp
 operator|->
 name|name
 operator|=
-name|MALLOC
+name|malloc
 argument_list|(
 name|strlen
 argument_list|(
@@ -435,12 +431,7 @@ name|bp
 decl_stmt|;
 name|symbol_table
 operator|=
-operator|(
-name|bucket
-operator|*
-operator|*
-operator|)
-name|MALLOC
+name|malloc
 argument_list|(
 name|TABLE_SIZE
 operator|*
@@ -527,7 +518,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|symbol_table
 argument_list|)
@@ -572,7 +563,7 @@ name|p
 operator|->
 name|next
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|p
 argument_list|)

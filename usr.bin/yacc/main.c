@@ -851,15 +851,15 @@ block|}
 end_function
 
 begin_function
-name|char
+name|void
 modifier|*
 name|allocate
 parameter_list|(
-name|unsigned
+name|size_t
 name|n
 parameter_list|)
 block|{
-name|char
+name|void
 modifier|*
 name|p
 decl_stmt|;
@@ -874,7 +874,7 @@ condition|)
 block|{
 name|p
 operator|=
-name|CALLOC
+name|calloc
 argument_list|(
 literal|1
 argument_list|,
@@ -968,7 +968,7 @@ name|i
 expr_stmt|;
 name|action_file_name
 operator|=
-name|MALLOC
+name|malloc
 argument_list|(
 name|i
 argument_list|)
@@ -984,7 +984,7 @@ argument_list|()
 expr_stmt|;
 name|text_file_name
 operator|=
-name|MALLOC
+name|malloc
 argument_list|(
 name|i
 argument_list|)
@@ -1000,7 +1000,7 @@ argument_list|()
 expr_stmt|;
 name|union_file_name
 operator|=
-name|MALLOC
+name|malloc
 argument_list|(
 name|i
 argument_list|)
@@ -1158,7 +1158,7 @@ argument_list|)
 expr_stmt|;
 name|output_file_name
 operator|=
-name|MALLOC
+name|malloc
 argument_list|(
 name|len
 operator|+
@@ -1198,7 +1198,7 @@ condition|)
 block|{
 name|code_file_name
 operator|=
-name|MALLOC
+name|malloc
 argument_list|(
 name|len
 operator|+
@@ -1324,7 +1324,7 @@ condition|)
 block|{
 name|defines_file_name
 operator|=
-name|MALLOC
+name|malloc
 argument_list|(
 name|len
 operator|+
@@ -1417,7 +1417,7 @@ condition|)
 block|{
 name|verbose_file_name
 operator|=
-name|MALLOC
+name|malloc
 argument_list|(
 name|len
 operator|+

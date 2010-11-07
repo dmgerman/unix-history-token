@@ -183,11 +183,7 @@ condition|)
 return|return;
 name|null_rules
 operator|=
-operator|(
-name|short
-operator|*
-operator|)
-name|MALLOC
+name|malloc
 argument_list|(
 name|nrules
 operator|*
@@ -231,7 +227,7 @@ argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|null_rules
 argument_list|)

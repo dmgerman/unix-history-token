@@ -937,11 +937,7 @@ name|p
 decl_stmt|;
 name|rules_used
 operator|=
-operator|(
-name|short
-operator|*
-operator|)
-name|MALLOC
+name|malloc
 argument_list|(
 name|nrules
 operator|*
@@ -1682,7 +1678,7 @@ name|p
 operator|->
 name|next
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|p
 argument_list|)
@@ -1726,7 +1722,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|parser
 argument_list|)

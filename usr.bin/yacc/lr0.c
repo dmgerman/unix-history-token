@@ -719,37 +719,37 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|FREE
+name|free
 argument_list|(
 name|shift_symbol
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|redset
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|shiftset
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|kernel_base
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|kernel_end
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|kernel_items
 argument_list|)
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|state_set
 argument_list|)
@@ -1113,11 +1113,7 @@ control|)
 continue|continue;
 name|p
 operator|=
-operator|(
-name|core
-operator|*
-operator|)
-name|MALLOC
+name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -1994,7 +1990,7 @@ literal|0
 end_if
 
 begin_endif
-unit|free_derives() {     FREE(derives[start_symbol]);     FREE(derives); }
+unit|free_derives() {     free(derives[start_symbol]);     free(derives); }
 endif|#
 directive|endif
 end_endif
@@ -2116,7 +2112,7 @@ name|done1
 decl_stmt|;
 name|nullable
 operator|=
-name|MALLOC
+name|malloc
 argument_list|(
 name|nsyms
 argument_list|)
@@ -2307,7 +2303,7 @@ literal|0
 end_if
 
 begin_endif
-unit|free_nullable(void) {     FREE(nullable); }
+unit|free_nullable(void) {     free(nullable); }
 endif|#
 directive|endif
 end_endif
