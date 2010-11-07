@@ -499,7 +499,7 @@ value|(MIIF_NOISOLATE|MIIF_NOLOOP|MIIF_AUTOTSLEEP)
 end_define
 
 begin_comment
-comment|/*  * Special `locators' passed to mii_attach().  If one of these is not  * an `any' value, we look for *that* PHY and configure it.  If both  * are not `any', that is an error, and mii_attach() will panic.  */
+comment|/*  * Special `locators' passed to mii_attach().  If one of these is not  * an `any' value, we look for *that* PHY and configure it.  If both  * are not `any', that is an error, and mii_attach() will fail.  */
 end_comment
 
 begin_define

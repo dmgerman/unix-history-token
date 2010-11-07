@@ -451,6 +451,17 @@ name|sc
 operator|->
 name|sc_mii
 operator|.
+name|mii_flags
+operator|=
+name|miibus_get_flags
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_mii
+operator|.
 name|mii_inst
 operator|=
 name|mii
@@ -485,7 +496,7 @@ name|mii
 expr_stmt|;
 name|capmask
 operator|=
-literal|0xFFFFFFFF
+name|BMSR_DEFCAPMASK
 expr_stmt|;
 if|if
 condition|(
@@ -600,7 +611,6 @@ name|MII_BMSR
 argument_list|)
 operator|&
 name|capmask
-comment|/*ma->mii_capmask*/
 expr_stmt|;
 define|#
 directive|define

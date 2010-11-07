@@ -1245,19 +1245,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|vr_phyaddr
-operator|!=
-name|phy
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 comment|/* Set the register address. */
 name|CSR_WRITE_1
 argument_list|(
@@ -1378,19 +1365,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|vr_phyaddr
-operator|!=
-name|phy
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 comment|/* Set the register address and data to write. */
 name|CSR_WRITE_1
 argument_list|(
@@ -3019,6 +2993,8 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|,
+name|phy
+decl_stmt|,
 name|pmc
 decl_stmt|;
 name|sc
@@ -3839,7 +3815,7 @@ goto|goto
 name|fail
 goto|;
 block|}
-comment|/* Save PHY address. */
+comment|/* Do MII setup. */
 if|if
 condition|(
 name|sc
@@ -3848,16 +3824,12 @@ name|vr_revid
 operator|>=
 name|REV_ID_VT6105_A0
 condition|)
-name|sc
-operator|->
-name|vr_phyaddr
+name|phy
 operator|=
 literal|1
 expr_stmt|;
 else|else
-name|sc
-operator|->
-name|vr_phyaddr
+name|phy
 operator|=
 name|CSR_READ_1
 argument_list|(
@@ -3868,10 +3840,9 @@ argument_list|)
 operator|&
 name|VR_PHYADDR_MASK
 expr_stmt|;
-comment|/* Do MII setup. */
-if|if
-condition|(
-name|mii_phy_probe
+name|error
+operator|=
+name|mii_attach
 argument_list|(
 name|dev
 argument_list|,
@@ -3880,22 +3851,34 @@ name|sc
 operator|->
 name|vr_miibus
 argument_list|,
+name|ifp
+argument_list|,
 name|vr_ifmedia_upd
 argument_list|,
 name|vr_ifmedia_sts
+argument_list|,
+name|BMSR_DEFCAPMASK
+argument_list|,
+name|phy
+argument_list|,
+name|MII_OFFSET_ANY
+argument_list|,
+literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
 condition|)
 block|{
 name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"MII without any phy!\n"
+literal|"attaching PHYs failed\n"
 argument_list|)
-expr_stmt|;
-name|error
-operator|=
-name|ENXIO
 expr_stmt|;
 goto|goto
 name|fail

@@ -14492,9 +14492,6 @@ name|int
 name|bge_if_flags
 decl_stmt|;
 name|int
-name|bge_phy_addr
-decl_stmt|;
-name|int
 name|bge_txcnt
 decl_stmt|;
 name|int

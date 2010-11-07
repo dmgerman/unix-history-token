@@ -305,9 +305,6 @@ name|struct
 name|mtx
 name|mtx
 decl_stmt|;
-name|int
-name|phyaddr
-decl_stmt|;
 name|uint8_t
 name|eaddr
 index|[

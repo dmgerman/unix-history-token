@@ -3516,6 +3516,8 @@ name|int
 name|i
 decl_stmt|,
 name|error
+decl_stmt|,
+name|phy
 decl_stmt|;
 name|sc
 operator|=
@@ -3547,6 +3549,16 @@ comment|/* Set chip version-dependent parameters */
 name|mge_ver_params
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+comment|/* 	 * We assume static PHY address<=> device unit mapping: 	 * PHY Address = MII_ADDR_BASE + devce unit. 	 * This is true for most Marvell boards. 	 */
+name|phy
+operator|=
+name|MII_ADDR_BASE
+operator|+
+name|device_get_unit
+argument_list|(
+name|dev
 argument_list|)
 expr_stmt|;
 comment|/* Initialize mutexes */
@@ -3863,10 +3875,10 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Probe PHY(s) */
+comment|/* Attach PHY(s) */
 name|error
 operator|=
-name|mii_phy_probe
+name|mii_attach
 argument_list|(
 name|dev
 argument_list|,
@@ -3875,9 +3887,19 @@ name|sc
 operator|->
 name|miibus
 argument_list|,
+name|ifp
+argument_list|,
 name|mge_ifmedia_upd
 argument_list|,
 name|mge_ifmedia_sts
+argument_list|,
+name|BMSR_DEFCAPMASK
+argument_list|,
+name|phy
+argument_list|,
+name|MII_OFFSET_ANY
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -3889,7 +3911,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"MII failed to find PHY\n"
+literal|"attaching PHYs failed\n"
 argument_list|)
 expr_stmt|;
 name|if_free
@@ -6357,25 +6379,6 @@ block|{
 name|uint32_t
 name|retries
 decl_stmt|;
-comment|/* 	 * We assume static PHY address<=> device unit mapping: 	 * PHY Address = MII_ADDR_BASE + devce unit. 	 * This is true for most Marvell boards. 	 *  	 * Code below grants proper PHY detection on each device 	 * unit. 	 */
-if|if
-condition|(
-operator|(
-name|MII_ADDR_BASE
-operator|+
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
-operator|)
-operator|!=
-name|phy
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 name|MGE_WRITE
 argument_list|(
 name|sc_mge0
@@ -6476,24 +6479,6 @@ block|{
 name|uint32_t
 name|retries
 decl_stmt|;
-if|if
-condition|(
-operator|(
-name|MII_ADDR_BASE
-operator|+
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
-operator|)
-operator|!=
-name|phy
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 name|MGE_WRITE
 argument_list|(
 name|sc_mge0
