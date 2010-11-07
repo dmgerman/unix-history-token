@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/pcb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"kgdb.h"
 end_include
 
@@ -204,7 +210,7 @@ name|pcb
 operator|.
 name|pcb_context
 index|[
-literal|0
+name|PCB_REG_S0
 index|]
 argument_list|)
 expr_stmt|;
@@ -221,7 +227,7 @@ name|pcb
 operator|.
 name|pcb_context
 index|[
-literal|1
+name|PCB_REG_S1
 index|]
 argument_list|)
 expr_stmt|;
@@ -238,7 +244,7 @@ name|pcb
 operator|.
 name|pcb_context
 index|[
-literal|2
+name|PCB_REG_S2
 index|]
 argument_list|)
 expr_stmt|;
@@ -255,7 +261,7 @@ name|pcb
 operator|.
 name|pcb_context
 index|[
-literal|3
+name|PCB_REG_S3
 index|]
 argument_list|)
 expr_stmt|;
@@ -272,7 +278,7 @@ name|pcb
 operator|.
 name|pcb_context
 index|[
-literal|4
+name|PCB_REG_S4
 index|]
 argument_list|)
 expr_stmt|;
@@ -289,7 +295,7 @@ name|pcb
 operator|.
 name|pcb_context
 index|[
-literal|5
+name|PCB_REG_S5
 index|]
 argument_list|)
 expr_stmt|;
@@ -306,7 +312,7 @@ name|pcb
 operator|.
 name|pcb_context
 index|[
-literal|6
+name|PCB_REG_S6
 index|]
 argument_list|)
 expr_stmt|;
@@ -323,7 +329,7 @@ name|pcb
 operator|.
 name|pcb_context
 index|[
-literal|7
+name|PCB_REG_S7
 index|]
 argument_list|)
 expr_stmt|;
@@ -340,7 +346,7 @@ name|pcb
 operator|.
 name|pcb_context
 index|[
-literal|8
+name|PCB_REG_SP
 index|]
 argument_list|)
 expr_stmt|;
@@ -357,7 +363,7 @@ name|pcb
 operator|.
 name|pcb_context
 index|[
-literal|9
+name|PCB_REG_GP
 index|]
 argument_list|)
 expr_stmt|;
@@ -374,7 +380,24 @@ name|pcb
 operator|.
 name|pcb_context
 index|[
-literal|10
+name|PCB_REG_RA
+index|]
+argument_list|)
+expr_stmt|;
+name|supply_register
+argument_list|(
+name|MIPS_EMBED_PC_REGNUM
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|pcb
+operator|.
+name|pcb_context
+index|[
+name|PCB_REG_PC
 index|]
 argument_list|)
 expr_stmt|;
@@ -394,7 +417,7 @@ name|fprintf_unfiltered
 argument_list|(
 name|gdb_stderr
 argument_list|,
-literal|"XXX: %s\n"
+literal|"Unimplemented function: %s\n"
 argument_list|,
 name|__func__
 argument_list|)
@@ -705,13 +728,11 @@ name|struct
 name|frame_info
 modifier|*
 name|next_frame
-name|__unused
 parameter_list|,
 name|void
 modifier|*
 modifier|*
 name|this_cache
-name|__unused
 parameter_list|)
 block|{
 name|char
@@ -1054,7 +1075,6 @@ name|struct
 name|frame_info
 modifier|*
 name|next_frame
-name|__unused
 parameter_list|)
 block|{
 name|char
@@ -1150,7 +1170,6 @@ operator|&
 name|kgdb_trgt_trapframe_unwind
 operator|)
 return|;
-comment|/* printf("%s: %llx =%s\n", __func__, pc, pname); */
 return|return
 operator|(
 name|NULL
