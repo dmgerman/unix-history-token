@@ -612,6 +612,14 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|struct
+name|task
+name|nfs_nfsiodnew_task
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|nfs_numasync
 decl_stmt|;
@@ -1486,10 +1494,23 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|nfs_nfsiodnew
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|nfs_nfsiodnew_tq
+parameter_list|(
+name|__unused
+name|void
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

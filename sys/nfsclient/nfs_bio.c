@@ -6293,6 +6293,8 @@ name|nfs_iodwant
 index|[
 name|iod
 index|]
+operator|==
+name|NFSIOD_AVAILABLE
 condition|)
 block|{
 name|gotiod
@@ -6307,28 +6309,10 @@ condition|(
 operator|!
 name|gotiod
 condition|)
-block|{
-name|iod
-operator|=
 name|nfs_nfsiodnew
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|iod
-operator|!=
-operator|-
-literal|1
-condition|)
-name|gotiod
-operator|=
-name|TRUE
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|gotiod
-condition|)
+else|else
 block|{
 comment|/* 		 * Found one, so wake it up and tell it which 		 * mount to process. 		 */
 name|NFS_DPF
@@ -6349,7 +6333,7 @@ index|[
 name|iod
 index|]
 operator|=
-name|NULL
+name|NFSIOD_NOT_AVAILABLE
 expr_stmt|;
 name|nfs_iodmount
 index|[
@@ -6521,30 +6505,9 @@ expr_stmt|;
 block|}
 block|}
 comment|/* 			 * We might have lost our iod while sleeping, 			 * so check and loop if nescessary. 			 */
-if|if
-condition|(
-name|nmp
-operator|->
-name|nm_bufqiods
-operator|==
-literal|0
-condition|)
-block|{
-name|NFS_DPF
-argument_list|(
-name|ASYNCIO
-argument_list|,
-operator|(
-literal|"nfs_asyncio: no iods after mount %p queue was drained, looping\n"
-operator|,
-name|nmp
-operator|)
-argument_list|)
-expr_stmt|;
 goto|goto
 name|again
 goto|;
-block|}
 block|}
 comment|/* We might have lost our nfsiod */
 if|if

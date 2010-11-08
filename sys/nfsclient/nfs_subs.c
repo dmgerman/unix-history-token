@@ -120,6 +120,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/taskqueue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -330,6 +336,13 @@ specifier|static
 name|struct
 name|mtx
 name|nfs_xid_mtx
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|task
+name|nfs_nfsiodnew_task
 decl_stmt|;
 end_decl_stmt
 
@@ -1969,7 +1982,7 @@ index|[
 name|i
 index|]
 operator|=
-name|NULL
+name|NFSIOD_NOT_AVAILABLE
 expr_stmt|;
 name|nfs_iodmount
 index|[
@@ -2034,6 +2047,18 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
+name|TASK_INIT
+argument_list|(
+operator|&
+name|nfs_nfsiodnew_task
+argument_list|,
+literal|0
+argument_list|,
+name|nfs_nfsiodnew_tq
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|nfs_pbuf_freecnt
 operator|=
 name|nswbuf
@@ -2082,7 +2107,7 @@ literal|"nfs_uninit: request queue not empty"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Tell all nfsiod processes to exit. Clear nfs_iodmax, and wakeup 	 * any sleeping nfsiods so they check nfs_iodmax and exit. 	 */
+comment|/* 	 * Tell all nfsiod processes to exit. Clear nfs_iodmax, and wakeup 	 * any sleeping nfsiods so they check nfs_iodmax and exit. 	 * Drain nfsiodnew task before we wait for them to finish. 	 */
 name|mtx_lock
 argument_list|(
 operator|&
@@ -2092,6 +2117,26 @@ expr_stmt|;
 name|nfs_iodmax
 operator|=
 literal|0
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|nfs_iod_mtx
+argument_list|)
+expr_stmt|;
+name|taskqueue_drain
+argument_list|(
+name|taskqueue_thread
+argument_list|,
+operator|&
+name|nfs_nfsiodnew_task
+argument_list|)
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|nfs_iod_mtx
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -2112,6 +2157,8 @@ name|nfs_iodwant
 index|[
 name|i
 index|]
+operator|==
+name|NFSIOD_AVAILABLE
 condition|)
 name|wakeup
 argument_list|(

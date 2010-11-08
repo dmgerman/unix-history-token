@@ -566,6 +566,25 @@ value|(((T1)->tv_sec != (T2)->tv_sec) || ((T1)->tv_nsec != (T2)->tv_nsec))
 end_define
 
 begin_comment
+comment|/*  * NFS iod threads can be in one of these two states once spawned.  * NFSIOD_NOT_AVAILABLE - Cannot be assigned an I/O operation at this time.  * NFSIOD_AVAILABLE - Available to be assigned an I/O operation.  */
+end_comment
+
+begin_enum
+enum|enum
+name|nfsiod_state
+block|{
+name|NFSIOD_NOT_AVAILABLE
+init|=
+literal|0
+block|,
+name|NFSIOD_AVAILABLE
+init|=
+literal|1
+block|, }
+enum|;
+end_enum
+
+begin_comment
 comment|/*  * Queue head for nfsiod's  */
 end_comment
 
@@ -583,9 +602,8 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|proc
-modifier|*
+name|enum
+name|nfsiod_state
 name|nfs_iodwant
 index|[
 name|NFS_MAXASYNCDAEMON
