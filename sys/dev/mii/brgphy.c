@@ -690,6 +690,13 @@ argument_list|)
 block|,
 name|MII_PHY_DESC
 argument_list|(
+name|xxBROADCOM_ALT2
+argument_list|,
+name|BCM5717C
+argument_list|)
+block|,
+name|MII_PHY_DESC
+argument_list|(
 name|BROADCOM2
 argument_list|,
 name|BCM5906
@@ -1157,6 +1164,11 @@ name|MIIF_HAVEFIBER
 expr_stmt|;
 break|break;
 block|}
+break|break;
+case|case
+name|MII_OUI_xxBROADCOM_ALT2
+case|:
+comment|/* No special handling yet. */
 break|break;
 default|default:
 name|device_printf
@@ -4546,6 +4558,9 @@ block|}
 break|break;
 case|case
 name|MII_OUI_xxBROADCOM_ALT1
+case|:
+case|case
+name|MII_OUI_xxBROADCOM_ALT2
 case|:
 break|break;
 block|}
