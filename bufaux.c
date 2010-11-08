@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: bufaux.c,v 1.48 2010/02/02 22:49:34 djm Exp $ */
+comment|/* $OpenBSD: bufaux.c,v 1.49 2010/03/26 03:13:17 djm Exp $ */
 end_comment
 
 begin_comment
@@ -205,6 +205,12 @@ operator|-
 literal|1
 operator|)
 return|;
+if|if
+condition|(
+name|ret
+operator|!=
+name|NULL
+condition|)
 operator|*
 name|ret
 operator|=
@@ -302,6 +308,12 @@ operator|-
 literal|1
 operator|)
 return|;
+if|if
+condition|(
+name|ret
+operator|!=
+name|NULL
+condition|)
 operator|*
 name|ret
 operator|=

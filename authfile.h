@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: authfile.h,v 1.14 2010/03/04 10:36:03 djm Exp $ */
+comment|/* $OpenBSD: authfile.h,v 1.15 2010/08/04 05:42:47 djm Exp $ */
 end_comment
 
 begin_comment
@@ -34,6 +34,18 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|Key
+modifier|*
+name|key_load_cert
+parameter_list|(
 specifier|const
 name|char
 modifier|*
@@ -90,6 +102,27 @@ modifier|*
 parameter_list|,
 name|char
 modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|Key
+modifier|*
+name|key_load_private_cert
+parameter_list|(
+name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
 modifier|*
 parameter_list|)
 function_decl|;

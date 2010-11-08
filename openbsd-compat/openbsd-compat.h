@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: openbsd-compat.h,v 1.49 2010/01/16 12:58:37 dtucker Exp $ */
+comment|/* $Id: openbsd-compat.h,v 1.50 2010/08/16 03:15:23 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -364,6 +364,46 @@ parameter_list|,
 name|char
 modifier|*
 name|p
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_STRPTIME
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
+begin_function_decl
+name|char
+modifier|*
+name|strptime
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|buf
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+name|struct
+name|tm
+modifier|*
+name|tm
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp.c,v 1.123 2010/01/27 19:21:39 djm Exp $ */
+comment|/* $OpenBSD: sftp.c,v 1.125 2010/06/18 00:58:39 djm Exp $ */
 end_comment
 
 begin_comment
@@ -967,6 +967,22 @@ block|,
 name|I_MKDIR
 block|,
 name|REMOTE
+block|}
+block|,
+block|{
+literal|"mget"
+block|,
+name|I_GET
+block|,
+name|REMOTE
+block|}
+block|,
+block|{
+literal|"mput"
+block|,
+name|I_PUT
+block|,
+name|LOCAL
 block|}
 block|,
 block|{
@@ -7339,7 +7355,7 @@ operator|!
 name|path1
 condition|)
 block|{
-name|do_globbed_ls
+name|do_ls_dir
 argument_list|(
 name|conn
 argument_list|,

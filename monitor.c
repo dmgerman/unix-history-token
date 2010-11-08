@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: monitor.c,v 1.106 2010/03/07 11:57:13 dtucker Exp $ */
+comment|/* $OpenBSD: monitor.c,v 1.108 2010/07/13 23:13:16 djm Exp $ */
 end_comment
 
 begin_comment
@@ -2751,7 +2751,7 @@ name|key_bloblen
 operator|!=
 name|bloblen
 operator|||
-name|memcmp
+name|timingsafe_bcmp
 argument_list|(
 name|key_blob
 argument_list|,
@@ -4600,21 +4600,31 @@ block|{
 name|char
 modifier|*
 name|name
+init|=
+name|NULL
 decl_stmt|,
 modifier|*
 name|info
+init|=
+name|NULL
 decl_stmt|,
 modifier|*
 modifier|*
 name|prompts
+init|=
+name|NULL
 decl_stmt|;
 name|u_int
 name|i
 decl_stmt|,
 name|num
+init|=
+literal|0
 decl_stmt|,
 modifier|*
 name|echo_on
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|ret
@@ -5562,7 +5572,7 @@ name|session_id2_len
 operator|)
 operator|||
 operator|(
-name|memcmp
+name|timingsafe_bcmp
 argument_list|(
 name|p
 argument_list|,
@@ -5614,7 +5624,7 @@ name|session_id2_len
 operator|)
 operator|||
 operator|(
-name|memcmp
+name|timingsafe_bcmp
 argument_list|(
 name|p
 argument_list|,
@@ -5881,7 +5891,7 @@ name|session_id2_len
 operator|)
 operator|||
 operator|(
-name|memcmp
+name|timingsafe_bcmp
 argument_list|(
 name|p
 argument_list|,
@@ -8492,22 +8502,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|session_id2
 operator|==
 name|NULL
-operator|)
 operator|||
-operator|(
 name|kex
 operator|->
 name|session_id_len
 operator|!=
 name|session_id2_len
-operator|)
 operator|||
-operator|(
-name|memcmp
+name|timingsafe_bcmp
 argument_list|(
 name|kex
 operator|->
@@ -8519,7 +8524,6 @@ name|session_id2_len
 argument_list|)
 operator|!=
 literal|0
-operator|)
 condition|)
 name|fatal
 argument_list|(

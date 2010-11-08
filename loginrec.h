@@ -101,7 +101,7 @@ begin_define
 define|#
 directive|define
 name|LINFO_NAMESIZE
-value|128
+value|512
 end_define
 
 begin_define

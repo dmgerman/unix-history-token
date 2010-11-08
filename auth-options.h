@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth-options.h,v 1.18 2010/02/26 20:29:54 djm Exp $ */
+comment|/* $OpenBSD: auth-options.h,v 1.20 2010/05/07 11:30:29 djm Exp $ */
 end_comment
 
 begin_comment
@@ -110,6 +110,14 @@ name|key_is_cert_authority
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|authorized_principals
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|int
 name|auth_parse_options
@@ -140,9 +148,9 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|auth_cert_constraints
+name|auth_cert_options
 parameter_list|(
-name|Buffer
+name|Key
 modifier|*
 parameter_list|,
 name|struct

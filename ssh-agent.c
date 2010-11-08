@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-agent.c,v 1.165 2010/02/26 20:29:54 djm Exp $ */
+comment|/* $OpenBSD: ssh-agent.c,v 1.166 2010/04/16 01:47:26 djm Exp $ */
 end_comment
 
 begin_comment
@@ -2592,6 +2592,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|KEY_DSA_CERT_V00
+case|:
+case|case
 name|KEY_DSA_CERT
 case|:
 name|cert
@@ -2756,6 +2759,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|KEY_RSA_CERT_V00
+case|:
+case|case
 name|KEY_RSA_CERT
 case|:
 name|cert
@@ -2883,6 +2889,9 @@ condition|)
 block|{
 case|case
 name|KEY_RSA
+case|:
+case|case
+name|KEY_RSA_CERT_V00
 case|:
 case|case
 name|KEY_RSA_CERT

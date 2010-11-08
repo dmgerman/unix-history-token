@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: channels.h,v 1.103 2010/01/26 01:28:35 djm Exp $ */
+comment|/* $OpenBSD: channels.h,v 1.104 2010/05/14 23:29:23 djm Exp $ */
 end_comment
 
 begin_comment
@@ -214,6 +214,21 @@ name|struct
 name|Channel
 name|Channel
 typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
+name|channel_open_fn
+parameter_list|(
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
 end_typedef
 
 begin_typedef
@@ -521,7 +536,7 @@ name|ctype
 decl_stmt|;
 comment|/* type */
 comment|/* callback */
-name|channel_callback_fn
+name|channel_open_fn
 modifier|*
 name|open_confirm
 decl_stmt|;
@@ -574,6 +589,9 @@ decl_stmt|;
 name|void
 modifier|*
 name|mux_ctx
+decl_stmt|;
+name|int
+name|mux_pause
 decl_stmt|;
 block|}
 struct|;
@@ -926,7 +944,7 @@ name|channel_register_open_confirm
 parameter_list|(
 name|int
 parameter_list|,
-name|channel_callback_fn
+name|channel_open_fn
 modifier|*
 parameter_list|,
 name|void

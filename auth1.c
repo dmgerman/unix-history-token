@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth1.c,v 1.73 2008/07/04 23:30:16 djm Exp $ */
+comment|/* $OpenBSD: auth1.c,v 1.74 2010/06/25 08:46:17 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1060,6 +1060,10 @@ expr_stmt|;
 comment|/* If the user has no password, accept authentication immediately. */
 if|if
 condition|(
+name|options
+operator|.
+name|permit_empty_passwd
+operator|&&
 name|options
 operator|.
 name|password_authentication

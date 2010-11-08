@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-keysign.c,v 1.30 2010/01/13 01:20:20 dtucker Exp $ */
+comment|/* $OpenBSD: ssh-keysign.c,v 1.32 2010/08/04 06:08:40 djm Exp $ */
 end_comment
 
 begin_comment
@@ -1139,7 +1139,7 @@ index|]
 operator|!=
 name|NULL
 operator|&&
-name|key_equal
+name|key_equal_public
 argument_list|(
 name|key
 argument_list|,

@@ -761,6 +761,19 @@ condition|)
 goto|goto
 name|failed
 goto|;
+if|if
+condition|(
+operator|(
+name|ifr
+operator|.
+name|ifr_flags
+operator|&
+name|IFF_UP
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 name|ifr
 operator|.
 name|ifr_flags
@@ -785,6 +798,7 @@ condition|)
 goto|goto
 name|failed
 goto|;
+block|}
 name|close
 argument_list|(
 name|sock

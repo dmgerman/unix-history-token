@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: session.c,v 1.252 2010/03/07 11:57:13 dtucker Exp $ */
+comment|/* $OpenBSD: session.c,v 1.256 2010/06/25 07:20:04 djm Exp $ */
 end_comment
 
 begin_comment
@@ -70,6 +70,12 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
 end_include
 
 begin_include
@@ -378,6 +384,8 @@ name|session_set_fds
 parameter_list|(
 name|Session
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|,
@@ -1845,6 +1853,17 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|s
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"do_exec_no_pty: no session"
+argument_list|)
+expr_stmt|;
 comment|/* Allocate pipes for communicating with the program. */
 if|if
 condition|(
@@ -1988,6 +2007,17 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|s
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"do_exec_no_pty: no session"
+argument_list|)
+expr_stmt|;
 comment|/* Uses socket pairs to communicate with the program. */
 if|if
 condition|(
@@ -2073,17 +2103,6 @@ return|;
 block|}
 endif|#
 directive|endif
-if|if
-condition|(
-name|s
-operator|==
-name|NULL
-condition|)
-name|fatal
-argument_list|(
-literal|"do_exec_no_pty: no session"
-argument_list|)
-expr_stmt|;
 name|session_proctitle
 argument_list|(
 name|s
@@ -2560,30 +2579,6 @@ condition|(
 name|compat20
 condition|)
 block|{
-if|if
-condition|(
-name|s
-operator|->
-name|is_subsystem
-condition|)
-block|{
-name|close
-argument_list|(
-name|perr
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-name|perr
-index|[
-literal|0
-index|]
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-block|}
 name|session_set_fds
 argument_list|(
 name|s
@@ -2602,6 +2597,10 @@ name|perr
 index|[
 literal|0
 index|]
+argument_list|,
+name|s
+operator|->
+name|is_subsystem
 argument_list|,
 literal|0
 argument_list|)
@@ -2671,33 +2670,16 @@ index|[
 literal|1
 index|]
 argument_list|,
-name|s
-operator|->
-name|is_subsystem
-condition|?
-operator|-
-literal|1
-else|:
 name|err
 index|[
 literal|1
 index|]
 argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|s
 operator|->
 name|is_subsystem
-condition|)
-name|close
-argument_list|(
-name|err
-index|[
-literal|1
-index|]
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -3172,6 +3154,8 @@ argument_list|,
 name|fdout
 argument_list|,
 operator|-
+literal|1
+argument_list|,
 literal|1
 argument_list|,
 literal|1
@@ -8096,6 +8080,17 @@ operator|.
 name|chroot_directory
 operator|==
 name|NULL
+operator|||
+name|strcasecmp
+argument_list|(
+name|options
+operator|.
+name|chroot_directory
+argument_list|,
+literal|"none"
+argument_list|)
+operator|==
+literal|0
 condition|)
 name|fprintf
 argument_list|(
@@ -9817,9 +9812,15 @@ argument_list|()
 expr_stmt|;
 name|logit
 argument_list|(
-literal|"subsystem request for %.100s"
+literal|"subsystem request for %.100s by user %s"
 argument_list|,
 name|subsys
+argument_list|,
+name|s
+operator|->
+name|pw
+operator|->
+name|pw_name
 argument_list|)
 expr_stmt|;
 for|for
@@ -10771,6 +10772,9 @@ name|int
 name|fderr
 parameter_list|,
 name|int
+name|ignore_fderr
+parameter_list|,
+name|int
 name|is_tty
 parameter_list|)
 block|{
@@ -10815,10 +10819,7 @@ name|fdin
 argument_list|,
 name|fderr
 argument_list|,
-name|fderr
-operator|==
-operator|-
-literal|1
+name|ignore_fderr
 condition|?
 name|CHAN_EXTENDED_IGNORE
 else|:

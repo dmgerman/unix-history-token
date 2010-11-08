@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth.c,v 1.86 2010/03/05 02:58:11 djm Exp $ */
+comment|/* $OpenBSD: auth.c,v 1.89 2010/08/04 05:42:47 djm Exp $ */
 end_comment
 
 begin_comment
@@ -553,6 +553,10 @@ directive|ifdef
 name|USE_LIBIAF
 name|free
 argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
 name|passwd
 argument_list|)
 expr_stmt|;
@@ -1563,6 +1567,41 @@ return|;
 block|}
 end_function
 
+begin_function
+name|char
+modifier|*
+name|authorized_principals_file
+parameter_list|(
+name|struct
+name|passwd
+modifier|*
+name|pw
+parameter_list|)
+block|{
+if|if
+condition|(
+name|options
+operator|.
+name|authorized_principals_file
+operator|==
+name|NULL
+condition|)
+return|return
+name|NULL
+return|;
+return|return
+name|expand_authorized_keys
+argument_list|(
+name|options
+operator|.
+name|authorized_principals_file
+argument_list|,
+name|pw
+argument_list|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/* return ok if key exists in sysfile or userfile */
 end_comment
@@ -1616,6 +1655,13 @@ name|found
 operator|=
 name|key_new
 argument_list|(
+name|key_is_cert
+argument_list|(
+name|key
+argument_list|)
+condition|?
+name|KEY_UNSPEC
+else|:
 name|key
 operator|->
 name|type
@@ -1713,6 +1759,13 @@ argument_list|,
 name|pw
 operator|->
 name|pw_name
+argument_list|,
+name|user_hostfile
+argument_list|)
+expr_stmt|;
+name|auth_debug_add
+argument_list|(
+literal|"Ignored %.200s: bad ownership or modes"
 argument_list|,
 name|user_hostfile
 argument_list|)
@@ -2110,9 +2163,10 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|FILE
 modifier|*
-name|auth_openkeyfile
+name|auth_openfile
 parameter_list|(
 specifier|const
 name|char
@@ -2126,6 +2180,13 @@ name|pw
 parameter_list|,
 name|int
 name|strict_modes
+parameter_list|,
+name|int
+name|log_missing
+parameter_list|,
+name|char
+modifier|*
+name|file_type
 parameter_list|)
 block|{
 name|char
@@ -2145,7 +2206,6 @@ name|FILE
 modifier|*
 name|f
 decl_stmt|;
-comment|/* 	 * Open the file containing the authorized keys 	 * Fail quietly if file does not exist 	 */
 if|if
 condition|(
 operator|(
@@ -2167,13 +2227,17 @@ condition|)
 block|{
 if|if
 condition|(
+name|log_missing
+operator|||
 name|errno
 operator|!=
 name|ENOENT
 condition|)
 name|debug
 argument_list|(
-literal|"Could not open keyfile '%s': %s"
+literal|"Could not open %s '%s': %s"
+argument_list|,
+name|file_type
 argument_list|,
 name|file
 argument_list|,
@@ -2222,11 +2286,13 @@ condition|)
 block|{
 name|logit
 argument_list|(
-literal|"User %s authorized keys %s is not a regular file"
+literal|"User %s %s %s is not a regular file"
 argument_list|,
 name|pw
 operator|->
 name|pw_name
+argument_list|,
+name|file_type
 argument_list|,
 name|file
 argument_list|)
@@ -2307,12 +2373,93 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
+name|auth_debug_add
+argument_list|(
+literal|"Ignored %s: %s"
+argument_list|,
+name|file_type
+argument_list|,
+name|line
+argument_list|)
+expr_stmt|;
 return|return
 name|NULL
 return|;
 block|}
 return|return
 name|f
+return|;
+block|}
+end_function
+
+begin_function
+name|FILE
+modifier|*
+name|auth_openkeyfile
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|struct
+name|passwd
+modifier|*
+name|pw
+parameter_list|,
+name|int
+name|strict_modes
+parameter_list|)
+block|{
+return|return
+name|auth_openfile
+argument_list|(
+name|file
+argument_list|,
+name|pw
+argument_list|,
+name|strict_modes
+argument_list|,
+literal|1
+argument_list|,
+literal|"authorized keys"
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|FILE
+modifier|*
+name|auth_openprincipals
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|struct
+name|passwd
+modifier|*
+name|pw
+parameter_list|,
+name|int
+name|strict_modes
+parameter_list|)
+block|{
+return|return
+name|auth_openfile
+argument_list|(
+name|file
+argument_list|,
+name|pw
+argument_list|,
+name|strict_modes
+argument_list|,
+literal|0
+argument_list|,
+literal|"authorized principals"
+argument_list|)
 return|;
 block|}
 end_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: key.h,v 1.29 2010/03/15 19:40:02 stevesk Exp $ */
+comment|/* $OpenBSD: key.h,v 1.30 2010/04/16 01:47:26 djm Exp $ */
 end_comment
 
 begin_comment
@@ -58,6 +58,10 @@ block|,
 name|KEY_RSA_CERT
 block|,
 name|KEY_DSA_CERT
+block|,
+name|KEY_RSA_CERT_V00
+block|,
+name|KEY_DSA_CERT_V00
 block|,
 name|KEY_UNSPEC
 block|}
@@ -118,6 +122,9 @@ name|u_int
 name|type
 decl_stmt|;
 comment|/* SSH2_CERT_TYPE_USER or SSH2_CERT_TYPE_HOST */
+name|u_int64_t
+name|serial
+decl_stmt|;
 name|char
 modifier|*
 name|key_id
@@ -136,7 +143,10 @@ decl_stmt|,
 name|valid_before
 decl_stmt|;
 name|Buffer
-name|constraints
+name|critical
+decl_stmt|;
+name|Buffer
+name|extensions
 decl_stmt|;
 name|Key
 modifier|*
@@ -414,6 +424,8 @@ name|key_to_certified
 parameter_list|(
 name|Key
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -475,6 +487,16 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|key_cert_is_legacy
+parameter_list|(
+name|Key
 modifier|*
 parameter_list|)
 function_decl|;

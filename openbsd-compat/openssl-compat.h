@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: openssl-compat.h,v 1.14 2009/03/07 11:22:35 dtucker Exp $ */
+comment|/* $Id: openssl-compat.h,v 1.15 2010/05/12 07:50:02 djm Exp $ */
 end_comment
 
 begin_comment
@@ -18,6 +18,58 @@ include|#
 directive|include
 file|<openssl/evp.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<openssl/rsa.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<openssl/dsa.h>
+end_include
+
+begin_comment
+comment|/* Only in 0.9.8 */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_DSA_MAX_MODULUS_BITS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|OPENSSL_DSA_MAX_MODULUS_BITS
+value|10000
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_RSA_MAX_MODULUS_BITS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|OPENSSL_RSA_MAX_MODULUS_BITS
+value|16384
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* OPENSSL_free() is Free() in versions before OpenSSL 0.9.6 */

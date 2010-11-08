@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: servconf.h,v 1.92 2010/03/04 10:36:03 djm Exp $ */
+comment|/* $OpenBSD: servconf.h,v 1.93 2010/05/07 11:30:30 djm Exp $ */
 end_comment
 
 begin_comment
@@ -565,6 +565,10 @@ decl_stmt|;
 name|char
 modifier|*
 name|trusted_user_ca_keys
+decl_stmt|;
+name|char
+modifier|*
+name|authorized_principals_file
 decl_stmt|;
 block|}
 name|ServerOptions
