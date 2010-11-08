@@ -4036,7 +4036,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Rx/Tx descriptor parameters (8139C+ and 8169 only)  *  * 8139C+  *  Number of descriptors supported : up to 64  *  Descriptor alignment : 256 bytes  *  Tx buffer : At least 4 bytes in length.  *  Rx buffer : At least 8 bytes in length and 8 bytes alignment required.  *    * 8169  *  Number of descriptors supported : up to 1024  *  Descriptor alignment : 256 bytes  *  Tx buffer : At least 4 bytes in length.  *  Rx buffer : At least 8 bytes in length and 8 bytes alignment required.  */
+comment|/*  * Rx/Tx descriptor parameters (8139C+ and 8169 only)  *  * 8139C+  *  Number of descriptors supported : up to 64  *  Descriptor alignment : 256 bytes  *  Tx buffer : At least 4 bytes in length.  *  Rx buffer : At least 8 bytes in length and 8 bytes alignment required.  *  * 8169  *  Number of descriptors supported : up to 1024  *  Descriptor alignment : 256 bytes  *  Tx buffer : At least 4 bytes in length.  *  Rx buffer : At least 8 bytes in length and 8 bytes alignment required.  */
 end_comment
 
 begin_ifndef
