@@ -14483,9 +14483,6 @@ name|uint32_t
 name|bge_tx_max_coal_bds
 decl_stmt|;
 name|uint32_t
-name|bge_tx_buf_ratio
-decl_stmt|;
-name|uint32_t
 name|bge_mi_mode
 decl_stmt|;
 name|int
