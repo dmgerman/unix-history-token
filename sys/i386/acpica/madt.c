@@ -823,11 +823,11 @@ name|SYSINIT
 argument_list|(
 name|madt_register
 argument_list|,
-name|SI_SUB_CPU
+name|SI_SUB_TUNABLES
 operator|-
 literal|1
 argument_list|,
-name|SI_ORDER_SECOND
+name|SI_ORDER_FIRST
 argument_list|,
 name|madt_register
 argument_list|,

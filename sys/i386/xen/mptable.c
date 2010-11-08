@@ -345,7 +345,7 @@ name|SYSINIT
 argument_list|(
 name|mptable_register
 argument_list|,
-name|SI_SUB_CPU
+name|SI_SUB_TUNABLES
 operator|-
 literal|1
 argument_list|,
