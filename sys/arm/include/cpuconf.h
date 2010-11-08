@@ -81,11 +81,6 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|CPU_XSCALE_IXP425
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|CPU_FA526
 argument_list|)
 operator|)
@@ -157,6 +152,12 @@ argument_list|(
 name|CPU_XSCALE_PXA2X0
 argument_list|)
 operator|||
+name|defined
+argument_list|(
+name|CPU_XSCALE_IXP425
+argument_list|)
+operator|||
+expr|\
 name|defined
 argument_list|(
 name|CPU_FA626TE
