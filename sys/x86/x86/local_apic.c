@@ -1561,6 +1561,21 @@ modifier|*
 name|str
 parameter_list|)
 block|{
+name|uint32_t
+name|maxlvt
+decl_stmt|;
+name|maxlvt
+operator|=
+operator|(
+name|lapic
+operator|->
+name|version
+operator|&
+name|APIC_VER_MAXLVT
+operator|)
+operator|>>
+name|MAXLVTSHIFT
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"cpu%d %s:\n"
@@ -1617,7 +1632,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  timer: 0x%08x therm: 0x%08x err: 0x%08x pmc: 0x%08x\n"
+literal|"  timer: 0x%08x therm: 0x%08x err: 0x%08x"
 argument_list|,
 name|lapic
 operator|->
@@ -1630,12 +1645,34 @@ argument_list|,
 name|lapic
 operator|->
 name|lvt_error
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|maxlvt
+operator|>=
+name|LVT_PMC
+condition|)
+name|printf
+argument_list|(
+literal|" pmc: 0x%08x"
 argument_list|,
 name|lapic
 operator|->
 name|lvt_pcint
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|maxlvt
+operator|>=
+name|LVT_CMCI
+condition|)
 name|printf
 argument_list|(
 literal|"   cmci: 0x%08x\n"
