@@ -157,6 +157,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|BGE_SEND_RING_5717
+value|0x00004000
+end_define
+
+begin_define
+define|#
+directive|define
 name|BGE_SEND_RING_1_TO_4
 value|0x00004000
 end_define
@@ -266,6 +273,20 @@ define|#
 directive|define
 name|BGE_BUFFPOOL_3_END
 value|0x0001FFFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_STD_RX_RINGS_5717
+value|0x00040000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_JUMBO_RX_RINGS_5717
+value|0x00044400
 end_define
 
 begin_comment
@@ -920,6 +941,13 @@ name|BGE_PCI_PRODID_ASICREV
 value|0xBC
 end_define
 
+begin_define
+define|#
+directive|define
+name|BGE_PCI_GEN2_PRODID_ASICREV
+value|0xF4
+end_define
+
 begin_comment
 comment|/* PCI Misc. Host control register */
 end_comment
@@ -978,6 +1006,13 @@ define|#
 directive|define
 name|BGE_PCIMISCCTL_INDIRECT_ACCESS
 value|0x00000080
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_PCIMISCCTL_TAGGED_STATUS
+value|0x00000200
 end_define
 
 begin_define
@@ -1495,6 +1530,20 @@ name|BGE_CHIPID_BCM57780_A1
 value|0x57780001
 end_define
 
+begin_define
+define|#
+directive|define
+name|BGE_CHIPID_BCM5717_A0
+value|0x05717000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_CHIPID_BCM5717_B0
+value|0x05717100
+end_define
+
 begin_comment
 comment|/* shorthand one */
 end_comment
@@ -1625,6 +1674,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|BGE_ASICREV_BCM5717
+value|0x5717
+end_define
+
+begin_define
+define|#
+directive|define
 name|BGE_ASICREV_BCM5761
 value|0x5761
 end_define
@@ -1734,6 +1790,20 @@ end_comment
 begin_define
 define|#
 directive|define
+name|BGE_CHIPREV_5717_AX
+value|0x57170
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_CHIPREV_5717_BX
+value|0x57171
+end_define
+
+begin_define
+define|#
+directive|define
 name|BGE_CHIPREV_5761_AX
 value|0x57611
 end_define
@@ -1754,6 +1824,13 @@ define|#
 directive|define
 name|BGE_PCIDMARWCTL_MINDMA
 value|0x000000FF
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_PCIDMARWCTL_DIS_CACHE_ALIGNMENT
+value|0x00000001
 end_define
 
 begin_define
@@ -3093,6 +3170,13 @@ define|#
 directive|define
 name|BGE_RX_RINGS_MAX
 value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_RX_RINGS_MAX_5717
+value|17
 end_define
 
 begin_comment
@@ -4918,6 +5002,20 @@ end_comment
 begin_define
 define|#
 directive|define
+name|BGE_SGDIGSTS_DONE
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_SGDIGSTS_IS_SERDES
+value|0x00000100
+end_define
+
+begin_define
+define|#
+directive|define
 name|BGE_SGDIGSTS_PAUSE_CAP
 value|0x00080000
 end_define
@@ -4927,13 +5025,6 @@ define|#
 directive|define
 name|BGE_SGDIGSTS_ASYM_PAUSE
 value|0x00100000
-end_define
-
-begin_define
-define|#
-directive|define
-name|BGE_SGDIGSTS_DONE
-value|0x00000002
 end_define
 
 begin_comment
@@ -5313,6 +5404,13 @@ define|#
 directive|define
 name|BGE_SDIMODE_STATS_OFLOW_ATTN
 value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_SDIMODE_HW_LSO_PRE_DMA
+value|0x00000008
 end_define
 
 begin_comment
@@ -6872,6 +6970,20 @@ define|#
 directive|define
 name|BGE_RBDI_JUMBO_REPL_THRESH
 value|0x2C1C
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_STD_REPLENISH_LWM
+value|0x2D00
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_JMB_REPLENISH_LWM
+value|0x2D04
 end_define
 
 begin_comment
@@ -8661,6 +8773,13 @@ define|#
 directive|define
 name|BGE_RDMAMODE_FIFO_LONG_BURST
 value|0x00030000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_RDMAMODE_MULT_DMA_RD_DIS
+value|0x01000000
 end_define
 
 begin_define
@@ -11799,9 +11918,42 @@ end_define
 begin_define
 define|#
 directive|define
+name|BGE_TXBDFLAG_JUMBO_FRAME
+value|0x0008
+end_define
+
+begin_comment
+comment|/* 5717 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|BGE_TXBDFLAG_IP_FRAG_END
 value|0x0010
 end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_TXBDFLAG_HDRLEN_BIT2
+value|0x0010
+end_define
+
+begin_comment
+comment|/* 5717 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BGE_TXBDFLAG_SNAP
+value|0x0020
+end_define
+
+begin_comment
+comment|/* 5717 */
+end_comment
 
 begin_define
 define|#
@@ -11834,9 +11986,64 @@ end_define
 begin_define
 define|#
 directive|define
+name|BGE_TXBDFLAG_HDRLEN_BIT3
+value|0x0400
+end_define
+
+begin_comment
+comment|/* 5717 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BGE_TXBDFLAG_HDRLEN_BIT4
+value|0x0800
+end_define
+
+begin_comment
+comment|/* 5717 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|BGE_TXBDFLAG_INSERT_SRC_ADDR
 value|0x1000
 end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_TXBDFLAG_HDRLEN_BIT5
+value|0x1000
+end_define
+
+begin_comment
+comment|/* 5717 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BGE_TXBDFLAG_HDRLEN_BIT6
+value|0x2000
+end_define
+
+begin_comment
+comment|/* 5717 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BGE_TXBDFLAG_HDRLEN_BIT7
+value|0x4000
+end_define
+
+begin_comment
+comment|/* 5717 */
+end_comment
 
 begin_define
 define|#
@@ -11851,6 +12058,32 @@ directive|define
 name|BGE_TXBDFLAG_NO_CRC
 value|0x8000
 end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_TXBDFLAG_MSS_SIZE_MASK
+value|0x3FFF
+end_define
+
+begin_comment
+comment|/* 5717 */
+end_comment
+
+begin_comment
+comment|/* Bits [1:0] of the MSS header length. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BGE_TXBDFLAG_MSS_HDRLEN_MASK
+value|0xC000
+end_define
+
+begin_comment
+comment|/* 5717 */
+end_comment
 
 begin_define
 define|#
@@ -12114,6 +12347,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|BGE_RXBDFLAG_IPV6
+value|0x8000
+end_define
+
+begin_define
+define|#
+directive|define
 name|BGE_RXERRFLAG_BAD_CRC
 value|0x0001
 end_define
@@ -12167,6 +12407,17 @@ name|BGE_RXERRFLAG_GIANT
 value|0x0080
 end_define
 
+begin_define
+define|#
+directive|define
+name|BGE_RXERRFLAG_IP_CSUM_NOK
+value|0x1000
+end_define
+
+begin_comment
+comment|/* 5717 */
+end_comment
+
 begin_struct
 struct|struct
 name|bge_sts_idx
@@ -12204,7 +12455,7 @@ name|uint32_t
 name|bge_status
 decl_stmt|;
 name|uint32_t
-name|bge_rsvd0
+name|bge_status_tag
 decl_stmt|;
 if|#
 directive|if
@@ -12420,6 +12671,20 @@ define|#
 directive|define
 name|BCOM_DEVICEID_BCM5715S
 value|0x1679
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCOM_DEVICEID_BCM5717
+value|0x1655
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCOM_DEVICEID_BCM5718
+value|0x1656
 end_define
 
 begin_define
@@ -14330,6 +14595,10 @@ name|BGE_FLAG_CPMU_PRESENT
 value|0x00000020
 define|#
 directive|define
+name|BGE_FLAG_TAGGED_STATUS
+value|0x00000040
+define|#
+directive|define
 name|BGE_FLAG_MSI
 value|0x00000100
 define|#
@@ -14344,6 +14613,14 @@ define|#
 directive|define
 name|BGE_FLAG_TSO
 value|0x00000800
+define|#
+directive|define
+name|BGE_FLAG_TSO3
+value|0x00001000
+define|#
+directive|define
+name|BGE_FLAG_JUMBO_FRAME
+value|0x00002000
 define|#
 directive|define
 name|BGE_FLAG_5700_FAMILY
@@ -14368,6 +14645,10 @@ define|#
 directive|define
 name|BGE_FLAG_5788
 value|0x00200000
+define|#
+directive|define
+name|BGE_FLAG_5717_PLUS
+value|0x00400000
 define|#
 directive|define
 name|BGE_FLAG_40BIT_BUG
