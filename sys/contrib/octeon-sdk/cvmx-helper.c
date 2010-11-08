@@ -220,6 +220,12 @@ case|:
 return|return
 literal|2
 return|;
+case|case
+name|CVMX_BOARD_TYPE_CUST_LANNER_MR730
+case|:
+return|return
+literal|1
+return|;
 endif|#
 directive|endif
 default|default:
