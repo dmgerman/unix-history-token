@@ -1986,7 +1986,6 @@ argument_list|,
 name|reg
 argument_list|)
 expr_stmt|;
-block|}
 name|alc_aspm
 argument_list|(
 name|sc
@@ -1999,6 +1998,7 @@ name|mii_media_active
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
