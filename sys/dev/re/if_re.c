@@ -1909,11 +1909,6 @@ operator|<<
 literal|16
 argument_list|)
 expr_stmt|;
-name|DELAY
-argument_list|(
-literal|1000
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -1946,7 +1941,7 @@ condition|)
 break|break;
 name|DELAY
 argument_list|(
-literal|100
+literal|25
 argument_list|)
 expr_stmt|;
 block|}
@@ -1972,6 +1967,12 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/* 	 * Controller requires a 20us delay to process next MDIO request. 	 */
+name|DELAY
+argument_list|(
+literal|20
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|rval
@@ -2039,11 +2040,6 @@ operator||
 name|RL_PHYAR_BUSY
 argument_list|)
 expr_stmt|;
-name|DELAY
-argument_list|(
-literal|1000
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -2079,7 +2075,7 @@ condition|)
 break|break;
 name|DELAY
 argument_list|(
-literal|100
+literal|25
 argument_list|)
 expr_stmt|;
 block|}
@@ -2105,6 +2101,12 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/* 	 * Controller requires a 20us delay to process next MDIO request. 	 */
+name|DELAY
+argument_list|(
+literal|20
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
