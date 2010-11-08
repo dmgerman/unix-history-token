@@ -4,15 +4,8 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.  */
 end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -316,6 +309,20 @@ modifier|*
 name|dmp
 parameter_list|)
 block|{
+if|#
+directive|if
+name|STT_NUM
+operator|!=
+operator|(
+name|STT_TLS
+operator|+
+literal|1
+operator|)
+error|#
+directive|error
+literal|"STT_NUM has grown. update dt_module_syminit32()"
+endif|#
+directive|endif
 name|Elf32_Sym
 modifier|*
 name|sym
@@ -567,6 +574,20 @@ modifier|*
 name|dmp
 parameter_list|)
 block|{
+if|#
+directive|if
+name|STT_NUM
+operator|!=
+operator|(
+name|STT_TLS
+operator|+
+literal|1
+operator|)
+error|#
+directive|error
+literal|"STT_NUM has grown. update dt_module_syminit64()"
+endif|#
+directive|endif
 name|Elf64_Sym
 modifier|*
 name|sym
@@ -2911,7 +2932,7 @@ name|sp
 decl_stmt|;
 if|if
 condition|(
-name|elf_getshstrndx
+name|elf_getshdrstrndx
 argument_list|(
 name|dmp
 operator|->
@@ -2921,7 +2942,8 @@ operator|&
 name|shstrs
 argument_list|)
 operator|==
-literal|0
+operator|-
+literal|1
 condition|)
 return|return
 operator|(
@@ -4388,6 +4410,35 @@ modifier|*
 name|dmp
 parameter_list|)
 block|{
+name|uint_t
+name|h
+init|=
+name|dt_strtab_hash
+argument_list|(
+name|dmp
+operator|->
+name|dm_name
+argument_list|,
+name|NULL
+argument_list|)
+operator|%
+name|dtp
+operator|->
+name|dt_modbuckets
+decl_stmt|;
+name|dt_module_t
+modifier|*
+modifier|*
+name|dmpp
+init|=
+operator|&
+name|dtp
+operator|->
+name|dt_mods
+index|[
+name|h
+index|]
+decl_stmt|;
 name|dt_list_delete
 argument_list|(
 operator|&
@@ -4411,6 +4462,43 @@ name|dtp
 operator|->
 name|dt_nmods
 operator|--
+expr_stmt|;
+comment|/* 	 * Now remove this module from its hash chain.  We expect to always 	 * find the module on its hash chain, so in this loop we assert that 	 * we don't run off the end of the list. 	 */
+while|while
+condition|(
+operator|*
+name|dmpp
+operator|!=
+name|dmp
+condition|)
+block|{
+name|dmpp
+operator|=
+operator|&
+operator|(
+operator|(
+operator|*
+name|dmpp
+operator|)
+operator|->
+name|dm_next
+operator|)
+expr_stmt|;
+name|assert
+argument_list|(
+operator|*
+name|dmpp
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+operator|*
+name|dmpp
+operator|=
+name|dmp
+operator|->
+name|dm_next
 expr_stmt|;
 name|dt_module_unload
 argument_list|(
@@ -5000,7 +5088,7 @@ operator|==
 operator|-
 literal|1
 operator|||
-name|elf_getshstrndx
+name|elf_getshdrstrndx
 argument_list|(
 name|dmp
 operator|->
@@ -5010,7 +5098,8 @@ operator|&
 name|shstrs
 argument_list|)
 operator|==
-literal|0
+operator|-
+literal|1
 condition|)
 block|{
 name|dt_dprintf

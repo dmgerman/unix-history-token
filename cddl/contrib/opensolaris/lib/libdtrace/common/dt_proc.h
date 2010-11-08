@@ -94,19 +94,11 @@ name|BUFSIZ
 index|]
 decl_stmt|;
 comment|/* error message */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
 name|rd_agent_t
 modifier|*
 name|dpr_rtld
 decl_stmt|;
 comment|/* rtld handle for librtld_db calls */
-endif|#
-directive|endif
 name|pthread_mutex_t
 name|dpr_lock
 decl_stmt|;

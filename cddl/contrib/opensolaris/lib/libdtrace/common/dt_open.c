@@ -4,15 +4,8 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.  */
 end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -336,15 +329,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|DT_VERS_1_6_3
+value|DT_VERSION_NUMBER(1, 6, 3)
+end_define
+
+begin_define
+define|#
+directive|define
 name|DT_VERS_LATEST
-value|DT_VERS_1_6_2
+value|DT_VERS_1_6_3
 end_define
 
 begin_define
 define|#
 directive|define
 name|DT_VERS_STRING
-value|"Sun D 1.6.2"
+value|"Sun D 1.6.3"
 end_define
 
 begin_decl_stmt
@@ -390,6 +390,9 @@ comment|/* D API 1.6.1 */
 name|DT_VERS_1_6_2
 block|,
 comment|/* D API 1.6.2 */
+name|DT_VERS_1_6_3
+block|,
+comment|/* D API 1.6.3 */
 literal|0
 block|}
 decl_stmt|;
@@ -1681,15 +1684,6 @@ begin_operator
 operator|,
 end_operator
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
-
 begin_block
 block|{
 literal|"jstack"
@@ -1714,11 +1708,6 @@ end_block
 begin_operator
 operator|,
 end_operator
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_block
 block|{
@@ -3557,6 +3546,11 @@ begin_operator
 operator|,
 end_operator
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_block
 block|{
 literal|"ucaller"
@@ -3581,6 +3575,15 @@ end_block
 begin_operator
 operator|,
 end_operator
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|sun
+argument_list|)
+end_if
 
 begin_block
 block|{
@@ -3671,6 +3674,11 @@ begin_operator
 operator|,
 end_operator
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_block
 block|{
 literal|"uregs"
@@ -3745,6 +3753,15 @@ end_block
 begin_operator
 operator|,
 end_operator
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|sun
+argument_list|)
+end_if
 
 begin_block
 block|{
@@ -5787,15 +5804,6 @@ begin_comment
 comment|/* API version string */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
-
 begin_decl_stmt
 name|int
 name|_dtrace_rdvers
@@ -5807,11 +5815,6 @@ end_decl_stmt
 begin_comment
 comment|/* rtld_db feature version */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_typedef
 typedef|typedef
@@ -5896,12 +5899,6 @@ argument_list|)
 operator|!=
 name|NULL
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
 for|for
 control|(
 init|;
@@ -5924,8 +5921,6 @@ name|RD_OK
 condition|)
 break|break;
 block|}
-endif|#
-directive|endif
 if|#
 directive|if
 name|defined
@@ -7413,12 +7408,28 @@ name|dt_oflags
 operator|=
 name|flags
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|sun
+argument_list|)
 name|dtp
 operator|->
 name|dt_prcmode
 operator|=
 name|DT_PROC_STOP_PREINIT
 expr_stmt|;
+else|#
+directive|else
+name|dtp
+operator|->
+name|dt_prcmode
+operator|=
+name|DT_PROC_STOP_MAIN
+expr_stmt|;
+endif|#
+directive|endif
 name|dtp
 operator|->
 name|dt_linkmode
