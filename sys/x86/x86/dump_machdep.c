@@ -83,6 +83,50 @@ directive|include
 file|<machine/md_var.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__amd64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|KERNELDUMP_VERSION
+value|KERNELDUMP_AMD64_VERSION
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_VALUE
+value|EM_X86_64
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|KERNELDUMP_VERSION
+value|KERNELDUMP_I386_VERSION
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_VALUE
+value|EM_386
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_expr_stmt
 name|CTASSERT
 argument_list|(
@@ -718,15 +762,21 @@ literal|1
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  chunk %d: %ldMB (%ld pages)"
+literal|"  chunk %d: %juMB (%ju pages)"
 argument_list|,
 name|seqnr
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|PG2MB
 argument_list|(
 name|pgs
 argument_list|)
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|pgs
 argument_list|)
 expr_stmt|;
@@ -768,8 +818,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|" %ld"
+literal|" %ju"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|PG2MB
 argument_list|(
 name|pgs
@@ -1322,7 +1375,7 @@ name|ehdr
 operator|.
 name|e_machine
 operator|=
-name|EM_X86_64
+name|EM_VALUE
 expr_stmt|;
 name|ehdr
 operator|.
@@ -1475,7 +1528,7 @@ name|kdh
 argument_list|,
 name|KERNELDUMPMAGIC
 argument_list|,
-name|KERNELDUMP_AMD64_VERSION
+name|KERNELDUMP_VERSION
 argument_list|,
 name|dumpsize
 argument_list|,
