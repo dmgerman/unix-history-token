@@ -12521,7 +12521,7 @@ name|sc
 argument_list|,
 name|RL_INTRMOD
 argument_list|,
-literal|0x5151
+literal|0x5100
 argument_list|)
 expr_stmt|;
 break|break;
