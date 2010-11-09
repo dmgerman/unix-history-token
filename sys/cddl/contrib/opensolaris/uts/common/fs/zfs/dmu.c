@@ -989,6 +989,8 @@ operator|=
 name|DB_RF_CANFAIL
 operator||
 name|DB_RF_NEVERWAIT
+operator||
+name|DB_RF_HAVESTRUCT
 expr_stmt|;
 if|if
 condition|(
@@ -1104,6 +1106,14 @@ operator|(
 name|longlong_t
 operator|)
 name|length
+argument_list|)
+expr_stmt|;
+name|rw_exit
+argument_list|(
+operator|&
+name|dn
+operator|->
+name|dn_struct_rwlock
 argument_list|)
 expr_stmt|;
 return|return
@@ -1262,14 +1272,6 @@ condition|(
 name|read
 condition|)
 block|{
-name|rw_exit
-argument_list|(
-operator|&
-name|dn
-operator|->
-name|dn_struct_rwlock
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1280,16 +1282,6 @@ argument_list|,
 name|zio
 argument_list|,
 name|dbuf_flags
-argument_list|)
-expr_stmt|;
-name|rw_enter
-argument_list|(
-operator|&
-name|dn
-operator|->
-name|dn_struct_rwlock
-argument_list|,
-name|RW_READER
 argument_list|)
 expr_stmt|;
 block|}
@@ -2874,8 +2866,6 @@ decl_stmt|;
 name|int
 name|numbufs
 decl_stmt|,
-name|i
-decl_stmt|,
 name|err
 decl_stmt|;
 name|err
@@ -2908,7 +2898,7 @@ if|if
 condition|(
 name|dn
 operator|->
-name|dn_datablkshift
+name|dn_maxblkid
 operator|==
 literal|0
 condition|)
@@ -2973,6 +2963,9 @@ name|DMU_MAX_ACCESS
 operator|/
 literal|2
 argument_list|)
+decl_stmt|;
+name|int
+name|i
 decl_stmt|;
 comment|/* 		 * NB: we could do this block-at-a-time, but it's nice 		 * to be reading in parallel. 		 */
 name|err
