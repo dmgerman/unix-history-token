@@ -340,7 +340,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Get a field from a \0 seperated string */
+comment|/* Get a field from a \0 separated string */
 end_comment
 
 begin_function

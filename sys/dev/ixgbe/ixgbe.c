@@ -1646,7 +1646,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Header split: this causes the hardware to DMA  * the header into a seperate mbuf from the payload,  * it can be a performance win in some workloads, but  * in others it actually hurts, its off by default.   */
+comment|/*  * Header split: this causes the hardware to DMA  * the header into a separate mbuf from the payload,  * it can be a performance win in some workloads, but  * in others it actually hurts, its off by default.   */
 end_comment
 
 begin_decl_stmt
@@ -16988,7 +16988,7 @@ index|[
 name|j
 index|]
 expr_stmt|;
-comment|/* 		** Dont allocate mbufs if not 		** doing header split, its wasteful 		*/
+comment|/* 		** Don't allocate mbufs if not 		** doing header split, its wasteful 		*/
 if|if
 condition|(
 name|rxr
@@ -19185,7 +19185,7 @@ goto|goto
 name|next_desc
 goto|;
 block|}
-comment|/* 		** On 82599 which supports a hardware 		** LRO (called HW RSC), packets need 		** not be fragmented across sequential 		** descriptors, rather the next descriptor 		** is indicated in bits of the descriptor. 		** This also means that we might proceses 		** more than one packet at a time, something 		** that has never been true before, it 		** required eliminating global chain pointers 		** in favor of what we are doing here.  -jfv 		*/
+comment|/* 		** On 82599 which supports a hardware 		** LRO (called HW RSC), packets need 		** not be fragmented across sequential 		** descriptors, rather the next descriptor 		** is indicated in bits of the descriptor. 		** This also means that we might process 		** more than one packet at a time, something 		** that has never been true before, it 		** required eliminating global chain pointers 		** in favor of what we are doing here.  -jfv 		*/
 if|if
 condition|(
 operator|!
@@ -20542,7 +20542,7 @@ name|mask
 operator|=
 name|IXGBE_EIMS_ENABLE_MASK
 expr_stmt|;
-comment|/* Dont autoclear Link */
+comment|/* Don't autoclear Link */
 name|mask
 operator|&=
 operator|~
@@ -20563,7 +20563,7 @@ name|mask
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	** Now enable all queues, this is done seperately to 	** allow for handling the extended (beyond 32) MSIX 	** vectors that can be used by 82599 	*/
+comment|/* 	** Now enable all queues, this is done separately to 	** allow for handling the extended (beyond 32) MSIX 	** vectors that can be used by 82599 	*/
 for|for
 control|(
 name|int

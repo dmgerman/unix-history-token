@@ -129,7 +129,7 @@ file|"mixer_if.h"
 end_include
 
 begin_comment
-comment|/*  * The driver supports CS4231A audio chips found on Sbus/Ebus based   * UltraSPARCs. Though, CS4231A says it supports full-duplex mode, I  * doubt it due to the lack of independent sampling frequency register  * for playback/capture.  * Since I couldn't find any documentation for APCDMA programming  * information, I guessed the usage of APCDMA from that of OpenBSD's  * driver. The EBDMA infomation of PCIO can be obtained from  *  http://solutions.sun.com/embedded/databook/web/microprocessors/pcio.html  * And CS4231A datasheet can also be obtained from  *  ftp://ftp.alsa-project.org/pub/manuals/cirrus/4231a.pdf  *  * Audio capture(recording) was not tested at all and may have bugs.  * Sorry, I don't have microphone. Don't try to use full-duplex mode.  * It wouldn't work.  */
+comment|/*  * The driver supports CS4231A audio chips found on Sbus/Ebus based   * UltraSPARCs. Though, CS4231A says it supports full-duplex mode, I  * doubt it due to the lack of independent sampling frequency register  * for playback/capture.  * Since I couldn't find any documentation for APCDMA programming  * information, I guessed the usage of APCDMA from that of OpenBSD's  * driver. The EBDMA information of PCIO can be obtained from  *  http://solutions.sun.com/embedded/databook/web/microprocessors/pcio.html  * And CS4231A datasheet can also be obtained from  *  ftp://ftp.alsa-project.org/pub/manuals/cirrus/4231a.pdf  *  * Audio capture(recording) was not tested at all and may have bugs.  * Sorry, I don't have microphone. Don't try to use full-duplex mode.  * It wouldn't work.  */
 end_comment
 
 begin_define
@@ -6456,7 +6456,7 @@ name|doreset
 operator|++
 expr_stmt|;
 block|}
-comment|/* 	 * capture channel 	 * cs4231 doesn't allow seperate fs setup for playback/capture. 	 * I believe this will break full-duplex operation. 	 */
+comment|/* 	 * capture channel 	 * cs4231 doesn't allow separate fs setup for playback/capture. 	 * I believe this will break full-duplex operation. 	 */
 if|if
 condition|(
 name|dir

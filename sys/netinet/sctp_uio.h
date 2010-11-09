@@ -185,7 +185,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* We add 96 bytes to the size of sctp_sndrcvinfo.  * This makes the current structure 128 bytes long  * which is nicely 64 bit aligned but also has room  * for us to add more and keep ABI compatability.  * For example, already we have the sctp_extrcvinfo  * when enabled which is 48 bytes.  */
+comment|/* We add 96 bytes to the size of sctp_sndrcvinfo.  * This makes the current structure 128 bytes long  * which is nicely 64 bit aligned but also has room  * for us to add more and keep ABI compatibility.  * For example, already we have the sctp_extrcvinfo  * when enabled which is 48 bytes.  */
 end_comment
 
 begin_comment
@@ -1050,7 +1050,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* compatable old spelling */
+comment|/* compatible old spelling */
 end_comment
 
 begin_struct
@@ -1336,7 +1336,7 @@ name|struct
 name|sctp_adaptation_event
 name|sn_adaptation_event
 decl_stmt|;
-comment|/* compatability same as above */
+comment|/* compatibility same as above */
 name|struct
 name|sctp_adaption_event
 name|sn_adaption_event
@@ -1454,7 +1454,7 @@ value|0x000b
 end_define
 
 begin_comment
-comment|/* we dont send this */
+comment|/* we don't send this */
 end_comment
 
 begin_comment
@@ -2960,7 +2960,7 @@ decl_stmt|;
 name|uint32_t
 name|sctps_earlyfrstrtmr
 decl_stmt|;
-comment|/* otheres */
+comment|/* others */
 name|uint32_t
 name|sctps_hdrops
 decl_stmt|;
@@ -2999,11 +2999,11 @@ comment|/* nagle allowed sending      */
 name|uint32_t
 name|sctps_naglequeued
 decl_stmt|;
-comment|/* nagle does't allow sending */
+comment|/* nagle doesn't allow sending */
 name|uint32_t
 name|sctps_maxburstqueued
 decl_stmt|;
-comment|/* max burst dosn't allow sending */
+comment|/* max burst doesn't allow sending */
 name|uint32_t
 name|sctps_ifnomemqueued
 decl_stmt|;
@@ -3062,8 +3062,8 @@ decl_stmt|;
 comment|/* number of sends with 						 * sinfo_flags !=0 */
 name|uint32_t
 name|sctps_sends_with_unord
-comment|/* number of undordered sends */
 decl_stmt|;
+comment|/* number of unordered sends */
 name|uint32_t
 name|sctps_sends_with_eof
 decl_stmt|;
@@ -3095,7 +3095,7 @@ comment|/* Number of cached stream oq's used */
 name|uint32_t
 name|sctps_left_abandon
 decl_stmt|;
-comment|/* Number of unread message abandonded 					 * by close */
+comment|/* Number of unread messages abandoned 					 * by close */
 name|uint32_t
 name|sctps_send_burst_avoid
 decl_stmt|;

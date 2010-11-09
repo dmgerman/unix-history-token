@@ -308,7 +308,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This should be called just before starting the kernel. This is so  * that one can undo incompatable hardware settings.  */
+comment|/*  * This should be called just before starting the kernel. This is so  * that one can undo incompatible hardware settings.  */
 end_comment
 
 begin_function
@@ -2052,7 +2052,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cfaltwait: master: no status, reselectin\n"
+literal|"cfaltwait: master: no status, reselecting\n"
 argument_list|)
 expr_stmt|;
 name|cfwrite8

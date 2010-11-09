@@ -6167,7 +6167,7 @@ name|msk_pflags
 operator||=
 name|MSK_FLAG_RAMBUF
 expr_stmt|;
-comment|/* 	 * Give receiver 2/3 of memory and round down to the multiple 	 * of 1024. Tx/Rx RAM buffer size of Yukon II shoud be multiple 	 * of 1024. 	 */
+comment|/* 	 * Give receiver 2/3 of memory and round down to the multiple 	 * of 1024. Tx/Rx RAM buffer size of Yukon II should be multiple 	 * of 1024. 	 */
 name|sc
 operator|->
 name|msk_rxqsize
@@ -8578,7 +8578,7 @@ name|IFCAP_VLAN_HWTAGGING
 operator||
 name|IFCAP_VLAN_HWTSO
 expr_stmt|;
-comment|/* 		 * Enable Rx checksum offloading for VLAN taggedd frames 		 * if controller support new descriptor format. 		 */
+comment|/* 		 * Enable Rx checksum offloading for VLAN tagged frames 		 * if controller support new descriptor format. 		 */
 if|if
 condition|(
 operator|(
@@ -9451,7 +9451,7 @@ operator|==
 name|CHIP_REV_YU_FE_P_A0
 condition|)
 block|{
-comment|/* 			 * XXX 			 * FE+ A0 has status LE writeback bug so msk(4) 			 * does not rely on status word of received frame 			 * in msk_rxeof() which in turn disables all 			 * hardware assistance bits reported by the status 			 * word as well as validity of the recevied frame. 			 * Just pass received frames to upper stack with 			 * minimal test and let upper stack handle them. 			 */
+comment|/* 			 * XXX 			 * FE+ A0 has status LE writeback bug so msk(4) 			 * does not rely on status word of received frame 			 * in msk_rxeof() which in turn disables all 			 * hardware assistance bits reported by the status 			 * word as well as validity of the received frame. 			 * Just pass received frames to upper stack with 			 * minimal test and let upper stack handle them. 			 */
 name|sc
 operator|->
 name|msk_pflags
@@ -10943,7 +10943,7 @@ decl_stmt|,
 name|i
 decl_stmt|;
 comment|/* Create parent DMA tag. */
-comment|/* 	 * XXX 	 * It seems that Yukon II supports full 64bits DMA operations. But 	 * it needs two descriptors(list elements) for 64bits DMA operations. 	 * Since we don't know what DMA address mappings(32bits or 64bits) 	 * would be used in advance for each mbufs, we limits its DMA space 	 * to be in range of 32bits address space. Otherwise, we should check 	 * what DMA address is used and chain another descriptor for the 	 * 64bits DMA operation. This also means descriptor ring size is 	 * variable. Limiting DMA address to be in 32bit address space greatly 	 * simplyfies descriptor handling and possibly would increase 	 * performance a bit due to efficient handling of descriptors. 	 * Apart from harassing checksum offloading mechanisms, it seems 	 * it's really bad idea to use a seperate descriptor for 64bit 	 * DMA operation to save small descriptor memory. Anyway, I've 	 * never seen these exotic scheme on ethernet interface hardware. 	 */
+comment|/* 	 * XXX 	 * It seems that Yukon II supports full 64bits DMA operations. But 	 * it needs two descriptors(list elements) for 64bits DMA operations. 	 * Since we don't know what DMA address mappings(32bits or 64bits) 	 * would be used in advance for each mbufs, we limits its DMA space 	 * to be in range of 32bits address space. Otherwise, we should check 	 * what DMA address is used and chain another descriptor for the 	 * 64bits DMA operation. This also means descriptor ring size is 	 * variable. Limiting DMA address to be in 32bit address space greatly 	 * simplifies descriptor handling and possibly would increase 	 * performance a bit due to efficient handling of descriptors. 	 * Apart from harassing checksum offloading mechanisms, it seems 	 * it's really bad idea to use a separate descriptor for 64bit 	 * DMA operation to save small descriptor memory. Anyway, I've 	 * never seen these exotic scheme on ethernet interface hardware. 	 */
 name|error
 operator|=
 name|bus_dma_tag_create
@@ -13472,7 +13472,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 			 * It seems that Yukon II has Tx checksum offload bug 			 * for small TCP packets that's less than 60 bytes in 			 * size (e.g. TCP window probe packet, pure ACK packet). 			 * Common work around like padding with zeros to make 			 * the frame minimum ethernet frame size didn't work at 			 * all. 			 * Instead of disabling checksum offload completely we 			 * resort to S/W checksum routine when we encounter 			 * short TCP frames. 			 * Short UDP packets appear to be handled correctly by 			 * Yukon II. Also I assume this bug does not happen on 			 * controllers that use newer descriptor format or 			 * automatic Tx checksum calaulcation. 			 */
+comment|/* 			 * It seems that Yukon II has Tx checksum offload bug 			 * for small TCP packets that's less than 60 bytes in 			 * size (e.g. TCP window probe packet, pure ACK packet). 			 * Common work around like padding with zeros to make 			 * the frame minimum ethernet frame size didn't work at 			 * all. 			 * Instead of disabling checksum offload completely we 			 * resort to S/W checksum routine when we encounter 			 * short TCP frames. 			 * Short UDP packets appear to be handled correctly by 			 * Yukon II. Also I assume this bug does not happen on 			 * controllers that use newer descriptor format or 			 * automatic Tx checksum calculation. 			 */
 name|m
 operator|=
 name|m_pullup
@@ -14372,7 +14372,7 @@ name|msk_tx_prod
 operator|=
 name|prod
 expr_stmt|;
-comment|/* Set EOP on the last desciptor. */
+comment|/* Set EOP on the last descriptor. */
 name|prod
 operator|=
 operator|(
@@ -17167,7 +17167,7 @@ argument_list|,
 literal|"Tx FIFO underrun!\n"
 argument_list|)
 expr_stmt|;
-comment|/* 		 * XXX 		 * In case of Tx underrun, we may need to flush/reset 		 * Tx MAC but that would also require resynchronization 		 * with status LEs. Reintializing status LEs would 		 * affect other port in dual MAC configuration so it 		 * should be avoided as possible as we can. 		 * Due to lack of documentation it's all vague guess but 		 * it needs more investigation. 		 */
+comment|/* 		 * XXX 		 * In case of Tx underrun, we may need to flush/reset 		 * Tx MAC but that would also require resynchronization 		 * with status LEs. Reinitializing status LEs would 		 * affect other port in dual MAC configuration so it 		 * should be avoided as possible as we can. 		 * Due to lack of documentation it's all vague guess but 		 * it needs more investigation. 		 */
 block|}
 block|}
 end_function
@@ -19919,7 +19919,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Set Rx Pause threshould. */
+comment|/* Set Rx Pause threshold. */
 name|CSR_WRITE_2
 argument_list|(
 name|sc
