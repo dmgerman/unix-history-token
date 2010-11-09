@@ -2439,7 +2439,7 @@ operator|->
 name|ifn_p
 condition|)
 block|{
-comment|/* 				 * The last IFN gets the address, remove 				 * the old one 				 */
+comment|/* 				 * The last IFN gets the address, remove the 				 * old one 				 */
 name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_PCB4
@@ -3778,6 +3778,8 @@ name|SCTP_PCBHASH_ALLADDR
 argument_list|(
 operator|(
 name|lport
+operator||
+name|rport
 operator|)
 argument_list|,
 name|SCTP_BASE_INFO
@@ -7568,6 +7570,10 @@ decl_stmt|;
 name|int
 name|lport
 decl_stmt|;
+name|unsigned
+name|int
+name|i
+decl_stmt|;
 if|if
 condition|(
 name|nam
@@ -7687,7 +7693,7 @@ argument_list|,
 name|vrf_id
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If the TCP model exists it could be that the main listening 	 * endpoint is gone but there exists a connected socket for this guy 	 * yet. If so we can return the first one that we find. This may NOT 	 * be the correct one so the caller should be wary on the return 	 * INP. Currently the only caller that sets this flag is in bindx 	 * where we are verifying that a user CAN bind the address. He 	 * either has bound it already, or someone else has, or its open to 	 * bind, so this is good enough. 	 */
+comment|/* 	 * If the TCP model exists it could be that the main listening 	 * endpoint is gone but there still exists a connected socket for 	 * this guy. If so we can return the first one that we find. This 	 * may NOT be the correct one so the caller should be wary on the 	 * returned INP. Currently the only caller that sets find_tcp_pool 	 * is in bindx where we are verifying that a user CAN bind the 	 * address. He either has bound it already, or someone else has, or 	 * its open to bind, so this is good enough. 	 */
 if|if
 condition|(
 name|inp
@@ -7697,6 +7703,25 @@ operator|&&
 name|find_tcp_pool
 condition|)
 block|{
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|SCTP_BASE_INFO
+argument_list|(
+name|hashtcpmark
+argument_list|)
+operator|+
+literal|1
+condition|;
+name|i
+operator|++
+control|)
+block|{
 name|head
 operator|=
 operator|&
@@ -7705,15 +7730,7 @@ argument_list|(
 name|sctp_tcpephash
 argument_list|)
 index|[
-name|SCTP_PCBHASH_ALLADDR
-argument_list|(
-name|lport
-argument_list|,
-name|SCTP_BASE_INFO
-argument_list|(
-name|hashtcpmark
-argument_list|)
-argument_list|)
+name|i
 index|]
 expr_stmt|;
 name|inp
@@ -7729,6 +7746,14 @@ argument_list|,
 name|vrf_id
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|inp
+condition|)
+block|{
+break|break;
+block|}
+block|}
 block|}
 if|if
 condition|(
@@ -11732,6 +11757,8 @@ name|SCTP_PCBHASH_ALLADDR
 argument_list|(
 operator|(
 name|lport
+operator||
+name|rport
 operator|)
 argument_list|,
 name|SCTP_BASE_INFO
@@ -13921,9 +13948,7 @@ argument_list|)
 index|[
 name|SCTP_PCBHASH_ALLADDR
 argument_list|(
-operator|(
 name|lport
-operator|)
 argument_list|,
 name|SCTP_BASE_INFO
 argument_list|(
@@ -16851,7 +16876,7 @@ name|int
 name|from
 parameter_list|)
 block|{
-comment|/* 	 * The following is redundant to the same lines in the 	 * sctp_aloc_assoc() but is needed since others call the add 	 * address function 	 */
+comment|/* 	 * The following is redundant to the same lines in the 	 * sctp_aloc_assoc() but is needed since others call the add address 	 * function 	 */
 name|struct
 name|sctp_nets
 modifier|*
@@ -24105,7 +24130,7 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-comment|/* 			 * This will start the kill timer (if we are the 			 * last one) since we hold an increment yet. But this 			 * is the only safe way to do this since otherwise 			 * if the socket closes at the same time we are here 			 * we might collide in the cleanup. 			 */
+comment|/* 			 * This will start the kill timer (if we are the 			 * last one) since we hold an increment yet. But 			 * this is the only safe way to do this since 			 * otherwise if the socket closes at the same time 			 * we are here we might collide in the cleanup. 			 */
 name|sctp_inpcb_free
 argument_list|(
 name|inp
@@ -31117,7 +31142,7 @@ name|reneged_at
 operator|++
 expr_stmt|;
 block|}
-comment|/* 	 * Another issue, in un-setting the TSN's in the mapping array we 	 * DID NOT adjust the highest_tsn marker.  This will cause one of two 	 * things to occur. It may cause us to do extra work in checking for 	 * our mapping array movement. More importantly it may cause us to 	 * SACK every datagram. This may not be a bad thing though since we 	 * will recover once we get our cum-ack above and all this stuff we 	 * dumped recovered. 	 */
+comment|/* 	 * Another issue, in un-setting the TSN's in the mapping array we 	 * DID NOT adjust the highest_tsn marker.  This will cause one of 	 * two things to occur. It may cause us to do extra work in checking 	 * for our mapping array movement. More importantly it may cause us 	 * to SACK every datagram. This may not be a bad thing though since 	 * we will recover once we get our cum-ack above and all this stuff 	 * we dumped recovered. 	 */
 block|}
 end_function
 
