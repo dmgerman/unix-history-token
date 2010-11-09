@@ -3992,10 +3992,8 @@ name|low
 argument_list|)
 expr_stmt|;
 comment|/* 		 * IPI the target cpu to force it to reschedule with the new 		 * workload. 		 */
-name|ipi_selected
+name|ipi_cpu
 argument_list|(
-literal|1
-operator|<<
 name|TDQ_ID
 argument_list|(
 name|low
@@ -4503,10 +4501,8 @@ name|tdq_ipipending
 operator|=
 literal|1
 expr_stmt|;
-name|ipi_selected
+name|ipi_cpu
 argument_list|(
-literal|1
-operator|<<
 name|cpu
 argument_list|,
 name|IPI_PREEMPT
@@ -10191,10 +10187,8 @@ name|td
 operator|!=
 name|curthread
 condition|)
-name|ipi_selected
+name|ipi_cpu
 argument_list|(
-literal|1
-operator|<<
 name|ts
 operator|->
 name|ts_cpu

@@ -747,10 +747,8 @@ operator|==
 name|NOCPU
 condition|)
 return|return;
-name|ipi_selected
+name|ipi_cpu
 argument_list|(
-literal|1
-operator|<<
 name|id
 argument_list|,
 name|IPI_AST

@@ -4270,11 +4270,9 @@ block|{
 name|forward_wakeups_delivered
 operator|++
 expr_stmt|;
-name|ipi_selected
+name|ipi_cpu
 argument_list|(
-name|pcpu
-operator|->
-name|pc_cpumask
+name|cpuid
 argument_list|,
 name|IPI_AST
 argument_list|)
@@ -4324,11 +4322,9 @@ endif|#
 directive|endif
 comment|/* ! FULL_PREEMPTION */
 block|{
-name|ipi_selected
+name|ipi_cpu
 argument_list|(
-name|pcpu
-operator|->
-name|pc_cpumask
+name|cpuid
 argument_list|,
 name|IPI_PREEMPT
 argument_list|)
@@ -4346,11 +4342,9 @@ name|td_flags
 operator||=
 name|TDF_NEEDRESCHED
 expr_stmt|;
-name|ipi_selected
+name|ipi_cpu
 argument_list|(
-name|pcpu
-operator|->
-name|pc_cpumask
+name|cpuid
 argument_list|,
 name|IPI_AST
 argument_list|)
@@ -6493,10 +6487,8 @@ name|td
 operator|!=
 name|curthread
 condition|)
-name|ipi_selected
+name|ipi_cpu
 argument_list|(
-literal|1
-operator|<<
 name|cpu
 argument_list|,
 name|IPI_AST
