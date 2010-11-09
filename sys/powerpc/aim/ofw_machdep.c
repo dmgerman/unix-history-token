@@ -1369,6 +1369,23 @@ name|fdt
 operator|=
 name|fdt_ptr
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|FDT_DTB_STATIC
+comment|/* Check for a statically included blob */
+if|if
+condition|(
+name|fdt
+operator|==
+name|NULL
+condition|)
+name|fdt
+operator|=
+operator|&
+name|fdt_static_dtb
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1451,7 +1468,13 @@ name|ofw_quiesce
 argument_list|()
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|fdt
+operator|!=
+name|NULL
+condition|)
 block|{
 name|status
 operator|=
