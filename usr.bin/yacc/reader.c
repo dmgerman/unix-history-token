@@ -3240,6 +3240,9 @@ if|if
 condition|(
 name|n
 operator|>
+operator|(
+name|int
+operator|)
 name|UCHAR_MAX
 condition|)
 name|illegal_character
@@ -3329,6 +3332,9 @@ if|if
 condition|(
 name|n
 operator|>
+operator|(
+name|int
+operator|)
 name|UCHAR_MAX
 condition|)
 name|illegal_character
