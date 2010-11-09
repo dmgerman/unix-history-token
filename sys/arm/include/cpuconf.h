@@ -495,12 +495,12 @@ name|defined
 argument_list|(
 name|CPU_XSCALE_80219
 argument_list|)
-operator|)
 operator|||
 name|defined
 argument_list|(
 name|CPU_XSCALE_81342
 argument_list|)
+operator|)
 end_if
 
 begin_define
@@ -587,12 +587,12 @@ name|defined
 argument_list|(
 name|CPU_XSCALE_80219
 argument_list|)
-operator|)
 operator|||
 name|defined
 argument_list|(
 name|CPU_XSCALE_81342
 argument_list|)
+operator|)
 end_if
 
 begin_define
