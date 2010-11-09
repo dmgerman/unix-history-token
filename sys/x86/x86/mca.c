@@ -21,11 +21,33 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__amd64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DEV_APIC
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|"opt_apic.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -3728,13 +3750,19 @@ block|{
 comment|/* 		 * Just print the values of the old Pentium registers 		 * and panic. 		 */
 name|printf
 argument_list|(
-literal|"MC Type: 0x%llx  Address: 0x%llx\n"
+literal|"MC Type: 0x%jx  Address: 0x%jx\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|rdmsr
 argument_list|(
 name|MSR_P5_MC_TYPE
 argument_list|)
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|rdmsr
 argument_list|(
 name|MSR_P5_MC_ADDR
