@@ -208,7 +208,7 @@ end_include
 
 begin_decl_stmt
 name|cyclic_clock_func_t
-name|lapic_cyclic_clock_func
+name|cyclic_clock_func
 index|[
 name|MAXCPU
 index|]
@@ -3308,7 +3308,7 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-name|lapic_cyclic_clock_func
+name|cyclic_clock_func
 index|[
 name|cpu
 index|]
@@ -3317,7 +3317,7 @@ name|NULL
 condition|)
 call|(
 modifier|*
-name|lapic_cyclic_clock_func
+name|cyclic_clock_func
 index|[
 name|cpu
 index|]

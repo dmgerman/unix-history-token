@@ -75,7 +75,7 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|cyclic_clock_func_t
-name|lapic_cyclic_clock_func
+name|cyclic_clock_func
 index|[]
 decl_stmt|;
 end_decl_stmt

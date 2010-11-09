@@ -159,7 +159,7 @@ name|i
 operator|++
 control|)
 comment|/* Reset the cyclic clock callback hook. */
-name|lapic_cyclic_clock_func
+name|cyclic_clock_func
 index|[
 name|i
 index|]
@@ -299,7 +299,7 @@ name|arg
 parameter_list|)
 block|{
 comment|/* Register the cyclic clock callback function. */
-name|lapic_cyclic_clock_func
+name|cyclic_clock_func
 index|[
 name|curcpu
 index|]
@@ -319,7 +319,7 @@ name|arg
 parameter_list|)
 block|{
 comment|/* Reset the cyclic clock callback function. */
-name|lapic_cyclic_clock_func
+name|cyclic_clock_func
 index|[
 name|curcpu
 index|]
