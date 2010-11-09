@@ -24,12 +24,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"opt_atpic.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_hwpmc_hooks.h"
 end_include
 
@@ -194,6 +188,64 @@ include|#
 directive|include
 file|<ddb/ddb.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__amd64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SDT_APIC
+value|SDT_SYSIGT
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDT_APICT
+value|SDT_SYSIGT
+end_define
+
+begin_define
+define|#
+directive|define
+name|GSEL_APIC
+value|0
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SDT_APIC
+value|SDT_SYS386IGT
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDT_APICT
+value|SDT_SYS386TGT
+end_define
+
+begin_define
+define|#
+directive|define
+name|GSEL_APIC
+value|GSEL(GCODE_SEL, SEL_KPL)
+end_define
 
 begin_endif
 endif|#
@@ -994,16 +1046,11 @@ argument_list|(
 name|spuriousint
 argument_list|)
 argument_list|,
-name|SDT_SYS386IGT
+name|SDT_APIC
 argument_list|,
 name|SEL_KPL
 argument_list|,
-name|GSEL
-argument_list|(
-name|GCODE_SEL
-argument_list|,
-name|SEL_KPL
-argument_list|)
+name|GSEL_APIC
 argument_list|)
 expr_stmt|;
 comment|/* Perform basic initialization of the BSP's local APIC. */
@@ -1029,16 +1076,11 @@ argument_list|(
 name|timerint
 argument_list|)
 argument_list|,
-name|SDT_SYS386IGT
+name|SDT_APIC
 argument_list|,
 name|SEL_KPL
 argument_list|,
-name|GSEL
-argument_list|(
-name|GCODE_SEL
-argument_list|,
-name|SEL_KPL
-argument_list|)
+name|GSEL_APIC
 argument_list|)
 expr_stmt|;
 comment|/* Local APIC error interrupt. */
@@ -1051,16 +1093,11 @@ argument_list|(
 name|errorint
 argument_list|)
 argument_list|,
-name|SDT_SYS386IGT
+name|SDT_APIC
 argument_list|,
 name|SEL_KPL
 argument_list|,
-name|GSEL
-argument_list|(
-name|GCODE_SEL
-argument_list|,
-name|SEL_KPL
-argument_list|)
+name|GSEL_APIC
 argument_list|)
 expr_stmt|;
 comment|/* XXX: Thermal interrupt */
@@ -1074,7 +1111,7 @@ argument_list|(
 name|cmcint
 argument_list|)
 argument_list|,
-name|SDT_SYS386TGT
+name|SDT_APICT
 argument_list|,
 name|SEL_KPL
 argument_list|,
@@ -4266,16 +4303,11 @@ operator|/
 literal|32
 index|]
 argument_list|,
-name|SDT_SYS386IGT
+name|SDT_APIC
 argument_list|,
 name|SEL_KPL
 argument_list|,
-name|GSEL
-argument_list|(
-name|GCODE_SEL
-argument_list|,
-name|SEL_KPL
-argument_list|)
+name|GSEL_APIC
 argument_list|)
 expr_stmt|;
 block|}
@@ -4335,16 +4367,11 @@ argument_list|(
 name|rsvd
 argument_list|)
 argument_list|,
-name|SDT_SYS386TGT
+name|SDT_APICT
 argument_list|,
 name|SEL_KPL
 argument_list|,
-name|GSEL
-argument_list|(
-name|GCODE_SEL
-argument_list|,
-name|SEL_KPL
-argument_list|)
+name|GSEL_APIC
 argument_list|)
 expr_stmt|;
 endif|#
@@ -5306,7 +5333,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Probe the APIC enumerators, enumerate CPUs, and initialize the  * local APIC.  */
+comment|/*  * We have to look for CPU's very, very early because certain subsystems  * want to know how many CPU's we have extremely early on in the boot  * process.  */
 end_comment
 
 begin_function
@@ -5325,9 +5352,14 @@ name|apic_enumerator
 modifier|*
 name|enumerator
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|__amd64__
 name|uint64_t
 name|apic_base
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|retval
 decl_stmt|,
@@ -5439,6 +5471,9 @@ operator|->
 name|apic_name
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__amd64__
 comment|/* 	 * To work around an errata, we disable the local APIC on some 	 * CPUs during early startup.  We need to turn the local APIC back 	 * on on such CPUs now. 	 */
 if|if
 condition|(
@@ -5478,6 +5513,8 @@ name|apic_base
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 comment|/* Second, probe the CPU's in the system. */
 name|retval
 operator|=
@@ -5503,6 +5540,57 @@ argument_list|,
 name|retval
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__amd64__
+block|}
+end_function
+
+begin_expr_stmt
+name|SYSINIT
+argument_list|(
+name|apic_init
+argument_list|,
+name|SI_SUB_TUNABLES
+operator|-
+literal|1
+argument_list|,
+name|SI_ORDER_SECOND
+argument_list|,
+name|apic_init
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/*  * Setup the local APIC.  We have to do this prior to starting up the APs  * in the SMP case.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|apic_setup_local
+parameter_list|(
+name|void
+modifier|*
+name|dummy
+name|__unused
+parameter_list|)
+block|{
+name|int
+name|retval
+decl_stmt|;
+if|if
+condition|(
+name|best_enum
+operator|==
+name|NULL
+condition|)
+return|return;
+endif|#
+directive|endif
 comment|/* Third, initialize the local APIC. */
 name|retval
 operator|=
@@ -5531,6 +5619,33 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__amd64__
+end_ifdef
+
+begin_expr_stmt
+name|SYSINIT
+argument_list|(
+name|apic_setup_local
+argument_list|,
+name|SI_SUB_CPU
+argument_list|,
+name|SI_ORDER_SECOND
+argument_list|,
+name|apic_setup_local
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_expr_stmt
 name|SYSINIT
 argument_list|(
@@ -5546,6 +5661,11 @@ name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Setup the I/O APICs.  */
@@ -5653,7 +5773,7 @@ name|SMP
 end_ifdef
 
 begin_comment
-comment|/*  * Inter Processor Interrupt functions.  The lapic_ipi_*() functions are  * private to the sys/i386 code.  The public interface for the rest of the  * kernel is defined in mp_machdep.c.  */
+comment|/*  * Inter Processor Interrupt functions.  The lapic_ipi_*() functions are  * private to the MD code.  The public interface for the rest of the  * kernel is defined in mp_machdep.c.  */
 end_comment
 
 begin_function
