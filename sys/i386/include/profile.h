@@ -203,7 +203,7 @@ name|MCOUNT_DECL
 parameter_list|(
 name|s
 parameter_list|)
-value|u_long s;
+value|register_t s;
 end_define
 
 begin_ifdef
@@ -226,7 +226,7 @@ name|MCOUNT_ENTER
 parameter_list|(
 name|s
 parameter_list|)
-value|{ s = read_eflags(); disable_intr(); \  			  while (!atomic_cmpset_acq_int(&mcount_lock, 0, 1)) \
+value|{ s = intr_disable(); \  			  while (!atomic_cmpset_acq_int(&mcount_lock, 0, 1)) \
 comment|/* nothing */
 value|; }
 end_define
@@ -238,7 +238,7 @@ name|MCOUNT_EXIT
 parameter_list|(
 name|s
 parameter_list|)
-value|{ atomic_store_rel_int(&mcount_lock, 0); \ 			  write_eflags(s); }
+value|{ atomic_store_rel_int(&mcount_lock, 0); \ 			  intr_restore(s); }
 end_define
 
 begin_else
@@ -253,7 +253,7 @@ name|MCOUNT_ENTER
 parameter_list|(
 name|s
 parameter_list|)
-value|{ s = read_eflags(); disable_intr(); }
+value|{ s = intr_disable(); }
 end_define
 
 begin_define
@@ -263,7 +263,7 @@ name|MCOUNT_EXIT
 parameter_list|(
 name|s
 parameter_list|)
-value|(write_eflags(s))
+value|(intr_restore(s))
 end_define
 
 begin_endif
