@@ -151,6 +151,13 @@ begin_comment
 comment|/* Max local APIC ID for HTT fixup */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SI_SUB_MPTBL
+value|(SI_SUB_TUNABLES - 1)
+end_define
+
 begin_else
 else|#
 directive|else
@@ -166,6 +173,13 @@ end_define
 begin_comment
 comment|/* Max local APIC ID for HTT fixup */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SI_SUB_MPTBL
+value|(SI_SUB_CPU - 1)
+end_define
 
 begin_endif
 endif|#
@@ -1950,9 +1964,7 @@ name|SYSINIT
 argument_list|(
 name|mptable_register
 argument_list|,
-name|SI_SUB_CPU
-operator|-
-literal|1
+name|SI_SUB_MPTBL
 argument_list|,
 name|SI_ORDER_FIRST
 argument_list|,
