@@ -1940,15 +1940,9 @@ comment|/* APM emulation */
 end_comment
 
 begin_function_decl
-name|struct
-name|apm_clone_data
-modifier|*
-name|acpi_apm_create_clone
+name|void
+name|acpi_apm_init
 parameter_list|(
-name|struct
-name|cdev
-modifier|*
-parameter_list|,
 name|struct
 name|acpi_softc
 modifier|*

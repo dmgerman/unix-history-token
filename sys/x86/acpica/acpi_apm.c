@@ -32,12 +32,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/condvar.h>
 end_include
 
@@ -51,6 +45,12 @@ begin_include
 include|#
 directive|include
 file|<sys/fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
 end_include
 
 begin_include
@@ -2208,42 +2208,35 @@ block|}
 end_function
 
 begin_function
-name|struct
-name|apm_clone_data
-modifier|*
-name|acpi_apm_create_clone
+name|void
+name|acpi_apm_init
 parameter_list|(
-name|struct
-name|cdev
-modifier|*
-name|dev
-parameter_list|,
 name|struct
 name|acpi_softc
 modifier|*
-name|acpi_sc
+name|sc
 parameter_list|)
 block|{
-name|struct
-name|apm_clone_data
-modifier|*
-name|clone
-decl_stmt|;
+comment|/* Create a clone for /dev/acpi also. */
 name|STAILQ_INIT
 argument_list|(
 operator|&
-name|acpi_sc
+name|sc
 operator|->
 name|apm_cdevs
 argument_list|)
 expr_stmt|;
-name|clone
+name|sc
+operator|->
+name|acpi_clone
 operator|=
 name|apm_create_clone
 argument_list|(
-name|dev
+name|sc
+operator|->
+name|acpi_dev_t
 argument_list|,
-name|acpi_sc
+name|sc
 argument_list|)
 expr_stmt|;
 name|clone_setup
@@ -2263,11 +2256,6 @@ argument_list|,
 literal|1000
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|clone
-operator|)
-return|;
 block|}
 end_function
 
