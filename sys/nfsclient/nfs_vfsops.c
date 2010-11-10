@@ -4396,6 +4396,8 @@ literal|"rdirplus"
 block|,
 literal|"resvport"
 block|,
+literal|"readahead"
+block|,
 literal|"readdirsize"
 block|,
 literal|"soft"
