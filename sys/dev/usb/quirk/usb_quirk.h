@@ -19,18 +19,16 @@ directive|define
 name|_USB_QUIRK_H_
 end_define
 
-begin_comment
-comment|/* NOTE: UQ_NONE is not a valid quirk */
-end_comment
-
 begin_enum
 enum|enum
 block|{
-comment|/* keep in sync with usb_quirk_str table */
+comment|/* 	 * Keep in sync with theusb_quirk_str usb_quirk.c, and with the 	 * share/man/man4/usb_quirk.4 	 */
 name|UQ_NONE
 block|,
+comment|/* not a valid quirk */
 name|UQ_MATCH_VENDOR_ONLY
 block|,
+comment|/* match quirk on vendor only */
 comment|/* Various quirks */
 name|UQ_AUDIO_SWAP_LR
 block|,
