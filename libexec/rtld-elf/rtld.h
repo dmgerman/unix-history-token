@@ -874,6 +874,12 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* Object is already on fini list. */
+name|bool
+name|dag_inited
+range|:
+literal|1
+decl_stmt|;
+comment|/* Object has its DAG initialized. */
 name|struct
 name|link_map
 name|linkmap
