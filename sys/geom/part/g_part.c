@@ -4048,7 +4048,7 @@ name|g_part_parm_geom
 argument_list|(
 name|req
 argument_list|,
-literal|"provider"
+literal|"arg0"
 argument_list|,
 operator|&
 name|gp
