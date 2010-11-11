@@ -25264,8 +25264,6 @@ name|freeblks
 operator|->
 name|fb_state
 operator||=
-name|DEPCOMPLETE
-operator||
 name|COMPLETE
 expr_stmt|;
 comment|/* 	 * Because the file length has been truncated to zero, any 	 * pending block allocation dependency structures associated 	 * with this inode are obsolete and can simply be de-allocated. 	 * We must first merge the two dependency lists to get rid of 	 * any duplicate freefrag structures, then purge the merged list. 	 * If we still have a bitmap dependency, then the inode has never 	 * been written to disk, so we can free any fragments without delay. 	 */
@@ -25605,14 +25603,20 @@ expr_stmt|;
 if|if
 condition|(
 name|delay
+operator|||
+name|needj
 condition|)
-block|{
 name|freeblks
 operator|->
 name|fb_state
 operator||=
 name|DEPCOMPLETE
 expr_stmt|;
+if|if
+condition|(
+name|delay
+condition|)
+block|{
 comment|/* 		 * If the inode with zeroed block pointers is now on disk 		 * we can start freeing blocks. Add freeblks to the worklist 		 * instead of calling  handle_workitem_freeblocks directly as 		 * it is more likely that additional IO is needed to complete 		 * the request here than in the !delay case. 		 */
 if|if
 condition|(
@@ -25637,6 +25641,22 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|needj
+operator|&&
+name|LIST_EMPTY
+argument_list|(
+operator|&
+name|freeblks
+operator|->
+name|fb_jfreeblkhd
+argument_list|)
+condition|)
+name|needj
+operator|=
+literal|0
+expr_stmt|;
 name|FREE_LOCK
 argument_list|(
 operator|&
