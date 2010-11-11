@@ -26190,7 +26190,7 @@ operator|*
 operator|)
 name|adp
 expr_stmt|;
-comment|/* 	 * If the journal hasn't been written the jnewblk must be passed 	 * to the call to ffs_freeblk that reclaims the space.  We accomplish 	 * this by linking the journal dependency into the freework to be 	 * freed when freework_freeblock() is called.  If the journal has 	 * been written we can simply reclaim the journal space when the 	 * freeblks work is complete. 	 */
+comment|/* 	 * If the journal hasn't been written the jnewblk must be passed 	 * to the call to ffs_blkfree that reclaims the space.  We accomplish 	 * this by linking the journal dependency into the freework to be 	 * freed when freework_freeblock() is called.  If the journal has 	 * been written we can simply reclaim the journal space when the 	 * freeblks work is complete. 	 */
 if|if
 condition|(
 name|newblk
@@ -29785,7 +29785,7 @@ name|newblk
 modifier|*
 name|newblk
 decl_stmt|;
-comment|/* 	 * If the journal hasn't been written the jnewblk must be passed 	 * to the call to ffs_freeblk that reclaims the space.  We accomplish 	 * this by linking the journal dependency into the indirdep to be 	 * freed when indir_trunc() is called.  If the journal has already 	 * been written we can simply reclaim the journal space when the 	 * freeblks work is complete. 	 */
+comment|/* 	 * If the journal hasn't been written the jnewblk must be passed 	 * to the call to ffs_blkfree that reclaims the space.  We accomplish 	 * this by linking the journal dependency into the indirdep to be 	 * freed when indir_trunc() is called.  If the journal has already 	 * been written we can simply reclaim the journal space when the 	 * freeblks work is complete. 	 */
 name|LIST_REMOVE
 argument_list|(
 name|aip
