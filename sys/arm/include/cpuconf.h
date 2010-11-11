@@ -78,11 +78,6 @@ name|defined
 argument_list|(
 name|CPU_IXP12X0
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|CPU_XSCALE_IXP425
-argument_list|)
 operator|)
 end_if
 
@@ -150,6 +145,11 @@ expr|\
 name|defined
 argument_list|(
 name|CPU_XSCALE_PXA2X0
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_XSCALE_IXP425
 argument_list|)
 operator|)
 end_if
@@ -473,12 +473,12 @@ name|defined
 argument_list|(
 name|CPU_XSCALE_80219
 argument_list|)
-operator|)
 operator|||
 name|defined
 argument_list|(
 name|CPU_XSCALE_81342
 argument_list|)
+operator|)
 end_if
 
 begin_define
@@ -565,12 +565,12 @@ name|defined
 argument_list|(
 name|CPU_XSCALE_80219
 argument_list|)
-operator|)
 operator|||
 name|defined
 argument_list|(
 name|CPU_XSCALE_81342
 argument_list|)
+operator|)
 end_if
 
 begin_define
