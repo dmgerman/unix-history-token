@@ -1902,6 +1902,20 @@ value|(((lbn)>= NDADDR || (size)>= ((lbn) + 1)<< (fs)->fs_bshift) \ 	  ? (fs)->f
 end_define
 
 begin_comment
+comment|/*  * Number of indirects in a filesystem block.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NINDIR
+parameter_list|(
+name|fs
+parameter_list|)
+value|((fs)->fs_nindir)
+end_define
+
+begin_comment
 comment|/*  * Indirect lbns are aligned on NDADDR addresses where single indirects  * are the negated address of the lowest lbn reachable, double indirects  * are this lbn - 1 and triple indirects are this lbn - 2.  This yields  * an unusual bit order to determine level.  */
 end_comment
 
@@ -1971,6 +1985,52 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+specifier|inline
+name|ufs_lbn_t
+name|lbn_offset
+parameter_list|(
+name|struct
+name|fs
+modifier|*
+name|fs
+parameter_list|,
+name|int
+name|level
+parameter_list|)
+block|{
+name|ufs_lbn_t
+name|res
+decl_stmt|;
+for|for
+control|(
+name|res
+operator|=
+literal|1
+init|;
+name|level
+operator|>
+literal|0
+condition|;
+name|level
+operator|--
+control|)
+name|res
+operator|*=
+name|NINDIR
+argument_list|(
+name|fs
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|res
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Number of inodes in a secondary storage block/fragment.  */
 end_comment
@@ -1993,20 +2053,6 @@ parameter_list|(
 name|fs
 parameter_list|)
 value|((fs)->fs_inopb>> (fs)->fs_fragshift)
-end_define
-
-begin_comment
-comment|/*  * Number of indirects in a filesystem block.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NINDIR
-parameter_list|(
-name|fs
-parameter_list|)
-value|((fs)->fs_nindir)
 end_define
 
 begin_comment

@@ -4608,7 +4608,7 @@ literal|4
 expr_stmt|;
 name|contents
 operator|=
-name|malloc
+name|bfd_zmalloc
 argument_list|(
 name|debuglink_size
 argument_list|)

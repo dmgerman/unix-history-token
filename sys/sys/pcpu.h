@@ -56,6 +56,12 @@ directive|include
 file|<machine/pcpu.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_comment
 comment|/*  * Define a set for pcpu data.  */
 end_comment
@@ -68,6 +74,14 @@ name|__start_set_pcpu
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|__GLOBL
+argument_list|(
+name|__start_set_pcpu
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|extern
 name|uintptr_t
@@ -75,6 +89,14 @@ modifier|*
 name|__stop_set_pcpu
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|__GLOBL
+argument_list|(
+name|__stop_set_pcpu
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Array of dynamic pcpu base offsets.  Indexed by id.  */
@@ -328,6 +350,15 @@ name|n
 parameter_list|)
 value|do {						\ 	u_int _i;							\ 									\ 	CPU_FOREACH(_i) {						\ 		bzero(DPCPU_ID_PTR(_i, n), sizeof(*DPCPU_PTR(n)));	\ 	}								\ } while(0)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_comment
 comment|/*   * XXXUPS remove as soon as we have per cpu variable  * linker sets and can define rm_queue in _rm_lock.h  */

@@ -430,10 +430,6 @@ name|struct
 name|task
 name|nfe_tx_task
 decl_stmt|;
-name|struct
-name|task
-name|nfe_link_task
-decl_stmt|;
 name|int
 name|nfe_link
 decl_stmt|;

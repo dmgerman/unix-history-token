@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: clientloop.c,v 1.219 2010/03/13 21:10:38 djm Exp $ */
+comment|/* $OpenBSD: clientloop.c,v 1.222 2010/07/19 09:15:12 djm Exp $ */
 end_comment
 
 begin_comment
@@ -401,6 +401,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Time when backgrounded control master using ControlPersist should exit */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|time_t
+name|control_persist_exit_time
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Common data for the client loop code. */
 end_comment
 
@@ -551,13 +564,22 @@ begin_decl_stmt
 specifier|static
 name|int
 name|session_closed
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* In SSH2: login session closed. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|x11_refuse_time
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* If>0, refuse x11 opens after this time. */
 end_comment
 
 begin_function_decl
@@ -870,6 +892,106 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Sets control_persist_exit_time to the absolute time when the  * backgrounded control master should exit due to expiry of the  * ControlPersist timeout.  Sets it to 0 if we are not a backgrounded  * control master process, or if there is no ControlPersist timeout.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|set_control_persist_exit_time
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+name|muxserver_sock
+operator|==
+operator|-
+literal|1
+operator|||
+operator|!
+name|options
+operator|.
+name|control_persist
+operator|||
+name|options
+operator|.
+name|control_persist_timeout
+operator|==
+literal|0
+condition|)
+comment|/* not using a ControlPersist timeout */
+name|control_persist_exit_time
+operator|=
+literal|0
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|channel_still_open
+argument_list|()
+condition|)
+block|{
+comment|/* some client connections are still open */
+if|if
+condition|(
+name|control_persist_exit_time
+operator|>
+literal|0
+condition|)
+name|debug2
+argument_list|(
+literal|"%s: cancel scheduled exit"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+name|control_persist_exit_time
+operator|=
+literal|0
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|control_persist_exit_time
+operator|<=
+literal|0
+condition|)
+block|{
+comment|/* a client connection has recently closed */
+name|control_persist_exit_time
+operator|=
+name|time
+argument_list|(
+name|NULL
+argument_list|)
+operator|+
+operator|(
+name|time_t
+operator|)
+name|options
+operator|.
+name|control_persist_timeout
+expr_stmt|;
+name|debug2
+argument_list|(
+literal|"%s: schedule exit in %d seconds"
+argument_list|,
+name|__func__
+argument_list|,
+name|options
+operator|.
+name|control_persist_timeout
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* else we are already counting down to the timeout */
+block|}
+end_function
+
 begin_define
 define|#
 directive|define
@@ -893,6 +1015,9 @@ name|xauth_path
 parameter_list|,
 name|u_int
 name|trusted
+parameter_list|,
+name|u_int
+name|timeout
 parameter_list|,
 name|char
 modifier|*
@@ -964,6 +1089,9 @@ decl_stmt|;
 name|struct
 name|stat
 name|st
+decl_stmt|;
+name|u_int
+name|now
 decl_stmt|;
 name|xauthdir
 operator|=
@@ -1137,7 +1265,7 @@ argument_list|)
 argument_list|,
 literal|"%s -f %s generate %s "
 name|SSH_X11_PROTO
-literal|" untrusted timeout 1200 2>"
+literal|" untrusted timeout %u 2>"
 name|_PATH_DEVNULL
 argument_list|,
 name|xauth_path
@@ -1145,6 +1273,8 @@ argument_list|,
 name|xauthfile
 argument_list|,
 name|display
+argument_list|,
+name|timeout
 argument_list|)
 expr_stmt|;
 name|debug2
@@ -1167,6 +1297,42 @@ name|generated
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|x11_refuse_time
+operator|==
+literal|0
+condition|)
+block|{
+name|now
+operator|=
+name|time
+argument_list|(
+name|NULL
+argument_list|)
+operator|+
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|UINT_MAX
+operator|-
+name|timeout
+operator|<
+name|now
+condition|)
+name|x11_refuse_time
+operator|=
+name|UINT_MAX
+expr_stmt|;
+else|else
+name|x11_refuse_time
+operator|=
+name|now
+operator|+
+name|timeout
+expr_stmt|;
+block|}
 block|}
 block|}
 comment|/* 		 * When in untrusted mode, we read the cookie only if it was 		 * successfully generated as an untrusted one in the step 		 * above. 		 */
@@ -1947,6 +2113,9 @@ modifier|*
 name|tvp
 decl_stmt|;
 name|int
+name|timeout_secs
+decl_stmt|;
+name|int
 name|ret
 decl_stmt|;
 comment|/* Add any selections by the channel mechanism. */
@@ -2130,17 +2299,68 @@ operator|*
 name|writesetp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Wait for something to happen.  This will suspend the process until 	 * some selected descriptor can be read, written, or has some other 	 * event pending. 	 */
+comment|/* 	 * Wait for something to happen.  This will suspend the process until 	 * some selected descriptor can be read, written, or has some other 	 * event pending, or a timeout expires. 	 */
+name|timeout_secs
+operator|=
+name|INT_MAX
+expr_stmt|;
+comment|/* we use INT_MAX to mean no timeout */
 if|if
 condition|(
 name|options
 operator|.
 name|server_alive_interval
-operator|==
+operator|>
 literal|0
-operator|||
-operator|!
+operator|&&
 name|compat20
+condition|)
+name|timeout_secs
+operator|=
+name|options
+operator|.
+name|server_alive_interval
+expr_stmt|;
+name|set_control_persist_exit_time
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|control_persist_exit_time
+operator|>
+literal|0
+condition|)
+block|{
+name|timeout_secs
+operator|=
+name|MIN
+argument_list|(
+name|timeout_secs
+argument_list|,
+name|control_persist_exit_time
+operator|-
+name|time
+argument_list|(
+name|NULL
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|timeout_secs
+operator|<
+literal|0
+condition|)
+name|timeout_secs
+operator|=
+literal|0
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|timeout_secs
+operator|==
+name|INT_MAX
 condition|)
 name|tvp
 operator|=
@@ -2152,9 +2372,7 @@ name|tv
 operator|.
 name|tv_sec
 operator|=
-name|options
-operator|.
-name|server_alive_interval
+name|timeout_secs
 expr_stmt|;
 name|tv
 operator|.
@@ -5607,6 +5825,32 @@ condition|)
 name|packet_write_poll
 argument_list|()
 expr_stmt|;
+comment|/* 		 * If we are a backgrounded control master, and the 		 * timeout has expired without any active client 		 * connections, then quit. 		 */
+if|if
+condition|(
+name|control_persist_exit_time
+operator|>
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|time
+argument_list|(
+name|NULL
+argument_list|)
+operator|>=
+name|control_persist_exit_time
+condition|)
+block|{
+name|debug
+argument_list|(
+literal|"ControlPersist timeout expired"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+block|}
 block|}
 if|if
 condition|(
@@ -6490,6 +6734,30 @@ name|error
 argument_list|(
 literal|"Warning: this is probably a break-in attempt by a "
 literal|"malicious server."
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+if|if
+condition|(
+name|x11_refuse_time
+operator|!=
+literal|0
+operator|&&
+name|time
+argument_list|(
+name|NULL
+argument_list|)
+operator|>=
+name|x11_refuse_time
+condition|)
+block|{
+name|verbose
+argument_list|(
+literal|"Rejected X11 connection after ForwardX11Timeout "
+literal|"expired"
 argument_list|)
 expr_stmt|;
 return|return
@@ -7611,7 +7879,7 @@ name|id
 argument_list|,
 literal|"PTY allocation"
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 name|packet_put_cstring

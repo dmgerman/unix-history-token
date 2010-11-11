@@ -414,7 +414,7 @@ value|"udp"
 end_define
 
 begin_comment
-comment|/*  * Text format for the rule string is that a rule consists of a  * comma-seperated list of elements.  Each element is in the form  * idtype:id:protocol:portnumber, and constitutes granting of permission  * for the specified binding.  */
+comment|/*  * Text format for the rule string is that a rule consists of a  * comma-separated list of elements.  Each element is in the form  * idtype:id:protocol:portnumber, and constitutes granting of permission  * for the specified binding.  */
 end_comment
 
 begin_decl_stmt

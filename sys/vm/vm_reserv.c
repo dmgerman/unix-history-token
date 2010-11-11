@@ -569,6 +569,9 @@ argument_list|,
 name|unused_pages
 operator|*
 operator|(
+operator|(
+name|int
+operator|)
 name|PAGE_SIZE
 operator|/
 literal|1024

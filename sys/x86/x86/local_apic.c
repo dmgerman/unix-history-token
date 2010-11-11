@@ -1561,6 +1561,21 @@ modifier|*
 name|str
 parameter_list|)
 block|{
+name|uint32_t
+name|maxlvt
+decl_stmt|;
+name|maxlvt
+operator|=
+operator|(
+name|lapic
+operator|->
+name|version
+operator|&
+name|APIC_VER_MAXLVT
+operator|)
+operator|>>
+name|MAXLVTSHIFT
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"cpu%d %s:\n"
@@ -1617,7 +1632,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  timer: 0x%08x therm: 0x%08x err: 0x%08x pmc: 0x%08x\n"
+literal|"  timer: 0x%08x therm: 0x%08x err: 0x%08x"
 argument_list|,
 name|lapic
 operator|->
@@ -1630,12 +1645,34 @@ argument_list|,
 name|lapic
 operator|->
 name|lvt_error
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|maxlvt
+operator|>=
+name|LVT_PMC
+condition|)
+name|printf
+argument_list|(
+literal|" pmc: 0x%08x"
 argument_list|,
 name|lapic
 operator|->
 name|lvt_pcint
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|maxlvt
+operator|>=
+name|LVT_CMCI
+condition|)
 name|printf
 argument_list|(
 literal|"   cmci: 0x%08x\n"
@@ -5755,7 +5792,7 @@ literal|0
 argument_list|)
 condition|)
 return|return;
-comment|/* First, probe all the enumerators to find the best match. */
+comment|/* Probe all the enumerators to find the best match. */
 name|best_enum
 operator|=
 name|NULL
@@ -5883,7 +5920,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* Second, probe the CPU's in the system. */
+comment|/* Probe the CPU's in the system. */
 name|retval
 operator|=
 name|best_enum
@@ -5908,9 +5945,6 @@ argument_list|,
 name|retval
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__amd64__
 block|}
 end_function
 
@@ -5957,9 +5991,7 @@ operator|==
 name|NULL
 condition|)
 return|return;
-endif|#
-directive|endif
-comment|/* Third, initialize the local APIC. */
+comment|/* Initialize the local APIC. */
 name|retval
 operator|=
 name|best_enum
@@ -5987,12 +6019,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__amd64__
-end_ifdef
-
 begin_expr_stmt
 name|SYSINIT
 argument_list|(
@@ -6008,32 +6034,6 @@ name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_expr_stmt
-name|SYSINIT
-argument_list|(
-name|apic_init
-argument_list|,
-name|SI_SUB_CPU
-argument_list|,
-name|SI_ORDER_SECOND
-argument_list|,
-name|apic_init
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Setup the I/O APICs.  */

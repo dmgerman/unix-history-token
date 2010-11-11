@@ -503,6 +503,30 @@ name|MIPS_XKSEG_END
 value|0xc00000ff80000000
 end_define
 
+begin_define
+define|#
+directive|define
+name|MIPS_XKSEG_COMPAT32_START
+value|0xffffffff80000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_XKSEG_COMPAT32_END
+value|0xffffffffffffffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_XKSEG_TO_COMPAT32
+parameter_list|(
+name|va
+parameter_list|)
+value|((va)& 0xffffffff)
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef

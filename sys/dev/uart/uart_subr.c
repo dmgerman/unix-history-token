@@ -866,7 +866,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Parse a device specification. The specification is a list of attributes  * seperated by commas. Each attribute is a tag-value pair with the tag and  * value seperated by a colon. Supported tags are:  *  *	br = Baudrate  *	ch = Channel  *	db = Data bits  *	dt = Device type  *	io = I/O port address  *	mm = Memory mapped I/O address  *	pa = Parity  *	rs = Register shift  *	sb = Stopbits  *	xo = Device clock (xtal oscillator)  *  * The io and mm tags are mutually exclusive.  */
+comment|/*  * Parse a device specification. The specification is a list of attributes  * separated by commas. Each attribute is a tag-value pair with the tag and  * value separated by a colon. Supported tags are:  *  *	br = Baudrate  *	ch = Channel  *	db = Data bits  *	dt = Device type  *	io = I/O port address  *	mm = Memory mapped I/O address  *	pa = Parity  *	rs = Register shift  *	sb = Stopbits  *	xo = Device clock (xtal oscillator)  *  * The io and mm tags are mutually exclusive.  */
 end_comment
 
 begin_function

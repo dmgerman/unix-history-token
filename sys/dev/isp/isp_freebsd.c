@@ -10720,7 +10720,7 @@ name|atio_private_data_t
 modifier|*
 name|atp
 decl_stmt|;
-comment|/* 	 * The firmware status (except for the QLTM_SVALID bit) 	 * indicates why this ATIO was sent to us. 	 * 	 * If QLTM_SVALID is set, the firware has recommended Sense Data. 	 * 	 * If the DISCONNECTS DISABLED bit is set in the flags field, 	 * we're still connected on the SCSI bus. 	 */
+comment|/* 	 * The firmware status (except for the QLTM_SVALID bit) 	 * indicates why this ATIO was sent to us. 	 * 	 * If QLTM_SVALID is set, the firmware has recommended Sense Data. 	 * 	 * If the DISCONNECTS DISABLED bit is set in the flags field, 	 * we're still connected on the SCSI bus. 	 */
 name|status
 operator|=
 name|aep
@@ -11370,7 +11370,7 @@ name|inot_private_data_t
 modifier|*
 name|ntp
 decl_stmt|;
-comment|/* 	 * The firmware status (except for the QLTM_SVALID bit) 	 * indicates why this ATIO was sent to us. 	 * 	 * If QLTM_SVALID is set, the firware has recommended Sense Data. 	 */
+comment|/* 	 * The firmware status (except for the QLTM_SVALID bit) 	 * indicates why this ATIO was sent to us. 	 * 	 * If QLTM_SVALID is set, the firmware has recommended Sense Data. 	 */
 if|if
 condition|(
 operator|(
@@ -15296,7 +15296,7 @@ operator|->
 name|in_vpidx
 argument_list|)
 decl_stmt|;
-comment|/* 		 * Note that we're just getting notification that an ELS was received 		 * (possibly with some associcated information sent upstream). This is 		 * *not* the same as being given the ELS frame to accept or reject. 		 */
+comment|/* 		 * Note that we're just getting notification that an ELS was received 		 * (possibly with some associated information sent upstream). This is 		 * *not* the same as being given the ELS frame to accept or reject. 		 */
 switch|switch
 condition|(
 name|inot
@@ -16541,7 +16541,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Handle task managment functions.  *  * We show up here with a notify structure filled out.  *  * The nt_lreserved tag points to the original queue entry  */
+comment|/*  * Handle task management functions.  *  * We show up here with a notify structure filled out.  *  * The nt_lreserved tag points to the original queue entry  */
 end_comment
 
 begin_function
@@ -17166,7 +17166,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Find the associated private data and makr it as dead so  * we don't try to work on it any further.  */
+comment|/*  * Find the associated private data and mark it as dead so  * we don't try to work on it any further.  */
 end_comment
 
 begin_function
@@ -31800,7 +31800,7 @@ operator|->
 name|def_wwpn
 expr_stmt|;
 block|}
-comment|/* 	 * For channel zero just return what we have. For either ACIIVE or 	 * DEFAULT cases, we depend on default override of NVRAM values for 	 * channel zero. 	 */
+comment|/* 	 * For channel zero just return what we have. For either ACTIVE or 	 * DEFAULT cases, we depend on default override of NVRAM values for 	 * channel zero. 	 */
 if|if
 condition|(
 name|chan
@@ -31894,7 +31894,7 @@ operator|==
 literal|2
 condition|)
 block|{
-comment|/* 		 * The type 2 NAA fields for QLogic cards appear be laid out 		 * thusly: 		 *  		 * bits 63..60 NAA == 2 bits 59..57 unused/zero bit 56 		 * port (1) or node (0) WWN distinguishor bit 48 		 * physical port on dual-port chips (23XX/24XX) 		 *  		 * This is somewhat nutty, particularly since bit 48 is 		 * irrelevant as they assign seperate serial numbers to 		 * different physical ports anyway. 		 *  		 * We'll stick our channel number plus one first into bits 		 * 57..59 and thence into bits 52..55 which allows for 8 bits 		 * of channel which is comfortably more than our maximum 		 * (126) now. 		 */
+comment|/* 		 * The type 2 NAA fields for QLogic cards appear be laid out 		 * thusly: 		 *  		 * bits 63..60 NAA == 2 bits 59..57 unused/zero bit 56 		 * port (1) or node (0) WWN distinguishor bit 48 		 * physical port on dual-port chips (23XX/24XX) 		 *  		 * This is somewhat nutty, particularly since bit 48 is 		 * irrelevant as they assign separate serial numbers to 		 * different physical ports anyway. 		 *  		 * We'll stick our channel number plus one first into bits 		 * 57..59 and thence into bits 52..55 which allows for 8 bits 		 * of channel which is comfortably more than our maximum 		 * (126) now. 		 */
 name|seed
 operator|&=
 operator|~

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth2-none.c,v 1.15 2008/07/02 12:36:39 djm Exp $ */
+comment|/* $OpenBSD: auth2-none.c,v 1.16 2010/06/25 08:46:17 djm Exp $ */
 end_comment
 
 begin_comment
@@ -187,6 +187,10 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+name|options
+operator|.
+name|permit_empty_passwd
+operator|&&
 name|options
 operator|.
 name|password_authentication

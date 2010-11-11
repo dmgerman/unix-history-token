@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: readconf.h,v 1.82 2010/02/08 10:50:20 markus Exp $ */
+comment|/* $OpenBSD: readconf.h,v 1.86 2010/07/19 09:15:12 djm Exp $ */
 end_comment
 
 begin_comment
@@ -45,6 +45,10 @@ name|int
 name|connect_port
 decl_stmt|;
 comment|/* Port to connect on connect_host. */
+name|int
+name|allocated_port
+decl_stmt|;
+comment|/* Dynamically allocated listen port */
 block|}
 name|Forward
 typedef|;
@@ -73,6 +77,10 @@ name|int
 name|forward_x11
 decl_stmt|;
 comment|/* Forward X11 display. */
+name|int
+name|forward_x11_timeout
+decl_stmt|;
+comment|/* Expiration for Cookies */
 name|int
 name|forward_x11_trusted
 decl_stmt|;
@@ -292,20 +300,16 @@ name|int
 name|num_local_forwards
 decl_stmt|;
 name|Forward
+modifier|*
 name|local_forwards
-index|[
-name|SSH_MAX_FORWARDS_PER_DIRECTION
-index|]
 decl_stmt|;
 comment|/* Remote TCP/IP forward requests. */
 name|int
 name|num_remote_forwards
 decl_stmt|;
 name|Forward
+modifier|*
 name|remote_forwards
-index|[
-name|SSH_MAX_FORWARDS_PER_DIRECTION
-index|]
 decl_stmt|;
 name|int
 name|clear_forwardings
@@ -345,6 +349,14 @@ decl_stmt|;
 name|int
 name|control_master
 decl_stmt|;
+name|int
+name|control_persist
+decl_stmt|;
+comment|/* ControlPersist flag */
+name|int
+name|control_persist_timeout
+decl_stmt|;
+comment|/* ControlPersist timeout (seconds) */
 name|int
 name|hash_known_hosts
 decl_stmt|;

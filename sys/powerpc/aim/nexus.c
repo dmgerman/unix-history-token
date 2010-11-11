@@ -821,25 +821,6 @@ name|start
 decl_stmt|,
 name|end
 decl_stmt|;
-if|if
-condition|(
-operator|(
-name|root
-operator|=
-name|OF_peer
-argument_list|(
-literal|0
-argument_list|)
-operator|)
-operator|==
-operator|-
-literal|1
-condition|)
-name|panic
-argument_list|(
-literal|"nexus_probe: OF_peer failed."
-argument_list|)
-expr_stmt|;
 name|sc
 operator|=
 name|device_get_softc
@@ -918,6 +899,27 @@ argument_list|(
 literal|"nexus_probe IRQ rman"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|root
+operator|=
+name|OF_peer
+argument_list|(
+literal|0
+argument_list|)
+operator|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|bus_generic_attach
+argument_list|(
+name|dev
+argument_list|)
+operator|)
+return|;
 comment|/* 	 * Now walk the OFW tree to locate top-level devices 	 */
 for|for
 control|(

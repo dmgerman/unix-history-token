@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: packet.c,v 1.166 2009/06/27 09:29:06 andreas Exp $ */
+comment|/* $OpenBSD: packet.c,v 1.168 2010/07/13 23:13:16 djm Exp $ */
 end_comment
 
 begin_comment
@@ -5892,7 +5892,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|memcmp
+name|timingsafe_bcmp
 argument_list|(
 name|macbuf
 argument_list|,

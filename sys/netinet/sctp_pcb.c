@@ -330,7 +330,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Addresses are added to VRF's (Virtual Router's). For BSD we  * have only the default VRF 0. We maintain a hash list of  * VRF's. Each VRF has its own list of sctp_ifn's. Each of  * these has a list of addresses. When we add a new address  * to a VRF we lookup the ifn/ifn_index, if the ifn does  * not exist we create it and add it to the list of IFN's  * within the VRF. Once we have the sctp_ifn, we add the  * address to the list. So we look something like:  *  * hash-vrf-table  *   vrf-> ifn-> ifn -> ifn  *   vrf    |  *    ...   +--ifa-> ifa -> ifa  *   vrf  *  * We keep these seperate lists since the SCTP subsystem will  * point to these from its source address selection nets structure.  * When an address is deleted it does not happen right away on  * the SCTP side, it gets scheduled. What we do when a  * delete happens is immediately remove the address from  * the master list and decrement the refcount. As our  * addip iterator works through and frees the src address  * selection pointing to the sctp_ifa, eventually the refcount  * will reach 0 and we will delete it. Note that it is assumed  * that any locking on system level ifn/ifa is done at the  * caller of these functions and these routines will only  * lock the SCTP structures as they add or delete things.  *  * Other notes on VRF concepts.  *  - An endpoint can be in multiple VRF's  *  - An association lives within a VRF and only one VRF.  *  - Any incoming packet we can deduce the VRF for by  *    looking at the mbuf/pak inbound (for BSD its VRF=0 :D)  *  - Any downward send call or connect call must supply the  *    VRF via ancillary data or via some sort of set default  *    VRF socket option call (again for BSD no brainer since  *    the VRF is always 0).  *  - An endpoint may add multiple VRF's to it.  *  - Listening sockets can accept associations in any  *    of the VRF's they are in but the assoc will end up  *    in only one VRF (gotten from the packet or connect/send).  *  */
+comment|/*  * Addresses are added to VRF's (Virtual Router's). For BSD we  * have only the default VRF 0. We maintain a hash list of  * VRF's. Each VRF has its own list of sctp_ifn's. Each of  * these has a list of addresses. When we add a new address  * to a VRF we lookup the ifn/ifn_index, if the ifn does  * not exist we create it and add it to the list of IFN's  * within the VRF. Once we have the sctp_ifn, we add the  * address to the list. So we look something like:  *  * hash-vrf-table  *   vrf-> ifn-> ifn -> ifn  *   vrf    |  *    ...   +--ifa-> ifa -> ifa  *   vrf  *  * We keep these separate lists since the SCTP subsystem will  * point to these from its source address selection nets structure.  * When an address is deleted it does not happen right away on  * the SCTP side, it gets scheduled. What we do when a  * delete happens is immediately remove the address from  * the master list and decrement the refcount. As our  * addip iterator works through and frees the src address  * selection pointing to the sctp_ifa, eventually the refcount  * will reach 0 and we will delete it. Note that it is assumed  * that any locking on system level ifn/ifa is done at the  * caller of these functions and these routines will only  * lock the SCTP structures as they add or delete things.  *  * Other notes on VRF concepts.  *  - An endpoint can be in multiple VRF's  *  - An association lives within a VRF and only one VRF.  *  - Any incoming packet we can deduce the VRF for by  *    looking at the mbuf/pak inbound (for BSD its VRF=0 :D)  *  - Any downward send call or connect call must supply the  *    VRF via ancillary data or via some sort of set default  *    VRF socket option call (again for BSD no brainer since  *    the VRF is always 0).  *  - An endpoint may add multiple VRF's to it.  *  - Listening sockets can accept associations in any  *    of the VRF's they are in but the assoc will end up  *    in only one VRF (gotten from the packet or connect/send).  *  */
 end_comment
 
 begin_function
@@ -585,7 +585,7 @@ name|sctp_ifnlist
 modifier|*
 name|hash_ifn_head
 decl_stmt|;
-comment|/* 	 * We assume the lock is held for the addresses if thats wrong 	 * problems could occur :-) 	 */
+comment|/* 	 * We assume the lock is held for the addresses if that's wrong 	 * problems could occur :-) 	 */
 name|hash_ifn_head
 operator|=
 operator|&
@@ -1218,7 +1218,7 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_PCB4
 argument_list|,
-literal|"IFN of ifa names different lenght %d vs %d - ignored\n"
+literal|"IFN of ifa names different length %d vs %d - ignored\n"
 argument_list|,
 name|len1
 argument_list|,
@@ -1476,7 +1476,7 @@ name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_PCB4
 argument_list|,
-literal|"IFN of ifa names different lenght %d vs %d - ignored\n"
+literal|"IFN of ifa names different length %d vs %d - ignored\n"
 argument_list|,
 name|len1
 argument_list|,
@@ -2439,7 +2439,7 @@ operator|->
 name|ifn_p
 condition|)
 block|{
-comment|/* 				 * The last IFN gets the address, removee 				 * the old one 				 */
+comment|/* 				 * The last IFN gets the address, remove the 				 * old one 				 */
 name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_PCB4
@@ -3778,6 +3778,8 @@ name|SCTP_PCBHASH_ALLADDR
 argument_list|(
 operator|(
 name|lport
+operator||
+name|rport
 operator|)
 argument_list|,
 name|SCTP_BASE_INFO
@@ -6506,7 +6508,7 @@ directive|endif
 name|int
 name|fnd
 decl_stmt|;
-comment|/* 	 * Endpoing probe expects that the INP_INFO is locked. 	 */
+comment|/* 	 * Endpoint probe expects that the INP_INFO is locked. 	 */
 name|sin
 operator|=
 name|NULL
@@ -7568,6 +7570,10 @@ decl_stmt|;
 name|int
 name|lport
 decl_stmt|;
+name|unsigned
+name|int
+name|i
+decl_stmt|;
 if|if
 condition|(
 name|nam
@@ -7687,7 +7693,7 @@ argument_list|,
 name|vrf_id
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If the TCP model exists it could be that the main listening 	 * endpoint is gone but there exists a connected socket for this guy 	 * yet. If so we can return the first one that we find. This may NOT 	 * be the correct one so the caller should be wary on the return 	 * INP. Currently the onlyc caller that sets this flag is in bindx 	 * where we are verifying that a user CAN bind the address. He 	 * either has bound it already, or someone else has, or its open to 	 * bind, so this is good enough. 	 */
+comment|/* 	 * If the TCP model exists it could be that the main listening 	 * endpoint is gone but there still exists a connected socket for 	 * this guy. If so we can return the first one that we find. This 	 * may NOT be the correct one so the caller should be wary on the 	 * returned INP. Currently the only caller that sets find_tcp_pool 	 * is in bindx where we are verifying that a user CAN bind the 	 * address. He either has bound it already, or someone else has, or 	 * its open to bind, so this is good enough. 	 */
 if|if
 condition|(
 name|inp
@@ -7697,6 +7703,25 @@ operator|&&
 name|find_tcp_pool
 condition|)
 block|{
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|SCTP_BASE_INFO
+argument_list|(
+name|hashtcpmark
+argument_list|)
+operator|+
+literal|1
+condition|;
+name|i
+operator|++
+control|)
+block|{
 name|head
 operator|=
 operator|&
@@ -7705,15 +7730,7 @@ argument_list|(
 name|sctp_tcpephash
 argument_list|)
 index|[
-name|SCTP_PCBHASH_ALLADDR
-argument_list|(
-name|lport
-argument_list|,
-name|SCTP_BASE_INFO
-argument_list|(
-name|hashtcpmark
-argument_list|)
-argument_list|)
+name|i
 index|]
 expr_stmt|;
 name|inp
@@ -7729,6 +7746,14 @@ argument_list|,
 name|vrf_id
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|inp
+condition|)
+block|{
+break|break;
+block|}
+block|}
 block|}
 if|if
 condition|(
@@ -8716,7 +8741,7 @@ condition|(
 name|remote_tag
 condition|)
 block|{
-comment|/* 				 * If we have both vtags thats all we match 				 * on 				 */
+comment|/* 				 * If we have both vtags that's all we match 				 * on 				 */
 if|if
 condition|(
 name|stcb
@@ -9529,7 +9554,7 @@ name|SCTP_INITIATION_ACK
 operator|)
 condition|)
 block|{
-comment|/*- 			 * special hook, we do NOT return linp or an 			 * association that is linked to an existing 			 * association that is under the TCP pool (i.e. no 			 * listener exists). The endpoint finding routine 			 * will always find a listner before examining the 			 * TCP pool. 			 */
+comment|/*- 			 * special hook, we do NOT return linp or an 			 * association that is linked to an existing 			 * association that is under the TCP pool (i.e. no 			 * listener exists). The endpoint finding routine 			 * will always find a listener before examining the 			 * TCP pool. 			 */
 if|if
 condition|(
 name|inp
@@ -11732,6 +11757,8 @@ name|SCTP_PCBHASH_ALLADDR
 argument_list|(
 operator|(
 name|lport
+operator||
+name|rport
 operator|)
 argument_list|,
 name|SCTP_BASE_INFO
@@ -13921,9 +13948,7 @@ argument_list|)
 index|[
 name|SCTP_PCBHASH_ALLADDR
 argument_list|(
-operator|(
 name|lport
-operator|)
 argument_list|,
 name|SCTP_BASE_INFO
 argument_list|(
@@ -16162,7 +16187,7 @@ expr_stmt|;
 name|SCTP_INP_INFO_WUNLOCK
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Now we release all locks. Since this INP cannot be found anymore 	 * except possbily by the kill timer that might be running. We call 	 * the drain function here. It should hit the case were it sees the 	 * ACTIVE flag cleared and exit out freeing us to proceed and 	 * destroy everything. 	 */
+comment|/* 	 * Now we release all locks. Since this INP cannot be found anymore 	 * except possibly by the kill timer that might be running. We call 	 * the drain function here. It should hit the case were it sees the 	 * ACTIVE flag cleared and exit out freeing us to proceed and 	 * destroy everything. 	 */
 if|if
 condition|(
 name|from
@@ -16851,7 +16876,7 @@ name|int
 name|from
 parameter_list|)
 block|{
-comment|/* 	 * The following is redundant to the same lines in the 	 * sctp_aloc_assoc() but is needed since other's call the add 	 * address function 	 */
+comment|/* 	 * The following is redundant to the same lines in the 	 * sctp_aloc_assoc() but is needed since others call the add address 	 * function 	 */
 name|struct
 name|sctp_nets
 modifier|*
@@ -18495,7 +18520,7 @@ name|primary_destination
 operator|)
 condition|)
 block|{
-comment|/* 		 * first one on the list is NOT the primary sctp_cmpaddr() 		 * is much more efficent if the primary is the first on the 		 * list, make it so. 		 */
+comment|/* 		 * first one on the list is NOT the primary sctp_cmpaddr() 		 * is much more efficient if the primary is the first on the 		 * list, make it so. 		 */
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -19149,7 +19174,7 @@ operator|&
 name|SCTP_PCB_FLAGS_UNBOUND
 condition|)
 block|{
-comment|/* 		 * If you have not performed a bind, then we need to do the 		 * ephemerial bind for you. 		 */
+comment|/* 		 * If you have not performed a bind, then we need to do the 		 * ephemeral bind for you. 		 */
 if|if
 condition|(
 operator|(
@@ -24105,7 +24130,7 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-comment|/* 			 * This will start the kill timer (if we are the 			 * lastone) since we hold an increment yet. But this 			 * is the only safe way to do this since otherwise 			 * if the socket closes at the same time we are here 			 * we might collide in the cleanup. 			 */
+comment|/* 			 * This will start the kill timer (if we are the 			 * last one) since we hold an increment yet. But 			 * this is the only safe way to do this since 			 * otherwise if the socket closes at the same time 			 * we are here we might collide in the cleanup. 			 */
 name|sctp_inpcb_free
 argument_list|(
 name|inp
@@ -30123,7 +30148,7 @@ operator|.
 name|primary_destination
 condition|)
 block|{
-comment|/* 			 * first one on the list is NOT the primary 			 * sctp_cmpaddr() is much more efficent if the 			 * primary is the first on the list, make it so. 			 */
+comment|/* 			 * first one on the list is NOT the primary 			 * sctp_cmpaddr() is much more efficient if the 			 * primary is the first on the list, make it so. 			 */
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -31117,7 +31142,7 @@ name|reneged_at
 operator|++
 expr_stmt|;
 block|}
-comment|/* 	 * Another issue, in un-setting the TSN's in the mapping array we 	 * DID NOT adjust the higest_tsn marker.  This will cause one of two 	 * things to occur. It may cause us to do extra work in checking for 	 * our mapping array movement. More importantly it may cause us to 	 * SACK every datagram. This may not be a bad thing though since we 	 * will recover once we get our cum-ack above and all this stuff we 	 * dumped recovered. 	 */
+comment|/* 	 * Another issue, in un-setting the TSN's in the mapping array we 	 * DID NOT adjust the highest_tsn marker.  This will cause one of 	 * two things to occur. It may cause us to do extra work in checking 	 * for our mapping array movement. More importantly it may cause us 	 * to SACK every datagram. This may not be a bad thing though since 	 * we will recover once we get our cum-ack above and all this stuff 	 * we dumped recovered. 	 */
 block|}
 end_function
 

@@ -529,6 +529,17 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|vm_paddr_t
+name|dump_avail
+index|[
+name|PHYS_AVAIL_ENTRIES
+operator|+
+literal|2
+index|]
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1743,25 +1754,6 @@ else|else
 name|panic
 argument_list|(
 literal|"ints disabled in idleproc!"
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|dumpsys
-parameter_list|(
-name|struct
-name|dumperinfo
-modifier|*
-name|di
-name|__unused
-parameter_list|)
-block|{
-name|printf
-argument_list|(
-literal|"Kernel dumps not implemented on this architecture\n"
 argument_list|)
 expr_stmt|;
 block|}

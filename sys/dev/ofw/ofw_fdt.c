@@ -1058,7 +1058,8 @@ literal|0
 condition|)
 return|return
 operator|(
-literal|0
+operator|-
+literal|1
 operator|)
 return|;
 name|p
@@ -1133,7 +1134,8 @@ literal|0
 condition|)
 return|return
 operator|(
-literal|0
+operator|-
+literal|1
 operator|)
 return|;
 if|if
@@ -1169,7 +1171,8 @@ return|;
 block|}
 name|len
 operator|=
-literal|0
+operator|-
+literal|1
 expr_stmt|;
 name|prop
 operator|=
@@ -1251,7 +1254,8 @@ literal|0
 condition|)
 return|return
 operator|(
-literal|0
+operator|-
+literal|1
 operator|)
 return|;
 if|if
@@ -1330,7 +1334,8 @@ name|NULL
 condition|)
 return|return
 operator|(
-literal|0
+operator|-
+literal|1
 operator|)
 return|;
 if|if
@@ -1534,7 +1539,8 @@ condition|)
 do|;
 return|return
 operator|(
-literal|0
+operator|-
+literal|1
 operator|)
 return|;
 block|}
@@ -1594,7 +1600,8 @@ literal|0
 condition|)
 return|return
 operator|(
-literal|0
+operator|-
+literal|1
 operator|)
 return|;
 if|if
@@ -1638,7 +1645,8 @@ name|NULL
 condition|)
 return|return
 operator|(
-literal|0
+operator|-
+literal|1
 operator|)
 return|;
 name|offset

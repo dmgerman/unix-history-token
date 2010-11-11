@@ -797,14 +797,12 @@ begin_function
 name|void
 name|write_section
 parameter_list|(
-name|section
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|section
 index|[]
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|c

@@ -616,7 +616,7 @@ value|4096
 end_define
 
 begin_comment
-comment|/*  * Array of objects and profs for each type of object for each cpu.  Spinlocks  * are handled seperately because a thread may be preempted and acquire a  * spinlock while in the lock profiling code of a non-spinlock.  In this way  * we only need a critical section to protect the per-cpu lists.  */
+comment|/*  * Array of objects and profs for each type of object for each cpu.  Spinlocks  * are handled separately because a thread may be preempted and acquire a  * spinlock while in the lock profiling code of a non-spinlock.  In this way  * we only need a critical section to protect the per-cpu lists.  */
 end_comment
 
 begin_struct

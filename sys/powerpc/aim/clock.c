@@ -259,7 +259,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Decrementor interrupt handler.  */
+comment|/*  * Decrementer interrupt handler.  */
 end_comment
 
 begin_function

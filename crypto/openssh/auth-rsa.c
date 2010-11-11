@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth-rsa.c,v 1.74 2010/03/04 10:36:03 djm Exp $ */
+comment|/* $OpenBSD: auth-rsa.c,v 1.78 2010/07/13 23:13:16 djm Exp $ */
 end_comment
 
 begin_comment
@@ -106,12 +106,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"auth-options.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"pathnames.h"
 end_include
 
@@ -131,6 +125,12 @@ begin_include
 include|#
 directive|include
 file|"key.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"auth-options.h"
 end_include
 
 begin_include
@@ -480,7 +480,7 @@ expr_stmt|;
 comment|/* Verify that the response is the original challenge. */
 if|if
 condition|(
-name|memcmp
+name|timingsafe_bcmp
 argument_list|(
 name|response
 argument_list|,
@@ -1045,6 +1045,11 @@ name|file
 argument_list|,
 name|linenum
 argument_list|)
+condition|)
+continue|continue;
+if|if
+condition|(
+name|key_is_cert_authority
 condition|)
 continue|continue;
 comment|/* break out, this key is allowed */

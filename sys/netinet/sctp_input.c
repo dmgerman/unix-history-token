@@ -4556,24 +4556,11 @@ argument_list|,
 name|SCTP_STATE_SHUTDOWN_PENDING
 argument_list|)
 expr_stmt|;
-name|sctp_timer_stop
+name|sctp_stop_timers_for_shutdown
 argument_list|(
-name|SCTP_TIMER_TYPE_RECV
-argument_list|,
 name|stcb
-operator|->
-name|sctp_ep
-argument_list|,
-name|stcb
-argument_list|,
-name|net
-argument_list|,
-name|SCTP_FROM_SCTP_INPUT
-operator|+
-name|SCTP_LOC_7
 argument_list|)
 expr_stmt|;
-comment|/* start SHUTDOWN timer */
 name|sctp_timer_start
 argument_list|(
 name|SCTP_TIMER_TYPE_SHUTDOWNACK

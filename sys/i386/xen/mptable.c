@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<x86/mptable.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/frame.h>
 end_include
 
@@ -93,12 +99,6 @@ begin_include
 include|#
 directive|include
 file|<machine/md_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/mptable.h>
 end_include
 
 begin_include
@@ -345,7 +345,7 @@ name|SYSINIT
 argument_list|(
 name|mptable_register
 argument_list|,
-name|SI_SUB_CPU
+name|SI_SUB_TUNABLES
 operator|-
 literal|1
 argument_list|,

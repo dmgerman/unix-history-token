@@ -3744,6 +3744,7 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
 name|res
 operator|=
 name|prep_devname
@@ -3813,6 +3814,7 @@ operator|(
 name|res
 operator|)
 return|;
+block|}
 block|}
 if|if
 condition|(

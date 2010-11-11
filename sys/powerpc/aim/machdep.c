@@ -825,7 +825,13 @@ argument|*decrsize; extern void     *extint
 argument_list|,
 argument|*extsize; extern void	*dblow
 argument_list|,
-argument|*dbsize;  uintptr_t powerpc_init(vm_offset_t startkernel, vm_offset_t endkernel,     vm_offset_t basekernel, void *mdp) { 	struct		pcpu *pc; 	vm_offset_t	end; 	void		*generictrap; 	size_t		trap_offset; 	void		*kmdp;         char		*env; 	register_t	msr
+argument|*dbsize; extern void	*imisstrap
+argument_list|,
+argument|*imisssize; extern void	*dlmisstrap
+argument_list|,
+argument|*dlmisssize; extern void	*dsmisstrap
+argument_list|,
+argument|*dsmisssize;  uintptr_t powerpc_init(vm_offset_t startkernel, vm_offset_t endkernel,     vm_offset_t basekernel, void *mdp) { 	struct		pcpu *pc; 	vm_offset_t	end; 	void		*generictrap; 	size_t		trap_offset; 	void		*kmdp;         char		*env; 	register_t	msr
 argument_list|,
 argument|scratch; 	uint8_t		*cache_check; 	int		cacheline_warn;
 ifndef|#
@@ -1549,6 +1555,66 @@ operator|&
 name|trapsize
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__powerpc64__
+comment|/* G2-specific TLB miss helper handlers */
+name|bcopy
+argument_list|(
+operator|&
+name|imisstrap
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|EXC_IMISS
+argument_list|,
+operator|(
+name|size_t
+operator|)
+operator|&
+name|imisssize
+argument_list|)
+expr_stmt|;
+name|bcopy
+argument_list|(
+operator|&
+name|dlmisstrap
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|EXC_DLMISS
+argument_list|,
+operator|(
+name|size_t
+operator|)
+operator|&
+name|dlmisssize
+argument_list|)
+expr_stmt|;
+name|bcopy
+argument_list|(
+operator|&
+name|dsmisstrap
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|EXC_DSMISS
+argument_list|,
+operator|(
+name|size_t
+operator|)
+operator|&
+name|dsmisssize
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|__syncicache
 argument_list|(
 name|EXC_RSVD

@@ -445,6 +445,18 @@ name|virtual_end
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|vm_paddr_t
+name|dump_avail
+index|[
+name|PHYS_AVAIL_ENTRIES
+operator|+
+literal|2
+index|]
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define

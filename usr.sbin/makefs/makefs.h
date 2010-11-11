@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: makefs.h,v 1.14 2004/06/20 22:20:18 jmc Exp $	*/
+comment|/*	$NetBSD: makefs.h,v 1.20 2008/12/28 21:51:46 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -227,84 +227,11 @@ name|int
 name|sectorsize
 decl_stmt|;
 comment|/* sector size */
-comment|/* ffs specific options */
-name|int
-name|bsize
+name|void
+modifier|*
+name|fs_specific
 decl_stmt|;
-comment|/* block size */
-name|int
-name|fsize
-decl_stmt|;
-comment|/* fragment size */
-name|int
-name|cpg
-decl_stmt|;
-comment|/* cylinders per group */
-name|int
-name|cpgflg
-decl_stmt|;
-comment|/* cpg was specified by user */
-name|int
-name|density
-decl_stmt|;
-comment|/* bytes per inode */
-name|int
-name|ntracks
-decl_stmt|;
-comment|/* number of tracks */
-name|int
-name|nsectors
-decl_stmt|;
-comment|/* number of sectors */
-name|int
-name|rpm
-decl_stmt|;
-comment|/* rpm */
-name|int
-name|minfree
-decl_stmt|;
-comment|/* free space threshold */
-name|int
-name|optimization
-decl_stmt|;
-comment|/* optimization (space or time) */
-name|int
-name|maxcontig
-decl_stmt|;
-comment|/* max contiguous blocks to allocate */
-name|int
-name|rotdelay
-decl_stmt|;
-comment|/* rotational delay between blocks */
-name|int
-name|maxbpg
-decl_stmt|;
-comment|/* maximum blocks per file in a cyl group */
-name|int
-name|nrpos
-decl_stmt|;
-comment|/* # of distinguished rotational positions */
-name|int
-name|avgfilesize
-decl_stmt|;
-comment|/* expected average file size */
-name|int
-name|avgfpdir
-decl_stmt|;
-comment|/* expected # of files per directory */
-name|int
-name|version
-decl_stmt|;
-comment|/* filesystem version (1 = FFS, 2 = UFS2) */
-name|int
-name|maxbsize
-decl_stmt|;
-comment|/* maximum extent size */
-name|int
-name|maxblkspercg
-decl_stmt|;
-comment|/* max # of blocks per cylinder group */
-comment|/* XXX: support `old' file systems ? */
+comment|/* File system specific additions. */
 block|}
 name|fsinfo_t
 typedef|;
@@ -362,6 +289,8 @@ modifier|*
 parameter_list|,
 name|fsnode
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -425,6 +354,26 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|free_fsnodes
+parameter_list|(
+name|fsnode
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ffs_prep_opts
+parameter_list|(
+name|fsinfo_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|ffs_parse_opts
 parameter_list|(
@@ -440,7 +389,72 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|ffs_cleanup_opts
+parameter_list|(
+name|fsinfo_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ffs_makefs
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|fsnode
+modifier|*
+parameter_list|,
+name|fsinfo_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|cd9660_prep_opts
+parameter_list|(
+name|fsinfo_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|cd9660_parse_opts
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|fsinfo_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|cd9660_cleanup_opts
+parameter_list|(
+name|fsinfo_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|cd9660_makefs
 parameter_list|(
 specifier|const
 name|char
@@ -673,6 +687,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|DEBUG_APPLY_SPECONLY
+value|0x10000000
+end_define
+
+begin_define
+define|#
+directive|define
 name|TIMER_START
 parameter_list|(
 name|x
@@ -691,7 +712,7 @@ parameter_list|,
 name|d
 parameter_list|)
 define|\
-value|if (debug& DEBUG_TIME) {			\ 		struct timeval end, td;			\ 		gettimeofday(&end, NULL);		\ 		timersub(&end,&(x),&td);		\ 		printf("%s took %ld.%06ld seconds\n",	\ 		    (d), (long) td.tv_sec, (long) td.tv_usec);	\ 	}
+value|if (debug& DEBUG_TIME) {			\ 		struct timeval end, td;			\ 		gettimeofday(&end, NULL);		\ 		timersub(&end,&(x),&td);		\ 		printf("%s took %lld.%06ld seconds\n",	\ 		    (d), (long long)td.tv_sec,		\ 		    (long)td.tv_usec);			\ 	}
 end_define
 
 begin_ifndef
@@ -813,7 +834,7 @@ parameter_list|,
 name|needswap
 parameter_list|)
 define|\
-value|(((oldfmt)&& !(needswap)) ?	\     DIRECTSIZ((dp)->d_type) : DIRECTSIZ((dp)->d_namlen))
+value|(((oldfmt)&& !(needswap)) ?       \     DIRECTSIZ((dp)->d_type) : DIRECTSIZ((dp)->d_namlen))
 end_define
 
 begin_else
@@ -833,7 +854,7 @@ parameter_list|,
 name|needswap
 parameter_list|)
 define|\
-value|(((oldfmt)&& (needswap)) ?		\     DIRECTSIZ((dp)->d_type) : DIRECTSIZ((dp)->d_namlen))
+value|(((oldfmt)&& (needswap)) ?                \     DIRECTSIZ((dp)->d_type) : DIRECTSIZ((dp)->d_namlen))
 end_define
 
 begin_endif

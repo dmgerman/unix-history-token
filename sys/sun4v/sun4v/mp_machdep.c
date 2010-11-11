@@ -2338,7 +2338,7 @@ begin_function
 name|void
 name|ipi_selected
 parameter_list|(
-name|u_int
+name|cpumask_t
 name|icpus
 parameter_list|,
 name|u_int

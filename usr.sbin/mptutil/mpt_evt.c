@@ -379,6 +379,8 @@ decl_stmt|;
 name|int
 name|ch
 decl_stmt|,
+name|error
+decl_stmt|,
 name|fd
 decl_stmt|,
 name|i
@@ -401,6 +403,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"mpt_open"
@@ -408,7 +414,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -428,6 +434,10 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to get event log info"
@@ -435,7 +445,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -516,6 +526,17 @@ operator|->
 name|NumLogEntries
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|entries
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
 name|num_events
 operator|=
 literal|0

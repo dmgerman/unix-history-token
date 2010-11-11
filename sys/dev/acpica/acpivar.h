@@ -1936,6 +1936,21 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* APM emulation */
+end_comment
+
+begin_function_decl
+name|void
+name|acpi_apm_init
+parameter_list|(
+name|struct
+name|acpi_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Misc. */
 end_comment
 

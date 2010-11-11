@@ -11645,12 +11645,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|mp
-operator|->
-name|mnt_kern_flag
-operator||=
-name|MNTK_SUJ
-expr_stmt|;
 name|error
 operator|=
 name|softdep_journal_lookup
@@ -11810,7 +11804,41 @@ operator|/
 literal|10
 expr_stmt|;
 comment|/* Suspend at 10%. */
-comment|/* 	 * Only validate the journal contents if the filesystem is clean, 	 * otherwise we write the logs but they'll never be used.  If the 	 * filesystem was still dirty when we mounted it the journal is 	 * invalid and a new journal can only be valid if it starts from a 	 * clean mount. 	 */
+name|VFSTOUFS
+argument_list|(
+name|mp
+argument_list|)
+operator|->
+name|softdep_jblocks
+operator|=
+name|jblocks
+expr_stmt|;
+name|out
+label|:
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+block|{
+name|MNT_ILOCK
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
+name|mp
+operator|->
+name|mnt_kern_flag
+operator||=
+name|MNTK_SUJ
+expr_stmt|;
+name|MNT_IUNLOCK
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Only validate the journal contents if the 		 * filesystem is clean, otherwise we write the logs 		 * but they'll never be used.  If the filesystem was 		 * still dirty when we mounted it the journal is 		 * invalid and a new journal can only be valid if it 		 * starts from a clean mount. 		 */
 if|if
 condition|(
 name|fs
@@ -11843,17 +11871,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|VFSTOUFS
-argument_list|(
-name|mp
-argument_list|)
-operator|->
-name|softdep_jblocks
-operator|=
-name|jblocks
-expr_stmt|;
-name|out
-label|:
+block|}
 name|vput
 argument_list|(
 name|vp
@@ -25246,8 +25264,6 @@ name|freeblks
 operator|->
 name|fb_state
 operator||=
-name|DEPCOMPLETE
-operator||
 name|COMPLETE
 expr_stmt|;
 comment|/* 	 * Because the file length has been truncated to zero, any 	 * pending block allocation dependency structures associated 	 * with this inode are obsolete and can simply be de-allocated. 	 * We must first merge the two dependency lists to get rid of 	 * any duplicate freefrag structures, then purge the merged list. 	 * If we still have a bitmap dependency, then the inode has never 	 * been written to disk, so we can free any fragments without delay. 	 */
@@ -25587,14 +25603,20 @@ expr_stmt|;
 if|if
 condition|(
 name|delay
+operator|||
+name|needj
 condition|)
-block|{
 name|freeblks
 operator|->
 name|fb_state
 operator||=
 name|DEPCOMPLETE
 expr_stmt|;
+if|if
+condition|(
+name|delay
+condition|)
+block|{
 comment|/* 		 * If the inode with zeroed block pointers is now on disk 		 * we can start freeing blocks. Add freeblks to the worklist 		 * instead of calling  handle_workitem_freeblocks directly as 		 * it is more likely that additional IO is needed to complete 		 * the request here than in the !delay case. 		 */
 if|if
 condition|(
@@ -25619,6 +25641,22 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|needj
+operator|&&
+name|LIST_EMPTY
+argument_list|(
+operator|&
+name|freeblks
+operator|->
+name|fb_jfreeblkhd
+argument_list|)
+condition|)
+name|needj
+operator|=
+literal|0
+expr_stmt|;
 name|FREE_LOCK
 argument_list|(
 operator|&
@@ -26190,7 +26228,7 @@ operator|*
 operator|)
 name|adp
 expr_stmt|;
-comment|/* 	 * If the journal hasn't been written the jnewblk must be passed 	 * to the call to ffs_freeblk that reclaims the space.  We accomplish 	 * this by linking the journal dependency into the freework to be 	 * freed when freework_freeblock() is called.  If the journal has 	 * been written we can simply reclaim the journal space when the 	 * freeblks work is complete. 	 */
+comment|/* 	 * If the journal hasn't been written the jnewblk must be passed 	 * to the call to ffs_blkfree that reclaims the space.  We accomplish 	 * this by linking the journal dependency into the freework to be 	 * freed when freework_freeblock() is called.  If the journal has 	 * been written we can simply reclaim the journal space when the 	 * freeblks work is complete. 	 */
 if|if
 condition|(
 name|newblk
@@ -28496,17 +28534,14 @@ name|vp
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|INVARIANTS
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|freeblks
 operator|->
 name|fb_chkcnt
-operator|!=
+operator|==
 literal|0
-operator|&&
+operator|||
 operator|(
 operator|(
 name|fs
@@ -28515,26 +28550,37 @@ name|fs_flags
 operator|&
 name|FS_UNCLEAN
 operator|)
-operator|==
+operator|!=
 literal|0
-operator|||
+operator|&&
 operator|(
 name|flags
 operator|&
 name|LK_NOWAIT
 operator|)
-operator|!=
+operator|==
 literal|0
 operator|)
-condition|)
-name|printf
-argument_list|(
-literal|"handle_workitem_freeblocks: block count\n"
+argument_list|,
+operator|(
+literal|"handle_workitem_freeblocks: inode %ju block count %jd\n"
+operator|,
+operator|(
+name|uintmax_t
+operator|)
+name|freeblks
+operator|->
+name|fb_previousinum
+operator|,
+operator|(
+name|intmax_t
+operator|)
+name|freeblks
+operator|->
+name|fb_chkcnt
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* INVARIANTS */
 name|ACQUIRE_LOCK
 argument_list|(
 operator|&
@@ -28757,26 +28803,11 @@ name|MNTK_SUJ
 expr_stmt|;
 name|lbnadd
 operator|=
-literal|1
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-name|level
-init|;
-name|i
-operator|>
-literal|0
-condition|;
-name|i
-operator|--
-control|)
-name|lbnadd
-operator|*=
-name|NINDIR
+name|lbn_offset
 argument_list|(
 name|fs
+argument_list|,
+name|level
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Get buffer of block pointers to be freed. This routine is not 	 * called until the zero'ed inode has been written, so it is safe 	 * to free blocks as they are encountered. Because the inode has 	 * been zero'ed, calls to bmap on these blocks will fail. So, we 	 * have to use the on-disk address and the block device for the 	 * filesystem to look them up. If the file was deleted before its 	 * indirect blocks were all written to disk, the routine that set 	 * us up (deallocate_dependencies) will have arranged to leave 	 * a complete copy of the indirect block in memory for our use. 	 * Otherwise we have to read the blocks in from the disk. 	 */
@@ -29785,7 +29816,7 @@ name|newblk
 modifier|*
 name|newblk
 decl_stmt|;
-comment|/* 	 * If the journal hasn't been written the jnewblk must be passed 	 * to the call to ffs_freeblk that reclaims the space.  We accomplish 	 * this by linking the journal dependency into the indirdep to be 	 * freed when indir_trunc() is called.  If the journal has already 	 * been written we can simply reclaim the journal space when the 	 * freeblks work is complete. 	 */
+comment|/* 	 * If the journal hasn't been written the jnewblk must be passed 	 * to the call to ffs_blkfree that reclaims the space.  We accomplish 	 * this by linking the journal dependency into the indirdep to be 	 * freed when indir_trunc() is called.  If the journal has already 	 * been written we can simply reclaim the journal space when the 	 * freeblks work is complete. 	 */
 name|LIST_REMOVE
 argument_list|(
 name|aip

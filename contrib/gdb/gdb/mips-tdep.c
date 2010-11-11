@@ -6410,6 +6410,9 @@ name|gen_mask
 decl_stmt|,
 name|float_mask
 decl_stmt|;
+name|long
+name|reg_offset
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -6502,6 +6505,14 @@ argument_list|(
 name|proc_desc
 argument_list|)
 operator|)
+expr_stmt|;
+comment|/* Save registers offset from scratching by following find_proc_desc call */
+name|reg_offset
+operator|=
+name|PROC_REG_OFFSET
+argument_list|(
+name|proc_desc
+argument_list|)
 expr_stmt|;
 name|kernel_trap
 operator|=
@@ -6663,10 +6674,7 @@ name|cache
 operator|->
 name|base
 operator|+
-name|PROC_REG_OFFSET
-argument_list|(
-name|proc_desc
-argument_list|)
+name|reg_offset
 operator|)
 decl_stmt|;
 name|int
@@ -9091,6 +9099,30 @@ operator|+
 name|low_word
 argument_list|)
 expr_stmt|;
+comment|/* Do we have registers offset yet? */
+if|if
+condition|(
+operator|!
+name|PROC_REG_OFFSET
+argument_list|(
+operator|&
+name|temp_proc_desc
+argument_list|)
+condition|)
+name|PROC_REG_OFFSET
+argument_list|(
+operator|&
+name|temp_proc_desc
+argument_list|)
+operator|=
+name|low_word
+operator|-
+name|PROC_FRAME_OFFSET
+argument_list|(
+operator|&
+name|temp_proc_desc
+argument_list|)
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -9105,7 +9137,6 @@ literal|0xffa0
 condition|)
 comment|/* sd reg,offset($sp) */
 block|{
-comment|/* Irix 6.2 N32 ABI uses sd instructions for saving $gp and $ra, 	     but the register size used is only 32 bits. Make the address 	     for the saved register point to the lower 32 bits.  */
 name|PROC_REG_MASK
 argument_list|(
 operator|&
@@ -9125,13 +9156,30 @@ argument_list|,
 name|sp
 operator|+
 name|low_word
-operator|+
-literal|8
-operator|-
-name|mips_regsize
-argument_list|(
-name|current_gdbarch
 argument_list|)
+expr_stmt|;
+comment|/* Do we have registers offset yet? */
+if|if
+condition|(
+operator|!
+name|PROC_REG_OFFSET
+argument_list|(
+operator|&
+name|temp_proc_desc
+argument_list|)
+condition|)
+name|PROC_REG_OFFSET
+argument_list|(
+operator|&
+name|temp_proc_desc
+argument_list|)
+operator|=
+name|low_word
+operator|-
+name|PROC_FRAME_OFFSET
+argument_list|(
+operator|&
+name|temp_proc_desc
 argument_list|)
 expr_stmt|;
 block|}

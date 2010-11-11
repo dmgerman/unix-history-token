@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh.h,v 1.78 2006/08/03 03:34:42 deraadt Exp $ */
+comment|/* $OpenBSD: ssh.h,v 1.79 2010/06/25 07:14:46 djm Exp $ */
 end_comment
 
 begin_comment
@@ -27,17 +27,6 @@ define|#
 directive|define
 name|SSH_DEFAULT_PORT
 value|22
-end_define
-
-begin_comment
-comment|/* Maximum number of TCP/IP ports forwarded per direction. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SSH_MAX_FORWARDS_PER_DIRECTION
-value|100
 end_define
 
 begin_comment

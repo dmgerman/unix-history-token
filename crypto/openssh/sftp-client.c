@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp-client.c,v 1.90 2009/10/11 10:41:26 dtucker Exp $ */
+comment|/* $OpenBSD: sftp-client.c,v 1.92 2010/07/19 03:16:33 djm Exp $ */
 end_comment
 
 begin_comment
@@ -3719,10 +3719,14 @@ name|status
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|buffer_free
+argument_list|(
+operator|&
+name|msg
+argument_list|)
+expr_stmt|;
 return|return
-operator|(
 name|NULL
-operator|)
 return|;
 block|}
 elseif|else
@@ -8065,11 +8069,11 @@ name|new_dst
 argument_list|,
 name|pflag
 argument_list|,
+name|printflag
+argument_list|,
 name|depth
 operator|+
 literal|1
-argument_list|,
-name|printflag
 argument_list|)
 operator|==
 operator|-
