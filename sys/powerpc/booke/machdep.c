@@ -1842,7 +1842,7 @@ expr_stmt|;
 operator|*
 name|ptr
 operator|=
-name|MTX_UNOWNED
+name|TLB_UNLOCKED
 expr_stmt|;
 operator|*
 operator|(
