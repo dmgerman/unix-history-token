@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshconnect.c,v 1.220 2010/03/04 10:36:03 djm Exp $ */
+comment|/* $OpenBSD: sshconnect.c,v 1.224 2010/04/16 21:14:27 djm Exp $ */
 end_comment
 
 begin_comment
@@ -467,6 +467,12 @@ argument_list|,
 literal|"p"
 argument_list|,
 name|strport
+argument_list|,
+literal|"r"
+argument_list|,
+name|options
+operator|.
+name|user
 argument_list|,
 operator|(
 name|char
@@ -2802,7 +2808,7 @@ name|host_key
 operator|->
 name|cert
 operator|->
-name|constraints
+name|critical
 argument_list|)
 operator|!=
 literal|0
@@ -2810,7 +2816,8 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"Certificate for %s contains unsupported constraint(s)"
+literal|"Certificate for %s contains unsupported "
+literal|"critical options(s)"
 argument_list|,
 name|host
 argument_list|)
@@ -3452,7 +3459,7 @@ literal|"Found %s in %s:%d"
 argument_list|,
 name|want_cert
 condition|?
-literal|"certificate"
+literal|"CA key"
 else|:
 literal|"key"
 argument_list|,

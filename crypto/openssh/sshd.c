@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshd.c,v 1.374 2010/03/07 11:57:13 dtucker Exp $ */
+comment|/* $OpenBSD: sshd.c,v 1.375 2010/04/16 01:47:26 djm Exp $ */
 end_comment
 
 begin_comment
@@ -3076,6 +3076,12 @@ name|type
 condition|)
 block|{
 case|case
+name|KEY_RSA_CERT_V00
+case|:
+case|case
+name|KEY_DSA_CERT_V00
+case|:
+case|case
 name|KEY_RSA_CERT
 case|:
 case|case
@@ -3197,16 +3203,23 @@ name|i
 operator|++
 control|)
 block|{
-if|if
+switch|switch
 condition|(
 name|type
-operator|==
-name|KEY_RSA_CERT
-operator|||
-name|type
-operator|==
-name|KEY_DSA_CERT
 condition|)
+block|{
+case|case
+name|KEY_RSA_CERT_V00
+case|:
+case|case
+name|KEY_DSA_CERT_V00
+case|:
+case|case
+name|KEY_RSA_CERT
+case|:
+case|case
+name|KEY_DSA_CERT
+case|:
 name|key
 operator|=
 name|sensitive_data
@@ -3216,7 +3229,8 @@ index|[
 name|i
 index|]
 expr_stmt|;
-else|else
+break|break;
+default|default:
 name|key
 operator|=
 name|sensitive_data
@@ -3226,6 +3240,8 @@ index|[
 name|i
 index|]
 expr_stmt|;
+break|break;
+block|}
 if|if
 condition|(
 name|key

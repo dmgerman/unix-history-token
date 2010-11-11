@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: myproposal.h,v 1.24 2010/02/26 20:29:54 djm Exp $ */
+comment|/* $OpenBSD: myproposal.h,v 1.25 2010/04/16 01:47:26 djm Exp $ */
 end_comment
 
 begin_comment
@@ -55,7 +55,8 @@ begin_define
 define|#
 directive|define
 name|KEX_DEFAULT_PK_ALG
-value|"ssh-rsa-cert-v00@openssh.com," \ 				"ssh-dss-cert-v00@openssh.com," \ 				"ssh-rsa,ssh-dss"
+define|\
+value|"ssh-rsa-cert-v01@openssh.com," \ 				"ssh-dss-cert-v01@openssh.com," \ 				"ssh-rsa-cert-v00@openssh.com," \  				"ssh-dss-cert-v00@openssh.com," \  				"ssh-rsa,ssh-dss"
 end_define
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: jpake.c,v 1.2 2009/03/05 07:18:19 djm Exp $ */
+comment|/* $OpenBSD: jpake.c,v 1.4 2010/07/13 23:13:16 djm Exp $ */
 end_comment
 
 begin_comment
@@ -2161,7 +2161,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|memcmp
+name|timingsafe_bcmp
 argument_list|(
 name|peer_confirm_hash
 argument_list|,

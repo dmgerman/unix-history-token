@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: authfd.c,v 1.82 2010/02/26 20:29:54 djm Exp $ */
+comment|/* $OpenBSD: authfd.c,v 1.83 2010/04/16 01:47:26 djm Exp $ */
 end_comment
 
 begin_comment
@@ -2020,6 +2020,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|KEY_RSA_CERT_V00
+case|:
+case|case
 name|KEY_RSA_CERT
 case|:
 if|if
@@ -2178,6 +2181,9 @@ name|priv_key
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|KEY_DSA_CERT_V00
+case|:
 case|case
 name|KEY_DSA_CERT
 case|:
@@ -2350,10 +2356,16 @@ case|case
 name|KEY_RSA_CERT
 case|:
 case|case
+name|KEY_RSA_CERT_V00
+case|:
+case|case
 name|KEY_DSA
 case|:
 case|case
 name|KEY_DSA_CERT
+case|:
+case|case
+name|KEY_DSA_CERT_V00
 case|:
 name|type
 operator|=

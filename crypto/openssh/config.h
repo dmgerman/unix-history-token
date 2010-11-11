@@ -2836,6 +2836,17 @@ comment|/* #undef HAVE_STRNVIS */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the `strptime' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRPTIME
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `strsep' function. */
 end_comment
 

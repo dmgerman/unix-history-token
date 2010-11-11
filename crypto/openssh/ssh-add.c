@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-add.c,v 1.94 2010/03/01 11:07:06 otto Exp $ */
+comment|/* $OpenBSD: ssh-add.c,v 1.96 2010/05/14 00:47:22 djm Exp $ */
 end_comment
 
 begin_comment
@@ -738,7 +738,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"The user has to confirm each use of the key\n"
+literal|"The user must confirm each use of the key\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -777,27 +777,73 @@ argument_list|,
 name|NULL
 argument_list|)
 operator|)
-operator|!=
+operator|==
 name|NULL
 condition|)
+goto|goto
+name|out
+goto|;
+if|if
+condition|(
+operator|!
+name|key_equal_public
+argument_list|(
+name|cert
+argument_list|,
+name|private
+argument_list|)
+condition|)
 block|{
+name|error
+argument_list|(
+literal|"Certificate %s does not match private key %s"
+argument_list|,
+name|certpath
+argument_list|,
+name|filename
+argument_list|)
+expr_stmt|;
+name|key_free
+argument_list|(
+name|cert
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 comment|/* Graft with private bits */
 if|if
 condition|(
 name|key_to_certified
 argument_list|(
 name|private
+argument_list|,
+name|key_cert_is_legacy
+argument_list|(
+name|cert
+argument_list|)
 argument_list|)
 operator|!=
 literal|0
 condition|)
-name|fatal
+block|{
+name|error
 argument_list|(
 literal|"%s: key_to_certified failed"
 argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
+name|key_free
+argument_list|(
+name|cert
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 name|key_cert_copy
 argument_list|(
 name|cert
@@ -812,6 +858,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|ssh_add_identity_constrained
 argument_list|(
 name|ac
@@ -826,6 +873,20 @@ name|confirm
 argument_list|)
 condition|)
 block|{
+name|error
+argument_list|(
+literal|"Certificate %s (%s) add failed"
+argument_list|,
+name|certpath
+argument_list|,
+name|private
+operator|->
+name|cert
+operator|->
+name|key_id
+argument_list|)
+expr_stmt|;
+block|}
 name|fprintf
 argument_list|(
 name|stderr
@@ -866,28 +927,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"The user has to confirm each "
-literal|"use of the key\n"
+literal|"The user must confirm each use of the key\n"
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|error
-argument_list|(
-literal|"Certificate %s (%s) add failed"
-argument_list|,
-name|certpath
-argument_list|,
-name|private
-operator|->
-name|cert
-operator|->
-name|key_id
-argument_list|)
-expr_stmt|;
-block|}
-block|}
+name|out
+label|:
 name|xfree
 argument_list|(
 name|certpath

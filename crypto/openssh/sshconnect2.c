@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshconnect2.c,v 1.180 2010/02/26 20:29:54 djm Exp $ */
+comment|/* $OpenBSD: sshconnect2.c,v 1.183 2010/04/26 22:28:24 djm Exp $ */
 end_comment
 
 begin_comment
@@ -840,7 +840,7 @@ name|Authmethod
 modifier|*
 name|method
 decl_stmt|;
-name|int
+name|sig_atomic_t
 name|success
 decl_stmt|;
 name|char
@@ -5592,9 +5592,40 @@ name|have_sig
 init|=
 literal|1
 decl_stmt|;
+name|char
+modifier|*
+name|fp
+decl_stmt|;
+name|fp
+operator|=
+name|key_fingerprint
+argument_list|(
+name|id
+operator|->
+name|key
+argument_list|,
+name|SSH_FP_MD5
+argument_list|,
+name|SSH_FP_HEX
+argument_list|)
+expr_stmt|;
 name|debug3
 argument_list|(
-literal|"sign_and_send_pubkey"
+literal|"sign_and_send_pubkey: %s %s"
+argument_list|,
+name|key_type
+argument_list|(
+name|id
+operator|->
+name|key
+argument_list|)
+argument_list|,
+name|fp
+argument_list|)
+expr_stmt|;
+name|xfree
+argument_list|(
+name|fp
 argument_list|)
 expr_stmt|;
 if|if
@@ -7032,7 +7063,14 @@ condition|)
 block|{
 name|debug
 argument_list|(
-literal|"Offering public key: %s"
+literal|"Offering %s public key: %s"
+argument_list|,
+name|key_type
+argument_list|(
+name|id
+operator|->
+name|key
+argument_list|)
 argument_list|,
 name|id
 operator|->
