@@ -79,13 +79,6 @@ name|pmap_t
 typedef|;
 end_typedef
 
-begin_typedef
-typedef|typedef
-name|uint32_t
-name|pmap_cpumask_t
-typedef|;
-end_typedef
-
 begin_struct_decl
 struct_decl|struct
 name|pv_entry
@@ -153,11 +146,11 @@ name|struct
 name|hv_tsb_info
 name|pm_tsb
 decl_stmt|;
-name|pmap_cpumask_t
+name|cpumask_t
 name|pm_active
 decl_stmt|;
 comment|/* mask of cpus currently using pmap */
-name|pmap_cpumask_t
+name|cpumask_t
 name|pm_tlbactive
 decl_stmt|;
 comment|/* mask of cpus that have used this pmap */

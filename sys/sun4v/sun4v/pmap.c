@@ -6859,7 +6859,7 @@ name|cpu_count
 decl_stmt|,
 name|retried
 decl_stmt|;
-name|u_int
+name|cpumask_t
 name|cpus
 decl_stmt|;
 name|cpumask_t

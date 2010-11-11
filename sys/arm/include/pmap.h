@@ -307,7 +307,7 @@ modifier|*
 name|pm_pdir
 decl_stmt|;
 comment|/* KVA of page directory */
-name|int
+name|cpumask_t
 name|pm_active
 decl_stmt|;
 comment|/* active on cpus */

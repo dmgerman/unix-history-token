@@ -134,7 +134,7 @@ begin_struct
 struct|struct
 name|ipi_cache_args
 block|{
-name|u_int
+name|cpumask_t
 name|ica_mask
 decl_stmt|;
 name|vm_paddr_t
@@ -148,7 +148,7 @@ begin_struct
 struct|struct
 name|ipi_tlb_args
 block|{
-name|u_int
+name|cpumask_t
 name|ita_mask
 decl_stmt|;
 name|struct
@@ -205,7 +205,7 @@ name|void
 name|cpu_ipi_selected
 parameter_list|(
 name|int
-name|cpus
+name|cpu_count
 parameter_list|,
 name|uint16_t
 modifier|*
@@ -309,7 +309,7 @@ begin_function_decl
 name|void
 name|ipi_selected
 parameter_list|(
-name|u_int
+name|cpumask_t
 name|cpus
 parameter_list|,
 name|u_int
@@ -507,7 +507,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static __inline void * ipi_dcache_page_inval(void *func, vm_paddr_t pa) { 	struct ipi_cache_args *ica;  	if (smp_cpus == 1) 		return (NULL); 	ica =&ipi_cache_args; 	mtx_lock_spin(&ipi_mtx); 	ica->ica_mask = all_cpus; 	ica->ica_pa = pa; 	cpu_ipi_selected(PCPU_GET(other_cpus), 0, (u_long)func, (u_long)ica); 	return (&ica->ica_mask); }  static __inline void * ipi_icache_page_inval(void *func, vm_paddr_t pa) { 	struct ipi_cache_args *ica;  	if (smp_cpus == 1) 		return (NULL); 	ica =&ipi_cache_args; 	mtx_lock_spin(&ipi_mtx); 	ica->ica_mask = all_cpus; 	ica->ica_pa = pa; 	cpu_ipi_selected(PCPU_GET(other_cpus), 0, (u_long)func, (u_long)ica); 	return (&ica->ica_mask); }  static __inline void * ipi_tlb_context_demap(struct pmap *pm) { 	struct ipi_tlb_args *ita; 	u_int cpus;  	if (smp_cpus == 1) 		return (NULL); 	if ((cpus = (pm->pm_active& PCPU_GET(other_cpus))) == 0) 		return (NULL); 	ita =&ipi_tlb_args; 	mtx_lock_spin(&ipi_mtx); 	ita->ita_mask = cpus | PCPU_GET(cpumask); 	ita->ita_pmap = pm; 	cpu_ipi_selected(cpus, 0, (u_long)tl_ipi_tlb_context_demap, 	    (u_long)ita); 	return (&ita->ita_mask); }  static __inline void * ipi_tlb_page_demap(struct pmap *pm, vm_offset_t va) { 	struct ipi_tlb_args *ita; 	u_int cpus;  	if (smp_cpus == 1) 		return (NULL); 	if ((cpus = (pm->pm_active& PCPU_GET(other_cpus))) == 0) 		return (NULL); 	ita =&ipi_tlb_args; 	mtx_lock_spin(&ipi_mtx); 	ita->ita_mask = cpus | PCPU_GET(cpumask); 	ita->ita_pmap = pm; 	ita->ita_va = va; 	cpu_ipi_selected(cpus, 0, (u_long)tl_ipi_tlb_page_demap, (u_long)ita); 	return (&ita->ita_mask); }  static __inline void * ipi_tlb_range_demap(struct pmap *pm, vm_offset_t start, vm_offset_t end) { 	struct ipi_tlb_args *ita; 	u_int cpus;  	if (smp_cpus == 1) 		return (NULL); 	if ((cpus = (pm->pm_active& PCPU_GET(other_cpus))) == 0) 		return (NULL); 	ita =&ipi_tlb_args; 	mtx_lock_spin(&ipi_mtx); 	ita->ita_mask = cpus | PCPU_GET(cpumask); 	ita->ita_pmap = pm; 	ita->ita_start = start; 	ita->ita_end = end; 	cpu_ipi_selected(cpus, 0, (u_long)tl_ipi_tlb_range_demap, (u_long)ita); 	return (&ita->ita_mask); }
+unit|static __inline void * ipi_dcache_page_inval(void *func, vm_paddr_t pa) { 	struct ipi_cache_args *ica;  	if (smp_cpus == 1) 		return (NULL); 	ica =&ipi_cache_args; 	mtx_lock_spin(&ipi_mtx); 	ica->ica_mask = all_cpus; 	ica->ica_pa = pa; 	cpu_ipi_selected(PCPU_GET(other_cpus), 0, (u_long)func, (u_long)ica); 	return (&ica->ica_mask); }  static __inline void * ipi_icache_page_inval(void *func, vm_paddr_t pa) { 	struct ipi_cache_args *ica;  	if (smp_cpus == 1) 		return (NULL); 	ica =&ipi_cache_args; 	mtx_lock_spin(&ipi_mtx); 	ica->ica_mask = all_cpus; 	ica->ica_pa = pa; 	cpu_ipi_selected(PCPU_GET(other_cpus), 0, (u_long)func, (u_long)ica); 	return (&ica->ica_mask); }  static __inline void * ipi_tlb_context_demap(struct pmap *pm) { 	struct ipi_tlb_args *ita; 	cpumask_t cpus;  	if (smp_cpus == 1) 		return (NULL); 	if ((cpus = (pm->pm_active& PCPU_GET(other_cpus))) == 0) 		return (NULL); 	ita =&ipi_tlb_args; 	mtx_lock_spin(&ipi_mtx); 	ita->ita_mask = cpus | PCPU_GET(cpumask); 	ita->ita_pmap = pm; 	cpu_ipi_selected(cpus, 0, (u_long)tl_ipi_tlb_context_demap, 	    (u_long)ita); 	return (&ita->ita_mask); }  static __inline void * ipi_tlb_page_demap(struct pmap *pm, vm_offset_t va) { 	struct ipi_tlb_args *ita; 	cpumask_t cpus;  	if (smp_cpus == 1) 		return (NULL); 	if ((cpus = (pm->pm_active& PCPU_GET(other_cpus))) == 0) 		return (NULL); 	ita =&ipi_tlb_args; 	mtx_lock_spin(&ipi_mtx); 	ita->ita_mask = cpus | PCPU_GET(cpumask); 	ita->ita_pmap = pm; 	ita->ita_va = va; 	cpu_ipi_selected(cpus, 0, (u_long)tl_ipi_tlb_page_demap, (u_long)ita); 	return (&ita->ita_mask); }  static __inline void * ipi_tlb_range_demap(struct pmap *pm, vm_offset_t start, vm_offset_t end) { 	struct ipi_tlb_args *ita; 	cpumask_t cpus;  	if (smp_cpus == 1) 		return (NULL); 	if ((cpus = (pm->pm_active& PCPU_GET(other_cpus))) == 0) 		return (NULL); 	ita =&ipi_tlb_args; 	mtx_lock_spin(&ipi_mtx); 	ita->ita_mask = cpus | PCPU_GET(cpumask); 	ita->ita_pmap = pm; 	ita->ita_start = start; 	ita->ita_end = end; 	cpu_ipi_selected(cpus, 0, (u_long)tl_ipi_tlb_range_demap, (u_long)ita); 	return (&ita->ita_mask); }
 endif|#
 directive|endif
 end_endif
@@ -524,7 +524,7 @@ name|cookie
 parameter_list|)
 block|{
 specifier|volatile
-name|u_int
+name|cpumask_t
 modifier|*
 name|mask
 decl_stmt|;
