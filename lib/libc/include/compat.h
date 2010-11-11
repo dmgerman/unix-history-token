@@ -31,7 +31,7 @@ parameter_list|,
 name|verid
 parameter_list|)
 define|\
-value|.symver impl , sym @ verid
+value|.symver impl, sym@verid
 end_define
 
 begin_expr_stmt
