@@ -115,7 +115,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|.globl SYMBOL_NAME(name) SEPARATOR     \   .private_extern SYMBOL_NAME(name) SEPARATOR    \   SYMBOL_NAME(name):
+value|.globl SYMBOL_NAME(name) SEPARATOR     \   .hidden SYMBOL_NAME(name) SEPARATOR    \   SYMBOL_NAME(name):
 end_define
 
 begin_else
@@ -147,7 +147,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|.globl SYMBOL_NAME(name) SEPARATOR             \   .private_extern SYMBOL_NAME(name) SEPARATOR    \   SYMBOL_NAME(name):
+value|.globl SYMBOL_NAME(name) SEPARATOR             \   .hidden SYMBOL_NAME(name) SEPARATOR    \   SYMBOL_NAME(name):
 end_define
 
 begin_define
@@ -158,7 +158,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|.globl name SEPARATOR             \   .private_extern name SEPARATOR    \   name:
+value|.globl name SEPARATOR             \   .hidden name SEPARATOR    \   name:
 end_define
 
 begin_endif
