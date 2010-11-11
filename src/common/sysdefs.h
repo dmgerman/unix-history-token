@@ -97,6 +97,28 @@ directive|endif
 end_endif
 
 begin_comment
+comment|// Get standard-compliant stdio functions under MinGW and MinGW-w64.
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__MINGW32__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|__USE_MINGW_ANSI_STDIO
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|// size_t and NULL
 end_comment
 

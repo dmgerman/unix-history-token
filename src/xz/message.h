@@ -65,10 +65,23 @@ block|,
 comment|///< Errors, warnings, and verbose statistics
 name|V_DEBUG
 block|,
-comment|///< Debugging, FIXME remove?
+comment|///< Very verbose
 block|}
 enum|;
 end_enum
+
+begin_comment
+comment|/// \brief      Signals used for progress message handling
+end_comment
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|int
+name|message_progress_sigs
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// \brief      Initializes the message functions

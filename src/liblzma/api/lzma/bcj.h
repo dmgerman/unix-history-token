@@ -58,7 +58,7 @@ value|LZMA_VLI_C(0x06)
 end_define
 
 begin_comment
-comment|/**< 	 * Filter for IA64 (Itanium) binaries. 	 */
+comment|/**< 	 * Filter for IA-64 (Itanium) binaries. 	 */
 end_comment
 
 begin_define
@@ -80,7 +80,7 @@ value|LZMA_VLI_C(0x08)
 end_define
 
 begin_comment
-comment|/**< 	 * Filter for ARMThumb binaries. 	 */
+comment|/**< 	 * Filter for ARM-Thumb binaries. 	 */
 end_comment
 
 begin_define
