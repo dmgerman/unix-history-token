@@ -3485,6 +3485,39 @@ begin_comment
 comment|/* ..8 Hardware Implementation Register 5 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SPR_HID6
+value|0x3f9
+end_define
+
+begin_comment
+comment|/* ..8 Hardware Implementation Register 6 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_CELL_TSRL
+value|0x380
+end_define
+
+begin_comment
+comment|/* ... Cell BE Thread Status Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPR_CELL_TSCR
+value|0x399
+end_define
+
+begin_comment
+comment|/* ... Cell BE Thread Switch Register */
+end_comment
+
 begin_if
 if|#
 directive|if

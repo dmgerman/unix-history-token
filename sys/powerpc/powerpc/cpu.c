@@ -586,6 +586,22 @@ name|cpu_e500_setup
 block|}
 block|,
 block|{
+literal|"IBM Cell Broadband Engine"
+block|,
+name|IBMCELLBE
+block|,
+name|REVFMT_MAJMIN
+block|,
+name|PPC_FEATURE_64
+operator||
+name|PPC_FEATURE_HAS_ALTIVEC
+operator||
+name|PPC_FEATURE_HAS_FPU
+block|,
+name|NULL
+block|}
+block|,
+block|{
 literal|"Unknown PowerPC CPU"
 block|,
 literal|0
