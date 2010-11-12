@@ -137,6 +137,12 @@ directive|include
 file|"acpi_wakecode.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"acpi_wakedata.h"
+end_include
+
 begin_comment
 comment|/* Make sure the code is less than one page and leave room for the stack. */
 end_comment
