@@ -5290,14 +5290,6 @@ name|sz
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|SMP
-name|TLBSYNC
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Calculate the last available physical address. 	 */
 for|for
 control|(
