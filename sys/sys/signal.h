@@ -1511,7 +1511,7 @@ begin_define
 define|#
 directive|define
 name|POLL_HUP
-value|4
+value|6
 end_define
 
 begin_comment
