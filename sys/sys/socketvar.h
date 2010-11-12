@@ -278,10 +278,14 @@ block|}
 modifier|*
 name|so_accf
 struct|;
+comment|/* 	 * so_fibnum, so_user_cookie and friends can be used to attach 	 * some user-specified metadata to a socket, which then can be 	 * used by the kernel for various actions. 	 * so_user_cookie is used by ipfw/dummynet. 	 */
 name|int
 name|so_fibnum
 decl_stmt|;
 comment|/* routing domain for this socket */
+name|uint32_t
+name|so_user_cookie
+decl_stmt|;
 block|}
 struct|;
 end_struct
