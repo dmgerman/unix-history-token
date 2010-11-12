@@ -324,6 +324,9 @@ comment|/* arg1=FIB number */
 name|O_FIB
 block|,
 comment|/* arg1=FIB desired fib number */
+name|O_SOCKARG
+block|,
+comment|/* socket argument */
 name|O_LAST_OPCODE
 comment|/* not an opcode!		*/
 block|}
