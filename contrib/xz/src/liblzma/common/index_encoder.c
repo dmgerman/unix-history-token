@@ -793,6 +793,17 @@ index|]
 operator|=
 name|true
 expr_stmt|;
+name|strm
+operator|->
+name|internal
+operator|->
+name|supported_actions
+index|[
+name|LZMA_FINISH
+index|]
+operator|=
+name|true
+expr_stmt|;
 return|return
 name|LZMA_OK
 return|;

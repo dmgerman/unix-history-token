@@ -427,7 +427,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"XZ Utils 4.999.9beta"
+value|"XZ Utils 5.0.0"
 end_define
 
 begin_define
@@ -448,7 +448,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"4.999.9beta"
+value|"5.0.0"
 end_define
 
 begin_define
@@ -469,6 +469,13 @@ begin_define
 define|#
 directive|define
 name|TUKLIB_CPUCORES_SYSCTL
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|TUKLIB_FAST_UNALIGNED_ACCESS
 value|1
 end_define
 
@@ -573,7 +580,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"4.999.9beta"
+value|"5.0.0"
 end_define
 
 begin_if

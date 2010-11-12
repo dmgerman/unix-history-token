@@ -253,6 +253,40 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SIGALRM
+comment|// Add also the signals from message.c to hooked_signals.
+for|for
+control|(
+name|size_t
+name|i
+init|=
+literal|0
+init|;
+name|message_progress_sigs
+index|[
+name|i
+index|]
+operator|!=
+literal|0
+condition|;
+operator|++
+name|i
+control|)
+name|sigaddset
+argument_list|(
+operator|&
+name|hooked_signals
+argument_list|,
+name|message_progress_sigs
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|struct
 name|sigaction
 name|sa
@@ -490,9 +524,17 @@ operator|!=
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|TUKLIB_DOSLIKE
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__VMS
+argument_list|)
 comment|// Don't raise(), set only exit status. This avoids
 comment|// printing unwanted message about SIGINT when the user
 comment|// presses C-c.
