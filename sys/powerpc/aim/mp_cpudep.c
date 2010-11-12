@@ -910,17 +910,21 @@ begin_break
 break|break;
 end_break
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__powerpc64__
-end_ifdef
-
 begin_case
 case|case
 name|IBMCELLBE
 case|:
 end_case
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NOTYET
+end_ifdef
+
+begin_comment
+comment|/* Causes problems if in instruction stream on 970 */
+end_comment
 
 begin_if
 if|if
@@ -984,6 +988,11 @@ expr_stmt|;
 block|}
 end_if
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_expr_stmt
 name|bsp_state
 index|[
@@ -1000,11 +1009,6 @@ end_expr_stmt
 begin_break
 break|break;
 end_break
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_case
 case|case
@@ -1254,17 +1258,21 @@ begin_break
 break|break;
 end_break
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__powerpc64__
-end_ifdef
-
 begin_case
 case|case
 name|IBMCELLBE
 case|:
 end_case
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NOTYET
+end_ifdef
+
+begin_comment
+comment|/* Causes problems if in instruction stream on 970 */
+end_comment
 
 begin_if
 if|if
@@ -1328,6 +1336,11 @@ expr_stmt|;
 block|}
 end_if
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_expr_stmt
 name|mtspr
 argument_list|(
@@ -1344,11 +1357,6 @@ end_expr_stmt
 begin_break
 break|break;
 end_break
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_case
 case|case
