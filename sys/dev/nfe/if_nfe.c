@@ -4550,11 +4550,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|NFE_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|mii
 operator|=
 name|device_get_softc
@@ -4709,11 +4704,6 @@ argument_list|,
 name|NFE_RX_CTL
 argument_list|,
 name|rxctl
-argument_list|)
-expr_stmt|;
-name|NFE_UNLOCK
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 block|}
