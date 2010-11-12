@@ -10582,6 +10582,16 @@ continue|continue;
 if|if
 condition|(
 name|s
+operator|+
+name|size
+operator|>
+name|platform_real_maxaddr
+argument_list|()
+condition|)
+continue|continue;
+if|if
+condition|(
+name|s
 operator|==
 name|phys_avail
 index|[

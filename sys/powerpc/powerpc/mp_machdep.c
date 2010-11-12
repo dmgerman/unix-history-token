@@ -320,24 +320,6 @@ block|}
 end_function
 
 begin_function
-name|struct
-name|cpu_group
-modifier|*
-name|cpu_topo
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-operator|(
-name|smp_topo_none
-argument_list|()
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
 name|void
 name|cpu_mp_setmaxid
 parameter_list|(

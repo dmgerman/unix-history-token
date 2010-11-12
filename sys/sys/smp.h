@@ -27,12 +27,6 @@ directive|ifndef
 name|LOCORE
 end_ifndef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SMP
-end_ifdef
-
 begin_comment
 comment|/*  * Topology of a NUMA or HTT system.  *  * The top level topology is an array of pointers to groups.  Each group  * contains a bitmask of cpus in its group or subgroups.  It may also  * contain a pointer to an array of child groups.  *  * The bitmasks at non leaf groups may be used by consumers who support  * a smaller depth than the hardware provides.  *  * The topology may be omitted by systems where all CPUs are equal.  */
 end_comment
@@ -76,6 +70,15 @@ comment|/* Traversal modifiers. */
 block|}
 struct|;
 end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|cpu_group
+modifier|*
+name|cpu_group_t
+typedef|;
+end_typedef
 
 begin_comment
 comment|/*  * Defines common resources for CPUs in the group.  The highest level  * resource should be used when multiple are shared.  */
@@ -149,6 +152,12 @@ end_comment
 begin_comment
 comment|/*  * Convenience routines for building topologies.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
 
 begin_function_decl
 name|struct

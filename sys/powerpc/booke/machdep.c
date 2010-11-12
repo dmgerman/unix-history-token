@@ -2485,28 +2485,5 @@ block|}
 block|}
 end_function
 
-begin_comment
-comment|/*  * XXX what is the better/proper place for this routine?  */
-end_comment
-
-begin_function
-name|int
-name|mem_valid
-parameter_list|(
-name|vm_offset_t
-name|addr
-parameter_list|,
-name|int
-name|len
-parameter_list|)
-block|{
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
-end_function
-
 end_unit
 
