@@ -4189,7 +4189,7 @@ operator|->
 name|ki_childstime
 argument_list|)
 expr_stmt|;
-comment|/* Some callers want child-times in a single value */
+comment|/* Some callers want child times in a single value. */
 name|kp
 operator|->
 name|ki_childtime

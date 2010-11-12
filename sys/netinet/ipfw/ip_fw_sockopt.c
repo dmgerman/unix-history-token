@@ -2461,6 +2461,9 @@ case|case
 name|O_IPVER
 case|:
 case|case
+name|O_SOCKARG
+case|:
+case|case
 name|O_TCPWIN
 case|:
 case|case

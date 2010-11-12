@@ -886,7 +886,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|driver_t
 name|gpioc_driver
 init|=

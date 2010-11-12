@@ -32,28 +32,28 @@ begin_define
 define|#
 directive|define
 name|LZMA_VERSION_MAJOR
-value|4
+value|5
 end_define
 
 begin_define
 define|#
 directive|define
 name|LZMA_VERSION_MINOR
-value|999
+value|0
 end_define
 
 begin_define
 define|#
 directive|define
 name|LZMA_VERSION_PATCH
-value|9
+value|0
 end_define
 
 begin_define
 define|#
 directive|define
 name|LZMA_VERSION_STABILITY
-value|LZMA_VERSION_STABILITY_BETA
+value|LZMA_VERSION_STABILITY_STABLE
 end_define
 
 begin_ifndef

@@ -217,6 +217,27 @@ end_endif
 begin_function
 specifier|static
 name|__inline
+name|register_t
+name|mfctrl
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|register_t
+name|value
+decl_stmt|;
+asm|__asm __volatile ("mfspr %0,136" : "=r"(value));
+return|return
+operator|(
+name|value
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
 name|void
 name|mtdec
 parameter_list|(

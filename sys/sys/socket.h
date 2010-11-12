@@ -673,6 +673,17 @@ begin_comment
 comment|/* use this FIB to route */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SO_USER_COOKIE
+value|0x1015
+end_define
+
+begin_comment
+comment|/* user cookie (dummynet etc.) */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

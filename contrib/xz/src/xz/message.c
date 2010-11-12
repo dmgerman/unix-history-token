@@ -304,6 +304,34 @@ directive|ifdef
 name|SIGALRM
 end_ifdef
 
+begin_decl_stmt
+specifier|const
+name|int
+name|message_progress_sigs
+index|[]
+init|=
+block|{
+name|SIGALRM
+block|,
+ifdef|#
+directive|ifdef
+name|SIGINFO
+name|SIGINFO
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|SIGUSR1
+name|SIGUSR1
+block|,
+endif|#
+directive|endif
+literal|0
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/// The signal handler for SIGALRM sets this to true. It is set back to false
 end_comment
@@ -461,56 +489,8 @@ comment|/* 	if (progress_automatic) { 		// stderr is a terminal. Check the COLUM
 ifdef|#
 directive|ifdef
 name|SIGALRM
-comment|// DJGPP lacks SA_RESTART, but it shouldn't give EINTR
-comment|// in most places either.
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__DJGPP__
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|SA_RESTART
-argument_list|)
-define|#
-directive|define
-name|SA_RESTART
-value|0
-endif|#
-directive|endif
 comment|// Establish the signal handlers which set a flag to tell us that
-comment|// progress info should be updated. Since these signals don't
-comment|// require any quick action, we set SA_RESTART. That way we don't
-comment|// need to block them either in signals_block() to keep stdio
-comment|// functions from getting EINTR.
-specifier|static
-specifier|const
-name|int
-name|sigs
-index|[]
-init|=
-block|{
-name|SIGALRM
-block|,
-ifdef|#
-directive|ifdef
-name|SIGINFO
-name|SIGINFO
-block|,
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|SIGUSR1
-name|SIGUSR1
-block|,
-endif|#
-directive|endif
-block|}
-decl_stmt|;
+comment|// progress info should be updated.
 name|struct
 name|sigaction
 name|sa
@@ -527,7 +507,7 @@ name|sa
 operator|.
 name|sa_flags
 operator|=
-name|SA_RESTART
+literal|0
 expr_stmt|;
 name|sa
 operator|.
@@ -543,12 +523,12 @@ name|i
 init|=
 literal|0
 init|;
+name|message_progress_sigs
+index|[
 name|i
-operator|<
-name|ARRAY_SIZE
-argument_list|(
-name|sigs
-argument_list|)
+index|]
+operator|!=
+literal|0
 condition|;
 operator|++
 name|i
@@ -557,7 +537,7 @@ if|if
 condition|(
 name|sigaction
 argument_list|(
-name|sigs
+name|message_progress_sigs
 index|[
 name|i
 index|]
@@ -3022,15 +3002,16 @@ case|:
 case|case
 name|LZMA_PROG_ERROR
 case|:
+comment|// Without "default", compiler will warn if new constants
+comment|// are added to lzma_ret, it is not too easy to forget to
+comment|// add the new constants to this function.
+break|break;
+block|}
 return|return
 name|_
 argument_list|(
 literal|"Internal error (bug)"
 argument_list|)
-return|;
-block|}
-return|return
-name|NULL
 return|;
 block|}
 end_function
