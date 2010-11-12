@@ -5230,27 +5230,20 @@ index|]
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
-operator|(
 name|mmu
 operator|=
 name|OF_instance_to_package
 argument_list|(
 name|mmui
 argument_list|)
-operator|)
-operator|==
-operator|-
-literal|1
-condition|)
-name|panic
-argument_list|(
-literal|"moea64_bootstrap: can't get mmu package"
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|mmu
+operator|==
+operator|-
+literal|1
+operator|||
 operator|(
 name|sz
 operator|=
@@ -5265,10 +5258,9 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|panic
-argument_list|(
-literal|"moea64_bootstrap: can't get ofw translation count"
-argument_list|)
+name|sz
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -5282,6 +5274,12 @@ argument_list|(
 literal|"moea64_bootstrap: too many ofw translations"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sz
+operator|>
+literal|0
+condition|)
 name|moea64_add_ofw_mappings
 argument_list|(
 name|mmup
