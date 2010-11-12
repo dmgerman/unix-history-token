@@ -128,6 +128,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/cc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -189,12 +195,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<netinet/tcp.h>
-end_include
 
 begin_define
 define|#
@@ -416,42 +416,6 @@ name|VNET_DEFINE
 argument_list|(
 name|int
 argument_list|,
-name|tcp_do_newreno
-argument_list|)
-operator|=
-literal|1
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_VNET_INT
-argument_list|(
-name|_net_inet_tcp
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|newreno
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|VNET_NAME
-argument_list|(
-name|tcp_do_newreno
-argument_list|)
-argument_list|,
-literal|0
-argument_list|,
-literal|"Enable NewReno Algorithms"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|VNET_DEFINE
-argument_list|(
-name|int
-argument_list|,
 name|tcp_do_tso
 argument_list|)
 operator|=
@@ -622,6 +586,69 @@ literal|"Max size of automatic send buffer"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_function_decl
+specifier|static
+name|void
+specifier|inline
+name|cc_after_idle
+parameter_list|(
+name|struct
+name|tcpcb
+modifier|*
+name|tp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * CC wrapper hook functions  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+specifier|inline
+name|cc_after_idle
+parameter_list|(
+name|struct
+name|tcpcb
+modifier|*
+name|tp
+parameter_list|)
+block|{
+name|INP_WLOCK_ASSERT
+argument_list|(
+name|tp
+operator|->
+name|t_inpcb
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|CC_ALGO
+argument_list|(
+name|tp
+argument_list|)
+operator|->
+name|after_idle
+operator|!=
+name|NULL
+condition|)
+name|CC_ALGO
+argument_list|(
+name|tp
+argument_list|)
+operator|->
+name|after_idle
+argument_list|(
+name|tp
+operator|->
+name|ccv
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Tcp output routine: figure out what should be sent and send it.  */
@@ -1047,6 +1074,8 @@ operator|&&
 name|IN_FASTRECOVERY
 argument_list|(
 name|tp
+operator|->
+name|t_flags
 argument_list|)
 operator|&&
 operator|(
@@ -5089,7 +5118,7 @@ if|#
 directive|if
 literal|0
 comment|/* 	 * This completely breaks TCP if newreno is turned on.  What happens 	 * is that if delayed-acks are turned on on the receiver, this code 	 * on the transmitter effectively destroys the TCP window, forcing 	 * it to four packets (1.5Kx4 = 6K window). 	 */
-block|if (sendalot&& (!V_tcp_do_newreno || --maxburst)) 		goto again;
+block|if (sendalot&& --maxburst) 		goto again;
 endif|#
 directive|endif
 if|if

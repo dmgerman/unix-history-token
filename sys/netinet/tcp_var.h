@@ -565,6 +565,17 @@ name|int
 name|t_bytes_acked
 decl_stmt|;
 comment|/* # bytes acked during current RTT */
+name|struct
+name|cc_algo
+modifier|*
+name|cc_algo
+decl_stmt|;
+comment|/* congestion control algorithm */
+name|struct
+name|cc_var
+modifier|*
+name|ccv
+decl_stmt|;
 name|int
 name|t_ispare
 decl_stmt|;
@@ -573,10 +584,10 @@ name|void
 modifier|*
 name|t_pspare2
 index|[
-literal|6
+literal|4
 index|]
 decl_stmt|;
-comment|/* 2 CC / 4 TBD */
+comment|/* 4 TBD */
 name|uint64_t
 name|_pad
 index|[
@@ -881,11 +892,33 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TF_CONGRECOVERY
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* congestion recovery mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TF_WASCRECOVERY
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* was in congestion recovery */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IN_FASTRECOVERY
 parameter_list|(
-name|tp
+name|t_flags
 parameter_list|)
-value|(tp->t_flags& TF_FASTRECOVERY)
+value|(t_flags& TF_FASTRECOVERY)
 end_define
 
 begin_define
@@ -893,9 +926,9 @@ define|#
 directive|define
 name|ENTER_FASTRECOVERY
 parameter_list|(
-name|tp
+name|t_flags
 parameter_list|)
-value|tp->t_flags |= TF_FASTRECOVERY
+value|t_flags |= TF_FASTRECOVERY
 end_define
 
 begin_define
@@ -903,9 +936,81 @@ define|#
 directive|define
 name|EXIT_FASTRECOVERY
 parameter_list|(
-name|tp
+name|t_flags
 parameter_list|)
-value|tp->t_flags&= ~TF_FASTRECOVERY
+value|t_flags&= ~TF_FASTRECOVERY
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN_CONGRECOVERY
+parameter_list|(
+name|t_flags
+parameter_list|)
+value|(t_flags& TF_CONGRECOVERY)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ENTER_CONGRECOVERY
+parameter_list|(
+name|t_flags
+parameter_list|)
+value|t_flags |= TF_CONGRECOVERY
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXIT_CONGRECOVERY
+parameter_list|(
+name|t_flags
+parameter_list|)
+value|t_flags&= ~TF_CONGRECOVERY
+end_define
+
+begin_define
+define|#
+directive|define
+name|IN_RECOVERY
+parameter_list|(
+name|t_flags
+parameter_list|)
+value|(t_flags& (TF_CONGRECOVERY | TF_FASTRECOVERY))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ENTER_RECOVERY
+parameter_list|(
+name|t_flags
+parameter_list|)
+value|t_flags |= (TF_CONGRECOVERY | TF_FASTRECOVERY)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXIT_RECOVERY
+parameter_list|(
+name|t_flags
+parameter_list|)
+value|t_flags&= ~(TF_CONGRECOVERY | TF_FASTRECOVERY)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BYTES_THIS_ACK
+parameter_list|(
+name|tp
+parameter_list|,
+name|th
+parameter_list|)
+value|(th->th_ack - tp->snd_una)
 end_define
 
 begin_comment
@@ -2165,16 +2270,6 @@ name|VNET_DECLARE
 argument_list|(
 name|int
 argument_list|,
-name|tcp_do_newreno
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|VNET_DECLARE
-argument_list|(
-name|int
-argument_list|,
 name|path_mtu_discovery
 argument_list|)
 expr_stmt|;
@@ -2196,6 +2291,26 @@ argument_list|(
 name|int
 argument_list|,
 name|ss_fltsz_local
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
+name|int
+argument_list|,
+name|tcp_do_rfc3465
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
+name|int
+argument_list|,
+name|tcp_abc_l_var
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2252,13 +2367,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|V_tcp_do_newreno
-value|VNET(tcp_do_newreno)
-end_define
-
-begin_define
-define|#
-directive|define
 name|V_path_mtu_discovery
 value|VNET(path_mtu_discovery)
 end_define
@@ -2275,6 +2383,20 @@ define|#
 directive|define
 name|V_ss_fltsz_local
 value|VNET(ss_fltsz_local)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_tcp_do_rfc3465
+value|VNET(tcp_do_rfc3465)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_tcp_abc_l_var
+value|VNET(tcp_abc_l_var)
 end_define
 
 begin_expr_stmt
@@ -3259,6 +3381,26 @@ parameter_list|(
 name|u_long
 parameter_list|,
 name|u_long
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|cc_cong_signal
+parameter_list|(
+name|struct
+name|tcpcb
+modifier|*
+name|tp
+parameter_list|,
+name|struct
+name|tcphdr
+modifier|*
+name|th
+parameter_list|,
+name|uint32_t
+name|type
 parameter_list|)
 function_decl|;
 end_function_decl
