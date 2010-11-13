@@ -1841,6 +1841,11 @@ argument_list|,
 literal|"archive_read_next_header"
 argument_list|)
 expr_stmt|;
+operator|++
+name|_a
+operator|->
+name|file_count
+expr_stmt|;
 name|archive_entry_clear
 argument_list|(
 name|entry
