@@ -3687,6 +3687,9 @@ operator|->
 name|text
 argument_list|)
 expr_stmt|;
+name|optschanged
+argument_list|()
+expr_stmt|;
 block|}
 elseif|else
 if|if
