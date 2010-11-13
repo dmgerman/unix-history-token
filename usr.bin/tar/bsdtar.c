@@ -233,6 +233,12 @@ directive|include
 file|"bsdtar.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"err.h"
+end_include
+
 begin_comment
 comment|/*  * Per POSIX.1-1988, tar defaults to reading/writing archives to/from  * the default tape device for the system.  Pick something reasonable here.  */
 end_comment
@@ -322,9 +328,7 @@ specifier|static
 name|void
 name|long_help
 parameter_list|(
-name|struct
-name|bsdtar
-modifier|*
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -481,7 +485,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Need bsdtar->progname before calling bsdtar_warnc. */
+comment|/* Need bsdtar_progname before calling bsdtar_warnc. */
 if|if
 condition|(
 operator|*
@@ -489,9 +493,7 @@ name|argv
 operator|==
 name|NULL
 condition|)
-name|bsdtar
-operator|->
-name|progname
+name|bsdtar_progname
 operator|=
 literal|"bsdtar"
 expr_stmt|;
@@ -509,9 +511,7 @@ name|defined
 argument_list|(
 name|__CYGWIN__
 argument_list|)
-name|bsdtar
-operator|->
-name|progname
+name|bsdtar_progname
 operator|=
 name|strrchr
 argument_list|(
@@ -523,9 +523,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|bsdtar
-operator|->
-name|progname
+name|bsdtar_progname
 operator|=
 name|strrchr
 argument_list|(
@@ -539,21 +537,15 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|bsdtar
-operator|->
-name|progname
+name|bsdtar_progname
 operator|!=
 name|NULL
 condition|)
-name|bsdtar
-operator|->
-name|progname
+name|bsdtar_progname
 operator|++
 expr_stmt|;
 else|else
-name|bsdtar
-operator|->
-name|progname
+name|bsdtar_progname
 operator|=
 operator|*
 name|argv
@@ -578,8 +570,6 @@ name|NULL
 condition|)
 name|bsdtar_warnc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|0
 argument_list|,
 literal|"Failed to set default locale"
@@ -768,8 +758,6 @@ literal|1024
 condition|)
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 literal|0
@@ -851,8 +839,6 @@ argument_list|)
 condition|)
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 literal|0
@@ -954,9 +940,7 @@ name|OPTION_HELP
 case|:
 comment|/* GNU tar, others */
 name|long_help
-argument_list|(
-name|bsdtar
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|exit
 argument_list|(
@@ -995,8 +979,6 @@ argument_list|)
 condition|)
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 literal|0
@@ -1026,8 +1008,6 @@ literal|'\0'
 condition|)
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 literal|0
@@ -1051,17 +1031,13 @@ else|#
 directive|else
 name|bsdtar_warnc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|0
 argument_list|,
 literal|"bzip2 compression not supported by this version of bsdtar"
 argument_list|)
 expr_stmt|;
 name|usage
-argument_list|(
-name|bsdtar
-argument_list|)
+argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
@@ -1083,8 +1059,6 @@ literal|'\0'
 condition|)
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 literal|0
@@ -1108,17 +1082,13 @@ else|#
 directive|else
 name|bsdtar_warnc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|0
 argument_list|,
 literal|"xz compression not supported by this version of bsdtar"
 argument_list|)
 expr_stmt|;
 name|usage
-argument_list|(
-name|bsdtar
-argument_list|)
+argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
@@ -1184,8 +1154,6 @@ literal|'\0'
 condition|)
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 literal|0
@@ -1209,17 +1177,13 @@ else|#
 directive|else
 name|bsdtar_warnc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|0
 argument_list|,
 literal|"lzma compression not supported by this version of bsdtar"
 argument_list|)
 expr_stmt|;
 name|usage
-argument_list|(
-name|bsdtar
-argument_list|)
+argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
@@ -1290,8 +1254,6 @@ literal|0
 condition|)
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 literal|0
@@ -1365,8 +1327,6 @@ literal|0
 condition|)
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 literal|0
@@ -1628,17 +1588,13 @@ else|#
 directive|else
 name|bsdtar_warnc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|0
 argument_list|,
 literal|"-s is not supported by this version of bsdtar"
 argument_list|)
 expr_stmt|;
 name|usage
-argument_list|(
-name|bsdtar
-argument_list|)
+argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
@@ -1794,8 +1750,6 @@ argument_list|)
 condition|)
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 literal|0
@@ -1837,8 +1791,6 @@ literal|'\0'
 condition|)
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 literal|0
@@ -1862,17 +1814,13 @@ else|#
 directive|else
 name|bsdtar_warnc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|0
 argument_list|,
 literal|"bzip2 compression not supported by this version of bsdtar"
 argument_list|)
 expr_stmt|;
 name|usage
-argument_list|(
-name|bsdtar
-argument_list|)
+argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
@@ -1891,8 +1839,6 @@ literal|'\0'
 condition|)
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 literal|0
@@ -1930,8 +1876,6 @@ literal|'\0'
 condition|)
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 literal|0
@@ -1955,17 +1899,13 @@ else|#
 directive|else
 name|bsdtar_warnc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|0
 argument_list|,
 literal|"gzip compression not supported by this version of bsdtar"
 argument_list|)
 expr_stmt|;
 name|usage
-argument_list|(
-name|bsdtar
-argument_list|)
+argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
@@ -1984,9 +1924,7 @@ expr_stmt|;
 break|break;
 default|default:
 name|usage
-argument_list|(
-name|bsdtar
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 block|}
@@ -2006,9 +1944,7 @@ name|possible_help_request
 condition|)
 block|{
 name|long_help
-argument_list|(
-name|bsdtar
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|exit
 argument_list|(
@@ -2027,8 +1963,6 @@ literal|'\0'
 condition|)
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 literal|0
@@ -2382,8 +2316,6 @@ literal|0
 condition|)
 name|bsdtar_warnc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|0
 argument_list|,
 literal|"Error exit delayed from previous errors."
@@ -2429,8 +2361,6 @@ name|opt
 condition|)
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 literal|0
@@ -2493,8 +2423,6 @@ name|NULL
 condition|)
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 literal|0
@@ -2515,10 +2443,7 @@ begin_function
 name|void
 name|usage
 parameter_list|(
-name|struct
-name|bsdtar
-modifier|*
-name|bsdtar
+name|void
 parameter_list|)
 block|{
 specifier|const
@@ -2528,9 +2453,7 @@ name|p
 decl_stmt|;
 name|p
 operator|=
-name|bsdtar
-operator|->
-name|progname
+name|bsdtar_progname
 expr_stmt|;
 name|fprintf
 argument_list|(
@@ -2652,10 +2575,7 @@ specifier|static
 name|void
 name|long_help
 parameter_list|(
-name|struct
-name|bsdtar
-modifier|*
-name|bsdtar
+name|void
 parameter_list|)
 block|{
 specifier|const
@@ -2670,9 +2590,7 @@ name|p
 decl_stmt|;
 name|prog
 operator|=
-name|bsdtar
-operator|->
-name|progname
+name|bsdtar_progname
 expr_stmt|;
 name|fflush
 argument_list|(

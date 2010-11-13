@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"err.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -160,8 +166,6 @@ name|NULL
 condition|)
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 name|errno
@@ -266,8 +270,6 @@ name|NULL
 condition|)
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 name|errno
@@ -319,8 +321,6 @@ literal|'\0'
 condition|)
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 literal|0
@@ -348,8 +348,6 @@ name|NULL
 condition|)
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 literal|0
@@ -374,8 +372,6 @@ name|NULL
 condition|)
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 name|errno
@@ -455,8 +451,6 @@ argument_list|)
 expr_stmt|;
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 literal|0
@@ -496,8 +490,6 @@ name|NULL
 condition|)
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 literal|0
@@ -528,8 +520,6 @@ name|NULL
 condition|)
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 name|errno
@@ -634,8 +624,6 @@ break|break;
 default|default:
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 literal|0
@@ -656,11 +644,6 @@ specifier|static
 name|void
 name|realloc_strncat
 parameter_list|(
-name|struct
-name|bsdtar
-modifier|*
-name|bsdtar
-parameter_list|,
 name|char
 modifier|*
 modifier|*
@@ -721,8 +704,6 @@ name|NULL
 condition|)
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 name|errno
@@ -779,11 +760,6 @@ specifier|static
 name|void
 name|realloc_strcat
 parameter_list|(
-name|struct
-name|bsdtar
-modifier|*
-name|bsdtar
-parameter_list|,
 name|char
 modifier|*
 modifier|*
@@ -844,8 +820,6 @@ name|NULL
 condition|)
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 name|errno
@@ -1032,8 +1006,6 @@ name|print
 expr_stmt|;
 name|realloc_strncat
 argument_list|(
-name|bsdtar
-argument_list|,
 name|result
 argument_list|,
 name|name
@@ -1083,8 +1055,6 @@ condition|)
 block|{
 name|realloc_strncat
 argument_list|(
-name|bsdtar
-argument_list|,
 name|result
 argument_list|,
 name|rule
@@ -1100,8 +1070,6 @@ argument_list|)
 expr_stmt|;
 name|realloc_strncat
 argument_list|(
-name|bsdtar
-argument_list|,
 name|result
 argument_list|,
 name|name
@@ -1159,8 +1127,6 @@ literal|'\\'
 case|:
 name|realloc_strncat
 argument_list|(
-name|bsdtar
-argument_list|,
 name|result
 argument_list|,
 name|rule
@@ -1210,8 +1176,6 @@ literal|'9'
 case|:
 name|realloc_strncat
 argument_list|(
-name|bsdtar
-argument_list|,
 name|result
 argument_list|,
 name|rule
@@ -1268,8 +1232,6 @@ return|;
 block|}
 name|realloc_strncat
 argument_list|(
-name|bsdtar
-argument_list|,
 name|result
 argument_list|,
 name|name
@@ -1316,8 +1278,6 @@ block|}
 block|}
 name|realloc_strcat
 argument_list|(
-name|bsdtar
-argument_list|,
 name|result
 argument_list|,
 name|rule
@@ -1351,8 +1311,6 @@ name|got_match
 condition|)
 name|realloc_strcat
 argument_list|(
-name|bsdtar
-argument_list|,
 name|result
 argument_list|,
 name|name

@@ -78,6 +78,12 @@ directive|include
 file|"bsdtar.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"err.h"
+end_include
+
 begin_comment
 comment|/*  * Short options for tar.  Please keep this sorted.  */
 end_comment
@@ -877,8 +883,6 @@ condition|)
 block|{
 name|bsdtar_warnc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|0
 argument_list|,
 literal|"Option %c requires an argument"
@@ -1137,8 +1141,6 @@ condition|)
 block|{
 name|bsdtar_warnc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|0
 argument_list|,
 literal|"Option -%c requires an argument"
@@ -1355,8 +1357,6 @@ condition|)
 block|{
 name|bsdtar_warnc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|0
 argument_list|,
 literal|"Option %s%s is not supported"
@@ -1381,8 +1381,6 @@ condition|)
 block|{
 name|bsdtar_warnc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|0
 argument_list|,
 literal|"Ambiguous option %s%s (matches --%s and --%s)"
@@ -1444,8 +1442,6 @@ condition|)
 block|{
 name|bsdtar_warnc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|0
 argument_list|,
 literal|"Option %s%s requires an argument"
@@ -1489,8 +1485,6 @@ condition|)
 block|{
 name|bsdtar_warnc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|0
 argument_list|,
 literal|"Option %s%s does not allow an argument"

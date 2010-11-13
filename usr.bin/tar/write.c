@@ -349,6 +349,12 @@ directive|include
 file|"tree.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"err.h"
+end_include
+
 begin_comment
 comment|/* Size of buffer for holding file data prior to writing. */
 end_comment
@@ -728,8 +734,6 @@ name|NULL
 condition|)
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 literal|0
@@ -804,9 +808,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 name|usage
-argument_list|(
-name|bsdtar
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 comment|/* 	 * If user explicitly set the block size, then assume they 	 * want the last block padded as well.  Otherwise, use the 	 * default block size and accept archive_write_open_file()'s 	 * default padding decisions. 	 */
@@ -947,8 +949,6 @@ break|break;
 default|default:
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 literal|0
@@ -977,8 +977,6 @@ argument_list|)
 condition|)
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 literal|0
@@ -1004,8 +1002,6 @@ argument_list|)
 condition|)
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 literal|0
@@ -1096,8 +1092,6 @@ literal|0
 condition|)
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 name|errno
@@ -1150,8 +1144,6 @@ name|ARCHIVE_OK
 condition|)
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 name|archive_errno
@@ -1208,8 +1200,6 @@ argument_list|)
 expr_stmt|;
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 literal|0
@@ -1298,8 +1288,6 @@ condition|)
 block|{
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 literal|0
@@ -1376,8 +1364,6 @@ argument_list|)
 condition|)
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 literal|0
@@ -1403,8 +1389,6 @@ argument_list|)
 condition|)
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 literal|0
@@ -1528,8 +1512,6 @@ literal|0
 condition|)
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 name|errno
@@ -1589,8 +1571,6 @@ condition|)
 block|{
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 literal|0
@@ -1646,8 +1626,6 @@ argument_list|)
 expr_stmt|;
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 literal|0
@@ -1798,8 +1776,6 @@ argument_list|)
 condition|)
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 literal|0
@@ -1825,8 +1801,6 @@ argument_list|)
 condition|)
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 literal|0
@@ -1976,8 +1950,6 @@ name|NULL
 condition|)
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 literal|0
@@ -2000,8 +1972,6 @@ name|NULL
 condition|)
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 literal|0
@@ -2036,8 +2006,6 @@ name|NULL
 condition|)
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 literal|0
@@ -2132,8 +2100,6 @@ condition|)
 block|{
 name|bsdtar_warnc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 literal|0
@@ -2326,8 +2292,6 @@ condition|)
 block|{
 name|bsdtar_warnc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|0
 argument_list|,
 literal|"%s"
@@ -2470,8 +2434,6 @@ name|next_line_is_dir
 condition|)
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 name|errno
@@ -2656,8 +2618,6 @@ condition|)
 block|{
 name|bsdtar_warnc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|0
 argument_list|,
 literal|"%s"
@@ -2701,8 +2661,6 @@ condition|)
 block|{
 name|bsdtar_warnc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|0
 argument_list|,
 literal|"Error reading archive %s: %s"
@@ -2894,8 +2852,6 @@ name|verbose
 condition|)
 name|bsdtar_warnc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|0
 argument_list|,
 literal|"%s: %s"
@@ -3083,8 +3039,6 @@ condition|)
 block|{
 name|bsdtar_warnc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|0
 argument_list|,
 literal|"%s"
@@ -3205,8 +3159,6 @@ condition|)
 block|{
 name|bsdtar_warnc
 argument_list|(
-name|bsdtar
-argument_list|,
 name|errno
 argument_list|,
 literal|"%s: Cannot open"
@@ -3276,8 +3228,6 @@ name|TREE_ERROR_FATAL
 condition|)
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 name|tree_errno
@@ -3299,8 +3249,6 @@ condition|)
 block|{
 name|bsdtar_warnc
 argument_list|(
-name|bsdtar
-argument_list|,
 name|errno
 argument_list|,
 literal|"%s: Couldn't visit directory"
@@ -3351,8 +3299,6 @@ block|{
 comment|/* Couldn't lstat(); must not exist. */
 name|bsdtar_warnc
 argument_list|(
-name|bsdtar
-argument_list|,
 name|errno
 argument_list|,
 literal|"%s: Cannot stat"
@@ -3550,8 +3496,6 @@ name|ARCHIVE_OK
 condition|)
 name|bsdtar_warnc
 argument_list|(
-name|bsdtar
-argument_list|,
 name|archive_errno
 argument_list|(
 name|bsdtar
@@ -3929,8 +3873,6 @@ name|verbose
 condition|)
 name|bsdtar_warnc
 argument_list|(
-name|bsdtar
-argument_list|,
 name|errno
 argument_list|,
 literal|"%s: could not open file"
@@ -3979,8 +3921,6 @@ name|verbose
 condition|)
 name|bsdtar_warnc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|0
 argument_list|,
 literal|"%s: %s"
@@ -4163,8 +4103,6 @@ block|{
 comment|/* Write failed; this is bad */
 name|bsdtar_warnc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|0
 argument_list|,
 literal|"%s"
@@ -4192,8 +4130,6 @@ block|{
 comment|/* Write was truncated; warn but continue. */
 name|bsdtar_warnc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|0
 argument_list|,
 literal|"%s: Truncated write; file may have grown while being archived."
@@ -4561,8 +4497,6 @@ name|NULL
 condition|)
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 name|ENOMEM
@@ -4589,8 +4523,6 @@ name|NULL
 condition|)
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 name|ENOMEM
@@ -4697,8 +4629,6 @@ name|NULL
 condition|)
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 literal|0
@@ -4716,8 +4646,6 @@ name|NULL
 condition|)
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 literal|0
@@ -4735,8 +4663,6 @@ literal|0
 condition|)
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 literal|0
@@ -4783,8 +4709,6 @@ argument_list|)
 condition|)
 name|bsdtar_errc
 argument_list|(
-name|bsdtar
-argument_list|,
 literal|1
 argument_list|,
 literal|0
