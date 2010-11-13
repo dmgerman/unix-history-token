@@ -652,13 +652,17 @@ name|extract_flags
 operator||=
 name|SECURITY
 expr_stmt|;
-comment|/* Defaults for root user: */
+ifndef|#
+directive|ifndef
+name|_WIN32
+comment|/* On POSIX systems, assume --same-owner and -p when run by 	 * the root user.  This doesn't make any sense on Windows. */
 if|if
 condition|(
-name|bsdtar_is_privileged
-argument_list|(
 name|bsdtar
-argument_list|)
+operator|->
+name|user_uid
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* --same-owner */
@@ -694,6 +698,8 @@ operator||=
 name|ARCHIVE_EXTRACT_FFLAGS
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|bsdtar
 operator|->
 name|argv

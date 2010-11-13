@@ -706,6 +706,12 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|_WIN32
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
 name|__CYGWIN__
 argument_list|)
 end_if
@@ -713,42 +719,8 @@ end_if
 begin_include
 include|#
 directive|include
-file|"bsdtar_cygwin.h"
-end_include
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|_WIN32
-argument_list|)
-end_elif
-
-begin_comment
-comment|/*&& !__CYGWIN__ */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|"bsdtar_windows.h"
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|bsdtar_is_privileged
-parameter_list|(
-name|bsdtar
-parameter_list|)
-value|(bsdtar->user_uid == 0)
-end_define
 
 begin_endif
 endif|#
