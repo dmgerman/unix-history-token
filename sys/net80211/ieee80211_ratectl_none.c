@@ -146,7 +146,23 @@ name|ieee80211_node
 modifier|*
 name|ni
 parameter_list|)
-block|{ }
+block|{
+name|ni
+operator|->
+name|ni_txrate
+operator|=
+name|ni
+operator|->
+name|ni_rates
+operator|.
+name|rs_rates
+index|[
+literal|0
+index|]
+operator|&
+name|IEEE80211_RATE_VAL
+expr_stmt|;
+block|}
 end_function
 
 begin_function
