@@ -4994,7 +4994,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Prefer memory space register mapping over IO space. 	 * Because RTL8169SC does not seem to work when memory mapping 	 * is used always activate io mapping.  	 */
+comment|/* 	 * Prefer memory space register mapping over IO space. 	 * Because RTL8169SC does not seem to work when memory mapping 	 * is used always activate io mapping. 	 */
 if|if
 condition|(
 name|devid
@@ -9718,7 +9718,7 @@ operator|->
 name|rl_dev
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Reclaim transmitted frames here. Technically it is not 	 * necessary to do here but it ensures periodic reclamation 	 * regardless of Tx completion interrupt which seems to be 	 * lost on PCIe based controllers under certain situations.  	 */
+comment|/* 	 * Reclaim transmitted frames here. Technically it is not 	 * necessary to do here but it ensures periodic reclamation 	 * regardless of Tx completion interrupt which seems to be 	 * lost on PCIe based controllers under certain situations. 	 */
 name|re_txeof
 argument_list|(
 name|sc
