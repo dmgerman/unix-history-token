@@ -1102,7 +1102,11 @@ operator|.
 name|ifr_media
 operator|&=
 operator|~
+operator|(
 name|IFM_GMASK
+operator||
+name|IFM_OMASK
+operator|)
 expr_stmt|;
 block|}
 name|ifmr
