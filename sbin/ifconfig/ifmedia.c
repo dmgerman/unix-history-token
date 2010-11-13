@@ -3489,6 +3489,10 @@ modifier|*
 name|ttos
 decl_stmt|;
 name|int
+name|seen_option
+init|=
+literal|0
+decl_stmt|,
 name|i
 decl_stmt|;
 comment|/* Find the top-level interface type. */
@@ -3646,9 +3650,27 @@ operator|->
 name|ifmt_word
 condition|)
 block|{
+if|if
+condition|(
+name|seen_option
+operator|==
+literal|0
+condition|)
 name|printf
 argument_list|(
-literal|" mediaopt %s"
+literal|" mediaopt "
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s%s"
+argument_list|,
+name|seen_option
+operator|++
+condition|?
+literal|","
+else|:
+literal|""
 argument_list|,
 name|desc
 operator|->
