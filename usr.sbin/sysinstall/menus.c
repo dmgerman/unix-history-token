@@ -4693,7 +4693,7 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.tr.freebsd.org"
+literal|"=ftp://ftp2.tr.freebsd.org"
 block|}
 block|,
 block|{
