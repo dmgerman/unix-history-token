@@ -715,15 +715,6 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
-case|case
-name|IFM_100_T4
-case|:
-case|case
-name|IFM_100_TX
-case|:
-case|case
-name|IFM_10_T
-case|:
 default|default:
 return|return
 operator|(
