@@ -11649,6 +11649,16 @@ block|}
 else|else
 block|{
 comment|/* Buffer is physical */
+ifdef|#
+directive|ifdef
+name|PAE
+name|panic
+argument_list|(
+literal|"arcmsr: CAM_DATA_PHYS not supported"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|struct
 name|bus_dma_segment
 name|seg
@@ -11688,6 +11698,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 else|else
