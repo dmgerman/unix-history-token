@@ -65,31 +65,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dirent.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<pwd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
+file|<inttypes.h>
 end_include
 
 begin_include
@@ -101,13 +89,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_comment
@@ -2289,8 +2295,9 @@ expr_stmt|;
 name|TRACE
 argument_list|(
 operator|(
-literal|"evalbackq: size=%d: \"%.*s\"\n"
+literal|"expbackq: size=%td: \"%.*s\"\n"
 operator|,
+operator|(
 operator|(
 name|dest
 operator|-
@@ -2299,7 +2306,12 @@ argument_list|()
 operator|)
 operator|-
 name|startloc
+operator|)
 operator|,
+call|(
+name|int
+call|)
+argument_list|(
 operator|(
 name|dest
 operator|-
@@ -2308,6 +2320,7 @@ argument_list|()
 operator|)
 operator|-
 name|startloc
+argument_list|)
 operator|,
 name|stackblock
 argument_list|()

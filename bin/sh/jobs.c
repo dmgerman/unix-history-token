@@ -47,37 +47,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<paths.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
+file|<sys/ioctl.h>
 end_include
 
 begin_include
@@ -89,7 +59,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/wait.h>
+file|<sys/resource.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stddef.h>
 end_include
 
 begin_include
@@ -101,7 +77,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/resource.h>
+file|<sys/wait.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
 end_include
 
 begin_include
@@ -113,7 +101,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -3426,7 +3426,7 @@ expr_stmt|;
 name|TRACE
 argument_list|(
 operator|(
-literal|"makejob(%p, %d) returns %%%d\n"
+literal|"makejob(%p, %d) returns %%%td\n"
 operator|,
 operator|(
 name|void
@@ -3768,7 +3768,7 @@ decl_stmt|;
 name|TRACE
 argument_list|(
 operator|(
-literal|"forkshell(%%%d, %p, %d) called\n"
+literal|"forkshell(%%%td, %p, %d) called\n"
 operator|,
 name|jp
 operator|-
@@ -4368,7 +4368,7 @@ expr_stmt|;
 name|TRACE
 argument_list|(
 operator|(
-literal|"waitforjob(%%%d) called\n"
+literal|"waitforjob(%%%td) called\n"
 operator|,
 name|jp
 operator|-
@@ -4947,7 +4947,7 @@ block|{
 name|TRACE
 argument_list|(
 operator|(
-literal|"Job %d: changing state from %d to %d\n"
+literal|"Job %td: changing state from %d to %d\n"
 operator|,
 name|jp
 operator|-
