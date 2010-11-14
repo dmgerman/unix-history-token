@@ -232,6 +232,30 @@ define|\
 value|bus_space_read_4(sc->sc_iot, sc->sc_gpio_ioh, reg)
 end_define
 
+begin_define
+define|#
+directive|define
+name|IXP4XX_GPIO_LOCK
+parameter_list|()
+value|mtx_lock(&ixp425_gpio_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXP4XX_GPIO_UNLOCK
+parameter_list|()
+value|mtx_unlock(&ixp425_gpio_mtx)
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|mtx
+name|ixp425_gpio_mtx
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 specifier|extern
 name|struct
