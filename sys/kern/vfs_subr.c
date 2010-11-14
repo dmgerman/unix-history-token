@@ -2461,7 +2461,9 @@ name|timestamp_precision
 argument_list|,
 literal|0
 argument_list|,
-literal|"File timestamp precision (0: seconds, 1: sec + ns accurate to 1/HZ, 2: sec + ns truncated to ms, 3+: sec + ns (max. precision))"
+literal|"File timestamp precision (0: seconds, "
+literal|"1: sec + ns accurate to 1/HZ, 2: sec + ns truncated to ms, "
+literal|"3+: sec + ns (max. precision))"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
