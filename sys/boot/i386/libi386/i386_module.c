@@ -21,30 +21,6 @@ begin_comment
 comment|/*  * i386-specific module functionality.  *  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<stand.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"bootstrap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"libi386.h"
-end_include
-
 begin_comment
 comment|/*  * Use voodoo to load modules required by current hardware.  */
 end_comment

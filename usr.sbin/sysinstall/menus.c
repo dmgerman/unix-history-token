@@ -4517,6 +4517,21 @@ literal|"=ftp://ftp3.se.freebsd.org"
 block|}
 block|,
 block|{
+literal|" Sweden #4"
+block|,
+literal|"ftp4.se.freebsd.org"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp4.se.freebsd.org"
+block|}
+block|,
+block|{
 literal|" Sweden #5"
 block|,
 literal|"ftp5.se.freebsd.org"
@@ -5102,7 +5117,7 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Network interface information required"
 block|,
-literal|"Please select the ethernet device to configure.\n\n"
+literal|"Please select the ethernet or PLIP device to configure.\n\n"
 literal|""
 block|,
 literal|"Press F1 to read network configuration manual"

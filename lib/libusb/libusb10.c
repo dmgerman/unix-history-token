@@ -3441,6 +3441,22 @@ name|NULL
 condition|)
 return|return;
 comment|/* be NULL safe */
+comment|/* check if we should free the transfer buffer */
+if|if
+condition|(
+name|uxfer
+operator|->
+name|flags
+operator|&
+name|LIBUSB_TRANSFER_FREE_BUFFER
+condition|)
+name|free
+argument_list|(
+name|uxfer
+operator|->
+name|buffer
+argument_list|)
+expr_stmt|;
 name|sxfer
 operator|=
 operator|(

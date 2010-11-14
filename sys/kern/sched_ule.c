@@ -7291,9 +7291,6 @@ name|u_char
 name|prio
 parameter_list|)
 block|{
-name|u_char
-name|oldprio
-decl_stmt|;
 name|td
 operator|->
 name|td_base_user_pri
@@ -7315,12 +7312,6 @@ operator|<=
 name|prio
 condition|)
 return|return;
-name|oldprio
-operator|=
-name|td
-operator|->
-name|td_user_pri
-expr_stmt|;
 name|td
 operator|->
 name|td_user_pri
@@ -7343,9 +7334,6 @@ name|u_char
 name|prio
 parameter_list|)
 block|{
-name|u_char
-name|oldprio
-decl_stmt|;
 name|THREAD_LOCK_ASSERT
 argument_list|(
 name|td
@@ -7358,12 +7346,6 @@ operator|->
 name|td_flags
 operator||=
 name|TDF_UBORROWING
-expr_stmt|;
-name|oldprio
-operator|=
-name|td
-operator|->
-name|td_user_pri
 expr_stmt|;
 name|td
 operator|->

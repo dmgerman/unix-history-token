@@ -2992,6 +2992,10 @@ name|sc
 operator|->
 name|sc_repdesc_ptr
 operator|=
+operator|(
+name|void
+operator|*
+operator|)
 operator|&
 name|uhid_graphire_report_descr
 expr_stmt|;
@@ -3085,6 +3089,10 @@ name|sc
 operator|->
 name|sc_repdesc_ptr
 operator|=
+operator|(
+name|void
+operator|*
+operator|)
 operator|&
 name|uhid_graphire3_4x5_report_descr
 expr_stmt|;
@@ -3144,6 +3152,10 @@ name|sc
 operator|->
 name|sc_repdesc_ptr
 operator|=
+operator|(
+name|void
+operator|*
+operator|)
 operator|&
 name|uhid_xb360gp_report_descr
 expr_stmt|;

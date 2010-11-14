@@ -294,7 +294,7 @@ name|stderr
 argument_list|,
 literal|"usage: mdconfig -a -t type [-n] [-o [no]option] ... [-f file]\n"
 literal|"                [-s size] [-S sectorsize] [-u unit]\n"
-literal|"                [-x sectors/track] [-y heads/cyl]\n"
+literal|"                [-x sectors/track] [-y heads/cylinder]\n"
 literal|"       mdconfig -d -u unit [-o [no]force]\n"
 literal|"       mdconfig -l [-v] [-n] [-u unit]\n"
 argument_list|)
