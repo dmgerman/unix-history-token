@@ -56,6 +56,20 @@ directive|include
 file|<machine/pcpu.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|DPCPU_SETNAME
+value|"set_pcpu"
+end_define
+
+begin_define
+define|#
+directive|define
+name|DPCPU_SYMPREFIX
+value|"pcpu_entry_"
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -191,7 +205,7 @@ name|t
 parameter_list|,
 name|n
 parameter_list|)
-value|t DPCPU_NAME(n) __section("set_pcpu") __used
+value|t DPCPU_NAME(n) __section(DPCPU_SETNAME) __used
 end_define
 
 begin_comment

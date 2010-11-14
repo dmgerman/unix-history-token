@@ -794,7 +794,8 @@ directive|define
 name|NLIST_START_SET_PCPU
 value|0
 block|{
-literal|"___start_set_pcpu"
+literal|"___start_"
+name|DPCPU_SETNAME
 block|}
 block|,
 define|#
@@ -802,7 +803,8 @@ directive|define
 name|NLIST_STOP_SET_PCPU
 value|1
 block|{
-literal|"___stop_set_pcpu"
+literal|"___stop_"
+name|DPCPU_SETNAME
 block|}
 block|,
 define|#
