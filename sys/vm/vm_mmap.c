@@ -813,7 +813,7 @@ name|curproc
 operator|->
 name|p_osrel
 operator|>=
-name|__FreeBSD_version_MAP_ANON
+name|P_OSREL_MAP_ANON
 operator|)
 operator|||
 operator|(
