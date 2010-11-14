@@ -2543,7 +2543,6 @@ name|IFM_10_T
 case|:
 break|break;
 block|}
-comment|/* Disable Rx flow control. */
 if|if
 condition|(
 operator|(
@@ -2554,7 +2553,7 @@ operator|->
 name|mii_media_active
 argument_list|)
 operator|&
-name|IFM_FLAG0
+name|IFM_ETH_RXPAUSE
 operator|)
 operator|==
 literal|0
@@ -2563,7 +2562,6 @@ name|gmac
 operator||=
 name|GM_GPCR_FC_RX_DIS
 expr_stmt|;
-comment|/* Disable Tx flow control. */
 if|if
 condition|(
 operator|(
@@ -2574,7 +2572,7 @@ operator|->
 name|mii_media_active
 argument_list|)
 operator|&
-name|IFM_FLAG1
+name|IFM_ETH_TXPAUSE
 operator|)
 operator|==
 literal|0
@@ -2670,7 +2668,7 @@ operator|->
 name|mii_media_active
 argument_list|)
 operator|&
-name|IFM_FLAG0
+name|IFM_ETH_RXPAUSE
 operator|)
 operator|!=
 literal|0
@@ -9803,6 +9801,12 @@ operator|=
 name|sc
 operator|->
 name|msk_pmd
+expr_stmt|;
+name|mmd
+operator|->
+name|mii_flags
+operator||=
+name|MIIF_DOPAUSE
 expr_stmt|;
 if|if
 condition|(

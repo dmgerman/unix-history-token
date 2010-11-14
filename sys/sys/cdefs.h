@@ -1934,21 +1934,11 @@ end_comment
 begin_define
 define|#
 directive|define
-name|__GLOBL1
-parameter_list|(
-name|sym
-parameter_list|)
-value|__asm__(".globl " #sym)
-end_define
-
-begin_define
-define|#
-directive|define
 name|__GLOBL
 parameter_list|(
 name|sym
 parameter_list|)
-value|__GLOBL1(sym)
+value|__asm__(".globl " sym)
 end_define
 
 begin_if

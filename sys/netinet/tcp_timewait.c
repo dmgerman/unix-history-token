@@ -331,8 +331,7 @@ file|<security/mac/mac_framework.h>
 end_include
 
 begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
+name|STATIC_VNET_DEFINE
 argument_list|(
 name|uma_zone_t
 argument_list|,
@@ -360,8 +359,7 @@ comment|/*  * The timed wait queue contains references to each of the TCP sessio
 end_comment
 
 begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
+name|STATIC_VNET_DEFINE
 argument_list|(
 name|TAILQ_HEAD
 argument_list|(,

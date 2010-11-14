@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fcntl.h>
 end_include
 
@@ -163,6 +169,10 @@ name|_close
 argument_list|(
 name|fd
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|EINVAL
 expr_stmt|;
 return|return
 operator|(
@@ -544,6 +554,10 @@ name|fclose
 argument_list|(
 name|fp
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|ESRCH
 expr_stmt|;
 return|return
 operator|(

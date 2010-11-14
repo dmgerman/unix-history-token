@@ -680,6 +680,34 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ANAR_PAUSE_NONE
+value|(0<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ANAR_PAUSE_SYM
+value|(1<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ANAR_PAUSE_ASYM
+value|(2<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ANAR_PAUSE_TOWARDS
+value|(3<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ANAR_X_FD
 value|0x0020
 end_define
@@ -851,6 +879,41 @@ end_define
 begin_comment
 comment|/* protocol selector CSMA/CD */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ANLPAR_PAUSE_MASK
+value|(3<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ANLPAR_PAUSE_NONE
+value|(0<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ANLPAR_PAUSE_SYM
+value|(1<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ANLPAR_PAUSE_ASYM
+value|(2<< 10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ANLPAR_PAUSE_TOWARDS
+value|(3<< 10)
+end_define
 
 begin_define
 define|#

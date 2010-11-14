@@ -564,7 +564,7 @@ begin_define
 define|#
 directive|define
 name|VAR_IPV6_ENABLE
-value|"ipv6_enable"
+value|"ipv6_activate_all_interfaces"
 end_define
 
 begin_define
@@ -815,8 +815,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|VAR_NTPDATE_FLAGS
-value|"ntpdate_flags"
+name|VAR_NTPDATE_HOSTS
+value|"ntpdate_hosts"
 end_define
 
 begin_define

@@ -683,8 +683,7 @@ struct|;
 end_struct
 
 begin_expr_stmt
-specifier|static
-name|DPCPU_DEFINE
+name|STATIC_DPCPU_DEFINE
 argument_list|(
 expr|struct
 name|pcpuidlestat

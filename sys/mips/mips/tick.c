@@ -138,8 +138,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-specifier|static
-name|DPCPU_DEFINE
+name|STATIC_DPCPU_DEFINE
 argument_list|(
 name|uint32_t
 argument_list|,
@@ -156,8 +155,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-specifier|static
-name|DPCPU_DEFINE
+name|STATIC_DPCPU_DEFINE
 argument_list|(
 specifier|volatile
 name|uint32_t
@@ -168,8 +166,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-specifier|static
-name|DPCPU_DEFINE
+name|STATIC_DPCPU_DEFINE
 argument_list|(
 specifier|volatile
 name|uint32_t
@@ -180,8 +177,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-specifier|static
-name|DPCPU_DEFINE
+name|STATIC_DPCPU_DEFINE
 argument_list|(
 name|uint32_t
 argument_list|,
@@ -191,8 +187,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-specifier|static
-name|DPCPU_DEFINE
+name|STATIC_DPCPU_DEFINE
 argument_list|(
 name|uint32_t
 argument_list|,

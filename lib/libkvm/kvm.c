@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/pcpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/vnet.h>
 end_include
 
@@ -2233,7 +2239,7 @@ name|nl
 argument_list|,
 name|error
 argument_list|,
-literal|"pcpu_entry_"
+name|DPCPU_SYMPREFIX
 argument_list|,
 name|_kvm_dpcpu_validaddr
 argument_list|)
@@ -2467,7 +2473,7 @@ name|strcmp
 argument_list|(
 name|prefix
 argument_list|,
-literal|"pcpu_entry_"
+name|DPCPU_SYMPREFIX
 argument_list|)
 condition|)
 name|p
@@ -2559,7 +2565,7 @@ literal|1
 expr_stmt|;
 name|prefix
 operator|=
-literal|"pcpu_entry_"
+name|DPCPU_SYMPREFIX
 expr_stmt|;
 goto|goto
 name|again

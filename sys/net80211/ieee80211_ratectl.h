@@ -343,16 +343,6 @@ name|ni
 operator|->
 name|ni_vap
 decl_stmt|;
-if|if
-condition|(
-name|ni
-operator|->
-name|ni_rctls
-operator|==
-name|NULL
-condition|)
-comment|/* ratectl not setup */
-return|return;
 name|vap
 operator|->
 name|iv_rate
@@ -394,18 +384,6 @@ name|ni
 operator|->
 name|ni_vap
 decl_stmt|;
-if|if
-condition|(
-name|ni
-operator|->
-name|ni_rctls
-operator|==
-name|NULL
-condition|)
-comment|/* ratectl not setup */
-return|return
-literal|0
-return|;
 return|return
 name|vap
 operator|->
@@ -453,16 +431,6 @@ modifier|*
 name|arg2
 parameter_list|)
 block|{
-if|if
-condition|(
-name|ni
-operator|->
-name|ni_rctls
-operator|==
-name|NULL
-condition|)
-comment|/* ratectl not setup */
-return|return;
 name|vap
 operator|->
 name|iv_rate
@@ -524,16 +492,6 @@ name|ir_tx_update
 operator|==
 name|NULL
 condition|)
-return|return;
-if|if
-condition|(
-name|ni
-operator|->
-name|ni_rctls
-operator|==
-name|NULL
-condition|)
-comment|/* ratectl not setup */
 return|return;
 name|vap
 operator|->

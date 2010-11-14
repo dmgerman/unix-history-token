@@ -115,6 +115,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|fwrite
+parameter_list|(
+name|ptr
+parameter_list|,
+name|size
+parameter_list|,
+name|nmemb
+parameter_list|,
+name|file
+parameter_list|)
+value|outbin(ptr, (size) * (nmemb), file)
+end_define
+
+begin_define
+define|#
+directive|define
 name|fflush
 value|flushout
 end_define

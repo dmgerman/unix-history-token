@@ -932,7 +932,7 @@ expr|struct
 name|namecache
 argument_list|)
 argument_list|,
-literal|""
+literal|"sizeof(struct namecache)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -970,9 +970,11 @@ parameter_list|,
 name|name
 parameter_list|,
 name|var
+parameter_list|,
+name|descr
 parameter_list|)
 define|\
-value|SYSCTL_ULONG(_vfs_cache, OID_AUTO, name, mode, var, 0, "");
+value|SYSCTL_ULONG(_vfs_cache, OID_AUTO, name, mode, var, 0, descr);
 end_define
 
 begin_expr_stmt
@@ -984,6 +986,8 @@ name|numneg
 argument_list|,
 operator|&
 name|numneg
+argument_list|,
+literal|"Number of negative cache entries"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -997,6 +1001,8 @@ name|numcache
 argument_list|,
 operator|&
 name|numcache
+argument_list|,
+literal|"Number of cache entries"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1017,6 +1023,8 @@ name|numcalls
 argument_list|,
 operator|&
 name|numcalls
+argument_list|,
+literal|"Number of cache lookups"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1037,6 +1045,8 @@ name|dothits
 argument_list|,
 operator|&
 name|dothits
+argument_list|,
+literal|"Number of '.' hits"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1057,6 +1067,8 @@ name|dotdothits
 argument_list|,
 operator|&
 name|dotdothits
+argument_list|,
+literal|"Number of '..' hits"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1077,6 +1089,8 @@ name|numchecks
 argument_list|,
 operator|&
 name|numchecks
+argument_list|,
+literal|"Number of checks in lookup"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1097,6 +1111,8 @@ name|nummiss
 argument_list|,
 operator|&
 name|nummiss
+argument_list|,
+literal|"Number of cache misses"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1117,6 +1133,8 @@ name|nummisszap
 argument_list|,
 operator|&
 name|nummisszap
+argument_list|,
+literal|"Number of cache misses we do not want to cache"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1137,6 +1155,8 @@ name|numposzaps
 argument_list|,
 operator|&
 name|numposzaps
+argument_list|,
+literal|"Number of cache hits (positive) we do not want to cache"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1157,6 +1177,8 @@ name|numposhits
 argument_list|,
 operator|&
 name|numposhits
+argument_list|,
+literal|"Number of cache hits (positive)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1177,6 +1199,8 @@ name|numnegzaps
 argument_list|,
 operator|&
 name|numnegzaps
+argument_list|,
+literal|"Number of cache hits (negative) we do not want to cache"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1197,6 +1221,8 @@ name|numneghits
 argument_list|,
 operator|&
 name|numneghits
+argument_list|,
+literal|"Number of cache hits (negative)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1217,6 +1243,8 @@ name|numupgrades
 argument_list|,
 operator|&
 name|numupgrades
+argument_list|,
+literal|"Number of updates of the cache after lookup (write lock + retry)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4953,9 +4981,11 @@ directive|define
 name|STATNODE
 parameter_list|(
 name|name
+parameter_list|,
+name|descr
 parameter_list|)
 define|\
-value|static u_int name;						\ 	SYSCTL_UINT(_vfs_cache, OID_AUTO, name, CTLFLAG_RD,&name, 0, "")
+value|static u_int name;						\ 	SYSCTL_UINT(_vfs_cache, OID_AUTO, name, CTLFLAG_RD,&name, 0, descr)
 end_define
 
 begin_decl_stmt
@@ -4994,6 +5024,8 @@ begin_expr_stmt
 name|STATNODE
 argument_list|(
 name|numfullpathcalls
+argument_list|,
+literal|"Number of fullpath search calls"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -5002,6 +5034,8 @@ begin_expr_stmt
 name|STATNODE
 argument_list|(
 name|numfullpathfail1
+argument_list|,
+literal|"Number of fullpath search errors (ENOTDIR)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -5010,6 +5044,8 @@ begin_expr_stmt
 name|STATNODE
 argument_list|(
 name|numfullpathfail2
+argument_list|,
+literal|"Number of fullpath search errors (VOP_VPTOCNP failures)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -5018,6 +5054,8 @@ begin_expr_stmt
 name|STATNODE
 argument_list|(
 name|numfullpathfail4
+argument_list|,
+literal|"Number of fullpath search errors (ENOMEM)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -5026,6 +5064,8 @@ begin_expr_stmt
 name|STATNODE
 argument_list|(
 name|numfullpathfound
+argument_list|,
+literal|"Number of successful fullpath calls"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

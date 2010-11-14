@@ -267,7 +267,7 @@ specifier|static
 name|u_int
 name|g_eli_visible_passphrase
 init|=
-literal|0
+name|GETS_NOECHO
 decl_stmt|;
 end_decl_stmt
 
@@ -298,7 +298,7 @@ name|g_eli_visible_passphrase
 argument_list|,
 literal|0
 argument_list|,
-literal|"Turn on echo when entering the passphrase (for debug purposes only!!)"
+literal|"Visibility of passphrase prompt (0 = invisible, 1 = visible, 2 = asterisk)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

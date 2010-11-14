@@ -273,8 +273,7 @@ name|IPSEC_FILTERTUNNEL
 end_ifdef
 
 begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
+name|STATIC_VNET_DEFINE
 argument_list|(
 name|int
 argument_list|,
@@ -291,8 +290,7 @@ directive|else
 end_else
 
 begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
+name|STATIC_VNET_DEFINE
 argument_list|(
 name|int
 argument_list|,

@@ -1833,7 +1833,7 @@ index|]
 operator|.
 name|name
 argument_list|,
-literal|"set_pcpu"
+name|DPCPU_SETNAME
 argument_list|)
 condition|)
 block|{
@@ -4138,7 +4138,7 @@ index|]
 operator|.
 name|name
 argument_list|,
-literal|"set_pcpu"
+name|DPCPU_SETNAME
 argument_list|)
 condition|)
 name|ef
@@ -4394,7 +4394,7 @@ index|]
 operator|.
 name|name
 argument_list|,
-literal|"set_pcpu"
+name|DPCPU_SETNAME
 argument_list|)
 condition|)
 name|dpcpu_copy
@@ -5157,7 +5157,7 @@ index|]
 operator|.
 name|name
 argument_list|,
-literal|"set_pcpu"
+name|DPCPU_SETNAME
 argument_list|)
 condition|)
 name|dpcpu_free

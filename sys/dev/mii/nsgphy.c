@@ -839,6 +839,11 @@ operator|->
 name|mii_media_active
 operator||=
 name|IFM_FDX
+operator||
+name|mii_phy_flowstatus
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 else|else
 name|mii

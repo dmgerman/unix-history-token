@@ -358,8 +358,7 @@ file|<security/mac/mac_framework.h>
 end_include
 
 begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
+name|STATIC_VNET_DEFINE
 argument_list|(
 name|int
 argument_list|,
@@ -402,8 +401,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
+name|STATIC_VNET_DEFINE
 argument_list|(
 name|int
 argument_list|,
@@ -693,8 +691,7 @@ value|30
 end_define
 
 begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
+name|STATIC_VNET_DEFINE
 argument_list|(
 expr|struct
 name|tcp_syncache

@@ -4743,8 +4743,7 @@ literal|10
 argument_list|,
 literal|"cryptosoft"
 argument_list|,
-operator|-
-literal|1
+literal|0
 argument_list|)
 operator|==
 literal|0
@@ -4775,7 +4774,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_NOWILDCARD
 operator|)
 return|;
 block|}
