@@ -67,6 +67,31 @@ begin_comment
 comment|/* Master, propagated to newvers */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|__FreeBSD_version_SIGSEGV
+value|700004
+end_define
+
+begin_define
+define|#
+directive|define
+name|__FreeBSD_version_MAP_ANON
+value|800104
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
