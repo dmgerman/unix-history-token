@@ -383,25 +383,9 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|struct
-name|ip
-modifier|*
-name|ip
-decl_stmt|;
 name|uint32_t
 name|checksum
 decl_stmt|;
-name|ip
-operator|=
-name|mtod
-argument_list|(
-name|m
-argument_list|,
-expr|struct
-name|ip
-operator|*
-argument_list|)
-expr_stmt|;
 name|checksum
 operator|=
 name|sctp_calculate_cksum
@@ -452,7 +436,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"delayed m_pullup, m->len: %d  off: %d  p: %d\n"
+literal|"sctp_delayed_cksum(): m->len: %d,  off: %d.\n"
 argument_list|,
 operator|(
 name|uint32_t
@@ -462,10 +446,6 @@ operator|->
 name|m_len
 argument_list|,
 name|offset
-argument_list|,
-name|ip
-operator|->
-name|ip_p
 argument_list|)
 expr_stmt|;
 comment|/* 		 * XXX this shouldn't happen, but if it does, the correct 		 * behavior may be to insert the checksum in the appropriate 		 * next mbuf in the chain. 		 */
