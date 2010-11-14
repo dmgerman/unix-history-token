@@ -208,6 +208,19 @@ parameter_list|)
 value|t DPCPU_NAME(n) __section(DPCPU_SETNAME) __used
 end_define
 
+begin_define
+define|#
+directive|define
+name|STATIC_DPCPU_DEFINE
+parameter_list|(
+name|t
+parameter_list|,
+name|n
+parameter_list|)
+define|\
+value|DPCPU_DEFINE(static t, n)
+end_define
+
 begin_comment
 comment|/*  * Accessors with a given base.  */
 end_comment

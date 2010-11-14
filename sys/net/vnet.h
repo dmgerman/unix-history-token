@@ -562,13 +562,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|STATIC_VNET_DEFINE
+parameter_list|(
+name|t
+parameter_list|,
+name|n
+parameter_list|)
+define|\
+value|VNET_DEFINE(static t, n)
+end_define
+
+begin_define
+define|#
+directive|define
 name|_VNET_PTR
 parameter_list|(
 name|b
 parameter_list|,
 name|n
 parameter_list|)
-value|(__typeof(VNET_NAME(n))*)		\ 				    ((b) + (uintptr_t)&VNET_NAME(n))
+define|\
+value|(__typeof(VNET_NAME(n))*)((b) + (uintptr_t)&VNET_NAME(n))
 end_define
 
 begin_define
@@ -1271,6 +1285,18 @@ parameter_list|,
 name|n
 parameter_list|)
 value|t n
+end_define
+
+begin_define
+define|#
+directive|define
+name|STATIC_VNET_DEFINE
+parameter_list|(
+name|t
+parameter_list|,
+name|n
+parameter_list|)
+value|static t n
 end_define
 
 begin_define
