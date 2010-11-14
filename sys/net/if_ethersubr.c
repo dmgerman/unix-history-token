@@ -825,8 +825,7 @@ function_decl|;
 end_function_decl
 
 begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
+name|STATIC_VNET_DEFINE
 argument_list|(
 name|int
 argument_list|,

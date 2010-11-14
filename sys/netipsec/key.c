@@ -369,8 +369,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
+name|STATIC_VNET_DEFINE
 argument_list|(
 name|u_int
 argument_list|,
@@ -382,8 +381,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
+name|STATIC_VNET_DEFINE
 argument_list|(
 name|u_int32_t
 argument_list|,
@@ -395,8 +393,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
+name|STATIC_VNET_DEFINE
 argument_list|(
 name|u_int32_t
 argument_list|,
@@ -412,8 +409,7 @@ comment|/* XXX */
 end_comment
 
 begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
+name|STATIC_VNET_DEFINE
 argument_list|(
 name|u_int32_t
 argument_list|,
@@ -429,8 +425,7 @@ comment|/*interval to initialize randseed,1(m)*/
 end_comment
 
 begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
+name|STATIC_VNET_DEFINE
 argument_list|(
 name|u_int
 argument_list|,
@@ -446,8 +441,7 @@ comment|/* interval to expire acquiring, 30(s)*/
 end_comment
 
 begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
+name|STATIC_VNET_DEFINE
 argument_list|(
 name|u_int
 argument_list|,
@@ -463,8 +457,7 @@ comment|/* counter for blocking SADB_ACQUIRE.*/
 end_comment
 
 begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
+name|STATIC_VNET_DEFINE
 argument_list|(
 name|int
 argument_list|,
@@ -480,8 +473,7 @@ comment|/* lifetime for blocking SADB_ACQUIRE.*/
 end_comment
 
 begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
+name|STATIC_VNET_DEFINE
 argument_list|(
 name|int
 argument_list|,
@@ -497,8 +489,7 @@ comment|/* preferred old sa rather than new sa.*/
 end_comment
 
 begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
+name|STATIC_VNET_DEFINE
 argument_list|(
 name|int
 argument_list|,
@@ -573,8 +564,7 @@ value|VNET(key_preferred_oldsa)
 end_define
 
 begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
+name|STATIC_VNET_DEFINE
 argument_list|(
 name|u_int32_t
 argument_list|,
@@ -597,8 +587,7 @@ comment|/* SPD */
 end_comment
 
 begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
+name|STATIC_VNET_DEFINE
 argument_list|(
 name|LIST_HEAD
 argument_list|(
@@ -672,8 +661,7 @@ value|mtx_assert(&sptree_lock, MA_OWNED)
 end_define
 
 begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
+name|STATIC_VNET_DEFINE
 argument_list|(
 name|LIST_HEAD
 argument_list|(
@@ -752,8 +740,7 @@ comment|/* registed list */
 end_comment
 
 begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
+name|STATIC_VNET_DEFINE
 argument_list|(
 name|LIST_HEAD
 argument_list|(
@@ -829,8 +816,7 @@ value|mtx_assert(&regtree_lock, MA_OWNED)
 end_define
 
 begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
+name|STATIC_VNET_DEFINE
 argument_list|(
 name|LIST_HEAD
 argument_list|(
@@ -909,8 +895,7 @@ comment|/* SP acquiring list */
 end_comment
 
 begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
+name|STATIC_VNET_DEFINE
 argument_list|(
 name|LIST_HEAD
 argument_list|(
@@ -1376,8 +1361,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
+name|STATIC_VNET_DEFINE
 argument_list|(
 name|int
 argument_list|,
@@ -1389,8 +1373,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
+name|STATIC_VNET_DEFINE
 argument_list|(
 name|int
 argument_list|,
@@ -1402,8 +1385,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
+name|STATIC_VNET_DEFINE
 argument_list|(
 name|int
 argument_list|,

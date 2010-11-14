@@ -5030,8 +5030,7 @@ struct|;
 end_struct
 
 begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
+name|STATIC_VNET_DEFINE
 argument_list|(
 name|TAILQ_HEAD
 argument_list|(,

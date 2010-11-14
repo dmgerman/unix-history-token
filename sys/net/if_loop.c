@@ -419,8 +419,7 @@ name|VIMAGE
 end_ifdef
 
 begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
+name|STATIC_VNET_DEFINE
 argument_list|(
 expr|struct
 name|ifc_simple_data
@@ -431,8 +430,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
+name|STATIC_VNET_DEFINE
 argument_list|(
 expr|struct
 name|if_clone

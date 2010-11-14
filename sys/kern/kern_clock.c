@@ -1466,8 +1466,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-specifier|static
-name|DPCPU_DEFINE
+name|STATIC_DPCPU_DEFINE
 argument_list|(
 name|int
 argument_list|,

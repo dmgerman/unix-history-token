@@ -552,8 +552,7 @@ comment|/* XXX Don't need to initialise them because it's a LIST */
 end_comment
 
 begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
+name|STATIC_VNET_DEFINE
 argument_list|(
 name|LIST_HEAD
 argument_list|(,
@@ -611,8 +610,7 @@ value|do { 								\ 		mtx_assert(&ng_idhash_mtx, MA_OWNED);			\ 		LIST_FOREACH(
 end_define
 
 begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
+name|STATIC_VNET_DEFINE
 argument_list|(
 name|LIST_HEAD
 argument_list|(,
@@ -1608,8 +1606,7 @@ directive|endif
 end_endif
 
 begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
+name|STATIC_VNET_DEFINE
 argument_list|(
 name|ng_ID_t
 argument_list|,

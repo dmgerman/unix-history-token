@@ -374,8 +374,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
+name|STATIC_VNET_DEFINE
 argument_list|(
 name|int
 argument_list|,
@@ -458,8 +457,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
+name|STATIC_VNET_DEFINE
 argument_list|(
 name|int
 argument_list|,
@@ -500,8 +498,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
+name|STATIC_VNET_DEFINE
 argument_list|(
 name|int
 argument_list|,
@@ -580,8 +577,7 @@ comment|/*  * XXX - Setting ip_checkinterface mostly implements the receive side
 end_comment
 
 begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
+name|STATIC_VNET_DEFINE
 argument_list|(
 name|int
 argument_list|,
@@ -773,8 +769,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
+name|STATIC_VNET_DEFINE
 argument_list|(
 name|uma_zone_t
 argument_list|,
@@ -784,8 +779,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
+name|STATIC_VNET_DEFINE
 argument_list|(
 name|TAILQ_HEAD
 argument_list|(
@@ -888,8 +882,7 @@ function_decl|;
 end_function_decl
 
 begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
+name|STATIC_VNET_DEFINE
 argument_list|(
 name|int
 argument_list|,
@@ -903,8 +896,7 @@ comment|/* Administrative limit on # reass queues. */
 end_comment
 
 begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
+name|STATIC_VNET_DEFINE
 argument_list|(
 name|int
 argument_list|,
@@ -956,8 +948,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
+name|STATIC_VNET_DEFINE
 argument_list|(
 name|int
 argument_list|,
@@ -1088,8 +1079,7 @@ name|FLOWTABLE
 end_ifdef
 
 begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
+name|STATIC_VNET_DEFINE
 argument_list|(
 name|int
 argument_list|,
@@ -7212,8 +7202,7 @@ comment|/*  * XXXRW: Multicast routing code in ip_mroute.c is generally MPSAFE, 
 end_comment
 
 begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
+name|STATIC_VNET_DEFINE
 argument_list|(
 name|int
 argument_list|,

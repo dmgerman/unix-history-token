@@ -345,8 +345,7 @@ value|((struct rtentry *)(p))
 end_define
 
 begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
+name|STATIC_VNET_DEFINE
 argument_list|(
 name|uma_zone_t
 argument_list|,
