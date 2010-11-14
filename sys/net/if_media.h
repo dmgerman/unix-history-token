@@ -608,6 +608,28 @@ begin_comment
 comment|/* master mode (1000baseT) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IFM_ETH_RXPAUSE
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* receive PAUSE frames */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_ETH_TXPAUSE
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* transmit PAUSE frames */
+end_comment
+
 begin_comment
 comment|/*  * Token ring  */
 end_comment
@@ -1405,6 +1427,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IFM_FLOW
+value|0x00400000
+end_define
+
+begin_comment
+comment|/* enable hardware flow control */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IFM_FLAG0
 value|0x01000000
 end_define
@@ -1537,6 +1570,17 @@ end_define
 begin_comment
 comment|/* Global options */
 end_comment
+
+begin_comment
+comment|/* Ethernet flow control mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_ETH_FMASK
+value|(IFM_FLOW | IFM_ETH_RXPAUSE | IFM_ETH_TXPAUSE)
+end_define
 
 begin_comment
 comment|/*  * Status bits  */
@@ -1736,7 +1780,7 @@ begin_define
 define|#
 directive|define
 name|IFM_SUBTYPE_ETHERNET_OPTION_DESCRIPTIONS
-value|{			\ 	{ 0, NULL },							\ }
+value|{			\ 	{ IFM_ETH_MASTER,	"master" },				\ 	{ IFM_ETH_RXPAUSE,	"rxpause" },				\ 	{ IFM_ETH_TXPAUSE,	"txpause" },				\ 	{ 0, NULL },							\ }
 end_define
 
 begin_define
@@ -1855,7 +1899,7 @@ begin_define
 define|#
 directive|define
 name|IFM_SHARED_OPTION_DESCRIPTIONS
-value|{				\ 	{ IFM_FDX,	"full-duplex" },				\ 	{ IFM_HDX,	"half-duplex" },				\ 	{ IFM_FLAG0,	"flag0" },					\ 	{ IFM_FLAG1,	"flag1" },					\ 	{ IFM_FLAG2,	"flag2" },					\ 	{ IFM_LOOP,	"hw-loopback" },				\ 	{ 0, NULL },							\ }
+value|{				\ 	{ IFM_FDX,	"full-duplex" },				\ 	{ IFM_HDX,	"half-duplex" },				\ 	{ IFM_FLOW,	"flowcontrol" },				\ 	{ IFM_FLAG0,	"flag0" },					\ 	{ IFM_FLAG1,	"flag1" },					\ 	{ IFM_FLAG2,	"flag2" },					\ 	{ IFM_LOOP,	"hw-loopback" },				\ 	{ 0, NULL },							\ }
 end_define
 
 begin_comment
