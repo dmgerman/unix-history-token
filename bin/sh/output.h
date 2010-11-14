@@ -15,6 +15,12 @@ directive|include
 file|<stdarg.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
+
 begin_struct
 struct|struct
 name|output
@@ -167,6 +173,23 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|struct
+name|output
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|outbin
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+name|size_t
 parameter_list|,
 name|struct
 name|output
