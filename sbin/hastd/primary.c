@@ -9176,6 +9176,12 @@ argument_list|)
 expr_stmt|;
 name|timeout
 operator|.
+name|tv_sec
+operator|=
+name|RETRY_SLEEP
+expr_stmt|;
+name|timeout
+operator|.
 name|tv_nsec
 operator|=
 literal|0
@@ -9272,12 +9278,6 @@ operator|=
 name|now
 expr_stmt|;
 block|}
-name|timeout
-operator|.
-name|tv_sec
-operator|=
-name|RETRY_SLEEP
-expr_stmt|;
 name|signo
 operator|=
 name|sigtimedwait
