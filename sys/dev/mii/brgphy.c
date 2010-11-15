@@ -775,11 +775,16 @@ condition|)
 block|{
 if|if
 condition|(
-name|strcmp
+name|strncmp
 argument_list|(
 name|sysenv
 argument_list|,
 name|HS21_PRODUCT_ID
+argument_list|,
+name|strlen
+argument_list|(
+name|HS21_PRODUCT_ID
+argument_list|)
 argument_list|)
 operator|==
 literal|0
