@@ -825,9 +825,6 @@ modifier|*
 name|CMAP1
 init|=
 literal|0
-decl_stmt|,
-modifier|*
-name|KPTmap
 decl_stmt|;
 end_decl_stmt
 
@@ -1787,7 +1784,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* 	 * XXX The calculation of virtual_avail is wrong. It's NKPT*PAGE_SIZE too 	 * large. It should instead be correctly calculated in locore.s and 	 * not based on 'first' (which is a physical address, not a virtual 	 * address, for the start of unused physical memory). The kernel 	 * page tables are NOT double mapped and thus should not be included 	 * in this calculation. 	 */
+comment|/* 	 * Initialize the first available kernel virtual address.  However, 	 * using "firstaddr" may waste a few pages of the kernel virtual 	 * address space, because locore may not have mapped every physical 	 * page that it allocated.  Preferably, locore would provide a first 	 * unused virtual address in addition to "firstaddr". 	 */
 name|virtual_avail
 operator|=
 operator|(
@@ -2057,7 +2054,7 @@ argument|msgbufp
 argument_list|,
 argument|atop(round_page(MSGBUF_SIZE))
 argument_list|)
-comment|/* 	 * KPTmap is used by pmap_kextract(). 	 */
+comment|/* 	 * KPTmap is used by pmap_kextract(). 	 * 	 * KPTmap is first initialized by locore.  However, that initial 	 * KPTmap can only support NKPT page table pages.  Here, a larger 	 * KPTmap is created that can support KVA_PAGES page table pages. 	 */
 name|SYSMAP
 argument_list|(
 argument|pt_entry_t *
@@ -5494,7 +5491,7 @@ comment|/***************************************************  * Low level mappin
 end_comment
 
 begin_comment
-comment|/*  * Add a wired page to the kva.  * Note: not SMP coherent.  */
+comment|/*  * Add a wired page to the kva.  * Note: not SMP coherent.  *  * This function may be used before pmap_bootstrap() is called.  */
 end_comment
 
 begin_function
@@ -5587,7 +5584,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Remove a page from the kernel pagetables.  * Note: not SMP coherent.  */
+comment|/*  * Remove a page from the kernel pagetables.  * Note: not SMP coherent.  *  * This function may be used before pmap_bootstrap() is called.  */
 end_comment
 
 begin_function
