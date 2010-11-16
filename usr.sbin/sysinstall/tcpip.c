@@ -214,7 +214,7 @@ literal|1
 block|,
 literal|"Host:"
 block|,
-literal|"Your fully-qualified hostname, e.g. foo.bar.com"
+literal|"Your fully-qualified hostname, e.g. foo.example.com"
 block|,
 name|hostname
 block|,
@@ -240,7 +240,7 @@ literal|1
 block|,
 literal|"Domain:"
 block|,
-literal|"The name of the domain that your machine is in, e.g. bar.com"
+literal|"The name of the domain that your machine is in, e.g. example.com"
 block|,
 name|domainname
 block|,
