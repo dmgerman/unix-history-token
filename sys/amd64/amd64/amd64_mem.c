@@ -1488,6 +1488,9 @@ comment|/* Flushes caches and TLBs. */
 name|wbinvd
 argument_list|()
 expr_stmt|;
+name|invltlb
+argument_list|()
+expr_stmt|;
 comment|/* Disable MTRRs (E = 0). */
 name|wrmsr
 argument_list|(
@@ -1907,8 +1910,11 @@ name|msrv
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Flush caches, TLBs. */
+comment|/* Flush caches and TLBs. */
 name|wbinvd
+argument_list|()
+expr_stmt|;
+name|invltlb
 argument_list|()
 expr_stmt|;
 comment|/* Enable MTRRs. */
