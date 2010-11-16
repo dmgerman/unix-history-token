@@ -62,6 +62,29 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Per-netstack bits. */
+end_comment
+
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
+expr|struct
+name|cc_algo
+operator|*
+argument_list|,
+name|default_cc_ptr
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_default_cc_ptr
+value|VNET(default_cc_ptr)
+end_define
+
+begin_comment
 comment|/* Define the new net.inet.tcp.cc sysctl tree. */
 end_comment
 
@@ -450,7 +473,7 @@ define|#
 directive|define
 name|CC_DEFAULT
 parameter_list|()
-value|STAILQ_FIRST(&cc_list)
+value|V_default_cc_ptr
 end_define
 
 begin_decl_stmt
@@ -512,9 +535,9 @@ end_define
 begin_define
 define|#
 directive|define
-name|CC_LIST_WLOCK_ASSERT
+name|CC_LIST_LOCK_ASSERT
 parameter_list|()
-value|rw_assert(&cc_list_lock, RA_WLOCKED)
+value|rw_assert(&cc_list_lock, RA_LOCKED)
 end_define
 
 begin_endif
