@@ -7344,7 +7344,7 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
-comment|/* 	 * zfs_zget() can't operate on virtual entires like .zfs/ or 	 * .zfs/snapshot/ directories, that's why we return EOPNOTSUPP. 	 * This will make NFS to switch to LOOKUP instead of using VGET. 	 */
+comment|/* 	 * zfs_zget() can't operate on virtual entries like .zfs/ or 	 * .zfs/snapshot/ directories, that's why we return EOPNOTSUPP. 	 * This will make NFS to switch to LOOKUP instead of using VGET. 	 */
 if|if
 condition|(
 name|ino
