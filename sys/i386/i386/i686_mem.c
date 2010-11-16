@@ -1404,8 +1404,10 @@ name|j
 decl_stmt|,
 name|msr
 decl_stmt|;
-name|u_int
-name|cr4save
+name|u_long
+name|cr0
+decl_stmt|,
+name|cr4
 decl_stmt|;
 name|mrd
 operator|=
@@ -1414,31 +1416,29 @@ operator|->
 name|mr_desc
 expr_stmt|;
 comment|/* Disable PGE. */
-name|cr4save
+name|cr4
 operator|=
 name|rcr4
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|cr4save
-operator|&
-name|CR4_PGE
-condition|)
 name|load_cr4
 argument_list|(
-name|cr4save
+name|cr4
 operator|&
 operator|~
 name|CR4_PGE
 argument_list|)
 expr_stmt|;
 comment|/* Disable caches (CD = 1, NW = 0). */
+name|cr0
+operator|=
+name|rcr0
+argument_list|()
+expr_stmt|;
 name|load_cr0
 argument_list|(
 operator|(
-name|rcr0
-argument_list|()
+name|cr0
 operator|&
 operator|~
 name|CR0_NW
@@ -1893,24 +1893,15 @@ operator||
 name|MTRR_DEF_ENABLE
 argument_list|)
 expr_stmt|;
-comment|/* Enable caches (CD = 0, NW = 0). */
+comment|/* Restore caches and PGE. */
 name|load_cr0
 argument_list|(
-name|rcr0
-argument_list|()
-operator|&
-operator|~
-operator|(
-name|CR0_CD
-operator||
-name|CR0_NW
-operator|)
+name|cr0
 argument_list|)
 expr_stmt|;
-comment|/* Restore PGE. */
 name|load_cr4
 argument_list|(
-name|cr4save
+name|cr4
 argument_list|)
 expr_stmt|;
 block|}
