@@ -2494,6 +2494,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|tcp_ccalgounload
+parameter_list|(
+name|struct
+name|cc_algo
+modifier|*
+name|unload_algo
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|tcpcb
 modifier|*
