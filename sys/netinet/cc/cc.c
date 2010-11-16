@@ -513,9 +513,12 @@ comment|/*  * Initialise CC subsystem on system boot.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|cc_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|CC_LIST_LOCK_INIT
 argument_list|()
@@ -992,6 +995,22 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|SYSINIT
+argument_list|(
+name|cc
+argument_list|,
+name|SI_SUB_PROTO_IFATTACHDOMAIN
+argument_list|,
+name|SI_ORDER_FIRST
+argument_list|,
+name|cc_init
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Declare sysctl tree and populate it. */

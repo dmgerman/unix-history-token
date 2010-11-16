@@ -1270,9 +1270,6 @@ block|{
 name|int
 name|hashsize
 decl_stmt|;
-name|cc_init
-argument_list|()
-expr_stmt|;
 name|hashsize
 operator|=
 name|TCBHASHSIZE
