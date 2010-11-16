@@ -567,6 +567,11 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
+name|VNET_ITERATOR_DECL
+argument_list|(
+name|vnet_iter
+argument_list|)
+expr_stmt|;
 name|err
 operator|=
 name|ENOENT
@@ -659,7 +664,20 @@ operator|!
 name|err
 condition|)
 block|{
-comment|/* 		 * Check all active control blocks and change any that are 		 * using this algorithm back to newreno. If the algorithm that 		 * was in use requires cleanup code to be run, call it. 		 * 		 * New connections already part way through being initialised 		 * with the CC algo we're removing will not race with this code 		 * because the INP_INFO_WLOCK is held during initialisation. 		 * We therefore don't enter the loop below until the connection 		 * list has stabilised. 		 */
+comment|/* 		 * Check all active control blocks across all network stacks and 		 * change any that are using this algorithm back to newreno. If 		 * the algorithm that was in use requires cleanup code to be 		 * run, call it. 		 * 		 * New connections already part way through being initialised 		 * with the CC algo we're removing will not race with this code 		 * because the INP_INFO_WLOCK is held during initialisation. 		 * We therefore don't enter the loop below until the connection 		 * list has stabilised. 		 */
+name|VNET_LIST_RLOCK
+argument_list|()
+expr_stmt|;
+name|VNET_FOREACH
+argument_list|(
+argument|vnet_iter
+argument_list|)
+block|{
+name|CURVNET_SET
+argument_list|(
+name|vnet_iter
+argument_list|)
+expr_stmt|;
 name|INP_INFO_RLOCK
 argument_list|(
 operator|&
@@ -704,7 +722,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 				 * By holding INP_WLOCK here, we are 				 * assured that the connection is not 				 * currently executing inside the CC 				 * module's functions i.e. it is safe to 				 * make the switch back to newreno. 				 */
+comment|/* 					 * By holding INP_WLOCK here, we are 					 * assured that the connection is not 					 * currently executing inside the CC 					 * module's functions i.e. it is safe 					 * to make the switch back to newreno. 					 */
 if|if
 condition|(
 name|CC_ALGO
@@ -722,7 +740,7 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-comment|/* Newreno does not require any init. */
+comment|/* 						 * Newreno does not 						 * require any init. 						 */
 name|CC_ALGO
 argument_list|(
 name|tp
@@ -761,6 +779,13 @@ argument_list|(
 operator|&
 name|V_tcbinfo
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
+block|}
+name|VNET_LIST_RUNLOCK
+argument_list|()
 expr_stmt|;
 block|}
 return|return
