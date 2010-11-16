@@ -76,14 +76,14 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|__FreeBSD_version_SIGSEGV
+name|P_OSREL_SIGSEGV
 value|700004
 end_define
 
 begin_define
 define|#
 directive|define
-name|__FreeBSD_version_MAP_ANON
+name|P_OSREL_MAP_ANON
 value|800104
 end_define
 

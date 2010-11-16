@@ -6691,7 +6691,7 @@ name|phy
 argument_list|,
 name|MII_OFFSET_ANY
 argument_list|,
-literal|0
+name|MIIF_DOPAUSE
 argument_list|)
 expr_stmt|;
 if|if

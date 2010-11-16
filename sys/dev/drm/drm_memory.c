@@ -311,7 +311,7 @@ name|map
 operator|->
 name|size
 argument_list|,
-name|PAT_WRITE_COMBINING
+name|VM_MEMATTR_WRITE_COMBINING
 argument_list|)
 return|;
 block|}

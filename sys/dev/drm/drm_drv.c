@@ -2604,6 +2604,16 @@ operator|->
 name|agp
 operator|!=
 name|NULL
+operator|&&
+name|dev
+operator|->
+name|agp
+operator|->
+name|info
+operator|.
+name|ai_aperture_base
+operator|!=
+literal|0
 condition|)
 block|{
 if|if

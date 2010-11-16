@@ -1660,7 +1660,7 @@ name|p
 operator|->
 name|p_osrel
 operator|>=
-name|__FreeBSD_version_SIGSEGV
+name|P_OSREL_SIGSEGV
 condition|)
 block|{
 name|i

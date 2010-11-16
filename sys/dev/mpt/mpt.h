@@ -4508,7 +4508,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|do {						 \ 	if (level<= (mpt)->debug_level)	 \ 		mpt_prtc(mpt, __VA_ARGS__);	 \ } while (0)
+value|do {						\ 	if (level<= (mpt)->verbose)		\ 		mpt_prtc(mpt, __VA_ARGS__);	\ } while (0)
 end_define
 
 begin_else

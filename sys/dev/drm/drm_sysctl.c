@@ -1153,6 +1153,9 @@ name|page_order
 operator|)
 operator|)
 operator|*
+operator|(
+name|int
+operator|)
 name|PAGE_SIZE
 operator|/
 literal|1024
