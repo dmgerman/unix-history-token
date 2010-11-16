@@ -4041,6 +4041,21 @@ literal|"=ftp://ftp3.se.freebsd.org"
 block|}
 block|,
 block|{
+literal|" Sweden #4"
+block|,
+literal|"ftp4.se.freebsd.org"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp4.se.freebsd.org"
+block|}
+block|,
+block|{
 literal|" Sweden #5"
 block|,
 literal|"ftp5.se.freebsd.org"
