@@ -21597,39 +21597,6 @@ decl_stmt|;
 name|int
 name|rv
 decl_stmt|;
-comment|/* 		 * First catch people who try to do things like: 		 * camcontrol tur /dev/da0  		 * camcontrol doesn't take device nodes as arguments. 		 */
-if|if
-condition|(
-name|argv
-index|[
-literal|2
-index|]
-index|[
-literal|0
-index|]
-operator|==
-literal|'/'
-condition|)
-block|{
-name|warnx
-argument_list|(
-literal|"%s is not a valid device identifier"
-argument_list|,
-name|argv
-index|[
-literal|2
-index|]
-argument_list|)
-expr_stmt|;
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"please read the camcontrol(8) man page"
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
 if|if
 condition|(
 name|isdigit
