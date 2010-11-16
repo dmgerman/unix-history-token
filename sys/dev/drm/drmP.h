@@ -288,11 +288,30 @@ directive|include
 file|<machine/resource.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<machine/specialreg.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1281,7 +1300,7 @@ parameter_list|,
 name|offset
 parameter_list|)
 define|\
-value|*(volatile u_int16_t *)(((vm_offset_t)(map)->virtual) +		\ 	    (vm_offset_t)(offset))
+value|le16toh(*(volatile u_int16_t *)(((vm_offset_t)(map)->virtual) +	\ 	    (vm_offset_t)(offset)))
 end_define
 
 begin_define
@@ -1294,7 +1313,7 @@ parameter_list|,
 name|offset
 parameter_list|)
 define|\
-value|*(volatile u_int32_t *)(((vm_offset_t)(map)->virtual) +		\ 	    (vm_offset_t)(offset))
+value|le32toh(*(volatile u_int32_t *)(((vm_offset_t)(map)->virtual) +	\ 	    (vm_offset_t)(offset)))
 end_define
 
 begin_define
@@ -1324,7 +1343,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|*(volatile u_int16_t *)(((vm_offset_t)(map)->virtual) +		\ 	    (vm_offset_t)(offset)) = val
+value|*(volatile u_int16_t *)(((vm_offset_t)(map)->virtual) +		\ 	    (vm_offset_t)(offset)) = htole16(val)
 end_define
 
 begin_define
@@ -1339,7 +1358,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|*(volatile u_int32_t *)(((vm_offset_t)(map)->virtual) +		\ 	    (vm_offset_t)(offset)) = val
+value|*(volatile u_int32_t *)(((vm_offset_t)(map)->virtual) +		\ 	    (vm_offset_t)(offset)) = htole32(val)
 end_define
 
 begin_define
