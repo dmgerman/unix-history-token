@@ -1645,7 +1645,7 @@ name|xmitq
 operator|.
 name|ifq_maxlen
 operator|=
-name|IFQ_MAXLEN
+name|ifqmaxlen
 expr_stmt|;
 name|sc
 operator|->
@@ -1653,7 +1653,7 @@ name|xmitq_hipri
 operator|.
 name|ifq_maxlen
 operator|=
-name|IFQ_MAXLEN
+name|ifqmaxlen
 expr_stmt|;
 name|mtx_init
 argument_list|(

@@ -524,15 +524,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
-name|int
-name|ipqmaxlen
-init|=
-name|IFQ_MAXLEN
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|struct
 name|domain
@@ -1274,7 +1265,7 @@ name|ipintrq
 operator|.
 name|ifq_maxlen
 operator|=
-name|ipqmaxlen
+name|ifqmaxlen
 expr_stmt|;
 name|mtx_init
 argument_list|(

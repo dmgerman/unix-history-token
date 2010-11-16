@@ -775,7 +775,7 @@ name|sc
 operator|->
 name|outq
 argument_list|,
-name|MAX_MBUFQ
+name|ifqmaxlen
 argument_list|)
 expr_stmt|;
 name|NGTLOCK

@@ -1836,7 +1836,7 @@ name|rx_queue
 operator|.
 name|ifq_maxlen
 operator|=
-name|IFQ_MAXLEN
+name|ifqmaxlen
 expr_stmt|;
 if|#
 directive|if
@@ -1931,7 +1931,7 @@ name|tx_queue
 operator|.
 name|ifq_maxlen
 operator|=
-name|IFQ_MAXLEN
+name|ifqmaxlen
 expr_stmt|;
 if|#
 directive|if

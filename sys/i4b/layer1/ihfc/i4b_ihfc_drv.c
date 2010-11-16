@@ -1013,7 +1013,7 @@ name|S_IFQUEUE
 operator|.
 name|ifq_maxlen
 operator|=
-name|IFQ_MAXLEN
+name|ifqmaxlen
 expr_stmt|;
 if|#
 directive|if
@@ -1128,7 +1128,7 @@ name|S_IFQUEUE
 operator|.
 name|ifq_maxlen
 operator|=
-name|IFQ_MAXLEN
+name|ifqmaxlen
 expr_stmt|;
 if|#
 directive|if

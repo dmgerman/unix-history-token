@@ -2848,7 +2848,7 @@ name|if_snd
 operator|.
 name|ifq_maxlen
 operator|=
-name|IFQ_MAXLEN
+name|ifqmaxlen
 expr_stmt|;
 comment|/* 	 * MII setup 	 * RTL8150 supports PHY == 0 only 	 */
 name|error

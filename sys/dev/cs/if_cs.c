@@ -2887,7 +2887,7 @@ name|if_snd
 operator|.
 name|ifq_maxlen
 operator|=
-name|IFQ_MAXLEN
+name|ifqmaxlen
 expr_stmt|;
 comment|/* 	 *  MIB DATA 	 */
 comment|/* 	ifp->if_linkmib=&sc->mibdata; 	ifp->if_linkmiblen=sizeof sc->mibdata; 	*/

@@ -5243,7 +5243,7 @@ name|rx_queue
 operator|.
 name|ifq_maxlen
 operator|=
-name|IFQ_MAXLEN
+name|ifqmaxlen
 expr_stmt|;
 name|i4b_Bcleanifq
 argument_list|(
@@ -5297,7 +5297,7 @@ name|tx_queue
 operator|.
 name|ifq_maxlen
 operator|=
-name|IFQ_MAXLEN
+name|ifqmaxlen
 expr_stmt|;
 name|i4b_Bcleanifq
 argument_list|(

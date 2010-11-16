@@ -358,7 +358,7 @@ specifier|static
 name|int
 name|ipxqmaxlen
 init|=
-name|IFQ_MAXLEN
+name|ifqmaxlen
 decl_stmt|;
 end_decl_stmt
 

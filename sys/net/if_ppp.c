@@ -831,7 +831,7 @@ name|if_snd
 operator|.
 name|ifq_maxlen
 operator|=
-name|IFQ_MAXLEN
+name|ifqmaxlen
 expr_stmt|;
 name|sc
 operator|->
@@ -839,7 +839,7 @@ name|sc_inq
 operator|.
 name|ifq_maxlen
 operator|=
-name|IFQ_MAXLEN
+name|ifqmaxlen
 expr_stmt|;
 name|sc
 operator|->
@@ -847,7 +847,7 @@ name|sc_fastq
 operator|.
 name|ifq_maxlen
 operator|=
-name|IFQ_MAXLEN
+name|ifqmaxlen
 expr_stmt|;
 name|sc
 operator|->
@@ -855,7 +855,7 @@ name|sc_rawq
 operator|.
 name|ifq_maxlen
 operator|=
-name|IFQ_MAXLEN
+name|ifqmaxlen
 expr_stmt|;
 name|mtx_init
 argument_list|(

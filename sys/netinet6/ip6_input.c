@@ -305,15 +305,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
-name|int
-name|ip6qmaxlen
-init|=
-name|IFQ_MAXLEN
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|in6_ifaddr
 modifier|*
@@ -627,7 +618,7 @@ name|ip6intrq
 operator|.
 name|ifq_maxlen
 operator|=
-name|ip6qmaxlen
+name|ifqmaxlen
 expr_stmt|;
 name|mtx_init
 argument_list|(
