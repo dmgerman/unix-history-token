@@ -756,6 +756,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RL_GTXSTART
+value|0x0038
+end_define
+
+begin_comment
+comment|/* 8 bits */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RL_TIMERINT_8169
 value|0x0058
 end_define
@@ -850,12 +861,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RL_GTXSTART
-value|0x0038
+name|RL_INTRMOD
+value|0x00E2
 end_define
 
 begin_comment
-comment|/* 8 bits */
+comment|/* 16 bits */
 end_comment
 
 begin_comment
