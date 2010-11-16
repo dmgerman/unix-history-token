@@ -233,6 +233,12 @@ parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
+name|char
+name|default_cc
+index|[
+name|TCP_CA_NAME_MAX
+index|]
+decl_stmt|;
 name|struct
 name|cc_algo
 modifier|*
@@ -258,12 +264,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|char
-name|default_cc
-index|[
-name|TCP_CA_NAME_MAX
-index|]
-decl_stmt|;
 comment|/* Just print the current default. */
 name|CC_LIST_RLOCK
 argument_list|()
