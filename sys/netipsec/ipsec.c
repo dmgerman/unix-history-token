@@ -470,6 +470,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|ipsec
+argument_list|,
+literal|"Internet Protocol Security (IPsec)"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
 name|_net_inet_ipsec
