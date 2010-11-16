@@ -13555,7 +13555,13 @@ condition|)
 block|{
 name|grow_amount
 operator|=
+name|trunc_page
+argument_list|(
+operator|(
+name|vm_size_t
+operator|)
 name|stacklim
+argument_list|)
 operator|-
 name|ctob
 argument_list|(
