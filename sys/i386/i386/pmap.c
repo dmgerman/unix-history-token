@@ -6496,6 +6496,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Initialize the pmap for the swapper process.  */
+end_comment
+
 begin_function
 name|void
 name|pmap_pinit0
@@ -6509,6 +6513,7 @@ argument_list|(
 name|pmap
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Since the page table directory is shared with the kernel pmap, 	 * which is already included in the list "allpmaps", this pmap does 	 * not need to be inserted into that list. 	 */
 name|pmap
 operator|->
 name|pm_pdir
@@ -6586,28 +6591,6 @@ sizeof|sizeof
 name|pmap
 operator|->
 name|pm_stats
-argument_list|)
-expr_stmt|;
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|allpmaps_lock
-argument_list|)
-expr_stmt|;
-name|LIST_INSERT_HEAD
-argument_list|(
-operator|&
-name|allpmaps
-argument_list|,
-name|pmap
-argument_list|,
-name|pm_list
-argument_list|)
-expr_stmt|;
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|allpmaps_lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -6911,13 +6894,7 @@ argument_list|,
 name|pm_list
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|allpmaps_lock
-argument_list|)
-expr_stmt|;
-comment|/* Wire in kernel global address entries. */
+comment|/* Copy the kernel page table directory entries. */
 name|bcopy
 argument_list|(
 name|PTD
@@ -6936,6 +6913,12 @@ sizeof|sizeof
 argument_list|(
 name|pd_entry_t
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|allpmaps_lock
 argument_list|)
 expr_stmt|;
 comment|/* install self-referential address mapping entry(s) */
