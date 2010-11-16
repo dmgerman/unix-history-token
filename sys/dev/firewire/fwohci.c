@@ -12165,8 +12165,8 @@ name|fc
 operator|->
 name|dev
 argument_list|,
-literal|"too many cycle lost, "
-literal|"no cycle master presents?\n"
+literal|"too many cycles lost, "
+literal|"no cycle master present?\n"
 argument_list|)
 expr_stmt|;
 block|}
