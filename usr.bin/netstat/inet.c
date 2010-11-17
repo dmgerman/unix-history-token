@@ -2066,8 +2066,10 @@ argument_list|,
 literal|"Local Address"
 argument_list|)
 expr_stmt|;
-else|else
-block|{
+if|if
+condition|(
+name|Tflag
+condition|)
 name|printf
 argument_list|(
 operator|(
@@ -2077,15 +2079,17 @@ operator|!
 name|Wflag
 operator|)
 condition|?
-literal|"%-5.5s %-6.6s %-6.6s  %-18.18s %-18.18s"
+literal|"%-5.5s %-6.6s %-6.6s %-6.6s %-18.18s %s\n"
 else|:
-literal|"%-5.5s %-6.6s %-6.6s  %-22.22s %-22.22s"
+literal|"%-5.5s %-6.6s %-6.6s %-6.6s %-22.22s %s\n"
 argument_list|,
 literal|"Proto"
 argument_list|,
-literal|"Recv-Q"
+literal|"Rexmit"
 argument_list|,
-literal|"Send-Q"
+literal|"OOORcv"
+argument_list|,
+literal|"0-win"
 argument_list|,
 literal|"Local Address"
 argument_list|,
@@ -2146,13 +2150,38 @@ literal|"(state)"
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+if|if
+condition|(
+operator|!
+name|xflag
+operator|&&
+operator|!
+name|Tflag
+condition|)
 name|printf
 argument_list|(
-literal|"(state)\n"
+operator|(
+name|Aflag
+operator|&&
+operator|!
+name|Wflag
+operator|)
+condition|?
+literal|"%-5.5s %-6.6s %-6.6s  %-18.18s %-18.18s"
+else|:
+literal|"%-5.5s %-6.6s %-6.6s  %-22.22s %-22.22s"
+argument_list|,
+literal|"Proto"
+argument_list|,
+literal|"Recv-Q"
+argument_list|,
+literal|"Send-Q"
+argument_list|,
+literal|"Local Address"
+argument_list|,
+literal|"Foreign Address"
 argument_list|)
 expr_stmt|;
-block|}
 name|first
 operator|=
 literal|0
@@ -2304,6 +2333,34 @@ argument_list|(
 literal|"%-14.14s "
 argument_list|,
 name|buf1
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|Tflag
+condition|)
+block|{
+if|if
+condition|(
+name|istcp
+condition|)
+name|printf
+argument_list|(
+literal|"%6u %6u %6u "
+argument_list|,
+name|tp
+operator|->
+name|t_sndrexmitpack
+argument_list|,
+name|tp
+operator|->
+name|t_rcvoopack
+argument_list|,
+name|tp
+operator|->
+name|t_sndzerowin
 argument_list|)
 expr_stmt|;
 block|}
@@ -2983,6 +3040,12 @@ name|istcp
 operator|&&
 operator|!
 name|Lflag
+operator|&&
+operator|!
+name|xflag
+operator|&&
+operator|!
+name|Tflag
 condition|)
 block|{
 if|if
