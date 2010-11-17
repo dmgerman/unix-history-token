@@ -94,6 +94,13 @@ name|mmu
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|real_mode
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * This isn't actually an Open Firmware function, but it seemed like the right  * place for it to go.  */
 end_comment
