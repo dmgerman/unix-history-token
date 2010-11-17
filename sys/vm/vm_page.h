@@ -1195,6 +1195,26 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|vm_page_t
+name|vm_page_next
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|vm_page_t
+name|vm_page_prev
+parameter_list|(
+name|vm_page_t
+name|m
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|vm_page_remove
 parameter_list|(
