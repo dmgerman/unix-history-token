@@ -18156,6 +18156,8 @@ argument_list|(
 name|MmAllocateContiguousMemory
 argument_list|,
 literal|2
+operator|+
+literal|1
 argument_list|)
 block|,
 name|IMPORT_SFUNC
@@ -18163,6 +18165,8 @@ argument_list|(
 name|MmAllocateContiguousMemorySpecifyCache
 argument_list|,
 literal|5
+operator|+
+literal|3
 argument_list|)
 block|,
 name|IMPORT_SFUNC
