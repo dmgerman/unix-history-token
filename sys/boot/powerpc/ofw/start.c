@@ -60,7 +60,7 @@ function_decl|;
 end_function_decl
 
 begin_asm
-asm|__asm("				\n\ 	.data			\n\ stack:				\n\ 	.space	16388		\n\ 				\n\ 	.text			\n\ 	.globl	_start		\n\ _start:				\n\ 	lis	%r1,stack@ha	\n\ 	addi	%r1,%r1,stack@l	\n\ 	addi	%r1,%r1,8192	\n\ 				\n\ 	b	startup		\n\ ");
+asm|__asm("				\n\ 	.data			\n\ stack:				\n\ 	.space	16388		\n\ 				\n\ 	.text			\n\ 	.globl	_start		\n\ _start:				\n\ 	lis	%r1,stack@ha	\n\ 	addi	%r1,%r1,stack@l	\n\ 	addi	%r1,%r1,16384	\n\ 				\n\ 	b	startup		\n\ ");
 end_asm
 
 begin_function
