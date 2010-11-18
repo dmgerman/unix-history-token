@@ -1898,6 +1898,12 @@ condition|)
 goto|goto
 name|fail
 goto|;
+comment|/* Attaching of the PHY drivers is done in miibus_attach(). */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 name|rv
 operator|=
