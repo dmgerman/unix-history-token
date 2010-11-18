@@ -953,8 +953,7 @@ argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
-block|}
-comment|/* 	 * Set FD_CLOEXEC, so that the output file is not shared with 	 * the traced process. 	 */
+comment|/* 		 * Set FD_CLOEXEC, so that the output file is not shared with 		 * the traced process. 		 */
 if|if
 condition|(
 name|fcntl
@@ -979,6 +978,7 @@ argument_list|(
 literal|"fcntl()"
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * If truss starts the process itself, it will ignore some signals -- 	 * they should be passed off to the process, which may or may not 	 * exit.  If, however, we are examining an already-running process, 	 * then we restore the event mask on these same signals. 	 */
 if|if
 condition|(
