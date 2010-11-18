@@ -7818,6 +7818,12 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|PAE
+if|if
+condition|(
+name|i
+operator|<
+name|NPGPTD
+condition|)
 name|KASSERT
 argument_list|(
 name|xpmap_ptom
