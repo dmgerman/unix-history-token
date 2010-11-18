@@ -2732,7 +2732,7 @@ name|allowed_irqs
 operator|=
 literal|0x00000000
 expr_stmt|;
-comment|/* 	 * Neither QEMU nor VirtualBox report supported IRQs correctly. 	 * The only way to use HPET there is to specify IRQs manually 	 * and/or use legacy_route. Legacy_route mode work on both. 	 */
+comment|/* 	 * Neither QEMU nor VirtualBox report supported IRQs correctly. 	 * The only way to use HPET there is to specify IRQs manually 	 * and/or use legacy_route. Legacy_route mode works on both. 	 */
 if|if
 condition|(
 name|vm_guest
@@ -3353,7 +3353,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-comment|/* If at least one timer needs legacy IRQ - setup it. */
+comment|/* If at least one timer needs legacy IRQ - set it up. */
 if|if
 condition|(
 name|sc
