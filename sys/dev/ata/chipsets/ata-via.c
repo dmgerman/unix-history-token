@@ -2933,6 +2933,13 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+else|else
+name|ch
+operator|->
+name|devices
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_function
 
