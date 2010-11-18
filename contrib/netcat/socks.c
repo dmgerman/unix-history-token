@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: socks.c,v 1.17 2006/09/25 04:51:20 ray Exp $	*/
+comment|/*	$OpenBSD: socks.c,v 1.18 2010/04/20 07:26:35 nicm Exp $	*/
 end_comment
 
 begin_comment
@@ -888,7 +888,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"write failed (%d/3)"
+literal|"write failed (%zu/3)"
 argument_list|,
 name|cnt
 argument_list|)
@@ -916,7 +916,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"read failed (%d/3)"
+literal|"read failed (%zu/3)"
 argument_list|,
 name|cnt
 argument_list|)
@@ -1211,7 +1211,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"write failed (%d/%d)"
+literal|"write failed (%zu/%zu)"
 argument_list|,
 name|cnt
 argument_list|,
@@ -1241,7 +1241,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"read failed (%d/10)"
+literal|"read failed (%zu/10)"
 argument_list|,
 name|cnt
 argument_list|)
@@ -1386,7 +1386,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"write failed (%d/%d)"
+literal|"write failed (%zu/%zu)"
 argument_list|,
 name|cnt
 argument_list|,
@@ -1416,7 +1416,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"read failed (%d/8)"
+literal|"read failed (%zu/8)"
 argument_list|,
 name|cnt
 argument_list|)
@@ -1588,7 +1588,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"write failed (%d/%d)"
+literal|"write failed (%zu/%d)"
 argument_list|,
 name|cnt
 argument_list|,
@@ -1750,7 +1750,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"write failed (%d/%d)"
+literal|"write failed (%zu/%d)"
 argument_list|,
 name|cnt
 argument_list|,
