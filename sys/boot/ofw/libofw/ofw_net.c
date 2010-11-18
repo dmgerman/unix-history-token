@@ -343,11 +343,6 @@ name|size_t
 name|len
 parameter_list|)
 block|{
-name|struct
-name|ether_header
-modifier|*
-name|eh
-decl_stmt|;
 name|size_t
 name|sendlen
 decl_stmt|;
@@ -360,6 +355,11 @@ name|defined
 argument_list|(
 name|NETIF_DEBUG
 argument_list|)
+name|struct
+name|ether_header
+modifier|*
+name|eh
+decl_stmt|;
 name|printf
 argument_list|(
 literal|"netif_put: desc=0x%x pkt=0x%x len=%d\n"

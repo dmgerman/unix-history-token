@@ -663,6 +663,24 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|resource_list_reserved
+parameter_list|(
+name|struct
+name|resource_list
+modifier|*
+name|rl
+parameter_list|,
+name|int
+name|type
+parameter_list|,
+name|int
+name|rid
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|resource_list_entry
 modifier|*

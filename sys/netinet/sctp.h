@@ -450,6 +450,13 @@ begin_comment
 comment|/* ro */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SCTP_TIMEOUTS
+value|0x00000106
+end_define
+
 begin_comment
 comment|/*  * user socket options: BSD implementation specific  */
 end_comment

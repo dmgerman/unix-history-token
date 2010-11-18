@@ -3863,7 +3863,7 @@ comment|/* Output some stuff at end of file if nec.  */
 name|dw2_output_indirect_constants
 argument_list|()
 expr_stmt|;
-comment|/* Flush any pending external directives.  cgraph did this for      assemble_external calls from the front end, but the RTL      expander can also generate them.  */
+comment|/* Flush any pending external directives.  */
 name|process_pending_assemble_externals
 argument_list|()
 expr_stmt|;

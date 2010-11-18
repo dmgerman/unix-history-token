@@ -3319,8 +3319,6 @@ name|ln
 decl_stmt|;
 name|int
 name|llflags
-init|=
-literal|0
 decl_stmt|;
 name|bzero
 argument_list|(
@@ -3360,6 +3358,10 @@ name|IF_AFDATA_LOCK_ASSERT
 argument_list|(
 name|ifp
 argument_list|)
+expr_stmt|;
+name|llflags
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -3410,29 +3412,17 @@ name|NULL
 operator|)
 operator|&&
 operator|(
-name|flags
+name|llflags
 operator|&
 name|LLE_CREATE
 operator|)
 condition|)
-block|{
 name|ln
 operator|->
 name|ln_state
 operator|=
 name|ND6_LLINFO_NOSTATE
 expr_stmt|;
-name|callout_init
-argument_list|(
-operator|&
-name|ln
-operator|->
-name|ln_timer_ch
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 operator|(
 name|ln
@@ -5810,8 +5800,6 @@ name|llchange
 decl_stmt|;
 name|int
 name|flags
-init|=
-literal|0
 decl_stmt|;
 name|int
 name|newstate
@@ -5879,7 +5867,7 @@ name|NULL
 return|;
 comment|/* 	 * Validation about ifp->if_addrlen and lladdrlen must be done in 	 * the caller. 	 * 	 * XXX If the link does not have link-layer adderss, what should 	 * we do? (ifp->if_addrlen == 0) 	 * Spec says nothing in sections for RA, RS and NA.  There's small 	 * description on it in NS section (RFC 2461 7.2.3). 	 */
 name|flags
-operator||=
+operator|=
 name|lladdr
 condition|?
 name|ND6_EXCLUSIVE
@@ -5911,7 +5899,7 @@ condition|)
 block|{
 name|flags
 operator||=
-name|LLE_EXCLUSIVE
+name|ND6_EXCLUSIVE
 expr_stmt|;
 name|ln
 operator|=

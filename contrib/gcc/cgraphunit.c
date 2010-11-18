@@ -5580,9 +5580,6 @@ argument_list|()
 expr_stmt|;
 return|return;
 block|}
-name|process_pending_assemble_externals
-argument_list|()
-expr_stmt|;
 comment|/* Frontend may output common variables after the unit has been finalized.      It is safe to deal with them here as they are always zero initialized.  */
 name|cgraph_varpool_analyze_pending_decls
 argument_list|()

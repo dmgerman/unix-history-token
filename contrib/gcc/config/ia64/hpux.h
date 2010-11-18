@@ -295,17 +295,6 @@ name|GTHREAD_USE_WEAK
 value|0
 end_define
 
-begin_comment
-comment|/* Put out the needed function declarations at the end.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TARGET_ASM_FILE_END
-value|ia64_hpux_file_end
-end_define
-
 begin_undef
 undef|#
 directive|undef
