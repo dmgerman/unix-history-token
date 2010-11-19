@@ -1052,6 +1052,13 @@ name|AMDPM_TSC_INVARIANT
 value|0x00000100
 end_define
 
+begin_define
+define|#
+directive|define
+name|AMDPM_CPB
+value|0x00000200
+end_define
+
 begin_comment
 comment|/*  * AMD extended function 8000_0008h ecx info  */
 end_comment
