@@ -184,6 +184,8 @@ decl_stmt|,
 name|VolumeID
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|fd
 decl_stmt|;
 if|if
@@ -247,6 +249,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"mpt_open"
@@ -254,12 +260,12 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
-if|if
-condition|(
+name|error
+operator|=
 name|mpt_lookup_volume
 argument_list|(
 name|fd
@@ -275,12 +281,16 @@ argument_list|,
 operator|&
 name|VolumeID
 argument_list|)
-operator|<
-literal|0
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
-name|warn
+name|warnc
 argument_list|(
+name|error
+argument_list|,
 literal|"Invalid volume: %s"
 argument_list|,
 name|av
@@ -291,7 +301,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -315,6 +325,10 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to fetch volume names"
@@ -322,7 +336,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -411,6 +425,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to set volume name"
@@ -418,7 +436,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -486,6 +504,8 @@ decl_stmt|,
 name|VolumeID
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|fd
 decl_stmt|;
 if|if
@@ -528,6 +548,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"mpt_open"
@@ -535,12 +559,12 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
-if|if
-condition|(
+name|error
+operator|=
 name|mpt_lookup_volume
 argument_list|(
 name|fd
@@ -556,12 +580,16 @@ argument_list|,
 operator|&
 name|VolumeID
 argument_list|)
-operator|<
-literal|0
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
-name|warn
+name|warnc
 argument_list|(
+name|error
+argument_list|,
 literal|"Invalid volume: %s"
 argument_list|,
 name|av
@@ -572,12 +600,12 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
-if|if
-condition|(
+name|error
+operator|=
 name|mpt_raid_action
 argument_list|(
 name|fd
@@ -617,18 +645,22 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|)
-operator|<
-literal|0
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
-name|warn
+name|warnc
 argument_list|(
+name|error
+argument_list|,
 literal|"Fetching volume status failed"
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -865,6 +897,8 @@ modifier|*
 name|s1
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|fd
 decl_stmt|;
 if|if
@@ -884,7 +918,7 @@ literal|3
 condition|?
 literal|"extra arguments"
 else|:
-literal|"volume required"
+literal|"missing arguments"
 argument_list|)
 expr_stmt|;
 return|return
@@ -995,6 +1029,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"mpt_open"
@@ -1002,12 +1040,12 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
-if|if
-condition|(
+name|error
+operator|=
 name|mpt_lookup_volume
 argument_list|(
 name|fd
@@ -1023,12 +1061,16 @@ argument_list|,
 operator|&
 name|VolumeID
 argument_list|)
-operator|<
-literal|0
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
-name|warn
+name|warnc
 argument_list|(
+name|error
+argument_list|,
 literal|"Invalid volume: %s"
 argument_list|,
 name|av
@@ -1039,7 +1081,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -1064,8 +1106,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-operator|-
-literal|1
+name|errno
 operator|)
 return|;
 name|Settings
@@ -1136,7 +1177,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"volume cache unchanged\n"
+literal|"volume cache unchanged"
 argument_list|)
 expr_stmt|;
 name|close
@@ -1158,8 +1199,8 @@ name|Settings
 operator|=
 name|NewSettings
 expr_stmt|;
-if|if
-condition|(
+name|error
+operator|=
 name|mpt_raid_action
 argument_list|(
 name|fd
@@ -1198,14 +1239,16 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|)
-operator|<
-literal|0
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
-name|warnx
+name|warnc
 argument_list|(
-literal|"volume cache change failed, errno= %d\n"
+name|error
 argument_list|,
-name|errno
+literal|"volume cache change failed"
 argument_list|)
 expr_stmt|;
 name|close
@@ -1215,7 +1258,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
