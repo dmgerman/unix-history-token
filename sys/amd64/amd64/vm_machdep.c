@@ -414,7 +414,7 @@ expr_stmt|;
 block|}
 return|return;
 block|}
-comment|/* Ensure that p1's pcb is up to date. */
+comment|/* Ensure that td1's pcb is up to date. */
 name|fpuexit
 argument_list|(
 name|td1
@@ -448,7 +448,7 @@ name|td_pcb
 operator|=
 name|pcb2
 expr_stmt|;
-comment|/* Copy p1's pcb */
+comment|/* Copy td1's pcb */
 name|bcopy
 argument_list|(
 name|td1
@@ -463,6 +463,16 @@ operator|*
 name|pcb2
 argument_list|)
 argument_list|)
+expr_stmt|;
+comment|/* Properly initialize pcb_save */
+name|pcb2
+operator|->
+name|pcb_save
+operator|=
+operator|&
+name|pcb2
+operator|->
+name|pcb_user_save
 expr_stmt|;
 comment|/* Point mdproc and then copy over td1's contents */
 name|mdp2
@@ -955,6 +965,9 @@ name|pcb
 modifier|*
 name|pcb
 decl_stmt|;
+name|critical_enter
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|td
@@ -965,6 +978,9 @@ name|fpcurthread
 argument_list|)
 condition|)
 name|fpudrop
+argument_list|()
+expr_stmt|;
+name|critical_exit
 argument_list|()
 expr_stmt|;
 name|pcb
@@ -1128,6 +1144,19 @@ operator|->
 name|td_pcb
 operator|-
 literal|1
+expr_stmt|;
+name|td
+operator|->
+name|td_pcb
+operator|->
+name|pcb_save
+operator|=
+operator|&
+name|td
+operator|->
+name|td_pcb
+operator|->
+name|pcb_user_save
 expr_stmt|;
 block|}
 end_function
@@ -1366,7 +1395,20 @@ operator|->
 name|pcb_flags
 operator|&=
 operator|~
+operator|(
 name|PCB_FPUINITDONE
+operator||
+name|PCB_USERFPUINITDONE
+operator|)
+expr_stmt|;
+name|pcb2
+operator|->
+name|pcb_save
+operator|=
+operator|&
+name|pcb2
+operator|->
+name|pcb_user_save
 expr_stmt|;
 name|pcb2
 operator|->

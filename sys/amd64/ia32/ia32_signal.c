@@ -365,11 +365,12 @@ modifier|*
 name|mcp
 parameter_list|)
 block|{
+comment|/* 	 * XXX Format of 64bit and 32bit FXSAVE areas differs. FXSAVE 	 * in 32bit mode saves %cs and %ds, while on 64bit it saves 	 * 64bit instruction and data pointers. Ignore the difference 	 * for now, it should be irrelevant for most applications. 	 */
 name|mcp
 operator|->
 name|mc_ownedfp
 operator|=
-name|fpugetregs
+name|fpugetuserregs
 argument_list|(
 name|td
 argument_list|,
@@ -469,8 +470,7 @@ operator|==
 name|_MC_FPOWNED_PCB
 condition|)
 block|{
-comment|/* 		 * XXX we violate the dubious requirement that fpusetregs() 		 * be called with interrupts disabled. 		 */
-name|fpusetregs
+name|fpusetuserregs
 argument_list|(
 name|td
 argument_list|,

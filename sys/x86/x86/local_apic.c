@@ -1436,7 +1436,7 @@ name|u_int32_t
 name|maxlvt
 decl_stmt|;
 name|register_t
-name|eflags
+name|saveintr
 decl_stmt|;
 name|char
 name|buf
@@ -1466,7 +1466,7 @@ literal|"missing APIC structure"
 operator|)
 argument_list|)
 expr_stmt|;
-name|eflags
+name|saveintr
 operator|=
 name|intr_disable
 argument_list|()
@@ -1690,7 +1690,7 @@ argument_list|)
 expr_stmt|;
 name|intr_restore
 argument_list|(
-name|eflags
+name|saveintr
 argument_list|)
 expr_stmt|;
 block|}
@@ -5870,7 +5870,7 @@ block|{
 name|register_t
 name|value
 decl_stmt|,
-name|eflags
+name|saveintr
 decl_stmt|;
 comment|/* XXX: Need more sanity checking of icrlo? */
 name|KASSERT
@@ -5926,7 +5926,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Set destination in ICR HI register if it is being used. */
-name|eflags
+name|saveintr
 operator|=
 name|intr_disable
 argument_list|()
@@ -5989,7 +5989,7 @@ name|value
 expr_stmt|;
 name|intr_restore
 argument_list|(
-name|eflags
+name|saveintr
 argument_list|)
 expr_stmt|;
 block|}

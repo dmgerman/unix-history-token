@@ -15756,7 +15756,7 @@ name|td
 operator|->
 name|td_pcb
 operator|->
-name|pcb_save
+name|pcb_user_save
 operator|.
 name|sv_xmm
 argument_list|,
@@ -15784,7 +15784,7 @@ name|td
 operator|->
 name|td_pcb
 operator|->
-name|pcb_save
+name|pcb_user_save
 operator|.
 name|sv_87
 argument_list|,
@@ -15840,7 +15840,7 @@ name|td
 operator|->
 name|td_pcb
 operator|->
-name|pcb_save
+name|pcb_user_save
 operator|.
 name|sv_xmm
 argument_list|)
@@ -15863,7 +15863,7 @@ name|td
 operator|->
 name|td_pcb
 operator|->
-name|pcb_save
+name|pcb_user_save
 operator|.
 name|sv_87
 argument_list|,
@@ -16518,7 +16518,7 @@ name|mcp
 operator|->
 name|mc_ownedfp
 operator|=
-name|npxgetregs
+name|npxgetuserregs
 argument_list|(
 name|td
 argument_list|,
@@ -16785,7 +16785,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 		 * XXX we violate the dubious requirement that npxsetregs() 		 * be called with interrupts disabled. 		 */
-name|npxsetregs
+name|npxsetuserregs
 argument_list|(
 name|td
 argument_list|,
@@ -16821,12 +16821,21 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|register_t
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|intr_disable
+name|KASSERT
+argument_list|(
+name|PCB_USER_FPU
+argument_list|(
+name|td
+operator|->
+name|td_pcb
+argument_list|)
+argument_list|,
+operator|(
+literal|"fpstate_drop: kernel-owned fpu"
+operator|)
+argument_list|)
+expr_stmt|;
+name|critical_enter
 argument_list|()
 expr_stmt|;
 ifdef|#
@@ -16854,12 +16863,14 @@ operator|->
 name|pcb_flags
 operator|&=
 operator|~
+operator|(
 name|PCB_NPXINITDONE
+operator||
+name|PCB_NPXUSERINITDONE
+operator|)
 expr_stmt|;
-name|intr_restore
-argument_list|(
-name|s
-argument_list|)
+name|critical_exit
+argument_list|()
 expr_stmt|;
 block|}
 end_function
