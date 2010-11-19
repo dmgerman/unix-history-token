@@ -1586,7 +1586,7 @@ name|sc_ncm
 operator|.
 name|rx_max
 operator|=
-name|UGETW
+name|UGETDW
 argument_list|(
 name|temp
 operator|.
@@ -1599,7 +1599,7 @@ name|sc_ncm
 operator|.
 name|tx_max
 operator|=
-name|UGETW
+name|UGETDW
 argument_list|(
 name|temp
 operator|.
@@ -1654,7 +1654,7 @@ name|sc_ncm
 operator|.
 name|rx_max
 operator|=
-name|UGETW
+name|UGETDW
 argument_list|(
 name|temp
 operator|.
@@ -1667,7 +1667,7 @@ name|sc_ncm
 operator|.
 name|tx_max
 operator|=
-name|UGETW
+name|UGETDW
 argument_list|(
 name|temp
 operator|.
