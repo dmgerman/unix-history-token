@@ -8085,6 +8085,14 @@ name|func_code
 operator|=
 name|XPT_DEV_MATCH
 expr_stmt|;
+name|matchccb
+operator|.
+name|ccb_h
+operator|.
+name|path_id
+operator|=
+name|CAM_BUS_WILDCARD
+expr_stmt|;
 name|bufsize
 operator|=
 sizeof|sizeof
