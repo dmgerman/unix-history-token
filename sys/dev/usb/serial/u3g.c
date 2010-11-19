@@ -1834,6 +1834,15 @@ argument_list|)
 block|,
 name|U3G_DEV
 argument_list|(
+name|HUAWEI
+argument_list|,
+name|K3765_INIT
+argument_list|,
+name|U3GINIT_HUAWEISCSI
+argument_list|)
+block|,
+name|U3G_DEV
+argument_list|(
 name|KYOCERA2
 argument_list|,
 name|CDMA_MSM_K
