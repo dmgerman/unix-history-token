@@ -10777,9 +10777,8 @@ index|[
 name|USB_SPEED_LOW
 index|]
 operator|=
-literal|0
+literal|8
 block|,
-comment|/* not supported */
 index|[
 name|USB_SPEED_FULL
 index|]
