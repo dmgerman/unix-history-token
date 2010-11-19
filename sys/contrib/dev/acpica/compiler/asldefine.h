@@ -26,57 +26,43 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CompilerCreatorRevision
+name|ASL_REVISION
 value|ACPI_CA_VERSION
 end_define
 
 begin_define
 define|#
 directive|define
-name|IntelAcpiCA
-value|"Intel ACPI Component Architecture"
-end_define
-
-begin_define
-define|#
-directive|define
-name|CompilerId
+name|ASL_COMPILER_NAME
 value|"ASL Optimizing Compiler"
 end_define
 
 begin_define
 define|#
 directive|define
-name|DisassemblerId
+name|AML_DISASSEMBLER_NAME
 value|"AML Disassembler"
 end_define
 
 begin_define
 define|#
 directive|define
-name|CompilerCopyright
-value|"Copyright (c) 2000 - 2010 Intel Corporation"
-end_define
-
-begin_define
-define|#
-directive|define
-name|CompilerCompliance
-value|"Supports ACPI Specification Revision 4.0"
-end_define
-
-begin_define
-define|#
-directive|define
-name|CompilerName
+name|ASL_INVOCATION_NAME
 value|"iasl"
 end_define
 
 begin_define
 define|#
 directive|define
-name|CompilerCreatorId
+name|ASL_CREATOR_ID
 value|"INTL"
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASL_COMPLIANCE
+value|"Supports ACPI Specification Revision 4.0a"
 end_define
 
 begin_comment
@@ -373,6 +359,38 @@ define|#
 directive|define
 name|FILE_SUFFIX_C_INCLUDE
 value|"h"
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILE_SUFFIX_ASL_CODE
+value|"asl"
+end_define
+
+begin_comment
+comment|/* Types for input files */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASL_INPUT_TYPE_BINARY
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASL_INPUT_TYPE_ASCII_ASL
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASL_INPUT_TYPE_ASCII_DATA
+value|2
 end_define
 
 begin_comment

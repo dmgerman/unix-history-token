@@ -391,7 +391,7 @@ name|TRUE
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%d"
+literal|"%u"
 argument_list|,
 name|i
 argument_list|)

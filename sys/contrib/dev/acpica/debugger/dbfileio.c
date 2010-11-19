@@ -385,7 +385,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"All LFs (%d) were changed to CR/LF pairs\n"
+literal|"All LFs (%u) were changed to CR/LF pairs\n"
 argument_list|,
 name|Pairs
 argument_list|)

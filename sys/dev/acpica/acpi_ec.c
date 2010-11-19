@@ -2246,8 +2246,6 @@ argument_list|,
 name|sc
 operator|->
 name|ec_gpebit
-argument_list|,
-name|ACPI_GPE_TYPE_RUNTIME
 argument_list|)
 expr_stmt|;
 if|if
@@ -2470,8 +2468,6 @@ argument_list|,
 name|sc
 operator|->
 name|ec_gpebit
-argument_list|,
-name|ACPI_GPE_TYPE_RUNTIME
 argument_list|)
 expr_stmt|;
 return|return

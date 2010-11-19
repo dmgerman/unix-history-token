@@ -976,7 +976,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiExSystemDoSuspend
+name|AcpiExSystemDoSleep
 parameter_list|(
 name|UINT64
 name|Time

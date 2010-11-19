@@ -1260,11 +1260,11 @@ argument_list|)
 expr_stmt|;
 name|AcpiDbUInt32ToHexString
 argument_list|(
-name|ACPI_TO_INTEGER
-argument_list|(
+operator|(
+name|UINT32
+operator|)
 name|AcpiOsGetThreadId
 argument_list|()
-argument_list|)
 argument_list|,
 name|Info
 operator|->
@@ -1299,11 +1299,8 @@ name|NumCreated
 operator|++
 index|]
 operator|=
-name|ACPI_TO_INTEGER
-argument_list|(
 name|AcpiOsGetThreadId
 argument_list|()
-argument_list|)
 expr_stmt|;
 block|}
 name|LocalInfo
@@ -1437,7 +1434,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|if ((i % 100) == 0)         {             AcpiOsPrintf ("%d executions, Thread 0x%x\n", i, AcpiOsGetThreadId ());         }          if (ReturnObj.Length)         {             AcpiOsPrintf ("Execution of %s returned object %p Buflen %X\n",                 Info->Pathname, ReturnObj.Pointer, (UINT32) ReturnObj.Length);             AcpiDbDumpExternalObject (ReturnObj.Pointer, 1);         }
+block|if ((i % 100) == 0)         {             AcpiOsPrintf ("%u executions, Thread 0x%x\n", i, AcpiOsGetThreadId ());         }          if (ReturnObj.Length)         {             AcpiOsPrintf ("Execution of %s returned object %p Buflen %X\n",                 Info->Pathname, ReturnObj.Pointer, (UINT32) ReturnObj.Length);             AcpiDbDumpExternalObject (ReturnObj.Pointer, 1);         }
 endif|#
 directive|endif
 block|}
@@ -1765,7 +1762,10 @@ name|NumThreads
 expr_stmt|;
 name|Size
 operator|=
-literal|4
+sizeof|sizeof
+argument_list|(
+name|ACPI_THREAD_ID
+argument_list|)
 operator|*
 name|AcpiGbl_DbMethodInfo
 operator|.
@@ -1775,10 +1775,6 @@ name|AcpiGbl_DbMethodInfo
 operator|.
 name|Threads
 operator|=
-operator|(
-name|UINT32
-operator|*
-operator|)
 name|AcpiOsAllocate
 argument_list|(
 name|Size

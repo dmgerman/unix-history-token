@@ -912,18 +912,16 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Thread %p cannot release Mutex [%4.4s] acquired by thread %p"
+literal|"Thread %u cannot release Mutex [%4.4s] acquired by thread %u"
 operator|,
-name|ACPI_CAST_PTR
-argument_list|(
-name|void
-argument_list|,
+operator|(
+name|UINT32
+operator|)
 name|WalkState
 operator|->
 name|Thread
 operator|->
 name|ThreadId
-argument_list|)
 operator|,
 name|AcpiUtGetNodeName
 argument_list|(
@@ -934,14 +932,12 @@ operator|.
 name|Node
 argument_list|)
 operator|,
-name|ACPI_CAST_PTR
-argument_list|(
-name|void
-argument_list|,
+operator|(
+name|UINT32
+operator|)
 name|OwnerThread
 operator|->
 name|ThreadId
-argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;

@@ -1127,7 +1127,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"/* A-CHILDREN: %d Actual %d */\n"
+literal|"/* A-CHILDREN: %u Actual %u */\n"
 argument_list|,
 name|ArgCount
 argument_list|,
@@ -1994,6 +1994,11 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 name|Object
 decl_stmt|;
+name|UINT32
+name|ParamCount
+init|=
+literal|0
+decl_stmt|;
 name|WalkState
 operator|=
 name|Info
@@ -2286,7 +2291,6 @@ name|Common
 operator|.
 name|Type
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|ObjectType2
@@ -2294,24 +2298,16 @@ operator|==
 name|ACPI_TYPE_METHOD
 condition|)
 block|{
-name|AcpiDmAddToExternalList
-argument_list|(
-name|Op
-argument_list|,
-name|Path
-argument_list|,
-name|ACPI_TYPE_METHOD
-argument_list|,
+name|ParamCount
+operator|=
 name|Object
 operator|->
 name|Method
 operator|.
 name|ParamCount
-argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
+block|}
 name|AcpiDmAddToExternalList
 argument_list|(
 name|Op
@@ -2323,10 +2319,9 @@ name|UINT8
 operator|)
 name|ObjectType2
 argument_list|,
-literal|0
+name|ParamCount
 argument_list|)
 expr_stmt|;
-block|}
 name|Op
 operator|->
 name|Common

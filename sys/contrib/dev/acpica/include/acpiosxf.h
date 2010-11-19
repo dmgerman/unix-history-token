@@ -672,7 +672,7 @@ parameter_list|,
 name|UINT32
 name|Reg
 parameter_list|,
-name|void
+name|UINT64
 modifier|*
 name|Value
 parameter_list|,
@@ -703,41 +703,8 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Interim function needed for PCI IRQ routing  */
-end_comment
-
-begin_function_decl
-name|void
-name|AcpiOsDerivePciId
-parameter_list|(
-name|ACPI_HANDLE
-name|Rhandle
-parameter_list|,
-name|ACPI_HANDLE
-name|Chandle
-parameter_list|,
-name|ACPI_PCI_ID
-modifier|*
-modifier|*
-name|PciId
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*  * Miscellaneous  */
 end_comment
-
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiOsValidateInterface
-parameter_list|(
-name|char
-modifier|*
-name|Interface
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|BOOLEAN

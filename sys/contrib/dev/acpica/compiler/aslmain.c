@@ -25,6 +25,12 @@ directive|include
 file|<contrib/dev/acpica/include/acapps.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/include/acdisasm.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -174,7 +180,7 @@ begin_define
 define|#
 directive|define
 name|ASL_SUPPORTED_OPTIONS
-value|"@:2b:cd^e:fgh^i^I:l^o:p:r:s:t:v:w:x:"
+value|"@:2b:c:d^e:fgh^i^I:l^no:p:r:s:t:T:v:w:x:z"
 end_define
 
 begin_comment
@@ -261,7 +267,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  -t<a|c>        Create AML in assembler or C hex table (*.hex)\n"
+literal|"  -t<a|c|s>      Create AML in assembler, C, or ASL hex table (*.hex)\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -291,12 +297,17 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"  -cr            Disable Resource Descriptor error checking\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"  -r<Revision>   Override table header Revision (1-255)\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\nListings:\n"
+literal|"\nASL Listing Files:\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -316,12 +327,32 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"\nACPI Data Tables:\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"  -T<Sig>       Create table template file for<Sig> (or \"ALL\")\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"  -vt            Create verbose templates (full disassembly)\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"\nAML Disassembler:\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
 literal|"  -d  [file]     Disassemble or decode binary ACPI table to file (*.dsl)\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"  -da [f1,f2]    Disassemble multiple tables from single namespace\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -367,6 +398,11 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"  -hr            Display ACPI reserved method names\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"  -ht            Display currently supported ACPI table names\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -449,7 +485,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  -c             Parse only, no output generation\n"
+literal|"  -n             Parse only, no output generation\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -460,6 +496,11 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"  -x<level>      Set debug level for trace output\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"  -z             Do not insert new compiler ID for DataTables\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -479,9 +520,16 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
+literal|"%s\n"
+argument_list|,
+name|ASL_COMPLIANCE
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"Usage:    %s [Options] [Files]\n\n"
 argument_list|,
-name|CompilerName
+name|ASL_INVOCATION_NAME
 argument_list|)
 expr_stmt|;
 name|Options
@@ -838,6 +886,9 @@ block|{
 name|int
 name|j
 decl_stmt|;
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
 comment|/* Get the command line options */
 while|while
 condition|(
@@ -959,11 +1010,37 @@ break|break;
 case|case
 literal|'c'
 case|:
-comment|/* Parse only */
-name|Gbl_ParseOnlyFlag
+switch|switch
+condition|(
+name|AcpiGbl_Optarg
+index|[
+literal|0
+index|]
+condition|)
+block|{
+case|case
+literal|'r'
+case|:
+name|Gbl_NoResourceChecking
 operator|=
 name|TRUE
 expr_stmt|;
+break|break;
+default|default:
+name|printf
+argument_list|(
+literal|"Unknown option: -c%s\n"
+argument_list|,
+name|AcpiGbl_Optarg
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 break|break;
 case|case
 literal|'d'
@@ -982,6 +1059,18 @@ case|:
 name|Gbl_DoCompile
 operator|=
 name|FALSE
+expr_stmt|;
+break|break;
+case|case
+literal|'a'
+case|:
+name|Gbl_DoCompile
+operator|=
+name|FALSE
+expr_stmt|;
+name|Gbl_DisassembleAll
+operator|=
+name|TRUE
 expr_stmt|;
 break|break;
 case|case
@@ -1011,10 +1100,35 @@ break|break;
 case|case
 literal|'e'
 case|:
-name|Gbl_ExternalFilename
+name|Status
 operator|=
+name|AcpiDmAddToExternalFileList
+argument_list|(
 name|AcpiGbl_Optarg
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Could not add %s to external list\n"
+argument_list|,
+name|AcpiGbl_Optarg
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 break|break;
 case|case
 literal|'f'
@@ -1083,6 +1197,17 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+case|case
+literal|'t'
+case|:
+name|UtDisplaySupportedTables
+argument_list|()
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 default|default:
 name|printf
 argument_list|(
@@ -1098,7 +1223,6 @@ literal|1
 operator|)
 return|;
 block|}
-break|break;
 case|case
 literal|'I'
 case|:
@@ -1289,6 +1413,15 @@ return|;
 block|}
 break|break;
 case|case
+literal|'n'
+case|:
+comment|/* Parse only */
+name|Gbl_ParseOnlyFlag
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
 literal|'p'
 case|:
 comment|/* Override default AML output filename */
@@ -1392,6 +1525,14 @@ operator|=
 name|HEX_OUTPUT_C
 expr_stmt|;
 break|break;
+case|case
+literal|'s'
+case|:
+name|Gbl_HexOutputFlag
+operator|=
+name|HEX_OUTPUT_ASL
+expr_stmt|;
+break|break;
 default|default:
 name|printf
 argument_list|(
@@ -1407,6 +1548,18 @@ literal|1
 operator|)
 return|;
 block|}
+break|break;
+case|case
+literal|'T'
+case|:
+name|Gbl_DoTemplates
+operator|=
+name|TRUE
+expr_stmt|;
+name|Gbl_TemplateSignature
+operator|=
+name|AcpiGbl_Optarg
+expr_stmt|;
 break|break;
 case|case
 literal|'v'
@@ -1459,6 +1612,14 @@ case|:
 name|Gbl_DoSignon
 operator|=
 name|FALSE
+expr_stmt|;
+break|break;
+case|case
+literal|'t'
+case|:
+name|Gbl_VerboseTemplates
+operator|=
+name|TRUE
 expr_stmt|;
 break|break;
 default|default:
@@ -1544,6 +1705,14 @@ literal|16
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+literal|'z'
+case|:
+name|Gbl_UseOriginalCompilerId
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
 default|default:
 return|return
 operator|(
@@ -1583,6 +1752,9 @@ name|BadCommandLine
 init|=
 literal|0
 decl_stmt|;
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
 comment|/* Minimum command line contains at least the command and an input file */
 if|if
 condition|(
@@ -1591,9 +1763,12 @@ operator|<
 literal|2
 condition|)
 block|{
-name|AslCompilerSignon
+name|printf
 argument_list|(
-name|ASL_FILE_STDOUT
+name|ACPI_COMMON_SIGNON
+argument_list|(
+name|ASL_COMPILER_NAME
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|Usage
@@ -1617,6 +1792,39 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Gbl_DoTemplates
+condition|)
+block|{
+name|Status
+operator|=
+name|DtCreateTemplates
+argument_list|(
+name|Gbl_TemplateSignature
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|exit
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Next parameter must be the input filename */
 if|if
 condition|(
@@ -1648,9 +1856,12 @@ condition|(
 name|Gbl_DoSignon
 condition|)
 block|{
-name|AslCompilerSignon
+name|printf
 argument_list|(
-name|ASL_FILE_STDOUT
+name|ACPI_COMMON_SIGNON
+argument_list|(
+name|ASL_COMPILER_NAME
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1704,8 +1915,15 @@ name|ACPI_STATUS
 name|Status
 decl_stmt|;
 name|int
-name|Index
+name|Index1
 decl_stmt|;
+name|int
+name|Index2
+decl_stmt|;
+name|AcpiGbl_ExternalFileList
+operator|=
+name|NULL
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|_DEBUG
@@ -1727,7 +1945,9 @@ comment|/* Init and command line */
 name|AslInitialize
 argument_list|()
 expr_stmt|;
-name|Index
+name|Index1
+operator|=
+name|Index2
 operator|=
 name|AslCommandLine
 argument_list|(
@@ -1770,12 +1990,16 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* Process each pathname/filename in the list, with possible wildcards */
+if|if
+condition|(
+name|Gbl_DisassembleAll
+condition|)
+block|{
 while|while
 condition|(
 name|argv
 index|[
-name|Index
+name|Index1
 index|]
 condition|)
 block|{
@@ -1785,8 +2009,10 @@ name|AslDoOnePathname
 argument_list|(
 name|argv
 index|[
-name|Index
+name|Index1
 index|]
+argument_list|,
+name|AcpiDmAddToExternalFileList
 argument_list|)
 expr_stmt|;
 if|if
@@ -1804,8 +2030,58 @@ literal|1
 operator|)
 return|;
 block|}
-name|Index
+name|Index1
 operator|++
+expr_stmt|;
+block|}
+block|}
+comment|/* Process each pathname/filename in the list, with possible wildcards */
+while|while
+condition|(
+name|argv
+index|[
+name|Index2
+index|]
+condition|)
+block|{
+name|Status
+operator|=
+name|AslDoOnePathname
+argument_list|(
+name|argv
+index|[
+name|Index2
+index|]
+argument_list|,
+name|AslDoOneFile
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+name|Index2
+operator|++
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|AcpiGbl_ExternalFileList
+condition|)
+block|{
+name|AcpiDmClearExternalFileList
+argument_list|()
 expr_stmt|;
 block|}
 return|return

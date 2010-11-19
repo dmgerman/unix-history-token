@@ -1419,7 +1419,7 @@ name|s
 parameter_list|,
 name|e
 parameter_list|)
-value|AcpiNsReportError (AE_INFO, s, e);
+value|AcpiUtNamespaceError (AE_INFO, s, e);
 end_define
 
 begin_define
@@ -1435,7 +1435,7 @@ name|p
 parameter_list|,
 name|e
 parameter_list|)
-value|AcpiNsReportMethodError (AE_INFO, s, n, p, e);
+value|AcpiUtMethodError (AE_INFO, s, n, p, e);
 end_define
 
 begin_define

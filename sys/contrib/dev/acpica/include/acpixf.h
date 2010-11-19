@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20100331
+value|0x20101013
 end_define
 
 begin_include
@@ -57,6 +57,13 @@ begin_decl_stmt
 specifier|extern
 name|ACPI_TABLE_FADT
 name|AcpiGbl_FADT
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|BOOLEAN
+name|AcpiGbl_SystemAwakeAndRunning
 decl_stmt|;
 end_decl_stmt
 
@@ -142,6 +149,13 @@ begin_decl_stmt
 specifier|extern
 name|UINT8
 name|AcpiGbl_CopyDsdtLocally
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|UINT8
+name|AcpiGbl_TruncateIoAddresses
 decl_stmt|;
 end_decl_stmt
 
@@ -274,8 +288,28 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiInstallInterface
+parameter_list|(
+name|ACPI_STRING
+name|InterfaceName
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiRemoveInterface
+parameter_list|(
+name|ACPI_STRING
+name|InterfaceName
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/*  * ACPI Memory managment  */
+comment|/*  * ACPI Memory management  */
 end_comment
 
 begin_function_decl
@@ -481,7 +515,7 @@ name|ACPI_STATUS
 name|AcpiGetName
 parameter_list|(
 name|ACPI_HANDLE
-name|Handle
+name|Object
 parameter_list|,
 name|UINT32
 name|NameType
@@ -515,7 +549,7 @@ name|ACPI_STATUS
 name|AcpiAttachData
 parameter_list|(
 name|ACPI_HANDLE
-name|ObjHandle
+name|Object
 parameter_list|,
 name|ACPI_OBJECT_HANDLER
 name|Handler
@@ -532,7 +566,7 @@ name|ACPI_STATUS
 name|AcpiDetachData
 parameter_list|(
 name|ACPI_HANDLE
-name|ObjHandle
+name|Object
 parameter_list|,
 name|ACPI_OBJECT_HANDLER
 name|Handler
@@ -545,7 +579,7 @@ name|ACPI_STATUS
 name|AcpiGetData
 parameter_list|(
 name|ACPI_HANDLE
-name|ObjHandle
+name|Object
 parameter_list|,
 name|ACPI_OBJECT_HANDLER
 name|Handler
@@ -632,7 +666,7 @@ name|ACPI_STATUS
 name|AcpiGetObjectInfo
 parameter_list|(
 name|ACPI_HANDLE
-name|Handle
+name|Object
 parameter_list|,
 name|ACPI_DEVICE_INFO
 modifier|*
@@ -872,6 +906,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiInstallInterfaceHandler
+parameter_list|(
+name|ACPI_INTERFACE_HANDLER
+name|Handler
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Event interfaces  */
 end_comment
@@ -979,9 +1023,6 @@ name|GpeDevice
 parameter_list|,
 name|UINT32
 name|GpeNumber
-parameter_list|,
-name|UINT8
-name|GpeType
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -995,9 +1036,6 @@ name|GpeDevice
 parameter_list|,
 name|UINT32
 name|GpeNumber
-parameter_list|,
-name|UINT8
-name|GpeType
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1011,6 +1049,22 @@ name|GpeDevice
 parameter_list|,
 name|UINT32
 name|GpeNumber
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiGpeWakeup
+parameter_list|(
+name|ACPI_HANDLE
+name|GpeDevice
+parameter_list|,
+name|UINT32
+name|GpeNumber
+parameter_list|,
+name|UINT8
+name|Action
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1122,7 +1176,7 @@ name|ACPI_STATUS
 name|AcpiGetVendorResource
 parameter_list|(
 name|ACPI_HANDLE
-name|DeviceHandle
+name|Device
 parameter_list|,
 name|char
 modifier|*
@@ -1144,7 +1198,7 @@ name|ACPI_STATUS
 name|AcpiGetCurrentResources
 parameter_list|(
 name|ACPI_HANDLE
-name|DeviceHandle
+name|Device
 parameter_list|,
 name|ACPI_BUFFER
 modifier|*
@@ -1158,7 +1212,7 @@ name|ACPI_STATUS
 name|AcpiGetPossibleResources
 parameter_list|(
 name|ACPI_HANDLE
-name|DeviceHandle
+name|Device
 parameter_list|,
 name|ACPI_BUFFER
 modifier|*
@@ -1172,7 +1226,7 @@ name|ACPI_STATUS
 name|AcpiWalkResources
 parameter_list|(
 name|ACPI_HANDLE
-name|DeviceHandle
+name|Device
 parameter_list|,
 name|char
 modifier|*
@@ -1193,7 +1247,7 @@ name|ACPI_STATUS
 name|AcpiSetCurrentResources
 parameter_list|(
 name|ACPI_HANDLE
-name|DeviceHandle
+name|Device
 parameter_list|,
 name|ACPI_BUFFER
 modifier|*
@@ -1207,7 +1261,7 @@ name|ACPI_STATUS
 name|AcpiGetIrqRoutingTable
 parameter_list|(
 name|ACPI_HANDLE
-name|BusDeviceHandle
+name|Device
 parameter_list|,
 name|ACPI_BUFFER
 modifier|*

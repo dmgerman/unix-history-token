@@ -990,7 +990,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Found %d predefined names in the namespace\n"
+literal|"Found %u predefined names in the namespace\n"
 argument_list|,
 name|Count
 argument_list|)
@@ -1394,7 +1394,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Executed %d predefined names in the namespace\n"
+literal|"Executed %u predefined names in the namespace\n"
 argument_list|,
 name|Info
 operator|.
@@ -1493,7 +1493,7 @@ name|i
 operator|<
 name|AcpiGbl_RootTableList
 operator|.
-name|Count
+name|CurrentTableCount
 condition|;
 name|i
 operator|++
@@ -1511,7 +1511,7 @@ index|]
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"%d "
+literal|"%u "
 argument_list|,
 name|i
 argument_list|)
@@ -2518,7 +2518,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"Arg%d - Invalid argument name\n"
+literal|"Arg%u - Invalid argument name\n"
 argument_list|,
 name|Index
 argument_list|)
@@ -2565,7 +2565,7 @@ name|Object
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Arg%d: "
+literal|"Arg%u: "
 argument_list|,
 name|Index
 argument_list|)
@@ -2591,7 +2591,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"Local%d - Invalid local variable name\n"
+literal|"Local%u - Invalid local variable name\n"
 argument_list|,
 name|Index
 argument_list|)
@@ -2638,7 +2638,7 @@ name|Object
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Local%d: "
+literal|"Local%u: "
 argument_list|,
 name|Index
 argument_list|)
@@ -2938,6 +2938,218 @@ operator|(
 name|AE_OK
 operator|)
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDisplayInterfaces  *  * PARAMETERS:  ActionArg           - Null, "install", or "remove"  *              InterfaceNameArg    - Name for install/remove options  *  * RETURN:      None  *  * DESCRIPTION: Display or modify the global _OSI interface list  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|AcpiDbDisplayInterfaces
+parameter_list|(
+name|char
+modifier|*
+name|ActionArg
+parameter_list|,
+name|char
+modifier|*
+name|InterfaceNameArg
+parameter_list|)
+block|{
+name|ACPI_INTERFACE_INFO
+modifier|*
+name|NextInterface
+decl_stmt|;
+name|char
+modifier|*
+name|SubString
+decl_stmt|;
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
+comment|/* If no arguments, just display current interface list */
+if|if
+condition|(
+operator|!
+name|ActionArg
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|AcpiOsAcquireMutex
+argument_list|(
+name|AcpiGbl_OsiMutex
+argument_list|,
+name|ACPI_WAIT_FOREVER
+argument_list|)
+expr_stmt|;
+name|NextInterface
+operator|=
+name|AcpiGbl_SupportedInterfaces
+expr_stmt|;
+while|while
+condition|(
+name|NextInterface
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|NextInterface
+operator|->
+name|Flags
+operator|&
+name|ACPI_OSI_INVALID
+operator|)
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|NextInterface
+operator|->
+name|Name
+argument_list|)
+expr_stmt|;
+block|}
+name|NextInterface
+operator|=
+name|NextInterface
+operator|->
+name|Next
+expr_stmt|;
+block|}
+name|AcpiOsReleaseMutex
+argument_list|(
+name|AcpiGbl_OsiMutex
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/* If ActionArg exists, so must InterfaceNameArg */
+if|if
+condition|(
+operator|!
+name|InterfaceNameArg
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"Missing Interface Name argument\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/* Uppercase the action for match below */
+name|AcpiUtStrupr
+argument_list|(
+name|ActionArg
+argument_list|)
+expr_stmt|;
+comment|/* Install - install an interface */
+name|SubString
+operator|=
+name|ACPI_STRSTR
+argument_list|(
+literal|"INSTALL"
+argument_list|,
+name|ActionArg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|SubString
+condition|)
+block|{
+name|Status
+operator|=
+name|AcpiInstallInterface
+argument_list|(
+name|InterfaceNameArg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"%s, while installing \"%s\"\n"
+argument_list|,
+name|AcpiFormatException
+argument_list|(
+name|Status
+argument_list|)
+argument_list|,
+name|InterfaceNameArg
+argument_list|)
+expr_stmt|;
+block|}
+return|return;
+block|}
+comment|/* Remove - remove an interface */
+name|SubString
+operator|=
+name|ACPI_STRSTR
+argument_list|(
+literal|"REMOVE"
+argument_list|,
+name|ActionArg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|SubString
+condition|)
+block|{
+name|Status
+operator|=
+name|AcpiRemoveInterface
+argument_list|(
+name|InterfaceNameArg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"%s, while removing \"%s\"\n"
+argument_list|,
+name|AcpiFormatException
+argument_list|(
+name|Status
+argument_list|)
+argument_list|,
+name|InterfaceNameArg
+argument_list|)
+expr_stmt|;
+block|}
+return|return;
+block|}
+comment|/* Invalid ActionArg */
+name|AcpiOsPrintf
+argument_list|(
+literal|"Invalid action argument: %s\n"
+argument_list|,
+name|ActionArg
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -4576,7 +4788,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Verified %d namespace nodes with %d Objects\n"
+literal|"Verified %u namespace nodes with %u Objects\n"
 argument_list|,
 name|Info
 operator|.

@@ -228,17 +228,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|LsSetupNsList
-parameter_list|(
-name|void
-modifier|*
-name|Handle
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+specifier|static
 name|ACPI_PARSE_OBJECT
 modifier|*
 name|LkGetNameOp
@@ -300,7 +290,7 @@ name|FlPrintFile
 argument_list|(
 name|ASL_FILE_NAMESPACE_OUTPUT
 argument_list|,
-literal|"%5d  [%d]  %*s %4.4s - %s"
+literal|"%5u  [%u]  %*s %4.4s - %s"
 argument_list|,
 name|Gbl_NumNamespaceObjects
 argument_list|,
@@ -1390,6 +1380,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|ACPI_PARSE_OBJECT
 modifier|*
 name|LkGetNameOp
@@ -2986,7 +2977,7 @@ name|sprintf
 argument_list|(
 name|MsgBuffer
 argument_list|,
-literal|"%s requires %d"
+literal|"%s requires %u"
 argument_list|,
 name|Op
 operator|->

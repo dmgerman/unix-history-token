@@ -419,14 +419,13 @@ expr_stmt|;
 block|}
 name|ParentNode
 operator|=
-name|AcpiNsGetParentNode
-argument_list|(
 name|RegionObj
 operator|->
 name|Region
 operator|.
 name|Node
-argument_list|)
+operator|->
+name|Parent
 expr_stmt|;
 comment|/*      * Get the _SEG and _BBN values from the device upon which the handler      * is installed.      *      * We need to get the _SEG and _BBN objects relative to the PCI BUS device.      * This is the device the handler has been registered to handle.      */
 comment|/*      * If the AddressSpace.Node is still pointing to the root, we need      * to scan upward for a PCI Root bridge and re-associate the OpRegion      * handlers with that device.      */
@@ -527,10 +526,9 @@ break|break;
 block|}
 name|PciRootNode
 operator|=
-name|AcpiNsGetParentNode
-argument_list|(
 name|PciRootNode
-argument_list|)
+operator|->
+name|Parent
 expr_stmt|;
 block|}
 comment|/* PCI root bridge not found, use namespace root node */
@@ -611,10 +609,9 @@ condition|)
 block|{
 name|PciDeviceNode
 operator|=
-name|AcpiNsGetParentNode
-argument_list|(
 name|PciDeviceNode
-argument_list|)
+operator|->
+name|Parent
 expr_stmt|;
 block|}
 if|if
@@ -634,7 +631,7 @@ name|AE_AML_OPERAND_TYPE
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Get the PCI device and function numbers from the _ADR object contained      * in the parent's scope.      */
+comment|/*      * Get the PCI device and function numbers from the _ADR object      * contained in the parent's scope.      */
 name|Status
 operator|=
 name|AcpiUtEvaluateNumericObject
@@ -743,9 +740,13 @@ name|PciValue
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Complete this device's PciId */
-name|AcpiOsDerivePciId
+comment|/* Complete/update the PCI ID for this device */
+name|Status
+operator|=
+name|AcpiHwDerivePciId
 argument_list|(
+name|PciId
+argument_list|,
 name|PciRootNode
 argument_list|,
 name|RegionObj
@@ -753,11 +754,27 @@ operator|->
 name|Region
 operator|.
 name|Node
-argument_list|,
-operator|&
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|ACPI_FREE
+argument_list|(
 name|PciId
 argument_list|)
 expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 operator|*
 name|RegionContext
 operator|=
@@ -1175,14 +1192,13 @@ expr_stmt|;
 block|}
 name|Node
 operator|=
-name|AcpiNsGetParentNode
-argument_list|(
 name|RegionObj
 operator|->
 name|Region
 operator|.
 name|Node
-argument_list|)
+operator|->
+name|Parent
 expr_stmt|;
 name|SpaceId
 operator|=
@@ -1488,10 +1504,9 @@ block|}
 comment|/* This node does not have the handler we need; Pop up one level */
 name|Node
 operator|=
-name|AcpiNsGetParentNode
-argument_list|(
 name|Node
-argument_list|)
+operator|->
+name|Parent
 expr_stmt|;
 block|}
 comment|/* If we get here, there is no handler for this region */

@@ -462,6 +462,12 @@ comment|/* ACPI Name, always 4 chars per ACPI spec */
 name|struct
 name|acpi_namespace_node
 modifier|*
+name|Parent
+decl_stmt|;
+comment|/* Parent node */
+name|struct
+name|acpi_namespace_node
+modifier|*
 name|Child
 decl_stmt|;
 comment|/* First child */
@@ -470,7 +476,7 @@ name|acpi_namespace_node
 modifier|*
 name|Peer
 decl_stmt|;
-comment|/* Peer. Parent if ANOBJ_END_OF_PEER_LIST set */
+comment|/* First peer */
 comment|/*      * The following fields are used by the ASL compiler and disassembler only      */
 ifdef|#
 directive|ifdef
@@ -500,12 +506,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ANOBJ_END_OF_PEER_LIST
+name|ANOBJ_RESERVED
 value|0x01
 end_define
 
 begin_comment
-comment|/* End-of-list, Peer field points to parent */
+comment|/* Available for use */
 end_comment
 
 begin_define
@@ -630,29 +636,32 @@ comment|/* iASL only: Object was referenced */
 end_comment
 
 begin_comment
-comment|/* One internal RSDT for table management */
+comment|/* Internal ACPI table management - master table list */
 end_comment
 
 begin_typedef
 typedef|typedef
 struct|struct
-name|acpi_internal_rsdt
+name|acpi_table_list
 block|{
 name|ACPI_TABLE_DESC
 modifier|*
 name|Tables
 decl_stmt|;
+comment|/* Table descriptor array */
 name|UINT32
-name|Count
+name|CurrentTableCount
 decl_stmt|;
+comment|/* Tables currently in the array */
 name|UINT32
-name|Size
+name|MaxTableCount
 decl_stmt|;
+comment|/* Max tables array will hold */
 name|UINT8
 name|Flags
 decl_stmt|;
 block|}
-name|ACPI_INTERNAL_RSDT
+name|ACPI_TABLE_LIST
 typedef|;
 end_typedef
 
@@ -1386,10 +1395,6 @@ name|UINT8
 name|RuntimeCount
 decl_stmt|;
 comment|/* References to a run GPE */
-name|UINT8
-name|WakeupCount
-decl_stmt|;
-comment|/* References to a wake GPE */
 block|}
 name|ACPI_GPE_EVENT_INFO
 typedef|;
@@ -1534,6 +1539,18 @@ decl_stmt|;
 name|ACPI_GPE_BLOCK_INFO
 modifier|*
 name|GpeBlock
+decl_stmt|;
+name|UINT16
+name|Count
+decl_stmt|;
+name|ACPI_OWNER_ID
+name|OwnerId
+decl_stmt|;
+name|BOOLEAN
+name|EnableThisGpe
+decl_stmt|;
+name|BOOLEAN
+name|ExecuteByOwnerId
 decl_stmt|;
 block|}
 name|ACPI_GPE_WALK_INFO
@@ -2826,7 +2843,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_BITMASK_ALL_FIXED_STATUS
-value|(\     ACPI_BITMASK_TIMER_STATUS          | \     ACPI_BITMASK_BUS_MASTER_STATUS     | \     ACPI_BITMASK_GLOBAL_LOCK_STATUS    | \     ACPI_BITMASK_POWER_BUTTON_STATUS   | \     ACPI_BITMASK_SLEEP_BUTTON_STATUS   | \     ACPI_BITMASK_RT_CLOCK_STATUS       | \     ACPI_BITMASK_WAKE_STATUS)
+value|(\     ACPI_BITMASK_TIMER_STATUS          | \     ACPI_BITMASK_BUS_MASTER_STATUS     | \     ACPI_BITMASK_GLOBAL_LOCK_STATUS    | \     ACPI_BITMASK_POWER_BUTTON_STATUS   | \     ACPI_BITMASK_SLEEP_BUTTON_STATUS   | \     ACPI_BITMASK_RT_CLOCK_STATUS       | \     ACPI_BITMASK_PCIEXP_WAKE_STATUS    | \     ACPI_BITMASK_WAKE_STATUS)
 end_define
 
 begin_define
@@ -3139,8 +3156,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_OSI_WIN_7
+name|ACPI_OSI_WIN_VISTA_SP2
 value|0x0A
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_OSI_WIN_7
+value|0x0B
 end_define
 
 begin_define
@@ -3159,6 +3183,14 @@ name|char
 modifier|*
 name|Name
 decl_stmt|;
+name|struct
+name|acpi_interface_info
+modifier|*
+name|Next
+decl_stmt|;
+name|UINT8
+name|Flags
+decl_stmt|;
 name|UINT8
 name|Value
 decl_stmt|;
@@ -3166,6 +3198,20 @@ block|}
 name|ACPI_INTERFACE_INFO
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|ACPI_OSI_INVALID
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_OSI_DYNAMIC
+value|0x02
+end_define
 
 begin_typedef
 typedef|typedef
@@ -3507,6 +3553,25 @@ name|ACPI_IPATH_ALLOCATED
 value|0x01
 end_define
 
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_external_file
+block|{
+name|char
+modifier|*
+name|Path
+decl_stmt|;
+name|struct
+name|acpi_external_file
+modifier|*
+name|Next
+decl_stmt|;
+block|}
+name|ACPI_EXTERNAL_FILE
+typedef|;
+end_typedef
+
 begin_comment
 comment|/*****************************************************************************  *  * Debugger  *  ****************************************************************************/
 end_comment
@@ -3525,7 +3590,7 @@ decl_stmt|;
 name|ACPI_HANDLE
 name|InfoGate
 decl_stmt|;
-name|UINT32
+name|ACPI_THREAD_ID
 modifier|*
 name|Threads
 decl_stmt|;

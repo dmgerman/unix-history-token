@@ -196,6 +196,21 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Optionally truncate I/O addresses to 16 bits. Provides compatibility  * with other ACPI implementations. NOTE: During ACPICA initialization,  * this value is set to TRUE if any Windows OSI strings have been  * requested by the BIOS.  */
+end_comment
+
+begin_function_decl
+name|UINT8
+name|ACPI_INIT_GLOBAL
+parameter_list|(
+name|AcpiGbl_TruncateIoAddresses
+parameter_list|,
+name|FALSE
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* AcpiGbl_FADT is a local copy of the FADT, converted to a common format. */
 end_comment
 
@@ -223,6 +238,12 @@ name|AcpiGbl_TraceMethodName
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|BOOLEAN
+name|AcpiGbl_SystemAwakeAndRunning
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -233,12 +254,12 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * AcpiGbl_RootTableList is the master list of ACPI tables found in the  * RSDT/XSDT.  *  */
+comment|/*  * AcpiGbl_RootTableList is the master list of ACPI tables that were  * found in the RSDT/XSDT.  */
 end_comment
 
 begin_decl_stmt
 name|ACPI_EXTERN
-name|ACPI_INTERNAL_RSDT
+name|ACPI_TABLE_LIST
 name|AcpiGbl_RootTableList
 decl_stmt|;
 end_decl_stmt
@@ -412,6 +433,17 @@ comment|/* For ACPI H/W except GPE registers */
 end_comment
 
 begin_comment
+comment|/* Mutex for _OSI support */
+end_comment
+
+begin_decl_stmt
+name|ACPI_EXTERN
+name|ACPI_MUTEX
+name|AcpiGbl_OsiMutex
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Reader/Writer lock is used for namespace walk and dynamic table unload */
 end_comment
 
@@ -525,6 +557,13 @@ name|AcpiGbl_BreakpointWalk
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|ACPI_EXTERN
+name|ACPI_INTERFACE_HANDLER
+name|AcpiGbl_InterfaceHandler
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Owner ID support */
 end_comment
@@ -622,15 +661,16 @@ end_decl_stmt
 
 begin_decl_stmt
 name|ACPI_EXTERN
-name|BOOLEAN
-name|AcpiGbl_SystemAwakeAndRunning
+name|UINT8
+name|AcpiGbl_OsiData
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|ACPI_EXTERN
-name|UINT8
-name|AcpiGbl_OsiData
+name|ACPI_INTERFACE_INFO
+modifier|*
+name|AcpiGbl_SupportedInterfaces
 decl_stmt|;
 end_decl_stmt
 
@@ -806,6 +846,13 @@ begin_decl_stmt
 name|ACPI_EXTERN
 name|BOOLEAN
 name|AcpiGbl_DisplayFinalMemStats
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ACPI_EXTERN
+name|BOOLEAN
+name|AcpiGbl_DisableMemTracking
 decl_stmt|;
 end_decl_stmt
 
@@ -1177,6 +1224,14 @@ name|ACPI_EXTERN
 name|ACPI_EXTERNAL_LIST
 modifier|*
 name|AcpiGbl_ExternalList
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ACPI_EXTERN
+name|ACPI_EXTERNAL_FILE
+modifier|*
+name|AcpiGbl_ExternalFileList
 decl_stmt|;
 end_decl_stmt
 

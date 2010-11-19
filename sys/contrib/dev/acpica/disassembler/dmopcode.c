@@ -133,7 +133,7 @@ expr_stmt|;
 comment|/* 1) Method argument count */
 name|AcpiOsPrintf
 argument_list|(
-literal|", %d, "
+literal|", %u, "
 argument_list|,
 name|Args
 argument_list|)
@@ -170,7 +170,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|", %d"
+literal|", %u"
 argument_list|,
 name|Flags
 operator|>>
@@ -1098,10 +1098,10 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|",%*.s  %d"
+literal|",%*.s  %u"
 argument_list|,
 call|(
-name|int
+name|unsigned
 call|)
 argument_list|(
 literal|5
@@ -1195,7 +1195,7 @@ else|else
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"    ,   %d"
+literal|"    ,   %u"
 argument_list|,
 name|Offset
 argument_list|)

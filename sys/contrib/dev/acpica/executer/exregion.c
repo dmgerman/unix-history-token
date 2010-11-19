@@ -414,7 +414,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"System-Memory (width %d) R/W %d Address=%8.8X%8.8X\n"
+literal|"System-Memory (width %u) R/W %u Address=%8.8X%8.8X\n"
 operator|,
 name|BitWidth
 operator|,
@@ -647,7 +647,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"System-IO (width %d) R/W %d Address=%8.8X%8.8X\n"
+literal|"System-IO (width %u) R/W %u Address=%8.8X%8.8X\n"
 operator|,
 name|BitWidth
 operator|,
@@ -798,7 +798,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"Pci-Config %d (%d) Seg(%04x) Bus(%04x) Dev(%04x) Func(%04x) Reg(%04x)\n"
+literal|"Pci-Config %u (%u) Seg(%04x) Bus(%04x) Dev(%04x) Func(%04x) Reg(%04x)\n"
 operator|,
 name|Function
 operator|,

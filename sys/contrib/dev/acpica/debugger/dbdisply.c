@@ -1309,7 +1309,7 @@ index|]
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Result%d: "
+literal|"Result%u: "
 argument_list|,
 name|i
 argument_list|)
@@ -1663,7 +1663,7 @@ control|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"CID %d: %s\n"
+literal|"CID %u: %s\n"
 argument_list|,
 name|i
 argument_list|,
@@ -1802,6 +1802,10 @@ name|ACPI_GPE_REGISTER_INFO
 modifier|*
 name|GpeRegisterInfo
 decl_stmt|;
+name|char
+modifier|*
+name|GpeType
+decl_stmt|;
 name|UINT32
 name|GpeIndex
 decl_stmt|;
@@ -1896,9 +1900,30 @@ literal|"Could not convert name to pathname\n"
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|GpeBlock
+operator|->
+name|Node
+operator|==
+name|AcpiGbl_FadtGpeDevice
+condition|)
+block|{
+name|GpeType
+operator|=
+literal|"FADT-defined GPE block"
+expr_stmt|;
+block|}
+else|else
+block|{
+name|GpeType
+operator|=
+literal|"GPE Block Device"
+expr_stmt|;
+block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|"\nBlock %d - Info %p  DeviceNode %p [%s]\n"
+literal|"\nBlock %u - Info %p  DeviceNode %p [%s] - %s\n"
 argument_list|,
 name|Block
 argument_list|,
@@ -1909,6 +1934,8 @@ operator|->
 name|Node
 argument_list|,
 name|Buffer
+argument_list|,
+name|GpeType
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
@@ -2116,7 +2143,7 @@ continue|continue;
 block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|"        GPE %.2X: %p  RunRefs %2.2X   WakeRefs %2.2X Flags %2.2X ("
+literal|"        GPE %.2X: %p  RunRefs %2.2X Flags %2.2X ("
 argument_list|,
 name|GpeBlock
 operator|->
@@ -2129,10 +2156,6 @@ argument_list|,
 name|GpeEventInfo
 operator|->
 name|RuntimeCount
-argument_list|,
-name|GpeEventInfo
-operator|->
-name|WakeupCount
 argument_list|,
 name|GpeEventInfo
 operator|->

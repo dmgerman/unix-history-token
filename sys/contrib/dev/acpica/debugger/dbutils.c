@@ -460,7 +460,7 @@ name|ACPI_TYPE_PACKAGE
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"[Package] Contains %d Elements:\n"
+literal|"[Package] Contains %u Elements:\n"
 argument_list|,
 name|ObjDesc
 operator|->

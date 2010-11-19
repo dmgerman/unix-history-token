@@ -66,12 +66,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|AcpiGbl_Optopt
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|AcpiGbl_Optarg
@@ -180,8 +174,6 @@ block|}
 block|}
 comment|/* Get the option */
 name|CurrentChar
-operator|=
-name|AcpiGbl_Optopt
 operator|=
 name|argv
 index|[

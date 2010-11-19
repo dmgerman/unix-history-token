@@ -316,7 +316,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Predefined ACPI Names (Built-in to the Interpreter)  *  * NOTES:  * 1) _SB_ is defined to be a device to allow \_SB_._INI to be run  *    during the initialization sequence.  * 2) _TZ_ is defined to be a thermal zone in order to allow ASL code to  *    perform a Notify() operation on it.  */
+comment|/*  * Predefined ACPI Names (Built-in to the Interpreter)  *  * NOTES:  * 1) _SB_ is defined to be a device to allow \_SB_._INI to be run  *    during the initialization sequence.  * 2) _TZ_ is defined to be a thermal zone in order to allow ASL code to  *    perform a Notify() operation on it. 09/2010: Changed to type Device.  *    This still allows notifies, but does not confuse host code that  *    searches for valid ThermalZone objects.  */
 end_comment
 
 begin_decl_stmt
@@ -361,7 +361,7 @@ block|,
 block|{
 literal|"_TZ_"
 block|,
-name|ACPI_TYPE_THERMAL
+name|ACPI_TYPE_DEVICE
 block|,
 name|NULL
 block|}
@@ -1376,7 +1376,7 @@ index|[]
 init|=
 block|{
 comment|/* 00 */
-literal|"Invalid"
+literal|"Not a Descriptor"
 block|,
 comment|/* 01 */
 literal|"Cached"
@@ -1460,12 +1460,7 @@ condition|)
 block|{
 return|return
 operator|(
-name|ACPI_CAST_PTR
-argument_list|(
-name|char
-argument_list|,
-name|AcpiGbl_BadType
-argument_list|)
+literal|"Not a Descriptor"
 operator|)
 return|;
 block|}
@@ -2007,6 +2002,10 @@ name|AcpiGbl_TableHandler
 operator|=
 name|NULL
 expr_stmt|;
+name|AcpiGbl_InterfaceHandler
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* Global Lock support */
 name|AcpiGbl_GlobalLockSemaphore
 operator|=
@@ -2089,6 +2088,10 @@ name|AcpiGbl_OsiData
 operator|=
 literal|0
 expr_stmt|;
+name|AcpiGbl_OsiMutex
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* Hardware oriented */
 name|AcpiGbl_EventsInitialized
 operator|=
@@ -2129,6 +2132,12 @@ name|ACPI_TYPE_DEVICE
 expr_stmt|;
 name|AcpiGbl_RootNodeStruct
 operator|.
+name|Parent
+operator|=
+name|NULL
+expr_stmt|;
+name|AcpiGbl_RootNodeStruct
+operator|.
 name|Child
 operator|=
 name|NULL
@@ -2144,12 +2153,6 @@ operator|.
 name|Object
 operator|=
 name|NULL
-expr_stmt|;
-name|AcpiGbl_RootNodeStruct
-operator|.
-name|Flags
-operator|=
-name|ANOBJ_END_OF_PEER_LIST
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -2178,6 +2181,10 @@ ifdef|#
 directive|ifdef
 name|ACPI_DBG_TRACK_ALLOCATIONS
 name|AcpiGbl_DisplayFinalMemStats
+operator|=
+name|FALSE
+expr_stmt|;
+name|AcpiGbl_DisableMemTracking
 operator|=
 name|FALSE
 expr_stmt|;

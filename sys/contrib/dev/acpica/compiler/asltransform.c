@@ -1516,7 +1516,7 @@ block|{
 comment|/* Unknown peer opcode */
 name|AcpiOsPrintf
 argument_list|(
-literal|"Unknown parse opcode for switch statement: %s (%d)\n"
+literal|"Unknown parse opcode for switch statement: %s (%u)\n"
 argument_list|,
 name|Next
 operator|->

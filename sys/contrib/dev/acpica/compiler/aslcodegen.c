@@ -1150,7 +1150,7 @@ name|TableHeader
 operator|.
 name|AslCompilerId
 argument_list|,
-name|CompilerCreatorId
+name|ASL_CREATOR_ID
 argument_list|,
 literal|4
 argument_list|)
@@ -1160,7 +1160,7 @@ name|TableHeader
 operator|.
 name|AslCompilerRevision
 operator|=
-name|CompilerCreatorRevision
+name|ASL_REVISION
 expr_stmt|;
 comment|/* Table length. Checksum zero for now, will rewrite later */
 name|TableHeader

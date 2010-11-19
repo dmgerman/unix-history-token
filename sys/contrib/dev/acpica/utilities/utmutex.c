@@ -169,6 +169,29 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Mutex for _OSI support */
+name|Status
+operator|=
+name|AcpiOsCreateMutex
+argument_list|(
+operator|&
+name|AcpiGbl_OsiMutex
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Create the reader/writer lock for namespace access */
 name|Status
 operator|=
@@ -226,6 +249,11 @@ name|i
 argument_list|)
 expr_stmt|;
 block|}
+name|AcpiOsDeleteMutex
+argument_list|(
+name|AcpiGbl_OsiMutex
+argument_list|)
+expr_stmt|;
 comment|/* Delete the spinlocks */
 name|AcpiOsDeleteLock
 argument_list|(
@@ -463,19 +491,17 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Mutex [%s] already acquired by this thread [%p]"
+literal|"Mutex [%s] already acquired by this thread [%u]"
 operator|,
 name|AcpiUtGetMutexName
 argument_list|(
 name|MutexId
 argument_list|)
 operator|,
-name|ACPI_CAST_PTR
-argument_list|(
-name|void
-argument_list|,
+operator|(
+name|UINT32
+operator|)
 name|ThisThreadId
-argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -490,14 +516,12 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Invalid acquire order: Thread %p owns [%s], wants [%s]"
+literal|"Invalid acquire order: Thread %u owns [%s], wants [%s]"
 operator|,
-name|ACPI_CAST_PTR
-argument_list|(
-name|void
-argument_list|,
+operator|(
+name|UINT32
+operator|)
 name|ThisThreadId
-argument_list|)
 operator|,
 name|AcpiUtGetMutexName
 argument_list|(
@@ -526,14 +550,12 @@ argument_list|(
 operator|(
 name|ACPI_DB_MUTEX
 operator|,
-literal|"Thread %p attempting to acquire Mutex [%s]\n"
+literal|"Thread %u attempting to acquire Mutex [%s]\n"
 operator|,
-name|ACPI_CAST_PTR
-argument_list|(
-name|void
-argument_list|,
+operator|(
+name|UINT32
+operator|)
 name|ThisThreadId
-argument_list|)
 operator|,
 name|AcpiUtGetMutexName
 argument_list|(
@@ -569,14 +591,12 @@ argument_list|(
 operator|(
 name|ACPI_DB_MUTEX
 operator|,
-literal|"Thread %p acquired Mutex [%s]\n"
+literal|"Thread %u acquired Mutex [%s]\n"
 operator|,
-name|ACPI_CAST_PTR
-argument_list|(
-name|void
-argument_list|,
+operator|(
+name|UINT32
+operator|)
 name|ThisThreadId
-argument_list|)
 operator|,
 name|AcpiUtGetMutexName
 argument_list|(
@@ -612,14 +632,12 @@ name|AE_INFO
 operator|,
 name|Status
 operator|,
-literal|"Thread %p could not acquire Mutex [0x%X]"
+literal|"Thread %u could not acquire Mutex [0x%X]"
 operator|,
-name|ACPI_CAST_PTR
-argument_list|(
-name|void
-argument_list|,
+operator|(
+name|UINT32
+operator|)
 name|ThisThreadId
-argument_list|)
 operator|,
 name|MutexId
 operator|)
@@ -664,14 +682,12 @@ argument_list|(
 operator|(
 name|ACPI_DB_MUTEX
 operator|,
-literal|"Thread %p releasing Mutex [%s]\n"
+literal|"Thread %u releasing Mutex [%s]\n"
 operator|,
-name|ACPI_CAST_PTR
-argument_list|(
-name|void
-argument_list|,
+operator|(
+name|UINT32
+operator|)
 name|ThisThreadId
-argument_list|)
 operator|,
 name|AcpiUtGetMutexName
 argument_list|(

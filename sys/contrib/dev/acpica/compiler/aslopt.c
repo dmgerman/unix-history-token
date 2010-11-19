@@ -576,7 +576,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_OPTIMIZATIONS
 operator|,
-literal|" COMMON: %d"
+literal|" COMMON: %u"
 operator|,
 name|NumCommonSegments
 operator|)

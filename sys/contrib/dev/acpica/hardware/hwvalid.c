@@ -543,6 +543,17 @@ decl_stmt|;
 name|UINT32
 name|i
 decl_stmt|;
+comment|/* Truncate address to 16 bits if requested */
+if|if
+condition|(
+name|AcpiGbl_TruncateIoAddresses
+condition|)
+block|{
+name|Address
+operator|&=
+name|ACPI_UINT16_MAX
+expr_stmt|;
+block|}
 comment|/* Validate the entire request and perform the I/O */
 name|Status
 operator|=
@@ -697,6 +708,17 @@ decl_stmt|;
 name|UINT32
 name|i
 decl_stmt|;
+comment|/* Truncate address to 16 bits if requested */
+if|if
+condition|(
+name|AcpiGbl_TruncateIoAddresses
+condition|)
+block|{
+name|Address
+operator|&=
+name|ACPI_UINT16_MAX
+expr_stmt|;
+block|}
 comment|/* Validate the entire request and perform the I/O */
 name|Status
 operator|=

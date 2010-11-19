@@ -201,6 +201,8 @@ name|CMD_OBJECT
 block|,
 name|CMD_OPEN
 block|,
+name|CMD_OSI
+block|,
 name|CMD_OWNER
 block|,
 name|CMD_PREDEFINED
@@ -494,6 +496,12 @@ literal|1
 block|}
 block|,
 block|{
+literal|"OSI"
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|"OWNER"
 block|,
 literal|1
@@ -733,6 +741,11 @@ expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
 literal|"Locks                               Current status of internal mutexes\n"
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"Osi [Install|Remove<name>]         Display or modify global _OSI list\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
@@ -1140,6 +1153,43 @@ operator|)
 return|;
 block|}
 block|}
+if|if
+condition|(
+operator|*
+name|String
+operator|==
+literal|'"'
+condition|)
+block|{
+comment|/* This is a quoted string, scan until closing quote */
+name|String
+operator|++
+expr_stmt|;
+name|Start
+operator|=
+name|String
+expr_stmt|;
+comment|/* Find end of token */
+while|while
+condition|(
+operator|*
+name|String
+operator|&&
+operator|(
+operator|*
+name|String
+operator|!=
+literal|'"'
+operator|)
+condition|)
+block|{
+name|String
+operator|++
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
 name|Start
 operator|=
 name|String
@@ -1161,6 +1211,7 @@ block|{
 name|String
 operator|++
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -1500,7 +1551,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"%d parameters entered, [%s] requires %d parameters\n"
+literal|"%u parameters entered, [%s] requires %u parameters\n"
 argument_list|,
 name|ParamCount
 argument_list|,
@@ -2160,6 +2211,23 @@ argument_list|(
 name|AcpiGbl_DbArgs
 index|[
 literal|1
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CMD_OSI
+case|:
+name|AcpiDbDisplayInterfaces
+argument_list|(
+name|AcpiGbl_DbArgs
+index|[
+literal|1
+index|]
+argument_list|,
+name|AcpiGbl_DbArgs
+index|[
+literal|2
 index|]
 argument_list|)
 expr_stmt|;

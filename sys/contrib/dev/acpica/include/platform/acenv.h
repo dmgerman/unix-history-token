@@ -109,13 +109,19 @@ directive|define
 name|ACPI_DATA_TABLE_DISASSEMBLY
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACPI_SINGLE_THREADED
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* AcpiExec configuration */
+comment|/* AcpiExec and AcpiBin configuration */
 end_comment
 
 begin_ifdef
@@ -146,6 +152,29 @@ begin_define
 define|#
 directive|define
 name|ACPI_DBG_TRACK_ALLOCATIONS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_BIN_APP
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ACPI_APPLICATION
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_SINGLE_THREADED
 end_define
 
 begin_endif
@@ -587,6 +616,27 @@ define|#
 directive|define
 name|ACPI_FLUSH_CPU_CACHE
 parameter_list|()
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* "inline" keywords - configurable since inline is not standardized */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_INLINE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ACPI_INLINE
 end_define
 
 begin_endif

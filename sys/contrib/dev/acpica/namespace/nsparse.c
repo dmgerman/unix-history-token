@@ -348,7 +348,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_PARSE
 operator|,
-literal|"*PARSE* pass %d parse\n"
+literal|"*PARSE* pass %u parse\n"
 operator|,
 name|PassNumber
 operator|)

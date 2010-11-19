@@ -50,7 +50,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmDumpRsdp  *  * PARAMETERS:  Table               - A RSDP  *  * RETURN:      Length of the table (there is no length field, use revision)  *  * DESCRIPTION: Format the contents of a RSDP  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmDumpRsdp  *  * PARAMETERS:  Table               - A RSDP  *  * RETURN:      Length of the table (there is not always a length field,  *              use revision or length if available (ACPI 2.0+))  *  * DESCRIPTION: Format the contents of a RSDP  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -62,10 +62,27 @@ modifier|*
 name|Table
 parameter_list|)
 block|{
+name|ACPI_TABLE_RSDP
+modifier|*
+name|Rsdp
+init|=
+name|ACPI_CAST_PTR
+argument_list|(
+name|ACPI_TABLE_RSDP
+argument_list|,
+name|Table
+argument_list|)
+decl_stmt|;
 name|UINT32
 name|Length
 init|=
-name|ACPI_RSDP_REV0_SIZE
+sizeof|sizeof
+argument_list|(
+name|ACPI_RSDP_COMMON
+argument_list|)
+decl_stmt|;
+name|UINT8
+name|Checksum
 decl_stmt|;
 comment|/* Dump the common ACPI 1.0 portion */
 name|AcpiDmDumpTable
@@ -81,15 +98,44 @@ argument_list|,
 name|AcpiDmTableInfoRsdp1
 argument_list|)
 expr_stmt|;
-comment|/* ACPI 2.0+ contains more data and has a Length field */
+comment|/* Validate the first checksum */
+name|Checksum
+operator|=
+name|AcpiDmGenerateChecksum
+argument_list|(
+name|Rsdp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ACPI_RSDP_COMMON
+argument_list|)
+argument_list|,
+name|Rsdp
+operator|->
+name|Checksum
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|ACPI_CAST_PTR
+name|Checksum
+operator|!=
+name|Rsdp
+operator|->
+name|Checksum
+condition|)
+block|{
+name|AcpiOsPrintf
 argument_list|(
-name|ACPI_TABLE_RSDP
+literal|"/* Incorrect Checksum above, should be 0x%2.2X */\n"
 argument_list|,
-name|Table
+name|Checksum
 argument_list|)
+expr_stmt|;
+block|}
+comment|/* The RSDP for ACPI 2.0+ contains more data and has a Length field */
+if|if
+condition|(
+name|Rsdp
 operator|->
 name|Revision
 operator|>
@@ -98,12 +144,7 @@ condition|)
 block|{
 name|Length
 operator|=
-name|ACPI_CAST_PTR
-argument_list|(
-name|ACPI_TABLE_RSDP
-argument_list|,
-name|Table
-argument_list|)
+name|Rsdp
 operator|->
 name|Length
 expr_stmt|;
@@ -120,6 +161,40 @@ argument_list|,
 name|AcpiDmTableInfoRsdp2
 argument_list|)
 expr_stmt|;
+comment|/* Validate the extended checksum over entire RSDP */
+name|Checksum
+operator|=
+name|AcpiDmGenerateChecksum
+argument_list|(
+name|Rsdp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ACPI_TABLE_RSDP
+argument_list|)
+argument_list|,
+name|Rsdp
+operator|->
+name|ExtendedChecksum
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Checksum
+operator|!=
+name|Rsdp
+operator|->
+name|ExtendedChecksum
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"/* Incorrect Extended Checksum above, should be 0x%2.2X */\n"
+argument_list|,
+name|Checksum
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 return|return
 operator|(
@@ -1501,7 +1576,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"[%2.2X, %2.2X]\n"
+literal|"%2.2X,%2.2X\n"
 argument_list|,
 name|PciPath
 index|[
@@ -1812,7 +1887,7 @@ argument_list|(
 name|ACPI_WHEA_HEADER
 argument_list|)
 argument_list|,
-name|AcpiDmTableInfoEinj0
+name|AcpiDmTableInfoErst0
 argument_list|)
 expr_stmt|;
 if|if
@@ -3072,7 +3147,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"Warning: there are %d invalid trailing bytes\n"
+literal|"Warning: there are %u invalid trailing bytes\n"
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3451,7 +3526,7 @@ return|return;
 block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|"%2.2X "
+literal|"%2.2X"
 argument_list|,
 name|Row
 index|[
@@ -3463,6 +3538,22 @@ name|Offset
 operator|++
 expr_stmt|;
 comment|/* Display up to 16 bytes per output row */
+if|if
+condition|(
+operator|(
+name|j
+operator|+
+literal|1
+operator|)
+operator|<
+name|Localities
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|","
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|j
@@ -3480,16 +3571,6 @@ operator|)
 operator|==
 literal|0
 operator|)
-operator|&&
-operator|(
-operator|(
-name|j
-operator|+
-literal|1
-operator|)
-operator|<
-name|Localities
-operator|)
 condition|)
 block|{
 name|AcpiOsPrintf
@@ -3506,6 +3587,7 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 comment|/* Point to next row */
