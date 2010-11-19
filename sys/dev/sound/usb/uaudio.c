@@ -2622,8 +2622,9 @@ block|,
 operator|.
 name|bufsize
 operator|=
-name|UMIDI_BULK_SIZE
+literal|4
 block|,
+comment|/* bytes */
 operator|.
 name|flags
 operator|=
@@ -2635,6 +2636,11 @@ literal|1
 block|,
 operator|.
 name|short_xfer_ok
+operator|=
+literal|1
+block|,
+operator|.
+name|proxy_buffer
 operator|=
 literal|1
 block|,}
@@ -16087,18 +16093,6 @@ argument_list|,
 name|actlen
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|actlen
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* should not happen */
-goto|goto
-name|tr_error
-goto|;
-block|}
 name|pos
 operator|=
 literal|0
@@ -16264,8 +16258,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 default|default:
-name|tr_error
-label|:
 name|DPRINTF
 argument_list|(
 literal|"error=%s\n"
