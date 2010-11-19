@@ -262,12 +262,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|URTW_DEBUG
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef
