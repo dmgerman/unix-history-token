@@ -554,6 +554,16 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|usb_linux
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*------------------------------------------------------------------------*  *	usb_linux_lookup_id  *  * This functions takes an array of "struct usb_device_id" and tries  * to match the entries with the information in "struct usb_attach_arg".  * If it finds a match the matching entry will be returned.  * Else "NULL" will be returned.  *------------------------------------------------------------------------*/
 end_comment
