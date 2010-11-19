@@ -143,6 +143,12 @@ directive|include
 file|<dev/usb/usbdi.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/usb/usbdi_util.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -4104,11 +4110,12 @@ name|ddesc
 operator|.
 name|bDeviceSubClass
 argument_list|,
+name|usb_get_serial
+argument_list|(
 name|res
 operator|.
 name|udev
-operator|->
-name|serial
+argument_list|)
 argument_list|,
 name|UGETW
 argument_list|(

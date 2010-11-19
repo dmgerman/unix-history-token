@@ -189,12 +189,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/usb/usb_device.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/usb/serial/usb_serial.h>
 end_include
 
@@ -847,11 +841,12 @@ condition|(
 operator|(
 name|strcmp
 argument_list|(
+name|usb_get_manufacturer
+argument_list|(
 name|uaa
 operator|->
 name|device
-operator|->
-name|manufacturer
+argument_list|)
 argument_list|,
 literal|"BWCT"
 argument_list|)
