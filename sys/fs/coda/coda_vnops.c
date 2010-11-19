@@ -6257,26 +6257,6 @@ block|}
 endif|#
 directive|endif
 block|}
-else|else
-block|{
-if|if
-condition|(
-name|prtactive
-operator|&&
-name|vp
-operator|->
-name|v_usecount
-operator|!=
-literal|0
-condition|)
-name|vprint
-argument_list|(
-literal|"coda_reclaim: pushing active"
-argument_list|,
-name|vp
-argument_list|)
-expr_stmt|;
-block|}
 name|cache_purge
 argument_list|(
 name|vp

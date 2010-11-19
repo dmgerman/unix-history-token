@@ -759,28 +759,6 @@ operator|->
 name|a_vp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|prtactive
-operator|&&
-name|vrefcnt
-argument_list|(
-name|ap
-operator|->
-name|a_vp
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|vprint
-argument_list|(
-literal|"nfs_inactive: pushing active"
-argument_list|,
-name|ap
-operator|->
-name|a_vp
-argument_list|)
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -953,24 +931,6 @@ decl_stmt|,
 modifier|*
 name|dp2
 decl_stmt|;
-if|if
-condition|(
-name|prtactive
-operator|&&
-name|vrefcnt
-argument_list|(
-name|vp
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|vprint
-argument_list|(
-literal|"nfs_reclaim: pushing active"
-argument_list|,
-name|vp
-argument_list|)
-expr_stmt|;
 comment|/* 	 * If the NLM is running, give it a chance to abort pending 	 * locks. 	 */
 if|if
 condition|(

@@ -155,24 +155,6 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-if|if
-condition|(
-name|prtactive
-operator|&&
-name|vrefcnt
-argument_list|(
-name|vp
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|vprint
-argument_list|(
-literal|"cd9660_inactive: pushing active"
-argument_list|,
-name|vp
-argument_list|)
-expr_stmt|;
 comment|/* 	 * If we are done with the inode, reclaim it 	 * so that it can be reused immediately. 	 */
 if|if
 condition|(
@@ -223,24 +205,6 @@ name|ap
 operator|->
 name|a_vp
 decl_stmt|;
-if|if
-condition|(
-name|prtactive
-operator|&&
-name|vrefcnt
-argument_list|(
-name|vp
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|vprint
-argument_list|(
-literal|"cd9660_reclaim: pushing active"
-argument_list|,
-name|vp
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Destroy the vm object and flush associated pages. 	 */
 name|vnode_destroy_vobject
 argument_list|(

@@ -1621,17 +1621,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|prtactive
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* nonzero to call vprint() */
-end_comment
-
-begin_decl_stmt
-specifier|extern
 name|struct
 name|vattr
 name|va_null
