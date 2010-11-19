@@ -2328,6 +2328,11 @@ argument_list|)
 expr_stmt|;
 block|}
 name|PRIV_END
+name|closedir
+argument_list|(
+name|spool
+argument_list|)
+decl_stmt|;
 block|}
 end_function
 
@@ -2612,6 +2617,11 @@ name|ch
 argument_list|)
 expr_stmt|;
 block|}
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 block|}
 break|break;
 default|default:
@@ -2628,6 +2638,11 @@ block|}
 block|}
 block|}
 block|}
+name|closedir
+argument_list|(
+name|spool
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
