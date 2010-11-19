@@ -7810,11 +7810,25 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* unpinning L1 and L2 treated the same */
+if|#
+directive|if
+literal|0
+block|xen_pgd_unpin(ma);
+else|#
+directive|else
+if|if
+condition|(
+name|i
+operator|==
+name|NPGPTD
+condition|)
 name|xen_pgd_unpin
 argument_list|(
 name|ma
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|PAE
