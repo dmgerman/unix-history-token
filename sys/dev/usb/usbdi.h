@@ -2107,6 +2107,21 @@ end_function_decl
 
 begin_function_decl
 name|uint8_t
+name|usbd_filter_power_mode
+parameter_list|(
+name|struct
+name|usb_device
+modifier|*
+name|udev
+parameter_list|,
+name|uint8_t
+name|power_mode
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint8_t
 name|usbd_device_attached
 parameter_list|(
 name|struct

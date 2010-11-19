@@ -5551,7 +5551,12 @@ name|udev
 operator|->
 name|power_mode
 operator|=
+name|usbd_filter_power_mode
+argument_list|(
+name|udev
+argument_list|,
 name|USB_POWER_MODE_ON
+argument_list|)
 expr_stmt|;
 name|udev
 operator|->
