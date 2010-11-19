@@ -238,11 +238,11 @@ name|bus_space_tag
 block|{
 define|#
 directive|define
-name|BUS_SPACE_IO
+name|BUS_SPACE_TAG_IO
 value|0
 define|#
 directive|define
-name|BUS_SPACE_MEM
+name|BUS_SPACE_TAG_MEM
 value|1
 name|u_int
 name|bs_tag
