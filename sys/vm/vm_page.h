@@ -217,17 +217,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VPO_CLEANCHK
-value|0x0100
-end_define
-
-begin_comment
-comment|/* page will be checked for cleaning */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|VPO_SWAPINPROG
 value|0x0200
 end_define
