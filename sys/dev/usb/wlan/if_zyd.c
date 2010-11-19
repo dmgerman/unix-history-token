@@ -3442,11 +3442,6 @@ name|ic_ifp
 operator|->
 name|if_softc
 decl_stmt|;
-name|struct
-name|ieee80211_node
-modifier|*
-name|ni
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -3504,12 +3499,6 @@ break|break;
 case|case
 name|IEEE80211_S_RUN
 case|:
-name|ni
-operator|=
-name|vap
-operator|->
-name|iv_bss
-expr_stmt|;
 if|if
 condition|(
 name|vap
@@ -3558,7 +3547,9 @@ name|sc
 operator|->
 name|sc_bssid
 argument_list|,
-name|ni
+name|vap
+operator|->
+name|iv_bss
 operator|->
 name|ni_bssid
 argument_list|)
