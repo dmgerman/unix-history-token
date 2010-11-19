@@ -55,12 +55,6 @@ directive|include
 file|<sys/queue.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/endian.h>
-end_include
-
 begin_define
 define|#
 directive|define
