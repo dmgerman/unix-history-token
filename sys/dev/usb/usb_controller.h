@@ -203,7 +203,7 @@ name|get_dma_delay
 function_decl|)
 parameter_list|(
 name|struct
-name|usb_bus
+name|usb_device
 modifier|*
 parameter_list|,
 name|uint32_t
