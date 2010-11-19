@@ -259,9 +259,11 @@ name|U16
 name|IOCStatus
 decl_stmt|;
 name|int
-name|fd
-decl_stmt|,
 name|comma
+decl_stmt|,
+name|error
+decl_stmt|,
+name|fd
 decl_stmt|;
 if|if
 condition|(
@@ -295,6 +297,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"mpt_open"
@@ -302,7 +308,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -324,6 +330,10 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to get controller info"
@@ -331,7 +341,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -352,7 +362,7 @@ operator|/
 literal|4
 condition|)
 block|{
-name|warn
+name|warnx
 argument_list|(
 literal|"Invalid controller info"
 argument_list|)
@@ -1416,6 +1426,8 @@ modifier|*
 name|sdisks
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|fd
 decl_stmt|,
 name|i
@@ -1456,6 +1468,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"mpt_open"
@@ -1463,7 +1479,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -1501,6 +1517,10 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to get config"
@@ -1508,7 +1528,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -1528,6 +1548,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to get standalone drive list"
@@ -1535,7 +1559,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -2029,6 +2053,8 @@ modifier|*
 name|vnames
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|fd
 decl_stmt|,
 name|i
@@ -2069,6 +2095,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"mpt_open"
@@ -2076,7 +2106,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -2099,6 +2129,10 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to get volume list"
@@ -2106,7 +2140,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -2535,6 +2569,8 @@ modifier|*
 name|sdisks
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|fd
 decl_stmt|,
 name|i
@@ -2577,6 +2613,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"mpt_open"
@@ -2584,7 +2624,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -2603,6 +2643,10 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Failed to get drive list"
@@ -2610,7 +2654,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}
@@ -2902,6 +2946,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|error
+operator|=
+name|errno
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"mpt_open"
@@ -2909,7 +2957,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|errno
+name|error
 operator|)
 return|;
 block|}

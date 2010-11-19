@@ -431,6 +431,8 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
 operator|(
 operator|*
 name|cmd
@@ -442,7 +444,13 @@ name|ac
 argument_list|,
 name|av
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+else|else
 return|return
 operator|(
 literal|0
@@ -462,7 +470,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+literal|1
 operator|)
 return|;
 block|}
