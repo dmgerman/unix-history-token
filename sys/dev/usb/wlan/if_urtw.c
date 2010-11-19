@@ -13232,6 +13232,11 @@ argument_list|(
 name|vap
 argument_list|)
 decl_stmt|;
+name|struct
+name|ieee80211_node
+modifier|*
+name|ni
+decl_stmt|;
 name|usb_error_t
 name|error
 init|=
@@ -13313,11 +13318,6 @@ break|break;
 case|case
 name|IEEE80211_S_RUN
 case|:
-name|struct
-name|ieee80211_node
-modifier|*
-name|ni
-decl_stmt|;
 name|ni
 operator|=
 name|ieee80211_ref_node
