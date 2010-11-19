@@ -3765,18 +3765,6 @@ literal|0
 argument_list|)
 block|}
 block|,
-comment|/* "High Tech Computer Corp" */
-block|{
-name|USB_VPI
-argument_list|(
-argument|USB_VENDOR_HTC
-argument_list|,
-literal|0x0bce
-argument_list|,
-literal|0
-argument_list|)
-block|}
-block|,
 comment|/**/
 block|{
 name|USB_VPI
@@ -3808,6 +3796,18 @@ argument_list|(
 argument|USB_VENDOR_HTC
 argument_list|,
 argument|USB_PRODUCT_HTC_WINMOBILE
+argument_list|,
+literal|0
+argument_list|)
+block|}
+block|,
+comment|/* High Tech Computer Wizard Smartphone */
+block|{
+name|USB_VPI
+argument_list|(
+argument|USB_VENDOR_HTC
+argument_list|,
+argument|USB_PRODUCT_HTC_WIZARD
 argument_list|,
 literal|0
 argument_list|)
