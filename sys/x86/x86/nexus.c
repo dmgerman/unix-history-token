@@ -201,13 +201,28 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|PC98
+name|__amd64__
 end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<pc98/cbus/cbus.h>
+file|<amd64/isa/isa.h>
+end_include
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|<i386/isa/isa.h>
 end_include
 
 begin_else
@@ -218,7 +233,7 @@ end_else
 begin_include
 include|#
 directive|include
-file|<x86/isa/isa.h>
+file|<pc98/cbus/cbus.h>
 end_include
 
 begin_endif
