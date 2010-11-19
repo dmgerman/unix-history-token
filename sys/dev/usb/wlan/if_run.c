@@ -5020,7 +5020,9 @@ name|ic
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|detach
 label|:
@@ -5294,7 +5296,9 @@ literal|"number of VAPs maxed out\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 switch|switch
@@ -5336,7 +5340,9 @@ name|ic_vaps
 argument_list|)
 condition|)
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 break|break;
 case|case
@@ -5383,7 +5389,9 @@ literal|"wds only supported in ap mode\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 break|break;
@@ -5398,7 +5406,9 @@ name|opmode
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 name|rvp
@@ -5430,7 +5440,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 name|vap
 operator|=
@@ -5633,7 +5645,9 @@ name|rvp_cnt
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|vap
+operator|)
 return|;
 block|}
 end_function
@@ -6717,6 +6731,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|usbd_do_request
 argument_list|(
 name|sc
@@ -6733,6 +6748,7 @@ name|req
 argument_list|,
 name|NULL
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -6902,7 +6918,9 @@ operator|=
 literal|0xffffffff
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -6971,6 +6989,7 @@ name|len
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|run_do_request
 argument_list|(
 name|sc
@@ -6980,6 +6999,7 @@ name|req
 argument_list|,
 name|buf
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -7044,6 +7064,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|run_do_request
 argument_list|(
 name|sc
@@ -7053,6 +7074,7 @@ name|req
 argument_list|,
 name|NULL
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -7112,7 +7134,9 @@ literal|16
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -7209,7 +7233,9 @@ literal|8
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 else|#
 directive|else
@@ -7256,6 +7282,7 @@ name|len
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|run_do_request
 argument_list|(
 name|sc
@@ -7265,6 +7292,7 @@ name|req
 argument_list|,
 name|buf
 argument_list|)
+operator|)
 return|;
 endif|#
 directive|endif
@@ -7345,7 +7373,9 @@ name|val
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -7402,7 +7432,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|addr
 operator|*=
@@ -7473,7 +7505,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 if|if
 condition|(
@@ -7500,7 +7534,9 @@ operator|==
 literal|100
 condition|)
 return|return
+operator|(
 name|ETIMEDOUT
+operator|)
 return|;
 if|if
 condition|(
@@ -7520,7 +7556,9 @@ literal|0xffff
 expr_stmt|;
 comment|/* address not found */
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 comment|/* determine to which 32-bit register our 16-bit word belongs */
@@ -7553,7 +7591,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 operator|*
 name|val
@@ -7573,7 +7613,9 @@ operator|&
 literal|0xffff
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -7690,7 +7732,9 @@ operator|=
 literal|0xffff
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -7788,7 +7832,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 if|if
 condition|(
@@ -7808,7 +7854,9 @@ operator|==
 literal|10
 condition|)
 return|return
+operator|(
 name|ETIMEDOUT
+operator|)
 return|;
 comment|/* RF registers are 24-bit on the RT2860 */
 name|tmp
@@ -7834,6 +7882,7 @@ literal|3
 operator|)
 expr_stmt|;
 return|return
+operator|(
 name|run_write
 argument_list|(
 name|sc
@@ -7842,6 +7891,7 @@ name|RT2860_RF_CSR_CFG0
 argument_list|,
 name|tmp
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -7905,7 +7955,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 if|if
 condition|(
@@ -7925,7 +7977,9 @@ operator|==
 literal|100
 condition|)
 return|return
+operator|(
 name|ETIMEDOUT
+operator|)
 return|;
 name|tmp
 operator|=
@@ -7953,7 +8007,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 for|for
 control|(
@@ -7988,7 +8044,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 if|if
 condition|(
@@ -8008,7 +8066,9 @@ operator|==
 literal|100
 condition|)
 return|return
+operator|(
 name|ETIMEDOUT
+operator|)
 return|;
 operator|*
 name|val
@@ -8018,7 +8078,9 @@ operator|&
 literal|0xff
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -8081,7 +8143,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 if|if
 condition|(
@@ -8101,7 +8165,9 @@ operator|==
 literal|10
 condition|)
 return|return
+operator|(
 name|ETIMEDOUT
+operator|)
 return|;
 name|tmp
 operator|=
@@ -8116,6 +8182,7 @@ operator||
 name|val
 expr_stmt|;
 return|return
+operator|(
 name|run_write
 argument_list|(
 name|sc
@@ -8124,6 +8191,7 @@ name|RT3070_RF_CSR_CFG
 argument_list|,
 name|tmp
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -8187,7 +8255,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 if|if
 condition|(
@@ -8207,7 +8277,9 @@ operator|==
 literal|10
 condition|)
 return|return
+operator|(
 name|ETIMEDOUT
+operator|)
 return|;
 name|tmp
 operator|=
@@ -8237,7 +8309,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 for|for
 control|(
@@ -8272,7 +8346,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 if|if
 condition|(
@@ -8292,7 +8368,9 @@ operator|==
 literal|10
 condition|)
 return|return
+operator|(
 name|ETIMEDOUT
+operator|)
 return|;
 operator|*
 name|val
@@ -8302,7 +8380,9 @@ operator|&
 literal|0xff
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -8365,7 +8445,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 if|if
 condition|(
@@ -8385,7 +8467,9 @@ operator|==
 literal|10
 condition|)
 return|return
+operator|(
 name|ETIMEDOUT
+operator|)
 return|;
 name|tmp
 operator|=
@@ -8398,6 +8482,7 @@ operator||
 name|val
 expr_stmt|;
 return|return
+operator|(
 name|run_write
 argument_list|(
 name|sc
@@ -8406,6 +8491,7 @@ name|RT2860_BBP_CSR_CFG
 argument_list|,
 name|tmp
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -8533,7 +8619,9 @@ name|cmd
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -8617,7 +8705,9 @@ literal|28
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|b32
+operator|)
 return|;
 block|}
 end_function
@@ -8694,7 +8784,9 @@ literal|"RT3052"
 return|;
 block|}
 return|return
+operator|(
 literal|"unknown"
+operator|)
 return|;
 block|}
 end_function
@@ -10630,7 +10722,9 @@ expr_stmt|;
 block|}
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -10765,7 +10859,9 @@ name|sc
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 name|tp
@@ -10867,7 +10963,9 @@ name|sc
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -11907,9 +12005,7 @@ name|cmdq_task
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 name|RUN_LOCK
@@ -14569,7 +14665,9 @@ literal|2
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|rxchain
+operator|)
 return|;
 block|}
 end_function
@@ -19058,9 +19156,7 @@ condition|)
 block|{
 comment|/* let caller free mbuf */
 return|return
-operator|(
 name|error
-operator|)
 return|;
 block|}
 name|opflags
@@ -22192,7 +22288,9 @@ operator|==
 name|IEEE80211_CHAN_ANY
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 if|if
 condition|(
@@ -22287,7 +22385,9 @@ literal|10
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -24111,12 +24211,14 @@ literal|0
 index|]
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|12
 operator|-
 name|delta
 operator|-
 name|rssi
+operator|)
 return|;
 block|}
 end_function
@@ -24197,7 +24299,9 @@ operator|==
 literal|20
 condition|)
 return|return
+operator|(
 name|ETIMEDOUT
+operator|)
 return|;
 comment|/* initialize BBP registers to default values */
 for|for
@@ -24334,7 +24438,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -25248,7 +25354,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -25556,7 +25664,9 @@ literal|0x01
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -26270,7 +26380,9 @@ name|RT2860_MAC_TX_EN
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
