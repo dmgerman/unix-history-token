@@ -364,7 +364,7 @@ comment|/* rw */
 end_comment
 
 begin_comment
-comment|/* explict EOR signalling */
+comment|/* explicit EOR signalling */
 end_comment
 
 begin_define
@@ -455,7 +455,7 @@ comment|/*  * user socket options: BSD implementation specific  */
 end_comment
 
 begin_comment
-comment|/*  * Blocking I/O is enabled on any TCP type socket by default. For the UDP  * model if this is turned on then the socket buffer is shared for send  * resources amongst all associations.  The default for the UDP model is that  * is SS_NBIO is set.  Which means all associations have a seperate send  * limit BUT they will NOT ever BLOCK instead you will get an error back  * EAGAIN if you try to send to much. If you want the blocking symantics you  * set this option at the cost of sharing one socket send buffer size amongst  * all associations. Peeled off sockets turn this option off and block. But  * since both TCP and peeled off sockets have only one assoc per socket this  * is fine. It probably does NOT make sense to set this on SS_NBIO on a TCP  * model OR peeled off UDP model, but we do allow you to do so. You just use  * the normal syscall to toggle SS_NBIO the way you want.  *  * Blocking I/O is controled by the SS_NBIO flag on the socket state so_state  * field.  */
+comment|/*  * Blocking I/O is enabled on any TCP type socket by default. For the UDP  * model if this is turned on then the socket buffer is shared for send  * resources amongst all associations.  The default for the UDP model is that  * is SS_NBIO is set.  Which means all associations have a separate send  * limit BUT they will NOT ever BLOCK instead you will get an error back  * EAGAIN if you try to send too much. If you want the blocking semantics you  * set this option at the cost of sharing one socket send buffer size amongst  * all associations. Peeled off sockets turn this option off and block. But  * since both TCP and peeled off sockets have only one assoc per socket this  * is fine. It probably does NOT make sense to set this on SS_NBIO on a TCP  * model OR peeled off UDP model, but we do allow you to do so. You just use  * the normal syscall to toggle SS_NBIO the way you want.  *  * Blocking I/O is controlled by the SS_NBIO flag on the socket state so_state  * field.  */
 end_comment
 
 begin_comment
@@ -553,7 +553,7 @@ value|0x00001105
 end_define
 
 begin_comment
-comment|/* Special hook for dynamically setting primary for all assoc's,  * this is a write only option that requires root privledge.  */
+comment|/* Special hook for dynamically setting primary for all assoc's,  * this is a write only option that requires root privilege.  */
 end_comment
 
 begin_define
@@ -564,7 +564,7 @@ value|0x00002001
 end_define
 
 begin_comment
-comment|/* VRF (virtual router feature) and multi-VRF support  * options. VRF's provide splits within a router  * that give the views of multiple routers. A  * standard host, without VRF support, is just  * a single VRF. If VRF's are supported then  * the transport must be VRF aware. This means  * that every socket call coming in must be directed  * within the endpoint to one of the VRF's it belongs  * to. The endpoint, before binding, may select  * the "default" VRF it is in by using a set socket  * option with SCTP_VRF_ID. This will also  * get propegated to the default VRF. Once the  * endpoint binds an address then it CANNOT add  * additional VRF's to become a Multi-VRF endpoint.  *  * Before BINDING additional VRF's can be added with  * the SCTP_ADD_VRF_ID call or deleted with  * SCTP_DEL_VRF_ID.  *  * Associations are ALWAYS contained inside a single  * VRF. They cannot reside in two (or more) VRF's. Incoming  * packets, assuming the router is VRF aware, can always  * tell us what VRF they arrived on. A host not supporting  * any VRF's will find that the packets always arrived on the  * single VRF that the host has.  *  */
+comment|/* VRF (virtual router feature) and multi-VRF support  * options. VRF's provide splits within a router  * that give the views of multiple routers. A  * standard host, without VRF support, is just  * a single VRF. If VRF's are supported then  * the transport must be VRF aware. This means  * that every socket call coming in must be directed  * within the endpoint to one of the VRF's it belongs  * to. The endpoint, before binding, may select  * the "default" VRF it is in by using a set socket  * option with SCTP_VRF_ID. This will also  * get propagated to the default VRF. Once the  * endpoint binds an address then it CANNOT add  * additional VRF's to become a Multi-VRF endpoint.  *  * Before BINDING additional VRF's can be added with  * the SCTP_ADD_VRF_ID call or deleted with  * SCTP_DEL_VRF_ID.  *  * Associations are ALWAYS contained inside a single  * VRF. They cannot reside in two (or more) VRF's. Incoming  * packets, assuming the router is VRF aware, can always  * tell us what VRF they arrived on. A host not supporting  * any VRF's will find that the packets always arrived on the  * single VRF that the host has.  *  */
 end_comment
 
 begin_define
@@ -1055,7 +1055,7 @@ value|0x0105
 end_define
 
 begin_comment
-comment|/*  * error cause parameters (user visisble)  */
+comment|/*  * error cause parameters (user visible)  */
 end_comment
 
 begin_struct

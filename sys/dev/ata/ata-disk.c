@@ -899,7 +899,7 @@ name|M_TEMP
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* detroy disk from the system so we dont get any further requests */
+comment|/* destroy disk from the system so we don't get any further requests */
 name|disk_destroy
 argument_list|(
 name|adp
@@ -907,13 +907,13 @@ operator|->
 name|disk
 argument_list|)
 expr_stmt|;
-comment|/* fail requests on the queue and any thats "in flight" for this device */
+comment|/* fail requests on the queue and any that's "in flight" for this device */
 name|ata_fail_requests
 argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* dont leave anything behind */
+comment|/* don't leave anything behind */
 name|device_set_ivars
 argument_list|(
 name|dev
@@ -2818,7 +2818,7 @@ index|[
 literal|64
 index|]
 decl_stmt|;
-comment|/* try to seperate the ATA model string into vendor and model parts */
+comment|/* try to separate the ATA model string into vendor and model parts */
 if|if
 condition|(
 operator|(

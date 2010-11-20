@@ -1438,7 +1438,7 @@ value|if(m->m_flags& M_PKTHDR) { \                                      MH_ALIGN
 end_define
 
 begin_comment
-comment|/* We make it so if you have up to 4 threads  * writting based on the default size of  * the packet log 65 k, that would be  * 4 16k packets before we would hit  * a problem.  */
+comment|/* We make it so if you have up to 4 threads  * writing based on the default size of  * the packet log 65 k, that would be  * 4 16k packets before we would hit  * a problem.  */
 end_comment
 
 begin_define
@@ -1593,7 +1593,7 @@ value|(m->m_flags)
 end_define
 
 begin_comment
-comment|/* For BSD this just accesses the M_PKTHDR length  * so it operates on an mbuf with hdr flag. Other  * O/S's may have seperate packet header and mbuf  * chain pointers.. thus the macro.  */
+comment|/* For BSD this just accesses the M_PKTHDR length  * so it operates on an mbuf with hdr flag. Other  * O/S's may have separate packet header and mbuf  * chain pointers.. thus the macro.  */
 end_comment
 
 begin_define

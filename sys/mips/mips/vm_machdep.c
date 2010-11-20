@@ -354,7 +354,7 @@ name|td2
 operator|->
 name|td_pcb
 expr_stmt|;
-comment|/* Copy p1's pcb, note that in this case 	 * our pcb also includes the td_frame being copied 	 * too. The older mips2 code did an additional copy 	 * of the td_frame, for us thats not needed any 	 * longer (this copy does them both  	 */
+comment|/* Copy p1's pcb, note that in this case 	 * our pcb also includes the td_frame being copied 	 * too. The older mips2 code did an additional copy 	 * of the td_frame, for us that's not needed any 	 * longer (this copy does them both)  	 */
 name|bcopy
 argument_list|(
 name|td1
@@ -1234,7 +1234,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Initialize machine state (pcb and trap frame) for a new thread about to  * upcall. Put enough state in the new thread's PCB to get it to go back  * userret(), where we can intercept it again to set the return (upcall)  * Address and stack, along with those from upcals that are from other sources  * such as those generated in thread_userret() itself.  */
+comment|/*  * Initialize machine state (pcb and trap frame) for a new thread about to  * upcall. Put enough state in the new thread's PCB to get it to go back  * userret(), where we can intercept it again to set the return (upcall)  * Address and stack, along with those from upcalls that are from other sources  * such as those generated in thread_userret() itself.  */
 end_comment
 
 begin_function
@@ -1264,7 +1264,7 @@ name|td
 operator|->
 name|td_pcb
 expr_stmt|;
-comment|/* 	 * Copy the upcall pcb.  This loads kernel regs. 	 * Those not loaded individually below get their default 	 * values here. 	 * 	 * XXXKSE It might be a good idea to simply skip this as 	 * the values of the other registers may be unimportant. 	 * This would remove any requirement for knowing the KSE 	 * at this time (see the matching comment below for 	 * more analysis) (need a good safe default). 	 * In MIPS, the trapframe is the first element of the PCB 	 * and gets copied when we copy the PCB. No seperate copy 	 * is needed. 	 */
+comment|/* 	 * Copy the upcall pcb.  This loads kernel regs. 	 * Those not loaded individually below get their default 	 * values here. 	 * 	 * XXXKSE It might be a good idea to simply skip this as 	 * the values of the other registers may be unimportant. 	 * This would remove any requirement for knowing the KSE 	 * at this time (see the matching comment below for 	 * more analysis) (need a good safe default). 	 * In MIPS, the trapframe is the first element of the PCB 	 * and gets copied when we copy the PCB. No separate copy 	 * is needed. 	 */
 name|bcopy
 argument_list|(
 name|td0
