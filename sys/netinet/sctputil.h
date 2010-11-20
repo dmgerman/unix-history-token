@@ -497,10 +497,23 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|find_next_best_mtu
+name|uint32_t
+name|sctp_get_prev_mtu
 parameter_list|(
-name|int
+name|uint32_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint32_t
+name|sctp_get_next_mtu
+parameter_list|(
+name|struct
+name|sctp_inpcb
+modifier|*
+parameter_list|,
+name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl
