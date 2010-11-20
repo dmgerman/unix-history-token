@@ -2010,8 +2010,6 @@ decl_stmt|;
 name|int
 name|maxcpu
 decl_stmt|,
-name|size
-decl_stmt|,
 name|i
 decl_stmt|;
 operator|*
