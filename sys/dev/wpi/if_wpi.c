@@ -3525,19 +3525,16 @@ comment|/* XXX looks like WME is partly supported? */
 if|#
 directive|if
 literal|0
-expr|| IEEE80211_C_IBSS
+expr_stmt|| IEEE80211_C_IBSS
 comment|/* IBSS mode support */
-expr|| IEEE80211_C_BGSCAN
+expr_stmt|| IEEE80211_C_BGSCAN
 comment|/* capable of bg scanning */
-expr|| IEEE80211_C_WME
+expr_stmt|| IEEE80211_C_WME
 comment|/* 802.11e */
-expr|| IEEE80211_C_HOSTAP
+expr_stmt|| IEEE80211_C_HOSTAP
 comment|/* Host access point mode */
 endif|#
 directive|endif
-operator||
-name|IEEE80211_C_RATECTL
-comment|/* use ratectl */
 expr_stmt|;
 comment|/* 	 * Read in the eeprom and also setup the channels for 	 * net80211. We don't set the rates as net80211 does this for us 	 */
 name|wpi_read_eeprom
