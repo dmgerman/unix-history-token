@@ -6515,9 +6515,7 @@ operator|&&
 operator|(
 name|vap
 operator|->
-name|iv_ic
-operator|->
-name|ic_flags
+name|iv_flags
 operator|&
 name|IEEE80211_F_BGSCAN
 operator|)
