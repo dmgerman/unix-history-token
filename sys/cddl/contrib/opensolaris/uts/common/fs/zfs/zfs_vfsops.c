@@ -6096,6 +6096,9 @@ expr_stmt|;
 name|PICKUP_GIANT
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|sun
 comment|/* 	 * Add an extra VFS_HOLD on our parent vfs so that it can't 	 * disappear due to a forced unmount. 	 */
 if|if
 condition|(
@@ -6122,6 +6125,9 @@ operator|->
 name|v_vfsp
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* sun */
 name|out
 label|:
 return|return
@@ -8423,6 +8429,9 @@ name|vfsp
 operator|->
 name|vfs_data
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|sun
 comment|/* 	 * If this is a snapshot, we have an extra VFS_HOLD on our parent 	 * from zfs_mount().  Release it here. 	 */
 if|if
 condition|(
@@ -8439,6 +8448,9 @@ operator|->
 name|z_vfs
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* sun */
 name|zfsvfs_free
 argument_list|(
 name|zfsvfs
