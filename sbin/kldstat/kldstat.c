@@ -172,8 +172,10 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|warn
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"can't stat file id %d"
 argument_list|,
 name|fileid
