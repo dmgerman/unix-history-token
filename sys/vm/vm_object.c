@@ -2929,17 +2929,6 @@ argument_list|,
 name|pagerflags
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
-name|n
-operator|>
-literal|0
-argument_list|,
-operator|(
-literal|"vm_object_page_collect_flush failed"
-operator|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|object
