@@ -109,6 +109,19 @@ end_comment
 
 begin_function_decl
 name|void
+name|outcslow
+parameter_list|(
+name|int
+parameter_list|,
+name|struct
+name|output
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|out1str
 parameter_list|(
 specifier|const
@@ -405,7 +418,7 @@ name|out2c
 parameter_list|(
 name|c
 parameter_list|)
-value|outc(c, out2);
+value|outcslow(c, out2);
 end_define
 
 begin_define
