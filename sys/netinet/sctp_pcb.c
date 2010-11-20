@@ -15667,6 +15667,11 @@ operator|=
 name|nasoc
 control|)
 block|{
+name|SCTP_TCB_LOCK
+argument_list|(
+name|asoc
+argument_list|)
+expr_stmt|;
 name|nasoc
 operator|=
 name|LIST_NEXT
@@ -15722,14 +15727,14 @@ block|}
 name|cnt
 operator|++
 expr_stmt|;
-continue|continue;
-block|}
-comment|/* Free associations that are NOT killing us */
-name|SCTP_TCB_LOCK
+name|SCTP_TCB_UNLOCK
 argument_list|(
 name|asoc
 argument_list|)
 expr_stmt|;
+continue|continue;
+block|}
+comment|/* Free associations that are NOT killing us */
 if|if
 condition|(
 operator|(
