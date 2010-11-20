@@ -10425,6 +10425,17 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|__amd64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__i386__
 argument_list|)
 name|struct
@@ -10470,17 +10481,6 @@ argument_list|(
 name|acpi
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__amd64__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
 comment|/* If a suspend request is already in progress, just return. */
 if|if
 condition|(
