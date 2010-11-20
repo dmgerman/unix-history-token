@@ -14425,6 +14425,13 @@ block|}
 block|}
 endif|#
 directive|endif
+name|socantrcvmore
+argument_list|(
+name|stcb
+operator|->
+name|sctp_socket
+argument_list|)
+expr_stmt|;
 name|sorwakeup
 argument_list|(
 name|stcb
