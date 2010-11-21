@@ -499,10 +499,6 @@ name|error
 operator|)
 return|;
 default|default:
-return|return
-name|EOPNOTSUPP
-return|;
-block|}
 if|if
 condition|(
 name|data
@@ -525,12 +521,13 @@ name|chainarg
 argument_list|)
 operator|)
 return|;
-else|else
 return|return
 operator|(
-literal|0
+name|EOPNOTSUPP
 operator|)
 return|;
+block|}
+comment|/* NOTREACHED */
 block|}
 end_function
 
