@@ -1205,7 +1205,7 @@ name|p
 operator|->
 name|p_osrel
 operator|>=
-literal|700004
+name|P_OSREL_SIGSEGV
 condition|)
 block|{
 name|i

@@ -813,7 +813,7 @@ name|curproc
 operator|->
 name|p_osrel
 operator|>=
-literal|800104
+name|P_OSREL_MAP_ANON
 operator|)
 operator|||
 operator|(
