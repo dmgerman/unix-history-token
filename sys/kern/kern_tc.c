@@ -766,7 +766,7 @@ name|timestepwarnings
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Log time steps"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2633,7 +2633,7 @@ name|sysctl_kern_timecounter_hardware
 argument_list|,
 literal|"A"
 argument_list|,
-literal|""
+literal|"Timecounter hardware selected"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2761,7 +2761,7 @@ name|sysctl_kern_timecounter_choice
 argument_list|,
 literal|"A"
 argument_list|,
-literal|""
+literal|"Timecounter hardware detected"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3733,7 +3733,7 @@ name|tc_tick
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Approximate number of hardclock ticks in a millisecond"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

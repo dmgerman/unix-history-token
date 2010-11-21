@@ -74,7 +74,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* local offset from GMT in seconds */
+comment|/* local offset from UTC in seconds */
 end_comment
 
 begin_decl_stmt
@@ -120,7 +120,7 @@ name|wall_cmos_clock
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"CMOS clock keeps wall time"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -195,7 +195,7 @@ name|sysctl_machdep_adjkerntz
 argument_list|,
 literal|"I"
 argument_list|,
-literal|""
+literal|"Local offset from UTC in seconds"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

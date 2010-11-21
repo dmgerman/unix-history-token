@@ -1158,7 +1158,7 @@ name|sysctl_sema
 argument_list|,
 literal|""
 argument_list|,
-literal|""
+literal|"Semaphore id pool"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

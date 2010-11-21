@@ -567,7 +567,7 @@ name|numvnodes
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Number of vnodes in existence"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -726,7 +726,7 @@ name|freevnodes
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Number of vnodes in the free list"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -786,7 +786,7 @@ name|reassignbufcalls
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Number of calls to reassignbuf"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -989,7 +989,7 @@ name|filedelay
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Time to delay syncing files (in seconds)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1023,7 +1023,7 @@ name|dirdelay
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Time to delay syncing directories (in seconds)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1057,7 +1057,7 @@ name|metadelay
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Time to delay syncing metadata (in seconds)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1100,7 +1100,7 @@ name|stat_rush_requests
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Number of times I/O speeded up (rush requests)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2461,7 +2461,9 @@ name|timestamp_precision
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"File timestamp precision (0: seconds, "
+literal|"1: sec + ns accurate to 1/HZ, 2: sec + ns truncated to ms, "
+literal|"3+: sec + ns (max. precision))"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -10605,7 +10607,7 @@ name|busyprt
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Print out busy vnodes"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -16871,7 +16873,7 @@ name|vfs_badlock_ddb
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Drop into debugger on lock violation"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -16904,7 +16906,7 @@ name|vfs_badlock_mutex
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Check for interlock across VOPs"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -16937,7 +16939,7 @@ name|vfs_badlock_print
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Print lock violations"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -16976,7 +16978,7 @@ name|vfs_badlock_backtrace
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Print backtrace at lock violations"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
