@@ -517,7 +517,7 @@ argument_list|,
 literal|"any"
 argument_list|)
 operator|&&
-name|variable_cmp
+name|strcmp
 argument_list|(
 name|cp
 argument_list|,

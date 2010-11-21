@@ -2354,7 +2354,7 @@ name|status
 operator|=
 name|variable_get_value
 argument_list|(
-name|VAR_NTPDATE_FLAGS
+name|VAR_NTPDATE_HOSTS
 argument_list|,
 literal|"Enter the name of an NTP server"
 argument_list|,
@@ -2388,11 +2388,11 @@ argument_list|(
 name|tmp
 argument_list|)
 argument_list|,
-literal|"ntpdate_enable=YES,ntpdate_flags=%s"
+literal|"ntpdate_enable=YES,ntpdate_hosts=%s"
 argument_list|,
 name|variable_get
 argument_list|(
-name|VAR_NTPDATE_FLAGS
+name|VAR_NTPDATE_HOSTS
 argument_list|)
 argument_list|)
 expr_stmt|;
