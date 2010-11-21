@@ -188,7 +188,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_XINT
+name|SYSCTL_INT
 argument_list|(
 name|_net_link_epair
 argument_list|,
@@ -1280,6 +1280,7 @@ operator|->
 name|epair_drv_flags
 operator||=
 name|IFF_DRV_OACTIVE
+expr_stmt|;
 name|DPRINTF
 argument_list|(
 literal|"hw queue length overflow at %u\n"
