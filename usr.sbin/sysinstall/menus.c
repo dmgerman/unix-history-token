@@ -4693,7 +4693,7 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.tr.freebsd.org"
+literal|"=ftp://ftp2.tr.freebsd.org"
 block|}
 block|,
 block|{
@@ -7685,7 +7685,7 @@ block|,
 block|{
 literal|" Ntpdate"
 block|,
-literal|"Select a clock-synchronization server"
+literal|"Select a clock synchronization server"
 block|,
 name|dmenuVarCheck
 block|,
@@ -7974,7 +7974,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=NO,ntpdate_flags=none"
+literal|"ntpdate_enable=NO,ntpdate_hosts=none"
 block|}
 block|,
 block|{
@@ -8002,7 +8002,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=pool.ntp.org"
+literal|"ntpdate_enable=YES,ntpdate_hosts=pool.ntp.org"
 block|}
 block|,
 block|{
@@ -8016,7 +8016,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=asia.pool.ntp.org"
+literal|"ntpdate_enable=YES,ntpdate_hosts=asia.pool.ntp.org"
 block|}
 block|,
 block|{
@@ -8030,7 +8030,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=europe.pool.ntp.org"
+literal|"ntpdate_enable=YES,ntpdate_hosts=europe.pool.ntp.org"
 block|}
 block|,
 block|{
@@ -8044,7 +8044,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=oceania.pool.ntp.org"
+literal|"ntpdate_enable=YES,ntpdate_hosts=oceania.pool.ntp.org"
 block|}
 block|,
 block|{
@@ -8058,7 +8058,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=north-america.pool.ntp.org"
+literal|"ntpdate_enable=YES,ntpdate_hosts=north-america.pool.ntp.org"
 block|}
 block|,
 block|{
@@ -8072,7 +8072,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=tick.nap.com.ar"
+literal|"ntpdate_enable=YES,ntpdate_hosts=tick.nap.com.ar"
 block|}
 block|,
 block|{
@@ -8086,7 +8086,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=time.sinectis.com.ar"
+literal|"ntpdate_enable=YES,ntpdate_hosts=time.sinectis.com.ar"
 block|}
 block|,
 block|{
@@ -8100,7 +8100,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=tock.nap.com.ar"
+literal|"ntpdate_enable=YES,ntpdate_hosts=tock.nap.com.ar"
 block|}
 block|,
 block|{
@@ -8114,7 +8114,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=au.pool.ntp.org"
+literal|"ntpdate_enable=YES,ntpdate_hosts=au.pool.ntp.org"
 block|}
 block|,
 block|{
@@ -8128,7 +8128,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=augean.eleceng.adelaide.edu.au"
+literal|"ntpdate_enable=YES,ntpdate_hosts=augean.eleceng.adelaide.edu.au"
 block|}
 block|,
 block|{
@@ -8142,7 +8142,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.adelaide.edu.au"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.adelaide.edu.au"
 block|}
 block|,
 block|{
@@ -8156,7 +8156,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.saard.net"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.saard.net"
 block|}
 block|,
 block|{
@@ -8170,7 +8170,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=time.deakin.edu.au"
+literal|"ntpdate_enable=YES,ntpdate_hosts=time.deakin.edu.au"
 block|}
 block|,
 block|{
@@ -8184,7 +8184,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp1.belbone.be"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp1.belbone.be"
 block|}
 block|,
 block|{
@@ -8198,7 +8198,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp2.belbone.be"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp2.belbone.be"
 block|}
 block|,
 block|{
@@ -8212,7 +8212,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=a.ntp.br"
+literal|"ntpdate_enable=YES,ntpdate_hosts=a.ntp.br"
 block|}
 block|,
 block|{
@@ -8226,7 +8226,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=b.ntp.br"
+literal|"ntpdate_enable=YES,ntpdate_hosts=b.ntp.br"
 block|}
 block|,
 block|{
@@ -8240,7 +8240,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=c.ntp.br"
+literal|"ntpdate_enable=YES,ntpdate_hosts=c.ntp.br"
 block|}
 block|,
 block|{
@@ -8254,7 +8254,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.cais.rnp.br"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.cais.rnp.br"
 block|}
 block|,
 block|{
@@ -8268,7 +8268,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp1.pucpr.br"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp1.pucpr.br"
 block|}
 block|,
 block|{
@@ -8282,7 +8282,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ca.pool.ntp.org"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ca.pool.ntp.org"
 block|}
 block|,
 block|{
@@ -8296,7 +8296,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.cpsc.ucalgary.ca"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.cpsc.ucalgary.ca"
 block|}
 block|,
 block|{
@@ -8310,7 +8310,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp1.cmc.ec.gc.ca"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp1.cmc.ec.gc.ca"
 block|}
 block|,
 block|{
@@ -8324,7 +8324,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp2.cmc.ec.gc.ca"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp2.cmc.ec.gc.ca"
 block|}
 block|,
 block|{
@@ -8338,7 +8338,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=tick.utoronto.ca"
+literal|"ntpdate_enable=YES,ntpdate_hosts=tick.utoronto.ca"
 block|}
 block|,
 block|{
@@ -8352,7 +8352,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=time.chu.nrc.ca"
+literal|"ntpdate_enable=YES,ntpdate_hosts=time.chu.nrc.ca"
 block|}
 block|,
 block|{
@@ -8366,7 +8366,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=time.nrc.ca"
+literal|"ntpdate_enable=YES,ntpdate_hosts=time.nrc.ca"
 block|}
 block|,
 block|{
@@ -8380,7 +8380,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=timelord.uregina.ca"
+literal|"ntpdate_enable=YES,ntpdate_hosts=timelord.uregina.ca"
 block|}
 block|,
 block|{
@@ -8394,7 +8394,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=tock.utoronto.ca"
+literal|"ntpdate_enable=YES,ntpdate_hosts=tock.utoronto.ca"
 block|}
 block|,
 block|{
@@ -8408,7 +8408,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.karpo.cz"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.karpo.cz"
 block|}
 block|,
 block|{
@@ -8422,7 +8422,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.cgi.cz"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.cgi.cz"
 block|}
 block|,
 block|{
@@ -8436,7 +8436,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=clock.netcetera.dk"
+literal|"ntpdate_enable=YES,ntpdate_hosts=clock.netcetera.dk"
 block|}
 block|,
 block|{
@@ -8450,7 +8450,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=clock2.netcetera.dk"
+literal|"ntpdate_enable=YES,ntpdate_hosts=clock2.netcetera.dk"
 block|}
 block|,
 block|{
@@ -8464,7 +8464,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=slug.ctv.es"
+literal|"ntpdate_enable=YES,ntpdate_hosts=slug.ctv.es"
 block|}
 block|,
 block|{
@@ -8478,7 +8478,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=tick.keso.fi"
+literal|"ntpdate_enable=YES,ntpdate_hosts=tick.keso.fi"
 block|}
 block|,
 block|{
@@ -8492,7 +8492,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=tock.keso.fi"
+literal|"ntpdate_enable=YES,ntpdate_hosts=tock.keso.fi"
 block|}
 block|,
 block|{
@@ -8506,7 +8506,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.obspm.fr"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.obspm.fr"
 block|}
 block|,
 block|{
@@ -8520,7 +8520,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.univ-lyon1.fr"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.univ-lyon1.fr"
 block|}
 block|,
 block|{
@@ -8534,7 +8534,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.via.ecp.fr"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.via.ecp.fr"
 block|}
 block|,
 block|{
@@ -8548,7 +8548,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=zg1.ntp.carnet.hr"
+literal|"ntpdate_enable=YES,ntpdate_hosts=zg1.ntp.carnet.hr"
 block|}
 block|,
 block|{
@@ -8562,7 +8562,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=zg2.ntp.carnet.hr"
+literal|"ntpdate_enable=YES,ntpdate_hosts=zg2.ntp.carnet.hr"
 block|}
 block|,
 block|{
@@ -8576,7 +8576,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=st.ntp.carnet.hr"
+literal|"ntpdate_enable=YES,ntpdate_hosts=st.ntp.carnet.hr"
 block|}
 block|,
 block|{
@@ -8590,7 +8590,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ri.ntp.carnet.hr"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ri.ntp.carnet.hr"
 block|}
 block|,
 block|{
@@ -8604,7 +8604,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=os.ntp.carnet.hr"
+literal|"ntpdate_enable=YES,ntpdate_hosts=os.ntp.carnet.hr"
 block|}
 block|,
 block|{
@@ -8618,7 +8618,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=time.kfki.hu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=time.kfki.hu"
 block|}
 block|,
 block|{
@@ -8632,7 +8632,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.kim.lipi.go.id"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.kim.lipi.go.id"
 block|}
 block|,
 block|{
@@ -8646,7 +8646,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.maths.tcd.ie"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.maths.tcd.ie"
 block|}
 block|,
 block|{
@@ -8660,7 +8660,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=it.pool.ntp.org"
+literal|"ntpdate_enable=YES,ntpdate_hosts=it.pool.ntp.org"
 block|}
 block|,
 block|{
@@ -8674,7 +8674,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.jst.mfeed.ad.jp"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.jst.mfeed.ad.jp"
 block|}
 block|,
 block|{
@@ -8688,7 +8688,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp1.v6.mfeed.ad.jp"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp1.v6.mfeed.ad.jp"
 block|}
 block|,
 block|{
@@ -8702,7 +8702,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=time.nuri.net"
+literal|"ntpdate_enable=YES,ntpdate_hosts=time.nuri.net"
 block|}
 block|,
 block|{
@@ -8716,7 +8716,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=mx.pool.ntp.org"
+literal|"ntpdate_enable=YES,ntpdate_hosts=mx.pool.ntp.org"
 block|}
 block|,
 block|{
@@ -8730,7 +8730,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp0.nl.net"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp0.nl.net"
 block|}
 block|,
 block|{
@@ -8744,7 +8744,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp1.nl.net"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp1.nl.net"
 block|}
 block|,
 block|{
@@ -8758,7 +8758,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp2.nl.net"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp2.nl.net"
 block|}
 block|,
 block|{
@@ -8772,7 +8772,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=fartein.ifi.uio.no"
+literal|"ntpdate_enable=YES,ntpdate_hosts=fartein.ifi.uio.no"
 block|}
 block|,
 block|{
@@ -8786,7 +8786,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=time.alcanet.no"
+literal|"ntpdate_enable=YES,ntpdate_hosts=time.alcanet.no"
 block|}
 block|,
 block|{
@@ -8800,7 +8800,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.massey.ac.nz"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.massey.ac.nz"
 block|}
 block|,
 block|{
@@ -8814,7 +8814,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.public.otago.ac.nz"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.public.otago.ac.nz"
 block|}
 block|,
 block|{
@@ -8828,7 +8828,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=tk1.ihug.co.nz"
+literal|"ntpdate_enable=YES,ntpdate_hosts=tk1.ihug.co.nz"
 block|}
 block|,
 block|{
@@ -8842,7 +8842,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.waikato.ac.nz"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.waikato.ac.nz"
 block|}
 block|,
 block|{
@@ -8856,7 +8856,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=info.cyf-kr.edu.pl"
+literal|"ntpdate_enable=YES,ntpdate_hosts=info.cyf-kr.edu.pl"
 block|}
 block|,
 block|{
@@ -8870,7 +8870,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ticks.roedu.net"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ticks.roedu.net"
 block|}
 block|,
 block|{
@@ -8884,7 +8884,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ru.pool.ntp.org"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ru.pool.ntp.org"
 block|}
 block|,
 block|{
@@ -8898,7 +8898,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.psn.ru"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.psn.ru"
 block|}
 block|,
 block|{
@@ -8912,7 +8912,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=se.pool.ntp.org"
+literal|"ntpdate_enable=YES,ntpdate_hosts=se.pool.ntp.org"
 block|}
 block|,
 block|{
@@ -8926,7 +8926,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.lth.se"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.lth.se"
 block|}
 block|,
 block|{
@@ -8940,7 +8940,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp1.sp.se"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp1.sp.se"
 block|}
 block|,
 block|{
@@ -8954,7 +8954,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp2.sp.se"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp2.sp.se"
 block|}
 block|,
 block|{
@@ -8968,7 +8968,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.kth.se"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.kth.se"
 block|}
 block|,
 block|{
@@ -8982,7 +8982,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=sg.pool.ntp.org"
+literal|"ntpdate_enable=YES,ntpdate_hosts=sg.pool.ntp.org"
 block|}
 block|,
 block|{
@@ -8996,7 +8996,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=si.pool.ntp.org"
+literal|"ntpdate_enable=YES,ntpdate_hosts=si.pool.ntp.org"
 block|}
 block|,
 block|{
@@ -9010,7 +9010,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=sizif.mf.uni-lj.si"
+literal|"ntpdate_enable=YES,ntpdate_hosts=sizif.mf.uni-lj.si"
 block|}
 block|,
 block|{
@@ -9024,7 +9024,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp1.arnes.si"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp1.arnes.si"
 block|}
 block|,
 block|{
@@ -9038,7 +9038,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp2.arnes.si"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp2.arnes.si"
 block|}
 block|,
 block|{
@@ -9052,7 +9052,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=time.ijs.si"
+literal|"ntpdate_enable=YES,ntpdate_hosts=time.ijs.si"
 block|}
 block|,
 block|{
@@ -9066,7 +9066,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.cs.strath.ac.uk"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.cs.strath.ac.uk"
 block|}
 block|,
 block|{
@@ -9080,7 +9080,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=time.stdtime.gov.tw"
+literal|"ntpdate_enable=YES,ntpdate_hosts=time.stdtime.gov.tw"
 block|}
 block|,
 block|{
@@ -9094,7 +9094,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=clock.stdtime.gov.tw"
+literal|"ntpdate_enable=YES,ntpdate_hosts=clock.stdtime.gov.tw"
 block|}
 block|,
 block|{
@@ -9108,7 +9108,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=tick.stdtime.gov.tw"
+literal|"ntpdate_enable=YES,ntpdate_hosts=tick.stdtime.gov.tw"
 block|}
 block|,
 block|{
@@ -9122,7 +9122,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=tock.stdtime.gov.tw"
+literal|"ntpdate_enable=YES,ntpdate_hosts=tock.stdtime.gov.tw"
 block|}
 block|,
 block|{
@@ -9136,7 +9136,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=watch.stdtime.gov.tw"
+literal|"ntpdate_enable=YES,ntpdate_hosts=watch.stdtime.gov.tw"
 block|}
 block|,
 block|{
@@ -9150,7 +9150,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=uk.pool.ntp.org"
+literal|"ntpdate_enable=YES,ntpdate_hosts=uk.pool.ntp.org"
 block|}
 block|,
 block|{
@@ -9164,7 +9164,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.exnet.com"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.exnet.com"
 block|}
 block|,
 block|{
@@ -9178,7 +9178,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp0.uk.uu.net"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp0.uk.uu.net"
 block|}
 block|,
 block|{
@@ -9192,7 +9192,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp1.uk.uu.net"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp1.uk.uu.net"
 block|}
 block|,
 block|{
@@ -9206,7 +9206,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp2.uk.uu.net"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp2.uk.uu.net"
 block|}
 block|,
 block|{
@@ -9220,7 +9220,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp2a.mcc.ac.uk"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp2a.mcc.ac.uk"
 block|}
 block|,
 block|{
@@ -9234,7 +9234,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp2b.mcc.ac.uk"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp2b.mcc.ac.uk"
 block|}
 block|,
 block|{
@@ -9248,7 +9248,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp2c.mcc.ac.uk"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp2c.mcc.ac.uk"
 block|}
 block|,
 block|{
@@ -9262,7 +9262,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp2d.mcc.ac.uk"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp2d.mcc.ac.uk"
 block|}
 block|,
 block|{
@@ -9276,7 +9276,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=us.pool.ntp.org"
+literal|"ntpdate_enable=YES,ntpdate_hosts=us.pool.ntp.org"
 block|}
 block|,
 block|{
@@ -9290,7 +9290,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=sushi.compsci.lyon.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=sushi.compsci.lyon.edu"
 block|}
 block|,
 block|{
@@ -9304,7 +9304,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.drydog.com"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.drydog.com"
 block|}
 block|,
 block|{
@@ -9318,7 +9318,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.ucsd.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.ucsd.edu"
 block|}
 block|,
 block|{
@@ -9332,7 +9332,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp1.mainecoon.com"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp1.mainecoon.com"
 block|}
 block|,
 block|{
@@ -9346,7 +9346,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp2.mainecoon.com"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp2.mainecoon.com"
 block|}
 block|,
 block|{
@@ -9360,7 +9360,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=reloj.kjsl.com"
+literal|"ntpdate_enable=YES,ntpdate_hosts=reloj.kjsl.com"
 block|}
 block|,
 block|{
@@ -9374,7 +9374,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=time.five-ten-sg.com"
+literal|"ntpdate_enable=YES,ntpdate_hosts=time.five-ten-sg.com"
 block|}
 block|,
 block|{
@@ -9388,7 +9388,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=louie.udel.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=louie.udel.edu"
 block|}
 block|,
 block|{
@@ -9402,7 +9402,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.shorty.com"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.shorty.com"
 block|}
 block|,
 block|{
@@ -9416,7 +9416,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=rolex.usg.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=rolex.usg.edu"
 block|}
 block|,
 block|{
@@ -9430,7 +9430,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=timex.usg.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=timex.usg.edu"
 block|}
 block|,
 block|{
@@ -9444,7 +9444,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp-0.cso.uiuc.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp-0.cso.uiuc.edu"
 block|}
 block|,
 block|{
@@ -9458,7 +9458,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp-1.cso.uiuc.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp-1.cso.uiuc.edu"
 block|}
 block|,
 block|{
@@ -9472,7 +9472,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp-1.mcs.anl.gov"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp-1.mcs.anl.gov"
 block|}
 block|,
 block|{
@@ -9486,7 +9486,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp-2.cso.uiuc.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp-2.cso.uiuc.edu"
 block|}
 block|,
 block|{
@@ -9500,7 +9500,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp-2.mcs.anl.gov"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp-2.mcs.anl.gov"
 block|}
 block|,
 block|{
@@ -9514,7 +9514,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=gilbreth.ecn.purdue.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=gilbreth.ecn.purdue.edu"
 block|}
 block|,
 block|{
@@ -9528,7 +9528,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=harbor.ecn.purdue.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=harbor.ecn.purdue.edu"
 block|}
 block|,
 block|{
@@ -9542,7 +9542,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=molecule.ecn.purdue.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=molecule.ecn.purdue.edu"
 block|}
 block|,
 block|{
@@ -9556,7 +9556,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp1.kansas.net"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp1.kansas.net"
 block|}
 block|,
 block|{
@@ -9570,7 +9570,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp2.kansas.net"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp2.kansas.net"
 block|}
 block|,
 block|{
@@ -9584,7 +9584,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.ourconcord.net"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.ourconcord.net"
 block|}
 block|,
 block|{
@@ -9598,7 +9598,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=timeserver.cs.umb.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=timeserver.cs.umb.edu"
 block|}
 block|,
 block|{
@@ -9612,7 +9612,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ns.nts.umn.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ns.nts.umn.edu"
 block|}
 block|,
 block|{
@@ -9626,7 +9626,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=nss.nts.umn.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=nss.nts.umn.edu"
 block|}
 block|,
 block|{
@@ -9640,7 +9640,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=time-ext.missouri.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=time-ext.missouri.edu"
 block|}
 block|,
 block|{
@@ -9654,7 +9654,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=chronos1.umt.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=chronos1.umt.edu"
 block|}
 block|,
 block|{
@@ -9668,7 +9668,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=chronos2.umt.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=chronos2.umt.edu"
 block|}
 block|,
 block|{
@@ -9682,7 +9682,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=chronos3.umt.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=chronos3.umt.edu"
 block|}
 block|,
 block|{
@@ -9696,7 +9696,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=clock1.unc.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=clock1.unc.edu"
 block|}
 block|,
 block|{
@@ -9710,7 +9710,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=cuckoo.nevada.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=cuckoo.nevada.edu"
 block|}
 block|,
 block|{
@@ -9724,7 +9724,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=tick.cs.unlv.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=tick.cs.unlv.edu"
 block|}
 block|,
 block|{
@@ -9738,7 +9738,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=tock.cs.unlv.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=tock.cs.unlv.edu"
 block|}
 block|,
 block|{
@@ -9752,7 +9752,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp0.cornell.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp0.cornell.edu"
 block|}
 block|,
 block|{
@@ -9766,7 +9766,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=sundial.columbia.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=sundial.columbia.edu"
 block|}
 block|,
 block|{
@@ -9780,7 +9780,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=timex.cs.columbia.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=timex.cs.columbia.edu"
 block|}
 block|,
 block|{
@@ -9794,7 +9794,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=clock-1.cs.cmu.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=clock-1.cs.cmu.edu"
 block|}
 block|,
 block|{
@@ -9808,7 +9808,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=clock-2.cs.cmu.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=clock-2.cs.cmu.edu"
 block|}
 block|,
 block|{
@@ -9822,7 +9822,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=clock.psu.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=clock.psu.edu"
 block|}
 block|,
 block|{
@@ -9836,7 +9836,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=fuzz.psc.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=fuzz.psc.edu"
 block|}
 block|,
 block|{
@@ -9850,7 +9850,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp-1.ece.cmu.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp-1.ece.cmu.edu"
 block|}
 block|,
 block|{
@@ -9864,7 +9864,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp-2.ece.cmu.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp-2.ece.cmu.edu"
 block|}
 block|,
 block|{
@@ -9878,7 +9878,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.fnbhs.com"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.fnbhs.com"
 block|}
 block|,
 block|{
@@ -9892,7 +9892,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.tmc.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.tmc.edu"
 block|}
 block|,
 block|{
@@ -9906,7 +9906,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp5.tamu.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp5.tamu.edu"
 block|}
 block|,
 block|{
@@ -9920,7 +9920,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=tick.greyware.com"
+literal|"ntpdate_enable=YES,ntpdate_hosts=tick.greyware.com"
 block|}
 block|,
 block|{
@@ -9934,7 +9934,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=tock.greyware.com"
+literal|"ntpdate_enable=YES,ntpdate_hosts=tock.greyware.com"
 block|}
 block|,
 block|{
@@ -9948,7 +9948,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp-1.vt.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp-1.vt.edu"
 block|}
 block|,
 block|{
@@ -9962,7 +9962,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp-2.vt.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp-2.vt.edu"
 block|}
 block|,
 block|{
@@ -9976,7 +9976,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.cmr.gov"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.cmr.gov"
 block|}
 block|,
 block|{
@@ -9990,7 +9990,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp0.state.vt.us"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp0.state.vt.us"
 block|}
 block|,
 block|{
@@ -10004,7 +10004,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp1.state.vt.us"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp1.state.vt.us"
 block|}
 block|,
 block|{
@@ -10018,7 +10018,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp2.state.vt.us"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp2.state.vt.us"
 block|}
 block|,
 block|{
@@ -10032,7 +10032,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.tcp-udp.net"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.tcp-udp.net"
 block|}
 block|,
 block|{
@@ -10046,7 +10046,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp1.cs.wisc.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp1.cs.wisc.edu"
 block|}
 block|,
 block|{
@@ -10060,7 +10060,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp3.cs.wisc.edu"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp3.cs.wisc.edu"
 block|}
 block|,
 block|{
@@ -10074,7 +10074,7 @@ name|dmenuSetVariables
 block|,
 name|NULL
 block|,
-literal|"ntpdate_enable=YES,ntpdate_flags=ntp.cs.unp.ac.za"
+literal|"ntpdate_enable=YES,ntpdate_hosts=ntp.cs.unp.ac.za"
 block|}
 block|,
 block|{

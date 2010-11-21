@@ -3131,7 +3131,7 @@ operator|!
 name|msgYesNo
 argument_list|(
 literal|"The FreeBSD package collection is a collection of thousands of ready-to-run\n"
-literal|"applications, from text editors to games to WEB servers and more.  Would you\n"
+literal|"applications, from text editors to games to Web servers and more.  Would you\n"
 literal|"like to browse the collection now?"
 argument_list|)
 condition|)

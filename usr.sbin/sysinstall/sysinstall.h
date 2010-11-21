@@ -815,8 +815,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|VAR_NTPDATE_FLAGS
-value|"ntpdate_flags"
+name|VAR_NTPDATE_HOSTS
+value|"ntpdate_hosts"
 end_define
 
 begin_define
