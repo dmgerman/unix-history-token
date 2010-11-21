@@ -3139,7 +3139,7 @@ decl_stmt|;
 name|int8_t
 name|isr_rssi
 decl_stmt|;
-name|uint16_t
+name|uint8_t
 name|isr_intval
 decl_stmt|;
 comment|/* beacon interval */
