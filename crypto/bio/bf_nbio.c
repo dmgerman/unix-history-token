@@ -405,10 +405,6 @@ name|int
 name|outl
 parameter_list|)
 block|{
-name|NBIO_TEST
-modifier|*
-name|nt
-decl_stmt|;
 name|int
 name|ret
 init|=
@@ -450,16 +446,6 @@ operator|(
 literal|0
 operator|)
 return|;
-name|nt
-operator|=
-operator|(
-name|NBIO_TEST
-operator|*
-operator|)
-name|b
-operator|->
-name|ptr
-expr_stmt|;
 name|BIO_clear_retry_flags
 argument_list|(
 name|b

@@ -158,11 +158,6 @@ modifier|*
 name|meth
 parameter_list|)
 block|{
-specifier|const
-name|ECDH_METHOD
-modifier|*
-name|mtmp
-decl_stmt|;
 name|ECDH_DATA
 modifier|*
 name|ecdh
@@ -183,18 +178,6 @@ condition|)
 return|return
 literal|0
 return|;
-name|mtmp
-operator|=
-name|ecdh
-operator|->
-name|meth
-expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (mtmp->finish) 		mtmp->finish(eckey);
-endif|#
-directive|endif
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_ENGINE

@@ -2805,10 +2805,6 @@ name|EVP_PKEY
 modifier|*
 name|pkey
 decl_stmt|;
-name|X509_CINF
-modifier|*
-name|ci
-decl_stmt|;
 name|BIO
 modifier|*
 name|in
@@ -3118,12 +3114,6 @@ condition|)
 goto|goto
 name|end
 goto|;
-name|ci
-operator|=
-name|x
-operator|->
-name|cert_info
-expr_stmt|;
 if|if
 condition|(
 name|sno

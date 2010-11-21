@@ -2264,12 +2264,26 @@ operator|==
 name|BIO_BIND_REUSEADDR_IF_UNUSED
 operator|)
 operator|&&
+ifdef|#
+directive|ifdef
+name|OPENSSL_SYS_WINDOWS
+comment|/* Some versions of Windows define EADDRINUSE to 			 * a dummy value. 			 */
+operator|(
+name|err_num
+operator|==
+name|WSAEADDRINUSE
+operator|)
+condition|)
+else|#
+directive|else
 operator|(
 name|err_num
 operator|==
 name|EADDRINUSE
 operator|)
-condition|)
+block|)
+endif|#
+directive|endif
 block|{
 name|memcpy
 argument_list|(
@@ -2416,6 +2430,9 @@ goto|goto
 name|err
 goto|;
 block|}
+end_function
+
+begin_if
 if|if
 condition|(
 name|listen
@@ -2459,12 +2476,21 @@ goto|goto
 name|err
 goto|;
 block|}
+end_if
+
+begin_expr_stmt
 name|ret
 operator|=
 literal|1
 expr_stmt|;
+end_expr_stmt
+
+begin_label
 name|err
 label|:
+end_label
+
+begin_if
 if|if
 condition|(
 name|str
@@ -2476,6 +2502,9 @@ argument_list|(
 name|str
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_if
 if|if
 condition|(
 operator|(
@@ -2501,26 +2530,27 @@ operator|=
 name|INVALID_SOCKET
 expr_stmt|;
 block|}
+end_if
+
+begin_return
 return|return
 operator|(
 name|s
 operator|)
 return|;
-block|}
-end_function
+end_return
 
-begin_function
-name|int
+begin_macro
+unit|}  int
 name|BIO_accept
-parameter_list|(
-name|int
-name|sock
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|addr
-parameter_list|)
+argument_list|(
+argument|int sock
+argument_list|,
+argument|char **addr
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|ret
@@ -2765,7 +2795,7 @@ name|ret
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_function
 name|int

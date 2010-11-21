@@ -1412,6 +1412,19 @@ name|p
 operator|+=
 name|i
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|OPENSSL_NO_COMP
+operator|*
+operator|(
+name|p
+operator|++
+operator|)
+operator|=
+literal|1
+expr_stmt|;
+else|#
+directive|else
 comment|/* COMPRESSION */
 if|if
 condition|(
@@ -1487,6 +1500,8 @@ operator|->
 name|id
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 operator|*
 operator|(
 name|p

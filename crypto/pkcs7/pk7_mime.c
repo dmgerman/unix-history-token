@@ -133,11 +133,6 @@ decl_stmt|,
 modifier|*
 name|p7bio
 decl_stmt|;
-name|int
-name|r
-init|=
-literal|0
-decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -204,10 +199,6 @@ condition|)
 goto|goto
 name|err
 goto|;
-name|r
-operator|=
-literal|1
-expr_stmt|;
 name|err
 label|:
 comment|/* Now remove any digests prepended to the BIO */

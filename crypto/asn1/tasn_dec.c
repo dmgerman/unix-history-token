@@ -723,9 +723,6 @@ literal|0
 decl_stmt|;
 name|ASN1_VALUE
 modifier|*
-name|pchval
-decl_stmt|,
-modifier|*
 modifier|*
 name|pchptr
 decl_stmt|,
@@ -1267,10 +1264,6 @@ name|err
 goto|;
 block|}
 comment|/* CHOICE type, try each possibility in turn */
-name|pchval
-operator|=
-name|NULL
-expr_stmt|;
 name|p
 operator|=
 operator|*

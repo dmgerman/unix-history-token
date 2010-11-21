@@ -1353,6 +1353,11 @@ return|;
 block|}
 name|notfound
 label|:
+name|ENGINE_free
+argument_list|(
+name|iterator
+argument_list|)
+expr_stmt|;
 name|ENGINEerr
 argument_list|(
 name|ENGINE_F_ENGINE_BY_ID

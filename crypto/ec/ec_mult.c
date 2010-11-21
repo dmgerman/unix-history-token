@@ -435,6 +435,7 @@ condition|;
 name|p
 operator|++
 control|)
+block|{
 name|EC_POINT_clear_free
 argument_list|(
 operator|*
@@ -443,16 +444,14 @@ argument_list|)
 expr_stmt|;
 name|OPENSSL_cleanse
 argument_list|(
-name|pre
-operator|->
-name|points
+name|p
 argument_list|,
 sizeof|sizeof
-name|pre
-operator|->
-name|points
+expr|*
+name|p
 argument_list|)
 expr_stmt|;
+block|}
 name|OPENSSL_free
 argument_list|(
 name|pre
@@ -466,6 +465,7 @@ argument_list|(
 name|pre
 argument_list|,
 sizeof|sizeof
+expr|*
 name|pre
 argument_list|)
 expr_stmt|;

@@ -179,8 +179,6 @@ name|time
 argument_list|(
 name|NULL
 argument_list|)
-decl_stmt|,
-name|l
 decl_stmt|;
 name|void
 function_decl|(
@@ -1178,18 +1176,6 @@ condition|)
 goto|goto
 name|end
 goto|;
-name|l
-operator|=
-name|s
-operator|->
-name|s3
-operator|->
-name|tmp
-operator|.
-name|new_cipher
-operator|->
-name|algorithms
-expr_stmt|;
 comment|/* EAY EAY EAY need to check for DH fix cert 			 * sent back */
 comment|/* For TLS, cert_req is set to 2, so a cert chain 			 * of nothing is sent, but no verify packet is sent */
 if|if

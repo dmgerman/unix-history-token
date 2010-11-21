@@ -464,11 +464,6 @@ block|{
 name|pitem
 modifier|*
 name|next
-decl_stmt|,
-modifier|*
-name|prev
-init|=
-name|NULL
 decl_stmt|;
 name|pitem
 modifier|*
@@ -501,10 +496,6 @@ name|next
 operator|!=
 name|NULL
 condition|;
-name|prev
-operator|=
-name|next
-operator|,
 name|next
 operator|=
 name|next
@@ -563,13 +554,6 @@ condition|)
 return|return
 name|NULL
 return|;
-if|#
-directive|if
-literal|0
-comment|/* find works in peek mode */
-block|if ( prev == NULL) 		pq->items = next->next; 	else 		prev->next = next->next;
-endif|#
-directive|endif
 return|return
 name|found
 return|;

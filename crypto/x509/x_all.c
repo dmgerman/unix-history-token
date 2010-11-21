@@ -271,6 +271,16 @@ modifier|*
 name|md
 parameter_list|)
 block|{
+name|x
+operator|->
+name|cert_info
+operator|->
+name|enc
+operator|.
+name|modified
+operator|=
+literal|1
+expr_stmt|;
 return|return
 operator|(
 name|ASN1_item_sign

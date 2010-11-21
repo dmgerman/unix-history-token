@@ -1196,8 +1196,6 @@ name|n
 decl_stmt|,
 name|ln
 decl_stmt|,
-name|tmp2
-decl_stmt|,
 name|exp_nl
 decl_stmt|;
 name|unsigned
@@ -1545,10 +1543,6 @@ condition|)
 name|exp_nl
 operator|=
 literal|1
-expr_stmt|;
-name|tmp2
-operator|=
-name|v
 expr_stmt|;
 if|if
 condition|(

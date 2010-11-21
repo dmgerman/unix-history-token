@@ -333,6 +333,11 @@ name|char
 modifier|*
 name|fragment
 decl_stmt|;
+name|unsigned
+name|char
+modifier|*
+name|reassembly
+decl_stmt|;
 block|}
 name|hm_fragment
 typedef|;

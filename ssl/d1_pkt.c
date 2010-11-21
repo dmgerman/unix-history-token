@@ -350,6 +350,34 @@ name|SSL3_RECORD
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Set proper sequence number for mac calculation */
+name|memcpy
+argument_list|(
+operator|&
+operator|(
+name|s
+operator|->
+name|s3
+operator|->
+name|read_sequence
+index|[
+literal|2
+index|]
+operator|)
+argument_list|,
+operator|&
+operator|(
+name|rdata
+operator|->
+name|packet
+index|[
+literal|5
+index|]
+operator|)
+argument_list|,
+literal|6
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -783,20 +811,6 @@ condition|(
 name|item
 condition|)
 block|{
-name|DTLS1_RECORD_DATA
-modifier|*
-name|rdata
-decl_stmt|;
-name|rdata
-operator|=
-operator|(
-name|DTLS1_RECORD_DATA
-operator|*
-operator|)
-name|item
-operator|->
-name|data
-expr_stmt|;
 comment|/* Check if epoch is current. */
 if|if
 condition|(
@@ -955,8 +969,6 @@ name|s
 parameter_list|)
 block|{
 name|int
-name|i
-decl_stmt|,
 name|al
 decl_stmt|;
 name|int
@@ -1088,7 +1100,7 @@ name|err
 goto|;
 comment|/* otherwise enc_err == -1 */
 goto|goto
-name|decryption_failed_or_bad_record_mac
+name|err
 goto|;
 block|}
 ifdef|#
@@ -1220,7 +1232,7 @@ block|al=SSL_AD_RECORD_OVERFLOW; 			SSLerr(SSL_F_DTLS1_PROCESS_RECORD,SSL_R_PRE_
 else|#
 directive|else
 goto|goto
-name|decryption_failed_or_bad_record_mac
+name|err
 goto|;
 endif|#
 directive|endif
@@ -1243,7 +1255,7 @@ block|al=SSL_AD_DECODE_ERROR; 			SSLerr(SSL_F_DTLS1_PROCESS_RECORD,SSL_R_LENGTH_
 else|#
 directive|else
 goto|goto
-name|decryption_failed_or_bad_record_mac
+name|err
 goto|;
 endif|#
 directive|endif
@@ -1254,8 +1266,6 @@ name|length
 operator|-=
 name|mac_size
 expr_stmt|;
-name|i
-operator|=
 name|s
 operator|->
 name|method
@@ -1296,7 +1306,7 @@ literal|0
 condition|)
 block|{
 goto|goto
-name|decryption_failed_or_bad_record_mac
+name|err
 goto|;
 block|}
 block|}
@@ -1417,20 +1427,6 @@ operator|(
 literal|1
 operator|)
 return|;
-name|decryption_failed_or_bad_record_mac
-label|:
-comment|/* Separate 'decryption_failed' alert was introduced with TLS 1.0, 	 * SSL 3.0 only has 'bad_record_mac'.  But unless a decryption 	 * failure is directly visible from the ciphertext anyway, 	 * we should not reveal which kind of error occured -- this 	 * might become visible to an attacker (e.g. via logfile) */
-name|al
-operator|=
-name|SSL_AD_BAD_RECORD_MAC
-expr_stmt|;
-name|SSLerr
-argument_list|(
-name|SSL_F_DTLS1_PROCESS_RECORD
-argument_list|,
-name|SSL_R_DECRYPTION_FAILED_OR_BAD_RECORD_MAC
-argument_list|)
-expr_stmt|;
 name|f_err
 label|:
 name|ssl3_send_alert
@@ -1483,10 +1479,6 @@ name|SSL3_RECORD
 modifier|*
 name|rr
 decl_stmt|;
-name|SSL_SESSION
-modifier|*
-name|sess
-decl_stmt|;
 name|unsigned
 name|char
 modifier|*
@@ -1517,24 +1509,12 @@ operator|->
 name|rrec
 operator|)
 expr_stmt|;
-name|sess
-operator|=
-name|s
-operator|->
-name|session
-expr_stmt|;
 comment|/* The epoch may have changed.  If so, process all the      * pending records.  This is a non-blocking operation. */
-if|if
-condition|(
-operator|!
 name|dtls1_process_buffered_records
 argument_list|(
 name|s
 argument_list|)
-condition|)
-return|return
-literal|0
-return|;
+expr_stmt|;
 comment|/* if we're renegotiating, then there may be buffered records */
 if|if
 condition|(
@@ -2016,19 +1996,24 @@ condition|)
 goto|goto
 name|again
 goto|;
-comment|/* If this record is from the next epoch (either HM or ALERT), buffer it      * since it cannot be processed at this time.      * Records from the next epoch are marked as received even though they are       * not processed, so as to prevent any potential resource DoS attack */
+comment|/* If this record is from the next epoch (either HM or ALERT), 	 * and a handshake is currently in progress, buffer it since it 	 * cannot be processed at this time. */
 if|if
 condition|(
 name|is_next_epoch
 condition|)
 block|{
-name|dtls1_record_bitmap_update
+if|if
+condition|(
+name|SSL_in_init
 argument_list|(
 name|s
-argument_list|,
-name|bitmap
 argument_list|)
-expr_stmt|;
+operator|||
+name|s
+operator|->
+name|in_handshake
+condition|)
+block|{
 name|dtls1_buffer_record
 argument_list|(
 name|s
@@ -2048,6 +2033,7 @@ operator|->
 name|seq_num
 argument_list|)
 expr_stmt|;
+block|}
 name|rr
 operator|->
 name|length
@@ -2072,11 +2058,25 @@ argument_list|(
 name|s
 argument_list|)
 condition|)
-return|return
-operator|(
+block|{
+name|rr
+operator|->
+name|length
+operator|=
 literal|0
-operator|)
-return|;
+expr_stmt|;
+name|s
+operator|->
+name|packet_length
+operator|=
+literal|0
+expr_stmt|;
+comment|/* dump this record */
+goto|goto
+name|again
+goto|;
+comment|/* get another record */
+block|}
 name|dtls1_clear_timeouts
 argument_list|(
 name|s
@@ -2492,7 +2492,10 @@ operator|->
 name|buffered_app_data
 operator|)
 argument_list|,
-literal|0
+operator|&
+name|rr
+operator|->
+name|seq_num
 argument_list|)
 expr_stmt|;
 name|rr

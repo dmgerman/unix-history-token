@@ -3948,9 +3948,6 @@ modifier|*
 name|l
 decl_stmt|,
 modifier|*
-name|start
-decl_stmt|,
-modifier|*
 name|buf
 decl_stmt|;
 name|int
@@ -4100,10 +4097,6 @@ operator|=
 name|mask_strength
 operator|=
 literal|0
-expr_stmt|;
-name|start
-operator|=
-name|l
 expr_stmt|;
 for|for
 control|(
@@ -5359,8 +5352,6 @@ name|long
 name|alg
 block|,
 name|alg2
-block|,
-name|alg_s
 block|;
 ifdef|#
 directive|ifdef
@@ -5391,12 +5382,6 @@ operator|=
 name|cipher
 operator|->
 name|algorithms
-block|;
-name|alg_s
-operator|=
-name|cipher
-operator|->
-name|algo_strength
 block|;
 name|alg2
 operator|=

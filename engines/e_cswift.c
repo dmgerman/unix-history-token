@@ -3769,11 +3769,6 @@ name|arg
 decl_stmt|,
 name|res
 decl_stmt|;
-name|unsigned
-name|char
-modifier|*
-name|ptr
-decl_stmt|;
 name|BN_CTX
 modifier|*
 name|ctx
@@ -4375,17 +4370,6 @@ name|err
 goto|;
 block|}
 comment|/* Convert the response */
-name|ptr
-operator|=
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
-name|result
-operator|->
-name|d
-expr_stmt|;
 if|if
 condition|(
 operator|(

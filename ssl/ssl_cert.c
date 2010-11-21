@@ -2843,6 +2843,9 @@ name|xn
 argument_list|)
 expr_stmt|;
 block|}
+name|ERR_clear_error
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 literal|0
