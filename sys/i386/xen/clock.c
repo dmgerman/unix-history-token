@@ -3049,13 +3049,7 @@ call|(
 name|uint32_t
 call|)
 argument_list|(
-operator|(
 name|clk
-operator|/
-name|NS_PER_TICK
-operator|)
-operator|*
-name|NS_PER_TICK
 argument_list|)
 return|;
 block|}
