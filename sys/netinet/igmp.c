@@ -798,7 +798,8 @@ comment|/*  * VIMAGE-wide globals.  *  * The IGMPv3 timers themselves need to ru
 end_comment
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 name|int
 argument_list|,
@@ -812,7 +813,8 @@ comment|/* IGMPv3 general 							 * query response */
 end_comment
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 name|int
 argument_list|,
@@ -826,7 +828,8 @@ comment|/* IGMPv3 state-change 							 * retransmit */
 end_comment
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 name|int
 argument_list|,
@@ -861,7 +864,8 @@ value|VNET(current_state_timers_running)
 end_define
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 name|LIST_HEAD
 argument_list|(,
@@ -874,7 +878,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 expr|struct
 name|igmpstat
@@ -901,7 +906,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 expr|struct
 name|timeval
@@ -939,7 +945,8 @@ value|VNET(igmp_gsrdelay)
 end_define
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 name|int
 argument_list|,
@@ -951,7 +958,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 name|int
 argument_list|,
@@ -963,7 +971,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 name|int
 argument_list|,
@@ -975,7 +984,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 name|int
 argument_list|,
@@ -987,7 +997,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 name|int
 argument_list|,
@@ -999,7 +1010,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 name|int
 argument_list|,
@@ -1009,7 +1021,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 name|int
 argument_list|,

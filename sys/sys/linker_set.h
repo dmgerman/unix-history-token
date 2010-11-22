@@ -56,7 +56,7 @@ parameter_list|,
 name|sym
 parameter_list|)
 define|\
-value|__GLOBL("__start_set_" #set);					\ 	__GLOBL("__stop_set_" #set);					\ 	static void const * const __set_##set##_sym_##sym 		\ 	__section("set_" #set) __used =&sym
+value|__GLOBL(__CONCAT(__start_set_,set));				\ 	__GLOBL(__CONCAT(__stop_set_,set));				\ 	static void const * const __set_##set##_sym_##sym 		\ 	__section("set_" #set) __used =&sym
 end_define
 
 begin_else

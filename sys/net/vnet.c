@@ -294,7 +294,8 @@ comment|/*  * Space to store virtualized global variables from loadable kernel m
 end_comment
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 name|char
 argument_list|,

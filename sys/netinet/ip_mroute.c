@@ -296,7 +296,8 @@ value|((m)->m_flags& M_EXT)
 end_define
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 name|uint32_t
 argument_list|,
@@ -405,7 +406,8 @@ comment|/* Allow no more V_ip_mrouter sockets */
 end_comment
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 expr|struct
 name|mrtstat
@@ -448,7 +450,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 name|u_long
 argument_list|,
@@ -496,7 +499,8 @@ comment|/* Hash size */
 end_comment
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 name|u_char
 operator|*
@@ -518,7 +522,8 @@ value|VNET(nexpire)
 end_define
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 name|LIST_HEAD
 argument_list|(
@@ -590,7 +595,8 @@ value|mtx_destroy(&mfc_mtx)
 end_define
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 name|vifi_t
 argument_list|,
@@ -607,7 +613,8 @@ value|VNET(numvifs)
 end_define
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 expr|struct
 name|vif
@@ -715,7 +722,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 expr|struct
 name|callout
@@ -783,7 +791,8 @@ value|1024
 end_define
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 expr|struct
 name|bw_meter
@@ -805,7 +814,8 @@ value|VNET(bw_meter_timers)
 end_define
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 expr|struct
 name|callout
@@ -838,7 +848,8 @@ comment|/*  * Pending upcalls are stored in a vector which is flushed when  * fu
 end_comment
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 expr|struct
 name|bw_upcall
@@ -859,7 +870,8 @@ value|VNET(bw_upcalls)
 end_define
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 name|u_int
 argument_list|,
@@ -880,7 +892,8 @@ value|VNET(bw_upcalls_n)
 end_define
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 expr|struct
 name|callout
@@ -909,7 +922,8 @@ comment|/* periodical flush of bw upcalls */
 end_comment
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 expr|struct
 name|pimstat
@@ -1217,7 +1231,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 name|vifi_t
 argument_list|,
@@ -1236,7 +1251,8 @@ value|VNET(reg_vif_num)
 end_define
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 expr|struct
 name|ifnet
@@ -1877,7 +1893,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 name|uint32_t
 argument_list|,
@@ -1894,7 +1911,8 @@ value|VNET(mrt_api_config)
 end_define
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 name|int
 argument_list|,

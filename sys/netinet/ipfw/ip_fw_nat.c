@@ -146,7 +146,8 @@ comment|/* XXX for in_cksum */
 end_comment
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 name|eventhandler_tag
 argument_list|,

@@ -161,7 +161,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 name|int
 argument_list|,

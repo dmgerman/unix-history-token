@@ -271,7 +271,8 @@ comment|/* timer values */
 end_comment
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 name|int
 argument_list|,
@@ -291,7 +292,8 @@ comment|/* once resolved, good for 20 						 * minutes */
 end_comment
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 name|int
 argument_list|,
@@ -319,7 +321,8 @@ comment|/* use loopback interface for 					 * local traffic */
 end_comment
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 name|int
 argument_list|,
@@ -331,7 +334,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 name|int
 argument_list|,
@@ -362,7 +366,8 @@ comment|/* ARP statistics, see if_arp.h */
 end_comment
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 name|int
 argument_list|,

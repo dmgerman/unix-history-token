@@ -88,6 +88,14 @@ name|__start_set_pcpu
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|__GLOBL
+argument_list|(
+name|__start_set_pcpu
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|extern
 name|uintptr_t
@@ -95,6 +103,14 @@ modifier|*
 name|__stop_set_pcpu
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|__GLOBL
+argument_list|(
+name|__stop_set_pcpu
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Array of dynamic pcpu base offsets.  Indexed by id.  */
@@ -189,21 +205,7 @@ name|t
 parameter_list|,
 name|n
 parameter_list|)
-define|\
-value|__GLOBL("__start_" DPCPU_SETNAME);					\     __GLOBL("__stop_" DPCPU_SETNAME);					\     t DPCPU_NAME(n) __section(DPCPU_SETNAME) __used
-end_define
-
-begin_define
-define|#
-directive|define
-name|STATIC_DPCPU_DEFINE
-parameter_list|(
-name|t
-parameter_list|,
-name|n
-parameter_list|)
-define|\
-value|DPCPU_DEFINE(static t, n)
+value|t DPCPU_NAME(n) __section(DPCPU_SETNAME) __used
 end_define
 
 begin_comment

@@ -178,7 +178,8 @@ comment|/*  * The socket used to communicate with the SeND daemon.  */
 end_comment
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 expr|struct
 name|socket

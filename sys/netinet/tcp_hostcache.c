@@ -244,7 +244,8 @@ comment|/* every 5 minutes */
 end_comment
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 expr|struct
 name|tcp_hostcache
@@ -262,7 +263,8 @@ value|VNET(tcp_hostcache)
 end_define
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 expr|struct
 name|callout
