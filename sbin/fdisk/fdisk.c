@@ -7459,7 +7459,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Try figuring out the root device's canonical disk name.  * The following choices are considered:  *   /dev/ad0s1a     => /dev/ad0  *   /dev/da0a       => /dev/da0  *   /dev/vinum/root => /dev/vinum/root  */
+comment|/*  * Try figuring out the root device's canonical disk name.  * The following choices are considered:  *   /dev/ad0s1a     => /dev/ad0  *   /dev/da0a       => /dev/da0  *   /dev/vinum/root => /dev/vinum/root  * A ".eli" part is removed if it exists (see geli(8)).  * A ".journal" ending is removed if it exists (see gjournal(8)).  */
 end_comment
 
 begin_function
@@ -7489,6 +7489,11 @@ name|NMATCHES
 index|]
 decl_stmt|;
 name|char
+name|dev
+index|[
+name|PATH_MAX
+index|]
+decl_stmt|,
 modifier|*
 name|s
 decl_stmt|;
@@ -7525,7 +7530,7 @@ argument_list|(
 operator|&
 name|re
 argument_list|,
-literal|"^(/dev/[a-z/]+[0-9]+)([sp][0-9]+)?[a-h]?$"
+literal|"^(/dev/[a-z/]+[0-9]*)([sp][0-9]+)?[a-h]?(\\.journal)?$"
 argument_list|,
 name|REG_EXTENDED
 argument_list|)
@@ -7542,6 +7547,53 @@ argument_list|,
 name|rv
 argument_list|)
 expr_stmt|;
+name|strlcpy
+argument_list|(
+name|dev
+argument_list|,
+name|rootfs
+operator|.
+name|f_mntfromname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|s
+operator|=
+name|strstr
+argument_list|(
+name|dev
+argument_list|,
+literal|".eli"
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+name|memmove
+argument_list|(
+name|s
+argument_list|,
+name|s
+operator|+
+literal|4
+argument_list|,
+name|strlen
+argument_list|(
+name|s
+operator|+
+literal|4
+argument_list|)
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -7552,9 +7604,7 @@ argument_list|(
 operator|&
 name|re
 argument_list|,
-name|rootfs
-operator|.
-name|f_mntfromname
+name|dev
 argument_list|,
 name|NMATCHES
 argument_list|,
