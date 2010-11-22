@@ -760,6 +760,25 @@ end_struct
 
 begin_struct
 struct|struct
+name|thrmisc32
+block|{
+name|char
+name|pr_tname
+index|[
+name|MAXCOMLEN
+operator|+
+literal|1
+index|]
+decl_stmt|;
+name|u_int
+name|_pad
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|mq_attr32
 block|{
 name|int

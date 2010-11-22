@@ -3657,6 +3657,17 @@ begin_comment
 comment|/* Process state info. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NT_THRMISC
+value|7
+end_define
+
+begin_comment
+comment|/* Thread miscellaneous info. */
+end_comment
+
 begin_comment
 comment|/* Symbol Binding - ELFNN_ST_BIND - st_info */
 end_comment
