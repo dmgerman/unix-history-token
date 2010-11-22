@@ -96,6 +96,11 @@ name|register_t
 name|vsid
 parameter_list|)
 block|{
+comment|/* Mark segment no-execute */
+name|vsid
+operator||=
+name|SR_N
+expr_stmt|;
 name|isync
 argument_list|()
 expr_stmt|;
