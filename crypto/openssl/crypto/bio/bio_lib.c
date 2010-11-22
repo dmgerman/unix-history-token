@@ -286,10 +286,6 @@ name|a
 parameter_list|)
 block|{
 name|int
-name|ret
-init|=
-literal|0
-decl_stmt|,
 name|i
 decl_stmt|;
 if|if
@@ -444,8 +440,6 @@ operator|(
 literal|1
 operator|)
 return|;
-name|ret
-operator|=
 name|a
 operator|->
 name|method

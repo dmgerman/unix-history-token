@@ -684,6 +684,9 @@ operator|*
 name|extensions
 expr_stmt|;
 comment|/* [ 3 ] optional in v3 */
+name|ASN1_ENCODING
+name|enc
+decl_stmt|;
 block|}
 name|X509_CINF
 typedef|;

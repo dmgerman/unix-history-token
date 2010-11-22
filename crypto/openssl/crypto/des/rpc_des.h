@@ -163,7 +163,7 @@ begin_define
 define|#
 directive|define
 name|DESIOCBLOCK
-value|_IOWR(d, 6, struct desparams)
+value|_IOWR('d', 6, struct desparams)
 end_define
 
 begin_comment
@@ -174,7 +174,7 @@ begin_define
 define|#
 directive|define
 name|DESIOCQUICK
-value|_IOWR(d, 7, struct desparams)
+value|_IOWR('d', 7, struct desparams)
 end_define
 
 end_unit

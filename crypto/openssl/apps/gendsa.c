@@ -135,17 +135,6 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
-ifndef|#
-directive|ifndef
-name|OPENSSL_NO_ENGINE
-name|ENGINE
-modifier|*
-name|e
-init|=
-name|NULL
-decl_stmt|;
-endif|#
-directive|endif
 name|DSA
 modifier|*
 name|dsa
@@ -837,8 +826,6 @@ block|}
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_ENGINE
-name|e
-operator|=
 name|setup_engine
 argument_list|(
 name|bio_err

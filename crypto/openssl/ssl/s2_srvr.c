@@ -3178,13 +3178,6 @@ name|n
 decl_stmt|,
 name|hit
 decl_stmt|;
-name|STACK_OF
-argument_list|(
-name|SSL_CIPHER
-argument_list|)
-operator|*
-name|sk
-expr_stmt|;
 name|p
 operator|=
 operator|(
@@ -3542,14 +3535,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* lets send out the ciphers we like in the 			 * prefered order */
-name|sk
-operator|=
-name|s
-operator|->
-name|session
-operator|->
-name|ciphers
-expr_stmt|;
 name|n
 operator|=
 name|ssl_cipher_list_to_bytes
