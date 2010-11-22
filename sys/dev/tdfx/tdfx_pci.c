@@ -877,7 +877,7 @@ operator|-
 literal|1
 return|;
 block|}
-comment|/*  	 * make_dev registers the cdev to access the 3dfx card from /dev 	 *	use hex here for the dev num, simply to provide better support if> 10 	 * voodoo cards, for the mad. The user must set the link, or use MAKEDEV. 	 * Why would we want that many voodoo cards anyhow?  	 */
+comment|/*  	 * make_dev registers the cdev to access the 3dfx card from /dev 	 *	use hex here for the dev num, simply to provide better support if> 10 	 * voodoo cards, for the mad. The user must set the link. 	 * Why would we want that many voodoo cards anyhow?  	 */
 name|tdfx_info
 operator|->
 name|devt
