@@ -3765,6 +3765,8 @@ name|gctl_get_int
 argument_list|(
 name|req
 argument_list|,
+literal|"%s"
+argument_list|,
 name|opt
 argument_list|)
 condition|)
