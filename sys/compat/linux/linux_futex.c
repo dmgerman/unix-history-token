@@ -1976,13 +1976,15 @@ name|args
 parameter_list|)
 block|{
 name|int
-name|op_ret
+name|clockrt
 decl_stmt|,
-name|val
+name|nrwake
+decl_stmt|,
+name|op_ret
 decl_stmt|,
 name|ret
 decl_stmt|,
-name|nrwake
+name|val
 decl_stmt|;
 name|struct
 name|linux_emuldata
@@ -2012,15 +2014,54 @@ name|args
 operator|->
 name|op
 operator|=
-operator|(
 name|args
 operator|->
 name|op
 operator|&
 operator|~
 name|LINUX_FUTEX_PRIVATE_FLAG
-operator|)
 expr_stmt|;
+comment|/* 	 * Currently support for switching between CLOCK_MONOTONIC and 	 * CLOCK_REALTIME is not present. However Linux forbids the use of 	 * FUTEX_CLOCK_REALTIME with any op except FUTEX_WAIT_BITSET and 	 * FUTEX_WAIT_REQUEUE_PI. 	 */
+name|clockrt
+operator|=
+name|args
+operator|->
+name|op
+operator|&
+name|LINUX_FUTEX_CLOCK_REALTIME
+expr_stmt|;
+name|args
+operator|->
+name|op
+operator|=
+name|args
+operator|->
+name|op
+operator|&
+operator|~
+name|LINUX_FUTEX_CLOCK_REALTIME
+expr_stmt|;
+if|if
+condition|(
+name|clockrt
+operator|&&
+name|args
+operator|->
+name|op
+operator|!=
+name|LINUX_FUTEX_WAIT_BITSET
+operator|&&
+name|args
+operator|->
+name|op
+operator|!=
+name|LINUX_FUTEX_WAIT_REQUEUE_PI
+condition|)
+return|return
+operator|(
+name|ENOSYS
+operator|)
+return|;
 switch|switch
 condition|(
 name|args
@@ -2943,6 +2984,14 @@ case|case
 name|LINUX_FUTEX_LOCK_PI
 case|:
 comment|/* not yet implemented */
+name|linux_msg
+argument_list|(
+name|td
+argument_list|,
+literal|"linux_sys_futex: "
+literal|"op LINUX_FUTEX_LOCK_PI not implemented.\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOSYS
@@ -2952,6 +3001,14 @@ case|case
 name|LINUX_FUTEX_UNLOCK_PI
 case|:
 comment|/* not yet implemented */
+name|linux_msg
+argument_list|(
+name|td
+argument_list|,
+literal|"linux_sys_futex: "
+literal|"op LINUX_FUTEX_UNLOCK_PI not implemented.\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOSYS
@@ -2961,6 +3018,14 @@ case|case
 name|LINUX_FUTEX_TRYLOCK_PI
 case|:
 comment|/* not yet implemented */
+name|linux_msg
+argument_list|(
+name|td
+argument_list|,
+literal|"linux_sys_futex: "
+literal|"op LINUX_FUTEX_TRYLOCK_PI not implemented.\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOSYS
@@ -2990,22 +3055,12 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|linux_msg
 argument_list|(
-literal|"linux(%s (%d)) sys_futex: "
+name|td
+argument_list|,
+literal|"linux_sys_futex: "
 literal|"unsupported futex_requeue op\n"
-argument_list|,
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_comm
-argument_list|,
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_pid
 argument_list|)
 expr_stmt|;
 name|em
@@ -3020,9 +3075,45 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-default|default:
-name|printf
+case|case
+name|LINUX_FUTEX_WAIT_BITSET
+case|:
+comment|/* not yet implemented */
+name|linux_msg
 argument_list|(
+name|td
+argument_list|,
+literal|"linux_sys_futex: "
+literal|"op FUTEX_WAIT_BITSET not implemented.\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOSYS
+operator|)
+return|;
+case|case
+name|LINUX_FUTEX_WAIT_REQUEUE_PI
+case|:
+comment|/* not yet implemented */
+name|linux_msg
+argument_list|(
+name|td
+argument_list|,
+literal|"linux_sys_futex: "
+literal|"op FUTEX_WAIT_REQUEUE_PI not implemented.\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOSYS
+operator|)
+return|;
+default|default:
+name|linux_msg
+argument_list|(
+name|td
+argument_list|,
 literal|"linux_sys_futex: unknown op %d\n"
 argument_list|,
 name|args
