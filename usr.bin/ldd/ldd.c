@@ -1553,7 +1553,7 @@ name|e_ident
 index|[
 name|EI_OSABI
 index|]
-operator|&
+operator|==
 name|ELFOSABI_FREEBSD
 condition|)
 block|{
@@ -1781,7 +1781,7 @@ name|e_ident
 index|[
 name|EI_OSABI
 index|]
-operator|&
+operator|==
 name|ELFOSABI_FREEBSD
 condition|)
 block|{
