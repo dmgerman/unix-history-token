@@ -200,6 +200,12 @@ directive|include
 file|<dev/usb/usb_bus.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/usb/usb_pf.h>
+end_include
+
 begin_struct
 struct|struct
 name|usb_std_packet_size
@@ -7874,6 +7880,21 @@ endif|#
 directive|endif
 block|}
 block|}
+if|if
+condition|(
+name|xfer
+operator|->
+name|usb_state
+operator|!=
+name|USB_ST_SETUP
+condition|)
+name|usbpf_xfertap
+argument_list|(
+name|xfer
+argument_list|,
+name|USBPF_XFERTAP_DONE
+argument_list|)
+expr_stmt|;
 comment|/* call processing routine */
 call|(
 name|xfer
@@ -8417,6 +8438,13 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 literal|"start\n"
+argument_list|)
+expr_stmt|;
+name|usbpf_xfertap
+argument_list|(
+name|xfer
+argument_list|,
+name|USBPF_XFERTAP_SUBMIT
 argument_list|)
 expr_stmt|;
 comment|/* start the transfer */
@@ -8968,6 +8996,13 @@ block|}
 name|DPRINTF
 argument_list|(
 literal|"start\n"
+argument_list|)
+expr_stmt|;
+name|usbpf_xfertap
+argument_list|(
+name|xfer
+argument_list|,
+name|USBPF_XFERTAP_SUBMIT
 argument_list|)
 expr_stmt|;
 comment|/* start USB transfer */
