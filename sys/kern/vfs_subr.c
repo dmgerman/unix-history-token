@@ -858,16 +858,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Set to 1 to print out reclaim of active vnodes */
-end_comment
-
-begin_decl_stmt
-name|int
-name|prtactive
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * The workitem queue.  *  * It is useful to delay writes of file data and filesystem metadata  * for tens of seconds so that quickly created and deleted files need  * not waste disk bandwidth being created and removed. To realize this,  * we append vnodes to a "workitem" queue. When running with a soft  * updates implementation, most pending metadata dependencies should  * not wait for more than a few seconds. Thus, mounted on block devices  * are delayed only about a half the time that file data is delayed.  * Similarly, directory updates are more critical, so are only delayed  * about a third the time that file data is delayed. Thus, there are  * SYNCER_MAXDELAY queues that are processed round-robin at a rate of  * one each second (driven off the filesystem syncer process). The  * syncer_delayno variable indicates the next queue that is to be processed.  * Items that need to be processed soon are placed in this queue:  *  *	syncer_workitem_pending[syncer_delayno]  *  * A delay of fifteen seconds is done by placing the request fifteen  * entries later in the queue:  *  *	syncer_workitem_pending[(syncer_delayno + 15)& syncer_mask]  *  */
 end_comment
 

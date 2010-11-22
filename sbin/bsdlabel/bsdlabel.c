@@ -2467,6 +2467,8 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
+literal|"%s"
+argument_list|,
 name|specname
 argument_list|)
 expr_stmt|;

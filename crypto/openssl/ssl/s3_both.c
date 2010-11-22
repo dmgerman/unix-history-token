@@ -1181,6 +1181,10 @@ operator|&
 name|xs_ctx
 argument_list|)
 expr_stmt|;
+comment|/* Don't leave errors in the queue */
+name|ERR_clear_error
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|i

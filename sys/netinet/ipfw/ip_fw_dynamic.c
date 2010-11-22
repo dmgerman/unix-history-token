@@ -303,7 +303,8 @@ comment|/*  * Static variables followed by global ones  */
 end_comment
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 name|ipfw_dyn_rule
 operator|*
@@ -315,7 +316,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 name|u_int32_t
 argument_list|,
@@ -325,7 +327,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 name|u_int32_t
 argument_list|,
@@ -335,7 +338,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 expr|struct
 name|callout
@@ -475,7 +479,8 @@ comment|/*  * Timeouts for various events in handing dynamic rules.  */
 end_comment
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 name|u_int32_t
 argument_list|,
@@ -485,7 +490,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 name|u_int32_t
 argument_list|,
@@ -495,7 +501,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 name|u_int32_t
 argument_list|,
@@ -505,7 +512,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 name|u_int32_t
 argument_list|,
@@ -515,7 +523,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 name|u_int32_t
 argument_list|,
@@ -525,7 +534,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 name|u_int32_t
 argument_list|,
@@ -581,7 +591,8 @@ comment|/*  * Keepalives are sent if dyn_keepalive is set. They are sent every  
 end_comment
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 name|u_int32_t
 argument_list|,
@@ -591,7 +602,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 name|u_int32_t
 argument_list|,
@@ -601,7 +613,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 name|u_int32_t
 argument_list|,
@@ -632,7 +645,8 @@ value|VNET(dyn_keepalive)
 end_define
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 name|u_int32_t
 argument_list|,
@@ -646,7 +660,8 @@ comment|/* # of dynamic rules */
 end_comment
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 name|u_int32_t
 argument_list|,

@@ -107,7 +107,10 @@ decl_stmt|;
 name|char
 name|mode
 index|[
-literal|8
+sizeof|sizeof
+argument_list|(
+literal|"true"
+argument_list|)
 index|]
 decl_stmt|;
 name|openfirmware
@@ -207,7 +210,7 @@ condition|)
 name|OF_exit
 argument_list|()
 expr_stmt|;
-comment|/*  	 * Check if we run in real mode. If so, we do not need to map 	 * memory later on. 	 */
+comment|/* 	 * Check if we run in real mode. If so, we do not need to map 	 * memory later on. 	 */
 name|options
 operator|=
 name|OF_finddevice
@@ -215,6 +218,8 @@ argument_list|(
 literal|"/options"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|OF_getprop
 argument_list|(
 name|options
@@ -228,16 +233,14 @@ argument_list|(
 name|mode
 argument_list|)
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|strncmp
+operator|>
+literal|0
+operator|&&
+name|strcmp
 argument_list|(
 name|mode
 argument_list|,
 literal|"true"
-argument_list|,
-literal|4
 argument_list|)
 operator|==
 literal|0

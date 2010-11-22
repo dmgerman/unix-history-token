@@ -156,6 +156,14 @@ name|__start_set_vnet
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|__GLOBL
+argument_list|(
+name|__start_set_vnet
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|extern
 name|uintptr_t
@@ -163,6 +171,14 @@ modifier|*
 name|__stop_set_vnet
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|__GLOBL
+argument_list|(
+name|__stop_set_vnet
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#
@@ -540,21 +556,7 @@ name|t
 parameter_list|,
 name|n
 parameter_list|)
-define|\
-value|__GLOBL("__start_" VNET_SETNAME);					\     __GLOBL("__stop_" VNET_SETNAME);					\     t VNET_NAME(n) __section(VNET_SETNAME) __used
-end_define
-
-begin_define
-define|#
-directive|define
-name|STATIC_VNET_DEFINE
-parameter_list|(
-name|t
-parameter_list|,
-name|n
-parameter_list|)
-define|\
-value|VNET_DEFINE(static t, n)
+value|t VNET_NAME(n) __section(VNET_SETNAME) __used
 end_define
 
 begin_define
@@ -566,8 +568,7 @@ name|b
 parameter_list|,
 name|n
 parameter_list|)
-define|\
-value|(__typeof(VNET_NAME(n))*)((b) + (uintptr_t)&VNET_NAME(n))
+value|(__typeof(VNET_NAME(n))*)		\ 				    ((b) + (uintptr_t)&VNET_NAME(n))
 end_define
 
 begin_define
@@ -1270,18 +1271,6 @@ parameter_list|,
 name|n
 parameter_list|)
 value|t n
-end_define
-
-begin_define
-define|#
-directive|define
-name|STATIC_VNET_DEFINE
-parameter_list|(
-name|t
-parameter_list|,
-name|n
-parameter_list|)
-value|static t n
 end_define
 
 begin_define

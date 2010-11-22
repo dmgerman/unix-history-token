@@ -3594,14 +3594,11 @@ name|pt_base
 expr_stmt|;
 name|IdlePDPTma
 operator|=
-name|xpmap_ptom
-argument_list|(
-name|VTOP
+name|VTOM
 argument_list|(
 name|startinfo
 operator|->
 name|pt_base
-argument_list|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -3654,16 +3651,13 @@ index|[
 name|i
 index|]
 operator|=
-name|xpmap_ptom
-argument_list|(
-name|VTOP
+name|VTOM
 argument_list|(
 name|IdlePTD
 operator|+
 name|i
 operator|*
 name|PAGE_SIZE
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|l2_pages
@@ -3875,12 +3869,9 @@ argument_list|)
 expr_stmt|;
 name|IdlePDPTnewma
 operator|=
-name|xpmap_ptom
-argument_list|(
-name|VTOP
+name|VTOM
 argument_list|(
 name|IdlePDPTnew
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|IdlePTDnew
@@ -3924,9 +3915,7 @@ index|[
 name|i
 index|]
 operator|=
-name|xpmap_ptom
-argument_list|(
-name|VTOP
+name|VTOM
 argument_list|(
 operator|(
 name|uint8_t
@@ -3937,7 +3926,6 @@ operator|+
 name|i
 operator|*
 name|PAGE_SIZE
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * L3 	 * 	 * Copy the 4 machine addresses of the new PTDs in to the PDPT 	 *  	 */
@@ -4236,12 +4224,9 @@ argument_list|)
 expr_stmt|;
 name|xen_pgdpt_pin
 argument_list|(
-name|xpmap_ptom
-argument_list|(
-name|VTOP
+name|VTOM
 argument_list|(
 name|IdlePDPTnew
-argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4318,12 +4303,9 @@ name|PT_SET_MA
 argument_list|(
 name|cur_space
 argument_list|,
-name|xpmap_ptom
-argument_list|(
-name|VTOP
+name|VTOM
 argument_list|(
 name|cur_space
-argument_list|)
 argument_list|)
 operator||
 name|PG_V
@@ -4354,12 +4336,9 @@ argument_list|)
 expr_stmt|;
 name|xen_pt_pin
 argument_list|(
-name|xpmap_ptom
-argument_list|(
-name|VTOP
+name|VTOM
 argument_list|(
 name|cur_space
-argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4382,12 +4361,9 @@ name|vm_paddr_t
 argument_list|)
 argument_list|)
 argument_list|,
-name|xpmap_ptom
-argument_list|(
-name|VTOP
+name|VTOM
 argument_list|(
 name|cur_space
-argument_list|)
 argument_list|)
 operator||
 name|PG_KERNEL
@@ -4615,14 +4591,14 @@ if|#
 directive|if
 literal|0
 comment|/* add page table for KERNBASE */
-block|xen_queue_pt_update(IdlePTDma + KPTDI*sizeof(vm_paddr_t),  			    xpmap_ptom(VTOP(cur_space) | PG_KERNEL)); 	xen_flush_queue();
+block|xen_queue_pt_update(IdlePTDma + KPTDI*sizeof(vm_paddr_t),  			    VTOM(cur_space) | PG_KERNEL); 	xen_flush_queue();
 ifdef|#
 directive|ifdef
 name|PAE
-block|xen_queue_pt_update(pdir_shadow_ma[3] + KPTDI*sizeof(vm_paddr_t),  			    xpmap_ptom(VTOP(cur_space) | PG_V | PG_A));
+block|xen_queue_pt_update(pdir_shadow_ma[3] + KPTDI*sizeof(vm_paddr_t),  			    VTOM(cur_space) | PG_V | PG_A);
 else|#
 directive|else
-block|xen_queue_pt_update(pdir_shadow_ma + KPTDI*sizeof(vm_paddr_t),  			    xpmap_ptom(VTOP(cur_space) | PG_V | PG_A));
+block|xen_queue_pt_update(pdir_shadow_ma + KPTDI*sizeof(vm_paddr_t),  			    VTOM(cur_space) | PG_V | PG_A);
 endif|#
 directive|endif
 block|xen_flush_queue(); 	cur_space += PAGE_SIZE; 	printk("#6\n");
@@ -4720,12 +4696,9 @@ name|PT_SET_MA
 argument_list|(
 name|i
 argument_list|,
-name|xpmap_ptom
-argument_list|(
-name|VTOP
+name|VTOM
 argument_list|(
 name|i
-argument_list|)
 argument_list|)
 operator||
 name|PG_V

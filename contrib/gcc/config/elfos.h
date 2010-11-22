@@ -796,5 +796,35 @@ define|\
 value|do									\     {									\       const unsigned char *_ascii_bytes =				\ 	(const unsigned char *) (STR);					\       const unsigned char *limit = _ascii_bytes + (LENGTH);		\       const unsigned char *last_null = NULL;				\       unsigned bytes_in_chunk = 0;					\ 									\       for (; _ascii_bytes< limit; _ascii_bytes++)			\         {								\ 	  const unsigned char *p;					\ 									\ 	  if (bytes_in_chunk>= 60)					\ 	    {								\ 	      fprintf ((FILE), "\"\n");					\ 	      bytes_in_chunk = 0;					\ 	    }								\ 									\ 	  if (_ascii_bytes> last_null)					\ 	    {								\ 	      for (p = _ascii_bytes; p< limit&& *p != '\0'; p++)	\ 		continue;						\ 	      last_null = p;						\ 	    }								\ 	  else								\ 	    p = last_null;						\ 									\ 	  if (p< limit&& (p - _ascii_bytes)<= (long)STRING_LIMIT)	\ 	    {								\ 	      if (bytes_in_chunk> 0)					\ 		{							\ 		  fprintf ((FILE), "\"\n");				\ 		  bytes_in_chunk = 0;					\ 		}							\ 									\ 	      ASM_OUTPUT_LIMITED_STRING ((FILE), _ascii_bytes);		\ 	      _ascii_bytes = p;						\ 	    }								\ 	  else								\ 	    {								\ 	      register int escape;					\ 	      register unsigned ch;					\ 									\ 	      if (bytes_in_chunk == 0)					\ 		fprintf ((FILE), "%s\"", ASCII_DATA_ASM_OP);		\ 									\ 	      switch (escape = ESCAPES[ch = *_ascii_bytes])		\ 		{							\ 		case 0:							\ 		  putc (ch, (FILE));					\ 		  bytes_in_chunk++;					\ 		  break;						\ 		case 1:							\ 		  fprintf ((FILE), "\\%03o", ch);			\ 		  bytes_in_chunk += 4;					\ 		  break;						\ 		default:						\ 		  putc ('\\', (FILE));					\ 		  putc (escape, (FILE));				\ 		  bytes_in_chunk += 2;					\ 		  break;						\ 		}							\ 	    }								\ 	}								\ 									\       if (bytes_in_chunk> 0)						\         fprintf ((FILE), "\"\n");					\     }									\   while (0)
 end_define
 
+begin_comment
+comment|/* A C statement (sans semicolon) to output to the stdio stream STREAM    any text necessary for declaring the name of an external symbol    named NAME whch is referenced in this compilation but not defined.    It is needed to properly support non-default visibility.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ASM_OUTPUT_EXTERNAL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ASM_OUTPUT_EXTERNAL
+parameter_list|(
+name|FILE
+parameter_list|,
+name|DECL
+parameter_list|,
+name|NAME
+parameter_list|)
+define|\
+value|default_elf_asm_output_external (FILE, DECL, NAME)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 end_unit
 

@@ -701,7 +701,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Output something to declare an external symbol to the assembler.    (Most assemblers don't need this, so we normally output nothing.)    Do nothing if DECL is not external.  */
+comment|/* Queue for outputing something to declare an external symbol to the    assembler.  (Most assemblers don't need this, so we normally output    nothing.)  Do nothing if DECL is not external.  */
 end_comment
 
 begin_function_decl
@@ -2691,6 +2691,34 @@ name|default_valid_pointer_mode
 parameter_list|(
 name|enum
 name|machine_mode
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|default_elf_asm_output_external
+parameter_list|(
+name|FILE
+modifier|*
+name|file
+parameter_list|,
+name|tree
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|maybe_assemble_visibility
+parameter_list|(
+name|tree
 parameter_list|)
 function_decl|;
 end_function_decl

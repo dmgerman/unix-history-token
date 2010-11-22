@@ -1643,11 +1643,11 @@ literal|"#define is_digit(c)\t((is_type+SYNBASE)[(int)c]& ISDIGIT)"
 block|,
 literal|"#define is_eof(c)\t((c) == PEOF)"
 block|,
-literal|"#define is_alpha(c)\t(((c)< CTLESC || (c)> CTLQUOTEMARK)&& (is_type+SYNBASE)[(int)c]& (ISUPPER|ISLOWER))"
+literal|"#define is_alpha(c)\t((is_type+SYNBASE)[(int)c]& (ISUPPER|ISLOWER))"
 block|,
-literal|"#define is_name(c)\t(((c)< CTLESC || (c)> CTLQUOTEMARK)&& (is_type+SYNBASE)[(int)c]& (ISUPPER|ISLOWER|ISUNDER))"
+literal|"#define is_name(c)\t((is_type+SYNBASE)[(int)c]& (ISUPPER|ISLOWER|ISUNDER))"
 block|,
-literal|"#define is_in_name(c)\t(((c)< CTLESC || (c)> CTLQUOTEMARK)&& (is_type+SYNBASE)[(int)c]& (ISUPPER|ISLOWER|ISUNDER|ISDIGIT))"
+literal|"#define is_in_name(c)\t((is_type+SYNBASE)[(int)c]& (ISUPPER|ISLOWER|ISUNDER|ISDIGIT))"
 block|,
 literal|"#define is_special(c)\t((is_type+SYNBASE)[(int)c]& (ISSPECL|ISDIGIT))"
 block|,

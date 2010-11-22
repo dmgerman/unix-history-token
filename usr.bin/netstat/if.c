@@ -3260,6 +3260,14 @@ name|if_ierrors
 expr_stmt|;
 name|ip
 operator|->
+name|ift_id
+operator|=
+name|ifnet
+operator|.
+name|if_iqdrops
+expr_stmt|;
+name|ip
+operator|->
 name|ift_ib
 operator|=
 name|ifnet

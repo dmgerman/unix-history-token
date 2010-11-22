@@ -1019,6 +1019,13 @@ name|AMDPM_TSC_INVARIANT
 value|0x00000100
 end_define
 
+begin_define
+define|#
+directive|define
+name|AMDPM_CPB
+value|0x00000200
+end_define
+
 begin_comment
 comment|/*  * AMD extended function 8000_0008h ecx info  */
 end_comment
@@ -1225,6 +1232,20 @@ define|#
 directive|define
 name|MSR_PERFCTR1
 value|0x0c2
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSR_MPERF
+value|0x0e7
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSR_APERF
+value|0x0e8
 end_define
 
 begin_define
@@ -3249,6 +3270,13 @@ end_define
 begin_comment
 comment|/* extended features */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MSR_HWCR
+value|0xc0010015
+end_define
 
 begin_define
 define|#

@@ -1244,6 +1244,8 @@ name|gctl_get_ascii
 argument_list|(
 name|req
 argument_list|,
+literal|"%s"
+argument_list|,
 name|param
 argument_list|)
 expr_stmt|;
@@ -1604,6 +1606,8 @@ operator|=
 name|gctl_get_ascii
 argument_list|(
 name|req
+argument_list|,
+literal|"%s"
 argument_list|,
 name|param
 argument_list|)
@@ -2006,6 +2010,8 @@ name|gctl_get_ascii
 argument_list|(
 name|req
 argument_list|,
+literal|"%s"
+argument_list|,
 name|param
 argument_list|)
 expr_stmt|;
@@ -2092,9 +2098,14 @@ operator|.
 name|md_chunk_size
 argument_list|)
 operator|>
+call|(
+name|off_t
+call|)
+argument_list|(
 name|msize
 operator|-
 name|ssize
+argument_list|)
 condition|)
 name|md
 operator|.
@@ -2450,6 +2461,8 @@ operator|=
 name|gctl_get_ascii
 argument_list|(
 name|req
+argument_list|,
+literal|"%s"
 argument_list|,
 name|param
 argument_list|)
@@ -2860,6 +2873,8 @@ operator|=
 name|gctl_get_ascii
 argument_list|(
 name|req
+argument_list|,
+literal|"%s"
 argument_list|,
 name|param
 argument_list|)

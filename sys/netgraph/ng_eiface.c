@@ -437,7 +437,8 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 expr|struct
 name|unrhdr
@@ -1289,6 +1290,22 @@ name|IFF_BROADCAST
 operator||
 name|IFF_MULTICAST
 operator|)
+expr_stmt|;
+name|ifp
+operator|->
+name|if_capabilities
+operator|=
+name|IFCAP_VLAN_MTU
+operator||
+name|IFCAP_JUMBO_MTU
+expr_stmt|;
+name|ifp
+operator|->
+name|if_capenable
+operator|=
+name|IFCAP_VLAN_MTU
+operator||
+name|IFCAP_JUMBO_MTU
 expr_stmt|;
 comment|/* Give this node the same name as the interface (if possible) */
 if|if

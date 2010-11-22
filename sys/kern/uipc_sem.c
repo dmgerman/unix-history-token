@@ -4706,6 +4706,13 @@ argument_list|)
 expr_stmt|;
 name|p31b_setcfg
 argument_list|(
+name|CTL_P1003_1B_SEMAPHORES
+argument_list|,
+literal|200112L
+argument_list|)
+expr_stmt|;
+name|p31b_setcfg
+argument_list|(
 name|CTL_P1003_1B_SEM_NSEMS_MAX
 argument_list|,
 name|SEM_MAX
@@ -4784,6 +4791,13 @@ directive|endif
 name|syscall_helper_unregister
 argument_list|(
 name|ksem_syscalls
+argument_list|)
+expr_stmt|;
+name|p31b_setcfg
+argument_list|(
+name|CTL_P1003_1B_SEMAPHORES
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|hashdestroy

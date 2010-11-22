@@ -709,6 +709,24 @@ argument_list|(
 name|FLASH_BUF_SIZE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|buf
+operator|==
+name|NULL
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"malloc failed"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
+block|}
 name|offset
 operator|=
 literal|0

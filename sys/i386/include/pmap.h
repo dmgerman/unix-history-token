@@ -815,6 +815,16 @@ parameter_list|)
 value|xpmap_ptom(VM_PAGE_TO_PHYS((m)))
 end_define
 
+begin_define
+define|#
+directive|define
+name|VTOM
+parameter_list|(
+name|va
+parameter_list|)
+value|xpmap_ptom(VTOP(va))
+end_define
+
 begin_function
 specifier|static
 name|__inline

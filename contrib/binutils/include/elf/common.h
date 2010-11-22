@@ -2634,6 +2634,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|NT_THRMISC
+value|7
+end_define
+
+begin_comment
+comment|/* Contains copy of thrmisc struct */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|NT_PRXFPREG
 value|0x46e62b7f
 end_define

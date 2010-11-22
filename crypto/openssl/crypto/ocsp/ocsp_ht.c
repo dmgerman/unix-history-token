@@ -1284,7 +1284,7 @@ comment|/* Fall thru */
 case|case
 name|OHS_ASN1_HEADER
 case|:
-comment|/* Now reading ASN1 header: can read at least 6 bytes which 		 * is more than enough for any valid ASN1 SEQUENCE header 		 */
+comment|/* Now reading ASN1 header: can read at least 2 bytes which 		 * is enough for ASN1 SEQUENCE header and either length field 		 * or at least the length of the length field. 		 */
 name|n
 operator|=
 name|BIO_get_mem_data
@@ -1301,7 +1301,7 @@ if|if
 condition|(
 name|n
 operator|<
-literal|6
+literal|2
 condition|)
 goto|goto
 name|next_io
@@ -1339,6 +1339,16 @@ operator|&
 literal|0x80
 condition|)
 block|{
+comment|/* If MSB set on initial length octet we can now 			 * always read 6 octets: make sure we have them. 			 */
+if|if
+condition|(
+name|n
+operator|<
+literal|6
+condition|)
+goto|goto
+name|next_io
+goto|;
 name|n
 operator|=
 operator|*

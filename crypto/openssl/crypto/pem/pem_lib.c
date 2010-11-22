@@ -2298,9 +2298,6 @@ modifier|*
 name|cipher
 parameter_list|)
 block|{
-name|int
-name|o
-decl_stmt|;
 specifier|const
 name|EVP_CIPHER
 modifier|*
@@ -2611,13 +2608,6 @@ operator|*
 name|header
 operator|=
 literal|'\0'
-expr_stmt|;
-name|o
-operator|=
-name|OBJ_sn2nid
-argument_list|(
-name|p
-argument_list|)
 expr_stmt|;
 name|cipher
 operator|->

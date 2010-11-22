@@ -186,7 +186,8 @@ value|mtx_assert(&scope6_lock, MA_OWNED)
 end_define
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 expr|struct
 name|scope6_id

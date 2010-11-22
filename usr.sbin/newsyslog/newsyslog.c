@@ -595,7 +595,7 @@ comment|/* Filename of the log file */
 name|time_t
 name|t
 decl_stmt|;
-comment|/* Parses timestamp of the logfile */
+comment|/* Parsed timestamp of the logfile */
 block|}
 struct|;
 end_struct

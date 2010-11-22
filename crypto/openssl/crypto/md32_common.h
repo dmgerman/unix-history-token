@@ -728,7 +728,7 @@ name|c
 parameter_list|,
 name|l
 parameter_list|)
-value|({ asm ("lrv	%0,%1"			\ 				   :"=d"(l) :"m"(*(const unsigned int *)(c));\ 				   (c)+=4; (l);				})
+value|({ asm ("lrv	%0,%1"			\ 				   :"=d"(l) :"m"(*(const unsigned int *)(c)));\ 				   (c)+=4; (l);				})
 end_define
 
 begin_define

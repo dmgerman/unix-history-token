@@ -2809,8 +2809,6 @@ decl_stmt|,
 name|c2
 decl_stmt|,
 name|neg
-decl_stmt|,
-name|zero
 decl_stmt|;
 name|BN_ULONG
 name|ln
@@ -2909,8 +2907,6 @@ operator|-
 name|n
 argument_list|)
 expr_stmt|;
-name|zero
-operator|=
 name|neg
 operator|=
 literal|0
@@ -2983,10 +2979,6 @@ case|case
 operator|-
 literal|3
 case|:
-name|zero
-operator|=
-literal|1
-expr_stmt|;
 comment|/* break; */
 case|case
 operator|-
@@ -3057,10 +3049,6 @@ case|:
 case|case
 literal|1
 case|:
-name|zero
-operator|=
-literal|1
-expr_stmt|;
 comment|/* break; */
 case|case
 literal|2
@@ -3123,10 +3111,6 @@ break|break;
 case|case
 literal|3
 case|:
-name|zero
-operator|=
-literal|1
-expr_stmt|;
 comment|/* break; */
 case|case
 literal|4
@@ -5958,11 +5942,6 @@ operator|<=
 literal|1
 condition|)
 block|{
-name|int
-name|sav_j
-init|=
-literal|0
-decl_stmt|;
 comment|/* Find out the power of two lower or equal 			   to the longest of the two numbers */
 if|if
 condition|(
@@ -6001,10 +5980,6 @@ name|bl
 argument_list|)
 expr_stmt|;
 block|}
-name|sav_j
-operator|=
-name|j
-expr_stmt|;
 name|j
 operator|=
 literal|1

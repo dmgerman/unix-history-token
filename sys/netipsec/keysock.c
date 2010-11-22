@@ -198,7 +198,8 @@ struct|;
 end_struct
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 expr|struct
 name|key_cb

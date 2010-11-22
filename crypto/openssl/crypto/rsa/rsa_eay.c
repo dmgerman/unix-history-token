@@ -2919,6 +2919,9 @@ operator|!=
 literal|12
 operator|)
 condition|)
+if|if
+condition|(
+operator|!
 name|BN_sub
 argument_list|(
 name|ret
@@ -2929,7 +2932,10 @@ name|n
 argument_list|,
 name|ret
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|err
+goto|;
 name|p
 operator|=
 name|buf

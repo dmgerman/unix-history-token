@@ -272,6 +272,15 @@ name|siginfo32
 name|pl_siginfo
 decl_stmt|;
 comment|/* siginfo for signal */
+name|char
+name|pl_tdname
+index|[
+name|MAXCOMLEN
+operator|+
+literal|1
+index|]
+decl_stmt|;
+comment|/* LWP name. */
 block|}
 struct|;
 end_struct
@@ -1929,6 +1938,17 @@ operator|&
 name|pl32
 operator|->
 name|pl_siginfo
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|pl32
+operator|->
+name|pl_tdname
+argument_list|,
+name|pl
+operator|->
+name|pl_tdname
 argument_list|)
 expr_stmt|;
 block|}
@@ -4698,6 +4718,17 @@ operator|=
 name|td2
 operator|->
 name|td_siglist
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|pl
+operator|->
+name|pl_tdname
+argument_list|,
+name|td2
+operator|->
+name|td_name
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef

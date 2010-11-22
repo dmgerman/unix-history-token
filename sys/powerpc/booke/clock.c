@@ -232,7 +232,8 @@ struct|;
 end_struct
 
 begin_expr_stmt
-name|STATIC_DPCPU_DEFINE
+specifier|static
+name|DPCPU_DEFINE
 argument_list|(
 expr|struct
 name|decr_state

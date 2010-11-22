@@ -3045,11 +3045,6 @@ operator|->
 name|resident_page_count
 operator|--
 expr_stmt|;
-name|object
-operator|->
-name|generation
-operator|++
-expr_stmt|;
 comment|/* 	 * The vnode may now be recycled. 	 */
 if|if
 condition|(
@@ -6160,67 +6155,34 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|m
-operator|->
-name|busy
-operator|||
 name|VM_PAGE_IS_FREE
 argument_list|(
 name|m
 argument_list|)
 condition|)
-block|{
-name|printf
+name|panic
 argument_list|(
-literal|"vm_page_free: pindex(%lu), busy(%d), VPO_BUSY(%d), hold(%d)\n"
-argument_list|,
-operator|(
-name|u_long
-operator|)
-name|m
-operator|->
-name|pindex
+literal|"vm_page_free: freeing free page %p"
 argument_list|,
 name|m
-operator|->
-name|busy
-argument_list|,
-operator|(
-name|m
-operator|->
-name|oflags
-operator|&
-name|VPO_BUSY
-operator|)
-condition|?
-literal|1
-else|:
-literal|0
-argument_list|,
-name|m
-operator|->
-name|hold_count
 argument_list|)
 expr_stmt|;
+elseif|else
 if|if
 condition|(
-name|VM_PAGE_IS_FREE
-argument_list|(
 name|m
-argument_list|)
+operator|->
+name|busy
+operator|!=
+literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"vm_page_free: freeing free page"
+literal|"vm_page_free: freeing busy page %p"
+argument_list|,
+name|m
 argument_list|)
 expr_stmt|;
-else|else
-name|panic
-argument_list|(
-literal|"vm_page_free: freeing busy page"
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * unqueue, then remove page.  Note that we cannot destroy 	 * the page here because we do not want to call the pager's 	 * callback routine until after we've put the page on the 	 * appropriate free queue. 	 */
 if|if
 condition|(
@@ -6279,39 +6241,13 @@ name|wire_count
 operator|!=
 literal|0
 condition|)
-block|{
-if|if
-condition|(
-name|m
-operator|->
-name|wire_count
-operator|>
-literal|1
-condition|)
-block|{
 name|panic
 argument_list|(
-literal|"vm_page_free: invalid wire count (%d), pindex: 0x%lx"
+literal|"vm_page_free: freeing wired page %p"
 argument_list|,
 name|m
-operator|->
-name|wire_count
-argument_list|,
-operator|(
-name|long
-operator|)
-name|m
-operator|->
-name|pindex
 argument_list|)
 expr_stmt|;
-block|}
-name|panic
-argument_list|(
-literal|"vm_page_free: freeing wired page"
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|m
@@ -7320,11 +7256,6 @@ name|object
 operator|->
 name|resident_page_count
 operator|--
-expr_stmt|;
-name|object
-operator|->
-name|generation
-operator|++
 expr_stmt|;
 comment|/* 	 * Restore the default memory attribute to the page. 	 */
 if|if
@@ -8678,13 +8609,6 @@ name|dirty
 operator|&=
 operator|~
 name|bits
-expr_stmt|;
-name|m
-operator|->
-name|object
-operator|->
-name|generation
-operator|++
 expr_stmt|;
 block|}
 comment|/*  * vm_page_zero_invalid()  *  *	The kernel assumes that the invalid portions of a page contain   *	garbage, but such pages can be mapped into memory by user code.  *	When this occurs, we must zero out the non-valid portions of the  *	page so user code sees what it expects.  *  *	Pages are most often semi-valid when the end of a file is mapped   *	into memory and the file's size is not page aligned.  */

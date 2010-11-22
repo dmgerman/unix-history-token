@@ -582,9 +582,6 @@ argument_list|(
 name|dev
 argument_list|)
 operator|!=
-operator|(
-name|u_int
-operator|)
 name|mymajor
 operator|||
 operator|(

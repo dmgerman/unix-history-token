@@ -1704,17 +1704,6 @@ name|struct
 name|route_in6
 name|ro
 decl_stmt|;
-name|bzero
-argument_list|(
-operator|&
-name|ro
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ro
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|IN6_IS_ADDR_MULTICAST
@@ -1850,6 +1839,17 @@ operator|.
 name|rcvif
 operator|=
 name|NULL
+expr_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|ro
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ro
+argument_list|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -5030,7 +5030,8 @@ struct|;
 end_struct
 
 begin_expr_stmt
-name|STATIC_VNET_DEFINE
+specifier|static
+name|VNET_DEFINE
 argument_list|(
 name|TAILQ_HEAD
 argument_list|(,

@@ -1934,6 +1934,8 @@ name|gctl_get_ascii
 argument_list|(
 name|req
 argument_list|,
+literal|"%s"
+argument_list|,
 name|argname
 argument_list|)
 expr_stmt|;

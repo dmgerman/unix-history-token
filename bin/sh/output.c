@@ -322,13 +322,35 @@ end_endif
 
 begin_macro
 unit|void
-name|out1str
+name|outcslow
 argument_list|(
-argument|const char *p
+argument|int c
+argument_list|,
+argument|struct output *file
 argument_list|)
 end_macro
 
 begin_block
+block|{
+name|outc
+argument_list|(
+name|c
+argument_list|,
+name|file
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_function
+name|void
+name|out1str
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|p
+parameter_list|)
 block|{
 name|outstr
 argument_list|(
@@ -338,7 +360,7 @@ name|out1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|void
@@ -538,7 +560,7 @@ if|if
 condition|(
 name|inquotes
 condition|)
-name|outc
+name|outcslow
 argument_list|(
 literal|'\''
 argument_list|,
@@ -563,7 +585,7 @@ condition|(
 operator|!
 name|inquotes
 condition|)
-name|outc
+name|outcslow
 argument_list|(
 literal|'\''
 argument_list|,
@@ -587,7 +609,7 @@ if|if
 condition|(
 name|inquotes
 condition|)
-name|outc
+name|outcslow
 argument_list|(
 literal|'\''
 argument_list|,

@@ -1000,9 +1000,6 @@ decl_stmt|;
 name|unsigned
 name|char
 modifier|*
-name|to
-decl_stmt|,
-modifier|*
 name|s
 decl_stmt|;
 name|long
@@ -1154,10 +1151,6 @@ goto|goto
 name|err
 goto|;
 block|}
-name|to
-operator|=
-name|s
-expr_stmt|;
 name|ret
 operator|->
 name|type

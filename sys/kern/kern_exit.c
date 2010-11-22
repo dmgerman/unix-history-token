@@ -611,6 +611,13 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|p
+operator|->
+name|p_xstat
+operator|=
+name|rv
+expr_stmt|;
+comment|/* Let event handler change exit status */
 name|PROC_UNLOCK
 argument_list|(
 name|p
@@ -744,6 +751,13 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|rv
+operator|=
+name|p
+operator|->
+name|p_xstat
+expr_stmt|;
+comment|/* Event handler could change exit status */
 name|stopprofclock
 argument_list|(
 name|p
@@ -1401,12 +1415,6 @@ name|PROC_LOCK
 argument_list|(
 name|p
 argument_list|)
-expr_stmt|;
-name|p
-operator|->
-name|p_xstat
-operator|=
-name|rv
 expr_stmt|;
 name|p
 operator|->

@@ -4899,12 +4899,14 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-operator|&
 name|se
 operator|->
 name|se_meshid
-operator|==
-name|NULL
+index|[
+literal|0
+index|]
+operator|!=
+name|IEEE80211_ELEMID_MESHID
 condition|)
 name|fail
 operator||=
