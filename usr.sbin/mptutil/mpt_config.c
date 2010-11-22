@@ -123,16 +123,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|powerof2
-parameter_list|(
-name|x
-parameter_list|)
-value|((((x)-1)&(x))==0)
-end_define
-
 begin_function
 specifier|static
 name|long
