@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2005-2008 Daniel Braniss<danny@cs.huji.ac.il>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*-  * Copyright (c) 2005-2010 Daniel Braniss<danny@cs.huji.ac.il>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_comment
@@ -157,7 +157,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"iscsi.h"
+file|<dev/iscsi/initiator/iscsi.h>
 end_include
 
 begin_include
@@ -1350,7 +1350,7 @@ if|if
 condition|(
 name|sysctlbyname
 argument_list|(
-literal|"net.iscsi.isid"
+literal|"net.iscsi_initiator.isid"
 argument_list|,
 operator|(
 name|void
@@ -1582,7 +1582,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|doCAM
 parameter_list|(
 name|isess_t
@@ -1603,6 +1603,8 @@ name|ccb
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|n
 decl_stmt|;
 if|if
 condition|(
@@ -1632,11 +1634,13 @@ argument_list|,
 name|errno
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+literal|0
+return|;
 block|}
 name|debug
 argument_list|(
-literal|2
+literal|1
 argument_list|,
 literal|"nluns=%d"
 argument_list|,
@@ -1650,6 +1654,8 @@ expr_stmt|;
 comment|/*       | for now will do this for each lun ...       */
 for|for
 control|(
+name|n
+operator|=
 name|i
 operator|=
 literal|0
@@ -1712,14 +1718,7 @@ name|cam
 operator|.
 name|target_id
 argument_list|,
-name|sess
-operator|->
-name|cam
-operator|.
-name|target_lun
-index|[
 name|i
-index|]
 argument_list|,
 name|O_RDWR
 argument_list|,
@@ -1735,15 +1734,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|syslog
-argument_list|(
-name|LOG_WARNING
-argument_list|,
-literal|"%s"
-argument_list|,
-name|cam_errbuf
-argument_list|)
-expr_stmt|;
+comment|//syslog(LOG_WARNING, "%s", cam_errbuf);
 name|debug
 argument_list|(
 literal|3
@@ -1854,9 +1845,9 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|syslog
+name|debug
 argument_list|(
-name|LOG_WARNING
+literal|2
 argument_list|,
 literal|"%s"
 argument_list|,
@@ -1889,6 +1880,10 @@ expr_stmt|;
 comment|// cam_error_print(sess->camdev, ccb, CAM_ESF_ALL, CAM_EPF_ALL, stderr);
 block|}
 else|else
+block|{
+name|n
+operator|++
+expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_INFO
@@ -1904,6 +1899,7 @@ operator|.
 name|openings
 argument_list|)
 expr_stmt|;
+block|}
 name|cam_freeccb
 argument_list|(
 name|ccb
@@ -1917,6 +1913,9 @@ name|camdev
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+name|n
+return|;
 block|}
 end_function
 
@@ -2026,6 +2025,58 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|sess
+operator|->
+name|op
+operator|->
+name|pidfile
+operator|!=
+name|NULL
+condition|)
+block|{
+name|FILE
+modifier|*
+name|pidf
+decl_stmt|;
+name|pidf
+operator|=
+name|fopen
+argument_list|(
+name|sess
+operator|->
+name|op
+operator|->
+name|pidfile
+argument_list|,
+literal|"w"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pidf
+operator|!=
+name|NULL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|pidf
+argument_list|,
+literal|"%d\n"
+argument_list|,
+name|getpid
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|pidf
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 name|openlog
 argument_list|(
 literal|"iscontrol"
@@ -2074,11 +2125,36 @@ operator|-
 literal|1
 return|;
 block|}
+if|if
+condition|(
 name|doCAM
 argument_list|(
 name|sess
 argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"no device found"
+argument_list|)
 expr_stmt|;
+name|ioctl
+argument_list|(
+name|sess
+operator|->
+name|fd
+argument_list|,
+name|ISCSISTOP
+argument_list|)
+expr_stmt|;
+return|return
+name|T15
+return|;
+block|}
 block|}
 else|else
 block|{
@@ -2179,6 +2255,10 @@ operator||
 name|SESS_RECONNECT
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|vflag
+condition|)
 name|printf
 argument_list|(
 literal|"iscontrol: supervise starting main loop\n"
@@ -2262,6 +2342,19 @@ operator|&
 name|SESS_DISCONNECT
 condition|)
 block|{
+name|sess
+operator|->
+name|flags
+operator|&=
+operator|~
+name|SESS_FULLFEATURE
+expr_stmt|;
+return|return
+name|T9
+return|;
+block|}
+else|else
+block|{
 name|val
 operator|=
 literal|0
@@ -2287,19 +2380,6 @@ literal|"ISCSISTOP"
 argument_list|)
 expr_stmt|;
 block|}
-name|sess
-operator|->
-name|flags
-operator|&=
-operator|~
-name|SESS_FULLFEATURE
-expr_stmt|;
-return|return
-name|T9
-return|;
-block|}
-else|else
-block|{
 name|sess
 operator|->
 name|flags
@@ -2351,7 +2431,7 @@ name|ptr
 operator|=
 name|pp
 operator|->
-name|ds
+name|ds_addr
 expr_stmt|;
 while|while
 condition|(
@@ -2759,9 +2839,37 @@ name|flags
 operator|&
 name|SESS_DISCONNECT
 condition|)
+block|{
+name|int
+name|val
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|sess
+operator|->
+name|fd
+argument_list|,
+name|ISCSISTOP
+argument_list|,
+operator|&
+name|val
+argument_list|)
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"ISCSISTOP"
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 literal|0
 return|;
+block|}
 return|return
 name|T13
 return|;
@@ -2902,17 +3010,9 @@ end_typedef
 begin_escape
 end_escape
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|S1: FREE       S2: XPT_WAIT       S4: IN_LOGIN       S5: LOGGED_IN       S6: IN_LOGOUT       S7: LOGOUT_REQUESTED       S8: CLEANUP_WAIT                       -------<-------------+          +--------->/ S1    \<----+       |       T13|       +->\       /<-+   \      |          |      /    ---+---    \   \     |          |     /        |     T2 \   |    |          |  T8 |        |T1       |  |    |          |     |        |        /   |T7  |          |     |        |       /    |    |          |     |        |      /     |    |          |     |        V     /     /     |          |     |     ------- /     /      |          |     |    / S2    \     /       |          |     |    \       /    /        |          |     |     ---+---    /         |          |     |        |T4    /          |          |     |        V     /           | T18          |     |     ------- /            |          |     |    / S4    \             |          |     |    \       /             |          |     |     ---+---              |         T15          |     |        |T5      +--------+---------+          |     |        |       /T16+-----+------+  |          |     |        |      /   -+-----+--+   |  |          |     |        |     /   /  S7   \  |T12|  |          |     |        |    / +->\       /<-+   V  V          |     |        |   / /    -+-----       -------          |     |        |  / /T11   |T10        /  S8   \          |     |        V / /       V  +----+   \       /          |     |      ---+-+-      ----+--  |    -------          |     |     / S5    \T9  / S6    \<+    ^          |     +-----\       /--->\       / T14  |          |            -------      --+----+------+T17          +---------------------------+
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/**       S1: FREE       S2: XPT_WAIT       S4: IN_LOGIN       S5: LOGGED_IN       S6: IN_LOGOUT       S7: LOGOUT_REQUESTED       S8: CLEANUP_WAIT                       -------<-------------+          +--------->/ S1    \<----+       |       T13|       +->\       /<-+   \      |          |      /    ---+---    \   \     |          |     /        |     T2 \   |    |          |  T8 |        |T1       |  |    |          |     |        |        /   |T7  |          |     |        |       /    |    |          |     |        |      /     |    |          |     |        V     /     /     |          |     |     ------- /     /      |          |     |    / S2    \     /       |          |     |    \       /    /        |          |     |     ---+---    /         |          |     |        |T4    /          |          |     |        V     /           | T18          |     |     ------- /            |          |     |    / S4    \             |          |     |    \       /             |          |     |     ---+---              |         T15          |     |        |T5      +--------+---------+          |     |        |       /T16+-----+------+  |          |     |        |      /   -+-----+--+   |  |          |     |        |     /   /  S7   \  |T12|  |          |     |        |    / +->\       /<-+   V  V          |     |        |   / /    -+-----       -------          |     |        |  / /T11   |T10        /  S8   \          |     |        V / /       V  +----+   \       /          |     |      ---+-+-      ----+--  |    -------          |     |     / S5    \T9  / S6    \<+    ^          |     +-----\       /--->\       / T14  |          |            -------      --+----+------+T17          +---------------------------+ */
+end_comment
 
 begin_function
 name|int

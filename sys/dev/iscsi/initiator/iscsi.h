@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2005-2008 Daniel Braniss<danny@cs.huji.ac.il>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2005-2010 Daniel Braniss<danny@cs.huji.ac.il>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
-comment|/*  | $Id: iscsi.h,v 1.17 2006/12/01 09:10:17 danny Exp danny $  */
+comment|/*  | $Id: iscsi.h 743 2009-08-08 10:54:53Z danny $  */
 end_comment
 
 begin_define
@@ -56,18 +56,7 @@ begin_define
 define|#
 directive|define
 name|ISCSI_MAX_TARGETS
-value|4
-end_define
-
-begin_comment
-comment|//64
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ISCSI_MAX_LUNS
-value|4
+value|64
 end_define
 
 begin_comment
@@ -1468,9 +1457,13 @@ name|union
 name|ipdu_u
 name|ipdu
 decl_stmt|;
+name|u_int
+name|hdr_dig
+decl_stmt|;
+comment|// header digest
 name|ahs_t
 modifier|*
-name|ahs
+name|ahs_addr
 decl_stmt|;
 name|u_int
 name|ahs_len
@@ -1479,13 +1472,9 @@ name|u_int
 name|ahs_size
 decl_stmt|;
 comment|// the allocated size
-name|u_int
-name|hdr_dig
-decl_stmt|;
-comment|// header digest
 name|u_char
 modifier|*
-name|ds
+name|ds_addr
 decl_stmt|;
 name|u_int
 name|ds_len
@@ -1637,6 +1626,10 @@ name|char
 modifier|*
 name|iqn
 decl_stmt|;
+name|char
+modifier|*
+name|pidfile
+decl_stmt|;
 block|}
 name|isc_opt_t
 typedef|;
@@ -1736,12 +1729,6 @@ name|target_id
 decl_stmt|;
 name|int
 name|target_nluns
-decl_stmt|;
-name|lun_id_t
-name|target_lun
-index|[
-name|ISCSI_MAX_LUNS
-index|]
 decl_stmt|;
 block|}
 name|iscsi_cam_t
