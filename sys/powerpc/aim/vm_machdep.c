@@ -746,21 +746,6 @@ block|{ }
 end_function
 
 begin_comment
-comment|/*  * Reset back to firmware.  */
-end_comment
-
-begin_function
-name|void
-name|cpu_reset
-parameter_list|()
-block|{
-name|OF_reboot
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Allocate a pool of sf_bufs (sendfile(2) or "super-fast" if you prefer. :-))  */
 end_comment
 
