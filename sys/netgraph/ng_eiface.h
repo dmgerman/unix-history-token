@@ -74,7 +74,7 @@ begin_define
 define|#
 directive|define
 name|NG_EIFACE_MTU_MAX
-value|2312
+value|ETHER_MAX_LEN_JUMBO
 end_define
 
 begin_define
