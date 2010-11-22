@@ -587,30 +587,6 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
-comment|/* XXX Dow sanity check. Dow is not used, so should we check it? */
-if|if
-condition|(
-name|ct
-operator|->
-name|dow
-operator|!=
-operator|-
-literal|1
-operator|&&
-name|ct
-operator|->
-name|dow
-operator|!=
-name|day_of_week
-argument_list|(
-name|days
-argument_list|)
-condition|)
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
 comment|/* Add hours, minutes, seconds. */
 name|secs
 operator|=
