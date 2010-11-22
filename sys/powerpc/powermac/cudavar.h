@@ -292,6 +292,9 @@ specifier|volatile
 name|int
 name|sc_autopoll
 decl_stmt|;
+name|uint32_t
+name|sc_rtc
+decl_stmt|;
 name|int
 name|sc_i2c_read_len
 decl_stmt|;
