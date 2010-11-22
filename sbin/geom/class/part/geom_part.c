@@ -640,21 +640,9 @@ literal|0
 block|,
 name|gpart_backup
 block|,
-block|{
-block|{
-literal|'l'
+name|G_NULL_OPTS
 block|,
-literal|"backup_labels"
-block|,
-name|NULL
-block|,
-name|G_TYPE_BOOL
-block|}
-block|,
-name|G_OPT_SENTINEL
-block|}
-block|,
-literal|"[-l] geom"
+literal|"geom"
 block|}
 block|,
 block|{
@@ -1086,6 +1074,16 @@ name|G_TYPE_BOOL
 block|}
 block|,
 block|{
+literal|'l'
+block|,
+literal|"restore_labels"
+block|,
+name|NULL
+block|,
+name|G_TYPE_BOOL
+block|}
+block|,
+block|{
 literal|'f'
 block|,
 literal|"flags"
@@ -1098,7 +1096,7 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
-literal|"[-F] [-f flags] provider [...]"
+literal|"[-lF] [-f flags] provider [...]"
 block|}
 block|,
 block|{
@@ -4106,8 +4104,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|,
-name|labels
-decl_stmt|,
 name|i
 decl_stmt|,
 name|windex
@@ -4225,15 +4221,6 @@ name|NULL
 condition|)
 name|abort
 argument_list|()
-expr_stmt|;
-name|labels
-operator|=
-name|gctl_get_int
-argument_list|(
-name|req
-argument_list|,
-literal|"backup_labels"
-argument_list|)
 expr_stmt|;
 name|gp
 operator|=
@@ -4520,7 +4507,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-*s %*s %*jd %*jd"
+literal|"%-*s %*s %*jd %*jd %s %s\n"
 argument_list|,
 name|windex
 argument_list|,
@@ -4553,26 +4540,16 @@ operator|(
 name|intmax_t
 operator|)
 name|length
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|labels
-operator|&&
+argument_list|,
+operator|(
 name|s
 operator|!=
 name|NULL
-condition|)
-name|printf
-argument_list|(
-literal|" %s"
-argument_list|,
+operator|)
+condition|?
 name|s
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|" %s\n"
+else|:
+literal|""
 argument_list|,
 name|fmtattrib
 argument_list|(
@@ -4728,6 +4705,8 @@ decl_stmt|,
 name|nargs
 decl_stmt|,
 name|created
+decl_stmt|,
+name|rl
 decl_stmt|;
 name|intmax_t
 name|n
@@ -4770,6 +4749,15 @@ argument_list|(
 name|req
 argument_list|,
 literal|"flags"
+argument_list|)
+expr_stmt|;
+name|rl
+operator|=
+name|gctl_get_int
+argument_list|(
+name|req
+argument_list|,
+literal|"restore_labels"
 argument_list|)
 expr_stmt|;
 name|s
@@ -5116,6 +5104,10 @@ if|if
 condition|(
 name|l
 operator|==
+literal|1
+operator|||
+name|l
+operator|==
 literal|2
 condition|)
 block|{
@@ -5131,14 +5123,24 @@ argument_list|,
 literal|"Incorrect backup format."
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|l
+operator|==
+literal|2
+condition|)
 name|n
 operator|=
-name|atoi
+name|strtoimax
 argument_list|(
 name|argv
 index|[
 literal|1
 index|]
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 for|for
@@ -5170,20 +5172,6 @@ name|r
 operator|=
 name|gctl_get_handle
 argument_list|()
-expr_stmt|;
-name|n
-operator|=
-name|strtoimax
-argument_list|(
-name|argv
-index|[
-literal|1
-index|]
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
-argument_list|)
 expr_stmt|;
 name|gctl_ro_param
 argument_list|(
@@ -5226,6 +5214,12 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|l
+operator|==
+literal|2
+condition|)
 name|gctl_ro_param
 argument_list|(
 name|r
@@ -5536,6 +5530,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|rl
+operator|!=
+literal|0
+operator|&&
 name|label
 operator|!=
 name|NULL
