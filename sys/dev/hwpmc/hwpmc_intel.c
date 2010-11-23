@@ -447,6 +447,14 @@ case|case
 literal|0x1A
 case|:
 case|case
+literal|0x1E
+case|:
+comment|/* Per Intel document 253669-032 9/2009, pages A-2 and A-57 */
+case|case
+literal|0x1F
+case|:
+comment|/* Per Intel document 253669-032 9/2009, pages A-2 and A-57 */
+case|case
 literal|0x2E
 case|:
 name|cputype
