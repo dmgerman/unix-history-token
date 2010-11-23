@@ -1109,6 +1109,17 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|void
+name|InitializeSListHead
+parameter_list|(
+name|slist_header
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|slist_entry
 modifier|*
 name|ntoskrnl_popsl
