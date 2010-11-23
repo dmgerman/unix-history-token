@@ -2907,6 +2907,9 @@ decl_stmt|;
 name|u_int
 name|atapi
 decl_stmt|;
+name|u_int
+name|caps
+decl_stmt|;
 block|}
 struct|;
 end_struct
