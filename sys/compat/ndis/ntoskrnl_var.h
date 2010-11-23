@@ -4865,6 +4865,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|STATUS_ACCESS_VIOLATION
+value|0xC0000005
+end_define
+
+begin_define
+define|#
+directive|define
 name|STATUS_INVALID_PARAMETER
 value|0xC000000D
 end_define
