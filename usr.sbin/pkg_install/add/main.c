@@ -1234,6 +1234,13 @@ literal|2
 index|]
 operator|==
 literal|'g'
+operator|||
+name|ptr
+index|[
+literal|2
+index|]
+operator|==
+literal|'x'
 operator|)
 operator|&&
 name|ptr

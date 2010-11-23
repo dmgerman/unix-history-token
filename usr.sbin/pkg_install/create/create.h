@@ -217,6 +217,8 @@ block|,
 name|BZIP
 block|,
 name|BZIP2
+block|,
+name|XZ
 block|}
 enum|;
 end_enum
