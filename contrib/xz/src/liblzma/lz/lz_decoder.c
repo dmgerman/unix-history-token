@@ -269,7 +269,7 @@ name|dict
 operator|.
 name|pos
 operator|+
-name|MIN
+name|my_min
 argument_list|(
 name|out_size
 operator|-
@@ -1154,7 +1154,7 @@ specifier|const
 name|size_t
 name|copy_size
 init|=
-name|MIN
+name|my_min
 argument_list|(
 name|lz_options
 operator|.

@@ -678,7 +678,6 @@ name|SEQ_COPY
 case|:
 block|{
 comment|// Copy from input to the dictionary as is.
-comment|// FIXME Can copy too much?
 name|dict_write
 argument_list|(
 name|dict

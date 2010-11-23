@@ -58,11 +58,23 @@ name|false
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+operator|(
+name|defined
+argument_list|(
 name|_WIN32
-end_ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+operator|)
+end_if
 
 begin_comment
 comment|/// If we were interrupted by a signal, we store the signal number so that
@@ -241,6 +253,40 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SIGALRM
+comment|// Add also the signals from message.c to hooked_signals.
+for|for
+control|(
+name|size_t
+name|i
+init|=
+literal|0
+init|;
+name|message_progress_sigs
+index|[
+name|i
+index|]
+operator|!=
+literal|0
+condition|;
+operator|++
+name|i
+control|)
+name|sigaddset
+argument_list|(
+operator|&
+name|hooked_signals
+argument_list|,
+name|message_progress_sigs
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|struct
 name|sigaction
 name|sa
@@ -478,6 +524,27 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|TUKLIB_DOSLIKE
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__VMS
+argument_list|)
+comment|// Don't raise(), set only exit status. This avoids
+comment|// printing unwanted message about SIGINT when the user
+comment|// presses C-c.
+name|set_exit_status
+argument_list|(
+name|E_ERROR
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|struct
 name|sigaction
 name|sa
@@ -517,6 +584,8 @@ argument_list|(
 name|exit_signal
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 return|return;
 block|}
@@ -532,18 +601,36 @@ comment|// While Windows has some very basic signal handling functions as requir
 end_comment
 
 begin_comment
-comment|// by C89, they are not really used, or so I understood. Instead, we use
+comment|// by C89, they are not really used, and e.g. SIGINT doesn't work exactly
 end_comment
 
 begin_comment
-comment|// SetConsoleCtrlHandler() to catch user pressing C-c.
+comment|// the way it does on POSIX (Windows creates a new thread for the signal
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<windows.h>
-end_include
+begin_comment
+comment|// handler). Instead, we use SetConsoleCtrlHandler() to catch user
+end_comment
+
+begin_comment
+comment|// pressing C-c, because that seems to be the recommended way to do it.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// NOTE: This doesn't work under MSYS. Trying with SIGINT doesn't work
+end_comment
+
+begin_comment
+comment|// either even if it appeared to work at first. So test using Windows
+end_comment
+
+begin_comment
+comment|// console window.
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -564,9 +651,6 @@ block|{
 comment|// Since we don't get a signal number which we could raise() at
 comment|// signals_exit() like on POSIX, just set the exit status to
 comment|// indicate an error, so that we cannot return with zero exit status.
-comment|//
-comment|// FIXME: Since this function runs in its own thread,
-comment|// set_exit_status() should have a mutex.
 name|set_exit_status
 argument_list|(
 name|E_ERROR

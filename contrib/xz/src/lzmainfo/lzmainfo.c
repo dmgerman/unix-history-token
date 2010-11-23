@@ -91,6 +91,29 @@ directive|include
 file|"tuklib_exit.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TUKLIB_DOSLIKE
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<io.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 name|void
@@ -182,7 +205,7 @@ argument_list|(
 literal|"lzmainfo ("
 name|PACKAGE_NAME
 literal|") "
-name|PACKAGE_VERSION
+name|LZMA_VERSION_STRING
 argument_list|)
 expr_stmt|;
 name|tuklib_exit
@@ -641,7 +664,11 @@ decl_stmt|;
 name|printf
 argument_list|(
 literal|"\nDictionary size:               "
-literal|"%u MB (2^%u bytes)\n"
+literal|"%"
+name|PRIu32
+literal|" MB (2^%"
+name|PRIu32
+literal|" bytes)\n"
 literal|"Literal context bits (lc):     %"
 name|PRIu32
 literal|"\n"
@@ -732,6 +759,21 @@ argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TUKLIB_DOSLIKE
+name|setmode
+argument_list|(
+name|fileno
+argument_list|(
+name|stdin
+argument_list|)
+argument_list|,
+name|O_BINARY
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|int
 name|ret
 init|=

@@ -25,7 +25,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/**  * \brief       Maximum supported value of variable-length integer  */
+comment|/**  * \brief       Maximum supported value of a variable-length integer  */
 end_comment
 
 begin_define
@@ -47,7 +47,7 @@ value|UINT64_MAX
 end_define
 
 begin_comment
-comment|/**  * \brief       Maximum supported length of variable length integers  */
+comment|/**  * \brief       Maximum supported encoded length of variable length integers  */
 end_comment
 
 begin_define
@@ -72,7 +72,7 @@ value|UINT64_C(n)
 end_define
 
 begin_comment
-comment|/**  * \brief       Variable-length integer type  *  * This will always be unsigned integer. Valid VLI values are in the range  * [0, LZMA_VLI_MAX]. Unknown value is indicated with LZMA_VLI_UNKNOWN,  * which is the maximum value of the underlaying integer type.  *  * In future, even if lzma_vli is defined to be something other than uint64_t,  * it is guaranteed that 2 * LZMA_VLI_MAX will not overflow lzma_vli.  * This simplifies integer overflow detection.  */
+comment|/**  * \brief       Variable-length integer type  *  * Valid VLI values are in the range [0, LZMA_VLI_MAX]. Unknown value is  * indicated with LZMA_VLI_UNKNOWN, which is the maximum value of the  * underlaying integer type.  *  * lzma_vli will be uint64_t for the foreseeable future. If a bigger size  * is needed in the future, it is guaranteed that 2 * LZMA_VLI_MAX will  * not overflow lzma_vli. This simplifies integer overflow detection.  */
 end_comment
 
 begin_typedef
@@ -83,7 +83,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * \brief       Simple macro to validate variable-length integer  *  * This is useful to test that application has given acceptable values  * for example in the uncompressed_size and compressed_size variables.  *  * \return      True if the integer is representable as VLI or if it  *              indicates unknown value.  */
+comment|/**  * \brief       Validate a variable-length integer  *  * This is useful to test that application has given acceptable values  * for example in the uncompressed_size and compressed_size variables.  *  * \return      True if the integer is representable as VLI or if it  *              indicates unknown value.  */
 end_comment
 
 begin_define
@@ -98,7 +98,7 @@ value|((vli)<= LZMA_VLI_MAX || (vli) == LZMA_VLI_UNKNOWN)
 end_define
 
 begin_comment
-comment|/**  * \brief       Encode a variable-length integer  *  * This function has two modes: single-call and multi-call. Single-call mode  * encodes the whole integer at once; it is an error if the output buffer is  * too small. Multi-call mode saves the position in *vli_pos, and thus it is  * possible to continue encoding if the buffer becomes full before the whole  * integer has been encoded.  *  * \param       vli       Integer to be encoded  * \param       vli_pos   How many VLI-encoded bytes have already been written  *                        out. When starting to encode a new integer, *vli_pos  *                        must be set to zero. To use single-call encoding,  *                        set vli_pos to NULL.  * \param       out       Beginning of the output buffer  * \param       out_pos   The next byte will be written to out[*out_pos].  * \param       out_size  Size of the out buffer; the first byte into  *                        which no data is written to is out[out_size].  *  * \return      Slightly different return values are used in multi-call and  *              single-call modes.  *  *              Single-call (vli_pos == NULL):  *              - LZMA_OK: Integer successfully encoded.  *              - LZMA_PROG_ERROR: Arguments are not sane. This can be due  *                to too little output space; single-call mode doesn't use  *                LZMA_BUF_ERROR, since the application should have checked  *                the encoded size with lzma_vli_size().  *  *              Multi-call (vli_pos != NULL):  *              - LZMA_OK: So far all OK, but the integer is not  *                completely written out yet.  *              - LZMA_STREAM_END: Integer successfully encoded.  *              - LZMA_BUF_ERROR: No output space was provided.  *              - LZMA_PROG_ERROR: Arguments are not sane.  */
+comment|/**  * \brief       Encode a variable-length integer  *  * This function has two modes: single-call and multi-call. Single-call mode  * encodes the whole integer at once; it is an error if the output buffer is  * too small. Multi-call mode saves the position in *vli_pos, and thus it is  * possible to continue encoding if the buffer becomes full before the whole  * integer has been encoded.  *  * \param       vli       Integer to be encoded  * \param       vli_pos   How many VLI-encoded bytes have already been written  *                        out. When starting to encode a new integer in  *                        multi-call mode, *vli_pos must be set to zero.  *                        To use single-call encoding, set vli_pos to NULL.  * \param       out       Beginning of the output buffer  * \param       out_pos   The next byte will be written to out[*out_pos].  * \param       out_size  Size of the out buffer; the first byte into  *                        which no data is written to is out[out_size].  *  * \return      Slightly different return values are used in multi-call and  *              single-call modes.  *  *              Single-call (vli_pos == NULL):  *              - LZMA_OK: Integer successfully encoded.  *              - LZMA_PROG_ERROR: Arguments are not sane. This can be due  *                to too little output space; single-call mode doesn't use  *                LZMA_BUF_ERROR, since the application should have checked  *                the encoded size with lzma_vli_size().  *  *              Multi-call (vli_pos != NULL):  *              - LZMA_OK: So far all OK, but the integer is not  *                completely written out yet.  *              - LZMA_STREAM_END: Integer successfully encoded.  *              - LZMA_BUF_ERROR: No output space was provided.  *              - LZMA_PROG_ERROR: Arguments are not sane.  */
 end_comment
 
 begin_extern
@@ -113,9 +113,9 @@ argument|lzma_vli vli
 argument_list|,
 argument|size_t *vli_pos
 argument_list|,
-argument|uint8_t *lzma_restrict out
+argument|uint8_t *out
 argument_list|,
-argument|size_t *lzma_restrict out_pos
+argument|size_t *out_pos
 argument_list|,
 argument|size_t out_size
 argument_list|)
@@ -127,7 +127,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/**  * \brief       Decode a variable-length integer  *  * Like lzma_vli_encode(), this function has single-call and multi-call modes.  *  * \param       vli       Pointer to decoded integer. The decoder will  *                        initialize it to zero when *vli_pos == 0, so  *                        application isn't required to initialize *vli.  * \param       vli_pos   How many bytes have already been decoded. When  *                        starting to decode a new integer, *vli_pos must  *                        be initialized to zero. To use single-call decoding,  *                        set this to NULL.  * \param       in        Beginning of the input buffer  * \param       in_pos    The next byte will be read from in[*in_pos].  * \param       in_size   Size of the input buffer; the first byte that  *                        won't be read is in[in_size].  *  * \return      Slightly different return values are used in multi-call and  *              single-call modes.  *  *              Single-call (vli_pos == NULL):  *              - LZMA_OK: Integer successfully decoded.  *              - LZMA_DATA_ERROR: Integer is corrupt. This includes hitting  *                the end of the input buffer before the whole integer was  *                decoded; providing no input at all will use LZMA_DATA_ERROR.  *              - LZMA_PROG_ERROR: Arguments are not sane.  *  *              Multi-call (vli_pos != NULL):  *              - LZMA_OK: So far all OK, but the integer is not  *                completely decoded yet.  *              - LZMA_STREAM_END: Integer successfully decoded.  *              - LZMA_DATA_ERROR: Integer is corrupt.  *              - LZMA_BUF_ERROR: No input was provided.  *              - LZMA_PROG_ERROR: Arguments are not sane.  */
+comment|/**  * \brief       Decode a variable-length integer  *  * Like lzma_vli_encode(), this function has single-call and multi-call modes.  *  * \param       vli       Pointer to decoded integer. The decoder will  *                        initialize it to zero when *vli_pos == 0, so  *                        application isn't required to initialize *vli.  * \param       vli_pos   How many bytes have already been decoded. When  *                        starting to decode a new integer in multi-call  *                        mode, *vli_pos must be initialized to zero. To  *                        use single-call decoding, set vli_pos to NULL.  * \param       in        Beginning of the input buffer  * \param       in_pos    The next byte will be read from in[*in_pos].  * \param       in_size   Size of the input buffer; the first byte that  *                        won't be read is in[in_size].  *  * \return      Slightly different return values are used in multi-call and  *              single-call modes.  *  *              Single-call (vli_pos == NULL):  *              - LZMA_OK: Integer successfully decoded.  *              - LZMA_DATA_ERROR: Integer is corrupt. This includes hitting  *                the end of the input buffer before the whole integer was  *                decoded; providing no input at all will use LZMA_DATA_ERROR.  *              - LZMA_PROG_ERROR: Arguments are not sane.  *  *              Multi-call (vli_pos != NULL):  *              - LZMA_OK: So far all OK, but the integer is not  *                completely decoded yet.  *              - LZMA_STREAM_END: Integer successfully decoded.  *              - LZMA_DATA_ERROR: Integer is corrupt.  *              - LZMA_BUF_ERROR: No input was provided.  *              - LZMA_PROG_ERROR: Arguments are not sane.  */
 end_comment
 
 begin_extern
@@ -138,13 +138,13 @@ begin_macro
 unit|)
 name|lzma_vli_decode
 argument_list|(
-argument|lzma_vli *lzma_restrict vli
+argument|lzma_vli *vli
 argument_list|,
 argument|size_t *vli_pos
 argument_list|,
-argument|const uint8_t *lzma_restrict in
+argument|const uint8_t *in
 argument_list|,
-argument|size_t *lzma_restrict in_pos
+argument|size_t *in_pos
 argument_list|,
 argument|size_t in_size
 argument_list|)

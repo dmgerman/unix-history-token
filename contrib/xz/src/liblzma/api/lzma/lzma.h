@@ -47,7 +47,7 @@ value|LZMA_VLI_C(0x21)
 end_define
 
 begin_comment
-comment|/**  * \brief       Match finders  *  * Match finder has major effect on both speed and compression ratio.  * Usually hash chains are faster than binary trees.  *  * The memory usage formulas are only rough estimates, which are closest to  * reality when dict_size is a power of two. The formulas are  more complex  * in reality, and can also change a little between liblzma versions. Use  * lzma_memusage_encoder() to get more accurate estimate of memory usage.  */
+comment|/**  * \brief       Match finders  *  * Match finder has major effect on both speed and compression ratio.  * Usually hash chains are faster than binary trees.  *  * If you will use LZMA_SYNC_FLUSH often, the hash chains may be a better  * choice, because binary trees get much higher compression ratio penalty  * with LZMA_SYNC_FLUSH.  *  * The memory usage formulas are only rough estimates, which are closest to  * reality when dict_size is a power of two. The formulas are  more complex  * in reality, and can also change a little between liblzma versions. Use  * lzma_raw_encoder_memusage() to get more accurate estimate of memory usage.  */
 end_comment
 
 begin_typedef
@@ -63,7 +63,7 @@ name|LZMA_MF_HC4
 init|=
 literal|0x04
 block|,
-comment|/**< 		 * \brief       Hash Chain with 2-, 3-, and 4-byte hashing 		 * 		 * Minimum nice_len: 4 		 * 		 * Memory usage: dict_size * 7.5 		 */
+comment|/**< 		 * \brief       Hash Chain with 2-, 3-, and 4-byte hashing 		 * 		 * Minimum nice_len: 4 		 * 		 * Memory usage: 		 *  - dict_size<= 32 MiB: dict_size * 7.5 		 *  - dict_size> 32 MiB: dict_size * 6.5 		 */
 name|LZMA_MF_BT2
 init|=
 literal|0x12
@@ -77,7 +77,7 @@ comment|/**< 		 * \brief       Binary Tree with 2- and 3-byte hashing 		 * 		 * 
 name|LZMA_MF_BT4
 init|=
 literal|0x14
-comment|/**< 		 * \brief       Binary Tree with 2-, 3-, and 4-byte hashing 		 * 		 * Minimum nice_len: 4 		 * 		 * Memory usage: dict_size * 11.5 		 */
+comment|/**< 		 * \brief       Binary Tree with 2-, 3-, and 4-byte hashing 		 * 		 * Minimum nice_len: 4 		 * 		 * Memory usage: 		 *  - dict_size<= 32 MiB: dict_size * 11.5 		 *  - dict_size> 32 MiB: dict_size * 10.5 		 */
 block|}
 name|lzma_match_finder
 typedef|;
@@ -150,7 +150,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/**  * \brief       Options specific to the LZMA1 and LZMA2 filters  *  * Since LZMA1 and LZMA2 share most of the code, it's simplest to share  * the options structure too. For encoding, all but the reserved variables  * need to be initialized unless specifically mentioned otherwise.  *  * For raw decoding, both LZMA1 and LZMA2 need dict_size, preset_dict, and  * preset_dict_size (if preset_dict != NULL). LZMA1 needs also lc, lp, and pb.  */
+comment|/**  * \brief       Options specific to the LZMA1 and LZMA2 filters  *  * Since LZMA1 and LZMA2 share most of the code, it's simplest to share  * the options structure too. For encoding, all but the reserved variables  * need to be initialized unless specifically mentioned otherwise.  * lzma_lzma_preset() can be used to get a good starting point.  *  * For raw decoding, both LZMA1 and LZMA2 need dict_size, preset_dict, and  * preset_dict_size (if preset_dict != NULL). LZMA1 needs also lc, lp, and pb.  */
 end_comment
 
 begin_typedef
@@ -179,7 +179,7 @@ comment|/** 	 * \brief       Size of the preset dictionary 	 * 	 * Specifies the
 name|uint32_t
 name|preset_dict_size
 decl_stmt|;
-comment|/** 	 * \brief       Number of literal context bits 	 * 	 * How many of the highest bits of the previous uncompressed 	 * eight-bit byte (also known as `literal') are taken into 	 * account when predicting the bits of the next literal. 	 * 	 * \todo        Example 	 * 	 * There is a limit that applies to literal context bits and literal 	 * position bits together: lc + lp<= 4. Without this limit the 	 * decoding could become very slow, which could have security related 	 * results in some cases like email servers doing virus scanning. 	 * This limit also simplifies the internal implementation in liblzma. 	 * 	 * There may be LZMA1 streams that have lc + lp> 4 (maximum possible 	 * lc would be 8). It is not possible to decode such streams with 	 * liblzma. 	 */
+comment|/** 	 * \brief       Number of literal context bits 	 * 	 * How many of the highest bits of the previous uncompressed 	 * eight-bit byte (also known as `literal') are taken into 	 * account when predicting the bits of the next literal. 	 * 	 * E.g. in typical English text, an upper-case letter is 	 * often followed by a lower-case letter, and a lower-case 	 * letter is usually followed by another lower-case letter. 	 * In the US-ASCII character set, the highest three bits are 010 	 * for upper-case letters and 011 for lower-case letters. 	 * When lc is at least 3, the literal coding can take advantage of 	 * this property in the uncompressed data. 	 * 	 * There is a limit that applies to literal context bits and literal 	 * position bits together: lc + lp<= 4. Without this limit the 	 * decoding could become very slow, which could have security related 	 * results in some cases like email servers doing virus scanning. 	 * This limit also simplifies the internal implementation in liblzma. 	 * 	 * There may be LZMA1 streams that have lc + lp> 4 (maximum possible 	 * lc would be 8). It is not possible to decode such streams with 	 * liblzma. 	 */
 name|uint32_t
 name|lc
 decl_stmt|;
@@ -195,7 +195,7 @@ define|#
 directive|define
 name|LZMA_LC_DEFAULT
 value|3
-comment|/** 	 * \brief       Number of literal position bits 	 * 	 * How many of the lowest bits of the current position (number 	 * of bytes from the beginning of the uncompressed data) in the 	 * uncompressed data is taken into account when predicting the 	 * bits of the next literal (a single eight-bit byte). 	 * 	 * \todo        Example 	 */
+comment|/** 	 * \brief       Number of literal position bits 	 * 	 * lp affects what kind of alignment in the uncompressed data is 	 * assumed when encoding literals. A literal is a single 8-bit byte. 	 * See pb below for more information about alignment. 	 */
 name|uint32_t
 name|lp
 decl_stmt|;
@@ -203,7 +203,7 @@ define|#
 directive|define
 name|LZMA_LP_DEFAULT
 value|0
-comment|/** 	 * \brief       Number of position bits 	 * 	 * How many of the lowest bits of the current position in the 	 * uncompressed data is taken into account when estimating 	 * probabilities of matches. A match is a sequence of bytes for 	 * which a matching sequence is found from the dictionary and 	 * thus can be stored as distance-length pair. 	 * 	 * Example: If most of the matches occur at byte positions of 	 * 8 * n + 3, that is, 3, 11, 19, ... set pb to 3, because 2**3 == 8. 	 */
+comment|/** 	 * \brief       Number of position bits 	 * 	 * pb affects what kind of alignment in the uncompressed data is 	 * assumed in general. The default means four-byte alignment 	 * (2^ pb =2^2=4), which is often a good choice when there's 	 * no better guess. 	 * 	 * When the aligment is known, setting pb accordingly may reduce 	 * the file size a little. E.g. with text files having one-byte 	 * alignment (US-ASCII, ISO-8859-*, UTF-8), setting pb=0 can 	 * improve compression slightly. For UTF-16 text, pb=1 is a good 	 * choice. If the alignment is an odd number like 3 bytes, pb=0 	 * might be the best choice. 	 * 	 * Even though the assumed alignment can be adjusted with pb and 	 * lp, LZMA1 and LZMA2 still slightly favor 16-byte alignment. 	 * It might be worth taking into account when designing file formats 	 * that are likely to be often compressed with LZMA1 or LZMA2. 	 */
 name|uint32_t
 name|pb
 decl_stmt|;
@@ -231,19 +231,11 @@ comment|/** Match finder ID */
 name|lzma_match_finder
 name|mf
 decl_stmt|;
-comment|/** 	 * \brief       Maximum search depth in the match finder 	 * 	 * For every input byte, match finder searches through the hash chain 	 * or binary tree in a loop, each iteration going one step deeper in 	 * the chain or tree. The searching stops if 	 *  - a match of at least nice_len bytes long is found; 	 *  - all match candidates from the hash chain or binary tree have 	 *    been checked; or 	 *  - maximum search depth is reached. 	 * 	 * Maximum search depth is needed to prevent the match finder from 	 * wasting too much time in case there are lots of short match 	 * candidates. On the other hand, stopping the search before all 	 * candidates have been checked can reduce compression ratio. 	 * 	 * Setting depth to zero tells liblzma to use an automatic default 	 * value, that depends on the selected match finder and nice_len. 	 * The default is in the range [10, 200] or so (it may vary between 	 * liblzma versions). 	 * 	 * Using a bigger depth value than the default can increase 	 * compression ratio in some cases. There is no strict maximum value, 	 * but high values (thousands or millions) should be used with care: 	 * the encoder could remain fast enough with typical input, but 	 * malicious input could cause the match finder to slow down 	 * dramatically, possibly creating a denial of service attack. 	 */
+comment|/** 	 * \brief       Maximum search depth in the match finder 	 * 	 * For every input byte, match finder searches through the hash chain 	 * or binary tree in a loop, each iteration going one step deeper in 	 * the chain or tree. The searching stops if 	 *  - a match of at least nice_len bytes long is found; 	 *  - all match candidates from the hash chain or binary tree have 	 *    been checked; or 	 *  - maximum search depth is reached. 	 * 	 * Maximum search depth is needed to prevent the match finder from 	 * wasting too much time in case there are lots of short match 	 * candidates. On the other hand, stopping the search before all 	 * candidates have been checked can reduce compression ratio. 	 * 	 * Setting depth to zero tells liblzma to use an automatic default 	 * value, that depends on the selected match finder and nice_len. 	 * The default is in the range [4, 200] or so (it may vary between 	 * liblzma versions). 	 * 	 * Using a bigger depth value than the default can increase 	 * compression ratio in some cases. There is no strict maximum value, 	 * but high values (thousands or millions) should be used with care: 	 * the encoder could remain fast enough with typical input, but 	 * malicious input could cause the match finder to slow down 	 * dramatically, possibly creating a denial of service attack. 	 */
 name|uint32_t
 name|depth
 decl_stmt|;
 comment|/* 	 * Reserved space to allow possible future extensions without 	 * breaking the ABI. You should not touch these, because the names 	 * of these variables may change. These are and will never be used 	 * with the currently supported options, so it is safe to leave these 	 * uninitialized. 	 */
-name|void
-modifier|*
-name|reserved_ptr1
-decl_stmt|;
-name|void
-modifier|*
-name|reserved_ptr2
-decl_stmt|;
 name|uint32_t
 name|reserved_int1
 decl_stmt|;
@@ -279,6 +271,14 @@ name|reserved_enum3
 decl_stmt|;
 name|lzma_reserved_enum
 name|reserved_enum4
+decl_stmt|;
+name|void
+modifier|*
+name|reserved_ptr1
+decl_stmt|;
+name|void
+modifier|*
+name|reserved_ptr2
 decl_stmt|;
 block|}
 name|lzma_options_lzma

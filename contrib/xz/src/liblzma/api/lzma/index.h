@@ -120,7 +120,7 @@ comment|/** 		 * \brief       Compressed start offset of this Block 		 * 		 * Th
 name|lzma_vli
 name|compressed_file_offset
 decl_stmt|;
-comment|/** 		 * \brief       Uncompressed start offset of this Block 		 * 		 * This offset is relative to the beginning of the lzma_index 		 * (i.e. usually the beginning of the .xz file). 		 */
+comment|/** 		 * \brief       Uncompressed start offset of this Block 		 * 		 * This offset is relative to the beginning of the lzma_index 		 * (i.e. usually the beginning of the .xz file). 		 * 		 * When doing random-access reading, it is possible that 		 * the target offset is not exactly at Block boundary. One 		 * will need to compare the target offset against 		 * uncompressed_file_offset or uncompressed_stream_offset, 		 * and possibly decode and throw away some amount of data 		 * before reaching the target offset. 		 */
 name|lzma_vli
 name|uncompressed_file_offset
 decl_stmt|;
@@ -136,11 +136,11 @@ comment|/** 		 * \brief       Uncompressed start offset of this Block 		 * 		 * 
 name|lzma_vli
 name|uncompressed_stream_offset
 decl_stmt|;
-comment|/** 		 * \brief       Uncompressed size of this Block 		 * 		 * You should pass this to the Block decoder if you will 		 * decode this Block. 		 * 		 * When doing random-access reading, it is possible that 		 * the target offset is not exactly at Block boundary. One 		 * will need to compare the target offset against 		 * uncompressed_file_offset or uncompressed_stream_offset, 		 * and possibly decode and throw away some amount of data 		 * before reaching the target offset. 		 */
+comment|/** 		 * \brief       Uncompressed size of this Block 		 * 		 * You should pass this to the Block decoder if you will 		 * decode this Block. It will allow the Block decoder to 		 * validate the uncompressed size. 		 */
 name|lzma_vli
 name|uncompressed_size
 decl_stmt|;
-comment|/** 		 * \brief       Unpadded size of this Block 		 * 		 * You should pass this to the Block decoder if you will 		 * decode this Block. 		 */
+comment|/** 		 * \brief       Unpadded size of this Block 		 * 		 * You should pass this to the Block decoder if you will 		 * decode this Block. It will allow the Block decoder to 		 * validate the unpadded size. 		 */
 name|lzma_vli
 name|unpadded_size
 decl_stmt|;
@@ -381,7 +381,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/**  * \brief       Get the types of integrity Checks  *  * If lzma_index_stream_padding() is used to set the Stream Flags for  * every Stream, lzma_index_checks() can be used to get a bitmask to  * indicate which Check types have been used. It can be useful e.g. if  * showing the Check types to the user.  *  * The bitmask is 1<< check_id, e.g. CRC32 is 1<< 1 and SHA-256 is 1<< 10.  */
+comment|/**  * \brief       Get the types of integrity Checks  *  * If lzma_index_stream_flags() is used to set the Stream Flags for  * every Stream, lzma_index_checks() can be used to get a bitmask to  * indicate which Check types have been used. It can be useful e.g. if  * showing the Check types to the user.  *  * The bitmask is 1<< check_id, e.g. CRC32 is 1<< 1 and SHA-256 is 1<< 10.  */
 end_comment
 
 begin_extern
@@ -683,9 +683,9 @@ begin_macro
 unit|)
 name|lzma_index_cat
 argument_list|(
-argument|lzma_index *lzma_restrict dest
+argument|lzma_index *dest
 argument_list|,
-argument|lzma_index *lzma_restrict src
+argument|lzma_index *src
 argument_list|,
 argument|lzma_allocator *allocator
 argument_list|)
@@ -722,7 +722,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/**  * \brief       Initialize .xz Index encoder  *  * \param       strm        Pointer to properly prepared lzma_stream  * \param       i           Pointer to lzma_index which should be encoded.  *  * The only valid action value for lzma_code() is LZMA_RUN.  *  * \return      - LZMA_OK: Initialization succeeded, continue with lzma_code().  *              - LZMA_MEM_ERROR  *              - LZMA_PROG_ERROR  */
+comment|/**  * \brief       Initialize .xz Index encoder  *  * \param       strm        Pointer to properly prepared lzma_stream  * \param       i           Pointer to lzma_index which should be encoded.  *  * The valid `action' values for lzma_code() are LZMA_RUN and LZMA_FINISH.  * It is enough to use only one of them (you can choose freely; use LZMA_RUN  * to support liblzma versions older than 5.0.0).  *  * \return      - LZMA_OK: Initialization succeeded, continue with lzma_code().  *              - LZMA_MEM_ERROR  *              - LZMA_PROG_ERROR  */
 end_comment
 
 begin_extern
@@ -746,7 +746,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/**  * \brief       Initialize .xz Index decoder  *  * \param       strm        Pointer to properly prepared lzma_stream  * \param       i           The decoded Index will be made available via  *                          this pointer. Initially this function will  *                          set *i to NULL (the old value is ignored). If  *                          decoding succeeds (lzma_code() returns  *                          LZMA_STREAM_END), *i will be set to point  *                          to a new lzma_index, which the application  *                          has to later free with lzma_index_end().  * \param       memlimit    How much memory the resulting lzma_index is  *                          allowed to require.  *  * The only valid action value for lzma_code() is LZMA_RUN.  *  * \return      - LZMA_OK: Initialization succeeded, continue with lzma_code().  *              - LZMA_MEM_ERROR  *              - LZMA_MEMLIMIT_ERROR  *              - LZMA_PROG_ERROR  */
+comment|/**  * \brief       Initialize .xz Index decoder  *  * \param       strm        Pointer to properly prepared lzma_stream  * \param       i           The decoded Index will be made available via  *                          this pointer. Initially this function will  *                          set *i to NULL (the old value is ignored). If  *                          decoding succeeds (lzma_code() returns  *                          LZMA_STREAM_END), *i will be set to point  *                          to a new lzma_index, which the application  *                          has to later free with lzma_index_end().  * \param       memlimit    How much memory the resulting lzma_index is  *                          allowed to require.  *  * The valid `action' values for lzma_code() are LZMA_RUN and LZMA_FINISH.  * It is enough to use only one of them (you can choose freely; use LZMA_RUN  * to support liblzma versions older than 5.0.0).  *  * \return      - LZMA_OK: Initialization succeeded, continue with lzma_code().  *              - LZMA_MEM_ERROR  *              - LZMA_MEMLIMIT_ERROR  *              - LZMA_PROG_ERROR  */
 end_comment
 
 begin_extern

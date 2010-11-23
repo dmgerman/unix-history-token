@@ -1972,7 +1972,7 @@ decl_stmt|;
 name|uint32_t
 name|len
 init|=
-name|MIN
+name|my_min
 argument_list|(
 name|len0
 argument_list|,
@@ -2278,7 +2278,7 @@ decl_stmt|;
 name|uint32_t
 name|len
 init|=
-name|MIN
+name|my_min
 argument_list|(
 name|len0
 argument_list|,

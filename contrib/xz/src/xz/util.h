@@ -391,35 +391,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// \brief      Convert double to a string with one decimal place
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// This is like uint64_to_str() except that this converts a double and
-end_comment
-
-begin_comment
-comment|/// uses exactly one decimal place.
-end_comment
-
-begin_function_decl
-specifier|extern
-specifier|const
-name|char
-modifier|*
-name|double_to_str
-parameter_list|(
-name|double
-name|value
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// \brief      Wrapper for snprintf() to help constructing a string in pieces
 end_comment
 

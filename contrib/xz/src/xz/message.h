@@ -65,10 +65,23 @@ block|,
 comment|///< Errors, warnings, and verbose statistics
 name|V_DEBUG
 block|,
-comment|///< Debugging, FIXME remove?
+comment|///< Very verbose
 block|}
 enum|;
 end_enum
+
+begin_comment
+comment|/// \brief      Signals used for progress message handling
+end_comment
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|int
+name|message_progress_sigs
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// \brief      Initializes the message functions
@@ -404,13 +417,78 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// Buffer size for message_filters_to_str()
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FILTERS_STR_SIZE
+value|512
+end_define
+
+begin_comment
+comment|/// \brief      Get the filter chain as a string
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param      buf         Pointer to caller allocated buffer to hold
+end_comment
+
+begin_comment
+comment|///                         the filter chain string
+end_comment
+
+begin_comment
+comment|/// \param      filters     Pointer to the filter chain
+end_comment
+
+begin_comment
+comment|/// \param      all_known   If true, all filter options are printed.
+end_comment
+
+begin_comment
+comment|///                         If false, only the options that get stored
+end_comment
+
+begin_comment
+comment|///                         into .xz headers are printed.
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|message_filters_to_str
+parameter_list|(
+name|char
+name|buf
+index|[
+name|FILTERS_STR_SIZE
+index|]
+parameter_list|,
+specifier|const
+name|lzma_filter
+modifier|*
+name|filters
+parameter_list|,
+name|bool
+name|all_known
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// Print the filter chain.
 end_comment
 
 begin_function_decl
 specifier|extern
 name|void
-name|message_filters
+name|message_filters_show
 parameter_list|(
 name|enum
 name|message_verbosity
@@ -437,27 +515,6 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/// Print the memory usage limit and exit.
-end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-name|message_memlimit
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|lzma_attribute
-parameter_list|(
-function_decl|(noreturn
-end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
 
 begin_comment
 comment|/// Prints the version number to stdout and exits with exit status SUCCESS.

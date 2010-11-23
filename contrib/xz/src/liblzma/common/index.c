@@ -75,7 +75,7 @@ begin_define
 define|#
 directive|define
 name|INDEX_GROUP_SIZE
-value|500
+value|512
 end_define
 
 begin_comment

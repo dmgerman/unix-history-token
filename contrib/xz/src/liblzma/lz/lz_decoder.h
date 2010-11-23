@@ -456,7 +456,7 @@ decl_stmt|;
 name|uint32_t
 name|left
 init|=
-name|MIN
+name|my_min
 argument_list|(
 name|dict_avail
 argument_list|,

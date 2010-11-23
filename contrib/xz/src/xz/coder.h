@@ -115,6 +115,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// If true, the compression settings are automatically adjusted down if
+end_comment
+
+begin_comment
+comment|/// they exceed the memory usage limit.
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|opt_auto_adjust
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Set the integrity check type used when compressing
 end_comment
 

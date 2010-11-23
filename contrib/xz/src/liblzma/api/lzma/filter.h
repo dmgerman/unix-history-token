@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**  * \file        lzma/filter.h  * \brief       Common filter related types  */
+comment|/**  * \file        lzma/filter.h  * \brief       Common filter related types and functions  */
 end_comment
 
 begin_comment
@@ -47,7 +47,7 @@ comment|/** 	 * \brief       Filter ID 	 * 	 * Use constants whose name begin wi
 name|lzma_vli
 name|id
 decl_stmt|;
-comment|/** 	 * \brief       Pointer to filter-specific options structure 	 * 	 * If the filter doesn't need options, set this to NULL. If id is 	 * set to LZMA_VLI_UNKNOWN, options is ignored, and thus 	 * doesn't need be initialized. 	 * 	 * Some filters support changing the options in the middle of 	 * the encoding process. These filters store the pointer of the 	 * options structure and communicate with the application via 	 * modifications of the options structure. 	 */
+comment|/** 	 * \brief       Pointer to filter-specific options structure 	 * 	 * If the filter doesn't need options, set this to NULL. If id is 	 * set to LZMA_VLI_UNKNOWN, options is ignored, and thus 	 * doesn't need be initialized. 	 */
 name|void
 modifier|*
 name|options
@@ -127,7 +127,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/**  * \brief       Calculate rough memory requirements for raw encoder  *  * Because the calculation is rough, this function can be used to calculate  * the memory requirements for Block and Stream encoders too.  *  * \param       filters     Array of filters terminated with  *                          .id == LZMA_VLI_UNKNOWN.  *  * \return      Rough number of bytes of memory required for the given  *              filter chain when encoding.  */
+comment|/**  * \brief       Calculate approximate memory requirements for raw encoder  *  * This function can be used to calculate the memory requirements for  * Block and Stream encoders too because Block and Stream encoders don't  * need significantly more memory than raw encoder.  *  * \param       filters     Array of filters terminated with  *                          .id == LZMA_VLI_UNKNOWN.  *  * \return      Number of bytes of memory required for the given  *              filter chain when encoding.  */
 end_comment
 
 begin_extern
@@ -149,7 +149,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/**  * \brief       Calculate rough memory requirements for raw decoder  *  * Because the calculation is rough, this function can be used to calculate  * the memory requirements for Block and Stream decoders too.  *  * \param       filters     Array of filters terminated with  *                          .id == LZMA_VLI_UNKNOWN.  *  * \return      Rough number of bytes of memory required for the given  *              filter chain when decoding.  */
+comment|/**  * \brief       Calculate approximate memory requirements for raw decoder  *  * This function can be used to calculate the memory requirements for  * Block and Stream decoders too because Block and Stream decoders don't  * need significantly more memory than raw decoder.  *  * \param       filters     Array of filters terminated with  *                          .id == LZMA_VLI_UNKNOWN.  *  * \return      Number of bytes of memory required for the given  *              filter chain when decoding.  */
 end_comment
 
 begin_extern
@@ -242,7 +242,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/**  * \brief       Single-call raw encoder  *  * \param       filters     Array of lzma_filter structures. The end of the  *                          array must be marked with .id = LZMA_VLI_UNKNOWN.  * \param       allocator   lzma_allocator for custom allocator functions.  *                          Set to NULL to use malloc() and free().  * \param       in          Beginning of the input buffer  * \param       in_size     Size of the input buffer  * \param       out         Beginning of the output buffer  * \param       out_pos     The next byte will be written to out[*out_pos].  *                          *out_pos is updated only if encoding succeeds.  * \param       out_size    Size of the out buffer; the first byte into  *                          which no data is written to is out[out_size].  *  * \return      - LZMA_OK: Encoding was successful.  *              - LZMA_BUF_ERROR: Not enough output buffer space.  *              - LZMA_OPTIONS_ERROR  *              - LZMA_MEM_ERROR  *              - LZMA_DATA_ERROR  *              - LZMA_PROG_ERROR  *  * \note        There is no function to calculate how big output buffer  *              would surely be big enough. (lzma_stream_buffer_bound()  *              works only for lzma_stream_buffer_encode().)  */
+comment|/**  * \brief       Single-call raw encoder  *  * \param       filters     Array of lzma_filter structures. The end of the  *                          array must be marked with .id = LZMA_VLI_UNKNOWN.  * \param       allocator   lzma_allocator for custom allocator functions.  *                          Set to NULL to use malloc() and free().  * \param       in          Beginning of the input buffer  * \param       in_size     Size of the input buffer  * \param       out         Beginning of the output buffer  * \param       out_pos     The next byte will be written to out[*out_pos].  *                          *out_pos is updated only if encoding succeeds.  * \param       out_size    Size of the out buffer; the first byte into  *                          which no data is written to is out[out_size].  *  * \return      - LZMA_OK: Encoding was successful.  *              - LZMA_BUF_ERROR: Not enough output buffer space.  *              - LZMA_OPTIONS_ERROR  *              - LZMA_MEM_ERROR  *              - LZMA_DATA_ERROR  *              - LZMA_PROG_ERROR  *  * \note        There is no function to calculate how big output buffer  *              would surely be big enough. (lzma_stream_buffer_bound()  *              works only for lzma_stream_buffer_encode(); raw encoder  *              won't necessarily meet that bound.)  */
 end_comment
 
 begin_extern
@@ -333,7 +333,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/**  * \brief       Encode the Filter Properties field  *  * \param       filter  Filter ID and options  * \param       props   Buffer to hold the encoded options. The size of  *                      buffer must have been already determined with  *                      lzma_properties_size().  *  * \return      - LZMA_OK  *              - LZMA_OPTIONS_ERROR  *              - LZMA_PROG_ERROR  *  * \note        Even this function won't validate more options than actually  *              necessary. Thus, it is possible that encoding the properties  *              succeeds but using the same options to initialize the encoder  *              will fail.  *  * \note        It is OK to skip calling this function if  *              lzma_properties_size() indicated that the size  *              of the Filter Properties field is zero.  */
+comment|/**  * \brief       Encode the Filter Properties field  *  * \param       filter  Filter ID and options  * \param       props   Buffer to hold the encoded options. The size of  *                      buffer must have been already determined with  *                      lzma_properties_size().  *  * \return      - LZMA_OK  *              - LZMA_OPTIONS_ERROR  *              - LZMA_PROG_ERROR  *  * \note        Even this function won't validate more options than actually  *              necessary. Thus, it is possible that encoding the properties  *              succeeds but using the same options to initialize the encoder  *              will fail.  *  * \note        If lzma_properties_size() indicated that the size  *              of the Filter Properties field is zero, calling  *              lzma_properties_encode() is not required, but it  *              won't do any harm either.  */
 end_comment
 
 begin_extern
@@ -383,7 +383,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/**  * \brief       Calculate encoded size of a Filter Flags field  *  * Knowing the size of Filter Flags is useful to know when allocating  * memory to hold the encoded Filter Flags.  *  * \param       size    Pointer to integer to hold the calculated size  * \param       filters Filter ID and associated options whose encoded  *                      size is to be calculated  *  * \return      - LZMA_OK: *size set successfully. Note that this doesn't  *                guarantee that filters->options is valid, thus  *                lzma_filter_flags_encode() may still fail.  *              - LZMA_OPTIONS_ERROR: Unknown Filter ID or unsupported options.  *              - LZMA_PROG_ERROR: Invalid options  *  * \note        If you need to calculate size of List of Filter Flags,  *              you need to loop over every lzma_filter entry.  */
+comment|/**  * \brief       Calculate encoded size of a Filter Flags field  *  * Knowing the size of Filter Flags is useful to know when allocating  * memory to hold the encoded Filter Flags.  *  * \param       size    Pointer to integer to hold the calculated size  * \param       filter  Filter ID and associated options whose encoded  *                      size is to be calculated  *  * \return      - LZMA_OK: *size set successfully. Note that this doesn't  *                guarantee that filter->options is valid, thus  *                lzma_filter_flags_encode() may still fail.  *              - LZMA_OPTIONS_ERROR: Unknown Filter ID or unsupported options.  *              - LZMA_PROG_ERROR: Invalid options  *  * \note        If you need to calculate size of List of Filter Flags,  *              you need to loop over every lzma_filter entry.  */
 end_comment
 
 begin_extern
@@ -396,7 +396,7 @@ name|lzma_filter_flags_size
 argument_list|(
 argument|uint32_t *size
 argument_list|,
-argument|const lzma_filter *filters
+argument|const lzma_filter *filter
 argument_list|)
 end_macro
 
@@ -407,7 +407,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/**  * \brief       Encode Filter Flags into given buffer  *  * In contrast to some functions, this doesn't allocate the needed buffer.  * This is due to how this function is used internally by liblzma.  *  * \param       filters     Filter ID and options to be encoded  * \param       out         Beginning of the output buffer  * \param       out_pos     out[*out_pos] is the next write position. This  *                          is updated by the encoder.  * \param       out_size    out[out_size] is the first byte to not write.  *  * \return      - LZMA_OK: Encoding was successful.  *              - LZMA_OPTIONS_ERROR: Invalid or unsupported options.  *              - LZMA_PROG_ERROR: Invalid options or not enough output  *                buffer space (you should have checked it with  *                lzma_filter_flags_size()).  */
+comment|/**  * \brief       Encode Filter Flags into given buffer  *  * In contrast to some functions, this doesn't allocate the needed buffer.  * This is due to how this function is used internally by liblzma.  *  * \param       filter      Filter ID and options to be encoded  * \param       out         Beginning of the output buffer  * \param       out_pos     out[*out_pos] is the next write position. This  *                          is updated by the encoder.  * \param       out_size    out[out_size] is the first byte to not write.  *  * \return      - LZMA_OK: Encoding was successful.  *              - LZMA_OPTIONS_ERROR: Invalid or unsupported options.  *              - LZMA_PROG_ERROR: Invalid options or not enough output  *                buffer space (you should have checked it with  *                lzma_filter_flags_size()).  */
 end_comment
 
 begin_extern
@@ -418,7 +418,7 @@ begin_macro
 unit|)
 name|lzma_filter_flags_encode
 argument_list|(
-argument|const lzma_filter *filters
+argument|const lzma_filter *filter
 argument_list|,
 argument|uint8_t *out
 argument_list|,
@@ -435,7 +435,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/**  * \brief       Decode Filter Flags from given buffer  *  * The decoded result is stored into *filters. filters->options is  * initialized but the old value is NOT free()d.  *  * \return      - LZMA_OK  *              - LZMA_OPTIONS_ERROR  *              - LZMA_MEM_ERROR  *              - LZMA_PROG_ERROR  */
+comment|/**  * \brief       Decode Filter Flags from given buffer  *  * The decoded result is stored into *filter. The old value of  * filter->options is not free()d.  *  * \return      - LZMA_OK  *              - LZMA_OPTIONS_ERROR  *              - LZMA_MEM_ERROR  *              - LZMA_PROG_ERROR  */
 end_comment
 
 begin_extern
@@ -446,7 +446,7 @@ begin_macro
 unit|)
 name|lzma_filter_flags_decode
 argument_list|(
-argument|lzma_filter *filters
+argument|lzma_filter *filter
 argument_list|,
 argument|lzma_allocator *allocator
 argument_list|,

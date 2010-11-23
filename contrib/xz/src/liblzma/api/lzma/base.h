@@ -142,16 +142,16 @@ name|LZMA_SYNC_FLUSH
 init|=
 literal|1
 block|,
-comment|/**< 		 * \brief       Make all the input available at output 		 * 		 * Normally the encoder introduces some latency. 		 * LZMA_SYNC_FLUSH forces all the buffered data to be 		 * available at output without resetting the internal 		 * state of the encoder. This way it is possible to use 		 * compressed stream for example for communication over 		 * network. 		 * 		 * Only some filters support LZMA_SYNC_FLUSH. Trying to use 		 * LZMA_SYNC_FLUSH with filters that don't support it will 		 * make lzma_code() return LZMA_OPTIONS_ERROR. For example, 		 * LZMA1 doesn't support LZMA_SYNC_FLUSH but LZMA2 does. 		 * 		 * Using LZMA_SYNC_FLUSH very often can dramatically reduce 		 * the compression ratio. With some filters (for example, 		 * LZMA2), fine-tuning the compression options may help 		 * mitigate this problem significantly. 		 * 		 * Decoders don't support LZMA_SYNC_FLUSH. 		 */
+comment|/**< 		 * \brief       Make all the input available at output 		 * 		 * Normally the encoder introduces some latency. 		 * LZMA_SYNC_FLUSH forces all the buffered data to be 		 * available at output without resetting the internal 		 * state of the encoder. This way it is possible to use 		 * compressed stream for example for communication over 		 * network. 		 * 		 * Only some filters support LZMA_SYNC_FLUSH. Trying to use 		 * LZMA_SYNC_FLUSH with filters that don't support it will 		 * make lzma_code() return LZMA_OPTIONS_ERROR. For example, 		 * LZMA1 doesn't support LZMA_SYNC_FLUSH but LZMA2 does. 		 * 		 * Using LZMA_SYNC_FLUSH very often can dramatically reduce 		 * the compression ratio. With some filters (for example, 		 * LZMA2), fine-tuning the compression options may help 		 * mitigate this problem significantly (for example, 		 * match finder with LZMA2). 		 * 		 * Decoders don't support LZMA_SYNC_FLUSH. 		 */
 name|LZMA_FULL_FLUSH
 init|=
 literal|2
 block|,
-comment|/**< 		 * \brief       Make all the input available at output 		 * 		 * Finish encoding of the current Block. All the input 		 * data going to the current Block must have been given 		 * to the encoder (the last bytes can still be pending in 		 * next_in). Call lzma_code() with LZMA_FULL_FLUSH until 		 * it returns LZMA_STREAM_END. Then continue normally with 		 * LZMA_RUN or finish the Stream with LZMA_FINISH. 		 * 		 * This action is currently supported only by Stream encoder 		 * and easy encoder (which uses Stream encoder). If there is 		 * no unfinished Block, no empty Block is created. 		 */
+comment|/**< 		 * \brief       Finish encoding of the current Block 		 * 		 * All the input data going to the current Block must have 		 * been given to the encoder (the last bytes can still be 		 * pending in* next_in). Call lzma_code() with LZMA_FULL_FLUSH 		 * until it returns LZMA_STREAM_END. Then continue normally 		 * with LZMA_RUN or finish the Stream with LZMA_FINISH. 		 * 		 * This action is currently supported only by Stream encoder 		 * and easy encoder (which uses Stream encoder). If there is 		 * no unfinished Block, no empty Block is created. 		 */
 name|LZMA_FINISH
 init|=
 literal|3
-comment|/**< 		 * \brief       Finish the coding operation 		 * 		 * Finishes the coding operation. All the input data must 		 * have been given to the encoder (the last bytes can still 		 * be pending in next_in). Call lzma_code() with LZMA_FINISH 		 * until it returns LZMA_STREAM_END. Once LZMA_FINISH has 		 * been used, the amount of input must no longer be changed 		 * by the application. 		 * 		 * When decoding, using LZMA_FINISH is optional unless the 		 * LZMA_CONCATENATED flag was used when the decoder was 		 * initialized. When LZMA_CONCATENATED was not used, the only 		 * effect of LZMA_FINISH is that the amount of input must not 		 * be changed just like in the encoder. 		 */
+comment|/**< 		 * \brief       Finish the coding operation 		 * 		 * All the input data must have been given to the encoder 		 * (the last bytes can still be pending in next_in). 		 * Call lzma_code() with LZMA_FINISH until it returns 		 * LZMA_STREAM_END. Once LZMA_FINISH has been used, 		 * the amount of input must no longer be changed by 		 * the application. 		 * 		 * When decoding, using LZMA_FINISH is optional unless the 		 * LZMA_CONCATENATED flag was used when the decoder was 		 * initialized. When LZMA_CONCATENATED was not used, the only 		 * effect of LZMA_FINISH is that the amount of input must not 		 * be changed just like in the encoder. 		 */
 block|}
 name|lzma_action
 typedef|;
@@ -278,11 +278,25 @@ name|void
 modifier|*
 name|reserved_ptr2
 decl_stmt|;
+name|void
+modifier|*
+name|reserved_ptr3
+decl_stmt|;
+name|void
+modifier|*
+name|reserved_ptr4
+decl_stmt|;
 name|uint64_t
 name|reserved_int1
 decl_stmt|;
 name|uint64_t
 name|reserved_int2
+decl_stmt|;
+name|size_t
+name|reserved_int3
+decl_stmt|;
+name|size_t
+name|reserved_int4
 decl_stmt|;
 name|lzma_reserved_enum
 name|reserved_enum1
@@ -304,7 +318,7 @@ define|#
 directive|define
 name|LZMA_STREAM_INIT
 define|\
-value|{ NULL, 0, 0, NULL, 0, 0, NULL, NULL, \ 	NULL, NULL, 0, 0, LZMA_RESERVED_ENUM, LZMA_RESERVED_ENUM }
+value|{ NULL, 0, 0, NULL, 0, 0, NULL, NULL, \ 	NULL, NULL, NULL, NULL, 0, 0, 0, 0, \ 	LZMA_RESERVED_ENUM, LZMA_RESERVED_ENUM }
 end_define
 
 begin_comment
@@ -353,7 +367,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/**  * \brief       Get the memory usage of decoder filter chain  *  * This function is currently supported only when *strm has been initialized  * with a function that takes a memlimit argument. With other functions, you  * should use e.g. lzma_raw_encoder_memusage() or lzma_raw_decoder_memusage()  * to estimate the memory requirements.  *  * This function is useful e.g. after LZMA_MEMLIMIT_ERROR to find out how big  * the memory usage limit should have been to decode the input. Note that  * this may give misleading information if decoding .xz Streams that have  * multiple Blocks, because each Block can have different memory requirements.  *  * \return      Rough estimate of how much memory is currently allocated  *              for the filter decoders. If no filter chain is currently  *              allocated, some non-zero value is still returned, which is  *              less than or equal to what any filter chain would indicate  *              as its memory requirement.  *  *              If this function isn't supported by *strm or some other error  *              occurs, zero is returned.  */
+comment|/**  * \brief       Get the memory usage of decoder filter chain  *  * This function is currently supported only when *strm has been initialized  * with a function that takes a memlimit argument. With other functions, you  * should use e.g. lzma_raw_encoder_memusage() or lzma_raw_decoder_memusage()  * to estimate the memory requirements.  *  * This function is useful e.g. after LZMA_MEMLIMIT_ERROR to find out how big  * the memory usage limit should have been to decode the input. Note that  * this may give misleading information if decoding .xz Streams that have  * multiple Blocks, because each Block can have different memory requirements.  *  * \return      How much memory is currently allocated for the filter  *              decoders. If no filter chain is currently allocated,  *              some non-zero value is still returned, which is less than  *              or equal to what any filter chain would indicate as its  *              memory requirement.  *  *              If this function isn't supported by *strm or some other error  *              occurs, zero is returned.  */
 end_comment
 
 begin_extern

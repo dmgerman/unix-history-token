@@ -304,6 +304,34 @@ directive|ifdef
 name|SIGALRM
 end_ifdef
 
+begin_decl_stmt
+specifier|const
+name|int
+name|message_progress_sigs
+index|[]
+init|=
+block|{
+name|SIGALRM
+block|,
+ifdef|#
+directive|ifdef
+name|SIGINFO
+name|SIGINFO
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|SIGUSR1
+name|SIGUSR1
+block|,
+endif|#
+directive|endif
+literal|0
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/// The signal handler for SIGALRM sets this to true. It is set back to false
 end_comment
@@ -461,51 +489,8 @@ comment|/* 	if (progress_automatic) { 		// stderr is a terminal. Check the COLUM
 ifdef|#
 directive|ifdef
 name|SIGALRM
-comment|// At least DJGPP lacks SA_RESTART. It's not essential for us (the
-comment|// rest of the code can handle interrupted system calls), so just
-comment|// define it zero.
-ifndef|#
-directive|ifndef
-name|SA_RESTART
-define|#
-directive|define
-name|SA_RESTART
-value|0
-endif|#
-directive|endif
 comment|// Establish the signal handlers which set a flag to tell us that
-comment|// progress info should be updated. Since these signals don't
-comment|// require any quick action, we set SA_RESTART.
-specifier|static
-specifier|const
-name|int
-name|sigs
-index|[]
-init|=
-block|{
-ifdef|#
-directive|ifdef
-name|SIGALRM
-name|SIGALRM
-block|,
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|SIGINFO
-name|SIGINFO
-block|,
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|SIGUSR1
-name|SIGUSR1
-block|,
-endif|#
-directive|endif
-block|}
-decl_stmt|;
+comment|// progress info should be updated.
 name|struct
 name|sigaction
 name|sa
@@ -522,7 +507,7 @@ name|sa
 operator|.
 name|sa_flags
 operator|=
-name|SA_RESTART
+literal|0
 expr_stmt|;
 name|sa
 operator|.
@@ -538,12 +523,12 @@ name|i
 init|=
 literal|0
 init|;
+name|message_progress_sigs
+index|[
 name|i
-operator|<
-name|ARRAY_SIZE
-argument_list|(
-name|sigs
-argument_list|)
+index|]
+operator|!=
+literal|0
 condition|;
 operator|++
 name|i
@@ -552,7 +537,7 @@ if|if
 condition|(
 name|sigaction
 argument_list|(
-name|sigs
+name|message_progress_sigs
 index|[
 name|i
 index|]
@@ -945,14 +930,12 @@ argument_list|)
 operator|*
 literal|99.9
 decl_stmt|;
+comment|// Use big enough buffer to hold e.g. a multibyte decimal point.
 specifier|static
 name|char
 name|buf
 index|[
-sizeof|sizeof
-argument_list|(
-literal|"99.9 %"
-argument_list|)
+literal|16
 index|]
 decl_stmt|;
 name|snprintf
@@ -1000,15 +983,12 @@ name|bool
 name|final
 parameter_list|)
 block|{
-comment|// This is enough to hold sizes up to about 99 TiB if thousand
-comment|// separator is used, or about 1 PiB without thousand separator.
-comment|// After that the progress indicator will look a bit silly, since
-comment|// the compression ratio no longer fits with three decimal places.
+comment|// Use big enough buffer to hold e.g. a multibyte thousand separators.
 specifier|static
 name|char
 name|buf
 index|[
-literal|36
+literal|128
 index|]
 decl_stmt|;
 name|char
@@ -1248,14 +1228,12 @@ comment|//  - 0.1 KiB/s
 comment|//  - 9.9 KiB/s
 comment|//  - 99 KiB/s
 comment|//  - 999 KiB/s
+comment|// Use big enough buffer to hold e.g. a multibyte decimal point.
 specifier|static
 name|char
 name|buf
 index|[
-sizeof|sizeof
-argument_list|(
-literal|"999 GiB/s"
-argument_list|)
+literal|16
 index|]
 decl_stmt|;
 name|snprintf
@@ -2081,17 +2059,20 @@ expr_stmt|;
 comment|// Print the actual progress message. The idea is that there is at
 comment|// least three spaces between the fields in typical situations, but
 comment|// even in rare situations there is at least one space.
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\r %6s %35s   %9s %10s   %10s\r"
-argument_list|,
+specifier|const
+name|char
+modifier|*
+name|cols
+index|[
+literal|5
+index|]
+init|=
+block|{
 name|progress_percentage
 argument_list|(
 name|in_pos
 argument_list|)
-argument_list|,
+block|,
 name|progress_sizes
 argument_list|(
 name|compressed_pos
@@ -2100,25 +2081,87 @@ name|uncompressed_pos
 argument_list|,
 name|false
 argument_list|)
-argument_list|,
+block|,
 name|progress_speed
 argument_list|(
 name|uncompressed_pos
 argument_list|,
 name|elapsed
 argument_list|)
-argument_list|,
+block|,
 name|progress_time
 argument_list|(
 name|elapsed
 argument_list|)
-argument_list|,
+block|,
 name|progress_remaining
 argument_list|(
 name|in_pos
 argument_list|,
 name|elapsed
 argument_list|)
+block|, 	}
+decl_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\r %*s %*s   %*s %10s   %10s\r"
+argument_list|,
+name|tuklib_mbstr_fw
+argument_list|(
+name|cols
+index|[
+literal|0
+index|]
+argument_list|,
+literal|6
+argument_list|)
+argument_list|,
+name|cols
+index|[
+literal|0
+index|]
+argument_list|,
+name|tuklib_mbstr_fw
+argument_list|(
+name|cols
+index|[
+literal|1
+index|]
+argument_list|,
+literal|35
+argument_list|)
+argument_list|,
+name|cols
+index|[
+literal|1
+index|]
+argument_list|,
+name|tuklib_mbstr_fw
+argument_list|(
+name|cols
+index|[
+literal|2
+index|]
+argument_list|,
+literal|9
+argument_list|)
+argument_list|,
+name|cols
+index|[
+literal|2
+index|]
+argument_list|,
+name|cols
+index|[
+literal|3
+index|]
+argument_list|,
+name|cols
+index|[
+literal|4
+index|]
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -2286,21 +2329,24 @@ condition|(
 name|progress_automatic
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\r %6s %35s   %9s %10s   %10s\n"
-argument_list|,
+specifier|const
+name|char
+modifier|*
+name|cols
+index|[
+literal|5
+index|]
+init|=
+block|{
 name|finished
-condition|?
+operator|?
 literal|"100 %"
-else|:
+operator|:
 name|progress_percentage
 argument_list|(
 name|in_pos
 argument_list|)
-argument_list|,
+block|,
 name|progress_sizes
 argument_list|(
 name|compressed_pos
@@ -2309,29 +2355,91 @@ name|uncompressed_pos
 argument_list|,
 name|true
 argument_list|)
-argument_list|,
+block|,
 name|progress_speed
 argument_list|(
 name|uncompressed_pos
 argument_list|,
 name|elapsed
 argument_list|)
-argument_list|,
+block|,
 name|progress_time
 argument_list|(
 name|elapsed
 argument_list|)
-argument_list|,
+block|,
 name|finished
-condition|?
+operator|?
 literal|""
-else|:
+operator|:
 name|progress_remaining
 argument_list|(
 name|in_pos
 argument_list|,
 name|elapsed
 argument_list|)
+block|, 		}
+decl_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\r %*s %*s   %*s %10s   %10s\n"
+argument_list|,
+name|tuklib_mbstr_fw
+argument_list|(
+name|cols
+index|[
+literal|0
+index|]
+argument_list|,
+literal|6
+argument_list|)
+argument_list|,
+name|cols
+index|[
+literal|0
+index|]
+argument_list|,
+name|tuklib_mbstr_fw
+argument_list|(
+name|cols
+index|[
+literal|1
+index|]
+argument_list|,
+literal|35
+argument_list|)
+argument_list|,
+name|cols
+index|[
+literal|1
+index|]
+argument_list|,
+name|tuklib_mbstr_fw
+argument_list|(
+name|cols
+index|[
+literal|2
+index|]
+argument_list|,
+literal|9
+argument_list|)
+argument_list|,
+name|cols
+index|[
+literal|2
+index|]
+argument_list|,
+name|cols
+index|[
+literal|3
+index|]
+argument_list|,
+name|cols
+index|[
+literal|4
+index|]
 argument_list|)
 expr_stmt|;
 block|}
@@ -2894,15 +3002,16 @@ case|:
 case|case
 name|LZMA_PROG_ERROR
 case|:
+comment|// Without "default", compiler will warn if new constants
+comment|// are added to lzma_ret, it is not too easy to forget to
+comment|// add the new constants to this function.
+break|break;
+block|}
 return|return
 name|_
 argument_list|(
 literal|"Internal error (bug)"
 argument_list|)
-return|;
-block|}
-return|return
-name|NULL
 return|;
 block|}
 end_function
@@ -2938,11 +3047,13 @@ argument_list|(
 name|memusage
 argument_list|)
 expr_stmt|;
+comment|// With US-ASCII:
 comment|// 2^64 with thousand separators + " MiB" suffix + '\0' = 26 + 4 + 1
+comment|// But there may be multibyte chars so reserve enough space.
 name|char
 name|memlimitstr
 index|[
-literal|32
+literal|128
 index|]
 decl_stmt|;
 comment|// Show the memory usage limit as MiB unless it is less than 1 MiB.
@@ -2952,7 +3063,9 @@ name|uint64_t
 name|memlimit
 init|=
 name|hardware_memlimit_get
-argument_list|()
+argument_list|(
+name|opt_mode
+argument_list|)
 decl_stmt|;
 if|if
 condition|(
@@ -3042,40 +3155,168 @@ return|return;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief      Convert uint32_t to a nice string for --lzma[12]=dict=SIZE
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// The idea is to use KiB or MiB suffix when possible.
+end_comment
+
+begin_function
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|uint32_to_optstr
+parameter_list|(
+name|uint32_t
+name|num
+parameter_list|)
+block|{
+specifier|static
+name|char
+name|buf
+index|[
+literal|16
+index|]
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|num
+operator|&
+operator|(
+operator|(
+name|UINT32_C
+argument_list|(
+literal|1
+argument_list|)
+operator|<<
+literal|20
+operator|)
+operator|-
+literal|1
+operator|)
+operator|)
+operator|==
+literal|0
+condition|)
+name|snprintf
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|"%"
+name|PRIu32
+literal|"MiB"
+argument_list|,
+name|num
+operator|>>
+literal|20
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|(
+name|num
+operator|&
+operator|(
+operator|(
+name|UINT32_C
+argument_list|(
+literal|1
+argument_list|)
+operator|<<
+literal|10
+operator|)
+operator|-
+literal|1
+operator|)
+operator|)
+operator|==
+literal|0
+condition|)
+name|snprintf
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|"%"
+name|PRIu32
+literal|"KiB"
+argument_list|,
+name|num
+operator|>>
+literal|10
+argument_list|)
+expr_stmt|;
+else|else
+name|snprintf
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|"%"
+name|PRIu32
+argument_list|,
+name|num
+argument_list|)
+expr_stmt|;
+return|return
+name|buf
+return|;
+block|}
+end_function
+
 begin_function
 specifier|extern
 name|void
-name|message_filters
+name|message_filters_to_str
 parameter_list|(
-name|enum
-name|message_verbosity
-name|v
+name|char
+name|buf
+index|[
+name|FILTERS_STR_SIZE
+index|]
 parameter_list|,
 specifier|const
 name|lzma_filter
 modifier|*
 name|filters
+parameter_list|,
+name|bool
+name|all_known
 parameter_list|)
 block|{
-if|if
-condition|(
-name|v
-operator|>
-name|verbosity
-condition|)
-return|return;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|_
-argument_list|(
-literal|"%s: Filter chain:"
-argument_list|)
-argument_list|,
-name|progname
-argument_list|)
-expr_stmt|;
+name|char
+modifier|*
+name|pos
+init|=
+name|buf
+decl_stmt|;
+name|size_t
+name|left
+init|=
+name|FILTERS_STR_SIZE
+decl_stmt|;
 for|for
 control|(
 name|size_t
@@ -3096,10 +3337,24 @@ operator|++
 name|i
 control|)
 block|{
-name|fprintf
+comment|// Add the dashes for the filter option. A space is
+comment|// needed after the first and later filters.
+name|my_snprintf
 argument_list|(
-name|stderr
+operator|&
+name|pos
 argument_list|,
+operator|&
+name|left
+argument_list|,
+literal|"%s"
+argument_list|,
+name|i
+operator|==
+literal|0
+condition|?
+literal|"--"
+else|:
 literal|" --"
 argument_list|)
 expr_stmt|;
@@ -3136,12 +3391,21 @@ specifier|const
 name|char
 modifier|*
 name|mode
+init|=
+name|NULL
 decl_stmt|;
 specifier|const
 name|char
 modifier|*
 name|mf
+init|=
+name|NULL
 decl_stmt|;
+if|if
+condition|(
+name|all_known
+condition|)
+block|{
 switch|switch
 condition|(
 name|opt
@@ -3226,23 +3490,18 @@ literal|"UNKNOWN"
 expr_stmt|;
 break|break;
 block|}
-name|fprintf
+block|}
+comment|// Add the filter name and dictionary size, which
+comment|// is always known.
+name|my_snprintf
 argument_list|(
-name|stderr
+operator|&
+name|pos
 argument_list|,
-literal|"lzma%c=dict=%"
-name|PRIu32
-literal|",lc=%"
-name|PRIu32
-literal|",lp=%"
-name|PRIu32
-literal|",pb=%"
-name|PRIu32
-literal|",mode=%s,nice=%"
-name|PRIu32
-literal|",mf=%s"
-literal|",depth=%"
-name|PRIu32
+operator|&
+name|left
+argument_list|,
+literal|"lzma%c=dict=%s"
 argument_list|,
 name|filters
 index|[
@@ -3257,9 +3516,56 @@ literal|'2'
 else|:
 literal|'1'
 argument_list|,
+name|uint32_to_optstr
+argument_list|(
 name|opt
 operator|->
 name|dict_size
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|// With LZMA1 also lc/lp/pb are known when
+comment|// decompressing, but this function is never
+comment|// used to print information about .lzma headers.
+name|assert
+argument_list|(
+name|filters
+index|[
+name|i
+index|]
+operator|.
+name|id
+operator|==
+name|LZMA_FILTER_LZMA2
+operator|||
+name|all_known
+argument_list|)
+expr_stmt|;
+comment|// Print the rest of the options, which are known
+comment|// only when compressing.
+if|if
+condition|(
+name|all_known
+condition|)
+name|my_snprintf
+argument_list|(
+operator|&
+name|pos
+argument_list|,
+operator|&
+name|left
+argument_list|,
+literal|",lc=%"
+name|PRIu32
+literal|",lp=%"
+name|PRIu32
+literal|",pb=%"
+name|PRIu32
+literal|",mode=%s,nice=%"
+name|PRIu32
+literal|",mf=%s"
+literal|",depth=%"
+name|PRIu32
 argument_list|,
 name|opt
 operator|->
@@ -3291,69 +3597,111 @@ block|}
 case|case
 name|LZMA_FILTER_X86
 case|:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"x86"
-argument_list|)
-expr_stmt|;
-break|break;
 case|case
 name|LZMA_FILTER_POWERPC
 case|:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"powerpc"
-argument_list|)
-expr_stmt|;
-break|break;
 case|case
 name|LZMA_FILTER_IA64
 case|:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"ia64"
-argument_list|)
-expr_stmt|;
-break|break;
 case|case
 name|LZMA_FILTER_ARM
 case|:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"arm"
-argument_list|)
-expr_stmt|;
-break|break;
 case|case
 name|LZMA_FILTER_ARMTHUMB
 case|:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"armthumb"
-argument_list|)
-expr_stmt|;
-break|break;
 case|case
 name|LZMA_FILTER_SPARC
 case|:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
+block|{
+specifier|static
+specifier|const
+name|char
+name|bcj_names
+index|[]
+index|[
+literal|9
+index|]
+init|=
+block|{
+literal|"x86"
+block|,
+literal|"powerpc"
+block|,
+literal|"ia64"
+block|,
+literal|"arm"
+block|,
+literal|"armthumb"
+block|,
 literal|"sparc"
+block|, 			}
+decl_stmt|;
+specifier|const
+name|lzma_options_bcj
+modifier|*
+name|opt
+init|=
+name|filters
+index|[
+name|i
+index|]
+operator|.
+name|options
+decl_stmt|;
+name|my_snprintf
+argument_list|(
+operator|&
+name|pos
+argument_list|,
+operator|&
+name|left
+argument_list|,
+literal|"%s"
+argument_list|,
+name|bcj_names
+index|[
+name|filters
+index|[
+name|i
+index|]
+operator|.
+name|id
+operator|-
+name|LZMA_FILTER_X86
+index|]
+argument_list|)
+expr_stmt|;
+comment|// Show the start offset only when really needed.
+if|if
+condition|(
+name|opt
+operator|!=
+name|NULL
+operator|&&
+name|opt
+operator|->
+name|start_offset
+operator|!=
+literal|0
+condition|)
+name|my_snprintf
+argument_list|(
+operator|&
+name|pos
+argument_list|,
+operator|&
+name|left
+argument_list|,
+literal|"=start=%"
+name|PRIu32
+argument_list|,
+name|opt
+operator|->
+name|start_offset
 argument_list|)
 expr_stmt|;
 break|break;
+block|}
 case|case
 name|LZMA_FILTER_DELTA
 case|:
@@ -3370,9 +3718,13 @@ index|]
 operator|.
 name|options
 decl_stmt|;
-name|fprintf
+name|my_snprintf
 argument_list|(
-name|stderr
+operator|&
+name|pos
+argument_list|,
+operator|&
+name|left
 argument_list|,
 literal|"delta=dist=%"
 name|PRIu32
@@ -3385,9 +3737,15 @@ expr_stmt|;
 break|break;
 block|}
 default|default:
-name|fprintf
+comment|// This should be possible only if liblzma is
+comment|// newer than the xz tool.
+name|my_snprintf
 argument_list|(
-name|stderr
+operator|&
+name|pos
+argument_list|,
+operator|&
+name|left
 argument_list|,
 literal|"UNKNOWN"
 argument_list|)
@@ -3395,11 +3753,59 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|fputc
+return|return;
+block|}
+end_function
+
+begin_function
+specifier|extern
+name|void
+name|message_filters_show
+parameter_list|(
+name|enum
+name|message_verbosity
+name|v
+parameter_list|,
+specifier|const
+name|lzma_filter
+modifier|*
+name|filters
+parameter_list|)
+block|{
+if|if
+condition|(
+name|v
+operator|>
+name|verbosity
+condition|)
+return|return;
+name|char
+name|buf
+index|[
+name|FILTERS_STR_SIZE
+index|]
+decl_stmt|;
+name|message_filters_to_str
 argument_list|(
-literal|'\n'
+name|buf
 argument_list|,
+name|filters
+argument_list|,
+name|true
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
 name|stderr
+argument_list|,
+name|_
+argument_list|(
+literal|"%s: Filter chain: %s\n"
+argument_list|)
+argument_list|,
+name|progname
+argument_list|,
+name|buf
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3435,70 +3841,6 @@ end_function
 begin_function
 specifier|extern
 name|void
-name|message_memlimit
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-if|if
-condition|(
-name|opt_robot
-condition|)
-name|printf
-argument_list|(
-literal|"%"
-name|PRIu64
-literal|"\n"
-argument_list|,
-name|hardware_memlimit_get
-argument_list|()
-argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-name|_
-argument_list|(
-literal|"%s MiB (%s bytes)\n"
-argument_list|)
-argument_list|,
-name|uint64_to_str
-argument_list|(
-name|round_up_to_mib
-argument_list|(
-name|hardware_memlimit_get
-argument_list|()
-argument_list|)
-argument_list|,
-literal|0
-argument_list|)
-argument_list|,
-name|uint64_to_str
-argument_list|(
-name|hardware_memlimit_get
-argument_list|()
-argument_list|,
-literal|1
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|tuklib_exit
-argument_list|(
-name|E_SUCCESS
-argument_list|,
-name|E_ERROR
-argument_list|,
-name|verbosity
-operator|!=
-name|V_SILENT
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|extern
-name|void
 name|message_version
 parameter_list|(
 name|void
@@ -3513,7 +3855,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"XZ_VERSION=%d\nLIBLZMA_VERSION=%d\n"
+literal|"XZ_VERSION=%"
+name|PRIu32
+literal|"\nLIBLZMA_VERSION=%"
+name|PRIu32
+literal|"\n"
 argument_list|,
 name|LZMA_VERSION
 argument_list|,
@@ -3576,12 +3922,18 @@ argument_list|,
 name|progname
 argument_list|)
 expr_stmt|;
+comment|// NOTE: The short help doesn't currently have options that
+comment|// take arguments.
+if|if
+condition|(
+name|long_help
+condition|)
 name|puts
 argument_list|(
 name|_
 argument_list|(
-literal|"Mandatory arguments to long options are mandatory for "
-literal|"short options too.\n"
+literal|"Mandatory arguments to long options are mandatory "
+literal|"for short options too.\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3604,7 +3956,7 @@ argument_list|(
 literal|"  -z, --compress      force compression\n"
 literal|"  -d, --decompress    force decompression\n"
 literal|"  -t, --test          test compressed file integrity\n"
-literal|"  -l, --list          list information about files"
+literal|"  -l, --list          list information about .xz files"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3640,10 +3992,10 @@ name|_
 argument_list|(
 literal|"      --no-sparse     do not create sparse files when decompressing\n"
 literal|"  -S, --suffix=.SUF   use the suffix `.SUF' on compressed files\n"
-literal|"      --files=[FILE]  read filenames to process from FILE; if FILE is\n"
+literal|"      --files[=FILE]  read filenames to process from FILE; if FILE is\n"
 literal|"                      omitted, filenames are read from the standard input;\n"
 literal|"                      filenames must be terminated with the newline character\n"
-literal|"      --files0=[FILE] like --files but use the null character as terminator"
+literal|"      --files0[=FILE] like --files but use the null character as terminator"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3666,8 +4018,8 @@ name|_
 argument_list|(
 literal|"  -F, --format=FMT    file format to encode or decode; possible values are\n"
 literal|"                      `auto' (default), `xz', `lzma', and `raw'\n"
-literal|"  -C, --check=CHECK   integrity check type: `crc32', `crc64' (default),\n"
-literal|"                      `sha256', or `none' (use with caution)"
+literal|"  -C, --check=CHECK   integrity check type: `none' (use with caution),\n"
+literal|"                      `crc32', `crc64' (default), or `sha256'"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3676,8 +4028,8 @@ name|puts
 argument_list|(
 name|_
 argument_list|(
-literal|"  -0 .. -9            compression preset; 0-2 fast compression, 3-5 good\n"
-literal|"                      compression, 6-9 excellent compression; default is 6"
+literal|"  -0 ... -9           compression preset; default is 6; take compressor *and*\n"
+literal|"                      decompressor memory usage into account before using 7-9!"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3685,8 +4037,8 @@ name|puts
 argument_list|(
 name|_
 argument_list|(
-literal|"  -e, --extreme       use more CPU time when encoding to increase compression\n"
-literal|"                      ratio without increasing memory usage of the decoder"
+literal|"  -e, --extreme       try to improve compression ratio by using more CPU time;\n"
+literal|"                      does not affect decompressor memory requirements"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3694,16 +4046,30 @@ if|if
 condition|(
 name|long_help
 condition|)
+block|{
 name|puts
 argument_list|(
 name|_
 argument_list|(
 comment|// xgettext:no-c-format
-literal|"  -M, --memory=NUM    use roughly NUM bytes of memory at maximum; 0 indicates\n"
-literal|"                      the default setting, which is 40 % of total RAM"
+literal|"      --memlimit-compress=LIMIT\n"
+literal|"      --memlimit-decompress=LIMIT\n"
+literal|"  -M, --memlimit=LIMIT\n"
+literal|"                      set memory usage limit for compression, decompression,\n"
+literal|"                      or both; LIMIT is in bytes, % of RAM, or 0 for defaults"
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|puts
+argument_list|(
+name|_
+argument_list|(
+literal|"      --no-adjust     if compression settings exceed the memory usage limit,\n"
+literal|"                      give an error instead of adjusting the settings downwards"
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|long_help
@@ -3739,6 +4105,10 @@ name|defined
 argument_list|(
 name|HAVE_DECODER_LZMA2
 argument_list|)
+comment|// TRANSLATORS: The word "literal" in "literal context bits"
+comment|// means how many "context bits" to use when encoding
+comment|// literals. A literal is a single 8-bit byte. It doesn't
+comment|// mean "literally" here.
 name|puts
 argument_list|(
 name|_
@@ -3746,7 +4116,7 @@ argument_list|(
 literal|"\n"
 literal|"  --lzma1[=OPTS]      LZMA1 or LZMA2; OPTS is a comma-separated list of zero or\n"
 literal|"  --lzma2[=OPTS]      more of the following options (valid values; default):\n"
-literal|"                        preset=NUM reset options to preset number NUM (0-9)\n"
+literal|"                        preset=PRE reset options to a preset (0-9[e])\n"
 literal|"                        dict=NUM   dictionary size (4KiB - 1536MiB; 8MiB)\n"
 literal|"                        lc=NUM     number of literal context bits (0-4; 3)\n"
 literal|"                        lp=NUM     number of literal position bits (0-4; 0)\n"
@@ -3765,9 +4135,9 @@ argument_list|(
 name|_
 argument_list|(
 literal|"\n"
-literal|"  --x86[=OPTS]        x86 BCJ filter\n"
+literal|"  --x86[=OPTS]        x86 BCJ filter (32-bit and 64-bit)\n"
 literal|"  --powerpc[=OPTS]    PowerPC BCJ filter (big endian only)\n"
-literal|"  --ia64[=OPTS]       IA64 (Itanium) BCJ filter\n"
+literal|"  --ia64[=OPTS]       IA-64 (Itanium) BCJ filter\n"
 literal|"  --arm[=OPTS]        ARM BCJ filter (little endian only)\n"
 literal|"  --armthumb[=OPTS]   ARM-Thumb BCJ filter (little endian only)\n"
 literal|"  --sparc[=OPTS]      SPARC BCJ filter\n"
@@ -3795,31 +4165,6 @@ literal|"\n"
 literal|"  --delta[=OPTS]      Delta filter; valid OPTS (valid values; default):\n"
 literal|"                        dist=NUM   distance between bytes being subtracted\n"
 literal|"                                   from each other (1-256; 1)"
-argument_list|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_ENCODER_SUBBLOCK
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|HAVE_DECODER_SUBBLOCK
-argument_list|)
-name|puts
-argument_list|(
-name|_
-argument_list|(
-literal|"\n"
-literal|"  --subblock[=OPTS]   Subblock filter; valid OPTS (valid values; default):\n"
-literal|"                        size=NUM   number of bytes of data per subblock\n"
-literal|"                                   (1 - 256Mi; 4Ki)\n"
-literal|"                        rle=NUM    run-length encoder chunk size (0-256; 0)"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3877,7 +4222,8 @@ name|puts
 argument_list|(
 name|_
 argument_list|(
-literal|"      --info-memory   display the memory usage limit and exit"
+literal|"      --info-memory   display the total amount of RAM and the currently active\n"
+literal|"                      memory usage limits, and exit"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3919,53 +4265,6 @@ literal|"\nWith no FILE, or when FILE is -, read standard input.\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|long_help
-condition|)
-block|{
-name|printf
-argument_list|(
-name|_
-argument_list|(
-literal|"On this system and configuration, this program will use a maximum of roughly\n"
-literal|"%s MiB RAM and "
-argument_list|)
-argument_list|,
-name|uint64_to_str
-argument_list|(
-name|round_up_to_mib
-argument_list|(
-name|hardware_memlimit_get
-argument_list|()
-argument_list|)
-argument_list|,
-literal|0
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-name|N_
-argument_list|(
-literal|"one thread.\n\n"
-argument_list|,
-literal|"%s threads.\n\n"
-argument_list|,
-name|hardware_threadlimit_get
-argument_list|()
-argument_list|)
-argument_list|,
-name|uint64_to_str
-argument_list|(
-name|hardware_threadlimit_get
-argument_list|()
-argument_list|,
-literal|0
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
 comment|// TRANSLATORS: This message indicates the bug reporting address
 comment|// for this package. Please add _another line_ saying
 comment|// "Report translation bugs to<...>\n" with the email or WWW

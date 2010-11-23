@@ -341,7 +341,7 @@ specifier|const
 name|size_t
 name|size
 init|=
-name|MIN
+name|my_min
 argument_list|(
 name|in_avail
 argument_list|,

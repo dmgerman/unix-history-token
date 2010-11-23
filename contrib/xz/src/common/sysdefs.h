@@ -97,6 +97,28 @@ directive|endif
 end_endif
 
 begin_comment
+comment|// Get standard-compliant stdio functions under MinGW and MinGW-w64.
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__MINGW32__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|__USE_MINGW_ANSI_STDIO
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|// size_t and NULL
 end_comment
 
@@ -510,7 +532,7 @@ end_else
 begin_error
 error|#
 directive|error
-error|sizeof(size_t) is not 32-bit or 64-bit
+error|size_t is not 32-bit or 64-bit
 end_error
 
 begin_endif
@@ -538,7 +560,7 @@ end_if
 begin_error
 error|#
 directive|error
-error|sizeof(size_t) is not 32-bit or 64-bit
+error|size_t is not 32-bit or 64-bit
 end_error
 
 begin_endif
@@ -757,16 +779,22 @@ parameter_list|)
 value|memset(s, 0, n)
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MIN
-end_ifndef
+begin_comment
+comment|// NOTE: Avoid using MIN() and MAX(), because even conditionally defining
+end_comment
+
+begin_comment
+comment|// those macros can cause some portability trouble, since on some systems
+end_comment
+
+begin_comment
+comment|// the system headers insist defining their own versions.
+end_comment
 
 begin_define
 define|#
 directive|define
-name|MIN
+name|my_min
 parameter_list|(
 name|x
 parameter_list|,
@@ -775,21 +803,10 @@ parameter_list|)
 value|((x)< (y) ? (x) : (y))
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MAX
-end_ifndef
-
 begin_define
 define|#
 directive|define
-name|MAX
+name|my_max
 parameter_list|(
 name|x
 parameter_list|,
@@ -797,11 +814,6 @@ name|y
 parameter_list|)
 value|((x)> (y) ? (x) : (y))
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#

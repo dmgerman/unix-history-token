@@ -1898,7 +1898,7 @@ return|;
 block|}
 comment|// With LZMA2 we need to take care that compressed size of
 comment|// a chunk doesn't get too big.
-comment|// TODO
+comment|// FIXME? Check if this could be improved.
 if|if
 condition|(
 name|limit

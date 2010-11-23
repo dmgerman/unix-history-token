@@ -1513,7 +1513,7 @@ decl_stmt|;
 name|uint32_t
 name|d
 init|=
-name|MAX
+name|my_max
 argument_list|(
 name|opt
 operator|->

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**  * \file        lzma/index_hash.h  * \brief       Validates Index by using a hash function  *  * Hashing makes it possible to use constant amount of memory to validate  * Index of arbitrary size.  */
+comment|/**  * \file        lzma/index_hash.h  * \brief       Validate Index by using a hash function  *  * Hashing makes it possible to use constant amount of memory to validate  * Index of arbitrary size.  */
 end_comment
 
 begin_comment

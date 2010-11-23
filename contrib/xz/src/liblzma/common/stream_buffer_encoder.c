@@ -117,7 +117,7 @@ comment|// the Stream exceeding LZMA_VLI_MAX (theoretically possible on
 comment|// 64-bit systems).
 if|if
 condition|(
-name|MIN
+name|my_min
 argument_list|(
 name|SIZE_MAX
 argument_list|,

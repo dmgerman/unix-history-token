@@ -62,21 +62,12 @@ file|"common.h"
 end_include
 
 begin_comment
-comment|// FIXME !!! Public API
+comment|// FIXME: Might become a part of the public API once finished.
 end_comment
 
-begin_function_decl
-specifier|extern
-name|lzma_vli
-name|lzma_chunk_size
-parameter_list|(
-specifier|const
-name|lzma_filter
-modifier|*
-name|filters
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_comment
+comment|// extern lzma_vli lzma_chunk_size(const lzma_filter *filters);
+end_comment
 
 begin_function_decl
 specifier|extern

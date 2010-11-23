@@ -24,7 +24,7 @@ comment|/*****************************  * Required standard headers *  *********
 end_comment
 
 begin_comment
-comment|/*  * liblzma API headers need some standard types and macros. To allow  * including lzma.h without requiring the application to include other  * headers first, lzma.h includes the required standard headers unless  * they already seem to be included already or if LZMA_MANUAL_HEADERS  * has been defined.  *  * Here's what types and macros are needed and from which headers:  *  - stddef.h: size_t, NULL  *  - stdint.h: uint8_t, uint32_t, uint64_t, UINT32_C(n), uint64_C(n),  *    UINT32_MAX, UINT64_MAX  *  * However, inttypes.h is a little more portable than stdint.h, although  * inttypes.h declares some unneeded things compared to plain stdint.h.  *  * The hacks below aren't perfect, specifically they assume that inttypes.h  * exists and that it typedefs at least uint8_t, uint32_t, and uint64_t,  * and that, in case of incomplete inttypes.h, unsigned int is 32-bit.  * If the application already takes care of setting up all the types and  * macros properly (for example by using gnulib's stdint.h or inttypes.h),  * we try to detect that the macros are already defined and don't include  * inttypes.h here again. However, you may define LZMA_MANUAL_HEADERS to  * force this file to never include any system headers.  *  * Some could argue that liblzma API should provide all the required types,  * for example lzma_uint64, LZMA_UINT64_C(n), and LZMA_UINT64_MAX. This was  * seen unnecessary mess, since most systems already provide all the necessary  * types and macros in the standard headers.  *  * Note that liblzma API still has lzma_bool, because using stdbool.h would  * break C89 and C++ programs on many systems. sizeof(bool) in C99 isn't  * necessarily the same as sizeof(bool) in C++.  */
+comment|/*  * liblzma API headers need some standard types and macros. To allow  * including lzma.h without requiring the application to include other  * headers first, lzma.h includes the required standard headers unless  * they already seem to be included already or if LZMA_MANUAL_HEADERS  * has been defined.  *  * Here's what types and macros are needed and from which headers:  *  - stddef.h: size_t, NULL  *  - stdint.h: uint8_t, uint32_t, uint64_t, UINT32_C(n), uint64_C(n),  *    UINT32_MAX, UINT64_MAX  *  * However, inttypes.h is a little more portable than stdint.h, although  * inttypes.h declares some unneeded things compared to plain stdint.h.  *  * The hacks below aren't perfect, specifically they assume that inttypes.h  * exists and that it typedefs at least uint8_t, uint32_t, and uint64_t,  * and that, in case of incomplete inttypes.h, unsigned int is 32-bit.  * If the application already takes care of setting up all the types and  * macros properly (for example by using gnulib's stdint.h or inttypes.h),  * we try to detect that the macros are already defined and don't include  * inttypes.h here again. However, you may define LZMA_MANUAL_HEADERS to  * force this file to never include any system headers.  *  * Some could argue that liblzma API should provide all the required types,  * for example lzma_uint64, LZMA_UINT64_C(n), and LZMA_UINT64_MAX. This was  * seen as an unnecessary mess, since most systems already provide all the  * necessary types and macros in the standard headers.  *  * Note that liblzma API still has lzma_bool, because using stdbool.h would  * break C89 and C++ programs on many systems. sizeof(bool) in C99 isn't  * necessarily the same as sizeof(bool) in C++.  */
 end_comment
 
 begin_ifndef
@@ -637,24 +637,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lzma_restrict
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|lzma_restrict
-value|__restrict__
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* warn_unused_result was added in GCC 3.4. */
 end_comment
@@ -712,48 +694,6 @@ parameter_list|(
 name|attr
 parameter_list|)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lzma_restrict
-end_ifndef
-
-begin_if
-if|#
-directive|if
-name|__STDC_VERSION__
-operator|>=
-literal|199901L
-end_if
-
-begin_define
-define|#
-directive|define
-name|lzma_restrict
-value|restrict
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|lzma_restrict
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -858,9 +798,6 @@ comment|/* Filters */
 include|#
 directive|include
 file|"lzma/filter.h"
-include|#
-directive|include
-file|"lzma/subblock.h"
 include|#
 directive|include
 file|"lzma/bcj.h"

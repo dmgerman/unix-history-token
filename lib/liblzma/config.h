@@ -41,13 +41,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|HAVE_DECODER
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
 name|HAVE_DECODER_ARM
 value|1
 end_define
@@ -112,13 +105,6 @@ begin_define
 define|#
 directive|define
 name|HAVE_DLFCN_H
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_ENCODER
 value|1
 end_define
 
@@ -224,6 +210,13 @@ begin_define
 define|#
 directive|define
 name|HAVE_LIMITS_H
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_MBRTOWC
 value|1
 end_define
 
@@ -384,6 +377,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_WCWIDTH
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE__BOOL
 value|1
 end_define
@@ -427,7 +427,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"XZ Utils 4.999.9beta"
+value|"XZ Utils 5.0.0"
 end_define
 
 begin_define
@@ -448,7 +448,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"4.999.9beta"
+value|"5.0.0"
 end_define
 
 begin_define
@@ -468,7 +468,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|TUKLIB_CPUCORES_SYSCONF
+name|TUKLIB_CPUCORES_SYSCTL
 value|1
 end_define
 
@@ -580,7 +580,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"4.999.9beta"
+value|"5.0.0"
 end_define
 
 begin_if

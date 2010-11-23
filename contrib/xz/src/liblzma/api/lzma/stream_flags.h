@@ -76,12 +76,6 @@ decl_stmt|;
 name|lzma_reserved_enum
 name|reserved_enum4
 decl_stmt|;
-name|lzma_reserved_enum
-name|reserved_enum5
-decl_stmt|;
-name|lzma_reserved_enum
-name|reserved_enum6
-decl_stmt|;
 name|lzma_bool
 name|reserved_bool1
 decl_stmt|;
@@ -111,12 +105,6 @@ name|reserved_int1
 decl_stmt|;
 name|uint32_t
 name|reserved_int2
-decl_stmt|;
-name|uint32_t
-name|reserved_int3
-decl_stmt|;
-name|uint32_t
-name|reserved_int4
 decl_stmt|;
 block|}
 name|lzma_stream_flags
@@ -172,7 +160,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/**  * \brief       Decode Stream Header  *  * \param       options     Stream Header options to be encoded.  * \param       in          Beginning of the input buffer of  *                          LZMA_STREAM_HEADER_SIZE bytes.  *  * options->backward_size is always set to LZMA_VLI_UNKNOWN. This is to  * help comparing Stream Flags from Stream Header and Stream Footer with  * lzma_stream_flags_compare().  *  * \return      - LZMA_OK: Decoding was successful.  *              - LZMA_FORMAT_ERROR: Magic bytes don't match, thus the given  *                buffer cannot be Stream Header.  *              - LZMA_DATA_ERROR: CRC32 doesn't match, thus the header  *                is corrupt.  *              - LZMA_OPTIONS_ERROR: Unsupported options are present  *                in the header.  *  * \note        When decoding .xz files that contain multiple Streams, it may  *              make sense to print "file format not recognized" only if  *              decoding of the Stream Header of the _first_ Stream gives  *              LZMA_FORMAT_ERROR. If non-first Stream Header gives  *              LZMA_FORMAT_ERROR, the message used for LZMA_DATA_ERROR is  *              probably more appropriate.  *  *              For example, Stream decoder in liblzma uses LZMA_DATA_ERROR if  *              LZMA_FORMAT_ERROR is returned by lzma_stream_header_decode()  *              when decoding non-first Stream.  */
+comment|/**  * \brief       Decode Stream Header  *  * \param       options     Target for the decoded Stream Header options.  * \param       in          Beginning of the input buffer of  *                          LZMA_STREAM_HEADER_SIZE bytes.  *  * options->backward_size is always set to LZMA_VLI_UNKNOWN. This is to  * help comparing Stream Flags from Stream Header and Stream Footer with  * lzma_stream_flags_compare().  *  * \return      - LZMA_OK: Decoding was successful.  *              - LZMA_FORMAT_ERROR: Magic bytes don't match, thus the given  *                buffer cannot be Stream Header.  *              - LZMA_DATA_ERROR: CRC32 doesn't match, thus the header  *                is corrupt.  *              - LZMA_OPTIONS_ERROR: Unsupported options are present  *                in the header.  *  * \note        When decoding .xz files that contain multiple Streams, it may  *              make sense to print "file format not recognized" only if  *              decoding of the Stream Header of the _first_ Stream gives  *              LZMA_FORMAT_ERROR. If non-first Stream Header gives  *              LZMA_FORMAT_ERROR, the message used for LZMA_DATA_ERROR is  *              probably more appropriate.  *  *              For example, Stream decoder in liblzma uses LZMA_DATA_ERROR if  *              LZMA_FORMAT_ERROR is returned by lzma_stream_header_decode()  *              when decoding non-first Stream.  */
 end_comment
 
 begin_extern
@@ -196,7 +184,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/**  * \brief       Decode Stream Footer  *  * \param       options     Stream Header options to be encoded.  * \param       in          Beginning of the input buffer of  *                          LZMA_STREAM_HEADER_SIZE bytes.  *  * \return      - LZMA_OK: Decoding was successful.  *              - LZMA_FORMAT_ERROR: Magic bytes don't match, thus the given  *                buffer cannot be Stream Footer.  *              - LZMA_DATA_ERROR: CRC32 doesn't match, thus the Stream Footer  *                is corrupt.  *              - LZMA_OPTIONS_ERROR: Unsupported options are present  *                in Stream Footer.  *  * \note        If Stream Header was already decoded successfully, but  *              decoding Stream Footer returns LZMA_FORMAT_ERROR, the  *              application should probably report some other error message  *              than "file format not recognized", since the file more likely  *              is corrupt (possibly truncated). Stream decoder in liblzma  *              uses LZMA_DATA_ERROR in this situation.  */
+comment|/**  * \brief       Decode Stream Footer  *  * \param       options     Target for the decoded Stream Header options.  * \param       in          Beginning of the input buffer of  *                          LZMA_STREAM_HEADER_SIZE bytes.  *  * \return      - LZMA_OK: Decoding was successful.  *              - LZMA_FORMAT_ERROR: Magic bytes don't match, thus the given  *                buffer cannot be Stream Footer.  *              - LZMA_DATA_ERROR: CRC32 doesn't match, thus the Stream Footer  *                is corrupt.  *              - LZMA_OPTIONS_ERROR: Unsupported options are present  *                in Stream Footer.  *  * \note        If Stream Header was already decoded successfully, but  *              decoding Stream Footer returns LZMA_FORMAT_ERROR, the  *              application should probably report some other error message  *              than "file format not recognized", since the file more likely  *              is corrupt (possibly truncated). Stream decoder in liblzma  *              uses LZMA_DATA_ERROR in this situation.  */
 end_comment
 
 begin_extern

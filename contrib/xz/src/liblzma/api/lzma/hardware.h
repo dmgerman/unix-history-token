@@ -25,7 +25,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/**  * \brief       Get the total amount of physical memory (RAM) in bytes  *  * This function may be useful when determining a reasonable memory  * usage limit for decompressing or how much memory it is OK to use  * for compressing. For example, the default limit used by the xz  * command line tool is 40 % of RAM.  *  * \return      On success, the total amount of physical memory in bytes  *              is returned. If the amount of RAM cannot be determined,  *              zero is returned. This can happen if an error occurs  *              or if there is no code in liblzma to detect the amount  *              of RAM on the specific operating system.  */
+comment|/**  * \brief       Get the total amount of physical memory (RAM) in bytes  *  * This function may be useful when determining a reasonable memory  * usage limit for decompressing or how much memory it is OK to use  * for compressing.  *  * \return      On success, the total amount of physical memory in bytes  *              is returned. If the amount of RAM cannot be determined,  *              zero is returned. This can happen if an error occurs  *              or if there is no code in liblzma to detect the amount  *              of RAM on the specific operating system.  */
 end_comment
 
 begin_extern

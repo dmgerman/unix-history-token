@@ -1938,7 +1938,8 @@ block|}
 case|case
 name|SEQ_EOPM
 case|:
-comment|// TODO Comment
+comment|// LZMA1 stream with
+comment|// end-of-payload marker.
 name|rc_normalize
 argument_list|(
 name|SEQ_EOPM
@@ -2578,7 +2579,6 @@ name|opt
 decl_stmt|;
 comment|// NOTE: We assume that lc/lp/pb are valid since they were
 comment|// successfully decoded with lzma_lzma_decode_properties().
-comment|// FIXME?
 comment|// Calculate pos_mask. We don't need pos_bits as is for anything.
 name|coder
 operator|->

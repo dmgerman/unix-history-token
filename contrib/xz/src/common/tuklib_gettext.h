@@ -143,20 +143,6 @@ parameter_list|)
 value|gettext(msgid)
 end_define
 
-begin_define
-define|#
-directive|define
-name|N_
-parameter_list|(
-name|msgid1
-parameter_list|,
-name|msgid2
-parameter_list|,
-name|n
-parameter_list|)
-value|ngettext(msgid1, msgid2, n)
-end_define
-
 begin_else
 else|#
 directive|else
@@ -188,7 +174,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|N_
+name|ngettext
 parameter_list|(
 name|msgid1
 parameter_list|,
@@ -203,6 +189,16 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|N_
+parameter_list|(
+name|msgid
+parameter_list|)
+value|msgid
+end_define
 
 begin_endif
 endif|#
