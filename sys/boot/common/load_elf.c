@@ -2444,7 +2444,22 @@ name|__XSTRING
 argument_list|(
 name|__ELF_WORD_SIZE
 argument_list|)
-literal|"_loadimage: could not read symbols - skipped!"
+literal|"_loadimage: could not read symbols - skipped! (%ju - %ju)"
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|result
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|shdr
+index|[
+name|i
+index|]
+operator|.
+name|sh_size
 argument_list|)
 expr_stmt|;
 name|lastaddr
