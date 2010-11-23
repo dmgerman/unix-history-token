@@ -3319,9 +3319,17 @@ argument_list|,
 literal|"timeout waiting to issue command\n"
 argument_list|)
 expr_stmt|;
+name|request
+operator|->
+name|flags
+operator||=
+name|ATA_R_TIMEOUT
+expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 comment|/* enable interrupt */
@@ -3444,7 +3452,9 @@ operator|&
 name|ATA_R_ATAPI_INTR
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 comment|/* command processed ? */
 name|res
@@ -3473,6 +3483,7 @@ name|res
 operator|<
 literal|0
 condition|)
+block|{
 name|device_printf
 argument_list|(
 name|request
@@ -3482,6 +3493,13 @@ argument_list|,
 literal|"timeout waiting for PACKET command\n"
 argument_list|)
 expr_stmt|;
+name|request
+operator|->
+name|flags
+operator||=
+name|ATA_R_TIMEOUT
+expr_stmt|;
+block|}
 return|return
 operator|(
 operator|-
@@ -3567,13 +3585,15 @@ argument_list|)
 expr_stmt|;
 name|request
 operator|->
-name|result
-operator|=
-name|EIO
+name|flags
+operator||=
+name|ATA_R_TIMEOUT
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 comment|/* this seems to be needed for some (slow) devices */
@@ -3644,7 +3664,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
