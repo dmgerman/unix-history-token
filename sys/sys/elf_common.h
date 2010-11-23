@@ -2519,6 +2519,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PT_GNU_STACK
+value|0x6474e551
+end_define
+
+begin_define
+define|#
+directive|define
 name|PT_LOSUNW
 value|0x6ffffffa
 end_define
