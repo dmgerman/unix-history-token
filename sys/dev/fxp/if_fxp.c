@@ -337,12 +337,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * The configuration byte map has several undefined fields which  * must be one or must be zero.  Set up a template for these bits.  * The actual configuration is performed in fxp_init.  *  * See struct fxp_cb_config for the bit definitions.  */
+comment|/*  * The configuration byte map has several undefined fields which  * must be one or must be zero.  Set up a template for these bits.  * The actual configuration is performed in fxp_init_body.  *  * See struct fxp_cb_config for the bit definitions.  */
 end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|u_char
+specifier|const
 name|fxp_cb_config_template
 index|[]
 init|=
@@ -471,8 +473,10 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|fxp_ident
+specifier|const
 name|fxp_ident_table
 index|[]
 init|=
@@ -1070,6 +1074,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+specifier|const
 name|struct
 name|fxp_ident
 modifier|*
@@ -2180,6 +2185,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|const
 name|struct
 name|fxp_ident
 modifier|*
@@ -2195,6 +2201,7 @@ decl_stmt|;
 name|uint8_t
 name|revid
 decl_stmt|;
+specifier|const
 name|struct
 name|fxp_ident
 modifier|*
@@ -2293,6 +2300,7 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|fxp_ident
 modifier|*
@@ -7984,31 +7992,6 @@ operator|=
 name|tx_threshold
 expr_stmt|;
 comment|/* 	 * Advance the end of list forward. 	 */
-ifdef|#
-directive|ifdef
-name|__alpha__
-comment|/* 	 * On platforms which can't access memory in 16-bit 	 * granularities, we must prevent the card from DMA'ing 	 * up the status while we update the command field. 	 * This could cause us to overwrite the completion status. 	 * XXX This is probably bogus and we're _not_ looking 	 * for atomicity here. 	 */
-name|atomic_clear_16
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|fxp_desc
-operator|.
-name|tx_last
-operator|->
-name|tx_cb
-operator|->
-name|cb_command
-argument_list|,
-name|htole16
-argument_list|(
-name|FXP_CB_COMMAND_S
-argument_list|)
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|sc
 operator|->
 name|fxp_desc
@@ -8025,9 +8008,6 @@ operator|~
 name|FXP_CB_COMMAND_S
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/*__alpha__*/
 name|sc
 operator|->
 name|fxp_desc
@@ -14345,6 +14325,8 @@ value|x, sizeof(x)/sizeof(uint32_t)
 end_define
 
 begin_struct
+specifier|static
+specifier|const
 struct|struct
 name|ucode
 block|{
@@ -14365,6 +14347,7 @@ name|u_short
 name|bundle_max_offset
 decl_stmt|;
 block|}
+decl|const
 name|ucode_table
 index|[]
 init|=
@@ -14486,6 +14469,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|ucode
 modifier|*
