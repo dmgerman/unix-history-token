@@ -532,16 +532,9 @@ init|;
 condition|;
 control|)
 block|{
-while|while
-condition|(
-operator|*
-name|p
-condition|)
-name|STPUTC
+name|STPUTS
 argument_list|(
-operator|*
 name|p
-operator|++
 argument_list|,
 name|concat
 argument_list|)

@@ -1027,6 +1027,13 @@ init|;
 condition|;
 control|)
 block|{
+name|CHECKSTRSPACE
+argument_list|(
+literal|2
+argument_list|,
+name|expdest
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|c
@@ -1087,7 +1094,7 @@ operator|)
 operator|!=
 literal|0
 condition|)
-name|STPUTC
+name|USTPUTC
 argument_list|(
 name|c
 argument_list|,
@@ -1110,7 +1117,7 @@ if|if
 condition|(
 name|quotes
 condition|)
-name|STPUTC
+name|USTPUTC
 argument_list|(
 name|c
 argument_list|,
@@ -1123,7 +1130,7 @@ operator|*
 name|p
 operator|++
 expr_stmt|;
-name|STPUTC
+name|USTPUTC
 argument_list|(
 name|c
 argument_list|,
@@ -1218,7 +1225,7 @@ case|case
 literal|'='
 case|:
 comment|/* 			 * sort of a hack - expand tildes in variable 			 * assignments (after the first '=' and after ':'s). 			 */
-name|STPUTC
+name|USTPUTC
 argument_list|(
 name|c
 argument_list|,
@@ -1291,7 +1298,7 @@ expr_stmt|;
 block|}
 break|break;
 default|default:
-name|STPUTC
+name|USTPUTC
 argument_list|(
 name|c
 argument_list|,
@@ -4197,7 +4204,7 @@ parameter_list|(
 name|p
 parameter_list|)
 define|\
-value|do {\ 	if (flag& (EXP_FULL | EXP_CASE)&& subtype != VSLENGTH) { \ 		syntax = quoted? DQSYNTAX : BASESYNTAX; \ 		while (*p) { \ 			if (syntax[(int)*p] == CCTL) \ 				STPUTC(CTLESC, expdest); \ 			STPUTC(*p++, expdest); \ 		} \ 	} else \ 		while (*p) \ 			STPUTC(*p++, expdest); \ 	} while (0)
+value|do {\ 	if (flag& (EXP_FULL | EXP_CASE)&& subtype != VSLENGTH) { \ 		syntax = quoted? DQSYNTAX : BASESYNTAX; \ 		while (*p) { \ 			if (syntax[(int)*p] == CCTL) \ 				STPUTC(CTLESC, expdest); \ 			STPUTC(*p++, expdest); \ 		} \ 	} else \ 		STPUTS(p, expdest); \ 	} while (0)
 switch|switch
 condition|(
 operator|*
@@ -7169,16 +7176,9 @@ name|p
 operator|=
 literal|'-'
 expr_stmt|;
-while|while
-condition|(
-operator|*
-name|p
-condition|)
-name|STPUTC
+name|STPUTS
 argument_list|(
-operator|*
 name|p
-operator|++
 argument_list|,
 name|buf
 argument_list|)

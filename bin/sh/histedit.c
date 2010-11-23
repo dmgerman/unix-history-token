@@ -1701,16 +1701,9 @@ operator|==
 literal|0
 condition|)
 block|{
-while|while
-condition|(
-operator|*
-name|r
-condition|)
-name|STPUTC
+name|STPUTS
 argument_list|(
-operator|*
 name|r
-operator|++
 argument_list|,
 name|dest
 argument_list|)

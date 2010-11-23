@@ -5006,6 +5006,13 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|CHECKSTRSPACE
+argument_list|(
+literal|2
+argument_list|,
+name|oout
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|c
@@ -5053,7 +5060,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 					 * If eating a newline, avoid putting 					 * the newline into the new character 					 * stream (via the STPUTC after the 					 * switch). 					 */
+comment|/* 					 * If eating a newline, avoid putting 					 * the newline into the new character 					 * stream (via the USTPUTC after the 					 * switch). 					 */
 continue|continue;
 block|}
 if|if
@@ -5079,7 +5086,7 @@ operator|!=
 literal|'"'
 operator|)
 condition|)
-name|STPUTC
+name|USTPUTC
 argument_list|(
 literal|'\\'
 argument_list|,
@@ -5114,7 +5121,7 @@ break|break;
 default|default:
 break|break;
 block|}
-name|STPUTC
+name|USTPUTC
 argument_list|(
 name|c
 argument_list|,
@@ -5124,7 +5131,7 @@ expr_stmt|;
 block|}
 name|done
 label|:
-name|STPUTC
+name|USTPUTC
 argument_list|(
 literal|'\0'
 argument_list|,
@@ -6959,9 +6966,6 @@ literal|0
 decl_stmt|;
 comment|/* used to handle ${[0-9]*} variables */
 name|int
-name|i
-decl_stmt|;
-name|int
 name|linno
 decl_stmt|;
 name|int
@@ -7280,28 +7284,9 @@ argument_list|,
 name|out
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|buf
-index|[
-name|i
-index|]
-operator|!=
-literal|'\0'
-condition|;
-name|i
-operator|++
-control|)
-name|STPUTC
+name|STPUTS
 argument_list|(
 name|buf
-index|[
-name|i
-index|]
 argument_list|,
 name|out
 argument_list|)
