@@ -4522,6 +4522,11 @@ name|sata
 operator|.
 name|caps
 expr_stmt|;
+else|else
+name|caps
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Store result to SIM. */
 name|bzero
 argument_list|(
@@ -5349,6 +5354,11 @@ operator|.
 name|sata
 operator|.
 name|caps
+expr_stmt|;
+else|else
+name|caps
+operator|=
+literal|0
 expr_stmt|;
 comment|/* Store result to SIM. */
 name|bzero
