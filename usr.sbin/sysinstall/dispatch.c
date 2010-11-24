@@ -541,6 +541,13 @@ modifier|*
 name|item
 parameter_list|)
 block|{
+if|if
+condition|(
+name|item
+operator|!=
+name|NULL
+condition|)
+block|{
 name|REMQUE
 argument_list|(
 name|item
@@ -553,6 +560,13 @@ operator|->
 name|string
 argument_list|)
 expr_stmt|;
+name|item
+operator|->
+name|string
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 name|free
 argument_list|(
 name|item
@@ -622,6 +636,8 @@ block|{
 name|command_buffer
 modifier|*
 name|new
+init|=
+name|NULL
 decl_stmt|;
 name|new
 operator|=
@@ -635,12 +651,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|new
-condition|)
-return|return
+operator|!=
 name|NULL
-return|;
+condition|)
+block|{
 name|new
 operator|->
 name|string
@@ -650,6 +665,28 @@ argument_list|(
 name|string
 argument_list|)
 expr_stmt|;
+comment|/* 	 * We failed to copy `string'; clean up the allocated 	 * resources. 	 */
+if|if
+condition|(
+name|new
+operator|->
+name|string
+operator|==
+name|NULL
+condition|)
+block|{
+name|free
+argument_list|(
+name|new
+argument_list|)
+expr_stmt|;
+name|new
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+else|else
+block|{
 name|INSQUEUE
 argument_list|(
 name|new
@@ -659,14 +696,13 @@ operator|->
 name|q_back
 argument_list|)
 expr_stmt|;
+block|}
+block|}
 return|return
 name|new
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*  * Command processing  */
@@ -1094,9 +1130,6 @@ name|i
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*  * File processing  */
