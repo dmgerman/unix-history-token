@@ -866,6 +866,12 @@ case|:
 case|case
 name|E1000_DEV_ID_82580_QUAD_FIBER
 case|:
+case|case
+name|E1000_DEV_ID_DH89XXCC_SGMII
+case|:
+case|case
+name|E1000_DEV_ID_DH89XXCC_SERDES
+case|:
 name|mac
 operator|->
 name|type
