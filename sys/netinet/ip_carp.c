@@ -1222,6 +1222,9 @@ parameter_list|(
 name|struct
 name|carp_softc
 modifier|*
+parameter_list|,
+name|int
+name|dofree
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1340,6 +1343,9 @@ parameter_list|(
 name|struct
 name|carp_softc
 modifier|*
+parameter_list|,
+name|int
+name|dofree
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2816,7 +2822,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This function can be called on CARP interface destroy path,  * and in case of the removal of the underlying interface as  * well. We differentiate these two cases. In the latter case  * we do not cleanup our multicast memberships, since they  * are already freed. Also, in the latter case we do not  * release the lock on return, because the function will be  * called once more, for another CARP instance on the same  * interface.  */
+comment|/*  * This function can be called on CARP interface destroy path,  * and in case of the removal of the underlying interface as  * well. We differentiate these two cases: in case of destruction  * of the underlying interface, we do not cleanup our multicast  * memberships, since they are already freed. But we purge pointers  * to multicast structures, since they are no longer valid, to  * avoid panic in future calls to carpdetach(). Also, we do not  * release the lock on return, because the function will be  * called once more, for another CARP instance on the same  * interface.  */
 end_comment
 
 begin_function
@@ -2918,13 +2924,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|unlock
-condition|)
 name|carp_multicast_cleanup
 argument_list|(
 name|sc
+argument_list|,
+name|unlock
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -2933,6 +2937,8 @@ name|INET6
 name|carp_multicast6_cleanup
 argument_list|(
 name|sc
+argument_list|,
+name|unlock
 argument_list|)
 expr_stmt|;
 endif|#
@@ -7860,6 +7866,9 @@ name|struct
 name|carp_softc
 modifier|*
 name|sc
+parameter_list|,
+name|int
+name|dofree
 parameter_list|)
 block|{
 name|struct
@@ -7900,6 +7909,10 @@ operator|!=
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|dofree
+condition|)
 name|in_delmulti
 argument_list|(
 name|imo
@@ -7966,6 +7979,9 @@ name|struct
 name|carp_softc
 modifier|*
 name|sc
+parameter_list|,
+name|int
+name|dofree
 parameter_list|)
 block|{
 name|struct
@@ -8005,6 +8021,10 @@ operator|!=
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|dofree
+condition|)
 name|in6_mc_leave
 argument_list|(
 name|im6o
@@ -9964,6 +9984,8 @@ condition|)
 name|carp_multicast6_cleanup
 argument_list|(
 name|sc
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|ifa_free
@@ -10071,6 +10093,8 @@ expr_stmt|;
 name|carp_multicast6_cleanup
 argument_list|(
 name|sc
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|TAILQ_REMOVE
