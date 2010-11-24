@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/stat.h>
 end_include
 
@@ -31,6 +37,18 @@ begin_include
 include|#
 directive|include
 file|<sys/utsname.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/bpf.h>
 end_include
 
 begin_include
@@ -940,7 +958,7 @@ name|print_apacket
 parameter_list|(
 specifier|const
 name|struct
-name|usbpf_xhdr
+name|bpf_xhdr
 modifier|*
 name|hdr
 parameter_list|,
@@ -1069,9 +1087,9 @@ name|tv_sec
 operator|=
 name|hdr
 operator|->
-name|uh_tstamp
+name|bh_tstamp
 operator|.
-name|ut_sec
+name|bt_sec
 expr_stmt|;
 name|tv
 operator|.
@@ -1079,9 +1097,9 @@ name|tv_usec
 operator|=
 name|hdr
 operator|->
-name|uh_tstamp
+name|bh_tstamp
 operator|.
-name|ut_frac
+name|bt_frac
 expr_stmt|;
 name|tm
 operator|=
@@ -1344,7 +1362,7 @@ name|up
 decl_stmt|;
 specifier|const
 name|struct
-name|usbpf_xhdr
+name|bpf_xhdr
 modifier|*
 name|hdr
 decl_stmt|;
@@ -1384,7 +1402,7 @@ operator|=
 operator|(
 specifier|const
 expr|struct
-name|usbpf_xhdr
+name|bpf_xhdr
 operator|*
 operator|)
 name|ptr
@@ -1401,22 +1419,22 @@ name|ptr
 operator|+
 name|hdr
 operator|->
-name|uh_hdrlen
+name|bh_hdrlen
 operator|)
 expr_stmt|;
 name|next
 operator|=
 name|ptr
 operator|+
-name|USBPF_WORDALIGN
+name|BPF_WORDALIGN
 argument_list|(
 name|hdr
 operator|->
-name|uh_hdrlen
+name|bh_hdrlen
 operator|+
 name|hdr
 operator|->
-name|uh_caplen
+name|bh_caplen
 argument_list|)
 expr_stmt|;
 name|ptr
@@ -2167,20 +2185,20 @@ name|timeval
 name|tv
 decl_stmt|;
 name|struct
-name|usbpf_insn
+name|bpf_insn
 name|total_insn
 decl_stmt|;
 name|struct
-name|usbpf_program
+name|bpf_program
 name|total_prog
 decl_stmt|;
 name|struct
-name|usbpf_stat
+name|bpf_stat
 name|us
 decl_stmt|;
 name|struct
-name|usbpf_version
-name|uv
+name|bpf_version
+name|bv
 decl_stmt|;
 name|struct
 name|usbcap
@@ -2193,8 +2211,8 @@ operator|&
 name|uc
 decl_stmt|;
 name|struct
-name|usbpf_ifreq
-name|ufr
+name|ifreq
+name|ifr
 decl_stmt|;
 name|long
 name|snapshot
@@ -2372,7 +2390,7 @@ name|fd
 operator|=
 name|open
 argument_list|(
-literal|"/dev/usbpf"
+literal|"/dev/bpf"
 argument_list|,
 name|O_RDONLY
 argument_list|)
@@ -2405,13 +2423,13 @@ name|ioctl
 argument_list|(
 name|fd
 argument_list|,
-name|UIOCVERSION
+name|BIOCVERSION
 argument_list|,
 operator|(
 name|caddr_t
 operator|)
 operator|&
-name|uv
+name|bv
 argument_list|)
 operator|<
 literal|0
@@ -2421,7 +2439,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"UIOCVERSION: %s\n"
+literal|"BIOCVERSION: %s\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -2437,17 +2455,17 @@ return|;
 block|}
 if|if
 condition|(
-name|uv
+name|bv
 operator|.
-name|uv_major
+name|bv_major
 operator|!=
-name|USBPF_MAJOR_VERSION
+name|BPF_MAJOR_VERSION
 operator|||
-name|uv
+name|bv
 operator|.
-name|uv_minor
+name|bv_minor
 operator|<
-name|USBPF_MINOR_VERSION
+name|BPF_MINOR_VERSION
 condition|)
 block|{
 name|fprintf
@@ -2470,7 +2488,7 @@ name|ioctl
 argument_list|(
 name|fd
 argument_list|,
-name|UIOCGBLEN
+name|BIOCGBLEN
 argument_list|,
 operator|(
 name|caddr_t
@@ -2484,11 +2502,11 @@ operator|)
 operator|||
 name|v
 operator|<
-literal|65536
+literal|4096
 condition|)
 name|v
 operator|=
-literal|65536
+literal|4096
 expr_stmt|;
 for|for
 control|(
@@ -2509,7 +2527,7 @@ name|ioctl
 argument_list|(
 name|fd
 argument_list|,
-name|UIOCSBLEN
+name|BIOCSBLEN
 argument_list|,
 operator|(
 name|caddr_t
@@ -2523,17 +2541,17 @@ name|void
 operator|)
 name|strncpy
 argument_list|(
-name|ufr
+name|ifr
 operator|.
-name|ufr_name
+name|ifr_name
 argument_list|,
 name|i_arg
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|ufr
+name|ifr
 operator|.
-name|ufr_name
+name|ifr_name
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2543,13 +2561,13 @@ name|ioctl
 argument_list|(
 name|fd
 argument_list|,
-name|UIOCSETIF
+name|BIOCSETIF
 argument_list|,
 operator|(
 name|caddr_t
 operator|)
 operator|&
-name|ufr
+name|ifr
 argument_list|)
 operator|>=
 literal|0
@@ -2567,7 +2585,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"UIOCSBLEN: %s: No buffer size worked"
+literal|"BIOCSBLEN: %s: No buffer size worked"
 argument_list|,
 name|i_arg
 argument_list|)
@@ -2584,7 +2602,7 @@ name|ioctl
 argument_list|(
 name|fd
 argument_list|,
-name|UIOCGBLEN
+name|BIOCGBLEN
 argument_list|,
 operator|(
 name|caddr_t
@@ -2600,7 +2618,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"UIOCGBLEN: %s"
+literal|"BIOCGBLEN: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -2671,9 +2689,9 @@ call|(
 name|u_short
 call|)
 argument_list|(
-name|USBPF_RET
+name|BPF_RET
 operator||
-name|USBPF_K
+name|BPF_K
 argument_list|)
 expr_stmt|;
 name|total_insn
@@ -2696,13 +2714,13 @@ name|snapshot
 expr_stmt|;
 name|total_prog
 operator|.
-name|uf_len
+name|bf_len
 operator|=
 literal|1
 expr_stmt|;
 name|total_prog
 operator|.
-name|uf_insns
+name|bf_insns
 operator|=
 operator|&
 name|total_insn
@@ -2715,7 +2733,7 @@ name|p
 operator|->
 name|fd
 argument_list|,
-name|UIOCSETF
+name|BIOCSETF
 argument_list|,
 operator|(
 name|caddr_t
@@ -2731,7 +2749,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"UIOCSETF: %s"
+literal|"BIOCSETF: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -2766,7 +2784,7 @@ name|p
 operator|->
 name|fd
 argument_list|,
-name|UIOCSRTIMEOUT
+name|BIOCSRTIMEOUT
 argument_list|,
 operator|(
 name|caddr_t
@@ -2782,7 +2800,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"UIOCSRTIMEOUT: %s"
+literal|"BIOCSRTIMEOUT: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -2817,7 +2835,7 @@ name|ioctl
 argument_list|(
 name|fd
 argument_list|,
-name|UIOCGSTATS
+name|BIOCGSTATS
 argument_list|,
 operator|(
 name|caddr_t
@@ -2833,7 +2851,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"UIOCGSTATS: %s"
+literal|"BIOCGSTATS: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -2866,7 +2884,7 @@ literal|"%d packets received by filter\n"
 argument_list|,
 name|us
 operator|.
-name|us_recv
+name|bs_recv
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2875,7 +2893,7 @@ literal|"%d packets dropped by kernel\n"
 argument_list|,
 name|us
 operator|.
-name|us_drop
+name|bs_drop
 argument_list|)
 expr_stmt|;
 if|if
