@@ -326,13 +326,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|GRANT_INVALID_REF
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
 name|NET_TX_RING_SIZE
 value|__RING_SIZE((netif_tx_sring_t *)0, PAGE_SIZE)
 end_define
@@ -1697,6 +1690,17 @@ index|[
 name|i
 index|]
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|ref
+operator|!=
+name|GRANT_REF_INVALID
+argument_list|,
+operator|(
+literal|"Invalid grant reference!\n"
+operator|)
+argument_list|)
+expr_stmt|;
 name|np
 operator|->
 name|grant_rx_ref
@@ -1704,7 +1708,7 @@ index|[
 name|i
 index|]
 operator|=
-name|GRANT_INVALID_REF
+name|GRANT_REF_INVALID
 expr_stmt|;
 return|return
 name|ref
@@ -1844,9 +1848,9 @@ name|macstr
 decl_stmt|;
 name|error
 operator|=
-name|xenbus_read
+name|xs_read
 argument_list|(
-name|XBT_NIL
+name|XST_NIL
 argument_list|,
 name|xenbus_get_node
 argument_list|(
@@ -1935,7 +1939,7 @@ name|free
 argument_list|(
 name|macstr
 argument_list|,
-name|M_DEVBUF
+name|M_XENBUS
 argument_list|)
 expr_stmt|;
 return|return
@@ -1957,7 +1961,7 @@ name|free
 argument_list|(
 name|macstr
 argument_list|,
-name|M_DEVBUF
+name|M_XENBUS
 argument_list|)
 expr_stmt|;
 return|return
@@ -2157,8 +2161,8 @@ modifier|*
 name|message
 decl_stmt|;
 name|struct
-name|xenbus_transaction
-name|xbt
+name|xs_transaction
+name|xst
 decl_stmt|;
 specifier|const
 name|char
@@ -2225,10 +2229,10 @@ name|again
 label|:
 name|err
 operator|=
-name|xenbus_transaction_start
+name|xs_transaction_start
 argument_list|(
 operator|&
-name|xbt
+name|xst
 argument_list|)
 expr_stmt|;
 if|if
@@ -2251,9 +2255,9 @@ goto|;
 block|}
 name|err
 operator|=
-name|xenbus_printf
+name|xs_printf
 argument_list|(
-name|xbt
+name|xst
 argument_list|,
 name|node
 argument_list|,
@@ -2281,9 +2285,9 @@ goto|;
 block|}
 name|err
 operator|=
-name|xenbus_printf
+name|xs_printf
 argument_list|(
-name|xbt
+name|xst
 argument_list|,
 name|node
 argument_list|,
@@ -2311,9 +2315,9 @@ goto|;
 block|}
 name|err
 operator|=
-name|xenbus_printf
+name|xs_printf
 argument_list|(
-name|xbt
+name|xst
 argument_list|,
 name|node
 argument_list|,
@@ -2344,9 +2348,9 @@ goto|;
 block|}
 name|err
 operator|=
-name|xenbus_printf
+name|xs_printf
 argument_list|(
-name|xbt
+name|xst
 argument_list|,
 name|node
 argument_list|,
@@ -2374,9 +2378,9 @@ goto|;
 block|}
 name|err
 operator|=
-name|xenbus_printf
+name|xs_printf
 argument_list|(
-name|xbt
+name|xst
 argument_list|,
 name|node
 argument_list|,
@@ -2402,9 +2406,9 @@ goto|;
 block|}
 name|err
 operator|=
-name|xenbus_printf
+name|xs_printf
 argument_list|(
-name|xbt
+name|xst
 argument_list|,
 name|node
 argument_list|,
@@ -2435,9 +2439,9 @@ operator|>=
 literal|700000
 name|err
 operator|=
-name|xenbus_printf
+name|xs_printf
 argument_list|(
-name|xbt
+name|xst
 argument_list|,
 name|node
 argument_list|,
@@ -2465,9 +2469,9 @@ endif|#
 directive|endif
 name|err
 operator|=
-name|xenbus_transaction_end
+name|xs_transaction_end
 argument_list|(
-name|xbt
+name|xst
 argument_list|,
 literal|0
 argument_list|)
@@ -2504,9 +2508,9 @@ literal|0
 return|;
 name|abort_transaction
 label|:
-name|xenbus_transaction_end
+name|xs_transaction_end
 argument_list|(
-name|xbt
+name|xst
 argument_list|,
 literal|1
 argument_list|)
@@ -2577,13 +2581,13 @@ name|info
 operator|->
 name|tx_ring_ref
 operator|=
-name|GRANT_INVALID_REF
+name|GRANT_REF_INVALID
 expr_stmt|;
 name|info
 operator|->
 name|rx_ring_ref
 operator|=
-name|GRANT_INVALID_REF
+name|GRANT_REF_INVALID
 expr_stmt|;
 name|info
 operator|->
@@ -3203,7 +3207,7 @@ index|[
 name|i
 index|]
 operator|=
-name|GRANT_INVALID_REF
+name|GRANT_REF_INVALID
 expr_stmt|;
 name|add_id_to_freelist
 argument_list|(
@@ -3647,15 +3651,12 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-operator|(
-name|short
-operator|)
 name|ref
-operator|>=
-literal|0
+operator|!=
+name|GNTTAB_LIST_END
 argument_list|,
 operator|(
-literal|"negative ref"
+literal|"reserved grant references exhuasted"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4949,7 +4950,7 @@ index|[
 name|id
 index|]
 operator|=
-name|GRANT_INVALID_REF
+name|GRANT_REF_INVALID
 expr_stmt|;
 name|np
 operator|->
@@ -5732,7 +5733,7 @@ if|if
 condition|(
 name|ref
 operator|==
-name|GRANT_INVALID_REF
+name|GRANT_REF_INVALID
 condition|)
 block|{
 if|#
@@ -5741,6 +5742,17 @@ literal|0
 block|if (net_ratelimit()) 				WPRINTK("Bad rx response id %d.\n", rx->id);
 endif|#
 directive|endif
+name|printf
+argument_list|(
+literal|"%s: Bad rx response id %d.\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|rx
+operator|->
+name|id
+argument_list|)
+expr_stmt|;
 name|err
 operator|=
 name|EINVAL
@@ -6406,6 +6418,23 @@ operator|>
 name|MAX_TX_REQ_FRAGS
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|printf
+argument_list|(
+literal|"%s: nfrags %d> MAX_TX_REQ_FRAGS %d, netback "
+literal|"won't be able to handle it, dropping\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|nfrags
+argument_list|,
+name|MAX_TX_REQ_FRAGS
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|m_freem
 argument_list|(
 name|m_head
@@ -7876,9 +7905,9 @@ name|feature_rx_flip
 decl_stmt|;
 name|error
 operator|=
-name|xenbus_scanf
+name|xs_scanf
 argument_list|(
-name|XBT_NIL
+name|XST_NIL
 argument_list|,
 name|xenbus_get_otherend_path
 argument_list|(
@@ -7907,9 +7936,9 @@ literal|0
 expr_stmt|;
 name|error
 operator|=
-name|xenbus_scanf
+name|xs_scanf
 argument_list|(
-name|XBT_NIL
+name|XST_NIL
 argument_list|,
 name|xenbus_get_otherend_path
 argument_list|(
@@ -8413,7 +8442,7 @@ index|[
 name|i
 index|]
 operator|=
-name|GRANT_INVALID_REF
+name|GRANT_REF_INVALID
 expr_stmt|;
 block|}
 name|np
@@ -8459,7 +8488,7 @@ index|[
 name|i
 index|]
 operator|=
-name|GRANT_INVALID_REF
+name|GRANT_REF_INVALID
 expr_stmt|;
 block|}
 comment|/* A grant for every tx ring slot */
@@ -8940,13 +8969,13 @@ name|info
 operator|->
 name|tx_ring_ref
 operator|=
-name|GRANT_INVALID_REF
+name|GRANT_REF_INVALID
 expr_stmt|;
 name|info
 operator|->
 name|rx_ring_ref
 operator|=
-name|GRANT_INVALID_REF
+name|GRANT_REF_INVALID
 expr_stmt|;
 name|info
 operator|->
@@ -9003,7 +9032,7 @@ if|if
 condition|(
 name|ref
 operator|!=
-name|GRANT_INVALID_REF
+name|GRANT_REF_INVALID
 condition|)
 name|gnttab_end_foreign_access
 argument_list|(
@@ -9126,7 +9155,7 @@ block|,
 comment|/* Xenbus interface */
 name|DEVMETHOD
 argument_list|(
-name|xenbus_backend_changed
+name|xenbus_otherend_changed
 argument_list|,
 name|netfront_backend_changed
 argument_list|)
@@ -9170,7 +9199,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|xe
 argument_list|,
-name|xenbus
+name|xenbusb_front
 argument_list|,
 name|netfront_driver
 argument_list|,

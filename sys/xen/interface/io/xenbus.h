@@ -27,6 +27,7 @@ name|XenbusStateUnknown
 init|=
 literal|0
 block|,
+comment|/*      * Initializing: Back-end is initializing.      */
 name|XenbusStateInitialising
 init|=
 literal|1
@@ -41,6 +42,7 @@ name|XenbusStateInitialised
 init|=
 literal|3
 block|,
+comment|/*      * Connected: The normal state for a front to backend connection.      */
 name|XenbusStateConnected
 init|=
 literal|4
@@ -50,6 +52,7 @@ name|XenbusStateClosing
 init|=
 literal|5
 block|,
+comment|/*      * Closed: No connection exists between front and back end.      */
 name|XenbusStateClosed
 init|=
 literal|6

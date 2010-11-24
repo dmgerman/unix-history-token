@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * xenbus_dev.c  *   * Driver giving user-space access to the kernel's xenbus connection  * to xenstore.  *   * Copyright (c) 2005, Christian Limpach  * Copyright (c) 2005, Rusty Russell, IBM Corporation  *   * This file may be distributed separately from the Linux kernel, or  * incorporated into other software packages, subject to the following license:  *   * Permission is hereby granted, free of charge, to any person obtaining a copy  * of this source file (the "Software"), to deal in the Software without  * restriction, including without limitation the rights to use, copy, modify,  * merge, publish, distribute, sublicense, and/or sell copies of the Software,  * and to permit persons to whom the Software is furnished to do so, subject to  * the following conditions:  *   * The above copyright notice and this permission notice shall be included in  * all copies or substantial portions of the Software.  *   * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS  * IN THE SOFTWARE.  */
+comment|/*  * xenstore_dev.c  *   * Driver giving user-space access to the kernel's connection to the  * XenStore service.  *   * Copyright (c) 2005, Christian Limpach  * Copyright (c) 2005, Rusty Russell, IBM Corporation  *   * This file may be distributed separately from the Linux kernel, or  * incorporated into other software packages, subject to the following license:  *   * Permission is hereby granted, free of charge, to any person obtaining a copy  * of this source file (the "Software"), to deal in the Software without  * restriction, including without limitation the rights to use, copy, modify,  * merge, publish, distribute, sublicense, and/or sell copies of the Software,  * and to permit persons to whom the Software is furnished to do so, subject to  * the following conditions:  *   * The above copyright notice and this permission notice shall be included in  * all copies or substantial portions of the Software.  *   * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS  * IN THE SOFTWARE.  */
 end_comment
 
 begin_include
@@ -92,27 +92,27 @@ end_include
 begin_include
 include|#
 directive|include
-file|<xen/xenbus/xenbusvar.h>
+file|<xen/xenstore/xenstorevar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<xen/xenbus/xenbus_comms.h>
+file|<xen/xenstore/xenstore_internal.h>
 end_include
 
 begin_struct
 struct|struct
-name|xenbus_dev_transaction
+name|xs_dev_transaction
 block|{
 name|LIST_ENTRY
 argument_list|(
-argument|xenbus_dev_transaction
+argument|xs_dev_transaction
 argument_list|)
 name|list
 expr_stmt|;
 name|struct
-name|xenbus_transaction
+name|xs_transaction
 name|handle
 decl_stmt|;
 block|}
@@ -121,14 +121,14 @@ end_struct
 
 begin_struct
 struct|struct
-name|xenbus_dev_data
+name|xs_dev_data
 block|{
 comment|/* In-progress transaction. */
 name|LIST_HEAD
 argument_list|(
 argument|xdd_list_head
 argument_list|,
-argument|xenbus_dev_transaction
+argument|xs_dev_transaction
 argument_list|)
 name|transactions
 expr_stmt|;
@@ -179,7 +179,7 @@ end_struct
 begin_function
 specifier|static
 name|int
-name|xenbus_dev_read
+name|xs_dev_read
 parameter_list|(
 name|struct
 name|cdev
@@ -199,7 +199,7 @@ name|int
 name|error
 decl_stmt|;
 name|struct
-name|xenbus_dev_data
+name|xs_dev_data
 modifier|*
 name|u
 init|=
@@ -226,7 +226,7 @@ name|u
 argument_list|,
 name|PCATCH
 argument_list|,
-literal|"xbdread"
+literal|"xsdread"
 argument_list|,
 name|hz
 operator|/
@@ -315,10 +315,10 @@ end_function
 begin_function
 specifier|static
 name|void
-name|queue_reply
+name|xs_queue_reply
 parameter_list|(
 name|struct
-name|xenbus_dev_data
+name|xs_dev_data
 modifier|*
 name|u
 parameter_list|,
@@ -404,7 +404,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|xenbus_dev_write
+name|xs_dev_write
 parameter_list|(
 name|struct
 name|cdev
@@ -424,7 +424,7 @@ name|int
 name|error
 decl_stmt|;
 name|struct
-name|xenbus_dev_data
+name|xs_dev_data
 modifier|*
 name|u
 init|=
@@ -433,7 +433,7 @@ operator|->
 name|si_drv1
 decl_stmt|;
 name|struct
-name|xenbus_dev_transaction
+name|xs_dev_transaction
 modifier|*
 name|trans
 decl_stmt|;
@@ -582,7 +582,7 @@ name|XS_SET_PERMS
 case|:
 name|error
 operator|=
-name|xenbus_dev_request_and_reply
+name|xs_dev_request_and_reply
 argument_list|(
 operator|&
 name|u
@@ -624,7 +624,7 @@ operator|*
 name|trans
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_XENSTORE
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -714,11 +714,11 @@ name|free
 argument_list|(
 name|trans
 argument_list|,
-name|M_DEVBUF
+name|M_XENSTORE
 argument_list|)
 expr_stmt|;
 block|}
-name|queue_reply
+name|xs_queue_reply
 argument_list|(
 name|u
 argument_list|,
@@ -743,7 +743,7 @@ name|msg
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|queue_reply
+name|xs_queue_reply
 argument_list|(
 name|u
 argument_list|,
@@ -766,7 +766,7 @@ name|free
 argument_list|(
 name|reply
 argument_list|,
-name|M_DEVBUF
+name|M_XENSTORE
 argument_list|)
 expr_stmt|;
 block|}
@@ -801,7 +801,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|xenbus_dev_open
+name|xs_dev_open
 parameter_list|(
 name|struct
 name|cdev
@@ -821,21 +821,10 @@ name|td
 parameter_list|)
 block|{
 name|struct
-name|xenbus_dev_data
+name|xs_dev_data
 modifier|*
 name|u
 decl_stmt|;
-if|if
-condition|(
-name|xen_store_evtchn
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-name|ENOENT
-operator|)
-return|;
 if|#
 directive|if
 literal|0
@@ -853,7 +842,7 @@ operator|*
 name|u
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_XENSTORE
 argument_list|,
 name|M_WAITOK
 operator||
@@ -885,7 +874,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|xenbus_dev_close
+name|xs_dev_close
 parameter_list|(
 name|struct
 name|cdev
@@ -905,7 +894,7 @@ name|td
 parameter_list|)
 block|{
 name|struct
-name|xenbus_dev_data
+name|xs_dev_data
 modifier|*
 name|u
 init|=
@@ -914,7 +903,7 @@ operator|->
 name|si_drv1
 decl_stmt|;
 name|struct
-name|xenbus_dev_transaction
+name|xs_dev_transaction
 modifier|*
 name|trans
 decl_stmt|,
@@ -932,7 +921,7 @@ argument_list|,
 argument|tmp
 argument_list|)
 block|{
-name|xenbus_transaction_end
+name|xs_transaction_end
 argument_list|(
 name|trans
 operator|->
@@ -952,7 +941,7 @@ name|free
 argument_list|(
 name|trans
 argument_list|,
-name|M_DEVBUF
+name|M_XENSTORE
 argument_list|)
 expr_stmt|;
 block|}
@@ -960,7 +949,7 @@ name|free
 argument_list|(
 name|u
 argument_list|,
-name|M_DEVBUF
+name|M_XENSTORE
 argument_list|)
 expr_stmt|;
 return|return
@@ -975,7 +964,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|cdevsw
-name|xenbus_dev_cdevsw
+name|xs_dev_cdevsw
 init|=
 block|{
 operator|.
@@ -986,43 +975,40 @@ block|,
 operator|.
 name|d_read
 operator|=
-name|xenbus_dev_read
+name|xs_dev_read
 block|,
 operator|.
 name|d_write
 operator|=
-name|xenbus_dev_write
+name|xs_dev_write
 block|,
 operator|.
 name|d_open
 operator|=
-name|xenbus_dev_open
+name|xs_dev_open
 block|,
 operator|.
 name|d_close
 operator|=
-name|xenbus_dev_close
+name|xs_dev_close
 block|,
 operator|.
 name|d_name
 operator|=
-literal|"xenbus_dev"
+literal|"xs_dev"
 block|, }
 decl_stmt|;
 end_decl_stmt
 
 begin_function
-specifier|static
-name|int
-name|xenbus_dev_sysinit
-parameter_list|(
 name|void
-parameter_list|)
+name|xs_dev_init
+parameter_list|()
 block|{
 name|make_dev
 argument_list|(
 operator|&
-name|xenbus_dev_cdevsw
+name|xs_dev_cdevsw
 argument_list|,
 literal|0
 argument_list|,
@@ -1032,32 +1018,11 @@ name|GID_WHEEL
 argument_list|,
 literal|0400
 argument_list|,
-literal|"xen/xenbus"
+literal|"xen/xenstore"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
-
-begin_expr_stmt
-name|SYSINIT
-argument_list|(
-name|xenbus_dev_sysinit
-argument_list|,
-name|SI_SUB_DRIVERS
-argument_list|,
-name|SI_ORDER_MIDDLE
-argument_list|,
-name|xenbus_dev_sysinit
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 end_unit
 

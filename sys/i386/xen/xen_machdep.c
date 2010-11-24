@@ -2894,17 +2894,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_struct_decl
+struct_decl|struct
+name|xenstore_domain_interface
+struct_decl|;
+end_struct_decl
+
 begin_decl_stmt
+specifier|extern
 name|struct
-name|ringbuf_head
+name|xenstore_domain_interface
 modifier|*
 name|xen_store
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* XXX move me */
-end_comment
 
 begin_decl_stmt
 name|char
@@ -3867,7 +3870,7 @@ name|xen_store
 operator|=
 operator|(
 expr|struct
-name|ringbuf_head
+name|xenstore_domain_interface
 operator|*
 operator|)
 name|cur_space

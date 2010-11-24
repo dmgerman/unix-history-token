@@ -121,6 +121,21 @@ value|(((_x)& 0xffff0000) ? __RD16((_x)>>16)<<16 : __RD16(_x))
 end_define
 
 begin_comment
+comment|/*  * The amount of space reserved in the shared ring for accounting information.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__RING_HEADER_SIZE
+parameter_list|(
+name|_s
+parameter_list|)
+define|\
+value|((intptr_t)(_s)->ring - (intptr_t)(_s))
+end_define
+
+begin_comment
 comment|/*  * Calculate size of a shared ring, given the total available space for the  * ring and indexes (_sz), and the name tag of the request/response structure.  * A ring contains as many entries as will fit, rounded down to the nearest   * power of two (so we can mask with (size-1) to loop around).  */
 end_comment
 
@@ -134,7 +149,24 @@ parameter_list|,
 name|_sz
 parameter_list|)
 define|\
-value|(__RD32(((_sz) - (long)(_s)->ring + (long)(_s)) / sizeof((_s)->ring[0])))
+value|(__RD32(((_sz) - __RING_HEADER_SIZE(_s)) / sizeof((_s)->ring[0])))
+end_define
+
+begin_comment
+comment|/*  * The number of pages needed to support a given number of request/reponse  * entries.  The entry count is rounded down to the nearest power of two  * as required by the ring macros.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__RING_PAGES
+parameter_list|(
+name|_s
+parameter_list|,
+name|_entries
+parameter_list|)
+define|\
+value|((__RING_HEADER_SIZE(_s)                    \    + (__RD32(_entries) * sizeof((_s)->ring[0])) \    + PAGE_SIZE - 1) / PAGE_SIZE)
 end_define
 
 begin_comment

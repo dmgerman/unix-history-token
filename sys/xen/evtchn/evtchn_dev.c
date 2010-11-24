@@ -1263,12 +1263,6 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|lock
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ring
@@ -1288,6 +1282,12 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|lock
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
