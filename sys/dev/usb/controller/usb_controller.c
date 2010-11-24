@@ -2222,11 +2222,6 @@ expr_stmt|;
 name|usbpf_attach
 argument_list|(
 name|bus
-argument_list|,
-operator|&
-name|bus
-operator|->
-name|uif
 argument_list|)
 expr_stmt|;
 if|#
