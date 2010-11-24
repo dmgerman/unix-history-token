@@ -199,7 +199,7 @@ operator|==
 name|USBPF_HDR_LEN
 argument_list|,
 operator|(
-literal|"wrong USB pf header length (%d)"
+literal|"wrong USB pf header length (%zd)"
 operator|,
 sizeof|sizeof
 argument_list|(
