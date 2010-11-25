@@ -77,24 +77,11 @@ directive|include
 file|<sys/callout.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>
-literal|502113
-end_if
-
 begin_include
 include|#
 directive|include
 file|<sys/kdb.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -11568,22 +11555,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|600022
-name|SLIST_FOREACH
-argument_list|(
-argument|rle
-argument_list|,
-argument|rl
-argument_list|,
-argument|link
-argument_list|)
-block|{
-else|#
-directive|else
 name|STAILQ_FOREACH
 argument_list|(
 argument|rle
@@ -11593,8 +11564,6 @@ argument_list|,
 argument|link
 argument_list|)
 block|{
-endif|#
-directive|endif
 name|r
 operator|=
 name|rle
@@ -11752,7 +11721,13 @@ name|NULL
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Workitems are unlike DPCs, in that they run in a user-mode thread  * context rather than at DISPATCH_LEVEL in kernel context. In our  * case we run them in kernel context anyway.  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|ntoskrnl_workitem_thread
@@ -11980,19 +11955,6 @@ name|irql
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|502113
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|kproc_exit
 argument_list|(
 literal|0
@@ -12001,6 +11963,9 @@ expr_stmt|;
 return|return;
 comment|/* notreached */
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|ntoskrnl_destroy_workitem_threads
@@ -12078,6 +12043,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_function
 name|io_workitem
 modifier|*
 name|IoAllocateWorkItem
@@ -12156,6 +12124,9 @@ name|iw
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 name|void
 name|IoFreeWorkItem
 parameter_list|(
@@ -12174,6 +12145,9 @@ name|iw
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|void
 name|IoQueueWorkItem
 parameter_list|(
@@ -12343,6 +12317,9 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|ntoskrnl_workitem
@@ -12411,7 +12388,13 @@ name|wqi_ctx
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * The ExQueueWorkItem() API is deprecated in Windows XP. Microsoft  * warns that it's unsafe and to use IoQueueWorkItem() instead. The  * problem with ExQueueWorkItem() is that it can't guard against  * the condition where a driver submits a job to the work queue and  * is then unloaded before the job is able to run. IoQueueWorkItem()  * acquires a reference to the device's device_object via the  * object manager and retains it until after the job has completed,  * which prevents the driver from being unloaded before the job  * runs. (We don't currently support this behavior, though hopefully  * that will change once the object manager API is fleshed out a bit.)  *  * Having said all that, the ExQueueWorkItem() API remains, because  * there are still other parts of Windows that use it, including  * NDIS itself: NdisScheduleWorkItem() calls ExQueueWorkItem().  * We fake up the ExQueueWorkItem() API on top of our implementation  * of IoQueueWorkItem(). Workitem thread #3 is reserved exclusively  * for ExQueueWorkItem() jobs, and we pass a pointer to the work  * queue item (provided by the caller) in to IoAllocateWorkItem()  * instead of the device_object. We need to save this pointer so  * we can apply a sanity check: as with the DPC queue and other  * workitem queues, we can't allow the same work queue item to  * be queued twice. If it's already pending, we silently return  */
+end_comment
+
+begin_function
 name|void
 name|ExQueueWorkItem
 parameter_list|(
@@ -12588,6 +12571,9 @@ name|iw
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|RtlZeroMemory
@@ -12612,6 +12598,9 @@ name|len
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|RtlCopyMemory
@@ -12645,6 +12634,9 @@ name|len
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|size_t
 name|RtlCompareMemory
@@ -12739,6 +12731,9 @@ name|total
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 name|void
 name|RtlInitAnsiString
 parameter_list|(
@@ -12817,6 +12812,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_function
 name|void
 name|RtlInitUnicodeString
 parameter_list|(
@@ -12913,6 +12911,9 @@ literal|2
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_function
 name|ndis_status
 name|RtlUnicodeStringToInteger
 parameter_list|(
@@ -13185,6 +13186,9 @@ name|STATUS_SUCCESS
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 name|void
 name|RtlFreeUnicodeString
 parameter_list|(
@@ -13218,6 +13222,9 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|void
 name|RtlFreeAnsiString
 parameter_list|(
@@ -13251,6 +13258,9 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|atoi
@@ -13282,6 +13292,9 @@ literal|10
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|long
 name|atol
@@ -13310,6 +13323,9 @@ literal|10
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|rand
@@ -13344,6 +13360,9 @@ argument_list|()
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|srand
@@ -13361,6 +13380,9 @@ name|seed
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|uint8_t
 name|IoIsWdmVersionAvailable
@@ -13393,6 +13415,9 @@ name|FALSE
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|ndis_status
 name|IoGetDeviceObjectPointer
@@ -13427,6 +13452,9 @@ name|STATUS_SUCCESS
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|ndis_status
 name|IoGetDeviceProperty
@@ -13520,6 +13548,9 @@ name|STATUS_SUCCESS
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|KeInitializeMutex
@@ -13599,6 +13630,9 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|uint32_t
 name|KeReleaseMutex
@@ -13702,6 +13736,9 @@ name|prevstate
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|uint32_t
 name|KeReadStateMutex
@@ -13723,6 +13760,9 @@ name|dh_sigstate
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 name|void
 name|KeInitializeEvent
 parameter_list|(
@@ -13797,6 +13837,9 @@ name|uint32_t
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|uint32_t
 name|KeResetEvent
 parameter_list|(
@@ -13844,6 +13887,9 @@ name|prevstate
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 name|uint32_t
 name|KeSetEvent
 parameter_list|(
@@ -14041,6 +14087,9 @@ name|prevstate
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 name|void
 name|KeClearEvent
 parameter_list|(
@@ -14060,6 +14109,9 @@ operator|=
 name|FALSE
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|uint32_t
 name|KeReadStateEvent
 parameter_list|(
@@ -14080,7 +14132,13 @@ name|dh_sigstate
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * The object manager in Windows is responsible for managing  * references and access to various types of objects, including  * device_objects, events, threads, timers and so on. However,  * there's a difference in the way objects are handled in user  * mode versus kernel mode.  *  * In user mode (i.e. Win32 applications), all objects are  * managed by the object manager. For example, when you create  * a timer or event object, you actually end up with an   * object_header (for the object manager's bookkeeping  * purposes) and an object body (which contains the actual object  * structure, e.g. ktimer, kevent, etc...). This allows Windows  * to manage resource quotas and to enforce access restrictions  * on basically every kind of system object handled by the kernel.  *  * However, in kernel mode, you only end up using the object  * manager some of the time. For example, in a driver, you create  * a timer object by simply allocating the memory for a ktimer  * structure and initializing it with KeInitializeTimer(). Hence,  * the timer has no object_header and no reference counting or  * security/resource checks are done on it. The assumption in  * this case is that if you're running in kernel mode, you know  * what you're doing, and you're already at an elevated privilege  * anyway.  *  * There are some exceptions to this. The two most important ones  * for our purposes are device_objects and threads. We need to use  * the object manager to do reference counting on device_objects,  * and for threads, you can only get a pointer to a thread's  * dispatch header by using ObReferenceObjectByHandle() on the  * handle returned by PsCreateSystemThread().  */
+end_comment
+
+begin_function
 specifier|static
 name|ndis_status
 name|ObReferenceObjectByHandle
@@ -14217,6 +14275,9 @@ name|STATUS_SUCCESS
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|ObfDereferenceObject
@@ -14254,6 +14315,9 @@ name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|uint32_t
 name|ZwClose
@@ -14270,6 +14334,9 @@ name|STATUS_SUCCESS
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|uint32_t
 name|WmiQueryTraceInformation
@@ -14308,6 +14375,9 @@ name|STATUS_NOT_FOUND
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|uint32_t
 name|WmiTraceMessage
@@ -14334,6 +14404,9 @@ name|STATUS_SUCCESS
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|uint32_t
 name|IoWMIRegistrationControl
@@ -14356,7 +14429,13 @@ name|STATUS_SUCCESS
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * This is here just in case the thread returns without calling  * PsTerminateSystemThread().  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|ntoskrnl_thrfunc
@@ -14429,6 +14508,9 @@ expr_stmt|;
 return|return;
 comment|/* notreached */
 block|}
+end_function
+
+begin_function
 specifier|static
 name|ndis_status
 name|PsCreateSystemThread
@@ -14575,7 +14657,13 @@ name|STATUS_SUCCESS
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * In Windows, the exit of a thread is an event that you're allowed  * to wait on, assuming you've obtained a reference to the thread using  * ObReferenceObjectByHandle(). Unfortunately, the only way we can  * simulate this behavior is to register each thread we create in a  * reference list, and if someone holds a reference to us, we poke  * them.  */
+end_comment
+
+begin_function
 specifier|static
 name|ndis_status
 name|PsTerminateSystemThread
@@ -14646,19 +14734,6 @@ expr_stmt|;
 name|ntoskrnl_kth
 operator|--
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|502113
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|kproc_exit
 argument_list|(
 literal|0
@@ -14671,6 +14746,9 @@ operator|)
 return|;
 comment|/* notreached */
 block|}
+end_function
+
+begin_function
 specifier|static
 name|uint32_t
 name|DbgPrint
@@ -14711,6 +14789,9 @@ name|STATUS_SUCCESS
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|DbgBreakPoint
@@ -14718,18 +14799,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|502113
-name|Debugger
-argument_list|(
-literal|"DbgBreakPoint(): breakpoint"
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|kdb_enter
 argument_list|(
 name|KDB_WHY_NDIS
@@ -14737,9 +14806,10 @@ argument_list|,
 literal|"DbgBreakPoint(): breakpoint"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|KeBugCheckEx
@@ -14778,6 +14848,9 @@ name|code
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|ntoskrnl_timercall
@@ -14961,9 +15034,15 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|NTOSKRNL_DEBUG_TIMERS
+end_ifdef
+
+begin_function
 specifier|static
 name|int
 name|sysctl_show_timers
@@ -14997,6 +15076,9 @@ argument_list|)
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|ntoskrnl_show_timers
@@ -15095,9 +15177,18 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Must be called with dispatcher lock held.  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|ntoskrnl_insert_timer
@@ -15220,6 +15311,9 @@ name|timer
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|ntoskrnl_remove_timer
@@ -15280,6 +15374,9 @@ name|ntoskrnl_calllock
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|void
 name|KeInitializeTimer
 parameter_list|(
@@ -15305,6 +15402,9 @@ name|EVENT_TYPE_NOTIFY
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|void
 name|KeInitializeTimerEx
 parameter_list|(
@@ -15409,7 +15509,13 @@ name|uint32_t
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * DPC subsystem. A Windows Defered Procedure Call has the following  * properties:  * - It runs at DISPATCH_LEVEL.  * - It can have one of 3 importance values that control when it  *   runs relative to other DPCs in the queue.  * - On SMP systems, it can be set to run on a specific processor.  * In order to satisfy the last property, we create a DPC thread for  * each CPU in the system and bind it to that CPU. Each thread  * maintains three queues with different importance levels, which  * will be processed in order from lowest to highest.  *  * In Windows, interrupt handlers run as DPCs. (Not to be confused  * with ISRs, which run in interrupt context and can preempt DPCs.)  * ISRs are given the highest importance so that they'll take  * precedence over timers and other things.  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|ntoskrnl_dpc_thread
@@ -15507,11 +15613,6 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|NTOSKRNL_MULTIPLE_DPCS
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|502102
 name|sched_bind
 argument_list|(
 name|curthread
@@ -15523,8 +15624,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|#
-directive|endif
 name|sched_prio
 argument_list|(
 name|curthread
@@ -15532,19 +15631,6 @@ argument_list|,
 name|PRI_MIN_KERN
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|600000
-name|curthread
-operator|->
-name|td_base_pri
-operator|=
-name|PRI_MIN_KERN
-expr_stmt|;
-endif|#
-directive|endif
 name|thread_unlock
 argument_list|(
 name|curthread
@@ -15725,19 +15811,6 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|502113
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|kproc_exit
 argument_list|(
 literal|0
@@ -15746,6 +15819,9 @@ expr_stmt|;
 return|return;
 comment|/* notreached */
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|ntoskrnl_destroy_dpc_threads
