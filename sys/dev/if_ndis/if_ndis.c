@@ -9832,6 +9832,8 @@ name|cipher
 operator|==
 name|WPA_CSE_WEP40
 operator|||
+name|cipher
+operator|==
 name|WPA_CSE_WEP104
 condition|)
 block|{
