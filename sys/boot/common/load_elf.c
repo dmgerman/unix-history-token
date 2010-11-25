@@ -2444,7 +2444,7 @@ name|__XSTRING
 argument_list|(
 name|__ELF_WORD_SIZE
 argument_list|)
-literal|"_loadimage: could not read symbols - skipped! (%ju - %ju)"
+literal|"_loadimage: could not read symbols - skipped! (%ju != %ju)"
 argument_list|,
 operator|(
 name|uintmax_t
