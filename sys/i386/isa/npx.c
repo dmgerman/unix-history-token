@@ -2961,7 +2961,7 @@ name|fnclex
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Load the dummy variable into the x87 stack.  This mangles 	 * the x87 stack, but we don't care since we're about to call 	 * fxrstor() anyway. 	 */
-asm|__asm __volatile("ffree %%st(7); fld %0" : : "m" (dummy_variable));
+asm|__asm __volatile("ffree %%st(7); flds %0" : : "m" (dummy_variable));
 block|}
 end_function
 
