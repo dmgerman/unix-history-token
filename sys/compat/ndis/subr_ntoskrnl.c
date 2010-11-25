@@ -2051,12 +2051,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|char
-name|name
-index|[
-literal|64
-index|]
-decl_stmt|;
 name|mtx_init
 argument_list|(
 operator|&
@@ -2334,15 +2328,6 @@ name|kq_cpu
 operator|=
 name|i
 expr_stmt|;
-name|sprintf
-argument_list|(
-name|name
-argument_list|,
-literal|"Windows DPC %d"
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|kproc_create
@@ -2358,7 +2343,9 @@ name|RFHIGHPID
 argument_list|,
 name|NDIS_KSTACK_PAGES
 argument_list|,
-name|name
+literal|"Windows DPC %d"
+argument_list|,
+name|i
 argument_list|)
 expr_stmt|;
 if|if
@@ -2392,15 +2379,6 @@ name|wq_queues
 operator|+
 name|i
 expr_stmt|;
-name|sprintf
-argument_list|(
-name|name
-argument_list|,
-literal|"Windows Workitem %d"
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|kproc_create
@@ -2416,7 +2394,9 @@ name|RFHIGHPID
 argument_list|,
 name|NDIS_KSTACK_PAGES
 argument_list|,
-name|name
+literal|"Windows Workitem %d"
+argument_list|,
+name|i
 argument_list|)
 expr_stmt|;
 if|if
@@ -14497,12 +14477,6 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|char
-name|tname
-index|[
-literal|128
-index|]
-decl_stmt|;
 name|thread_context
 modifier|*
 name|tc
@@ -14549,15 +14523,6 @@ name|tc_thrfunc
 operator|=
 name|thrfunc
 expr_stmt|;
-name|sprintf
-argument_list|(
-name|tname
-argument_list|,
-literal|"windows kthread %d"
-argument_list|,
-name|ntoskrnl_kth
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|kproc_create
@@ -14573,7 +14538,9 @@ name|RFHIGHPID
 argument_list|,
 name|NDIS_KSTACK_PAGES
 argument_list|,
-name|tname
+literal|"Windows Kthread %d"
+argument_list|,
+name|ntoskrnl_kth
 argument_list|)
 expr_stmt|;
 if|if
