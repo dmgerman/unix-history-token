@@ -6,13 +6,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ARCMSR_DRIVER_VERSION
-value|"Driver Version 1.20.00.17 2010-07-15"
-end_define
-
-begin_define
-define|#
-directive|define
 name|ARCMSR_SCSI_INITIATOR_ID
 value|255
 end_define
@@ -289,8 +282,41 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCI_DEVICE_ID_ARECA_1200
+value|0x1200
+end_define
+
+begin_comment
+comment|/* Device ID	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_DEVICE_ID_ARECA_1201
+value|0x1201
+end_define
+
+begin_comment
+comment|/* Device ID	*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCI_DEVICE_ID_ARECA_1210
 value|0x1210
+end_define
+
+begin_comment
+comment|/* Device ID	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_DEVICE_ID_ARECA_1212
+value|0x1212
 end_define
 
 begin_comment
@@ -311,6 +337,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCI_DEVICE_ID_ARECA_1222
+value|0x1222
+end_define
+
+begin_comment
+comment|/* Device ID	*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCI_DEVICE_ID_ARECA_1230
 value|0x1230
 end_define
@@ -322,8 +359,30 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCI_DEVICE_ID_ARECA_1231
+value|0x1231
+end_define
+
+begin_comment
+comment|/* Device ID	*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCI_DEVICE_ID_ARECA_1260
 value|0x1260
+end_define
+
+begin_comment
+comment|/* Device ID	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_DEVICE_ID_ARECA_1261
+value|0x1261
 end_define
 
 begin_comment
@@ -346,28 +405,6 @@ define|#
 directive|define
 name|PCI_DEVICE_ID_ARECA_1280
 value|0x1280
-end_define
-
-begin_comment
-comment|/* Device ID	*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCI_DEVICE_ID_ARECA_1212
-value|0x1212
-end_define
-
-begin_comment
-comment|/* Device ID	*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCI_DEVICE_ID_ARECA_1222
-value|0x1222
 end_define
 
 begin_comment
@@ -412,17 +449,6 @@ define|#
 directive|define
 name|PCI_DEVICE_ID_ARECA_1681
 value|0x1681
-end_define
-
-begin_comment
-comment|/* Device ID	*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCI_DEVICE_ID_ARECA_1201
-value|0x1201
 end_define
 
 begin_comment
@@ -498,8 +524,41 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCIDevVenIDARC1200
+value|0x120017D3
+end_define
+
+begin_comment
+comment|/* Vendor Device ID	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIDevVenIDARC1201
+value|0x120117D3
+end_define
+
+begin_comment
+comment|/* Vendor Device ID	*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCIDevVenIDARC1210
 value|0x121017D3
+end_define
+
+begin_comment
+comment|/* Vendor Device ID	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIDevVenIDARC1212
+value|0x121217D3
 end_define
 
 begin_comment
@@ -520,6 +579,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCIDevVenIDARC1222
+value|0x122217D3
+end_define
+
+begin_comment
+comment|/* Vendor Device ID	*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCIDevVenIDARC1230
 value|0x123017D3
 end_define
@@ -531,8 +601,30 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCIDevVenIDARC1231
+value|0x123117D3
+end_define
+
+begin_comment
+comment|/* Vendor Device ID	*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCIDevVenIDARC1260
 value|0x126017D3
+end_define
+
+begin_comment
+comment|/* Vendor Device ID	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIDevVenIDARC1261
+value|0x126117D3
 end_define
 
 begin_comment
@@ -555,28 +647,6 @@ define|#
 directive|define
 name|PCIDevVenIDARC1280
 value|0x128017D3
-end_define
-
-begin_comment
-comment|/* Vendor Device ID	*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCIDevVenIDARC1212
-value|0x121217D3
-end_define
-
-begin_comment
-comment|/* Vendor Device ID	*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCIDevVenIDARC1222
-value|0x122217D3
 end_define
 
 begin_comment
@@ -621,17 +691,6 @@ define|#
 directive|define
 name|PCIDevVenIDARC1681
 value|0x168117D3
-end_define
-
-begin_comment
-comment|/* Vendor Device ID	*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCIDevVenIDARC1201
-value|0x120117D3
 end_define
 
 begin_comment
@@ -2160,14 +2219,14 @@ comment|/* 08h   Address of this request */
 name|u_int32_t
 name|DataLength
 decl_stmt|;
-comment|/* 0ch   not used now            */
+comment|/* 0ch   not used now           */
 name|u_int8_t
 name|Cdb
 index|[
 literal|16
 index|]
 decl_stmt|;
-comment|/* 10h   SCSI CDB                */
+comment|/* 10h   SCSI CDB               */
 comment|/* 	******************************************************** 	**Device Status : the same from SCSI bus if error occur  	** SCSI bus status codes. 	******************************************************** 	*/
 name|u_int8_t
 name|DeviceStatus
@@ -3110,7 +3169,7 @@ block|{
 name|u_int8_t
 name|doorbell_reserved
 index|[
-literal|132096
+name|ARCMSR_DRV2IOP_DOORBELL
 index|]
 decl_stmt|;
 comment|/*reserved */
@@ -3145,7 +3204,7 @@ block|{
 name|u_int8_t
 name|message_reserved0
 index|[
-literal|64000
+name|ARCMSR_MSGCODE_RWBUFFER
 index|]
 decl_stmt|;
 comment|/*reserved */
