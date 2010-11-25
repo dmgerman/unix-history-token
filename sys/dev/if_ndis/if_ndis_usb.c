@@ -862,10 +862,14 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function

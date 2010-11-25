@@ -1785,7 +1785,6 @@ operator|&
 name|drvdb_mtx
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2596,7 +2595,6 @@ name|x86_critical_exit
 argument_list|()
 expr_stmt|;
 comment|/* Now entering Windows land, population: you. */
-return|return;
 block|}
 end_function
 
@@ -2658,7 +2656,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-return|return;
 block|}
 end_function
 
@@ -3551,7 +3548,6 @@ operator|&
 name|dt_lock
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3755,7 +3751,6 @@ name|dt_lock
 argument_list|)
 expr_stmt|;
 comment|/* Whew. */
-return|return;
 block|}
 end_function
 

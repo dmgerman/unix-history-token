@@ -2137,7 +2137,6 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3717,7 +3716,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 if|if
 condition|(
 name|sc
@@ -3736,7 +3734,6 @@ name|ndis_80211
 operator|++
 expr_stmt|;
 break|break;
-block|}
 block|}
 if|if
 condition|(
@@ -6260,7 +6257,6 @@ argument_list|,
 name|irql
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6316,7 +6312,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6666,7 +6661,6 @@ operator|->
 name|nmb_lock
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6835,7 +6829,6 @@ argument_list|,
 name|ifp
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7325,7 +7318,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -7522,7 +7514,6 @@ argument_list|,
 name|irql
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7711,7 +7702,6 @@ argument_list|,
 name|ifp
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7909,7 +7899,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8040,7 +8029,6 @@ break|break;
 default|default:
 break|break;
 block|}
-return|return;
 block|}
 end_function
 
@@ -8468,7 +8456,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8581,7 +8568,6 @@ operator|.
 name|ds_len
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -8619,7 +8605,9 @@ name|ni
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -8710,7 +8698,6 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -9632,8 +9619,6 @@ name|ndis_media_state
 name|linkstate
 decl_stmt|;
 name|int
-name|error
-decl_stmt|,
 name|len
 decl_stmt|;
 name|ifmr
@@ -9670,8 +9655,6 @@ argument_list|(
 name|linkstate
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
 name|ndis_get_info
 argument_list|(
 name|sc
@@ -9696,8 +9679,6 @@ argument_list|(
 name|media_info
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
 name|ndis_get_info
 argument_list|(
 name|sc
@@ -9776,7 +9757,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-return|return;
 block|}
 end_function
 
@@ -10636,7 +10616,7 @@ operator|&
 name|len
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Note that OID_80211_PRIVACY_FILTER is optional: 	 * not all drivers implement it. 	 */
+comment|/* 	 * Note that OID_802_11_PRIVACY_FILTER is optional: 	 * not all drivers implement it. 	 */
 name|len
 operator|=
 sizeof|sizeof
@@ -11329,7 +11309,7 @@ index|]
 operator|.
 name|wk_keylen
 expr_stmt|;
-comment|/* 				 * 5, 13 and 16 are the only valid 				 * only valid key lengths. Anything 				 * in between will be zero padded out to 				 * the next highest boundary. 				 */
+comment|/* 				 * 5, 13 and 16 are the only valid 				 * key lengths. Anything in between 				 * will be zero padded out to the 				 * next highest boundary. 				 */
 if|if
 condition|(
 name|vap
@@ -12907,7 +12887,7 @@ argument_list|,
 name|M_TEMP
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Determine current authentication mode. Note: authmode 	 * reporting isn't supported prior to FreeBSD 6.x. 	 */
+comment|/* 	 * Determine current authentication mode. 	 */
 name|len
 operator|=
 sizeof|sizeof
@@ -13103,7 +13083,6 @@ operator||
 name|IEEE80211_F_DROPUNENC
 operator|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -14812,7 +14791,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -15030,7 +15008,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -15065,7 +15042,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
