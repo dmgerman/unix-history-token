@@ -532,7 +532,7 @@ value|(nice)
 end_define
 
 begin_comment
-comment|/*  * These determine the interactivity of a process.  Interactivity differs from  * cpu utilization in that it expresses the voluntary time slept vs time ran  * while cpu utilization includes all time not running.  This more accurately  * models the intent of the thread.  *  * SLP_RUN_MAX:	Maximum amount of sleep time + run time we'll accumulate  *		before throttling back.  * SLP_RUN_FORK:	Maximum slp+run time to inherit at fork time.  * INTERACT_MAX:	Maximum interactivity value.  Smaller is better.  * INTERACT_THRESH:	Threshhold for placement on the current runq.  */
+comment|/*  * These determine the interactivity of a process.  Interactivity differs from  * cpu utilization in that it expresses the voluntary time slept vs time ran  * while cpu utilization includes all time not running.  This more accurately  * models the intent of the thread.  *  * SLP_RUN_MAX:	Maximum amount of sleep time + run time we'll accumulate  *		before throttling back.  * SLP_RUN_FORK:	Maximum slp+run time to inherit at fork time.  * INTERACT_MAX:	Maximum interactivity value.  Smaller is better.  * INTERACT_THRESH:	Threshold for placement on the current runq.  */
 end_comment
 
 begin_define
@@ -9254,7 +9254,7 @@ name|ts_incrtick
 operator|=
 name|ticks
 expr_stmt|;
-comment|/* 	 * Update if we've exceeded our desired tick threshhold by over one 	 * second. 	 */
+comment|/* 	 * Update if we've exceeded our desired tick threshold by over one 	 * second. 	 */
 if|if
 condition|(
 name|ts
