@@ -683,11 +683,23 @@ return|;
 block|}
 end_function
 
+begin_function_decl
+name|int
+name|HYPERVISOR_multicall
+parameter_list|(
+name|multicall_entry_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 specifier|static
 specifier|inline
 name|int
-name|HYPERVISOR_multicall
+name|_HYPERVISOR_multicall
 parameter_list|(
 name|void
 modifier|*
