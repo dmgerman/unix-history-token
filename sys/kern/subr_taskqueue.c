@@ -160,11 +160,6 @@ argument|task
 argument_list|)
 name|tq_queue
 expr_stmt|;
-specifier|const
-name|char
-modifier|*
-name|tq_name
-decl_stmt|;
 name|taskqueue_enqueue_fn
 name|tq_enqueue
 decl_stmt|;
@@ -327,6 +322,7 @@ specifier|const
 name|char
 modifier|*
 name|name
+name|__unused
 parameter_list|,
 name|int
 name|mflags
@@ -392,12 +388,6 @@ name|queue
 operator|->
 name|tq_active
 argument_list|)
-expr_stmt|;
-name|queue
-operator|->
-name|tq_name
-operator|=
-name|name
 expr_stmt|;
 name|queue
 operator|->

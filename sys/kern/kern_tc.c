@@ -2256,11 +2256,13 @@ operator|*
 name|delta
 operator|<
 operator|(
+operator|(
 name|uint64_t
 operator|)
 literal|1
 operator|<<
 literal|63
+operator|)
 operator|)
 condition|)
 block|{

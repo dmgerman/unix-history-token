@@ -5841,6 +5841,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|pmap_init_pat
+argument_list|()
+expr_stmt|;
 name|PCPU_SET
 argument_list|(
 name|switchtime

@@ -195,6 +195,43 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|char
+modifier|*
+name|stputbin
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|data
+parameter_list|,
+name|int
+name|len
+parameter_list|,
+name|char
+modifier|*
+name|p
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|stputs
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|data
+parameter_list|,
+name|char
+modifier|*
+name|p
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
@@ -311,6 +348,32 @@ parameter_list|(
 name|p
 parameter_list|)
 value|stalloc(stackblocksize() - sstrnleft)
+end_define
+
+begin_define
+define|#
+directive|define
+name|STPUTBIN
+parameter_list|(
+name|s
+parameter_list|,
+name|len
+parameter_list|,
+name|p
+parameter_list|)
+value|p = stputbin((s), (len), p)
+end_define
+
+begin_define
+define|#
+directive|define
+name|STPUTS
+parameter_list|(
+name|s
+parameter_list|,
+name|p
+parameter_list|)
+value|p = stputs((s), p)
 end_define
 
 end_unit

@@ -2158,6 +2158,7 @@ operator|&&
 operator|!
 name|Tflag
 condition|)
+block|{
 name|printf
 argument_list|(
 operator|(
@@ -2182,6 +2183,12 @@ argument_list|,
 literal|"Foreign Address"
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"(state)\n"
+argument_list|)
+expr_stmt|;
+block|}
 name|first
 operator|=
 literal|0

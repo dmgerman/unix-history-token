@@ -1769,7 +1769,7 @@ operator|->
 name|flags
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Filter out MNT_ROOTFS.  We do not want clients of nmount() in 	 * userspace to set this flag, but we must filter it out if we want 	 * MNT_UPDATE on the root file system to work. 	 * MNT_ROOTFS should only be set in the kernel in vfs_mountroot_try(). 	 */
+comment|/* 	 * Filter out MNT_ROOTFS.  We do not want clients of nmount() in 	 * userspace to set this flag, but we must filter it out if we want 	 * MNT_UPDATE on the root file system to work. 	 * MNT_ROOTFS should only be set by the kernel when mounting its 	 * root file system. 	 */
 name|uap
 operator|->
 name|flags
@@ -3637,7 +3637,7 @@ operator|->
 name|flags
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Filter out MNT_ROOTFS.  We do not want clients of mount() in 	 * userspace to set this flag, but we must filter it out if we want 	 * MNT_UPDATE on the root file system to work. 	 * MNT_ROOTFS should only be set in the kernel in vfs_mountroot_try(). 	 */
+comment|/* 	 * Filter out MNT_ROOTFS.  We do not want clients of mount() in 	 * userspace to set this flag, but we must filter it out if we want 	 * MNT_UPDATE on the root file system to work. 	 * MNT_ROOTFS should only be set by the kernel when mounting its 	 * root file system. 	 */
 name|uap
 operator|->
 name|flags

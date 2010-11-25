@@ -2892,7 +2892,7 @@ operator|==
 literal|0
 condition|)
 continue|continue;
-while|while
+if|if
 condition|(
 name|vm_page_sleep_if_busy
 argument_list|(
@@ -2915,6 +2915,16 @@ condition|)
 goto|goto
 name|rescan
 goto|;
+name|np
+operator|=
+name|vm_page_find_least
+argument_list|(
+name|object
+argument_list|,
+name|pi
+argument_list|)
+expr_stmt|;
+continue|continue;
 block|}
 name|vm_page_test_dirty
 argument_list|(

@@ -172,11 +172,11 @@ modifier|*
 name|devices
 decl_stmt|;
 name|struct
-name|usbpf_if
+name|ifnet
 modifier|*
-name|uif
+name|ifp
 decl_stmt|;
-comment|/* USB Packet Filter */
+comment|/* only for USB Packet Filter */
 name|usb_power_mask_t
 name|hw_power_state
 decl_stmt|;

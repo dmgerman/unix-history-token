@@ -315,6 +315,7 @@ comment|/* -1 matches anything */
 name|uint8_t
 name|ich
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
@@ -428,6 +429,7 @@ modifier|*
 name|ih
 decl_stmt|;
 comment|/* interrupt handler cookie */
+specifier|const
 name|struct
 name|fxp_ident
 modifier|*

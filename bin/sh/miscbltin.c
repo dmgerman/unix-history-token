@@ -565,6 +565,13 @@ operator|==
 literal|'\0'
 condition|)
 continue|continue;
+name|CHECKSTRSPACE
+argument_list|(
+literal|1
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|backslash
@@ -584,7 +591,7 @@ name|c
 operator|!=
 literal|'\n'
 condition|)
-name|STPUTC
+name|USTPUTC
 argument_list|(
 name|c
 argument_list|,
@@ -661,7 +668,7 @@ if|if
 condition|(
 name|saveall
 condition|)
-name|STPUTC
+name|USTPUTC
 argument_list|(
 name|c
 argument_list|,
@@ -690,7 +697,7 @@ if|if
 condition|(
 name|saveall
 condition|)
-name|STPUTC
+name|USTPUTC
 argument_list|(
 name|c
 argument_list|,
@@ -720,7 +727,7 @@ comment|/* Not just a spare terminator */
 name|saveall
 operator|++
 expr_stmt|;
-name|STPUTC
+name|USTPUTC
 argument_list|(
 name|c
 argument_list|,
@@ -748,7 +755,7 @@ comment|/* Last variable needs all IFS chars */
 name|saveall
 operator|++
 expr_stmt|;
-name|STPUTC
+name|USTPUTC
 argument_list|(
 name|c
 argument_list|,

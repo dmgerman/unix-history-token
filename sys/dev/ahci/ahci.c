@@ -6139,7 +6139,7 @@ name|AHCI_CAP_NCS_SHIFT
 operator|)
 operator|+
 literal|1
-operator|,
+expr_stmt|;
 name|mtx_init
 argument_list|(
 operator|&

@@ -1203,12 +1203,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|regs
 index|[
 literal|0
 index|]
 operator|&
-literal|0x4
+name|CPUTPM1_ARAT
+operator|)
+operator|!=
+literal|0
 condition|)
 name|arat
 operator|=

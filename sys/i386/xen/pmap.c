@@ -5124,6 +5124,13 @@ operator|>>
 literal|32
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
+block|mclp->args[3] = (*pte& PG_V) ? UVMF_INVLPG|UVMF_ALL : 0;
+else|#
+directive|else
+comment|/* 		 * Somehow we seem to be ending up with pages which are in 		 * the TLB in spite of not having PG_V set, resulting in 		 * pages newly loaded into the bufcache not showing up 		 * immediately (i.e., accessing them provides the old data). 		 * As a workaround, always perform a TLB flush, even if the 		 * old page didn't have PG_V. 		 */
 name|mclp
 operator|->
 name|args
@@ -5131,19 +5138,12 @@ index|[
 literal|3
 index|]
 operator|=
-operator|(
-operator|*
-name|pte
-operator|&
-name|PG_V
-operator|)
-condition|?
 name|UVMF_INVLPG
 operator||
 name|UVMF_ALL
-else|:
-literal|0
 expr_stmt|;
+endif|#
+directive|endif
 name|va
 operator|+=
 name|PAGE_SIZE
