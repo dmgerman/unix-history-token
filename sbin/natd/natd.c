@@ -3755,6 +3755,10 @@ argument_list|)
 operator|==
 operator|-
 literal|1
+operator|&&
+name|errno
+operator|!=
+name|ENOMEM
 condition|)
 name|err
 argument_list|(
