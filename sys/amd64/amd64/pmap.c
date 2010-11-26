@@ -2190,6 +2190,17 @@ return|;
 block|}
 end_function
 
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+name|powerof2
+argument_list|(
+name|NDMPML4E
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|void
@@ -2735,7 +2746,21 @@ name|PG_V
 operator||
 name|PG_U
 expr_stmt|;
-comment|/* Connect the Direct Map slot up to the PML4 */
+comment|/* Connect the Direct Map slot(s) up to the PML4. */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|NDMPML4E
+condition|;
+name|i
+operator|++
+control|)
+block|{
 operator|(
 operator|(
 name|pdp_entry_t
@@ -2745,9 +2770,17 @@ name|KPML4phys
 operator|)
 index|[
 name|DMPML4I
+operator|+
+name|i
 index|]
 operator|=
 name|DMPDPphys
+operator|+
+operator|(
+name|i
+operator|<<
+name|PAGE_SHIFT
+operator|)
 expr_stmt|;
 operator|(
 operator|(
@@ -2758,6 +2791,8 @@ name|KPML4phys
 operator|)
 index|[
 name|DMPML4I
+operator|+
+name|i
 index|]
 operator||=
 name|PG_RW
@@ -2766,6 +2801,7 @@ name|PG_V
 operator||
 name|PG_U
 expr_stmt|;
+block|}
 comment|/* Connect the KVA slot up to the PML4 */
 operator|(
 operator|(
@@ -6936,6 +6972,9 @@ specifier|static
 name|vm_pindex_t
 name|color
 decl_stmt|;
+name|int
+name|i
+decl_stmt|;
 name|PMAP_LOCK_INIT
 argument_list|(
 name|pmap
@@ -7019,14 +7058,38 @@ name|PG_V
 operator||
 name|PG_U
 expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|NDMPML4E
+condition|;
+name|i
+operator|++
+control|)
+block|{
 name|pmap
 operator|->
 name|pm_pml4
 index|[
 name|DMPML4I
+operator|+
+name|i
 index|]
 operator|=
+operator|(
 name|DMPDPphys
+operator|+
+operator|(
+name|i
+operator|<<
+name|PAGE_SHIFT
+operator|)
+operator|)
 operator||
 name|PG_RW
 operator||
@@ -7034,6 +7097,7 @@ name|PG_V
 operator||
 name|PG_U
 expr_stmt|;
+block|}
 comment|/* install self-referential address mapping entry(s) */
 name|pmap
 operator|->
@@ -8141,6 +8205,9 @@ block|{
 name|vm_page_t
 name|m
 decl_stmt|;
+name|int
+name|i
+decl_stmt|;
 name|KASSERT
 argument_list|(
 name|pmap
@@ -8199,16 +8266,31 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* KVA */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|NDMPML4E
+condition|;
+name|i
+operator|++
+control|)
+comment|/* Direct Map */
 name|pmap
 operator|->
 name|pm_pml4
 index|[
 name|DMPML4I
+operator|+
+name|i
 index|]
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Direct Map */
 name|pmap
 operator|->
 name|pm_pml4
