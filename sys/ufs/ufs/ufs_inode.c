@@ -203,23 +203,6 @@ name|mp
 operator|=
 name|NULL
 expr_stmt|;
-if|if
-condition|(
-name|prtactive
-operator|&&
-name|vp
-operator|->
-name|v_usecount
-operator|!=
-literal|0
-condition|)
-name|vprint
-argument_list|(
-literal|"ufs_inactive: pushing active"
-argument_list|,
-name|vp
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Ignore inodes related to stale file handles. 	 */
 if|if
 condition|(
@@ -719,23 +702,6 @@ name|i
 decl_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
-name|prtactive
-operator|&&
-name|vp
-operator|->
-name|v_usecount
-operator|!=
-literal|0
-condition|)
-name|vprint
-argument_list|(
-literal|"ufs_reclaim: pushing active"
-argument_list|,
-name|vp
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Destroy the vm object and flush associated pages. 	 */
 name|vnode_destroy_vobject
 argument_list|(

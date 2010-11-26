@@ -2022,24 +2022,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
-name|prtactive
-operator|&&
-name|vrefcnt
-argument_list|(
-name|vp
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|vprint
-argument_list|(
-literal|"msdosfs_reclaim(): pushing active"
-argument_list|,
-name|vp
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Destroy the vm object and flush associated pages. 	 */
 name|vnode_destroy_vobject
 argument_list|(
@@ -2146,24 +2128,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
-name|prtactive
-operator|&&
-name|vrefcnt
-argument_list|(
-name|vp
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|vprint
-argument_list|(
-literal|"msdosfs_inactive(): pushing active"
-argument_list|,
-name|vp
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Ignore denodes related to stale file handles. 	 */
 if|if
 condition|(
