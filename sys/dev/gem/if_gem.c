@@ -1696,7 +1696,7 @@ name|phy
 argument_list|,
 name|MII_OFFSET_ANY
 argument_list|,
-literal|0
+name|MIIF_DOPAUSE
 argument_list|)
 expr_stmt|;
 block|}
@@ -1808,7 +1808,7 @@ name|phy
 argument_list|,
 name|MII_OFFSET_ANY
 argument_list|,
-literal|0
+name|MIIF_DOPAUSE
 argument_list|)
 expr_stmt|;
 block|}
@@ -1921,7 +1921,7 @@ name|GEM_PHYAD_EXTERNAL
 argument_list|,
 name|MII_OFFSET_ANY
 argument_list|,
-literal|0
+name|MIIF_DOPAUSE
 argument_list|)
 expr_stmt|;
 block|}
@@ -3744,6 +3744,12 @@ argument_list|,
 literal|"cannot disable RX DMA\n"
 argument_list|)
 expr_stmt|;
+comment|/* Wait 5ms extra. */
+name|DELAY
+argument_list|(
+literal|5000
+argument_list|)
+expr_stmt|;
 comment|/* Finally, reset the ERX. */
 name|GEM_BANK2_WRITE_4
 argument_list|(
@@ -4131,6 +4137,12 @@ operator|->
 name|sc_dev
 argument_list|,
 literal|"cannot disable TX DMA\n"
+argument_list|)
+expr_stmt|;
+comment|/* Wait 5ms extra. */
+name|DELAY
+argument_list|(
+literal|5000
 argument_list|)
 expr_stmt|;
 comment|/* Finally, reset the ETX. */
@@ -6305,7 +6317,7 @@ name|sc
 argument_list|,
 name|GEM_MAC_CONTROL_TYPE
 argument_list|,
-literal|0x8088
+literal|0x8808
 argument_list|)
 expr_stmt|;
 comment|/* random number seed */
@@ -10118,9 +10130,6 @@ operator||
 name|GEM_MAC_CC_TX_PAUSE
 operator|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notyet
 if|if
 condition|(
 operator|(
@@ -10163,8 +10172,6 @@ name|v
 operator||=
 name|GEM_MAC_CC_TX_PAUSE
 expr_stmt|;
-endif|#
-directive|endif
 name|GEM_BANK1_WRITE_4
 argument_list|(
 name|sc
