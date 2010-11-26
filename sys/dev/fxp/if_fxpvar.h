@@ -549,10 +549,6 @@ name|tunable_bundle_max
 decl_stmt|;
 comment|/* max # frames per interrupt (ucode) */
 name|int
-name|tunable_noflow
-decl_stmt|;
-comment|/* flow control disabled */
-name|int
 name|rnr
 decl_stmt|;
 comment|/* RNR events */

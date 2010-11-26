@@ -130,12 +130,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FXP_CSR_FLOWCONTROL
+name|FXP_CSR_FC_THRESH
 value|0x19
 end_define
 
 begin_comment
-comment|/* flow control (2 bytes) */
+comment|/* flow control (1 byte) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FXP_CSR_FC_STATUS
+value|0x1A
+end_define
+
+begin_comment
+comment|/* flow control status (1 byte) */
 end_comment
 
 begin_define
