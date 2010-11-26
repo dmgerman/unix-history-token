@@ -2989,7 +2989,7 @@ argument_list|(
 name|td
 argument_list|,
 literal|"linux_sys_futex: "
-literal|"op LINUX_FUTEX_LOCK_PI not implemented.\n"
+literal|"op LINUX_FUTEX_LOCK_PI not implemented\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3006,7 +3006,7 @@ argument_list|(
 name|td
 argument_list|,
 literal|"linux_sys_futex: "
-literal|"op LINUX_FUTEX_UNLOCK_PI not implemented.\n"
+literal|"op LINUX_FUTEX_UNLOCK_PI not implemented\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3023,7 +3023,7 @@ argument_list|(
 name|td
 argument_list|,
 literal|"linux_sys_futex: "
-literal|"op LINUX_FUTEX_TRYLOCK_PI not implemented.\n"
+literal|"op LINUX_FUTEX_TRYLOCK_PI not implemented\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3084,7 +3084,7 @@ argument_list|(
 name|td
 argument_list|,
 literal|"linux_sys_futex: "
-literal|"op FUTEX_WAIT_BITSET not implemented.\n"
+literal|"op FUTEX_WAIT_BITSET not implemented\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3101,7 +3101,7 @@ argument_list|(
 name|td
 argument_list|,
 literal|"linux_sys_futex: "
-literal|"op FUTEX_WAIT_REQUEUE_PI not implemented.\n"
+literal|"op FUTEX_WAIT_REQUEUE_PI not implemented\n"
 argument_list|)
 expr_stmt|;
 return|return
