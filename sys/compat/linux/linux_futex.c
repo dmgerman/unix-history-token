@@ -2003,6 +2003,8 @@ name|f
 decl_stmt|,
 modifier|*
 name|f2
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|error
