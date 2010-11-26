@@ -5249,6 +5249,23 @@ name|cpumask
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
+name|PCPU_SET
+argument_list|(
+name|switchtime
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|PCPU_SET
+argument_list|(
+name|switchticks
+argument_list|,
+name|ticks
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Wait for resume */
 while|while
 condition|(
