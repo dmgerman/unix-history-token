@@ -2517,11 +2517,6 @@ operator|->
 name|resident_page_count
 operator|--
 expr_stmt|;
-name|object
-operator|->
-name|generation
-operator|++
-expr_stmt|;
 comment|/* 	 * The vnode may now be recycled. 	 */
 if|if
 condition|(
@@ -6165,11 +6160,6 @@ operator|->
 name|resident_page_count
 operator|--
 expr_stmt|;
-name|object
-operator|->
-name|generation
-operator|++
-expr_stmt|;
 comment|/* 	 * Restore the default memory attribute to the page. 	 */
 if|if
 condition|(
@@ -7363,13 +7353,6 @@ name|dirty
 operator|&=
 operator|~
 name|bits
-expr_stmt|;
-name|m
-operator|->
-name|object
-operator|->
-name|generation
-operator|++
 expr_stmt|;
 block|}
 comment|/*  * vm_page_zero_invalid()  *  *	The kernel assumes that the invalid portions of a page contain   *	garbage, but such pages can be mapped into memory by user code.  *	When this occurs, we must zero out the non-valid portions of the  *	page so user code sees what it expects.  *  *	Pages are most often semi-valid when the end of a file is mapped   *	into memory and the file's size is not page aligned.  */

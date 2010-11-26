@@ -2165,11 +2165,6 @@ operator|->
 name|shadow_count
 operator|--
 expr_stmt|;
-name|temp
-operator|->
-name|generation
-operator|++
-expr_stmt|;
 name|VM_OBJECT_UNLOCK
 argument_list|(
 name|temp
@@ -4160,11 +4155,6 @@ operator|->
 name|shadow_count
 operator|++
 expr_stmt|;
-name|source
-operator|->
-name|generation
-operator|++
-expr_stmt|;
 if|#
 directive|if
 name|VM_NRESERVLEVEL
@@ -4417,11 +4407,6 @@ expr_stmt|;
 name|source
 operator|->
 name|shadow_count
-operator|++
-expr_stmt|;
-name|source
-operator|->
-name|generation
 operator|++
 expr_stmt|;
 name|vm_object_reference_locked
@@ -5609,11 +5594,6 @@ operator|->
 name|shadow_count
 operator|--
 expr_stmt|;
-name|backing_object
-operator|->
-name|generation
-operator|++
-expr_stmt|;
 if|if
 condition|(
 name|backing_object
@@ -5650,13 +5630,6 @@ name|shadow_list
 argument_list|)
 expr_stmt|;
 comment|/* 				 * The shadow_count has not changed. 				 */
-name|backing_object
-operator|->
-name|backing_object
-operator|->
-name|generation
-operator|++
-expr_stmt|;
 name|VM_OBJECT_UNLOCK
 argument_list|(
 name|backing_object
@@ -5757,11 +5730,6 @@ operator|->
 name|shadow_count
 operator|--
 expr_stmt|;
-name|backing_object
-operator|->
-name|generation
-operator|++
-expr_stmt|;
 name|new_backing_object
 operator|=
 name|backing_object
@@ -5801,11 +5769,6 @@ expr_stmt|;
 name|new_backing_object
 operator|->
 name|shadow_count
-operator|++
-expr_stmt|;
-name|new_backing_object
-operator|->
-name|generation
 operator|++
 expr_stmt|;
 name|vm_object_reference_locked
