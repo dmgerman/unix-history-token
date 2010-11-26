@@ -539,7 +539,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"cannot get children"
+literal|"cannot get children\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1316,7 +1316,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: phyloc and offloc specified"
+literal|"%s: phyloc and offloc specified\n"
 argument_list|,
 name|__func__
 argument_list|)
@@ -1346,7 +1346,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: ivalid offloc %d"
+literal|"%s: ivalid offloc %d\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -1392,7 +1392,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: ivalid phyloc %d"
+literal|"%s: ivalid phyloc %d\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -1555,7 +1555,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: non-matching invariant"
+literal|"%s: non-matching invariant\n"
 argument_list|,
 name|__func__
 argument_list|)
