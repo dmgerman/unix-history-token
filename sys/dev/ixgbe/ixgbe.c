@@ -647,7 +647,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|ixgbe_setup_interface
 parameter_list|(
 name|device_t
@@ -1657,7 +1657,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Header split: this causes the hardware to DMA  * the header into a seperate mbuf from the payload,  * it can be a performance win in some workloads, but  * in others it actually hurts, its off by default.   */
+comment|/*  * Header split: this causes the hardware to DMA  * the header into a separate mbuf from the payload,  * it can be a performance win in some workloads, but  * in others it actually hurts, its off by default.   */
 end_comment
 
 begin_decl_stmt
@@ -2609,6 +2609,51 @@ goto|goto
 name|err_out
 goto|;
 block|}
+comment|/* Allocate multicast array memory. */
+name|adapter
+operator|->
+name|mta
+operator|=
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|u8
+argument_list|)
+operator|*
+name|IXGBE_ETH_LENGTH_OF_ADDRESS
+operator|*
+name|MAX_NUM_MULTICAST_ADDRESSES
+argument_list|,
+name|M_DEVBUF
+argument_list|,
+name|M_NOWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|adapter
+operator|->
+name|mta
+operator|==
+name|NULL
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Can not allocate multicast setup array\n"
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|ENOMEM
+expr_stmt|;
+goto|goto
+name|err_late
+goto|;
+block|}
 comment|/* Initialize the shared code */
 name|error
 operator|=
@@ -2869,13 +2914,20 @@ goto|goto
 name|err_late
 goto|;
 comment|/* Setup OS specific network interface */
+if|if
+condition|(
 name|ixgbe_setup_interface
 argument_list|(
 name|dev
 argument_list|,
 name|adapter
 argument_list|)
-expr_stmt|;
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|err_late
+goto|;
 comment|/* Sysctl for limiting the amount of work done in the taskqueue */
 name|ixgbe_add_rx_process_limit
 argument_list|(
@@ -3099,9 +3151,33 @@ argument_list|)
 expr_stmt|;
 name|err_out
 label|:
+if|if
+condition|(
+name|adapter
+operator|->
+name|ifp
+operator|!=
+name|NULL
+condition|)
+name|if_free
+argument_list|(
+name|adapter
+operator|->
+name|ifp
+argument_list|)
+expr_stmt|;
 name|ixgbe_free_pci_resources
 argument_list|(
 name|adapter
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|adapter
+operator|->
+name|mta
+argument_list|,
+name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 return|return
@@ -3414,6 +3490,15 @@ expr_stmt|;
 name|ixgbe_free_receive_structures
 argument_list|(
 name|adapter
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|adapter
+operator|->
+name|mta
+argument_list|,
+name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 name|IXGBE_CORE_LOCK_DESTROY
@@ -8207,12 +8292,8 @@ name|u32
 name|fctrl
 decl_stmt|;
 name|u8
+modifier|*
 name|mta
-index|[
-name|MAX_NUM_MULTICAST_ADDRESSES
-operator|*
-name|IXGBE_ETH_LENGTH_OF_ADDRESS
-index|]
 decl_stmt|;
 name|u8
 modifier|*
@@ -8240,6 +8321,26 @@ decl_stmt|;
 name|IOCTL_DEBUGOUT
 argument_list|(
 literal|"ixgbe_set_multi: begin"
+argument_list|)
+expr_stmt|;
+name|mta
+operator|=
+name|adapter
+operator|->
+name|mta
+expr_stmt|;
+name|bzero
+argument_list|(
+name|mta
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|u8
+argument_list|)
+operator|*
+name|IXGBE_ETH_LENGTH_OF_ADDRESS
+operator|*
+name|MAX_NUM_MULTICAST_ADDRESSES
 argument_list|)
 expr_stmt|;
 name|fctrl
@@ -10789,7 +10890,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|ixgbe_setup_interface
 parameter_list|(
 name|device_t
@@ -10838,16 +10939,21 @@ name|ifp
 operator|==
 name|NULL
 condition|)
-name|panic
-argument_list|(
-literal|"%s: can not if_alloc()\n"
-argument_list|,
-name|device_get_nameunit
+block|{
+name|device_printf
 argument_list|(
 name|dev
-argument_list|)
+argument_list|,
+literal|"can not allocate ifnet structure\n"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 name|if_initname
 argument_list|(
 name|ifp
@@ -11131,7 +11237,11 @@ operator||
 name|IFM_AUTO
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -16951,7 +17061,7 @@ index|[
 name|j
 index|]
 expr_stmt|;
-comment|/* 		** Dont allocate mbufs if not 		** doing header split, its wasteful 		*/
+comment|/* 		** Don't allocate mbufs if not 		** doing header split, its wasteful 		*/
 if|if
 condition|(
 name|rxr
@@ -20539,7 +20649,7 @@ name|mask
 operator|=
 name|IXGBE_EIMS_ENABLE_MASK
 expr_stmt|;
-comment|/* Dont autoclear Link */
+comment|/* Don't autoclear Link */
 name|mask
 operator|&=
 operator|~
@@ -20560,7 +20670,7 @@ name|mask
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	** Now enable all queues, this is done seperately to 	** allow for handling the extended (beyond 32) MSIX 	** vectors that can be used by 82599 	*/
+comment|/* 	** Now enable all queues, this is done separately to 	** allow for handling the extended (beyond 32) MSIX 	** vectors that can be used by 82599 	*/
 for|for
 control|(
 name|int
