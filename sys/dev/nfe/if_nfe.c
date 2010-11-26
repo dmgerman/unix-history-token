@@ -3445,7 +3445,9 @@ name|MII_PHY_ANY
 argument_list|,
 name|MII_OFFSET_ANY
 argument_list|,
-literal|0
+name|MIIF_DOPAUSE
+operator||
+name|MIIF_FORCEPAUSE
 argument_list|)
 expr_stmt|;
 if|if
@@ -5208,7 +5210,7 @@ operator|->
 name|mii_media_active
 argument_list|)
 operator|&
-name|IFM_FLAG0
+name|IFM_ETH_RXPAUSE
 operator|)
 operator|!=
 literal|0
@@ -5264,7 +5266,7 @@ operator|->
 name|mii_media_active
 argument_list|)
 operator|&
-name|IFM_FLAG1
+name|IFM_ETH_TXPAUSE
 operator|)
 operator|!=
 literal|0

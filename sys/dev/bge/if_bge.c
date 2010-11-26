@@ -4865,6 +4865,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|IFM_OPTIONS
 argument_list|(
 name|mii
@@ -4872,7 +4873,10 @@ operator|->
 name|mii_media_active
 argument_list|)
 operator|&
-name|IFM_FLAG1
+name|IFM_ETH_TXPAUSE
+operator|)
+operator|!=
+literal|0
 condition|)
 name|BGE_SETBIT
 argument_list|(
@@ -4895,6 +4899,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|IFM_OPTIONS
 argument_list|(
 name|mii
@@ -4902,7 +4907,10 @@ operator|->
 name|mii_media_active
 argument_list|)
 operator|&
-name|IFM_FLAG0
+name|IFM_ETH_RXPAUSE
+operator|)
+operator|!=
+literal|0
 condition|)
 name|BGE_SETBIT
 argument_list|(
@@ -15346,7 +15354,6 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-operator|(
 name|mii_attach
 argument_list|(
 name|dev
@@ -15368,9 +15375,10 @@ name|phy_addr
 argument_list|,
 name|MII_OFFSET_ANY
 argument_list|,
-literal|0
+name|MIIF_DOPAUSE
+operator||
+name|MIIF_FORCEPAUSE
 argument_list|)
-operator|)
 expr_stmt|;
 if|if
 condition|(

@@ -392,6 +392,12 @@ name|mii_pdata
 operator|=
 name|mii
 expr_stmt|;
+name|sc
+operator|->
+name|mii_flags
+operator||=
+name|MIIF_NOMANPAUSE
+expr_stmt|;
 name|mii_phy_reset
 argument_list|(
 name|sc

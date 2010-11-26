@@ -333,6 +333,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MIIF_DOINGAUTO
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* doing autonegotiation (mii_softc) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MIIF_AUTOTSLEEP
 value|0x00000010
 end_define
@@ -405,6 +416,28 @@ end_define
 
 begin_comment
 comment|/* force auto-negotiation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIIF_NOMANPAUSE
+value|0x00100000
+end_define
+
+begin_comment
+comment|/* no manual PAUSE selection */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIIF_FORCEPAUSE
+value|0x00200000
+end_define
+
+begin_comment
+comment|/* force PAUSE advertisment */
 end_comment
 
 begin_define
@@ -961,6 +994,17 @@ end_function_decl
 begin_function_decl
 name|void
 name|mii_phy_down
+parameter_list|(
+name|struct
+name|mii_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u_int
+name|mii_phy_flowstatus
 parameter_list|(
 name|struct
 name|mii_softc
