@@ -3555,7 +3555,9 @@ expr_stmt|;
 comment|/* Set up MII bus. */
 name|flags
 operator|=
-literal|0
+name|MIIF_DOPAUSE
+operator||
+name|MIIF_FORCEPAUSE
 expr_stmt|;
 if|if
 condition|(
@@ -7359,7 +7361,7 @@ operator|&
 name|IFM_GMASK
 operator|)
 operator|&
-name|IFM_FLAG0
+name|IFM_ETH_RXPAUSE
 operator|)
 operator|!=
 literal|0
@@ -7381,7 +7383,7 @@ operator|&
 name|IFM_GMASK
 operator|)
 operator|&
-name|IFM_FLAG1
+name|IFM_ETH_TXPAUSE
 operator|)
 operator|!=
 literal|0

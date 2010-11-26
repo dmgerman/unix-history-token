@@ -5729,7 +5729,9 @@ name|bce_phy_addr
 argument_list|,
 name|MII_OFFSET_ANY
 argument_list|,
-literal|0
+name|MIIF_DOPAUSE
+operator||
+name|MIIF_FORCEPAUSE
 argument_list|)
 expr_stmt|;
 if|if
@@ -8288,14 +8290,17 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
-comment|/* FLAG0 is set if RX is enabled and FLAG1 if TX is enabled */
 if|if
 condition|(
+operator|(
 name|mii
 operator|->
 name|mii_media_active
 operator|&
-name|IFM_FLAG0
+name|IFM_ETH_RXPAUSE
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|DBPRINT
@@ -8344,11 +8349,15 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
 name|mii
 operator|->
 name|mii_media_active
 operator|&
-name|IFM_FLAG1
+name|IFM_ETH_TXPAUSE
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|DBPRINT
