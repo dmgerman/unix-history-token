@@ -1488,6 +1488,10 @@ argument_list|,
 name|pageout_count
 argument_list|,
 literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
 argument_list|)
 operator|)
 return|;
@@ -1495,7 +1499,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vm_pageout_flush() - launder the given pages  *  *	The given pages are laundered.  Note that we setup for the start of  *	I/O ( i.e. busy the page ), mark it read-only, and bump the object  *	reference count all in here rather then in the parent.  If we want  *	the parent to do more sophisticated things we may have to change  *	the ordering.  */
+comment|/*  * vm_pageout_flush() - launder the given pages  *  *	The given pages are laundered.  Note that we setup for the start of  *	I/O ( i.e. busy the page ), mark it read-only, and bump the object  *	reference count all in here rather then in the parent.  If we want  *	the parent to do more sophisticated things we may have to change  *	the ordering.  *  *	Returned runlen is the count of pages between mreq and first  *	page after mreq with status VM_PAGER_AGAIN.  */
 end_comment
 
 begin_function
@@ -1511,6 +1515,13 @@ name|count
 parameter_list|,
 name|int
 name|flags
+parameter_list|,
+name|int
+name|mreq
+parameter_list|,
+name|int
+modifier|*
+name|prunlen
 parameter_list|)
 block|{
 name|vm_object_t
@@ -1536,6 +1547,8 @@ literal|0
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|runlen
 decl_stmt|;
 name|mtx_assert
 argument_list|(
@@ -1632,6 +1645,12 @@ argument_list|,
 name|pageout_status
 argument_list|)
 expr_stmt|;
+name|runlen
+operator|=
+name|count
+operator|-
+name|mreq
+expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -1727,6 +1746,24 @@ break|break;
 case|case
 name|VM_PAGER_AGAIN
 case|:
+if|if
+condition|(
+name|i
+operator|>=
+name|mreq
+operator|&&
+name|i
+operator|-
+name|mreq
+operator|<
+name|runlen
+condition|)
+name|runlen
+operator|=
+name|i
+operator|-
+name|mreq
+expr_stmt|;
 break|break;
 block|}
 comment|/* 		 * If the operation is still going, leave the page busy to 		 * block all other accesses. Also, leave the paging in 		 * progress indicator set so that we don't attempt an object 		 * collapse. 		 */
@@ -1762,8 +1799,21 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|prunlen
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|prunlen
+operator|=
+name|runlen
+expr_stmt|;
 return|return
+operator|(
 name|numpagedout
+operator|)
 return|;
 block|}
 end_function
