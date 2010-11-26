@@ -2125,7 +2125,7 @@ name|MII_PHY_ANY
 argument_list|,
 name|MII_OFFSET_ANY
 argument_list|,
-literal|0
+name|MIIF_DOPAUSE
 argument_list|)
 expr_stmt|;
 block|}
@@ -2230,7 +2230,7 @@ name|MII_PHY_ANY
 argument_list|,
 name|MII_OFFSET_ANY
 argument_list|,
-literal|0
+name|MIIF_DOPAUSE
 argument_list|)
 expr_stmt|;
 block|}
@@ -2356,7 +2356,7 @@ name|CAS_PHYAD_EXTERNAL
 argument_list|,
 name|MII_OFFSET_ANY
 argument_list|,
-literal|0
+name|MIIF_DOPAUSE
 argument_list|)
 expr_stmt|;
 block|}
@@ -5769,21 +5769,13 @@ argument_list|,
 name|CAS_RX_PTHRS
 argument_list|,
 operator|(
-operator|(
 literal|111
-operator|*
-literal|64
-operator|)
 operator|<<
 name|CAS_RX_PTHRS_XOFF_SHFT
 operator|)
 operator||
 operator|(
-operator|(
 literal|15
-operator|*
-literal|64
-operator|)
 operator|<<
 name|CAS_RX_PTHRS_XON_SHFT
 operator|)
@@ -7146,7 +7138,7 @@ name|sc
 argument_list|,
 name|CAS_MAC_CTRL_TYPE
 argument_list|,
-literal|0x8088
+literal|0x8808
 argument_list|)
 expr_stmt|;
 comment|/* random number seed */
@@ -8297,11 +8289,11 @@ block|}
 ifdef|#
 directive|ifdef
 name|CAS_DEBUG
-name|CTR4
+name|CTR5
 argument_list|(
 name|KTR_CAS
 argument_list|,
-literal|"%s: CAS_TX_STATE_MACHINE %x CAS_TX_DESC_BASE %llx "
+literal|"%s: CAS_TX_SM1 %x CAS_TX_SM2 %x CAS_TX_DESC_BASE %llx "
 literal|"CAS_TX_COMP3 %x"
 argument_list|,
 name|__func__
@@ -8310,7 +8302,14 @@ name|CAS_READ_4
 argument_list|(
 name|sc
 argument_list|,
-name|CAS_TX_STATE_MACHINE
+name|CAS_TX_SM1
+argument_list|)
+argument_list|,
+name|CAS_READ_4
+argument_list|(
+name|sc
+argument_list|,
+name|CAS_TX_SM2
 argument_list|)
 argument_list|,
 operator|(
@@ -8322,7 +8321,7 @@ name|CAS_READ_4
 argument_list|(
 name|sc
 argument_list|,
-name|CAS_TX_DESC_BASE_HI3
+name|CAS_TX_DESC3_BASE_HI
 argument_list|)
 operator|<<
 literal|32
@@ -8332,7 +8331,7 @@ name|CAS_READ_4
 argument_list|(
 name|sc
 argument_list|,
-name|CAS_TX_DESC_BASE_LO3
+name|CAS_TX_DESC3_BASE_LO
 argument_list|)
 argument_list|,
 name|CAS_READ_4
@@ -8579,7 +8578,7 @@ name|__func__
 argument_list|,
 name|sc
 operator|->
-name|rxcptr
+name|sc_rxcptr
 argument_list|,
 name|sc
 operator|->
@@ -9881,7 +9880,7 @@ name|__func__
 argument_list|,
 name|sc
 operator|->
-name|rxcptr
+name|sc_rxcptr
 argument_list|,
 name|sc
 operator|->
@@ -10465,7 +10464,7 @@ argument_list|,
 operator|(
 name|status
 operator|>>
-name|CAS_STATUS_TX_COMP3_SHIFT
+name|CAS_STATUS_TX_COMP3_SHFT
 operator|)
 argument_list|,
 operator|(
@@ -11044,7 +11043,7 @@ name|CTR4
 argument_list|(
 name|KTR_CAS
 argument_list|,
-literal|"%s: CAS_RX_CONFIG %x CAS_MAC_RX_STATUS %x CAS_MAC_RX_CONFIG %x"
+literal|"%s: CAS_RX_CONF %x CAS_MAC_RX_STATUS %x CAS_MAC_RX_CONF %x"
 argument_list|,
 name|__func__
 argument_list|,
@@ -11052,7 +11051,7 @@ name|CAS_READ_4
 argument_list|(
 name|sc
 argument_list|,
-name|CAS_RX_CONFIG
+name|CAS_RX_CONF
 argument_list|)
 argument_list|,
 name|CAS_READ_4
@@ -11066,7 +11065,7 @@ name|CAS_READ_4
 argument_list|(
 name|sc
 argument_list|,
-name|CAS_MAC_RX_CONFIG
+name|CAS_MAC_RX_CONF
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -11074,7 +11073,7 @@ name|CTR4
 argument_list|(
 name|KTR_CAS
 argument_list|,
-literal|"%s: CAS_TX_CONFIG %x CAS_MAC_TX_STATUS %x CAS_MAC_TX_CONFIG %x"
+literal|"%s: CAS_TX_CONF %x CAS_MAC_TX_STATUS %x CAS_MAC_TX_CONF %x"
 argument_list|,
 name|__func__
 argument_list|,
@@ -11082,7 +11081,7 @@ name|CAS_READ_4
 argument_list|(
 name|sc
 argument_list|,
-name|CAS_TX_CONFIG
+name|CAS_TX_CONF
 argument_list|)
 argument_list|,
 name|CAS_READ_4
@@ -11096,7 +11095,7 @@ name|CAS_READ_4
 argument_list|(
 name|sc
 argument_list|,
-name|CAS_MAC_TX_CONFIG
+name|CAS_MAC_TX_CONF
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -12233,9 +12232,6 @@ operator||
 name|CAS_MAC_CTRL_CONF_RXP
 operator|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notyet
 if|if
 condition|(
 operator|(
@@ -12278,8 +12274,6 @@ name|v
 operator||=
 name|CAS_MAC_CTRL_CONF_TXP
 expr_stmt|;
-endif|#
-directive|endif
 name|CAS_WRITE_4
 argument_list|(
 name|sc
