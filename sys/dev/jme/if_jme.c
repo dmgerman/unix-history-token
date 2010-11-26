@@ -4213,7 +4213,7 @@ name|jme_phyaddr
 argument_list|,
 name|MII_OFFSET_ANY
 argument_list|,
-literal|0
+name|MIIF_DOPAUSE
 argument_list|)
 expr_stmt|;
 if|if
@@ -10920,9 +10920,6 @@ operator||
 name|TXMAC_FRAME_BURST
 operator|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notyet
 if|if
 condition|(
 operator|(
@@ -10961,8 +10958,6 @@ name|rxmac
 operator||=
 name|RXMAC_FC_ENB
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* Disable retry transmit timer/retry limit. */
 name|CSR_WRITE_4
 argument_list|(
