@@ -1584,8 +1584,6 @@ name|s
 init|=
 operator|-
 literal|1
-decl_stmt|,
-name|i
 decl_stmt|;
 if|if
 condition|(
@@ -1815,10 +1813,6 @@ condition|)
 goto|goto
 name|err
 goto|;
-name|i
-operator|=
-literal|0
-expr_stmt|;
 operator|*
 name|sock
 operator|=
@@ -1913,8 +1907,6 @@ parameter_list|)
 block|{
 name|int
 name|ret
-decl_stmt|,
-name|i
 decl_stmt|;
 name|struct
 name|hostent
@@ -2024,6 +2016,9 @@ argument_list|(
 name|NETWARE_BSDSOCK
 argument_list|)
 operator|)
+name|int
+name|i
+decl_stmt|;
 name|i
 operator|=
 name|WSAGetLastError
@@ -2248,10 +2243,6 @@ literal|0
 operator|)
 return|;
 block|}
-name|i
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|h2

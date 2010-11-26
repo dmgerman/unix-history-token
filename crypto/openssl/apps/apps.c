@@ -1669,8 +1669,6 @@ block|{
 name|int
 name|num
 decl_stmt|,
-name|len
-decl_stmt|,
 name|i
 decl_stmt|;
 name|char
@@ -1686,13 +1684,6 @@ operator|*
 name|argv
 operator|=
 name|NULL
-expr_stmt|;
-name|len
-operator|=
-name|strlen
-argument_list|(
-name|buf
-argument_list|)
 expr_stmt|;
 name|i
 operator|=
@@ -4500,12 +4491,13 @@ name|e
 condition|)
 name|BIO_printf
 argument_list|(
-name|bio_err
+name|err
 argument_list|,
 literal|"no engine specified\n"
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 name|pkey
 operator|=
 name|ENGINE_load_private_key
@@ -4520,6 +4512,28 @@ operator|&
 name|cb_data
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|pkey
+condition|)
+block|{
+name|BIO_printf
+argument_list|(
+name|err
+argument_list|,
+literal|"cannot load %s from engine\n"
+argument_list|,
+name|key_descrip
+argument_list|)
+expr_stmt|;
+name|ERR_print_errors
+argument_list|(
+name|err
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 goto|goto
 name|end
 goto|;
@@ -4770,6 +4784,7 @@ name|pkey
 operator|==
 name|NULL
 condition|)
+block|{
 name|BIO_printf
 argument_list|(
 name|err
@@ -4779,6 +4794,12 @@ argument_list|,
 name|key_descrip
 argument_list|)
 expr_stmt|;
+name|ERR_print_errors
+argument_list|(
+name|err
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|pkey

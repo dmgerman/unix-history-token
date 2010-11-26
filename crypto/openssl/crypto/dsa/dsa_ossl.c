@@ -559,6 +559,9 @@ argument_list|)
 operator|>
 literal|0
 condition|)
+if|if
+condition|(
+operator|!
 name|BN_sub
 argument_list|(
 name|s
@@ -569,7 +572,10 @@ name|dsa
 operator|->
 name|q
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|err
+goto|;
 if|if
 condition|(
 operator|!

@@ -338,7 +338,7 @@ name|a
 parameter_list|,
 name|n
 parameter_list|)
-value|({ register unsigned int ret;	\ 				asm (			\ 				"roll %1,%0"		\ 				: "=r"(ret)		\ 				: "I"(n), "0"(a)	\ 				: "cc");		\ 			   ret;				\ 			})
+value|({ register unsigned int ret;	\ 				asm (			\ 				"roll %1,%0"		\ 				: "=r"(ret)		\ 				: "I"(n), "0"((unsigned int)(a))	\ 				: "cc");		\ 			   ret;				\ 			})
 end_define
 
 begin_elif
@@ -728,7 +728,7 @@ name|c
 parameter_list|,
 name|l
 parameter_list|)
-value|({ asm ("lrv	%0,%1"			\ 				   :"=d"(l) :"m"(*(const unsigned int *)(c));\ 				   (c)+=4; (l);				})
+value|({ asm ("lrv	%0,%1"			\ 				   :"=d"(l) :"m"(*(const unsigned int *)(c)));\ 				   (c)+=4; (l);				})
 end_define
 
 begin_define
@@ -1423,6 +1423,25 @@ directive|ifndef
 name|MD32_REG_T
 end_ifndef
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__alpha
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sparcv9
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__mips
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
@@ -1431,8 +1450,29 @@ value|long
 end_define
 
 begin_comment
-comment|/*  * This comment was originaly written for MD5, which is why it  * discusses A-D. But it basically applies to all 32-bit digests,  * which is why it was moved to common header file.  *  * In case you wonder why A-D are declared as long and not  * as MD5_LONG. Doing so results in slight performance  * boost on LP64 architectures. The catch is we don't  * really care if 32 MSBs of a 64-bit register get polluted  * with eventual overflows as we *save* only 32 LSBs in  * *either* case. Now declaring 'em long excuses the compiler  * from keeping 32 MSBs zeroed resulting in 13% performance  * improvement under SPARC Solaris7/64 and 5% under AlphaLinux.  * Well, to be honest it should say that this *prevents*   * performance degradation.  *<appro@fy.chalmers.se>  * Apparently there're LP64 compilers that generate better  * code if A-D are declared int. Most notably GCC-x86_64  * generates better code.  *<appro@fy.chalmers.se>  */
+comment|/*  * This comment was originaly written for MD5, which is why it  * discusses A-D. But it basically applies to all 32-bit digests,  * which is why it was moved to common header file.  *  * In case you wonder why A-D are declared as long and not  * as MD5_LONG. Doing so results in slight performance  * boost on LP64 architectures. The catch is we don't  * really care if 32 MSBs of a 64-bit register get polluted  * with eventual overflows as we *save* only 32 LSBs in  * *either* case. Now declaring 'em long excuses the compiler  * from keeping 32 MSBs zeroed resulting in 13% performance  * improvement under SPARC Solaris7/64 and 5% under AlphaLinux.  * Well, to be honest it should say that this *prevents*   * performance degradation.  *<appro@fy.chalmers.se>  */
 end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/*  * Above is not absolute and there are LP64 compilers that  * generate better code if MD32_REG_T is defined int. The above  * pre-processor condition reflects the circumstances under which  * the conclusion was made and is subject to further extension.  *<appro@fy.chalmers.se>  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MD32_REG_T
+value|int
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

@@ -262,8 +262,6 @@ name|time
 argument_list|(
 name|NULL
 argument_list|)
-decl_stmt|,
-name|l
 decl_stmt|;
 name|void
 function_decl|(
@@ -1100,18 +1098,6 @@ condition|)
 goto|goto
 name|end
 goto|;
-name|l
-operator|=
-name|s
-operator|->
-name|s3
-operator|->
-name|tmp
-operator|.
-name|new_cipher
-operator|->
-name|algorithms
-expr_stmt|;
 comment|/* EAY EAY EAY need to check for DH fix cert 			 * sent back */
 comment|/* For TLS, cert_req is set to 2, so a cert chain 			 * of nothing is sent, but no verify packet is sent */
 comment|/* XXX: For now, we do not support client  			 * authentication in ECDH cipher suites with 			 * ECDH (rather than ECDSA) certificates. 			 * We need to skip the certificate verify  			 * message when client's ECDH public key is sent  			 * inside the client certificate. 			 */
@@ -5749,6 +5735,10 @@ name|BN_CTX_free
 argument_list|(
 name|bn_ctx
 argument_list|)
+expr_stmt|;
+name|bn_ctx
+operator|=
+name|NULL
 expr_stmt|;
 name|EC_POINT_free
 argument_list|(

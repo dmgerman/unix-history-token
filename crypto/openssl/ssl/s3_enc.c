@@ -646,9 +646,6 @@ modifier|*
 name|p
 decl_stmt|,
 modifier|*
-name|key_block
-decl_stmt|,
-modifier|*
 name|mac_secret
 decl_stmt|;
 name|unsigned
@@ -793,16 +790,6 @@ name|method
 expr_stmt|;
 endif|#
 directive|endif
-name|key_block
-operator|=
-name|s
-operator|->
-name|s3
-operator|->
-name|tmp
-operator|.
-name|key_block
-expr_stmt|;
 if|if
 condition|(
 name|which

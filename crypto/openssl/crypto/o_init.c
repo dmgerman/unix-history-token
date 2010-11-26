@@ -27,6 +27,12 @@ begin_comment
 comment|/* Internal only functions: only ever used here */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENSSL_FIPS
+end_ifdef
+
 begin_function_decl
 specifier|extern
 name|void
@@ -36,6 +42,12 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
+end_ifndef
 
 begin_function_decl
 specifier|extern
@@ -66,6 +78,16 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Perform any essential OpenSSL initialization operations.  * Currently only sets FIPS callbacks  */

@@ -826,8 +826,6 @@ name|end
 decl_stmt|;
 name|int
 name|again
-decl_stmt|,
-name|n
 decl_stmt|;
 name|long
 name|eline
@@ -869,18 +867,8 @@ decl_stmt|,
 modifier|*
 name|buf
 decl_stmt|;
-name|STACK_OF
-argument_list|(
-name|CONF_VALUE
-argument_list|)
-operator|*
-name|section_sk
-operator|=
-name|NULL
-operator|,
-operator|*
-name|ts
-expr_stmt|;
+comment|/*	STACK_OF(CONF_VALUE) *section_sk=NULL;*/
+comment|/*	STACK_OF(CONF_VALUE) *ts=NULL;*/
 name|char
 modifier|*
 name|start
@@ -1014,19 +1002,7 @@ goto|goto
 name|err
 goto|;
 block|}
-name|section_sk
-operator|=
-operator|(
-name|STACK_OF
-argument_list|(
-name|CONF_VALUE
-argument_list|)
-operator|*
-operator|)
-name|sv
-operator|->
-name|value
-expr_stmt|;
+comment|/*	section_sk=(STACK_OF(CONF_VALUE) *)sv->value;*/
 name|bufnum
 operator|=
 literal|0
@@ -1287,13 +1263,6 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-name|n
-operator|=
-name|strlen
-argument_list|(
-name|buf
-argument_list|)
-expr_stmt|;
 name|s
 operator|=
 name|eat_ws
@@ -1463,19 +1432,7 @@ goto|goto
 name|err
 goto|;
 block|}
-name|section_sk
-operator|=
-operator|(
-name|STACK_OF
-argument_list|(
-name|CONF_VALUE
-argument_list|)
-operator|*
-operator|)
-name|sv
-operator|->
-name|value
-expr_stmt|;
+comment|/*			section_sk=(STACK_OF(CONF_VALUE) *)sv->value;*/
 continue|continue;
 block|}
 else|else
@@ -1813,19 +1770,7 @@ goto|goto
 name|err
 goto|;
 block|}
-name|ts
-operator|=
-operator|(
-name|STACK_OF
-argument_list|(
-name|CONF_VALUE
-argument_list|)
-operator|*
-operator|)
-name|tv
-operator|->
-name|value
-expr_stmt|;
+comment|/*				ts=(STACK_OF(CONF_VALUE) *)tv->value;*/
 block|}
 else|else
 block|{
@@ -1833,10 +1778,7 @@ name|tv
 operator|=
 name|sv
 expr_stmt|;
-name|ts
-operator|=
-name|section_sk
-expr_stmt|;
+comment|/*				ts=section_sk;*/
 block|}
 if|#
 directive|if
@@ -2142,14 +2084,6 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-name|char
-modifier|*
-name|to
-decl_stmt|;
-name|to
-operator|=
-name|p
-expr_stmt|;
 for|for
 control|(
 init|;

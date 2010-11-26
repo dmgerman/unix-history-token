@@ -273,10 +273,6 @@ name|chain_ss
 init|=
 name|NULL
 decl_stmt|;
-name|X509_NAME
-modifier|*
-name|xn
-decl_stmt|;
 name|int
 name|bad_chain
 init|=
@@ -502,13 +498,6 @@ condition|)
 break|break;
 comment|/* FIXME: If this happens, we should take 		                         * note of it and, if appropriate, use the 		                         * X509_V_ERR_CERT_CHAIN_TOO_LONG error 		                         * code later. 		                         */
 comment|/* If we are self signed, we break */
-name|xn
-operator|=
-name|X509_get_issuer_name
-argument_list|(
-name|x
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ctx
@@ -637,13 +626,6 @@ argument_list|,
 name|i
 operator|-
 literal|1
-argument_list|)
-expr_stmt|;
-name|xn
-operator|=
-name|X509_get_subject_name
-argument_list|(
-name|x
 argument_list|)
 expr_stmt|;
 if|if
@@ -844,13 +826,6 @@ name|num
 condition|)
 break|break;
 comment|/* If we are self signed, we break */
-name|xn
-operator|=
-name|X509_get_issuer_name
-argument_list|(
-name|x
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ctx
@@ -933,13 +908,6 @@ operator|++
 expr_stmt|;
 block|}
 comment|/* we now have our chain, lets check it... */
-name|xn
-operator|=
-name|X509_get_issuer_name
-argument_list|(
-name|x
-argument_list|)
-expr_stmt|;
 comment|/* Is last certificate looked up self signed? */
 if|if
 condition|(
@@ -6220,7 +6188,7 @@ name|ctx
 operator|->
 name|param
 operator|->
-name|flags
+name|inh_flags
 operator||=
 name|X509_VP_FLAG_DEFAULT
 operator||

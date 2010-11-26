@@ -1631,8 +1631,6 @@ name|length
 parameter_list|)
 block|{
 name|int
-name|version
-decl_stmt|,
 name|ssl_version
 init|=
 literal|0
@@ -1699,16 +1697,6 @@ argument_list|,
 name|aip
 argument_list|,
 name|d2i_ASN1_INTEGER
-argument_list|)
-expr_stmt|;
-name|version
-operator|=
-operator|(
-name|int
-operator|)
-name|ASN1_INTEGER_get
-argument_list|(
-name|aip
 argument_list|)
 expr_stmt|;
 if|if

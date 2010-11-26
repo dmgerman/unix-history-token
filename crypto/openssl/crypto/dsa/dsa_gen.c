@@ -353,8 +353,6 @@ literal|0
 decl_stmt|,
 name|i
 decl_stmt|,
-name|b
-decl_stmt|,
 name|m
 init|=
 literal|0
@@ -847,18 +845,6 @@ operator|-
 literal|1
 operator|)
 operator|/
-literal|160
-expr_stmt|;
-name|b
-operator|=
-operator|(
-name|bits
-operator|-
-literal|1
-operator|)
-operator|-
-name|n
-operator|*
 literal|160
 expr_stmt|;
 for|for

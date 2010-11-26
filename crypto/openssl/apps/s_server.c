@@ -10066,8 +10066,6 @@ name|j
 decl_stmt|,
 name|k
 decl_stmt|,
-name|blank
-decl_stmt|,
 name|dot
 decl_stmt|;
 name|struct
@@ -10092,9 +10090,14 @@ decl_stmt|,
 modifier|*
 name|sbio
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|RENEG
 name|long
 name|total_bytes
 decl_stmt|;
+endif|#
+directive|endif
 name|buf
 operator|=
 name|OPENSSL_malloc
@@ -10453,10 +10456,6 @@ name|bio_s_out
 argument_list|)
 expr_stmt|;
 block|}
-name|blank
-operator|=
-literal|0
-expr_stmt|;
 for|for
 control|(
 init|;
@@ -11630,10 +11629,15 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* send the file */
+ifdef|#
+directive|ifdef
+name|RENEG
 name|total_bytes
 operator|=
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 init|;
