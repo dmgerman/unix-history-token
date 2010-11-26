@@ -1312,14 +1312,14 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|((((x) / 4)<< RXCSR_DESC_RT_CNT_SHIFT)& RXCSR_DESC_RT_CNT_MASK)
+value|(((x)<< RXCSR_DESC_RT_CNT_SHIFT)& RXCSR_DESC_RT_CNT_MASK)
 end_define
 
 begin_define
 define|#
 directive|define
 name|RXCSR_DESC_RT_CNT_DEFAULT
-value|32
+value|0
 end_define
 
 begin_comment
