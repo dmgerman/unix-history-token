@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_IXGBE_H_
+name|_IXV_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_IXGBE_H_
+name|_IXV_H_
 end_define
 
 begin_include
@@ -30,25 +30,6 @@ include|#
 directive|include
 file|<sys/systm.h>
 end_include
-
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/buf_ring.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -296,27 +277,16 @@ directive|include
 file|<machine/smp.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IXGBE_IEEE1588
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/ieee1588.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
 file|"ixgbe_api.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ixgbe_vf.h"
 end_include
 
 begin_comment
@@ -416,7 +386,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IXGBE_WATCHDOG
+name|IXV_WATCHDOG
 value|(10 * hz)
 end_define
 
@@ -427,21 +397,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IXGBE_TX_CLEANUP_THRESHOLD
+name|IXV_TX_CLEANUP_THRESHOLD
 value|(adapter->num_tx_desc / 8)
 end_define
 
 begin_define
 define|#
 directive|define
-name|IXGBE_TX_OP_THRESHOLD
+name|IXV_TX_OP_THRESHOLD
 value|(adapter->num_tx_desc / 32)
 end_define
 
 begin_define
 define|#
 directive|define
-name|IXGBE_MAX_FRAME_SIZE
+name|IXV_MAX_FRAME_SIZE
 value|0x3F00
 end_define
 
@@ -452,21 +422,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IXGBE_FC_PAUSE
+name|IXV_FC_PAUSE
 value|0xFFFF
 end_define
 
 begin_define
 define|#
 directive|define
-name|IXGBE_FC_HI
+name|IXV_FC_HI
 value|0x20000
 end_define
 
 begin_define
 define|#
 directive|define
-name|IXGBE_FC_LO
+name|IXV_FC_LO
 value|0x10000
 end_define
 
@@ -613,206 +583,75 @@ end_define
 begin_define
 define|#
 directive|define
-name|IXGBE_82598_SCATTER
-value|100
+name|IXV_EITR_DEFAULT
+value|128
 end_define
 
 begin_define
 define|#
 directive|define
-name|IXGBE_82599_SCATTER
+name|IXV_SCATTER
 value|32
 end_define
 
 begin_define
 define|#
 directive|define
-name|MSIX_82598_BAR
+name|IXV_RX_HDR
+value|128
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSIX_BAR
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|MSIX_82599_BAR
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_TSO_SIZE
+name|IXV_TSO_SIZE
 value|65535
 end_define
 
 begin_define
 define|#
 directive|define
-name|IXGBE_TX_BUFFER_SIZE
-value|((u32) 1514)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_RX_HDR
-value|128
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_VFTA_SIZE
-value|128
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_BR_SIZE
+name|IXV_BR_SIZE
 value|4096
 end_define
 
 begin_define
 define|#
 directive|define
-name|IXGBE_QUEUE_IDLE
-value|0
+name|IXV_LINK_ITR
+value|2000
 end_define
 
 begin_define
 define|#
 directive|define
-name|IXGBE_QUEUE_WORKING
-value|1
+name|TX_BUFFER_SIZE
+value|((u32) 1514)
 end_define
 
 begin_define
 define|#
 directive|define
-name|IXGBE_QUEUE_HUNG
-value|2
+name|VFTA_SIZE
+value|128
 end_define
 
 begin_comment
 comment|/* Offload bits in mbuf flag */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
-end_if
-
 begin_define
 define|#
 directive|define
 name|CSUM_OFFLOAD
 value|(CSUM_IP|CSUM_TCP|CSUM_UDP|CSUM_SCTP)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|CSUM_OFFLOAD
-value|(CSUM_IP|CSUM_TCP|CSUM_UDP)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* For 6.X code compatibility */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|ETHER_BPF_MTAP
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|ETHER_BPF_MTAP
-value|BPF_MTAP
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|<
-literal|700000
-end_if
-
-begin_define
-define|#
-directive|define
-name|CSUM_TSO
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|IFCAP_TSO4
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * Interrupt Moderation parameters   */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IXGBE_LOW_LATENCY
-value|128
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_AVE_LATENCY
-value|400
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_BULK_LATENCY
-value|1200
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_LINK_ITR
-value|2000
 end_define
 
 begin_comment
@@ -822,7 +661,7 @@ end_comment
 begin_typedef
 typedef|typedef
 struct|struct
-name|_ixgbe_vendor_info_t
+name|_ixv_vendor_info_t
 block|{
 name|unsigned
 name|int
@@ -845,13 +684,13 @@ name|int
 name|index
 decl_stmt|;
 block|}
-name|ixgbe_vendor_info_t
+name|ixv_vendor_info_t
 typedef|;
 end_typedef
 
 begin_struct
 struct|struct
-name|ixgbe_tx_buf
+name|ixv_tx_buf
 block|{
 name|u32
 name|eop_index
@@ -870,7 +709,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|ixgbe_rx_buf
+name|ixv_rx_buf
 block|{
 name|struct
 name|mbuf
@@ -898,12 +737,12 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Bus dma allocation structure used by ixgbe_dma_malloc and ixgbe_dma_free.  */
+comment|/*  * Bus dma allocation structure used by ixv_dma_malloc and ixv_dma_free.  */
 end_comment
 
 begin_struct
 struct|struct
-name|ixgbe_dma_alloc
+name|ixv_dma_alloc
 block|{
 name|bus_addr_t
 name|dma_paddr
@@ -954,6 +793,10 @@ comment|/* This queue's EIMS bit */
 name|u32
 name|eitr_setting
 decl_stmt|;
+name|u32
+name|eitr
+decl_stmt|;
+comment|/* cached reg */
 name|struct
 name|resource
 modifier|*
@@ -1009,8 +852,8 @@ decl_stmt|;
 name|u32
 name|me
 decl_stmt|;
-name|int
-name|queue_status
+name|bool
+name|watchdog_check
 decl_stmt|;
 name|int
 name|watchdog_time
@@ -1021,7 +864,7 @@ modifier|*
 name|tx_base
 decl_stmt|;
 name|struct
-name|ixgbe_dma_alloc
+name|ixv_dma_alloc
 name|txdma
 decl_stmt|;
 name|u32
@@ -1031,7 +874,7 @@ name|u32
 name|next_to_clean
 decl_stmt|;
 name|struct
-name|ixgbe_tx_buf
+name|ixv_tx_buf
 modifier|*
 name|tx_buffers
 decl_stmt|;
@@ -1051,37 +894,18 @@ index|[
 literal|16
 index|]
 decl_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800000
 name|struct
 name|buf_ring
 modifier|*
 name|br
 decl_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|IXGBE_FDIR
-name|u16
-name|atr_sample
-decl_stmt|;
-name|u16
-name|atr_count
-decl_stmt|;
-endif|#
-directive|endif
+comment|/* Soft Stats */
 name|u32
 name|bytes
 decl_stmt|;
-comment|/* used for AIM */
 name|u32
 name|packets
 decl_stmt|;
-comment|/* Soft Stats */
 name|u64
 name|no_desc_avail
 decl_stmt|;
@@ -1118,7 +942,7 @@ modifier|*
 name|rx_base
 decl_stmt|;
 name|struct
-name|ixgbe_dma_alloc
+name|ixv_dma_alloc
 name|rxdma
 decl_stmt|;
 name|struct
@@ -1130,9 +954,6 @@ name|lro_enabled
 decl_stmt|;
 name|bool
 name|hdr_split
-decl_stmt|;
-name|bool
-name|hw_rsc
 decl_stmt|;
 name|bool
 name|discard
@@ -1150,7 +971,7 @@ literal|16
 index|]
 decl_stmt|;
 name|struct
-name|ixgbe_rx_buf
+name|ixv_rx_buf
 modifier|*
 name|rx_buffers
 decl_stmt|;
@@ -1183,17 +1004,6 @@ decl_stmt|;
 name|u64
 name|rx_discarded
 decl_stmt|;
-name|u64
-name|rsc_num
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|IXGBE_FDIR
-name|u64
-name|flm
-decl_stmt|;
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
@@ -1274,21 +1084,7 @@ decl_stmt|;
 name|u16
 name|num_queues
 decl_stmt|;
-comment|/* 	** Shadow VFTA table, this is needed because 	** the real vlan filter table gets cleared during 	** a soft reset and the driver needs to be able 	** to repopulate it. 	*/
-name|u32
-name|shadow_vfta
-index|[
-name|IXGBE_VFTA_SIZE
-index|]
-decl_stmt|;
-comment|/* Info about the interface */
-name|u32
-name|optics
-decl_stmt|;
-name|int
-name|advertise
-decl_stmt|;
-comment|/* link speeds */
+comment|/* Info about the board itself */
 name|bool
 name|link_active
 decl_stmt|;
@@ -1302,43 +1098,18 @@ name|bool
 name|link_up
 decl_stmt|;
 name|u32
-name|linkvec
+name|mbxvec
 decl_stmt|;
 comment|/* Mbuf cluster size */
 name|u32
 name|rx_mbuf_sz
 decl_stmt|;
 comment|/* Support for pluggable optics */
-name|bool
-name|sfp_probe
-decl_stmt|;
 name|struct
 name|task
-name|link_task
+name|mbx_task
 decl_stmt|;
-comment|/* Link tasklet */
-name|struct
-name|task
-name|mod_task
-decl_stmt|;
-comment|/* SFP tasklet */
-name|struct
-name|task
-name|msf_task
-decl_stmt|;
-comment|/* Multispeed Fiber */
-ifdef|#
-directive|ifdef
-name|IXGBE_FDIR
-name|int
-name|fdir_reinit
-decl_stmt|;
-name|struct
-name|task
-name|fdir_task
-decl_stmt|;
-endif|#
-directive|endif
+comment|/* Mailbox tasklet */
 name|struct
 name|taskqueue
 modifier|*
@@ -1409,69 +1180,33 @@ name|tso_tx
 decl_stmt|;
 name|unsigned
 name|long
-name|link_irq
+name|mbx_irq
 decl_stmt|;
 name|struct
-name|ixgbe_hw_stats
+name|ixgbevf_hw_stats
 name|stats
 decl_stmt|;
 block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/* Precision Time Sync (IEEE 1588) defines */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|ETHERTYPE_IEEE1588
-value|0x88F7
-end_define
-
-begin_define
-define|#
-directive|define
-name|PICOSECS_PER_TICK
-value|20833
-end_define
-
-begin_define
-define|#
-directive|define
-name|TSYNC_UDP_PORT
-value|319
-end_define
-
-begin_comment
-comment|/* UDP port for the protocol */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IXGBE_ADVTXD_TSTAMP
-value|0x00080000
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_CORE_LOCK_INIT
+name|IXV_CORE_LOCK_INIT
 parameter_list|(
 name|_sc
 parameter_list|,
 name|_name
 parameter_list|)
 define|\
-value|mtx_init(&(_sc)->core_mtx, _name, "IXGBE Core Lock", MTX_DEF)
+value|mtx_init(&(_sc)->core_mtx, _name, "IXV Core Lock", MTX_DEF)
 end_define
 
 begin_define
 define|#
 directive|define
-name|IXGBE_CORE_LOCK_DESTROY
+name|IXV_CORE_LOCK_DESTROY
 parameter_list|(
 name|_sc
 parameter_list|)
@@ -1481,7 +1216,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|IXGBE_TX_LOCK_DESTROY
+name|IXV_TX_LOCK_DESTROY
 parameter_list|(
 name|_sc
 parameter_list|)
@@ -1491,7 +1226,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|IXGBE_RX_LOCK_DESTROY
+name|IXV_RX_LOCK_DESTROY
 parameter_list|(
 name|_sc
 parameter_list|)
@@ -1501,7 +1236,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|IXGBE_CORE_LOCK
+name|IXV_CORE_LOCK
 parameter_list|(
 name|_sc
 parameter_list|)
@@ -1511,7 +1246,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|IXGBE_TX_LOCK
+name|IXV_TX_LOCK
 parameter_list|(
 name|_sc
 parameter_list|)
@@ -1521,7 +1256,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|IXGBE_TX_TRYLOCK
+name|IXV_TX_TRYLOCK
 parameter_list|(
 name|_sc
 parameter_list|)
@@ -1531,7 +1266,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|IXGBE_RX_LOCK
+name|IXV_RX_LOCK
 parameter_list|(
 name|_sc
 parameter_list|)
@@ -1541,7 +1276,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|IXGBE_CORE_UNLOCK
+name|IXV_CORE_UNLOCK
 parameter_list|(
 name|_sc
 parameter_list|)
@@ -1551,7 +1286,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|IXGBE_TX_UNLOCK
+name|IXV_TX_UNLOCK
 parameter_list|(
 name|_sc
 parameter_list|)
@@ -1561,7 +1296,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|IXGBE_RX_UNLOCK
+name|IXV_RX_UNLOCK
 parameter_list|(
 name|_sc
 parameter_list|)
@@ -1571,7 +1306,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|IXGBE_CORE_LOCK_ASSERT
+name|IXV_CORE_LOCK_ASSERT
 parameter_list|(
 name|_sc
 parameter_list|)
@@ -1581,62 +1316,12 @@ end_define
 begin_define
 define|#
 directive|define
-name|IXGBE_TX_LOCK_ASSERT
+name|IXV_TX_LOCK_ASSERT
 parameter_list|(
 name|_sc
 parameter_list|)
 value|mtx_assert(&(_sc)->tx_mtx, MA_OWNED)
 end_define
-
-begin_function
-specifier|static
-specifier|inline
-name|bool
-name|ixgbe_is_sfp
-parameter_list|(
-name|struct
-name|ixgbe_hw
-modifier|*
-name|hw
-parameter_list|)
-block|{
-switch|switch
-condition|(
-name|hw
-operator|->
-name|phy
-operator|.
-name|type
-condition|)
-block|{
-case|case
-name|ixgbe_phy_sfp_avago
-case|:
-case|case
-name|ixgbe_phy_sfp_ftl
-case|:
-case|case
-name|ixgbe_phy_sfp_intel
-case|:
-case|case
-name|ixgbe_phy_sfp_unknown
-case|:
-case|case
-name|ixgbe_phy_sfp_passive_tyco
-case|:
-case|case
-name|ixgbe_phy_sfp_passive_unknown
-case|:
-return|return
-name|TRUE
-return|;
-default|default:
-return|return
-name|FALSE
-return|;
-block|}
-block|}
-end_function
 
 begin_comment
 comment|/* Workaround to make 8.0 buildable */
@@ -1710,7 +1395,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _IXGBE_H_ */
+comment|/* _IXV_H_ */
 end_comment
 
 end_unit
