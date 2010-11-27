@@ -6544,6 +6544,13 @@ name|MAC_B2B_IPG
 value|88
 end_define
 
+begin_define
+define|#
+directive|define
+name|NLGE_PREPAD_LEN
+value|32
+end_define
+
 begin_comment
 comment|/* frame sizes need to be cacheline aligned */
 end_comment
@@ -6552,7 +6559,7 @@ begin_define
 define|#
 directive|define
 name|MAX_FRAME_SIZE
-value|1536
+value|(1536 + NLGE_PREPAD_LEN)
 end_define
 
 begin_define
@@ -6953,10 +6960,6 @@ decl_stmt|;
 name|xlr_reg_t
 modifier|*
 name|base
-decl_stmt|;
-name|struct
-name|callout
-name|tx_thr
 decl_stmt|;
 name|struct
 name|fr_desc
