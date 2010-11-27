@@ -1209,6 +1209,22 @@ name|u16
 operator|)
 name|mdic
 expr_stmt|;
+comment|/* 	 * Allow some time after each MDIC transaction to avoid  	 * reading duplicate data in the next MDIC transaction. 	 */
+if|if
+condition|(
+name|hw
+operator|->
+name|mac
+operator|.
+name|type
+operator|==
+name|e1000_pch2lan
+condition|)
+name|usec_delay
+argument_list|(
+literal|100
+argument_list|)
+expr_stmt|;
 name|out
 label|:
 return|return
@@ -1434,6 +1450,22 @@ goto|goto
 name|out
 goto|;
 block|}
+comment|/* 	 * Allow some time after each MDIC transaction to avoid  	 * reading duplicate data in the next MDIC transaction. 	 */
+if|if
+condition|(
+name|hw
+operator|->
+name|mac
+operator|.
+name|type
+operator|==
+name|e1000_pch2lan
+condition|)
+name|usec_delay
+argument_list|(
+literal|100
+argument_list|)
+expr_stmt|;
 name|out
 label|:
 return|return
@@ -3070,17 +3102,22 @@ condition|)
 goto|goto
 name|out
 goto|;
+name|phy_data
+operator||=
+name|M88E1000_PSCR_ASSERT_CRS_ON_TX
+expr_stmt|;
 comment|/* For BM PHY this bit is downshift enable */
 if|if
 condition|(
 name|phy
 operator|->
 name|type
-operator|!=
+operator|==
 name|e1000_phy_bm
 condition|)
 name|phy_data
-operator||=
+operator|&=
+operator|~
 name|M88E1000_PSCR_ASSERT_CRS_ON_TX
 expr_stmt|;
 comment|/* 	 * Options: 	 *   MDI/MDI-X = 0 (default) 	 *   0 - Auto for all speeds 	 *   1 - MDI mode 	 *   2 - MDI-X mode 	 *   3 - Auto for 1000Base-T only (MDI-X for 10/100Base-T modes) 	 */
@@ -9010,6 +9047,14 @@ case|:
 name|phy_type
 operator|=
 name|e1000_phy_82577
+expr_stmt|;
+break|break;
+case|case
+name|I82579_E_PHY_ID
+case|:
+name|phy_type
+operator|=
+name|e1000_phy_82579
 expr_stmt|;
 break|break;
 case|case

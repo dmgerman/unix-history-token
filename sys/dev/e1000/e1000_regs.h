@@ -220,6 +220,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_FEXTNVM4
+value|0x00024
+end_define
+
+begin_comment
+comment|/* Future Extended NVM 4 - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|E1000_FEXTNVM
 value|0x00028
 end_define
@@ -1338,6 +1349,26 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_SHRAL
+parameter_list|(
+name|_i
+parameter_list|)
+value|(0x05438 + ((_i) * 8))
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_SHRAH
+parameter_list|(
+name|_i
+parameter_list|)
+value|(0x0543C + ((_i) * 8))
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_IP4AT_REG
 parameter_list|(
 name|_i
@@ -2376,6 +2407,69 @@ end_define
 begin_comment
 comment|/* CRC Offset register */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_VFGPRC
+value|0x00F10
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_VFGORC
+value|0x00F18
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_VFMPRC
+value|0x00F3C
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_VFGPTC
+value|0x00F14
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_VFGOTC
+value|0x00F34
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_VFGOTLBC
+value|0x00F50
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_VFGPTLBC
+value|0x00F44
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_VFGORLBC
+value|0x00F48
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_VFGPRLBC
+value|0x00F40
+end_define
 
 begin_comment
 comment|/* Virtualization statistical counters */
@@ -4088,6 +4182,17 @@ end_define
 
 begin_comment
 comment|/* DMA Tx Switch Control - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_WVBR
+value|0x03554
+end_define
+
+begin_comment
+comment|/* VM Wrong Behavior - RWS */
 end_comment
 
 begin_define
