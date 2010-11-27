@@ -470,6 +470,10 @@ name|device_index
 decl_stmt|;
 comment|/* device index in "bus->devices" */
 name|uint8_t
+name|controller_slot_id
+decl_stmt|;
+comment|/* controller specific value */
+name|uint8_t
 name|curr_config_index
 decl_stmt|;
 comment|/* current configuration index */
@@ -506,6 +510,10 @@ name|power_mode
 decl_stmt|;
 comment|/* see USB_POWER_XXX */
 name|uint8_t
+name|re_enumerate_wait
+decl_stmt|;
+comment|/* set if re-enum. is in progress */
+name|uint8_t
 name|ifaces_max
 decl_stmt|;
 comment|/* number of interfaces present */
@@ -524,6 +532,11 @@ name|ctrl_ep_desc
 decl_stmt|;
 comment|/* for endpoint 0 */
 name|struct
+name|usb_endpoint_ss_comp_descriptor
+name|ctrl_ep_comp_desc
+decl_stmt|;
+comment|/* for endpoint 0 */
+name|struct
 name|usb_device_descriptor
 name|ddesc
 decl_stmt|;
@@ -532,17 +545,17 @@ name|char
 modifier|*
 name|serial
 decl_stmt|;
-comment|/* serial number */
+comment|/* serial number, can be NULL */
 name|char
 modifier|*
 name|manufacturer
 decl_stmt|;
-comment|/* manufacturer string */
+comment|/* manufacturer string, can be NULL */
 name|char
 modifier|*
 name|product
 decl_stmt|;
-comment|/* product string */
+comment|/* product string, can be NULL */
 if|#
 directive|if
 name|USB_HAVE_COMPAT_LINUX
@@ -828,11 +841,21 @@ parameter_list|(
 name|struct
 name|usb_device
 modifier|*
-name|udev
 parameter_list|,
 name|enum
 name|usb_dev_state
-name|state
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|enum
+name|usb_dev_state
+name|usb_get_device_state
+parameter_list|(
+name|struct
+name|usb_device
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

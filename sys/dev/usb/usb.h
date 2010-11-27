@@ -1087,6 +1087,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|UDESC_SS_HUB
+value|0x2A
+end_define
+
+begin_comment
+comment|/* super speed */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|UDESC_ENDPOINT_SS_COMP
 value|0x30
 end_define
@@ -1195,6 +1206,13 @@ define|#
 directive|define
 name|UR_SET_HUB_DEPTH
 value|0x0c
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_SS_HUB_DEPTH_MAX
+value|5
 end_define
 
 begin_define
@@ -1678,7 +1696,7 @@ name|uWord
 name|wSpeedsSupported
 decl_stmt|;
 name|uByte
-name|bFunctionaltySupport
+name|bFunctionalitySupport
 decl_stmt|;
 name|uByte
 name|bU1DevExitLat
@@ -1716,7 +1734,7 @@ name|uByte
 name|bReserved
 decl_stmt|;
 name|uByte
-name|ContainerID
+name|bContainerID
 decl_stmt|;
 block|}
 name|__packed
@@ -1782,6 +1800,13 @@ define|#
 directive|define
 name|UDPROTO_HSHUBMTT
 value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|UDPROTO_SSHUB
+value|0x03
 end_define
 
 begin_define
@@ -2774,7 +2799,7 @@ decl_stmt|;
 name|uByte
 name|bDescriptorType
 decl_stmt|;
-name|uWord
+name|uByte
 name|bMaxBurst
 decl_stmt|;
 name|uByte
@@ -2970,7 +2995,7 @@ struct|struct
 name|usb_hub_ss_descriptor
 block|{
 name|uByte
-name|bDescLength
+name|bLength
 decl_stmt|;
 name|uByte
 name|bDescriptorType
@@ -2978,7 +3003,6 @@ decl_stmt|;
 name|uByte
 name|bNbrPorts
 decl_stmt|;
-comment|/* max 15 */
 name|uWord
 name|wHubCharacteristics
 decl_stmt|;
@@ -2998,10 +3022,10 @@ decl_stmt|;
 name|uByte
 name|DeviceRemovable
 index|[
-literal|2
+literal|32
 index|]
 decl_stmt|;
-comment|/* max 15 ports */
+comment|/* max 255 ports */
 block|}
 name|__packed
 struct|;
@@ -3261,6 +3285,69 @@ define|#
 directive|define
 name|UPS_RESET
 value|0x0010
+comment|/* The link-state bits are valid for Super-Speed USB HUBs */
+define|#
+directive|define
+name|UPS_PORT_LINK_STATE_GET
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> 5)& 0xF)
+define|#
+directive|define
+name|UPS_PORT_LINK_STATE_SET
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& 0xF)<< 5)
+define|#
+directive|define
+name|UPS_PORT_LS_U0
+value|0x00
+define|#
+directive|define
+name|UPS_PORT_LS_U1
+value|0x01
+define|#
+directive|define
+name|UPS_PORT_LS_U2
+value|0x02
+define|#
+directive|define
+name|UPS_PORT_LS_U3
+value|0x03
+define|#
+directive|define
+name|UPS_PORT_LS_SS_DIS
+value|0x04
+define|#
+directive|define
+name|UPS_PORT_LS_RX_DET
+value|0x05
+define|#
+directive|define
+name|UPS_PORT_LS_SS_INA
+value|0x06
+define|#
+directive|define
+name|UPS_PORT_LS_POLL
+value|0x07
+define|#
+directive|define
+name|UPS_PORT_LS_RECOVER
+value|0x08
+define|#
+directive|define
+name|UPS_PORT_LS_HOT_RST
+value|0x09
+define|#
+directive|define
+name|UPS_PORT_LS_COMP_MODE
+value|0x0A
+define|#
+directive|define
+name|UPS_PORT_LS_LOOPBACK
+value|0x0B
 define|#
 directive|define
 name|UPS_PORT_POWER
@@ -3273,6 +3360,11 @@ define|#
 directive|define
 name|UPS_HIGH_SPEED
 value|0x0400
+define|#
+directive|define
+name|UPS_OTHER_SPEED
+value|0x0600
+comment|/* currently FreeBSD specific */
 define|#
 directive|define
 name|UPS_PORT_TEST
@@ -3309,6 +3401,18 @@ define|#
 directive|define
 name|UPS_C_PORT_RESET
 value|0x0010
+define|#
+directive|define
+name|UPS_C_BH_PORT_RESET
+value|0x0020
+define|#
+directive|define
+name|UPS_C_PORT_LINK_STATE
+value|0x0040
+define|#
+directive|define
+name|UPS_C_PORT_CONFIG_ERROR
+value|0x0080
 block|}
 name|__packed
 struct|;

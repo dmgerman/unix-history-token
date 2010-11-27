@@ -147,6 +147,25 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|struct
+name|usb_endpoint_ss_comp_descriptor
+modifier|*
+name|usb_ed_comp_foreach
+parameter_list|(
+name|struct
+name|usb_config_descriptor
+modifier|*
+name|cd
+parameter_list|,
+name|struct
+name|usb_endpoint_ss_comp_descriptor
+modifier|*
+name|ped
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|uint8_t
 name|usbd_get_no_descriptors
 parameter_list|(
