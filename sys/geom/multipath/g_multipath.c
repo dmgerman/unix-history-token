@@ -414,7 +414,6 @@ name|ace
 operator|>
 literal|0
 condition|)
-block|{
 name|g_access
 argument_list|(
 name|cp
@@ -435,7 +434,6 @@ operator|->
 name|ace
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|cp
@@ -1026,9 +1024,7 @@ name|bp
 operator|==
 name|NULL
 condition|)
-block|{
 break|break;
-block|}
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -1187,9 +1183,7 @@ name|cp
 operator|==
 name|badcp
 condition|)
-block|{
 break|break;
-block|}
 operator|(
 name|void
 operator|)
@@ -1310,11 +1304,9 @@ name|gp
 operator|==
 name|NULL
 condition|)
-block|{
 goto|goto
 name|fail
 goto|;
-block|}
 name|sc
 operator|=
 name|g_malloc
@@ -1409,11 +1401,9 @@ name|pp
 operator|==
 name|NULL
 condition|)
-block|{
 goto|goto
 name|fail
 goto|;
-block|}
 comment|/* limit the provider to not have it stomp on metadata */
 name|pp
 operator|->
@@ -1470,7 +1460,6 @@ name|softc
 operator|!=
 name|NULL
 condition|)
-block|{
 name|g_free
 argument_list|(
 name|gp
@@ -1478,7 +1467,6 @@ operator|->
 name|softc
 argument_list|)
 expr_stmt|;
-block|}
 name|g_destroy_geom
 argument_list|(
 name|gp
@@ -1561,9 +1549,7 @@ name|provider
 operator|==
 name|pp
 condition|)
-block|{
 break|break;
-block|}
 block|}
 if|if
 condition|(
@@ -1612,13 +1598,11 @@ name|cp
 operator|==
 name|NULL
 condition|)
-block|{
 return|return
 operator|(
 name|ENOMEM
 operator|)
 return|;
-block|}
 name|error
 operator|=
 name|g_attach
@@ -1833,13 +1817,11 @@ name|softc
 operator|==
 name|NULL
 condition|)
-block|{
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
-block|}
 name|pp
 operator|=
 name|LIST_FIRST
@@ -1876,13 +1858,11 @@ operator|!=
 literal|0
 operator|)
 condition|)
-block|{
 return|return
 operator|(
 name|EBUSY
 operator|)
 return|;
-block|}
 name|printf
 argument_list|(
 literal|"GEOM_MULTIPATH: destroying %s\n"
@@ -2109,12 +2089,10 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 name|g_multipath_kt_state
 operator|=
 name|GKT_RUN
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -2227,13 +2205,11 @@ name|error
 operator|!=
 literal|0
 condition|)
-block|{
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
 name|pp
 operator|=
 name|cp
@@ -2286,13 +2262,11 @@ name|buf
 operator|==
 name|NULL
 condition|)
-block|{
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
 name|multipath_metadata_decode
 argument_list|(
 name|buf
@@ -2437,13 +2411,11 @@ name|error
 operator|!=
 literal|0
 condition|)
-block|{
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
-block|}
 name|gp
 operator|=
 name|NULL
@@ -2466,7 +2438,6 @@ if|if
 condition|(
 name|g_multipath_debug
 condition|)
-block|{
 name|printf
 argument_list|(
 literal|"%s is not MULTIPATH\n"
@@ -2476,7 +2447,6 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|NULL
@@ -2518,7 +2488,6 @@ if|if
 condition|(
 name|g_multipath_debug
 condition|)
-block|{
 name|printf
 argument_list|(
 literal|"MULTIPATH: %s/%s\n"
@@ -2532,7 +2501,6 @@ operator|.
 name|md_uuid
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Let's check if such a device already is present. We check against 	 * uuid alone first because that's the true distinguishor. If that 	 * passes, then we check for name conflicts. If there are conflicts,  	 * modify the name. 	 * 	 * The whole purpose of this is to solve the problem that people don't 	 * pick good unique names, but good unique names (like uuids) are a 	 * pain to use. So, we allow people to build GEOMs with friendly names 	 * and uuids, and modify the names in case there's a collision. 	 */
 name|sc
 operator|=
@@ -2559,9 +2527,7 @@ name|sc
 operator|==
 name|NULL
 condition|)
-block|{
 continue|continue;
-block|}
 if|if
 condition|(
 name|strncmp
@@ -2584,9 +2550,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 break|break;
-block|}
 block|}
 name|LIST_FOREACH
 argument_list|(
@@ -2603,9 +2567,7 @@ name|gp1
 operator|==
 name|gp
 condition|)
-block|{
 continue|continue;
-block|}
 name|sc
 operator|=
 name|gp1
@@ -2618,9 +2580,7 @@ name|sc
 operator|==
 name|NULL
 condition|)
-block|{
 continue|continue;
-block|}
 if|if
 condition|(
 name|strncmp
@@ -2643,9 +2603,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 break|break;
-block|}
 block|}
 comment|/* 	 * If gp is NULL, we had no extant MULTIPATH geom with this uuid. 	 * 	 * If gp1 is *not* NULL, that means we have a MULTIPATH geom extant 	 * with the same name (but a different UUID). 	 * 	 * If gp is NULL, then modify the name with a random number and   	 * complain, but allow the creation of the geom to continue. 	 * 	 * If gp is *not* NULL, just use the geom's name as we're attaching 	 * this disk to the (previously generated) name. 	 */
 if|if
@@ -2851,13 +2809,11 @@ if|if
 condition|(
 name|isnew
 condition|)
-block|{
 name|g_multipath_destroy
 argument_list|(
 name|gp
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|NULL
@@ -3046,12 +3002,10 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 name|name
 operator|+=
 literal|5
 expr_stmt|;
-block|}
 name|pp0
 operator|=
 name|g_provider_by_name
@@ -3115,12 +3069,10 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 name|name
 operator|+=
 literal|5
 expr_stmt|;
-block|}
 name|pp1
 operator|=
 name|g_provider_by_name
@@ -3324,7 +3276,7 @@ name|pp0
 operator|->
 name|sectorsize
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|md
 operator|.
@@ -3340,7 +3292,7 @@ name|md_name
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|md
 operator|.
@@ -3372,9 +3324,7 @@ name|gp
 operator|==
 name|NULL
 condition|)
-block|{
 return|return;
-block|}
 name|error
 operator|=
 name|g_multipath_add_disk
