@@ -5996,7 +5996,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|em_poll
 parameter_list|(
 name|struct
@@ -6068,11 +6068,7 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 block|}
 if|if
 condition|(
@@ -6191,11 +6187,7 @@ argument_list|(
 name|txr
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|rx_done
-operator|)
-return|;
+return|return;
 block|}
 end_function
 
