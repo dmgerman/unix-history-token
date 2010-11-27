@@ -1374,6 +1374,11 @@ decl_stmt|;
 name|u32
 name|rx_process_limit
 decl_stmt|;
+comment|/* Multicast array memory */
+name|u8
+modifier|*
+name|mta
+decl_stmt|;
 comment|/* Misc stats maintained by the driver */
 name|unsigned
 name|long
