@@ -2934,12 +2934,6 @@ operator|->
 name|nskip_out_inpcb
 operator|++
 expr_stmt|;
-name|INP_INFO_RUNLOCK
-argument_list|(
-operator|&
-name|V_tcbinfo
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -2954,13 +2948,13 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
+block|}
 name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|inp
