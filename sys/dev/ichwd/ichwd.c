@@ -2332,7 +2332,7 @@ comment|/* 	 * Determine if we are coming up after a watchdog-induced reset. 	 *
 if|if
 condition|(
 operator|(
-name|ich_read_tco_2
+name|ichwd_read_tco_2
 argument_list|(
 name|sc
 argument_list|,
