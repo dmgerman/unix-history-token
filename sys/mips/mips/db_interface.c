@@ -676,7 +676,7 @@ name|int
 name|op
 parameter_list|)
 block|{
-name|int
+name|register_t
 modifier|*
 name|reg
 decl_stmt|;
@@ -694,7 +694,7 @@ return|;
 name|reg
 operator|=
 operator|(
-name|int
+name|register_t
 operator|*
 operator|)
 operator|(
@@ -704,7 +704,10 @@ operator|)
 name|kdb_frame
 operator|+
 operator|(
-name|db_expr_t
+name|size_t
+operator|)
+operator|(
+name|intptr_t
 operator|)
 name|vp
 operator|->

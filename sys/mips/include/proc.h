@@ -65,8 +65,9 @@ name|int
 name|md_pc_spill
 decl_stmt|;
 comment|/* performance counter spill */
-name|vm_offset_t
-name|md_realstack
+name|void
+modifier|*
+name|md_tls
 decl_stmt|;
 block|}
 struct|;

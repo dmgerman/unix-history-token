@@ -30,6 +30,10 @@ begin_comment
 comment|/*XXX The cprestore instruction is a "dummy" to shut up as(1). */
 end_comment
 
+begin_comment
+comment|/*XXX This is not MIPS64 safe. */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -78,7 +82,7 @@ name|MCOUNT_ENTER
 parameter_list|(
 name|s
 parameter_list|)
-value|{					\ 	s = disable_intr();					\ 	while (!atomic_cmpset_acq_int(&mcount_lock, 0, 1))	\
+value|{					\ 	s = intr_disable();					\ 	while (!atomic_cmpset_acq_int(&mcount_lock, 0, 1))	\
 comment|/* nothing */
 value|;					\ }
 end_define
@@ -90,7 +94,7 @@ name|MCOUNT_EXIT
 parameter_list|(
 name|s
 parameter_list|)
-value|{					\ 	atomic_store_rel_int(&mcount_lock, 0);			\ 	enableintr(s);						\ }
+value|{					\ 	atomic_store_rel_int(&mcount_lock, 0);			\ 	intr_restore(s);						\ }
 end_define
 
 begin_else
@@ -105,7 +109,7 @@ name|MCOUNT_ENTER
 parameter_list|(
 name|s
 parameter_list|)
-value|{ s = disable_intr(); }
+value|{ s = intr_disable(); }
 end_define
 
 begin_define
@@ -115,7 +119,7 @@ name|MCOUNT_EXIT
 parameter_list|(
 name|s
 parameter_list|)
-value|(enableintr(s))
+value|(intr_restore(s))
 end_define
 
 begin_endif
@@ -204,13 +208,35 @@ name|FUNCTION_ALIGNMENT
 value|4
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__mips_n64
+end_ifdef
+
 begin_typedef
 typedef|typedef
-name|unsigned
-name|int
+name|u_long
 name|uintfptr_t
 typedef|;
 end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_typedef
+typedef|typedef
+name|u_int
+name|uintfptr_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -225,12 +251,35 @@ begin_comment
 comment|/*  * An unsigned integral type that can hold non-negative difference between  * function pointers.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__mips_n64
+end_ifdef
+
+begin_typedef
+typedef|typedef
+name|u_long
+name|fptrdiff_t
+typedef|;
+end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_typedef
 typedef|typedef
 name|u_int
 name|fptrdiff_t
 typedef|;
 end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#

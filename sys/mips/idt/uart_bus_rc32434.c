@@ -293,7 +293,7 @@ name|bas
 operator|.
 name|bst
 operator|=
-literal|0
+name|mips_bus_space_generic
 expr_stmt|;
 name|sc
 operator|->
@@ -322,7 +322,7 @@ name|sc_bas
 operator|.
 name|bst
 operator|=
-literal|0
+name|mips_bus_space_generic
 expr_stmt|;
 name|sc
 operator|->

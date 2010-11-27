@@ -57,9 +57,12 @@ decl_stmt|;
 name|u_int8_t
 name|icache_virtual
 decl_stmt|;
+name|boolean_t
+name|cache_coherent_dma
+decl_stmt|;
 struct|struct
 block|{
-name|u_int8_t
+name|u_int32_t
 name|ic_size
 decl_stmt|;
 name|u_int8_t
@@ -71,7 +74,7 @@ decl_stmt|;
 name|u_int16_t
 name|ic_nsets
 decl_stmt|;
-name|u_int8_t
+name|u_int32_t
 name|dc_size
 decl_stmt|;
 name|u_int8_t
@@ -90,129 +93,13 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/* TODO: Merge above structure with NetBSD's below. */
-end_comment
-
-begin_struct
-struct|struct
-name|cpu_info
-block|{
-ifdef|#
-directive|ifdef
-name|notyet
-name|struct
-name|schedstate_percpu
-name|ci_schedstate
-decl_stmt|;
-comment|/* scheduler state */
-endif|#
-directive|endif
-name|u_long
-name|ci_cpu_freq
-decl_stmt|;
-comment|/* CPU frequency */
-name|u_long
-name|ci_cycles_per_hz
-decl_stmt|;
-comment|/* CPU freq / hz */
-name|u_long
-name|ci_divisor_delay
-decl_stmt|;
-comment|/* for delay/DELAY */
-name|u_long
-name|ci_divisor_recip
-decl_stmt|;
-comment|/* scaled reciprocal of previous; 					   see below */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|DIAGNOSTIC
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|LOCKDEBUG
-argument_list|)
-name|u_long
-name|ci_spin_locks
-decl_stmt|;
-comment|/* # of spin locks held */
-name|u_long
-name|ci_simple_locks
-decl_stmt|;
-comment|/* # of simple locks held */
-endif|#
-directive|endif
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * To implement a more accurate microtime using the CP0 COUNT register  * we need to divide that register by the number of cycles per MHz.  * But...  *  * DIV and DIVU are expensive on MIPS (eg 75 clocks on the R4000).  MULT  * and MULTU are only 12 clocks on the same CPU.  *  * The strategy we use is to calculate the reciprical of cycles per MHz,  * scaled by 1<<32.  Then we can simply issue a MULTU and pluck of the  * HI register and have the results of the division.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MIPS_SET_CI_RECIPRICAL
-parameter_list|(
-name|cpu
-parameter_list|)
-define|\
-value|do {									\ 	KASSERT((cpu)->ci_divisor_delay != 0, ("divisor delay"));		\ 	(cpu)->ci_divisor_recip = 0x100000000ULL / (cpu)->ci_divisor_delay; \ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MIPS_COUNT_TO_MHZ
-parameter_list|(
-name|cpu
-parameter_list|,
-name|count
-parameter_list|,
-name|res
-parameter_list|)
-define|\
-value|__asm __volatile ("multu %1,%2 ; mfhi %0"			\ 	    : "=r"((res)) : "r"((count)), "r"((cpu)->ci_divisor_recip))
-end_define
-
 begin_decl_stmt
 specifier|extern
 name|struct
-name|cpu_info
-name|cpu_info_store
+name|mips_cpuinfo
+name|cpuinfo
 decl_stmt|;
 end_decl_stmt
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|curcpu
-parameter_list|()
-value|(&cpu_info_store)
-end_define
-
-begin_define
-define|#
-directive|define
-name|cpu_number
-parameter_list|()
-value|(0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

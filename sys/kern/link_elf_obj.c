@@ -4902,14 +4902,23 @@ name|panic
 argument_list|(
 literal|"mapbase 0x%lx != address %p + mapsize 0x%lx (0x%lx)\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|mapbase
 argument_list|,
 name|ef
 operator|->
 name|address
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|mapsize
 argument_list|,
+operator|(
+name|u_long
+operator|)
 operator|(
 name|vm_offset_t
 operator|)

@@ -38,11 +38,15 @@ name|trapframe
 name|pcb_regs
 decl_stmt|;
 comment|/* saved CPU and registers */
-name|label_t
+name|__register_t
 name|pcb_context
+index|[
+literal|14
+index|]
 decl_stmt|;
 comment|/* kernel context for resume */
-name|int
+name|void
+modifier|*
 name|pcb_onfault
 decl_stmt|;
 comment|/* for copyin/copyout faults */
@@ -146,6 +150,13 @@ define|#
 directive|define
 name|PCB_REG_GP
 value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCB_REG_PC
+value|13
 end_define
 
 begin_ifdef

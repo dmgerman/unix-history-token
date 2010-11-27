@@ -47,12 +47,6 @@ directive|include
 file|<machine/md_var.h>
 end_include
 
-begin_struct_decl
-struct_decl|struct
-name|tlb
-struct_decl|;
-end_struct_decl
-
 begin_comment
 comment|/*  * CPU identification, from PRID register.  */
 end_comment
@@ -252,6 +246,28 @@ end_define
 
 begin_comment
 comment|/* Lexra */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIPS_PRID_CID_RMI
+value|0x0c
+end_define
+
+begin_comment
+comment|/* RMI */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIPS_PRID_CID_CAVIUM
+value|0x0d
+end_define
+
+begin_comment
+comment|/* Cavium */
 end_comment
 
 begin_define

@@ -39,21 +39,6 @@ value|(1*PAGE_SIZE)
 end_define
 
 begin_comment
-comment|/*  * USRSTACK needs to start a little below 0x8000000 because the R8000  * and some QED CPUs perform some virtual address checks before the  * offset is calculated.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USRSTACK
-value|0x7ffff000
-end_define
-
-begin_comment
-comment|/* Start of user stack */
-end_comment
-
-begin_comment
 comment|/*  * Virtual memory related constants, all in bytes  */
 end_comment
 
@@ -218,8 +203,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|VM_MAXUSER_ADDRESS
-value|((vm_offset_t)0x80000000)
+name|VM_MAX_ADDRESS
+value|((vm_offset_t)(intptr_t)(int32_t)0xffffffff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_MINUSER_ADDRESS
+value|((vm_offset_t)0x00000000)
 end_define
 
 begin_define
@@ -229,30 +221,44 @@ name|VM_MAX_MMAP_ADDR
 value|VM_MAXUSER_ADDRESS
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__mips_n64
+end_ifdef
+
 begin_define
 define|#
 directive|define
-name|VM_MAX_ADDRESS
+name|VM_MAXUSER_ADDRESS
+value|(VM_MINUSER_ADDRESS + (NPDEPG * NBSEG))
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_MIN_KERNEL_ADDRESS
+value|((vm_offset_t)0xc000000000000000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_MAX_KERNEL_ADDRESS
+value|(VM_MIN_KERNEL_ADDRESS + (NPDEPG * NBSEG))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|VM_MAXUSER_ADDRESS
 value|((vm_offset_t)0x80000000)
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|VM_KERNEL_ALLOC_OFFSET
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|VM_KERNEL_ALLOC_OFFSET
-value|((vm_offset_t)0x00000000)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -264,16 +270,54 @@ end_define
 begin_define
 define|#
 directive|define
-name|VM_KERNEL_WIRED_ADDR_END
-value|(VM_MIN_KERNEL_ADDRESS + VM_KERNEL_ALLOC_OFFSET)
+name|VM_MAX_KERNEL_ADDRESS
+value|((vm_offset_t)0xFFFFC000)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
 directive|define
-name|VM_MAX_KERNEL_ADDRESS
-value|((vm_offset_t)0xFFFFC000)
+name|KERNBASE
+value|((vm_offset_t)(intptr_t)(int32_t)0x80000000)
 end_define
+
+begin_comment
+comment|/*  * USRSTACK needs to start a little below 0x8000000 because the R8000  * and some QED CPUs perform some virtual address checks before the  * offset is calculated.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USRSTACK
+value|(VM_MAXUSER_ADDRESS - PAGE_SIZE)
+end_define
+
+begin_comment
+comment|/*  * Only one memory domain.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VM_NDOMAIN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|VM_NDOMAIN
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Disable superpage reservations. (not sure if this is right  * I copied it from ARM)  */
@@ -397,13 +441,13 @@ value|32
 end_define
 
 begin_comment
-comment|/*  * The physical address space is densely populated.  */
+comment|/*  * The physical address space is sparsely populated.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|VM_PHYSSEG_DENSE
+name|VM_PHYSSEG_SPARSE
 end_define
 
 begin_comment
@@ -439,8 +483,14 @@ value|1
 end_define
 
 begin_comment
-comment|/*  * we support 1 free list:  *  *	- DEFAULT for all systems  */
+comment|/*  * we support 2 free lists:  *  *	- DEFAULT for direct mapped (KSEG0) pages.  *	  Note: This usage of DEFAULT may be misleading because we use  *	  DEFAULT for allocating direct mapped pages. The normal page  *	  allocations use HIGHMEM if available, and then DEFAULT.   *	- HIGHMEM for other pages   */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__mips_n64
+end_ifdef
 
 begin_define
 define|#
@@ -456,6 +506,58 @@ name|VM_FREELIST_DEFAULT
 value|0
 end_define
 
+begin_define
+define|#
+directive|define
+name|VM_FREELIST_DIRECT
+value|VM_FREELIST_DEFAULT
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|VM_NFREELIST
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_FREELIST_DEFAULT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_FREELIST_HIGHMEM
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_FREELIST_DIRECT
+value|VM_FREELIST_DEFAULT
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_HIGHMEM_ADDRESS
+value|((vm_paddr_t)0x20000000)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * The largest allocation size is 1MB.  */
 end_comment
@@ -466,111 +568,6 @@ directive|define
 name|VM_NFREEORDER
 value|9
 end_define
-
-begin_comment
-comment|/*  * XXXMIPS: This values need to be changed!!!  */
-end_comment
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|VM_MIN_ADDRESS
-value|((vm_offset_t)0x0000000000010000)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VM_MAXUSER_ADDRESS
-value|((vm_offset_t)MIPS_KSEG0_START-1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VM_MAX_ADDRESS
-value|((vm_offset_t)0x0000000100000000)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VM_MIN_KERNEL_ADDRESS
-value|((vm_offset_t)MIPS_KSEG3_START)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VM_MAX_KERNEL_ADDRESS
-value|((vm_offset_t)MIPS_KSEG3_END)
-end_define
-
-begin_define
-define|#
-directive|define
-name|KERNBASE
-value|(VM_MIN_KERNEL_ADDRESS)
-end_define
-
-begin_comment
-comment|/* virtual sizes (bytes) for various kernel submaps */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VM_KMEM_SIZE
-value|(16*1024*1024)
-end_define
-
-begin_comment
-comment|/* XXX ??? */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|NBSEG
-value|0x400000
-end_define
-
-begin_comment
-comment|/* bytes/segment */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SEGOFSET
-value|(NBSEG-1)
-end_define
-
-begin_comment
-comment|/* byte offset into segment */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SEGSHIFT
-value|22
-end_define
-
-begin_comment
-comment|/* LOG2(NBSEG) */
-end_comment
 
 begin_endif
 endif|#

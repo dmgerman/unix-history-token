@@ -24,6 +24,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_cputype.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -130,7 +136,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|TARGET_OCTEON
+name|CPU_CNMIPS
 end_ifdef
 
 begin_define
@@ -156,9 +162,21 @@ endif|#
 directive|endif
 end_endif
 
-begin_asm
-asm|__asm(".set mips32");
-end_asm
+begin_comment
+comment|/*  * Exported variables for consumers like bus_dma code  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|mips_picache_linesize
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|mips_pdcache_linesize
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -394,6 +412,22 @@ operator|.
 name|dc_nways
 expr_stmt|;
 block|}
+name|mips_picache_linesize
+operator|=
+name|cpuinfo
+operator|->
+name|l1
+operator|.
+name|ic_linesize
+expr_stmt|;
+name|mips_pdcache_linesize
+operator|=
+name|cpuinfo
+operator|->
+name|l1
+operator|.
+name|dc_linesize
+expr_stmt|;
 name|picache_size
 operator|=
 name|cpuinfo
@@ -436,6 +470,11 @@ name|CACHE_DEBUG
 ifdef|#
 directive|ifdef
 name|CACHE_DEBUG
+name|printf
+argument_list|(
+literal|"Cache info:\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|cpuinfo
@@ -1433,8 +1472,7 @@ name|vm_size_t
 name|size
 parameter_list|)
 block|{
-name|unsigned
-name|int
+name|vm_offset_t
 name|eva
 decl_stmt|,
 name|tmpva
@@ -1589,8 +1627,7 @@ name|vm_size_t
 name|size
 parameter_list|)
 block|{
-name|unsigned
-name|int
+name|vm_offset_t
 name|eva
 decl_stmt|,
 name|tmpva
@@ -2093,7 +2130,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|TARGET_OCTEON
+name|CPU_CNMIPS
 end_ifdef
 
 begin_function

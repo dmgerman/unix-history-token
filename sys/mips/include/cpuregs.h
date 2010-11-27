@@ -19,87 +19,109 @@ directive|define
 name|_MIPS_CPUREGS_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
 begin_comment
-comment|/* For __CONCAT() */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_KERNEL_OPT
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|"opt_cputype.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * Address space.  * 32-bit mips CPUS partition their 32-bit address space into four segments:  *  * kuseg   0x00000000 - 0x7fffffff  User virtual mem,  mapped  * kseg0   0x80000000 - 0x9fffffff  Physical memory, cached, unmapped  * kseg1   0xa0000000 - 0xbfffffff  Physical memory, uncached, unmapped  * kseg2   0xc0000000 - 0xffffffff  kernel-virtual,  mapped  *  * mips1 physical memory is limited to 512Mbytes, which is  * doubly mapped in kseg0 (cached) and kseg1 (uncached.)  * Caching of mapped addresses is controlled by bits in the TLB entry.  */
+comment|/*  * Address space.  * 32-bit mips CPUS partition their 32-bit address space into four segments:  *  * kuseg   0x00000000 - 0x7fffffff  User virtual mem,  mapped  * kseg0   0x80000000 - 0x9fffffff  Physical memory, cached, unmapped  * kseg1   0xa0000000 - 0xbfffffff  Physical memory, uncached, unmapped  * kseg2   0xc0000000 - 0xffffffff  kernel-virtual,  mapped  *  * Caching of mapped addresses is controlled by bits in the TLB entry.  */
 end_comment
 
 begin_define
 define|#
 directive|define
+name|MIPS_KSEG0_LARGEST_PHYS
+value|(0x20000000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_KSEG0_PHYS_MASK
+value|(0x1fffffff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_XKPHYS_LARGEST_PHYS
+value|(0x10000000000)
+end_define
+
+begin_comment
+comment|/* 40 bit PA */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIPS_XKPHYS_PHYS_MASK
+value|(0x0ffffffffff)
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCORE
+end_ifndef
+
+begin_define
+define|#
+directive|define
 name|MIPS_KUSEG_START
-value|0x0
+value|0x00000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|MIPS_KSEG0_START
-value|0x80000000
+value|((intptr_t)(int32_t)0x80000000)
 end_define
 
 begin_define
 define|#
 directive|define
 name|MIPS_KSEG0_END
-value|0x9fffffff
+value|((intptr_t)(int32_t)0x9fffffff)
 end_define
 
 begin_define
 define|#
 directive|define
 name|MIPS_KSEG1_START
-value|0xa0000000
+value|((intptr_t)(int32_t)0xa0000000)
 end_define
 
 begin_define
 define|#
 directive|define
 name|MIPS_KSEG1_END
-value|0xbfffffff
+value|((intptr_t)(int32_t)0xbfffffff)
 end_define
 
 begin_define
 define|#
 directive|define
 name|MIPS_KSSEG_START
-value|0xc0000000
+value|((intptr_t)(int32_t)0xc0000000)
 end_define
 
 begin_define
 define|#
 directive|define
 name|MIPS_KSSEG_END
-value|0xdfffffff
+value|((intptr_t)(int32_t)0xdfffffff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_KSEG3_START
+value|((intptr_t)(int32_t)0xe0000000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_KSEG3_END
+value|((intptr_t)(int32_t)0xffffffff)
 end_define
 
 begin_define
@@ -116,48 +138,283 @@ name|MIPS_KSEG2_END
 value|MIPS_KSSEG_END
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
-name|MIPS_KSEG3_START
-value|0xe0000000
+name|MIPS_PHYS_TO_KSEG0
+parameter_list|(
+name|x
+parameter_list|)
+value|((uintptr_t)(x) | MIPS_KSEG0_START)
 end_define
 
 begin_define
 define|#
 directive|define
-name|MIPS_KSEG3_END
-value|0xffffffff
+name|MIPS_PHYS_TO_KSEG1
+parameter_list|(
+name|x
+parameter_list|)
+value|((uintptr_t)(x) | MIPS_KSEG1_START)
 end_define
 
 begin_define
 define|#
 directive|define
-name|MIPS_MAX_MEM_ADDR
-value|0xbe000000
+name|MIPS_KSEG0_TO_PHYS
+parameter_list|(
+name|x
+parameter_list|)
+value|((uintptr_t)(x)& MIPS_KSEG0_PHYS_MASK)
 end_define
 
 begin_define
 define|#
 directive|define
-name|MIPS_RESERVED_ADDR
-value|0xbfc80000
+name|MIPS_KSEG1_TO_PHYS
+parameter_list|(
+name|x
+parameter_list|)
+value|((uintptr_t)(x)& MIPS_KSEG0_PHYS_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_IS_KSEG0_ADDR
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(((vm_offset_t)(x)>= MIPS_KSEG0_START)&&		\ 	    ((vm_offset_t)(x)<= MIPS_KSEG0_END))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_IS_KSEG1_ADDR
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(((vm_offset_t)(x)>= MIPS_KSEG1_START)&&		\ 	    ((vm_offset_t)(x)<= MIPS_KSEG1_END))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_IS_VALID_PTR
+parameter_list|(
+name|x
+parameter_list|)
+value|(MIPS_IS_KSEG0_ADDR(x) || \ 					    MIPS_IS_KSEG1_ADDR(x))
 end_define
 
 begin_comment
-comment|/* Map virtual address to index in mips3 r4k virtually-indexed cache */
+comment|/*  * Cache Coherency Attributes:  *	UC:	Uncached.  *	UA:	Uncached accelerated.  *	C:	Cacheable, coherency unspecified.  *	CNC:	Cacheable non-coherent.  *	CC:	Cacheable coherent.  *	CCE:	Cacheable coherent, exclusive read.  *	CCEW:	Cacheable coherent, exclusive write.  *	CCUOW:	Cacheable coherent, update on write.  *  * Note that some bits vary in meaning across implementations (and that the  * listing here is no doubt incomplete) and that the optimal cached mode varies  * between implementations.  0x02 is required to be UC and 0x03 is required to  * be a least C.  *  * We define the following logical bits:  * 	UNCACHED:  * 		The optimal uncached mode for the target CPU type.  This must  * 		be suitable for use in accessing memory-mapped devices.  * 	CACHED:	The optional cached mode for the target CPU type.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MIPS3_VA_TO_CINDEX
-parameter_list|(
-name|x
-parameter_list|)
-define|\
-value|((unsigned)(x)& 0xffffff | MIPS_KSEG0_START)
+name|MIPS_CCA_UC
+value|0x02
 end_define
+
+begin_comment
+comment|/* Uncached. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIPS_CCA_C
+value|0x03
+end_define
+
+begin_comment
+comment|/* Cacheable, coherency unspecified. */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CPU_R4000
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_R10000
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|MIPS_CCA_CNC
+value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_CCA_CCE
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_CCA_CCEW
+value|0x05
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CPU_R4000
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MIPS_CCA_CCUOW
+value|0x06
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CPU_R10000
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MIPS_CCA_UA
+value|0x07
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|MIPS_CCA_CACHED
+value|MIPS_CCA_CCEW
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(CPU_R4000) || defined(CPU_R10000) */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CPU_SB1
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|MIPS_CCA_CC
+value|0x05
+end_define
+
+begin_comment
+comment|/* Cacheable Coherent. */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MIPS_CCA_UNCACHED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MIPS_CCA_UNCACHED
+value|MIPS_CCA_UC
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * If we don't know which cached mode to use and there is a cache coherent  * mode, use it.  If there is not a cache coherent mode, use the required  * cacheable mode.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MIPS_CCA_CACHED
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MIPS_CCA_CC
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MIPS_CCA_CACHED
+value|MIPS_CCA_CC
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MIPS_CCA_CACHED
+value|MIPS_CCA_C
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -175,28 +432,145 @@ end_define
 begin_define
 define|#
 directive|define
+name|MIPS_PHYS_TO_XKPHYS_CACHED
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|((0x2ULL<< 62) | ((unsigned long long)(MIPS_CCA_CACHED)<< 59) | (x))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_PHYS_TO_XKPHYS_UNCACHED
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|((0x2ULL<< 62) | ((unsigned long long)(MIPS_CCA_UNCACHED)<< 59) | (x))
+end_define
+
+begin_define
+define|#
+directive|define
 name|MIPS_XKPHYS_TO_PHYS
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)& 0x0effffffffffffffULL)
+value|((uintptr_t)(x)& MIPS_XKPHYS_PHYS_MASK)
 end_define
 
-begin_comment
-comment|/* CPU dependent mtc0 hazard hook */
-end_comment
+begin_define
+define|#
+directive|define
+name|MIPS_XKPHYS_START
+value|0x8000000000000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_XKPHYS_END
+value|0xbfffffffffffffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_XUSEG_START
+value|0x0000000000000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_XUSEG_END
+value|0x0000010000000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_XKSEG_START
+value|0xc000000000000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_XKSEG_END
+value|0xc00000ff80000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_XKSEG_COMPAT32_START
+value|0xffffffff80000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_XKSEG_COMPAT32_END
+value|0xffffffffffffffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_XKSEG_TO_COMPAT32
+parameter_list|(
+name|va
+parameter_list|)
+value|((va)& 0xffffffff)
+end_define
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|TARGET_OCTEON
+name|__mips_n64
 end_ifdef
 
 begin_define
 define|#
 directive|define
-name|COP0_SYNC
-value|nop; nop; nop; nop; nop;
+name|MIPS_DIRECT_MAPPABLE
+parameter_list|(
+name|pa
+parameter_list|)
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_PHYS_TO_DIRECT
+parameter_list|(
+name|pa
+parameter_list|)
+value|MIPS_PHYS_TO_XKPHYS_CACHED(pa)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_PHYS_TO_DIRECT_UNCACHED
+parameter_list|(
+name|pa
+parameter_list|)
+value|MIPS_PHYS_TO_XKPHYS_UNCACHED(pa)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_DIRECT_TO_PHYS
+parameter_list|(
+name|va
+parameter_list|)
+value|MIPS_XKPHYS_TO_PHYS(va)
 end_define
 
 begin_else
@@ -207,12 +581,111 @@ end_else
 begin_define
 define|#
 directive|define
+name|MIPS_DIRECT_MAPPABLE
+parameter_list|(
+name|pa
+parameter_list|)
+value|((pa)< MIPS_KSEG0_LARGEST_PHYS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_PHYS_TO_DIRECT
+parameter_list|(
+name|pa
+parameter_list|)
+value|MIPS_PHYS_TO_KSEG0(pa)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_PHYS_TO_DIRECT_UNCACHED
+parameter_list|(
+name|pa
+parameter_list|)
+value|MIPS_PHYS_TO_KSEG1(pa)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_DIRECT_TO_PHYS
+parameter_list|(
+name|va
+parameter_list|)
+value|MIPS_KSEG0_TO_PHYS(va)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CPU dependent mtc0 hazard hook */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CPU_CNMIPS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|COP0_SYNC
+value|nop; nop; nop; nop; nop;
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|CPU_SB1
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|COP0_SYNC
+value|ssnop; ssnop; ssnop; ssnop; ssnop; ssnop; ssnop; ssnop; ssnop
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|CPU_RMI
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
 name|COP0_SYNC
 end_define
 
+begin_else
+else|#
+directive|else
+end_else
+
 begin_comment
-comment|/* nothing */
+comment|/*  * Pick a reasonable default based on the "typical" spacing described in the  * "CP0 Hazards" chapter of MIPS Architecture Book Vol III.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|COP0_SYNC
+value|ssnop; ssnop; ssnop; ssnop; ssnop
+end_define
 
 begin_endif
 endif|#
@@ -378,9 +851,12 @@ begin_comment
 comment|/* Never used, true for r3k */
 end_comment
 
-begin_comment
-comment|/*#define MIPS_SR_INT_MASK	0x0000ff00*/
-end_comment
+begin_define
+define|#
+directive|define
+name|MIPS_SR_INT_MASK
+value|0x0000ff00
+end_define
 
 begin_comment
 comment|/*  * The R2000/R3000-specific status register bit definitions.  * all bits are active when set to 1.  *  *	MIPS_SR_PARITY_ERR	Parity error.  *	MIPS_SR_CACHE_MISS	Most recent D-cache load resulted in a miss.  *	MIPS_SR_PARITY_ZERO	Zero replaces outgoing parity bits.  *	MIPS_SR_SWAP_CACHES	Swap I-cache and D-cache.  *	MIPS_SR_ISOL_CACHES	Isolate D-cache from main memory.  *				Interrupt enable bits defined below.  *	MIPS_SR_KU_OLD		Old kernel/user mode bit. 1 => user mode.  *	MIPS_SR_INT_ENA_OLD	Old interrupt enable bit.  *	MIPS_SR_KU_PREV		Previous kernel/user mode bit. 1 => user mode.  *	MIPS_SR_INT_ENA_PREV	Previous interrupt enable bit.  *	MIPS_SR_KU_CUR		Current kernel/user mode bit. 1 => user mode.  */
@@ -744,203 +1220,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * These definitions are for MIPS32 processors.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MIPS32_SR_RP
-value|0x08000000
-end_define
-
-begin_comment
-comment|/* reduced power mode */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MIPS32_SR_FR
-value|0x04000000
-end_define
-
-begin_comment
-comment|/* 64-bit capable fpu */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MIPS32_SR_RE
-value|0x02000000
-end_define
-
-begin_comment
-comment|/* reverse user endian */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MIPS32_SR_MX
-value|0x01000000
-end_define
-
-begin_comment
-comment|/* MIPS64 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MIPS32_SR_PX
-value|0x00800000
-end_define
-
-begin_comment
-comment|/* MIPS64 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MIPS32_SR_BEV
-value|0x00400000
-end_define
-
-begin_comment
-comment|/* Use boot exception vector */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MIPS32_SR_TS
-value|0x00200000
-end_define
-
-begin_comment
-comment|/* TLB multiple match */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MIPS32_SR_SOFT_RESET
-value|0x00100000
-end_define
-
-begin_comment
-comment|/* soft reset occurred */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MIPS32_SR_NMI
-value|0x00080000
-end_define
-
-begin_comment
-comment|/* NMI occurred */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MIPS32_SR_INT_MASK
-value|0x0000ff00
-end_define
-
-begin_define
-define|#
-directive|define
-name|MIPS32_SR_KX
-value|0x00000080
-end_define
-
-begin_comment
-comment|/* MIPS64 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MIPS32_SR_SX
-value|0x00000040
-end_define
-
-begin_comment
-comment|/* MIPS64 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MIPS32_SR_UX
-value|0x00000020
-end_define
-
-begin_comment
-comment|/* MIPS64 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MIPS32_SR_KSU_MASK
-value|0x00000018
-end_define
-
-begin_comment
-comment|/* privilege mode */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MIPS32_SR_KSU_USER
-value|0x00000010
-end_define
-
-begin_define
-define|#
-directive|define
-name|MIPS32_SR_KSU_SUPER
-value|0x00000008
-end_define
-
-begin_define
-define|#
-directive|define
-name|MIPS32_SR_KSU_KERNEL
-value|0x00000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|MIPS32_SR_ERL
-value|0x00000004
-end_define
-
-begin_comment
-comment|/* error level */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MIPS32_SR_EXL
-value|0x00000002
-end_define
-
-begin_comment
-comment|/* exception level */
-end_comment
 
 begin_define
 define|#
@@ -1788,14 +2067,14 @@ begin_define
 define|#
 directive|define
 name|MIPS_RESET_EXC_VEC
-value|0xBFC00000
+value|((intptr_t)(int32_t)0xBFC00000)
 end_define
 
 begin_define
 define|#
 directive|define
 name|MIPS_UTLB_MISS_EXC_VEC
-value|0x80000000
+value|((intptr_t)(int32_t)0x80000000)
 end_define
 
 begin_comment
@@ -1806,7 +2085,7 @@ begin_define
 define|#
 directive|define
 name|MIPS1_GEN_EXC_VEC
-value|0x80000080
+value|((intptr_t)(int32_t)0x80000080)
 end_define
 
 begin_comment
@@ -1817,21 +2096,21 @@ begin_define
 define|#
 directive|define
 name|MIPS3_XTLB_MISS_EXC_VEC
-value|0x80000080
+value|((intptr_t)(int32_t)0x80000080)
 end_define
 
 begin_define
 define|#
 directive|define
 name|MIPS3_CACHE_ERR_EXC_VEC
-value|0x80000100
+value|((intptr_t)(int32_t)0x80000100)
 end_define
 
 begin_define
 define|#
 directive|define
 name|MIPS3_GEN_EXC_VEC
-value|0x80000180
+value|((intptr_t)(int32_t)0x80000180)
 end_define
 
 begin_comment
@@ -1864,7 +2143,7 @@ value|0x80000200
 end_define
 
 begin_comment
-comment|/*  * Coprocessor 0 registers:  *  *				v--- width for mips I,III,32,64  *				     (3=32bit, 6=64bit, i=impl dep)  *  0	MIPS_COP_0_TLB_INDEX	3333 TLB Index.  *  1	MIPS_COP_0_TLB_RANDOM	3333 TLB Random.  *  2	MIPS_COP_0_TLB_LOW	3... r3k TLB entry low.  *  2	MIPS_COP_0_TLB_LO0	.636 r4k TLB entry low.  *  3	MIPS_COP_0_TLB_LO1	.636 r4k TLB entry low, extended.  *  4	MIPS_COP_0_TLB_CONTEXT	3636 TLB Context.  *  5	MIPS_COP_0_TLB_PG_MASK	.333 TLB Page Mask register.  *  6	MIPS_COP_0_TLB_WIRED	.333 Wired TLB number.  *  8	MIPS_COP_0_BAD_VADDR	3636 Bad virtual address.  *  9	MIPS_COP_0_COUNT	.333 Count register.  * 10	MIPS_COP_0_TLB_HI	3636 TLB entry high.  * 11	MIPS_COP_0_COMPARE	.333 Compare (against Count).  * 12	MIPS_COP_0_STATUS	3333 Status register.  * 13	MIPS_COP_0_CAUSE	3333 Exception cause register.  * 14	MIPS_COP_0_EXC_PC	3636 Exception PC.  * 15	MIPS_COP_0_PRID		3333 Processor revision identifier.  * 16	MIPS_COP_0_CONFIG	3333 Configuration register.  * 16/1	MIPS_COP_0_CONFIG1	..33 Configuration register 1.  * 16/2	MIPS_COP_0_CONFIG2	..33 Configuration register 2.  * 16/3	MIPS_COP_0_CONFIG3	..33 Configuration register 3.  * 17	MIPS_COP_0_LLADDR	.336 Load Linked Address.  * 18	MIPS_COP_0_WATCH_LO	.336 WatchLo register.  * 19	MIPS_COP_0_WATCH_HI	.333 WatchHi register.  * 20	MIPS_COP_0_TLB_XCONTEXT .6.6 TLB XContext register.  * 23	MIPS_COP_0_DEBUG	.... Debug JTAG register.  * 24	MIPS_COP_0_DEPC		.... DEPC JTAG register.  * 25	MIPS_COP_0_PERFCNT	..36 Performance Counter register.  * 26	MIPS_COP_0_ECC		.3ii ECC / Error Control register.  * 27	MIPS_COP_0_CACHE_ERR	.3ii Cache Error register.  * 28/0	MIPS_COP_0_TAG_LO	.3ii Cache TagLo register (instr).  * 28/1	MIPS_COP_0_DATA_LO	..ii Cache DataLo register (instr).  * 28/2	MIPS_COP_0_TAG_LO	..ii Cache TagLo register (data).  * 28/3	MIPS_COP_0_DATA_LO	..ii Cache DataLo register (data).  * 29/0	MIPS_COP_0_TAG_HI	.3ii Cache TagHi register (instr).  * 29/1	MIPS_COP_0_DATA_HI	..ii Cache DataHi register (instr).  * 29/2	MIPS_COP_0_TAG_HI	..ii Cache TagHi register (data).  * 29/3	MIPS_COP_0_DATA_HI	..ii Cache DataHi register (data).  * 30	MIPS_COP_0_ERROR_PC	.636 Error EPC register.  * 31	MIPS_COP_0_DESAVE	.... DESAVE JTAG register.  */
+comment|/*  * Coprocessor 0 registers:  *  *				v--- width for mips I,III,32,64  *				     (3=32bit, 6=64bit, i=impl dep)  *  0	MIPS_COP_0_TLB_INDEX	3333 TLB Index.  *  1	MIPS_COP_0_TLB_RANDOM	3333 TLB Random.  *  2	MIPS_COP_0_TLB_LO0	.636 r4k TLB entry low.  *  3	MIPS_COP_0_TLB_LO1	.636 r4k TLB entry low, extended.  *  4	MIPS_COP_0_TLB_CONTEXT	3636 TLB Context.  *  5	MIPS_COP_0_TLB_PG_MASK	.333 TLB Page Mask register.  *  6	MIPS_COP_0_TLB_WIRED	.333 Wired TLB number.  *  7	MIPS_COP_0_INFO		..33 Info registers  *  8	MIPS_COP_0_BAD_VADDR	3636 Bad virtual address.  *  9	MIPS_COP_0_COUNT	.333 Count register.  * 10	MIPS_COP_0_TLB_HI	3636 TLB entry high.  * 11	MIPS_COP_0_COMPARE	.333 Compare (against Count).  * 12	MIPS_COP_0_STATUS	3333 Status register.  * 13	MIPS_COP_0_CAUSE	3333 Exception cause register.  * 14	MIPS_COP_0_EXC_PC	3636 Exception PC.  * 15	MIPS_COP_0_PRID		3333 Processor revision identifier.  * 16	MIPS_COP_0_CONFIG	3333 Configuration register.  * 16/1	MIPS_COP_0_CONFIG1	..33 Configuration register 1.  * 16/2	MIPS_COP_0_CONFIG2	..33 Configuration register 2.  * 16/3	MIPS_COP_0_CONFIG3	..33 Configuration register 3.  * 17	MIPS_COP_0_LLADDR	.336 Load Linked Address.  * 18	MIPS_COP_0_WATCH_LO	.336 WatchLo register.  * 19	MIPS_COP_0_WATCH_HI	.333 WatchHi register.  * 20	MIPS_COP_0_TLB_XCONTEXT .6.6 TLB XContext register.  * 23	MIPS_COP_0_DEBUG	.... Debug JTAG register.  * 24	MIPS_COP_0_DEPC		.... DEPC JTAG register.  * 25	MIPS_COP_0_PERFCNT	..36 Performance Counter register.  * 26	MIPS_COP_0_ECC		.3ii ECC / Error Control register.  * 27	MIPS_COP_0_CACHE_ERR	.3ii Cache Error register.  * 28/0	MIPS_COP_0_TAG_LO	.3ii Cache TagLo register (instr).  * 28/1	MIPS_COP_0_DATA_LO	..ii Cache DataLo register (instr).  * 28/2	MIPS_COP_0_TAG_LO	..ii Cache TagLo register (data).  * 28/3	MIPS_COP_0_DATA_LO	..ii Cache DataLo register (data).  * 29/0	MIPS_COP_0_TAG_HI	.3ii Cache TagHi register (instr).  * 29/1	MIPS_COP_0_DATA_HI	..ii Cache DataHi register (instr).  * 29/2	MIPS_COP_0_TAG_HI	..ii Cache TagHi register (data).  * 29/3	MIPS_COP_0_DATA_HI	..ii Cache DataHi register (data).  * 30	MIPS_COP_0_ERROR_PC	.636 Error EPC register.  * 31	MIPS_COP_0_DESAVE	.... DESAVE JTAG register.  */
 end_comment
 
 begin_comment
@@ -1987,17 +2266,6 @@ value|_(15)
 end_define
 
 begin_comment
-comment|/* MIPS-I */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MIPS_COP_0_TLB_LOW
-value|_(2)
-end_define
-
-begin_comment
 comment|/* MIPS-III */
 end_comment
 
@@ -2116,6 +2384,13 @@ end_define
 begin_comment
 comment|/* MIPS32/64 */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MIPS_COP_0_INFO
+value|_(7)
+end_define
 
 begin_define
 define|#
@@ -2263,6 +2538,13 @@ define|#
 directive|define
 name|MIPS_CONFIG1_TLBSZ_SHIFT
 value|25
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_MAX_TLB_ENTRIES
+value|64
 end_define
 
 begin_define
@@ -2513,6 +2795,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MIPS_BREAK_DDB_VAL
+value|516
+end_define
+
+begin_define
+define|#
+directive|define
 name|MIPS_BREAK_KDB
 value|(MIPS_BREAK_INSTR | \ 				(MIPS_BREAK_KDB_VAL<< MIPS_BREAK_VAL_SHIFT))
 end_define
@@ -2536,6 +2825,13 @@ define|#
 directive|define
 name|MIPS_BREAK_SOVER
 value|(MIPS_BREAK_INSTR | \ 				(MIPS_BREAK_SOVER_VAL<< MIPS_BREAK_VAL_SHIFT))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_BREAK_DDB
+value|(MIPS_BREAK_INSTR | \ 				(MIPS_BREAK_DDB_VAL<< MIPS_BREAK_VAL_SHIFT))
 end_define
 
 begin_comment
@@ -3881,6 +4177,50 @@ end_define
 
 begin_comment
 comment|/* MIPS 4KSd			ISA 32  Rel 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIPS_24K
+value|0x93
+end_define
+
+begin_comment
+comment|/* MIPS 24Kc/24Kf		ISA 32  Rel 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIPS_34K
+value|0x95
+end_define
+
+begin_comment
+comment|/* MIPS 34K			ISA 32  R2 MT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIPS_24KE
+value|0x96
+end_define
+
+begin_comment
+comment|/* MIPS 24KEc			ISA 32  Rel 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIPS_74K
+value|0x97
+end_define
+
+begin_comment
+comment|/* MIPS 74Kc/74Kf		ISA 32  Rel 2 */
 end_comment
 
 begin_comment

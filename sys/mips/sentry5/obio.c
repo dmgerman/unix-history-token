@@ -138,7 +138,6 @@ return|return
 literal|0
 return|;
 block|}
-else|else
 return|return
 operator|(
 name|ENXIO
@@ -360,11 +359,6 @@ name|rman
 modifier|*
 name|rm
 decl_stmt|;
-name|bus_space_tag_t
-name|bt
-init|=
-literal|0
-decl_stmt|;
 name|bus_space_handle_t
 name|bh
 init|=
@@ -413,12 +407,6 @@ operator|&
 name|sc
 operator|->
 name|oba_rman
-expr_stmt|;
-name|bt
-operator|=
-name|sc
-operator|->
-name|oba_st
 expr_stmt|;
 name|bh
 operator|=
@@ -489,7 +477,7 @@ name|rman_set_bustag
 argument_list|(
 name|rv
 argument_list|,
-name|bt
+name|mips_bus_space_generic
 argument_list|)
 expr_stmt|;
 name|rman_set_bushandle

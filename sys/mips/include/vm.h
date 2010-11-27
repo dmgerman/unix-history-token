@@ -29,21 +29,14 @@ begin_define
 define|#
 directive|define
 name|VM_MEMATTR_UNCACHED
-value|((vm_memattr_t)PTE_UNCACHED)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VM_MEMATTR_CACHEABLE_NONCOHERENT
-value|((vm_memattr_t)PTE_CACHE)
+value|((vm_memattr_t)PTE_C_UNCACHED)
 end_define
 
 begin_define
 define|#
 directive|define
 name|VM_MEMATTR_DEFAULT
-value|VM_MEMATTR_CACHEABLE_NONCOHERENT
+value|((vm_memattr_t)PTE_C_CACHE)
 end_define
 
 begin_endif

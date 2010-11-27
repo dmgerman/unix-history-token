@@ -19,7 +19,7 @@ begin_define
 define|#
 directive|define
 name|MALTA_SYSTEMRAM_BASE
-value|0x00000000
+value|0x00000000ul
 end_define
 
 begin_comment
@@ -41,7 +41,7 @@ begin_define
 define|#
 directive|define
 name|MALTA_PCIMEM1_BASE
-value|0x08000000
+value|0x08000000ul
 end_define
 
 begin_comment
@@ -63,7 +63,7 @@ begin_define
 define|#
 directive|define
 name|MALTA_PCIMEM2_BASE
-value|0x10000000
+value|0x10000000ul
 end_define
 
 begin_comment
@@ -85,7 +85,7 @@ begin_define
 define|#
 directive|define
 name|MALTA_PCIMEM3_BASE
-value|0x18000000
+value|0x18000000ul
 end_define
 
 begin_comment
@@ -107,7 +107,7 @@ begin_define
 define|#
 directive|define
 name|MALTA_CORECTRL_BASE
-value|0x1be00000
+value|0x1be00000ul
 end_define
 
 begin_comment
@@ -129,7 +129,7 @@ begin_define
 define|#
 directive|define
 name|MALTA_RESERVED_BASE1
-value|0x1c000000
+value|0x1c000000ul
 end_define
 
 begin_comment
@@ -151,7 +151,7 @@ begin_define
 define|#
 directive|define
 name|MALTA_MONITORFLASH_BASE
-value|0x1e000000
+value|0x1e000000ul
 end_define
 
 begin_comment
@@ -184,7 +184,7 @@ begin_define
 define|#
 directive|define
 name|MALTA_FILEFLASH_BASE
-value|0x1e3e0000
+value|0x1e3e0000ul
 end_define
 
 begin_comment
@@ -217,7 +217,7 @@ begin_define
 define|#
 directive|define
 name|MALTA_RESERVED_BASE2
-value|0x1e400000
+value|0x1e400000ul
 end_define
 
 begin_comment
@@ -239,7 +239,7 @@ begin_define
 define|#
 directive|define
 name|MALTA_FPGA_BASE
-value|0x1f000000
+value|0x1f000000ul
 end_define
 
 begin_comment
@@ -625,7 +625,7 @@ begin_define
 define|#
 directive|define
 name|MALTA_BOOTROM_BASE
-value|0x1fc00000
+value|0x1fc00000ul
 end_define
 
 begin_comment
@@ -647,7 +647,7 @@ begin_define
 define|#
 directive|define
 name|MALTA_REVISION
-value|0x1fc00010
+value|0x1fc00010ul
 end_define
 
 begin_define

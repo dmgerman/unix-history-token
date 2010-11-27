@@ -268,6 +268,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+name|void
+name|platform_cpu_init
+parameter_list|()
+block|{
+comment|/* Nothing special */
+block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|mips_init
@@ -326,11 +335,7 @@ index|]
 operator|=
 name|MIPS_KSEG0_TO_PHYS
 argument_list|(
-operator|(
-name|vm_offset_t
-operator|)
-operator|&
-name|end
+name|kernel_kseg0_end
 argument_list|)
 expr_stmt|;
 name|phys_avail
@@ -367,11 +372,24 @@ expr_stmt|;
 name|mutex_init
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DDB
 name|kdb_init
 argument_list|()
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KDB
+if|if
+condition|(
+name|boothowto
+operator|&
+name|RB_KDB
+condition|)
+name|kdb_enter
+argument_list|(
+name|KDB_WHY_BOOTFLAGS
+argument_list|,
+literal|"Boot flags requested debugger"
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -462,14 +480,11 @@ decl_stmt|;
 comment|/* clear the BSS and SBSS segments */
 name|kernend
 operator|=
-name|round_page
-argument_list|(
 operator|(
 name|vm_offset_t
 operator|)
 operator|&
 name|end
-argument_list|)
 expr_stmt|;
 name|memset
 argument_list|(
@@ -488,6 +503,13 @@ operator|&
 name|edata
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|mips_postboot_fixup
+argument_list|()
+expr_stmt|;
+comment|/* Initialize pcpu stuff */
+name|mips_pcpu0_init
+argument_list|()
 expr_stmt|;
 name|cninit
 argument_list|()

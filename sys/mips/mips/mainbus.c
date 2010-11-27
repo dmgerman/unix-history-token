@@ -24,6 +24,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_cputype.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -1007,7 +1013,7 @@ block|{
 comment|/* 	 * If this is a memory resource, map it into the kernel. 	 */
 ifdef|#
 directive|ifdef
-name|TARGET_OCTEON
+name|CPU_CNMIPS
 name|uint64_t
 name|temp
 decl_stmt|;
@@ -1085,10 +1091,9 @@ argument_list|,
 name|vaddr
 argument_list|)
 expr_stmt|;
-comment|/* IBM-PC: the type of bus_space_handle_t is u_int */
 ifdef|#
 directive|ifdef
-name|TARGET_OCTEON
+name|CPU_CNMIPS
 name|temp
 operator|=
 literal|0x0000000000000000

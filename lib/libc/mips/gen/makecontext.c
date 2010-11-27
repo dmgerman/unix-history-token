@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: makecontext.c,v 1.3 2003/01/19 08:53:36 matt Exp $	*/
+comment|/*	$NetBSD: makecontext.c,v 1.5 2009/12/14 01:07:42 matt Exp $	*/
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 2001 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Klaus Klein.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2001 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Klaus Klein.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -39,7 +39,7 @@ end_if
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: makecontext.c,v 1.3 2003/01/19 08:53:36 matt Exp $"
+literal|"$NetBSD: makecontext.c,v 1.5 2009/12/14 01:07:42 matt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -52,13 +52,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ucontext.h>
+file|<machine/regnum.h>
 end_include
 
 begin_include
@@ -67,9 +67,62 @@ directive|include
 file|<stdarg.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ucontext.h>
+end_include
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|__makecontext
+argument_list|,
+name|makecontext
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_function_decl
+name|void
+name|_ctx_done
+parameter_list|(
+name|ucontext_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_ctx_start
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
-name|makecontext
+name|__makecontext
 parameter_list|(
 name|ucontext_t
 modifier|*
@@ -90,33 +143,394 @@ parameter_list|,
 modifier|...
 parameter_list|)
 block|{
-comment|/* XXXMIPS: Implement me */
+name|mcontext_t
+modifier|*
+name|mc
+decl_stmt|;
+name|register_t
+modifier|*
+name|sp
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+name|va_list
+name|ap
+decl_stmt|;
+comment|/* 	 * XXX/juli 	 * We need an mc_len or mc_flags like other architectures 	 * so that we can mark a context as invalid.  Store it in 	 * mc->mc_regs[ZERO] perhaps? 	 */
+if|if
+condition|(
+name|argc
+operator|<
+literal|0
+operator|||
+name|argc
+operator|>
+literal|6
+operator|||
+name|ucp
+operator|==
+name|NULL
+operator|||
+name|ucp
+operator|->
+name|uc_stack
+operator|.
+name|ss_sp
+operator|==
+name|NULL
+operator|||
+name|ucp
+operator|->
+name|uc_stack
+operator|.
+name|ss_size
+operator|<
+name|MINSIGSTKSZ
+condition|)
+return|return;
+name|mc
+operator|=
+operator|&
+name|ucp
+operator|->
+name|uc_mcontext
+expr_stmt|;
+name|sp
+operator|=
+operator|(
+name|register_t
+operator|*
+operator|)
+operator|(
+operator|(
+name|uintptr_t
+operator|)
+name|ucp
+operator|->
+name|uc_stack
+operator|.
+name|ss_sp
+operator|+
+name|ucp
+operator|->
+name|uc_stack
+operator|.
+name|ss_size
+operator|)
+expr_stmt|;
 if|#
 directive|if
-literal|0
-block|__greg_t *gr = ucp->uc_mcontext.__gregs; 	uintptr_t *sp; 	int i; 	va_list ap;  	void __resumecontext(void);
-comment|/* LINTED uintptr_t is safe */
-block|sp  = (uintptr_t *) 	    ((uintptr_t)ucp->uc_stack.ss_sp + ucp->uc_stack.ss_size);
-comment|/* LINTED uintptr_t is safe */
-block|sp -= (argc>= 4 ? argc : 4);
+name|defined
+argument_list|(
+name|__mips_o32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__mips_o64
+argument_list|)
+name|sp
+operator|-=
+operator|(
+name|argc
+operator|>=
+literal|4
+condition|?
+name|argc
+else|:
+literal|4
+operator|)
+expr_stmt|;
 comment|/* Make room for>=4 arguments. */
-block|sp  = (uintptr_t *) 	      ((uintptr_t)sp& ~0x7);
+name|sp
+operator|=
+operator|(
+name|register_t
+operator|*
+operator|)
+operator|(
+operator|(
+name|uintptr_t
+operator|)
+name|sp
+operator|&
+operator|~
+literal|0x7
+operator|)
+expr_stmt|;
 comment|/* Align on double-word boundary. */
-block|gr[_REG_SP]  = (__greg_t)sp; 	gr[_REG_RA]  = (__greg_t)__resumecontext; 	gr[_REG_T9]  = (__greg_t)func;
-comment|/* required for .abicalls */
-block|gr[_REG_EPC] = (__greg_t)func;
-comment|/* Construct argument list. */
-block|va_start(ap, argc);
-comment|/* Up to the first four arguments are passed in $a0-3. */
-block|for (i = 0; i< argc&& i< 4; i++)
-comment|/* LINTED uintptr_t is safe */
-block|gr[_REG_A0 + i] = va_arg(ap, uintptr_t);
-comment|/* Pass remaining arguments on the stack above the $a0-3 gap. */
-block|for (sp += 4; i< argc; i++)
-comment|/* LINTED uintptr_t is safe */
-block|*sp++ = va_arg(ap, uintptr_t); 	va_end(ap);
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__mips_n32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__mips_n64
+argument_list|)
+name|sp
+operator|-=
+operator|(
+name|argc
+operator|>
+literal|8
+condition|?
+name|argc
+operator|-
+literal|8
+else|:
+literal|0
+operator|)
+expr_stmt|;
+comment|/* Make room for> 8 arguments. */
+name|sp
+operator|=
+operator|(
+name|register_t
+operator|*
+operator|)
+operator|(
+operator|(
+name|uintptr_t
+operator|)
+name|sp
+operator|&
+operator|~
+literal|0xf
+operator|)
+expr_stmt|;
+comment|/* Align on quad-word boundary. */
 endif|#
 directive|endif
+name|mc
+operator|->
+name|mc_regs
+index|[
+name|SP
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|sp
+expr_stmt|;
+name|mc
+operator|->
+name|mc_regs
+index|[
+name|S0
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|ucp
+expr_stmt|;
+name|mc
+operator|->
+name|mc_regs
+index|[
+name|T9
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|func
+expr_stmt|;
+name|mc
+operator|->
+name|mc_pc
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|_ctx_start
+expr_stmt|;
+comment|/* Construct argument list. */
+name|va_start
+argument_list|(
+name|ap
+argument_list|,
+name|argc
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__mips_o32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__mips_o64
+argument_list|)
+comment|/* Up to the first four arguments are passed in $a0-3. */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|argc
+operator|&&
+name|i
+operator|<
+literal|4
+condition|;
+name|i
+operator|++
+control|)
+comment|/* LINTED register_t is safe */
+name|mc
+operator|->
+name|mc_regs
+index|[
+name|A0
+operator|+
+name|i
+index|]
+operator|=
+name|va_arg
+argument_list|(
+name|ap
+argument_list|,
+name|register_t
+argument_list|)
+expr_stmt|;
+comment|/* Pass remaining arguments on the stack above the $a0-3 gap. */
+name|sp
+operator|+=
+name|i
+expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__mips_n32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__mips_n64
+argument_list|)
+comment|/* Up to the first 8 arguments are passed in $a0-7. */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|argc
+operator|&&
+name|i
+operator|<
+literal|8
+condition|;
+name|i
+operator|++
+control|)
+comment|/* LINTED register_t is safe */
+name|mc
+operator|->
+name|mc_regs
+index|[
+name|A0
+operator|+
+name|i
+index|]
+operator|=
+name|va_arg
+argument_list|(
+name|ap
+argument_list|,
+name|register_t
+argument_list|)
+expr_stmt|;
+comment|/* Pass remaining arguments on the stack above the $a0-3 gap. */
+endif|#
+directive|endif
+comment|/* Pass remaining arguments on the stack above the $a0-3 gap. */
+for|for
+control|(
+init|;
+name|i
+operator|<
+name|argc
+condition|;
+name|i
+operator|++
+control|)
+comment|/* LINTED uintptr_t is safe */
+operator|*
+name|sp
+operator|++
+operator|=
+name|va_arg
+argument_list|(
+name|ap
+argument_list|,
+name|register_t
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|_ctx_done
+parameter_list|(
+name|ucontext_t
+modifier|*
+name|ucp
+parameter_list|)
+block|{
+if|if
+condition|(
+name|ucp
+operator|->
+name|uc_link
+operator|==
+name|NULL
+condition|)
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+name|setcontext
+argument_list|(
+operator|(
+specifier|const
+name|ucontext_t
+operator|*
+operator|)
+name|ucp
+operator|->
+name|uc_link
+argument_list|)
+expr_stmt|;
+name|abort
+argument_list|()
+expr_stmt|;
+block|}
 block|}
 end_function
 

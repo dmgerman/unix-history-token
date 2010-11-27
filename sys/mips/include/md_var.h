@@ -27,7 +27,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|long
 name|Maxmem
 decl_stmt|;
 end_decl_stmt
@@ -51,8 +51,30 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|uint32_t
+modifier|*
+name|vm_page_dump
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|vm_page_dump_size
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|vm_offset_t
 name|kstack0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|vm_offset_t
+name|kernel_kseg0_end
 decl_stmt|;
 end_decl_stmt
 
@@ -88,18 +110,33 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u_int
+name|uintptr_t
 name|MipsEmulateBranch
 parameter_list|(
 name|struct
 name|trapframe
 modifier|*
 parameter_list|,
-name|int
+name|uintptr_t
 parameter_list|,
 name|int
 parameter_list|,
-name|u_int
+name|uintptr_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|MipsSwitchFPState
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|,
+name|struct
+name|trapframe
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -117,7 +154,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|is_physical_memory
+name|is_cacheable_mem
 parameter_list|(
 name|vm_offset_t
 name|addr
@@ -126,11 +163,10 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|is_cacheable_mem
+name|void
+name|mips_generic_reset
 parameter_list|(
-name|vm_offset_t
-name|pa
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -194,7 +230,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|cpu_identify
+name|mips_cpu_init
 parameter_list|(
 name|void
 parameter_list|)
@@ -203,7 +239,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|mips_cpu_init
+name|mips_pcpu0_init
 parameter_list|(
 name|void
 parameter_list|)
@@ -219,6 +255,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|mips_postboot_fixup
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Platform call-downs. */
 end_comment
@@ -228,6 +273,39 @@ name|void
 name|platform_identify
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|busdma_swi_pending
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|void
+name|busdma_swi
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_struct_decl
+struct_decl|struct
+name|dumperinfo
+struct_decl|;
+end_struct_decl
+
+begin_function_decl
+name|void
+name|minidumpsys
+parameter_list|(
+name|struct
+name|dumperinfo
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -62,6 +62,22 @@ end_function_decl
 
 begin_function_decl
 name|vm_page_t
+name|vm_phys_alloc_freelist_pages
+parameter_list|(
+name|int
+name|flind
+parameter_list|,
+name|int
+name|pool
+parameter_list|,
+name|int
+name|order
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|vm_page_t
 name|vm_phys_alloc_pages
 parameter_list|(
 name|int

@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_cputype.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -119,30 +125,37 @@ directive|include
 file|<machine/pte.h>
 end_include
 
-begin_decl_stmt
+begin_include
+include|#
+directive|include
+file|<machine/tlb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/hwfunc.h>
+end_include
+
+begin_function_decl
 specifier|static
+name|void
+name|cpu_identify
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
 name|struct
 name|mips_cpuinfo
 name|cpuinfo
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|union
-name|cpuprid
-name|cpu_id
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|union
-name|cpuprid
-name|fpu_id
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/*  * Attempt to identify the MIPS CPU as much as possible.  *  * XXX: Assumes the CPU is MIPS32 compliant.  * XXX: For now, skip config register selections 2 and 3  * as we don't currently use L2/L3 cache or additional  * MIPS32 processor features.  */
+comment|/*  * Attempt to identify the MIPS CPU as much as possible.  *  * XXX: Assumes the CPU is MIPS{32,64}{,r2} compliant.  * XXX: For now, skip config register selections 2 and 3  * as we don't currently use L2/L3 cache or additional  * MIPS32 processor features.  */
 end_comment
 
 begin_function
@@ -256,7 +269,7 @@ return|return;
 comment|/* Learn TLB size and L1 cache geometry. */
 name|cfg1
 operator|=
-name|mips_rd_config_sel1
+name|mips_rd_config1
 argument_list|()
 expr_stmt|;
 name|cpuinfo
@@ -278,10 +291,6 @@ expr_stmt|;
 comment|/* L1 instruction cache. */
 name|tmp
 operator|=
-literal|1
-operator|<<
-operator|(
-operator|(
 operator|(
 name|cfg1
 operator|&
@@ -289,10 +298,6 @@ name|MIPS_CONFIG1_IL_MASK
 operator|)
 operator|>>
 name|MIPS_CONFIG1_IL_SHIFT
-operator|)
-operator|+
-literal|1
-operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -307,7 +312,13 @@ name|l1
 operator|.
 name|ic_linesize
 operator|=
+literal|1
+operator|<<
+operator|(
 name|tmp
+operator|+
+literal|1
+operator|)
 expr_stmt|;
 name|cpuinfo
 operator|->
@@ -379,10 +390,6 @@ block|}
 comment|/* L1 data cache. */
 name|tmp
 operator|=
-literal|1
-operator|<<
-operator|(
-operator|(
 operator|(
 name|cfg1
 operator|&
@@ -390,10 +397,6 @@ name|MIPS_CONFIG1_DL_MASK
 operator|)
 operator|>>
 name|MIPS_CONFIG1_DL_SHIFT
-operator|)
-operator|+
-literal|1
-operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -408,7 +411,13 @@ name|l1
 operator|.
 name|dc_linesize
 operator|=
+literal|1
+operator|<<
+operator|(
 name|tmp
+operator|+
+literal|1
+operator|)
 expr_stmt|;
 name|cpuinfo
 operator|->
@@ -452,10 +461,11 @@ operator|+
 literal|6
 operator|)
 expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
-name|TARGET_OCTEON
-comment|/*          * Octeon does 128 byte line-size. But Config-Sel1 doesn't show          * 128 line-size, 1 Set, 64 ways.          */
+name|CPU_CNMIPS
+comment|/* 	 * Octeon does 128 byte line-size. But Config-Sel1 doesn't show 	 * 128 line-size, 1 Set, 64 ways. 	 */
 name|cpuinfo
 operator|->
 name|l1
@@ -507,7 +517,6 @@ operator|.
 name|dc_nways
 expr_stmt|;
 block|}
-block|}
 end_function
 
 begin_function
@@ -517,6 +526,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|platform_cpu_init
+argument_list|()
+expr_stmt|;
 name|mips_get_identity
 argument_list|(
 operator|&
@@ -529,17 +541,15 @@ name|cpuinfo
 operator|.
 name|tlb_nentries
 expr_stmt|;
-name|Mips_SetWIRED
+name|mips_wr_wired
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-name|Mips_TLBFlush
-argument_list|(
-name|num_tlbentries
-argument_list|)
+name|tlb_invalidate_all
+argument_list|()
 expr_stmt|;
-name|Mips_SetWIRED
+name|mips_wr_wired
 argument_list|(
 name|VMWIRED_ENTRIES
 argument_list|)
@@ -567,12 +577,22 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|cpu_identify
 parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|uint32_t
+name|cfg0
+decl_stmt|,
+name|cfg1
+decl_stmt|,
+name|cfg2
+decl_stmt|,
+name|cfg3
+decl_stmt|;
 name|printf
 argument_list|(
 literal|"cpu%d: "
@@ -664,12 +684,34 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|MIPS_PRID_CID_RMI
+case|:
+name|printf
+argument_list|(
+literal|"RMI"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|MIPS_PRID_CID_CAVIUM
+case|:
+name|printf
+argument_list|(
+literal|"Cavium"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|MIPS_PRID_CID_PREHISTORIC
 case|:
 default|default:
 name|printf
 argument_list|(
-literal|"Unknown"
+literal|"Unknown cid %#x"
+argument_list|,
+name|cpuinfo
+operator|.
+name|cpu_vendor
 argument_list|)
 expr_stmt|;
 break|break;
@@ -912,6 +954,88 @@ name|dc_linesize
 argument_list|)
 expr_stmt|;
 block|}
+name|cfg0
+operator|=
+name|mips_rd_config
+argument_list|()
+expr_stmt|;
+comment|/* If config register selection 1 does not exist, exit. */
+if|if
+condition|(
+operator|!
+operator|(
+name|cfg0
+operator|&
+name|MIPS3_CONFIG_CM
+operator|)
+condition|)
+return|return;
+name|cfg1
+operator|=
+name|mips_rd_config1
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"  Config1=0x%b\n"
+argument_list|,
+name|cfg1
+argument_list|,
+literal|"\20\7COP2\6MDMX\5PerfCount\4WatchRegs\3MIPS16\2EJTAG\1FPU"
+argument_list|)
+expr_stmt|;
+comment|/* If config register selection 2 does not exist, exit. */
+if|if
+condition|(
+operator|!
+operator|(
+name|cfg1
+operator|&
+name|MIPS3_CONFIG_CM
+operator|)
+condition|)
+return|return;
+name|cfg2
+operator|=
+name|mips_rd_config2
+argument_list|()
+expr_stmt|;
+comment|/*  	 * Config2 contains no useful information other then Config3  	 * existence flag 	 */
+comment|/* If config register selection 3 does not exist, exit. */
+if|if
+condition|(
+operator|!
+operator|(
+name|cfg2
+operator|&
+name|MIPS3_CONFIG_CM
+operator|)
+condition|)
+return|return;
+name|cfg3
+operator|=
+name|mips_rd_config3
+argument_list|()
+expr_stmt|;
+comment|/* Print Config3 if it contains any useful info */
+if|if
+condition|(
+name|cfg3
+operator|&
+operator|~
+operator|(
+literal|0x80000000
+operator|)
+condition|)
+name|printf
+argument_list|(
+literal|"  Config3=0x%b\n"
+argument_list|,
+name|cfg3
+argument_list|,
+literal|"\20\2SmartMIPS\1TraceLogic"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

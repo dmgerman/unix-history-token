@@ -19,6 +19,20 @@ directive|define
 name|_MACHINE_SYSARCH_H_
 end_define
 
+begin_define
+define|#
+directive|define
+name|MIPS_SET_TLS
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIPS_GET_TLS
+value|2
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -30,48 +44,6 @@ include|#
 directive|include
 file|<sys/cdefs.h>
 end_include
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* Something useful for each MIPS platform. */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|mips_tcb_set
-parameter_list|(
-name|tcb
-parameter_list|)
-value|do {} while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|mips_tcb_get
-parameter_list|()
-value|NULL
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _MIPS_ARCH_XLR */
-end_comment
 
 begin_function_decl
 name|__BEGIN_DECLS
