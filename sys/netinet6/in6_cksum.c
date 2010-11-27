@@ -79,7 +79,7 @@ value|{l_util.l = sum; sum = l_util.s[0] + l_util.s[1]; (void)ADDCARRY(sum);}
 end_define
 
 begin_comment
-comment|/*  * m MUST contain a continuous IP6 header.  * off is an offset where TCP/UDP/ICMP6 header starts.  * len is a total length of a transport segment.  * (e.g. TCP header + TCP payload)  */
+comment|/*  * m MUST contain a contiguous IP6 header.  * off is an offset where TCP/UDP/ICMP6 header starts.  * len is a total length of a transport segment.  * (e.g. TCP header + TCP payload)  */
 end_comment
 
 begin_function

@@ -516,7 +516,7 @@ comment|/* two or more ext mbuf */
 name|u_quad_t
 name|ip6s_exthdrtoolong
 decl_stmt|;
-comment|/* ext hdr are not continuous */
+comment|/* ext hdr are not contiguous */
 name|u_quad_t
 name|ip6s_nogif
 decl_stmt|;
