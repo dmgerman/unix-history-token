@@ -13076,10 +13076,8 @@ name|metrics
 operator|.
 name|rmx_bandwidth
 expr_stmt|;
-comment|/* 	 * Set the slow-start flight size depending on whether this 	 * is a local network or not. 	 * 	 * Extend this so we cache the cwnd too and retrieve it here. 	 * Make cwnd even bigger than RFC3390 suggests but only if we 	 * have previous experience with the remote host. Be careful 	 * not make cwnd bigger than remote receive window or our own 	 * send socket buffer. Maybe put some additional upper bound 	 * on the retrieved cwnd. Should do incremental updates to 	 * hostcache when cwnd collapses so next connection doesn't 	 * overloads the path again. 	 * 	 * RFC3390 says only do this if SYN or SYN/ACK didn't got lost. 	 * We currently check only in syncache_socket for that. 	 */
-define|#
-directive|define
-name|TCP_METRICS_CWND
+comment|/* 	 * Set the slow-start flight size depending on whether this 	 * is a local network or not. 	 * 	 * Extend this so we cache the cwnd too and retrieve it here. 	 * Make cwnd even bigger than RFC3390 suggests but only if we 	 * have previous experience with the remote host. Be careful 	 * not make cwnd bigger than remote receive window or our own 	 * send socket buffer. Maybe put some additional upper bound 	 * on the retrieved cwnd. Should do incremental updates to 	 * hostcache when cwnd collapses so next connection doesn't 	 * overloads the path again. 	 * 	 * XXXAO: Initializing the CWND from the hostcache is broken 	 * and in its current form not RFC conformant.  It is disabled 	 * until fixed or removed entirely. 	 * 	 * RFC3390 says only do this if SYN or SYN/ACK didn't got lost. 	 * We currently check only in syncache_socket for that. 	 */
+comment|/* #define TCP_METRICS_CWND */
 ifdef|#
 directive|ifdef
 name|TCP_METRICS_CWND
