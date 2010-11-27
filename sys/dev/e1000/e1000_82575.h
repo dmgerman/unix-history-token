@@ -2472,6 +2472,24 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|e1000_vmdq_set_anti_spoofing_pf
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|,
+name|bool
+name|enable
+parameter_list|,
+name|int
+name|pf
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|e1000_vmdq_set_replication_pf
 parameter_list|(
 name|struct

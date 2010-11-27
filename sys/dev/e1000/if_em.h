@@ -285,6 +285,27 @@ name|EM_82544_APME
 value|0x0004;
 end_define
 
+begin_define
+define|#
+directive|define
+name|EM_QUEUE_IDLE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_QUEUE_WORKING
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_QUEUE_HUNG
+value|2
+end_define
+
 begin_comment
 comment|/*  * TDBA/RDBA should be aligned on 16 byte boundary. But TDLEN/RDLEN should be  * multiple of 128 bytes. So we align TDBA/RDBA on 128 byte boundary. This will  * also optimize cache line size effect. H/W supports up to cache line size 128.  */
 end_comment
@@ -697,8 +718,8 @@ decl_stmt|;
 name|u32
 name|ims
 decl_stmt|;
-name|bool
-name|watchdog_check
+name|int
+name|queue_status
 decl_stmt|;
 name|int
 name|watchdog_time
@@ -742,6 +763,18 @@ decl_stmt|;
 comment|/* last tx was tso */
 name|u16
 name|last_hw_offload
+decl_stmt|;
+name|u8
+name|last_hw_ipcso
+decl_stmt|;
+name|u8
+name|last_hw_ipcss
+decl_stmt|;
+name|u8
+name|last_hw_tucso
+decl_stmt|;
+name|u8
+name|last_hw_tucss
 decl_stmt|;
 if|#
 directive|if
@@ -867,13 +900,17 @@ decl_stmt|;
 name|bus_dma_tag_t
 name|rxtag
 decl_stmt|;
-name|bus_dmamap_t
-name|rx_sparemap
+name|bool
+name|discard
 decl_stmt|;
 comment|/* Soft stats */
 name|unsigned
 name|long
 name|rx_irq
+decl_stmt|;
+name|unsigned
+name|long
+name|rx_discarded
 decl_stmt|;
 name|unsigned
 name|long
@@ -969,6 +1006,9 @@ decl_stmt|;
 name|int
 name|min_frame_size
 decl_stmt|;
+name|int
+name|pause_frames
+decl_stmt|;
 name|struct
 name|mtx
 name|core_mtx
@@ -1033,6 +1073,9 @@ decl_stmt|;
 name|u32
 name|rx_process_limit
 decl_stmt|;
+name|u32
+name|rx_mbuf_sz
+decl_stmt|;
 comment|/* Management and WOL features */
 name|u32
 name|wol
@@ -1048,18 +1091,28 @@ name|u8
 modifier|*
 name|mta
 decl_stmt|;
-comment|/* Info about the board itself */
-name|uint8_t
+comment|/* 	** Shadow VFTA table, this is needed because 	** the real vlan filter table gets cleared during 	** a soft reset and the driver needs to be able 	** to repopulate it. 	*/
+name|u32
+name|shadow_vfta
+index|[
+name|EM_VFTA_SIZE
+index|]
+decl_stmt|;
+comment|/* Info about the interface */
+name|u8
 name|link_active
 decl_stmt|;
-name|uint16_t
+name|u16
 name|link_speed
 decl_stmt|;
-name|uint16_t
+name|u16
 name|link_duplex
 decl_stmt|;
-name|uint32_t
+name|u32
 name|smartspeed
+decl_stmt|;
+name|u32
+name|fc_setting
 decl_stmt|;
 name|struct
 name|em_int_delay_info

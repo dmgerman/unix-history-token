@@ -213,6 +213,151 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_FWSM_PROXY_MODE
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* FW is in proxy mode */
+end_comment
+
+begin_comment
+comment|/* Shared Receive Address Registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_SHRAL
+parameter_list|(
+name|_i
+parameter_list|)
+value|(0x05438 + ((_i) * 8))
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_SHRAH
+parameter_list|(
+name|_i
+parameter_list|)
+value|(0x0543C + ((_i) * 8))
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_SHRAH_AV
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* Addr Valid bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_SHRAH_MAV
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* Multicast Addr Valid bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_H2ME
+value|0x05B50
+end_define
+
+begin_comment
+comment|/* Host to ME */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_H2ME_LSECREQ
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* Linksec Request */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_H2ME_LSECA
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* Linksec Active */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_H2ME_LSECSF
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* Linksec Failed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_H2ME_LSECD
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* Linksec Disabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_H2ME_SLCAPD
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* Start LCAPD */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_H2ME_IPV4_ARP_EN
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* Arp Offload enable bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_H2ME_IPV6_NS_EN
+value|0x00000040
+end_define
+
+begin_comment
+comment|/* NS Offload enable bit */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ID_LED_DEFAULT_ICH8LAN
 value|((ID_LED_DEF1_DEF2<< 12) | \                                  (ID_LED_OFF1_OFF2<<  8) | \                                  (ID_LED_OFF1_ON2<<  4) | \                                  (ID_LED_DEF1_DEF2))
 end_define
@@ -273,6 +418,27 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_FEXTNVM4_BEACON_DURATION_MASK
+value|0x7
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_FEXTNVM4_BEACON_DURATION_8USEC
+value|0x7
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_FEXTNVM4_BEACON_DURATION_16USEC
+value|0x3
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCIE_ICH8_SNOOP_ALL
 value|PCIE_NO_SNOOP_ALL
 end_define
@@ -283,6 +449,17 @@ directive|define
 name|E1000_ICH_RAR_ENTRIES
 value|7
 end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_PCH2_RAR_ENTRIES
+value|5
+end_define
+
+begin_comment
+comment|/* RAR[0], SHRA[0-3] */
+end_comment
 
 begin_define
 define|#
@@ -455,6 +632,73 @@ parameter_list|(
 name|_i
 parameter_list|)
 value|(BM_PHY_REG(BM_WUC_PAGE, 128 + ((_i)<< 1)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BM_IPAV
+value|(BM_PHY_REG(BM_WUC_PAGE, 64))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BM_IP4AT_L
+parameter_list|(
+name|_i
+parameter_list|)
+value|(BM_PHY_REG(BM_WUC_PAGE, 82 + ((_i) * 2)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BM_IP4AT_H
+parameter_list|(
+name|_i
+parameter_list|)
+value|(BM_PHY_REG(BM_WUC_PAGE, 83 + ((_i) * 2)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BM_SHRAL_LOWER
+parameter_list|(
+name|_i
+parameter_list|)
+value|(BM_PHY_REG(BM_WUC_PAGE, 44 + ((_i) * 4)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BM_SHRAL_UPPER
+parameter_list|(
+name|_i
+parameter_list|)
+value|(BM_PHY_REG(BM_WUC_PAGE, 45 + ((_i) * 4)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BM_SHRAH_LOWER
+parameter_list|(
+name|_i
+parameter_list|)
+value|(BM_PHY_REG(BM_WUC_PAGE, 46 + ((_i) * 4)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BM_SHRAH_UPPER
+parameter_list|(
+name|_i
+parameter_list|)
+value|(BM_PHY_REG(BM_WUC_PAGE, 47 + ((_i) * 4)))
 end_define
 
 begin_define
@@ -739,6 +983,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HV_SMB_ADDR_MASK
+value|0x007F
+end_define
+
+begin_define
+define|#
+directive|define
 name|HV_SMB_ADDR_PEC_EN
 value|0x0200
 end_define
@@ -871,6 +1122,24 @@ comment|/* SW Semaphore flag timeout in milliseconds */
 end_comment
 
 begin_comment
+comment|/* PHY Low Power Idle Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|I82579_LPI_CTRL
+value|PHY_REG(772, 20)
+end_define
+
+begin_define
+define|#
+directive|define
+name|I82579_LPI_CTRL_ENABLE_MASK
+value|0x6000
+end_define
+
+begin_comment
 comment|/*  * Additional interrupts need to be handled for ICH family:  *  DSW = The FW changed the status of the DISSW bit in FWSM  *  PHYINT = The LAN connected device generates an interrupt  *  EPRST = Manageability reset event  */
 end_comment
 
@@ -955,6 +1224,20 @@ define|#
 directive|define
 name|E1000_RXDEXT_LINKSEC_ERROR_BAD_SIG
 value|0x60000000
+end_define
+
+begin_comment
+comment|/* Receive Address Initial CRC Calculation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_PCH_RAICC
+parameter_list|(
+name|_n
+parameter_list|)
+value|(0x05F50 + ((_n) * 4))
 end_define
 
 begin_function_decl
@@ -1046,6 +1329,33 @@ name|struct
 name|e1000_hw
 modifier|*
 name|hw
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|e1000_copy_rx_addrs_to_phy_ich8lan
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|s32
+name|e1000_lv_jumbo_workaround_ich8lan
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|,
+name|bool
+name|enable
 parameter_list|)
 function_decl|;
 end_function_decl

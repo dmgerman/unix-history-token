@@ -133,6 +133,28 @@ begin_comment
 comment|/* if PHY supports wakeup */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|E1000_WUC_FLX6_PHY
+value|0x4000
+end_define
+
+begin_comment
+comment|/* Flexible Filter 6 Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_WUC_FLX7_PHY
+value|0x8000
+end_define
+
+begin_comment
+comment|/* Flexible Filter 7 Enable */
+end_comment
+
 begin_comment
 comment|/* Wake Up Filter Control */
 end_comment
@@ -382,6 +404,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_WUFC_FLX6
+value|0x00400000
+end_define
+
+begin_comment
+comment|/* Flexible Filter 6 Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_WUFC_FLX7
+value|0x00800000
+end_define
+
+begin_comment
+comment|/* Flexible Filter 7 Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|E1000_WUFC_ALL_FILTERS_PHY_4
 value|0x0000F0FF
 end_define
@@ -459,6 +503,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_WUFC_ALL_FILTERS_8
+value|0x00FF00FF
+end_define
+
+begin_comment
+comment|/* Mask for all 8 wakeup filters*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|E1000_WUFC_FLX_OFFSET
 value|16
 end_define
@@ -487,6 +542,17 @@ end_define
 
 begin_comment
 comment|/* Mask for 6 flexible filters */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_WUFC_FLX_FILTERS_8
+value|0x00FF0000
+end_define
+
+begin_comment
+comment|/* Mask for 8 flexible filters */
 end_comment
 
 begin_comment
@@ -644,6 +710,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_WUS_FLX6
+value|E1000_WUFC_FLX6
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_WUS_FLX7
+value|E1000_WUFC_FLX7
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_WUS_FLX4_PHY
 value|E1000_WUFC_FLX4_PHY
 end_define
@@ -658,6 +738,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_WUS_FLX6_PHY
+value|0x0400
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_WUS_FLX7_PHY
+value|0x0800
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_WUS_FLX_FILTERS
 value|E1000_WUFC_FLX_FILTERS
 end_define
@@ -667,6 +761,13 @@ define|#
 directive|define
 name|E1000_WUS_FLX_FILTERS_6
 value|E1000_WUFC_FLX_FILTERS_6
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_WUS_FLX_FILTERS_8
+value|E1000_WUFC_FLX_FILTERS_8
 end_define
 
 begin_define
@@ -711,6 +812,17 @@ define|#
 directive|define
 name|E1000_FLEXIBLE_FILTER_COUNT_MAX_6
 value|6
+end_define
+
+begin_comment
+comment|/* Eight Flexible Filters are supported */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_FLEXIBLE_FILTER_COUNT_MAX_8
+value|8
 end_define
 
 begin_comment
@@ -769,6 +881,13 @@ define|#
 directive|define
 name|E1000_FFLT_SIZE_6
 value|E1000_FLEXIBLE_FILTER_COUNT_MAX_6
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_FFLT_SIZE_8
+value|E1000_FLEXIBLE_FILTER_COUNT_MAX_8
 end_define
 
 begin_define
@@ -5071,6 +5190,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_EXTCNF_CTRL_GATE_PHY_CFG
+value|0x00000080
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_EXTCNF_SIZE_EXT_PCIE_LENGTH_MASK
 value|0x00FF0000
 end_define
@@ -7304,6 +7430,27 @@ name|E1000_ERR_MBX
 value|15
 end_define
 
+begin_define
+define|#
+directive|define
+name|E1000_ERR_INVALID_ARGUMENT
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_ERR_NO_SPACE
+value|17
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_ERR_NVM_PBA_SECTION
+value|18
+end_define
+
 begin_comment
 comment|/* Loop limit on how long we wait for auto-negotiation to complete */
 end_comment
@@ -7996,6 +8143,42 @@ end_define
 begin_comment
 comment|/* IMIREXT Reg Clear Mask */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MDICNFG_EXT_MDIO
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* MDI ext/int destination */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MDICNFG_COM_MDIO
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* MDI shared w/ lan 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MDICNFG_PHY_MASK
+value|0x03E00000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_MDICNFG_PHY_SHIFT
+value|21
+end_define
 
 begin_comment
 comment|/* PCI Express Control */
@@ -9629,6 +9812,32 @@ value|(a ? (0x40 + (0x40 * a)) : 0)
 end_define
 
 begin_comment
+comment|/* Mask bits for fields in Word 0x24 of the NVM */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NVM_WORD24_COM_MDIO
+value|0x0008
+end_define
+
+begin_comment
+comment|/* MDIO interface shared */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NVM_WORD24_EXT_MDIO
+value|0x0004
+end_define
+
+begin_comment
+comment|/* MDIO accesses routed external */
+end_comment
+
+begin_comment
 comment|/* Mask bits for fields in Word 0x0f of the NVM */
 end_comment
 
@@ -9686,6 +9895,28 @@ value|0x000C
 end_define
 
 begin_comment
+comment|/* Mask bits for fields in Word 0x03 of the EEPROM */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NVM_COMPAT_LOM
+value|0x0800
+end_define
+
+begin_comment
+comment|/* length of string needed to store PBA number */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_PBANUM_LENGTH
+value|11
+end_define
+
+begin_comment
 comment|/* For checksumming, the sum of all words in the NVM should equal 0xBABA. */
 end_comment
 
@@ -9715,6 +9946,13 @@ define|#
 directive|define
 name|NVM_PBA_OFFSET_1
 value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|NVM_PBA_PTR_GUARD
+value|0xFAFA
 end_define
 
 begin_define
@@ -10363,6 +10601,13 @@ define|#
 directive|define
 name|I82578_E_PHY_ID
 value|0x004DD040
+end_define
+
+begin_define
+define|#
+directive|define
+name|I82579_E_PHY_ID
+value|0x01540090
 end_define
 
 begin_define
@@ -11500,6 +11745,13 @@ define|#
 directive|define
 name|E1000_MDIC_ERROR
 value|0x40000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_MDIC_DEST
+value|0x80000000
 end_define
 
 begin_comment

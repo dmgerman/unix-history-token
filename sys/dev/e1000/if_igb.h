@@ -327,6 +327,27 @@ name|IGB_EEPROM_APME
 value|0x400;
 end_define
 
+begin_define
+define|#
+directive|define
+name|IGB_QUEUE_IDLE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGB_QUEUE_WORKING
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGB_QUEUE_HUNG
+value|2
+end_define
+
 begin_comment
 comment|/*  * TDBA/RDBA should be aligned on 16 byte boundary. But TDLEN/RDLEN should be  * multiple of 128 bytes. So we align TDBA/RDBA on 128 byte boundary. This will  * also optimize cache line size effect. H/W supports up to cache line size 128.  */
 end_comment
@@ -359,21 +380,6 @@ directive|define
 name|IGB_MSIX_BAR
 value|3
 end_define
-
-begin_comment
-comment|/* ** This is the total number of MSIX vectors you wish ** to use, it also controls the size of resources. ** The 82575 has a total of 10, 82576 has 25. Set this ** to the real amount you need to streamline data storage. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IGB_MSIX_VEC
-value|6
-end_define
-
-begin_comment
-comment|/* MSIX vectors configured */
-end_comment
 
 begin_comment
 comment|/* Defines for printing debug information */
@@ -630,32 +636,7 @@ begin_define
 define|#
 directive|define
 name|IGB_DEFAULT_ITR
-value|1000000000/(IGB_INTS_PER_SEC * 256)
-end_define
-
-begin_comment
-comment|/* Header split codes for get_buf */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IGB_CLEAN_HEADER
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|IGB_CLEAN_PAYLOAD
-value|0x02
-end_define
-
-begin_define
-define|#
-directive|define
-name|IGB_CLEAN_BOTH
-value|(IGB_CLEAN_HEADER | IGB_CLEAN_PAYLOAD)
+value|((1000000/IGB_INTS_PER_SEC)<< 2)
 end_define
 
 begin_define
@@ -854,8 +835,8 @@ decl_stmt|;
 name|u32
 name|packets
 decl_stmt|;
-name|bool
-name|watchdog_check
+name|int
+name|queue_status
 decl_stmt|;
 name|int
 name|watchdog_time
@@ -1066,6 +1047,9 @@ decl_stmt|;
 name|int
 name|min_frame_size
 decl_stmt|;
+name|int
+name|pause_frames
+decl_stmt|;
 name|struct
 name|mtx
 name|core_mtx
@@ -1092,7 +1076,14 @@ decl_stmt|;
 name|int
 name|has_manage
 decl_stmt|;
-comment|/* Info about the board itself */
+comment|/* 	** Shadow VFTA table, this is needed because 	** the real vlan filter table gets cleared during 	** a soft reset and the driver needs to be able 	** to repopulate it. 	*/
+name|u32
+name|shadow_vfta
+index|[
+name|IGB_VFTA_SIZE
+index|]
+decl_stmt|;
+comment|/* Info about the interface */
 name|u8
 name|link_active
 decl_stmt|;
@@ -1120,6 +1111,11 @@ decl_stmt|;
 name|u16
 name|num_tx_desc
 decl_stmt|;
+comment|/* Multicast array pointer */
+name|u8
+modifier|*
+name|mta
+decl_stmt|;
 comment|/*  	 * Receive rings 	 */
 name|struct
 name|rx_ring
@@ -1140,11 +1136,6 @@ name|rx_mbuf_sz
 decl_stmt|;
 name|u32
 name|rx_mask
-decl_stmt|;
-comment|/* Multicast array memory */
-name|u8
-modifier|*
-name|mta
 decl_stmt|;
 comment|/* Misc stats maintained by the driver */
 name|unsigned

@@ -929,11 +929,6 @@ modifier|*
 name|tq
 decl_stmt|;
 comment|/* private task queue */
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|700029
 name|eventhandler_tag
 name|vlan_attach
 decl_stmt|;
@@ -943,8 +938,6 @@ decl_stmt|;
 name|u32
 name|num_vlans
 decl_stmt|;
-endif|#
-directive|endif
 comment|/* Management and WOL features */
 name|u32
 name|wol
@@ -960,7 +953,14 @@ name|u8
 modifier|*
 name|mta
 decl_stmt|;
-comment|/* Info about the board itself */
+comment|/* 	** Shadow VFTA table, this is needed because 	** the real vlan filter table gets cleared during 	** a soft reset and the driver needs to be able 	** to repopulate it. 	*/
+name|u32
+name|shadow_vfta
+index|[
+name|EM_VFTA_SIZE
+index|]
+decl_stmt|;
+comment|/* Info about the interface */
 name|uint8_t
 name|link_active
 decl_stmt|;
@@ -972,6 +972,9 @@ name|link_duplex
 decl_stmt|;
 name|uint32_t
 name|smartspeed
+decl_stmt|;
+name|uint32_t
+name|fc_setting
 decl_stmt|;
 name|struct
 name|em_int_delay_info
@@ -1113,6 +1116,18 @@ decl_stmt|;
 name|unsigned
 name|long
 name|rx_overruns
+decl_stmt|;
+name|unsigned
+name|long
+name|rx_irq
+decl_stmt|;
+name|unsigned
+name|long
+name|tx_irq
+decl_stmt|;
+name|unsigned
+name|long
+name|link_irq
 decl_stmt|;
 comment|/* 82547 workaround */
 name|uint32_t
