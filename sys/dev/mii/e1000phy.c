@@ -2172,6 +2172,15 @@ name|E1000_AR
 argument_list|)
 expr_stmt|;
 name|reg
+operator|&=
+operator|~
+operator|(
+name|E1000_AR_PAUSE
+operator||
+name|E1000_AR_ASM_DIR
+operator|)
+expr_stmt|;
+name|reg
 operator||=
 name|E1000_AR_10T
 operator||
