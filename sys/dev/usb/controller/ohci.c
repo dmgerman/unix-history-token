@@ -8758,7 +8758,7 @@ block|,
 operator|.
 name|bInterfaceProtocol
 operator|=
-name|UIPROTO_FSHUB
+literal|0
 block|, 	}
 block|,
 operator|.

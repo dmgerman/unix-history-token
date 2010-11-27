@@ -6762,7 +6762,7 @@ block|,
 operator|.
 name|bDeviceProtocol
 operator|=
-name|UDPROTO_HSHUBSTT
+name|UDPROTO_FSHUB
 block|,
 operator|.
 name|bMaxPacketSize
@@ -6954,7 +6954,7 @@ block|,
 operator|.
 name|bInterfaceProtocol
 operator|=
-name|UIPROTO_HSHUBSTT
+literal|0
 block|, 	}
 block|,
 operator|.

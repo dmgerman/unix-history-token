@@ -8665,7 +8665,7 @@ block|,
 operator|.
 name|bInterfaceProtocol
 operator|=
-name|UIPROTO_HSHUBSTT
+literal|0
 block|, 	}
 block|,
 operator|.
