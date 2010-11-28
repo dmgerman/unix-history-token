@@ -4734,6 +4734,11 @@ argument_list|(
 name|ue
 argument_list|)
 expr_stmt|;
+name|axe_reset
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* Set MAC address. */
 if|if
 condition|(
@@ -5173,11 +5178,6 @@ name|sc_xfer
 index|[
 name|AXE_BULK_DT_RD
 index|]
-argument_list|)
-expr_stmt|;
-name|axe_reset
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 block|}
