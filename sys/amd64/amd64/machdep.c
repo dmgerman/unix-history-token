@@ -9537,6 +9537,10 @@ parameter_list|)
 block|{
 name|KASSERT
 argument_list|(
+name|td
+operator|==
+name|curthread
+operator|||
 name|TD_IS_SUSPENDED
 argument_list|(
 name|td
