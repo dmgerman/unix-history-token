@@ -1025,6 +1025,18 @@ operator|||
 operator|(
 name|tag
 operator|==
+name|V_ASN1_NUMERICSTRING
+operator|)
+operator|||
+operator|(
+name|tag
+operator|==
+name|V_ASN1_UTF8STRING
+operator|)
+operator|||
+operator|(
+name|tag
+operator|==
 name|V_ASN1_UTCTIME
 operator|)
 operator|||
@@ -1205,6 +1217,8 @@ literal|"Bad boolean\n"
 argument_list|,
 literal|12
 argument_list|)
+operator|<=
+literal|0
 condition|)
 goto|goto
 name|end

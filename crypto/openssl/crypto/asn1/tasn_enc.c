@@ -4,7 +4,7 @@ comment|/* tasn_enc.c */
 end_comment
 
 begin_comment
-comment|/* Written by Dr Stephen N Henson (shenson@bigfoot.com) for the OpenSSL  * project 2000.  */
+comment|/* Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project 2000.  */
 end_comment
 
 begin_comment
@@ -2169,6 +2169,9 @@ operator|,
 name|tder
 operator|++
 control|)
+operator|(
+name|void
+operator|)
 name|sk_ASN1_VALUE_set
 argument_list|(
 name|sk
@@ -2590,17 +2593,12 @@ name|utype
 expr_stmt|;
 name|pval
 operator|=
-operator|(
-name|ASN1_VALUE
-operator|*
-operator|*
-operator|)
 operator|&
 name|typ
 operator|->
 name|value
 operator|.
-name|ptr
+name|asn1_value
 expr_stmt|;
 block|}
 else|else

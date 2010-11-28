@@ -28,6 +28,29 @@ end_include
 begin_include
 include|#
 directive|include
+file|<openssl/crypto.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENSSL_FIPS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<openssl/fips.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
 file|"bf_locl.h"
 end_include
 
@@ -37,23 +60,14 @@ directive|include
 file|"bf_pi.h"
 end_include
 
-begin_function
-name|void
-name|BF_set_key
-parameter_list|(
-name|BF_KEY
-modifier|*
-name|key
-parameter_list|,
-name|int
-name|len
-parameter_list|,
-specifier|const
-name|unsigned
-name|char
-modifier|*
-name|data
-parameter_list|)
+begin_macro
+name|FIPS_NON_FIPS_VCIPHER_Init
+argument_list|(
+argument|BF
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|i
@@ -362,7 +376,7 @@ index|]
 expr_stmt|;
 block|}
 block|}
-end_function
+end_block
 
 end_unit
 

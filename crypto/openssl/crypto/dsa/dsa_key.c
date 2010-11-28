@@ -49,6 +49,12 @@ directive|include
 file|<openssl/rand.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_FIPS
+end_ifndef
+
 begin_function_decl
 specifier|static
 name|int
@@ -267,7 +273,7 @@ name|prk
 argument_list|,
 name|priv_key
 argument_list|,
-name|BN_FLG_EXP_CONSTTIME
+name|BN_FLG_CONSTTIME
 argument_list|)
 expr_stmt|;
 block|}
@@ -378,6 +384,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

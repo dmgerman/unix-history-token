@@ -4,7 +4,7 @@ comment|/* v3_cpols.c */
 end_comment
 
 begin_comment
-comment|/* Written by Dr Stephen N Henson (shenson@bigfoot.com) for the OpenSSL  * project 1999.  */
+comment|/* Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project 1999.  */
 end_comment
 
 begin_comment
@@ -790,13 +790,33 @@ operator|=
 name|pobj
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
 name|sk_POLICYINFO_push
 argument_list|(
 name|pols
 argument_list|,
 name|pol
 argument_list|)
+condition|)
+block|{
+name|POLICYINFO_free
+argument_list|(
+name|pol
+argument_list|)
 expr_stmt|;
+name|X509V3err
+argument_list|(
+name|X509V3_F_R2I_CERTPOL
+argument_list|,
+name|ERR_R_MALLOC_FAILURE
+argument_list|)
+expr_stmt|;
+goto|goto
+name|err
+goto|;
+block|}
 block|}
 end_for
 
@@ -2415,6 +2435,13 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_macro
+name|IMPLEMENT_STACK_OF
+argument_list|(
+argument|X509_POLICY_NODE
+argument_list|)
+end_macro
 
 end_unit
 

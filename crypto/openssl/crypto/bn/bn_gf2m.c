@@ -2093,6 +2093,8 @@ operator|=
 name|b
 expr_stmt|;
 block|}
+if|if
+condition|(
 name|bn_wexpand
 argument_list|(
 name|r
@@ -2101,7 +2103,12 @@ name|at
 operator|->
 name|top
 argument_list|)
-expr_stmt|;
+operator|==
+name|NULL
+condition|)
+return|return
+literal|0
+return|;
 for|for
 control|(
 name|i
@@ -2554,6 +2561,7 @@ name|BN_BITS2
 operator|-
 name|d0
 expr_stmt|;
+comment|/* clear up the top d1 bits */
 if|if
 condition|(
 name|d0
@@ -2574,7 +2582,14 @@ operator|)
 operator|>>
 name|d1
 expr_stmt|;
-comment|/* clear up the top d1 bits */
+else|else
+name|z
+index|[
+name|dN
+index|]
+operator|=
+literal|0
+expr_stmt|;
 name|z
 index|[
 literal|0

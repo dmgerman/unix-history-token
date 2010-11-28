@@ -733,13 +733,6 @@ break|break;
 case|case
 name|BIO_C_GET_MD_CTX
 case|:
-if|if
-condition|(
-name|b
-operator|->
-name|init
-condition|)
-block|{
 name|pctx
 operator|=
 name|ptr
@@ -748,12 +741,6 @@ operator|*
 name|pctx
 operator|=
 name|ctx
-expr_stmt|;
-block|}
-else|else
-name|ret
-operator|=
-literal|0
 expr_stmt|;
 break|break;
 case|case

@@ -324,6 +324,40 @@ name|alloca
 value|_alloca
 end_define
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|NETWARE_CLIB
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+end_elif
+
+begin_function_decl
+name|void
+modifier|*
+name|alloca
+parameter_list|(
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|alloca
+parameter_list|(
+name|s
+parameter_list|)
+value|__builtin_alloca(s)
+end_define
+
 begin_else
 else|#
 directive|else
@@ -762,19 +796,17 @@ return|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_macro
 name|IMPLEMENT_DYNAMIC_CHECK_FN
 argument_list|()
-expr_stmt|;
-end_expr_stmt
+end_macro
 
-begin_expr_stmt
+begin_macro
 name|IMPLEMENT_DYNAMIC_BIND_FN
 argument_list|(
-name|padlock_bind_fn
+argument|padlock_bind_fn
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_endif
 endif|#
@@ -1263,7 +1295,7 @@ parameter_list|,
 name|rep_xcrypt
 parameter_list|)
 define|\
-value|static inline void *name(size_t cnt,		\ 	struct padlock_cipher_data *cdata,	\ 	void *out, const void *inp) 		\ {	void *iv; 				\ 	asm volatile ( "pushl	%%ebx\n"	\ 		"	leal	16(%0),%%edx\n"	\ 		"	leal	32(%0),%%ebx\n"	\ 			rep_xcrypt "\n"		\ 		"	popl	%%ebx"		\ 		: "=a"(iv), "=c"(cnt), "=D"(out), "=S"(inp) \ 		: "0"(cdata), "1"(cnt), "2"(out), "3"(inp), "m"(*cdata)  \ 		: "edx", "cc", "memory");	\ 	return iv;				\ }
+value|static inline void *name(size_t cnt,		\ 	struct padlock_cipher_data *cdata,	\ 	void *out, const void *inp) 		\ {	void *iv; 				\ 	asm volatile ( "pushl	%%ebx\n"	\ 		"	leal	16(%0),%%edx\n"	\ 		"	leal	32(%0),%%ebx\n"	\ 			rep_xcrypt "\n"		\ 		"	popl	%%ebx"		\ 		: "=a"(iv), "=c"(cnt), "=D"(out), "=S"(inp) \ 		: "0"(cdata), "1"(cnt), "2"(out), "3"(inp)  \ 		: "edx", "cc", "memory");	\ 	return iv;				\ }
 end_define
 
 begin_comment

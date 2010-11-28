@@ -4,7 +4,7 @@ comment|/* crypto/dsa/dsa_err.c */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1999-2005 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1999-2007 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_comment
@@ -96,6 +96,24 @@ block|,
 block|{
 name|ERR_FUNC
 argument_list|(
+name|DSA_F_DSA_BUILTIN_KEYGEN
+argument_list|)
+block|,
+literal|"DSA_BUILTIN_KEYGEN"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|DSA_F_DSA_BUILTIN_PARAMGEN
+argument_list|)
+block|,
+literal|"DSA_BUILTIN_PARAMGEN"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
 name|DSA_F_DSA_DO_SIGN
 argument_list|)
 block|,
@@ -109,6 +127,15 @@ name|DSA_F_DSA_DO_VERIFY
 argument_list|)
 block|,
 literal|"DSA_do_verify"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|DSA_F_DSA_GENERATE_PARAMETERS
+argument_list|)
+block|,
+literal|"DSA_generate_parameters"
 block|}
 block|,
 block|{
@@ -136,6 +163,24 @@ name|DSA_F_DSA_PRINT_FP
 argument_list|)
 block|,
 literal|"DSA_print_fp"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|DSA_F_DSA_SET_DEFAULT_METHOD
+argument_list|)
+block|,
+literal|"DSA_set_default_method"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|DSA_F_DSA_SET_METHOD
+argument_list|)
+block|,
+literal|"DSA_set_method"
 block|}
 block|,
 block|{
@@ -229,6 +274,15 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|DSA_R_KEY_SIZE_TOO_SMALL
+argument_list|)
+block|,
+literal|"key size too small"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|DSA_R_MISSING_PARAMETERS
 argument_list|)
 block|,
@@ -242,6 +296,24 @@ name|DSA_R_MODULUS_TOO_LARGE
 argument_list|)
 block|,
 literal|"modulus too large"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|DSA_R_NON_FIPS_METHOD
+argument_list|)
+block|,
+literal|"non fips method"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|DSA_R_OPERATION_NOT_ALLOWED_IN_FIPS_MODE
+argument_list|)
+block|,
+literal|"operation not allowed in fips mode"
 block|}
 block|,
 block|{

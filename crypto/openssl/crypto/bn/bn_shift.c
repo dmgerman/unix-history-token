@@ -749,7 +749,7 @@ expr_stmt|;
 if|if
 condition|(
 name|nw
-operator|>
+operator|>=
 name|a
 operator|->
 name|top

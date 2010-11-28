@@ -47,6 +47,12 @@ directive|include
 file|<openssl/asn1.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_FIPS
+end_ifndef
+
 begin_function_decl
 specifier|static
 name|DSA_SIG
@@ -553,6 +559,9 @@ argument_list|)
 operator|>
 literal|0
 condition|)
+if|if
+condition|(
+operator|!
 name|BN_sub
 argument_list|(
 name|s
@@ -563,7 +572,10 @@ name|dsa
 operator|->
 name|q
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|err
+goto|;
 if|if
 condition|(
 operator|!
@@ -858,7 +870,7 @@ argument_list|(
 operator|&
 name|k
 argument_list|,
-name|BN_FLG_EXP_CONSTTIME
+name|BN_FLG_CONSTTIME
 argument_list|)
 expr_stmt|;
 block|}
@@ -1714,6 +1726,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

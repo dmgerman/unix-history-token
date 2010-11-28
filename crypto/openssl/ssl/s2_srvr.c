@@ -807,7 +807,7 @@ expr_stmt|;
 if|if
 condition|(
 name|num1
-operator|!=
+operator|>
 literal|0
 condition|)
 block|{
@@ -2786,6 +2786,8 @@ operator|->
 name|tmp
 operator|.
 name|session_id_length
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -3008,6 +3010,9 @@ operator|<
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|sk_SSL_CIPHER_delete
 argument_list|(
 name|prio
@@ -3173,13 +3178,6 @@ name|n
 decl_stmt|,
 name|hit
 decl_stmt|;
-name|STACK_OF
-argument_list|(
-name|SSL_CIPHER
-argument_list|)
-operator|*
-name|sk
-expr_stmt|;
 name|p
 operator|=
 operator|(
@@ -3537,14 +3535,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* lets send out the ciphers we like in the 			 * prefered order */
-name|sk
-operator|=
-name|s
-operator|->
-name|session
-operator|->
-name|ciphers
-expr_stmt|;
 name|n
 operator|=
 name|ssl_cipher_list_to_bytes

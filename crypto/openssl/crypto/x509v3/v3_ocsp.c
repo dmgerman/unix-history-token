@@ -4,7 +4,7 @@ comment|/* v3_ocsp.c */
 end_comment
 
 begin_comment
-comment|/* Written by Dr Stephen N Henson (shenson@bigfoot.com) for the OpenSSL  * project 1999.  */
+comment|/* Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project 1999.  */
 end_comment
 
 begin_comment
@@ -594,7 +594,6 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
 name|BIO_printf
 argument_list|(
 name|bp
@@ -605,6 +604,8 @@ name|ind
 argument_list|,
 literal|""
 argument_list|)
+operator|<=
+literal|0
 condition|)
 goto|goto
 name|err
@@ -630,7 +631,6 @@ name|err
 goto|;
 if|if
 condition|(
-operator|!
 name|BIO_write
 argument_list|(
 name|bp
@@ -639,6 +639,8 @@ literal|"\n"
 argument_list|,
 literal|1
 argument_list|)
+operator|<=
+literal|0
 condition|)
 goto|goto
 name|err
@@ -653,7 +655,6 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
 name|BIO_printf
 argument_list|(
 name|bp
@@ -664,13 +665,14 @@ name|ind
 argument_list|,
 literal|""
 argument_list|)
+operator|<=
+literal|0
 condition|)
 goto|goto
 name|err
 goto|;
 if|if
 condition|(
-operator|!
 name|i2a_ASN1_INTEGER
 argument_list|(
 name|bp
@@ -679,13 +681,14 @@ name|a
 operator|->
 name|crlNum
 argument_list|)
+operator|<=
+literal|0
 condition|)
 goto|goto
 name|err
 goto|;
 if|if
 condition|(
-operator|!
 name|BIO_write
 argument_list|(
 name|bp
@@ -694,6 +697,8 @@ literal|"\n"
 argument_list|,
 literal|1
 argument_list|)
+operator|<=
+literal|0
 condition|)
 goto|goto
 name|err
@@ -708,7 +713,6 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
 name|BIO_printf
 argument_list|(
 name|bp
@@ -719,6 +723,8 @@ name|ind
 argument_list|,
 literal|""
 argument_list|)
+operator|<=
+literal|0
 condition|)
 goto|goto
 name|err
@@ -740,7 +746,6 @@ name|err
 goto|;
 if|if
 condition|(
-operator|!
 name|BIO_write
 argument_list|(
 name|bp
@@ -749,6 +754,8 @@ literal|"\n"
 argument_list|,
 literal|1
 argument_list|)
+operator|<=
+literal|0
 condition|)
 goto|goto
 name|err
@@ -788,7 +795,6 @@ parameter_list|)
 block|{
 if|if
 condition|(
-operator|!
 name|BIO_printf
 argument_list|(
 name|bp
@@ -799,6 +805,8 @@ name|ind
 argument_list|,
 literal|""
 argument_list|)
+operator|<=
+literal|0
 condition|)
 return|return
 literal|0
@@ -845,7 +853,6 @@ parameter_list|)
 block|{
 if|if
 condition|(
-operator|!
 name|BIO_printf
 argument_list|(
 name|bp
@@ -856,19 +863,22 @@ name|ind
 argument_list|,
 literal|""
 argument_list|)
+operator|<=
+literal|0
 condition|)
 return|return
 literal|0
 return|;
 if|if
 condition|(
-operator|!
 name|i2a_ASN1_OBJECT
 argument_list|(
 name|bp
 argument_list|,
 name|oid
 argument_list|)
+operator|<=
+literal|0
 condition|)
 return|return
 literal|0

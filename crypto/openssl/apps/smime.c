@@ -4,7 +4,7 @@ comment|/* smime.c */
 end_comment
 
 begin_comment
-comment|/* Written by Dr Stephen N Henson (shenson@bigfoot.com) for the OpenSSL  * project.  */
+comment|/* Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project.  */
 end_comment
 
 begin_comment
@@ -600,6 +600,28 @@ condition|)
 name|cipher
 operator|=
 name|EVP_des_cbc
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_SEED
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+operator|*
+name|args
+argument_list|,
+literal|"-seed"
+argument_list|)
+condition|)
+name|cipher
+operator|=
+name|EVP_seed_cbc
 argument_list|()
 expr_stmt|;
 endif|#
@@ -1831,6 +1853,18 @@ argument_list|(
 name|bio_err
 argument_list|,
 literal|"-des           encrypt with DES\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_SEED
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|"-seed          encrypt with SEED\n"
 argument_list|)
 expr_stmt|;
 endif|#

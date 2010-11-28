@@ -16,6 +16,29 @@ end_include
 begin_include
 include|#
 directive|include
+file|<openssl/crypto.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENSSL_FIPS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<openssl/fips.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
 file|"cast_lcl.h"
 end_include
 
@@ -70,23 +93,14 @@ name|S7
 value|CAST_S_table7
 end_define
 
-begin_function
-name|void
-name|CAST_set_key
-parameter_list|(
-name|CAST_KEY
-modifier|*
-name|key
-parameter_list|,
-name|int
-name|len
-parameter_list|,
-specifier|const
-name|unsigned
-name|char
-modifier|*
-name|data
-parameter_list|)
+begin_macro
+name|FIPS_NON_FIPS_VCIPHER_Init
+argument_list|(
+argument|CAST
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|CAST_LONG
 name|x
@@ -2092,7 +2106,7 @@ literal|0x1f
 expr_stmt|;
 block|}
 block|}
-end_function
+end_block
 
 end_unit
 

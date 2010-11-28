@@ -145,7 +145,6 @@ name|i
 operator|=
 name|ASN1_R_TAG_VALUE_TOO_HIGH
 expr_stmt|;
-empty_stmt|;
 goto|goto
 name|err
 goto|;

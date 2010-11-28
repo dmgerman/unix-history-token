@@ -4,7 +4,7 @@ comment|/* p12_utl.c */
 end_comment
 
 begin_comment
-comment|/* Written by Dr Stephen N Henson (shenson@bigfoot.com) for the OpenSSL  * project 1999.  */
+comment|/* Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project 1999.  */
 end_comment
 
 begin_comment
@@ -28,6 +28,35 @@ include|#
 directive|include
 file|<openssl/pkcs12.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENSSL_SYS_NETWARE
+end_ifdef
+
+begin_comment
+comment|/* Rename these functions to avoid name clashes on NetWare OS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|uni2asc
+value|OPENSSL_uni2asc
+end_define
+
+begin_define
+define|#
+directive|define
+name|asc2uni
+value|OPENSSL_asc2uni
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Cheap and nasty Unicode stuff */

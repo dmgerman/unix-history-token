@@ -273,10 +273,6 @@ name|chain_ss
 init|=
 name|NULL
 decl_stmt|;
-name|X509_NAME
-modifier|*
-name|xn
-decl_stmt|;
 name|int
 name|bad_chain
 init|=
@@ -502,13 +498,6 @@ condition|)
 break|break;
 comment|/* FIXME: If this happens, we should take 		                         * note of it and, if appropriate, use the 		                         * X509_V_ERR_CERT_CHAIN_TOO_LONG error 		                         * code later. 		                         */
 comment|/* If we are self signed, we break */
-name|xn
-operator|=
-name|X509_get_issuer_name
-argument_list|(
-name|x
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ctx
@@ -587,6 +576,9 @@ argument_list|,
 name|CRYPTO_LOCK_X509
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sk_X509_delete_ptr
 argument_list|(
 name|sktmp
@@ -634,13 +626,6 @@ argument_list|,
 name|i
 operator|-
 literal|1
-argument_list|)
-expr_stmt|;
-name|xn
-operator|=
-name|X509_get_subject_name
-argument_list|(
-name|x
 argument_list|)
 expr_stmt|;
 if|if
@@ -766,6 +751,9 @@ name|x
 operator|=
 name|xtmp
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sk_X509_set
 argument_list|(
 name|ctx
@@ -838,13 +826,6 @@ name|num
 condition|)
 break|break;
 comment|/* If we are self signed, we break */
-name|xn
-operator|=
-name|X509_get_issuer_name
-argument_list|(
-name|x
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ctx
@@ -927,13 +908,6 @@ operator|++
 expr_stmt|;
 block|}
 comment|/* we now have our chain, lets check it... */
-name|xn
-operator|=
-name|X509_get_issuer_name
-argument_list|(
-name|x
-argument_list|)
-expr_stmt|;
 comment|/* Is last certificate looked up self signed? */
 if|if
 condition|(
@@ -1557,6 +1531,10 @@ init|=
 literal|0
 decl_stmt|,
 name|must_be_ca
+decl_stmt|,
+name|plen
+init|=
+literal|0
 decl_stmt|;
 name|X509
 modifier|*
@@ -2019,13 +1997,22 @@ name|end
 goto|;
 block|}
 block|}
-comment|/* Check pathlen */
+comment|/* Check pathlen if not self issued */
 if|if
 condition|(
 operator|(
 name|i
 operator|>
 literal|1
+operator|)
+operator|&&
+operator|!
+operator|(
+name|x
+operator|->
+name|ex_flags
+operator|&
+name|EXFLAG_SI
 operator|)
 operator|&&
 operator|(
@@ -2038,7 +2025,7 @@ literal|1
 operator|)
 operator|&&
 operator|(
-name|i
+name|plen
 operator|>
 operator|(
 name|x
@@ -2088,6 +2075,21 @@ goto|goto
 name|end
 goto|;
 block|}
+comment|/* Increment path length if not self issued */
+if|if
+condition|(
+operator|!
+operator|(
+name|x
+operator|->
+name|ex_flags
+operator|&
+name|EXFLAG_SI
+operator|)
+condition|)
+name|plen
+operator|++
+expr_stmt|;
 comment|/* If this certificate is a proxy certificate, the next 		   certificate must be another proxy certificate or a EE 		   certificate.  If not, the next certificate must be a 		   CA certificate.  */
 if|if
 condition|(
@@ -4224,12 +4226,29 @@ name|error_depth
 operator|=
 name|n
 expr_stmt|;
+comment|/* Skip signature check for self signed certificates unless 		 * explicitly asked for. It doesn't add any security and 		 * just wastes time. 		 */
 if|if
 condition|(
 operator|!
 name|xs
 operator|->
 name|valid
+operator|&&
+operator|(
+name|xs
+operator|!=
+name|xi
+operator|||
+operator|(
+name|ctx
+operator|->
+name|param
+operator|->
+name|flags
+operator|&
+name|X509_V_FLAG_CHECK_SS_SIGNATURE
+operator|)
+operator|)
 condition|)
 block|{
 if|if
@@ -4291,7 +4310,6 @@ argument_list|)
 operator|<=
 literal|0
 condition|)
-comment|/* XXX  For the final trusted self-signed cert, 				 * this is a waste of time.  That check should 				 * optional so that e.g. 'openssl x509' can be 				 * used to detect invalid self-signatures, but 				 * we don't verify again and again in SSL 				 * handshakes and the like once the cert has 				 * been declared trusted. */
 block|{
 name|ctx
 operator|->
@@ -6170,7 +6188,7 @@ name|ctx
 operator|->
 name|param
 operator|->
-name|flags
+name|inh_flags
 operator||=
 name|X509_VP_FLAG_DEFAULT
 operator||

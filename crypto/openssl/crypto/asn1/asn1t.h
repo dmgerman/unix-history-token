@@ -4,7 +4,7 @@ comment|/* asn1t.h */
 end_comment
 
 begin_comment
-comment|/* Written by Dr Stephen N Henson (shenson@bigfoot.com) for the OpenSSL  * project 2000.  */
+comment|/* Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project 2000.  */
 end_comment
 
 begin_comment
@@ -190,6 +190,16 @@ name|tname
 parameter_list|)
 define|\
 value|ASN1_SEQUENCE(tname)
+define|#
+directive|define
+name|ASN1_NDEF_SEQUENCE_cb
+parameter_list|(
+name|tname
+parameter_list|,
+name|cb
+parameter_list|)
+define|\
+value|ASN1_SEQUENCE_cb(tname, cb)
 define|#
 directive|define
 name|ASN1_SEQUENCE_cb
@@ -689,6 +699,21 @@ name|tag
 parameter_list|)
 define|\
 value|ASN1_EXP_EX(stname, field, type, tag, ASN1_TFLG_SEQUENCE_OF|ASN1_TFLG_OPTIONAL)
+comment|/* EXPLICIT using indefinite length constructed form */
+define|#
+directive|define
+name|ASN1_NDEF_EXP
+parameter_list|(
+name|stname
+parameter_list|,
+name|field
+parameter_list|,
+name|type
+parameter_list|,
+name|tag
+parameter_list|)
+define|\
+value|ASN1_EXP_EX(stname, field, type, tag, ASN1_TFLG_NDEF)
 comment|/* EXPLICIT OPTIONAL using indefinite length constructed form */
 define|#
 directive|define

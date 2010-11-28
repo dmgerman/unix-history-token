@@ -4,7 +4,7 @@ comment|/* x509v3.h */
 end_comment
 
 begin_comment
-comment|/* Written by Dr Stephen N Henson (shenson@bigfoot.com) for the OpenSSL  * project 1999.  */
+comment|/* Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project 1999.  */
 end_comment
 
 begin_comment
@@ -1093,6 +1093,11 @@ define|#
 directive|define
 name|EXFLAG_CA
 value|0x10
+comment|/* Really self issued not necessarily self signed */
+define|#
+directive|define
+name|EXFLAG_SI
+value|0x20
 define|#
 directive|define
 name|EXFLAG_SS
@@ -1120,7 +1125,7 @@ value|0x400
 define|#
 directive|define
 name|EXFLAG_INVALID_POLICY
-value|0x400
+value|0x800
 define|#
 directive|define
 name|KU_DIGITAL_SIGNATURE
@@ -2782,6 +2787,15 @@ parameter_list|(
 name|STACK
 modifier|*
 name|sk
+parameter_list|)
+function_decl|;
+name|STACK
+modifier|*
+name|X509_get1_ocsp
+parameter_list|(
+name|X509
+modifier|*
+name|x
 parameter_list|)
 function_decl|;
 name|ASN1_OCTET_STRING

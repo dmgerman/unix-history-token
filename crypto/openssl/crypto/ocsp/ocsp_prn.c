@@ -769,11 +769,6 @@ decl_stmt|;
 name|long
 name|l
 decl_stmt|;
-name|unsigned
-name|char
-modifier|*
-name|p
-decl_stmt|;
 name|OCSP_CERTID
 modifier|*
 name|cid
@@ -930,15 +925,6 @@ return|return
 literal|1
 return|;
 block|}
-name|p
-operator|=
-name|ASN1_STRING_data
-argument_list|(
-name|rb
-operator|->
-name|response
-argument_list|)
-expr_stmt|;
 name|i
 operator|=
 name|ASN1_STRING_length
@@ -1350,7 +1336,6 @@ goto|;
 block|}
 if|if
 condition|(
-operator|!
 name|BIO_write
 argument_list|(
 name|bp
@@ -1359,6 +1344,8 @@ literal|"\n"
 argument_list|,
 literal|1
 argument_list|)
+operator|<=
+literal|0
 condition|)
 goto|goto
 name|err
@@ -1386,7 +1373,6 @@ name|err
 goto|;
 if|if
 condition|(
-operator|!
 name|BIO_write
 argument_list|(
 name|bp
@@ -1395,6 +1381,8 @@ literal|"\n"
 argument_list|,
 literal|1
 argument_list|)
+operator|<=
+literal|0
 condition|)
 goto|goto
 name|err
@@ -1418,6 +1406,9 @@ argument_list|,
 literal|4
 argument_list|)
 condition|)
+goto|goto
+name|err
+goto|;
 if|if
 condition|(
 name|X509_signature_print

@@ -4,7 +4,7 @@ comment|/* v3_alt.c */
 end_comment
 
 begin_comment
-comment|/* Written by Dr Stephen N Henson (shenson@bigfoot.com) for the OpenSSL  * project.  */
+comment|/* Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project.  */
 end_comment
 
 begin_comment
@@ -1781,6 +1781,11 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+name|X509_NAME_ENTRY_free
+argument_list|(
+name|ne
+argument_list|)
+expr_stmt|;
 name|i
 operator|--
 expr_stmt|;
@@ -2521,6 +2526,11 @@ name|gen
 return|;
 name|err
 label|:
+if|if
+condition|(
+operator|!
+name|out
+condition|)
 name|GENERAL_NAME_free
 argument_list|(
 name|gen
@@ -2818,6 +2828,13 @@ operator|.
 name|dirn
 operator|=
 name|nm
+expr_stmt|;
+name|X509V3_section_free
+argument_list|(
+name|ctx
+argument_list|,
+name|sk
+argument_list|)
 expr_stmt|;
 return|return
 name|ret

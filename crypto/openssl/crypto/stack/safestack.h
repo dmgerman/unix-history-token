@@ -21,34 +21,61 @@ directive|include
 file|<openssl/stack.h>
 end_include
 
-begin_typedef
-typedef|typedef
-name|void
-function_decl|(
-modifier|*
-name|openssl_fptr
-function_decl|)
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|openssl_fcast
-parameter_list|(
-name|f
-parameter_list|)
-value|((openssl_fptr)f)
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|DEBUG_SAFESTACK
 end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CHECKED_PTR_OF
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|CHECKED_PTR_OF
+parameter_list|(
+name|type
+parameter_list|,
+name|p
+parameter_list|)
+define|\
+value|((void*) (1 ? p : (type*)0))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|CHECKED_SK_FREE_FUNC
+parameter_list|(
+name|type
+parameter_list|,
+name|p
+parameter_list|)
+define|\
+value|((void (*)(void *)) ((1 ? p : (void (*)(type *))0)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHECKED_SK_CMP_FUNC
+parameter_list|(
+name|type
+parameter_list|,
+name|p
+parameter_list|)
+define|\
+value|((int (*)(const char * const *, const char * const *)) \ 	((1 ? p : (int (*)(const type * const *, const type * const *))0)))
+end_define
 
 begin_define
 define|#
@@ -108,7 +135,7 @@ parameter_list|,
 name|cmp
 parameter_list|)
 define|\
-value|((STACK_OF(type) * (*)(int (*)(const type * const *, const type * const *)))openssl_fcast(sk_new))(cmp)
+value|((STACK_OF(type) *)sk_new(CHECKED_SK_CMP_FUNC(type, cmp)))
 end_define
 
 begin_define
@@ -119,7 +146,7 @@ parameter_list|(
 name|type
 parameter_list|)
 define|\
-value|((STACK_OF(type) * (*)(void))openssl_fcast(sk_new_null))()
+value|((STACK_OF(type) *)sk_new_null())
 end_define
 
 begin_define
@@ -132,7 +159,7 @@ parameter_list|,
 name|st
 parameter_list|)
 define|\
-value|((void (*)(STACK_OF(type) *))openssl_fcast(sk_free))(st)
+value|sk_free(CHECKED_PTR_OF(STACK_OF(type), st))
 end_define
 
 begin_define
@@ -145,7 +172,7 @@ parameter_list|,
 name|st
 parameter_list|)
 define|\
-value|((int (*)(const STACK_OF(type) *))openssl_fcast(sk_num))(st)
+value|sk_num(CHECKED_PTR_OF(STACK_OF(type), st))
 end_define
 
 begin_define
@@ -160,7 +187,7 @@ parameter_list|,
 name|i
 parameter_list|)
 define|\
-value|((type * (*)(const STACK_OF(type) *, int))openssl_fcast(sk_value))(st, i)
+value|((type *)sk_value(CHECKED_PTR_OF(STACK_OF(type), st), i))
 end_define
 
 begin_define
@@ -177,7 +204,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|((type * (*)(STACK_OF(type) *, int, type *))openssl_fcast(sk_set))(st, i, val)
+value|sk_set(CHECKED_PTR_OF(STACK_OF(type), st), i, CHECKED_PTR_OF(type, val))
 end_define
 
 begin_define
@@ -190,7 +217,7 @@ parameter_list|,
 name|st
 parameter_list|)
 define|\
-value|((void (*)(STACK_OF(type) *))openssl_fcast(sk_zero))(st)
+value|sk_zero(CHECKED_PTR_OF(STACK_OF(type), st))
 end_define
 
 begin_define
@@ -205,7 +232,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|((int (*)(STACK_OF(type) *, type *))openssl_fcast(sk_push))(st, val)
+value|sk_push(CHECKED_PTR_OF(STACK_OF(type), st), CHECKED_PTR_OF(type, val))
 end_define
 
 begin_define
@@ -220,7 +247,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|((int (*)(STACK_OF(type) *, type *))openssl_fcast(sk_unshift))(st, val)
+value|sk_unshift(CHECKED_PTR_OF(STACK_OF(type), st), CHECKED_PTR_OF(type, val))
 end_define
 
 begin_define
@@ -235,7 +262,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|((int (*)(STACK_OF(type) *, type *))openssl_fcast(sk_find))(st, val)
+value|sk_find(CHECKED_PTR_OF(STACK_OF(type), st), CHECKED_PTR_OF(type, val))
 end_define
 
 begin_define
@@ -250,7 +277,7 @@ parameter_list|,
 name|i
 parameter_list|)
 define|\
-value|((type * (*)(STACK_OF(type) *, int))openssl_fcast(sk_delete))(st, i)
+value|(type *)sk_delete(CHECKED_PTR_OF(STACK_OF(type), st), i)
 end_define
 
 begin_define
@@ -265,7 +292,7 @@ parameter_list|,
 name|ptr
 parameter_list|)
 define|\
-value|((type * (*)(STACK_OF(type) *, type *))openssl_fcast(sk_delete_ptr))(st, ptr)
+value|(type *)sk_delete_ptr(CHECKED_PTR_OF(STACK_OF(type), st), CHECKED_PTR_OF(type, ptr))
 end_define
 
 begin_define
@@ -282,7 +309,7 @@ parameter_list|,
 name|i
 parameter_list|)
 define|\
-value|((int (*)(STACK_OF(type) *, type *, int))openssl_fcast(sk_insert))(st, val, i)
+value|sk_insert(CHECKED_PTR_OF(STACK_OF(type), st), CHECKED_PTR_OF(type, val), i)
 end_define
 
 begin_define
@@ -297,7 +324,7 @@ parameter_list|,
 name|cmp
 parameter_list|)
 define|\
-value|((int (*(*)(STACK_OF(type) *, int (*)(const type * const *, const type * const *))) \ 	  (const type * const *, const type * const *))openssl_fcast(sk_set_cmp_func))\ 	(st, cmp)
+value|((int (*)(const type * const *,const type * const *)) \ 	sk_set_cmp_func(CHECKED_PTR_OF(STACK_OF(type), st), CHECKED_SK_CMP_FUNC(type, cmp)))
 end_define
 
 begin_define
@@ -310,7 +337,7 @@ parameter_list|,
 name|st
 parameter_list|)
 define|\
-value|((STACK_OF(type) *(*)(STACK_OF(type) *))openssl_fcast(sk_dup))(st)
+value|(STACK_OF(type) *)sk_dup(CHECKED_PTR_OF(STACK_OF(type), st))
 end_define
 
 begin_define
@@ -325,7 +352,7 @@ parameter_list|,
 name|free_func
 parameter_list|)
 define|\
-value|((void (*)(STACK_OF(type) *, void (*)(type *)))openssl_fcast(sk_pop_free))\ 	(st, free_func)
+value|sk_pop_free(CHECKED_PTR_OF(STACK_OF(type), st), CHECKED_SK_FREE_FUNC(type, free_func))
 end_define
 
 begin_define
@@ -338,7 +365,7 @@ parameter_list|,
 name|st
 parameter_list|)
 define|\
-value|((type * (*)(STACK_OF(type) *))openssl_fcast(sk_shift))(st)
+value|(type *)sk_shift(CHECKED_PTR_OF(STACK_OF(type), st))
 end_define
 
 begin_define
@@ -351,7 +378,7 @@ parameter_list|,
 name|st
 parameter_list|)
 define|\
-value|((type * (*)(STACK_OF(type) *))openssl_fcast(sk_pop))(st)
+value|(type *)sk_pop(CHECKED_PTR_OF(STACK_OF(type), st))
 end_define
 
 begin_define
@@ -364,7 +391,7 @@ parameter_list|,
 name|st
 parameter_list|)
 define|\
-value|((void (*)(STACK_OF(type) *))openssl_fcast(sk_sort))(st)
+value|sk_sort(CHECKED_PTR_OF(STACK_OF(type), st))
 end_define
 
 begin_define
@@ -377,7 +404,7 @@ parameter_list|,
 name|st
 parameter_list|)
 define|\
-value|((int (*)(const STACK_OF(type) *))openssl_fcast(sk_is_sorted))(st)
+value|sk_is_sorted(CHECKED_PTR_OF(STACK_OF(type), st))
 end_define
 
 begin_define
@@ -402,7 +429,7 @@ parameter_list|,
 name|ex_class
 parameter_list|)
 define|\
-value|((STACK_OF(type) * (*) (STACK_OF(type) **,const unsigned char **, long , \                          type *(*)(type **, const unsigned char **,long), \                                 void (*)(type *), int ,int )) openssl_fcast(d2i_ASN1_SET)) \ 			(st,pp,length, d2i_func, free_func, ex_tag,ex_class)
+value|(STACK_OF(type) *)d2i_ASN1_SET(CHECKED_PTR_OF(STACK_OF(type), st), \ 				pp, length, \ 				CHECKED_D2I_OF(type, d2i_func), \ 				CHECKED_SK_FREE_FUNC(type, free_func), \ 				ex_tag, ex_class)
 end_define
 
 begin_define
@@ -425,7 +452,7 @@ parameter_list|,
 name|is_set
 parameter_list|)
 define|\
-value|((int (*)(STACK_OF(type) *,unsigned char **, \         int (*)(type *,unsigned char **), int , int , int)) openssl_fcast(i2d_ASN1_SET)) \ 						(st,pp,i2d_func,ex_tag,ex_class,is_set)
+value|i2d_ASN1_SET(CHECKED_PTR_OF(STACK_OF(type), st), pp, \ 				CHECKED_I2D_OF(type, i2d_func), \ 				ex_tag, ex_class, is_set)
 end_define
 
 begin_define
@@ -444,7 +471,7 @@ parameter_list|,
 name|len
 parameter_list|)
 define|\
-value|((unsigned char *(*)(STACK_OF(type) *, \         int (*)(type *,unsigned char **), unsigned char **,int *)) openssl_fcast(ASN1_seq_pack)) \ 				(st, i2d_func, buf, len)
+value|ASN1_seq_pack(CHECKED_PTR_OF(STACK_OF(type), st), \ 			CHECKED_I2D_OF(type, i2d_func), buf, len)
 end_define
 
 begin_define
@@ -463,7 +490,7 @@ parameter_list|,
 name|free_func
 parameter_list|)
 define|\
-value|((STACK_OF(type) * (*)(const unsigned char *,int, \                               type *(*)(type **,const unsigned char **, long), \                               void (*)(type *)))openssl_fcast(ASN1_seq_unpack)) \ 					(buf,len,d2i_func, free_func)
+value|(STACK_OF(type) *)ASN1_seq_unpack(buf, len, CHECKED_D2I_OF(type, d2i_func), CHECKED_SK_FREE_FUNC(type, free_func))
 end_define
 
 begin_define
@@ -488,7 +515,7 @@ parameter_list|,
 name|seq
 parameter_list|)
 define|\
-value|((STACK_OF(type) * (*)(X509_ALGOR *, \             		type *(*)(type **, const unsigned char **, long), \ 				void (*)(type *), \                                 const char *, int, \                                 ASN1_STRING *, int))PKCS12_decrypt_d2i) \ 				(algor,d2i_func,free_func,pass,passlen,oct,seq)
+value|(STACK_OF(type) *)PKCS12_decrypt_d2i(algor, \ 				CHECKED_D2I_OF(type, d2i_func), \ 				CHECKED_SK_FREE_FUNC(type, free_func), \ 				pass, passlen, oct, seq)
 end_define
 
 begin_else
@@ -667,7 +694,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|sk_unshift(st, val)
+value|sk_unshift(st, (char *)val)
 end_define
 
 begin_define
@@ -3056,6 +3083,942 @@ end_define
 begin_define
 define|#
 directive|define
+name|sk_CMS_CertificateChoices_new
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_new(CMS_CertificateChoices, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_CertificateChoices_new_null
+parameter_list|()
+value|SKM_sk_new_null(CMS_CertificateChoices)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_CertificateChoices_free
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_free(CMS_CertificateChoices, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_CertificateChoices_num
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_num(CMS_CertificateChoices, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_CertificateChoices_value
+parameter_list|(
+name|st
+parameter_list|,
+name|i
+parameter_list|)
+value|SKM_sk_value(CMS_CertificateChoices, (st), (i))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_CertificateChoices_set
+parameter_list|(
+name|st
+parameter_list|,
+name|i
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_set(CMS_CertificateChoices, (st), (i), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_CertificateChoices_zero
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_zero(CMS_CertificateChoices, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_CertificateChoices_push
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_push(CMS_CertificateChoices, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_CertificateChoices_unshift
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_unshift(CMS_CertificateChoices, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_CertificateChoices_find
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find(CMS_CertificateChoices, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_CertificateChoices_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(CMS_CertificateChoices, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_CertificateChoices_delete
+parameter_list|(
+name|st
+parameter_list|,
+name|i
+parameter_list|)
+value|SKM_sk_delete(CMS_CertificateChoices, (st), (i))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_CertificateChoices_delete_ptr
+parameter_list|(
+name|st
+parameter_list|,
+name|ptr
+parameter_list|)
+value|SKM_sk_delete_ptr(CMS_CertificateChoices, (st), (ptr))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_CertificateChoices_insert
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|,
+name|i
+parameter_list|)
+value|SKM_sk_insert(CMS_CertificateChoices, (st), (val), (i))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_CertificateChoices_set_cmp_func
+parameter_list|(
+name|st
+parameter_list|,
+name|cmp
+parameter_list|)
+value|SKM_sk_set_cmp_func(CMS_CertificateChoices, (st), (cmp))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_CertificateChoices_dup
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_dup(CMS_CertificateChoices, st)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_CertificateChoices_pop_free
+parameter_list|(
+name|st
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_pop_free(CMS_CertificateChoices, (st), (free_func))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_CertificateChoices_shift
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_shift(CMS_CertificateChoices, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_CertificateChoices_pop
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_pop(CMS_CertificateChoices, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_CertificateChoices_sort
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_sort(CMS_CertificateChoices, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_CertificateChoices_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(CMS_CertificateChoices, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_RecipientInfo_new
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_new(CMS_RecipientInfo, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_RecipientInfo_new_null
+parameter_list|()
+value|SKM_sk_new_null(CMS_RecipientInfo)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_RecipientInfo_free
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_free(CMS_RecipientInfo, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_RecipientInfo_num
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_num(CMS_RecipientInfo, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_RecipientInfo_value
+parameter_list|(
+name|st
+parameter_list|,
+name|i
+parameter_list|)
+value|SKM_sk_value(CMS_RecipientInfo, (st), (i))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_RecipientInfo_set
+parameter_list|(
+name|st
+parameter_list|,
+name|i
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_set(CMS_RecipientInfo, (st), (i), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_RecipientInfo_zero
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_zero(CMS_RecipientInfo, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_RecipientInfo_push
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_push(CMS_RecipientInfo, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_RecipientInfo_unshift
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_unshift(CMS_RecipientInfo, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_RecipientInfo_find
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find(CMS_RecipientInfo, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_RecipientInfo_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(CMS_RecipientInfo, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_RecipientInfo_delete
+parameter_list|(
+name|st
+parameter_list|,
+name|i
+parameter_list|)
+value|SKM_sk_delete(CMS_RecipientInfo, (st), (i))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_RecipientInfo_delete_ptr
+parameter_list|(
+name|st
+parameter_list|,
+name|ptr
+parameter_list|)
+value|SKM_sk_delete_ptr(CMS_RecipientInfo, (st), (ptr))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_RecipientInfo_insert
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|,
+name|i
+parameter_list|)
+value|SKM_sk_insert(CMS_RecipientInfo, (st), (val), (i))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_RecipientInfo_set_cmp_func
+parameter_list|(
+name|st
+parameter_list|,
+name|cmp
+parameter_list|)
+value|SKM_sk_set_cmp_func(CMS_RecipientInfo, (st), (cmp))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_RecipientInfo_dup
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_dup(CMS_RecipientInfo, st)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_RecipientInfo_pop_free
+parameter_list|(
+name|st
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_pop_free(CMS_RecipientInfo, (st), (free_func))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_RecipientInfo_shift
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_shift(CMS_RecipientInfo, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_RecipientInfo_pop
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_pop(CMS_RecipientInfo, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_RecipientInfo_sort
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_sort(CMS_RecipientInfo, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_RecipientInfo_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(CMS_RecipientInfo, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_RevocationInfoChoice_new
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_new(CMS_RevocationInfoChoice, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_RevocationInfoChoice_new_null
+parameter_list|()
+value|SKM_sk_new_null(CMS_RevocationInfoChoice)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_RevocationInfoChoice_free
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_free(CMS_RevocationInfoChoice, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_RevocationInfoChoice_num
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_num(CMS_RevocationInfoChoice, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_RevocationInfoChoice_value
+parameter_list|(
+name|st
+parameter_list|,
+name|i
+parameter_list|)
+value|SKM_sk_value(CMS_RevocationInfoChoice, (st), (i))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_RevocationInfoChoice_set
+parameter_list|(
+name|st
+parameter_list|,
+name|i
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_set(CMS_RevocationInfoChoice, (st), (i), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_RevocationInfoChoice_zero
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_zero(CMS_RevocationInfoChoice, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_RevocationInfoChoice_push
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_push(CMS_RevocationInfoChoice, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_RevocationInfoChoice_unshift
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_unshift(CMS_RevocationInfoChoice, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_RevocationInfoChoice_find
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find(CMS_RevocationInfoChoice, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_RevocationInfoChoice_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(CMS_RevocationInfoChoice, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_RevocationInfoChoice_delete
+parameter_list|(
+name|st
+parameter_list|,
+name|i
+parameter_list|)
+value|SKM_sk_delete(CMS_RevocationInfoChoice, (st), (i))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_RevocationInfoChoice_delete_ptr
+parameter_list|(
+name|st
+parameter_list|,
+name|ptr
+parameter_list|)
+value|SKM_sk_delete_ptr(CMS_RevocationInfoChoice, (st), (ptr))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_RevocationInfoChoice_insert
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|,
+name|i
+parameter_list|)
+value|SKM_sk_insert(CMS_RevocationInfoChoice, (st), (val), (i))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_RevocationInfoChoice_set_cmp_func
+parameter_list|(
+name|st
+parameter_list|,
+name|cmp
+parameter_list|)
+value|SKM_sk_set_cmp_func(CMS_RevocationInfoChoice, (st), (cmp))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_RevocationInfoChoice_dup
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_dup(CMS_RevocationInfoChoice, st)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_RevocationInfoChoice_pop_free
+parameter_list|(
+name|st
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_pop_free(CMS_RevocationInfoChoice, (st), (free_func))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_RevocationInfoChoice_shift
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_shift(CMS_RevocationInfoChoice, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_RevocationInfoChoice_pop
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_pop(CMS_RevocationInfoChoice, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_RevocationInfoChoice_sort
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_sort(CMS_RevocationInfoChoice, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_RevocationInfoChoice_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(CMS_RevocationInfoChoice, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_SignerInfo_new
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_new(CMS_SignerInfo, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_SignerInfo_new_null
+parameter_list|()
+value|SKM_sk_new_null(CMS_SignerInfo)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_SignerInfo_free
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_free(CMS_SignerInfo, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_SignerInfo_num
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_num(CMS_SignerInfo, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_SignerInfo_value
+parameter_list|(
+name|st
+parameter_list|,
+name|i
+parameter_list|)
+value|SKM_sk_value(CMS_SignerInfo, (st), (i))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_SignerInfo_set
+parameter_list|(
+name|st
+parameter_list|,
+name|i
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_set(CMS_SignerInfo, (st), (i), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_SignerInfo_zero
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_zero(CMS_SignerInfo, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_SignerInfo_push
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_push(CMS_SignerInfo, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_SignerInfo_unshift
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_unshift(CMS_SignerInfo, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_SignerInfo_find
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find(CMS_SignerInfo, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_SignerInfo_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(CMS_SignerInfo, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_SignerInfo_delete
+parameter_list|(
+name|st
+parameter_list|,
+name|i
+parameter_list|)
+value|SKM_sk_delete(CMS_SignerInfo, (st), (i))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_SignerInfo_delete_ptr
+parameter_list|(
+name|st
+parameter_list|,
+name|ptr
+parameter_list|)
+value|SKM_sk_delete_ptr(CMS_SignerInfo, (st), (ptr))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_SignerInfo_insert
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|,
+name|i
+parameter_list|)
+value|SKM_sk_insert(CMS_SignerInfo, (st), (val), (i))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_SignerInfo_set_cmp_func
+parameter_list|(
+name|st
+parameter_list|,
+name|cmp
+parameter_list|)
+value|SKM_sk_set_cmp_func(CMS_SignerInfo, (st), (cmp))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_SignerInfo_dup
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_dup(CMS_SignerInfo, st)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_SignerInfo_pop_free
+parameter_list|(
+name|st
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_pop_free(CMS_SignerInfo, (st), (free_func))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_SignerInfo_shift
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_shift(CMS_SignerInfo, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_SignerInfo_pop
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_pop(CMS_SignerInfo, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_SignerInfo_sort
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_sort(CMS_SignerInfo, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_CMS_SignerInfo_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(CMS_SignerInfo, (st))
+end_define
+
+begin_define
+define|#
+directive|define
 name|sk_CONF_IMODULE_new
 parameter_list|(
 name|st
@@ -5157,6 +6120,240 @@ parameter_list|(
 name|st
 parameter_list|)
 value|SKM_sk_is_sorted(GENERAL_NAME, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_GENERAL_NAMES_new
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_new(GENERAL_NAMES, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_GENERAL_NAMES_new_null
+parameter_list|()
+value|SKM_sk_new_null(GENERAL_NAMES)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_GENERAL_NAMES_free
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_free(GENERAL_NAMES, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_GENERAL_NAMES_num
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_num(GENERAL_NAMES, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_GENERAL_NAMES_value
+parameter_list|(
+name|st
+parameter_list|,
+name|i
+parameter_list|)
+value|SKM_sk_value(GENERAL_NAMES, (st), (i))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_GENERAL_NAMES_set
+parameter_list|(
+name|st
+parameter_list|,
+name|i
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_set(GENERAL_NAMES, (st), (i), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_GENERAL_NAMES_zero
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_zero(GENERAL_NAMES, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_GENERAL_NAMES_push
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_push(GENERAL_NAMES, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_GENERAL_NAMES_unshift
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_unshift(GENERAL_NAMES, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_GENERAL_NAMES_find
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find(GENERAL_NAMES, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_GENERAL_NAMES_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(GENERAL_NAMES, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_GENERAL_NAMES_delete
+parameter_list|(
+name|st
+parameter_list|,
+name|i
+parameter_list|)
+value|SKM_sk_delete(GENERAL_NAMES, (st), (i))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_GENERAL_NAMES_delete_ptr
+parameter_list|(
+name|st
+parameter_list|,
+name|ptr
+parameter_list|)
+value|SKM_sk_delete_ptr(GENERAL_NAMES, (st), (ptr))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_GENERAL_NAMES_insert
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|,
+name|i
+parameter_list|)
+value|SKM_sk_insert(GENERAL_NAMES, (st), (val), (i))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_GENERAL_NAMES_set_cmp_func
+parameter_list|(
+name|st
+parameter_list|,
+name|cmp
+parameter_list|)
+value|SKM_sk_set_cmp_func(GENERAL_NAMES, (st), (cmp))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_GENERAL_NAMES_dup
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_dup(GENERAL_NAMES, st)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_GENERAL_NAMES_pop_free
+parameter_list|(
+name|st
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_pop_free(GENERAL_NAMES, (st), (free_func))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_GENERAL_NAMES_shift
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_shift(GENERAL_NAMES, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_GENERAL_NAMES_pop
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_pop(GENERAL_NAMES, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_GENERAL_NAMES_sort
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_sort(GENERAL_NAMES, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_GENERAL_NAMES_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(GENERAL_NAMES, (st))
 end_define
 
 begin_define
@@ -8901,6 +10098,240 @@ parameter_list|(
 name|st
 parameter_list|)
 value|SKM_sk_is_sorted(OCSP_ONEREQ, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_OCSP_RESPID_new
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_new(OCSP_RESPID, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_OCSP_RESPID_new_null
+parameter_list|()
+value|SKM_sk_new_null(OCSP_RESPID)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_OCSP_RESPID_free
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_free(OCSP_RESPID, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_OCSP_RESPID_num
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_num(OCSP_RESPID, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_OCSP_RESPID_value
+parameter_list|(
+name|st
+parameter_list|,
+name|i
+parameter_list|)
+value|SKM_sk_value(OCSP_RESPID, (st), (i))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_OCSP_RESPID_set
+parameter_list|(
+name|st
+parameter_list|,
+name|i
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_set(OCSP_RESPID, (st), (i), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_OCSP_RESPID_zero
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_zero(OCSP_RESPID, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_OCSP_RESPID_push
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_push(OCSP_RESPID, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_OCSP_RESPID_unshift
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_unshift(OCSP_RESPID, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_OCSP_RESPID_find
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find(OCSP_RESPID, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_OCSP_RESPID_find_ex
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|)
+value|SKM_sk_find_ex(OCSP_RESPID, (st), (val))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_OCSP_RESPID_delete
+parameter_list|(
+name|st
+parameter_list|,
+name|i
+parameter_list|)
+value|SKM_sk_delete(OCSP_RESPID, (st), (i))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_OCSP_RESPID_delete_ptr
+parameter_list|(
+name|st
+parameter_list|,
+name|ptr
+parameter_list|)
+value|SKM_sk_delete_ptr(OCSP_RESPID, (st), (ptr))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_OCSP_RESPID_insert
+parameter_list|(
+name|st
+parameter_list|,
+name|val
+parameter_list|,
+name|i
+parameter_list|)
+value|SKM_sk_insert(OCSP_RESPID, (st), (val), (i))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_OCSP_RESPID_set_cmp_func
+parameter_list|(
+name|st
+parameter_list|,
+name|cmp
+parameter_list|)
+value|SKM_sk_set_cmp_func(OCSP_RESPID, (st), (cmp))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_OCSP_RESPID_dup
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_dup(OCSP_RESPID, st)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_OCSP_RESPID_pop_free
+parameter_list|(
+name|st
+parameter_list|,
+name|free_func
+parameter_list|)
+value|SKM_sk_pop_free(OCSP_RESPID, (st), (free_func))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_OCSP_RESPID_shift
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_shift(OCSP_RESPID, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_OCSP_RESPID_pop
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_pop(OCSP_RESPID, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_OCSP_RESPID_sort
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_sort(OCSP_RESPID, (st))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sk_OCSP_RESPID_is_sorted
+parameter_list|(
+name|st
+parameter_list|)
+value|SKM_sk_is_sorted(OCSP_RESPID, (st))
 end_define
 
 begin_define

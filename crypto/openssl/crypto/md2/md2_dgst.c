@@ -43,6 +43,29 @@ directive|include
 file|<openssl/crypto.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENSSL_FIPS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<openssl/fips.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<openssl/err.h>
+end_include
+
 begin_decl_stmt
 specifier|const
 name|char
@@ -643,14 +666,14 @@ return|;
 block|}
 end_function
 
-begin_function
-name|int
-name|MD2_Init
-parameter_list|(
-name|MD2_CTX
-modifier|*
-name|c
-parameter_list|)
+begin_macro
+name|FIPS_NON_FIPS_MD_Init
+argument_list|(
+argument|MD2
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|c
 operator|->
@@ -704,7 +727,7 @@ return|return
 literal|1
 return|;
 block|}
-end_function
+end_block
 
 begin_function
 name|int

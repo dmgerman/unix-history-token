@@ -4,7 +4,7 @@ comment|/* tasn_dec.c */
 end_comment
 
 begin_comment
-comment|/* Written by Dr Stephen N Henson (shenson@bigfoot.com) for the OpenSSL  * project 2000.  */
+comment|/* Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project 2000.  */
 end_comment
 
 begin_comment
@@ -119,6 +119,9 @@ name|tag
 parameter_list|,
 name|int
 name|aclass
+parameter_list|,
+name|int
+name|depth
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -498,11 +501,11 @@ operator|=
 operator|&
 name|ptmpval
 expr_stmt|;
-name|asn1_tlc_clear
-argument_list|(
-operator|&
 name|c
-argument_list|)
+operator|.
+name|valid
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -567,11 +570,11 @@ block|{
 name|ASN1_TLC
 name|c
 decl_stmt|;
-name|asn1_tlc_clear
-argument_list|(
-operator|&
 name|c
-argument_list|)
+operator|.
+name|valid
+operator|=
+literal|0
 expr_stmt|;
 return|return
 name|asn1_template_ex_d2i
@@ -719,9 +722,6 @@ init|=
 literal|0
 decl_stmt|;
 name|ASN1_VALUE
-modifier|*
-name|pchval
-decl_stmt|,
 modifier|*
 modifier|*
 name|pchptr
@@ -1264,10 +1264,6 @@ name|err
 goto|;
 block|}
 comment|/* CHOICE type, try each possibility in turn */
-name|pchval
-operator|=
-name|NULL
-expr_stmt|;
 name|p
 operator|=
 operator|*
@@ -2385,11 +2381,6 @@ argument_list|,
 name|tt
 argument_list|)
 expr_stmt|;
-operator|*
-name|val
-operator|=
-name|NULL
-expr_stmt|;
 return|return
 literal|0
 return|;
@@ -2984,11 +2975,6 @@ argument_list|,
 name|tt
 argument_list|)
 expr_stmt|;
-operator|*
-name|val
-operator|=
-name|NULL
-expr_stmt|;
 return|return
 literal|0
 return|;
@@ -3469,6 +3455,8 @@ operator|-
 literal|1
 argument_list|,
 name|V_ASN1_UNIVERSAL
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 block|{
@@ -3781,17 +3769,12 @@ name|pval
 expr_stmt|;
 name|pval
 operator|=
-operator|(
-name|ASN1_VALUE
-operator|*
-operator|*
-operator|)
 operator|&
 name|typ
 operator|->
 name|value
 operator|.
-name|ptr
+name|asn1_value
 expr_stmt|;
 block|}
 switch|switch
@@ -4471,6 +4454,28 @@ begin_comment
 comment|/* This function collects the asn1 data from a constructred string  * type into a buffer. The values of 'in' and 'len' should refer  * to the contents of the constructed type and 'inf' should be set  * if it is indefinite length.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ASN1_MAX_STRING_NEST
+end_ifndef
+
+begin_comment
+comment|/* This determines how many levels of recursion are permitted in ASN1  * string types. If it is not limited stack overflows can occur. If set  * to zero no recursion is allowed at all. Although zero should be adequate  * examples exist that require a value of 1. So 5 should be more than enough.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASN1_MAX_STRING_NEST
+value|5
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|int
@@ -4498,6 +4503,9 @@ name|tag
 parameter_list|,
 name|int
 name|aclass
+parameter_list|,
+name|int
+name|depth
 parameter_list|)
 block|{
 specifier|const
@@ -4642,9 +4650,24 @@ condition|(
 name|cst
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|OPENSSL_ALLOW_NESTED_ASN1_STRINGS
+if|if
+condition|(
+name|depth
+operator|>=
+name|ASN1_MAX_STRING_NEST
+condition|)
+block|{
+name|ASN1err
+argument_list|(
+name|ASN1_F_ASN1_COLLECT
+argument_list|,
+name|ASN1_R_NESTED_ASN1_STRING
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 if|if
 condition|(
 operator|!
@@ -4662,25 +4685,15 @@ argument_list|,
 name|tag
 argument_list|,
 name|aclass
+argument_list|,
+name|depth
+operator|+
+literal|1
 argument_list|)
 condition|)
 return|return
 literal|0
 return|;
-else|#
-directive|else
-name|ASN1err
-argument_list|(
-name|ASN1_F_ASN1_COLLECT
-argument_list|,
-name|ASN1_R_NESTED_ASN1_STRING
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-endif|#
-directive|endif
 block|}
 elseif|else
 if|if

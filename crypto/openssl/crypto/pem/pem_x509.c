@@ -4,7 +4,7 @@ comment|/* pem_x509.c */
 end_comment
 
 begin_comment
-comment|/* Written by Dr Stephen N Henson (shenson@bigfoot.com) for the OpenSSL  * project 2001.  */
+comment|/* Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project 2001.  */
 end_comment
 
 begin_comment

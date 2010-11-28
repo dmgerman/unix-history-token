@@ -100,7 +100,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|0
+name|EVP_CIPH_FLAG_FIPS
 block|,
 name|null_init_key
 block|,

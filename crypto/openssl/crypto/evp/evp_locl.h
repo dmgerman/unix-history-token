@@ -4,7 +4,7 @@ comment|/* evp_locl.h */
 end_comment
 
 begin_comment
-comment|/* Written by Dr Stephen N Henson (shenson@bigfoot.com) for the OpenSSL  * project 2000.  */
+comment|/* Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project 2000.  */
 end_comment
 
 begin_comment
@@ -97,7 +97,7 @@ parameter_list|,
 name|ksched
 parameter_list|)
 define|\
-value|static int cname##_cfb##cbits##_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out, const unsigned char *in, unsigned int inl) \ {\ 	cprefix##_cfb##cbits##_encrypt(in, out, (long)inl,&((kstruct *)ctx->cipher_data)->ksched, ctx->iv,&ctx->num, ctx->encrypt);\ 	return 1;\ }
+value|static int cname##_cfb##cbits##_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out, const unsigned char *in, unsigned int inl) \ {\ 	cprefix##_cfb##cbits##_encrypt(in, out, (long)((cbits==1)&& !(ctx->flags& EVP_CIPH_FLAG_LENGTH_BITS) ?inl*8:inl),&((kstruct *)ctx->cipher_data)->ksched, ctx->iv,&ctx->num, ctx->encrypt);\ 	return 1;\ }
 end_define
 
 begin_define
@@ -272,8 +272,6 @@ name|block_size
 parameter_list|,
 name|key_len
 parameter_list|, \
-name|iv_len
-parameter_list|,
 name|flags
 parameter_list|,
 name|init_key
@@ -287,7 +285,7 @@ parameter_list|,
 name|ctrl
 parameter_list|)
 define|\
-value|BLOCK_CIPHER_def1(cname, ecb, ecb, ECB, kstruct, nid, block_size, key_len, \ 		  iv_len, flags, init_key, cleanup, set_asn1, get_asn1, ctrl)
+value|BLOCK_CIPHER_def1(cname, ecb, ecb, ECB, kstruct, nid, block_size, key_len, \ 		  0, flags, init_key, cleanup, set_asn1, get_asn1, ctrl)
 end_define
 
 begin_define
@@ -322,7 +320,7 @@ parameter_list|,
 name|ctrl
 parameter_list|)
 define|\
-value|BLOCK_CIPHER_def_cbc(cname, kstruct, nid, block_size, key_len, iv_len, flags, \ 		     init_key, cleanup, set_asn1, get_asn1, ctrl) \ BLOCK_CIPHER_def_cfb(cname, kstruct, nid, key_len, iv_len, cbits, \ 		     flags, init_key, cleanup, set_asn1, get_asn1, ctrl) \ BLOCK_CIPHER_def_ofb(cname, kstruct, nid, key_len, iv_len, cbits, \ 		     flags, init_key, cleanup, set_asn1, get_asn1, ctrl) \ BLOCK_CIPHER_def_ecb(cname, kstruct, nid, block_size, key_len, iv_len, flags, \ 		     init_key, cleanup, set_asn1, get_asn1, ctrl)
+value|BLOCK_CIPHER_def_cbc(cname, kstruct, nid, block_size, key_len, iv_len, flags, \ 		     init_key, cleanup, set_asn1, get_asn1, ctrl) \ BLOCK_CIPHER_def_cfb(cname, kstruct, nid, key_len, iv_len, cbits, \ 		     flags, init_key, cleanup, set_asn1, get_asn1, ctrl) \ BLOCK_CIPHER_def_ofb(cname, kstruct, nid, key_len, iv_len, cbits, \ 		     flags, init_key, cleanup, set_asn1, get_asn1, ctrl) \ BLOCK_CIPHER_def_ecb(cname, kstruct, nid, block_size, key_len, flags, \ 		     init_key, cleanup, set_asn1, get_asn1, ctrl)
 end_define
 
 begin_comment
@@ -398,10 +396,107 @@ parameter_list|,
 name|cbits
 parameter_list|,
 name|iv_len
+parameter_list|,
+name|fl
 parameter_list|)
 define|\
-value|BLOCK_CIPHER_func_cfb(cipher##_##keysize,cprefix,cbits,kstruct,ksched) \ 	BLOCK_CIPHER_def_cfb(cipher##_##keysize,kstruct, \ 			     NID_##cipher##_##keysize, keysize/8, iv_len, cbits, \ 			     0, cipher##_init_key, NULL, \ 			     EVP_CIPHER_set_asn1_iv, \ 			     EVP_CIPHER_get_asn1_iv, \ 			     NULL)
+value|BLOCK_CIPHER_func_cfb(cipher##_##keysize,cprefix,cbits,kstruct,ksched) \ 	BLOCK_CIPHER_def_cfb(cipher##_##keysize,kstruct, \ 			     NID_##cipher##_##keysize, keysize/8, iv_len, cbits, \ 			     (fl)|EVP_CIPH_FLAG_DEFAULT_ASN1, \ 			     cipher##_init_key, NULL, NULL, NULL, NULL)
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENSSL_FIPS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|RC2_set_key
+value|private_RC2_set_key
+end_define
+
+begin_define
+define|#
+directive|define
+name|RC4_set_key
+value|private_RC4_set_key
+end_define
+
+begin_define
+define|#
+directive|define
+name|CAST_set_key
+value|private_CAST_set_key
+end_define
+
+begin_define
+define|#
+directive|define
+name|RC5_32_set_key
+value|private_RC5_32_set_key
+end_define
+
+begin_define
+define|#
+directive|define
+name|BF_set_key
+value|private_BF_set_key
+end_define
+
+begin_define
+define|#
+directive|define
+name|Camellia_set_key
+value|private_Camellia_set_key
+end_define
+
+begin_define
+define|#
+directive|define
+name|idea_set_encrypt_key
+value|private_idea_set_encrypt_key
+end_define
+
+begin_define
+define|#
+directive|define
+name|MD5_Init
+value|private_MD5_Init
+end_define
+
+begin_define
+define|#
+directive|define
+name|MD4_Init
+value|private_MD4_Init
+end_define
+
+begin_define
+define|#
+directive|define
+name|MD2_Init
+value|private_MD2_Init
+end_define
+
+begin_define
+define|#
+directive|define
+name|MDC2_Init
+value|private_MDC2_Init
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHA_Init
+value|private_SHA_Init
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

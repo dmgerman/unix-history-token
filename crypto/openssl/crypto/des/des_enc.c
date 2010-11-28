@@ -1560,6 +1560,16 @@ directive|ifndef
 name|DES_DEFAULT_OPTIONS
 end_ifndef
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|OPENSSL_FIPS_DES_ASM
+argument_list|)
+end_if
+
 begin_undef
 undef|#
 directive|undef
@@ -2195,6 +2205,11 @@ literal|0
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

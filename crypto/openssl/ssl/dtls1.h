@@ -38,6 +38,82 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|OPENSSL_SYS_VMS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<resource.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/timeb.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENSSL_SYS_WIN32
+end_ifdef
+
+begin_comment
+comment|/* Needed for struct timeval */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<winsock.h>
+end_include
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|OPENSSL_SYS_NETWARE
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_WINSOCK2API_
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|<sys/timeval.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__cplusplus
 end_ifdef
 
@@ -55,15 +131,21 @@ define|#
 directive|define
 name|DTLS1_BAD_VER
 value|0x0100
+if|#
+directive|if
+literal|0
+comment|/* this alert description is not specified anywhere... */
 define|#
 directive|define
 name|DTLS1_AD_MISSING_HANDSHAKE_MESSAGE
 value|110
+endif|#
+directive|endif
 comment|/* lengths of messages */
 define|#
 directive|define
 name|DTLS1_COOKIE_LENGTH
-value|32
+value|256
 define|#
 directive|define
 name|DTLS1_RT_HEADER_LENGTH
@@ -84,10 +166,21 @@ define|#
 directive|define
 name|DTLS1_CCS_HEADER_LENGTH
 value|1
+ifdef|#
+directive|ifdef
+name|DTLS1_AD_MISSING_HANDSHAKE_MESSAGE
 define|#
 directive|define
 name|DTLS1_AL_HEADER_LENGTH
 value|7
+else|#
+directive|else
+define|#
+directive|define
+name|DTLS1_AL_HEADER_LENGTH
+value|2
+endif|#
+directive|endif
 typedef|typedef
 struct|struct
 name|dtls1_bitmap_st
@@ -107,6 +200,46 @@ comment|/* max record number seen so far */
 block|}
 name|DTLS1_BITMAP
 typedef|;
+struct|struct
+name|dtls1_retransmit_state
+block|{
+name|EVP_CIPHER_CTX
+modifier|*
+name|enc_write_ctx
+decl_stmt|;
+comment|/* cryptographic state */
+specifier|const
+name|EVP_MD
+modifier|*
+name|write_hash
+decl_stmt|;
+comment|/* used for mac generation */
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_COMP
+name|COMP_CTX
+modifier|*
+name|compress
+decl_stmt|;
+comment|/* compression */
+else|#
+directive|else
+name|char
+modifier|*
+name|compress
+decl_stmt|;
+endif|#
+directive|endif
+name|SSL_SESSION
+modifier|*
+name|session
+decl_stmt|;
+name|unsigned
+name|short
+name|epoch
+decl_stmt|;
+block|}
+struct|;
 struct|struct
 name|hm_header_st
 block|{
@@ -133,6 +266,10 @@ decl_stmt|;
 name|unsigned
 name|int
 name|is_ccs
+decl_stmt|;
+name|struct
+name|dtls1_retransmit_state
+name|saved_retransmit_state
 decl_stmt|;
 block|}
 struct|;
@@ -196,6 +333,11 @@ name|char
 modifier|*
 name|fragment
 decl_stmt|;
+name|unsigned
+name|char
+modifier|*
+name|reassembly
+decl_stmt|;
 block|}
 name|hm_fragment
 typedef|;
@@ -255,6 +397,14 @@ name|unsigned
 name|short
 name|handshake_read_seq
 decl_stmt|;
+comment|/* save last sequence number for retransmissions */
+name|unsigned
+name|char
+name|last_write_sequence
+index|[
+literal|8
+index|]
+decl_stmt|;
 comment|/* Received handshake records (processed and unprocessed) */
 name|record_pqueue
 name|unprocessed_rcds
@@ -270,11 +420,20 @@ comment|/* Buffered (sent) handshake records */
 name|pqueue
 name|sent_messages
 decl_stmt|;
+comment|/* Buffered application records. 	 * Only for records between CCS and Finished 	 * to prevent either protocol violation or 	 * unnecessary message loss. 	 */
+name|record_pqueue
+name|buffered_app_data
+decl_stmt|;
+comment|/* Is set when listening for new connections with dtls1_listen() */
+name|unsigned
+name|int
+name|listen
+decl_stmt|;
 name|unsigned
 name|int
 name|mtu
 decl_stmt|;
-comment|/* max wire packet size */
+comment|/* max DTLS packet size */
 name|struct
 name|hm_header_st
 name|w_msg_hdr
@@ -286,6 +445,16 @@ decl_stmt|;
 name|struct
 name|dtls1_timeout_st
 name|timeout
+decl_stmt|;
+comment|/* Indicates when the last handshake msg sent will timeout */
+name|struct
+name|timeval
+name|next_timeout
+decl_stmt|;
+comment|/* Timeout duration */
+name|unsigned
+name|short
+name|timeout_duration
 decl_stmt|;
 comment|/* storage for Alert/Handshake protocol data received but not 	 * yet processed by ssl3_read_bytes: */
 name|unsigned
@@ -313,6 +482,10 @@ decl_stmt|;
 name|unsigned
 name|int
 name|retransmitting
+decl_stmt|;
+name|unsigned
+name|int
+name|change_cipher_spec_ok
 decl_stmt|;
 block|}
 name|DTLS1_STATE

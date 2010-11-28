@@ -4,7 +4,7 @@ comment|/* crypto/asn1/asn1_err.c */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1999-2005 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1999-2008 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_comment
@@ -429,6 +429,15 @@ block|,
 block|{
 name|ERR_FUNC
 argument_list|(
+name|ASN1_F_ASN1_OUTPUT_DATA
+argument_list|)
+block|,
+literal|"ASN1_OUTPUT_DATA"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
 name|ASN1_F_ASN1_PACK_STRING
 argument_list|)
 block|,
@@ -595,6 +604,24 @@ name|ASN1_F_ASN1_VERIFY
 argument_list|)
 block|,
 literal|"ASN1_verify"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|ASN1_F_B64_READ_ASN1
+argument_list|)
+block|,
+literal|"B64_READ_ASN1"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|ASN1_F_B64_WRITE_ASN1
+argument_list|)
+block|,
+literal|"B64_WRITE_ASN1"
 block|}
 block|,
 block|{
@@ -960,6 +987,24 @@ block|,
 block|{
 name|ERR_FUNC
 argument_list|(
+name|ASN1_F_SMIME_READ_ASN1
+argument_list|)
+block|,
+literal|"SMIME_read_ASN1"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|ASN1_F_SMIME_TEXT
+argument_list|)
+block|,
+literal|"SMIME_text"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
 name|ASN1_F_X509_CINF_NEW
 argument_list|)
 block|,
@@ -1052,6 +1097,24 @@ name|ASN1_R_ADDING_OBJECT
 argument_list|)
 block|,
 literal|"adding object"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|ASN1_R_ASN1_PARSE_ERROR
+argument_list|)
+block|,
+literal|"asn1 parse error"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|ASN1_R_ASN1_SIG_PARSE_ERROR
+argument_list|)
+block|,
+literal|"asn1 sig parse error"
 block|}
 block|,
 block|{
@@ -1480,6 +1543,15 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|ASN1_R_INVALID_MIME_TYPE
+argument_list|)
+block|,
+literal|"invalid mime type"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|ASN1_R_INVALID_MODIFIER
 argument_list|)
 block|,
@@ -1493,6 +1565,15 @@ name|ASN1_R_INVALID_NUMBER
 argument_list|)
 block|,
 literal|"invalid number"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|ASN1_R_INVALID_OBJECT_ENCODING
+argument_list|)
+block|,
+literal|"invalid object encoding"
 block|}
 block|,
 block|{
@@ -1556,6 +1637,33 @@ name|ASN1_R_LIST_ERROR
 argument_list|)
 block|,
 literal|"list error"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|ASN1_R_MIME_NO_CONTENT_TYPE
+argument_list|)
+block|,
+literal|"mime no content type"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|ASN1_R_MIME_PARSE_ERROR
+argument_list|)
+block|,
+literal|"mime parse error"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|ASN1_R_MIME_SIG_PARSE_ERROR
+argument_list|)
+block|,
+literal|"mime sig parse error"
 block|}
 block|,
 block|{
@@ -1642,10 +1750,46 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|ASN1_R_NO_CONTENT_TYPE
+argument_list|)
+block|,
+literal|"no content type"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|ASN1_R_NO_MATCHING_CHOICE_TYPE
 argument_list|)
 block|,
 literal|"no matching choice type"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|ASN1_R_NO_MULTIPART_BODY_FAILURE
+argument_list|)
+block|,
+literal|"no multipart body failure"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|ASN1_R_NO_MULTIPART_BOUNDARY
+argument_list|)
+block|,
+literal|"no multipart boundary"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|ASN1_R_NO_SIG_CONTENT_TYPE
+argument_list|)
+block|,
+literal|"no sig content type"
 block|}
 block|,
 block|{
@@ -1727,6 +1871,24 @@ name|ASN1_R_SHORT_LINE
 argument_list|)
 block|,
 literal|"short line"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|ASN1_R_SIG_INVALID_MIME_TYPE
+argument_list|)
+block|,
+literal|"sig invalid mime type"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|ASN1_R_STREAMING_NOT_SUPPORTED
+argument_list|)
+block|,
+literal|"streaming not supported"
 block|}
 block|,
 block|{

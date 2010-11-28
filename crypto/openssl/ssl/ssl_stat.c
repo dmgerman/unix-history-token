@@ -517,6 +517,22 @@ literal|"SSLv3 read server certificate request B"
 expr_stmt|;
 break|break;
 case|case
+name|SSL3_ST_CR_SESSION_TICKET_A
+case|:
+name|str
+operator|=
+literal|"SSLv3 read server session ticket A"
+expr_stmt|;
+break|break;
+case|case
+name|SSL3_ST_CR_SESSION_TICKET_B
+case|:
+name|str
+operator|=
+literal|"SSLv3 read server session ticket B"
+expr_stmt|;
+break|break;
+case|case
 name|SSL3_ST_CR_SRVR_DONE_A
 case|:
 name|str
@@ -808,6 +824,22 @@ literal|"SSLv3 write certificate request B"
 expr_stmt|;
 break|break;
 case|case
+name|SSL3_ST_SW_SESSION_TICKET_A
+case|:
+name|str
+operator|=
+literal|"SSLv3 write session ticket A"
+expr_stmt|;
+break|break;
+case|case
+name|SSL3_ST_SW_SESSION_TICKET_B
+case|:
+name|str
+operator|=
+literal|"SSLv3 write session ticket B"
+expr_stmt|;
+break|break;
+case|case
 name|SSL3_ST_SW_SRVR_DONE_A
 case|:
 name|str
@@ -939,6 +971,39 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
+comment|/* DTLS */
+case|case
+name|DTLS1_ST_CR_HELLO_VERIFY_REQUEST_A
+case|:
+name|str
+operator|=
+literal|"DTLS1 read hello verify request A"
+expr_stmt|;
+break|break;
+case|case
+name|DTLS1_ST_CR_HELLO_VERIFY_REQUEST_B
+case|:
+name|str
+operator|=
+literal|"DTLS1 read hello verify request B"
+expr_stmt|;
+break|break;
+case|case
+name|DTLS1_ST_SW_HELLO_VERIFY_REQUEST_A
+case|:
+name|str
+operator|=
+literal|"DTLS1 write hello verify request A"
+expr_stmt|;
+break|break;
+case|case
+name|DTLS1_ST_SW_HELLO_VERIFY_REQUEST_B
+case|:
+name|str
+operator|=
+literal|"DTLS1 write hello verify request B"
+expr_stmt|;
+break|break;
 default|default:
 name|str
 operator|=
@@ -1889,6 +1954,39 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
+comment|/* DTLS */
+case|case
+name|DTLS1_ST_CR_HELLO_VERIFY_REQUEST_A
+case|:
+name|str
+operator|=
+literal|"DRCHVA"
+expr_stmt|;
+break|break;
+case|case
+name|DTLS1_ST_CR_HELLO_VERIFY_REQUEST_B
+case|:
+name|str
+operator|=
+literal|"DRCHVB"
+expr_stmt|;
+break|break;
+case|case
+name|DTLS1_ST_SW_HELLO_VERIFY_REQUEST_A
+case|:
+name|str
+operator|=
+literal|"DWCHVA"
+expr_stmt|;
+break|break;
+case|case
+name|DTLS1_ST_SW_HELLO_VERIFY_REQUEST_B
+case|:
+name|str
+operator|=
+literal|"DWCHVB"
+expr_stmt|;
+break|break;
 default|default:
 name|str
 operator|=

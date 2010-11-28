@@ -4,7 +4,7 @@ comment|/* asn1_gen.c */
 end_comment
 
 begin_comment
-comment|/* Written by Dr Stephen N Henson (shenson@bigfoot.com) for the OpenSSL  * project 2002.  */
+comment|/* Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project 2002.  */
 end_comment
 
 begin_comment
@@ -847,6 +847,14 @@ argument_list|(
 name|len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|new_der
+condition|)
+goto|goto
+name|err
+goto|;
 comment|/* Generate tagged encoding */
 name|p
 operator|=
@@ -1781,6 +1789,14 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|sk
+condition|)
+goto|goto
+name|bad
+goto|;
+if|if
+condition|(
 name|section
 condition|)
 block|{
@@ -1854,13 +1870,19 @@ condition|)
 goto|goto
 name|bad
 goto|;
+if|if
+condition|(
+operator|!
 name|sk_ASN1_TYPE_push
 argument_list|(
 name|sk
 argument_list|,
 name|typ
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|bad
+goto|;
 name|typ
 operator|=
 name|NULL
@@ -1907,6 +1929,14 @@ argument_list|(
 name|derlen
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|der
+condition|)
+goto|goto
+name|bad
+goto|;
 name|p
 operator|=
 name|der

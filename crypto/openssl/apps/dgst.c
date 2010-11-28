@@ -152,6 +152,9 @@ specifier|const
 name|char
 modifier|*
 name|hmac_key
+parameter_list|,
+name|int
+name|non_fips_allow
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -200,7 +203,7 @@ name|i
 decl_stmt|,
 name|err
 init|=
-literal|0
+literal|1
 decl_stmt|;
 specifier|const
 name|EVP_MD
@@ -321,6 +324,12 @@ name|siglen
 init|=
 literal|0
 decl_stmt|;
+name|unsigned
+name|int
+name|sig_flags
+init|=
+literal|0
+decl_stmt|;
 name|char
 modifier|*
 name|passargin
@@ -349,7 +358,15 @@ name|hmac_key
 init|=
 name|NULL
 decl_stmt|;
+name|int
+name|non_fips_allow
+init|=
+literal|0
+decl_stmt|;
 name|apps_startup
+argument_list|()
+expr_stmt|;
+name|ERR_load_crypto_strings
 argument_list|()
 expr_stmt|;
 if|if
@@ -692,6 +709,122 @@ argument_list|(
 operator|*
 name|argv
 argument_list|,
+literal|"-x931"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|sig_flags
+operator|=
+name|EVP_MD_CTX_FLAG_PAD_X931
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+operator|*
+name|argv
+argument_list|,
+literal|"-pss_saltlen"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|int
+name|saltlen
+decl_stmt|;
+if|if
+condition|(
+operator|--
+name|argc
+operator|<
+literal|1
+condition|)
+break|break;
+name|saltlen
+operator|=
+name|atoi
+argument_list|(
+operator|*
+operator|(
+operator|++
+name|argv
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|saltlen
+operator|==
+operator|-
+literal|1
+condition|)
+name|sig_flags
+operator|=
+name|EVP_MD_CTX_FLAG_PSS_MREC
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|saltlen
+operator|==
+operator|-
+literal|2
+condition|)
+name|sig_flags
+operator|=
+name|EVP_MD_CTX_FLAG_PSS_MDLEN
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|saltlen
+operator|<
+operator|-
+literal|2
+operator|||
+name|saltlen
+operator|>=
+literal|0xFFFE
+condition|)
+block|{
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|"Invalid PSS salt length %d\n"
+argument_list|,
+name|saltlen
+argument_list|)
+expr_stmt|;
+goto|goto
+name|end
+goto|;
+block|}
+else|else
+name|sig_flags
+operator|=
+name|saltlen
+expr_stmt|;
+name|sig_flags
+operator|<<=
+literal|16
+expr_stmt|;
+name|sig_flags
+operator||=
+name|EVP_MD_CTX_FLAG_PAD_PSS
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+operator|*
+name|argv
+argument_list|,
 literal|"-signature"
 argument_list|)
 operator|==
@@ -835,6 +968,39 @@ condition|)
 name|debug
 operator|=
 literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+operator|*
+name|argv
+argument_list|,
+literal|"-non-fips-allow"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|non_fips_allow
+operator|=
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+operator|*
+name|argv
+argument_list|,
+literal|"-fips-fingerprint"
+argument_list|)
+condition|)
+name|hmac_key
+operator|=
+literal|"etaonrishdlcupfm"
 expr_stmt|;
 elseif|else
 if|if
@@ -1043,6 +1209,13 @@ argument_list|,
 literal|"-binary         output in binary form\n"
 argument_list|)
 expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|"-hmac key       create hashed MAC with key\n"
+argument_list|)
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_ENGINE
@@ -1059,7 +1232,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-%3s to use the %s message digest algorithm (default)\n"
+literal|"-%-14s to use the %s message digest algorithm (default)\n"
 argument_list|,
 name|LN_md5
 argument_list|,
@@ -1070,7 +1243,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-%3s to use the %s message digest algorithm\n"
+literal|"-%-14s to use the %s message digest algorithm\n"
 argument_list|,
 name|LN_md4
 argument_list|,
@@ -1081,7 +1254,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-%3s to use the %s message digest algorithm\n"
+literal|"-%-14s to use the %s message digest algorithm\n"
 argument_list|,
 name|LN_md2
 argument_list|,
@@ -1095,7 +1268,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-%3s to use the %s message digest algorithm\n"
+literal|"-%-14s to use the %s message digest algorithm\n"
 argument_list|,
 name|LN_sha1
 argument_list|,
@@ -1106,7 +1279,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-%3s to use the %s message digest algorithm\n"
+literal|"-%-14s to use the %s message digest algorithm\n"
 argument_list|,
 name|LN_sha
 argument_list|,
@@ -1120,7 +1293,18 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-%3s to use the %s message digest algorithm\n"
+literal|"-%-14s to use the %s message digest algorithm\n"
+argument_list|,
+name|LN_sha224
+argument_list|,
+name|LN_sha224
+argument_list|)
+expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|"-%-14s to use the %s message digest algorithm\n"
 argument_list|,
 name|LN_sha256
 argument_list|,
@@ -1136,7 +1320,18 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-%3s to use the %s message digest algorithm\n"
+literal|"-%-14s to use the %s message digest algorithm\n"
+argument_list|,
+name|LN_sha384
+argument_list|,
+name|LN_sha384
+argument_list|)
+expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|"-%-14s to use the %s message digest algorithm\n"
 argument_list|,
 name|LN_sha512
 argument_list|,
@@ -1151,7 +1346,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-%3s to use the %s message digest algorithm\n"
+literal|"-%-14s to use the %s message digest algorithm\n"
 argument_list|,
 name|LN_mdc2
 argument_list|,
@@ -1162,7 +1357,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-%3s to use the %s message digest algorithm\n"
+literal|"-%-14s to use the %s message digest algorithm\n"
 argument_list|,
 name|LN_ripemd160
 argument_list|,
@@ -1577,6 +1772,56 @@ name|end
 goto|;
 block|}
 block|}
+if|if
+condition|(
+name|non_fips_allow
+condition|)
+block|{
+name|EVP_MD_CTX
+modifier|*
+name|md_ctx
+decl_stmt|;
+name|BIO_get_md_ctx
+argument_list|(
+name|bmd
+argument_list|,
+operator|&
+name|md_ctx
+argument_list|)
+expr_stmt|;
+name|EVP_MD_CTX_set_flags
+argument_list|(
+name|md_ctx
+argument_list|,
+name|EVP_MD_CTX_FLAG_NON_FIPS_ALLOW
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|sig_flags
+condition|)
+block|{
+name|EVP_MD_CTX
+modifier|*
+name|md_ctx
+decl_stmt|;
+name|BIO_get_md_ctx
+argument_list|(
+name|bmd
+argument_list|,
+operator|&
+name|md_ctx
+argument_list|)
+expr_stmt|;
+name|EVP_MD_CTX_set_flags
+argument_list|(
+name|md_ctx
+argument_list|,
+name|sig_flags
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* we use md as a filter, reading from 'in' */
 if|if
 condition|(
@@ -1659,6 +1904,8 @@ argument_list|,
 name|bmd
 argument_list|,
 name|hmac_key
+argument_list|,
+name|non_fips_allow
 argument_list|)
 expr_stmt|;
 block|}
@@ -1672,6 +1919,10 @@ name|md
 operator|->
 name|type
 argument_list|)
+expr_stmt|;
+name|err
+operator|=
+literal|0
 expr_stmt|;
 for|for
 control|(
@@ -1826,6 +2077,8 @@ argument_list|,
 name|bmd
 argument_list|,
 name|hmac_key
+argument_list|,
+name|non_fips_allow
 argument_list|)
 expr_stmt|;
 if|if
@@ -1991,6 +2244,9 @@ specifier|const
 name|char
 modifier|*
 name|hmac_key
+parameter_list|,
+name|int
+name|non_fips_allow
 parameter_list|)
 block|{
 name|unsigned

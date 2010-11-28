@@ -23,6 +23,12 @@ directive|include
 file|<string.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<openssl/e_os2.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -59,12 +65,6 @@ begin_else
 else|#
 directive|else
 end_else
-
-begin_include
-include|#
-directive|include
-file|<openssl/e_os2.h>
-end_include
 
 begin_include
 include|#

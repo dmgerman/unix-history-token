@@ -20,6 +20,14 @@ name|NUMPRIMES
 value|2048
 end_define
 
+begin_typedef
+typedef|typedef
+name|unsigned
+name|short
+name|prime_t
+typedef|;
+end_typedef
+
 begin_else
 else|#
 directive|else
@@ -32,6 +40,14 @@ name|NUMPRIMES
 value|54
 end_define
 
+begin_typedef
+typedef|typedef
+name|unsigned
+name|char
+name|prime_t
+typedef|;
+end_typedef
+
 begin_endif
 endif|#
 directive|endif
@@ -40,8 +56,7 @@ end_endif
 begin_decl_stmt
 specifier|static
 specifier|const
-name|unsigned
-name|int
+name|prime_t
 name|primes
 index|[
 name|NUMPRIMES

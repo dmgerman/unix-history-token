@@ -34,6 +34,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"evp_locl.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<openssl/objects.h>
 end_include
 

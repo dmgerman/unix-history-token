@@ -27,11 +27,22 @@ directive|include
 file|"ssl_locl.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_COMP
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<openssl/comp.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -56,6 +67,23 @@ include|#
 directive|include
 file|<openssl/rand.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KSSL_DEBUG
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<openssl/des.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int
@@ -91,10 +119,6 @@ decl_stmt|,
 name|j
 decl_stmt|,
 name|k
-decl_stmt|,
-name|n
-init|=
-literal|0
 decl_stmt|;
 specifier|const
 name|EVP_CIPHER
@@ -106,23 +130,6 @@ condition|(
 name|send
 condition|)
 block|{
-if|if
-condition|(
-name|s
-operator|->
-name|write_hash
-operator|!=
-name|NULL
-condition|)
-name|n
-operator|=
-name|EVP_MD_size
-argument_list|(
-name|s
-operator|->
-name|write_hash
-argument_list|)
-expr_stmt|;
 name|ds
 operator|=
 name|s
@@ -200,7 +207,6 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
 name|RAND_bytes
 argument_list|(
 name|rec
@@ -214,6 +220,8 @@ operator|->
 name|cipher
 argument_list|)
 argument_list|)
+operator|<=
+literal|0
 condition|)
 return|return
 operator|-
@@ -224,23 +232,6 @@ block|}
 block|}
 else|else
 block|{
-if|if
-condition|(
-name|s
-operator|->
-name|read_hash
-operator|!=
-name|NULL
-condition|)
-name|n
-operator|=
-name|EVP_MD_size
-argument_list|(
-name|s
-operator|->
-name|read_hash
-argument_list|)
-expr_stmt|;
 name|ds
 operator|=
 name|s
@@ -468,6 +459,10 @@ name|printf
 argument_list|(
 literal|"EVP_Cipher(ds=%p,rec->data=%p,rec->input=%p,l=%ld) ==>\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|ds
 argument_list|,
 name|rec
@@ -483,7 +478,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tEVP_CIPHER_CTX: %d buf_len, %d key_len [%d %d], %d iv_len\n"
+literal|"\tEVP_CIPHER_CTX: %d buf_len, %d key_len [%ld %ld], %d iv_len\n"
 argument_list|,
 name|ds
 operator|->
@@ -495,8 +490,16 @@ name|cipher
 operator|->
 name|key_len
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|DES_KEY_SZ
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|DES_SCHEDULE_SZ
 argument_list|,
 name|ds
@@ -645,7 +648,7 @@ name|KSSL_DEBUG
 block|{
 name|unsigned
 name|long
-name|i
+name|ki
 decl_stmt|;
 name|printf
 argument_list|(
@@ -654,15 +657,15 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|i
+name|ki
 operator|=
 literal|0
 init|;
-name|i
+name|ki
 operator|<
 name|l
 condition|;
-name|i
+name|ki
 operator|++
 control|)
 name|printf
@@ -673,7 +676,7 @@ name|rec
 operator|->
 name|data
 index|[
-name|i
+name|ki
 index|]
 argument_list|)
 expr_stmt|;

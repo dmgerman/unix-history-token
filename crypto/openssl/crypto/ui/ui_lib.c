@@ -169,6 +169,12 @@ name|user_data
 operator|=
 name|NULL
 expr_stmt|;
+name|ret
+operator|->
+name|flags
+operator|=
+literal|0
+expr_stmt|;
 name|CRYPTO_new_ex_data
 argument_list|(
 name|CRYPTO_EX_INDEX_UI

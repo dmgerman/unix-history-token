@@ -4,7 +4,7 @@ comment|/* a_mbstr.c */
 end_comment
 
 begin_comment
-comment|/* Written by Dr Stephen N Henson (shenson@bigfoot.com) for the OpenSSL  * project 1999.  */
+comment|/* Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project 1999.  */
 end_comment
 
 begin_comment
@@ -294,6 +294,8 @@ name|int
 name|outform
 decl_stmt|,
 name|outlen
+init|=
+literal|0
 decl_stmt|;
 name|ASN1_STRING
 modifier|*

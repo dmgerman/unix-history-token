@@ -4,7 +4,7 @@ comment|/* x509_vpm.c */
 end_comment
 
 begin_comment
-comment|/* Written by Dr Stephen N Henson (shenson@bigfoot.com) for the OpenSSL  * project 2004.  */
+comment|/* Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project 2004.  */
 end_comment
 
 begin_comment
@@ -95,7 +95,7 @@ name|param
 operator|->
 name|inh_flags
 operator|=
-name|X509_VP_FLAG_DEFAULT
+literal|0
 expr_stmt|;
 name|param
 operator|->
@@ -453,19 +453,40 @@ modifier|*
 name|from
 parameter_list|)
 block|{
+name|unsigned
+name|long
+name|save_flags
+init|=
+name|to
+operator|->
+name|inh_flags
+decl_stmt|;
+name|int
+name|ret
+decl_stmt|;
 name|to
 operator|->
 name|inh_flags
 operator||=
 name|X509_VP_FLAG_DEFAULT
 expr_stmt|;
-return|return
+name|ret
+operator|=
 name|X509_VERIFY_PARAM_inherit
 argument_list|(
 name|to
 argument_list|,
 name|from
 argument_list|)
+expr_stmt|;
+name|to
+operator|->
+name|inh_flags
+operator|=
+name|save_flags
+expr_stmt|;
+return|return
+name|ret
 return|;
 block|}
 end_function
@@ -969,7 +990,7 @@ comment|/* purpose */
 literal|0
 block|,
 comment|/* trust */
-literal|9
+literal|100
 block|,
 comment|/* depth */
 name|NULL
@@ -979,7 +1000,34 @@ block|,
 block|{
 literal|"pkcs7"
 block|,
-comment|/* SSL/TLS client parameters */
+comment|/* S/MIME signing parameters */
+literal|0
+block|,
+comment|/* Check time */
+literal|0
+block|,
+comment|/* internal flags */
+literal|0
+block|,
+comment|/* flags */
+name|X509_PURPOSE_SMIME_SIGN
+block|,
+comment|/* purpose */
+name|X509_TRUST_EMAIL
+block|,
+comment|/* trust */
+operator|-
+literal|1
+block|,
+comment|/* depth */
+name|NULL
+comment|/* policies */
+block|}
+block|,
+block|{
+literal|"smime_sign"
+block|,
+comment|/* S/MIME signing parameters */
 literal|0
 block|,
 comment|/* Check time */
@@ -1228,6 +1276,9 @@ argument_list|(
 name|ptmp
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sk_X509_VERIFY_PARAM_delete
 argument_list|(
 name|param_table

@@ -4,7 +4,7 @@ comment|/* x_exten.c */
 end_comment
 
 begin_comment
-comment|/* Written by Dr Stephen N Henson (shenson@bigfoot.com) for the OpenSSL  * project 2000.  */
+comment|/* Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project 2000.  */
 end_comment
 
 begin_comment
@@ -73,9 +73,36 @@ name|ASN1_SEQUENCE_END
 argument_list|(
 argument|X509_EXTENSION
 argument_list|)
+name|ASN1_ITEM_TEMPLATE
+argument_list|(
+name|X509_EXTENSIONS
+argument_list|)
+operator|=
+name|ASN1_EX_TEMPLATE_TYPE
+argument_list|(
+argument|ASN1_TFLG_SEQUENCE_OF
+argument_list|,
+literal|0
+argument_list|,
+argument|Extension
+argument_list|,
+argument|X509_EXTENSION
+argument_list|)
+name|ASN1_ITEM_TEMPLATE_END
+argument_list|(
+argument|X509_EXTENSIONS
+argument_list|)
 name|IMPLEMENT_ASN1_FUNCTIONS
 argument_list|(
 argument|X509_EXTENSION
+argument_list|)
+name|IMPLEMENT_ASN1_ENCODE_FUNCTIONS_fname
+argument_list|(
+argument|X509_EXTENSIONS
+argument_list|,
+argument|X509_EXTENSIONS
+argument_list|,
+argument|X509_EXTENSIONS
 argument_list|)
 name|IMPLEMENT_ASN1_DUP_FUNCTION
 argument_list|(

@@ -1028,9 +1028,6 @@ name|unsigned
 name|char
 modifier|*
 name|p
-decl_stmt|,
-modifier|*
-name|kp
 decl_stmt|;
 name|NETSCAPE_ENCRYPTED_PKEY
 modifier|*
@@ -1149,16 +1146,6 @@ goto|goto
 name|err
 goto|;
 block|}
-name|kp
-operator|=
-name|enckey
-operator|->
-name|enckey
-operator|->
-name|digest
-operator|->
-name|data
-expr_stmt|;
 if|if
 condition|(
 name|cb

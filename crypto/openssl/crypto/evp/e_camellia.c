@@ -226,7 +226,7 @@ name|ksize
 parameter_list|,
 name|cbits
 parameter_list|)
-value|IMPLEMENT_CFBR(camellia,Camellia,EVP_CAMELLIA_KEY,ks,ksize,cbits,16)
+value|IMPLEMENT_CFBR(camellia,Camellia,EVP_CAMELLIA_KEY,ks,ksize,cbits,16,0)
 end_define
 
 begin_macro

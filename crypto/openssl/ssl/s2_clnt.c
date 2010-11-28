@@ -1828,6 +1828,9 @@ literal|1
 operator|)
 return|;
 block|}
+operator|(
+name|void
+operator|)
 name|sk_SSL_CIPHER_set_cmp_func
 argument_list|(
 name|sk
@@ -1843,6 +1846,9 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sk_SSL_CIPHER_set_cmp_func
 argument_list|(
 name|cl

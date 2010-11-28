@@ -4,7 +4,7 @@ comment|/* eng_cnf.c */
 end_comment
 
 begin_comment
-comment|/* Written by Stephen Henson (shenson@bigfoot.com) for the OpenSSL  * project 2001.  */
+comment|/* Written by Stephen Henson (steve@openssl.org) for the OpenSSL  * project 2001.  */
 end_comment
 
 begin_comment
@@ -186,6 +186,8 @@ expr_stmt|;
 name|CONF_VALUE
 modifier|*
 name|ecmd
+init|=
+name|NULL
 decl_stmt|;
 name|char
 modifier|*
@@ -199,6 +201,11 @@ modifier|*
 name|e
 init|=
 name|NULL
+decl_stmt|;
+name|int
+name|soft
+init|=
+literal|0
 decl_stmt|;
 name|name
 operator|=
@@ -321,6 +328,21 @@ name|name
 operator|=
 name|ctrlvalue
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|ctrlname
+argument_list|,
+literal|"soft_load"
+argument_list|)
+condition|)
+name|soft
+operator|=
+literal|1
+expr_stmt|;
 comment|/* Load a dynamic ENGINE */
 elseif|else
 if|if
@@ -422,10 +444,25 @@ if|if
 condition|(
 operator|!
 name|e
+operator|&&
+name|soft
 condition|)
+block|{
+name|ERR_clear_error
+argument_list|()
+expr_stmt|;
 return|return
-literal|0
+literal|1
 return|;
+block|}
+if|if
+condition|(
+operator|!
+name|e
+condition|)
+goto|goto
+name|err
+goto|;
 block|}
 comment|/* Allow "EMPTY" to mean no value: this allows a valid 			 * "value" to be passed to ctrls of type NO_INPUT 		 	 */
 if|if
@@ -551,9 +588,9 @@ argument_list|,
 literal|0
 argument_list|)
 condition|)
-return|return
-literal|0
-return|;
+goto|goto
+name|err
+goto|;
 block|}
 block|}
 if|if
@@ -573,15 +610,63 @@ argument_list|(
 name|e
 argument_list|)
 condition|)
+block|{
+name|ecmd
+operator|=
+name|NULL
+expr_stmt|;
 goto|goto
 name|err
 goto|;
+block|}
 name|ret
 operator|=
 literal|1
 expr_stmt|;
 name|err
 label|:
+if|if
+condition|(
+name|ret
+operator|!=
+literal|1
+condition|)
+block|{
+name|ENGINEerr
+argument_list|(
+name|ENGINE_F_INT_ENGINE_CONFIGURE
+argument_list|,
+name|ENGINE_R_ENGINE_CONFIGURATION_ERROR
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ecmd
+condition|)
+name|ERR_add_error_data
+argument_list|(
+literal|6
+argument_list|,
+literal|"section="
+argument_list|,
+name|ecmd
+operator|->
+name|section
+argument_list|,
+literal|", name="
+argument_list|,
+name|ecmd
+operator|->
+name|name
+argument_list|,
+literal|", value="
+argument_list|,
+name|ecmd
+operator|->
+name|value
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|e

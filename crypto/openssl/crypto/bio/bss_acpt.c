@@ -1385,10 +1385,6 @@ modifier|*
 name|ptr
 parameter_list|)
 block|{
-name|BIO
-modifier|*
-name|dbio
-decl_stmt|;
 name|int
 modifier|*
 name|ip
@@ -1792,15 +1788,7 @@ break|break;
 case|case
 name|BIO_CTRL_DUP
 case|:
-name|dbio
-operator|=
-operator|(
-name|BIO
-operator|*
-operator|)
-name|ptr
-expr_stmt|;
-comment|/*		if (data->param_port) EAY EAY 			BIO_set_port(dbio,data->param_port); 		if (data->param_hostname) 			BIO_set_hostname(dbio,data->param_hostname); 		BIO_set_nbio(dbio,data->nbio); */
+comment|/*		dbio=(BIO *)ptr; 		if (data->param_port) EAY EAY 			BIO_set_port(dbio,data->param_port); 		if (data->param_hostname) 			BIO_set_hostname(dbio,data->param_hostname); 		BIO_set_nbio(dbio,data->nbio); */
 break|break;
 default|default:
 name|ret

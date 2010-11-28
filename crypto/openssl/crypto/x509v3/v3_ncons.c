@@ -4,7 +4,7 @@ comment|/* v3_ncons.c */
 end_comment
 
 begin_comment
-comment|/* Written by Dr Stephen N Henson (shenson@bigfoot.com) for the OpenSSL  * project.  */
+comment|/* Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project.  */
 end_comment
 
 begin_comment
@@ -753,15 +753,6 @@ argument_list|,
 name|tree
 operator|->
 name|base
-argument_list|)
-expr_stmt|;
-name|tree
-operator|=
-name|sk_GENERAL_SUBTREE_value
-argument_list|(
-name|trees
-argument_list|,
-name|i
 argument_list|)
 expr_stmt|;
 name|BIO_puts

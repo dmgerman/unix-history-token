@@ -4,7 +4,7 @@ comment|/* pcy_tree.c */
 end_comment
 
 begin_comment
-comment|/* Written by Dr Stephen N Henson (shenson@bigfoot.com) for the OpenSSL  * project 2004.  */
+comment|/* Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project 2004.  */
 end_comment
 
 begin_comment
@@ -275,9 +275,6 @@ operator|>
 literal|0
 condition|)
 block|{
-name|explicit_policy
-operator|--
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -286,9 +283,14 @@ name|x
 operator|->
 name|ex_flags
 operator|&
-name|EXFLAG_SS
+name|EXFLAG_SI
 operator|)
-operator|&&
+condition|)
+name|explicit_policy
+operator|--
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|cache
 operator|->
@@ -404,6 +406,8 @@ if|if
 condition|(
 operator|!
 name|tree
+operator|->
+name|levels
 condition|)
 block|{
 name|OPENSSL_free
@@ -561,7 +565,7 @@ name|x
 operator|->
 name|ex_flags
 operator|&
-name|EXFLAG_SS
+name|EXFLAG_SI
 operator|)
 operator|||
 operator|(
@@ -579,6 +583,17 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|x
+operator|->
+name|ex_flags
+operator|&
+name|EXFLAG_SI
+operator|)
+condition|)
 name|any_skip
 operator|--
 expr_stmt|;
@@ -588,7 +603,7 @@ operator|(
 name|cache
 operator|->
 name|any_skip
-operator|>
+operator|>=
 literal|0
 operator|)
 operator|&&
@@ -630,7 +645,7 @@ operator|(
 name|cache
 operator|->
 name|map_skip
-operator|>
+operator|>=
 literal|0
 operator|)
 operator|&&
@@ -930,15 +945,14 @@ condition|)
 return|return
 literal|0
 return|;
+comment|/* Curr may not have anyPolicy */
 name|data
 operator|->
 name|qualifier_set
 operator|=
-name|curr
+name|cache
 operator|->
 name|anyPolicy
-operator|->
-name|data
 operator|->
 name|qualifier_set
 expr_stmt|;
@@ -1090,6 +1104,9 @@ argument_list|(
 name|node
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sk_X509_POLICY_NODE_delete
 argument_list|(
 name|curr
@@ -1163,6 +1180,9 @@ argument_list|(
 name|node
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sk_X509_POLICY_NODE_delete
 argument_list|(
 name|curr

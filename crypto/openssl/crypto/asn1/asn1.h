@@ -405,9 +405,25 @@ define|#
 directive|define
 name|MBSTRING_UNIV
 value|(MBSTRING_FLAG|4)
+define|#
+directive|define
+name|SMIME_OLDMIME
+value|0x400
+define|#
+directive|define
+name|SMIME_CRLFEOL
+value|0x800
+define|#
+directive|define
+name|SMIME_STREAM
+value|0x1000
 struct_decl|struct
 name|X509_algor_st
 struct_decl|;
+name|DECLARE_STACK_OF
+argument_list|(
+argument|X509_ALGOR
+argument_list|)
 define|#
 directive|define
 name|DECLARE_ASN1_SET_OF
@@ -608,6 +624,11 @@ define|#
 directive|define
 name|ASN1_STRING_FLAG_NDEF
 value|0x010
+comment|/* This flag is used by the CMS code to indicate that a string is not  * complete and is a place holder for content when it had all been   * accessed. The flag will be reset when content has been written to it.  */
+define|#
+directive|define
+name|ASN1_STRING_FLAG_CONT
+value|0x020
 comment|/* This is the base type that holds just about everything :-) */
 typedef|typedef
 struct|struct
@@ -833,7 +854,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|name *name##_new(void); \ 	void name##_free(name *a);
+value|DECLARE_ASN1_ALLOC_FUNCTIONS(name) \ 	DECLARE_ASN1_ENCODE_FUNCTIONS_const(name, name)
 define|#
 directive|define
 name|DECLARE_ASN1_ALLOC_FUNCTIONS_name
@@ -865,6 +886,66 @@ parameter_list|(
 name|type
 parameter_list|)
 value|int (*)(const type *,unsigned char **)
+define|#
+directive|define
+name|CHECKED_D2I_OF
+parameter_list|(
+name|type
+parameter_list|,
+name|d2i
+parameter_list|)
+define|\
+value|((d2i_of_void*) (1 ? d2i : ((D2I_OF(type))0)))
+define|#
+directive|define
+name|CHECKED_I2D_OF
+parameter_list|(
+name|type
+parameter_list|,
+name|i2d
+parameter_list|)
+define|\
+value|((i2d_of_void*) (1 ? i2d : ((I2D_OF(type))0)))
+define|#
+directive|define
+name|CHECKED_NEW_OF
+parameter_list|(
+name|type
+parameter_list|,
+name|xnew
+parameter_list|)
+define|\
+value|((void *(*)(void)) (1 ? xnew : ((type *(*)(void))0)))
+define|#
+directive|define
+name|CHECKED_PTR_OF
+parameter_list|(
+name|type
+parameter_list|,
+name|p
+parameter_list|)
+define|\
+value|((void*) (1 ? p : (type*)0))
+define|#
+directive|define
+name|CHECKED_PPTR_OF
+parameter_list|(
+name|type
+parameter_list|,
+name|p
+parameter_list|)
+define|\
+value|((void**) (1 ? p : (type**)0))
+define|#
+directive|define
+name|CHECKED_PTR_OF_TO_CHAR
+parameter_list|(
+name|type
+parameter_list|,
+name|p
+parameter_list|)
+define|\
+value|((char*) (1 ? p : (type*)0))
 define|#
 directive|define
 name|TYPEDEF_D2I_OF
@@ -1149,6 +1230,10 @@ name|ASN1_STRING
 modifier|*
 name|sequence
 decl_stmt|;
+name|ASN1_VALUE
+modifier|*
+name|asn1_value
+decl_stmt|;
 block|}
 name|value
 union|;
@@ -1432,7 +1517,7 @@ define|#
 directive|define
 name|B_ASN1_PRINTABLE
 define|\
-value|B_ASN1_PRINTABLESTRING| \ 			B_ASN1_T61STRING| \ 			B_ASN1_IA5STRING| \ 			B_ASN1_BIT_STRING| \ 			B_ASN1_UNIVERSALSTRING|\ 			B_ASN1_BMPSTRING|\ 			B_ASN1_UTF8STRING|\ 			B_ASN1_SEQUENCE|\ 			B_ASN1_UNKNOWN
+value|B_ASN1_NUMERICSTRING| \ 			B_ASN1_PRINTABLESTRING| \ 			B_ASN1_T61STRING| \ 			B_ASN1_IA5STRING| \ 			B_ASN1_BIT_STRING| \ 			B_ASN1_UNIVERSALSTRING|\ 			B_ASN1_BMPSTRING|\ 			B_ASN1_UTF8STRING|\ 			B_ASN1_SEQUENCE|\ 			B_ASN1_UNKNOWN
 define|#
 directive|define
 name|B_ASN1_DIRECTORYSTRING
@@ -1919,6 +2004,22 @@ modifier|*
 name|value
 parameter_list|)
 function_decl|;
+name|int
+name|ASN1_TYPE_set1
+parameter_list|(
+name|ASN1_TYPE
+modifier|*
+name|a
+parameter_list|,
+name|int
+name|type
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|value
+parameter_list|)
+function_decl|;
 name|ASN1_OBJECT
 modifier|*
 name|ASN1_OBJECT_new
@@ -2053,6 +2154,21 @@ modifier|*
 name|str
 parameter_list|,
 specifier|const
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|int
+name|len
+parameter_list|)
+function_decl|;
+name|void
+name|ASN1_STRING_set0
+parameter_list|(
+name|ASN1_STRING
+modifier|*
+name|str
+parameter_list|,
 name|void
 modifier|*
 name|data
@@ -3181,7 +3297,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|((type *)ASN1_dup((i2d_of_void *)(i2d), (d2i_of_void *)(d2i), (char *)(x)))
+value|((type*)ASN1_dup(CHECKED_I2D_OF(type, i2d), \ 		     CHECKED_D2I_OF(type, d2i), \ 		     CHECKED_PTR_OF_TO_CHAR(type, x)))
 define|#
 directive|define
 name|ASN1_dup_of_const
@@ -3195,7 +3311,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|((type *)ASN1_dup((i2d_of_void *)(i2d), (d2i_of_void *)(d2i), (char *)(x)))
+value|((type*)ASN1_dup(CHECKED_I2D_OF(const type, i2d), \ 		     CHECKED_D2I_OF(type, d2i), \ 		     CHECKED_PTR_OF_TO_CHAR(const type, x)))
 name|void
 modifier|*
 name|ASN1_item_dup
@@ -3210,6 +3326,24 @@ modifier|*
 name|x
 parameter_list|)
 function_decl|;
+comment|/* ASN1 alloc/free macros for when a type is only used internally */
+define|#
+directive|define
+name|M_ASN1_new_of
+parameter_list|(
+name|type
+parameter_list|)
+value|(type *)ASN1_item_new(ASN1_ITEM_rptr(type))
+define|#
+directive|define
+name|M_ASN1_free_of
+parameter_list|(
+name|x
+parameter_list|,
+name|type
+parameter_list|)
+define|\
+value|ASN1_item_free(CHECKED_PTR_OF(type, x), ASN1_ITEM_rptr(type))
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_FP_API
@@ -3256,7 +3390,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|((type *)ASN1_d2i_fp((void *(*)(void))(xnew), (d2i_of_void *)(d2i), (in), (void **)(x)))
+value|((type*)ASN1_d2i_fp(CHECKED_NEW_OF(type, xnew), \ 			CHECKED_D2I_OF(type, d2i), \ 			in, \ 			CHECKED_PPTR_OF(type, x)))
 name|void
 modifier|*
 name|ASN1_item_d2i_fp
@@ -3304,7 +3438,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|(ASN1_i2d_fp((i2d_of_void *)(i2d), (out), (x)))
+value|(ASN1_i2d_fp(CHECKED_I2D_OF(type, i2d), \ 		 out, \ 		 CHECKED_PTR_OF(type, x)))
 define|#
 directive|define
 name|ASN1_i2d_fp_of_const
@@ -3318,7 +3452,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|(ASN1_i2d_fp((i2d_of_void *)(i2d), (out), (x)))
+value|(ASN1_i2d_fp(CHECKED_I2D_OF(const type, i2d), \ 		 out, \ 		 CHECKED_PTR_OF(const type, x)))
 name|int
 name|ASN1_item_i2d_fp
 parameter_list|(
@@ -3414,7 +3548,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|((type *)ASN1_d2i_bio( (void *(*)(void))(xnew), (d2i_of_void *)(d2i), (in), (void **)(x)))
+value|((type*)ASN1_d2i_bio( CHECKED_NEW_OF(type, xnew), \ 			  CHECKED_D2I_OF(type, d2i), \ 			  in, \ 			  CHECKED_PPTR_OF(type, x)))
 name|void
 modifier|*
 name|ASN1_item_d2i_bio
@@ -3463,7 +3597,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|(ASN1_i2d_bio((i2d_of_void *)(i2d), (out), (void *)(x)))
+value|(ASN1_i2d_bio(CHECKED_I2D_OF(type, i2d), \ 		  out, \ 		  CHECKED_PTR_OF(type, x)))
 define|#
 directive|define
 name|ASN1_i2d_bio_of_const
@@ -3477,7 +3611,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|(ASN1_i2d_bio((i2d_of_void *)(i2d), (out), (void *)(x)))
+value|(ASN1_i2d_bio(CHECKED_I2D_OF(const type, i2d), \ 		  out, \ 		  CHECKED_PTR_OF(const type, x)))
 name|int
 name|ASN1_item_i2d_bio
 parameter_list|(
@@ -3881,7 +4015,7 @@ parameter_list|,
 name|oct
 parameter_list|)
 define|\
-value|(ASN1_pack_string((obj), (i2d_of_void *)(i2d), (oct)))
+value|(ASN1_pack_string(CHECKED_PTR_OF(type, obj), \ 		      CHECKED_I2D_OF(type, i2d), \ 		      oct))
 name|ASN1_STRING
 modifier|*
 name|ASN1_item_pack
@@ -4155,6 +4289,91 @@ modifier|*
 name|cnf
 parameter_list|)
 function_decl|;
+typedef|typedef
+name|int
+name|asn1_output_data_fn
+parameter_list|(
+name|BIO
+modifier|*
+name|out
+parameter_list|,
+name|BIO
+modifier|*
+name|data
+parameter_list|,
+name|ASN1_VALUE
+modifier|*
+name|val
+parameter_list|,
+name|int
+name|flags
+parameter_list|,
+specifier|const
+name|ASN1_ITEM
+modifier|*
+name|it
+parameter_list|)
+function_decl|;
+name|int
+name|int_smime_write_ASN1
+argument_list|(
+name|BIO
+operator|*
+name|bio
+argument_list|,
+name|ASN1_VALUE
+operator|*
+name|val
+argument_list|,
+name|BIO
+operator|*
+name|data
+argument_list|,
+name|int
+name|flags
+argument_list|,
+name|int
+name|ctype_nid
+argument_list|,
+name|int
+name|econt_nid
+argument_list|,
+name|STACK_OF
+argument_list|(
+name|X509_ALGOR
+argument_list|)
+operator|*
+name|mdalgs
+argument_list|,
+name|asn1_output_data_fn
+operator|*
+name|data_fn
+argument_list|,
+specifier|const
+name|ASN1_ITEM
+operator|*
+name|it
+argument_list|)
+decl_stmt|;
+name|ASN1_VALUE
+modifier|*
+name|SMIME_read_ASN1
+parameter_list|(
+name|BIO
+modifier|*
+name|bio
+parameter_list|,
+name|BIO
+modifier|*
+modifier|*
+name|bcont
+parameter_list|,
+specifier|const
+name|ASN1_ITEM
+modifier|*
+name|it
+parameter_list|)
+function_decl|;
 comment|/* BEGIN ERROR CODES */
 comment|/* The following lines are auto generated by the script mkerr.pl. Any changes  * made after this point may be overwritten when the script is next run.  */
 name|void
@@ -4327,6 +4546,10 @@ name|ASN1_F_ASN1_OBJECT_NEW
 value|123
 define|#
 directive|define
+name|ASN1_F_ASN1_OUTPUT_DATA
+value|207
+define|#
+directive|define
 name|ASN1_F_ASN1_PACK_STRING
 value|124
 define|#
@@ -4401,6 +4624,14 @@ define|#
 directive|define
 name|ASN1_F_ASN1_VERIFY
 value|137
+define|#
+directive|define
+name|ASN1_F_B64_READ_ASN1
+value|208
+define|#
+directive|define
+name|ASN1_F_B64_WRITE_ASN1
+value|209
 define|#
 directive|define
 name|ASN1_F_BITSTR_CB
@@ -4563,6 +4794,14 @@ name|ASN1_F_PKCS5_PBE_SET
 value|202
 define|#
 directive|define
+name|ASN1_F_SMIME_READ_ASN1
+value|210
+define|#
+directive|define
+name|ASN1_F_SMIME_TEXT
+value|211
+define|#
+directive|define
 name|ASN1_F_X509_CINF_NEW
 value|168
 define|#
@@ -4598,6 +4837,14 @@ define|#
 directive|define
 name|ASN1_R_ADDING_OBJECT
 value|171
+define|#
+directive|define
+name|ASN1_R_ASN1_PARSE_ERROR
+value|198
+define|#
+directive|define
+name|ASN1_R_ASN1_SIG_PARSE_ERROR
+value|199
 define|#
 directive|define
 name|ASN1_R_AUX_ERROR
@@ -4788,12 +5035,20 @@ name|ASN1_R_INVALID_DIGIT
 value|130
 define|#
 directive|define
+name|ASN1_R_INVALID_MIME_TYPE
+value|200
+define|#
+directive|define
 name|ASN1_R_INVALID_MODIFIER
 value|186
 define|#
 directive|define
 name|ASN1_R_INVALID_NUMBER
 value|187
+define|#
+directive|define
+name|ASN1_R_INVALID_OBJECT_ENCODING
+value|212
 define|#
 directive|define
 name|ASN1_R_INVALID_SEPARATOR
@@ -4822,6 +5077,18 @@ define|#
 directive|define
 name|ASN1_R_LIST_ERROR
 value|188
+define|#
+directive|define
+name|ASN1_R_MIME_NO_CONTENT_TYPE
+value|201
+define|#
+directive|define
+name|ASN1_R_MIME_PARSE_ERROR
+value|202
+define|#
+directive|define
+name|ASN1_R_MIME_SIG_PARSE_ERROR
+value|203
 define|#
 directive|define
 name|ASN1_R_MISSING_EOC
@@ -4860,8 +5127,24 @@ name|ASN1_R_NOT_ENOUGH_DATA
 value|142
 define|#
 directive|define
+name|ASN1_R_NO_CONTENT_TYPE
+value|204
+define|#
+directive|define
 name|ASN1_R_NO_MATCHING_CHOICE_TYPE
 value|143
+define|#
+directive|define
+name|ASN1_R_NO_MULTIPART_BODY_FAILURE
+value|205
+define|#
+directive|define
+name|ASN1_R_NO_MULTIPART_BOUNDARY
+value|206
+define|#
+directive|define
+name|ASN1_R_NO_SIG_CONTENT_TYPE
+value|207
 define|#
 directive|define
 name|ASN1_R_NULL_IS_WRONG_LENGTH
@@ -4898,6 +5181,14 @@ define|#
 directive|define
 name|ASN1_R_SHORT_LINE
 value|150
+define|#
+directive|define
+name|ASN1_R_SIG_INVALID_MIME_TYPE
+value|208
+define|#
+directive|define
+name|ASN1_R_STREAMING_NOT_SUPPORTED
+value|209
 define|#
 directive|define
 name|ASN1_R_STRING_TOO_LONG

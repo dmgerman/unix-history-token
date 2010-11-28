@@ -4,7 +4,7 @@ comment|/* pk7_smime.c */
 end_comment
 
 begin_comment
-comment|/* Written by Dr Stephen N Henson (shenson@bigfoot.com) for the OpenSSL  * project.  */
+comment|/* Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project.  */
 end_comment
 
 begin_comment
@@ -843,12 +843,12 @@ return|return
 literal|0
 return|;
 block|}
-name|X509_STORE_CTX_set_purpose
+name|X509_STORE_CTX_set_default
 argument_list|(
 operator|&
 name|cert_ctx
 argument_list|,
-name|X509_PURPOSE_SMIME_SIGN
+literal|"smime_sign"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1087,6 +1087,13 @@ goto|goto
 name|err
 goto|;
 block|}
+name|BIO_set_mem_eof_return
+argument_list|(
+name|tmpout
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 name|tmpout
@@ -1784,6 +1791,9 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+operator|(
+name|void
+operator|)
 name|BIO_flush
 argument_list|(
 name|p7bio

@@ -4,7 +4,7 @@ comment|/* pkcs12.c */
 end_comment
 
 begin_comment
-comment|/* Written by Dr Stephen N Henson (shenson@bigfoot.com) for the OpenSSL  * project.  */
+comment|/* Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project.  */
 end_comment
 
 begin_comment
@@ -80,6 +80,35 @@ include|#
 directive|include
 file|<openssl/pkcs12.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENSSL_SYS_NETWARE
+end_ifdef
+
+begin_comment
+comment|/* Rename these functions to avoid name clashes on NetWare OS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|uni2asc
+value|OPENSSL_uni2asc
+end_define
+
+begin_define
+define|#
+directive|define
+name|asc2uni
+value|OPENSSL_asc2uni
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -401,6 +430,11 @@ name|csp_name
 init|=
 name|NULL
 decl_stmt|;
+name|int
+name|add_lmk
+init|=
+literal|0
+decl_stmt|;
 name|PKCS12
 modifier|*
 name|p12
@@ -460,8 +494,6 @@ literal|0
 decl_stmt|;
 name|int
 name|cert_pbe
-init|=
-name|NID_pbe_WithSHA1And40BitRC2_CBC
 decl_stmt|;
 name|int
 name|key_pbe
@@ -557,6 +589,25 @@ endif|#
 directive|endif
 name|apps_startup
 argument_list|()
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|OPENSSL_FIPS
+if|if
+condition|(
+name|FIPS_mode
+argument_list|()
+condition|)
+name|cert_pbe
+operator|=
+name|NID_pbe_WithSHA1And3_Key_TripleDES_CBC
+expr_stmt|;
+else|else
+endif|#
+directive|endif
+name|cert_pbe
+operator|=
+name|NID_pbe_WithSHA1And40BitRC2_CBC
 expr_stmt|;
 name|enc
 operator|=
@@ -842,6 +893,23 @@ operator|=
 name|EVP_des_cbc
 argument_list|()
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+operator|*
+name|args
+argument_list|,
+literal|"-des3"
+argument_list|)
+condition|)
+name|enc
+operator|=
+name|EVP_des_ede3_cbc
+argument_list|()
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_IDEA
@@ -864,6 +932,9 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_SEED
 elseif|else
 if|if
 condition|(
@@ -873,14 +944,16 @@ argument_list|(
 operator|*
 name|args
 argument_list|,
-literal|"-des3"
+literal|"-seed"
 argument_list|)
 condition|)
 name|enc
 operator|=
-name|EVP_des_ede3_cbc
+name|EVP_seed_cbc
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_AES
@@ -1374,6 +1447,22 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+operator|*
+name|args
+argument_list|,
+literal|"-LMK"
+argument_list|)
+condition|)
+name|add_lmk
+operator|=
+literal|1
+expr_stmt|;
 elseif|else
 if|if
 condition|(
@@ -1937,6 +2026,18 @@ endif|#
 directive|endif
 ifndef|#
 directive|ifndef
+name|OPENSSL_NO_SEED
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|"-seed         encrypt private keys with seed\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
 name|OPENSSL_NO_AES
 name|BIO_printf
 argument_list|(
@@ -2092,6 +2193,20 @@ argument_list|(
 name|bio_err
 argument_list|,
 literal|"              the random number generator\n"
+argument_list|)
+expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|"-CSP name     Microsoft CSP name\n"
+argument_list|)
+expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|"-LMK          Add local machine keyset attribute to private key\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2708,6 +2823,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Remove from list */
+operator|(
+name|void
+operator|)
 name|sk_X509_delete
 argument_list|(
 name|certs
@@ -3066,6 +3184,26 @@ name|char
 operator|*
 operator|)
 name|csp_name
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|add_lmk
+operator|&&
+name|key
+condition|)
+name|EVP_PKEY_add1_attr_by_NID
+argument_list|(
+name|key
+argument_list|,
+name|NID_LocalKeySet
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
 argument_list|,
 operator|-
 literal|1

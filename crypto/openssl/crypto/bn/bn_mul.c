@@ -1694,6 +1694,10 @@ begin_comment
 comment|/* r is 2*n2 words in size,  * a and b are both n2 words in size.  * n2 must be a power of 2.  * We multiply and return the result.  * t must be 2*n2 words in size  * We calculate  * a[0]*b[0]  * a[0]*b[0]+a[1]*b[1]+(a[0]-a[1])*(b[1]-b[0])  * a[1]*b[1]  */
 end_comment
 
+begin_comment
+comment|/* dnX may not be positive, but n2/2+dnX has to be */
+end_comment
+
 begin_function
 name|void
 name|bn_mul_recursive
@@ -1769,11 +1773,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|" bn_mul_recursive %d * %d\n"
+literal|" bn_mul_recursive %d%+d * %d%+d\n"
 argument_list|,
 name|n2
 argument_list|,
+name|dna
+argument_list|,
 name|n2
+argument_list|,
+name|dnb
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2750,6 +2758,10 @@ begin_comment
 comment|/* n+tn is the word length  * t needs to be n*4 is size, as does r */
 end_comment
 
+begin_comment
+comment|/* tnX may not be negative but less than n */
+end_comment
+
 begin_function
 name|void
 name|bn_mul_part_recursive
@@ -2797,8 +2809,6 @@ decl_stmt|,
 name|c2
 decl_stmt|,
 name|neg
-decl_stmt|,
-name|zero
 decl_stmt|;
 name|BN_ULONG
 name|ln
@@ -2815,15 +2825,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|" bn_mul_part_recursive (%d+%d) * (%d+%d)\n"
+literal|" bn_mul_part_recursive (%d%+d) * (%d%+d)\n"
+argument_list|,
+name|n
 argument_list|,
 name|tna
 argument_list|,
 name|n
 argument_list|,
 name|tnb
-argument_list|,
-name|n
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2897,8 +2907,6 @@ operator|-
 name|n
 argument_list|)
 expr_stmt|;
-name|zero
-operator|=
 name|neg
 operator|=
 literal|0
@@ -2971,10 +2979,6 @@ case|case
 operator|-
 literal|3
 case|:
-name|zero
-operator|=
-literal|1
-expr_stmt|;
 comment|/* break; */
 case|case
 operator|-
@@ -3045,10 +3049,6 @@ case|:
 case|case
 literal|1
 case|:
-name|zero
-operator|=
-literal|1
-expr_stmt|;
 comment|/* break; */
 case|case
 literal|2
@@ -3111,10 +3111,6 @@ break|break;
 case|case
 literal|3
 case|:
-name|zero
-operator|=
-literal|1
-expr_stmt|;
 comment|/* break; */
 case|case
 literal|4
@@ -3595,12 +3591,13 @@ name|i
 operator|/=
 literal|2
 expr_stmt|;
+comment|/* these simplified conditions work 					 * exclusively because difference 					 * between tna and tnb is 1 or 0 */
 if|if
 condition|(
 name|i
 operator|<
 name|tna
-operator|&&
+operator|||
 name|i
 operator|<
 name|tnb
@@ -3651,11 +3648,11 @@ elseif|else
 if|if
 condition|(
 name|i
-operator|<=
+operator|==
 name|tna
-operator|&&
+operator|||
 name|i
-operator|<=
+operator|==
 name|tnb
 condition|)
 block|{
@@ -5945,11 +5942,6 @@ operator|<=
 literal|1
 condition|)
 block|{
-name|int
-name|sav_j
-init|=
-literal|0
-decl_stmt|;
 comment|/* Find out the power of two lower or equal 			   to the longest of the two numbers */
 if|if
 condition|(
@@ -5988,10 +5980,6 @@ name|bl
 argument_list|)
 expr_stmt|;
 block|}
-name|sav_j
-operator|=
-name|j
-expr_stmt|;
 name|j
 operator|=
 literal|1
@@ -6028,6 +6016,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|t
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|err
+goto|;
+if|if
+condition|(
 name|al
 operator|>
 name|j
@@ -6037,6 +6034,8 @@ operator|>
 name|j
 condition|)
 block|{
+if|if
+condition|(
 name|bn_wexpand
 argument_list|(
 name|t
@@ -6045,7 +6044,14 @@ name|k
 operator|*
 literal|4
 argument_list|)
-expr_stmt|;
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|err
+goto|;
+if|if
+condition|(
 name|bn_wexpand
 argument_list|(
 name|rr
@@ -6054,7 +6060,12 @@ name|k
 operator|*
 literal|4
 argument_list|)
-expr_stmt|;
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|err
+goto|;
 name|bn_mul_part_recursive
 argument_list|(
 name|rr
@@ -6088,6 +6099,8 @@ block|}
 else|else
 comment|/* al<= j || bl<= j */
 block|{
+if|if
+condition|(
 name|bn_wexpand
 argument_list|(
 name|t
@@ -6096,7 +6109,14 @@ name|k
 operator|*
 literal|2
 argument_list|)
-expr_stmt|;
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|err
+goto|;
+if|if
+condition|(
 name|bn_wexpand
 argument_list|(
 name|rr
@@ -6105,7 +6125,12 @@ name|k
 operator|*
 literal|2
 argument_list|)
-expr_stmt|;
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|err
+goto|;
 name|bn_mul_recursive
 argument_list|(
 name|rr

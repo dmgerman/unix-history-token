@@ -277,7 +277,6 @@ block|}
 name|OCSP_RESPBYTES
 typedef|;
 comment|/*   OCSPResponse ::= SEQUENCE {  *      responseStatus         OCSPResponseStatus,  *      responseBytes          [0] EXPLICIT ResponseBytes OPTIONAL }  */
-typedef|typedef
 struct|struct
 name|ocsp_response_st
 block|{
@@ -290,8 +289,7 @@ modifier|*
 name|responseBytes
 decl_stmt|;
 block|}
-name|OCSP_RESPONSE
-typedef|;
+struct|;
 comment|/*   ResponderID ::= CHOICE {  *      byName   [1] Name,  *      byKey    [2] KeyHash }  */
 define|#
 directive|define
@@ -301,7 +299,6 @@ define|#
 directive|define
 name|V_OCSP_RESPID_KEY
 value|1
-typedef|typedef
 struct|struct
 name|ocsp_responder_id_st
 block|{
@@ -322,8 +319,15 @@ block|}
 name|value
 union|;
 block|}
-name|OCSP_RESPID
-typedef|;
+struct|;
+name|DECLARE_STACK_OF
+argument_list|(
+argument|OCSP_RESPID
+argument_list|)
+name|DECLARE_ASN1_FUNCTIONS
+argument_list|(
+argument|OCSP_RESPID
+argument_list|)
 comment|/*   KeyHash ::= OCTET STRING --SHA-1 hash of responder's public key  *                            --(excluding the tag and length fields)  */
 comment|/*   RevokedInfo ::= SEQUENCE {  *       revocationTime              GeneralizedTime,  *       revocationReason    [0]     EXPLICIT CRLReason OPTIONAL }  */
 typedef|typedef
@@ -735,6 +739,47 @@ parameter_list|,
 name|OCSP_REQUEST
 modifier|*
 name|req
+parameter_list|)
+function_decl|;
+name|OCSP_REQ_CTX
+modifier|*
+name|OCSP_sendreq_new
+parameter_list|(
+name|BIO
+modifier|*
+name|io
+parameter_list|,
+name|char
+modifier|*
+name|path
+parameter_list|,
+name|OCSP_REQUEST
+modifier|*
+name|req
+parameter_list|,
+name|int
+name|maxline
+parameter_list|)
+function_decl|;
+name|int
+name|OCSP_sendreq_nbio
+parameter_list|(
+name|OCSP_RESPONSE
+modifier|*
+modifier|*
+name|presp
+parameter_list|,
+name|OCSP_REQ_CTX
+modifier|*
+name|rctx
+parameter_list|)
+function_decl|;
+name|void
+name|OCSP_REQ_CTX_free
+parameter_list|(
+name|OCSP_REQ_CTX
+modifier|*
+name|rctx
 parameter_list|)
 function_decl|;
 name|OCSP_CERTID
@@ -1299,7 +1344,7 @@ parameter_list|,
 name|sk
 parameter_list|)
 define|\
-value|(ASN1_STRING_encode((s), (i2d_of_void *)(i2d), (data), (STACK_OF(ASN1_OBJECT) *)(sk)))
+value|ASN1_STRING_encode(s, CHECKED_I2D_OF(type, i2d), data, sk)
 name|X509_EXTENSION
 modifier|*
 name|OCSP_crlID_new
@@ -2091,6 +2136,10 @@ define|#
 directive|define
 name|OCSP_F_OCSP_SENDREQ_BIO
 value|112
+define|#
+directive|define
+name|OCSP_F_PARSE_HTTP_LINE1
+value|117
 define|#
 directive|define
 name|OCSP_F_REQUEST_VERIFY

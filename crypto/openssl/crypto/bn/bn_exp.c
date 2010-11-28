@@ -83,13 +83,13 @@ name|BN_get_flags
 argument_list|(
 name|p
 argument_list|,
-name|BN_FLG_EXP_CONSTTIME
+name|BN_FLG_CONSTTIME
 argument_list|)
 operator|!=
 literal|0
 condition|)
 block|{
-comment|/* BN_FLG_EXP_CONSTTIME only supported by BN_mod_exp_mont() */
+comment|/* BN_FLG_CONSTTIME only supported by BN_mod_exp_mont() */
 name|BNerr
 argument_list|(
 name|BN_F_BN_EXP
@@ -133,16 +133,20 @@ name|rr
 operator|=
 name|r
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|v
 operator|=
 name|BN_CTX_get
 argument_list|(
 name|ctx
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|rr
+operator|==
+name|NULL
+operator|||
+name|v
 operator|==
 name|NULL
 condition|)
@@ -392,7 +396,7 @@ name|BN_get_flags
 argument_list|(
 name|p
 argument_list|,
-name|BN_FLG_EXP_CONSTTIME
+name|BN_FLG_CONSTTIME
 argument_list|)
 operator|==
 literal|0
@@ -578,13 +582,13 @@ name|BN_get_flags
 argument_list|(
 name|p
 argument_list|,
-name|BN_FLG_EXP_CONSTTIME
+name|BN_FLG_CONSTTIME
 argument_list|)
 operator|!=
 literal|0
 condition|)
 block|{
-comment|/* BN_FLG_EXP_CONSTTIME only supported by BN_mod_exp_mont() */
+comment|/* BN_FLG_CONSTTIME only supported by BN_mod_exp_mont() */
 name|BNerr
 argument_list|(
 name|BN_F_BN_MOD_EXP_RECP
@@ -1254,7 +1258,7 @@ name|BN_get_flags
 argument_list|(
 name|p
 argument_list|,
-name|BN_FLG_EXP_CONSTTIME
+name|BN_FLG_CONSTTIME
 argument_list|)
 operator|!=
 literal|0
@@ -3062,13 +3066,13 @@ name|BN_get_flags
 argument_list|(
 name|p
 argument_list|,
-name|BN_FLG_EXP_CONSTTIME
+name|BN_FLG_CONSTTIME
 argument_list|)
 operator|!=
 literal|0
 condition|)
 block|{
-comment|/* BN_FLG_EXP_CONSTTIME only supported by BN_mod_exp_mont() */
+comment|/* BN_FLG_CONSTTIME only supported by BN_mod_exp_mont() */
 name|BNerr
 argument_list|(
 name|BN_F_BN_MOD_EXP_MONT_WORD
@@ -3676,13 +3680,13 @@ name|BN_get_flags
 argument_list|(
 name|p
 argument_list|,
-name|BN_FLG_EXP_CONSTTIME
+name|BN_FLG_CONSTTIME
 argument_list|)
 operator|!=
 literal|0
 condition|)
 block|{
-comment|/* BN_FLG_EXP_CONSTTIME only supported by BN_mod_exp_mont() */
+comment|/* BN_FLG_CONSTTIME only supported by BN_mod_exp_mont() */
 name|BNerr
 argument_list|(
 name|BN_F_BN_MOD_EXP_SIMPLE

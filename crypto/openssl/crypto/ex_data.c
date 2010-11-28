@@ -993,6 +993,9 @@ operator|->
 name|meth_num
 operator|++
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sk_CRYPTO_EX_DATA_FUNCS_set
 argument_list|(
 name|item

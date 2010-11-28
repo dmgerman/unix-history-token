@@ -80,6 +80,11 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+comment|/* Signalling cipher suite value: from draft-ietf-tls-renegotiation-03.txt */
+define|#
+directive|define
+name|SSL3_CK_SCSV
+value|0x030000FF
 define|#
 directive|define
 name|SSL3_CK_RSA_NULL_MD5
@@ -1054,6 +1059,33 @@ decl_stmt|;
 block|}
 name|tmp
 struct|;
+comment|/* Connection binding to prevent renegotiation attacks */
+name|unsigned
+name|char
+name|previous_client_finished
+index|[
+name|EVP_MAX_MD_SIZE
+index|]
+decl_stmt|;
+name|unsigned
+name|char
+name|previous_client_finished_len
+decl_stmt|;
+name|unsigned
+name|char
+name|previous_server_finished
+index|[
+name|EVP_MAX_MD_SIZE
+index|]
+decl_stmt|;
+name|unsigned
+name|char
+name|previous_server_finished_len
+decl_stmt|;
+name|int
+name|send_connection_binding
+decl_stmt|;
+comment|/* TODOEKR */
 block|}
 name|SSL3_STATE
 typedef|;
@@ -1188,6 +1220,22 @@ define|#
 directive|define
 name|SSL3_ST_CR_FINISHED_B
 value|(0x1D1|SSL_ST_CONNECT)
+define|#
+directive|define
+name|SSL3_ST_CR_SESSION_TICKET_A
+value|(0x1E0|SSL_ST_CONNECT)
+define|#
+directive|define
+name|SSL3_ST_CR_SESSION_TICKET_B
+value|(0x1E1|SSL_ST_CONNECT)
+define|#
+directive|define
+name|SSL3_ST_CR_CERT_STATUS_A
+value|(0x1F0|SSL_ST_CONNECT)
+define|#
+directive|define
+name|SSL3_ST_CR_CERT_STATUS_B
+value|(0x1F1|SSL_ST_CONNECT)
 comment|/* server */
 comment|/* extra state */
 define|#
@@ -1329,6 +1377,22 @@ name|SSL3_ST_SW_FINISHED_B
 value|(0x1E1|SSL_ST_ACCEPT)
 define|#
 directive|define
+name|SSL3_ST_SW_SESSION_TICKET_A
+value|(0x1F0|SSL_ST_ACCEPT)
+define|#
+directive|define
+name|SSL3_ST_SW_SESSION_TICKET_B
+value|(0x1F1|SSL_ST_ACCEPT)
+define|#
+directive|define
+name|SSL3_ST_SW_CERT_STATUS_A
+value|(0x200|SSL_ST_ACCEPT)
+define|#
+directive|define
+name|SSL3_ST_SW_CERT_STATUS_B
+value|(0x201|SSL_ST_ACCEPT)
+define|#
+directive|define
 name|SSL3_MT_HELLO_REQUEST
 value|0
 define|#
@@ -1339,6 +1403,10 @@ define|#
 directive|define
 name|SSL3_MT_SERVER_HELLO
 value|2
+define|#
+directive|define
+name|SSL3_MT_NEWSESSION_TICKET
+value|4
 define|#
 directive|define
 name|SSL3_MT_CERTIFICATE
@@ -1367,6 +1435,10 @@ define|#
 directive|define
 name|SSL3_MT_FINISHED
 value|20
+define|#
+directive|define
+name|SSL3_MT_CERTIFICATE_STATUS
+value|22
 define|#
 directive|define
 name|DTLS1_MT_HELLO_VERIFY_REQUEST

@@ -79,6 +79,28 @@ comment|/* Use reduced rounds for short key */
 block|}
 name|CAST_KEY
 typedef|;
+ifdef|#
+directive|ifdef
+name|OPENSSL_FIPS
+name|void
+name|private_CAST_set_key
+parameter_list|(
+name|CAST_KEY
+modifier|*
+name|key
+parameter_list|,
+name|int
+name|len
+parameter_list|,
+specifier|const
+name|unsigned
+name|char
+modifier|*
+name|data
+parameter_list|)
+function_decl|;
+endif|#
+directive|endif
 name|void
 name|CAST_set_key
 parameter_list|(
@@ -110,6 +132,7 @@ name|char
 modifier|*
 name|out
 parameter_list|,
+specifier|const
 name|CAST_KEY
 modifier|*
 name|key
@@ -125,6 +148,7 @@ name|CAST_LONG
 modifier|*
 name|data
 parameter_list|,
+specifier|const
 name|CAST_KEY
 modifier|*
 name|key
@@ -137,6 +161,7 @@ name|CAST_LONG
 modifier|*
 name|data
 parameter_list|,
+specifier|const
 name|CAST_KEY
 modifier|*
 name|key
@@ -159,6 +184,7 @@ parameter_list|,
 name|long
 name|length
 parameter_list|,
+specifier|const
 name|CAST_KEY
 modifier|*
 name|ks
@@ -189,6 +215,7 @@ parameter_list|,
 name|long
 name|length
 parameter_list|,
+specifier|const
 name|CAST_KEY
 modifier|*
 name|schedule
@@ -223,6 +250,7 @@ parameter_list|,
 name|long
 name|length
 parameter_list|,
+specifier|const
 name|CAST_KEY
 modifier|*
 name|schedule

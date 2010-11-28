@@ -819,6 +819,9 @@ condition|)
 goto|goto
 name|err
 goto|;
+operator|(
+name|void
+operator|)
 name|BIO_flush
 argument_list|(
 name|out
@@ -842,6 +845,9 @@ condition|)
 goto|goto
 name|err
 goto|;
+operator|(
+name|void
+operator|)
 name|BIO_flush
 argument_list|(
 name|out
@@ -865,6 +871,9 @@ condition|)
 goto|goto
 name|err
 goto|;
+operator|(
+name|void
+operator|)
 name|BIO_flush
 argument_list|(
 name|out
@@ -904,6 +913,9 @@ condition|)
 goto|goto
 name|err
 goto|;
+operator|(
+name|void
+operator|)
 name|BIO_flush
 argument_list|(
 name|out
@@ -931,6 +943,9 @@ condition|)
 goto|goto
 name|err
 goto|;
+operator|(
+name|void
+operator|)
 name|BIO_flush
 argument_list|(
 name|out
@@ -954,6 +969,9 @@ condition|)
 goto|goto
 name|err
 goto|;
+operator|(
+name|void
+operator|)
 name|BIO_flush
 argument_list|(
 name|out
@@ -979,6 +997,9 @@ condition|)
 goto|goto
 name|err
 goto|;
+operator|(
+name|void
+operator|)
 name|BIO_flush
 argument_list|(
 name|out
@@ -1004,6 +1025,9 @@ condition|)
 goto|goto
 name|err
 goto|;
+operator|(
+name|void
+operator|)
 name|BIO_flush
 argument_list|(
 name|out
@@ -1027,6 +1051,9 @@ condition|)
 goto|goto
 name|err
 goto|;
+operator|(
+name|void
+operator|)
 name|BIO_flush
 argument_list|(
 name|out
@@ -1052,6 +1079,9 @@ condition|)
 goto|goto
 name|err
 goto|;
+operator|(
+name|void
+operator|)
 name|BIO_flush
 argument_list|(
 name|out
@@ -1075,6 +1105,9 @@ condition|)
 goto|goto
 name|err
 goto|;
+operator|(
+name|void
+operator|)
 name|BIO_flush
 argument_list|(
 name|out
@@ -1100,6 +1133,9 @@ condition|)
 goto|goto
 name|err
 goto|;
+operator|(
+name|void
+operator|)
 name|BIO_flush
 argument_list|(
 name|out
@@ -1125,6 +1161,9 @@ condition|)
 goto|goto
 name|err
 goto|;
+operator|(
+name|void
+operator|)
 name|BIO_flush
 argument_list|(
 name|out
@@ -1150,6 +1189,9 @@ condition|)
 goto|goto
 name|err
 goto|;
+operator|(
+name|void
+operator|)
 name|BIO_flush
 argument_list|(
 name|out
@@ -1175,6 +1217,9 @@ condition|)
 goto|goto
 name|err
 goto|;
+operator|(
+name|void
+operator|)
 name|BIO_flush
 argument_list|(
 name|out
@@ -1200,6 +1245,9 @@ condition|)
 goto|goto
 name|err
 goto|;
+operator|(
+name|void
+operator|)
 name|BIO_flush
 argument_list|(
 name|out
@@ -1225,6 +1273,9 @@ condition|)
 goto|goto
 name|err
 goto|;
+operator|(
+name|void
+operator|)
 name|BIO_flush
 argument_list|(
 name|out
@@ -1250,6 +1301,9 @@ condition|)
 goto|goto
 name|err
 goto|;
+operator|(
+name|void
+operator|)
 name|BIO_flush
 argument_list|(
 name|out
@@ -1275,6 +1329,9 @@ condition|)
 goto|goto
 name|err
 goto|;
+operator|(
+name|void
+operator|)
 name|BIO_flush
 argument_list|(
 name|out
@@ -1300,6 +1357,9 @@ condition|)
 goto|goto
 name|err
 goto|;
+operator|(
+name|void
+operator|)
 name|BIO_flush
 argument_list|(
 name|out
@@ -1323,6 +1383,9 @@ condition|)
 goto|goto
 name|err
 goto|;
+operator|(
+name|void
+operator|)
 name|BIO_flush
 argument_list|(
 name|out
@@ -1346,6 +1409,9 @@ condition|)
 goto|goto
 name|err
 goto|;
+operator|(
+name|void
+operator|)
 name|BIO_flush
 argument_list|(
 name|out
@@ -1371,6 +1437,9 @@ condition|)
 goto|goto
 name|err
 goto|;
+operator|(
+name|void
+operator|)
 name|BIO_flush
 argument_list|(
 name|out
@@ -1396,6 +1465,9 @@ condition|)
 goto|goto
 name|err
 goto|;
+operator|(
+name|void
+operator|)
 name|BIO_flush
 argument_list|(
 name|out
@@ -1421,6 +1493,9 @@ condition|)
 goto|goto
 name|err
 goto|;
+operator|(
+name|void
+operator|)
 name|BIO_flush
 argument_list|(
 name|out
@@ -1446,6 +1521,9 @@ condition|)
 goto|goto
 name|err
 goto|;
+operator|(
+name|void
+operator|)
 name|BIO_flush
 argument_list|(
 name|out
@@ -1471,6 +1549,9 @@ condition|)
 goto|goto
 name|err
 goto|;
+operator|(
+name|void
+operator|)
 name|BIO_flush
 argument_list|(
 name|out
@@ -1496,6 +1577,9 @@ condition|)
 goto|goto
 name|err
 goto|;
+operator|(
+name|void
+operator|)
 name|BIO_flush
 argument_list|(
 name|out
@@ -1521,6 +1605,9 @@ condition|)
 goto|goto
 name|err
 goto|;
+operator|(
+name|void
+operator|)
 name|BIO_flush
 argument_list|(
 name|out
@@ -1552,6 +1639,9 @@ literal|"1\n"
 argument_list|)
 expr_stmt|;
 comment|/* make sure the Perl script fed by bc notices 	                      * the failure, see test_bn in test/Makefile.ssl*/
+operator|(
+name|void
+operator|)
 name|BIO_flush
 argument_list|(
 name|out
@@ -5152,7 +5242,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-literal|00
+literal|0
 operator|)
 return|;
 if|if
@@ -5715,7 +5805,6 @@ expr_stmt|;
 comment|/**/
 if|if
 condition|(
-operator|!
 name|BN_exp
 argument_list|(
 name|d
@@ -5726,10 +5815,12 @@ name|b
 argument_list|,
 name|ctx
 argument_list|)
+operator|<=
+literal|0
 condition|)
 return|return
 operator|(
-literal|00
+literal|0
 operator|)
 return|;
 if|if

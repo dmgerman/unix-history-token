@@ -121,15 +121,15 @@ literal|16
 argument_list|,
 literal|128
 argument_list|,
-literal|0
+argument|EVP_CIPH_FLAG_FIPS|EVP_CIPH_FLAG_DEFAULT_ASN1
 argument_list|,
 argument|aes_init_key
 argument_list|,
 argument|NULL
 argument_list|,
-argument|EVP_CIPHER_set_asn1_iv
+argument|NULL
 argument_list|,
-argument|EVP_CIPHER_get_asn1_iv
+argument|NULL
 argument_list|,
 argument|NULL
 argument_list|)
@@ -156,15 +156,15 @@ literal|16
 argument_list|,
 literal|128
 argument_list|,
-literal|0
+argument|EVP_CIPH_FLAG_FIPS|EVP_CIPH_FLAG_DEFAULT_ASN1
 argument_list|,
 argument|aes_init_key
 argument_list|,
 argument|NULL
 argument_list|,
-argument|EVP_CIPHER_set_asn1_iv
+argument|NULL
 argument_list|,
-argument|EVP_CIPHER_get_asn1_iv
+argument|NULL
 argument_list|,
 argument|NULL
 argument_list|)
@@ -191,15 +191,15 @@ literal|16
 argument_list|,
 literal|128
 argument_list|,
-literal|0
+argument|EVP_CIPH_FLAG_FIPS|EVP_CIPH_FLAG_DEFAULT_ASN1
 argument_list|,
 argument|aes_init_key
 argument_list|,
 argument|NULL
 argument_list|,
-argument|EVP_CIPHER_set_asn1_iv
+argument|NULL
 argument_list|,
-argument|EVP_CIPHER_get_asn1_iv
+argument|NULL
 argument_list|,
 argument|NULL
 argument_list|)
@@ -213,8 +213,10 @@ parameter_list|(
 name|ksize
 parameter_list|,
 name|cbits
+parameter_list|,
+name|flags
 parameter_list|)
-value|IMPLEMENT_CFBR(aes,AES,EVP_AES_KEY,ks,ksize,cbits,16)
+value|IMPLEMENT_CFBR(aes,AES,EVP_AES_KEY,ks,ksize,cbits,16,flags)
 end_define
 
 begin_macro
@@ -223,6 +225,8 @@ argument_list|(
 literal|128
 argument_list|,
 literal|1
+argument_list|,
+argument|EVP_CIPH_FLAG_FIPS
 argument_list|)
 end_macro
 
@@ -232,6 +236,8 @@ argument_list|(
 literal|192
 argument_list|,
 literal|1
+argument_list|,
+argument|EVP_CIPH_FLAG_FIPS
 argument_list|)
 end_macro
 
@@ -241,6 +247,8 @@ argument_list|(
 literal|256
 argument_list|,
 literal|1
+argument_list|,
+argument|EVP_CIPH_FLAG_FIPS
 argument_list|)
 end_macro
 
@@ -250,6 +258,8 @@ argument_list|(
 literal|128
 argument_list|,
 literal|8
+argument_list|,
+argument|EVP_CIPH_FLAG_FIPS
 argument_list|)
 end_macro
 
@@ -259,6 +269,8 @@ argument_list|(
 literal|192
 argument_list|,
 literal|8
+argument_list|,
+argument|EVP_CIPH_FLAG_FIPS
 argument_list|)
 end_macro
 
@@ -268,6 +280,8 @@ argument_list|(
 literal|256
 argument_list|,
 literal|8
+argument_list|,
+argument|EVP_CIPH_FLAG_FIPS
 argument_list|)
 end_macro
 

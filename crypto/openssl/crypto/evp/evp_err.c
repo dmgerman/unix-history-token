@@ -4,7 +4,7 @@ comment|/* crypto/evp/evp_err.c */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1999-2005 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1999-2007 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_comment
@@ -78,6 +78,15 @@ block|,
 block|{
 name|ERR_FUNC
 argument_list|(
+name|EVP_F_ALG_MODULE_INIT
+argument_list|)
+block|,
+literal|"ALG_MODULE_INIT"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
 name|EVP_F_CAMELLIA_INIT_KEY
 argument_list|)
 block|,
@@ -91,6 +100,42 @@ name|EVP_F_D2I_PKEY
 argument_list|)
 block|,
 literal|"D2I_PKEY"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|EVP_F_DO_EVP_ENC_ENGINE
+argument_list|)
+block|,
+literal|"DO_EVP_ENC_ENGINE"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|EVP_F_DO_EVP_ENC_ENGINE_FULL
+argument_list|)
+block|,
+literal|"DO_EVP_ENC_ENGINE_FULL"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|EVP_F_DO_EVP_MD_ENGINE
+argument_list|)
+block|,
+literal|"DO_EVP_MD_ENGINE"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|EVP_F_DO_EVP_MD_ENGINE_FULL
+argument_list|)
+block|,
+literal|"DO_EVP_MD_ENGINE_FULL"
 block|}
 block|,
 block|{
@@ -132,6 +177,15 @@ block|,
 block|{
 name|ERR_FUNC
 argument_list|(
+name|EVP_F_EVP_CIPHERINIT
+argument_list|)
+block|,
+literal|"EVP_CipherInit"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
 name|EVP_F_EVP_CIPHERINIT_EX
 argument_list|)
 block|,
@@ -163,6 +217,15 @@ name|EVP_F_EVP_DECRYPTFINAL_EX
 argument_list|)
 block|,
 literal|"EVP_DecryptFinal_ex"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
+name|EVP_F_EVP_DIGESTINIT
+argument_list|)
+block|,
+literal|"EVP_DigestInit"
 block|}
 block|,
 block|{
@@ -535,10 +598,37 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|EVP_R_DISABLED_FOR_FIPS
+argument_list|)
+block|,
+literal|"disabled for fips"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|EVP_R_ENCODE_ERROR
 argument_list|)
 block|,
 literal|"encode error"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|EVP_R_ERROR_LOADING_SECTION
+argument_list|)
+block|,
+literal|"error loading section"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|EVP_R_ERROR_SETTING_FIPS_MODE
+argument_list|)
+block|,
+literal|"error setting fips mode"
 block|}
 block|,
 block|{
@@ -598,6 +688,15 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
+name|EVP_R_FIPS_MODE_NOT_SUPPORTED
+argument_list|)
+block|,
+literal|"fips mode not supported"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
 name|EVP_R_INITIALIZATION_ERROR
 argument_list|)
 block|,
@@ -611,6 +710,15 @@ name|EVP_R_INPUT_NOT_INITIALIZED
 argument_list|)
 block|,
 literal|"input not initialized"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|EVP_R_INVALID_FIPS_MODE
+argument_list|)
+block|,
+literal|"invalid fips mode"
 block|}
 block|,
 block|{
@@ -710,6 +818,24 @@ name|EVP_R_PUBLIC_KEY_NOT_RSA
 argument_list|)
 block|,
 literal|"public key not rsa"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|EVP_R_SEED_KEY_SETUP_FAILED
+argument_list|)
+block|,
+literal|"seed key setup failed"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|EVP_R_UNKNOWN_OPTION
+argument_list|)
+block|,
+literal|"unknown option"
 block|}
 block|,
 block|{

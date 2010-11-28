@@ -4,7 +4,7 @@ comment|/* conf_sap.c */
 end_comment
 
 begin_comment
-comment|/* Written by Stephen Henson (shenson@bigfoot.com) for the OpenSSL  * project 2001.  */
+comment|/* Written by Stephen Henson (steve@openssl.org) for the OpenSSL  * project 2001.  */
 end_comment
 
 begin_comment
@@ -120,8 +120,10 @@ name|CONF_modules_load_file
 argument_list|(
 name|NULL
 argument_list|,
-name|NULL
+name|config_name
 argument_list|,
+name|CONF_MFLAGS_DEFAULT_SECTION
+operator||
 name|CONF_MFLAGS_IGNORE_MISSING_FILE
 argument_list|)
 operator|<=

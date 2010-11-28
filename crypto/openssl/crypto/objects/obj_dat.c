@@ -49,6 +49,12 @@ directive|include
 file|<openssl/objects.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<openssl/bn.h>
+end_include
+
 begin_comment
 comment|/* obj_dat.h is generated from objects.h by obj_dat.pl */
 end_comment
@@ -2427,6 +2433,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|s
+condition|)
+block|{
+if|if
+condition|(
 name|buf
 condition|)
 name|BUF_strlcpy
@@ -2448,6 +2459,7 @@ expr_stmt|;
 return|return
 name|n
 return|;
+block|}
 block|}
 name|len
 operator|=

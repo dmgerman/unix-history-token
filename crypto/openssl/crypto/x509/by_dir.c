@@ -88,6 +88,24 @@ directive|include
 file|<openssl/x509.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_WIN32
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|stat
+value|_stat
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -1651,7 +1669,7 @@ block|}
 comment|/* else case will caught higher up */
 block|}
 comment|/* we have added it to the cache so now pull 		 * it out again */
-name|CRYPTO_r_lock
+name|CRYPTO_w_lock
 argument_list|(
 name|CRYPTO_LOCK_X509_STORE
 argument_list|)
@@ -1695,7 +1713,7 @@ name|tmp
 operator|=
 name|NULL
 expr_stmt|;
-name|CRYPTO_r_unlock
+name|CRYPTO_w_unlock
 argument_list|(
 name|CRYPTO_LOCK_X509_STORE
 argument_list|)

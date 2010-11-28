@@ -4,7 +4,7 @@ comment|/* tasn_fre.c */
 end_comment
 
 begin_comment
-comment|/* Written by Dr Stephen N Henson (shenson@bigfoot.com) for the OpenSSL  * project 2000.  */
+comment|/* Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project 2000.  */
 end_comment
 
 begin_comment
@@ -285,19 +285,6 @@ name|i
 operator|=
 name|asn1_get_choice_selector
 argument_list|(
-name|pval
-argument_list|,
-name|it
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|asn1_cb
-condition|)
-name|asn1_cb
-argument_list|(
-name|ASN1_OP_FREE_PRE
-argument_list|,
 name|pval
 argument_list|,
 name|it
@@ -798,17 +785,12 @@ name|type
 expr_stmt|;
 name|pval
 operator|=
-operator|(
-name|ASN1_VALUE
-operator|*
-operator|*
-operator|)
 operator|&
 name|typ
 operator|->
 name|value
 operator|.
-name|ptr
+name|asn1_value
 expr_stmt|;
 if|if
 condition|(

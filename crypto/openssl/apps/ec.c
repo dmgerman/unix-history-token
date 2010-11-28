@@ -114,17 +114,6 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
-ifndef|#
-directive|ifndef
-name|OPENSSL_NO_ENGINE
-name|ENGINE
-modifier|*
-name|e
-init|=
-name|NULL
-decl_stmt|;
-endif|#
-directive|endif
 name|int
 name|ret
 init|=
@@ -1018,7 +1007,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"                 possilbe values:"
+literal|"                 possible values:"
 literal|" named_curve (default)\n"
 argument_list|)
 expr_stmt|;
@@ -1040,8 +1029,6 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_ENGINE
-name|e
-operator|=
 name|setup_engine
 argument_list|(
 name|bio_err

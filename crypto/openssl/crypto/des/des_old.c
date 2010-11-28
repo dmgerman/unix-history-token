@@ -804,40 +804,21 @@ expr_stmt|;
 block|}
 end_function
 
-begin_decl_stmt
-name|void
-name|_ossl_old_des_xwhite_in2out
-argument_list|(
-name|_ossl_old_des_cblock
-argument_list|(
-operator|*
-name|des_key
-argument_list|)
-argument_list|,
-name|_ossl_old_des_cblock
-argument_list|(
-operator|*
-name|in_white
-argument_list|)
-argument_list|,
-name|_ossl_old_des_cblock
-argument_list|(
-operator|*
-name|out_white
-argument_list|)
-argument_list|)
-block|{
-name|DES_xwhite_in2out
-argument_list|(
-name|des_key
-argument_list|,
-name|in_white
-argument_list|,
-name|out_white
-argument_list|)
-expr_stmt|;
-block|}
-end_decl_stmt
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* broken code, preserved just in case anyone specifically looks for this */
+end_comment
+
+begin_endif
+unit|void _ossl_old_des_xwhite_in2out(_ossl_old_des_cblock (*des_key), _ossl_old_des_cblock (*in_white), 	_ossl_old_des_cblock (*out_white)) 	{ 	DES_xwhite_in2out(des_key, in_white, out_white); 	}
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int

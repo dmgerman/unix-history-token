@@ -220,15 +220,6 @@ block|,
 block|{
 name|ERR_REASON
 argument_list|(
-name|HWCRHK_R_LOCKING_MISSING
-argument_list|)
-block|,
-literal|"locking missing"
-block|}
-block|,
-block|{
-name|ERR_REASON
-argument_list|(
 name|HWCRHK_R_MISSING_KEY_COMPONENTS
 argument_list|)
 block|,
