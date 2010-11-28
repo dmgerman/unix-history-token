@@ -204,30 +204,6 @@ begin_comment
 comment|/* 		 "\t\tPOW group to receive packets from. All ethernet hardware\n" 		 "\t\twill be configured to send incomming packets to this POW\n" 		 "\t\tgroup. Also any other software can submit packets to this\n" 		 "\t\tgroup for the kernel to process." */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|int
-name|disable_core_queueing
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.octe.disable_core_queueing"
-argument_list|,
-operator|&
-name|disable_core_queueing
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* 		"\t\tWhen set the networking core's tx_queue_len is set to zero.  This\n" 		"\t\tallows packets to be sent without lock contention in the packet scheduler\n" 		"\t\tresulting in some cases in improved throughput.\n" */
-end_comment
-
 begin_function_decl
 specifier|extern
 name|int
@@ -650,12 +626,6 @@ name|IFF_DRV_OACTIVE
 expr_stmt|;
 block|}
 block|}
-if|#
-directive|if
-literal|0
-block|cvm_oct_device[port]->get_stats(cvm_oct_device[port]);
-endif|#
-directive|endif
 block|}
 name|port
 operator|++
@@ -1173,12 +1143,6 @@ argument_list|,
 name|OCTEON_SDK_VERSION_STRING
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|cvm_oct_proc_initialize();
-endif|#
-directive|endif
 name|cvm_oct_rx_initialize
 argument_list|()
 expr_stmt|;
@@ -1453,13 +1417,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* XXX/juli set max send q len.  */
-if|#
-directive|if
-literal|0
-block|if (disable_core_queueing) 				ifp->tx_queue_len = 0;
-endif|#
-directive|endif
 comment|/* Initialize the device private structure. */
 name|device_probe
 argument_list|(
@@ -1618,7 +1575,7 @@ name|priv
 operator|->
 name|uninit
 operator|=
-name|cvm_oct_xaui_uninit
+name|cvm_oct_common_uninit
 expr_stmt|;
 name|device_set_desc
 argument_list|(
@@ -1664,7 +1621,7 @@ name|priv
 operator|->
 name|uninit
 operator|=
-name|cvm_oct_sgmii_uninit
+name|cvm_oct_common_uninit
 expr_stmt|;
 name|device_set_desc
 argument_list|(
@@ -2010,12 +1967,6 @@ block|}
 name|cvmx_pko_shutdown
 argument_list|()
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|cvm_oct_proc_shutdown();
-endif|#
-directive|endif
 name|cvmx_ipd_free_ptr
 argument_list|()
 expr_stmt|;

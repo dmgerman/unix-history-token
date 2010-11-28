@@ -187,12 +187,6 @@ argument_list|)
 expr_stmt|;
 do|do
 block|{
-if|#
-directive|if
-literal|0
-block|if (!in_interrupt()) 			yield();
-endif|#
-directive|endif
 name|smi_rd
 operator|.
 name|u64
@@ -333,12 +327,6 @@ argument_list|)
 expr_stmt|;
 do|do
 block|{
-if|#
-directive|if
-literal|0
-block|if (!in_interrupt()) 			yield();
-endif|#
-directive|endif
 name|smi_wr
 operator|.
 name|u64

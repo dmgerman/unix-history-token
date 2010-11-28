@@ -192,42 +192,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CONFIG_NET_POLL_CONTROLLER
-end_ifdef
-
-begin_comment
-comment|/**  * This is called when the kernel needs to manually poll the  * device. For Octeon, this is simply calling the interrupt  * handler. We actually poll all the devices, not just the  * one supplied.  *  * @param dev    Device to poll. Unused  */
-end_comment
-
-begin_function
-name|void
-name|cvm_oct_poll_controller
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-parameter_list|)
-block|{
-name|taskqueue_enqueue
-argument_list|(
-name|cvm_oct_taskq
-argument_list|,
-operator|&
-name|cvm_oct_task
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/**  * This is called on receive errors, and determines if the packet  * can be dropped early-on in cvm_oct_tasklet_rx().  *  * @param work Work queue entry pointing to the packet.  * @return Non-zero if the packet can be dropped, zero otherwise.  */
 end_comment
@@ -794,8 +758,6 @@ block|}
 block|}
 name|mbuf_in_hw
 operator|=
-name|USE_MBUFS_IN_HW
-operator|&&
 name|work
 operator|->
 name|word2
@@ -1391,8 +1353,6 @@ block|}
 comment|/* Check to see if the mbuf and work share 		   the same packet buffer */
 if|if
 condition|(
-name|USE_MBUFS_IN_HW
-operator|&&
 operator|(
 name|packet_not_copied
 operator|)
@@ -1451,11 +1411,6 @@ name|old_scratch
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|USE_MBUFS_IN_HW
-condition|)
-block|{
 comment|/* Refill the packet buffer pool */
 name|number_to_free
 operator|=
@@ -1508,7 +1463,6 @@ operator|-
 name|num_freed
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 name|sched_unpin
