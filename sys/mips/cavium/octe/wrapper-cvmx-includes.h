@@ -40,12 +40,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<contrib/octeon-sdk/cvmx-ciu.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<contrib/octeon-sdk/cvmx-pip.h>
 end_include
 

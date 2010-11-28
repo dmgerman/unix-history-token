@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***********************license start***************  *  Copyright (c) 2003-2008 Cavium Networks (support@cavium.com). All rights  *  reserved.  *  *  *  Redistribution and use in source and binary forms, with or without  *  modification, are permitted provided that the following conditions are  *  met:  *  *      * Redistributions of source code must retain the above copyright  *        notice, this list of conditions and the following disclaimer.  *  *      * Redistributions in binary form must reproduce the above  *        copyright notice, this list of conditions and the following  *        disclaimer in the documentation and/or other materials provided  *        with the distribution.  *  *      * Neither the name of Cavium Networks nor the names of  *        its contributors may be used to endorse or promote products  *        derived from this software without specific prior written  *        permission.  *  *  TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  *  AND WITH ALL FAULTS AND CAVIUM NETWORKS MAKES NO PROMISES, REPRESENTATIONS  *  OR WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH  *  RESPECT TO THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY  *  REPRESENTATION OR DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT  *  DEFECTS, AND CAVIUM SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES  *  OF TITLE, MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR  *  PURPOSE, LACK OF VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET  *  POSSESSION OR CORRESPONDENCE TO DESCRIPTION.  THE ENTIRE RISK ARISING OUT  *  OF USE OR PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  *  *  *  For any questions regarding licensing please contact marketing@caviumnetworks.com  *  ***********************license end**************************************/
+comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Networks (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Networks nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM  NETWORKS MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
 end_comment
 
 begin_comment
-comment|/**  * @file  *  * Interface to the hardware Input Packet Data unit.  *  *<hr>$Revision: 41586 $<hr>  */
+comment|/**  * @file  *  * Interface to the hardware Input Packet Data unit.  *  *<hr>$Revision: 49448 $<hr>  */
 end_comment
 
 begin_ifndef
@@ -18,6 +18,35 @@ define|#
 directive|define
 name|__CVMX_IPD_H__
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CVMX_BUILD_FOR_LINUX_KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<asm/octeon/cvmx.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<asm/octeon/cvmx-config.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<asm/octeon/cvmx-ipd-defs.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_ifndef
 ifndef|#
@@ -53,6 +82,11 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -74,16 +108,16 @@ name|CVMX_ENABLE_LEN_M8_FIX
 value|0
 endif|#
 directive|endif
-comment|/* CSR typedefs have been moved to cvmx-csr-*.h */
+comment|/* CSR typedefs have been moved to cvmx-ipd-defs.h */
 typedef|typedef
-name|cvmx_ipd_mbuff_first_skip_t
+name|cvmx_ipd_1st_mbuff_skip_t
 name|cvmx_ipd_mbuff_not_first_skip_t
 typedef|;
 typedef|typedef
-name|cvmx_ipd_first_next_ptr_back_t
+name|cvmx_ipd_1st_next_ptr_back_t
 name|cvmx_ipd_second_next_ptr_back_t
 typedef|;
-comment|/**  * Configure IPD  *  * @param mbuff_size Packets buffer size in 8 byte words  * @param first_mbuff_skip  *                   Number of 8 byte words to skip in the first buffer  * @param not_first_mbuff_skip  *                   Number of 8 byte words to skip in each following buffer  * @param first_back Must be same as first_mbuff_skip / 128  * @param second_back  *                   Must be same as not_first_mbuff_skip / 128  * @param wqe_fpa_pool  *                   FPA pool to get work entries from  * @param cache_mode  * @param back_pres_enable_flag  *                   Enable or disable port back pressure  */
+comment|/**  * Configure IPD  *  * @param mbuff_size Packets buffer size in 8 byte words  * @param first_mbuff_skip  *                   Number of 8 byte words to skip in the first buffer  * @param not_first_mbuff_skip  *                   Number of 8 byte words to skip in each following buffer  * @param first_back Must be same as first_mbuff_skip / 128  * @param second_back  *                   Must be same as not_first_mbuff_skip / 128  * @param wqe_fpa_pool  *                   FPA pool to get work entries from  * @param cache_mode  * @param back_pres_enable_flag  *                   Enable or disable port back pressure at a global level.  *                   This should always be 1 as more accurate control can be  *                   found in IPD_PORTX_BP_PAGE_CNT[BP_ENB].  */
 specifier|static
 specifier|inline
 name|void
@@ -114,22 +148,22 @@ name|uint64_t
 name|back_pres_enable_flag
 parameter_list|)
 block|{
-name|cvmx_ipd_mbuff_first_skip_t
+name|cvmx_ipd_1st_mbuff_skip_t
 name|first_skip
 decl_stmt|;
 name|cvmx_ipd_mbuff_not_first_skip_t
 name|not_first_skip
 decl_stmt|;
-name|cvmx_ipd_mbuff_size_t
+name|cvmx_ipd_packet_mbuff_size_t
 name|size
 decl_stmt|;
-name|cvmx_ipd_first_next_ptr_back_t
+name|cvmx_ipd_1st_next_ptr_back_t
 name|first_back_struct
 decl_stmt|;
 name|cvmx_ipd_second_next_ptr_back_t
 name|second_back_struct
 decl_stmt|;
-name|cvmx_ipd_wqe_fpa_pool_t
+name|cvmx_ipd_wqe_fpa_queue_t
 name|wqe_pool
 decl_stmt|;
 name|cvmx_ipd_ctl_status_t
@@ -351,7 +385,7 @@ name|s
 operator|.
 name|ipd_en
 operator|=
-name|TRUE
+literal|1
 expr_stmt|;
 if|#
 directive|if
@@ -371,7 +405,7 @@ name|s
 operator|.
 name|len_m8
 operator|=
-name|TRUE
+literal|1
 expr_stmt|;
 block|}
 endif|#
@@ -413,7 +447,7 @@ name|s
 operator|.
 name|ipd_en
 operator|=
-name|FALSE
+literal|0
 expr_stmt|;
 name|cvmx_write_csr
 argument_list|(
@@ -428,11 +462,11 @@ block|}
 ifdef|#
 directive|ifdef
 name|CVMX_ENABLE_PKO_FUNCTIONS
-comment|/**  * Supportive function for cvmx_fpa_shutdown_pool.  */
+comment|/**  * @INTERNAL  * This function is called by cvmx_helper_shutdown() to extract  * all FPA buffers out of the IPD and PIP. After this function  * completes, all FPA buffers that were prefetched by IPD and PIP  * wil be in the apropriate FPA pool. This functions does not reset  * PIP or IPD as FPA pool zero must be empty before the reset can  * be performed. WARNING: It is very important that IPD and PIP be  * reset soon after a call to this function.  */
 specifier|static
 specifier|inline
 name|void
-name|cvmx_ipd_free_ptr
+name|__cvmx_ipd_free_ptr
 parameter_list|(
 name|void
 parameter_list|)
@@ -440,12 +474,6 @@ block|{
 comment|/* Only CN38XXp{1,2} cannot read pointer out of the IPD */
 if|if
 condition|(
-operator|!
-name|OCTEON_IS_MODEL
-argument_list|(
-name|OCTEON_CN38XX_PASS1
-argument_list|)
-operator|&&
 operator|!
 name|OCTEON_IS_MODEL
 argument_list|(
@@ -763,6 +791,9 @@ name|cvmx_fpa_free
 argument_list|(
 name|cvmx_phys_to_ptr
 argument_list|(
+operator|(
+name|uint64_t
+operator|)
 name|ipd_pkt_ptr_valid
 operator|.
 name|s
@@ -1154,70 +1185,6 @@ argument_list|(
 name|CVMX_IPD_PWP_PTR_FIFO_CTL
 argument_list|,
 name|ipd_pwp_ptr_fifo_ctl
-operator|.
-name|u64
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Reset the IPD to get all buffers out of it */
-block|{
-name|cvmx_ipd_ctl_status_t
-name|ipd_ctl_status
-decl_stmt|;
-name|ipd_ctl_status
-operator|.
-name|u64
-operator|=
-name|cvmx_read_csr
-argument_list|(
-name|CVMX_IPD_CTL_STATUS
-argument_list|)
-expr_stmt|;
-name|ipd_ctl_status
-operator|.
-name|s
-operator|.
-name|reset
-operator|=
-literal|1
-expr_stmt|;
-name|cvmx_write_csr
-argument_list|(
-name|CVMX_IPD_CTL_STATUS
-argument_list|,
-name|ipd_ctl_status
-operator|.
-name|u64
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Reset the PIP */
-block|{
-name|cvmx_pip_sft_rst_t
-name|pip_sft_rst
-decl_stmt|;
-name|pip_sft_rst
-operator|.
-name|u64
-operator|=
-name|cvmx_read_csr
-argument_list|(
-name|CVMX_PIP_SFT_RST
-argument_list|)
-expr_stmt|;
-name|pip_sft_rst
-operator|.
-name|s
-operator|.
-name|rst
-operator|=
-literal|1
-expr_stmt|;
-name|cvmx_write_csr
-argument_list|(
-name|CVMX_PIP_SFT_RST
-argument_list|,
-name|pip_sft_rst
 operator|.
 name|u64
 argument_list|)

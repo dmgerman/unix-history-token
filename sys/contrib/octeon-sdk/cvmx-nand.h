@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***********************license start***************  *  Copyright (c) 2003-2008 Cavium Networks (support@cavium.com). All rights  *  reserved.  *  *  *  Redistribution and use in source and binary forms, with or without  *  modification, are permitted provided that the following conditions are  *  met:  *  *      * Redistributions of source code must retain the above copyright  *        notice, this list of conditions and the following disclaimer.  *  *      * Redistributions in binary form must reproduce the above  *        copyright notice, this list of conditions and the following  *        disclaimer in the documentation and/or other materials provided  *        with the distribution.  *  *      * Neither the name of Cavium Networks nor the names of  *        its contributors may be used to endorse or promote products  *        derived from this software without specific prior written  *        permission.  *  *  TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  *  AND WITH ALL FAULTS AND CAVIUM NETWORKS MAKES NO PROMISES, REPRESENTATIONS  *  OR WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH  *  RESPECT TO THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY  *  REPRESENTATION OR DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT  *  DEFECTS, AND CAVIUM SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES  *  OF TITLE, MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR  *  PURPOSE, LACK OF VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET  *  POSSESSION OR CORRESPONDENCE TO DESCRIPTION.  THE ENTIRE RISK ARISING OUT  *  OF USE OR PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  *  *  *  For any questions regarding licensing please contact marketing@caviumnetworks.com  *  ***********************license end**************************************/
+comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Networks (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Networks nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM  NETWORKS MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
 end_comment
 
 begin_comment
@@ -31,6 +31,11 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+comment|/* Maxium PAGE + OOB size supported.  This is used to size ** buffers, some that must be statically allocated. */
+define|#
+directive|define
+name|CVMX_NAND_MAX_PAGE_AND_OOB_SIZE
+value|(4096 + 256)
 comment|/* Block size for boot ECC */
 define|#
 directive|define
@@ -92,6 +97,11 @@ name|CVMX_NAND_TIMEOUT
 init|=
 operator|-
 literal|4
+block|,
+name|CVMX_NAND_ERROR
+init|=
+operator|-
+literal|5
 block|, }
 name|cvmx_nand_status_t
 typedef|;
@@ -1049,7 +1059,7 @@ comment|/**< Byte 254-255: Integrity CRC */
 block|}
 name|cvmx_nand_onfi_param_page_t
 expr_stmt|;
-comment|/**  * Called to initialize the NAND controller for use. Note that  * you must be running out of L2 or memory and not NAND before  * calling this function.  *  * @param flags  Optional initialization flags  * @param active_chips  *               Each bit in this parameter represents a chip select that might  *               contain NAND flash. Any chip select present in this bitmask may  *               be connected to NAND. It is normally safe to pass 0xff here and  *               let the API probe all 8 chip selects.  *  * @return Zero on success, a negative cvmx_nand_status_t error code on failure  */
+comment|/**  * Called to initialize the NAND controller for use. Note that  * you must be running out of L2 or memory and not NAND before  * calling this function.  * When probing for NAND chips, this function attempts to autoconfigure based on the NAND parts detected.  * It currently supports autodetection for ONFI parts (with valid parameter pages), and some Samsung NAND  * parts (decoding ID bits.)  If autoconfiguration fails, the defaults set with __set_chip_defaults()  * prior to calling cvmx_nand_initialize() are used.  * If defaults are set and the CVMX_NAND_INITIALIZE_FLAGS_DONT_PROBE flag is provided, the defaults are used  * for all chips in the active_chips mask.  *  * @param flags  Optional initialization flags  *               If the CVMX_NAND_INITIALIZE_FLAGS_DONT_PROBE flag is passed, chips are not probed,  *               and the default parameters (if set with cvmx_nand_set_defaults) are used for all chips  *               in the active_chips mask.  * @param active_chips  *               Each bit in this parameter represents a chip select that might  *               contain NAND flash. Any chip select present in this bitmask may  *               be connected to NAND. It is normally safe to pass 0xff here and  *               let the API probe all 8 chip selects.  *  * @return Zero on success, a negative cvmx_nand_status_t error code on failure  */
 specifier|extern
 name|cvmx_nand_status_t
 name|cvmx_nand_initialize
@@ -1059,6 +1069,27 @@ name|flags
 parameter_list|,
 name|int
 name|active_chips
+parameter_list|)
+function_decl|;
+comment|/**  * This function may be called before cvmx_nand_initialize to set default values that will be used  * for NAND chips that do not identify themselves in a way that allows autoconfiguration. (ONFI chip with  * missing parameter page, for example.)  * The parameters set by this function will be used by _all_ non-autoconfigured NAND chips.  *  *  *   NOTE:  This function signature is _NOT_ stable, and will change in the future as required to support  *          various NAND chips.  *  * @param page_size page size in bytes  * @param oob_size  Out of band size in bytes (per page)  * @param pages_per_block  *                  number of pages per block  * @param blocks    Total number of blocks in device  * @param onfi_timing_mode  *                  ONFI timing mode  *  * @return Zero on success, a negative cvmx_nand_status_t error code on failure  */
+specifier|extern
+name|cvmx_nand_status_t
+name|cvmx_nand_set_defaults
+parameter_list|(
+name|int
+name|page_size
+parameter_list|,
+name|int
+name|oob_size
+parameter_list|,
+name|int
+name|pages_per_block
+parameter_list|,
+name|int
+name|blocks
+parameter_list|,
+name|int
+name|onfi_timing_mode
 parameter_list|)
 function_decl|;
 comment|/**  * Call to shutdown the NAND controller after all transactions  * are done. In most setups this will never be called.  *  * @return Zero on success, a negative cvmx_nand_status_t error code on failure  */
@@ -1260,7 +1291,7 @@ name|int
 name|chip
 parameter_list|)
 function_decl|;
-comment|/**  * This function computes the Octeon specific ECC data used by the NAND boot  * feature.  *   * @param block  pointer to 256 bytes of data  * @param eccp   pointer to where 8 bytes of ECC data will be stored  */
+comment|/**  * This function computes the Octeon specific ECC data used by the NAND boot  * feature.  *  * @param block  pointer to 256 bytes of data  * @param eccp   pointer to where 8 bytes of ECC data will be stored  */
 specifier|extern
 name|void
 name|cvmx_nand_compute_boot_ecc

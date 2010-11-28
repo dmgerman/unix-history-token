@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***********************license start***************  *  Copyright (c) 2003-2008 Cavium Networks (support@cavium.com). All rights  *  reserved.  *  *  *  Redistribution and use in source and binary forms, with or without  *  modification, are permitted provided that the following conditions are  *  met:  *  *      * Redistributions of source code must retain the above copyright  *        notice, this list of conditions and the following disclaimer.  *  *      * Redistributions in binary form must reproduce the above  *        copyright notice, this list of conditions and the following  *        disclaimer in the documentation and/or other materials provided  *        with the distribution.  *  *      * Neither the name of Cavium Networks nor the names of  *        its contributors may be used to endorse or promote products  *        derived from this software without specific prior written  *        permission.  *  *  TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  *  AND WITH ALL FAULTS AND CAVIUM NETWORKS MAKES NO PROMISES, REPRESENTATIONS  *  OR WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH  *  RESPECT TO THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY  *  REPRESENTATION OR DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT  *  DEFECTS, AND CAVIUM SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES  *  OF TITLE, MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR  *  PURPOSE, LACK OF VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET  *  POSSESSION OR CORRESPONDENCE TO DESCRIPTION.  THE ENTIRE RISK ARISING OUT  *  OF USE OR PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  *  *  *  For any questions regarding licensing please contact marketing@caviumnetworks.com  *  ***********************license end**************************************/
+comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Networks (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Networks nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM  NETWORKS MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
 end_comment
 
 begin_comment
-comment|/**  * @file  *  * Interface to the hardware Free Pool Allocator.  *  *<hr>$Revision: 41586 $<hr>  *  */
+comment|/**  * @file  *  * Interface to the hardware Free Pool Allocator.  *  *<hr>$Revision: 50048 $<hr>  *  */
 end_comment
 
 begin_ifndef
@@ -18,6 +18,29 @@ define|#
 directive|define
 name|__CVMX_FPA_H__
 end_define
+
+begin_include
+include|#
+directive|include
+file|"cvmx-scratch.h"
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CVMX_BUILD_FOR_LINUX_KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"cvmx-fpa-defs.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -116,7 +139,7 @@ index|[
 name|CVMX_FPA_NUM_POOLS
 index|]
 decl_stmt|;
-comment|/* CSR typedefs have been moved to cvmx-csr-*.h */
+comment|/* CSR typedefs have been moved to cvmx-fpa-defs.h */
 comment|/**  * Return the name of the pool  *  * @param pool   Pool to get the name of  * @return The name  */
 specifier|static
 specifier|inline
@@ -260,90 +283,12 @@ literal|"Warning: Enabling FPA when FPA already enabled.\n"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Do runtime check as we allow pass1 compiled code to run on pass2 chips */
-if|if
-condition|(
-name|cvmx_octeon_is_pass1
-argument_list|()
-condition|)
-block|{
-name|cvmx_fpa_fpf_marks_t
-name|marks
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|1
-init|;
-name|i
-operator|<
-literal|8
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|marks
-operator|.
-name|u64
-operator|=
-name|cvmx_read_csr
-argument_list|(
-name|CVMX_FPA_FPF1_MARKS
-operator|+
-operator|(
-name|i
-operator|-
-literal|1
-operator|)
-operator|*
-literal|8ull
-argument_list|)
-expr_stmt|;
-name|marks
-operator|.
-name|s
-operator|.
-name|fpf_wr
-operator|=
-literal|0xe0
-expr_stmt|;
-name|cvmx_write_csr
-argument_list|(
-name|CVMX_FPA_FPF1_MARKS
-operator|+
-operator|(
-name|i
-operator|-
-literal|1
-operator|)
-operator|*
-literal|8ull
-argument_list|,
-name|marks
-operator|.
-name|u64
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Enforce a 10 cycle delay between config and enable */
-name|cvmx_wait
-argument_list|(
-literal|10
-argument_list|)
-expr_stmt|;
-block|}
 name|status
 operator|.
 name|u64
 operator|=
 literal|0
 expr_stmt|;
-comment|/* FIXME: CVMX_FPA_CTL_STATUS read is unmodelled */
 name|status
 operator|.
 name|s
@@ -375,7 +320,15 @@ parameter_list|)
 block|{
 name|uint64_t
 name|address
-init|=
+decl_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
+name|address
+operator|=
 name|cvmx_read_csr
 argument_list|(
 name|CVMX_ADDR_DID
@@ -388,23 +341,50 @@ name|pool
 argument_list|)
 argument_list|)
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
+name|cvmx_likely
+argument_list|(
 name|address
+argument_list|)
 condition|)
+block|{
 return|return
 name|cvmx_phys_to_ptr
 argument_list|(
 name|address
 argument_list|)
 return|;
+block|}
+else|else
+block|{
+comment|/* If pointers are available, continuously retry.  */
+if|if
+condition|(
+name|cvmx_read_csr
+argument_list|(
+name|CVMX_FPA_QUEX_AVAILABLE
+argument_list|(
+name|pool
+argument_list|)
+argument_list|)
+operator|>
+literal|0
+condition|)
+name|cvmx_wait
+argument_list|(
+literal|50
+argument_list|)
+expr_stmt|;
 else|else
 return|return
 name|NULL
 return|;
 block|}
-comment|/**  * Asynchronously get a new block from the FPA  *  * @param scr_addr Local scratch address to put response in.  This is a byte address,  *                  but must be 8 byte aligned.  * @param pool      Pool to get the block from  */
+block|}
+block|}
+comment|/**  * Asynchronously get a new block from the FPA  *  * The result of cvmx_fpa_async_alloc() may be retrieved using  * cvmx_fpa_async_alloc_finish().  *  * @param scr_addr Local scratch address to put response in.  This is a byte address,  *                  but must be 8 byte aligned.  * @param pool      Pool to get the block from  */
 specifier|static
 specifier|inline
 name|void
@@ -467,6 +447,53 @@ operator|.
 name|u64
 argument_list|)
 expr_stmt|;
+block|}
+comment|/**  * Retrieve the result of cvmx_fpa_async_alloc  *  * @param scr_addr The Local scratch address.  Must be the same value  * passed to cvmx_fpa_async_alloc().  *  * @param pool Pool the block came from.  Must be the same value  * passed to cvmx_fpa_async_alloc.  *  * @return Pointer to the block or NULL on failure  */
+specifier|static
+specifier|inline
+name|void
+modifier|*
+name|cvmx_fpa_async_alloc_finish
+parameter_list|(
+name|uint64_t
+name|scr_addr
+parameter_list|,
+name|uint64_t
+name|pool
+parameter_list|)
+block|{
+name|uint64_t
+name|address
+decl_stmt|;
+name|CVMX_SYNCIOBDMA
+expr_stmt|;
+name|address
+operator|=
+name|cvmx_scratch_read64
+argument_list|(
+name|scr_addr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cvmx_likely
+argument_list|(
+name|address
+argument_list|)
+condition|)
+return|return
+name|cvmx_phys_to_ptr
+argument_list|(
+name|address
+argument_list|)
+return|;
+else|else
+return|return
+name|cvmx_fpa_alloc
+argument_list|(
+name|pool
+argument_list|)
+return|;
 block|}
 comment|/**  * Free a block allocated with a FPA pool.  * Does NOT provide memory ordering in cases where the memory block was modified by the core.  *  * @param ptr    Block to free  * @param pool   Pool to put it in  * @param num_cache_lines  *               Cache lines to invalidate  */
 specifier|static
@@ -611,7 +638,7 @@ name|uint64_t
 name|num_blocks
 parameter_list|)
 function_decl|;
-comment|/**  * Shutdown a Memory pool and validate that it had all of  * the buffers originally placed in it. This should only be  * called by one processor after all hardware has finished  * using the pool.  *  * @param pool   Pool to shutdown  * @return Zero on success  *         - Positive is count of missing buffers  *         - Negative is too many buffers or corrupted pointers  */
+comment|/**  * Shutdown a Memory pool and validate that it had all of  * the buffers originally placed in it. This should only be  * called by one processor after all hardware has finished  * using the pool. Most like you will want to have called  * cvmx_helper_shutdown_packet_io_global() before this  * function to make sure all FPA buffers are out of the packet  * IO hardware.  *  * @param pool   Pool to shutdown  *  * @return Zero on success  *         - Positive is count of missing buffers  *         - Negative is too many buffers or corrupted pointers  */
 specifier|extern
 name|uint64_t
 name|cvmx_fpa_shutdown_pool
@@ -645,7 +672,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|//  __CVM_FPA_H__
+comment|/*  __CVM_FPA_H__ */
 end_comment
 
 end_unit

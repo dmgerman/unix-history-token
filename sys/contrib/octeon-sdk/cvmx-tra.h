@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***********************license start***************  *  Copyright (c) 2003-2008 Cavium Networks (support@cavium.com). All rights  *  reserved.  *  *  *  Redistribution and use in source and binary forms, with or without  *  modification, are permitted provided that the following conditions are  *  met:  *  *      * Redistributions of source code must retain the above copyright  *        notice, this list of conditions and the following disclaimer.  *  *      * Redistributions in binary form must reproduce the above  *        copyright notice, this list of conditions and the following  *        disclaimer in the documentation and/or other materials provided  *        with the distribution.  *  *      * Neither the name of Cavium Networks nor the names of  *        its contributors may be used to endorse or promote products  *        derived from this software without specific prior written  *        permission.  *  *  TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  *  AND WITH ALL FAULTS AND CAVIUM NETWORKS MAKES NO PROMISES, REPRESENTATIONS  *  OR WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH  *  RESPECT TO THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY  *  REPRESENTATION OR DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT  *  DEFECTS, AND CAVIUM SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES  *  OF TITLE, MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR  *  PURPOSE, LACK OF VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET  *  POSSESSION OR CORRESPONDENCE TO DESCRIPTION.  THE ENTIRE RISK ARISING OUT  *  OF USE OR PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  *  *  *  For any questions regarding licensing please contact marketing@caviumnetworks.com  *  ***********************license end**************************************/
+comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Networks (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Networks nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM  NETWORKS MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
 end_comment
 
 begin_comment
-comment|/**  * @file  *  * Interface to the Trace buffer hardware.  *  * WRITING THE TRACE BUFFER  *  * When the trace is enabled, commands are traced continuously (wrapping) or until the buffer is filled once  * (no wrapping).  Additionally and independent of wrapping, tracing can be temporarily enabled and disabled  * by the tracing triggers.  All XMC commands can be traced except for IDLE and IOBRSP.  The subset of XMC  * commands that are traced is determined by the filter and the two triggers, each of which is comprised of  * masks for command, sid, did, and address).  If triggers are disabled, then only those commands matching  * the filter are traced.  If triggers are enabled, then only those commands matching the filter, the start  * trigger, or the stop trigger are traced during the time between a start trigger and a stop trigger.  *  * For a given command, its XMC data is written immediately to the buffer.  If the command has XMD data,  * then that data comes in-order at some later time.  The XMD data is accumulated across all valid  * XMD cycles and written to the buffer or to a shallow fifo.  Data from the fifo is written to the buffer  * as soon as it gets access to write the buffer (i.e. the buffer is not currently being written with XMC  * data).  If the fifo overflows, it simply overwrites itself and the previous XMD data is lost.  *  *  * READING THE TRACE BUFFER  *  * Each entry of the trace buffer is read by a CSR read command.  The trace buffer services each read in order,  * as soon as it has access to the (single-ported) trace buffer.  *  *  * OVERFLOW, UNDERFLOW AND THRESHOLD EVENTS  *  * The trace buffer maintains a write pointer and a read pointer and detects both the overflow and underflow  * conditions.  Each time a new trace is enabled, both pointers are reset to entry 0.  Normally, each write  * (traced event) increments the write pointer and each read increments the read pointer.  During the overflow  * condition, writing (tracing) is disabled.  Tracing will continue as soon as the overflow condition is  * resolved.  The first entry that is written immediately following the overflow condition may be marked to  * indicate that a tracing discontinuity has occurred before this entry.  During the underflow condition,  * reading does not increment the read pointer and the read data is marked to indicate that no read data is  * available.  *  * The full threshold events are defined to signal an interrupt a certain levels of "fullness" (1/2, 3/4, 4/4).  * "fullness" is defined as the relative distance between the write and read pointers (i.e. not defined as the  * absolute distance between the write pointer and entry 0).  When enabled, the full threshold event occurs  * every time the desired level of "fullness" is achieved.  *  *  * Trace buffer entry format  * @verbatim  *       6                   5                   4                   3                   2                   1                   0  * 3 2 1 0 9 8 7 6 5 4 3 2 1 0 9 8 7 6 5 4 3 2 1 0 9 8 7 6 5 4 3 2 1 0 9 8 7 6 5 4 3 2 1 0 9 8 7 6 5 4 3 2 1 0 9 8 7 6 5 4 3 2 1 0  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |sta|                          address[35:3]                          |       0       | src id  |   0   | DWB   | diff timestamp|  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |sta|                          address[35:3]                          |       0       | src id  |   0   | PL2   | diff timestamp|  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |sta|                          address[35:3]                          |       0       | src id  |   0   | PSL1  | diff timestamp|  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |sta|                          address[35:3]                          |       0       | src id  |   0   | LDD   | diff timestamp|  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |sta|                          address[35:3]                          |       0       | src id  |   0   | LDI   | diff timestamp|  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |sta|                          address[35:3]                          |       0       | src id  |   0   | LDT   | diff timestamp|  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |sta|                          address[35:3]                          | * or 16B mask | src id  |   0   | STC   | diff timestamp|  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |sta|                          address[35:3]                          | * or 16B mask | src id  |   0   | STF   | diff timestamp|  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |sta|                          address[35:3]                          | * or 16B mask | src id  |   0   | STP   | diff timestamp|  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |sta|                          address[35:3]                          | * or 16B mask | src id  |   0   | STT   | diff timestamp|  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |sta|                          address[35:0]                                |    0    | src id| dest id |IOBLD8 | diff timestamp|  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |sta|                          address[35:1]                              |     0     | src id| dest id |IOBLD16| diff timestamp|  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |sta|                          address[35:2]                            |      0      | src id| dest id |IOBLD32| diff timestamp|  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |sta|                          address[35:3]                          |       0       | src id| dest id |IOBLD64| diff timestamp|  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |sta|                          address[35:3]                          | * or 16B mask | src id| dest id |IOBST  | diff timestamp|  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |sta|                     * or address[35:3]                          | * or length   | src id| dest id |IOBDMA | diff timestamp|  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  *  * notes:  * - Fields marked as '*' are first filled with '0' at XMC time and may be filled with real data later at XMD time.  Note that the  * XMD write may be dropped if the shallow FIFO overflows which leaves the '*' fields as '0'.  * - 2 bits (sta) are used not to trace, but to return global state information with each read, encoded as follows:  * 0x0-0x1=not valid  * 0x2=valid, no discontinuity  * 0x3=valid,    discontinuity  * - commands are encoded as follows:  * 0x0=DWB  * 0x1=PL2  * 0x2=PSL1  * 0x3=LDD  * 0x4=LDI  * 0x5=LDT  * 0x6=STC  * 0x7=STF  * 0x8=STP  * 0x9=STT  * 0xa=IOBLD8  * 0xb=IOBLD16  * 0xc=IOBLD32  * 0xd=IOBLD64  * 0xe=IOBST  * 0xf=IOBDMA  * - For non IOB* commands  * - source id is encoded as follows:  * 0x00-0x0f=PP[n]  * 0x10=IOB(Packet)  * 0x11=IOB(PKO)  * 0x12=IOB(ReqLoad, ReqStore)  * 0x13=IOB(DWB)  * 0x14-0x1e=illegal  * 0x1f=IOB(generic)  * - dest   id is unused (can only be L2c)  * - For IOB* commands  * - source id is encoded as follows:  * 0x00-0x0f = PP[n]  * - dest   id is encoded as follows:  * 0x00-0x0f=PP[n]  * 0x10=IOB(Packet)  * 0x11=IOB(PKO)  * 0x12=IOB(ReqLoad, ReqStore)  * 0x13=IOB(DWB)  * 0x14-0x1e=illegal  * 0x1f=IOB(generic)  *  * Source of data for each command  * command source id    dest id      address                 length/mask  * -------+------------+------------+-----------------------+----------------------------------------------  * LDI     xmc_sid[8:3] x            xmc_adr[35:3]           x  * LDT     xmc_sid[8:3] x            xmc_adr[35:3]           x  * STF     xmc_sid[8:3] x            xmc_adr[35:3]           16B mask(xmd_[wrval,eow,adr[6:4],wrmsk[15:0]])  * STC     xmc_sid[8:3] x            xmc_adr[35:3]           16B mask(xmd_[wrval,eow,adr[6:4],wrmsk[15:0]])  * STP     xmc_sid[8:3] x            xmc_adr[35:3]           16B mask(xmd_[wrval,eow,adr[6:4],wrmsk[15:0]])  * STT     xmc_sid[8:3] x            xmc_adr[35:3]           16B mask(xmd_[wrval,eow,adr[6:4],wrmsk[15:0]])  * DWB     xmc_sid[8:3] x            xmc_adr[35:3]           x  * PL2     xmc_sid[8:3] x            xmc_adr[35:3]           x  * PSL1    xmc_sid[8:3] x            xmc_adr[35:3]           x  * IOBLD8  xmc_sid[8:3] xmc_did[8:3] xmc_adr[35:0]           x  * IOBLD16 xmc_sid[8:3] xmc_did[8:3] xmc_adr[35:1]           x  * IOBLD32 xmc_sid[8:3] xmc_did[8:3] xmc_adr[35:2]           x  * IOBLD64 xmc_sid[8:3] xmc_did[8:3] xmc_adr[35:3]           x  * IOBST   xmc_sid[8:3] xmc_did[8:3] xmc_adr[35:3]           16B mask(xmd_[wrval,eow,adr[6:4],wrmsk[15:0]])  * IOBDMA  xmc_sid[8:3] xmc_did[8:3] (xmd_[wrval,eow,dat[]]) length(xmd_[wrval,eow,dat[]])  * IOBRSP  not traced, but monitored to keep XMC and XMD data in sync.  * @endverbatim  *  *<hr>$Revision: 41586 $<hr>  */
+comment|/**  * @file  *  * Interface to the Trace buffer hardware.  *  * WRITING THE TRACE BUFFER  *  * When the trace is enabled, commands are traced continuously (wrapping) or until the buffer is filled once  * (no wrapping).  Additionally and independent of wrapping, tracing can be temporarily enabled and disabled  * by the tracing triggers.  All XMC commands can be traced except for IDLE and IOBRSP.  The subset of XMC  * commands that are traced is determined by the filter and the two triggers, each of which is comprised of  * masks for command, sid, did, and address).  If triggers are disabled, then only those commands matching  * the filter are traced.  If triggers are enabled, then only those commands matching the filter, the start  * trigger, or the stop trigger are traced during the time between a start trigger and a stop trigger.  *  * For a given command, its XMC data is written immediately to the buffer.  If the command has XMD data,  * then that data comes in-order at some later time.  The XMD data is accumulated across all valid  * XMD cycles and written to the buffer or to a shallow fifo.  Data from the fifo is written to the buffer  * as soon as it gets access to write the buffer (i.e. the buffer is not currently being written with XMC  * data).  If the fifo overflows, it simply overwrites itself and the previous XMD data is lost.  *  *  * READING THE TRACE BUFFER  *  * Each entry of the trace buffer is read by a CSR read command.  The trace buffer services each read in order,  * as soon as it has access to the (single-ported) trace buffer.  *  * On Octeon2, each entry of the trace buffer is read by two CSR memory read operations.  The first read accesses  * bits 63:0 of the buffer entry, and the second read accesses bits 68:64 of the buffer entry. The trace buffer  * services each read in order, as soon as it has access to the (single-ported) trace buffer.  Buffer's read pointer  * increments after two CSR memory read operations.  *  *  * OVERFLOW, UNDERFLOW AND THRESHOLD EVENTS  *  * The trace buffer maintains a write pointer and a read pointer and detects both the overflow and underflow  * conditions.  Each time a new trace is enabled, both pointers are reset to entry 0.  Normally, each write  * (traced event) increments the write pointer and each read increments the read pointer.  During the overflow  * condition, writing (tracing) is disabled.  Tracing will continue as soon as the overflow condition is  * resolved.  The first entry that is written immediately following the overflow condition may be marked to  * indicate that a tracing discontinuity has occurred before this entry.  During the underflow condition,  * reading does not increment the read pointer and the read data is marked to indicate that no read data is  * available.  *  * The full threshold events are defined to signal an interrupt a certain levels of "fullness" (1/2, 3/4, 4/4).  * "fullness" is defined as the relative distance between the write and read pointers (i.e. not defined as the  * absolute distance between the write pointer and entry 0).  When enabled, the full threshold event occurs  * every time the desired level of "fullness" is achieved.  *  *  * Trace buffer entry format  * @verbatim  *       6                   5                   4                   3                   2                   1                   0  * 3 2 1 0 9 8 7 6 5 4 3 2 1 0 9 8 7 6 5 4 3 2 1 0 9 8 7 6 5 4 3 2 1 0 9 8 7 6 5 4 3 2 1 0 9 8 7 6 5 4 3 2 1 0 9 8 7 6 5 4 3 2 1 0  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |sta|                          address[35:3]                          |       0       | src id  |   0   | DWB   | diff timestamp|  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |sta|                          address[35:3]                          |       0       | src id  |   0   | PL2   | diff timestamp|  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |sta|                          address[35:3]                          |       0       | src id  |   0   | PSL1  | diff timestamp|  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |sta|                          address[35:3]                          |       0       | src id  |   0   | LDD   | diff timestamp|  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |sta|                          address[35:3]                          |       0       | src id  |   0   | LDI   | diff timestamp|  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |sta|                          address[35:3]                          |       0       | src id  |   0   | LDT   | diff timestamp|  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |sta|                          address[35:3]                          | * or 16B mask | src id  |   0   | STC   | diff timestamp|  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |sta|                          address[35:3]                          | * or 16B mask | src id  |   0   | STF   | diff timestamp|  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |sta|                          address[35:3]                          | * or 16B mask | src id  |   0   | STP   | diff timestamp|  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |sta|                          address[35:3]                          | * or 16B mask | src id  |   0   | STT   | diff timestamp|  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |sta|                          address[35:0]                                |    0    | src id| dest id |IOBLD8 | diff timestamp|  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |sta|                          address[35:1]                              |     0     | src id| dest id |IOBLD16| diff timestamp|  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |sta|                          address[35:2]                            |      0      | src id| dest id |IOBLD32| diff timestamp|  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |sta|                          address[35:3]                          |       0       | src id| dest id |IOBLD64| diff timestamp|  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |sta|                          address[35:3]                          | * or 16B mask | src id| dest id |IOBST  | diff timestamp|  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |sta|                     * or address[35:3]                          | * or length   | src id| dest id |IOBDMA | diff timestamp|  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  *  *  * Trace buffer entry format in Octeon2 is different  *  *                 6                   5                   4                   3                   2                   1                   0  * 8 7 6 5 4 3 2 1 0 9 8 7 6 5 4 3 2 1 0 9 8 7 6 5 4 3 2 1 0 9 8 7 6 5 4 3 2 1 0 9 8 7 6 5 4 3 2 1 0 9 8 7 6 5 4 3 2 1 0 9 8 7 6 5 4 3 2 1 0  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |sta|                          address[37:0]                                  |       0           |  src id |  Group 1    | diff timestamp|  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |sta|                          address[37:0]                                  | 0 |  xmd mask     |  src id |  Group 2    | diff timestamp|  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |sta|                          address[37:0]                                  | 0 |s-did| dest id |  src id |  Group 3    | diff timestamp|  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |sta|                         *address[37:3]                            | *Length       | dest id |  src id |  Group 4    | diff timestamp|  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  *  * notes:  * - diff timestamp is the difference in time from the previous trace event to this event - 1.  the granularity of the timestamp is programmable  * - Fields marked as '*' are first filled with '0' at XMC time and may be filled with real data later at XMD time.  Note that the  * XMD write may be dropped if the shallow FIFO overflows which leaves the '*' fields as '0'.  * - 2 bits (sta) are used not to trace, but to return global state information with each read, encoded as follows:  * 0x0-0x1=not valid  * 0x2=valid, no discontinuity  * 0x3=valid,    discontinuity  * - commands are encoded as follows:  * 0x0=DWB  * 0x1=PL2  * 0x2=PSL1  * 0x3=LDD  * 0x4=LDI  * 0x5=LDT  * 0x6=STF  * 0x7=STC  * 0x8=STP  * 0x9=STT  * 0xa=IOBLD8  * 0xb=IOBLD16  * 0xc=IOBLD32  * 0xd=IOBLD64  * 0xe=IOBST  * 0xf=IOBDMA  * - In Octeon2 the commands are grouped as follows:  * Group1:  *   XMC_LDT, XMC_LDI, XMC_PL2, XMC_RPL2, XMC_DWB, XMC_WBL2,  *   XMC_SET8, XMC_SET16, XMC_SET32, XMC_SET64,  *   XMC_CLR8, XMC_CLR16, XMC_CLR32, XMC_CLR64,  *   XMC_INCR8, XMC_INCR16, XMC_INCR32, XMC_INCR64,  *   XMC_DECR8, XMC_DECR16, XMC_DECR32, XMC_DECR64  * Group2:  *   XMC_STF, XMC_STT, XMC_STP, XMC_STC,  *   XMC_LDD, XMC_PSL1  *   XMC_SAA32, XMC_SAA64,  *   XMC_FAA32, XMC_FAA64,  *   XMC_FAS32, XMC_FAS64  * Group3:  *   XMC_IOBLD8, XMC_IOBLD16, XMC_IOBLD32, XMC_IOBLD64,  *   XMC_IOBST8, XMC_IOBST16, XMC_IOBST32, XMC_IOBST64  * Group4:  *   XMC_IOBDMA  * - For non IOB* commands  * - source id is encoded as follows:  * 0x00-0x0f=PP[n]  * 0x10=IOB(Packet)  * 0x11=IOB(PKO)  * 0x12=IOB(ReqLoad, ReqStore)  * 0x13=IOB(DWB)  * 0x14-0x1e=illegal  * 0x1f=IOB(generic)  * - dest id is unused (can only be L2c)  * - For IOB* commands  * - source id is encoded as follows:  * 0x00-0x0f = PP[n]  * - dest   id is encoded as follows:  * 0   = CIU/GPIO (for CSRs)  * 1-2 = illegal  * 3   = PCIe (access to RSL-type CSRs)  * 4   = KEY (read/write operations)  * 5   = FPA (free pool allocate/free operations)  * 6   = DFA  * 7   = ZIP (doorbell operations)  * 8   = RNG (load/IOBDMA operations)  * 10  = PKO (doorbell operations)  * 11  = illegal  * 12  = POW (get work, add work, status/memory/index loads, NULLrd load operations, CSR operations)  * 13-31 = illegal  * @endverbatim  *  *<hr>$Revision: 49484 $<hr>  */
 end_comment
 
 begin_ifndef
@@ -28,6 +28,23 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|CVMX_BUILD_FOR_LINUX_KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"cvmx-tra-defs.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__cplusplus
 end_ifdef
 
@@ -37,88 +54,664 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-comment|/* CSR typedefs have been moved to cvmx-csr-*.h */
-comment|/**  * Enumeration of the data types stored in cvmx_tra_data_t  */
+comment|/* CSR typedefs have been moved to cvmx-tra-defs.h */
+comment|/* The 'saa' filter command is renamed as 'saa64' */
+define|#
+directive|define
+name|CVMX_TRA_FILT_SAA
+value|CVMX_TRA_FILT_SAA64
+comment|/* The 'iobst' filter command is renamed as 'iobst64' */
+define|#
+directive|define
+name|CVMX_TRA_FILT_IOBST
+value|CVMX_TRA_FILT_IOBST64
+comment|/**  * Enumeration of the bitmask of all the filter commands. The bit positions  * correspond to Octeon2 model.  */
 typedef|typedef
 enum|enum
 block|{
-name|CVMX_TRA_DATA_DWB
+name|CVMX_TRA_FILT_NOP
 init|=
-literal|0x0
+literal|1ull
+operator|<<
+literal|0
 block|,
-name|CVMX_TRA_DATA_PL2
+comment|/**< none */
+name|CVMX_TRA_FILT_LDT
 init|=
-literal|0x1
+literal|1ull
+operator|<<
+literal|1
 block|,
-name|CVMX_TRA_DATA_PSL1
+comment|/**< don't allocate L2 or L1 */
+name|CVMX_TRA_FILT_LDI
 init|=
-literal|0x2
+literal|1ull
+operator|<<
+literal|2
 block|,
-name|CVMX_TRA_DATA_LDD
+comment|/**< don't allocate L1 */
+name|CVMX_TRA_FILT_PL2
 init|=
-literal|0x3
+literal|1ull
+operator|<<
+literal|3
 block|,
-name|CVMX_TRA_DATA_LDI
+comment|/**< pref L2 */
+name|CVMX_TRA_FILT_RPL2
 init|=
-literal|0x4
+literal|1ull
+operator|<<
+literal|4
 block|,
-name|CVMX_TRA_DATA_LDT
+comment|/**< mark for replacement in L2 */
+name|CVMX_TRA_FILT_DWB
 init|=
-literal|0x5
+literal|1ull
+operator|<<
+literal|5
 block|,
-name|CVMX_TRA_DATA_STC
+comment|/**< clear L2 dirty bit (no writeback) + RPL2 */
+name|CVMX_TRA_FILT_LDD
 init|=
-literal|0x6
+literal|1ull
+operator|<<
+literal|8
 block|,
-name|CVMX_TRA_DATA_STF
+comment|/**< normal load */
+name|CVMX_TRA_FILT_PSL1
 init|=
-literal|0x7
+literal|1ull
+operator|<<
+literal|9
 block|,
-name|CVMX_TRA_DATA_STP
+comment|/**< pref L1, bypass L2 */
+name|CVMX_TRA_FILT_IOBDMA
 init|=
-literal|0x8
+literal|1ull
+operator|<<
+literal|15
 block|,
-name|CVMX_TRA_DATA_STT
+comment|/**< store reflection by IOB for prior load */
+name|CVMX_TRA_FILT_STF
 init|=
-literal|0x9
+literal|1ull
+operator|<<
+literal|16
 block|,
-name|CVMX_TRA_DATA_IOBLD8
+comment|/**< full block store to L2, fill 0's */
+name|CVMX_TRA_FILT_STT
 init|=
-literal|0xa
+literal|1ull
+operator|<<
+literal|17
 block|,
-name|CVMX_TRA_DATA_IOBLD16
+comment|/**< full block store bypass-L2, fill 0's */
+name|CVMX_TRA_FILT_STP
 init|=
-literal|0xb
+literal|1ull
+operator|<<
+literal|18
 block|,
-name|CVMX_TRA_DATA_IOBLD32
+comment|/**< partial store to L2 */
+name|CVMX_TRA_FILT_STC
 init|=
-literal|0xc
+literal|1ull
+operator|<<
+literal|19
 block|,
-name|CVMX_TRA_DATA_IOBLD64
+comment|/**< partial store to L2, if duptag valid */
+name|CVMX_TRA_FILT_STFIL1
 init|=
-literal|0xd
+literal|1ull
+operator|<<
+literal|20
 block|,
-name|CVMX_TRA_DATA_IOBST
+comment|/**< full block store to L2, fill 0's, invalidate L1 */
+name|CVMX_TRA_FILT_STTIL1
 init|=
-literal|0xe
+literal|1ull
+operator|<<
+literal|21
 block|,
-name|CVMX_TRA_DATA_IOBDMA
+comment|/**< full block store bypass-L2, fill 0's, invalidate L1 */
+name|CVMX_TRA_FILT_FAS32
 init|=
-literal|0xf
+literal|1ull
+operator|<<
+literal|22
 block|,
-name|CVMX_TRA_DATA_SAA
+comment|/**< to load from and write a word of memory atomically */
+name|CVMX_TRA_FILT_FAS64
 init|=
-literal|0x10
-block|, }
-name|cvmx_tra_data_type_t
+literal|1ull
+operator|<<
+literal|23
+block|,
+comment|/**< to load from and write a doubleword of memory atomically */
+name|CVMX_TRA_FILT_WBIL2I
+init|=
+literal|1ull
+operator|<<
+literal|24
+block|,
+comment|/**< writeback if dirty, invalidate, clear use bit, by index/way */
+name|CVMX_TRA_FILT_LTGL2I
+init|=
+literal|1ull
+operator|<<
+literal|25
+block|,
+comment|/**< read tag @ index/way into CSR */
+name|CVMX_TRA_FILT_STGL2I
+init|=
+literal|1ull
+operator|<<
+literal|26
+block|,
+comment|/**< write tag @ index/way from CSR */
+name|CVMX_TRA_FILT_INVL2
+init|=
+literal|1ull
+operator|<<
+literal|28
+block|,
+comment|/**< invalidate, clear use bit, by address (dirty data is LOST) */
+name|CVMX_TRA_FILT_WBIL2
+init|=
+literal|1ull
+operator|<<
+literal|29
+block|,
+comment|/**< writeback if dirty, invalidate, clear use bit, by address */
+name|CVMX_TRA_FILT_WBL2
+init|=
+literal|1ull
+operator|<<
+literal|30
+block|,
+comment|/**< writeback if dirty, make clean, clear use bit, by address */
+name|CVMX_TRA_FILT_LCKL2
+init|=
+literal|1ull
+operator|<<
+literal|31
+block|,
+comment|/**< allocate (if miss), set lock bit, set use bit, by address */
+name|CVMX_TRA_FILT_IOBLD8
+init|=
+literal|1ull
+operator|<<
+literal|32
+block|,
+comment|/**< load reflection 8bit */
+name|CVMX_TRA_FILT_IOBLD16
+init|=
+literal|1ull
+operator|<<
+literal|33
+block|,
+comment|/**< load reflection 16bit */
+name|CVMX_TRA_FILT_IOBLD32
+init|=
+literal|1ull
+operator|<<
+literal|34
+block|,
+comment|/**< load reflection 32bit */
+name|CVMX_TRA_FILT_IOBLD64
+init|=
+literal|1ull
+operator|<<
+literal|35
+block|,
+comment|/**< load reflection 64bit */
+name|CVMX_TRA_FILT_IOBST8
+init|=
+literal|1ull
+operator|<<
+literal|36
+block|,
+comment|/**< store reflection 8bit */
+name|CVMX_TRA_FILT_IOBST16
+init|=
+literal|1ull
+operator|<<
+literal|37
+block|,
+comment|/**< store reflection 16bit */
+name|CVMX_TRA_FILT_IOBST32
+init|=
+literal|1ull
+operator|<<
+literal|38
+block|,
+comment|/**< store reflection 32bit */
+name|CVMX_TRA_FILT_IOBST64
+init|=
+literal|1ull
+operator|<<
+literal|39
+block|,
+comment|/**< store reflection 64bit */
+name|CVMX_TRA_FILT_SET8
+init|=
+literal|1ull
+operator|<<
+literal|40
+block|,
+comment|/**< to load from and write 1's to 8bit of memory atomically */
+name|CVMX_TRA_FILT_SET16
+init|=
+literal|1ull
+operator|<<
+literal|41
+block|,
+comment|/**< to load from and write 1's to 16bit of memory atomically */
+name|CVMX_TRA_FILT_SET32
+init|=
+literal|1ull
+operator|<<
+literal|42
+block|,
+comment|/**< to load from and write 1's to 32bit of memory atomically */
+name|CVMX_TRA_FILT_SET64
+init|=
+literal|1ull
+operator|<<
+literal|43
+block|,
+comment|/**< to load from and write 1's to 64bit of memory atomically */
+name|CVMX_TRA_FILT_CLR8
+init|=
+literal|1ull
+operator|<<
+literal|44
+block|,
+comment|/**< to load from and write 0's to 8bit of memory atomically */
+name|CVMX_TRA_FILT_CLR16
+init|=
+literal|1ull
+operator|<<
+literal|45
+block|,
+comment|/**< to load from and write 0's to 16bit of memory atomically */
+name|CVMX_TRA_FILT_CLR32
+init|=
+literal|1ull
+operator|<<
+literal|46
+block|,
+comment|/**< to load from and write 0's to 32bit of memory atomically */
+name|CVMX_TRA_FILT_CLR64
+init|=
+literal|1ull
+operator|<<
+literal|47
+block|,
+comment|/**< to load from and write 0's to 64bit of memory atomically */
+name|CVMX_TRA_FILT_INCR8
+init|=
+literal|1ull
+operator|<<
+literal|48
+block|,
+comment|/**< to load and increment 8bit of memory atomically */
+name|CVMX_TRA_FILT_INCR16
+init|=
+literal|1ull
+operator|<<
+literal|49
+block|,
+comment|/**< to load and increment 16bit of memory atomically */
+name|CVMX_TRA_FILT_INCR32
+init|=
+literal|1ull
+operator|<<
+literal|50
+block|,
+comment|/**< to load and increment 32bit of memory atomically */
+name|CVMX_TRA_FILT_INCR64
+init|=
+literal|1ull
+operator|<<
+literal|51
+block|,
+comment|/**< to load and increment 64bit of memory atomically */
+name|CVMX_TRA_FILT_DECR8
+init|=
+literal|1ull
+operator|<<
+literal|52
+block|,
+comment|/**< to load and decrement 8bit of memory atomically */
+name|CVMX_TRA_FILT_DECR16
+init|=
+literal|1ull
+operator|<<
+literal|53
+block|,
+comment|/**< to load and decrement 16bit of memory atomically */
+name|CVMX_TRA_FILT_DECR32
+init|=
+literal|1ull
+operator|<<
+literal|54
+block|,
+comment|/**< to load and decrement 32bit of memory atomically */
+name|CVMX_TRA_FILT_DECR64
+init|=
+literal|1ull
+operator|<<
+literal|55
+block|,
+comment|/**< to load and decrement 64bit of memory atomically */
+name|CVMX_TRA_FILT_FAA32
+init|=
+literal|1ull
+operator|<<
+literal|58
+block|,
+comment|/**< to load from and add to a word of memory atomically */
+name|CVMX_TRA_FILT_FAA64
+init|=
+literal|1ull
+operator|<<
+literal|59
+block|,
+comment|/**< to load from and add to a doubleword of memory atomically  */
+name|CVMX_TRA_FILT_SAA32
+init|=
+literal|1ull
+operator|<<
+literal|62
+block|,
+comment|/**< to atomically add a word to a memory location */
+name|CVMX_TRA_FILT_SAA64
+init|=
+literal|1ull
+operator|<<
+literal|63
+block|,
+comment|/**< to atomically add a doubleword to a memory location */
+name|CVMX_TRA_FILT_ALL
+init|=
+operator|-
+literal|1ull
+comment|/**< all the above filter commands */
+block|}
+name|cvmx_tra_filt_t
 typedef|;
-comment|/**  * TRA data format definition. Use the type field to  * determine which union element to use.  */
+comment|/*  * Enumeration of the bitmask of all source commands.  */
+typedef|typedef
+enum|enum
+block|{
+name|CVMX_TRA_SID_PP0
+init|=
+literal|1ull
+operator|<<
+literal|0
+block|,
+comment|/**< Enable tracing from PP0 with matching sourceID */
+name|CVMX_TRA_SID_PP1
+init|=
+literal|1ull
+operator|<<
+literal|1
+block|,
+comment|/**< Enable tracing from PP1 with matching sourceID */
+name|CVMX_TRA_SID_PP2
+init|=
+literal|1ull
+operator|<<
+literal|2
+block|,
+comment|/**< Enable tracing from PP2 with matching sourceID */
+name|CVMX_TRA_SID_PP3
+init|=
+literal|1ull
+operator|<<
+literal|3
+block|,
+comment|/**< Enable tracing from PP3 with matching sourceID */
+name|CVMX_TRA_SID_PP4
+init|=
+literal|1ull
+operator|<<
+literal|4
+block|,
+comment|/**< Enable tracing from PP4 with matching sourceID */
+name|CVMX_TRA_SID_PP5
+init|=
+literal|1ull
+operator|<<
+literal|5
+block|,
+comment|/**< Enable tracing from PP5 with matching sourceID */
+name|CVMX_TRA_SID_PP6
+init|=
+literal|1ull
+operator|<<
+literal|6
+block|,
+comment|/**< Enable tracing from PP6 with matching sourceID */
+name|CVMX_TRA_SID_PP7
+init|=
+literal|1ull
+operator|<<
+literal|7
+block|,
+comment|/**< Enable tracing from PP7 with matching sourceID */
+name|CVMX_TRA_SID_PP8
+init|=
+literal|1ull
+operator|<<
+literal|8
+block|,
+comment|/**< Enable tracing from PP8 with matching sourceID */
+name|CVMX_TRA_SID_PP9
+init|=
+literal|1ull
+operator|<<
+literal|9
+block|,
+comment|/**< Enable tracing from PP9 with matching sourceID */
+name|CVMX_TRA_SID_PP10
+init|=
+literal|1ull
+operator|<<
+literal|10
+block|,
+comment|/**< Enable tracing from PP10 with matching sourceID */
+name|CVMX_TRA_SID_PP11
+init|=
+literal|1ull
+operator|<<
+literal|11
+block|,
+comment|/**< Enable tracing from PP11 with matching sourceID */
+name|CVMX_TRA_SID_PP12
+init|=
+literal|1ull
+operator|<<
+literal|12
+block|,
+comment|/**< Enable tracing from PP12 with matching sourceID */
+name|CVMX_TRA_SID_PP13
+init|=
+literal|1ull
+operator|<<
+literal|13
+block|,
+comment|/**< Enable tracing from PP13 with matching sourceID */
+name|CVMX_TRA_SID_PP14
+init|=
+literal|1ull
+operator|<<
+literal|14
+block|,
+comment|/**< Enable tracing from PP14 with matching sourceID */
+name|CVMX_TRA_SID_PP15
+init|=
+literal|1ull
+operator|<<
+literal|15
+block|,
+comment|/**< Enable tracing from PP15 with matching sourceID */
+name|CVMX_TRA_SID_PKI
+init|=
+literal|1ull
+operator|<<
+literal|16
+block|,
+comment|/**< Enable tracing of write requests from PIP/IPD */
+name|CVMX_TRA_SID_PKO
+init|=
+literal|1ull
+operator|<<
+literal|17
+block|,
+comment|/**< Enable tracing of write requests from PKO */
+name|CVMX_TRA_SID_IOBREQ
+init|=
+literal|1ull
+operator|<<
+literal|18
+block|,
+comment|/**< Enable tracing of write requests from FPA,TIM,DFA,PCI,ZIP,POW, and PKO (writes) */
+name|CVMX_TRA_SID_DWB
+init|=
+literal|1ull
+operator|<<
+literal|19
+block|,
+comment|/**< Enable tracing of write requests from IOB DWB engine */
+name|CVMX_TRA_SID_ALL
+init|=
+operator|-
+literal|1ull
+comment|/**< Enable tracing all the above source commands */
+block|}
+name|cvmx_tra_sid_t
+typedef|;
+define|#
+directive|define
+name|CVMX_TRA_DID_SLI
+value|CVMX_TRA_DID_PCI
+comment|/**< Enable tracing of requests to SLI and RSL-type CSRs. */
+comment|/*  * Enumeration of the bitmask of all destination commands.  */
+typedef|typedef
+enum|enum
+block|{
+name|CVMX_TRA_DID_MIO
+init|=
+literal|1ull
+operator|<<
+literal|0
+block|,
+comment|/**< Enable tracing of CIU and GPIO CSR's */
+name|CVMX_TRA_DID_PCI
+init|=
+literal|1ull
+operator|<<
+literal|3
+block|,
+comment|/**< Enable tracing of requests to PCI and RSL type CSR's */
+name|CVMX_TRA_DID_KEY
+init|=
+literal|1ull
+operator|<<
+literal|4
+block|,
+comment|/**< Enable tracing of requests to KEY memory */
+name|CVMX_TRA_DID_FPA
+init|=
+literal|1ull
+operator|<<
+literal|5
+block|,
+comment|/**< Enable tracing of requests to FPA */
+name|CVMX_TRA_DID_DFA
+init|=
+literal|1ull
+operator|<<
+literal|6
+block|,
+comment|/**< Enable tracing of requests to DFA */
+name|CVMX_TRA_DID_ZIP
+init|=
+literal|1ull
+operator|<<
+literal|7
+block|,
+comment|/**< Enable tracing of requests to ZIP */
+name|CVMX_TRA_DID_RNG
+init|=
+literal|1ull
+operator|<<
+literal|8
+block|,
+comment|/**< Enable tracing of requests to RNG */
+name|CVMX_TRA_DID_IPD
+init|=
+literal|1ull
+operator|<<
+literal|9
+block|,
+comment|/**< Enable tracing of IPD CSR accesses */
+name|CVMX_TRA_DID_PKO
+init|=
+literal|1ull
+operator|<<
+literal|10
+block|,
+comment|/**< Enable tracing of PKO accesses (doorbells) */
+name|CVMX_TRA_DID_POW
+init|=
+literal|1ull
+operator|<<
+literal|12
+block|,
+comment|/**< Enable tracing of requests to RNG */
+name|CVMX_TRA_DID_USB0
+init|=
+literal|1ull
+operator|<<
+literal|13
+block|,
+comment|/**< Enable tracing of USB0 accesses (UAHC0 EHCI and OHCI NCB CSRs) */
+name|CVMX_TRA_DID_RAD
+init|=
+literal|1ull
+operator|<<
+literal|14
+block|,
+comment|/**< Enable tracing of RAD accesses (doorbells) */
+name|CVMX_TRA_DID_DPI
+init|=
+literal|1ull
+operator|<<
+literal|27
+block|,
+comment|/**< Enable tracing of DPI accesses (DPI NCD CSRs) */
+name|CVMX_TRA_DID_FAU
+init|=
+literal|1ull
+operator|<<
+literal|30
+block|,
+comment|/**< Enable tracing FAU accesses */
+name|CVMX_TRA_DID_ALL
+init|=
+operator|-
+literal|1ull
+comment|/**< Enable tracing all the above destination commands */
+block|}
+name|cvmx_tra_did_t
+typedef|;
+comment|/**  * TRA data format definition. Use the type field to  * determine which union element to use.  *  * In Octeon 2, the trace buffer is 69 bits,  * the first read accesses bits 63:0 of the trace buffer entry, and  * the second read accesses bits 68:64 of the trace buffer entry.  */
 typedef|typedef
 union|union
 block|{
-name|uint64_t
-name|u64
-decl_stmt|;
 struct|struct
 block|{
 if|#
@@ -126,6 +719,37 @@ directive|if
 name|__BYTE_ORDER
 operator|==
 name|__BIG_ENDIAN
+name|uint64_t
+name|datahi
+decl_stmt|;
+name|uint64_t
+name|data
+decl_stmt|;
+else|#
+directive|else
+name|uint64_t
+name|data
+decl_stmt|;
+name|uint64_t
+name|datahi
+decl_stmt|;
+endif|#
+directive|endif
+block|}
+name|u128
+struct|;
+struct|struct
+block|{
+if|#
+directive|if
+name|__BYTE_ORDER
+operator|==
+name|__BIG_ENDIAN
+name|uint64_t
+name|reserved3
+range|:
+literal|64
+decl_stmt|;
 name|uint64_t
 name|valid
 range|:
@@ -156,7 +780,7 @@ name|reserved2
 range|:
 literal|3
 decl_stmt|;
-name|cvmx_tra_data_type_t
+name|uint64_t
 name|type
 range|:
 literal|5
@@ -173,7 +797,7 @@ name|timestamp
 range|:
 literal|8
 decl_stmt|;
-name|cvmx_tra_data_type_t
+name|uint64_t
 name|type
 range|:
 literal|5
@@ -207,6 +831,11 @@ name|uint64_t
 name|valid
 range|:
 literal|1
+decl_stmt|;
+name|uint64_t
+name|reserved3
+range|:
+literal|64
 decl_stmt|;
 endif|#
 directive|endif
@@ -222,6 +851,11 @@ name|__BYTE_ORDER
 operator|==
 name|__BIG_ENDIAN
 name|uint64_t
+name|reserved3
+range|:
+literal|64
+decl_stmt|;
+name|uint64_t
 name|valid
 range|:
 literal|1
@@ -251,7 +885,7 @@ name|reserved2
 range|:
 literal|3
 decl_stmt|;
-name|cvmx_tra_data_type_t
+name|uint64_t
 name|type
 range|:
 literal|5
@@ -268,7 +902,7 @@ name|timestamp
 range|:
 literal|8
 decl_stmt|;
-name|cvmx_tra_data_type_t
+name|uint64_t
 name|type
 range|:
 literal|5
@@ -302,6 +936,11 @@ name|uint64_t
 name|valid
 range|:
 literal|1
+decl_stmt|;
+name|uint64_t
+name|reserved3
+range|:
+literal|64
 decl_stmt|;
 endif|#
 directive|endif
@@ -317,6 +956,11 @@ name|__BYTE_ORDER
 operator|==
 name|__BIG_ENDIAN
 name|uint64_t
+name|reserved3
+range|:
+literal|64
+decl_stmt|;
+name|uint64_t
 name|valid
 range|:
 literal|1
@@ -407,6 +1051,11 @@ name|uint64_t
 name|valid
 range|:
 literal|1
+decl_stmt|;
+name|uint64_t
+name|reserved3
+range|:
+literal|64
 decl_stmt|;
 endif|#
 directive|endif
@@ -422,6 +1071,11 @@ name|__BYTE_ORDER
 operator|==
 name|__BIG_ENDIAN
 name|uint64_t
+name|reserved3
+range|:
+literal|64
+decl_stmt|;
+name|uint64_t
 name|valid
 range|:
 literal|1
@@ -503,10 +1157,483 @@ name|valid
 range|:
 literal|1
 decl_stmt|;
+name|uint64_t
+name|reserved3
+range|:
+literal|64
+decl_stmt|;
 endif|#
 directive|endif
 block|}
 name|iob
+struct|;
+comment|/**< for IOBDMA */
+struct|struct
+block|{
+if|#
+directive|if
+name|__BYTE_ORDER
+operator|==
+name|__BIG_ENDIAN
+name|uint64_t
+name|reserved1
+range|:
+literal|59
+decl_stmt|;
+name|uint64_t
+name|valid
+range|:
+literal|1
+decl_stmt|;
+name|uint64_t
+name|discontinuity
+range|:
+literal|1
+decl_stmt|;
+name|uint64_t
+name|addresshi
+range|:
+literal|3
+decl_stmt|;
+comment|/* Split the address to fit in upper 64 bits  */
+name|uint64_t
+name|addresslo
+range|:
+literal|35
+decl_stmt|;
+comment|/* and lower 64-bits. */
+name|uint64_t
+name|reserved
+range|:
+literal|10
+decl_stmt|;
+name|uint64_t
+name|source
+range|:
+literal|5
+decl_stmt|;
+name|uint64_t
+name|type
+range|:
+literal|6
+decl_stmt|;
+name|uint64_t
+name|timestamp
+range|:
+literal|8
+decl_stmt|;
+else|#
+directive|else
+name|uint64_t
+name|timestamp
+range|:
+literal|8
+decl_stmt|;
+name|uint64_t
+name|type
+range|:
+literal|6
+decl_stmt|;
+name|uint64_t
+name|source
+range|:
+literal|5
+decl_stmt|;
+name|uint64_t
+name|reserved
+range|:
+literal|10
+decl_stmt|;
+name|uint64_t
+name|addresslo
+range|:
+literal|35
+decl_stmt|;
+name|uint64_t
+name|addresshi
+range|:
+literal|3
+decl_stmt|;
+name|uint64_t
+name|discontinuity
+range|:
+literal|1
+decl_stmt|;
+name|uint64_t
+name|valid
+range|:
+literal|1
+decl_stmt|;
+name|uint64_t
+name|reserved1
+range|:
+literal|59
+decl_stmt|;
+endif|#
+directive|endif
+block|}
+name|cmn2
+struct|;
+comment|/**< for LDT, LDI, PL2, RPL2, DWB, WBL2, SET*, CLR*, INCR*, DECR* */
+struct|struct
+block|{
+if|#
+directive|if
+name|__BYTE_ORDER
+operator|==
+name|__BIG_ENDIAN
+name|uint64_t
+name|reserved1
+range|:
+literal|59
+decl_stmt|;
+name|uint64_t
+name|valid
+range|:
+literal|1
+decl_stmt|;
+name|uint64_t
+name|discontinuity
+range|:
+literal|1
+decl_stmt|;
+name|uint64_t
+name|addresshi
+range|:
+literal|3
+decl_stmt|;
+comment|/* Split the address to fit in upper 64 bits  */
+name|uint64_t
+name|addresslo
+range|:
+literal|35
+decl_stmt|;
+comment|/* and lower 64-bits */
+name|uint64_t
+name|reserved
+range|:
+literal|2
+decl_stmt|;
+name|uint64_t
+name|mask
+range|:
+literal|8
+decl_stmt|;
+name|uint64_t
+name|source
+range|:
+literal|5
+decl_stmt|;
+name|uint64_t
+name|type
+range|:
+literal|6
+decl_stmt|;
+name|uint64_t
+name|timestamp
+range|:
+literal|8
+decl_stmt|;
+else|#
+directive|else
+name|uint64_t
+name|timestamp
+range|:
+literal|8
+decl_stmt|;
+name|uint64_t
+name|type
+range|:
+literal|6
+decl_stmt|;
+name|uint64_t
+name|source
+range|:
+literal|5
+decl_stmt|;
+name|uint64_t
+name|mask
+range|:
+literal|8
+decl_stmt|;
+name|uint64_t
+name|reserved
+range|:
+literal|2
+decl_stmt|;
+name|uint64_t
+name|addresslo
+range|:
+literal|35
+decl_stmt|;
+name|uint64_t
+name|addresshi
+range|:
+literal|3
+decl_stmt|;
+name|uint64_t
+name|discontinuity
+range|:
+literal|1
+decl_stmt|;
+name|uint64_t
+name|valid
+range|:
+literal|1
+decl_stmt|;
+name|uint64_t
+name|reserved1
+range|:
+literal|59
+decl_stmt|;
+endif|#
+directive|endif
+block|}
+name|store2
+struct|;
+comment|/**< for STC, STF, STP, STT, LDD, PSL1, SAA32, SAA64, FAA32, FAA64, FAS32, FAS64 */
+struct|struct
+block|{
+if|#
+directive|if
+name|__BYTE_ORDER
+operator|==
+name|__BIG_ENDIAN
+name|uint64_t
+name|reserved1
+range|:
+literal|59
+decl_stmt|;
+name|uint64_t
+name|valid
+range|:
+literal|1
+decl_stmt|;
+name|uint64_t
+name|discontinuity
+range|:
+literal|1
+decl_stmt|;
+name|uint64_t
+name|addresshi
+range|:
+literal|3
+decl_stmt|;
+comment|/* Split the address to fit in upper 64 bits  */
+name|uint64_t
+name|addresslo
+range|:
+literal|35
+decl_stmt|;
+comment|/* and lower 64-bits */
+name|uint64_t
+name|reserved
+range|:
+literal|2
+decl_stmt|;
+name|uint64_t
+name|subid
+range|:
+literal|3
+decl_stmt|;
+name|uint64_t
+name|dest
+range|:
+literal|5
+decl_stmt|;
+name|uint64_t
+name|source
+range|:
+literal|5
+decl_stmt|;
+name|uint64_t
+name|type
+range|:
+literal|6
+decl_stmt|;
+name|uint64_t
+name|timestamp
+range|:
+literal|8
+decl_stmt|;
+else|#
+directive|else
+name|uint64_t
+name|timestamp
+range|:
+literal|8
+decl_stmt|;
+name|uint64_t
+name|type
+range|:
+literal|6
+decl_stmt|;
+name|uint64_t
+name|source
+range|:
+literal|5
+decl_stmt|;
+name|uint64_t
+name|dest
+range|:
+literal|5
+decl_stmt|;
+name|uint64_t
+name|subid
+range|:
+literal|3
+decl_stmt|;
+name|uint64_t
+name|reserved
+range|:
+literal|2
+decl_stmt|;
+name|uint64_t
+name|addresslo
+range|:
+literal|35
+decl_stmt|;
+name|uint64_t
+name|addresshi
+range|:
+literal|3
+decl_stmt|;
+name|uint64_t
+name|discontinuity
+range|:
+literal|1
+decl_stmt|;
+name|uint64_t
+name|valid
+range|:
+literal|1
+decl_stmt|;
+name|uint64_t
+name|reserved1
+range|:
+literal|59
+decl_stmt|;
+endif|#
+directive|endif
+block|}
+name|iobld2
+struct|;
+comment|/**< for IOBLD8, IOBLD16, IOBLD32, IOBLD64, IOBST64, IOBST32, IOBST16, IOBST8 */
+struct|struct
+block|{
+if|#
+directive|if
+name|__BYTE_ORDER
+operator|==
+name|__BIG_ENDIAN
+name|uint64_t
+name|reserved1
+range|:
+literal|59
+decl_stmt|;
+name|uint64_t
+name|valid
+range|:
+literal|1
+decl_stmt|;
+name|uint64_t
+name|discontinuity
+range|:
+literal|1
+decl_stmt|;
+name|uint64_t
+name|addresshi
+range|:
+literal|3
+decl_stmt|;
+comment|/* Split the address to fit in upper 64 bits  */
+name|uint64_t
+name|addresslo
+range|:
+literal|32
+decl_stmt|;
+comment|/* and lower 64-bits */
+name|uint64_t
+name|mask
+range|:
+literal|8
+decl_stmt|;
+name|uint64_t
+name|dest
+range|:
+literal|5
+decl_stmt|;
+name|uint64_t
+name|source
+range|:
+literal|5
+decl_stmt|;
+name|uint64_t
+name|type
+range|:
+literal|6
+decl_stmt|;
+name|uint64_t
+name|timestamp
+range|:
+literal|8
+decl_stmt|;
+else|#
+directive|else
+name|uint64_t
+name|timestamp
+range|:
+literal|8
+decl_stmt|;
+name|uint64_t
+name|type
+range|:
+literal|6
+decl_stmt|;
+name|uint64_t
+name|source
+range|:
+literal|5
+decl_stmt|;
+name|uint64_t
+name|dest
+range|:
+literal|5
+decl_stmt|;
+name|uint64_t
+name|mask
+range|:
+literal|8
+decl_stmt|;
+name|uint64_t
+name|addresslo
+range|:
+literal|32
+decl_stmt|;
+name|uint64_t
+name|addresshi
+range|:
+literal|3
+decl_stmt|;
+name|uint64_t
+name|discontinuity
+range|:
+literal|1
+decl_stmt|;
+name|uint64_t
+name|valid
+range|:
+literal|1
+decl_stmt|;
+name|uint64_t
+name|reserved1
+range|:
+literal|59
+decl_stmt|;
+endif|#
+directive|endif
+block|}
+name|iob2
 struct|;
 comment|/**< for IOBDMA */
 block|}
@@ -520,13 +1647,13 @@ parameter_list|(
 name|cvmx_tra_ctl_t
 name|control
 parameter_list|,
-name|cvmx_tra_filt_cmd_t
+name|cvmx_tra_filt_t
 name|filter
 parameter_list|,
-name|cvmx_tra_filt_sid_t
+name|cvmx_tra_sid_t
 name|source_filter
 parameter_list|,
-name|cvmx_tra_filt_did_t
+name|cvmx_tra_did_t
 name|dest_filter
 parameter_list|,
 name|uint64_t
@@ -544,13 +1671,13 @@ parameter_list|(
 name|uint64_t
 name|trigger
 parameter_list|,
-name|cvmx_tra_filt_cmd_t
+name|cvmx_tra_filt_t
 name|filter
 parameter_list|,
-name|cvmx_tra_filt_sid_t
+name|cvmx_tra_sid_t
 name|source_filter
 parameter_list|,
-name|cvmx_tra_trig0_did_t
+name|cvmx_tra_did_t
 name|dest_filter
 parameter_list|,
 name|uint64_t
@@ -560,7 +1687,7 @@ name|uint64_t
 name|address_mask
 parameter_list|)
 function_decl|;
-comment|/**  * Read an entry from the TRA buffer  *  * @return Value return. High bit will be zero if there wasn't any data  */
+comment|/**  * Read an entry from the TRA buffer. The trace buffer format is  * different in Octeon2, need to read twice from TRA_READ_DAT.  *  * @return Value return. High bit will be zero if there wasn't any data  */
 specifier|extern
 name|cvmx_tra_data_t
 name|cvmx_tra_read

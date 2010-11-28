@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***********************license start***************  *  Copyright (c) 2003-2008 Cavium Networks (support@cavium.com). All rights  *  reserved.  *  *  *  Redistribution and use in source and binary forms, with or without  *  modification, are permitted provided that the following conditions are  *  met:  *  *      * Redistributions of source code must retain the above copyright  *        notice, this list of conditions and the following disclaimer.  *  *      * Redistributions in binary form must reproduce the above  *        copyright notice, this list of conditions and the following  *        disclaimer in the documentation and/or other materials provided  *        with the distribution.  *  *      * Neither the name of Cavium Networks nor the names of  *        its contributors may be used to endorse or promote products  *        derived from this software without specific prior written  *        permission.  *  *  TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  *  AND WITH ALL FAULTS AND CAVIUM NETWORKS MAKES NO PROMISES, REPRESENTATIONS  *  OR WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH  *  RESPECT TO THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY  *  REPRESENTATION OR DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT  *  DEFECTS, AND CAVIUM SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES  *  OF TITLE, MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR  *  PURPOSE, LACK OF VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET  *  POSSESSION OR CORRESPONDENCE TO DESCRIPTION.  THE ENTIRE RISK ARISING OUT  *  OF USE OR PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  *  *  *  For any questions regarding licensing please contact marketing@caviumnetworks.com  *  ***********************license end**************************************/
+comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Networks (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Networks nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM  NETWORKS MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
 end_comment
 
 begin_comment
@@ -36,43 +36,52 @@ enum|enum
 block|{
 name|OCTEON_FEATURE_SAAD
 block|,
-comment|/* Octeon models in the CN5XXX family and higher support atomic add instructions to memory (saa/saad) */
+comment|/**<  Octeon models in the CN5XXX family and higher support atomic add instructions to memory (saa/saad) */
 name|OCTEON_FEATURE_ZIP
 block|,
-comment|/* Does this Octeon support the ZIP offload engine? */
+comment|/**<  Does this Octeon support the ZIP offload engine? */
 name|OCTEON_FEATURE_CRYPTO
 block|,
-comment|/* Does this Octeon support crypto acceleration using COP2? */
+comment|/**<  Does this Octeon support crypto acceleration using COP2? */
+name|OCTEON_FEATURE_DORM_CRYPTO
+block|,
+comment|/**<  Can crypto be enabled by calling cvmx_crypto_dormant_enable()? */
 name|OCTEON_FEATURE_PCIE
 block|,
-comment|/* Does this Octeon support PCI express? */
+comment|/**<  Does this Octeon support PCI express? */
+name|OCTEON_FEATURE_SRIO
+block|,
+comment|/**<  Does this Octeon support SRIOs */
 name|OCTEON_FEATURE_KEY_MEMORY
 block|,
-comment|/* Some Octeon models support internal memory for storing cryptographic keys */
+comment|/**<  Some Octeon models support internal memory for storing cryptographic keys */
 name|OCTEON_FEATURE_LED_CONTROLLER
 block|,
-comment|/* Octeon has a LED controller for banks of external LEDs */
+comment|/**<  Octeon has a LED controller for banks of external LEDs */
 name|OCTEON_FEATURE_TRA
 block|,
-comment|/* Octeon has a trace buffer */
+comment|/**<  Octeon has a trace buffer */
 name|OCTEON_FEATURE_MGMT_PORT
 block|,
-comment|/* Octeon has a management port */
+comment|/**<  Octeon has a management port */
 name|OCTEON_FEATURE_RAID
 block|,
-comment|/* Octeon has a raid unit */
+comment|/**<  Octeon has a raid unit */
 name|OCTEON_FEATURE_USB
 block|,
-comment|/* Octeon has a builtin USB */
+comment|/**<  Octeon has a builtin USB */
 name|OCTEON_FEATURE_NO_WPTR
 block|,
-comment|/* Octeon IPD can run without using work queue entries */
+comment|/**<  Octeon IPD can run without using work queue entries */
 name|OCTEON_FEATURE_DFA
 block|,
-comment|/* Octeon has DFA state machines */
+comment|/**<  Octeon has DFA state machines */
 name|OCTEON_FEATURE_MDIO_CLAUSE_45
 block|,
-comment|/* Octeon MDIO block supports clause 45 transactions for 10 Gig support */
+comment|/**<  Octeon MDIO block supports clause 45 transactions for 10 Gig support */
+name|OCTEON_FEATURE_NPEI
+block|,
+comment|/**<  CN52XX and CN56XX used a block named NPEI for PCIe access. Newer chips replaced this with SLI+DPI */
 block|}
 name|octeon_feature_t
 typedef|;
@@ -124,39 +133,155 @@ condition|)
 return|return
 literal|0
 return|;
-elseif|else
-if|if
-condition|(
-name|OCTEON_IS_MODEL
-argument_list|(
-name|OCTEON_CN38XX_PASS1
-argument_list|)
-condition|)
-return|return
-literal|1
-return|;
 else|else
 return|return
-operator|(
 operator|!
 name|cvmx_fuse_read
 argument_list|(
 literal|121
 argument_list|)
-operator|)
 return|;
 case|case
 name|OCTEON_FEATURE_CRYPTO
 case|:
+if|if
+condition|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN6XXX
+argument_list|)
+condition|)
+block|{
+name|cvmx_mio_fus_dat2_t
+name|fus_2
+decl_stmt|;
+name|fus_2
+operator|.
+name|u64
+operator|=
+name|cvmx_read_csr
+argument_list|(
+name|CVMX_MIO_FUS_DAT2
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fus_2
+operator|.
+name|s
+operator|.
+name|nocrypto
+operator|||
+name|fus_2
+operator|.
+name|s
+operator|.
+name|nomul
+condition|)
+block|{
 return|return
-operator|(
+literal|0
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|fus_2
+operator|.
+name|s
+operator|.
+name|dorm_crypto
+condition|)
+block|{
+return|return
+literal|1
+return|;
+block|}
+else|else
+block|{
+name|cvmx_rnm_ctl_status_t
+name|st
+decl_stmt|;
+name|st
+operator|.
+name|u64
+operator|=
+name|cvmx_read_csr
+argument_list|(
+name|CVMX_RNM_CTL_STATUS
+argument_list|)
+expr_stmt|;
+return|return
+name|st
+operator|.
+name|s
+operator|.
+name|eer_val
+return|;
+block|}
+block|}
+else|else
+block|{
+return|return
 operator|!
 name|cvmx_fuse_read
 argument_list|(
 literal|90
 argument_list|)
-operator|)
 return|;
+block|}
+case|case
+name|OCTEON_FEATURE_DORM_CRYPTO
+case|:
+if|if
+condition|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN6XXX
+argument_list|)
+condition|)
+block|{
+name|cvmx_mio_fus_dat2_t
+name|fus_2
+decl_stmt|;
+name|fus_2
+operator|.
+name|u64
+operator|=
+name|cvmx_read_csr
+argument_list|(
+name|CVMX_MIO_FUS_DAT2
+argument_list|)
+expr_stmt|;
+return|return
+operator|!
+name|fus_2
+operator|.
+name|s
+operator|.
+name|nocrypto
+operator|&&
+operator|!
+name|fus_2
+operator|.
+name|s
+operator|.
+name|nomul
+operator|&&
+name|fus_2
+operator|.
+name|s
+operator|.
+name|dorm_crypto
+return|;
+block|}
+else|else
+block|{
+return|return
+literal|0
+return|;
+block|}
 case|case
 name|OCTEON_FEATURE_PCIE
 case|:
@@ -171,16 +296,28 @@ name|OCTEON_IS_MODEL
 argument_list|(
 name|OCTEON_CN52XX
 argument_list|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN6XXX
+argument_list|)
+operator|)
+return|;
+case|case
+name|OCTEON_FEATURE_SRIO
+case|:
+return|return
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN6XXX
+argument_list|)
 operator|)
 return|;
 case|case
 name|OCTEON_FEATURE_KEY_MEMORY
 case|:
-case|case
-name|OCTEON_FEATURE_LED_CONTROLLER
-case|:
 return|return
-operator|(
 name|OCTEON_IS_MODEL
 argument_list|(
 name|OCTEON_CN38XX
@@ -195,7 +332,30 @@ name|OCTEON_IS_MODEL
 argument_list|(
 name|OCTEON_CN56XX
 argument_list|)
-operator|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN6XXX
+argument_list|)
+return|;
+case|case
+name|OCTEON_FEATURE_LED_CONTROLLER
+case|:
+return|return
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN38XX
+argument_list|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN58XX
+argument_list|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN56XX
+argument_list|)
 return|;
 case|case
 name|OCTEON_FEATURE_TRA
@@ -218,7 +378,6 @@ case|case
 name|OCTEON_FEATURE_MGMT_PORT
 case|:
 return|return
-operator|(
 name|OCTEON_IS_MODEL
 argument_list|(
 name|OCTEON_CN56XX
@@ -228,13 +387,16 @@ name|OCTEON_IS_MODEL
 argument_list|(
 name|OCTEON_CN52XX
 argument_list|)
-operator|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN6XXX
+argument_list|)
 return|;
 case|case
 name|OCTEON_FEATURE_RAID
 case|:
 return|return
-operator|(
 name|OCTEON_IS_MODEL
 argument_list|(
 name|OCTEON_CN56XX
@@ -244,7 +406,11 @@ name|OCTEON_IS_MODEL
 argument_list|(
 name|OCTEON_CN52XX
 argument_list|)
-operator|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN6XXX
+argument_list|)
 return|;
 case|case
 name|OCTEON_FEATURE_USB
@@ -268,7 +434,6 @@ name|OCTEON_FEATURE_NO_WPTR
 case|:
 return|return
 operator|(
-operator|(
 name|OCTEON_IS_MODEL
 argument_list|(
 name|OCTEON_CN56XX
@@ -277,6 +442,11 @@ operator|||
 name|OCTEON_IS_MODEL
 argument_list|(
 name|OCTEON_CN52XX
+argument_list|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN6XXX
 argument_list|)
 operator|)
 operator|&&
@@ -291,7 +461,6 @@ name|OCTEON_IS_MODEL
 argument_list|(
 name|OCTEON_CN52XX_PASS1_X
 argument_list|)
-operator|)
 return|;
 case|case
 name|OCTEON_FEATURE_DFA
@@ -330,32 +499,18 @@ condition|)
 return|return
 literal|0
 return|;
-elseif|else
-if|if
-condition|(
-name|OCTEON_IS_MODEL
-argument_list|(
-name|OCTEON_CN38XX_PASS1
-argument_list|)
-condition|)
-return|return
-literal|1
-return|;
 else|else
 return|return
-operator|(
 operator|!
 name|cvmx_fuse_read
 argument_list|(
 literal|120
 argument_list|)
-operator|)
 return|;
 case|case
 name|OCTEON_FEATURE_MDIO_CLAUSE_45
 case|:
 return|return
-operator|(
 operator|!
 operator|(
 name|OCTEON_IS_MODEL
@@ -373,6 +528,21 @@ argument_list|(
 name|OCTEON_CN50XX
 argument_list|)
 operator|)
+return|;
+case|case
+name|OCTEON_FEATURE_NPEI
+case|:
+return|return
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN56XX
+argument_list|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN52XX
+argument_list|)
 operator|)
 return|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***********************license start***************  *  Copyright (c) 2003-2008 Cavium Networks (support@cavium.com). All rights  *  reserved.  *  *  *  Redistribution and use in source and binary forms, with or without  *  modification, are permitted provided that the following conditions are  *  met:  *  *      * Redistributions of source code must retain the above copyright  *        notice, this list of conditions and the following disclaimer.  *  *      * Redistributions in binary form must reproduce the above  *        copyright notice, this list of conditions and the following  *        disclaimer in the documentation and/or other materials provided  *        with the distribution.  *  *      * Neither the name of Cavium Networks nor the names of  *        its contributors may be used to endorse or promote products  *        derived from this software without specific prior written  *        permission.  *  *  TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  *  AND WITH ALL FAULTS AND CAVIUM NETWORKS MAKES NO PROMISES, REPRESENTATIONS  *  OR WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH  *  RESPECT TO THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY  *  REPRESENTATION OR DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT  *  DEFECTS, AND CAVIUM SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES  *  OF TITLE, MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR  *  PURPOSE, LACK OF VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET  *  POSSESSION OR CORRESPONDENCE TO DESCRIPTION.  THE ENTIRE RISK ARISING OUT  *  OF USE OR PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  *  *  *  For any questions regarding licensing please contact marketing@caviumnetworks.com  *  ***********************license end**************************************/
+comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Networks (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Networks nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM  NETWORKS MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
 end_comment
 
 begin_comment
@@ -291,9 +291,6 @@ comment|/**< A callback of this type is called when a submitted transfer        
 name|CVMX_USB_CALLBACK_PORT_CHANGED
 block|,
 comment|/**< The status of the port changed. For example, someone may have                                         plugged a device in. The status parameter contains                                         CVMX_USB_COMPLETE_SUCCESS. Use cvmx_usb_get_status() to get                                         the new port status. */
-name|CVMX_USB_CALLBACK_DEVICE_SETUP
-block|,
-comment|/**< This is called in device mode when a control channels receives                                         a setup header */
 name|__CVMX_USB_CALLBACK_END
 comment|/**< Do not use. Used internally for array bounds */
 block|}
@@ -367,13 +364,6 @@ init|=
 literal|0
 block|,
 comment|/**< Automatically determine clock type based on function                                                              in cvmx-helper-board.c. */
-name|CVMX_USB_INITIALIZE_FLAGS_DEVICE_MODE
-init|=
-literal|1
-operator|<<
-literal|2
-block|,
-comment|/**< Program the USB port for device mode instead of host mode */
 name|CVMX_USB_INITIALIZE_FLAGS_CLOCK_MHZ_MASK
 init|=
 literal|3
@@ -403,6 +393,13 @@ literal|3
 block|,
 comment|/**< Speed of reference clock */
 comment|/* Bits 3-4 used to encode the clock frequency */
+name|CVMX_USB_INITIALIZE_FLAGS_NO_DMA
+init|=
+literal|1
+operator|<<
+literal|5
+block|,
+comment|/**< Disable DMA and used polled IO for data transfer use for the USB  */
 name|CVMX_USB_INITIALIZE_FLAGS_DEBUG_TRANSFERS
 init|=
 literal|1
@@ -570,7 +567,7 @@ name|cvmx_usb_port_status_t
 name|port_status
 parameter_list|)
 function_decl|;
-comment|/**  * Open a virtual pipe between the host and a USB device. A pipe  * must be opened before data can be transferred between a device  * and Octeon.  *  * @param state      USB device state populated by  *                   cvmx_usb_initialize().  * @param flags      Optional pipe flags defined in  *                   cvmx_usb_pipe_flags_t.  * @param device_addr  *                   USB device address to open the pipe to  *                   (0-127).  * @param endpoint_num  *                   USB endpoint number to open the pipe to  *                   (0-15).  * @param device_speed  *                   The speed of the device the pipe is going  *                   to. This must match the device's speed,  *                   which may be different than the port speed.  * @param max_packet The maximum packet length the device can  *                   transmit/receive (low speed=0-8, full  *                   speed=0-1023, high speed=0-1024). This value  *                   comes from the stadnard endpoint descriptor  *                   field wMaxPacketSize bits<10:0>.  * @param transfer_type  *                   The type of transfer this pipe is for.  * @param transfer_dir  *                   The direction the pipe is in. This is not  *                   used for control pipes.  * @param interval   For ISOCHRONOUS and INTERRUPT transfers,  *                   this is how often the transfer is scheduled  *                   for. All other transfers should specify  *                   zero. The units are in frames (8000/sec at  *                   high speed, 1000/sec for full speed).  * @param multi_count  *                   For high speed devices, this is the maximum  *                   allowed number of packet per microframe.  *                   Specify zero for non high speed devices. This  *                   value comes from the stadnard endpoint descriptor  *                   field wMaxPacketSize bits<12:11>.  * @param hub_device_addr  *                   Hub device address this device is connected  *                   to. Devices connected directly to Octeon  *                   use zero. This is only used when the device  *                   is full/low speed behind a high speed hub.  *                   The address will be of the high speed hub,  *                   not and full speed hubs after it.  * @param hub_port   Which port on the hub the device is  *                   connected. Use zero for devices connected  *                   directly to Octeon. Like hub_device_addr,  *                   this is only used for full/low speed  *                   devices behind a high speed hub.  *  * @return A non negative value is a pipe handle. Negative  *         values are failure codes from cvmx_usb_status_t.  */
+comment|/**  * Open a virtual pipe between the host and a USB device. A pipe  * must be opened before data can be transferred between a device  * and Octeon.  *  * @param state      USB device state populated by  *                   cvmx_usb_initialize().  * @param flags      Optional pipe flags defined in  *                   cvmx_usb_pipe_flags_t.  * @param device_addr  *                   USB device address to open the pipe to  *                   (0-127).  * @param endpoint_num  *                   USB endpoint number to open the pipe to  *                   (0-15).  * @param device_speed  *                   The speed of the device the pipe is going  *                   to. This must match the device's speed,  *                   which may be different than the port speed.  * @param max_packet The maximum packet length the device can  *                   transmit/receive (low speed=0-8, full  *                   speed=0-1023, high speed=0-1024). This value  *                   comes from the standard endpoint descriptor  *                   field wMaxPacketSize bits<10:0>.  * @param transfer_type  *                   The type of transfer this pipe is for.  * @param transfer_dir  *                   The direction the pipe is in. This is not  *                   used for control pipes.  * @param interval   For ISOCHRONOUS and INTERRUPT transfers,  *                   this is how often the transfer is scheduled  *                   for. All other transfers should specify  *                   zero. The units are in frames (8000/sec at  *                   high speed, 1000/sec for full speed).  * @param multi_count  *                   For high speed devices, this is the maximum  *                   allowed number of packet per microframe.  *                   Specify zero for non high speed devices. This  *                   value comes from the standard endpoint descriptor  *                   field wMaxPacketSize bits<12:11>.  * @param hub_device_addr  *                   Hub device address this device is connected  *                   to. Devices connected directly to Octeon  *                   use zero. This is only used when the device  *                   is full/low speed behind a high speed hub.  *                   The address will be of the high speed hub,  *                   not and full speed hubs after it.  * @param hub_port   Which port on the hub the device is  *                   connected. Use zero for devices connected  *                   directly to Octeon. Like hub_device_addr,  *                   this is only used for full/low speed  *                   devices behind a high speed hub.  *  * @return A non negative value is a pipe handle. Negative  *         values are failure codes from cvmx_usb_status_t.  */
 specifier|extern
 name|int
 name|cvmx_usb_open_pipe
@@ -834,47 +831,6 @@ parameter_list|(
 name|cvmx_usb_state_t
 modifier|*
 name|state
-parameter_list|)
-function_decl|;
-comment|/**  * Enable an endpoint for use in device mode. After this call  * transactions will be allowed over the endpoint. This must be  * called after every usb reset.  *  * @param state  USB device state populated by  *               cvmx_usb_initialize().  * @param endpoint_num  *               The endpoint number to enable (0-4)  * @param transfer_type  *               USB transfer type of this endpoint  * @param transfer_dir  *               Direction of transfer relative to Octeon  * @param max_packet_size  *               Maximum packet size support by this endpoint  * @param buffer Buffer to send/receive  * @param buffer_length  *               Length of the buffer in bytes  *  * @return CVMX_USB_SUCCESS or a negative error code defined in  *         cvmx_usb_status_t.  */
-specifier|extern
-name|cvmx_usb_status_t
-name|cvmx_usb_device_enable_endpoint
-parameter_list|(
-name|cvmx_usb_state_t
-modifier|*
-name|state
-parameter_list|,
-name|int
-name|endpoint_num
-parameter_list|,
-name|cvmx_usb_transfer_t
-name|transfer_type
-parameter_list|,
-name|cvmx_usb_direction_t
-name|transfer_dir
-parameter_list|,
-name|int
-name|max_packet_size
-parameter_list|,
-name|uint64_t
-name|buffer
-parameter_list|,
-name|int
-name|buffer_length
-parameter_list|)
-function_decl|;
-comment|/**  * Disable an endpoint in device mode.  *  * @param state  USB device state populated by  *               cvmx_usb_initialize().  * @param endpoint_num  *               The endpoint number to disable (0-4)  *  * @return CVMX_USB_SUCCESS or a negative error code defined in  *         cvmx_usb_status_t.  */
-specifier|extern
-name|cvmx_usb_status_t
-name|cvmx_usb_device_disable_endpoint
-parameter_list|(
-name|cvmx_usb_state_t
-modifier|*
-name|state
-parameter_list|,
-name|int
-name|endpoint_num
 parameter_list|)
 function_decl|;
 comment|/*  * The FreeBSD host driver uses these functions to manipulate the toggle to deal  * more easily with endpoint management.  */

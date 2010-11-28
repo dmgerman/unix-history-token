@@ -1887,9 +1887,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|cvmx_ipd_disable
-argument_list|()
-expr_stmt|;
 if|#
 directive|if
 literal|0
@@ -1906,7 +1903,7 @@ expr_stmt|;
 name|cvm_oct_rx_shutdown
 argument_list|()
 expr_stmt|;
-name|cvmx_pko_disable
+name|cvmx_helper_shutdown_packet_io_global
 argument_list|()
 expr_stmt|;
 comment|/* Free the ethernet devices */
@@ -1964,46 +1961,6 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
-name|cvmx_pko_shutdown
-argument_list|()
-expr_stmt|;
-name|cvmx_ipd_free_ptr
-argument_list|()
-expr_stmt|;
-comment|/* Free the HW pools */
-name|cvm_oct_mem_empty_fpa
-argument_list|(
-name|CVMX_FPA_PACKET_POOL
-argument_list|,
-name|CVMX_FPA_PACKET_POOL_SIZE
-argument_list|,
-name|num_packet_buffers
-argument_list|)
-expr_stmt|;
-name|cvm_oct_mem_empty_fpa
-argument_list|(
-name|CVMX_FPA_WQE_POOL
-argument_list|,
-name|CVMX_FPA_WQE_POOL_SIZE
-argument_list|,
-name|num_packet_buffers
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|CVMX_FPA_OUTPUT_BUFFER_POOL
-operator|!=
-name|CVMX_FPA_PACKET_POOL
-condition|)
-name|cvm_oct_mem_empty_fpa
-argument_list|(
-name|CVMX_FPA_OUTPUT_BUFFER_POOL
-argument_list|,
-name|CVMX_FPA_OUTPUT_BUFFER_POOL_SIZE
-argument_list|,
-literal|128
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

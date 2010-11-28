@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***********************license start***************  *  Copyright (c) 2003-2008 Cavium Networks (support@cavium.com). All rights  *  reserved.  *  *  *  Redistribution and use in source and binary forms, with or without  *  modification, are permitted provided that the following conditions are  *  met:  *  *      * Redistributions of source code must retain the above copyright  *        notice, this list of conditions and the following disclaimer.  *  *      * Redistributions in binary form must reproduce the above  *        copyright notice, this list of conditions and the following  *        disclaimer in the documentation and/or other materials provided  *        with the distribution.  *  *      * Neither the name of Cavium Networks nor the names of  *        its contributors may be used to endorse or promote products  *        derived from this software without specific prior written  *        permission.  *  *  TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  *  AND WITH ALL FAULTS AND CAVIUM NETWORKS MAKES NO PROMISES, REPRESENTATIONS  *  OR WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH  *  RESPECT TO THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY  *  REPRESENTATION OR DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT  *  DEFECTS, AND CAVIUM SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES  *  OF TITLE, MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR  *  PURPOSE, LACK OF VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET  *  POSSESSION OR CORRESPONDENCE TO DESCRIPTION.  THE ENTIRE RISK ARISING OUT  *  OF USE OR PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  *  *  *  For any questions regarding licensing please contact marketing@caviumnetworks.com  *  ***********************license end**************************************/
+comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Networks (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Networks nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM  NETWORKS MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
 end_comment
 
 begin_comment
-comment|/**  * @file  *  * Interface to the hardware Packet Output unit.  *  * Starting with SDK 1.7.0, the PKO output functions now support  * two types of locking. CVMX_PKO_LOCK_ATOMIC_TAG continues to  * function similarly to previous SDKs by using POW atomic tags  * to preserve ordering and exclusivity. As a new option, you  * can now pass CVMX_PKO_LOCK_CMD_QUEUE which uses a ll/sc  * memory based locking instead. This locking has the advantage  * of not affecting the tag state but doesn't preserve packet  * ordering. CVMX_PKO_LOCK_CMD_QUEUE is appropriate in most  * generic code while CVMX_PKO_LOCK_CMD_QUEUE should be used  * with hand tuned fast path code.  *  * Some of other SDK differences visible to the command command  * queuing:  * - PKO indexes are no longer stored in the FAU. A large  *   percentage of the FAU register block used to be tied up  *   maintaining PKO queue pointers. These are now stored in a  *   global named block.  * - The PKO<b>use_locking</b> parameter can now have a global  *   effect. Since all application use the same named block,  *   queue locking correctly applies across all operating  *   systems when using CVMX_PKO_LOCK_CMD_QUEUE.  * - PKO 3 word commands are now supported. Use  *   cvmx_pko_send_packet_finish3().  *  *<hr>$Revision: 42150 $<hr>  */
+comment|/**  * @file  *  * Interface to the hardware Packet Output unit.  *  * Starting with SDK 1.7.0, the PKO output functions now support  * two types of locking. CVMX_PKO_LOCK_ATOMIC_TAG continues to  * function similarly to previous SDKs by using POW atomic tags  * to preserve ordering and exclusivity. As a new option, you  * can now pass CVMX_PKO_LOCK_CMD_QUEUE which uses a ll/sc  * memory based locking instead. This locking has the advantage  * of not affecting the tag state but doesn't preserve packet  * ordering. CVMX_PKO_LOCK_CMD_QUEUE is appropriate in most  * generic code while CVMX_PKO_LOCK_CMD_QUEUE should be used  * with hand tuned fast path code.  *  * Some of other SDK differences visible to the command command  * queuing:  * - PKO indexes are no longer stored in the FAU. A large  *   percentage of the FAU register block used to be tied up  *   maintaining PKO queue pointers. These are now stored in a  *   global named block.  * - The PKO<b>use_locking</b> parameter can now have a global  *   effect. Since all application use the same named block,  *   queue locking correctly applies across all operating  *   systems when using CVMX_PKO_LOCK_CMD_QUEUE.  * - PKO 3 word commands are now supported. Use  *   cvmx_pko_send_packet_finish3().  *  *<hr>$Revision: 49448 $<hr>  */
 end_comment
 
 begin_ifndef
@@ -18,6 +18,29 @@ define|#
 directive|define
 name|__CVMX_PKO_H__
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CVMX_BUILD_FOR_LINUX_KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"cvmx-config.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"cvmx-pko-defs.h"
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_ifndef
 ifndef|#
@@ -53,11 +76,10 @@ endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|"cvmx-cvmmem.h"
-end_include
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -113,16 +135,16 @@ value|256
 define|#
 directive|define
 name|CVMX_PKO_MAX_OUTPUT_QUEUES
-value|((OCTEON_IS_MODEL(OCTEON_CN31XX) || OCTEON_IS_MODEL(OCTEON_CN3010) || OCTEON_IS_MODEL(OCTEON_CN3005) || OCTEON_IS_MODEL(OCTEON_CN50XX)) ? 32 : (OCTEON_IS_MODEL(OCTEON_CN58XX) || OCTEON_IS_MODEL(OCTEON_CN56XX)) ? 256 : 128)
+value|((OCTEON_IS_MODEL(OCTEON_CN31XX) || OCTEON_IS_MODEL(OCTEON_CN3010) || OCTEON_IS_MODEL(OCTEON_CN3005) || OCTEON_IS_MODEL(OCTEON_CN50XX)) ? 32 : (OCTEON_IS_MODEL(OCTEON_CN58XX) || OCTEON_IS_MODEL(OCTEON_CN56XX) || OCTEON_IS_MODEL(OCTEON_CN52XX) || OCTEON_IS_MODEL(OCTEON_CN63XX)) ? 256 : 128)
 define|#
 directive|define
 name|CVMX_PKO_NUM_OUTPUT_PORTS
-value|40
+value|((OCTEON_IS_MODEL(OCTEON_CN63XX)) ? 44 : 40)
 define|#
 directive|define
 name|CVMX_PKO_MEM_QUEUE_PTRS_ILLEGAL_PID
 value|63
-comment|// use this for queues that are not used
+comment|/* use this for queues that are not used */
 define|#
 directive|define
 name|CVMX_PKO_QUEUE_STATIC_PRIORITY
@@ -371,7 +393,7 @@ struct|;
 block|}
 name|cvmx_pko_command_word0_t
 typedef|;
-comment|/* CSR typedefs have been moved to cvmx-csr-*.h */
+comment|/* CSR typedefs have been moved to cvmx-pko-defs.h */
 comment|/**  * Definition of internal state for Packet output processing  */
 typedef|typedef
 struct|struct
@@ -847,6 +869,26 @@ name|CVMX_HELPER_PKO_MAX_PORTS_INTERFACE1
 value|16
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|CVMX_PKO_QUEUES_PER_PORT_SRIO0
+comment|/* We use two queues per port for SRIO0. Having two queues per         port with two ports gives us four queues, one for each mailbox */
+define|#
+directive|define
+name|CVMX_PKO_QUEUES_PER_PORT_SRIO0
+value|2
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|CVMX_PKO_QUEUES_PER_PORT_SRIO1
+comment|/* We use two queues per port for SRIO1. Having two queues per         port with two ports gives us four queues, one for each mailbox */
+define|#
+directive|define
+name|CVMX_PKO_QUEUES_PER_PORT_SRIO1
+value|2
+endif|#
+directive|endif
 if|if
 condition|(
 name|port
@@ -956,6 +998,90 @@ operator|)
 operator|*
 name|CVMX_PKO_QUEUES_PER_PORT_LOOP
 return|;
+elseif|else
+if|if
+condition|(
+operator|(
+name|port
+operator|>=
+literal|40
+operator|)
+operator|&&
+operator|(
+name|port
+operator|<
+literal|42
+operator|)
+condition|)
+return|return
+name|CVMX_PKO_MAX_PORTS_INTERFACE0
+operator|*
+name|CVMX_PKO_QUEUES_PER_PORT_INTERFACE0
+operator|+
+name|CVMX_PKO_MAX_PORTS_INTERFACE1
+operator|*
+name|CVMX_PKO_QUEUES_PER_PORT_INTERFACE1
+operator|+
+literal|4
+operator|*
+name|CVMX_PKO_QUEUES_PER_PORT_PCI
+operator|+
+literal|4
+operator|*
+name|CVMX_PKO_QUEUES_PER_PORT_LOOP
+operator|+
+operator|(
+name|port
+operator|-
+literal|40
+operator|)
+operator|*
+name|CVMX_PKO_QUEUES_PER_PORT_SRIO0
+return|;
+elseif|else
+if|if
+condition|(
+operator|(
+name|port
+operator|>=
+literal|42
+operator|)
+operator|&&
+operator|(
+name|port
+operator|<
+literal|44
+operator|)
+condition|)
+return|return
+name|CVMX_PKO_MAX_PORTS_INTERFACE0
+operator|*
+name|CVMX_PKO_QUEUES_PER_PORT_INTERFACE0
+operator|+
+name|CVMX_PKO_MAX_PORTS_INTERFACE1
+operator|*
+name|CVMX_PKO_QUEUES_PER_PORT_INTERFACE1
+operator|+
+literal|4
+operator|*
+name|CVMX_PKO_QUEUES_PER_PORT_PCI
+operator|+
+literal|4
+operator|*
+name|CVMX_PKO_QUEUES_PER_PORT_LOOP
+operator|+
+literal|2
+operator|*
+name|CVMX_PKO_QUEUES_PER_PORT_SRIO0
+operator|+
+operator|(
+name|port
+operator|-
+literal|42
+operator|)
+operator|*
+name|CVMX_PKO_QUEUES_PER_PORT_SRIO1
+return|;
 else|else
 comment|/* Given the limit on the number of ports we can map to          * CVMX_MAX_OUTPUT_QUEUES_STATIC queues (currently 256,          * divided among all cores), the remaining unmapped ports          * are assigned an illegal queue number */
 return|return
@@ -1029,6 +1155,26 @@ literal|40
 condition|)
 return|return
 name|CVMX_PKO_QUEUES_PER_PORT_LOOP
+return|;
+elseif|else
+if|if
+condition|(
+name|port
+operator|<
+literal|42
+condition|)
+return|return
+name|CVMX_PKO_QUEUES_PER_PORT_SRIO0
+return|;
+elseif|else
+if|if
+condition|(
+name|port
+operator|<
+literal|44
+condition|)
+return|return
+name|CVMX_PKO_QUEUES_PER_PORT_SRIO1
 return|;
 else|else
 return|return

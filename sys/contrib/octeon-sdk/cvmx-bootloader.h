@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***********************license start***************  *  Copyright (c) 2008 Cavium Networks (support@cavium.com). All rights  *  reserved.  *  *  *  Redistribution and use in source and binary forms, with or without  *  modification, are permitted provided that the following conditions are  *  met:  *  *      * Redistributions of source code must retain the above copyright  *        notice, this list of conditions and the following disclaimer.  *  *      * Redistributions in binary form must reproduce the above  *        copyright notice, this list of conditions and the following  *        disclaimer in the documentation and/or other materials provided  *        with the distribution.  *  *      * Neither the name of Cavium Networks nor the names of  *        its contributors may be used to endorse or promote products  *        derived from this software without specific prior written  *        permission.  *  *  TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  *  AND WITH ALL FAULTS AND CAVIUM NETWORKS MAKES NO PROMISES, REPRESENTATIONS  *  OR WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH  *  RESPECT TO THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY  *  REPRESENTATION OR DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT  *  DEFECTS, AND CAVIUM SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES  *  OF TITLE, MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR  *  PURPOSE, LACK OF VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET  *  POSSESSION OR CORRESPONDENCE TO DESCRIPTION.  THE ENTIRE RISK ARISING OUT  *  OF USE OR PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  *  *  *  For any questions regarding licensing please contact marketing@caviumnetworks.com  *  ***********************license end**************************************/
+comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Networks (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Networks nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM  NETWORKS MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
 end_comment
 
 begin_ifndef
@@ -16,7 +16,7 @@ name|__CVMX_BOOTLOADER__
 end_define
 
 begin_comment
-comment|/**  * @file  *  * Bootloader definitions that are shared with other programs  *  *<hr>$Revision: 41586 $<hr>  */
+comment|/**  * @file  *  * Bootloader definitions that are shared with other programs  *  *<hr>$Revision: 49448 $<hr>  */
 end_comment
 
 begin_comment
@@ -70,8 +70,12 @@ begin_define
 define|#
 directive|define
 name|BOOTLOADER_HEADER_CURRENT_MINOR_REV
-value|1
+value|2
 end_define
+
+begin_comment
+comment|/* Revision history * 1.1  Initial released revision. (SDK 1.9) * 1.2  TLB based relocatable image (SDK 2.0) * * */
+end_comment
 
 begin_comment
 comment|/* offsets to struct bootloader_header fields for assembly use */
@@ -80,42 +84,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MAGIC_OFFST
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|HCRC_OFFST
-value|12
-end_define
-
-begin_define
-define|#
-directive|define
-name|HLEN_OFFST
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
-name|DLEN_OFFST
-value|24
-end_define
-
-begin_define
-define|#
-directive|define
-name|DCRC_OFFST
-value|28
-end_define
-
-begin_define
-define|#
-directive|define
-name|GOT_OFFST
+name|GOT_ADDRESS_OFFSET
 value|48
 end_define
 
@@ -123,7 +92,7 @@ begin_define
 define|#
 directive|define
 name|LOOKUP_STEP
-value|8192
+value|(64*1024)
 end_define
 
 begin_ifndef
@@ -192,23 +161,18 @@ name|uint16_t
 name|resv0
 decl_stmt|;
 comment|/* pad */
-comment|/* The next 4 fields are placed in compile-time, not by the utility */
 name|uint32_t
-name|got_address
+name|reserved1
 decl_stmt|;
-comment|/* compiled got address position in the image */
 name|uint32_t
-name|got_num_entries
+name|reserved2
 decl_stmt|;
-comment|/* number of got entries */
 name|uint32_t
-name|compiled_start
+name|reserved3
 decl_stmt|;
-comment|/* compaled start of the image address */
 name|uint32_t
-name|image_start
+name|reserved4
 decl_stmt|;
-comment|/* relocated start of image address */
 name|char
 name|comment_string
 index|[
@@ -247,7 +211,7 @@ begin_typedef
 typedef|typedef
 enum|enum
 block|{
-name|BL_HEADER_IMAGE_UKNOWN
+name|BL_HEADER_IMAGE_UNKNOWN
 init|=
 literal|0x0
 block|,
@@ -299,6 +263,17 @@ define|#
 directive|define
 name|MAX_NAND_SEARCH_ADDR
 value|0x400000
+end_define
+
+begin_comment
+comment|/* Maximum address to look for start of normal bootloader */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_NOR_SEARCH_ADDR
+value|0x100000
 end_define
 
 begin_comment

@@ -1,17 +1,121 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***********************license start***************  *  Copyright (c) 2003-2008 Cavium Networks (support@cavium.com). All rights  *  reserved.  *  *  *  Redistribution and use in source and binary forms, with or without  *  modification, are permitted provided that the following conditions are  *  met:  *  *      * Redistributions of source code must retain the above copyright  *        notice, this list of conditions and the following disclaimer.  *  *      * Redistributions in binary form must reproduce the above  *        copyright notice, this list of conditions and the following  *        disclaimer in the documentation and/or other materials provided  *        with the distribution.  *  *      * Neither the name of Cavium Networks nor the names of  *        its contributors may be used to endorse or promote products  *        derived from this software without specific prior written  *        permission.  *  *  TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  *  AND WITH ALL FAULTS AND CAVIUM NETWORKS MAKES NO PROMISES, REPRESENTATIONS  *  OR WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH  *  RESPECT TO THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY  *  REPRESENTATION OR DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT  *  DEFECTS, AND CAVIUM SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES  *  OF TITLE, MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR  *  PURPOSE, LACK OF VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET  *  POSSESSION OR CORRESPONDENCE TO DESCRIPTION.  THE ENTIRE RISK ARISING OUT  *  OF USE OR PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  *  *  *  For any questions regarding licensing please contact marketing@caviumnetworks.com  *  ***********************license end**************************************/
+comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Networks (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Networks nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM  NETWORKS MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
 end_comment
 
 begin_comment
-comment|/**  * @file  *  * Support functions for managing command queues used for  * various hardware blocks.  *  *<hr>$Revision: 42150 $<hr>  */
+comment|/**  * @file  *  * Support functions for managing command queues used for  * various hardware blocks.  *  *<hr>$Revision: 49448 $<hr>  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CVMX_BUILD_FOR_LINUX_KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<linux/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<asm/octeon/cvmx.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<asm/octeon/cvmx-bootmem.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<asm/octeon/cvmx-npei-defs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<asm/octeon/cvmx-pexp-defs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<asm/octeon/cvmx-dpi-defs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<asm/octeon/cvmx-pko-defs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<asm/octeon/cvmx-config.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<asm/octeon/cvmx-fpa.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<asm/octeon/cvmx-cmd-queue.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_include
 include|#
 directive|include
 file|"cvmx.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"cvmx-bootmem.h"
+end_include
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|"cvmx-config.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -25,11 +129,10 @@ directive|include
 file|"cvmx-cmd-queue.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"cvmx-bootmem.h"
-end_include
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/**  * This application uses this pointer to access the global queue  * state. It points to a bootmem named block.  */
@@ -40,10 +143,27 @@ name|CVMX_SHARED
 name|__cvmx_cmd_queue_all_state_t
 modifier|*
 name|__cvmx_cmd_queue_state_ptr
-init|=
-name|NULL
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CVMX_BUILD_FOR_LINUX_KERNEL
+end_ifdef
+
+begin_expr_stmt
+name|EXPORT_SYMBOL
+argument_list|(
+name|__cvmx_cmd_queue_state_ptr
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/**  * @INTERNAL  * Initialize the Global queue state pointer.  *  * @return CVMX_CMD_QUEUE_SUCCESS or a failure code  */
@@ -92,6 +212,11 @@ directive|ifdef
 name|CVMX_BUILD_FOR_LINUX_KERNEL
 if|#
 directive|if
+name|defined
+argument_list|(
+name|CONFIG_CAVIUM_RESERVE32
+argument_list|)
+operator|&&
 name|CONFIG_CAVIUM_RESERVE32
 if|if
 condition|(
@@ -180,6 +305,7 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
+specifier|const
 name|cvmx_bootmem_named_block_desc_t
 modifier|*
 name|block_desc
@@ -370,7 +496,7 @@ condition|)
 block|{
 name|cvmx_dprintf
 argument_list|(
-literal|"ERROR: cvmx_cmd_queue_initialize: Queue already initalized with different max_depth (%d).\n"
+literal|"ERROR: cvmx_cmd_queue_initialize: Queue already initialized with different max_depth (%d).\n"
 argument_list|,
 operator|(
 name|int
@@ -395,7 +521,7 @@ condition|)
 block|{
 name|cvmx_dprintf
 argument_list|(
-literal|"ERROR: cvmx_cmd_queue_initialize: Queue already initalized with different FPA pool (%u).\n"
+literal|"ERROR: cvmx_cmd_queue_initialize: Queue already initialized with different FPA pool (%u).\n"
 argument_list|,
 name|qstate
 operator|->
@@ -423,7 +549,7 @@ condition|)
 block|{
 name|cvmx_dprintf
 argument_list|(
-literal|"ERROR: cvmx_cmd_queue_initialize: Queue already initalized with different FPA pool size (%u).\n"
+literal|"ERROR: cvmx_cmd_queue_initialize: Queue already initialized with different FPA pool size (%u).\n"
 argument_list|,
 operator|(
 name|qstate
@@ -807,6 +933,13 @@ return|;
 case|case
 name|CVMX_CMD_QUEUE_DMA_BASE
 case|:
+if|if
+condition|(
+name|octeon_has_feature
+argument_list|(
+name|OCTEON_FEATURE_NPEI
+argument_list|)
+condition|)
 block|{
 name|cvmx_npei_dmax_counts_t
 name|dmax_counts
@@ -818,6 +951,33 @@ operator|=
 name|cvmx_read_csr
 argument_list|(
 name|CVMX_PEXP_NPEI_DMAX_COUNTS
+argument_list|(
+name|queue_id
+operator|&
+literal|0x7
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+name|dmax_counts
+operator|.
+name|s
+operator|.
+name|dbell
+return|;
+block|}
+else|else
+block|{
+name|cvmx_dpi_dmax_counts_t
+name|dmax_counts
+decl_stmt|;
+name|dmax_counts
+operator|.
+name|u64
+operator|=
+name|cvmx_read_csr
+argument_list|(
+name|CVMX_DPI_DMAX_COUNTS
 argument_list|(
 name|queue_id
 operator|&
@@ -847,7 +1007,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Return the command buffer to be written to. The purpose of this  * function is to allow CVMX routine access t othe low level buffer  * for initial hardware setup. User applications should not call this  * function directly.  *  * @param queue_id Command queue to query  *  * @return Command buffer or NULL on failure  */
+comment|/**  * Return the command buffer to be written to. The purpose of this  * function is to allow CVMX routine access to the low level buffer  * for initial hardware setup. User applications should not call this  * function directly.  *  * @param queue_id Command queue to query  *  * @return Command buffer or NULL on failure  */
 end_comment
 
 begin_function

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***********************license start***************  *  Copyright (c) 2003-2008 Cavium Networks (support@cavium.com). All rights  *  reserved.  *  *  *  Redistribution and use in source and binary forms, with or without  *  modification, are permitted provided that the following conditions are  *  met:  *  *      * Redistributions of source code must retain the above copyright  *        notice, this list of conditions and the following disclaimer.  *  *      * Redistributions in binary form must reproduce the above  *        copyright notice, this list of conditions and the following  *        disclaimer in the documentation and/or other materials provided  *        with the distribution.  *  *      * Neither the name of Cavium Networks nor the names of  *        its contributors may be used to endorse or promote products  *        derived from this software without specific prior written  *        permission.  *  *  TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  *  AND WITH ALL FAULTS AND CAVIUM NETWORKS MAKES NO PROMISES, REPRESENTATIONS  *  OR WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH  *  RESPECT TO THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY  *  REPRESENTATION OR DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT  *  DEFECTS, AND CAVIUM SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES  *  OF TITLE, MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR  *  PURPOSE, LACK OF VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET  *  POSSESSION OR CORRESPONDENCE TO DESCRIPTION.  THE ENTIRE RISK ARISING OUT  *  OF USE OR PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  *  *  *  For any questions regarding licensing please contact marketing@caviumnetworks.com  *  ***********************license end**************************************/
+comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Networks (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Networks nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM  NETWORKS MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
 end_comment
 
 begin_comment
-comment|/**  * @file  *  * Support library for the hardware work queue timers.  *  *<hr>$Revision: 42180 $<hr>  */
+comment|/**  * @file  *  * Support library for the hardware work queue timers.  *  *<hr>$Revision: 49448 $<hr>  */
 end_comment
 
 begin_include
@@ -44,7 +44,7 @@ file|"cvmx-bootmem.h"
 end_include
 
 begin_comment
-comment|/* CSR typedefs have been moved to cvmx-csr-*.h */
+comment|/* CSR typedefs have been moved to cvmx-tim-defs.h */
 end_comment
 
 begin_comment
@@ -94,44 +94,14 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
-if|#
-directive|if
-operator|!
-operator|(
-name|defined
-argument_list|(
-name|__KERNEL__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|linux
-argument_list|)
-operator|)
-name|cvmx_sysinfo_t
-modifier|*
-name|sys_info_ptr
-init|=
-name|cvmx_sysinfo_get
-argument_list|()
-decl_stmt|;
 name|uint64_t
-name|cpu_clock_hz
+name|tim_clock_hz
 init|=
-name|sys_info_ptr
-operator|->
-name|cpu_clock_hz
+name|cvmx_clock_get_rate
+argument_list|(
+name|CVMX_CLOCK_TIM
+argument_list|)
 decl_stmt|;
-else|#
-directive|else
-name|uint64_t
-name|cpu_clock_hz
-init|=
-name|octeon_get_clock_rate
-argument_list|()
-decl_stmt|;
-endif|#
-directive|endif
 name|uint64_t
 name|hw_tick_ns
 decl_stmt|;
@@ -154,11 +124,11 @@ decl_stmt|;
 comment|/* for the simulator */
 if|if
 condition|(
-name|cpu_clock_hz
+name|tim_clock_hz
 operator|==
 literal|0
 condition|)
-name|cpu_clock_hz
+name|tim_clock_hz
 operator|=
 literal|333000000
 expr_stmt|;
@@ -168,9 +138,9 @@ literal|1024
 operator|*
 literal|1000000000ull
 operator|/
-name|cpu_clock_hz
+name|tim_clock_hz
 expr_stmt|;
-comment|/*       * Doulbe the minmal allowed tick to 2* HW tick.  tick between      * (hw_tick_ns, 2*hw_tick_ns) will set config_ring1.s.interval       * to zero, or 1024 cycles. This is not enough time for the timer unit      * to fetch the bucket data, Resulting in timer ring error interrupt       * be always generated. Avoid such setting in software       */
+comment|/*      * Double the minimal allowed tick to 2 * HW tick.  tick between      * (hw_tick_ns, 2*hw_tick_ns) will set config_ring1.s.interval      * to zero, or 1024 cycles. This is not enough time for the timer unit      * to fetch the bucket data, Resulting in timer ring error interrupt      * be always generated. Avoid such setting in software.      */
 name|hw_tick_ns_allowed
 operator|=
 name|hw_tick_ns
@@ -216,7 +186,7 @@ condition|)
 block|{
 name|cvmx_dprintf
 argument_list|(
-literal|"init: tick wrong size. Requested tick %lu(ns) is smaller than"
+literal|"ERROR: cvmx_tim_setup: Requested tick %lu(ns) is smaller than"
 literal|" the minimal ticks allowed by hardware %lu(ns)\n"
 argument_list|,
 name|tick_ns
@@ -284,7 +254,7 @@ name|tick_cycles
 operator|=
 name|tick
 operator|*
-name|cpu_clock_hz
+name|tim_clock_hz
 operator|/
 literal|1000000
 expr_stmt|;
@@ -385,7 +355,7 @@ condition|)
 block|{
 name|cvmx_dprintf
 argument_list|(
-literal|"init: num_buckets out of range\n"
+literal|"ERROR: cvmx_tim_setup: num_buckets out of range\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -424,7 +394,7 @@ condition|)
 block|{
 name|cvmx_dprintf
 argument_list|(
-literal|"init: allocation problem\n"
+literal|"ERROR: cvmx_tim_setup: allocation problem\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -658,8 +628,10 @@ name|cvmx_tim
 operator|.
 name|start_time
 operator|=
-name|cvmx_get_cycle
-argument_list|()
+name|cvmx_clock_get_count
+argument_list|(
+name|CVMX_CLOCK_TIM
+argument_list|)
 expr_stmt|;
 name|cvmx_write_csr
 argument_list|(

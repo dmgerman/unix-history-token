@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***********************license start***************  *  Copyright (c) 2003-2008 Cavium Networks (support@cavium.com). All rights  *  reserved.  *  *  *  Redistribution and use in source and binary forms, with or without  *  modification, are permitted provided that the following conditions are  *  met:  *  *      * Redistributions of source code must retain the above copyright  *        notice, this list of conditions and the following disclaimer.  *  *      * Redistributions in binary form must reproduce the above  *        copyright notice, this list of conditions and the following  *        disclaimer in the documentation and/or other materials provided  *        with the distribution.  *  *      * Neither the name of Cavium Networks nor the names of  *        its contributors may be used to endorse or promote products  *        derived from this software without specific prior written  *        permission.  *  *  TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  *  AND WITH ALL FAULTS AND CAVIUM NETWORKS MAKES NO PROMISES, REPRESENTATIONS  *  OR WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH  *  RESPECT TO THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY  *  REPRESENTATION OR DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT  *  DEFECTS, AND CAVIUM SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES  *  OF TITLE, MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR  *  PURPOSE, LACK OF VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET  *  POSSESSION OR CORRESPONDENCE TO DESCRIPTION.  THE ENTIRE RISK ARISING OUT  *  OF USE OR PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  *  *  *  For any questions regarding licensing please contact marketing@caviumnetworks.com  *  ***********************license end**************************************/
+comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Networks (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Networks nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM  NETWORKS MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
 end_comment
 
 begin_comment
-comment|/**  * @file  *  * This file is resposible for including all system dependent  * headers for the cvmx-* files.  *  *<hr>$Revision: 41586 $<hr> */
+comment|/**  * @file  *  * This file is resposible for including all system dependent  * headers for the cvmx-* files.  *  *<hr>$Revision: 49448 $<hr> */
 end_comment
 
 begin_ifndef
@@ -237,7 +237,7 @@ end_elif
 begin_define
 define|#
 directive|define
-name|CVMX_BUILD_FOR_FREEBSD
+name|CVMX_BUILD_FOR_FREEBSD_KERNEL
 end_define
 
 begin_else
@@ -269,7 +269,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|CVMX_BUILD_FOR_FREEBSD
+name|CVMX_BUILD_FOR_FREEBSD_KERNEL
 argument_list|)
 end_if
 
@@ -284,12 +284,34 @@ else|#
 directive|else
 end_else
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CVMX_BUILD_FOR_LINUX_HOST
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|CVMX_SHARED
 value|__attribute__ ((cvmx_shared))
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|CVMX_SHARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -418,6 +440,120 @@ include|#
 directive|include
 file|<unistd.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysmips.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|MIPS_CAVIUM_XKPHYS_READ
+value|2010
+end_define
+
+begin_comment
+comment|/* XKPHYS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIPS_CAVIUM_XKPHYS_WRITE
+value|2011
+end_define
+
+begin_comment
+comment|/* XKPHYS */
+end_comment
+
+begin_comment
+comment|/* Enable access to XKPHYS segments. Warning message is printed in case of    error. If warn_count is set, the warning message is not displayed. */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|cvmx_linux_enable_xkphys_access
+parameter_list|(
+name|int32_t
+name|warn_count
+parameter_list|)
+block|{
+name|int
+name|ret
+decl_stmt|;
+name|ret
+operator|=
+name|sysmips
+argument_list|(
+name|MIPS_CAVIUM_XKPHYS_WRITE
+argument_list|,
+name|getpid
+argument_list|()
+argument_list|,
+literal|3
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|!=
+literal|0
+operator|&&
+operator|!
+name|warn_count
+condition|)
+block|{
+switch|switch
+condition|(
+name|errno
+condition|)
+block|{
+case|case
+name|EINVAL
+case|:
+name|perror
+argument_list|(
+literal|"sysmips(MIPS_CAVIUM_XKPHYS_WRITE) failed.\n"
+literal|"  Did you configure your kernel with both:\n"
+literal|"     CONFIG_CAVIUM_OCTEON_USER_MEM_PER_PROCESS *and*\n"
+literal|"     CONFIG_CAVIUM_OCTEON_USER_IO_PER_PROCESS?"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|EPERM
+case|:
+name|perror
+argument_list|(
+literal|"sysmips(MIPS_CAVIUM_XKPHYS_WRITE) failed.\n"
+literal|"  Are you running as root?"
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|perror
+argument_list|(
+literal|"sysmips(MIPS_CAVIUM_XKPHYS_WRITE) failed"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+block|}
+block|}
+end_function
 
 begin_elif
 elif|#
@@ -640,7 +776,7 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|CVMX_BUILD_FOR_FREEBSD
+name|CVMX_BUILD_FOR_FREEBSD_KERNEL
 argument_list|)
 end_elif
 
