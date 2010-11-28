@@ -4728,6 +4728,19 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+operator|)
+operator|!=
+literal|0
+condition|)
+return|return;
 comment|/* Cancel pending I/O */
 name|axe_stop
 argument_list|(
