@@ -3218,6 +3218,34 @@ operator|/
 literal|100
 argument_list|)
 expr_stmt|;
+comment|/* Reinitialize controller to achieve full reset. */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|AXE_FLAG_178
+condition|)
+name|axe_ax88178_init
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|AXE_FLAG_772
+condition|)
+name|axe_ax88772_init
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
