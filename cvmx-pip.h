@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***********************license start***************  *  Copyright (c) 2003-2008 Cavium Networks (support@cavium.com). All rights  *  reserved.  *  *  *  Redistribution and use in source and binary forms, with or without  *  modification, are permitted provided that the following conditions are  *  met:  *  *      * Redistributions of source code must retain the above copyright  *        notice, this list of conditions and the following disclaimer.  *  *      * Redistributions in binary form must reproduce the above  *        copyright notice, this list of conditions and the following  *        disclaimer in the documentation and/or other materials provided  *        with the distribution.  *  *      * Neither the name of Cavium Networks nor the names of  *        its contributors may be used to endorse or promote products  *        derived from this software without specific prior written  *        permission.  *  *  TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  *  AND WITH ALL FAULTS AND CAVIUM NETWORKS MAKES NO PROMISES, REPRESENTATIONS  *  OR WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH  *  RESPECT TO THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY  *  REPRESENTATION OR DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT  *  DEFECTS, AND CAVIUM SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES  *  OF TITLE, MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR  *  PURPOSE, LACK OF VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET  *  POSSESSION OR CORRESPONDENCE TO DESCRIPTION.  THE ENTIRE RISK ARISING OUT  *  OF USE OR PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  *  *  *  For any questions regarding licensing please contact marketing@caviumnetworks.com  *  ***********************license end**************************************/
+comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Networks (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Networks nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM  NETWORKS MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
 end_comment
 
 begin_comment
-comment|/**  * @file  *  * Interface to the hardware Packet Input Processing unit.  *  *<hr>$Revision: 41586 $<hr>  */
+comment|/**  * @file  *  * Interface to the hardware Packet Input Processing unit.  *  *<hr>$Revision: 49504 $<hr>  */
 end_comment
 
 begin_ifndef
@@ -31,6 +31,23 @@ directive|include
 file|"cvmx-fpa.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CVMX_BUILD_FOR_LINUX_KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"cvmx-pip-defs.h"
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -42,6 +59,11 @@ include|#
 directive|include
 file|"executive-config.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -63,14 +85,8 @@ directive|endif
 define|#
 directive|define
 name|CVMX_PIP_NUM_INPUT_PORTS
-value|40
-define|#
-directive|define
-name|CVMX_PIP_NUM_WATCHERS
-value|4
-comment|//
-comment|// Encodes the different error and exception codes
-comment|//
+value|44
+comment|/*  * Encodes the different error and exception codes  */
 typedef|typedef
 enum|enum
 block|{
@@ -78,52 +94,52 @@ name|CVMX_PIP_L4_NO_ERR
 init|=
 literal|0ull
 block|,
-comment|//        1  = TCP (UDP) packet not long enough to cover TCP (UDP) header
+comment|/*        1  = TCP (UDP) packet not long enough to cover TCP (UDP) header */
 name|CVMX_PIP_L4_MAL_ERR
 init|=
 literal|1ull
 block|,
-comment|//        2  = TCP/UDP checksum failure
+comment|/*        2  = TCP/UDP checksum failure */
 name|CVMX_PIP_CHK_ERR
 init|=
 literal|2ull
 block|,
-comment|//        3  = TCP/UDP length check (TCP/UDP length does not match IP length)
+comment|/*        3  = TCP/UDP length check (TCP/UDP length does not match IP length) */
 name|CVMX_PIP_L4_LENGTH_ERR
 init|=
 literal|3ull
 block|,
-comment|//        4  = illegal TCP/UDP port (either source or dest port is zero)
+comment|/*        4  = illegal TCP/UDP port (either source or dest port is zero) */
 name|CVMX_PIP_BAD_PRT_ERR
 init|=
 literal|4ull
 block|,
-comment|//        8  = TCP flags = FIN only
+comment|/*        8  = TCP flags = FIN only */
 name|CVMX_PIP_TCP_FLG8_ERR
 init|=
 literal|8ull
 block|,
-comment|//        9  = TCP flags = 0
+comment|/*        9  = TCP flags = 0 */
 name|CVMX_PIP_TCP_FLG9_ERR
 init|=
 literal|9ull
 block|,
-comment|//        10 = TCP flags = FIN+RST+*
+comment|/*        10 = TCP flags = FIN+RST+* */
 name|CVMX_PIP_TCP_FLG10_ERR
 init|=
 literal|10ull
 block|,
-comment|//        11 = TCP flags = SYN+URG+*
+comment|/*        11 = TCP flags = SYN+URG+* */
 name|CVMX_PIP_TCP_FLG11_ERR
 init|=
 literal|11ull
 block|,
-comment|//        12 = TCP flags = SYN+RST+*
+comment|/*        12 = TCP flags = SYN+RST+* */
 name|CVMX_PIP_TCP_FLG12_ERR
 init|=
 literal|12ull
 block|,
-comment|//        13 = TCP flags = SYN+FIN+*
+comment|/*        13 = TCP flags = SYN+FIN+* */
 name|CVMX_PIP_TCP_FLG13_ERR
 init|=
 literal|13ull
@@ -137,32 +153,32 @@ name|CVMX_PIP_IP_NO_ERR
 init|=
 literal|0ull
 block|,
-comment|//        1 = not IPv4 or IPv6
+comment|/*        1 = not IPv4 or IPv6 */
 name|CVMX_PIP_NOT_IP
 init|=
 literal|1ull
 block|,
-comment|//        2 = IPv4 header checksum violation
+comment|/*        2 = IPv4 header checksum violation */
 name|CVMX_PIP_IPV4_HDR_CHK
 init|=
 literal|2ull
 block|,
-comment|//        3 = malformed (packet not long enough to cover IP hdr)
+comment|/*        3 = malformed (packet not long enough to cover IP hdr) */
 name|CVMX_PIP_IP_MAL_HDR
 init|=
 literal|3ull
 block|,
-comment|//        4 = malformed (packet not long enough to cover len in IP hdr)
+comment|/*        4 = malformed (packet not long enough to cover len in IP hdr) */
 name|CVMX_PIP_IP_MAL_PKT
 init|=
 literal|4ull
 block|,
-comment|//        5 = TTL / hop count equal zero
+comment|/*        5 = TTL / hop count equal zero */
 name|CVMX_PIP_TTL_HOP
 init|=
 literal|5ull
 block|,
-comment|//        6 = IPv4 options / IPv6 early extension headers
+comment|/*        6 = IPv4 options / IPv6 early extension headers */
 name|CVMX_PIP_OPTS
 init|=
 literal|6ull
@@ -182,91 +198,97 @@ name|CVMX_PIP_PARTIAL_ERR
 init|=
 literal|1ull
 block|,
-comment|// RGM+SPI            1 = partially received packet (buffering/bandwidth not adequate)
+comment|/* RGM+SPI            1 = partially received packet (buffering/bandwidth not adequate) */
 name|CVMX_PIP_JABBER_ERR
 init|=
 literal|2ull
 block|,
-comment|// RGM+SPI            2 = receive packet too large and truncated
+comment|/* RGM+SPI            2 = receive packet too large and truncated */
 name|CVMX_PIP_OVER_FCS_ERR
 init|=
 literal|3ull
 block|,
-comment|// RGM                3 = max frame error (pkt len> max frame len) (with FCS error)
+comment|/* RGM                3 = max frame error (pkt len> max frame len) (with FCS error) */
 name|CVMX_PIP_OVER_ERR
 init|=
 literal|4ull
 block|,
-comment|// RGM+SPI            4 = max frame error (pkt len> max frame len)
+comment|/* RGM+SPI            4 = max frame error (pkt len> max frame len) */
 name|CVMX_PIP_ALIGN_ERR
 init|=
 literal|5ull
 block|,
-comment|// RGM                5 = nibble error (data not byte multiple - 100M and 10M only)
+comment|/* RGM                5 = nibble error (data not byte multiple - 100M and 10M only) */
 name|CVMX_PIP_UNDER_FCS_ERR
 init|=
 literal|6ull
 block|,
-comment|// RGM                6 = min frame error (pkt len< min frame len) (with FCS error)
+comment|/* RGM                6 = min frame error (pkt len< min frame len) (with FCS error) */
 name|CVMX_PIP_GMX_FCS_ERR
 init|=
 literal|7ull
 block|,
-comment|// RGM                7 = FCS error
+comment|/* RGM                7 = FCS error */
 name|CVMX_PIP_UNDER_ERR
 init|=
 literal|8ull
 block|,
-comment|// RGM+SPI            8 = min frame error (pkt len< min frame len)
+comment|/* RGM+SPI            8 = min frame error (pkt len< min frame len) */
 name|CVMX_PIP_EXTEND_ERR
 init|=
 literal|9ull
 block|,
-comment|// RGM                9 = Frame carrier extend error
+comment|/* RGM                9 = Frame carrier extend error */
+name|CVMX_PIP_TERMINATE_ERR
+init|=
+literal|9ull
+block|,
+comment|/* XAUI               9 = Packet was terminated with an idle cycle */
 name|CVMX_PIP_LENGTH_ERR
 init|=
 literal|10ull
 block|,
-comment|// RGM               10 = length mismatch (len did not match len in L2 length/type)
+comment|/* RGM               10 = length mismatch (len did not match len in L2 length/type) */
 name|CVMX_PIP_DAT_ERR
 init|=
 literal|11ull
 block|,
-comment|// RGM               11 = Frame error (some or all data bits marked err)
+comment|/* RGM               11 = Frame error (some or all data bits marked err) */
 name|CVMX_PIP_DIP_ERR
 init|=
 literal|11ull
 block|,
-comment|//     SPI           11 = DIP4 error
+comment|/*     SPI           11 = DIP4 error */
 name|CVMX_PIP_SKIP_ERR
 init|=
 literal|12ull
 block|,
-comment|// RGM               12 = packet was not large enough to pass the skipper - no inspection could occur
+comment|/* RGM               12 = packet was not large enough to pass the skipper - no inspection could occur */
 name|CVMX_PIP_NIBBLE_ERR
 init|=
 literal|13ull
 block|,
-comment|// RGM               13 = studder error (data not repeated - 100M and 10M only)
+comment|/* RGM               13 = studder error (data not repeated - 100M and 10M only) */
 name|CVMX_PIP_PIP_FCS
 init|=
 literal|16L
 block|,
-comment|// RGM+SPI           16 = FCS error
+comment|/* RGM+SPI           16 = FCS error */
 name|CVMX_PIP_PIP_SKIP_ERR
 init|=
 literal|17L
 block|,
-comment|// RGM+SPI+PCI       17 = packet was not large enough to pass the skipper - no inspection could occur
+comment|/* RGM+SPI+PCI       17 = packet was not large enough to pass the skipper - no inspection could occur */
 name|CVMX_PIP_PIP_L2_MAL_HDR
 init|=
 literal|18L
-comment|// RGM+SPI+PCI       18 = malformed l2 (packet not long enough to cover L2 hdr)
-comment|// NOTES
-comment|//       xx = late collision (data received before collision)
-comment|//            late collisions cannot be detected by the receiver
-comment|//            they would appear as JAM bits which would appear as bad FCS
-comment|//            or carrier extend error which is CVMX_PIP_EXTEND_ERR
+block|,
+comment|/* RGM+SPI+PCI       18 = malformed l2 (packet not long enough to cover L2 hdr) */
+name|CVMX_PIP_PUNY_ERR
+init|=
+literal|47L
+comment|/* SGMII             47 = PUNY error (packet was 4B or less when FCS stripping is enabled) */
+comment|/* NOTES      *       xx = late collision (data received before collision)      *            late collisions cannot be detected by the receiver      *            they would appear as JAM bits which would appear as bad FCS      *            or carrier extend error which is CVMX_PIP_EXTEND_ERR      */
 block|}
 name|cvmx_pip_rcv_err_t
 typedef|;
@@ -423,9 +445,33 @@ comment|/**< Skip amount, including this header, to the beginning of the packet 
 name|uint64_t
 name|reserved2
 range|:
-literal|6
+literal|2
 decl_stmt|;
 comment|/**< Must be zero */
+name|uint64_t
+name|nqos
+range|:
+literal|1
+decl_stmt|;
+comment|/**< Must be 0 when PKT_INST_HDR[R] = 0.                                                              When set to 1, NQOS prevents PIP from directly using                                                              PKT_INST_HDR[QOS] for the QOS value in WQE.                                                              When PIP_GBL_CTL[IHMSK_DIS] = 1, Octeon2 does not use NQOS */
+name|uint64_t
+name|ngrp
+range|:
+literal|1
+decl_stmt|;
+comment|/**< Must be 0 when PKT_INST_HDR[R] = 0.                                                              When set to 1, NGPR prevents PIP from directly using                                                              PKT_INST_HDR[GPR] for the GPR value in WQE.                                                              When PIP_GBL_CTL[IHMSK_DIS] = 1, Octeon2 does not use NGRP */
+name|uint64_t
+name|ntt
+range|:
+literal|1
+decl_stmt|;
+comment|/**< Must be 0 when PKT_INST_HDR[R] = 0.                                                              When set to 1, NTT prevents PIP from directly using                                                              PKT_INST_HDR[TT] for the TT value in WQE.                                                              When PIP_GBL_CTL[IHMSK_DIS] = 1, Octeon2 does not use NTT */
+name|uint64_t
+name|ntag
+range|:
+literal|1
+decl_stmt|;
+comment|/**< Must be 0 when PKT_INST_HDR[R] = 0.                                                              When set to 1, NTAG prevents PIP from directly using                                                              PKT_INST_HDR[TAG] for the TAG value in WQE.                                                              When PIP_GBL_CTL[IHMSK_DIS] = 1, Octeon2 does not use NTAG */
 name|uint64_t
 name|qos
 range|:
@@ -462,7 +508,7 @@ struct|;
 block|}
 name|cvmx_pip_pkt_inst_hdr_t
 typedef|;
-comment|/* CSR typedefs have been moved to cvmx-csr-*.h */
+comment|/* CSR typedefs have been moved to cvmx-pip-defs.h */
 comment|/**  * Configure an ethernet input port  *  * @param port_num Port number to configure  * @param port_cfg Port hardware configuration  * @param port_tag_cfg  *                 Port POW tagging configuration  */
 specifier|static
 specifier|inline
@@ -472,10 +518,10 @@ parameter_list|(
 name|uint64_t
 name|port_num
 parameter_list|,
-name|cvmx_pip_port_cfg_t
+name|cvmx_pip_prt_cfgx_t
 name|port_cfg
 parameter_list|,
-name|cvmx_pip_port_tag_cfg_t
+name|cvmx_pip_prt_tagx_t
 name|port_tag_cfg
 parameter_list|)
 block|{
@@ -523,7 +569,7 @@ name|uint64_t
 name|qos
 parameter_list|)
 block|{
-name|cvmx_pip_port_watcher_cfg_t
+name|cvmx_pip_qos_watchx_t
 name|watcher_config
 decl_stmt|;
 name|watcher_config
@@ -737,6 +783,136 @@ operator|.
 name|u64
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|port_num
+operator|>=
+literal|40
+condition|)
+block|{
+name|stat0
+operator|.
+name|u64
+operator|=
+name|cvmx_read_csr
+argument_list|(
+name|CVMX_PIP_XSTAT0_PRTX
+argument_list|(
+name|port_num
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|stat1
+operator|.
+name|u64
+operator|=
+name|cvmx_read_csr
+argument_list|(
+name|CVMX_PIP_XSTAT1_PRTX
+argument_list|(
+name|port_num
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|stat2
+operator|.
+name|u64
+operator|=
+name|cvmx_read_csr
+argument_list|(
+name|CVMX_PIP_XSTAT2_PRTX
+argument_list|(
+name|port_num
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|stat3
+operator|.
+name|u64
+operator|=
+name|cvmx_read_csr
+argument_list|(
+name|CVMX_PIP_XSTAT3_PRTX
+argument_list|(
+name|port_num
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|stat4
+operator|.
+name|u64
+operator|=
+name|cvmx_read_csr
+argument_list|(
+name|CVMX_PIP_XSTAT4_PRTX
+argument_list|(
+name|port_num
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|stat5
+operator|.
+name|u64
+operator|=
+name|cvmx_read_csr
+argument_list|(
+name|CVMX_PIP_XSTAT5_PRTX
+argument_list|(
+name|port_num
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|stat6
+operator|.
+name|u64
+operator|=
+name|cvmx_read_csr
+argument_list|(
+name|CVMX_PIP_XSTAT6_PRTX
+argument_list|(
+name|port_num
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|stat7
+operator|.
+name|u64
+operator|=
+name|cvmx_read_csr
+argument_list|(
+name|CVMX_PIP_XSTAT7_PRTX
+argument_list|(
+name|port_num
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|stat8
+operator|.
+name|u64
+operator|=
+name|cvmx_read_csr
+argument_list|(
+name|CVMX_PIP_XSTAT8_PRTX
+argument_list|(
+name|port_num
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|stat9
+operator|.
+name|u64
+operator|=
+name|cvmx_read_csr
+argument_list|(
+name|CVMX_PIP_XSTAT9_PRTX
+argument_list|(
+name|port_num
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|stat0
 operator|.
 name|u64
@@ -857,6 +1033,7 @@ name|port_num
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 name|pip_stat_inb_pktsx
 operator|.
 name|u64
@@ -1113,84 +1290,6 @@ name|s
 operator|.
 name|errs
 expr_stmt|;
-if|if
-condition|(
-name|cvmx_octeon_is_pass1
-argument_list|()
-condition|)
-block|{
-comment|/* Kludge to fix Octeon Pass 1 errata - Drop counts don't work */
-if|if
-condition|(
-name|status
-operator|->
-name|inb_packets
-operator|>
-name|status
-operator|->
-name|packets
-condition|)
-name|status
-operator|->
-name|dropped_packets
-operator|=
-name|status
-operator|->
-name|inb_packets
-operator|-
-name|status
-operator|->
-name|packets
-expr_stmt|;
-else|else
-name|status
-operator|->
-name|dropped_packets
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|status
-operator|->
-name|inb_octets
-operator|-
-name|status
-operator|->
-name|inb_packets
-operator|*
-literal|4
-operator|>
-name|status
-operator|->
-name|octets
-condition|)
-name|status
-operator|->
-name|dropped_octets
-operator|=
-name|status
-operator|->
-name|inb_octets
-operator|-
-name|status
-operator|->
-name|inb_packets
-operator|*
-literal|4
-operator|-
-name|status
-operator|->
-name|octets
-expr_stmt|;
-else|else
-name|status
-operator|->
-name|dropped_octets
-operator|=
-literal|0
-expr_stmt|;
-block|}
 block|}
 comment|/**  * Configure the hardware CRC engine  *  * @param interface Interface to configure (0 or 1)  * @param invert_result  *                 Invert the result of the CRC  * @param reflect  Reflect  * @param initialization_vector  *                 CRC initialization vector  */
 specifier|static

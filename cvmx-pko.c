@@ -1,22 +1,57 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***********************license start***************  *  Copyright (c) 2003-2008 Cavium Networks (support@cavium.com). All rights  *  reserved.  *  *  *  Redistribution and use in source and binary forms, with or without  *  modification, are permitted provided that the following conditions are  *  met:  *  *      * Redistributions of source code must retain the above copyright  *        notice, this list of conditions and the following disclaimer.  *  *      * Redistributions in binary form must reproduce the above  *        copyright notice, this list of conditions and the following  *        disclaimer in the documentation and/or other materials provided  *        with the distribution.  *  *      * Neither the name of Cavium Networks nor the names of  *        its contributors may be used to endorse or promote products  *        derived from this software without specific prior written  *        permission.  *  *  TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  *  AND WITH ALL FAULTS AND CAVIUM NETWORKS MAKES NO PROMISES, REPRESENTATIONS  *  OR WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH  *  RESPECT TO THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY  *  REPRESENTATION OR DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT  *  DEFECTS, AND CAVIUM SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES  *  OF TITLE, MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR  *  PURPOSE, LACK OF VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET  *  POSSESSION OR CORRESPONDENCE TO DESCRIPTION.  THE ENTIRE RISK ARISING OUT  *  OF USE OR PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  *  *  *  For any questions regarding licensing please contact marketing@caviumnetworks.com  *  ***********************license end**************************************/
+comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Networks (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Networks nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM  NETWORKS MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
 end_comment
 
 begin_comment
-comment|/**  * @file  *  * Support library for the hardware Packet Output unit.  *  *<hr>$Revision: 42150 $<hr>  */
+comment|/**  * @file  *  * Support library for the hardware Packet Output unit.  *  *<hr>$Revision: 49448 $<hr>  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CVMX_BUILD_FOR_LINUX_KERNEL
+end_ifdef
 
 begin_include
 include|#
 directive|include
-file|"executive-config.h"
+file|<asm/octeon/cvmx.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"cvmx-config.h"
+file|<asm/octeon/cvmx-config.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<asm/octeon/cvmx-pko.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<asm/octeon/cvmx-helper.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<asm/octeon/cvmx-clock.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|"executive-config.h"
 end_include
 
 begin_include
@@ -28,13 +63,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"cvmx-pko.h"
+file|"cvmx-sysinfo.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"cvmx-sysinfo.h"
+file|"cvmx-config.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"cvmx-pko.h"
 end_include
 
 begin_include
@@ -42,6 +83,11 @@ include|#
 directive|include
 file|"cvmx-helper.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/**  * Internal state of packet output  */
@@ -72,7 +118,7 @@ name|priority
 init|=
 literal|8
 decl_stmt|;
-name|cvmx_pko_pool_cfg_t
+name|cvmx_pko_reg_cmd_buf_t
 name|config
 decl_stmt|;
 comment|/* Set the size of the PKO command buffers to an odd number of 64bit         words. This allows the normal two word send to stay aligned and never         span a comamnd word buffer. */
@@ -157,6 +203,11 @@ operator|||
 name|OCTEON_IS_MODEL
 argument_list|(
 name|OCTEON_CN52XX
+argument_list|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN63XX
 argument_list|)
 condition|)
 block|{
@@ -459,7 +510,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|cvmx_pko_queue_cfg_t
+name|cvmx_pko_mem_queue_ptrs_t
 name|config
 decl_stmt|;
 name|int
@@ -629,7 +680,7 @@ decl_stmt|;
 name|uint64_t
 name|queue
 decl_stmt|;
-name|cvmx_pko_queue_cfg_t
+name|cvmx_pko_mem_queue_ptrs_t
 name|config
 decl_stmt|;
 name|cvmx_pko_reg_queue_ptrs1_t
@@ -982,13 +1033,6 @@ name|base_queue
 operator|+
 name|queue
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|cvmx_octeon_is_pass1
-argument_list|()
-condition|)
-block|{
 name|config
 operator|.
 name|s
@@ -1025,7 +1069,6 @@ name|queue
 operator|==
 name|static_priority_end
 expr_stmt|;
-block|}
 comment|/* Convert the priority into an enable bit field. Try to space the bits             out evenly so the packet don't get grouped up */
 switch|switch
 condition|(
@@ -1149,14 +1192,6 @@ break|break;
 case|case
 name|CVMX_PKO_QUEUE_STATIC_PRIORITY
 case|:
-if|if
-condition|(
-operator|!
-name|cvmx_octeon_is_pass1
-argument_list|()
-condition|)
-comment|/* Pass 1 will fall through to the error case */
-block|{
 name|config
 operator|.
 name|s
@@ -1166,7 +1201,6 @@ operator|=
 literal|0xff
 expr_stmt|;
 break|break;
-block|}
 default|default:
 name|cvmx_dprintf
 argument_list|(
@@ -1516,10 +1550,10 @@ name|s
 operator|.
 name|rate_pkt
 operator|=
-name|cvmx_sysinfo_get
-argument_list|()
-operator|->
-name|cpu_clock_hz
+name|cvmx_clock_get_rate
+argument_list|(
+name|CVMX_CLOCK_SCLK
+argument_list|)
 operator|/
 name|packets_s
 operator|/
@@ -1620,10 +1654,10 @@ decl_stmt|;
 name|uint64_t
 name|clock_rate
 init|=
-name|cvmx_sysinfo_get
-argument_list|()
-operator|->
-name|cpu_clock_hz
+name|cvmx_clock_get_rate
+argument_list|(
+name|CVMX_CLOCK_SCLK
+argument_list|)
 decl_stmt|;
 name|uint64_t
 name|tokens_per_bit

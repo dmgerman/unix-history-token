@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***********************license start***************  *  Copyright (c) 2003-2009 Cavium Networks (support@cavium.com). All rights  *  reserved.  *  *  *  Redistribution and use in source and binary forms, with or without  *  modification, are permitted provided that the following conditions are  *  met:  *  *      * Redistributions of source code must retain the above copyright  *        notice, this list of conditions and the following disclaimer.  *  *      * Redistributions in binary form must reproduce the above  *        copyright notice, this list of conditions and the following  *        disclaimer in the documentation and/or other materials provided  *        with the distribution.  *  *      * Neither the name of Cavium Networks nor the names of  *        its contributors may be used to endorse or promote products  *        derived from this software without specific prior written  *        permission.  *  *  TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  *  AND WITH ALL FAULTS AND CAVIUM NETWORKS MAKES NO PROMISES, REPRESENTATIONS  *  OR WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH  *  RESPECT TO THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY  *  REPRESENTATION OR DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT  *  DEFECTS, AND CAVIUM SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES  *  OF TITLE, MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR  *  PURPOSE, LACK OF VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET  *  POSSESSION OR CORRESPONDENCE TO DESCRIPTION.  THE ENTIRE RISK ARISING OUT  *  OF USE OR PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  *  *  *  For any questions regarding licensing please contact marketing@caviumnetworks.com  *  ***********************license end**************************************/
+comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Networks (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Networks nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM  NETWORKS MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
 end_comment
 
 begin_comment
@@ -18,6 +18,12 @@ define|#
 directive|define
 name|__CVMX_UTILS_H__
 end_define
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
 
 begin_ifdef
 ifdef|#
@@ -69,16 +75,40 @@ define|#
 directive|define
 name|cvmx_dprintf
 value|printk
+define|#
+directive|define
+name|cvmx_dvprintf
+value|vprintk
 else|#
 directive|else
 define|#
 directive|define
 name|cvmx_dprintf
 value|printf
+define|#
+directive|define
+name|cvmx_dvprintf
+value|vprintf
 endif|#
 directive|endif
 else|#
 directive|else
+specifier|static
+specifier|inline
+name|void
+name|cvmx_dvprintf
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|format
+parameter_list|,
+name|va_list
+name|ap
+parameter_list|)
+block|{
+comment|/* Prints are disbled, do nothing */
+block|}
 specifier|static
 specifier|inline
 name|void
@@ -140,6 +170,10 @@ name|v
 parameter_list|)
 value|((long long)(long)(v))
 end_define
+
+begin_comment
+comment|// use only when 'v' is a pointer
+end_comment
 
 begin_define
 define|#
@@ -211,7 +245,7 @@ parameter_list|,
 name|timeout_usec
 parameter_list|)
 define|\
-value|({int result;                                                       \     do {                                                                \         uint64_t done = cvmx_get_cycle() + (uint64_t)timeout_usec *     \                            cvmx_sysinfo_get()->cpu_clock_hz / 1000000;  \         type c;                                                         \         while (1)                                                       \         {                                                               \             c.u64 = cvmx_read_csr(address);                             \             if ((c.s.field) op (value)) {                               \                 result = 0;                                             \                 break;                                                  \             } else if (cvmx_get_cycle()> done) {                       \                 result = -1;                                            \                 break;                                                  \             } else                                                      \                 cvmx_wait(100);                                         \         }                                                               \     } while (0);                                                        \     result;})
+value|({int result;                                                       \     do {                                                                \         uint64_t done = cvmx_clock_get_count(CVMX_CLOCK_CORE) + (uint64_t)timeout_usec * \                         cvmx_clock_get_rate(CVMX_CLOCK_CORE) / 1000000; \         type c;                                                         \         while (1)                                                       \         {                                                               \             c.u64 = cvmx_read_csr(address);                             \             if ((c.s.field) op (value)) {                               \                 result = 0;                                             \                 break;                                                  \             } else if (cvmx_clock_get_count(CVMX_CLOCK_CORE)> done) {  \                 result = -1;                                            \                 break;                                                  \             } else                                                      \                 cvmx_wait(100);                                         \         }                                                               \     } while (0);                                                        \     result;})
 end_define
 
 begin_comment
@@ -360,28 +394,6 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Return true if Octeon is CN38XX pass 1  *  * @return  */
-end_comment
-
-begin_function
-specifier|static
-specifier|inline
-name|int
-name|cvmx_octeon_is_pass1
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-name|OCTEON_IS_MODEL
-argument_list|(
-name|OCTEON_CN38XX_PASS1
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/**  * Return true if Octeon is CN36XX  *  * @return  */
 end_comment
 
@@ -399,12 +411,6 @@ operator|(
 name|OCTEON_IS_MODEL
 argument_list|(
 name|OCTEON_CN38XX
-argument_list|)
-operator|&&
-operator|!
-name|OCTEON_IS_MODEL
-argument_list|(
-name|OCTEON_CN38XX_PASS1
 argument_list|)
 operator|&&
 name|cvmx_fuse_read

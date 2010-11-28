@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***********************license start***************  *  Copyright (c) 2003-2008 Cavium Networks (support@cavium.com). All rights  *  reserved.  *  *  *  Redistribution and use in source and binary forms, with or without  *  modification, are permitted provided that the following conditions are  *  met:  *  *      * Redistributions of source code must retain the above copyright  *        notice, this list of conditions and the following disclaimer.  *  *      * Redistributions in binary form must reproduce the above  *        copyright notice, this list of conditions and the following  *        disclaimer in the documentation and/or other materials provided  *        with the distribution.  *  *      * Neither the name of Cavium Networks nor the names of  *        its contributors may be used to endorse or promote products  *        derived from this software without specific prior written  *        permission.  *  *  TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  *  AND WITH ALL FAULTS AND CAVIUM NETWORKS MAKES NO PROMISES, REPRESENTATIONS  *  OR WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH  *  RESPECT TO THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY  *  REPRESENTATION OR DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT  *  DEFECTS, AND CAVIUM SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES  *  OF TITLE, MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR  *  PURPOSE, LACK OF VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET  *  POSSESSION OR CORRESPONDENCE TO DESCRIPTION.  THE ENTIRE RISK ARISING OUT  *  OF USE OR PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  *  *  *  For any questions regarding licensing please contact marketing@caviumnetworks.com  *  ***********************license end**************************************/
+comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Networks (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Networks nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM  NETWORKS MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
 end_comment
 
 begin_comment
-comment|/**  * @file  *  * Interface to the hardware Packet Order / Work unit.  *  * New, starting with SDK 1.7.0, cvmx-pow supports a number of  * extended consistency checks. The define  * CVMX_ENABLE_POW_CHECKS controls the runtime insertion of POW  * internal state checks to find common programming errors. If  * CVMX_ENABLE_POW_CHECKS is not defined, checks are by default  * enabled. For example, cvmx-pow will check for the following  * program errors or POW state inconsistency.  * - Requesting a POW operation with an active tag switch in  *   progress.  * - Waiting for a tag switch to complete for an excessively  *   long period. This is normally a sign of an error in locking  *   causing deadlock.  * - Illegal tag switches from NULL_NULL.  * - Illegal tag switches from NULL.  * - Illegal deschedule request.  * - WQE pointer not matching the one attached to the core by  *   the POW.  *  *<hr>$Revision: 41586 $<hr>  */
+comment|/**  * @file  *  * Interface to the hardware Packet Order / Work unit.  *  * New, starting with SDK 1.7.0, cvmx-pow supports a number of  * extended consistency checks. The define  * CVMX_ENABLE_POW_CHECKS controls the runtime insertion of POW  * internal state checks to find common programming errors. If  * CVMX_ENABLE_POW_CHECKS is not defined, checks are by default  * enabled. For example, cvmx-pow will check for the following  * program errors or POW state inconsistency.  * - Requesting a POW operation with an active tag switch in  *   progress.  * - Waiting for a tag switch to complete for an excessively  *   long period. This is normally a sign of an error in locking  *   causing deadlock.  * - Illegal tag switches from NULL_NULL.  * - Illegal tag switches from NULL.  * - Illegal deschedule request.  * - WQE pointer not matching the one attached to the core by  *   the POW.  *  *<hr>$Revision: 49448 $<hr>  */
 end_comment
 
 begin_ifndef
@@ -31,11 +31,22 @@ directive|include
 file|"cvmx-wqe.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CVMX_BUILD_FOR_LINUX_KERNEL
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|"cvmx-warn.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -2445,7 +2456,7 @@ struct|;
 block|}
 name|cvmx_pow_iobdma_store_t
 typedef|;
-comment|/* CSR typedefs have been moved to cvmx-csr-*.h */
+comment|/* CSR typedefs have been moved to cvmx-pow-defs.h */
 comment|/**  * Get the POW tag for this core. This returns the current  * tag type, tag, group, and POW entry index associated with  * this core. Index is only valid if the tag type isn't NULL_NULL.  * If a tag switch is pending this routine returns the tag before  * the tag switch, not after.  *  * @return Current tag  */
 specifier|static
 specifier|inline
@@ -4408,7 +4419,7 @@ operator|.
 name|u64
 argument_list|)
 expr_stmt|;
-comment|// since TAG3 is used, this store will clear the local pending switch bit
+comment|/* since TAG3 is used, this store will clear the local pending switch bit */
 block|}
 comment|/**  * Performs a tag switch and then an immediate deschedule. This completes  * immediatly, so completion must not be waited for.  This function does NOT  * update the wqe in DRAM to match arguments.  *  * This function waits for any prior tag switches to complete, so the  * calling code may call this function with a pending tag switch.  *  * Note the following CAVEAT of the Octeon HW behavior when  * re-scheduling DE-SCHEDULEd items whose (next) state is  * ORDERED:  *   - If there are no switches pending at the time that the  *     HW executes the de-schedule, the HW will only re-schedule  *     the head of the FIFO associated with the given tag. This  *     means that in many respects, the HW treats this ORDERED  *     tag as an ATOMIC tag. Note that in the SWTAG_DESCH  *     case (to an ORDERED tag), the HW will do the switch  *     before the deschedule whenever it is possible to do  *     the switch immediately, so it may often look like  *     this case.  *   - If there is a pending switch to ORDERED at the time  *     the HW executes the de-schedule, the HW will perform  *     the switch at the time it re-schedules, and will be  *     able to reschedule any/all of the entries with the  *     same tag.  * Due to this behavior, the RECOMMENDATION to software is  * that they have a (next) state of ATOMIC when they  * DE-SCHEDULE. If an ORDERED tag is what was really desired,  * SW can choose to immediately switch to an ORDERED tag  * after the work (that has an ATOMIC tag) is re-scheduled.  * Note that since there are never any tag switches pending  * when the HW re-schedules, this switch can be IMMEDIATE upon  * the reception of the pointer during the re-schedule.  *  * @param tag      New tag value  * @param tag_type New tag type  * @param group    New group value  * @param no_sched Control whether this work queue entry will be rescheduled.  *                 - 1 : don't schedule this work  *                 - 0 : allow this work to be scheduled.  */
 specifier|static
@@ -4588,7 +4599,7 @@ operator|.
 name|u64
 argument_list|)
 expr_stmt|;
-comment|// since TAG3 is used, this store will clear the local pending switch bit
+comment|/* since TAG3 is used, this store will clear the local pending switch bit */
 block|}
 comment|/*********************************************************************************************** ** Define usage of bits within the 32 bit tag values. ***********************************************************************************************/
 comment|/*  * Number of bits of the tag used by software.  The SW bits  * are always a contiguous block of the high starting at bit 31.  * The hardware bits are always the low bits.  By default, the top 8 bits  * of the tag are reserved for software, and the low 24 are set by the IPD unit.  */
@@ -4768,7 +4779,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// __CVMX_POW_H__
+comment|/* __CVMX_POW_H__ */
 end_comment
 
 end_unit

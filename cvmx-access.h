@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***********************license start***************  *  Copyright (c) 2003-2009 Cavium Networks (support@cavium.com). All rights  *  reserved.  *  *  *  Redistribution and use in source and binary forms, with or without  *  modification, are permitted provided that the following conditions are  *  met:  *  *      * Redistributions of source code must retain the above copyright  *        notice, this list of conditions and the following disclaimer.  *  *      * Redistributions in binary form must reproduce the above  *        copyright notice, this list of conditions and the following  *        disclaimer in the documentation and/or other materials provided  *        with the distribution.  *  *      * Neither the name of Cavium Networks nor the names of  *        its contributors may be used to endorse or promote products  *        derived from this software without specific prior written  *        permission.  *  *  TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  *  AND WITH ALL FAULTS AND CAVIUM NETWORKS MAKES NO PROMISES, REPRESENTATIONS  *  OR WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH  *  RESPECT TO THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY  *  REPRESENTATION OR DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT  *  DEFECTS, AND CAVIUM SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES  *  OF TITLE, MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR  *  PURPOSE, LACK OF VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET  *  POSSESSION OR CORRESPONDENCE TO DESCRIPTION.  THE ENTIRE RISK ARISING OUT  *  OF USE OR PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  *  *  *  For any questions regarding licensing please contact marketing@caviumnetworks.com  *  ***********************license end**************************************/
+comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Networks (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Networks nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM  NETWORKS MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
 end_comment
 
 begin_comment
@@ -392,7 +392,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Number of the Core on which the program is currently running.   *  * @return Number of cores  */
+comment|/**  * Number of the Core on which the program is currently running.  *  * @return Number of cores  */
 end_comment
 
 begin_function_decl
@@ -437,7 +437,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Provide current cycle counter as a return value  *  * @return current cycle counter  */
+comment|/**  * @deprecated  * Provide current cycle counter as a return value. Deprecated, use  * cvmx_clock_get_count(CVMX_CLOCK_CORE) to get cycle counter.  *  * @return current cycle counter  */
 end_comment
 
 begin_function_decl
@@ -451,7 +451,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Reads a chip global cycle counter.  This counts CPU cycles since  * chip reset.  The counter is 64 bit.  * This register does not exist on CN38XX pass 1 silicion  *  * @return Global chip cycle count since chip reset.  */
+comment|/**  * @deprecated  * Reads a chip global cycle counter.  This counts SCLK cycles since  * chip reset.  The counter is 64 bit. This function is deprecated as the rate  * of the global cycle counter is different between Octeon+ and Octeon2, use  * cvmx_clock_get_count(CVMX_CLOCK_SCLK) instead. For Octeon2, the clock rate  * of SCLK may be differnet than the core clock.  *  * @return Global chip cycle count since chip reset.  */
 end_comment
 
 begin_function_decl
@@ -461,11 +461,18 @@ name|cvmx_get_cycle_global
 parameter_list|(
 name|void
 parameter_list|)
-function_decl|;
+function_decl|__attribute__
+parameter_list|(
+function_decl|(deprecated
 end_function_decl
 
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
-comment|/**  * Wait for the specified number of cycle  *  * @param cycles  */
+comment|/**  * Wait for the specified number of core clock cycles  *  * @param cycles  */
 end_comment
 
 begin_function_decl
@@ -490,6 +497,21 @@ name|cvmx_wait_usec
 parameter_list|(
 name|uint64_t
 name|usec
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * Wait for the specified number of io clock cycles  *  * @param cycles  */
+end_comment
+
+begin_function_decl
+name|CVMX_FUNCTION
+name|void
+name|cvmx_wait_io
+parameter_list|(
+name|uint64_t
+name|cycles
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***********************license start***************  *  Copyright (c) 2003-2008 Cavium Networks (support@cavium.com). All rights  *  reserved.  *  *  *  Redistribution and use in source and binary forms, with or without  *  modification, are permitted provided that the following conditions are  *  met:  *  *      * Redistributions of source code must retain the above copyright  *        notice, this list of conditions and the following disclaimer.  *  *      * Redistributions in binary form must reproduce the above  *        copyright notice, this list of conditions and the following  *        disclaimer in the documentation and/or other materials provided  *        with the distribution.  *  *      * Neither the name of Cavium Networks nor the names of  *        its contributors may be used to endorse or promote products  *        derived from this software without specific prior written  *        permission.  *  *  TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  *  AND WITH ALL FAULTS AND CAVIUM NETWORKS MAKES NO PROMISES, REPRESENTATIONS  *  OR WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH  *  RESPECT TO THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY  *  REPRESENTATION OR DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT  *  DEFECTS, AND CAVIUM SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES  *  OF TITLE, MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR  *  PURPOSE, LACK OF VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET  *  POSSESSION OR CORRESPONDENCE TO DESCRIPTION.  THE ENTIRE RISK ARISING OUT  *  OF USE OR PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  *  *  *  For any questions regarding licensing please contact marketing@caviumnetworks.com  *  ***********************license end**************************************/
+comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Networks (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Networks nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM  NETWORKS MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
 end_comment
 
 begin_comment
-comment|/**  * @file  *  * Module to support operations on core such as TLB config, etc.  *  *<hr>$Revision: 41586 $<hr>  *  */
+comment|/**  * @file  *  * Module to support operations on core such as TLB config, etc.  *  *<hr>$Revision: 49448 $<hr>  *  */
 end_comment
 
 begin_ifndef
@@ -305,6 +305,22 @@ init|=
 literal|58
 block|,
 comment|/**< Number of SYNCWs */
+comment|/* Added in CN63XX */
+name|CVMX_CORE_PERF_ERETMIS
+init|=
+literal|64
+block|,
+comment|/**< D/eret mispredicts */
+name|CVMX_CORE_PERF_LIKMIS
+init|=
+literal|65
+block|,
+comment|/**< Branch likely mispredicts */
+name|CVMX_CORE_PERF_HAZTR
+init|=
+literal|66
+block|,
+comment|/**< Hazard traps due to *MTC0 to CvmCtl, Perf counter control, EntryHi, or CvmMemCtl registers */
 name|CVMX_CORE_PERF_MAX
 comment|/**< This not a counter, just a marker for the highest number */
 block|}
@@ -319,6 +335,11 @@ name|u32
 decl_stmt|;
 struct|struct
 block|{
+if|#
+directive|if
+name|__BYTE_ORDER
+operator|==
+name|__BIG_ENDIAN
 name|uint32_t
 name|m
 range|:
@@ -334,12 +355,12 @@ comment|/**< Set to 1 indicating coutners are 64 bit */
 name|uint32_t
 name|reserved_11_29
 range|:
-literal|19
+literal|15
 decl_stmt|;
 name|cvmx_core_perf_t
 name|event
 range|:
-literal|6
+literal|10
 decl_stmt|;
 comment|/**< Selects the event to be counted by the corresponding Counter Register */
 name|uint32_t
@@ -372,6 +393,55 @@ range|:
 literal|1
 decl_stmt|;
 comment|/**< Count in exception context */
+else|#
+directive|else
+name|uint32_t
+name|ex
+range|:
+literal|1
+decl_stmt|;
+name|uint32_t
+name|k
+range|:
+literal|1
+decl_stmt|;
+name|uint32_t
+name|s
+range|:
+literal|1
+decl_stmt|;
+name|uint32_t
+name|u
+range|:
+literal|1
+decl_stmt|;
+name|uint32_t
+name|ie
+range|:
+literal|1
+decl_stmt|;
+name|uint32_t
+name|event
+range|:
+literal|10
+decl_stmt|;
+name|uint32_t
+name|reserved_11_29
+range|:
+literal|15
+decl_stmt|;
+name|uint32_t
+name|w
+range|:
+literal|1
+decl_stmt|;
+name|uint32_t
+name|m
+range|:
+literal|1
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 name|s
 struct|;
@@ -483,6 +553,13 @@ name|page1_addr
 parameter_list|,
 name|cvmx_tlb_pagemask_t
 name|page_mask
+parameter_list|)
+function_decl|;
+comment|/**  * Return number of TLB entries.  */
+name|int
+name|cvmx_core_get_tlb_entries
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 ifdef|#

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***********************license start***************  *  Copyright (c) 2003-2008 Cavium Networks (support@cavium.com). All rights  *  reserved.  *  *  *  Redistribution and use in source and binary forms, with or without  *  modification, are permitted provided that the following conditions are  *  met:  *  *      * Redistributions of source code must retain the above copyright  *        notice, this list of conditions and the following disclaimer.  *  *      * Redistributions in binary form must reproduce the above  *        copyright notice, this list of conditions and the following  *        disclaimer in the documentation and/or other materials provided  *        with the distribution.  *  *      * Neither the name of Cavium Networks nor the names of  *        its contributors may be used to endorse or promote products  *        derived from this software without specific prior written  *        permission.  *  *  TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  *  AND WITH ALL FAULTS AND CAVIUM NETWORKS MAKES NO PROMISES, REPRESENTATIONS  *  OR WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH  *  RESPECT TO THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY  *  REPRESENTATION OR DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT  *  DEFECTS, AND CAVIUM SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES  *  OF TITLE, MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR  *  PURPOSE, LACK OF VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET  *  POSSESSION OR CORRESPONDENCE TO DESCRIPTION.  THE ENTIRE RISK ARISING OUT  *  OF USE OR PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  *  *  *  For any questions regarding licensing please contact marketing@caviumnetworks.com  *  ***********************license end**************************************/
+comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Networks (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Networks nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM  NETWORKS MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
 end_comment
 
 begin_comment
-comment|/**  * @file  * Simple allocate only memory allocator.  Used to allocate memory at application  * start time.  *  *<hr>$Revision: 41586 $<hr>  *  */
+comment|/**  * @file  * Simple allocate only memory allocator.  Used to allocate memory at application  * start time.  *  *<hr>$Revision: 49448 $<hr>  *  */
 end_comment
 
 begin_ifndef
@@ -72,8 +72,8 @@ block|}
 name|cvmx_bootmem_block_header_t
 typedef|;
 comment|/* Structure for named memory blocks ** Number of descriptors ** available can be changed without affecting compatiblity, ** but name length changes require a bump in the bootmem ** descriptor version ** Note: This structure must be naturally 64 bit aligned, as a single ** memory image will be used by both 32 and 64 bit programs. */
-typedef|typedef
 struct|struct
+name|cvmx_bootmem_named_block_desc
 block|{
 name|uint64_t
 name|base_addr
@@ -91,6 +91,10 @@ index|]
 decl_stmt|;
 comment|/**< name of named block */
 block|}
+struct|;
+typedef|typedef
+name|struct
+name|cvmx_bootmem_named_block_desc
 name|cvmx_bootmem_named_block_desc_t
 typedef|;
 comment|/* Current descriptor versions */
@@ -148,14 +152,13 @@ comment|/**< address of named memory block descriptors */
 block|}
 name|cvmx_bootmem_desc_t
 typedef|;
-comment|/**  * Initialize the boot alloc memory structures. This is  * normally called inside of cvmx_user_app_init()  *  * @param mem_desc_ptr	Address of the free memory list  * @return  */
+comment|/**  * Initialize the boot alloc memory structures. This is  * normally called inside of cvmx_user_app_init()  *  * @param mem_desc_addr	Address of the free memory list  * @return  */
 specifier|extern
 name|int
 name|cvmx_bootmem_init
 parameter_list|(
-name|void
-modifier|*
-name|mem_desc_ptr
+name|uint64_t
+name|mem_desc_addr
 parameter_list|)
 function_decl|;
 comment|/**  * Allocate a block of memory from the free list that was passed  * to the application by the bootloader.  * This is an allocate-only algorithm, so freeing memory is not possible.  *  * @param size      Size in bytes of block to allocate  * @param alignment Alignment required - must be power of 2  *  * @return pointer to block of memory, NULL on error  */
@@ -218,6 +221,7 @@ parameter_list|,
 name|uint64_t
 name|alignment
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -235,6 +239,7 @@ parameter_list|,
 name|uint64_t
 name|address
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -258,6 +263,7 @@ parameter_list|,
 name|uint64_t
 name|align
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -268,16 +274,19 @@ specifier|extern
 name|int
 name|cvmx_bootmem_free_named
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
 parameter_list|)
 function_decl|;
 comment|/**  * Finds a named bootmem block by name.  *  * @param name   name of block to free  *  * @return pointer to named block descriptor on success  *         0 on failure  */
+specifier|const
 name|cvmx_bootmem_named_block_desc_t
 modifier|*
 name|cvmx_bootmem_find_named_block
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -334,6 +343,7 @@ parameter_list|,
 name|uint64_t
 name|alignment
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -342,11 +352,11 @@ name|uint32_t
 name|flags
 parameter_list|)
 function_decl|;
-comment|/**  * Finds a named memory block by name.  * Also used for finding an unused entry in the named block table.  *  * @param name   Name of memory block to find.  *               If NULL pointer given, then finds unused descriptor, if available.  * @param flags     Flags to control options for the allocation.  *  * @return Pointer to memory block descriptor, NULL if not found.  *         If NULL returned when name parameter is NULL, then no memory  *         block descriptors are available.  */
-name|cvmx_bootmem_named_block_desc_t
-modifier|*
+comment|/**  * Finds a named memory block by name.  * Also used for finding an unused entry in the named block table.  *  * @param name   Name of memory block to find.  *               If NULL pointer given, then finds unused descriptor, if available.  * @param flags  Flags to control options for the allocation.  *  * @return Physical address of the memory block descriptor, zero if not  *         found. If zero returned when name parameter is NULL, then no  *         memory block descriptors are available.  */
+name|uint64_t
 name|cvmx_bootmem_phy_named_block_find
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -367,6 +377,7 @@ comment|/**  * Frees a named block.  *  * @param name   name of block to free  *
 name|int
 name|cvmx_bootmem_phy_named_block_free
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name

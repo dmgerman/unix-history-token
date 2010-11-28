@@ -1,11 +1,40 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***********************license start***************  *  Copyright (c) 2003-2008 Cavium Networks (support@cavium.com). All rights  *  reserved.  *  *  *  Redistribution and use in source and binary forms, with or without  *  modification, are permitted provided that the following conditions are  *  met:  *  *      * Redistributions of source code must retain the above copyright  *        notice, this list of conditions and the following disclaimer.  *  *      * Redistributions in binary form must reproduce the above  *        copyright notice, this list of conditions and the following  *        disclaimer in the documentation and/or other materials provided  *        with the distribution.  *  *      * Neither the name of Cavium Networks nor the names of  *        its contributors may be used to endorse or promote products  *        derived from this software without specific prior written  *        permission.  *  *  TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  *  AND WITH ALL FAULTS AND CAVIUM NETWORKS MAKES NO PROMISES, REPRESENTATIONS  *  OR WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH  *  RESPECT TO THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY  *  REPRESENTATION OR DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT  *  DEFECTS, AND CAVIUM SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES  *  OF TITLE, MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR  *  PURPOSE, LACK OF VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET  *  POSSESSION OR CORRESPONDENCE TO DESCRIPTION.  THE ENTIRE RISK ARISING OUT  *  OF USE OR PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  *  *  *  For any questions regarding licensing please contact marketing@caviumnetworks.com  *  ***********************license end**************************************/
+comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Networks (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Networks nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM  NETWORKS MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
 end_comment
 
 begin_comment
-comment|/**  * @file  *  * Module to support operations on core such as TLB config, etc.  *  *<hr>$Revision: 41586 $<hr>  *  */
+comment|/**  * @file  *  * Module to support operations on core such as TLB config, etc.  *  *<hr>$Revision: 49862 $<hr>  *  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CVMX_BUILD_FOR_LINUX_KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<linux/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<asm/octeon/cvmx.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<asm/octeon/cvmx-core.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_include
 include|#
@@ -25,8 +54,13 @@ directive|include
 file|"cvmx-core.h"
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/**  * Adds a wired TLB entry, and returns the index of the entry added.  * Parameters are written to TLB registers without further processing.  *  * @param hi     HI register value  * @param lo0    lo0 register value  * @param lo1    lo1 register value  * @param page_mask   pagemask register value  *  * @return Success: TLB index used (0-31) or (0-63) for OCTEON Plus  *         Failure: -1  */
+comment|/**  * Adds a wired TLB entry, and returns the index of the entry added.  * Parameters are written to TLB registers without further processing.  *  * @param hi     HI register value  * @param lo0    lo0 register value  * @param lo1    lo1 register value  * @param page_mask   pagemask register value  *  * @return Success: TLB index used (0-31 Octeon, 0-63 Octeon+, or 0-127  *         Octeon2). Failure: -1  */
 end_comment
 
 begin_function
@@ -49,25 +83,6 @@ block|{
 name|uint32_t
 name|index
 decl_stmt|;
-name|uint32_t
-name|index_limit
-init|=
-literal|31
-decl_stmt|;
-if|if
-condition|(
-operator|!
-name|OCTEON_IS_MODEL
-argument_list|(
-name|OCTEON_CN3XXX
-argument_list|)
-condition|)
-block|{
-name|index_limit
-operator|=
-literal|63
-expr_stmt|;
-block|}
 name|CVMX_MF_TLB_WIRED
 argument_list|(
 name|index
@@ -77,7 +92,12 @@ if|if
 condition|(
 name|index
 operator|>=
-name|index_limit
+operator|(
+name|unsigned
+name|int
+operator|)
+name|cvmx_core_get_tlb_entries
+argument_list|()
 condition|)
 block|{
 return|return
@@ -307,6 +327,45 @@ argument_list|,
 name|page_mask
 argument_list|)
 operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  * Return number of TLB entries.  */
+end_comment
+
+begin_function
+name|int
+name|cvmx_core_get_tlb_entries
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN3XXX
+argument_list|)
+condition|)
+return|return
+literal|32
+return|;
+elseif|else
+if|if
+condition|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN5XXX
+argument_list|)
+condition|)
+return|return
+literal|64
+return|;
+else|else
+return|return
+literal|128
 return|;
 block|}
 end_function

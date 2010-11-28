@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***********************license start***************  *  Copyright (c) 2003-2008 Cavium Networks (support@cavium.com). All rights  *  reserved.  *  *  *  Redistribution and use in source and binary forms, with or without  *  modification, are permitted provided that the following conditions are  *  met:  *  *      * Redistributions of source code must retain the above copyright  *        notice, this list of conditions and the following disclaimer.  *  *      * Redistributions in binary form must reproduce the above  *        copyright notice, this list of conditions and the following  *        disclaimer in the documentation and/or other materials provided  *        with the distribution.  *  *      * Neither the name of Cavium Networks nor the names of  *        its contributors may be used to endorse or promote products  *        derived from this software without specific prior written  *        permission.  *  *  TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  *  AND WITH ALL FAULTS AND CAVIUM NETWORKS MAKES NO PROMISES, REPRESENTATIONS  *  OR WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH  *  RESPECT TO THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY  *  REPRESENTATION OR DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT  *  DEFECTS, AND CAVIUM SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES  *  OF TITLE, MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR  *  PURPOSE, LACK OF VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET  *  POSSESSION OR CORRESPONDENCE TO DESCRIPTION.  THE ENTIRE RISK ARISING OUT  *  OF USE OR PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  *  *  *  For any questions regarding licensing please contact marketing@caviumnetworks.com  *  ***********************license end**************************************/
+comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Networks (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Networks nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM  NETWORKS MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
 end_comment
 
 begin_comment
-comment|/**  * @file  *  * Support functions for managing command queues used for  * various hardware blocks.  *  * The common command queue infrastructure abstracts out the  * software necessary for adding to Octeon's chained queue  * structures. These structures are used for commands to the  * PKO, ZIP, DFA, RAID, and DMA engine blocks. Although each  * hardware unit takes commands and CSRs of different types,  * they all use basic linked command buffers to store the  * pending request. In general, users of the CVMX API don't  * call cvmx-cmd-queue functions directly. Instead the hardware  * unit specific wrapper should be used. The wrappers perform  * unit specific validation and CSR writes to submit the  * commands.  *  * Even though most software will never directly interact with  * cvmx-cmd-queue, knowledge of its internal working can help  * in diagnosing performance problems and help with debugging.  *  * Command queue pointers are stored in a global named block  * called "cvmx_cmd_queues". Except for the PKO queues, each  * hardware queue is stored in its own cache line to reduce SMP  * contention on spin locks. The PKO queues are stored such that  * every 16th queue is next to each other in memory. This scheme  * allows for queues being in separate cache lines when there  * are low number of queues per port. With 16 queues per port,  * the first queue for each port is in the same cache area. The  * second queues for each port are in another area, etc. This  * allows software to implement very efficient lockless PKO with  * 16 queues per port using a minimum of cache lines per core.  * All queues for a given core will be isolated in the same  * cache area.  *  * In addition to the memory pointer layout, cvmx-cmd-queue  * provides an optimized fair ll/sc locking mechanism for the  * queues. The lock uses a "ticket / now serving" model to  * maintain fair order on contended locks. In addition, it uses  * predicted locking time to limit cache contention. When a core  * know it must wait in line for a lock, it spins on the  * internal cycle counter to completely eliminate any causes of  * bus traffic.  *  *<hr> $Revision: 42150 $<hr>  */
+comment|/**  * @file  *  * Support functions for managing command queues used for  * various hardware blocks.  *  * The common command queue infrastructure abstracts out the  * software necessary for adding to Octeon's chained queue  * structures. These structures are used for commands to the  * PKO, ZIP, DFA, RAID, and DMA engine blocks. Although each  * hardware unit takes commands and CSRs of different types,  * they all use basic linked command buffers to store the  * pending request. In general, users of the CVMX API don't  * call cvmx-cmd-queue functions directly. Instead the hardware  * unit specific wrapper should be used. The wrappers perform  * unit specific validation and CSR writes to submit the  * commands.  *  * Even though most software will never directly interact with  * cvmx-cmd-queue, knowledge of its internal workings can help  * in diagnosing performance problems and help with debugging.  *  * Command queue pointers are stored in a global named block  * called "cvmx_cmd_queues". Except for the PKO queues, each  * hardware queue is stored in its own cache line to reduce SMP  * contention on spin locks. The PKO queues are stored such that  * every 16th queue is next to each other in memory. This scheme  * allows for queues being in separate cache lines when there  * are low number of queues per port. With 16 queues per port,  * the first queue for each port is in the same cache area. The  * second queues for each port are in another area, etc. This  * allows software to implement very efficient lockless PKO with  * 16 queues per port using a minimum of cache lines per core.  * All queues for a given core will be isolated in the same  * cache area.  *  * In addition to the memory pointer layout, cvmx-cmd-queue  * provides an optimized fair ll/sc locking mechanism for the  * queues. The lock uses a "ticket / now serving" model to  * maintain fair order on contended locks. In addition, it uses  * predicted locking time to limit cache contention. When a core  * know it must wait in line for a lock, it spins on the  * internal cycle counter to completely eliminate any causes of  * bus traffic.  *  *<hr> $Revision: 50049 $<hr>  */
 end_comment
 
 begin_ifndef
@@ -19,6 +19,12 @@ directive|define
 name|__CVMX_CMD_QUEUE_H__
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CVMX_BUILD_FOR_LINUX_KERNEL
+end_ifndef
+
 begin_include
 include|#
 directive|include
@@ -30,6 +36,11 @@ include|#
 directive|include
 file|"cvmx-config.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -103,7 +114,7 @@ literal|0x50000
 block|, }
 name|cvmx_cmd_queue_id_t
 typedef|;
-comment|/**  * Command write operations can fail if the comamnd queue needs  * a new buffer and the associated FPA pool is empty. It can also  * fail if the number of queued command words reaches the maximum  * set at initialization.  */
+comment|/**  * Command write operations can fail if the command queue needs  * a new buffer and the associated FPA pool is empty. It can also  * fail if the number of queued command words reaches the maximum  * set at initialization.  */
 typedef|typedef
 enum|enum
 block|{
@@ -177,11 +188,11 @@ name|index
 range|:
 literal|13
 decl_stmt|;
-comment|/**< Number of comamnds already used in buffer */
+comment|/**< Number of commands already used in buffer */
 block|}
 name|__cvmx_cmd_queue_state_t
 typedef|;
-comment|/**  * This structure contains the global state of all comamnd queues.  * It is stored in a bootmem named block and shared by all  * applications running on Octeon. Tickets are stored in a differnet  * cahce line that queue information to reduce the contention on the  * ll/sc used to get a ticket. If this is not the case, the update  * of queue state causes the ll/sc to fail quite often.  */
+comment|/**  * This structure contains the global state of all command queues.  * It is stored in a bootmem named block and shared by all  * applications running on Octeon. Tickets are stored in a different  * cache line that queue information to reduce the contention on the  * ll/sc used to get a ticket. If this is not the case, the update  * of queue state causes the ll/sc to fail quite often.  */
 typedef|typedef
 struct|struct
 block|{
@@ -245,7 +256,7 @@ name|cvmx_cmd_queue_id_t
 name|queue_id
 parameter_list|)
 function_decl|;
-comment|/**  * Return the command buffer to be written to. The purpose of this  * function is to allow CVMX routine access t othe low level buffer  * for initial hardware setup. User applications should not call this  * function directly.  *  * @param queue_id Command queue to query  *  * @return Command buffer or NULL on failure  */
+comment|/**  * Return the command buffer to be written to. The purpose of this  * function is to allow CVMX routine access to the low level buffer  * for initial hardware setup. User applications should not call this  * function directly.  *  * @param queue_id Command queue to query  *  * @return Command buffer or NULL on failure  */
 name|void
 modifier|*
 name|cvmx_cmd_queue_buffer
@@ -372,13 +383,29 @@ modifier|*
 name|qptr
 parameter_list|)
 block|{
+name|uint8_t
+name|ns
+decl_stmt|;
+name|ns
+operator|=
 name|qptr
 operator|->
 name|now_serving
-operator|++
+operator|+
+literal|1
 expr_stmt|;
 name|CVMX_SYNCWS
 expr_stmt|;
+comment|/* Order queue manipulation with respect to the unlock.  */
+name|qptr
+operator|->
+name|now_serving
+operator|=
+name|ns
+expr_stmt|;
+name|CVMX_SYNCWS
+expr_stmt|;
+comment|/* nudge out the unlock. */
 block|}
 comment|/**  * @INTERNAL  * Get the queue state structure for the given queue id  *  * @param queue_id Queue id to get  *  * @return Queue structure or NULL on failure  */
 specifier|static
@@ -444,7 +471,7 @@ argument_list|)
 index|]
 return|;
 block|}
-comment|/**  * Write an arbitrary number of command words to a command queue.  * This is a generic function; the fixed number of comamnd word  * functions yield higher performance.  *  * @param queue_id  Hardware command queue to write to  * @param use_locking  *                  Use internal locking to ensure exclusive access for queue  *                  updates. If you don't use this locking you must ensure  *                  exclusivity some other way. Locking is strongly recommended.  * @param cmd_count Number of command words to write  * @param cmds      Array of comamnds to write  *  * @return CVMX_CMD_QUEUE_SUCCESS or a failure code  */
+comment|/**  * Write an arbitrary number of command words to a command queue.  * This is a generic function; the fixed number of command word  * functions yield higher performance.  *  * @param queue_id  Hardware command queue to write to  * @param use_locking  *                  Use internal locking to ensure exclusive access for queue  *                  updates. If you don't use this locking you must ensure  *                  exclusivity some other way. Locking is strongly recommended.  * @param cmd_count Number of command words to write  * @param cmds      Array of commands to write  *  * @return CVMX_CMD_QUEUE_SUCCESS or a failure code  */
 specifier|static
 specifier|inline
 name|cvmx_cmd_queue_result_t
@@ -658,7 +685,7 @@ decl_stmt|;
 name|int
 name|count
 decl_stmt|;
-comment|/* We need a new comamnd buffer. Fail if there isn't one available */
+comment|/* We need a new command buffer. Fail if there isn't one available */
 name|uint64_t
 modifier|*
 name|new_buffer
@@ -1002,7 +1029,7 @@ name|qptr
 operator|->
 name|index
 decl_stmt|;
-comment|/* We need a new comamnd buffer. Fail if there isn't one available */
+comment|/* We need a new command buffer. Fail if there isn't one available */
 name|uint64_t
 modifier|*
 name|new_buffer
@@ -1357,7 +1384,7 @@ name|qptr
 operator|->
 name|index
 decl_stmt|;
-comment|/* We need a new comamnd buffer. Fail if there isn't one available */
+comment|/* We need a new command buffer. Fail if there isn't one available */
 name|uint64_t
 modifier|*
 name|new_buffer
