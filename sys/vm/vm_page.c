@@ -5329,7 +5329,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * 	vm_page_alloc_freelist:  *   *	Allocate a page from the specified freelist with specified order.  *	Only the ALLOC_CLASS values in req are honored, other request flags  *	are ignored.  */
+comment|/*  * 	vm_page_alloc_freelist:  *   *	Allocate a page from the specified freelist.  *	Only the ALLOC_CLASS values in req are honored, other request flags  *	are ignored.  */
 end_comment
 
 begin_function
@@ -5338,9 +5338,6 @@ name|vm_page_alloc_freelist
 parameter_list|(
 name|int
 name|flind
-parameter_list|,
-name|int
-name|order
 parameter_list|,
 name|int
 name|req
@@ -5431,7 +5428,7 @@ name|flind
 argument_list|,
 name|VM_FREEPOOL_DIRECT
 argument_list|,
-name|order
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
