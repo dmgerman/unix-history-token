@@ -6297,8 +6297,6 @@ name|u
 union|;
 name|int
 name|err
-init|=
-name|ENOTTY
 decl_stmt|;
 name|u
 operator|.
@@ -6376,6 +6374,10 @@ name|data
 operator|=
 name|usb_template
 expr_stmt|;
+name|err
+operator|=
+literal|0
+expr_stmt|;
 break|break;
 case|case
 name|USB_SET_TEMPLATE
@@ -6402,6 +6404,12 @@ name|int
 operator|*
 operator|)
 name|data
+expr_stmt|;
+break|break;
+default|default:
+name|err
+operator|=
+name|ENOTTY
 expr_stmt|;
 break|break;
 block|}
