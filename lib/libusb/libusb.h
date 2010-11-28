@@ -1107,6 +1107,14 @@ name|devh
 parameter_list|)
 function_decl|;
 name|int
+name|libusb_check_connected
+parameter_list|(
+name|libusb_device_handle
+modifier|*
+name|devh
+parameter_list|)
+function_decl|;
+name|int
 name|libusb_kernel_driver_active
 parameter_list|(
 name|libusb_device_handle
