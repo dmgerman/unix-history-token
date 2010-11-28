@@ -5860,11 +5860,6 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|ata_dmainit
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 comment|/* note start and stop are not used here */
 name|ch
 operator|->
@@ -5908,6 +5903,11 @@ operator|.
 name|max_address
 operator|=
 name|BUS_SPACE_MAXADDR
+expr_stmt|;
+name|ata_dmainit
+argument_list|(
+name|dev
+argument_list|)
 expr_stmt|;
 block|}
 end_function

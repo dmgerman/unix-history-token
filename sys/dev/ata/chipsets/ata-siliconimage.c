@@ -1872,11 +1872,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|ata_pci_dmainit
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -2317,6 +2312,11 @@ operator|->
 name|flags
 operator||=
 name|ATA_CHECKS_CABLE
+expr_stmt|;
+name|ata_pci_dmainit
+argument_list|(
+name|dev
+argument_list|)
 expr_stmt|;
 return|return
 literal|0
@@ -5851,11 +5851,6 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|ata_dmainit
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 comment|/* note start and stop are not used here */
 name|ch
 operator|->
@@ -5886,6 +5881,11 @@ literal|1
 operator|)
 operator|*
 name|PAGE_SIZE
+expr_stmt|;
+name|ata_dmainit
+argument_list|(
+name|dev
+argument_list|)
 expr_stmt|;
 block|}
 end_function
