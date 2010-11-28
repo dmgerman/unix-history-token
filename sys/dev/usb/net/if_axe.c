@@ -2476,9 +2476,11 @@ name|sc_ue
 operator|.
 name|ue_dev
 argument_list|,
-literal|"EEPROM data : 0x%04x\n"
+literal|"EEPROM data : 0x%04x, phymode : 0x%02x\n"
 argument_list|,
 name|eeprom
+argument_list|,
+name|phymode
 argument_list|)
 expr_stmt|;
 comment|/* Program GPIOs depending on PHY hardware. */
@@ -2563,6 +2565,12 @@ expr_stmt|;
 break|break;
 case|case
 name|AXE_PHY_MODE_CICADA
+case|:
+case|case
+name|AXE_PHY_MODE_CICADA_V2
+case|:
+case|case
+name|AXE_PHY_MODE_CICADA_V2_ASIX
 case|:
 if|if
 condition|(
