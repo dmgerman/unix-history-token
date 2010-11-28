@@ -5010,6 +5010,12 @@ name|if_drv_flags
 operator||=
 name|IFF_DRV_RUNNING
 expr_stmt|;
+comment|/* Switch to selected media. */
+name|axe_ifmedia_upd
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|axe_start
 argument_list|(
 name|ue
