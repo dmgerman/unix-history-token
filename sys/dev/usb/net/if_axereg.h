@@ -926,8 +926,18 @@ value|0x1000
 comment|/* AX88772 */
 define|#
 directive|define
-name|AXE_FLAG_178
+name|AXE_FLAG_772A
 value|0x2000
+comment|/* AX88772A */
+define|#
+directive|define
+name|AXE_FLAG_772B
+value|0x4000
+comment|/* AX88772B */
+define|#
+directive|define
+name|AXE_FLAG_178
+value|0x8000
 comment|/* AX88178 */
 name|uint8_t
 name|sc_ipgs
@@ -941,9 +951,34 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+name|int
+name|sc_tx_bufsz
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|AXE_IS_178_FAMILY
+parameter_list|(
+name|sc
+parameter_list|)
+define|\
+value|((sc)->sc_flags& (AXE_FLAG_772 | AXE_FLAG_772A | AXE_FLAG_772B | \ 	AXE_FLAG_178))
+end_define
+
+begin_define
+define|#
+directive|define
+name|AXE_IS_772
+parameter_list|(
+name|sc
+parameter_list|)
+define|\
+value|((sc)->sc_flags& (AXE_FLAG_772 | AXE_FLAG_772A | AXE_FLAG_772B))
+end_define
 
 begin_define
 define|#
