@@ -141,6 +141,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|IXGBE_SFF_1GBASET_CAPABLE
+value|0x8
+end_define
+
+begin_define
+define|#
+directive|define
 name|IXGBE_SFF_10GBASESR_CAPABLE
 value|0x10
 end_define
@@ -192,6 +199,24 @@ define|#
 directive|define
 name|IXGBE_I2C_EEPROM_STATUS_IN_PROGRESS
 value|0x3
+end_define
+
+begin_comment
+comment|/* Flow control defines */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_TAF_SYM_PAUSE
+value|0x400
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_TAF_ASM_PAUSE
+value|0x800
 end_define
 
 begin_comment
@@ -624,18 +649,6 @@ end_function_decl
 begin_function_decl
 name|s32
 name|ixgbe_tn_check_overtemp
-parameter_list|(
-name|struct
-name|ixgbe_hw
-modifier|*
-name|hw
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|s32
-name|ixgbe_tn_set_low_power_state
 parameter_list|(
 name|struct
 name|ixgbe_hw
