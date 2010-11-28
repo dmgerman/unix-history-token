@@ -1836,9 +1836,9 @@ name|U3G_DEV
 argument_list|(
 name|HUAWEI
 argument_list|,
-name|K3765_INIT
+name|K3765
 argument_list|,
-name|U3GINIT_HUAWEISCSI
+name|U3GINIT_HUAWEI
 argument_list|)
 block|,
 name|U3G_DEV
@@ -1873,6 +1873,15 @@ argument_list|(
 name|MERLIN
 argument_list|,
 name|V620
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|U3G_DEV
+argument_list|(
+name|NEOTEL
+argument_list|,
+name|PRIME
 argument_list|,
 literal|0
 argument_list|)

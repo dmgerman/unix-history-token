@@ -1230,6 +1230,13 @@ argument_list|)
 block|,
 name|UPGT_DEV
 argument_list|(
+name|NETGEAR
+argument_list|,
+name|WG111V2_2
+argument_list|)
+block|,
+name|UPGT_DEV
+argument_list|(
 name|INTERSIL
 argument_list|,
 name|PRISM_GT
