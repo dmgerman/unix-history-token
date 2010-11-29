@@ -12320,6 +12320,16 @@ name|first
 operator|+=
 name|DPCPU_SIZE
 expr_stmt|;
+name|physfree
+operator|+=
+name|DPCPU_SIZE
+expr_stmt|;
+name|init_first
+operator|+=
+name|DPCPU_SIZE
+operator|/
+name|PAGE_SIZE
+expr_stmt|;
 name|PCPU_SET
 argument_list|(
 name|prvspace
