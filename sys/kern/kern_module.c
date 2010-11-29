@@ -120,17 +120,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_typedef
-typedef|typedef
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|module
-argument_list|)
-name|modulelist_t
-expr_stmt|;
-end_typedef
-
 begin_struct
 struct|struct
 name|module
@@ -197,12 +186,17 @@ parameter_list|)
 value|(mod)->handler((mod), (type), (mod)->arg)
 end_define
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
-name|modulelist_t
+name|TAILQ_HEAD
+argument_list|(
+argument|modulelist
+argument_list|,
+argument|module
+argument_list|)
 name|modules
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|struct
@@ -365,11 +359,13 @@ argument_list|)
 expr_stmt|;
 name|MOD_SLOCK
 expr_stmt|;
-name|TAILQ_FOREACH
+name|TAILQ_FOREACH_REVERSE
 argument_list|(
 argument|mod
 argument_list|,
 argument|&modules
+argument_list|,
+argument|modulelist
 argument_list|,
 argument|link
 argument_list|)
