@@ -901,6 +901,11 @@ argument_list|,
 name|sysconfig
 argument_list|)
 expr_stmt|;
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 return|return
 name|fnt
 return|;
