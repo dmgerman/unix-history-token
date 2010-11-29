@@ -472,6 +472,15 @@ name|segs
 operator|=
 literal|1
 expr_stmt|;
+name|pko_command
+operator|.
+name|s
+operator|.
+name|dontfree
+operator|=
+literal|1
+expr_stmt|;
+comment|/* Do not put this buffer into the FPA.  */
 name|work
 operator|=
 name|NULL
@@ -553,6 +562,15 @@ name|u64
 operator|=
 literal|0
 expr_stmt|;
+name|hw_buffer
+operator|.
+name|s
+operator|.
+name|i
+operator|=
+literal|1
+expr_stmt|;
+comment|/* Do not put this buffer into the FPA.  */
 name|hw_buffer
 operator|.
 name|s
@@ -653,6 +671,15 @@ name|gather
 operator|=
 literal|1
 expr_stmt|;
+name|pko_command
+operator|.
+name|s
+operator|.
+name|dontfree
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Put the WQE above back into the FPA.  */
 block|}
 comment|/* Finish building the PKO command */
 name|pko_command
@@ -664,28 +691,6 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* Don't pollute L2 with the outgoing packet */
-name|pko_command
-operator|.
-name|s
-operator|.
-name|dontfree
-operator|=
-literal|1
-expr_stmt|;
-name|pko_command
-operator|.
-name|s
-operator|.
-name|reg0
-operator|=
-name|priv
-operator|->
-name|fau
-operator|+
-name|qos
-operator|*
-literal|4
-expr_stmt|;
 name|pko_command
 operator|.
 name|s
@@ -762,6 +767,7 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
+comment|/* 	 * XXX 	 * Could use a different free queue (and different FAU address) per 	 * core instead of per QoS, to reduce contention here. 	 */
 name|IF_LOCK
 argument_list|(
 operator|&
@@ -984,24 +990,6 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|work
-operator|!=
-name|NULL
-condition|)
-name|cvmx_fpa_free
-argument_list|(
-name|work
-argument_list|,
-name|CVMX_FPA_WQE_POOL
-argument_list|,
-name|DONT_WRITEBACK
-argument_list|(
-literal|1
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* Free mbufs not in use by the hardware */
 if|if
 condition|(
