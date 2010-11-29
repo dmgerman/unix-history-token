@@ -3533,6 +3533,8 @@ name|CTL_MAXNAME
 index|]
 decl_stmt|,
 name|len
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|sysctl_oid
