@@ -5359,6 +5359,10 @@ argument_list|(
 name|bn_ctx
 argument_list|)
 expr_stmt|;
+name|bn_ctx
+operator|=
+name|NULL
+expr_stmt|;
 name|EC_POINT_free
 argument_list|(
 name|srvr_ecpoint
