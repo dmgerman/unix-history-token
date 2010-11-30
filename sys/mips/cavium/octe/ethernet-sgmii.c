@@ -139,18 +139,6 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|octeon_is_simulation
-argument_list|()
-condition|)
-name|priv
-operator|->
-name|poll
-operator|=
-name|cvm_oct_common_poll
-expr_stmt|;
 comment|/* FIXME: Need autoneg logic */
 return|return
 literal|0

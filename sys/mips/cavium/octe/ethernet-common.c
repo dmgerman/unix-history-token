@@ -959,11 +959,18 @@ operator|.
 name|u64
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Set the link state unless we are using MII. 	 */
 if|if
 condition|(
 operator|!
 name|octeon_is_simulation
 argument_list|()
+operator|&&
+name|priv
+operator|->
+name|miibus
+operator|==
+name|NULL
 condition|)
 block|{
 name|link_info
@@ -1126,6 +1133,43 @@ decl_stmt|;
 name|cvmx_helper_link_info_t
 name|link_info
 decl_stmt|;
+comment|/* 	 * If this is a simulation, do nothing. 	 */
+if|if
+condition|(
+name|octeon_is_simulation
+argument_list|()
+condition|)
+return|return;
+comment|/* 	 * If there is a device-specific poll method, use it. 	 */
+if|if
+condition|(
+name|priv
+operator|->
+name|poll
+operator|!=
+name|NULL
+condition|)
+block|{
+name|priv
+operator|->
+name|poll
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/* 	 * If an MII bus is attached, don't use the Simple Executive's link 	 * state routines. 	 */
+if|if
+condition|(
+name|priv
+operator|->
+name|miibus
+operator|!=
+name|NULL
+condition|)
+return|return;
+comment|/* 	 * Use the Simple Executive's link state routines. 	 */
 name|link_info
 operator|=
 name|cvmx_helper_link_get

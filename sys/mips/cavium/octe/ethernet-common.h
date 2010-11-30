@@ -169,18 +169,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|cvm_oct_sgmii_uninit
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|cvm_oct_spi_init
 parameter_list|(
@@ -207,18 +195,6 @@ end_function_decl
 begin_function_decl
 name|int
 name|cvm_oct_xaui_init
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|cvm_oct_xaui_uninit
 parameter_list|(
 name|struct
 name|ifnet
