@@ -2347,7 +2347,9 @@ else|#
 directive|else
 name|font_size
 operator|=
-literal|16
+name|scp
+operator|->
+name|font_size
 expr_stmt|;
 endif|#
 directive|endif
