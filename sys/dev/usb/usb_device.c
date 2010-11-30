@@ -9528,6 +9528,7 @@ if|#
 directive|if
 name|USB_HAVE_UGEN
 literal|"ugen=%s "
+literal|"cdev=%s "
 endif|#
 directive|endif
 literal|"vendor=0x%04x "
@@ -9549,6 +9550,10 @@ argument_list|,
 if|#
 directive|if
 name|USB_HAVE_UGEN
+name|udev
+operator|->
+name|ugen_name
+argument_list|,
 name|udev
 operator|->
 name|ugen_name
@@ -9726,6 +9731,7 @@ if|#
 directive|if
 name|USB_HAVE_UGEN
 literal|"ugen=%s "
+literal|"cdev=%s "
 endif|#
 directive|endif
 literal|"vendor=0x%04x "
@@ -9744,6 +9750,10 @@ argument_list|,
 if|#
 directive|if
 name|USB_HAVE_UGEN
+name|udev
+operator|->
+name|ugen_name
+argument_list|,
 name|udev
 operator|->
 name|ugen_name
