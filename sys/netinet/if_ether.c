@@ -1703,7 +1703,7 @@ name|la
 operator|->
 name|la_expire
 operator|>
-name|time_second
+name|time_uptime
 operator|)
 condition|)
 block|{
@@ -1733,7 +1733,7 @@ operator|&
 name|LLE_STATIC
 operator|)
 operator|&&
-name|time_second
+name|time_uptime
 operator|+
 name|la
 operator|->
@@ -1836,7 +1836,7 @@ name|la
 operator|->
 name|la_expire
 operator|!=
-name|time_second
+name|time_uptime
 operator|)
 expr_stmt|;
 if|if
@@ -2053,7 +2053,7 @@ name|la
 operator|->
 name|la_expire
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 name|canceled
 operator|=
@@ -3637,7 +3637,7 @@ name|la
 operator|->
 name|la_expire
 operator|=
-name|time_second
+name|time_uptime
 operator|+
 name|V_arpt_keep
 expr_stmt|;
