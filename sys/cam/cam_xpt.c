@@ -10627,6 +10627,9 @@ case|:
 case|case
 name|XPT_ENG_EXEC
 case|:
+case|case
+name|XPT_SMP_IO
+case|:
 block|{
 name|struct
 name|cam_path

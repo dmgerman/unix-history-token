@@ -341,6 +341,9 @@ comment|/* ATA error, look at error code in CCB */
 name|CAM_SCSI_IT_NEXUS_LOST
 block|,
 comment|/* Initiator/Target Nexus lost. */
+name|CAM_SMP_STATUS_ERROR
+block|,
+comment|/* SMP error, look at error code in CCB */
 name|CAM_IDE
 init|=
 literal|0x33
@@ -491,6 +494,26 @@ init|=
 literal|0x20
 block|}
 name|cam_error_scsi_flags
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|CAM_ESMF_PRINT_NONE
+init|=
+literal|0x00
+block|,
+name|CAM_ESMF_PRINT_STATUS
+init|=
+literal|0x10
+block|,
+name|CAM_ESMF_PRINT_FULL_CMD
+init|=
+literal|0x20
+block|, }
+name|cam_error_smp_flags
 typedef|;
 end_typedef
 
