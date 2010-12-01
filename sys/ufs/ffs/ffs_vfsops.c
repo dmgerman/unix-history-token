@@ -4750,6 +4750,15 @@ argument_list|,
 name|M_UFSMNT
 argument_list|)
 expr_stmt|;
+name|ffs_flushfiles
+argument_list|(
+name|mp
+argument_list|,
+name|FORCECLOSE
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out
 goto|;
