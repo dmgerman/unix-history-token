@@ -2488,7 +2488,7 @@ name|cc_cong_signal
 argument_list|(
 name|tp
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 name|CC_RTO
 argument_list|)
