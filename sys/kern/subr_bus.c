@@ -3340,7 +3340,7 @@ parameter_list|)
 block|{
 name|devaddq
 argument_list|(
-literal|"+"
+literal|"-"
 argument_list|,
 name|device_get_nameunit
 argument_list|(
@@ -3350,7 +3350,6 @@ argument_list|,
 name|dev
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
