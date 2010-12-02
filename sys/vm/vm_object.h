@@ -206,9 +206,9 @@ block|}
 name|un_pager
 union|;
 name|struct
-name|uidinfo
+name|ucred
 modifier|*
-name|uip
+name|cred
 decl_stmt|;
 name|vm_ooffset_t
 name|charge
