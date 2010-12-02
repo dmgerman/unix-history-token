@@ -765,6 +765,14 @@ expr_stmt|;
 break|break;
 block|}
 break|break;
+case|case
+literal|0x1A308086
+case|:
+name|s
+operator|=
+literal|"Intel 82845 Host to PCI bridge"
+expr_stmt|;
+break|break;
 comment|/* AMD -- vendor 0x1022 */
 case|case
 literal|0x30001022
@@ -1050,6 +1058,12 @@ case|:
 comment|/* FALLTHROUGH */
 case|case
 literal|0x01011166
+case|:
+case|case
+literal|0x01101166
+case|:
+case|case
+literal|0x02251166
 case|:
 name|s
 operator|=

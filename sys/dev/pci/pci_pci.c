@@ -3102,7 +3102,13 @@ case|case
 literal|0x010f1014
 case|:
 case|case
+literal|0x01101166
+case|:
+case|case
 literal|0x02011166
+case|:
+case|case
+literal|0x02251166
 case|:
 case|case
 literal|0x03021014
