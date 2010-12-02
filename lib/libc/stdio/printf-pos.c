@@ -1077,10 +1077,6 @@ name|int
 name|flags
 decl_stmt|;
 comment|/* flags as above */
-name|int
-name|width
-decl_stmt|;
-comment|/* width from format (%8d), or 0 */
 name|struct
 name|typetable
 name|types
@@ -1143,10 +1139,6 @@ operator|++
 expr_stmt|;
 comment|/* skip over '%' */
 name|flags
-operator|=
-literal|0
-expr_stmt|;
-name|width
 operator|=
 literal|0
 expr_stmt|;
@@ -1348,10 +1340,6 @@ goto|goto
 name|rflag
 goto|;
 block|}
-name|width
-operator|=
-name|n
-expr_stmt|;
 goto|goto
 name|reswitch
 goto|;
@@ -1942,10 +1930,6 @@ name|int
 name|flags
 decl_stmt|;
 comment|/* flags as above */
-name|int
-name|width
-decl_stmt|;
-comment|/* width from format (%8d), or 0 */
 name|struct
 name|typetable
 name|types
@@ -2008,10 +1992,6 @@ operator|++
 expr_stmt|;
 comment|/* skip over '%' */
 name|flags
-operator|=
-literal|0
-expr_stmt|;
-name|width
 operator|=
 literal|0
 expr_stmt|;
@@ -2213,10 +2193,6 @@ goto|goto
 name|rflag
 goto|;
 block|}
-name|width
-operator|=
-name|n
-expr_stmt|;
 goto|goto
 name|reswitch
 goto|;
