@@ -2909,6 +2909,15 @@ name|FXP_FLAG_WOLCAP
 expr_stmt|;
 block|}
 comment|/* Receiver lock-up workaround detection. */
+if|if
+condition|(
+name|sc
+operator|->
+name|revision
+operator|<
+name|FXP_REV_82558_A4
+condition|)
+block|{
 name|fxp_read_eeprom
 argument_list|(
 name|sc
@@ -2945,6 +2954,7 @@ argument_list|,
 literal|"Enabling Rx lock-up workaround\n"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* 	 * Determine whether we must use the 503 serial interface. 	 */
 name|fxp_read_eeprom
