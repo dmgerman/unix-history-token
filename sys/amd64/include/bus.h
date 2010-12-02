@@ -30,6 +30,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/_bus.h>
 end_include
 
@@ -716,6 +728,19 @@ name|size_t
 name|count
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|count
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|tag
@@ -799,6 +824,19 @@ name|size_t
 name|count
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|count
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|tag
@@ -882,6 +920,19 @@ name|size_t
 name|count
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|count
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|tag
@@ -1067,6 +1118,19 @@ name|size_t
 name|count
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|count
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|tag
@@ -1207,6 +1271,19 @@ name|size_t
 name|count
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|count
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|tag
@@ -1347,6 +1424,19 @@ name|size_t
 name|count
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|count
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|tag
@@ -1837,6 +1927,19 @@ name|size_t
 name|count
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|count
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|tag
@@ -1923,6 +2026,19 @@ name|size_t
 name|count
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|count
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|tag
@@ -2009,6 +2125,19 @@ name|size_t
 name|count
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|count
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|tag
@@ -2212,6 +2341,19 @@ name|size_t
 name|count
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|count
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|tag
@@ -2353,6 +2495,19 @@ name|size_t
 name|count
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|count
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|tag
@@ -2494,6 +2649,19 @@ name|size_t
 name|count
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|count
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|tag
@@ -3414,6 +3582,19 @@ name|bsh2
 operator|+
 name|off2
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|count
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|tag
@@ -3647,6 +3828,19 @@ name|bsh2
 operator|+
 name|off2
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|count
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|tag
@@ -3896,6 +4090,19 @@ name|bsh2
 operator|+
 name|off2
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|count
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|tag

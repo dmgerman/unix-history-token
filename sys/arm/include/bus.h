@@ -26,6 +26,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/_bus.h>
 end_include
 
@@ -1766,7 +1778,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|__bs_nonsingle(rm,1,(t),(h),(o),(a),(c))
+value|KASSERT(c != 0, ("bus_space_read_multi_1: count == 0"));	\ 	__bs_nonsingle(rm,1,(t),(h),(o),(a),(c))
 end_define
 
 begin_define
@@ -1785,7 +1797,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|__bs_nonsingle(rm,2,(t),(h),(o),(a),(c))
+value|KASSERT(c != 0, ("bus_space_read_multi_2: count == 0"));	\ 	__bs_nonsingle(rm,2,(t),(h),(o),(a),(c))
 end_define
 
 begin_define
@@ -1804,7 +1816,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|__bs_nonsingle(rm,4,(t),(h),(o),(a),(c))
+value|KASSERT(c != 0, ("bus_space_read_multi_4: count == 0"));	\ 	__bs_nonsingle(rm,4,(t),(h),(o),(a),(c))
 end_define
 
 begin_define
@@ -1823,7 +1835,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|__bs_nonsingle(rm,8,(t),(h),(o),(a),(c))
+value|KASSERT(c != 0, ("bus_space_read_multi_8: count == 0"));	\ 	__bs_nonsingle(rm,8,(t),(h),(o),(a),(c))
 end_define
 
 begin_define
@@ -1842,7 +1854,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|__bs_nonsingle_s(rm,1,(t),(h),(o),(a),(c))
+value|KASSERT(c != 0, ("bus_space_read_multi_stream_1: count == 0"));	\ 	__bs_nonsingle_s(rm,1,(t),(h),(o),(a),(c))
 end_define
 
 begin_define
@@ -1861,7 +1873,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|__bs_nonsingle_s(rm,2,(t),(h),(o),(a),(c))
+value|KASSERT(c != 0, ("bus_space_read_multi_stream_2: count == 0"));	\ 	__bs_nonsingle_s(rm,2,(t),(h),(o),(a),(c))
 end_define
 
 begin_define
@@ -1880,7 +1892,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|__bs_nonsingle_s(rm,4,(t),(h),(o),(a),(c))
+value|KASSERT(c != 0, ("bus_space_read_multi_stream_4: count == 0"));	\ 	__bs_nonsingle_s(rm,4,(t),(h),(o),(a),(c))
 end_define
 
 begin_define
@@ -1899,7 +1911,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|__bs_nonsingle_s(rm,8,(t),(h),(o),(a),(c))
+value|KASSERT(c != 0, ("bus_space_read_multi_stream_8: count == 0"));	\ 	__bs_nonsingle_s(rm,8,(t),(h),(o),(a),(c))
 end_define
 
 begin_comment
@@ -1922,7 +1934,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|__bs_nonsingle(rr,1,(t),(h),(o),(a),(c))
+value|KASSERT(c != 0, ("bus_space_read_region_1: count == 0"));	\ 	__bs_nonsingle(rr,1,(t),(h),(o),(a),(c))
 end_define
 
 begin_define
@@ -1941,7 +1953,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|__bs_nonsingle(rr,2,(t),(h),(o),(a),(c))
+value|KASSERT(c != 0, ("bus_space_read_region_2: count == 0"));	\ 	__bs_nonsingle(rr,2,(t),(h),(o),(a),(c))
 end_define
 
 begin_define
@@ -1960,7 +1972,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|__bs_nonsingle(rr,4,(t),(h),(o),(a),(c))
+value|KASSERT(c != 0, ("bus_space_read_region_4: count == 0"));	\ 	__bs_nonsingle(rr,4,(t),(h),(o),(a),(c))
 end_define
 
 begin_define
@@ -1979,7 +1991,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|__bs_nonsingle(rr,8,(t),(h),(o),(a),(c))
+value|KASSERT(c != 0, ("bus_space_read_region_8: count == 0"));	\ 	__bs_nonsingle(rr,8,(t),(h),(o),(a),(c))
 end_define
 
 begin_define
@@ -1998,7 +2010,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|__bs_nonsingle_s(rr,1,(t),(h),(o),(a),(c))
+value|KASSERT(c != 0, ("bus_space_read_region_stream_1: count == 0"));\ 	__bs_nonsingle_s(rr,1,(t),(h),(o),(a),(c))
 end_define
 
 begin_define
@@ -2017,7 +2029,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|__bs_nonsingle_s(rr,2,(t),(h),(o),(a),(c))
+value|KASSERT(c != 0, ("bus_space_read_region_stream_2: count == 0"));\ 	__bs_nonsingle_s(rr,2,(t),(h),(o),(a),(c))
 end_define
 
 begin_define
@@ -2036,7 +2048,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|__bs_nonsingle_s(rr,4,(t),(h),(o),(a),(c))
+value|KASSERT(c != 0, ("bus_space_read_region_stream_4: count == 0"));\ 	__bs_nonsingle_s(rr,4,(t),(h),(o),(a),(c))
 end_define
 
 begin_define
@@ -2055,7 +2067,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|__bs_nonsingle_s(rr,8,(t),(h),(o),(a),(c))
+value|KASSERT(c != 0, ("bus_space_read_region_stream_8 count == 0"));	\ 	__bs_nonsingle_s(rr,8,(t),(h),(o),(a),(c))
 end_define
 
 begin_comment
@@ -2210,7 +2222,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|__bs_nonsingle(wm,1,(t),(h),(o),(a),(c))
+value|KASSERT(c != 0, ("bus_space_write_multi_1: count == 0"));	\ 	__bs_nonsingle(wm,1,(t),(h),(o),(a),(c))
 end_define
 
 begin_define
@@ -2229,7 +2241,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|__bs_nonsingle(wm,2,(t),(h),(o),(a),(c))
+value|KASSERT(c != 0, ("bus_space_write_multi_2: count == 0"));	\ 	__bs_nonsingle(wm,2,(t),(h),(o),(a),(c))
 end_define
 
 begin_define
@@ -2248,7 +2260,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|__bs_nonsingle(wm,4,(t),(h),(o),(a),(c))
+value|KASSERT(c != 0, ("bus_space_write_multi_4: count == 0"));	\ 	__bs_nonsingle(wm,4,(t),(h),(o),(a),(c))
 end_define
 
 begin_define
@@ -2267,7 +2279,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|__bs_nonsingle(wm,8,(t),(h),(o),(a),(c))
+value|KASSERT(c != 0, ("bus_space_write_multi_8: count == 0"));	\ 	__bs_nonsingle(wm,8,(t),(h),(o),(a),(c))
 end_define
 
 begin_define
@@ -2286,7 +2298,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|__bs_nonsingle_s(wm,1,(t),(h),(o),(a),(c))
+value|KASSERT(c != 0, ("bus_space_write_multi_stream_1: count == 0"));\ 	__bs_nonsingle_s(wm,1,(t),(h),(o),(a),(c))
 end_define
 
 begin_define
@@ -2305,7 +2317,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|__bs_nonsingle_s(wm,2,(t),(h),(o),(a),(c))
+value|KASSERT(c != 0, ("bus_space_write_multi_stream_2: count == 0"));\ 	__bs_nonsingle_s(wm,2,(t),(h),(o),(a),(c))
 end_define
 
 begin_define
@@ -2324,7 +2336,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|__bs_nonsingle_s(wm,4,(t),(h),(o),(a),(c))
+value|KASSERT(c != 0, ("bus_space_write_multi_stream_4: count == 0"));\ 	__bs_nonsingle_s(wm,4,(t),(h),(o),(a),(c))
 end_define
 
 begin_define
@@ -2343,7 +2355,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|__bs_nonsingle_s(wm,8,(t),(h),(o),(a),(c))
+value|KASSERT(c != 0, ("bus_space_write_multi_stream_8: count == 0"));\ 	__bs_nonsingle_s(wm,8,(t),(h),(o),(a),(c))
 end_define
 
 begin_comment
@@ -2366,7 +2378,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|__bs_nonsingle(wr,1,(t),(h),(o),(a),(c))
+value|KASSERT(c != 0, ("bus_space_write_region_1: count == 0"));	\ 	__bs_nonsingle(wr,1,(t),(h),(o),(a),(c))
 end_define
 
 begin_define
@@ -2385,7 +2397,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|__bs_nonsingle(wr,2,(t),(h),(o),(a),(c))
+value|KASSERT(c != 0, ("bus_space_write_region_2: count == 0"));	\ 	__bs_nonsingle(wr,2,(t),(h),(o),(a),(c))
 end_define
 
 begin_define
@@ -2404,7 +2416,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|__bs_nonsingle(wr,4,(t),(h),(o),(a),(c))
+value|KASSERT(c != 0, ("bus_space_write_region_4: count == 0"));	\ 	__bs_nonsingle(wr,4,(t),(h),(o),(a),(c))
 end_define
 
 begin_define
@@ -2423,7 +2435,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|__bs_nonsingle(wr,8,(t),(h),(o),(a),(c))
+value|KASSERT(c != 0, ("bus_space_write_region_8: count == 0"));	\ 	__bs_nonsingle(wr,8,(t),(h),(o),(a),(c))
 end_define
 
 begin_define
@@ -2442,7 +2454,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|__bs_nonsingle_s(wr,1,(t),(h),(o),(a),(c))
+value|KASSERT(c != 0,							\ 	    ("bus_space_write_region_stream_1: count == 0"));		\ 	__bs_nonsingle_s(wr,1,(t),(h),(o),(a),(c))
 end_define
 
 begin_define
@@ -2461,7 +2473,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|__bs_nonsingle_s(wr,2,(t),(h),(o),(a),(c))
+value|KASSERT(c != 0,							\ 	    ("bus_space_write_region_stream_2: count == 0"));		\ 	__bs_nonsingle_s(wr,2,(t),(h),(o),(a),(c))
 end_define
 
 begin_define
@@ -2480,7 +2492,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|__bs_nonsingle_s(wr,4,(t),(h),(o),(a),(c))
+value|KASSERT(c != 0,							\ 	    ("bus_space_write_region_stream_4: count == 0"));		\ 	__bs_nonsingle_s(wr,4,(t),(h),(o),(a),(c))
 end_define
 
 begin_define
@@ -2499,7 +2511,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|__bs_nonsingle_s(wr,8,(t),(h),(o),(a),(c))
+value|KASSERT(c != 0,							\ 	    ("bus_space_write_region_stream_8: count == 0"));		\ 	__bs_nonsingle_s(wr,8,(t),(h),(o),(a),(c))
 end_define
 
 begin_comment
@@ -2522,7 +2534,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|__bs_set(sm,1,(t),(h),(o),(v),(c))
+value|KASSERT(c != 0, ("bus_space_set_multi_1: count == 0"));	\ 	__bs_set(sm,1,(t),(h),(o),(v),(c))
 end_define
 
 begin_define
@@ -2541,7 +2553,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|__bs_set(sm,2,(t),(h),(o),(v),(c))
+value|KASSERT(c != 0, ("bus_space_set_multi_2: count == 0"));	\ 	__bs_set(sm,2,(t),(h),(o),(v),(c))
 end_define
 
 begin_define
@@ -2560,7 +2572,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|__bs_set(sm,4,(t),(h),(o),(v),(c))
+value|KASSERT(c != 0, ("bus_space_set_multi_4: count == 0"));	\ 	__bs_set(sm,4,(t),(h),(o),(v),(c))
 end_define
 
 begin_define
@@ -2579,7 +2591,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|__bs_set(sm,8,(t),(h),(o),(v),(c))
+value|KASSERT(c != 0, ("bus_space_set_multi_8: count == 0"));	\ 	__bs_set(sm,8,(t),(h),(o),(v),(c))
 end_define
 
 begin_comment
@@ -2602,7 +2614,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|__bs_set(sr,1,(t),(h),(o),(v),(c))
+value|KASSERT(c != 0, ("bus_space_set_region_1: count == 0"));	\ 	__bs_set(sr,1,(t),(h),(o),(v),(c))
 end_define
 
 begin_define
@@ -2621,7 +2633,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|__bs_set(sr,2,(t),(h),(o),(v),(c))
+value|KASSERT(c != 0, ("bus_space_set_region_2: count == 0"));	\ 	__bs_set(sr,2,(t),(h),(o),(v),(c))
 end_define
 
 begin_define
@@ -2640,7 +2652,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|__bs_set(sr,4,(t),(h),(o),(v),(c))
+value|KASSERT(c != 0, ("bus_space_set_region_4: count == 0"));	\ 	__bs_set(sr,4,(t),(h),(o),(v),(c))
 end_define
 
 begin_define
@@ -2659,7 +2671,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|__bs_set(sr,8,(t),(h),(o),(v),(c))
+value|KASSERT(c != 0, ("bus_space_set_region_8: count == 0"));	\ 	__bs_set(sr,8,(t),(h),(o),(v),(c))
 end_define
 
 begin_comment
@@ -2684,7 +2696,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|__bs_copy(1, t, h1, o1, h2, o2, c)
+value|KASSERT(c != 0, ("bus_space_copy_region_1: count == 0"));	\ 	__bs_copy(1, t, h1, o1, h2, o2, c)
 end_define
 
 begin_define
@@ -2705,7 +2717,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|__bs_copy(2, t, h1, o1, h2, o2, c)
+value|KASSERT(c != 0, ("bus_space_copy_region_2: count == 0"));	\ 	__bs_copy(2, t, h1, o1, h2, o2, c)
 end_define
 
 begin_define
@@ -2726,7 +2738,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|__bs_copy(4, t, h1, o1, h2, o2, c)
+value|KASSERT(c != 0, ("bus_space_copy_region_4: count == 0"));	\ 	__bs_copy(4, t, h1, o1, h2, o2, c)
 end_define
 
 begin_define
@@ -2747,7 +2759,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|__bs_copy(8, t, h1, o1, h2, o2, c)
+value|KASSERT(c != 0, ("bus_space_copy_region_8: count == 0"));	\ 	__bs_copy(8, t, h1, o1, h2, o2, c)
 end_define
 
 begin_comment

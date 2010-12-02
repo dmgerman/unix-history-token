@@ -19,6 +19,18 @@ directive|define
 name|_MACHINE_BUS_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -828,6 +840,19 @@ name|size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|c
@@ -874,6 +899,19 @@ name|size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|c
@@ -920,6 +958,19 @@ name|size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|c
@@ -966,6 +1017,19 @@ name|size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|c
@@ -1229,6 +1293,19 @@ name|size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|c
@@ -1276,6 +1353,19 @@ name|size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|c
@@ -1323,6 +1413,19 @@ name|size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|c
@@ -1370,6 +1473,19 @@ name|size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|c
@@ -1415,6 +1531,19 @@ name|size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|c
@@ -1458,6 +1587,19 @@ name|size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|c
@@ -1501,6 +1643,19 @@ name|size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|c
@@ -1544,6 +1699,19 @@ name|size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|c
@@ -1588,6 +1756,19 @@ name|bus_size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -1640,6 +1821,19 @@ name|bus_size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -1693,6 +1887,19 @@ name|bus_size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -1746,6 +1953,19 @@ name|bus_size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -1800,6 +2020,19 @@ name|bus_size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -1853,6 +2086,19 @@ name|bus_size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -1907,6 +2153,19 @@ name|bus_size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -1961,6 +2220,19 @@ name|bus_size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -2014,6 +2286,19 @@ name|bus_size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -2062,6 +2347,19 @@ name|bus_size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -2111,6 +2409,19 @@ name|bus_size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -2160,6 +2471,19 @@ name|bus_size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -2211,6 +2535,19 @@ name|bus_size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -2271,6 +2608,19 @@ name|bus_size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -2333,6 +2683,19 @@ name|bus_size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -2395,6 +2758,19 @@ name|bus_size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -2663,6 +3039,19 @@ name|size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|c
@@ -2709,6 +3098,19 @@ name|size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|c
@@ -2755,6 +3157,19 @@ name|size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|c
@@ -2801,6 +3216,19 @@ name|size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|c
@@ -3064,6 +3492,19 @@ name|size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|c
@@ -3111,6 +3552,19 @@ name|size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|c
@@ -3158,6 +3612,19 @@ name|size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|c
@@ -3205,6 +3672,19 @@ name|size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|c
@@ -3250,6 +3730,19 @@ name|size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|c
@@ -3293,6 +3786,19 @@ name|size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|c
@@ -3336,6 +3842,19 @@ name|size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|c
@@ -3379,6 +3898,19 @@ name|size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|c
@@ -3423,6 +3955,19 @@ name|bus_size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -3475,6 +4020,19 @@ name|bus_size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -3528,6 +4086,19 @@ name|bus_size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -3581,6 +4152,19 @@ name|bus_size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -3635,6 +4219,19 @@ name|bus_size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -3688,6 +4285,19 @@ name|bus_size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -3742,6 +4352,19 @@ name|bus_size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -3796,6 +4419,19 @@ name|bus_size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -3849,6 +4485,19 @@ name|bus_size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -3897,6 +4546,19 @@ name|bus_size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -3946,6 +4608,19 @@ name|bus_size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -3995,6 +4670,19 @@ name|bus_size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -4046,6 +4734,19 @@ name|bus_size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -4106,6 +4807,19 @@ name|bus_size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -4168,6 +4882,19 @@ name|bus_size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -4230,6 +4957,19 @@ name|bus_size_t
 name|c
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|c
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"%s: count == 0"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
