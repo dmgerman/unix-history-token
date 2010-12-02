@@ -2476,7 +2476,7 @@ block|,
 block|{
 literal|"2 COM1"
 block|,
-literal|"Serial mouse on COM1 (/dev/cuad0)"
+literal|"Serial mouse on COM1 (/dev/cuau0)"
 block|,
 name|dmenuVarCheck
 block|,
@@ -2485,13 +2485,13 @@ block|,
 name|NULL
 block|,
 name|VAR_MOUSED_PORT
-literal|"=/dev/cuad0"
+literal|"=/dev/cuau0"
 block|}
 block|,
 block|{
 literal|"3 COM2"
 block|,
-literal|"Serial mouse on COM2 (/dev/cuad1)"
+literal|"Serial mouse on COM2 (/dev/cuau1)"
 block|,
 name|dmenuVarCheck
 block|,
@@ -2500,7 +2500,7 @@ block|,
 name|NULL
 block|,
 name|VAR_MOUSED_PORT
-literal|"=/dev/cuad1"
+literal|"=/dev/cuau1"
 block|}
 block|,
 block|{
@@ -2547,7 +2547,7 @@ block|,
 block|{
 literal|"2 COM1"
 block|,
-literal|"Serial mouse on COM1 (/dev/cuad0)"
+literal|"Serial mouse on COM1 (/dev/cuau0)"
 block|,
 name|dmenuVarCheck
 block|,
@@ -2556,13 +2556,13 @@ block|,
 name|NULL
 block|,
 name|VAR_MOUSED_PORT
-literal|"=/dev/cuad0"
+literal|"=/dev/cuau0"
 block|}
 block|,
 block|{
 literal|"3 COM2"
 block|,
-literal|"Serial mouse on COM2 (/dev/cuad1)"
+literal|"Serial mouse on COM2 (/dev/cuau1)"
 block|,
 name|dmenuVarCheck
 block|,
@@ -2571,13 +2571,13 @@ block|,
 name|NULL
 block|,
 name|VAR_MOUSED_PORT
-literal|"=/dev/cuad1"
+literal|"=/dev/cuau1"
 block|}
 block|,
 block|{
 literal|"4 COM3"
 block|,
-literal|"Serial mouse on COM3 (/dev/cuad2)"
+literal|"Serial mouse on COM3 (/dev/cuau2)"
 block|,
 name|dmenuVarCheck
 block|,
@@ -2586,13 +2586,13 @@ block|,
 name|NULL
 block|,
 name|VAR_MOUSED_PORT
-literal|"=/dev/cuad2"
+literal|"=/dev/cuau2"
 block|}
 block|,
 block|{
 literal|"5 COM4"
 block|,
-literal|"Serial mouse on COM4 (/dev/cuad3)"
+literal|"Serial mouse on COM4 (/dev/cuau3)"
 block|,
 name|dmenuVarCheck
 block|,
@@ -2601,7 +2601,7 @@ block|,
 name|NULL
 block|,
 name|VAR_MOUSED_PORT
-literal|"=/dev/cuad3"
+literal|"=/dev/cuau3"
 block|}
 block|,
 block|{

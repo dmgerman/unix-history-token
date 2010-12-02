@@ -394,7 +394,7 @@ argument_list|)
 block|,
 name|SERIAL
 argument_list|(
-literal|"cuad%d"
+literal|"cuau%d"
 argument_list|,
 literal|"%s on device %s (COM%d)"
 argument_list|,
