@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***********************license start***************  *  Copyright (c) 2003-2009 Cavium Networks (support@cavium.com). All rights  *  reserved.  *  *  *  Redistribution and use in source and binary forms, with or without  *  modification, are permitted provided that the following conditions are  *  met:  *  *      * Redistributions of source code must retain the above copyright  *        notice, this list of conditions and the following disclaimer.  *  *      * Redistributions in binary form must reproduce the above  *        copyright notice, this list of conditions and the following  *        disclaimer in the documentation and/or other materials provided  *        with the distribution.  *  *      * Neither the name of Cavium Networks nor the names of  *        its contributors may be used to endorse or promote products  *        derived from this software without specific prior written  *        permission.  *  *  TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  *  AND WITH ALL FAULTS AND CAVIUM NETWORKS MAKES NO PROMISES, REPRESENTATIONS  *  OR WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH  *  RESPECT TO THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY  *  REPRESENTATION OR DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT  *  DEFECTS, AND CAVIUM SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES  *  OF TITLE, MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR  *  PURPOSE, LACK OF VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET  *  POSSESSION OR CORRESPONDENCE TO DESCRIPTION.  THE ENTIRE RISK ARISING OUT  *  OF USE OR PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  *  *  *  For any questions regarding licensing please contact marketing@caviumnetworks.com  *  ***********************license end**************************************/
+comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Networks (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Networks nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM  NETWORKS MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
 end_comment
 
 begin_comment
@@ -73,7 +73,7 @@ literal|3LL
 block|}
 name|cvmx_mips_xkseg_space_t
 typedef|;
-comment|// decodes<14:13> of a kseg3 window address
+comment|/* decodes<14:13> of a kseg3 window address */
 typedef|typedef
 enum|enum
 block|{
@@ -85,7 +85,7 @@ name|CVMX_ADD_WIN_DMA
 init|=
 literal|1L
 block|,
-comment|// see cvmx_add_win_dma_dec_t for further decode
+comment|/* see cvmx_add_win_dma_dec_t for further decode */
 name|CVMX_ADD_WIN_UNUSED
 init|=
 literal|2L
@@ -96,7 +96,7 @@ literal|3L
 block|}
 name|cvmx_add_win_dec_t
 typedef|;
-comment|// decode within DMA space
+comment|/* decode within DMA space */
 typedef|typedef
 enum|enum
 block|{
@@ -104,31 +104,31 @@ name|CVMX_ADD_WIN_DMA_ADD
 init|=
 literal|0L
 block|,
-comment|// add store data to the write buffer entry, allocating it if necessary
+comment|/* add store data to the write buffer entry, allocating it if necessary */
 name|CVMX_ADD_WIN_DMA_SENDMEM
 init|=
 literal|1L
 block|,
-comment|// send out the write buffer entry to DRAM
-comment|// store data must be normal DRAM memory space address in this case
+comment|/* send out the write buffer entry to DRAM */
+comment|/* store data must be normal DRAM memory space address in this case */
 name|CVMX_ADD_WIN_DMA_SENDDMA
 init|=
 literal|2L
 block|,
-comment|// send out the write buffer entry as an IOBDMA command
-comment|// see CVMX_ADD_WIN_DMA_SEND_DEC for data contents
+comment|/* send out the write buffer entry as an IOBDMA command */
+comment|/* see CVMX_ADD_WIN_DMA_SEND_DEC for data contents */
 name|CVMX_ADD_WIN_DMA_SENDIO
 init|=
 literal|3L
 block|,
-comment|// send out the write buffer entry as an IO write
-comment|// store data must be normal IO space address in this case
+comment|/* send out the write buffer entry as an IO write */
+comment|/* store data must be normal IO space address in this case */
 name|CVMX_ADD_WIN_DMA_SENDSINGLE
 init|=
 literal|4L
 block|,
-comment|// send out a single-tick command on the NCB bus
-comment|// no write buffer data needed/used
+comment|/* send out a single-tick command on the NCB bus */
+comment|/* no write buffer data needed/used */
 block|}
 name|cvmx_add_win_dma_dec_t
 typedef|;
@@ -154,7 +154,7 @@ decl_stmt|;
 block|}
 name|sva
 struct|;
-comment|// mapped or unmapped virtual address
+comment|/* mapped or unmapped virtual address */
 struct|struct
 block|{
 name|uint64_t
@@ -170,7 +170,7 @@ decl_stmt|;
 block|}
 name|suseg
 struct|;
-comment|// mapped USEG virtual addresses (typically)
+comment|/* mapped USEG virtual addresses (typically) */
 struct|struct
 block|{
 name|uint64_t
@@ -191,7 +191,7 @@ decl_stmt|;
 block|}
 name|sxkseg
 struct|;
-comment|// mapped or unmapped virtual address
+comment|/* mapped or unmapped virtual address */
 struct|struct
 block|{
 name|cvmx_mips_space_t
@@ -199,13 +199,13 @@ name|R
 range|:
 literal|2
 decl_stmt|;
-comment|// CVMX_MIPS_SPACE_XKPHYS in this case
+comment|/* CVMX_MIPS_SPACE_XKPHYS in this case */
 name|uint64_t
 name|cca
 range|:
 literal|3
 decl_stmt|;
-comment|// ignored by octeon
+comment|/* ignored by octeon */
 name|uint64_t
 name|mbz
 range|:
@@ -216,11 +216,11 @@ name|pa
 range|:
 literal|49
 decl_stmt|;
-comment|// physical address
+comment|/* physical address */
 block|}
 name|sxkphys
 struct|;
-comment|// physical address accessed through xkphys unmapped virtual address
+comment|/* physical address accessed through xkphys unmapped virtual address */
 struct|struct
 block|{
 name|uint64_t
@@ -233,19 +233,19 @@ name|is_io
 range|:
 literal|1
 decl_stmt|;
-comment|// if set, the address is uncached and resides on MCB bus
+comment|/* if set, the address is uncached and resides on MCB bus */
 name|uint64_t
 name|did
 range|:
 literal|8
 decl_stmt|;
-comment|// the hardware ignores this field when is_io==0, else device ID
+comment|/* the hardware ignores this field when is_io==0, else device ID */
 name|uint64_t
 name|unaddr
 range|:
 literal|4
 decl_stmt|;
-comment|// the hardware ignores<39:36> in Octeon I
+comment|/* the hardware ignores<39:36> in Octeon I */
 name|uint64_t
 name|offset
 range|:
@@ -254,7 +254,7 @@ decl_stmt|;
 block|}
 name|sphys
 struct|;
-comment|// physical address
+comment|/* physical address */
 struct|struct
 block|{
 name|uint64_t
@@ -262,13 +262,13 @@ name|zeroes
 range|:
 literal|24
 decl_stmt|;
-comment|// techically,<47:40> are dont-cares
+comment|/* techically,<47:40> are dont-cares */
 name|uint64_t
 name|unaddr
 range|:
 literal|4
 decl_stmt|;
-comment|// the hardware ignores<39:36> in Octeon I
+comment|/* the hardware ignores<39:36> in Octeon I */
 name|uint64_t
 name|offset
 range|:
@@ -277,7 +277,7 @@ decl_stmt|;
 block|}
 name|smem
 struct|;
-comment|// physical mem address
+comment|/* physical mem address */
 struct|struct
 block|{
 name|uint64_t
@@ -295,19 +295,19 @@ name|is_io
 range|:
 literal|1
 decl_stmt|;
-comment|// 1 in this case
+comment|/* 1 in this case */
 name|uint64_t
 name|did
 range|:
 literal|8
 decl_stmt|;
-comment|// the hardware ignores this field when is_io==0, else device ID
+comment|/* the hardware ignores this field when is_io==0, else device ID */
 name|uint64_t
 name|unaddr
 range|:
 literal|4
 decl_stmt|;
-comment|// the hardware ignores<39:36> in Octeon I
+comment|/* the hardware ignores<39:36> in Octeon I */
 name|uint64_t
 name|offset
 range|:
@@ -316,7 +316,7 @@ decl_stmt|;
 block|}
 name|sio
 struct|;
-comment|// physical IO address
+comment|/* physical IO address */
 struct|struct
 block|{
 name|uint64_t
@@ -329,7 +329,7 @@ name|csrdec
 range|:
 literal|2
 decl_stmt|;
-comment|// CVMX_ADD_WIN_SCR (0) in this case
+comment|/* CVMX_ADD_WIN_SCR (0) in this case */
 name|uint64_t
 name|addr
 range|:
@@ -338,8 +338,8 @@ decl_stmt|;
 block|}
 name|sscr
 struct|;
-comment|// scratchpad virtual address - accessed through a window at the end of kseg3
-comment|// there should only be stores to IOBDMA space, no loads
+comment|/* scratchpad virtual address - accessed through a window at the end of kseg3 */
+comment|/* there should only be stores to IOBDMA space, no loads */
 struct|struct
 block|{
 name|uint64_t
@@ -352,7 +352,7 @@ name|csrdec
 range|:
 literal|2
 decl_stmt|;
-comment|// CVMX_ADD_WIN_DMA (1) in this case
+comment|/* CVMX_ADD_WIN_DMA (1) in this case */
 name|uint64_t
 name|unused2
 range|:
@@ -371,7 +371,7 @@ decl_stmt|;
 block|}
 name|sdma
 struct|;
-comment|// IOBDMA virtual address - accessed through a window at the end of kseg3
+comment|/* IOBDMA virtual address - accessed through a window at the end of kseg3 */
 struct|struct
 block|{
 name|uint64_t
@@ -454,12 +454,12 @@ parameter_list|,
 name|subdid
 parameter_list|)
 value|(((did)<< 3) | (subdid))
-comment|// from include/ncb_rsl_id.v
+comment|/* from include/ncb_rsl_id.v */
 define|#
 directive|define
 name|CVMX_OCT_DID_MIS
 value|0ULL
-comment|// misc stuff
+comment|/* misc stuff */
 define|#
 directive|define
 name|CVMX_OCT_DID_GMX0
@@ -508,7 +508,7 @@ define|#
 directive|define
 name|CVMX_OCT_DID_TAG
 value|12ULL
-comment|// the rest are not on the IO bus
+comment|/* the rest are not on the IO bus */
 define|#
 directive|define
 name|CVMX_OCT_DID_L2C

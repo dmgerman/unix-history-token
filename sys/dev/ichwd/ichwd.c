@@ -1033,14 +1033,14 @@ argument_list|,
 name|TCO_TIMEOUT
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX The datasheet says that TCO_SECOND_TO_STS must be cleared 	 * before TCO_BOOT_STS, not the other way around. 	 */
+comment|/*  	 * According to Intel's docs, clearing SECOND_TO_STS and BOOT_STS must  	 * be done in two separate operations. 	 */
 name|ichwd_write_tco_2
 argument_list|(
 name|sc
 argument_list|,
 name|TCO2_STS
 argument_list|,
-name|TCO_BOOT_STS
+name|TCO_SECOND_TO_STS
 argument_list|)
 expr_stmt|;
 name|ichwd_write_tco_2
@@ -1049,7 +1049,7 @@ name|sc
 argument_list|,
 name|TCO2_STS
 argument_list|,
-name|TCO_SECOND_TO_STS
+name|TCO_BOOT_STS
 argument_list|)
 expr_stmt|;
 block|}
@@ -2328,7 +2328,29 @@ operator|->
 name|ich_version
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX we should check the status registers (specifically, the 	 * TCO_SECOND_TO_STS bit in the TCO2_STS register) to see if we 	 * just came back from a watchdog-induced reset, and let the user 	 * know. 	 */
+comment|/* 	 * Determine if we are coming up after a watchdog-induced reset. 	 * This bit is cleared in ichwd_sts_reset(). 	 */
+if|if
+condition|(
+operator|(
+name|ichwd_read_tco_2
+argument_list|(
+name|sc
+argument_list|,
+name|TCO2_STS
+argument_list|)
+operator|&
+name|TCO_SECOND_TO_STS
+operator|)
+operator|!=
+literal|0
+condition|)
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"resuming after hardware watchdog timeout\n"
+argument_list|)
+expr_stmt|;
 comment|/* reset the watchdog status registers */
 name|ichwd_sts_reset
 argument_list|(

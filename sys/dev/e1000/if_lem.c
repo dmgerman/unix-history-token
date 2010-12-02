@@ -5443,12 +5443,6 @@ argument_list|,
 name|ETHERTYPE_VLAN
 argument_list|)
 expr_stmt|;
-comment|/* Use real VLAN Filter support */
-name|lem_setup_vlan_hw_support
-argument_list|(
-name|adapter
-argument_list|)
-expr_stmt|;
 comment|/* Set hardware offload abilities */
 name|ifp
 operator|->

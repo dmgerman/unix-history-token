@@ -1698,6 +1698,11 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 elseif|else
@@ -1739,6 +1744,11 @@ argument_list|,
 literal|"read error %s"
 argument_list|,
 name|xxboot
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return;

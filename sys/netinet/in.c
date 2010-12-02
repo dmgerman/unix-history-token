@@ -6267,7 +6267,7 @@ name|base
 operator|.
 name|la_expire
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 comment|/* mark expired */
 name|lle

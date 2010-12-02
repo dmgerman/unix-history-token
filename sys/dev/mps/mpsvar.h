@@ -184,6 +184,17 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * This needs to be at least 2 to support SMP passthrough.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPS_IOVEC_COUNT
+value|2
+end_define
+
 begin_struct
 struct|struct
 name|mps_command
@@ -205,6 +216,20 @@ name|cm_data
 decl_stmt|;
 name|u_int
 name|cm_length
+decl_stmt|;
+name|struct
+name|uio
+name|cm_uio
+decl_stmt|;
+name|struct
+name|iovec
+name|cm_iovec
+index|[
+name|MPS_IOVEC_COUNT
+index|]
+decl_stmt|;
+name|u_int
+name|cm_max_segs
 decl_stmt|;
 name|u_int
 name|cm_sglsize
@@ -271,6 +296,14 @@ define|#
 directive|define
 name|MPS_CM_FLAGS_ACTIVE
 value|(1<< 6)
+define|#
+directive|define
+name|MPS_CM_FLAGS_USE_UIO
+value|(1<< 7)
+define|#
+directive|define
+name|MPS_CM_FLAGS_SMP_PASS
+value|(1<< 8)
 name|u_int
 name|cm_state
 decl_stmt|;
@@ -908,6 +941,7 @@ name|cm_reply
 operator|!=
 name|NULL
 condition|)
+block|{
 name|mps_free_reply
 argument_list|(
 name|sc
@@ -917,6 +951,13 @@ operator|->
 name|cm_reply_data
 argument_list|)
 expr_stmt|;
+name|cm
+operator|->
+name|cm_reply
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 name|cm
 operator|->
 name|cm_flags
@@ -938,6 +979,12 @@ expr_stmt|;
 name|cm
 operator|->
 name|cm_targ
+operator|=
+literal|0
+expr_stmt|;
+name|cm
+operator|->
+name|cm_max_segs
 operator|=
 literal|0
 expr_stmt|;
@@ -1722,6 +1769,26 @@ parameter_list|,
 name|int
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|mpi_init_sge
+parameter_list|(
+name|struct
+name|mps_command
+modifier|*
+name|cm
+parameter_list|,
+name|void
+modifier|*
+name|req
+parameter_list|,
+name|void
+modifier|*
+name|sge
 parameter_list|)
 function_decl|;
 end_function_decl

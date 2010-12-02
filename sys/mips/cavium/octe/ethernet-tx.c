@@ -114,13 +114,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|pow_send_group
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/**  * Packet transmit  *  * @param m    Packet to send  * @param dev    Device info structure  * @return Always returns zero  */
 end_comment
@@ -479,6 +472,15 @@ name|segs
 operator|=
 literal|1
 expr_stmt|;
+name|pko_command
+operator|.
+name|s
+operator|.
+name|dontfree
+operator|=
+literal|1
+expr_stmt|;
+comment|/* Do not put this buffer into the FPA.  */
 name|work
 operator|=
 name|NULL
@@ -560,6 +562,15 @@ name|u64
 operator|=
 literal|0
 expr_stmt|;
+name|hw_buffer
+operator|.
+name|s
+operator|.
+name|i
+operator|=
+literal|1
+expr_stmt|;
+comment|/* Do not put this buffer into the FPA.  */
 name|hw_buffer
 operator|.
 name|s
@@ -660,6 +671,15 @@ name|gather
 operator|=
 literal|1
 expr_stmt|;
+name|pko_command
+operator|.
+name|s
+operator|.
+name|dontfree
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Put the WQE above back into the FPA.  */
 block|}
 comment|/* Finish building the PKO command */
 name|pko_command
@@ -671,28 +691,6 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* Don't pollute L2 with the outgoing packet */
-name|pko_command
-operator|.
-name|s
-operator|.
-name|dontfree
-operator|=
-literal|1
-expr_stmt|;
-name|pko_command
-operator|.
-name|s
-operator|.
-name|reg0
-operator|=
-name|priv
-operator|->
-name|fau
-operator|+
-name|qos
-operator|*
-literal|4
-expr_stmt|;
 name|pko_command
 operator|.
 name|s
@@ -769,6 +767,7 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
+comment|/* 	 * XXX 	 * Could use a different free queue (and different FAU address) per 	 * core instead of per QoS, to reduce contention here. 	 */
 name|IF_LOCK
 argument_list|(
 operator|&
@@ -991,24 +990,6 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|work
-operator|!=
-name|NULL
-condition|)
-name|cvmx_fpa_free
-argument_list|(
-name|work
-argument_list|,
-name|CVMX_FPA_WQE_POOL
-argument_list|,
-name|DONT_WRITEBACK
-argument_list|(
-literal|1
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* Free mbufs not in use by the hardware */
 if|if
 condition|(
@@ -1075,448 +1056,6 @@ argument_list|)
 expr_stmt|;
 return|return
 name|dropped
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/**  * Packet transmit to the POW  *  * @param m    Packet to send  * @param dev    Device info structure  * @return Always returns zero  */
-end_comment
-
-begin_function
-name|int
-name|cvm_oct_xmit_pow
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-name|m
-parameter_list|,
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-parameter_list|)
-block|{
-name|cvm_oct_private_t
-modifier|*
-name|priv
-init|=
-operator|(
-name|cvm_oct_private_t
-operator|*
-operator|)
-name|ifp
-operator|->
-name|if_softc
-decl_stmt|;
-name|char
-modifier|*
-name|packet_buffer
-decl_stmt|;
-name|char
-modifier|*
-name|copy_location
-decl_stmt|;
-comment|/* Get a work queue entry */
-name|cvmx_wqe_t
-modifier|*
-name|work
-init|=
-name|cvmx_fpa_alloc
-argument_list|(
-name|CVMX_FPA_WQE_POOL
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|__predict_false
-argument_list|(
-name|work
-operator|==
-name|NULL
-argument_list|)
-condition|)
-block|{
-name|DEBUGPRINT
-argument_list|(
-literal|"%s: Failed to allocate a work queue entry\n"
-argument_list|,
-name|if_name
-argument_list|(
-name|ifp
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|ifp
-operator|->
-name|if_oerrors
-operator|++
-expr_stmt|;
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-comment|/* Get a packet buffer */
-name|packet_buffer
-operator|=
-name|cvmx_fpa_alloc
-argument_list|(
-name|CVMX_FPA_PACKET_POOL
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|__predict_false
-argument_list|(
-name|packet_buffer
-operator|==
-name|NULL
-argument_list|)
-condition|)
-block|{
-name|DEBUGPRINT
-argument_list|(
-literal|"%s: Failed to allocate a packet buffer\n"
-argument_list|,
-name|if_name
-argument_list|(
-name|ifp
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|cvmx_fpa_free
-argument_list|(
-name|work
-argument_list|,
-name|CVMX_FPA_WQE_POOL
-argument_list|,
-name|DONT_WRITEBACK
-argument_list|(
-literal|1
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|ifp
-operator|->
-name|if_oerrors
-operator|++
-expr_stmt|;
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-comment|/* Calculate where we need to copy the data to. We need to leave 8 bytes 	   for a next pointer (unused). We also need to include any configure 	   skip. Then we need to align the IP packet src and dest into the same 	   64bit word. The below calculation may add a little extra, but that 	   doesn't hurt */
-name|copy_location
-operator|=
-name|packet_buffer
-operator|+
-sizeof|sizeof
-argument_list|(
-name|uint64_t
-argument_list|)
-expr_stmt|;
-name|copy_location
-operator|+=
-operator|(
-operator|(
-name|CVMX_HELPER_FIRST_MBUFF_SKIP
-operator|+
-literal|7
-operator|)
-operator|&
-literal|0xfff8
-operator|)
-operator|+
-literal|6
-expr_stmt|;
-comment|/* We have to copy the packet since whoever processes this packet 	   will free it to a hardware pool. We can't use the trick of 	   counting outstanding packets like in cvm_oct_xmit */
-name|m_copydata
-argument_list|(
-name|m
-argument_list|,
-literal|0
-argument_list|,
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|len
-argument_list|,
-name|copy_location
-argument_list|)
-expr_stmt|;
-comment|/* Fill in some of the work queue fields. We may need to add more 	   if the software at the other end needs them */
-if|#
-directive|if
-literal|0
-block|work->hw_chksum     = m->csum;
-endif|#
-directive|endif
-name|work
-operator|->
-name|len
-operator|=
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|len
-expr_stmt|;
-name|work
-operator|->
-name|ipprt
-operator|=
-name|priv
-operator|->
-name|port
-expr_stmt|;
-name|work
-operator|->
-name|qos
-operator|=
-name|priv
-operator|->
-name|port
-operator|&
-literal|0x7
-expr_stmt|;
-name|work
-operator|->
-name|grp
-operator|=
-name|pow_send_group
-expr_stmt|;
-name|work
-operator|->
-name|tag_type
-operator|=
-name|CVMX_HELPER_INPUT_TAG_TYPE
-expr_stmt|;
-name|work
-operator|->
-name|tag
-operator|=
-name|pow_send_group
-expr_stmt|;
-comment|/* FIXME */
-name|work
-operator|->
-name|word2
-operator|.
-name|u64
-operator|=
-literal|0
-expr_stmt|;
-comment|/* Default to zero. Sets of zero later are commented out */
-name|work
-operator|->
-name|word2
-operator|.
-name|s
-operator|.
-name|bufs
-operator|=
-literal|1
-expr_stmt|;
-name|work
-operator|->
-name|packet_ptr
-operator|.
-name|u64
-operator|=
-literal|0
-expr_stmt|;
-name|work
-operator|->
-name|packet_ptr
-operator|.
-name|s
-operator|.
-name|addr
-operator|=
-name|cvmx_ptr_to_phys
-argument_list|(
-name|copy_location
-argument_list|)
-expr_stmt|;
-name|work
-operator|->
-name|packet_ptr
-operator|.
-name|s
-operator|.
-name|pool
-operator|=
-name|CVMX_FPA_PACKET_POOL
-expr_stmt|;
-name|work
-operator|->
-name|packet_ptr
-operator|.
-name|s
-operator|.
-name|size
-operator|=
-name|CVMX_FPA_PACKET_POOL_SIZE
-expr_stmt|;
-name|work
-operator|->
-name|packet_ptr
-operator|.
-name|s
-operator|.
-name|back
-operator|=
-operator|(
-name|copy_location
-operator|-
-name|packet_buffer
-operator|)
-operator|>>
-literal|7
-expr_stmt|;
-name|panic
-argument_list|(
-literal|"%s: POW transmit not quite implemented yet."
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (m->protocol == htons(ETH_P_IP)) { 		work->word2.s.ip_offset     = 14;
-if|#
-directive|if
-literal|0
-block|work->word2.s.vlan_valid  = 0;
-comment|/* FIXME */
-block|work->word2.s.vlan_cfi    = 0;
-comment|/* FIXME */
-block|work->word2.s.vlan_id     = 0;
-comment|/* FIXME */
-block|work->word2.s.dec_ipcomp  = 0;
-comment|/* FIXME */
-endif|#
-directive|endif
-block|work->word2.s.tcp_or_udp    = (ip_hdr(m)->protocol == IP_PROTOCOL_TCP) || (ip_hdr(m)->protocol == IP_PROTOCOL_UDP);
-if|#
-directive|if
-literal|0
-block|work->word2.s.dec_ipsec   = 0;
-comment|/* FIXME */
-block|work->word2.s.is_v6       = 0;
-comment|/* We only support IPv4 right now */
-block|work->word2.s.software    = 0;
-comment|/* Hardware would set to zero */
-block|work->word2.s.L4_error    = 0;
-comment|/* No error, packet is internal */
-endif|#
-directive|endif
-block|work->word2.s.is_frag       = !((ip_hdr(m)->frag_off == 0) || (ip_hdr(m)->frag_off == 1<<14));
-if|#
-directive|if
-literal|0
-block|work->word2.s.IP_exc      = 0;
-comment|/* Assume Linux is sending a good packet */
-endif|#
-directive|endif
-block|work->word2.s.is_bcast      = (m->pkt_type == PACKET_BROADCAST); 		work->word2.s.is_mcast      = (m->pkt_type == PACKET_MULTICAST);
-if|#
-directive|if
-literal|0
-block|work->word2.s.not_IP      = 0;
-comment|/* This is an IP packet */
-block|work->word2.s.rcv_error   = 0;
-comment|/* No error, packet is internal */
-block|work->word2.s.err_code    = 0;
-comment|/* No error, packet is internal */
-endif|#
-directive|endif
-comment|/* When copying the data, include 4 bytes of the ethernet header to 		   align the same way hardware does */
-block|memcpy(work->packet_data, m->data + 10, sizeof(work->packet_data)); 	} else {
-if|#
-directive|if
-literal|0
-block|work->word2.snoip.vlan_valid  = 0;
-comment|/* FIXME */
-block|work->word2.snoip.vlan_cfi    = 0;
-comment|/* FIXME */
-block|work->word2.snoip.vlan_id     = 0;
-comment|/* FIXME */
-block|work->word2.snoip.software    = 0;
-comment|/* Hardware would set to zero */
-endif|#
-directive|endif
-block|work->word2.snoip.is_rarp       = m->protocol == htons(ETH_P_RARP); 		work->word2.snoip.is_arp        = m->protocol == htons(ETH_P_ARP); 		work->word2.snoip.is_bcast      = (m->pkt_type == PACKET_BROADCAST); 		work->word2.snoip.is_mcast      = (m->pkt_type == PACKET_MULTICAST); 		work->word2.snoip.not_IP        = 1;
-comment|/* IP was done up above */
-if|#
-directive|if
-literal|0
-block|work->word2.snoip.rcv_error   = 0;
-comment|/* No error, packet is internal */
-block|work->word2.snoip.err_code    = 0;
-comment|/* No error, packet is internal */
-endif|#
-directive|endif
-block|memcpy(work->packet_data, m->data, sizeof(work->packet_data)); 	}
-endif|#
-directive|endif
-comment|/* Submit the packet to the POW */
-name|cvmx_pow_work_submit
-argument_list|(
-name|work
-argument_list|,
-name|work
-operator|->
-name|tag
-argument_list|,
-name|work
-operator|->
-name|tag_type
-argument_list|,
-name|work
-operator|->
-name|qos
-argument_list|,
-name|work
-operator|->
-name|grp
-argument_list|)
-expr_stmt|;
-name|ifp
-operator|->
-name|if_opackets
-operator|++
-expr_stmt|;
-name|ifp
-operator|->
-name|if_obytes
-operator|+=
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|len
-expr_stmt|;
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
 return|;
 block|}
 end_function

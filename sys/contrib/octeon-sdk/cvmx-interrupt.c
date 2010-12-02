@@ -1,11 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***********************license start***************  *  Copyright (c) 2003-2008 Cavium Networks (support@cavium.com). All rights  *  reserved.  *  *  *  Redistribution and use in source and binary forms, with or without  *  modification, are permitted provided that the following conditions are  *  met:  *  *      * Redistributions of source code must retain the above copyright  *        notice, this list of conditions and the following disclaimer.  *  *      * Redistributions in binary form must reproduce the above  *        copyright notice, this list of conditions and the following  *        disclaimer in the documentation and/or other materials provided  *        with the distribution.  *  *      * Neither the name of Cavium Networks nor the names of  *        its contributors may be used to endorse or promote products  *        derived from this software without specific prior written  *        permission.  *  *  TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  *  AND WITH ALL FAULTS AND CAVIUM NETWORKS MAKES NO PROMISES, REPRESENTATIONS  *  OR WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH  *  RESPECT TO THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY  *  REPRESENTATION OR DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT  *  DEFECTS, AND CAVIUM SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES  *  OF TITLE, MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR  *  PURPOSE, LACK OF VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET  *  POSSESSION OR CORRESPONDENCE TO DESCRIPTION.  THE ENTIRE RISK ARISING OUT  *  OF USE OR PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  *  *  *  For any questions regarding licensing please contact marketing@caviumnetworks.com  *  ***********************license end**************************************/
+comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Networks (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Networks nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM  NETWORKS MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
 end_comment
 
 begin_comment
-comment|/**  * @file  *  * Interface to the Mips interrupts.  *  *<hr>$Revision: 42264 $<hr>  */
+comment|/**  * @file  *  * Interface to the Mips interrupts.  *  *<hr>$Revision: 52004 $<hr>  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__U_BOOT__
+end_ifndef
 
 begin_if
 if|#
@@ -29,6 +35,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __U_BOOT__ */
+end_comment
 
 begin_include
 include|#
@@ -90,10 +105,32 @@ directive|include
 file|"cvmx-app-init.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"cvmx-error.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../../bootloader/u-boot/include/octeon_mem_map.h"
+end_include
+
 begin_function_decl
 name|EXTERN_ASM
 name|void
 name|cvmx_interrupt_stage1
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|EXTERN_ASM
+name|void
+name|cvmx_debug_handler_stage1
 parameter_list|(
 name|void
 parameter_list|)
@@ -109,6 +146,14 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|int
+name|cvmx_interrupt_in_isr
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/**  * Internal status the interrupt registration  */
@@ -145,6 +190,12 @@ begin_comment
 comment|/**  * Internal state the interrupt registration  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__U_BOOT__
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|CVMX_SHARED
@@ -161,45 +212,14 @@ name|cvmx_interrupt_default_lock
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|COP0_CAUSE
-value|"$13,0"
-end_define
+begin_endif
+endif|#
+directive|endif
+end_endif
 
-begin_define
-define|#
-directive|define
-name|COP0_STATUS
-value|"$12,0"
-end_define
-
-begin_define
-define|#
-directive|define
-name|COP0_BADVADDR
-value|"$8,0"
-end_define
-
-begin_define
-define|#
-directive|define
-name|COP0_EPC
-value|"$14,0"
-end_define
-
-begin_define
-define|#
-directive|define
-name|READ_COP0
-parameter_list|(
-name|dest
-parameter_list|,
-name|R
-parameter_list|)
-value|asm volatile ("dmfc0 %[rt]," R : [rt] "=r" (dest))
-end_define
+begin_comment
+comment|/* __U_BOOT__ */
+end_comment
 
 begin_define
 define|#
@@ -208,27 +228,32 @@ name|ULL
 value|unsigned long long
 end_define
 
-begin_comment
-comment|/**  * @INTERNAL  * Dump all useful registers to the console  *  * @param registers CPU register to dump  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|__cvmx_interrupt_dump_registers
+begin_define
+define|#
+directive|define
+name|HI32
 parameter_list|(
-name|uint64_t
-name|registers
-index|[
-literal|32
-index|]
+name|data64
 parameter_list|)
-block|{
+value|((uint32_t)(data64>> 32))
+end_define
+
+begin_define
+define|#
+directive|define
+name|LO32
+parameter_list|(
+name|data64
+parameter_list|)
+value|((uint32_t)(data64& 0xFFFFFFFF))
+end_define
+
+begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-modifier|*
-name|name
+name|reg_names
+index|[]
 index|[
 literal|32
 index|]
@@ -299,7 +324,367 @@ block|,
 literal|"ra"
 block|}
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/**  * version of printf that works better in exception context.  *  * @param format  */
+end_comment
+
+begin_function
+name|void
+name|cvmx_safe_printf
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|format
+parameter_list|,
+modifier|...
+parameter_list|)
+block|{
+name|char
+name|buffer
+index|[
+literal|256
+index|]
+decl_stmt|;
+name|char
+modifier|*
+name|ptr
+init|=
+name|buffer
+decl_stmt|;
+name|int
+name|count
+decl_stmt|;
+name|va_list
+name|args
+decl_stmt|;
+name|va_start
+argument_list|(
+name|args
+argument_list|,
+name|format
+argument_list|)
+expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__U_BOOT__
+name|count
+operator|=
+name|vsnprintf
+argument_list|(
+name|buffer
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buffer
+argument_list|)
+argument_list|,
+name|format
+argument_list|,
+name|args
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|count
+operator|=
+name|vsprintf
+argument_list|(
+name|buffer
+argument_list|,
+name|format
+argument_list|,
+name|args
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|va_end
+argument_list|(
+name|args
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|count
+operator|--
+operator|>
+literal|0
+condition|)
+block|{
+name|cvmx_uart_lsr_t
+name|lsrval
+decl_stmt|;
+comment|/* Spin until there is room */
+do|do
+block|{
+name|lsrval
+operator|.
+name|u64
+operator|=
+name|cvmx_read_csr
+argument_list|(
+name|CVMX_MIO_UARTX_LSR
+argument_list|(
+literal|0
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|CONFIG_OCTEON_SIM_SPEED
+argument_list|)
+if|if
+condition|(
+name|lsrval
+operator|.
+name|s
+operator|.
+name|temt
+operator|==
+literal|0
+condition|)
+name|cvmx_wait
+argument_list|(
+literal|10000
+argument_list|)
+expr_stmt|;
+comment|/* Just to reduce the load on the system */
+endif|#
+directive|endif
+block|}
+do|while
+condition|(
+name|lsrval
+operator|.
+name|s
+operator|.
+name|temt
+operator|==
+literal|0
+condition|)
+do|;
+if|if
+condition|(
+operator|*
+name|ptr
+operator|==
+literal|'\n'
+condition|)
+name|cvmx_write_csr
+argument_list|(
+name|CVMX_MIO_UARTX_THR
+argument_list|(
+literal|0
+argument_list|)
+argument_list|,
+literal|'\r'
+argument_list|)
+expr_stmt|;
+name|cvmx_write_csr
+argument_list|(
+name|CVMX_MIO_UARTX_THR
+argument_list|(
+literal|0
+argument_list|)
+argument_list|,
+operator|*
+name|ptr
+operator|++
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/* Textual descriptions of cause codes */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|cause_names
+index|[]
+index|[
+literal|128
+index|]
+init|=
+block|{
+comment|/*  0 */
+literal|"Interrupt"
+block|,
+comment|/*  1 */
+literal|"TLB modification"
+block|,
+comment|/*  2 */
+literal|"tlb load/fetch"
+block|,
+comment|/*  3 */
+literal|"tlb store"
+block|,
+comment|/*  4 */
+literal|"address exc, load/fetch"
+block|,
+comment|/*  5 */
+literal|"address exc, store"
+block|,
+comment|/*  6 */
+literal|"bus error, instruction fetch"
+block|,
+comment|/*  7 */
+literal|"bus error, load/store"
+block|,
+comment|/*  8 */
+literal|"syscall"
+block|,
+comment|/*  9 */
+literal|"breakpoint"
+block|,
+comment|/* 10 */
+literal|"reserved instruction"
+block|,
+comment|/* 11 */
+literal|"cop unusable"
+block|,
+comment|/* 12 */
+literal|"arithmetic overflow"
+block|,
+comment|/* 13 */
+literal|"trap"
+block|,
+comment|/* 14 */
+literal|""
+block|,
+comment|/* 15 */
+literal|"floating point exc"
+block|,
+comment|/* 16 */
+literal|""
+block|,
+comment|/* 17 */
+literal|""
+block|,
+comment|/* 18 */
+literal|"cop2 exception"
+block|,
+comment|/* 19 */
+literal|""
+block|,
+comment|/* 20 */
+literal|""
+block|,
+comment|/* 21 */
+literal|""
+block|,
+comment|/* 22 */
+literal|"mdmx unusable"
+block|,
+comment|/* 23 */
+literal|"watch"
+block|,
+comment|/* 24 */
+literal|"machine check"
+block|,
+comment|/* 25 */
+literal|""
+block|,
+comment|/* 26 */
+literal|""
+block|,
+comment|/* 27 */
+literal|""
+block|,
+comment|/* 28 */
+literal|""
+block|,
+comment|/* 29 */
+literal|""
+block|,
+comment|/* 30 */
+literal|"cache error"
+block|,
+comment|/* 31 */
+literal|""
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/**  * @INTERNAL  * print_reg64  * @param name   Name of the value to print  * @param reg    Value to print  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|print_reg64
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
 name|uint64_t
+name|reg
+parameter_list|)
+block|{
+name|cvmx_safe_printf
+argument_list|(
+literal|"%16s: 0x%08x%08x\n"
+argument_list|,
+name|name
+argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
+name|HI32
+argument_list|(
+name|reg
+argument_list|)
+argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
+name|LO32
+argument_list|(
+name|reg
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/**  * @INTERNAL  * Dump all useful registers to the console  *  * @param registers CPU register to dump  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|__cvmx_interrupt_dump_registers
+parameter_list|(
+name|uint64_t
+name|registers
+index|[
+literal|32
+index|]
+parameter_list|)
+block|{
+name|uint64_t
+name|r1
+decl_stmt|,
+name|r2
+decl_stmt|;
+name|int
 name|reg
 decl_stmt|;
 for|for
@@ -316,128 +701,136 @@ name|reg
 operator|++
 control|)
 block|{
+name|r1
+operator|=
+name|registers
+index|[
+name|reg
+index|]
+expr_stmt|;
+name|r2
+operator|=
+name|registers
+index|[
+name|reg
+operator|+
+literal|16
+index|]
+expr_stmt|;
 name|cvmx_safe_printf
 argument_list|(
-literal|"%3s ($%02d): 0x%016llx \t %3s ($%02d): 0x%016llx\n"
+literal|"%3s ($%02d): 0x%08x%08x \t %3s ($%02d): 0x%08x%08x\n"
 argument_list|,
-name|name
+name|reg_names
 index|[
 name|reg
 index|]
 argument_list|,
+name|reg
+argument_list|,
 operator|(
+name|unsigned
 name|int
 operator|)
-name|reg
+name|HI32
+argument_list|(
+name|r1
+argument_list|)
 argument_list|,
 operator|(
-name|ULL
-operator|)
-name|registers
-index|[
-name|reg
-index|]
-argument_list|,
-name|name
-index|[
-name|reg
-operator|+
-literal|16
-index|]
-argument_list|,
-operator|(
+name|unsigned
 name|int
 operator|)
-name|reg
-operator|+
-literal|16
+name|LO32
+argument_list|(
+name|r1
+argument_list|)
 argument_list|,
-operator|(
-name|ULL
-operator|)
-name|registers
+name|reg_names
 index|[
 name|reg
 operator|+
 literal|16
 index|]
+argument_list|,
+name|reg
+operator|+
+literal|16
+argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
+name|HI32
+argument_list|(
+name|r2
+argument_list|)
+argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
+name|LO32
+argument_list|(
+name|r2
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|READ_COP0
+name|CVMX_MF_COP0
 argument_list|(
-name|reg
+name|r1
 argument_list|,
 name|COP0_CAUSE
 argument_list|)
 expr_stmt|;
-name|cvmx_safe_printf
+name|print_reg64
 argument_list|(
-literal|"%16s: 0x%016llx\n"
-argument_list|,
 literal|"COP0_CAUSE"
 argument_list|,
-operator|(
-name|ULL
-operator|)
-name|reg
+name|r1
 argument_list|)
 expr_stmt|;
-name|READ_COP0
+name|CVMX_MF_COP0
 argument_list|(
-name|reg
+name|r2
 argument_list|,
 name|COP0_STATUS
 argument_list|)
 expr_stmt|;
-name|cvmx_safe_printf
+name|print_reg64
 argument_list|(
-literal|"%16s: 0x%016llx\n"
-argument_list|,
 literal|"COP0_STATUS"
 argument_list|,
-operator|(
-name|ULL
-operator|)
-name|reg
+name|r2
 argument_list|)
 expr_stmt|;
-name|READ_COP0
+name|CVMX_MF_COP0
 argument_list|(
-name|reg
+name|r1
 argument_list|,
 name|COP0_BADVADDR
 argument_list|)
 expr_stmt|;
-name|cvmx_safe_printf
+name|print_reg64
 argument_list|(
-literal|"%16s: 0x%016llx\n"
-argument_list|,
 literal|"COP0_BADVADDR"
 argument_list|,
-operator|(
-name|ULL
-operator|)
-name|reg
+name|r1
 argument_list|)
 expr_stmt|;
-name|READ_COP0
+name|CVMX_MF_COP0
 argument_list|(
-name|reg
+name|r2
 argument_list|,
 name|COP0_EPC
 argument_list|)
 expr_stmt|;
-name|cvmx_safe_printf
+name|print_reg64
 argument_list|(
-literal|"%16s: 0x%016llx\n"
-argument_list|,
 literal|"COP0_EPC"
 argument_list|,
-operator|(
-name|ULL
-operator|)
-name|reg
+name|r2
 argument_list|)
 expr_stmt|;
 block|}
@@ -447,8 +840,17 @@ begin_comment
 comment|/**  * @INTERNAL  * Default exception handler. Prints out the exception  * cause decode and all relevant registers.  *  * @param registers Registers at time of the exception  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__U_BOOT__
+end_ifndef
+
 begin_function
 specifier|static
+endif|#
+directive|endif
+comment|/* __U_BOOT__ */
 name|void
 name|__cvmx_interrupt_default_exception_handler
 parameter_list|(
@@ -462,6 +864,14 @@ block|{
 name|uint64_t
 name|trap_print_cause
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|str
+decl_stmt|;
+ifndef|#
+directive|ifndef
+name|__U_BOOT__
 name|ebt3000_str_write
 argument_list|(
 literal|"Trap"
@@ -473,31 +883,19 @@ operator|&
 name|cvmx_interrupt_default_lock
 argument_list|)
 expr_stmt|;
-name|cvmx_safe_printf
-argument_list|(
-literal|"******************************************************************\n"
-argument_list|)
-expr_stmt|;
-name|cvmx_safe_printf
-argument_list|(
-literal|"Core %d: Unhandled Exception. Cause register decodes to:\n"
-argument_list|,
-operator|(
-name|int
-operator|)
-name|cvmx_get_core_num
-argument_list|()
-argument_list|)
-expr_stmt|;
-name|READ_COP0
+endif|#
+directive|endif
+name|CVMX_MF_COP0
 argument_list|(
 name|trap_print_cause
 argument_list|,
 name|COP0_CAUSE
 argument_list|)
 expr_stmt|;
-switch|switch
-condition|(
+name|str
+operator|=
+name|cause_names
+index|[
 operator|(
 name|trap_print_cause
 operator|>>
@@ -505,196 +903,28 @@ literal|2
 operator|)
 operator|&
 literal|0x1f
-condition|)
-block|{
-case|case
-literal|0x0
-case|:
+index|]
+expr_stmt|;
 name|cvmx_safe_printf
 argument_list|(
-literal|"Interrupt\n"
+literal|"Core %d: Unhandled Exception. Cause register decodes to:\n%s\n"
+argument_list|,
+operator|(
+name|int
+operator|)
+name|cvmx_get_core_num
+argument_list|()
+argument_list|,
+name|str
+operator|&&
+operator|*
+name|str
+condition|?
+name|str
+else|:
+literal|"Reserved exception cause"
 argument_list|)
 expr_stmt|;
-break|break;
-case|case
-literal|0x1
-case|:
-name|cvmx_safe_printf
-argument_list|(
-literal|"TLB Mod\n"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|0x2
-case|:
-name|cvmx_safe_printf
-argument_list|(
-literal|"tlb load/fetch\n"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|0x3
-case|:
-name|cvmx_safe_printf
-argument_list|(
-literal|"tlb store\n"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|0x4
-case|:
-name|cvmx_safe_printf
-argument_list|(
-literal|"address exc, load/fetch\n"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|0x5
-case|:
-name|cvmx_safe_printf
-argument_list|(
-literal|"address exc, store\n"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|0x6
-case|:
-name|cvmx_safe_printf
-argument_list|(
-literal|"bus error, inst. fetch\n"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|0x7
-case|:
-name|cvmx_safe_printf
-argument_list|(
-literal|"bus error, load/store\n"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|0x8
-case|:
-name|cvmx_safe_printf
-argument_list|(
-literal|"syscall\n"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|0x9
-case|:
-name|cvmx_safe_printf
-argument_list|(
-literal|"breakpoint \n"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|0xa
-case|:
-name|cvmx_safe_printf
-argument_list|(
-literal|"reserved instruction\n"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|0xb
-case|:
-name|cvmx_safe_printf
-argument_list|(
-literal|"cop unusable\n"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|0xc
-case|:
-name|cvmx_safe_printf
-argument_list|(
-literal|"arithmetic overflow\n"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|0xd
-case|:
-name|cvmx_safe_printf
-argument_list|(
-literal|"trap\n"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|0xf
-case|:
-name|cvmx_safe_printf
-argument_list|(
-literal|"floating point exc\n"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|0x12
-case|:
-name|cvmx_safe_printf
-argument_list|(
-literal|"cop2 exception\n"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|0x16
-case|:
-name|cvmx_safe_printf
-argument_list|(
-literal|"mdmx unusable\n"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|0x17
-case|:
-name|cvmx_safe_printf
-argument_list|(
-literal|"watch\n"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|0x18
-case|:
-name|cvmx_safe_printf
-argument_list|(
-literal|"machine check\n"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|0x1e
-case|:
-name|cvmx_safe_printf
-argument_list|(
-literal|"cache error\n"
-argument_list|)
-expr_stmt|;
-break|break;
-default|default:
-name|cvmx_safe_printf
-argument_list|(
-literal|"Reserved exception cause.\n"
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
 name|cvmx_safe_printf
 argument_list|(
 literal|"******************************************************************\n"
@@ -705,6 +935,9 @@ argument_list|(
 name|registers
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__U_BOOT__
 name|cvmx_safe_printf
 argument_list|(
 literal|"******************************************************************\n"
@@ -794,11 +1027,20 @@ decl_stmt|;
 comment|/* Pulse the MCD0 signal. */
 asm|asm
 specifier|volatile
-asm|( 		".set push\n" 		".set noreorder\n" 		".set mips64\n" 		"dmfc0 %0, $22\n" 		"ori   %0, %0, 0x10\n" 		"dmtc0 %0, $22\n" 		".set pop\n" 		: "=r" (tmp));
+asm|( 	    ".set push\n" 	    ".set noreorder\n" 	    ".set mips64\n" 	    "dmfc0 %0, $22\n" 	    "ori   %0, %0, 0x10\n" 	    "dmtc0 %0, $22\n" 	    ".set pop\n" 	    : "=r" (tmp));
 block|}
 block|}
+endif|#
+directive|endif
+comment|/* __U_BOOT__ */
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__U_BOOT__
+end_ifndef
 
 begin_comment
 comment|/**  * @INTERNAL  * Default interrupt handler if the user doesn't register one.  *  * @param irq_number IRQ that caused this interrupt  * @param registers  Register at the time of the interrupt  * @param user_arg   Unused optional user data  */
@@ -1032,7 +1274,7 @@ modifier|*
 name|user_arg
 parameter_list|)
 block|{
-name|cvmx_interrupt_rsl_decode
+name|cvmx_error_poll
 argument_list|()
 expr_stmt|;
 block|}
@@ -1092,6 +1334,22 @@ asm|("dmfc0 %0,$13,0" : "=r" (cause));
 asm|asm
 specifier|volatile
 asm|("dmfc0 %0,$12,0" : "=r" (status));
+comment|/* In case of exception, clear all interrupts to avoid recursive interrupts.        Also clear EXL bit to display the correct PC value. */
+if|if
+condition|(
+operator|(
+name|cause
+operator|&
+literal|0x7c
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+asm|asm
+specifier|volatile
+asm|("dmtc0 %0, $12, 0" : : "r" (status& ~(0xff02)));
+block|}
 comment|/* The assembly stub at each exception vector saves its address in k1 when     ** it calls the stage 2 handler.  We use this to compute the exception vector     ** that brought us here */
 name|exc_vec
 operator|=
@@ -1257,7 +1515,9 @@ argument_list|(
 name|registers
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|return_from_interrupt
+goto|;
 block|}
 comment|/* Convert the cause into an active mask */
 name|mask
@@ -1280,8 +1540,12 @@ name|mask
 operator|==
 literal|0
 condition|)
-return|return;
+block|{
+goto|goto
+name|return_from_interrupt
+goto|;
 comment|/* Spurious interrupt */
+block|}
 for|for
 control|(
 name|i
@@ -1326,7 +1590,9 @@ name|i
 index|]
 operator|)
 expr_stmt|;
-return|return;
+goto|goto
+name|return_from_interrupt
+goto|;
 block|}
 block|}
 comment|/* We should never get here */
@@ -1335,6 +1601,12 @@ argument_list|(
 name|registers
 argument_list|)
 expr_stmt|;
+name|return_from_interrupt
+label|:
+comment|/* Restore Status register before returning from exception. */
+asm|asm
+specifier|volatile
+asm|("dmtc0 %0, $12, 0" : : "r" (status));
 block|}
 end_function
 
@@ -1613,8 +1885,18 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|cvmx_interrupt_rsl_enable
-argument_list|()
+if|if
+condition|(
+name|cvmx_error_initialize
+argument_list|(
+literal|0
+comment|/* || CVMX_ERROR_FLAGS_ECC_SINGLE_BIT */
+argument_list|)
+condition|)
+name|cvmx_warn
+argument_list|(
+literal|"cvmx_error_initialize() failed\n"
+argument_list|)
 expr_stmt|;
 name|cvmx_interrupt_unmask_irq
 argument_list|(
@@ -1719,153 +2001,14 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/**  * version of printf that works better in exception context.  *  * @param format  */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
-begin_function
-name|void
-name|cvmx_safe_printf
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|format
-parameter_list|,
-modifier|...
-parameter_list|)
-block|{
-specifier|static
-name|char
-name|buffer
-index|[
-literal|256
-index|]
-decl_stmt|;
-name|va_list
-name|args
-decl_stmt|;
-name|va_start
-argument_list|(
-name|args
-argument_list|,
-name|format
-argument_list|)
-expr_stmt|;
-name|int
-name|count
-init|=
-name|vsnprintf
-argument_list|(
-name|buffer
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buffer
-argument_list|)
-argument_list|,
-name|format
-argument_list|,
-name|args
-argument_list|)
-decl_stmt|;
-name|va_end
-argument_list|(
-name|args
-argument_list|)
-expr_stmt|;
-name|char
-modifier|*
-name|ptr
-init|=
-name|buffer
-decl_stmt|;
-while|while
-condition|(
-name|count
-operator|--
-operator|>
-literal|0
-condition|)
-block|{
-name|cvmx_uart_lsr_t
-name|lsrval
-decl_stmt|;
-comment|/* Spin until there is room */
-do|do
-block|{
-name|lsrval
-operator|.
-name|u64
-operator|=
-name|cvmx_read_csr
-argument_list|(
-name|CVMX_MIO_UARTX_LSR
-argument_list|(
-literal|0
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|lsrval
-operator|.
-name|s
-operator|.
-name|temt
-operator|==
-literal|0
-condition|)
-name|cvmx_wait
-argument_list|(
-literal|10000
-argument_list|)
-expr_stmt|;
-comment|/* Just to reduce the load on the system */
-block|}
-do|while
-condition|(
-name|lsrval
-operator|.
-name|s
-operator|.
-name|temt
-operator|==
-literal|0
-condition|)
-do|;
-if|if
-condition|(
-operator|*
-name|ptr
-operator|==
-literal|'\n'
-condition|)
-name|cvmx_write_csr
-argument_list|(
-name|CVMX_MIO_UARTX_THR
-argument_list|(
-literal|0
-argument_list|)
-argument_list|,
-literal|'\r'
-argument_list|)
-expr_stmt|;
-name|cvmx_write_csr
-argument_list|(
-name|CVMX_MIO_UARTX_THR
-argument_list|(
-literal|0
-argument_list|)
-argument_list|,
-operator|*
-name|ptr
-operator|++
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_function
+begin_comment
+comment|/* !__U_BOOT__ */
+end_comment
 
 end_unit
 

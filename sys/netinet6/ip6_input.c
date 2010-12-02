@@ -4054,7 +4054,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Search header for all Hop-by-hop options and process each option.  * This function is separate from ip6_hopopts_input() in order to  * handle a case where the sending node itself process its hop-by-hop  * options header. In such a case, the function is called from ip6_output().  *  * The function assumes that hbh header is located right after the IPv6 header  * (RFC2460 p7), opthead is pointer into data content in m, and opthead to  * opthead + hbhlen is located in continuous memory region.  */
+comment|/*  * Search header for all Hop-by-hop options and process each option.  * This function is separate from ip6_hopopts_input() in order to  * handle a case where the sending node itself process its hop-by-hop  * options header. In such a case, the function is called from ip6_output().  *  * The function assumes that hbh header is located right after the IPv6 header  * (RFC2460 p7), opthead is pointer into data content in m, and opthead to  * opthead + hbhlen is located in contiguous memory region.  */
 end_comment
 
 begin_function
@@ -4569,7 +4569,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Unknown option processing.  * The third argument `off' is the offset from the IPv6 header to the option,  * which is necessary if the IPv6 header the and option header and IPv6 header  * is not continuous in order to return an ICMPv6 error.  */
+comment|/*  * Unknown option processing.  * The third argument `off' is the offset from the IPv6 header to the option,  * which is necessary if the IPv6 header the and option header and IPv6 header  * is not contiguous in order to return an ICMPv6 error.  */
 end_comment
 
 begin_function

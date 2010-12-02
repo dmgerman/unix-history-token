@@ -284,29 +284,6 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"gnuc.h"
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_OS_PROTO_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"os-proto.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* rfc1716 */
 end_comment

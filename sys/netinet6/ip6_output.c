@@ -2943,12 +2943,12 @@ name|m_len
 condition|)
 name|panic
 argument_list|(
-literal|"ip6e_hbh is not continuous"
+literal|"ip6e_hbh is not contiguous"
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 		 *  XXX: if we have to send an ICMPv6 error to the sender, 		 *       we need the M_LOOP flag since icmp6_error() expects 		 *       the IPv6 and the hop-by-hop options header are 		 *       continuous unless the flag is set. 		 */
+comment|/* 		 *  XXX: if we have to send an ICMPv6 error to the sender, 		 *       we need the M_LOOP flag since icmp6_error() expects 		 *       the IPv6 and the hop-by-hop options header are 		 *       contiguous unless the flag is set. 		 */
 name|m
 operator|->
 name|m_flags

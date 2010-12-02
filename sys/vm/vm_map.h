@@ -165,9 +165,9 @@ name|lastr
 decl_stmt|;
 comment|/* last read */
 name|struct
-name|uidinfo
+name|ucred
 modifier|*
-name|uip
+name|cred
 decl_stmt|;
 comment|/* tmp storage for creator ref */
 block|}

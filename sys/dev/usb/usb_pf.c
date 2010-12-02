@@ -188,6 +188,11 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+name|if_up
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 sizeof|sizeof
@@ -262,6 +267,11 @@ name|NULL
 condition|)
 block|{
 name|bpfdetach
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+name|if_down
 argument_list|(
 name|ifp
 argument_list|)

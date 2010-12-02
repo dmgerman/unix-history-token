@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/module.h>
 end_include
 
@@ -60,31 +66,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/if.h>
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<net/if_var.h>
+file|<net/vnet.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<netinet/cc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_pcb.h>
 end_include
 
 begin_include
@@ -106,6 +100,7 @@ file|<netinet/cc/cc_module.h>
 end_include
 
 begin_function_decl
+specifier|static
 name|void
 name|newreno_ack_received
 parameter_list|(
@@ -121,6 +116,20 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
+name|void
+name|newreno_after_idle
+parameter_list|(
+name|struct
+name|cc_var
+modifier|*
+name|ccv
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|void
 name|newreno_cong_signal
 parameter_list|(
@@ -136,20 +145,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|newreno_post_recovery
-parameter_list|(
-name|struct
-name|cc_var
-modifier|*
-name|ccv
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|newreno_after_idle
 parameter_list|(
 name|struct
 name|cc_var
@@ -176,6 +174,11 @@ operator|=
 name|newreno_ack_received
 block|,
 operator|.
+name|after_idle
+operator|=
+name|newreno_after_idle
+block|,
+operator|.
 name|cong_signal
 operator|=
 name|newreno_cong_signal
@@ -184,20 +187,12 @@ operator|.
 name|post_recovery
 operator|=
 name|newreno_post_recovery
-block|,
-operator|.
-name|after_idle
-operator|=
-name|newreno_after_idle
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  * Increase cwnd on receipt of a successful ACK:  * if cwnd<= ssthresh, increases by 1 MSS per ACK  * if cwnd> ssthresh, increase by ~1 MSS per RTT  */
-end_comment
-
 begin_function
+specifier|static
 name|void
 name|newreno_ack_received
 parameter_list|(
@@ -405,11 +400,93 @@ block|}
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|newreno_after_idle
+parameter_list|(
+name|struct
+name|cc_var
+modifier|*
+name|ccv
+parameter_list|)
+block|{
+name|int
+name|rw
+decl_stmt|;
+comment|/* 	 * If we've been idle for more than one retransmit timeout the old 	 * congestion window is no longer current and we have to reduce it to 	 * the restart window before we can transmit again. 	 * 	 * The restart window is the initial window or the last CWND, whichever 	 * is smaller. 	 * 	 * This is done to prevent us from flooding the path with a full CWND at 	 * wirespeed, overloading router and switch buffers along the way. 	 * 	 * See RFC5681 Section 4.1. "Restarting Idle Connections". 	 */
+if|if
+condition|(
+name|V_tcp_do_rfc3390
+condition|)
+name|rw
+operator|=
+name|min
+argument_list|(
+literal|4
+operator|*
+name|CCV
+argument_list|(
+name|ccv
+argument_list|,
+name|t_maxseg
+argument_list|)
+argument_list|,
+name|max
+argument_list|(
+literal|2
+operator|*
+name|CCV
+argument_list|(
+name|ccv
+argument_list|,
+name|t_maxseg
+argument_list|)
+argument_list|,
+literal|4380
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+name|rw
+operator|=
+name|CCV
+argument_list|(
+name|ccv
+argument_list|,
+name|t_maxseg
+argument_list|)
+operator|*
+literal|2
+expr_stmt|;
+name|CCV
+argument_list|(
+name|ccv
+argument_list|,
+name|snd_cwnd
+argument_list|)
+operator|=
+name|min
+argument_list|(
+name|rw
+argument_list|,
+name|CCV
+argument_list|(
+name|ccv
+argument_list|,
+name|snd_cwnd
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
-comment|/*  * manage congestion signals  */
+comment|/*  * Perform any necessary tasks before we enter congestion recovery.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|newreno_cong_signal
 parameter_list|(
@@ -563,10 +640,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * decrease the cwnd in response to packet loss or a transmit timeout.  * th can be null, in which case cwnd will be set according to reno instead  * of new reno.  */
+comment|/*  * Perform any necessary tasks before we exit congestion recovery.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|newreno_post_recovery
 parameter_list|(
@@ -654,78 +732,6 @@ name|snd_ssthresh
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-end_function
-
-begin_comment
-comment|/*  * if a connection has been idle for a while and more data is ready to be sent,  * reset cwnd  */
-end_comment
-
-begin_function
-name|void
-name|newreno_after_idle
-parameter_list|(
-name|struct
-name|cc_var
-modifier|*
-name|ccv
-parameter_list|)
-block|{
-comment|/* 	 * We have been idle for "a while" and no acks are expected to clock out 	 * any data we send -- slow start to get ack "clock" running again. 	 */
-if|if
-condition|(
-name|V_tcp_do_rfc3390
-condition|)
-name|CCV
-argument_list|(
-name|ccv
-argument_list|,
-name|snd_cwnd
-argument_list|)
-operator|=
-name|min
-argument_list|(
-literal|4
-operator|*
-name|CCV
-argument_list|(
-name|ccv
-argument_list|,
-name|t_maxseg
-argument_list|)
-argument_list|,
-name|max
-argument_list|(
-literal|2
-operator|*
-name|CCV
-argument_list|(
-name|ccv
-argument_list|,
-name|t_maxseg
-argument_list|)
-argument_list|,
-literal|4380
-argument_list|)
-argument_list|)
-expr_stmt|;
-else|else
-name|CCV
-argument_list|(
-name|ccv
-argument_list|,
-name|snd_cwnd
-argument_list|)
-operator|=
-name|CCV
-argument_list|(
-name|ccv
-argument_list|,
-name|t_maxseg
-argument_list|)
-operator|*
-literal|2
-expr_stmt|;
 block|}
 end_function
 

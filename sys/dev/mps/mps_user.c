@@ -1546,7 +1546,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|mpi_init_sge
 parameter_list|(

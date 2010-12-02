@@ -8,7 +8,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * A few defines are used to control the operation of this driver:  *  CONFIG_CAVIUM_RESERVE32  *      This kernel config options controls the amount of memory configured  *      in a wired TLB entry for all processes to share. If this is set, the  *      driver will use this memory instead of kernel memory for pools. This  *      allows 32bit userspace application to access the buffers, but also  *      requires all received packets to be copied.  *  CONFIG_CAVIUM_OCTEON_NUM_PACKET_BUFFERS  *      This kernel config option allows the user to control the number of  *      packet and work queue buffers allocated by the driver. If this is zero,  *      the driver uses the default from below.  *  USE_MBUFS_IN_HW  *      Tells the driver to populate the packet buffers with kernel mbufs.  *      This allows the driver to receive packets without copying them. It also  *      means that 32bit userspace can't access the packet buffers.  *  USE_32BIT_SHARED  *      This define tells the driver to allocate memory for buffers from the  *      32bit sahred region instead of the kernel memory space.  *  USE_HW_TCPUDP_CHECKSUM  *      Controls if the Octeon TCP/UDP checksum engine is used for packet  *      output. If this is zero, the kernel will perform the checksum in  *      software.  *  USE_MULTICORE_RECEIVE  *      Process receive interrupts on multiple cores. This spreads the network  *      load across the first 8 processors. If ths is zero, only one core  *      processes incomming packets.  *  USE_ASYNC_IOBDMA  *      Use asynchronous IO access to hardware. This uses Octeon's asynchronous  *      IOBDMAs to issue IO accesses without stalling. Set this to zero  *      to disable this. Note that IOBDMAs require CVMSEG.  */
+comment|/*  * A few defines are used to control the operation of this driver:  *  CONFIG_CAVIUM_RESERVE32  *      This kernel config options controls the amount of memory configured  *      in a wired TLB entry for all processes to share. If this is set, the  *      driver will use this memory instead of kernel memory for pools. This  *      allows 32bit userspace application to access the buffers, but also  *      requires all received packets to be copied.  *  CONFIG_CAVIUM_OCTEON_NUM_PACKET_BUFFERS  *      This kernel config option allows the user to control the number of  *      packet and work queue buffers allocated by the driver. If this is zero,  *      the driver uses the default from below.  *  USE_HW_TCPUDP_CHECKSUM  *      Controls if the Octeon TCP/UDP checksum engine is used for packet  *      output. If this is zero, the kernel will perform the checksum in  *      software.  *  USE_MULTICORE_RECEIVE  *      Process receive interrupts on multiple cores. This spreads the network  *      load across the first 8 processors. If ths is zero, only one core  *      processes incomming packets.  *  USE_ASYNC_IOBDMA  *      Use asynchronous IO access to hardware. This uses Octeon's asynchronous  *      IOBDMAs to issue IO accesses without stalling. Set this to zero  *      to disable this. Note that IOBDMAs require CVMSEG.  */
 end_comment
 
 begin_ifndef
@@ -22,50 +22,6 @@ define|#
 directive|define
 name|CONFIG_CAVIUM_RESERVE32
 value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|CONFIG_CAVIUM_RESERVE32
-end_if
-
-begin_define
-define|#
-directive|define
-name|USE_32BIT_SHARED
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|USE_MBUFS_IN_HW
-value|0
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|USE_32BIT_SHARED
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|USE_MBUFS_IN_HW
-value|1
 end_define
 
 begin_endif

@@ -533,6 +533,7 @@ name|gps_maxent
 operator|=
 literal|20
 block|,
+comment|/* Only 22 entries fit in 512 byte sectors */
 operator|.
 name|gps_bootcodesz
 operator|=

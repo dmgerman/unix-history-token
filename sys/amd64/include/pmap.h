@@ -447,19 +447,19 @@ begin_comment
 comment|/* number of userland PD entries */
 end_comment
 
+begin_comment
+comment|/*  * NDMPML4E is the number of PML4 entries that are used to implement the  * direct map.  It must be a power of two.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|NDMPML4E
-value|1
+value|2
 end_define
 
 begin_comment
-comment|/* number of dmap PML4 slots */
-end_comment
-
-begin_comment
-comment|/*  * The *PDI values control the layout of virtual memory  */
+comment|/*  * The *PDI values control the layout of virtual memory.  The starting address  * of the direct map, which is controlled by DMPML4I, must be a multiple of  * its size.  (See the PHYS_TO_DMAP() and DMAP_TO_PHYS() macros.)  */
 end_comment
 
 begin_define
@@ -488,11 +488,11 @@ begin_define
 define|#
 directive|define
 name|DMPML4I
-value|(KPML4I-1)
+value|rounddown(KPML4I - NDMPML4E, NDMPML4E)
 end_define
 
 begin_comment
-comment|/* Next 512GB down for direct map */
+comment|/* Below KVM */
 end_comment
 
 begin_define

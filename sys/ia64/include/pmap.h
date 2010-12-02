@@ -327,7 +327,7 @@ end_ifdef
 
 begin_decl_stmt
 specifier|extern
-name|vm_offset_t
+name|vm_paddr_t
 name|phys_avail
 index|[]
 decl_stmt|;

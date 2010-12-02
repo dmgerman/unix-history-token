@@ -471,6 +471,28 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * Ceiling on amount of kmem_map kva space.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VM_KMEM_SIZE_MAX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|VM_KMEM_SIZE_MAX
+value|(VM_MAX_KERNEL_ADDRESS - VM_MIN_KERNEL_ADDRESS)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Initial pagein size of beginning of executable file.  */
 end_comment
 

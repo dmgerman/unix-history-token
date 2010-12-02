@@ -717,7 +717,7 @@ literal|0
 expr_stmt|;
 name|object
 operator|->
-name|uip
+name|cred
 operator|=
 name|NULL
 expr_stmt|;
@@ -2219,7 +2219,7 @@ if|if
 condition|(
 name|object
 operator|->
-name|uip
+name|cred
 operator|!=
 name|NULL
 condition|)
@@ -2239,13 +2239,13 @@ operator|==
 name|OBJT_SWAP
 argument_list|,
 operator|(
-literal|"vm_object_terminate: non-swap obj %p has uip"
+literal|"vm_object_terminate: non-swap obj %p has cred"
 operator|,
 name|object
 operator|)
 argument_list|)
 expr_stmt|;
-name|swap_release_by_uid
+name|swap_release_by_cred
 argument_list|(
 name|object
 operator|->
@@ -2253,7 +2253,7 @@ name|charge
 argument_list|,
 name|object
 operator|->
-name|uip
+name|cred
 argument_list|)
 expr_stmt|;
 name|object
@@ -2262,16 +2262,16 @@ name|charge
 operator|=
 literal|0
 expr_stmt|;
-name|uifree
+name|crfree
 argument_list|(
 name|object
 operator|->
-name|uip
+name|cred
 argument_list|)
 expr_stmt|;
 name|object
 operator|->
-name|uip
+name|cred
 operator|=
 name|NULL
 expr_stmt|;
@@ -4510,24 +4510,24 @@ if|if
 condition|(
 name|orig_object
 operator|->
-name|uip
+name|cred
 operator|!=
 name|NULL
 condition|)
 block|{
 name|new_object
 operator|->
-name|uip
+name|cred
 operator|=
 name|orig_object
 operator|->
-name|uip
+name|cred
 expr_stmt|;
-name|uihold
+name|crhold
 argument_list|(
 name|orig_object
 operator|->
-name|uip
+name|cred
 argument_list|)
 expr_stmt|;
 name|new_object
@@ -6548,19 +6548,19 @@ if|if
 condition|(
 name|prev_object
 operator|->
-name|uip
+name|cred
 operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 		 * If prev_object was charged, then this mapping, 		 * althought not charged now, may become writable 		 * later. Non-NULL uip in the object would prevent 		 * swap reservation during enabling of the write 		 * access, so reserve swap now. Failed reservation 		 * cause allocation of the separate object for the map 		 * entry, and swap reservation for this entry is 		 * managed in appropriate time. 		 */
+comment|/* 		 * If prev_object was charged, then this mapping, 		 * althought not charged now, may become writable 		 * later. Non-NULL cred in the object would prevent 		 * swap reservation during enabling of the write 		 * access, so reserve swap now. Failed reservation 		 * cause allocation of the separate object for the map 		 * entry, and swap reservation for this entry is 		 * managed in appropriate time. 		 */
 if|if
 condition|(
 operator|!
 name|reserved
 operator|&&
 operator|!
-name|swap_reserve_by_uid
+name|swap_reserve_by_cred
 argument_list|(
 name|ptoa
 argument_list|(
@@ -6569,7 +6569,7 @@ argument_list|)
 argument_list|,
 name|prev_object
 operator|->
-name|uip
+name|cred
 argument_list|)
 condition|)
 block|{
@@ -6632,7 +6632,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|if (prev_object->uip != NULL) { 			KASSERT(prev_object->charge>= 			    ptoa(prev_object->size - next_pindex), 			    ("object %p overcharged 1 %jx %jx", prev_object, 				(uintmax_t)next_pindex, (uintmax_t)next_size)); 			prev_object->charge -= ptoa(prev_object->size - 			    next_pindex); 		}
+block|if (prev_object->cred != NULL) { 			KASSERT(prev_object->charge>= 			    ptoa(prev_object->size - next_pindex), 			    ("object %p overcharged 1 %jx %jx", prev_object, 				(uintmax_t)next_pindex, (uintmax_t)next_size)); 			prev_object->charge -= ptoa(prev_object->size - 			    next_pindex); 		}
 endif|#
 directive|endif
 block|}
@@ -7232,7 +7232,7 @@ condition|)
 return|return;
 name|db_iprintf
 argument_list|(
-literal|"Object %p: type=%d, size=0x%jx, res=%d, ref=%d, flags=0x%x uip %d charge %jx\n"
+literal|"Object %p: type=%d, size=0x%jx, res=%d, ref=%d, flags=0x%x ruid %d charge %jx\n"
 argument_list|,
 name|object
 argument_list|,
@@ -7264,13 +7264,13 @@ name|flags
 argument_list|,
 name|object
 operator|->
-name|uip
+name|cred
 condition|?
 name|object
 operator|->
-name|uip
+name|cred
 operator|->
-name|ui_uid
+name|cr_ruid
 else|:
 operator|-
 literal|1

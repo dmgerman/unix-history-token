@@ -4614,17 +4614,6 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|shmsegs
-operator|==
-name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"cannot allocate initial memory for sysvshm"
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i

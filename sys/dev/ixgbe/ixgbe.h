@@ -673,6 +673,27 @@ name|IXGBE_BR_SIZE
 value|4096
 end_define
 
+begin_define
+define|#
+directive|define
+name|IXGBE_QUEUE_IDLE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_QUEUE_WORKING
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_QUEUE_HUNG
+value|2
+end_define
+
 begin_comment
 comment|/* Offload bits in mbuf flag */
 end_comment
@@ -792,31 +813,6 @@ define|#
 directive|define
 name|IXGBE_LINK_ITR
 value|2000
-end_define
-
-begin_comment
-comment|/* Header split args for get_bug */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IXGBE_CLEAN_HDR
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_CLEAN_PKT
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_CLEAN_ALL
-value|3
 end_define
 
 begin_comment
@@ -1013,8 +1009,8 @@ decl_stmt|;
 name|u32
 name|me
 decl_stmt|;
-name|bool
-name|watchdog_check
+name|int
+name|queue_status
 decl_stmt|;
 name|int
 name|watchdog_time
@@ -1278,7 +1274,14 @@ decl_stmt|;
 name|u16
 name|num_queues
 decl_stmt|;
-comment|/* Info about the board itself */
+comment|/* 	** Shadow VFTA table, this is needed because 	** the real vlan filter table gets cleared during 	** a soft reset and the driver needs to be able 	** to repopulate it. 	*/
+name|u32
+name|shadow_vfta
+index|[
+name|IXGBE_VFTA_SIZE
+index|]
+decl_stmt|;
+comment|/* Info about the interface */
 name|u32
 name|optics
 decl_stmt|;

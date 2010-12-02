@@ -4541,8 +4541,6 @@ name|vm_page_alloc_freelist
 argument_list|(
 name|VM_FREELIST_DIRECT
 argument_list|,
-literal|0
-argument_list|,
 name|req
 argument_list|)
 expr_stmt|;

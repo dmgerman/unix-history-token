@@ -1163,13 +1163,13 @@ name|delta
 argument_list|)
 expr_stmt|;
 comment|/* Free the swap accounted for shm */
-name|swap_release_by_uid
+name|swap_release_by_cred
 argument_list|(
 name|delta
 argument_list|,
 name|object
 operator|->
-name|uip
+name|cred
 argument_list|)
 expr_stmt|;
 name|object
@@ -1318,13 +1318,13 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|swap_reserve_by_uid
+name|swap_reserve_by_cred
 argument_list|(
 name|delta
 argument_list|,
 name|object
 operator|->
-name|uip
+name|cred
 argument_list|)
 condition|)
 block|{

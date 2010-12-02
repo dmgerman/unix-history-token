@@ -805,17 +805,6 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|msgpool
-operator|==
-name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"msgpool is NULL"
-argument_list|)
-expr_stmt|;
 name|msgmaps
 operator|=
 name|malloc
@@ -833,17 +822,6 @@ argument_list|,
 name|M_MSG
 argument_list|,
 name|M_WAITOK
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|msgmaps
-operator|==
-name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"msgmaps is NULL"
 argument_list|)
 expr_stmt|;
 name|msghdrs
@@ -865,17 +843,6 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|msghdrs
-operator|==
-name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"msghdrs is NULL"
-argument_list|)
-expr_stmt|;
 name|msqids
 operator|=
 name|malloc
@@ -893,17 +860,6 @@ argument_list|,
 name|M_MSG
 argument_list|,
 name|M_WAITOK
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|msqids
-operator|==
-name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"msqids is NULL"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * msginfo.msgssz should be a power of two for efficiency reasons. 	 * It is also pretty silly if msginfo.msgssz is less than 8 	 * or greater than about 256 so ... 	 */
@@ -983,17 +939,6 @@ literal|"msginfo.msgseg> 32767"
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|msgmaps
-operator|==
-name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"msgmaps is NULL"
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -1048,17 +993,6 @@ operator|=
 name|msginfo
 operator|.
 name|msgseg
-expr_stmt|;
-if|if
-condition|(
-name|msghdrs
-operator|==
-name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"msghdrs is NULL"
-argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -1137,17 +1071,6 @@ name|msghdrs
 index|[
 literal|0
 index|]
-expr_stmt|;
-if|if
-condition|(
-name|msqids
-operator|==
-name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"msqids is NULL"
-argument_list|)
 expr_stmt|;
 for|for
 control|(

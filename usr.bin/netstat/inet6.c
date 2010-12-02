@@ -1291,7 +1291,7 @@ name|p
 argument_list|(
 name|ip6s_exthdrtoolong
 argument_list|,
-literal|"\t%ju packet%s whose headers are not continuous\n"
+literal|"\t%ju packet%s whose headers are not contiguous\n"
 argument_list|)
 expr_stmt|;
 name|p

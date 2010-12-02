@@ -25,23 +25,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|cvm_oct_xmit_pow
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-name|m
-parameter_list|,
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|cvm_oct_tx_shutdown
 parameter_list|(

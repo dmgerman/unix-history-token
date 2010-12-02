@@ -248,6 +248,26 @@ name|EPERM
 operator|)
 return|;
 block|}
+if|if
+condition|(
+operator|!
+name|P_SHOULDSTOP
+argument_list|(
+name|p
+argument_list|)
+condition|)
+block|{
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EBUSY
+operator|)
+return|;
+block|}
 comment|/* XXXKSE: */
 name|td2
 operator|=

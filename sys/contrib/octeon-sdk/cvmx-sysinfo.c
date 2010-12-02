@@ -1,11 +1,46 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***********************license start***************  *  Copyright (c) 2003-2008 Cavium Networks (support@cavium.com). All rights  *  reserved.  *  *  *  Redistribution and use in source and binary forms, with or without  *  modification, are permitted provided that the following conditions are  *  met:  *  *      * Redistributions of source code must retain the above copyright  *        notice, this list of conditions and the following disclaimer.  *  *      * Redistributions in binary form must reproduce the above  *        copyright notice, this list of conditions and the following  *        disclaimer in the documentation and/or other materials provided  *        with the distribution.  *  *      * Neither the name of Cavium Networks nor the names of  *        its contributors may be used to endorse or promote products  *        derived from this software without specific prior written  *        permission.  *  *  TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  *  AND WITH ALL FAULTS AND CAVIUM NETWORKS MAKES NO PROMISES, REPRESENTATIONS  *  OR WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH  *  RESPECT TO THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY  *  REPRESENTATION OR DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT  *  DEFECTS, AND CAVIUM SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES  *  OF TITLE, MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR  *  PURPOSE, LACK OF VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET  *  POSSESSION OR CORRESPONDENCE TO DESCRIPTION.  THE ENTIRE RISK ARISING OUT  *  OF USE OR PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  *  *  *  For any questions regarding licensing please contact marketing@caviumnetworks.com  *  ***********************license end**************************************/
+comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Networks (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Networks nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM  NETWORKS MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
 end_comment
 
 begin_comment
-comment|/**  * @file  *  * This module provides system/board/application information obtained by the bootloader.  *  *<hr>$Revision: 41586 $<hr>  *  */
+comment|/**  * @file  *  * This module provides system/board/application information obtained by the bootloader.  *  *<hr>$Revision: 52004 $<hr>  *  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CVMX_BUILD_FOR_LINUX_KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<linux/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<asm/octeon/cvmx.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<asm/octeon/cvmx-spinlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<asm/octeon/cvmx-sysinfo.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_include
 include|#
@@ -24,6 +59,11 @@ include|#
 directive|include
 file|"cvmx-sysinfo.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/**  * This structure defines the private state maintained by sysinfo module.  *  */
@@ -86,8 +126,8 @@ begin_expr_stmt
 name|CVMX_SHARED
 specifier|static
 expr|struct
-block|{
-name|cvmx_sysinfo_t
+block|{      struct
+name|cvmx_sysinfo
 name|sysinfo
 block|;
 comment|/**< system information */
@@ -175,7 +215,8 @@ comment|/**  * This function returns the application information as obtained  * 
 end_comment
 
 begin_function
-name|cvmx_sysinfo_t
+name|struct
+name|cvmx_sysinfo
 modifier|*
 name|cvmx_sysinfo_get
 parameter_list|(
@@ -193,17 +234,35 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CVMX_BUILD_FOR_LINUX_KERNEL
+end_ifdef
+
+begin_expr_stmt
+name|EXPORT_SYMBOL
+argument_list|(
+name|cvmx_sysinfo_get
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/**  * This function is used in non-simple executive environments (such as Linux kernel, u-boot, etc.)  * to configure the minimal fields that are required to use  * simple executive files directly.  *  * Locking (if required) must be handled outside of this  * function  *  * @param phy_mem_desc_ptr  *                   Pointer to global physical memory descriptor (bootmem descriptor)  * @param board_type Octeon board type enumeration  *  * @param board_rev_major  *                   Board major revision  * @param board_rev_minor  *                   Board minor revision  * @param cpu_clock_hz  *                   CPU clock freqency in hertz  *  * @return 0: Failure  *         1: success  */
+comment|/**  * This function is used in non-simple executive environments (such as Linux kernel, u-boot, etc.)  * to configure the minimal fields that are required to use  * simple executive files directly.  *  * Locking (if required) must be handled outside of this  * function  *  * @param phy_mem_desc_addr  *                   Address of the global physical memory descriptor (bootmem  *                   descriptor)  * @param board_type Octeon board type enumeration  *  * @param board_rev_major  *                   Board major revision  * @param board_rev_minor  *                   Board minor revision  * @param cpu_clock_hz  *                   CPU clock freqency in hertz  *  * @return 0: Failure  *         1: success  */
 end_comment
 
 begin_function
 name|int
 name|cvmx_sysinfo_minimal_initialize
 parameter_list|(
-name|void
-modifier|*
-name|phy_mem_desc_ptr
+name|uint64_t
+name|phy_mem_desc_addr
 parameter_list|,
 name|uint16_t
 name|board_type
@@ -241,9 +300,9 @@ name|state
 operator|.
 name|sysinfo
 operator|.
-name|phy_mem_desc_ptr
+name|phy_mem_desc_addr
 operator|=
-name|phy_mem_desc_ptr
+name|phy_mem_desc_addr
 expr_stmt|;
 name|state
 operator|.
@@ -478,12 +537,9 @@ literal|0
 condition|)
 name|system_info
 operator|->
-name|phy_mem_desc_ptr
+name|phy_mem_desc_addr
 operator|=
-name|cvmx_phys_to_ptr
-argument_list|(
 name|value
-argument_list|)
 expr_stmt|;
 elseif|else
 if|if
@@ -772,6 +828,15 @@ name|value
 expr_stmt|;
 block|}
 block|}
+name|system_info
+operator|->
+name|cpu_clock_hz
+operator|=
+name|cvmx_clock_get_rate
+argument_list|(
+name|CVMX_CLOCK_CORE
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

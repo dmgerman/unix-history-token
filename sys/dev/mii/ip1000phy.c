@@ -1403,6 +1403,15 @@ name|IP1000PHY_MII_ANAR
 argument_list|)
 expr_stmt|;
 name|reg
+operator|&=
+operator|~
+operator|(
+name|IP1000PHY_ANAR_PAUSE
+operator||
+name|IP1000PHY_ANAR_APAUSE
+operator|)
+expr_stmt|;
+name|reg
 operator||=
 name|IP1000PHY_ANAR_NP
 expr_stmt|;

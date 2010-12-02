@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***********************license start***************  *  Copyright (c) 2003-2008 Cavium Networks (support@cavium.com). All rights  *  reserved.  *  *  *  Redistribution and use in source and binary forms, with or without  *  modification, are permitted provided that the following conditions are  *  met:  *  *      * Redistributions of source code must retain the above copyright  *        notice, this list of conditions and the following disclaimer.  *  *      * Redistributions in binary form must reproduce the above  *        copyright notice, this list of conditions and the following  *        disclaimer in the documentation and/or other materials provided  *        with the distribution.  *  *      * Neither the name of Cavium Networks nor the names of  *        its contributors may be used to endorse or promote products  *        derived from this software without specific prior written  *        permission.  *  *  TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  *  AND WITH ALL FAULTS AND CAVIUM NETWORKS MAKES NO PROMISES, REPRESENTATIONS  *  OR WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH  *  RESPECT TO THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY  *  REPRESENTATION OR DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT  *  DEFECTS, AND CAVIUM SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES  *  OF TITLE, MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR  *  PURPOSE, LACK OF VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET  *  POSSESSION OR CORRESPONDENCE TO DESCRIPTION.  THE ENTIRE RISK ARISING OUT  *  OF USE OR PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  *  *  *  For any questions regarding licensing please contact marketing@caviumnetworks.com  *  ***********************license end**************************************/
+comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Networks (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Networks nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM  NETWORKS MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
 end_comment
 
 begin_comment
-comment|/**  * @file  * Simple executive application initialization for Linux user space. This  * file should be used instead of cvmx-app-init.c for running simple executive  * applications under Linux in userspace. The following are some of the key  * points to remember when writing applications to run both under the  * standalone simple executive and userspace under Linux.  *  * -# Application main must be called "appmain" under Linux. Use and ifdef  *      based on __linux__ to determine the proper name.  * -# Be careful to use cvmx_ptr_to_phys() and cvmx_phys_to_ptr. The simple  *      executive 1-1 TLB mappings allow you to be sloppy and interchange  *      hardware addresses with virtual address. This isn't true under Linux.  * -# If you're talking directly to hardware, be careful. The normal Linux  *      protections are circumvented. If you do something bad, Linux won't  *      save you.  * -# Most hardware can only be initialized once. Unless you're very careful,  *      this also means you Linux application can only run once.  *  *<hr>$Revision: 41757 $<hr>  *  */
+comment|/**  * @file  * Simple executive application initialization for Linux user space. This  * file should be used instead of cvmx-app-init.c for running simple executive  * applications under Linux in userspace. The following are some of the key  * points to remember when writing applications to run both under the  * standalone simple executive and userspace under Linux.  *  * -# Application main must be called "appmain" under Linux. Use and ifdef  *      based on __linux__ to determine the proper name.  * -# Be careful to use cvmx_ptr_to_phys() and cvmx_phys_to_ptr. The simple  *      executive 1-1 TLB mappings allow you to be sloppy and interchange  *      hardware addresses with virtual address. This isn't true under Linux.  * -# If you're talking directly to hardware, be careful. The normal Linux  *      protections are circumvented. If you do something bad, Linux won't  *      save you.  * -# Most hardware can only be initialized once. Unless you're very careful,  *      this also means you Linux application can only run once.  *  *<hr>$Revision: 49448 $<hr>  *  */
 end_comment
 
 begin_define
@@ -229,36 +229,6 @@ name|linux_mem32_offset
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|MIPS_CAVIUM_XKPHYS_READ
-value|2010
-end_define
-
-begin_comment
-comment|/* XKPHYS */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MIPS_CAVIUM_XKPHYS_WRITE
-value|2011
-end_define
-
-begin_comment
-comment|/* XKPHYS */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|CVMX_SHARED
-name|int32_t
-name|warn_count
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/**  * This function performs some default initialization of the Octeon executive.  It initializes  * the cvmx_bootmem memory allocator with the list of physical memory shared by the bootloader.  * This function should be called on all cores that will use the bootmem allocator.  * Applications which require a different configuration can replace this function with a suitable application  * specific one.  *  * @return 0 on success  *         -1 on failure  */
 end_comment
@@ -277,7 +247,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Simulator magic is not supported in user mode under Linux.  * This version of simprintf simply calls the underlying C  * library printf for output. It also makes sure that two  * calls to simprintf provide atomic output.  *  * @param fmt    Format string in the same format as printf.  */
+comment|/**  * Simulator magic is not supported in user mode under Linux.  * This version of simprintf simply calls the underlying C  * library printf for output. It also makes sure that two  * calls to simprintf provide atomic output.  *  * @param format  Format string in the same format as printf.  */
 end_comment
 
 begin_function
@@ -287,7 +257,7 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|fmt
+name|format
 parameter_list|,
 modifier|...
 parameter_list|)
@@ -323,12 +293,12 @@ name|va_start
 argument_list|(
 name|ap
 argument_list|,
-name|fmt
+name|format
 argument_list|)
 expr_stmt|;
 name|vprintf
 argument_list|(
-name|fmt
+name|format
 argument_list|,
 name|ap
 argument_list|)
@@ -904,10 +874,20 @@ name|long
 name|cpu
 decl_stmt|;
 name|int
-name|lastcpu
+name|firstcpu
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|firstcore
+init|=
+literal|0
+decl_stmt|;
+name|cvmx_linux_enable_xkphys_access
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 name|cvmx_sysinfo_linux_userspace_initialize
 argument_list|()
 expr_stmt|;
@@ -955,7 +935,7 @@ argument_list|(
 name|cvmx_sysinfo_get
 argument_list|()
 operator|->
-name|phy_mem_desc_ptr
+name|phy_mem_desc_addr
 argument_list|)
 expr_stmt|;
 comment|/* Check to make sure the Chip version matches the configured version */
@@ -1012,31 +992,57 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|cpu
+comment|/* Get the lowest logical cpu */
+name|firstcore
 operator|=
-literal|0
-init|;
-name|cpu
-operator|<
-literal|16
-condition|;
-name|cpu
-operator|++
-control|)
+name|ffsl
+argument_list|(
+name|cpumask
+argument_list|)
+operator|-
+literal|1
+expr_stmt|;
+name|cpumask
+operator|^=
+operator|(
+literal|1
+operator|<<
+operator|(
+name|firstcore
+operator|)
+operator|)
+expr_stmt|;
+while|while
+condition|(
+literal|1
+condition|)
 block|{
 if|if
 condition|(
 name|cpumask
-operator|&
-operator|(
-literal|1
-operator|<<
-name|cpu
-operator|)
+operator|==
+literal|0
 condition|)
 block|{
+name|cpu
+operator|=
+name|firstcore
+expr_stmt|;
+name|firstcpu
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+block|}
+name|cpu
+operator|=
+name|ffsl
+argument_list|(
+name|cpumask
+argument_list|)
+operator|-
+literal|1
+expr_stmt|;
 comment|/* Turn off the bit for this CPU number. We've counted him */
 name|cpumask
 operator|^=
@@ -1046,20 +1052,6 @@ operator|<<
 name|cpu
 operator|)
 expr_stmt|;
-comment|/* If this is the last CPU to run on, use this process instead of forking another one */
-if|if
-condition|(
-name|cpumask
-operator|==
-literal|0
-condition|)
-block|{
-name|lastcpu
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-block|}
 comment|/* Increment the number of CPUs running this app */
 name|cvmx_atomic_add32
 argument_list|(
@@ -1069,7 +1061,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Flush all IO streams before the fork. Otherwise any buffered                 data in the C library will be duplicated. This results in                 duplicate output from a single print */
+comment|/* Flush all IO streams before the fork. Otherwise any buffered            data in the C library will be duplicated. This results in            duplicate output from a single print */
 name|fflush
 argument_list|(
 name|NULL
@@ -1110,7 +1102,6 @@ argument_list|(
 name|errno
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 comment|/* Set affinity to lock me to the correct CPU */
@@ -1198,7 +1189,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|lastcpu
+name|firstcpu
 condition|)
 name|system_info
 operator|->
@@ -1230,82 +1221,11 @@ operator|->
 name|core_mask
 argument_list|)
 expr_stmt|;
-name|int
-name|ret
-init|=
-name|sysmips
+name|cvmx_linux_enable_xkphys_access
 argument_list|(
-name|MIPS_CAVIUM_XKPHYS_WRITE
-argument_list|,
-name|getpid
-argument_list|()
-argument_list|,
-literal|3
-argument_list|,
-literal|0
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|ret
-operator|!=
-literal|0
-condition|)
-block|{
-name|int32_t
-name|w
-init|=
-name|cvmx_atomic_fetch_and_add32
-argument_list|(
-operator|&
-name|warn_count
-argument_list|,
 literal|1
 argument_list|)
-decl_stmt|;
-if|if
-condition|(
-operator|!
-name|w
-condition|)
-block|{
-switch|switch
-condition|(
-name|errno
-condition|)
-block|{
-case|case
-name|EINVAL
-case|:
-name|perror
-argument_list|(
-literal|"sysmips(MIPS_CAVIUM_XKPHYS_WRITE) failed.\n"
-literal|"  Did you configure your kernel with both:\n"
-literal|"     CONFIG_CAVIUM_OCTEON_USER_MEM_PER_PROCESS *and*\n"
-literal|"     CONFIG_CAVIUM_OCTEON_USER_IO_PER_PROCESS?"
-argument_list|)
 expr_stmt|;
-break|break;
-case|case
-name|EPERM
-case|:
-name|perror
-argument_list|(
-literal|"sysmips(MIPS_CAVIUM_XKPHYS_WRITE) failed.\n"
-literal|"  Are you running as root?"
-argument_list|)
-expr_stmt|;
-break|break;
-default|default:
-name|perror
-argument_list|(
-literal|"sysmips(MIPS_CAVIUM_XKPHYS_WRITE) failed"
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-block|}
-block|}
 name|int
 name|result
 init|=

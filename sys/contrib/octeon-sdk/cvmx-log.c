@@ -1,16 +1,22 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***********************license start***************  *  Copyright (c) 2003-2008 Cavium Networks (support@cavium.com). All rights  *  reserved.  *  *  *  Redistribution and use in source and binary forms, with or without  *  modification, are permitted provided that the following conditions are  *  met:  *  *      * Redistributions of source code must retain the above copyright  *        notice, this list of conditions and the following disclaimer.  *  *      * Redistributions in binary form must reproduce the above  *        copyright notice, this list of conditions and the following  *        disclaimer in the documentation and/or other materials provided  *        with the distribution.  *  *      * Neither the name of Cavium Networks nor the names of  *        its contributors may be used to endorse or promote products  *        derived from this software without specific prior written  *        permission.  *  *  TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  *  AND WITH ALL FAULTS AND CAVIUM NETWORKS MAKES NO PROMISES, REPRESENTATIONS  *  OR WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH  *  RESPECT TO THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY  *  REPRESENTATION OR DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT  *  DEFECTS, AND CAVIUM SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES  *  OF TITLE, MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR  *  PURPOSE, LACK OF VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET  *  POSSESSION OR CORRESPONDENCE TO DESCRIPTION.  THE ENTIRE RISK ARISING OUT  *  OF USE OR PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  *  *  *  For any questions regarding licensing please contact marketing@caviumnetworks.com  *  ***********************license end**************************************/
+comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Networks (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Networks nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM  NETWORKS MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
 end_comment
 
 begin_comment
-comment|/**  * @file  *  * cvmx-log supplies a fast log buffer implementation. Each core writes  * log data to a differnet buffer to avoid synchronization overhead. Function  * call logging can be turned on with the GCC option "-pg".  *  *<hr>$Revision: 41586 $<hr>  */
+comment|/**  * @file  *  * cvmx-log supplies a fast log buffer implementation. Each core writes  * log data to a differnet buffer to avoid synchronization overhead. Function  * call logging can be turned on with the GCC option "-pg".  *  *<hr>$Revision: 49448 $<hr>  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"cvmx.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"cvmx-core.h"
 end_include
 
 begin_include
@@ -1043,14 +1049,14 @@ begin_function
 name|void
 name|cvmx_log_perf_setup
 parameter_list|(
-name|cvmx_log_perf_event_t
+name|cvmx_core_perf_t
 name|counter1
 parameter_list|,
-name|cvmx_log_perf_event_t
+name|cvmx_core_perf_t
 name|counter2
 parameter_list|)
 block|{
-name|cvmx_log_perf_control_t
+name|cvmx_core_perf_control_t
 name|control
 decl_stmt|;
 name|control
@@ -1071,7 +1077,7 @@ name|control
 operator|.
 name|s
 operator|.
-name|U
+name|u
 operator|=
 literal|1
 expr_stmt|;
@@ -1079,7 +1085,7 @@ name|control
 operator|.
 name|s
 operator|.
-name|S
+name|s
 operator|=
 literal|1
 expr_stmt|;
@@ -1087,7 +1093,7 @@ name|control
 operator|.
 name|s
 operator|.
-name|K
+name|k
 operator|=
 literal|1
 expr_stmt|;
@@ -1095,7 +1101,7 @@ name|control
 operator|.
 name|s
 operator|.
-name|EX
+name|ex
 operator|=
 literal|1
 expr_stmt|;

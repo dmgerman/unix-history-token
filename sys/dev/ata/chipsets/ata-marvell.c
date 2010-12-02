@@ -3957,11 +3957,6 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|ata_dmainit
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 comment|/* note start and stop are not used here */
 name|ch
 operator|->
@@ -4021,6 +4016,11 @@ operator|=
 literal|64
 operator|*
 name|DEV_BSIZE
+expr_stmt|;
+name|ata_dmainit
+argument_list|(
+name|dev
+argument_list|)
 expr_stmt|;
 block|}
 end_function

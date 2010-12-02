@@ -892,9 +892,6 @@ decl_stmt|;
 name|vm_paddr_t
 name|pa
 decl_stmt|;
-name|int
-name|nblocks
-decl_stmt|;
 name|vm_paddr_t
 name|last_pa
 decl_stmt|;
@@ -922,10 +919,6 @@ operator|=
 literal|0
 expr_stmt|;
 name|biggestone
-operator|=
-literal|0
-expr_stmt|;
-name|nblocks
 operator|=
 literal|0
 expr_stmt|;
@@ -1083,9 +1076,6 @@ name|i
 operator|+
 literal|1
 index|]
-expr_stmt|;
-operator|++
-name|nblocks
 expr_stmt|;
 block|}
 ifdef|#
@@ -1310,20 +1300,52 @@ argument_list|(
 name|__mips__
 argument_list|)
 comment|/* 	 * Allocate a bitmap to indicate that a random physical page 	 * needs to be included in a minidump. 	 * 	 * The amd64 port needs this to indicate which direct map pages 	 * need to be dumped, via calls to dump_add_page()/dump_drop_page(). 	 * 	 * However, i386 still needs this workspace internally within the 	 * minidump code.  In theory, they are not needed on i386, but are 	 * included should the sf_buf code decide to use them. 	 */
-name|page_range
+name|last_pa
 operator|=
-name|phys_avail
+literal|0
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|dump_avail
 index|[
-operator|(
-name|nblocks
-operator|-
-literal|1
-operator|)
-operator|*
-literal|2
+name|i
 operator|+
 literal|1
 index|]
+operator|!=
+literal|0
+condition|;
+name|i
+operator|+=
+literal|2
+control|)
+if|if
+condition|(
+name|dump_avail
+index|[
+name|i
+operator|+
+literal|1
+index|]
+operator|>
+name|last_pa
+condition|)
+name|last_pa
+operator|=
+name|dump_avail
+index|[
+name|i
+operator|+
+literal|1
+index|]
+expr_stmt|;
+name|page_range
+operator|=
+name|last_pa
 operator|/
 name|PAGE_SIZE
 expr_stmt|;
@@ -5329,7 +5351,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * 	vm_page_alloc_freelist:  *   *	Allocate a page from the specified freelist with specified order.  *	Only the ALLOC_CLASS values in req are honored, other request flags  *	are ignored.  */
+comment|/*  * 	vm_page_alloc_freelist:  *   *	Allocate a page from the specified freelist.  *	Only the ALLOC_CLASS values in req are honored, other request flags  *	are ignored.  */
 end_comment
 
 begin_function
@@ -5338,9 +5360,6 @@ name|vm_page_alloc_freelist
 parameter_list|(
 name|int
 name|flind
-parameter_list|,
-name|int
-name|order
 parameter_list|,
 name|int
 name|req
@@ -5431,7 +5450,7 @@ name|flind
 argument_list|,
 name|VM_FREEPOOL_DIRECT
 argument_list|,
-name|order
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
