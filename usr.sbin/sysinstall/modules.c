@@ -616,6 +616,8 @@ block|{
 name|DMenu
 modifier|*
 name|menu
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|i
@@ -644,6 +646,10 @@ decl_stmt|;
 name|err
 operator|=
 name|NULL
+expr_stmt|;
+name|count
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -714,10 +720,6 @@ argument_list|)
 operator|*
 literal|2
 operator|)
-expr_stmt|;
-name|count
-operator|=
-literal|0
 expr_stmt|;
 if|if
 condition|(
