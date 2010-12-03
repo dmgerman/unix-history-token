@@ -429,7 +429,7 @@ parameter_list|,
 name|ex_class
 parameter_list|)
 define|\
-value|(STACK_OF(type) *)d2i_ASN1_SET(CHECKED_PTR_OF(STACK_OF(type), st), \ 				pp, length, \ 				CHECKED_D2I_OF(type, d2i_func), \ 				CHECKED_SK_FREE_FUNC(type, free_func), \ 				ex_tag, ex_class)
+value|(STACK_OF(type) *)d2i_ASN1_SET(CHECKED_PTR_OF(STACK_OF(type)*, st), \ 				pp, length, \ 				CHECKED_D2I_OF(type, d2i_func), \ 				CHECKED_SK_FREE_FUNC(type, free_func), \ 				ex_tag, ex_class)
 end_define
 
 begin_define
