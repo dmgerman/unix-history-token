@@ -116,8 +116,6 @@ end_include
 begin_decl_stmt
 name|uint64_t
 name|tsc_freq
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
