@@ -28,17 +28,6 @@ comment|/*  * Machine dependent constants mips processors.  */
 end_comment
 
 begin_comment
-comment|/*  * USRTEXT is the start of the user text/data space, while USRSTACK  * is the top (end) of the user stack.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USRTEXT
-value|(1*PAGE_SIZE)
-end_define
-
-begin_comment
 comment|/*  * Virtual memory related constants, all in bytes  */
 end_comment
 
@@ -212,13 +201,6 @@ define|#
 directive|define
 name|VM_MINUSER_ADDRESS
 value|((vm_offset_t)0x00000000)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VM_MAX_MMAP_ADDR
-value|VM_MAXUSER_ADDRESS
 end_define
 
 begin_ifdef
