@@ -1172,9 +1172,9 @@ name|up_type
 operator|==
 name|USBPF_XFERTAP_SUBMIT
 condition|?
-literal|">"
+literal|"S"
 else|:
-literal|"<"
+literal|"D"
 argument_list|)
 expr_stmt|;
 name|printf
