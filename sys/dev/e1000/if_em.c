@@ -20374,15 +20374,6 @@ name|i
 parameter_list|)
 block|{
 name|struct
-name|adapter
-modifier|*
-name|adapter
-init|=
-name|rxr
-operator|->
-name|adapter
-decl_stmt|;
-name|struct
 name|em_buffer
 modifier|*
 name|rbuf
