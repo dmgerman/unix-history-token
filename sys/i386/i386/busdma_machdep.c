@@ -3915,6 +3915,8 @@ parameter_list|)
 block|{
 name|bus_addr_t
 name|lastaddr
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|nsegs
@@ -4004,13 +4006,6 @@ expr_stmt|;
 name|first
 operator|=
 literal|1
-expr_stmt|;
-name|lastaddr
-operator|=
-operator|(
-name|bus_addr_t
-operator|)
-literal|0
 expr_stmt|;
 for|for
 control|(
