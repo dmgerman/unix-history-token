@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: view.c,v 1.150.84.3.10.1 2010/03/03 22:06:39 marka Exp $ */
+comment|/* $Id: view.c,v 1.150.84.3.10.2 2010/09/29 00:03:32 marka Exp $ */
 end_comment
 
 begin_comment
@@ -836,6 +836,18 @@ name|dns_one_answer
 expr_stmt|;
 name|view
 operator|->
+name|cacheacl
+operator|=
+name|NULL
+expr_stmt|;
+name|view
+operator|->
+name|cacheonacl
+operator|=
+name|NULL
+expr_stmt|;
+name|view
+operator|->
 name|queryacl
 operator|=
 name|NULL
@@ -1592,6 +1604,38 @@ operator|&
 name|view
 operator|->
 name|matchdestinations
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|view
+operator|->
+name|cacheacl
+operator|!=
+name|NULL
+condition|)
+name|dns_acl_detach
+argument_list|(
+operator|&
+name|view
+operator|->
+name|cacheacl
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|view
+operator|->
+name|cacheonacl
+operator|!=
+name|NULL
+condition|)
+name|dns_acl_detach
+argument_list|(
+operator|&
+name|view
+operator|->
+name|cacheonacl
 argument_list|)
 expr_stmt|;
 if|if

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: query.c,v 1.313.20.16.10.2 2010/06/26 23:46:14 tbox Exp $ */
+comment|/* $Id: query.c,v 1.313.20.16.10.3 2010/09/29 00:03:32 marka Exp $ */
 end_comment
 
 begin_comment
@@ -3566,13 +3566,13 @@ name|query
 operator|.
 name|attributes
 operator|&
-name|NS_QUERYATTR_QUERYOKVALID
+name|NS_QUERYATTR_CACHEACLOKVALID
 operator|)
 operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 		 * We've evaluated the view's queryacl already.  If 		 * NS_QUERYATTR_QUERYOK is set, then the client is 		 * allowed to make queries, otherwise the query should 		 * be refused. 		 */
+comment|/* 		 * We've evaluated the view's cacheacl already.  If 		 * NS_QUERYATTR_CACHEACLOK is set, then the client is 		 * allowed to make queries, otherwise the query should 		 * be refused. 		 */
 name|check_acl
 operator|=
 name|ISC_FALSE
@@ -3586,7 +3586,7 @@ name|query
 operator|.
 name|attributes
 operator|&
-name|NS_QUERYATTR_QUERYOK
+name|NS_QUERYATTR_CACHEACLOK
 operator|)
 operator|==
 literal|0
@@ -3643,7 +3643,7 @@ name|client
 operator|->
 name|view
 operator|->
-name|queryacl
+name|cacheacl
 argument_list|,
 name|ISC_TRUE
 argument_list|)
@@ -3655,14 +3655,14 @@ operator|==
 name|ISC_R_SUCCESS
 condition|)
 block|{
-comment|/* 			 * We were allowed by the default 			 * "allow-query" ACL.  Remember this so we 			 * don't have to check again. 			 */
+comment|/* 			 * We were allowed by the "allow-query-cache" ACL. 			 * Remember this so we don't have to check again. 			 */
 name|client
 operator|->
 name|query
 operator|.
 name|attributes
 operator||=
-name|NS_QUERYATTR_QUERYOK
+name|NS_QUERYATTR_CACHEACLOK
 expr_stmt|;
 if|if
 condition|(
@@ -3765,14 +3765,14 @@ name|msg
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * We've now evaluated the view's query ACL, and 		 * the NS_QUERYATTR_QUERYOK attribute is now valid. 		 */
+comment|/* 		 * We've now evaluated the view's query ACL, and 		 * the NS_QUERYATTR_CACHEACLOKVALID attribute is now valid. 		 */
 name|client
 operator|->
 name|query
 operator|.
 name|attributes
 operator||=
-name|NS_QUERYATTR_QUERYOKVALID
+name|NS_QUERYATTR_CACHEACLOKVALID
 expr_stmt|;
 if|if
 condition|(
