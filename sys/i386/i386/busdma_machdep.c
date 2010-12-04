@@ -26,24 +26,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kdb.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ddb/ddb.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ddb/db_output.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/systm.h>
 end_include
 
