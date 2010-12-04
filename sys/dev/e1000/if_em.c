@@ -3299,7 +3299,7 @@ name|adapter
 argument_list|,
 literal|"flow_control"
 argument_list|,
-literal|"max number of rx packets to process"
+literal|"configure flow control"
 argument_list|,
 operator|&
 name|adapter
@@ -17884,18 +17884,15 @@ index|[
 name|i
 index|]
 expr_stmt|;
-comment|/* 		** Just skip entries with a buffer, 		** they can only be due to an error 		** and are to be reused. 		*/
 if|if
 condition|(
 name|rxbuf
 operator|->
 name|m_head
-operator|!=
+operator|==
 name|NULL
 condition|)
-goto|goto
-name|reuse
-goto|;
+block|{
 name|m
 operator|=
 name|m_getjcl
@@ -17911,7 +17908,7 @@ operator|->
 name|rx_mbuf_sz
 argument_list|)
 expr_stmt|;
-comment|/* 		** If we have a temporary resource shortage 		** that causes a failure, just abort refresh 		** for now, we will return to this point when 		** reinvoked from em_rxeof. 		*/
+comment|/* 			** If we have a temporary resource shortage 			** that causes a failure, just abort refresh 			** for now, we will return to this point when 			** reinvoked from em_rxeof. 			*/
 if|if
 condition|(
 name|m
@@ -17921,6 +17918,14 @@ condition|)
 goto|goto
 name|update
 goto|;
+block|}
+else|else
+name|m
+operator|=
+name|rxbuf
+operator|->
+name|m_head
+expr_stmt|;
 name|m
 operator|->
 name|m_len
@@ -17934,6 +17939,22 @@ operator|=
 name|adapter
 operator|->
 name|rx_mbuf_sz
+expr_stmt|;
+name|m
+operator|->
+name|m_flags
+operator||=
+name|M_PKTHDR
+expr_stmt|;
+name|m
+operator|->
+name|m_data
+operator|=
+name|m
+operator|->
+name|m_ext
+operator|.
+name|ext_buf
 expr_stmt|;
 comment|/* Use bus_dma machinery to setup the memory mapping  */
 name|error
@@ -17965,26 +17986,34 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"Refresh mbufs: hdr dmamap load"
+literal|" failure - %d\n"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
 name|m_free
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+name|rxbuf
+operator|->
+name|m_head
+operator|=
+name|NULL
+expr_stmt|;
 goto|goto
 name|update
 goto|;
 block|}
-comment|/* If nsegs is wrong then the stack is corrupt. */
-name|KASSERT
-argument_list|(
-name|nsegs
-operator|==
-literal|1
-argument_list|,
-operator|(
-literal|"Too many segments returned!"
-operator|)
-argument_list|)
+name|rxbuf
+operator|->
+name|m_head
+operator|=
+name|m
 expr_stmt|;
 name|bus_dmamap_sync
 argument_list|(
@@ -17998,12 +18027,6 @@ name|map
 argument_list|,
 name|BUS_DMASYNC_PREREAD
 argument_list|)
-expr_stmt|;
-name|rxbuf
-operator|->
-name|m_head
-operator|=
-name|m
 expr_stmt|;
 name|rxr
 operator|->
@@ -18024,8 +18047,6 @@ operator|.
 name|ds_addr
 argument_list|)
 expr_stmt|;
-name|reuse
-label|:
 name|cleaned
 operator|=
 name|i
@@ -18044,7 +18065,6 @@ name|i
 operator|=
 literal|0
 expr_stmt|;
-comment|/* This is the work marker for refresh */
 name|rxr
 operator|->
 name|next_to_refresh
@@ -19917,19 +19937,19 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|rxr
-operator|->
-name|discard
-operator|==
-name|TRUE
-operator|)
-operator|||
-operator|(
 name|cur
 operator|->
 name|errors
 operator|&
 name|E1000_RXD_ERR_FRAME_ERR_MASK
+operator|)
+operator|||
+operator|(
+name|rxr
+operator|->
+name|discard
+operator|==
+name|TRUE
 operator|)
 condition|)
 block|{
@@ -20367,11 +20387,6 @@ name|em_buffer
 modifier|*
 name|rbuf
 decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-name|m
-decl_stmt|;
 name|rbuf
 operator|=
 operator|&
@@ -20420,49 +20435,28 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* Reset state, keep loaded DMA map and reuse */
-name|m
-operator|=
+comment|/* 	** Free buffer and allow em_refresh_mbufs() 	** to clean up and recharge buffer. 	*/
+if|if
+condition|(
 name|rbuf
 operator|->
 name|m_head
+condition|)
+block|{
+name|m_free
+argument_list|(
+name|rbuf
+operator|->
+name|m_head
+argument_list|)
 expr_stmt|;
-name|m
+name|rbuf
 operator|->
-name|m_len
-operator|=
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|len
-operator|=
-name|adapter
-operator|->
-name|rx_mbuf_sz
-expr_stmt|;
-name|m
-operator|->
-name|m_flags
-operator||=
-name|M_PKTHDR
-expr_stmt|;
-name|m
-operator|->
-name|m_data
-operator|=
-name|m
-operator|->
-name|m_ext
-operator|.
-name|ext_buf
-expr_stmt|;
-name|m
-operator|->
-name|m_next
+name|m_head
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 return|return;
 block|}
 end_function
