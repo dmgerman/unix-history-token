@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005, 2007-2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005, 2007-2010  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: journal.c,v 1.103.48.6 2009/11/04 23:47:25 tbox Exp $ */
+comment|/* $Id: journal.c,v 1.103.48.6.10.2 2010/11/17 23:46:16 tbox Exp $ */
 end_comment
 
 begin_include
@@ -10457,13 +10457,20 @@ operator|.
 name|offset
 expr_stmt|;
 block|}
+comment|/* 	 * Close both journals before trying to rename files (this is 	 * necessary on WIN32). 	 */
+name|dns_journal_destroy
+argument_list|(
+operator|&
+name|j
+argument_list|)
+expr_stmt|;
 name|dns_journal_destroy
 argument_list|(
 operator|&
 name|new
 argument_list|)
 expr_stmt|;
-comment|/* 	 * With a UFS file system this should just succeed and be atomic. 	 * Any IXFR outs will just continue and the old journal will be 	 * removed on final close. 	 * 	 * With MSDOS / NTFS we need to do a two stage rename triggered 	 * bu EEXISTS.  Hopefully all IXFR's that were active at the last 	 * rename are now complete. 	 */
+comment|/* 	 * With a UFS file system this should just succeed and be atomic. 	 * Any IXFR outs will just continue and the old journal will be 	 * removed on final close. 	 * 	 * With MSDOS / NTFS we need to do a two stage rename, triggered 	 * by EEXIST.  (If any IXFR's are running in other threads, however, 	 * this will fail, and the journal will not be compacted.  But 	 * if so, hopefully they'll be finished by the next time we 	 * compact.) 	 */
 if|if
 condition|(
 name|rename
@@ -10481,7 +10488,7 @@ if|if
 condition|(
 name|errno
 operator|==
-name|EACCES
+name|EEXIST
 operator|&&
 operator|!
 name|is_backup
@@ -10559,12 +10566,6 @@ name|failure
 goto|;
 block|}
 block|}
-name|dns_journal_destroy
-argument_list|(
-operator|&
-name|j
-argument_list|)
-expr_stmt|;
 name|result
 operator|=
 name|ISC_R_SUCCESS
