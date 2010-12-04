@@ -19,6 +19,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -483,6 +484,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|char
 modifier|*
 name|pr_type
@@ -874,8 +876,6 @@ decl_stmt|,
 name|rcvcmsglen
 decl_stmt|,
 name|error
-decl_stmt|,
-name|minlen
 decl_stmt|;
 name|struct
 name|addrinfo
@@ -903,6 +903,8 @@ name|hp
 decl_stmt|;
 name|size_t
 name|size
+decl_stmt|,
+name|minlen
 decl_stmt|;
 name|uid_t
 name|uid
@@ -2275,13 +2277,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"traceroute6: packet size must be %d<= s< %ld.\n"
+literal|"traceroute6: packet size must be %zu<= s< %d.\n"
 argument_list|,
 name|minlen
 argument_list|,
-operator|(
-name|long
-operator|)
 name|MAXPACKET
 argument_list|)
 expr_stmt|;
@@ -2293,16 +2292,8 @@ expr_stmt|;
 block|}
 name|outpacket
 operator|=
-operator|(
-expr|struct
-name|opacket
-operator|*
-operator|)
 name|malloc
 argument_list|(
-operator|(
-name|unsigned
-operator|)
 name|datalen
 argument_list|)
 expr_stmt|;
@@ -3725,7 +3716,7 @@ name|got_there
 init|=
 literal|0
 decl_stmt|;
-name|int
+name|unsigned
 name|unreachable
 init|=
 literal|0
@@ -4654,6 +4645,9 @@ name|i
 operator|<
 literal|0
 operator|||
+operator|(
+name|u_long
+operator|)
 name|i
 operator|!=
 name|datalen
@@ -4858,15 +4852,14 @@ comment|/*  * Convert an ICMP "type" field to a printable string.  */
 end_comment
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|pr_type
 parameter_list|(
-name|t0
-parameter_list|)
 name|int
 name|t0
-decl_stmt|;
+parameter_list|)
 block|{
 name|u_char
 name|t
@@ -4875,6 +4868,7 @@ name|t0
 operator|&
 literal|0xff
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|cp
@@ -5220,6 +5214,9 @@ if|if
 condition|(
 name|cc
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
