@@ -22,7 +22,7 @@ name|lint
 end_ifndef
 
 begin_endif
-unit|__RCSID("$NetBSD: stat.c,v 1.28 2009/04/13 23:02:36 lukem Exp $");
+unit|__RCSID("$NetBSD: stat.c,v 1.30 2010/11/25 04:33:30 dholland Exp $");
 endif|#
 directive|endif
 end_endif
@@ -3316,10 +3316,6 @@ name|ts
 operator|.
 name|tv_sec
 expr_stmt|;
-name|small
-operator|=
-literal|1
-expr_stmt|;
 name|tm
 operator|=
 name|localtime
@@ -4533,7 +4529,7 @@ name|strcat
 argument_list|(
 name|lfmt
 argument_list|,
-literal|"d"
+literal|"lld"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4546,6 +4542,10 @@ name|blen
 argument_list|,
 name|lfmt
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|ts
 operator|.
 name|tv_sec
@@ -4608,6 +4608,7 @@ name|tmp
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Seconds: time_t cast to long long. */
 operator|(
 name|void
 operator|)
@@ -4615,7 +4616,7 @@ name|strcat
 argument_list|(
 name|lfmt
 argument_list|,
-literal|"d"
+literal|"lld"
 argument_list|)
 expr_stmt|;
 comment|/* 		 * The stuff after the decimal point always needs zero 		 * filling. 		 */
@@ -4629,7 +4630,7 @@ argument_list|,
 literal|".%0"
 argument_list|)
 expr_stmt|;
-comment|/* 		 * We can "print" at most nine digits of precision.  The 		 * rest we will pad on at the end. 		 */
+comment|/* 		 * We can "print" at most nine digits of precision.  The 		 * rest we will pad on at the end. 		 * 		 * Nanoseconds: long. 		 */
 operator|(
 name|void
 operator|)
@@ -4642,7 +4643,7 @@ argument_list|(
 name|tmp
 argument_list|)
 argument_list|,
-literal|"%dd"
+literal|"%dld"
 argument_list|,
 name|prec
 operator|>
@@ -4691,6 +4692,10 @@ name|blen
 argument_list|,
 name|lfmt
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|ts
 operator|.
 name|tv_sec
