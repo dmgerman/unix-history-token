@@ -808,8 +808,6 @@ parameter_list|,
 name|int
 parameter_list|,
 name|int
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1476,8 +1474,6 @@ argument_list|,
 name|fn
 argument_list|,
 name|nonl
-argument_list|,
-name|quiet
 argument_list|)
 expr_stmt|;
 name|argv
@@ -1646,9 +1642,6 @@ name|fn
 parameter_list|,
 name|int
 name|nonl
-parameter_list|,
-name|int
-name|quiet
 parameter_list|)
 block|{
 name|int
