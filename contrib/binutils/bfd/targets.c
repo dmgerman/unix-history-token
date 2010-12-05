@@ -527,6 +527,14 @@ begin_decl_stmt
 specifier|extern
 specifier|const
 name|bfd_target
+name|bfd_elf64_ia64_freebsd_vec
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|bfd_target
 name|bfd_elf32_ia64_hpux_big_vec
 decl_stmt|;
 end_decl_stmt
