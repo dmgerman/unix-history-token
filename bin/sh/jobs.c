@@ -1792,7 +1792,7 @@ name|statestr
 argument_list|,
 literal|64
 argument_list|,
-literal|"Done (%d)"
+literal|"Done(%d)"
 argument_list|,
 name|WEXITSTATUS
 argument_list|(
