@@ -22,7 +22,7 @@ name|lint
 end_ifndef
 
 begin_endif
-unit|__RCSID("$NetBSD: stat.c,v 1.18 2004/05/28 04:48:31 atatat Exp $");
+unit|__RCSID("$NetBSD: stat.c,v 1.22 2005/04/22 03:36:48 atatat Exp $");
 endif|#
 directive|endif
 end_endif
@@ -1648,6 +1648,10 @@ name|char
 name|buf
 index|[
 name|PATH_MAX
+operator|+
+literal|4
+operator|+
+literal|1
 index|]
 decl_stmt|;
 specifier|const
@@ -2354,6 +2358,8 @@ sizeof|sizeof
 argument_list|(
 name|buf
 argument_list|)
+operator|-
+literal|1
 condition|;
 name|i
 operator|++
