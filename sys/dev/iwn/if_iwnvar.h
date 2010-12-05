@@ -866,6 +866,9 @@ decl_stmt|;
 name|u_int
 name|calib_init
 decl_stmt|;
+name|u_int
+name|calib_runtime
+decl_stmt|;
 define|#
 directive|define
 name|IWN_CALIB_XTAL
