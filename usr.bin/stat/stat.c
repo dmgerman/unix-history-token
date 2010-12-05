@@ -22,7 +22,7 @@ name|lint
 end_ifndef
 
 begin_endif
-unit|__RCSID("$NetBSD: stat.c,v 1.13 2003/07/25 03:21:17 atatat Exp $");
+unit|__RCSID("$NetBSD: stat.c,v 1.18 2004/05/28 04:48:31 atatat Exp $");
 endif|#
 directive|endif
 end_endif
@@ -133,6 +133,12 @@ begin_include
 include|#
 directive|include
 file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -1353,6 +1359,11 @@ if|if
 condition|(
 name|usestat
 condition|)
+block|{
+comment|/* 				 * Try stat() and if it fails, fall back to 				 * lstat() just in case we're examining a 				 * broken symlink. 				 */
+if|if
+condition|(
+operator|(
 name|rc
 operator|=
 name|stat
@@ -1362,7 +1373,35 @@ argument_list|,
 operator|&
 name|st
 argument_list|)
+operator|)
+operator|==
+operator|-
+literal|1
+operator|&&
+name|errno
+operator|==
+name|ENOENT
+operator|&&
+operator|(
+name|rc
+operator|=
+name|lstat
+argument_list|(
+name|file
+argument_list|,
+operator|&
+name|st
+argument_list|)
+operator|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|errno
+operator|=
+name|ENOENT
 expr_stmt|;
+block|}
 else|else
 name|rc
 operator|=
