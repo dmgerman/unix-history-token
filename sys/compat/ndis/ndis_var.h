@@ -6902,6 +6902,22 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|void
+modifier|*
+name|ndis_get_routine_address
+parameter_list|(
+name|struct
+name|image_patch_table
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|int
 name|ndis_get_supported_oids
 parameter_list|(
