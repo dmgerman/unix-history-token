@@ -608,7 +608,6 @@ expr_stmt|;
 name|hardclockintr
 argument_list|()
 expr_stmt|;
-empty_stmt|;
 break|break;
 default|default:
 name|panic

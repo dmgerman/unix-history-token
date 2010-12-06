@@ -431,7 +431,6 @@ operator|==
 name|NULL
 condition|)
 break|break;
-empty_stmt|;
 if|if
 condition|(
 operator|!

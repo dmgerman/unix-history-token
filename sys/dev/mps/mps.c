@@ -6341,7 +6341,6 @@ name|handled
 init|=
 literal|0
 decl_stmt|;
-empty_stmt|;
 name|event
 operator|=
 name|reply
