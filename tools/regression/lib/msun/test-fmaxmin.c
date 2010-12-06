@@ -86,11 +86,13 @@ name|x
 operator|==
 name|y
 operator|&&
+operator|!
 name|signbit
 argument_list|(
 name|x
 argument_list|)
 operator|==
+operator|!
 name|signbit
 argument_list|(
 name|y
