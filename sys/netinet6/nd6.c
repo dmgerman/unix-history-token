@@ -4083,6 +4083,20 @@ return|;
 block|}
 if|if
 condition|(
+name|dr
+condition|)
+block|{
+comment|/* 			 * Unreachablity of a router might affect the default 			 * router selection and on-link detection of advertised 			 * prefixes. 			 */
+comment|/* 			 * Temporarily fake the state to choose a new default 			 * router and to perform on-link determination of 			 * prefixes correctly. 			 * Below the state will be set correctly, 			 * or the entry itself will be deleted. 			 */
+name|ln
+operator|->
+name|ln_state
+operator|=
+name|ND6_LLINFO_INCOMPLETE
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|ln
 operator|->
 name|ln_router
@@ -4090,6 +4104,12 @@ operator|||
 name|dr
 condition|)
 block|{
+comment|/* 			 * We need to unlock to avoid a LOR with rt6_flush() with the 			 * rnh and for the calls to pfxlist_onlink_check() and 			 * defrouter_select() in the block further down for calls 			 * into nd6_lookup().  We still hold a ref. 			 */
+name|LLE_WUNLOCK
+argument_list|(
+name|ln
+argument_list|)
+expr_stmt|;
 comment|/* 			 * rt6_flush must be called whether or not the neighbor 			 * is in the Default Router List. 			 * See a corresponding comment in nd6_na_input(). 			 */
 name|rt6_flush
 argument_list|(
@@ -4110,33 +4130,28 @@ condition|(
 name|dr
 condition|)
 block|{
-comment|/* 			 * Unreachablity of a router might affect the default 			 * router selection and on-link detection of advertised 			 * prefixes. 			 */
-comment|/* 			 * Temporarily fake the state to choose a new default 			 * router and to perform on-link determination of 			 * prefixes correctly. 			 * Below the state will be set correctly, 			 * or the entry itself will be deleted. 			 */
-name|ln
-operator|->
-name|ln_state
-operator|=
-name|ND6_LLINFO_INCOMPLETE
-expr_stmt|;
 comment|/* 			 * Since defrouter_select() does not affect the 			 * on-link determination and MIP6 needs the check 			 * before the default router selection, we perform 			 * the check now. 			 */
 name|pfxlist_onlink_check
 argument_list|()
 expr_stmt|;
-comment|/* 			 * Refresh default router list.  Have to unlock as 			 * it calls into nd6_lookup(), still holding a ref. 			 */
-name|LLE_WUNLOCK
-argument_list|(
-name|ln
-argument_list|)
-expr_stmt|;
+comment|/* 			 * Refresh default router list. 			 */
 name|defrouter_select
 argument_list|()
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|ln
+operator|->
+name|ln_router
+operator|||
+name|dr
+condition|)
 name|LLE_WLOCK
 argument_list|(
 name|ln
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 comment|/* 	 * Before deleting the entry, remember the next entry as the 	 * return value.  We need this because pfxlist_onlink_check() above 	 * might have freed other entries (particularly the old next entry) as 	 * a side effect (XXX). 	 */
 name|next
