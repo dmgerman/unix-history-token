@@ -138,7 +138,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_int
+name|int
 name|tsc_present
 decl_stmt|;
 end_decl_stmt
