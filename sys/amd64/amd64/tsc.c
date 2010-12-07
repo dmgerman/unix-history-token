@@ -862,7 +862,7 @@ name|int
 name|status
 parameter_list|)
 block|{
-comment|/* 	 * If there was an error during the transition or 	 * TSC is P-state invariant, don't do anything. 	 */
+comment|/* If there was an error during the transition, don't do anything. */
 if|if
 condition|(
 name|status
