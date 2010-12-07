@@ -183,6 +183,12 @@ name|bdev
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|ifp
+operator|->
+name|if_flags
+operator|=
+name|IFF_CANTCONFIG
+expr_stmt|;
 name|if_attach
 argument_list|(
 name|ifp

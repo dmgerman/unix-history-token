@@ -453,8 +453,15 @@ begin_comment
 comment|/* (i) supports multicast */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IFF_CANTCONFIG
+value|0x10000
+end_define
+
 begin_comment
-comment|/*			0x10000		*/
+comment|/* (i) unconfigurable using ioctl(2) */
 end_comment
 
 begin_define
