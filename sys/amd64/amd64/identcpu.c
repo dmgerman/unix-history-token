@@ -405,6 +405,13 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
+name|eventhandler_tag
+name|tsc_post_tag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|char
 name|cpu_brand
 index|[
@@ -1280,6 +1287,7 @@ parameter_list|(
 name|void
 modifier|*
 name|arg
+name|__unused
 parameter_list|,
 specifier|const
 name|struct
@@ -1297,8 +1305,6 @@ condition|(
 name|status
 operator|!=
 literal|0
-operator|||
-name|tsc_is_invariant
 condition|)
 return|return;
 comment|/* Total setting for this level gives the new frequency in MHz. */
@@ -1313,8 +1319,25 @@ expr_stmt|;
 block|}
 end_function
 
-begin_expr_stmt
-name|EVENTHANDLER_DEFINE
+begin_function
+specifier|static
+name|void
+name|hook_tsc_freq
+parameter_list|(
+name|void
+modifier|*
+name|arg
+name|__unused
+parameter_list|)
+block|{
+if|if
+condition|(
+name|tsc_is_invariant
+condition|)
+return|return;
+name|tsc_post_tag
+operator|=
+name|EVENTHANDLER_REGISTER
 argument_list|(
 name|cpufreq_post_change
 argument_list|,
@@ -1323,6 +1346,23 @@ argument_list|,
 name|NULL
 argument_list|,
 name|EVENTHANDLER_PRI_ANY
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
+name|SYSINIT
+argument_list|(
+name|hook_tsc_freq
+argument_list|,
+name|SI_SUB_CONFIGURE
+argument_list|,
+name|SI_ORDER_ANY
+argument_list|,
+name|hook_tsc_freq
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
