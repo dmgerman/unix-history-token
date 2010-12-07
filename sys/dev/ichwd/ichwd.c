@@ -2328,7 +2328,7 @@ operator|->
 name|ich_version
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Determine if we are coming up after a watchdog-induced reset. 	 * This bit is cleared in ichwd_sts_reset(). 	 */
+comment|/* 	 * Determine if we are coming up after a watchdog-induced reset.  Some 	 * BIOSes may clear this bit at bootup, preventing us from reporting 	 * this case on such systems.  We clear this bit in ichwd_sts_reset(). 	 */
 if|if
 condition|(
 operator|(
