@@ -1264,14 +1264,6 @@ name|td_frame
 operator|->
 name|tf_rcx
 expr_stmt|;
-name|td
-operator|->
-name|td_pcb
-operator|->
-name|pcb_flags
-operator||=
-name|PCB_FULLCTX
-expr_stmt|;
 break|break;
 case|case
 name|EJUSTRETURN

@@ -4659,8 +4659,6 @@ name|pcb
 operator|->
 name|pcb_flags
 operator||=
-name|PCB_FULLCTX
-operator||
 name|PCB_32BIT
 expr_stmt|;
 name|pcb

@@ -1020,14 +1020,6 @@ name|td
 operator|->
 name|td_pcb
 operator|->
-name|pcb_flags
-operator||=
-name|PCB_FULLCTX
-expr_stmt|;
-name|td
-operator|->
-name|td_pcb
-operator|->
 name|pcb_full_iret
 operator|=
 literal|1
@@ -4264,8 +4256,6 @@ name|pcb
 operator|->
 name|pcb_flags
 operator||=
-name|PCB_FULLCTX
-operator||
 name|PCB_32BIT
 expr_stmt|;
 name|pcb
