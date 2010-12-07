@@ -17,6 +17,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * Return the base 2 logarithm of x. See k_log.c for details on the algorithm.  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -46,20 +50,19 @@ decl_stmt|,
 comment|/* 0x4c000000 */
 name|ivln2hi
 init|=
-literal|0x1
-literal|.716p
-operator|+
-literal|0f
+literal|1.4428710938e+00
 decl_stmt|,
+comment|/* 0x3fb8b000 */
 name|ivln2lo
 init|=
 operator|-
-literal|0x1
-literal|.7135a8fa03d11p
-operator|-
-literal|13
+literal|1.7605285393e-04
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* 0xb9389ad4 */
+end_comment
 
 begin_decl_stmt
 specifier|static
