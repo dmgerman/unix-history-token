@@ -555,6 +555,11 @@ decl_stmt|;
 name|uint64_t
 name|max_freq
 decl_stmt|;
+if|if
+condition|(
+name|tsc_is_invariant
+condition|)
+return|return;
 comment|/* Only use values from the first CPU, assuming all are equal. */
 if|if
 condition|(
