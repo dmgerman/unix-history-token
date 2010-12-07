@@ -513,7 +513,7 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
-comment|/* 	 * Inform CPU accounting about our boot-time clock rate.  Once the 	 * system is finished booting, we will get the real max clock rate 	 * via tsc_freq_max().  This also will be updated if someone loads 	 * a cpufreq driver after boot that discovers a new max frequency. 	 */
+comment|/* 	 * Inform CPU accounting about our boot-time clock rate.  This will 	 * be updated if someone loads a cpufreq driver after boot that 	 * discovers a new max frequency. 	 */
 name|set_cputicker
 argument_list|(
 name|rdtsc
@@ -523,6 +523,11 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tsc_is_invariant
+condition|)
+return|return;
 comment|/* Register to find out about changes in CPU frequency. */
 name|tsc_pre_tag
 operator|=
@@ -654,11 +659,6 @@ decl_stmt|;
 name|uint64_t
 name|max_freq
 decl_stmt|;
-if|if
-condition|(
-name|tsc_is_invariant
-condition|)
-return|return;
 comment|/* Only use values from the first CPU, assuming all are equal. */
 if|if
 condition|(
@@ -823,8 +823,6 @@ name|timecounter
 operator|!=
 operator|&
 name|tsc_timecounter
-operator|||
-name|tsc_is_invariant
 condition|)
 return|return;
 name|printf
@@ -870,8 +868,6 @@ condition|(
 name|status
 operator|!=
 literal|0
-operator|||
-name|tsc_is_invariant
 condition|)
 return|return;
 comment|/* Total setting for this level gives the new frequency in MHz. */
