@@ -235,7 +235,10 @@ name|x
 operator|=
 name|x
 operator|-
-literal|1
+operator|(
+name|float
+operator|)
+literal|1.0
 expr_stmt|;
 name|GET_FLOAT_WORD
 argument_list|(
