@@ -611,6 +611,30 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|XEN
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|pmap_kextract
+end_undef
+
+begin_define
+define|#
+directive|define
+name|pmap_kextract
+value|pmap_kextract_ma
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Return true if a match is made.  *  * To find a match walk the chain of bus_dma_tag_t's looking for 'paddr'.  *  * If paddr is within the bounds of the dma tag then call the filter callback  * to check for a match, if there is no filter callback then assume a match.  */
 end_comment
