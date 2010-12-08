@@ -137,12 +137,35 @@ directive|include
 file|<machine/specialreg.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|MAX_BPAGES
 value|512
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MAX_BPAGES
+value|8192
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
