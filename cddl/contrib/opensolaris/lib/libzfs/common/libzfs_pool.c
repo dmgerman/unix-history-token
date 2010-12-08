@@ -143,6 +143,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|sun
+end_ifdef
+
 begin_if
 if|#
 directive|if
@@ -180,6 +186,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* sun */
+end_comment
 
 begin_comment
 comment|/*  * ====================================================================  *   zpool property functions  * ====================================================================  */
@@ -8908,6 +8923,9 @@ operator|==
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|sun
 if|if
 condition|(
 name|rootpool
@@ -8935,6 +8953,9 @@ name|new_disk
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* sun */
 return|return
 operator|(
 literal|0
