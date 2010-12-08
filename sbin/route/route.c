@@ -7056,6 +7056,8 @@ literal|"RTM_DELMADDR: multicast group membership removed from iface"
 block|,
 literal|"RTM_IFANNOUNCE: interface arrival/departure"
 block|,
+literal|"RTM_IEEE80211: IEEE 802.11 wireless event"
+block|,
 literal|0
 block|, }
 decl_stmt|;
