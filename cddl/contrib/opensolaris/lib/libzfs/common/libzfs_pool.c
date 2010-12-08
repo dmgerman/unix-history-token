@@ -8923,15 +8923,11 @@ operator|==
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|sun
 if|if
 condition|(
 name|rootpool
 condition|)
 block|{
-comment|/* 			 * XXX - This should be removed once we can 			 * automatically install the bootblocks on the 			 * newly attached disk. 			 */
 operator|(
 name|void
 operator|)
@@ -8943,19 +8939,24 @@ name|dgettext
 argument_list|(
 name|TEXT_DOMAIN
 argument_list|,
-literal|"Please "
-literal|"be sure to invoke %s to make '%s' bootable.\n"
+literal|"If "
+literal|"you boot from pool '%s', you may need to update\n"
+literal|"boot code on newly attached disk '%s'.\n\n"
+literal|"Assuming you use GPT partitioning and 'da0' is "
+literal|"your new boot disk\n"
+literal|"you may use the following command:\n\n"
+literal|"\tgpart bootcode -b /boot/pmbr -p "
+literal|"/boot/gptzfsboot -i 1 da0\n\n"
 argument_list|)
 argument_list|,
-name|BOOTCMD
+name|zhp
+operator|->
+name|zpool_name
 argument_list|,
 name|new_disk
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* sun */
 return|return
 operator|(
 literal|0
