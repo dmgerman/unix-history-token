@@ -2583,21 +2583,16 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Calculate the difference in readings, convert to Mhz, and 	 * subtract 0.5% of the total.  Empirical testing has shown that 	 * overhead in DELAY() works out to approximately this value. 	 */
-name|tsc2
-operator|-=
-name|tsc1
-expr_stmt|;
 operator|*
 name|rate
 operator|=
+operator|(
 name|tsc2
+operator|-
+name|tsc1
+operator|)
 operator|*
 literal|1000
-operator|-
-name|tsc2
-operator|*
-literal|5
 expr_stmt|;
 return|return
 operator|(
