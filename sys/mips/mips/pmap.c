@@ -12840,9 +12840,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pmap_pte_v
+name|pte_test
 argument_list|(
 name|ptep
+argument_list|,
+name|PTE_V
 argument_list|)
 condition|)
 name|printf
