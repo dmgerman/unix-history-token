@@ -2312,6 +2312,12 @@ name|td_flags
 operator|=
 name|TDF_INMEM
 expr_stmt|;
+name|td2
+operator|->
+name|td_lend_user_pri
+operator|=
+name|PRI_MAX
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|VIMAGE

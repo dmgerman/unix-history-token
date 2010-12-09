@@ -556,6 +556,10 @@ define|#
 directive|define
 name|td_siglist
 value|td_sigqueue.sq_signals
+name|u_char
+name|td_lend_user_pri
+decl_stmt|;
+comment|/* (t) Lend user pri. */
 comment|/* Cleared during fork1() */
 define|#
 directive|define
@@ -1147,12 +1151,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDF_UBORROWING
+name|TDF_UNUSED09
 value|0x00000200
 end_define
 
 begin_comment
-comment|/* Thread is borrowing user pri. */
+comment|/* --available-- */
 end_comment
 
 begin_define

@@ -432,6 +432,12 @@ name|td_critnest
 operator|=
 literal|1
 expr_stmt|;
+name|td
+operator|->
+name|td_lend_user_pri
+operator|=
+name|PRI_MAX
+expr_stmt|;
 name|EVENTHANDLER_INVOKE
 argument_list|(
 name|thread_ctor
