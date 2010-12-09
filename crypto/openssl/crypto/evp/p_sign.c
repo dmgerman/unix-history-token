@@ -144,7 +144,6 @@ literal|0
 decl_stmt|,
 name|v
 decl_stmt|;
-name|MS_STATIC
 name|EVP_MD_CTX
 name|tmp_ctx
 decl_stmt|;

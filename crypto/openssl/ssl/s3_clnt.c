@@ -3157,17 +3157,13 @@ name|id
 operator|)
 condition|)
 block|{
-if|if
-condition|(
-operator|!
-operator|(
-name|s
-operator|->
-name|options
-operator|&
-name|SSL_OP_NETSCAPE_REUSE_CIPHER_CHANGE_BUG
-operator|)
-condition|)
+comment|/* Workaround is now obsolete */
+if|#
+directive|if
+literal|0
+block|if (!(s->options& 			SSL_OP_NETSCAPE_REUSE_CIPHER_CHANGE_BUG))
+endif|#
+directive|endif
 block|{
 name|al
 operator|=
