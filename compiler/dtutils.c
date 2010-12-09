@@ -920,6 +920,9 @@ case|case
 name|ACPI_DMT_SPACEID
 case|:
 case|case
+name|ACPI_DMT_ACCWIDTH
+case|:
+case|case
 name|ACPI_DMT_IVRS
 case|:
 case|case

@@ -244,7 +244,7 @@ expr_stmt|;
 name|AcpiExEnterInterpreter
 argument_list|()
 expr_stmt|;
-comment|/* Update GPEs for any new _PRW or _Lxx/_Exx methods. Ignore errors */
+comment|/*      * Update GPEs for any new _Lxx/_Exx methods. Ignore errors. The host is      * responsible for discovering any new wake GPEs by running _PRW methods      * that may have been loaded by this table.      */
 name|Status
 operator|=
 name|AcpiTbGetOwnerId

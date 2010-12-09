@@ -1322,9 +1322,9 @@ end_comment
 begin_typedef
 typedef|typedef
 struct|struct
-name|acpi_handler_info
+name|acpi_gpe_handler_info
 block|{
-name|ACPI_EVENT_HANDLER
+name|ACPI_GPE_HANDLER
 name|Address
 decl_stmt|;
 comment|/* Address of handler, if any */
@@ -1338,10 +1338,22 @@ modifier|*
 name|MethodNode
 decl_stmt|;
 comment|/* Method node for this GPE level (saved) */
+name|UINT8
+name|OriginalFlags
+decl_stmt|;
+comment|/* Original (pre-handler) GPE info */
+name|BOOLEAN
+name|OriginallyEnabled
+decl_stmt|;
+comment|/* True if GPE was originally enabled */
 block|}
-name|ACPI_HANDLER_INFO
+name|ACPI_GPE_HANDLER_INFO
 typedef|;
 end_typedef
+
+begin_comment
+comment|/*  * GPE dispatch info. At any time, the GPE can have at most one type  * of dispatch - Method, Handler, or Implicit Notify.  */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -1354,10 +1366,16 @@ name|MethodNode
 decl_stmt|;
 comment|/* Method node for this GPE level */
 name|struct
-name|acpi_handler_info
+name|acpi_gpe_handler_info
 modifier|*
 name|Handler
 decl_stmt|;
+comment|/* Installed GPE handler */
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|DeviceNode
+decl_stmt|;
+comment|/* Parent _PRW device for implicit notify */
 block|}
 name|ACPI_GPE_DISPATCH_INFO
 typedef|;
@@ -1489,6 +1507,10 @@ name|UINT8
 name|BlockBaseNumber
 decl_stmt|;
 comment|/* Base GPE number for this block */
+name|BOOLEAN
+name|Initialized
+decl_stmt|;
+comment|/* TRUE if this block is initialized */
 block|}
 name|ACPI_GPE_BLOCK_INFO
 typedef|;
@@ -1545,9 +1567,6 @@ name|Count
 decl_stmt|;
 name|ACPI_OWNER_ID
 name|OwnerId
-decl_stmt|;
-name|BOOLEAN
-name|EnableThisGpe
 decl_stmt|;
 name|BOOLEAN
 name|ExecuteByOwnerId

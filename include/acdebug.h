@@ -23,8 +23,12 @@ begin_define
 define|#
 directive|define
 name|ACPI_DEBUG_BUFFER_SIZE
-value|4196
+value|0x4000
 end_define
+
+begin_comment
+comment|/* 16K buffer for return objects */
+end_comment
 
 begin_typedef
 typedef|typedef

@@ -4871,6 +4871,8 @@ name|void
 operator|)
 name|AcpiEvGpeDispatch
 argument_list|(
+name|NULL
+argument_list|,
 name|GpeEventInfo
 argument_list|,
 name|GpeNumber

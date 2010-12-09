@@ -476,6 +476,37 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|ACPI_GAS_WIDTH_RESERVED
+value|5
+end_define
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|AcpiDmGasAccessWidth
+index|[]
+init|=
+block|{
+literal|"Undefined/Legacy"
+block|,
+literal|"Byte Access:8"
+block|,
+literal|"Word Access:16"
+block|,
+literal|"DWord Access:32"
+block|,
+literal|"QWord Access:64"
+block|,
+literal|"Unknown Width Encoding"
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*******************************************************************************  *  * ACPI Table Data, indexed by signature.  *  * Each entry contains: Signature, Table Info, Handler, DtHandler,  *  Template, Description  *  * Simple tables have only a TableInfo structure, complex tables have a  * handler. This table must be NULL terminated. RSDP and FACS are  * special-cased elsewhere.  *  ******************************************************************************/
 end_comment
@@ -1675,6 +1706,9 @@ case|case
 name|ACPI_DMT_SPACEID
 case|:
 case|case
+name|ACPI_DMT_ACCWIDTH
+case|:
+case|case
 name|ACPI_DMT_IVRS
 case|:
 case|case
@@ -2354,6 +2388,40 @@ argument_list|(
 operator|*
 name|Target
 argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_DMT_ACCWIDTH
+case|:
+comment|/* Encoded Access Width */
+name|Temp8
+operator|=
+operator|*
+name|Target
+expr_stmt|;
+if|if
+condition|(
+name|Temp8
+operator|>
+name|ACPI_GAS_WIDTH_RESERVED
+condition|)
+block|{
+name|Temp8
+operator|=
+name|ACPI_GAS_WIDTH_RESERVED
+expr_stmt|;
+block|}
+name|AcpiOsPrintf
+argument_list|(
+literal|"%2.2X (%s)\n"
+argument_list|,
+name|Temp8
+argument_list|,
+name|AcpiDmGasAccessWidth
+index|[
+name|Temp8
+index|]
 argument_list|)
 expr_stmt|;
 break|break;

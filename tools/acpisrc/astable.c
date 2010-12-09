@@ -466,6 +466,15 @@ block|,
 name|REPLACE_WHOLE_WORD
 block|}
 block|,
+comment|/* Include file paths */
+block|{
+literal|"\"acpi.h\""
+block|,
+literal|"<acpi/acpi.h>"
+block|,
+name|REPLACE_WHOLE_WORD
+block|}
+block|,
 block|{
 name|NULL
 block|,
@@ -473,7 +482,7 @@ name|NULL
 block|,
 literal|0
 block|}
-block|, }
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -796,6 +805,12 @@ name|SRC_TYPE_SIMPLE
 block|}
 block|,
 block|{
+literal|"ACPI_GPE_HANDLER_INFO"
+block|,
+name|SRC_TYPE_STRUCT
+block|}
+block|,
+block|{
 literal|"ACPI_GPE_INDEX_INFO"
 block|,
 name|SRC_TYPE_STRUCT
@@ -823,12 +838,6 @@ block|{
 literal|"ACPI_HANDLE"
 block|,
 name|SRC_TYPE_SIMPLE
-block|}
-block|,
-block|{
-literal|"ACPI_HANDLER_INFO"
-block|,
-name|SRC_TYPE_STRUCT
 block|}
 block|,
 block|{

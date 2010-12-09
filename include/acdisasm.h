@@ -426,6 +426,13 @@ name|ACPI_DMT_ERSTINST
 value|40
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACPI_DMT_ACCWIDTH
+value|41
+end_define
+
 begin_typedef
 typedef|typedef
 name|void

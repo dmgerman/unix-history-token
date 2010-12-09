@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20101013
+value|0x20101209
 end_define
 
 begin_include
@@ -113,13 +113,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|UINT8
-name|AcpiGbl_LeaveWakeGpesDisabled
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|UINT8
 name|AcpiGbl_UseDefaultRegisterWidths
 decl_stmt|;
 end_decl_stmt
@@ -160,7 +153,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Global interfaces  */
+comment|/*  * Initialization  */
 end_comment
 
 begin_function_decl
@@ -218,14 +211,9 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiSubsystemStatus
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_comment
+comment|/*  * Miscellaneous global interfaces  */
+end_comment
 
 begin_function_decl
 name|ACPI_STATUS
@@ -239,6 +227,15 @@ end_function_decl
 begin_function_decl
 name|ACPI_STATUS
 name|AcpiDisable
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiSubsystemStatus
 parameter_list|(
 name|void
 parameter_list|)
@@ -754,6 +751,20 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
+name|AcpiInstallGlobalEventHandler
+parameter_list|(
+name|ACPI_GBL_EVENT_HANDLER
+name|Handler
+parameter_list|,
+name|void
+modifier|*
+name|Context
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
 name|AcpiInstallFixedEventHandler
 parameter_list|(
 name|UINT32
@@ -778,6 +789,45 @@ name|AcpiEvent
 parameter_list|,
 name|ACPI_EVENT_HANDLER
 name|Handler
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiInstallGpeHandler
+parameter_list|(
+name|ACPI_HANDLE
+name|GpeDevice
+parameter_list|,
+name|UINT32
+name|GpeNumber
+parameter_list|,
+name|UINT32
+name|Type
+parameter_list|,
+name|ACPI_GPE_HANDLER
+name|Address
+parameter_list|,
+name|void
+modifier|*
+name|Context
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiRemoveGpeHandler
+parameter_list|(
+name|ACPI_HANDLE
+name|GpeDevice
+parameter_list|,
+name|UINT32
+name|GpeNumber
+parameter_list|,
+name|ACPI_GPE_HANDLER
+name|Address
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -859,45 +909,6 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiInstallGpeHandler
-parameter_list|(
-name|ACPI_HANDLE
-name|GpeDevice
-parameter_list|,
-name|UINT32
-name|GpeNumber
-parameter_list|,
-name|UINT32
-name|Type
-parameter_list|,
-name|ACPI_EVENT_HANDLER
-name|Address
-parameter_list|,
-name|void
-modifier|*
-name|Context
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiRemoveGpeHandler
-parameter_list|(
-name|ACPI_HANDLE
-name|GpeDevice
-parameter_list|,
-name|UINT32
-name|GpeNumber
-parameter_list|,
-name|ACPI_EVENT_HANDLER
-name|Address
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|ACPI_STATUS
 name|AcpiInstallExceptionHandler
 parameter_list|(
 name|ACPI_EXCEPTION_HANDLER
@@ -917,7 +928,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Event interfaces  */
+comment|/*  * Global Lock interfaces  */
 end_comment
 
 begin_function_decl
@@ -943,6 +954,10 @@ name|Handle
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*  * Fixed Event interfaces  */
+end_comment
 
 begin_function_decl
 name|ACPI_STATUS
@@ -995,21 +1010,14 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * GPE Interfaces  */
+comment|/*  * General Purpose Event (GPE) Interfaces  */
 end_comment
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiSetGpe
+name|AcpiUpdateAllGpes
 parameter_list|(
-name|ACPI_HANDLE
-name|GpeDevice
-parameter_list|,
-name|UINT32
-name|GpeNumber
-parameter_list|,
-name|UINT8
-name|Action
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1055,7 +1063,52 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiGpeWakeup
+name|AcpiSetGpe
+parameter_list|(
+name|ACPI_HANDLE
+name|GpeDevice
+parameter_list|,
+name|UINT32
+name|GpeNumber
+parameter_list|,
+name|UINT8
+name|Action
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiFinishGpe
+parameter_list|(
+name|ACPI_HANDLE
+name|GpeDevice
+parameter_list|,
+name|UINT32
+name|GpeNumber
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiSetupGpeForWake
+parameter_list|(
+name|ACPI_HANDLE
+name|ParentDevice
+parameter_list|,
+name|ACPI_HANDLE
+name|GpeDevice
+parameter_list|,
+name|UINT32
+name|GpeNumber
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiSetGpeWakeMask
 parameter_list|(
 name|ACPI_HANDLE
 name|GpeDevice
