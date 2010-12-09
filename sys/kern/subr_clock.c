@@ -59,12 +59,12 @@ directive|include
 file|<sys/timetc.h>
 end_include
 
-begin_define
-define|#
-directive|define
+begin_decl_stmt
+specifier|static
+name|int
 name|ct_debug
-value|bootverbose
-end_define
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -103,6 +103,27 @@ end_decl_stmt
 begin_comment
 comment|/*  * This have traditionally been in machdep, but should probably be moved to  * kern.  */
 end_comment
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_machdep
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|ct_debug
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ct_debug
+argument_list|,
+literal|0
+argument_list|,
+literal|"Print ct debug if enabled."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
