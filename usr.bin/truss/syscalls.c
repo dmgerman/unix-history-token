@@ -5120,6 +5120,8 @@ block|{
 name|buf
 index|[
 name|totalsize
+operator|-
+literal|1
 index|]
 operator|=
 literal|'\0'

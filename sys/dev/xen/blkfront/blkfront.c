@@ -2417,9 +2417,13 @@ name|sc
 operator|->
 name|max_request_size
 operator|=
+operator|(
 name|sc
 operator|->
 name|max_request_segments
+operator|-
+literal|1
+operator|)
 operator|*
 name|PAGE_SIZE
 expr_stmt|;

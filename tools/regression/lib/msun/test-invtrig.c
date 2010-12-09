@@ -307,11 +307,13 @@ operator|)
 return|;
 if|if
 condition|(
+operator|!
 name|signbit
 argument_list|(
 name|x
 argument_list|)
 operator|!=
+operator|!
 name|signbit
 argument_list|(
 name|y

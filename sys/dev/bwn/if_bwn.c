@@ -22279,7 +22279,6 @@ condition|)
 goto|goto
 name|fail
 goto|;
-empty_stmt|;
 name|bwn_mac_suspend
 argument_list|(
 name|mac
@@ -55308,7 +55307,6 @@ name|sc
 operator|->
 name|sc_curmac
 expr_stmt|;
-empty_stmt|;
 name|status
 operator|=
 name|down_dev

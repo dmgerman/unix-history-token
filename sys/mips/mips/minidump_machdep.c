@@ -294,7 +294,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|dump_add_page
 parameter_list|(
@@ -341,7 +340,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|dump_drop_page
 parameter_list|(

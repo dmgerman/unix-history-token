@@ -2851,7 +2851,6 @@ name|tv_sec
 operator|=
 name|ut_timecopy
 expr_stmt|;
-empty_stmt|;
 name|usht
 operator|.
 name|ut_type

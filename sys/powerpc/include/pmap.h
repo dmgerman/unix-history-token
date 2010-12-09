@@ -254,6 +254,168 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_define
+define|#
+directive|define
+name|PVO_PTEGIDX_MASK
+value|0x007UL
+end_define
+
+begin_comment
+comment|/* which PTEG slot */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PVO_PTEGIDX_VALID
+value|0x008UL
+end_define
+
+begin_comment
+comment|/* slot is valid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PVO_WIRED
+value|0x010UL
+end_define
+
+begin_comment
+comment|/* PVO entry is wired */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PVO_MANAGED
+value|0x020UL
+end_define
+
+begin_comment
+comment|/* PVO entry is managed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PVO_EXECUTABLE
+value|0x040UL
+end_define
+
+begin_comment
+comment|/* PVO entry is executable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PVO_BOOTSTRAP
+value|0x080UL
+end_define
+
+begin_comment
+comment|/* PVO entry allocated during 						   bootstrap */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PVO_FAKE
+value|0x100UL
+end_define
+
+begin_comment
+comment|/* fictitious phys page */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PVO_LARGE
+value|0x200UL
+end_define
+
+begin_comment
+comment|/* large page */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PVO_VADDR
+parameter_list|(
+name|pvo
+parameter_list|)
+value|((pvo)->pvo_vaddr& ~ADDR_POFF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PVO_ISFAKE
+parameter_list|(
+name|pvo
+parameter_list|)
+value|((pvo)->pvo_vaddr& PVO_FAKE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PVO_PTEGIDX_GET
+parameter_list|(
+name|pvo
+parameter_list|)
+value|((pvo)->pvo_vaddr& PVO_PTEGIDX_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PVO_PTEGIDX_ISSET
+parameter_list|(
+name|pvo
+parameter_list|)
+value|((pvo)->pvo_vaddr& PVO_PTEGIDX_VALID)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PVO_PTEGIDX_CLR
+parameter_list|(
+name|pvo
+parameter_list|)
+define|\
+value|((void)((pvo)->pvo_vaddr&= ~(PVO_PTEGIDX_VALID|PVO_PTEGIDX_MASK)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PVO_PTEGIDX_SET
+parameter_list|(
+name|pvo
+parameter_list|,
+name|i
+parameter_list|)
+define|\
+value|((void)((pvo)->pvo_vaddr |= (i)|PVO_PTEGIDX_VALID))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PVO_VSID
+parameter_list|(
+name|pvo
+parameter_list|)
+value|((pvo)->pvo_vpn>> 16)
+end_define
+
 begin_struct
 struct|struct
 name|md_page

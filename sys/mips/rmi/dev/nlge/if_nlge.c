@@ -1389,15 +1389,6 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|reg_dump
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_undef
 undef|#
 directive|undef

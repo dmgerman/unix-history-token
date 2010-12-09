@@ -2865,6 +2865,11 @@ operator|+=
 literal|8
 expr_stmt|;
 block|}
+name|fclose
+argument_list|(
+name|file
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

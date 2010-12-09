@@ -1455,6 +1455,15 @@ end_function_decl
 
 begin_function_decl
 name|double
+name|log2
+parameter_list|(
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|double
 name|logb
 parameter_list|(
 name|double
@@ -2062,6 +2071,15 @@ end_function_decl
 begin_function_decl
 name|float
 name|log1pf
+parameter_list|(
+name|float
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|float
+name|log2f
 parameter_list|(
 name|float
 parameter_list|)

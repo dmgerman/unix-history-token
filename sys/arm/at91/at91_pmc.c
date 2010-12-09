@@ -1569,7 +1569,6 @@ name|div
 decl_stmt|,
 name|freq
 decl_stmt|;
-empty_stmt|;
 name|freq
 operator|=
 name|clk

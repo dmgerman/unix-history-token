@@ -129,6 +129,7 @@ name|void
 modifier|*
 name|as_setup
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|server
@@ -158,6 +159,11 @@ name|s
 decl_stmt|,
 name|error
 decl_stmt|;
+name|s
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|server

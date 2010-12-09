@@ -301,6 +301,24 @@ end_struct_decl
 
 begin_function_decl
 name|void
+name|dump_add_page
+parameter_list|(
+name|vm_paddr_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|dump_drop_page
+parameter_list|(
+name|vm_paddr_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|minidumpsys
 parameter_list|(
 name|struct

@@ -1588,10 +1588,18 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__amd64__
-comment|/* 	 * pmap_map on amd64 comes out of the direct-map, not kvm like i386, 	 * so the pages must be tracked for a crashdump to include this data. 	 * This includes the vm_page_array and the early UMA bootstrap pages. 	 */
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__mips__
+argument_list|)
+comment|/* 	 * pmap_map on amd64 and mips can come out of the direct-map, not kvm 	 * like i386, so the pages must be tracked for a crashdump to include 	 * this data.  This includes the vm_page_array and the early UMA 	 * bootstrap pages. 	 */
 for|for
 control|(
 name|pa

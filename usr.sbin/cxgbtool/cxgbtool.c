@@ -6911,6 +6911,11 @@ argument_list|,
 literal|"load firmware"
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -7094,6 +7099,11 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"load boot image"
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return

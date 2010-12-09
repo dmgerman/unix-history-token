@@ -189,8 +189,7 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|HAVE_SOCKADDR_SA_LEN
-specifier|register
-name|int
+name|size_t
 name|n
 decl_stmt|;
 endif|#
@@ -248,7 +247,7 @@ decl_stmt|;
 define|#
 directive|define
 name|MAX_IPADDR
-value|(sizeof(ibuf) / sizeof(ibuf[0]))
+value|((int)(sizeof(ibuf) / sizeof(ibuf[0])))
 specifier|static
 name|struct
 name|ifaddrlist
@@ -350,6 +349,9 @@ name|ifc
 operator|.
 name|ifc_len
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -370,7 +372,7 @@ name|sprintf
 argument_list|(
 name|errbuf
 argument_list|,
-literal|"SIOCGIFCONF: ifreq struct too small (%d bytes)"
+literal|"SIOCGIFCONF: ifreq struct too small (%zu bytes)"
 argument_list|,
 sizeof|sizeof
 argument_list|(

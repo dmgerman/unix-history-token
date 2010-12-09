@@ -65,6 +65,7 @@ comment|/*  * Test for equality with two special rules:  *   fpequal(NaN, NaN) i
 end_comment
 
 begin_function
+specifier|static
 specifier|inline
 name|int
 name|fpequal
@@ -85,11 +86,13 @@ name|x
 operator|==
 name|y
 operator|&&
+operator|!
 name|signbit
 argument_list|(
 name|x
 argument_list|)
 operator|==
+operator|!
 name|signbit
 argument_list|(
 name|y
@@ -133,7 +136,7 @@ name|expected
 parameter_list|)
 value|do {				      \ 	type __x = (x);
 comment|/* convert before we clear exceptions */
-value|\ 	type __y = (y);							      \ 	feclearexcept(ALL_STD_EXCEPT);					      \ 	long double __result = func((__x), (__y));			      \ 	if (fetestexcept(ALL_STD_EXCEPT)) {				      \ 		fprintf(stderr, #func "(%L.20g, %L.20g) raised 0x%x\n",	      \ 			(x), (y), fetestexcept(FE_ALL_EXCEPT));		      \ 		ok = 0;							      \ 	}								      \ 	if (!fpequal(__result, (expected)))	{			      \ 		fprintf(stderr, #func "(%.20Lg, %.20Lg) = %.20Lg, "	      \ 			"expected %.20Lg\n", (x), (y), __result, (expected)); \ 		ok = 0;							      \ 	}								      \ } while (0)
+value|\ 	type __y = (y);							      \ 	feclearexcept(ALL_STD_EXCEPT);					      \ 	long double __result = func((__x), (__y));			      \ 	if (fetestexcept(ALL_STD_EXCEPT)) {				      \ 		fprintf(stderr, #func "(%.20Lg, %.20Lg) raised 0x%x\n",	      \ 			(x), (y), fetestexcept(FE_ALL_EXCEPT));		      \ 		ok = 0;							      \ 	}								      \ 	if (!fpequal(__result, (expected)))	{			      \ 		fprintf(stderr, #func "(%.20Lg, %.20Lg) = %.20Lg, "	      \ 			"expected %.20Lg\n", (x), (y), __result, (expected)); \ 		ok = 0;							      \ 	}								      \ } while (0)
 end_define
 
 begin_function
@@ -351,7 +354,7 @@ comment|/*  * Test all the functions: fmaxf, fmax, fmaxl, fminf, fmin, and fminl
 end_comment
 
 begin_function
-name|int
+name|void
 name|testall
 parameter_list|(
 name|int

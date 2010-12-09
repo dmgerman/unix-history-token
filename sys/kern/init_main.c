@@ -1862,6 +1862,12 @@ name|PUSER
 expr_stmt|;
 name|td
 operator|->
+name|td_lend_user_pri
+operator|=
+name|PRI_MAX
+expr_stmt|;
+name|td
+operator|->
 name|td_priority
 operator|=
 name|PVM

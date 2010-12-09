@@ -2607,6 +2607,9 @@ name|uint8_t
 name|saw_sack_with_frags
 decl_stmt|;
 name|uint8_t
+name|saw_sack_with_nr_frags
+decl_stmt|;
+name|uint8_t
 name|in_asocid_hash
 decl_stmt|;
 name|uint8_t

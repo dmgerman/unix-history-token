@@ -1518,7 +1518,6 @@ name|siba_softc
 modifier|*
 name|siba
 decl_stmt|;
-empty_stmt|;
 name|sd
 operator|=
 name|device_get_ivars

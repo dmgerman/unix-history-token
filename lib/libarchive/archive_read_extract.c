@@ -94,6 +94,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"archive_entry.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"archive_private.h"
 end_include
 
@@ -493,7 +499,16 @@ argument_list|,
 name|ad
 argument_list|)
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+name|archive_entry_size
+argument_list|(
+name|entry
+argument_list|)
+operator|>
+literal|0
+condition|)
 comment|/* Otherwise, pour data into the entry. */
 name|r
 operator|=

@@ -786,31 +786,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|vm_page_t
-name|pmap_alloc_pte_page
-parameter_list|(
-name|unsigned
-name|int
-name|index
-parameter_list|,
-name|int
-name|req
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|pmap_grow_pte_page_cache
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -865,7 +840,7 @@ name|__mips_n64
 end_ifndef
 
 begin_comment
-comment|/*  * This structure is for high memory (memory above 512Meg in 32 bit)  * This memory area does not have direct mapping, so we a mechanism to do  * temporary per-CPU mapping to access these addresses.  *  * At bootup we reserve 2 virtual pages per CPU for mapping highmem pages, to   * access a highmem physical address on a CPU, we will disable interrupts and  * add the mapping from the reserved virtual address for the CPU to the physical  * address in the kernel pagetable.  */
+comment|/*  * This structure is for high memory (memory above 512Meg in 32 bit) support.  * The highmem area does not have a KSEG0 mapping, and we need a mechanism to  * do temporary per-CPU mappings for pmap_zero_page, pmap_copy_page etc.  *  * At bootup, we reserve 2 virtual pages per CPU for mapping highmem pages. To   * access a highmem physical address on a CPU, we map the physical address to  * the reserved virtual address for the CPU in the kernel pagetable.  This is   * done with interrupts disabled(although a spinlock and sched_pin would be   * sufficient).  */
 end_comment
 
 begin_struct
@@ -2407,7 +2382,7 @@ name|again
 goto|;
 block|}
 block|}
-comment|/* 	 * In 32 bit, we may have memory which cannot be mapped directly 	 * this memory will need temporary mapping before it can be 	 * accessed. 	 */
+comment|/* 	 * In 32 bit, we may have memory which cannot be mapped directly. 	 * This memory will need temporary mapping before it can be 	 * accessed. 	 */
 if|if
 condition|(
 operator|!
@@ -2419,6 +2394,8 @@ name|i
 operator|-
 literal|1
 index|]
+operator|-
+literal|1
 argument_list|)
 condition|)
 name|need_local_mappings
@@ -3857,6 +3834,8 @@ condition|(
 name|MIPS_DIRECT_MAPPABLE
 argument_list|(
 name|end
+operator|-
+literal|1
 argument_list|)
 condition|)
 return|return
@@ -4486,9 +4465,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
-name|pmap_grow_pte_page_cache
+name|pmap_grow_direct_page_cache
 parameter_list|()
 block|{
 ifdef|#
@@ -4520,9 +4498,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|vm_page_t
-name|pmap_alloc_pte_page
+name|pmap_alloc_direct_page
 parameter_list|(
 name|unsigned
 name|int
@@ -4634,7 +4611,7 @@ condition|(
 operator|(
 name|ptdpg
 operator|=
-name|pmap_alloc_pte_page
+name|pmap_alloc_direct_page
 argument_list|(
 name|NUSERPGTBLS
 argument_list|,
@@ -4644,7 +4621,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|pmap_grow_pte_page_cache
+name|pmap_grow_direct_page_cache
 argument_list|()
 expr_stmt|;
 name|ptdva
@@ -4807,7 +4784,7 @@ condition|(
 operator|(
 name|m
 operator|=
-name|pmap_alloc_pte_page
+name|pmap_alloc_direct_page
 argument_list|(
 name|ptepindex
 argument_list|,
@@ -4833,7 +4810,7 @@ expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
-name|pmap_grow_pte_page_cache
+name|pmap_grow_direct_page_cache
 argument_list|()
 expr_stmt|;
 name|vm_page_lock_queues
@@ -5435,7 +5412,7 @@ block|{
 comment|/* new intermediate page table entry */
 name|nkpg
 operator|=
-name|pmap_alloc_pte_page
+name|pmap_alloc_direct_page
 argument_list|(
 name|nkpt
 argument_list|,
@@ -5524,7 +5501,7 @@ block|}
 comment|/* 		 * This index is bogus, but out of the way 		 */
 name|nkpg
 operator|=
-name|pmap_alloc_pte_page
+name|pmap_alloc_direct_page
 argument_list|(
 name|nkpt
 argument_list|,
@@ -12863,9 +12840,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pmap_pte_v
+name|pte_test
 argument_list|(
 name|ptep
+argument_list|,
+name|PTE_V
 argument_list|)
 condition|)
 name|printf

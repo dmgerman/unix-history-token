@@ -780,6 +780,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|__ieee754_log2
+value|log2
+end_define
+
+begin_define
+define|#
+directive|define
 name|__ieee754_atanh
 value|atanh
 end_define
@@ -1041,6 +1048,13 @@ define|#
 directive|define
 name|__ieee754_log10f
 value|log10f
+end_define
+
+begin_define
+define|#
+directive|define
+name|__ieee754_log2f
+value|log2f
 end_define
 
 begin_define

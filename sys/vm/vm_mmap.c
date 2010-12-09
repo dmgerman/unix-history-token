@@ -992,7 +992,7 @@ return|;
 block|}
 else|else
 block|{
-comment|/* 	 * XXX for non-fixed mappings where no hint is provided or 	 * the hint would fall in the potential heap space, 	 * place it after the end of the largest possible heap. 	 * 	 * There should really be a pmap call to determine a reasonable 	 * location. 	 */
+comment|/* 		 * XXX for non-fixed mappings where no hint is provided or 		 * the hint would fall in the potential heap space, 		 * place it after the end of the largest possible heap. 		 * 		 * There should really be a pmap call to determine a reasonable 		 * location. 		 */
 name|PROC_LOCK
 argument_list|(
 name|td

@@ -453,8 +453,15 @@ begin_comment
 comment|/* (i) supports multicast */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IFF_CANTCONFIG
+value|0x10000
+end_define
+
 begin_comment
-comment|/*			0x10000		*/
+comment|/* (i) unconfigurable using ioctl(2) */
 end_comment
 
 begin_define
@@ -550,7 +557,7 @@ define|#
 directive|define
 name|IFF_CANTCHANGE
 define|\
-value|(IFF_BROADCAST|IFF_POINTOPOINT|IFF_DRV_RUNNING|IFF_DRV_OACTIVE|\ 	    IFF_SIMPLEX|IFF_MULTICAST|IFF_ALLMULTI|IFF_SMART|IFF_PROMISC|\ 	    IFF_DYING)
+value|(IFF_BROADCAST|IFF_POINTOPOINT|IFF_DRV_RUNNING|IFF_DRV_OACTIVE|\ 	    IFF_SIMPLEX|IFF_MULTICAST|IFF_ALLMULTI|IFF_SMART|IFF_PROMISC|\ 	    IFF_DYING|IFF_CANTCONFIG)
 end_define
 
 begin_comment

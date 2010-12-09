@@ -1853,18 +1853,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-else|else
-block|{
-name|err
-argument_list|(
-literal|1
-argument_list|,
-literal|"write_mbr: %s"
-argument_list|,
-name|fname
-argument_list|)
-expr_stmt|;
-block|}
 comment|/*      * If we're called to write to a backup file, don't try to      * write through GEOM. It only generates additional errors.      */
 if|if
 condition|(
