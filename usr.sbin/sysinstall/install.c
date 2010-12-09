@@ -3321,7 +3321,7 @@ operator|==
 name|FALSE
 condition|)
 return|return
-name|FALSE
+name|DITEM_FAILURE
 return|;
 comment|/* When running as init, *now* it's safe to grab the rc.foo vars */
 name|installEnvironment

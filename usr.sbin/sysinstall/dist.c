@@ -3808,6 +3808,14 @@ operator|=
 name|FALSE
 expr_stmt|;
 block|}
+else|else
+block|{
+comment|// ignore any failures with DIST_LOCAL
+name|status
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
 block|}
 break|break;
 block|}
@@ -4241,7 +4249,7 @@ name|FALSE
 condition|)
 name|status
 operator|=
-name|DITEM_FAILURE
+name|FALSE
 expr_stmt|;
 return|return
 name|status
