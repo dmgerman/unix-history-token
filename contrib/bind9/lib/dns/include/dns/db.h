@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005, 2007, 2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005, 2007, 2009, 2010  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: db.h,v 1.76.18.14 2009/01/19 00:36:28 marka Exp $ */
+comment|/* $Id: db.h,v 1.76.18.16 2010/11/17 23:45:12 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -801,49 +801,63 @@ begin_define
 define|#
 directive|define
 name|DNS_DBFIND_GLUEOK
-value|0x01
+value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
 name|DNS_DBFIND_VALIDATEGLUE
-value|0x02
+value|0x0002
 end_define
 
 begin_define
 define|#
 directive|define
 name|DNS_DBFIND_NOWILD
-value|0x04
+value|0x0004
 end_define
 
 begin_define
 define|#
 directive|define
 name|DNS_DBFIND_PENDINGOK
-value|0x08
+value|0x0008
 end_define
 
 begin_define
 define|#
 directive|define
 name|DNS_DBFIND_NOEXACT
-value|0x10
+value|0x0010
 end_define
 
 begin_define
 define|#
 directive|define
 name|DNS_DBFIND_FORCENSEC
-value|0x20
+value|0x0020
 end_define
 
 begin_define
 define|#
 directive|define
 name|DNS_DBFIND_COVERINGNSEC
-value|0x40
+value|0x0040
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_DBFIND_FORCENSEC3
+value|0x0080
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_DBFIND_ADDITIONALOK
+value|0x0100
 end_define
 
 begin_comment
@@ -1403,7 +1417,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Find the best match for 'name' and 'type' in version 'version' of 'db'.  *  * Notes:  *  * \li	If type == dns_rdataset_any, then rdataset will not be bound.  *  * \li	If 'options' does not have #DNS_DBFIND_GLUEOK set, then no glue will  *	be returned.  For zone databases, glue is as defined in RFC2181.  *	For cache databases, glue is any rdataset with a trust of  *	dns_trust_glue.  *  * \li	If 'options' does not have #DNS_DBFIND_PENDINGOK set, then no  *	pending data will be returned.  This option is only meaningful for  *	cache databases.  *  * \li	If the #DNS_DBFIND_NOWILD option is set, then wildcard matching will  *	be disabled.  This option is only meaningful for zone databases.  *  * \li	If the #DNS_DBFIND_FORCENSEC option is set, the database is assumed to  *	have NSEC records, and these will be returned when appropriate.  This  *	is only necessary when querying a database that was not secure  *	when created.  *  * \li	If the DNS_DBFIND_COVERINGNSEC option is set, then look for a  *	NSEC record that potentially covers 'name' if a answer cannot  *	be found.  Note the returned NSEC needs to be checked to ensure  *	that it is correct.  This only affects answers returned from the  *	cache.  *  * \li	To respond to a query for SIG records, the caller should create a  *	rdataset iterator and extract the signatures from each rdataset.  *  * \li	Making queries of type ANY with #DNS_DBFIND_GLUEOK is not recommended,  *	because the burden of determining whether a given rdataset is valid  *	glue or not falls upon the caller.  *  * \li	The 'now' field is ignored if 'db' is a zone database.  If 'db' is a  *	cache database, an rdataset will not be found unless it expires after  *	'now'.  Any ANY query will not match unless at least one rdataset at  *	the node expires after 'now'.  If 'now' is zero, then the current time  *	will be used.  *  * Requires:  *  * \li	'db' is a valid database.  *  * \li	'type' is not SIG, or a meta-RR type other than 'ANY' (e.g. 'OPT').  *  * \li	'nodep' is NULL, or nodep is a valid pointer and *nodep == NULL.  *  * \li	'foundname' is a valid name with a dedicated buffer.  *  * \li	'rdataset' is NULL, or is a valid unassociated rdataset.  *  * Ensures,  *	on a non-error completion:  *  *	\li	If nodep != NULL, then it is bound to the found node.  *  *	\li	If foundname != NULL, then it contains the full name of the  *		found node.  *  *	\li	If rdataset != NULL and type != dns_rdatatype_any, then  *		rdataset is bound to the found rdataset.  *  *	Non-error results are:  *  *	\li	#ISC_R_SUCCESS			The desired node and type were  *						found.  *  *	\li	#DNS_R_WILDCARD			The desired node and type were  *						found after performing  *						wildcard matching.  This is  *						only returned if the  *						#DNS_DBFIND_INDICATEWILD  *						option is set; otherwise  *						#ISC_R_SUCCESS is returned.  *  *	\li	#DNS_R_GLUE			The desired node and type were  *						found, but are glue.  This  *						result can only occur if  *						the DNS_DBFIND_GLUEOK option  *						is set.  This result can only  *						occur if 'db' is a zone  *						database.  If type ==  *						dns_rdatatype_any, then the  *						node returned may contain, or  *						consist entirely of invalid  *						glue (i.e. data occluded by a  *						zone cut).  The caller must  *						take care not to return invalid  *						glue to a client.  *  *	\li	#DNS_R_DELEGATION		The data requested is beneath  *						a zone cut.  node, foundname,  *						and rdataset reference the  *						NS RRset of the zone cut.  *						If 'db' is a cache database,  *						then this is the deepest known  *						delegation.  *  *	\li	#DNS_R_ZONECUT			type == dns_rdatatype_any, and  *						the desired node is a zonecut.  *						The caller must take care not  *						to return inappropriate glue  *						to a client.  This result can  *						only occur if 'db' is a zone  *						database and DNS_DBFIND_GLUEOK  *						is set.  *  *	\li	#DNS_R_DNAME			The data requested is beneath  *						a DNAME.  node, foundname,  *						and rdataset reference the  *						DNAME RRset.  *  *	\li	#DNS_R_CNAME			The rdataset requested was not  *						found, but there is a CNAME  *						at the desired name.  node,  *						foundname, and rdataset  *						reference the CNAME RRset.  *  *	\li	#DNS_R_NXDOMAIN			The desired name does not  *						exist.  *  *	\li	#DNS_R_NXRRSET			The desired name exists, but  *						the desired type does not.  *  *	\li	#ISC_R_NOTFOUND			The desired name does not  *						exist, and no delegation could  *						be found.  This result can only  *						occur if 'db' is a cache  *						database.  The caller should  *						use its nameserver(s) of last  *						resort (e.g. root hints).  *  *	\li	#DNS_R_NCACHENXDOMAIN		The desired name does not  *						exist.  'node' is bound to the  *						cache node with the desired  *						name, and 'rdataset' contains  *						the negative caching proof.  *  *	\li	#DNS_R_NCACHENXRRSET		The desired type does not  *						exist.  'node' is bound to the  *						cache node with the desired  *						name, and 'rdataset' contains  *						the negative caching proof.  *  *	\li	#DNS_R_EMPTYNAME			The name exists but there is  *						no data at the name.  *  *	\li	#DNS_R_COVERINGNSEC		The returned data is a NSEC  *						that potentially covers 'name'.  *  *	Error results:  *  *	\li	#ISC_R_NOMEMORY  *  *	\li	#DNS_R_BADDB			Data that is required to be  *						present in the DB, e.g. an NSEC  *						record in a secure zone, is not  *						present.  *  *	\li	Other results are possible, and should all be treated as  *		errors.  */
+comment|/*%<  * Find the best match for 'name' and 'type' in version 'version' of 'db'.  *  * Notes:  *  * \li	If type == dns_rdataset_any, then rdataset will not be bound.  *  * \li	If 'options' does not have #DNS_DBFIND_GLUEOK set, then no glue will  *	be returned.  For zone databases, glue is as defined in RFC2181.  *	For cache databases, glue is any rdataset with a trust of  *	dns_trust_glue.  *  * \li	If 'options' does not have #DNS_DBFIND_ADDITIONALOK set, then no  *	additional records will be returned.  Only caches can have  *	rdataset with trust dns_trust_additional.  *  * \li	If 'options' does not have #DNS_DBFIND_PENDINGOK set, then no  *	pending data will be returned.  This option is only meaningful for  *	cache databases.  *  * \li	If the #DNS_DBFIND_NOWILD option is set, then wildcard matching will  *	be disabled.  This option is only meaningful for zone databases.  *  * \li	If the #DNS_DBFIND_FORCENSEC option is set, the database is assumed to  *	have NSEC records, and these will be returned when appropriate.  This  *	is only necessary when querying a database that was not secure  *	when created.  *  * \li	If the DNS_DBFIND_COVERINGNSEC option is set, then look for a  *	NSEC record that potentially covers 'name' if a answer cannot  *	be found.  Note the returned NSEC needs to be checked to ensure  *	that it is correct.  This only affects answers returned from the  *	cache.  *  * \li	To respond to a query for SIG records, the caller should create a  *	rdataset iterator and extract the signatures from each rdataset.  *  * \li	Making queries of type ANY with #DNS_DBFIND_GLUEOK is not recommended,  *	because the burden of determining whether a given rdataset is valid  *	glue or not falls upon the caller.  *  * \li	The 'now' field is ignored if 'db' is a zone database.  If 'db' is a  *	cache database, an rdataset will not be found unless it expires after  *	'now'.  Any ANY query will not match unless at least one rdataset at  *	the node expires after 'now'.  If 'now' is zero, then the current time  *	will be used.  *  * Requires:  *  * \li	'db' is a valid database.  *  * \li	'type' is not SIG, or a meta-RR type other than 'ANY' (e.g. 'OPT').  *  * \li	'nodep' is NULL, or nodep is a valid pointer and *nodep == NULL.  *  * \li	'foundname' is a valid name with a dedicated buffer.  *  * \li	'rdataset' is NULL, or is a valid unassociated rdataset.  *  * Ensures,  *	on a non-error completion:  *  *	\li	If nodep != NULL, then it is bound to the found node.  *  *	\li	If foundname != NULL, then it contains the full name of the  *		found node.  *  *	\li	If rdataset != NULL and type != dns_rdatatype_any, then  *		rdataset is bound to the found rdataset.  *  *	Non-error results are:  *  *	\li	#ISC_R_SUCCESS			The desired node and type were  *						found.  *  *	\li	#DNS_R_WILDCARD			The desired node and type were  *						found after performing  *						wildcard matching.  This is  *						only returned if the  *						#DNS_DBFIND_INDICATEWILD  *						option is set; otherwise  *						#ISC_R_SUCCESS is returned.  *  *	\li	#DNS_R_GLUE			The desired node and type were  *						found, but are glue.  This  *						result can only occur if  *						the DNS_DBFIND_GLUEOK option  *						is set.  This result can only  *						occur if 'db' is a zone  *						database.  If type ==  *						dns_rdatatype_any, then the  *						node returned may contain, or  *						consist entirely of invalid  *						glue (i.e. data occluded by a  *						zone cut).  The caller must  *						take care not to return invalid  *						glue to a client.  *  *	\li	#DNS_R_DELEGATION		The data requested is beneath  *						a zone cut.  node, foundname,  *						and rdataset reference the  *						NS RRset of the zone cut.  *						If 'db' is a cache database,  *						then this is the deepest known  *						delegation.  *  *	\li	#DNS_R_ZONECUT			type == dns_rdatatype_any, and  *						the desired node is a zonecut.  *						The caller must take care not  *						to return inappropriate glue  *						to a client.  This result can  *						only occur if 'db' is a zone  *						database and DNS_DBFIND_GLUEOK  *						is set.  *  *	\li	#DNS_R_DNAME			The data requested is beneath  *						a DNAME.  node, foundname,  *						and rdataset reference the  *						DNAME RRset.  *  *	\li	#DNS_R_CNAME			The rdataset requested was not  *						found, but there is a CNAME  *						at the desired name.  node,  *						foundname, and rdataset  *						reference the CNAME RRset.  *  *	\li	#DNS_R_NXDOMAIN			The desired name does not  *						exist.  *  *	\li	#DNS_R_NXRRSET			The desired name exists, but  *						the desired type does not.  *  *	\li	#ISC_R_NOTFOUND			The desired name does not  *						exist, and no delegation could  *						be found.  This result can only  *						occur if 'db' is a cache  *						database.  The caller should  *						use its nameserver(s) of last  *						resort (e.g. root hints).  *  *	\li	#DNS_R_NCACHENXDOMAIN		The desired name does not  *						exist.  'node' is bound to the  *						cache node with the desired  *						name, and 'rdataset' contains  *						the negative caching proof.  *  *	\li	#DNS_R_NCACHENXRRSET		The desired type does not  *						exist.  'node' is bound to the  *						cache node with the desired  *						name, and 'rdataset' contains  *						the negative caching proof.  *  *	\li	#DNS_R_EMPTYNAME			The name exists but there is  *						no data at the name.  *  *	\li	#DNS_R_COVERINGNSEC		The returned data is a NSEC  *						that potentially covers 'name'.  *  *	Error results:  *  *	\li	#ISC_R_NOMEMORY  *  *	\li	#DNS_R_BADDB			Data that is required to be  *						present in the DB, e.g. an NSEC  *						record in a secure zone, is not  *						present.  *  *	\li	Other results are possible, and should all be treated as  *		errors.  */
 end_comment
 
 begin_function_decl

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: query.c,v 1.257.18.55 2010/07/03 23:45:26 tbox Exp $ */
+comment|/* $Id: query.c,v 1.257.18.56 2010/11/17 10:21:01 marka Exp $ */
 end_comment
 
 begin_comment
@@ -4620,6 +4620,8 @@ operator|.
 name|dboptions
 operator||
 name|DNS_DBFIND_GLUEOK
+operator||
+name|DNS_DBFIND_ADDITIONALOK
 argument_list|,
 name|client
 operator|->
@@ -6624,6 +6626,8 @@ operator|.
 name|dboptions
 operator||
 name|DNS_DBFIND_GLUEOK
+operator||
+name|DNS_DBFIND_ADDITIONALOK
 argument_list|,
 name|client
 operator|->
