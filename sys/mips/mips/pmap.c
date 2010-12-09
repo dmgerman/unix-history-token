@@ -786,31 +786,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|vm_page_t
-name|pmap_alloc_pte_page
-parameter_list|(
-name|unsigned
-name|int
-name|index
-parameter_list|,
-name|int
-name|req
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|pmap_grow_pte_page_cache
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -4490,9 +4465,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
-name|pmap_grow_pte_page_cache
+name|pmap_grow_direct_page_cache
 parameter_list|()
 block|{
 ifdef|#
@@ -4524,9 +4498,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|vm_page_t
-name|pmap_alloc_pte_page
+name|pmap_alloc_direct_page
 parameter_list|(
 name|unsigned
 name|int
@@ -4638,7 +4611,7 @@ condition|(
 operator|(
 name|ptdpg
 operator|=
-name|pmap_alloc_pte_page
+name|pmap_alloc_direct_page
 argument_list|(
 name|NUSERPGTBLS
 argument_list|,
@@ -4648,7 +4621,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|pmap_grow_pte_page_cache
+name|pmap_grow_direct_page_cache
 argument_list|()
 expr_stmt|;
 name|ptdva
@@ -4811,7 +4784,7 @@ condition|(
 operator|(
 name|m
 operator|=
-name|pmap_alloc_pte_page
+name|pmap_alloc_direct_page
 argument_list|(
 name|ptepindex
 argument_list|,
@@ -4837,7 +4810,7 @@ expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
-name|pmap_grow_pte_page_cache
+name|pmap_grow_direct_page_cache
 argument_list|()
 expr_stmt|;
 name|vm_page_lock_queues
@@ -5439,7 +5412,7 @@ block|{
 comment|/* new intermediate page table entry */
 name|nkpg
 operator|=
-name|pmap_alloc_pte_page
+name|pmap_alloc_direct_page
 argument_list|(
 name|nkpt
 argument_list|,
@@ -5528,7 +5501,7 @@ block|}
 comment|/* 		 * This index is bogus, but out of the way 		 */
 name|nkpg
 operator|=
-name|pmap_alloc_pte_page
+name|pmap_alloc_direct_page
 argument_list|(
 name|nkpt
 argument_list|,

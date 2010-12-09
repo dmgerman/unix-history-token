@@ -411,6 +411,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|UMA_MD_SMALL_ALLOC
+end_define
+
 begin_comment
 comment|/*  * max number of non-contig chunks of physical RAM you can have  */
 end_comment
