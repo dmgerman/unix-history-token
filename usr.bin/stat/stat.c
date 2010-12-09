@@ -22,7 +22,7 @@ name|lint
 end_ifndef
 
 begin_endif
-unit|__RCSID("$NetBSD: stat.c,v 1.30 2010/11/25 04:33:30 dholland Exp $");
+unit|__RCSID("$NetBSD: stat.c,v 1.30 2010/11/25 04:33:30 dholland Exp $" "$OpenBSD: stat.c,v 1.14 2009/06/24 09:44:25 sobrado Exp $");
 endif|#
 directive|endif
 end_endif
@@ -1057,7 +1057,8 @@ literal|"f:FlLnqrst:x"
 expr_stmt|;
 name|synopsis
 operator|=
-literal|"[-FlLnqrsx] [-f format] [-t timefmt] [file ...]"
+literal|"[-FLnq] [-f format | -l | -r | -s | -x] "
+literal|"[-t timefmt] [file ...]"
 expr_stmt|;
 block|}
 while|while
