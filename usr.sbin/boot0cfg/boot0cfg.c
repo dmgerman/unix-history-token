@@ -1852,18 +1852,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-else|else
-block|{
-name|err
-argument_list|(
-literal|1
-argument_list|,
-literal|"write_mbr: %s"
-argument_list|,
-name|fname
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|flags
