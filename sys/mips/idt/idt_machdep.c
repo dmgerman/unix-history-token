@@ -571,11 +571,6 @@ name|phys_avail
 index|[
 literal|1
 index|]
-operator|-
-name|phys_avail
-index|[
-literal|0
-index|]
 expr_stmt|;
 name|physmem
 operator|=
