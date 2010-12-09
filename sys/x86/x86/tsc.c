@@ -449,10 +449,6 @@ name|cpu_id
 argument_list|)
 operator|>=
 literal|0x10
-operator|||
-name|cpu_id
-operator|==
-literal|0x60fb2
 condition|)
 name|tsc_is_invariant
 operator|=
