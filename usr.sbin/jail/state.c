@@ -62,11 +62,11 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|cfjails
-name|waiting
+name|depend
 init|=
 name|TAILQ_HEAD_INITIALIZER
 argument_list|(
-name|waiting
+name|depend
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -642,7 +642,7 @@ operator|=
 name|TAILQ_FIRST
 argument_list|(
 operator|&
-name|waiting
+name|depend
 argument_list|)
 operator|)
 operator|!=
@@ -1119,7 +1119,7 @@ argument_list|(
 name|j
 argument_list|,
 operator|&
-name|waiting
+name|depend
 argument_list|)
 expr_stmt|;
 return|return
@@ -1318,7 +1318,7 @@ operator|->
 name|queue
 operator|==
 operator|&
-name|waiting
+name|depend
 condition|)
 name|requeue
 argument_list|(
@@ -1608,7 +1608,7 @@ operator|->
 name|ndeps
 condition|?
 operator|&
-name|waiting
+name|depend
 else|:
 operator|&
 name|ready

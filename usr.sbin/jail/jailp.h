@@ -305,23 +305,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|JF_RUNQ
-value|0x1000
-end_define
-
-begin_comment
-comment|/* Jail was in the run qeueue */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|JF_BACKGROUND
+name|JF_SLEEPQ
 value|0x2000
 end_define
 
 begin_comment
-comment|/* Command was run in the background */
+comment|/* Waiting on a command and/or timeout */
 end_comment
 
 begin_define
@@ -843,10 +832,6 @@ name|cfjail
 modifier|*
 name|j
 parameter_list|,
-name|int
-modifier|*
-name|plimit
-parameter_list|,
 name|enum
 name|intparam
 name|comparam
@@ -863,10 +848,6 @@ name|struct
 name|cfjail
 modifier|*
 name|j
-parameter_list|,
-name|int
-modifier|*
-name|plimit
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -880,19 +861,6 @@ name|next_proc
 parameter_list|(
 name|int
 name|nonblock
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|term_procs
-parameter_list|(
-name|struct
-name|cfjail
-modifier|*
-name|j
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1224,7 +1192,7 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|cfjails
-name|waiting
+name|depend
 decl_stmt|;
 end_decl_stmt
 
@@ -1234,6 +1202,13 @@ specifier|const
 name|char
 modifier|*
 name|cfname
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|paralimit
 decl_stmt|;
 end_decl_stmt
 
