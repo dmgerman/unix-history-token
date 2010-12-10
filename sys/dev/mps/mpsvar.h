@@ -471,9 +471,6 @@ decl_stmt|;
 name|int
 name|replyfreeindex
 decl_stmt|;
-name|int
-name|replycurindex
-decl_stmt|;
 name|struct
 name|resource
 modifier|*
