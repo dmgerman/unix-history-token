@@ -1966,7 +1966,7 @@ name|cbfcnp
 operator|=
 name|passdone
 expr_stmt|;
-comment|/* 	 * We only attempt to map the user memory into kernel space 	 * if they haven't passed in a physical memory pointer, 	 * and if there is actually an I/O operation to perform. 	 * cam_periph_mapmem() supports SCSI, ATA, SMP, ADVINFO and device 	 * match CCBs.  For the SCSI and ATA CCBs, we only pass the CCB in if 	 * there's actually data to map.  cam_periph_mapmem() will do the 	 * right thing, even if there isn't data to map, but since CCBs 	 * without data are a reasonably common occurance (e.g. test unit 	 * ready), it will save a few cycles if we check for it here. 	 */
+comment|/* 	 * We only attempt to map the user memory into kernel space 	 * if they haven't passed in a physical memory pointer, 	 * and if there is actually an I/O operation to perform. 	 * cam_periph_mapmem() supports SCSI, ATA, SMP, ADVINFO and device 	 * match CCBs.  For the SCSI, ATA and ADVINFO CCBs, we only pass the 	 * CCB in if there's actually data to map.  cam_periph_mapmem() will 	 * do the right thing, even if there isn't data to map, but since CCBs 	 * without data are a reasonably common occurance (e.g. test unit 	 * ready), it will save a few cycles if we check for it here. 	 */
 if|if
 condition|(
 operator|(
@@ -2039,6 +2039,7 @@ name|XPT_SMP_IO
 operator|)
 operator|||
 operator|(
+operator|(
 name|ccb
 operator|->
 name|ccb_h
@@ -2046,6 +2047,17 @@ operator|.
 name|func_code
 operator|==
 name|XPT_GDEV_ADVINFO
+operator|)
+operator|&&
+operator|(
+name|ccb
+operator|->
+name|cgdai
+operator|.
+name|bufsiz
+operator|>
+literal|0
+operator|)
 operator|)
 operator|)
 condition|)

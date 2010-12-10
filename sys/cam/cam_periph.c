@@ -3068,6 +3068,21 @@ break|break;
 case|case
 name|XPT_GDEV_ADVINFO
 case|:
+if|if
+condition|(
+name|ccb
+operator|->
+name|cgdai
+operator|.
+name|bufsiz
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|data_ptrs
 index|[
 literal|0
@@ -3106,6 +3121,11 @@ expr_stmt|;
 name|numbufs
 operator|=
 literal|1
+expr_stmt|;
+comment|/* 		 * This request will not go to the hardware, no reason 		 * to be so strict. vmapbuf() is able to map up to MAXPHYS. 		 */
+name|maxmap
+operator|=
+name|MAXPHYS
 expr_stmt|;
 break|break;
 default|default:
