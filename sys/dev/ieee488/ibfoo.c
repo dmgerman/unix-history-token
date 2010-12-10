@@ -6564,7 +6564,7 @@ literal|0
 expr_stmt|;
 name|ap
 operator|->
-name|retval
+name|__retval
 operator|=
 literal|0
 expr_stmt|;
