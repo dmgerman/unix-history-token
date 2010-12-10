@@ -370,6 +370,20 @@ parameter_list|)
 value|do {				\ 	SLIST_FIRST((head)) = SLIST_NEXT(SLIST_FIRST((head)), field);	\ } while (0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|SLIST_SWAP
+parameter_list|(
+name|head1
+parameter_list|,
+name|head2
+parameter_list|,
+name|type
+parameter_list|)
+value|do {				\ 	struct type *swap_first = SLIST_FIRST(head1);			\ 	SLIST_FIRST(head1) = SLIST_FIRST(head2);			\ 	SLIST_FIRST(head2) = swap_first;				\ } while (0)
+end_define
+
 begin_comment
 comment|/*  * Singly-linked Tail queue declarations.  */
 end_comment
