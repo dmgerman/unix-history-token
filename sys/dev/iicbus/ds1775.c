@@ -505,6 +505,7 @@ argument_list|)
 operator|!=
 literal|0
 operator|||
+operator|(
 name|strcmp
 argument_list|(
 name|compatible
@@ -513,6 +514,16 @@ literal|"ds1775"
 argument_list|)
 operator|!=
 literal|0
+operator|&&
+name|strcmp
+argument_list|(
+name|compatible
+argument_list|,
+literal|"lm75"
+argument_list|)
+operator|!=
+literal|0
+operator|)
 condition|)
 return|return
 operator|(
@@ -545,7 +556,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"Temp-Monitor DS1755"
+literal|"Temp-Monitor DS1775"
 argument_list|)
 expr_stmt|;
 return|return
