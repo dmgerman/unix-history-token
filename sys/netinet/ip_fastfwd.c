@@ -620,7 +620,7 @@ block|{
 comment|/* minimum header length */
 name|ipstat
 operator|.
-name|ips_badlen
+name|ips_badhlen
 operator|++
 expr_stmt|;
 goto|goto
