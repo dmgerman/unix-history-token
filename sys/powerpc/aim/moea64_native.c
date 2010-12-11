@@ -899,6 +899,10 @@ operator|&=
 operator|~
 name|LPTE_VALID
 expr_stmt|;
+comment|/* Finish all pending operations */
+name|isync
+argument_list|()
+expr_stmt|;
 comment|/* 	 * Force the reg& chg bits back into the PTEs. 	 */
 name|SYNC
 argument_list|()

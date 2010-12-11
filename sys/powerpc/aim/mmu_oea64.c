@@ -5218,6 +5218,9 @@ operator|->
 name|pvo_vpn
 argument_list|)
 expr_stmt|;
+name|isync
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
