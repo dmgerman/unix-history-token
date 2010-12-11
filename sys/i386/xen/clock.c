@@ -1826,11 +1826,15 @@ literal|1000
 expr_stmt|;
 name|timer_freq
 operator|=
+literal|1000000000LL
+expr_stmt|;
 name|xen_timecounter
 operator|.
 name|tc_frequency
 operator|=
-literal|1000000000LL
+name|timer_freq
+operator|>>
+literal|9
 expr_stmt|;
 name|tc_init
 argument_list|(
@@ -3053,6 +3057,8 @@ name|uint32_t
 call|)
 argument_list|(
 name|clk
+operator|>>
+literal|9
 argument_list|)
 return|;
 block|}
