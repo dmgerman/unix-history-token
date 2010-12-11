@@ -1455,7 +1455,6 @@ argument_list|,
 name|DMU_READ_PREFETCH
 argument_list|)
 expr_stmt|;
-empty_stmt|;
 block|}
 name|zfs_unmap_page
 argument_list|(
