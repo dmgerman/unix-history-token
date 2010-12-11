@@ -718,7 +718,7 @@ name|counter
 parameter_list|,
 name|value
 parameter_list|)
-value|atomic_set_int(&port_counters[port][(counter)], (value))
+value|atomic_store_int(&port_counters[port][(counter)], (value))
 end_define
 
 begin_else
@@ -11949,7 +11949,7 @@ name|i
 operator|++
 control|)
 block|{
-name|atomic_set_int
+name|atomic_store_int
 argument_list|(
 operator|&
 operator|(
