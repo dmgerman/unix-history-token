@@ -1280,6 +1280,9 @@ operator|!=
 name|HYPERVISOR_shared_info
 operator|->
 name|wc_version
+operator|&&
+operator|!
+name|independent_wallclock
 condition|)
 block|{
 name|printf
