@@ -56,13 +56,6 @@ name|sstrnleft
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|herefd
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|pointer
 name|ckmalloc
