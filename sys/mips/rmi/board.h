@@ -642,6 +642,19 @@ block|}
 enum|;
 end_enum
 
+begin_enum
+enum|enum
+name|i2c_dev_types
+block|{
+name|I2C_RTC
+block|,
+name|I2C_THERMAL
+block|,
+name|I2C_EEPROM
+block|}
+enum|;
+end_enum
+
 begin_struct
 struct|struct
 name|xlr_board_info
@@ -689,6 +702,33 @@ name|int
 name|gmacports
 decl_stmt|;
 comment|/* number of gmac ports on the board */
+struct|struct
+name|xlr_i2c_dev_t
+block|{
+name|uint32_t
+name|addr
+decl_stmt|;
+name|unsigned
+name|int
+name|enabled
+decl_stmt|;
+comment|/* mask of devs enabled */
+name|int
+name|type
+decl_stmt|;
+name|int
+name|unit
+decl_stmt|;
+name|char
+modifier|*
+name|dev_name
+decl_stmt|;
+block|}
+name|xlr_i2c_device
+index|[
+literal|3
+index|]
+struct|;
 struct|struct
 name|xlr_gmac_block_t
 block|{

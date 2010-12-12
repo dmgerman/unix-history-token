@@ -1032,6 +1032,15 @@ name|device_add_child
 argument_list|(
 name|dev
 argument_list|,
+literal|"xlr_i2c"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|device_add_child
+argument_list|(
+name|dev
+argument_list|,
 literal|"pcib"
 argument_list|,
 literal|0
