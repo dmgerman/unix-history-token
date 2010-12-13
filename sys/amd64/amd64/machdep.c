@@ -3920,6 +3920,15 @@ name|tf_flags
 operator|=
 name|TF_HASSEGS
 expr_stmt|;
+name|td
+operator|->
+name|td_retval
+index|[
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Reset the hardware debug registers if they were in use. 	 * They won't have any meaning for the newly exec'd process. 	 */
 if|if
 condition|(
