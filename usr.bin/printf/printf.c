@@ -346,7 +346,7 @@ parameter_list|(
 name|char
 modifier|*
 parameter_list|,
-name|int
+name|char
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1378,7 +1378,7 @@ name|char
 modifier|*
 name|str
 parameter_list|,
-name|int
+name|char
 name|ch
 parameter_list|)
 block|{
