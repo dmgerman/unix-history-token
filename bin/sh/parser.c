@@ -4484,18 +4484,6 @@ operator|=
 name|pgetc_macro
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|c
-operator|==
-literal|' '
-operator|||
-name|c
-operator|==
-literal|'\t'
-condition|)
-continue|continue;
-comment|/* quick check for white space first */
 switch|switch
 condition|(
 name|c
