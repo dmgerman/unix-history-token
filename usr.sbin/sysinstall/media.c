@@ -803,7 +803,7 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"No USB devices found!"
+literal|"No USB devices found (try Options/Re-scan Devices)"
 argument_list|)
 expr_stmt|;
 return|return
