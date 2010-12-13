@@ -158,10 +158,6 @@ decl_stmt|;
 name|device_t
 name|sc_dev
 decl_stmt|;
-name|struct
-name|mtx
-name|sc_mtx
-decl_stmt|;
 name|int
 name|sc_curtemp
 decl_stmt|;
@@ -343,20 +339,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_mtx
-argument_list|,
-literal|"max6657"
-argument_list|,
-literal|"max6657"
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
 name|SYSCTL_ADD_PROC
 argument_list|(
 name|ctx
@@ -506,14 +488,6 @@ block|{
 name|int
 name|v
 decl_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_mtx
-argument_list|)
-expr_stmt|;
 comment|/* NB: no point in updating any faster than the chip */
 if|if
 condition|(
@@ -560,14 +534,6 @@ operator|=
 name|ticks
 expr_stmt|;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_mtx
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
