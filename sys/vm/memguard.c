@@ -856,6 +856,10 @@ expr_stmt|;
 if|if
 condition|(
 name|memguard_mapsize
+operator|==
+literal|0
+operator|||
+name|memguard_mapsize
 operator|/
 operator|(
 literal|2
@@ -875,6 +879,10 @@ name|PAGE_SIZE
 expr_stmt|;
 if|if
 condition|(
+name|km_max
+operator|>
+literal|0
+operator|&&
 name|km_size
 operator|+
 name|memguard_mapsize
