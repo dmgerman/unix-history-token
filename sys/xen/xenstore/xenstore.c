@@ -3324,7 +3324,7 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-comment|/* 	 * We are either operating within a PV kernel or being probed 	 * as the child of the successfully attached xenpci device. 	 * Thus we are in a Xen environment and there will be a XenStore. 	 * Uncontitionally return success. 	 */
+comment|/* 	 * We are either operating within a PV kernel or being probed 	 * as the child of the successfully attached xenpci device. 	 * Thus we are in a Xen environment and there will be a XenStore. 	 * Unconditionally return success. 	 */
 name|device_set_desc
 argument_list|(
 name|dev
