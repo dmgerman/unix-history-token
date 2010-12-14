@@ -1420,7 +1420,7 @@ name|dsl_prop_get_integer
 argument_list|(
 name|name
 argument_list|,
-literal|"zoned"
+literal|"jailed"
 argument_list|,
 operator|&
 name|zoned
@@ -5303,6 +5303,9 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|sun
 name|nvlist_t
 modifier|*
 name|config
@@ -5324,6 +5327,14 @@ name|nspares
 init|=
 literal|0
 decl_stmt|;
+else|#
+directive|else
+name|nvlist_t
+modifier|*
+name|config
+decl_stmt|;
+endif|#
+directive|endif
 name|error
 operator|=
 name|spa_open
@@ -5365,6 +5376,9 @@ operator|&
 name|config
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|sun
 operator|(
 name|void
 operator|)
@@ -5428,6 +5442,8 @@ name|EDOM
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|error

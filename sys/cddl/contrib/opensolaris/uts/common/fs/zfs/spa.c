@@ -7123,6 +7123,25 @@ argument_list|,
 name|SPA_ASYNC_CONFIG_UPDATE
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Check all DTLs to see if anything needs resilvering. 		 */
+if|if
+condition|(
+name|vdev_resilver_needed
+argument_list|(
+name|rvd
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+condition|)
+name|spa_async_request
+argument_list|(
+name|spa
+argument_list|,
+name|SPA_ASYNC_RESILVER
+argument_list|)
+expr_stmt|;
 block|}
 name|error
 operator|=
