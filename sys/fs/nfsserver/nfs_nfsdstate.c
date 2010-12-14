@@ -1071,6 +1071,11 @@ operator|)
 return|;
 if|if
 condition|(
+name|nfsrv_issuedelegs
+operator|==
+literal|0
+operator|||
+operator|(
 operator|(
 name|nd
 operator|->
@@ -1078,10 +1083,15 @@ name|nd_flag
 operator|&
 name|ND_GSS
 operator|)
+operator|!=
+literal|0
 operator|&&
 name|nfsrv_nogsscallback
+operator|!=
+literal|0
+operator|)
 condition|)
-comment|/* 		 * Don't do callbacks for AUTH_GSS. 		 * (Since these aren't yet debugged, they might cause the 		 *  server to crap out, if they get past the Init call to 		 *  the client.) 		 */
+comment|/* 		 * Don't do callbacks when delegations are disabled or 		 * for AUTH_GSS unless enabled via nfsrv_nogsscallback. 		 * If establishing a callback connection is attempted 		 * when a firewall is blocking the callback path, the 		 * server may wait too long for the connect attempt to 		 * succeed during the Open. Some clients, such as Linux, 		 * may timeout and give up on the Open before the server 		 * replies. Also, since AUTH_GSS callbacks are not 		 * yet interoperability tested, they might cause the 		 * server to crap out, if they get past the Init call to 		 * the client. 		 */
 name|new_clp
 operator|->
 name|lc_program
