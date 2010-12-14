@@ -3332,11 +3332,6 @@ argument_list|,
 literal|"XenStore"
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"xs_probe: Probe retuns 0\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
