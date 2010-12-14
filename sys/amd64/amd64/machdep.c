@@ -2497,6 +2497,16 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+comment|/* If TSC is P-state invariant, DELAY(9) based logic fails. */
+if|if
+condition|(
+name|tsc_is_invariant
+condition|)
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
 comment|/* If we're booting, trust the rate calibrated moments ago. */
 if|if
 condition|(
