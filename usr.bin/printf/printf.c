@@ -135,12 +135,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sysexits.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<unistd.h>
 end_include
 
@@ -484,7 +478,11 @@ block|{
 name|usage
 argument_list|()
 expr_stmt|;
-comment|/* NOTREACHED */
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 ifdef|#
 directive|ifdef
@@ -2474,11 +2472,6 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: printf format [arguments ...]\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|EX_USAGE
 argument_list|)
 expr_stmt|;
 block|}
