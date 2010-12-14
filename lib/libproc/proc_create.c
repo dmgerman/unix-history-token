@@ -276,6 +276,11 @@ name|phdl
 expr_stmt|;
 name|out
 label|:
+name|proc_free
+argument_list|(
+name|phdl
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
