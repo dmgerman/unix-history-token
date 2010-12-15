@@ -2595,7 +2595,7 @@ name|NULL
 condition|)
 name|path
 operator|=
-name|CLASS_DIR
+name|GEOM_CLASS_DIR
 expr_stmt|;
 return|return
 operator|(
