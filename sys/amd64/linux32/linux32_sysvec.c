@@ -4664,14 +4664,6 @@ name|tf_rbx
 operator|=
 name|ps_strings
 expr_stmt|;
-name|td
-operator|->
-name|td_pcb
-operator|->
-name|pcb_full_iret
-operator|=
-literal|1
-expr_stmt|;
 name|load_cr0
 argument_list|(
 name|rcr0
@@ -4687,7 +4679,7 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-comment|/* Return via doreti so that we can change to a different %cs */
+comment|/* Do full restore on return so that we can change to a different %cs */
 name|pcb
 operator|->
 name|pcb_flags
@@ -4700,6 +4692,12 @@ name|pcb_flags
 operator|&=
 operator|~
 name|PCB_GS32BIT
+expr_stmt|;
+name|pcb
+operator|->
+name|pcb_full_iret
+operator|=
+literal|1
 expr_stmt|;
 name|td
 operator|->

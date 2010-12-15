@@ -9011,6 +9011,14 @@ name|tf_flags
 operator|=
 name|TF_HASSEGS
 expr_stmt|;
+name|td
+operator|->
+name|td_pcb
+operator|->
+name|pcb_full_iret
+operator|=
+literal|1
+expr_stmt|;
 block|}
 return|return
 operator|(
