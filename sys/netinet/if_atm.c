@@ -1027,6 +1027,9 @@ operator|.
 name|s_addr
 expr_stmt|;
 comment|/* XXX: move npcb to llinfo when ATM ARP is ready */
+ifdef|#
+directive|ifdef
+name|__notyet_restored__
 name|rt
 operator|->
 name|rt_llinfo
@@ -1036,6 +1039,8 @@ name|caddr_t
 operator|)
 name|npcb
 expr_stmt|;
+endif|#
+directive|endif
 name|rt
 operator|->
 name|rt_flags
@@ -1144,12 +1149,17 @@ argument_list|,
 name|NPCB_DESTROY
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__notyet_restored__
 name|rt
 operator|->
 name|rt_llinfo
 operator|=
 name|NULL
 expr_stmt|;
+endif|#
+directive|endif
 name|rt
 operator|->
 name|rt_flags
@@ -1190,6 +1200,9 @@ block|{
 name|NATM_LOCK
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__notyet_restored__
 name|npcb_free
 argument_list|(
 operator|(
@@ -1210,6 +1223,8 @@ name|rt_llinfo
 operator|=
 name|NULL
 expr_stmt|;
+endif|#
+directive|endif
 name|rt
 operator|->
 name|rt_flags
