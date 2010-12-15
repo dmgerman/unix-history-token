@@ -7487,14 +7487,6 @@ operator|->
 name|vfs_data
 decl_stmt|;
 comment|/* 	 * If this is regular file system vfsp is the same as 	 * zfsvfs->z_parent->z_vfs, but if it is snapshot, 	 * zfsvfs->z_parent->z_vfs represents parent file system 	 * which we have to use here, because only this file system 	 * has mnt_export configured. 	 */
-name|vfsp
-operator|=
-name|zfsvfs
-operator|->
-name|z_parent
-operator|->
-name|z_vfs
-expr_stmt|;
 return|return
 operator|(
 name|vfs_stdcheckexp
