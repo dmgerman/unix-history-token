@@ -2151,21 +2151,49 @@ value|2
 end_define
 
 begin_comment
-comment|/*  * GPE info flags - Per GPE  * +-------+---+-+-+  * |  7:4  |3:2|1|0|  * +-------+---+-+-+  *     |     |  | |  *     |     |  | +--- Interrupt type: edge or level triggered  *     |     |  +----- GPE can wake the system  *     |     +-------- Type of dispatch:to method, handler, or none  *     +--------------<Reserved>  */
+comment|/*  * GPE info flags - Per GPE  * +-------+-+-+---+  * |  7:4  |3|2|1:0|  * +-------+-+-+---+  *     |    | |  |  *     |    | |  +-- Type of dispatch:to method, handler, notify, or none  *     |    | +----- Interrupt type: edge or level triggered  *     |    +------- Is a Wake GPE  *     +------------<Reserved>  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ACPI_GPE_XRUPT_TYPE_MASK
+name|ACPI_GPE_DISPATCH_NONE
+value|(UINT8) 0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_GPE_DISPATCH_METHOD
 value|(UINT8) 0x01
 end_define
 
 begin_define
 define|#
 directive|define
+name|ACPI_GPE_DISPATCH_HANDLER
+value|(UINT8) 0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_GPE_DISPATCH_NOTIFY
+value|(UINT8) 0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_GPE_DISPATCH_MASK
+value|(UINT8) 0x03
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_GPE_LEVEL_TRIGGERED
-value|(UINT8) 0x01
+value|(UINT8) 0x04
 end_define
 
 begin_define
@@ -2178,36 +2206,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_GPE_CAN_WAKE
-value|(UINT8) 0x02
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_GPE_DISPATCH_MASK
-value|(UINT8) 0x0C
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_GPE_DISPATCH_HANDLER
+name|ACPI_GPE_XRUPT_TYPE_MASK
 value|(UINT8) 0x04
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_GPE_DISPATCH_METHOD
+name|ACPI_GPE_CAN_WAKE
 value|(UINT8) 0x08
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_GPE_DISPATCH_NOT_USED
-value|(UINT8) 0x00
 end_define
 
 begin_comment
@@ -2969,12 +2976,71 @@ end_comment
 
 begin_typedef
 typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|ACPI_GBL_EVENT_HANDLER
+function_decl|)
+parameter_list|(
+name|UINT32
+name|EventType
+parameter_list|,
+name|ACPI_HANDLE
+name|Device
+parameter_list|,
+name|UINT32
+name|EventNumber
+parameter_list|,
+name|void
+modifier|*
+name|Context
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|ACPI_EVENT_TYPE_GPE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_EVENT_TYPE_FIXED
+value|1
+end_define
+
+begin_typedef
+typedef|typedef
 name|UINT32
 function_decl|(
 modifier|*
 name|ACPI_EVENT_HANDLER
 function_decl|)
 parameter_list|(
+name|void
+modifier|*
+name|Context
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|UINT32
+function_decl|(
+modifier|*
+name|ACPI_GPE_HANDLER
+function_decl|)
+parameter_list|(
+name|ACPI_HANDLE
+name|GpeDevice
+parameter_list|,
+name|UINT32
+name|GpeNumber
+parameter_list|,
 name|void
 modifier|*
 name|Context
@@ -3261,6 +3327,17 @@ define|#
 directive|define
 name|ACPI_INTERRUPT_HANDLED
 value|0x01
+end_define
+
+begin_comment
+comment|/* GPE handler return values */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_REENABLE_GPE
+value|0x80
 end_define
 
 begin_comment

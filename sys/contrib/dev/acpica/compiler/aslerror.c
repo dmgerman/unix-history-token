@@ -250,6 +250,14 @@ name|FILE
 modifier|*
 name|SourceFile
 decl_stmt|;
+name|long
+name|FileSize
+decl_stmt|;
+name|BOOLEAN
+name|PrematureEOF
+init|=
+name|FALSE
+decl_stmt|;
 if|if
 condition|(
 name|Gbl_NoErrors
@@ -338,6 +346,46 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|SourceFile
+condition|)
+block|{
+comment|/* Determine if the error occurred at source file EOF */
+name|fseek
+argument_list|(
+name|SourceFile
+argument_list|,
+literal|0
+argument_list|,
+name|SEEK_END
+argument_list|)
+expr_stmt|;
+name|FileSize
+operator|=
+name|ftell
+argument_list|(
+name|SourceFile
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|long
+operator|)
+name|Enode
+operator|->
+name|LogicalByteOffset
+operator|>=
+name|FileSize
+condition|)
+block|{
+name|PrematureEOF
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
 name|Header
 condition|)
 block|{
@@ -393,7 +441,14 @@ operator|->
 name|LineNumber
 argument_list|)
 expr_stmt|;
-comment|/*                  * Seek to the offset in the combined source file, read the source                  * line, and write it to the output.                  */
+comment|/*                  * If not at EOF, get the corresponding source code line and                  * display it. Don't attempt this if we have a premature EOF                  * condition.                  */
+if|if
+condition|(
+operator|!
+name|PrematureEOF
+condition|)
+block|{
+comment|/*                      * Seek to the offset in the combined source file, read                      * the source line, and write it to the output.                      */
 name|Actual
 operator|=
 name|fseek
@@ -510,6 +565,7 @@ argument_list|,
 name|SourceFile
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 name|fprintf
@@ -667,6 +723,9 @@ block|}
 if|if
 condition|(
 name|Gbl_VerboseErrors
+operator|&&
+operator|!
+name|PrematureEOF
 condition|)
 block|{
 name|SourceColumn
@@ -786,6 +845,19 @@ argument_list|,
 literal|" (%s)"
 argument_list|,
 name|ExtraMessage
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|PrematureEOF
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|OutputFile
+argument_list|,
+literal|" and premature End-Of-File"
 argument_list|)
 expr_stmt|;
 block|}

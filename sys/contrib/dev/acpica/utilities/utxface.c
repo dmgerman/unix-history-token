@@ -663,37 +663,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*      * Initialize the GPE blocks defined in the FADT (GPE block 0 and 1).      * The runtime GPEs are enabled here.      *      * This is where the _PRW methods are executed for the GPEs. These      * methods can only be executed after the SCI and Global Lock handlers are      * installed and initialized.      *      * GPEs can only be enabled after the _REG, _STA, and _INI methods have      * been run. This ensures that all Operation Regions and all Devices have      * been initialized and are ready.      */
-if|if
-condition|(
-operator|!
-operator|(
-name|Flags
-operator|&
-name|ACPI_NO_EVENT_INIT
-operator|)
-condition|)
-block|{
-name|Status
-operator|=
-name|AcpiEvInstallFadtGpes
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-return|return
-operator|(
-name|Status
-operator|)
-return|;
-block|}
-block|}
 comment|/*      * Empty the caches (delete the cached objects) on the assumption that      * the table load filled them up more than they will be at runtime --      * thus wasting non-paged memory.      */
 name|Status
 operator|=

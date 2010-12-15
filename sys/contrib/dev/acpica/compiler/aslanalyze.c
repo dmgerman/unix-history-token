@@ -1324,6 +1324,7 @@ decl_stmt|;
 name|UINT32
 name|AlphaPrefixLength
 decl_stmt|;
+comment|/* Only care about string versions of _HID/_CID (integers are legal) */
 if|if
 condition|(
 name|Op
@@ -1337,6 +1338,7 @@ condition|)
 block|{
 return|return;
 block|}
+comment|/* For both _HID and _CID, the string must be non-null */
 name|Length
 operator|=
 name|strlen
@@ -1350,7 +1352,70 @@ operator|.
 name|String
 argument_list|)
 expr_stmt|;
-comment|/*      * If _HID/_CID is a string, all characters must be alphanumeric.      * One of the things we want to catch here is the use of      * a leading asterisk in the string -- an odd construct      * that certain platform manufacturers are fond of.      */
+if|if
+condition|(
+operator|!
+name|Length
+condition|)
+block|{
+name|AslError
+argument_list|(
+name|ASL_ERROR
+argument_list|,
+name|ASL_MSG_NULL_STRING
+argument_list|,
+name|Op
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/*      * One of the things we want to catch here is the use of a leading      * asterisk in the string -- an odd construct that certain platform      * manufacturers are fond of. Technically, a leading asterisk is OK      * for _CID, but a valid use of this has not been seen.      */
+if|if
+condition|(
+operator|*
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Value
+operator|.
+name|String
+operator|==
+literal|'*'
+condition|)
+block|{
+name|AslError
+argument_list|(
+name|ASL_ERROR
+argument_list|,
+name|ASL_MSG_LEADING_ASTERISK
+argument_list|,
+name|Op
+argument_list|,
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Value
+operator|.
+name|String
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/* _CID strings are bus-specific, no more checks can be performed */
+if|if
+condition|(
+name|Type
+operator|==
+name|ASL_TYPE_CID
+condition|)
+block|{
+return|return;
+block|}
+comment|/* For _HID, all characters must be alphanumeric */
 for|for
 control|(
 name|i
@@ -1412,16 +1477,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-block|}
-if|if
-condition|(
-name|Type
-operator|==
-name|ASL_TYPE_CID
-condition|)
-block|{
-comment|/* _CID strings are bus-specific, no more checks can be performed */
-return|return;
 block|}
 comment|/* _HID String must be of the form "XXX####" or "ACPI####" */
 if|if

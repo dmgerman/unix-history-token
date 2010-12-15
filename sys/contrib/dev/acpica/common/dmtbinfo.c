@@ -1334,14 +1334,14 @@ literal|0
 block|}
 block|,
 block|{
-name|ACPI_DMT_UINT8
+name|ACPI_DMT_ACCWIDTH
 block|,
 name|ACPI_GAS_OFFSET
 argument_list|(
 name|AccessWidth
 argument_list|)
 block|,
-literal|"Access Width"
+literal|"Encoded Access Width"
 block|,
 literal|0
 block|}

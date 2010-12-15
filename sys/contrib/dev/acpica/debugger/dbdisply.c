@@ -2128,7 +2128,6 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|GpeEventInfo
 operator|->
@@ -2136,6 +2135,8 @@ name|Flags
 operator|&
 name|ACPI_GPE_DISPATCH_MASK
 operator|)
+operator|==
+name|ACPI_GPE_DISPATCH_NONE
 condition|)
 block|{
 comment|/* This GPE is not used (no method or handler), ignore it */
@@ -2219,11 +2220,20 @@ name|ACPI_GPE_DISPATCH_MASK
 condition|)
 block|{
 case|case
-name|ACPI_GPE_DISPATCH_NOT_USED
+name|ACPI_GPE_DISPATCH_NONE
 case|:
 name|AcpiOsPrintf
 argument_list|(
 literal|"NotUsed"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_GPE_DISPATCH_METHOD
+case|:
+name|AcpiOsPrintf
+argument_list|(
+literal|"Method"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2237,11 +2247,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|ACPI_GPE_DISPATCH_METHOD
+name|ACPI_GPE_DISPATCH_NOTIFY
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"Method"
+literal|"Notify"
 argument_list|)
 expr_stmt|;
 break|break;

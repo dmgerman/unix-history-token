@@ -330,6 +330,10 @@ name|ASL_MSG_UPPER_CASE
 block|,
 name|ASL_MSG_HID_LENGTH
 block|,
+name|ASL_MSG_NULL_STRING
+block|,
+name|ASL_MSG_LEADING_ASTERISK
+block|,
 name|ASL_MSG_INVALID_FIELD_NAME
 block|,
 name|ASL_MSG_INTEGER_SIZE
@@ -687,7 +691,7 @@ comment|/*    ASL_MSG_MULTIPLE_DEFAULT */
 literal|"More than one Default statement within Switch construct"
 block|,
 comment|/*    ASL_MSG_TIMEOUT */
-literal|"Possible operator timeout is ignored"
+literal|"Result is not used, possible operator timeout will be missed"
 block|,
 comment|/*    ASL_MSG_RESULT_NOT_USED */
 literal|"Result is not used, operator has no effect"
@@ -748,6 +752,12 @@ literal|"Non-hex letters must be upper case"
 block|,
 comment|/*    ASL_MSG_HID_LENGTH */
 literal|"_HID string must be exactly 7 or 8 characters"
+block|,
+comment|/*    ASL_MSG_NULL_STRING */
+literal|"Invalid zero-length (null) string"
+block|,
+comment|/*    ASL_MSG_LEADING_ASTERISK */
+literal|"Invalid leading asterisk"
 block|,
 comment|/* These messages are used by the data table compiler only */
 comment|/*    ASL_MSG_INVALID_FIELD_NAME */

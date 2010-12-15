@@ -136,21 +136,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Disable wakeup GPEs during runtime? Default is TRUE because WAKE and  * RUNTIME GPEs should never be shared, and WAKE GPEs should typically only  * be enabled just before going to sleep.  */
-end_comment
-
-begin_function_decl
-name|UINT8
-name|ACPI_INIT_GLOBAL
-parameter_list|(
-name|AcpiGbl_LeaveWakeGpesDisabled
-parameter_list|,
-name|TRUE
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*  * Optionally use default values for the ACPI register widths. Set this to  * TRUE to use the defaults, if an FADT contains incorrect widths/lengths.  */
 end_comment
 
@@ -1068,22 +1053,9 @@ comment|/***********************************************************************
 end_comment
 
 begin_decl_stmt
-specifier|extern
-name|ACPI_FIXED_EVENT_INFO
-name|AcpiGbl_FixedEventInfo
-index|[
-name|ACPI_NUM_FIXED_EVENTS
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|ACPI_EXTERN
-name|ACPI_FIXED_EVENT_HANDLER
-name|AcpiGbl_FixedEventHandlers
-index|[
-name|ACPI_NUM_FIXED_EVENTS
-index|]
+name|UINT8
+name|AcpiGbl_AllGpesInitialized
 decl_stmt|;
 end_decl_stmt
 
@@ -1102,6 +1074,41 @@ modifier|*
 name|AcpiGbl_GpeFadtBlocks
 index|[
 name|ACPI_MAX_GPE_BLOCKS
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ACPI_EXTERN
+name|ACPI_GBL_EVENT_HANDLER
+name|AcpiGbl_GlobalEventHandler
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ACPI_EXTERN
+name|void
+modifier|*
+name|AcpiGbl_GlobalEventHandlerContext
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ACPI_EXTERN
+name|ACPI_FIXED_EVENT_HANDLER
+name|AcpiGbl_FixedEventHandlers
+index|[
+name|ACPI_NUM_FIXED_EVENTS
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|ACPI_FIXED_EVENT_INFO
+name|AcpiGbl_FixedEventInfo
+index|[
+name|ACPI_NUM_FIXED_EVENTS
 index|]
 decl_stmt|;
 end_decl_stmt

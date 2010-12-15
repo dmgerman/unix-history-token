@@ -187,10 +187,9 @@ argument_list|(
 name|EvEnableGpe
 argument_list|)
 expr_stmt|;
-comment|/*      * We will only allow a GPE to be enabled if it has either an      * associated method (_Lxx/_Exx) or a handler. Otherwise, the      * GPE will be immediately disabled by AcpiEvGpeDispatch the      * first time it fires.      */
+comment|/*      * We will only allow a GPE to be enabled if it has either an associated      * method (_Lxx/_Exx) or a handler, or is using the implicit notify      * feature. Otherwise, the GPE will be immediately disabled by      * AcpiEvGpeDispatch the first time it fires.      */
 if|if
 condition|(
-operator|!
 operator|(
 name|GpeEventInfo
 operator|->
@@ -198,6 +197,8 @@ name|Flags
 operator|&
 name|ACPI_GPE_DISPATCH_MASK
 operator|)
+operator|==
+name|ACPI_GPE_DISPATCH_NONE
 condition|)
 block|{
 name|return_ACPI_STATUS
@@ -238,6 +239,204 @@ argument_list|,
 name|ACPI_GPE_ENABLE
 argument_list|)
 expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvAddGpeReference  *  * PARAMETERS:  GpeEventInfo            - Add a reference to this GPE  *  * RETURN:      Status  *  * DESCRIPTION: Add a reference to a GPE. On the first reference, the GPE is  *              hardware-enabled.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_STATUS
+name|AcpiEvAddGpeReference
+parameter_list|(
+name|ACPI_GPE_EVENT_INFO
+modifier|*
+name|GpeEventInfo
+parameter_list|)
+block|{
+name|ACPI_STATUS
+name|Status
+init|=
+name|AE_OK
+decl_stmt|;
+name|ACPI_FUNCTION_TRACE
+argument_list|(
+name|EvAddGpeReference
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|GpeEventInfo
+operator|->
+name|RuntimeCount
+operator|==
+name|ACPI_UINT8_MAX
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_LIMIT
+argument_list|)
+expr_stmt|;
+block|}
+name|GpeEventInfo
+operator|->
+name|RuntimeCount
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|GpeEventInfo
+operator|->
+name|RuntimeCount
+operator|==
+literal|1
+condition|)
+block|{
+comment|/* Enable on first reference */
+name|Status
+operator|=
+name|AcpiEvUpdateGpeEnableMask
+argument_list|(
+name|GpeEventInfo
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_SUCCESS
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|Status
+operator|=
+name|AcpiEvEnableGpe
+argument_list|(
+name|GpeEventInfo
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|GpeEventInfo
+operator|->
+name|RuntimeCount
+operator|--
+expr_stmt|;
+block|}
+block|}
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvRemoveGpeReference  *  * PARAMETERS:  GpeEventInfo            - Remove a reference to this GPE  *  * RETURN:      Status  *  * DESCRIPTION: Remove a reference to a GPE. When the last reference is  *              removed, the GPE is hardware-disabled.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_STATUS
+name|AcpiEvRemoveGpeReference
+parameter_list|(
+name|ACPI_GPE_EVENT_INFO
+modifier|*
+name|GpeEventInfo
+parameter_list|)
+block|{
+name|ACPI_STATUS
+name|Status
+init|=
+name|AE_OK
+decl_stmt|;
+name|ACPI_FUNCTION_TRACE
+argument_list|(
+name|EvRemoveGpeReference
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|GpeEventInfo
+operator|->
+name|RuntimeCount
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_LIMIT
+argument_list|)
+expr_stmt|;
+block|}
+name|GpeEventInfo
+operator|->
+name|RuntimeCount
+operator|--
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|GpeEventInfo
+operator|->
+name|RuntimeCount
+condition|)
+block|{
+comment|/* Disable on last reference */
+name|Status
+operator|=
+name|AcpiEvUpdateGpeEnableMask
+argument_list|(
+name|GpeEventInfo
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_SUCCESS
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|Status
+operator|=
+name|AcpiHwLowSetGpe
+argument_list|(
+name|GpeEventInfo
+argument_list|,
+name|ACPI_GPE_DISABLE
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|GpeEventInfo
+operator|->
+name|RuntimeCount
+operator|++
+expr_stmt|;
+block|}
+block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
@@ -625,7 +824,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_INTERRUPTS
 operator|,
-literal|"Read GPE Register at GPE%X: Status=%02X, Enable=%02X\n"
+literal|"Read GPE Register at GPE%02X: Status=%02X, Enable=%02X\n"
 operator|,
 name|GpeRegisterInfo
 operator|->
@@ -690,6 +889,10 @@ name|IntStatus
 operator||=
 name|AcpiEvGpeDispatch
 argument_list|(
+name|GpeBlock
+operator|->
+name|Node
+argument_list|,
 operator|&
 name|GpeBlock
 operator|->
@@ -878,20 +1081,37 @@ block|{
 name|return_VOID
 expr_stmt|;
 block|}
-comment|/*      * Must check for control method type dispatch one more time to avoid a      * race with EvGpeInstallHandler      */
-if|if
+comment|/* Do the correct dispatch - normal method or implicit notify */
+switch|switch
 condition|(
-operator|(
 name|LocalGpeEventInfo
 operator|->
 name|Flags
 operator|&
 name|ACPI_GPE_DISPATCH_MASK
-operator|)
-operator|==
-name|ACPI_GPE_DISPATCH_METHOD
 condition|)
 block|{
+case|case
+name|ACPI_GPE_DISPATCH_NOTIFY
+case|:
+comment|/*          * Implicit notify.          * Dispatch a DEVICE_WAKE notify to the appropriate handler.          * NOTE: the request is queued for execution after this method          * completes. The notify handlers are NOT invoked synchronously          * from this thread -- because handlers may in turn run other          * control methods.          */
+name|Status
+operator|=
+name|AcpiEvQueueNotifyRequest
+argument_list|(
+name|LocalGpeEventInfo
+operator|->
+name|Dispatch
+operator|.
+name|DeviceNode
+argument_list|,
+name|ACPI_NOTIFY_DEVICE_WAKE
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_GPE_DISPATCH_METHOD
+case|:
 comment|/* Allocate the evaluation information block */
 name|Info
 operator|=
@@ -916,7 +1136,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*              * Invoke the GPE Method (_Lxx, _Exx) i.e., evaluate the _Lxx/_Exx              * control method that corresponds to this GPE              */
+comment|/*              * Invoke the GPE Method (_Lxx, _Exx) i.e., evaluate the              * _Lxx/_Exx control method that corresponds to this GPE              */
 name|Info
 operator|->
 name|PrefixNode
@@ -975,6 +1195,11 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
+break|break;
+default|default:
+name|return_VOID
+expr_stmt|;
+comment|/* Should never happen */
 block|}
 comment|/* Defer enabling of GPE until all notify handlers are done */
 name|Status
@@ -1008,7 +1233,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvAsynchEnableGpe  *  * PARAMETERS:  Context (GpeEventInfo) - Info for this GPE  *  * RETURN:      None  *  * DESCRIPTION: Asynchronous clear/enable for GPE. This allows the GPE to  *              complete (i.e., finish execution of Notify)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvAsynchEnableGpe  *  * PARAMETERS:  Context (GpeEventInfo) - Info for this GPE  *              Callback from AcpiOsExecute  *  * RETURN:      None  *  * DESCRIPTION: Asynchronous clear/enable for GPE. This allows the GPE to  *              complete (i.e., finish execution of Notify)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1028,6 +1253,36 @@ name|GpeEventInfo
 init|=
 name|Context
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|AcpiEvFinishGpe
+argument_list|(
+name|GpeEventInfo
+argument_list|)
+expr_stmt|;
+name|ACPI_FREE
+argument_list|(
+name|GpeEventInfo
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvFinishGpe  *  * PARAMETERS:  GpeEventInfo        - Info for this GPE  *  * RETURN:      Status  *  * DESCRIPTION: Clear/Enable a GPE. Common code that is used after execution  *              of a GPE method or a synchronous or asynchronous GPE handler.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_STATUS
+name|AcpiEvFinishGpe
+parameter_list|(
+name|ACPI_GPE_EVENT_INFO
+modifier|*
+name|GpeEventInfo
+parameter_list|)
+block|{
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
@@ -1044,7 +1299,7 @@ operator|==
 name|ACPI_GPE_LEVEL_TRIGGERED
 condition|)
 block|{
-comment|/*          * GPE is level-triggered, we clear the GPE status bit after handling          * the event.          */
+comment|/*          * GPE is level-triggered, we clear the GPE status bit after          * handling the event.          */
 name|Status
 operator|=
 name|AcpiHwClearGpe
@@ -1060,12 +1315,14 @@ name|Status
 argument_list|)
 condition|)
 block|{
-goto|goto
-name|Exit
-goto|;
+return|return
+operator|(
+name|Status
+operator|)
+return|;
 block|}
 block|}
-comment|/*      * Enable this GPE, conditionally. This means that the GPE will only be      * physically enabled if the EnableForRun bit is set in the EventInfo      */
+comment|/*      * Enable this GPE, conditionally. This means that the GPE will      * only be physically enabled if the EnableForRun bit is set      * in the EventInfo.      */
 operator|(
 name|void
 operator|)
@@ -1076,25 +1333,26 @@ argument_list|,
 name|ACPI_GPE_CONDITIONAL_ENABLE
 argument_list|)
 expr_stmt|;
-name|Exit
-label|:
-name|ACPI_FREE
-argument_list|(
-name|GpeEventInfo
-argument_list|)
-expr_stmt|;
-return|return;
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
 block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvGpeDispatch  *  * PARAMETERS:  GpeEventInfo    - Info for this GPE  *              GpeNumber       - Number relative to the parent GPE block  *  * RETURN:      INTERRUPT_HANDLED or INTERRUPT_NOT_HANDLED  *  * DESCRIPTION: Dispatch a General Purpose Event to either a function (e.g. EC)  *              or method (e.g. _Lxx/_Exx) handler.  *  *              This function executes at interrupt level.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvGpeDispatch  *  * PARAMETERS:  GpeDevice           - Device node. NULL for GPE0/GPE1  *              GpeEventInfo        - Info for this GPE  *              GpeNumber           - Number relative to the parent GPE block  *  * RETURN:      INTERRUPT_HANDLED or INTERRUPT_NOT_HANDLED  *  * DESCRIPTION: Dispatch a General Purpose Event to either a function (e.g. EC)  *              or method (e.g. _Lxx/_Exx) handler.  *  *              This function executes at interrupt level.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|UINT32
 name|AcpiEvGpeDispatch
 parameter_list|(
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|GpeDevice
+parameter_list|,
 name|ACPI_GPE_EVENT_INFO
 modifier|*
 name|GpeEventInfo
@@ -1106,14 +1364,35 @@ block|{
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
+name|UINT32
+name|ReturnValue
+decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 name|EvGpeDispatch
 argument_list|)
 expr_stmt|;
+comment|/* Invoke global event handler if present */
 name|AcpiGpeCount
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|AcpiGbl_GlobalEventHandler
+condition|)
+block|{
+name|AcpiGbl_GlobalEventHandler
+argument_list|(
+name|ACPI_EVENT_TYPE_GPE
+argument_list|,
+name|GpeDevice
+argument_list|,
+name|GpeNumber
+argument_list|,
+name|AcpiGbl_GlobalEventHandlerContext
+argument_list|)
+expr_stmt|;
+block|}
 comment|/*      * If edge-triggered, clear the GPE status bit now. Note that      * level-triggered events are cleared after the GPE is serviced.      */
 if|if
 condition|(
@@ -1150,7 +1429,7 @@ name|AE_INFO
 operator|,
 name|Status
 operator|,
-literal|"Unable to clear GPE[0x%2X]"
+literal|"Unable to clear GPE%02X"
 operator|,
 name|GpeNumber
 operator|)
@@ -1163,94 +1442,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*      * Dispatch the GPE to either an installed handler, or the control method      * associated with this GPE (_Lxx or _Exx). If a handler exists, we invoke      * it and do not attempt to run the method. If there is neither a handler      * nor a method, we disable this GPE to prevent further such pointless      * events from firing.      */
-switch|switch
-condition|(
-name|GpeEventInfo
-operator|->
-name|Flags
-operator|&
-name|ACPI_GPE_DISPATCH_MASK
-condition|)
-block|{
-case|case
-name|ACPI_GPE_DISPATCH_HANDLER
-case|:
-comment|/*          * Invoke the installed handler (at interrupt level)          * Ignore return status for now.          * TBD: leave GPE disabled on error?          */
-operator|(
-name|void
-operator|)
-name|GpeEventInfo
-operator|->
-name|Dispatch
-operator|.
-name|Handler
-operator|->
-name|Address
-argument_list|(
-name|GpeEventInfo
-operator|->
-name|Dispatch
-operator|.
-name|Handler
-operator|->
-name|Context
-argument_list|)
-expr_stmt|;
-comment|/* It is now safe to clear level-triggered events. */
-if|if
-condition|(
-operator|(
-name|GpeEventInfo
-operator|->
-name|Flags
-operator|&
-name|ACPI_GPE_XRUPT_TYPE_MASK
-operator|)
-operator|==
-name|ACPI_GPE_LEVEL_TRIGGERED
-condition|)
-block|{
-name|Status
-operator|=
-name|AcpiHwClearGpe
-argument_list|(
-name|GpeEventInfo
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|ACPI_EXCEPTION
-argument_list|(
-operator|(
-name|AE_INFO
-operator|,
-name|Status
-operator|,
-literal|"Unable to clear GPE[0x%2X]"
-operator|,
-name|GpeNumber
-operator|)
-argument_list|)
-expr_stmt|;
-name|return_UINT32
-argument_list|(
-name|ACPI_INTERRUPT_NOT_HANDLED
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-break|break;
-case|case
-name|ACPI_GPE_DISPATCH_METHOD
-case|:
-comment|/*          * Disable the GPE, so it doesn't keep firing before the method has a          * chance to run (it runs asynchronously with interrupts enabled).          */
+comment|/*      * Always disable the GPE so that it does not keep firing before      * any asynchronous activity completes (either from the execution      * of a GPE method or an asynchronous GPE handler.)      *      * If there is no handler or method to run, just disable the      * GPE and leave it disabled permanently to prevent further such      * pointless events from firing.      */
 name|Status
 operator|=
 name|AcpiHwLowSetGpe
@@ -1275,7 +1467,7 @@ name|AE_INFO
 operator|,
 name|Status
 operator|,
-literal|"Unable to disable GPE[0x%2X]"
+literal|"Unable to disable GPE%02X"
 operator|,
 name|GpeNumber
 operator|)
@@ -1287,6 +1479,67 @@ name|ACPI_INTERRUPT_NOT_HANDLED
 argument_list|)
 expr_stmt|;
 block|}
+comment|/*      * Dispatch the GPE to either an installed handler or the control      * method associated with this GPE (_Lxx or _Exx). If a handler      * exists, we invoke it and do not attempt to run the method.      * If there is neither a handler nor a method, leave the GPE      * disabled.      */
+switch|switch
+condition|(
+name|GpeEventInfo
+operator|->
+name|Flags
+operator|&
+name|ACPI_GPE_DISPATCH_MASK
+condition|)
+block|{
+case|case
+name|ACPI_GPE_DISPATCH_HANDLER
+case|:
+comment|/* Invoke the installed handler (at interrupt level) */
+name|ReturnValue
+operator|=
+name|GpeEventInfo
+operator|->
+name|Dispatch
+operator|.
+name|Handler
+operator|->
+name|Address
+argument_list|(
+name|GpeDevice
+argument_list|,
+name|GpeNumber
+argument_list|,
+name|GpeEventInfo
+operator|->
+name|Dispatch
+operator|.
+name|Handler
+operator|->
+name|Context
+argument_list|)
+expr_stmt|;
+comment|/* If requested, clear (if level-triggered) and reenable the GPE */
+if|if
+condition|(
+name|ReturnValue
+operator|&
+name|ACPI_REENABLE_GPE
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|AcpiEvFinishGpe
+argument_list|(
+name|GpeEventInfo
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
+name|ACPI_GPE_DISPATCH_METHOD
+case|:
+case|case
+name|ACPI_GPE_DISPATCH_NOTIFY
+case|:
 comment|/*          * Execute the method associated with the GPE          * NOTE: Level-triggered GPEs are cleared after the method completes.          */
 name|Status
 operator|=
@@ -1314,7 +1567,7 @@ name|AE_INFO
 operator|,
 name|Status
 operator|,
-literal|"Unable to queue handler for GPE[0x%2X] - event disabled"
+literal|"Unable to queue handler for GPE%02X - event disabled"
 operator|,
 name|GpeNumber
 operator|)
@@ -1329,49 +1582,12 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"No handler or method for GPE[0x%2X], disabling event"
+literal|"No handler or method for GPE%02X, disabling event"
 operator|,
 name|GpeNumber
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*          * Disable the GPE. The GPE will remain disabled until a handler          * is installed or ACPICA is restarted.          */
-name|Status
-operator|=
-name|AcpiHwLowSetGpe
-argument_list|(
-name|GpeEventInfo
-argument_list|,
-name|ACPI_GPE_DISABLE
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|ACPI_EXCEPTION
-argument_list|(
-operator|(
-name|AE_INFO
-operator|,
-name|Status
-operator|,
-literal|"Unable to disable GPE[0x%2X]"
-operator|,
-name|GpeNumber
-operator|)
-argument_list|)
-expr_stmt|;
-name|return_UINT32
-argument_list|(
-name|ACPI_INTERRUPT_NOT_HANDLED
-argument_list|)
-expr_stmt|;
-block|}
 break|break;
 block|}
 name|return_UINT32

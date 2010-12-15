@@ -1955,6 +1955,10 @@ literal|0
 expr_stmt|;
 block|}
 comment|/* GPE support */
+name|AcpiGbl_AllGpesInitialized
+operator|=
+name|FALSE
+expr_stmt|;
 name|AcpiGbl_GpeXruptListHead
 operator|=
 name|NULL
@@ -2003,6 +2007,10 @@ operator|=
 name|NULL
 expr_stmt|;
 name|AcpiGbl_InterfaceHandler
+operator|=
+name|NULL
+expr_stmt|;
+name|AcpiGbl_GlobalEventHandler
 operator|=
 name|NULL
 expr_stmt|;

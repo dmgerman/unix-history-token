@@ -717,12 +717,15 @@ end_function
 
 begin_function_decl
 specifier|static
-name|uint32_t
+name|UINT32
 name|EcGpeHandler
 parameter_list|(
+name|ACPI_HANDLE
+parameter_list|,
+name|UINT32
+parameter_list|,
 name|void
 modifier|*
-name|Context
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2137,7 +2140,6 @@ name|ec_gpebit
 argument_list|,
 name|ACPI_GPE_EDGE_TRIGGERED
 argument_list|,
-operator|&
 name|EcGpeHandler
 argument_list|,
 name|sc
@@ -2298,7 +2300,6 @@ name|sc
 operator|->
 name|ec_gpebit
 argument_list|,
-operator|&
 name|EcGpeHandler
 argument_list|)
 expr_stmt|;
@@ -3013,9 +3014,15 @@ end_comment
 
 begin_function
 specifier|static
-name|uint32_t
+name|UINT32
 name|EcGpeHandler
 parameter_list|(
+name|ACPI_HANDLE
+name|GpeDevice
+parameter_list|,
+name|UINT32
+name|GpeNumber
+parameter_list|,
 name|void
 modifier|*
 name|Context
@@ -3129,9 +3136,10 @@ literal|"EcGpeHandler: queuing GPE query handler failed\n"
 argument_list|)
 expr_stmt|;
 block|}
+comment|/*      * XXX jkim      * AcpiFinishGpe() should be used at the necessary places.      */
 return|return
 operator|(
-literal|0
+name|ACPI_REENABLE_GPE
 operator|)
 return|;
 block|}

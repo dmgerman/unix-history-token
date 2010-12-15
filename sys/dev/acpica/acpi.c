@@ -3509,6 +3509,31 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+comment|/* Update all GPEs and enable runtime GPEs. */
+name|status
+operator|=
+name|AcpiUpdateAllGpes
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|status
+argument_list|)
+condition|)
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Could not update all GPEs: %s\n"
+argument_list|,
+name|AcpiFormatException
+argument_list|(
+name|status
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* Allow sleep request after a while. */
 name|timeout
 argument_list|(
@@ -7803,6 +7828,10 @@ modifier|*
 name|status
 parameter_list|)
 block|{
+name|struct
+name|acpi_prw_data
+name|prw
+decl_stmt|;
 name|ACPI_OBJECT_TYPE
 name|type
 decl_stmt|;
@@ -7916,6 +7945,31 @@ operator|==
 literal|0
 condition|)
 break|break;
+if|if
+condition|(
+name|acpi_parse_prw
+argument_list|(
+name|handle
+argument_list|,
+operator|&
+name|prw
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|AcpiSetupGpeForWake
+argument_list|(
+name|handle
+argument_list|,
+name|prw
+operator|.
+name|gpe_handle
+argument_list|,
+name|prw
+operator|.
+name|gpe_bit
+argument_list|)
+expr_stmt|;
 comment|/* FALLTHROUGH */
 case|case
 name|ACPI_TYPE_PROCESSOR
@@ -11398,7 +11452,7 @@ condition|)
 block|{
 name|status
 operator|=
-name|AcpiGpeWakeup
+name|AcpiSetGpeWakeMask
 argument_list|(
 name|prw
 operator|.
@@ -11446,7 +11500,7 @@ else|else
 block|{
 name|status
 operator|=
-name|AcpiGpeWakeup
+name|AcpiSetGpeWakeMask
 argument_list|(
 name|prw
 operator|.
@@ -11553,7 +11607,7 @@ operator|.
 name|lowest_wake
 condition|)
 block|{
-name|AcpiGpeWakeup
+name|AcpiSetGpeWakeMask
 argument_list|(
 name|prw
 operator|.
@@ -11721,7 +11775,7 @@ operator|.
 name|lowest_wake
 condition|)
 block|{
-name|AcpiGpeWakeup
+name|AcpiSetGpeWakeMask
 argument_list|(
 name|prw
 operator|.
