@@ -6616,7 +6616,7 @@ index|[
 name|ncomp
 index|]
 operator|=
-literal|0
+name|error
 expr_stmt|;
 name|nv_free
 argument_list|(
