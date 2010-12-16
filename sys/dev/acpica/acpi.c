@@ -7673,7 +7673,7 @@ argument_list|(
 name|bus
 argument_list|)
 expr_stmt|;
-comment|/* Probe/attach all children, created staticly and from the namespace. */
+comment|/* Probe/attach all children, created statically and from the namespace. */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
