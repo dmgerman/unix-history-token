@@ -91,11 +91,22 @@ directive|include
 file|"opt_global.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"opt_kernname.h"
-end_include
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KERNNAME
+end_ifndef
+
+begin_error
+error|#
+directive|error
+error|Kernel name not provided
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
