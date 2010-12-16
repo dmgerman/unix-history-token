@@ -5117,9 +5117,6 @@ name|ggio
 argument_list|,
 literal|"Local request failed (%zd != %jd), trying remote node. "
 argument_list|,
-operator|(
-name|intmax_t
-operator|)
 name|ret
 argument_list|,
 operator|(
@@ -5233,9 +5230,6 @@ name|ggio
 argument_list|,
 literal|"Local request failed (%zd != %jd): "
 argument_list|,
-operator|(
-name|intmax_t
-operator|)
 name|ret
 argument_list|,
 operator|(
