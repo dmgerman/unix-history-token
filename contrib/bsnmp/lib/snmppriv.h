@@ -104,10 +104,6 @@ name|enum
 name|snmp_code
 name|snmp_pdu_calc_digest
 parameter_list|(
-name|struct
-name|asn_buf
-modifier|*
-parameter_list|,
 specifier|const
 name|struct
 name|snmp_pdu
@@ -124,10 +120,6 @@ name|enum
 name|snmp_code
 name|snmp_pdu_encrypt
 parameter_list|(
-name|struct
-name|asn_buf
-modifier|*
-parameter_list|,
 specifier|const
 name|struct
 name|snmp_pdu
@@ -141,10 +133,6 @@ name|enum
 name|snmp_code
 name|snmp_pdu_decrypt
 parameter_list|(
-name|struct
-name|asn_buf
-modifier|*
-parameter_list|,
 specifier|const
 name|struct
 name|snmp_pdu

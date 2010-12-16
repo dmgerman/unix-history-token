@@ -3132,8 +3132,6 @@ name|code
 operator|=
 name|snmp_pdu_calc_digest
 argument_list|(
-name|b
-argument_list|,
 name|pdu
 argument_list|,
 name|digest
@@ -3263,8 +3261,6 @@ name|code
 operator|=
 name|snmp_pdu_decrypt
 argument_list|(
-name|b
-argument_list|,
 name|pdu
 argument_list|)
 operator|)
@@ -4412,8 +4408,6 @@ if|if
 condition|(
 name|snmp_pdu_encrypt
 argument_list|(
-name|b
-argument_list|,
 name|pdu
 argument_list|)
 operator|!=
@@ -4508,8 +4502,6 @@ name|code
 operator|=
 name|snmp_pdu_calc_digest
 argument_list|(
-name|b
-argument_list|,
 name|pdu
 argument_list|,
 name|pdu
