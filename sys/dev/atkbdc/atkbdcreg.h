@@ -844,6 +844,11 @@ modifier|*
 name|port1
 decl_stmt|;
 comment|/* status port */
+name|struct
+name|resource
+modifier|*
+name|irq
+decl_stmt|;
 name|bus_space_tag_t
 name|iot
 decl_stmt|;
