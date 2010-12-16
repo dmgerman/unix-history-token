@@ -4575,6 +4575,15 @@ operator|<=
 literal|0
 condition|)
 return|return;
+name|bus_delete_resource
+argument_list|(
+name|psmc
+argument_list|,
+name|SYS_RES_IRQ
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|bus_set_resource
 argument_list|(
 name|psm
@@ -4670,8 +4679,6 @@ argument_list|,
 operator|&
 name|rid
 argument_list|,
-name|RF_SHAREABLE
-operator||
 name|RF_ACTIVE
 argument_list|)
 expr_stmt|;
@@ -5968,8 +5975,6 @@ argument_list|,
 operator|&
 name|rid
 argument_list|,
-name|RF_SHAREABLE
-operator||
 name|RF_ACTIVE
 argument_list|)
 expr_stmt|;
@@ -21718,6 +21723,15 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|bus_delete_resource
+argument_list|(
+name|me
+argument_list|,
+name|SYS_RES_IRQ
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|bus_set_resource
 argument_list|(
 name|psm
@@ -21864,7 +21878,7 @@ argument_list|,
 operator|&
 name|rid
 argument_list|,
-name|RF_SHAREABLE
+literal|0
 argument_list|)
 expr_stmt|;
 name|bus_release_resource
@@ -21917,9 +21931,6 @@ block|{
 name|device_t
 name|atkbdc
 decl_stmt|;
-name|int
-name|rid
-decl_stmt|;
 comment|/* find the keyboard controller, which may be on acpi* or isa* bus */
 name|atkbdc
 operator|=
@@ -21960,26 +21971,6 @@ argument_list|,
 name|dev
 argument_list|)
 expr_stmt|;
-else|else
-block|{
-comment|/* 		 * If we don't have the AT keyboard controller yet, 		 * just reserve the IRQ for later use... 		 * (See psmidentify() above.) 		 */
-name|rid
-operator|=
-literal|0
-expr_stmt|;
-name|bus_alloc_resource_any
-argument_list|(
-name|dev
-argument_list|,
-name|SYS_RES_IRQ
-argument_list|,
-operator|&
-name|rid
-argument_list|,
-name|RF_SHAREABLE
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0
