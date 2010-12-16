@@ -653,7 +653,8 @@ parameter_list|(
 name|Objlist
 modifier|*
 parameter_list|,
-name|bool
+name|Obj_Entry
+modifier|*
 parameter_list|,
 name|int
 modifier|*
@@ -8206,7 +8207,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Call the finalization functions for each of the objects in "list"  * which are unreferenced.  All of the objects are expected to have  * non-NULL fini functions.  */
+comment|/*  * Call the finalization functions for each of the objects in "list"  * belonging to the DAG of "root" and referenced once. If NULL "root"  * is specified, every finalization function will be called regardless  * of the reference count and the list elements won't be freed. All of  * the objects are expected to have non-NULL fini functions.  */
 end_comment
 
 begin_function
@@ -8218,8 +8219,9 @@ name|Objlist
 modifier|*
 name|list
 parameter_list|,
-name|bool
-name|force
+name|Obj_Entry
+modifier|*
+name|root
 parameter_list|,
 name|int
 modifier|*
@@ -8229,44 +8231,72 @@ block|{
 name|Objlist_Entry
 modifier|*
 name|elm
-decl_stmt|,
-modifier|*
-name|elm_tmp
 decl_stmt|;
 name|char
 modifier|*
 name|saved_msg
 decl_stmt|;
+name|assert
+argument_list|(
+name|root
+operator|==
+name|NULL
+operator|||
+name|root
+operator|->
+name|refcount
+operator|==
+literal|1
+argument_list|)
+expr_stmt|;
 comment|/*      * Preserve the current error message since a fini function might      * call into the dynamic linker and overwrite it.      */
 name|saved_msg
 operator|=
 name|errmsg_save
 argument_list|()
 expr_stmt|;
-name|STAILQ_FOREACH_SAFE
+do|do
+block|{
+name|STAILQ_FOREACH
 argument_list|(
 argument|elm
 argument_list|,
 argument|list
 argument_list|,
 argument|link
-argument_list|,
-argument|elm_tmp
 argument_list|)
 block|{
 if|if
 condition|(
+name|root
+operator|!=
+name|NULL
+operator|&&
+operator|(
 name|elm
 operator|->
 name|obj
 operator|->
 name|refcount
-operator|==
-literal|0
+operator|!=
+literal|1
 operator|||
-name|force
+name|objlist_find
+argument_list|(
+operator|&
+name|root
+operator|->
+name|dagmembers
+argument_list|,
+name|elm
+operator|->
+name|obj
+argument_list|)
+operator|==
+name|NULL
+operator|)
 condition|)
-block|{
+continue|continue;
 name|dbg
 argument_list|(
 literal|"calling fini function for %s at %p"
@@ -8329,6 +8359,7 @@ argument_list|,
 name|link
 argument_list|)
 expr_stmt|;
+comment|/* 	     * XXX: If a dlopen() call references an object while the 	     * fini function is in progress, we might end up trying to 	     * unload the referenced object in dlclose() or the object 	     * won't be unloaded although its fini function has been 	     * called. 	     */
 name|wlock_release
 argument_list|(
 name|rtld_bind_lock
@@ -8361,16 +8392,26 @@ expr_stmt|;
 comment|/* No need to free anything if process is going down. */
 if|if
 condition|(
-operator|!
-name|force
+name|root
+operator|!=
+name|NULL
 condition|)
 name|free
 argument_list|(
 name|elm
 argument_list|)
 expr_stmt|;
+comment|/* 	     * We must restart the list traversal after every fini call 	     * because a dlclose() call from the fini function or from 	     * another thread might have modified the reference counts. 	     */
+break|break;
 block|}
 block|}
+do|while
+condition|(
+name|elm
+operator|!=
+name|NULL
+condition|)
+do|;
 name|errmsg_restore
 argument_list|(
 name|saved_msg
@@ -9117,7 +9158,7 @@ argument_list|(
 operator|&
 name|list_fini
 argument_list|,
-name|true
+name|NULL
 argument_list|,
 operator|&
 name|lockstate
@@ -9639,30 +9680,30 @@ operator|->
 name|dl_refcount
 operator|--
 expr_stmt|;
-name|unref_dag
-argument_list|(
-name|root
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|root
 operator|->
 name|refcount
 operator|==
-literal|0
+literal|1
 condition|)
 block|{
-comment|/* 	 * The object is no longer referenced, so we must unload it. 	 * First, call the fini functions. 	 */
+comment|/* 	 * The object will be no longer referenced, so we must unload it. 	 * First, call the fini functions. 	 */
 name|objlist_call_fini
 argument_list|(
 operator|&
 name|list_fini
 argument_list|,
-name|false
+name|root
 argument_list|,
 operator|&
 name|lockstate
+argument_list|)
+expr_stmt|;
+name|unref_dag
+argument_list|(
+name|root
 argument_list|)
 expr_stmt|;
 comment|/* Finish cleaning up the newly-unreferenced objects. */
@@ -9689,6 +9730,12 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|unref_dag
+argument_list|(
+name|root
+argument_list|)
+expr_stmt|;
 name|LD_UTRACE
 argument_list|(
 name|UTRACE_DLCLOSE_STOP
