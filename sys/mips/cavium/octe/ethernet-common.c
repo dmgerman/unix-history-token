@@ -1346,6 +1346,9 @@ argument_list|)
 case|case
 name|CVMX_BOARD_TYPE_CUST_LANNER_MR320
 case|:
+case|case
+name|CVMX_BOARD_TYPE_CUST_LANNER_MR321X
+case|:
 if|if
 condition|(
 name|priv

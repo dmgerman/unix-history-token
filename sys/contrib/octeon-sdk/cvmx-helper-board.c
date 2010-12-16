@@ -881,6 +881,9 @@ return|;
 case|case
 name|CVMX_BOARD_TYPE_CUST_LANNER_MR320
 case|:
+case|case
+name|CVMX_BOARD_TYPE_CUST_LANNER_MR321X
+case|:
 comment|/* Port 0 is a Marvell 88E6161 switch, ports 1 and 2 are Marvell 	       88E1111 interfaces.  */
 switch|switch
 condition|(
@@ -1314,6 +1317,9 @@ expr_stmt|;
 break|break;
 case|case
 name|CVMX_BOARD_TYPE_CUST_LANNER_MR320
+case|:
+case|case
+name|CVMX_BOARD_TYPE_CUST_LANNER_MR321X
 case|:
 comment|/* Port 0 connects to the switch */
 if|if
@@ -3328,6 +3334,9 @@ name|OCTEON_VENDOR_LANNER
 argument_list|)
 case|case
 name|CVMX_BOARD_TYPE_CUST_LANNER_MR320
+case|:
+case|case
+name|CVMX_BOARD_TYPE_CUST_LANNER_MR321X
 case|:
 endif|#
 directive|endif

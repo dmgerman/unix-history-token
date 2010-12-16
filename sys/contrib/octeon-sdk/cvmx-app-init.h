@@ -514,6 +514,10 @@ name|CVMX_BOARD_TYPE_CUST_LANNER_MR320
 init|=
 literal|20002
 block|,
+name|CVMX_BOARD_TYPE_CUST_LANNER_MR321X
+init|=
+literal|20007
+block|,
 endif|#
 directive|endif
 name|CVMX_BOARD_TYPE_CUST_PRIVATE_MAX
@@ -909,6 +913,10 @@ argument_list|)
 name|ENUM_BRD_TYPE_CASE
 argument_list|(
 argument|CVMX_BOARD_TYPE_CUST_LANNER_MR320
+argument_list|)
+name|ENUM_BRD_TYPE_CASE
+argument_list|(
+argument|CVMX_BOARD_TYPE_CUST_LANNER_MR321X
 argument_list|)
 endif|#
 directive|endif
