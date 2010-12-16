@@ -2897,6 +2897,13 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
+name|pjdlog_info
+argument_list|(
+literal|"Started successfully, running protocol version %d."
+argument_list|,
+name|HAST_PROTO_VERSION
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
