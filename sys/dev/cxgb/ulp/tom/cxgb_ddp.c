@@ -698,7 +698,7 @@ operator|)
 return|;
 name|unpin
 label|:
-name|vm_fault_unhold_pages
+name|vm_page_unhold_pages
 argument_list|(
 name|p
 operator|->
@@ -830,7 +830,7 @@ name|dirty
 parameter_list|)
 block|{
 comment|/* 	 * XXX mark pages as dirty before unholding  	 */
-name|vm_fault_unhold_pages
+name|vm_page_unhold_pages
 argument_list|(
 name|gl
 operator|->

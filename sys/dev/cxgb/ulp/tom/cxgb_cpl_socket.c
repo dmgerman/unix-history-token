@@ -2193,7 +2193,7 @@ condition|(
 name|rv
 condition|)
 block|{
-name|vm_fault_unhold_pages
+name|vm_page_unhold_pages
 argument_list|(
 name|toep
 operator|->
@@ -2262,7 +2262,7 @@ argument_list|(
 name|toep
 argument_list|)
 expr_stmt|;
-name|vm_fault_unhold_pages
+name|vm_page_unhold_pages
 argument_list|(
 name|toep
 operator|->
