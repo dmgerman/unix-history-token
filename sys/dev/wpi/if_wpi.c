@@ -15612,11 +15612,6 @@ argument_list|,
 literal|"timeout waiting for thermal calibration\n"
 argument_list|)
 expr_stmt|;
-name|WPI_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 name|DPRINTFN
@@ -15649,11 +15644,6 @@ operator|->
 name|sc_dev
 argument_list|,
 literal|"device config failed\n"
-argument_list|)
-expr_stmt|;
-name|WPI_UNLOCK
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 return|return;
