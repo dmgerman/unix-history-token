@@ -92,12 +92,9 @@ name|hapd
 decl_stmt|;
 comment|/* back pointer */
 name|int
-name|ioctl_sock
+name|sock
 decl_stmt|;
 comment|/* open socket for 802.11 ioctls */
-name|int
-name|wext_sock
-decl_stmt|;
 name|struct
 name|l2_packet_data
 modifier|*
@@ -150,15 +147,6 @@ comment|/* wpa state to restore on deinit */
 block|}
 struct|;
 end_struct
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|struct
-name|wpa_driver_ops
-name|bsd_driver_ops
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 specifier|static
@@ -260,7 +248,7 @@ name|ioctl
 argument_list|(
 name|drv
 operator|->
-name|ioctl_sock
+name|sock
 argument_list|,
 name|SIOCS80211
 argument_list|,
@@ -388,7 +376,7 @@ name|ioctl
 argument_list|(
 name|drv
 operator|->
-name|ioctl_sock
+name|sock
 argument_list|,
 name|SIOCG80211
 argument_list|,
@@ -921,7 +909,7 @@ if|if
 condition|(
 name|drv
 operator|->
-name|ioctl_sock
+name|sock
 operator|<
 literal|0
 condition|)
@@ -963,7 +951,7 @@ name|ioctl
 argument_list|(
 name|drv
 operator|->
-name|ioctl_sock
+name|sock
 argument_list|,
 name|SIOCGIFFLAGS
 argument_list|,
@@ -1049,7 +1037,7 @@ name|ioctl
 argument_list|(
 name|drv
 operator|->
-name|ioctl_sock
+name|sock
 argument_list|,
 name|SIOCSIFFLAGS
 argument_list|,
@@ -3655,7 +3643,7 @@ name|hapd
 expr_stmt|;
 name|drv
 operator|->
-name|ioctl_sock
+name|sock
 operator|=
 name|socket
 argument_list|(
@@ -3670,7 +3658,7 @@ if|if
 condition|(
 name|drv
 operator|->
-name|ioctl_sock
+name|sock
 operator|<
 literal|0
 condition|)
@@ -3877,7 +3865,7 @@ if|if
 condition|(
 name|drv
 operator|->
-name|ioctl_sock
+name|sock
 operator|>=
 literal|0
 condition|)
@@ -3885,7 +3873,7 @@ name|close
 argument_list|(
 name|drv
 operator|->
-name|ioctl_sock
+name|sock
 argument_list|)
 expr_stmt|;
 name|free
@@ -3956,7 +3944,7 @@ if|if
 condition|(
 name|drv
 operator|->
-name|ioctl_sock
+name|sock
 operator|>=
 literal|0
 condition|)
@@ -3964,7 +3952,7 @@ name|close
 argument_list|(
 name|drv
 operator|->
-name|ioctl_sock
+name|sock
 argument_list|)
 expr_stmt|;
 if|if
