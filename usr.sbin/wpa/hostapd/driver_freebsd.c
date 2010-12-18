@@ -106,7 +106,7 @@ name|route
 decl_stmt|;
 comment|/* routing socket for events */
 name|char
-name|iface
+name|ifname
 index|[
 name|IFNAMSIZ
 operator|+
@@ -204,7 +204,7 @@ name|i_name
 argument_list|,
 name|drv
 operator|->
-name|iface
+name|ifname
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -342,7 +342,7 @@ name|i_name
 argument_list|,
 name|drv
 operator|->
-name|iface
+name|ifname
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -942,7 +942,7 @@ literal|"%s"
 argument_list|,
 name|drv
 operator|->
-name|iface
+name|ifname
 argument_list|)
 expr_stmt|;
 if|if
@@ -3676,7 +3676,7 @@ name|memcpy
 argument_list|(
 name|drv
 operator|->
-name|iface
+name|ifname
 argument_list|,
 name|params
 operator|->
@@ -3686,7 +3686,7 @@ sizeof|sizeof
 argument_list|(
 name|drv
 operator|->
-name|iface
+name|ifname
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3699,7 +3699,7 @@ name|if_nametoindex
 argument_list|(
 name|drv
 operator|->
-name|iface
+name|ifname
 argument_list|)
 expr_stmt|;
 if|if
@@ -3719,7 +3719,7 @@ name|__func__
 argument_list|,
 name|drv
 operator|->
-name|iface
+name|ifname
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3734,7 +3734,7 @@ name|l2_packet_init
 argument_list|(
 name|drv
 operator|->
-name|iface
+name|ifname
 argument_list|,
 name|NULL
 argument_list|,
