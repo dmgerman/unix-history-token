@@ -1298,13 +1298,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|pci_enable_io
-argument_list|(
-name|dev
-argument_list|,
-name|SYS_RES_IOPORT
-argument_list|)
-expr_stmt|;
 name|i
 operator|=
 name|PCIR_BAR

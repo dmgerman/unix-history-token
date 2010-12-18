@@ -5508,13 +5508,6 @@ name|polling
 operator|=
 literal|0
 expr_stmt|;
-name|pci_set_powerstate
-argument_list|(
-name|dev
-argument_list|,
-name|PCI_POWERSTATE_D0
-argument_list|)
-expr_stmt|;
 name|pci_enable_busmaster
 argument_list|(
 name|dev
@@ -6304,13 +6297,6 @@ argument_list|,
 name|ATI_REG_CMD_POWERDOWN
 argument_list|)
 expr_stmt|;
-name|pci_set_powerstate
-argument_list|(
-name|dev
-argument_list|,
-name|PCI_POWERSTATE_D3
-argument_list|)
-expr_stmt|;
 name|atiixp_unlock
 argument_list|(
 name|sc
@@ -6346,26 +6332,6 @@ decl_stmt|;
 name|atiixp_lock
 argument_list|(
 name|sc
-argument_list|)
-expr_stmt|;
-comment|/* power up pci bus */
-name|pci_set_powerstate
-argument_list|(
-name|dev
-argument_list|,
-name|PCI_POWERSTATE_D0
-argument_list|)
-expr_stmt|;
-name|pci_enable_io
-argument_list|(
-name|dev
-argument_list|,
-name|SYS_RES_MEMORY
-argument_list|)
-expr_stmt|;
-name|pci_enable_busmaster
-argument_list|(
-name|dev
 argument_list|)
 expr_stmt|;
 comment|/* reset / power up aclink */
