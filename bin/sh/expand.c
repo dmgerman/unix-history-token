@@ -2675,17 +2675,6 @@ operator|&=
 operator|~
 name|VSNUL
 expr_stmt|;
-if|if
-condition|(
-name|c
-operator|!=
-literal|0
-condition|)
-operator|*
-name|loc
-operator|=
-name|c
-expr_stmt|;
 return|return
 literal|1
 return|;
