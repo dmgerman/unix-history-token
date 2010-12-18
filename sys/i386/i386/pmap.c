@@ -5473,6 +5473,11 @@ argument_list|(
 name|ptep
 argument_list|)
 expr_stmt|;
+name|PMAP_UNLOCK
+argument_list|(
+name|pmap
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -5524,11 +5529,6 @@ name|PAGE_MASK
 operator|)
 expr_stmt|;
 block|}
-name|PMAP_UNLOCK
-argument_list|(
-name|pmap
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|rtval
