@@ -580,19 +580,6 @@ argument_list|,
 name|len
 argument_list|)
 decl_stmt|;
-name|wpa_printf
-argument_list|(
-name|MSG_DEBUG
-argument_list|,
-literal|"%s: ssid=\"%.*s\"\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|ssid_len
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
 return|return
 name|ssid_len
 return|;
@@ -633,19 +620,6 @@ name|drv
 operator|->
 name|hapd
 decl_stmt|;
-name|wpa_printf
-argument_list|(
-name|MSG_DEBUG
-argument_list|,
-literal|"%s: ssid=\"%.*s\"\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|len
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
 return|return
 name|set80211var
 argument_list|(
@@ -894,17 +868,6 @@ name|struct
 name|ifreq
 name|ifr
 decl_stmt|;
-name|wpa_printf
-argument_list|(
-name|MSG_DEBUG
-argument_list|,
-literal|"%s: flags=0x%x\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|flags
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|drv
@@ -1422,7 +1385,7 @@ name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
 argument_list|,
-literal|"%s: enabled=%d\n"
+literal|"%s: enabled=%d"
 argument_list|,
 name|__func__
 argument_list|,
@@ -2177,7 +2140,7 @@ name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
 argument_list|,
-literal|"%s: enabled=%d\n"
+literal|"%s: enabled=%d"
 argument_list|,
 name|__func__
 argument_list|,
@@ -2248,7 +2211,7 @@ name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
 argument_list|,
-literal|"%s: addr=%s idx=%d\n"
+literal|"%s: addr=%s idx=%d"
 argument_list|,
 name|__func__
 argument_list|,
@@ -2567,7 +2530,7 @@ name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
 argument_list|,
-literal|"%s: addr=%s\n"
+literal|"%s: addr=%s"
 argument_list|,
 name|__func__
 argument_list|,
