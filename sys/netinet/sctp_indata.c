@@ -8889,7 +8889,10 @@ literal|0
 operator|)
 operator|||
 operator|(
-operator|(
+call|(
+name|uint16_t
+call|)
+argument_list|(
 name|asoc
 operator|->
 name|strmin
@@ -8900,7 +8903,7 @@ operator|.
 name|last_sequence_delivered
 operator|+
 literal|1
-operator|)
+argument_list|)
 operator|==
 name|strmseq
 operator|&&
