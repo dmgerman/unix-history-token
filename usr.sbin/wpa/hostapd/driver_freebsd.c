@@ -2021,6 +2021,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Avoid conflicts with hostapd definitions by undefining couple of defines  * from net80211 header files.  */
+end_comment
+
 begin_undef
 undef|#
 directive|undef
@@ -2037,12 +2041,6 @@ begin_undef
 undef|#
 directive|undef
 name|WPA_OUI_TYPE
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|WME_OUI_TYPE
 end_undef
 
 begin_function_decl
