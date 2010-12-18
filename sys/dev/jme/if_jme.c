@@ -3881,7 +3881,7 @@ name|dev
 argument_list|,
 name|i
 operator|+
-literal|0x08
+name|PCIR_EXPRESS_DEVICE_CTL
 argument_list|,
 literal|2
 argument_list|)
