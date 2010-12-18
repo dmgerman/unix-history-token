@@ -4203,6 +4203,14 @@ name|BMSR_DEFCAPMASK
 argument_list|,
 name|sc
 operator|->
+name|jme_flags
+operator|&
+name|JME_FLAG_FPGA
+condition|?
+name|MII_PHY_ANY
+else|:
+name|sc
+operator|->
 name|jme_phyaddr
 argument_list|,
 name|MII_OFFSET_ANY
