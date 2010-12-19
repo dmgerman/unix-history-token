@@ -2471,8 +2471,6 @@ name|pa_base
 decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|ofw_mappings
 decl_stmt|;
 name|bzero
 argument_list|(
@@ -2535,10 +2533,6 @@ expr_stmt|;
 for|for
 control|(
 name|i
-operator|=
-literal|0
-operator|,
-name|ofw_mappings
 operator|=
 literal|0
 init|;
@@ -2705,9 +2699,6 @@ name|pa_base
 operator|+
 name|off
 argument_list|)
-expr_stmt|;
-name|ofw_mappings
-operator|++
 expr_stmt|;
 block|}
 name|ENABLE_TRANS

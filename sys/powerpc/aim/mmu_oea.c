@@ -2924,9 +2924,6 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-name|int
-name|ofw_mappings
-decl_stmt|;
 name|vm_size_t
 name|size
 decl_stmt|,
@@ -4302,10 +4299,6 @@ control|(
 name|i
 operator|=
 literal|0
-operator|,
-name|ofw_mappings
-operator|=
-literal|0
 init|;
 name|i
 operator|<
@@ -4381,7 +4374,6 @@ name|off
 operator|+=
 name|PAGE_SIZE
 control|)
-block|{
 name|moea_kenter
 argument_list|(
 name|mmup
@@ -4405,10 +4397,6 @@ operator|+
 name|off
 argument_list|)
 expr_stmt|;
-name|ofw_mappings
-operator|++
-expr_stmt|;
-block|}
 block|}
 end_for
 
