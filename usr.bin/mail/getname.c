@@ -75,11 +75,9 @@ name|char
 modifier|*
 name|getname
 parameter_list|(
-name|uid
-parameter_list|)
 name|int
 name|uid
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|passwd
@@ -122,12 +120,10 @@ begin_function
 name|int
 name|getuserid
 parameter_list|(
-name|name
-parameter_list|)
 name|char
 name|name
 index|[]
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|passwd

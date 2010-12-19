@@ -110,12 +110,10 @@ begin_function
 name|int
 name|setfile
 parameter_list|(
-name|name
-parameter_list|)
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|)
 block|{
 name|FILE
 modifier|*
@@ -656,7 +654,9 @@ end_comment
 begin_function
 name|int
 name|incfile
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|off_t
 name|newsize
@@ -805,7 +805,9 @@ end_comment
 begin_function
 name|void
 name|commands
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|n
@@ -1132,17 +1134,13 @@ begin_function
 name|int
 name|execute
 parameter_list|(
-name|linebuf
-parameter_list|,
-name|contxt
-parameter_list|)
 name|char
 name|linebuf
 index|[]
-decl_stmt|;
+parameter_list|,
 name|int
 name|contxt
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|word
@@ -1911,11 +1909,9 @@ begin_function
 name|void
 name|setmsize
 parameter_list|(
-name|sz
-parameter_list|)
 name|int
 name|sz
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1965,12 +1961,10 @@ name|cmd
 modifier|*
 name|lex
 parameter_list|(
-name|word
-parameter_list|)
 name|char
 name|word
 index|[]
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|struct
@@ -2046,21 +2040,16 @@ begin_function
 name|int
 name|isprefix
 parameter_list|(
-name|as1
-parameter_list|,
-name|as2
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|as1
-decl_stmt|,
-decl|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 name|as2
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 specifier|const
 name|char
@@ -2110,7 +2099,7 @@ literal|'\0'
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * The following gets called on receipt of an interrupt.  This is  * to abort printout of a command, mainly.  * Dispatching here when command() is inactive crashes rcv.  * Close all open files except 0, 1, 2, and the temporary.  * Also, unstack all source files.  */
@@ -2127,19 +2116,14 @@ begin_comment
 comment|/* am printing startup headers */
 end_comment
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 name|void
 name|intr
 parameter_list|(
-name|s
-parameter_list|)
 name|int
 name|s
-decl_stmt|;
+name|__unused
+parameter_list|)
 block|{
 name|noreset
 operator|=
@@ -2211,11 +2195,9 @@ begin_function
 name|void
 name|stop
 parameter_list|(
-name|s
-parameter_list|)
 name|int
 name|s
-decl_stmt|;
+parameter_list|)
 block|{
 name|sig_t
 name|old_action
@@ -2318,19 +2300,14 @@ begin_comment
 comment|/*  * Branch here on hangup signal and simulate "exit".  */
 end_comment
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 name|void
 name|hangup
 parameter_list|(
-name|s
-parameter_list|)
 name|int
 name|s
-decl_stmt|;
+name|__unused
+parameter_list|)
 block|{
 comment|/* nothing to do? */
 name|exit
@@ -2348,7 +2325,9 @@ end_comment
 begin_function
 name|void
 name|announce
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|vec
@@ -2427,11 +2406,9 @@ begin_function
 name|int
 name|newfileinfo
 parameter_list|(
-name|omsgCount
-parameter_list|)
 name|int
 name|omsgCount
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|message
@@ -2834,19 +2811,14 @@ begin_comment
 comment|/*  * Print the current version number.  */
 end_comment
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
 name|int
 name|pversion
 parameter_list|(
-name|e
-parameter_list|)
 name|int
 name|e
-decl_stmt|;
+name|__unused
+parameter_list|)
 block|{
 name|printf
 argument_list|(
@@ -2871,12 +2843,10 @@ begin_function
 name|void
 name|load
 parameter_list|(
-name|name
-parameter_list|)
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|)
 block|{
 name|FILE
 modifier|*

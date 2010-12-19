@@ -70,7 +70,9 @@ end_decl_stmt
 begin_function
 name|void
 name|tinit
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 modifier|*

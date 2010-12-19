@@ -69,11 +69,9 @@ name|char
 modifier|*
 name|salloc
 parameter_list|(
-name|size
-parameter_list|)
 name|int
 name|size
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -286,7 +284,9 @@ end_comment
 begin_function
 name|void
 name|sreset
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|strings
@@ -366,7 +366,9 @@ end_comment
 begin_function
 name|void
 name|spreserve
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|strings

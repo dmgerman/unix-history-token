@@ -73,7 +73,9 @@ end_comment
 begin_function
 name|int
 name|quitcmd
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|/* 	 * If we are sourcing, then return 1 so execute() can handle it. 	 * Otherwise, return -1 to abort command loop. 	 */
 if|if
@@ -101,7 +103,9 @@ end_comment
 begin_function
 name|void
 name|quit
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|mcount
@@ -1504,12 +1508,10 @@ begin_function
 name|int
 name|writeback
 parameter_list|(
-name|res
-parameter_list|)
 name|FILE
 modifier|*
 name|res
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|message
@@ -1819,7 +1821,9 @@ end_comment
 begin_function
 name|void
 name|edstop
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|gotcha
