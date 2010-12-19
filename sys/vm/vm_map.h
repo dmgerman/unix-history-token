@@ -480,6 +480,9 @@ directive|define
 name|max_offset
 value|header.end
 comment|/* (c) */
+name|int
+name|busy
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -498,6 +501,13 @@ end_define
 begin_comment
 comment|/* wire all future pages */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MAP_BUSY_WAKEUP
+value|0x02
+end_define
 
 begin_ifdef
 ifdef|#
@@ -874,6 +884,36 @@ end_function_decl
 begin_function_decl
 name|void
 name|vm_map_wakeup
+parameter_list|(
+name|vm_map_t
+name|map
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vm_map_busy
+parameter_list|(
+name|vm_map_t
+name|map
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vm_map_unbusy
+parameter_list|(
+name|vm_map_t
+name|map
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vm_map_wait_busy
 parameter_list|(
 name|vm_map_t
 name|map
