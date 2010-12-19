@@ -1075,6 +1075,9 @@ name|uint32_t
 name|ki_udata
 decl_stmt|;
 name|uint32_t
+name|ki_tdaddr
+decl_stmt|;
+name|uint32_t
 name|ki_spareptrs
 index|[
 name|KI_NSPARE_PTR
