@@ -157,8 +157,6 @@ name|va
 decl_stmt|;
 name|int
 name|faults
-decl_stmt|,
-name|rv
 decl_stmt|;
 name|pmap_t
 name|pmap
@@ -302,11 +300,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	 * Pages either have insufficient permissions or are not present 	 * trigger a fault where neccessary 	 *  	 */
-name|rv
-operator|=
-literal|0
-expr_stmt|;
+comment|/* 	 * Pages either have insufficient permissions or are not present 	 * trigger a fault where neccessary 	 */
 for|for
 control|(
 name|pages
@@ -329,18 +323,14 @@ name|pages
 operator|++
 control|)
 block|{
-comment|/* 		 * Account for a very narrow race where the page may be 		 * taken away from us before it is held 		 */
-while|while
+if|if
 condition|(
 operator|*
 name|pages
 operator|==
 name|NULL
-condition|)
-block|{
-name|rv
-operator|=
-name|vm_fault
+operator|&&
+name|vm_fault_hold
 argument_list|(
 name|map
 argument_list|,
@@ -349,28 +339,15 @@ argument_list|,
 name|prot
 argument_list|,
 name|VM_FAULT_NORMAL
+argument_list|,
+name|pages
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|rv
+operator|!=
+name|KERN_SUCCESS
 condition|)
 goto|goto
 name|error
 goto|;
-operator|*
-name|pages
-operator|=
-name|pmap_extract_and_hold
-argument_list|(
-name|pmap
-argument_list|,
-name|va
-argument_list|,
-name|prot
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 return|return
 operator|(
