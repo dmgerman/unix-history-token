@@ -1091,6 +1091,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|duplicate_block
+parameter_list|(
+name|struct
+name|file_lock
+modifier|*
+name|fl
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|add_blockingfilelock
 parameter_list|(
@@ -5389,9 +5401,6 @@ name|struct
 name|file_lock
 modifier|*
 name|ifl
-decl_stmt|,
-modifier|*
-name|nfl
 decl_stmt|;
 name|int
 name|retval
