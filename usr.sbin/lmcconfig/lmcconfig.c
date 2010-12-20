@@ -9588,7 +9588,7 @@ name|i
 decl_stmt|,
 name|length
 decl_stmt|;
-name|char
+name|int
 name|c
 decl_stmt|;
 if|if
