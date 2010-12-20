@@ -147,43 +147,23 @@ end_define
 begin_define
 define|#
 directive|define
-name|warnx1
+name|warnx
 parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
+modifier|...
 parameter_list|)
-value|{				\ 	char buf[64];					\ 	(void)snprintf(buf, sizeof(buf), a);		\ 	error("%s", buf);				\ }
+value|do {					\ 	out2fmt_flush("%s: ", commandname);		\ 	out2fmt_flush(__VA_ARGS__);			\ 	out2fmt_flush("\n");				\ 	} while (0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|warnx2
+name|errx
 parameter_list|(
-name|a
+name|exitstatus
 parameter_list|,
-name|b
-parameter_list|,
-name|c
+modifier|...
 parameter_list|)
-value|{				\ 	char buf[64];					\ 	(void)snprintf(buf, sizeof(buf), a, b);		\ 	error("%s", buf);				\ }
-end_define
-
-begin_define
-define|#
-directive|define
-name|warnx3
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|{				\ 	char buf[64];					\ 	(void)snprintf(buf, sizeof(buf), a, b, c);	\ 	error("%s", buf);				\ }
+value|error(__VA_ARGS__)
 end_define
 
 begin_else
