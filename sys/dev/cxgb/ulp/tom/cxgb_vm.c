@@ -157,6 +157,8 @@ name|va
 decl_stmt|;
 name|int
 name|faults
+decl_stmt|,
+name|rv
 decl_stmt|;
 name|pmap_t
 name|pmap
@@ -330,6 +332,9 @@ name|pages
 operator|==
 name|NULL
 operator|&&
+operator|(
+name|rv
+operator|=
 name|vm_fault_hold
 argument_list|(
 name|map
@@ -342,6 +347,7 @@ name|VM_FAULT_NORMAL
 argument_list|,
 name|pages
 argument_list|)
+operator|)
 operator|!=
 name|KERN_SUCCESS
 condition|)
