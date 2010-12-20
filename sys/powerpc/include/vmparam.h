@@ -477,14 +477,36 @@ comment|/* 1? */
 end_comment
 
 begin_comment
-comment|/*  * The physical address space is densely populated.  */
+comment|/*  * The physical address space is densely populated on 32-bit systems,  * but may not be on 64-bit ones.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|VM_PHYSSEG_SPARSE
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
 directive|define
 name|VM_PHYSSEG_DENSE
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Create three free page pools: VM_FREEPOOL_DEFAULT is the default pool  * from which physical pages are allocated and VM_FREEPOOL_DIRECT is  * the pool from which physical pages for small UMA objects are  * allocated.  */
