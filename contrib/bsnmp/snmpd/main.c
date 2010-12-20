@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2001-2003  *	Fraunhofer Institute for Open Communication Systems (FhG Fokus).  *	All rights reserved.  *  * Author: Harti Brandt<harti@freebsd.org>  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Begemot: bsnmp/snmpd/main.c,v 1.100 2006/02/14 09:04:20 brandt_h Exp $  *  * SNMPd main stuff.  */
+comment|/*  * Copyright (c) 2001-2003  *	Fraunhofer Institute for Open Communication Systems (FhG Fokus).  *	All rights reserved.  *  * Author: Harti Brandt<harti@freebsd.org>  *   * Copyright (c) 2010 The FreeBSD Foundation  * All rights reserved.  *  * Portions of this software were developed by Shteryana Sotirova Shopova  * under sponsorship from the FreeBSD Foundation.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Begemot: bsnmp/snmpd/main.c,v 1.100 2006/02/14 09:04:20 brandt_h Exp $  *  * SNMPd main stuff.  */
 end_comment
 
 begin_include
@@ -333,6 +333,13 @@ end_comment
 begin_decl_stmt
 name|int32_t
 name|snmp_serial_no
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|snmpd_target_stats
+name|snmpd_target_stats
 decl_stmt|;
 end_decl_stmt
 
@@ -1675,7 +1682,6 @@ comment|/*  * Check whether access to each of var bindings in the PDU is allowed
 end_comment
 
 begin_function
-specifier|static
 name|enum
 name|snmp_code
 name|snmp_pdu_auth_access
@@ -8415,19 +8421,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|snmp_send_trap
-argument_list|(
-operator|&
-name|oid_coldStart
-argument_list|,
-operator|(
-expr|struct
-name|snmp_value
-operator|*
-operator|)
-name|NULL
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -8466,6 +8459,19 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
+name|snmp_send_trap
+argument_list|(
+operator|&
+name|oid_coldStart
+argument_list|,
+operator|(
+expr|struct
+name|snmp_value
+operator|*
+operator|)
+name|NULL
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;

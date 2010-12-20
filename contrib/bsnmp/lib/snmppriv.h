@@ -81,25 +81,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|snmp_pdu_init_secparams
-parameter_list|(
-name|struct
-name|snmp_pdu
-modifier|*
-parameter_list|,
-name|struct
-name|snmp_engine
-modifier|*
-parameter_list|,
-name|struct
-name|snmp_user
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|enum
 name|snmp_code
 name|snmp_pdu_calc_digest
