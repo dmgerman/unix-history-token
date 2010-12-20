@@ -1880,17 +1880,6 @@ name|ma
 operator|>>
 name|PAGE_SHIFT
 expr_stmt|;
-name|printk
-argument_list|(
-literal|"xen_pt_pin(): mfn=%x\n"
-argument_list|,
-name|op
-operator|.
-name|arg1
-operator|.
-name|mfn
-argument_list|)
-expr_stmt|;
 name|xen_flush_queue
 argument_list|()
 expr_stmt|;
