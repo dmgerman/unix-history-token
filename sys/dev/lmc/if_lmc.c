@@ -30933,14 +30933,14 @@ name|pa
 operator|.
 name|pa_iot
 operator|=
-name|I386_BUS_SPACE_IO
+name|X86_BUS_SPACE_IO
 expr_stmt|;
 comment|/* XXX */
 name|pa
 operator|.
 name|pa_memt
 operator|=
-name|I386_BUS_SPACE_MEM
+name|X86_BUS_SPACE_MEM
 expr_stmt|;
 comment|/* XXX */
 name|pa

@@ -335,14 +335,14 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|I386_BUS_SPACE_IO
+name|X86_BUS_SPACE_IO
 value|(&SBUS_io_space_tag)
 end_define
 
 begin_define
 define|#
 directive|define
-name|I386_BUS_SPACE_MEM
+name|X86_BUS_SPACE_MEM
 value|(&SBUS_mem_space_tag)
 end_define
 
