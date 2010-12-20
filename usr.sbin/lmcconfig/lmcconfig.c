@@ -4049,7 +4049,7 @@ operator|)
 operator|&&
 operator|(
 name|vga
-operator|<=
+operator|<
 literal|0x3F
 operator|)
 condition|)
@@ -4064,19 +4064,9 @@ operator|-
 literal|0x3A
 operator|)
 return|;
-if|if
-condition|(
-name|vga
-operator|>
-literal|0x3F
-condition|)
 return|return
 literal|64.0
 return|;
-return|return
-literal|0.0
-return|;
-comment|/* suppress compiler warning */
 block|}
 end_function
 
