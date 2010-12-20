@@ -1034,18 +1034,6 @@ name|device_t
 name|child
 parameter_list|)
 block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"child %s requested pci_enable_busmaster\n"
-argument_list|,
-name|device_get_nameunit
-argument_list|(
-name|child
-argument_list|)
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|pci_enable_busmaster
@@ -1069,18 +1057,6 @@ name|device_t
 name|child
 parameter_list|)
 block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"child %s requested pci_disable_busmaster\n"
-argument_list|,
-name|device_get_nameunit
-argument_list|(
-name|child
-argument_list|)
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|pci_disable_busmaster
