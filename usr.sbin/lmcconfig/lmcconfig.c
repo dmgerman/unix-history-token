@@ -9,13 +9,37 @@ end_escape
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_include
@@ -34,6 +58,12 @@ begin_include
 include|#
 directive|include
 file|<strings.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
 end_include
 
 begin_include
@@ -61,36 +91,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
 
 begin_include
 include|#
@@ -220,10 +220,35 @@ begin_comment
 comment|/* gate array ucode file checksum */
 end_comment
 
+begin_comment
+comment|/* Functions currently unused. Keep compiler happy and provide prototypes. */
+end_comment
+
+begin_function_decl
+name|void
+name|ioctl_snmp_loop
+parameter_list|(
+name|u_int32_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|init_srom
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
+specifier|static
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(
@@ -574,7 +599,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t-A<y|b|a> Start sending Yellow|Blue}AIS signal\n"
+literal|"\t-A<y|b|a> Start sending Yellow|Blue|AIS signal\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -1001,6 +1026,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|call_driver
 parameter_list|(
@@ -1281,6 +1307,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|u_int32_t
 name|read_pci_config
 parameter_list|(
@@ -1343,6 +1370,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|write_pci_config
 parameter_list|(
@@ -1409,6 +1437,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|u_int32_t
 name|read_csr
 parameter_list|(
@@ -1471,6 +1500,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|write_csr
 parameter_list|(
@@ -1537,6 +1567,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|u_int16_t
 name|read_srom
 parameter_list|(
@@ -1599,6 +1630,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|write_srom
 parameter_list|(
@@ -1665,6 +1697,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|u_int8_t
 name|read_bios_rom
 parameter_list|(
@@ -1727,6 +1760,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|write_bios_rom
 parameter_list|(
@@ -1793,6 +1827,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|u_int16_t
 name|read_mii
 parameter_list|(
@@ -1855,6 +1890,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|write_mii
 parameter_list|(
@@ -1921,6 +1957,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|unsigned
 name|char
 name|read_framer
@@ -1984,6 +2021,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|write_framer
 parameter_list|(
@@ -2050,6 +2088,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|write_synth
 parameter_list|(
@@ -2118,6 +2157,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|write_dac
 parameter_list|(
@@ -2175,9 +2215,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|reset_xilinx
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|ioctl
@@ -2223,9 +2266,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|load_xilinx_from_rom
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|ioctl
@@ -2271,6 +2317,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|load_xilinx_from_file
 parameter_list|(
@@ -2338,6 +2385,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ioctl_snmp_send
 parameter_list|(
@@ -2452,9 +2500,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ioctl_reset_cntrs
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|ioctl
@@ -2500,9 +2551,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ioctl_read_config
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|config
 operator|.
@@ -2538,9 +2592,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ioctl_write_config
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|config
 operator|.
@@ -2576,9 +2633,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ioctl_read_status
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|status
 operator|.
@@ -2614,9 +2674,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|print_card_name
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|printf
 argument_list|(
@@ -2629,9 +2692,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|print_card_type
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|printf
 argument_list|(
@@ -2706,9 +2772,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|print_status
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -2768,9 +2837,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|print_tx_speed
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|printf
 argument_list|(
@@ -2785,9 +2857,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|print_debug
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -2808,9 +2883,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|print_line_prot
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -3008,9 +3086,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|print_crc_len
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|printf
 argument_list|(
@@ -3072,9 +3153,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|print_loop_back
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|printf
 argument_list|(
@@ -3194,9 +3278,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|print_tx_clk_src
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|printf
 argument_list|(
@@ -3262,9 +3349,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|print_format
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|printf
 argument_list|(
@@ -3375,9 +3465,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|print_dte_dce
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|printf
 argument_list|(
@@ -3425,9 +3518,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|print_synth_freq
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|double
 name|Fref
@@ -3509,6 +3605,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|synth_freq
 parameter_list|(
@@ -3807,9 +3904,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|print_cable_len
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|printf
 argument_list|(
@@ -3824,9 +3924,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|print_cable_type
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|printf
 argument_list|(
@@ -3867,9 +3970,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|print_time_slots
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|printf
 argument_list|(
@@ -3884,9 +3990,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|print_scrambler
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|printf
 argument_list|(
@@ -3948,6 +4057,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|double
 name|vga_dbs
 parameter_list|(
@@ -4071,9 +4181,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|print_rx_gain
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|printf
 argument_list|(
@@ -4120,9 +4233,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|print_tx_lbo
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|u_int8_t
 name|saved_lbo
@@ -4233,9 +4349,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|print_tx_pulse
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|u_int8_t
 name|saved_pulse
@@ -4385,9 +4504,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|print_ssi_sigs
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|u_int32_t
 name|mii16
@@ -4515,9 +4637,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|print_hssi_sigs
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|u_int32_t
 name|mii16
@@ -4615,9 +4740,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|print_events
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -4719,8 +4847,11 @@ name|ibytes
 condition|)
 name|printf
 argument_list|(
-literal|"Rx bytes:\t\t%qu\n"
+literal|"Rx bytes:\t\t%ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|status
 operator|.
 name|cntrs
@@ -4738,8 +4869,11 @@ name|obytes
 condition|)
 name|printf
 argument_list|(
-literal|"Tx bytes:\t\t%qu\n"
+literal|"Tx bytes:\t\t%ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|status
 operator|.
 name|cntrs
@@ -4757,8 +4891,11 @@ name|ipackets
 condition|)
 name|printf
 argument_list|(
-literal|"Rx packets:\t\t%qu\n"
+literal|"Rx packets:\t\t%ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|status
 operator|.
 name|cntrs
@@ -4776,8 +4913,11 @@ name|opackets
 condition|)
 name|printf
 argument_list|(
-literal|"Tx packets:\t\t%qu\n"
+literal|"Tx packets:\t\t%ju\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|status
 operator|.
 name|cntrs
@@ -5197,9 +5337,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|print_summary
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 switch|switch
 condition|(
@@ -5450,6 +5593,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|print_t3_bop
@@ -5514,9 +5658,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|print_t3_snmp
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|printf
 argument_list|(
@@ -5689,9 +5836,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|print_t3_dsu
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -6144,6 +6294,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|t3_cmd
 parameter_list|(
@@ -6908,6 +7059,7 @@ comment|/* proc */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|print_test_pattern
 parameter_list|(
@@ -7075,6 +7227,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|print_t1_bop
@@ -7139,6 +7292,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|print_far_report
 parameter_list|(
@@ -7334,9 +7488,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|print_t1_snmp
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|printf
 argument_list|(
@@ -7531,9 +7688,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|print_t1_dsu
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -8306,6 +8466,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|t1_cmd
 parameter_list|(
@@ -9484,6 +9645,7 @@ comment|/* used when reading Motorola S-Record format ROM files */
 end_comment
 
 begin_function
+specifier|static
 name|unsigned
 name|char
 name|read_hex
@@ -9966,6 +10128,7 @@ comment|/* 32-bit CRC calculated right-to-left over 8-bit bytes */
 end_comment
 
 begin_function
+specifier|static
 name|u_int32_t
 name|crc32
 parameter_list|(
@@ -10066,6 +10229,7 @@ comment|/* 8-bit CRC calculated left-to-right over 16-bit words */
 end_comment
 
 begin_function
+specifier|static
 name|u_int8_t
 name|crc8
 parameter_list|(
