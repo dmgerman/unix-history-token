@@ -484,7 +484,7 @@ begin_define
 define|#
 directive|define
 name|VM_KMEM_SIZE_MAX
-value|(VM_MAX_KERNEL_ADDRESS - VM_MIN_KERNEL_ADDRESS)
+value|((VM_MAX_KERNEL_ADDRESS - \     VM_MIN_KERNEL_ADDRESS + 1) * 3 / 5)
 end_define
 
 begin_endif
