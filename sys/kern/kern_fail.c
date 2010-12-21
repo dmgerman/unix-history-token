@@ -183,6 +183,99 @@ parameter_list|()
 value|mtx_unlock(&g_fp_mtx)
 end_define
 
+begin_comment
+comment|/**  * Failpoint types.  * Don't change these without changing fail_type_strings in fail.c.  * @ingroup failpoint_private  */
+end_comment
+
+begin_enum
+enum|enum
+name|fail_point_t
+block|{
+name|FAIL_POINT_OFF
+block|,
+comment|/**< don't fail */
+name|FAIL_POINT_PANIC
+block|,
+comment|/**< panic */
+name|FAIL_POINT_RETURN
+block|,
+comment|/**< return an errorcode */
+name|FAIL_POINT_BREAK
+block|,
+comment|/**< break into the debugger */
+name|FAIL_POINT_PRINT
+block|,
+comment|/**< print a message */
+name|FAIL_POINT_SLEEP
+block|,
+comment|/**< sleep for some msecs */
+name|FAIL_POINT_INVALID
+block|,
+comment|/**< placeholder */
+block|}
+enum|;
+end_enum
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|fail_type_strings
+index|[]
+init|=
+block|{
+literal|"off"
+block|,
+literal|"panic"
+block|,
+literal|"return"
+block|,
+literal|"break"
+block|,
+literal|"print"
+block|,
+literal|"sleep"
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/**  * Internal structure tracking a single term of a complete failpoint.  * @ingroup failpoint_private  */
+end_comment
+
+begin_struct
+struct|struct
+name|fail_point_entry
+block|{
+name|enum
+name|fail_point_t
+name|fe_type
+decl_stmt|;
+comment|/**< type of entry */
+name|int
+name|fe_arg
+decl_stmt|;
+comment|/**< argument to type (e.g. return value) */
+name|int
+name|fe_prob
+decl_stmt|;
+comment|/**< likelihood of firing in millionths */
+name|int
+name|fe_count
+decl_stmt|;
+comment|/**< number of times to fire, 0 means always */
+name|TAILQ_ENTRY
+argument_list|(
+argument|fail_point_entry
+argument_list|)
+name|fe_entries
+expr_stmt|;
+comment|/**< next entry in fail point */
+block|}
+struct|;
+end_struct
+
 begin_function
 specifier|static
 specifier|inline
@@ -298,30 +391,6 @@ comment|/* number of zero's in above number */
 block|}
 enum|;
 end_enum
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|fail_type_strings
-index|[]
-init|=
-block|{
-literal|"off"
-block|,
-literal|"panic"
-block|,
-literal|"return"
-block|,
-literal|"break"
-block|,
-literal|"print"
-block|,
-literal|"sleep"
-block|, }
-decl_stmt|;
-end_decl_stmt
 
 begin_function_decl
 specifier|static
