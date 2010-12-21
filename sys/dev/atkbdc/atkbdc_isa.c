@@ -1191,6 +1191,13 @@ expr_stmt|;
 comment|/* 	 * If the device is not created by the PnP BIOS or ACPI, refer 	 * to device hints for IRQ.  We always populate the resource 	 * list entry so we can use a standard bus_get_resource() 	 * method. 	 */
 if|if
 condition|(
+name|order
+operator|==
+name|KBDC_RID_KBD
+condition|)
+block|{
+if|if
+condition|(
 name|sc
 operator|->
 name|irq
@@ -1256,6 +1263,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|resource_disabled
