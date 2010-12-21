@@ -606,10 +606,8 @@ name|uint64_t
 name|tick_cmpr
 parameter_list|)
 block|{
-name|wr
+name|wrtickcmpr
 argument_list|(
-name|tick_cmpr
-argument_list|,
 name|tick_cmpr
 argument_list|,
 literal|0
@@ -627,7 +625,7 @@ name|uint64_t
 name|tick_cmpr
 parameter_list|)
 block|{
-name|wrtickcmpr
+name|wrtickcmpr_bbwar
 argument_list|(
 name|tick_cmpr
 argument_list|,
