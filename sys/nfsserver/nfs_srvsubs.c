@@ -4367,6 +4367,14 @@ name|NFSERR_AUTHERR
 operator||
 name|AUTH_TOOWEAK
 expr_stmt|;
+name|vfs_unbusy
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
 block|}
 block|}
 endif|#
