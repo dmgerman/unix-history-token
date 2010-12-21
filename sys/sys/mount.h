@@ -2959,7 +2959,7 @@ name|VFS_UNLOCK_GIANT
 parameter_list|(
 name|locked
 parameter_list|)
-value|if ((locked)) mtx_unlock(&Giant);
+value|do					\ {									\ 	if ((locked))							\ 		mtx_unlock(&Giant);					\ } while (0)
 end_define
 
 begin_define
