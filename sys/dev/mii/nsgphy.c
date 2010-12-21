@@ -436,7 +436,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * NB: the PHY has the 10baseT BMSR bits hard-wired to 0, 	 * even though it supports 10baseT. 	 */
+comment|/* 	 * NB: the PHY has the 10BASE-T BMSR bits hard-wired to 0, 	 * even though it supports 10BASE-T. 	 */
 name|sc
 operator|->
 name|mii_capabilities
@@ -449,17 +449,16 @@ argument_list|,
 name|MII_BMSR
 argument_list|)
 operator||
-operator|(
 name|BMSR_10TFDX
 operator||
 name|BMSR_10THDX
-operator|)
 operator|)
 operator|&
 name|ma
 operator|->
 name|mii_capmask
 expr_stmt|;
+comment|/* 	 * Note that as documented manual 1000BASE-T modes of DP83865 only 	 * work together with other National Semiconductor PHYs. 	 */
 if|if
 condition|(
 name|sc
