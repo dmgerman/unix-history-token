@@ -4462,13 +4462,11 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
 name|VFS_UNLOCK_GIANT
 argument_list|(
 name|vfslocked
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 operator|*
 name|vfslockedp
