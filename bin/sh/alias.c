@@ -1053,11 +1053,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|outfmt
+name|warning
 argument_list|(
-name|out2
-argument_list|,
-literal|"alias: %s not found\n"
+literal|"%s not found"
 argument_list|,
 name|n
 argument_list|)

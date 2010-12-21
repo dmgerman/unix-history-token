@@ -1015,9 +1015,9 @@ name|p
 operator|==
 name|NULL
 condition|)
-name|out2fmt_flush
+name|warning
 argument_list|(
-literal|"cd: warning: failed to get name of current directory\n"
+literal|"warning: failed to get name of current directory"
 argument_list|)
 expr_stmt|;
 name|updatepwd

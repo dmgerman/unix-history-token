@@ -148,10 +148,7 @@ begin_define
 define|#
 directive|define
 name|warnx
-parameter_list|(
-modifier|...
-parameter_list|)
-value|do {					\ 	out2fmt_flush("%s: ", commandname);		\ 	out2fmt_flush(__VA_ARGS__);			\ 	out2fmt_flush("\n");				\ 	} while (0)
+value|warning
 end_define
 
 begin_define

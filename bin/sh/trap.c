@@ -832,9 +832,9 @@ operator|-
 literal|1
 condition|)
 block|{
-name|out2fmt_flush
+name|warning
 argument_list|(
-literal|"trap: bad signal %s\n"
+literal|"bad signal %s"
 argument_list|,
 operator|*
 name|argv
