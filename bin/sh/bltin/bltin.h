@@ -31,6 +31,13 @@ directive|include
 file|"../output.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|FILE
+value|struct output
+end_define
+
 begin_undef
 undef|#
 directive|undef
@@ -154,6 +161,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|warn
+parameter_list|(
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+value|warning(fmt ": %s", __VA_ARGS__, strerror(errno))
+end_define
+
+begin_define
+define|#
+directive|define
 name|errx
 parameter_list|(
 name|exitstatus
@@ -201,6 +220,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_function_decl
 name|pointer
 name|stalloc
@@ -231,6 +256,16 @@ begin_empty_stmt
 unit|)
 empty_stmt|;
 end_empty_stmt
+
+begin_function_decl
+name|pid_t
+name|getjobpgrp
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int
