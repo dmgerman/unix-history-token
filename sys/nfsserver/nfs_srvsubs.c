@@ -1948,6 +1948,21 @@ goto|goto
 name|out
 goto|;
 block|}
+if|if
+condition|(
+operator|!
+name|pubflag
+operator|&&
+name|nfs_ispublicfh
+argument_list|(
+name|fhp
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ESTALE
+operator|)
+return|;
 comment|/* 	 * Extract and set starting directory. 	 */
 name|error
 operator|=
@@ -1955,7 +1970,7 @@ name|nfsrv_fhtovp
 argument_list|(
 name|fhp
 argument_list|,
-name|FALSE
+literal|0
 argument_list|,
 operator|&
 name|dp
@@ -1971,8 +1986,6 @@ name|nam
 argument_list|,
 operator|&
 name|rdonly
-argument_list|,
-name|pubflag
 argument_list|)
 expr_stmt|;
 if|if
@@ -2000,7 +2013,7 @@ operator|!=
 name|VDIR
 condition|)
 block|{
-name|vrele
+name|vput
 argument_list|(
 name|dp
 argument_list|)
@@ -2034,15 +2047,6 @@ condition|(
 name|v3
 condition|)
 block|{
-name|vn_lock
-argument_list|(
-name|dp
-argument_list|,
-name|LK_EXCLUSIVE
-operator||
-name|LK_RETRY
-argument_list|)
-expr_stmt|;
 operator|*
 name|retdirattr_retp
 operator|=
@@ -2059,6 +2063,7 @@ operator|.
 name|cn_cred
 argument_list|)
 expr_stmt|;
+block|}
 name|VOP_UNLOCK
 argument_list|(
 name|dp
@@ -2066,7 +2071,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|pubflag
@@ -3919,7 +3923,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * nfsrv_fhtovp() - convert a fh to a vnode ptr (optionally locked)  * 	- look up fsid in mount list (if not found ret error)  *	- get vp and export rights by calling VFS_FHTOVP()  *	- if cred->cr_uid == 0 or MNT_EXPORTANON set it to credanon  *	- if not lockflag unlock it with VOP_UNLOCK()  */
+comment|/*  * nfsrv_fhtovp() - convert a fh to a vnode ptr (optionally locked)  * 	- look up fsid in mount list (if not found ret error)  *	- get vp and export rights by calling VFS_FHTOVP()  *	- if cred->cr_uid == 0 or MNT_EXPORTANON set it to credanon  */
 end_comment
 
 begin_function
@@ -3931,7 +3935,7 @@ modifier|*
 name|fhp
 parameter_list|,
 name|int
-name|lockflag
+name|flags
 parameter_list|,
 name|struct
 name|vnode
@@ -3961,9 +3965,6 @@ parameter_list|,
 name|int
 modifier|*
 name|rdonlyp
-parameter_list|,
-name|int
-name|pubflag
 parameter_list|)
 block|{
 name|struct
@@ -4045,9 +4046,6 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
-name|pubflag
-operator|||
 operator|!
 name|nfs_pub
 operator|.
@@ -4277,9 +4275,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
-operator|!=
-literal|0
 condition|)
+block|{
 comment|/* Make sure the server replies ESTALE to the client. */
 name|error
 operator|=
@@ -4290,13 +4287,10 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
 goto|goto
 name|out
 goto|;
+block|}
 ifdef|#
 directive|ifdef
 name|MNT_EXNORESPORT
@@ -4443,14 +4437,15 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|lockflag
+operator|(
+name|flags
+operator|&
+name|NFSRV_FLAG_BUSY
+operator|)
 condition|)
-name|VOP_UNLOCK
+name|vfs_unbusy
 argument_list|(
-operator|*
-name|vpp
-argument_list|,
-literal|0
+name|mp
 argument_list|)
 expr_stmt|;
 name|out

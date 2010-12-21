@@ -763,7 +763,7 @@ name|nfsrv_fhtovp
 argument_list|(
 name|fhp
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 operator|&
 name|vp
@@ -779,8 +779,6 @@ name|nam
 argument_list|,
 operator|&
 name|rdonly
-argument_list|,
-name|TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -1170,7 +1168,7 @@ name|nfsrv_fhtovp
 argument_list|(
 name|fhp
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 operator|&
 name|vp
@@ -1186,8 +1184,6 @@ name|nam
 argument_list|,
 operator|&
 name|rdonly
-argument_list|,
-name|TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -1808,7 +1804,7 @@ name|nfsrv_fhtovp
 argument_list|(
 name|fhp
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 operator|&
 name|vp
@@ -1824,8 +1820,6 @@ name|nam
 argument_list|,
 operator|&
 name|rdonly
-argument_list|,
-name|TRUE
 argument_list|)
 expr_stmt|;
 name|vfslocked
@@ -3422,7 +3416,7 @@ name|nfsrv_fhtovp
 argument_list|(
 name|fhp
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 operator|&
 name|vp
@@ -3438,8 +3432,6 @@ name|nam
 argument_list|,
 operator|&
 name|rdonly
-argument_list|,
-name|TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -3947,7 +3939,7 @@ name|nfsrv_fhtovp
 argument_list|(
 name|fhp
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 operator|&
 name|vp
@@ -3963,8 +3955,6 @@ name|nam
 argument_list|,
 operator|&
 name|rdonly
-argument_list|,
-name|TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -5621,7 +5611,7 @@ name|nfsrv_fhtovp
 argument_list|(
 name|fhp
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 operator|&
 name|vp
@@ -5637,8 +5627,6 @@ name|nam
 argument_list|,
 operator|&
 name|rdonly
-argument_list|,
-name|TRUE
 argument_list|)
 expr_stmt|;
 name|vfslocked
@@ -11021,7 +11009,7 @@ name|nfsrv_fhtovp
 argument_list|(
 name|fhp
 argument_list|,
-name|TRUE
+literal|0
 argument_list|,
 operator|&
 name|vp
@@ -11037,8 +11025,6 @@ name|nam
 argument_list|,
 operator|&
 name|rdonly
-argument_list|,
-name|TRUE
 argument_list|)
 expr_stmt|;
 name|vfslocked
@@ -14680,7 +14666,7 @@ name|nfsrv_fhtovp
 argument_list|(
 name|fhp
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 operator|&
 name|vp
@@ -14696,8 +14682,6 @@ name|nam
 argument_list|,
 operator|&
 name|rdonly
-argument_list|,
-name|TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -16218,7 +16202,7 @@ name|nfsrv_fhtovp
 argument_list|(
 name|fhp
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 operator|&
 name|vp
@@ -17757,6 +17741,15 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mntp
+condition|)
+name|vfs_unbusy
+argument_list|(
+name|mntp
+argument_list|)
+expr_stmt|;
 name|VFS_UNLOCK_GIANT
 argument_list|(
 name|vfslocked
@@ -18043,7 +18036,7 @@ name|nfsrv_fhtovp
 argument_list|(
 name|fhp
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 operator|&
 name|vp
@@ -18059,8 +18052,6 @@ name|nam
 argument_list|,
 operator|&
 name|rdonly
-argument_list|,
-name|TRUE
 argument_list|)
 expr_stmt|;
 name|vfslocked
@@ -18761,7 +18752,7 @@ name|nfsrv_fhtovp
 argument_list|(
 name|fhp
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 operator|&
 name|vp
@@ -18777,8 +18768,6 @@ name|nam
 argument_list|,
 operator|&
 name|rdonly
-argument_list|,
-name|TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -19363,7 +19352,7 @@ name|nfsrv_fhtovp
 argument_list|(
 name|fhp
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 operator|&
 name|vp
@@ -19379,8 +19368,6 @@ name|nam
 argument_list|,
 operator|&
 name|rdonly
-argument_list|,
-name|TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -19796,7 +19783,7 @@ name|nfsrv_fhtovp
 argument_list|(
 name|fhp
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 operator|&
 name|vp
@@ -19812,8 +19799,6 @@ name|nam
 argument_list|,
 operator|&
 name|rdonly
-argument_list|,
-name|TRUE
 argument_list|)
 expr_stmt|;
 if|if

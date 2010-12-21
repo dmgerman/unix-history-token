@@ -856,6 +856,21 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * The following flags can be passed to nfsrv_fhtovp() function.  */
+end_comment
+
+begin_comment
+comment|/* Leave file system busy on success. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFSRV_FLAG_BUSY
+value|0x01
+end_define
+
 begin_function_decl
 name|struct
 name|mbuf
@@ -1180,8 +1195,6 @@ modifier|*
 parameter_list|,
 name|int
 modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
