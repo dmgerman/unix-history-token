@@ -7140,6 +7140,24 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|gctl_get_int
+argument_list|(
+name|req
+argument_list|,
+literal|"nargs"
+argument_list|)
+operator|!=
+literal|1
+condition|)
+name|errx
+argument_list|(
+name|EXIT_FAILURE
+argument_list|,
+literal|"Invalid number of arguments."
+argument_list|)
+expr_stmt|;
 name|s
 operator|=
 name|gctl_get_ascii
