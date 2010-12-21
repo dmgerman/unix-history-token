@@ -612,6 +612,12 @@ name|name
 expr_stmt|;
 name|fp
 operator|->
+name|fp_location
+operator|=
+literal|""
+expr_stmt|;
+name|fp
+operator|->
 name|fp_flags
 operator||=
 name|FAIL_POINT_DYNAMIC_NAME
@@ -1440,7 +1446,7 @@ name|error
 condition|)
 name|IWARNING
 argument_list|(
-literal|"Failed to set %s (%s) to %s"
+literal|"Failed to set %s %s to %s"
 argument_list|,
 name|fp
 operator|->
@@ -1456,7 +1462,7 @@ expr_stmt|;
 else|else
 name|INOTICE
 argument_list|(
-literal|"Set %s (%s) to %s"
+literal|"Set %s %s to %s"
 argument_list|,
 name|fp
 operator|->
