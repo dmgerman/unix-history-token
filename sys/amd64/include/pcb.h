@@ -113,7 +113,7 @@ decl_stmt|;
 name|uint16_t
 name|pcb_tr
 decl_stmt|;
-name|u_char
+name|u_int
 name|pcb_flags
 decl_stmt|;
 define|#
@@ -210,11 +210,11 @@ modifier|*
 name|pcb
 parameter_list|,
 specifier|const
-name|u_char
+name|u_int
 name|flags
 parameter_list|)
 block|{
-asm|__asm __volatile("orb %b1,%0"
+asm|__asm __volatile("orl %1,%0"
 block|:
 literal|"=m"
 operator|(
@@ -223,7 +223,7 @@ operator|->
 name|pcb_flags
 operator|)
 operator|:
-literal|"iq"
+literal|"ir"
 operator|(
 name|flags
 operator|)
@@ -252,11 +252,11 @@ modifier|*
 name|pcb
 parameter_list|,
 specifier|const
-name|u_char
+name|u_int
 name|flags
 parameter_list|)
 block|{
-asm|__asm __volatile("andb %b1,%0"
+asm|__asm __volatile("andl %1,%0"
 block|:
 literal|"=m"
 operator|(
@@ -265,7 +265,7 @@ operator|->
 name|pcb_flags
 operator|)
 operator|:
-literal|"iq"
+literal|"ir"
 operator|(
 operator|~
 name|flags
