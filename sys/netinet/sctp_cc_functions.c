@@ -137,7 +137,6 @@ name|stcb
 operator|->
 name|asoc
 expr_stmt|;
-comment|/* 	 * We take the minimum of the burst limit and the initial congestion 	 * window. The initial congestion window is at least two times the 	 * MTU. 	 */
 name|cwnd_in_mtu
 operator|=
 name|SCTP_BASE_SYSCTL
@@ -145,6 +144,46 @@ argument_list|(
 name|sctp_initial_cwnd
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cwnd_in_mtu
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* Using 0 means that the value of RFC 4960 is used. */
+name|net
+operator|->
+name|cwnd
+operator|=
+name|min
+argument_list|(
+operator|(
+name|net
+operator|->
+name|mtu
+operator|*
+literal|4
+operator|)
+argument_list|,
+name|max
+argument_list|(
+operator|(
+literal|2
+operator|*
+name|net
+operator|->
+name|mtu
+operator|)
+argument_list|,
+name|SCTP_INITIAL_CWND
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 		 * We take the minimum of the burst limit and the initial 		 * congestion window. 		 */
 if|if
 condition|(
 operator|(
@@ -187,6 +226,7 @@ operator|)
 operator|*
 name|cwnd_in_mtu
 expr_stmt|;
+block|}
 name|net
 operator|->
 name|ssthresh
