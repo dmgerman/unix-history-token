@@ -11252,7 +11252,7 @@ block|{
 name|NULL
 block|}
 block|}
-block|, }
+block|}
 block|;
 name|DMenu
 name|MenuSysconsSaver
@@ -11443,6 +11443,20 @@ literal|"saver=warp"
 block|}
 block|,
 block|{
+literal|"d None"
+block|,
+literal|"Disable the screensaver"
+block|,
+name|dmenuVarCheck
+block|,
+name|configSaver
+block|,
+name|NULL
+block|,
+literal|"saver=NO"
+block|}
+block|,
+block|{
 literal|"Timeout"
 block|,
 literal|"Set the screen saver timeout interval"
@@ -11466,7 +11480,7 @@ block|{
 name|NULL
 block|}
 block|}
-block|, }
+block|}
 block|;
 ifndef|#
 directive|ifndef
