@@ -79,9 +79,13 @@ name|c_flags
 decl_stmt|;
 comment|/* Flags of the condition variable */
 name|__uint32_t
+name|c_clockid
+decl_stmt|;
+comment|/* Clock id */
+name|__uint32_t
 name|c_spare
 index|[
-literal|2
+literal|1
 index|]
 decl_stmt|;
 comment|/* Spare space */

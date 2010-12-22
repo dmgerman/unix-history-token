@@ -313,19 +313,47 @@ end_define
 begin_define
 define|#
 directive|define
-name|UMTX_OP_MAX
+name|UMTX_OP_NWAKE_PRIVATE
 value|21
 end_define
 
+begin_define
+define|#
+directive|define
+name|UMTX_OP_MAX
+value|22
+end_define
+
 begin_comment
-comment|/* flags for UMTX_OP_CV_WAIT */
+comment|/* Flags for UMTX_OP_CV_WAIT */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|UMTX_CHECK_UNPARKING
+name|CVWAIT_CHECK_UNPARKING
 value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|CVWAIT_ABSTIME
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|CVWAIT_CLOCKID
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|UMTX_CHECK_UNPARKING
+value|CVWAIT_CHECK_UNPARKING
 end_define
 
 begin_ifndef
