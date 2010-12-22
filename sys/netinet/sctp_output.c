@@ -17174,8 +17174,8 @@ operator|->
 name|asoc
 operator|.
 name|sctp_cmt_on_off
-operator|==
-literal|1
+operator|>
+literal|0
 operator|)
 operator|&&
 operator|(
@@ -36132,8 +36132,8 @@ operator|->
 name|asoc
 operator|.
 name|sctp_cmt_on_off
-operator|==
-literal|1
+operator|>
+literal|0
 condition|)
 block|{
 comment|/* ran dry with CMT on */
@@ -37006,8 +37006,8 @@ condition|(
 name|asoc
 operator|->
 name|sctp_cmt_on_off
-operator|==
-literal|1
+operator|>
+literal|0
 condition|)
 block|{
 comment|/* get the last start point */
@@ -39146,8 +39146,8 @@ operator|(
 name|asoc
 operator|->
 name|sctp_cmt_on_off
-operator|==
-literal|1
+operator|>
+literal|0
 operator|)
 operator|&&
 operator|(
@@ -39192,8 +39192,8 @@ operator|(
 name|asoc
 operator|->
 name|sctp_cmt_on_off
-operator|==
-literal|1
+operator|>
+literal|0
 operator|)
 operator|&&
 operator|(
@@ -39225,8 +39225,8 @@ operator|(
 name|asoc
 operator|->
 name|sctp_cmt_on_off
-operator|==
-literal|1
+operator|>
+literal|0
 operator|)
 operator|&&
 operator|(
@@ -40195,8 +40195,8 @@ operator|(
 name|asoc
 operator|->
 name|sctp_cmt_on_off
-operator|==
-literal|1
+operator|>
+literal|0
 operator|)
 operator|&&
 operator|(
@@ -46418,8 +46418,8 @@ operator|(
 name|asoc
 operator|->
 name|sctp_cmt_on_off
-operator|==
-literal|1
+operator|>
+literal|0
 operator|)
 operator|&&
 operator|(
@@ -48806,8 +48806,8 @@ operator|(
 name|asoc
 operator|->
 name|sctp_cmt_on_off
-operator|==
-literal|1
+operator|>
+literal|0
 operator|)
 operator|&&
 name|SCTP_BASE_SYSCTL

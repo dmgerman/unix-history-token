@@ -287,7 +287,7 @@ name|sctp_nets
 modifier|*
 name|net
 decl_stmt|;
-comment|/*- 	 * CMT fast recovery code. Need to debug. ((sctp_cmt_on_off == 1)&& 	 * (net->fast_retran_loss_recovery == 0))) 	 */
+comment|/*- 	 * CMT fast recovery code. Need to debug. ((sctp_cmt_on_off> 0)&& 	 * (net->fast_retran_loss_recovery == 0))) 	 */
 name|TAILQ_FOREACH
 argument_list|(
 argument|net
@@ -311,8 +311,8 @@ operator|(
 name|asoc
 operator|->
 name|sctp_cmt_on_off
-operator|==
-literal|1
+operator|>
+literal|0
 operator|)
 condition|)
 block|{
@@ -1016,8 +1016,8 @@ operator|(
 name|asoc
 operator|->
 name|sctp_cmt_on_off
-operator|==
-literal|1
+operator|>
+literal|0
 operator|)
 operator|&&
 operator|(
@@ -1132,7 +1132,7 @@ ifdef|#
 directive|ifdef
 name|JANA_CMT_FAST_RECOVERY
 comment|/* 		 * CMT fast recovery code 		 */
-comment|/* 		 * if (sctp_cmt_on_off == 1&& 		 * net->fast_retran_loss_recovery&& 		 * net->will_exit_fast_recovery == 0) { @@@ Do something } 		 * else if (sctp_cmt_on_off == 0&& 		 * asoc->fast_retran_loss_recovery&& will_exit == 0) { 		 */
+comment|/* 		 * if (sctp_cmt_on_off> 0&& net->fast_retran_loss_recovery 		 *&& net->will_exit_fast_recovery == 0) { @@@ Do something 		 * } else if (sctp_cmt_on_off == 0&& 		 * asoc->fast_retran_loss_recovery&& will_exit == 0) { 		 */
 endif|#
 directive|endif
 if|if
@@ -1171,8 +1171,8 @@ operator|(
 name|asoc
 operator|->
 name|sctp_cmt_on_off
-operator|==
-literal|1
+operator|>
+literal|0
 operator|)
 operator|&&
 name|net
@@ -3897,7 +3897,7 @@ name|sctp_nets
 modifier|*
 name|net
 decl_stmt|;
-comment|/* 	 * CMT fast recovery code. Need to debug. ((sctp_cmt_on_off == 1)&& 	 * (net->fast_retran_loss_recovery == 0))) 	 */
+comment|/* 	 * CMT fast recovery code. Need to debug. ((sctp_cmt_on_off> 0)&& 	 * (net->fast_retran_loss_recovery == 0))) 	 */
 name|TAILQ_FOREACH
 argument_list|(
 argument|net
@@ -3921,8 +3921,8 @@ operator|(
 name|asoc
 operator|->
 name|sctp_cmt_on_off
-operator|==
-literal|1
+operator|>
+literal|0
 operator|)
 condition|)
 block|{
@@ -4508,8 +4508,8 @@ operator|(
 name|asoc
 operator|->
 name|sctp_cmt_on_off
-operator|==
-literal|1
+operator|>
+literal|0
 operator|)
 operator|&&
 operator|(
@@ -4575,7 +4575,7 @@ ifdef|#
 directive|ifdef
 name|JANA_CMT_FAST_RECOVERY
 comment|/* 		 * CMT fast recovery code 		 */
-comment|/* 		 * if (sctp_cmt_on_off == 1&& 		 * net->fast_retran_loss_recovery&& 		 * net->will_exit_fast_recovery == 0) { @@@ Do something } 		 * else if (sctp_cmt_on_off == 0&& 		 * asoc->fast_retran_loss_recovery&& will_exit == 0) { 		 */
+comment|/* 		 * if (sctp_cmt_on_off> 0&& net->fast_retran_loss_recovery 		 *&& net->will_exit_fast_recovery == 0) { @@@ Do something 		 * } else if (sctp_cmt_on_off == 0&& 		 * asoc->fast_retran_loss_recovery&& will_exit == 0) { 		 */
 endif|#
 directive|endif
 if|if
@@ -4614,8 +4614,8 @@ operator|(
 name|asoc
 operator|->
 name|sctp_cmt_on_off
-operator|==
-literal|1
+operator|>
+literal|0
 operator|)
 operator|&&
 name|net
@@ -6955,8 +6955,8 @@ operator|(
 name|asoc
 operator|->
 name|sctp_cmt_on_off
-operator|==
-literal|1
+operator|>
+literal|0
 operator|)
 operator|&&
 operator|(
@@ -7022,7 +7022,7 @@ ifdef|#
 directive|ifdef
 name|JANA_CMT_FAST_RECOVERY
 comment|/* 		 * CMT fast recovery code 		 */
-comment|/* 		 * if (sctp_cmt_on_off == 1&& 		 * net->fast_retran_loss_recovery&& 		 * net->will_exit_fast_recovery == 0) { @@@ Do something } 		 * else if (sctp_cmt_on_off == 0&& 		 * asoc->fast_retran_loss_recovery&& will_exit == 0) { 		 */
+comment|/* 		 * if (sctp_cmt_on_off> 0&& net->fast_retran_loss_recovery 		 *&& net->will_exit_fast_recovery == 0) { @@@ Do something 		 * } else if (sctp_cmt_on_off == 0&& 		 * asoc->fast_retran_loss_recovery&& will_exit == 0) { 		 */
 endif|#
 directive|endif
 if|if
@@ -7059,8 +7059,8 @@ operator|(
 name|asoc
 operator|->
 name|sctp_cmt_on_off
-operator|==
-literal|1
+operator|>
+literal|0
 operator|)
 operator|&&
 name|net
@@ -7215,7 +7215,7 @@ name|sctp_nets
 modifier|*
 name|net
 decl_stmt|;
-comment|/* 	 * CMT fast recovery code. Need to debug. ((sctp_cmt_on_off == 1)&& 	 * (net->fast_retran_loss_recovery == 0))) 	 */
+comment|/* 	 * CMT fast recovery code. Need to debug. ((sctp_cmt_on_off> 0)&& 	 * (net->fast_retran_loss_recovery == 0))) 	 */
 name|TAILQ_FOREACH
 argument_list|(
 argument|net
@@ -7239,8 +7239,8 @@ operator|(
 name|asoc
 operator|->
 name|sctp_cmt_on_off
-operator|==
-literal|1
+operator|>
+literal|0
 operator|)
 condition|)
 block|{

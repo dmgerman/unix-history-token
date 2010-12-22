@@ -1956,8 +1956,8 @@ operator|->
 name|asoc
 operator|.
 name|sctp_cmt_on_off
-operator|==
-literal|1
+operator|>
+literal|0
 operator|)
 operator|&&
 operator|(
