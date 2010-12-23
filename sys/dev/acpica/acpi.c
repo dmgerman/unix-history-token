@@ -5603,6 +5603,16 @@ operator|==
 name|SYS_RES_IRQ
 condition|)
 continue|continue;
+comment|/* 	     * Don't reserve the resource if it is already allocated. 	     * The acpi_ec(4) driver can allocate its resources early 	     * if ECDT is present. 	     */
+if|if
+condition|(
+name|rle
+operator|->
+name|res
+operator|!=
+name|NULL
+condition|)
+continue|continue;
 comment|/* 	     * Try to reserve the resource from our parent.  If this 	     * fails because the resource is a system resource, just 	     * let it be.  The resource range is already reserved so 	     * that other devices will not use it.  If the driver 	     * needs to allocate the resource, then 	     * acpi_alloc_resource() will sub-alloc from the system 	     * resource. 	     */
 name|resource_list_reserve
 argument_list|(
