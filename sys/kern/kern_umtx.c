@@ -550,14 +550,14 @@ begin_define
 define|#
 directive|define
 name|UMTX_CHAINS
-value|128
+value|512
 end_define
 
 begin_define
 define|#
 directive|define
 name|UMTX_SHIFTS
-value|(__WORD_BIT - 7)
+value|(__WORD_BIT - 9)
 end_define
 
 begin_define
