@@ -560,9 +560,7 @@ operator|)
 condition|)
 block|{
 name|IXP4XX_GPIO_LOCK
-argument_list|(
-name|sc
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|pin
 operator|->
@@ -617,9 +615,7 @@ argument_list|)
 expr_stmt|;
 block|}
 name|IXP4XX_GPIO_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 block|}
@@ -774,9 +770,7 @@ name|EINVAL
 operator|)
 return|;
 name|IXP4XX_GPIO_LOCK
-argument_list|(
-name|sc
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|/* refresh since we do not own all the pins */
 name|sc
@@ -808,9 +802,7 @@ operator|.
 name|gp_flags
 expr_stmt|;
 name|IXP4XX_GPIO_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -1070,9 +1062,7 @@ name|EINVAL
 operator|)
 return|;
 name|IXP4XX_GPIO_LOCK
-argument_list|(
-name|sc
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -1098,9 +1088,7 @@ name|mask
 argument_list|)
 expr_stmt|;
 name|IXP4XX_GPIO_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -1162,9 +1150,7 @@ name|EINVAL
 operator|)
 return|;
 name|IXP4XX_GPIO_LOCK
-argument_list|(
-name|sc
-argument_list|)
+argument_list|()
 expr_stmt|;
 operator|*
 name|val
@@ -1189,9 +1175,7 @@ else|:
 literal|0
 expr_stmt|;
 name|IXP4XX_GPIO_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -1254,9 +1238,7 @@ name|EINVAL
 operator|)
 return|;
 name|IXP4XX_GPIO_LOCK
-argument_list|(
-name|sc
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|res
 operator|=
@@ -1293,9 +1275,7 @@ name|mask
 argument_list|)
 expr_stmt|;
 name|IXP4XX_GPIO_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
