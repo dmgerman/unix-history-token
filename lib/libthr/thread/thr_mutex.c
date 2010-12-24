@@ -2726,12 +2726,6 @@ else|else
 block|{
 if|if
 condition|(
-name|curthread
-operator|->
-name|will_sleep
-operator|==
-literal|0
-operator|&&
 operator|(
 name|m
 operator|->
@@ -2779,6 +2773,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|curthread
+operator|->
+name|will_sleep
+operator|==
+literal|0
+operator|&&
 name|defered
 condition|)
 block|{
