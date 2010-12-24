@@ -676,6 +676,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|nfsrv_postopattr
@@ -971,6 +973,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -1358,6 +1362,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -2218,6 +2224,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -2638,6 +2646,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|vrele
@@ -2740,6 +2750,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -2797,6 +2809,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|vrele
@@ -3093,6 +3107,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|vput
@@ -3717,6 +3733,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -4017,6 +4035,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -4893,6 +4913,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -5134,6 +5156,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|vput
@@ -5819,6 +5843,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|nfsrv_wcc
@@ -5911,6 +5937,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -6097,6 +6125,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|vput
@@ -6235,6 +6265,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|vrele
@@ -6967,6 +6999,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -7194,6 +7228,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|vrele
@@ -7259,6 +7295,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -7507,6 +7545,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -7552,6 +7592,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|vrele
@@ -7986,6 +8028,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -8158,6 +8202,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|vrele
@@ -8435,6 +8481,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|tond
@@ -8560,6 +8608,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -8657,6 +8707,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|NFSVOPUNLOCK
@@ -9115,6 +9167,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -9135,6 +9189,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -9854,6 +9910,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -9907,6 +9965,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -9928,6 +9988,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|vrele
@@ -10389,6 +10451,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|nfsrvd_symlinksub
@@ -10452,6 +10516,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|vrele
@@ -10739,6 +10805,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -10796,6 +10864,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|vrele
@@ -11236,6 +11306,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|vrele
@@ -11293,6 +11365,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Call nfsrvd_mkdirsub() for the code common to V4 as well. 	 */
@@ -11635,6 +11709,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -11690,6 +11766,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|vrele
@@ -11912,6 +11990,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|nd
@@ -11956,6 +12036,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|nfsrv_wcc
@@ -12149,6 +12231,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|vput
@@ -12515,6 +12599,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|nfsvno_getfs
@@ -12865,6 +12951,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|vput
@@ -15926,6 +16014,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -17051,6 +17141,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -17216,6 +17308,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -21180,6 +21274,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
