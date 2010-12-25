@@ -53,6 +53,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stddef.h>
 end_include
 
@@ -753,6 +759,14 @@ modifier|*
 name|needed
 decl_stmt|;
 comment|/* Shared objects needed by this one (%) */
+name|Needed_Entry
+modifier|*
+name|needed_filtees
+decl_stmt|;
+name|Needed_Entry
+modifier|*
+name|needed_aux_filtees
+decl_stmt|;
 name|STAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -857,6 +871,12 @@ literal|1
 decl_stmt|;
 comment|/* Do not load on dlopen */
 name|bool
+name|z_loadfltr
+range|:
+literal|1
+decl_stmt|;
+comment|/* Immediately load filtees */
+name|bool
 name|ref_nodel
 range|:
 literal|1
@@ -880,6 +900,12 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* Object has its DAG initialized. */
+name|bool
+name|filtees_loaded
+range|:
+literal|1
+decl_stmt|;
+comment|/* Filtees loaded */
 name|struct
 name|link_map
 name|linkmap
@@ -995,6 +1021,28 @@ begin_comment
 comment|/* Only tracing. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|RTLD_LO_NODELETE
+value|0x08
+end_define
+
+begin_comment
+comment|/* Loaded object cannot be closed. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTLD_LO_FILTEES
+value|0x10
+end_define
+
+begin_comment
+comment|/* Loading filtee. */
+end_comment
+
 begin_comment
 comment|/*  * Symbol cache entry used during relocation to avoid multiple lookups  * of the same symbol.  */
 end_comment
@@ -1018,6 +1066,97 @@ decl_stmt|;
 comment|/* Shared object which defines it */
 block|}
 name|SymCache
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * This structure provides a reentrant way to keep a list of objects and  * check which ones have already been processed in some way.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|Struct_DoneList
+block|{
+specifier|const
+name|Obj_Entry
+modifier|*
+modifier|*
+name|objs
+decl_stmt|;
+comment|/* Array of object pointers */
+name|unsigned
+name|int
+name|num_alloc
+decl_stmt|;
+comment|/* Allocated size of the array */
+name|unsigned
+name|int
+name|num_used
+decl_stmt|;
+comment|/* Number of array slots used */
+block|}
+name|DoneList
+typedef|;
+end_typedef
+
+begin_struct
+struct|struct
+name|Struct_RtldLockState
+block|{
+name|int
+name|lockstate
+decl_stmt|;
+name|jmp_buf
+name|env
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * The pack of arguments and results for the symbol lookup functions.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|Struct_SymLook
+block|{
+specifier|const
+name|char
+modifier|*
+name|name
+decl_stmt|;
+name|unsigned
+name|long
+name|hash
+decl_stmt|;
+specifier|const
+name|Ver_Entry
+modifier|*
+name|ventry
+decl_stmt|;
+name|int
+name|flags
+decl_stmt|;
+specifier|const
+name|Obj_Entry
+modifier|*
+name|defobj_out
+decl_stmt|;
+specifier|const
+name|Elf_Sym
+modifier|*
+name|sym_out
+decl_stmt|;
+name|struct
+name|Struct_RtldLockState
+modifier|*
+name|lockstate
+decl_stmt|;
+block|}
+name|SymLook
 typedef|;
 end_typedef
 
@@ -1212,6 +1351,10 @@ name|int
 parameter_list|,
 name|SymCache
 modifier|*
+parameter_list|,
+name|struct
+name|Struct_RtldLockState
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1265,27 +1408,29 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|const
-name|Elf_Sym
-modifier|*
-name|symlook_obj
+name|void
+name|symlook_init
 parameter_list|(
+name|SymLook
+modifier|*
+parameter_list|,
 specifier|const
 name|char
 modifier|*
-parameter_list|,
-name|unsigned
-name|long
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|symlook_obj
+parameter_list|(
+name|SymLook
+modifier|*
 parameter_list|,
 specifier|const
 name|Obj_Entry
 modifier|*
-parameter_list|,
-specifier|const
-name|Ver_Entry
-modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1414,6 +1559,10 @@ modifier|*
 parameter_list|,
 name|Obj_Entry
 modifier|*
+parameter_list|,
+name|struct
+name|Struct_RtldLockState
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1433,6 +1582,10 @@ name|int
 name|reloc_jmpslots
 parameter_list|(
 name|Obj_Entry
+modifier|*
+parameter_list|,
+name|struct
+name|Struct_RtldLockState
 modifier|*
 parameter_list|)
 function_decl|;

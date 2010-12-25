@@ -510,6 +510,10 @@ parameter_list|,
 name|SymCache
 modifier|*
 name|cache
+parameter_list|,
+name|RtldLockState
+modifier|*
+name|lockstate
 parameter_list|)
 block|{
 name|struct
@@ -610,6 +614,8 @@ argument_list|,
 name|false
 argument_list|,
 name|cache
+argument_list|,
+name|lockstate
 argument_list|)
 expr_stmt|;
 if|if
@@ -709,6 +715,8 @@ argument_list|,
 name|true
 argument_list|,
 name|cache
+argument_list|,
+name|lockstate
 argument_list|)
 expr_stmt|;
 if|if
@@ -913,6 +921,8 @@ argument_list|,
 name|false
 argument_list|,
 name|cache
+argument_list|,
+name|lockstate
 argument_list|)
 expr_stmt|;
 if|if
@@ -1033,6 +1043,8 @@ argument_list|,
 name|false
 argument_list|,
 name|cache
+argument_list|,
+name|lockstate
 argument_list|)
 expr_stmt|;
 if|if
@@ -1089,6 +1101,8 @@ argument_list|,
 name|false
 argument_list|,
 name|cache
+argument_list|,
+name|lockstate
 argument_list|)
 expr_stmt|;
 if|if
@@ -1149,6 +1163,8 @@ argument_list|,
 name|false
 argument_list|,
 name|cache
+argument_list|,
+name|lockstate
 argument_list|)
 expr_stmt|;
 if|if
@@ -1272,6 +1288,10 @@ parameter_list|,
 name|Obj_Entry
 modifier|*
 name|obj_rtld
+parameter_list|,
+name|RtldLockState
+modifier|*
+name|lockstate
 parameter_list|)
 block|{
 specifier|const
@@ -1427,6 +1447,8 @@ operator|&
 name|locrela
 argument_list|,
 name|cache
+argument_list|,
+name|lockstate
 argument_list|)
 condition|)
 goto|goto
@@ -1487,6 +1509,8 @@ argument_list|,
 name|rela
 argument_list|,
 name|cache
+argument_list|,
+name|lockstate
 argument_list|)
 condition|)
 goto|goto
@@ -1762,6 +1786,10 @@ parameter_list|(
 name|Obj_Entry
 modifier|*
 name|obj
+parameter_list|,
+name|RtldLockState
+modifier|*
+name|lockstate
 parameter_list|)
 block|{
 if|if
@@ -1891,6 +1919,8 @@ argument_list|,
 name|true
 argument_list|,
 name|NULL
+argument_list|,
+name|lockstate
 argument_list|)
 expr_stmt|;
 if|if
@@ -2027,6 +2057,8 @@ argument_list|,
 name|true
 argument_list|,
 name|NULL
+argument_list|,
+name|lockstate
 argument_list|)
 expr_stmt|;
 if|if

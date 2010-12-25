@@ -1116,6 +1116,8 @@ argument_list|,
 name|SYMLOOK_IN_PLT
 argument_list|,
 name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1221,6 +1223,10 @@ parameter_list|,
 name|Obj_Entry
 modifier|*
 name|obj_rtld
+parameter_list|,
+name|RtldLockState
+modifier|*
+name|lockstate
 parameter_list|)
 block|{
 specifier|const
@@ -1506,6 +1512,8 @@ argument_list|,
 name|false
 argument_list|,
 name|NULL
+argument_list|,
+name|lockstate
 argument_list|)
 expr_stmt|;
 if|if
@@ -1700,6 +1708,8 @@ argument_list|,
 name|false
 argument_list|,
 name|NULL
+argument_list|,
+name|lockstate
 argument_list|)
 expr_stmt|;
 if|if
@@ -2228,6 +2238,10 @@ parameter_list|(
 name|Obj_Entry
 modifier|*
 name|obj
+parameter_list|,
+name|RtldLockState
+modifier|*
+name|lockstate
 parameter_list|)
 block|{
 comment|/* Do nothing */
