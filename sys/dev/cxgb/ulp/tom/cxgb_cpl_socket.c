@@ -335,12 +335,6 @@ directive|include
 file|<ulp/tom/cxgb_tcp.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<ulp/tom/cxgb_vm.h>
-end_include
-
 begin_function_decl
 specifier|static
 name|int
@@ -1002,9 +996,10 @@ argument_list|,
 name|npages
 argument_list|)
 expr_stmt|;
+comment|/* The following return value is not used. XXX */
 name|err
 operator|=
-name|vm_fault_hold_user_pages
+name|vm_fault_quick_hold_pages
 argument_list|(
 name|map
 argument_list|,
@@ -1015,11 +1010,15 @@ name|iov
 operator|->
 name|iov_base
 argument_list|,
+name|iov
+operator|->
+name|iov_len
+argument_list|,
+name|prot
+argument_list|,
 name|mp
 argument_list|,
 name|count
-argument_list|,
-name|prot
 argument_list|)
 expr_stmt|;
 name|mp
@@ -2397,7 +2396,7 @@ name|zcopy_enabled
 decl_stmt|,
 name|rv
 decl_stmt|;
-comment|/* 	 * In order to use DMA direct from userspace the following 	 * conditions must be met: 	 *  - the connection is currently offloaded 	 *  - ddp is enabled 	 *  - the number of bytes to be transferred exceeds the threshold 	 *  - the number of bytes currently in flight won't exceed the in-flight 	 *    threshold XXX TODO 	 *  - vm_fault_hold_user_pages succeeds 	 *  - blocking socket XXX for now 	 * 	 */
+comment|/* 	 * In order to use DMA direct from userspace the following 	 * conditions must be met: 	 *  - the connection is currently offloaded 	 *  - ddp is enabled 	 *  - the number of bytes to be transferred exceeds the threshold 	 *  - the number of bytes currently in flight won't exceed the in-flight 	 *    threshold XXX TODO 	 *  - vm_fault_quick_hold_pages succeeds 	 *  - blocking socket XXX for now 	 * 	 */
 if|if
 condition|(
 name|tp
@@ -4980,7 +4979,7 @@ name|MSG_EOR
 else|:
 literal|0
 expr_stmt|;
-comment|/* 	 * In order to use DMA direct from userspace the following 	 * conditions must be met: 	 *  - the connection is currently offloaded 	 *  - ddp is enabled 	 *  - the number of bytes to be transferred exceeds the threshold 	 *  - the number of bytes currently in flight won't exceed the in-flight 	 *    threshold XXX TODO 	 *  - vm_fault_hold_user_pages succeeds 	 *  - blocking socket XXX for now 	 *  - iovcnt is 1 	 * 	 */
+comment|/* 	 * In order to use DMA direct from userspace the following 	 * conditions must be met: 	 *  - the connection is currently offloaded 	 *  - ddp is enabled 	 *  - the number of bytes to be transferred exceeds the threshold 	 *  - the number of bytes currently in flight won't exceed the in-flight 	 *    threshold XXX TODO 	 *  - vm_fault_quick_hold_pages succeeds 	 *  - blocking socket XXX for now 	 *  - iovcnt is 1 	 * 	 */
 if|if
 condition|(
 name|tp
