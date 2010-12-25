@@ -621,19 +621,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|vm_fault_quick
-parameter_list|(
-name|caddr_t
-name|v
-parameter_list|,
-name|int
-name|prot
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|struct
 name|sf_buf
 modifier|*
