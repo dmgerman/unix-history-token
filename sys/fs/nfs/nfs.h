@@ -2516,6 +2516,9 @@ decl_stmt|;
 name|int
 name|modifyfs
 decl_stmt|;
+name|int
+name|lktype
+decl_stmt|;
 block|}
 struct|;
 end_struct

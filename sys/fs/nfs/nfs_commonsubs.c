@@ -242,6 +242,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* undef */
@@ -253,6 +255,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* undef */
@@ -264,6 +268,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* undef */
@@ -275,6 +281,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_SHARED
 block|}
 block|,
 comment|/* Access */
@@ -286,6 +294,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* Close */
@@ -297,6 +307,8 @@ block|,
 literal|0
 block|,
 literal|1
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* Commit */
@@ -308,6 +320,8 @@ block|,
 literal|1
 block|,
 literal|1
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* Create */
@@ -319,6 +333,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* Delegpurge */
@@ -330,6 +346,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* Delegreturn */
@@ -341,6 +359,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_SHARED
 block|}
 block|,
 comment|/* Getattr */
@@ -352,6 +372,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* GetFH */
@@ -363,6 +385,8 @@ block|,
 literal|1
 block|,
 literal|1
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* Link */
@@ -374,6 +398,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* Lock */
@@ -385,6 +411,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* LockT */
@@ -396,6 +424,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* LockU */
@@ -407,6 +437,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* Lookup */
@@ -418,6 +450,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* Lookupp */
@@ -429,6 +463,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* NVerify */
@@ -440,6 +476,8 @@ block|,
 literal|0
 block|,
 literal|1
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* Open */
@@ -451,6 +489,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* OpenAttr */
@@ -462,6 +502,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* OpenConfirm */
@@ -473,6 +515,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* OpenDowngrade */
@@ -484,6 +528,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* PutFH */
@@ -495,6 +541,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* PutPubFH */
@@ -506,6 +554,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* PutRootFH */
@@ -517,6 +567,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* Read */
@@ -528,6 +580,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_SHARED
 block|}
 block|,
 comment|/* Readdir */
@@ -539,6 +593,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_SHARED
 block|}
 block|,
 comment|/* ReadLink */
@@ -550,6 +606,8 @@ block|,
 literal|1
 block|,
 literal|1
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* Remove */
@@ -561,6 +619,8 @@ block|,
 literal|1
 block|,
 literal|1
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* Rename */
@@ -572,6 +632,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* Renew */
@@ -583,6 +645,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* RestoreFH */
@@ -594,6 +658,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* SaveFH */
@@ -605,6 +671,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* SecInfo */
@@ -616,6 +684,8 @@ block|,
 literal|1
 block|,
 literal|1
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* Setattr */
@@ -627,6 +697,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* SetClientID */
@@ -638,6 +710,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* SetClientIDConfirm */
@@ -649,6 +723,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* Verify */
@@ -660,6 +736,8 @@ block|,
 literal|1
 block|,
 literal|1
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* Write */
@@ -671,6 +749,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|LK_EXCLUSIVE
 block|}
 block|,
 comment|/* ReleaseLockOwner */
@@ -10357,17 +10437,18 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|NFSVOPLOCK
+if|if
+condition|(
+name|vn_lock
 argument_list|(
 name|vp
 argument_list|,
-name|LK_EXCLUSIVE
-operator||
-name|LK_RETRY
-argument_list|,
-name|p
+name|LK_SHARED
 argument_list|)
-expr_stmt|;
+operator|==
+literal|0
+condition|)
+block|{
 name|error
 operator|=
 name|VOP_ACCESS
@@ -10402,14 +10483,18 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-name|NFSVOPUNLOCK
+name|VOP_UNLOCK
 argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|p
 argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|error
+operator|=
+name|NFSERR_PERM
 expr_stmt|;
 if|if
 condition|(

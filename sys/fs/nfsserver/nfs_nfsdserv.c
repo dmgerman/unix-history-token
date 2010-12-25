@@ -8674,6 +8674,8 @@ argument_list|,
 operator|&
 name|tfh
 argument_list|,
+name|LK_EXCLUSIVE
+argument_list|,
 operator|&
 name|tdp
 argument_list|,
@@ -9676,6 +9678,8 @@ name|nd
 argument_list|,
 operator|&
 name|dfh
+argument_list|,
+name|LK_EXCLUSIVE
 argument_list|,
 operator|&
 name|dp
@@ -19838,6 +19842,8 @@ name|nd
 argument_list|,
 operator|&
 name|fh
+argument_list|,
+name|LK_SHARED
 argument_list|,
 operator|&
 name|vp
