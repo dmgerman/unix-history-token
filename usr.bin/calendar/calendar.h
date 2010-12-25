@@ -838,7 +838,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* ostern.c / pashka.c */
+comment|/* ostern.c / paskha.c */
 end_comment
 
 begin_function_decl
