@@ -139,15 +139,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|growstackblock
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|grabstackblock
 parameter_list|(
 name|int
@@ -170,7 +161,7 @@ name|char
 modifier|*
 name|makestrspace
 parameter_list|(
-name|void
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -272,7 +263,7 @@ name|n
 parameter_list|,
 name|p
 parameter_list|)
-value|{ if (sstrnleft< n) p = makestrspace(); }
+value|{ if (sstrnleft< n) p = makestrspace(n); }
 end_define
 
 begin_define
