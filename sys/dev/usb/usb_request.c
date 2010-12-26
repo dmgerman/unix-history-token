@@ -2950,6 +2950,26 @@ goto|goto
 name|done
 goto|;
 block|}
+comment|/* if the device disappeared, just give up */
+if|if
+condition|(
+operator|!
+operator|(
+name|UGETW
+argument_list|(
+name|ps
+operator|.
+name|wPortStatus
+argument_list|)
+operator|&
+name|UPS_CURRENT_CONNECT_STATUS
+operator|)
+condition|)
+block|{
+goto|goto
+name|done
+goto|;
+block|}
 comment|/* check if reset is complete */
 if|if
 condition|(
