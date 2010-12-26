@@ -679,7 +679,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"EJL:NO:RS:T:UXa:b:c:d:e:f:g:h:i:lm:no:r:s:"
+literal|"EJL:NO:RS:T:UXa:b:c:d:e:f:g:h:i:lm:no:p:r:s:"
 argument_list|)
 operator|)
 operator|!=
