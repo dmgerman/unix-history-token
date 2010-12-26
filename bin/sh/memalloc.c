@@ -668,7 +668,7 @@ name|stacknleft
 expr_stmt|;
 if|if
 condition|(
-name|newlen
+name|min
 operator|>=
 name|INT_MAX
 operator|/
