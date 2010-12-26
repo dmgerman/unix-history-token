@@ -15603,12 +15603,6 @@ operator|.
 name|sent_queue_retran_cnt
 argument_list|)
 expr_stmt|;
-name|tp1
-operator|->
-name|sent
-operator|=
-name|SCTP_DATAGRAM_RESEND
-expr_stmt|;
 comment|/* 				 * mark it as if we were doing a FR, since 				 * we will be getting gap ack reports behind 				 * the info from the router. 				 */
 name|tp1
 operator|->
@@ -15775,6 +15769,12 @@ name|tp1
 argument_list|)
 expr_stmt|;
 block|}
+name|tp1
+operator|->
+name|sent
+operator|=
+name|SCTP_DATAGRAM_RESEND
+expr_stmt|;
 block|}
 block|{
 comment|/* audit code */
