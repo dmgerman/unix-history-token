@@ -3948,6 +3948,9 @@ operator|*
 name|PMAP2
 argument_list|)
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|PT_SET_VA
 argument_list|(
 name|PMAP2
@@ -3956,6 +3959,9 @@ literal|0
 argument_list|,
 name|TRUE
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 name|mtx_unlock
 argument_list|(
