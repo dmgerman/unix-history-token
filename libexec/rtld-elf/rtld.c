@@ -11452,7 +11452,7 @@ argument_list|)
 expr_stmt|;
 name|res
 operator|=
-name|symlook_obj
+name|symlook_default
 argument_list|(
 operator|&
 name|req
