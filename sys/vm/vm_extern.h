@@ -603,24 +603,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|vm_object_print
-parameter_list|(
-comment|/* db_expr_t */
-name|long
-parameter_list|,
-name|boolean_t
-parameter_list|,
-comment|/* db_expr_t */
-name|long
-parameter_list|,
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|struct
 name|sf_buf
 modifier|*
