@@ -1987,6 +1987,31 @@ name|puc_config_cronyx
 block|}
 block|,
 block|{
+literal|0x13a8
+block|,
+literal|0x0258
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|"Exar XR17V258IV"
+block|,
+name|DEFAULT_RCLK
+operator|*
+literal|8
+block|,
+name|PUC_PORT_8S
+block|,
+literal|0x10
+block|,
+literal|0
+block|,
+operator|-
+literal|1
+block|, 	}
+block|,
+block|{
 literal|0x1407
 block|,
 literal|0x0100
