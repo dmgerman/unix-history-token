@@ -13002,6 +13002,11 @@ argument_list|)
 expr_stmt|;
 name|MNT_KERN_FLAG
 argument_list|(
+name|MNTK_SUJ
+argument_list|)
+expr_stmt|;
+name|MNT_KERN_FLAG
+argument_list|(
 name|MNTK_UNMOUNT
 argument_list|)
 expr_stmt|;
