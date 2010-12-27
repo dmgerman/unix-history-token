@@ -883,6 +883,13 @@ name|NT_AUXV
 value|6
 end_define
 
+begin_define
+define|#
+directive|define
+name|NT_THRMISC
+value|7
+end_define
+
 begin_comment
 comment|/* Note types used in executables */
 end_comment

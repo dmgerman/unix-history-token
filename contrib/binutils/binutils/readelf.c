@@ -44006,6 +44006,15 @@ literal|"NT_PSINFO (psinfo structure)"
 argument_list|)
 return|;
 case|case
+name|NT_THRMISC
+case|:
+return|return
+name|_
+argument_list|(
+literal|"NT_THRMISC (thrmisc structure)"
+argument_list|)
+return|;
+case|case
 name|NT_LWPSTATUS
 case|:
 return|return

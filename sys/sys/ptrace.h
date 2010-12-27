@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/reg.h>
 end_include
 
@@ -508,6 +514,15 @@ name|__siginfo
 name|pl_siginfo
 decl_stmt|;
 comment|/* siginfo for signal */
+name|char
+name|pl_tdname
+index|[
+name|MAXCOMLEN
+operator|+
+literal|1
+index|]
+decl_stmt|;
+comment|/* LWP name */
 block|}
 struct|;
 end_struct
