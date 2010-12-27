@@ -665,14 +665,14 @@ argument_list|,
 name|TCO_TIMEOUT
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX The datasheet says that TCO_SECOND_TO_STS must be cleared 	 * before TCO_BOOT_STS, not the other way around. 	 */
+comment|/*  	 * According to Intel's docs, clearing SECOND_TO_STS and BOOT_STS must  	 * be done in two separate operations. 	 */
 name|ichwd_write_tco_2
 argument_list|(
 name|sc
 argument_list|,
 name|TCO2_STS
 argument_list|,
-name|TCO_BOOT_STS
+name|TCO_SECOND_TO_STS
 argument_list|)
 expr_stmt|;
 name|ichwd_write_tco_2
@@ -681,7 +681,7 @@ name|sc
 argument_list|,
 name|TCO2_STS
 argument_list|,
-name|TCO_SECOND_TO_STS
+name|TCO_BOOT_STS
 argument_list|)
 expr_stmt|;
 block|}
@@ -881,16 +881,15 @@ name|int
 name|timeout
 parameter_list|)
 block|{
-comment|/* 	 * If the datasheets are to be believed, the minimum value 	 * actually varies from chipset to chipset - 4 for ICH5 and 2 for 	 * all other chipsets.  I suspect this is a bug in the ICH5 	 * datasheet and that the minimum is uniformly 2, but I'd rather 	 * err on the side of caution. 	 */
 if|if
 condition|(
 name|timeout
 operator|<
-literal|4
+name|TCO_RLD_TMR_MIN
 condition|)
 name|timeout
 operator|=
-literal|4
+name|TCO_RLD_TMR_MIN
 expr_stmt|;
 if|if
 condition|(
@@ -913,17 +912,22 @@ argument_list|)
 decl_stmt|;
 name|tmr_val8
 operator|&=
-literal|0xc0
+operator|(
+operator|~
+name|TCO_RLD1_TMR_MAX
+operator|&
+literal|0xff
+operator|)
 expr_stmt|;
 if|if
 condition|(
 name|timeout
 operator|>
-literal|0x3f
+name|TCO_RLD1_TMR_MAX
 condition|)
 name|timeout
 operator|=
-literal|0x3f
+name|TCO_RLD1_TMR_MAX
 expr_stmt|;
 name|tmr_val8
 operator||=
@@ -953,17 +957,22 @@ argument_list|)
 decl_stmt|;
 name|tmr_val16
 operator|&=
-literal|0xfc00
+operator|(
+operator|~
+name|TCO_RLD2_TMR_MAX
+operator|&
+literal|0xffff
+operator|)
 expr_stmt|;
 if|if
 condition|(
 name|timeout
 operator|>
-literal|0x03ff
+name|TCO_RLD2_TMR_MAX
 condition|)
 name|timeout
 operator|=
-literal|0x03ff
+name|TCO_RLD2_TMR_MAX
 expr_stmt|;
 name|tmr_val16
 operator||=
@@ -1960,7 +1969,29 @@ operator|->
 name|ich_version
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX we should check the status registers (specifically, the 	 * TCO_SECOND_TO_STS bit in the TCO2_STS register) to see if we 	 * just came back from a watchdog-induced reset, and let the user 	 * know. 	 */
+comment|/* 	 * Determine if we are coming up after a watchdog-induced reset.  Some 	 * BIOSes may clear this bit at bootup, preventing us from reporting 	 * this case on such systems.  We clear this bit in ichwd_sts_reset(). 	 */
+if|if
+condition|(
+operator|(
+name|ichwd_read_tco_2
+argument_list|(
+name|sc
+argument_list|,
+name|TCO2_STS
+argument_list|)
+operator|&
+name|TCO_SECOND_TO_STS
+operator|)
+operator|!=
+literal|0
+condition|)
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"resuming after hardware watchdog timeout\n"
+argument_list|)
+expr_stmt|;
 comment|/* reset the watchdog status registers */
 name|ichwd_sts_reset
 argument_list|(

@@ -721,6 +721,31 @@ comment|/* preserve these bits */
 end_comment
 
 begin_comment
+comment|/*  * Masks for the TCO timer value field in TCO_RLD.  * If the datasheets are to be believed, the minimum value actually varies  * from chipset to chipset - 4 for ICH5 and 2 for all other chipsets.  * I suspect this is a bug in the ICH5 datasheet and that the minimum is  * uniformly 2, but I'd rather err on the side of caution.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCO_RLD_TMR_MIN
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCO_RLD1_TMR_MAX
+value|0x003f
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCO_RLD2_TMR_MAX
+value|0x03ff
+end_define
+
+begin_comment
 comment|/* approximate length in nanoseconds of one WDT tick (about 0.6 sec) */
 end_comment
 
