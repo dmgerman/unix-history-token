@@ -51,8 +51,9 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|sstrnleft
+name|char
+modifier|*
+name|sstrend
 decl_stmt|;
 end_decl_stmt
 
@@ -162,16 +163,6 @@ modifier|*
 name|makestrspace
 parameter_list|(
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ungrabstackstr
-parameter_list|(
-name|char
-modifier|*
 parameter_list|,
 name|char
 modifier|*
@@ -239,7 +230,7 @@ name|STARTSTACKSTR
 parameter_list|(
 name|p
 parameter_list|)
-value|p = stackblock(), sstrnleft = stackblocksize()
+value|p = stackblock()
 end_define
 
 begin_define
@@ -251,7 +242,7 @@ name|c
 parameter_list|,
 name|p
 parameter_list|)
-value|(--sstrnleft>= 0? (*p++ = (c)) : (p = growstackstr(), --sstrnleft, *p++ = (c)))
+value|do { if (p == sstrend) p = growstackstr(); *p++ = (c); } while(0)
 end_define
 
 begin_define
@@ -263,7 +254,7 @@ name|n
 parameter_list|,
 name|p
 parameter_list|)
-value|{ if (sstrnleft< n) p = makestrspace(n); }
+value|{ if (sstrend - p< n) p = makestrspace(n, p); }
 end_define
 
 begin_define
@@ -275,7 +266,7 @@ name|c
 parameter_list|,
 name|p
 parameter_list|)
-value|(--sstrnleft, *p++ = (c))
+value|(*p++ = (c))
 end_define
 
 begin_comment
@@ -289,7 +280,7 @@ name|STACKSTRNUL
 parameter_list|(
 name|p
 parameter_list|)
-value|(sstrnleft == 0? (p = growstackstr(), *p = '\0') : (*p = '\0'))
+value|(p == sstrend ? (p = growstackstr(), *p = '\0') : (*p = '\0'))
 end_define
 
 begin_define
@@ -299,7 +290,7 @@ name|STUNPUTC
 parameter_list|(
 name|p
 parameter_list|)
-value|(++sstrnleft, --p)
+value|(--p)
 end_define
 
 begin_define
@@ -321,7 +312,7 @@ name|amount
 parameter_list|,
 name|p
 parameter_list|)
-value|(p += (amount), sstrnleft -= (amount))
+value|(p += (amount))
 end_define
 
 begin_define
@@ -331,7 +322,19 @@ name|grabstackstr
 parameter_list|(
 name|p
 parameter_list|)
-value|stalloc(stackblocksize() - sstrnleft)
+value|stalloc((char *)p - stackblock())
+end_define
+
+begin_define
+define|#
+directive|define
+name|ungrabstackstr
+parameter_list|(
+name|s
+parameter_list|,
+name|p
+parameter_list|)
+value|stunalloc((s))
 end_define
 
 begin_define
