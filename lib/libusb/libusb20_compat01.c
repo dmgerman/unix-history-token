@@ -2048,6 +2048,30 @@ operator|+
 name|d
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ptr
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* free config structure */
+name|free
+argument_list|(
+name|ps
+operator|.
+name|a
+operator|.
+name|currcfg
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 comment|/* "currifcw" must be first, hence this pointer is freed */
 name|ps
 operator|.
