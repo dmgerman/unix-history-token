@@ -854,6 +854,18 @@ expr_stmt|;
 name|PTESYNC
 argument_list|()
 expr_stmt|;
+comment|/* Keep statistics for unlocked pages */
+if|if
+condition|(
+operator|!
+operator|(
+name|pvo_pt
+operator|->
+name|pte_hi
+operator|&
+name|LPTE_LOCKED
+operator|)
+condition|)
 name|moea64_pte_valid
 operator|++
 expr_stmt|;
@@ -930,6 +942,18 @@ argument_list|,
 name|pvo_pt
 argument_list|)
 expr_stmt|;
+comment|/* Keep statistics for unlocked pages */
+if|if
+condition|(
+operator|!
+operator|(
+name|pvo_pt
+operator|->
+name|pte_hi
+operator|&
+name|LPTE_LOCKED
+operator|)
+condition|)
 name|moea64_pte_valid
 operator|--
 expr_stmt|;
