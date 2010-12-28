@@ -2040,7 +2040,7 @@ name|mpt
 operator|->
 name|pci_pio_reg
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_any
 argument_list|(
 name|dev
 argument_list|,
@@ -2050,13 +2050,6 @@ operator|&
 name|mpt
 operator|->
 name|pci_pio_rid
-argument_list|,
-literal|0
-argument_list|,
-operator|~
-literal|0
-argument_list|,
-literal|0
 argument_list|,
 name|RF_ACTIVE
 argument_list|)
@@ -2117,7 +2110,7 @@ name|mpt
 operator|->
 name|pci_reg
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_any
 argument_list|(
 name|dev
 argument_list|,
@@ -2127,13 +2120,6 @@ operator|&
 name|mpt
 operator|->
 name|pci_mem_rid
-argument_list|,
-literal|0
-argument_list|,
-operator|~
-literal|0
-argument_list|,
-literal|0
 argument_list|,
 name|RF_ACTIVE
 argument_list|)
