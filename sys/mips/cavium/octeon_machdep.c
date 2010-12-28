@@ -1214,6 +1214,19 @@ operator|<
 name|PHYS_AVAIL_ENTRIES
 condition|)
 block|{
+comment|/* 		 * If there is less than 2MB of memory available in 128-byte 		 * blocks, do not steal any more memory.  We need to leave some 		 * memory for the command queues to be allocated out of. 		 */
+if|if
+condition|(
+name|cvmx_bootmem_available_mem
+argument_list|(
+literal|128
+argument_list|)
+operator|<
+literal|2
+operator|<<
+literal|20
+condition|)
+break|break;
 name|addr
 operator|=
 name|cvmx_bootmem_phy_alloc
