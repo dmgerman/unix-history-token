@@ -592,6 +592,7 @@ name|cc_var
 modifier|*
 name|ccv
 decl_stmt|;
+comment|/* congestion control specific vars */
 name|struct
 name|osd
 modifier|*
