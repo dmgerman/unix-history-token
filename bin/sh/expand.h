@@ -209,6 +209,17 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|expandhassideeffects
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|wordexpcmd
 parameter_list|(
 name|int
