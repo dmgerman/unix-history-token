@@ -2113,6 +2113,17 @@ name|defined
 argument_list|(
 name|GEOM_PART_EBR_COMPAT
 argument_list|)
+if|if
+condition|(
+name|req
+operator|==
+name|G_PART_CTL_DESTROY
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 return|return
 operator|(
 name|ECANCELED
