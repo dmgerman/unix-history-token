@@ -656,15 +656,6 @@ parameter_list|)
 block|{
 name|int
 name|ret
-init|=
-operator|(
-name|xc_mute
-condition|?
-literal|0
-else|:
-operator|-
-literal|1
-operator|)
 decl_stmt|;
 if|if
 condition|(
@@ -688,6 +679,9 @@ name|rp
 operator|-
 name|rc
 operator|)
+operator|&&
+operator|!
+name|xc_mute
 condition|)
 block|{
 comment|/* we need to return only one char */
@@ -708,6 +702,12 @@ name|rc
 operator|++
 expr_stmt|;
 block|}
+else|else
+name|ret
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|CN_UNLOCK
 argument_list|(
 name|cn_mtx
