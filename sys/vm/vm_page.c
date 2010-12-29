@@ -2959,11 +2959,6 @@ name|root
 operator|=
 name|m
 expr_stmt|;
-name|object
-operator|->
-name|generation
-operator|++
-expr_stmt|;
 comment|/* 	 * show that the object has one more resident page. 	 */
 name|object
 operator|->
