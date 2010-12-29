@@ -316,6 +316,10 @@ name|um_savedmaxfilesize
 decl_stmt|;
 comment|/* XXX - limit maxfilesize */
 name|int
+name|um_candelete
+decl_stmt|;
+comment|/* devvp supports TRIM */
+name|int
 function_decl|(
 modifier|*
 name|um_balloc
