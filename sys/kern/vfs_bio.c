@@ -10263,15 +10263,15 @@ expr_stmt|;
 comment|/* 	 * We qualify the scan for modified pages on whether the 	 * object has been flushed yet. 	 */
 if|if
 condition|(
+operator|(
 name|object
 operator|->
 name|flags
 operator|&
-operator|(
 name|OBJ_MIGHTBEDIRTY
-operator||
-name|OBJ_CLEANING
 operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|vm_offset_t

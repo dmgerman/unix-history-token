@@ -2828,13 +2828,6 @@ name|size
 else|:
 name|end
 expr_stmt|;
-name|vm_object_set_flag
-argument_list|(
-name|object
-argument_list|,
-name|OBJ_CLEANING
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Make the page read-only so we can then clear the object flags. 	 * 	 * However, if this is a nosync mmap then the object is likely to  	 * stay dirty so do not mess with the page and do not clear the 	 * object flags. 	 */
 name|clearobjflags
 operator|=
@@ -2992,13 +2985,6 @@ literal|0
 block|VOP_FSYNC(vp, (pagerflags& VM_PAGER_PUT_SYNC) ? MNT_WAIT : 0);
 endif|#
 directive|endif
-name|vm_object_clear_flag
-argument_list|(
-name|object
-argument_list|,
-name|OBJ_CLEANING
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|clearobjflags

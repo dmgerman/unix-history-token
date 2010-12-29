@@ -279,13 +279,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|OBJ_CLEANING
-value|0x0200
-end_define
-
-begin_define
-define|#
-directive|define
 name|OBJ_COLORED
 value|0x1000
 end_define
