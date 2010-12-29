@@ -307,6 +307,16 @@ comment|/* do not create .snap directory */
 end_comment
 
 begin_decl_stmt
+name|int
+name|tflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* enable TRIM */
+end_comment
+
+begin_decl_stmt
 name|intmax_t
 name|fssize
 decl_stmt|;
@@ -704,7 +714,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"EJL:NO:RS:T:UXa:b:c:d:e:f:g:h:i:lm:no:p:r:s:"
+literal|"EJL:NO:RS:T:UXa:b:c:d:e:f:g:h:i:lm:no:p:r:s:t"
 argument_list|)
 operator|)
 operator|!=
@@ -1428,6 +1438,14 @@ literal|"%s: bad file system size"
 argument_list|,
 name|optarg
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'t'
+case|:
+name|tflag
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -2726,6 +2744,13 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"\t-s file system size (sectors)\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t-t enable TRIM\n"
 argument_list|)
 expr_stmt|;
 name|exit
