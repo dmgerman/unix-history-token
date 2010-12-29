@@ -2525,6 +2525,18 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+specifier|static
+name|LIST_HEAD
+argument_list|(
+argument|mkdirlist
+argument_list|,
+argument|mkdir
+argument_list|)
+name|mkdirlisthd
+expr_stmt|;
+end_expr_stmt
+
 begin_define
 define|#
 directive|define

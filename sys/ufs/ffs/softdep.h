@@ -1698,20 +1698,6 @@ block|}
 struct|;
 end_struct
 
-begin_macro
-name|LIST_HEAD
-argument_list|(
-argument|mkdirlist
-argument_list|,
-argument|mkdir
-argument_list|)
-end_macro
-
-begin_expr_stmt
-name|mkdirlisthd
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/*  * A "dirrem" structure describes an operation to decrement the link  * count on an inode. The dirrem structure is attached to the pg_dirremhd  * list of the pagedep for the directory page that contains the entry.  * It is processed after the directory page with the deleted entry has  * been written to disk.  */
 end_comment
