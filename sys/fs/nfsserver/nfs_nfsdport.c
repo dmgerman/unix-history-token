@@ -7080,6 +7080,9 @@ name|struct
 name|iovec
 name|iv
 decl_stmt|;
+name|int
+name|not_zfs
+decl_stmt|;
 if|if
 condition|(
 name|nd
@@ -7371,6 +7374,21 @@ literal|0
 operator|)
 return|;
 block|}
+name|not_zfs
+operator|=
+name|strcmp
+argument_list|(
+name|vp
+operator|->
+name|v_mount
+operator|->
+name|mnt_vfc
+operator|->
+name|vfc_name
+argument_list|,
+literal|"zfs"
+argument_list|)
+expr_stmt|;
 name|NFSVOPUNLOCK
 argument_list|(
 name|vp
@@ -7793,7 +7811,7 @@ name|cookiep
 operator|=
 name|cookies
 expr_stmt|;
-comment|/* 	 * For some reason FreeBSD's ufs_readdir() chooses to back the 	 * directory offset up to a block boundary, so it is necessary to 	 * skip over the records that precede the requested offset. This 	 * requires the assumption that file offset cookies monotonically 	 * increase. 	 */
+comment|/* 	 * For some reason FreeBSD's ufs_readdir() chooses to back the 	 * directory offset up to a block boundary, so it is necessary to 	 * skip over the records that precede the requested offset. This 	 * requires the assumption that file offset cookies monotonically 	 * increase. 	 * Since the offset cookies don't monotonically increase for ZFS, 	 * this is not done when ZFS is the file system. 	 */
 while|while
 condition|(
 name|cpos
@@ -7818,6 +7836,11 @@ operator|==
 name|DT_WHT
 operator|||
 operator|(
+name|not_zfs
+operator|!=
+literal|0
+operator|&&
+operator|(
 call|(
 name|u_quad_t
 call|)
@@ -7828,6 +7851,7 @@ argument_list|)
 operator|)
 operator|<=
 name|toff
+operator|)
 operator|)
 condition|)
 block|{
@@ -8418,6 +8442,9 @@ name|struct
 name|componentname
 name|cn
 decl_stmt|;
+name|int
+name|not_zfs
+decl_stmt|;
 if|if
 condition|(
 name|nd
@@ -8803,6 +8830,21 @@ literal|0
 operator|)
 return|;
 block|}
+name|not_zfs
+operator|=
+name|strcmp
+argument_list|(
+name|vp
+operator|->
+name|v_mount
+operator|->
+name|mnt_vfc
+operator|->
+name|vfc_name
+argument_list|,
+literal|"zfs"
+argument_list|)
+expr_stmt|;
 name|MALLOC
 argument_list|(
 name|rbuf
@@ -9168,7 +9210,7 @@ name|cookiep
 operator|=
 name|cookies
 expr_stmt|;
-comment|/* 	 * For some reason FreeBSD's ufs_readdir() chooses to back the 	 * directory offset up to a block boundary, so it is necessary to 	 * skip over the records that precede the requested offset. This 	 * requires the assumption that file offset cookies monotonically 	 * increase. 	 */
+comment|/* 	 * For some reason FreeBSD's ufs_readdir() chooses to back the 	 * directory offset up to a block boundary, so it is necessary to 	 * skip over the records that precede the requested offset. This 	 * requires the assumption that file offset cookies monotonically 	 * increase. 	 * Since the offset cookies don't monotonically increase for ZFS, 	 * this is not done when ZFS is the file system. 	 */
 while|while
 condition|(
 name|cpos
@@ -9193,6 +9235,11 @@ operator|==
 name|DT_WHT
 operator|||
 operator|(
+name|not_zfs
+operator|!=
+literal|0
+operator|&&
+operator|(
 call|(
 name|u_quad_t
 call|)
@@ -9203,6 +9250,7 @@ argument_list|)
 operator|)
 operator|<=
 name|toff
+operator|)
 operator|||
 operator|(
 operator|(
