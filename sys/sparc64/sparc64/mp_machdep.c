@@ -198,6 +198,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/tsb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/tte.h>
 end_include
 
@@ -2034,7 +2040,17 @@ operator|->
 name|pc_impl
 argument_list|)
 expr_stmt|;
-comment|/* Lock the kernel TSB in the TLB. */
+comment|/* Set the kernel context. */
+name|pmap_set_kctx
+argument_list|()
+expr_stmt|;
+comment|/* Lock the kernel TSB in the TLB if necessary. */
+if|if
+condition|(
+name|tsb_kernel_ldd_phys
+operator|==
+literal|0
+condition|)
 name|pmap_map_tsb
 argument_list|()
 expr_stmt|;

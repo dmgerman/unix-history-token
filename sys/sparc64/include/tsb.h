@@ -115,6 +115,13 @@ name|tsb_kernel_phys
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|tsb_kernel_ldd_phys
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 specifier|static
 name|__inline
