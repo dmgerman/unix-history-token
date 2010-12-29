@@ -3462,6 +3462,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|sc
 operator|->
 name|fwsectors
@@ -3493,6 +3494,16 @@ operator|->
 name|fwheads
 argument_list|)
 operator|)
+operator|)
+operator|||
+name|g_handleattr_int
+argument_list|(
+name|bp
+argument_list|,
+literal|"GEOM::candelete"
+argument_list|,
+literal|1
+argument_list|)
 condition|)
 name|error
 operator|=
