@@ -2133,6 +2133,9 @@ operator|!=
 name|newpri
 condition|)
 block|{
+name|critical_enter
+argument_list|()
+expr_stmt|;
 name|thread_unlock
 argument_list|(
 name|td
@@ -2144,6 +2147,9 @@ name|td
 argument_list|,
 name|oldpri
 argument_list|)
+expr_stmt|;
+name|critical_exit
+argument_list|()
 expr_stmt|;
 block|}
 else|else
