@@ -194,7 +194,7 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|int
+name|off_t
 name|isize
 decl_stmt|;
 name|struct
