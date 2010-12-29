@@ -1087,7 +1087,7 @@ literal|'L'
 case|:
 name|printf
 argument_list|(
-literal|"-i deprecated, use -o nolockd\n"
+literal|"-L deprecated, use -o nolockd\n"
 argument_list|)
 expr_stmt|;
 name|build_iovec
