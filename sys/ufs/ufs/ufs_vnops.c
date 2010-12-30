@@ -7127,6 +7127,22 @@ goto|goto
 name|unlockout
 goto|;
 block|}
+elseif|else
+if|if
+condition|(
+name|DOINGSUJ
+argument_list|(
+name|tdvp
+argument_list|)
+condition|)
+comment|/* Journal must account for each new link. */
+name|softdep_setup_dotdot_link
+argument_list|(
+name|tdp
+argument_list|,
+name|fip
+argument_list|)
+expr_stmt|;
 name|fip
 operator|->
 name|i_offset
