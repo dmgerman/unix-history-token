@@ -31786,7 +31786,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|ntohl
 argument_list|(
@@ -31798,8 +31798,6 @@ argument_list|,
 name|asoc
 operator|->
 name|asconf_seq_out_acked
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -32033,8 +32031,7 @@ operator|(
 name|tp1
 operator|)
 operator|&&
-operator|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|tp1
 operator|->
@@ -32054,10 +32051,7 @@ operator|.
 name|data
 operator|.
 name|TSN_seq
-argument_list|,
-name|MAX_TSN
 argument_list|)
-operator|)
 condition|)
 block|{
 name|struct
@@ -32108,7 +32102,7 @@ name|tpp
 expr_stmt|;
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|tp1
 operator|->
@@ -32128,8 +32122,6 @@ operator|.
 name|data
 operator|.
 name|TSN_seq
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -48379,7 +48371,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|asoc
 operator|->
@@ -48388,8 +48380,6 @@ argument_list|,
 name|asoc
 operator|->
 name|highest_tsn_inside_nr_map
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -48967,7 +48957,7 @@ block|}
 block|}
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|asoc
 operator|->
@@ -48976,8 +48966,6 @@ argument_list|,
 name|asoc
 operator|->
 name|cumulative_tsn
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -49008,15 +48996,13 @@ operator|==
 name|SCTP_SELECTIVE_ACK
 operator|)
 operator|&&
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|highest_tsn
 argument_list|,
 name|asoc
 operator|->
 name|cumulative_tsn
-argument_list|,
-name|MAX_TSN
 argument_list|)
 operator|)
 operator|||
@@ -49027,7 +49013,7 @@ operator|==
 name|SCTP_NR_SELECTIVE_ACK
 operator|)
 operator|&&
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|asoc
 operator|->
@@ -49036,8 +49022,6 @@ argument_list|,
 name|asoc
 operator|->
 name|cumulative_tsn
-argument_list|,
-name|MAX_TSN
 argument_list|)
 operator|)
 condition|)
@@ -49364,7 +49348,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|asoc
 operator|->
@@ -49373,8 +49357,6 @@ argument_list|,
 name|asoc
 operator|->
 name|cumulative_tsn
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -49398,7 +49380,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|asoc
 operator|->
@@ -49407,8 +49389,6 @@ argument_list|,
 name|asoc
 operator|->
 name|cumulative_tsn
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -54234,7 +54214,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|high_tsn
 argument_list|,
@@ -54244,8 +54224,6 @@ name|cwr
 operator|->
 name|tsn
 argument_list|)
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{

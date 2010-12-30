@@ -1280,13 +1280,11 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|cumackp1
 argument_list|,
 name|tsn
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -1362,15 +1360,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|tsn
 argument_list|,
 name|asoc
 operator|->
 name|highest_tsn_inside_nr_map
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -1399,26 +1395,14 @@ name|tsn
 operator|-
 literal|1
 init|;
-operator|(
-name|compare_with_wrap
+name|SCTP_TSN_GE
 argument_list|(
 name|i
 argument_list|,
 name|asoc
 operator|->
 name|mapping_array_base_tsn
-argument_list|,
-name|MAX_TSN
 argument_list|)
-operator|||
-operator|(
-name|i
-operator|==
-name|asoc
-operator|->
-name|mapping_array_base_tsn
-operator|)
-operator|)
 condition|;
 name|i
 operator|--
@@ -2514,7 +2498,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_SSN_GE
 argument_list|(
 name|strm
 operator|->
@@ -2523,19 +2507,7 @@ argument_list|,
 name|control
 operator|->
 name|sinfo_ssn
-argument_list|,
-name|MAX_SEQ
 argument_list|)
-operator|||
-operator|(
-name|strm
-operator|->
-name|last_sequence_delivered
-operator|==
-name|control
-operator|->
-name|sinfo_ssn
-operator|)
 condition|)
 block|{
 comment|/* The incoming sseq is behind where we last delivered? */
@@ -2964,8 +2936,7 @@ block|{
 comment|/* 		 * Ok, we did not deliver this guy, find the correct place 		 * to put it on the queue. 		 */
 if|if
 condition|(
-operator|(
-name|compare_with_wrap
+name|SCTP_TSN_GE
 argument_list|(
 name|asoc
 operator|->
@@ -2974,20 +2945,7 @@ argument_list|,
 name|control
 operator|->
 name|sinfo_tsn
-argument_list|,
-name|MAX_TSN
 argument_list|)
-operator|)
-operator|||
-operator|(
-name|control
-operator|->
-name|sinfo_tsn
-operator|==
-name|asoc
-operator|->
-name|cumulative_tsn
-operator|)
 condition|)
 block|{
 goto|goto
@@ -3052,7 +3010,7 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_SSN_GT
 argument_list|(
 name|at
 operator|->
@@ -3061,8 +3019,6 @@ argument_list|,
 name|control
 operator|->
 name|sinfo_ssn
-argument_list|,
-name|MAX_SEQ
 argument_list|)
 condition|)
 block|{
@@ -4733,7 +4689,7 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|at
 operator|->
@@ -4750,8 +4706,6 @@ operator|.
 name|data
 operator|.
 name|TSN_seq
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -6972,7 +6926,7 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|TSN_seq
 argument_list|,
@@ -6983,8 +6937,6 @@ operator|.
 name|data
 operator|.
 name|TSN_seq
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -7358,22 +7310,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GE
 argument_list|(
 name|asoc
 operator|->
 name|cumulative_tsn
 argument_list|,
 name|tsn
-argument_list|,
-name|MAX_TSN
 argument_list|)
-operator|||
-name|asoc
-operator|->
-name|cumulative_tsn
-operator|==
-name|tsn
 condition|)
 block|{
 comment|/* It is a duplicate */
@@ -7492,14 +7436,12 @@ block|}
 block|}
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|tsn
 argument_list|,
 operator|*
 name|high_tsn
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -7830,26 +7772,22 @@ block|}
 comment|/* now is it in the mapping array of what we have accepted? */
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|tsn
 argument_list|,
 name|asoc
 operator|->
 name|highest_tsn_inside_map
-argument_list|,
-name|MAX_TSN
 argument_list|)
 operator|&&
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|tsn
 argument_list|,
 name|asoc
 operator|->
 name|highest_tsn_inside_nr_map
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -8087,15 +8025,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|tsn
 argument_list|,
 name|asoc
 operator|->
 name|highest_tsn_inside_nr_map
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -8318,8 +8254,7 @@ operator|)
 operator|==
 literal|0
 operator|&&
-operator|(
-name|compare_with_wrap
+name|SCTP_SSN_GE
 argument_list|(
 name|asoc
 operator|->
@@ -8331,21 +8266,7 @@ operator|.
 name|last_sequence_delivered
 argument_list|,
 name|strmseq
-argument_list|,
-name|MAX_SEQ
 argument_list|)
-operator|||
-name|asoc
-operator|->
-name|strmin
-index|[
-name|strmno
-index|]
-operator|.
-name|last_sequence_delivered
-operator|==
-name|strmseq
-operator|)
 condition|)
 block|{
 comment|/* The incoming sseq is behind where we last delivered? */
@@ -8892,15 +8813,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|tsn
 argument_list|,
 name|asoc
 operator|->
 name|highest_tsn_inside_nr_map
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -9167,15 +9086,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|tsn
 argument_list|,
 name|asoc
 operator|->
 name|highest_tsn_inside_nr_map
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -9331,15 +9248,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|tsn
 argument_list|,
 name|asoc
 operator|->
 name|highest_tsn_inside_nr_map
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -9364,15 +9279,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|tsn
 argument_list|,
 name|asoc
 operator|->
 name|highest_tsn_inside_map
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -10443,20 +10356,14 @@ operator|!=
 name|NULL
 operator|)
 operator|&&
-operator|(
-operator|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|tsn
 argument_list|,
 name|liste
 operator|->
 name|tsn
-argument_list|,
-name|MAX_TSN
 argument_list|)
-operator|)
-operator|)
 condition|)
 block|{
 comment|/* 				 * yep its past where we need to reset... go 				 * ahead and queue it. 				 */
@@ -10514,7 +10421,7 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|control
 operator|->
@@ -10523,8 +10430,6 @@ argument_list|,
 name|ctlOn
 operator|->
 name|sinfo_tsn
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -10763,9 +10668,7 @@ operator|!=
 name|NULL
 operator|)
 operator|&&
-operator|(
-operator|(
-name|compare_with_wrap
+name|SCTP_TSN_GE
 argument_list|(
 name|asoc
 operator|->
@@ -10774,21 +10677,7 @@ argument_list|,
 name|liste
 operator|->
 name|tsn
-argument_list|,
-name|MAX_TSN
 argument_list|)
-operator|)
-operator|||
-operator|(
-name|asoc
-operator|->
-name|cumulative_tsn
-operator|==
-name|liste
-operator|->
-name|tsn
-operator|)
-operator|)
 condition|)
 block|{
 comment|/* 		 * we have finished working through the backlogged TSN's now 		 * time to reset streams. 1: call reset function. 2: free 		 * pending_reply space 3: distribute any chunks in 		 * pending_reply_queue. 		 */
@@ -10920,7 +10809,7 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|ctl
 operator|->
@@ -10929,8 +10818,6 @@ argument_list|,
 name|liste
 operator|->
 name|tsn
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -11681,7 +11568,7 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|asoc
 operator|->
@@ -11690,11 +11577,9 @@ argument_list|,
 name|asoc
 operator|->
 name|highest_tsn_inside_map
-argument_list|,
-name|MAX_TSN
 argument_list|)
 operator|&&
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|asoc
 operator|->
@@ -11703,8 +11588,6 @@ argument_list|,
 name|asoc
 operator|->
 name|highest_tsn_inside_nr_map
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -11789,7 +11672,7 @@ directive|endif
 block|}
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|asoc
 operator|->
@@ -11798,8 +11681,6 @@ argument_list|,
 name|asoc
 operator|->
 name|highest_tsn_inside_map
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -12400,7 +12281,7 @@ name|asoc
 expr_stmt|;
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|asoc
 operator|->
@@ -12409,8 +12290,6 @@ argument_list|,
 name|asoc
 operator|->
 name|highest_tsn_inside_map
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -12500,7 +12379,7 @@ decl_stmt|;
 comment|/* is there a gap now ? */
 name|is_a_gap
 operator|=
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|highest_tsn
 argument_list|,
@@ -12509,8 +12388,6 @@ operator|->
 name|asoc
 operator|.
 name|cumulative_tsn
-argument_list|,
-name|MAX_TSN
 argument_list|)
 expr_stmt|;
 comment|/* 		 * CMT DAC algorithm: increase number of packets received 		 * since last ack 		 */
@@ -13145,7 +13022,7 @@ name|asoc
 expr_stmt|;
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|asoc
 operator|->
@@ -13154,8 +13031,6 @@ argument_list|,
 name|asoc
 operator|->
 name|highest_tsn_inside_map
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -13177,7 +13052,7 @@ expr_stmt|;
 block|}
 name|was_a_gap
 operator|=
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|highest_tsn
 argument_list|,
@@ -13186,8 +13061,6 @@ operator|->
 name|asoc
 operator|.
 name|cumulative_tsn
-argument_list|,
-name|MAX_TSN
 argument_list|)
 expr_stmt|;
 comment|/* 	 * setup where we got the last DATA packet from for any SACK that 	 * may need to go out. Don't bump the net. This is done ONLY when a 	 * chunk is assigned. 	 */
@@ -14507,7 +14380,7 @@ block|{
 comment|/*- 						 * If it is less than RESEND, it is 						 * now no-longer in flight. 						 * Higher values may already be set 						 * via previous Gap Ack Blocks... 						 * i.e. ACKED or RESEND. 						 */
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|tp1
 operator|->
@@ -14519,8 +14392,6 @@ name|TSN_seq
 argument_list|,
 operator|*
 name|biggest_newly_acked_tsn
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -14559,7 +14430,7 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|tp1
 operator|->
@@ -14574,8 +14445,6 @@ operator|->
 name|whoTo
 operator|->
 name|this_sack_highest_newack
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -14966,7 +14835,7 @@ name|SCTP_SACK_NONCE_SUM
 expr_stmt|;
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|tp1
 operator|->
@@ -14981,8 +14850,6 @@ operator|->
 name|asoc
 operator|.
 name|this_sack_highest_gap
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -15141,7 +15008,7 @@ block|}
 comment|/* if (tp1->TSN_seq == theTSN) */
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|tp1
 operator|->
@@ -15152,11 +15019,11 @@ operator|.
 name|TSN_seq
 argument_list|,
 name|theTSN
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
+block|{
 break|break;
+block|}
 name|tp1
 operator|=
 name|TAILQ_NEXT
@@ -15479,7 +15346,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 operator|(
 name|last_tsn
@@ -15489,8 +15356,6 @@ operator|)
 argument_list|,
 operator|*
 name|biggest_tsn_acked
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -15638,7 +15503,7 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|tp1
 operator|->
@@ -15649,15 +15514,13 @@ operator|.
 name|TSN_seq
 argument_list|,
 name|cumack
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
 comment|/* 			 * ok this guy is either ACK or MARKED. If it is 			 * ACKED it has been previously acked but not this 			 * time i.e. revoked.  If it is MARKED it was ACK'ed 			 * again. 			 */
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|tp1
 operator|->
@@ -15668,11 +15531,11 @@ operator|.
 name|TSN_seq
 argument_list|,
 name|biggest_tsn_acked
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
+block|{
 break|break;
+block|}
 if|if
 condition|(
 name|tp1
@@ -16115,7 +15978,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|tp1
 operator|->
@@ -16126,8 +15989,6 @@ operator|.
 name|TSN_seq
 argument_list|,
 name|biggest_tsn_acked
-argument_list|,
-name|MAX_TSN
 argument_list|)
 operator|||
 name|tp1
@@ -16223,7 +16084,7 @@ block|}
 block|}
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|tp1
 operator|->
@@ -16236,8 +16097,6 @@ argument_list|,
 name|asoc
 operator|->
 name|this_sack_highest_gap
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -16303,7 +16162,7 @@ name|tp1
 operator|->
 name|whoTo
 operator|&&
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|tp1
 operator|->
@@ -16318,8 +16177,6 @@ operator|->
 name|whoTo
 operator|->
 name|this_sack_highest_newack
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -16416,7 +16273,7 @@ operator|==
 literal|1
 operator|)
 operator|&&
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|this_sack_lowest_newack
 argument_list|,
@@ -16427,8 +16284,6 @@ operator|.
 name|data
 operator|.
 name|TSN_seq
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -16519,8 +16374,7 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
-name|compare_with_wrap
+name|SCTP_TSN_GE
 argument_list|(
 name|biggest_tsn_newly_acked
 argument_list|,
@@ -16531,22 +16385,7 @@ operator|.
 name|data
 operator|.
 name|fast_retran_tsn
-argument_list|,
-name|MAX_TSN
 argument_list|)
-operator|)
-operator|||
-operator|(
-name|biggest_tsn_newly_acked
-operator|==
-name|tp1
-operator|->
-name|rec
-operator|.
-name|data
-operator|.
-name|fast_retran_tsn
-operator|)
 condition|)
 block|{
 comment|/* 					 * Strike the TSN, since this ack is 					 * beyond where things were when we 					 * did a FR. 					 */
@@ -16632,7 +16471,7 @@ operator|==
 literal|1
 operator|)
 operator|&&
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|this_sack_lowest_newack
 argument_list|,
@@ -16643,8 +16482,6 @@ operator|.
 name|data
 operator|.
 name|TSN_seq
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -16704,7 +16541,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|tp1
 operator|->
@@ -16715,8 +16552,6 @@ operator|.
 name|TSN_seq
 argument_list|,
 name|biggest_tsn_newly_acked
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -16804,7 +16639,7 @@ operator|==
 literal|1
 operator|)
 operator|&&
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|this_sack_lowest_newack
 argument_list|,
@@ -16815,8 +16650,6 @@ operator|.
 name|data
 operator|.
 name|TSN_seq
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -17663,7 +17496,7 @@ block|{
 comment|/* advance PeerAckPoint goes forward */
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|tp1
 operator|->
@@ -17676,8 +17509,6 @@ argument_list|,
 name|asoc
 operator|->
 name|advanced_peer_ack_point
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -18281,15 +18112,13 @@ name|peers_rwnd
 expr_stmt|;
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|asoc
 operator|->
 name|last_acked_seq
 argument_list|,
 name|cumack
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -18477,19 +18306,11 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|(
-name|cumack
-operator|==
-name|send_s
-operator|)
-operator|||
-name|compare_with_wrap
+name|SCTP_TSN_GE
 argument_list|(
 name|cumack
 argument_list|,
 name|send_s
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -18704,15 +18525,13 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|cumack
 argument_list|,
 name|asoc
 operator|->
 name|last_acked_seq
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -18730,7 +18549,7 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GE
 argument_list|(
 name|cumack
 argument_list|,
@@ -18741,19 +18560,7 @@ operator|.
 name|data
 operator|.
 name|TSN_seq
-argument_list|,
-name|MAX_TSN
 argument_list|)
-operator|||
-name|cumack
-operator|==
-name|tp1
-operator|->
-name|rec
-operator|.
-name|data
-operator|.
-name|TSN_seq
 condition|)
 block|{
 if|if
@@ -19513,7 +19320,7 @@ else|else
 block|{
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GE
 argument_list|(
 name|asoc
 operator|->
@@ -19522,19 +19329,7 @@ argument_list|,
 name|asoc
 operator|->
 name|nonce_wait_tsn
-argument_list|,
-name|MAX_TSN
 argument_list|)
-operator|||
-operator|(
-name|asoc
-operator|->
-name|last_acked_seq
-operator|==
-name|asoc
-operator|->
-name|nonce_wait_tsn
-operator|)
 condition|)
 block|{
 comment|/* 						 * Misbehaving peer. We need 						 * to react to this guy 						 */
@@ -19559,7 +19354,7 @@ block|{
 comment|/* See if Resynchronization Possible */
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|asoc
 operator|->
@@ -19568,8 +19363,6 @@ argument_list|,
 name|asoc
 operator|->
 name|nonce_resync_tsn
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -20579,15 +20372,13 @@ comment|/*********************************************/
 comment|/* C1. update advancedPeerAckPoint */
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|cumack
 argument_list|,
 name|asoc
 operator|->
 name|advanced_peer_ack_point
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -20642,30 +20433,26 @@ expr_stmt|;
 comment|/* C3. See if we need to send a Fwd-TSN */
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|asoc
 operator|->
 name|advanced_peer_ack_point
 argument_list|,
 name|cumack
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
 comment|/* 			 * ISSUE with ECN, see FWD-TSN processing for notes 			 * on issues that will occur when the ECN NONCE 			 * stuff is put into SCTP for cross checking. 			 */
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|asoc
 operator|->
 name|advanced_peer_ack_point
 argument_list|,
 name|old_adv_peer_ack_point
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -21278,17 +21065,11 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|cum_ack
-operator|==
-name|send_s
-operator|||
-name|compare_with_wrap
+name|SCTP_TSN_GE
 argument_list|(
 name|cum_ack
 argument_list|,
 name|send_s
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -21480,15 +21261,13 @@ comment|/* 1) check the range */
 comment|/**********************/
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|asoc
 operator|->
 name|last_acked_seq
 argument_list|,
 name|last_tsn
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -21754,7 +21533,7 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GE
 argument_list|(
 name|last_tsn
 argument_list|,
@@ -21765,19 +21544,7 @@ operator|.
 name|data
 operator|.
 name|TSN_seq
-argument_list|,
-name|MAX_TSN
 argument_list|)
-operator|||
-name|last_tsn
-operator|==
-name|tp1
-operator|->
-name|rec
-operator|.
-name|data
-operator|.
-name|TSN_seq
 condition|)
 block|{
 if|if
@@ -22271,22 +22038,12 @@ block|{
 comment|/* 			 * validate the biggest_tsn_acked in the gap acks if 			 * strict adherence is wanted. 			 */
 if|if
 condition|(
-operator|(
-name|biggest_tsn_acked
-operator|==
-name|send_s
-operator|)
-operator|||
-operator|(
-name|compare_with_wrap
+name|SCTP_TSN_GE
 argument_list|(
 name|biggest_tsn_acked
 argument_list|,
 name|send_s
-argument_list|,
-name|MAX_TSN
 argument_list|)
-operator|)
 condition|)
 block|{
 comment|/* 				 * peer is either confused or we are under 				 * attack. We must abort. 				 */
@@ -22409,7 +22166,7 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|tp1
 operator|->
@@ -22420,8 +22177,6 @@ operator|.
 name|TSN_seq
 argument_list|,
 name|cum_ack
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -22846,7 +22601,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GE
 argument_list|(
 name|asoc
 operator|->
@@ -22855,17 +22610,7 @@ argument_list|,
 name|asoc
 operator|->
 name|fast_recovery_tsn
-argument_list|,
-name|MAX_TSN
 argument_list|)
-operator|||
-name|asoc
-operator|->
-name|last_acked_seq
-operator|==
-name|asoc
-operator|->
-name|fast_recovery_tsn
 condition|)
 block|{
 comment|/* Setup so we will exit RFC2582 fast recovery */
@@ -23911,7 +23656,7 @@ else|else
 block|{
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GE
 argument_list|(
 name|asoc
 operator|->
@@ -23920,19 +23665,7 @@ argument_list|,
 name|asoc
 operator|->
 name|nonce_wait_tsn
-argument_list|,
-name|MAX_TSN
 argument_list|)
-operator|||
-operator|(
-name|asoc
-operator|->
-name|last_acked_seq
-operator|==
-name|asoc
-operator|->
-name|nonce_wait_tsn
-operator|)
 condition|)
 block|{
 comment|/* 						 * Misbehaving peer. We need 						 * to react to this guy 						 */
@@ -23957,7 +23690,7 @@ block|{
 comment|/* See if Resynchronization Possible */
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|asoc
 operator|->
@@ -23966,8 +23699,6 @@ argument_list|,
 name|asoc
 operator|->
 name|nonce_resync_tsn
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -24015,9 +23746,7 @@ operator|->
 name|sat_t3_loss_recovery
 operator|)
 operator|&&
-operator|(
-operator|(
-name|compare_with_wrap
+name|SCTP_TSN_GE
 argument_list|(
 name|asoc
 operator|->
@@ -24026,21 +23755,7 @@ argument_list|,
 name|asoc
 operator|->
 name|sat_t3_recovery_tsn
-argument_list|,
-name|MAX_TSN
 argument_list|)
-operator|||
-operator|(
-name|asoc
-operator|->
-name|last_acked_seq
-operator|==
-name|asoc
-operator|->
-name|sat_t3_recovery_tsn
-operator|)
-operator|)
-operator|)
 condition|)
 block|{
 comment|/* end satellite t3 loss recovery */
@@ -24568,15 +24283,13 @@ comment|/*********************************************/
 comment|/* C1. update advancedPeerAckPoint */
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|cum_ack
 argument_list|,
 name|asoc
 operator|->
 name|advanced_peer_ack_point
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -24631,15 +24344,13 @@ expr_stmt|;
 comment|/* C3. See if we need to send a Fwd-TSN */
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|asoc
 operator|->
 name|advanced_peer_ack_point
 argument_list|,
 name|cum_ack
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -24672,15 +24383,13 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|asoc
 operator|->
 name|advanced_peer_ack_point
 argument_list|,
 name|old_adv_peer_ack_point
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -24929,24 +24638,14 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_SSN_GE
 argument_list|(
 name|tt
 argument_list|,
 name|ctl
 operator|->
 name|sinfo_ssn
-argument_list|,
-name|MAX_SEQ
 argument_list|)
-operator|||
-operator|(
-name|tt
-operator|==
-name|ctl
-operator|->
-name|sinfo_ssn
-operator|)
 condition|)
 block|{
 comment|/* this is deliverable now */
@@ -25257,7 +24956,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|chk
 operator|->
@@ -25270,8 +24969,6 @@ argument_list|,
 name|asoc
 operator|->
 name|tsn_last_delivered
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -25356,8 +25053,7 @@ operator|)
 operator|!=
 name|SCTP_DATA_UNORDERED
 operator|&&
-operator|(
-name|compare_with_wrap
+name|SCTP_SSN_GT
 argument_list|(
 name|chk
 operator|->
@@ -25381,10 +25077,7 @@ name|stream_number
 index|]
 operator|.
 name|last_sequence_delivered
-argument_list|,
-name|MAX_SEQ
 argument_list|)
-operator|)
 condition|)
 block|{
 comment|/* 				 * We must dump forward this streams 				 * sequence number if the chunk is not 				 * unordered that is being skipped. There is 				 * a chance that if the peer does not 				 * include the last fragment in its FWD-TSN 				 * we WILL have a problem here since you 				 * would have a partial chunk in queue that 				 * may not be deliverable. Also if a Partial 				 * delivery API as started the user may get 				 * a partial chunk. The next read returning 				 * a new chunk... really ugly but I see no 				 * way around it! Maybe a notify?? 				 */
@@ -25444,7 +25137,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_SSN_GT
 argument_list|(
 name|chk
 operator|->
@@ -25455,8 +25148,6 @@ operator|.
 name|stream_seq
 argument_list|,
 name|seq
-argument_list|,
-name|MAX_SEQ
 argument_list|)
 condition|)
 block|{
@@ -25609,22 +25300,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GE
 argument_list|(
 name|asoc
 operator|->
 name|cumulative_tsn
 argument_list|,
 name|new_cum_tsn
-argument_list|,
-name|MAX_TSN
 argument_list|)
-operator|||
-name|asoc
-operator|->
-name|cumulative_tsn
-operator|==
-name|new_cum_tsn
 condition|)
 block|{
 comment|/* Already got there ... */
@@ -25998,7 +25681,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|asoc
 operator|->
@@ -26009,8 +25692,6 @@ argument_list|,
 name|asoc
 operator|->
 name|highest_tsn_inside_nr_map
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -26062,8 +25743,7 @@ argument_list|)
 block|{
 if|if
 condition|(
-operator|(
-name|compare_with_wrap
+name|SCTP_TSN_GE
 argument_list|(
 name|new_cum_tsn
 argument_list|,
@@ -26074,22 +25754,7 @@ operator|.
 name|data
 operator|.
 name|TSN_seq
-argument_list|,
-name|MAX_TSN
 argument_list|)
-operator|)
-operator|||
-operator|(
-name|new_cum_tsn
-operator|==
-name|chk
-operator|->
-name|rec
-operator|.
-name|data
-operator|.
-name|TSN_seq
-operator|)
 condition|)
 block|{
 comment|/* It needs to be tossed */
@@ -26107,7 +25772,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|chk
 operator|->
@@ -26120,8 +25785,6 @@ argument_list|,
 name|asoc
 operator|->
 name|tsn_last_delivered
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -26206,8 +25869,7 @@ operator|)
 operator|!=
 name|SCTP_DATA_UNORDERED
 operator|&&
-operator|(
-name|compare_with_wrap
+name|SCTP_SSN_GT
 argument_list|(
 name|chk
 operator|->
@@ -26231,10 +25893,7 @@ name|stream_number
 index|]
 operator|.
 name|last_sequence_delivered
-argument_list|,
-name|MAX_SEQ
 argument_list|)
-operator|)
 condition|)
 block|{
 comment|/* 				 * We must dump forward this streams 				 * sequence number if the chunk is not 				 * unordered that is being skipped. There is 				 * a chance that if the peer does not 				 * include the last fragment in its FWD-TSN 				 * we WILL have a problem here since you 				 * would have a partial chunk in queue that 				 * may not be deliverable. Also if a Partial 				 * delivery API as started the user may get 				 * a partial chunk. The next read returning 				 * a new chunk... really ugly but I see no 				 * way around it! Maybe a notify?? 				 */
@@ -26622,8 +26281,7 @@ operator|->
 name|stream
 operator|)
 operator|&&
-operator|(
-name|compare_with_wrap
+name|SCTP_SSN_GT
 argument_list|(
 name|ctl
 operator|->
@@ -26632,10 +26290,7 @@ argument_list|,
 name|stseq
 operator|->
 name|sequence
-argument_list|,
-name|MAX_SEQ
 argument_list|)
-operator|)
 condition|)
 block|{
 comment|/* We are past our victim SSN */
@@ -26656,7 +26311,7 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_SSN_GT
 argument_list|(
 name|stseq
 operator|->
@@ -26665,8 +26320,6 @@ argument_list|,
 name|strm
 operator|->
 name|last_sequence_delivered
-argument_list|,
-name|MAX_SEQ
 argument_list|)
 condition|)
 block|{
