@@ -1476,6 +1476,14 @@ end_ifdef
 
 begin_decl_stmt
 specifier|extern
+name|struct
+name|proc_ldt
+name|default_proc_ldt
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|union
 name|descriptor
 modifier|*
