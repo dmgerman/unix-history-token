@@ -201,29 +201,6 @@ directive|include
 file|<machine/bus.h>
 end_include
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_include
-include|#
-directive|include
-file|"if_vtereg.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"if_vtevar.h"
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_include
 include|#
 directive|include
@@ -235,11 +212,6 @@ include|#
 directive|include
 file|<dev/vte/if_vtevar.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* "device miibus" required.  See GENERIC if you get errors here. */
