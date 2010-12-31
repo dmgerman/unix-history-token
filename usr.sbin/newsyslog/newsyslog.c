@@ -3169,7 +3169,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"a:d:f:nrst:vCD:FNPR:"
+literal|"a:d:f:nrst:vCD:FNPR:S:"
 argument_list|)
 operator|)
 operator|!=
