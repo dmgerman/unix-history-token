@@ -935,6 +935,13 @@ argument_list|)
 block|,
 name|NETWORK
 argument_list|(
+literal|"vte"
+argument_list|,
+literal|"DM&P Vortex86 RDC R6040 Fast Ethernet"
+argument_list|)
+block|,
+name|NETWORK
+argument_list|(
 literal|"vlan"
 argument_list|,
 literal|"IEEE 802.1Q VLAN network interface"
