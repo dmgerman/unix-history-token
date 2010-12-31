@@ -2300,6 +2300,12 @@ name|ldt_active
 operator|=
 literal|0
 expr_stmt|;
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|dt_lock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2359,6 +2365,13 @@ name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|dt_lock
+argument_list|)
+expr_stmt|;
+comment|/* XXX kill once pmap locking fixed. */
 name|pmap_map_readonly
 argument_list|(
 name|kernel_pmap
@@ -2381,6 +2394,13 @@ name|descriptor
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|dt_lock
+argument_list|)
+expr_stmt|;
+comment|/* XXX kill once pmap locking fixed. */
 return|return
 operator|(
 name|new_ldt
