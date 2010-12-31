@@ -356,7 +356,7 @@ name|lle
 parameter_list|)
 value|do {				\ 	if ((lle)->lle_refcnt<= 1)				\ 		(lle)->lle_tbl->llt_free((lle)->lle_tbl, (lle));\ 	else {							\ 		(lle)->lle_refcnt--;				\ 		LLE_WUNLOCK(lle);				\ 	}							\
 comment|/* guard against invalid refs */
-value|\ 	lle = 0;						\ } while (0)
+value|\ 	lle = NULL;						\ } while (0)
 end_define
 
 begin_define
@@ -366,9 +366,7 @@ name|LLE_FREE
 parameter_list|(
 name|lle
 parameter_list|)
-value|do {					\ 	LLE_WLOCK(lle);						\ 	if ((lle)->lle_refcnt<= 1)				\ 		(lle)->lle_tbl->llt_free((lle)->lle_tbl, (lle));\ 	else {							\ 		(lle)->lle_refcnt--;				\ 		LLE_WUNLOCK(lle);				\ 	}							\
-comment|/* guard against invalid refs */
-value|\ 	lle = NULL;						\ } while (0)
+value|do {					\ 	LLE_WLOCK(lle);						\ 	LLE_FREE_LOCKED(lle);					\ } while (0)
 end_define
 
 begin_define
