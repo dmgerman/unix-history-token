@@ -1221,6 +1221,46 @@ argument_list|,
 name|CTLFLAG_RD
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Some miniport drivers rely on the existence of the SlotNumber, 	 * NetCfgInstanceId and DriverDesc keys. 	 */
+name|ndis_add_sysctl
+argument_list|(
+name|sc
+argument_list|,
+literal|"SlotNumber"
+argument_list|,
+literal|"Slot Numer"
+argument_list|,
+literal|"01"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|)
+expr_stmt|;
+name|ndis_add_sysctl
+argument_list|(
+name|sc
+argument_list|,
+literal|"NetCfgInstanceId"
+argument_list|,
+literal|"NetCfgInstanceId"
+argument_list|,
+literal|"{12345678-1234-5678-CAFE0-123456789ABC}"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|)
+expr_stmt|;
+name|ndis_add_sysctl
+argument_list|(
+name|sc
+argument_list|,
+literal|"DriverDesc"
+argument_list|,
+literal|"Driver Description"
+argument_list|,
+literal|"NDIS Network Adapter"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|)
+expr_stmt|;
 comment|/* Bus type (PCI, PCMCIA, etc...) */
 name|sprintf
 argument_list|(
