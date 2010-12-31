@@ -15797,7 +15797,7 @@ return|return;
 block|}
 name|csum
 operator|=
-name|ntohs
+name|bswap16
 argument_list|(
 name|sc_if
 operator|->
