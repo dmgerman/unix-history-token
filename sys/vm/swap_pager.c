@@ -5449,17 +5449,6 @@ name|index
 operator|+=
 name|SWAP_META_PAGES
 expr_stmt|;
-if|if
-condition|(
-name|index
-operator|>
-literal|0x20000000
-condition|)
-name|panic
-argument_list|(
-literal|"swap_pager_isswapped: failed to locate all swap meta blocks"
-argument_list|)
-expr_stmt|;
 block|}
 name|mtx_unlock
 argument_list|(
@@ -6560,17 +6549,6 @@ expr_stmt|;
 name|index
 operator|+=
 name|SWAP_META_PAGES
-expr_stmt|;
-if|if
-condition|(
-name|index
-operator|>
-literal|0x20000000
-condition|)
-name|panic
-argument_list|(
-literal|"swp_pager_meta_free_all: failed to locate all swap meta blocks"
-argument_list|)
 expr_stmt|;
 block|}
 block|}
