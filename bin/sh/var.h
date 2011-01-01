@@ -88,6 +88,17 @@ begin_comment
 comment|/* don't call the callback function */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|VNOSET
+value|0x80
+end_define
+
+begin_comment
+comment|/* do not set variable - just readonly test */
+end_comment
+
 begin_struct
 struct|struct
 name|var
@@ -414,6 +425,8 @@ parameter_list|(
 name|struct
 name|strlist
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1481,6 +1481,13 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|flags
+operator|&
+name|VNOSET
+condition|)
+return|return;
 name|INTOFF
 expr_stmt|;
 if|if
@@ -1632,6 +1639,13 @@ return|return;
 block|}
 block|}
 comment|/* not found */
+if|if
+condition|(
+name|flags
+operator|&
+name|VNOSET
+condition|)
+return|return;
 name|vp
 operator|=
 name|ckmalloc
@@ -1726,6 +1740,9 @@ name|struct
 name|strlist
 modifier|*
 name|list
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 name|struct
@@ -1759,7 +1776,7 @@ operator|->
 name|text
 argument_list|)
 argument_list|,
-literal|0
+name|flags
 argument_list|)
 expr_stmt|;
 block|}
