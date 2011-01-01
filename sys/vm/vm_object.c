@@ -2626,6 +2626,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Make the page read-only so that we can clear the object flags.  However, if  * this is a nosync mmap then the object is likely to stay dirty so do not  * mess with the page and do not clear the object flags.  Returns TRUE if the  * page should be flushed, and FALSE otherwise.  */
+end_comment
+
 begin_function
 specifier|static
 name|boolean_t
@@ -2828,10 +2832,17 @@ name|size
 else|:
 name|end
 expr_stmt|;
-comment|/* 	 * Make the page read-only so we can then clear the object flags. 	 * 	 * However, if this is a nosync mmap then the object is likely to  	 * stay dirty so do not mess with the page and do not clear the 	 * object flags. 	 */
 name|clearobjflags
 operator|=
-literal|1
+name|start
+operator|==
+literal|0
+operator|&&
+name|tend
+operator|==
+name|object
+operator|->
+name|size
 expr_stmt|;
 name|rescan
 label|:
@@ -2988,16 +2999,6 @@ directive|endif
 if|if
 condition|(
 name|clearobjflags
-operator|&&
-name|start
-operator|==
-literal|0
-operator|&&
-name|tend
-operator|==
-name|object
-operator|->
-name|size
 condition|)
 name|vm_object_clear_flag
 argument_list|(
