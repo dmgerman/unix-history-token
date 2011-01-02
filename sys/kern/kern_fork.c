@@ -441,20 +441,16 @@ begin_function
 name|int
 name|vfork
 parameter_list|(
-name|td
-parameter_list|,
-name|uap
-parameter_list|)
 name|struct
 name|thread
 modifier|*
 name|td
-decl_stmt|;
+parameter_list|,
 name|struct
 name|vfork_args
 modifier|*
 name|uap
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|error
@@ -882,12 +878,21 @@ name|pidchecked
 init|=
 literal|0
 decl_stmt|;
+comment|/* 	 * Requires allproc_lock in order to iterate over the list 	 * of processes, and proctree_lock to access p_pgrp. 	 */
 name|sx_assert
 argument_list|(
 operator|&
 name|allproc_lock
 argument_list|,
-name|SX_XLOCKED
+name|SX_LOCKED
+argument_list|)
+expr_stmt|;
+name|sx_assert
+argument_list|(
+operator|&
+name|proctree_lock
+argument_list|,
+name|SX_LOCKED
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Find an unused process ID.  We remember a range of unused IDs 	 * ready to use (from lastpid+1 through pidchecked-1). 	 * 	 * If RFHIGHPID is set (used during system boot), do not allocate 	 * low-numbered pids. 	 */
@@ -1208,12 +1213,6 @@ name|td
 parameter_list|,
 name|int
 name|flags
-parameter_list|,
-name|struct
-name|proc
-modifier|*
-modifier|*
-name|procp
 parameter_list|)
 block|{
 name|int
@@ -1244,11 +1243,6 @@ operator|=
 name|td
 operator|->
 name|td_proc
-expr_stmt|;
-operator|*
-name|procp
-operator|=
-name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -1796,7 +1790,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 			 * Shared file descriptor table and 			 * shared process leaders. 			 */
+comment|/* 			 * Shared file descriptor table, and shared 			 * process leaders. 			 */
 name|fdtol
 operator|=
 name|p1
@@ -1825,7 +1819,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*  			 * Shared file descriptor table, and 			 * different process leaders  			 */
+comment|/*  			 * Shared file descriptor table, and different 			 * process leaders. 			 */
 name|fdtol
 operator|=
 name|filedesc_to_leader_alloc
@@ -2102,7 +2096,7 @@ argument_list|(
 name|p2
 argument_list|)
 expr_stmt|;
-comment|/* Bump references to the text vnode (for procfs) */
+comment|/* Bump references to the text vnode (for procfs). */
 if|if
 condition|(
 name|p2
@@ -2630,7 +2624,7 @@ name|vm_ssize
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Both processes are set up, now check if any loadable modules want 	 * to adjust anything. 	 *   What if they have an error? XXX 	 */
+comment|/* 	 * Both processes are set up, now check if any loadable modules want 	 * to adjust anything. 	 */
 name|EVENTHANDLER_INVOKE
 argument_list|(
 name|process_fork
@@ -2927,6 +2921,12 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+operator|*
+name|procp
+operator|=
+name|NULL
+expr_stmt|;
 return|return
 operator|(
 name|fork_norfproc
@@ -2934,12 +2934,10 @@ argument_list|(
 name|td
 argument_list|,
 name|flags
-argument_list|,
-name|procp
 argument_list|)
 operator|)
 return|;
-comment|/* 	 * XXX 	 * We did have single-threading code here 	 * however it proved un-needed and caused problems 	 */
+block|}
 name|mem_charged
 operator|=
 literal|0
