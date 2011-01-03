@@ -43,6 +43,30 @@ modifier|*
 parameter_list|,
 name|off_t
 modifier|*
+parameter_list|,
+name|struct
+name|timeval
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+name|nfs_vinvalbuf_ftype
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_typedef
@@ -89,6 +113,11 @@ modifier|*
 name|nmcom_getinfo
 decl_stmt|;
 comment|/* Get info from nfsnode */
+name|nfs_vinvalbuf_ftype
+modifier|*
+name|nmcom_vinvalbuf
+decl_stmt|;
+comment|/* Invalidate buffers */
 block|}
 struct|;
 end_struct
