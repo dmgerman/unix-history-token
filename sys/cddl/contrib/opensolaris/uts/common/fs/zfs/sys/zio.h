@@ -799,7 +799,11 @@ name|_KERNEL
 comment|/* FreeBSD only. */
 name|struct
 name|ostask
-name|io_task
+name|io_task_issue
+decl_stmt|;
+name|struct
+name|ostask
+name|io_task_interrupt
 decl_stmt|;
 endif|#
 directive|endif
