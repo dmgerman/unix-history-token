@@ -3072,7 +3072,6 @@ argument_list|)
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|&
 name|sc
 argument_list|)
 expr_stmt|;
@@ -3746,7 +3745,6 @@ name|ec_gencount
 condition|)
 name|tsleep
 argument_list|(
-operator|&
 name|sc
 argument_list|,
 literal|0
