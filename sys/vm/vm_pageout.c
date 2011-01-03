@@ -1337,10 +1337,14 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK_ASSERT
-argument_list|(
+name|object
+operator|=
 name|m
 operator|->
+name|object
+expr_stmt|;
+name|VM_OBJECT_LOCK_ASSERT
+argument_list|(
 name|object
 argument_list|,
 name|MA_OWNED
@@ -1388,6 +1392,11 @@ name|m
 operator|)
 argument_list|)
 expr_stmt|;
+name|vm_page_unlock
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 name|mc
 index|[
 name|vm_pageout_page_count
@@ -1416,12 +1425,6 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* 	 * Scan object for clusterable pages. 	 * 	 * We can cluster ONLY if: ->> the page is NOT 	 * clean, wired, busy, held, or mapped into a 	 * buffer, and one of the following: 	 * 1) The page is inactive, or a seldom used 	 *    active page. 	 * -or- 	 * 2) we force the issue. 	 * 	 * During heavy mmap/modification loads the pageout 	 * daemon can really fragment the underlying file 	 * due to flushing pages out of order and not trying 	 * align the clusters (which leave sporatic out-of-order 	 * holes).  To solve this problem we do the reverse scan 	 * first and attempt to align our cluster, then do a  	 * forward scan if room remains. 	 */
-name|object
-operator|=
-name|m
-operator|->
-name|object
-expr_stmt|;
 name|more
 label|:
 while|while
@@ -1690,11 +1693,6 @@ condition|)
 goto|goto
 name|more
 goto|;
-name|vm_page_unlock
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 comment|/* 	 * we allow reads during pageouts... 	 */
 return|return
 operator|(
