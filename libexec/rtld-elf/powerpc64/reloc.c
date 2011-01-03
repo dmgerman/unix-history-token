@@ -635,9 +635,12 @@ name|R_PPC_NONE
 case|:
 break|break;
 case|case
-name|R_PPC64_ADDR64
+name|R_PPC64_UADDR64
 case|:
 comment|/* doubleword64 S + A */
+case|case
+name|R_PPC64_ADDR64
+case|:
 case|case
 name|R_PPC_GLOB_DAT
 case|:
