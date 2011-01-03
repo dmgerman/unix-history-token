@@ -1222,6 +1222,7 @@ argument_list|(
 name|curthread
 argument_list|)
 expr_stmt|;
+comment|/* 	 * The last exiting thread in a kernel process must tear down 	 * the whole process. 	 */
 name|rw_wlock
 argument_list|(
 operator|&
@@ -1258,7 +1259,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* NOTREACHED. */
+comment|/* NOTREACHED */
 block|}
 name|LIST_REMOVE
 argument_list|(
