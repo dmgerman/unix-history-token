@@ -568,12 +568,16 @@ argument_list|,
 literal|1000
 argument_list|)
 expr_stmt|;
-name|make_dev
+name|make_dev_credf
 argument_list|(
+name|MAKEDEV_ETERNAL_KLD
+argument_list|,
 operator|&
 name|ptmx_cdevsw
 argument_list|,
 literal|0
+argument_list|,
+name|NULL
 argument_list|,
 name|UID_ROOT
 argument_list|,
