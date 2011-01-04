@@ -68,13 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/xen/xenfunc.h>
+file|<machine/xen/xenvar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/xen/xenvar.h>
+file|<machine/xen/xenfunc.h>
 end_include
 
 begin_include

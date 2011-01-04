@@ -119,6 +119,34 @@ directive|include
 file|<dev/xen/xenpci/xenpcivar.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|__ffs
+parameter_list|(
+name|word
+parameter_list|)
+value|ffs(word)
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+end_elif
+
 begin_function
 specifier|static
 specifier|inline
@@ -132,11 +160,28 @@ name|word
 parameter_list|)
 block|{
 asm|__asm__("bsfq %1,%0"                 :"=r" (word)                 :"rm" (word));
+comment|/* XXXRW: why no "cc"? */
 return|return
 name|word
 return|;
 block|}
 end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_error
+error|#
+directive|error
+literal|"evtchn: unsupported architecture"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

@@ -683,6 +683,15 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|XEN
+argument_list|)
+end_if
+
 begin_function_decl
 name|int
 name|HYPERVISOR_multicall
@@ -695,19 +704,26 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function
+begin_decl_stmt
 specifier|static
 specifier|inline
 name|int
 name|_HYPERVISOR_multicall
-parameter_list|(
-name|void
-modifier|*
-name|call_list
-parameter_list|,
+argument_list|(
+else|#
+directive|else
+comment|/* XENHVM */
+specifier|static
+specifier|inline
 name|int
-name|nr_calls
-parameter_list|)
+name|HYPERVISOR_multicall
+argument_list|(
+endif|#
+directive|endif
+argument|void *call_list
+argument_list|,
+argument|int nr_calls
+argument_list|)
 block|{
 return|return
 name|_hypercall2
@@ -722,7 +738,7 @@ name|nr_calls
 argument_list|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_function
 specifier|static

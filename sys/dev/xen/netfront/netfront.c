@@ -265,6 +265,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/xen/xenvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<xen/hypervisor.h>
 end_include
 
