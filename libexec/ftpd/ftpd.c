@@ -10333,6 +10333,8 @@ name|reply
 argument_list|(
 literal|226
 argument_list|,
+literal|"%s"
+argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;
