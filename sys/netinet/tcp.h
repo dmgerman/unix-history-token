@@ -739,11 +739,23 @@ name|u_int32_t
 name|tcpi_toe_tid
 decl_stmt|;
 comment|/* HWTID for TOE endpoints */
+name|u_int32_t
+name|tcpi_snd_rexmitpack
+decl_stmt|;
+comment|/* Retransmitted packets */
+name|u_int32_t
+name|tcpi_rcv_ooopack
+decl_stmt|;
+comment|/* Out-of-order packets */
+name|u_int32_t
+name|tcpi_snd_zerowin
+decl_stmt|;
+comment|/* Zero-sized windows sent */
 comment|/* Padding to grow without breaking ABI. */
 name|u_int32_t
 name|__tcpi_pad
 index|[
-literal|29
+literal|26
 index|]
 decl_stmt|;
 comment|/* Padding. */

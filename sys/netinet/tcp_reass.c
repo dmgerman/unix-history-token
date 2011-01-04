@@ -1024,6 +1024,11 @@ name|i
 expr_stmt|;
 block|}
 block|}
+name|tp
+operator|->
+name|t_rcvoopack
+operator|++
+expr_stmt|;
 name|TCPSTAT_INC
 argument_list|(
 name|tcps_rcvoopack

@@ -491,6 +491,10 @@ name|tcp_seq
 name|snd_recover_prev
 decl_stmt|;
 comment|/* snd_recover prior to retransmit */
+name|int
+name|t_sndzerowin
+decl_stmt|;
+comment|/* zero-window updates sent */
 name|u_int
 name|t_badrxtwin
 decl_stmt|;
@@ -556,6 +560,14 @@ modifier|*
 name|t_tu
 decl_stmt|;
 comment|/* offload operations vector */
+name|int
+name|t_sndrexmitpack
+decl_stmt|;
+comment|/* retransmit packets sent */
+name|int
+name|t_rcvoopack
+decl_stmt|;
+comment|/* out-of-order packets received */
 name|void
 modifier|*
 name|t_toe
