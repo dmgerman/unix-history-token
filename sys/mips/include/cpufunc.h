@@ -150,7 +150,7 @@ end_if
 begin_define
 define|#
 directive|define
-name|MIPS_RDRW64_COP0
+name|MIPS_RW64_COP0
 parameter_list|(
 name|n
 parameter_list|,
@@ -170,7 +170,7 @@ argument_list|)
 end_if
 
 begin_expr_stmt
-name|MIPS_RDRW64_COP0
+name|MIPS_RW64_COP0
 argument_list|(
 name|excpc
 argument_list|,
@@ -180,7 +180,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|MIPS_RDRW64_COP0
+name|MIPS_RW64_COP0
 argument_list|(
 name|entrylo0
 argument_list|,
@@ -190,7 +190,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|MIPS_RDRW64_COP0
+name|MIPS_RW64_COP0
 argument_list|(
 name|entrylo1
 argument_list|,
@@ -200,7 +200,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|MIPS_RDRW64_COP0
+name|MIPS_RW64_COP0
 argument_list|(
 name|entryhi
 argument_list|,
@@ -210,7 +210,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|MIPS_RDRW64_COP0
+name|MIPS_RW64_COP0
 argument_list|(
 name|pagemask
 argument_list|,
@@ -225,7 +225,7 @@ directive|endif
 end_endif
 
 begin_expr_stmt
-name|MIPS_RDRW64_COP0
+name|MIPS_RW64_COP0
 argument_list|(
 name|xcontext
 argument_list|,
@@ -237,7 +237,7 @@ end_expr_stmt
 begin_undef
 undef|#
 directive|undef
-name|MIPS_RDRW64_COP0
+name|MIPS_RW64_COP0
 end_undef
 
 begin_endif
@@ -248,7 +248,7 @@ end_endif
 begin_define
 define|#
 directive|define
-name|MIPS_RDRW32_COP0
+name|MIPS_RW32_COP0
 parameter_list|(
 name|n
 parameter_list|,
@@ -261,7 +261,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|MIPS_RDRW32_COP0_SEL
+name|MIPS_RW32_COP0_SEL
 parameter_list|(
 name|n
 parameter_list|,
@@ -308,7 +308,7 @@ directive|endif
 end_endif
 
 begin_expr_stmt
-unit|MIPS_RDRW32_COP0
+unit|MIPS_RW32_COP0
 operator|(
 name|compare
 operator|,
@@ -318,7 +318,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|MIPS_RDRW32_COP0
+name|MIPS_RW32_COP0
 argument_list|(
 name|config
 argument_list|,
@@ -328,7 +328,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|MIPS_RDRW32_COP0_SEL
+name|MIPS_RW32_COP0_SEL
 argument_list|(
 name|config1
 argument_list|,
@@ -340,7 +340,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|MIPS_RDRW32_COP0_SEL
+name|MIPS_RW32_COP0_SEL
 argument_list|(
 name|config2
 argument_list|,
@@ -352,7 +352,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|MIPS_RDRW32_COP0_SEL
+name|MIPS_RW32_COP0_SEL
 argument_list|(
 name|config3
 argument_list|,
@@ -364,7 +364,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|MIPS_RDRW32_COP0
+name|MIPS_RW32_COP0
 argument_list|(
 name|count
 argument_list|,
@@ -374,7 +374,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|MIPS_RDRW32_COP0
+name|MIPS_RW32_COP0
 argument_list|(
 name|index
 argument_list|,
@@ -384,7 +384,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|MIPS_RDRW32_COP0
+name|MIPS_RW32_COP0
 argument_list|(
 name|wired
 argument_list|,
@@ -394,7 +394,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|MIPS_RDRW32_COP0
+name|MIPS_RW32_COP0
 argument_list|(
 name|cause
 argument_list|,
@@ -414,7 +414,7 @@ argument_list|)
 end_if
 
 begin_expr_stmt
-name|MIPS_RDWR32_COP0
+name|MIPS_RW32_COP0
 argument_list|(
 name|excpc
 argument_list|,
@@ -429,7 +429,7 @@ directive|endif
 end_endif
 
 begin_expr_stmt
-name|MIPS_RDRW32_COP0
+name|MIPS_RW32_COP0
 argument_list|(
 name|status
 argument_list|,
@@ -453,7 +453,7 @@ argument_list|)
 end_if
 
 begin_expr_stmt
-name|MIPS_RDRW32_COP0
+name|MIPS_RW32_COP0
 argument_list|(
 name|entrylo0
 argument_list|,
@@ -463,7 +463,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|MIPS_RDRW32_COP0
+name|MIPS_RW32_COP0
 argument_list|(
 name|entrylo1
 argument_list|,
@@ -473,7 +473,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|MIPS_RDRW32_COP0
+name|MIPS_RW32_COP0
 argument_list|(
 name|entryhi
 argument_list|,
@@ -483,7 +483,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|MIPS_RDRW32_COP0
+name|MIPS_RW32_COP0
 argument_list|(
 name|pagemask
 argument_list|,
@@ -498,7 +498,7 @@ directive|endif
 end_endif
 
 begin_expr_stmt
-name|MIPS_RDRW32_COP0
+name|MIPS_RW32_COP0
 argument_list|(
 name|prid
 argument_list|,
@@ -512,7 +512,7 @@ comment|/* XXX 64-bit?  */
 end_comment
 
 begin_expr_stmt
-name|MIPS_RDRW32_COP0_SEL
+name|MIPS_RW32_COP0_SEL
 argument_list|(
 name|ebase
 argument_list|,
@@ -524,7 +524,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|MIPS_RDRW32_COP0
+name|MIPS_RW32_COP0
 argument_list|(
 name|watchlo
 argument_list|,
@@ -534,7 +534,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|MIPS_RDRW32_COP0_SEL
+name|MIPS_RW32_COP0_SEL
 argument_list|(
 name|watchlo1
 argument_list|,
@@ -546,7 +546,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|MIPS_RDRW32_COP0_SEL
+name|MIPS_RW32_COP0_SEL
 argument_list|(
 name|watchlo2
 argument_list|,
@@ -558,7 +558,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|MIPS_RDRW32_COP0_SEL
+name|MIPS_RW32_COP0_SEL
 argument_list|(
 name|watchlo3
 argument_list|,
@@ -570,7 +570,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|MIPS_RDRW32_COP0
+name|MIPS_RW32_COP0
 argument_list|(
 name|watchhi
 argument_list|,
@@ -580,7 +580,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|MIPS_RDRW32_COP0_SEL
+name|MIPS_RW32_COP0_SEL
 argument_list|(
 name|watchhi1
 argument_list|,
@@ -592,7 +592,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|MIPS_RDRW32_COP0_SEL
+name|MIPS_RW32_COP0_SEL
 argument_list|(
 name|watchhi2
 argument_list|,
@@ -604,7 +604,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|MIPS_RDRW32_COP0_SEL
+name|MIPS_RW32_COP0_SEL
 argument_list|(
 name|watchhi3
 argument_list|,
@@ -616,7 +616,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|MIPS_RDRW32_COP0_SEL
+name|MIPS_RW32_COP0_SEL
 argument_list|(
 name|perfcnt0
 argument_list|,
@@ -628,7 +628,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|MIPS_RDRW32_COP0_SEL
+name|MIPS_RW32_COP0_SEL
 argument_list|(
 name|perfcnt1
 argument_list|,
@@ -640,7 +640,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|MIPS_RDRW32_COP0_SEL
+name|MIPS_RW32_COP0_SEL
 argument_list|(
 name|perfcnt2
 argument_list|,
@@ -652,7 +652,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|MIPS_RDRW32_COP0_SEL
+name|MIPS_RW32_COP0_SEL
 argument_list|(
 name|perfcnt3
 argument_list|,
@@ -666,7 +666,13 @@ end_expr_stmt
 begin_undef
 undef|#
 directive|undef
-name|MIPS_RDRW32_COP0
+name|MIPS_RW32_COP0
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|MIPS_RW32_COP0_SEL
 end_undef
 
 begin_function
