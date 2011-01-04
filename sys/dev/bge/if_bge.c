@@ -12572,6 +12572,7 @@ name|boundary
 operator|=
 name|BGE_DMA_BNDRY
 expr_stmt|;
+comment|/* 	 * XXX 	 * It seems bus_dma(9) still has issue on dealing with boundary 	 * restriction for dynamic buffers so disable the boundary 	 * restriction and limit DMA address space to 32bit.  It's not 	 * clear whether there is another hardware issue here. 	 */
 name|error
 operator|=
 name|bus_dma_tag_create
@@ -12585,9 +12586,9 @@ argument_list|)
 argument_list|,
 literal|1
 argument_list|,
-name|boundary
+literal|0
 argument_list|,
-name|lowaddr
+name|BUS_SPACE_MAXADDR_32BIT
 argument_list|,
 name|BUS_SPACE_MAXADDR
 argument_list|,
