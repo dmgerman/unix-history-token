@@ -207,16 +207,16 @@ name|cpuid
 parameter_list|)
 block|{
 name|unsigned
-name|ipi_int_mask
+name|ciu_int_mask
 decl_stmt|,
 name|clock_int_mask
+decl_stmt|,
+name|ipi_int_mask
 decl_stmt|;
 comment|/* 	 * Set the exception base. 	 */
 name|mips_wr_ebase
 argument_list|(
 literal|0x80000000
-operator||
-name|cpuid
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Clear any pending IPIs. 	 */
@@ -234,7 +234,14 @@ comment|/* 	 * Set up interrupts. 	 */
 name|octeon_ciu_reset
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Unmask the clock and ipi interrupts. 	 */
+comment|/* 	 * Unmask the clock, ipi and ciu interrupts. 	 */
+name|ciu_int_mask
+operator|=
+name|hard_int_mask
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 name|clock_int_mask
 operator|=
 name|hard_int_mask
@@ -252,9 +259,11 @@ argument_list|)
 expr_stmt|;
 name|set_intr_mask
 argument_list|(
-name|ipi_int_mask
+name|ciu_int_mask
 operator||
 name|clock_int_mask
+operator||
+name|ipi_int_mask
 argument_list|)
 expr_stmt|;
 name|mips_wbflush
