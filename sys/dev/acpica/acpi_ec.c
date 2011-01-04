@@ -3013,6 +3013,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Reenable runtime GPE if its execution was deferred. */
 if|if
 condition|(
 name|sci_enqueued
@@ -3044,7 +3045,7 @@ name|sc
 operator|->
 name|ec_dev
 argument_list|,
-literal|"clearing GPE failed: %s\n"
+literal|"reenabling runtime GPE failed: %s\n"
 argument_list|,
 name|AcpiFormatException
 argument_list|(
