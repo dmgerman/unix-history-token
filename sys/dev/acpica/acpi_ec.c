@@ -2759,6 +2759,8 @@ name|Status
 decl_stmt|;
 name|int
 name|retry
+decl_stmt|,
+name|sci_enqueued
 decl_stmt|;
 name|char
 name|qxx
@@ -2822,6 +2824,12 @@ expr_stmt|;
 return|return;
 block|}
 comment|/*      * Send a query command to the EC to find out which _Qxx call it      * wants to make.  This command clears the SCI bit and also the      * interrupt source since we are edge-triggered.  To prevent the GPE      * that may arise from running the query from causing another query      * to be queued, we clear the pending flag only after running it.      */
+name|sci_enqueued
+operator|=
+name|sc
+operator|->
+name|ec_sci_pend
+expr_stmt|;
 for|for
 control|(
 name|retry
@@ -3005,6 +3013,46 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|sci_enqueued
+condition|)
+block|{
+name|Status
+operator|=
+name|AcpiFinishGpe
+argument_list|(
+name|sc
+operator|->
+name|ec_gpehandle
+argument_list|,
+name|sc
+operator|->
+name|ec_gpebit
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|ec_dev
+argument_list|,
+literal|"clearing GPE failed: %s\n"
+argument_list|,
+name|AcpiFormatException
+argument_list|(
+name|Status
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -3122,12 +3170,19 @@ argument_list|(
 name|Status
 argument_list|)
 condition|)
+block|{
 name|sc
 operator|->
 name|ec_sci_pend
 operator|=
 name|TRUE
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 else|else
 name|printf
 argument_list|(
@@ -3135,7 +3190,6 @@ literal|"EcGpeHandler: queuing GPE query handler failed\n"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * XXX jkim      * AcpiFinishGpe() should be used at the necessary places.      */
 return|return
 operator|(
 name|ACPI_REENABLE_GPE
