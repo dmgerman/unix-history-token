@@ -985,6 +985,15 @@ argument_list|)
 block|,
 name|UFTDI_DEV
 argument_list|(
+name|FALCOM
+argument_list|,
+name|TWIST
+argument_list|,
+literal|8U232AM
+argument_list|)
+block|,
+name|UFTDI_DEV
+argument_list|(
 name|FTDI
 argument_list|,
 name|GAMMASCOUT
