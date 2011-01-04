@@ -2115,7 +2115,7 @@ name|sc_ot_ires
 argument_list|,
 name|INTR_TYPE_MISC
 operator||
-name|INTR_FAST
+name|INTR_BRIDGE
 argument_list|,
 name|NULL
 argument_list|,
@@ -2214,7 +2214,7 @@ name|sc_pf_ires
 argument_list|,
 name|INTR_TYPE_MISC
 operator||
-name|INTR_FAST
+name|INTR_BRIDGE
 argument_list|,
 name|NULL
 argument_list|,

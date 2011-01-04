@@ -3856,7 +3856,7 @@ index|]
 argument_list|,
 name|INTR_TYPE_MISC
 operator||
-name|INTR_FAST
+name|INTR_BRIDGE
 argument_list|,
 name|handler
 argument_list|,
