@@ -177,6 +177,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
+name|Tflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* show TCP control block info */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|Wflag
 decl_stmt|;
 end_decl_stmt

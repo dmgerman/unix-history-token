@@ -2050,6 +2050,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|Tflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* TCP Information */
+end_comment
+
+begin_decl_stmt
+name|int
 name|xflag
 decl_stmt|;
 end_decl_stmt
@@ -2158,7 +2168,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"AaBbdf:ghI:iLlM:mN:np:q:rSstuWw:xz"
+literal|"AaBbdf:ghI:iLlM:mN:np:Qq:rSTstuWw:xz"
 argument_list|)
 operator|)
 operator|!=
@@ -2600,6 +2610,14 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'T'
+case|:
+name|Tflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'x'
 case|:
 name|xflag
@@ -2726,6 +2744,19 @@ name|setgid
 argument_list|(
 name|getgid
 argument_list|()
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|xflag
+operator|&&
+name|Tflag
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"-x and -T are incompatible, pick one."
 argument_list|)
 expr_stmt|;
 if|if
@@ -4109,7 +4140,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: netstat [-AaLnSWx] [-f protocol_family | -p protocol]\n"
+literal|"usage: netstat [-AaLnSTWx] [-f protocol_family | -p protocol]\n"
 literal|"               [-M core] [-N system]"
 argument_list|,
 literal|"       netstat -i | -I interface [-abdhntW] [-f address_family]\n"
