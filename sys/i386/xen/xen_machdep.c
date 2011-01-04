@@ -987,17 +987,9 @@ argument_list|(
 name|gdtset
 argument_list|)
 condition|)
-name|KASSERT
+name|CRITICAL_ASSERT
 argument_list|(
 name|curthread
-operator|->
-name|td_critnest
-operator|>
-literal|0
-argument_list|,
-operator|(
-literal|"xen queue flush should be in a critical section"
-operator|)
 argument_list|)
 expr_stmt|;
 endif|#
