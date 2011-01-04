@@ -129,6 +129,10 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_comment
+comment|/*  * XXX  * It would be nice to add variants that read/write register_t, to avoid some  * ABI checks.  */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -164,6 +168,16 @@ argument_list|(
 name|__mips_n64
 argument_list|)
 end_if
+
+begin_expr_stmt
+name|MIPS_RDRW64_COP0
+argument_list|(
+name|excpc
+argument_list|,
+name|MIPS_COP_0_EXC_PC
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|MIPS_RDRW64_COP0
@@ -388,6 +402,31 @@ name|MIPS_COP_0_CAUSE
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__mips_n64
+argument_list|)
+end_if
+
+begin_expr_stmt
+name|MIPS_RDWR32_COP0
+argument_list|(
+name|excpc
+argument_list|,
+name|MIPS_COP_0_EXC_PC
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|MIPS_RDRW32_COP0
