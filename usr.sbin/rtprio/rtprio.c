@@ -555,7 +555,7 @@ name|endp
 operator|!=
 literal|'\0'
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
@@ -570,7 +570,7 @@ name|res
 operator|>=
 name|INT_MAX
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
