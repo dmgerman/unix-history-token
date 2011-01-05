@@ -7094,6 +7094,29 @@ argument_list|,
 name|verinfo
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mod
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"KLD file %s - cannot find "
+literal|"dependency \"%s\"\n"
+argument_list|,
+name|lf
+operator|->
+name|filename
+argument_list|,
+name|modname
+argument_list|)
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
 comment|/* Don't count self-dependencies */
 if|if
 condition|(
@@ -7146,16 +7169,6 @@ condition|(
 name|error
 condition|)
 block|{
-name|TAILQ_REMOVE
-argument_list|(
-operator|&
-name|depended_files
-argument_list|,
-name|lf
-argument_list|,
-name|loaded
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"KLD file %s - could not finalize loading\n"
@@ -7165,14 +7178,9 @@ operator|->
 name|filename
 argument_list|)
 expr_stmt|;
-name|linker_file_unload
-argument_list|(
-name|lf
-argument_list|,
-name|LINKER_UNLOAD_FORCE
-argument_list|)
-expr_stmt|;
-continue|continue;
+goto|goto
+name|fail
+goto|;
 block|}
 name|linker_file_register_modules
 argument_list|(
@@ -7215,6 +7223,26 @@ operator|->
 name|flags
 operator||=
 name|LINKER_FILE_LINKED
+expr_stmt|;
+continue|continue;
+name|fail
+label|:
+name|TAILQ_REMOVE
+argument_list|(
+operator|&
+name|depended_files
+argument_list|,
+name|lf
+argument_list|,
+name|loaded
+argument_list|)
+expr_stmt|;
+name|linker_file_unload
+argument_list|(
+name|lf
+argument_list|,
+name|LINKER_UNLOAD_FORCE
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* woohoo! we made it! */
