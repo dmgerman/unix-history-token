@@ -3164,7 +3164,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Execute a simple command.  */
+comment|/*  * Execute a simple command.  * Note: This may or may not return if (flags& EV_EXIT).  */
 end_comment
 
 begin_function
@@ -3334,6 +3334,10 @@ expr_stmt|;
 name|varflag
 operator|=
 literal|1
+expr_stmt|;
+name|jp
+operator|=
+name|NULL
 expr_stmt|;
 name|do_clearcmdentry
 operator|=
@@ -4689,9 +4693,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|flags
-operator|&
-name|EV_EXIT
+name|jp
 condition|)
 name|exitshell
 argument_list|(
@@ -4964,6 +4966,10 @@ expr_stmt|;
 name|freestdout
 argument_list|()
 expr_stmt|;
+name|handler
+operator|=
+name|savehandler
+expr_stmt|;
 if|if
 condition|(
 name|e
@@ -4977,22 +4983,14 @@ name|savecmdname
 expr_stmt|;
 if|if
 condition|(
-name|flags
-operator|&
-name|EV_EXIT
+name|jp
 condition|)
-block|{
 name|exitshell
 argument_list|(
 name|exitstatus
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-name|handler
-operator|=
-name|savehandler
-expr_stmt|;
 if|if
 condition|(
 name|flags
