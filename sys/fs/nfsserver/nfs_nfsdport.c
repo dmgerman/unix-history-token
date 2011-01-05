@@ -12904,7 +12904,7 @@ expr_stmt|;
 comment|/* 	 * Check for the special case of the nfsv4root_fh. 	 */
 name|mp
 operator|=
-name|vfs_getvfs
+name|vfs_busyfs
 argument_list|(
 operator|&
 name|fhp
@@ -12914,8 +12914,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|mp
+operator|==
+name|NULL
 condition|)
 block|{
 operator|*
@@ -13049,6 +13050,11 @@ name|exp
 argument_list|,
 operator|&
 name|credanon
+argument_list|)
+expr_stmt|;
+name|vfs_unbusy
+argument_list|(
+name|mp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * For NFSv4 without a pseudo root fs, unexported file handles 	 * can be returned, so that Lookup works everywhere. 	 */
@@ -13296,11 +13302,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|vfs_rel
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
 operator|*
 name|vpp
 operator|=
@@ -13310,14 +13311,6 @@ operator|*
 name|mpp
 operator|=
 name|NULL
-expr_stmt|;
-block|}
-else|else
-block|{
-name|vfs_rel
-argument_list|(
-name|mp
-argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -13934,7 +13927,7 @@ name|error
 decl_stmt|;
 name|mp
 operator|=
-name|vfs_getvfs
+name|vfs_busyfs
 argument_list|(
 operator|&
 name|fhp
@@ -13966,6 +13959,11 @@ name|fh_fid
 argument_list|,
 operator|&
 name|vp
+argument_list|)
+expr_stmt|;
+name|vfs_unbusy
+argument_list|(
+name|mp
 argument_list|)
 expr_stmt|;
 if|if
