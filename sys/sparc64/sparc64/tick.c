@@ -959,10 +959,8 @@ argument_list|(
 name|tick
 argument_list|)
 expr_stmt|;
-name|wr
+name|wrtickcmpr
 argument_list|(
-name|tick_cmpr
-argument_list|,
 name|tick
 operator|+
 name|tick_increment
@@ -1033,7 +1031,7 @@ argument_list|(
 name|tick
 argument_list|)
 expr_stmt|;
-name|wrtickcmpr
+name|wrtickcmpr_bbwar
 argument_list|(
 name|tick
 operator|+

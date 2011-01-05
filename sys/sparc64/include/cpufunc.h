@@ -581,8 +581,16 @@ value|do {					\ 	__asm __volatile("wrpr %0, %1, %%" #name			\ 	    : : "r" (val
 end_define
 
 begin_comment
-comment|/*  * Trick GAS/GCC into compiling access to STICK/STICK_COMPARE independently  * of the selected instruction set.  */
+comment|/*  * Trick GAS/GCC into compiling access to TICK/(S)TICK_COMPARE independently  * of the selected instruction set.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|rdtickcmpr
+parameter_list|()
+value|rd(asr23)
+end_define
 
 begin_define
 define|#
@@ -598,6 +606,18 @@ directive|define
 name|rdstickcmpr
 parameter_list|()
 value|rd(asr25)
+end_define
+
+begin_define
+define|#
+directive|define
+name|wrtickcmpr
+parameter_list|(
+name|val
+parameter_list|,
+name|xor
+parameter_list|)
+value|wr(asr23, (val), (xor))
 end_define
 
 begin_define
@@ -631,13 +651,13 @@ end_comment
 begin_define
 define|#
 directive|define
-name|wrtickcmpr
+name|wrtickcmpr_bbwar
 parameter_list|(
 name|val
 parameter_list|,
 name|xor
 parameter_list|)
-value|({						\ 	__asm __volatile(						\ 	"	ba,pt	%%xcc, 1f ;		"			\ 	"	 nop	 ;			"			\ 	"	.align	128 ;			"			\ 	"1:	wr	%0, %1, %%asr23 ;	"			\ 	"	rd	%%asr23, %%g0 ;		"			\ 	: : "r" (val), "rI" (xor));					\ })
+value|({					\ 	__asm __volatile(						\ 	"	ba,pt	%%xcc, 1f ;		"			\ 	"	 nop	 ;			"			\ 	"	.align	128 ;			"			\ 	"1:	wr	%0, %1, %%asr23 ;	"			\ 	"	rd	%%asr23, %%g0 ;		"			\ 	: : "r" (val), "rI" (xor));					\ })
 end_define
 
 begin_function
