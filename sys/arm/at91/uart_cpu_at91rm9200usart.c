@@ -234,27 +234,6 @@ operator|&
 name|at91_bs_tag
 expr_stmt|;
 comment|/*  	 * XXX: Not pretty, but will work because we map the needed addresses 	 * early. 	 */
-ifdef|#
-directive|ifdef
-name|SKYEYE_WORKAROUNDS
-name|di
-operator|->
-name|bas
-operator|.
-name|bsh
-operator|=
-name|AT91RM92_BASE
-operator|+
-name|AT91RM92_USART0_BASE
-expr_stmt|;
-name|di
-operator|->
-name|baudrate
-operator|=
-literal|38400
-expr_stmt|;
-else|#
-directive|else
 name|di
 operator|->
 name|bas
@@ -271,8 +250,6 @@ name|baudrate
 operator|=
 literal|115200
 expr_stmt|;
-endif|#
-directive|endif
 name|di
 operator|->
 name|bas

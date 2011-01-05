@@ -267,19 +267,9 @@ comment|/* get_timecount */
 name|NULL
 block|,
 comment|/* no poll_pps */
-ifdef|#
-directive|ifdef
-name|SKYEYE_WORKAROUNDS
-literal|0xffffffffu
-block|,
-comment|/* counter_mask */
-else|#
-directive|else
 literal|0xfffffu
 block|,
 comment|/* counter_mask */
-endif|#
-directive|endif
 literal|32768
 block|,
 comment|/* frequency */
@@ -516,27 +506,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SKYEYE_WORKAROUNDS
-end_ifdef
-
-begin_decl_stmt
-specifier|static
-name|unsigned
-name|long
-name|tot_count
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 specifier|static
 name|unsigned
@@ -548,24 +517,12 @@ modifier|*
 name|tc
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|SKYEYE_WORKAROUNDS
-return|return
-operator|(
-name|tot_count
-operator|)
-return|;
-else|#
-directive|else
 return|return
 operator|(
 name|st_crtr
 argument_list|()
 operator|)
 return|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -685,17 +642,6 @@ operator|&
 name|ST_SR_PITS
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SKYEYE_WORKAROUNDS
-name|tot_count
-operator|+=
-literal|32768
-operator|/
-name|hz
-expr_stmt|;
-endif|#
-directive|endif
 name|hardclock
 argument_list|(
 name|TRAPF_USERMODE
