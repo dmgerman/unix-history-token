@@ -2330,12 +2330,18 @@ name|istcp
 condition|)
 name|printf
 argument_list|(
-literal|"%6u %6u %6u "
+literal|"%6ju %6ju %6u "
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|tp
 operator|->
 name|t_sndrexmitpack
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|tp
 operator|->
 name|t_rcvoopack
