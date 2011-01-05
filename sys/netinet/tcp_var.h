@@ -491,10 +491,6 @@ name|tcp_seq
 name|snd_recover_prev
 decl_stmt|;
 comment|/* snd_recover prior to retransmit */
-name|int
-name|t_sndzerowin
-decl_stmt|;
-comment|/* zero-window updates sent */
 name|u_int
 name|t_badrxtwin
 decl_stmt|;
@@ -560,14 +556,6 @@ modifier|*
 name|t_tu
 decl_stmt|;
 comment|/* offload operations vector */
-name|int
-name|t_sndrexmitpack
-decl_stmt|;
-comment|/* retransmit packets sent */
-name|int
-name|t_rcvoopack
-decl_stmt|;
-comment|/* out-of-order packets received */
 name|void
 modifier|*
 name|t_toe
@@ -578,9 +566,17 @@ name|t_bytes_acked
 decl_stmt|;
 comment|/* # bytes acked during current RTT */
 name|int
-name|t_ispare
+name|t_sndzerowin
 decl_stmt|;
-comment|/* explicit pad for 64bit alignment */
+comment|/* zero-window updates sent */
+name|uint64_t
+name|t_sndrexmitpack
+decl_stmt|;
+comment|/* retransmit packets sent */
+name|uint64_t
+name|t_rcvoopack
+decl_stmt|;
+comment|/* out-of-order packets received */
 name|void
 modifier|*
 name|t_pspare2
@@ -592,10 +588,10 @@ comment|/* 2 CC / 4 TBD */
 name|uint64_t
 name|_pad
 index|[
-literal|12
+literal|10
 index|]
 decl_stmt|;
-comment|/* 7 UTO, 5 TBD (1-2 CC/RTT?) */
+comment|/* 7 UTO, 3 TBD (1-2 CC/RTT?) */
 block|}
 struct|;
 end_struct
