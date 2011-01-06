@@ -236,6 +236,10 @@ name|sz
 operator|=
 literal|0
 expr_stmt|;
+name|hin
+operator|=
+name|NULL
+expr_stmt|;
 name|status
 operator|=
 name|BS
