@@ -302,22 +302,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|PCONFIG
+name|PLOCK
 value|(PRI_MIN_KERN + 32)
 end_define
 
 begin_define
 define|#
 directive|define
-name|PLOCK
-value|(PRI_MIN_KERN + 36)
-end_define
-
-begin_define
-define|#
-directive|define
 name|PPAUSE
-value|(PRI_MIN_KERN + 40)
+value|(PRI_MIN_KERN + 36)
 end_define
 
 begin_define
