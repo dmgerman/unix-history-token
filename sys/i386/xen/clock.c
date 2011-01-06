@@ -2878,8 +2878,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|INTR_TYPE_CLK
-operator||
-name|INTR_FAST
 argument_list|,
 operator|&
 name|time_irq
@@ -2946,8 +2944,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|INTR_TYPE_CLK
-operator||
-name|INTR_FAST
 argument_list|,
 operator|&
 name|time_irq

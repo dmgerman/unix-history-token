@@ -9811,8 +9811,6 @@ name|sc
 operator|->
 name|rge_irq
 argument_list|,
-name|INTR_FAST
-operator||
 name|INTR_TYPE_NET
 operator||
 name|INTR_MPSAFE

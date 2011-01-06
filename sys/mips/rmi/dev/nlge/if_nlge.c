@@ -8454,13 +8454,9 @@ argument_list|,
 operator|&
 name|irq_res
 argument_list|,
-operator|(
-name|INTR_FAST
-operator||
 name|INTR_TYPE_NET
 operator||
 name|INTR_MPSAFE
-operator|)
 argument_list|,
 name|NULL
 argument_list|,

@@ -2024,8 +2024,6 @@ argument_list|,
 name|IRQ_MSGRING
 argument_list|,
 name|INTR_TYPE_NET
-operator||
-name|INTR_FAST
 argument_list|,
 operator|&
 name|cookie

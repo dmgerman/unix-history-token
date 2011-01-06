@@ -747,8 +747,6 @@ argument_list|,
 name|irq
 argument_list|,
 name|INTR_TYPE_CLK
-operator||
-name|INTR_FAST
 argument_list|,
 name|clock_intr
 argument_list|,

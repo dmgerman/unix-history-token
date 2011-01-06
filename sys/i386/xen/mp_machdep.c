@@ -1829,11 +1829,7 @@ index|]
 argument_list|,
 name|smp_reschedule_interrupt
 argument_list|,
-name|INTR_FAST
-operator||
 name|INTR_TYPE_TTY
-operator||
-name|INTR_MPSAFE
 argument_list|,
 operator|&
 name|irq
@@ -1886,11 +1882,7 @@ index|]
 argument_list|,
 name|smp_call_function_interrupt
 argument_list|,
-name|INTR_FAST
-operator||
 name|INTR_TYPE_TTY
-operator||
-name|INTR_MPSAFE
 argument_list|,
 operator|&
 name|irq

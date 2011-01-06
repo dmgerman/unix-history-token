@@ -885,8 +885,6 @@ name|self
 argument_list|,
 name|irq_err
 argument_list|,
-name|INTR_FAST
-operator||
 name|INTR_TYPE_BIO
 argument_list|,
 name|err_intr
