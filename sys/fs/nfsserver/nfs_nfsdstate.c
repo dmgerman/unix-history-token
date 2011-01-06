@@ -19388,12 +19388,14 @@ operator|->
 name|nsf_fp
 argument_list|)
 expr_stmt|;
-name|NFS_STARTWRITE
+name|vn_start_write
 argument_list|(
 name|vp
 argument_list|,
 operator|&
 name|mp
+argument_list|,
+name|V_WAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -19442,7 +19444,7 @@ name|error
 operator|=
 name|EPERM
 expr_stmt|;
-name|NFS_ENDWRITE
+name|vn_finished_write
 argument_list|(
 name|mp
 argument_list|)

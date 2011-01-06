@@ -2476,32 +2476,6 @@ value|(1024 * 1024)
 end_define
 
 begin_comment
-comment|/*  * These macros are called at the start and end of operations that  * might modify the underlying file system.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFS_STARTWRITE
-parameter_list|(
-name|v
-parameter_list|,
-name|m
-parameter_list|)
-value|vn_start_write((v), (m), V_WAIT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NFS_ENDWRITE
-parameter_list|(
-name|m
-parameter_list|)
-value|vn_finished_write(m)
-end_define
-
-begin_comment
 comment|/*  * Define these to handle the type of va_rdev.  */
 end_comment
 
