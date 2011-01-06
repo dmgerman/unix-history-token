@@ -183,10 +183,6 @@ struct|struct
 name|nfsexstuff
 block|{
 name|int
-name|nes_vfslocked
-decl_stmt|;
-comment|/* required for all ports */
-name|int
 name|nes_exflag
 decl_stmt|;
 comment|/* export flags */
