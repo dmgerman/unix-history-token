@@ -245,7 +245,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|mv_gpio_intr
 parameter_list|(
 name|void
@@ -953,13 +953,7 @@ name|i
 index|]
 argument_list|,
 name|INTR_TYPE_MISC
-operator||
-name|INTR_FAST
 argument_list|,
-operator|(
-name|driver_filter_t
-operator|*
-operator|)
 name|mv_gpio_intr
 argument_list|,
 name|NULL
@@ -1016,7 +1010,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|mv_gpio_intr
 parameter_list|(
 name|void
@@ -1153,6 +1147,11 @@ operator|++
 expr_stmt|;
 block|}
 block|}
+return|return
+operator|(
+name|FILTER_HANDLED
+operator|)
+return|;
 block|}
 end_function
 
