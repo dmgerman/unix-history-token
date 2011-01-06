@@ -375,23 +375,6 @@ name|PTHREAD_MUTEX_DEFAULT
 value|PTHREAD_MUTEX_ERRORCHECK
 end_define
 
-begin_enum
-enum|enum
-name|pthread_rwlocktype_np
-block|{
-name|PTHREAD_RWLOCK_PREFER_READER_NP
-block|,
-name|PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP
-block|,
-name|PTHREAD_RWLOCK_PREFER_WRITER_NP
-block|,
-name|PTHREAD_RWLOCK_DEFAULT_NP
-init|=
-name|PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP
-block|}
-enum|;
-end_enum
-
 begin_struct
 struct|struct
 name|_pthread_cleanup_info
