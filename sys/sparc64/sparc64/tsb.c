@@ -314,12 +314,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|vm_paddr_t
-name|tsb_kernel_phys_end
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|u_int
 name|tsb_kernel_ldd_phys
 decl_stmt|;
