@@ -1246,6 +1246,14 @@ block|,
 comment|/* I/O DATA USB-RSAQ3 */
 name|UPLCOM_DEV
 argument_list|(
+name|PROLIFIC
+argument_list|,
+name|UIC_MSR206
+argument_list|)
+block|,
+comment|/* UIC MSR206 Card Reader */
+name|UPLCOM_DEV
+argument_list|(
 name|PROLIFIC2
 argument_list|,
 name|PL2303
