@@ -390,10 +390,6 @@ name|INTR_TYPE_AV
 init|=
 literal|64
 block|,
-name|INTR_FAST
-init|=
-literal|128
-block|,
 name|INTR_EXCL
 init|=
 literal|256
