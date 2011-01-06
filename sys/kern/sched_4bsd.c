@@ -2706,6 +2706,14 @@ operator|->
 name|td_cpuset
 argument_list|)
 expr_stmt|;
+name|childtd
+operator|->
+name|td_priority
+operator|=
+name|childtd
+operator|->
+name|td_base_pri
+expr_stmt|;
 name|ts
 operator|=
 name|childtd
