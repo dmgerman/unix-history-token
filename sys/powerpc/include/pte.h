@@ -299,6 +299,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|LPTE_AVPN_MASK
+value|0xFFFFFFFFFFFFFF80ULL
+end_define
+
+begin_define
+define|#
+directive|define
 name|LPTE_API
 value|0x0000000000000F80ULL
 end_define
