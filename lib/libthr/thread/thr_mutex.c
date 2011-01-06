@@ -2114,9 +2114,6 @@ init|=
 name|_get_curthread
 argument_list|()
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 name|ENQUEUE_MUTEX
 argument_list|(
 name|curthread
@@ -2132,7 +2129,7 @@ name|count
 expr_stmt|;
 return|return
 operator|(
-name|error
+literal|0
 operator|)
 return|;
 block|}
