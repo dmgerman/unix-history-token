@@ -347,11 +347,6 @@ name|flags
 parameter_list|)
 block|{
 name|struct
-name|proc
-modifier|*
-name|p1
-decl_stmt|;
-name|struct
 name|trapframe
 modifier|*
 name|tf
@@ -406,12 +401,6 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|p1
-operator|=
-name|td1
-operator|->
-name|td_proc
-expr_stmt|;
 name|pcb
 operator|=
 operator|(

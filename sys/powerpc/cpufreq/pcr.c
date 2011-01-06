@@ -1309,11 +1309,6 @@ modifier|*
 name|set
 parameter_list|)
 block|{
-name|struct
-name|pcr_softc
-modifier|*
-name|sc
-decl_stmt|;
 name|uint64_t
 name|psr
 decl_stmt|;
@@ -1328,13 +1323,6 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-name|sc
-operator|=
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 name|memset
 argument_list|(
 name|set
