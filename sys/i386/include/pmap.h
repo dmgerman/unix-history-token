@@ -1008,13 +1008,6 @@ block|{
 name|pt_entry_t
 name|r
 decl_stmt|;
-name|v
-operator|=
-name|xpmap_ptom
-argument_list|(
-name|v
-argument_list|)
-expr_stmt|;
 name|r
 operator|=
 operator|*

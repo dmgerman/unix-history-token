@@ -16054,6 +16054,9 @@ name|PAGE_SIZE
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|pte_store
 argument_list|(
 name|pte
@@ -16071,6 +16074,9 @@ name|PG_M
 operator|)
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 name|PMAP_MARK_PRIV
 argument_list|(
@@ -16161,6 +16167,9 @@ name|pte
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|pte_store
 argument_list|(
 name|pte
@@ -16177,6 +16186,9 @@ operator||
 name|PG_M
 operator|)
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 name|pmap_pte_release
 argument_list|(
