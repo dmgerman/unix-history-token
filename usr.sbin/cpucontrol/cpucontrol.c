@@ -1034,7 +1034,7 @@ name|CPUCTL_RDMSR
 expr_stmt|;
 name|command_name
 operator|=
-literal|"CPUCTL_RDMSR"
+literal|"RDMSR"
 expr_stmt|;
 break|break;
 case|case
@@ -1046,7 +1046,7 @@ name|CPUCTL_WRMSR
 expr_stmt|;
 name|command_name
 operator|=
-literal|"CPUCTL_WRMSR"
+literal|"WRMSR"
 expr_stmt|;
 break|break;
 case|case
@@ -1058,7 +1058,7 @@ name|CPUCTL_MSRSBIT
 expr_stmt|;
 name|command_name
 operator|=
-literal|"CPUCTL_MSRSBIT"
+literal|"MSRSBIT"
 expr_stmt|;
 break|break;
 case|case
@@ -1070,7 +1070,7 @@ name|CPUCTL_MSRCBIT
 expr_stmt|;
 name|command_name
 operator|=
-literal|"CPUCTL_MSRCBIT"
+literal|"MSRCBIT"
 expr_stmt|;
 break|break;
 default|default:
@@ -1146,7 +1146,7 @@ name|WARN
 argument_list|(
 literal|0
 argument_list|,
-literal|"ioctl(%s, %s (%lu))"
+literal|"ioctl(%s, CPUCTL_%s (%lu))"
 argument_list|,
 name|dev
 argument_list|,
