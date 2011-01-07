@@ -426,6 +426,9 @@ name|struct
 name|thread
 modifier|*
 name|p
+parameter_list|,
+name|int
+name|vpislocked
 parameter_list|)
 block|{
 name|int
@@ -435,7 +438,14 @@ name|lockedit
 init|=
 literal|0
 decl_stmt|;
-comment|/* Since FreeBSD insists the vnode be locked... */
+if|if
+condition|(
+name|vpislocked
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* 		 * When vpislocked == 0, the vnode is either exclusively 		 * locked by this thread or not locked by this thread. 		 * As such, shared lock it, if not exclusively locked. 		 */
 if|if
 condition|(
 name|VOP_ISLOCKED
@@ -450,17 +460,16 @@ name|lockedit
 operator|=
 literal|1
 expr_stmt|;
-name|NFSVOPLOCK
+name|vn_lock
 argument_list|(
 name|vp
 argument_list|,
-name|LK_EXCLUSIVE
+name|LK_SHARED
 operator||
 name|LK_RETRY
-argument_list|,
-name|p
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|error
 operator|=
@@ -479,14 +488,14 @@ expr_stmt|;
 if|if
 condition|(
 name|lockedit
+operator|!=
+literal|0
 condition|)
-name|NFSVOPUNLOCK
+name|VOP_UNLOCK
 argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|p
 argument_list|)
 expr_stmt|;
 return|return
@@ -6875,6 +6884,8 @@ argument_list|,
 name|cred
 argument_list|,
 name|p
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -7260,6 +7271,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|#
@@ -7571,6 +7584,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -8640,6 +8655,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -8973,6 +8990,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -9850,6 +9869,8 @@ operator|->
 name|nd_cred
 argument_list|,
 name|p
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
