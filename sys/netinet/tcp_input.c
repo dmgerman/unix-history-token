@@ -9030,7 +9030,7 @@ block|{
 name|int
 name|awnd
 decl_stmt|;
-comment|/* 						 * Compute the amount of data in flight first. 						 * We can inject new data into the pipe iff  						 * we have less than 1/2 the original window's 	 						 * worth of data in flight. 						 */
+comment|/* 						 * Compute the amount of data in flight first. 						 * We can inject new data into the pipe iff  						 * we have less than 1/2 the original window's 						 * worth of data in flight. 						 */
 name|awnd
 operator|=
 operator|(
