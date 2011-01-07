@@ -23336,7 +23336,7 @@ name|sc
 operator|->
 name|tq
 operator|=
-name|taskqueue_create_fast
+name|taskqueue_create
 argument_list|(
 literal|"mxge_taskq"
 argument_list|,
