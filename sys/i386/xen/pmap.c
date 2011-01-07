@@ -13327,6 +13327,14 @@ block|{
 name|vm_offset_t
 name|va
 decl_stmt|;
+name|vm_paddr_t
+name|ma
+init|=
+name|xpmap_ptom
+argument_list|(
+name|pa
+argument_list|)
+decl_stmt|;
 name|va
 operator|=
 operator|(
@@ -13345,7 +13353,7 @@ argument_list|(
 name|va
 argument_list|,
 operator|(
-name|pa
+name|ma
 operator|&
 operator|~
 name|PAGE_MASK
