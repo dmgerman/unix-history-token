@@ -1651,6 +1651,10 @@ begin_if
 if|#
 directive|if
 name|__FreeBSD_version
+operator|>=
+literal|800000
+operator|&&
+name|__FreeBSD_version
 operator|<
 literal|800504
 end_if
