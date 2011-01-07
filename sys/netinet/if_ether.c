@@ -3740,17 +3740,6 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|m_hold
-operator|=
-name|la
-operator|->
-name|la_hold
-operator|,
-name|la
-operator|->
-name|la_hold
-operator|=
-name|NULL
 init|;
 name|m_hold
 operator|!=
