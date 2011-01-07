@@ -482,5 +482,18 @@ define|\
 value|do {									\     fprintf (asm_out_file, "%s %d,0,0,", ASM_STABN_OP, N_RBRAC);	\     assemble_name (asm_out_file, NAME);					\         fputc ('-', asm_out_file);					\         assemble_name (asm_out_file,					\ 		 XSTR (XEXP (DECL_RTL (current_function_decl), 0), 0));	\     fprintf (asm_out_file, "\n");					\   } while (0)
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|NEED_INDICATE_EXEC_STACK
+end_undef
+
+begin_define
+define|#
+directive|define
+name|NEED_INDICATE_EXEC_STACK
+value|1
+end_define
+
 end_unit
 
