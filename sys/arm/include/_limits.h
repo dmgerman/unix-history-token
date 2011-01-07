@@ -129,42 +129,6 @@ begin_comment
 comment|/* min value for an int */
 end_comment
 
-begin_comment
-comment|/* Bad hack for gcc configured to give 64-bit longs. */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_LARGE_LONG
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|__ULONG_MAX
-value|0xffffffffffffffffUL
-end_define
-
-begin_define
-define|#
-directive|define
-name|__LONG_MAX
-value|0x7fffffffffffffffL
-end_define
-
-begin_define
-define|#
-directive|define
-name|__LONG_MIN
-value|(-0x7fffffffffffffffL - 1)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -197,11 +161,6 @@ end_define
 begin_comment
 comment|/* min value for a long */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* max value for an unsigned long long */
@@ -317,35 +276,12 @@ begin_comment
 comment|/* min value for a quad_t */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_LARGE_LONG
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|__LONG_BIT
-value|64
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
 name|__LONG_BIT
 value|32
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

@@ -129,19 +129,11 @@ begin_comment
 comment|/* min value for an int */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_LARGE_LONG
-argument_list|)
-operator|||
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__LP64__
-argument_list|)
-end_if
+end_ifdef
 
 begin_define
 define|#
@@ -162,6 +154,13 @@ define|#
 directive|define
 name|__LONG_MIN
 value|(-0x7fffffffffffffffL - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__LONG_BIT
+value|64
 end_define
 
 begin_else
@@ -201,6 +200,13 @@ end_define
 begin_comment
 comment|/* min value for a long */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|__LONG_BIT
+value|32
+end_define
 
 begin_endif
 endif|#
@@ -354,44 +360,6 @@ end_define
 begin_comment
 comment|/* min value for a quad_t */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_LARGE_LONG
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__LP64__
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|__LONG_BIT
-value|64
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|__LONG_BIT
-value|32
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
