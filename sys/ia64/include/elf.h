@@ -410,8 +410,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AT_STACKPROT
+value|23
+end_define
+
+begin_comment
+comment|/* Initial stack protection. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|AT_COUNT
-value|22
+value|24
 end_define
 
 begin_comment
