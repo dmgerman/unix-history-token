@@ -3794,7 +3794,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"cd9660:cd0\n"
+literal|"cd9660:/dev/cd0 ro\n"
 argument_list|)
 expr_stmt|;
 name|sbuf_printf
@@ -3808,7 +3808,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"cd9660:acd0\n"
+literal|"cd9660:/dev/acd0 ro\n"
 argument_list|)
 expr_stmt|;
 name|sbuf_printf
