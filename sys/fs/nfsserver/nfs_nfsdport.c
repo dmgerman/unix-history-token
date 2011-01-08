@@ -705,15 +705,13 @@ name|vpislocked
 operator|==
 literal|0
 condition|)
-name|NFSVOPLOCK
+name|vn_lock
 argument_list|(
 name|vp
 argument_list|,
-name|LK_EXCLUSIVE
+name|LK_SHARED
 operator||
 name|LK_RETRY
-argument_list|,
-name|p
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Should the override still be applied when ACLs are enabled? 	 */
@@ -905,13 +903,11 @@ name|vpislocked
 operator|==
 literal|0
 condition|)
-name|NFSVOPUNLOCK
+name|VOP_UNLOCK
 argument_list|(
 name|vp
 argument_list|,
 literal|0
-argument_list|,
-name|p
 argument_list|)
 expr_stmt|;
 return|return
@@ -9625,7 +9621,7 @@ name|dp
 operator|->
 name|d_fileno
 argument_list|,
-name|LK_EXCLUSIVE
+name|LK_SHARED
 argument_list|,
 operator|&
 name|nvp
@@ -9662,7 +9658,7 @@ name|cn
 operator|.
 name|cn_lkflags
 operator|=
-name|LK_EXCLUSIVE
+name|LK_SHARED
 operator||
 name|LK_RETRY
 expr_stmt|;
@@ -9743,7 +9739,7 @@ name|vn_lock
 argument_list|(
 name|vp
 argument_list|,
-name|LK_EXCLUSIVE
+name|LK_SHARED
 argument_list|)
 operator|!=
 literal|0
@@ -12538,6 +12534,9 @@ name|sockaddr
 modifier|*
 name|nam
 parameter_list|,
+name|int
+name|lktype
+parameter_list|,
 name|struct
 name|vnode
 modifier|*
@@ -12701,6 +12700,27 @@ index|]
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+operator|&&
+name|lktype
+operator|==
+name|LK_SHARED
+condition|)
+comment|/* 		 * It would be much better to pass lktype to VFS_FHTOVP(), 		 * but this will have to do until VFS_FHTOVP() has a lock 		 * type argument like VFS_VGET(). 		 */
+name|vn_lock
+argument_list|(
+operator|*
+name|vpp
+argument_list|,
+name|LK_DOWNGRADE
+operator||
+name|LK_RETRY
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -12779,6 +12799,9 @@ name|struct
 name|nfsrvfh
 modifier|*
 name|nfp
+parameter_list|,
+name|int
+name|lktype
 parameter_list|,
 name|struct
 name|vnode
@@ -12969,6 +12992,8 @@ argument_list|,
 name|nd
 operator|->
 name|nd_nam
+argument_list|,
+name|lktype
 argument_list|,
 name|vpp
 argument_list|,

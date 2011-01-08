@@ -2437,6 +2437,8 @@ name|struct
 name|nfsrvfh
 modifier|*
 parameter_list|,
+name|int
+parameter_list|,
 name|vnode_t
 modifier|*
 parameter_list|,
@@ -6057,6 +6059,8 @@ name|fhandle_t
 modifier|*
 parameter_list|,
 name|NFSSOCKADDR_T
+parameter_list|,
+name|int
 parameter_list|,
 name|vnode_t
 modifier|*
