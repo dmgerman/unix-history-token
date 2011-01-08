@@ -591,6 +591,9 @@ modifier|*
 name|interp
 decl_stmt|;
 comment|/* Pathname of the interpreter, if any */
+name|Elf_Word
+name|stack_flags
+decl_stmt|;
 comment|/* TLS information */
 name|int
 name|tlsindex
