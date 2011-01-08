@@ -722,7 +722,7 @@ value|0x10
 end_define
 
 begin_comment
-comment|/*  * Parameter names corresponding to PR_* flag values  */
+comment|/*  * Parameter names corresponding to PR_* flag values.  Size values are for kvm  * as we cannot figure out the size of a sparse array, or an array without a  * terminating entry.  */
 end_comment
 
 begin_decl_stmt
@@ -766,6 +766,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
+name|size_t
+name|pr_flag_names_size
+init|=
+sizeof|sizeof
+argument_list|(
+name|pr_flag_names
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|char
 modifier|*
@@ -802,6 +814,18 @@ block|,
 endif|#
 directive|endif
 block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|size_t
+name|pr_flag_nonames_size
+init|=
+sizeof|sizeof
+argument_list|(
+name|pr_flag_nonames
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -881,6 +905,18 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|const
+name|size_t
+name|pr_flag_jailsys_size
+init|=
+sizeof|sizeof
+argument_list|(
+name|pr_flag_jailsys
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|char
 modifier|*
@@ -906,6 +942,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
+name|size_t
+name|pr_allow_names_size
+init|=
+sizeof|sizeof
+argument_list|(
+name|pr_allow_names
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|char
 modifier|*
@@ -927,6 +975,18 @@ literal|"allow.noquotas"
 block|,
 literal|"allow.nosocket_af"
 block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|size_t
+name|pr_allow_nonames_size
+init|=
+sizeof|sizeof
+argument_list|(
+name|pr_allow_nonames
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
