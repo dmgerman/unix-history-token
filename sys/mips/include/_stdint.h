@@ -60,42 +60,6 @@ parameter_list|)
 value|(c)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__mips_n64
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|INT64_C
-parameter_list|(
-name|c
-parameter_list|)
-value|(c ## L)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|INT64_C
-parameter_list|(
-name|c
-parameter_list|)
-value|(c ## LL)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -129,49 +93,13 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__mips_n64
+name|__LP64__
 end_ifdef
 
 begin_define
 define|#
 directive|define
-name|UINT64_C
-parameter_list|(
-name|c
-parameter_list|)
-value|(c ## UL)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|UINT64_C
-parameter_list|(
-name|c
-parameter_list|)
-value|(c ## ULL)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__mips_n64
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|INTMAX_C
+name|INT64_C
 parameter_list|(
 name|c
 parameter_list|)
@@ -181,7 +109,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|UINTMAX_C
+name|UINT64_C
 parameter_list|(
 name|c
 parameter_list|)
@@ -196,7 +124,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|INTMAX_C
+name|INT64_C
 parameter_list|(
 name|c
 parameter_list|)
@@ -206,7 +134,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|UINTMAX_C
+name|UINT64_C
 parameter_list|(
 name|c
 parameter_list|)
@@ -217,6 +145,26 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|INTMAX_C
+parameter_list|(
+name|c
+parameter_list|)
+value|INT64_C(c)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UINTMAX_C
+parameter_list|(
+name|c
+parameter_list|)
+value|UINT64_C(c)
+end_define
 
 begin_endif
 endif|#
@@ -275,7 +223,7 @@ begin_define
 define|#
 directive|define
 name|INT64_MIN
-value|(-INTMAX_C(0x7fffffffffffffff)-1)
+value|(-INT64_C(0x7fffffffffffffff)-1)
 end_define
 
 begin_comment
@@ -307,7 +255,7 @@ begin_define
 define|#
 directive|define
 name|INT64_MAX
-value|INTMAX_C(0x7fffffffffffffff)
+value|INT64_C(0x7fffffffffffffff)
 end_define
 
 begin_comment
@@ -332,14 +280,14 @@ begin_define
 define|#
 directive|define
 name|UINT32_MAX
-value|0xffffffffU
+value|0xffffffff
 end_define
 
 begin_define
 define|#
 directive|define
 name|UINT64_MAX
-value|UINTMAX_C(0xffffffffffffffff)
+value|UINT64_C(0xffffffffffffffff)
 end_define
 
 begin_comment
@@ -549,7 +497,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__mips_n64
+name|__LP64__
 end_ifdef
 
 begin_define
@@ -633,15 +581,15 @@ begin_comment
 comment|/*  * ISO/IEC 9899:1999  * 7.18.3  Limits of other integer types  */
 end_comment
 
-begin_comment
-comment|/* Limits of ptrdiff_t. */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__mips_n64
+name|__LP64__
 end_ifdef
+
+begin_comment
+comment|/* Limits of ptrdiff_t. */
+end_comment
 
 begin_define
 define|#
@@ -657,10 +605,25 @@ name|PTRDIFF_MAX
 value|INT64_MAX
 end_define
 
+begin_comment
+comment|/* Limit of size_t. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIZE_MAX
+value|UINT64_MAX
+end_define
+
 begin_else
 else|#
 directive|else
 end_else
+
+begin_comment
+comment|/* Limits of ptrdiff_t. */
+end_comment
 
 begin_define
 define|#
@@ -674,6 +637,17 @@ define|#
 directive|define
 name|PTRDIFF_MAX
 value|INT32_MAX
+end_define
+
+begin_comment
+comment|/* Limit of size_t. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIZE_MAX
+value|UINT32_MAX
 end_define
 
 begin_endif
@@ -698,40 +672,6 @@ directive|define
 name|SIG_ATOMIC_MAX
 value|INT32_MAX
 end_define
-
-begin_comment
-comment|/* Limit of size_t. */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__mips_n64
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|SIZE_MAX
-value|UINT64_MAX
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|SIZE_MAX
-value|UINT32_MAX
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#

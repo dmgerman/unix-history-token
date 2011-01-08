@@ -19,14 +19,11 @@ begin_comment
 comment|/*  * Macros for format specifiers.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__mips_n64
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__LP64__
+end_ifdef
 
 begin_define
 define|#

@@ -117,7 +117,7 @@ name|INTMAX_C
 parameter_list|(
 name|c
 parameter_list|)
-value|(c ## L)
+value|INT64_C(c)
 end_define
 
 begin_define
@@ -127,7 +127,7 @@ name|UINTMAX_C
 parameter_list|(
 name|c
 parameter_list|)
-value|(c ## UL)
+value|UINT64_C(c)
 end_define
 
 begin_endif

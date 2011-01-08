@@ -93,7 +93,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__powerpc64__
+name|__LP64__
 end_ifdef
 
 begin_define
@@ -110,26 +110,6 @@ begin_define
 define|#
 directive|define
 name|UINT64_C
-parameter_list|(
-name|c
-parameter_list|)
-value|(c ## UL)
-end_define
-
-begin_define
-define|#
-directive|define
-name|INTMAX_C
-parameter_list|(
-name|c
-parameter_list|)
-value|(c ## L)
-end_define
-
-begin_define
-define|#
-directive|define
-name|UINTMAX_C
 parameter_list|(
 name|c
 parameter_list|)
@@ -161,6 +141,11 @@ parameter_list|)
 value|(c ## ULL)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -168,7 +153,7 @@ name|INTMAX_C
 parameter_list|(
 name|c
 parameter_list|)
-value|(c ## LL)
+value|INT64_C(c)
 end_define
 
 begin_define
@@ -178,13 +163,8 @@ name|UINTMAX_C
 parameter_list|(
 name|c
 parameter_list|)
-value|(c ## ULL)
+value|UINT64_C(c)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -243,7 +223,7 @@ begin_define
 define|#
 directive|define
 name|INT64_MIN
-value|(-0x7fffffffffffffffLL-1)
+value|(-INT64_C(0x7fffffffffffffff)-1)
 end_define
 
 begin_comment
@@ -271,35 +251,12 @@ name|INT32_MAX
 value|0x7fffffff
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__powerpc64__
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|INT64_MAX
-value|0x7fffffffffffffffL
+value|INT64_C(0x7fffffffffffffff)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|INT64_MAX
-value|0x7fffffffffffffffLL
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Maximum values of exact-width unsigned integer types. */
@@ -323,38 +280,15 @@ begin_define
 define|#
 directive|define
 name|UINT32_MAX
-value|0xffffffffU
+value|0xffffffff
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__powerpc64__
-end_ifdef
 
 begin_define
 define|#
 directive|define
 name|UINT64_MAX
-value|0xffffffffffffffffUL
+value|UINT64_C(0xffffffffffffffff)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|UINT64_MAX
-value|0xffffffffffffffffULL
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * ISO/IEC 9899:1999  * 7.18.2.2  Limits of minimum-width integer types  */
@@ -563,7 +497,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__powerpc64__
+name|__LP64__
 end_ifdef
 
 begin_define
@@ -650,7 +584,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__powerpc64__
+name|__LP64__
 end_ifdef
 
 begin_comment

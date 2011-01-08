@@ -85,7 +85,7 @@ end_typedef
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__mips_n64
+name|__LP64__
 end_ifdef
 
 begin_typedef
@@ -191,36 +191,6 @@ name|__cpumask_t
 typedef|;
 end_typedef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__mips_n64
-end_ifdef
-
-begin_typedef
-typedef|typedef
-name|__int64_t
-name|__critical_t
-typedef|;
-end_typedef
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_typedef
-typedef|typedef
-name|__int32_t
-name|__critical_t
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_typedef
 typedef|typedef
 name|double
@@ -238,8 +208,15 @@ end_typedef
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__mips_n64
+name|__LP64__
 end_ifdef
+
+begin_typedef
+typedef|typedef
+name|__int64_t
+name|__critical_t
+typedef|;
+end_typedef
 
 begin_typedef
 typedef|typedef
@@ -259,6 +236,13 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_typedef
+typedef|typedef
+name|__int32_t
+name|__critical_t
+typedef|;
+end_typedef
 
 begin_typedef
 typedef|typedef
@@ -347,7 +331,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__mips_n64
+name|__LP64__
 argument_list|)
 operator|||
 name|defined
@@ -397,7 +381,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__mips_n64
+name|__LP64__
 end_ifdef
 
 begin_typedef
@@ -589,7 +573,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__mips_n64
+name|__LP64__
 argument_list|)
 operator|||
 name|defined
@@ -622,14 +606,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__mips_n64
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__LP64__
+end_ifdef
 
 begin_typedef
 typedef|typedef

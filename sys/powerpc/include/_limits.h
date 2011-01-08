@@ -245,7 +245,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__powerpc64__
+name|__LP64__
 end_ifdef
 
 begin_define
