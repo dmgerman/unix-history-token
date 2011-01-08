@@ -1868,16 +1868,11 @@ name|regs
 operator|->
 name|tf_rip
 operator|=
-name|PS_STRINGS
-operator|-
-operator|*
-operator|(
 name|p
 operator|->
 name|p_sysent
 operator|->
-name|sv_szsigcode
-operator|)
+name|sv_sigcode_base
 expr_stmt|;
 name|regs
 operator|->

@@ -21,6 +21,12 @@ directive|include
 file|<sys/uio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vm/vm.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -205,6 +211,9 @@ name|pagesizes
 decl_stmt|;
 name|int
 name|pagesizeslen
+decl_stmt|;
+name|vm_prot_t
+name|stack_prot
 decl_stmt|;
 block|}
 struct|;

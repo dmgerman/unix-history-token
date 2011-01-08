@@ -697,7 +697,7 @@ block|,
 operator|.
 name|sv_maxuser
 operator|=
-name|FREEBSD32_USRSTACK
+name|FREEBSD32_MAXUSER
 block|,
 operator|.
 name|sv_usrstack
@@ -743,6 +743,16 @@ operator||
 name|SV_IA32
 operator||
 name|SV_ILP32
+operator||
+ifdef|#
+directive|ifdef
+name|__amd64__
+name|SV_SHP
+else|#
+directive|else
+literal|0
+endif|#
+directive|endif
 block|,
 operator|.
 name|sv_set_syscall_retval
@@ -758,9 +768,30 @@ operator|.
 name|sv_syscallnames
 operator|=
 name|freebsd32_syscallnames
+block|,
+operator|.
+name|sv_shared_page_base
+operator|=
+name|FREEBSD32_SHAREDPAGE
+block|,
+operator|.
+name|sv_shared_page_len
+operator|=
+name|PAGE_SIZE
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|INIT_SYSENTVEC
+argument_list|(
+name|elf_ia32_sysvec
+argument_list|,
+operator|&
+name|ia32_freebsd_sysvec
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|static

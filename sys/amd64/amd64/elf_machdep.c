@@ -279,6 +279,8 @@ operator|=
 name|SV_ABI_FREEBSD
 operator||
 name|SV_LP64
+operator||
+name|SV_SHP
 block|,
 operator|.
 name|sv_set_syscall_retval
@@ -294,9 +296,30 @@ operator|.
 name|sv_syscallnames
 operator|=
 name|syscallnames
+block|,
+operator|.
+name|sv_shared_page_base
+operator|=
+name|SHAREDPAGE
+block|,
+operator|.
+name|sv_shared_page_len
+operator|=
+name|PAGE_SIZE
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|INIT_SYSENTVEC
+argument_list|(
+name|elf64_sysvec
+argument_list|,
+operator|&
+name|elf64_freebsd_sysvec
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|static

@@ -402,8 +402,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|SHAREDPAGE
+value|(VM_MAXUSER_ADDRESS - PAGE_SIZE)
+end_define
+
+begin_define
+define|#
+directive|define
 name|USRSTACK
-value|VM_MAXUSER_ADDRESS
+value|SHAREDPAGE
 end_define
 
 begin_define

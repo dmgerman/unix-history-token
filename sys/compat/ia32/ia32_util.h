@@ -60,8 +60,22 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|FREEBSD32_USRSTACK
+name|FREEBSD32_MAXUSER
 value|((1ul<< 32) - IA32_PAGE_SIZE * 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FREEBSD32_SHAREDPAGE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|FREEBSD32_USRSTACK
+value|FREEBSD32_MAXUSER
 end_define
 
 begin_else
@@ -72,8 +86,22 @@ end_else
 begin_define
 define|#
 directive|define
-name|FREEBSD32_USRSTACK
+name|FREEBSD32_MAXUSER
 value|((1ul<< 32) - IA32_PAGE_SIZE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FREEBSD32_SHAREDPAGE
+value|(FREEBSD32_MAXUSER - IA32_PAGE_SIZE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FREEBSD32_USRSTACK
+value|FREEBSD32_SHAREDPAGE
 end_define
 
 begin_endif
