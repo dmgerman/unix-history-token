@@ -163,7 +163,7 @@ block|{
 name|int
 name|ioc_opt
 decl_stmt|;
-name|int
+name|uint32_t
 name|ioc_svlen
 decl_stmt|;
 comment|/* size of ioc_server address */
@@ -172,7 +172,7 @@ name|sockaddr
 modifier|*
 name|ioc_server
 decl_stmt|;
-name|int
+name|uint32_t
 name|ioc_lolen
 decl_stmt|;
 comment|/* size of ioc_local address */

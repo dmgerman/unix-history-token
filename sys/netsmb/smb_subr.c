@@ -366,7 +366,7 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-name|int
+name|size_t
 name|len
 decl_stmt|;
 name|len
@@ -431,7 +431,7 @@ name|char
 modifier|*
 name|s
 parameter_list|,
-name|int
+name|size_t
 name|maxlen
 parameter_list|)
 block|{
@@ -443,11 +443,14 @@ name|bt
 decl_stmt|;
 name|int
 name|error
-decl_stmt|,
-name|len
-init|=
-literal|0
 decl_stmt|;
+name|size_t
+name|len
+decl_stmt|;
+name|len
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|p
@@ -555,7 +558,7 @@ name|void
 modifier|*
 name|umem
 parameter_list|,
-name|int
+name|size_t
 name|len
 parameter_list|)
 block|{
@@ -725,8 +728,7 @@ name|void
 modifier|*
 name|smb_zmalloc
 parameter_list|(
-name|unsigned
-name|long
+name|size_t
 name|size
 parameter_list|,
 name|struct
@@ -813,7 +815,7 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-name|int
+name|size_t
 name|len
 decl_stmt|;
 name|printf
@@ -844,7 +846,7 @@ name|m_len
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"(%d)"
+literal|"(%zu)"
 argument_list|,
 name|len
 argument_list|)
@@ -1348,7 +1350,7 @@ name|char
 modifier|*
 name|src
 parameter_list|,
-name|int
+name|size_t
 name|size
 parameter_list|,
 name|int

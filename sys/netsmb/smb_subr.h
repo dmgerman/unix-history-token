@@ -425,7 +425,7 @@ name|char
 modifier|*
 name|s
 parameter_list|,
-name|int
+name|size_t
 name|maxlen
 parameter_list|)
 function_decl|;
@@ -440,7 +440,7 @@ name|void
 modifier|*
 name|umem
 parameter_list|,
-name|int
+name|size_t
 name|len
 parameter_list|)
 function_decl|;
@@ -489,8 +489,7 @@ name|void
 modifier|*
 name|smb_zmalloc
 parameter_list|(
-name|unsigned
-name|long
+name|size_t
 name|size
 parameter_list|,
 name|struct
@@ -588,7 +587,7 @@ name|char
 modifier|*
 name|src
 parameter_list|,
-name|int
+name|size_t
 name|len
 parameter_list|,
 name|int
