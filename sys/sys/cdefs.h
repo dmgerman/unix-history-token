@@ -142,13 +142,6 @@ name|__GNUCLIKE___SECTION
 value|1
 end_define
 
-begin_define
-define|#
-directive|define
-name|__GNUCLIKE_ATTRIBUTE_MODE_DI
-value|1
-end_define
-
 begin_ifndef
 ifndef|#
 directive|ifndef
