@@ -1247,8 +1247,8 @@ name|argc
 operator|>
 literal|1
 condition|)
-name|exitstatus
-operator|=
+name|exitshell
+argument_list|(
 name|number
 argument_list|(
 name|argv
@@ -1256,21 +1256,12 @@ index|[
 literal|1
 index|]
 argument_list|)
-expr_stmt|;
-else|else
-name|exitstatus
-operator|=
-name|oexitstatus
-expr_stmt|;
-name|exitshell
-argument_list|(
-name|exitstatus
 argument_list|)
 expr_stmt|;
-comment|/*NOTREACHED*/
-return|return
-literal|0
-return|;
+else|else
+name|exitshell_savedstatus
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
