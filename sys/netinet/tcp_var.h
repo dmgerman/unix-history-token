@@ -569,14 +569,6 @@ name|int
 name|t_sndzerowin
 decl_stmt|;
 comment|/* zero-window updates sent */
-name|uint64_t
-name|t_sndrexmitpack
-decl_stmt|;
-comment|/* retransmit packets sent */
-name|uint64_t
-name|t_rcvoopack
-decl_stmt|;
-comment|/* out-of-order packets received */
 name|void
 modifier|*
 name|t_pspare2
@@ -592,6 +584,14 @@ literal|10
 index|]
 decl_stmt|;
 comment|/* 7 UTO, 3 TBD (1-2 CC/RTT?) */
+name|uint64_t
+name|t_sndrexmitpack
+decl_stmt|;
+comment|/* retransmit packets sent */
+name|uint64_t
+name|t_rcvoopack
+decl_stmt|;
+comment|/* out-of-order packets received */
 block|}
 struct|;
 end_struct
