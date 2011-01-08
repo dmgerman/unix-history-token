@@ -5000,6 +5000,14 @@ name|AT_STACKPROT
 argument_list|,
 name|imgp
 operator|->
+name|sysent
+operator|->
+name|sv_shared_page_obj
+operator|!=
+name|NULL
+operator|&&
+name|imgp
+operator|->
 name|stack_prot
 operator|!=
 literal|0
