@@ -9392,6 +9392,18 @@ argument_list|(
 name|vnet_iter
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VIMAGE
+name|db_printf
+argument_list|(
+literal|"vnet %p\n"
+argument_list|,
+name|vnet_iter
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|flowtable_show_vnet
 argument_list|()
 expr_stmt|;
