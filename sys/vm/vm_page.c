@@ -225,19 +225,15 @@ name|vm_page_queue_free_lock
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|struct
 name|vpglocks
 name|pa_lock
 index|[
 name|PA_LOCK_COUNT
 index|]
-name|__aligned
-parameter_list|(
-name|CACHE_LINE_SIZE
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|vm_page_t
