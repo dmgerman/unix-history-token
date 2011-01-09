@@ -181,20 +181,6 @@ end_endif
 begin_define
 define|#
 directive|define
-name|IP_PROTOCOL_TCP
-value|6
-end_define
-
-begin_define
-define|#
-directive|define
-name|IP_PROTOCOL_UDP
-value|0x11
-end_define
-
-begin_define
-define|#
-directive|define
 name|FAU_NUM_PACKET_BUFFERS_TO_FREE
 value|(CVMX_FAU_REG_END - sizeof(uint32_t))
 end_define
