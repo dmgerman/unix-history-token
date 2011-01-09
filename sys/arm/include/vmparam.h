@@ -381,13 +381,6 @@ name|SGROWSIZ
 value|(128*1024)
 end_define
 
-begin_define
-define|#
-directive|define
-name|MAXSLP
-value|20
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef

@@ -146,17 +146,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * The time for a process to be blocked before being very swappable.  * This is a number of seconds which the system takes as being a non-trivial  * amount of real time.  You probably shouldn't change this;  * it is used in subtle ways (fractions and multiples of it are, that is, like  * half of a ``long time'', almost a long time, etc.)  * It is related to human patience and other factors which don't really  * change over time.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXSLP
-value|20
-end_define
-
-begin_comment
 comment|/*  * We provide a machine specific single page allocator through the use  * of the direct mapped segment.  This uses 2MB pages for reduced  * TLB pressure.  */
 end_comment
 

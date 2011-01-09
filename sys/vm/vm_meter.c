@@ -132,14 +132,6 @@ name|cnt
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|maxslp
-init|=
-name|MAXSLP
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(

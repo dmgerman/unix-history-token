@@ -203,13 +203,6 @@ directive|include
 file|<vm/swap_pager.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|maxslp
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * System initialization  *  * THIS MUST BE THE LAST INITIALIZATION ITEM!!!  *  * Note: run scheduling should be divorced from the vm system.  */
 end_comment
@@ -3051,7 +3044,7 @@ name|PVM
 argument_list|,
 literal|"sched"
 argument_list|,
-name|maxslp
+name|MAXSLP
 operator|*
 name|hz
 operator|/
@@ -3200,7 +3193,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Swapout is driven by the pageout daemon.  Very simple, we find eligible  * procs and swap out their stacks.  We try to always "swap" at least one  * process in case we need the room for a swapin.  * If any procs have been sleeping/stopped for at least maxslp seconds,  * they are swapped.  Else, we swap the longest-sleeping or stopped process,  * if any, otherwise the longest-resident process.  */
+comment|/*  * First, if any processes have been sleeping or stopped for at least  * "swap_idle_threshold1" seconds, they are swapped out.  If, however,  * no such processes exist, then the longest-sleeping or stopped  * process is swapped out.  Finally, and only as a last resort, if  * there are no sleeping or stopped processes, the longest-resident  * process is swapped out.  */
 end_comment
 
 begin_function
