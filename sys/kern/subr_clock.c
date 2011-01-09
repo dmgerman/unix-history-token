@@ -60,35 +60,6 @@ file|<sys/timetc.h>
 end_include
 
 begin_decl_stmt
-specifier|static
-name|int
-name|ct_debug
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|adjkerntz
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* local offset from UTC in seconds */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|wall_cmos_clock
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* wall CMOS clock assumed if != 0 */
-end_comment
-
-begin_decl_stmt
 name|int
 name|tz_minuteswest
 decl_stmt|;
@@ -101,50 +72,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * This have traditionally been in machdep, but should probably be moved to  * kern.  */
+comment|/*  * The adjkerntz and wall_cmos_clock sysctls are in the "machdep" sysctl  * namespace because they were misplaced there originally.  */
 end_comment
 
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_machdep
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|ct_debug
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|ct_debug
-argument_list|,
-literal|0
-argument_list|,
-literal|"Print ct debug if enabled."
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_machdep
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|wall_cmos_clock
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|wall_cmos_clock
-argument_list|,
-literal|0
-argument_list|,
-literal|"CMOS clock keeps wall time"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_decl_stmt
+specifier|static
+name|int
+name|adjkerntz
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static
@@ -217,6 +153,62 @@ argument_list|,
 literal|"I"
 argument_list|,
 literal|"Local offset from UTC in seconds"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ct_debug
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_debug
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|clocktime
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ct_debug
+argument_list|,
+literal|0
+argument_list|,
+literal|"Enable printing of clocktime debugging"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|wall_cmos_clock
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_machdep
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|wall_cmos_clock
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|wall_cmos_clock
+argument_list|,
+literal|0
+argument_list|,
+literal|"Enables application of machdep.adjkerntz"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
