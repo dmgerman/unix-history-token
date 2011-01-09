@@ -139,15 +139,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|grabstackblock
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|char
 modifier|*
 name|growstackstr
@@ -221,6 +212,16 @@ directive|define
 name|stackblocksize
 parameter_list|()
 value|stacknleft
+end_define
+
+begin_define
+define|#
+directive|define
+name|grabstackblock
+parameter_list|(
+name|n
+parameter_list|)
+value|stalloc(n)
 end_define
 
 begin_define

@@ -903,32 +903,6 @@ block|}
 block|}
 end_function
 
-begin_function
-name|void
-name|grabstackblock
-parameter_list|(
-name|int
-name|len
-parameter_list|)
-block|{
-name|len
-operator|=
-name|ALIGN
-argument_list|(
-name|len
-argument_list|)
-expr_stmt|;
-name|stacknxt
-operator|+=
-name|len
-expr_stmt|;
-name|stacknleft
-operator|-=
-name|len
-expr_stmt|;
-block|}
-end_function
-
 begin_comment
 comment|/*  * The following routines are somewhat easier to use that the above.  * The user declares a variable of type STACKSTR, which may be declared  * to be a register.  The macro STARTSTACKSTR initializes things.  Then  * the user uses the macro STPUTC to add characters to the string.  In  * effect, STPUTC(c, p) is the same as *p++ = c except that the stack is  * grown as necessary.  When the user is done, she can just leave the  * string there and refer to it using stackblock().  Or she can allocate  * the space for it using grabstackstr().  If it is necessary to allow  * someone else to use the stack temporarily and then continue to grow  * the string, the user should use grabstack to allocate the space, and  * then call ungrabstr(p) to return to the previous mode of operation.  *  * USTPUTC is like STPUTC except that it doesn't check for overflow.  * CHECKSTACKSPACE can be called before USTPUTC to ensure that there  * is space for at least one character.  */
 end_comment
