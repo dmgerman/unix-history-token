@@ -177,6 +177,16 @@ comment|/*-  * This file implements core functions for virtual network stacks:  
 end_comment
 
 begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|vimage
+argument_list|,
+literal|"VIMAGE kernel virtualization"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|MALLOC_DEFINE
 argument_list|(
 name|M_VNET
