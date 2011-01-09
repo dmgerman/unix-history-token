@@ -44,6 +44,13 @@ name|AR91XX_RST_RESET_MODULE_USBSUS_OVERRIDE
 value|(1<< 10)
 end_define
 
+begin_define
+define|#
+directive|define
+name|AR91XX_RST_RESET_MODULE_AMBA2WMAC
+value|(1<< 22)
+end_define
+
 begin_comment
 comment|/* PLL block */
 end_comment
