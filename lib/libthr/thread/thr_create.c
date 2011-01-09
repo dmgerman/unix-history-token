@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<link.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -184,6 +190,9 @@ name|int
 name|cpusetsize
 init|=
 literal|0
+decl_stmt|;
+name|int
+name|old_stack_prot
 decl_stmt|;
 name|_thr_check_init
 argument_list|()
@@ -376,6 +385,11 @@ name|tid
 operator|=
 name|TID_TERMINATED
 expr_stmt|;
+name|old_stack_prot
+operator|=
+name|_rtld_get_stack_prot
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|create_stack
@@ -514,6 +528,19 @@ name|_thr_link
 argument_list|(
 name|curthread
 argument_list|,
+name|new_thread
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Handle the race between __pthread_map_stacks_exec and 	 * thread linkage. 	 */
+if|if
+condition|(
+name|old_stack_prot
+operator|!=
+name|_rtld_get_stack_prot
+argument_list|()
+condition|)
+name|_thr_stack_fix_protection
+argument_list|(
 name|new_thread
 argument_list|)
 expr_stmt|;

@@ -16,6 +16,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mman.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<link.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -706,6 +718,18 @@ argument_list|(
 name|dummy
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|mprotect
+argument_list|(
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|_rtld_get_stack_prot
+argument_list|()
 expr_stmt|;
 name|li
 operator|.

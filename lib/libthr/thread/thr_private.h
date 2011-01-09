@@ -3724,6 +3724,18 @@ name|__hidden
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|void
+name|_thr_stack_fix_protection
+parameter_list|(
+name|struct
+name|pthread
+modifier|*
+name|thrd
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_macro
 name|__END_DECLS
 end_macro
