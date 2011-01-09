@@ -101,7 +101,7 @@ begin_define
 define|#
 directive|define
 name|DECIMAL_DIG
-value|35
+value|17
 end_define
 
 begin_comment
