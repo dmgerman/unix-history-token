@@ -1046,6 +1046,14 @@ block|,
 comment|/* Cressi Edy diving computer */
 name|UPLCOM_DEV
 argument_list|(
+name|EPSON
+argument_list|,
+name|N2ITION3
+argument_list|)
+block|,
+comment|/* Zeagle N2iTion3 diving computer */
+name|UPLCOM_DEV
+argument_list|(
 name|ELECOM
 argument_list|,
 name|UCSGT
