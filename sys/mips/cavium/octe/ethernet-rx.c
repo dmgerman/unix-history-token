@@ -141,6 +141,13 @@ name|cvm_oct_taskq
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|cvm_oct_rx_active
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/**  * Interrupt handler. The interrupt occurs whenever the POW  * transitions from 0->1 packets in our group.  *  * @param cpl  * @param dev_id  * @param regs  * @return  */
 end_comment
@@ -178,6 +185,19 @@ operator|<<
 name|pow_receive_group
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Schedule task if there isn't one running. 	 */
+if|if
+condition|(
+name|atomic_cmpset_int
+argument_list|(
+operator|&
+name|cvm_oct_rx_active
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+condition|)
 name|taskqueue_enqueue
 argument_list|(
 name|cvm_oct_taskq
@@ -1383,6 +1403,51 @@ else|else
 name|cvm_oct_free_work
 argument_list|(
 name|work
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 	 * If we hit our limit, schedule another task while we clean up. 	 */
+if|if
+condition|(
+name|INTERRUPT_LIMIT
+operator|!=
+literal|0
+operator|&&
+name|rx_count
+operator|==
+name|MAX_RX_PACKETS
+condition|)
+block|{
+name|taskqueue_enqueue
+argument_list|(
+name|cvm_oct_taskq
+argument_list|,
+operator|&
+name|cvm_oct_task
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 		 * No more packets, all done. 		 */
+if|if
+condition|(
+operator|!
+name|atomic_cmpset_int
+argument_list|(
+operator|&
+name|cvm_oct_rx_active
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+name|panic
+argument_list|(
+literal|"%s: inconsistent rx active state."
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
