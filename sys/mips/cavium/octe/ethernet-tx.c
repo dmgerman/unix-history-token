@@ -989,6 +989,21 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+name|ifp
+operator|->
+name|if_opackets
+operator|++
+expr_stmt|;
+name|ifp
+operator|->
+name|if_obytes
+operator|+=
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+expr_stmt|;
 block|}
 comment|/* Free mbufs not in use by the hardware */
 if|if
