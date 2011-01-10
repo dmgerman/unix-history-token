@@ -2246,6 +2246,11 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|len
@@ -2261,6 +2266,31 @@ name|if_ierrors
 operator|++
 expr_stmt|;
 block|}
+comment|/* Acknowledge interrupts.  */
+name|cvmx_write_csr
+argument_list|(
+name|CVMX_MIXX_ISR
+argument_list|(
+name|sc
+operator|->
+name|sc_port
+argument_list|)
+argument_list|,
+name|mixx_isr
+operator|.
+name|u64
+argument_list|)
+expr_stmt|;
+name|cvmx_read_csr
+argument_list|(
+name|CVMX_MIXX_ISR
+argument_list|(
+name|sc
+operator|->
+name|sc_port
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
