@@ -362,10 +362,6 @@ expr_stmt|;
 if|if
 condition|(
 name|InterruptNumber
-operator|<
-literal|0
-operator|||
-name|InterruptNumber
 operator|>
 literal|255
 operator|||
@@ -796,10 +792,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|InterruptNumber
-operator|<
-literal|0
-operator|||
 name|InterruptNumber
 operator|>
 literal|255
