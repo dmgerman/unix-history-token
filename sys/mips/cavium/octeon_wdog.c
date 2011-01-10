@@ -1030,7 +1030,7 @@ name|parent
 argument_list|,
 literal|0
 argument_list|,
-literal|"octeon_wdog"
+literal|"owdog"
 argument_list|,
 literal|0
 argument_list|)
@@ -1081,7 +1081,7 @@ name|driver_t
 name|octeon_wdog_driver
 init|=
 block|{
-literal|"octeon_wdog"
+literal|"owdog"
 block|,
 name|octeon_wdog_methods
 block|,
@@ -1104,7 +1104,7 @@ end_decl_stmt
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|octeon_wdog
+name|owdog
 argument_list|,
 name|ciu
 argument_list|,
