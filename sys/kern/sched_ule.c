@@ -479,7 +479,7 @@ begin_define
 define|#
 directive|define
 name|SCHED_PRI_RANGE
-value|(SCHED_PRI_MAX - SCHED_PRI_MIN)
+value|(SCHED_PRI_MAX - SCHED_PRI_MIN + 1)
 end_define
 
 begin_define
@@ -6325,6 +6325,8 @@ operator|(
 name|PRI_MAX_REALTIME
 operator|-
 name|PRI_MIN_REALTIME
+operator|+
+literal|1
 operator|)
 operator|/
 name|sched_interact
