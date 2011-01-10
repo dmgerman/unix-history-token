@@ -161,6 +161,29 @@ modifier|*
 name|buffer
 parameter_list|)
 function_decl|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+comment|/**  * Send a packet out the management port. The packet is copied so  * the input mbuf isn't used after this call.  *  * @param port       Management port  * @param m          Packet mbuf (with pkthdr)  *  * @return CVMX_MGMT_PORT_SUCCESS or an error code  */
+specifier|extern
+name|cvmx_mgmt_port_result_t
+name|cvmx_mgmt_port_sendm
+parameter_list|(
+name|int
+name|port
+parameter_list|,
+specifier|const
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|)
+function_decl|;
+endif|#
+directive|endif
 comment|/**  * Receive a packet from the management port.  *  * @param port       Management port  * @param buffer_len Size of the buffer to receive the packet into  * @param buffer     Buffer to receive the packet into  *  * @return The size of the packet, or a negative erorr code on failure. Zero  *         means that no packets were available.  */
 specifier|extern
 name|int
@@ -172,7 +195,7 @@ parameter_list|,
 name|int
 name|buffer_len
 parameter_list|,
-name|void
+name|uint8_t
 modifier|*
 name|buffer
 parameter_list|)

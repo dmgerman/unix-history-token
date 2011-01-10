@@ -138,7 +138,7 @@ begin_define
 define|#
 directive|define
 name|CIU_IRQ_EN1_END
-value|CVMX_IRQ_WDOG15
+value|CVMX_IRQ_DFM
 end_define
 
 begin_define
