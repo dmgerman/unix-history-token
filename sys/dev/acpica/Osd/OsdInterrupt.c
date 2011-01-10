@@ -437,6 +437,13 @@ operator|&
 name|acpi_intr_lock
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|ai
+argument_list|,
+name|M_ACPIINTR
+argument_list|)
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_ALREADY_EXISTS
