@@ -12568,10 +12568,25 @@ operator|)
 operator|!=
 literal|0
 condition|)
+block|{
 name|boundary
 operator|=
 name|BGE_DMA_BNDRY
 expr_stmt|;
+comment|/* 		 * XXX 		 * watchdog timeout issue was observed on BCM5704 which 		 * lives behind PCI-X bridge(e.g AMD 8131 PCI-X bridge). 		 * Limiting DMA address space to 32bits seems to address 		 * it. 		 */
+if|if
+condition|(
+name|sc
+operator|->
+name|bge_flags
+operator|&
+name|BGE_FLAG_PCIX
+condition|)
+name|lowaddr
+operator|=
+name|BUS_SPACE_MAXADDR_32BIT
+expr_stmt|;
+block|}
 name|error
 operator|=
 name|bus_dma_tag_create
