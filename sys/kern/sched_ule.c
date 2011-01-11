@@ -6281,9 +6281,12 @@ name|pri
 decl_stmt|;
 if|if
 condition|(
+name|PRI_BASE
+argument_list|(
 name|td
 operator|->
 name|td_pri_class
+argument_list|)
 operator|!=
 name|PRI_TIMESHARE
 condition|)
@@ -9058,9 +9061,12 @@ condition|)
 return|return;
 if|if
 condition|(
+name|PRI_BASE
+argument_list|(
 name|td
 operator|->
 name|td_pri_class
+argument_list|)
 operator|==
 name|PRI_TIMESHARE
 condition|)
