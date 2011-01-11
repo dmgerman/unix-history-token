@@ -22,19 +22,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/linker_set.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
 end_include
 
 begin_include
@@ -342,23 +342,9 @@ parameter_list|)
 value|_fail_point_##name
 define|#
 directive|define
-name|_STRINGIFY_HELPER
-parameter_list|(
-name|x
-parameter_list|)
-value|#x
-define|#
-directive|define
-name|_STRINGIFY
-parameter_list|(
-name|x
-parameter_list|)
-value|_STRINGIFY_HELPER(x)
-define|#
-directive|define
 name|_FAIL_POINT_LOCATION
 parameter_list|()
-value|__FILE__ ":" _STRINGIFY(__LINE__)
+value|"(" __FILE__ ":" __XSTRING(__LINE__) ")"
 comment|/**  * Instantiate a failpoint which returns "value" from the function when triggered.  * @param parent  The parent sysctl under which to locate the sysctl  * @param name    The name of the failpoint in the sysctl tree (and printouts)  * @return        Instantly returns the return("value") specified in the  *                failpoint, if triggered.  */
 define|#
 directive|define
@@ -409,7 +395,7 @@ name|label
 parameter_list|)
 define|\
 value|KFAIL_POINT_CODE(parent, name, (error_var) = RETURN_VALUE; goto label)
-comment|/**  * Instantiate a failpoint which runs arbitrary code when triggered.  * @param parent     The parent sysctl under which to locate the sysctl  * @param name       The name of the failpoint in the sysctl tree (and printouts)  * @param code       The arbitrary code to run when triggered.  Can reference  *                   "RETURN_VALUE" if desired to extract the specified user  *                   return-value when triggered  */
+comment|/**  * Instantiate a failpoint which runs arbitrary code when triggered.  * @param parent     The parent sysctl under which to locate the sysctl  * @param name       The name of the failpoint in the sysctl tree  *		     (and printouts)  * @param code       The arbitrary code to run when triggered.  Can reference  *                   "RETURN_VALUE" if desired to extract the specified  *                   user return-value when triggered.  Note that this is  *                   implemented with a do-while loop so be careful of  *                   break and continue statements.  */
 define|#
 directive|define
 name|KFAIL_POINT_CODE
@@ -421,25 +407,8 @@ parameter_list|,
 name|code
 parameter_list|)
 define|\
-value|KFAIL_POINT_START(parent, name) {				\ 		code;							\ 	} FAIL_POINT_END
+value|do {									\ 	int RETURN_VALUE;						\ 	static struct fail_point _FAIL_POINT_NAME(name) = {		\ 		#name,							\ 		_FAIL_POINT_LOCATION(),					\ 		TAILQ_HEAD_INITIALIZER(_FAIL_POINT_NAME(name).fp_entries), \ 		0,							\ 		NULL, NULL,						\ 	};								\ 	SYSCTL_OID(parent, OID_AUTO, name,				\ 	    CTLTYPE_STRING | CTLFLAG_RW | CTLFLAG_MPSAFE,		\&_FAIL_POINT_NAME(name), 0, fail_point_sysctl,		\ 	    "A", "");							\ 									\ 	if (__predict_false(						\ 	    fail_point_eval(&_FAIL_POINT_NAME(name),&RETURN_VALUE))) {	\ 									\ 		code;							\ 									\ 	}								\ } while (0)
 comment|/**  * @}  * (end group failpoint)  */
-comment|/**  * Internal macro to implement above #defines -- should not be used directly.  * @ingroup failpoint_private  */
-define|#
-directive|define
-name|KFAIL_POINT_START
-parameter_list|(
-name|parent
-parameter_list|,
-name|name
-parameter_list|)
-define|\
-value|do {								\ 		int RETURN_VALUE;					\ 		static struct fail_point _FAIL_POINT_NAME(name) = {	\ 			#name,						\ 			_FAIL_POINT_LOCATION(),				\ 			TAILQ_HEAD_INITIALIZER(				\ 				_FAIL_POINT_NAME(name).fp_entries),	\ 			0,						\ 			NULL, NULL,					\ 		};							\ 		SYSCTL_OID(parent, OID_AUTO, name,			\ 			CTLTYPE_STRING | CTLFLAG_RW | CTLFLAG_MPSAFE,	\&_FAIL_POINT_NAME(name), 0, fail_point_sysctl,	\ 			"A", "");					\ 									\ 		if (__predict_false(					\ 		    fail_point_eval(&_FAIL_POINT_NAME(name),		\&RETURN_VALUE))) {
-comment|/**  * Internal macro to implement above #defines -- should not be used directly.  * @ingroup failpoint_private  */
-define|#
-directive|define
-name|FAIL_POINT_END
-define|\
-value|}							\ 	} while (0)
 ifdef|#
 directive|ifdef
 name|_KERNEL
