@@ -50,39 +50,6 @@ file|<sys/sysctl.h>
 end_include
 
 begin_comment
-comment|/**  * Failpoint types.  * Don't change these without changing fail_type_strings in fail.c.  * @ingroup failpoint_private  */
-end_comment
-
-begin_enum
-enum|enum
-name|fail_point_t
-block|{
-name|FAIL_POINT_OFF
-block|,
-comment|/**< don't fail */
-name|FAIL_POINT_PANIC
-block|,
-comment|/**< panic */
-name|FAIL_POINT_RETURN
-block|,
-comment|/**< return an errorcode */
-name|FAIL_POINT_BREAK
-block|,
-comment|/**< break into the debugger */
-name|FAIL_POINT_PRINT
-block|,
-comment|/**< print a message */
-name|FAIL_POINT_SLEEP
-block|,
-comment|/**< sleep for some msecs */
-name|FAIL_POINT_INVALID
-block|,
-comment|/**< placeholder */
-block|}
-enum|;
-end_enum
-
-begin_comment
 comment|/**  * Failpoint return codes, used internally.  * @ingroup failpoint_private  */
 end_comment
 
@@ -104,6 +71,12 @@ comment|/**< sleep_fn will be called */
 block|}
 enum|;
 end_enum
+
+begin_struct_decl
+struct_decl|struct
+name|fail_point_entry
+struct_decl|;
+end_struct_decl
 
 begin_expr_stmt
 name|TAILQ_HEAD
@@ -174,47 +147,9 @@ begin_comment
 comment|/**< Must free name on destroy */
 end_comment
 
-begin_comment
-comment|/**  * Internal structure tracking a single term of a complete failpoint.  * @ingroup failpoint_private  */
-end_comment
-
-begin_struct
-struct|struct
-name|fail_point_entry
-block|{
-name|enum
-name|fail_point_t
-name|fe_type
-decl_stmt|;
-comment|/**< type of entry */
-name|int
-name|fe_arg
-decl_stmt|;
-comment|/**< argument to type (e.g. return value) */
-name|int
-name|fe_prob
-decl_stmt|;
-comment|/**< likelihood of firing in millionths */
-name|int
-name|fe_count
-decl_stmt|;
-comment|/**< number of times to fire, 0 means always */
-name|TAILQ_ENTRY
-argument_list|(
-argument|fail_point_entry
-argument_list|)
-name|fe_entries
-expr_stmt|;
-comment|/**< next entry in fail point */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* Private failpoint eval function -- use fail_point_eval() instead. */
-end_comment
-
 begin_function_decl
+name|__BEGIN_DECLS
+comment|/* Private failpoint eval function -- use fail_point_eval() instead. */
 name|enum
 name|fail_point_return_code
 name|fail_point_eval_nontrivial
@@ -395,11 +330,9 @@ return|;
 block|}
 end_function
 
-begin_comment
+begin_function_decl
+name|__END_DECLS
 comment|/* Declare a fail_point and its sysctl in a function. */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|_FAIL_POINT_NAME
@@ -407,9 +340,6 @@ parameter_list|(
 name|name
 parameter_list|)
 value|_fail_point_##name
-end_define
-
-begin_define
 define|#
 directive|define
 name|_STRINGIFY_HELPER
@@ -417,9 +347,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|#x
-end_define
-
-begin_define
 define|#
 directive|define
 name|_STRINGIFY
@@ -427,21 +354,12 @@ parameter_list|(
 name|x
 parameter_list|)
 value|_STRINGIFY_HELPER(x)
-end_define
-
-begin_define
 define|#
 directive|define
 name|_FAIL_POINT_LOCATION
 parameter_list|()
 value|__FILE__ ":" _STRINGIFY(__LINE__)
-end_define
-
-begin_comment
 comment|/**  * Instantiate a failpoint which returns "value" from the function when triggered.  * @param parent  The parent sysctl under which to locate the sysctl  * @param name    The name of the failpoint in the sysctl tree (and printouts)  * @return        Instantly returns the return("value") specified in the  *                failpoint, if triggered.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|KFAIL_POINT_RETURN
@@ -452,13 +370,7 @@ name|name
 parameter_list|)
 define|\
 value|KFAIL_POINT_CODE(parent, name, return RETURN_VALUE)
-end_define
-
-begin_comment
 comment|/**  * Instantiate a failpoint which returns (void) from the function when triggered.  * @param parent  The parent sysctl under which to locate the sysctl  * @param name    The name of the failpoint in the sysctl tree (and printouts)  * @return        Instantly returns void, if triggered in the failpoint.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|KFAIL_POINT_RETURN_VOID
@@ -469,13 +381,7 @@ name|name
 parameter_list|)
 define|\
 value|KFAIL_POINT_CODE(parent, name, return)
-end_define
-
-begin_comment
 comment|/**  * Instantiate a failpoint which sets an error when triggered.  * @param parent     The parent sysctl under which to locate the sysctl  * @param name       The name of the failpoint in the sysctl tree (and printouts)  * @param error_var  A variable to set to the failpoint's specified  *                   return-value when triggered  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|KFAIL_POINT_ERROR
@@ -488,13 +394,7 @@ name|error_var
 parameter_list|)
 define|\
 value|KFAIL_POINT_CODE(parent, name, (error_var) = RETURN_VALUE)
-end_define
-
-begin_comment
 comment|/**  * Instantiate a failpoint which sets an error and then goes to a  * specified label in the function when triggered.  * @param parent     The parent sysctl under which to locate the sysctl  * @param name       The name of the failpoint in the sysctl tree (and printouts)  * @param error_var  A variable to set to the failpoint's specified  *                   return-value when triggered  * @param label      The location to goto when triggered.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|KFAIL_POINT_GOTO
@@ -509,13 +409,7 @@ name|label
 parameter_list|)
 define|\
 value|KFAIL_POINT_CODE(parent, name, (error_var) = RETURN_VALUE; goto label)
-end_define
-
-begin_comment
 comment|/**  * Instantiate a failpoint which runs arbitrary code when triggered.  * @param parent     The parent sysctl under which to locate the sysctl  * @param name       The name of the failpoint in the sysctl tree (and printouts)  * @param code       The arbitrary code to run when triggered.  Can reference  *                   "RETURN_VALUE" if desired to extract the specified user  *                   return-value when triggered  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|KFAIL_POINT_CODE
@@ -528,17 +422,8 @@ name|code
 parameter_list|)
 define|\
 value|KFAIL_POINT_START(parent, name) {				\ 		code;							\ 	} FAIL_POINT_END
-end_define
-
-begin_comment
 comment|/**  * @}  * (end group failpoint)  */
-end_comment
-
-begin_comment
 comment|/**  * Internal macro to implement above #defines -- should not be used directly.  * @ingroup failpoint_private  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|KFAIL_POINT_START
@@ -548,28 +433,16 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|do {								\ 		int RETURN_VALUE;					\ 		static struct fail_point _FAIL_POINT_NAME(name) = {	\ 			#name,						\ 			_FAIL_POINT_LOCATION(),				\ 			TAILQ_HEAD_INITIALIZER(				\ 				_FAIL_POINT_NAME(name).fp_entries),	\ 			0,						\ 			NULL, NULL,					\ 		};							\ 		SYSCTL_OID(parent, OID_AUTO, name,			\ 			CTLTYPE_STRING | CTLFLAG_RW,			\&_FAIL_POINT_NAME(name), 0, fail_point_sysctl,	\ 			"A", "");					\ 									\ 		if (__predict_false(					\ 		    fail_point_eval(&_FAIL_POINT_NAME(name),		\&RETURN_VALUE))) {
-end_define
-
-begin_comment
+value|do {								\ 		int RETURN_VALUE;					\ 		static struct fail_point _FAIL_POINT_NAME(name) = {	\ 			#name,						\ 			_FAIL_POINT_LOCATION(),				\ 			TAILQ_HEAD_INITIALIZER(				\ 				_FAIL_POINT_NAME(name).fp_entries),	\ 			0,						\ 			NULL, NULL,					\ 		};							\ 		SYSCTL_OID(parent, OID_AUTO, name,			\ 			CTLTYPE_STRING | CTLFLAG_RW | CTLFLAG_MPSAFE,	\&_FAIL_POINT_NAME(name), 0, fail_point_sysctl,	\ 			"A", "");					\ 									\ 		if (__predict_false(					\ 		    fail_point_eval(&_FAIL_POINT_NAME(name),		\&RETURN_VALUE))) {
 comment|/**  * Internal macro to implement above #defines -- should not be used directly.  * @ingroup failpoint_private  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|FAIL_POINT_END
 define|\
 value|}							\ 	} while (0)
-end_define
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|_KERNEL
-end_ifdef
-
-begin_function_decl
 name|int
 name|fail_point_sysctl
 parameter_list|(
@@ -590,17 +463,17 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
 name|DEBUG_FP
 value|_debug_fail_point
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
