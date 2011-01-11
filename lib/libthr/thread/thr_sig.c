@@ -1382,7 +1382,7 @@ operator|->
 name|deferred_siginfo
 operator|.
 name|si_signo
-operator|==
+operator|!=
 literal|0
 condition|)
 block|{
