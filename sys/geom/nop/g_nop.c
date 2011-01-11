@@ -878,14 +878,6 @@ name|EINVAL
 operator|)
 return|;
 block|}
-if|if
-condition|(
-name|size
-operator|%
-name|secsize
-operator|!=
-literal|0
-condition|)
 name|size
 operator|-=
 name|size
