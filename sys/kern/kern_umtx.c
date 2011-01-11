@@ -15454,7 +15454,7 @@ else|else
 block|{
 name|error
 operator|=
-name|copyin
+name|copyin_timeout32
 argument_list|(
 name|uap
 operator|->
@@ -15462,11 +15462,6 @@ name|uaddr2
 argument_list|,
 operator|&
 name|timeout
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|timeout
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
