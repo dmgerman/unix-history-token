@@ -509,23 +509,6 @@ begin_comment
 comment|/*  * Virtual network stack memory allocator, which allows global variables to  * be automatically instantiated for each network stack instance.  */
 end_comment
 
-begin_asm
-asm|__asm__(
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__arm__
-argument_list|)
-asm|".section " VNET_SETNAME ", \"aw\", %progbits\n"
-else|#
-directive|else
-asm|".section " VNET_SETNAME ", \"aw\", @progbits\n"
-endif|#
-directive|endif
-asm|"\t.p2align " __XSTRING(CACHE_LINE_SHIFT) "\n" 	"\t.previous");
-end_asm
-
 begin_define
 define|#
 directive|define
