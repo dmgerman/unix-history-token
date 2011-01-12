@@ -1352,10 +1352,10 @@ name|i
 index|]
 operator|.
 name|type
-operator|==
+operator|!=
 name|BOOT1_MEM_RAM
 condition|)
-block|{
+continue|continue;
 if|if
 condition|(
 name|j
@@ -1377,7 +1377,6 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* TODO FIXME  */
 comment|/* start after kernel end */
 name|phys_avail
 index|[
@@ -1397,7 +1396,6 @@ literal|0x20000
 expr_stmt|;
 comment|/* boot loader start */
 comment|/* HACK to Use bootloaders memory region */
-comment|/* TODO FIXME  */
 if|if
 condition|(
 name|boot_map
@@ -1493,7 +1491,114 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*  * Can't use this code yet, because most of the fixed allocations happen from  * the biggest physical area. If we have more than 512M memory the kernel will try  * to map from the second are which is not in KSEG0 and not mapped  */
+comment|/* 			 * In 32 bit physical address mode we cannot use  			 * mem> 0xffffffff 			 */
+if|if
+condition|(
+name|boot_map
+operator|->
+name|physmem_map
+index|[
+name|i
+index|]
+operator|.
+name|addr
+operator|>
+literal|0xfffff000U
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Memory: start %#jx size %#jx ignored"
+literal|"(>4GB)\n"
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
+name|boot_map
+operator|->
+name|physmem_map
+index|[
+name|i
+index|]
+operator|.
+name|addr
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
+name|boot_map
+operator|->
+name|physmem_map
+index|[
+name|i
+index|]
+operator|.
+name|size
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+name|boot_map
+operator|->
+name|physmem_map
+index|[
+name|i
+index|]
+operator|.
+name|addr
+operator|+
+name|boot_map
+operator|->
+name|physmem_map
+index|[
+name|i
+index|]
+operator|.
+name|size
+operator|>
+literal|0xfffff000U
+condition|)
+block|{
+name|boot_map
+operator|->
+name|physmem_map
+index|[
+name|i
+index|]
+operator|.
+name|size
+operator|=
+literal|0xfffff000U
+operator|-
+name|boot_map
+operator|->
+name|physmem_map
+index|[
+name|i
+index|]
+operator|.
+name|addr
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Memory: start %#jx limited to 4GB\n"
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
+name|boot_map
+operator|->
+name|physmem_map
+index|[
+name|i
+index|]
+operator|.
+name|addr
+argument_list|)
+expr_stmt|;
+block|}
 name|phys_avail
 index|[
 name|j
@@ -1532,94 +1637,12 @@ index|]
 operator|.
 name|size
 expr_stmt|;
-if|if
-condition|(
-name|phys_avail
-index|[
-name|j
-operator|+
-literal|1
-index|]
-operator|<
-name|phys_avail
-index|[
-name|j
-index|]
-condition|)
-block|{
-comment|/* Houston we have an issue. Memory is 					 * larger than possible. Its probably in 					 * 64 bit> 4Gig and we are in 32 bit mode. 					 */
-name|phys_avail
-index|[
-name|j
-operator|+
-literal|1
-index|]
-operator|=
-literal|0xfffff000
-expr_stmt|;
 name|printf
 argument_list|(
-literal|"boot map size was %jx\n"
+literal|"Next segment : addr:%#jx -> %#jx\n"
 argument_list|,
 operator|(
-name|intmax_t
-operator|)
-name|boot_map
-operator|->
-name|physmem_map
-index|[
-name|i
-index|]
-operator|.
-name|size
-argument_list|)
-expr_stmt|;
-name|boot_map
-operator|->
-name|physmem_map
-index|[
-name|i
-index|]
-operator|.
-name|size
-operator|=
-name|phys_avail
-index|[
-name|j
-operator|+
-literal|1
-index|]
-operator|-
-name|phys_avail
-index|[
-name|j
-index|]
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"reduced to %jx\n"
-argument_list|,
-operator|(
-name|intmax_t
-operator|)
-name|boot_map
-operator|->
-name|physmem_map
-index|[
-name|i
-index|]
-operator|.
-name|size
-argument_list|)
-expr_stmt|;
-block|}
-name|printf
-argument_list|(
-literal|"Next segment : addr:%p -> %p \n"
-argument_list|,
-operator|(
-name|void
-operator|*
+name|uintmax_t
 operator|)
 name|phys_avail
 index|[
@@ -1627,8 +1650,7 @@ name|j
 index|]
 argument_list|,
 operator|(
-name|void
-operator|*
+name|uintmax_t
 operator|)
 name|phys_avail
 index|[
@@ -1675,8 +1697,6 @@ operator|.
 name|size
 expr_stmt|;
 block|}
-block|}
-comment|/* FIXME XLR TODO */
 name|phys_avail
 index|[
 name|j
@@ -1751,7 +1771,6 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
-comment|/* XXX FIXME the code below is not 64 bit clean */
 comment|/* Save boot loader and other stuff from scratch regs */
 name|xlr_boot1_info
 operator|=
@@ -1849,8 +1868,6 @@ argument_list|,
 literal|6
 argument_list|)
 expr_stmt|;
-comment|/* TODO: Verify the magic number here */
-comment|/* FIXMELATER: xlr_boot1_info.magic_number */
 comment|/* Initialize pcpu stuff */
 name|mips_pcpu0_init
 argument_list|()
@@ -2228,10 +2245,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * XXX Maybe return the state of the watchdog in enter, and pass it to  * exit?  Like spl().  */
-end_comment
-
 begin_function
 name|void
 name|platform_trap_enter
@@ -2429,7 +2442,6 @@ argument_list|()
 operator|==
 literal|0
 condition|)
-block|{
 name|xlr_msgring_cpu_init
 argument_list|()
 expr_stmt|;
@@ -2438,7 +2450,6 @@ argument_list|(
 name|IRQ_MSGRING
 argument_list|)
 expr_stmt|;
-block|}
 return|return;
 block|}
 end_function
