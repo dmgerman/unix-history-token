@@ -2691,7 +2691,7 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"in_arp: requested protocol length != %ld\n"
+literal|"in_arp: requested protocol length != %zu\n"
 argument_list|,
 sizeof|sizeof
 argument_list|(
