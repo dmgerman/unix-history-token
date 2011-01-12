@@ -2202,7 +2202,7 @@ name|primary_exit
 argument_list|(
 name|EX_TEMPFAIL
 argument_list|,
-literal|"Unable to create connection to %s"
+literal|"Unable to create outgoing connection to %s"
 argument_list|,
 name|res
 operator|->
@@ -2527,11 +2527,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|pjdlog_errno
+name|primary_exit
 argument_list|(
-name|LOG_WARNING
+name|EX_TEMPFAIL
 argument_list|,
-literal|"Unable to create connection to %s"
+literal|"Unable to create incoming connection to %s"
 argument_list|,
 name|res
 operator|->
@@ -9332,6 +9332,12 @@ argument_list|)
 expr_stmt|;
 name|timeout
 operator|.
+name|tv_sec
+operator|=
+name|RETRY_SLEEP
+expr_stmt|;
+name|timeout
+operator|.
 name|tv_nsec
 operator|=
 literal|0
@@ -9428,12 +9434,6 @@ operator|=
 name|now
 expr_stmt|;
 block|}
-name|timeout
-operator|.
-name|tv_sec
-operator|=
-name|RETRY_SLEEP
-expr_stmt|;
 name|signo
 operator|=
 name|sigtimedwait
