@@ -14798,7 +14798,7 @@ operator|->
 name|if_snd
 argument_list|)
 condition|)
-name|alc_start_locked
+name|alc_start
 argument_list|(
 name|ifp
 argument_list|)
