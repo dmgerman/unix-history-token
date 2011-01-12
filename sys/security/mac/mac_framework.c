@@ -354,7 +354,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_QUAD
+name|SYSCTL_UQUAD
 argument_list|(
 name|_security_mac
 argument_list|,
