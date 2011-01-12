@@ -266,7 +266,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UQUAD
+name|SYSCTL_QUAD
 argument_list|(
 name|_vfs_zfs_zfetch
 argument_list|,
