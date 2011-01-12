@@ -197,7 +197,7 @@ argument_list|(
 name|intr_model
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UINT
+name|SYSCTL_ADD_INT
 argument_list|(
 operator|&
 name|sc

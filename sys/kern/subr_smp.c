@@ -220,7 +220,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_UINT
 argument_list|(
 name|_kern_smp
 argument_list|,

@@ -612,7 +612,7 @@ argument_list|,
 literal|"Low water mark for request space."
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UINT
+name|SYSCTL_ADD_INT
 argument_list|(
 operator|&
 name|pool
@@ -637,7 +637,7 @@ argument_list|,
 literal|"Whether nfs requests are currently throttled"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UINT
+name|SYSCTL_ADD_INT
 argument_list|(
 operator|&
 name|pool

@@ -241,7 +241,7 @@ argument_list|,
 literal|"event timer description"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UINT
+name|SYSCTL_ADD_INT
 argument_list|(
 name|NULL
 argument_list|,
@@ -270,7 +270,7 @@ argument_list|,
 literal|"Event timer capabilities"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|NULL
 argument_list|,

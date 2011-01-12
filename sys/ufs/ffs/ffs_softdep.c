@@ -2116,7 +2116,7 @@ parameter_list|,
 name|long
 parameter_list|)
 define|\
-value|static MALLOC_DEFINE(M_ ## type, #str, long);			\     SYSCTL_LONG(_debug_softdep_total, OID_AUTO, str, CTLFLAG_RD,	\&dep_total[D_ ## type], 0, "");					\     SYSCTL_LONG(_debug_softdep_current, OID_AUTO, str, CTLFLAG_RD, 	\&dep_current[D_ ## type], 0, "");
+value|static MALLOC_DEFINE(M_ ## type, #str, long);			\     SYSCTL_ULONG(_debug_softdep_total, OID_AUTO, str, CTLFLAG_RD,	\&dep_total[D_ ## type], 0, "");					\     SYSCTL_ULONG(_debug_softdep_current, OID_AUTO, str, CTLFLAG_RD, 	\&dep_current[D_ ## type], 0, "");
 end_define
 
 begin_expr_stmt

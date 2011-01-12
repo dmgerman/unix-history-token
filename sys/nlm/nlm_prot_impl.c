@@ -3449,7 +3449,7 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 operator|&
 name|host
@@ -3477,7 +3477,7 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 operator|&
 name|host

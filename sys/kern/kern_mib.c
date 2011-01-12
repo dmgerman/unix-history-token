@@ -1056,7 +1056,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_ULONG
+name|SYSCTL_LONG
 argument_list|(
 name|_hw
 argument_list|,

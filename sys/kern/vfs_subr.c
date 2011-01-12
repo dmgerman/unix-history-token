@@ -558,7 +558,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_LONG
+name|SYSCTL_ULONG
 argument_list|(
 name|_vfs
 argument_list|,
@@ -685,7 +685,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_LONG
+name|SYSCTL_ULONG
 argument_list|(
 name|_vfs
 argument_list|,
@@ -717,7 +717,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_LONG
+name|SYSCTL_ULONG
 argument_list|(
 name|_vfs
 argument_list|,
@@ -1172,7 +1172,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_ULONG
 argument_list|(
 name|_kern
 argument_list|,
