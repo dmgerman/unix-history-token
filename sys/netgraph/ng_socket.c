@@ -531,7 +531,7 @@ comment|/* really max datagram size */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_ULONG
 argument_list|(
 name|_net_graph
 argument_list|,
@@ -563,7 +563,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_ULONG
 argument_list|(
 name|_net_graph
 argument_list|,

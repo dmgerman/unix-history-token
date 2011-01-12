@@ -478,7 +478,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_UINT
 argument_list|(
 name|_net_bluetooth_sco_sockets_seq
 argument_list|,
@@ -499,7 +499,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_UINT
 argument_list|(
 name|_net_bluetooth_sco_sockets_seq
 argument_list|,
@@ -522,7 +522,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_UINT
 argument_list|(
 name|_net_bluetooth_sco_sockets_seq
 argument_list|,
@@ -545,7 +545,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_UINT
 argument_list|(
 name|_net_bluetooth_sco_sockets_seq
 argument_list|,
