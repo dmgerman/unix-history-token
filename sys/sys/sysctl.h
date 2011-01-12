@@ -972,7 +972,7 @@ name|SYSCTL_ALLOWED_TYPES
 argument_list|(
 argument|XLONG
 argument_list|,
-argument|unsigned long *a; long b;
+argument|unsigned long *a; long *b;
 argument_list|)
 end_macro
 
