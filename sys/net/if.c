@@ -402,7 +402,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_INT
 argument_list|(
 name|_net_link
 argument_list|,

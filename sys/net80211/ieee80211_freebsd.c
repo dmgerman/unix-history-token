@@ -1078,7 +1078,7 @@ argument_list|,
 literal|"parent device"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 name|ctx
 argument_list|,
@@ -1112,7 +1112,7 @@ name|iv_debug
 operator|=
 name|ieee80211_debug
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 name|ctx
 argument_list|,
@@ -1298,7 +1298,7 @@ operator|&
 name|IEEE80211_HTC_HT
 condition|)
 block|{
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 name|ctx
 argument_list|,
@@ -1326,7 +1326,7 @@ argument_list|,
 literal|"BK traffic tx aggr threshold (pps)"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 name|ctx
 argument_list|,
@@ -1354,7 +1354,7 @@ argument_list|,
 literal|"BE traffic tx aggr threshold (pps)"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 name|ctx
 argument_list|,
@@ -1382,7 +1382,7 @@ argument_list|,
 literal|"VO traffic tx aggr threshold (pps)"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 name|ctx
 argument_list|,

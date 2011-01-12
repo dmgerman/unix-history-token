@@ -177,7 +177,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_UINT
 argument_list|(
 name|_net
 argument_list|,
@@ -225,7 +225,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_UINT
 argument_list|(
 name|_net
 argument_list|,

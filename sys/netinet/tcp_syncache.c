@@ -730,7 +730,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_VNET_UINT
 argument_list|(
 name|_net_inet_tcp_syncache
 argument_list|,
@@ -756,7 +756,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_VNET_UINT
 argument_list|(
 name|_net_inet_tcp_syncache
 argument_list|,
@@ -782,7 +782,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_VNET_UINT
 argument_list|(
 name|_net_inet_tcp_syncache
 argument_list|,
@@ -808,7 +808,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_VNET_UINT
 argument_list|(
 name|_net_inet_tcp_syncache
 argument_list|,
@@ -834,7 +834,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_VNET_INT
+name|SYSCTL_VNET_UINT
 argument_list|(
 name|_net_inet_tcp_syncache
 argument_list|,

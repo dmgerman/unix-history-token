@@ -726,7 +726,7 @@ comment|/* Drain parameters */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_UINT
 argument_list|(
 name|_net_inet_ip_dummynet
 argument_list|,
@@ -749,7 +749,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_UINT
 argument_list|(
 name|_net_inet_ip_dummynet
 argument_list|,

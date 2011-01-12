@@ -1548,7 +1548,7 @@ literal|"amrr operation interval (ms)"
 argument_list|)
 expr_stmt|;
 comment|/* XXX bounds check values */
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 name|ctx
 argument_list|,
@@ -1573,7 +1573,7 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 name|ctx
 argument_list|,
