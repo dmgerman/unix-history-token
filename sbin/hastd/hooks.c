@@ -1603,6 +1603,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Dummy handler set for SIGCHLD in the parent should be 		 * changed after fork(2) automatically to the default SIG_IGN, 		 * so there is no need to do anything with it. 		 */
 name|execv
 argument_list|(
 name|path
