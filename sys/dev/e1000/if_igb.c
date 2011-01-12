@@ -23647,7 +23647,7 @@ name|QUEUE_NAME_LEN
 index|]
 decl_stmt|;
 comment|/* Driver Statistics */
-name|SYSCTL_ADD_UINT
+name|SYSCTL_ADD_INT
 argument_list|(
 name|ctx
 argument_list|,
@@ -24085,7 +24085,7 @@ argument_list|,
 literal|"Transmit Descriptor Tail"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24105,7 +24105,7 @@ argument_list|,
 literal|"Queue No Descriptor Available"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24181,7 +24181,7 @@ argument_list|,
 literal|"Receive Descriptor Tail"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24201,7 +24201,7 @@ argument_list|,
 literal|"Queue Packets Received"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24221,7 +24221,7 @@ argument_list|,
 literal|"Queue Bytes Received"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UINT
+name|SYSCTL_ADD_INT
 argument_list|(
 name|ctx
 argument_list|,
@@ -24243,7 +24243,7 @@ argument_list|,
 literal|"LRO Queued"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UINT
+name|SYSCTL_ADD_INT
 argument_list|(
 name|ctx
 argument_list|,
@@ -24307,7 +24307,7 @@ operator|==
 name|e1000_vfadapt
 condition|)
 block|{
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24327,7 +24327,7 @@ argument_list|,
 literal|"Good Packets Received"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24347,7 +24347,7 @@ argument_list|,
 literal|"Good Packets Transmitted"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24367,7 +24367,7 @@ argument_list|,
 literal|"Good Octets Received"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24387,7 +24387,7 @@ argument_list|,
 literal|"Good Octets Transmitted"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24409,7 +24409,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24429,7 +24429,7 @@ argument_list|,
 literal|"Excessive collisions"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24449,7 +24449,7 @@ argument_list|,
 literal|"Single collisions"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24469,7 +24469,7 @@ argument_list|,
 literal|"Multiple collisions"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24489,7 +24489,7 @@ argument_list|,
 literal|"Late collisions"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24509,7 +24509,7 @@ argument_list|,
 literal|"Collision Count"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24529,7 +24529,7 @@ argument_list|,
 literal|"Symbol Errors"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24549,7 +24549,7 @@ argument_list|,
 literal|"Sequence Errors"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24569,7 +24569,7 @@ argument_list|,
 literal|"Defer Count"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24589,7 +24589,7 @@ argument_list|,
 literal|"Missed Packets"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24609,7 +24609,7 @@ argument_list|,
 literal|"Receive No Buffers"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24629,7 +24629,7 @@ argument_list|,
 literal|"Receive Undersize"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24649,7 +24649,7 @@ argument_list|,
 literal|"Fragmented Packets Received "
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24669,7 +24669,7 @@ argument_list|,
 literal|"Oversized Packets Received"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24689,7 +24689,7 @@ argument_list|,
 literal|"Recevied Jabber"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24709,7 +24709,7 @@ argument_list|,
 literal|"Receive Errors"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24729,7 +24729,7 @@ argument_list|,
 literal|"CRC errors"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24750,7 +24750,7 @@ literal|"Alignment Errors"
 argument_list|)
 expr_stmt|;
 comment|/* On 82575 these are collision counts */
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24770,7 +24770,7 @@ argument_list|,
 literal|"Collision/Carrier extension errors"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24790,7 +24790,7 @@ argument_list|,
 literal|"XON Received"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24810,7 +24810,7 @@ argument_list|,
 literal|"XON Transmitted"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24830,7 +24830,7 @@ argument_list|,
 literal|"XOFF Received"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24851,7 +24851,7 @@ literal|"XOFF Transmitted"
 argument_list|)
 expr_stmt|;
 comment|/* Packet Reception Stats */
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24871,7 +24871,7 @@ argument_list|,
 literal|"Total Packets Received "
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24891,7 +24891,7 @@ argument_list|,
 literal|"Good Packets Received"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24911,7 +24911,7 @@ argument_list|,
 literal|"Broadcast Packets Received"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24931,7 +24931,7 @@ argument_list|,
 literal|"Multicast Packets Received"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24951,7 +24951,7 @@ argument_list|,
 literal|"64 byte frames received "
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24971,7 +24971,7 @@ argument_list|,
 literal|"65-127 byte frames received"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -24991,7 +24991,7 @@ argument_list|,
 literal|"128-255 byte frames received"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25011,7 +25011,7 @@ argument_list|,
 literal|"256-511 byte frames received"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25031,7 +25031,7 @@ argument_list|,
 literal|"512-1023 byte frames received"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25051,7 +25051,7 @@ argument_list|,
 literal|"1023-1522 byte frames received"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25072,7 +25072,7 @@ literal|"Good Octets Received"
 argument_list|)
 expr_stmt|;
 comment|/* Packet Transmission Stats */
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25092,7 +25092,7 @@ argument_list|,
 literal|"Good Octets Transmitted"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25112,7 +25112,7 @@ argument_list|,
 literal|"Total Packets Transmitted"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25132,7 +25132,7 @@ argument_list|,
 literal|"Good Packets Transmitted"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25152,7 +25152,7 @@ argument_list|,
 literal|"Broadcast Packets Transmitted"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25172,7 +25172,7 @@ argument_list|,
 literal|"Multicast Packets Transmitted"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25192,7 +25192,7 @@ argument_list|,
 literal|"64 byte frames transmitted "
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25212,7 +25212,7 @@ argument_list|,
 literal|"65-127 byte frames transmitted"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25232,7 +25232,7 @@ argument_list|,
 literal|"128-255 byte frames transmitted"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25252,7 +25252,7 @@ argument_list|,
 literal|"256-511 byte frames transmitted"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25272,7 +25272,7 @@ argument_list|,
 literal|"512-1023 byte frames transmitted"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25292,7 +25292,7 @@ argument_list|,
 literal|"1024-1522 byte frames transmitted"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25312,7 +25312,7 @@ argument_list|,
 literal|"TSO Contexts Transmitted"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25359,7 +25359,7 @@ argument_list|(
 name|int_node
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25379,7 +25379,7 @@ argument_list|,
 literal|"Interrupt Assertion Count"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25399,7 +25399,7 @@ argument_list|,
 literal|"Interrupt Cause Rx Pkt Timer Expire Count"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25419,7 +25419,7 @@ argument_list|,
 literal|"Interrupt Cause Rx Abs Timer Expire Count"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25439,7 +25439,7 @@ argument_list|,
 literal|"Interrupt Cause Tx Pkt Timer Expire Count"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25459,7 +25459,7 @@ argument_list|,
 literal|"Interrupt Cause Tx Abs Timer Expire Count"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25479,7 +25479,7 @@ argument_list|,
 literal|"Interrupt Cause Tx Queue Empty Count"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25499,7 +25499,7 @@ argument_list|,
 literal|"Interrupt Cause Tx Queue Min Thresh Count"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25519,7 +25519,7 @@ argument_list|,
 literal|"Interrupt Cause Rx Desc Min Thresh Count"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25566,7 +25566,7 @@ argument_list|(
 name|host_node
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25586,7 +25586,7 @@ argument_list|,
 literal|"Circuit Breaker Tx Packet Count"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25606,7 +25606,7 @@ argument_list|,
 literal|"Host Transmit Discarded Packets"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25626,7 +25626,7 @@ argument_list|,
 literal|"Rx Packets To Host"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25646,7 +25646,7 @@ argument_list|,
 literal|"Circuit Breaker Rx Packet Count"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25666,7 +25666,7 @@ argument_list|,
 literal|"Circuit Breaker Rx Dropped Count"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25686,7 +25686,7 @@ argument_list|,
 literal|"Host Good Packets Tx Count"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25706,7 +25706,7 @@ argument_list|,
 literal|"Host Tx Circuit Breaker Dropped Count"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25726,7 +25726,7 @@ argument_list|,
 literal|"Host Good Octets Received Count"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25746,7 +25746,7 @@ argument_list|,
 literal|"Host Good Octets Transmit Count"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25766,7 +25766,7 @@ argument_list|,
 literal|"Length Errors"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -25786,7 +25786,7 @@ argument_list|,
 literal|"SerDes/SGMII Code Violation Pkt Count"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
