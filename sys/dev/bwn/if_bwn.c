@@ -104667,7 +104667,7 @@ name|mac
 operator|->
 name|mac_stats
 expr_stmt|;
-name|SYSCTL_ADD_UINT
+name|SYSCTL_ADD_INT
 argument_list|(
 name|device_get_sysctl_ctx
 argument_list|(
@@ -104698,7 +104698,7 @@ argument_list|,
 literal|"Noise level"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UINT
+name|SYSCTL_ADD_INT
 argument_list|(
 name|device_get_sysctl_ctx
 argument_list|(
@@ -104729,7 +104729,7 @@ argument_list|,
 literal|"RTS"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UINT
+name|SYSCTL_ADD_INT
 argument_list|(
 name|device_get_sysctl_ctx
 argument_list|(

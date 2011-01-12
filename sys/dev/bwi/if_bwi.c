@@ -3167,7 +3167,7 @@ name|BWI_RX_RADIOTAP_PRESENT
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Add sysctl nodes 	 */
-name|SYSCTL_ADD_UINT
+name|SYSCTL_ADD_INT
 argument_list|(
 name|device_get_sysctl_ctx
 argument_list|(
@@ -3198,7 +3198,7 @@ argument_list|,
 literal|"Firmware version"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UINT
+name|SYSCTL_ADD_INT
 argument_list|(
 name|device_get_sysctl_ctx
 argument_list|(

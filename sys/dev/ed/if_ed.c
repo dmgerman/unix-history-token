@@ -1346,8 +1346,6 @@ literal|0
 argument_list|,
 literal|"type"
 argument_list|,
-name|CTLTYPE_STRING
-operator||
 name|CTLFLAG_RD
 argument_list|,
 name|sc
@@ -1378,8 +1376,6 @@ literal|1
 argument_list|,
 literal|"TxMem"
 argument_list|,
-name|CTLTYPE_STRING
-operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -1411,8 +1407,6 @@ literal|2
 argument_list|,
 literal|"RxMem"
 argument_list|,
-name|CTLTYPE_STRING
-operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -1425,7 +1419,7 @@ argument_list|,
 literal|"Memory  set aside for receiving packets"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 name|device_get_sysctl_ctx
 argument_list|(
@@ -1444,8 +1438,6 @@ literal|3
 argument_list|,
 literal|"Mem"
 argument_list|,
-name|CTLTYPE_STRING
-operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&

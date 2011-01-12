@@ -9161,7 +9161,7 @@ operator|->
 name|dev
 argument_list|)
 decl_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 name|ctx
 argument_list|,
@@ -9186,7 +9186,7 @@ argument_list|,
 literal|"Debugging/Verbose level"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 name|ctx
 argument_list|,

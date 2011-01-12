@@ -1645,7 +1645,7 @@ operator|->
 name|events_mask_supported
 condition|)
 block|{
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 name|sc
 operator|->
@@ -1700,7 +1700,7 @@ name|events_availmask
 operator|=
 literal|0xffffffff
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 name|sc
 operator|->

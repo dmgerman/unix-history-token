@@ -1017,7 +1017,7 @@ name|td
 operator|->
 name|td_proc
 expr_stmt|;
-name|SYSCTL_ADD_UINT
+name|SYSCTL_ADD_INT
 argument_list|(
 operator|&
 name|sp

@@ -3955,9 +3955,36 @@ begin_if
 if|#
 directive|if
 name|__FreeBSD_version
+operator|>=
+literal|900030
+end_if
+
+begin_define
+define|#
+directive|define
+name|ALE_SYSCTL_STAT_ADD64
+parameter_list|(
+name|c
+parameter_list|,
+name|h
+parameter_list|,
+name|n
+parameter_list|,
+name|p
+parameter_list|,
+name|d
+parameter_list|)
+define|\
+value|SYSCTL_ADD_UQUAD(c, h, OID_AUTO, n, CTLFLAG_RD, p, d)
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|__FreeBSD_version
 operator|>
 literal|800000
-end_if
+end_elif
 
 begin_define
 define|#

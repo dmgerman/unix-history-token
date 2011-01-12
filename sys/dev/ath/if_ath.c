@@ -31148,7 +31148,7 @@ name|sc
 operator|->
 name|sc_ah
 decl_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 name|ctx
 argument_list|,
@@ -31173,7 +31173,7 @@ argument_list|,
 literal|"EEPROM country code"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 name|ctx
 argument_list|,
@@ -31368,7 +31368,7 @@ argument_list|,
 literal|"GPIO pin connected to LED"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 name|ctx
 argument_list|,
@@ -31393,7 +31393,7 @@ argument_list|,
 literal|"setting to turn LED on"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 name|ctx
 argument_list|,
@@ -31515,7 +31515,7 @@ name|sc_txintrperiod
 operator|=
 name|ATH_TXINTR_PERIOD
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 name|ctx
 argument_list|,
@@ -31799,7 +31799,7 @@ name|HAL_RXERR_DECRYPT
 operator||
 name|HAL_RXERR_MIC
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 name|ctx
 argument_list|,

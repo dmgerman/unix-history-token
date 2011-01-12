@@ -4143,7 +4143,7 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 operator|&
 name|sc
@@ -4173,7 +4173,7 @@ argument_list|,
 literal|"mps debug level"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 operator|&
 name|sc

@@ -18955,7 +18955,7 @@ argument_list|,
 literal|"enable/disable software LED support"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 name|ctx
 argument_list|,
@@ -18980,7 +18980,7 @@ argument_list|,
 literal|"pin setting to turn activity LED on"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 name|ctx
 argument_list|,
@@ -19006,7 +19006,7 @@ literal|"idle time for inactivity LED (ticks)"
 argument_list|)
 expr_stmt|;
 comment|/* XXX for debugging */
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 name|ctx
 argument_list|,

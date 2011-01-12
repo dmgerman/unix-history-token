@@ -3049,7 +3049,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_INT
 argument_list|(
 name|_hw_bce
 argument_list|,
@@ -3098,7 +3098,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_INT
 argument_list|(
 name|_hw_bce
 argument_list|,
@@ -36025,7 +36025,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 name|ctx
 argument_list|,
@@ -36070,7 +36070,7 @@ argument_list|,
 literal|"Debug control to force mbuf allocation failures"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 name|ctx
 argument_list|,
@@ -36094,7 +36094,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 name|ctx
 argument_list|,
@@ -36116,7 +36116,7 @@ argument_list|,
 literal|"Number of mbuf allocation failures"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 name|ctx
 argument_list|,
@@ -36162,7 +36162,7 @@ literal|"Debug control to force DMA mapping failures"
 argument_list|)
 expr_stmt|;
 comment|/* ToDo: Figure out how to update this value in bce_dma_map_addr(). */
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 name|ctx
 argument_list|,
@@ -36186,7 +36186,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 name|ctx
 argument_list|,
@@ -36208,7 +36208,7 @@ argument_list|,
 literal|"Number of RX DMA mapping failures"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 name|ctx
 argument_list|,
@@ -36253,7 +36253,7 @@ argument_list|,
 literal|"Debug control to simulate unexpected attentions"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 name|ctx
 argument_list|,
@@ -36277,7 +36277,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 name|ctx
 argument_list|,

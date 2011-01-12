@@ -10732,7 +10732,7 @@ parameter_list|,
 name|d
 parameter_list|)
 define|\
-value|SYSCTL_ADD_QUAD(c, h, OID_AUTO, n, CTLFLAG_RD, p, d)
+value|SYSCTL_ADD_UQUAD(c, h, OID_AUTO, n, CTLFLAG_RD, p, d)
 end_define
 
 begin_function

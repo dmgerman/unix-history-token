@@ -5159,7 +5159,7 @@ literal|"record channels node"
 argument_list|)
 expr_stmt|;
 comment|/* XXX: an user should be able to set this with a control tool, the 	   sysadmin then needs min+max sysctls for this */
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 name|device_get_sysctl_ctx
 argument_list|(
