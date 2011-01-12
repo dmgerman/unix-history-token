@@ -328,7 +328,7 @@ decl_stmt|;
 name|int
 name|map_count
 decl_stmt|;
-name|bus_size_t
+name|uint32_t
 name|alignment
 decl_stmt|;
 name|bus_addr_t
@@ -5064,7 +5064,7 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_UINT
 argument_list|(
 name|busdma_sysctl_tree
 argument_list|(
@@ -5089,6 +5089,8 @@ operator|&
 name|bz
 operator|->
 name|alignment
+argument_list|,
+literal|0
 argument_list|,
 literal|""
 argument_list|)
