@@ -271,7 +271,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_INT
 argument_list|(
 name|_hw_cxgb
 argument_list|,
@@ -312,7 +312,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_INT
 argument_list|(
 name|_hw_cxgb
 argument_list|,
@@ -402,7 +402,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_INT
 argument_list|(
 name|_hw_cxgb
 argument_list|,
@@ -443,7 +443,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_INT
 argument_list|(
 name|_hw_cxgb
 argument_list|,
@@ -484,7 +484,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_INT
 argument_list|(
 name|_hw_cxgb
 argument_list|,
@@ -18955,7 +18955,7 @@ argument_list|,
 literal|"firmware version"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 name|ctx
 argument_list|,
@@ -19021,7 +19021,7 @@ argument_list|,
 literal|"enable verbose debugging output"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -19061,7 +19061,7 @@ argument_list|,
 literal|"#times txq overrun"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 name|ctx
 argument_list|,
@@ -19393,7 +19393,7 @@ argument_list|(
 name|poid
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 name|ctx
 argument_list|,
@@ -19896,7 +19896,7 @@ argument_list|,
 literal|"dump of the response queue"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
@@ -19923,7 +19923,7 @@ argument_list|,
 literal|"#tunneled packets dropped"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 name|ctx
 argument_list|,
@@ -19958,7 +19958,7 @@ literal|0
 block|SYSCTL_ADD_UINT(ctx, txqpoidlist, OID_AUTO, "queue_pidx", 			    CTLFLAG_RD, (uint32_t *)(uintptr_t)&qs->txq[TXQ_ETH].txq_mr.br_prod, 			    0, "#tunneled packets queue producer index"); 			SYSCTL_ADD_UINT(ctx, txqpoidlist, OID_AUTO, "queue_cidx", 			    CTLFLAG_RD, (uint32_t *)(uintptr_t)&qs->txq[TXQ_ETH].txq_mr.br_cons, 			    0, "#tunneled packets queue consumer index");
 endif|#
 directive|endif
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 name|ctx
 argument_list|,
@@ -20071,7 +20071,7 @@ argument_list|,
 literal|"#tunneled packet descriptors skipped"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_QUAD
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 name|ctx
 argument_list|,
