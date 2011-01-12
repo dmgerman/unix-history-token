@@ -162,6 +162,10 @@ name|mbuf
 modifier|*
 name|la_hold
 decl_stmt|;
+name|int
+name|la_numheld
+decl_stmt|;
+comment|/* # of packets currently held */
 name|time_t
 name|la_expire
 decl_stmt|;
@@ -775,7 +779,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|size_t
 name|llentry_free
 parameter_list|(
 name|struct

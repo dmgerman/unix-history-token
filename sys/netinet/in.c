@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_arp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_dl.h>
 end_include
 
@@ -395,6 +401,28 @@ define|#
 directive|define
 name|V_ripcbinfo
 value|VNET(ripcbinfo)
+end_define
+
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
+expr|struct
+name|arpstat
+argument_list|,
+name|arpstat
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* ARP statistics, see if_arp.h */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|V_arpstat
+value|VNET(arpstat)
 end_define
 
 begin_comment
@@ -6399,6 +6427,9 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
+name|size_t
+name|pkts_dropped
+decl_stmt|;
 for|for
 control|(
 name|i
@@ -6471,9 +6502,18 @@ argument_list|(
 name|lle
 argument_list|)
 expr_stmt|;
+name|pkts_dropped
+operator|=
 name|llentry_free
 argument_list|(
 name|lle
+argument_list|)
+expr_stmt|;
+name|ARPSTAT_ADD
+argument_list|(
+name|dropped
+argument_list|,
+name|pkts_dropped
 argument_list|)
 expr_stmt|;
 block|}
