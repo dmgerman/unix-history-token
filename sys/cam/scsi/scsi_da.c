@@ -4078,7 +4078,7 @@ name|fc
 operator|->
 name|wwpn
 expr_stmt|;
-name|SYSCTL_ADD_XLONG
+name|SYSCTL_ADD_X64
 argument_list|(
 operator|&
 name|softc
@@ -4096,8 +4096,6 @@ name|OID_AUTO
 argument_list|,
 literal|"wwpn"
 argument_list|,
-name|CTLTYPE_QUAD
-operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
