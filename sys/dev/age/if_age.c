@@ -9213,11 +9213,6 @@ operator|=
 name|AGE_TX_TIMEOUT
 expr_stmt|;
 block|}
-name|AGE_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
