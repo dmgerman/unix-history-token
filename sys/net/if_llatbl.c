@@ -449,7 +449,7 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"%s: la_numheld %d> 0, pkts_droped %ld"
+literal|"%s: la_numheld %d> 0, pkts_droped %zd"
 operator|,
 name|__func__
 operator|,
