@@ -5690,16 +5690,15 @@ name|dev
 argument_list|)
 condition|)
 block|{
+name|ether_ifdetach
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|ALC_LOCK
 argument_list|(
 name|sc
 argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|alc_flags
-operator||=
-name|ALC_FLAG_DETACH
 expr_stmt|;
 name|alc_stop
 argument_list|(
@@ -5729,11 +5728,6 @@ operator|&
 name|sc
 operator|->
 name|alc_int_task
-argument_list|)
-expr_stmt|;
-name|ether_ifdetach
-argument_list|(
-name|ifp
 argument_list|)
 expr_stmt|;
 block|}
@@ -12846,19 +12840,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-operator|(
-name|sc
-operator|->
-name|alc_flags
-operator|&
-name|ALC_FLAG_DETACH
-operator|)
-operator|==
-literal|0
-condition|)
+else|else
 name|alc_init_locked
 argument_list|(
 name|sc
@@ -14550,6 +14532,11 @@ argument_list|,
 name|ALC_INTR_STATUS
 argument_list|)
 expr_stmt|;
+name|ALC_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -14654,11 +14641,6 @@ operator|==
 name|EIO
 condition|)
 block|{
-name|ALC_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|ifp
 operator|->
 name|if_drv_flags
@@ -14753,11 +14735,6 @@ argument_list|,
 literal|"TxQ reset! -- resetting\n"
 argument_list|)
 expr_stmt|;
-name|ALC_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|ifp
 operator|->
 name|if_drv_flags
@@ -14798,7 +14775,7 @@ operator|->
 name|if_snd
 argument_list|)
 condition|)
-name|alc_start
+name|alc_start_locked
 argument_list|(
 name|ifp
 argument_list|)
@@ -14824,6 +14801,11 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|ALC_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|taskqueue_enqueue
 argument_list|(
 name|sc
@@ -14864,6 +14846,11 @@ literal|0x7FFFFFFF
 argument_list|)
 expr_stmt|;
 block|}
+name|ALC_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -16445,6 +16432,11 @@ endif|#
 directive|endif
 block|{
 comment|/* Pass it on. */
+name|ALC_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 call|(
 modifier|*
 name|ifp
@@ -16455,6 +16447,11 @@ argument_list|(
 name|ifp
 argument_list|,
 name|m
+argument_list|)
+expr_stmt|;
+name|ALC_LOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 block|}

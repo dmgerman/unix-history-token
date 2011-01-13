@@ -737,10 +737,6 @@ name|ALC_FLAG_APS
 value|0x1000
 define|#
 directive|define
-name|ALC_FLAG_DETACH
-value|0x4000
-define|#
-directive|define
 name|ALC_FLAG_LINK
 value|0x8000
 name|struct
