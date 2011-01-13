@@ -3644,18 +3644,6 @@ name|intsrc
 modifier|*
 name|isrc
 decl_stmt|;
-if|if
-condition|(
-name|vector
-operator|==
-operator|-
-literal|1
-condition|)
-name|panic
-argument_list|(
-literal|"Couldn't get vector from ISR!"
-argument_list|)
-expr_stmt|;
 name|isrc
 operator|=
 name|intr_lookup_source
