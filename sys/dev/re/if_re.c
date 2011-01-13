@@ -5796,22 +5796,6 @@ name|RL_EEMODE_OFF
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Reset the adapter. */
-name|RL_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|re_reset
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|RL_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|hw_rev
 operator|=
 name|re_hwrevs
@@ -6197,6 +6181,22 @@ break|break;
 default|default:
 break|break;
 block|}
+comment|/* Reset the adapter. */
+name|RL_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|re_reset
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|RL_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* Enable PME. */
 name|CSR_WRITE_1
 argument_list|(
