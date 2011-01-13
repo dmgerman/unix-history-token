@@ -5901,7 +5901,7 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Page table info for pc address %#jx: pde = %p, pte = %#x\n"
+literal|"Page table info for pc address %#jx: pde = %p, pte = %#jx\n"
 argument_list|,
 operator|(
 name|intmax_t
@@ -5918,12 +5918,17 @@ operator|)
 operator|*
 name|pdep
 argument_list|,
+call|(
+name|uintmax_t
+call|)
+argument_list|(
 name|ptep
 condition|?
 operator|*
 name|ptep
 else|:
 literal|0
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|addr
@@ -5981,7 +5986,7 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"pc address %#jx is inaccessible, pde = %p, pte = %#x\n"
+literal|"pc address %#jx is inaccessible, pde = %p, pte = %#jx\n"
 argument_list|,
 operator|(
 name|intmax_t
@@ -5998,12 +6003,17 @@ operator|)
 operator|*
 name|pdep
 argument_list|,
+call|(
+name|uintmax_t
+call|)
+argument_list|(
 name|ptep
 condition|?
 operator|*
 name|ptep
 else|:
 literal|0
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -6244,7 +6254,7 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Page table info for pc address %#jx: pde = %p, pte = %#x\n"
+literal|"Page table info for pc address %#jx: pde = %p, pte = %#jx\n"
 argument_list|,
 operator|(
 name|intmax_t
@@ -6261,12 +6271,17 @@ operator|)
 operator|*
 name|pdep
 argument_list|,
+call|(
+name|uintmax_t
+call|)
+argument_list|(
 name|ptep
 condition|?
 operator|*
 name|ptep
 else|:
 literal|0
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|addr
@@ -6324,7 +6339,7 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"pc address %#jx is inaccessible, pde = %p, pte = %#x\n"
+literal|"pc address %#jx is inaccessible, pde = %p, pte = %#jx\n"
 argument_list|,
 operator|(
 name|intmax_t
@@ -6341,12 +6356,17 @@ operator|)
 operator|*
 name|pdep
 argument_list|,
+call|(
+name|uintmax_t
+call|)
+argument_list|(
 name|ptep
 condition|?
 operator|*
 name|ptep
 else|:
 literal|0
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -6370,7 +6390,7 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Page table info for bad address %#jx: pde = %p, pte = %#x\n"
+literal|"Page table info for bad address %#jx: pde = %p, pte = %#jx\n"
 argument_list|,
 operator|(
 name|intmax_t
@@ -6389,12 +6409,17 @@ operator|)
 operator|*
 name|pdep
 argument_list|,
+call|(
+name|uintmax_t
+call|)
+argument_list|(
 name|ptep
 condition|?
 operator|*
 name|ptep
 else|:
 literal|0
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

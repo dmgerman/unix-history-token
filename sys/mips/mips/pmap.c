@@ -275,7 +275,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Get PDEs and PTEs for user/kernel address space  *  * XXX The& for pmap_segshift() is wrong, as is the fact that it doesn't  *     trim off gratuitous bits of the address space.  By having the&  *     there, we break defining NUSERPGTBLS below because the address space  *     is defined such that it ends immediately after NPDEPG*NPTEPG*PAGE_SIZE,  *     so we end up getting NUSERPGTBLS of 0.  */
+comment|/*  * Get PDEs and PTEs for user/kernel address space  */
 end_comment
 
 begin_define
@@ -771,7 +771,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|pt_entry_t
 name|init_pte_prot
 parameter_list|(
 name|vm_offset_t
@@ -3814,10 +3814,10 @@ name|vm_offset_t
 modifier|*
 name|virt
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 name|start
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 name|end
 parameter_list|,
 name|int
@@ -6523,7 +6523,7 @@ decl_stmt|;
 name|vm_page_t
 name|m
 decl_stmt|;
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 decl_stmt|;
 name|mtx_assert
@@ -6635,7 +6635,7 @@ name|PTE_RO
 argument_list|)
 argument_list|,
 operator|(
-literal|"%s: modified page not writable: va: %p, pte: 0x%x"
+literal|"%s: modified page not writable: va: %p, pte: %#jx"
 operator|,
 name|__func__
 operator|,
@@ -6645,6 +6645,9 @@ operator|*
 operator|)
 name|va
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|oldpte
 operator|)
 argument_list|)
@@ -7234,7 +7237,7 @@ name|PTE_RO
 argument_list|)
 argument_list|,
 operator|(
-literal|"%s: modified page not writable: va: %p, pte: 0x%x"
+literal|"%s: modified page not writable: va: %p, pte: %#jx"
 operator|,
 name|__func__
 operator|,
@@ -7246,6 +7249,9 @@ name|pv
 operator|->
 name|pv_va
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|tpte
 operator|)
 argument_list|)
@@ -7717,7 +7723,7 @@ name|boolean_t
 name|wired
 parameter_list|)
 block|{
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 decl_stmt|,
 name|opa
@@ -7739,7 +7745,7 @@ name|mpte
 decl_stmt|,
 name|om
 decl_stmt|;
-name|int
+name|pt_entry_t
 name|rw
 init|=
 literal|0
@@ -7964,7 +7970,7 @@ name|PTE_RO
 argument_list|)
 argument_list|,
 operator|(
-literal|"%s: modified page not writable: va: %p, pte: 0x%x"
+literal|"%s: modified page not writable: va: %p, pte: %#jx"
 operator|,
 name|__func__
 operator|,
@@ -7974,6 +7980,9 @@ operator|*
 operator|)
 name|va
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|origpte
 operator|)
 argument_list|)
@@ -8425,7 +8434,7 @@ argument_list|)
 argument_list|,
 operator|(
 literal|"pmap_enter: modified page not writable:"
-literal|" va: %p, pte: 0x%x"
+literal|" va: %p, pte: %#jx"
 operator|,
 operator|(
 name|void
@@ -8433,6 +8442,9 @@ operator|*
 operator|)
 name|va
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|origpte
 operator|)
 argument_list|)
@@ -8627,7 +8639,7 @@ name|pt_entry_t
 modifier|*
 name|pte
 decl_stmt|;
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 decl_stmt|;
 name|KASSERT
@@ -10332,8 +10344,11 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"pmap_remove_pages: bad tpte %x"
+literal|"pmap_remove_pages: bad tpte %#jx"
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|tpte
 operator|)
 argument_list|)
@@ -11618,7 +11633,7 @@ name|void
 modifier|*
 name|pmap_mapdev
 parameter_list|(
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|,
 name|vm_size_t
@@ -11869,7 +11884,7 @@ name|ptep
 decl_stmt|,
 name|pte
 decl_stmt|;
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 decl_stmt|;
 name|vm_page_t
@@ -12685,7 +12700,7 @@ operator|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"\t\t[%04d] va: %p pte: %8x pa:%lx\n"
+literal|"\t\t[%04d] va: %p pte: %8jx pa:%jx\n"
 argument_list|,
 name|k
 argument_list|,
@@ -12695,10 +12710,13 @@ operator|*
 operator|)
 name|va
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|pte
 argument_list|,
 operator|(
-name|u_long
+name|uintmax_t
 operator|)
 name|pa
 argument_list|)
@@ -13107,7 +13125,7 @@ block|}
 name|int
 name|page_is_managed
 parameter_list|(
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|)
 block|{
@@ -13176,7 +13194,7 @@ operator|)
 return|;
 block|}
 specifier|static
-name|int
+name|pt_entry_t
 name|init_pte_prot
 parameter_list|(
 name|vm_offset_t
@@ -13189,7 +13207,7 @@ name|vm_prot_t
 name|prot
 parameter_list|)
 block|{
-name|int
+name|pt_entry_t
 name|rw
 decl_stmt|;
 if|if
@@ -13298,7 +13316,7 @@ name|pt_entry_t
 modifier|*
 name|pte
 decl_stmt|;
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 decl_stmt|;
 name|PMAP_LOCK

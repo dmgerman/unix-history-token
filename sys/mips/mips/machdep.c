@@ -508,7 +508,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|vm_offset_t
+name|vm_paddr_t
 name|phys_avail
 index|[
 name|PHYS_AVAIL_ENTRIES
@@ -519,7 +519,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|vm_offset_t
+name|vm_paddr_t
 name|physmem_desc
 index|[
 name|PHYS_AVAIL_ENTRIES
@@ -1833,8 +1833,8 @@ begin_function
 name|int
 name|is_cacheable_mem
 parameter_list|(
-name|vm_offset_t
-name|addr
+name|vm_paddr_t
+name|pa
 parameter_list|)
 block|{
 name|int
@@ -1862,14 +1862,14 @@ control|)
 block|{
 if|if
 condition|(
-name|addr
+name|pa
 operator|>=
 name|physmem_desc
 index|[
 name|i
 index|]
 operator|&&
-name|addr
+name|pa
 operator|<
 name|physmem_desc
 index|[

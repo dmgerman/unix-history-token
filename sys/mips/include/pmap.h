@@ -409,7 +409,7 @@ end_define
 
 begin_decl_stmt
 specifier|extern
-name|vm_offset_t
+name|vm_paddr_t
 name|phys_avail
 index|[
 name|PHYS_AVAIL_ENTRIES
@@ -421,7 +421,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|vm_offset_t
+name|vm_paddr_t
 name|physmem_desc
 index|[
 name|PHYS_AVAIL_ENTRIES
@@ -503,7 +503,7 @@ name|void
 modifier|*
 name|pmap_mapdev
 parameter_list|(
-name|vm_offset_t
+name|vm_paddr_t
 parameter_list|,
 name|vm_size_t
 parameter_list|)
@@ -535,7 +535,7 @@ begin_function_decl
 name|int
 name|page_is_managed
 parameter_list|(
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|)
 function_decl|;
