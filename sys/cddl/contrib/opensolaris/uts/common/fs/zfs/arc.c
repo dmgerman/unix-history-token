@@ -358,7 +358,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_QUAD
+name|SYSCTL_UQUAD
 argument_list|(
 name|_vfs_zfs
 argument_list|,
@@ -379,7 +379,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_QUAD
+name|SYSCTL_UQUAD
 argument_list|(
 name|_vfs_zfs
 argument_list|,
@@ -1461,7 +1461,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_QUAD
+name|SYSCTL_UQUAD
 argument_list|(
 name|_vfs_zfs
 argument_list|,
@@ -1482,7 +1482,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_QUAD
+name|SYSCTL_UQUAD
 argument_list|(
 name|_vfs_zfs
 argument_list|,
@@ -2327,7 +2327,7 @@ comment|/* no reads during writes */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_QUAD
+name|SYSCTL_UQUAD
 argument_list|(
 name|_vfs_zfs
 argument_list|,
@@ -2348,7 +2348,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_QUAD
+name|SYSCTL_UQUAD
 argument_list|(
 name|_vfs_zfs
 argument_list|,
@@ -2369,7 +2369,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_QUAD
+name|SYSCTL_UQUAD
 argument_list|(
 name|_vfs_zfs
 argument_list|,
@@ -2390,7 +2390,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_QUAD
+name|SYSCTL_UQUAD
 argument_list|(
 name|_vfs_zfs
 argument_list|,
@@ -2411,7 +2411,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_QUAD
+name|SYSCTL_UQUAD
 argument_list|(
 name|_vfs_zfs
 argument_list|,
@@ -2495,7 +2495,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_QUAD
+name|SYSCTL_UQUAD
 argument_list|(
 name|_vfs_zfs
 argument_list|,
@@ -2518,7 +2518,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_QUAD
+name|SYSCTL_UQUAD
 argument_list|(
 name|_vfs_zfs
 argument_list|,
@@ -2544,7 +2544,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_QUAD
+name|SYSCTL_UQUAD
 argument_list|(
 name|_vfs_zfs
 argument_list|,
@@ -2570,7 +2570,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_QUAD
+name|SYSCTL_UQUAD
 argument_list|(
 name|_vfs_zfs
 argument_list|,
@@ -2593,7 +2593,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_QUAD
+name|SYSCTL_UQUAD
 argument_list|(
 name|_vfs_zfs
 argument_list|,
@@ -2619,7 +2619,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_QUAD
+name|SYSCTL_UQUAD
 argument_list|(
 name|_vfs_zfs
 argument_list|,
@@ -2645,7 +2645,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_QUAD
+name|SYSCTL_UQUAD
 argument_list|(
 name|_vfs_zfs
 argument_list|,
@@ -2668,7 +2668,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_QUAD
+name|SYSCTL_UQUAD
 argument_list|(
 name|_vfs_zfs
 argument_list|,
@@ -2694,7 +2694,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_QUAD
+name|SYSCTL_UQUAD
 argument_list|(
 name|_vfs_zfs
 argument_list|,
@@ -2720,7 +2720,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_QUAD
+name|SYSCTL_UQUAD
 argument_list|(
 name|_vfs_zfs
 argument_list|,
@@ -2743,7 +2743,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_QUAD
+name|SYSCTL_UQUAD
 argument_list|(
 name|_vfs_zfs
 argument_list|,
@@ -2769,7 +2769,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_QUAD
+name|SYSCTL_UQUAD
 argument_list|(
 name|_vfs_zfs
 argument_list|,
@@ -2795,7 +2795,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_QUAD
+name|SYSCTL_UQUAD
 argument_list|(
 name|_vfs_zfs
 argument_list|,
@@ -2818,7 +2818,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_QUAD
+name|SYSCTL_UQUAD
 argument_list|(
 name|_vfs_zfs
 argument_list|,
@@ -2844,7 +2844,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_QUAD
+name|SYSCTL_UQUAD
 argument_list|(
 name|_vfs_zfs
 argument_list|,
@@ -2870,7 +2870,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_QUAD
+name|SYSCTL_UQUAD
 argument_list|(
 name|_vfs_zfs
 argument_list|,

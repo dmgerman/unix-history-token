@@ -2429,6 +2429,12 @@ name|SYSCTL_QUAD
 parameter_list|(
 modifier|...
 parameter_list|)
+define|#
+directive|define
+name|SYSCTL_UQUAD
+parameter_list|(
+modifier|...
+parameter_list|)
 ifdef|#
 directive|ifdef
 name|TUNABLE_INT
