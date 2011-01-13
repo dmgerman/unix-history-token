@@ -11466,7 +11466,7 @@ name|taskqueue_create
 argument_list|(
 literal|"dummynet"
 argument_list|,
-name|M_NOWAIT
+name|M_WAITOK
 argument_list|,
 name|taskqueue_thread_enqueue
 argument_list|,
