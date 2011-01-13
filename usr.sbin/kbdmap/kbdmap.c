@@ -1360,7 +1360,7 @@ operator|&
 name|dialog
 argument_list|,
 literal|"/usr/bin/dialog --clear --title \"Keyboard Menu\" "
-literal|"--menu \"%s\" -1 -1 10"
+literal|"--menu \"%s\" 0 0 0"
 argument_list|,
 name|menu
 argument_list|)
