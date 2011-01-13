@@ -1191,7 +1191,7 @@ name|warn
 condition|)
 name|uprintf
 argument_list|(
-literal|"\n%s: warning, %s %s\n"
+literal|"\n%s: warning, %s disk quota exceeded\n"
 argument_list|,
 name|ITOV
 argument_list|(
@@ -1208,8 +1208,6 @@ name|quotatypes
 index|[
 name|i
 index|]
-argument_list|,
-literal|"disk quota exceeded"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1466,7 +1464,8 @@ argument_list|)
 expr_stmt|;
 name|uprintf
 argument_list|(
-literal|"\n%s: write failed, %s %s\n"
+literal|"\n%s: write failed, %s "
+literal|"disk quota exceeded for too long\n"
 argument_list|,
 name|ITOV
 argument_list|(
@@ -1483,8 +1482,6 @@ name|quotatypes
 index|[
 name|type
 index|]
-argument_list|,
-literal|"disk quota exceeded for too long"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1970,7 +1967,7 @@ name|warn
 condition|)
 name|uprintf
 argument_list|(
-literal|"\n%s: warning, %s %s\n"
+literal|"\n%s: warning, %s inode quota exceeded\n"
 argument_list|,
 name|ITOV
 argument_list|(
@@ -1987,8 +1984,6 @@ name|quotatypes
 index|[
 name|i
 index|]
-argument_list|,
-literal|"inode quota exceeded"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2245,7 +2240,8 @@ argument_list|)
 expr_stmt|;
 name|uprintf
 argument_list|(
-literal|"\n%s: write failed, %s %s\n"
+literal|"\n%s: write failed, %s "
+literal|"inode quota exceeded for too long\n"
 argument_list|,
 name|ITOV
 argument_list|(
@@ -2262,8 +2258,6 @@ name|quotatypes
 index|[
 name|type
 index|]
-argument_list|,
-literal|"inode quota exceeded for too long"
 argument_list|)
 expr_stmt|;
 return|return
