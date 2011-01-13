@@ -1140,7 +1140,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_LONG
 argument_list|(
 name|_kern_ntp_pll
 argument_list|,

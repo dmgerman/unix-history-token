@@ -31843,7 +31843,7 @@ name|sc_tdmadbaprep
 operator|=
 literal|2
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 name|ctx
 argument_list|,
@@ -31874,7 +31874,7 @@ name|sc_tdmaswbaprep
 operator|=
 literal|10
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 name|ctx
 argument_list|,
@@ -31899,7 +31899,7 @@ argument_list|,
 literal|"TDMA SWBA preparation time"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 name|ctx
 argument_list|,
@@ -31924,7 +31924,7 @@ argument_list|,
 literal|"TDMA slot guard time"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_UINT
 argument_list|(
 name|ctx
 argument_list|,
