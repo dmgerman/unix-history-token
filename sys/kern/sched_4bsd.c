@@ -1545,7 +1545,7 @@ comment|/* exp(-1/20) */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_UINT
 argument_list|(
 name|_kern
 argument_list|,
