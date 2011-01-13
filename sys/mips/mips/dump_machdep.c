@@ -790,9 +790,12 @@ operator|(
 name|void
 operator|*
 operator|)
-operator|(
+call|(
+name|intptr_t
+call|)
+argument_list|(
 name|pa
-operator|)
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -801,6 +804,7 @@ argument_list|,
 name|sz
 argument_list|)
 expr_stmt|;
+comment|/* XXX fix PA */
 if|if
 condition|(
 name|error

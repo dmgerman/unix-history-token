@@ -13132,7 +13132,7 @@ block|{
 name|vm_offset_t
 name|pgnum
 init|=
-name|mips_btop
+name|atop
 argument_list|(
 name|pa
 argument_list|)

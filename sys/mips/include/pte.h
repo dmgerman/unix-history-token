@@ -21,9 +21,35 @@ directive|ifndef
 name|_LOCORE
 end_ifndef
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__mips_n64
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__mips_n32
+argument_list|)
+end_if
+
 begin_comment
-comment|/* pt_entry_t is 32 bit for now, has to be made 64 bit for n64 */
+comment|/*  PHYSADDR_64_BIT */
 end_comment
+
+begin_typedef
+typedef|typedef
+name|uint64_t
+name|pt_entry_t
+typedef|;
+end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_typedef
 typedef|typedef
@@ -31,6 +57,11 @@ name|uint32_t
 name|pt_entry_t
 typedef|;
 end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
@@ -92,6 +123,43 @@ begin_comment
 comment|/*  * PFN for EntryLo register.  Upper bits are 0, which is to say that  * bit 29 is the last hardware bit;  Bits 30 and upwards (EntryLo is  * 64 bit though it can be referred to in 32-bits providing 2 software  * bits safely.  We use it as 64 bits to get many software bits, and  * god knows what else.) are unacknowledged by hardware.  They may be  * written as anything, but otherwise they have as much meaning as  * other 0 fields.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__mips_n64
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__mips_n32
+argument_list|)
+end_if
+
+begin_comment
+comment|/*  PHYSADDR_64_BIT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLBLO_SWBITS_SHIFT
+value|(34)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLBLO_PFN_MASK
+value|0x3FFFFFFC0ULL
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -102,9 +170,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|TLBLO_SWBITS_MASK
-value|(0x3U<< TLBLO_SWBITS_SHIFT)
+name|TLBLO_PFN_MASK
+value|(0x3FFFFFC0)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -116,8 +189,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|TLBLO_PFN_MASK
-value|(0x3FFFFFC0)
+name|TLBLO_SWBITS_MASK
+value|((pt_entry_t)0x3<< TLBLO_SWBITS_SHIFT)
 end_define
 
 begin_define
@@ -277,6 +350,10 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* !defined(__mips_n64) */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -300,6 +377,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* defined(__mips_n64) */
+end_comment
 
 begin_comment
 comment|/*  * TLB flags managed in hardware:  * 	C:	Cache attribute.  * 	D:	Dirty bit.  This means a page is writable.  It is not  * 		set at first, and a write is trapped, and the dirty  * 		bit is set.  See also PTE_RO.  * 	V:	Valid bit.  Obvious, isn't it?  * 	G:	Global bit.  This means that this mapping is present  * 		in EVERY address space, and to ignore the ASID when  * 		it is matched.  */
@@ -358,14 +439,14 @@ begin_define
 define|#
 directive|define
 name|PTE_RO
-value|(0x01<< TLBLO_SWBITS_SHIFT)
+value|((pt_entry_t)0x01<< TLBLO_SWBITS_SHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|PTE_W
-value|(0x02<< TLBLO_SWBITS_SHIFT)
+value|((pt_entry_t)0x02<< TLBLO_SWBITS_SHIFT)
 end_define
 
 begin_comment
@@ -407,6 +488,219 @@ name|bit
 parameter_list|)
 value|((*(pte)& (bit)) == (bit))
 end_define
+
+begin_comment
+comment|/* Assembly support for PTE access*/
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LOCORE
+end_ifdef
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__mips_n64
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__mips_n32
+argument_list|)
+end_if
+
+begin_comment
+comment|/*  PHYSADDR_64_BIT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PTESHIFT
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTE2MASK
+value|0xff0
+end_define
+
+begin_comment
+comment|/* for the 2-page lo0/lo1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PTEMASK
+value|0xff8
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTESIZE
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTE_L
+value|ld
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTE_MTC0
+value|dmtc0
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLEAR_PTE_SWBITS
+parameter_list|(
+name|pr
+parameter_list|)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|PTESHIFT
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTE2MASK
+value|0xff8
+end_define
+
+begin_comment
+comment|/* for the 2-page lo0/lo1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PTEMASK
+value|0xffc
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTESIZE
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTE_L
+value|lw
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTE_MTC0
+value|mtc0
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLEAR_PTE_SWBITS
+parameter_list|(
+name|r
+parameter_list|)
+value|sll r, 2; srl r, 2
+end_define
+
+begin_comment
+comment|/* remove 2 high bits */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(__mips_n64) || defined(__mips_n32) */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__mips_n64
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|PTRSHIFT
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|PDEPTRMASK
+value|0xff8
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|PTRSHIFT
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|PDEPTRMASK
+value|0xffc
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* LOCORE */
+end_comment
 
 begin_endif
 endif|#

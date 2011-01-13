@@ -1491,6 +1491,20 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__mips_n64
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__mips_n32
+argument_list|)
+comment|/* !PHYSADDR_64_BIT */
 comment|/* 			 * In 32 bit physical address mode we cannot use  			 * mem> 0xffffffff 			 */
 if|if
 condition|(
@@ -1599,6 +1613,9 @@ name|addr
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* !PHYSADDR_64_BIT */
 name|phys_avail
 index|[
 name|j

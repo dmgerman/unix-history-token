@@ -380,20 +380,74 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|__mips_n32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|__mips_n64
 argument_list|)
 end_if
+
+begin_comment
+comment|/*  PHYSADDR_64_BIT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NPTEPGSHIFT
+value|9
+end_define
+
+begin_comment
+comment|/* LOG2(NPTEPG) */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|NPTEPGSHIFT
+value|10
+end_define
+
+begin_comment
+comment|/* LOG2(NPTEPG) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__mips_n64
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|NPDEPGSHIFT
+value|9
+end_define
+
+begin_comment
+comment|/* LOG2(NPTEPG) */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|SEGSHIFT
-value|31
+value|(PAGE_SHIFT + NPTEPGSHIFT + NPDEPGSHIFT)
 end_define
-
-begin_comment
-comment|/* LOG2(NBSEG) */
-end_comment
 
 begin_define
 define|#
@@ -402,20 +456,12 @@ name|NBSEG
 value|(1ul<< SEGSHIFT)
 end_define
 
-begin_comment
-comment|/* bytes/segment */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|PDRSHIFT
-value|22
+value|(PAGE_SHIFT + NPTEPGSHIFT)
 end_define
-
-begin_comment
-comment|/* second level */
-end_comment
 
 begin_define
 define|#
@@ -432,13 +478,20 @@ end_else
 begin_define
 define|#
 directive|define
-name|SEGSHIFT
-value|22
+name|NPDEPGSHIFT
+value|10
 end_define
 
 begin_comment
-comment|/* LOG2(NBSEG) */
+comment|/* LOG2(NPTEPG) */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SEGSHIFT
+value|(PAGE_SHIFT + NPTEPGSHIFT)
+end_define
 
 begin_define
 define|#
@@ -489,7 +542,7 @@ begin_define
 define|#
 directive|define
 name|SEGMASK
-value|(NBSEG-1)
+value|(NBSEG - 1)
 end_define
 
 begin_comment
@@ -504,7 +557,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* maximum number of supported page sizes */
+comment|/* max supported pagesizes */
 end_comment
 
 begin_define
@@ -611,7 +664,7 @@ name|round_page
 parameter_list|(
 name|x
 parameter_list|)
-value|(((unsigned long)(x) + PAGE_MASK)& ~PAGE_MASK)
+value|(((x) + PAGE_MASK)& ~PAGE_MASK)
 end_define
 
 begin_define
@@ -621,7 +674,7 @@ name|trunc_page
 parameter_list|(
 name|x
 parameter_list|)
-value|((unsigned long)(x)& ~PAGE_MASK)
+value|((x)& ~PAGE_MASK)
 end_define
 
 begin_define
@@ -631,7 +684,7 @@ name|atop
 parameter_list|(
 name|x
 parameter_list|)
-value|((unsigned long)(x)>> PAGE_SHIFT)
+value|((x)>> PAGE_SHIFT)
 end_define
 
 begin_define
@@ -641,27 +694,7 @@ name|ptoa
 parameter_list|(
 name|x
 parameter_list|)
-value|((unsigned long)(x)<< PAGE_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|mips_btop
-parameter_list|(
-name|x
-parameter_list|)
-value|((unsigned long)(x)>> PAGE_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|mips_ptob
-parameter_list|(
-name|x
-parameter_list|)
-value|((unsigned long)(x)<< PAGE_SHIFT)
+value|((x)<< PAGE_SHIFT)
 end_define
 
 begin_define
@@ -671,33 +704,8 @@ name|pgtok
 parameter_list|(
 name|x
 parameter_list|)
-value|((unsigned long)(x) * (PAGE_SIZE / 1024))
+value|((x) * (PAGE_SIZE / 1024))
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_KERNEL
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|DELAY
-parameter_list|(
-name|n
-parameter_list|)
-value|{ register int N = (n); while (--N> 0); }
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !_KERNEL */
-end_comment
 
 begin_endif
 endif|#

@@ -31,13 +31,35 @@ name|int
 name|md_flags
 decl_stmt|;
 comment|/* machine-dependent flags */
-name|int
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__mips_n64
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__mips_n32
+argument_list|)
+comment|/*  PHYSADDR_64_BIT */
+name|uint64_t
 name|md_upte
 index|[
 name|KSTACK_PAGES
 index|]
 decl_stmt|;
 comment|/* ptes for mapping u pcb */
+else|#
+directive|else
+name|int
+name|md_upte
+index|[
+name|KSTACK_PAGES
+index|]
+decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|md_ss_addr
 decl_stmt|;
