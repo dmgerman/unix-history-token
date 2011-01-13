@@ -12110,6 +12110,38 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* 	 * For C+ mode, initialize the RX descriptors and mbufs. 	 */
+if|if
+condition|(
+name|re_rx_list_init
+argument_list|(
+name|sc
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|rl_dev
+argument_list|,
+literal|"no memory for RX buffers\n"
+argument_list|)
+expr_stmt|;
+name|re_stop
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|re_tx_list_init
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Enable C+ RX and TX mode, as well as VLAN stripping and 	 * RX checksum offload. We must configure the C+ register 	 * before all others. 	 */
 name|cfg
 operator|=
@@ -12373,17 +12405,6 @@ argument_list|,
 name|RL_EECMD
 argument_list|,
 name|RL_EEMODE_OFF
-argument_list|)
-expr_stmt|;
-comment|/* 	 * For C+ mode, initialize the RX descriptors and mbufs. 	 */
-name|re_rx_list_init
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|re_tx_list_init
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Load the addresses of the RX and TX lists into the chip. 	 */
