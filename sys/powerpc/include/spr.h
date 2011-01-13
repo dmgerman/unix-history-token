@@ -348,6 +348,39 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SRR1_ISI_PFAULT
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* ISI page not found */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SRR1_ISI_NOEXECUTE
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* Memory marked no-execute */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SRR1_ISI_PP
+value|0x08000000
+end_define
+
+begin_comment
+comment|/* PP bits forbid access */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SPR_DECAR
 value|0x036
 end_define
