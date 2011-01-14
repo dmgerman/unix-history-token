@@ -1902,6 +1902,13 @@ name|IFM_SHARED_OPTION_DESCRIPTIONS
 value|{				\ 	{ IFM_FDX,	"full-duplex" },				\ 	{ IFM_HDX,	"half-duplex" },				\ 	{ IFM_FLOW,	"flowcontrol" },				\ 	{ IFM_FLAG0,	"flag0" },					\ 	{ IFM_FLAG1,	"flag1" },					\ 	{ IFM_FLAG2,	"flag2" },					\ 	{ IFM_LOOP,	"hw-loopback" },				\ 	{ 0, NULL },							\ }
 end_define
 
+begin_define
+define|#
+directive|define
+name|IFM_SHARED_OPTION_ALIASES
+value|{					\ 	{ IFM_FDX,	"fdx" },					\ 	{ IFM_HDX,	"hdx" },					\ 	{ IFM_FLOW,	"flow" },					\ 	{ IFM_LOOP,	"loop" },					\ 	{ IFM_LOOP,	"loopback" },					\ 	{ 0, NULL },							\ }
+end_define
+
 begin_comment
 comment|/*  * Baudrate descriptions for the various media types.  */
 end_comment
