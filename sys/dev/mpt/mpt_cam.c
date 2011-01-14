@@ -13988,10 +13988,6 @@ name|union
 name|ccb
 modifier|*
 name|ccb
-init|=
-name|tgt
-operator|->
-name|ccb
 decl_stmt|;
 name|uint32_t
 name|ct_id
