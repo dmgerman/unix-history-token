@@ -2476,9 +2476,11 @@ name|sc_ue
 operator|.
 name|ue_dev
 argument_list|,
-literal|"EEPROM data : 0x%04x\n"
+literal|"EEPROM data : 0x%04x, phymode : 0x%02x\n"
 argument_list|,
 name|eeprom
+argument_list|,
+name|phymode
 argument_list|)
 expr_stmt|;
 comment|/* Program GPIOs depending on PHY hardware. */
@@ -2563,6 +2565,12 @@ expr_stmt|;
 break|break;
 case|case
 name|AXE_PHY_MODE_CICADA
+case|:
+case|case
+name|AXE_PHY_MODE_CICADA_V2
+case|:
+case|case
+name|AXE_PHY_MODE_CICADA_V2_ASIX
 case|:
 if|if
 condition|(
@@ -3208,6 +3216,34 @@ argument_list|,
 name|hz
 operator|/
 literal|100
+argument_list|)
+expr_stmt|;
+comment|/* Reinitialize controller to achieve full reset. */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|AXE_FLAG_178
+condition|)
+name|axe_ax88178_init
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|AXE_FLAG_772
+condition|)
+name|axe_ax88772_init
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
@@ -4720,10 +4756,28 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+operator|)
+operator|!=
+literal|0
+condition|)
+return|return;
 comment|/* Cancel pending I/O */
 name|axe_stop
 argument_list|(
 name|ue
+argument_list|)
+expr_stmt|;
+name|axe_reset
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 comment|/* Set MAC address. */
@@ -4984,6 +5038,12 @@ name|if_drv_flags
 operator||=
 name|IFF_DRV_RUNNING
 expr_stmt|;
+comment|/* Switch to selected media. */
+name|axe_ifmedia_upd
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|axe_start
 argument_list|(
 name|ue
@@ -5165,11 +5225,6 @@ name|sc_xfer
 index|[
 name|AXE_BULK_DT_RD
 index|]
-argument_list|)
-expr_stmt|;
-name|axe_reset
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 block|}
