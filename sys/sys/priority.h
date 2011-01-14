@@ -120,7 +120,7 @@ comment|/*  * Priorities.  Note that with 64 run queues, differences less than 4
 end_comment
 
 begin_comment
-comment|/*  * Priorities range from 0 to 255, but differences of less then 4 (RQ_PPQ)  * are insignificant.  Ranges are as follows:  *  * Interrupt threads:		0 - 63  * Top half kernel threads:	64 - 127  * Realtime user threads:	128 - 159  * Time sharing user threads:	160 - 223  * Idle user threads:		224 - 255  *  * XXX If/When the specific interrupt thread and top half thread ranges  * disappear, a larger range can be used for user processes.  */
+comment|/*  * Priorities range from 0 to 255, but differences of less then 4 (RQ_PPQ)  * are insignificant.  Ranges are as follows:  *  * Interrupt threads:		0 - 47  * Realtime user threads:	48 - 79  * Top half kernel threads:	80 - 119  * Time sharing user threads:	120 - 223  * Idle user threads:		224 - 255  *  * XXX If/When the specific interrupt thread and top half thread ranges  * disappear, a larger range can be used for user processes.  */
 end_comment
 
 begin_define
@@ -156,7 +156,7 @@ begin_define
 define|#
 directive|define
 name|PRI_MAX_ITHD
-value|(PRI_MIN_KERN - 1)
+value|(PRI_MIN_REALTIME - 1)
 end_define
 
 begin_define
@@ -221,15 +221,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|PRI_MIN_REALTIME
+value|(48)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRI_MAX_REALTIME
+value|(PRI_MIN_KERN - 1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|PRI_MIN_KERN
-value|(64)
+value|(80)
 end_define
 
 begin_define
 define|#
 directive|define
 name|PRI_MAX_KERN
-value|(PRI_MIN_REALTIME - 1)
+value|(PRI_MIN_TIMESHARE - 1)
 end_define
 
 begin_define
@@ -305,22 +319,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|PRI_MIN_REALTIME
-value|(128)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PRI_MAX_REALTIME
-value|(PRI_MIN_TIMESHARE - 1)
-end_define
-
-begin_define
-define|#
-directive|define
 name|PRI_MIN_TIMESHARE
-value|(160)
+value|(120)
 end_define
 
 begin_define

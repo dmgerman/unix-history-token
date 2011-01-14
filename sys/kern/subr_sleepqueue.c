@@ -3040,6 +3040,15 @@ operator|->
 name|td_priority
 operator|>
 name|pri
+operator|&&
+name|PRI_BASE
+argument_list|(
+name|td
+operator|->
+name|td_pri_class
+argument_list|)
+operator|==
+name|PRI_TIMESHARE
 condition|)
 name|sched_prio
 argument_list|(

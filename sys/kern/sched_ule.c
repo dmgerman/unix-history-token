@@ -392,28 +392,42 @@ value|CPU_ISSET((cpu),&(td)->td_cpuset->cs_mask)
 end_define
 
 begin_comment
-comment|/*  * Priority ranges used for interactive and non-interactive timeshare  * threads.  Interactive threads use realtime priorities.  */
+comment|/*  * Priority ranges used for interactive and non-interactive timeshare  * threads.  The timeshare priorities are split up into four ranges.  * The first range handles interactive threads.  The last three ranges  * (NHALF, x, and NHALF) handle non-interactive threads with the outer  * ranges supporting nice values.  */
 end_comment
 
 begin_define
 define|#
 directive|define
+name|PRI_TIMESHARE_RANGE
+value|(PRI_MAX_TIMESHARE - PRI_MIN_TIMESHARE + 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRI_INTERACT_RANGE
+value|((PRI_TIMESHARE_RANGE - SCHED_PRI_NRESV) / 2)
+end_define
+
+begin_define
+define|#
+directive|define
 name|PRI_MIN_INTERACT
-value|PRI_MIN_REALTIME
+value|PRI_MIN_TIMESHARE
 end_define
 
 begin_define
 define|#
 directive|define
 name|PRI_MAX_INTERACT
-value|PRI_MAX_REALTIME
+value|(PRI_MIN_TIMESHARE + PRI_INTERACT_RANGE - 1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|PRI_MIN_BATCH
-value|PRI_MIN_TIMESHARE
+value|(PRI_MIN_TIMESHARE + PRI_INTERACT_RANGE)
 end_define
 
 begin_define
@@ -8187,6 +8201,18 @@ name|td_flags
 operator||=
 name|TDF_CANSWAP
 expr_stmt|;
+if|if
+condition|(
+name|PRI_BASE
+argument_list|(
+name|td
+operator|->
+name|td_pri_class
+argument_list|)
+operator|!=
+name|PRI_TIMESHARE
+condition|)
+return|return;
 if|if
 condition|(
 name|static_boost
