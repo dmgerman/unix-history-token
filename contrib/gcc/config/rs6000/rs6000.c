@@ -87158,7 +87158,7 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|TARGET_32BIT
+name|NEED_INDICATE_EXEC_STACK
 condition|)
 name|file_end_indicate_exec_stack
 argument_list|()

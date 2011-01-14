@@ -473,6 +473,13 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|TARGET_ASM_FILE_END
+value|rs6000_elf_end_indicate_exec_stack
+end_define
+
 begin_comment
 comment|/* FreeBSD doesn't support saving and restoring 64-bit regs with a 32-bit    kernel. This is supported when running on a 64-bit kernel with    COMPAT_FREEBSD32, but tell GCC it isn't so that our 32-bit binaries    are compatible. */
 end_comment
@@ -510,6 +517,19 @@ name|LABEL
 parameter_list|)
 define|\
 value|do { if (TARGET_64BIT) output_profile_hook (LABEL); } while (0)
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|NEED_INDICATE_EXEC_STACK
+end_undef
+
+begin_define
+define|#
+directive|define
+name|NEED_INDICATE_EXEC_STACK
+value|1
 end_define
 
 end_unit
