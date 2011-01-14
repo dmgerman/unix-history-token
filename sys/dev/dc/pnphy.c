@@ -141,36 +141,6 @@ directive|include
 file|"miibus_if.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|DC_SETBIT
-parameter_list|(
-name|sc
-parameter_list|,
-name|reg
-parameter_list|,
-name|x
-parameter_list|)
-define|\
-value|CSR_WRITE_4(sc, reg,                            \                 CSR_READ_4(sc, reg) | x)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DC_CLRBIT
-parameter_list|(
-name|sc
-parameter_list|,
-name|reg
-parameter_list|,
-name|x
-parameter_list|)
-define|\
-value|CSR_WRITE_4(sc, reg,                            \                 CSR_READ_4(sc, reg)& ~x)
-end_define
-
 begin_function_decl
 specifier|static
 name|int
@@ -588,6 +558,7 @@ operator|==
 literal|0
 condition|)
 break|break;
+comment|/* 		 * Note that auto-negotiation is broken on this chip. 		 */
 switch|switch
 condition|(
 name|IFM_SUBTYPE
@@ -598,19 +569,6 @@ name|ifm_media
 argument_list|)
 condition|)
 block|{
-case|case
-name|IFM_AUTO
-case|:
-comment|/* NWAY is busted on this chip */
-case|case
-name|IFM_100_T4
-case|:
-comment|/* 			 * XXX Not supported as a manual setting right now. 			 */
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
 case|case
 name|IFM_100_TX
 case|:
@@ -629,10 +587,10 @@ name|ife
 operator|->
 name|ifm_media
 operator|&
-name|IFM_GMASK
-operator|)
-operator|==
 name|IFM_FDX
+operator|)
+operator|!=
+literal|0
 condition|)
 name|mii
 operator|->
@@ -670,10 +628,10 @@ name|ife
 operator|->
 name|ifm_media
 operator|&
-name|IFM_GMASK
-operator|)
-operator|==
 name|IFM_FDX
+operator|)
+operator|!=
+literal|0
 condition|)
 name|mii
 operator|->
@@ -820,14 +778,18 @@ name|mii_media_status
 operator||=
 name|IFM_ACTIVE
 expr_stmt|;
-if|if
-condition|(
+name|reg
+operator|=
 name|CSR_READ_4
 argument_list|(
 name|dc_sc
 argument_list|,
 name|DC_NETCFG
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|reg
 operator|&
 name|DC_NETCFG_SPEEDSEL
 condition|)
@@ -846,12 +808,7 @@ name|IFM_100_TX
 expr_stmt|;
 if|if
 condition|(
-name|CSR_READ_4
-argument_list|(
-name|dc_sc
-argument_list|,
-name|DC_NETCFG
-argument_list|)
+name|reg
 operator|&
 name|DC_NETCFG_FULLDUPLEX
 condition|)
