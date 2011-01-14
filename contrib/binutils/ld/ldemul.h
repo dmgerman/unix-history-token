@@ -15,6 +15,16 @@ directive|define
 name|LDEMUL_H
 end_define
 
+begin_comment
+comment|/* Forward declaration for ldemul_add_options() and others.  */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|option
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 specifier|extern
 name|void
