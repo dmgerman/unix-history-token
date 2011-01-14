@@ -1616,7 +1616,7 @@ begin_define
 define|#
 directive|define
 name|IFM_STATUS_VALID_LIST
-value|{						\         IFM_AVALID,							\         0								\ }
+value|{						\ 	IFM_AVALID,							\ 	0								\ }
 end_define
 
 begin_comment
@@ -1670,7 +1670,7 @@ name|IFM_OPTIONS
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)& (IFM_OMASK|IFM_GMASK))
+value|((x)& (IFM_OMASK | IFM_GMASK))
 end_define
 
 begin_define
