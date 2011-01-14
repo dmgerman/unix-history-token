@@ -1601,7 +1601,6 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-operator|(
 name|IFM_SUBTYPE
 argument_list|(
 name|ife
@@ -1623,6 +1622,7 @@ literal|0
 operator|)
 operator|&&
 operator|(
+operator|(
 name|ife
 operator|->
 name|ifm_media
@@ -1631,7 +1631,6 @@ name|IFM_FLOW
 operator|)
 operator|!=
 literal|0
-operator|)
 operator|||
 operator|(
 name|sc
@@ -1642,6 +1641,7 @@ name|MIIF_FORCEPAUSE
 operator|)
 operator|!=
 literal|0
+operator|)
 condition|)
 name|anar
 operator||=
