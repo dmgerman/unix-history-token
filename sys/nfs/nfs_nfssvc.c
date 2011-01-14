@@ -417,6 +417,8 @@ operator||
 name|NFSSVC_DUMPCLIENTS
 operator||
 name|NFSSVC_DUMPLOCKS
+operator||
+name|NFSSVC_BACKUPSTABLE
 operator|)
 operator|)
 operator|&&
