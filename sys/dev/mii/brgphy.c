@@ -1931,10 +1931,10 @@ condition|(
 operator|(
 name|media
 operator|&
-name|IFM_GMASK
-operator|)
-operator|==
 name|IFM_FDX
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|bmcr
