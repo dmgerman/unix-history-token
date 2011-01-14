@@ -19,7 +19,7 @@ begin_define
 define|#
 directive|define
 name|USRSTACK
-value|VM_MAXUSER_ADDRESS
+value|SHAREDPAGE
 end_define
 
 begin_ifndef
@@ -169,6 +169,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SHAREDPAGE
+value|(VM_MAXUSER_ADDRESS - PAGE_SIZE)
+end_define
+
+begin_define
+define|#
+directive|define
 name|VM_MAX_ADDRESS
 value|(0xffffffffffffffffUL)
 end_define
@@ -190,6 +197,13 @@ define|#
 directive|define
 name|VM_MAXUSER_ADDRESS
 value|((vm_offset_t)0x7ffff000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHAREDPAGE
+value|(VM_MAXUSER_ADDRESS - PAGE_SIZE)
 end_define
 
 begin_define
@@ -250,8 +264,15 @@ end_comment
 begin_define
 define|#
 directive|define
+name|FREEBSD32_SHAREDPAGE
+value|(0x7ffff000 - PAGE_SIZE)
+end_define
+
+begin_define
+define|#
+directive|define
 name|FREEBSD32_USRSTACK
-value|0x7ffff000
+value|FREEBSD32_SHAREDPAGE
 end_define
 
 begin_ifdef
