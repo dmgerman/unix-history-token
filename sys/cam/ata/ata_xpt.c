@@ -2936,6 +2936,9 @@ name|cam_path
 modifier|*
 name|path
 decl_stmt|;
+name|cam_status
+name|status
+decl_stmt|;
 name|u_int32_t
 name|priority
 decl_stmt|;
@@ -3086,6 +3089,16 @@ name|TRUE
 argument_list|)
 expr_stmt|;
 block|}
+name|status
+operator|=
+name|done_ccb
+operator|->
+name|ccb_h
+operator|.
+name|status
+operator|&
+name|CAM_STATUS_MASK
+expr_stmt|;
 if|if
 condition|(
 name|softc
@@ -3136,9 +3149,9 @@ name|restart
 operator|=
 literal|0
 expr_stmt|;
+comment|/* Old PIO2 devices may not support mode setting. */
 block|}
 elseif|else
-comment|/* Old PIO2 devices may not support mode setting. */
 if|if
 condition|(
 name|softc
@@ -3146,6 +3159,10 @@ operator|->
 name|action
 operator|==
 name|PROBE_SETMODE
+operator|&&
+name|status
+operator|==
+name|CAM_ATA_STATUS_ERROR
 operator|&&
 name|ata_max_pmode
 argument_list|(
@@ -3164,9 +3181,30 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
 goto|goto
 name|noerror
 goto|;
+comment|/* 		 * Some old WD SATA disks report supported and enabled 		 * device-initiated interface power management, but return 		 * ABORT on attempt to disable it. 		 */
+block|}
+elseif|else
+if|if
+condition|(
+name|softc
+operator|->
+name|action
+operator|==
+name|PROBE_SETPM
+operator|&&
+name|status
+operator|==
+name|CAM_ATA_STATUS_ERROR
+condition|)
+block|{
+goto|goto
+name|noerror
+goto|;
+block|}
 comment|/* 		 * If we get to this point, we got an error status back 		 * from the inquiry and the error status doesn't require 		 * automatically retrying the command.  Therefore, the 		 * inquiry failed.  If we had inquiry information before 		 * for this device, but this latest inquiry command failed, 		 * the device has probably gone away.  If this device isn't 		 * already marked unconfigured, notify the peripheral 		 * drivers that this device is no more. 		 */
 name|device_fail
 label|:
