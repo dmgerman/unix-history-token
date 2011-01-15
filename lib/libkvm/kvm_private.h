@@ -106,6 +106,36 @@ name|uintptr_t
 name|vnet_base
 decl_stmt|;
 comment|/* vnet base of current vnet */
+comment|/* 	 * Dynamic per-CPU kernel memory.  We translate symbols, on-demand, 	 * to the data associated with dpcpu_curcpu, set with 	 * kvm_dpcpu_setcpu(). 	 */
+name|int
+name|dpcpu_initialized
+decl_stmt|;
+comment|/* dpcpu fields set up */
+name|uintptr_t
+name|dpcpu_start
+decl_stmt|;
+comment|/* start of kernel's dpcpu region */
+name|uintptr_t
+name|dpcpu_stop
+decl_stmt|;
+comment|/* stop of kernel's dpcpu region */
+name|u_int
+name|dpcpu_maxcpus
+decl_stmt|;
+comment|/* size of base array */
+name|uintptr_t
+modifier|*
+name|dpcpu_off
+decl_stmt|;
+comment|/* base array, indexed by CPU ID */
+name|u_int
+name|dpcpu_curcpu
+decl_stmt|;
+comment|/* CPU we're currently working with */
+name|uintptr_t
+name|dpcpu_curoff
+decl_stmt|;
+comment|/* dpcpu base of current CPU */
 block|}
 struct|;
 end_struct
@@ -318,6 +348,30 @@ end_function_decl
 begin_function_decl
 name|uintptr_t
 name|_kvm_vnet_validaddr
+parameter_list|(
+name|kvm_t
+modifier|*
+parameter_list|,
+name|uintptr_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|_kvm_dpcpu_initialized
+parameter_list|(
+name|kvm_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uintptr_t
+name|_kvm_dpcpu_validaddr
 parameter_list|(
 name|kvm_t
 modifier|*
