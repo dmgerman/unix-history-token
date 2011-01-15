@@ -863,9 +863,6 @@ modifier|*
 name|xdev
 parameter_list|)
 block|{
-name|phandle_t
-name|child
-decl_stmt|;
 name|struct
 name|max6690_softc
 modifier|*
@@ -915,13 +912,6 @@ operator|->
 name|sc_nsensors
 operator|=
 literal|0
-expr_stmt|;
-name|child
-operator|=
-name|ofw_bus_get_node
-argument_list|(
-name|dev
-argument_list|)
 expr_stmt|;
 comment|/* Count the actual number of sensors. */
 name|sc
