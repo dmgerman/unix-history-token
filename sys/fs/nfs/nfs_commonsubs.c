@@ -568,7 +568,7 @@ literal|0
 block|,
 literal|0
 block|,
-name|LK_EXCLUSIVE
+name|LK_SHARED
 block|}
 block|,
 comment|/* Read */
