@@ -879,6 +879,7 @@ name|void
 name|netisr_stats
 parameter_list|(
 name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
