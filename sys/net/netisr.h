@@ -262,7 +262,7 @@ begin_define
 define|#
 directive|define
 name|NETISR_SNP_FLAGS_DRAINEDCPU
-value|0x00000003
+value|0x00000004
 end_define
 
 begin_comment
