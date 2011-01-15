@@ -387,7 +387,7 @@ name|OID_AUTO
 argument_list|,
 name|maxthreads
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|netisr_maxthreads
@@ -432,7 +432,7 @@ name|OID_AUTO
 argument_list|,
 name|bindthreads
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|netisr_bindthreads
@@ -484,7 +484,7 @@ name|OID_AUTO
 argument_list|,
 name|maxqlimit
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|netisr_maxqlimit
@@ -536,7 +536,7 @@ name|OID_AUTO
 argument_list|,
 name|defaultqlimit
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|netisr_defaultqlimit
