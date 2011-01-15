@@ -1396,6 +1396,11 @@ operator|*
 name|which
 condition|)
 block|{
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 name|errno
 operator|=
 name|ENOMEM
