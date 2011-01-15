@@ -2010,6 +2010,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|Qflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* show netisr information */
+end_comment
+
+begin_decl_stmt
+name|int
 name|rflag
 decl_stmt|;
 end_decl_stmt
@@ -2525,6 +2535,14 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'Q'
+case|:
+name|Qflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'q'
 case|:
 name|noutputs
@@ -2827,6 +2845,28 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|Qflag
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|live
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
+name|netisr_stats
+argument_list|()
 expr_stmt|;
 name|exit
 argument_list|(
@@ -4138,7 +4178,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n"
+literal|"%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
 literal|"usage: netstat [-AaLnSTWx] [-f protocol_family | -p protocol]\n"
 literal|"               [-M core] [-N system]"
@@ -4165,6 +4205,8 @@ argument_list|,
 literal|"       netstat -g [-W] [-f address_family] [-M core] [-N system]"
 argument_list|,
 literal|"       netstat -gs [-s] [-f address_family] [-M core] [-N system]"
+argument_list|,
+literal|"       netstat -Q"
 argument_list|)
 expr_stmt|;
 name|exit
