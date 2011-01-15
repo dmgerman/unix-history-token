@@ -4676,7 +4676,7 @@ expr_stmt|;
 name|KASSERT
 argument_list|(
 name|counter
-operator|<
+operator|<=
 name|NETISR_MAXPROT
 argument_list|,
 operator|(
@@ -4933,7 +4933,7 @@ expr_stmt|;
 name|KASSERT
 argument_list|(
 name|counter
-operator|<
+operator|<=
 name|MAXCPU
 argument_list|,
 operator|(
@@ -5282,7 +5282,7 @@ block|}
 name|KASSERT
 argument_list|(
 name|counter
-operator|<
+operator|<=
 name|MAXCPU
 operator|*
 name|NETISR_MAXPROT
