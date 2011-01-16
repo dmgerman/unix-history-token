@@ -863,6 +863,10 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
+name|savehandler
+operator|=
+name|handler
+expr_stmt|;
 comment|/* 	 * If executing... 	 */
 if|if
 condition|(
@@ -885,10 +889,6 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* 		 * Catch interrupts to reset active counter and 		 * cleanup temp files. 		 */
-name|savehandler
-operator|=
-name|handler
-expr_stmt|;
 if|if
 condition|(
 name|setjmp
@@ -1536,6 +1536,10 @@ condition|)
 name|displayhist
 operator|=
 literal|0
+expr_stmt|;
+name|handler
+operator|=
+name|savehandler
 expr_stmt|;
 return|return
 literal|0
