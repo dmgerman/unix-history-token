@@ -76,7 +76,7 @@ comment|/* which object am I in (O,P)*/
 name|vm_pindex_t
 name|pindex
 decl_stmt|;
-comment|/* offset into object (O,Q) */
+comment|/* offset into object (O,P) */
 name|vm_paddr_t
 name|phys_addr
 decl_stmt|;
