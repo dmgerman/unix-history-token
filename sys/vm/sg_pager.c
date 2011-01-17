@@ -985,6 +985,12 @@ name|phys_addr
 operator|=
 name|paddr
 expr_stmt|;
+name|m
+operator|->
+name|queue
+operator|=
+name|PQ_NONE
+expr_stmt|;
 comment|/* Fictitious pages don't use "segind". */
 name|m
 operator|->

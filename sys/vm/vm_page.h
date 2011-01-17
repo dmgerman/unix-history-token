@@ -240,35 +240,35 @@ begin_define
 define|#
 directive|define
 name|PQ_NONE
-value|0
+value|255
 end_define
 
 begin_define
 define|#
 directive|define
 name|PQ_INACTIVE
-value|1
+value|0
 end_define
 
 begin_define
 define|#
 directive|define
 name|PQ_ACTIVE
-value|2
+value|1
 end_define
 
 begin_define
 define|#
 directive|define
 name|PQ_HOLD
-value|3
+value|2
 end_define
 
 begin_define
 define|#
 directive|define
 name|PQ_COUNT
-value|4
+value|3
 end_define
 
 begin_struct

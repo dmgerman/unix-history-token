@@ -2022,6 +2022,12 @@ name|pa
 expr_stmt|;
 name|m
 operator|->
+name|queue
+operator|=
+name|PQ_NONE
+expr_stmt|;
+name|m
+operator|->
 name|segind
 operator|=
 name|vm_phys_paddr_to_segind
