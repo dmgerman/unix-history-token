@@ -5255,6 +5255,11 @@ operator|->
 name|ni_inact_reload
 argument_list|)
 expr_stmt|;
+name|ieee80211_ratectl_node_init
+argument_list|(
+name|ni
+argument_list|)
+expr_stmt|;
 return|return
 name|ni
 return|;
@@ -5428,6 +5433,11 @@ operator|->
 name|ni_psq
 argument_list|,
 literal|"unknown"
+argument_list|)
+expr_stmt|;
+name|ieee80211_ratectl_node_init
+argument_list|(
+name|ni
 argument_list|)
 expr_stmt|;
 block|}
