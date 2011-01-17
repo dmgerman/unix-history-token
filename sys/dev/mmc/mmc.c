@@ -3804,7 +3804,7 @@ name|retval
 operator|&
 operator|(
 operator|(
-literal|1
+literal|1llu
 operator|<<
 name|size
 operator|)
