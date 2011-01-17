@@ -367,11 +367,10 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-specifier|static
 name|char
 name|cpu_model
 index|[
-literal|30
+literal|80
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -392,6 +391,35 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Machine model"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|char
+name|cpu_board
+index|[
+literal|80
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_STRING
+argument_list|(
+name|_hw
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|board
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+name|cpu_board
+argument_list|,
+literal|0
+argument_list|,
+literal|"Machine board"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
