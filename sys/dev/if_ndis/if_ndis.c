@@ -6046,14 +6046,7 @@ name|m
 operator|==
 name|NULL
 condition|)
-block|{
-name|NdisFreePacket
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 return|return;
-block|}
 comment|/* Save the data provided to us so far. */
 name|m
 operator|->
