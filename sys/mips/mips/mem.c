@@ -574,14 +574,5 @@ return|;
 block|}
 end_function
 
-begin_function
-name|void
-name|dev_mem_md_init
-parameter_list|(
-name|void
-parameter_list|)
-block|{ }
-end_function
-
 end_unit
 
