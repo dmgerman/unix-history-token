@@ -10256,7 +10256,8 @@ literal|"System Console Keymap"
 block|,
 literal|"The system console driver for FreeBSD defaults to a standard\n"
 literal|"\"PC-98x1\" keyboard map.  Users may wish to choose one of the\n"
-literal|"other keymaps below.\n"
+literal|"other keymaps below."
+block|,
 literal|"Choose a keyboard map"
 block|,
 name|NULL
