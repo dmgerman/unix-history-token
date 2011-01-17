@@ -186,6 +186,14 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|extern
+name|uint32_t
+modifier|*
+name|bootinfo
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|int
 name|cpu
@@ -724,9 +732,6 @@ parameter_list|)
 block|{
 name|u_long
 name|ticks
-init|=
-operator|-
-literal|1
 decl_stmt|;
 name|phandle_t
 name|cpus
@@ -736,6 +741,16 @@ decl_stmt|;
 name|pcell_t
 name|freq
 decl_stmt|;
+comment|/* Backward compatibility. See 8-STABLE. */
+name|ticks
+operator|=
+name|bootinfo
+index|[
+literal|3
+index|]
+operator|>>
+literal|3
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -768,6 +783,10 @@ condition|)
 goto|goto
 name|out
 goto|;
+name|freq
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|OF_getprop
@@ -795,6 +814,12 @@ goto|goto
 name|out
 goto|;
 comment|/* 	 * Time Base and Decrementer are updated every 8 CCB bus clocks. 	 * HID0[SEL_TBCLK] = 0 	 */
+if|if
+condition|(
+name|freq
+operator|!=
+literal|0
+condition|)
 name|ticks
 operator|=
 name|freq

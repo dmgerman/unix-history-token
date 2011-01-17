@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_platform.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/cdefs.h>
 end_include
 
@@ -500,6 +506,17 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*  * Bootinfo is passed to us by legacy loaders. Save the address of the  * structure to handle backward compatibility.  */
+end_comment
+
+begin_decl_stmt
+name|uint32_t
+modifier|*
+name|bootinfo
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -1165,6 +1182,21 @@ argument_list|,
 name|vm_offset_t
 argument_list|)
 expr_stmt|;
+name|bootinfo
+operator|=
+operator|(
+name|uint32_t
+operator|*
+operator|)
+name|preload_search_info
+argument_list|(
+name|kmdp
+argument_list|,
+name|MODINFO_METADATA
+operator||
+name|MODINFOMD_BOOTINFO
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DDB
@@ -1204,6 +1236,32 @@ literal|1
 condition|)
 empty_stmt|;
 block|}
+if|#
+directive|if
+name|defined
+argument_list|(
+name|FDT_DTB_STATIC
+argument_list|)
+comment|/* 	 * In case the device tree blob was not retrieved (from metadata) try 	 * to use the statically embedded one. 	 */
+if|if
+condition|(
+name|dtbp
+operator|==
+operator|(
+name|vm_offset_t
+operator|)
+name|NULL
+condition|)
+name|dtbp
+operator|=
+operator|(
+name|vm_offset_t
+operator|)
+operator|&
+name|fdt_static_dtb
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|OF_install
