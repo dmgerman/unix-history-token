@@ -227,7 +227,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|0
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -842,26 +842,6 @@ operator|(
 literal|0
 operator|)
 return|;
-block|}
-end_function
-
-begin_function
-name|void
-name|dev_mem_md_init
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|mem_range_softc
-operator|.
-name|mr_op
-operator|->
-name|init
-argument_list|(
-operator|&
-name|mem_range_softc
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
