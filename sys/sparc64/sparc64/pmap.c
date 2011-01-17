@@ -2035,6 +2035,15 @@ name|addr
 parameter_list|,
 name|val
 parameter_list|)
+value|do {					\ 	if (addr[0] != SETHI(IF_F2_RD(addr[0]), 0x0) ||			\ 	    addr[1] != OR_R_I_R(IF_F3_RD(addr[1]), 0x0,			\ 	    IF_F3_RS1(addr[1]))	||					\ 	    addr[3] != SETHI(IF_F2_RD(addr[3]), 0x0))			\ 		panic("%s: patched instructions have changed",		\ 		    __func__);						\ 	addr[0] |= EIF_IMM((val)>> 42, 22);				\ 	addr[1] |= EIF_IMM((val)>> 32, 10);				\ 	addr[3] |= EIF_IMM((val)>> 10, 22);				\ 	flush(addr);							\ 	flush(addr + 1);						\ 	flush(addr + 3);						\ } while (0)
+define|#
+directive|define
+name|PATCH_TSB_MASK
+parameter_list|(
+name|addr
+parameter_list|,
+name|val
+parameter_list|)
 value|do {					\ 	if (addr[0] != SETHI(IF_F2_RD(addr[0]), 0x0) ||			\ 	    addr[1] != OR_R_I_R(IF_F3_RD(addr[1]), 0x0,			\ 	    IF_F3_RS1(addr[1])))					\ 		panic("%s: patched instructions have changed",		\ 		    __func__);						\ 	addr[0] |= EIF_IMM((val)>> 10, 22);				\ 	addr[1] |= EIF_IMM((val), 10);					\ 	flush(addr);							\ 	flush(addr + 1);						\ } while (0)
 if|if
 condition|(
@@ -2123,14 +2132,14 @@ argument_list|,
 name|off
 argument_list|)
 expr_stmt|;
-name|PATCH_TSB
+name|PATCH_TSB_MASK
 argument_list|(
 name|tl1_dmmu_miss_patch_tsb_mask_1
 argument_list|,
 name|tsb_kernel_mask
 argument_list|)
 expr_stmt|;
-name|PATCH_TSB
+name|PATCH_TSB_MASK
 argument_list|(
 name|tl1_dmmu_miss_patch_tsb_mask_2
 argument_list|,
@@ -2165,14 +2174,14 @@ argument_list|,
 name|off
 argument_list|)
 expr_stmt|;
-name|PATCH_TSB
+name|PATCH_TSB_MASK
 argument_list|(
 name|tl1_dmmu_prot_patch_tsb_mask_1
 argument_list|,
 name|tsb_kernel_mask
 argument_list|)
 expr_stmt|;
-name|PATCH_TSB
+name|PATCH_TSB_MASK
 argument_list|(
 name|tl1_dmmu_prot_patch_tsb_mask_2
 argument_list|,
@@ -2207,14 +2216,14 @@ argument_list|,
 name|off
 argument_list|)
 expr_stmt|;
-name|PATCH_TSB
+name|PATCH_TSB_MASK
 argument_list|(
 name|tl1_immu_miss_patch_tsb_mask_1
 argument_list|,
 name|tsb_kernel_mask
 argument_list|)
 expr_stmt|;
-name|PATCH_TSB
+name|PATCH_TSB_MASK
 argument_list|(
 name|tl1_immu_miss_patch_tsb_mask_2
 argument_list|,
