@@ -6987,6 +6987,24 @@ block|}
 block|}
 if|if
 condition|(
+name|op
+operator|==
+name|NFSV4OP_LOOKUP
+operator|||
+name|op
+operator|==
+name|NFSV4OP_LOOKUPP
+condition|)
+comment|/* Lookup ops return a locked vnode */
+name|VOP_UNLOCK
+argument_list|(
+name|nvp
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|!
 name|nd
 operator|->
@@ -7003,6 +7021,12 @@ operator|=
 name|nvp
 expr_stmt|;
 block|}
+else|else
+name|vrele
+argument_list|(
+name|nvp
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
