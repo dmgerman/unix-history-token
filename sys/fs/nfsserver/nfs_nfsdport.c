@@ -4223,10 +4223,6 @@ argument_list|(
 name|ndp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
 name|vrele
 argument_list|(
 name|ndp
