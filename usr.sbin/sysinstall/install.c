@@ -2693,10 +2693,10 @@ directive|ifdef
 name|WITH_SLICES
 name|msgConfirm
 argument_list|(
-literal|"In the next menu, you will need to set up a DOS-style (\"fdisk\") partitioning\n"
+literal|"In the next menu, you will need to set up an MBR partitioning\n"
 literal|"scheme for your hard disk.  If you simply wish to devote all disk space\n"
-literal|"to FreeBSD (overwriting anything else that might be on the disk(s) selected)\n"
-literal|"then use the (A)ll command to select the default partitioning scheme followed\n"
+literal|"to FreeBSD (overwriting anything else that might be on the disk selected)\n"
+literal|"then use the (A)ll command to create a single partition followed\n"
 literal|"by a (Q)uit.  If you wish to allocate only free space to FreeBSD, move to a\n"
 literal|"partition marked \"unused\" and use the (C)reate command."
 argument_list|)
@@ -2748,7 +2748,7 @@ goto|;
 block|}
 name|msgConfirm
 argument_list|(
-literal|"Now you need to create BSD partitions inside of the fdisk partition(s)\n"
+literal|"Now you need to create BSD partitions inside of the MBR partition(s)\n"
 literal|"just created.  If you have a reasonable amount of disk space (1GB or more)\n"
 literal|"and don't have any special requirements, simply use the (A)uto command to\n"
 literal|"allocate space automatically.  If you have more specific needs or just don't\n"
@@ -3474,6 +3474,12 @@ operator|&
 name|MenuConfigure
 argument_list|,
 name|FALSE
+argument_list|)
+expr_stmt|;
+else|else
+name|dmenuExit
+argument_list|(
+name|NULL
 argument_list|)
 expr_stmt|;
 name|configRC_conf

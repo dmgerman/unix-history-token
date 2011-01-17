@@ -549,7 +549,7 @@ directive|endif
 block|{
 literal|" Disklabel"
 block|,
-literal|"The disk Label editor"
+literal|"The disk label editor"
 block|,
 name|NULL
 block|,
@@ -992,7 +992,7 @@ block|,
 block|{
 literal|" Media, HTTP"
 block|,
-literal|"Select FTP via HTTP proxy installation media."
+literal|"Select FTP via HTTP proxy install media."
 block|,
 name|NULL
 block|,
@@ -1093,7 +1093,7 @@ name|WITH_SLICES
 block|{
 literal|" Partition"
 block|,
-literal|"The disk Slice (PC-style partition) Editor"
+literal|"The disk slice (PC-style partition) editor"
 block|,
 name|NULL
 block|,
@@ -7038,7 +7038,7 @@ name|WITH_SLICES
 block|{
 literal|" Fdisk"
 block|,
-literal|"The disk Slice (PC-style partition) Editor"
+literal|"The disk slice (PC-style partition) editor"
 block|,
 name|NULL
 block|,
@@ -7050,7 +7050,7 @@ directive|endif
 block|{
 literal|" Label"
 block|,
-literal|"The disk Label editor"
+literal|"The disk label editor"
 block|,
 name|NULL
 block|,
@@ -10257,10 +10257,6 @@ block|,
 literal|"The system console driver for FreeBSD defaults to a standard\n"
 literal|"\"PC-98x1\" keyboard map.  Users may wish to choose one of the\n"
 literal|"other keymaps below.\n"
-literal|"Note that sysinstall itself only uses the part of the keyboard map\n"
-literal|"which is required to generate the ANSI character subset, but your\n"
-literal|"choice of keymap will also be saved for later (fuller) use."
-block|,
 literal|"Choose a keyboard map"
 block|,
 name|NULL
@@ -10313,12 +10309,8 @@ block|,
 literal|"System Console Keymap"
 block|,
 literal|"The system console driver for FreeBSD defaults to a standard\n"
-literal|"\"American\" keyboard map.  Users in other countries (or with\n"
-literal|"different keyboard preferences) may wish to choose one of the\n"
-literal|"other keymaps below.\n"
-literal|"Note that sysinstall itself only uses the part of the keyboard map\n"
-literal|"which is required to generate the ANSI character subset, but your\n"
-literal|"choice of keymap will also be saved for later (fuller) use."
+literal|"\"US\" keyboard map.  Users may wish to choose one of the\n"
+literal|"other keymaps below."
 block|,
 literal|"Choose a keyboard map"
 block|,
