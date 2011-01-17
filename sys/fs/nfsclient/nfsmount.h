@@ -289,6 +289,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|nm_vinvalbuf
+value|nm_com.nmcom_vinvalbuf
+end_define
+
+begin_define
+define|#
+directive|define
 name|NFSMNT_DIRPATH
 parameter_list|(
 name|m

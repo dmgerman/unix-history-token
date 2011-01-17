@@ -286,6 +286,13 @@ name|nm_getinfo
 value|nm_com.nmcom_getinfo
 end_define
 
+begin_define
+define|#
+directive|define
+name|nm_vinvalbuf
+value|nm_com.nmcom_vinvalbuf
+end_define
+
 begin_if
 if|#
 directive|if
