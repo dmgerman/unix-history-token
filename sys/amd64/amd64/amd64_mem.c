@@ -1452,6 +1452,9 @@ name|sc
 operator|->
 name|mr_desc
 expr_stmt|;
+name|critical_enter
+argument_list|()
+expr_stmt|;
 comment|/* Disable PGE. */
 name|cr4
 operator|=
@@ -1940,6 +1943,9 @@ name|load_cr4
 argument_list|(
 name|cr4
 argument_list|)
+expr_stmt|;
+name|critical_exit
+argument_list|()
 expr_stmt|;
 block|}
 end_function
