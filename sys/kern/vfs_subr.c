@@ -13734,6 +13734,8 @@ name|OID_AUTO
 argument_list|,
 name|conflist
 argument_list|,
+name|CTLTYPE_OPAQUE
+operator||
 name|CTLFLAG_RD
 argument_list|,
 name|NULL
@@ -19033,6 +19035,8 @@ name|OID_AUTO
 argument_list|,
 name|ctl
 argument_list|,
+name|CTLTYPE_OPAQUE
+operator||
 name|CTLFLAG_WR
 argument_list|,
 name|NULL

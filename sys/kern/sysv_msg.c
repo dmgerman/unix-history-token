@@ -6024,6 +6024,8 @@ name|OID_AUTO
 argument_list|,
 name|msqids
 argument_list|,
+name|CTLTYPE_OPAQUE
+operator||
 name|CTLFLAG_RD
 argument_list|,
 name|NULL

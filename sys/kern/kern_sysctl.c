@@ -3693,6 +3693,8 @@ literal|3
 argument_list|,
 name|name2oid
 argument_list|,
+name|CTLTYPE_INT
+operator||
 name|CTLFLAG_RW
 operator||
 name|CTLFLAG_ANYBODY

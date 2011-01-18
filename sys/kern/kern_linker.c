@@ -9833,6 +9833,8 @@ name|OID_AUTO
 argument_list|,
 name|function_list
 argument_list|,
+name|CTLTYPE_OPAQUE
+operator||
 name|CTLFLAG_RD
 argument_list|,
 name|NULL
