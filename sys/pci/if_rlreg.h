@@ -1051,7 +1051,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|RL_HWREV_8168_SPIN1
+name|RL_HWREV_8168B_SPIN1
 value|0x30000000
 end_define
 
@@ -1086,14 +1086,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|RL_HWREV_8168_SPIN2
+name|RL_HWREV_8168B_SPIN2
 value|0x38000000
 end_define
 
 begin_define
 define|#
 directive|define
-name|RL_HWREV_8168_SPIN3
+name|RL_HWREV_8168B_SPIN3
 value|0x38400000
 end_define
 

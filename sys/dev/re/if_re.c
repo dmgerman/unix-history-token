@@ -525,7 +525,7 @@ name|RL_MTU
 block|}
 block|,
 block|{
-name|RL_HWREV_8168_SPIN1
+name|RL_HWREV_8168B_SPIN1
 block|,
 name|RL_8169
 block|,
@@ -685,7 +685,7 @@ name|RL_MTU
 block|}
 block|,
 block|{
-name|RL_HWREV_8168_SPIN2
+name|RL_HWREV_8168B_SPIN2
 block|,
 name|RL_8169
 block|,
@@ -695,7 +695,7 @@ name|RL_JUMBO_MTU
 block|}
 block|,
 block|{
-name|RL_HWREV_8168_SPIN3
+name|RL_HWREV_8168B_SPIN3
 block|,
 name|RL_8169
 block|,
@@ -6304,10 +6304,10 @@ name|RL_FLAG_MACSLEEP
 expr_stmt|;
 break|break;
 case|case
-name|RL_HWREV_8168_SPIN1
+name|RL_HWREV_8168B_SPIN1
 case|:
 case|case
-name|RL_HWREV_8168_SPIN2
+name|RL_HWREV_8168B_SPIN2
 case|:
 name|sc
 operator|->
@@ -6317,7 +6317,7 @@ name|RL_FLAG_WOLRXENB
 expr_stmt|;
 comment|/* FALLTHROUGH */
 case|case
-name|RL_HWREV_8168_SPIN3
+name|RL_HWREV_8168B_SPIN3
 case|:
 name|sc
 operator|->
