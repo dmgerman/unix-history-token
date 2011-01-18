@@ -6127,24 +6127,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|nfsvno_unlockvfs
-parameter_list|(
-name|mount_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|nfsvno_lockvfs
-parameter_list|(
-name|mount_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|nfsrv_v4rootexport
 parameter_list|(
