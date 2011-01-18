@@ -878,6 +878,12 @@ name|EINVAL
 operator|)
 return|;
 block|}
+name|size
+operator|-=
+name|size
+operator|%
+name|secsize
+expr_stmt|;
 name|snprintf
 argument_list|(
 name|name
