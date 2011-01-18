@@ -309,6 +309,8 @@ name|OID_AUTO
 argument_list|,
 name|maxsegments
 argument_list|,
+name|CTLTYPE_INT
+operator||
 name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
@@ -358,6 +360,8 @@ name|OID_AUTO
 argument_list|,
 name|cursegments
 argument_list|,
+name|CTLTYPE_INT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -407,6 +411,8 @@ name|OID_AUTO
 argument_list|,
 name|overflows
 argument_list|,
+name|CTLTYPE_INT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&

@@ -1063,6 +1063,8 @@ name|OID_AUTO
 argument_list|,
 literal|"%parent"
 argument_list|,
+name|CTLTYPE_STRING
+operator||
 name|CTLFLAG_RD
 argument_list|,
 name|vap

@@ -4927,9 +4927,11 @@ comment|/*XXX*/
 argument_list|,
 name|pcblist
 argument_list|,
+name|CTLTYPE_OPAQUE
+operator||
 name|CTLFLAG_RD
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 literal|0
 argument_list|,
