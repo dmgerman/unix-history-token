@@ -10451,7 +10451,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|VOP_ACCESS
+name|VOP_ACCESSX
 argument_list|(
 name|vp
 argument_list|,
