@@ -8689,12 +8689,16 @@ parameter_list|)
 block|{
 name|dev_console
 operator|=
-name|make_dev
+name|make_dev_credf
 argument_list|(
+name|MAKEDEV_ETERNAL
+argument_list|,
 operator|&
 name|ttyconsdev_cdevsw
 argument_list|,
 literal|0
+argument_list|,
+name|NULL
 argument_list|,
 name|UID_ROOT
 argument_list|,
