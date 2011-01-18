@@ -345,6 +345,19 @@ block|}
 struct|;
 end_struct
 
+begin_expr_stmt
+specifier|static
+name|MALLOC_DEFINE
+argument_list|(
+name|M_VMPGDATA
+argument_list|,
+literal|"vm_pgdata"
+argument_list|,
+literal|"swap pager private data"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
 name|struct
