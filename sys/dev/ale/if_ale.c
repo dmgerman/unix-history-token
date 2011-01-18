@@ -3629,16 +3629,15 @@ name|dev
 argument_list|)
 condition|)
 block|{
+name|ether_ifdetach
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|ALE_LOCK
 argument_list|(
 name|sc
 argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|ale_flags
-operator||=
-name|ALE_FLAG_DETACH
 expr_stmt|;
 name|ale_stop
 argument_list|(
@@ -3678,11 +3677,6 @@ operator|&
 name|sc
 operator|->
 name|ale_link_task
-argument_list|)
-expr_stmt|;
-name|ether_ifdetach
-argument_list|(
-name|ifp
 argument_list|)
 expr_stmt|;
 block|}
@@ -10387,11 +10381,6 @@ operator|=
 name|ALE_TX_TIMEOUT
 expr_stmt|;
 block|}
-name|ALE_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -10744,18 +10733,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|if
-condition|(
-operator|(
-name|sc
-operator|->
-name|ale_flags
-operator|&
-name|ALE_FLAG_DETACH
-operator|)
-operator|==
-literal|0
-condition|)
 name|ale_init_locked
 argument_list|(
 name|sc
@@ -12469,6 +12446,11 @@ argument_list|,
 name|ALE_INTR_STATUS
 argument_list|)
 expr_stmt|;
+name|ALE_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -12560,11 +12542,6 @@ operator|==
 name|EIO
 condition|)
 block|{
-name|ALE_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|ale_stats
@@ -12644,11 +12621,6 @@ argument_list|,
 literal|"DMA write error! -- resetting\n"
 argument_list|)
 expr_stmt|;
-name|ALE_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|ifp
 operator|->
 name|if_drv_flags
@@ -12705,6 +12677,11 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|ALE_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|taskqueue_enqueue
 argument_list|(
 name|sc
@@ -12721,6 +12698,11 @@ return|return;
 block|}
 name|done
 label|:
+name|ALE_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* Re-enable interrupts. */
 name|CSR_WRITE_4
 argument_list|(
@@ -13878,6 +13860,11 @@ name|M_VLANTAG
 expr_stmt|;
 block|}
 comment|/* Pass it to upper layer. */
+name|ALE_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 call|(
 modifier|*
 name|ifp
@@ -13888,6 +13875,11 @@ argument_list|(
 name|ifp
 argument_list|,
 name|m
+argument_list|)
+expr_stmt|;
+name|ALE_LOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 name|ale_rx_update_page

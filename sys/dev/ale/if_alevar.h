@@ -665,10 +665,6 @@ name|ALE_FLAG_TXCMB_BUG
 value|0x0200
 define|#
 directive|define
-name|ALE_FLAG_DETACH
-value|0x4000
-define|#
-directive|define
 name|ALE_FLAG_LINK
 value|0x8000
 name|struct
