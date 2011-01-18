@@ -1841,10 +1841,6 @@ block|{
 if|if
 condition|(
 name|irq
-operator|>=
-literal|0
-operator|||
-name|irq
 operator|<
 literal|16
 condition|)
