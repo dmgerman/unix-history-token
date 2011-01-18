@@ -7874,6 +7874,9 @@ endif|#
 directive|endif
 block|}
 block|}
+if|#
+directive|if
+name|USB_HAVE_PF
 if|if
 condition|(
 name|xfer
@@ -7889,6 +7892,8 @@ argument_list|,
 name|USBPF_XFERTAP_DONE
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* call processing routine */
 call|(
 name|xfer
@@ -8434,6 +8439,9 @@ argument_list|(
 literal|"start\n"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|USB_HAVE_PF
 name|usbpf_xfertap
 argument_list|(
 name|xfer
@@ -8441,6 +8449,8 @@ argument_list|,
 name|USBPF_XFERTAP_SUBMIT
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* start the transfer */
 call|(
 name|ep
@@ -8992,6 +9002,9 @@ argument_list|(
 literal|"start\n"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|USB_HAVE_PF
 name|usbpf_xfertap
 argument_list|(
 name|xfer
@@ -8999,6 +9012,8 @@ argument_list|,
 name|USBPF_XFERTAP_SUBMIT
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* start USB transfer */
 call|(
 name|ep

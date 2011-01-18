@@ -879,11 +879,16 @@ operator|->
 name|control_xfer_proc
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|USB_HAVE_PF
 name|usbpf_detach
 argument_list|(
 name|bus
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -1641,11 +1646,16 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|USB_HAVE_PF
 name|usbpf_attach
 argument_list|(
 name|bus
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Initialise USB process messages */
 name|bus
 operator|->
