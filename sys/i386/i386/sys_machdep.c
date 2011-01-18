@@ -3270,7 +3270,7 @@ condition|(
 name|uap
 operator|->
 name|num
-operator|<=
+operator|==
 literal|0
 condition|)
 return|return
@@ -3427,12 +3427,6 @@ operator|->
 name|start
 operator|>=
 name|MAX_LD
-operator|||
-name|uap
-operator|->
-name|num
-operator|<
-literal|0
 operator|||
 name|largest_ld
 operator|>
