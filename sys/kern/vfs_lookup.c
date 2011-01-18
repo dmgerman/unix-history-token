@@ -4210,7 +4210,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Check for degenerate name (e.g. / or "") 	 * which is a way of talking about a directory, 	 * e.g. like "/." or ".". 	 */
+comment|/* 	 * Check for "" which represents the root directory after slash 	 * removal. 	 */
 if|if
 condition|(
 name|cnp
@@ -4223,42 +4223,33 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-if|if
-condition|(
+comment|/* 		 * Support only LOOKUP for "/" because lookup() 		 * can't succeed for CREATE, DELETE and RENAME. 		 */
+name|KASSERT
+argument_list|(
 name|cnp
 operator|->
 name|cn_nameiop
-operator|!=
+operator|==
 name|LOOKUP
-operator|||
-name|wantparent
-condition|)
-block|{
-name|error
-operator|=
-name|EISDIR
+argument_list|,
+operator|(
+literal|"nameiop must be LOOKUP"
+operator|)
+argument_list|)
 expr_stmt|;
-goto|goto
-name|bad
-goto|;
-block|}
-if|if
-condition|(
+name|KASSERT
+argument_list|(
 name|dp
 operator|->
 name|v_type
-operator|!=
+operator|==
 name|VDIR
-condition|)
-block|{
-name|error
-operator|=
-name|ENOTDIR
+argument_list|,
+operator|(
+literal|"dp is not a directory"
+operator|)
+argument_list|)
 expr_stmt|;
-goto|goto
-name|bad
-goto|;
-block|}
 if|if
 condition|(
 operator|!
