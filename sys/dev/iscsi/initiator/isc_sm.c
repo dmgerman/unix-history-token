@@ -3191,6 +3191,8 @@ name|OID_AUTO
 argument_list|,
 literal|"targetname"
 argument_list|,
+name|CTLTYPE_STRING
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|(
@@ -3231,6 +3233,8 @@ name|OID_AUTO
 argument_list|,
 literal|"targeaddress"
 argument_list|,
+name|CTLTYPE_STRING
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|(
@@ -3271,6 +3275,8 @@ name|OID_AUTO
 argument_list|,
 literal|"stats"
 argument_list|,
+name|CTLTYPE_STRING
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|(

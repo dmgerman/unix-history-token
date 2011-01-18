@@ -14474,6 +14474,8 @@ name|OID_AUTO
 argument_list|,
 literal|"istats"
 argument_list|,
+name|CTLTYPE_ULONG
+operator||
 name|CTLFLAG_RD
 argument_list|,
 name|sc
@@ -14512,6 +14514,8 @@ name|OID_AUTO
 argument_list|,
 literal|"stats"
 argument_list|,
+name|CTLTYPE_ULONG
+operator||
 name|CTLFLAG_RD
 argument_list|,
 name|sc

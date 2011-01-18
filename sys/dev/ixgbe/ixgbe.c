@@ -23801,6 +23801,8 @@ name|OID_AUTO
 argument_list|,
 literal|"interrupt_rate"
 argument_list|,
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 operator|&
@@ -23839,6 +23841,8 @@ name|OID_AUTO
 argument_list|,
 literal|"txd_head"
 argument_list|,
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 name|txr
@@ -23865,6 +23869,8 @@ name|OID_AUTO
 argument_list|,
 literal|"txd_tail"
 argument_list|,
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 name|txr
@@ -24036,6 +24042,8 @@ name|OID_AUTO
 argument_list|,
 literal|"rxd_head"
 argument_list|,
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 name|rxr
@@ -24062,6 +24070,8 @@ name|OID_AUTO
 argument_list|,
 literal|"rxd_tail"
 argument_list|,
+name|CTLTYPE_UINT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 name|rxr
