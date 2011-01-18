@@ -79,7 +79,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) $Version: unifdef-2.3 $\n"
+literal|"@(#) $Version: unifdef-2.5 $\n"
 literal|"@(#) $FreeBSD$\n"
 literal|"@(#) $Author: Tony Finch (dot@dotat.at) $\n"
 literal|"@(#) $URL: http://dotat.at/prog/unifdef $\n"
@@ -1564,34 +1564,18 @@ name|ist
 decl_stmt|,
 name|ost
 decl_stmt|;
-name|memset
-argument_list|(
-operator|&
-name|ist
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ist
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|memset
-argument_list|(
-operator|&
-name|ost
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ost
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
+name|stat
+argument_list|(
+name|ofilename
+argument_list|,
+operator|&
+name|ost
+argument_list|)
+operator|==
+literal|0
+operator|&&
 name|fstat
 argument_list|(
 name|fileno
@@ -1602,41 +1586,9 @@ argument_list|,
 operator|&
 name|ist
 argument_list|)
-operator|!=
+operator|==
 literal|0
 condition|)
-name|err
-argument_list|(
-literal|2
-argument_list|,
-literal|"can't fstat %s"
-argument_list|,
-name|filename
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|stat
-argument_list|(
-name|ofilename
-argument_list|,
-operator|&
-name|ost
-argument_list|)
-operator|!=
-literal|0
-operator|&&
-name|errno
-operator|!=
-name|ENOENT
-condition|)
-name|warn
-argument_list|(
-literal|"can't stat %s"
-argument_list|,
-name|ofilename
-argument_list|)
-expr_stmt|;
 name|overwriting
 operator|=
 operator|(
@@ -1907,7 +1859,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * A state transition function alters the global #if processing state  * in a particular way. The table below is indexed by the current  * processing state and the type of the current line.  *  * Nesting is handled by keeping a stack of states; some transition  * functions increase or decrease the depth. They also maintain the  * ignore state on a stack. In some complicated cases they have to  * alter the preprocessor directive, as follows.  *  * When we have processed a group that starts off with a known-false  * #if/#elif sequence (which has therefore been deleted) followed by a  * #elif that we don't understand and therefore must keep, we edit the  * latter into a #if to keep the nesting correct.  *  * When we find a true #elif in a group, the following block will  * always be kept and the rest of the sequence after the next #elif or  * #else will be discarded. We edit the #elif into a #else and the  * following directive to #endif since this has the desired behaviour.  *  * "Dodgy" directives are split across multiple lines, the most common  * example being a multi-line comment hanging off the right of the  * directive. We can handle them correctly only if there is no change  * from printing to dropping (or vice versa) caused by that directive.  * If the directive is the first of a group we have a choice between  * failing with an error, or passing it through unchanged instead of  * evaluating it. The latter is not the default to avoid questions from  * users about unifdef unexpectedly leaving behind preprocessor directives.  */
+comment|/*  * A state transition function alters the global #if processing state  * in a particular way. The table below is indexed by the current  * processing state and the type of the current line.  *  * Nesting is handled by keeping a stack of states; some transition  * functions increase or decrease the depth. They also maintain the  * ignore state on a stack. In some complicated cases they have to  * alter the preprocessor directive, as follows.  *  * When we have processed a group that starts off with a known-false  * #if/#elif sequence (which has therefore been deleted) followed by a  * #elif that we don't understand and therefore must keep, we edit the  * latter into a #if to keep the nesting correct. We use strncpy() to  * overwrite the 4 byte token "elif" with "if  " without a '\0' byte.  *  * When we find a true #elif in a group, the following block will  * always be kept and the rest of the sequence after the next #elif or  * #else will be discarded. We edit the #elif into a #else and the  * following directive to #endif since this has the desired behaviour.  *  * "Dodgy" directives are split across multiple lines, the most common  * example being a multi-line comment hanging off the right of the  * directive. We can handle them correctly only if there is no change  * from printing to dropping (or vice versa) caused by that directive.  * If the directive is the first of a group we have a choice between  * failing with an error, or passing it through unchanged instead of  * evaluating it. The latter is not the default to avoid questions from  * users about unifdef unexpectedly leaving behind preprocessor directives.  */
 end_comment
 
 begin_typedef
@@ -2454,7 +2406,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* edit this line */
+comment|/* modify this line */
 end_comment
 
 begin_function
@@ -3551,7 +3503,7 @@ name|rename
 argument_list|(
 name|tempname
 argument_list|,
-name|filename
+name|ofilename
 argument_list|)
 operator|==
 operator|-
@@ -3574,7 +3526,7 @@ literal|2
 argument_list|,
 literal|"%s unchanged"
 argument_list|,
-name|filename
+name|ofilename
 argument_list|)
 expr_stmt|;
 block|}
