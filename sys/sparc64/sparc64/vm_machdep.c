@@ -2144,7 +2144,7 @@ name|sf_buf_alloc_want
 operator|>
 literal|0
 condition|)
-name|wakeup_one
+name|wakeup
 argument_list|(
 operator|&
 name|sf_freelist
