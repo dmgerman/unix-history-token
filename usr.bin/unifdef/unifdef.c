@@ -1,61 +1,23 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2002 - 2009 Tony Finch<dot@dotat.at>  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 2002 - 2010 Tony Finch<dot@dotat.at>  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
-comment|/*  * This code was derived from software contributed to Berkeley by Dave Yost.  * It was rewritten to support ANSI C by Tony Finch. The original version  * of unifdef carried the 4-clause BSD copyright licence. None of its code  * remains in this version (though some of the names remain) so it now  * carries a more liberal licence.  *  * The latest version is available from http://dotat.at/prog/unifdef  */
+comment|/*  * unifdef - remove ifdef'ed lines  *  * This code was derived from software contributed to Berkeley by Dave Yost.  * It was rewritten to support ANSI C by Tony Finch. The original version  * of unifdef carried the 4-clause BSD copyright licence. None of its code  * remains in this version (though some of the names remain) so it now  * carries a more liberal licence.  *  *  Wishlist:  *      provide an option which will append the name of the  *        appropriate symbol after #else's and #endif's  *      provide an option which will check symbols after  *        #else's and #endif's to see that they match their  *        corresponding #ifdef or #ifndef  *  *   These require better buffer handling, which would also make  *   it possible to handle all "dodgy" directives correctly.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
+file|<sys/types.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__IDSTRING
-end_ifdef
-
-begin_expr_stmt
-name|__IDSTRING
-argument_list|(
-name|dotat
-argument_list|,
-literal|"$dotat: unifdef/unifdef.c,v 1.190 2009/11/27 17:21:26 fanf2 Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FBSDID
-end_ifdef
-
-begin_expr_stmt
-name|__FBSDID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * unifdef - remove ifdef'ed lines  *  *  Wishlist:  *      provide an option which will append the name of the  *        appropriate symbol after #else's and #endif's  *      provide an option which will check symbols after  *        #else's and #endif's to see that they match their  *        corresponding #ifdef or #ifndef  *  *   The first two items above require better buffer handling, which would  *     also make it possible to handle all "dodgy" directives correctly.  */
-end_comment
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
 
 begin_include
 include|#
@@ -67,6 +29,12 @@ begin_include
 include|#
 directive|include
 file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -104,6 +72,19 @@ include|#
 directive|include
 file|<unistd.h>
 end_include
+
+begin_decl_stmt
+specifier|const
+name|char
+name|copyright
+index|[]
+init|=
+literal|"@(#) $Version: unifdef-2.5 $\n"
+literal|"@(#) $FreeBSD$\n"
+literal|"@(#) $Author: Tony Finch (dot@dotat.at) $\n"
+literal|"@(#) $URL: http://dotat.at/prog/unifdef $\n"
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* types of input lines: */
@@ -453,6 +434,17 @@ value|10
 end_define
 
 begin_comment
+comment|/*  * For temporary filenames  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TEMPLATE
+value|"unifdef.XXXXXX"
+end_define
+
+begin_comment
 comment|/*  * Globals.  */
 end_comment
 
@@ -553,6 +545,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* -s: output symbol list */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|bool
+name|symdepth
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* -S: output symbol depth */
 end_comment
 
 begin_decl_stmt
@@ -661,6 +664,56 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|FILE
+modifier|*
+name|output
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* output file pointer */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|ofilename
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* output file name */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|bool
+name|overwriting
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* output overwrites input */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+name|tempname
+index|[
+name|FILENAME_MAX
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* used when overwriting */
+end_comment
+
+begin_decl_stmt
+specifier|static
 name|char
 name|tline
 index|[
@@ -686,6 +739,41 @@ end_decl_stmt
 begin_comment
 comment|/* used for editing #elif's */
 end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|newline
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* input file format */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|newline_unix
+index|[]
+init|=
+literal|"\n"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|newline_crlf
+index|[]
+init|=
+literal|"\r\n"
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -808,6 +896,30 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|bool
+name|zerosyms
+init|=
+name|true
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* to format symdepth output */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|bool
+name|firstsym
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* ditto */
+end_comment
+
+begin_decl_stmt
+specifier|static
 name|int
 name|exitstat
 decl_stmt|;
@@ -828,6 +940,16 @@ name|bool
 parameter_list|,
 name|char
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|closeout
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1055,6 +1177,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|version
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
@@ -1096,7 +1228,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"i:D:U:I:BbcdeKklnst"
+literal|"i:D:U:I:o:bBcdeKklnsStV"
 argument_list|)
 operator|)
 operator|!=
@@ -1189,15 +1321,6 @@ case|:
 comment|/* no-op for compatibility with cpp */
 break|break;
 case|case
-literal|'B'
-case|:
-comment|/* compress blank lines around removed section */
-name|compblank
-operator|=
-name|true
-expr_stmt|;
-break|break;
-case|case
 literal|'b'
 case|:
 comment|/* blank deleted lines instead of omitting them */
@@ -1206,6 +1329,15 @@ literal|'l'
 case|:
 comment|/* backwards compatibility */
 name|lnblank
+operator|=
+name|true
+expr_stmt|;
+break|break;
+case|case
+literal|'B'
+case|:
+comment|/* compress blank lines around removed section */
+name|compblank
 operator|=
 name|true
 expr_stmt|;
@@ -1264,10 +1396,30 @@ name|true
 expr_stmt|;
 break|break;
 case|case
+literal|'o'
+case|:
+comment|/* output to a file */
+name|ofilename
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
 literal|'s'
 case|:
 comment|/* only output list of symbols that control #ifs */
 name|symlist
+operator|=
+name|true
+expr_stmt|;
+break|break;
+case|case
+literal|'S'
+case|:
+comment|/* list symbols with their nesting depth */
+name|symlist
+operator|=
+name|symdepth
 operator|=
 name|true
 expr_stmt|;
@@ -1281,6 +1433,13 @@ operator|=
 name|true
 expr_stmt|;
 break|break;
+case|case
+literal|'V'
+case|:
+comment|/* print version */
+name|version
+argument_list|()
+expr_stmt|;
 default|default:
 name|usage
 argument_list|()
@@ -1351,7 +1510,7 @@ name|fopen
 argument_list|(
 name|filename
 argument_list|,
-literal|"r"
+literal|"rb"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1381,6 +1540,222 @@ operator|=
 name|stdin
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|ofilename
+operator|==
+name|NULL
+condition|)
+block|{
+name|ofilename
+operator|=
+literal|"[stdout]"
+expr_stmt|;
+name|output
+operator|=
+name|stdout
+expr_stmt|;
+block|}
+else|else
+block|{
+name|struct
+name|stat
+name|ist
+decl_stmt|,
+name|ost
+decl_stmt|;
+if|if
+condition|(
+name|stat
+argument_list|(
+name|ofilename
+argument_list|,
+operator|&
+name|ost
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|fstat
+argument_list|(
+name|fileno
+argument_list|(
+name|input
+argument_list|)
+argument_list|,
+operator|&
+name|ist
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|overwriting
+operator|=
+operator|(
+name|ist
+operator|.
+name|st_dev
+operator|==
+name|ost
+operator|.
+name|st_dev
+operator|&&
+name|ist
+operator|.
+name|st_ino
+operator|==
+name|ost
+operator|.
+name|st_ino
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|overwriting
+condition|)
+block|{
+specifier|const
+name|char
+modifier|*
+name|dirsep
+decl_stmt|;
+name|int
+name|ofd
+decl_stmt|;
+name|dirsep
+operator|=
+name|strrchr
+argument_list|(
+name|ofilename
+argument_list|,
+literal|'/'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dirsep
+operator|!=
+name|NULL
+condition|)
+name|snprintf
+argument_list|(
+name|tempname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tempname
+argument_list|)
+argument_list|,
+literal|"%.*s/"
+name|TEMPLATE
+argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
+name|dirsep
+operator|-
+name|ofilename
+argument_list|)
+argument_list|,
+name|ofilename
+argument_list|)
+expr_stmt|;
+else|else
+name|snprintf
+argument_list|(
+name|tempname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tempname
+argument_list|)
+argument_list|,
+name|TEMPLATE
+argument_list|)
+expr_stmt|;
+name|ofd
+operator|=
+name|mkstemp
+argument_list|(
+name|tempname
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ofd
+operator|!=
+operator|-
+literal|1
+condition|)
+name|output
+operator|=
+name|fdopen
+argument_list|(
+name|ofd
+argument_list|,
+literal|"wb+"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|output
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|2
+argument_list|,
+literal|"can't create temporary file"
+argument_list|)
+expr_stmt|;
+name|fchmod
+argument_list|(
+name|ofd
+argument_list|,
+name|ist
+operator|.
+name|st_mode
+operator|&
+operator|(
+name|S_IRWXU
+operator||
+name|S_IRWXG
+operator||
+name|S_IRWXO
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|output
+operator|=
+name|fopen
+argument_list|(
+name|ofilename
+argument_list|,
+literal|"wb"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|output
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|2
+argument_list|,
+literal|"can't open %s"
+argument_list|,
+name|ofilename
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 name|process
 argument_list|()
 expr_stmt|;
@@ -1388,6 +1763,74 @@ name|abort
 argument_list|()
 expr_stmt|;
 comment|/* bug */
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|version
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+specifier|const
+name|char
+modifier|*
+name|c
+init|=
+name|copyright
+decl_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
+while|while
+condition|(
+operator|*
+operator|++
+name|c
+operator|!=
+literal|'$'
+condition|)
+if|if
+condition|(
+operator|*
+name|c
+operator|==
+literal|'\0'
+condition|)
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+operator|*
+operator|++
+name|c
+operator|!=
+literal|'$'
+condition|)
+name|putc
+argument_list|(
+operator|*
+name|c
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+name|putc
+argument_list|(
+literal|'\n'
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1403,7 +1846,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: unifdef [-BbcdeKknst] [-Ipath]"
+literal|"usage: unifdef [-bBcdeKknsStV] [-Ipath]"
 literal|" [-Dsym[=val]] [-Usym] [-iDsym[=val]] [-iUsym] ... [file]\n"
 argument_list|)
 expr_stmt|;
@@ -1416,7 +1859,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * A state transition function alters the global #if processing state  * in a particular way. The table below is indexed by the current  * processing state and the type of the current line.  *  * Nesting is handled by keeping a stack of states; some transition  * functions increase or decrease the depth. They also maintain the  * ignore state on a stack. In some complicated cases they have to  * alter the preprocessor directive, as follows.  *  * When we have processed a group that starts off with a known-false  * #if/#elif sequence (which has therefore been deleted) followed by a  * #elif that we don't understand and therefore must keep, we edit the  * latter into a #if to keep the nesting correct.  *  * When we find a true #elif in a group, the following block will  * always be kept and the rest of the sequence after the next #elif or  * #else will be discarded. We edit the #elif into a #else and the  * following directive to #endif since this has the desired behaviour.  *  * "Dodgy" directives are split across multiple lines, the most common  * example being a multi-line comment hanging off the right of the  * directive. We can handle them correctly only if there is no change  * from printing to dropping (or vice versa) caused by that directive.  * If the directive is the first of a group we have a choice between  * failing with an error, or passing it through unchanged instead of  * evaluating it. The latter is not the default to avoid questions from  * users about unifdef unexpectedly leaving behind preprocessor directives.  */
+comment|/*  * A state transition function alters the global #if processing state  * in a particular way. The table below is indexed by the current  * processing state and the type of the current line.  *  * Nesting is handled by keeping a stack of states; some transition  * functions increase or decrease the depth. They also maintain the  * ignore state on a stack. In some complicated cases they have to  * alter the preprocessor directive, as follows.  *  * When we have processed a group that starts off with a known-false  * #if/#elif sequence (which has therefore been deleted) followed by a  * #elif that we don't understand and therefore must keep, we edit the  * latter into a #if to keep the nesting correct. We use strncpy() to  * overwrite the 4 byte token "elif" with "if  " without a '\0' byte.  *  * When we find a true #elif in a group, the following block will  * always be kept and the rest of the sequence after the next #elif or  * #else will be discarded. We edit the #elif into a #else and the  * following directive to #endif since this has the desired behaviour.  *  * "Dodgy" directives are split across multiple lines, the most common  * example being a multi-line comment hanging off the right of the  * directive. We can handle them correctly only if there is no change  * from printing to dropping (or vice versa) caused by that directive.  * If the directive is the first of a group we have a choice between  * failing with an error, or passing it through unchanged instead of  * evaluating it. The latter is not the default to avoid questions from  * users about unifdef unexpectedly leaving behind preprocessor directives.  */
 end_comment
 
 begin_typedef
@@ -1963,7 +2406,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* edit this line */
+comment|/* modify this line */
 end_comment
 
 begin_function
@@ -1999,7 +2442,7 @@ parameter_list|)
 block|{
 name|keywordedit
 argument_list|(
-literal|"else\n"
+literal|"else"
 argument_list|)
 expr_stmt|;
 name|state
@@ -2020,7 +2463,7 @@ parameter_list|)
 block|{
 name|keywordedit
 argument_list|(
-literal|"endif\n"
+literal|"endif"
 argument_list|)
 expr_stmt|;
 name|state
@@ -2041,7 +2484,7 @@ parameter_list|)
 block|{
 name|keywordedit
 argument_list|(
-literal|"endif\n"
+literal|"endif"
 argument_list|)
 expr_stmt|;
 name|state
@@ -2567,31 +3010,6 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|done
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-if|if
-condition|(
-name|incomment
-condition|)
-name|error
-argument_list|(
-literal|"EOF in comment"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|exitstat
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
 name|ignoreoff
 parameter_list|(
 name|void
@@ -2651,11 +3069,9 @@ modifier|*
 name|replacement
 parameter_list|)
 block|{
-name|strlcpy
+name|snprintf
 argument_list|(
 name|keyword
-argument_list|,
-name|replacement
 argument_list|,
 name|tline
 operator|+
@@ -2665,6 +3081,12 @@ name|tline
 argument_list|)
 operator|-
 name|keyword
+argument_list|,
+literal|"%s%s"
+argument_list|,
+name|replacement
+argument_list|,
+name|newline
 argument_list|)
 expr_stmt|;
 name|print
@@ -2798,7 +3220,7 @@ name|strspn
 argument_list|(
 name|tline
 argument_list|,
-literal|" \t\n"
+literal|" \t\r\n"
 argument_list|)
 index|]
 operator|==
@@ -2836,16 +3258,18 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"#line %d\n"
+literal|"#line %d%s"
 argument_list|,
 name|linenum
+argument_list|,
+name|newline
 argument_list|)
 expr_stmt|;
 name|fputs
 argument_list|(
 name|tline
 argument_list|,
-name|stdout
+name|output
 argument_list|)
 expr_stmt|;
 name|delcount
@@ -2872,11 +3296,11 @@ if|if
 condition|(
 name|lnblank
 condition|)
-name|putc
+name|fputs
 argument_list|(
-literal|'\n'
+name|newline
 argument_list|,
-name|stdout
+name|output
 argument_list|)
 expr_stmt|;
 name|exitstat
@@ -2892,6 +3316,15 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|debugging
+condition|)
+name|fflush
+argument_list|(
+name|output
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2907,9 +3340,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|Linetype
-name|lineval
-decl_stmt|;
 comment|/* When compressing blank lines, act as if the file 	   is preceded by a large number of blank lines. */
 name|blankmax
 operator|=
@@ -2923,14 +3353,12 @@ init|;
 condition|;
 control|)
 block|{
-name|linenum
-operator|++
-expr_stmt|;
+name|Linetype
 name|lineval
-operator|=
+init|=
 name|parseline
 argument_list|()
-expr_stmt|;
+decl_stmt|;
 name|trans_table
 index|[
 name|ifstate
@@ -2946,7 +3374,9 @@ operator|)
 expr_stmt|;
 name|debug
 argument_list|(
-literal|"process %s -> %s depth %d"
+literal|"process line %d %s -> %s depth %d"
+argument_list|,
+name|linenum
 argument_list|,
 name|linetype_name
 index|[
@@ -2965,6 +3395,146 @@ name|depth
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  * Flush the output and handle errors.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|closeout
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+name|symdepth
+operator|&&
+operator|!
+name|zerosyms
+condition|)
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fclose
+argument_list|(
+name|output
+argument_list|)
+operator|==
+name|EOF
+condition|)
+block|{
+name|warn
+argument_list|(
+literal|"couldn't write to %s"
+argument_list|,
+name|ofilename
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|overwriting
+condition|)
+block|{
+name|unlink
+argument_list|(
+name|tempname
+argument_list|)
+expr_stmt|;
+name|errx
+argument_list|(
+literal|2
+argument_list|,
+literal|"%s unchanged"
+argument_list|,
+name|filename
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|exit
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  * Clean up and exit.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|done
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+name|incomment
+condition|)
+name|error
+argument_list|(
+literal|"EOF in comment"
+argument_list|)
+expr_stmt|;
+name|closeout
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|overwriting
+operator|&&
+name|rename
+argument_list|(
+name|tempname
+argument_list|,
+name|ofilename
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|warn
+argument_list|(
+literal|"couldn't rename temporary file"
+argument_list|)
+expr_stmt|;
+name|unlink
+argument_list|(
+name|tempname
+argument_list|)
+expr_stmt|;
+name|errx
+argument_list|(
+literal|2
+argument_list|,
+literal|"%s unchanged"
+argument_list|,
+name|ofilename
+argument_list|)
+expr_stmt|;
+block|}
+name|exit
+argument_list|(
+name|exitstat
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2997,6 +3567,9 @@ decl_stmt|;
 name|Comment_state
 name|wascomment
 decl_stmt|;
+name|linenum
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|fgets
@@ -3015,6 +3588,41 @@ operator|(
 name|LT_EOF
 operator|)
 return|;
+if|if
+condition|(
+name|newline
+operator|==
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|strrchr
+argument_list|(
+name|tline
+argument_list|,
+literal|'\n'
+argument_list|)
+operator|==
+name|strrchr
+argument_list|(
+name|tline
+argument_list|,
+literal|'\r'
+argument_list|)
+operator|+
+literal|1
+condition|)
+name|newline
+operator|=
+name|newline_crlf
+expr_stmt|;
+else|else
+name|newline
+operator|=
+name|newline_unix
+expr_stmt|;
+block|}
 name|retval
 operator|=
 name|LT_PLAIN
@@ -3048,6 +3656,10 @@ block|{
 name|linestate
 operator|=
 name|LS_HASH
+expr_stmt|;
+name|firstsym
+operator|=
+name|true
 expr_stmt|;
 name|cp
 operator|=
@@ -3108,6 +3720,17 @@ expr_stmt|;
 comment|/* no way can we deal with a continuation inside a keyword */
 if|if
 condition|(
+name|strncmp
+argument_list|(
+name|cp
+argument_list|,
+literal|"\\\r\n"
+argument_list|,
+literal|3
+argument_list|)
+operator|==
+literal|0
+operator|||
 name|strncmp
 argument_list|(
 name|cp
@@ -3448,26 +4071,21 @@ name|NULL
 condition|)
 block|{
 comment|/* append the missing newline */
+name|strcpy
+argument_list|(
 name|tline
-index|[
-name|len
 operator|+
-literal|0
-index|]
-operator|=
-literal|'\n'
-expr_stmt|;
-name|tline
-index|[
 name|len
-operator|+
-literal|1
-index|]
-operator|=
-literal|'\0'
+argument_list|,
+name|newline
+argument_list|)
 expr_stmt|;
 name|cp
-operator|++
+operator|+=
+name|strlen
+argument_list|(
+name|newline
+argument_list|)
 expr_stmt|;
 name|linestate
 operator|=
@@ -3509,7 +4127,9 @@ expr_stmt|;
 block|}
 name|debug
 argument_list|(
-literal|"parser %s comment %s line"
+literal|"parser line %d state %s comment %s line"
+argument_list|,
+name|linenum
 argument_list|,
 name|comment_name
 index|[
@@ -5089,6 +5709,24 @@ name|strncmp
 argument_list|(
 name|cp
 argument_list|,
+literal|"\\\r\n"
+argument_list|,
+literal|3
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|cp
+operator|+=
+literal|3
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|cp
+argument_list|,
 literal|"\\\n"
 argument_list|,
 literal|2
@@ -5109,6 +5747,30 @@ block|{
 case|case
 name|NO_COMMENT
 case|:
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|cp
+argument_list|,
+literal|"/\\\r\n"
+argument_list|,
+literal|4
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|incomment
+operator|=
+name|STARTING_COMMENT
+expr_stmt|;
+name|cp
+operator|+=
+literal|4
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|strncmp
@@ -5265,7 +5927,7 @@ if|if
 condition|(
 name|strchr
 argument_list|(
-literal|" \t"
+literal|" \r\t"
 argument_list|,
 operator|*
 name|cp
@@ -5433,6 +6095,30 @@ continue|continue;
 case|case
 name|C_COMMENT
 case|:
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|cp
+argument_list|,
+literal|"*\\\r\n"
+argument_list|,
+literal|4
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|incomment
+operator|=
+name|FINISHING_COMMENT
+expr_stmt|;
+name|cp
+operator|+=
+literal|4
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|strncmp
@@ -5773,9 +6459,40 @@ condition|(
 name|symlist
 condition|)
 block|{
+if|if
+condition|(
+name|symdepth
+operator|&&
+name|firstsym
+condition|)
 name|printf
 argument_list|(
-literal|"%.*s\n"
+literal|"%s%3d"
+argument_list|,
+name|zerosyms
+condition|?
+literal|""
+else|:
+literal|"\n"
+argument_list|,
+name|depth
+argument_list|)
+expr_stmt|;
+name|firstsym
+operator|=
+name|zerosyms
+operator|=
+name|false
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s%.*s%s"
+argument_list|,
+name|symdepth
+condition|?
+literal|" "
+else|:
+literal|""
 argument_list|,
 call|(
 name|int
@@ -5787,6 +6504,12 @@ name|str
 argument_list|)
 argument_list|,
 name|str
+argument_list|,
+name|symdepth
+condition|?
+literal|""
+else|:
+literal|"\n"
 argument_list|)
 expr_stmt|;
 comment|/* we don't care about the value of the symbol */
@@ -5995,7 +6718,7 @@ index|[
 name|symind
 index|]
 operator|=
-literal|""
+literal|"1"
 expr_stmt|;
 else|else
 name|usage
@@ -6022,6 +6745,28 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|debug
+argument_list|(
+literal|"addsym %s=%s"
+argument_list|,
+name|symname
+index|[
+name|symind
+index|]
+argument_list|,
+name|value
+index|[
+name|symind
+index|]
+condition|?
+name|value
+index|[
+name|symind
+index|]
+else|:
+literal|"undef"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -6197,6 +6942,9 @@ index|]
 argument_list|,
 name|depth
 argument_list|)
+expr_stmt|;
+name|closeout
+argument_list|()
 expr_stmt|;
 name|errx
 argument_list|(
