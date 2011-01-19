@@ -4288,11 +4288,13 @@ name|sc
 operator|->
 name|uma
 argument_list|,
+operator|(
 name|md_malloc_wait
 condition|?
 name|M_WAITOK
 else|:
 name|M_NOWAIT
+operator|)
 operator||
 name|M_ZERO
 argument_list|)
