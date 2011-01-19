@@ -1244,7 +1244,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _LINUX_EXT2_FS_H */
+comment|/* !_FS_EXT2FS_EXT2FS_H */
 end_comment
 
 end_unit

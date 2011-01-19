@@ -227,7 +227,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _FS_EXT2FS_EXT2_DINODE_H_ */
+comment|/* !_FS_EXT2FS_EXT2_DINODE_H_ */
 end_comment
 
 end_unit
