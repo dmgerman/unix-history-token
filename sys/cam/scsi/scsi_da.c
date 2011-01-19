@@ -4078,7 +4078,7 @@ name|fc
 operator|->
 name|wwpn
 expr_stmt|;
-name|SYSCTL_ADD_X64
+name|SYSCTL_ADD_UQUAD
 argument_list|(
 operator|&
 name|softc

@@ -420,7 +420,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_XINT
+name|SYSCTL_INT
 argument_list|(
 name|_net_enc_in
 argument_list|,
@@ -450,7 +450,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_XINT
+name|SYSCTL_INT
 argument_list|(
 name|_net_enc_in
 argument_list|,
@@ -498,7 +498,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_XINT
+name|SYSCTL_INT
 argument_list|(
 name|_net_enc_out
 argument_list|,
@@ -530,7 +530,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_XINT
+name|SYSCTL_INT
 argument_list|(
 name|_net_enc_out
 argument_list|,

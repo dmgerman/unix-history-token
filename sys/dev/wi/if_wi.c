@@ -1706,7 +1706,7 @@ argument_list|,
 literal|"Primary Firmware version"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_XINT
+name|SYSCTL_ADD_UINT
 argument_list|(
 name|sctx
 argument_list|,

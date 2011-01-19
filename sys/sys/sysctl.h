@@ -931,19 +931,6 @@ end_empty_stmt
 begin_macro
 name|SYSCTL_ALLOWED_TYPES
 argument_list|(
-argument|XINT
-argument_list|,
-argument|unsigned int *a; int *b;
-argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_macro
-name|SYSCTL_ALLOWED_TYPES
-argument_list|(
 argument|LONG
 argument_list|,
 argument|long *a;
@@ -970,19 +957,6 @@ end_empty_stmt
 begin_macro
 name|SYSCTL_ALLOWED_TYPES
 argument_list|(
-argument|XLONG
-argument_list|,
-argument|unsigned long *a; long *b;
-argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_macro
-name|SYSCTL_ALLOWED_TYPES
-argument_list|(
 argument|INT64
 argument_list|,
 argument|int64_t *a; long long *b;
@@ -999,19 +973,6 @@ argument_list|(
 argument|UINT64
 argument_list|,
 argument|uint64_t *a; unsigned long long *b;
-argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_macro
-name|SYSCTL_ALLOWED_TYPES
-argument_list|(
-argument|XINT64
-argument_list|,
-argument|uint64_t *a; int64_t *b;     unsigned long long *c; long long *d;
 argument_list|)
 end_macro
 
@@ -1426,54 +1387,6 @@ define|\
 value|sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_UINT | CTLFLAG_MPSAFE | (access),			\ 	    SYSCTL_ADD_ASSERT_TYPE(UINT, ptr), val,			\ 	    sysctl_handle_int, "IU", __DESCR(descr))
 end_define
 
-begin_define
-define|#
-directive|define
-name|SYSCTL_XINT
-parameter_list|(
-name|parent
-parameter_list|,
-name|nbr
-parameter_list|,
-name|name
-parameter_list|,
-name|access
-parameter_list|,
-name|ptr
-parameter_list|,
-name|val
-parameter_list|,
-name|descr
-parameter_list|)
-define|\
-value|SYSCTL_ASSERT_TYPE(XINT, ptr, parent, name);			\ 	SYSCTL_OID(parent, nbr, name,					\ 	    CTLTYPE_UINT | CTLFLAG_MPSAFE | (access),			\ 	    ptr, val, sysctl_handle_int, "IX", descr)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SYSCTL_ADD_XINT
-parameter_list|(
-name|ctx
-parameter_list|,
-name|parent
-parameter_list|,
-name|nbr
-parameter_list|,
-name|name
-parameter_list|,
-name|access
-parameter_list|,
-name|ptr
-parameter_list|,
-name|val
-parameter_list|,
-name|descr
-parameter_list|)
-define|\
-value|sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_UINT | CTLFLAG_MPSAFE | (access),			\ 	    SYSCTL_ADD_ASSERT_TYPE(XINT, ptr), val,			\ 	    sysctl_handle_int, "IX", __DESCR(descr))
-end_define
-
 begin_comment
 comment|/* Oid for a long.  The pointer must be non NULL. */
 end_comment
@@ -1574,52 +1487,6 @@ define|\
 value|sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_ULONG | CTLFLAG_MPSAFE | (access),			\ 	    SYSCTL_ADD_ASSERT_TYPE(ULONG, ptr), 0,			\ 	    sysctl_handle_long, "LU", __DESCR(descr))
 end_define
 
-begin_define
-define|#
-directive|define
-name|SYSCTL_XLONG
-parameter_list|(
-name|parent
-parameter_list|,
-name|nbr
-parameter_list|,
-name|name
-parameter_list|,
-name|access
-parameter_list|,
-name|ptr
-parameter_list|,
-name|val
-parameter_list|,
-name|descr
-parameter_list|)
-define|\
-value|SYSCTL_ASSERT_TYPE(XLONG, ptr, parent, name);			\ 	SYSCTL_OID(parent, nbr, name,					\ 	    CTLTYPE_ULONG | CTLFLAG_MPSAFE | (access),			\ 	    ptr, val, sysctl_handle_long, "LX", descr)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SYSCTL_ADD_XLONG
-parameter_list|(
-name|ctx
-parameter_list|,
-name|parent
-parameter_list|,
-name|nbr
-parameter_list|,
-name|name
-parameter_list|,
-name|access
-parameter_list|,
-name|ptr
-parameter_list|,
-name|descr
-parameter_list|)
-define|\
-value|sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_ULONG | CTLFLAG_MPSAFE | (access),			\ 	    SYSCTL_ADD_ASSERT_TYPE(XLONG, ptr), 0,			\ 	    sysctl_handle_long, "LX", __DESCR(descr))
-end_define
-
 begin_comment
 comment|/* Oid for a quad.  The pointer must be non NULL. */
 end_comment
@@ -1714,52 +1581,6 @@ name|descr
 parameter_list|)
 define|\
 value|sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_QUAD | CTLFLAG_MPSAFE | (access),			\ 	    SYSCTL_ADD_ASSERT_TYPE(UINT64, ptr), 0,			\ 	    sysctl_handle_quad,	"QU", __DESCR(descr))
-end_define
-
-begin_define
-define|#
-directive|define
-name|SYSCTL_X64
-parameter_list|(
-name|parent
-parameter_list|,
-name|nbr
-parameter_list|,
-name|name
-parameter_list|,
-name|access
-parameter_list|,
-name|ptr
-parameter_list|,
-name|val
-parameter_list|,
-name|descr
-parameter_list|)
-define|\
-value|SYSCTL_ASSERT_TYPE(XINT64, ptr, parent, name);			\ 	SYSCTL_OID(parent, nbr, name,					\ 	    CTLTYPE_QUAD | CTLFLAG_MPSAFE | (access),	\ 	    ptr, val, sysctl_handle_quad, "QX", descr)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SYSCTL_ADD_X64
-parameter_list|(
-name|ctx
-parameter_list|,
-name|parent
-parameter_list|,
-name|nbr
-parameter_list|,
-name|name
-parameter_list|,
-name|access
-parameter_list|,
-name|ptr
-parameter_list|,
-name|descr
-parameter_list|)
-define|\
-value|sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_QUAD | CTLFLAG_MPSAFE | (access),			\ 	    SYSCTL_ADD_ASSERT_TYPE(XINT64, ptr), 0,			\ 	    sysctl_handle_quad,	"QX", __DESCR(descr))
 end_define
 
 begin_comment
@@ -1898,7 +1719,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name, (access), \ 		ptr, arg, handler, fmt, descr)
+value|CTASSERT(((access)& CTLTYPE) != 0);				\ 	SYSCTL_OID(parent, nbr, name, (access), \ 		ptr, arg, handler, fmt, descr)
 end_define
 
 begin_define

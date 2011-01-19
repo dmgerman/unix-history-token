@@ -19798,7 +19798,7 @@ argument_list|,
 literal|"#times starved"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_XLONG
+name|SYSCTL_ADD_ULONG
 argument_list|(
 name|ctx
 argument_list|,
@@ -20135,7 +20135,7 @@ argument_list|,
 literal|"tx queues stopped"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_XLONG
+name|SYSCTL_ADD_ULONG
 argument_list|(
 name|ctx
 argument_list|,

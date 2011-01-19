@@ -767,7 +767,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name, CTLFLAG_VNET|(access), ptr, arg, 	\ 	    handler, fmt, descr)
+value|CTASSERT(((access)& CTLTYPE) != 0);				\ 	SYSCTL_OID(parent, nbr, name, CTLFLAG_VNET|(access), ptr, arg, 	\ 	    handler, fmt, descr)
 end_define
 
 begin_define
