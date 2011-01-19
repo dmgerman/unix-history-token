@@ -23230,7 +23230,7 @@ parameter_list|,
 name|d
 parameter_list|)
 define|\
-value|SYSCTL_ADD_PROC(c, p, OID_AUTO, o, CTLTYPE_UINT | CTLFLAG_RD, 	\ 	    sc, offsetof(struct msk_hw_stats, n), msk_sysctl_stat64,	\ 	    "Q", d)
+value|SYSCTL_ADD_PROC(c, p, OID_AUTO, o, CTLTYPE_QUAD | CTLFLAG_RD, 	\ 	    sc, offsetof(struct msk_hw_stats, n), msk_sysctl_stat64,	\ 	    "Q", d)
 end_define
 
 begin_function

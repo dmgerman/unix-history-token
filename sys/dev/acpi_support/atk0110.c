@@ -1219,7 +1219,7 @@ name|i
 argument_list|,
 name|si
 argument_list|,
-name|CTLTYPE_OPAQUE
+name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RD
 argument_list|,

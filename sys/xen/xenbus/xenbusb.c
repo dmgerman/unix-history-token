@@ -866,6 +866,8 @@ name|OID_AUTO
 argument_list|,
 literal|"xenstore_path"
 argument_list|,
+name|CTLTYPE_STRING
+operator||
 name|CTLFLAG_RD
 argument_list|,
 name|dev
@@ -892,6 +894,8 @@ name|OID_AUTO
 argument_list|,
 literal|"xenbus_dev_type"
 argument_list|,
+name|CTLTYPE_STRING
+operator||
 name|CTLFLAG_RD
 argument_list|,
 name|dev
@@ -918,6 +922,8 @@ name|OID_AUTO
 argument_list|,
 literal|"xenbus_connection_state"
 argument_list|,
+name|CTLTYPE_STRING
+operator||
 name|CTLFLAG_RD
 argument_list|,
 name|dev
@@ -944,6 +950,8 @@ name|OID_AUTO
 argument_list|,
 literal|"xenbus_peer_domid"
 argument_list|,
+name|CTLTYPE_INT
+operator||
 name|CTLFLAG_RD
 argument_list|,
 name|dev
@@ -970,6 +978,8 @@ name|OID_AUTO
 argument_list|,
 literal|"xenstore_peer_path"
 argument_list|,
+name|CTLTYPE_STRING
+operator||
 name|CTLFLAG_RD
 argument_list|,
 name|dev

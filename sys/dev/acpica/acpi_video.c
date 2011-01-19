@@ -2629,7 +2629,7 @@ name|OID_AUTO
 argument_list|,
 literal|"levels"
 argument_list|,
-name|CTLTYPE_OPAQUE
+name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RD
 argument_list|,
