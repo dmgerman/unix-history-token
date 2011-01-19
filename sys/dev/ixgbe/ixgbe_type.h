@@ -3540,6 +3540,35 @@ name|IXGBE_RTTBCNRC
 value|0x04984
 end_define
 
+begin_define
+define|#
+directive|define
+name|IXGBE_RTTBCNRC_RS_ENA
+value|0x80000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_RTTBCNRC_RF_DEC_MASK
+value|0x00003FFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_RTTBCNRC_RF_INT_SHIFT
+value|14
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_RTTBCNRC_RF_INT_MASK
+define|\
+value|(IXGBE_RTTBCNRC_RF_DEC_MASK<< IXGBE_RTTBCNRC_RF_INT_SHIFT)
+end_define
+
 begin_comment
 comment|/* BCN (for DCB) Registers */
 end_comment
@@ -7222,22 +7251,22 @@ begin_define
 define|#
 directive|define
 name|IXGBE_MSCA_READ
-value|0x08000000
+value|0x0C000000
 end_define
 
 begin_comment
-comment|/* OP CODE 10 (read) */
+comment|/* OP CODE 11 (read) */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|IXGBE_MSCA_READ_AUTOINC
-value|0x0C000000
+value|0x08000000
 end_define
 
 begin_comment
-comment|/* OP CODE 11 (read, auto inc)*/
+comment|/* OP CODE 10 (read, auto inc)*/
 end_comment
 
 begin_define
@@ -12295,6 +12324,31 @@ end_define
 begin_define
 define|#
 directive|define
+name|IXGBE_FW_LESM_PARAMETERS_PTR
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_FW_LESM_STATE_1
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_FW_LESM_STATE_ENABLED
+value|0x8000
+end_define
+
+begin_comment
+comment|/* LESM Enable bit */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IXGBE_FW_PASSTHROUGH_PATCH_CONFIG_PTR
 value|0x4
 end_define
@@ -16420,11 +16474,14 @@ begin_union
 union|union
 name|ixgbe_atr_input
 block|{
-comment|/* Byte layout in order, all values with MSB first: 	 * 	 * rsvd0      - 2 bytes - space reserved must be 0. 	 * vlan_id    - 2 bytes 	 * src_ip     - 16 bytes 	 * dst_ip     - 16 bytes 	 * src_port   - 2 bytes 	 * dst_port   - 2 bytes 	 * flex_bytes - 2 bytes 	 * vm_pool    - 1 byte 	 * flow_type  - 1 byte 	 */
+comment|/* 	 * Byte layout in order, all values with MSB first: 	 * 	 * vm_pool    - 1 byte 	 * flow_type  - 1 byte 	 * vlan_id    - 2 bytes 	 * src_ip     - 16 bytes 	 * dst_ip     - 16 bytes 	 * src_port   - 2 bytes 	 * dst_port   - 2 bytes 	 * flex_bytes - 2 bytes 	 * rsvd0      - 2 bytes - space reserved must be 0. 	 */
 struct|struct
 block|{
-name|__be16
-name|rsvd0
+name|u8
+name|vm_pool
+decl_stmt|;
+name|u8
+name|flow_type
 decl_stmt|;
 name|__be16
 name|vlan_id
@@ -16450,11 +16507,8 @@ decl_stmt|;
 name|__be16
 name|flex_bytes
 decl_stmt|;
-name|u8
-name|vm_pool
-decl_stmt|;
-name|u8
-name|flow_type
+name|__be16
+name|rsvd0
 decl_stmt|;
 block|}
 name|formatted
@@ -16464,6 +16518,52 @@ name|dword_stream
 index|[
 literal|11
 index|]
+decl_stmt|;
+block|}
+union|;
+end_union
+
+begin_comment
+comment|/* Flow Director compressed ATR hash input struct */
+end_comment
+
+begin_union
+union|union
+name|ixgbe_atr_hash_dword
+block|{
+struct|struct
+block|{
+name|u8
+name|vm_pool
+decl_stmt|;
+name|u8
+name|flow_type
+decl_stmt|;
+name|__be16
+name|vlan_id
+decl_stmt|;
+block|}
+name|formatted
+struct|;
+name|__be32
+name|ip
+decl_stmt|;
+struct|struct
+block|{
+name|__be16
+name|src
+decl_stmt|;
+name|__be16
+name|dst
+decl_stmt|;
+block|}
+name|port
+struct|;
+name|__be16
+name|flex_bytes
+decl_stmt|;
+name|__be32
+name|dword
 decl_stmt|;
 block|}
 union|;
