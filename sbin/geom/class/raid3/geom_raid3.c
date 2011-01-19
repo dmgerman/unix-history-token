@@ -1065,6 +1065,24 @@ operator|.
 name|md_sectorsize
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|md
+operator|.
+name|md_sectorsize
+operator|>
+name|MAXPHYS
+condition|)
+block|{
+name|gctl_error
+argument_list|(
+name|req
+argument_list|,
+literal|"The blocksize is too big."
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* 	 * Clear last sector first, to spoil all components if device exists. 	 */
 for|for
 control|(
