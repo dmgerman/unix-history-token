@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<assert.h>
 end_include
 
@@ -27,6 +33,12 @@ begin_include
 include|#
 directive|include
 file|<float.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
 end_include
 
 begin_include
@@ -44,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -56,13 +74,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
+file|<syslog.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<time.h>
 end_include
 
 begin_define
