@@ -1141,6 +1141,23 @@ argument_list|(
 name|vdp
 argument_list|)
 expr_stmt|;
+name|bmask
+operator|=
+name|VFSTOEXT2
+argument_list|(
+name|vdp
+operator|->
+name|v_mount
+argument_list|)
+operator|->
+name|um_mountp
+operator|->
+name|mnt_stat
+operator|.
+name|f_iosize
+operator|-
+literal|1
+expr_stmt|;
 comment|/* 	 * We now have a segment name to search for, and a directory to search. 	 */
 comment|/* 	 * Suppress search for slots unless creating 	 * file and at end of pathname, in which case 	 * we watch for a place to put the new file in 	 * case it doesn't already exist. 	 */
 name|ino
@@ -1200,23 +1217,6 @@ expr_stmt|;
 comment|/* was 		slotneeded = (sizeof(struct direct) - MAXNAMLEN + 			cnp->cn_namelen + 3)&~ 3; */
 block|}
 comment|/* 	 * If there is cached information on a previous search of 	 * this directory, pick up where we last left off. 	 * We cache only lookups as these are the most common 	 * and have the greatest payoff. Caching CREATE has little 	 * benefit as it usually must search the entire directory 	 * to determine that the entry does not exist. Caching the 	 * location of the last DELETE or RENAME has not reduced 	 * profiling time and hence has been removed in the interest 	 * of simplicity. 	 */
-name|bmask
-operator|=
-name|VFSTOEXT2
-argument_list|(
-name|vdp
-operator|->
-name|v_mount
-argument_list|)
-operator|->
-name|um_mountp
-operator|->
-name|mnt_stat
-operator|.
-name|f_iosize
-operator|-
-literal|1
-expr_stmt|;
 if|if
 condition|(
 name|nameiop
