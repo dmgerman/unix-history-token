@@ -6191,6 +6191,21 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|XEN
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|XEN_PRIVILEGED
+argument_list|)
+end_if
+
 begin_function
 specifier|static
 name|int
@@ -6283,6 +6298,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * C1E renders the local APIC timer dead, so we disable it by  * reading the Interrupt Pending Message register and clearing  * both C1eOnCmpHalt (bit 28) and SmiOnCmpHalt (bit 27).  *   * Reference:  *   "BIOS and Kernel Developer's Guide for AMD NPT Family 0Fh Processors"  *   #32559 revision 3.00+  */
@@ -12918,6 +12938,12 @@ index|[
 literal|1
 index|]
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|XEN_PRIVILEGED
+argument_list|)
 if|if
 condition|(
 name|cpu_probe_amdc1e
@@ -12927,6 +12953,8 @@ name|cpu_idle_fn
 operator|=
 name|cpu_idle_amdc1e
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
