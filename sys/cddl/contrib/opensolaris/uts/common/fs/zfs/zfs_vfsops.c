@@ -5239,6 +5239,8 @@ operator|->
 name|mnt_flag
 operator||=
 name|MNT_LOCAL
+operator||
+name|MNT_NFS4ACLS
 expr_stmt|;
 name|vfsp
 operator|->
