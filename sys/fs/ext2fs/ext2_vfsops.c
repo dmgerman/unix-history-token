@@ -4851,15 +4851,7 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* 	 * Finish inode initialization now that aliasing has been resolved. 	 */
-name|ip
-operator|->
-name|i_devvp
-operator|=
-name|ump
-operator|->
-name|um_devvp
-expr_stmt|;
+comment|/* 	 * Finish inode initialization. 	 */
 comment|/* 	 * Set up a generation number for this inode if it does not 	 * already have one. This should only happen on old filesystems. 	 */
 if|if
 condition|(

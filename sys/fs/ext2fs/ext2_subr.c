@@ -374,7 +374,9 @@ name|vp
 operator|=
 name|ip
 operator|->
-name|i_devvp
+name|i_ump
+operator|->
+name|um_devvp
 expr_stmt|;
 comment|/* look for overlap */
 if|if

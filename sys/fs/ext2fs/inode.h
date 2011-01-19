@@ -82,12 +82,6 @@ name|i_vnode
 decl_stmt|;
 comment|/* Vnode associated with this inode. */
 name|struct
-name|vnode
-modifier|*
-name|i_devvp
-decl_stmt|;
-comment|/* Vnode for block I/O. */
-name|struct
 name|ext2mount
 modifier|*
 name|i_ump
@@ -517,6 +511,13 @@ end_define
 begin_comment
 comment|/* Process IN_ACCESS after the 					    suspension finished */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|i_devvp
+value|i_ump->um_devvp
+end_define
 
 begin_ifdef
 ifdef|#
