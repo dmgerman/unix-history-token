@@ -1447,11 +1447,10 @@ name|size
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"First segment: addr:%p -> %p \n"
+literal|"First segment: addr:%#jx -> %#jx \n"
 argument_list|,
 operator|(
-name|void
-operator|*
+name|uintmax_t
 operator|)
 name|phys_avail
 index|[
@@ -1459,8 +1458,7 @@ literal|0
 index|]
 argument_list|,
 operator|(
-name|void
-operator|*
+name|uintmax_t
 operator|)
 name|phys_avail
 index|[
