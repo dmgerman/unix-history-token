@@ -3278,13 +3278,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|vm_object_set_writeable_dirty
-argument_list|(
-name|sc
-operator|->
-name|object
-argument_list|)
-expr_stmt|;
 name|VM_OBJECT_UNLOCK
 argument_list|(
 name|sc
