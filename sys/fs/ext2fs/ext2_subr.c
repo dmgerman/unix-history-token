@@ -85,6 +85,12 @@ directive|ifdef
 name|KDB
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<fs/ext2fs/ext2_mount.h>
+end_include
+
 begin_function_decl
 name|void
 name|ext2_checkoverlap
