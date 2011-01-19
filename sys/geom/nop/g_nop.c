@@ -878,6 +878,26 @@ name|EINVAL
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|secsize
+operator|>
+name|MAXPHYS
+condition|)
+block|{
+name|gctl_error
+argument_list|(
+name|req
+argument_list|,
+literal|"secsize is too big."
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+block|}
 name|size
 operator|-=
 name|size
