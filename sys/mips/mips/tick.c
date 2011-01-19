@@ -509,7 +509,7 @@ name|counter_freq
 expr_stmt|;
 name|error
 operator|=
-name|sysctl_handle_int
+name|sysctl_handle_64
 argument_list|(
 name|oidp
 argument_list|,
@@ -575,20 +575,17 @@ name|OID_AUTO
 argument_list|,
 name|counter_freq
 argument_list|,
-name|CTLTYPE_QUAD
+name|CTLTYPE_U64
 operator||
 name|CTLFLAG_RW
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|u_int
-argument_list|)
+literal|0
 argument_list|,
 name|sysctl_machdep_counter_freq
 argument_list|,
-literal|"IU"
+literal|"QU"
 argument_list|,
 literal|"Timecounter frequency in Hz"
 argument_list|)

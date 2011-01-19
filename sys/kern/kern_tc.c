@@ -944,7 +944,7 @@ operator|->
 name|tc_frequency
 expr_stmt|;
 return|return
-name|sysctl_handle_quad
+name|sysctl_handle_64
 argument_list|(
 name|oidp
 argument_list|,
@@ -1800,7 +1800,7 @@ name|OID_AUTO
 argument_list|,
 literal|"frequency"
 argument_list|,
-name|CTLTYPE_QUAD
+name|CTLTYPE_U64
 operator||
 name|CTLFLAG_RD
 argument_list|,

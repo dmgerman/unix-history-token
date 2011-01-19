@@ -2375,6 +2375,33 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|CTLTYPE_UINT
+case|:
+name|printf
+argument_list|(
+literal|" u_int\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CTLTYPE_LONG
+case|:
+name|printf
+argument_list|(
+literal|" Long\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CTLTYPE_ULONG
+case|:
+name|printf
+argument_list|(
+literal|" u_long\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|CTLTYPE_STRING
 case|:
 name|printf
@@ -2384,11 +2411,20 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|CTLTYPE_QUAD
+name|CTLTYPE_U64
 case|:
 name|printf
 argument_list|(
-literal|" Quad\n"
+literal|" uint64_t\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CTLTYPE_S64
+case|:
+name|printf
+argument_list|(
+literal|" int64_t\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4363,7 +4399,7 @@ end_comment
 
 begin_function
 name|int
-name|sysctl_handle_quad
+name|sysctl_handle_64
 parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)

@@ -984,7 +984,7 @@ name|tsc_freq
 expr_stmt|;
 name|error
 operator|=
-name|sysctl_handle_quad
+name|sysctl_handle_64
 argument_list|(
 name|oidp
 argument_list|,
@@ -1037,7 +1037,7 @@ name|OID_AUTO
 argument_list|,
 name|tsc_freq
 argument_list|,
-name|CTLTYPE_QUAD
+name|CTLTYPE_U64
 operator||
 name|CTLFLAG_RW
 argument_list|,

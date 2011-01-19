@@ -19189,7 +19189,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|sysctl_handle_quad
+name|sysctl_handle_64
 argument_list|(
 name|oidp
 argument_list|,
@@ -20535,7 +20535,7 @@ name|CXGB_SYSCTL_ADD_QUAD
 parameter_list|(
 name|a
 parameter_list|)
-value|SYSCTL_ADD_OID(ctx, poidlist, OID_AUTO, #a, \     (CTLTYPE_QUAD | CTLFLAG_RD), pi, offsetof(struct mac_stats, a), \     sysctl_handle_macstat, "QU", 0)
+value|SYSCTL_ADD_OID(ctx, poidlist, OID_AUTO, #a, \     (CTLTYPE_U64 | CTLFLAG_RD), pi, offsetof(struct mac_stats, a), \     sysctl_handle_macstat, "QU", 0)
 name|CXGB_SYSCTL_ADD_QUAD
 argument_list|(
 name|tx_octets

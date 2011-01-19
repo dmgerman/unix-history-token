@@ -23163,7 +23163,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|sysctl_handle_quad
+name|sysctl_handle_64
 argument_list|(
 name|oidp
 argument_list|,
@@ -23230,7 +23230,7 @@ parameter_list|,
 name|d
 parameter_list|)
 define|\
-value|SYSCTL_ADD_PROC(c, p, OID_AUTO, o, CTLTYPE_QUAD | CTLFLAG_RD, 	\ 	    sc, offsetof(struct msk_hw_stats, n), msk_sysctl_stat64,	\ 	    "Q", d)
+value|SYSCTL_ADD_PROC(c, p, OID_AUTO, o, CTLTYPE_U64 | CTLFLAG_RD, 	\ 	    sc, offsetof(struct msk_hw_stats, n), msk_sysctl_stat64,	\ 	    "QU", d)
 end_define
 
 begin_function

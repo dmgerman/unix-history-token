@@ -110,12 +110,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CTLTYPE_QUAD
+name|CTLTYPE_S64
 value|4
 end_define
 
 begin_comment
-comment|/* name describes a 64-bit number */
+comment|/* name describes a signed 64-bit number */
 end_comment
 
 begin_define
@@ -171,6 +171,17 @@ end_define
 
 begin_comment
 comment|/* name describes an unsigned long */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTLTYPE_U64
+value|9
+end_define
+
+begin_comment
+comment|/* name describes an unsigned 64-bit number */
 end_comment
 
 begin_define
@@ -693,16 +704,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|sysctl_handle_quad
-parameter_list|(
-name|SYSCTL_HANDLER_ARGS
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|sysctl_handle_intptr
+name|sysctl_handle_64
 parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
@@ -1511,7 +1513,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_ASSERT_TYPE(INT64, ptr, parent, name);			\ 	SYSCTL_OID(parent, nbr, name,					\ 	    CTLTYPE_QUAD | CTLFLAG_MPSAFE | (access),			\ 	    ptr, val, sysctl_handle_quad, "Q", descr)
+value|SYSCTL_ASSERT_TYPE(INT64, ptr, parent, name);			\ 	SYSCTL_OID(parent, nbr, name,					\ 	    CTLTYPE_S64 | CTLFLAG_MPSAFE | (access),			\ 	    ptr, val, sysctl_handle_64, "Q", descr)
 end_define
 
 begin_define
@@ -1534,7 +1536,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_QUAD | CTLFLAG_MPSAFE | (access),			\ 	    SYSCTL_ADD_ASSERT_TYPE(INT64, ptr), 0,			\ 	    sysctl_handle_quad,	"Q", __DESCR(descr))
+value|sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_S64 | CTLFLAG_MPSAFE | (access),			\ 	    SYSCTL_ADD_ASSERT_TYPE(INT64, ptr), 0,			\ 	    sysctl_handle_64, "Q", __DESCR(descr))
 end_define
 
 begin_define
@@ -1557,7 +1559,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_ASSERT_TYPE(UINT64, ptr, parent, name);			\ 	SYSCTL_OID(parent, nbr, name,					\ 	    CTLTYPE_QUAD | CTLFLAG_MPSAFE | (access),	\ 	    ptr, val, sysctl_handle_quad, "QU", descr)
+value|SYSCTL_ASSERT_TYPE(UINT64, ptr, parent, name);			\ 	SYSCTL_OID(parent, nbr, name,					\ 	    CTLTYPE_U64 | CTLFLAG_MPSAFE | (access),			\ 	    ptr, val, sysctl_handle_64, "QU", descr)
 end_define
 
 begin_define
@@ -1580,7 +1582,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_QUAD | CTLFLAG_MPSAFE | (access),			\ 	    SYSCTL_ADD_ASSERT_TYPE(UINT64, ptr), 0,			\ 	    sysctl_handle_quad,	"QU", __DESCR(descr))
+value|sysctl_add_oid(ctx, parent, nbr, name,				\ 	    CTLTYPE_U64 | CTLFLAG_MPSAFE | (access),			\ 	    SYSCTL_ADD_ASSERT_TYPE(UINT64, ptr), 0,			\ 	    sysctl_handle_64, "QU", __DESCR(descr))
 end_define
 
 begin_comment
