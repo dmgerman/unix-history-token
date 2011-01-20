@@ -287,6 +287,11 @@ name|ah_reqTxIntrDesc
 operator|=
 name|ar5210IntrReqTxDesc
 block|,
+operator|.
+name|ah_getTxCompletionRates
+operator|=
+name|ar5210GetTxCompletionRates
+block|,
 comment|/* RX Functions */
 operator|.
 name|ah_getRxDP
