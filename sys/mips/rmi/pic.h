@@ -790,6 +790,8 @@ operator|&
 name|xlr_pic_lock
 argument_list|)
 expr_stmt|;
+name|reg
+operator|=
 name|xlr_read_reg
 argument_list|(
 name|mmio
@@ -860,7 +862,7 @@ name|__inline
 name|void
 name|pic_update_control
 parameter_list|(
-name|__uint32_t
+name|uint32_t
 name|control
 parameter_list|)
 block|{

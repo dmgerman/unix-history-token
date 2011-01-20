@@ -1860,6 +1860,9 @@ name|int
 name|irq
 parameter_list|)
 block|{
+operator|(
+name|void
+operator|)
 name|xlr_read_reg
 argument_list|(
 name|xlr_io_mmio
