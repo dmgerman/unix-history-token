@@ -3001,6 +3001,15 @@ name|U3G_DEV
 argument_list|(
 name|QUALCOMMINC
 argument_list|,
+name|SURFSTICK
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|U3G_DEV
+argument_list|(
+name|QUALCOMMINC
+argument_list|,
 name|E2002
 argument_list|,
 literal|0
