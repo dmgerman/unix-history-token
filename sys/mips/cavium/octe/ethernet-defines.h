@@ -8,26 +8,8 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * A few defines are used to control the operation of this driver:  *  CONFIG_CAVIUM_RESERVE32  *      This kernel config options controls the amount of memory configured  *      in a wired TLB entry for all processes to share. If this is set, the  *      driver will use this memory instead of kernel memory for pools. This  *      allows 32bit userspace application to access the buffers, but also  *      requires all received packets to be copied.  *  CONFIG_CAVIUM_OCTEON_NUM_PACKET_BUFFERS  *      This kernel config option allows the user to control the number of  *      packet and work queue buffers allocated by the driver. If this is zero,  *      the driver uses the default from below.  *  USE_HW_TCPUDP_CHECKSUM  *      Controls if the Octeon TCP/UDP checksum engine is used for packet  *      output. If this is zero, the kernel will perform the checksum in  *      software.  *  USE_MULTICORE_RECEIVE  *      Process receive interrupts on multiple cores. This spreads the network  *      load across the first 8 processors. If ths is zero, only one core  *      processes incomming packets.  *  USE_ASYNC_IOBDMA  *      Use asynchronous IO access to hardware. This uses Octeon's asynchronous  *      IOBDMAs to issue IO accesses without stalling. Set this to zero  *      to disable this. Note that IOBDMAs require CVMSEG.  */
+comment|/*  * A few defines are used to control the operation of this driver:  *  CONFIG_CAVIUM_OCTEON_NUM_PACKET_BUFFERS  *      This kernel config option allows the user to control the number of  *      packet and work queue buffers allocated by the driver. If this is zero,  *      the driver uses the default from below.  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|CONFIG_CAVIUM_RESERVE32
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|CONFIG_CAVIUM_RESERVE32
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -51,20 +33,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USE_HW_TCPUDP_CHECKSUM
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|USE_MULTICORE_RECEIVE
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
 name|USE_RED
 value|1
 end_define
@@ -72,36 +40,6 @@ end_define
 begin_comment
 comment|/* Enable Random Early Dropping under load */
 end_comment
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|USE_ASYNC_IOBDMA
-value|(CONFIG_CAVIUM_OCTEON_CVMSEG_SIZE> 0)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|USE_ASYNC_IOBDMA
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -153,30 +91,6 @@ directive|define
 name|MAX_OUT_QUEUE_DEPTH
 value|1000
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SMP
-end_ifndef
-
-begin_undef
-undef|#
-directive|undef
-name|USE_MULTICORE_RECEIVE
-end_undef
-
-begin_define
-define|#
-directive|define
-name|USE_MULTICORE_RECEIVE
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

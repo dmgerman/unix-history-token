@@ -865,14 +865,6 @@ block|}
 ifdef|#
 directive|ifdef
 name|SMP
-if|if
-condition|(
-name|USE_MULTICORE_RECEIVE
-condition|)
-block|{
-name|critical_enter
-argument_list|()
-expr_stmt|;
 block|{
 name|cvmx_ciu_intx0_t
 name|en
@@ -936,10 +928,6 @@ name|u64
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-name|critical_exit
-argument_list|()
-expr_stmt|;
 block|}
 endif|#
 directive|endif
