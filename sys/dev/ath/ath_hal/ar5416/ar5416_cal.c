@@ -127,6 +127,10 @@ begin_comment
 comment|/*  * Determine if calibration is supported by device and channel flags  */
 end_comment
 
+begin_comment
+comment|/*  * ADC GAIN/DC offset calibration is for calibrating two ADCs that  * are acting as one by interleaving incoming symbols. This isn't  * relevant for 2.4GHz 20MHz wide modes because, as far as I can tell,  * the secondary ADC is never enabled. It is enabled however for  * 5GHz modes.  *  * It hasn't been confirmed whether doing this calibration is needed  * at all in the above modes and/or whether it's actually harmful.  * So for now, let's leave it enabled and just remember to get  * confirmation that it needs to be clarified.  *  * See US Patent No: US 7,541,952 B1:  *  " Method and Apparatus for Offset and Gain Compensation for  *    Analog-to-Digital Converters."  */
+end_comment
+
 begin_function
 specifier|static
 name|OS_INLINE
