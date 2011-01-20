@@ -7083,7 +7083,7 @@ name|ath_hal_getdiagstate
 argument_list|(
 name|ah
 argument_list|,
-literal|32
+name|HAL_DIAG_CHECK_HANGS
 argument_list|,
 operator|&
 name|mask
