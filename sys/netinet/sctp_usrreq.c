@@ -11051,7 +11051,7 @@ operator|&
 name|SCTP_ADDR_UNCONFIRMED
 condition|)
 block|{
-comment|/* Its unconfirmed */
+comment|/* It's unconfirmed */
 name|paddri
 operator|->
 name|spinfo_state
@@ -11069,7 +11069,7 @@ operator|&
 name|SCTP_ADDR_REACHABLE
 condition|)
 block|{
-comment|/* The Active */
+comment|/* It's active */
 name|paddri
 operator|->
 name|spinfo_state
@@ -11079,7 +11079,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* It's Inactive */
+comment|/* It's inactive */
 name|paddri
 operator|->
 name|spinfo_state
@@ -11476,7 +11476,7 @@ operator|&
 name|SCTP_ADDR_REACHABLE
 condition|)
 block|{
-comment|/* Its active */
+comment|/* It's active */
 name|sstat
 operator|->
 name|sstat_primary
@@ -11488,7 +11488,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* It's Inactive */
+comment|/* It's inactive */
 name|sstat
 operator|->
 name|sstat_primary
