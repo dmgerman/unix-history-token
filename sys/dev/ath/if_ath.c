@@ -2522,6 +2522,10 @@ name|sc
 operator|->
 name|sc_sh
 argument_list|,
+name|sc
+operator|->
+name|sc_eepromdata
+argument_list|,
 operator|&
 name|status
 argument_list|)

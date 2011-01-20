@@ -874,6 +874,10 @@ parameter_list|,
 name|HAL_BUS_HANDLE
 name|sh
 parameter_list|,
+name|uint16_t
+modifier|*
+name|eepromdata
+parameter_list|,
 name|HAL_STATUS
 modifier|*
 name|status

@@ -287,6 +287,10 @@ name|HAL_BUS_TAG
 parameter_list|,
 name|HAL_BUS_HANDLE
 parameter_list|,
+name|uint16_t
+modifier|*
+name|eepromdata
+parameter_list|,
 name|HAL_STATUS
 modifier|*
 name|error

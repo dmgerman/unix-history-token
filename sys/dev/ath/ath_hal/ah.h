@@ -1839,6 +1839,11 @@ name|uint16_t
 name|ah_analog2GhzRev
 decl_stmt|;
 comment|/* 2GHz radio revision */
+name|uint16_t
+modifier|*
+name|ah_eepromdata
+decl_stmt|;
+comment|/* eeprom buffer, if needed */
 specifier|const
 name|HAL_RATE_TABLE
 modifier|*
@@ -3543,6 +3548,10 @@ parameter_list|,
 name|HAL_BUS_TAG
 parameter_list|,
 name|HAL_BUS_HANDLE
+parameter_list|,
+name|uint16_t
+modifier|*
+name|eepromdata
 parameter_list|,
 name|HAL_STATUS
 modifier|*

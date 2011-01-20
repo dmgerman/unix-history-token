@@ -1427,6 +1427,11 @@ name|u_int32_t
 name|sc_avgtsfdeltam
 decl_stmt|;
 comment|/* TDMA slot adjust (-) */
+name|uint16_t
+modifier|*
+name|sc_eepromdata
+decl_stmt|;
+comment|/* Local eeprom data, if AR9100 */
 block|}
 struct|;
 end_struct

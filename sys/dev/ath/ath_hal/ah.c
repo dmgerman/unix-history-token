@@ -138,6 +138,10 @@ parameter_list|,
 name|HAL_BUS_HANDLE
 name|sh
 parameter_list|,
+name|uint16_t
+modifier|*
+name|eepromdata
+parameter_list|,
 name|HAL_STATUS
 modifier|*
 name|error
@@ -198,6 +202,8 @@ argument_list|,
 name|st
 argument_list|,
 name|sh
+argument_list|,
+name|eepromdata
 argument_list|,
 name|error
 argument_list|)
