@@ -12002,11 +12002,6 @@ operator|->
 name|sta
 argument_list|)
 expr_stmt|;
-name|ieee80211_ratectl_node_init
-argument_list|(
-name|ni
-argument_list|)
-expr_stmt|;
 name|usb_callout_reset
 argument_list|(
 operator|&

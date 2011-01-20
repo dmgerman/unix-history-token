@@ -13913,11 +13913,6 @@ name|ni_macaddr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ieee80211_ratectl_node_init
-argument_list|(
-name|ni
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|sc_ni

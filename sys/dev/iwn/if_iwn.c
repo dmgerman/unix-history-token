@@ -844,20 +844,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
-name|iwn_newassoc
-parameter_list|(
-name|struct
-name|ieee80211_node
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|int
 name|iwn_media_change
 parameter_list|(
@@ -3978,12 +3964,6 @@ operator|->
 name|ic_node_alloc
 operator|=
 name|iwn_node_alloc
-expr_stmt|;
-name|ic
-operator|->
-name|ic_newassoc
-operator|=
-name|iwn_newassoc
 expr_stmt|;
 name|ic
 operator|->
@@ -10387,29 +10367,6 @@ operator||
 name|M_ZERO
 argument_list|)
 return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|iwn_newassoc
-parameter_list|(
-name|struct
-name|ieee80211_node
-modifier|*
-name|ni
-parameter_list|,
-name|int
-name|isnew
-parameter_list|)
-block|{
-comment|/* XXX move */
-name|ieee80211_ratectl_node_init
-argument_list|(
-name|ni
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
