@@ -978,7 +978,7 @@ condition|)
 block|{
 name|dprintf
 argument_list|(
-literal|"%s: Bad parameters od=%p iov=%p iovlen=%d "
+literal|"%s: Bad parameters od=%p iov=%p iovlen=%jd "
 literal|"auth_off=%d auth_len=%d crypt_off=%d crypt_len=%d "
 literal|"icv_off=%d ivp=%p\n"
 argument_list|,
@@ -1347,7 +1347,7 @@ condition|)
 block|{
 name|dprintf
 argument_list|(
-literal|"%s: Bad parameters od=%p iov=%p iovlen=%d "
+literal|"%s: Bad parameters od=%p iov=%p iovlen=%jd "
 literal|"auth_off=%d auth_len=%d crypt_off=%d crypt_len=%d "
 literal|"icv_off=%d ivp=%p\n"
 argument_list|,
@@ -1727,7 +1727,7 @@ condition|)
 block|{
 name|dprintf
 argument_list|(
-literal|"%s: Bad parameters od=%p iov=%p iovlen=%d "
+literal|"%s: Bad parameters od=%p iov=%p iovlen=%jd "
 literal|"auth_off=%d auth_len=%d crypt_off=%d crypt_len=%d "
 literal|"icv_off=%d ivp=%p\n"
 argument_list|,
@@ -2195,7 +2195,7 @@ condition|)
 block|{
 name|dprintf
 argument_list|(
-literal|"%s: Bad parameters od=%p iov=%p iovlen=%d "
+literal|"%s: Bad parameters od=%p iov=%p iovlen=%jd "
 literal|"auth_off=%d auth_len=%d crypt_off=%d crypt_len=%d "
 literal|"icv_off=%d ivp=%p\n"
 argument_list|,
@@ -2679,7 +2679,7 @@ condition|)
 block|{
 name|dprintf
 argument_list|(
-literal|"%s: Bad parameters od=%p iov=%p iovlen=%d "
+literal|"%s: Bad parameters od=%p iov=%p iovlen=%jd "
 literal|"auth_off=%d auth_len=%d crypt_off=%d crypt_len=%d "
 literal|"icv_off=%d ivp=%p\n"
 argument_list|,
@@ -3177,7 +3177,7 @@ condition|)
 block|{
 name|dprintf
 argument_list|(
-literal|"%s: Bad parameters od=%p iov=%p iovlen=%d "
+literal|"%s: Bad parameters od=%p iov=%p iovlen=%jd "
 literal|"auth_off=%d auth_len=%d crypt_off=%d crypt_len=%d "
 literal|"icv_off=%d ivp=%p\n"
 argument_list|,
@@ -3763,7 +3763,7 @@ condition|)
 block|{
 name|dprintf
 argument_list|(
-literal|"%s: Bad parameters od=%p iov=%p iovlen=%d "
+literal|"%s: Bad parameters od=%p iov=%p iovlen=%jd "
 literal|"auth_off=%d auth_len=%d crypt_off=%d crypt_len=%d "
 literal|"icv_off=%d ivp=%p\n"
 argument_list|,
@@ -4620,7 +4620,7 @@ condition|)
 block|{
 name|dprintf
 argument_list|(
-literal|"%s: Bad parameters od=%p iov=%p iovlen=%d "
+literal|"%s: Bad parameters od=%p iov=%p iovlen=%jd "
 literal|"auth_off=%d auth_len=%d crypt_off=%d crypt_len=%d "
 literal|"icv_off=%d ivp=%p\n"
 argument_list|,
@@ -5487,7 +5487,7 @@ condition|)
 block|{
 name|dprintf
 argument_list|(
-literal|"%s: Bad parameters od=%p iov=%p iovlen=%d "
+literal|"%s: Bad parameters od=%p iov=%p iovlen=%jd "
 literal|"auth_off=%d auth_len=%d crypt_off=%d crypt_len=%d "
 literal|"icv_off=%d ivp=%p\n"
 argument_list|,
@@ -6377,7 +6377,7 @@ condition|)
 block|{
 name|dprintf
 argument_list|(
-literal|"%s: Bad parameters od=%p iov=%p iovlen=%d "
+literal|"%s: Bad parameters od=%p iov=%p iovlen=%jd "
 literal|"auth_off=%d auth_len=%d crypt_off=%d crypt_len=%d "
 literal|"icv_off=%d ivp=%p\n"
 argument_list|,
@@ -7294,7 +7294,7 @@ condition|)
 block|{
 name|dprintf
 argument_list|(
-literal|"%s: Bad parameters od=%p iov=%p iovlen=%d "
+literal|"%s: Bad parameters od=%p iov=%p iovlen=%jd "
 literal|"auth_off=%d auth_len=%d crypt_off=%d crypt_len=%d "
 literal|"icv_off=%d ivp=%p\n"
 argument_list|,
@@ -8378,7 +8378,7 @@ condition|)
 block|{
 name|dprintf
 argument_list|(
-literal|"%s: Bad parameters od=%p iov=%p iovlen=%d "
+literal|"%s: Bad parameters od=%p iov=%p iovlen=%jd "
 literal|"auth_off=%d auth_len=%d crypt_off=%d crypt_len=%d "
 literal|"icv_off=%d ivp=%p\n"
 argument_list|,
@@ -9472,7 +9472,7 @@ condition|)
 block|{
 name|dprintf
 argument_list|(
-literal|"%s: Bad parameters od=%p iov=%p iovlen=%d "
+literal|"%s: Bad parameters od=%p iov=%p iovlen=%jd "
 literal|"auth_off=%d auth_len=%d crypt_off=%d crypt_len=%d "
 literal|"icv_off=%d ivp=%p\n"
 argument_list|,
@@ -10612,7 +10612,7 @@ condition|)
 block|{
 name|dprintf
 argument_list|(
-literal|"%s: Bad parameters od=%p iov=%p iovlen=%d "
+literal|"%s: Bad parameters od=%p iov=%p iovlen=%jd "
 literal|"auth_off=%d auth_len=%d crypt_off=%d crypt_len=%d "
 literal|"icv_off=%d ivp=%p\n"
 argument_list|,
