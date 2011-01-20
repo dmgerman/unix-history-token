@@ -280,6 +280,12 @@ begin_comment
 comment|/* XXX for softled */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<dev/ath/ath_hal/ah_diagcodes.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
