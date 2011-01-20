@@ -46,7 +46,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ar5416/ar9285.h"
+file|"ar9002/ar9285.h"
 end_include
 
 begin_include

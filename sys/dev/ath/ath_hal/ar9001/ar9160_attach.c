@@ -48,7 +48,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ar5416/ar9160.ini"
+file|"ar9001/ar9160.ini"
 end_include
 
 begin_decl_stmt

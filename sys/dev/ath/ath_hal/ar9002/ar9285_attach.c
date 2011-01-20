@@ -40,13 +40,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"ar5416/ar9280.h"
+file|"ar9002/ar9280.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ar5416/ar9285.h"
+file|"ar9002/ar9285.h"
 end_include
 
 begin_include
@@ -64,19 +64,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ar5416/ar9285.ini"
+file|"ar9002/ar9285.ini"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ar5416/ar9285v2.ini"
+file|"ar9002/ar9285v2.ini"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ar5416/ar9280v2.ini"
+file|"ar9002/ar9280v2.ini"
 end_include
 
 begin_comment
