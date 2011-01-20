@@ -1956,6 +1956,30 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|HAL_BOOL
+name|ath_hal_waitfor
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|u_int
+name|reg
+parameter_list|,
+name|uint32_t
+name|mask
+parameter_list|,
+name|uint32_t
+name|val
+parameter_list|,
+name|uint32_t
+name|timeout
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* return the first n bits in val reversed */
 end_comment
