@@ -198,6 +198,27 @@ name|AR5416_EEP_MINOR_VER_19
 value|0x13
 end_define
 
+begin_define
+define|#
+directive|define
+name|AR5416_EEP_MINOR_VER_20
+value|0x14
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR5416_EEP_MINOR_VER_21
+value|0x15
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR5416_EEP_MINOR_VER_22
+value|0x16
+end_define
+
 begin_comment
 comment|// 16-bit offset location start of calibration struct
 end_comment

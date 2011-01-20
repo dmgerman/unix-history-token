@@ -392,6 +392,9 @@ comment|/* uint8_t* */
 name|AR_EEP_TXGAIN_TYPE
 block|,
 comment|/* uint8_t* */
+name|AR_EEP_DAC_HPWR_5G
+block|,
+comment|/* uint8_t* */
 name|AR_EEP_OL_PWRCTRL
 block|,
 comment|/* use ath_hal_eepromGetFlag */
