@@ -3347,6 +3347,23 @@ end_define
 begin_define
 define|#
 directive|define
+name|ath_hal_gettxcompletionrates
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_ds
+parameter_list|,
+name|_rates
+parameter_list|,
+name|_tries
+parameter_list|)
+define|\
+value|((*(_ah)->ah_getTxCompletionRates)((_ah), (_ds), (_rates), (_tries)))
+end_define
+
+begin_define
+define|#
+directive|define
 name|ath_hal_gpioCfgOutput
 parameter_list|(
 name|_ah
