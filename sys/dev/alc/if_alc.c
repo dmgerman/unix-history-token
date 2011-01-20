@@ -3823,9 +3823,11 @@ name|PM_CFG_MAC_ASPM_CHK
 expr_stmt|;
 name|pmcfg
 operator||=
-name|PM_CFG_SERDES_ENB
-operator||
-name|PM_CFG_RBER_ENB
+operator|(
+name|PM_CFG_LCKDET_TIMER_DEFAULT
+operator|<<
+name|PM_CFG_LCKDET_TIMER_SHIFT
+operator|)
 expr_stmt|;
 name|pmcfg
 operator|&=
@@ -16866,6 +16868,16 @@ expr_stmt|;
 name|alc_init_smb
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+comment|/* Enable all clocks. */
+name|CSR_WRITE_4
+argument_list|(
+name|sc
+argument_list|,
+name|ALC_CLK_GATING_CFG
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Reprogram the station address. */
