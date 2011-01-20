@@ -64,7 +64,7 @@ name|struct
 name|grackle_range
 name|sc_range
 index|[
-literal|6
+literal|7
 index|]
 decl_stmt|;
 name|int
