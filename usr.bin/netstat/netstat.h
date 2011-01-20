@@ -767,6 +767,17 @@ struct_decl|;
 end_struct_decl
 
 begin_function_decl
+name|void
+name|in6_fillscopeid
+parameter_list|(
+name|struct
+name|sockaddr_in6
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|char
 modifier|*
 name|routename6
