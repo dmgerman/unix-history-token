@@ -465,6 +465,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AR2427_DEVID_PCIE
+value|0x002c
+end_define
+
+begin_comment
+comment|/* AR2427 PCI-E w/ 802.11n bonded out */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|AR_SUBVENDOR_ID_NOG
 value|0x0e11
 end_define

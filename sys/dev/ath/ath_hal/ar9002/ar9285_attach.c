@@ -1179,6 +1179,24 @@ goto|goto
 name|bad
 goto|;
 block|}
+comment|/* Disable 11n for the AR2427 */
+if|if
+condition|(
+name|devid
+operator|==
+name|AR2427_DEVID_PCIE
+condition|)
+name|AH_PRIVATE
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_caps
+operator|.
+name|halHTSupport
+operator|=
+name|AH_FALSE
+expr_stmt|;
 name|ecode
 operator|=
 name|ath_hal_eepromGet
@@ -1874,6 +1892,21 @@ name|AR9285_DEVID_PCIE
 condition|)
 return|return
 literal|"Atheros 9285"
+return|;
+if|if
+condition|(
+name|vendorid
+operator|==
+name|ATHEROS_VENDOR_ID
+operator|&&
+operator|(
+name|devid
+operator|==
+name|AR2427_DEVID_PCIE
+operator|)
+condition|)
+return|return
+literal|"Atheros 2427"
 return|;
 return|return
 name|AH_NULL
