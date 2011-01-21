@@ -25,76 +25,6 @@ directive|include
 file|<sys/types.h>
 end_include
 
-begin_comment
-comment|/*  * Special inode numbers  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EXT2_BAD_INO
-value|1
-end_define
-
-begin_comment
-comment|/* Bad blocks inode */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EXT2_ROOT_INO
-value|2
-end_define
-
-begin_comment
-comment|/* Root inode */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EXT2_BOOT_LOADER_INO
-value|5
-end_define
-
-begin_comment
-comment|/* Boot loader inode */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EXT2_UNDEL_DIR_INO
-value|6
-end_define
-
-begin_comment
-comment|/* Undelete directory inode */
-end_comment
-
-begin_comment
-comment|/* First non-reserved inode for old ext2 filesystems */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E2FS_REV0_FIRST_INO
-value|11
-end_define
-
-begin_comment
-comment|/*  * The second extended file system magic number  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E2FS_MAGIC
-value|0xEF53
-end_define
-
 begin_if
 if|#
 directive|if
@@ -510,6 +440,7 @@ name|uint8_t
 modifier|*
 name|e2fs_contigdirs
 decl_stmt|;
+comment|/* (u) # of contig. allocated dirs */
 name|char
 name|e2fs_wasvalid
 decl_stmt|;
@@ -543,6 +474,28 @@ define|#
 directive|define
 name|E2FS_VERSION
 value|"0.5b"
+end_define
+
+begin_comment
+comment|/* First non-reserved inode for old ext2 filesystems */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E2FS_REV0_FIRST_INO
+value|11
+end_define
+
+begin_comment
+comment|/*  * The second extended file system magic number  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E2FS_MAGIC
+value|0xEF53
 end_define
 
 begin_comment
@@ -601,6 +554,13 @@ define|#
 directive|define
 name|EXT2F_COMPAT_PREALLOC
 value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXT2F_COMPAT_HASJOURNAL
+value|0x0004
 end_define
 
 begin_define
