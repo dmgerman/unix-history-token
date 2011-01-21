@@ -804,15 +804,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|IFM_100_T4
-case|:
-comment|/* 			 * XXX Not supported as a manual setting right now. 			 */
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
-case|case
 name|IFM_100_TX
 case|:
 name|dcphy_reset
@@ -844,10 +835,10 @@ name|ife
 operator|->
 name|ifm_media
 operator|&
-name|IFM_GMASK
-operator|)
-operator|==
 name|IFM_FDX
+operator|)
+operator|!=
+literal|0
 condition|)
 name|mode
 operator||=
@@ -897,10 +888,10 @@ name|ife
 operator|->
 name|ifm_media
 operator|&
-name|IFM_GMASK
-operator|)
-operator|==
 name|IFM_FDX
+operator|)
+operator|!=
+literal|0
 condition|)
 name|DC_SETBIT
 argument_list|(
@@ -955,10 +946,10 @@ name|ife
 operator|->
 name|ifm_media
 operator|&
-name|IFM_GMASK
-operator|)
-operator|==
 name|IFM_FDX
+operator|)
+operator|!=
+literal|0
 condition|)
 name|mode
 operator||=
