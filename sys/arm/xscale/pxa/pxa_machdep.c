@@ -10,12 +10,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_msgbuf.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_ddb.h"
 end_include
 
@@ -913,7 +907,7 @@ name|msgbufpv
 argument_list|,
 name|round_page
 argument_list|(
-name|MSGBUF_SIZE
+name|msgbufsize
 argument_list|)
 operator|/
 name|PAGE_SIZE
@@ -1679,7 +1673,7 @@ name|msgbufinit
 argument_list|(
 name|msgbufp
 argument_list|,
-name|MSGBUF_SIZE
+name|msgbufsize
 argument_list|)
 expr_stmt|;
 name|mutex_init

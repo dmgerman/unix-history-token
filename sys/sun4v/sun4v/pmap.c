@@ -26,12 +26,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_msgbuf.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_pmap.h"
 end_include
 
@@ -3973,7 +3967,7 @@ name|msgbuf_phys
 operator|=
 name|pmap_bootstrap_alloc
 argument_list|(
-name|MSGBUF_SIZE
+name|msgbufsize
 argument_list|)
 expr_stmt|;
 name|msgbufp

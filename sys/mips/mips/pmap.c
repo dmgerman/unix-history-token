@@ -24,12 +24,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"opt_msgbuf.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_ddb.h"
 end_include
 
@@ -2566,14 +2560,14 @@ operator|*
 operator|)
 name|pmap_steal_memory
 argument_list|(
-name|MSGBUF_SIZE
+name|msgbufsize
 argument_list|)
 expr_stmt|;
 name|msgbufinit
 argument_list|(
 name|msgbufp
 argument_list|,
-name|MSGBUF_SIZE
+name|msgbufsize
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Steal thread0 kstack. 	 */

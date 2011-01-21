@@ -40,12 +40,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_msgbuf.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_smp.h"
 end_include
 
@@ -1978,7 +1972,7 @@ argument|unused
 argument_list|,
 argument|msgbufp
 argument_list|,
-argument|atop(round_page(MSGBUF_SIZE))
+argument|atop(round_page(msgbufsize))
 argument_list|)
 comment|/* 	 * ptemap is used for pmap_pte_quick 	 */
 name|SYSMAP

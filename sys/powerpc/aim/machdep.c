@@ -42,12 +42,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_msgbuf.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -1792,7 +1786,7 @@ name|msgbufinit
 argument_list|(
 name|msgbufp
 argument_list|,
-name|MSGBUF_SIZE
+name|msgbufsize
 argument_list|)
 expr_stmt|;
 ifdef|#

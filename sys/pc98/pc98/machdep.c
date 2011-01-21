@@ -74,12 +74,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_msgbuf.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_npx.h"
 end_include
 
@@ -9900,7 +9894,7 @@ name|PAGE_SIZE
 operator|+
 name|round_page
 argument_list|(
-name|MSGBUF_SIZE
+name|msgbufsize
 argument_list|)
 operator|>=
 name|phys_avail
@@ -9961,7 +9955,7 @@ index|]
 operator|-=
 name|round_page
 argument_list|(
-name|MSGBUF_SIZE
+name|msgbufsize
 argument_list|)
 expr_stmt|;
 comment|/* Map the message buffer. */
@@ -9975,7 +9969,7 @@ name|off
 operator|<
 name|round_page
 argument_list|(
-name|MSGBUF_SIZE
+name|msgbufsize
 argument_list|)
 condition|;
 name|off
@@ -11400,7 +11394,7 @@ name|msgbufinit
 argument_list|(
 name|msgbufp
 argument_list|,
-name|MSGBUF_SIZE
+name|msgbufsize
 argument_list|)
 expr_stmt|;
 comment|/* make a call gate to reenter kernel with */
