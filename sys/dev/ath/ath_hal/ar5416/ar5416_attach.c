@@ -519,19 +519,19 @@ operator|->
 name|ah_rxMonitor
 operator|=
 name|ar5416RxMonitor
-operator|,
+expr_stmt|;
 name|ah
 operator|->
 name|ah_aniPoll
 operator|=
 name|ar5416AniPoll
-operator|,
+expr_stmt|;
 name|ah
 operator|->
 name|ah_procMibEvent
 operator|=
 name|ar5416ProcessMibIntr
-operator|,
+expr_stmt|;
 comment|/* Misc Functions */
 name|ah
 operator|->
