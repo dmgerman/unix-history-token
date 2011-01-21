@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2002 - 2010 Tony Finch<dot@dotat.at>  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 2002 - 2011 Tony Finch<dot@dotat.at>  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -79,7 +79,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) $Version: unifdef-2.5 $\n"
+literal|"@(#) $Version: unifdef-2.5.6.21f1388 $\n"
 literal|"@(#) $FreeBSD$\n"
 literal|"@(#) $Author: Tony Finch (dot@dotat.at) $\n"
 literal|"@(#) $URL: http://dotat.at/prog/unifdef $\n"
@@ -3187,7 +3187,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Write a line to the output or not, according to command line options.  */
+comment|/*  * Write a line to the output or not, according to command line options.  * If writing fails, closeout() will print the error and exit.  */
 end_comment
 
 begin_function
@@ -3255,22 +3255,36 @@ operator|&&
 name|delcount
 operator|>
 literal|0
-condition|)
-name|printf
+operator|&&
+name|fprintf
 argument_list|(
+name|output
+argument_list|,
 literal|"#line %d%s"
 argument_list|,
 name|linenum
 argument_list|,
 name|newline
 argument_list|)
+operator|<
+literal|0
+condition|)
+name|closeout
+argument_list|()
 expr_stmt|;
+if|if
+condition|(
 name|fputs
 argument_list|(
 name|tline
 argument_list|,
 name|output
 argument_list|)
+operator|==
+name|EOF
+condition|)
+name|closeout
+argument_list|()
 expr_stmt|;
 name|delcount
 operator|=
@@ -3295,13 +3309,18 @@ block|{
 if|if
 condition|(
 name|lnblank
-condition|)
+operator|&&
 name|fputs
 argument_list|(
 name|newline
 argument_list|,
 name|output
 argument_list|)
+operator|==
+name|EOF
+condition|)
+name|closeout
+argument_list|()
 expr_stmt|;
 name|exitstat
 operator|=
@@ -3319,11 +3338,16 @@ block|}
 if|if
 condition|(
 name|debugging
-condition|)
+operator|&&
 name|fflush
 argument_list|(
 name|output
 argument_list|)
+operator|==
+name|EOF
+condition|)
+name|closeout
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -3424,6 +3448,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|ferror
+argument_list|(
+name|output
+argument_list|)
+operator|||
 name|fclose
 argument_list|(
 name|output
@@ -3432,18 +3461,16 @@ operator|==
 name|EOF
 condition|)
 block|{
-name|warn
-argument_list|(
-literal|"couldn't write to %s"
-argument_list|,
-name|ofilename
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|overwriting
 condition|)
 block|{
+name|warn
+argument_list|(
+literal|"couldn't write to temporary file"
+argument_list|)
+expr_stmt|;
 name|unlink
 argument_list|(
 name|tempname
@@ -3455,15 +3482,19 @@ literal|2
 argument_list|,
 literal|"%s unchanged"
 argument_list|,
-name|filename
+name|ofilename
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-name|exit
+name|err
 argument_list|(
 literal|2
+argument_list|,
+literal|"couldn't write to %s"
+argument_list|,
+name|ofilename
 argument_list|)
 expr_stmt|;
 block|}
@@ -3583,11 +3614,29 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
+block|{
+if|if
+condition|(
+name|ferror
+argument_list|(
+name|input
+argument_list|)
+condition|)
+name|error
+argument_list|(
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
 return|return
 operator|(
 name|LT_EOF
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|newline
@@ -4070,7 +4119,22 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* append the missing newline */
+if|if
+condition|(
+name|ferror
+argument_list|(
+name|input
+argument_list|)
+condition|)
+name|error
+argument_list|(
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* append the missing newline at eof */
 name|strcpy
 argument_list|(
 name|tline
