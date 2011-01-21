@@ -4611,16 +4611,6 @@ name|tf_rbx
 operator|=
 name|ps_strings
 expr_stmt|;
-name|load_cr0
-argument_list|(
-name|rcr0
-argument_list|()
-operator||
-name|CR0_MP
-operator||
-name|CR0_TS
-argument_list|)
-expr_stmt|;
 name|fpstate_drop
 argument_list|(
 name|td
