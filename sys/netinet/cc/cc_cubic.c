@@ -746,7 +746,7 @@ name|cubic_data
 operator|->
 name|mean_rtt_ticks
 operator|=
-name|TCPTV_SRTTBASE
+literal|1
 expr_stmt|;
 name|ccv
 operator|->
@@ -1197,9 +1197,12 @@ operator|&&
 name|cubic_data
 operator|->
 name|sum_rtt_ticks
-operator|>
-literal|0
+operator|>=
+name|cubic_data
+operator|->
+name|epoch_ack_count
 condition|)
+block|{
 name|cubic_data
 operator|->
 name|mean_rtt_ticks
@@ -1217,16 +1220,7 @@ operator|->
 name|epoch_ack_count
 argument_list|)
 expr_stmt|;
-else|else
-comment|/* For safety. */
-name|cubic_data
-operator|->
-name|mean_rtt_ticks
-operator|=
-name|cubic_data
-operator|->
-name|min_rtt_ticks
-expr_stmt|;
+block|}
 name|cubic_data
 operator|->
 name|epoch_ack_count
@@ -1330,6 +1324,7 @@ operator|==
 name|TCPTV_SRTTBASE
 operator|)
 condition|)
+block|{
 name|cubic_data
 operator|->
 name|min_rtt_ticks
@@ -1341,6 +1336,26 @@ argument_list|,
 name|t_srtt_ticks
 argument_list|)
 expr_stmt|;
+comment|/* 			 * If the connection is within its first congestion 			 * epoch, ensure we prime mean_rtt_ticks with a 			 * reasonable value until the epoch average RTT is 			 * calculated in cubic_post_recovery(). 			 */
+if|if
+condition|(
+name|cubic_data
+operator|->
+name|min_rtt_ticks
+operator|>
+name|cubic_data
+operator|->
+name|mean_rtt_ticks
+condition|)
+name|cubic_data
+operator|->
+name|mean_rtt_ticks
+operator|=
+name|cubic_data
+operator|->
+name|min_rtt_ticks
+expr_stmt|;
+block|}
 comment|/* Sum samples for epoch average RTT calculation. */
 name|cubic_data
 operator|->
