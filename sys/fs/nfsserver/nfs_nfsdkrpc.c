@@ -262,6 +262,15 @@ name|newnfs_numnfsd
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|proc
+modifier|*
+name|nfsd_master_proc
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * NFS server system calls  */
 end_comment
@@ -1789,6 +1798,10 @@ condition|(
 name|terminating
 condition|)
 block|{
+name|nfsd_master_proc
+operator|=
+name|NULL
+expr_stmt|;
 name|NFSD_UNLOCK
 argument_list|()
 expr_stmt|;

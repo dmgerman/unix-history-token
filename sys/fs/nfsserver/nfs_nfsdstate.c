@@ -3145,6 +3145,9 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+name|nfsrv_backupstable
+argument_list|()
+expr_stmt|;
 comment|/* 	 * and clear out the state, marking the clientid revoked. 	 */
 name|clp
 operator|->
@@ -14463,7 +14466,10 @@ comment|/* 	 * If the client just confirmed its first open, write a timestamp 	 
 if|if
 condition|(
 name|gotstate
+operator|!=
+literal|0
 condition|)
+block|{
 name|nfsrv_writestable
 argument_list|(
 name|client
@@ -14475,6 +14481,10 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+name|nfsrv_backupstable
+argument_list|()
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|error
@@ -19659,6 +19669,9 @@ name|M_TEMP
 argument_list|)
 expr_stmt|;
 block|}
+name|nfsrv_backupstable
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -20210,6 +20223,9 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+name|nfsrv_backupstable
+argument_list|()
+expr_stmt|;
 name|nfsrv_cleanclient
 argument_list|(
 name|clp
@@ -20747,6 +20763,9 @@ name|NFSNST_REVOKE
 argument_list|,
 name|p
 argument_list|)
+expr_stmt|;
+name|nfsrv_backupstable
+argument_list|()
 expr_stmt|;
 if|if
 condition|(

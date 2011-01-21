@@ -170,6 +170,13 @@ name|NFSSVC_GETSTATS
 value|0x00400000
 end_define
 
+begin_define
+define|#
+directive|define
+name|NFSSVC_BACKUPSTABLE
+value|0x00800000
+end_define
+
 begin_endif
 endif|#
 directive|endif
