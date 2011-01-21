@@ -668,10 +668,10 @@ name|ife
 operator|->
 name|ifm_media
 operator|&
-name|IFM_GMASK
-operator|)
-operator|==
 name|IFM_FDX
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|PHY_WRITE
