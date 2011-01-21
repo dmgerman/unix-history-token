@@ -518,6 +518,12 @@ name|ah
 operator|->
 name|ah_rxMonitor
 operator|=
+name|ar5416RxMonitor
+operator|,
+name|ah
+operator|->
+name|ah_aniPoll
+operator|=
 name|ar5416AniPoll
 operator|,
 name|ah

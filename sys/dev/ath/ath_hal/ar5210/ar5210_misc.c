@@ -2237,7 +2237,7 @@ end_function
 
 begin_function
 name|void
-name|ar5210AniPoll
+name|ar5210RxMonitor
 parameter_list|(
 name|struct
 name|ath_hal
@@ -2248,6 +2248,24 @@ specifier|const
 name|HAL_NODE_STATS
 modifier|*
 name|stats
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_channel
+modifier|*
+name|chan
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+name|void
+name|ar5210AniPoll
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
 parameter_list|,
 specifier|const
 name|struct

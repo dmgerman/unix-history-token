@@ -2269,6 +2269,24 @@ modifier|*
 name|ah
 parameter_list|,
 specifier|const
+name|struct
+name|ieee80211_channel
+modifier|*
+name|chan
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+name|void
+name|ar5211RxMonitor
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+specifier|const
 name|HAL_NODE_STATS
 modifier|*
 name|stats

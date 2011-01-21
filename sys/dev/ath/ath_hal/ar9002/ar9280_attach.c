@@ -4060,6 +4060,27 @@ name|AR9280_DEFAULT_RXCHAINMASK
 expr_stmt|;
 break|break;
 block|}
+name|HALDEBUG
+argument_list|(
+name|ah
+argument_list|,
+name|HAL_DEBUG_ANY
+argument_list|,
+literal|"%s: settings=%d, tx/rx chainmask=%d/%d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|settings
+argument_list|,
+name|ahp
+operator|->
+name|ah_tx_chainmask
+argument_list|,
+name|ahp
+operator|->
+name|ah_rx_chainmask
+argument_list|)
+expr_stmt|;
 return|return
 name|AH_TRUE
 return|;

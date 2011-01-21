@@ -365,9 +365,13 @@ name|ast_be_missed
 decl_stmt|;
 comment|/* missed beacons */
 name|u_int32_t
+name|ast_ani_cal
+decl_stmt|;
+comment|/* ANI calibrations performed */
+name|u_int32_t
 name|ast_pad
 index|[
-literal|13
+literal|12
 index|]
 decl_stmt|;
 block|}

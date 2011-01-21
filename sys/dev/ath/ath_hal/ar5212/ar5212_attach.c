@@ -326,6 +326,11 @@ block|,
 operator|.
 name|ah_rxMonitor
 operator|=
+name|ar5212RxMonitor
+block|,
+operator|.
+name|ah_aniPoll
+operator|=
 name|ar5212AniPoll
 block|,
 operator|.

@@ -1391,6 +1391,18 @@ name|int
 name|sc_lastcalreset
 decl_stmt|;
 comment|/* last cal reset done */
+name|int
+name|sc_lastani
+decl_stmt|;
+comment|/* last ANI poll */
+name|int
+name|sc_lastshortcal
+decl_stmt|;
+comment|/* last short calibration */
+name|HAL_BOOL
+name|sc_doresetcal
+decl_stmt|;
+comment|/* Yes, we're doing a reset cal atm */
 name|HAL_NODE_STATS
 name|sc_halstats
 decl_stmt|;
@@ -2448,6 +2460,19 @@ name|_chan
 parameter_list|)
 define|\
 value|((*(_ah)->ah_rxMonitor)((_ah), (_arg), (_chan)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_ani_poll
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_chan
+parameter_list|)
+define|\
+value|((*(_ah)->ah_aniPoll)((_ah), (_chan)))
 end_define
 
 begin_define
