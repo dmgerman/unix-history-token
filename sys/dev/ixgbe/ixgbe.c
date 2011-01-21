@@ -8610,11 +8610,6 @@ operator|->
 name|watchdog_events
 operator|++
 expr_stmt|;
-name|IXGBE_TX_UNLOCK
-argument_list|(
-name|txr
-argument_list|)
-expr_stmt|;
 name|ixgbe_init_locked
 argument_list|(
 name|adapter
