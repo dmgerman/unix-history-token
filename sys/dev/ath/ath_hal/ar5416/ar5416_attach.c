@@ -535,6 +535,12 @@ operator|,
 comment|/* Misc Functions */
 name|ah
 operator|->
+name|ah_getCapability
+operator|=
+name|ar5416GetCapability
+expr_stmt|;
+name|ah
+operator|->
 name|ah_getDiagState
 operator|=
 name|ar5416GetDiagState
