@@ -73,6 +73,12 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
 begin_decl_stmt
 name|int
 name|ath_hal_debug

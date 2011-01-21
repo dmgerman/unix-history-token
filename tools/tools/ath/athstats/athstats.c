@@ -85,6 +85,26 @@ directive|include
 file|<err.h>
 end_include
 
+begin_comment
+comment|/* Use the system net80211 headers, rather than the kernel tree */
+end_comment
+
+begin_comment
+comment|/*  * XXX this means that if you build a separate net80211 stack  * XXX with your kernel and don't install the new/changed headers,  * XXX this tool may break.  * XXX -adrian  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<net80211/ieee80211_ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net80211/ieee80211_radiotap.h>
+end_include
+
 begin_include
 include|#
 directive|include
@@ -95,18 +115,6 @@ begin_include
 include|#
 directive|include
 file|"ah_desc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ieee80211_ioctl.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ieee80211_radiotap.h"
 end_include
 
 begin_include
