@@ -910,8 +910,7 @@ argument_list|)
 expr_stmt|;
 name|VM_OBJECT_LOCK_INIT
 argument_list|(
-operator|&
-name|kernel_object_store
+name|kernel_object
 argument_list|,
 literal|"kernel object"
 argument_list|)
@@ -957,8 +956,7 @@ endif|#
 directive|endif
 name|VM_OBJECT_LOCK_INIT
 argument_list|(
-operator|&
-name|kmem_object_store
+name|kmem_object
 argument_list|,
 literal|"kmem object"
 argument_list|)
