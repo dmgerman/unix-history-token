@@ -9153,6 +9153,16 @@ name|IFM_10G_CX4
 expr_stmt|;
 break|break;
 case|case
+name|IXGBE_PHYSICAL_LAYER_SFP_PLUS_CU
+case|:
+name|adapter
+operator|->
+name|optics
+operator|=
+name|IFM_10G_TWINAX
+expr_stmt|;
+break|break;
+case|case
 name|IXGBE_PHYSICAL_LAYER_1000BASE_KX
 case|:
 case|case
