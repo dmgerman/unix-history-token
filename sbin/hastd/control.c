@@ -704,7 +704,7 @@ goto|;
 block|}
 name|error
 operator|=
-name|nv_get_int64
+name|nv_get_int16
 argument_list|(
 name|cnvin
 argument_list|,
