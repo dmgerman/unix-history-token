@@ -643,7 +643,17 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* LOG */
+name|pjdlog_common
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|0
+argument_list|,
+name|error
+argument_list|,
+literal|"Unable to prepare control header"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|end
 goto|;
@@ -672,7 +682,13 @@ name|error
 operator|=
 name|errno
 expr_stmt|;
-comment|/* LOG */
+name|pjdlog_errno
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"Unable to send control header"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|end
 goto|;
@@ -697,7 +713,13 @@ name|error
 operator|=
 name|errno
 expr_stmt|;
-comment|/* LOG */
+name|pjdlog_errno
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"Unable to receive control header"
+argument_list|)
+expr_stmt|;
 goto|goto
 name|end
 goto|;
@@ -740,7 +762,13 @@ name|error
 operator|=
 name|ENOENT
 expr_stmt|;
-comment|/* LOG */
+name|pjdlog_errno
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"Field 'status' is missing."
+argument_list|)
+expr_stmt|;
 goto|goto
 name|end
 goto|;
