@@ -117,6 +117,36 @@ parameter_list|)
 value|(td)->p_pgid
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|USB_HOST_ALIGN
+argument_list|)
+operator|&&
+operator|(
+name|USB_HOST_ALIGN
+operator|!=
+literal|0
+operator|)
+end_if
+
+begin_comment
+comment|/* USB_HOST_ALIGN is already defined and valid */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_undef
+undef|#
+directive|undef
+name|USB_HOST_ALIGN
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -127,6 +157,11 @@ end_define
 begin_comment
 comment|/* bytes, must be power of two */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
