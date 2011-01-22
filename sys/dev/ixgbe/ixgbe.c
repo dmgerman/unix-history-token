@@ -24365,7 +24365,7 @@ argument_list|,
 operator|&
 name|stats
 operator|->
-name|lxontxc
+name|lxonrxc
 argument_list|,
 literal|"Link XON Received"
 argument_list|)
@@ -24405,7 +24405,7 @@ argument_list|,
 operator|&
 name|stats
 operator|->
-name|lxofftxc
+name|lxoffrxc
 argument_list|,
 literal|"Link XOFF Received"
 argument_list|)
