@@ -116,7 +116,7 @@ end_empty_stmt
 
 begin_function_decl
 name|void
-name|pjdlog_prefix_setv
+name|pjdlogv_prefix_set
 parameter_list|(
 specifier|const
 name|char

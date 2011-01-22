@@ -228,7 +228,7 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
-name|pjdlog_prefix_setv
+name|pjdlogv_prefix_set
 argument_list|(
 name|fmt
 argument_list|,
@@ -249,7 +249,7 @@ end_comment
 
 begin_function
 name|void
-name|pjdlog_prefix_setv
+name|pjdlogv_prefix_set
 parameter_list|(
 specifier|const
 name|char
