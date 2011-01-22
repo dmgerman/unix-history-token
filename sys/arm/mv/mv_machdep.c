@@ -1953,6 +1953,9 @@ argument_list|,
 name|KSTACK_PAGES
 argument_list|)
 expr_stmt|;
+name|init_param1
+argument_list|()
+expr_stmt|;
 name|valloc_pages
 argument_list|(
 name|msgbufpv
@@ -2534,9 +2537,6 @@ name|physmap_init
 argument_list|()
 expr_stmt|;
 comment|/* Do basic tuning, hz etc */
-name|init_param1
-argument_list|()
-expr_stmt|;
 name|init_param2
 argument_list|(
 name|physmem
