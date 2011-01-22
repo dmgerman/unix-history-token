@@ -1330,7 +1330,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Deal with modified resources. 	 * Depending on what has changed exactly we might want to perform 	 * different actions. 	 * 	 * We do full resource restart in the following situations: 	 * Resource role is INIT or SECONDARY. 	 * Resource role is PRIMARY and path to local component or provider 	 * name has changed. 	 * In case of PRIMARY, the worker process will be killed and restarted, 	 * which also means removing /dev/hast/<name> provider and 	 * recreating it. 	 * 	 * We do just reload (send SIGHUP to worker process) if we act as 	 * PRIMARY, but only remote address, replication mode and timeout 	 * has changed. For those, there is no need to restart worker process. 	 * If PRIMARY receives SIGHUP, it will reconnect if remote address or 	 * replication mode has changed or simply set new timeout if only 	 * timeout has changed. 	 */
+comment|/* 	 * Deal with modified resources. 	 * Depending on what has changed exactly we might want to perform 	 * different actions. 	 * 	 * We do full resource restart in the following situations: 	 * Resource role is INIT or SECONDARY. 	 * Resource role is PRIMARY and path to local component or provider 	 * name has changed. 	 * In case of PRIMARY, the worker process will be killed and restarted, 	 * which also means removing /dev/hast/<name> provider and 	 * recreating it. 	 * 	 * We do just reload (send SIGHUP to worker process) if we act as 	 * PRIMARY, but only if remote address, replication mode, timeout or 	 * execution path has changed. For those, there is no need to restart 	 * worker process. 	 * If PRIMARY receives SIGHUP, it will reconnect if remote address or 	 * replication mode has changed or simply set new timeout if only 	 * timeout has changed. 	 */
 name|TAILQ_FOREACH_SAFE
 argument_list|(
 argument|nres
@@ -1509,6 +1509,24 @@ operator|=
 name|nres
 operator|->
 name|hr_timeout
+expr_stmt|;
+name|strlcpy
+argument_list|(
+name|cres
+operator|->
+name|hr_exec
+argument_list|,
+name|nres
+operator|->
+name|hr_exec
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cres
+operator|->
+name|hr_exec
+argument_list|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
