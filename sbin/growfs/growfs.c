@@ -828,7 +828,7 @@ argument_list|(
 literal|"growfs"
 argument_list|)
 name|time_t
-name|utime
+name|modtime
 decl_stmt|;
 name|uint
 name|cylno
@@ -882,7 +882,7 @@ comment|/* FSIRAND */
 name|time
 argument_list|(
 operator|&
-name|utime
+name|modtime
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Get the cylinder summary into the memory. 	 */
@@ -1080,7 +1080,7 @@ name|fs_ncg
 operator|-
 literal|1
 argument_list|,
-name|utime
+name|modtime
 argument_list|,
 name|fsi
 argument_list|,
@@ -1221,7 +1221,7 @@ name|initcg
 argument_list|(
 name|cylno
 argument_list|,
-name|utime
+name|modtime
 argument_list|,
 name|fso
 argument_list|,
@@ -1312,7 +1312,7 @@ expr_stmt|;
 comment|/* 	 * Do all needed changes in the first cylinder group. 	 * allocate blocks in new location 	 */
 name|updcsloc
 argument_list|(
-name|utime
+name|modtime
 argument_list|,
 name|fsi
 argument_list|,
@@ -1477,7 +1477,7 @@ name|sblock
 operator|.
 name|fs_time
 operator|=
-name|utime
+name|modtime
 expr_stmt|;
 name|wtfs
 argument_list|(
@@ -1659,7 +1659,7 @@ name|int
 name|cylno
 parameter_list|,
 name|time_t
-name|utime
+name|modtime
 parameter_list|,
 name|int
 name|fso
@@ -1835,7 +1835,7 @@ name|acg
 operator|.
 name|cg_time
 operator|=
-name|utime
+name|modtime
 expr_stmt|;
 name|acg
 operator|.
@@ -3353,7 +3353,7 @@ name|int
 name|cylno
 parameter_list|,
 name|time_t
-name|utime
+name|modtime
 parameter_list|,
 name|int
 name|fsi
@@ -3634,7 +3634,7 @@ name|acg
 operator|.
 name|cg_time
 operator|=
-name|utime
+name|modtime
 expr_stmt|;
 if|if
 condition|(
@@ -4396,7 +4396,7 @@ name|void
 name|updcsloc
 parameter_list|(
 name|time_t
-name|utime
+name|modtime
 parameter_list|,
 name|int
 name|fsi
@@ -4618,7 +4618,7 @@ name|acg
 operator|.
 name|cg_time
 operator|=
-name|utime
+name|modtime
 expr_stmt|;
 comment|/* 	 * XXX	In the case of having active snapshots we may need much more 	 *	blocks for the copy on write. We need each block twice, and 	 *	also up to 8*3 blocks for indirect blocks for all possible 	 *	references. 	 */
 if|if
