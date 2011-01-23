@@ -475,7 +475,7 @@ begin_define
 define|#
 directive|define
 name|PM_CFG_LCKDET_TIMER_MASK
-value|0x3F000000
+value|0x0F000000
 end_define
 
 begin_define
@@ -545,6 +545,13 @@ begin_define
 define|#
 directive|define
 name|PM_CFG_L1_ENTRY_TIMER_DEFAULT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PM_CFG_LCKDET_TIMER_DEFAULT
 value|12
 end_define
 
@@ -552,7 +559,7 @@ begin_define
 define|#
 directive|define
 name|PM_CFG_PM_REQ_TIMER_DEFAULT
-value|1
+value|12
 end_define
 
 begin_define
@@ -3885,6 +3892,55 @@ define|#
 directive|define
 name|ALC_TX_MIB_BASE
 value|0x1760
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALC_CLK_GATING_CFG
+value|0x1814
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_GATING_DMAW_ENB
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_GATING_DMAR_ENB
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_GATING_TXQ_ENB
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_GATING_RXQ_ENB
+value|0x0008
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_GATING_TXMAC_ENB
+value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_GATING_RXMAC_ENB
+value|0x0020
 end_define
 
 begin_define
