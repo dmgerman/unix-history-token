@@ -528,6 +528,24 @@ value|0x00001202
 end_define
 
 begin_comment
+comment|/* RS - Pluggable Stream Scheduling Socket option */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_PLUGGABLE_SS
+value|0x00001203
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_SS_VALUE
+value|0x00001204
+end_define
+
+begin_comment
 comment|/* read only */
 end_comment
 
@@ -790,6 +808,76 @@ define|#
 directive|define
 name|SCTP_CC_HTCP
 value|0x00000002
+end_define
+
+begin_comment
+comment|/* RS - Supported stream scheduling modules for pluggable  * stream scheduling  */
+end_comment
+
+begin_comment
+comment|/* Default simple round-robin */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_SS_DEFAULT
+value|0x00000000
+end_define
+
+begin_comment
+comment|/* Real round-robin */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_SS_ROUND_ROBIN
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* Real round-robin per packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_SS_ROUND_ROBIN_PACKET
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* Priority */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_SS_PRIORITY
+value|0x00000003
+end_define
+
+begin_comment
+comment|/* Fair Bandwidth */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_SS_FAIR_BANDWITH
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* First-come, first-serve */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_SS_FIRST_COME
+value|0x00000005
 end_define
 
 begin_comment

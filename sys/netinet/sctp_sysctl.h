@@ -218,6 +218,10 @@ comment|/* JRS - Variable for default congestion control module */
 name|uint32_t
 name|sctp_default_cc_module
 decl_stmt|;
+comment|/* RS - Variable for default stream scheduling module */
+name|uint32_t
+name|sctp_default_ss_module
+decl_stmt|;
 name|uint32_t
 name|sctp_default_frag_interleave
 decl_stmt|;
@@ -2028,6 +2032,38 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_DEFAULT_CC_MODULE_DEFAULT
+value|0
+end_define
+
+begin_comment
+comment|/* RS - default stream scheduling module sysctl */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_DEFAULT_SS_MODULE_DESC
+value|"Default stream scheduling module"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_DEFAULT_SS_MODULE_MIN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_DEFAULT_SS_MODULE_MAX
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_DEFAULT_SS_MODULE_DEFAULT
 value|0
 end_define
 

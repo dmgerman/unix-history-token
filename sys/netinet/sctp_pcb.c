@@ -11271,6 +11271,15 @@ argument_list|(
 name|sctp_default_cc_module
 argument_list|)
 expr_stmt|;
+name|m
+operator|->
+name|sctp_default_ss_module
+operator|=
+name|SCTP_BASE_SYSCTL
+argument_list|(
+name|sctp_default_ss_module
+argument_list|)
+expr_stmt|;
 comment|/* number of streams to pre-open on a association */
 name|m
 operator|->
