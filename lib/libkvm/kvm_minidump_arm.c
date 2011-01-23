@@ -570,9 +570,6 @@ modifier|*
 name|kd
 parameter_list|)
 block|{
-name|u_long
-name|pa
-decl_stmt|;
 name|struct
 name|vmstate
 modifier|*
@@ -845,6 +842,9 @@ argument_list|,
 name|off
 argument_list|)
 operator|!=
+operator|(
+name|ssize_t
+operator|)
 name|vmst
 operator|->
 name|hdr
@@ -957,6 +957,9 @@ argument_list|,
 name|off
 argument_list|)
 operator|!=
+operator|(
+name|ssize_t
+operator|)
 name|vmst
 operator|->
 name|hdr
@@ -1059,9 +1062,6 @@ decl_stmt|;
 name|uint32_t
 modifier|*
 name|ptemap
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 if|if
 condition|(

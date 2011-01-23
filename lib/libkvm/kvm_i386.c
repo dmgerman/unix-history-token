@@ -603,7 +603,7 @@ parameter_list|)
 block|{
 name|struct
 name|nlist
-name|nlist
+name|nl
 index|[
 literal|2
 index|]
@@ -807,7 +807,7 @@ literal|1
 operator|)
 return|;
 block|}
-name|nlist
+name|nl
 index|[
 literal|0
 index|]
@@ -816,7 +816,7 @@ name|n_name
 operator|=
 literal|"kernbase"
 expr_stmt|;
-name|nlist
+name|nl
 index|[
 literal|1
 index|]
@@ -831,7 +831,7 @@ name|kvm_nlist
 argument_list|(
 name|kd
 argument_list|,
-name|nlist
+name|nl
 argument_list|)
 operator|!=
 literal|0
@@ -844,14 +844,14 @@ comment|/* for old kernels */
 else|else
 name|kernbase
 operator|=
-name|nlist
+name|nl
 index|[
 literal|0
 index|]
 operator|.
 name|n_value
 expr_stmt|;
-name|nlist
+name|nl
 index|[
 literal|0
 index|]
@@ -860,7 +860,7 @@ name|n_name
 operator|=
 literal|"IdlePDPT"
 expr_stmt|;
-name|nlist
+name|nl
 index|[
 literal|1
 index|]
@@ -875,7 +875,7 @@ name|kvm_nlist
 argument_list|(
 name|kd
 argument_list|,
-name|nlist
+name|nl
 argument_list|)
 operator|==
 literal|0
@@ -891,7 +891,7 @@ argument_list|(
 name|kd
 argument_list|,
 operator|(
-name|nlist
+name|nl
 index|[
 literal|0
 index|]
@@ -1083,7 +1083,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|nlist
+name|nl
 index|[
 literal|0
 index|]
@@ -1092,7 +1092,7 @@ name|n_name
 operator|=
 literal|"IdlePTD"
 expr_stmt|;
-name|nlist
+name|nl
 index|[
 literal|1
 index|]
@@ -1107,7 +1107,7 @@ name|kvm_nlist
 argument_list|(
 name|kd
 argument_list|,
-name|nlist
+name|nl
 argument_list|)
 operator|!=
 literal|0
@@ -1138,7 +1138,7 @@ argument_list|(
 name|kd
 argument_list|,
 operator|(
-name|nlist
+name|nl
 index|[
 literal|0
 index|]

@@ -424,6 +424,7 @@ parameter_list|(
 name|kvm_t
 modifier|*
 parameter_list|,
+specifier|const
 name|struct
 name|kinfo_proc
 modifier|*

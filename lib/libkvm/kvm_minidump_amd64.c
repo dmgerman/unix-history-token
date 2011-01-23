@@ -571,9 +571,6 @@ modifier|*
 name|kd
 parameter_list|)
 block|{
-name|u_long
-name|pa
-decl_stmt|;
 name|struct
 name|vmstate
 modifier|*
@@ -1060,9 +1057,6 @@ decl_stmt|;
 name|u_long
 name|pteindex
 decl_stmt|;
-name|int
-name|i
-decl_stmt|;
 name|u_long
 name|a
 decl_stmt|;
@@ -1369,9 +1363,6 @@ name|pteindex
 decl_stmt|;
 name|u_long
 name|pdeindex
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 name|u_long
 name|a

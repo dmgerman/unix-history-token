@@ -312,6 +312,9 @@ argument_list|,
 name|size
 argument_list|)
 operator|!=
+operator|(
+name|ssize_t
+operator|)
 name|size
 condition|)
 block|{
@@ -558,9 +561,6 @@ name|regsz
 decl_stmt|;
 name|vm_offset_t
 name|pa
-decl_stmt|;
-name|vm_size_t
-name|mask
 decl_stmt|;
 name|vm
 operator|=
@@ -825,11 +825,6 @@ modifier|*
 name|pa
 parameter_list|)
 block|{
-name|struct
-name|vmstate
-modifier|*
-name|vm
-decl_stmt|;
 if|#
 directive|if
 operator|!
@@ -841,17 +836,19 @@ name|struct
 name|tte
 name|tte
 decl_stmt|;
+name|off_t
+name|tte_off
+decl_stmt|;
+name|u_long
+name|vpn
+decl_stmt|;
 endif|#
 directive|endif
 name|off_t
-name|tte_off
-decl_stmt|,
 name|pa_off
 decl_stmt|;
 name|u_long
 name|pg_off
-decl_stmt|,
-name|vpn
 decl_stmt|;
 name|int
 name|rest
@@ -1010,7 +1007,7 @@ name|kd
 argument_list|,
 literal|0
 argument_list|,
-literal|"invalid address (%x)"
+literal|"invalid address (%lx)"
 argument_list|,
 name|va
 argument_list|)

@@ -324,26 +324,6 @@ modifier|*
 name|pa
 parameter_list|)
 block|{
-name|u_long
-name|offset
-init|=
-name|va
-operator|&
-operator|(
-name|PAGE_SIZE
-operator|-
-literal|1
-operator|)
-decl_stmt|;
-name|struct
-name|vmstate
-modifier|*
-name|vm
-init|=
-name|kd
-operator|->
-name|vmst
-decl_stmt|;
 if|if
 condition|(
 name|kd
@@ -383,6 +363,12 @@ begin_comment
 comment|/*  * Machine-dependent initialization for ALL open kvm descriptors,  * not just those for a kernel crash dump.  Some architectures  * have to deal with these NOT being constants!  (i.e. m68k)  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FBSD_NOT_YET
+end_ifdef
+
 begin_function
 name|int
 name|_kvm_mdopen
@@ -400,6 +386,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

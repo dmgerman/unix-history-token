@@ -140,16 +140,25 @@ index|[]
 init|=
 block|{
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_swtailq"
 block|}
 block|,
 comment|/* list of swap devices and sizes */
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_dmmax"
 block|}
 block|,
 comment|/* maximum size of a swap block */
 block|{
+operator|.
+name|n_name
+operator|=
 name|NULL
 block|}
 block|}
@@ -254,6 +263,7 @@ parameter_list|(
 name|kvm_t
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -1063,20 +1073,6 @@ modifier|*
 name|kd
 parameter_list|)
 block|{
-name|TAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|swdevt
-argument_list|)
-name|swtailq
-expr_stmt|;
-name|struct
-name|swdevt
-modifier|*
-name|sp
-decl_stmt|,
-name|swinfo
-decl_stmt|;
 if|if
 condition|(
 name|kvm_swap_nl_cached
@@ -1191,6 +1187,7 @@ name|kvm_t
 modifier|*
 name|kd
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name

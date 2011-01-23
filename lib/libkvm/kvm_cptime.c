@@ -86,11 +86,17 @@ index|[]
 init|=
 block|{
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"_cp_time"
 block|}
 block|,
 comment|/* (deprecated) */
 block|{
+operator|.
+name|n_name
+operator|=
 name|NULL
 block|}
 block|, }
@@ -142,6 +148,11 @@ name|kvm_cp_time_cached
 operator|=
 literal|1
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

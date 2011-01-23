@@ -289,40 +289,29 @@ specifier|static
 name|int
 name|kvm_proclist
 parameter_list|(
-name|kd
-parameter_list|,
-name|what
-parameter_list|,
-name|arg
-parameter_list|,
-name|p
-parameter_list|,
-name|bp
-parameter_list|,
-name|maxcnt
-parameter_list|)
 name|kvm_t
 modifier|*
 name|kd
-decl_stmt|;
+parameter_list|,
 name|int
 name|what
-decl_stmt|,
+parameter_list|,
+name|int
 name|arg
-decl_stmt|;
+parameter_list|,
 name|struct
 name|proc
 modifier|*
 name|p
-decl_stmt|;
+parameter_list|,
 name|struct
 name|kinfo_proc
 modifier|*
 name|bp
-decl_stmt|;
+parameter_list|,
 name|int
 name|maxcnt
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|cnt
@@ -360,10 +349,12 @@ name|struct
 name|sigacts
 name|sigacts
 decl_stmt|;
-name|struct
-name|pstats
-name|pstats
-decl_stmt|;
+if|#
+directive|if
+literal|0
+block|struct pstats pstats;
+endif|#
+directive|endif
 name|struct
 name|ucred
 name|ucred
@@ -470,7 +461,7 @@ name|kd
 operator|->
 name|program
 argument_list|,
-literal|"can't read proc at %x"
+literal|"can't read proc at %p"
 argument_list|,
 name|p
 argument_list|)
@@ -521,7 +512,7 @@ name|kd
 operator|->
 name|program
 argument_list|,
-literal|"can't read thread at %x"
+literal|"can't read thread at %p"
 argument_list|,
 name|TAILQ_FIRST
 argument_list|(
@@ -699,7 +690,7 @@ name|kd
 operator|->
 name|program
 argument_list|,
-literal|"can't read prison at %x"
+literal|"can't read prison at %p"
 argument_list|,
 name|ucred
 operator|.
@@ -931,7 +922,7 @@ name|kd
 operator|->
 name|program
 argument_list|,
-literal|"can't read sigacts at %x"
+literal|"can't read sigacts at %p"
 argument_list|,
 name|proc
 operator|.
@@ -1020,7 +1011,7 @@ name|kd
 operator|->
 name|program
 argument_list|,
-literal|"can't read pproc at %x"
+literal|"can't read pproc at %p"
 argument_list|,
 name|proc
 operator|.
@@ -1087,7 +1078,7 @@ name|kd
 operator|->
 name|program
 argument_list|,
-literal|"can't read pgrp at %x"
+literal|"can't read pgrp at %p"
 argument_list|,
 name|proc
 operator|.
@@ -1143,7 +1134,7 @@ name|kd
 operator|->
 name|program
 argument_list|,
-literal|"can't read session at %x"
+literal|"can't read session at %p"
 argument_list|,
 name|pgrp
 operator|.
@@ -1255,7 +1246,7 @@ name|kd
 operator|->
 name|program
 argument_list|,
-literal|"can't read tty at %x"
+literal|"can't read tty at %p"
 argument_list|,
 name|sess
 operator|.
@@ -1304,7 +1295,7 @@ name|kd
 operator|->
 name|program
 argument_list|,
-literal|"can't read cdev at %x"
+literal|"can't read cdev at %p"
 argument_list|,
 name|tty
 operator|.
@@ -1368,7 +1359,7 @@ name|kd
 operator|->
 name|program
 argument_list|,
-literal|"can't read tpgrp at %x"
+literal|"can't read tpgrp at %p"
 argument_list|,
 name|tty
 operator|.
@@ -1434,7 +1425,7 @@ name|kd
 operator|->
 name|program
 argument_list|,
-literal|"can't read session at %x"
+literal|"can't read session at %p"
 argument_list|,
 name|tty
 operator|.
@@ -2237,36 +2228,25 @@ specifier|static
 name|int
 name|kvm_deadprocs
 parameter_list|(
-name|kd
-parameter_list|,
-name|what
-parameter_list|,
-name|arg
-parameter_list|,
-name|a_allproc
-parameter_list|,
-name|a_zombproc
-parameter_list|,
-name|maxcnt
-parameter_list|)
 name|kvm_t
 modifier|*
 name|kd
-decl_stmt|;
+parameter_list|,
 name|int
 name|what
-decl_stmt|,
+parameter_list|,
+name|int
 name|arg
-decl_stmt|;
+parameter_list|,
 name|u_long
 name|a_allproc
-decl_stmt|;
+parameter_list|,
 name|u_long
 name|a_zombproc
-decl_stmt|;
+parameter_list|,
 name|int
 name|maxcnt
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|kinfo_proc
@@ -2424,27 +2404,20 @@ name|kinfo_proc
 modifier|*
 name|kvm_getprocs
 parameter_list|(
-name|kd
-parameter_list|,
-name|op
-parameter_list|,
-name|arg
-parameter_list|,
-name|cnt
-parameter_list|)
 name|kvm_t
 modifier|*
 name|kd
-decl_stmt|;
+parameter_list|,
 name|int
 name|op
-decl_stmt|,
+parameter_list|,
+name|int
 name|arg
-decl_stmt|;
+parameter_list|,
 name|int
 modifier|*
 name|cnt
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|mib
@@ -2751,7 +2724,7 @@ name|kd
 operator|->
 name|program
 argument_list|,
-literal|"kinfo_proc size mismatch (expected %d, got %d)"
+literal|"kinfo_proc size mismatch (expected %zu, got %d)"
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3124,12 +3097,10 @@ begin_function
 name|void
 name|_kvm_freeprocs
 parameter_list|(
-name|kd
-parameter_list|)
 name|kvm_t
 modifier|*
 name|kd
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -3160,23 +3131,17 @@ name|void
 modifier|*
 name|_kvm_realloc
 parameter_list|(
-name|kd
-parameter_list|,
-name|p
-parameter_list|,
-name|n
-parameter_list|)
 name|kvm_t
 modifier|*
 name|kd
-decl_stmt|;
+parameter_list|,
 name|void
 modifier|*
 name|p
-decl_stmt|;
+parameter_list|,
 name|size_t
 name|n
-decl_stmt|;
+parameter_list|)
 block|{
 name|void
 modifier|*
@@ -3259,34 +3224,25 @@ modifier|*
 modifier|*
 name|kvm_argv
 parameter_list|(
-name|kd
-parameter_list|,
-name|kp
-parameter_list|,
-name|addr
-parameter_list|,
-name|narg
-parameter_list|,
-name|maxcnt
-parameter_list|)
 name|kvm_t
 modifier|*
 name|kd
-decl_stmt|;
+parameter_list|,
+specifier|const
 name|struct
 name|kinfo_proc
 modifier|*
 name|kp
-decl_stmt|;
+parameter_list|,
 name|u_long
 name|addr
-decl_stmt|;
+parameter_list|,
 name|int
 name|narg
-decl_stmt|;
+parameter_list|,
 name|int
 name|maxcnt
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -3317,7 +3273,7 @@ modifier|*
 modifier|*
 name|argv
 decl_stmt|;
-comment|/* 	 * Check that there aren't an unreasonable number of agruments, 	 * and that the address is in user space. 	 */
+comment|/* 	 * Check that there aren't an unreasonable number of arguments, 	 * and that the address is in user space.  Special test for 	 * VM_MIN_ADDRESS as it evaluates to zero, but is not a simple zero 	 * constant for some archs.  We cannot use the pre-processor here and 	 * for some archs the compiler would trigger a signedness warning. 	 */
 if|if
 condition|(
 name|narg
@@ -3325,8 +3281,12 @@ operator|>
 literal|512
 operator|||
 name|addr
+operator|+
+literal|1
 operator|<
 name|VM_MIN_ADDRESS
+operator|+
+literal|1
 operator|||
 name|addr
 operator|>=
@@ -3971,25 +3931,19 @@ specifier|static
 name|void
 name|ps_str_a
 parameter_list|(
-name|p
-parameter_list|,
-name|addr
-parameter_list|,
-name|n
-parameter_list|)
 name|struct
 name|ps_strings
 modifier|*
 name|p
-decl_stmt|;
+parameter_list|,
 name|u_long
 modifier|*
 name|addr
-decl_stmt|;
+parameter_list|,
 name|int
 modifier|*
 name|n
-decl_stmt|;
+parameter_list|)
 block|{
 operator|*
 name|addr
@@ -4016,25 +3970,19 @@ specifier|static
 name|void
 name|ps_str_e
 parameter_list|(
-name|p
-parameter_list|,
-name|addr
-parameter_list|,
-name|n
-parameter_list|)
 name|struct
 name|ps_strings
 modifier|*
 name|p
-decl_stmt|;
+parameter_list|,
 name|u_long
 modifier|*
 name|addr
-decl_stmt|;
+parameter_list|,
 name|int
 modifier|*
 name|n
-decl_stmt|;
+parameter_list|)
 block|{
 operator|*
 name|addr
@@ -4065,13 +4013,12 @@ specifier|static
 name|int
 name|proc_verify
 parameter_list|(
-name|curkp
-parameter_list|)
+specifier|const
 name|struct
 name|kinfo_proc
 modifier|*
 name|curkp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|kinfo_proc
@@ -4178,42 +4125,26 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|char
 modifier|*
 modifier|*
 name|kvm_doargv
-argument_list|(
-name|kd
-argument_list|,
-name|kp
-argument_list|,
-name|nchr
-argument_list|,
-name|info
-argument_list|)
+parameter_list|(
 name|kvm_t
 modifier|*
 name|kd
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
+specifier|const
 name|struct
 name|kinfo_proc
 modifier|*
 name|kp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|int
 name|nchr
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
+parameter_list|,
 name|void
 function_decl|(
 modifier|*
@@ -4230,10 +4161,7 @@ parameter_list|,
 name|int
 modifier|*
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_block
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -4406,7 +4334,7 @@ name|ap
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Get the command args.  This code is now machine independent.  */
@@ -4418,25 +4346,19 @@ modifier|*
 modifier|*
 name|kvm_getargv
 parameter_list|(
-name|kd
-parameter_list|,
-name|kp
-parameter_list|,
-name|nchr
-parameter_list|)
 name|kvm_t
 modifier|*
 name|kd
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|struct
 name|kinfo_proc
 modifier|*
 name|kp
-decl_stmt|;
+parameter_list|,
 name|int
 name|nchr
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|oid
@@ -4765,25 +4687,19 @@ modifier|*
 modifier|*
 name|kvm_getenvv
 parameter_list|(
-name|kd
-parameter_list|,
-name|kp
-parameter_list|,
-name|nchr
-parameter_list|)
 name|kvm_t
 modifier|*
 name|kd
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|struct
 name|kinfo_proc
 modifier|*
 name|kp
-decl_stmt|;
+parameter_list|,
 name|int
 name|nchr
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -4810,35 +4726,26 @@ begin_function
 name|ssize_t
 name|kvm_uread
 parameter_list|(
-name|kd
-parameter_list|,
-name|kp
-parameter_list|,
-name|uva
-parameter_list|,
-name|buf
-parameter_list|,
-name|len
-parameter_list|)
 name|kvm_t
 modifier|*
 name|kd
-decl_stmt|;
+parameter_list|,
+specifier|const
 name|struct
 name|kinfo_proc
 modifier|*
 name|kp
-decl_stmt|;
+parameter_list|,
 name|u_long
 name|uva
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|buf
-decl_stmt|;
+parameter_list|,
 name|size_t
 name|len
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -4975,7 +4882,7 @@ name|kd
 operator|->
 name|program
 argument_list|,
-literal|"invalid address (%x) in %s"
+literal|"invalid address (%lx) in %s"
 argument_list|,
 name|uva
 argument_list|,
