@@ -2710,7 +2710,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 if|if
 condition|(
