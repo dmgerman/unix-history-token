@@ -844,20 +844,12 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
-name|ch
-operator|->
-name|flags
-operator||=
-name|ATA_NO_ATAPI_DMA
-expr_stmt|;
 name|sc
 operator|->
 name|shasta
 operator|=
 literal|1
 expr_stmt|;
-block|}
 comment|/* Pre-K2 controllers apparently need this hack */
 if|if
 condition|(
@@ -1020,6 +1012,13 @@ operator|->
 name|flags
 operator||=
 name|ATA_USE_16BIT
+expr_stmt|;
+comment|/* XXX: ATAPI DMA is unreliable. We should find out why. */
+name|ch
+operator|->
+name|flags
+operator||=
+name|ATA_NO_ATAPI_DMA
 expr_stmt|;
 name|ata_generic_hw
 argument_list|(
