@@ -25274,6 +25274,11 @@ block|{
 name|int
 name|error
 decl_stmt|;
+name|int
+name|last
+init|=
+name|ixgbe_flow_control
+decl_stmt|;
 name|struct
 name|adapter
 modifier|*
@@ -25300,6 +25305,18 @@ condition|)
 return|return
 operator|(
 name|error
+operator|)
+return|;
+comment|/* Don't bother if it's not changed */
+if|if
+condition|(
+name|ixgbe_flow_control
+operator|==
+name|last
+condition|)
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 name|adapter
