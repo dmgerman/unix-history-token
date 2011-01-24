@@ -176,9 +176,9 @@ name|ans
 parameter_list|,
 name|tmp
 parameter_list|,
-name|size
+name|nbits
 parameter_list|)
-value|if (decimal(str,&tmp, ans, size)) ans = tmp
+value|if (decimal(str,&tmp, ans, nbits)) ans = tmp
 end_define
 
 begin_define
@@ -1397,7 +1397,7 @@ name|int
 name|deflt
 parameter_list|,
 name|int
-name|size
+name|nbits
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3016,6 +3016,8 @@ name|partp
 operator|->
 name|dp_typ
 argument_list|)
+operator|*
+literal|8
 argument_list|)
 expr_stmt|;
 name|Decimal
@@ -3034,6 +3036,8 @@ name|partp
 operator|->
 name|dp_start
 argument_list|)
+operator|*
+literal|8
 argument_list|)
 expr_stmt|;
 name|Decimal
@@ -3052,6 +3056,8 @@ name|partp
 operator|->
 name|dp_size
 argument_list|)
+operator|*
+literal|8
 argument_list|)
 expr_stmt|;
 if|if
@@ -3126,12 +3132,7 @@ name|tcyl
 argument_list|,
 name|tmp
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|partp
-operator|->
-name|dp_scyl
-argument_list|)
+literal|10
 argument_list|)
 expr_stmt|;
 name|Decimal
@@ -3148,6 +3149,8 @@ name|partp
 operator|->
 name|dp_shd
 argument_list|)
+operator|*
+literal|8
 argument_list|)
 expr_stmt|;
 name|Decimal
@@ -3158,12 +3161,7 @@ name|tsec
 argument_list|,
 name|tmp
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|partp
-operator|->
-name|dp_ssect
-argument_list|)
+literal|6
 argument_list|)
 expr_stmt|;
 name|partp
@@ -3228,12 +3226,7 @@ name|tcyl
 argument_list|,
 name|tmp
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|partp
-operator|->
-name|dp_ecyl
-argument_list|)
+literal|10
 argument_list|)
 expr_stmt|;
 name|Decimal
@@ -3250,6 +3243,8 @@ name|partp
 operator|->
 name|dp_ehd
 argument_list|)
+operator|*
+literal|8
 argument_list|)
 expr_stmt|;
 name|Decimal
@@ -3260,12 +3255,7 @@ name|tsec
 argument_list|,
 name|tmp
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|partp
-operator|->
-name|dp_esect
-argument_list|)
+literal|6
 argument_list|)
 expr_stmt|;
 name|partp
@@ -4923,7 +4913,7 @@ name|int
 name|deflt
 parameter_list|,
 name|int
-name|size
+name|nbits
 parameter_list|)
 block|{
 name|long
@@ -4932,7 +4922,7 @@ name|acc
 init|=
 literal|0
 decl_stmt|,
-name|maxval
+name|limit
 decl_stmt|;
 name|int
 name|c
@@ -4943,21 +4933,23 @@ name|cp
 decl_stmt|;
 if|if
 condition|(
-name|size
+name|nbits
 operator|==
 literal|0
 condition|)
 block|{
-name|size
+name|nbits
 operator|=
 sizeof|sizeof
 argument_list|(
 operator|*
 name|num
 argument_list|)
+operator|*
+literal|8
 expr_stmt|;
 block|}
-name|maxval
+name|limit
 operator|=
 operator|(
 name|long
@@ -4965,11 +4957,7 @@ name|long
 operator|)
 literal|1
 operator|<<
-operator|(
-name|size
-operator|*
-literal|8
-operator|)
+name|nbits
 expr_stmt|;
 while|while
 condition|(
@@ -5089,7 +5077,7 @@ if|if
 condition|(
 name|acc
 operator|<
-name|maxval
+name|limit
 condition|)
 name|acc
 operator|=
@@ -5147,12 +5135,12 @@ if|if
 condition|(
 name|acc
 operator|>=
-name|maxval
+name|limit
 condition|)
 block|{
 name|acc
 operator|=
-name|maxval
+name|limit
 operator|-
 literal|1
 expr_stmt|;
