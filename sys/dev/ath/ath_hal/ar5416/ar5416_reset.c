@@ -1029,16 +1029,6 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-comment|/* Set ADC/DAC select values */
-name|OS_REG_WRITE
-argument_list|(
-name|ah
-argument_list|,
-name|AR_PHY_SLEEP_SCAL
-argument_list|,
-literal|0x0e
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|AH5416
