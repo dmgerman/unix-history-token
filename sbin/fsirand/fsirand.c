@@ -36,19 +36,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/disklabel.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
+file|<sys/disklabel.h>
 end_include
 
 begin_include
@@ -109,6 +103,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
 end_include
 
 begin_include

@@ -42,12 +42,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<ctype.h>
 end_include
 
@@ -79,6 +73,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
 end_include
 
 begin_include
