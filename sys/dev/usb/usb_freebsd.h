@@ -120,26 +120,24 @@ end_define
 begin_if
 if|#
 directive|if
+operator|(
+operator|!
 name|defined
 argument_list|(
 name|USB_HOST_ALIGN
 argument_list|)
-operator|&&
+operator|)
+operator|||
 operator|(
 name|USB_HOST_ALIGN
-operator|!=
+operator|<=
 literal|0
 operator|)
 end_if
 
 begin_comment
-comment|/* USB_HOST_ALIGN is already defined and valid */
+comment|/* Use default value. */
 end_comment
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_undef
 undef|#
@@ -157,6 +155,36 @@ end_define
 begin_comment
 comment|/* bytes, must be power of two */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Sanity check for USB_HOST_ALIGN: Verify power of two. */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|(
+operator|(
+operator|-
+name|USB_HOST_ALIGN
+operator|)
+operator|&
+name|USB_HOST_ALIGN
+operator|)
+operator|!=
+name|USB_HOST_ALIGN
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"USB_HOST_ALIGN is not power of two."
+end_error
 
 begin_endif
 endif|#
