@@ -2491,16 +2491,9 @@ name|sysctl_netisr_work
 modifier|*
 name|snwp
 decl_stmt|;
-name|int
-name|first
-decl_stmt|;
 name|u_int
 name|i
 decl_stmt|;
-name|first
-operator|=
-literal|1
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -2534,11 +2527,6 @@ operator|->
 name|snws_wsid
 condition|)
 continue|continue;
-if|if
-condition|(
-name|first
-condition|)
-block|{
 name|printf
 argument_list|(
 literal|"%4u "
@@ -2555,21 +2543,6 @@ argument_list|,
 name|snwsp
 operator|->
 name|snws_cpu
-argument_list|)
-expr_stmt|;
-name|first
-operator|=
-literal|0
-expr_stmt|;
-block|}
-else|else
-name|printf
-argument_list|(
-literal|"%4s %3s "
-argument_list|,
-literal|""
-argument_list|,
-literal|""
 argument_list|)
 expr_stmt|;
 name|printf
