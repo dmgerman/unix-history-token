@@ -29,6 +29,13 @@ name|HASTCTL_STATUS
 value|2
 end_define
 
+begin_define
+define|#
+directive|define
+name|HASTCTL_RELOAD
+value|3
+end_define
+
 begin_struct_decl
 struct_decl|struct
 name|hastd_config

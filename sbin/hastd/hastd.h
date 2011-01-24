@@ -93,6 +93,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|primary_config_reload
+parameter_list|(
+name|struct
+name|hast_resource
+modifier|*
+name|res
+parameter_list|,
+name|struct
+name|nv
+modifier|*
+name|nv
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
