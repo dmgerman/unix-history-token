@@ -1101,6 +1101,39 @@ name|AR_RTSCTSRate_S
 operator|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|AR_SREV_KITE
+argument_list|(
+name|ah
+argument_list|)
+condition|)
+block|{
+name|ads
+operator|->
+name|ds_ctl8
+operator|=
+literal|0
+expr_stmt|;
+name|ads
+operator|->
+name|ds_ctl9
+operator|=
+literal|0
+expr_stmt|;
+name|ads
+operator|->
+name|ds_ctl10
+operator|=
+literal|0
+expr_stmt|;
+name|ads
+operator|->
+name|ds_ctl11
+operator|=
+literal|0
+expr_stmt|;
+block|}
 return|return
 name|AH_TRUE
 return|;
@@ -1524,7 +1557,7 @@ comment|/* XXX validate rtsctsDuration */
 end_comment
 
 begin_undef
-unit|ads->ds_ctl0 |= (flags& HAL_TXDESC_CTSENA ? AR_CTSEnable : 0) 			| (flags& HAL_TXDESC_RTSENA ? AR_RTSEnable : 0); 		ads->ds_ctl2 |= SM(rtsctsDuration, AR_BurstDur); 	} 	 	return AH_TRUE;
+unit|ads->ds_ctl0 |= (flags& HAL_TXDESC_CTSENA ? AR_CTSEnable : 0) 			| (flags& HAL_TXDESC_RTSENA ? AR_RTSEnable : 0); 		ads->ds_ctl2 |= SM(rtsctsDuration, AR_BurstDur); 	}  	if (AR_SREV_KITE(ah)) { 		ads->ds_ctl8 = 0; 		ads->ds_ctl9 = 0; 		ads->ds_ctl10 = 0; 		ads->ds_ctl11 = 0; 	} 	 	return AH_TRUE;
 undef|#
 directive|undef
 name|RTSCTS
