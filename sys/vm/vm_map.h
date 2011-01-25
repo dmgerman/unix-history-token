@@ -670,6 +670,7 @@ name|caddr_t
 name|vm_maxsaddr
 decl_stmt|;
 comment|/* user VA at max stack growth */
+specifier|volatile
 name|int
 name|vm_refcnt
 decl_stmt|;
