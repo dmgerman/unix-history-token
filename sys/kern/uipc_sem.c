@@ -4194,6 +4194,13 @@ argument_list|)
 expr_stmt|;
 name|p31b_setcfg
 argument_list|(
+name|CTL_P1003_1B_SEMAPHORES
+argument_list|,
+literal|200112L
+argument_list|)
+expr_stmt|;
+name|p31b_setcfg
+argument_list|(
 name|CTL_P1003_1B_SEM_NSEMS_MAX
 argument_list|,
 name|SEM_MAX
@@ -4320,6 +4327,13 @@ expr_stmt|;
 name|SYSCALL_DEREGISTER
 argument_list|(
 name|ksem_destroy
+argument_list|)
+expr_stmt|;
+name|p31b_setcfg
+argument_list|(
+name|CTL_P1003_1B_SEMAPHORES
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|hashdestroy
