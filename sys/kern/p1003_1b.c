@@ -304,7 +304,7 @@ name|p31b_setcfg
 argument_list|(
 name|CTL_P1003_1B_PRIORITY_SCHEDULING
 argument_list|,
-literal|1
+literal|200112L
 argument_list|)
 expr_stmt|;
 return|return
