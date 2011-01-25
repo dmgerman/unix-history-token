@@ -27,6 +27,25 @@ directive|include
 file|"ah_eeprom_v14.h"
 end_include
 
+begin_if
+if|#
+directive|if
+name|_BYTE_ORDER
+operator|==
+name|_BIG_ENDIAN
+end_if
+
+begin_define
+define|#
+directive|define
+name|__BIG_ENDIAN_BITFIELD
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -225,7 +244,7 @@ index|[
 name|AR5416_4K_MAX_CHAINS
 index|]
 decl_stmt|;
-comment|// 12
+comment|// 4
 name|uint32_t
 name|antCtrlCommon
 decl_stmt|;
@@ -321,9 +340,7 @@ decl_stmt|;
 comment|// 1
 ifdef|#
 directive|ifdef
-name|_BYTE_ORDER
-name|==
-name|_BIG_ENDIAN
+name|__BIG_ENDIAN_BITFIELD
 name|uint8_t
 name|ob_1
 range|:
@@ -333,6 +350,7 @@ name|ob_0
 range|:
 literal|4
 decl_stmt|;
+comment|// 1
 name|uint8_t
 name|db1_1
 range|:
@@ -342,6 +360,7 @@ name|db1_0
 range|:
 literal|4
 decl_stmt|;
+comment|// 1
 else|#
 directive|else
 name|uint8_t
@@ -414,9 +433,7 @@ decl_stmt|;
 comment|// 1
 ifdef|#
 directive|ifdef
-name|_BYTE_ORDER
-name|==
-name|_BIG_ENDIAN
+name|__BIG_ENDIAN_BITFIELD
 name|uint8_t
 name|db2_1
 range|:
@@ -447,9 +464,7 @@ decl_stmt|;
 comment|// 1
 ifdef|#
 directive|ifdef
-name|_BYTE_ORDER
-name|==
-name|_BIG_ENDIAN
+name|__BIG_ENDIAN_BITFIELD
 name|uint8_t
 name|ob_3
 range|:
@@ -459,6 +474,7 @@ name|ob_2
 range|:
 literal|4
 decl_stmt|;
+comment|// 1
 name|uint8_t
 name|antdiv_ctl1
 range|:
@@ -468,6 +484,7 @@ name|ob_4
 range|:
 literal|4
 decl_stmt|;
+comment|// 1
 name|uint8_t
 name|db1_3
 range|:
@@ -477,6 +494,7 @@ name|db1_2
 range|:
 literal|4
 decl_stmt|;
+comment|// 1
 name|uint8_t
 name|antdiv_ctl2
 range|:
@@ -486,6 +504,7 @@ name|db1_4
 range|:
 literal|4
 decl_stmt|;
+comment|// 1
 name|uint8_t
 name|db2_2
 range|:
@@ -495,6 +514,7 @@ name|db2_3
 range|:
 literal|4
 decl_stmt|;
+comment|// 1
 name|uint8_t
 name|reserved
 range|:
@@ -504,6 +524,7 @@ name|db2_4
 range|:
 literal|4
 decl_stmt|;
+comment|// 1
 else|#
 directive|else
 name|uint8_t
@@ -568,6 +589,7 @@ index|[
 literal|4
 index|]
 decl_stmt|;
+comment|// 4
 name|SPUR_CHAN
 name|spurChans
 index|[
@@ -582,7 +604,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// == ? B
+comment|// == 68 B
 end_comment
 
 begin_typedef
