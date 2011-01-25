@@ -2804,8 +2804,10 @@ operator|->
 name|ia_ifp
 operator|->
 name|if_bridge
-operator|!=
-name|NULL
+operator|==
+name|ifp
+operator|->
+name|if_bridge
 operator|)
 operator|||
 name|ia
@@ -2919,8 +2921,10 @@ operator|->
 name|ia_ifp
 operator|->
 name|if_bridge
-operator|!=
-name|NULL
+operator|==
+name|ifp
+operator|->
+name|if_bridge
 operator|)
 operator|||
 name|ia
