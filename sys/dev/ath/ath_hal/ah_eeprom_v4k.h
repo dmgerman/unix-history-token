@@ -321,7 +321,9 @@ decl_stmt|;
 comment|// 1
 ifdef|#
 directive|ifdef
-name|__BIG_ENDIAN_BITFIELD
+name|_BYTE_ORDER
+name|==
+name|_BIG_ENDIAN
 name|uint8_t
 name|ob_1
 range|:
@@ -412,7 +414,9 @@ decl_stmt|;
 comment|// 1
 ifdef|#
 directive|ifdef
-name|__BIG_ENDIAN_BITFIELD
+name|_BYTE_ORDER
+name|==
+name|_BIG_ENDIAN
 name|uint8_t
 name|db2_1
 range|:
@@ -443,7 +447,9 @@ decl_stmt|;
 comment|// 1
 ifdef|#
 directive|ifdef
-name|__BIG_ENDIAN_BITFIELD
+name|_BYTE_ORDER
+name|==
+name|_BIG_ENDIAN
 name|uint8_t
 name|ob_3
 range|:
