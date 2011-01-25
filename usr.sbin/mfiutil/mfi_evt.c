@@ -3210,6 +3210,24 @@ argument_list|(
 name|size
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|list
+operator|==
+name|NULL
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"malloc failed"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
+block|}
 for|for
 control|(
 name|seq
