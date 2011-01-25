@@ -7190,20 +7190,7 @@ name|ifp
 operator|->
 name|if_capabilities
 expr_stmt|;
-comment|/* 	 * Don't enable TSO by default for old controllers. Under 	 * certain circumtances the controller generated corrupted 	 * packets in TSO size. 	 */
-if|if
-condition|(
-operator|(
-name|sc
-operator|->
-name|rl_flags
-operator|&
-name|RL_FLAG_DESCV2
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
+comment|/* 	 * Don't enable TSO by default.  It is known to generate 	 * corrupted TCP segments(bad TCP options) under certain 	 * circumtances. 	 */
 name|ifp
 operator|->
 name|if_hwassist
@@ -7222,7 +7209,6 @@ operator||
 name|IFCAP_VLAN_HWTSO
 operator|)
 expr_stmt|;
-block|}
 ifdef|#
 directive|ifdef
 name|DEVICE_POLLING
