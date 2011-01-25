@@ -331,7 +331,7 @@ argument_list|)
 expr_stmt|;
 name|stack_flags
 operator|=
-name|PF_X
+name|RTLD_DEFAULT_STACK_PF_EXEC
 operator||
 name|PF_R
 operator||

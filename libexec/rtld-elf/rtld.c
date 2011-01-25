@@ -1572,7 +1572,7 @@ name|PROT_READ
 operator||
 name|PROT_WRITE
 operator||
-name|PROT_EXEC
+name|RTLD_DEFAULT_STACK_EXEC
 decl_stmt|;
 end_decl_stmt
 
