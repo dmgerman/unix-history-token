@@ -1385,6 +1385,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|LINUX_SOUND_MIXER_READ_CAPS
+value|0x4dfc
+end_define
+
+begin_define
+define|#
+directive|define
 name|LINUX_SOUND_MIXER_READ_RECMASK
 value|0x4dfd
 end_define
