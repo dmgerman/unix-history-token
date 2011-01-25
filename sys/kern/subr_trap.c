@@ -1679,7 +1679,11 @@ name|td
 operator|->
 name|td_dbgflags
 operator|&
+operator|(
 name|TDB_EXEC
+operator||
+name|TDB_FORK
+operator|)
 operator|)
 operator|!=
 literal|0
@@ -1699,6 +1703,8 @@ operator|(
 name|TDB_SCX
 operator||
 name|TDB_EXEC
+operator||
+name|TDB_FORK
 operator|)
 expr_stmt|;
 name|PROC_UNLOCK

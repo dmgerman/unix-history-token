@@ -783,6 +783,10 @@ modifier|*
 name|td_map_def_user
 decl_stmt|;
 comment|/* (k) Deferred entries. */
+name|pid_t
+name|td_dbg_forked
+decl_stmt|;
+comment|/* (c) Child pid for debugger. */
 define|#
 directive|define
 name|td_endzero
@@ -1458,6 +1462,28 @@ end_define
 
 begin_comment
 comment|/* TDB_SCX from exec(2) family */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDB_FORK
+value|0x00000040
+end_define
+
+begin_comment
+comment|/* TDB_SCX from fork(2) that created new 				      process */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDB_STOPATFORK
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* Stop at the return from fork (child 				      only) */
 end_comment
 
 begin_comment
@@ -2523,7 +2549,12 @@ name|struct
 name|cv
 name|p_pwait
 decl_stmt|;
-comment|/* (*) wait cv for exit/exec */
+comment|/* (*) wait cv for exit/exec. */
+name|struct
+name|cv
+name|p_dbgwait
+decl_stmt|;
+comment|/* (*) wait cv for debugger attach 					   after fork. */
 block|}
 struct|;
 end_struct
@@ -2625,12 +2656,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|P_UNUSED0
+name|P_FOLLOWFORK
 value|0x00008
 end_define
 
 begin_comment
-comment|/* available. */
+comment|/* Attach parent debugger to children. */
 end_comment
 
 begin_define
