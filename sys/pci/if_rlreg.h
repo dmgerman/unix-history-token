@@ -4676,10 +4676,6 @@ endif|#
 directive|endif
 name|struct
 name|task
-name|rl_txtask
-decl_stmt|;
-name|struct
-name|task
 name|rl_inttask
 decl_stmt|;
 name|int
