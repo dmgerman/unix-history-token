@@ -90,7 +90,7 @@ name|mfi_status_codes
 index|[]
 init|=
 block|{
-literal|"Command completed succesfully"
+literal|"Command completed successfully"
 block|,
 literal|"Invalid command"
 block|,
