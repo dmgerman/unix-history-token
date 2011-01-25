@@ -1594,6 +1594,15 @@ init|;
 name|tk
 operator|->
 name|name
+operator|&&
+name|strcmp
+argument_list|(
+name|tk
+operator|->
+name|name
+argument_list|,
+literal|"end"
+argument_list|)
 condition|;
 name|tk
 operator|++

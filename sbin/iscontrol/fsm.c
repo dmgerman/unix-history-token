@@ -1676,7 +1676,7 @@ name|debug
 argument_list|(
 literal|2
 argument_list|,
-literal|"CAM path_id=%d target_id=%d target_lun=%d"
+literal|"CAM path_id=%d target_id=%d"
 argument_list|,
 name|sess
 operator|->
@@ -1689,15 +1689,6 @@ operator|->
 name|cam
 operator|.
 name|target_id
-argument_list|,
-name|sess
-operator|->
-name|cam
-operator|.
-name|target_lun
-index|[
-name|i
-index|]
 argument_list|)
 expr_stmt|;
 name|sess
