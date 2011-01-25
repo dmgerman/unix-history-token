@@ -274,7 +274,7 @@ case|:
 return|return
 name|pModal
 operator|->
-name|ob
+name|ob_0
 return|;
 case|case
 name|AR_EEP_DB_2
@@ -282,7 +282,7 @@ case|:
 return|return
 name|pModal
 operator|->
-name|db
+name|db1_1
 return|;
 case|case
 name|AR_EEP_TXMASK
