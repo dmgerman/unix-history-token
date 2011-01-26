@@ -311,6 +311,13 @@ argument_list|)
 block|,
 name|MII_PHY_DESC
 argument_list|(
+name|xxREALTEK
+argument_list|,
+name|RTL8201E
+argument_list|)
+block|,
+name|MII_PHY_DESC
+argument_list|(
 name|ICPLUS
 argument_list|,
 name|IP101
