@@ -3963,6 +3963,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AR_SREV_OWL
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|((AH_PRIVATE((_ah))->ah_macVersion == AR_XSREV_VERSION_OWL_PCI) || \ 	 (AH_PRIVATE((_ah))->ah_macVersion == AR_XSREV_VERSION_OWL_PCIE))
+end_define
+
+begin_define
+define|#
+directive|define
 name|AR_SREV_OWL_20_OR_LATER
 parameter_list|(
 name|_ah
