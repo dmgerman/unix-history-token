@@ -480,14 +480,14 @@ condition|)
 comment|/* Linux process can execute FreeBSD one, do not attempt 		 * to create emuldata for such process using 		 * linux_proc_init, this leads to a panic on KASSERT 		 * because such process has p->p_emuldata == NULL. 		 */
 if|if
 condition|(
+name|SV_PROC_ABI
+argument_list|(
 name|td
 operator|->
 name|td_proc
-operator|->
-name|p_sysent
+argument_list|)
 operator|==
-operator|&
-name|elf_linux_sysvec
+name|SV_ABI_LINUX
 condition|)
 name|error
 operator|=

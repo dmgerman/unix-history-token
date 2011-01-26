@@ -554,11 +554,33 @@ end_define
 begin_define
 define|#
 directive|define
+name|SV_PROC_FLAG
+parameter_list|(
+name|p
+parameter_list|,
+name|x
+parameter_list|)
+value|((p)->p_sysent->sv_flags& (x))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SV_PROC_ABI
+parameter_list|(
+name|p
+parameter_list|)
+value|((p)->p_sysent->sv_flags& SV_ABI_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SV_CURPROC_FLAG
 parameter_list|(
 name|x
 parameter_list|)
-value|(curproc->p_sysent->sv_flags& (x))
+value|SV_PROC_FLAG(curproc, x)
 end_define
 
 begin_define
@@ -566,7 +588,7 @@ define|#
 directive|define
 name|SV_CURPROC_ABI
 parameter_list|()
-value|(curproc->p_sysent->sv_flags& SV_ABI_MASK)
+value|SV_PROC_ABI(curproc)
 end_define
 
 begin_comment
