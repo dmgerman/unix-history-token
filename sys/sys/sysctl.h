@@ -216,17 +216,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|CTLFLAG_NOLOCK
-value|0x20000000
-end_define
-
-begin_comment
-comment|/* XXX Don't Lock */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|CTLFLAG_ANYBODY
 value|0x10000000
 end_define
@@ -421,24 +410,9 @@ end_comment
 begin_define
 define|#
 directive|define
-name|REQ_UNLOCKED
-value|0
-end_define
-
-begin_comment
-comment|/* not locked and not wired */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|REQ_LOCKED
+name|REQ_UNWIRED
 value|1
 end_define
-
-begin_comment
-comment|/* locked and not wired */
-end_comment
 
 begin_define
 define|#
@@ -446,10 +420,6 @@ directive|define
 name|REQ_WIRED
 value|2
 end_define
-
-begin_comment
-comment|/* locked and wired */
-end_comment
 
 begin_comment
 comment|/* definitions for sysctl_req 'flags' member */
@@ -507,7 +477,7 @@ comment|/* used for access checking */
 name|int
 name|lock
 decl_stmt|;
-comment|/* locking/wiring state */
+comment|/* wiring state */
 name|void
 modifier|*
 name|oldptr
