@@ -113,7 +113,7 @@ define|#
 directive|define
 name|USAGE
 define|\
-value|"usage: ktrdump [-cfqrt] [-e execfile] [-i ktrfile] [-m corefile] [-o outfile]\n"
+value|"usage: ktrdump [-cfqrtH] [-e execfile] [-i ktrfile] [-m corefile] [-o outfile]\n"
 end_define
 
 begin_function_decl
@@ -210,6 +210,13 @@ begin_decl_stmt
 specifier|static
 name|int
 name|iflag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|hflag
 decl_stmt|;
 end_decl_stmt
 
@@ -374,7 +381,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"cfqrte:i:m:o:"
+literal|"cfqrtHe:i:m:o:"
 argument_list|)
 operator|)
 operator|!=
@@ -554,6 +561,14 @@ case|case
 literal|'t'
 case|:
 name|tflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'H'
+case|:
+name|hflag
 operator|=
 literal|1
 expr_stmt|;
@@ -938,6 +953,19 @@ argument_list|,
 literal|"file and line"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|hflag
+condition|)
+name|fprintf
+argument_list|(
+name|out
+argument_list|,
+literal|"%-18s "
+argument_list|,
+literal|"tid"
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|out
@@ -992,6 +1020,17 @@ argument_list|(
 name|out
 argument_list|,
 literal|"---------------------------------------- "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|hflag
+condition|)
+name|fprintf
+argument_list|(
+name|out
+argument_list|,
+literal|"------------------ "
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -1507,6 +1546,24 @@ name|obuf
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|hflag
+condition|)
+name|fprintf
+argument_list|(
+name|out
+argument_list|,
+literal|"%p "
+argument_list|,
+name|buf
+index|[
+name|i
+index|]
+operator|.
+name|ktr_thread
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|out
