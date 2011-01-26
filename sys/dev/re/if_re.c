@@ -410,7 +410,7 @@ name|RT_DEVICEID_8101E
 block|,
 literal|0
 block|,
-literal|"RealTek 8101E/8102E/8102EL/8103E PCIe 10/100baseTX"
+literal|"RealTek 810xE PCIe 10/100baseTX"
 block|}
 block|,
 block|{
@@ -720,6 +720,16 @@ block|,
 name|RL_8169
 block|,
 literal|"8103E"
+block|,
+name|RL_MTU
+block|}
+block|,
+block|{
+name|RL_HWREV_8105E
+block|,
+name|RL_8169
+block|,
+literal|"8105E"
 block|,
 name|RL_MTU
 block|}
@@ -6579,6 +6589,30 @@ operator||
 name|RL_FLAG_AUTOPAD
 operator||
 name|RL_FLAG_MACSLEEP
+expr_stmt|;
+break|break;
+case|case
+name|RL_HWREV_8105E
+case|:
+name|sc
+operator|->
+name|rl_flags
+operator||=
+name|RL_FLAG_PHYWAKE
+operator||
+name|RL_FLAG_PHYWAKE_PM
+operator||
+name|RL_FLAG_PAR
+operator||
+name|RL_FLAG_DESCV2
+operator||
+name|RL_FLAG_MACSTAT
+operator||
+name|RL_FLAG_FASTETHER
+operator||
+name|RL_FLAG_CMDSTOP
+operator||
+name|RL_FLAG_AUTOPAD
 expr_stmt|;
 break|break;
 case|case
