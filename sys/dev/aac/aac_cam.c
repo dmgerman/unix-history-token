@@ -2603,7 +2603,14 @@ index|]
 operator|=
 operator|(
 operator|(
-name|device
+name|ccb
+operator|->
+name|csio
+operator|.
+name|data_ptr
+index|[
+literal|0
+index|]
 operator|&
 literal|0xe0
 operator|)
