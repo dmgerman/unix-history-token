@@ -210,7 +210,7 @@ comment|/* stop on all events */
 end_comment
 
 begin_comment
-comment|/*  * If PF_LINGER is set in procp->p_pfsflags, then the last close  * of a /proc/<pid>/mem file will nto clear out the stops and continue  * the process.  */
+comment|/*  * If PF_LINGER is set in procp->p_pfsflags, then the last close  * of a /proc/<pid>/mem file will not clear out the stops and continue  * the process.  */
 end_comment
 
 begin_define
