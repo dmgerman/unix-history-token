@@ -3204,6 +3204,25 @@ block|{
 goto|goto
 name|noerror
 goto|;
+comment|/* 		 * Some HP SATA disks report supported DMA Auto-Activation, 		 * but return ABORT on attempt to enable it. 		 */
+block|}
+elseif|else
+if|if
+condition|(
+name|softc
+operator|->
+name|action
+operator|==
+name|PROBE_SETDMAAA
+operator|&&
+name|status
+operator|==
+name|CAM_ATA_STATUS_ERROR
+condition|)
+block|{
+goto|goto
+name|noerror
+goto|;
 block|}
 comment|/* 		 * If we get to this point, we got an error status back 		 * from the inquiry and the error status doesn't require 		 * automatically retrying the command.  Therefore, the 		 * inquiry failed.  If we had inquiry information before 		 * for this device, but this latest inquiry command failed, 		 * the device has probably gone away.  If this device isn't 		 * already marked unconfigured, notify the peripheral 		 * drivers that this device is no more. 		 */
 name|device_fail
