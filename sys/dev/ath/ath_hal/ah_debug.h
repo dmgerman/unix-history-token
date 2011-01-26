@@ -106,9 +106,14 @@ init|=
 literal|0x00020000
 block|,
 comment|/* power management */
+name|HAL_DEBUG_GPIO
+init|=
+literal|0x00040000
+block|,
+comment|/* GPIO debugging */
 name|HAL_DEBUG_INTERRUPT
 init|=
-literal|0x00000080
+literal|0x00080000
 block|,
 comment|/* interrupt handling */
 name|HAL_DEBUG_ANY
