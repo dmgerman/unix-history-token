@@ -45307,10 +45307,6 @@ decl_stmt|,
 name|burst_cnt
 init|=
 literal|0
-decl_stmt|,
-name|burst_limit
-init|=
-literal|0
 decl_stmt|;
 name|struct
 name|timeval
@@ -45761,11 +45757,21 @@ return|return;
 block|}
 if|if
 condition|(
+operator|(
+name|asoc
+operator|->
+name|max_burst
+operator|>
+literal|0
+operator|)
+operator|&&
+operator|(
 name|tot_frs
 operator|>
 name|asoc
 operator|->
 name|max_burst
+operator|)
 condition|)
 block|{
 comment|/* Hit FR burst limit */
@@ -45807,12 +45813,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* Check for bad destinations, if they exist move chunks around. */
-name|burst_limit
-operator|=
-name|asoc
-operator|->
-name|max_burst
-expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|net
@@ -45906,6 +45906,15 @@ block|{
 comment|/*- 			 * if ((asoc->sat_network) || (net->addr_is_local)) 			 * { burst_limit = asoc->max_burst * 			 * SCTP_SAT_NETWORK_BURST_INCR; } 			 */
 if|if
 condition|(
+name|asoc
+operator|->
+name|max_burst
+operator|>
+literal|0
+condition|)
+block|{
+if|if
+condition|(
 name|SCTP_BASE_SYSCTL
 argument_list|(
 name|sctp_use_cwnd_based_maxburst
@@ -45920,7 +45929,9 @@ operator|->
 name|flight_size
 operator|+
 operator|(
-name|burst_limit
+name|asoc
+operator|->
+name|max_burst
 operator|*
 name|net
 operator|->
@@ -45933,7 +45944,7 @@ operator|->
 name|cwnd
 condition|)
 block|{
-comment|/* 					 * JRS - Use the congestion control 					 * given in the congestion control 					 * module 					 */
+comment|/* 						 * JRS - Use the congestion 						 * control given in the 						 * congestion control module 						 */
 name|asoc
 operator|->
 name|cc_functions
@@ -45944,7 +45955,9 @@ name|stcb
 argument_list|,
 name|net
 argument_list|,
-name|burst_limit
+name|asoc
+operator|->
+name|max_burst
 argument_list|)
 expr_stmt|;
 if|if
@@ -45965,7 +45978,9 @@ name|net
 argument_list|,
 literal|0
 argument_list|,
-name|burst_limit
+name|asoc
+operator|->
+name|max_burst
 argument_list|,
 name|SCTP_MAX_BURST_APPLIED
 argument_list|)
@@ -45995,8 +46010,9 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Should be decaying the cwnd here */
+comment|/* 						 * Should be decaying the 						 * cwnd here 						 */
 empty_stmt|;
+block|}
 block|}
 block|}
 block|}
@@ -46304,6 +46320,14 @@ condition|(
 name|num_out
 operator|&&
 operator|(
+operator|(
+name|asoc
+operator|->
+name|max_burst
+operator|==
+literal|0
+operator|)
+operator|||
 name|SCTP_BASE_SYSCTL
 argument_list|(
 name|sctp_use_cwnd_based_maxburst
@@ -46312,7 +46336,9 @@ operator|||
 operator|(
 name|burst_cnt
 operator|<
-name|burst_limit
+name|asoc
+operator|->
+name|max_burst
 operator|)
 operator|)
 condition|)
@@ -46329,9 +46355,21 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
+name|asoc
+operator|->
+name|max_burst
+operator|>
+literal|0
+operator|)
+operator|&&
+operator|(
 name|burst_cnt
 operator|>=
-name|burst_limit
+name|asoc
+operator|->
+name|max_burst
+operator|)
 condition|)
 block|{
 name|SCTP_STAT_INCR
