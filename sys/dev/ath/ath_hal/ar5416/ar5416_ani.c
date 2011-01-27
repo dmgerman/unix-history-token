@@ -706,7 +706,7 @@ name|HALDEBUG
 argument_list|(
 name|ah
 argument_list|,
-name|HAL_DEBUG_ANY
+name|HAL_DEBUG_ANI
 argument_list|,
 literal|"%s: immunity level out of range (%u> %u)\n"
 argument_list|,
@@ -1234,7 +1234,7 @@ name|HALDEBUG
 argument_list|(
 name|ah
 argument_list|,
-name|HAL_DEBUG_ANY
+name|HAL_DEBUG_ANI
 argument_list|,
 literal|"%s: firstep level out of range (%u> %u)\n"
 argument_list|,
@@ -1341,7 +1341,7 @@ name|HALDEBUG
 argument_list|(
 name|ah
 argument_list|,
-name|HAL_DEBUG_ANY
+name|HAL_DEBUG_ANI
 argument_list|,
 literal|"%s: spur immunity level out of range (%u> %u)\n"
 argument_list|,
@@ -1543,7 +1543,7 @@ name|HALDEBUG
 argument_list|(
 name|ah
 argument_list|,
-name|HAL_DEBUG_ANY
+name|HAL_DEBUG_ANI
 argument_list|,
 literal|"%s: invalid cmd %u\n"
 argument_list|,
