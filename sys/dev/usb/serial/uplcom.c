@@ -1027,7 +1027,7 @@ argument_list|,
 name|F5U257
 argument_list|)
 block|,
-comment|/* Belkin F5U257 */
+comment|/* Belkin F5U257 USB to Serial */
 name|UPLCOM_DEV
 argument_list|(
 name|COREGA
@@ -1051,7 +1051,7 @@ argument_list|,
 name|UCSGT
 argument_list|)
 block|,
-comment|/* ELECOM UC-SGT */
+comment|/* ELECOM UC-SGT Serial Adapter */
 name|UPLCOM_DEV
 argument_list|(
 name|ELECOM
@@ -1059,7 +1059,7 @@ argument_list|,
 name|UCSGT0
 argument_list|)
 block|,
-comment|/* ELECOM UC-SGT */
+comment|/* ELECOM UC-SGT Serial Adapter */
 name|UPLCOM_DEV
 argument_list|(
 name|HAL
@@ -1246,6 +1246,14 @@ block|,
 comment|/* I/O DATA USB-RSAQ3 */
 name|UPLCOM_DEV
 argument_list|(
+name|PROLIFIC
+argument_list|,
+name|UIC_MSR206
+argument_list|)
+block|,
+comment|/* UIC MSR206 Card Reader */
+name|UPLCOM_DEV
+argument_list|(
 name|PROLIFIC2
 argument_list|,
 name|PL2303
@@ -1259,6 +1267,7 @@ argument_list|,
 name|USBCABLE
 argument_list|)
 block|,
+comment|/* Radio Shack USB Adapter */
 name|UPLCOM_DEV
 argument_list|(
 name|RATOC
@@ -1298,7 +1307,7 @@ argument_list|,
 name|EF81
 argument_list|)
 block|,
-comment|/* Seimens EF81 */
+comment|/* Siemens EF81 */
 name|UPLCOM_DEV
 argument_list|(
 name|SIEMENS3
@@ -1306,7 +1315,7 @@ argument_list|,
 name|SX1
 argument_list|)
 block|,
-comment|/* Seimens SX1 */
+comment|/* Siemens SX1 */
 name|UPLCOM_DEV
 argument_list|(
 name|SIEMENS3
@@ -1314,7 +1323,7 @@ argument_list|,
 name|X65
 argument_list|)
 block|,
-comment|/* Seimens X65 */
+comment|/* Siemens X65 */
 name|UPLCOM_DEV
 argument_list|(
 name|SIEMENS3
@@ -1322,7 +1331,7 @@ argument_list|,
 name|X75
 argument_list|)
 block|,
-comment|/* Seimens X75 */
+comment|/* Siemens X75 */
 name|UPLCOM_DEV
 argument_list|(
 name|SITECOM
@@ -1338,7 +1347,7 @@ argument_list|,
 name|PL2303
 argument_list|)
 block|,
-comment|/* SMART Technologies */
+comment|/* SMART Technologies USB to Serial */
 name|UPLCOM_DEV
 argument_list|(
 name|SONY
@@ -1418,7 +1427,7 @@ argument_list|,
 name|U209
 argument_list|)
 block|,
-comment|/* Tripp-Lite U209-000-R */
+comment|/* Tripp-Lite U209-000-R USB to Serial */
 name|UPLCOM_DEV
 argument_list|(
 name|YCCABLE
