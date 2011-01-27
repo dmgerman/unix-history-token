@@ -2662,7 +2662,7 @@ value|NULL
 end_define
 
 begin_comment
-comment|/*  * This must be defined to be a global variable the increments once  * per second, but never stops or goes backwards, even when a "date"  * command changes the tod clock. It is used for delta times for  * leases, etc.  */
+comment|/*  * This must be defined to be a global variable that increments once  * per second, but never stops or goes backwards, even when a "date"  * command changes the TOD clock. It is used for delta times for  * leases, etc.  */
 end_comment
 
 begin_define
