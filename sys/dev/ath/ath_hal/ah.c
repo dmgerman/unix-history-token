@@ -4176,6 +4176,8 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/* Analog shift register delay seems needed for Merlin - PR kern/154220 */
+comment|/* XXX verify whether any analog radio bank writes will hit up this */
+comment|/* XXX since this is a merlin work-around; and merlin doesn't use radio banks */
 if|if
 condition|(
 name|HAL_INI_VAL
