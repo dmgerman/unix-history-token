@@ -1853,7 +1853,7 @@ name|td
 operator|->
 name|td_base_pri
 operator|=
-name|PUSER
+name|PVM
 expr_stmt|;
 name|td
 operator|->

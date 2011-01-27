@@ -8508,7 +8508,7 @@ name|ts_flags
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Grab our parents cpu estimation information and priority. 	 */
+comment|/* 	 * Grab our parents cpu estimation information. 	 */
 name|ts2
 operator|->
 name|ts_ticks
@@ -8541,21 +8541,14 @@ name|ts
 operator|->
 name|ts_ftick
 expr_stmt|;
+comment|/* 	 * Do not inherit any borrowed priority from the parent. 	 */
 name|child
 operator|->
-name|td_user_pri
+name|td_priority
 operator|=
-name|td
-operator|->
-name|td_user_pri
-expr_stmt|;
 name|child
 operator|->
-name|td_base_user_pri
-operator|=
-name|td
-operator|->
-name|td_base_user_pri
+name|td_base_pri
 expr_stmt|;
 comment|/* 	 * And update interactivity score. 	 */
 name|ts2
