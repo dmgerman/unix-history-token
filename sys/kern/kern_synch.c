@@ -2274,6 +2274,17 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|PRI_BASE
+argument_list|(
+name|td
+operator|->
+name|td_pri_class
+argument_list|)
+operator|==
+name|PRI_TIMESHARE
+condition|)
 name|sched_prio
 argument_list|(
 name|td
