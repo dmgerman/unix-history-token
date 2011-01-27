@@ -8008,6 +8008,11 @@ argument_list|(
 name|vnet_iter
 argument_list|)
 expr_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
 if|if
 condition|(
 name|bootverbose
@@ -8018,6 +8023,10 @@ name|LOG_INFO
 argument_list|,
 literal|"flowtable cleaner started\n"
 argument_list|)
+expr_stmt|;
+name|td
+operator|=
+name|curthread
 expr_stmt|;
 while|while
 condition|(
@@ -8052,6 +8061,23 @@ name|mtx_lock
 argument_list|(
 operator|&
 name|flowclean_lock
+argument_list|)
+expr_stmt|;
+name|thread_lock
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
+name|sched_prio
+argument_list|(
+name|td
+argument_list|,
+name|PPAUSE
+argument_list|)
+expr_stmt|;
+name|thread_unlock
+argument_list|(
+name|td
 argument_list|)
 expr_stmt|;
 name|flowclean_cycles
