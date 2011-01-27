@@ -3622,6 +3622,11 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
+name|pjdlog_init
+argument_list|(
+name|PJDLOG_MODE_STD
+argument_list|)
+expr_stmt|;
 name|pjdlog_debug_set
 argument_list|(
 name|debuglevel
