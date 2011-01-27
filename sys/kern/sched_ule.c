@@ -500,7 +500,7 @@ begin_define
 define|#
 directive|define
 name|SCHED_PRI_RANGE
-value|(SCHED_PRI_MAX - SCHED_PRI_MIN)
+value|(SCHED_PRI_MAX - SCHED_PRI_MIN + 1)
 end_define
 
 begin_define
@@ -6339,9 +6339,12 @@ name|pri
 decl_stmt|;
 if|if
 condition|(
+name|PRI_BASE
+argument_list|(
 name|td
 operator|->
 name|td_pri_class
+argument_list|)
 operator|!=
 name|PRI_TIMESHARE
 condition|)
@@ -6383,6 +6386,8 @@ operator|(
 name|PRI_MAX_REALTIME
 operator|-
 name|PRI_MIN_REALTIME
+operator|+
+literal|1
 operator|)
 operator|/
 name|sched_interact
@@ -9132,9 +9137,12 @@ condition|)
 return|return;
 if|if
 condition|(
+name|PRI_BASE
+argument_list|(
 name|td
 operator|->
 name|td_pri_class
+argument_list|)
 operator|==
 name|PRI_TIMESHARE
 condition|)
