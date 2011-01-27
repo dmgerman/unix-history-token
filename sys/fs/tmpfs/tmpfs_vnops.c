@@ -5861,7 +5861,15 @@ literal|1
 condition|)
 name|error
 operator|=
+operator|(
+name|cnt
+operator|!=
 literal|0
+operator|)
+condition|?
+literal|0
+else|:
+name|EINVAL
 expr_stmt|;
 if|if
 condition|(

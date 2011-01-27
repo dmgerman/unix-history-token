@@ -2965,6 +2965,13 @@ argument_list|,
 name|uio
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+block|{
 operator|(
 operator|*
 name|cntp
@@ -2980,6 +2987,7 @@ argument_list|,
 name|td_entries
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 do|while
 condition|(
