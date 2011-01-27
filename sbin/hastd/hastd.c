@@ -3159,6 +3159,13 @@ expr_stmt|;
 name|terminate_workers
 argument_list|()
 expr_stmt|;
+name|proto_close
+argument_list|(
+name|cfg
+operator|->
+name|hc_controlconn
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 name|EX_OK
