@@ -1230,6 +1230,12 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|cfg
+operator|->
+name|hc_controlin
+operator|=
+name|conn
+expr_stmt|;
 name|nvin
 operator|=
 name|nvout
@@ -1674,6 +1680,12 @@ name|proto_close
 argument_list|(
 name|conn
 argument_list|)
+expr_stmt|;
+name|cfg
+operator|->
+name|hc_controlin
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 end_function

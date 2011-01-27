@@ -328,6 +328,12 @@ name|proto_conn
 modifier|*
 name|hc_controlconn
 decl_stmt|;
+comment|/* Incoming control connection. */
+name|struct
+name|proto_conn
+modifier|*
+name|hc_controlin
+decl_stmt|;
 comment|/* Address to listen on. */
 name|char
 name|hc_listenaddr
