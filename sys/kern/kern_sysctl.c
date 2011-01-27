@@ -7076,7 +7076,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Drain into a sysctl struct.  The user buffer must be wired.  */
+comment|/*  * Drain into a sysctl struct.  The user buffer should be wired if a page  * fault would cause issue.  */
 end_comment
 
 begin_function
@@ -7170,14 +7170,6 @@ modifier|*
 name|req
 parameter_list|)
 block|{
-comment|/* Wire the user buffer, so we can write without blocking. */
-name|sysctl_wire_old_buffer
-argument_list|(
-name|req
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|s
 operator|=
 name|sbuf_new
