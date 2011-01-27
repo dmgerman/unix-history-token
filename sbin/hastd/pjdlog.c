@@ -131,6 +131,8 @@ argument_list|(
 name|NULL
 argument_list|,
 name|LOG_PID
+operator||
+name|LOG_NDELAY
 argument_list|,
 name|LOG_DAEMON
 argument_list|)
