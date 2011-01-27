@@ -295,9 +295,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|MIPS_DIRECT_MAPPABLE
+argument_list|(
 name|pa
-operator|<
-name|MIPS_KSEG0_LARGEST_PHYS
+argument_list|)
 condition|)
 block|{
 name|sf
@@ -310,7 +311,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|MIPS_PHYS_TO_KSEG0
+name|MIPS_PHYS_TO_DIRECT
 argument_list|(
 name|pa
 argument_list|)

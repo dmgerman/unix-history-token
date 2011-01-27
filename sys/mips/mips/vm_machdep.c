@@ -227,6 +227,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__mips_n64
+end_ifndef
+
 begin_function_decl
 specifier|static
 name|void
@@ -285,6 +291,11 @@ name|u_int
 name|sf_buf_alloc_want
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Finish a fork operation, with process p2 nearly set up.  * Copy and update the pcb, set up the stack so that the child  * ready to run and return to user mode.  */
@@ -1677,6 +1688,12 @@ begin_comment
 comment|/*  * Allocate a pool of sf_bufs (sendfile(2) or "super-fast" if you prefer. :-))  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__mips_n64
+end_ifndef
+
 begin_function
 specifier|static
 name|void
@@ -1813,6 +1830,11 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Get an sf_buf from the freelist.  Will block if none are available.  */
 end_comment
@@ -1832,6 +1854,9 @@ name|int
 name|flags
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|__mips_n64
 name|struct
 name|sf_buf
 modifier|*
@@ -1982,6 +2007,20 @@ operator|(
 name|sf
 operator|)
 return|;
+else|#
+directive|else
+return|return
+operator|(
+operator|(
+expr|struct
+name|sf_buf
+operator|*
+operator|)
+name|m
+operator|)
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1999,6 +2038,9 @@ modifier|*
 name|sf
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|__mips_n64
 name|pmap_qremove
 argument_list|(
 name|sf
@@ -2051,6 +2093,8 @@ operator|.
 name|sf_lock
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
