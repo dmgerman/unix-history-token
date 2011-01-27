@@ -654,9 +654,25 @@ specifier|const
 name|char
 modifier|*
 name|failedexpr
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
 parameter_list|)
-function_decl|;
+function_decl|__printflike
+parameter_list|(
+function_decl|5
+operator|,
+function_decl|6
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_define
 define|#
@@ -665,7 +681,29 @@ name|PJDLOG_VERIFY
 parameter_list|(
 name|expr
 parameter_list|)
-value|do {					\ 	if (!(expr))							\ 		pjdlog_verify(__func__, __FILE__, __LINE__, #expr);	\ } while (0)
+value|do {					\ 	if (!(expr)) {							\ 		pjdlog_verify(__func__, __FILE__, __LINE__, #expr,	\ 		    __func__);						\ 	}								\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PJDLOG_RVERIFY
+parameter_list|(
+name|expr
+parameter_list|,
+modifier|...
+parameter_list|)
+value|do {				\ 	if (!(expr)) {							\ 		pjdlog_verify(__func__, __FILE__, __LINE__, #expr,	\ 		    __VA_ARGS__);					\ 	}								\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PJDLOG_ABORT
+parameter_list|(
+modifier|...
+parameter_list|)
+value|pjdlog_verify(__func__, __FILE__,	\ 				    __LINE__, NULL, __VA_ARGS__)
 end_define
 
 begin_ifdef
@@ -684,6 +722,16 @@ parameter_list|)
 value|do { } while (0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|PJDLOG_RASSERT
+parameter_list|(
+modifier|...
+parameter_list|)
+value|do { } while (0)
+end_define
+
 begin_else
 else|#
 directive|else
@@ -697,6 +745,16 @@ parameter_list|(
 name|expr
 parameter_list|)
 value|PJDLOG_VERIFY(expr)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PJDLOG_RASSERT
+parameter_list|(
+modifier|...
+parameter_list|)
+value|PJDLOG_RVERIFY(__VA_ARGS__)
 end_define
 
 begin_endif
