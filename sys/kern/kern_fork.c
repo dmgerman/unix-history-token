@@ -1772,24 +1772,6 @@ name|p_pid
 operator|=
 name|trypid
 expr_stmt|;
-comment|/* 	 * Allow the scheduler to initialize the child. 	 */
-name|thread_lock
-argument_list|(
-name|td
-argument_list|)
-expr_stmt|;
-name|sched_fork
-argument_list|(
-name|td
-argument_list|,
-name|td2
-argument_list|)
-expr_stmt|;
-name|thread_unlock
-argument_list|(
-name|td
-argument_list|)
-expr_stmt|;
 name|AUDIT_ARG
 argument_list|(
 name|pid
@@ -2167,6 +2149,24 @@ operator|->
 name|td_flags
 operator|=
 name|TDF_INMEM
+expr_stmt|;
+comment|/* 	 * Allow the scheduler to initialize the child. 	 */
+name|thread_lock
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
+name|sched_fork
+argument_list|(
+name|td
+argument_list|,
+name|td2
+argument_list|)
+expr_stmt|;
+name|thread_unlock
+argument_list|(
+name|td
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Duplicate sub-structures as needed. 	 * Increase reference counts on shared objects. 	 */
 name|p2
