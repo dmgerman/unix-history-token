@@ -1295,6 +1295,9 @@ decl_stmt|;
 name|u16
 name|max_frame_size
 decl_stmt|;
+name|u16
+name|num_segs
+decl_stmt|;
 name|u32
 name|link_speed
 decl_stmt|;
