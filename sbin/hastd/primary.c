@@ -3777,6 +3777,25 @@ argument_list|(
 name|res
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|drop_privs
+argument_list|()
+operator|!=
+literal|0
+condition|)
+block|{
+name|cleanup
+argument_list|(
+name|res
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EX_CONFIG
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Create the guard thread first, so we can handle signals from the 	 * very begining. 	 */
 name|error
 operator|=
