@@ -3557,6 +3557,7 @@ operator|<
 literal|0
 condition|)
 block|{
+comment|/* TODO: There's no need for this to be fatal error. */
 name|KEEP_ERRNO
 argument_list|(
 operator|(
@@ -3592,6 +3593,7 @@ operator|<
 literal|0
 condition|)
 block|{
+comment|/* TODO: There's no need for this to be fatal error. */
 name|KEEP_ERRNO
 argument_list|(
 operator|(
@@ -3623,6 +3625,7 @@ operator|<
 literal|0
 condition|)
 block|{
+comment|/* TODO: There's no need for this to be fatal error. */
 name|KEEP_ERRNO
 argument_list|(
 operator|(
