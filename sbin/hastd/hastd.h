@@ -78,6 +78,22 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|descriptors_assert
+parameter_list|(
+specifier|const
+name|struct
+name|hast_resource
+modifier|*
+name|res
+parameter_list|,
+name|int
+name|pjdlogmode
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|hastd_primary
 parameter_list|(
 name|struct
