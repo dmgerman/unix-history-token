@@ -1494,6 +1494,13 @@ argument_list|(
 name|res
 argument_list|)
 expr_stmt|;
+name|descriptors_assert
+argument_list|(
+name|res
+argument_list|,
+name|mode
+argument_list|)
+expr_stmt|;
 name|pjdlog_init
 argument_list|(
 name|mode
