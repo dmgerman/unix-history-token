@@ -10046,10 +10046,7 @@ expr_stmt|;
 comment|/* not a real error */
 break|break;
 block|}
-comment|/* 			 * Get a sendfile buf.  We usually wait as long 			 * as necessary, but this wait can be interrupted. 			 */
-if|if
-condition|(
-operator|(
+comment|/* 			 * Get a sendfile buf.  When allocating the 			 * first buffer for mbuf chain, we usually 			 * wait as long as necessary, but this wait 			 * can be interrupted.  For consequent 			 * buffers, do not sleep, since several 			 * threads might exhaust the buffers and then 			 * deadlock. 			 */
 name|sf
 operator|=
 name|sf_buf_alloc
@@ -10058,13 +10055,20 @@ name|pg
 argument_list|,
 operator|(
 name|mnw
+operator|||
+name|m
+operator|!=
+name|NULL
+operator|)
 condition|?
 name|SFB_NOWAIT
 else|:
 name|SFB_CATCH
-operator|)
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|sf
 operator|==
 name|NULL
 condition|)
@@ -10104,6 +10108,12 @@ argument_list|(
 name|pg
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+condition|)
 name|error
 operator|=
 operator|(
