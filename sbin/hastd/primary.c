@@ -3540,6 +3540,8 @@ name|pid
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|mode
 decl_stmt|;
 comment|/* 	 * Create communication channel between parent and child. 	 */
 if|if
@@ -3665,6 +3667,18 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* Declare that we are sender. */
+name|proto_send
+argument_list|(
+name|res
+operator|->
+name|hr_ctrl
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|res
 operator|->
 name|hr_workerpid
@@ -3677,25 +3691,10 @@ name|gres
 operator|=
 name|res
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|pidfile_close
-argument_list|(
-name|pfh
-argument_list|)
-expr_stmt|;
-name|hook_fini
+name|mode
+operator|=
+name|pjdlog_mode_get
 argument_list|()
-expr_stmt|;
-name|setproctitle
-argument_list|(
-literal|"%s (primary)"
-argument_list|,
-name|res
-operator|->
-name|hr_name
-argument_list|)
 expr_stmt|;
 comment|/* Declare that we are sender. */
 name|proto_send
@@ -3707,6 +3706,53 @@ argument_list|,
 name|NULL
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Declare that we are receiver. */
+name|proto_recv
+argument_list|(
+name|res
+operator|->
+name|hr_ctrl
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|descriptors_cleanup
+argument_list|(
+name|res
+argument_list|)
+expr_stmt|;
+name|pjdlog_init
+argument_list|(
+name|mode
+argument_list|)
+expr_stmt|;
+name|pjdlog_prefix_set
+argument_list|(
+literal|"[%s] (%s) "
+argument_list|,
+name|res
+operator|->
+name|hr_name
+argument_list|,
+name|role2str
+argument_list|(
+name|res
+operator|->
+name|hr_role
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|setproctitle
+argument_list|(
+literal|"%s (primary)"
+argument_list|,
+name|res
+operator|->
+name|hr_name
 argument_list|)
 expr_stmt|;
 name|init_local
