@@ -1199,7 +1199,7 @@ decl_stmt|;
 name|uint16_t
 name|ah_ratesArray
 index|[
-literal|16
+literal|37
 index|]
 decl_stmt|;
 name|uint8_t
