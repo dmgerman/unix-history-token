@@ -49,11 +49,21 @@ name|cas32
 value|atomic_cmpset_32
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|__LP64__
-end_ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__mips_n32
+argument_list|)
+end_if
 
 begin_function_decl
 specifier|extern
@@ -83,6 +93,17 @@ name|target
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__LP64__
+end_ifndef
 
 begin_function_decl
 specifier|extern
@@ -367,11 +388,19 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__LP64__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__mips_n32
+argument_list|)
+end_if
 
 begin_function
 specifier|static

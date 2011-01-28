@@ -135,9 +135,19 @@ argument_list|)
 block|; }
 endif|#
 directive|endif
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|__LP64__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__mips_n32
+argument_list|)
 name|void
 name|atomic_add_64
 argument_list|(
