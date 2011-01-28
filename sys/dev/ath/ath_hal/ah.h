@@ -3764,7 +3764,70 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Calculate the transmit duration of a frame.  */
+comment|/*  * Calculate the packet TX time for a legacy or 11n frame  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|uint32_t
+name|__ahdecl
+name|ath_hal_pkt_txtime
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+specifier|const
+name|HAL_RATE_TABLE
+modifier|*
+name|rates
+parameter_list|,
+name|uint32_t
+name|frameLen
+parameter_list|,
+name|uint16_t
+name|rateix
+parameter_list|,
+name|HAL_BOOL
+name|isht40
+parameter_list|,
+name|HAL_BOOL
+name|shortPreamble
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Calculate the duration of an 11n frame.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|uint32_t
+name|__ahdecl
+name|ath_computedur_ht
+parameter_list|(
+name|uint32_t
+name|frameLen
+parameter_list|,
+name|uint16_t
+name|rate
+parameter_list|,
+name|int
+name|streams
+parameter_list|,
+name|HAL_BOOL
+name|isht40
+parameter_list|,
+name|HAL_BOOL
+name|isShortGI
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Calculate the transmit duration of a legacy frame.  */
 end_comment
 
 begin_function_decl
