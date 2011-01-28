@@ -236,6 +236,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAST_USER
+value|"hast"
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAST_TIMEOUT
 value|5
 end_define
