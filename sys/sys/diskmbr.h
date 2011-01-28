@@ -77,6 +77,50 @@ end_define
 begin_define
 define|#
 directive|define
+name|DOSPTYP_EXT
+value|0x05
+end_define
+
+begin_comment
+comment|/* DOS extended partition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DOSPTYP_NTFS
+value|0x07
+end_define
+
+begin_comment
+comment|/* NTFS partition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DOSPTYP_FAT32
+value|0x0b
+end_define
+
+begin_comment
+comment|/* FAT32 partition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DOSPTYP_EXTLBA
+value|0x0f
+end_define
+
+begin_comment
+comment|/* DOS extended partition */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DOSPTYP_386BSD
 value|0xa5
 end_define
@@ -110,6 +154,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DOSPTYP_LINLVM
+value|0x8e
+end_define
+
+begin_comment
+comment|/* Linux LVM partition */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DOSPTYP_PMBR
 value|0xee
 end_define
@@ -121,34 +176,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DOSPTYP_EXT
-value|5
+name|DOSPTYP_LINRAID
+value|0xfd
 end_define
 
 begin_comment
-comment|/* DOS extended partition */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DOSPTYP_EXTLBA
-value|15
-end_define
-
-begin_comment
-comment|/* DOS extended partition */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DOSPTYP_NTFS
-value|0x07
-end_define
-
-begin_comment
-comment|/* NTFS partition */
+comment|/* Linux raid partition */
 end_comment
 
 begin_struct

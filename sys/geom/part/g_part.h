@@ -140,6 +140,15 @@ comment|/* A NetBSD swap partition entry. */
 name|G_PART_ALIAS_NETBSD_LFS
 block|,
 comment|/* A NetBSD LFS partition entry. */
+name|G_PART_ALIAS_EBR
+block|,
+comment|/* A EBR partition entry. */
+name|G_PART_ALIAS_MS_FAT32
+block|,
+comment|/* A Microsoft FAT32 partition entry. */
+name|G_PART_ALIAS_BIOS_BOOT
+block|,
+comment|/* A GRUB 2 boot partition entry. */
 comment|/* Keep the following last */
 name|G_PART_ALIAS_COUNT
 block|}

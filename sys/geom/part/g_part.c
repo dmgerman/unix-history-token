@@ -266,9 +266,27 @@ name|G_PART_ALIAS_APPLE_UFS
 block|}
 block|,
 block|{
+literal|"bios-boot"
+block|,
+name|G_PART_ALIAS_BIOS_BOOT
+block|}
+block|,
+block|{
+literal|"ebr"
+block|,
+name|G_PART_ALIAS_EBR
+block|}
+block|,
+block|{
 literal|"efi"
 block|,
 name|G_PART_ALIAS_EFI
+block|}
+block|,
+block|{
+literal|"fat32"
+block|,
+name|G_PART_ALIAS_MS_FAT32
 block|}
 block|,
 block|{
@@ -329,6 +347,12 @@ block|{
 literal|"linux-swap"
 block|,
 name|G_PART_ALIAS_LINUX_SWAP
+block|}
+block|,
+block|{
+literal|"mbr"
+block|,
+name|G_PART_ALIAS_MBR
 block|}
 block|,
 block|{
@@ -396,13 +420,7 @@ literal|"netbsd-swap"
 block|,
 name|G_PART_ALIAS_NETBSD_SWAP
 block|}
-block|,
-block|{
-literal|"mbr"
-block|,
-name|G_PART_ALIAS_MBR
-block|}
-block|}
+block|, }
 struct|;
 end_struct
 
