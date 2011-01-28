@@ -685,6 +685,10 @@ name|timeval
 name|start_time
 decl_stmt|;
 comment|/* time when this net was created */
+name|struct
+name|timeval
+name|last_measured_rtt
+decl_stmt|;
 name|uint32_t
 name|marked_retrans
 decl_stmt|;
