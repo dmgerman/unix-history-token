@@ -9465,17 +9465,6 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-name|KASSERT
-argument_list|(
-name|devnull
-operator|==
-name|i
-argument_list|,
-operator|(
-literal|"oof, we didn't get our fd"
-operator|)
-argument_list|)
-expr_stmt|;
 name|td
 operator|->
 name|td_retval
@@ -9490,6 +9479,17 @@ condition|(
 name|error
 condition|)
 break|break;
+name|KASSERT
+argument_list|(
+name|devnull
+operator|==
+name|i
+argument_list|,
+operator|(
+literal|"oof, we didn't get our fd"
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
