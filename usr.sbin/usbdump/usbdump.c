@@ -216,10 +216,6 @@ literal|"usbus0"
 decl_stmt|;
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -742,14 +738,9 @@ name|line
 decl_stmt|;
 name|int
 name|x
-decl_stmt|,
-name|c
 decl_stmt|;
-name|char
-name|lbuf
-index|[
-literal|80
-index|]
+name|int
+name|c
 decl_stmt|;
 define|#
 directive|define
@@ -757,10 +748,9 @@ name|EMIT
 parameter_list|(
 name|fmt
 parameter_list|,
-name|args
 modifier|...
 parameter_list|)
-value|do {		\ 	sprintf(lbuf, fmt , ## args);		\ 	printf("%s", lbuf);			\ } while (0)
+value|do {		\ 	printf(fmt,## __VA_ARGS__);	\ } while (0)
 for|for
 control|(
 name|line
