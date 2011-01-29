@@ -5070,14 +5070,28 @@ name|new_entry
 operator|->
 name|start
 expr_stmt|;
-if|#
-directive|if
+comment|/* 	 * It may be possible to merge the new entry with the next and/or 	 * previous entries.  However, due to MAP_STACK_* being a hack, a 	 * panic can result from merging such entries. 	 */
+if|if
+condition|(
+operator|(
+name|cow
+operator|&
+operator|(
+name|MAP_STACK_GROWS_DOWN
+operator||
+name|MAP_STACK_GROWS_UP
+operator|)
+operator|)
+operator|==
 literal|0
-comment|/* 	 * Temporarily removed to avoid MAP_STACK panic, due to 	 * MAP_STACK being a huge hack.  Will be added back in 	 * when MAP_STACK (and the user stack mapping) is fixed. 	 */
-comment|/* 	 * It may be possible to simplify the entry 	 */
-block|vm_map_simplify_entry(map, new_entry);
-endif|#
-directive|endif
+condition|)
+name|vm_map_simplify_entry
+argument_list|(
+name|map
+argument_list|,
+name|new_entry
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|cow
