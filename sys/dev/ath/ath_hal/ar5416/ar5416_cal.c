@@ -2041,6 +2041,21 @@ name|i
 operator|++
 control|)
 block|{
+comment|/* Don't write to EXT radio CCA registers */
+comment|/* XXX this check should really be cleaner! */
+if|if
+condition|(
+name|i
+operator|>=
+literal|3
+operator|&&
+operator|!
+name|IEEE80211_IS_CHAN_HT40
+argument_list|(
+name|chan
+argument_list|)
+condition|)
+continue|continue;
 if|if
 condition|(
 name|chainmask
