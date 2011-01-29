@@ -1249,6 +1249,17 @@ argument_list|(
 literal|"nfsv4acls "
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fsflags
+operator|&
+name|FS_TRIM
+condition|)
+name|printf
+argument_list|(
+literal|"trim "
+argument_list|)
+expr_stmt|;
 name|fsflags
 operator|&=
 operator|~
@@ -1270,6 +1281,8 @@ operator||
 name|FS_FLAGS_UPDATED
 operator||
 name|FS_NFS4ACLS
+operator||
+name|FS_TRIM
 operator|)
 expr_stmt|;
 if|if
