@@ -3403,15 +3403,14 @@ name|_type
 parameter_list|,
 name|_keyix
 parameter_list|, \
-name|_
-name|cipher
-parameter|,
+name|_cipher
+parameter_list|,
 name|_delims
-parameter|,
+parameter_list|,
 name|_seglen
-parameter|,
+parameter_list|,
 name|_first
-parameter|,
+parameter_list|,
 name|_last
 parameter_list|)
 define|\
@@ -3478,9 +3477,11 @@ parameter_list|,
 name|_series
 parameter_list|,
 name|_ns
+parameter_list|,
+name|_flags
 parameter_list|)
 define|\
-value|((*(_ah)->ah_set11nRateScenario)((_ah), (_ds), (_dur), (_rt), \ 	(_series), (_ns)))
+value|((*(_ah)->ah_set11nRateScenario)((_ah), (_ds), (_dur), (_rt), \ 	(_series), (_ns), (_flags)))
 end_define
 
 begin_define
@@ -3526,21 +3527,6 @@ name|_type
 parameter_list|)
 define|\
 value|((*(_ah)->ah_gpioCfgOutput)((_ah), (_gpio), (_type)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ath_hal_gpioset
-parameter_list|(
-name|_ah
-parameter_list|,
-name|_gpio
-parameter_list|,
-name|_b
-parameter_list|)
-define|\
-value|#define ath_hal_gpioCfgOutput(_ah, _gpio, _type) \         ((*(_ah)->ah_gpioCfgOutput)((_ah), (_gpio), (_type)))
 end_define
 
 begin_define

@@ -1808,6 +1808,9 @@ index|[]
 parameter_list|,
 name|u_int
 name|nseries
+parameter_list|,
+name|u_int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
