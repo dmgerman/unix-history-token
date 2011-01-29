@@ -141,11 +141,10 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|uint32_t
-name|openpic_mambo_id
+name|int
+name|openpic_mambo_attach
 parameter_list|(
 name|device_t
-name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -295,7 +294,7 @@ name|DEVMETHOD
 argument_list|(
 name|device_attach
 argument_list|,
-name|openpic_attach
+name|openpic_mambo_attach
 argument_list|)
 block|,
 comment|/* PIC interface */
@@ -346,13 +345,6 @@ argument_list|(
 name|pic_unmask
 argument_list|,
 name|openpic_unmask
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|pic_id
-argument_list|,
-name|openpic_mambo_id
 argument_list|)
 block|,
 block|{
@@ -669,8 +661,8 @@ end_function
 
 begin_function
 specifier|static
-name|uint32_t
-name|openpic_mambo_id
+name|int
+name|openpic_mambo_attach
 parameter_list|(
 name|device_t
 name|dev
@@ -678,11 +670,16 @@ parameter_list|)
 block|{
 return|return
 operator|(
+name|openpic_common_attach
+argument_list|(
+name|dev
+argument_list|,
 name|ofw_bus_get_node
 argument_list|(
 name|device_get_parent
 argument_list|(
 name|dev
+argument_list|)
 argument_list|)
 argument_list|)
 operator|)

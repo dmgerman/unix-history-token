@@ -143,6 +143,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|int
+name|openpic_iobus_attach
+parameter_list|(
+name|device_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|static
 name|device_method_t
@@ -162,7 +172,7 @@ name|DEVMETHOD
 argument_list|(
 name|device_attach
 argument_list|,
-name|openpic_attach
+name|openpic_iobus_attach
 argument_list|)
 block|,
 comment|/* PIC interface */
@@ -326,6 +336,28 @@ expr_stmt|;
 return|return
 operator|(
 literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|openpic_iobus_attach
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+return|return
+operator|(
+name|openpic_common_attach
+argument_list|(
+name|dev
+argument_list|,
+literal|0
+argument_list|)
 operator|)
 return|;
 block|}

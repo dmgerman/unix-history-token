@@ -74,12 +74,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/ocpbus.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/pio.h>
 end_include
 
@@ -305,17 +299,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|uint32_t
-name|atpic_id
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 specifier|static
 name|device_method_t
@@ -393,13 +376,6 @@ argument_list|(
 name|pic_unmask
 argument_list|,
 name|atpic_unmask
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|pic_id
-argument_list|,
-name|atpic_id
 argument_list|)
 block|,
 block|{
@@ -696,10 +672,7 @@ name|SYS_RES_IRQ
 argument_list|,
 literal|0
 argument_list|,
-name|PIC_IRQ_EXT
-argument_list|(
-literal|0
-argument_list|)
+literal|16
 argument_list|,
 literal|1
 argument_list|)
@@ -1102,7 +1075,13 @@ name|powerpc_register_pic
 argument_list|(
 name|dev
 argument_list|,
-literal|0x10
+literal|0
+argument_list|,
+literal|16
+argument_list|,
+literal|0
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 return|return
@@ -1697,23 +1676,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-end_function
-
-begin_function
-specifier|static
-name|uint32_t
-name|atpic_id
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|)
-block|{
-return|return
-operator|(
-name|ATPIC_ID
-operator|)
-return|;
 block|}
 end_function
 

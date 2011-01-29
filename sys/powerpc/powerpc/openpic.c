@@ -282,10 +282,13 @@ end_function
 
 begin_function
 name|int
-name|openpic_attach
+name|openpic_common_attach
 parameter_list|(
 name|device_t
 name|dev
+parameter_list|,
+name|uint32_t
+name|node
 parameter_list|)
 block|{
 name|struct
@@ -956,9 +959,15 @@ name|powerpc_register_pic
 argument_list|(
 name|dev
 argument_list|,
+name|node
+argument_list|,
 name|sc
 operator|->
 name|sc_nirq
+argument_list|,
+literal|4
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 comment|/* If this is not a cascaded PIC, it must be the root PIC */

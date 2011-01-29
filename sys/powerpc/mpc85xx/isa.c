@@ -56,12 +56,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/ocpbus.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/resource.h>
 end_include
 
@@ -81,12 +75,6 @@ begin_include
 include|#
 directive|include
 file|<isa/isa_common.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ocpbus.h"
 end_include
 
 begin_function
@@ -230,13 +218,6 @@ case|:
 name|rids
 operator|=
 name|ISA_PNP_NIRQ
-expr_stmt|;
-name|start
-operator|=
-name|ISA_IRQ
-argument_list|(
-name|start
-argument_list|)
 expr_stmt|;
 break|break;
 case|case

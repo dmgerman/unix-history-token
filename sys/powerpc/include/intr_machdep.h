@@ -32,40 +32,13 @@ end_define
 begin_define
 define|#
 directive|define
-name|IGN_SHIFT
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|INTR_INTLINE
-parameter_list|(
-name|irq
-parameter_list|)
-value|(irq& ((1<< IGN_SHIFT) - 1))
-end_define
-
-begin_define
-define|#
-directive|define
-name|INTR_IGN
-parameter_list|(
-name|irq
-parameter_list|)
-value|(irq>> IGN_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
 name|INTR_VEC
 parameter_list|(
-name|pic_id
+name|node
 parameter_list|,
-name|irq
+name|pin
 parameter_list|)
-value|((powerpc_ign_lookup(pic_id)<< IGN_SHIFT) | (irq))
+value|powerpc_get_irq(node, pin)
 end_define
 
 begin_comment
@@ -121,17 +94,24 @@ name|powerpc_register_pic
 parameter_list|(
 name|device_t
 parameter_list|,
+name|uint32_t
+parameter_list|,
+name|u_int
+parameter_list|,
+name|u_int
+parameter_list|,
 name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|powerpc_ign_lookup
+name|u_int
+name|powerpc_get_irq
 parameter_list|(
 name|uint32_t
-name|pic_id
+parameter_list|,
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl

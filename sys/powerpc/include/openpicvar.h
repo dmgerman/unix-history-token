@@ -96,9 +96,11 @@ end_comment
 
 begin_function_decl
 name|int
-name|openpic_attach
+name|openpic_common_attach
 parameter_list|(
 name|device_t
+parameter_list|,
+name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl
