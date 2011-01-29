@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/pci/pcireg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/fdt.h>
 end_include
 
@@ -75,6 +81,12 @@ begin_include
 include|#
 directive|include
 file|"ofw_bus_if.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pcib_if.h"
 end_include
 
 begin_define
@@ -624,21 +636,12 @@ modifier|*
 name|mem_space
 parameter_list|)
 block|{
-name|struct
-name|fdt_pci_range
-name|par_io_space
-decl_stmt|,
-name|par_mem_space
-decl_stmt|;
-name|u_long
-name|base
-decl_stmt|;
 name|int
 name|err
 decl_stmt|;
 name|debugf
 argument_list|(
-literal|"Processing parent PCI node: %x\n"
+literal|"Processing PCI node: %x\n"
 argument_list|,
 name|node
 argument_list|)
@@ -650,16 +653,11 @@ name|err
 operator|=
 name|fdt_pci_ranges_decode
 argument_list|(
-name|OF_parent
-argument_list|(
 name|node
-argument_list|)
 argument_list|,
-operator|&
-name|par_io_space
+name|io_space
 argument_list|,
-operator|&
-name|par_mem_space
+name|mem_space
 argument_list|)
 operator|)
 operator|!=
@@ -677,82 +675,6 @@ name|err
 operator|)
 return|;
 block|}
-name|debugf
-argument_list|(
-literal|"Processing PCI sub node: %x\n"
-argument_list|,
-name|node
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|err
-operator|=
-name|fdt_pci_ranges_decode
-argument_list|(
-name|node
-argument_list|,
-name|io_space
-argument_list|,
-name|mem_space
-argument_list|)
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|debugf
-argument_list|(
-literal|"could not decode PCI subnode 'ranges'\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|err
-operator|)
-return|;
-block|}
-name|base
-operator|=
-name|io_space
-operator|->
-name|base_parent
-operator|&
-literal|0x000fffff
-expr_stmt|;
-name|base
-operator|+=
-name|par_io_space
-operator|.
-name|base_parent
-expr_stmt|;
-name|io_space
-operator|->
-name|base_parent
-operator|=
-name|base
-expr_stmt|;
-name|base
-operator|=
-name|mem_space
-operator|->
-name|base_parent
-operator|&
-literal|0x000fffff
-expr_stmt|;
-name|base
-operator|+=
-name|par_mem_space
-operator|.
-name|base_parent
-expr_stmt|;
-name|mem_space
-operator|->
-name|base_parent
-operator|=
-name|base
-expr_stmt|;
 name|debugf
 argument_list|(
 literal|"Post fixup dump:\n"
@@ -934,36 +856,40 @@ decl_stmt|,
 modifier|*
 name|mask
 decl_stmt|;
-name|phandle_t
-name|pci_par
-decl_stmt|;
 name|int
-name|intr_cells
+name|acells
 decl_stmt|,
-name|addr_cells
+name|icells
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|len
 decl_stmt|;
-name|addr_cells
+name|error
 operator|=
-name|fdt_parent_addr_cells
+name|fdt_addr_cells
 argument_list|(
 name|node
+argument_list|,
+operator|&
+name|acells
 argument_list|)
 expr_stmt|;
-name|pci_par
-operator|=
-name|OF_parent
-argument_list|(
-name|node
-argument_list|)
-expr_stmt|;
-name|intr_cells
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+name|icells
 operator|=
 name|fdt_interrupt_cells
 argument_list|(
-name|pci_par
+name|node
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Retrieve the interrupt map and mask properties. 	 */
@@ -971,7 +897,7 @@ name|len
 operator|=
 name|OF_getprop_alloc
 argument_list|(
-name|pci_par
+name|node
 argument_list|,
 literal|"interrupt-map-mask"
 argument_list|,
@@ -991,9 +917,9 @@ name|pcell_t
 argument_list|)
 operator|!=
 operator|(
-name|addr_cells
+name|acells
 operator|+
-name|intr_cells
+name|icells
 operator|)
 condition|)
 block|{
@@ -1012,7 +938,7 @@ name|len
 operator|=
 name|OF_getprop_alloc
 argument_list|(
-name|pci_par
+name|node
 argument_list|,
 literal|"interrupt-map"
 argument_list|,
@@ -1062,13 +988,24 @@ name|intr_info
 operator|->
 name|addr_cells
 operator|=
-name|addr_cells
+name|acells
 expr_stmt|;
 name|intr_info
 operator|->
 name|intr_cells
 operator|=
-name|intr_cells
+name|icells
+expr_stmt|;
+name|debugf
+argument_list|(
+literal|"acells=%u, icells=%u, map_len=%u\n"
+argument_list|,
+name|acells
+argument_list|,
+name|icells
+argument_list|,
+name|len
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -1457,7 +1394,7 @@ name|__powerpc__
 argument_list|)
 name|powerpc_config_intr
 argument_list|(
-name|INTR_VEC
+name|FDT_MAP_IRQ
 argument_list|(
 name|intr_par
 argument_list|,
@@ -1648,6 +1585,78 @@ block|}
 end_function
 
 begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+unit|static int fdt_pci_config_bar(device_t dev, int bus, int slot, int func, int bar) { }  static int fdt_pci_config_normal(device_t dev, int bus, int slot, int func) { 	int bar; 	uint8_t command, intline, intpin;  	command = PCIB_READ_CONFIG(dev, bus, slot, func, PCIR_COMMAND, 1); 	command&= ~(PCIM_CMD_MEMEN | PCIM_CMD_PORTEN); 	PCIB_WRITE_CONFIG(dev, bus, slot, func, PCIR_COMMAND, command, 1);
+comment|/* Program the base address registers. */
+end_comment
+
+begin_comment
+unit|bar = 0; 	while (bar<= PCIR_MAX_BAR_0) 		bar += fdt_pci_config_bar(dev, bus, slot, func, bar);
+comment|/* Perform interrupt routing. */
+end_comment
+
+begin_comment
+unit|intpin = PCIB_READ_CONFIG(dev, bus, slot, func, PCIR_INTPIN, 1); 	intline = fsl_pcib_route_int(dev, bus, slot, func, intpin); 	PCIB_WRITE_CONFIG(dev, bus, slot, func, PCIR_INTLINE, intline, 1);  	command |= PCIM_CMD_MEMEN | PCIM_CMD_PORTEN; 	PCIB_WRITE_CONFIG(dev, bus, slot, func, PCIR_COMMAND, command, 1); }  static int fdt_pci_config_bridge(device_t dev, int bus, int secbus, int slot, int func) { 	int maxbar; 	uint8_t command;  	command = PCIB_READ_CONFIG(dev, bus, slot, func, PCIR_COMMAND, 1); 	command&= ~(PCIM_CMD_MEMEN | PCIM_CMD_PORTEN); 	PCIB_WRITE_CONFIG(dev, bus, slot, func, PCIR_COMMAND, command, 1);
+comment|/* Program the base address registers. */
+end_comment
+
+begin_comment
+unit|maxbar = (hdrtype& PCIM_HDRTYPE) ? 1 : 6;                         bar = 0;                         while (bar< maxbar)                                 bar += fsl_pcib_init_bar(sc, bus, slot, func,                                     bar);
+comment|/* Perform interrupt routing. */
+end_comment
+
+begin_comment
+unit|intpin = fsl_pcib_read_config(sc->sc_dev, bus, slot,                             func, PCIR_INTPIN, 1);                         intline = fsl_pcib_route_int(sc, bus, slot, func,                             intpin);                         fsl_pcib_write_config(sc->sc_dev, bus, slot, func,                             PCIR_INTLINE, intline, 1);                          command |= PCIM_CMD_MEMEN | PCIM_CMD_PORTEN;                         fsl_pcib_write_config(sc->sc_dev, bus, slot, func,                             PCIR_COMMAND, command, 1);
+comment|/*                          * Handle PCI-PCI bridges                          */
+end_comment
+
+begin_comment
+unit|class = fsl_pcib_read_config(sc->sc_dev, bus, slot,                             func, PCIR_CLASS, 1);                         subclass = fsl_pcib_read_config(sc->sc_dev, bus, slot,                             func, PCIR_SUBCLASS, 1);
+comment|/* Allow only proper PCI-PCI briges */
+end_comment
+
+begin_comment
+unit|if (class != PCIC_BRIDGE)                                 continue;                         if (subclass != PCIS_BRIDGE_PCI)                                 continue;                          secbus++;
+comment|/* Program I/O decoder. */
+end_comment
+
+begin_comment
+unit|fsl_pcib_write_config(sc->sc_dev, bus, slot, func,                             PCIR_IOBASEL_1, sc->sc_ioport.rm_start>> 8, 1);                         fsl_pcib_write_config(sc->sc_dev, bus, slot, func,                             PCIR_IOLIMITL_1, sc->sc_ioport.rm_end>> 8, 1);                         fsl_pcib_write_config(sc->sc_dev, bus, slot, func,                             PCIR_IOBASEH_1, sc->sc_ioport.rm_start>> 16, 2);                         fsl_pcib_write_config(sc->sc_dev, bus, slot, func,                             PCIR_IOLIMITH_1, sc->sc_ioport.rm_end>> 16, 2);
+comment|/* Program (non-prefetchable) memory decoder. */
+end_comment
+
+begin_comment
+unit|fsl_pcib_write_config(sc->sc_dev, bus, slot, func,                             PCIR_MEMBASE_1, sc->sc_iomem.rm_start>> 16, 2);                         fsl_pcib_write_config(sc->sc_dev, bus, slot, func,                             PCIR_MEMLIMIT_1, sc->sc_iomem.rm_end>> 16, 2);
+comment|/* Program prefetchable memory decoder. */
+end_comment
+
+begin_comment
+unit|fsl_pcib_write_config(sc->sc_dev, bus, slot, func,                             PCIR_PMBASEL_1, 0x0010, 2);                         fsl_pcib_write_config(sc->sc_dev, bus, slot, func,                             PCIR_PMLIMITL_1, 0x000f, 2);                         fsl_pcib_write_config(sc->sc_dev, bus, slot, func,                             PCIR_PMBASEH_1, 0x00000000, 4);                         fsl_pcib_write_config(sc->sc_dev, bus, slot, func,                             PCIR_PMLIMITH_1, 0x00000000, 4);
+comment|/* Read currect bus register configuration */
+end_comment
+
+begin_comment
+unit|old_pribus = fsl_pcib_read_config(sc->sc_dev, bus,                             slot, func, PCIR_PRIBUS_1, 1);                         old_secbus = fsl_pcib_read_config(sc->sc_dev, bus,                             slot, func, PCIR_SECBUS_1, 1);                         old_subbus = fsl_pcib_read_config(sc->sc_dev, bus,                             slot, func, PCIR_SUBBUS_1, 1);                          if (bootverbose)                                 printf("PCI: reading firmware bus numbers for "                                     "secbus = %d (bus/sec/sub) = (%d/%d/%d)\n",                                     secbus, old_pribus, old_secbus, old_subbus);                          new_pribus = bus;                         new_secbus = secbus;                          secbus = fsl_pcib_init(sc, secbus,                             (subclass == PCIS_BRIDGE_PCI) ? PCI_SLOTMAX : 0);                          new_subbus = secbus;                          if (bootverbose)                                 printf("PCI: translate firmware bus numbers "                                     "for secbus %d (%d/%d/%d) -> (%d/%d/%d)\n",                                     secbus, old_pribus, old_secbus, old_subbus,                                     new_pribus, new_secbus, new_subbus);                          fsl_pcib_write_config(sc->sc_dev, bus, slot, func,                             PCIR_PRIBUS_1, new_pribus, 1);                         fsl_pcib_write_config(sc->sc_dev, bus, slot, func,                             PCIR_SECBUS_1, new_secbus, 1);                         fsl_pcib_write_config(sc->sc_dev, bus, slot, func,                             PCIR_SUBBUS_1, new_subbus, 1);  }  static int fdt_pci_config_slot(device_t dev, int bus, int secbus, int slot) { 	int func, maxfunc; 	uint16_t vendor; 	uint8_t hdrtype;  	maxfunc = 0; 	for (func = 0; func<= maxfunc; func++) { 		hdrtype = PCIB_READ_CONFIG(dev, bus, slot, func, 		    PCIR_HDRTYPE, 1); 		if ((hdrtype& PCIM_HDRTYPE)> PCI_MAXHDRTYPE) 			continue; 		if (func == 0&& (hdrtype& PCIM_MFDEV)) 			maxfunc = PCI_FUNCMAX;  		vendor = PCIB_READ_CONFIG(dev, bus, slot, func, 		    PCIR_VENDOR, 2); 		if (vendor == 0xffff) 			continue;  		if ((hdrtype& PCIM_HDRTYPE) == PCIM_HDRTYPE_NORMAL) 			fdt_pci_config_normal(dev, bus, slot, func); 		else 			secbus = fdt_pci_config_bridge(dev, bus, secbus, 			    slot, func); 	}  	return (secbus); }  static int fdt_pci_config_bus(device_t dev, int bus, int maxslot) { 	int func, maxfunc, secbus, slot;  	secbus = bus; 	for (slot = 0; slot<= maxslot; slot++) 		secbus = fdt_pci_config_slot(dev, bus, secbus, slot);  	return (secbus); }  int fdt_pci_config_domain(device_t dev) { 	pcell_t bus_range[2]; 	phandle_t root; 	int bus, error, maxslot;  	root = ofw_bus_get_node(dev); 	if (root == 0) 		return (EINVAL); 	if (!fdt_is_type(root, "pci")) 		return (EINVAL);
+comment|/* 	 * Determine the bus number of the root in this domain. 	 * Lacking any information, this will be bus 0. 	 * Write the bus number to the bus device, using the IVAR. 	 */
+end_comment
+
+begin_comment
+unit|if ((OF_getprop(root, "bus-range", bus_range, sizeof(bus_range))<= 0) 		bus = 0; 	else 		bus = fdt32_to_cpu(bus_range[0]);  	error = BUS_WRITE_IVAR(dev, NULL, PCIB_IVAR_BUS, bus); 	if (error) 		return (error);
+comment|/* Get the maximum slot number for bus-enumeration. */
+end_comment
+
+begin_endif
+unit|maxslot = PCIB_MAXSLOTS(dev);  	bus = fdt_pci_config_bus(dev, bus, maxslot); 	return (0); }
 endif|#
 directive|endif
 end_endif
