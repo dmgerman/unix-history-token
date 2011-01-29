@@ -1093,6 +1093,17 @@ begin_comment
 comment|/* file system has NFSv4 ACLs enabled */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|FS_TRIM
+value|0x0400
+end_define
+
+begin_comment
+comment|/* issue BIO_DELETE for deleted blocks */
+end_comment
+
 begin_comment
 comment|/*  * Macros to access bits in the fs_active array.  */
 end_comment
