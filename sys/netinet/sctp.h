@@ -1523,6 +1523,24 @@ name|SCTP_PACKET_TRUNCATED
 value|0x04
 end_define
 
+begin_comment
+comment|/* Flag for ECN -CWR */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_CWR_REDUCE_OVERRIDE
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_CWR_IN_SAME_WINDOW
+value|0x02
+end_define
+
 begin_define
 define|#
 directive|define
