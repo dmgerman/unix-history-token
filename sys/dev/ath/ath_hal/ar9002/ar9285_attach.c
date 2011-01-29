@@ -1330,6 +1330,41 @@ name|ah
 argument_list|)
 expr_stmt|;
 comment|/* Anti Noise Immunity */
+comment|/* Setup noise floor min/max/nominal values */
+name|AH5416
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|nf_2g
+operator|.
+name|max
+operator|=
+name|AR_PHY_CCA_MAX_GOOD_VAL_9285_2GHZ
+expr_stmt|;
+name|AH5416
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|nf_2g
+operator|.
+name|min
+operator|=
+name|AR_PHY_CCA_MIN_GOOD_VAL_9285_2GHZ
+expr_stmt|;
+name|AH5416
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|nf_2g
+operator|.
+name|nominal
+operator|=
+name|AR_PHY_CCA_NOM_VAL_9285_2GHZ
+expr_stmt|;
+comment|/* XXX no 5ghz values? */
 name|ar5416InitNfHistBuff
 argument_list|(
 name|AH5416

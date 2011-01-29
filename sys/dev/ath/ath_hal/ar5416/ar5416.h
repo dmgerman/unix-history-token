@@ -139,6 +139,23 @@ end_define
 
 begin_struct
 struct|struct
+name|ar5416NfLimits
+block|{
+name|int16_t
+name|max
+decl_stmt|;
+name|int16_t
+name|min
+decl_stmt|;
+name|int16_t
+name|nominal
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|ath_hal_5416
 block|{
 name|struct
@@ -243,6 +260,14 @@ name|ar5416PerCal
 name|ah_cal
 decl_stmt|;
 comment|/* periodic calibration state */
+name|struct
+name|ar5416NfLimits
+name|nf_2g
+decl_stmt|;
+name|struct
+name|ar5416NfLimits
+name|nf_5g
+decl_stmt|;
 block|}
 struct|;
 end_struct

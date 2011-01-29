@@ -63,6 +63,27 @@ name|AR9285_DEFAULT_TXCHAINMASK
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|AR_PHY_CCA_NOM_VAL_9285_2GHZ
+value|-118
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_PHY_CCA_MIN_GOOD_VAL_9285_2GHZ
+value|-127
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_PHY_CCA_MAX_GOOD_VAL_9285_2GHZ
+value|-108
+end_define
+
 begin_function_decl
 name|HAL_BOOL
 name|ar9285SetAntennaSwitch
