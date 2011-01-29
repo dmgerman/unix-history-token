@@ -4136,6 +4136,17 @@ define|\
 value|(AR_SREV_KITE_12(_ah) || \ 	 AH_PRIVATE((_ah))->ah_macRev>= AR_XSREV_REVISION_KITE_12)
 end_define
 
+begin_define
+define|#
+directive|define
+name|AR_SREV_9285E_20
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(AR_SREV_KITE_12_OR_LATER(_ah)&& \ 	((OS_REG_READ(_ah, AR_AN_SYNTH9)& 0x7) == 0x1))
+end_define
+
 begin_endif
 endif|#
 directive|endif
