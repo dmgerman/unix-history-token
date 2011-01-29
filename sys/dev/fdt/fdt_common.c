@@ -2122,6 +2122,8 @@ name|i
 decl_stmt|,
 name|intr_num
 decl_stmt|,
+name|irq
+decl_stmt|,
 name|rv
 decl_stmt|;
 if|if
@@ -2376,6 +2378,15 @@ name|pol
 operator|=
 name|pol
 expr_stmt|;
+name|irq
+operator|=
+name|FDT_MAP_IRQ
+argument_list|(
+name|intr_par
+argument_list|,
+name|interrupt
+argument_list|)
+expr_stmt|;
 name|resource_list_add
 argument_list|(
 name|rl
@@ -2384,9 +2395,9 @@ name|SYS_RES_IRQ
 argument_list|,
 name|i
 argument_list|,
-name|interrupt
+name|irq
 argument_list|,
-name|interrupt
+name|irq
 argument_list|,
 literal|1
 argument_list|)

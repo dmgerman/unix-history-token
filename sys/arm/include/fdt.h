@@ -63,6 +63,22 @@ value|NIRQ
 end_define
 
 begin_comment
+comment|/* Map phandle/intpin pair to global IRQ number */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FDT_MAP_IRQ
+parameter_list|(
+name|node
+parameter_list|,
+name|pin
+parameter_list|)
+value|(pin)
+end_define
+
+begin_comment
 comment|/*  * Bus space tag. XXX endianess info needs to be derived from the blob.  */
 end_comment
 
