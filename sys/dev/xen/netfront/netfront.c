@@ -5583,12 +5583,6 @@ operator|*
 name|cons
 decl_stmt|;
 name|int
-name|max
-init|=
-literal|5
-comment|/* MAX_TX_REQ_FRAGS + (rx->status<= RX_COPY_THRESHOLD) */
-decl_stmt|;
-name|int
 name|frags
 init|=
 literal|1
@@ -6143,42 +6137,6 @@ name|list
 operator|=
 name|m0
 expr_stmt|;
-if|if
-condition|(
-name|unlikely
-argument_list|(
-name|frags
-operator|>
-name|max
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-name|net_ratelimit
-argument_list|()
-condition|)
-name|WPRINTK
-argument_list|(
-literal|"Too many frags\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s: too many frags %d> max %d\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|frags
-argument_list|,
-name|max
-argument_list|)
-expr_stmt|;
-name|err
-operator|=
-name|E2BIG
-expr_stmt|;
-block|}
 operator|*
 name|cons
 operator|+=
@@ -6190,7 +6148,9 @@ operator|=
 name|pages_flipped
 expr_stmt|;
 return|return
+operator|(
 name|err
+operator|)
 return|;
 block|}
 end_function
