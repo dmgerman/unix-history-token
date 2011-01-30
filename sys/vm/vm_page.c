@@ -4863,7 +4863,7 @@ name|v_free_count
 operator|--
 expr_stmt|;
 block|}
-comment|/* 	 * Initialize structure.  Only the PG_ZERO flag is inherited. 	 */
+comment|/* 	 * Only the PG_ZERO flag is inherited.  The PG_CACHED or PG_FREE flag 	 * must be cleared before the free page queues lock is released. 	 */
 name|flags
 operator|=
 literal|0
@@ -4913,6 +4913,12 @@ name|flags
 operator|=
 name|flags
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_page_queue_free_mtx
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|req
@@ -4943,6 +4949,7 @@ operator|&
 name|VM_ALLOC_WIRED
 condition|)
 block|{
+comment|/* 		 * The page lock is not required for wiring a page until that 		 * page is inserted into the object. 		 */
 name|atomic_add_int
 argument_list|(
 operator|&
@@ -4960,12 +4967,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|vm_page_queue_free_mtx
-argument_list|)
-expr_stmt|;
 name|m
 operator|->
 name|act_count
