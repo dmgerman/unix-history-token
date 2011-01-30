@@ -658,6 +658,24 @@ value|HDA_MODEL_CONSTRUCT(ATI, 0xffff)
 end_define
 
 begin_comment
+comment|/* RDC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RDC_VENDORID
+value|0x17f3
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_RDC_M3010
+value|HDA_MODEL_CONSTRUCT(RDC, 0x3010)
+end_define
+
+begin_comment
 comment|/* VIA */
 end_comment
 
@@ -2600,6 +2618,14 @@ block|{
 name|HDA_ATI_RV770
 block|,
 literal|"ATI RV770"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_RDC_M3010
+block|,
+literal|"RDC M3010"
 block|,
 literal|0
 block|}
