@@ -16389,6 +16389,8 @@ name|sr_flags
 operator|=
 name|IEEE80211_IOC_SCAN_ACTIVE
 operator||
+name|IEEE80211_IOC_SCAN_BGSCAN
+operator||
 name|IEEE80211_IOC_SCAN_NOPICK
 operator||
 name|IEEE80211_IOC_SCAN_ONCE
