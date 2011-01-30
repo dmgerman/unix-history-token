@@ -12549,6 +12549,8 @@ operator|->
 name|iv_ic
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|i
 decl_stmt|;
 comment|/* convert duration */
@@ -12943,7 +12945,6 @@ argument_list|(
 name|ic
 argument_list|)
 expr_stmt|;
-comment|/* XXX neeed error return codes */
 if|if
 condition|(
 name|sr
@@ -12953,9 +12954,8 @@ operator|&
 name|IEEE80211_IOC_SCAN_CHECK
 condition|)
 block|{
-operator|(
-name|void
-operator|)
+name|error
+operator|=
 name|ieee80211_check_scan
 argument_list|(
 name|vap
@@ -12999,9 +12999,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
-operator|(
-name|void
-operator|)
+name|error
+operator|=
 name|ieee80211_start_scan
 argument_list|(
 name|vap
@@ -13043,6 +13042,15 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+return|return
+name|EINPROGRESS
+return|;
 block|}
 return|return
 literal|0
