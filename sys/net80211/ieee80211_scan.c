@@ -2078,6 +2078,9 @@ name|ss_scan_task
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+literal|1
+return|;
 block|}
 else|else
 block|{
@@ -2104,13 +2107,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-operator|(
-name|ic
-operator|->
-name|ic_flags
-operator|&
-name|IEEE80211_F_SCAN
-operator|)
+literal|0
 return|;
 block|}
 end_function
