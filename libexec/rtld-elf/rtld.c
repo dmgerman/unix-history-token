@@ -18424,7 +18424,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* 	     * If there is DT_NEEDED for the name we are looking for, 	     * we are all set.  Note that object might not be found if 	     * dependency was not loaded yet, so the function can 	     * return NULL here.  This is expected and handled 	     * properly in caller. 	     */
+comment|/* 	     * If there is DT_NEEDED for the name we are looking for, 	     * we are all set.  Note that object might not be found if 	     * dependency was not loaded yet, so the function can 	     * return NULL here.  This is expected and handled 	     * properly by the caller. 	     */
 return|return
 operator|(
 name|needed
