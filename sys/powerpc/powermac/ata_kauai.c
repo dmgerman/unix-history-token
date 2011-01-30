@@ -1013,6 +1013,13 @@ name|flags
 operator||=
 name|ATA_USE_16BIT
 expr_stmt|;
+comment|/* XXX: ATAPI DMA is unreliable. We should find out why. */
+name|ch
+operator|->
+name|flags
+operator||=
+name|ATA_NO_ATAPI_DMA
+expr_stmt|;
 name|ata_generic_hw
 argument_list|(
 name|dev
