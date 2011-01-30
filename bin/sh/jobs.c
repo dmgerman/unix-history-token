@@ -5438,7 +5438,7 @@ index|[
 name|sig
 index|]
 condition|)
-name|out1str
+name|out2str
 argument_list|(
 name|sys_siglist
 index|[
@@ -5447,8 +5447,10 @@ index|]
 argument_list|)
 expr_stmt|;
 else|else
-name|out1fmt
+name|outfmt
 argument_list|(
+name|out2
+argument_list|,
 literal|"Signal %d"
 argument_list|,
 name|sig
@@ -5458,19 +5460,19 @@ if|if
 condition|(
 name|coredump
 condition|)
-name|out1str
+name|out2str
 argument_list|(
 literal|" (core dumped)"
 argument_list|)
 expr_stmt|;
-name|out1c
+name|out2c
 argument_list|(
 literal|'\n'
 argument_list|)
 expr_stmt|;
 name|flushout
 argument_list|(
-name|out1
+name|out2
 argument_list|)
 expr_stmt|;
 block|}
