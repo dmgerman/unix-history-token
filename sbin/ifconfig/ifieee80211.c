@@ -16423,7 +16423,7 @@ argument_list|(
 name|sr
 argument_list|)
 expr_stmt|;
-comment|/* NB: only root can trigger a scan so ignore errors */
+comment|/* 	 * NB: only root can trigger a scan so ignore errors. Also ignore 	 * possible errors from net80211, even if no new scan could be 	 * started there might still be a valid scan cache. 	 */
 if|if
 condition|(
 name|ioctl
@@ -16435,7 +16435,7 @@ argument_list|,
 operator|&
 name|ireq
 argument_list|)
-operator|>=
+operator|==
 literal|0
 condition|)
 block|{
