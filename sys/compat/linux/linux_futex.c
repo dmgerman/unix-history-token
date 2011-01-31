@@ -3159,6 +3159,23 @@ operator|(
 name|ENOSYS
 operator|)
 return|;
+case|case
+name|LINUX_FUTEX_CMP_REQUEUE_PI
+case|:
+comment|/* not yet implemented */
+name|linux_msg
+argument_list|(
+name|td
+argument_list|,
+literal|"linux_sys_futex: "
+literal|"op LINUX_FUTEX_CMP_REQUEUE_PI not implemented\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOSYS
+operator|)
+return|;
 default|default:
 name|linux_msg
 argument_list|(

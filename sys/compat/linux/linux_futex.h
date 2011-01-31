@@ -130,6 +130,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|LINUX_FUTEX_CMP_REQUEUE_PI
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
 name|LINUX_FUTEX_PRIVATE_FLAG
 value|128
 end_define
