@@ -433,20 +433,7 @@ name|fd
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|*
-operator|(
-operator|(
-name|int
-operator|*
-operator|)
-name|CMSG_DATA
-argument_list|(
-name|cmsg
-argument_list|)
-operator|)
-operator|=
-name|fd
-expr_stmt|;
+comment|//	*((int *)CMSG_DATA(cmsg)) = fd;
 if|if
 condition|(
 name|sendmsg
@@ -633,21 +620,7 @@ operator|==
 name|SCM_RIGHTS
 condition|)
 block|{
-operator|*
-name|fdp
-operator|=
-operator|*
-operator|(
-operator|(
-name|int
-operator|*
-operator|)
-name|CMSG_DATA
-argument_list|(
-name|cmsg
-argument_list|)
-operator|)
-expr_stmt|;
+comment|//			*fdp = *((int *)CMSG_DATA(cmsg));
 return|return
 operator|(
 literal|0
