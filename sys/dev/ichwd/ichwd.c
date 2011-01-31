@@ -766,6 +766,14 @@ literal|10
 block|}
 block|,
 block|{
+name|DEVICEID_DH89XXCC_LPC
+block|,
+literal|"Intel DH89xxCC watchdog timer"
+block|,
+literal|10
+block|}
+block|,
+block|{
 literal|0
 block|,
 name|NULL

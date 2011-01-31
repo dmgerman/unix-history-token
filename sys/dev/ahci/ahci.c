@@ -1202,6 +1202,16 @@ literal|0
 block|}
 block|,
 block|{
+literal|0x23238086
+block|,
+literal|0x00
+block|,
+literal|"Intel DH89xxCC"
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|0x2361197b
 block|,
 literal|0x00

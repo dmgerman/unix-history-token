@@ -1245,6 +1245,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_DH89XXCC
+value|0x23238086
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_ITE_ID
 value|0x1283
 end_define

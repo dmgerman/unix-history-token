@@ -337,6 +337,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|DEVICEID_DH89XXCC_LPC
+value|0x2310
+end_define
+
+begin_define
+define|#
+directive|define
 name|DEVICEID_82801AA
 value|0x2410
 end_define

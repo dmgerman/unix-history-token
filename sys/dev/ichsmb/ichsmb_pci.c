@@ -228,6 +228,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ID_DH89XXCC
+value|0x23308086
+end_define
+
+begin_define
+define|#
+directive|define
 name|ID_CPT
 value|0x1c228086
 end_define
@@ -622,6 +629,17 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"Intel 631xESB/6321ESB (ESB2) SMBus controller"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ID_DH89XXCC
+case|:
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"Intel DH89xxCC SMBus controller"
 argument_list|)
 expr_stmt|;
 break|break;
