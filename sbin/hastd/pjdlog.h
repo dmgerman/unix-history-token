@@ -633,46 +633,44 @@ name|__dead2
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|void
-name|pjdlog_verify
-parameter_list|(
+name|pjdlog_abort
+argument_list|(
 specifier|const
 name|char
-modifier|*
+operator|*
 name|func
-parameter_list|,
+argument_list|,
 specifier|const
 name|char
-modifier|*
+operator|*
 name|file
-parameter_list|,
+argument_list|,
 name|int
 name|line
-parameter_list|,
+argument_list|,
 specifier|const
 name|char
-modifier|*
+operator|*
 name|failedexpr
-parameter_list|,
+argument_list|,
 specifier|const
 name|char
-modifier|*
+operator|*
 name|fmt
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|__printflike
-parameter_list|(
-function_decl|5
-operator|,
-function_decl|6
-end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
+argument_list|,
+operator|...
+argument_list|)
+name|__printflike
+argument_list|(
+literal|5
+argument_list|,
+literal|6
+argument_list|)
+name|__dead2
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -681,7 +679,7 @@ name|PJDLOG_VERIFY
 parameter_list|(
 name|expr
 parameter_list|)
-value|do {					\ 	if (!(expr)) {							\ 		pjdlog_verify(__func__, __FILE__, __LINE__, #expr,	\ 		    __func__);						\ 	}								\ } while (0)
+value|do {					\ 	if (!(expr)) {							\ 		pjdlog_abort(__func__, __FILE__, __LINE__, #expr,	\ 		    __func__);						\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -693,7 +691,7 @@ name|expr
 parameter_list|,
 modifier|...
 parameter_list|)
-value|do {				\ 	if (!(expr)) {							\ 		pjdlog_verify(__func__, __FILE__, __LINE__, #expr,	\ 		    __VA_ARGS__);					\ 	}								\ } while (0)
+value|do {				\ 	if (!(expr)) {							\ 		pjdlog_abort(__func__, __FILE__, __LINE__, #expr,	\ 		    __VA_ARGS__);					\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -703,7 +701,7 @@ name|PJDLOG_ABORT
 parameter_list|(
 modifier|...
 parameter_list|)
-value|pjdlog_verify(__func__, __FILE__,	\ 				    __LINE__, NULL, __VA_ARGS__)
+value|pjdlog_abort(__func__, __FILE__,	\ 				    __LINE__, NULL, __VA_ARGS__)
 end_define
 
 begin_ifdef

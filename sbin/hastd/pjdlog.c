@@ -1456,12 +1456,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Log assertion and exit.  */
+comment|/*  * Log failure message and exit.  */
 end_comment
 
 begin_function
 name|void
-name|pjdlog_verify
+name|pjdlog_abort
 parameter_list|(
 specifier|const
 name|char
