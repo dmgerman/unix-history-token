@@ -5715,7 +5715,8 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"%6s|%58s|%s\n%6s|%58s|%58s\n"
+literal|"%6s|%58s|%s\n"
+literal|"%6s|%58s|%58s\n"
 argument_list|,
 literal|"Inter-"
 argument_list|,
@@ -5725,9 +5726,9 @@ literal|"  Transmit"
 argument_list|,
 literal|" face"
 argument_list|,
-literal|"bytes    packets errs drop fifo frame compressed"
+literal|"bytes    packets errs drop fifo frame compressed multicast"
 argument_list|,
-literal|"bytes    packets errs drop fifo frame compressed"
+literal|"bytes    packets errs drop fifo colls carrier compressed"
 argument_list|)
 expr_stmt|;
 name|CURVNET_SET
@@ -5764,7 +5765,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"%6.6s:"
+literal|"%6.6s: "
 argument_list|,
 name|ifname
 argument_list|)
@@ -5773,48 +5774,82 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"%8lu %7lu %4lu %4lu %4lu %5lu %10lu %9lu "
+literal|"%7lu %7lu %4lu %4lu %4lu %5lu %10lu %9lu "
 argument_list|,
+name|ifp
+operator|->
+name|if_ibytes
+argument_list|,
+comment|/* rx_bytes */
+name|ifp
+operator|->
+name|if_ipackets
+argument_list|,
+comment|/* rx_packets */
+name|ifp
+operator|->
+name|if_ierrors
+argument_list|,
+comment|/* rx_errors */
+name|ifp
+operator|->
+name|if_iqdrops
+argument_list|,
+comment|/* rx_dropped + 					 * rx_missed_errors */
 literal|0UL
 argument_list|,
+comment|/* rx_fifo_errors */
 literal|0UL
 argument_list|,
+comment|/* rx_length_errors + 					 * rx_over_errors + 		    			 * rx_crc_errors + 					 * rx_frame_errors */
 literal|0UL
 argument_list|,
-literal|0UL
-argument_list|,
-literal|0UL
-argument_list|,
-literal|0UL
-argument_list|,
-literal|0UL
-argument_list|,
-literal|0UL
+comment|/* rx_compressed */
+name|ifp
+operator|->
+name|if_imcasts
 argument_list|)
 expr_stmt|;
+comment|/* multicast, XXX-BZ rx only? */
 name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
 literal|"%8lu %7lu %4lu %4lu %4lu %5lu %7lu %10lu\n"
 argument_list|,
+name|ifp
+operator|->
+name|if_obytes
+argument_list|,
+comment|/* tx_bytes */
+name|ifp
+operator|->
+name|if_opackets
+argument_list|,
+comment|/* tx_packets */
+name|ifp
+operator|->
+name|if_oerrors
+argument_list|,
+comment|/* tx_errors */
 literal|0UL
 argument_list|,
+comment|/* tx_dropped */
 literal|0UL
 argument_list|,
+comment|/* tx_fifo_errors */
+name|ifp
+operator|->
+name|if_collisions
+argument_list|,
+comment|/* collisions */
 literal|0UL
 argument_list|,
-literal|0UL
-argument_list|,
-literal|0UL
-argument_list|,
-literal|0UL
-argument_list|,
-literal|0UL
-argument_list|,
+comment|/* tx_carrier_errors + 					 * tx_aborted_errors + 					 * tx_window_errors + 					 * tx_heartbeat_errors */
 literal|0UL
 argument_list|)
 expr_stmt|;
+comment|/* tx_compressed */
 block|}
 name|IFNET_RUNLOCK
 argument_list|()
