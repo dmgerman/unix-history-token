@@ -62,12 +62,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<assert.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<err.h>
 end_include
 
@@ -863,7 +857,7 @@ block|{
 name|va_list
 name|ap
 decl_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|exitcode
 operator|!=
@@ -996,14 +990,14 @@ operator|&
 name|size
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|buf
 operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 operator|(
 name|size
@@ -2141,7 +2135,7 @@ decl_stmt|;
 name|size_t
 name|size
 decl_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 operator|(
 name|inp
@@ -2164,7 +2158,7 @@ name|NULL
 operator|)
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|real_remote
 argument_list|(
@@ -3811,7 +3805,7 @@ argument_list|,
 name|res
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|error
 operator|==
@@ -3833,7 +3827,7 @@ argument_list|,
 name|res
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|error
 operator|==
@@ -3873,7 +3867,7 @@ argument_list|,
 name|res
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|error
 operator|==
@@ -3894,7 +3888,7 @@ argument_list|,
 name|res
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|error
 operator|==
@@ -3915,7 +3909,7 @@ argument_list|,
 name|res
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|error
 operator|==
@@ -3936,7 +3930,7 @@ argument_list|,
 name|res
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|error
 operator|==
@@ -3957,7 +3951,7 @@ argument_list|,
 name|res
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|error
 operator|==
@@ -4276,7 +4270,7 @@ name|ncomp
 argument_list|)
 condition|)
 block|{
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|res
 operator|->
@@ -4285,7 +4279,7 @@ operator|==
 name|NULL
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|res
 operator|->
@@ -4305,7 +4299,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|res
 operator|->
@@ -4314,7 +4308,7 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|res
 operator|->
@@ -4711,7 +4705,7 @@ block|}
 else|else
 comment|/* if (res->hr_syncsrc == 			    HAST_SYNCSRC_SECONDARY) */
 block|{
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|res
 operator|->
@@ -5562,7 +5556,7 @@ name|ncomp
 argument_list|)
 condition|)
 return|return;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|res
 operator|->
@@ -5571,7 +5565,7 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|res
 operator|->
@@ -5948,7 +5942,7 @@ literal|0
 expr_stmt|;
 break|break;
 default|default:
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 operator|!
 literal|"invalid condition"
@@ -6610,7 +6604,7 @@ name|ncomp
 index|]
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|hio
 operator|!=
@@ -6999,7 +6993,7 @@ name|BIO_FLUSH
 case|:
 break|break;
 default|default:
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 operator|!
 literal|"invalid condition"
@@ -8117,7 +8111,7 @@ block|}
 else|else
 comment|/* if (res->hr_syncsrc == HAST_SYNCSRC_SECONDARY) */
 block|{
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|res
 operator|->
@@ -8300,7 +8294,7 @@ block|}
 else|else
 comment|/* if (res->hr_syncsrc == HAST_SYNCSRC_SECONDARY) */
 block|{
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|res
 operator|->
@@ -8510,7 +8504,7 @@ argument_list|(
 literal|"Reloading configuration..."
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|res
 operator|->
@@ -8519,7 +8513,7 @@ operator|==
 name|HAST_ROLE_PRIMARY
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|gres
 operator|==
@@ -9002,7 +8996,7 @@ name|ncomp
 argument_list|)
 condition|)
 block|{
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|res
 operator|->
@@ -9011,7 +9005,7 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|res
 operator|->
@@ -9042,7 +9036,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|res
 operator|->
@@ -9051,7 +9045,7 @@ operator|==
 name|NULL
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|res
 operator|->
@@ -9110,7 +9104,7 @@ name|ncomp
 index|]
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|res
 operator|->
@@ -9119,7 +9113,7 @@ operator|==
 name|NULL
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|res
 operator|->
@@ -9128,7 +9122,7 @@ operator|==
 name|NULL
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|in
 operator|!=
@@ -9176,7 +9170,7 @@ block|}
 else|else
 block|{
 comment|/* Both connections should be NULL. */
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|res
 operator|->
@@ -9185,7 +9179,7 @@ operator|==
 name|NULL
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|res
 operator|->
@@ -9194,7 +9188,7 @@ operator|==
 name|NULL
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|in
 operator|==

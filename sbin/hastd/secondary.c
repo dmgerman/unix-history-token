@@ -50,12 +50,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<assert.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<err.h>
 end_include
 
@@ -797,7 +791,7 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * Provider is used for the first time. If primary node done no 		 * writes yet as well (we will find "virgin" argument) then 		 * there is no need to synchronize anything. If primary node 		 * done any writes already we have to synchronize everything. 		 */
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|res
 operator|->
@@ -1060,7 +1054,7 @@ else|else
 comment|/* if (res->hr_secondary_localcnt< res->hr_primary_remotecnt || 	    res->hr_primary_localcnt< res->hr_secondary_remotecnt) */
 block|{
 comment|/* 		 * This should never happen in practise, but we will perform 		 * full synchronization. 		 */
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|res
 operator|->
@@ -1635,7 +1629,7 @@ argument_list|,
 name|res
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|error
 operator|==
@@ -1670,7 +1664,7 @@ argument_list|,
 name|res
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|error
 operator|==
@@ -1691,7 +1685,7 @@ argument_list|,
 name|res
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|error
 operator|==
@@ -2399,7 +2393,7 @@ block|{
 name|va_list
 name|ap
 decl_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|exitcode
 operator|!=

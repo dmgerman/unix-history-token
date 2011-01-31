@@ -44,12 +44,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<assert.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<errno.h>
 end_include
 
@@ -106,7 +100,7 @@ name|struct
 name|stat
 name|sb
 decl_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|res
 operator|->

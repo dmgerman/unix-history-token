@@ -50,12 +50,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<assert.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<err.h>
 end_include
 
@@ -1431,7 +1425,7 @@ modifier|*
 name|res1
 parameter_list|)
 block|{
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|strcmp
 argument_list|(
@@ -1599,7 +1593,7 @@ modifier|*
 name|res1
 parameter_list|)
 block|{
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|strcmp
 argument_list|(
@@ -1615,7 +1609,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|strcmp
 argument_list|(
@@ -1631,7 +1625,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|strcmp
 argument_list|(
@@ -1761,7 +1755,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|res
 operator|->
@@ -2430,7 +2424,7 @@ literal|0
 condition|)
 break|break;
 block|}
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|cres
 operator|!=
@@ -3309,7 +3303,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|res
 operator|->
@@ -3336,7 +3330,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|res
 operator|->
@@ -4030,10 +4024,11 @@ argument_list|()
 expr_stmt|;
 break|break;
 default|default:
-name|assert
+name|PJDLOG_ABORT
 argument_list|(
-operator|!
-literal|"invalid condition"
+literal|"Unexpected signal (%d)."
+argument_list|,
+name|signo
 argument_list|)
 expr_stmt|;
 block|}
@@ -4056,7 +4051,7 @@ operator|->
 name|hc_controlconn
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|fd
 operator|>=
@@ -4080,7 +4075,7 @@ operator|->
 name|hc_listenconn
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|fd
 operator|>=
@@ -4132,7 +4127,7 @@ operator|->
 name|hr_event
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|fd
 operator|>=
@@ -4158,7 +4153,7 @@ else|:
 name|maxfd
 expr_stmt|;
 block|}
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|maxfd
 operator|+
@@ -4542,7 +4537,7 @@ argument_list|,
 name|true
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|cfg
 operator|!=
