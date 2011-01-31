@@ -391,24 +391,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* ECN Nonce: draft-ladha-sctp-ecn-nonce */
-end_comment
-
-begin_struct
-struct|struct
-name|sctp_ecn_nonce_supported_param
-block|{
-name|struct
-name|sctp_paramhdr
-name|ph
-decl_stmt|;
-comment|/* type = 0x8001  len = 4 */
-block|}
-name|SCTP_PACKED
-struct|;
-end_struct
-
-begin_comment
 comment|/*  * Structures for DATA chunks  */
 end_comment
 

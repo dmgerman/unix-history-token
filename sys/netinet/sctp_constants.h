@@ -1804,17 +1804,6 @@ value|0x8000
 end_define
 
 begin_comment
-comment|/* ECN Nonce: draft-ladha-sctp-ecn-nonce */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTP_ECN_NONCE_SUPPORTED
-value|0x8001
-end_define
-
-begin_comment
 comment|/* draft-ietf-tsvwg-auth-xxx */
 end_comment
 

@@ -810,10 +810,6 @@ name|uint32_t
 name|context
 decl_stmt|;
 comment|/* from send */
-comment|/* ECN Nonce: Nonce Value for this chunk */
-name|uint8_t
-name|ect_nonce
-decl_stmt|;
 name|uint8_t
 name|fwd_tsn_cnt
 decl_stmt|;
@@ -1686,6 +1682,12 @@ name|struct
 name|sctp_nets
 modifier|*
 name|net
+parameter_list|,
+name|int
+name|in_window
+parameter_list|,
+name|int
+name|num_pkt_lost
 parameter_list|)
 function_decl|;
 name|void
@@ -2447,9 +2449,6 @@ name|uint32_t
 name|highest_tsn_inside_nr_map
 decl_stmt|;
 name|uint32_t
-name|last_echo_tsn
-decl_stmt|;
-name|uint32_t
 name|fast_recovery_tsn
 decl_stmt|;
 name|uint32_t
@@ -2585,13 +2584,6 @@ name|uint32_t
 name|my_rwnd_control_len
 decl_stmt|;
 comment|/* shadow of sb_mbcnt used for rwnd 					 * control */
-comment|/* 32 bit nonce stuff */
-name|uint32_t
-name|nonce_resync_tsn
-decl_stmt|;
-name|uint32_t
-name|nonce_wait_tsn
-decl_stmt|;
 name|uint32_t
 name|default_flowlabel
 decl_stmt|;
@@ -2601,7 +2593,7 @@ decl_stmt|;
 name|int
 name|ctrl_queue_cnt
 decl_stmt|;
-comment|/* could be removed  REM */
+comment|/* could be removed  REM - NO IT CAN'T!! RRS */
 comment|/* 	 * All outbound datagrams queue into this list from the individual 	 * stream queue. Here they get assigned a TSN and then await 	 * sending. The stream seq comes when it is first put in the 	 * individual str queue 	 */
 name|unsigned
 name|int
@@ -2903,30 +2895,7 @@ name|uint8_t
 name|asconf_del_pending
 decl_stmt|;
 comment|/* asconf delete last addr pending */
-comment|/* ECN Nonce stuff */
-name|uint8_t
-name|receiver_nonce_sum
-decl_stmt|;
-comment|/* nonce I sum and put in my sack */
-name|uint8_t
-name|ecn_nonce_allowed
-decl_stmt|;
-comment|/* Tells us if ECN nonce is on */
-name|uint8_t
-name|nonce_sum_check
-decl_stmt|;
-comment|/* On off switch used during re-sync */
-name|uint8_t
-name|nonce_wait_for_ecne
-decl_stmt|;
-comment|/* flag when we expect a ECN */
-name|uint8_t
-name|peer_supports_ecn_nonce
-decl_stmt|;
 comment|/* 	 * This value, plus all other ack'd but above cum-ack is added 	 * together to cross check against the bit that we have yet to 	 * define (probably in the SACK). When the cum-ack is updated, this 	 * sum is updated as well. 	 */
-name|uint8_t
-name|nonce_sum_expect_base
-decl_stmt|;
 comment|/* Flag to tell if ECN is allowed */
 name|uint8_t
 name|ecn_allowed
