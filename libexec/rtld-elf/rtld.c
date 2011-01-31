@@ -6886,7 +6886,7 @@ name|defined
 argument_list|(
 name|__mips__
 argument_list|)
-comment|/* MIPS and SH{3,5} have a bogus DT_TEXTREL. */
+comment|/* MIPS has a bogus DT_TEXTREL. */
 name|assert
 argument_list|(
 operator|!
