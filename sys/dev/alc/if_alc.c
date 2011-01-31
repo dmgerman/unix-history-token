@@ -18859,7 +18859,7 @@ name|reg
 operator|&
 name|TXQ_CFG_ENB
 operator|)
-operator|==
+operator|!=
 literal|0
 condition|)
 block|{
