@@ -10778,6 +10778,19 @@ name|rfilt
 operator||=
 name|HAL_RX_FILTER_CONTROL
 expr_stmt|;
+if|if
+condition|(
+name|IEEE80211_IS_CHAN_HT
+argument_list|(
+name|ic
+operator|->
+name|ic_curchan
+argument_list|)
+condition|)
+name|rfilt
+operator||=
+name|HAL_RX_FILTER_COMPBAR
+expr_stmt|;
 name|DPRINTF
 argument_list|(
 name|sc
@@ -18020,6 +18033,21 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* tag AMPDU aggregates for reorder processing */
+if|if
+condition|(
+name|ni
+operator|->
+name|ni_flags
+operator|&
+name|IEEE80211_NODE_HT
+condition|)
+name|m
+operator|->
+name|m_flags
+operator||=
+name|M_AMPDU
+expr_stmt|;
 comment|/* 			 * Sending station is known, dispatch directly. 			 */
 name|type
 operator|=
