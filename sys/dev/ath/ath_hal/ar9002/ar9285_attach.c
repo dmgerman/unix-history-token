@@ -1769,6 +1769,19 @@ literal|0
 block|pCap->halWowMatchPatternDword = AH_TRUE;
 endif|#
 directive|endif
+comment|/* AR9285 has 2 antennas but is a 1x1 stream device */
+name|pCap
+operator|->
+name|halTxStreams
+operator|=
+literal|2
+expr_stmt|;
+name|pCap
+operator|->
+name|halRxStreams
+operator|=
+literal|2
+expr_stmt|;
 name|pCap
 operator|->
 name|halCSTSupport

@@ -348,6 +348,11 @@ init|=
 literal|38
 block|,
 comment|/* hardware has disable bssid match */
+name|HAL_CAP_STREAMS
+init|=
+literal|39
+block|,
+comment|/* how many 802.11n spatial streams are available */
 block|}
 name|HAL_CAPABILITY_TYPE
 typedef|;

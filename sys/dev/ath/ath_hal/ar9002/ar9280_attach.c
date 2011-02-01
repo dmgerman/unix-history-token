@@ -3953,6 +3953,19 @@ literal|0
 block|pCap->halWowMatchPatternDword = AH_TRUE;
 endif|#
 directive|endif
+comment|/* AR9280 is a 2x2 stream device */
+name|pCap
+operator|->
+name|halTxStreams
+operator|=
+literal|2
+expr_stmt|;
+name|pCap
+operator|->
+name|halRxStreams
+operator|=
+literal|2
+expr_stmt|;
 name|pCap
 operator|->
 name|halCSTSupport

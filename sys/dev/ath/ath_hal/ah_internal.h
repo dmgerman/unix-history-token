@@ -736,6 +736,12 @@ decl_stmt|;
 name|uint32_t
 name|halIntrMask
 decl_stmt|;
+name|uint8_t
+name|halTxStreams
+decl_stmt|;
+name|uint8_t
+name|halRxStreams
+decl_stmt|;
 block|}
 name|HAL_CAPABILITIES
 typedef|;

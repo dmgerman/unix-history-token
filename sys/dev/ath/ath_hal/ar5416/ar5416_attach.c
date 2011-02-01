@@ -4647,6 +4647,19 @@ argument_list|,
 name|AH_NULL
 argument_list|)
 expr_stmt|;
+comment|/* AR5416 may have 3 antennas but is a 2x2 stream device */
+name|pCap
+operator|->
+name|halTxStreams
+operator|=
+literal|2
+expr_stmt|;
+name|pCap
+operator|->
+name|halRxStreams
+operator|=
+literal|2
+expr_stmt|;
 name|pCap
 operator|->
 name|halRtsAggrLimit

@@ -1510,6 +1510,19 @@ operator|=
 name|AH_FALSE
 expr_stmt|;
 comment|/* XXX? */
+comment|/* AR9160 is a 2x2 stream device */
+name|pCap
+operator|->
+name|halTxStreams
+operator|=
+literal|2
+expr_stmt|;
+name|pCap
+operator|->
+name|halRxStreams
+operator|=
+literal|2
+expr_stmt|;
 return|return
 name|AH_TRUE
 return|;
