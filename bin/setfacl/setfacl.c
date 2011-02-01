@@ -1008,6 +1008,9 @@ operator|->
 name|filename
 argument_list|)
 expr_stmt|;
+name|carried_error
+operator|++
+expr_stmt|;
 continue|continue;
 block|}
 if|if
@@ -1034,6 +1037,9 @@ name|file
 operator|->
 name|filename
 argument_list|)
+expr_stmt|;
+name|carried_error
+operator|++
 expr_stmt|;
 continue|continue;
 block|}
@@ -1087,6 +1093,9 @@ name|file
 operator|->
 name|filename
 argument_list|)
+expr_stmt|;
+name|carried_error
+operator|++
 expr_stmt|;
 continue|continue;
 block|}
@@ -1192,6 +1201,9 @@ name|file
 operator|->
 name|filename
 argument_list|)
+expr_stmt|;
+name|carried_error
+operator|++
 expr_stmt|;
 continue|continue;
 block|}
