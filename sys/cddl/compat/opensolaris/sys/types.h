@@ -25,19 +25,6 @@ directive|include
 file|<sys/stdint.h>
 end_include
 
-begin_typedef
-typedef|typedef
-name|int64_t
-name|clock_t
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|_CLOCK_T_DECLARED
-end_define
-
 begin_empty
 empty|#include_next<sys/types.h>
 end_empty
