@@ -130,13 +130,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fs/ext2fs/ext2_extern.h>
+file|<fs/ext2fs/ext2fs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<fs/ext2fs/ext2fs.h>
+file|<fs/ext2fs/ext2_dinode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fs/ext2fs/ext2_extern.h>
 end_include
 
 begin_function_decl
@@ -1642,7 +1648,7 @@ name|fs
 operator|->
 name|e2fs_first_inode
 operator|=
-name|E2FS_REV0_FIRST_INO
+name|EXT2_FIRSTINO
 expr_stmt|;
 name|fs
 operator|->

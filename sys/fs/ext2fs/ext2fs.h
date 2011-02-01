@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_FS_EXT2FS_EXT2_FS_H
+name|_FS_EXT2FS_EXT2_FS_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_FS_EXT2FS_EXT2_FS_H
+name|_FS_EXT2FS_EXT2_FS_H_
 end_define
 
 begin_include
@@ -474,17 +474,6 @@ define|#
 directive|define
 name|E2FS_VERSION
 value|"0.5b"
-end_define
-
-begin_comment
-comment|/* First non-reserved inode for old ext2 filesystems */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|E2FS_REV0_FIRST_INO
-value|11
 end_define
 
 begin_comment
@@ -1204,7 +1193,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_FS_EXT2FS_EXT2FS_H */
+comment|/* !_FS_EXT2FS_EXT2FS_H_ */
 end_comment
 
 end_unit
