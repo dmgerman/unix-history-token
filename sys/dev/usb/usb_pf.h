@@ -19,27 +19,27 @@ begin_struct
 struct|struct
 name|usbpf_pkthdr
 block|{
-name|int
+name|uint32_t
 name|up_busunit
 decl_stmt|;
 comment|/* Host controller unit number */
-name|u_char
+name|uint8_t
 name|up_address
 decl_stmt|;
 comment|/* USB device address */
-name|u_char
+name|uint8_t
 name|up_endpoint
 decl_stmt|;
 comment|/* USB endpoint */
-name|u_char
+name|uint8_t
 name|up_type
 decl_stmt|;
 comment|/* points SUBMIT / DONE */
-name|u_char
+name|uint8_t
 name|up_xfertype
 decl_stmt|;
 comment|/* Transfer type */
-name|u_int32_t
+name|uint32_t
 name|up_flags
 decl_stmt|;
 comment|/* Transfer flags */
@@ -79,7 +79,7 @@ define|#
 directive|define
 name|USBPF_FLAG_STALL_PIPE
 value|(1<< 8)
-name|u_int32_t
+name|uint32_t
 name|up_status
 decl_stmt|;
 comment|/* Transfer status */
@@ -168,24 +168,24 @@ define|#
 directive|define
 name|USBPF_STATUS_DOING_CALLBACK
 value|(1<< 19)
-name|u_int32_t
+name|uint32_t
 name|up_length
 decl_stmt|;
 comment|/* Total data length (submit/actual) */
-name|u_int32_t
+name|uint32_t
 name|up_frames
 decl_stmt|;
 comment|/* USB frame number (submit/actual) */
-name|u_int32_t
+name|uint32_t
 name|up_error
 decl_stmt|;
 comment|/* usb_error_t */
-name|u_int32_t
+name|uint32_t
 name|up_interval
 decl_stmt|;
 comment|/* for interrupt and isoc */
 comment|/* sizeof(struct usbpf_pkthdr) == 128 bytes */
-name|u_char
+name|uint8_t
 name|up_reserved
 index|[
 literal|96

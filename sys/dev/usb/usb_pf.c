@@ -1054,7 +1054,7 @@ name|ptr
 operator|+
 sizeof|sizeof
 argument_list|(
-name|u_int32_t
+name|uint32_t
 argument_list|)
 operator|>=
 name|end
@@ -1065,7 +1065,7 @@ goto|;
 operator|*
 operator|(
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 name|ptr
@@ -1085,7 +1085,7 @@ name|ptr
 operator|+=
 sizeof|sizeof
 argument_list|(
-name|u_int32_t
+name|uint32_t
 argument_list|)
 expr_stmt|;
 if|if
