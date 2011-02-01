@@ -146,6 +146,38 @@ comment|/*  * Transmit handling.  */
 end_comment
 
 begin_comment
+comment|/*  * Return the four TX rate index and try counts for the current data packet.  */
+end_comment
+
+begin_function_decl
+name|void
+name|ath_rate_getxtxrates
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|ath_node
+modifier|*
+name|an
+parameter_list|,
+name|uint8_t
+name|rix0
+parameter_list|,
+name|uint8_t
+modifier|*
+name|rix
+parameter_list|,
+name|uint8_t
+modifier|*
+name|try
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Return the transmit info for a data packet.  If multi-rate state  * is to be setup then try0 should contain a value other than ATH_TXMATRY  * and ath_rate_setupxtxdesc will be called after deciding if the frame  * can be transmitted with multi-rate retry.  */
 end_comment
 
