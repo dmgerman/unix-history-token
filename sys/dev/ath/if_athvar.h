@@ -1444,6 +1444,14 @@ modifier|*
 name|sc_eepromdata
 decl_stmt|;
 comment|/* Local eeprom data, if AR9100 */
+name|int
+name|sc_txchainmask
+decl_stmt|;
+comment|/* currently configured TX chainmask */
+name|int
+name|sc_rxchainmask
+decl_stmt|;
+comment|/* currently configured RX chainmask */
 block|}
 struct|;
 end_struct
@@ -3222,6 +3230,32 @@ name|_c
 parameter_list|)
 define|\
 value|((*(_ah)->ah_getChanNoise)((_ah), (_c)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_getrxchainmask
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_prxchainmask
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_RX_CHAINMASK, 0, _prxchainmask))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_gettxchainmask
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_ptxchainmask
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_TX_CHAINMASK, 0, _ptxchainmask))
 end_define
 
 begin_define
