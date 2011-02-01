@@ -628,8 +628,12 @@ define|#
 directive|define
 name|VALID_TX_RATES
 define|\
-value|((1<<0x0b)|(1<<0x0f)|(1<<0x0a)|(1<<0x0e)|(1<<0x09)|(1<<0x0d)|\          (1<<0x08)|(1<<0x0c)|(1<<0x1b)|(1<<0x1a)|(1<<0x1e)|(1<<0x19)|\          (1<<0x1d)|(1<<0x18)|(1<<0x1c))
+value|((1<<0x0b)|(1<<0x0f)|(1<<0x0a)|(1<<0x0e)|(1<<0x09)|(1<<0x0d)|\          (1<<0x08)|(1<<0x0c)|(1<<0x1b)|(1<<0x1a)|(1<<0x1e)|(1<<0x19)|\ 	 (1<<0x1d)|(1<<0x18)|(1<<0x1c)|(1<<0x01)|(1<<0x02)|(1<<0x03)|\ 	 (1<<0x04)|(1<<0x05)|(1<<0x06)|(1<<0x07)|(1<<0x00))
 end_define
+
+begin_comment
+comment|/* NB: accept HT rates */
+end_comment
 
 begin_define
 define|#
@@ -638,7 +642,7 @@ name|isValidTxRate
 parameter_list|(
 name|_r
 parameter_list|)
-value|((1<<(_r))& VALID_TX_RATES)
+value|((1<<((_r)& 0x7f))& VALID_TX_RATES)
 end_define
 
 begin_function
