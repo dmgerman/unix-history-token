@@ -502,6 +502,26 @@ block|{
 name|u_int
 name|win
 decl_stmt|;
+comment|/* Catch algos which mistakenly leak private signal types. */
+name|KASSERT
+argument_list|(
+operator|(
+name|type
+operator|&
+name|CC_SIGPRIVMASK
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"%s: congestion signal type 0x%08x is private\n"
+operator|,
+name|__func__
+operator|,
+name|type
+operator|)
+argument_list|)
+expr_stmt|;
 name|win
 operator|=
 name|max

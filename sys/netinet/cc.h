@@ -255,7 +255,7 @@ begin_define
 define|#
 directive|define
 name|CC_ECN
-value|0x000001
+value|0x00000001
 end_define
 
 begin_comment
@@ -266,7 +266,7 @@ begin_define
 define|#
 directive|define
 name|CC_RTO
-value|0x000002
+value|0x00000002
 end_define
 
 begin_comment
@@ -277,7 +277,7 @@ begin_define
 define|#
 directive|define
 name|CC_RTO_ERR
-value|0x000004
+value|0x00000004
 end_define
 
 begin_comment
@@ -288,11 +288,22 @@ begin_define
 define|#
 directive|define
 name|CC_NDUPACK
-value|0x000008
+value|0x00000008
 end_define
 
 begin_comment
 comment|/* Threshold of dupack's reached. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CC_SIGPRIVMASK
+value|0xFF000000
+end_define
+
+begin_comment
+comment|/* Mask to check if sig is private. */
 end_comment
 
 begin_comment
