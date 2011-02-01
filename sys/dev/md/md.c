@@ -3533,13 +3533,6 @@ name|bp
 operator|->
 name|bio_length
 expr_stmt|;
-name|g_io_deliver
-argument_list|(
-name|bp
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3565,6 +3558,13 @@ operator|->
 name|devstat
 argument_list|,
 name|bp
+argument_list|)
+expr_stmt|;
+name|g_io_deliver
+argument_list|(
+name|bp
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 block|}
