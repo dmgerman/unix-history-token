@@ -2326,6 +2326,8 @@ condition|(
 name|proto_connect
 argument_list|(
 name|controlconn
+argument_list|,
+name|HAST_TIMEOUT
 argument_list|)
 operator|<
 literal|0
