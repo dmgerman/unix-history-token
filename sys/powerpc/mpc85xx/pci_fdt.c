@@ -2854,7 +2854,7 @@ name|sc_devfn_via_ide
 condition|)
 name|intline
 operator|=
-name|INTR_VEC
+name|MAP_IRQ
 argument_list|(
 literal|0
 argument_list|,
@@ -2874,7 +2874,7 @@ literal|1
 condition|)
 name|intline
 operator|=
-name|INTR_VEC
+name|MAP_IRQ
 argument_list|(
 literal|0
 argument_list|,
@@ -2894,7 +2894,7 @@ literal|2
 condition|)
 name|intline
 operator|=
-name|INTR_VEC
+name|MAP_IRQ
 argument_list|(
 literal|0
 argument_list|,

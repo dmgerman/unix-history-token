@@ -1699,7 +1699,7 @@ name|powerpc_setup_intr
 argument_list|(
 literal|"IPI"
 argument_list|,
-name|INTR_VEC
+name|MAP_IRQ
 argument_list|(
 name|piclist
 index|[

@@ -789,14 +789,14 @@ name|SYS_RES_IRQ
 argument_list|,
 literal|0
 argument_list|,
-name|INTR_VEC
+name|MAP_IRQ
 argument_list|(
 name|iparent
 argument_list|,
 name|irq
 argument_list|)
 argument_list|,
-name|INTR_VEC
+name|MAP_IRQ
 argument_list|(
 name|iparent
 argument_list|,

@@ -841,7 +841,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|INTR_VEC
+name|MAP_IRQ
 argument_list|(
 name|iparent
 argument_list|,
@@ -1413,7 +1413,7 @@ operator|)
 condition|?
 name|intr
 else|:
-name|INTR_VEC
+name|MAP_IRQ
 argument_list|(
 name|iparent
 argument_list|,
@@ -1457,7 +1457,7 @@ literal|1
 condition|)
 name|intr
 operator|=
-name|INTR_VEC
+name|MAP_IRQ
 argument_list|(
 name|iparent
 argument_list|,

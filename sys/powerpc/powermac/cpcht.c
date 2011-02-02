@@ -3186,7 +3186,7 @@ index|[
 name|j
 index|]
 operator|=
-name|INTR_VEC
+name|MAP_IRQ
 argument_list|(
 name|cpcht_msipic
 argument_list|,
@@ -3405,7 +3405,7 @@ expr_stmt|;
 operator|*
 name|irq
 operator|=
-name|INTR_VEC
+name|MAP_IRQ
 argument_list|(
 name|cpcht_msipic
 argument_list|,

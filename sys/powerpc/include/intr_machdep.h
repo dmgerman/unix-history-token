@@ -32,7 +32,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|INTR_VEC
+name|MAP_IRQ
 parameter_list|(
 name|node
 parameter_list|,

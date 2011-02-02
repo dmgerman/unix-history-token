@@ -1662,7 +1662,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|INTR_VEC
+name|MAP_IRQ
 argument_list|(
 name|iparent
 argument_list|,
