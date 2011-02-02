@@ -463,6 +463,9 @@ parameter_list|(
 name|void
 modifier|*
 name|ctx
+parameter_list|,
+name|int
+name|timeout
 parameter_list|)
 block|{
 name|struct
@@ -502,6 +505,13 @@ argument_list|(
 name|uctx
 operator|->
 name|uc_fd
+operator|>=
+literal|0
+argument_list|)
+expr_stmt|;
+name|PJDLOG_ASSERT
+argument_list|(
+name|timeout
 operator|>=
 literal|0
 argument_list|)

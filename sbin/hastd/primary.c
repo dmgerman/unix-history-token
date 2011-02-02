@@ -2210,6 +2210,8 @@ condition|(
 name|proto_connect
 argument_list|(
 name|out
+argument_list|,
+name|HAST_TIMEOUT
 argument_list|)
 operator|<
 literal|0
@@ -2539,6 +2541,8 @@ condition|(
 name|proto_connect
 argument_list|(
 name|in
+argument_list|,
+name|HAST_TIMEOUT
 argument_list|)
 operator|<
 literal|0

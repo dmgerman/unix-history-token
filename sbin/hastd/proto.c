@@ -621,6 +621,9 @@ name|struct
 name|proto_conn
 modifier|*
 name|conn
+parameter_list|,
+name|int
+name|timeout
 parameter_list|)
 block|{
 name|int
@@ -671,6 +674,13 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
+name|PJDLOG_ASSERT
+argument_list|(
+name|timeout
+operator|>=
+literal|0
+argument_list|)
+expr_stmt|;
 name|ret
 operator|=
 name|conn
@@ -682,6 +692,8 @@ argument_list|(
 name|conn
 operator|->
 name|pc_ctx
+argument_list|,
+name|timeout
 argument_list|)
 expr_stmt|;
 if|if

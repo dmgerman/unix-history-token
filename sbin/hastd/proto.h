@@ -67,6 +67,9 @@ name|struct
 name|proto_conn
 modifier|*
 name|conn
+parameter_list|,
+name|int
+name|timeout
 parameter_list|)
 function_decl|;
 end_function_decl
