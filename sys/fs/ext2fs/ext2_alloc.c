@@ -3410,19 +3410,19 @@ name|isset
 argument_list|(
 name|bbp
 argument_list|,
-operator|(
-name|daddr_t
-operator|)
 name|bno
 argument_list|)
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ext2fs_alloccgblk: cg=%d bno=%d fs=%s\n"
+literal|"ext2fs_alloccgblk: cg=%d bno=%jd fs=%s\n"
 argument_list|,
 name|cg
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|bno
 argument_list|,
 name|fs
@@ -3442,9 +3442,6 @@ name|setbit
 argument_list|(
 name|bbp
 argument_list|,
-operator|(
-name|daddr_t
-operator|)
 name|bno
 argument_list|)
 expr_stmt|;
