@@ -786,10 +786,6 @@ name|task
 name|alc_int_task
 decl_stmt|;
 name|struct
-name|task
-name|alc_tx_task
-decl_stmt|;
-name|struct
 name|taskqueue
 modifier|*
 name|alc_tq

@@ -328,10 +328,6 @@ name|int_task
 decl_stmt|;
 name|struct
 name|task
-name|tx_task
-decl_stmt|;
-name|struct
-name|task
 name|link_task
 decl_stmt|;
 name|struct
