@@ -61,7 +61,7 @@ name|uint32_t
 name|sctp_ecn_enable
 decl_stmt|;
 name|uint32_t
-name|sctp_not_used
+name|sctp_fr_max_burst_default
 decl_stmt|;
 name|uint32_t
 name|sctp_strict_sacks
@@ -625,6 +625,38 @@ define|#
 directive|define
 name|SCTPCTL_MAXBURST_DEFAULT
 value|SCTP_DEF_MAX_BURST
+end_define
+
+begin_comment
+comment|/* fr_maxburst: Default max burst for sctp endpoints when fast retransmitting */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_FRMAXBURST_DESC
+value|"Default fr max burst for sctp endpoints"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_FRMAXBURST_MIN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_FRMAXBURST_MAX
+value|0xFFFFFFFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_FRMAXBURST_DEFAULT
+value|SCTP_DEF_FRMAX_BURST
 end_define
 
 begin_comment
@@ -1808,7 +1840,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_HB_MAX_BURST_DEFAULT
-value|SCTP_DEF_MAX_BURST
+value|SCTP_DEF_HBMAX_BURST
 end_define
 
 begin_comment

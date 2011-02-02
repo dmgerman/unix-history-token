@@ -11264,6 +11264,15 @@ argument_list|)
 expr_stmt|;
 name|m
 operator|->
+name|fr_max_burst
+operator|=
+name|SCTP_BASE_SYSCTL
+argument_list|(
+name|sctp_fr_max_burst_default
+argument_list|)
+expr_stmt|;
+name|m
+operator|->
 name|sctp_default_cc_module
 operator|=
 name|SCTP_BASE_SYSCTL

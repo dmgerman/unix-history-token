@@ -14792,6 +14792,8 @@ operator|->
 name|sent_rcv_time
 argument_list|,
 name|sctp_align_safe_nocopy
+argument_list|,
+name|SCTP_DETERMINE_LL_OK
 argument_list|)
 expr_stmt|;
 name|tp1
@@ -17860,6 +17862,9 @@ parameter_list|,
 name|int
 modifier|*
 name|abort_now
+parameter_list|,
+name|int
+name|ecne_seen
 parameter_list|)
 block|{
 name|struct
@@ -18620,6 +18625,8 @@ operator|->
 name|sent_rcv_time
 argument_list|,
 name|sctp_align_safe_nocopy
+argument_list|,
+name|SCTP_DETERMINE_LL_OK
 argument_list|)
 expr_stmt|;
 name|tp1
@@ -19044,11 +19051,19 @@ block|}
 comment|/* JRS - Use the congestion control given in the CC module */
 if|if
 condition|(
+operator|(
 name|asoc
 operator|->
 name|last_acked_seq
 operator|!=
 name|cumack
+operator|)
+operator|&&
+operator|(
+name|ecne_seen
+operator|==
+literal|0
+operator|)
 condition|)
 name|asoc
 operator|->
@@ -20334,6 +20349,9 @@ name|cum_ack
 parameter_list|,
 name|uint32_t
 name|rwnd
+parameter_list|,
+name|int
+name|ecne_seen
 parameter_list|)
 block|{
 name|struct
@@ -21473,6 +21491,8 @@ operator|->
 name|sent_rcv_time
 argument_list|,
 name|sctp_align_safe_nocopy
+argument_list|,
+name|SCTP_DETERMINE_LL_OK
 argument_list|)
 expr_stmt|;
 name|tp1
@@ -22514,6 +22534,12 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* JRS - Use the congestion control given in the CC module */
+if|if
+condition|(
+name|ecne_seen
+operator|==
+literal|0
+condition|)
 name|asoc
 operator|->
 name|cc_functions
@@ -24109,6 +24135,8 @@ argument_list|,
 name|a_rwnd
 argument_list|,
 name|abort_flag
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
