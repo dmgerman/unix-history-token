@@ -14863,6 +14863,12 @@ name|mp
 operator|=
 name|arg
 expr_stmt|;
+name|curthread
+operator|->
+name|td_pflags
+operator||=
+name|TDP_NORUNNINGBUF
+expr_stmt|;
 for|for
 control|(
 init|;
