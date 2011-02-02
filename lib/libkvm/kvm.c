@@ -2413,7 +2413,6 @@ argument_list|,
 name|initialize
 argument_list|)
 operator|&&
-operator|!
 name|strcmp
 argument_list|(
 name|prefix
@@ -2446,7 +2445,6 @@ argument_list|,
 name|initialize
 argument_list|)
 operator|&&
-operator|!
 name|strcmp
 argument_list|(
 name|prefix
