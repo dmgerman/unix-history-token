@@ -7439,8 +7439,6 @@ name|int
 name|cnt
 decl_stmt|,
 name|matchcnt
-decl_stmt|,
-name|loopcount
 decl_stmt|;
 name|struct
 name|ufsmount
@@ -7478,10 +7476,6 @@ argument_list|(
 operator|&
 name|lk
 argument_list|)
-expr_stmt|;
-name|loopcount
-operator|=
-literal|1
 expr_stmt|;
 name|starttime
 operator|=
@@ -7575,12 +7569,8 @@ block|}
 comment|/* 		 * We do not generally want to stop for buffer space, but if 		 * we are really being a buffer hog, we will stop and wait. 		 */
 if|if
 condition|(
-name|loopcount
-operator|++
-operator|%
-literal|128
-operator|==
-literal|0
+name|should_yield
+argument_list|()
 condition|)
 block|{
 name|FREE_LOCK

@@ -320,6 +320,24 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|maybe_yield
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|should_yield
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|uiomove
 parameter_list|(
