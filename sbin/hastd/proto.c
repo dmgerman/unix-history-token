@@ -269,6 +269,21 @@ name|side
 operator|==
 name|PROTO_SIDE_CLIENT
 condition|)
+block|{
+if|if
+condition|(
+name|proto
+operator|->
+name|hp_client
+operator|==
+name|NULL
+condition|)
+name|ret
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+else|else
 name|ret
 operator|=
 name|proto
@@ -281,8 +296,24 @@ operator|&
 name|ctx
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 comment|/* if (side == PROTO_SIDE_SERVER_LISTEN) */
+block|{
+if|if
+condition|(
+name|proto
+operator|->
+name|hp_server
+operator|==
+name|NULL
+condition|)
+name|ret
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+else|else
 name|ret
 operator|=
 name|proto
@@ -295,6 +326,7 @@ operator|&
 name|ctx
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 		 * ret == 0  - success 		 * ret == -1 - addr is not for this protocol 		 * ret> 0   - right protocol, but an error occured 		 */
 if|if
 condition|(
