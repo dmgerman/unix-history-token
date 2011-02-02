@@ -401,7 +401,7 @@ literal|100
 block|, 	}
 decl_stmt|;
 comment|/* NB: ANI is not enabled yet */
-name|ar5212AniAttach
+name|ar5416AniAttach
 argument_list|(
 name|ah
 argument_list|,

@@ -306,7 +306,7 @@ name|ah
 parameter_list|)
 block|{
 comment|/* NB: disable ANI for reliable RIFS rx */
-name|ar5212AniAttach
+name|ar5416AniAttach
 argument_list|(
 name|ah
 argument_list|,
