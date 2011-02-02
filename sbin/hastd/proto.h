@@ -76,6 +76,21 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|proto_connect_wait
+parameter_list|(
+name|struct
+name|proto_conn
+modifier|*
+name|conn
+parameter_list|,
+name|int
+name|timeout
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|proto_server
 parameter_list|(
 specifier|const
