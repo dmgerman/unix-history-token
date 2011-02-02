@@ -168,7 +168,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|proto_descriptor_send
+name|proto_connection_send
 parameter_list|(
 specifier|const
 name|struct
@@ -176,15 +176,17 @@ name|proto_conn
 modifier|*
 name|conn
 parameter_list|,
-name|int
-name|fd
+name|struct
+name|proto_conn
+modifier|*
+name|mconn
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|int
-name|proto_descriptor_recv
+name|proto_connection_recv
 parameter_list|(
 specifier|const
 name|struct
@@ -192,9 +194,14 @@ name|proto_conn
 modifier|*
 name|conn
 parameter_list|,
-name|int
+name|bool
+name|client
+parameter_list|,
+name|struct
+name|proto_conn
 modifier|*
-name|fdp
+modifier|*
+name|newconnp
 parameter_list|)
 function_decl|;
 end_function_decl
