@@ -744,7 +744,7 @@ value|p = stputs_quotes((data), syntax, p)
 end_define
 
 begin_comment
-comment|/*  * Perform expansions on an argument, placing the resulting list of arguments  * in arglist.  Parameter expansion, command substitution and arithmetic  * expansion are always performed; additional expansions can be requested  * via flag (EXP_*).  * The result is left in the stack string.  * When arglist is NULL, perform here document expansion.  A partial result  * may be written to herefd, which is then not included in the stack string.  *  * Caution: this function uses global state and is not reentrant.  * However, a new invocation after an interrupted invocation is safe  * and will reset the global state for the new call.  */
+comment|/*  * Perform expansions on an argument, placing the resulting list of arguments  * in arglist.  Parameter expansion, command substitution and arithmetic  * expansion are always performed; additional expansions can be requested  * via flag (EXP_*).  * The result is left in the stack string.  * When arglist is NULL, perform here document expansion.  *  * Caution: this function uses global state and is not reentrant.  * However, a new invocation after an interrupted invocation is safe  * and will reset the global state for the new call.  */
 end_comment
 
 begin_function
