@@ -1696,8 +1696,6 @@ operator||
 name|LK_RETRY
 argument_list|)
 expr_stmt|;
-name|again
-label|:
 name|aiov
 operator|.
 name|iov_base
@@ -2369,9 +2367,15 @@ name|args
 operator|->
 name|dirent
 condition|)
+block|{
+name|nbytes
+operator|=
+name|resid
+expr_stmt|;
 goto|goto
-name|again
+name|eof
 goto|;
+block|}
 name|fp
 operator|->
 name|f_offset
