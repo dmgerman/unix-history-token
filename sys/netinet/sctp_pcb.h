@@ -1096,6 +1096,9 @@ decl_stmt|;
 name|uint32_t
 name|sctp_cmt_on_off
 decl_stmt|;
+name|uint32_t
+name|sctp_ecn_enable
+decl_stmt|;
 name|struct
 name|sctp_nonpad_sndrcvinfo
 name|def_send

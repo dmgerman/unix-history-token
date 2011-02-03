@@ -13480,6 +13480,17 @@ name|sctp_cmt_on_off
 expr_stmt|;
 name|inp
 operator|->
+name|sctp_ecn_enable
+operator|=
+operator|(
+operator|*
+name|inp_p
+operator|)
+operator|->
+name|sctp_ecn_enable
+expr_stmt|;
+name|inp
+operator|->
 name|partial_delivery_point
 operator|=
 operator|(
@@ -27796,11 +27807,15 @@ block|}
 comment|/* take care of ecn */
 if|if
 condition|(
+operator|(
 name|stcb
 operator|->
 name|asoc
 operator|.
 name|ecn_allowed
+operator|==
+literal|1
+operator|)
 operator|&&
 operator|(
 operator|(
