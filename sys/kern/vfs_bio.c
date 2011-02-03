@@ -6921,12 +6921,6 @@ operator|!
 name|m
 operator|->
 name|valid
-operator|&&
-name|m
-operator|->
-name|hold_count
-operator|==
-literal|0
 condition|)
 block|{
 name|vm_page_free

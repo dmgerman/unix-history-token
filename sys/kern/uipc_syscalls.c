@@ -10011,12 +10011,6 @@ name|oflags
 operator|&
 name|VPO_BUSY
 operator|)
-operator|&&
-name|pg
-operator|->
-name|hold_count
-operator|==
-literal|0
 condition|)
 name|vm_page_free
 argument_list|(
