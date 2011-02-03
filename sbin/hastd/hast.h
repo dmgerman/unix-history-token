@@ -531,7 +531,7 @@ comment|/* PID of child worker process. 0 - no child. */
 name|pid_t
 name|hr_workerpid
 decl_stmt|;
-comment|/* Control connection between parent and child. */
+comment|/* Control commands from parent to child. */
 name|struct
 name|proto_conn
 modifier|*
@@ -542,6 +542,12 @@ name|struct
 name|proto_conn
 modifier|*
 name|hr_event
+decl_stmt|;
+comment|/* Connection requests from child to parent. */
+name|struct
+name|proto_conn
+modifier|*
+name|hr_conn
 decl_stmt|;
 comment|/* Activemap structure. */
 name|struct
