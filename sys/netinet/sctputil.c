@@ -6033,6 +6033,8 @@ name|strmout
 index|[
 name|i
 index|]
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}

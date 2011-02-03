@@ -16547,6 +16547,16 @@ operator|.
 name|sctp_ss_init_stream
 argument_list|(
 operator|&
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|strmout
+index|[
+name|i
+index|]
+argument_list|,
+operator|&
 name|oldstream
 index|[
 name|i
@@ -16782,6 +16792,8 @@ name|strmout
 index|[
 name|i
 index|]
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
