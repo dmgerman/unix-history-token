@@ -4042,7 +4042,7 @@ literal|0
 init|;
 name|cpu
 operator|<
-name|mp_ncpus
+name|mp_maxid
 condition|;
 name|cpu
 operator|++
