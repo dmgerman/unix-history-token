@@ -149,6 +149,13 @@ name|SCTP_KTHREAD_PAGES
 value|0
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCTP_MCORE_NAME
+value|"sctp_core_worker"
+end_define
+
 begin_comment
 comment|/* If you support Multi-VRF how big to  * make the initial array of VRF's to.  */
 end_comment

@@ -116,6 +116,86 @@ end_define
 begin_define
 define|#
 directive|define
+name|SCTP_MCORE_QLOCK_INIT
+parameter_list|(
+name|cpstr
+parameter_list|)
+value|do { \ 		mtx_init(&(cpstr)->que_mtx,	      \ 			 "sctp-mcore_queue","queue_lock",	\ 			 MTX_DEF|MTX_DUPOK);		\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_MCORE_QLOCK
+parameter_list|(
+name|cpstr
+parameter_list|)
+value|do { \ 		mtx_lock(&(cpstr)->que_mtx);	\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_MCORE_QUNLOCK
+parameter_list|(
+name|cpstr
+parameter_list|)
+value|do { \ 		mtx_unlock(&(cpstr)->que_mtx);	\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_MCORE_QDESTROY
+parameter_list|(
+name|cpstr
+parameter_list|)
+value|do { \ 	if(mtx_owned(&(cpstr)->core_mtx)) {	\ 		mtx_unlock(&(cpstr)->que_mtx);	\         } \ 	mtx_destroy(&(cpstr)->que_mtx);	\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_MCORE_LOCK_INIT
+parameter_list|(
+name|cpstr
+parameter_list|)
+value|do { \ 		mtx_init(&(cpstr)->core_mtx,	      \ 			 "sctp-cpulck","cpu_proc_lock",	\ 			 MTX_DEF|MTX_DUPOK);		\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_MCORE_LOCK
+parameter_list|(
+name|cpstr
+parameter_list|)
+value|do { \ 		mtx_lock(&(cpstr)->core_mtx);	\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_MCORE_UNLOCK
+parameter_list|(
+name|cpstr
+parameter_list|)
+value|do { \ 		mtx_unlock(&(cpstr)->core_mtx);	\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_MCORE_DESTROY
+parameter_list|(
+name|cpstr
+parameter_list|)
+value|do { \ 	if(mtx_owned(&(cpstr)->core_mtx)) {	\ 		mtx_unlock(&(cpstr)->core_mtx);	\         } \ 	mtx_destroy(&(cpstr)->core_mtx);	\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SCTP_INP_INFO_WLOCK
 parameter_list|()
 value|do { 					\             rw_wlock(&SCTP_BASE_INFO(ipi_ep_mtx));                         \ } while (0)

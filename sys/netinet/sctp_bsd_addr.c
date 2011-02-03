@@ -337,6 +337,18 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|SCTP_M_MCORE
+argument_list|,
+literal|"sctp_mcore"
+argument_list|,
+literal|"sctp mcore queue"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Global NON-VNET structure that controls the iterator */
 end_comment
