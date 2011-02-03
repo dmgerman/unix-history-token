@@ -1614,6 +1614,11 @@ argument_list|(
 name|EX_CONFIG
 argument_list|)
 expr_stmt|;
+name|pjdlog_info
+argument_list|(
+literal|"Privileges successfully dropped."
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Create the control thread before sending any event to the parent, 	 * as we can deadlock when parent sends control request to worker, 	 * but worker has no control thread started yet, so parent waits. 	 * In the meantime worker sends an event to the parent, but parent 	 * is unable to handle the event, because it waits for control 	 * request response. 	 */
 name|error
 operator|=

@@ -800,11 +800,6 @@ operator|->
 name|pw_gid
 argument_list|)
 expr_stmt|;
-name|pjdlog_info
-argument_list|(
-literal|"Privileges successfully dropped."
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
