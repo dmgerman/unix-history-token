@@ -18033,7 +18033,11 @@ operator|!=
 name|NULL
 condition|)
 block|{
+if|#
+directive|if
+name|NOTYET
 comment|/* tag AMPDU aggregates for reorder processing */
+comment|/* 		 * XXX this should only tag frames marked as aggregate; rather 		 * XXX than all frames. 		 */
 if|if
 condition|(
 name|ni
@@ -18048,6 +18052,8 @@ name|m_flags
 operator||=
 name|M_AMPDU
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 			 * Sending station is known, dispatch directly. 			 */
 name|type
 operator|=
