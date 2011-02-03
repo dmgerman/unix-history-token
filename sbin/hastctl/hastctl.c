@@ -2345,6 +2345,25 @@ name|hc_controladdr
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|drop_privs
+argument_list|()
+operator|!=
+literal|0
+condition|)
+name|exit
+argument_list|(
+name|EX_CONFIG
+argument_list|)
+expr_stmt|;
+name|pjdlog_debug
+argument_list|(
+literal|1
+argument_list|,
+literal|"Privileges successfully dropped."
+argument_list|)
+expr_stmt|;
 comment|/* Send the command to the server... */
 if|if
 condition|(
