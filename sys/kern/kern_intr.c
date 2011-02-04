@@ -658,13 +658,12 @@ name|INTR_TYPE_TTY
 case|:
 name|pri
 operator|=
-name|PI_TTYLOW
+name|PI_TTY
 expr_stmt|;
 break|break;
 case|case
 name|INTR_TYPE_BIO
 case|:
-comment|/* 		 * XXX We need to refine this.  BSD/OS distinguishes 		 * between tape and disk priorities. 		 */
 name|pri
 operator|=
 name|PI_DISK
@@ -685,12 +684,10 @@ name|pri
 operator|=
 name|PI_DISK
 expr_stmt|;
-comment|/* XXX or PI_CAM? */
 break|break;
 case|case
 name|INTR_TYPE_AV
 case|:
-comment|/* Audio/video */
 name|pri
 operator|=
 name|PI_AV
@@ -5194,13 +5191,10 @@ name|handler
 argument_list|,
 name|arg
 argument_list|,
-operator|(
+name|PI_SWI
+argument_list|(
 name|pri
-operator|*
-name|RQ_PPQ
-operator|)
-operator|+
-name|PI_SOFT
+argument_list|)
 argument_list|,
 name|flags
 argument_list|,
@@ -7249,23 +7243,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|PI_TTYHIGH
-case|:
-case|case
-name|PI_TTYLOW
+name|PI_TTY
 case|:
 name|db_printf
 argument_list|(
 literal|"TTY "
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|PI_TAPE
-case|:
-name|db_printf
-argument_list|(
-literal|"TAPE"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -7280,9 +7262,6 @@ expr_stmt|;
 break|break;
 case|case
 name|PI_DISK
-case|:
-case|case
-name|PI_DISKLOW
 case|:
 name|db_printf
 argument_list|(
