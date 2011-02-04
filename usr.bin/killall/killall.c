@@ -900,7 +900,7 @@ argument_list|(
 operator|*
 name|av
 argument_list|,
-literal|"sig"
+literal|"SIG"
 argument_list|,
 literal|3
 argument_list|)

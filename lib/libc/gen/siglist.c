@@ -70,97 +70,97 @@ init|=
 block|{
 literal|"Signal 0"
 block|,
-literal|"hup"
+literal|"HUP"
 block|,
 comment|/* SIGHUP */
-literal|"int"
+literal|"INT"
 block|,
 comment|/* SIGINT */
-literal|"quit"
+literal|"QUIT"
 block|,
 comment|/* SIGQUIT */
-literal|"ill"
+literal|"ILL"
 block|,
 comment|/* SIGILL */
-literal|"trap"
+literal|"TRAP"
 block|,
 comment|/* SIGTRAP */
-literal|"abrt"
+literal|"ABRT"
 block|,
 comment|/* SIGABRT */
-literal|"emt"
+literal|"EMT"
 block|,
 comment|/* SIGEMT */
-literal|"fpe"
+literal|"FPE"
 block|,
 comment|/* SIGFPE */
-literal|"kill"
+literal|"KILL"
 block|,
 comment|/* SIGKILL */
-literal|"bus"
+literal|"BUS"
 block|,
 comment|/* SIGBUS */
-literal|"segv"
+literal|"SEGV"
 block|,
 comment|/* SIGSEGV */
-literal|"sys"
+literal|"SYS"
 block|,
 comment|/* SIGSYS */
-literal|"pipe"
+literal|"PIPE"
 block|,
 comment|/* SIGPIPE */
-literal|"alrm"
+literal|"ALRM"
 block|,
 comment|/* SIGALRM */
-literal|"term"
+literal|"TERM"
 block|,
 comment|/* SIGTERM */
-literal|"urg"
+literal|"URG"
 block|,
 comment|/* SIGURG */
-literal|"stop"
+literal|"STOP"
 block|,
 comment|/* SIGSTOP */
-literal|"tstp"
+literal|"TSTP"
 block|,
 comment|/* SIGTSTP */
-literal|"cont"
+literal|"CONT"
 block|,
 comment|/* SIGCONT */
-literal|"chld"
+literal|"CHLD"
 block|,
 comment|/* SIGCHLD */
-literal|"ttin"
+literal|"TTIN"
 block|,
 comment|/* SIGTTIN */
-literal|"ttou"
+literal|"TTOU"
 block|,
 comment|/* SIGTTOU */
-literal|"io"
+literal|"IO"
 block|,
 comment|/* SIGIO */
-literal|"xcpu"
+literal|"XCPU"
 block|,
 comment|/* SIGXCPU */
-literal|"xfsz"
+literal|"XFSZ"
 block|,
 comment|/* SIGXFSZ */
-literal|"vtalrm"
+literal|"VTALRM"
 block|,
 comment|/* SIGVTALRM */
-literal|"prof"
+literal|"PROF"
 block|,
 comment|/* SIGPROF */
-literal|"winch"
+literal|"WINCH"
 block|,
 comment|/* SIGWINCH */
-literal|"info"
+literal|"INFO"
 block|,
 comment|/* SIGINFO */
-literal|"usr1"
+literal|"USR1"
 block|,
 comment|/* SIGUSR1 */
-literal|"usr2"
+literal|"USR2"
 comment|/* SIGUSR2 */
 block|}
 decl_stmt|;

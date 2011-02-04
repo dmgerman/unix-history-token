@@ -718,7 +718,7 @@ name|strncasecmp
 argument_list|(
 name|sig
 argument_list|,
-literal|"sig"
+literal|"SIG"
 argument_list|,
 operator|(
 name|size_t

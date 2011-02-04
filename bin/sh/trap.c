@@ -394,7 +394,7 @@ name|strcasecmp
 argument_list|(
 name|sig
 argument_list|,
-literal|"exit"
+literal|"EXIT"
 argument_list|)
 operator|==
 literal|0
@@ -417,7 +417,7 @@ name|strncasecmp
 argument_list|(
 name|sig
 argument_list|,
-literal|"sig"
+literal|"SIG"
 argument_list|,
 literal|3
 argument_list|)
@@ -718,7 +718,7 @@ condition|)
 block|{
 name|out1str
 argument_list|(
-literal|" exit\n"
+literal|" EXIT\n"
 argument_list|)
 expr_stmt|;
 block|}

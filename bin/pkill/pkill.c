@@ -796,7 +796,7 @@ name|strncasecmp
 argument_list|(
 name|p
 argument_list|,
-literal|"sig"
+literal|"SIG"
 argument_list|,
 literal|3
 argument_list|)

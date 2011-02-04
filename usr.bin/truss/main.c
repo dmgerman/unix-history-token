@@ -585,7 +585,7 @@ argument_list|(
 operator|&
 name|ret
 argument_list|,
-literal|"sig%s"
+literal|"SIG%s"
 argument_list|,
 name|sys_signame
 index|[
