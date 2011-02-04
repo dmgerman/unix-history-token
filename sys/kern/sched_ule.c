@@ -413,6 +413,38 @@ value|CPU_ISSET((cpu),&(td)->td_cpuset->cs_mask)
 end_define
 
 begin_comment
+comment|/*  * Priority ranges used for interactive and non-interactive timeshare  * threads.  Interactive threads use realtime priorities.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRI_MIN_INTERACT
+value|PRI_MIN_REALTIME
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRI_MAX_INTERACT
+value|PRI_MAX_REALTIME
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRI_MIN_BATCH
+value|PRI_MIN_TIMESHARE
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRI_MAX_BATCH
+value|PRI_MAX_TIMESHARE
+end_define
+
+begin_comment
 comment|/*  * Cpu percentage computation macros and defines.  *  * SCHED_TICK_SECS:	Number of seconds to average the cpu usage across.  * SCHED_TICK_TARG:	Number of hz ticks to average the cpu usage across.  * SCHED_TICK_MAX:	Maximum number of ticks before scaling back.  * SCHED_TICK_SHIFT:	Shift factor to avoid rounding away results.  * SCHED_TICK_HZ:	Compute the number of hz ticks for a given ticks count.  * SCHED_TICK_TOTAL:	Gives the amount of time we've been recording ticks.  */
 end_comment
 
@@ -486,14 +518,14 @@ begin_define
 define|#
 directive|define
 name|SCHED_PRI_MIN
-value|(PRI_MIN_TIMESHARE + SCHED_PRI_NHALF)
+value|(PRI_MIN_BATCH + SCHED_PRI_NHALF)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCHED_PRI_MAX
-value|(PRI_MAX_TIMESHARE - SCHED_PRI_NHALF)
+value|(PRI_MAX_BATCH - SCHED_PRI_NHALF)
 end_define
 
 begin_define
@@ -1923,7 +1955,7 @@ begin_define
 define|#
 directive|define
 name|TS_RQ_PPQ
-value|(((PRI_MAX_TIMESHARE - PRI_MIN_TIMESHARE) + 1) / RQ_NQS)
+value|(((PRI_MAX_BATCH - PRI_MIN_BATCH) + 1) / RQ_NQS)
 end_define
 
 begin_comment
@@ -2027,11 +2059,11 @@ name|KASSERT
 argument_list|(
 name|pri
 operator|<=
-name|PRI_MAX_TIMESHARE
+name|PRI_MAX_BATCH
 operator|&&
 name|pri
 operator|>=
-name|PRI_MIN_TIMESHARE
+name|PRI_MIN_BATCH
 argument_list|,
 operator|(
 literal|"Invalid priority %d on timeshare runq"
@@ -2061,7 +2093,7 @@ operator|=
 operator|(
 name|pri
 operator|-
-name|PRI_MIN_TIMESHARE
+name|PRI_MIN_BATCH
 operator|)
 operator|/
 name|TS_RQ_PPQ
@@ -3812,16 +3844,16 @@ condition|)
 goto|goto
 name|sendipi
 goto|;
-comment|/* 	 * If we're realtime or better and there is timeshare or worse running 	 * send an IPI. 	 */
+comment|/* 	 * If we're interactive or better and there is non-interactive 	 * or worse running send an IPI. 	 */
 if|if
 condition|(
 name|pri
-operator|<
-name|PRI_MAX_REALTIME
+operator|<=
+name|PRI_MAX_INTERACT
 operator|&&
 name|cpri
 operator|>
-name|PRI_MAX_REALTIME
+name|PRI_MAX_INTERACT
 condition|)
 goto|goto
 name|sendipi
@@ -5248,7 +5280,7 @@ name|ts_thread
 operator|->
 name|td_priority
 operator|>=
-name|PRI_MIN_TIMESHARE
+name|PRI_MIN_BATCH
 argument_list|,
 operator|(
 literal|"tdq_choose: Invalid priority on timeshare queue %d"
@@ -6377,15 +6409,15 @@ condition|)
 block|{
 name|pri
 operator|=
-name|PRI_MIN_REALTIME
+name|PRI_MIN_INTERACT
 expr_stmt|;
 name|pri
 operator|+=
 operator|(
 operator|(
-name|PRI_MAX_REALTIME
+name|PRI_MAX_INTERACT
 operator|-
-name|PRI_MIN_REALTIME
+name|PRI_MIN_INTERACT
 operator|+
 literal|1
 operator|)
@@ -6399,11 +6431,11 @@ name|KASSERT
 argument_list|(
 name|pri
 operator|>=
-name|PRI_MIN_REALTIME
+name|PRI_MIN_INTERACT
 operator|&&
 name|pri
 operator|<=
-name|PRI_MAX_REALTIME
+name|PRI_MAX_INTERACT
 argument_list|,
 operator|(
 literal|"sched_priority: invalid interactive priority %d score %d"
@@ -6453,11 +6485,11 @@ name|KASSERT
 argument_list|(
 name|pri
 operator|>=
-name|PRI_MIN_TIMESHARE
+name|PRI_MIN_BATCH
 operator|&&
 name|pri
 operator|<=
-name|PRI_MAX_TIMESHARE
+name|PRI_MAX_BATCH
 argument_list|,
 operator|(
 literal|"sched_priority: invalid priority %d: nice %d, "
@@ -9704,8 +9736,8 @@ condition|(
 name|td
 operator|->
 name|td_priority
-operator|<=
-name|PRI_MAX_REALTIME
+operator|<
+name|PRI_MIN_BATCH
 condition|)
 name|ts
 operator|->
@@ -9723,7 +9755,7 @@ name|td
 operator|->
 name|td_priority
 operator|<=
-name|PRI_MAX_TIMESHARE
+name|PRI_MAX_BATCH
 condition|)
 name|ts
 operator|->
