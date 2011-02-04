@@ -176,20 +176,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|PI_TTYHIGH
-value|(PRI_MIN_ITHD + 8)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PI_TAPE
-value|(PRI_MIN_ITHD + 12)
-end_define
-
-begin_define
-define|#
-directive|define
 name|PI_NET
 value|(PRI_MIN_ITHD + 16)
 end_define
@@ -204,15 +190,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|PI_TTYLOW
+name|PI_TTY
 value|(PRI_MIN_ITHD + 24)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PI_DISKLOW
-value|(PRI_MIN_ITHD + 28)
 end_define
 
 begin_define
@@ -227,6 +206,16 @@ define|#
 directive|define
 name|PI_SOFT
 value|(PRI_MIN_ITHD + 36)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PI_SWI
+parameter_list|(
+name|x
+parameter_list|)
+value|(PI_SOFT + (x) * RQ_PPQ)
 end_define
 
 begin_define
