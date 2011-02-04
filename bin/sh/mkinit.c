@@ -258,15 +258,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
-name|shellproc
-index|[]
-init|=
-literal|"\ /*\n\  * This routine is called to initialize the shell to run a shell procedure.\n\  */\n"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|event
 name|event
@@ -297,24 +288,6 @@ block|,
 literal|"reset"
 block|,
 name|reset
-block|,
-block|{
-name|NULL
-block|,
-literal|0
-block|,
-name|NULL
-block|,
-name|NULL
-block|}
-block|}
-block|,
-block|{
-literal|"SHELLPROC"
-block|,
-literal|"initshellproc"
-block|,
-name|shellproc
 block|,
 block|{
 name|NULL

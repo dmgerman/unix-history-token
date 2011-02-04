@@ -76,19 +76,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EXSHELLPROC
-value|2
-end_define
-
-begin_comment
-comment|/* execute a shell procedure */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|EXEXEC
-value|3
+value|2
 end_define
 
 begin_comment

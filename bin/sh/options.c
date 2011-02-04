@@ -1286,66 +1286,19 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|mkinit
-end_ifdef
-
-begin_expr_stmt
-name|INCLUDE
-literal|"options.h"
-name|SHELLPROC
-block|{
-name|int
-name|i
-block|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|NOPTS
-condition|;
-name|i
-operator|++
-control|)
-name|optlist
-index|[
-name|i
-index|]
-operator|.
-name|val
-operator|=
-literal|0
-expr_stmt|;
-name|optschanged
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-unit|}
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Set the shell parameters.  */
 end_comment
 
-begin_macro
-unit|void
+begin_function
+name|void
 name|setparam
-argument_list|(
-argument|char **argv
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|char
+modifier|*
+modifier|*
+name|argv
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -1452,7 +1405,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Free the list of positional parameters.  */

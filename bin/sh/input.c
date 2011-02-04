@@ -448,12 +448,6 @@ block|{
 name|popallfiles
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|exception
-operator|!=
-name|EXSHELLPROC
-condition|)
 name|parselleft
 operator|=
 name|parsenleft
@@ -461,18 +455,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* clear input buffer */
-block|}
-end_block
-
-begin_macro
-name|SHELLPROC
-end_macro
-
-begin_block
-block|{
-name|popallfiles
-argument_list|()
-expr_stmt|;
 block|}
 end_block
 

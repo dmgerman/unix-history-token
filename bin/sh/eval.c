@@ -477,12 +477,6 @@ name|funcnest
 operator|=
 literal|0
 block|; }
-name|SHELLPROC
-block|{
-name|exitstatus
-operator|=
-literal|0
-block|; }
 endif|#
 directive|endif
 comment|/*  * The eval command.  */
@@ -3492,6 +3486,7 @@ control|)
 name|argc
 operator|++
 expr_stmt|;
+comment|/* Add one slot at the beginning for tryexec(). */
 name|argv
 operator|=
 name|stalloc
@@ -3505,9 +3500,12 @@ operator|*
 operator|(
 name|argc
 operator|+
-literal|1
+literal|2
 operator|)
 argument_list|)
+expr_stmt|;
+name|argv
+operator|++
 expr_stmt|;
 for|for
 control|(
@@ -4481,20 +4479,6 @@ name|loc
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-name|exception
-operator|==
-name|EXSHELLPROC
-condition|)
-name|freeparam
-argument_list|(
-operator|&
-name|saveparam
-argument_list|)
-expr_stmt|;
-else|else
-block|{
 name|freeparam
 argument_list|(
 operator|&
@@ -4518,7 +4502,6 @@ condition|)
 name|popredir
 argument_list|()
 expr_stmt|;
-block|}
 name|unreffunc
 argument_list|(
 name|cmdentry
@@ -4970,13 +4953,6 @@ name|handler
 operator|=
 name|savehandler
 expr_stmt|;
-if|if
-condition|(
-name|e
-operator|!=
-name|EXSHELLPROC
-condition|)
-block|{
 name|commandname
 operator|=
 name|savecmdname
@@ -4990,7 +4966,6 @@ argument_list|(
 name|exitstatus
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|flags

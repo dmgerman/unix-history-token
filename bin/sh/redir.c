@@ -1508,18 +1508,6 @@ expr_stmt|;
 block|}
 end_expr_stmt
 
-begin_macro
-name|SHELLPROC
-end_macro
-
-begin_block
-block|{
-name|clearredir
-argument_list|()
-expr_stmt|;
-block|}
-end_block
-
 begin_endif
 endif|#
 directive|endif
