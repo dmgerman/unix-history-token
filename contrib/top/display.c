@@ -1686,6 +1686,9 @@ literal|"\nCPU: "
 argument_list|)
 expr_stmt|;
 else|else
+block|{
+name|value
+operator|=
 name|printf
 argument_list|(
 literal|"\nCPU %d: "
@@ -1693,19 +1696,23 @@ argument_list|,
 name|cpu
 argument_list|)
 expr_stmt|;
+while|while
+condition|(
+name|value
+operator|++
+operator|<=
+name|cpustates_column
+condition|)
+name|printf
+argument_list|(
+literal|" "
+argument_list|)
+expr_stmt|;
+block|}
 name|lastline
 operator|++
 expr_stmt|;
 comment|/* now walk thru the names and print the line */
-name|Move_to
-argument_list|(
-name|cpustates_column
-argument_list|,
-name|y_cpustates
-operator|+
-name|cpu
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -2018,6 +2025,8 @@ name|lp
 decl_stmt|;
 name|int
 name|cpu
+decl_stmt|,
+name|value
 decl_stmt|;
 for|for
 control|(
@@ -2050,6 +2059,9 @@ literal|"\nCPU: "
 argument_list|)
 expr_stmt|;
 else|else
+block|{
+name|value
+operator|=
 name|printf
 argument_list|(
 literal|"\nCPU %d: "
@@ -2057,17 +2069,21 @@ argument_list|,
 name|cpu
 argument_list|)
 expr_stmt|;
+while|while
+condition|(
+name|value
+operator|++
+operator|<=
+name|cpustates_column
+condition|)
+name|printf
+argument_list|(
+literal|" "
+argument_list|)
+expr_stmt|;
+block|}
 name|lastline
 operator|++
-expr_stmt|;
-name|Move_to
-argument_list|(
-name|cpustates_column
-argument_list|,
-name|y_cpustates
-operator|+
-name|cpu
-argument_list|)
 expr_stmt|;
 while|while
 condition|(
