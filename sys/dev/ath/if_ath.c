@@ -18033,8 +18033,8 @@ operator|!=
 name|NULL
 condition|)
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|NOTYET
 comment|/* tag AMPDU aggregates for reorder processing */
 comment|/* 		 * XXX this should only tag frames marked as aggregate; rather 		 * XXX than all frames. 		 */
