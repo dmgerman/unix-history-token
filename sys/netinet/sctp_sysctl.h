@@ -692,7 +692,7 @@ value|SCTP_ASOC_MAX_CHUNKS_ON_QUEUE
 end_define
 
 begin_comment
-comment|/* tcbhashsize: Tuneable for Hash table sizes */
+comment|/* tcbhashsize: Tunable for Hash table sizes */
 end_comment
 
 begin_define
@@ -724,7 +724,7 @@ value|SCTP_TCBHASHSIZE
 end_define
 
 begin_comment
-comment|/* pcbhashsize: Tuneable for PCB Hash table sizes */
+comment|/* pcbhashsize: Tunable for PCB Hash table sizes */
 end_comment
 
 begin_define
@@ -788,14 +788,14 @@ value|SCTP_DEFAULT_SPLIT_POINT_MIN
 end_define
 
 begin_comment
-comment|/* chunkscale: Tuneable for Scaling of number of chunks and messages */
+comment|/* chunkscale: Tunable for Scaling of number of chunks and messages */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SCTPCTL_CHUNKSCALE_DESC
-value|"Tuneable for Scaling of number of chunks and messages"
+value|"Tunable for Scaling of number of chunks and messages"
 end_define
 
 begin_define
