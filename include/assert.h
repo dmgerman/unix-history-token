@@ -85,27 +85,28 @@ begin_comment
 comment|/* NDEBUG */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|__BEGIN_DECLS
 name|void
 name|__assert
-parameter_list|(
+argument_list|(
 specifier|const
 name|char
-modifier|*
-parameter_list|,
+operator|*
+argument_list|,
 specifier|const
 name|char
-modifier|*
-parameter_list|,
+operator|*
+argument_list|,
 name|int
-parameter_list|,
+argument_list|,
 specifier|const
 name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+argument_list|)
+name|__dead2
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|__END_DECLS
