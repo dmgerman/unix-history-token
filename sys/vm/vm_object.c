@@ -4169,7 +4169,10 @@ name|vm_object_allocate
 argument_list|(
 name|OBJT_DEFAULT
 argument_list|,
+name|atop
+argument_list|(
 name|length
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * The new object shadows the source object, adding a reference to it. 	 * Our caller changes his reference to point to the new object, 	 * removing a reference to the source object.  Net result: no change 	 * of reference count. 	 * 	 * Try to optimize the result object's page color when shadowing 	 * in order to maintain page coloring consistency in the combined  	 * shadowed object. 	 */

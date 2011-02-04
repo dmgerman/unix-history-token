@@ -12537,8 +12537,6 @@ name|old_entry
 operator|->
 name|offset
 argument_list|,
-name|atop
-argument_list|(
 name|old_entry
 operator|->
 name|end
@@ -12546,7 +12544,6 @@ operator|-
 name|old_entry
 operator|->
 name|start
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|old_entry
@@ -14639,13 +14636,13 @@ decl_stmt|;
 name|vm_object_t
 name|eobject
 decl_stmt|;
+name|vm_size_t
+name|size
+decl_stmt|;
 name|struct
 name|ucred
 modifier|*
 name|cred
-decl_stmt|;
-name|vm_ooffset_t
-name|size
 decl_stmt|;
 name|RetryLookup
 label|:
@@ -14942,10 +14939,7 @@ name|entry
 operator|->
 name|offset
 argument_list|,
-name|atop
-argument_list|(
 name|size
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|entry
