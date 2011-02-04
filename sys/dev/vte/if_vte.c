@@ -10095,7 +10095,7 @@ name|nperf
 operator|=
 literal|0
 expr_stmt|;
-name|if_maddr_rlock
+name|IF_ADDR_LOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -10246,7 +10246,7 @@ literal|0x0F
 operator|)
 expr_stmt|;
 block|}
-name|if_maddr_runlock
+name|IF_ADDR_UNLOCK
 argument_list|(
 name|ifp
 argument_list|)
