@@ -333,7 +333,7 @@ argument_list|,
 operator|&
 name|intr_config_hook_lock
 argument_list|,
-name|PCONFIG
+literal|0
 argument_list|,
 literal|"conifhk"
 argument_list|,
