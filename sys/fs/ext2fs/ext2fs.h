@@ -25,53 +25,6 @@ directive|include
 file|<sys/types.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_KERNEL
-argument_list|)
-end_if
-
-begin_comment
-comment|/*  * FreeBSD passes the pointer to the in-core struct with relevant  * fields to EXT2_SB macro when accessing superblock fields.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EXT2_SB
-parameter_list|(
-name|sb
-parameter_list|)
-value|(sb)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* Assume that user mode programs are passing in an ext2fs superblock, not  * a kernel struct super_block.  This will allow us to call the feature-test  * macros from user land. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EXT2_SB
-parameter_list|(
-name|sb
-parameter_list|)
-value|(sb)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Maximal count of links to a file  */
 end_comment
@@ -311,20 +264,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/* Assume that user mode programs are passing in an ext2fs superblock, not  * a kernel struct super_block.  This will allow us to call the feature-test  * macros from user land. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EXT2_SB
-parameter_list|(
-name|sb
-parameter_list|)
-value|(sb)
-end_define
 
 begin_comment
 comment|/*  * In-Memory Superblock  */
@@ -617,6 +556,20 @@ define|#
 directive|define
 name|EXT2F_INCOMPAT_SUPP
 value|EXT2F_INCOMPAT_FTYPE
+end_define
+
+begin_comment
+comment|/* Assume that user mode programs are passing in an ext2fs superblock, not  * a kernel struct super_block.  This will allow us to call the feature-test  * macros from user land. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT2_SB
+parameter_list|(
+name|sb
+parameter_list|)
+value|(sb)
 end_define
 
 begin_comment
