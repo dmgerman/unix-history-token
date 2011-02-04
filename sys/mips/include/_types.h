@@ -85,7 +85,7 @@ end_typedef
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__LP64__
+name|__mips_n64
 end_ifdef
 
 begin_typedef
@@ -208,7 +208,7 @@ end_typedef
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__LP64__
+name|__mips_n64
 end_ifdef
 
 begin_typedef
@@ -331,7 +331,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__LP64__
+name|__mips_n64
 argument_list|)
 operator|||
 name|defined
@@ -381,7 +381,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__LP64__
+name|__mips_n64
 end_ifdef
 
 begin_typedef
@@ -573,7 +573,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__LP64__
+name|__mips_n64
 argument_list|)
 operator|||
 name|defined
@@ -609,7 +609,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__LP64__
+name|__mips_n64
 end_ifdef
 
 begin_typedef
@@ -655,7 +655,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__LP64__
+name|__mips_n64
 argument_list|)
 operator|||
 name|defined

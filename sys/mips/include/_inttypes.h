@@ -22,7 +22,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__LP64__
+name|__mips_n64
 end_ifdef
 
 begin_define
