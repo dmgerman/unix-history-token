@@ -338,7 +338,7 @@ begin_function_decl
 name|void
 name|clearcmdentry
 parameter_list|(
-name|int
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
