@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: mem.c,v 1.145.120.4.24.2 2010/08/12 23:46:25 tbox Exp $ */
+comment|/* $Id: mem.c,v 1.145.120.9 2010-08-11 23:45:49 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -284,7 +284,7 @@ begin_define
 define|#
 directive|define
 name|FLARG
-value|, const char *file, int line
+value|, const char *file, unsigned int line
 end_define
 
 begin_else
@@ -857,6 +857,12 @@ name|unsigned
 name|int
 name|i
 decl_stmt|;
+name|unsigned
+name|int
+name|mysize
+init|=
+name|size
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -905,13 +911,13 @@ condition|)
 return|return;
 if|if
 condition|(
-name|size
+name|mysize
 operator|>
 name|mctx
 operator|->
 name|max_size
 condition|)
-name|size
+name|mysize
 operator|=
 name|mctx
 operator|->
@@ -925,7 +931,7 @@ name|mctx
 operator|->
 name|debuglist
 index|[
-name|size
+name|mysize
 index|]
 argument_list|)
 expr_stmt|;
@@ -1152,7 +1158,7 @@ name|mctx
 operator|->
 name|debuglist
 index|[
-name|size
+name|mysize
 index|]
 argument_list|,
 name|dl
@@ -4144,12 +4150,6 @@ decl_stmt|;
 name|isc_ondestroy_t
 name|ondest
 decl_stmt|;
-name|ctx
-operator|->
-name|magic
-operator|=
-literal|0
-expr_stmt|;
 name|LOCK
 argument_list|(
 operator|&
@@ -4176,6 +4176,12 @@ argument_list|(
 operator|&
 name|lock
 argument_list|)
+expr_stmt|;
+name|ctx
+operator|->
+name|magic
+operator|=
+literal|0
 expr_stmt|;
 name|INSIST
 argument_list|(

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007, 2010  Internet Systems Consortium,
 end_comment
 
 begin_comment
-comment|/* $Id: check-tool.h,v 1.14.628.2 2010/09/07 23:46:26 tbox Exp $ */
+comment|/* $Id: check-tool.h,v 1.14.334.2 2010-09-07 23:46:05 tbox Exp $ */
 end_comment
 
 begin_ifndef

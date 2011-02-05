@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2007, 2010  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: tsig.h,v 1.51 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: tsig.h,v 1.51.332.4 2010-12-09 01:12:55 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -228,6 +228,21 @@ name|isc_mem_t
 modifier|*
 name|mctx
 decl_stmt|;
+comment|/* 	 * LRU list of generated key along with a count of the keys on the 	 * list and a maximum size. 	 */
+name|unsigned
+name|int
+name|generated
+decl_stmt|;
+name|unsigned
+name|int
+name|maxgenerated
+decl_stmt|;
+name|ISC_LIST
+argument_list|(
+argument|dns_tsigkey_t
+argument_list|)
+name|lru
+expr_stmt|;
 block|}
 struct|;
 end_struct
@@ -286,6 +301,12 @@ name|isc_refcount_t
 name|refs
 decl_stmt|;
 comment|/*%< reference counter */
+name|ISC_LINK
+argument_list|(
+argument|dns_tsigkey_t
+argument_list|)
+name|link
+expr_stmt|;
 block|}
 struct|;
 end_struct
@@ -298,7 +319,7 @@ parameter_list|(
 name|tsigkey
 parameter_list|)
 define|\
-value|((tsigkey) == NULL ? NULL : \          (tsigkey)->generated ? ((tsigkey)->creator) : \          (&((tsigkey)->name)))
+value|((tsigkey) == NULL ? NULL : \ 	 (tsigkey)->generated ? ((tsigkey)->creator) : \ 	 (&((tsigkey)->name)))
 end_define
 
 begin_function_decl
@@ -397,7 +418,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  *	Creates a tsig key structure and saves it in the keyring.  If key is  *	not NULL, *key will contain a copy of the key.  The keys validity  *	period is specified by (inception, expire), and will not expire if  *	inception == expire.  If the key was generated, the creating identity,  *	if there is one, should be in the creator parameter.  Specifying an  *	unimplemented algorithm will cause failure only if dstkey != NULL; this  *	allows a transient key with an invalid algorithm to exist long enough  *	to generate a BADKEY response.  *  *	Requires:  *\li		'name' is a valid dns_name_t  *\li		'algorithm' is a valid dns_name_t  *\li		'secret' is a valid pointer  *\li		'length' is an integer>= 0  *\li		'key' is a valid dst key or NULL  *\li		'creator' points to a valid dns_name_t or is NULL  *\li		'mctx' is a valid memory context  *\li		'ring' is a valid TSIG keyring or NULL  *\li		'key' or '*key' must be NULL  *  *	Returns:  *\li		#ISC_R_SUCCESS  *\li		#ISC_R_EXISTS - a key with this name already exists  *\li		#ISC_R_NOTIMPLEMENTED - algorithm is not implemented  *\li		#ISC_R_NOMEMORY  */
+comment|/*%<  *	Creates a tsig key structure and saves it in the keyring.  If key is  *	not NULL, *key will contain a copy of the key.  The keys validity  *	period is specified by (inception, expire), and will not expire if  *	inception == expire.  If the key was generated, the creating identity,  *	if there is one, should be in the creator parameter.  Specifying an  *	unimplemented algorithm will cause failure only if dstkey != NULL; this  *	allows a transient key with an invalid algorithm to exist long enough  *	to generate a BADKEY response.  *  *	If dns_tsigkey_createfromkey is successful a new reference to 'dstkey'  *	will have been made.  *  *	Requires:  *\li		'name' is a valid dns_name_t  *\li		'algorithm' is a valid dns_name_t  *\li		'secret' is a valid pointer  *\li		'length' is an integer>= 0  *\li		'dstkey' is a valid dst key or NULL  *\li		'creator' points to a valid dns_name_t or is NULL  *\li		'mctx' is a valid memory context  *\li		'ring' is a valid TSIG keyring or NULL  *\li		'key' or '*key' must be NULL  *  *	Returns:  *\li		#ISC_R_SUCCESS  *\li		#ISC_R_EXISTS - a key with this name already exists  *\li		#ISC_R_NOTIMPLEMENTED - algorithm is not implemented  *\li		#ISC_R_NOMEMORY  */
 end_comment
 
 begin_function_decl

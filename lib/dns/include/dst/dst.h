@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2008, 2010  Internet Systems Consortium, Inc. (
 end_comment
 
 begin_comment
-comment|/* $Id: dst.h,v 1.12.50.2 2010/01/15 23:47:34 tbox Exp $ */
+comment|/* $Id: dst.h,v 1.12.50.3 2010-12-09 01:12:55 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -905,6 +905,26 @@ end_function_decl
 
 begin_comment
 comment|/*%<  * Compares the parameters of two DST keys.  This is used to determine if  * two (Diffie-Hellman) keys can be used to derive a shared secret.  *  * Requires:  *\li	"key1" is a valid key.  *\li	"key2" is a valid key.  *  * Returns:  *\li 	ISC_TRUE  * \li	ISC_FALSE  */
+end_comment
+
+begin_function_decl
+name|void
+name|dst_key_attach
+parameter_list|(
+name|dst_key_t
+modifier|*
+name|source
+parameter_list|,
+name|dst_key_t
+modifier|*
+modifier|*
+name|target
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Attach to a existing key increasing the reference count.  *  * Requires:  *\li 'source' to be a valid key.  *\li 'target' to be non-NULL and '*target' to be NULL.  */
 end_comment
 
 begin_function_decl

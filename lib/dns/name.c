@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2008, 2010  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: name.c,v 1.165 2008/04/01 23:47:10 tbox Exp $ */
+comment|/* $Id: name.c,v 1.165.120.3 2010-07-09 05:15:05 each Exp $ */
 end_comment
 
 begin_comment
@@ -4662,15 +4662,16 @@ argument_list|)
 expr_stmt|;
 name|REQUIRE
 argument_list|(
-name|first
-operator|+
 name|n
 operator|<=
 name|source
 operator|->
 name|labels
+operator|-
+name|first
 argument_list|)
 expr_stmt|;
+comment|/* note first+n could overflow */
 name|REQUIRE
 argument_list|(
 name|BINDABLE
@@ -6539,6 +6540,80 @@ name|target
 parameter_list|)
 block|{
 name|unsigned
+name|int
+name|options
+init|=
+name|DNS_NAME_MASTERFILE
+decl_stmt|;
+if|if
+condition|(
+name|omit_final_dot
+condition|)
+name|options
+operator||=
+name|DNS_NAME_OMITFINALDOT
+expr_stmt|;
+return|return
+operator|(
+name|dns_name_totext2
+argument_list|(
+name|name
+argument_list|,
+name|options
+argument_list|,
+name|target
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|isc_result_t
+name|dns_name_toprincipal
+parameter_list|(
+name|dns_name_t
+modifier|*
+name|name
+parameter_list|,
+name|isc_buffer_t
+modifier|*
+name|target
+parameter_list|)
+block|{
+return|return
+operator|(
+name|dns_name_totext2
+argument_list|(
+name|name
+argument_list|,
+name|DNS_NAME_OMITFINALDOT
+argument_list|,
+name|target
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|isc_result_t
+name|dns_name_totext2
+parameter_list|(
+name|dns_name_t
+modifier|*
+name|name
+parameter_list|,
+name|unsigned
+name|int
+name|options
+parameter_list|,
+name|isc_buffer_t
+modifier|*
+name|target
+parameter_list|)
+block|{
+name|unsigned
 name|char
 modifier|*
 name|ndata
@@ -6597,6 +6672,16 @@ name|result
 decl_stmt|;
 endif|#
 directive|endif
+name|isc_boolean_t
+name|omit_final_dot
+init|=
+name|ISC_TF
+argument_list|(
+name|options
+operator|&
+name|DNS_NAME_OMITFINALDOT
+argument_list|)
+decl_stmt|;
 comment|/* 	 * This function assumes the name is in proper uncompressed 	 * wire format. 	 */
 name|REQUIRE
 argument_list|(
@@ -6841,6 +6926,28 @@ condition|(
 name|c
 condition|)
 block|{
+comment|/* Special modifiers in zone files. */
+case|case
+literal|0x40
+case|:
+comment|/* '@' */
+case|case
+literal|0x24
+case|:
+comment|/* '$' */
+if|if
+condition|(
+operator|(
+name|options
+operator|&
+name|DNS_NAME_MASTERFILE
+operator|)
+operator|==
+literal|0
+condition|)
+goto|goto
+name|no_escape
+goto|;
 case|case
 literal|0x22
 case|:
@@ -6865,15 +6972,6 @@ case|case
 literal|0x5C
 case|:
 comment|/* '\\' */
-comment|/* Special modifiers in zone files. */
-case|case
-literal|0x40
-case|:
-comment|/* '@' */
-case|case
-literal|0x24
-case|:
-comment|/* '$' */
 if|if
 condition|(
 name|trem
@@ -6913,6 +7011,8 @@ name|nlen
 operator|--
 expr_stmt|;
 break|break;
+name|no_escape
+label|:
 default|default:
 if|if
 condition|(

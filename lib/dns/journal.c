@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007-2010  Internet Systems Consortium, 
 end_comment
 
 begin_comment
-comment|/* $Id: journal.c,v 1.103.48.6.10.2 2010/11/17 23:46:16 tbox Exp $ */
+comment|/* $Id: journal.c,v 1.103.48.8 2010-11-17 23:45:45 tbox Exp $ */
 end_comment
 
 begin_include
