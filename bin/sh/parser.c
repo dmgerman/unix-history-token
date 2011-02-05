@@ -1834,6 +1834,9 @@ decl_stmt|;
 name|int
 name|t
 decl_stmt|;
+name|int
+name|is_subshell
+decl_stmt|;
 name|checkkwd
 operator|=
 name|CHKNL
@@ -1841,6 +1844,10 @@ operator||
 name|CHKKWD
 operator||
 name|CHKALIAS
+expr_stmt|;
+name|is_subshell
+operator|=
+literal|0
 expr_stmt|;
 name|redir
 operator|=
@@ -3010,6 +3017,10 @@ name|CHKKWD
 operator||
 name|CHKALIAS
 expr_stmt|;
+name|is_subshell
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 case|case
 name|TBEGIN
@@ -3146,11 +3157,8 @@ condition|)
 block|{
 if|if
 condition|(
-name|n1
-operator|->
-name|type
-operator|!=
-name|NSUBSHELL
+operator|!
+name|is_subshell
 condition|)
 block|{
 name|n2
