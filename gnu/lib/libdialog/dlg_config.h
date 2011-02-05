@@ -38,13 +38,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|HAVE_CURSES_H
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
 name|HAVE_DIRENT_H
 value|1
 end_define
@@ -249,6 +242,13 @@ begin_define
 define|#
 directive|define
 name|HAVE_LC_MESSAGES
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_LIBNCURSESW
 value|1
 end_define
 
@@ -585,6 +585,13 @@ begin_define
 define|#
 directive|define
 name|TYPE_CHTYPE_IS_SCALAR
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|USE_WIDE_CURSES
 value|1
 end_define
 
