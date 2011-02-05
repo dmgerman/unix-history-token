@@ -4,7 +4,7 @@ comment|/*  * Portions Copyright (C) 2004-2008, 2010  Internet Systems Consortiu
 end_comment
 
 begin_comment
-comment|/* $Id: dst_internal.h,v 1.11.120.2 2010/01/15 23:47:33 tbox Exp $ */
+comment|/* $Id: dst_internal.h,v 1.11.120.3 2010-12-09 01:12:55 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -60,6 +60,12 @@ begin_include
 include|#
 directive|include
 file|<isc/md5.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<isc/refcount.h>
 end_include
 
 begin_include
@@ -241,6 +247,9 @@ block|{
 name|unsigned
 name|int
 name|magic
+decl_stmt|;
+name|isc_refcount_t
+name|refs
 decl_stmt|;
 name|dns_name_t
 modifier|*

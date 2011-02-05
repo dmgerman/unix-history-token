@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: zone.c,v 1.483.36.17 2009/12/21 04:32:42 marka Exp $ */
+comment|/* $Id: zone.c,v 1.483.36.23 2010-12-14 00:48:22 marka Exp $ */
 end_comment
 
 begin_comment
@@ -8571,6 +8571,21 @@ decl_stmt|;
 name|int
 name|level
 decl_stmt|;
+comment|/* 	 * "." means the services does not exist. 	 */
+if|if
+condition|(
+name|dns_name_equal
+argument_list|(
+name|name
+argument_list|,
+name|dns_rootname
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ISC_TRUE
+operator|)
+return|;
 comment|/* 	 * Outside of zone. 	 */
 if|if
 condition|(
@@ -19027,7 +19042,7 @@ name|ver
 argument_list|,
 name|diff
 argument_list|,
-name|DNS_DIFFOP_DEL
+name|DNS_DIFFOP_DELRESIGN
 argument_list|,
 name|name
 argument_list|,
@@ -19224,7 +19239,7 @@ name|ver
 argument_list|,
 name|diff
 argument_list|,
-name|DNS_DIFFOP_DEL
+name|DNS_DIFFOP_DELRESIGN
 argument_list|,
 name|name
 argument_list|,
@@ -19255,7 +19270,7 @@ name|ver
 argument_list|,
 name|diff
 argument_list|,
-name|DNS_DIFFOP_DEL
+name|DNS_DIFFOP_DELRESIGN
 argument_list|,
 name|name
 argument_list|,
@@ -19651,6 +19666,19 @@ name|dns_rdata_reset
 argument_list|(
 operator|&
 name|sig_rdata
+argument_list|)
+expr_stmt|;
+name|isc_buffer_init
+argument_list|(
+operator|&
+name|buffer
+argument_list|,
+name|data
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|data
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -27733,7 +27761,7 @@ name|version
 argument_list|,
 name|diff
 argument_list|,
-name|DNS_DIFFOP_DEL
+name|DNS_DIFFOP_DELRESIGN
 argument_list|,
 name|name
 argument_list|,
@@ -49904,6 +49932,13 @@ decl_stmt|;
 name|isc_time_t
 name|now
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|soa_before
+init|=
+literal|""
+decl_stmt|;
 name|UNUSED
 argument_list|(
 name|task
@@ -50046,6 +50081,19 @@ operator|&
 name|peer
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|DNS_ZONE_FLAG
+argument_list|(
+name|zone
+argument_list|,
+name|DNS_ZONEFLG_SOABEFOREAXFR
+argument_list|)
+condition|)
+name|soa_before
+operator|=
+literal|"SOA before "
+expr_stmt|;
 comment|/* 	 * Decide whether we should request IXFR or AXFR. 	 */
 if|if
 condition|(
@@ -50097,11 +50145,27 @@ literal|1
 argument_list|)
 argument_list|,
 literal|"ixfr-from-differences "
-literal|"set, requesting AXFR from %s"
+literal|"set, requesting %sAXFR from %s"
+argument_list|,
+name|soa_before
 argument_list|,
 name|master
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|DNS_ZONE_FLAG
+argument_list|(
+name|zone
+argument_list|,
+name|DNS_ZONEFLG_SOABEFOREAXFR
+argument_list|)
+condition|)
+name|xfrtype
+operator|=
+name|dns_rdatatype_soa
+expr_stmt|;
+else|else
 name|xfrtype
 operator|=
 name|dns_rdatatype_axfr
@@ -50240,7 +50304,9 @@ argument_list|(
 literal|1
 argument_list|)
 argument_list|,
-literal|"IXFR disabled, requesting AXFR from %s"
+literal|"IXFR disabled, requesting %sAXFR from %s"
+argument_list|,
+name|soa_before
 argument_list|,
 name|master
 argument_list|)

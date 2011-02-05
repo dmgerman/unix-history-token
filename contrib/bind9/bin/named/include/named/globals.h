@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2008, 2010  Internet Systems Consortium, Inc. (
 end_comment
 
 begin_comment
-comment|/* $Id: globals.h,v 1.80.84.2 2010/06/26 23:46:15 tbox Exp $ */
+comment|/* $Id: globals.h,v 1.80.12.3 2010-09-15 12:16:50 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -732,6 +732,17 @@ begin_function_decl
 name|EXTERN
 name|isc_boolean_t
 name|ns_g_nosoa
+name|INIT
+parameter_list|(
+name|ISC_FALSE
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|EXTERN
+name|isc_boolean_t
+name|ns_g_noaa
 name|INIT
 parameter_list|(
 name|ISC_FALSE

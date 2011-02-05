@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: diff.h,v 1.15.120.2.24.2 2010/06/04 23:49:23 tbox Exp $ */
+comment|/* $Id: diff.h,v 1.15.120.4 2010-06-04 23:48:25 tbox Exp $ */
 end_comment
 
 begin_ifndef

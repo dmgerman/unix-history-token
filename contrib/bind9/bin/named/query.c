@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: query.c,v 1.313.20.16.10.3 2010/09/29 00:03:32 marka Exp $ */
+comment|/* $Id: query.c,v 1.313.20.24 2010-09-24 08:09:07 marka Exp $ */
 end_comment
 
 begin_comment
@@ -12059,6 +12059,9 @@ name|name
 parameter_list|,
 name|isc_boolean_t
 name|ispositive
+parameter_list|,
+name|isc_boolean_t
+name|nodata
 parameter_list|)
 block|{
 name|isc_buffer_t
@@ -12763,7 +12766,7 @@ name|sigrdataset
 argument_list|,
 name|fname
 argument_list|,
-name|ISC_FALSE
+name|nodata
 argument_list|,
 name|NULL
 argument_list|)
@@ -13312,6 +13315,8 @@ operator|.
 name|qname
 argument_list|,
 name|ISC_TRUE
+argument_list|,
+name|ISC_FALSE
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We'll need some resources... 	 */
@@ -18673,6 +18678,8 @@ operator|.
 name|qname
 argument_list|,
 name|ISC_FALSE
+argument_list|,
+name|ISC_TRUE
 argument_list|)
 expr_stmt|;
 block|}
@@ -18961,6 +18968,8 @@ operator|->
 name|query
 operator|.
 name|qname
+argument_list|,
+name|ISC_FALSE
 argument_list|,
 name|ISC_FALSE
 argument_list|)
@@ -20222,9 +20231,15 @@ block|{
 comment|/* 			 * We didn't match any rdatasets. 			 */
 if|if
 condition|(
+operator|(
 name|qtype
 operator|==
 name|dns_rdatatype_rrsig
+operator|||
+name|qtype
+operator|==
+name|dns_rdatatype_sig
+operator|)
 operator|&&
 name|result
 operator|==
@@ -20238,6 +20253,7 @@ operator|!
 name|is_zone
 condition|)
 block|{
+comment|/* 					 * Note: this is dead code because 					 * is_zone is always true due to the 					 * condition above.  But naive 					 * recursion would cause infinite 					 * attempts of recursion because 					 * the answer to (RR)SIG queries 					 * won't be cached.  Until we figure 					 * out what we should do and implement 					 * it we intentionally keep this code 					 * dead. 					 */
 name|authoritative
 operator|=
 name|ISC_FALSE
@@ -20585,6 +20601,8 @@ name|wildcardname
 argument_list|)
 argument_list|,
 name|ISC_TRUE
+argument_list|,
+name|ISC_FALSE
 argument_list|)
 expr_stmt|;
 name|cleanup
@@ -22137,7 +22155,12 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * Assume authoritative response until it is known to be 	 * otherwise. 	 */
+comment|/* 	 * Assume authoritative response until it is known to be 	 * otherwise. 	 * 	 * If "-T noaa" has been set on the command line don't set 	 * AA on authoritative answers. 	 */
+if|if
+condition|(
+operator|!
+name|ns_g_noaa
+condition|)
 name|message
 operator|->
 name|flags
