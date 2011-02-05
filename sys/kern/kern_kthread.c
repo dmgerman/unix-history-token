@@ -1021,6 +1021,12 @@ name|td_map_def_user
 operator|=
 name|NULL
 expr_stmt|;
+name|newtd
+operator|->
+name|td_dbg_forked
+operator|=
+literal|0
+expr_stmt|;
 comment|/* XXX check if we should zero. */
 name|bcopy
 argument_list|(

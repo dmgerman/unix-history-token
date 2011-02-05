@@ -263,6 +263,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PT_FOLLOW_FORK
+value|23
+end_define
+
+begin_define
+define|#
+directive|define
 name|PT_GETREGS
 value|33
 end_define
@@ -501,6 +508,11 @@ directive|define
 name|PL_FLAG_SI
 value|0x20
 comment|/* siginfo is valid */
+define|#
+directive|define
+name|PL_FLAG_FORKED
+value|0x40
+comment|/* new child */
 name|sigset_t
 name|pl_sigmask
 decl_stmt|;
@@ -523,6 +535,10 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* LWP name */
+name|int
+name|pl_child_pid
+decl_stmt|;
+comment|/* New child pid */
 block|}
 struct|;
 end_struct

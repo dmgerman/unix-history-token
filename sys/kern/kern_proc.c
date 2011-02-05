@@ -1677,6 +1677,16 @@ argument_list|,
 literal|"ppwait"
 argument_list|)
 expr_stmt|;
+name|cv_init
+argument_list|(
+operator|&
+name|p
+operator|->
+name|p_dbgwait
+argument_list|,
+literal|"dbgwait"
+argument_list|)
+expr_stmt|;
 name|TAILQ_INIT
 argument_list|(
 operator|&

@@ -893,6 +893,12 @@ name|td_map_def_user
 operator|=
 name|NULL
 expr_stmt|;
+name|newtd
+operator|->
+name|td_dbg_forked
+operator|=
+literal|0
+expr_stmt|;
 name|bcopy
 argument_list|(
 operator|&
