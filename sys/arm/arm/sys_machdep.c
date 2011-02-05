@@ -252,6 +252,9 @@ name|td_md
 operator|.
 name|md_tp
 operator|=
+operator|(
+name|register_t
+operator|)
 name|args
 expr_stmt|;
 return|return
@@ -284,9 +287,6 @@ index|[
 literal|0
 index|]
 operator|=
-operator|(
-name|uint32_t
-operator|)
 name|td
 operator|->
 name|td_md

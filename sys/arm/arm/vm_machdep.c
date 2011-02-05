@@ -611,8 +611,7 @@ name|md_tp
 operator|=
 operator|*
 operator|(
-name|uint32_t
-operator|*
+name|register_t
 operator|*
 operator|)
 name|ARM_TP_ADDRESS
@@ -1690,6 +1689,9 @@ name|td_md
 operator|.
 name|md_tp
 operator|=
+operator|(
+name|register_t
+operator|)
 name|tls_base
 expr_stmt|;
 else|else
@@ -1699,12 +1701,14 @@ argument_list|()
 expr_stmt|;
 operator|*
 operator|(
-name|void
-operator|*
+name|register_t
 operator|*
 operator|)
 name|ARM_TP_ADDRESS
 operator|=
+operator|(
+name|register_t
+operator|)
 name|tls_base
 expr_stmt|;
 name|critical_exit
