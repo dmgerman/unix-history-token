@@ -5152,6 +5152,11 @@ argument_list|,
 name|SHOWJOBS_DEFAULT
 argument_list|)
 expr_stmt|;
+name|flushout
+argument_list|(
+name|out1
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 else|else
