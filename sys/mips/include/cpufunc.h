@@ -48,6 +48,12 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|CPU_CNMIPS
+asm|__asm __volatile("" : : : "memory");
+else|#
+directive|else
 asm|__asm __volatile (".set noreorder\n\t"
 literal|"nop\n\t"
 literal|"nop\n\t"
@@ -65,6 +71,11 @@ literal|"memory"
 block|)
 function|;
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 unit|}  static
@@ -88,15 +99,45 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CPU_CNMIPS
+argument_list|)
+asm|__asm __volatile (".set noreorder\n\t"
+literal|"syncw\n\t"
+literal|".set reorder\n"
+operator|:
+operator|:
+operator|:
+literal|"memory"
+block|)
+function|;
+end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_asm
 asm|__asm __volatile ("sync" : : : "memory");
+end_asm
+
+begin_expr_stmt
 name|mips_barrier
 argument_list|()
 expr_stmt|;
-block|}
-end_function
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
-specifier|static
+unit|}  static
 name|__inline
 name|void
 name|mips_read_membar
@@ -160,6 +201,21 @@ define|\
 value|static __inline uint64_t					\ mips_rd_ ## n (void)						\ {								\ 	int v0;							\ 	__asm __volatile ("dmfc0 %[v0], $"__XSTRING(r)";"	\ 			  : [v0] "=&r"(v0));			\ 	mips_barrier();						\ 	return (v0);						\ }								\ static __inline void						\ mips_wr_ ## n (uint64_t a0)					\ {								\ 	__asm __volatile ("dmtc0 %[a0], $"__XSTRING(r)";"	\ 			 __XSTRING(COP0_SYNC)";"		\ 			 "nop;"					\ 			 "nop;"					\ 			 :					\ 			 : [a0] "r"(a0));			\ 	mips_barrier();						\ } struct __hack
 end_define
 
+begin_define
+define|#
+directive|define
+name|MIPS_RW64_COP0_SEL
+parameter_list|(
+name|n
+parameter_list|,
+name|r
+parameter_list|,
+name|s
+parameter_list|)
+define|\
+value|static __inline uint64_t					\ mips_rd_ ## n(void)						\ {								\ 	int v0;							\ 	__asm __volatile ("dmfc0 %[v0], $"__XSTRING(r)", "__XSTRING(s)";"	\ 			  : [v0] "=&r"(v0));			\ 	mips_barrier();						\ 	return (v0);						\ }								\ static __inline void						\ mips_wr_ ## n(uint64_t a0)					\ {								\ 	__asm __volatile ("dmtc0 %[a0], $"__XSTRING(r)", "__XSTRING(s)";"	\ 			 __XSTRING(COP0_SYNC)";"		\ 			 :					\ 			 : [a0] "r"(a0));			\ 	mips_barrier();						\ } struct __hack
+end_define
+
 begin_if
 if|#
 directive|if
@@ -198,6 +254,77 @@ name|MIPS_COP_0_TLB_PG_MASK
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CPU_CNMIPS
+end_ifdef
+
+begin_expr_stmt
+name|MIPS_RW64_COP0_SEL
+argument_list|(
+name|cvmcount
+argument_list|,
+name|MIPS_COP_0_COUNT
+argument_list|,
+literal|6
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MIPS_RW64_COP0_SEL
+argument_list|(
+name|cvmctl
+argument_list|,
+name|MIPS_COP_0_COUNT
+argument_list|,
+literal|7
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MIPS_RW64_COP0_SEL
+argument_list|(
+name|cvmmemctl
+argument_list|,
+name|MIPS_COP_0_COMPARE
+argument_list|,
+literal|7
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MIPS_RW64_COP0_SEL
+argument_list|(
+name|icache_err
+argument_list|,
+name|MIPS_COP_0_CACHE_ERR
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MIPS_RW64_COP0_SEL
+argument_list|(
+name|dcache_err
+argument_list|,
+name|MIPS_COP_0_CACHE_ERR
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -261,6 +388,12 @@ begin_undef
 undef|#
 directive|undef
 name|MIPS_RW64_COP0
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|MIPS_RW64_COP0_SEL
 end_undef
 
 begin_endif
@@ -385,6 +518,29 @@ literal|3
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CPU_CNMIPS
+end_ifdef
+
+begin_expr_stmt
+name|MIPS_RW32_COP0_SEL
+argument_list|(
+name|config4
+argument_list|,
+name|MIPS_COP_0_CONFIG
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|MIPS_RW32_COP0
