@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: dig.c,v 1.225.26.4 2009/05/06 10:18:33 fdupont Exp $ */
+comment|/* $Id: dig.c,v 1.225.26.7 2010-05-13 00:43:37 marka Exp $ */
 end_comment
 
 begin_comment
@@ -1044,6 +1044,17 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|result
+operator|==
+name|ISC_R_NOSPACE
+condition|)
+return|return
+operator|(
+name|result
+operator|)
+return|;
 name|check_result
 argument_list|(
 name|result
@@ -1167,9 +1178,6 @@ name|dns_rdataset_t
 modifier|*
 name|rdataset
 decl_stmt|;
-name|isc_buffer_t
-name|target
-decl_stmt|;
 name|isc_result_t
 name|result
 decl_stmt|,
@@ -1177,12 +1185,6 @@ name|loopresult
 decl_stmt|;
 name|dns_name_t
 name|empty_name
-decl_stmt|;
-name|char
-name|t
-index|[
-literal|4096
-index|]
 decl_stmt|;
 name|dns_rdata_t
 name|rdata
@@ -1254,19 +1256,6 @@ operator|&
 name|name
 argument_list|)
 expr_stmt|;
-name|isc_buffer_init
-argument_list|(
-operator|&
-name|target
-argument_list|,
-name|t
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|t
-argument_list|)
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|rdataset
@@ -1326,6 +1315,17 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|result
+operator|==
+name|ISC_R_NOSPACE
+condition|)
+return|return
+operator|(
+name|result
+operator|)
+return|;
 name|check_result
 argument_list|(
 name|result
@@ -2166,6 +2166,23 @@ condition|)
 name|printf
 argument_list|(
 literal|" cd"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|msg
+operator|->
+name|flags
+operator|&
+literal|0x0040U
+operator|)
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"; MBZ: 0x4"
 argument_list|)
 expr_stmt|;
 name|printf

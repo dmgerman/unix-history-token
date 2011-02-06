@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: server.c,v 1.520.12.11.10.4 2010/11/16 22:42:03 marka Exp $ */
+comment|/* $Id: server.c,v 1.520.12.21 2011-01-14 23:45:49 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -756,7 +756,7 @@ block|}
 block|,
 endif|#
 directive|endif
-comment|/* RFC 3330 */
+comment|/* RFC 5735 and RFC 5737 */
 block|{
 literal|"0.IN-ADDR.ARPA"
 block|,
@@ -785,6 +785,20 @@ name|ISC_FALSE
 block|}
 block|,
 comment|/* TEST NET */
+block|{
+literal|"100.51.198.IN-ADDR.ARPA"
+block|,
+name|ISC_FALSE
+block|}
+block|,
+comment|/* TEST NET 2 */
+block|{
+literal|"113.0.203.IN-ADDR.ARPA"
+block|,
+name|ISC_FALSE
+block|}
+block|,
+comment|/* TEST NET 3 */
 block|{
 literal|"255.255.255.255.IN-ADDR.ARPA"
 block|,
@@ -840,6 +854,13 @@ name|ISC_FALSE
 block|}
 block|,
 comment|/* LINK LOCAL */
+comment|/* Example Prefix, RFC 3849. */
+block|{
+literal|"8.B.D.0.1.0.0.2.IP6.ARPA"
+block|,
+name|ISC_FALSE
+block|}
+block|,
 block|{
 name|NULL
 block|,
@@ -25375,20 +25396,11 @@ argument_list|(
 name|text
 argument_list|)
 condition|)
-block|{
-name|isc_task_endexclusive
-argument_list|(
-name|server
-operator|->
-name|task
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ISC_R_NOSPACE
 operator|)
 return|;
-block|}
 name|isc_buffer_add
 argument_list|(
 name|text
@@ -26033,20 +26045,11 @@ argument_list|(
 name|text
 argument_list|)
 condition|)
-block|{
-name|isc_task_endexclusive
-argument_list|(
-name|server
-operator|->
-name|task
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ISC_R_NOSPACE
 operator|)
 return|;
-block|}
 name|isc_buffer_add
 argument_list|(
 name|text

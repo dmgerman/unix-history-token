@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: named-checkzone.c,v 1.51.34.4.10.2 2010/09/07 23:46:26 tbox Exp $ */
+comment|/* $Id: named-checkzone.c,v 1.51.34.6 2010-09-07 23:46:06 tbox Exp $ */
 end_comment
 
 begin_comment

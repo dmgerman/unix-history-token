@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: sdb.c,v 1.66.48.3.10.1 2010/03/03 22:06:39 marka Exp $ */
+comment|/* $Id: sdb.c,v 1.66.48.6 2010-08-16 05:21:42 marka Exp $ */
 end_comment
 
 begin_comment
@@ -4373,18 +4373,6 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* 		 * Unless this is an explicit lookup at the origin, don't 		 * look at the origin. 		 */
-if|if
-condition|(
-name|i
-operator|==
-name|olabels
-operator|&&
-name|i
-operator|!=
-name|nlabels
-condition|)
-continue|continue;
 comment|/* 		 * Look up the next label. 		 */
 name|dns_name_getlabelsequence
 argument_list|(

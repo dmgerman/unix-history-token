@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2002, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2008, 2010  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2002, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: namedconf.c,v 1.92 2008/09/27 23:35:31 jinmei Exp $ */
+comment|/* $Id: namedconf.c,v 1.92.44.2 2010-05-13 23:47:49 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -2389,13 +2389,11 @@ argument_list|(
 name|obj
 argument_list|)
 expr_stmt|;
-name|cfg_print_chars
+name|cfg_print_cstr
 argument_list|(
 name|pctx
 argument_list|,
 literal|"none"
-argument_list|,
-literal|4
 argument_list|)
 expr_stmt|;
 block|}
@@ -2542,13 +2540,11 @@ argument_list|(
 name|type
 argument_list|)
 expr_stmt|;
-name|cfg_print_chars
+name|cfg_print_cstr
 argument_list|(
 name|pctx
 argument_list|,
 literal|"(<quoted_string> | none )"
-argument_list|,
-literal|26
 argument_list|)
 expr_stmt|;
 block|}
@@ -2599,13 +2595,11 @@ argument_list|(
 name|obj
 argument_list|)
 expr_stmt|;
-name|cfg_print_chars
+name|cfg_print_cstr
 argument_list|(
 name|pctx
 argument_list|,
 literal|"hostname"
-argument_list|,
-literal|4
 argument_list|)
 expr_stmt|;
 block|}
@@ -2789,13 +2783,11 @@ argument_list|(
 name|type
 argument_list|)
 expr_stmt|;
-name|cfg_print_chars
+name|cfg_print_cstr
 argument_list|(
 name|pctx
 argument_list|,
 literal|"(<quoted_string> | none | hostname )"
-argument_list|,
-literal|26
 argument_list|)
 expr_stmt|;
 block|}
@@ -4927,13 +4919,11 @@ argument_list|(
 name|type
 argument_list|)
 expr_stmt|;
-name|cfg_print_chars
+name|cfg_print_cstr
 argument_list|(
 name|pctx
 argument_list|,
 literal|"[<integer> ]"
-argument_list|,
-literal|13
 argument_list|)
 expr_stmt|;
 block|}
@@ -8802,13 +8792,11 @@ operator|.
 name|sockaddr
 argument_list|)
 expr_stmt|;
-name|cfg_print_chars
+name|cfg_print_cstr
 argument_list|(
 name|pctx
 argument_list|,
 literal|"address "
-argument_list|,
-literal|8
 argument_list|)
 expr_stmt|;
 name|cfg_print_rawaddr
@@ -8819,13 +8807,11 @@ operator|&
 name|na
 argument_list|)
 expr_stmt|;
-name|cfg_print_chars
+name|cfg_print_cstr
 argument_list|(
 name|pctx
 argument_list|,
 literal|" port "
-argument_list|,
-literal|6
 argument_list|)
 expr_stmt|;
 name|cfg_print_rawuint
@@ -10413,13 +10399,11 @@ operator|!=
 name|cfg_print_void
 condition|)
 block|{
-name|cfg_print_chars
+name|cfg_print_cstr
 argument_list|(
 name|pctx
 argument_list|,
 literal|" versions "
-argument_list|,
-literal|10
 argument_list|)
 expr_stmt|;
 name|cfg_print_obj
@@ -10455,13 +10439,11 @@ operator|!=
 name|cfg_print_void
 condition|)
 block|{
-name|cfg_print_chars
+name|cfg_print_cstr
 argument_list|(
 name|pctx
 argument_list|,
 literal|" size "
-argument_list|,
-literal|6
 argument_list|)
 expr_stmt|;
 name|cfg_print_obj

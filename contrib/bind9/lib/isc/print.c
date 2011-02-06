@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2008, 2010  Internet Systems Consortium, Inc. (
 end_comment
 
 begin_comment
-comment|/* $Id: print.c,v 1.35.418.2 2010/10/18 23:46:34 tbox Exp $ */
+comment|/* $Id: print.c,v 1.35.130.2 2010-10-18 23:46:17 tbox Exp $ */
 end_comment
 
 begin_comment

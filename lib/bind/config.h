@@ -492,6 +492,20 @@ comment|/* #undef FD_SETSIZE */
 end_comment
 
 begin_comment
+comment|/* Define to nothing if C supports flexible array members, and to 1 if it does    not. That way, with a declaration like `struct s { int n; double    d[FLEXIBLE_ARRAY_MEMBER]; };', the struct hack can be used with pre-C99    compilers. When computing the size of such an object, don't use 'sizeof    (struct s)' as it overestimates the size. Use 'offsetof (struct s, d)'    instead. Don't use 'offsetof (struct s, d[0])', as this doesn't work with    MSVC and with C++ compilers. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FLEXIBLE_ARRAY_MEMBER
+end_define
+
+begin_comment
+comment|/**/
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the `chroot' function. */
 end_comment
 
@@ -501,6 +515,14 @@ directive|define
 name|HAVE_CHROOT
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<devpoll.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_DEVPOLL_H */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<dlfcn.h> header file. */
@@ -572,6 +594,30 @@ directive|define
 name|HAVE_INTTYPES_H
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<kerberosv5/krb5.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_KERBEROSV5_KRB5_H */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<krb5.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_KRB5_H */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<krb5/krb5.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_KRB5_KRB5_H */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `c' library (-lc). */

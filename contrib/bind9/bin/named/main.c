@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: main.c,v 1.166.34.3.24.3 2010/09/06 03:58:32 marka Exp $ */
+comment|/* $Id: main.c,v 1.166.34.7 2010-09-15 12:16:49 marka Exp $ */
 end_comment
 
 begin_comment
@@ -1893,6 +1893,21 @@ literal|"nosoa"
 argument_list|)
 condition|)
 name|ns_g_nosoa
+operator|=
+name|ISC_TRUE
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|isc_commandline_argument
+argument_list|,
+literal|"noaa"
+argument_list|)
+condition|)
+name|ns_g_noaa
 operator|=
 name|ISC_TRUE
 expr_stmt|;

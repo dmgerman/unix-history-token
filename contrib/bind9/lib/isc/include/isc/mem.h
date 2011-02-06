@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: mem.h,v 1.78.120.3.24.2 2010/08/12 23:46:25 tbox Exp $ */
+comment|/* $Id: mem.h,v 1.78.120.6 2010-08-11 23:04:21 jinmei Exp $ */
 end_comment
 
 begin_ifndef
@@ -318,7 +318,7 @@ begin_define
 define|#
 directive|define
 name|_ISC_MEM_FLARG
-value|, const char *, int
+value|, const char *, unsigned int
 end_define
 
 begin_else
