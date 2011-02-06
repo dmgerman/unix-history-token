@@ -752,16 +752,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|isopen
-operator|=
-name|true
-expr_stmt|;
-comment|/* silence gcc */
-name|mode
-operator|=
-literal|0
-expr_stmt|;
-comment|/* silence gcc */
 operator|(
 name|void
 operator|)
