@@ -762,6 +762,9 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* silence gcc */
+operator|(
+name|void
+operator|)
 name|snprintf
 argument_list|(
 name|msg
@@ -804,6 +807,9 @@ operator|!
 name|isopen
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|snprintf
 argument_list|(
 name|msg
@@ -858,6 +864,9 @@ operator|!
 name|isopen
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|snprintf
 argument_list|(
 name|msg
@@ -883,6 +892,9 @@ name|mode
 argument_list|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|snprintf
 argument_list|(
 name|msg
@@ -929,6 +941,9 @@ operator|!
 name|isopen
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|snprintf
 argument_list|(
 name|msg
@@ -954,6 +969,9 @@ name|mode
 argument_list|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|snprintf
 argument_list|(
 name|msg
@@ -1000,6 +1018,9 @@ operator|!
 name|isopen
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|snprintf
 argument_list|(
 name|msg
@@ -1025,6 +1046,9 @@ name|mode
 argument_list|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|snprintf
 argument_list|(
 name|msg
@@ -1077,6 +1101,9 @@ operator|!
 name|isopen
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|snprintf
 argument_list|(
 name|msg
@@ -1102,6 +1129,9 @@ name|mode
 argument_list|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|snprintf
 argument_list|(
 name|msg
@@ -1154,6 +1184,9 @@ operator|!
 name|isopen
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|snprintf
 argument_list|(
 name|msg
@@ -1179,6 +1212,9 @@ name|mode
 argument_list|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|snprintf
 argument_list|(
 name|msg
@@ -1213,6 +1249,9 @@ condition|(
 name|isopen
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|snprintf
 argument_list|(
 name|msg
