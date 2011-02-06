@@ -781,6 +781,7 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
 if|if
 condition|(
