@@ -659,12 +659,36 @@ operator|<
 literal|0
 condition|)
 block|{
+name|pjdlog_init
+argument_list|(
+name|pjdlogmode
+argument_list|)
+expr_stmt|;
+name|pjdlog_prefix_set
+argument_list|(
+literal|"[%s] (%s) "
+argument_list|,
+name|res
+operator|->
+name|hr_name
+argument_list|,
+name|role2str
+argument_list|(
+name|res
+operator|->
+name|hr_role
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|pjdlog_errno
 argument_list|(
 name|LOG_WARNING
 argument_list|,
 literal|"sysconf(_SC_OPEN_MAX) failed"
 argument_list|)
+expr_stmt|;
+name|pjdlog_fini
+argument_list|()
 expr_stmt|;
 name|maxfd
 operator|=
