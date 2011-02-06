@@ -369,9 +369,13 @@ name|ast_ani_cal
 decl_stmt|;
 comment|/* ANI calibrations performed */
 name|u_int32_t
+name|ast_rx_agg
+decl_stmt|;
+comment|/* number of aggregate frames RX'ed */
+name|u_int32_t
 name|ast_pad
 index|[
-literal|12
+literal|11
 index|]
 decl_stmt|;
 block|}

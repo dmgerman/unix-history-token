@@ -18033,27 +18033,21 @@ operator|!=
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|NOTYET
 comment|/* tag AMPDU aggregates for reorder processing */
-comment|/* 		 * XXX this should only tag frames marked as aggregate; rather 		 * XXX than all frames. 		 */
 if|if
 condition|(
-name|ni
+name|rs
 operator|->
-name|ni_flags
-operator|&
-name|IEEE80211_NODE_HT
+name|rs_isaggr
 condition|)
+block|{
 name|m
 operator|->
 name|m_flags
 operator||=
 name|M_AMPDU
 expr_stmt|;
-endif|#
-directive|endif
+block|}
 comment|/* 			 * Sending station is known, dispatch directly. 			 */
 name|type
 operator|=
@@ -31950,6 +31944,30 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"number of ANI polls"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_UINT
+argument_list|(
+name|ctx
+argument_list|,
+name|child
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"ast_rx_agg"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_stats
+operator|.
+name|ast_rx_agg
+argument_list|,
+literal|0
+argument_list|,
+literal|"number of aggregate frames received"
 argument_list|)
 expr_stmt|;
 block|}
