@@ -6649,8 +6649,7 @@ argument_list|(
 name|cm
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Dequeue all events so that there's no risk of events getting 	 * stranded. 	 */
-while|while
+if|if
 condition|(
 operator|(
 name|event
