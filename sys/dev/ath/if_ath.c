@@ -18026,6 +18026,28 @@ name|sc_lastrs
 operator|=
 name|rs
 expr_stmt|;
+comment|/* tag AMPDU aggregates for reorder processing */
+comment|/* 		 * Just make sure all frames are tagged for AMPDU reorder checking. 		 * As there seems to be some situations where single frames aren't 		 * matching a node but bump the seqno. This needs to be investigated. 		 */
+name|m
+operator|->
+name|m_flags
+operator||=
+name|M_AMPDU
+expr_stmt|;
+comment|/* Keep statistics on the number of aggregate packets received */
+if|if
+condition|(
+name|rs
+operator|->
+name|rs_isaggr
+condition|)
+name|sc
+operator|->
+name|sc_stats
+operator|.
+name|ast_rx_agg
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|ni
@@ -18033,21 +18055,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* tag AMPDU aggregates for reorder processing */
-if|if
-condition|(
-name|rs
-operator|->
-name|rs_isaggr
-condition|)
-block|{
-name|m
-operator|->
-name|m_flags
-operator||=
-name|M_AMPDU
-expr_stmt|;
-block|}
 comment|/* 			 * Sending station is known, dispatch directly. 			 */
 name|type
 operator|=
