@@ -18502,6 +18502,12 @@ operator|->
 name|sctp_lport
 argument_list|)
 expr_stmt|;
+name|net
+operator|->
+name|flowidset
+operator|=
+literal|1
+expr_stmt|;
 return|return
 operator|(
 literal|0

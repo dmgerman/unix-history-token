@@ -890,6 +890,9 @@ decl_stmt|;
 name|uint32_t
 name|flowid
 decl_stmt|;
+name|uint8_t
+name|flowidset
+decl_stmt|;
 block|}
 struct|;
 end_struct

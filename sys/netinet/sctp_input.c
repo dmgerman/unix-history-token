@@ -12947,6 +12947,15 @@ name|m_pkthdr
 operator|.
 name|flowid
 expr_stmt|;
+operator|(
+operator|*
+name|netp
+operator|)
+operator|->
+name|flowidset
+operator|=
+literal|1
+expr_stmt|;
 block|}
 comment|/* 	 * Ok, we built an association so confirm the address we sent the 	 * INIT-ACK to. 	 */
 name|netl
@@ -29007,6 +29016,12 @@ operator|->
 name|m_pkthdr
 operator|.
 name|flowid
+expr_stmt|;
+name|net
+operator|->
+name|flowidset
+operator|=
+literal|1
 expr_stmt|;
 block|}
 comment|/* inp's ref-count increased&& stcb locked */
