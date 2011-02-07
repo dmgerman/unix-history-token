@@ -415,7 +415,7 @@ operator|/
 literal|15
 expr_stmt|;
 comment|/* RefDivA setting */
-name|OS_REG_RMW_FIELD
+name|OS_A_REG_RMW_FIELD
 argument_list|(
 name|ah
 argument_list|,
