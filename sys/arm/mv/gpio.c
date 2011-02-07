@@ -186,9 +186,6 @@ name|uint8_t
 name|irq_num
 decl_stmt|;
 comment|/* number of real IRQs occupied by GPIO controller */
-name|uint8_t
-name|use_high
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -712,12 +709,6 @@ name|irq_num
 operator|=
 literal|4
 expr_stmt|;
-name|sc
-operator|->
-name|use_high
-operator|=
-literal|0
-expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -738,12 +729,6 @@ operator|->
 name|irq_num
 operator|=
 literal|7
-expr_stmt|;
-name|sc
-operator|->
-name|use_high
-operator|=
-literal|1
 expr_stmt|;
 block|}
 else|else
@@ -872,7 +857,9 @@ if|if
 condition|(
 name|sc
 operator|->
-name|use_high
+name|pin_num
+operator|>
+name|GPIO_PINS_PER_REG
 condition|)
 block|{
 name|bus_space_write_4
@@ -1055,7 +1042,9 @@ if|if
 condition|(
 name|mv_gpio_softc
 operator|->
-name|use_high
+name|pin_num
+operator|>
+name|GPIO_PINS_PER_REG
 condition|)
 block|{
 name|int_cause_hi
@@ -1111,7 +1100,9 @@ if|if
 condition|(
 name|mv_gpio_softc
 operator|->
-name|use_high
+name|pin_num
+operator|>
+name|GPIO_PINS_PER_REG
 condition|)
 block|{
 name|i
