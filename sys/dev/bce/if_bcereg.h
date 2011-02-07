@@ -5113,9 +5113,6 @@ decl_stmt|;
 name|u16
 name|tx_bd_flags
 decl_stmt|;
-name|u16
-name|tx_bd_vlan_tag
-decl_stmt|;
 define|#
 directive|define
 name|TX_BD_FLAGS_CONN_FAULT
@@ -5164,6 +5161,9 @@ define|#
 directive|define
 name|TX_BD_FLAGS_SW_LSO
 value|(1<<15)
+name|u16
+name|tx_bd_vlan_tag
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -5829,6 +5829,10 @@ name|L2_FHDR_ERRORS_GIANT_FRAME
 value|(1<<21)
 define|#
 directive|define
+name|L2_FHDR_ERRORS_IPV4_BAD_LEN
+value|(1<<22)
+define|#
+directive|define
 name|L2_FHDR_ERRORS_TCP_XSUM
 value|(1<<28)
 define|#
@@ -5885,7 +5889,7 @@ define|#
 directive|define
 name|BCE_L2FHDR_PRINTFB
 define|\
-value|"\20"			\ 	"\40UDP_XSUM_ERR"	\ 	"\37b30"		\ 	"\36b29"		\ 	"\35TCP_XSUM_ERR"	\ 	"\34b27"		\ 	"\33b26"		\ 	"\32b25"		\ 	"\31b24"		\ 	"\30b23"		\ 	"\27b22"		\ 	"\26GIANT_ERR"		\ 	"\25SHORT_ERR"		\ 	"\24ALIGN_ERR"		\ 	"\23PHY_ERR"		\ 	"\22CRC_ERR"		\ 	"\21SPLIT"		\ 	"\20UDP"		\ 	"\17TCP"		\ 	"\16IP"			\ 	"\15b12"		\ 	"\14b11"		\ 	"\13b10"		\ 	"\12b09"		\ 	"\11RSS"		\ 	"\10SNAP"		\ 	"\07VLAN"		\ 	"\06P4"			\ 	"\05P3"			\ 	"\04P2"
+value|"\20"				\ 	"\40UDP_XSUM_ERR"	\ 	"\37b30"			\ 	"\36b29"			\ 	"\35TCP_XSUM_ERR"	\ 	"\34b27"			\ 	"\33b26"			\ 	"\32b25"			\ 	"\31b24"			\ 	"\30b23"			\ 	"\27IPv4_BAL_LEN"	\ 	"\26GIANT_ERR"		\ 	"\25SHORT_ERR"		\ 	"\24ALIGN_ERR"		\ 	"\23PHY_ERR"		\ 	"\22CRC_ERR"		\ 	"\21SPLIT"			\ 	"\20UDP"			\ 	"\17TCP"			\ 	"\16IP"				\ 	"\15SORT_b3"		\ 	"\14SORT_b2"		\ 	"\13SORT_b1"		\ 	"\12SORT_b0"		\ 	"\11RSS"			\ 	"\10SNAP"			\ 	"\07VLAN"			\ 	"\06P4"				\ 	"\05P3"				\ 	"\04P2"				\ 	"\03RULE_b2"		\ 	"\02RULE_b1"		\ 	"\01RULE_b0"
 end_define
 
 begin_comment
@@ -34641,8 +34645,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TX_PAGES
+name|DEFAULT_TX_PAGES
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_TX_PAGES
+value|8
 end_define
 
 begin_define
@@ -34662,22 +34673,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|TOTAL_TX_BD
-value|(TOTAL_TX_BD_PER_PAGE * TX_PAGES)
+name|MAX_TX_BD_AVAIL
+value|(MAX_TX_PAGES * TOTAL_TX_BD_PER_PAGE)
 end_define
 
 begin_define
 define|#
 directive|define
-name|USABLE_TX_BD
-value|(USABLE_TX_BD_PER_PAGE * TX_PAGES)
+name|TOTAL_TX_BD_ALLOC
+value|(TOTAL_TX_BD_PER_PAGE * sc->tx_pages)
 end_define
 
 begin_define
 define|#
 directive|define
-name|MAX_TX_BD
-value|(TOTAL_TX_BD - 1)
+name|USABLE_TX_BD_ALLOC
+value|(USABLE_TX_BD_PER_PAGE * sc->tx_pages)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_TX_BD_ALLOC
+value|(TOTAL_TX_BD_ALLOC - 1)
 end_define
 
 begin_comment
@@ -34701,7 +34719,7 @@ name|TX_CHAIN_IDX
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)& MAX_TX_BD)
+value|((x)& MAX_TX_BD_ALLOC)
 end_define
 
 begin_define
@@ -34731,8 +34749,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RX_PAGES
+name|DEFAULT_RX_PAGES
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_RX_PAGES
+value|8
 end_define
 
 begin_define
@@ -34752,22 +34777,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|TOTAL_RX_BD
-value|(TOTAL_RX_BD_PER_PAGE * RX_PAGES)
+name|MAX_RX_BD_AVAIL
+value|(MAX_RX_PAGES * TOTAL_RX_BD_PER_PAGE)
 end_define
 
 begin_define
 define|#
 directive|define
-name|USABLE_RX_BD
-value|(USABLE_RX_BD_PER_PAGE * RX_PAGES)
+name|TOTAL_RX_BD_ALLOC
+value|(TOTAL_RX_BD_PER_PAGE * sc->rx_pages)
 end_define
 
 begin_define
 define|#
 directive|define
-name|MAX_RX_BD
-value|(TOTAL_RX_BD - 1)
+name|USABLE_RX_BD_ALLOC
+value|(USABLE_RX_BD_PER_PAGE * sc->rx_pages)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_RX_BD_ALLOC
+value|(TOTAL_RX_BD_ALLOC - 1)
 end_define
 
 begin_comment
@@ -34791,7 +34823,7 @@ name|RX_CHAIN_IDX
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)& MAX_RX_BD)
+value|((x)& MAX_RX_BD_ALLOC)
 end_define
 
 begin_define
@@ -34814,12 +34846,6 @@ parameter_list|)
 value|((x)& USABLE_RX_BD_PER_PAGE)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BCE_JUMBO_HDRSPLIT
-end_ifdef
-
 begin_comment
 comment|/*  * To accomodate jumbo frames, the page chain should  * be 4 times larger than the receive chain.  */
 end_comment
@@ -34827,8 +34853,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PG_PAGES
-value|(RX_PAGES * 4)
+name|DEFAULT_PG_PAGES
+value|(DEFAULT_RX_PAGES * 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_PG_PAGES
+value|(MAX_RX_PAGES * 4)
 end_define
 
 begin_define
@@ -34848,22 +34881,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|TOTAL_PG_BD
-value|(TOTAL_PG_BD_PER_PAGE * PG_PAGES)
+name|MAX_PG_BD_AVAIL
+value|(MAX_PG_PAGES * TOTAL_PG_BD_PER_PAGE)
 end_define
 
 begin_define
 define|#
 directive|define
-name|USABLE_PG_BD
-value|(USABLE_PG_BD_PER_PAGE * PG_PAGES)
+name|TOTAL_PG_BD_ALLOC
+value|(TOTAL_PG_BD_PER_PAGE * sc->pg_pages)
 end_define
 
 begin_define
 define|#
 directive|define
-name|MAX_PG_BD
-value|(TOTAL_PG_BD - 1)
+name|USABLE_PG_BD_ALLOC
+value|(USABLE_PG_BD_PER_PAGE * sc->pg_pages)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_PG_BD_ALLOC
+value|(TOTAL_PG_BD_ALLOC - 1)
 end_define
 
 begin_comment
@@ -34887,7 +34927,7 @@ name|PG_CHAIN_IDX
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)& MAX_PG_BD)
+value|((x)& MAX_PG_BD_ALLOC)
 end_define
 
 begin_define
@@ -34909,15 +34949,6 @@ name|x
 parameter_list|)
 value|((x)& USABLE_PG_BD_PER_PAGE)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* BCE_JUMBO_HDRSPLIT */
-end_comment
 
 begin_define
 define|#
@@ -35076,6 +35107,62 @@ define|#
 directive|define
 name|RX_CID
 value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_TX_QUICK_CONS_TRIP_INT
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_TX_QUICK_CONS_TRIP
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_TX_TICKS_INT
+value|80
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_TX_TICKS
+value|80
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_RX_QUICK_CONS_TRIP_INT
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_RX_QUICK_CONS_TRIP
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_RX_TICKS_INT
+value|18
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_RX_TICKS
+value|18
 end_define
 
 begin_comment
@@ -35864,7 +35951,7 @@ comment|/* The device handle for the MII bus child device. */
 name|device_t
 name|bce_miibus
 decl_stmt|;
-comment|/* Driver maintained TX chain pointers and byte counter. */
+comment|/* Driver maintained RX chain pointers and byte counter. */
 name|u16
 name|rx_prod
 decl_stmt|;
@@ -35875,6 +35962,7 @@ comment|/* Counts the bytes used in the RX chain. */
 name|u32
 name|rx_prod_bseq
 decl_stmt|;
+comment|/* Driver maintained TX chain pointers and byte counter. */
 name|u16
 name|tx_prod
 decl_stmt|;
@@ -35885,17 +35973,13 @@ comment|/* Counts the bytes used in the TX chain. */
 name|u32
 name|tx_prod_bseq
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|BCE_JUMBO_HDRSPLIT
+comment|/* Driver maintained PG chain pointers. */
 name|u16
 name|pg_prod
 decl_stmt|;
 name|u16
 name|pg_cons
 decl_stmt|;
-endif|#
-directive|endif
 name|int
 name|bce_link_up
 decl_stmt|;
@@ -35924,14 +36008,9 @@ decl_stmt|;
 name|int
 name|rx_bd_mbuf_align_pad
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|BCE_JUMBO_HDRSPLIT
 name|int
 name|pg_bd_mbuf_alloc_size
 decl_stmt|;
-endif|#
-directive|endif
 comment|/* Receive mode settings (i.e promiscuous, multicast, etc.). */
 name|u32
 name|rx_mode
@@ -35941,13 +36020,16 @@ name|bus_dma_tag_t
 name|parent_tag
 decl_stmt|;
 comment|/* H/W maintained TX buffer descriptor chain structure. */
+name|int
+name|tx_pages
+decl_stmt|;
 name|bus_dma_tag_t
 name|tx_bd_chain_tag
 decl_stmt|;
 name|bus_dmamap_t
 name|tx_bd_chain_map
 index|[
-name|TX_PAGES
+name|MAX_TX_PAGES
 index|]
 decl_stmt|;
 name|struct
@@ -35955,23 +36037,26 @@ name|tx_bd
 modifier|*
 name|tx_bd_chain
 index|[
-name|TX_PAGES
+name|MAX_TX_PAGES
 index|]
 decl_stmt|;
 name|bus_addr_t
 name|tx_bd_chain_paddr
 index|[
-name|TX_PAGES
+name|MAX_TX_PAGES
 index|]
 decl_stmt|;
 comment|/* H/W maintained RX buffer descriptor chain structure. */
+name|int
+name|rx_pages
+decl_stmt|;
 name|bus_dma_tag_t
 name|rx_bd_chain_tag
 decl_stmt|;
 name|bus_dmamap_t
 name|rx_bd_chain_map
 index|[
-name|RX_PAGES
+name|MAX_RX_PAGES
 index|]
 decl_stmt|;
 name|struct
@@ -35979,26 +36064,26 @@ name|rx_bd
 modifier|*
 name|rx_bd_chain
 index|[
-name|RX_PAGES
+name|MAX_RX_PAGES
 index|]
 decl_stmt|;
 name|bus_addr_t
 name|rx_bd_chain_paddr
 index|[
-name|RX_PAGES
+name|MAX_RX_PAGES
 index|]
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|BCE_JUMBO_HDRSPLIT
 comment|/* H/W maintained page buffer descriptor chain structure. */
+name|int
+name|pg_pages
+decl_stmt|;
 name|bus_dma_tag_t
 name|pg_bd_chain_tag
 decl_stmt|;
 name|bus_dmamap_t
 name|pg_bd_chain_map
 index|[
-name|PG_PAGES
+name|MAX_PG_PAGES
 index|]
 decl_stmt|;
 name|struct
@@ -36006,17 +36091,15 @@ name|rx_bd
 modifier|*
 name|pg_bd_chain
 index|[
-name|PG_PAGES
+name|MAX_PG_PAGES
 index|]
 decl_stmt|;
 name|bus_addr_t
 name|pg_bd_chain_paddr
 index|[
-name|PG_PAGES
+name|MAX_PG_PAGES
 index|]
 decl_stmt|;
-endif|#
-directive|endif
 comment|/* H/W maintained status block. */
 name|bus_dma_tag_t
 name|status_tag
@@ -36091,19 +36174,14 @@ decl_stmt|;
 name|bus_dma_tag_t
 name|tx_mbuf_tag
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|BCE_JUMBO_HDRSPLIT
 name|bus_dma_tag_t
 name|pg_mbuf_tag
 decl_stmt|;
-endif|#
-directive|endif
 comment|/* S/W maintained mbuf TX chain structure. */
 name|bus_dmamap_t
 name|tx_mbuf_map
 index|[
-name|TOTAL_TX_BD
+name|MAX_TX_BD_AVAIL
 index|]
 decl_stmt|;
 name|struct
@@ -36111,14 +36189,14 @@ name|mbuf
 modifier|*
 name|tx_mbuf_ptr
 index|[
-name|TOTAL_TX_BD
+name|MAX_TX_BD_AVAIL
 index|]
 decl_stmt|;
 comment|/* S/W maintained mbuf RX chain structure. */
 name|bus_dmamap_t
 name|rx_mbuf_map
 index|[
-name|TOTAL_RX_BD
+name|MAX_RX_BD_AVAIL
 index|]
 decl_stmt|;
 name|struct
@@ -36126,17 +36204,14 @@ name|mbuf
 modifier|*
 name|rx_mbuf_ptr
 index|[
-name|TOTAL_RX_BD
+name|MAX_RX_BD_AVAIL
 index|]
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|BCE_JUMBO_HDRSPLIT
 comment|/* S/W maintained mbuf page chain structure. */
 name|bus_dmamap_t
 name|pg_mbuf_map
 index|[
-name|TOTAL_PG_BD
+name|MAX_PG_BD_AVAIL
 index|]
 decl_stmt|;
 name|struct
@@ -36144,11 +36219,9 @@ name|mbuf
 modifier|*
 name|pg_mbuf_ptr
 index|[
-name|TOTAL_PG_BD
+name|MAX_PG_BD_AVAIL
 index|]
 decl_stmt|;
-endif|#
-directive|endif
 comment|/* Track the number of buffer descriptors in use. */
 name|u16
 name|free_rx_bd
@@ -36162,17 +36235,12 @@ decl_stmt|;
 name|u16
 name|max_tx_bd
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|BCE_JUMBO_HDRSPLIT
 name|u16
 name|free_pg_bd
 decl_stmt|;
 name|u16
 name|max_pg_bd
 decl_stmt|;
-endif|#
-directive|endif
 comment|/* Provides access to hardware statistics through sysctl. */
 name|u64
 name|stat_IfHCInOctets
@@ -36390,96 +36458,88 @@ decl_stmt|;
 name|int
 name|debug_rx_mbuf_alloc
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|BCE_JUMBO_HDRSPLIT
 name|int
 name|debug_pg_mbuf_alloc
 decl_stmt|;
-endif|#
-directive|endif
 comment|/* Track how many and what type of interrupts are generated. */
-name|u32
+name|u64
 name|interrupts_generated
 decl_stmt|;
-name|u32
+name|u64
 name|interrupts_handled
 decl_stmt|;
-name|u32
+name|u64
 name|interrupts_rx
 decl_stmt|;
-name|u32
+name|u64
 name|interrupts_tx
 decl_stmt|;
-name|u32
+name|u64
 name|phy_interrupts
 decl_stmt|;
-comment|/* Track interrupt time (25MHz clock). */
-name|u64
-name|rx_intr_time
-decl_stmt|;
-name|u64
-name|tx_intr_time
-decl_stmt|;
 comment|/* Lowest number of rx_bd's free. */
-name|u32
+name|u16
 name|rx_low_watermark
 decl_stmt|;
 comment|/* Number of times the RX chain was empty. */
-name|u32
+name|u64
 name|rx_empty_count
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|BCE_JUMBO_HDRSPLIT
 comment|/* Lowest number of pages free. */
-name|u32
+name|u16
 name|pg_low_watermark
 decl_stmt|;
 comment|/* Number of times the page chain was empty. */
-name|u32
+name|u64
 name|pg_empty_count
 decl_stmt|;
-endif|#
-directive|endif
 comment|/* Greatest number of tx_bd's used. */
-name|u32
+name|u16
 name|tx_hi_watermark
 decl_stmt|;
 comment|/* Number of times the TX chain was full. */
-name|u32
+name|u64
 name|tx_full_count
 decl_stmt|;
 comment|/* Number of TSO frames requested. */
-name|u32
+name|u64
 name|tso_frames_requested
 decl_stmt|;
 comment|/* Number of TSO frames completed. */
-name|u32
+name|u64
 name|tso_frames_completed
 decl_stmt|;
 comment|/* Number of TSO frames failed. */
-name|u32
+name|u64
 name|tso_frames_failed
 decl_stmt|;
 comment|/* Number of IP checksum offload frames.*/
-name|u32
+name|u64
 name|csum_offload_ip
 decl_stmt|;
 comment|/* Number of TCP/UDP checksum offload frames.*/
-name|u32
+name|u64
 name|csum_offload_tcp_udp
 decl_stmt|;
 comment|/* Number of VLAN tagged frames received. */
-name|u32
+name|u64
 name|vlan_tagged_frames_rcvd
 decl_stmt|;
 comment|/* Number of VLAN tagged frames stripped. */
-name|u32
+name|u64
 name|vlan_tagged_frames_stripped
+decl_stmt|;
+comment|/* Number of split header frames received. */
+name|u64
+name|split_header_frames_rcvd
+decl_stmt|;
+comment|/* Number of split header TCP frames received. */
+name|u64
+name|split_header_tcp_frames_rcvd
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* BCE_DEBUG */
 name|uint8_t
 modifier|*
 name|nvram_buf
