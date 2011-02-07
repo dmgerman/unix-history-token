@@ -768,7 +768,7 @@ name|uint8_t
 name|rxGainType
 decl_stmt|;
 name|uint8_t
-name|dacHiPwrMode
+name|dacHiPwrMode_5G
 decl_stmt|;
 comment|/* use the DAC high power mode (MB91) */
 name|uint8_t
@@ -787,9 +787,18 @@ name|rcChainMask
 decl_stmt|;
 comment|/* "1" if the card is an HB93 1x2 */
 name|uint8_t
+name|desiredScaleCCK
+decl_stmt|;
+name|uint8_t
+name|pwr_table_offset
+decl_stmt|;
+name|uint8_t
+name|frac_n_5g
+decl_stmt|;
+name|uint8_t
 name|futureBase
 index|[
-literal|24
+literal|21
 index|]
 decl_stmt|;
 block|}

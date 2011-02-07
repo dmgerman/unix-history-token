@@ -439,7 +439,7 @@ name|val
 operator|=
 name|pBase
 operator|->
-name|dacHiPwrMode
+name|dacHiPwrMode_5G
 expr_stmt|;
 return|return
 name|HAL_OK
