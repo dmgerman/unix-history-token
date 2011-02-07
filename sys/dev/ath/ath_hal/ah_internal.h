@@ -1905,6 +1905,27 @@ value|OS_REG_WRITE(_a, _r, OS_REG_READ(_a, _r)&~ (_f))
 end_define
 
 begin_comment
+comment|/* Analog register writes may require a delay between each one (eg Merlin?) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OS_A_REG_RMW_FIELD
+parameter_list|(
+name|_a
+parameter_list|,
+name|_r
+parameter_list|,
+name|_f
+parameter_list|,
+name|_v
+parameter_list|)
+define|\
+value|do { OS_REG_WRITE(_a, _r, (OS_REG_READ(_a, _r)&~ (_f)) | (((_v)<< _f##_S)& (_f))) ; OS_DELAY(100); } while (0)
+end_define
+
+begin_comment
 comment|/* system-configurable parameters */
 end_comment
 
