@@ -890,9 +890,14 @@ decl_stmt|;
 name|uint32_t
 name|flowid
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INVARIANTS
 name|uint8_t
 name|flowidset
 decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
