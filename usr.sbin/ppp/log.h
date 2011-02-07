@@ -421,6 +421,10 @@ name|void
 name|log_SetTun
 parameter_list|(
 name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

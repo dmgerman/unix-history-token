@@ -3799,6 +3799,8 @@ argument_list|(
 name|bundle
 operator|.
 name|unit
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|ifname
@@ -4318,7 +4320,7 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|iface_Destroy
+name|iface_Free
 argument_list|(
 name|bundle
 operator|.
