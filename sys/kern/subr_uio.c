@@ -1506,23 +1506,6 @@ block|}
 end_function
 
 begin_function
-name|void
-name|uio_yield
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|kern_yield
-argument_list|(
-name|curthread
-operator|->
-name|td_user_pri
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
 name|int
 name|copyinfrom
 parameter_list|(
