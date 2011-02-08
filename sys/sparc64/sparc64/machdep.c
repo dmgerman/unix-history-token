@@ -2309,6 +2309,12 @@ name|kstack0
 expr_stmt|;
 name|thread0
 operator|.
+name|td_kstack_pages
+operator|=
+name|KSTACK_PAGES
+expr_stmt|;
+name|thread0
+operator|.
 name|td_pcb
 operator|=
 operator|(
