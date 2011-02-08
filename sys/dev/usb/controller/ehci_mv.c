@@ -325,6 +325,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|USB_BRIDGE_ERR_ADDR
+value|0x21C
+end_define
+
+begin_define
+define|#
+directive|define
 name|MV_USB_ADDR_DECODE_ERR
 value|(1<< 0)
 end_define
@@ -1378,9 +1385,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"IRQ ERR: cause: 0x%08x\n"
-argument_list|,
-name|cause
+literal|"USB error: "
 argument_list|)
 expr_stmt|;
 if|if
@@ -1389,11 +1394,27 @@ name|cause
 operator|&
 name|MV_USB_ADDR_DECODE_ERR
 condition|)
-name|printf
+block|{
+name|uint32_t
+name|addr
+decl_stmt|;
+name|addr
+operator|=
+name|EREAD4
 argument_list|(
-literal|"IRQ ERR: Address decoding error\n"
+name|sc
+argument_list|,
+name|USB_BRIDGE_ERR_ADDR
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"address decoding error (addr=%#x)\n"
+argument_list|,
+name|addr
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|cause
@@ -1402,7 +1423,7 @@ name|MV_USB_HOST_UNDERFLOW
 condition|)
 name|printf
 argument_list|(
-literal|"IRQ ERR: USB Host Underflow\n"
+literal|"host underflow\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1413,7 +1434,7 @@ name|MV_USB_HOST_OVERFLOW
 condition|)
 name|printf
 argument_list|(
-literal|"IRQ ERR: USB Host Overflow\n"
+literal|"host overflow\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1424,7 +1445,7 @@ name|MV_USB_DEVICE_UNDERFLOW
 condition|)
 name|printf
 argument_list|(
-literal|"IRQ ERR: USB Device Underflow\n"
+literal|"device underflow\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1444,7 +1465,9 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|"IRQ ERR: Unknown error\n"
+literal|"unknown cause (cause=%#x)\n"
+argument_list|,
+name|cause
 argument_list|)
 expr_stmt|;
 name|EWRITE4
