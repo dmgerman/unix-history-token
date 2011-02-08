@@ -4607,6 +4607,12 @@ name|halAutoSleepSupport
 operator|=
 name|AH_FALSE
 expr_stmt|;
+name|pCap
+operator|->
+name|hal4kbSplitTransSupport
+operator|=
+name|AH_TRUE
+expr_stmt|;
 if|#
 directive|if
 literal|0
