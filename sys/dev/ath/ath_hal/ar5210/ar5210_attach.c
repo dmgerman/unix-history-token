@@ -1670,6 +1670,12 @@ name|HAL_INT_TX
 operator||
 name|HAL_INT_FATAL
 expr_stmt|;
+name|pCap
+operator|->
+name|hal4kbSplitTransSupport
+operator|=
+name|AH_TRUE
+expr_stmt|;
 name|ahpriv
 operator|->
 name|ah_rxornIsFatal

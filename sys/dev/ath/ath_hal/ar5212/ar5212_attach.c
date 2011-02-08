@@ -4148,6 +4148,12 @@ operator|&=
 operator|~
 name|HAL_INT_TBTT
 expr_stmt|;
+name|pCap
+operator|->
+name|hal4kbSplitTransSupport
+operator|=
+name|AH_TRUE
+expr_stmt|;
 return|return
 name|AH_TRUE
 return|;

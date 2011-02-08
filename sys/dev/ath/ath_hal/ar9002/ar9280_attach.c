@@ -4013,12 +4013,12 @@ operator|=
 name|AH_FALSE
 expr_stmt|;
 comment|/* XXX? */
-if|#
-directive|if
-literal|0
-block|pCap->hal4kbSplitTransSupport = AH_FALSE;
-endif|#
-directive|endif
+name|pCap
+operator|->
+name|hal4kbSplitTransSupport
+operator|=
+name|AH_FALSE
+expr_stmt|;
 name|pCap
 operator|->
 name|halRxStbcSupport

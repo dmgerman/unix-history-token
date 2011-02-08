@@ -692,6 +692,10 @@ decl_stmt|,
 name|halBssidMatchSupport
 range|:
 literal|1
+decl_stmt|,
+name|hal4kbSplitTransSupport
+range|:
+literal|1
 decl_stmt|;
 name|uint32_t
 name|halWirelessModes
