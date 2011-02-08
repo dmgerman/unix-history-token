@@ -6977,8 +6977,12 @@ operator|!=
 name|EAGAIN
 condition|)
 break|break;
-name|uio_yield
-argument_list|()
+name|kern_yield
+argument_list|(
+name|curthread
+operator|->
+name|td_user_pri
+argument_list|)
 expr_stmt|;
 block|}
 name|CURVNET_RESTORE

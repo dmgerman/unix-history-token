@@ -7579,8 +7579,11 @@ operator|&
 name|lk
 argument_list|)
 expr_stmt|;
-name|uio_yield
-argument_list|()
+name|kern_yield
+argument_list|(
+operator|-
+literal|1
+argument_list|)
 expr_stmt|;
 name|bwillwrite
 argument_list|()

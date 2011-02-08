@@ -677,6 +677,10 @@ name|int
 name|td_blktick
 decl_stmt|;
 comment|/* (t) Time spent blocked. */
+name|int
+name|td_swvoltick
+decl_stmt|;
+comment|/* (t) Time at last SW_VOL switch. */
 name|struct
 name|rusage
 name|td_ru
@@ -4233,6 +4237,15 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|kern_yield
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|kick_proc0
 parameter_list|(
 name|void
@@ -4260,6 +4273,15 @@ name|struct
 name|thread
 modifier|*
 name|td
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|maybe_yield
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4574,6 +4596,15 @@ name|struct
 name|proc
 modifier|*
 name|p
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|should_yield
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

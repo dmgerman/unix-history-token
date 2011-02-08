@@ -9065,8 +9065,11 @@ operator|==
 literal|0
 condition|)
 break|break;
-name|uio_yield
-argument_list|()
+name|kern_yield
+argument_list|(
+operator|-
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 name|lodirtybuffers

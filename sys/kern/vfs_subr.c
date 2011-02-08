@@ -3067,6 +3067,7 @@ name|next_iter_mntunlocked
 label|:
 if|if
 condition|(
+operator|!
 name|should_yield
 argument_list|()
 condition|)
@@ -3080,6 +3081,7 @@ name|next_iter
 label|:
 if|if
 condition|(
+operator|!
 name|should_yield
 argument_list|()
 condition|)
@@ -3091,8 +3093,11 @@ argument_list|)
 expr_stmt|;
 name|yield
 label|:
-name|uio_yield
-argument_list|()
+name|kern_yield
+argument_list|(
+operator|-
+literal|1
+argument_list|)
 expr_stmt|;
 name|relock_mnt
 label|:
@@ -3559,8 +3564,11 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|uio_yield
-argument_list|()
+name|kern_yield
+argument_list|(
+operator|-
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 block|}

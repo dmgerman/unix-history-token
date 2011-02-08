@@ -11091,9 +11091,6 @@ operator|(
 name|error
 operator|)
 return|;
-name|uio_yield
-argument_list|()
-expr_stmt|;
 block|}
 return|return
 operator|(
