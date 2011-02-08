@@ -1706,6 +1706,10 @@ expr_stmt|;
 if|if
 condition|(
 name|cpu_impl
+operator|==
+name|CPU_IMPL_SPARC64V
+operator|||
+name|cpu_impl
 operator|>=
 name|CPU_IMPL_ULTRASPARCIIIp
 condition|)
