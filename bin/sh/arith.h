@@ -19,18 +19,6 @@ parameter_list|)
 value|(3 + (2 + CHAR_BIT * sizeof((var))) / 3)
 end_define
 
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|char
-modifier|*
-name|arith_buf
-decl_stmt|,
-modifier|*
-name|arith_startbuf
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|arith_t
 name|arith
