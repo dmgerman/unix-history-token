@@ -122,6 +122,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<libutil.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -316,10 +322,6 @@ literal|"/var/run/rtadvd.dump"
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* XXX: should be configurable */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|char
@@ -330,9 +332,14 @@ literal|"/var/run/rtadvd.pid"
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* should be configurable */
-end_comment
+begin_decl_stmt
+specifier|static
+name|struct
+name|pidfh
+modifier|*
+name|pfh
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -834,12 +841,10 @@ literal|0
 decl_stmt|,
 name|logopt
 decl_stmt|;
-name|FILE
-modifier|*
-name|pidfp
-decl_stmt|;
 name|pid_t
 name|pid
+decl_stmt|,
+name|otherpid
 decl_stmt|;
 comment|/* get command line options and arguments */
 while|while
@@ -853,7 +858,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"c:dDfM:Rs"
+literal|"c:dDF:fMp:Rs"
 argument_list|)
 operator|)
 operator|!=
@@ -928,6 +933,22 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+case|case
+literal|'p'
+case|:
+name|pidfilename
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'F'
+case|:
+name|dumpfilename
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
 block|}
 block|}
 name|argc
@@ -950,7 +971,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: rtadvd [-dDfMRs] [-c conffile] "
-literal|"interfaces...\n"
+literal|"[-F dumpfile] [-p pidfile] interfaces...\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1094,6 +1115,53 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|pfh
+operator|=
+name|pidfile_open
+argument_list|(
+name|pidfilename
+argument_list|,
+literal|0600
+argument_list|,
+operator|&
+name|otherpid
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pfh
+operator|==
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|EEXIST
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s already running, pid: %d"
+argument_list|,
+name|getprogname
+argument_list|()
+argument_list|,
+name|otherpid
+argument_list|)
+expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"<%s> failed to open the pid log file, run anyway."
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -1115,49 +1183,11 @@ operator|=
 name|getpid
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|pidfp
-operator|=
-name|fopen
+name|pidfile_write
 argument_list|(
-name|pidfilename
-argument_list|,
-literal|"w"
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-block|{
-name|syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"<%s> failed to open the pid log file, run anyway."
-argument_list|,
-name|__func__
+name|pfh
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|fprintf
-argument_list|(
-name|pidfp
-argument_list|,
-literal|"%d\n"
-argument_list|,
-name|pid
-argument_list|)
-expr_stmt|;
-name|fclose
-argument_list|(
-name|pidfp
-argument_list|)
-expr_stmt|;
-block|}
 ifdef|#
 directive|ifdef
 name|HAVE_POLL_H
@@ -1771,6 +1801,11 @@ name|MIN_DELAY_BETWEEN_RAS
 argument_list|)
 expr_stmt|;
 block|}
+name|pidfile_remove
+argument_list|(
+name|pfh
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 literal|0
