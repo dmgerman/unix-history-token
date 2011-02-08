@@ -18027,13 +18027,13 @@ operator|=
 name|rs
 expr_stmt|;
 comment|/* tag AMPDU aggregates for reorder processing */
+if|#
+directive|if
+literal|0
 comment|/* 		 * Just make sure all frames are tagged for AMPDU reorder checking. 		 * As there seems to be some situations where single frames aren't 		 * matching a node but bump the seqno. This needs to be investigated. 		 */
-name|m
-operator|->
-name|m_flags
-operator||=
-name|M_AMPDU
-expr_stmt|;
+block|m->m_flags |= M_AMPDU;
+endif|#
+directive|endif
 comment|/* Keep statistics on the number of aggregate packets received */
 if|if
 condition|(
@@ -18055,6 +18055,21 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/*  			 * Only punt packets for ampdu reorder processing for 11n nodes;  			 * net80211 enforces that M_AMPDU is only set for 11n nodes.  			 */
+if|if
+condition|(
+name|ni
+operator|->
+name|ni_flags
+operator|&
+name|IEEE80211_NODE_HT
+condition|)
+name|m
+operator|->
+name|m_flags
+operator||=
+name|M_AMPDU
+expr_stmt|;
 comment|/* 			 * Sending station is known, dispatch directly. 			 */
 name|type
 operator|=
