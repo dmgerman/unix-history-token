@@ -144,12 +144,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PIL_FAST
+name|PIL_BRIDGE
 value|13
 end_define
 
 begin_comment
-comment|/* fast interrupts */
+comment|/* bridge interrupts */
 end_comment
 
 begin_define
@@ -168,6 +168,13 @@ ifndef|#
 directive|ifndef
 name|LOCORE
 end_ifndef
+
+begin_define
+define|#
+directive|define
+name|INTR_BRIDGE
+value|INTR_MD1
+end_define
 
 begin_struct_decl
 struct_decl|struct

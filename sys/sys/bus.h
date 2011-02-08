@@ -349,7 +349,27 @@ comment|/* this interrupt is SMP safe */
 name|INTR_ENTROPY
 init|=
 literal|1024
+block|,
 comment|/* this interrupt provides entropy */
+name|INTR_MD1
+init|=
+literal|4096
+block|,
+comment|/* flag reserved for MD use */
+name|INTR_MD2
+init|=
+literal|8192
+block|,
+comment|/* flag reserved for MD use */
+name|INTR_MD3
+init|=
+literal|16384
+block|,
+comment|/* flag reserved for MD use */
+name|INTR_MD4
+init|=
+literal|32768
+comment|/* flag reserved for MD use */
 block|}
 enum|;
 end_enum

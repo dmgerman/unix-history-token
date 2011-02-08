@@ -227,9 +227,9 @@ block|,
 literal|"filter"
 block|,
 comment|/* PIL_FILTER */
-literal|"fast"
+literal|"bridge"
 block|,
-comment|/* PIL_FAST */
+comment|/* PIL_BRIDGE */
 literal|"tick"
 block|,
 comment|/* PIL_TICK */
@@ -1445,13 +1445,13 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/* 	 * INTR_FAST filters/handlers are special purpose only, allowing 	 * them to be shared just would complicate things unnecessarily. 	 */
+comment|/* 	 * INTR_BRIDGE filters/handlers are special purpose only, allowing 	 * them to be shared just would complicate things unnecessarily. 	 */
 if|if
 condition|(
 operator|(
 name|flags
 operator|&
-name|INTR_FAST
+name|INTR_BRIDGE
 operator|)
 operator|!=
 literal|0
@@ -1583,12 +1583,12 @@ argument_list|(
 operator|(
 name|flags
 operator|&
-name|INTR_FAST
+name|INTR_BRIDGE
 operator|)
 operator|!=
 literal|0
 condition|?
-name|PIL_FAST
+name|PIL_BRIDGE
 else|:
 name|filt
 operator|!=
