@@ -706,6 +706,11 @@ name|irq_mask
 operator||=
 name|IRQ_TIMER0_MASK
 expr_stmt|;
+name|irq_mask
+operator|&=
+operator|~
+name|IRQ_TIMER1_MASK
+expr_stmt|;
 name|write_cpu_ctrl
 argument_list|(
 name|BRIDGE_IRQ_MASK
@@ -1113,7 +1118,7 @@ condition|;
 name|val
 operator|--
 control|)
-empty_stmt|;
+asm|__asm __volatile("nop" ::: "memory");
 return|return;
 block|}
 name|val
