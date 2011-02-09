@@ -4569,11 +4569,16 @@ name|uint8_t
 name|needs_delay
 parameter_list|)
 block|{
+if|#
+directive|if
+name|USB_HAVE_BUSDMA
 name|struct
 name|usb_page_cache
 modifier|*
 name|pc
 decl_stmt|;
+endif|#
+directive|endif
 name|USB_BUS_LOCK_ASSERT
 argument_list|(
 name|info

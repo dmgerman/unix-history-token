@@ -1828,8 +1828,10 @@ name|USB_PRI_MED
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
+name|dev
+argument_list|,
 literal|"WARNING: Creation of USB Giant "
 literal|"callback process failed.\n"
 argument_list|)
@@ -1856,8 +1858,10 @@ name|USB_PRI_HIGH
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
+name|dev
+argument_list|,
 literal|"WARNING: Creation of USB non-Giant "
 literal|"callback process failed.\n"
 argument_list|)
@@ -1884,8 +1888,10 @@ name|USB_PRI_MED
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
+name|dev
+argument_list|,
 literal|"WARNING: Creation of USB explore "
 literal|"process failed.\n"
 argument_list|)
@@ -1912,8 +1918,10 @@ name|USB_PRI_MED
 argument_list|)
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
+name|dev
+argument_list|,
 literal|"WARNING: Creation of USB control transfer "
 literal|"process failed.\n"
 argument_list|)
