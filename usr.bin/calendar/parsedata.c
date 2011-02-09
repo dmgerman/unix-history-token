@@ -2354,6 +2354,15 @@ argument_list|(
 name|year
 argument_list|)
 expr_stmt|;
+name|yearinfo
+operator|->
+name|ipaskha
+operator|=
+name|paskha
+argument_list|(
+name|year
+argument_list|)
+expr_stmt|;
 name|fpom
 argument_list|(
 name|year
