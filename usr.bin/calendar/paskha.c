@@ -60,7 +60,7 @@ comment|/* return year day for Orthodox Easter using Gauss formula */
 end_comment
 
 begin_comment
-comment|/* (old style result) */
+comment|/* (new style result) */
 end_comment
 
 begin_function
@@ -179,6 +179,8 @@ name|d
 operator|+
 name|e
 operator|)
+operator|+
+literal|13
 operator|)
 return|;
 block|}
