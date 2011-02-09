@@ -141,6 +141,16 @@ directive|ifdef
 name|UFS_ACL
 end_ifdef
 
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|ufs_acl
+argument_list|,
+literal|"ACL support for UFS"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Synchronize an ACL and an inode by copying over appropriate inode fields  * to the passed ACL.  Assumes an ACL that would satisfy acl_posix1e_check(),  * and may panic if not.  */
 end_comment

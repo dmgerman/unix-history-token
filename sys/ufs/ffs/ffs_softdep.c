@@ -1826,6 +1826,16 @@ else|#
 directive|else
 end_else
 
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|softupdates
+argument_list|,
+literal|"FFS soft-updates support"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * These definitions need to be adapted to the system to which  * this file is being ported.  */
 end_comment

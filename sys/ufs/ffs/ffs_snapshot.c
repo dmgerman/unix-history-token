@@ -350,6 +350,16 @@ directive|else
 end_else
 
 begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|ffs_snapshot
+argument_list|,
+literal|"FFS snapshot support"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|TAILQ_HEAD
 argument_list|(
 name|snaphead
