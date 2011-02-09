@@ -887,7 +887,7 @@ break|break;
 case|case
 name|RTLD_LOCK_RLOCKED
 case|:
-name|longjmp
+name|siglongjmp
 argument_list|(
 name|lockstate
 operator|->

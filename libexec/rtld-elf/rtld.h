@@ -1110,7 +1110,7 @@ block|{
 name|int
 name|lockstate
 decl_stmt|;
-name|jmp_buf
+name|sigjmp_buf
 name|env
 decl_stmt|;
 block|}
