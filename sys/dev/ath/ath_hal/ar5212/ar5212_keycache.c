@@ -399,7 +399,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Sets the mac part of the specified key cache entry (and any  * associated MIC entry) and mark them valid.  */
+comment|/*  * Sets the mac part of the specified key cache entry (and any  * associated MIC entry) and mark them valid.  *  * Since mac[0] is shifted off and not presented to the hardware,  * it does double duty as a "don't use for unicast, use for multicast  * matching" flag. This interface should later be extended to  * explicitly do that rather than overloading a bit in the MAC  * address.  */
 end_comment
 
 begin_function
@@ -424,6 +424,11 @@ name|uint32_t
 name|macHi
 decl_stmt|,
 name|macLo
+decl_stmt|;
+name|uint32_t
+name|unicast_flag
+init|=
+name|AR_KEYTABLE_VALID
 decl_stmt|;
 if|if
 condition|(
@@ -464,6 +469,20 @@ operator|!=
 name|AH_NULL
 condition|)
 block|{
+comment|/* 		 * AR_KEYTABLE_VALID indicates that the address is a unicast 		 * address, which must match the transmitter address for 		 * decrypting frames. 		 * Not setting this bit allows the hardware to use the key 		 * for multicast frame decryption. 		 */
+if|if
+condition|(
+name|mac
+index|[
+literal|0
+index|]
+operator|&
+literal|0x01
+condition|)
+name|unicast_flag
+operator|=
+literal|0
+expr_stmt|;
 name|macHi
 operator|=
 operator|(
@@ -566,7 +585,7 @@ argument_list|)
 argument_list|,
 name|macHi
 operator||
-name|AR_KEYTABLE_VALID
+name|unicast_flag
 argument_list|)
 expr_stmt|;
 return|return

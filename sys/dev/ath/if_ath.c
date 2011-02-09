@@ -9247,7 +9247,7 @@ operator|->
 name|sc_mcastkey
 condition|)
 block|{
-comment|/* 		 * Group keys on hardware that supports multicast frame 		 * key search use a MAC that is the sender's address with 		 * the high bit set instead of the app-specified address. 		 */
+comment|/* 		 * Group keys on hardware that supports multicast frame 		 * key search use a MAC that is the sender's address with 		 * the multicast bit set instead of the app-specified address. 		 */
 name|IEEE80211_ADDR_COPY
 argument_list|(
 name|gmac
@@ -9262,7 +9262,7 @@ index|[
 literal|0
 index|]
 operator||=
-literal|0x80
+literal|0x01
 expr_stmt|;
 name|mac
 operator|=
