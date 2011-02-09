@@ -353,6 +353,11 @@ init|=
 literal|39
 block|,
 comment|/* how many 802.11n spatial streams are available */
+name|HAP_CAP_SPLIT_4KB_TRANS
+init|=
+literal|40
+block|,
+comment|/* hardware supports descriptors straddling a 4k page boundary */
 block|}
 name|HAL_CAPABILITY_TYPE
 typedef|;

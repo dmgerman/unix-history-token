@@ -3261,6 +3261,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|ath_hal_split4ktrans
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAP_CAP_SPLIT_4KB_TRANS, 0, NULL) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ath_hal_setuprxdesc
 parameter_list|(
 name|_ah
