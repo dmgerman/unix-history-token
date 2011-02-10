@@ -348,10 +348,10 @@ if|if
 condition|(
 name|hx
 operator|<
-literal|0x31800000
+literal|0x39000000
 condition|)
 block|{
-comment|/* when |x|<2**-28 */
+comment|/* when |x|<2**-14 */
 if|if
 condition|(
 name|huge
