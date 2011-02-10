@@ -102,9 +102,9 @@ if|if
 condition|(
 name|ix
 operator|<
-literal|0x3e300000
+literal|0x3e400000
 condition|)
-comment|/* x< 2**-28 */
+comment|/* x< 2**-27 */
 if|if
 condition|(
 operator|(

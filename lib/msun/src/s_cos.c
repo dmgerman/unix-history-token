@@ -102,9 +102,9 @@ if|if
 condition|(
 name|ix
 operator|<
-literal|0x3e400000
+literal|0x3e46a09e
 condition|)
-comment|/* if x< 2**-27 */
+comment|/* if x< 2**-27 * sqrt(2) */
 if|if
 condition|(
 operator|(
