@@ -36537,13 +36537,14 @@ comment|/* Number of split header TCP frames received. */
 name|u64
 name|split_header_tcp_frames_rcvd
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* BCE_DEBUG */
-name|uint8_t
+comment|/* Buffer with NVRAM contents for the NIC. */
+name|u8
 modifier|*
 name|nvram_buf
 decl_stmt|;
+endif|#
+directive|endif
+comment|/* BCE_DEBUG */
 block|}
 struct|;
 end_struct

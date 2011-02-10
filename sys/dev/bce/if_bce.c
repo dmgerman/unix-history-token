@@ -171,22 +171,6 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/* BCE Build Time Options                                                   */
-end_comment
-
-begin_comment
-comment|/****************************************************************************/
-end_comment
-
-begin_comment
-comment|/* #define BCE_NVRAM_WRITE_SUPPORT 1 */
-end_comment
-
-begin_comment
-comment|/****************************************************************************/
-end_comment
-
-begin_comment
 comment|/* PCI Device ID Table                                                      */
 end_comment
 
@@ -1677,7 +1661,7 @@ end_ifdef
 begin_function_decl
 specifier|static
 name|int
-name|sysctl_nvram_dump
+name|bce_sysctl_nvram_dump
 parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
@@ -1693,7 +1677,7 @@ end_ifdef
 begin_function_decl
 specifier|static
 name|int
-name|sysctl_nvram_write
+name|bce_sysctl_nvram_write
 parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
@@ -36648,6 +36632,8 @@ operator|(
 name|error
 operator|)
 return|;
+name|error
+operator|=
 name|bce_nvram_read
 argument_list|(
 name|sc
@@ -36978,10 +36964,38 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_comment
+comment|/* Provides a sysctl interface for dumping the nvram contents.              */
+end_comment
+
+begin_comment
+comment|/* DO NOT ENABLE ON PRODUCTION SYSTEMS!					    */
+end_comment
+
+begin_comment
+comment|/*									    */
+end_comment
+
+begin_comment
+comment|/* Returns:								    */
+end_comment
+
+begin_comment
+comment|/*   0 for success, positive errno for failure.				    */
+end_comment
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
 begin_function
 specifier|static
 name|int
-name|sysctl_nvram_dump
+name|bce_sysctl_nvram_dump
 parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
@@ -37011,7 +37025,6 @@ name|nvram_buf
 operator|==
 name|NULL
 condition|)
-block|{
 name|sc
 operator|->
 name|nvram_buf
@@ -37029,22 +37042,10 @@ operator||
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-block|}
-if|if
-condition|(
-name|sc
-operator|->
-name|nvram_buf
-operator|==
-name|NULL
-condition|)
-block|{
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
-block|}
+name|error
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|req
@@ -37067,11 +37068,16 @@ operator|<
 name|sc
 operator|->
 name|bce_flash_size
+operator|&&
+name|error
+operator|==
+literal|0
 condition|;
 name|i
 operator|++
 control|)
-block|{
+name|error
+operator|=
 name|bce_nvram_read
 argument_list|(
 name|sc
@@ -37090,7 +37096,12 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-block|}
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
 name|error
 operator|=
 name|SYSCTL_OUT
@@ -37118,10 +37129,38 @@ directive|ifdef
 name|BCE_NVRAM_WRITE_SUPPORT
 end_ifdef
 
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
+begin_comment
+comment|/* Provides a sysctl interface for writing to nvram.                        */
+end_comment
+
+begin_comment
+comment|/* DO NOT ENABLE ON PRODUCTION SYSTEMS!					    */
+end_comment
+
+begin_comment
+comment|/*									    */
+end_comment
+
+begin_comment
+comment|/* Returns:								    */
+end_comment
+
+begin_comment
+comment|/*   0 for success, positive errno for failure.				    */
+end_comment
+
+begin_comment
+comment|/****************************************************************************/
+end_comment
+
 begin_function
 specifier|static
 name|int
-name|sysctl_nvram_write
+name|bce_sysctl_nvram_write
 parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
@@ -37149,7 +37188,6 @@ name|nvram_buf
 operator|==
 name|NULL
 condition|)
-block|{
 name|sc
 operator|->
 name|nvram_buf
@@ -37167,22 +37205,7 @@ operator||
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-block|}
-if|if
-condition|(
-name|sc
-operator|->
-name|nvram_buf
-operator|==
-name|NULL
-condition|)
-block|{
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
-block|}
+else|else
 name|bzero
 argument_list|(
 name|sc
@@ -37211,6 +37234,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|error
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+if|if
+condition|(
 name|req
 operator|->
 name|newlen
@@ -37219,7 +37253,8 @@ name|sc
 operator|->
 name|bce_flash_size
 condition|)
-block|{
+name|error
+operator|=
 name|bce_nvram_write
 argument_list|(
 name|sc
@@ -37235,7 +37270,6 @@ operator|->
 name|bce_flash_size
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 name|error
 return|;
@@ -38220,7 +38254,7 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-name|sysctl_nvram_dump
+name|bce_sysctl_nvram_dump
 argument_list|,
 literal|"S"
 argument_list|,
@@ -38252,7 +38286,7 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-name|sysctl_nvram_write
+name|bce_sysctl_nvram_write
 argument_list|,
 literal|"S"
 argument_list|,
