@@ -321,7 +321,7 @@ block|{
 comment|/* raise underflow flag */
 name|INSERT_WORDS
 argument_list|(
-name|y
+name|x
 argument_list|,
 name|hx
 argument_list|,
@@ -329,7 +329,7 @@ name|lx
 argument_list|)
 expr_stmt|;
 return|return
-name|y
+name|x
 return|;
 block|}
 block|}
