@@ -205,6 +205,18 @@ end_function_decl
 
 begin_function_decl
 name|s32
+name|e1000_copper_link_setup_m88_gen2
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|s32
 name|e1000_phy_force_speed_duplex_igp
 parameter_list|(
 name|struct
@@ -242,6 +254,18 @@ end_function_decl
 begin_function_decl
 name|s32
 name|e1000_get_cable_length_m88
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|s32
+name|e1000_get_cable_length_m88_gen2
 parameter_list|(
 name|struct
 name|e1000_hw
@@ -1124,6 +1148,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|BM_PORT_GEN_CFG_REG
+value|PHY_REG(BM_PORT_CTRL_PAGE, 17)
+end_define
+
+begin_define
+define|#
+directive|define
 name|BM_PCIE_PAGE
 value|770
 end_define
@@ -1378,6 +1409,50 @@ directive|define
 name|I82577_DSTATUS_CABLE_LENGTH_SHIFT
 value|2
 end_define
+
+begin_comment
+comment|/* 82580 PHY Power Management */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_82580_PHY_POWER_MGMT
+value|0xE14
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_82580_PM_SPD
+value|0x0001
+end_define
+
+begin_comment
+comment|/* Smart Power Down */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_82580_PM_D0_LPLU
+value|0x0002
+end_define
+
+begin_comment
+comment|/* For D0a states */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_82580_PM_D3_LPLU
+value|0x0004
+end_define
+
+begin_comment
+comment|/* For all other states */
+end_comment
 
 begin_comment
 comment|/* BM PHY Copper Specific Control 1 */
@@ -1767,6 +1842,17 @@ end_define
 
 begin_comment
 comment|/* Kumeran InBand Parameters */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_KMRNCTRLSTA_IBIST_DISABLE
+value|0x0200
+end_define
+
+begin_comment
+comment|/* Kumeran IBIST Disable */
 end_comment
 
 begin_define

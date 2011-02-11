@@ -58,6 +58,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_RAR_ENTRIES_I350
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_SW_SYNCH_MB
 value|0x00000100
 end_define
@@ -814,10 +821,10 @@ name|__le16
 name|pkt_info
 decl_stmt|;
 comment|/*RSS type, Pkt type*/
+comment|/* Split Header, header buffer len */
 name|__le16
 name|hdr_info
 decl_stmt|;
-comment|/* Split Header, 				        	          * header buffer len*/
 block|}
 name|hs_rss
 struct|;
@@ -2288,6 +2295,83 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_VMOLR_VPE
+value|0x00800000
+end_define
+
+begin_comment
+comment|/* VLAN promiscuous enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_VMOLR_UPE
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* Unicast promisuous enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_DVMOLR_HIDVLAN
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* Vlan hiding enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_DVMOLR_STRVLAN
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* Vlan stripping enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_DVMOLR_STRCRC
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* CRC stripping enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_PBRWAC_WALPB
+value|0x00000007
+end_define
+
+begin_comment
+comment|/* Wrap around event on LAN Rx PB */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_PBRWAC_PBE
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* Rx packet buffer empty */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|E1000_VLVF_ARRAY_SIZE
 value|32
 end_define
@@ -2445,7 +2529,7 @@ value|0xFFFF
 end_define
 
 begin_comment
-comment|/* RX packet buffer size defines */
+comment|/* Rx packet buffer size defines */
 end_comment
 
 begin_define
@@ -2581,6 +2665,17 @@ name|e1000_rxpbs_adjust_82580
 parameter_list|(
 name|u32
 name|data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|s32
+name|e1000_set_eee_i350
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

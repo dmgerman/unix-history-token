@@ -16,6 +16,45 @@ end_include
 begin_function_decl
 specifier|static
 name|s32
+name|e1000_set_default_fc_generic
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|s32
+name|e1000_commit_fc_settings_generic
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|s32
+name|e1000_poll_fiber_serdes_link_generic
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|s32
 name|e1000_validate_mdi_setting_generic
 parameter_list|(
 name|struct
@@ -1249,32 +1288,13 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* Check for LOM (vs. NIC) or one of two valid mezzanine cards */
 if|if
 condition|(
 operator|!
 operator|(
-operator|(
 name|nvm_data
 operator|&
 name|NVM_COMPAT_LOM
-operator|)
-operator|||
-operator|(
-name|hw
-operator|->
-name|device_id
-operator|==
-name|E1000_DEV_ID_82571EB_SERDES_DUAL
-operator|)
-operator|||
-operator|(
-name|hw
-operator|->
-name|device_id
-operator|==
-name|E1000_DEV_ID_82571EB_SERDES_QUAD
-operator|)
 operator|)
 condition|)
 goto|goto
@@ -2647,7 +2667,7 @@ goto|;
 block|}
 name|DEBUGOUT
 argument_list|(
-literal|"NOT RXing /C/, disable AutoNeg and force link.\n"
+literal|"NOT Rx'ing /C/, disable AutoNeg and force link.\n"
 argument_list|)
 expr_stmt|;
 comment|/* Disable auto-negotiation in the TXCW register */
@@ -2736,7 +2756,7 @@ block|{
 comment|/* 		 * If we are forcing link and we are receiving /C/ ordered 		 * sets, re-enable auto-negotiation in the TXCW register 		 * and disable forced link in the Device Control register 		 * in an attempt to auto-negotiate with our link partner. 		 */
 name|DEBUGOUT
 argument_list|(
-literal|"RXing /C/, enable AutoNeg and stop forcing link.\n"
+literal|"Rx'ing /C/, enable AutoNeg and stop forcing link.\n"
 argument_list|)
 expr_stmt|;
 name|E1000_WRITE_REG
@@ -2893,7 +2913,7 @@ goto|;
 block|}
 name|DEBUGOUT
 argument_list|(
-literal|"NOT RXing /C/, disable AutoNeg and force link.\n"
+literal|"NOT Rx'ing /C/, disable AutoNeg and force link.\n"
 argument_list|)
 expr_stmt|;
 comment|/* Disable auto-negotiation in the TXCW register */
@@ -2982,7 +3002,7 @@ block|{
 comment|/* 		 * If we are forcing link and we are receiving /C/ ordered 		 * sets, re-enable auto-negotiation in the TXCW register 		 * and disable forced link in the Device Control register 		 * in an attempt to auto-negotiate with our link partner. 		 */
 name|DEBUGOUT
 argument_list|(
-literal|"RXing /C/, enable AutoNeg and stop forcing link.\n"
+literal|"Rx'ing /C/, enable AutoNeg and stop forcing link.\n"
 argument_list|)
 expr_stmt|;
 name|E1000_WRITE_REG
@@ -3600,6 +3620,7 @@ comment|/**  *  e1000_poll_fiber_serdes_link_generic - Poll for link up  *  @hw:
 end_comment
 
 begin_function
+specifier|static
 name|s32
 name|e1000_poll_fiber_serdes_link_generic
 parameter_list|(
@@ -3749,6 +3770,7 @@ comment|/**  *  e1000_commit_fc_settings_generic - Configure flow control  *  @h
 end_comment
 
 begin_function
+specifier|static
 name|s32
 name|e1000_commit_fc_settings_generic
 parameter_list|(
@@ -3987,6 +4009,7 @@ comment|/**  *  e1000_set_default_fc_generic - Set flow control default values  
 end_comment
 
 begin_function
+specifier|static
 name|s32
 name|e1000_set_default_fc_generic
 parameter_list|(

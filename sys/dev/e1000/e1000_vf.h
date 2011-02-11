@@ -53,6 +53,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_DEV_ID_I350_VF
+value|0x1520
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_VF_INIT_TIMEOUT
 value|200
 end_define
@@ -331,14 +338,14 @@ name|data
 decl_stmt|;
 struct|struct
 block|{
+comment|/* RSS type, Packet type */
 name|u16
 name|pkt_info
 decl_stmt|;
-comment|/* RSS type, Packet type */
+comment|/* Split Header, header buffer len */
 name|u16
 name|hdr_info
 decl_stmt|;
-comment|/* Split Header, 				        	       * header buffer length */
 block|}
 name|hs_rss
 struct|;
@@ -642,6 +649,8 @@ init|=
 literal|0
 block|,
 name|e1000_vfadapt
+block|,
+name|e1000_vfadapt_i350
 block|,
 name|e1000_num_macs
 comment|/* List is 1-based, so subtract 1 for TRUE count. */

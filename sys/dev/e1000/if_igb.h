@@ -282,7 +282,7 @@ begin_define
 define|#
 directive|define
 name|IGB_TX_WTHRESH
-value|(((hw->mac.type == e1000_82576 || \ 					  hw->mac.type == e1000_vfadapt)&& \                                           adapter->msix_mem) ? 1 : 16)
+value|((hw->mac.type != e1000_82575&& \                                           adapter->msix_mem) ? 1 : 16)
 end_define
 
 begin_define
@@ -895,6 +895,9 @@ decl_stmt|;
 name|bool
 name|discard
 decl_stmt|;
+name|bool
+name|needs_refresh
+decl_stmt|;
 name|struct
 name|mtx
 name|rx_mtx
@@ -1011,7 +1014,7 @@ modifier|*
 name|tag
 decl_stmt|;
 name|u32
-name|eims_mask
+name|que_mask
 decl_stmt|;
 name|int
 name|linkvec
@@ -1060,6 +1063,10 @@ decl_stmt|;
 name|u16
 name|num_queues
 decl_stmt|;
+name|u16
+name|vf_ifp
+decl_stmt|;
+comment|/* a VF interface */
 name|eventhandler_tag
 name|vlan_attach
 decl_stmt|;

@@ -2324,17 +2324,21 @@ name|hw
 operator|->
 name|mbx
 decl_stmt|;
-if|if
+switch|switch
 condition|(
 name|hw
 operator|->
 name|mac
 operator|.
 name|type
-operator|==
-name|e1000_82576
 condition|)
 block|{
+case|case
+name|e1000_82576
+case|:
+case|case
+name|e1000_i350
+case|:
 name|mbx
 operator|->
 name|timeout
@@ -2449,10 +2453,11 @@ name|rsts
 operator|=
 literal|0
 expr_stmt|;
-block|}
+default|default:
 return|return
 name|E1000_SUCCESS
 return|;
+block|}
 block|}
 end_function
 

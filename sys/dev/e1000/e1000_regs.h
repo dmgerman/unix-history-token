@@ -629,6 +629,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_POEMB
+value|E1000_PHY_CTRL
+end_define
+
+begin_comment
+comment|/* PHY OEM Bits */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|E1000_PBA
 value|0x01000
 end_define
@@ -1034,6 +1045,17 @@ end_define
 
 begin_comment
 comment|/* Same as RXPBS, renamed for newer adapters - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_PBRWAC
+value|0x024E8
+end_define
+
+begin_comment
+comment|/* Rx packet buffer wrap around counter - RO */
 end_comment
 
 begin_define
@@ -3896,6 +3918,17 @@ begin_comment
 comment|/* Host Interface Control */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|E1000_FWSTS
+value|0x08F0C
+end_define
+
+begin_comment
+comment|/* FW Status */
+end_comment
+
 begin_comment
 comment|/* RSS registers */
 end_comment
@@ -4239,6 +4272,94 @@ begin_comment
 comment|/* Virtual Mirror Rule Control */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|E1000_VMRVLAN
+value|0x05D90
+end_define
+
+begin_comment
+comment|/* Virtual Mirror Rule VLAN */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_VMRVM
+value|0x05DA0
+end_define
+
+begin_comment
+comment|/* Virtual Mirror Rule VM */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MDFB
+value|0x03558
+end_define
+
+begin_comment
+comment|/* Malicious Driver free block */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_LVMMC
+value|0x03548
+end_define
+
+begin_comment
+comment|/* Last VM Misbehavior cause */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TXSWC
+value|0x05ACC
+end_define
+
+begin_comment
+comment|/* Tx Switch Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_SCCRL
+value|0x05DB0
+end_define
+
+begin_comment
+comment|/* Storm Control Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_BSCTRH
+value|0x05DB8
+end_define
+
+begin_comment
+comment|/* Broadcast Storm Control Threshold */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_MSCTRH
+value|0x05DBC
+end_define
+
+begin_comment
+comment|/* Multicast Storm Control Threshold */
+end_comment
+
 begin_comment
 comment|/* These act per VF so an array friendly macro is used */
 end_comment
@@ -4316,6 +4437,20 @@ name|_n
 parameter_list|)
 value|(0x03700 + (4 * (_n)))
 end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_DVMOLR
+parameter_list|(
+name|_n
+parameter_list|)
+value|(0x0C038 + (0x40 * (_n)))
+end_define
+
+begin_comment
+comment|/* DMA VM offload */
+end_comment
 
 begin_comment
 comment|/* Time Sync */
@@ -5018,7 +5153,7 @@ value|0x05DD4
 end_define
 
 begin_comment
-comment|/* Current RX Count */
+comment|/* Current Rx Count */
 end_comment
 
 begin_define
@@ -5053,6 +5188,205 @@ directive|define
 name|E1000_PCIEERRSTS
 value|0x05BA8
 end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_PROXYS
+value|0x5F64
+end_define
+
+begin_comment
+comment|/* Proxying Status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_PROXYFC
+value|0x5F60
+end_define
+
+begin_comment
+comment|/* Proxying Filter Control */
+end_comment
+
+begin_comment
+comment|/* Thermal sensor configuration and status registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_THMJT
+value|0x08100
+end_define
+
+begin_comment
+comment|/* Junction Temperature */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_THLOWTC
+value|0x08104
+end_define
+
+begin_comment
+comment|/* Low Threshold Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_THMIDTC
+value|0x08108
+end_define
+
+begin_comment
+comment|/* Mid Threshold Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_THHIGHTC
+value|0x0810C
+end_define
+
+begin_comment
+comment|/* High Threshold Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_THSTAT
+value|0x08110
+end_define
+
+begin_comment
+comment|/* Thermal Sensor Status */
+end_comment
+
+begin_comment
+comment|/*Energy Efficient Ethernet "EEE" registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_IPCNFG
+value|0x0E38
+end_define
+
+begin_comment
+comment|/* Internal PHY Configuration */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_LTRC
+value|0x01A0
+end_define
+
+begin_comment
+comment|/* Latency Tolerance Reporting Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_EEER
+value|0x0E30
+end_define
+
+begin_comment
+comment|/* Energy Efficient Ethernet "EEE"*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_EEE_SU
+value|0x0E34
+end_define
+
+begin_comment
+comment|/* EEE Setup */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_TLPIC
+value|0x4148
+end_define
+
+begin_comment
+comment|/* EEE Tx LPI Count - TLPIC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_RLPIC
+value|0x414C
+end_define
+
+begin_comment
+comment|/* EEE Rx LPI Count - RLPIC */
+end_comment
+
+begin_comment
+comment|/* OS2BMC Registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_B2OSPC
+value|0x08FE0
+end_define
+
+begin_comment
+comment|/* BMC2OS packets sent by BMC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_B2OGPRC
+value|0x04158
+end_define
+
+begin_comment
+comment|/* BMC2OS packets received by host */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_O2BGPTC
+value|0x08FE4
+end_define
+
+begin_comment
+comment|/* OS2BMC packets received by BMC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_O2BSPC
+value|0x0415C
+end_define
+
+begin_comment
+comment|/* OS2BMC packets transmitted by host */
+end_comment
 
 begin_endif
 endif|#
