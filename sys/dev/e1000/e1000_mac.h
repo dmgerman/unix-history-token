@@ -412,6 +412,18 @@ end_function_decl
 
 begin_function_decl
 name|s32
+name|e1000_set_default_fc_generic
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|s32
 name|e1000_set_fc_watermarks_generic
 parameter_list|(
 name|struct
