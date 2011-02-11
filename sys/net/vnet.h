@@ -236,6 +236,54 @@ begin_comment
 comment|/*  * Various macros -- get and set the current network stack, but also  * assertions.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INVARIANTS
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|VNET_DEBUG
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|VNET_ASSERT
+parameter_list|(
+name|exp
+parameter_list|,
+name|msg
+parameter_list|)
+value|do {					\ 	if (!(exp))							\ 		panic msg;						\ } while (0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|VNET_ASSERT
+parameter_list|(
+name|exp
+parameter_list|,
+name|msg
+parameter_list|)
+value|do {					\ } while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -262,23 +310,12 @@ end_function_decl
 begin_define
 define|#
 directive|define
-name|VNET_ASSERT
-parameter_list|(
-name|condition
-parameter_list|)
-define|\
-value|if (!(condition)) {						\ 		printf("VNET_ASSERT @ %s:%d %s():\n",			\ 			__FILE__, __LINE__, __func__);			\ 		panic(#condition);					\ 	}
-end_define
-
-begin_define
-define|#
-directive|define
 name|CURVNET_SET_QUIET
 parameter_list|(
 name|arg
 parameter_list|)
 define|\
-value|VNET_ASSERT((arg)->vnet_magic_n == VNET_MAGIC_N);		\ 	struct vnet *saved_vnet = curvnet;				\ 	const char *saved_vnet_lpush = curthread->td_vnet_lpush;	\ 	curvnet = arg;							\ 	curthread->td_vnet_lpush = __func__;
+value|VNET_ASSERT((arg) != NULL&& (arg)->vnet_magic_n == VNET_MAGIC_N, \ 	    ("CURVNET_SET at %s:%d %s() curvnet=%p vnet=%p",		\ 	    __FILE__, __LINE__, __func__, curvnet, (arg)));		\ 	struct vnet *saved_vnet = curvnet;				\ 	const char *saved_vnet_lpush = curthread->td_vnet_lpush;	\ 	curvnet = arg;							\ 	curthread->td_vnet_lpush = __func__;
 end_define
 
 begin_define
@@ -308,7 +345,7 @@ directive|define
 name|CURVNET_RESTORE
 parameter_list|()
 define|\
-value|VNET_ASSERT(saved_vnet == NULL ||				\ 		    saved_vnet->vnet_magic_n == VNET_MAGIC_N);		\ 	curvnet = saved_vnet;						\ 	curthread->td_vnet_lpush = saved_vnet_lpush;
+value|VNET_ASSERT(curvnet != NULL&& (saved_vnet == NULL ||		\ 	    saved_vnet->vnet_magic_n == VNET_MAGIC_N),			\ 	    ("CURVNET_RESTORE at %s:%d %s() curvnet=%p saved_vnet=%p",	\ 	    __FILE__, __LINE__, __func__, curvnet, saved_vnet));	\ 	curvnet = saved_vnet;						\ 	curthread->td_vnet_lpush = saved_vnet_lpush;
 end_define
 
 begin_else
@@ -319,15 +356,6 @@ end_else
 begin_comment
 comment|/* !VNET_DEBUG */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|VNET_ASSERT
-parameter_list|(
-name|condition
-parameter_list|)
-end_define
 
 begin_define
 define|#
@@ -1120,7 +1148,9 @@ define|#
 directive|define
 name|VNET_ASSERT
 parameter_list|(
-name|condition
+name|exp
+parameter_list|,
+name|msg
 parameter_list|)
 end_define
 
