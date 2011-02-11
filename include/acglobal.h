@@ -578,6 +578,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Initialization sequencing */
+end_comment
+
+begin_decl_stmt
+name|ACPI_EXTERN
+name|BOOLEAN
+name|AcpiGbl_RegMethodsExecuted
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Misc */
 end_comment
 

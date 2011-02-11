@@ -1609,9 +1609,10 @@ goto|goto
 name|enterloop
 goto|;
 block|}
+comment|/*           * Install most of the handlers.           * Override some default region handlers, especially SystemMemory           */
 name|Status
 operator|=
-name|AeInstallHandlers
+name|AeInstallEarlyHandlers
 argument_list|()
 expr_stmt|;
 if|if
@@ -1626,7 +1627,7 @@ goto|goto
 name|enterloop
 goto|;
 block|}
-comment|/*          * TBD:          * Need a way to call this after the "LOAD" command          */
+comment|/*          * TBD: Need a way to call this after the "LOAD" command          */
 name|Status
 operator|=
 name|AcpiEnableSubsystem
@@ -1685,6 +1686,10 @@ goto|goto
 name|enterloop
 goto|;
 block|}
+comment|/*          * Install handlers for "device driver" space IDs (EC,SMBus, etc.)          * and fixed event handlers          */
+name|AeInstallLateHandlers
+argument_list|()
+expr_stmt|;
 name|AeMiscellaneousTests
 argument_list|()
 expr_stmt|;

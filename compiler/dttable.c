@@ -3487,14 +3487,13 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    DtTableInfoGeneric  *  * PARAMETERS:  Name                - Generic type name  *  * RETURN:      Info entry  *  * DESCRIPTION: Obtain table info for a generic name entry  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    DtGetGenericTableInfo  *  * PARAMETERS:  Name                - Generic type name  *  * RETURN:      Info entry  *  * DESCRIPTION: Obtain table info for a generic name entry  *  *****************************************************************************/
 end_comment
 
 begin_function
-specifier|static
 name|ACPI_DMTABLE_INFO
 modifier|*
-name|DtTableInfoGeneric
+name|DtGetGenericTableInfo
 parameter_list|(
 name|char
 modifier|*
@@ -3623,6 +3622,7 @@ name|UINT16
 modifier|*
 name|DataOffset
 decl_stmt|;
+comment|/* Compile the predefined portion of the UEFI table */
 name|Status
 operator|=
 name|DtCompileTable
@@ -3685,6 +3685,15 @@ argument_list|,
 name|Subtable
 argument_list|)
 expr_stmt|;
+comment|/*      * Compile the "generic" portion of the UEFI table. This      * part of the table is not predefined and any of the generic      * operators may be used.      */
+comment|/* Find any and all labels in the entire generic portion */
+name|DtDetectAllLabels
+argument_list|(
+operator|*
+name|PFieldList
+argument_list|)
+expr_stmt|;
+comment|/* Now we can actually compile the parse tree */
 while|while
 condition|(
 operator|*
@@ -3693,7 +3702,7 @@ condition|)
 block|{
 name|Info
 operator|=
-name|DtTableInfoGeneric
+name|DtGetGenericTableInfo
 argument_list|(
 operator|(
 operator|*

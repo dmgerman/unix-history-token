@@ -458,6 +458,10 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|AcpiGbl_RegMethodsExecuted
+operator|=
+name|TRUE
+expr_stmt|;
 operator|(
 name|void
 operator|)

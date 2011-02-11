@@ -465,6 +465,20 @@ name|ACPI_DMT_DEVICE_PATH
 value|44
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACPI_DMT_LABEL
+value|45
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DMT_BUF7
+value|46
+end_define
+
 begin_typedef
 typedef|typedef
 name|void

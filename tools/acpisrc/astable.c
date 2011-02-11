@@ -841,6 +841,12 @@ name|SRC_TYPE_SIMPLE
 block|}
 block|,
 block|{
+literal|"ACPI_HANDLER_INFO"
+block|,
+name|SRC_TYPE_STRUCT
+block|}
+block|,
+block|{
 literal|"ACPI_INIT_HANDLER"
 block|,
 name|SRC_TYPE_SIMPLE

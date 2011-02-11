@@ -1237,6 +1237,31 @@ parameter_list|)
 value|(UINT8) ACPI_OFFSET (ACPI_TABLE_FADT, f)
 end_define
 
+begin_comment
+comment|/*  * Sizes of the various flavors of FADT. We need to look closely  * at the FADT length because the version number essentially tells  * us nothing because of many BIOS bugs where the version does not  * match the expected length. In other words, the length of the  * FADT is the bottom line as to what the version really is.  *  * For reference, the values below are as follows:  *     FADT V1  size: 0x74  *     FADT V2  size: 0x84  *     FADT V3+ size: 0xF4  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_FADT_V1_SIZE
+value|(UINT32) (ACPI_FADT_OFFSET (Flags) + 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_FADT_V2_SIZE
+value|(UINT32) (ACPI_FADT_OFFSET (Reserved4[0]) + 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_FADT_V3_SIZE
+value|(UINT32) (sizeof (ACPI_TABLE_FADT))
+end_define
+
 begin_endif
 endif|#
 directive|endif

@@ -1295,9 +1295,9 @@ name|TrWalkParseTree
 argument_list|(
 name|RootNode
 argument_list|,
-name|ASL_WALK_VISIT_TWICE
+name|ASL_WALK_VISIT_UPWARD
 argument_list|,
-name|AnMethodTypingWalkBegin
+name|NULL
 argument_list|,
 name|AnMethodTypingWalkEnd
 argument_list|,
@@ -1328,9 +1328,9 @@ name|TrWalkParseTree
 argument_list|(
 name|RootNode
 argument_list|,
-name|ASL_WALK_VISIT_TWICE
+name|ASL_WALK_VISIT_UPWARD
 argument_list|,
-name|AnOperandTypecheckWalkBegin
+name|NULL
 argument_list|,
 name|AnOperandTypecheckWalkEnd
 argument_list|,
@@ -1362,11 +1362,11 @@ name|TrWalkParseTree
 argument_list|(
 name|RootNode
 argument_list|,
-name|ASL_WALK_VISIT_TWICE
+name|ASL_WALK_VISIT_DOWNWARD
 argument_list|,
 name|AnOtherSemanticAnalysisWalkBegin
 argument_list|,
-name|AnOtherSemanticAnalysisWalkEnd
+name|NULL
 argument_list|,
 operator|&
 name|AnalysisWalkInfo

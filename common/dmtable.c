@@ -1796,6 +1796,9 @@ break|break;
 case|case
 name|ACPI_DMT_UINT56
 case|:
+case|case
+name|ACPI_DMT_BUF7
+case|:
 name|ByteLength
 operator|=
 literal|7
@@ -2135,9 +2138,12 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|ACPI_DMT_BUF7
+case|:
+case|case
 name|ACPI_DMT_BUF16
 case|:
-comment|/* Buffer of length 16 */
+comment|/*              * Buffer: Size depends on the opcode and was set above.              * Each hex byte is separated with a space.              */
 for|for
 control|(
 name|Temp8
@@ -2146,7 +2152,7 @@ literal|0
 init|;
 name|Temp8
 operator|<
-literal|16
+name|ByteLength
 condition|;
 name|Temp8
 operator|++
@@ -2164,18 +2170,21 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
+call|(
+name|UINT32
+call|)
+argument_list|(
 name|Temp8
 operator|+
 literal|1
-operator|)
+argument_list|)
 operator|<
-literal|16
+name|ByteLength
 condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|","
+literal|" "
 argument_list|)
 expr_stmt|;
 block|}
