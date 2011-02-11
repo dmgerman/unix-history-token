@@ -577,7 +577,7 @@ index|[
 name|i
 index|]
 operator|.
-name|rateFlags
+name|RateFlags
 operator|&
 name|HAL_RATESERIES_HALFGI
 argument_list|)
