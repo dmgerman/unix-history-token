@@ -572,7 +572,14 @@ operator|&
 name|IEEE80211_HTCAP_CHWIDTH40
 operator|)
 argument_list|,
-name|shortPreamble
+name|series
+index|[
+name|i
+index|]
+operator|.
+name|rateFlags
+operator|&
+name|HAL_RATESERIES_HALFGI
 argument_list|)
 expr_stmt|;
 block|}
