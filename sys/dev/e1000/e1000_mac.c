@@ -16,45 +16,6 @@ end_include
 begin_function_decl
 specifier|static
 name|s32
-name|e1000_set_default_fc_generic
-parameter_list|(
-name|struct
-name|e1000_hw
-modifier|*
-name|hw
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|s32
-name|e1000_commit_fc_settings_generic
-parameter_list|(
-name|struct
-name|e1000_hw
-modifier|*
-name|hw
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|s32
-name|e1000_poll_fiber_serdes_link_generic
-parameter_list|(
-name|struct
-name|e1000_hw
-modifier|*
-name|hw
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|s32
 name|e1000_validate_mdi_setting_generic
 parameter_list|(
 name|struct
@@ -3620,7 +3581,6 @@ comment|/**  *  e1000_poll_fiber_serdes_link_generic - Poll for link up  *  @hw:
 end_comment
 
 begin_function
-specifier|static
 name|s32
 name|e1000_poll_fiber_serdes_link_generic
 parameter_list|(
@@ -3770,7 +3730,6 @@ comment|/**  *  e1000_commit_fc_settings_generic - Configure flow control  *  @h
 end_comment
 
 begin_function
-specifier|static
 name|s32
 name|e1000_commit_fc_settings_generic
 parameter_list|(
@@ -4009,7 +3968,6 @@ comment|/**  *  e1000_set_default_fc_generic - Set flow control default values  
 end_comment
 
 begin_function
-specifier|static
 name|s32
 name|e1000_set_default_fc_generic
 parameter_list|(
