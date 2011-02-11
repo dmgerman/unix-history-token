@@ -1797,14 +1797,7 @@ name|top
 operator|->
 name|cg_mask
 operator|=
-operator|~
-literal|0U
-operator|>>
-operator|(
-literal|32
-operator|-
-name|mp_ncpus
-operator|)
+name|all_cpus
 expr_stmt|;
 name|top
 operator|->
