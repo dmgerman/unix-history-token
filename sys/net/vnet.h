@@ -360,12 +360,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CURVNET_SET
+name|CURVNET_SET_QUIET
 parameter_list|(
 name|arg
 parameter_list|)
 define|\
-value|struct vnet *saved_vnet = curvnet;				\ 	curvnet = arg;
+value|VNET_ASSERT((arg) != NULL&& (arg)->vnet_magic_n == VNET_MAGIC_N, \ 	    ("CURVNET_SET at %s:%d %s() curvnet=%p vnet=%p",		\ 	    __FILE__, __LINE__, __func__, curvnet, (arg)));		\ 	struct vnet *saved_vnet = curvnet;				\ 	curvnet = arg;
 end_define
 
 begin_define
@@ -375,17 +375,18 @@ name|CURVNET_SET_VERBOSE
 parameter_list|(
 name|arg
 parameter_list|)
-value|CURVNET_SET(arg)
+define|\
+value|CURVNET_SET_QUIET(arg)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CURVNET_SET_QUIET
+name|CURVNET_SET
 parameter_list|(
 name|arg
 parameter_list|)
-value|CURVNET_SET(arg)
+value|CURVNET_SET_VERBOSE(arg)
 end_define
 
 begin_define
@@ -394,7 +395,7 @@ directive|define
 name|CURVNET_RESTORE
 parameter_list|()
 define|\
-value|curvnet = saved_vnet;
+value|VNET_ASSERT(curvnet != NULL&& (saved_vnet == NULL ||		\ 	    saved_vnet->vnet_magic_n == VNET_MAGIC_N),			\ 	    ("CURVNET_RESTORE at %s:%d %s() curvnet=%p saved_vnet=%p",	\ 	    __FILE__, __LINE__, __func__, curvnet, saved_vnet));	\ 	curvnet = saved_vnet;
 end_define
 
 begin_endif
