@@ -81,9 +81,9 @@ name|pdeath_signal
 decl_stmt|;
 comment|/* parent death signal */
 name|int
-name|used_requeue
+name|flags
 decl_stmt|;
-comment|/* uses deprecated futex op */
+comment|/* different emuldata flags */
 name|struct
 name|linux_robust_list_head
 modifier|*
@@ -193,6 +193,21 @@ directive|define
 name|EMUL_DONTLOCK
 value|0
 end_define
+
+begin_comment
+comment|/* emuldata flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINUX_XDEPR_REQUEUEOP
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* uses deprecated 						   futex REQUEUE op*/
+end_comment
 
 begin_function_decl
 name|int
