@@ -1993,6 +1993,21 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|m
+operator|->
+name|busy
+operator|>
+literal|0
+argument_list|,
+operator|(
+literal|"vm_page_io_finish: page %p is not busy"
+operator|,
+name|m
+operator|)
+argument_list|)
+expr_stmt|;
 name|m
 operator|->
 name|busy
