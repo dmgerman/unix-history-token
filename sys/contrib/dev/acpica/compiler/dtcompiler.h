@@ -170,6 +170,13 @@ name|DT_FIELD_TYPE_DEVICE_PATH
 value|9
 end_define
 
+begin_define
+define|#
+directive|define
+name|DT_FIELD_TYPE_LABEL
+value|10
+end_define
+
 begin_comment
 comment|/*  * Structure used for each individual field within an ACPI table  */
 end_comment
@@ -183,15 +190,24 @@ name|char
 modifier|*
 name|Name
 decl_stmt|;
+comment|/* Field name (from name : value) */
 name|char
 modifier|*
 name|Value
 decl_stmt|;
+comment|/* Field value (from name : value) */
 name|struct
 name|dt_field
 modifier|*
 name|Next
 decl_stmt|;
+comment|/* Next field */
+name|struct
+name|dt_field
+modifier|*
+name|NextLabel
+decl_stmt|;
+comment|/* If field is a label, next label */
 name|UINT32
 name|Line
 decl_stmt|;
@@ -208,6 +224,10 @@ name|UINT32
 name|Column
 decl_stmt|;
 comment|/* Start column for field value */
+name|UINT32
+name|TableOffset
+decl_stmt|;
+comment|/* Binary offset within ACPI table */
 name|UINT8
 name|Flags
 decl_stmt|;
@@ -332,6 +352,39 @@ operator|*
 name|Gbl_SubtableStack
 argument_list|,
 name|NULL
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* List for defined labels */
+end_comment
+
+begin_decl_stmt
+name|DT_EXTERN
+name|DT_FIELD
+name|DT_INIT_GLOBAL
+argument_list|(
+operator|*
+name|Gbl_LabelList
+argument_list|,
+name|NULL
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Current offset within the binary output table */
+end_comment
+
+begin_decl_stmt
+name|DT_EXTERN
+name|UINT32
+name|DT_INIT_GLOBAL
+argument_list|(
+name|Gbl_CurrentTableOffset
+argument_list|,
+literal|0
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -536,6 +589,32 @@ parameter_list|(
 name|DT_SUBTABLE
 modifier|*
 name|Subtable
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* dtexpress - Integer expressions and labels */
+end_comment
+
+begin_function_decl
+name|UINT64
+name|DtResolveIntegerExpression
+parameter_list|(
+name|DT_FIELD
+modifier|*
+name|Field
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|DtDetectAllLabels
+parameter_list|(
+name|DT_FIELD
+modifier|*
+name|FieldList
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1075,6 +1154,18 @@ name|void
 modifier|*
 modifier|*
 name|PFieldList
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_DMTABLE_INFO
+modifier|*
+name|DtGetGenericTableInfo
+parameter_list|(
+name|char
+modifier|*
+name|Name
 parameter_list|)
 function_decl|;
 end_function_decl

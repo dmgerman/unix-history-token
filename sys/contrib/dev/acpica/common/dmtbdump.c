@@ -49,6 +49,20 @@ literal|"dmtbdump"
 argument_list|)
 end_macro
 
+begin_function_decl
+specifier|static
+name|void
+name|AcpiDmValidateFadtLength
+parameter_list|(
+name|UINT32
+name|Revision
+parameter_list|,
+name|UINT32
+name|Length
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmDumpRsdp  *  * PARAMETERS:  Table               - A RSDP  *  * RETURN:      Length of the table (there is not always a length field,  *              use revision or length if available (ACPI 2.0+))  *  * DESCRIPTION: Format the contents of a RSDP  *  ******************************************************************************/
 end_comment
@@ -434,7 +448,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmDumpFadt  *  * PARAMETERS:  Table               - A FADT  *  * RETURN:      None  *  * DESCRIPTION: Format the contents of a FADT  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmDumpFadt  *  * PARAMETERS:  Table               - A FADT  *  * RETURN:      None  *  * DESCRIPTION: Format the contents of a FADT  *  * NOTE:        We cannot depend on the FADT version to indicate the actual  *              contents of the FADT because of BIOS bugs. The table length  *              is the only reliable indicator.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -446,7 +460,7 @@ modifier|*
 name|Table
 parameter_list|)
 block|{
-comment|/* Common ACPI 1.0 portion of FADT */
+comment|/* Always dump the minimum FADT revision 1 fields (ACPI 1.0) */
 name|AcpiDmDumpTable
 argument_list|(
 name|Table
@@ -462,14 +476,24 @@ argument_list|,
 name|AcpiDmTableInfoFadt1
 argument_list|)
 expr_stmt|;
-comment|/* Check for ACPI 1.0B MS extensions (FADT revision 2) */
+comment|/* Check for FADT revision 2 fields (ACPI 1.0B MS extensions) */
 if|if
 condition|(
+operator|(
 name|Table
 operator|->
-name|Revision
-operator|==
-literal|2
+name|Length
+operator|>
+name|ACPI_FADT_V1_SIZE
+operator|)
+operator|&&
+operator|(
+name|Table
+operator|->
+name|Length
+operator|<=
+name|ACPI_FADT_V2_SIZE
+operator|)
 condition|)
 block|{
 name|AcpiDmDumpTable
@@ -488,18 +512,15 @@ name|AcpiDmTableInfoFadt2
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Check for ACPI 2.0+ extended data (FADT revision 3+) */
+comment|/* Check for FADT revision 3 fields and up (ACPI 2.0+ extended data) */
 elseif|else
 if|if
 condition|(
 name|Table
 operator|->
 name|Length
-operator|>=
-sizeof|sizeof
-argument_list|(
-name|ACPI_TABLE_FADT
-argument_list|)
+operator|>
+name|ACPI_FADT_V2_SIZE
 condition|)
 block|{
 name|AcpiDmDumpTable
@@ -526,6 +547,104 @@ argument_list|,
 name|Table
 operator|->
 name|Length
+argument_list|)
+expr_stmt|;
+comment|/* Validate FADT length against the revision */
+name|AcpiDmValidateFadtLength
+argument_list|(
+name|Table
+operator|->
+name|Revision
+argument_list|,
+name|Table
+operator|->
+name|Length
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmValidateFadtLength  *  * PARAMETERS:  Revision            - FADT revision (Header->Revision)  *              Length              - FADT length (Header->Length  *  * RETURN:      None  *  * DESCRIPTION: Check the FADT revision against the expected table length for  *              that revision. Issue a warning if the length is not what was  *              expected. This seems to be such a common BIOS bug that the  *              FADT revision has been rendered virtually meaningless.  *  ******************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|AcpiDmValidateFadtLength
+parameter_list|(
+name|UINT32
+name|Revision
+parameter_list|,
+name|UINT32
+name|Length
+parameter_list|)
+block|{
+name|UINT32
+name|ExpectedLength
+decl_stmt|;
+switch|switch
+condition|(
+name|Revision
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|AcpiOsPrintf
+argument_list|(
+literal|"// ACPI Warning: Invalid FADT revision: 0\n"
+argument_list|)
+expr_stmt|;
+return|return;
+case|case
+literal|1
+case|:
+name|ExpectedLength
+operator|=
+name|ACPI_FADT_V1_SIZE
+expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+name|ExpectedLength
+operator|=
+name|ACPI_FADT_V2_SIZE
+expr_stmt|;
+break|break;
+case|case
+literal|3
+case|:
+case|case
+literal|4
+case|:
+name|ExpectedLength
+operator|=
+name|ACPI_FADT_V3_SIZE
+expr_stmt|;
+break|break;
+default|default:
+return|return;
+block|}
+if|if
+condition|(
+name|Length
+operator|==
+name|ExpectedLength
+condition|)
+block|{
+return|return;
+block|}
+name|AcpiOsPrintf
+argument_list|(
+literal|"\n// ACPI Warning: FADT revision %X does not match length: found %X expected %X\n"
+argument_list|,
+name|Revision
+argument_list|,
+name|Length
+argument_list|,
+name|ExpectedLength
 argument_list|)
 expr_stmt|;
 block|}

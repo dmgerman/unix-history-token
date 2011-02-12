@@ -87,7 +87,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
 name|UINT32
 name|DtGetNextLine
 parameter_list|(
@@ -129,6 +128,9 @@ parameter_list|,
 name|UINT8
 modifier|*
 name|Buffer
+parameter_list|,
+name|UINT32
+name|Offset
 parameter_list|,
 name|UINT32
 name|Length
@@ -750,10 +752,12 @@ condition|(
 operator|*
 name|End
 operator|&&
+operator|(
 operator|*
 name|End
 operator|!=
 literal|'"'
+operator|)
 condition|)
 block|{
 name|End
@@ -765,6 +769,7 @@ operator|++
 expr_stmt|;
 break|break;
 block|}
+comment|/*          * Special "comment" fields at line end, ignore them.          * Note: normal slash-slash and slash-asterisk comments are          * stripped already by the DtGetNextLine parser.          *          * TBD: Perhaps DtGetNextLine should parse the following type          * of comments also.          */
 if|if
 condition|(
 operator|*
@@ -776,11 +781,6 @@ operator|*
 name|End
 operator|==
 literal|'<'
-operator|||
-operator|*
-name|End
-operator|==
-literal|'/'
 condition|)
 block|{
 break|break;
@@ -900,7 +900,6 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-specifier|static
 name|UINT32
 name|DtGetNextLine
 parameter_list|(
@@ -952,6 +951,31 @@ operator|==
 name|EOF
 condition|)
 block|{
+switch|switch
+condition|(
+name|State
+condition|)
+block|{
+case|case
+name|DT_START_QUOTED_STRING
+case|:
+case|case
+name|DT_SLASH_ASTERISK_COMMENT
+case|:
+case|case
+name|DT_SLASH_SLASH_COMMENT
+case|:
+name|AcpiOsPrintf
+argument_list|(
+literal|"**** EOF within comment/string %u\n"
+argument_list|,
+name|State
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
 return|return
 operator|(
 literal|0
@@ -1205,6 +1229,32 @@ operator|=
 name|DT_NORMAL_TEXT
 expr_stmt|;
 break|break;
+case|case
+literal|'\n'
+case|:
+name|CurrentLineOffset
+operator|=
+name|Gbl_NextLineOffset
+expr_stmt|;
+name|Gbl_NextLineOffset
+operator|=
+operator|(
+name|UINT32
+operator|)
+name|ftell
+argument_list|(
+name|Handle
+argument_list|)
+expr_stmt|;
+name|Gbl_CurrentLineNumber
+operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'*'
+case|:
+comment|/* Consume all adjacent asterisks */
+break|break;
 default|default:
 name|State
 operator|=
@@ -1442,7 +1492,7 @@ comment|/*  * Listing support  */
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    DtDumpBuffer  *  * PARAMETERS:  FileID              - Where to write buffer data  *              Buffer              - Buffer to dump  *              Length              - Buffer Length  *  * RETURN:      None  *  * DESCRIPTION: Another copy of DumpBuffer routine (unfortunately).  *  * TBD: merge dump buffer routines  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    DtDumpBuffer  *  * PARAMETERS:  FileID              - Where to write buffer data  *              Buffer              - Buffer to dump  *              Offset              - Offset in current table  *              Length              - Buffer Length  *  * RETURN:      None  *  * DESCRIPTION: Another copy of DumpBuffer routine (unfortunately).  *  * TBD: merge dump buffer routines  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -1458,6 +1508,9 @@ modifier|*
 name|Buffer
 parameter_list|,
 name|UINT32
+name|Offset
+parameter_list|,
+name|UINT32
 name|Length
 parameter_list|)
 block|{
@@ -1470,6 +1523,19 @@ decl_stmt|;
 name|UINT8
 name|BufChar
 decl_stmt|;
+name|FlPrintFile
+argument_list|(
+name|FileId
+argument_list|,
+literal|"Output: [%3.3Xh %4.4d% 3d] "
+argument_list|,
+name|Offset
+argument_list|,
+name|Offset
+argument_list|,
+name|Length
+argument_list|)
+expr_stmt|;
 name|i
 operator|=
 literal|0
@@ -1481,16 +1547,24 @@ operator|<
 name|Length
 condition|)
 block|{
-comment|/* Print 16 hex chars */
+if|if
+condition|(
+name|i
+operator|>=
+literal|16
+condition|)
+block|{
 name|FlPrintFile
 argument_list|(
 name|FileId
 argument_list|,
-literal|"Output: [%.3d] "
+literal|"%23s"
 argument_list|,
-name|Length
+literal|""
 argument_list|)
 expr_stmt|;
+block|}
+comment|/* Print 16 hex chars */
 for|for
 control|(
 name|j
@@ -1754,19 +1828,16 @@ operator|->
 name|Value
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* TBD Dump the length and AML offset */
-block|FlPrintFile (ASL_FILE_LISTING_OUTPUT,         "Output: Length %d(0x%X) Offset %d(0x%X)\n",         Field->Column-4, Field->Name, Field->Value);
-endif|#
-directive|endif
 comment|/* Dump the hex data that will be output for this field */
 name|DtDumpBuffer
 argument_list|(
 name|ASL_FILE_LISTING_OUTPUT
 argument_list|,
 name|Buffer
+argument_list|,
+name|Field
+operator|->
+name|TableOffset
 argument_list|,
 name|Length
 argument_list|)

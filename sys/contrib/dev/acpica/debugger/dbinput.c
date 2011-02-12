@@ -106,9 +106,7 @@ specifier|static
 name|void
 name|AcpiDbDisplayHelp
 parameter_list|(
-name|char
-modifier|*
-name|HelpType
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -164,6 +162,8 @@ block|,
 name|CMD_GPE
 block|,
 name|CMD_GPES
+block|,
+name|CMD_HANDLERS
 block|,
 name|CMD_HELP
 block|,
@@ -383,6 +383,12 @@ block|}
 block|,
 block|{
 literal|"GPES"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"HANDLERS"
 block|,
 literal|0
 block|}
@@ -619,7 +625,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDisplayHelp  *  * PARAMETERS:  HelpType        - Subcommand (optional)  *  * RETURN:      None  *  * DESCRIPTION: Print a usage message.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDisplayHelp  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Print a usage message.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -627,402 +633,322 @@ specifier|static
 name|void
 name|AcpiDbDisplayHelp
 parameter_list|(
-name|char
-modifier|*
-name|HelpType
+name|void
 parameter_list|)
 block|{
-name|AcpiUtStrupr
-argument_list|(
-name|HelpType
-argument_list|)
-expr_stmt|;
-comment|/* No parameter, just give the overview */
-if|if
-condition|(
-operator|!
-name|HelpType
-condition|)
-block|{
-name|AcpiOsPrintf
-argument_list|(
-literal|"ACPI CA Debugger Commands\n\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"The following classes of commands are available.  Help is available for\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"each class by entering \"Help<ClassName>\"\n\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"    [GENERAL]       General-Purpose Commands\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"    [NAMESPACE]     Namespace Access Commands\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"    [METHOD]        Control Method Execution Commands\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"    [STATISTICS]    Statistical Information\n"
-argument_list|)
-expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"    [FILE]          File I/O Commands\n"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-comment|/*      * Parameter is the command class      *      * The idea here is to keep each class of commands smaller than a screenful      */
-switch|switch
-condition|(
-name|HelpType
-index|[
-literal|0
-index|]
-condition|)
-block|{
-case|case
-literal|'G'
-case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\nGeneral-Purpose Commands\n\n"
+literal|"\nGeneral-Purpose Commands:\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Allocations                         Display list of current memory allocations\n"
+literal|"  Allocations                         Display list of current memory allocations\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Dump<Address>|<Namepath>\n"
+literal|"  Dump<Address>|<Namepath>\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"     [Byte|Word|Dword|Qword]        Display ACPI objects or memory\n"
+literal|"       [Byte|Word|Dword|Qword]        Display ACPI objects or memory\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"EnableAcpi                          Enable ACPI (hardware) mode\n"
+literal|"  EnableAcpi                          Enable ACPI (hardware) mode\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Help                                This help screen\n"
+literal|"  Handlers                            Info about global handlers\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"History                             Display command history buffer\n"
+literal|"  Help                                This help screen\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Level [<DebugLevel>] [console]      Get/Set debug level for file or console\n"
+literal|"  History                             Display command history buffer\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Locks                               Current status of internal mutexes\n"
+literal|"  Level [<DebugLevel>] [console]      Get/Set debug level for file or console\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Osi [Install|Remove<name>]         Display or modify global _OSI list\n"
+literal|"  Locks                               Current status of internal mutexes\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Quit or Exit                        Exit this command\n"
+literal|"  Osi [Install|Remove<name>]         Display or modify global _OSI list\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Stats [Allocations|Memory|Misc\n"
+literal|"  Quit or Exit                        Exit this command\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"      |Objects|Sizes|Stack|Tables]  Display namespace and memory statistics\n"
+literal|"  Stats [Allocations|Memory|Misc|\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Tables                              Display info about loaded ACPI tables\n"
+literal|"        Objects|Sizes|Stack|Tables]   Display namespace and memory statistics\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Unload<TableSig> [Instance]        Unload an ACPI table\n"
+literal|"     Allocations                      Display list of current memory allocations\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"!<CommandNumber>                   Execute command from history buffer\n"
+literal|"     Memory                           Dump internal memory lists\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"!!                                  Execute last command again\n"
+literal|"     Misc                             Namespace search and mutex stats\n"
 argument_list|)
 expr_stmt|;
-return|return;
-case|case
-literal|'S'
-case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\nStats Subcommands\n\n"
+literal|"     Objects                          Summary of namespace objects\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Allocations                         Display list of current memory allocations\n"
+literal|"     Sizes                            Sizes for each of the internal objects\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Memory                              Dump internal memory lists\n"
+literal|"     Stack                            Display CPU stack usage\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Misc                                Namespace search and mutex stats\n"
+literal|"     Tables                           Info about current ACPI table(s)\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Objects                             Summary of namespace objects\n"
+literal|"  Tables                              Display info about loaded ACPI tables\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Sizes                               Sizes for each of the internal objects\n"
+literal|"  Unload<TableSig> [Instance]        Unload an ACPI table\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Stack                               Display CPU stack usage\n"
+literal|"  !<CommandNumber>                   Execute command from history buffer\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Tables                              Info about current ACPI table(s)\n"
+literal|"  !!                                  Execute last command again\n"
 argument_list|)
 expr_stmt|;
-return|return;
-case|case
-literal|'N'
-case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\nNamespace Access Commands\n\n"
+literal|"\nNamespace Access Commands:\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Businfo                             Display system bus info\n"
+literal|"  Businfo                             Display system bus info\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Disassemble<Method>                Disassemble a control method\n"
+literal|"  Disassemble<Method>                Disassemble a control method\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Event<F|G><Value>                 Generate AcpiEvent (Fixed/GPE)\n"
+literal|"  Event<F|G><Value>                 Generate AcpiEvent (Fixed/GPE)\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Find<AcpiName>  (? is wildcard)    Find ACPI name(s) with wildcards\n"
+literal|"  Find<AcpiName>  (? is wildcard)    Find ACPI name(s) with wildcards\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Gpe<GpeNum><GpeBlock>             Simulate a GPE\n"
+literal|"  Gpe<GpeNum><GpeBlock>             Simulate a GPE\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Gpes                                Display info on all GPEs\n"
+literal|"  Gpes                                Display info on all GPEs\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Integrity                           Validate namespace integrity\n"
+literal|"  Integrity                           Validate namespace integrity\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Methods                             Display list of loaded control methods\n"
+literal|"  Methods                             Display list of loaded control methods\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Namespace [Object] [Depth]          Display loaded namespace tree/subtree\n"
+literal|"  Namespace [Object] [Depth]          Display loaded namespace tree/subtree\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Notify<Object><Value>             Send a notification on Object\n"
+literal|"  Notify<Object><Value>             Send a notification on Object\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Objects<ObjectType>                Display all objects of the given type\n"
+literal|"  Objects<ObjectType>                Display all objects of the given type\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Owner<OwnerId> [Depth]             Display loaded namespace by object owner\n"
+literal|"  Owner<OwnerId> [Depth]             Display loaded namespace by object owner\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Predefined                          Check all predefined names\n"
+literal|"  Predefined                          Check all predefined names\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Prefix [<NamePath>]                 Set or Get current execution prefix\n"
+literal|"  Prefix [<NamePath>]                 Set or Get current execution prefix\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"References<Addr>                   Find all references to object at addr\n"
+literal|"  References<Addr>                   Find all references to object at addr\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Resources<Device>                  Get and display Device resources\n"
+literal|"  Resources<Device>                  Get and display Device resources\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Set N<NamedObject><Value>         Set value for named integer\n"
+literal|"  Set N<NamedObject><Value>         Set value for named integer\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Sleep<SleepState>                  Simulate sleep/wake sequence\n"
+literal|"  Sleep<SleepState>                  Simulate sleep/wake sequence\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Terminate                           Delete namespace and all internal objects\n"
+literal|"  Terminate                           Delete namespace and all internal objects\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Type<Object>                       Display object type\n"
+literal|"  Type<Object>                       Display object type\n"
 argument_list|)
 expr_stmt|;
-return|return;
-case|case
-literal|'M'
-case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\nControl Method Execution Commands\n\n"
+literal|"\nControl Method Execution Commands:\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Arguments (or Args)                 Display method arguments\n"
+literal|"  Arguments (or Args)                 Display method arguments\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Breakpoint<AmlOffset>              Set an AML execution breakpoint\n"
+literal|"  Breakpoint<AmlOffset>              Set an AML execution breakpoint\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Call                                Run to next control method invocation\n"
+literal|"  Call                                Run to next control method invocation\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Debug<Namepath> [Arguments]        Single Step a control method\n"
+literal|"  Debug<Namepath> [Arguments]        Single Step a control method\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Execute<Namepath> [Arguments]      Execute control method\n"
+literal|"  Execute<Namepath> [Arguments]      Execute control method\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Go                                  Allow method to run to completion\n"
+literal|"  Go                                  Allow method to run to completion\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Information                         Display info about the current method\n"
+literal|"  Information                         Display info about the current method\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Into                                Step into (not over) a method call\n"
+literal|"  Into                                Step into (not over) a method call\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"List [# of Aml Opcodes]             Display method ASL statements\n"
+literal|"  List [# of Aml Opcodes]             Display method ASL statements\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Locals                              Display method local variables\n"
+literal|"  Locals                              Display method local variables\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Results                             Display method result stack\n"
+literal|"  Results                             Display method result stack\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Set<A|L><#><Value>               Set method data (Arguments/Locals)\n"
+literal|"  Set<A|L><#><Value>               Set method data (Arguments/Locals)\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Stop                                Terminate control method\n"
+literal|"  Stop                                Terminate control method\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Thread<Threads><Loops><NamePath>   Spawn threads to execute method(s)\n"
+literal|"  Thread<Threads><Loops><NamePath>   Spawn threads to execute method(s)\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Trace<method name>                 Trace method execution\n"
+literal|"  Trace<method name>                 Trace method execution\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Tree                                Display control method calling tree\n"
+literal|"  Tree                                Display control method calling tree\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
@@ -1030,41 +956,26 @@ argument_list|(
 literal|"<Enter>                             Single step next AML opcode (over calls)\n"
 argument_list|)
 expr_stmt|;
-return|return;
-case|case
-literal|'F'
-case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"\nFile I/O Commands\n\n"
+literal|"\nFile I/O Commands:\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Close                               Close debug output file\n"
+literal|"  Close                               Close debug output file\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Open<Output Filename>              Open a file for debug output\n"
+literal|"  Load<Input Filename>               Load ACPI table from a file\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"Load<Input Filename>               Load ACPI table from a file\n"
+literal|"  Open<Output Filename>              Open a file for debug output\n"
 argument_list|)
 expr_stmt|;
-return|return;
-default|default:
-name|AcpiOsPrintf
-argument_list|(
-literal|"Unrecognized Command Class: %s\n"
-argument_list|,
-name|HelpType
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 block|}
 end_function
 
@@ -1844,18 +1755,20 @@ argument_list|()
 expr_stmt|;
 break|break;
 case|case
+name|CMD_HANDLERS
+case|:
+name|AcpiDbDisplayHandlers
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
 name|CMD_HELP
 case|:
 case|case
 name|CMD_HELP2
 case|:
 name|AcpiDbDisplayHelp
-argument_list|(
-name|AcpiGbl_DbArgs
-index|[
-literal|1
-index|]
-argument_list|)
+argument_list|()
 expr_stmt|;
 break|break;
 case|case

@@ -334,6 +334,10 @@ name|ASL_MSG_NULL_STRING
 block|,
 name|ASL_MSG_LEADING_ASTERISK
 block|,
+name|ASL_MSG_RESERVED_NO_RETURN_VAL
+block|,
+name|ASL_MSG_GPE_NAME_CONFLICT
+block|,
 name|ASL_MSG_INVALID_FIELD_NAME
 block|,
 name|ASL_MSG_INTEGER_SIZE
@@ -353,6 +357,12 @@ block|,
 name|ASL_MSG_UNKNOWN_SUBTABLE
 block|,
 name|ASL_MSG_OEM_TABLE
+block|,
+name|ASL_MSG_UNKNOWN_LABEL
+block|,
+name|ASL_MSG_INVALID_EXPRESSION
+block|,
+name|ASL_MSG_DIVIDE_BY_ZERO
 block|}
 name|ASL_MESSAGE_IDS
 typedef|;
@@ -759,6 +769,12 @@ block|,
 comment|/*    ASL_MSG_LEADING_ASTERISK */
 literal|"Invalid leading asterisk"
 block|,
+comment|/*    ASL_MSG_RESERVED_NO_RETURN_VAL */
+literal|"Reserved method should not return a value"
+block|,
+comment|/*    ASL_MSG_GPE_NAME_CONFLICT */
+literal|"Name conflicts with a previous GPE method"
+block|,
 comment|/* These messages are used by the data table compiler only */
 comment|/*    ASL_MSG_INVALID_FIELD_NAME */
 literal|"Invalid Field Name"
@@ -789,6 +805,15 @@ literal|"Unknown subtable type"
 block|,
 comment|/*    ASL_MSG_OEM_TABLE */
 literal|"OEM table - unknown contents"
+block|,
+comment|/*    ASL_MSG_UNKNOWN_LABEL */
+literal|"Label is undefined"
+block|,
+comment|/*    ASL_MSG_INVALID_EXPRESSION */
+literal|"Invalid expression"
+block|,
+comment|/*    ASL_MSG_DIVIDE_BY_ZERO */
+literal|"Expression contains divide-by-zero"
 block|}
 decl_stmt|;
 end_decl_stmt

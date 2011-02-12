@@ -34,7 +34,7 @@ value|"__A0"
 end_define
 
 begin_comment
-comment|/*  * dsopcode - support for late evaluation  */
+comment|/*  * dsargs - execution of dynamic arguments for static objects  */
 end_comment
 
 begin_function_decl
@@ -91,6 +91,44 @@ name|ObjDesc
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*  * dscontrol - support for execution control opcodes  */
+end_comment
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiDsExecBeginControlOp
+parameter_list|(
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
+parameter_list|,
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiDsExecEndControlOp
+parameter_list|(
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
+parameter_list|,
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * dsopcode - support for late operand evaluation  */
+end_comment
 
 begin_function_decl
 name|ACPI_STATUS
@@ -177,40 +215,6 @@ name|AcpiDsInitializeRegion
 parameter_list|(
 name|ACPI_HANDLE
 name|ObjHandle
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * dsctrl - Parser/Interpreter interface, control stack routines  */
-end_comment
-
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiDsExecBeginControlOp
-parameter_list|(
-name|ACPI_WALK_STATE
-modifier|*
-name|WalkState
-parameter_list|,
-name|ACPI_PARSE_OBJECT
-modifier|*
-name|Op
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiDsExecEndControlOp
-parameter_list|(
-name|ACPI_WALK_STATE
-modifier|*
-name|WalkState
-parameter_list|,
-name|ACPI_PARSE_OBJECT
-modifier|*
-name|Op
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -353,8 +357,22 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * dsload - Parser/Interpreter interface, namespace load callbacks  */
+comment|/*  * dsload - Parser/Interpreter interface, pass 1 namespace load callbacks  */
 end_comment
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiDsInitCallbacks
+parameter_list|(
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
+parameter_list|,
+name|UINT32
+name|PassNumber
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
@@ -383,6 +401,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * dsload - Parser/Interpreter interface, pass 2 namespace load callbacks  */
+end_comment
+
 begin_function_decl
 name|ACPI_STATUS
 name|AcpiDsLoad2BeginOp
@@ -406,20 +428,6 @@ parameter_list|(
 name|ACPI_WALK_STATE
 modifier|*
 name|WalkState
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiDsInitCallbacks
-parameter_list|(
-name|ACPI_WALK_STATE
-modifier|*
-name|WalkState
-parameter_list|,
-name|UINT32
-name|PassNumber
 parameter_list|)
 function_decl|;
 end_function_decl

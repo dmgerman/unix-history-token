@@ -806,16 +806,16 @@ operator|.
 name|Dsdt
 expr_stmt|;
 block|}
-comment|/*      * For ACPI 1.0 FADTs (revision 1 or 2), ensure that reserved fields which      * should be zero are indeed zero. This will workaround BIOSs that      * inadvertently place values in these fields.      *      * The ACPI 1.0 reserved fields that will be zeroed are the bytes located      * at offset 45, 55, 95, and the word located at offset 109, 110.      */
+comment|/*      * For ACPI 1.0 FADTs (revision 1 or 2), ensure that reserved fields which      * should be zero are indeed zero. This will workaround BIOSs that      * inadvertently place values in these fields.      *      * The ACPI 1.0 reserved fields that will be zeroed are the bytes located      * at offset 45, 55, 95, and the word located at offset 109, 110.      *      * Note: The FADT revision value is unreliable. Only the length can be      * trusted.      */
 if|if
 condition|(
 name|AcpiGbl_FADT
 operator|.
 name|Header
 operator|.
-name|Revision
-operator|<
-literal|3
+name|Length
+operator|<=
+name|ACPI_FADT_V2_SIZE
 condition|)
 block|{
 name|AcpiGbl_FADT

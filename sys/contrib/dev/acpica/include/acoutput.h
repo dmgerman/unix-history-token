@@ -699,7 +699,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * Module name is included in both debug and non-debug versions primarily for  * error messages. The __FILE__ macro is not very useful for this, because it  * often includes the entire pathname to the module  */
+comment|/*  * The module name is used primarily for error and debug messages.  * The __FILE__ macro is not very useful for this, because it  * usually includes the entire pathname to the module making the  * debug output difficult to read.  */
 end_comment
 
 begin_define
@@ -717,6 +717,10 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/*  * For the no-debug and no-error-msg cases, we must at least define  * a null module name.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -724,6 +728,13 @@ name|ACPI_MODULE_NAME
 parameter_list|(
 name|Name
 parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_AcpiModuleName
+value|""
 end_define
 
 begin_endif

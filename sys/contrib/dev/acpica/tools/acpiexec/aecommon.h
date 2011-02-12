@@ -395,7 +395,16 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AeInstallHandlers
+name|AeInstallEarlyHandlers
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AeInstallLateHandlers
 parameter_list|(
 name|void
 parameter_list|)

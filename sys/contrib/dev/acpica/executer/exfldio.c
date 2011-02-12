@@ -701,7 +701,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Region %s(0x%X) not implemented"
+literal|"Region %s (ID=%u) not implemented"
 operator|,
 name|AcpiUtGetRegionName
 argument_list|(
@@ -734,7 +734,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Region %s(0x%X) has no handler"
+literal|"Region %s (ID=%u) has no handler"
 operator|,
 name|AcpiUtGetRegionName
 argument_list|(

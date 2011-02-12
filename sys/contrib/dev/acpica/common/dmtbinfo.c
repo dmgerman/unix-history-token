@@ -3386,7 +3386,7 @@ index|[]
 init|=
 block|{
 block|{
-name|ACPI_DMT_UINT56
+name|ACPI_DMT_BUF7
 block|,
 name|ACPI_ASF3_OFFSET
 argument_list|(
@@ -9576,6 +9576,13 @@ argument_list|(
 name|ACPI_DMT_STRING
 argument_list|,
 literal|"DevicePath"
+argument_list|)
+block|,
+name|ACPI_DM_GENERIC_ENTRY
+argument_list|(
+name|ACPI_DMT_LABEL
+argument_list|,
+literal|"Label"
 argument_list|)
 block|,
 block|{

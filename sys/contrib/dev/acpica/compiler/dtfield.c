@@ -520,7 +520,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    DtCompileInteger  *  * PARAMETERS:  Buffer              - Output buffer  *              Field               - Field obj with Integer to be compiled  *              ByteLength          - Byte length of the integer  *  * RETURN:      None  *  * DESCRIPTION: Compile an integer  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    DtCompileInteger  *  * PARAMETERS:  Buffer              - Output buffer  *              Field               - Field obj with Integer to be compiled  *              ByteLength          - Byte length of the integer  *              Flags               - Additional compile info  *  * RETURN:      None  *  * DESCRIPTION: Compile an integer. Supports integer expressions with C-style  *              operators.  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -544,29 +544,11 @@ parameter_list|)
 block|{
 name|UINT64
 name|Value
-init|=
-literal|0
 decl_stmt|;
 name|UINT64
 name|MaxValue
 decl_stmt|;
-name|UINT8
-modifier|*
-name|Hex
-decl_stmt|;
-name|char
-modifier|*
-name|Message
-init|=
-name|NULL
-decl_stmt|;
-name|ACPI_STATUS
-name|Status
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
-comment|/* Byte length must be in range 1-8 */
+comment|/* Output buffer byte length must be in range 1-8 */
 if|if
 condition|(
 operator|(
@@ -593,67 +575,14 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Convert string to an actual integer */
-name|Status
+comment|/* Resolve integer expression to a single integer value */
+name|Value
 operator|=
-name|DtStrtoul64
+name|DtResolveIntegerExpression
 argument_list|(
 name|Field
-operator|->
-name|Value
-argument_list|,
-operator|&
-name|Value
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-name|Status
-operator|==
-name|AE_LIMIT
-condition|)
-block|{
-name|Message
-operator|=
-literal|"Constant larger than 64 bits"
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|Status
-operator|==
-name|AE_BAD_CHARACTER
-condition|)
-block|{
-name|Message
-operator|=
-literal|"Invalid character in constant"
-expr_stmt|;
-block|}
-name|DtError
-argument_list|(
-name|ASL_ERROR
-argument_list|,
-name|ASL_MSG_INVALID_HEX_INTEGER
-argument_list|,
-name|Field
-argument_list|,
-name|Message
-argument_list|)
-expr_stmt|;
-goto|goto
-name|Exit
-goto|;
-block|}
 comment|/* Ensure that reserved fields are set to zero */
 comment|/* TBD: should we set to zero, or just make this an ERROR? */
 comment|/* TBD: Probably better to use a flag */
@@ -755,9 +684,12 @@ name|sprintf
 argument_list|(
 name|MsgBuffer
 argument_list|,
-literal|"Maximum %u bytes"
+literal|"%8.8X%8.8X"
 argument_list|,
-name|ByteLength
+name|ACPI_FORMAT_UINT64
+argument_list|(
+name|Value
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|DtError
@@ -772,54 +704,6 @@ name|MsgBuffer
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * TBD: hard code for ASF! Capabilites field.      *      * This field is actually a buffer, not a 56-bit integer --      * so, the ordering is reversed. Something should be fixed      * so we don't need this code.      */
-if|if
-condition|(
-name|ByteLength
-operator|==
-literal|7
-condition|)
-block|{
-name|Hex
-operator|=
-name|ACPI_CAST_PTR
-argument_list|(
-name|UINT8
-argument_list|,
-operator|&
-name|Value
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|6
-init|;
-name|i
-operator|>=
-literal|0
-condition|;
-name|i
-operator|--
-control|)
-block|{
-name|Buffer
-index|[
-name|i
-index|]
-operator|=
-operator|*
-name|Hex
-expr_stmt|;
-name|Hex
-operator|++
-expr_stmt|;
-block|}
-return|return;
-block|}
-name|Exit
-label|:
 name|ACPI_MEMCPY
 argument_list|(
 name|Buffer

@@ -51,6 +51,22 @@ end_comment
 
 begin_function_decl
 specifier|static
+name|void
+name|ApCheckForUnexpectedReturnValue
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|,
+name|ASL_METHOD_INFO
+modifier|*
+name|MethodInfo
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|UINT32
 name|ApCheckForSpecialName
 parameter_list|(
@@ -792,7 +808,72 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    ApCheckPredefinedReturnValue  *  * PARAMETERS:  Op              - A parse node of type "RETURN".  *              MethodInfo      - Saved info about this method  *  * RETURN:      None  *  * DESCRIPTION: If method is a predefined name, attempt to validate the return  *              value. Only "static" types can be validated - a simple return  *              of an integer/string/buffer/package or a named reference to  *              a static object. Values such as a Localx or Argx or a control  *              method invocation are not checked.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    ApCheckForUnexpectedReturnValue  *  * PARAMETERS:  Op              - A parse node of type "RETURN".  *              MethodInfo      - Saved info about this method  *  * RETURN:      None  *  * DESCRIPTION: Check for an unexpected return value from a predefined method.  *              Invoked for predefined methods that are defined to not return  *              any value. If there is a return value, issue a remark, since  *              the ASL writer may be confused as to the method definition  *              and/or functionality.  *  * Note: We ignore all return values of "Zero", since this is what a standalone  *       Return() statement will always generate -- so we ignore it here --  *       i.e., there is no difference between Return() and Return(Zero).  *       Also, a null Return() will be disassembled to return(Zero) -- so, we  *       don't want to generate extraneous remarks/warnings for a disassembled  *       ASL file.  *  ******************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|ApCheckForUnexpectedReturnValue
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|,
+name|ASL_METHOD_INFO
+modifier|*
+name|MethodInfo
+parameter_list|)
+block|{
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|ReturnValueOp
+decl_stmt|;
+comment|/* Ignore Return() and Return(Zero) (they are the same) */
+name|ReturnValueOp
+operator|=
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Child
+expr_stmt|;
+if|if
+condition|(
+name|ReturnValueOp
+operator|->
+name|Asl
+operator|.
+name|ParseOpcode
+operator|==
+name|PARSEOP_ZERO
+condition|)
+block|{
+return|return;
+block|}
+comment|/* We have a valid return value, but the reserved name did not expect it */
+name|AslError
+argument_list|(
+name|ASL_WARNING
+argument_list|,
+name|ASL_MSG_RESERVED_NO_RETURN_VAL
+argument_list|,
+name|Op
+argument_list|,
+name|MethodInfo
+operator|->
+name|Op
+operator|->
+name|Asl
+operator|.
+name|ExternalName
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    ApCheckPredefinedReturnValue  *  * PARAMETERS:  Op              - A parse node of type "RETURN".  *              MethodInfo      - Saved info about this method  *  * RETURN:      None  *  * DESCRIPTION: If method is a predefined name, attempt to validate the return  *              value. Only "static" types can be validated - a simple return  *              of an integer/string/buffer/package or a named reference to  *              a static object. Values such as a Localx or Argx or a control  *              method invocation are not checked. Issue a warning if there is  *              a valid return value, but the reserved method defines no  *              return value.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -839,6 +920,19 @@ name|Index
 condition|)
 block|{
 case|case
+name|ACPI_EVENT_RESERVED_NAME
+case|:
+comment|/* _Lxx/_Exx/_Wxx/_Qxx methods */
+comment|/* No return value expected, warn if there is one */
+name|ApCheckForUnexpectedReturnValue
+argument_list|(
+name|Op
+argument_list|,
+name|MethodInfo
+argument_list|)
+expr_stmt|;
+return|return;
+case|case
 name|ACPI_NOT_RESERVED_NAME
 case|:
 comment|/* No underscore or _Txx or _xxx name not matched */
@@ -850,15 +944,10 @@ case|case
 name|ACPI_COMPILER_RESERVED_NAME
 case|:
 comment|/* A _Txx that was not emitted by compiler */
-case|case
-name|ACPI_EVENT_RESERVED_NAME
-case|:
-comment|/* _Lxx/_Exx/_Wxx/_Qxx methods */
 comment|/* Just return, nothing to do */
 return|return;
 default|default:
 comment|/* A standard predefined ACPI name */
-comment|/* Exit if no return value expected */
 if|if
 condition|(
 operator|!
@@ -872,6 +961,14 @@ operator|.
 name|ExpectedBtypes
 condition|)
 block|{
+comment|/* No return value expected, warn if there is one */
+name|ApCheckForUnexpectedReturnValue
+argument_list|(
+name|Op
+argument_list|,
+name|MethodInfo
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 comment|/* Get the object returned, it is the next argument */

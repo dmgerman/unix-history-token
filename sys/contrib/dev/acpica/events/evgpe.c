@@ -767,6 +767,23 @@ index|[
 name|i
 index|]
 expr_stmt|;
+comment|/*              * Optimization: If there are no GPEs enabled within this              * register, we can safely ignore the entire register.              */
+if|if
+condition|(
+operator|!
+operator|(
+name|GpeRegisterInfo
+operator|->
+name|EnableForRun
+operator||
+name|GpeRegisterInfo
+operator|->
+name|EnableForWake
+operator|)
+condition|)
+block|{
+continue|continue;
+block|}
 comment|/* Read the Status Register */
 name|Status
 operator|=

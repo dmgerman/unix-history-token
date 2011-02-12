@@ -744,6 +744,9 @@ case|case
 name|ACPI_DMT_BUFFER
 case|:
 case|case
+name|ACPI_DMT_BUF7
+case|:
+case|case
 name|ACPI_DMT_BUF16
 case|:
 case|case
@@ -787,6 +790,14 @@ case|:
 name|Type
 operator|=
 name|DT_FIELD_TYPE_DEVICE_PATH
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_DMT_LABEL
+case|:
+name|Type
+operator|=
+name|DT_FIELD_TYPE_LABEL
 expr_stmt|;
 break|break;
 default|default:
@@ -929,6 +940,9 @@ case|:
 case|case
 name|ACPI_DMT_FLAGS2
 case|:
+case|case
+name|ACPI_DMT_LABEL
+case|:
 name|ByteLength
 operator|=
 literal|0
@@ -1030,6 +1044,9 @@ expr_stmt|;
 break|break;
 case|case
 name|ACPI_DMT_UINT56
+case|:
+case|case
+name|ACPI_DMT_BUF7
 case|:
 name|ByteLength
 operator|=
