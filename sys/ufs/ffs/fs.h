@@ -2203,7 +2203,7 @@ comment|/* Count of valid records */
 name|uint16_t
 name|jsr_blocks
 decl_stmt|;
-comment|/* Count of DEV_BSIZE blocks. */
+comment|/* Count of device bsize blocks. */
 name|uint32_t
 name|jsr_crc
 decl_stmt|;

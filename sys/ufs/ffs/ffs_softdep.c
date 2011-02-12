@@ -3021,8 +3021,9 @@ name|void
 name|jseg_write
 parameter_list|(
 name|struct
-name|fs
+name|ufsmount
 modifier|*
+name|ump
 parameter_list|,
 name|struct
 name|jblocks
@@ -12835,7 +12836,7 @@ specifier|static
 name|void
 name|jseg_write
 parameter_list|(
-name|fs
+name|ump
 parameter_list|,
 name|jblocks
 parameter_list|,
@@ -12844,9 +12845,9 @@ parameter_list|,
 name|data
 parameter_list|)
 name|struct
-name|fs
+name|ufsmount
 modifier|*
-name|fs
+name|ump
 decl_stmt|;
 name|struct
 name|jblocks
@@ -12909,7 +12910,13 @@ name|jseg
 operator|->
 name|js_size
 operator|/
-name|DEV_BSIZE
+name|ump
+operator|->
+name|um_devvp
+operator|->
+name|v_bufobj
+operator|.
+name|bo_bsize
 expr_stmt|;
 name|rec
 operator|->
@@ -12921,7 +12928,9 @@ name|rec
 operator|->
 name|jsr_time
 operator|=
-name|fs
+name|ump
+operator|->
+name|um_fs
 operator|->
 name|fs_mtime
 expr_stmt|;
@@ -13646,6 +13655,9 @@ decl_stmt|;
 name|int
 name|off
 decl_stmt|;
+name|int
+name|devbsize
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -13678,11 +13690,21 @@ name|ump
 operator|->
 name|softdep_jblocks
 expr_stmt|;
+name|devbsize
+operator|=
+name|ump
+operator|->
+name|um_devvp
+operator|->
+name|v_bufobj
+operator|.
+name|bo_bsize
+expr_stmt|;
 comment|/* 	 * We write anywhere between a disk block and fs block.  The upper 	 * bound is picked to prevent buffer cache fragmentation and limit 	 * processing time per I/O. 	 */
 name|jrecmin
 operator|=
 operator|(
-name|DEV_BSIZE
+name|devbsize
 operator|/
 name|JREC_SIZE
 operator|)
@@ -13697,7 +13719,7 @@ name|fs
 operator|->
 name|fs_bsize
 operator|/
-name|DEV_BSIZE
+name|devbsize
 operator|)
 operator|*
 name|jrecmin
@@ -13914,7 +13936,7 @@ argument_list|,
 name|jrecmin
 argument_list|)
 operator|*
-name|DEV_BSIZE
+name|devbsize
 expr_stmt|;
 else|else
 name|size
@@ -14000,7 +14022,7 @@ argument_list|,
 operator|(
 name|size
 operator|/
-name|DEV_BSIZE
+name|devbsize
 operator|)
 operator|*
 name|jrecmin
@@ -14120,7 +14142,7 @@ condition|(
 operator|(
 name|off
 operator|%
-name|DEV_BSIZE
+name|devbsize
 operator|)
 operator|==
 literal|0
@@ -14128,7 +14150,7 @@ condition|)
 block|{
 name|jseg_write
 argument_list|(
-name|fs
+name|ump
 argument_list|,
 name|jblocks
 argument_list|,
