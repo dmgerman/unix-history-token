@@ -11558,9 +11558,13 @@ comment|/*boundary*/
 literal|0
 argument_list|,
 comment|/*lowaddr*/
-literal|1
+operator|(
+literal|1U
 operator|<<
 literal|31
+operator|)
+operator|-
+literal|1
 argument_list|,
 comment|/* can only access 0-2gb */
 comment|/*highaddr*/
