@@ -1950,6 +1950,12 @@ literal|2
 operator|+
 name|idsize
 expr_stmt|;
+name|size
+operator|-=
+literal|2
+operator|+
+name|idsize
+expr_stmt|;
 if|if
 condition|(
 name|dsize
@@ -2083,6 +2089,22 @@ return|;
 block|}
 block|}
 comment|/* Read in request_extensions */
+if|if
+condition|(
+name|size
+operator|<
+literal|2
+condition|)
+block|{
+operator|*
+name|al
+operator|=
+name|SSL_AD_DECODE_ERROR
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 name|n2s
 argument_list|(
 name|data
@@ -2097,7 +2119,7 @@ expr_stmt|;
 if|if
 condition|(
 name|dsize
-operator|>
+operator|!=
 name|size
 condition|)
 block|{
