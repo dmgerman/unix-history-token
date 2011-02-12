@@ -657,6 +657,9 @@ parameter_list|,
 name|uint8_t
 name|ctsrate
 parameter_list|,
+name|int
+name|is_pspoll
+parameter_list|,
 name|uint8_t
 modifier|*
 name|rix
@@ -750,12 +753,14 @@ name|ah
 argument_list|,
 name|ds
 argument_list|,
+operator|!
+name|is_pspoll
+argument_list|,
+comment|/* whether to override the duration or not */
+comment|/* don't allow hardware to override the duration on ps-poll packets */
 name|ctsrate
 argument_list|,
 comment|/* rts/cts rate */
-literal|0
-argument_list|,
-comment|/* rts/cts duration */
 name|series
 argument_list|,
 comment|/* 11n rate series */

@@ -44,6 +44,9 @@ parameter_list|,
 name|uint8_t
 name|ctsrate
 parameter_list|,
+name|int
+name|is_pspoll
+parameter_list|,
 name|uint8_t
 modifier|*
 name|rix

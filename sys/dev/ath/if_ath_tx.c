@@ -3629,6 +3629,12 @@ name|flags
 argument_list|,
 name|ctsrate
 argument_list|,
+operator|(
+name|atype
+operator|==
+name|HAL_PKT_TYPE_PSPOLL
+operator|)
+argument_list|,
 name|rate
 argument_list|,
 name|try
@@ -4739,6 +4745,12 @@ argument_list|,
 name|flags
 argument_list|,
 name|ctsrate
+argument_list|,
+operator|(
+name|atype
+operator|==
+name|HAL_PKT_TYPE_PSPOLL
+operator|)
 argument_list|,
 name|rate
 argument_list|,
