@@ -273,20 +273,17 @@ block|}
 end_function
 
 begin_function
-name|int
-name|platform_num_processors
+name|cpumask_t
+name|platform_cpu_mask
 parameter_list|(
 name|void
 parameter_list|)
 block|{
 return|return
 operator|(
-name|bitcount32
-argument_list|(
 name|octeon_bootinfo
 operator|->
 name|core_mask
-argument_list|)
 operator|)
 return|;
 block|}
