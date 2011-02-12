@@ -78,6 +78,20 @@ parameter_list|)
 value|strtoimax(nptr, endptr, base)
 end_define
 
+begin_define
+define|#
+directive|define
+name|ARITH_MIN
+value|INTMAX_MIN
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARITH_MAX
+value|INTMAX_MAX
+end_define
+
 begin_typedef
 typedef|typedef
 name|void

@@ -497,6 +497,22 @@ argument_list|(
 literal|"division by zero"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|a
+operator|==
+name|ARITH_MIN
+operator|&&
+name|b
+operator|==
+operator|-
+literal|1
+condition|)
+name|yyerror
+argument_list|(
+literal|"divide error"
+argument_list|)
+expr_stmt|;
 return|return
 name|op
 operator|==
