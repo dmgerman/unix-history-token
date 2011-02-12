@@ -1056,30 +1056,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|s32
-name|e1000_commit_fc_settings_generic
-parameter_list|(
-name|struct
-name|e1000_hw
-modifier|*
-name|hw
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|s32
-name|e1000_poll_fiber_serdes_link_generic
-parameter_list|(
-name|struct
-name|e1000_hw
-modifier|*
-name|hw
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * TBI_ACCEPT macro definition:  *  * This macro requires:  *      adapter = a pointer to struct e1000_hw  *      status = the 8 bit status field of the Rx descriptor with EOP set  *      error = the 8 bit error field of the Rx descriptor with EOP set  *      length = the sum of all the length fields of the Rx descriptors that  *               make up the current frame  *      last_byte = the last byte of the frame DMAed by the hardware  *      max_frame_length = the maximum frame length we want to accept.  *      min_frame_length = the minimum frame length we want to accept.  *  * This macro is a conditional that should be used in the interrupt  * handler's Rx processing routine when RxErrors have been detected.  *  * Typical use:  *  ...  *  if (TBI_ACCEPT) {  *      accept_frame = TRUE;  *      e1000_tbi_adjust_stats(adapter, MacAddress);  *      frame_length--;  *  } else {  *      accept_frame = FALSE;  *  }  *  ...  */
 end_comment
