@@ -704,6 +704,10 @@ name|np
 parameter_list|)
 define|\
 value|freemempos -= (np * PAGE_SIZE);		\ 	(var) = freemempos;		\ 	memset((char *)(var), 0, ((np) * PAGE_SIZE));
+comment|/* Do basic tuning, hz etc */
+name|init_param1
+argument_list|()
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -1684,10 +1688,6 @@ name|i
 index|]
 operator|=
 literal|0
-expr_stmt|;
-comment|/* Do basic tuning, hz etc */
-name|init_param1
-argument_list|()
 expr_stmt|;
 name|init_param2
 argument_list|(

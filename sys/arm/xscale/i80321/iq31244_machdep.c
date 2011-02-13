@@ -692,6 +692,10 @@ operator|&
 name|thread0
 argument_list|)
 expr_stmt|;
+comment|/* Do basic tuning, hz etc */
+name|init_param1
+argument_list|()
+expr_stmt|;
 name|freemempos
 operator|=
 literal|0xa0200000
@@ -1695,10 +1699,6 @@ name|i
 index|]
 operator|=
 literal|0
-expr_stmt|;
-comment|/* Do basic tuning, hz etc */
-name|init_param1
-argument_list|()
 expr_stmt|;
 name|init_param2
 argument_list|(
