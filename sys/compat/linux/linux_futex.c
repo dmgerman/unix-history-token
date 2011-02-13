@@ -297,7 +297,7 @@ name|FUTEX_INIT
 parameter_list|(
 name|f
 parameter_list|)
-value|sx_init_flags(&(f)->f_lck, "ftlk", 0)
+value|sx_init_flags(&(f)->f_lck, "ftlk", SX_DUPOK)
 end_define
 
 begin_define
