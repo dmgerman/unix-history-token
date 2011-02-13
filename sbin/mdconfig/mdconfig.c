@@ -2146,6 +2146,14 @@ name|printf
 argument_list|(
 literal|"%s"
 argument_list|,
+name|nflag
+condition|?
+name|pp
+operator|->
+name|lg_name
+operator|+
+literal|2
+else|:
 name|pp
 operator|->
 name|lg_name
