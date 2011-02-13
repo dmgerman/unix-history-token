@@ -401,9 +401,6 @@ comment|/* The contents of regular files stored in a tmpfs 			 * file system are
 name|vm_object_t
 name|tn_aobj
 decl_stmt|;
-name|size_t
-name|tn_aobj_pages
-decl_stmt|;
 block|}
 name|tn_reg
 struct|;
