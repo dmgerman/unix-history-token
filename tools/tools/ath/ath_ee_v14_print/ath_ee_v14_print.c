@@ -385,6 +385,9 @@ name|ee_base
 operator|.
 name|baseEepHeader
 decl_stmt|;
+name|int
+name|i
+decl_stmt|;
 name|printf
 argument_list|(
 literal|"| Version: 0x%.4x   | Length: 0x%.4x | Checksum: 0x%.4x "
@@ -549,14 +552,14 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"| dacHiPwrMode: 0x%.2x | openLoopPwrCntl: 0x%.2x | dacLpMode: 0x%.2x "
+literal|"| dacHiPwrMode_5G: 0x%.2x | openLoopPwrCntl: 0x%.2x | dacLpMode: 0x%.2x "
 argument_list|,
 operator|(
 name|int
 operator|)
 name|eh
 operator|->
-name|dacHiPwrMode
+name|dacHiPwrMode_5G
 argument_list|,
 operator|(
 name|int
@@ -592,6 +595,32 @@ operator|->
 name|rcChainMask
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"| desiredScaleCCK: 0x%.2x | pwr_table_offset: 0x%.2x | frac_n_5g: %.2x\n"
+argument_list|,
+operator|(
+name|int
+operator|)
+name|eh
+operator|->
+name|desiredScaleCCK
+argument_list|,
+operator|(
+name|int
+operator|)
+name|eh
+operator|->
+name|pwr_table_offset
+argument_list|,
+operator|(
+name|int
+operator|)
+name|eh
+operator|->
+name|frac_n_5g
+argument_list|)
+expr_stmt|;
 comment|/* because it's convienent */
 name|printf
 argument_list|(
@@ -610,6 +639,54 @@ name|ee_antennaGainMax
 index|[
 literal|1
 index|]
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" | futureBase:"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+sizeof|sizeof
+argument_list|(
+name|eh
+operator|->
+name|futureBase
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|uint8_t
+argument_list|)
+condition|;
+name|i
+operator|++
+control|)
+name|printf
+argument_list|(
+literal|" %.2x"
+argument_list|,
+operator|(
+name|int
+operator|)
+name|eh
+operator|->
+name|futureBase
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
