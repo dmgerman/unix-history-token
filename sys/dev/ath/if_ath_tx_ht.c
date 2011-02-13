@@ -562,7 +562,7 @@ name|txrate
 argument_list|,
 name|ic
 operator|->
-name|ic_rxstream
+name|ic_txstream
 argument_list|,
 operator|(
 name|ni
