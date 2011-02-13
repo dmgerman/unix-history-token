@@ -829,7 +829,6 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-operator|(
 literal|1
 operator|<<
 operator|(
@@ -842,7 +841,7 @@ operator|+
 name|bw
 operator|)
 operator|)
-expr|;
+return|;
 block|}
 end_function
 
