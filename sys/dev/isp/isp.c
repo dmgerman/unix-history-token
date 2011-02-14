@@ -3838,6 +3838,9 @@ argument_list|(
 name|isp
 argument_list|)
 argument_list|)
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|ISP_MEMZERO
@@ -4319,6 +4322,9 @@ argument_list|(
 name|isp
 argument_list|)
 argument_list|)
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|ISP_MEMZERO
@@ -8757,6 +8763,8 @@ argument_list|(
 operator|*
 name|icbp
 argument_list|)
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|isp_mboxcmd
@@ -10514,6 +10522,8 @@ argument_list|(
 operator|*
 name|icbp
 argument_list|)
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|isp_mboxcmd
@@ -11194,6 +11204,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|QENTRY_LEN
+argument_list|,
+name|chan
 argument_list|)
 expr_stmt|;
 name|isp_mboxcmd
@@ -11238,6 +11250,8 @@ argument_list|,
 name|QENTRY_LEN
 argument_list|,
 name|QENTRY_LEN
+argument_list|,
+name|chan
 argument_list|)
 expr_stmt|;
 name|scp
@@ -12322,6 +12336,8 @@ sizeof|sizeof
 argument_list|(
 name|un
 argument_list|)
+argument_list|,
+name|chan
 argument_list|)
 expr_stmt|;
 name|isp_mboxcmd
@@ -16818,6 +16834,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|SNS_GID_FT_REQ_SIZE
+argument_list|,
+name|chan
 argument_list|)
 expr_stmt|;
 name|MBSINIT
@@ -17532,6 +17550,8 @@ argument_list|,
 literal|2
 operator|*
 name|QENTRY_LEN
+argument_list|,
+name|chan
 argument_list|)
 expr_stmt|;
 name|isp_mboxcmd
@@ -17570,6 +17590,8 @@ argument_list|,
 name|ZTXOFF
 argument_list|,
 name|QENTRY_LEN
+argument_list|,
+name|chan
 argument_list|)
 expr_stmt|;
 name|pt
@@ -17663,6 +17685,8 @@ argument_list|,
 name|GIDLEN
 operator|+
 literal|16
+argument_list|,
+name|chan
 argument_list|)
 expr_stmt|;
 if|if
@@ -18128,6 +18152,8 @@ argument_list|,
 name|IGPOFF
 argument_list|,
 name|GIDLEN
+argument_list|,
+name|chan
 argument_list|)
 expr_stmt|;
 name|rs0
@@ -20922,6 +20948,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|SNS_RFT_ID_REQ_SIZE
+argument_list|,
+name|chan
 argument_list|)
 expr_stmt|;
 name|isp_mboxcmd
@@ -21571,6 +21599,8 @@ argument_list|,
 literal|2
 operator|*
 name|QENTRY_LEN
+argument_list|,
+name|chan
 argument_list|)
 expr_stmt|;
 name|isp_mboxcmd
@@ -21616,6 +21646,8 @@ argument_list|,
 name|ZTXOFF
 argument_list|,
 name|QENTRY_LEN
+argument_list|,
+name|chan
 argument_list|)
 expr_stmt|;
 name|pt
@@ -24149,6 +24181,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|QENTRY_LEN
+argument_list|,
+name|chan
 argument_list|)
 expr_stmt|;
 name|fcp
@@ -24195,6 +24229,8 @@ argument_list|,
 name|QENTRY_LEN
 argument_list|,
 name|QENTRY_LEN
+argument_list|,
+name|chan
 argument_list|)
 expr_stmt|;
 name|sp
@@ -24842,6 +24878,8 @@ argument_list|,
 literal|2
 operator|*
 name|QENTRY_LEN
+argument_list|,
+name|chan
 argument_list|)
 expr_stmt|;
 name|isp_mboxcmd
@@ -24882,6 +24920,8 @@ argument_list|,
 name|QENTRY_LEN
 argument_list|,
 name|QENTRY_LEN
+argument_list|,
+name|chan
 argument_list|)
 expr_stmt|;
 name|isp_get_24xx_abrt
@@ -26270,6 +26310,9 @@ argument_list|,
 name|oop
 argument_list|,
 name|QENTRY_LEN
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|addr
@@ -26832,6 +26875,9 @@ argument_list|,
 name|oop
 argument_list|,
 name|QENTRY_LEN
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|isp_get_hdr

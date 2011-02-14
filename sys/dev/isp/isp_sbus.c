@@ -1975,6 +1975,9 @@ argument_list|,
 name|offset
 argument_list|,
 literal|2
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -2542,6 +2545,8 @@ operator|&
 name|base
 argument_list|,
 name|BUS_DMA_NOWAIT
+operator||
+name|BUS_DMA_COHERENT
 argument_list|,
 operator|&
 name|isp
