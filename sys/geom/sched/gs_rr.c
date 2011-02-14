@@ -103,6 +103,7 @@ begin_enum
 enum|enum
 name|g_rr_flags
 block|{
+comment|/* G_FLAG_COMPLETED means that the field q_slice_end is valid. */
 name|G_FLAG_COMPLETED
 init|=
 literal|1
@@ -144,7 +145,7 @@ comment|/* service received so far */
 name|int
 name|q_slice_end
 decl_stmt|;
-comment|/* actual slice end in ticks */
+comment|/* actual slice end time, in ticks */
 name|enum
 name|g_rr_flags
 name|q_flags
@@ -2463,21 +2464,7 @@ name|bp
 operator|->
 name|bio_caller1
 expr_stmt|;
-if|if
-condition|(
-name|qp
-operator|==
-name|sc
-operator|->
-name|sc_active
-operator|&&
-name|qp
-operator|->
-name|q_status
-operator|==
-name|G_QUEUE_BUSY
-condition|)
-block|{
+comment|/* 	 * When the first request for this queue completes, update the 	 * duration and end of the slice. We do not do it when the 	 * slice starts to avoid charging to the queue the time for 	 * the first seek. 	 */
 if|if
 condition|(
 operator|!
@@ -2496,7 +2483,7 @@ name|q_flags
 operator||=
 name|G_FLAG_COMPLETED
 expr_stmt|;
-comment|/* in case we want to make the slice adaptive */
+comment|/* 		 * recompute the slice duration, in case we want 		 * to make it adaptive. This is not used right now. 		 * XXX should we do the same for q_quantum and q_wait_ticks ? 		 */
 name|qp
 operator|->
 name|q_slice_duration
@@ -2522,6 +2509,21 @@ operator|->
 name|q_slice_duration
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|qp
+operator|==
+name|sc
+operator|->
+name|sc_active
+operator|&&
+name|qp
+operator|->
+name|q_status
+operator|==
+name|G_QUEUE_BUSY
+condition|)
+block|{
 comment|/* The queue is trying anticipation, start the timer. */
 name|qp
 operator|->
