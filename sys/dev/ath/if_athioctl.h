@@ -198,7 +198,7 @@ comment|/* rx failed 'cuz of PHY err */
 name|u_int32_t
 name|ast_rx_phy
 index|[
-literal|32
+literal|64
 index|]
 decl_stmt|;
 comment|/* rx PHY error per-code counts */
@@ -373,9 +373,27 @@ name|ast_rx_agg
 decl_stmt|;
 comment|/* number of aggregate frames RX'ed */
 name|u_int32_t
+name|ast_rx_halfgi
+decl_stmt|;
+name|u_int32_t
+name|ast_rx_2040
+decl_stmt|;
+name|u_int32_t
+name|ast_rx_pre_crc_err
+decl_stmt|;
+name|u_int32_t
+name|ast_rx_post_crc_err
+decl_stmt|;
+name|u_int32_t
+name|ast_rx_decrypt_busy_err
+decl_stmt|;
+name|u_int32_t
+name|ast_rx_hi_rx_chain
+decl_stmt|;
+name|u_int32_t
 name|ast_pad
 index|[
-literal|11
+literal|4
 index|]
 decl_stmt|;
 block|}
