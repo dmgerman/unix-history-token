@@ -209,34 +209,6 @@ name|MTX_DESTROYED
 value|(MTX_CONTESTED | MTX_UNOWNED)
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _KERNEL */
-end_comment
-
-begin_comment
-comment|/*  * XXX: Friendly reminder to fix things in MP code that is presently being  * XXX: worked on.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|mp_fixme
-parameter_list|(
-name|string
-parameter_list|)
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
 begin_comment
 comment|/*  * Prototypes  *  * NOTE: Functions prepended with `_' (underscore) are exported to other parts  *	 of the kernel via macros, thus allowing us to use the cpp LOCK_FILE  *	 and LOCK_LINE. These functions should not be called directly by any  *	 code using the API. Their macros cover their functionality.  *  * [See below for descriptions]  *  */
 end_comment
