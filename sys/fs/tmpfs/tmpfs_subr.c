@@ -3351,7 +3351,7 @@ comment|/* ---------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|/*  * Resizes the aobj associated to the regular file pointed to by vp to  * the size newsize.  'vp' must point to a vnode that represents a regular  * file.  'newsize' must be positive.  *  * Returns zero on success or an appropriate error code on failure.  */
+comment|/*  * Resizes the aobj associated with the regular file pointed to by 'vp' to the  * size 'newsize'.  'vp' must point to a vnode that represents a regular file.  * 'newsize' must be positive.  *  * Returns zero on success or an appropriate error code on failure.  */
 end_comment
 
 begin_function
@@ -3394,9 +3394,6 @@ decl_stmt|;
 name|size_t
 name|zerolen
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 name|MPASS
 argument_list|(
 name|vp
@@ -3437,7 +3434,7 @@ operator|->
 name|v_mount
 argument_list|)
 expr_stmt|;
-comment|/* Convert the old and new sizes to the number of pages needed to 	 * store them.  It may happen that we do not need to do anything 	 * because the last allocated page can accommodate the change on 	 * its own. */
+comment|/* 	 * Convert the old and new sizes to the number of pages needed to 	 * store them.  It may happen that we do not need to do anything 	 * because the last allocated page can accommodate the change on 	 * its own. 	 */
 name|oldsize
 operator|=
 name|node
@@ -3486,15 +3483,11 @@ argument_list|(
 name|tmp
 argument_list|)
 condition|)
-block|{
-name|error
-operator|=
+return|return
+operator|(
 name|ENOSPC
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
+operator|)
+return|;
 name|TMPFS_LOCK
 argument_list|(
 name|tmp
@@ -3540,7 +3533,7 @@ operator|<
 name|oldsize
 condition|)
 block|{
-comment|/* 		 * free "backing store" 		 */
+comment|/* 		 * Release any swap space and free any whole pages. 		 */
 if|if
 condition|(
 name|newpages
@@ -3571,7 +3564,7 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * zero out the truncated part of the last page. 		 */
+comment|/* 		 * Zero the truncated part of the last page. 		 */
 name|zerolen
 operator|=
 name|round_page
@@ -3630,15 +3623,9 @@ argument_list|(
 name|uobj
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
-literal|0
-expr_stmt|;
-name|out
-label|:
 return|return
 operator|(
-name|error
+literal|0
 operator|)
 return|;
 block|}
