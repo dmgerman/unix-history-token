@@ -1143,6 +1143,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|LINUX_SIGRTMIN
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
 name|LINUX_SIGTBLSZ
 value|31
 end_define
