@@ -4037,6 +4037,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * This has been disabled - having the HAL flip chainmasks on/off  * when attempting to implement 11n disrupts things. For now, just  * leave this flipped off and worry about implementing TX diversity  * for legacy and MCS0-7 when 11n is fully functioning.  */
+end_comment
+
 begin_function
 name|HAL_BOOL
 name|ar9280SetAntennaSwitch
@@ -4058,109 +4062,21 @@ define|#
 directive|define
 name|ANTENNA1_CHAINMASK
 value|0x2
-name|struct
-name|ath_hal_5416
-modifier|*
-name|ahp
-init|=
-name|AH5416
-argument_list|(
-name|ah
-argument_list|)
-decl_stmt|;
+if|#
+directive|if
+literal|0
+block|struct ath_hal_5416 *ahp = AH5416(ah);
 comment|/* Antenna selection is done by setting the tx/rx chainmasks approp. */
-switch|switch
-condition|(
-name|settings
-condition|)
-block|{
-case|case
-name|HAL_ANT_FIXED_A
-case|:
+block|switch (settings) { 	case HAL_ANT_FIXED_A:
 comment|/* Enable first antenna only */
-name|ahp
-operator|->
-name|ah_tx_chainmask
-operator|=
-name|ANTENNA0_CHAINMASK
-expr_stmt|;
-name|ahp
-operator|->
-name|ah_rx_chainmask
-operator|=
-name|ANTENNA0_CHAINMASK
-expr_stmt|;
-break|break;
-case|case
-name|HAL_ANT_FIXED_B
-case|:
+block|ahp->ah_tx_chainmask = ANTENNA0_CHAINMASK; 		ahp->ah_rx_chainmask = ANTENNA0_CHAINMASK; 		break; 	case HAL_ANT_FIXED_B:
 comment|/* Enable second antenna only, after checking capability */
-if|if
-condition|(
-name|AH_PRIVATE
-argument_list|(
-name|ah
-argument_list|)
-operator|->
-name|ah_caps
-operator|.
-name|halTxChainMask
-operator|>
-name|ANTENNA1_CHAINMASK
-condition|)
-name|ahp
-operator|->
-name|ah_tx_chainmask
-operator|=
-name|ANTENNA1_CHAINMASK
-expr_stmt|;
-name|ahp
-operator|->
-name|ah_rx_chainmask
-operator|=
-name|ANTENNA1_CHAINMASK
-expr_stmt|;
-break|break;
-case|case
-name|HAL_ANT_VARIABLE
-case|:
+block|if (AH_PRIVATE(ah)->ah_caps.halTxChainMask> ANTENNA1_CHAINMASK) 			ahp->ah_tx_chainmask = ANTENNA1_CHAINMASK; 		ahp->ah_rx_chainmask = ANTENNA1_CHAINMASK; 		break; 	case HAL_ANT_VARIABLE:
 comment|/* Restore original chainmask settings */
 comment|/* XXX */
-name|ahp
-operator|->
-name|ah_tx_chainmask
-operator|=
-name|AR9280_DEFAULT_TXCHAINMASK
-expr_stmt|;
-name|ahp
-operator|->
-name|ah_rx_chainmask
-operator|=
-name|AR9280_DEFAULT_RXCHAINMASK
-expr_stmt|;
-break|break;
-block|}
-name|HALDEBUG
-argument_list|(
-name|ah
-argument_list|,
-name|HAL_DEBUG_ANY
-argument_list|,
-literal|"%s: settings=%d, tx/rx chainmask=%d/%d\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|settings
-argument_list|,
-name|ahp
-operator|->
-name|ah_tx_chainmask
-argument_list|,
-name|ahp
-operator|->
-name|ah_rx_chainmask
-argument_list|)
-expr_stmt|;
+block|ahp->ah_tx_chainmask = AR9280_DEFAULT_TXCHAINMASK; 		ahp->ah_rx_chainmask = AR9280_DEFAULT_RXCHAINMASK; 		break; 	}  	HALDEBUG(ah, HAL_DEBUG_ANY, "%s: settings=%d, tx/rx chainmask=%d/%d\n", 	    __func__, settings, ahp->ah_tx_chainmask, ahp->ah_rx_chainmask);
+endif|#
+directive|endif
 return|return
 name|AH_TRUE
 return|;
