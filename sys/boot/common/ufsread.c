@@ -446,7 +446,7 @@ decl_stmt|;
 name|ssize_t
 name|n
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|dt
 decl_stmt|;
 name|ino
