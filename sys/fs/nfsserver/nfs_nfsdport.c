@@ -15839,6 +15839,10 @@ name|nfsd_call_nfsd
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* Clean the NFS server reply cache */
+name|nfsrvd_cleancache
+argument_list|()
+expr_stmt|;
 comment|/* and get rid of the locks */
 name|mtx_destroy
 argument_list|(
