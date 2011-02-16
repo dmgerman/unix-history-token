@@ -134,6 +134,17 @@ name|FL_ERASE_32K
 value|0x02
 end_define
 
+begin_comment
+comment|/*  * Define the sectorsize to be a smaller size rather than the flash  * sector size. Trying to run FFS off of a 64k flash sector size  * results in a completely un-usable system.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MX25L_SECTORSIZE
+value|512
+end_define
+
 begin_struct
 struct|struct
 name|mx25l_flash_ident
@@ -1218,45 +1229,30 @@ name|write_offset
 operator|=
 name|offset
 expr_stmt|;
-comment|/* 	 * Sanity checks 	 */
-name|KASSERT
-argument_list|(
+comment|/* 	 * Use the erase sectorsize here since blocks are fully erased 	 * first before they're written to. 	 */
+if|if
+condition|(
 name|count
 operator|%
 name|sc
 operator|->
 name|sc_sectorsize
-operator|==
+operator|!=
 literal|0
-argument_list|,
-operator|(
-literal|"count for BIO_WRITE is not sector size (%d bytes) aligned"
-operator|,
-name|sc
-operator|->
-name|sc_sectorsize
-operator|)
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
+operator|||
 name|offset
 operator|%
 name|sc
 operator|->
 name|sc_sectorsize
-operator|==
+operator|!=
 literal|0
-argument_list|,
+condition|)
+return|return
 operator|(
-literal|"offset for BIO_WRITE is not sector size (%d bytes) aligned"
-operator|,
-name|sc
-operator|->
-name|sc_sectorsize
+name|EIO
 operator|)
-argument_list|)
-expr_stmt|;
+return|;
 comment|/* 	 * Assume here that we write per-sector only  	 * and sector size should be 256 bytes aligned 	 */
 name|KASSERT
 argument_list|(
@@ -1515,45 +1511,34 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Sanity checks 	 */
-name|KASSERT
-argument_list|(
+comment|/* 	 * Enforce the disk read sectorsize not the erase sectorsize. 	 * In this way, smaller read IO is possible,dramatically 	 * speeding up filesystem/geom_compress access. 	 */
+if|if
+condition|(
 name|count
 operator|%
 name|sc
 operator|->
-name|sc_sectorsize
-operator|==
-literal|0
-argument_list|,
-operator|(
-literal|"count for BIO_READ is not sector size (%d bytes) aligned"
-operator|,
-name|sc
+name|sc_disk
 operator|->
-name|sc_sectorsize
-operator|)
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
+name|d_sectorsize
+operator|!=
+literal|0
+operator|||
 name|offset
 operator|%
 name|sc
 operator|->
-name|sc_sectorsize
-operator|==
-literal|0
-argument_list|,
-operator|(
-literal|"offset for BIO_READ is not sector size (%d bytes) aligned"
-operator|,
-name|sc
+name|sc_disk
 operator|->
-name|sc_sectorsize
+name|d_sectorsize
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|EIO
 operator|)
-argument_list|)
-expr_stmt|;
+return|;
 name|txBuf
 index|[
 literal|0
@@ -1833,9 +1818,7 @@ name|sc_disk
 operator|->
 name|d_sectorsize
 operator|=
-name|ident
-operator|->
-name|sectorsize
+name|MX25L_SECTORSIZE
 expr_stmt|;
 name|sc
 operator|->
