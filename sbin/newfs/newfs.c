@@ -266,6 +266,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|jflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* enable soft updates journaling for filesys */
+end_comment
+
+begin_decl_stmt
+name|int
 name|Xflag
 init|=
 literal|0
@@ -714,7 +724,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"EJL:NO:RS:T:UXa:b:c:d:e:f:g:h:i:lm:no:p:r:s:t"
+literal|"EJL:NO:RS:T:UXa:b:c:d:e:f:g:h:i:jlm:no:p:r:s:t"
 argument_list|)
 operator|)
 operator|!=
@@ -896,6 +906,14 @@ operator|=
 name|optarg
 expr_stmt|;
 break|break;
+case|case
+literal|'j'
+case|:
+name|jflag
+operator|=
+literal|1
+expr_stmt|;
+comment|/* fall through to enable soft updates */
 case|case
 literal|'U'
 case|:
@@ -2190,11 +2208,43 @@ operator|&
 name|disk
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|jflag
+condition|)
 name|exit
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|execlp
+argument_list|(
+literal|"tunefs"
+argument_list|,
+literal|"newfs"
+argument_list|,
+literal|"-j"
+argument_list|,
+literal|"enable"
+argument_list|,
+name|special
+argument_list|,
+name|NULL
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"Cannot enable soft updates journaling, tunefs"
+argument_list|)
+expr_stmt|;
+comment|/* NOT REACHED */
 block|}
 end_function
 
@@ -2695,6 +2745,13 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"\t-i number of bytes per inode\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t-j enable soft updates journaling\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
