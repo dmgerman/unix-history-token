@@ -418,6 +418,21 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|fill_frame_regs
+parameter_list|(
+name|struct
+name|trapframe
+modifier|*
+parameter_list|,
+name|struct
+name|reg
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|set_regs
 parameter_list|(
 name|struct
