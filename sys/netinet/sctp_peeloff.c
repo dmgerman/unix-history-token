@@ -823,6 +823,13 @@ argument_list|(
 name|stcb
 argument_list|)
 expr_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|head
+operator|->
+name|so_vnet
+argument_list|)
+expr_stmt|;
 name|newso
 operator|=
 name|sonewconn
@@ -831,6 +838,9 @@ name|head
 argument_list|,
 name|SS_ISCONNECTED
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 if|if
 condition|(

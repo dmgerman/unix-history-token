@@ -922,13 +922,6 @@ name|err
 goto|;
 block|}
 block|}
-name|CURVNET_SET
-argument_list|(
-name|so
-operator|->
-name|so_vnet
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -941,9 +934,6 @@ name|si
 argument_list|)
 condition|)
 block|{
-name|CURVNET_RESTORE
-argument_list|()
-expr_stmt|;
 goto|goto
 name|err
 goto|;
@@ -1078,9 +1068,6 @@ name|sopt
 argument_list|)
 expr_stmt|;
 block|}
-name|CURVNET_RESTORE
-argument_list|()
-expr_stmt|;
 name|ct
 operator|->
 name|ct_closeit

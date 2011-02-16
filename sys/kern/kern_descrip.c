@@ -247,6 +247,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<net/vnet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<security/audit/audit.h>
 end_include
 
@@ -10721,10 +10727,20 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|so
+operator|->
+name|so_vnet
+argument_list|)
+expr_stmt|;
 name|sorele
 argument_list|(
 name|so
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 block|}
 end_function

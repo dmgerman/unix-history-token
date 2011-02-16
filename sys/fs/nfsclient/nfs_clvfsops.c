@@ -2387,6 +2387,14 @@ name|sin
 argument_list|)
 expr_stmt|;
 comment|/* XXX MRT use table 0 for this sort of thing */
+name|CURVNET_SET
+argument_list|(
+name|TD_TO_VNET
+argument_list|(
+name|td
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|rtrequest
@@ -2425,6 +2433,9 @@ name|RTF_GATEWAY
 argument_list|,
 name|NULL
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
