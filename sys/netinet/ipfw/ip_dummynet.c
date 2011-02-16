@@ -12124,7 +12124,7 @@ name|MODULE_VERSION
 argument_list|(
 name|dummynet
 argument_list|,
-literal|1
+literal|3
 argument_list|)
 expr_stmt|;
 end_expr_stmt
