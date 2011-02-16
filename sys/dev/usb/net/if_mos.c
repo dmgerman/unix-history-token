@@ -3719,7 +3719,7 @@ condition|)
 block|{
 name|MOS_DPRINTFN
 argument_list|(
-literal|"error: pktlen %i is smaller than ether_header %i"
+literal|"error: pktlen %d is smaller than ether_header %zd"
 argument_list|,
 name|pktlen
 argument_list|,
