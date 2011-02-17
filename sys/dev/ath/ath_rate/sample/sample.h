@@ -338,6 +338,9 @@ name|short_retries
 parameter_list|,
 name|int
 name|long_retries
+parameter_list|,
+name|int
+name|is_ht40
 parameter_list|)
 block|{
 specifier|const
@@ -710,7 +713,7 @@ name|rix
 argument_list|,
 literal|0
 argument_list|,
-name|AH_TRUE
+name|is_ht40
 argument_list|)
 expr_stmt|;
 if|if
@@ -768,7 +771,7 @@ name|rix
 argument_list|,
 literal|0
 argument_list|,
-name|AH_TRUE
+name|is_ht40
 argument_list|)
 expr_stmt|;
 name|tt
