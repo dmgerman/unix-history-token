@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: readconf.h,v 1.86 2010/07/19 09:15:12 djm Exp $ */
+comment|/* $OpenBSD: readconf.h,v 1.88 2010/11/13 23:27:50 djm Exp $ */
 end_comment
 
 begin_comment
@@ -171,6 +171,14 @@ name|int
 name|tcp_keep_alive
 decl_stmt|;
 comment|/* Set SO_KEEPALIVE. */
+name|int
+name|ip_qos_interactive
+decl_stmt|;
+comment|/* IP ToS/DSCP/class for interactive */
+name|int
+name|ip_qos_bulk
+decl_stmt|;
+comment|/* IP ToS/DSCP/class for bulk traffic */
 name|LogLevel
 name|log_level
 decl_stmt|;
@@ -213,6 +221,11 @@ modifier|*
 name|hostkeyalgorithms
 decl_stmt|;
 comment|/* SSH2 server key types in order of preference. */
+name|char
+modifier|*
+name|kex_algorithms
+decl_stmt|;
+comment|/* SSH2 kex methods in order of preference. */
 name|int
 name|protocol
 decl_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: audit.c,v 1.5 2006/09/01 05:38:36 djm Exp $ */
+comment|/* $Id: audit.c,v 1.6 2011/01/17 10:15:30 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -524,10 +524,10 @@ begin_function
 name|void
 name|audit_session_open
 parameter_list|(
-specifier|const
-name|char
+name|struct
+name|logininfo
 modifier|*
-name|ttyn
+name|li
 parameter_list|)
 block|{
 specifier|const
@@ -535,9 +535,13 @@ name|char
 modifier|*
 name|t
 init|=
-name|ttyn
+name|li
+operator|->
+name|line
 condition|?
-name|ttyn
+name|li
+operator|->
+name|line
 else|:
 literal|"(no tty)"
 decl_stmt|;
@@ -565,10 +569,10 @@ begin_function
 name|void
 name|audit_session_close
 parameter_list|(
-specifier|const
-name|char
+name|struct
+name|logininfo
 modifier|*
-name|ttyn
+name|li
 parameter_list|)
 block|{
 specifier|const
@@ -576,9 +580,13 @@ name|char
 modifier|*
 name|t
 init|=
-name|ttyn
+name|li
+operator|->
+name|line
 condition|?
-name|ttyn
+name|li
+operator|->
+name|line
 else|:
 literal|"(no tty)"
 decl_stmt|;

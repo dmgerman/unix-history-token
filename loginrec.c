@@ -529,7 +529,7 @@ name|int
 name|login_get_lastlog_time
 parameter_list|(
 specifier|const
-name|int
+name|uid_t
 name|uid
 parameter_list|)
 block|{
@@ -579,7 +579,7 @@ modifier|*
 name|li
 parameter_list|,
 specifier|const
-name|int
+name|uid_t
 name|uid
 parameter_list|)
 block|{
@@ -623,10 +623,13 @@ name|NULL
 condition|)
 name|fatal
 argument_list|(
-literal|"%s: Cannot find account for uid %i"
+literal|"%s: Cannot find account for uid %ld"
 argument_list|,
 name|__func__
 argument_list|,
+operator|(
+name|long
+operator|)
 name|uid
 argument_list|)
 expr_stmt|;
@@ -680,7 +683,7 @@ name|logininfo
 modifier|*
 name|login_alloc_entry
 parameter_list|(
-name|int
+name|pid_t
 name|pid
 parameter_list|,
 specifier|const
@@ -771,7 +774,7 @@ name|logininfo
 modifier|*
 name|li
 parameter_list|,
-name|int
+name|pid_t
 name|pid
 parameter_list|,
 specifier|const
@@ -1202,8 +1205,6 @@ condition|)
 name|audit_session_open
 argument_list|(
 name|li
-operator|->
-name|line
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1218,8 +1219,6 @@ condition|)
 name|audit_session_close
 argument_list|(
 name|li
-operator|->
-name|line
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2968,6 +2967,11 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -2990,6 +2994,11 @@ argument_list|,
 name|tty
 argument_list|,
 name|UTMP_FILE
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -3136,6 +3145,11 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -3158,6 +3172,11 @@ argument_list|,
 name|tty
 argument_list|,
 name|UTMP_FILE
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -3204,6 +3223,16 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 name|close
 argument_list|(
@@ -5787,7 +5816,7 @@ name|off_t
 call|)
 argument_list|(
 operator|(
-name|long
+name|u_long
 operator|)
 name|li
 operator|->
@@ -5827,6 +5856,12 @@ name|strerror
 argument_list|(
 name|errno
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+operator|*
+name|fd
 argument_list|)
 expr_stmt|;
 return|return
@@ -6763,7 +6798,7 @@ operator|.
 name|st_mode
 operator|&
 operator|(
-name|S_IRWXG
+name|S_IXGRP
 operator||
 name|S_IRWXO
 operator|)

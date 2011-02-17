@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-keyscan.c,v 1.82 2010/06/22 04:54:30 djm Exp $ */
+comment|/* $OpenBSD: ssh-keyscan.c,v 1.84 2011/01/04 20:44:13 otto Exp $ */
 end_comment
 
 begin_comment
@@ -243,6 +243,13 @@ define|#
 directive|define
 name|KT_RSA
 value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|KT_ECDSA
+value|8
 end_define
 
 begin_decl_stmt
@@ -1111,7 +1118,17 @@ name|KT_DSA
 condition|?
 literal|"ssh-dss"
 else|:
+operator|(
+name|c
+operator|->
+name|c_keytype
+operator|==
+name|KT_RSA
+condition|?
 literal|"ssh-rsa"
+else|:
+literal|"ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521"
+operator|)
 expr_stmt|;
 name|c
 operator|->
@@ -1165,6 +1182,17 @@ name|KEX_DH_GEX_SHA256
 index|]
 operator|=
 name|kexgex_client
+expr_stmt|;
+name|c
+operator|->
+name|c_kex
+operator|->
+name|kex
+index|[
+name|KEX_ECDH_SHA2
+index|]
+operator|=
+name|kexecdh_client
 expr_stmt|;
 name|c
 operator|->
@@ -3169,7 +3197,7 @@ name|KT_RSA1
 init|;
 name|j
 operator|<=
-name|KT_RSA
+name|KT_ECDSA
 condition|;
 name|j
 operator|*=
@@ -3599,6 +3627,14 @@ case|:
 name|get_keytypes
 operator||=
 name|KT_DSA
+expr_stmt|;
+break|break;
+case|case
+name|KEY_ECDSA
+case|:
+name|get_keytypes
+operator||=
+name|KT_ECDSA
 expr_stmt|;
 break|break;
 case|case

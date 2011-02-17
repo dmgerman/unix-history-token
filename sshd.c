@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshd.c,v 1.375 2010/04/16 01:47:26 djm Exp $ */
+comment|/* $OpenBSD: sshd.c,v 1.381 2011/01/11 06:13:10 djm Exp $ */
 end_comment
 
 begin_comment
@@ -2933,6 +2933,9 @@ case|:
 case|case
 name|KEY_DSA
 case|:
+case|case
+name|KEY_ECDSA
+case|:
 if|if
 condition|(
 name|buffer_len
@@ -3010,6 +3013,9 @@ name|KEY_RSA_CERT
 case|:
 case|case
 name|KEY_DSA_CERT
+case|:
+case|case
+name|KEY_ECDSA_CERT
 case|:
 if|if
 condition|(
@@ -3143,6 +3149,9 @@ name|KEY_RSA_CERT
 case|:
 case|case
 name|KEY_DSA_CERT
+case|:
+case|case
+name|KEY_ECDSA_CERT
 case|:
 name|key
 operator|=
@@ -6327,7 +6336,7 @@ argument_list|(
 name|REEXEC_DEVCRYPTO_RESERVED_FD
 argument_list|)
 expr_stmt|;
-name|SSLeay_add_all_algorithms
+name|OpenSSL_add_all_algorithms
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Force logging to stderr until we have loaded the private host 	 * key (unless started from inetd) 	 */
@@ -6810,6 +6819,9 @@ name|KEY_RSA
 case|:
 case|case
 name|KEY_DSA
+case|:
+case|case
+name|KEY_ECDSA
 case|:
 name|sensitive_data
 operator|.
@@ -8658,8 +8670,18 @@ name|verbose
 argument_list|(
 literal|"Transferred: sent %llu, received %llu bytes"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|obytes
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|ibytes
 argument_list|)
 expr_stmt|;
@@ -9851,6 +9873,23 @@ operator|=
 literal|"none,zlib@openssh.com"
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|options
+operator|.
+name|kex_algorithms
+operator|!=
+name|NULL
+condition|)
+name|myproposal
+index|[
+name|PROPOSAL_KEX_ALGS
+index|]
+operator|=
+name|options
+operator|.
+name|kex_algorithms
+expr_stmt|;
 name|myproposal
 index|[
 name|PROPOSAL_SERVER_HOST_KEY_ALGS
@@ -9902,6 +9941,15 @@ name|KEX_DH_GEX_SHA256
 index|]
 operator|=
 name|kexgex_server
+expr_stmt|;
+name|kex
+operator|->
+name|kex
+index|[
+name|KEX_ECDH_SHA2
+index|]
+operator|=
+name|kexecdh_server
 expr_stmt|;
 name|kex
 operator|->

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: readpass.c,v 1.47 2006/08/03 03:34:42 deraadt Exp $ */
+comment|/* $OpenBSD: readpass.c,v 1.48 2010/12/15 00:49:27 djm Exp $ */
 end_comment
 
 begin_comment
@@ -53,6 +53,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
 
 begin_include
 include|#
@@ -138,6 +144,8 @@ parameter_list|)
 block|{
 name|pid_t
 name|pid
+decl_stmt|,
+name|ret
 decl_stmt|;
 name|size_t
 name|len
@@ -153,8 +161,6 @@ literal|2
 index|]
 decl_stmt|,
 name|status
-decl_stmt|,
-name|ret
 decl_stmt|;
 name|char
 name|buf
@@ -162,6 +168,15 @@ index|[
 literal|1024
 index|]
 decl_stmt|;
+name|void
+function_decl|(
+modifier|*
+name|osigchld
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
 if|if
 condition|(
 name|fflush
@@ -216,6 +231,15 @@ return|return
 name|NULL
 return|;
 block|}
+name|osigchld
+operator|=
+name|signal
+argument_list|(
+name|SIGCHLD
+argument_list|,
+name|SIG_DFL
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -236,6 +260,13 @@ name|strerror
 argument_list|(
 name|errno
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGCHLD
+argument_list|,
+name|osigchld
 argument_list|)
 expr_stmt|;
 return|return
@@ -325,14 +356,13 @@ argument_list|)
 expr_stmt|;
 name|len
 operator|=
-name|ret
-operator|=
 literal|0
 expr_stmt|;
 do|do
 block|{
-name|ret
-operator|=
+name|ssize_t
+name|r
+init|=
 name|read
 argument_list|(
 name|p
@@ -353,10 +383,10 @@ literal|1
 operator|-
 name|len
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
-name|ret
+name|r
 operator|==
 operator|-
 literal|1
@@ -368,14 +398,14 @@ condition|)
 continue|continue;
 if|if
 condition|(
-name|ret
+name|r
 operator|<=
 literal|0
 condition|)
 break|break;
 name|len
 operator|+=
-name|ret
+name|r
 expr_stmt|;
 block|}
 do|while
@@ -409,6 +439,9 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
+operator|(
+name|ret
+operator|=
 name|waitpid
 argument_list|(
 name|pid
@@ -418,6 +451,7 @@ name|status
 argument_list|,
 literal|0
 argument_list|)
+operator|)
 operator|<
 literal|0
 condition|)
@@ -428,8 +462,20 @@ operator|!=
 name|EINTR
 condition|)
 break|break;
+name|signal
+argument_list|(
+name|SIGCHLD
+argument_list|,
+name|osigchld
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
+name|ret
+operator|==
+operator|-
+literal|1
+operator|||
 operator|!
 name|WIFEXITED
 argument_list|(

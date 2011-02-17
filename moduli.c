@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: moduli.c,v 1.21 2008/06/26 09:19:40 djm Exp $ */
+comment|/* $OpenBSD: moduli.c,v 1.22 2010/11/10 01:33:07 djm Exp $ */
 end_comment
 
 begin_comment
@@ -81,6 +81,12 @@ begin_include
 include|#
 directive|include
 file|"log.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"openbsd-compat/openssl-compat.h"
 end_include
 
 begin_comment
@@ -2302,13 +2308,11 @@ expr_stmt|;
 comment|/* 		 * The (1/4)^N performance bound on Miller-Rabin is 		 * extremely pessimistic, so don't spend a lot of time 		 * really verifying that q is prime until after we know 		 * that p is also prime. A single pass will weed out the 		 * vast majority of composite q's. 		 */
 if|if
 condition|(
-name|BN_is_prime
+name|BN_is_prime_ex
 argument_list|(
 name|q
 argument_list|,
 literal|1
-argument_list|,
-name|NULL
 argument_list|,
 name|ctx
 argument_list|,
@@ -2331,13 +2335,11 @@ comment|/* 		 * q is possibly prime, so go ahead and really make sure 		 * that 
 if|if
 condition|(
 operator|!
-name|BN_is_prime
+name|BN_is_prime_ex
 argument_list|(
 name|p
 argument_list|,
 name|trials
-argument_list|,
-name|NULL
 argument_list|,
 name|ctx
 argument_list|,
@@ -2365,15 +2367,13 @@ comment|/* recheck q more rigorously */
 if|if
 condition|(
 operator|!
-name|BN_is_prime
+name|BN_is_prime_ex
 argument_list|(
 name|q
 argument_list|,
 name|trials
 operator|-
 literal|1
-argument_list|,
-name|NULL
 argument_list|,
 name|ctx
 argument_list|,

@@ -659,6 +659,9 @@ argument_list|(
 literal|"OpenSSL version mismatch. Built against %lx, you "
 literal|"have %lx"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|OPENSSL_VERSION_NUMBER
 argument_list|,
 name|SSLeay
