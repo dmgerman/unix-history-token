@@ -166,13 +166,6 @@ directive|endif
 name|cpumask_t
 name|pm_active
 decl_stmt|;
-name|uint32_t
-name|pm_gen_count
-decl_stmt|;
-comment|/* generation count (pmap lock dropped) */
-name|u_int
-name|pm_retries
-decl_stmt|;
 name|struct
 name|pmap
 modifier|*
@@ -630,10 +623,6 @@ name|cpumask_t
 name|pm_active
 decl_stmt|;
 comment|/* active on cpus */
-name|int
-name|pm_refs
-decl_stmt|;
-comment|/* ref count */
 name|struct
 name|pmap_statistics
 name|pm_stats
@@ -646,13 +635,6 @@ name|pm_pdir
 index|[
 name|PDIR_NENTRIES
 index|]
-decl_stmt|;
-comment|/* generation count (pmap lock dropped) */
-name|uint32_t
-name|pm_gen_count
-decl_stmt|;
-name|u_int
-name|pm_retries
 decl_stmt|;
 comment|/* List of allocated ptbl bufs (ptbl kva regions). */
 name|TAILQ_HEAD
