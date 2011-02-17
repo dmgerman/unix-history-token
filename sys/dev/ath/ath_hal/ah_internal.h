@@ -1664,31 +1664,48 @@ typedef|typedef
 enum|enum
 block|{
 name|HAL_ANI_PRESENT
+init|=
+literal|0x1
 block|,
 comment|/* is ANI support present */
 name|HAL_ANI_NOISE_IMMUNITY_LEVEL
+init|=
+literal|0x2
 block|,
 comment|/* set level */
 name|HAL_ANI_OFDM_WEAK_SIGNAL_DETECTION
+init|=
+literal|0x4
 block|,
 comment|/* enable/disable */
 name|HAL_ANI_CCK_WEAK_SIGNAL_THR
+init|=
+literal|0x8
 block|,
 comment|/* enable/disable */
 name|HAL_ANI_FIRSTEP_LEVEL
+init|=
+literal|0x10
 block|,
 comment|/* set level */
 name|HAL_ANI_SPUR_IMMUNITY_LEVEL
+init|=
+literal|0x20
 block|,
 comment|/* set level */
 name|HAL_ANI_MODE
 init|=
-literal|6
+literal|0x40
 block|,
 comment|/* 0 => manual, 1 => auto (XXX do not change) */
 name|HAL_ANI_PHYERR_RESET
+init|=
+literal|0x80
 block|,
 comment|/* reset phy error stats */
+name|HAL_ANI_ALL
+init|=
+literal|0xff
 block|}
 name|HAL_ANI_CMD
 typedef|;

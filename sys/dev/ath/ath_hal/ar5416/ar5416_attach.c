@@ -815,6 +815,16 @@ name|ah_tx_chainmask
 operator|=
 name|AR5416_DEFAULT_TXCHAINMASK
 expr_stmt|;
+comment|/* Enable all ANI functions to begin with */
+name|AH5416
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_ani_function
+operator|=
+name|HAL_ANI_ALL
+expr_stmt|;
 block|}
 end_function
 

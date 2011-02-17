@@ -255,6 +255,9 @@ decl_stmt|;
 name|uint32_t
 name|ah_tx_chainmask
 decl_stmt|;
+name|HAL_ANI_CMD
+name|ah_ani_function
+decl_stmt|;
 name|struct
 name|ar5416PerCal
 name|ah_cal

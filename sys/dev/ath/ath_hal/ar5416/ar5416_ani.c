@@ -669,6 +669,13 @@ expr_stmt|;
 switch|switch
 condition|(
 name|cmd
+operator|&
+name|AH5416
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_ani_function
 condition|)
 block|{
 case|case
@@ -1638,6 +1645,18 @@ expr_stmt|;
 comment|/* First, raise noise immunity level, up to max */
 if|if
 condition|(
+operator|(
+name|AH5416
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_ani_function
+operator|&
+name|HAL_ANI_NOISE_IMMUNITY_LEVEL
+operator|)
+operator|&&
+operator|(
 name|aniState
 operator|->
 name|noiseImmunityLevel
@@ -1647,6 +1666,7 @@ operator|<
 name|params
 operator|->
 name|maxNoiseImmunityLevel
+operator|)
 condition|)
 block|{
 name|ar5416AniControl
@@ -1667,6 +1687,18 @@ block|}
 comment|/* then, raise spur immunity level, up to max */
 if|if
 condition|(
+operator|(
+name|AH5416
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_ani_function
+operator|&
+name|HAL_ANI_SPUR_IMMUNITY_LEVEL
+operator|)
+operator|&&
+operator|(
 name|aniState
 operator|->
 name|spurImmunityLevel
@@ -1676,6 +1708,7 @@ operator|<
 name|params
 operator|->
 name|maxSpurImmunityLevel
+operator|)
 condition|)
 block|{
 name|ar5416AniControl
