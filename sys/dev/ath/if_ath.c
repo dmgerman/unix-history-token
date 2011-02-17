@@ -3573,9 +3573,14 @@ comment|/* A-MSDU tx/rx */
 operator||
 name|IEEE80211_HTCAP_MAXAMSDU_3839
 comment|/* max A-MSDU length */
-operator||
-name|IEEE80211_HTCAP_SHORTGI20
+comment|/* At the present time, the hardware doesn't support short-GI in 20mhz mode */
+if|#
+directive|if
+literal|0
+expr|| IEEE80211_HTCAP_SHORTGI20
 comment|/* short GI in 20MHz */
+endif|#
+directive|endif
 operator||
 name|IEEE80211_HTCAP_SMPS_OFF
 expr_stmt|;
