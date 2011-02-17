@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: key.c,v 1.95 2010/11/10 01:33:07 djm Exp $ */
+comment|/* $OpenBSD: key.c,v 1.96 2011/02/04 00:44:21 djm Exp $ */
 end_comment
 
 begin_comment
@@ -9714,15 +9714,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* -v01 certs put nonce first */
-if|if
-condition|(
-operator|!
-name|key_cert_is_legacy
-argument_list|(
-name|k
-argument_list|)
-condition|)
-block|{
 name|arc4random_buf
 argument_list|(
 operator|&
@@ -9734,6 +9725,14 @@ name|nonce
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|key_cert_is_legacy
+argument_list|(
+name|k
+argument_list|)
+condition|)
 name|buffer_put_string
 argument_list|(
 operator|&
@@ -9751,7 +9750,6 @@ name|nonce
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 switch|switch
 condition|(
 name|k

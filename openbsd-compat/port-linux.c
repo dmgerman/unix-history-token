@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: port-linux.c,v 1.11 2011/01/17 07:50:24 dtucker Exp $ */
+comment|/* $Id: port-linux.c,v 1.11.4.2 2011/02/04 00:43:08 djm Exp $ */
 end_comment
 
 begin_comment
@@ -861,7 +861,65 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|void
+name|ssh_selinux_setfscreatecon
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|path
+parameter_list|)
+block|{
+name|security_context_t
+name|context
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|ssh_selinux_enabled
+argument_list|()
+condition|)
+return|return;
+if|if
+condition|(
+name|path
+operator|==
+name|NULL
+condition|)
+name|setfscreatecon
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+end_function
+
+begin_if
+if|if
+condition|(
+name|matchpathcon
+argument_list|(
+name|path
+argument_list|,
+literal|0700
+argument_list|,
+operator|&
+name|context
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|setfscreatecon
+argument_list|(
+name|context
+argument_list|)
+expr_stmt|;
+end_if
+
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif
@@ -881,7 +939,7 @@ comment|/*  * The magic "don't kill me" values, old and new, as documented in eg
 end_comment
 
 begin_decl_stmt
-specifier|static
+unit|static
 name|int
 name|oom_adj_save
 init|=
