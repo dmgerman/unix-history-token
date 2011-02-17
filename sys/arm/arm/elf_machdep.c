@@ -719,16 +719,9 @@ return|return
 operator|-
 literal|1
 return|;
-if|if
-condition|(
 operator|*
 name|where
-operator|!=
-name|addr
-condition|)
-operator|*
-name|where
-operator|=
+operator|+=
 name|addr
 expr_stmt|;
 break|break;
