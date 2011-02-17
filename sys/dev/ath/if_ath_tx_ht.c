@@ -506,14 +506,9 @@ name|RateFlags
 operator||=
 name|HAL_RATESERIES_2040
 expr_stmt|;
+comment|/* 		 * The hardware only supports short-gi in 40mhz mode - 		 * if later hardware supports it in 20mhz mode, be sure 		 * to add the relevant check here. 		 */
 if|if
 condition|(
-name|ni
-operator|->
-name|ni_htcap
-operator|&
-name|IEEE80211_HTCAP_SHORTGI20
-operator|||
 name|ni
 operator|->
 name|ni_htcap
