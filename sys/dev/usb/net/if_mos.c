@@ -3663,11 +3663,14 @@ name|rxstat
 operator|&
 name|MOS_RXSTS_LARGE_FRAME
 condition|)
+block|{
 name|MOS_DPRINTFN
 argument_list|(
-literal|"frame size larger than 1532 bytes"
+literal|"frame size larger than "
+literal|"1532 bytes"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|rxstat
@@ -3719,7 +3722,8 @@ condition|)
 block|{
 name|MOS_DPRINTFN
 argument_list|(
-literal|"error: pktlen %d is smaller than ether_header %zd"
+literal|"error: pktlen %d is smaller "
+literal|"than ether_header %zd"
 argument_list|,
 name|pktlen
 argument_list|,
