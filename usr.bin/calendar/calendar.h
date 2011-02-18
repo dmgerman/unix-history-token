@@ -859,6 +859,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|j2g
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* dates.c */
 end_comment
