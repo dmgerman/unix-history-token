@@ -55,6 +55,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AH_HMAC_MAXHASHLEN
+value|(SHA2_512_HASH_LEN/2)
+end_define
+
+begin_comment
+comment|/* Keep this updated */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|AH_HMAC_INITIAL_RPL
 value|1
 end_define

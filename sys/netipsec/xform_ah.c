@@ -210,8 +210,7 @@ name|AUTHSIZE
 parameter_list|(
 name|sav
 parameter_list|)
-define|\
-value|((sav->flags& SADB_X_EXT_OLD) ? 16 : AH_HMAC_HASHLEN)
+value|ah_authsize(sav)
 end_define
 
 begin_expr_stmt
@@ -375,6 +374,75 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function
+specifier|static
+name|int
+name|ah_authsize
+parameter_list|(
+name|struct
+name|secasvar
+modifier|*
+name|sav
+parameter_list|)
+block|{
+name|IPSEC_ASSERT
+argument_list|(
+name|sav
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"%s: sav == NULL"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sav
+operator|->
+name|flags
+operator|&
+name|SADB_X_EXT_OLD
+condition|)
+return|return
+literal|16
+return|;
+switch|switch
+condition|(
+name|sav
+operator|->
+name|alg_auth
+condition|)
+block|{
+case|case
+name|SADB_X_AALG_SHA2_256
+case|:
+return|return
+literal|16
+return|;
+case|case
+name|SADB_X_AALG_SHA2_384
+case|:
+return|return
+literal|24
+return|;
+case|case
+name|SADB_X_AALG_SHA2_512
+case|:
+return|return
+literal|32
+return|;
+default|default:
+return|return
+name|AH_HMAC_HASHLEN
+return|;
+block|}
+comment|/* NOTREACHED */
+block|}
+end_function
 
 begin_comment
 comment|/*  * NB: this is public for use by the PF_KEY support.  */
