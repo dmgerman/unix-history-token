@@ -13040,15 +13040,6 @@ operator|->
 name|dc_pnic_rx_buf
 expr_stmt|;
 comment|/* 	 * Now copy the salvaged frame to the last mbuf and fake up 	 * the status word to make it look like a successful 	 * frame reception. 	 */
-name|dc_newbuf
-argument_list|(
-name|sc
-argument_list|,
-name|i
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|bcopy
 argument_list|(
 name|ptr
