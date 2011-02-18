@@ -304,6 +304,14 @@ define|#
 directive|define
 name|MPS_CM_FLAGS_SMP_PASS
 value|(1<< 8)
+define|#
+directive|define
+name|MPS_CM_FLAGS_CHAIN_FAILED
+value|(1<< 9)
+define|#
+directive|define
+name|MPS_CM_FLAGS_ERROR_MASK
+value|MPS_CM_FLAGS_CHAIN_FAILED
 name|u_int
 name|cm_state
 decl_stmt|;
@@ -407,6 +415,10 @@ define|#
 directive|define
 name|MPS_FLAGS_SHUTDOWN
 value|(1<< 3)
+define|#
+directive|define
+name|MPS_FLAGS_ATTACH_DONE
+value|(1<< 4)
 name|u_int
 name|mps_debug
 decl_stmt|;
@@ -415,6 +427,21 @@ name|allow_multiple_tm_cmds
 decl_stmt|;
 name|int
 name|tm_cmds_active
+decl_stmt|;
+name|int
+name|io_cmds_active
+decl_stmt|;
+name|int
+name|io_cmds_highwater
+decl_stmt|;
+name|int
+name|chain_free
+decl_stmt|;
+name|int
+name|chain_free_lowwater
+decl_stmt|;
+name|uint64_t
+name|chain_alloc_fail
 decl_stmt|;
 name|struct
 name|sysctl_ctx_list
@@ -852,6 +879,7 @@ operator|)
 operator|!=
 name|NULL
 condition|)
+block|{
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -864,7 +892,40 @@ argument_list|,
 name|chain_link
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|chain_free
+operator|--
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|chain_free
+operator|<
+name|sc
+operator|->
+name|chain_free_lowwater
+condition|)
+name|sc
+operator|->
+name|chain_free_lowwater
+operator|=
+name|sc
+operator|->
+name|chain_free
+expr_stmt|;
+block|}
 end_expr_stmt
+
+begin_else
+else|else
+name|sc
+operator|->
+name|chain_alloc_fail
+operator|++
+expr_stmt|;
+end_else
 
 begin_return
 return|return
@@ -897,6 +958,11 @@ literal|0
 block|bzero(chain->chain, 128);
 endif|#
 directive|endif
+name|sc
+operator|->
+name|chain_free
+operator|++
+expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
