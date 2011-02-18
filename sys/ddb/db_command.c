@@ -3037,15 +3037,22 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
 name|db_printf
 argument_list|(
 literal|"The remote GDB backend could not be selected.\n"
 argument_list|)
 expr_stmt|;
-else|else
+return|return;
+block|}
+comment|/* 	 * Mark that we are done in the debugger.  kdb_trap() 	 * should re-enter with the new backend. 	 */
+name|db_cmd_loop_done
+operator|=
+literal|1
+expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"Step to enter the remote GDB backend.\n"
+literal|"(ctrl-c will return control to ddb)\n"
 argument_list|)
 expr_stmt|;
 block|}
