@@ -465,6 +465,13 @@ argument|mps_command
 argument_list|)
 name|tm_list
 expr_stmt|;
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|mps_command
+argument_list|)
+name|io_list
+expr_stmt|;
 name|int
 name|replypostindex
 decl_stmt|;
