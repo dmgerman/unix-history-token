@@ -2784,6 +2784,9 @@ name|DC_MIN_FRAMELEN
 index|]
 decl_stmt|;
 name|int
+name|dc_tx_pkts
+decl_stmt|;
+name|int
 name|dc_tx_first
 decl_stmt|;
 name|int
