@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ternary.h - Ternary Search Trees    Copyright 2001 Free Software Foundation, Inc.     Contributed by Daniel Berlin (dan@cgsoftware.com)      This program is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by the    Free Software Foundation; either version 2, or (at your option) any    later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,    USA.  */
+comment|/* ternary.h - Ternary Search Trees    Copyright 2001 Free Software Foundation, Inc.     Contributed by Daniel Berlin (dan@cgsoftware.com)      This program is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by the    Free Software Foundation; either version 2, or (at your option) any    later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301,    USA.  */
 end_comment
 
 begin_ifndef
@@ -54,71 +54,65 @@ begin_comment
 comment|/* Insert string S into tree P, associating it with DATA.     Return the data in the tree associated with the string if it's    already there, and replace is 0.    Otherwise, replaces if it it exists, inserts if it doesn't, and    returns the data you passed in. */
 end_comment
 
-begin_decl_stmt
-name|PTR
+begin_function_decl
+name|void
+modifier|*
 name|ternary_insert
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|ternary_tree
-operator|*
+modifier|*
 name|p
-operator|,
+parameter_list|,
 specifier|const
 name|char
-operator|*
+modifier|*
 name|s
-operator|,
-name|PTR
+parameter_list|,
+name|void
+modifier|*
 name|data
-operator|,
+parameter_list|,
 name|int
 name|replace
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Delete the ternary search tree rooted at P.     Does NOT delete the data you associated with the strings. */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|ternary_cleanup
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|ternary_tree
 name|p
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Search the ternary tree for string S, returning the data associated    with it if found. */
 end_comment
 
-begin_decl_stmt
-name|PTR
+begin_function_decl
+name|void
+modifier|*
 name|ternary_search
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|ternary_node
-operator|*
+modifier|*
 name|p
-operator|,
+parameter_list|,
 specifier|const
 name|char
-operator|*
+modifier|*
 name|s
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

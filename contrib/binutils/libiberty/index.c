@@ -12,7 +12,13 @@ specifier|extern
 name|char
 modifier|*
 name|strchr
-parameter_list|()
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -21,17 +27,14 @@ name|char
 modifier|*
 name|index
 parameter_list|(
-name|s
-parameter_list|,
-name|c
-parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|,
 name|int
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|strchr

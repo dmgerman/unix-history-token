@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ECOFF support on MIPS machines.    coff/ecoff.h must be included before this file.        Copyright 2001 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.        This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* ECOFF support on MIPS machines.    coff/ecoff.h must be included before this file.        Copyright 1999, 2004 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.        This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.        You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_define
@@ -374,7 +374,7 @@ value|7
 end_define
 
 begin_comment
-comment|/* These reloc types are a Cygnus extension used when generating    position independent code for embedded systems.  The numbers are    taken from Irix 4, but at least for internal relocs Irix 5 does not    give them the same meaning.  For an internal reloc the symbol index    of RELHI and RELLO is modified as described below for    MIPS_R_SWITCH.  */
+comment|/* FIXME: This relocation is used (internally only) to represent branches    when assembling.  It should never appear in output files, and      be removed.  (It used to be used for embedded-PIC support.)  */
 end_comment
 
 begin_define
@@ -382,31 +382,6 @@ define|#
 directive|define
 name|MIPS_R_PCREL16
 value|12
-end_define
-
-begin_define
-define|#
-directive|define
-name|MIPS_R_RELHI
-value|13
-end_define
-
-begin_define
-define|#
-directive|define
-name|MIPS_R_RELLO
-value|14
-end_define
-
-begin_comment
-comment|/* This reloc type is a Cygnus extension used when generating position    independent code for embedded systems.  It is used for an entry in    a switch table, which looks like this:      .word $L3-$LS12    The object file will contain the correct difference, and does not    require adjustment.  However, when the linker is relaxing PC    relative calls, it is possible for $L3 to move farther away.  This    reloc always appears in the .text section, and is always against    the .text section.  However, the symbol index is not    RELOC_SECTION_TEXT.  It is, instead, the distance between this    switch table entry and $LS12.  Thus, the original value of $L12 is      vaddr - symndx    and the original value of $L3 is      vaddr - symndx + addend    where addend is the value in the object file.  Knowing this, the    linker can know whether the addend in the object file must be    adjusted.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MIPS_R_SWITCH
-value|22
 end_define
 
 begin_comment

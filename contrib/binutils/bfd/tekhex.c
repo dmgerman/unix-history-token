@@ -1,22 +1,22 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD backend for Extended Tektronix Hex Format  objects.    Copyright 1992, 1993, 1994, 1995, 1996, 1998, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.    Written by Steve Chamberlain of Cygnus Support<sac@cygnus.com>.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD backend for Extended Tektronix Hex Format  objects.    Copyright 1992, 1993, 1994, 1995, 1996, 1998, 1999, 2000, 2001, 2002,    2003, 2004, 2007 Free Software Foundation, Inc.    Written by Steve Chamberlain of Cygnus Support<sac@cygnus.com>.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
-comment|/* SUBSECTION 	Tektronix Hex Format handling  DESCRIPTION  	Tek Hex records can hold symbols and data, but not 	relocations. Their main application is communication with 	devices like PROM programmers and ICE equipment.  	It seems that the sections are described as being really big,         the example I have says that the text section is 0..ffffffff. 	BFD would barf with this, many apps would try to alloc 4GB to 	read in the file.  	Tex Hex may contain many sections, but the data which comes in 	has no tag saying which section it belongs to, so we create 	one section for each block of data, called "blknnnn" which we 	stick all the data into.  	TekHex may come out of 	order and there is no header, so an 	initial scan is required  to discover the minimum and maximum 	addresses used to create the vma and size of the sections we 	create. 	We read in the data into pages of CHUNK_MASK+1 size and read 	them out from that whenever we need to.  	Any number of sections may be created for output, we save them 	up and output them when it's time to close the bfd.  	A TekHex record looks like: EXAMPLE 	%<block length><type><checksum><stuff><cr>  DESCRIPTION 	Where 	o length 	is the number of bytes in the record not including the % sign. 	o type 	is one of: 	3) symbol record 	6) data record 	8) termination record  The data can come out of order, and may be discontigous. This is a serial protocol, so big files are unlikely, so we keep a list of 8k chunks */
+comment|/* SUBSECTION 	Tektronix Hex Format handling     DESCRIPTION  	Tek Hex records can hold symbols and data, but not 	relocations. Their main application is communication with 	devices like PROM programmers and ICE equipment.  	It seems that the sections are described as being really big,         the example I have says that the text section is 0..ffffffff. 	BFD would barf with this, many apps would try to alloc 4GB to 	read in the file.  	Tex Hex may contain many sections, but the data which comes in 	has no tag saying which section it belongs to, so we create 	one section for each block of data, called "blknnnn" which we 	stick all the data into.  	TekHex may come out of 	order and there is no header, so an 	initial scan is required  to discover the minimum and maximum 	addresses used to create the vma and size of the sections we 	create. 	We read in the data into pages of CHUNK_MASK+1 size and read 	them out from that whenever we need to.  	Any number of sections may be created for output, we save them 	up and output them when it's time to close the bfd.  	A TekHex record looks like:   EXAMPLE 	%<block length><type><checksum><stuff><cr>    DESCRIPTION 	Where 	o length 	is the number of bytes in the record not including the % sign. 	o type 	is one of: 	3) symbol record 	6) data record 	8) termination record    The data can come out of order, and may be discontigous. This is a   serial protocol, so big files are unlikely, so we keep a list of 8k chunks.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"bfd.h"
-end_include
 
 begin_include
 include|#
 directive|include
 file|"sysdep.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"bfd.h"
 end_include
 
 begin_include
@@ -109,20 +109,7 @@ name|HEX
 parameter_list|(
 name|buffer
 parameter_list|)
-value|((NIBBLE((buffer)[0])<<4) + NIBBLE((buffer)[1]))
-end_define
-
-begin_define
-define|#
-directive|define
-name|TOHEX
-parameter_list|(
-name|d
-parameter_list|,
-name|x
-parameter_list|)
-define|\
-value|(d)[1] = digs[(x)& 0xf]; \ (d)[0] = digs[((x)>>4)&0xf];
+value|((NIBBLE ((buffer)[0])<< 4) + NIBBLE ((buffer)[1]))
 end_define
 
 begin_define
@@ -135,443 +122,30 @@ parameter_list|)
 value|hex_p(x)
 end_define
 
-begin_decl_stmt
-specifier|static
-name|void
-name|tekhex_init
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_vma
-name|getvalue
-name|PARAMS
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|tekhex_print_symbol
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|PTR
-operator|,
-name|asymbol
-operator|*
-operator|,
-name|bfd_print_symbol_type
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|tekhex_get_symbol_info
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|asymbol
-operator|*
-operator|,
-name|symbol_info
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|asymbol
-modifier|*
-name|tekhex_make_empty_symbol
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|tekhex_sizeof_headers
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|bfd_boolean
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|tekhex_write_object_contents
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|out
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|int
-operator|,
-name|char
-operator|*
-operator|,
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|writesym
-name|PARAMS
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|writevalue
-name|PARAMS
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|*
-operator|,
-name|bfd_vma
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|tekhex_set_section_contents
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|sec_ptr
-operator|,
-specifier|const
-name|PTR
-operator|,
-name|file_ptr
-operator|,
-name|bfd_size_type
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|tekhex_set_arch_mach
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-expr|enum
-name|bfd_architecture
-operator|,
-name|unsigned
-name|long
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|tekhex_get_section_contents
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|asection
-operator|*
-operator|,
-name|PTR
-operator|,
-name|file_ptr
-operator|,
-name|bfd_size_type
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|move_section_contents
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|asection
-operator|*
-operator|,
-specifier|const
-name|PTR
-operator|,
-name|file_ptr
-operator|,
-name|bfd_size_type
-operator|,
-name|bfd_boolean
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|bfd_target
-modifier|*
-name|tekhex_object_p
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|tekhex_mkobject
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|long
-name|tekhex_get_symtab_upper_bound
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|long
-name|tekhex_canonicalize_symtab
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|asymbol
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|pass_over
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|(
-name|bfd
-operator|*
-argument_list|,
-name|int
-argument_list|,
-name|char
-operator|*
-argument_list|)
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|first_phase
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|int
-operator|,
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|insert_byte
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|int
-operator|,
-name|bfd_vma
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|data_struct
-modifier|*
-name|find_chunk
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|bfd_vma
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|unsigned
-name|int
-name|getsym
-name|PARAMS
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|TOHEX
+parameter_list|(
+name|d
+parameter_list|,
+name|x
+parameter_list|)
+define|\
+value|(d)[1] = digs[(x)& 0xf]; \   (d)[0] = digs[((x)>>4)&0xf];
+end_define
 
 begin_comment
-comment|/* Here's an example %3A6C6480004E56FFFC4E717063B0AEFFFC6D0652AEFFFC60F24E5E4E75 %1B3709T_SEGMENT1108FFFFFFFF %2B3AB9T_SEGMENT7Dgcc_compiled$1087hello$c10 %373829T_SEGMENT80int$t1$r1$$214741080char$t2$r2$0$12710 %373769T_SEGMENT80long$int$t3$r1$$1080unsigned$int$t4$10 %373CA9T_SEGMENT80long$unsigned$in1080short$int$t6$r1$10 %373049T_SEGMENT80long$long$int$t71080short$unsigned$i10 %373A29T_SEGMENT80long$long$unsign1080signed$char$t10$10 %373D69T_SEGMENT80unsigned$char$t11080float$t12$r1$4$010 %373D19T_SEGMENT80double$t13$r1$8$1080long$double$t14$10 %2734D9T_SEGMENT8Bvoid$t15$151035_main10 %2F3CA9T_SEGMENT81$1081$1681$1E81$21487main$F110 %2832F9T_SEGMENT83i$18FFFFFFFC81$1481$214 %07 8 10 10  explanation: %3A6C6480004E56FFFC4E717063B0AEFFFC6D0652AEFFFC60F24E5E4E75  ^ ^^ ^     ^-data  | || +------ 4 char integer 0x8000  | |+-------- checksum  | +--------- type 6 (data record)  +----------- length 3a chars<---------------------- 3a (58 chars) ------------------->  %1B3709T_SEGMENT1108FFFFFFFF       ^         ^^ ^- 8 character integer 0xffffffff       |         |+-   1 character integer 0       |         +--   type 1 symbol (section definition)       +------------   9 char symbol T_SEGMENT  %2B3AB9T_SEGMENT7Dgcc_compiled$1087hello$c10 %373829T_SEGMENT80int$t1$r1$$214741080char$t2$r2$0$12710 %373769T_SEGMENT80long$int$t3$r1$$1080unsigned$int$t4$10 %373CA9T_SEGMENT80long$unsigned$in1080short$int$t6$r1$10 %373049T_SEGMENT80long$long$int$t71080short$unsigned$i10 %373A29T_SEGMENT80long$long$unsign1080signed$char$t10$10 %373D69T_SEGMENT80unsigned$char$t11080float$t12$r1$4$010 %373D19T_SEGMENT80double$t13$r1$8$1080long$double$t14$10 %2734D9T_SEGMENT8Bvoid$t15$151035_main10 %2F3CA9T_SEGMENT81$1081$1681$1E81$21487main$F110 %2832F9T_SEGMENT83i$18FFFFFFFC81$1481$214 %0781010  Turns into sac@thepub$ ./objdump -dx -m m68k f  f:     file format tekhex -----x--- 9/55728 -134219416 Sep 29 15:13 1995 f architecture: UNKNOWN!, flags 0x00000010: HAS_SYMS start address 0x00000000 SECTION 0 [D00000000]	: size 00020000 vma 00000000 align 2**0  ALLOC, LOAD SECTION 1 [D00008000]	: size 00002001 vma 00008000 align 2**0  SECTION 2 [T_SEGMENT]	: size ffffffff vma 00000000 align 2**0  SYMBOL TABLE: 00000000  g       T_SEGMENT gcc_compiled$ 00000000  g       T_SEGMENT hello$c 00000000  g       T_SEGMENT int$t1$r1$$21474 00000000  g       T_SEGMENT char$t2$r2$0$127 00000000  g       T_SEGMENT long$int$t3$r1$$ 00000000  g       T_SEGMENT unsigned$int$t4$ 00000000  g       T_SEGMENT long$unsigned$in 00000000  g       T_SEGMENT short$int$t6$r1$ 00000000  g       T_SEGMENT long$long$int$t7 00000000  g       T_SEGMENT short$unsigned$i 00000000  g       T_SEGMENT long$long$unsign 00000000  g       T_SEGMENT signed$char$t10$ 00000000  g       T_SEGMENT unsigned$char$t1 00000000  g       T_SEGMENT float$t12$r1$4$0 00000000  g       T_SEGMENT double$t13$r1$8$ 00000000  g       T_SEGMENT long$double$t14$ 00000000  g       T_SEGMENT void$t15$15 00000000  g       T_SEGMENT _main 00000000  g       T_SEGMENT $ 00000000  g       T_SEGMENT $ 00000000  g       T_SEGMENT $ 00000010  g       T_SEGMENT $ 00000000  g       T_SEGMENT main$F1 fcffffff  g       T_SEGMENT i$1 00000000  g       T_SEGMENT $ 00000010  g       T_SEGMENT $  RELOCATION RECORDS FOR [D00000000]: (none)  RELOCATION RECORDS FOR [D00008000]: (none)  RELOCATION RECORDS FOR [T_SEGMENT]: (none)  Disassembly of section D00000000: ... 00008000 ($+)7ff0 linkw fp,#-4 00008004 ($+)7ff4 nop 00008006 ($+)7ff6 movel #99,d0 00008008 ($+)7ff8 cmpl fp@(-4),d0 0000800c ($+)7ffc blts 00008014 ($+)8004 0000800e ($+)7ffe addql #1,fp@(-4) 00008012 ($+)8002 bras 00008006 ($+)7ff6 00008014 ($+)8004 unlk fp 00008016 ($+)8006 rts ...  */
+comment|/* Here's an example    %3A6C6480004E56FFFC4E717063B0AEFFFC6D0652AEFFFC60F24E5E4E75    %1B3709T_SEGMENT1108FFFFFFFF    %2B3AB9T_SEGMENT7Dgcc_compiled$1087hello$c10    %373829T_SEGMENT80int$t1$r1$$214741080char$t2$r2$0$12710    %373769T_SEGMENT80long$int$t3$r1$$1080unsigned$int$t4$10    %373CA9T_SEGMENT80long$unsigned$in1080short$int$t6$r1$10    %373049T_SEGMENT80long$long$int$t71080short$unsigned$i10    %373A29T_SEGMENT80long$long$unsign1080signed$char$t10$10    %373D69T_SEGMENT80unsigned$char$t11080float$t12$r1$4$010    %373D19T_SEGMENT80double$t13$r1$8$1080long$double$t14$10    %2734D9T_SEGMENT8Bvoid$t15$151035_main10    %2F3CA9T_SEGMENT81$1081$1681$1E81$21487main$F110    %2832F9T_SEGMENT83i$18FFFFFFFC81$1481$214    %07 8 10 10     explanation:    %3A6C6480004E56FFFC4E717063B0AEFFFC6D0652AEFFFC60F24E5E4E75     ^ ^^ ^     ^-data     | || +------ 4 char integer 0x8000     | |+-------- checksum     | +--------- type 6 (data record)     +----------- length 3a chars<---------------------- 3a (58 chars) ------------------->     %1B3709T_SEGMENT1108FFFFFFFF          ^         ^^ ^- 8 character integer 0xffffffff          |         |+-   1 character integer 0          |         +--   type 1 symbol (section definition)          +------------   9 char symbol T_SEGMENT     %2B3AB9T_SEGMENT7Dgcc_compiled$1087hello$c10    %373829T_SEGMENT80int$t1$r1$$214741080char$t2$r2$0$12710    %373769T_SEGMENT80long$int$t3$r1$$1080unsigned$int$t4$10    %373CA9T_SEGMENT80long$unsigned$in1080short$int$t6$r1$10    %373049T_SEGMENT80long$long$int$t71080short$unsigned$i10    %373A29T_SEGMENT80long$long$unsign1080signed$char$t10$10    %373D69T_SEGMENT80unsigned$char$t11080float$t12$r1$4$010    %373D19T_SEGMENT80double$t13$r1$8$1080long$double$t14$10    %2734D9T_SEGMENT8Bvoid$t15$151035_main10    %2F3CA9T_SEGMENT81$1081$1681$1E81$21487main$F110    %2832F9T_SEGMENT83i$18FFFFFFFC81$1481$214    %0781010     Turns into    sac@thepub$ ./objdump -dx -m m68k f     f:     file format tekhex    -----x--- 9/55728 -134219416 Sep 29 15:13 1995 f    architecture: UNKNOWN!, flags 0x00000010:    HAS_SYMS    start address 0x00000000    SECTION 0 [D00000000]	: size 00020000 vma 00000000 align 2**0    ALLOC, LOAD    SECTION 1 [D00008000]	: size 00002001 vma 00008000 align 2**0     SECTION 2 [T_SEGMENT]	: size ffffffff vma 00000000 align 2**0     SYMBOL TABLE:    00000000  g       T_SEGMENT gcc_compiled$    00000000  g       T_SEGMENT hello$c    00000000  g       T_SEGMENT int$t1$r1$$21474    00000000  g       T_SEGMENT char$t2$r2$0$127    00000000  g       T_SEGMENT long$int$t3$r1$$    00000000  g       T_SEGMENT unsigned$int$t4$    00000000  g       T_SEGMENT long$unsigned$in    00000000  g       T_SEGMENT short$int$t6$r1$    00000000  g       T_SEGMENT long$long$int$t7    00000000  g       T_SEGMENT short$unsigned$i    00000000  g       T_SEGMENT long$long$unsign    00000000  g       T_SEGMENT signed$char$t10$    00000000  g       T_SEGMENT unsigned$char$t1    00000000  g       T_SEGMENT float$t12$r1$4$0    00000000  g       T_SEGMENT double$t13$r1$8$    00000000  g       T_SEGMENT long$double$t14$    00000000  g       T_SEGMENT void$t15$15    00000000  g       T_SEGMENT _main    00000000  g       T_SEGMENT $    00000000  g       T_SEGMENT $    00000000  g       T_SEGMENT $    00000010  g       T_SEGMENT $    00000000  g       T_SEGMENT main$F1    fcffffff  g       T_SEGMENT i$1    00000000  g       T_SEGMENT $    00000010  g       T_SEGMENT $     RELOCATION RECORDS FOR [D00000000]: (none)     RELOCATION RECORDS FOR [D00008000]: (none)     RELOCATION RECORDS FOR [T_SEGMENT]: (none)     Disassembly of section D00000000:    ...    00008000 ($+)7ff0 linkw fp,#-4    00008004 ($+)7ff4 nop    00008006 ($+)7ff6 movel #99,d0    00008008 ($+)7ff8 cmpl fp@(-4),d0    0000800c ($+)7ffc blts 00008014 ($+)8004    0000800e ($+)7ffe addql #1,fp@(-4)    00008012 ($+)8002 bras 00008006 ($+)7ff6    00008014 ($+)8004 unlk fp    00008016 ($+)8006 rts    ...  */
 end_comment
 
 begin_function
 specifier|static
 name|void
 name|tekhex_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|unsigned
 name|int
@@ -616,7 +190,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 name|sum_block
 index|[
 name|i
@@ -627,7 +200,6 @@ operator|=
 name|val
 operator|++
 expr_stmt|;
-block|}
 for|for
 control|(
 name|i
@@ -641,7 +213,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 name|sum_block
 index|[
 name|i
@@ -650,7 +221,6 @@ operator|=
 name|val
 operator|++
 expr_stmt|;
-block|}
 name|sum_block
 index|[
 literal|'$'
@@ -696,7 +266,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 name|sum_block
 index|[
 name|i
@@ -707,11 +276,10 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-block|}
 end_function
 
 begin_comment
-comment|/* The maximum number of bytes on a line is FF */
+comment|/* The maximum number of bytes on a line is FF.  */
 end_comment
 
 begin_define
@@ -722,7 +290,7 @@ value|0xff
 end_define
 
 begin_comment
-comment|/* The number of bytes we fit onto a line on output */
+comment|/* The number of bytes we fit onto a line on output.  */
 end_comment
 
 begin_define
@@ -847,16 +415,18 @@ end_define
 
 begin_function
 specifier|static
-name|bfd_vma
+name|bfd_boolean
 name|getvalue
 parameter_list|(
-name|srcp
-parameter_list|)
 name|char
 modifier|*
 modifier|*
 name|srcp
-decl_stmt|;
+parameter_list|,
+name|bfd_vma
+modifier|*
+name|valuep
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -873,14 +443,28 @@ decl_stmt|;
 name|unsigned
 name|int
 name|len
-init|=
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|ISHEX
+argument_list|(
+operator|*
+name|src
+argument_list|)
+condition|)
+return|return
+name|FALSE
+return|;
+name|len
+operator|=
 name|hex_value
 argument_list|(
 operator|*
 name|src
 operator|++
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|len
@@ -897,6 +481,18 @@ name|len
 operator|--
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|ISHEX
+argument_list|(
+operator|*
+name|src
+argument_list|)
+condition|)
+return|return
+name|FALSE
+return|;
 name|value
 operator|=
 name|value
@@ -916,31 +512,36 @@ name|srcp
 operator|=
 name|src
 expr_stmt|;
-return|return
+operator|*
+name|valuep
+operator|=
 name|value
+expr_stmt|;
+return|return
+name|TRUE
 return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|unsigned
-name|int
+name|bfd_boolean
 name|getsym
 parameter_list|(
+name|char
+modifier|*
 name|dstp
 parameter_list|,
+name|char
+modifier|*
+modifier|*
 name|srcp
+parameter_list|,
+name|unsigned
+name|int
+modifier|*
+name|lenp
 parameter_list|)
-name|char
-modifier|*
-name|dstp
-decl_stmt|;
-name|char
-modifier|*
-modifier|*
-name|srcp
-decl_stmt|;
 block|{
 name|char
 modifier|*
@@ -956,14 +557,28 @@ decl_stmt|;
 name|unsigned
 name|int
 name|len
-init|=
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|ISHEX
+argument_list|(
+operator|*
+name|src
+argument_list|)
+condition|)
+return|return
+name|FALSE
+return|;
+name|len
+operator|=
 name|hex_value
 argument_list|(
 operator|*
 name|src
 operator|++
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|len
@@ -1011,8 +626,13 @@ name|src
 operator|+
 name|i
 expr_stmt|;
-return|return
+operator|*
+name|lenp
+operator|=
 name|len
+expr_stmt|;
+return|return
+name|TRUE
 return|;
 block|}
 end_function
@@ -1024,17 +644,13 @@ name|data_struct
 modifier|*
 name|find_chunk
 parameter_list|(
-name|abfd
-parameter_list|,
-name|vma
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|bfd_vma
 name|vma
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|data_struct
@@ -1066,29 +682,21 @@ operator|)
 operator|!=
 name|vma
 condition|)
-block|{
 name|d
 operator|=
 name|d
 operator|->
 name|next
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
 name|d
 condition|)
 block|{
-comment|/* No chunk for this address, so make one up */
+comment|/* No chunk for this address, so make one up.  */
 name|d
 operator|=
-operator|(
-operator|(
-expr|struct
-name|data_struct
-operator|*
-operator|)
 name|bfd_zalloc
 argument_list|(
 name|abfd
@@ -1102,7 +710,6 @@ expr|struct
 name|data_struct
 argument_list|)
 argument_list|)
-operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -1152,24 +759,18 @@ specifier|static
 name|void
 name|insert_byte
 parameter_list|(
-name|abfd
-parameter_list|,
-name|value
-parameter_list|,
-name|addr
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|int
 name|value
-decl_stmt|;
+parameter_list|,
 name|bfd_vma
 name|addr
-decl_stmt|;
+parameter_list|)
 block|{
-comment|/* Find the chunk that this byte needs and put it in */
+comment|/* Find the chunk that this byte needs and put it in.  */
 name|struct
 name|data_struct
 modifier|*
@@ -1208,31 +809,25 @@ block|}
 end_function
 
 begin_comment
-comment|/* The first pass is to find the names of all the sections, and see   how big the data is */
+comment|/* The first pass is to find the names of all the sections, and see   how big the data is.  */
 end_comment
 
 begin_function
 specifier|static
-name|void
+name|bfd_boolean
 name|first_phase
 parameter_list|(
-name|abfd
-parameter_list|,
-name|type
-parameter_list|,
-name|src
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|int
 name|type
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|src
-decl_stmt|;
+parameter_list|)
 block|{
 name|asection
 modifier|*
@@ -1244,13 +839,16 @@ name|unsigned
 name|int
 name|len
 decl_stmt|;
+name|bfd_vma
+name|val
+decl_stmt|;
 name|char
 name|sym
 index|[
 literal|17
 index|]
 decl_stmt|;
-comment|/* A symbol can only be 16chars long */
+comment|/* A symbol can only be 16chars long.  */
 switch|switch
 condition|(
 name|type
@@ -1259,17 +857,26 @@ block|{
 case|case
 literal|'6'
 case|:
-comment|/* Data record - read it and store it */
+comment|/* Data record - read it and store it.  */
 block|{
 name|bfd_vma
 name|addr
-init|=
+decl_stmt|;
+if|if
+condition|(
+operator|!
 name|getvalue
 argument_list|(
 operator|&
 name|src
+argument_list|,
+operator|&
+name|addr
 argument_list|)
-decl_stmt|;
+condition|)
+return|return
+name|FALSE
+return|;
 while|while
 condition|(
 operator|*
@@ -1297,21 +904,30 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-return|return;
+return|return
+name|TRUE
+return|;
 case|case
 literal|'3'
 case|:
-comment|/* Symbol record, read the segment */
-name|len
-operator|=
+comment|/* Symbol record, read the segment.  */
+if|if
+condition|(
+operator|!
 name|getsym
 argument_list|(
 name|sym
 argument_list|,
 operator|&
 name|src
+argument_list|,
+operator|&
+name|len
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+name|FALSE
+return|;
 name|section
 operator|=
 name|bfd_get_section_by_name
@@ -1325,10 +941,6 @@ if|if
 condition|(
 name|section
 operator|==
-operator|(
-name|asection
-operator|*
-operator|)
 name|NULL
 condition|)
 block|{
@@ -1353,10 +965,9 @@ condition|(
 operator|!
 name|n
 condition|)
-name|abort
-argument_list|()
-expr_stmt|;
-comment|/* FIXME */
+return|return
+name|FALSE
+return|;
 name|memcpy
 argument_list|(
 name|n
@@ -1393,29 +1004,47 @@ block|{
 case|case
 literal|'1'
 case|:
-comment|/* section range */
+comment|/* Section range.  */
 name|src
 operator|++
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|getvalue
+argument_list|(
+operator|&
+name|src
+argument_list|,
+operator|&
 name|section
 operator|->
 name|vma
-operator|=
+argument_list|)
+condition|)
+return|return
+name|FALSE
+return|;
+if|if
+condition|(
+operator|!
 name|getvalue
 argument_list|(
 operator|&
 name|src
+argument_list|,
+operator|&
+name|val
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+name|FALSE
+return|;
 name|section
 operator|->
-name|_raw_size
+name|size
 operator|=
-name|getvalue
-argument_list|(
-operator|&
-name|src
-argument_list|)
+name|val
 operator|-
 name|section
 operator|->
@@ -1453,7 +1082,7 @@ case|:
 case|case
 literal|'8'
 case|:
-comment|/* Symbols, add to section */
+comment|/* Symbols, add to section.  */
 block|{
 name|bfd_size_type
 name|amt
@@ -1467,10 +1096,6 @@ name|tekhex_symbol_type
 modifier|*
 name|new
 init|=
-operator|(
-name|tekhex_symbol_type
-operator|*
-operator|)
 name|bfd_alloc
 argument_list|(
 name|abfd
@@ -1491,10 +1116,9 @@ condition|(
 operator|!
 name|new
 condition|)
-name|abort
-argument_list|()
-expr_stmt|;
-comment|/* FIXME */
+return|return
+name|FALSE
+return|;
 name|new
 operator|->
 name|symbol
@@ -1539,16 +1163,23 @@ name|symbols
 operator|=
 name|new
 expr_stmt|;
-name|len
-operator|=
+if|if
+condition|(
+operator|!
 name|getsym
 argument_list|(
 name|sym
 argument_list|,
 operator|&
 name|src
+argument_list|,
+operator|&
+name|len
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+name|FALSE
+return|;
 name|new
 operator|->
 name|symbol
@@ -1576,10 +1207,9 @@ name|symbol
 operator|.
 name|name
 condition|)
-name|abort
-argument_list|()
-expr_stmt|;
-comment|/* FIXME */
+return|return
+name|FALSE
+return|;
 name|memcpy
 argument_list|(
 operator|(
@@ -1636,26 +1266,45 @@ name|flags
 operator|=
 name|BSF_LOCAL
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|getvalue
+argument_list|(
+operator|&
+name|src
+argument_list|,
+operator|&
+name|val
+argument_list|)
+condition|)
+return|return
+name|FALSE
+return|;
 name|new
 operator|->
 name|symbol
 operator|.
 name|value
 operator|=
-name|getvalue
-argument_list|(
-operator|&
-name|src
-argument_list|)
+name|val
 operator|-
 name|section
 operator|->
 name|vma
 expr_stmt|;
+break|break;
+block|}
+default|default:
+return|return
+name|FALSE
+return|;
 block|}
 block|}
 block|}
-block|}
+return|return
+name|TRUE
+return|;
 block|}
 end_function
 
@@ -1663,42 +1312,30 @@ begin_comment
 comment|/* Pass over a tekhex, calling one of the above functions on each    record.  */
 end_comment
 
-begin_function_decl
+begin_function
 specifier|static
-name|void
+name|bfd_boolean
 name|pass_over
 parameter_list|(
-name|abfd
-parameter_list|,
-name|func
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
-function_decl|void
+parameter_list|,
+name|bfd_boolean
+function_decl|(
+modifier|*
+name|func
+function_decl|)
 parameter_list|(
-function_decl|*func
-end_function_decl
-
-begin_expr_stmt
-unit|)
-name|PARAMS
-argument_list|(
-operator|(
 name|bfd
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+modifier|*
+parameter_list|)
+parameter_list|)
 block|{
 name|unsigned
 name|int
@@ -1709,7 +1346,7 @@ name|eof
 init|=
 name|FALSE
 decl_stmt|;
-comment|/* To the front of the file */
+comment|/* To the front of the file.  */
 if|if
 condition|(
 name|bfd_seek
@@ -1726,9 +1363,9 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|abort
-argument_list|()
-expr_stmt|;
+return|return
+name|FALSE
+return|;
 while|while
 condition|(
 operator|!
@@ -1736,21 +1373,15 @@ name|eof
 condition|)
 block|{
 name|char
-name|buffer
+name|src
 index|[
 name|MAXCHUNK
 index|]
 decl_stmt|;
 name|char
-modifier|*
-name|src
-init|=
-name|buffer
-decl_stmt|;
-name|char
 name|type
 decl_stmt|;
-comment|/* Find first '%' */
+comment|/* Find first '%'.  */
 name|eof
 operator|=
 call|(
@@ -1782,7 +1413,6 @@ operator|&&
 operator|!
 name|eof
 condition|)
-block|{
 name|eof
 operator|=
 call|(
@@ -1804,16 +1434,12 @@ operator|!=
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|eof
 condition|)
 break|break;
-name|src
-operator|++
-expr_stmt|;
-comment|/* Fetch the type and the length and the checksum */
+comment|/* Fetch the type and the length and the checksum.  */
 if|if
 condition|(
 name|bfd_bread
@@ -1830,10 +1456,9 @@ argument_list|)
 operator|!=
 literal|5
 condition|)
-name|abort
-argument_list|()
-expr_stmt|;
-comment|/* FIXME */
+return|return
+name|FALSE
+return|;
 name|type
 operator|=
 name|src
@@ -1862,6 +1487,7 @@ index|]
 argument_list|)
 condition|)
 break|break;
+comment|/* Already read five chars.  */
 name|chars_on_line
 operator|=
 name|HEX
@@ -1871,7 +1497,15 @@ argument_list|)
 operator|-
 literal|5
 expr_stmt|;
-comment|/* Already read five char */
+if|if
+condition|(
+name|chars_on_line
+operator|>=
+name|MAXCHUNK
+condition|)
+return|return
+name|FALSE
+return|;
 if|if
 condition|(
 name|bfd_bread
@@ -1888,10 +1522,10 @@ argument_list|)
 operator|!=
 name|chars_on_line
 condition|)
-name|abort
-argument_list|()
-expr_stmt|;
-comment|/* FIXME */
+return|return
+name|FALSE
+return|;
+comment|/* Put a null at the end.  */
 name|src
 index|[
 name|chars_on_line
@@ -1899,7 +1533,9 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-comment|/* put a null at the end */
+if|if
+condition|(
+operator|!
 name|func
 argument_list|(
 name|abfd
@@ -1908,29 +1544,31 @@ name|type
 argument_list|,
 name|src
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+name|FALSE
+return|;
 block|}
+return|return
+name|TRUE
+return|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
 name|long
 name|tekhex_canonicalize_symtab
 parameter_list|(
-name|abfd
-parameter_list|,
-name|table
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|asymbol
 modifier|*
 modifier|*
 name|table
-decl_stmt|;
+parameter_list|)
 block|{
 name|tekhex_symbol_type
 modifier|*
@@ -1999,12 +1637,10 @@ specifier|static
 name|long
 name|tekhex_get_symtab_upper_bound
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -2032,12 +1668,10 @@ specifier|static
 name|bfd_boolean
 name|tekhex_mkobject
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 name|tdata_type
 modifier|*
@@ -2045,10 +1679,6 @@ name|tdata
 decl_stmt|;
 name|tdata
 operator|=
-operator|(
-name|tdata_type
-operator|*
-operator|)
 name|bfd_alloc
 argument_list|(
 name|abfd
@@ -2088,32 +1718,18 @@ name|tdata
 operator|->
 name|head
 operator|=
-operator|(
-name|tekhex_data_list_type
-operator|*
-operator|)
 name|NULL
 expr_stmt|;
 name|tdata
 operator|->
 name|symbols
 operator|=
-operator|(
-expr|struct
-name|tekhex_symbol_struct
-operator|*
-operator|)
 name|NULL
 expr_stmt|;
 name|tdata
 operator|->
 name|data
 operator|=
-operator|(
-expr|struct
-name|data_struct
-operator|*
-operator|)
 name|NULL
 expr_stmt|;
 return|return
@@ -2123,7 +1739,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   Return TRUE if the file looks like it's in TekHex format. Just look   for a percent sign and some hex digits */
+comment|/* Return TRUE if the file looks like it's in TekHex format. Just look    for a percent sign and some hex digits.  */
 end_comment
 
 begin_function
@@ -2133,12 +1749,10 @@ name|bfd_target
 modifier|*
 name|tekhex_object_p
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|b
@@ -2219,11 +1833,6 @@ index|]
 argument_list|)
 condition|)
 return|return
-operator|(
-specifier|const
-name|bfd_target
-operator|*
-operator|)
 name|NULL
 return|;
 name|tekhex_mkobject
@@ -2231,13 +1840,19 @@ argument_list|(
 name|abfd
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|pass_over
 argument_list|(
 name|abfd
 argument_list|,
 name|first_phase
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+name|NULL
+return|;
 return|return
 name|abfd
 operator|->
@@ -2251,39 +1866,28 @@ specifier|static
 name|void
 name|move_section_contents
 parameter_list|(
-name|abfd
-parameter_list|,
-name|section
-parameter_list|,
-name|locationp
-parameter_list|,
-name|offset
-parameter_list|,
-name|count
-parameter_list|,
-name|get
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|section
-decl_stmt|;
+parameter_list|,
 specifier|const
-name|PTR
+name|void
+modifier|*
 name|locationp
-decl_stmt|;
+parameter_list|,
 name|file_ptr
 name|offset
-decl_stmt|;
+parameter_list|,
 name|bfd_size_type
 name|count
-decl_stmt|;
+parameter_list|,
 name|bfd_boolean
 name|get
-decl_stmt|;
+parameter_list|)
 block|{
 name|bfd_vma
 name|addr
@@ -2303,17 +1907,12 @@ name|prev_number
 init|=
 literal|1
 decl_stmt|;
-comment|/* Nothing can have this as a high bit*/
+comment|/* Nothing can have this as a high bit.  */
 name|struct
 name|data_struct
 modifier|*
 name|d
 init|=
-operator|(
-expr|struct
-name|data_struct
-operator|*
-operator|)
 name|NULL
 decl_stmt|;
 name|BFD_ASSERT
@@ -2367,8 +1966,7 @@ name|chunk_number
 operator|!=
 name|prev_number
 condition|)
-block|{
-comment|/* Different chunk, so move pointer */
+comment|/* Different chunk, so move pointer. */
 name|d
 operator|=
 name|find_chunk
@@ -2378,7 +1976,6 @@ argument_list|,
 name|chunk_number
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|get
@@ -2393,7 +1990,6 @@ index|[
 name|low_bits
 index|]
 condition|)
-block|{
 operator|*
 name|location
 operator|=
@@ -2404,15 +2000,12 @@ index|[
 name|low_bits
 index|]
 expr_stmt|;
-block|}
 else|else
-block|{
 operator|*
 name|location
 operator|=
 literal|0
 expr_stmt|;
-block|}
 block|}
 else|else
 block|{
@@ -2453,33 +2046,24 @@ specifier|static
 name|bfd_boolean
 name|tekhex_get_section_contents
 parameter_list|(
-name|abfd
-parameter_list|,
-name|section
-parameter_list|,
-name|locationp
-parameter_list|,
-name|offset
-parameter_list|,
-name|count
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|section
-decl_stmt|;
-name|PTR
+parameter_list|,
+name|void
+modifier|*
 name|locationp
-decl_stmt|;
+parameter_list|,
 name|file_ptr
 name|offset
-decl_stmt|;
+parameter_list|,
 name|bfd_size_type
 name|count
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -2513,7 +2097,6 @@ return|return
 name|TRUE
 return|;
 block|}
-else|else
 return|return
 name|FALSE
 return|;
@@ -2525,24 +2108,18 @@ specifier|static
 name|bfd_boolean
 name|tekhex_set_arch_mach
 parameter_list|(
-name|abfd
-parameter_list|,
-name|arch
-parameter_list|,
-name|machine
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|enum
 name|bfd_architecture
 name|arch
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|long
 name|machine
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|bfd_default_set_arch_mach
@@ -2558,7 +2135,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* we have to save up all the Tekhexords for a splurge before output,     */
+comment|/* We have to save up all the Tekhexords for a splurge before output.  */
 end_comment
 
 begin_function
@@ -2566,33 +2143,24 @@ specifier|static
 name|bfd_boolean
 name|tekhex_set_section_contents
 parameter_list|(
-name|abfd
-parameter_list|,
-name|section
-parameter_list|,
-name|locationp
-parameter_list|,
-name|offset
-parameter_list|,
-name|bytes_to_do
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|sec_ptr
 name|section
-decl_stmt|;
+parameter_list|,
 specifier|const
-name|PTR
+name|void
+modifier|*
 name|locationp
-decl_stmt|;
+parameter_list|,
 name|file_ptr
 name|offset
-decl_stmt|;
+parameter_list|,
 name|bfd_size_type
 name|bytes_to_do
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -2602,7 +2170,7 @@ operator|->
 name|output_has_begun
 condition|)
 block|{
-comment|/* The first time around, allocate enough sections to hold all the chunks */
+comment|/* The first time around, allocate enough sections to hold all the chunks.  */
 name|asection
 modifier|*
 name|s
@@ -2662,7 +2230,7 @@ name|vma
 operator|+
 name|s
 operator|->
-name|_raw_size
+name|size
 condition|;
 name|vma
 operator|+=
@@ -2710,7 +2278,6 @@ return|return
 name|TRUE
 return|;
 block|}
-else|else
 return|return
 name|FALSE
 return|;
@@ -2722,18 +2289,14 @@ specifier|static
 name|void
 name|writevalue
 parameter_list|(
-name|dst
-parameter_list|,
-name|value
-parameter_list|)
 name|char
 modifier|*
 modifier|*
 name|dst
-decl_stmt|;
+parameter_list|,
 name|bfd_vma
 name|value
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -2848,20 +2411,16 @@ specifier|static
 name|void
 name|writesym
 parameter_list|(
-name|dst
-parameter_list|,
-name|sym
-parameter_list|)
 name|char
 modifier|*
 modifier|*
 name|dst
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|sym
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -2927,7 +2486,6 @@ literal|1
 expr_stmt|;
 block|}
 else|else
-block|{
 operator|*
 name|p
 operator|++
@@ -2938,13 +2496,11 @@ name|len
 index|]
 expr_stmt|;
 block|}
-block|}
 while|while
 condition|(
 name|len
 operator|--
 condition|)
-block|{
 operator|*
 name|p
 operator|++
@@ -2953,7 +2509,6 @@ operator|*
 name|sym
 operator|++
 expr_stmt|;
-block|}
 operator|*
 name|dst
 operator|=
@@ -2967,29 +2522,21 @@ specifier|static
 name|void
 name|out
 parameter_list|(
-name|abfd
-parameter_list|,
-name|type
-parameter_list|,
-name|start
-parameter_list|,
-name|end
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|int
 name|type
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|start
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|end
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|sum
@@ -3049,7 +2596,6 @@ condition|;
 name|s
 operator|++
 control|)
-block|{
 name|sum
 operator|+=
 name|sum_block
@@ -3062,7 +2608,6 @@ operator|*
 name|s
 index|]
 expr_stmt|;
-block|}
 name|sum
 operator|+=
 name|sum_block
@@ -3077,7 +2622,7 @@ literal|1
 index|]
 index|]
 expr_stmt|;
-comment|/*  length */
+comment|/* Length.  */
 name|sum
 operator|+=
 name|sum_block
@@ -3106,7 +2651,7 @@ literal|3
 index|]
 index|]
 expr_stmt|;
-comment|/* type */
+comment|/* Type.  */
 name|TOHEX
 argument_list|(
 name|front
@@ -3174,16 +2719,11 @@ specifier|static
 name|bfd_boolean
 name|tekhex_write_object_contents
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
-name|int
-name|bytes_written
-decl_stmt|;
 name|char
 name|buffer
 index|[
@@ -3207,11 +2747,7 @@ decl_stmt|;
 name|tekhex_init
 argument_list|()
 expr_stmt|;
-name|bytes_written
-operator|=
-literal|0
-expr_stmt|;
-comment|/* And the raw data */
+comment|/* And the raw data.  */
 for|for
 control|(
 name|d
@@ -3226,11 +2762,6 @@ name|data
 init|;
 name|d
 operator|!=
-operator|(
-expr|struct
-name|data_struct
-operator|*
-operator|)
 name|NULL
 condition|;
 name|d
@@ -3252,7 +2783,7 @@ decl_stmt|;
 name|int
 name|addr
 decl_stmt|;
-comment|/* Write it in blocks of 32 bytes */
+comment|/* Write it in blocks of 32 bytes.  */
 for|for
 control|(
 name|addr
@@ -3275,7 +2806,7 @@ name|need
 init|=
 literal|0
 decl_stmt|;
-comment|/* Check to see if necessary */
+comment|/* Check to see if necessary.  */
 for|for
 control|(
 name|low
@@ -3292,7 +2823,6 @@ condition|;
 name|low
 operator|++
 control|)
-block|{
 if|if
 condition|(
 name|d
@@ -3308,7 +2838,6 @@ name|need
 operator|=
 literal|1
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|need
@@ -3379,7 +2908,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* write all the section headers for the sections */
+comment|/* Write all the section headers for the sections.  */
 for|for
 control|(
 name|s
@@ -3390,10 +2919,6 @@ name|sections
 init|;
 name|s
 operator|!=
-operator|(
-name|asection
-operator|*
-operator|)
 name|NULL
 condition|;
 name|s
@@ -3446,7 +2971,7 @@ name|vma
 operator|+
 name|s
 operator|->
-name|_raw_size
+name|size
 argument_list|)
 expr_stmt|;
 name|out
@@ -3461,7 +2986,7 @@ name|dst
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* And the symbols */
+comment|/* And the symbols.  */
 if|if
 condition|(
 name|abfd
@@ -3500,7 +3025,7 @@ operator|!=
 literal|'?'
 condition|)
 block|{
-comment|/* do not include debug symbols */
+comment|/* Do not include debug symbols.  */
 name|asymbol
 modifier|*
 name|sym
@@ -3658,7 +3183,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* And the terminator */
+comment|/* And the terminator.  */
 if|if
 condition|(
 name|bfd_bwrite
@@ -3689,19 +3214,17 @@ specifier|static
 name|int
 name|tekhex_sizeof_headers
 parameter_list|(
-name|abfd
-parameter_list|,
-name|exec
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
-name|bfd_boolean
-name|exec
+parameter_list|,
+name|struct
+name|bfd_link_info
+modifier|*
+name|info
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 literal|0
@@ -3715,12 +3238,10 @@ name|asymbol
 modifier|*
 name|tekhex_make_empty_symbol
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 name|bfd_size_type
 name|amt
@@ -3735,10 +3256,6 @@ name|tekhex_symbol_type
 modifier|*
 name|new
 init|=
-operator|(
-name|tekhex_symbol_type
-operator|*
-operator|)
 name|bfd_zalloc
 argument_list|(
 name|abfd
@@ -3766,11 +3283,6 @@ name|new
 operator|->
 name|prev
 operator|=
-operator|(
-expr|struct
-name|tekhex_symbol_struct
-operator|*
-operator|)
 name|NULL
 expr_stmt|;
 return|return
@@ -3789,25 +3301,19 @@ specifier|static
 name|void
 name|tekhex_get_symbol_info
 parameter_list|(
-name|ignore_abfd
-parameter_list|,
-name|symbol
-parameter_list|,
-name|ret
-parameter_list|)
 name|bfd
 modifier|*
-name|ignore_abfd
+name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|asymbol
 modifier|*
 name|symbol
-decl_stmt|;
+parameter_list|,
 name|symbol_info
 modifier|*
 name|ret
-decl_stmt|;
+parameter_list|)
 block|{
 name|bfd_symbol_info
 argument_list|(
@@ -3824,28 +3330,21 @@ specifier|static
 name|void
 name|tekhex_print_symbol
 parameter_list|(
-name|abfd
-parameter_list|,
-name|filep
-parameter_list|,
-name|symbol
-parameter_list|,
-name|how
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
-name|PTR
+parameter_list|,
+name|void
+modifier|*
 name|filep
-decl_stmt|;
+parameter_list|,
 name|asymbol
 modifier|*
 name|symbol
-decl_stmt|;
+parameter_list|,
 name|bfd_print_symbol_type
 name|how
-decl_stmt|;
+parameter_list|)
 block|{
 name|FILE
 modifier|*
@@ -3901,7 +3400,8 @@ argument_list|(
 name|abfd
 argument_list|,
 operator|(
-name|PTR
+name|void
+operator|*
 operator|)
 name|file
 argument_list|,
@@ -3950,6 +3450,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|tekhex_bfd_is_target_special_symbol
+value|((bfd_boolean (*) (bfd *, asymbol *)) bfd_false)
+end_define
+
+begin_define
+define|#
+directive|define
 name|tekhex_bfd_is_local_label_name
 value|bfd_generic_is_local_label_name
 end_define
@@ -3966,6 +3473,13 @@ define|#
 directive|define
 name|tekhex_find_nearest_line
 value|_bfd_nosymbols_find_nearest_line
+end_define
+
+begin_define
+define|#
+directive|define
+name|tekhex_find_inliner_info
+value|_bfd_nosymbols_find_inliner_info
 end_define
 
 begin_define
@@ -3993,7 +3507,6 @@ begin_define
 define|#
 directive|define
 name|tekhex_bfd_get_relocated_section_contents
-define|\
 value|bfd_generic_get_relocated_section_contents
 end_define
 
@@ -4021,8 +3534,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|tekhex_bfd_is_group_section
+value|bfd_generic_is_group_section
+end_define
+
+begin_define
+define|#
+directive|define
 name|tekhex_bfd_discard_group
 value|bfd_generic_discard_group
+end_define
+
+begin_define
+define|#
+directive|define
+name|tekhex_section_already_linked
+value|_bfd_generic_section_already_linked
 end_define
 
 begin_define
@@ -4071,7 +3598,6 @@ begin_define
 define|#
 directive|define
 name|tekhex_get_section_contents_in_window
-define|\
 value|_bfd_generic_get_section_contents_in_window
 end_define
 
@@ -4083,19 +3609,19 @@ init|=
 block|{
 literal|"tekhex"
 block|,
-comment|/* name */
+comment|/* Name.  */
 name|bfd_target_tekhex_flavour
 block|,
 name|BFD_ENDIAN_UNKNOWN
 block|,
-comment|/* target byte order */
+comment|/* Target byte order.  */
 name|BFD_ENDIAN_UNKNOWN
 block|,
-comment|/* target headers byte order */
+comment|/* Target headers byte order.  */
 operator|(
 name|EXEC_P
 operator||
-comment|/* object flags */
+comment|/* Object flags.  */
 name|HAS_SYMS
 operator||
 name|HAS_LINENO
@@ -4127,16 +3653,16 @@ operator||
 name|SEC_RELOC
 operator|)
 block|,
-comment|/* section flags */
+comment|/* Section flags.  */
 literal|0
 block|,
-comment|/* leading underscore */
+comment|/* Leading underscore.  */
 literal|' '
 block|,
-comment|/* ar_pad_char */
+comment|/* AR_pad_char.  */
 literal|16
 block|,
-comment|/* ar_max_namelen */
+comment|/* AR_max_namelen.  */
 name|bfd_getb64
 block|,
 name|bfd_getb_signed_64
@@ -4155,7 +3681,7 @@ name|bfd_getb_signed_16
 block|,
 name|bfd_putb16
 block|,
-comment|/* data */
+comment|/* Data.  */
 name|bfd_getb64
 block|,
 name|bfd_getb_signed_64
@@ -4174,13 +3700,13 @@ name|bfd_getb_signed_16
 block|,
 name|bfd_putb16
 block|,
-comment|/* hdrs */
+comment|/* Headers.  */
 block|{
 name|_bfd_dummy_target
 block|,
 name|tekhex_object_p
 block|,
-comment|/* bfd_check_format */
+comment|/* bfd_check_format.  */
 name|_bfd_dummy_target
 block|,
 name|_bfd_dummy_target
@@ -4197,7 +3723,7 @@ name|bfd_false
 block|,   }
 block|,
 block|{
-comment|/* bfd_write_contents */
+comment|/* bfd_write_contents.  */
 name|bfd_false
 block|,
 name|tekhex_write_object_contents
@@ -4254,10 +3780,7 @@ argument_list|)
 block|,
 name|NULL
 block|,
-operator|(
-name|PTR
-operator|)
-literal|0
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt

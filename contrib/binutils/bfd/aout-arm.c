@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for raw ARM a.out binaries.    Copyright 1994, 1995, 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.    Contributed by Richard Earnshaw (rwe@pegasus.esprit.ec.org)  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for raw ARM a.out binaries.    Copyright 1994, 1995, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2005,    2007 Free Software Foundation, Inc.    Contributed by Richard Earnshaw (rwe@pegasus.esprit.ec.org)     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"bfd.h"
+file|"sysdep.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sysdep.h"
+file|"bfd.h"
 end_include
 
 begin_comment
@@ -111,6 +111,13 @@ name|MY_bfd_reloc_type_lookup
 value|aoutarm_bfd_reloc_type_lookup
 end_define
 
+begin_define
+define|#
+directive|define
+name|MY_bfd_reloc_name_lookup
+value|aoutarm_bfd_reloc_name_lookup
+end_define
+
 begin_include
 include|#
 directive|include
@@ -123,222 +130,74 @@ directive|include
 file|"aout/aout64.h"
 end_include
 
-begin_function_decl
-specifier|static
-name|bfd_boolean
-name|MY
-parameter_list|(
-name|write_object_contents
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
-specifier|static
-name|bfd_reloc_status_type
-name|MY
-parameter_list|(
-name|fix_pcrel_26_done
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-operator|,
-function_decl|arelent *
-operator|,
-function_decl|asymbol *
-operator|,
-function_decl|PTR
-operator|,
-function_decl|asection *
-operator|,
-function_decl|bfd *
-operator|,
-function_decl|char **
-end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
-specifier|static
-name|bfd_reloc_status_type
-name|MY
-parameter_list|(
-name|fix_pcrel_26
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-operator|,
-function_decl|arelent *
-operator|,
-function_decl|asymbol *
-operator|,
-function_decl|PTR
-operator|,
-function_decl|asection *
-operator|,
-function_decl|bfd *
-operator|,
-function_decl|char **
-end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
-specifier|static
-name|void
-name|MY
-parameter_list|(
-name|swap_std_reloc_in
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-operator|,
-function_decl|struct reloc_std_external *
-operator|,
-function_decl|arelent *
-operator|,
-function_decl|asymbol **
-operator|,
-function_decl|bfd_size_type
-end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
-name|reloc_howto_type
-modifier|*
-name|MY
-parameter_list|(
-name|bfd_reloc_type_lookup
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-operator|,
-function_decl|bfd_reloc_code_real_type
-end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
-name|reloc_howto_type
-modifier|*
-name|MY
-parameter_list|(
-name|reloc_howto
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-operator|,
-function_decl|struct reloc_std_external *
-operator|,
-function_decl|int *
-operator|,
-function_decl|int *
-operator|,
-function_decl|int *
-end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
-name|void
-name|MY
-parameter_list|(
-name|put_reloc
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-operator|,
-function_decl|int
-operator|,
-function_decl|int
-operator|,
-function_decl|bfd_vma
-operator|,
-function_decl|reloc_howto_type *
-operator|,
-function_decl|struct reloc_std_external *
-end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
-name|void
-name|MY
-parameter_list|(
-name|relocatable_reloc
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(reloc_howto_type *
-operator|,
-function_decl|bfd *
-operator|,
-function_decl|struct reloc_std_external *
-operator|,
-function_decl|bfd_vma *
-operator|,
-function_decl|bfd_vma
-end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
-name|void
-name|MY
-parameter_list|(
-name|swap_std_reloc_out
-parameter_list|)
-function_decl|PARAMS
-parameter_list|(
-function_decl|(bfd *
-operator|,
-function_decl|arelent *
-operator|,
-function_decl|struct reloc_std_external *
-end_function_decl
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
 begin_escape
 end_escape
+
+begin_function_decl
+specifier|static
+name|bfd_reloc_status_type
+name|MY
+function_decl|(
+name|fix_pcrel_26
+function_decl|)
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|,
+name|arelent
+modifier|*
+parameter_list|,
+name|asymbol
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|asection
+modifier|*
+parameter_list|,
+name|bfd
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|bfd_reloc_status_type
+name|MY
+function_decl|(
+name|fix_pcrel_26_done
+function_decl|)
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|,
+name|arelent
+modifier|*
+parameter_list|,
+name|asymbol
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|asection
+modifier|*
+parameter_list|,
+name|bfd
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|reloc_howto_type
@@ -349,7 +208,7 @@ argument_list|)
 decl|[]
 init|=
 block|{
-comment|/* Type rs size bsz pcrel bitpos ovrf sf name part_inpl        readmask setmask pcdone.  */
+comment|/* Type rs size bsz pcrel bitpos ovrf sf name part_inpl      readmask setmask pcdone.  */
 name|HOWTO
 argument_list|(
 literal|0
@@ -672,6 +531,7 @@ value|((unsigned int) 0x10)
 end_define
 
 begin_function
+specifier|static
 name|reloc_howto_type
 modifier|*
 name|MY
@@ -679,37 +539,27 @@ function|(
 name|reloc_howto
 function|)
 parameter_list|(
-name|abfd
-parameter_list|,
-name|rel
-parameter_list|,
-name|r_index
-parameter_list|,
-name|r_extern
-parameter_list|,
-name|r_pcrel
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|struct
 name|reloc_std_external
 modifier|*
 name|rel
-decl_stmt|;
+parameter_list|,
 name|int
 modifier|*
 name|r_index
-decl_stmt|;
+parameter_list|,
 name|int
 modifier|*
 name|r_extern
-decl_stmt|;
+parameter_list|,
 name|int
 modifier|*
 name|r_pcrel
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|int
@@ -999,50 +849,39 @@ parameter_list|,
 name|PC
 parameter_list|)
 define|\
-value|MY(reloc_howto) (BFD, REL,&IN,&EX,&PC)
+value|MY (reloc_howto) (BFD, REL,&IN,&EX,&PC)
 end_define
 
 begin_function
+specifier|static
 name|void
 name|MY
 function|(
 name|put_reloc
 function|)
 parameter_list|(
-name|abfd
-parameter_list|,
-name|r_extern
-parameter_list|,
-name|r_index
-parameter_list|,
-name|value
-parameter_list|,
-name|howto
-parameter_list|,
-name|reloc
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|int
 name|r_extern
-decl_stmt|;
+parameter_list|,
 name|int
 name|r_index
-decl_stmt|;
+parameter_list|,
 name|bfd_vma
 name|value
-decl_stmt|;
+parameter_list|,
 name|reloc_howto_type
 modifier|*
 name|howto
-decl_stmt|;
+parameter_list|,
 name|struct
 name|reloc_std_external
 modifier|*
 name|reloc
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|int
@@ -1282,46 +1121,37 @@ parameter_list|,
 name|RELOC
 parameter_list|)
 define|\
-value|MY(put_reloc) (BFD, EXT, IDX, VAL, HOWTO, RELOC)
+value|MY (put_reloc) (BFD, EXT, IDX, VAL, HOWTO, RELOC)
 end_define
 
 begin_function
+specifier|static
 name|void
 name|MY
 function|(
 name|relocatable_reloc
 function|)
 parameter_list|(
-name|howto
-parameter_list|,
-name|abfd
-parameter_list|,
-name|reloc
-parameter_list|,
-name|amount
-parameter_list|,
-name|r_addr
-parameter_list|)
 name|reloc_howto_type
 modifier|*
 name|howto
-decl_stmt|;
+parameter_list|,
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|struct
 name|reloc_std_external
 modifier|*
 name|reloc
-decl_stmt|;
+parameter_list|,
 name|bfd_vma
 modifier|*
 name|amount
-decl_stmt|;
+parameter_list|,
 name|bfd_vma
 name|r_addr
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -1352,14 +1182,12 @@ else|:
 name|RELOC_STD_BITS_EXTERN_LITTLE
 operator|)
 condition|)
-block|{
 comment|/* The reloc is still external, so don't modify anything.  */
 operator|*
 name|amount
 operator|=
 literal|0
 expr_stmt|;
-block|}
 else|else
 block|{
 operator|*
@@ -1429,7 +1257,7 @@ parameter_list|,
 name|ADDR
 parameter_list|)
 define|\
-value|MY(relocatable_reloc) (HOW, BFD, REL,&(AMOUNT), ADDR)
+value|MY (relocatable_reloc) (HOW, BFD, REL,&(AMOUNT), ADDR)
 end_define
 
 begin_function
@@ -1440,55 +1268,42 @@ function|(
 name|fix_pcrel_26_done
 function|)
 parameter_list|(
-name|abfd
-parameter_list|,
-name|reloc_entry
-parameter_list|,
-name|symbol
-parameter_list|,
-name|data
-parameter_list|,
-name|input_section
-parameter_list|,
-name|output_bfd
-parameter_list|,
-name|error_message
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|arelent
 modifier|*
 name|reloc_entry
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|asymbol
 modifier|*
 name|symbol
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
-name|PTR
+parameter_list|,
+name|void
+modifier|*
 name|data
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|input_section
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|bfd
 modifier|*
 name|output_bfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|error_message
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* This is dead simple at present.  */
 return|return
@@ -1505,49 +1320,36 @@ function|(
 name|fix_pcrel_26
 function|)
 parameter_list|(
-name|abfd
-parameter_list|,
-name|reloc_entry
-parameter_list|,
-name|symbol
-parameter_list|,
-name|data
-parameter_list|,
-name|input_section
-parameter_list|,
-name|output_bfd
-parameter_list|,
-name|error_message
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|arelent
 modifier|*
 name|reloc_entry
-decl_stmt|;
+parameter_list|,
 name|asymbol
 modifier|*
 name|symbol
-decl_stmt|;
-name|PTR
+parameter_list|,
+name|void
+modifier|*
 name|data
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|input_section
-decl_stmt|;
+parameter_list|,
 name|bfd
 modifier|*
 name|output_bfd
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|error_message
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 name|bfd_vma
 name|relocation
@@ -1622,10 +1424,6 @@ name|name
 operator|&&
 name|output_bfd
 operator|!=
-operator|(
-name|bfd
-operator|*
-operator|)
 name|NULL
 condition|)
 return|return
@@ -1809,6 +1607,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|reloc_howto_type
 modifier|*
 name|MY
@@ -1816,17 +1615,13 @@ function|(
 name|bfd_reloc_type_lookup
 function|)
 parameter_list|(
-name|abfd
-parameter_list|,
-name|code
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|bfd_reloc_code_real_type
 name|code
-decl_stmt|;
+parameter_list|)
 block|{
 define|#
 directive|define
@@ -1836,7 +1631,7 @@ name|i
 parameter_list|,
 name|j
 parameter_list|)
-value|case i: return&MY(howto_table)[j]
+value|case i: return& MY (howto_table)[j]
 if|if
 condition|(
 name|code
@@ -1863,13 +1658,7 @@ expr_stmt|;
 break|break;
 default|default:
 return|return
-operator|(
-specifier|const
-expr|struct
-name|reloc_howto_struct
-operator|*
-operator|)
-literal|0
+name|NULL
 return|;
 block|}
 switch|switch
@@ -1921,15 +1710,110 @@ argument_list|)
 expr_stmt|;
 default|default:
 return|return
-operator|(
-specifier|const
-expr|struct
-name|reloc_howto_struct
-operator|*
-operator|)
-literal|0
+name|NULL
 return|;
 block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|reloc_howto_type
+modifier|*
+name|MY
+function|(
+name|bfd_reloc_name_lookup
+function|)
+parameter_list|(
+name|bfd
+modifier|*
+name|abfd
+name|ATTRIBUTE_UNUSED
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|r_name
+parameter_list|)
+block|{
+name|unsigned
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+sizeof|sizeof
+argument_list|(
+name|MY
+argument_list|(
+name|howto_table
+argument_list|)
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|MY
+argument_list|(
+name|howto_table
+argument_list|)
+index|[
+literal|0
+index|]
+argument_list|)
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|MY
+argument_list|(
+name|howto_table
+argument_list|)
+index|[
+name|i
+index|]
+operator|.
+name|name
+operator|!=
+name|NULL
+operator|&&
+name|strcasecmp
+argument_list|(
+name|MY
+argument_list|(
+name|howto_table
+argument_list|)
+index|[
+name|i
+index|]
+operator|.
+name|name
+argument_list|,
+name|r_name
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|&
+name|MY
+argument_list|(
+name|howto_table
+argument_list|)
+index|[
+name|i
+index|]
+return|;
+return|return
+name|NULL
+return|;
 block|}
 end_function
 
@@ -1937,14 +1821,14 @@ begin_define
 define|#
 directive|define
 name|MY_swap_std_reloc_in
-value|MY(swap_std_reloc_in)
+value|MY (swap_std_reloc_in)
 end_define
 
 begin_define
 define|#
 directive|define
 name|MY_swap_std_reloc_out
-value|MY(swap_std_reloc_out)
+value|MY (swap_std_reloc_out)
 end_define
 
 begin_define
@@ -1954,17 +1838,45 @@ name|MY_get_section_contents
 value|_bfd_generic_get_section_contents
 end_define
 
-begin_comment
-comment|/* #define MY_bfd_link_hash_table_create _bfd_generic_link_hash_table_create */
-end_comment
+begin_function_decl
+name|void
+name|MY_swap_std_reloc_in
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|,
+name|struct
+name|reloc_std_external
+modifier|*
+parameter_list|,
+name|arelent
+modifier|*
+parameter_list|,
+name|asymbol
+modifier|*
+modifier|*
+parameter_list|,
+name|bfd_size_type
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_comment
-comment|/* #define MY_bfd_link_add_symbols _bfd_generic_link_add_symbols */
-end_comment
-
-begin_comment
-comment|/* #define MY_bfd_final_link _bfd_generic_final_link */
-end_comment
+begin_function_decl
+name|void
+name|MY_swap_std_reloc_out
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|,
+name|arelent
+modifier|*
+parameter_list|,
+name|struct
+name|reloc_std_external
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_include
 include|#
@@ -1973,42 +1885,31 @@ file|"aoutx.h"
 end_include
 
 begin_function
-specifier|static
 name|void
 name|MY_swap_std_reloc_in
 parameter_list|(
-name|abfd
-parameter_list|,
-name|bytes
-parameter_list|,
-name|cache_ptr
-parameter_list|,
-name|symbols
-parameter_list|,
-name|symcount
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|struct
 name|reloc_std_external
 modifier|*
 name|bytes
-decl_stmt|;
+parameter_list|,
 name|arelent
 modifier|*
 name|cache_ptr
-decl_stmt|;
+parameter_list|,
 name|asymbol
 modifier|*
 modifier|*
 name|symbols
-decl_stmt|;
+parameter_list|,
 name|bfd_size_type
 name|symcount
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|r_index
@@ -2077,25 +1978,19 @@ begin_function
 name|void
 name|MY_swap_std_reloc_out
 parameter_list|(
-name|abfd
-parameter_list|,
-name|g
-parameter_list|,
-name|natptr
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|arelent
 modifier|*
 name|g
-decl_stmt|;
+parameter_list|,
 name|struct
 name|reloc_std_external
 modifier|*
 name|natptr
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|r_index
@@ -2157,7 +2052,7 @@ name|howto
 operator|->
 name|size
 expr_stmt|;
-comment|/* Size as a power of two */
+comment|/* Size as a power of two.  */
 if|if
 condition|(
 name|r_length
@@ -2186,8 +2081,8 @@ name|howto
 operator|->
 name|pc_relative
 expr_stmt|;
-comment|/* Relative to PC? */
-comment|/* For RISC iX, in pc-relative relocs the r_pcrel bit means that the      relocation has been done already (Only for the 26-bit one I think)???!!!      */
+comment|/* Relative to PC?  */
+comment|/* For RISC iX, in pc-relative relocs the r_pcrel bit means that the      relocation has been done already (Only for the 26-bit one I think).  */
 if|if
 condition|(
 name|g
@@ -2229,15 +2124,8 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-comment|/* For a standard reloc, the addend is in the object file.  */
-block|r_addend = g->addend + (*(g->sym_ptr_ptr))->section->output_section->vma;
-endif|#
-directive|endif
-comment|/* name was clobbered by aout_write_syms to be symbol index */
-comment|/* If this relocation is relative to a symbol then set the      r_index to the symbols index, and the r_extern bit.       Absolute symbols can come in in two ways, either as an offset      from the abs section, or as a symbol which has an abs value.      check for that here      */
+comment|/* Name was clobbered by aout_write_syms to be symbol index.  */
+comment|/* If this relocation is relative to a symbol then set the      r_index to the symbols index, and the r_extern bit.       Absolute symbols can come in in two ways, either as an offset      from the abs section, or as a symbol which has an abs value.      check for that here.  */
 if|if
 condition|(
 name|bfd_is_com_section
@@ -2495,21 +2383,21 @@ init|=
 block|{
 literal|"a.out-arm-little"
 block|,
-comment|/* name */
+comment|/* Name.  */
 name|bfd_target_aout_flavour
 block|,
 name|BFD_ENDIAN_LITTLE
 block|,
-comment|/* target byte order (little) */
+comment|/* Target byte order (little).  */
 name|BFD_ENDIAN_LITTLE
 block|,
-comment|/* target headers byte order (little) */
+comment|/* Target headers byte order (little).  */
 operator|(
 name|HAS_RELOC
 operator||
 name|EXEC_P
 operator||
-comment|/* object flags */
+comment|/* Object flags.  */
 name|HAS_LINENO
 operator||
 name|HAS_DEBUG
@@ -2543,10 +2431,10 @@ name|MY_symbol_leading_char
 block|,
 name|AR_PAD_CHAR
 block|,
-comment|/* ar_pad_char */
+comment|/* AR_pad_char.  */
 literal|15
 block|,
-comment|/* ar_max_namelen */
+comment|/* AR_max_namelen.  */
 name|bfd_getl64
 block|,
 name|bfd_getl_signed_64
@@ -2565,7 +2453,7 @@ name|bfd_getl_signed_16
 block|,
 name|bfd_putl16
 block|,
-comment|/* data */
+comment|/* Data.  */
 name|bfd_getl64
 block|,
 name|bfd_getl_signed_64
@@ -2584,13 +2472,13 @@ name|bfd_getl_signed_16
 block|,
 name|bfd_putl16
 block|,
-comment|/* hdrs */
+comment|/* Headers.  */
 block|{
 name|_bfd_dummy_target
 block|,
 name|MY_object_p
 block|,
-comment|/* bfd_check_format */
+comment|/* bfd_check_format.  */
 name|bfd_generic_archive_p
 block|,
 name|MY_core_file_p
@@ -2601,7 +2489,7 @@ name|bfd_false
 block|,
 name|MY_mkobject
 block|,
-comment|/* bfd_set_format */
+comment|/* bfd_set_format.  */
 name|_bfd_generic_mkarchive
 block|,
 name|bfd_false
@@ -2612,7 +2500,7 @@ name|bfd_false
 block|,
 name|MY_write_object_contents
 block|,
-comment|/* bfd_write_contents */
+comment|/* bfd_write_contents.  */
 name|_bfd_write_archive_contents
 block|,
 name|bfd_false
@@ -2667,10 +2555,11 @@ operator|&
 name|aout_arm_big_vec
 block|,
 operator|(
-name|PTR
+name|void
+operator|*
 operator|)
 name|MY_backend_data
-block|,   }
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -2682,21 +2571,21 @@ init|=
 block|{
 literal|"a.out-arm-big"
 block|,
-comment|/* name */
+comment|/* Name.  */
 name|bfd_target_aout_flavour
 block|,
 name|BFD_ENDIAN_BIG
 block|,
-comment|/* target byte order (big) */
+comment|/* Target byte order (big).  */
 name|BFD_ENDIAN_BIG
 block|,
-comment|/* target headers byte order (big) */
+comment|/* Target headers byte order (big).  */
 operator|(
 name|HAS_RELOC
 operator||
 name|EXEC_P
 operator||
-comment|/* object flags */
+comment|/* Object flags.  */
 name|HAS_LINENO
 operator||
 name|HAS_DEBUG
@@ -2730,10 +2619,10 @@ name|MY_symbol_leading_char
 block|,
 name|AR_PAD_CHAR
 block|,
-comment|/* ar_pad_char */
+comment|/* AR_pad_char.  */
 literal|15
 block|,
-comment|/* ar_max_namelen */
+comment|/* AR_max_namelen.  */
 name|bfd_getb64
 block|,
 name|bfd_getb_signed_64
@@ -2752,7 +2641,7 @@ name|bfd_getb_signed_16
 block|,
 name|bfd_putb16
 block|,
-comment|/* data */
+comment|/* Data.  */
 name|bfd_getb64
 block|,
 name|bfd_getb_signed_64
@@ -2771,13 +2660,13 @@ name|bfd_getb_signed_16
 block|,
 name|bfd_putb16
 block|,
-comment|/* hdrs */
+comment|/* Headers.  */
 block|{
 name|_bfd_dummy_target
 block|,
 name|MY_object_p
 block|,
-comment|/* bfd_check_format */
+comment|/* bfd_check_format.  */
 name|bfd_generic_archive_p
 block|,
 name|MY_core_file_p
@@ -2788,7 +2677,7 @@ name|bfd_false
 block|,
 name|MY_mkobject
 block|,
-comment|/* bfd_set_format */
+comment|/* bfd_set_format.  */
 name|_bfd_generic_mkarchive
 block|,
 name|bfd_false
@@ -2799,7 +2688,7 @@ name|bfd_false
 block|,
 name|MY_write_object_contents
 block|,
-comment|/* bfd_write_contents */
+comment|/* bfd_write_contents.  */
 name|_bfd_write_archive_contents
 block|,
 name|bfd_false
@@ -2854,10 +2743,11 @@ operator|&
 name|aout_arm_little_vec
 block|,
 operator|(
-name|PTR
+name|void
+operator|*
 operator|)
 name|MY_backend_data
-block|,   }
+block|, }
 decl_stmt|;
 end_decl_stmt
 

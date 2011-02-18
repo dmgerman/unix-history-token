@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Header file for targets using CGEN: Cpu tools GENerator.  Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.  This file is part of GDB, the GNU debugger, and the GNU Binutils.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Header file for targets using CGEN: Cpu tools GENerator.  Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2005 Free Software Foundation, Inc.  This file is part of GDB, the GNU debugger, and the GNU Binutils.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -14,6 +14,18 @@ define|#
 directive|define
 name|CGEN_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"symcat.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"cgen-bitset.h"
+end_include
 
 begin_comment
 comment|/* ??? This file requires bfd.h but only to get bfd_vma.    Seems like an awful lot to require just to get such a fundamental type.    Perhaps the definition of bfd_vma can be moved outside of bfd.h.    Or perhaps one could duplicate its definition in another file.    Until such time, this file conditionally compiles definitions that require    bfd_vma using __BFD_H_SEEN__.  */
@@ -200,7 +212,29 @@ end_comment
 
 begin_typedef
 typedef|typedef
+name|CGEN_BITSET
+name|CGEN_ATTR_VALUE_BITSET_TYPE
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|int
+name|CGEN_ATTR_VALUE_ENUM_TYPE
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+union|union
+block|{
+name|CGEN_ATTR_VALUE_BITSET_TYPE
+name|bitset
+decl_stmt|;
+name|CGEN_ATTR_VALUE_ENUM_TYPE
+name|nonbitset
+decl_stmt|;
+block|}
 name|CGEN_ATTR_VALUE_TYPE
 typedef|;
 end_typedef
@@ -316,7 +350,22 @@ parameter_list|,
 name|attr
 parameter_list|)
 define|\
-value|((unsigned int) (attr)< CGEN_ATTR_NBOOL_OFFSET \  ? ((CGEN_ATTR_BOOLS (attr_table)& CGEN_ATTR_MASK (attr)) != 0) \  : ((attr_table)->nonbool[(attr) - CGEN_ATTR_NBOOL_OFFSET]))
+value|((unsigned int) (attr)< CGEN_ATTR_NBOOL_OFFSET \  ? ((CGEN_ATTR_BOOLS (attr_table)& CGEN_ATTR_MASK (attr)) != 0) \  : ((attr_table)->nonbool[(attr) - CGEN_ATTR_NBOOL_OFFSET].nonbitset))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CGEN_BITSET_ATTR_VALUE
+parameter_list|(
+name|obj
+parameter_list|,
+name|attr_table
+parameter_list|,
+name|attr
+parameter_list|)
+define|\
+value|((attr_table)->nonbool[(attr) - CGEN_ATTR_NBOOL_OFFSET].bitset)
 end_define
 
 begin_comment
@@ -332,7 +381,7 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-name|CGEN_ATTR_VALUE_TYPE
+name|unsigned
 name|value
 decl_stmt|;
 block|}
@@ -775,6 +824,8 @@ block|,
 name|CGEN_PARSE_OPERAND_INTEGER
 block|,
 name|CGEN_PARSE_OPERAND_ADDRESS
+block|,
+name|CGEN_PARSE_OPERAND_SYMBOLIC
 block|}
 enum|;
 end_enum
@@ -2459,6 +2510,16 @@ name|CGEN_INSN_ATTR
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|CGEN_ATTR_CGEN_INSN_ALIAS_VALUE
+parameter_list|(
+name|attrs
+parameter_list|)
+value|((attrs)->bool& (1<< CGEN_INSN_ALIAS))
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -2561,6 +2622,16 @@ name|attr
 parameter_list|)
 define|\
 value|CGEN_ATTR_VALUE ((insn), CGEN_INSN_ATTRS (insn), (attr))
+define|#
+directive|define
+name|CGEN_INSN_BITSET_ATTR_VALUE
+parameter_list|(
+name|insn
+parameter_list|,
+name|attr
+parameter_list|)
+define|\
+value|CGEN_BITSET_ATTR_VALUE ((insn), CGEN_INSN_ATTRS (insn), (attr))
 block|}
 name|CGEN_IBASE
 typedef|;
@@ -3048,10 +3119,18 @@ comment|/* Bitmap of selected machine(s) (a la BFD machine number).  */
 name|int
 name|machs
 decl_stmt|;
-comment|/* Bitmap of selected isa(s).      ??? Simultaneous multiple isas might not make sense, but it's not (yet)      precluded.  */
-name|int
+comment|/* Bitmap of selected isa(s).  */
+name|CGEN_BITSET
+modifier|*
 name|isas
 decl_stmt|;
+define|#
+directive|define
+name|CGEN_CPU_ISAS
+parameter_list|(
+name|cd
+parameter_list|)
+value|((cd)->isas)
 comment|/* Current endian.  */
 name|enum
 name|cgen_endian

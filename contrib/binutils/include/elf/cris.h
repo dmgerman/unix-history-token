@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* CRIS ELF support for BFD.    Copyright 2000, 2001 Free Software Foundation, Inc.    Contributed by Axis Communications AB, Lund, Sweden.    Written by Hans-Peter Nilsson.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* CRIS ELF support for BFD.    Copyright 2000, 2001, 2004 Free Software Foundation, Inc.    Contributed by Axis Communications AB, Lund, Sweden.    Written by Hans-Peter Nilsson.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -280,6 +280,50 @@ define|#
 directive|define
 name|EF_CRIS_UNDERSCORE
 value|0x00000001
+end_define
+
+begin_comment
+comment|/* This is a mask for different incompatible machine variants.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EF_CRIS_VARIANT_MASK
+value|0x0000000e
+end_define
+
+begin_comment
+comment|/* Variant 0; may contain v0..10 object.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EF_CRIS_VARIANT_ANY_V0_V10
+value|0x00000000
+end_define
+
+begin_comment
+comment|/* Variant 1; contains v32 object.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EF_CRIS_VARIANT_V32
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* Variant 2; contains object compatible with v32 and v10.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EF_CRIS_VARIANT_COMMON_V10_V32
+value|0x00000004
 end_define
 
 begin_endif

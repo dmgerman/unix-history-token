@@ -1,11 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Sysroff object format dumper.    Copyright 1994, 1995, 1998, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* Sysroff object format dumper.    Copyright 1994, 1995, 1998, 1999, 2000, 2001, 2002, 2003, 2005, 2007    Free Software Foundation, Inc.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_comment
 comment|/* Written by Steve Chamberlain<sac@cygnus.com>.   This program reads a SYSROFF object file and prints it in an  almost human readable form to stdout.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"sysdep.h"
+end_include
 
 begin_include
 include|#
@@ -16,19 +22,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"bucomm.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"safe-ctype.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
 end_include
 
 begin_include
@@ -41,6 +35,12 @@ begin_include
 include|#
 directive|include
 file|"getopt.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"bucomm.h"
 end_include
 
 begin_include
@@ -235,113 +235,6 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|char
-modifier|*
-name|getCHARS
-parameter_list|(
-name|unsigned
-name|char
-modifier|*
-parameter_list|,
-name|int
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|fillup
-parameter_list|(
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|barray
-name|getBARRAY
-parameter_list|(
-name|unsigned
-name|char
-modifier|*
-parameter_list|,
-name|int
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|getINT
-parameter_list|(
-name|unsigned
-name|char
-modifier|*
-parameter_list|,
-name|int
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|getBITS
-parameter_list|(
-name|char
-modifier|*
-parameter_list|,
-name|int
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|sysroff_swap_tr_in
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|sysroff_print_tr_out
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|int
 name|main
 parameter_list|(
@@ -355,6 +248,7 @@ function_decl|;
 end_function_decl
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|getCHARS
@@ -615,9 +509,11 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|fillup
 parameter_list|(
+name|unsigned
 name|char
 modifier|*
 name|ptr
@@ -717,6 +613,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|barray
 name|getBARRAY
 parameter_list|(
@@ -814,6 +711,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|getINT
 parameter_list|(
@@ -992,9 +890,11 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|getBITS
 parameter_list|(
+name|unsigned
 name|char
 modifier|*
 name|ptr
@@ -1258,12 +1158,14 @@ value|0x7f
 end_define
 
 begin_function
+specifier|static
 name|void
 name|sysroff_swap_tr_in
 parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|unsigned
 name|char
 name|raw
 index|[
@@ -1288,6 +1190,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sysroff_print_tr_out
 parameter_list|(
@@ -1957,38 +1860,6 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* This is no longer used.  */
-end_comment
-
-begin_endif
-unit|static void unit_info_list (void) {   while (opt (IT_un_CODE))     {       getone (IT_us_CODE);        while (getone (IT_sc_CODE)) 	getone (IT_ss_CODE);        while (getone (IT_er_CODE)) 	;        while (getone (IT_ed_CODE)) 	;     } }
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* This is no longer used.  */
-end_comment
-
-begin_endif
-unit|static void object_body_list (void) {   while (getone (IT_sh_CODE))     {       while (getone (IT_ob_CODE)) 	;       while (getone (IT_rl_CODE)) 	;     } }
-endif|#
-directive|endif
-end_endif
-
 begin_function
 specifier|static
 name|void
@@ -2280,38 +2151,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* This is no longer used.  */
-end_comment
-
-begin_endif
-unit|static void program_structure (void) {   tab (1, "PROGRAM STRUCTURE");   while (opt (IT_dps_CODE))     {       must (IT_dso_CODE);       opt (IT_dss_CODE);       dump_symbol_info ();       must (IT_dps_CODE);     }   tab (-1, ""); }
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* This is no longer used.  */
-end_comment
-
-begin_endif
-unit|static void debug_list (void) {   tab (1, "DEBUG LIST");    must (IT_du_CODE);   opt (IT_dus_CODE);   program_structure ();   must (IT_dln_CODE);    tab (-1, ""); }
-endif|#
-directive|endif
-end_endif
-
 begin_function
 specifier|static
 name|void
@@ -2370,12 +2209,6 @@ operator|!=
 name|IT_tr_CODE
 condition|)
 do|;
-if|#
-directive|if
-literal|0
-block|must (IT_cs_CODE);   must (IT_hd_CODE);   opt (IT_hs_CODE);    unit_info_list ();   object_body_list ();   debug_list ();    must (IT_tr_CODE);
-endif|#
-directive|endif
 name|tab
 argument_list|(
 operator|-
@@ -2490,6 +2323,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|REPORT_BUGS_TO
+index|[
+literal|0
+index|]
+operator|&&
 name|status
 operator|==
 literal|0
@@ -2631,6 +2469,15 @@ expr_stmt|;
 name|xmalloc_set_program_name
 argument_list|(
 name|program_name
+argument_list|)
+expr_stmt|;
+name|expandargv
+argument_list|(
+operator|&
+name|ac
+argument_list|,
+operator|&
+name|av
 argument_list|)
 expr_stmt|;
 while|while

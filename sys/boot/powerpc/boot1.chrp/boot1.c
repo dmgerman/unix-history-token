@@ -725,7 +725,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_asm
-asm|__asm("                         \n\         .data                   \n\ stack:                          \n\         .space  16384           \n\                                 \n\         .text                   \n\         .globl  _start          \n\ _start:                         \n\         lis     %r1,stack@ha    \n\         addi    %r1,%r1,stack@l \n\         addi    %r1,%r1,8192    \n\                                 \n\         b       ofw_init        \n\ ");
+asm|__asm("                         \n\         .data                   \n\ 	.align 4		\n\ stack:                          \n\         .space  16384           \n\                                 \n\         .text                   \n\         .globl  _start          \n\ _start:                         \n\         lis     %r1,stack@ha    \n\         addi    %r1,%r1,stack@l \n\         addi    %r1,%r1,8192    \n\                                 \n\         b       ofw_init        \n\ ");
 end_asm
 
 begin_function

@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* A.out "format 1" file handling code for BFD.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 2000,    2001, 2002, 2003    Free Software Foundation, Inc.    Written by Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* A.out "format 1" file handling code for BFD.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 2000,    2001, 2002, 2003, 2004, 2005, 2006, 2007    Free Software Foundation, Inc.    Written by Cygnus Support.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"bfd.h"
+file|"sysdep.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sysdep.h"
+file|"bfd.h"
 end_include
 
 begin_include
@@ -34,7 +34,7 @@ file|"libaout.h"
 end_include
 
 begin_comment
-comment|/* BFD a.out internal data structures */
+comment|/* BFD a.out internal data structures.  */
 end_comment
 
 begin_include
@@ -82,15 +82,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* The file @code{aoutf1.h} contains the code for BFD's a.out back end. Control over the generated back end is given by these two preprocessor names: @table @code @item ARCH_SIZE This value should be either 32 or 64, depending upon the size of an int in the target format. It changes the sizes of the structs which perform the memory/disk mapping of structures.  The 64 bit backend may only be used if the host compiler supports 64 ints (eg long long with gcc), by defining the name @code{BFD_HOST_64_BIT} in @code{bfd.h}. With this name defined, @emph{all} bfd operations are performed with 64bit arithmetic, not just those to a 64bit target.  @item TARGETNAME The name put into the target vector. @item @end table  */
-end_comment
-
-begin_comment
-comment|/*SUPPRESS558*/
-end_comment
-
-begin_comment
-comment|/*SUPPRESS529*/
+comment|/* The file @code{aoutf1.h} contains the code for BFD's    a.out back end.  Control over the generated back end is given by these    two preprocessor names:    @table @code    @item ARCH_SIZE    This value should be either 32 or 64, depending upon the size of an    int in the target format. It changes the sizes of the structs which    perform the memory/disk mapping of structures.     The 64 bit backend may only be used if the host compiler supports 64    ints (eg long long with gcc), by defining the name @code{BFD_HOST_64_BIT} in @code{bfd.h}.    With this name defined, @emph{all} bfd operations are performed with 64bit    arithmetic, not just those to a 64bit target.     @item TARGETNAME    The name put into the target vector.    @item    @end table.  */
 end_comment
 
 begin_if
@@ -139,144 +131,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|sunos_merge_private_bfd_data
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|bfd
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|sunos_set_arch_mach
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-expr|enum
-name|machine_type
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|choose_reloc_size
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|sunos_write_object_contents
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|bfd_target
-modifier|*
-name|sunos4_core_file_p
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|sunos4_core_file_failing_command
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|sunos4_core_file_failing_signal
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|sunos4_core_file_matches_executable_p
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|bfd
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|sunos4_set_sizes
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Merge backend data into the output file.    This is necessary on sparclet-aout where we want the resultant machine    number to be M_SPARCLET if any input file is M_SPARCLET.  */
 end_comment
@@ -293,20 +147,14 @@ specifier|static
 name|bfd_boolean
 name|sunos_merge_private_bfd_data
 parameter_list|(
-name|ibfd
-parameter_list|,
-name|obfd
-parameter_list|)
 name|bfd
 modifier|*
 name|ibfd
-decl_stmt|,
-decl|*
+parameter_list|,
+name|bfd
+modifier|*
 name|obfd
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -366,7 +214,7 @@ return|return
 name|TRUE
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* This is either sunos_32_set_arch_mach or sunos_64_set_arch_mach,    depending upon ARCH_SIZE.  */
@@ -377,18 +225,14 @@ specifier|static
 name|void
 name|sunos_set_arch_mach
 parameter_list|(
-name|abfd
-parameter_list|,
-name|machtype
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|enum
 name|machine_type
 name|machtype
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* Determine the architecture and machine type of the object file.  */
 name|enum
@@ -499,18 +343,6 @@ literal|0
 expr_stmt|;
 break|break;
 case|case
-name|M_29K
-case|:
-name|arch
-operator|=
-name|bfd_arch_a29k
-expr_stmt|;
-name|machine
-operator|=
-literal|0
-expr_stmt|;
-break|break;
-case|case
 name|M_HPUX
 case|:
 name|arch
@@ -559,7 +391,7 @@ value|NAME(sunos,set_arch_mach) (ABFD, N_MACHTYPE (EXEC)); \   choose_reloc_size
 end_define
 
 begin_comment
-comment|/* Determine the size of a relocation entry, based on the architecture */
+comment|/* Determine the size of a relocation entry, based on the architecture.  */
 end_comment
 
 begin_function
@@ -567,12 +399,10 @@ specifier|static
 name|void
 name|choose_reloc_size
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 switch|switch
 condition|(
@@ -584,9 +414,6 @@ condition|)
 block|{
 case|case
 name|bfd_arch_sparc
-case|:
-case|case
-name|bfd_arch_a29k
 case|:
 name|obj_reloc_entry_size
 argument_list|(
@@ -618,12 +445,10 @@ specifier|static
 name|bfd_boolean
 name|sunos_write_object_contents
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|external_exec
@@ -757,18 +582,6 @@ name|M_386
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-name|bfd_arch_a29k
-case|:
-name|N_SET_MACHTYPE
-argument_list|(
-operator|*
-name|execp
-argument_list|,
-name|M_29K
-argument_list|)
-expr_stmt|;
-break|break;
 default|default:
 name|N_SET_MACHTYPE
 argument_list|(
@@ -832,7 +645,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* core files */
+comment|/* Core files.  */
 end_comment
 
 begin_define
@@ -937,43 +750,41 @@ block|{
 name|int
 name|c_magic
 decl_stmt|;
-comment|/* Corefile magic number */
+comment|/* Corefile magic number.  */
 name|int
 name|c_len
 decl_stmt|;
-comment|/* Sizeof (struct core) */
+comment|/* Sizeof (struct core).  */
 define|#
 directive|define
 name|SPARC_CORE_LEN
 value|432
-name|int
+name|struct
+name|regs
 name|c_regs
-index|[
-literal|19
-index|]
 decl_stmt|;
-comment|/* General purpose registers -- MACHDEP SIZE */
+comment|/* General purpose registers -- MACHDEP SIZE.  */
 name|struct
 name|external_exec
 name|c_aouthdr
 decl_stmt|;
-comment|/* A.out header */
+comment|/* A.out header.  */
 name|int
 name|c_signo
 decl_stmt|;
-comment|/* Killing signal, if any */
+comment|/* Killing signal, if any.  */
 name|int
 name|c_tsize
 decl_stmt|;
-comment|/* Text size (bytes) */
+comment|/* Text size (bytes).  */
 name|int
 name|c_dsize
 decl_stmt|;
-comment|/* Data size (bytes) */
+comment|/* Data size (bytes).  */
 name|int
 name|c_ssize
 decl_stmt|;
-comment|/* Stack size (bytes) */
+comment|/* Stack size (bytes).  */
 name|char
 name|c_cmdname
 index|[
@@ -982,20 +793,20 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-comment|/* Command name */
+comment|/* Command name.  */
 name|double
 name|fp_stuff
 index|[
 literal|1
 index|]
 decl_stmt|;
-comment|/* external FPU state (size unknown by us) */
-comment|/* The type "double" is critical here, for alignment.     SunOS declares a struct here, but the struct's alignment       is double since it contains doubles.  */
+comment|/* External FPU state (size unknown by us).  */
+comment|/* The type "double" is critical here, for alignment.      SunOS declares a struct here, but the struct's      alignment is double since it contains doubles.  */
 name|int
 name|c_ucode
 decl_stmt|;
-comment|/* Exception no. from u_code */
-comment|/* (this member is not accessible by name since we don't     portably know the size of fp_stuff.) */
+comment|/* Exception no. from u_code.  */
+comment|/* This member is not accessible by name since      we don't portably know the size of fp_stuff.  */
 block|}
 struct|;
 end_struct
@@ -1011,26 +822,24 @@ block|{
 name|int
 name|c_magic
 decl_stmt|;
-comment|/* Corefile magic number */
+comment|/* Corefile magic number.  */
 name|int
 name|c_len
 decl_stmt|;
-comment|/* Sizeof (struct core) */
+comment|/* Sizeof (struct core).  */
 define|#
 directive|define
 name|SOLARIS_BCP_CORE_LEN
 value|456
-name|int
+name|struct
+name|regs
 name|c_regs
-index|[
-literal|19
-index|]
 decl_stmt|;
-comment|/* General purpose registers -- MACHDEP SIZE */
+comment|/* General purpose registers -- MACHDEP SIZE.  */
 name|int
 name|c_exdata_vp
 decl_stmt|;
-comment|/* exdata structure */
+comment|/* Exdata structure.  */
 name|int
 name|c_exdata_tsize
 decl_stmt|;
@@ -1073,19 +882,19 @@ decl_stmt|;
 name|int
 name|c_signo
 decl_stmt|;
-comment|/* Killing signal, if any */
+comment|/* Killing signal, if any.  */
 name|int
 name|c_tsize
 decl_stmt|;
-comment|/* Text size (bytes) */
+comment|/* Text size (bytes).  */
 name|int
 name|c_dsize
 decl_stmt|;
-comment|/* Data size (bytes) */
+comment|/* Data size (bytes).  */
 name|int
 name|c_ssize
 decl_stmt|;
-comment|/* Stack size (bytes) */
+comment|/* Stack size (bytes).  */
 name|char
 name|c_cmdname
 index|[
@@ -1094,20 +903,20 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-comment|/* Command name */
+comment|/* Command name.  */
 name|double
 name|fp_stuff
 index|[
 literal|1
 index|]
 decl_stmt|;
-comment|/* external FPU state (size unknown by us) */
-comment|/* The type "double" is critical here, for alignment.     SunOS declares a struct here, but the struct's alignment       is double since it contains doubles.  */
+comment|/* External FPU state (size unknown by us).  */
+comment|/* The type "double" is critical here, for alignment.      SunOS declares a struct here, but the struct's      alignment is double since it contains doubles.  */
 name|int
 name|c_ucode
 decl_stmt|;
-comment|/* Exception no. from u_code */
-comment|/* (this member is not accessible by name since we don't     portably know the size of fp_stuff.) */
+comment|/* Exception no. from u_code.  */
+comment|/* This member is not accessible by name since      we don't portably know the size of fp_stuff.  */
 block|}
 struct|;
 end_struct
@@ -1119,44 +928,44 @@ block|{
 name|int
 name|c_magic
 decl_stmt|;
-comment|/* Corefile magic number */
+comment|/* Corefile magic number.  */
 name|int
 name|c_len
 decl_stmt|;
-comment|/* Sizeof (struct core) */
+comment|/* Sizeof (struct core).  */
 define|#
 directive|define
 name|SUN3_CORE_LEN
 value|826
-comment|/* As of SunOS 4.1.1 */
+comment|/* As of SunOS 4.1.1.  */
 name|int
 name|c_regs
 index|[
 literal|18
 index|]
 decl_stmt|;
-comment|/* General purpose registers -- MACHDEP SIZE */
+comment|/* General purpose registers -- MACHDEP SIZE.  */
 name|struct
 name|external_exec
 name|c_aouthdr
 decl_stmt|;
-comment|/* A.out header */
+comment|/* A.out header.  */
 name|int
 name|c_signo
 decl_stmt|;
-comment|/* Killing signal, if any */
+comment|/* Killing signal, if any.  */
 name|int
 name|c_tsize
 decl_stmt|;
-comment|/* Text size (bytes) */
+comment|/* Text size (bytes).  */
 name|int
 name|c_dsize
 decl_stmt|;
-comment|/* Data size (bytes) */
+comment|/* Data size (bytes).  */
 name|int
 name|c_ssize
 decl_stmt|;
-comment|/* Stack size (bytes) */
+comment|/* Stack size (bytes).  */
 name|char
 name|c_cmdname
 index|[
@@ -1165,20 +974,20 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-comment|/* Command name */
+comment|/* Command name.  */
 name|double
 name|fp_stuff
 index|[
 literal|1
 index|]
 decl_stmt|;
-comment|/* external FPU state (size unknown by us) */
-comment|/* The type "double" is critical here, for alignment.     SunOS declares a struct here, but the struct's alignment       is double since it contains doubles.  */
+comment|/* External FPU state (size unknown by us).  */
+comment|/* The type "double" is critical here, for alignment.      SunOS declares a struct here, but the struct's      alignment is double since it contains doubles.  */
 name|int
 name|c_ucode
 decl_stmt|;
-comment|/* Exception no. from u_code */
-comment|/* (this member is not accessible by name since we don't     portably know the size of fp_stuff.) */
+comment|/* Exception no. from u_code.  */
+comment|/* This member is not accessible by name since      we don't portably know the size of fp_stuff.  */
 block|}
 struct|;
 end_struct
@@ -1190,48 +999,48 @@ block|{
 name|int
 name|c_magic
 decl_stmt|;
-comment|/* Corefile magic number */
+comment|/* Corefile magic number.  */
 name|int
 name|c_len
 decl_stmt|;
-comment|/* Sizeof (struct core) */
+comment|/* Sizeof (struct core).  */
 name|long
 name|c_regs_pos
 decl_stmt|;
-comment|/* file offset of General purpose registers */
+comment|/* File offset of General purpose registers.  */
 name|int
 name|c_regs_size
 decl_stmt|;
-comment|/* size of General purpose registers */
+comment|/* Size of General purpose registers.  */
 name|struct
 name|internal_exec
 name|c_aouthdr
 decl_stmt|;
-comment|/* A.out header */
+comment|/* A.out header.  */
 name|int
 name|c_signo
 decl_stmt|;
-comment|/* Killing signal, if any */
+comment|/* Killing signal, if any.  */
 name|int
 name|c_tsize
 decl_stmt|;
-comment|/* Text size (bytes) */
+comment|/* Text size (bytes).  */
 name|int
 name|c_dsize
 decl_stmt|;
-comment|/* Data size (bytes) */
+comment|/* Data size (bytes).  */
 name|bfd_vma
 name|c_data_addr
 decl_stmt|;
-comment|/* Data start (address) */
+comment|/* Data start (address).  */
 name|int
 name|c_ssize
 decl_stmt|;
-comment|/* Stack size (bytes) */
+comment|/* Stack size (bytes).  */
 name|bfd_vma
 name|c_stacktop
 decl_stmt|;
-comment|/* Stack top (address) */
+comment|/* Stack top (address).  */
 name|char
 name|c_cmdname
 index|[
@@ -1240,88 +1049,25 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-comment|/* Command name */
+comment|/* Command name.  */
 name|long
 name|fp_stuff_pos
 decl_stmt|;
-comment|/* file offset of external FPU state (regs) */
+comment|/* File offset of external FPU state (regs).  */
 name|int
 name|fp_stuff_size
 decl_stmt|;
-comment|/* Size of it */
+comment|/* Size of it.  */
 name|int
 name|c_ucode
 decl_stmt|;
-comment|/* Exception no. from u_code */
+comment|/* Exception no. from u_code.  */
 block|}
 struct|;
 end_struct
 
-begin_decl_stmt
-specifier|static
-name|void
-name|swapcore_sun3
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|char
-operator|*
-operator|,
-expr|struct
-name|internal_sunos_core
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|swapcore_sparc
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|char
-operator|*
-operator|,
-expr|struct
-name|internal_sunos_core
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|swapcore_solaris_bcp
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|char
-operator|*
-operator|,
-expr|struct
-name|internal_sunos_core
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/* byte-swap in the Sun-3 core structure */
+comment|/* Byte-swap in the Sun-3 core structure.  */
 end_comment
 
 begin_function
@@ -1329,25 +1075,19 @@ specifier|static
 name|void
 name|swapcore_sun3
 parameter_list|(
-name|abfd
-parameter_list|,
-name|ext
-parameter_list|,
-name|intcore
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|ext
-decl_stmt|;
+parameter_list|,
 name|struct
 name|internal_sunos_core
 modifier|*
 name|intcore
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|external_sun3_core
@@ -1393,19 +1133,11 @@ name|intcore
 operator|->
 name|c_regs_pos
 operator|=
-call|(
-name|long
-call|)
+name|offsetof
 argument_list|(
-operator|(
-operator|(
 expr|struct
 name|external_sun3_core
-operator|*
-operator|)
-literal|0
-operator|)
-operator|->
+argument_list|,
 name|c_regs
 argument_list|)
 expr_stmt|;
@@ -1534,19 +1266,11 @@ name|intcore
 operator|->
 name|fp_stuff_pos
 operator|=
-call|(
-name|long
-call|)
+name|offsetof
 argument_list|(
-operator|(
-operator|(
 expr|struct
 name|external_sun3_core
-operator|*
-operator|)
-literal|0
-operator|)
-operator|->
+argument_list|,
 name|fp_stuff
 argument_list|)
 expr_stmt|;
@@ -1566,23 +1290,15 @@ operator|->
 name|c_ucode
 operator|)
 operator|-
-call|(
-name|file_ptr
-call|)
+name|offsetof
 argument_list|(
-operator|(
-operator|(
 expr|struct
 name|external_sun3_core
-operator|*
-operator|)
-literal|0
-operator|)
-operator|->
+argument_list|,
 name|fp_stuff
 argument_list|)
 expr_stmt|;
-comment|/* Ucode is the last thing in the struct -- just before the end */
+comment|/* Ucode is the last thing in the struct -- just before the end.  */
 name|intcore
 operator|->
 name|c_ucode
@@ -1618,12 +1334,12 @@ name|c_stacktop
 operator|=
 literal|0x0E000000
 expr_stmt|;
-comment|/* By experimentation */
+comment|/* By experimentation.  */
 block|}
 end_function
 
 begin_comment
-comment|/* byte-swap in the Sparc core structure */
+comment|/* Byte-swap in the Sparc core structure.  */
 end_comment
 
 begin_function
@@ -1631,25 +1347,19 @@ specifier|static
 name|void
 name|swapcore_sparc
 parameter_list|(
-name|abfd
-parameter_list|,
-name|ext
-parameter_list|,
-name|intcore
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|ext
-decl_stmt|;
+parameter_list|,
 name|struct
 name|internal_sunos_core
 modifier|*
 name|intcore
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|external_sparc_core
@@ -1695,19 +1405,11 @@ name|intcore
 operator|->
 name|c_regs_pos
 operator|=
-call|(
-name|long
-call|)
+name|offsetof
 argument_list|(
-operator|(
-operator|(
 expr|struct
 name|external_sparc_core
-operator|*
-operator|)
-literal|0
-operator|)
-operator|->
+argument_list|,
 name|c_regs
 argument_list|)
 expr_stmt|;
@@ -1836,19 +1538,11 @@ name|intcore
 operator|->
 name|fp_stuff_pos
 operator|=
-call|(
-name|long
-call|)
+name|offsetof
 argument_list|(
-operator|(
-operator|(
 expr|struct
 name|external_sparc_core
-operator|*
-operator|)
-literal|0
-operator|)
-operator|->
+argument_list|,
 name|fp_stuff
 argument_list|)
 expr_stmt|;
@@ -1868,23 +1562,15 @@ operator|->
 name|c_ucode
 operator|)
 operator|-
-call|(
-name|file_ptr
-call|)
+name|offsetof
 argument_list|(
-operator|(
-operator|(
 expr|struct
 name|external_sparc_core
-operator|*
-operator|)
-literal|0
-operator|)
-operator|->
+argument_list|,
 name|fp_stuff
 argument_list|)
 expr_stmt|;
-comment|/* Ucode is the last thing in the struct -- just before the end */
+comment|/* Ucode is the last thing in the struct -- just before the end.  */
 name|intcore
 operator|->
 name|c_ucode
@@ -1933,21 +1619,10 @@ argument_list|(
 name|abfd
 argument_list|,
 operator|&
-operator|(
-operator|(
-expr|struct
-name|regs
-operator|*
-operator|)
-operator|&
 name|extcore
 operator|->
 name|c_regs
-index|[
-literal|0
-index|]
-operator|)
-operator|->
+operator|.
 name|r_o6
 argument_list|)
 decl_stmt|;
@@ -1975,7 +1650,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* byte-swap in the Solaris BCP core structure */
+comment|/* Byte-swap in the Solaris BCP core structure.  */
 end_comment
 
 begin_function
@@ -1983,25 +1658,19 @@ specifier|static
 name|void
 name|swapcore_solaris_bcp
 parameter_list|(
-name|abfd
-parameter_list|,
-name|ext
-parameter_list|,
-name|intcore
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|ext
-decl_stmt|;
+parameter_list|,
 name|struct
 name|internal_sunos_core
 modifier|*
 name|intcore
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|external_solaris_bcp_core
@@ -2047,19 +1716,11 @@ name|intcore
 operator|->
 name|c_regs_pos
 operator|=
-call|(
-name|long
-call|)
+name|offsetof
 argument_list|(
-operator|(
-operator|(
 expr|struct
 name|external_solaris_bcp_core
-operator|*
-operator|)
-literal|0
-operator|)
-operator|->
+argument_list|,
 name|c_regs
 argument_list|)
 expr_stmt|;
@@ -2078,7 +1739,8 @@ comment|/* The Solaris BCP exdata structure does not contain an a_syms field,   
 name|memset
 argument_list|(
 operator|(
-name|PTR
+name|void
+operator|*
 operator|)
 operator|&
 name|intcore
@@ -2186,19 +1848,11 @@ name|intcore
 operator|->
 name|fp_stuff_pos
 operator|=
-call|(
-name|long
-call|)
+name|offsetof
 argument_list|(
-operator|(
-operator|(
 expr|struct
 name|external_solaris_bcp_core
-operator|*
-operator|)
-literal|0
-operator|)
-operator|->
+argument_list|,
 name|fp_stuff
 argument_list|)
 expr_stmt|;
@@ -2218,19 +1872,11 @@ operator|->
 name|c_ucode
 operator|)
 operator|-
-call|(
-name|file_ptr
-call|)
+name|offsetof
 argument_list|(
-operator|(
-operator|(
 expr|struct
 name|external_solaris_bcp_core
-operator|*
-operator|)
-literal|0
-operator|)
-operator|->
+argument_list|,
 name|fp_stuff
 argument_list|)
 expr_stmt|;
@@ -2283,21 +1929,10 @@ argument_list|(
 name|abfd
 argument_list|,
 operator|&
-operator|(
-operator|(
-expr|struct
-name|regs
-operator|*
-operator|)
-operator|&
 name|extcore
 operator|->
 name|c_regs
-index|[
-literal|0
-index|]
-operator|)
-operator|->
+operator|.
 name|r_o6
 argument_list|)
 decl_stmt|;
@@ -2325,7 +1960,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* need this cast because ptr is really void * */
+comment|/* Need this cast because ptr is really void *.  */
 end_comment
 
 begin_define
@@ -2345,7 +1980,7 @@ name|core_datasec
 parameter_list|(
 name|bfd
 parameter_list|)
-value|(core_hdr(bfd)->data_section)
+value|(core_hdr (bfd)->data_section)
 end_define
 
 begin_define
@@ -2355,7 +1990,7 @@ name|core_stacksec
 parameter_list|(
 name|bfd
 parameter_list|)
-value|(core_hdr(bfd)->stack_section)
+value|(core_hdr (bfd)->stack_section)
 end_define
 
 begin_define
@@ -2365,7 +2000,7 @@ name|core_regsec
 parameter_list|(
 name|bfd
 parameter_list|)
-value|(core_hdr(bfd)->reg_section)
+value|(core_hdr (bfd)->reg_section)
 end_define
 
 begin_define
@@ -2375,11 +2010,11 @@ name|core_reg2sec
 parameter_list|(
 name|bfd
 parameter_list|)
-value|(core_hdr(bfd)->reg2_section)
+value|(core_hdr (bfd)->reg2_section)
 end_define
 
 begin_comment
-comment|/* These are stored in the bfd's tdata */
+comment|/* These are stored in the bfd's tdata.  */
 end_comment
 
 begin_struct
@@ -2391,7 +2026,7 @@ name|internal_sunos_core
 modifier|*
 name|hdr
 decl_stmt|;
-comment|/* core file header */
+comment|/* Core file header.  */
 name|asection
 modifier|*
 name|data_section
@@ -2419,12 +2054,10 @@ name|bfd_target
 modifier|*
 name|sunos4_core_file_p
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|char
@@ -2433,7 +2066,7 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-comment|/* Raw bytes of various header fields */
+comment|/* Raw bytes of various header fields.  */
 name|bfd_size_type
 name|core_size
 decl_stmt|,
@@ -2473,12 +2106,16 @@ block|}
 modifier|*
 name|mergem
 struct|;
+name|flagword
+name|flags
+decl_stmt|;
 if|if
 condition|(
 name|bfd_bread
 argument_list|(
 operator|(
-name|PTR
+name|void
+operator|*
 operator|)
 name|longbuf
 argument_list|,
@@ -2499,7 +2136,7 @@ name|longbuf
 argument_list|)
 condition|)
 return|return
-literal|0
+name|NULL
 return|;
 name|core_mag
 operator|=
@@ -2517,7 +2154,7 @@ operator|!=
 name|CORE_MAGIC
 condition|)
 return|return
-literal|0
+name|NULL
 return|;
 comment|/* SunOS core headers can vary in length; second word is size; */
 if|if
@@ -2525,7 +2162,8 @@ condition|(
 name|bfd_bread
 argument_list|(
 operator|(
-name|PTR
+name|void
+operator|*
 operator|)
 name|longbuf
 argument_list|,
@@ -2546,7 +2184,7 @@ name|longbuf
 argument_list|)
 condition|)
 return|return
-literal|0
+name|NULL
 return|;
 name|core_size
 operator|=
@@ -2557,7 +2195,7 @@ argument_list|,
 name|longbuf
 argument_list|)
 expr_stmt|;
-comment|/* Sanity check */
+comment|/* Sanity check.  */
 if|if
 condition|(
 name|core_size
@@ -2565,7 +2203,7 @@ operator|>
 literal|20000
 condition|)
 return|return
-literal|0
+name|NULL
 return|;
 if|if
 condition|(
@@ -2584,7 +2222,7 @@ operator|!=
 literal|0
 condition|)
 return|return
-literal|0
+name|NULL
 return|;
 name|amt
 operator|=
@@ -2598,11 +2236,6 @@ argument_list|)
 expr_stmt|;
 name|mergem
 operator|=
-operator|(
-expr|struct
-name|mergem
-operator|*
-operator|)
 name|bfd_zalloc
 argument_list|(
 name|abfd
@@ -2617,7 +2250,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-literal|0
+name|NULL
 return|;
 name|extcore
 operator|=
@@ -2631,7 +2264,8 @@ operator|(
 name|bfd_bread
 argument_list|(
 operator|(
-name|PTR
+name|void
+operator|*
 operator|)
 name|extcore
 argument_list|,
@@ -2671,7 +2305,7 @@ name|abfd
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|NULL
 return|;
 block|}
 comment|/* Validate that it's a core file we know how to handle, due to sun      botching the positioning of registers and other fields in a machine      dependent way.  */
@@ -2732,7 +2366,7 @@ argument_list|(
 name|bfd_error_system_call
 argument_list|)
 expr_stmt|;
-comment|/* FIXME */
+comment|/* FIXME.  */
 goto|goto
 name|loser
 goto|;
@@ -2759,16 +2393,26 @@ operator|=
 name|core
 expr_stmt|;
 comment|/* Create the sections.  */
+name|flags
+operator|=
+name|SEC_ALLOC
+operator|+
+name|SEC_LOAD
+operator|+
+name|SEC_HAS_CONTENTS
+expr_stmt|;
 name|core_stacksec
 argument_list|(
 name|abfd
 argument_list|)
 operator|=
-name|bfd_make_section_anyway
+name|bfd_make_section_anyway_with_flags
 argument_list|(
 name|abfd
 argument_list|,
 literal|".stack"
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 if|if
@@ -2784,16 +2428,26 @@ comment|/* bfd_release frees everything allocated after it's arg.  */
 goto|goto
 name|loser
 goto|;
+name|flags
+operator|=
+name|SEC_ALLOC
+operator|+
+name|SEC_LOAD
+operator|+
+name|SEC_HAS_CONTENTS
+expr_stmt|;
 name|core_datasec
 argument_list|(
 name|abfd
 argument_list|)
 operator|=
-name|bfd_make_section_anyway
+name|bfd_make_section_anyway_with_flags
 argument_list|(
 name|abfd
 argument_list|,
 literal|".data"
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 if|if
@@ -2808,16 +2462,22 @@ condition|)
 goto|goto
 name|loser
 goto|;
+name|flags
+operator|=
+name|SEC_HAS_CONTENTS
+expr_stmt|;
 name|core_regsec
 argument_list|(
 name|abfd
 argument_list|)
 operator|=
-name|bfd_make_section_anyway
+name|bfd_make_section_anyway_with_flags
 argument_list|(
 name|abfd
 argument_list|,
 literal|".reg"
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 if|if
@@ -2832,16 +2492,22 @@ condition|)
 goto|goto
 name|loser
 goto|;
+name|flags
+operator|=
+name|SEC_HAS_CONTENTS
+expr_stmt|;
 name|core_reg2sec
 argument_list|(
 name|abfd
 argument_list|)
 operator|=
-name|bfd_make_section_anyway
+name|bfd_make_section_anyway_with_flags
 argument_list|(
 name|abfd
 argument_list|,
 literal|".reg2"
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 if|if
@@ -2861,51 +2527,7 @@ argument_list|(
 name|abfd
 argument_list|)
 operator|->
-name|flags
-operator|=
-name|SEC_ALLOC
-operator|+
-name|SEC_LOAD
-operator|+
-name|SEC_HAS_CONTENTS
-expr_stmt|;
-name|core_datasec
-argument_list|(
-name|abfd
-argument_list|)
-operator|->
-name|flags
-operator|=
-name|SEC_ALLOC
-operator|+
-name|SEC_LOAD
-operator|+
-name|SEC_HAS_CONTENTS
-expr_stmt|;
-name|core_regsec
-argument_list|(
-name|abfd
-argument_list|)
-operator|->
-name|flags
-operator|=
-name|SEC_HAS_CONTENTS
-expr_stmt|;
-name|core_reg2sec
-argument_list|(
-name|abfd
-argument_list|)
-operator|->
-name|flags
-operator|=
-name|SEC_HAS_CONTENTS
-expr_stmt|;
-name|core_stacksec
-argument_list|(
-name|abfd
-argument_list|)
-operator|->
-name|_raw_size
+name|size
 operator|=
 name|core
 operator|->
@@ -2916,7 +2538,7 @@ argument_list|(
 name|abfd
 argument_list|)
 operator|->
-name|_raw_size
+name|size
 operator|=
 name|core
 operator|->
@@ -2927,7 +2549,7 @@ argument_list|(
 name|abfd
 argument_list|)
 operator|->
-name|_raw_size
+name|size
 operator|=
 name|core
 operator|->
@@ -2938,7 +2560,7 @@ argument_list|(
 name|abfd
 argument_list|)
 operator|->
-name|_raw_size
+name|size
 operator|=
 name|core
 operator|->
@@ -3016,7 +2638,7 @@ name|core
 operator|->
 name|c_len
 expr_stmt|;
-comment|/* We'll access the regs afresh in the core file, like any section: */
+comment|/* We'll access the regs afresh in the core file, like any section:  */
 name|core_regsec
 argument_list|(
 name|abfd
@@ -3045,7 +2667,7 @@ name|core
 operator|->
 name|fp_stuff_pos
 expr_stmt|;
-comment|/* Align to word at least */
+comment|/* Align to word at least.  */
 name|core_stacksec
 argument_list|(
 name|abfd
@@ -3096,12 +2718,10 @@ name|char
 modifier|*
 name|sunos4_core_file_failing_command
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|core_hdr
@@ -3121,12 +2741,10 @@ specifier|static
 name|int
 name|sunos4_core_file_failing_signal
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|core_hdr
@@ -3146,18 +2764,14 @@ specifier|static
 name|bfd_boolean
 name|sunos4_core_file_matches_executable_p
 parameter_list|(
+name|bfd
+modifier|*
 name|core_bfd
 parameter_list|,
+name|bfd
+modifier|*
 name|exec_bfd
 parameter_list|)
-name|bfd
-modifier|*
-name|core_bfd
-decl_stmt|;
-name|bfd
-modifier|*
-name|exec_bfd
-decl_stmt|;
 block|{
 if|if
 condition|(
@@ -3199,7 +2813,6 @@ return|return
 name|TRUE
 return|;
 return|return
-operator|(
 name|memcmp
 argument_list|(
 operator|(
@@ -3237,7 +2850,6 @@ argument_list|)
 argument_list|)
 operator|==
 literal|0
-operator|)
 return|;
 block|}
 end_function
@@ -3254,12 +2866,10 @@ specifier|static
 name|bfd_boolean
 name|sunos4_set_sizes
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 switch|switch
 condition|(
@@ -3501,22 +3111,22 @@ init|=
 block|{
 literal|0
 block|,
-comment|/* zmagic files are not contiguous */
+comment|/* Zmagic files are not contiguous.  */
 literal|1
 block|,
-comment|/* text includes header */
+comment|/* Text includes header.  */
 name|MY_entry_is_text_address
 block|,
 name|MY_exec_hdr_flags
 block|,
 literal|0
 block|,
-comment|/* default text vma */
+comment|/* Default text vma.  */
 name|sunos4_set_sizes
 block|,
 literal|0
 block|,
-comment|/* header is counted in zmagic text */
+comment|/* Header is counted in zmagic text.  */
 name|MY_add_dynamic_symbols
 block|,
 name|MY_add_one_symbol
@@ -3574,8 +3184,7 @@ begin_define
 define|#
 directive|define
 name|MY_bfd_debug_info_accumulate
-define|\
-value|(void (*) PARAMS ((bfd *, struct bfd_section *))) bfd_void
+value|(void (*) (bfd *, struct bfd_section *)) bfd_void
 end_define
 
 begin_define
@@ -3589,14 +3198,14 @@ begin_define
 define|#
 directive|define
 name|MY_write_object_contents
-value|NAME(aout,sunos4_write_object_contents)
+value|NAME(aout, sunos4_write_object_contents)
 end_define
 
 begin_define
 define|#
 directive|define
 name|MY_backend_data
-value|&sunos4_aout_backend
+value|& sunos4_aout_backend
 end_define
 
 begin_ifndef

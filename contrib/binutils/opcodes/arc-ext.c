@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ARC target-dependent stuff. Extension structure access functions    Copyright 1995, 1997, 2000, 2001 Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* ARC target-dependent stuff. Extension structure access functions    Copyright 1995, 1997, 2000, 2001, 2004, 2005    Free Software Foundation, Inc.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -184,11 +184,6 @@ return|return
 literal|0
 return|;
 return|return
-operator|(
-specifier|const
-name|char
-operator|*
-operator|)
 name|arc_extension_map
 operator|.
 name|coreRegisters
@@ -225,11 +220,6 @@ return|return
 literal|0
 return|;
 return|return
-operator|(
-specifier|const
-name|char
-operator|*
-operator|)
 name|arc_extension_map
 operator|.
 name|condCodes
@@ -710,6 +700,10 @@ argument_list|(
 name|insn_name
 argument_list|,
 operator|(
+name|char
+operator|*
+operator|)
+operator|(
 name|p
 operator|+
 literal|5
@@ -771,6 +765,10 @@ argument_list|(
 name|core_name
 argument_list|,
 operator|(
+name|char
+operator|*
+operator|)
+operator|(
 name|p
 operator|+
 literal|3
@@ -827,6 +825,10 @@ name|strcpy
 argument_list|(
 name|cc_name
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|(
 name|p
 operator|+
@@ -904,6 +906,10 @@ name|strcpy
 argument_list|(
 name|aux_name
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|(
 name|p
 operator|+
@@ -1043,9 +1049,10 @@ condition|)
 block|{
 name|count
 operator|=
+name|bfd_get_section_size
+argument_list|(
 name|p
-operator|->
-name|_raw_size
+argument_list|)
 expr_stmt|;
 name|arcExtMap
 operator|=

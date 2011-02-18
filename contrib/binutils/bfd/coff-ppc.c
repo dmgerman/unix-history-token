@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for PowerPC Microsoft Portable Executable files.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002, 2003    Free Software Foundation, Inc.     Original version pieced together by Kim Knuttila (krk@cygnus.com)     There is nothing new under the sun. This file draws a lot on other    coff files, in particular, those for the rs/6000, alpha, mips, and    intel backends, and the PE work for the arm.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for PowerPC Microsoft Portable Executable files.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007    Free Software Foundation, Inc.     Original version pieced together by Kim Knuttila (krk@cygnus.com)     There is nothing new under the sun. This file draws a lot on other    coff files, in particular, those for the rs/6000, alpha, mips, and    intel backends, and the PE work for the arm.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, 51 Franklin Street - Fifth Floor,    Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -10,13 +10,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"bfd.h"
+file|"sysdep.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sysdep.h"
+file|"bfd.h"
 end_include
 
 begin_include
@@ -327,44 +327,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|bfd_boolean
-name|ppc_coff_link_hash_table_init
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
-name|ppc_coff_link_hash_table
-operator|*
-operator|,
-name|bfd
-operator|*
-operator|,
-expr|struct
-name|bfd_hash_entry
-operator|*
-call|(
-modifier|*
-call|)
-argument_list|(
-expr|struct
-name|bfd_hash_entry
-operator|*
-argument_list|,
-expr|struct
-name|bfd_hash_table
-operator|*
-argument_list|,
-specifier|const
-name|char
-operator|*
-argument_list|)
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|struct
 name|bfd_link_hash_table
 modifier|*
@@ -615,54 +577,40 @@ specifier|static
 name|bfd_boolean
 name|ppc_coff_link_hash_table_init
 argument_list|(
-name|table
-argument_list|,
-name|abfd
-argument_list|,
-name|newfunc
-argument_list|)
-decl|struct
+expr|struct
 name|ppc_coff_link_hash_table
-modifier|*
-name|table
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|bfd
-modifier|*
-name|abfd
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|bfd_hash_entry
-modifier|*
-argument_list|(
 operator|*
-name|newfunc
-argument_list|)
-name|PARAMS
-argument_list|(
-operator|(
+name|table
+argument_list|,
+name|bfd
+operator|*
+name|abfd
+argument_list|,
 expr|struct
 name|bfd_hash_entry
 operator|*
-operator|,
+call|(
+modifier|*
+name|newfunc
+call|)
+argument_list|(
+expr|struct
+name|bfd_hash_entry
+operator|*
+argument_list|,
 expr|struct
 name|bfd_hash_table
 operator|*
-operator|,
+argument_list|,
 specifier|const
 name|char
 operator|*
-operator|)
 argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+argument_list|,
+name|unsigned
+name|int
+name|entsize
+argument_list|)
 block|{
 return|return
 name|_bfd_coff_link_hash_table_init
@@ -675,10 +623,12 @@ argument_list|,
 name|abfd
 argument_list|,
 name|newfunc
+argument_list|,
+name|entsize
 argument_list|)
 return|;
 block|}
-end_block
+end_decl_stmt
 
 begin_comment
 comment|/* Create a PE linker hash table.  */
@@ -743,6 +693,12 @@ argument_list|,
 name|abfd
 argument_list|,
 name|ppc_coff_link_hash_newfunc
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ppc_coff_link_hash_entry
+argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -1188,18 +1144,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static bfd_reloc_status_type ppc_reflo_reloc PARAMS ((bfd *abfd, 						      arelent *reloc, 						      asymbol *symbol, 						      PTR data, 						      asection *section, 						      bfd *output_bfd, 						      char **error));
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|static
 name|bfd_reloc_status_type
@@ -1280,18 +1224,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static bfd_reloc_status_type ppc_addr32nb_reloc PARAMS ((bfd *abfd, 							 arelent *reloc, 							 asymbol *symbol, 							 PTR data, 							 asection *section, 							 bfd *output_bfd, 							 char **error));
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -3307,50 +3239,6 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* This function is in charge of performing all the ppc PE relocations    Don't yet know if we want to do this this particular way ... (krk).  */
-end_comment
-
-begin_comment
-comment|/* FIXME: (it is not yet enabled).  */
-end_comment
-
-begin_comment
-unit|static bfd_reloc_status_type pe_ppc_reloc (abfd, reloc_entry, symbol_in, data, input_section, output_bfd, 	      error_message)      bfd *abfd;      arelent *reloc_entry;      asymbol *symbol_in;      PTR data;      asection *input_section;      bfd *output_bfd;      char **error_message; {
-comment|/* The consth relocation comes in two parts, we have to remember      the state between calls, in these variables.  */
-end_comment
-
-begin_comment
-unit|static bfd_boolean part1_consth_active = FALSE;   static unsigned long part1_consth_value;    unsigned long sym_value;   unsigned short r_type;   unsigned long addr = reloc_entry->address ;
-comment|/*+ input_section->vma*/
-end_comment
-
-begin_comment
-unit|r_type = reloc_entry->howto->type;    if (output_bfd)     {
-comment|/* Partial linking - do nothing.  */
-end_comment
-
-begin_comment
-unit|reloc_entry->address += input_section->output_offset;       return bfd_reloc_ok;     }    if (symbol_in != NULL&& bfd_is_und_section (symbol_in->section))     {
-comment|/* Keep the state machine happy in case we're called again.  */
-end_comment
-
-begin_endif
-unit|if (r_type == IMAGE_REL_PPC_REFHI) 	{ 	  part1_consth_active = TRUE; 	  part1_consth_value  = 0; 	}       return(bfd_reloc_undefined);     }    if ((part1_consth_active)&& (r_type != IMAGE_REL_PPC_PAIR))     {       part1_consth_active = FALSE;       *error_message = (char *) _("Missing PAIR");       return(bfd_reloc_dangerous);     }    sym_value = get_symbol_value(symbol_in);    return(bfd_reloc_ok); }
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* 0 */
-end_comment
-
 begin_comment
 comment|/* The reloc processing routine for the optimized COFF linker.  */
 end_comment
@@ -3838,13 +3726,10 @@ call|)
 argument_list|(
 name|_
 argument_list|(
-literal|"%s: unsupported relocation type 0x%02x"
+literal|"%B: unsupported relocation type 0x%02x"
 argument_list|)
 argument_list|,
-name|bfd_archive_filename
-argument_list|(
 name|input_bfd
-argument_list|)
 argument_list|,
 name|r_type
 argument_list|)
@@ -4083,13 +3968,10 @@ call|)
 argument_list|(
 name|_
 argument_list|(
-literal|"%s: Relocation for %s of %lx exceeds Toc size limit"
+literal|"%B: Relocation for %s of %lx exceeds Toc size limit"
 argument_list|)
 argument_list|,
-name|bfd_archive_filename
-argument_list|(
 name|input_bfd
-argument_list|)
 argument_list|,
 name|name
 argument_list|,
@@ -4269,7 +4151,7 @@ name|our_toc_offset
 operator|>
 name|toc_section
 operator|->
-name|_raw_size
+name|size
 condition|)
 block|{
 call|(
@@ -4279,13 +4161,10 @@ call|)
 argument_list|(
 name|_
 argument_list|(
-literal|"%s: Relocation exceeds allocated TOC (%lx)"
+literal|"%B: Relocation exceeds allocated TOC (%lx)"
 argument_list|)
 argument_list|,
-name|bfd_archive_filename
-argument_list|(
 name|input_bfd
-argument_list|)
 argument_list|,
 operator|(
 name|unsigned
@@ -4293,7 +4172,7 @@ name|long
 operator|)
 name|toc_section
 operator|->
-name|_raw_size
+name|size
 argument_list|)
 expr_stmt|;
 name|bfd_set_error
@@ -4456,34 +4335,24 @@ name|root
 operator|.
 name|string
 expr_stmt|;
-name|fprintf
+call|(
+modifier|*
+name|_bfd_error_handler
+call|)
 argument_list|(
-name|stderr
-argument_list|,
 name|_
 argument_list|(
-literal|"Warning: unsupported reloc %s<file %s, section %s>\n"
+literal|"Warning: unsupported reloc %s<file %B, section %A>\n"
+literal|"sym %ld (%s), r_vaddr %ld (%lx)"
 argument_list|)
+argument_list|,
+name|input_bfd
+argument_list|,
+name|input_section
 argument_list|,
 name|howto
 operator|->
 name|name
-argument_list|,
-name|bfd_archive_filename
-argument_list|(
-name|input_bfd
-argument_list|)
-argument_list|,
-name|input_section
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"sym %ld (%s), r_vaddr %ld (%lx)\n"
 argument_list|,
 name|rel
 operator|->
@@ -4547,13 +4416,10 @@ call|)
 argument_list|(
 name|_
 argument_list|(
-literal|"%s: Out of order IMGLUE reloc for %s"
+literal|"%B: Out of order IMGLUE reloc for %s"
 argument_list|)
 argument_list|,
-name|bfd_archive_filename
-argument_list|(
 name|input_bfd
-argument_list|)
 argument_list|,
 name|my_name
 argument_list|)
@@ -4589,18 +4455,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|strncmp
+name|CONST_STRNEQ
 argument_list|(
-literal|".idata$2"
-argument_list|,
 name|input_section
 operator|->
 name|name
 argument_list|,
-literal|8
+literal|".idata$2"
 argument_list|)
-operator|==
-literal|0
 operator|&&
 name|first_thunk_address
 operator|==
@@ -5264,15 +5126,7 @@ name|NULL
 condition|)
 name|name
 operator|=
-name|h
-operator|->
-name|root
-operator|.
-name|root
-operator|.
-name|root
-operator|.
-name|string
+name|NULL
 expr_stmt|;
 elseif|else
 if|if
@@ -5364,6 +5218,19 @@ name|reloc_overflow
 call|)
 argument_list|(
 name|info
+argument_list|,
+operator|(
+name|h
+condition|?
+operator|&
+name|h
+operator|->
+name|root
+operator|.
+name|root
+else|:
+name|NULL
+operator|)
 argument_list|,
 name|name
 argument_list|,
@@ -5832,11 +5699,7 @@ argument_list|)
 expr_stmt|;
 name|s
 operator|->
-name|_raw_size
-operator|=
-name|s
-operator|->
-name|_cooked_size
+name|size
 operator|=
 name|global_toc_size
 expr_stmt|;
@@ -6173,18 +6036,6 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static bfd_reloc_status_type ppc_reflo_reloc (abfd, reloc_entry, symbol, data, 		 input_section, output_bfd, error_message)      bfd *abfd;      arelent *reloc_entry;      asymbol *symbol;      PTR data;      asection *input_section;      bfd *output_bfd;      char **error_message; {   UN_IMPL("REFLO");   DUMP_RELOC("REFLO",reloc_entry);    if (output_bfd == (bfd *) NULL)     return bfd_reloc_continue;    return bfd_reloc_undefined; }
-endif|#
-directive|endif
-end_endif
-
 begin_function
 specifier|static
 name|bfd_reloc_status_type
@@ -6357,22 +6208,6 @@ name|bfd_reloc_ok
 return|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* ADDR32NB : 32 bit address relative to the virtual origin.               (On the alpha, this is always a linker generated thunk)               (i.e. 32bit addr relative to the image base).  */
-end_comment
-
-begin_endif
-unit|static bfd_reloc_status_type ppc_addr32nb_reloc (abfd, reloc_entry, symbol, data, 		    input_section, output_bfd, error_message)      bfd *abfd;      arelent *reloc_entry;      asymbol *symbol;      PTR data;      asection *input_section;      bfd *output_bfd;      char **error_message; {   UN_IMPL("ADDR32NB");   DUMP_RELOC("ADDR32NB",reloc_entry);    return bfd_reloc_ok; }
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
@@ -7297,6 +7132,89 @@ directive|undef
 name|HOW2MAP
 end_undef
 
+begin_function
+specifier|static
+name|reloc_howto_type
+modifier|*
+name|ppc_coff_reloc_name_lookup
+parameter_list|(
+name|bfd
+modifier|*
+name|abfd
+name|ATTRIBUTE_UNUSED
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|r_name
+parameter_list|)
+block|{
+name|unsigned
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+sizeof|sizeof
+argument_list|(
+name|ppc_coff_howto_table
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|ppc_coff_howto_table
+index|[
+literal|0
+index|]
+argument_list|)
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|ppc_coff_howto_table
+index|[
+name|i
+index|]
+operator|.
+name|name
+operator|!=
+name|NULL
+operator|&&
+name|strcasecmp
+argument_list|(
+name|ppc_coff_howto_table
+index|[
+name|i
+index|]
+operator|.
+name|name
+argument_list|,
+name|r_name
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|&
+name|ppc_coff_howto_table
+index|[
+name|i
+index|]
+return|;
+return|return
+name|NULL
+return|;
+block|}
+end_function
+
 begin_escape
 end_escape
 
@@ -7330,6 +7248,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|coff_bfd_reloc_name_lookup
+value|ppc_coff_reloc_name_lookup
+end_define
+
+begin_define
+define|#
+directive|define
 name|coff_rtype_to_howto
 value|coff_ppc_rtype_to_howto
 end_define
@@ -7353,28 +7278,6 @@ ifndef|#
 directive|ifndef
 name|COFF_IMAGE_WITH_PE
 end_ifndef
-
-begin_comment
-comment|/* FIXME: This no longer works.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|coff_swap_sym_in_hook
-value|ppc_coff_swap_sym_in_hook
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -7426,52 +7329,6 @@ end_include
 
 begin_escape
 end_escape
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|COFF_IMAGE_WITH_PE
-end_ifndef
-
-begin_comment
-comment|/* FIXME: This no longer works.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* FIXME:    What we're trying to do here is allocate a toc section (early), and attach    it to the last bfd to be processed. This avoids the problem of having a toc    written out before all files have been processed. This code allocates    a toc section for every file, and records the last one seen. There are    at least two problems with this approach:    1. We allocate whole bunches of toc sections that are ignored, but at       at least we will not allocate a toc if no .toc is present.    2. It's not clear to me that being the last bfd read necessarily means       that you are the last bfd closed.    3. Doing it on a "swap in" hook depends on when the "swap in" is called,       and how often, etc. It's not clear to me that there isn't a hole here.  */
-end_comment
-
-begin_comment
-unit|static void ppc_coff_swap_sym_in_hook PARAMS ((bfd *, PTR, PTR));  static void ppc_coff_swap_sym_in_hook (abfd, ext1, in1)      bfd            *abfd;      PTR ext1 ATTRIBUTE_UNUSED;      PTR in1; {   struct internal_syment * in = (struct internal_syment *)in1;    if (bfd_of_toc_owner != 0)
-comment|/* We already have a toc, so go home.  */
-end_comment
-
-begin_comment
-unit|return;    if (strcmp (in->_n._n_name, ".toc") == 0)     {       flagword flags;       register asection *s;        s = bfd_get_section_by_name (abfd, TOC_SECTION_NAME);       if (s != NULL) 	return;        flags = SEC_ALLOC | SEC_LOAD | SEC_HAS_CONTENTS | SEC_IN_MEMORY ;        s = bfd_make_section (abfd, TOC_SECTION_NAME);        if (s == NULL 	  || !bfd_set_section_flags (abfd, s, flags) 	  || !bfd_set_section_alignment (abfd, s, 2))
-comment|/* FIXME: set appropriate bfd error.  */
-end_comment
-
-begin_comment
-unit|abort ();
-comment|/* Save the bfd for later allocation.  */
-end_comment
-
-begin_endif
-unit|bfd_of_toc_owner = abfd;     }    return; }
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -7868,7 +7725,9 @@ name|p
 operator|=
 name|o
 operator|->
-name|link_order_head
+name|map_head
+operator|.
+name|link_order
 init|;
 name|p
 operator|!=
@@ -7951,7 +7810,7 @@ if|if
 condition|(
 name|sec
 operator|->
-name|_raw_size
+name|rawsize
 operator|>
 name|max_contents_size
 condition|)
@@ -7959,7 +7818,21 @@ name|max_contents_size
 operator|=
 name|sec
 operator|->
-name|_raw_size
+name|rawsize
+expr_stmt|;
+if|if
+condition|(
+name|sec
+operator|->
+name|size
+operator|>
+name|max_contents_size
+condition|)
+name|max_contents_size
+operator|=
+name|sec
+operator|->
+name|size
 expr_stmt|;
 if|if
 condition|(
@@ -8756,7 +8629,9 @@ name|p
 operator|=
 name|o
 operator|->
-name|link_order_head
+name|map_head
+operator|.
+name|link_order
 init|;
 name|p
 operator|!=
@@ -9628,6 +9503,8 @@ name|info
 argument_list|)
 operator|->
 name|stab_info
+operator|.
+name|stabstr
 operator|!=
 name|NULL
 condition|)

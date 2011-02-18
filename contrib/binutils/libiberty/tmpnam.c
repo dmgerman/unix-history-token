@@ -66,7 +66,9 @@ begin_function_decl
 specifier|extern
 name|int
 name|getpid
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -75,12 +77,10 @@ name|char
 modifier|*
 name|tmpnam
 parameter_list|(
-name|s
-parameter_list|)
 name|char
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|pid

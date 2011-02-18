@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ELF support for BFD.    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001, 2002, 2003    Free Software Foundation, Inc.     Written by Fred Fish @ Cygnus Support, from information published    in "UNIX System V Release 4, Programmers Guide: ANSI C and    Programming Support Tools".     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* ELF support for BFD.    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001, 2002, 2003, 2004, 2005, 2006, 2007    Free Software Foundation, Inc.     Written by Fred Fish @ Cygnus Support, from information published    in "UNIX System V Release 4, Programmers Guide: ANSI C and    Programming Support Tools".     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -742,6 +742,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|EM_SPU
+value|23
+end_define
+
+begin_comment
+comment|/* Sony/Toshiba/IBM SPU */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|EM_V800
 value|36
 end_define
@@ -1406,6 +1417,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|EM_CR
+value|103
+end_define
+
+begin_comment
+comment|/* National Semiconductor CompactRISC */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|EM_MSP430
 value|105
 end_define
@@ -1414,34 +1436,67 @@ begin_comment
 comment|/* TI msp430 micro controller */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|EM_BLACKFIN
+value|106
+end_define
+
+begin_comment
+comment|/* ADI Blackfin */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_ALTERA_NIOS2
+value|113
+end_define
+
+begin_comment
+comment|/* Altera Nios II soft-core processor */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_CRX
+value|114
+end_define
+
+begin_comment
+comment|/* National Semiconductor CRX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_CR16
+value|115
+end_define
+
+begin_comment
+comment|/* National Semiconductor CompactRISC - CR16 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_SCORE
+value|135
+end_define
+
+begin_comment
+comment|/* Sunplus Score */
+end_comment
+
 begin_comment
 comment|/* If it is necessary to assign new unofficial EM_* values, please pick large    random numbers (0x8523, 0xa7f2, etc.) to minimize the chances of collision    with official or non-GNU unofficial values.     NOTE: Do not just increment the most recent number by one.    Somebody else somewhere will do exactly the same thing, and you    will have a collision.  Instead, pick a random number.     Normally, each entity or maintainer responsible for a machine with an    unofficial e_machine number should eventually ask registry@caldera.com for    an officially blessed number to be added to the list above.	*/
 end_comment
 
-begin_define
-define|#
-directive|define
-name|EM_PJ_OLD
-value|99
-end_define
-
 begin_comment
-comment|/* picoJava */
-end_comment
-
-begin_comment
-comment|/* Cygnus PowerPC ELF backend.  Written in the absence of an ABI.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EM_CYGNUS_POWERPC
-value|0x9025
-end_define
-
-begin_comment
-comment|/* Old version of Sparc v9, from before the ABI; this should be    removed shortly.  */
+comment|/* Old version of Sparc v9, from before the ABI;    This should be removed shortly.  */
 end_comment
 
 begin_define
@@ -1463,47 +1518,102 @@ value|17
 end_define
 
 begin_comment
-comment|/* (Deprecated) Temporary number for the OpenRISC processor.  */
+comment|/* picoJava */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|EM_OR32
-value|0x8472
+name|EM_PJ_OLD
+value|99
 end_define
 
 begin_comment
-comment|/* Cygnus M32R ELF backend.  Written in the absence of an ABI.  */
+comment|/* AVR magic number.  Written in the absense of an ABI.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|EM_CYGNUS_M32R
-value|0x9041
+name|EM_AVR_OLD
+value|0x1057
 end_define
 
 begin_comment
-comment|/* Alpha backend magic number.  Written in the absence of an ABI.  */
+comment|/* MSP430 magic number.  Written in the absense of everything.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|EM_ALPHA
-value|0x9026
+name|EM_MSP430_OLD
+value|0x1059
 end_define
 
 begin_comment
-comment|/* old S/390 backend magic number. Written in the absence of an ABI.  */
+comment|/* Morpho MT.   Written in the absense of an ABI.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|EM_S390_OLD
-value|0xa390
+name|EM_MT
+value|0x2530
+end_define
+
+begin_comment
+comment|/* FR30 magic number - no EABI available.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_CYGNUS_FR30
+value|0x3330
+end_define
+
+begin_comment
+comment|/* OpenRISC magic number.  Written in the absense of an ABI.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_OPENRISC_OLD
+value|0x3426
+end_define
+
+begin_comment
+comment|/* DLX magic number.  Written in the absense of an ABI.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_DLX
+value|0x5aa5
+end_define
+
+begin_comment
+comment|/* FRV magic number - no EABI available??.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_CYGNUS_FRV
+value|0x5441
+end_define
+
+begin_comment
+comment|/* Infineon Technologies 16-bit microcontroller with C166-V2 core.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_XC16X
+value|0x4688
 end_define
 
 begin_comment
@@ -1529,6 +1639,61 @@ value|0x7676
 end_define
 
 begin_comment
+comment|/* Ubicom IP2xxx;   Written in the absense of an ABI.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_IP2K_OLD
+value|0x8217
+end_define
+
+begin_comment
+comment|/* (Deprecated) Temporary number for the OpenRISC processor.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_OR32
+value|0x8472
+end_define
+
+begin_comment
+comment|/* Cygnus PowerPC ELF backend.  Written in the absence of an ABI.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_CYGNUS_POWERPC
+value|0x9025
+end_define
+
+begin_comment
+comment|/* Alpha backend magic number.  Written in the absence of an ABI.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_ALPHA
+value|0x9026
+end_define
+
+begin_comment
+comment|/* Cygnus M32R ELF backend.  Written in the absence of an ABI.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EM_CYGNUS_M32R
+value|0x9041
+end_define
+
+begin_comment
 comment|/* V850 backend magic number.  Written in the absense of an ABI.  */
 end_comment
 
@@ -1540,65 +1705,25 @@ value|0x9080
 end_define
 
 begin_comment
-comment|/* mn10200 and mn10300 backend magic numbers.    Written in the absense of an ABI.  */
+comment|/* old S/390 backend magic number. Written in the absence of an ABI.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|EM_CYGNUS_MN10200
-value|0xdead
-end_define
-
-begin_define
-define|#
-directive|define
-name|EM_CYGNUS_MN10300
-value|0xbeef
+name|EM_S390_OLD
+value|0xa390
 end_define
 
 begin_comment
-comment|/* FR30 magic number - no EABI available.  */
+comment|/* Old, unofficial value for Xtensa.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|EM_CYGNUS_FR30
-value|0x3330
-end_define
-
-begin_comment
-comment|/* AVR magic number    Written in the absense of an ABI.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EM_AVR_OLD
-value|0x1057
-end_define
-
-begin_comment
-comment|/* OpenRISC magic number    Written in the absense of an ABI.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EM_OPENRISC_OLD
-value|0x3426
-end_define
-
-begin_comment
-comment|/* DLX magic number    Written in the absense of an ABI.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EM_DLX
-value|0x5aa5
+name|EM_XTENSA_OLD
+value|0xabc7
 end_define
 
 begin_define
@@ -1609,36 +1734,32 @@ value|0xad45
 end_define
 
 begin_comment
-comment|/* FRV magic number - no EABI available??.  */
+comment|/* mn10200 and mn10300 backend magic numbers.    Written in the absense of an ABI.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|EM_CYGNUS_FRV
-value|0x5441
+name|EM_CYGNUS_MN10300
+value|0xbeef
+end_define
+
+begin_define
+define|#
+directive|define
+name|EM_CYGNUS_MN10200
+value|0xdead
 end_define
 
 begin_comment
-comment|/* Ubicom IP2xxx; no ABI */
+comment|/* Renesas M32C and M16C.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|EM_IP2K_OLD
-value|0x8217
-end_define
-
-begin_comment
-comment|/* MSP430 magic number       Written in the absense everything.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EM_MSP430_OLD
-value|0x1059
+name|EM_M32C
+value|0xFEB0
 end_define
 
 begin_comment
@@ -1653,15 +1774,26 @@ value|0xFEBA
 end_define
 
 begin_comment
-comment|/* Old, unofficial value for Xtensa.  */
+comment|/* NIOS magic number - no EABI available.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|EM_XTENSA_OLD
-value|0xabc7
+name|EM_NIOS32
+value|0xFEBB
 end_define
+
+begin_define
+define|#
+directive|define
+name|EM_CYGNUS_MEP
+value|0xF00D
+end_define
+
+begin_comment
+comment|/* Toshiba MeP */
+end_comment
 
 begin_comment
 comment|/* See the above comment before you add a new EM_* value here.  */
@@ -1836,12 +1968,42 @@ name|PT_GNU_EH_FRAME
 value|(PT_LOOS + 0x474e550)
 end_define
 
+begin_comment
+comment|/* Frame unwind information */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PT_SUNW_EH_FRAME
+value|PT_GNU_EH_FRAME
+end_define
+
+begin_comment
+comment|/* Solaris uses the same value */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|PT_GNU_STACK
 value|(PT_LOOS + 0x474e551)
 end_define
+
+begin_comment
+comment|/* Stack flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PT_GNU_RELRO
+value|(PT_LOOS + 0x474e552)
+end_define
+
+begin_comment
+comment|/* Read-only after relocation */
+end_comment
 
 begin_comment
 comment|/* Program segment permissions, in program header p_flags field.  */
@@ -2121,6 +2283,28 @@ end_define
 
 begin_comment
 comment|/* Last of OS specific semantics */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHT_GNU_ATTRIBUTES
+value|0x6ffffff5
+end_define
+
+begin_comment
+comment|/* Object attributes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHT_GNU_HASH
+value|0x6ffffff6
+end_define
+
+begin_comment
+comment|/* GNU style symbol hash table */
 end_comment
 
 begin_define
@@ -2757,7 +2941,7 @@ value|ELF_ST_INFO
 end_define
 
 begin_comment
-comment|/* This macro disassembles and assembles a symbol's visibility into    the st_other field.  The STV_ defines specificy the actual visibility.  */
+comment|/* This macro disassembles and assembles a symbol's visibility into    the st_other field.  The STV_ defines specify the actual visibility.  */
 end_comment
 
 begin_define
@@ -2951,6 +3135,28 @@ end_define
 
 begin_comment
 comment|/* Thread local data object */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STT_RELC
+value|8
+end_define
+
+begin_comment
+comment|/* Complex relocation expression */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STT_SRELC
+value|9
+end_define
+
+begin_comment
+comment|/* Signed Complex relocation expression */
 end_comment
 
 begin_define
@@ -3235,7 +3441,7 @@ name|s
 parameter_list|,
 name|t
 parameter_list|)
-value|(((bfd_vma) (s)<< 32) + (bfd_vma) (t))
+value|(((bfd_vma) (s)<< 31<< 1) + (bfd_vma) (t))
 end_define
 
 begin_comment
@@ -3463,7 +3669,7 @@ begin_define
 define|#
 directive|define
 name|DT_ENCODING
-value|31
+value|32
 end_define
 
 begin_define
@@ -3626,6 +3832,27 @@ define|#
 directive|define
 name|DT_ADDRRNGLO
 value|0x6ffffe00
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_GNU_HASH
+value|0x6ffffef5
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_TLSDESC_PLT
+value|0x6ffffef6
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_TLSDESC_GOT
+value|0x6ffffef7
 end_define
 
 begin_define

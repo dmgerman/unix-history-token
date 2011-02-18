@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-mips.h -- header file for tc-mips.c.    Copyright 1993, 1994, 1995, 1996, 1997, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.    Contributed by the OSF and Ralph Campbell.    Written by Keith Knowles and Ralph Campbell, working independently.    Modified for ECOFF support by Ian Lance Taylor of Cygnus Support.     This file is part of GAS.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* tc-mips.h -- header file for tc-mips.c.    Copyright 1993, 1994, 1995, 1996, 1997, 2000, 2001, 2002, 2003, 2004,    2005, 2006 Free Software Foundation, Inc.    Contributed by the OSF and Ralph Campbell.    Written by Keith Knowles and Ralph Campbell, working independently.    Modified for ECOFF support by Ian Lance Taylor of Cygnus Support.     This file is part of GAS.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -186,14 +186,28 @@ name|MAX_MEM_FOR_RS_ALIGN_CODE
 value|(1 + 2)
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|insn_label_list
+struct_decl|;
+end_struct_decl
+
+begin_define
+define|#
+directive|define
+name|TC_SEGMENT_INFO_TYPE
+value|struct insn_label_list *
+end_define
+
 begin_comment
-comment|/* We permit PC relative difference expressions when generating    embedded PIC code.  */
+comment|/* This field is nonzero if the symbol is the target of a MIPS16 jump.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|DIFF_EXPR_OK
+name|TC_SYMFIELD_TYPE
+value|int
 end_define
 
 begin_comment
@@ -243,8 +257,8 @@ block|,
 comment|/* Generate PIC code as in the SVR4 MIPS ABI.  */
 name|SVR4_PIC
 block|,
-comment|/* Generate PIC code without using a global offset table: the data      segment has a maximum size of 64K, all data references are off      the $gp register, and all text references are PC relative.  This      is used on some embedded systems.  */
-name|EMBEDDED_PIC
+comment|/* VxWorks's PIC model.  */
+name|VXWORKS_PIC
 block|}
 enum|;
 end_enum
@@ -442,7 +456,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Values passed to md_apply_fix3 don't include symbol values.  */
+comment|/* Values passed to md_apply_fix don't include symbol values.  */
 end_comment
 
 begin_define
@@ -456,7 +470,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* Global syms must not be resolved, to support ELF shared libraries.    When generating embedded code, we don't have shared libs.  */
+comment|/* Global syms must not be resolved, to support ELF shared libraries.  */
 end_comment
 
 begin_define
@@ -464,11 +478,11 @@ define|#
 directive|define
 name|EXTERN_FORCE_RELOC
 define|\
-value|(OUTPUT_FLAVOR == bfd_target_elf_flavour	\&& mips_pic != EMBEDDED_PIC)
+value|(OUTPUT_FLAVOR == bfd_target_elf_flavour)
 end_define
 
 begin_comment
-comment|/* When generating embedded PIC code we must keep PC relative    relocations.  */
+comment|/* When generating NEWABI code, we may need to have to keep combined    relocations which don't have symbols.  */
 end_comment
 
 begin_define
@@ -583,13 +597,6 @@ parameter_list|()
 value|md_mips_end()
 end_define
 
-begin_define
-define|#
-directive|define
-name|USE_GLOBAL_POINTER_OPT
-value|(OUTPUT_FLAVOR == bfd_target_ecoff_flavour \ 				 || OUTPUT_FLAVOR == bfd_target_coff_flavour \ 				 || OUTPUT_FLAVOR == bfd_target_elf_flavour)
-end_define
-
 begin_function_decl
 specifier|extern
 name|void
@@ -643,6 +650,12 @@ parameter_list|()
 value|mips_enable_auto_align()
 end_define
 
+begin_enum_decl
+enum_decl|enum
+name|dwarf2_format
+enum_decl|;
+end_enum_decl
+
 begin_function_decl
 specifier|extern
 name|enum
@@ -662,6 +675,16 @@ parameter_list|()
 value|mips_dwarf2_format ()
 end_define
 
+begin_function_decl
+specifier|extern
+name|int
+name|mips_dwarf2_addr_size
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
@@ -670,6 +693,63 @@ parameter_list|(
 name|bfd
 parameter_list|)
 value|mips_dwarf2_addr_size ()
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_USE_CFIPOP
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|tc_cfi_frame_initial_instructions
+value|mips_cfi_frame_initial_instructions
+end_define
+
+begin_function_decl
+specifier|extern
+name|void
+name|mips_cfi_frame_initial_instructions
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|tc_regname_to_dw2regnum
+value|tc_mips_regname_to_dw2regnum
+end_define
+
+begin_function_decl
+specifier|extern
+name|int
+name|tc_mips_regname_to_dw2regnum
+parameter_list|(
+name|char
+modifier|*
+name|regname
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|DWARF2_DEFAULT_RETURN_COLUMN
+value|31
+end_define
+
+begin_define
+define|#
+directive|define
+name|DWARF2_CIE_DATA_ALIGNMENT
+value|(-4)
 end_define
 
 begin_endif

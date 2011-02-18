@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* chew    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1998, 2000, 2001,    2002, 2003    Free Software Foundation, Inc.    Contributed by steve chamberlain @cygnus  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* chew    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1998, 2000, 2001,    2002, 2003, 2005    Free Software Foundation, Inc.    Contributed by steve chamberlain @cygnus  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -20,12 +20,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"sysdep.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<assert.h>
 end_include
 
@@ -39,6 +33,18 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_define
@@ -2601,26 +2607,6 @@ operator|++
 expr_stmt|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* This is not currently used.  */
-end_comment
-
-begin_comment
-comment|/* turn everything not starting with a . into a comment */
-end_comment
-
-begin_endif
-unit|static void manglecomments () {   unsigned int idx = 0;   string_type out;   init_string (&out);    while (at (tos, idx))     {       if (at (tos, idx) == '\n'&& at (tos, idx + 1) == '*') 	{ 	  cattext (&out, "	/*"); 	  idx += 2; 	}       else if (at (tos, idx) == '*'&& at (tos, idx + 1) == '}') 	{ 	  cattext (&out, "*/"); 	  idx += 2; 	}       else 	{ 	  catchar (&out, at (tos, idx)); 	  idx++; 	}     }    overwrite_string (tos,&out);    pc++; }
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Mod tos so that only lines with leading dots remain */

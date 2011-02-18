@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ld-emul.h - Linker emulation header file    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 2000, 2002, 2003    Free Software Foundation, Inc.     This file is part of GLD, the Gnu Linker.     GLD is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 1, or (at your option)    any later version.     GLD is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.  */
+comment|/* ld-emul.h - Linker emulation header file    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 2000, 2001,    2002, 2003, 2004, 2005    Free Software Foundation, Inc.     This file is part of GLD, the Gnu Linker.     GLD is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 1, or (at your option)    any later version.     GLD is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.  */
 end_comment
 
 begin_ifndef
@@ -203,10 +203,6 @@ specifier|extern
 name|bfd_boolean
 name|ldemul_place_orphan
 parameter_list|(
-name|struct
-name|lang_input_statement_struct
-modifier|*
-parameter_list|,
 name|asection
 modifier|*
 parameter_list|)
@@ -358,6 +354,26 @@ begin_function_decl
 specifier|extern
 name|void
 name|before_allocation_default
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|finish_default
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|finish_default
 parameter_list|(
 name|void
 parameter_list|)
@@ -599,10 +615,6 @@ modifier|*
 name|place_orphan
 function_decl|)
 parameter_list|(
-name|struct
-name|lang_input_statement_struct
-modifier|*
-parameter_list|,
 name|asection
 modifier|*
 parameter_list|)

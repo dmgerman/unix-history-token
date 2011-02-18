@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Disassemble from a buffer, for GNU.    Copyright 1993, 1994, 1996, 1997, 1998, 1999, 2000    Free Software Foundation, Inc.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Disassemble from a buffer, for GNU.    Copyright 1993, 1994, 1996, 1997, 1998, 1999, 2000, 2001, 2003, 2005    Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston,    MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -35,30 +35,22 @@ begin_function
 name|int
 name|buffer_read_memory
 parameter_list|(
-name|memaddr
-parameter_list|,
-name|myaddr
-parameter_list|,
-name|length
-parameter_list|,
-name|info
-parameter_list|)
 name|bfd_vma
 name|memaddr
-decl_stmt|;
+parameter_list|,
 name|bfd_byte
 modifier|*
 name|myaddr
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|int
 name|length
-decl_stmt|;
+parameter_list|,
 name|struct
 name|disassemble_info
 modifier|*
 name|info
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|int
@@ -149,23 +141,17 @@ begin_function
 name|void
 name|perror_memory
 parameter_list|(
-name|status
-parameter_list|,
-name|memaddr
-parameter_list|,
-name|info
-parameter_list|)
 name|int
 name|status
-decl_stmt|;
+parameter_list|,
 name|bfd_vma
 name|memaddr
-decl_stmt|;
+parameter_list|,
 name|struct
 name|disassemble_info
 modifier|*
 name|info
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -191,7 +177,21 @@ name|status
 argument_list|)
 expr_stmt|;
 else|else
-comment|/* Actually, address between memaddr and memaddr + len was        out of bounds.  */
+block|{
+name|char
+name|buf
+index|[
+literal|30
+index|]
+decl_stmt|;
+comment|/* Actually, address between memaddr and memaddr + len was 	 out of bounds.  */
+name|sprintf_vma
+argument_list|(
+name|buf
+argument_list|,
+name|memaddr
+argument_list|)
+expr_stmt|;
 name|info
 operator|->
 name|fprintf_func
@@ -202,12 +202,13 @@ name|stream
 argument_list|,
 name|_
 argument_list|(
-literal|"Address 0x%x is out of bounds.\n"
+literal|"Address 0x%s is out of bounds.\n"
 argument_list|)
 argument_list|,
-name|memaddr
+name|buf
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -223,18 +224,14 @@ begin_function
 name|void
 name|generic_print_address
 parameter_list|(
-name|addr
-parameter_list|,
-name|info
-parameter_list|)
 name|bfd_vma
 name|addr
-decl_stmt|;
+parameter_list|,
 name|struct
 name|disassemble_info
 modifier|*
 name|info
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|buf
@@ -268,22 +265,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* Just concatenate the address as hex.  This is included for    completeness even though both GDB and objdump provide their own (to    print symbolic addresses).  */
-end_comment
-
-begin_endif
-unit|void generic_strcat_address PARAMS ((bfd_vma, char *, int));  void generic_strcat_address (addr, buf, len)      bfd_vma addr;      char *buf;      int len; {   if (buf != (char *)NULL&& len> 0)     {       char tmpBuf[30];        sprintf_vma (tmpBuf, addr);       if ((strlen (buf) + strlen (tmpBuf))<= (unsigned int) len) 	strcat (buf, tmpBuf);       else 	strncat (buf, tmpBuf, (len - strlen(buf)));     }   return; }
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* Just return true.  */
 end_comment
@@ -292,20 +273,16 @@ begin_function
 name|int
 name|generic_symbol_at_address
 parameter_list|(
-name|addr
-parameter_list|,
-name|info
-parameter_list|)
 name|bfd_vma
 name|addr
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|,
 name|struct
 name|disassemble_info
 modifier|*
 name|info
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 literal|1

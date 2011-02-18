@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ECOFF debugging support.    Copyright 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.    Contributed by Cygnus Support.    This file was put together by Ian Lance Taylor<ian@cygnus.com>.  A    good deal of it comes directly from mips-tfile.c, by Michael    Meissner<meissner@osf.org>.     This file is part of GAS.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* ECOFF debugging support.    Copyright 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002,    2003, 2004, 2005, 2006    Free Software Foundation, Inc.    Contributed by Cygnus Support.    This file was put together by Ian Lance Taylor<ian@cygnus.com>.  A    good deal of it comes directly from mips-tfile.c, by Michael    Meissner<meissner@osf.org>.     This file is part of GAS.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -7520,6 +7520,10 @@ specifier|const
 name|char
 modifier|*
 name|name
+parameter_list|,
+name|int
+name|appfile
+name|ATTRIBUTE_UNUSED
 parameter_list|)
 block|{
 if|if
@@ -9273,7 +9277,7 @@ name|as_bad
 argument_list|(
 name|_
 argument_list|(
-literal|".val expression is too copmlex"
+literal|".val expression is too complex"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -10696,20 +10700,12 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* Alpha-OSF1 adds "the offset of saved $a0 from $sp", according to      Sandro.  I don't yet know where this value should be stored, if      anywhere.  */
-block|demand_empty_rest_of_line ();
-else|#
-directive|else
+comment|/* Alpha-OSF1 adds "the offset of saved $a0 from $sp", according to      Sandro.  I don't yet know where this value should be stored, if      anywhere.  Don't call demand_empty_rest_of_line ().  */
 name|s_ignore
 argument_list|(
 literal|42
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -12453,6 +12449,7 @@ name|totcount
 operator|=
 literal|0
 expr_stmt|;
+comment|/* FIXME?  Now that MIPS embedded-PIC is gone, it may be safe to      remove this code.  */
 comment|/* For some reason the address of the first procedure is ignored      when reading line numbers.  This doesn't matter if the address of      the first procedure is 0, but when gcc is generating MIPS      embedded PIC code, it will put strings in the .text section      before the first procedure.  We cope by inserting a dummy line if      the address of the first procedure is not 0.  Hopefully this      won't screw things up too badly.       Don't do this for ECOFF assembly source line numbers.  They work      without this extra attention.  */
 if|if
 condition|(

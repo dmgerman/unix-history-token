@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* objalloc.h -- routines to allocate memory for objects    Copyright 1997, 2001 Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Solutions.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* objalloc.h -- routines to allocate memory for objects    Copyright 1997, 2001 Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Solutions.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -41,7 +41,8 @@ name|unsigned
 name|int
 name|current_space
 decl_stmt|;
-name|PTR
+name|void
+modifier|*
 name|chunks
 decl_stmt|;
 block|}
@@ -133,42 +134,37 @@ begin_comment
 comment|/* Create an objalloc structure.  Returns NULL if malloc fails.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|struct
 name|objalloc
 modifier|*
 name|objalloc_create
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Allocate space from an objalloc structure.  Returns NULL if malloc    fails.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
-name|PTR
+name|void
+modifier|*
 name|_objalloc_alloc
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|objalloc
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|unsigned
 name|long
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* The macro version of objalloc_alloc.  We only define this if using    gcc, because otherwise we would have to evaluate the arguments    multiple times, or use a temporary field as obstack.h does.  */
@@ -230,7 +226,7 @@ parameter_list|,
 name|l
 parameter_list|)
 define|\
-value|__extension__								\   ({ struct objalloc *__o = (o);					\      unsigned long __len = (l);						\      if (__len == 0)							\        __len = 1;							\      __len = (__len + OBJALLOC_ALIGN - 1)&~ (OBJALLOC_ALIGN - 1);	\      (__len<= __o->current_space					\       ? (__o->current_ptr += __len,					\ 	 __o->current_space -= __len,					\ 	 (PTR) (__o->current_ptr - __len))				\       : _objalloc_alloc (__o, __len)); })
+value|__extension__								\   ({ struct objalloc *__o = (o);					\      unsigned long __len = (l);						\      if (__len == 0)							\        __len = 1;							\      __len = (__len + OBJALLOC_ALIGN - 1)&~ (OBJALLOC_ALIGN - 1);	\      (__len<= __o->current_space					\       ? (__o->current_ptr += __len,					\ 	 __o->current_space -= __len,					\ 	 (void *) (__o->current_ptr - __len))				\       : _objalloc_alloc (__o, __len)); })
 end_define
 
 begin_else
@@ -267,41 +263,36 @@ begin_comment
 comment|/* Free an entire objalloc structure.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|objalloc_free
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|objalloc
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Free a block allocated by objalloc_alloc.  This also frees all more    recently allocated blocks.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|objalloc_free_block
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|objalloc
-operator|*
-operator|,
-name|PTR
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

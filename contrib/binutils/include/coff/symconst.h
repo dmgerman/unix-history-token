@@ -181,7 +181,7 @@ value|11
 end_define
 
 begin_comment
-comment|/* maximun allowed 32 -- 5 bits */
+comment|/* maximum allowed 32 -- 5 bits */
 end_comment
 
 begin_comment

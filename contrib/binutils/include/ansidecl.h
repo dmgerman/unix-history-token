@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ANSI and traditional C compatability macros    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.    This file is part of the GNU C Library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* ANSI and traditional C compatability macros    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.    This file is part of the GNU C Library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -137,6 +137,16 @@ name|LONG_DOUBLE
 value|long double
 end_define
 
+begin_comment
+comment|/* PARAMS is often defined elsewhere (e.g. by libintl.h), so wrap it in    a #ifndef.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PARAMS
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -146,6 +156,11 @@ name|ARGS
 parameter_list|)
 value|ARGS
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -778,6 +793,12 @@ begin_if
 if|#
 directive|if
 operator|(
+operator|!
+name|defined
+argument_list|(
+name|__cplusplus
+argument_list|)
+operator|&&
 name|GCC_VERSION
 operator|>=
 literal|2093
@@ -808,7 +829,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* GNUC>= 2.93 */
+comment|/* !__cplusplus&& GNUC>= 2.93 */
 end_comment
 
 begin_endif
@@ -840,6 +861,64 @@ end_endif
 
 begin_comment
 comment|/* ATTRIBUTE_UNUSED */
+end_comment
+
+begin_comment
+comment|/* Before GCC 3.4, the C++ frontend couldn't parse attributes placed after the    identifier name.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__cplusplus
+argument_list|)
+operator|||
+operator|(
+name|GCC_VERSION
+operator|>=
+literal|3004
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ARG_UNUSED
+parameter_list|(
+name|NAME
+parameter_list|)
+value|NAME ATTRIBUTE_UNUSED
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !__cplusplus || GNUC>= 3.4 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARG_UNUSED
+parameter_list|(
+name|NAME
+parameter_list|)
+value|NAME
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !__cplusplus || GNUC>= 3.4 */
 end_comment
 
 begin_ifndef
@@ -927,6 +1006,62 @@ comment|/* ATTRIBUTE_NONNULL */
 end_comment
 
 begin_comment
+comment|/* Attribute `pure' was valid as of gcc 3.0.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATTRIBUTE_PURE
+end_ifndef
+
+begin_if
+if|#
+directive|if
+operator|(
+name|GCC_VERSION
+operator|>=
+literal|3000
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_PURE
+value|__attribute__ ((__pure__))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_PURE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* GNUC>= 3.0 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ATTRIBUTE_PURE */
+end_comment
+
+begin_comment
 comment|/* Use ATTRIBUTE_PRINTF when the format specifier must not be NULL.    This was the case for the `printf' format attribute by itself    before GCC 3.3, but as of 3.3 we need to add the `nonnull'    attribute to retain this behavior.  */
 end_comment
 
@@ -990,6 +1125,107 @@ end_endif
 
 begin_comment
 comment|/* ATTRIBUTE_PRINTF */
+end_comment
+
+begin_comment
+comment|/* Use ATTRIBUTE_FPTR_PRINTF when the format attribute is to be set on    a function pointer.  Format attributes were allowed on function    pointers as of gcc 3.1.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATTRIBUTE_FPTR_PRINTF
+end_ifndef
+
+begin_if
+if|#
+directive|if
+operator|(
+name|GCC_VERSION
+operator|>=
+literal|3001
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_FPTR_PRINTF
+parameter_list|(
+name|m
+parameter_list|,
+name|n
+parameter_list|)
+value|ATTRIBUTE_PRINTF(m, n)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_FPTR_PRINTF
+parameter_list|(
+name|m
+parameter_list|,
+name|n
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* GNUC>= 3.1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_FPTR_PRINTF_1
+value|ATTRIBUTE_FPTR_PRINTF(1, 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_FPTR_PRINTF_2
+value|ATTRIBUTE_FPTR_PRINTF(2, 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_FPTR_PRINTF_3
+value|ATTRIBUTE_FPTR_PRINTF(3, 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_FPTR_PRINTF_4
+value|ATTRIBUTE_FPTR_PRINTF(4, 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_FPTR_PRINTF_5
+value|ATTRIBUTE_FPTR_PRINTF(5, 6)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ATTRIBUTE_FPTR_PRINTF */
 end_comment
 
 begin_comment
@@ -1091,6 +1327,250 @@ end_endif
 
 begin_comment
 comment|/* ATTRIBUTE_NULL_PRINTF */
+end_comment
+
+begin_comment
+comment|/* Attribute `sentinel' was valid as of gcc 3.5.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATTRIBUTE_SENTINEL
+end_ifndef
+
+begin_if
+if|#
+directive|if
+operator|(
+name|GCC_VERSION
+operator|>=
+literal|3005
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_SENTINEL
+value|__attribute__ ((__sentinel__))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_SENTINEL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* GNUC>= 3.5 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ATTRIBUTE_SENTINEL */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATTRIBUTE_ALIGNED_ALIGNOF
+end_ifndef
+
+begin_if
+if|#
+directive|if
+operator|(
+name|GCC_VERSION
+operator|>=
+literal|3000
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_ALIGNED_ALIGNOF
+parameter_list|(
+name|m
+parameter_list|)
+value|__attribute__ ((__aligned__ (__alignof__ (m))))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_ALIGNED_ALIGNOF
+parameter_list|(
+name|m
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* GNUC>= 3.0 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ATTRIBUTE_ALIGNED_ALIGNOF */
+end_comment
+
+begin_comment
+comment|/* Useful for structures whose layout must much some binary specification    regardless of the alignment and padding qualities of the compiler.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATTRIBUTE_PACKED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_PACKED
+value|__attribute__ ((packed))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Attribute `hot' and `cold' was valid as of gcc 4.3.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATTRIBUTE_COLD
+end_ifndef
+
+begin_if
+if|#
+directive|if
+operator|(
+name|GCC_VERSION
+operator|>=
+literal|4003
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_COLD
+value|__attribute__ ((__cold__))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_COLD
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* GNUC>= 4.3 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ATTRIBUTE_COLD */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATTRIBUTE_HOT
+end_ifndef
+
+begin_if
+if|#
+directive|if
+operator|(
+name|GCC_VERSION
+operator|>=
+literal|4003
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_HOT
+value|__attribute__ ((__hot__))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_HOT
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* GNUC>= 4.3 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ATTRIBUTE_HOT */
 end_comment
 
 begin_comment

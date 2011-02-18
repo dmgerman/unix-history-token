@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (C) 1991, 1992, 1996, 1998 Free Software Foundation, Inc.    This file is derived from mkstemp.c from the GNU C Library.     The GNU C Library is free software; you can redistribute it and/or    modify it under the terms of the GNU Library General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     The GNU C Library is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    Library General Public License for more details.     You should have received a copy of the GNU Library General Public    License along with the GNU C Library; see the file COPYING.LIB.  If not,    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Copyright (C) 1991, 1992, 1996, 1998, 2004 Free Software Foundation, Inc.    This file is derived from mkstemp.c from the GNU C Library.     The GNU C Library is free software; you can redistribute it and/or    modify it under the terms of the GNU Library General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     The GNU C Library is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    Library General Public License for more details.     You should have received a copy of the GNU Library General Public    License along with the GNU C Library; see the file COPYING.LIB.  If not,    write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor,    Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifdef
@@ -177,25 +177,39 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|O_BINARY
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|O_BINARY
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*  @deftypefn Replacement int mkstemps (char *@var{template}, int @var{suffix_len})  Generate a unique temporary file name from @var{template}. @var{template} has the form:  @example    @var{path}/ccXXXXXX@var{suffix} @end example  @var{suffix_len} tells us how long @var{suffix} is (it can be zero length).  The last six characters of @var{template} before @var{suffix} must be @samp{XXXXXX}; they are replaced with a string that makes the filename unique.  Returns a file descriptor open on the file for reading and writing.  @end deftypefn  */
+comment|/*  @deftypefn Replacement int mkstemps (char *@var{pattern}, int @var{suffix_len})  Generate a unique temporary file name from @var{pattern}. @var{pattern} has the form:  @example    @var{path}/ccXXXXXX@var{suffix} @end example  @var{suffix_len} tells us how long @var{suffix} is (it can be zero length).  The last six characters of @var{pattern} before @var{suffix} must be @samp{XXXXXX}; they are replaced with a string that makes the filename unique.  Returns a file descriptor open on the file for reading and writing.  @end deftypefn  */
 end_comment
 
 begin_function
 name|int
 name|mkstemps
 parameter_list|(
-name|template
-parameter_list|,
-name|suffix_len
-parameter_list|)
 name|char
 modifier|*
-name|template
-decl_stmt|;
+name|pattern
+parameter_list|,
 name|int
 name|suffix_len
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 specifier|const
@@ -232,7 +246,7 @@ name|len
 operator|=
 name|strlen
 argument_list|(
-name|template
+name|pattern
 argument_list|)
 expr_stmt|;
 if|if
@@ -249,7 +263,7 @@ operator|||
 name|strncmp
 argument_list|(
 operator|&
-name|template
+name|pattern
 index|[
 name|len
 operator|-
@@ -272,7 +286,7 @@ block|}
 name|XXXXXX
 operator|=
 operator|&
-name|template
+name|pattern
 index|[
 name|len
 operator|-
@@ -437,34 +451,14 @@ operator|%
 literal|62
 index|]
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VMS
 name|fd
 operator|=
 name|open
 argument_list|(
-name|template
+name|pattern
 argument_list|,
-name|O_RDWR
+name|O_BINARY
 operator||
-name|O_CREAT
-operator||
-name|O_EXCL
-argument_list|,
-literal|0600
-argument_list|,
-literal|"fop=tmd"
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|fd
-operator|=
-name|open
-argument_list|(
-name|template
-argument_list|,
 name|O_RDWR
 operator||
 name|O_CREAT
@@ -474,8 +468,6 @@ argument_list|,
 literal|0600
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|fd
@@ -493,7 +485,7 @@ literal|7777
 expr_stmt|;
 block|}
 comment|/* We return the null string if we can't find a unique file name.  */
-name|template
+name|pattern
 index|[
 literal|0
 index|]

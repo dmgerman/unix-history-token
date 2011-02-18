@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ldexp.h -    Copyright 1991, 1992, 1993, 1994, 1995, 1998, 1999, 2000, 2001, 2002,    2003, 2004 Free Software Foundation, Inc.     This file is part of GLD, the Gnu Linker.     GLD is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GLD is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GLD; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* ldexp.h -    Copyright 1991, 1992, 1993, 1994, 1995, 1998, 1999, 2000, 2001, 2002,    2003, 2004, 2005 Free Software Foundation, Inc.     This file is part of GLD, the Gnu Linker.     GLD is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GLD is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GLD; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -30,8 +30,7 @@ name|char
 modifier|*
 name|str
 decl_stmt|;
-name|struct
-name|lang_output_section_statement_struct
+name|asection
 modifier|*
 name|section
 decl_stmt|;
@@ -50,6 +49,10 @@ block|{
 name|int
 name|node_code
 decl_stmt|;
+name|unsigned
+name|int
+name|lineno
+decl_stmt|;
 enum|enum
 block|{
 name|etree_binary
@@ -65,10 +68,6 @@ block|,
 name|etree_provide
 block|,
 name|etree_provided
-block|,
-name|etree_undef
-block|,
-name|etree_unspec
 block|,
 name|etree_value
 block|,
@@ -146,6 +145,9 @@ name|union
 name|etree_union
 modifier|*
 name|src
+decl_stmt|;
+name|bfd_boolean
+name|hidden
 decl_stmt|;
 block|}
 name|assign
@@ -229,10 +231,52 @@ name|etree_type
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|lang_first_phase_enum
+block|,
+name|lang_mark_phase_enum
+block|,
+name|lang_allocating_phase_enum
+block|,
+name|lang_final_phase_enum
+block|}
+name|lang_phase_type
+typedef|;
+end_typedef
+
 begin_struct
-specifier|extern
 struct|struct
-name|exp_data_seg
+name|ldexp_control
+block|{
+comment|/* Modify expression evaluation depending on this.  */
+name|lang_phase_type
+name|phase
+decl_stmt|;
+comment|/* Principally used for diagnostics.  */
+name|bfd_boolean
+name|assigning_to_dot
+decl_stmt|;
+comment|/* Working results.  */
+name|etree_value_type
+name|result
+decl_stmt|;
+name|bfd_vma
+name|dot
+decl_stmt|;
+comment|/* Current dot and section passed to ldexp folder.  */
+name|bfd_vma
+modifier|*
+name|dotp
+decl_stmt|;
+name|asection
+modifier|*
+name|section
+decl_stmt|;
+comment|/* State machine and results for DATASEG.  */
+struct|struct
 block|{
 enum|enum
 block|{
@@ -240,7 +284,11 @@ name|exp_dataseg_none
 block|,
 name|exp_dataseg_align_seen
 block|,
+name|exp_dataseg_relro_seen
+block|,
 name|exp_dataseg_end_seen
+block|,
+name|exp_dataseg_relro_adjust
 block|,
 name|exp_dataseg_adjust
 block|}
@@ -249,14 +297,76 @@ enum|;
 name|bfd_vma
 name|base
 decl_stmt|,
+name|min_base
+decl_stmt|,
+name|relro_end
+decl_stmt|,
 name|end
 decl_stmt|,
 name|pagesize
+decl_stmt|,
+name|maxpagesize
 decl_stmt|;
 block|}
-name|exp_data_seg
+name|dataseg
+struct|;
+block|}
 struct|;
 end_struct
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|ldexp_control
+name|expld
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* A maps from a segment name to a base address.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|segment_struct
+block|{
+comment|/* The next segment in the linked list.  */
+name|struct
+name|segment_struct
+modifier|*
+name|next
+decl_stmt|;
+comment|/* The name of the sgement.  */
+specifier|const
+name|char
+modifier|*
+name|name
+decl_stmt|;
+comment|/* The base address for the segment.  */
+name|bfd_vma
+name|value
+decl_stmt|;
+comment|/* True if a SEGMENT_START directive corresponding to this segment      has been seen.  */
+name|bfd_boolean
+name|used
+decl_stmt|;
+block|}
+name|segment_type
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* The segments specified by the user on the command-line.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|segment_type
+modifier|*
+name|segments
+decl_stmt|;
+end_decl_stmt
 
 begin_typedef
 typedef|typedef
@@ -303,28 +413,14 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|etree_value_type
-name|invalid
-parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|etree_value_type
 name|exp_fold_tree
 parameter_list|(
 name|etree_type
 modifier|*
 parameter_list|,
-name|struct
-name|lang_output_section_statement_struct
+name|asection
 modifier|*
-parameter_list|,
-name|lang_phase_type
-parameter_list|,
-name|bfd_vma
 parameter_list|,
 name|bfd_vma
 modifier|*
@@ -422,6 +518,8 @@ modifier|*
 parameter_list|,
 name|etree_type
 modifier|*
+parameter_list|,
+name|bfd_boolean
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -462,8 +560,6 @@ name|bfd_vma
 parameter_list|,
 name|char
 modifier|*
-parameter_list|,
-name|lang_phase_type
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -479,8 +575,6 @@ name|int
 parameter_list|,
 name|char
 modifier|*
-parameter_list|,
-name|lang_phase_type
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -498,8 +592,6 @@ modifier|*
 parameter_list|,
 name|char
 modifier|*
-parameter_list|,
-name|lang_phase_type
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -515,8 +607,6 @@ name|int
 parameter_list|,
 name|char
 modifier|*
-parameter_list|,
-name|lang_phase_type
 parameter_list|)
 function_decl|;
 end_function_decl

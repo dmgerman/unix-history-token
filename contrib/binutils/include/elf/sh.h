@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* SH ELF support for BFD.    Copyright 1998, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* SH ELF support for BFD.    Copyright 1998, 2000, 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -61,16 +61,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|EF_SH_HAS_DSP
-parameter_list|(
-name|flags
-parameter_list|)
-value|(((flags)& EF_SH_MACH_MASK& ~3) == 4)
-end_define
-
-begin_define
-define|#
-directive|define
 name|EF_SH_DSP
 value|4
 end_define
@@ -87,16 +77,6 @@ define|#
 directive|define
 name|EF_SH4AL_DSP
 value|6
-end_define
-
-begin_define
-define|#
-directive|define
-name|EF_SH_HAS_FP
-parameter_list|(
-name|flags
-parameter_list|)
-value|((flags)& 8)
 end_define
 
 begin_define
@@ -130,15 +110,71 @@ end_define
 begin_define
 define|#
 directive|define
+name|EF_SH2A
+value|13
+end_define
+
+begin_define
+define|#
+directive|define
 name|EF_SH4_NOFPU
-value|0x10
+value|16
 end_define
 
 begin_define
 define|#
 directive|define
 name|EF_SH4A_NOFPU
-value|0x11
+value|17
+end_define
+
+begin_define
+define|#
+directive|define
+name|EF_SH4_NOMMU_NOFPU
+value|18
+end_define
+
+begin_define
+define|#
+directive|define
+name|EF_SH2A_NOFPU
+value|19
+end_define
+
+begin_define
+define|#
+directive|define
+name|EF_SH3_NOMMU
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|EF_SH2A_SH4_NOFPU
+value|21
+end_define
+
+begin_define
+define|#
+directive|define
+name|EF_SH2A_SH3_NOFPU
+value|22
+end_define
+
+begin_define
+define|#
+directive|define
+name|EF_SH2A_SH4
+value|23
+end_define
+
+begin_define
+define|#
+directive|define
+name|EF_SH2A_SH3E
+value|24
 end_define
 
 begin_comment
@@ -152,20 +188,94 @@ name|EF_SH5
 value|10
 end_define
 
+begin_comment
+comment|/* Define the mapping from ELF to bfd mach numbers.    bfd_mach_* are defined in bfd_in2.h (generated from    archures.c).  */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|EF_SH_MERGE_MACH
-parameter_list|(
-name|mach1
-parameter_list|,
-name|mach2
-parameter_list|)
+name|EF_SH_BFD_TABLE
 define|\
-value|(((((mach1) == EF_SH3 || (mach1) == EF_SH_UNKNOWN)&& (mach2) == EF_SH_DSP) \     || ((mach1) == EF_SH_DSP \&& ((mach2) == EF_SH3 || (mach2) == EF_SH_UNKNOWN))) \    ? EF_SH3_DSP \    : (((mach1)< EF_SH3&& (mach2) == EF_SH_UNKNOWN) \       || ((mach2)< EF_SH3&& (mach1) == EF_SH_UNKNOWN)) \    ? EF_SH3 \    : ((mach1) == EF_SH2E&& EF_SH_HAS_FP (mach2)) \    ? (mach2) \    : ((mach2) == EF_SH2E&& EF_SH_HAS_FP (mach1)) \    ? (mach1) \    : (((mach1) == EF_SH2E&& (mach2) == EF_SH_UNKNOWN) \       || ((mach2) == EF_SH2E&& (mach1) == EF_SH_UNKNOWN)) \    ? EF_SH2E \    : (((mach1) == EF_SH3E&& (mach2) == EF_SH_UNKNOWN) \       || ((mach2) == EF_SH3E&& (mach1) == EF_SH_UNKNOWN)) \    ? EF_SH4 \
-comment|/* ??? SH4?  Why not SH3E?  */
-value|\    : ((((mach1) == EF_SH4_NOFPU || (mach1) == EF_SH4A_NOFPU) \&& EF_SH_HAS_DSP (mach2)) \       || (((mach2) == EF_SH4_NOFPU || (mach2) == EF_SH4A_NOFPU) \&& EF_SH_HAS_DSP (mach1))) \    ? EF_SH4AL_DSP \    : ((mach1) == EF_SH4_NOFPU&& EF_SH_HAS_FP (mach2)) \    ? ((mach2)< EF_SH4A) ? EF_SH4 : (mach2) \    : ((mach2) == EF_SH4_NOFPU&& EF_SH_HAS_FP (mach1)) \    ? ((mach1)< EF_SH4A) ? EF_SH4 : (mach1) \    : ((mach1) == EF_SH4A_NOFPU&& EF_SH_HAS_FP (mach2)) \    ? ((mach2)<= EF_SH4A) ? EF_SH4A : (mach2) \    : ((mach2) == EF_SH4A_NOFPU&& EF_SH_HAS_FP (mach1)) \    ? ((mach1)<= EF_SH4A) ? EF_SH4A : (mach1) \    : (((mach1) == EF_SH2E ? 7 : (mach1))> ((mach2) == EF_SH2E ? 7 : (mach2)) \       ? (mach1) : (mach2)))
+comment|/* EF_SH_UNKNOWN	*/
+value|bfd_mach_sh3		, \
+comment|/* EF_SH1		*/
+value|bfd_mach_sh		, \
+comment|/* EF_SH2		*/
+value|bfd_mach_sh2		, \
+comment|/* EF_SH3		*/
+value|bfd_mach_sh3		, \
+comment|/* EF_SH_DSP		*/
+value|bfd_mach_sh_dsp	, \
+comment|/* EF_SH3_DSP		*/
+value|bfd_mach_sh3_dsp	, \
+comment|/* EF_SHAL_DSP		*/
+value|bfd_mach_sh4al_dsp	, \
+comment|/* 7			*/
+value|0, \
+comment|/* EF_SH3E		*/
+value|bfd_mach_sh3e	, \
+comment|/* EF_SH4		*/
+value|bfd_mach_sh4		, \
+comment|/* EF_SH5		*/
+value|0, \
+comment|/* EF_SH2E		*/
+value|bfd_mach_sh2e	, \
+comment|/* EF_SH4A		*/
+value|bfd_mach_sh4a	, \
+comment|/* EF_SH2A		*/
+value|bfd_mach_sh2a        , \
+comment|/* 14, 15		*/
+value|0, 0, \
+comment|/* EF_SH4_NOFPU		*/
+value|bfd_mach_sh4_nofpu	, \
+comment|/* EF_SH4A_NOFPU	*/
+value|bfd_mach_sh4a_nofpu	, \
+comment|/* EF_SH4_NOMMU_NOFPU	*/
+value|bfd_mach_sh4_nommu_nofpu, \
+comment|/* EF_SH2A_NOFPU	*/
+value|bfd_mach_sh2a_nofpu  , \
+comment|/* EF_SH3_NOMMU		*/
+value|bfd_mach_sh3_nommu   , \
+comment|/* EF_SH2A_SH4_NOFPU    */
+value|bfd_mach_sh2a_nofpu_or_sh4_nommu_nofpu, \
+comment|/* EF_SH2A_SH3_NOFPU    */
+value|bfd_mach_sh2a_nofpu_or_sh3_nommu, \
+comment|/* EF_SH2A_SH4          */
+value|bfd_mach_sh2a_or_sh4 , \
+comment|/* EF_SH2A_SH3E         */
+value|bfd_mach_sh2a_or_sh3e
 end_define
+
+begin_comment
+comment|/* Convert arch_sh* into EF_SH*.  */
+end_comment
+
+begin_function_decl
+name|int
+name|sh_find_elf_flags
+parameter_list|(
+name|unsigned
+name|int
+name|arch_set
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Convert bfd_mach_* into EF_SH*.  */
+end_comment
+
+begin_function_decl
+name|int
+name|sh_elf_get_flags_from_mach
+parameter_list|(
+name|unsigned
+name|long
+name|mach
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Flags for the st_other symbol field.    Keep away from the STV_ visibility flags (bit 0..1).  */

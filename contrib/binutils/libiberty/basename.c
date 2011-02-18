@@ -7,6 +7,23 @@ begin_comment
 comment|/*  @deftypefn Supplemental char* basename (const char *@var{name})  Returns a pointer to the last component of pathname @var{name}. Behavior is undefined if the pathname ends in a directory separator.  @end deftypefn  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CONFIG_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -151,13 +168,11 @@ name|char
 modifier|*
 name|basename
 parameter_list|(
-name|name
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|char

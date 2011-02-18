@@ -186,8 +186,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|I1
+value|INSN_ISA1
+end_define
+
+begin_define
+define|#
+directive|define
 name|I3
 value|INSN_ISA3
+end_define
+
+begin_define
+define|#
+directive|define
+name|I32
+value|INSN_ISA32
+end_define
+
+begin_define
+define|#
+directive|define
+name|I64
+value|INSN_ISA64
 end_define
 
 begin_define
@@ -205,6 +226,7 @@ name|mips16_opcodes
 index|[]
 init|=
 block|{
+comment|/* name,    args,	match,	mask,	pinfo,         	pinfo2, membership */
 block|{
 literal|"nop"
 block|,
@@ -218,7 +240,7 @@ name|RD_Z
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 comment|/* move $0,$Z */
@@ -237,7 +259,7 @@ name|RD_PC
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -256,7 +278,7 @@ name|INSN_MACRO
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -274,7 +296,7 @@ name|RD_x
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -292,7 +314,7 @@ name|RD_x
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -310,7 +332,7 @@ name|RD_SP
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -328,7 +350,7 @@ name|RD_SP
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -346,7 +368,7 @@ name|RD_PC
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -364,7 +386,7 @@ name|RD_SP
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -384,7 +406,7 @@ name|RD_y
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -402,7 +424,7 @@ name|RD_x
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -420,7 +442,7 @@ name|RD_x
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -438,7 +460,7 @@ name|RD_SP
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -456,7 +478,7 @@ name|RD_SP
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -474,7 +496,7 @@ name|RD_PC
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -492,7 +514,7 @@ name|RD_SP
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -512,7 +534,7 @@ name|RD_y
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -528,7 +550,7 @@ name|BR
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -547,7 +569,7 @@ name|INSN_MACRO
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -566,7 +588,7 @@ name|INSN_MACRO
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -584,7 +606,7 @@ name|RD_x
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -603,7 +625,7 @@ name|INSN_MACRO
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -622,7 +644,7 @@ name|INSN_MACRO
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -641,7 +663,7 @@ name|INSN_MACRO
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -660,7 +682,7 @@ name|INSN_MACRO
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -679,7 +701,7 @@ name|INSN_MACRO
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -698,7 +720,7 @@ name|INSN_MACRO
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -717,7 +739,7 @@ name|INSN_MACRO
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -736,7 +758,7 @@ name|INSN_MACRO
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -755,7 +777,7 @@ name|INSN_MACRO
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -774,7 +796,7 @@ name|INSN_MACRO
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -793,7 +815,7 @@ name|INSN_MACRO
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -812,7 +834,7 @@ name|INSN_MACRO
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -831,7 +853,7 @@ name|INSN_MACRO
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -850,7 +872,7 @@ name|INSN_MACRO
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -869,7 +891,7 @@ name|INSN_MACRO
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -888,7 +910,7 @@ name|INSN_MACRO
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -907,7 +929,7 @@ name|INSN_MACRO
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -926,7 +948,7 @@ name|INSN_MACRO
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -944,7 +966,7 @@ name|RD_x
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -960,7 +982,7 @@ name|TRAP
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -978,7 +1000,7 @@ name|RD_T
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -996,7 +1018,7 @@ name|RD_T
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -1014,7 +1036,7 @@ name|RD_x
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -1034,7 +1056,7 @@ name|RD_y
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -1052,7 +1074,7 @@ name|RD_x
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -1347,7 +1369,7 @@ name|INSN_MACRO
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -1388,7 +1410,7 @@ name|INSN_MACRO
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -1410,7 +1432,7 @@ name|WR_LO
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -1429,7 +1451,7 @@ name|INSN_MACRO
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -1451,7 +1473,7 @@ name|WR_LO
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -1470,7 +1492,7 @@ name|INSN_MACRO
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -1574,7 +1596,7 @@ name|INSN_MACRO
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -1615,7 +1637,7 @@ name|INSN_MACRO
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -1828,7 +1850,7 @@ name|INSN_MACRO
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -1847,7 +1869,7 @@ name|INSN_MACRO
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -1863,7 +1885,7 @@ name|TRAP
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -1879,7 +1901,7 @@ name|TRAP
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -1895,7 +1917,7 @@ name|TRAP
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -1911,7 +1933,7 @@ name|TRAP
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -1927,7 +1949,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -1947,7 +1969,7 @@ name|RD_x
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -1967,7 +1989,7 @@ name|RD_x
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -1987,7 +2009,7 @@ name|RD_x
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -2007,7 +2029,7 @@ name|RD_x
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -2025,7 +2047,7 @@ name|WR_31
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -2043,7 +2065,7 @@ name|WR_31
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -2061,7 +2083,7 @@ name|RD_x
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -2079,7 +2101,7 @@ name|RD_31
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -2097,7 +2119,7 @@ name|RD_x
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -2115,7 +2137,7 @@ name|RD_31
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -2133,7 +2155,7 @@ name|RD_x
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -2151,7 +2173,7 @@ name|RD_x
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -2241,7 +2263,7 @@ name|RD_x
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -2259,7 +2281,7 @@ name|RD_x
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -2275,7 +2297,7 @@ name|WR_x
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -2293,7 +2315,7 @@ name|RD_x
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -2311,7 +2333,7 @@ name|RD_PC
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -2329,7 +2351,7 @@ name|RD_PC
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -2347,7 +2369,7 @@ name|RD_SP
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -2383,7 +2405,7 @@ name|RD_HI
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -2401,7 +2423,7 @@ name|RD_LO
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -2419,7 +2441,7 @@ name|RD_X
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -2437,7 +2459,7 @@ name|RD_Z
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -2456,7 +2478,7 @@ name|INSN_MACRO
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -2478,7 +2500,7 @@ name|WR_LO
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -2500,7 +2522,7 @@ name|WR_LO
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -2518,7 +2540,7 @@ name|RD_y
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -2536,7 +2558,7 @@ name|RD_y
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -2556,7 +2578,7 @@ name|RD_y
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -2578,7 +2600,7 @@ name|WR_LO
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -2597,7 +2619,7 @@ name|INSN_MACRO
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -2619,7 +2641,7 @@ name|WR_LO
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -2638,7 +2660,7 @@ name|INSN_MACRO
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -2656,7 +2678,7 @@ name|RD_x
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -2710,7 +2732,7 @@ name|RD_PC
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -2728,7 +2750,7 @@ name|RD_x
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -2748,7 +2770,7 @@ name|RD_x
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -2766,7 +2788,7 @@ name|RD_y
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -2786,7 +2808,7 @@ name|RD_x
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -2804,7 +2826,7 @@ name|RD_x
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -2824,7 +2846,7 @@ name|RD_y
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -2842,7 +2864,7 @@ name|RD_x
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -2860,7 +2882,7 @@ name|RD_x
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -2880,7 +2902,7 @@ name|RD_y
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -2898,7 +2920,7 @@ name|RD_x
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -2918,7 +2940,7 @@ name|RD_x
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -2936,7 +2958,7 @@ name|RD_y
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -2956,7 +2978,7 @@ name|RD_x
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -2976,7 +2998,7 @@ name|RD_x
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -2994,7 +3016,7 @@ name|RD_y
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -3014,7 +3036,7 @@ name|RD_x
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -3034,7 +3056,7 @@ name|RD_y
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -3053,7 +3075,7 @@ name|INSN_MACRO
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -3072,7 +3094,7 @@ name|INSN_MACRO
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -3090,7 +3112,7 @@ name|RD_x
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -3108,7 +3130,7 @@ name|RD_SP
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -3126,7 +3148,7 @@ name|RD_SP
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 block|{
@@ -3146,7 +3168,7 @@ name|RD_y
 block|,
 literal|0
 block|,
-literal|0
+name|I1
 block|}
 block|,
 comment|/* MIPS16e additions */
@@ -3167,7 +3189,7 @@ name|TRAP
 block|,
 literal|0
 block|,
-literal|0
+name|I32
 block|}
 block|,
 block|{
@@ -3187,7 +3209,7 @@ name|TRAP
 block|,
 literal|0
 block|,
-literal|0
+name|I32
 block|}
 block|,
 block|{
@@ -3205,7 +3227,7 @@ name|TRAP
 block|,
 literal|0
 block|,
-literal|0
+name|I32
 block|}
 block|,
 block|{
@@ -3223,7 +3245,7 @@ name|TRAP
 block|,
 literal|0
 block|,
-literal|0
+name|I32
 block|}
 block|,
 block|{
@@ -3245,7 +3267,7 @@ name|TRAP
 block|,
 literal|0
 block|,
-literal|0
+name|I32
 block|}
 block|,
 block|{
@@ -3267,7 +3289,23 @@ name|TRAP
 block|,
 literal|0
 block|,
+name|I32
+block|}
+block|,
+block|{
+literal|"sdbbp"
+block|,
+literal|"6"
+block|,
+literal|0xe801
+block|,
+literal|0xf81f
+block|,
+name|TRAP
+block|,
 literal|0
+block|,
+name|I32
 block|}
 block|,
 block|{
@@ -3285,7 +3323,7 @@ name|RD_x
 block|,
 literal|0
 block|,
-literal|0
+name|I32
 block|}
 block|,
 block|{
@@ -3303,7 +3341,7 @@ name|RD_x
 block|,
 literal|0
 block|,
-literal|0
+name|I32
 block|}
 block|,
 block|{
@@ -3321,7 +3359,7 @@ name|RD_x
 block|,
 literal|0
 block|,
-name|I3
+name|I64
 block|}
 block|,
 block|{
@@ -3339,7 +3377,7 @@ name|RD_x
 block|,
 literal|0
 block|,
-literal|0
+name|I32
 block|}
 block|,
 block|{
@@ -3357,7 +3395,7 @@ name|RD_x
 block|,
 literal|0
 block|,
-literal|0
+name|I32
 block|}
 block|,
 block|{
@@ -3375,7 +3413,7 @@ name|RD_x
 block|,
 literal|0
 block|,
-name|I3
+name|I64
 block|}
 block|, }
 decl_stmt|;

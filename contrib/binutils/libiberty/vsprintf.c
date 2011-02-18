@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Simple implementation of vsprintf for systems without it.    Highly system-dependent, but should work on most "traditional"    implementations of stdio; newer ones should already have vsprintf.    Written by Per Bothner of Cygnus Support.    Based on libg++'s "form" (written by Doug Lea; dl@rocky.oswego.edu).    Copyright (C) 1991, 1995, 2002 Free Software Foundation, Inc.  This file is part of the libiberty library.  This library is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  As a special exception, if you link this library with files compiled with a GNU compiler to produce an executable, this does not cause the resulting executable to be covered by the GNU General Public License. This exception does not however invalidate any other reasons why the executable file might be covered by the GNU General Public License. */
+comment|/* Simple implementation of vsprintf for systems without it.    Highly system-dependent, but should work on most "traditional"    implementations of stdio; newer ones should already have vsprintf.    Written by Per Bothner of Cygnus Support.    Based on libg++'s "form" (written by Doug Lea; dl@rocky.oswego.edu).    Copyright (C) 1991, 1995, 2002 Free Software Foundation, Inc.  This file is part of the libiberty library.  This library is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  As a special exception, if you link this library with files compiled with a GNU compiler to produce an executable, this does not cause the resulting executable to be covered by the GNU General Public License. This exception does not however invalidate any other reasons why the executable file might be covered by the GNU General Public License. */
 end_comment
 
 begin_include
@@ -9,33 +9,11 @@ directive|include
 file|<ansidecl.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ANSI_PROTOTYPES
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<stdarg.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<varargs.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -63,24 +41,18 @@ begin_function
 name|int
 name|vsprintf
 parameter_list|(
-name|buf
-parameter_list|,
-name|format
-parameter_list|,
-name|ap
-parameter_list|)
 name|char
 modifier|*
 name|buf
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|format
-decl_stmt|;
+parameter_list|,
 name|va_list
 name|ap
-decl_stmt|;
+parameter_list|)
 block|{
 name|FILE
 name|b

@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ldemul.c -- clearing house for ld emulation states    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 2000, 2002, 2003    Free Software Foundation, Inc.  This file is part of GLD, the Gnu Linker.  GLD is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GLD is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GLD; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* ldemul.c -- clearing house for ld emulation states    Copyright 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001, 2002, 2003, 2005, 2007    Free Software Foundation, Inc.  This file is part of GLD, the Gnu Linker.  GLD is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GLD is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GLD; see the file COPYING.  If not, write to the Free Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"bfd.h"
-end_include
 
 begin_include
 include|#
@@ -18,7 +12,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"bfd.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"getopt.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"bfdlink.h"
 end_include
 
 begin_include
@@ -70,6 +76,7 @@ file|"ldemul-list.h"
 end_include
 
 begin_decl_stmt
+specifier|static
 name|ld_emulation_xfer_type
 modifier|*
 name|ld_emulation
@@ -181,12 +188,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-if|if
-condition|(
-name|ld_emulation
-operator|->
-name|before_allocation
-condition|)
 name|ld_emulation
 operator|->
 name|before_allocation
@@ -217,12 +218,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-if|if
-condition|(
-name|ld_emulation
-operator|->
-name|finish
-condition|)
 name|ld_emulation
 operator|->
 name|finish
@@ -343,10 +338,6 @@ begin_function
 name|bfd_boolean
 name|ldemul_place_orphan
 parameter_list|(
-name|lang_input_statement_type
-modifier|*
-name|file
-parameter_list|,
 name|asection
 modifier|*
 name|s
@@ -366,8 +357,6 @@ operator|->
 name|place_orphan
 call|)
 argument_list|(
-name|file
-argument_list|,
 name|s
 argument_list|)
 return|;
@@ -689,7 +678,43 @@ name|before_allocation_default
 parameter_list|(
 name|void
 parameter_list|)
-block|{ }
+block|{
+if|if
+condition|(
+operator|!
+name|link_info
+operator|.
+name|relocatable
+condition|)
+name|strip_excluded_output_sections
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|finish_default
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|link_info
+operator|.
+name|relocatable
+condition|)
+name|_bfd_fix_excluded_sec_syms
+argument_list|(
+name|output_bfd
+argument_list|,
+operator|&
+name|link_info
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 begin_function

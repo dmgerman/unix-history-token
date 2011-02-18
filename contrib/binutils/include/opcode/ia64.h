@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ia64.h -- Header file for ia64 opcode table    Copyright (C) 1998, 1999, 2002 Free Software Foundation, Inc. 	Contributed by David Mosberger-Tang<davidm@hpl.hp.com> */
+comment|/* ia64.h -- Header file for ia64 opcode table    Copyright (C) 1998, 1999, 2000, 2002, 2005, 2006    Free Software Foundation, Inc.    Contributed by David Mosberger-Tang<davidm@hpl.hp.com> */
 end_comment
 
 begin_ifndef
@@ -195,6 +195,10 @@ comment|/* third register # */
 name|IA64_OPND_R3_2
 block|,
 comment|/* third register # (limited to gr0-gr3) */
+comment|/* memory operands: */
+name|IA64_OPND_MR3
+block|,
+comment|/* memory at addr of third register # */
 comment|/* indirect operands: */
 name|IA64_OPND_CPUID_R3
 block|,
@@ -211,9 +215,6 @@ comment|/* itr[reg] */
 name|IA64_OPND_IBR_R3
 block|,
 comment|/* ibr[reg] */
-name|IA64_OPND_MR3
-block|,
-comment|/* memory at addr of third register # */
 name|IA64_OPND_MSR_R3
 block|,
 comment|/* msr[reg] */
@@ -263,6 +264,9 @@ comment|/* signed 1-bit immediate (bit 36) */
 name|IA64_OPND_IMMU2
 block|,
 comment|/* unsigned 2-bit immediate (bits 13-14) */
+name|IA64_OPND_IMMU5b
+block|,
+comment|/* unsigned 5-bit immediate (32 + bits 14-18) */
 name|IA64_OPND_IMMU7a
 block|,
 comment|/* unsigned 7-bit immediate (bits 13-19) */

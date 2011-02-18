@@ -1,22 +1,22 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for Intel Hex objects.    Copyright 1995, 1996, 1998, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.    Written by Ian Lance Taylor of Cygnus Support<ian@cygnus.com>.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for Intel Hex objects.    Copyright 1995, 1996, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,    2006, 2007 Free Software Foundation, Inc.    Written by Ian Lance Taylor of Cygnus Support<ian@cygnus.com>.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
-comment|/* This is what Intel Hex files look like:  1. INTEL FORMATS  A. Intel 1     16-bit address-field format, for files 64k bytes in length or less.     DATA RECORD    Byte 1	Header = colon(:)    2..3		The number of data bytes in hex notation    4..5		High byte of the record load address    6..7		Low byte of the record load address    8..9		Record type, must be "00"    10..x	Data bytes in hex notation: 	x = (number of bytes - 1) * 2 + 11    x+1..x+2	Checksum in hex notation    x+3..x+4	Carriage return, line feed     END RECORD    Byte 1	Header = colon (:)    2..3		The byte count, must be "00"    4..7		Transfer-address (usually "0000") 		the jump-to address, execution start address    8..9		Record type, must be "01"    10..11	Checksum, in hex notation    12..13	Carriage return, line feed  B. INTEL 2     MCS-86 format, using a 20-bit address for files larger than 64K bytes.     DATA RECORD    Byte 1	Header = colon (:)    2..3		The byte count of this record, hex notation    4..5		High byte of the record load address    6..7		Low byte of the record load address    8..9		Record type, must be "00"    10..x	The data bytes in hex notation: 	x = (number of data bytes - 1) * 2 + 11    x+1..x+2	Checksum in hex notation    x+3..x+4	Carriage return, line feed     EXTENDED ADDRESS RECORD    Byte 1	Header = colon(:)    2..3		The byte count, must be "02"    4..7		Load address, must be "0000"    8..9		Record type, must be "02"    10..11	High byte of the offset address    12..13	Low byte of the offset address    14..15	Checksum in hex notation    16..17	Carriage return, line feed     The checksums are the two's complement of the 8-bit sum    without carry of the byte count, offset address, and the    record type.     START ADDRESS RECORD    Byte 1	Header = colon (:)    2..3		The byte count, must be "04"    4..7		Load address, must be "0000"    8..9		Record type, must be "03"    10..13	8086 CS value    14..17	8086 IP value    18..19	Checksum in hex notation    20..21	Carriage return, line feed  Another document reports these additional types:     EXTENDED LINEAR ADDRESS RECORD    Byte 1	Header = colon (:)    2..3		The byte count, must be "02"    4..7		Load address, must be "0000"    8..9		Record type, must be "04"    10..13	Upper 16 bits of address of subsequent records    14..15	Checksum in hex notation    16..17	Carriage return, line feed     START LINEAR ADDRESS RECORD    Byte 1	Header = colon (:)    2..3		The byte count, must be "02"    4..7		Load address, must be "0000"    8..9		Record type, must be "05"    10..13	Upper 16 bits of start address    14..15	Checksum in hex notation    16..17	Carriage return, line feed  The MRI compiler uses this, which is a repeat of type 5:    EXTENDED START RECORD    Byte 1	Header = colon (:)    2..3		The byte count, must be "04"    4..7		Load address, must be "0000"    8..9		Record type, must be "05"    10..13	Upper 16 bits of start address    14..17	Lower 16 bits of start address    18..19	Checksum in hex notation    20..21	Carriage return, line feed */
+comment|/* This is what Intel Hex files look like:  1. INTEL FORMATS  A. Intel 1     16-bit address-field format, for files 64k bytes in length or less.     DATA RECORD    Byte 1	Header = colon(:)    2..3		The number of data bytes in hex notation    4..5		High byte of the record load address    6..7		Low byte of the record load address    8..9		Record type, must be "00"    10..x	Data bytes in hex notation: 	x = (number of bytes - 1) * 2 + 11    x+1..x+2	Checksum in hex notation    x+3..x+4	Carriage return, line feed     END RECORD    Byte 1	Header = colon (:)    2..3		The byte count, must be "00"    4..7		Transfer-address (usually "0000") 		the jump-to address, execution start address    8..9		Record type, must be "01"    10..11	Checksum, in hex notation    12..13	Carriage return, line feed  B. INTEL 2     MCS-86 format, using a 20-bit address for files larger than 64K bytes.     DATA RECORD    Byte 1	Header = colon (:)    2..3		The byte count of this record, hex notation    4..5		High byte of the record load address    6..7		Low byte of the record load address    8..9		Record type, must be "00"    10..x	The data bytes in hex notation: 	x = (number of data bytes - 1) * 2 + 11    x+1..x+2	Checksum in hex notation    x+3..x+4	Carriage return, line feed     EXTENDED ADDRESS RECORD    Byte 1	Header = colon(:)    2..3		The byte count, must be "02"    4..7		Load address, must be "0000"    8..9		Record type, must be "02"    10..11	High byte of the offset address    12..13	Low byte of the offset address    14..15	Checksum in hex notation    16..17	Carriage return, line feed     The checksums are the two's complement of the 8-bit sum    without carry of the byte count, offset address, and the    record type.     START ADDRESS RECORD    Byte 1	Header = colon (:)    2..3		The byte count, must be "04"    4..7		Load address, must be "0000"    8..9		Record type, must be "03"    10..13	8086 CS value    14..17	8086 IP value    18..19	Checksum in hex notation    20..21	Carriage return, line feed  Another document reports these additional types:     EXTENDED LINEAR ADDRESS RECORD    Byte 1	Header = colon (:)    2..3		The byte count, must be "02"    4..7		Load address, must be "0000"    8..9		Record type, must be "04"    10..13	Upper 16 bits of address of subsequent records    14..15	Checksum in hex notation    16..17	Carriage return, line feed     START LINEAR ADDRESS RECORD    Byte 1	Header = colon (:)    2..3		The byte count, must be "02"    4..7		Load address, must be "0000"    8..9		Record type, must be "05"    10..13	Upper 16 bits of start address    14..15	Checksum in hex notation    16..17	Carriage return, line feed  The MRI compiler uses this, which is a repeat of type 5:    EXTENDED START RECORD    Byte 1	Header = colon (:)    2..3		The byte count, must be "04"    4..7		Load address, must be "0000"    8..9		Record type, must be "05"    10..13	Upper 16 bits of start address    14..17	Lower 16 bits of start address    18..19	Checksum in hex notation    20..21	Carriage return, line feed.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"bfd.h"
-end_include
 
 begin_include
 include|#
 directive|include
 file|"sysdep.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"bfd.h"
 end_include
 
 begin_include
@@ -36,244 +36,6 @@ include|#
 directive|include
 file|"safe-ctype.h"
 end_include
-
-begin_decl_stmt
-specifier|static
-name|void
-name|ihex_init
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|ihex_mkobject
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|INLINE
-name|int
-name|ihex_get_byte
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|bfd_boolean
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|ihex_bad_byte
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|unsigned
-name|int
-operator|,
-name|int
-operator|,
-name|bfd_boolean
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|ihex_scan
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|bfd_target
-modifier|*
-name|ihex_object_p
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|ihex_read_section
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|asection
-operator|*
-operator|,
-name|bfd_byte
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|ihex_get_section_contents
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|asection
-operator|*
-operator|,
-name|PTR
-operator|,
-name|file_ptr
-operator|,
-name|bfd_size_type
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|ihex_set_section_contents
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|asection
-operator|*
-operator|,
-specifier|const
-name|PTR
-operator|,
-name|file_ptr
-operator|,
-name|bfd_size_type
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|ihex_write_record
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|size_t
-operator|,
-name|unsigned
-name|int
-operator|,
-name|unsigned
-name|int
-operator|,
-name|bfd_byte
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|ihex_write_object_contents
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|bfd_boolean
-name|ihex_set_arch_mach
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-expr|enum
-name|bfd_architecture
-operator|,
-name|unsigned
-name|long
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|ihex_sizeof_headers
-name|PARAMS
-argument_list|(
-operator|(
-name|bfd
-operator|*
-operator|,
-name|bfd_boolean
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* The number of bytes we put on one line during output.  */
@@ -387,7 +149,9 @@ begin_function
 specifier|static
 name|void
 name|ihex_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|static
 name|bfd_boolean
@@ -419,39 +183,27 @@ specifier|static
 name|bfd_boolean
 name|ihex_mkobject
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ihex_data_struct
 modifier|*
 name|tdata
 decl_stmt|;
-name|bfd_size_type
-name|amt
-init|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ihex_data_struct
-argument_list|)
-decl_stmt|;
 name|tdata
 operator|=
-operator|(
-expr|struct
-name|ihex_data_struct
-operator|*
-operator|)
 name|bfd_alloc
 argument_list|(
 name|abfd
 argument_list|,
-name|amt
+sizeof|sizeof
+argument_list|(
+operator|*
+name|tdata
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -499,18 +251,14 @@ name|INLINE
 name|int
 name|ihex_get_byte
 parameter_list|(
-name|abfd
-parameter_list|,
-name|errorptr
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|bfd_boolean
 modifier|*
 name|errorptr
-decl_stmt|;
+parameter_list|)
 block|{
 name|bfd_byte
 name|c
@@ -571,28 +319,20 @@ specifier|static
 name|void
 name|ihex_bad_byte
 parameter_list|(
-name|abfd
-parameter_list|,
-name|lineno
-parameter_list|,
-name|c
-parameter_list|,
-name|error
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|int
 name|lineno
-decl_stmt|;
+parameter_list|,
 name|int
 name|c
-decl_stmt|;
+parameter_list|,
 name|bfd_boolean
 name|error
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -665,13 +405,10 @@ call|)
 argument_list|(
 name|_
 argument_list|(
-literal|"%s:%d: unexpected character `%s' in Intel Hex file\n"
+literal|"%B:%d: unexpected character `%s' in Intel Hex file"
 argument_list|)
 argument_list|,
-name|bfd_archive_filename
-argument_list|(
 name|abfd
-argument_list|)
 argument_list|,
 name|lineno
 argument_list|,
@@ -696,12 +433,10 @@ specifier|static
 name|bfd_boolean
 name|ihex_scan
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 name|bfd_vma
 name|segbase
@@ -993,10 +728,6 @@ condition|)
 block|{
 name|buf
 operator|=
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|bfd_realloc
 argument_list|(
 name|buf
@@ -1156,13 +887,10 @@ call|)
 argument_list|(
 name|_
 argument_list|(
-literal|"%s:%u: bad checksum in Intel Hex file (expected %u, found %u)"
+literal|"%B:%u: bad checksum in Intel Hex file (expected %u, found %u)"
 argument_list|)
 argument_list|,
-name|bfd_archive_filename
-argument_list|(
 name|abfd
-argument_list|)
 argument_list|,
 name|lineno
 argument_list|,
@@ -1217,7 +945,7 @@ name|vma
 operator|+
 name|sec
 operator|->
-name|_raw_size
+name|size
 operator|==
 name|extbase
 operator|+
@@ -1229,7 +957,7 @@ block|{
 comment|/* This data goes at the end of the section we are                      currently building.  */
 name|sec
 operator|->
-name|_raw_size
+name|size
 operator|+=
 name|len
 expr_stmt|;
@@ -1254,6 +982,9 @@ name|secname
 decl_stmt|;
 name|bfd_size_type
 name|amt
+decl_stmt|;
+name|flagword
+name|flags
 decl_stmt|;
 name|sprintf
 argument_list|(
@@ -1280,10 +1011,6 @@ literal|1
 expr_stmt|;
 name|secname
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|bfd_alloc
 argument_list|(
 name|abfd
@@ -1307,13 +1034,23 @@ argument_list|,
 name|secbuf
 argument_list|)
 expr_stmt|;
+name|flags
+operator|=
+name|SEC_HAS_CONTENTS
+operator||
+name|SEC_LOAD
+operator||
+name|SEC_ALLOC
+expr_stmt|;
 name|sec
 operator|=
-name|bfd_make_section
+name|bfd_make_section_with_flags
 argument_list|(
 name|abfd
 argument_list|,
 name|secname
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 if|if
@@ -1325,16 +1062,6 @@ condition|)
 goto|goto
 name|error_return
 goto|;
-name|sec
-operator|->
-name|flags
-operator|=
-name|SEC_HAS_CONTENTS
-operator||
-name|SEC_LOAD
-operator||
-name|SEC_ALLOC
-expr_stmt|;
 name|sec
 operator|->
 name|vma
@@ -1357,7 +1084,7 @@ name|addr
 expr_stmt|;
 name|sec
 operator|->
-name|_raw_size
+name|size
 operator|=
 name|len
 expr_stmt|;
@@ -1419,13 +1146,10 @@ call|)
 argument_list|(
 name|_
 argument_list|(
-literal|"%s:%u: bad extended address record length in Intel Hex file"
+literal|"%B:%u: bad extended address record length in Intel Hex file"
 argument_list|)
 argument_list|,
-name|bfd_archive_filename
-argument_list|(
 name|abfd
-argument_list|)
 argument_list|,
 name|lineno
 argument_list|)
@@ -1471,13 +1195,10 @@ call|)
 argument_list|(
 name|_
 argument_list|(
-literal|"%s:%u: bad extended start address length in Intel Hex file"
+literal|"%B:%u: bad extended start address length in Intel Hex file"
 argument_list|)
 argument_list|,
-name|bfd_archive_filename
-argument_list|(
 name|abfd
-argument_list|)
 argument_list|,
 name|lineno
 argument_list|)
@@ -1534,13 +1255,10 @@ call|)
 argument_list|(
 name|_
 argument_list|(
-literal|"%s:%u: bad extended linear address record length in Intel Hex file"
+literal|"%B:%u: bad extended linear address record length in Intel Hex file"
 argument_list|)
 argument_list|,
-name|bfd_archive_filename
-argument_list|(
 name|abfd
-argument_list|)
 argument_list|,
 name|lineno
 argument_list|)
@@ -1590,13 +1308,10 @@ call|)
 argument_list|(
 name|_
 argument_list|(
-literal|"%s:%u: bad extended linear start address length in Intel Hex file"
+literal|"%B:%u: bad extended linear start address length in Intel Hex file"
 argument_list|)
 argument_list|,
-name|bfd_archive_filename
-argument_list|(
 name|abfd
-argument_list|)
 argument_list|,
 name|lineno
 argument_list|)
@@ -1661,13 +1376,10 @@ call|)
 argument_list|(
 name|_
 argument_list|(
-literal|"%s:%u: unrecognized ihex type %u in Intel Hex file\n"
+literal|"%B:%u: unrecognized ihex type %u in Intel Hex file"
 argument_list|)
 argument_list|,
-name|bfd_archive_filename
-argument_list|(
 name|abfd
-argument_list|)
 argument_list|,
 name|lineno
 argument_list|,
@@ -1736,14 +1448,13 @@ name|bfd_target
 modifier|*
 name|ihex_object_p
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
-name|PTR
+name|void
+modifier|*
 name|tdata_save
 decl_stmt|;
 name|bfd_byte
@@ -1977,24 +1688,18 @@ specifier|static
 name|bfd_boolean
 name|ihex_read_section
 parameter_list|(
-name|abfd
-parameter_list|,
-name|section
-parameter_list|,
-name|contents
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|section
-decl_stmt|;
+parameter_list|,
 name|bfd_byte
 modifier|*
 name|contents
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|c
@@ -2072,9 +1777,6 @@ name|unsigned
 name|int
 name|len
 decl_stmt|;
-name|bfd_vma
-name|addr
-decl_stmt|;
 name|unsigned
 name|int
 name|type
@@ -2128,15 +1830,6 @@ argument_list|(
 name|hdr
 argument_list|)
 expr_stmt|;
-name|addr
-operator|=
-name|HEX4
-argument_list|(
-name|hdr
-operator|+
-literal|2
-argument_list|)
-expr_stmt|;
 name|type
 operator|=
 name|HEX2
@@ -2161,13 +1854,10 @@ call|)
 argument_list|(
 name|_
 argument_list|(
-literal|"%s: internal error in ihex_read_section"
+literal|"%B: internal error in ihex_read_section"
 argument_list|)
 argument_list|,
-name|bfd_archive_filename
-argument_list|(
 name|abfd
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|bfd_set_error
@@ -2190,10 +1880,6 @@ condition|)
 block|{
 name|buf
 operator|=
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|bfd_realloc
 argument_list|(
 name|buf
@@ -2284,7 +1970,7 @@ argument_list|)
 operator|>=
 name|section
 operator|->
-name|_raw_size
+name|size
 condition|)
 block|{
 comment|/* We've read everything in the section.  */
@@ -2337,7 +2023,7 @@ argument_list|)
 operator|<
 name|section
 operator|->
-name|_raw_size
+name|size
 condition|)
 block|{
 call|(
@@ -2347,13 +2033,10 @@ call|)
 argument_list|(
 name|_
 argument_list|(
-literal|"%s: bad section length in ihex_read_section"
+literal|"%B: bad section length in ihex_read_section"
 argument_list|)
 argument_list|,
-name|bfd_archive_filename
-argument_list|(
 name|abfd
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|bfd_set_error
@@ -2407,33 +2090,24 @@ specifier|static
 name|bfd_boolean
 name|ihex_get_section_contents
 parameter_list|(
-name|abfd
-parameter_list|,
-name|section
-parameter_list|,
-name|location
-parameter_list|,
-name|offset
-parameter_list|,
-name|count
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|section
-decl_stmt|;
-name|PTR
+parameter_list|,
+name|void
+modifier|*
 name|location
-decl_stmt|;
+parameter_list|,
 name|file_ptr
 name|offset
-decl_stmt|;
+parameter_list|,
 name|bfd_size_type
 name|count
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -2454,7 +2128,7 @@ name|abfd
 argument_list|,
 name|section
 operator|->
-name|_raw_size
+name|size
 argument_list|)
 expr_stmt|;
 if|if
@@ -2521,34 +2195,25 @@ specifier|static
 name|bfd_boolean
 name|ihex_set_section_contents
 parameter_list|(
-name|abfd
-parameter_list|,
-name|section
-parameter_list|,
-name|location
-parameter_list|,
-name|offset
-parameter_list|,
-name|count
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|asection
 modifier|*
 name|section
-decl_stmt|;
+parameter_list|,
 specifier|const
-name|PTR
+name|void
+modifier|*
 name|location
-decl_stmt|;
+parameter_list|,
 name|file_ptr
 name|offset
-decl_stmt|;
+parameter_list|,
 name|bfd_size_type
 name|count
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ihex_data_list
@@ -2563,9 +2228,6 @@ name|struct
 name|ihex_data_struct
 modifier|*
 name|tdata
-decl_stmt|;
-name|bfd_size_type
-name|amt
 decl_stmt|;
 if|if
 condition|(
@@ -2596,26 +2258,17 @@ condition|)
 return|return
 name|TRUE
 return|;
-name|amt
-operator|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ihex_data_list
-argument_list|)
-expr_stmt|;
 name|n
 operator|=
-operator|(
-expr|struct
-name|ihex_data_list
-operator|*
-operator|)
 name|bfd_alloc
 argument_list|(
 name|abfd
 argument_list|,
-name|amt
+sizeof|sizeof
+argument_list|(
+operator|*
+name|n
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2629,10 +2282,6 @@ name|FALSE
 return|;
 name|data
 operator|=
-operator|(
-name|bfd_byte
-operator|*
-operator|)
 name|bfd_alloc
 argument_list|(
 name|abfd
@@ -2734,7 +2383,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-specifier|register
 name|struct
 name|ihex_data_list
 modifier|*
@@ -2819,35 +2467,25 @@ specifier|static
 name|bfd_boolean
 name|ihex_write_record
 parameter_list|(
-name|abfd
-parameter_list|,
-name|count
-parameter_list|,
-name|addr
-parameter_list|,
-name|type
-parameter_list|,
-name|data
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|size_t
 name|count
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|int
 name|addr
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|int
 name|type
-decl_stmt|;
+parameter_list|,
 name|bfd_byte
 modifier|*
 name|data
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 specifier|const
@@ -3070,12 +2708,10 @@ specifier|static
 name|bfd_boolean
 name|ihex_write_object_contents
 parameter_list|(
-name|abfd
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|)
 block|{
 name|bfd_vma
 name|segbase
@@ -3703,24 +3339,18 @@ specifier|static
 name|bfd_boolean
 name|ihex_set_arch_mach
 parameter_list|(
-name|abfd
-parameter_list|,
-name|arch
-parameter_list|,
-name|mach
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
-decl_stmt|;
+parameter_list|,
 name|enum
 name|bfd_architecture
 name|arch
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|long
 name|mach
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -3760,19 +3390,17 @@ specifier|static
 name|int
 name|ihex_sizeof_headers
 parameter_list|(
-name|abfd
-parameter_list|,
-name|exec
-parameter_list|)
 name|bfd
 modifier|*
 name|abfd
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
-name|bfd_boolean
-name|exec
+parameter_list|,
+name|struct
+name|bfd_link_info
+modifier|*
+name|info
 name|ATTRIBUTE_UNUSED
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 literal|0
@@ -3809,7 +3437,6 @@ begin_define
 define|#
 directive|define
 name|ihex_get_section_contents_in_window
-define|\
 value|_bfd_generic_get_section_contents_in_window
 end_define
 
@@ -3824,8 +3451,7 @@ begin_define
 define|#
 directive|define
 name|ihex_canonicalize_symtab
-define|\
-value|((long (*) PARAMS ((bfd *, asymbol **))) bfd_0l)
+value|((long (*) (bfd *, asymbol **)) bfd_0l)
 end_define
 
 begin_define
@@ -3852,6 +3478,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ihex_bfd_is_target_special_symbol
+value|((bfd_boolean (*) (bfd *, asymbol *)) bfd_false)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ihex_bfd_is_local_label_name
 value|_bfd_nosymbols_bfd_is_local_label_name
 end_define
@@ -3868,6 +3501,13 @@ define|#
 directive|define
 name|ihex_find_nearest_line
 value|_bfd_nosymbols_find_nearest_line
+end_define
+
+begin_define
+define|#
+directive|define
+name|ihex_find_inliner_info
+value|_bfd_nosymbols_find_inliner_info
 end_define
 
 begin_define
@@ -3894,31 +3534,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ihex_get_reloc_upper_bound
-define|\
-value|((long (*) PARAMS ((bfd *, asection *))) bfd_0l)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ihex_canonicalize_reloc
-define|\
-value|((long (*) PARAMS ((bfd *, asection *, arelent **, asymbol **))) bfd_0l)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ihex_bfd_reloc_type_lookup
-value|_bfd_norelocs_bfd_reloc_type_lookup
-end_define
-
-begin_define
-define|#
-directive|define
 name|ihex_bfd_get_relocated_section_contents
-define|\
 value|bfd_generic_get_relocated_section_contents
 end_define
 
@@ -3946,8 +3562,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|ihex_bfd_is_group_section
+value|bfd_generic_is_group_section
+end_define
+
+begin_define
+define|#
+directive|define
 name|ihex_bfd_discard_group
 value|bfd_generic_discard_group
+end_define
+
+begin_define
+define|#
+directive|define
+name|ihex_section_already_linked
+value|_bfd_generic_section_already_linked
 end_define
 
 begin_define
@@ -4004,18 +3634,18 @@ init|=
 block|{
 literal|"ihex"
 block|,
-comment|/* name */
+comment|/* Name.  */
 name|bfd_target_ihex_flavour
 block|,
 name|BFD_ENDIAN_UNKNOWN
 block|,
-comment|/* target byte order */
+comment|/* Target byte order.  */
 name|BFD_ENDIAN_UNKNOWN
 block|,
-comment|/* target headers byte order */
+comment|/* Target headers byte order.  */
 literal|0
 block|,
-comment|/* object flags */
+comment|/* Object flags.  */
 operator|(
 name|SEC_HAS_CONTENTS
 operator||
@@ -4024,16 +3654,16 @@ operator||
 name|SEC_LOAD
 operator|)
 block|,
-comment|/* section flags */
+comment|/* Section flags.  */
 literal|0
 block|,
-comment|/* leading underscore */
+comment|/* Leading underscore.  */
 literal|' '
 block|,
-comment|/* ar_pad_char */
+comment|/* AR_pad_char.  */
 literal|16
 block|,
-comment|/* ar_max_namelen */
+comment|/* AR_max_namelen.  */
 name|bfd_getb64
 block|,
 name|bfd_getb_signed_64
@@ -4052,7 +3682,7 @@ name|bfd_getb_signed_16
 block|,
 name|bfd_putb16
 block|,
-comment|/* data */
+comment|/* Data.  */
 name|bfd_getb64
 block|,
 name|bfd_getb_signed_64
@@ -4071,13 +3701,13 @@ name|bfd_getb_signed_16
 block|,
 name|bfd_putb16
 block|,
-comment|/* hdrs */
+comment|/* Headers. */
 block|{
 name|_bfd_dummy_target
 block|,
 name|ihex_object_p
 block|,
-comment|/* bfd_check_format */
+comment|/* bfd_check_format.  */
 name|_bfd_dummy_target
 block|,
 name|_bfd_dummy_target
@@ -4094,7 +3724,7 @@ name|bfd_false
 block|,   }
 block|,
 block|{
-comment|/* bfd_write_contents */
+comment|/* bfd_write_contents.  */
 name|bfd_false
 block|,
 name|ihex_write_object_contents
@@ -4131,7 +3761,7 @@ argument_list|)
 block|,
 name|BFD_JUMP_TABLE_RELOCS
 argument_list|(
-name|ihex
+name|_bfd_norelocs
 argument_list|)
 block|,
 name|BFD_JUMP_TABLE_WRITE
@@ -4151,10 +3781,7 @@ argument_list|)
 block|,
 name|NULL
 block|,
-operator|(
-name|PTR
-operator|)
-literal|0
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt

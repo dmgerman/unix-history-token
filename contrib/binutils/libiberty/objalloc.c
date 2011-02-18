@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* objalloc.c -- routines to allocate memory for objects    Copyright 1997 Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Solutions.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* objalloc.c -- routines to allocate memory for objects    Copyright 1997 Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Solutions.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"ansidecl.h"
+file|"config.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"config.h"
+file|"ansidecl.h"
 end_include
 
 begin_include
@@ -54,12 +54,6 @@ else|#
 directive|else
 end_else
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ANSI_PROTOTYPES
-end_ifdef
-
 begin_comment
 comment|/* Get a definition for size_t.  */
 end_comment
@@ -69,11 +63,6 @@ include|#
 directive|include
 file|<stddef.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -96,31 +85,25 @@ begin_comment
 comment|/* For systems with larger pointers than ints, this must be declared.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|PTR
 name|malloc
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|free
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|PTR
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -206,7 +189,9 @@ name|struct
 name|objalloc
 modifier|*
 name|objalloc_create
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|objalloc
@@ -328,19 +313,15 @@ begin_function
 name|PTR
 name|_objalloc_alloc
 parameter_list|(
-name|o
-parameter_list|,
-name|len
-parameter_list|)
 name|struct
 name|objalloc
 modifier|*
 name|o
-decl_stmt|;
+parameter_list|,
 name|unsigned
 name|long
 name|len
-decl_stmt|;
+parameter_list|)
 block|{
 comment|/* We avoid confusion from zero sized objects by always allocating      at least 1 byte.  */
 if|if
@@ -588,13 +569,11 @@ begin_function
 name|void
 name|objalloc_free
 parameter_list|(
-name|o
-parameter_list|)
 name|struct
 name|objalloc
 modifier|*
 name|o
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|objalloc_chunk
@@ -656,18 +635,14 @@ begin_function
 name|void
 name|objalloc_free_block
 parameter_list|(
-name|o
-parameter_list|,
-name|block
-parameter_list|)
 name|struct
 name|objalloc
 modifier|*
 name|o
-decl_stmt|;
+parameter_list|,
 name|PTR
 name|block
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|objalloc_chunk

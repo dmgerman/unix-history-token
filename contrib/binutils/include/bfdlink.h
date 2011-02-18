@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* bfdlink.h -- header file for BFD link routines    Copyright 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2002, 2003,    2004 Free Software Foundation, Inc.    Written by Steve Chamberlain and Ian Lance Taylor, Cygnus Support.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* bfdlink.h -- header file for BFD link routines    Copyright 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002,    2003, 2004, 2005, 2006, 2007 Free Software Foundation, Inc.    Written by Steve Chamberlain and Ian Lance Taylor, Cygnus Support.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -147,12 +147,6 @@ name|enum
 name|bfd_link_hash_type
 name|type
 decl_stmt|;
-comment|/* Undefined and common symbols are kept in a linked list through      this field.  This field is not in the union because that would      force us to remove entries from the list when we changed their      type, which would force the list to be doubly linked, which would      waste more memory.  When an undefined or common symbol is      created, it should be added to this list, the head of which is in      the link hash table itself.  As symbols are defined, they need      not be removed from the list; anything which reads the list must      doublecheck the symbol type.       Weak symbols are not kept on this list.       Defined and defweak symbols use this field as a reference marker.      If the field is not NULL, or this structure is the tail of the      undefined symbol list, the symbol has been referenced.  If the      symbol is undefined and becomes defined, this field will      automatically be non-NULL since the symbol will have been on the      undefined symbol list.  */
-name|struct
-name|bfd_link_hash_entry
-modifier|*
-name|und_next
-decl_stmt|;
 comment|/* A union of information depending upon the type.  */
 union|union
 block|{
@@ -160,32 +154,53 @@ comment|/* Nothing is kept for bfd_hash_new.  */
 comment|/* bfd_link_hash_undefined, bfd_link_hash_undefweak.  */
 struct|struct
 block|{
+comment|/* Undefined and common symbols are kept in a linked list through 	     this field.  This field is present in all of the union element 	     so that we don't need to remove entries from the list when we 	     change their type.  Removing entries would either require the 	     list to be doubly linked, which would waste more memory, or 	     require a traversal.  When an undefined or common symbol is 	     created, it should be added to this list, the head of which is in 	     the link hash table itself.  As symbols are defined, they need 	     not be removed from the list; anything which reads the list must 	     doublecheck the symbol type.  	     Weak symbols are not kept on this list.  	     Defined and defweak symbols use this field as a reference marker. 	     If the field is not NULL, or this structure is the tail of the 	     undefined symbol list, the symbol has been referenced.  If the 	     symbol is undefined and becomes defined, this field will 	     automatically be non-NULL since the symbol will have been on the 	     undefined symbol list.  */
+name|struct
+name|bfd_link_hash_entry
+modifier|*
+name|next
+decl_stmt|;
 name|bfd
 modifier|*
 name|abfd
 decl_stmt|;
 comment|/* BFD symbol was found in.  */
+name|bfd
+modifier|*
+name|weak
+decl_stmt|;
+comment|/* BFD weak symbol was found in.  */
 block|}
 name|undef
 struct|;
 comment|/* bfd_link_hash_defined, bfd_link_hash_defweak.  */
 struct|struct
 block|{
-name|bfd_vma
-name|value
+name|struct
+name|bfd_link_hash_entry
+modifier|*
+name|next
 decl_stmt|;
-comment|/* Symbol value.  */
 name|asection
 modifier|*
 name|section
 decl_stmt|;
 comment|/* Symbol section.  */
+name|bfd_vma
+name|value
+decl_stmt|;
+comment|/* Symbol value.  */
 block|}
 name|def
 struct|;
 comment|/* bfd_link_hash_indirect, bfd_link_hash_warning.  */
 struct|struct
 block|{
+name|struct
+name|bfd_link_hash_entry
+modifier|*
+name|next
+decl_stmt|;
 name|struct
 name|bfd_link_hash_entry
 modifier|*
@@ -204,11 +219,12 @@ struct|;
 comment|/* bfd_link_hash_common.  */
 struct|struct
 block|{
-comment|/* The linker needs to know three things about common 	     symbols: the size, the alignment, and the section in 	     which the symbol should be placed.  We store the size 	     here, and we allocate a small structure to hold the 	     section and the alignment.  The alignment is stored as a 	     power of two.  We don't store all the information 	     directly because we don't want to increase the size of 	     the union; this structure is a major space user in the 	     linker.  */
-name|bfd_size_type
-name|size
+name|struct
+name|bfd_link_hash_entry
+modifier|*
+name|next
 decl_stmt|;
-comment|/* Common symbol size.  */
+comment|/* The linker needs to know three things about common 	     symbols: the size, the alignment, and the section in 	     which the symbol should be placed.  We store the size 	     here, and we allocate a small structure to hold the 	     section and the alignment.  The alignment is stored as a 	     power of two.  We don't store all the information 	     directly because we don't want to increase the size of 	     the union; this structure is a major space user in the 	     linker.  */
 struct|struct
 name|bfd_link_hash_common_entry
 block|{
@@ -226,6 +242,10 @@ block|}
 modifier|*
 name|p
 struct|;
+name|bfd_size_type
+name|size
+decl_stmt|;
+comment|/* Common symbol size.  */
 block|}
 name|c
 struct|;
@@ -390,6 +410,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* Remove symbols from the undefs list that don't belong there.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|bfd_link_repair_undef_list
+parameter_list|(
+name|struct
+name|bfd_link_hash_table
+modifier|*
+name|table
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_struct
 struct|struct
 name|bfd_sym_chain
@@ -432,6 +469,12 @@ name|RM_GENERATE_ERROR
 block|}
 enum|;
 end_enum
+
+begin_struct_decl
+struct_decl|struct
+name|bfd_elf_dynamic_list
+struct_decl|;
+end_struct_decl
 
 begin_comment
 comment|/* This structure holds all the information needed to communicate    between BFD and the linker when doing a link.  */
@@ -518,6 +561,20 @@ name|allow_undefined_version
 range|:
 literal|1
 decl_stmt|;
+comment|/* TRUE if a default symbol version should be created and used for      exported symbols.  */
+name|unsigned
+name|int
+name|create_default_symver
+range|:
+literal|1
+decl_stmt|;
+comment|/* TRUE if a default symbol version should be created and used for      imported symbols.  */
+name|unsigned
+name|int
+name|default_imported_symver
+range|:
+literal|1
+decl_stmt|;
 comment|/* TRUE if symbols should be retained in memory, FALSE if they      should be freed and reread.  */
 name|unsigned
 name|int
@@ -567,13 +624,6 @@ name|strip_discarded
 range|:
 literal|1
 decl_stmt|;
-comment|/* TRUE if the final relax pass is needed.  */
-name|unsigned
-name|int
-name|need_relax_finalize
-range|:
-literal|1
-decl_stmt|;
 comment|/* TRUE if generating a position independent executable.  */
 name|unsigned
 name|int
@@ -599,6 +649,69 @@ comment|/* TRUE if PT_GNU_STACK segment should be created with PF_R|PF_W      fl
 name|unsigned
 name|int
 name|noexecstack
+range|:
+literal|1
+decl_stmt|;
+comment|/* TRUE if PT_GNU_RELRO segment should be created.  */
+name|unsigned
+name|int
+name|relro
+range|:
+literal|1
+decl_stmt|;
+comment|/* TRUE if we should warn when adding a DT_TEXTREL to a shared object.  */
+name|unsigned
+name|int
+name|warn_shared_textrel
+range|:
+literal|1
+decl_stmt|;
+comment|/* TRUE if unreferenced sections should be removed.  */
+name|unsigned
+name|int
+name|gc_sections
+range|:
+literal|1
+decl_stmt|;
+comment|/* TRUE if user shoudl be informed of removed unreferenced sections.  */
+name|unsigned
+name|int
+name|print_gc_sections
+range|:
+literal|1
+decl_stmt|;
+comment|/* TRUE if .hash section should be created.  */
+name|unsigned
+name|int
+name|emit_hash
+range|:
+literal|1
+decl_stmt|;
+comment|/* TRUE if .gnu.hash section should be created.  */
+name|unsigned
+name|int
+name|emit_gnu_hash
+range|:
+literal|1
+decl_stmt|;
+comment|/* If TRUE reduce memory overheads, at the expense of speed. This will      cause map file generation to use an O(N^2) algorithm and disable      caching ELF symbol buffer.  */
+name|unsigned
+name|int
+name|reduce_memory_overheads
+range|:
+literal|1
+decl_stmt|;
+comment|/* TRUE if all data symbols should be dynamic.  */
+name|unsigned
+name|int
+name|dynamic_data
+range|:
+literal|1
+decl_stmt|;
+comment|/* TRUE if some symbols have to be dynamic, controlled by      --dynamic-list command line options.  */
+name|unsigned
+name|int
+name|dynamic
 range|:
 literal|1
 decl_stmt|;
@@ -667,6 +780,11 @@ name|bfd
 modifier|*
 name|input_bfds
 decl_stmt|;
+name|bfd
+modifier|*
+modifier|*
+name|input_bfds_tail
+decl_stmt|;
 comment|/* If a symbol should be created for each input BFD, this is section      where those symbols should be placed.  It must be a section in      the output BFD.  It may be NULL, in which case no such symbols      will be created.  This is to support CREATE_OBJECT_SYMBOLS in the      linker command language.  */
 name|asection
 modifier|*
@@ -695,6 +813,14 @@ name|char
 modifier|*
 name|fini_function
 decl_stmt|;
+comment|/* Number of relaxation passes.  Usually only one relaxation pass      is needed.  But a backend can have as many relaxation passes as      necessary.  During bfd_relax_section call, it is set to the      current pass, starting from 0.  */
+name|int
+name|relax_pass
+decl_stmt|;
+comment|/* Number of relaxation trips.  This number is incremented every      time the relaxation pass is restarted due to a previous      relaxation returning true in *AGAIN.  */
+name|int
+name|relax_trip
+decl_stmt|;
 comment|/* Non-zero if auto-import thunks for DATA items in pei386 DLLs      should be generated/linked against.  Set to 1 if this feature      is explicitly requested by the user, -1 if enabled by default.  */
 name|int
 name|pei386_auto_import
@@ -716,12 +842,24 @@ comment|/* May be used to set DT_FLAGS_1 for ELF. */
 name|bfd_vma
 name|flags_1
 decl_stmt|;
+comment|/* Start and end of RELRO region.  */
+name|bfd_vma
+name|relro_start
+decl_stmt|,
+name|relro_end
+decl_stmt|;
+comment|/* List of symbols should be dynamic.  */
+name|struct
+name|bfd_elf_dynamic_list
+modifier|*
+name|dynamic_list
+decl_stmt|;
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/* This structures holds a set of callback functions.  These are    called by the BFD linker routines.  The first argument to each    callback function is the bfd_link_info structure being used.  Each    function returns a boolean value.  If the function returns FALSE,    then the BFD function which called it will return with a failure    indication.  */
+comment|/* This structures holds a set of callback functions.  These are called    by the BFD linker routines.  Except for the info functions, the first    argument to each callback function is the bfd_link_info structure    being used and each function returns a boolean value.  If the    function returns FALSE, then the BFD function which called it should    return with a failure indication.  */
 end_comment
 
 begin_struct
@@ -953,7 +1091,7 @@ name|bfd_boolean
 name|fatal
 parameter_list|)
 function_decl|;
-comment|/* A function which is called when a reloc overflow occurs.  NAME is      the name of the symbol or section the reloc is against,      RELOC_NAME is the name of the relocation, and ADDEND is any      addend that is used.  ABFD, SECTION and ADDRESS identify the      location at which the overflow occurs; if this is the result of a      bfd_section_reloc_link_order or bfd_symbol_reloc_link_order, then      ABFD will be NULL.  */
+comment|/* A function which is called when a reloc overflow occurs. ENTRY is      the link hash table entry for the symbol the reloc is against.      NAME is the name of the local symbol or section the reloc is      against, RELOC_NAME is the name of the relocation, and ADDEND is      any addend that is used.  ABFD, SECTION and ADDRESS identify the      location at which the overflow occurs; if this is the result of a      bfd_section_reloc_link_order or bfd_symbol_reloc_link_order, then      ABFD will be NULL.  */
 name|bfd_boolean
 function_decl|(
 modifier|*
@@ -963,6 +1101,11 @@ parameter_list|(
 name|struct
 name|bfd_link_info
 modifier|*
+parameter_list|,
+name|struct
+name|bfd_link_hash_entry
+modifier|*
+name|entry
 parameter_list|,
 specifier|const
 name|char
@@ -989,7 +1132,7 @@ name|bfd_vma
 name|address
 parameter_list|)
 function_decl|;
-comment|/* A function which is called when a dangerous reloc is performed.      The canonical example is an a29k IHCONST reloc which does not      follow an IHIHALF reloc.  MESSAGE is an appropriate message.      ABFD, SECTION and ADDRESS identify the location at which the      problem occurred; if this is the result of a      bfd_section_reloc_link_order or bfd_symbol_reloc_link_order, then      ABFD will be NULL.  */
+comment|/* A function which is called when a dangerous reloc is performed.      MESSAGE is an appropriate message.      ABFD, SECTION and ADDRESS identify the location at which the      problem occurred; if this is the result of a      bfd_section_reloc_link_order or bfd_symbol_reloc_link_order, then      ABFD will be NULL.  */
 name|bfd_boolean
 function_decl|(
 modifier|*
@@ -1073,16 +1216,13 @@ name|bfd_vma
 name|address
 parameter_list|)
 function_decl|;
-comment|/* A function which is called for reporting a linker error. ID is the      error identifier. The remaining input is the same as einfo () in      ld.  */
-name|bfd_boolean
+comment|/* Error or warning link info message.  */
+name|void
 function_decl|(
 modifier|*
-name|error_handler
+name|einfo
 function_decl|)
 parameter_list|(
-name|int
-name|id
-parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -1091,11 +1231,63 @@ parameter_list|,
 modifier|...
 parameter_list|)
 function_decl|;
-comment|/* Identifiers of linker error messages used by error_handler.  */
-define|#
-directive|define
-name|LD_DEFINITION_IN_DISCARDED_SECTION
-value|1
+comment|/* General link info message.  */
+name|void
+function_decl|(
+modifier|*
+name|info
+function_decl|)
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+comment|/* Message to be printed in linker map file.  */
+name|void
+function_decl|(
+modifier|*
+name|minfo
+function_decl|)
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+comment|/* This callback provides a chance for users of the BFD library to      override its decision about whether to place two adjacent sections      into the same segment.  */
+name|bfd_boolean
+function_decl|(
+modifier|*
+name|override_segment_assignment
+function_decl|)
+parameter_list|(
+name|struct
+name|bfd_link_info
+modifier|*
+parameter_list|,
+name|bfd
+modifier|*
+name|abfd
+parameter_list|,
+name|asection
+modifier|*
+name|current_section
+parameter_list|,
+name|asection
+modifier|*
+name|previous_section
+parameter_list|,
+name|bfd_boolean
+name|new_segment
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct
@@ -1134,7 +1326,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/* This is the link_order structure itself.  These form a chain    attached to the section whose contents they are describing.  */
+comment|/* This is the link_order structure itself.  These form a chain    attached to the output section whose contents they are describing.  */
 end_comment
 
 begin_struct
@@ -1165,7 +1357,7 @@ union|union
 block|{
 struct|struct
 block|{
-comment|/* Section to include.  If this is used, then 	     section->output_section must be the section the 	     link_order is attached to, section->output_offset must 	     equal the link_order offset field, and section->_raw_size 	     must equal the link_order size field.  Maybe these 	     restrictions should be relaxed someday.  */
+comment|/* Section to include.  If this is used, then 	     section->output_section must be the section the 	     link_order is attached to, section->output_offset must 	     equal the link_order offset field, and section->size 	     must equal the link_order size field.  Maybe these 	     restrictions should be relaxed someday.  */
 name|asection
 modifier|*
 name|section
@@ -1434,6 +1626,42 @@ name|int
 name|used
 decl_stmt|;
 comment|/* Matching hook.  */
+name|struct
+name|bfd_elf_version_expr
+modifier|*
+function_decl|(
+modifier|*
+name|match
+function_decl|)
+parameter_list|(
+name|struct
+name|bfd_elf_version_expr_head
+modifier|*
+name|head
+parameter_list|,
+name|struct
+name|bfd_elf_version_expr
+modifier|*
+name|prev
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|sym
+parameter_list|)
+function_decl|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|bfd_elf_dynamic_list
+block|{
+name|struct
+name|bfd_elf_version_expr_head
+name|head
+decl_stmt|;
 name|struct
 name|bfd_elf_version_expr
 modifier|*

@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* bfd initialization stuff    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 2003    Free Software Foundation, Inc.    Written by Steve Chamberlain of Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* bfd initialization stuff    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 2003, 2007    Free Software Foundation, Inc.    Written by Steve Chamberlain of Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"bfd.h"
-end_include
 
 begin_include
 include|#
@@ -18,11 +12,17 @@ end_include
 begin_include
 include|#
 directive|include
+file|"bfd.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"libbfd.h"
 end_include
 
 begin_comment
-comment|/* SECTION 	Initialization  	These are the functions that handle initializing a BFD. */
+comment|/* SECTION 	Initialization  SUBSECTION 	Initialization functions  	These are the functions that handle initializing a BFD. */
 end_comment
 
 begin_comment

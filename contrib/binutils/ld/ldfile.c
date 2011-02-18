@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Linker file opening and searching.    Copyright 1991, 1992, 1993, 1994, 1995, 1998, 1999, 2000, 2001, 2002,    2003, 2004 Free Software Foundation, Inc.     This file is part of GLD, the Gnu Linker.     GLD is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GLD is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GLD; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* Linker file opening and searching.    Copyright 1991, 1992, 1993, 1994, 1995, 1998, 1999, 2000, 2001, 2002,    2003, 2004, 2005, 2007 Free Software Foundation, Inc.     This file is part of GLD, the Gnu Linker.     GLD is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GLD is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GLD; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -10,13 +10,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"bfd.h"
+file|"sysdep.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sysdep.h"
+file|"bfd.h"
 end_include
 
 begin_include
@@ -144,12 +144,6 @@ name|search_head
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MPW
-end_ifndef
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -157,6 +151,7 @@ name|VMS
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|slash
@@ -186,6 +181,7 @@ argument_list|)
 end_if
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|slash
@@ -200,6 +196,7 @@ directive|else
 end_else
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|slash
@@ -217,37 +214,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* MPW */
-end_comment
-
-begin_comment
-comment|/* The MPW path char is a colon.  */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|slash
-init|=
-literal|":"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* MPW */
-end_comment
 
 begin_typedef
 typedef|typedef
@@ -645,12 +611,17 @@ return|return
 name|FALSE
 return|;
 block|}
-comment|/* If we are searching for this file, see if the architecture is      compatible with the output file.  If it isn't, keep searching.      If we can't open the file as an object file, stop the search      here.  */
+comment|/* If we are searching for this file, see if the architecture is      compatible with the output file.  If it isn't, keep searching.      If we can't open the file as an object file, stop the search      here.  If we are statically linking, ensure that we don't link      a dynamic object.  */
 if|if
 condition|(
 name|entry
 operator|->
 name|search_dirs_flag
+operator|||
+operator|!
+name|entry
+operator|->
+name|dynamic
 condition|)
 block|{
 name|bfd
@@ -711,6 +682,10 @@ operator|==
 name|entry
 operator|->
 name|the_bfd
+operator|&&
+name|entry
+operator|->
+name|search_dirs_flag
 operator|&&
 name|bfd_get_error
 argument_list|()
@@ -1063,11 +1038,18 @@ condition|(
 name|skip
 condition|)
 block|{
+if|if
+condition|(
+name|command_line
+operator|.
+name|warn_search_mismatch
+condition|)
 name|einfo
 argument_list|(
 name|_
 argument_list|(
-literal|"%P: skipping incompatible %s when searching for %s\n"
+literal|"%P: skipping incompatible %s "
+literal|"when searching for %s\n"
 argument_list|)
 argument_list|,
 name|attempt
@@ -1101,7 +1083,58 @@ return|;
 block|}
 if|if
 condition|(
+operator|!
+name|entry
+operator|->
+name|dynamic
+operator|&&
 operator|(
+name|entry
+operator|->
+name|the_bfd
+operator|->
+name|flags
+operator|&
+name|DYNAMIC
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|einfo
+argument_list|(
+name|_
+argument_list|(
+literal|"%F%P: attempted static link of dynamic object `%s'\n"
+argument_list|)
+argument_list|,
+name|attempt
+argument_list|)
+expr_stmt|;
+name|bfd_close
+argument_list|(
+name|entry
+operator|->
+name|the_bfd
+argument_list|)
+expr_stmt|;
+name|entry
+operator|->
+name|the_bfd
+operator|=
+name|NULL
+expr_stmt|;
+return|return
+name|FALSE
+return|;
+block|}
+if|if
+condition|(
+name|entry
+operator|->
+name|search_dirs_flag
+operator|&&
+operator|!
 name|bfd_arch_get_compatible
 argument_list|(
 name|check
@@ -1112,9 +1145,6 @@ name|command_line
 operator|.
 name|accept_unknown_input_arch
 argument_list|)
-operator|==
-name|NULL
-operator|)
 comment|/* XCOFF archives can have 32 and 64 bit objects.  */
 operator|&&
 operator|!
@@ -1144,11 +1174,18 @@ argument_list|)
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|command_line
+operator|.
+name|warn_search_mismatch
+condition|)
 name|einfo
 argument_list|(
 name|_
 argument_list|(
-literal|"%P: skipping incompatible %s when searching for %s\n"
+literal|"%P: skipping incompatible %s "
+literal|"when searching for %s\n"
 argument_list|)
 argument_list|,
 name|attempt
@@ -1909,6 +1946,7 @@ comment|/* Try to open NAME; if that fails, look for it in any directories    sp
 end_comment
 
 begin_function
+specifier|static
 name|FILE
 modifier|*
 name|ldfile_find_command_file
@@ -2078,237 +2116,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|GNU960
-end_ifdef
-
-begin_function
-specifier|static
-name|char
-modifier|*
-name|gnu960_map_archname
-parameter_list|(
-name|char
-modifier|*
-name|name
-parameter_list|)
-block|{
-struct|struct
-name|tabentry
-block|{
-name|char
-modifier|*
-name|cmd_switch
-decl_stmt|;
-name|char
-modifier|*
-name|arch
-decl_stmt|;
-block|}
-struct|;
-specifier|static
-name|struct
-name|tabentry
-name|arch_tab
-index|[]
-init|=
-block|{
-literal|""
-block|,
-literal|""
-block|,
-literal|"KA"
-block|,
-literal|"ka"
-block|,
-literal|"KB"
-block|,
-literal|"kb"
-block|,
-literal|"KC"
-block|,
-literal|"mc"
-block|,
-comment|/* Synonym for MC */
-literal|"MC"
-block|,
-literal|"mc"
-block|,
-literal|"CA"
-block|,
-literal|"ca"
-block|,
-literal|"SA"
-block|,
-literal|"ka"
-block|,
-comment|/* Functionally equivalent to KA */
-literal|"SB"
-block|,
-literal|"kb"
-block|,
-comment|/* Functionally equivalent to KB */
-name|NULL
-block|,
-literal|""
-block|}
-decl_stmt|;
-name|struct
-name|tabentry
-modifier|*
-name|tp
-decl_stmt|;
-for|for
-control|(
-name|tp
-operator|=
-name|arch_tab
-init|;
-name|tp
-operator|->
-name|cmd_switch
-operator|!=
-name|NULL
-condition|;
-name|tp
-operator|++
-control|)
-block|{
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|name
-argument_list|,
-name|tp
-operator|->
-name|cmd_switch
-argument_list|)
-condition|)
-break|break;
-block|}
-if|if
-condition|(
-name|tp
-operator|->
-name|cmd_switch
-operator|==
-name|NULL
-condition|)
-name|einfo
-argument_list|(
-name|_
-argument_list|(
-literal|"%P%F: unknown architecture: %s\n"
-argument_list|)
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-return|return
-name|tp
-operator|->
-name|arch
-return|;
-block|}
-end_function
-
-begin_function
-name|void
-name|ldfile_add_arch
-parameter_list|(
-name|char
-modifier|*
-name|name
-parameter_list|)
-block|{
-name|search_arch_type
-modifier|*
-name|new
-init|=
-name|xmalloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|search_arch_type
-argument_list|)
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-operator|*
-name|name
-operator|!=
-literal|'\0'
-condition|)
-block|{
-if|if
-condition|(
-name|ldfile_output_machine_name
-index|[
-literal|0
-index|]
-operator|!=
-literal|'\0'
-condition|)
-block|{
-name|einfo
-argument_list|(
-name|_
-argument_list|(
-literal|"%P%F: target architecture respecified\n"
-argument_list|)
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-name|ldfile_output_machine_name
-operator|=
-name|name
-expr_stmt|;
-block|}
-name|new
-operator|->
-name|next
-operator|=
-name|NULL
-expr_stmt|;
-name|new
-operator|->
-name|name
-operator|=
-name|gnu960_map_archname
-argument_list|(
-name|name
-argument_list|)
-expr_stmt|;
-operator|*
-name|search_arch_tail_ptr
-operator|=
-name|new
-expr_stmt|;
-name|search_arch_tail_ptr
-operator|=
-operator|&
-name|new
-operator|->
-name|next
-expr_stmt|;
-block|}
-end_function
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* not GNU960 */
-end_comment
-
 begin_function
 name|void
 name|ldfile_add_arch
@@ -2389,11 +2196,6 @@ name|next
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Set the output architecture.  */

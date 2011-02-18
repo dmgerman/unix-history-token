@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* frags.h - Header file for the frag concept.    Copyright 1987, 1992, 1993, 1994, 1995, 1997, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* frags.h - Header file for the frag concept.    Copyright 1987, 1992, 1993, 1994, 1995, 1997, 1998, 1999, 2000, 2001,    2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -15,22 +15,11 @@ directive|define
 name|FRAGS_H
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ANSI_PROTOTYPES
-end_ifdef
-
 begin_struct_decl
 struct_decl|struct
 name|obstack
 struct_decl|;
 end_struct_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* A code fragment (frag) is some known number of chars, followed by some    unknown number of chars. Typically the unknown number of chars is an    instruction address whose size is yet unknown. We always know the greatest    possible size the unknown number of chars may become, and reserve that    much room at the end of the frag.    Once created, frags do not change address during assembly.    We chain the frags in (a) forward-linked list(s). The object-file address    of the 1st char of a frag is generally not known until after relax().    Many things at assembly time describe an address by {object-file-address    of a particular frag}+offset.     BUG: it may be smarter to have a single pointer off to various different    notes for different frag kinds.  See how code pans.  */
@@ -101,6 +90,19 @@ name|int
 name|relax_marker
 range|:
 literal|1
+decl_stmt|;
+comment|/* Used to ensure that all insns are emitted on proper address      boundaries.  */
+name|unsigned
+name|int
+name|has_code
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|int
+name|insn_addr
+range|:
+literal|6
 decl_stmt|;
 comment|/* What state is my tail in? */
 name|relax_stateT
@@ -220,36 +222,6 @@ name|bss_address_frag
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* A macro to speed up appending exactly 1 char to current frag.  */
-end_comment
-
-begin_comment
-comment|/* JF changed< 1 to<= 1 to avoid a race condition.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FRAG_APPEND_1_CHAR
-parameter_list|(
-name|datum
-parameter_list|)
-define|\
-value|{							\   if (obstack_room (&frags)<= 1)			\     {							\       frag_wane (frag_now);				\       frag_new (0);					\     }							\   obstack_1grow (&frags, datum);			\ }
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_function_decl
 specifier|extern
 name|void
@@ -269,11 +241,6 @@ name|X
 parameter_list|)
 value|frag_append_1_char (X)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|void
@@ -456,6 +423,24 @@ parameter_list|,
 name|char
 modifier|*
 name|opcode
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bfd_boolean
+name|frag_offset_fixed_p
+parameter_list|(
+specifier|const
+name|fragS
+modifier|*
+parameter_list|,
+specifier|const
+name|fragS
+modifier|*
+parameter_list|,
+name|bfd_vma
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

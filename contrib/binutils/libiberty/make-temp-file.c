@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Utility to pick a temporary filename prefix.    Copyright (C) 1996, 1997, 1998, 2001 Free Software Foundation, Inc.  This file is part of the libiberty library. Libiberty is free software; you can redistribute it and/or modify it under the terms of the GNU Library General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  Libiberty is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public License for more details.  You should have received a copy of the GNU Library General Public License along with libiberty; see the file COPYING.LIB.  If not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Utility to pick a temporary filename prefix.    Copyright (C) 1996, 1997, 1998, 2001 Free Software Foundation, Inc.  This file is part of the libiberty library. Libiberty is free software; you can redistribute it and/or modify it under the terms of the GNU Library General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  Libiberty is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public License for more details.  You should have received a copy of the GNU Library General Public License along with libiberty; see the file COPYING.LIB.  If not, write to the Free Software Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifdef
@@ -146,21 +146,18 @@ directive|include
 file|"libiberty.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|mkstemps
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* '/' works just fine on MS-DOS based systems.  */
@@ -206,27 +203,24 @@ begin_comment
 comment|/* Subroutine of choose_tmpdir.    If BASE is non-NULL, return it.    Otherwise it checks if DIR is a usable directory.    If success, DIR is returned.    Otherwise NULL is returned.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 specifier|inline
 specifier|const
 name|char
 modifier|*
-name|try
-name|PARAMS
-argument_list|(
-operator|(
+name|try_dir
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
@@ -234,23 +228,18 @@ specifier|inline
 specifier|const
 name|char
 modifier|*
-name|try
+name|try_dir
 parameter_list|(
-name|dir
-parameter_list|,
-name|base
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|dir
-decl_stmt|,
-decl|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 name|base
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -287,7 +276,7 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 specifier|static
@@ -384,7 +373,9 @@ begin_function
 name|char
 modifier|*
 name|choose_tmpdir
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|const
 name|char
@@ -410,7 +401,7 @@ name|memoized_tmpdir
 return|;
 name|base
 operator|=
-name|try
+name|try_dir
 argument_list|(
 name|getenv
 argument_list|(
@@ -422,7 +413,7 @@ argument_list|)
 expr_stmt|;
 name|base
 operator|=
-name|try
+name|try_dir
 argument_list|(
 name|getenv
 argument_list|(
@@ -434,7 +425,7 @@ argument_list|)
 expr_stmt|;
 name|base
 operator|=
-name|try
+name|try_dir
 argument_list|(
 name|getenv
 argument_list|(
@@ -449,7 +440,7 @@ directive|ifdef
 name|P_tmpdir
 name|base
 operator|=
-name|try
+name|try_dir
 argument_list|(
 name|P_tmpdir
 argument_list|,
@@ -461,7 +452,7 @@ directive|endif
 comment|/* Try /var/tmp, /usr/tmp, then /tmp.  */
 name|base
 operator|=
-name|try
+name|try_dir
 argument_list|(
 name|vartmp
 argument_list|,
@@ -470,7 +461,7 @@ argument_list|)
 expr_stmt|;
 name|base
 operator|=
-name|try
+name|try_dir
 argument_list|(
 name|usrtmp
 argument_list|,
@@ -479,7 +470,7 @@ argument_list|)
 expr_stmt|;
 name|base
 operator|=
-name|try
+name|try_dir
 argument_list|(
 name|tmp
 argument_list|,
@@ -507,8 +498,10 @@ argument_list|)
 expr_stmt|;
 name|tmpdir
 operator|=
-name|xmalloc
+name|XNEWVEC
 argument_list|(
+name|char
+argument_list|,
 name|len
 operator|+
 literal|2
@@ -556,13 +549,11 @@ name|char
 modifier|*
 name|make_temp_file
 parameter_list|(
-name|suffix
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|suffix
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|char
@@ -610,8 +601,10 @@ argument_list|)
 expr_stmt|;
 name|temp_filename
 operator|=
-name|xmalloc
+name|XNEWVEC
 argument_list|(
+name|char
+argument_list|,
 name|base_len
 operator|+
 name|TEMP_FILE_LEN

@@ -1,11 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* srconv.c -- Sysroff conversion program    Copyright 1994, 1995, 1996, 1998, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* srconv.c -- Sysroff conversion program    Copyright 1994, 1995, 1996, 1998, 1999, 2000, 2001, 2002, 2003, 2004,    2005, 2007 Free Software Foundation, Inc.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_comment
 comment|/* Written by Steve Chamberlain (sac@cygnus.com)     This program can be used to convert a coff object file    into a Hitachi OM/LM (Sysroff) format.     All debugging information is preserved */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"sysdep.h"
+end_include
 
 begin_include
 include|#
@@ -135,6 +141,7 @@ parameter_list|(
 name|FILE
 modifier|*
 parameter_list|,
+name|unsigned
 name|char
 modifier|*
 parameter_list|,
@@ -152,6 +159,7 @@ name|writeINT
 parameter_list|(
 name|int
 parameter_list|,
+name|unsigned
 name|char
 modifier|*
 parameter_list|,
@@ -173,6 +181,7 @@ name|writeBITS
 parameter_list|(
 name|int
 parameter_list|,
+name|unsigned
 name|char
 modifier|*
 parameter_list|,
@@ -191,6 +200,7 @@ name|writeBARRAY
 parameter_list|(
 name|barray
 parameter_list|,
+name|unsigned
 name|char
 modifier|*
 parameter_list|,
@@ -213,6 +223,7 @@ parameter_list|(
 name|char
 modifier|*
 parameter_list|,
+name|unsigned
 name|char
 modifier|*
 parameter_list|,
@@ -1083,6 +1094,7 @@ name|FILE
 modifier|*
 name|file
 parameter_list|,
+name|unsigned
 name|char
 modifier|*
 name|ptr
@@ -1207,6 +1219,7 @@ parameter_list|(
 name|int
 name|n
 parameter_list|,
+name|unsigned
 name|char
 modifier|*
 name|ptr
@@ -1404,6 +1417,7 @@ parameter_list|(
 name|int
 name|val
 parameter_list|,
+name|unsigned
 name|char
 modifier|*
 name|ptr
@@ -1519,6 +1533,7 @@ parameter_list|(
 name|barray
 name|data
 parameter_list|,
+name|unsigned
 name|char
 modifier|*
 name|ptr
@@ -1599,6 +1614,7 @@ name|char
 modifier|*
 name|string
 parameter_list|,
+name|unsigned
 name|char
 modifier|*
 name|ptr
@@ -1903,9 +1919,7 @@ name|spare1
 operator|=
 literal|0
 expr_stmt|;
-if|#
-directive|if
-literal|1
+comment|/* Don't count the abs section.  */
 name|un
 operator|.
 name|nsections
@@ -1916,18 +1930,6 @@ name|nsections
 operator|-
 literal|1
 expr_stmt|;
-comment|/*  Don't count the abs section.  */
-else|#
-directive|else
-comment|/*NEW - only count sections with size.  */
-name|un
-operator|.
-name|nsections
-operator|=
-name|nsecs
-expr_stmt|;
-endif|#
-directive|endif
 name|un
 operator|.
 name|nextdefs
@@ -2498,11 +2500,12 @@ while|while
 condition|(
 name|i
 operator|<
+name|bfd_get_section_size
+argument_list|(
 name|section
 operator|->
 name|bfd_section
-operator|->
-name|_raw_size
+argument_list|)
 condition|)
 block|{
 name|struct
@@ -2527,19 +2530,21 @@ name|i
 operator|+
 name|todo
 operator|>
+name|bfd_get_section_size
+argument_list|(
 name|section
 operator|->
 name|bfd_section
-operator|->
-name|_raw_size
+argument_list|)
 condition|)
 name|todo
 operator|=
+name|bfd_get_section_size
+argument_list|(
 name|section
 operator|->
 name|bfd_section
-operator|->
-name|_raw_size
+argument_list|)
 operator|-
 name|i
 expr_stmt|;
@@ -3626,6 +3631,12 @@ name|struct
 name|IT_dpt
 name|dpt
 decl_stmt|;
+name|dpt
+operator|.
+name|dunno
+operator|=
+literal|0
+expr_stmt|;
 name|walk_tree_type_1
 argument_list|(
 name|sfile
@@ -5757,12 +5768,6 @@ decl_stmt|;
 name|int
 name|lim
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|struct coff_symbol *symbol;   static int incit = 0x500000;   int used = 0;
-endif|#
-directive|endif
 name|int
 name|i
 decl_stmt|;
@@ -5924,13 +5929,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* Look through all the symbols and try and work out the extents in this      source file.  */
-if|#
-directive|if
-literal|0
-block|for (symbol = sfile->scope->vars_head;        symbol;        symbol = symbol->next)     {       if (symbol->type->type == coff_secdef_type) 	{ 	  unsigned int low = symbol->where->offset; 	  unsigned int high = symbol->where->offset + symbol->type->size - 1; 	  struct coff_section *section = symbol->where->section;  	  int sn = section->number; 	  if (low< lowest[sn]) 	    lowest[sn] = low; 	  if (high> highest[sn]) 	    highest[sn] = high; 	}     }    for (i = 0; i< du.sections; i++)     {       if (highest[i] == 0) 	lowest[i] = highest[i] = incit;        du.san[used] = i;       du.length[used] = highest[i] - lowest[i];       du.address[used] = bfd_get_file_flags (abfd)& EXEC_P ? lowest[i] : 0;        if (debug) 	{ 	  printf (" section %6s 0x%08x..0x%08x\n", 		  p->sections[i + 1].name, 		  lowest[i], 		  highest[i]); 	}       used++;     }
-endif|#
-directive|endif
 name|lim
 operator|=
 name|du
@@ -6222,12 +6220,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Find the filenames.  */
-if|#
-directive|if
-literal|0
-block|i = 0;    for (sfile = p->source_head;        sfile;        sfile = sfile->next)     {       dus.drb[i] = 0;       dus.spare[i] = 0;       dus.fname[i] = sfile->name;       i++;     }
-else|#
-directive|else
 name|dus
 operator|.
 name|drb
@@ -6248,8 +6240,6 @@ name|sfile
 operator|->
 name|name
 expr_stmt|;
-endif|#
-directive|endif
 name|sysroff_swap_dus_out
 argument_list|(
 name|file
@@ -6317,19 +6307,6 @@ name|n
 name|ATTRIBUTE_UNUSED
 parameter_list|)
 block|{
-if|#
-directive|if
-literal|0
-block|if (n == 0)     {
-comment|/* Count up all the linenumbers */
-block|struct coff_symbol *sy;       int lc = 0;       struct IT_dln dln;        int idx;        for (sy = p->symbol_list_head; 	   sy; 	   sy = sy->next_in_ofile_list) 	{ 	  struct coff_type *t = sy->type; 	  if (t->type == coff_function_type) 	    { 	      struct coff_line *l = t->u.function.lines; 	      lc += l->nlines; 	    } 	}        dln.sfn = nints (lc);       dln.sln = nints (lc);       dln.lln = nints (lc);       dln.section = nints (lc);        dln.from_address = nints (lc);       dln.to_address = nints (lc);         dln.neg = 0x1001;        dln.nln = lc;
-comment|/* Run through once more and fill up the structure */
-block|idx = 0;       for (sy = p->symbol_list_head; 	   sy; 	   sy = sy->next_in_ofile_list) 	{ 	  if (sy->type->type == coff_function_type) 	    { 	      int i; 	      struct coff_line *l = sy->type->u.function.lines; 	      for (i = 0; i< l->nlines; i++) 		{ 		  dln.section[idx] = sy->where->section->number; 		  dln.sfn[idx] = n; 		  dln.sln[idx] = l->lines[i]; 		  dln.from_address[idx] = l->addresses[i]; 		  if (idx) 		    dln.to_address[idx - 1] = dln.from_address[idx]; 		  idx++; 		} 	    } 	  n++; 	}       sysroff_swap_dln_out (file,&dln);     }
-endif|#
-directive|endif
-if|#
-directive|if
-literal|1
 comment|/* Count up all the linenumbers */
 name|struct
 name|coff_symbol
@@ -6694,8 +6671,6 @@ operator|&
 name|dln
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -7472,13 +7447,6 @@ operator|=
 name|CONTENTS_CODE
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-comment|/* NEW */
-block|if (sc.length) 	{
-endif|#
-directive|endif
 name|sysroff_swap_sc_out
 argument_list|(
 name|file
@@ -7490,12 +7458,6 @@ expr_stmt|;
 name|scount
 operator|++
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|}
-endif|#
-directive|endif
 block|}
 return|return
 name|scount
@@ -8174,12 +8136,17 @@ name|file
 argument_list|,
 name|_
 argument_list|(
-literal|" The options are:\n\   -q --quick       (Obsolete - ignoerd)\n\   -n --noprescan   Do not perform a scan to convert commons into defs\n\   -d --debug       Display information about what is being done\n\   -h --help        Display this information\n\   -v --version     Print the program's version number\n"
+literal|" The options are:\n\   -q --quick       (Obsolete - ignored)\n\   -n --noprescan   Do not perform a scan to convert commons into defs\n\   -d --debug       Display information about what is being done\n\   @<file>          Read options from<file>\n\   -h --help        Display this information\n\   -v --version     Print the program's version number\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|REPORT_BUGS_TO
+index|[
+literal|0
+index|]
+operator|&&
 name|status
 operator|==
 literal|0
@@ -8358,6 +8325,15 @@ expr_stmt|;
 name|xmalloc_set_program_name
 argument_list|(
 name|program_name
+argument_list|)
+expr_stmt|;
+name|expandargv
+argument_list|(
+operator|&
+name|ac
+argument_list|,
+operator|&
+name|av
 argument_list|)
 expr_stmt|;
 while|while

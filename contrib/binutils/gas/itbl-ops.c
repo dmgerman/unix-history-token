@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* itbl-ops.c    Copyright 1997, 1999, 2000, 2001 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* itbl-ops.c    Copyright 1997, 1999, 2000, 2001, 2002, 2003, 2005, 2006    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -14,19 +14,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
+file|"as.h"
 end_include
 
 begin_include
@@ -269,64 +257,6 @@ index|]
 index|[
 name|e_ntypes
 index|]
-init|=
-block|{
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -618,20 +548,6 @@ name|int
 name|regnum
 parameter_list|)
 block|{
-if|#
-directive|if
-literal|0
-include|#
-directive|include
-file|"as.h"
-include|#
-directive|include
-file|"symbols.h"
-comment|/* Since register names don't have a prefix, we put them in the symbol table so      they can't be used as symbols.  This also simplifies argument parsing as      we can let gas parse registers for us.  The recorded register number is      regnum.  */
-comment|/* Use symbol_create here instead of symbol_new so we don't try to      output registers into the object file's symbol table.  */
-block|symbol_table_insert (symbol_create (regname, reg_section, 				      regnum,&zero_address_frag));
-endif|#
-directive|endif
 return|return
 name|alloc_entry
 argument_list|(
@@ -868,18 +784,6 @@ ifndef|#
 directive|ifndef
 name|STAND_ALONE
 end_ifndef
-
-begin_include
-include|#
-directive|include
-file|"as.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"symbols.h"
-end_include
 
 begin_function_decl
 specifier|static

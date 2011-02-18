@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-ia64.h -- Header file for tc-ia64.c.    Copyright 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.    Contributed by David Mosberger-Tang<davidm@hpl.hp.com>     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* tc-ia64.h -- Header file for tc-ia64.c.    Copyright 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2007    Free Software Foundation, Inc.    Contributed by David Mosberger-Tang<davidm@hpl.hp.com>     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 51 Franklin Street - Fifth Floor,    Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -304,7 +304,7 @@ begin_define
 define|#
 directive|define
 name|LEX_AT
-value|LEX_NAME
+value|(LEX_NAME|LEX_BEGIN_NAME)
 end_define
 
 begin_comment
@@ -315,7 +315,7 @@ begin_define
 define|#
 directive|define
 name|LEX_QM
-value|LEX_NAME
+value|(LEX_NAME|LEX_BEGIN_NAME)
 end_define
 
 begin_comment
@@ -332,6 +332,22 @@ end_define
 begin_comment
 comment|/* allow `#' ending a name */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+name|ia64_symbol_chars
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|tc_symbol_chars
+value|ia64_symbol_chars
+end_define
 
 begin_define
 define|#
@@ -457,21 +473,28 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|int
 name|ia64_parse_name
-parameter_list|(
+name|PARAMS
+argument_list|(
+operator|(
 name|char
-modifier|*
+operator|*
 name|name
-parameter_list|,
+operator|,
 name|expressionS
-modifier|*
+operator|*
 name|e
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|,
+name|char
+operator|*
+name|nextP
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -864,9 +887,11 @@ name|s
 parameter_list|,
 name|e
 parameter_list|,
+name|m
+parameter_list|,
 name|c
 parameter_list|)
-value|ia64_parse_name (s, e)
+value|ia64_parse_name (s, e, c)
 end_define
 
 begin_define
@@ -1176,6 +1201,21 @@ parameter_list|(
 name|FRAGP
 parameter_list|)
 value|do {(FRAGP)->tc_frag_data = 0;}while (0)
+end_define
+
+begin_comment
+comment|/* Give an error if a frag containing code is not aligned to a 16 byte    boundary.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|md_frag_check
+parameter_list|(
+name|FRAGP
+parameter_list|)
+define|\
+value|if ((FRAGP)->has_code							\&& (((FRAGP)->fr_address + (FRAGP)->insn_addr)& 15) != 0)	\      as_bad_where ((FRAGP)->fr_file, (FRAGP)->fr_line,			\ 		   _("instruction address is not a multiple of 16"));
 end_define
 
 begin_define
@@ -1543,7 +1583,7 @@ modifier|*
 name|i
 decl_stmt|;
 name|unsigned
-name|long
+name|int
 name|fr_mem
 decl_stmt|;
 name|unsigned
@@ -1567,9 +1607,10 @@ typedef|typedef
 struct|struct
 name|unw_p_record
 block|{
-name|void
+name|struct
+name|unw_rec_list
 modifier|*
-name|imask
+name|next
 decl_stmt|;
 name|unsigned
 name|long
@@ -1579,37 +1620,43 @@ name|unsigned
 name|long
 name|size
 decl_stmt|;
+union|union
+block|{
 name|unsigned
 name|long
-name|spoff
+name|sp
 decl_stmt|;
 name|unsigned
 name|long
-name|br
+name|psp
 decl_stmt|;
-name|unsigned
-name|long
-name|pspoff
-decl_stmt|;
+block|}
+name|off
+union|;
+union|union
+block|{
 name|unsigned
 name|short
 name|gr
 decl_stmt|;
 name|unsigned
 name|short
-name|rmask
+name|br
 decl_stmt|;
+block|}
+name|r
+union|;
 name|unsigned
-name|short
+name|char
 name|grmask
 decl_stmt|;
 name|unsigned
-name|long
-name|frmask
+name|char
+name|brmask
 decl_stmt|;
 name|unsigned
-name|short
-name|brmask
+name|int
+name|frmask
 decl_stmt|;
 name|unsigned
 name|char
@@ -1655,6 +1702,8 @@ name|unsigned
 name|long
 name|t
 decl_stmt|;
+union|union
+block|{
 name|unsigned
 name|long
 name|spoff
@@ -1664,12 +1713,15 @@ name|long
 name|pspoff
 decl_stmt|;
 name|unsigned
-name|short
+name|int
 name|reg
 decl_stmt|;
+block|}
+name|where
+union|;
 name|unsigned
 name|short
-name|treg
+name|reg
 decl_stmt|;
 name|unsigned
 name|short
@@ -1740,7 +1792,7 @@ parameter_list|(
 name|FIX
 parameter_list|)
 define|\
-value|((FIX)->fx_r_type != BFD_RELOC_UNUSED			\&& (!(FIX)->fx_pcrel					\        || (FIX)->fx_plt					\        || TC_FORCE_RELOCATION (FIX)))
+value|((FIX)->fx_r_type != BFD_RELOC_UNUSED			\&& (!(FIX)->fx_pcrel					\        || (FIX)->fx_r_type == BFD_RELOC_IA64_PLTOFF22	\        || TC_FORCE_RELOCATION (FIX)))
 end_define
 
 end_unit

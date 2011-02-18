@@ -4007,7 +4007,7 @@ condition|)
 block|{
 name|dwarf_info_size
 operator|=
-name|bfd_get_section_size_before_reloc
+name|bfd_get_section_size
 argument_list|(
 name|sectp
 argument_list|)
@@ -4034,7 +4034,7 @@ condition|)
 block|{
 name|dwarf_abbrev_size
 operator|=
-name|bfd_get_section_size_before_reloc
+name|bfd_get_section_size
 argument_list|(
 name|sectp
 argument_list|)
@@ -4061,7 +4061,7 @@ condition|)
 block|{
 name|dwarf_line_size
 operator|=
-name|bfd_get_section_size_before_reloc
+name|bfd_get_section_size
 argument_list|(
 name|sectp
 argument_list|)
@@ -4088,7 +4088,7 @@ condition|)
 block|{
 name|dwarf_pubnames_size
 operator|=
-name|bfd_get_section_size_before_reloc
+name|bfd_get_section_size
 argument_list|(
 name|sectp
 argument_list|)
@@ -4115,7 +4115,7 @@ condition|)
 block|{
 name|dwarf_aranges_size
 operator|=
-name|bfd_get_section_size_before_reloc
+name|bfd_get_section_size
 argument_list|(
 name|sectp
 argument_list|)
@@ -4142,7 +4142,7 @@ condition|)
 block|{
 name|dwarf_loc_size
 operator|=
-name|bfd_get_section_size_before_reloc
+name|bfd_get_section_size
 argument_list|(
 name|sectp
 argument_list|)
@@ -4169,7 +4169,7 @@ condition|)
 block|{
 name|dwarf_macinfo_size
 operator|=
-name|bfd_get_section_size_before_reloc
+name|bfd_get_section_size
 argument_list|(
 name|sectp
 argument_list|)
@@ -4196,7 +4196,7 @@ condition|)
 block|{
 name|dwarf_str_size
 operator|=
-name|bfd_get_section_size_before_reloc
+name|bfd_get_section_size
 argument_list|(
 name|sectp
 argument_list|)
@@ -4223,7 +4223,7 @@ condition|)
 block|{
 name|dwarf_frame_size
 operator|=
-name|bfd_get_section_size_before_reloc
+name|bfd_get_section_size
 argument_list|(
 name|sectp
 argument_list|)
@@ -4267,7 +4267,7 @@ condition|)
 block|{
 name|dwarf_eh_frame_size
 operator|=
-name|bfd_get_section_size_before_reloc
+name|bfd_get_section_size
 argument_list|(
 name|sectp
 argument_list|)
@@ -4295,7 +4295,7 @@ condition|)
 block|{
 name|dwarf_ranges_size
 operator|=
-name|bfd_get_section_size_before_reloc
+name|bfd_get_section_size
 argument_list|(
 name|sectp
 argument_list|)
@@ -16465,7 +16465,7 @@ decl_stmt|;
 name|bfd_size_type
 name|size
 init|=
-name|bfd_get_section_size_before_reloc
+name|bfd_get_section_size
 argument_list|(
 name|sectp
 argument_list|)

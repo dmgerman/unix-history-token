@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* struct_symbol.h - Internal symbol structure    Copyright 1987, 1992, 1993, 1994, 1995, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* struct_symbol.h - Internal symbol structure    Copyright 1987, 1992, 1993, 1994, 1995, 1998, 1999, 2000, 2001, 2005    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -15,33 +15,6 @@ directive|define
 name|__struc_symbol_h__
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BFD_ASSEMBLER
-end_ifdef
-
-begin_comment
-comment|/* The BFD code wants to walk the list in both directions.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|SYMBOLS_NEED_BACKPOINTERS
-end_undef
-
-begin_define
-define|#
-directive|define
-name|SYMBOLS_NEED_BACKPOINTERS
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* The information we keep for a symbol.  Note that the symbol table    holds pointers both to this and to local_symbol structures.  See    below.  */
 end_comment
@@ -50,31 +23,11 @@ begin_struct
 struct|struct
 name|symbol
 block|{
-ifdef|#
-directive|ifdef
-name|BFD_ASSEMBLER
 comment|/* BFD symbol */
 name|asymbol
 modifier|*
 name|bsym
 decl_stmt|;
-else|#
-directive|else
-comment|/* The (4-origin) position of sy_name in the symbol table of the object      file.  This will be 0 for (nameless) .stabd symbols.       Not used until write_object_file() time.  */
-name|unsigned
-name|long
-name|sy_name_offset
-decl_stmt|;
-comment|/* What we write in .o file (if permitted).  */
-name|obj_symbol_type
-name|sy_symbol
-decl_stmt|;
-comment|/* The 24 bit symbol number.  Symbol numbers start at 0 and are unsigned.  */
-name|long
-name|sy_number
-decl_stmt|;
-endif|#
-directive|endif
 comment|/* The value of the symbol.  */
 name|expressionS
 name|sy_value
@@ -85,17 +38,11 @@ name|symbol
 modifier|*
 name|sy_next
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|SYMBOLS_NEED_BACKPOINTERS
 name|struct
 name|symbol
 modifier|*
 name|sy_previous
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* SYMBOLS_NEED_BACKPOINTERS */
 comment|/* Pointer to the frag this symbol is attached to, if any.      Otherwise, NULL.  */
 name|struct
 name|frag
@@ -136,10 +83,38 @@ name|sy_used
 range|:
 literal|1
 decl_stmt|;
+comment|/* Whether the symbol can be re-defined.  */
+name|unsigned
+name|int
+name|sy_volatile
+range|:
+literal|1
+decl_stmt|;
+comment|/* Whether the symbol is a forward reference.  */
+name|unsigned
+name|int
+name|sy_forward_ref
+range|:
+literal|1
+decl_stmt|;
 comment|/* This is set if the symbol is defined in an MRI common section.      We handle such sections as single common symbols, so symbols      defined within them must be treated specially by the relocation      routines.  */
 name|unsigned
 name|int
 name|sy_mri_common
+range|:
+literal|1
+decl_stmt|;
+comment|/* This is set if the symbol is set with a .weakref directive.  */
+name|unsigned
+name|int
+name|sy_weakrefr
+range|:
+literal|1
+decl_stmt|;
+comment|/* This is set when the symbol is referenced as part of a .weakref      directive, but only if the symbol was not in the symbol table      before.  It is cleared as soon as any direct reference to the      symbol is present.  */
+name|unsigned
+name|int
+name|sy_weakrefd
 range|:
 literal|1
 decl_stmt|;
@@ -168,12 +143,6 @@ directive|endif
 block|}
 struct|;
 end_struct
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BFD_ASSEMBLER
-end_ifdef
 
 begin_comment
 comment|/* A pointer in the symbol may point to either a complete symbol    (struct symbol above) or to a local symbol (struct local_symbol    defined here).  The symbol code can detect the case by examining    the first field.  It is always NULL for a local symbol.     We do this because we ordinarily only need a small amount of    information for a local symbol.  The symbol table takes up a lot of    space, and storing less information for a local symbol can make a    big difference in assembler memory usage when assembling a large    file.  */
@@ -311,15 +280,6 @@ name|s
 parameter_list|)
 value|((l)->u.lsy_sym = (s))
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* BFD_ASSEMBLER */
-end_comment
 
 begin_endif
 endif|#

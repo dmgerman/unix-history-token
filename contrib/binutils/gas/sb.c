@@ -1,69 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* sb.c - string buffer manipulation routines    Copyright 1994, 1995, 2000 Free Software Foundation, Inc.     Written by Steve and Judy Chamberlain of Cygnus Support,       sac@cygnus.com     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* sb.c - string buffer manipulation routines    Copyright 1994, 1995, 2000, 2003, 2006 Free Software Foundation, Inc.     Written by Steve and Judy Chamberlain of Cygnus Support,       sac@cygnus.com     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"config.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_STDLIB_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_STRING_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<strings.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|"libiberty.h"
+file|"as.h"
 end_include
 
 begin_include
@@ -76,12 +19,14 @@ begin_comment
 comment|/* These routines are about manipulating strings.     They are managed in things called `sb's which is an abbreviation    for string buffers.  An sb has to be created, things can be glued    on to it, and at the end of it's life it should be freed.  The    contents should never be pointed at whilst it is still growing,    since it could be moved at any time     eg:    sb_new (&foo);    sb_grow... (&foo,...);    use foo->ptr[*];    sb_kill (&foo);  */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_decl_stmt
+specifier|static
+name|int
 name|dsize
-value|5
-end_define
+init|=
+literal|5
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -101,6 +46,7 @@ comment|/* Statistics of sb structures.  */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|string_count
 index|[
@@ -113,18 +59,28 @@ begin_comment
 comment|/* Free list of sb structures.  */
 end_comment
 
-begin_decl_stmt
+begin_struct
 specifier|static
-name|sb_list_vector
-name|free_list
+struct|struct
+block|{
+name|sb_element
+modifier|*
+name|size
+index|[
+name|sb_max_power_two
+index|]
 decl_stmt|;
-end_decl_stmt
+block|}
+name|free_list
+struct|;
+end_struct
 
 begin_comment
-comment|/* initializes an sb.  */
+comment|/* Initializes an sb.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|sb_build
 parameter_list|(
@@ -136,19 +92,17 @@ name|int
 name|size
 parameter_list|)
 block|{
-comment|/* see if we can find one to allocate */
+comment|/* See if we can find one to allocate.  */
 name|sb_element
 modifier|*
 name|e
 decl_stmt|;
-if|if
-condition|(
+name|assert
+argument_list|(
 name|size
-operator|>
+operator|<
 name|sb_max_power_two
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
 name|e
 operator|=
@@ -165,7 +119,7 @@ operator|!
 name|e
 condition|)
 block|{
-comment|/* nothing there, allocate one and stick into the free list */
+comment|/* Nothing there, allocate one and stick into the free list.  */
 name|e
 operator|=
 operator|(
@@ -221,7 +175,7 @@ index|]
 operator|++
 expr_stmt|;
 block|}
-comment|/* remove from free list */
+comment|/* Remove from free list.  */
 name|free_list
 operator|.
 name|size
@@ -233,7 +187,7 @@ name|e
 operator|->
 name|next
 expr_stmt|;
-comment|/* copy into callers world */
+comment|/* Copy into callers world.  */
 name|ptr
 operator|->
 name|ptr
@@ -283,7 +237,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* deallocate the sb at ptr */
+comment|/* Deallocate the sb at ptr.  */
 end_comment
 
 begin_function
@@ -295,7 +249,7 @@ modifier|*
 name|ptr
 parameter_list|)
 block|{
-comment|/* return item to free list */
+comment|/* Return item to free list.  */
 name|ptr
 operator|->
 name|item
@@ -328,7 +282,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* add the sb at s to the end of the sb at ptr */
+comment|/* Add the sb at s to the end of the sb at ptr.  */
 end_comment
 
 begin_function
@@ -384,7 +338,154 @@ block|}
 end_function
 
 begin_comment
-comment|/* make sure that the sb at ptr has room for another len characters,    and grow it if it doesn't.  */
+comment|/* Helper for sb_scrub_and_add_sb.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|sb
+modifier|*
+name|sb_to_scrub
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|scrub_position
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+name|int
+name|scrub_from_sb
+parameter_list|(
+name|char
+modifier|*
+name|buf
+parameter_list|,
+name|int
+name|buflen
+parameter_list|)
+block|{
+name|int
+name|copy
+decl_stmt|;
+name|copy
+operator|=
+name|sb_to_scrub
+operator|->
+name|len
+operator|-
+operator|(
+name|scrub_position
+operator|-
+name|sb_to_scrub
+operator|->
+name|ptr
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|copy
+operator|>
+name|buflen
+condition|)
+name|copy
+operator|=
+name|buflen
+expr_stmt|;
+name|memcpy
+argument_list|(
+name|buf
+argument_list|,
+name|scrub_position
+argument_list|,
+name|copy
+argument_list|)
+expr_stmt|;
+name|scrub_position
+operator|+=
+name|copy
+expr_stmt|;
+return|return
+name|copy
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Run the sb at s through do_scrub_chars and add the result to the sb    at ptr.  */
+end_comment
+
+begin_function
+name|void
+name|sb_scrub_and_add_sb
+parameter_list|(
+name|sb
+modifier|*
+name|ptr
+parameter_list|,
+name|sb
+modifier|*
+name|s
+parameter_list|)
+block|{
+name|sb_to_scrub
+operator|=
+name|s
+expr_stmt|;
+name|scrub_position
+operator|=
+name|s
+operator|->
+name|ptr
+expr_stmt|;
+name|sb_check
+argument_list|(
+name|ptr
+argument_list|,
+name|s
+operator|->
+name|len
+argument_list|)
+expr_stmt|;
+name|ptr
+operator|->
+name|len
+operator|+=
+name|do_scrub_chars
+argument_list|(
+name|scrub_from_sb
+argument_list|,
+name|ptr
+operator|->
+name|ptr
+operator|+
+name|ptr
+operator|->
+name|len
+argument_list|,
+name|s
+operator|->
+name|len
+argument_list|)
+expr_stmt|;
+name|sb_to_scrub
+operator|=
+literal|0
+expr_stmt|;
+name|scrub_position
+operator|=
+literal|0
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Make sure that the sb at ptr has room for another len characters,    and grow it if it doesn't.  */
 end_comment
 
 begin_function
@@ -471,7 +572,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* make the sb at ptr point back to the beginning.  */
+comment|/* Make the sb at ptr point back to the beginning.  */
 end_comment
 
 begin_function
@@ -493,7 +594,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* add character c to the end of the sb at ptr.  */
+comment|/* Add character c to the end of the sb at ptr.  */
 end_comment
 
 begin_function
@@ -531,7 +632,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* add null terminated string s to the end of sb at ptr.  */
+comment|/* Add null terminated string s to the end of sb at ptr.  */
 end_comment
 
 begin_function
@@ -588,7 +689,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* add string at s of length len to sb at ptr */
+comment|/* Add string at s of length len to sb at ptr */
 end_comment
 
 begin_function
@@ -640,162 +741,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* print the sb at ptr to the output file */
-end_comment
-
-begin_function
-name|void
-name|sb_print
-parameter_list|(
-name|FILE
-modifier|*
-name|outfile
-parameter_list|,
-name|sb
-modifier|*
-name|ptr
-parameter_list|)
-block|{
-name|int
-name|i
-decl_stmt|;
-name|int
-name|nc
-init|=
-literal|0
-decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|ptr
-operator|->
-name|len
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|nc
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|outfile
-argument_list|,
-literal|","
-argument_list|)
-expr_stmt|;
-block|}
-name|fprintf
-argument_list|(
-name|outfile
-argument_list|,
-literal|"%d"
-argument_list|,
-name|ptr
-operator|->
-name|ptr
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
-name|nc
-operator|=
-literal|1
-expr_stmt|;
-block|}
-block|}
-end_function
-
-begin_function
-name|void
-name|sb_print_at
-parameter_list|(
-name|FILE
-modifier|*
-name|outfile
-parameter_list|,
-name|int
-name|idx
-parameter_list|,
-name|sb
-modifier|*
-name|ptr
-parameter_list|)
-block|{
-name|int
-name|i
-decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-name|idx
-init|;
-name|i
-operator|<
-name|ptr
-operator|->
-name|len
-condition|;
-name|i
-operator|++
-control|)
-name|putc
-argument_list|(
-name|ptr
-operator|->
-name|ptr
-index|[
-name|i
-index|]
-argument_list|,
-name|outfile
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/* put a null at the end of the sb at in and return the start of the    string, so that it can be used as an arg to printf %s.  */
-end_comment
-
-begin_function
-name|char
-modifier|*
-name|sb_name
-parameter_list|(
-name|sb
-modifier|*
-name|in
-parameter_list|)
-block|{
-comment|/* stick a null on the end of the string */
-name|sb_add_char
-argument_list|(
-name|in
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-return|return
-name|in
-operator|->
-name|ptr
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* like sb_name, but don't include the null byte in the string.  */
+comment|/* Like sb_name, but don't include the null byte in the string.  */
 end_comment
 
 begin_function
@@ -829,7 +775,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* start at the index idx into the string in sb at ptr and skip    whitespace. return the index of the first non whitespace character */
+comment|/* Start at the index idx into the string in sb at ptr and skip    whitespace. return the index of the first non whitespace character.  */
 end_comment
 
 begin_function
@@ -882,7 +828,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* start at the index idx into the sb at ptr. skips whitespace,    a comma and any following whitespace. returns the index of the    next character.  */
+comment|/* Start at the index idx into the sb at ptr. skips whitespace,    a comma and any following whitespace. returns the index of the    next character.  */
 end_comment
 
 begin_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* atof_vax.c - turn a Flonum into a VAX floating point number    Copyright 1987, 1992, 1993, 1995, 1997, 1999, 2000    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* atof_vax.c - turn a Flonum into a VAX floating point number    Copyright 1987, 1992, 1993, 1995, 1997, 1999, 2000, 2005, 2007    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -8,85 +8,6 @@ include|#
 directive|include
 file|"as.h"
 end_include
-
-begin_decl_stmt
-specifier|static
-name|int
-name|atof_vax_sizeof
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|next_bits
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|make_invalid_floating_point_number
-name|PARAMS
-argument_list|(
-operator|(
-name|LITTLENUM_TYPE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|what_kind_of_float
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-operator|,
-name|int
-operator|*
-operator|,
-name|long
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|atof_vax
-name|PARAMS
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|int
-operator|,
-name|LITTLENUM_TYPE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* Precision in LittleNums.  */
@@ -96,35 +17,35 @@ begin_define
 define|#
 directive|define
 name|MAX_PRECISION
-value|(8)
+value|8
 end_define
 
 begin_define
 define|#
 directive|define
 name|H_PRECISION
-value|(8)
+value|8
 end_define
 
 begin_define
 define|#
 directive|define
 name|G_PRECISION
-value|(4)
+value|4
 end_define
 
 begin_define
 define|#
 directive|define
 name|D_PRECISION
-value|(4)
+value|4
 end_define
 
 begin_define
 define|#
 directive|define
 name|F_PRECISION
-value|(2)
+value|2
 end_define
 
 begin_comment
@@ -135,29 +56,23 @@ begin_define
 define|#
 directive|define
 name|GUARD
-value|(2)
+value|2
 end_define
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|flonum_gen2vax
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-name|format_letter
-operator|,
+parameter_list|,
 name|FLONUM_TYPE
-operator|*
-name|f
-operator|,
+modifier|*
+parameter_list|,
 name|LITTLENUM_TYPE
-operator|*
-name|words
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Number of chars in flonum type 'letter'.  */
@@ -165,19 +80,18 @@ end_comment
 
 begin_function
 specifier|static
+name|unsigned
 name|int
 name|atof_vax_sizeof
 parameter_list|(
-name|letter
-parameter_list|)
 name|int
 name|letter
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|return_value
 decl_stmt|;
-comment|/*    * Permitting uppercase letters is probably a bad idea.    * Please use only lower-cased letters in case the upper-cased    * ones become unsupported!    */
+comment|/* Permitting uppercase letters is probably a bad idea.      Please use only lower-cased letters in case the upper-cased      ones become unsupported!  */
 switch|switch
 condition|(
 name|letter
@@ -230,16 +144,10 @@ expr_stmt|;
 break|break;
 block|}
 return|return
-operator|(
 name|return_value
-operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* atof_vax_sizeof */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -322,7 +230,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Shared between flonum_gen2vax and next_bits */
+comment|/* Shared between flonum_gen2vax and next_bits.  */
 end_comment
 
 begin_decl_stmt
@@ -353,11 +261,9 @@ specifier|static
 name|int
 name|next_bits
 parameter_list|(
-name|number_of_bits
-parameter_list|)
 name|int
 name|number_of_bits
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|return_value
@@ -454,9 +360,7 @@ operator|)
 expr_stmt|;
 block|}
 return|return
-operator|(
 name|return_value
-operator|)
 return|;
 block|}
 end_function
@@ -466,19 +370,17 @@ specifier|static
 name|void
 name|make_invalid_floating_point_number
 parameter_list|(
-name|words
-parameter_list|)
 name|LITTLENUM_TYPE
 modifier|*
 name|words
-decl_stmt|;
+parameter_list|)
 block|{
 operator|*
 name|words
 operator|=
 literal|0x8000
 expr_stmt|;
-comment|/* Floating Reserved Operand Code */
+comment|/* Floating Reserved Operand Code.  */
 block|}
 end_function
 
@@ -491,31 +393,24 @@ name|int
 comment|/* 0 means letter is OK.  */
 name|what_kind_of_float
 parameter_list|(
-name|letter
-parameter_list|,
-name|precisionP
-parameter_list|,
-name|exponent_bitsP
-parameter_list|)
 name|int
 name|letter
-decl_stmt|;
-comment|/* In: lowercase please. What kind of float? */
+parameter_list|,
+comment|/* In: lowercase please. What kind of float?  */
 name|int
 modifier|*
 name|precisionP
-decl_stmt|;
+parameter_list|,
 comment|/* Number of 16-bit words in the float.  */
 name|long
 modifier|*
 name|exponent_bitsP
-decl_stmt|;
+parameter_list|)
 comment|/* Number of exponent bits.  */
 block|{
 name|int
 name|retval
 decl_stmt|;
-comment|/* 0: OK.  */
 name|retval
 operator|=
 literal|0
@@ -589,9 +484,7 @@ expr_stmt|;
 break|break;
 block|}
 return|return
-operator|(
 name|retval
-operator|)
 return|;
 block|}
 end_function
@@ -600,35 +493,28 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/***********************************************************************\  *									*  *	Warning: this returns 16-bit LITTLENUMs, because that is	*  *	what the VAX thinks in. It is up to the caller to figure	*  *	out any alignment problems and to conspire for the bytes/word	*  *	to be emitted in the right order. Bigendians beware!		*  *									*  \***********************************************************************/
+comment|/* Warning: this returns 16-bit LITTLENUMs, because that is    what the VAX thinks in. It is up to the caller to figure    out any alignment problems and to conspire for the bytes/word    to be emitted in the right order. Bigendians beware!  */
 end_comment
 
 begin_function
 specifier|static
 name|char
 modifier|*
-comment|/* Return pointer past text consumed.  */
 name|atof_vax
 parameter_list|(
-name|str
-parameter_list|,
-name|what_kind
-parameter_list|,
-name|words
-parameter_list|)
 name|char
 modifier|*
 name|str
-decl_stmt|;
+parameter_list|,
 comment|/* Text to convert to binary.  */
 name|int
 name|what_kind
-decl_stmt|;
-comment|/* 'd', 'f', 'g', 'h' */
+parameter_list|,
+comment|/* 'd', 'f', 'g', 'h'  */
 name|LITTLENUM_TYPE
 modifier|*
 name|words
-decl_stmt|;
+parameter_list|)
 comment|/* Build the binary here.  */
 block|{
 name|FLONUM_TYPE
@@ -644,9 +530,7 @@ operator|+
 name|GUARD
 index|]
 decl_stmt|;
-comment|/* Extra bits for zeroed low-order bits.  */
-comment|/* The 1st MAX_PRECISION are zeroed, */
-comment|/* the last contain flonum bits.  */
+comment|/* Extra bits for zeroed low-order bits.      The 1st MAX_PRECISION are zeroed,      the last contain flonum bits.  */
 name|char
 modifier|*
 name|return_value
@@ -712,7 +596,6 @@ name|return_value
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* We lost.  */
 name|make_invalid_floating_point_number
 argument_list|(
 name|words
@@ -738,9 +621,7 @@ operator|*
 name|MAX_PRECISION
 argument_list|)
 expr_stmt|;
-comment|/* Use more LittleNums than seems */
-comment|/* necessary: the highest flonum may have */
-comment|/* 15 leading 0 bits, so could be useless.  */
+comment|/* Use more LittleNums than seems          necessary: the highest flonum may have          15 leading 0 bits, so could be useless.  */
 name|f
 operator|.
 name|high
@@ -780,10 +661,8 @@ name|return_value
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* we lost */
 block|}
-else|else
-block|{
+elseif|else
 if|if
 condition|(
 name|flonum_gen2vax
@@ -796,56 +675,40 @@ argument_list|,
 name|words
 argument_list|)
 condition|)
-block|{
 name|return_value
 operator|=
 name|NULL
 expr_stmt|;
 block|}
-block|}
-block|}
 return|return
-operator|(
 name|return_value
-operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* atof_vax() */
-end_comment
 
 begin_escape
 end_escape
 
 begin_comment
-comment|/*  * In: a flonum, a vax floating point format.  * Out: a vax floating-point bit pattern.  */
+comment|/* In: a flonum, a vax floating point format.    Out: a vax floating-point bit pattern.  */
 end_comment
 
 begin_function
 name|int
-comment|/* 0: OK.  */
 name|flonum_gen2vax
 parameter_list|(
-name|format_letter
-parameter_list|,
-name|f
-parameter_list|,
-name|words
-parameter_list|)
 name|int
 name|format_letter
-decl_stmt|;
+parameter_list|,
 comment|/* One of 'd' 'f' 'g' 'h'.  */
 name|FLONUM_TYPE
 modifier|*
 name|f
-decl_stmt|;
+parameter_list|,
 name|LITTLENUM_TYPE
 modifier|*
 name|words
-decl_stmt|;
+parameter_list|)
 comment|/* Deliver answer here.  */
 block|{
 name|LITTLENUM_TYPE
@@ -881,13 +744,11 @@ name|return_value
 operator|!=
 literal|0
 condition|)
-block|{
 name|make_invalid_floating_point_number
 argument_list|(
 name|words
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 block|{
 if|if
@@ -900,7 +761,6 @@ name|f
 operator|->
 name|leader
 condition|)
-block|{
 comment|/* 0.0e0 seen.  */
 name|memset
 argument_list|(
@@ -916,7 +776,6 @@ operator|*
 name|precision
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 block|{
 name|long
@@ -937,7 +796,7 @@ decl_stmt|;
 name|LITTLENUM_TYPE
 name|word1
 decl_stmt|;
-comment|/* JF: Deal with new Nan, +Inf and -Inf codes */
+comment|/* JF: Deal with new Nan, +Inf and -Inf codes.  */
 if|if
 condition|(
 name|f
@@ -962,48 +821,7 @@ return|return
 name|return_value
 return|;
 block|}
-comment|/* 			 * All vaxen floating_point formats (so far) have: 			 * Bit 15 is sign bit. 			 * Bits 14:n are excess-whatever exponent. 			 * Bits n-1:0 (if any) are most significant bits of fraction. 			 * Bits 15:0 of the next word are the next most significant bits. 			 * And so on for each other word. 			 * 			 * All this to be compatible with a KF11?? (Which is still faster 			 * than lots of vaxen I can think of, but it also has higher 			 * maintenance costs ... sigh). 			 * 			 * So we need: number of bits of exponent, number of bits of 			 * mantissa. 			 */
-ifdef|#
-directive|ifdef
-name|NEVER
-comment|/******* This zeroing seems redundant - Dean 3may86 **********/
-comment|/* 			 * No matter how few bits we got back from the atof() 			 * routine, add enough zero littlenums so the rest of the 			 * code won't run out of "significant" bits in the mantissa. 			 */
-block|{
-name|LITTLENUM_TYPE
-modifier|*
-name|ltp
-decl_stmt|;
-for|for
-control|(
-name|ltp
-operator|=
-name|f
-operator|->
-name|leader
-operator|+
-literal|1
-init|;
-name|ltp
-operator|<=
-name|f
-operator|->
-name|low
-operator|+
-name|precision
-condition|;
-name|ltp
-operator|++
-control|)
-block|{
-operator|*
-name|ltp
-operator|=
-literal|0
-expr_stmt|;
-block|}
-block|}
-endif|#
-directive|endif
+comment|/* All vaxen floating_point formats (so far) have: 	     Bit 15 is sign bit. 	     Bits 14:n are excess-whatever exponent. 	     Bits n-1:0 (if any) are most significant bits of fraction. 	     Bits 15:0 of the next word are the next most significant bits. 	     And so on for each other word.  	     All this to be compatible with a KF11?? (Which is still faster 	     than lots of vaxen I can think of, but it also has higher 	     maintenance costs ... sigh).  	     So we need: number of bits of exponent, number of bits of 	     mantissa.  */
 name|bits_left_in_littlenum
 operator|=
 name|LITTLENUM_NUMBER_OF_BITS
@@ -1020,7 +838,7 @@ name|f
 operator|->
 name|low
 expr_stmt|;
-comment|/* Seek (and forget) 1st significant bit */
+comment|/* Seek (and forget) 1st significant bit.  */
 for|for
 control|(
 name|exponent_skippage
@@ -1095,13 +913,13 @@ name|exponent_bits
 index|]
 condition|)
 block|{
-comment|/* 				 * Exponent overflow. Lose immediately. 				 */
+comment|/* Exponent overflow. Lose immediately.  */
 name|make_invalid_floating_point_number
 argument_list|(
 name|words
 argument_list|)
 expr_stmt|;
-comment|/* 				 * We leave return_value alone: admit we read the 				 * number, but return a floating exception 				 * because we can't encode the number. 				 */
+comment|/* We leave return_value alone: admit we read the 	         number, but return a floating exception 	         because we can't encode the number.  */
 block|}
 else|else
 block|{
@@ -1109,8 +927,7 @@ name|lp
 operator|=
 name|words
 expr_stmt|;
-comment|/* Word 1. Sign, exponent and perhaps high bits.  */
-comment|/* Assume 2's complement integers.  */
+comment|/* Word 1. Sign, exponent and perhaps high bits. 	         Assume 2's complement integers.  */
 name|word1
 operator|=
 operator|(
@@ -1172,7 +989,6 @@ condition|;
 name|lp
 operator|++
 control|)
-block|{
 operator|*
 name|lp
 operator|=
@@ -1181,7 +997,6 @@ argument_list|(
 name|LITTLENUM_NUMBER_OF_BITS
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|next_bits
@@ -1190,12 +1005,12 @@ literal|1
 argument_list|)
 condition|)
 block|{
-comment|/* 					 * Since the NEXT bit is a 1, round UP the mantissa. 					 * The cunning design of these hidden-1 floats permits 					 * us to let the mantissa overflow into the exponent, and 					 * it 'does the right thing'. However, we lose if the 					 * highest-order bit of the lowest-order word flips. 					 * Is that clear? 					 */
+comment|/* Since the NEXT bit is a 1, round UP the mantissa. 		     The cunning design of these hidden-1 floats permits 		     us to let the mantissa overflow into the exponent, and 		     it 'does the right thing'. However, we lose if the 		     highest-order bit of the lowest-order word flips. 		     Is that clear?  */
 name|unsigned
 name|long
 name|carry
 decl_stmt|;
-comment|/* 					  #if (sizeof(carry))< ((sizeof(bits[0]) * BITS_PER_CHAR) + 2) 					  Please allow at least 1 more bit in carry than is in a LITTLENUM. 					  We need that extra bit to hold a carry during a LITTLENUM carry 					  propagation. Another extra bit (kept 0) will assure us that we 					  don't get a sticky sign bit after shifting right, and that 					  permits us to propagate the carry without any masking of bits. 					  #endif 					  */
+comment|/* 		    #if (sizeof(carry))< ((sizeof(bits[0]) * BITS_PER_CHAR) + 2) 		    Please allow at least 1 more bit in carry than is in a LITTLENUM. 		    We need that extra bit to hold a carry during a LITTLENUM carry 		    propagation. Another extra bit (kept 0) will assure us that we 		    don't get a sticky sign bit after shifting right, and that 		    permits us to propagate the carry without any masking of bits. 		    #endif   */
 for|for
 control|(
 name|carry
@@ -1259,41 +1074,31 @@ argument_list|(
 name|words
 argument_list|)
 expr_stmt|;
-comment|/* 						 * We leave return_value alone: admit we read the 						 * number, but return a floating exception 						 * because we can't encode the number. 						 */
+comment|/* We leave return_value alone: admit we read the 		         number, but return a floating exception 		         because we can't encode the number.  */
 block|}
 block|}
-comment|/* if (we needed to round up) */
 block|}
-comment|/* if (exponent overflow) */
 block|}
-comment|/* if (0.0e0) */
 block|}
-comment|/* if (float_type was OK) */
 return|return
-operator|(
 name|return_value
-operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/* flonum_gen2vax() */
+comment|/* JF this used to be in vax.c but this looks like a better place for it.  */
 end_comment
 
 begin_comment
-comment|/* JF this used to be in vax.c but this looks like a better place for it */
-end_comment
-
-begin_comment
-comment|/*  *		md_atof()  *  * In:	input_line_pointer->the 1st character of a floating-point  *		number.  *	1 letter denoting the type of statement that wants a  *		binary floating point number returned.  *	Address of where to build floating point literal.  *		Assumed to be 'big enough'.  *	Address of where to return size of literal (in chars).  *  * Out:	Input_line_pointer->of next char after floating number.  *	Error message, or 0.  *	Floating point literal.  *	Number of chars we used for the literal.  */
+comment|/* In:	input_line_pointer->the 1st character of a floating-point   		number.   	1 letter denoting the type of statement that wants a   		binary floating point number returned.   	Address of where to build floating point literal.   		Assumed to be 'big enough'.   	Address of where to return size of literal (in chars).       Out:	Input_line_pointer->of next char after floating number.   	Error message, or 0.   	Floating point literal.   	Number of chars we used for the literal.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MAXIMUM_NUMBER_OF_LITTLENUMS
-value|(8)
+value|8
 end_define
 
 begin_comment
@@ -1305,23 +1110,17 @@ name|char
 modifier|*
 name|md_atof
 parameter_list|(
-name|what_statement_type
-parameter_list|,
-name|literalP
-parameter_list|,
-name|sizeP
-parameter_list|)
 name|int
 name|what_statement_type
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|literalP
-decl_stmt|;
+parameter_list|,
 name|int
 modifier|*
 name|sizeP
-decl_stmt|;
+parameter_list|)
 block|{
 name|LITTLENUM_TYPE
 name|words
@@ -1329,15 +1128,13 @@ index|[
 name|MAXIMUM_NUMBER_OF_LITTLENUMS
 index|]
 decl_stmt|;
-specifier|register
 name|char
 name|kind_of_float
 decl_stmt|;
-specifier|register
+name|unsigned
 name|int
 name|number_of_chars
 decl_stmt|;
-specifier|register
 name|LITTLENUM_TYPE
 modifier|*
 name|littlenumP
@@ -1350,11 +1147,9 @@ block|{
 case|case
 literal|'F'
 case|:
-comment|/* .float */
 case|case
 literal|'f'
 case|:
-comment|/* .ffloat */
 name|kind_of_float
 operator|=
 literal|'f'
@@ -1363,11 +1158,9 @@ break|break;
 case|case
 literal|'D'
 case|:
-comment|/* .double */
 case|case
 literal|'d'
 case|:
-comment|/* .dfloat */
 name|kind_of_float
 operator|=
 literal|'d'
@@ -1376,7 +1169,6 @@ break|break;
 case|case
 literal|'g'
 case|:
-comment|/* .gfloat */
 name|kind_of_float
 operator|=
 literal|'g'
@@ -1385,7 +1177,6 @@ break|break;
 case|case
 literal|'h'
 case|:
-comment|/* .hfloat */
 name|kind_of_float
 operator|=
 literal|'h'
@@ -1404,7 +1195,6 @@ condition|(
 name|kind_of_float
 condition|)
 block|{
-specifier|register
 name|LITTLENUM_TYPE
 modifier|*
 name|limit
@@ -1420,7 +1210,7 @@ argument_list|,
 name|words
 argument_list|)
 expr_stmt|;
-comment|/*        * The atof_vax() builds up 16-bit numbers.        * Since the assembler may not be running on        * a little-endian machine, be very careful about        * converting words to chars.        */
+comment|/* The atof_vax() builds up 16-bit numbers.          Since the assembler may not be running on          a little-endian machine, be very careful about          converting words to chars.  */
 name|number_of_chars
 operator|=
 name|atof_vax_sizeof
@@ -1491,13 +1281,10 @@ block|}
 empty_stmt|;
 block|}
 else|else
-block|{
 name|number_of_chars
 operator|=
 literal|0
 expr_stmt|;
-block|}
-empty_stmt|;
 operator|*
 name|sizeP
 operator|=
@@ -1515,10 +1302,6 @@ argument_list|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* end of atof-vax.c */
-end_comment
 
 end_unit
 

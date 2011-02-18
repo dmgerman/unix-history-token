@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Main header file for the bfd library -- portable access to object files.     Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.     Contributed by Cygnus Support.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Main header file for the bfd library -- portable access to object files.     Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007    Free Software Foundation, Inc.     Contributed by Cygnus Support.     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -73,6 +73,43 @@ endif|#
 directive|endif
 endif|#
 directive|endif
+comment|/* This is a utility macro to handle the situation where the code    wants to place a constant string into the code, followed by a    comma and then the length of the string.  Doing this by hand    is error prone, so using this macro is safer.  The macro will    also safely handle the case where a NULL is passed as the arg.  */
+define|#
+directive|define
+name|STRING_COMMA_LEN
+parameter_list|(
+name|STR
+parameter_list|)
+value|(STR), ((STR) ? sizeof (STR) - 1 : 0)
+comment|/* Unfortunately it is not possible to use the STRING_COMMA_LEN macro    to create the arguments to another macro, since the preprocessor    will mis-count the number of arguments to the outer macro (by not    evaluating STRING_COMMA_LEN and so missing the comma).  This is a    problem for example when trying to use STRING_COMMA_LEN to build    the arguments to the strncmp() macro.  Hence this alternative    definition of strncmp is provided here.        Note - these macros do NOT work if STR2 is not a constant string.  */
+define|#
+directive|define
+name|CONST_STRNEQ
+parameter_list|(
+name|STR1
+parameter_list|,
+name|STR2
+parameter_list|)
+value|(strncmp ((STR1), (STR2), sizeof (STR2) - 1) == 0)
+comment|/* strcpy() can have a similar problem, but since we know we are      copying a constant string, we can use memcpy which will be faster      since there is no need to check for a NUL byte inside STR.  We      can also save time if we do not need to copy the terminating NUL.  */
+define|#
+directive|define
+name|LITMEMCPY
+parameter_list|(
+name|DEST
+parameter_list|,
+name|STR2
+parameter_list|)
+value|memcpy ((DEST), (STR2), sizeof (STR2) - 1)
+define|#
+directive|define
+name|LITSTRCPY
+parameter_list|(
+name|DEST
+parameter_list|,
+name|STR2
+parameter_list|)
+value|memcpy ((DEST), (STR2), sizeof (STR2))
 comment|/* The word size used by BFD on the host.  This may be 64 with a 32    bit target if the host is 64 bit, or if other 64 bit targets have    been selected with --enable-targets, or if --enable-64-bit-bfd.  */
 define|#
 directive|define
@@ -170,26 +207,6 @@ define|#
 directive|define
 name|TRUE
 value|1
-if|#
-directive|if
-literal|0
-comment|/* Poison.  */
-undef|#
-directive|undef
-name|false
-undef|#
-directive|undef
-name|true
-define|#
-directive|define
-name|false
-value|dont_use_false_in_bfd
-define|#
-directive|define
-name|true
-value|dont_use_true_in_bfd
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|BFD64
@@ -328,6 +345,11 @@ value|sprintf (s, "%08lx", x)
 endif|#
 directive|endif
 comment|/* not BFD64  */
+define|#
+directive|define
+name|HALF_BFD_SIZE_TYPE
+define|\
+value|(((bfd_size_type) 1)<< (8 * sizeof (bfd_size_type) / 2))
 ifndef|#
 directive|ifndef
 name|BFD_HOST_64_BIT
@@ -503,6 +525,11 @@ define|#
 directive|define
 name|HAS_LOAD_PAGE
 value|0x1000
+comment|/* This BFD has been created by the linker and doesn't correspond    to any input file.  */
+define|#
+directive|define
+name|BFD_LINKER_CREATED
+value|0x2000
 comment|/* Symbols and relocation.  */
 comment|/* A count of carsyms (canonical archive symbols).  */
 typedef|typedef
@@ -727,7 +754,14 @@ name|bfd
 parameter_list|,
 name|ptr
 parameter_list|)
-value|(bfd_get_section_size_before_reloc(ptr))
+value|((ptr)->size)
+define|#
+directive|define
+name|bfd_get_section_size
+parameter_list|(
+name|ptr
+parameter_list|)
+value|((ptr)->size)
 define|#
 directive|define
 name|bfd_section_vma
@@ -813,11 +847,30 @@ parameter_list|,
 name|val
 parameter_list|)
 value|(((ptr)->userdata = (val)),TRUE)
-typedef|typedef
-name|struct
+comment|/* Find the address one past the end of SEC.  */
+define|#
+directive|define
+name|bfd_get_section_limit
+parameter_list|(
+name|bfd
+parameter_list|,
+name|sec
+parameter_list|)
+define|\
+value|(((sec)->rawsize ? (sec)->rawsize : (sec)->size) \    / bfd_octets_per_byte (bfd))
+comment|/* Return TRUE if section has been discarded.  */
+define|#
+directive|define
+name|elf_discarded_section
+parameter_list|(
+name|sec
+parameter_list|)
+define|\
+value|(!bfd_is_abs_section (sec)					\&& bfd_is_abs_section ((sec)->output_section)		\&& (sec)->sec_info_type != ELF_INFO_TYPE_MERGE		\&& (sec)->sec_info_type != ELF_INFO_TYPE_JUST_SYMS)
+comment|/* Forward define.  */
+struct_decl|struct
 name|stat
-name|stat_type
-typedef|;
+struct_decl|;
 typedef|typedef
 enum|enum
 name|bfd_print_symbol
@@ -914,11 +967,6 @@ modifier|*
 modifier|*
 name|table
 decl_stmt|;
-comment|/* The number of slots in the hash table.  */
-name|unsigned
-name|int
-name|size
-decl_stmt|;
 comment|/* A function used to create new elements in the hash table.  The      first entry is itself a pointer to an element.  When this      function is first invoked, this pointer will be NULL.  However,      having the pointer permits a hierarchy of method functions to be      built each of which calls the function in the superclass.  Thus      each function should be written to allocate a new block of memory      only if the argument is NULL.  */
 name|struct
 name|bfd_hash_entry
@@ -945,6 +993,28 @@ comment|/* An objalloc for this hash table.  This is a struct objalloc *,      b
 name|void
 modifier|*
 name|memory
+decl_stmt|;
+comment|/* The number of slots in the hash table.  */
+name|unsigned
+name|int
+name|size
+decl_stmt|;
+comment|/* The number of entries in the hash table.  */
+name|unsigned
+name|int
+name|count
+decl_stmt|;
+comment|/* The size of elements.  */
+name|unsigned
+name|int
+name|entsize
+decl_stmt|;
+comment|/* If non-zero, don't grow the hash table.  */
+name|unsigned
+name|int
+name|frozen
+range|:
+literal|1
 decl_stmt|;
 block|}
 struct|;
@@ -976,6 +1046,9 @@ specifier|const
 name|char
 operator|*
 argument_list|)
+argument_list|,
+name|unsigned
+name|int
 argument_list|)
 decl_stmt|;
 comment|/* Initialize a hash table specifying a size.  */
@@ -1009,7 +1082,9 @@ argument_list|)
 argument_list|,
 name|unsigned
 name|int
-name|size
+argument_list|,
+name|unsigned
+name|int
 argument_list|)
 decl_stmt|;
 comment|/* Free up a hash table.  */
@@ -1125,6 +1200,37 @@ modifier|*
 name|info
 parameter_list|)
 function_decl|;
+comment|/* Allows the default size of a hash table to be configured. New hash    tables allocated using bfd_hash_table_init will be created with    this size.  */
+specifier|extern
+name|void
+name|bfd_hash_set_default_size
+parameter_list|(
+name|bfd_size_type
+parameter_list|)
+function_decl|;
+comment|/* This structure is used to keep track of stabs in sections    information while linking.  */
+struct|struct
+name|stab_info
+block|{
+comment|/* A hash table used to hold stabs strings.  */
+name|struct
+name|bfd_strtab_hash
+modifier|*
+name|strings
+decl_stmt|;
+comment|/* The header file hash table.  */
+name|struct
+name|bfd_hash_table
+name|includes
+decl_stmt|;
+comment|/* The first .stabstr section.  */
+name|struct
+name|bfd_section
+modifier|*
+name|stabstr
+decl_stmt|;
+block|}
+struct|;
 define|#
 directive|define
 name|COFF_SWAP_TABLE
@@ -1467,6 +1573,13 @@ function_decl|;
 comment|/* NB: This declaration should match the autogenerated one in libbfd.h.  */
 specifier|extern
 name|bfd_boolean
+name|bfd_cache_close_all
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+specifier|extern
+name|bfd_boolean
 name|bfd_record_phdr
 parameter_list|(
 name|bfd
@@ -1671,6 +1784,20 @@ parameter_list|,
 name|int
 parameter_list|,
 name|bfd_boolean
+parameter_list|)
+function_decl|;
+specifier|extern
+name|bfd_boolean
+name|bfd_section_already_linked_table_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|bfd_section_already_linked_table_free
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 comment|/* Externally visible ECOFF routines.  */
@@ -2035,30 +2162,6 @@ name|file_ptr
 name|where
 parameter_list|)
 function_decl|;
-specifier|extern
-name|bfd_boolean
-name|bfd_mips_ecoff_create_embedded_relocs
-parameter_list|(
-name|bfd
-modifier|*
-parameter_list|,
-name|struct
-name|bfd_link_info
-modifier|*
-parameter_list|,
-name|struct
-name|bfd_section
-modifier|*
-parameter_list|,
-name|struct
-name|bfd_section
-modifier|*
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-parameter_list|)
-function_decl|;
 comment|/* Externally visible ELF routines.  */
 struct|struct
 name|bfd_link_needed_list
@@ -2093,6 +2196,24 @@ block|,
 name|DYN_DT_NEEDED
 init|=
 literal|2
+block|,
+name|DYN_NO_ADD_NEEDED
+init|=
+literal|4
+block|,
+name|DYN_NO_NEEDED
+init|=
+literal|8
+block|}
+enum|;
+enum|enum
+name|notice_asneeded_action
+block|{
+name|notice_as_needed
+block|,
+name|notice_not_needed
+block|,
+name|notice_needed
 block|}
 enum|;
 specifier|extern
@@ -2109,6 +2230,8 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|bfd_boolean
 parameter_list|,
 name|bfd_boolean
 parameter_list|)
@@ -2180,6 +2303,18 @@ modifier|*
 parameter_list|)
 function_decl|;
 specifier|extern
+name|bfd_boolean
+name|bfd_elf_size_dynsym_hash_dynstr
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|,
+name|struct
+name|bfd_link_info
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
 name|void
 name|bfd_elf_set_dt_needed_name
 parameter_list|(
@@ -2208,7 +2343,16 @@ parameter_list|(
 name|bfd
 modifier|*
 parameter_list|,
+name|enum
+name|dynamic_lib_link_class
+parameter_list|)
+function_decl|;
+specifier|extern
 name|int
+name|bfd_elf_get_dyn_lib_class
+parameter_list|(
+name|bfd
+modifier|*
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -2234,6 +2378,16 @@ modifier|*
 parameter_list|,
 name|struct
 name|bfd_link_info
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|unsigned
+name|int
+name|_bfd_elf_default_action_discarded
+parameter_list|(
+name|struct
+name|bfd_section
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2287,7 +2441,7 @@ parameter_list|(
 name|bfd_vma
 name|vma
 parameter_list|,
-name|char
+name|bfd_byte
 modifier|*
 name|myaddr
 parameter_list|,
@@ -2329,6 +2483,32 @@ modifier|*
 parameter_list|)
 function_decl|;
 specifier|extern
+name|void
+name|_bfd_fix_excluded_sec_syms
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|,
+name|struct
+name|bfd_link_info
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|unsigned
+name|bfd_m68k_mach_to_features
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|bfd_m68k_features_to_mach
+parameter_list|(
+name|unsigned
+parameter_list|)
+function_decl|;
+specifier|extern
 name|bfd_boolean
 name|bfd_m68k_elf32_create_embedded_relocs
 parameter_list|(
@@ -2354,7 +2534,7 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|bfd_boolean
-name|bfd_mips_elf32_create_embedded_relocs
+name|bfd_bfin_elf32_create_embedded_relocs
 parameter_list|(
 name|bfd
 modifier|*
@@ -2801,6 +2981,64 @@ modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
+comment|/* ARM VFP11 erratum workaround support.  */
+typedef|typedef
+enum|enum
+block|{
+name|BFD_ARM_VFP11_FIX_DEFAULT
+block|,
+name|BFD_ARM_VFP11_FIX_NONE
+block|,
+name|BFD_ARM_VFP11_FIX_SCALAR
+block|,
+name|BFD_ARM_VFP11_FIX_VECTOR
+block|}
+name|bfd_arm_vfp11_fix
+typedef|;
+specifier|extern
+name|void
+name|bfd_elf32_arm_init_maps
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|bfd_elf32_arm_set_vfp11_fix
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|,
+name|struct
+name|bfd_link_info
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|bfd_boolean
+name|bfd_elf32_arm_vfp11_erratum_scan
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|,
+name|struct
+name|bfd_link_info
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|bfd_elf32_arm_vfp11_fix_veneer_locations
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|,
+name|struct
+name|bfd_link_info
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/* ARM Interworking support.  Called from linker.  */
 specifier|extern
 name|bfd_boolean
@@ -2893,6 +3131,30 @@ parameter_list|,
 name|struct
 name|bfd_link_info
 modifier|*
+parameter_list|)
+function_decl|;
+name|void
+name|bfd_elf32_arm_set_target_relocs
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|,
+name|struct
+name|bfd_link_info
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|bfd_arm_vfp11_fix
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|)
@@ -2919,6 +3181,47 @@ parameter_list|,
 name|struct
 name|bfd_link_info
 modifier|*
+parameter_list|)
+function_decl|;
+comment|/* ELF ARM mapping symbol support */
+define|#
+directive|define
+name|BFD_ARM_SPECIAL_SYM_TYPE_MAP
+value|(1<< 0)
+define|#
+directive|define
+name|BFD_ARM_SPECIAL_SYM_TYPE_TAG
+value|(1<< 1)
+define|#
+directive|define
+name|BFD_ARM_SPECIAL_SYM_TYPE_OTHER
+value|(1<< 2)
+define|#
+directive|define
+name|BFD_ARM_SPECIAL_SYM_TYPE_ANY
+value|(~0)
+specifier|extern
+name|bfd_boolean
+name|bfd_is_arm_special_symbol_name
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|int
+name|type
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|bfd_elf32_arm_set_byteswap_code
+parameter_list|(
+name|struct
+name|bfd_link_info
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 comment|/* ARM Note section processing.  */
@@ -3003,6 +3306,36 @@ name|void
 name|bfd_elf64_ia64_after_parse
 parameter_list|(
 name|int
+parameter_list|)
+function_decl|;
+comment|/* This structure is used for a comdat section, as in PE.  A comdat    section is associated with a particular symbol.  When the linker    sees a comdat section, it keeps only one of the sections with a    given name and associated with a given symbol.  */
+struct|struct
+name|coff_comdat_info
+block|{
+comment|/* The name of the symbol associated with a comdat section.  */
+specifier|const
+name|char
+modifier|*
+name|name
+decl_stmt|;
+comment|/* The local symbol table index of the symbol associated with a      comdat section.  This is only meaningful to the object file format      specific code; it is not an index into the list returned by      bfd_canonicalize_symtab.  */
+name|long
+name|symbol
+decl_stmt|;
+block|}
+struct|;
+specifier|extern
+name|struct
+name|coff_comdat_info
+modifier|*
+name|bfd_coff_get_comdat_section
+parameter_list|(
+name|bfd
+modifier|*
+parameter_list|,
+name|struct
+name|bfd_section
+modifier|*
 parameter_list|)
 function_decl|;
 end_extern

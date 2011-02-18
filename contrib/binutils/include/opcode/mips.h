@@ -857,6 +857,20 @@ name|OP_MASK_RDDSP
 value|0x3f
 end_define
 
+begin_define
+define|#
+directive|define
+name|OP_SH_BP
+value|11
+end_define
+
+begin_define
+define|#
+directive|define
+name|OP_MASK_BP
+value|0x3
+end_define
+
 begin_comment
 comment|/* MIPS MT ASE */
 end_comment
@@ -1074,6 +1088,66 @@ value|0x16
 end_define
 
 begin_comment
+comment|/* UDI */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OP_SH_UDI1
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|OP_MASK_UDI1
+value|0x1f
+end_define
+
+begin_define
+define|#
+directive|define
+name|OP_SH_UDI2
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|OP_MASK_UDI2
+value|0x3ff
+end_define
+
+begin_define
+define|#
+directive|define
+name|OP_SH_UDI3
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|OP_MASK_UDI3
+value|0x7fff
+end_define
+
+begin_define
+define|#
+directive|define
+name|OP_SH_UDI4
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|OP_MASK_UDI4
+value|0xfffff
+end_define
+
+begin_comment
 comment|/* This structure holds information for a particular instruction.  */
 end_comment
 
@@ -1123,7 +1197,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* These are the characters which may appear in the args field of an    instruction.  They appear in the order in which the fields appear    when the instruction is used.  Commas and parentheses in the args    string are ignored when assembling, and written into the output    when disassembling.     Each of these characters corresponds to a mask field defined above.     "<" 5 bit shift amount (OP_*_SHAMT)    ">" shift amount between 32 and 63, stored after subtracting 32 (OP_*_SHAMT)    "^" 5 bit bit index amount (OP_*_BITIND)    "~" bit index between 32 and 63, stored after subtracting 32 (OP_*_BITIND)    "a" 26 bit target address (OP_*_TARGET)    "b" 5 bit base register (OP_*_RS)    "c" 10 bit breakpoint code (OP_*_CODE)    "d" 5 bit destination register specifier (OP_*_RD)    "h" 5 bit prefx hint (OP_*_PREFX)    "i" 16 bit unsigned immediate (OP_*_IMMEDIATE)    "j" 16 bit signed immediate (OP_*_DELTA)    "k" 5 bit cache opcode in target register position (OP_*_CACHE)        Also used for immediate operands in vr5400 vector insns.    "o" 16 bit signed offset (OP_*_DELTA)    "p" 16 bit PC relative branch target address (OP_*_DELTA)    "q" 10 bit extra breakpoint code (OP_*_CODE2)    "r" 5 bit same register used as both source and target (OP_*_RS)    "s" 5 bit source register specifier (OP_*_RS)    "t" 5 bit target register (OP_*_RT)    "u" 16 bit upper 16 bits of address (OP_*_IMMEDIATE)    "v" 5 bit same register used as both source and destination (OP_*_RS)    "w" 5 bit same register used as both target and destination (OP_*_RT)    "U" 5 bit same destination register in both OP_*_RD and OP_*_RT        (used by clo and clz)    "C" 25 bit coprocessor function code (OP_*_COPZ)    "B" 20 bit syscall/breakpoint function code (OP_*_CODE20)    "J" 19 bit wait function code (OP_*_CODE19)    "x" accept and ignore register name    "y" 10 bit signed const (OP_*_CODE2)    "z" must be zero register    "K" 5 bit Hardware Register (rdhwr instruction) (OP_*_RD)    "+A" 5 bit ins/ext position, which becomes LSB (OP_*_SHAMT). 	Enforces: 0<= pos< 32.    "+B" 5 bit ins size, which becomes MSB (OP_*_INSMSB). 	Requires that "+A" or "+E" occur first to set position. 	Enforces: 0< (pos+size)<= 32.    "+C" 5 bit ext size, which becomes MSBD (OP_*_EXTMSBD). 	Requires that "+A" or "+E" occur first to set position. 	Enforces: 0< (pos+size)<= 32. 	(Also used by "dext" w/ different limits, but limits for 	that are checked by the M_DEXT macro.)    "+E" 5 bit dins/dext position, which becomes LSB-32 (OP_*_SHAMT). 	Enforces: 32<= pos< 64.    "+F" 5 bit "dinsm" size, which becomes MSB-32 (OP_*_INSMSB). 	Requires that "+A" or "+E" occur first to set position. 	Enforces: 32< (pos+size)<= 64.    "+G" 5 bit "dextm" size, which becomes MSBD-32 (OP_*_EXTMSBD). 	Requires that "+A" or "+E" occur first to set position. 	Enforces: 32< (pos+size)<= 64.    "+H" 5 bit "dextu" size, which becomes MSBD (OP_*_EXTMSBD). 	Requires that "+A" or "+E" occur first to set position. 	Enforces: 32< (pos+size)<= 64.     Floating point instructions:    "D" 5 bit destination register (OP_*_FD)    "M" 3 bit compare condition code (OP_*_CCC) (only used for mips4 and up)    "N" 3 bit branch condition code (OP_*_BCC) (only used for mips4 and up)    "S" 5 bit fs source 1 register (OP_*_FS)    "T" 5 bit ft source 2 register (OP_*_FT)    "R" 5 bit fr source 3 register (OP_*_FR)    "V" 5 bit same register used as floating source and destination (OP_*_FS)    "W" 5 bit same register used as floating target and destination (OP_*_FT)     Coprocessor instructions:    "E" 5 bit target register (OP_*_RT)    "G" 5 bit destination register (OP_*_RD)    "H" 3 bit sel field for (d)mtc* and (d)mfc* (OP_*_SEL)    "P" 5 bit performance-monitor register (OP_*_PERFREG)    "e" 5 bit vector register byte specifier (OP_*_VECBYTE)    "%" 3 bit immediate vr5400 vector alignment operand (OP_*_VECALIGN)    see also "k" above    "+D" Combined destination register ("G") and sel ("H") for CP0 ops, 	for pretty-printing in disassembly only.     Macro instructions:    "A" General 32 bit expression    "I" 32 bit immediate (value placed in imm_expr).    "+I" 32 bit immediate (value placed in imm2_expr).    "F" 64 bit floating point constant in .rdata    "L" 64 bit floating point constant in .lit8    "f" 32 bit floating point constant    "l" 32 bit floating point constant in .lit4     MDMX instruction operands (note that while these use the FP register    fields, they accept both $fN and $vN names for the registers):      "O"	MDMX alignment offset (OP_*_ALN)    "Q"	MDMX vector/scalar/immediate source (OP_*_VSEL and OP_*_FT)    "X"	MDMX destination register (OP_*_FD)     "Y"	MDMX source register (OP_*_FS)    "Z"	MDMX source register (OP_*_FT)     DSP ASE usage:    "3" 3 bit unsigned immediate (OP_*_SA3)    "4" 4 bit unsigned immediate (OP_*_SA4)    "5" 8 bit unsigned immediate (OP_*_IMM8)    "6" 5 bit unsigned immediate (OP_*_RS)    "7" 2 bit dsp accumulator register (OP_*_DSPACC)    "8" 6 bit unsigned immediate (OP_*_WRDSP)    "9" 2 bit dsp accumulator register (OP_*_DSPACC_S)    "0" 6 bit signed immediate (OP_*_DSPSFT)    ":" 7 bit signed immediate (OP_*_DSPSFT_7)    "'" 6 bit unsigned immediate (OP_*_RDDSP)    "@" 10 bit signed immediate (OP_*_IMM10)     MT ASE usage:    "!" 1 bit immediate at bit 5    "$" 1 bit immediate at bit 4    "*" 2 bit dsp/smartmips accumulator register (OP_*_MTACC_T)    "&" 2 bit dsp/smartmips accumulator register (OP_*_MTACC_D)    "g" 5 bit coprocessor 1 and 2 destination register (OP_*_RD)    "+t" 5 bit coprocessor 0 destination register (OP_*_RT)    "+T" 5 bit coprocessor 0 destination register (OP_*_RT) - disassembly only     Other:    "()" parens surrounding optional value    ","  separates operands    "[]" brackets around index for vector-op scalar operand specifier (vr5400)    "+"  Start of extension sequence.     Characters used so far, for quick reference when adding more:    "34567890"    "%[]<>(),+:'@!$*&^~"    "ABCDEFGHIJKLMNOPQRSTUVWXYZ"    "abcdefghijklopqrstuvwxyz"     Extension character sequences used so far ("+" followed by the    following), for quick reference when adding more:    "ABCDEFGHIT"    "t" */
+comment|/* These are the characters which may appear in the args field of an    instruction.  They appear in the order in which the fields appear    when the instruction is used.  Commas and parentheses in the args    string are ignored when assembling, and written into the output    when disassembling.     Each of these characters corresponds to a mask field defined above.     "<" 5 bit shift amount (OP_*_SHAMT)    ">" shift amount between 32 and 63, stored after subtracting 32 (OP_*_SHAMT)    "^" 5 bit bit index amount (OP_*_BITIND)    "~" bit index between 32 and 63, stored after subtracting 32 (OP_*_BITIND)    "a" 26 bit target address (OP_*_TARGET)    "b" 5 bit base register (OP_*_RS)    "c" 10 bit breakpoint code (OP_*_CODE)    "d" 5 bit destination register specifier (OP_*_RD)    "h" 5 bit prefx hint (OP_*_PREFX)    "i" 16 bit unsigned immediate (OP_*_IMMEDIATE)    "j" 16 bit signed immediate (OP_*_DELTA)    "k" 5 bit cache opcode in target register position (OP_*_CACHE)        Also used for immediate operands in vr5400 vector insns.    "o" 16 bit signed offset (OP_*_DELTA)    "p" 16 bit PC relative branch target address (OP_*_DELTA)    "q" 10 bit extra breakpoint code (OP_*_CODE2)    "r" 5 bit same register used as both source and target (OP_*_RS)    "s" 5 bit source register specifier (OP_*_RS)    "t" 5 bit target register (OP_*_RT)    "u" 16 bit upper 16 bits of address (OP_*_IMMEDIATE)    "v" 5 bit same register used as both source and destination (OP_*_RS)    "w" 5 bit same register used as both target and destination (OP_*_RT)    "U" 5 bit same destination register in both OP_*_RD and OP_*_RT        (used by clo and clz)    "C" 25 bit coprocessor function code (OP_*_COPZ)    "B" 20 bit syscall/breakpoint function code (OP_*_CODE20)    "J" 19 bit wait function code (OP_*_CODE19)    "x" accept and ignore register name    "y" 10 bit signed const (OP_*_CODE2)    "z" must be zero register    "K" 5 bit Hardware Register (rdhwr instruction) (OP_*_RD)    "+A" 5 bit ins/ext/dins/dext/dinsm/dextm position, which becomes         LSB (OP_*_SHAMT). 	Enforces: 0<= pos< 32.    "+B" 5 bit ins/dins size, which becomes MSB (OP_*_INSMSB). 	Requires that "+A" or "+E" occur first to set position. 	Enforces: 0< (pos+size)<= 32.    "+C" 5 bit ext/dext size, which becomes MSBD (OP_*_EXTMSBD). 	Requires that "+A" or "+E" occur first to set position. 	Enforces: 0< (pos+size)<= 32. 	(Also used by "dext" w/ different limits, but limits for 	that are checked by the M_DEXT macro.)    "+E" 5 bit dinsu/dextu position, which becomes LSB-32 (OP_*_SHAMT). 	Enforces: 32<= pos< 64.    "+F" 5 bit "dinsm/dinsu" size, which becomes MSB-32 (OP_*_INSMSB). 	Requires that "+A" or "+E" occur first to set position. 	Enforces: 32< (pos+size)<= 64.    "+G" 5 bit "dextm" size, which becomes MSBD-32 (OP_*_EXTMSBD). 	Requires that "+A" or "+E" occur first to set position. 	Enforces: 32< (pos+size)<= 64.    "+H" 5 bit "dextu" size, which becomes MSBD (OP_*_EXTMSBD). 	Requires that "+A" or "+E" occur first to set position. 	Enforces: 32< (pos+size)<= 64.     Floating point instructions:    "D" 5 bit destination register (OP_*_FD)    "M" 3 bit compare condition code (OP_*_CCC) (only used for mips4 and up)    "N" 3 bit branch condition code (OP_*_BCC) (only used for mips4 and up)    "S" 5 bit fs source 1 register (OP_*_FS)    "T" 5 bit ft source 2 register (OP_*_FT)    "R" 5 bit fr source 3 register (OP_*_FR)    "V" 5 bit same register used as floating source and destination (OP_*_FS)    "W" 5 bit same register used as floating target and destination (OP_*_FT)     Coprocessor instructions:    "E" 5 bit target register (OP_*_RT)    "G" 5 bit destination register (OP_*_RD)    "H" 3 bit sel field for (d)mtc* and (d)mfc* (OP_*_SEL)    "P" 5 bit performance-monitor register (OP_*_PERFREG)    "e" 5 bit vector register byte specifier (OP_*_VECBYTE)    "%" 3 bit immediate vr5400 vector alignment operand (OP_*_VECALIGN)    see also "k" above    "+D" Combined destination register ("G") and sel ("H") for CP0 ops, 	for pretty-printing in disassembly only.     Macro instructions:    "A" General 32 bit expression    "I" 32 bit immediate (value placed in imm_expr).    "+I" 32 bit immediate (value placed in imm2_expr).    "F" 64 bit floating point constant in .rdata    "L" 64 bit floating point constant in .lit8    "f" 32 bit floating point constant    "l" 32 bit floating point constant in .lit4     MDMX instruction operands (note that while these use the FP register    fields, they accept both $fN and $vN names for the registers):      "O"	MDMX alignment offset (OP_*_ALN)    "Q"	MDMX vector/scalar/immediate source (OP_*_VSEL and OP_*_FT)    "X"	MDMX destination register (OP_*_FD)     "Y"	MDMX source register (OP_*_FS)    "Z"	MDMX source register (OP_*_FT)     DSP ASE usage:    "2" 2 bit unsigned immediate for byte align (OP_*_BP)    "3" 3 bit unsigned immediate (OP_*_SA3)    "4" 4 bit unsigned immediate (OP_*_SA4)    "5" 8 bit unsigned immediate (OP_*_IMM8)    "6" 5 bit unsigned immediate (OP_*_RS)    "7" 2 bit dsp accumulator register (OP_*_DSPACC)    "8" 6 bit unsigned immediate (OP_*_WRDSP)    "9" 2 bit dsp accumulator register (OP_*_DSPACC_S)    "0" 6 bit signed immediate (OP_*_DSPSFT)    ":" 7 bit signed immediate (OP_*_DSPSFT_7)    "'" 6 bit unsigned immediate (OP_*_RDDSP)    "@" 10 bit signed immediate (OP_*_IMM10)     MT ASE usage:    "!" 1 bit usermode flag (OP_*_MT_U)    "$" 1 bit load high flag (OP_*_MT_H)    "*" 2 bit dsp/smartmips accumulator register (OP_*_MTACC_T)    "&" 2 bit dsp/smartmips accumulator register (OP_*_MTACC_D)    "g" 5 bit coprocessor 1 and 2 destination register (OP_*_RD)    "+t" 5 bit coprocessor 0 destination register (OP_*_RT)    "+T" 5 bit coprocessor 0 destination register (OP_*_RT) - disassembly only     UDI immediates:    "+1" UDI immediate bits 6-10    "+2" UDI immediate bits 6-15    "+3" UDI immediate bits 6-20    "+4" UDI immediate bits 6-25     Other:    "()" parens surrounding optional value    ","  separates operands    "[]" brackets around index for vector-op scalar operand specifier (vr5400)    "+"  Start of extension sequence.     Characters used so far, for quick reference when adding more:    "234567890"    "%[]<>(),+:'@!$*&^~"    "ABCDEFGHIJKLMNOPQRSTUVWXYZ"    "abcdefghijklopqrstuvwxyz"     Extension character sequences used so far ("+" followed by the    following), for quick reference when adding more:    "1234"    "ABCDEFGHIT"    "t" */
 end_comment
 
 begin_comment
@@ -1612,7 +1686,7 @@ begin_define
 define|#
 directive|define
 name|INSN_ASE_MASK
-value|0x0400f000
+value|0x3c00f000
 end_define
 
 begin_comment
@@ -1626,6 +1700,13 @@ name|INSN_DSP
 value|0x00001000
 end_define
 
+begin_define
+define|#
+directive|define
+name|INSN_DSP64
+value|0x00002000
+end_define
+
 begin_comment
 comment|/* MIPS 16 ASE */
 end_comment
@@ -1634,7 +1715,7 @@ begin_define
 define|#
 directive|define
 name|INSN_MIPS16
-value|0x00002000
+value|0x00004000
 end_define
 
 begin_comment
@@ -1645,17 +1726,6 @@ begin_define
 define|#
 directive|define
 name|INSN_MIPS3D
-value|0x00004000
-end_define
-
-begin_comment
-comment|/* MDMX ASE */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INSN_MDMX
 value|0x00008000
 end_define
 
@@ -1774,6 +1844,17 @@ value|0x02000000
 end_define
 
 begin_comment
+comment|/* MDMX ASE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INSN_MDMX
+value|0x04000000
+end_define
+
+begin_comment
 comment|/* MT ASE */
 end_comment
 
@@ -1781,7 +1862,29 @@ begin_define
 define|#
 directive|define
 name|INSN_MT
-value|0x04000000
+value|0x08000000
+end_define
+
+begin_comment
+comment|/* SmartMIPS ASE  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INSN_SMARTMIPS
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* DSP R2 ASE  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INSN_DSPR2
+value|0x20000000
 end_define
 
 begin_comment
@@ -2126,6 +2229,8 @@ name|M_ADDU_I
 block|,
 name|M_AND_I
 block|,
+name|M_BALIGN
+block|,
 name|M_BEQ
 block|,
 name|M_BEQ_I
@@ -2201,6 +2306,8 @@ block|,
 name|M_BNE_I
 block|,
 name|M_BNEL_I
+block|,
+name|M_CACHE_AB
 block|,
 name|M_DABS
 block|,

@@ -2006,12 +2006,23 @@ name|coff_bfd_reloc_type_lookup
 value|coff_amd64_reloc_type_lookup
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|coff_bfd_reloc_name_lookup
 value|coff_amd64_reloc_name_lookup
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -2153,6 +2164,12 @@ block|}
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
 begin_function
 specifier|static
 name|reloc_howto_type
@@ -2235,6 +2252,11 @@ name|NULL
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

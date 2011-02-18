@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tc-ppc.h -- Header file for tc-ppc.c.    Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* tc-ppc.h -- Header file for tc-ppc.c.    Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003,    2004, 2005, 2006, 2007 Free Software Foundation, Inc.    Written by Ian Lance Taylor, Cygnus Support.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to the Free    Software Foundation, 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_define
@@ -9,22 +9,11 @@ directive|define
 name|TC_PPC
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ANSI_PROTOTYPES
-end_ifdef
-
 begin_struct_decl
 struct_decl|struct
 name|fix
 struct_decl|;
 end_struct_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Set the endianness we are using.  Default to big endian.  */
@@ -42,23 +31,6 @@ directive|define
 name|TARGET_BYTES_BIG_ENDIAN
 value|1
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BFD_ASSEMBLER
-end_ifndef
-
-begin_error
-error|#
-directive|error
-error|PowerPC support requires BFD_ASSEMBLER
-end_error
 
 begin_endif
 endif|#
@@ -115,33 +87,27 @@ name|TARGET_MACH
 value|(ppc_mach ())
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|enum
 name|bfd_architecture
 name|ppc_arch
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|unsigned
 name|long
 name|ppc_mach
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Whether or not the target is big endian */
@@ -165,19 +131,16 @@ name|TARGET_FORMAT
 value|(ppc_target_format ())
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|char
 modifier|*
 name|ppc_target_format
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Permit temporary numeric labels.  */
@@ -297,7 +260,42 @@ parameter_list|(
 name|FRAGP
 parameter_list|)
 define|\
-value|if ((FRAGP)->fr_type == rs_align_code) 				\     {									\       valueT count = ((FRAGP)->fr_next->fr_address			\ 		      - ((FRAGP)->fr_address + (FRAGP)->fr_fix));	\       if (count != 0&& (count& 3) == 0)				\ 	{								\ 	  unsigned char *dest = (FRAGP)->fr_literal + (FRAGP)->fr_fix;	\ 									\ 	  (FRAGP)->fr_var = 4;						\ 	  if (target_big_endian)					\ 	    {								\ 	      *dest++ = 0x60;						\ 	      *dest++ = 0;						\ 	      *dest++ = 0;						\ 	      *dest++ = 0;						\ 	    }								\ 	  else								\ 	    {								\ 	      *dest++ = 0;						\ 	      *dest++ = 0;						\ 	      *dest++ = 0;						\ 	      *dest++ = 0x60;						\ 	    }								\ 	}								\     }
+value|if ((FRAGP)->fr_type == rs_align_code)				\     ppc_handle_align (FRAGP);
+end_define
+
+begin_function_decl
+specifier|extern
+name|void
+name|ppc_handle_align
+parameter_list|(
+name|struct
+name|frag
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|SUB_SEGMENT_ALIGN
+parameter_list|(
+name|SEG
+parameter_list|,
+name|FRCHAIN
+parameter_list|)
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|md_frag_check
+parameter_list|(
+name|FRAGP
+parameter_list|)
+define|\
+value|if ((FRAGP)->has_code							\&& (((FRAGP)->fr_address + (FRAGP)->insn_addr)& 3) != 0)		\     as_bad_where ((FRAGP)->fr_file, (FRAGP)->fr_line,			\ 		  _("instruction address is not a multiple of 4"));
 end_define
 
 begin_escape
@@ -334,20 +332,17 @@ parameter_list|)
 value|ppc_pe_fix_adjustable (FIX)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|ppc_pe_fix_adjustable
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|fix
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -455,20 +450,17 @@ parameter_list|)
 value|ppc_canonicalize_symbol_name (name)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|char
 modifier|*
 name|ppc_canonicalize_symbol_name
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Get the symbol class from the name.  */
@@ -484,19 +476,16 @@ parameter_list|)
 value|ppc_symbol_new_hook (sym)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|ppc_symbol_new_hook
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|symbolS
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Set the symbol class of a label based on the csect.  */
@@ -512,19 +501,16 @@ parameter_list|)
 value|ppc_frob_label (sym)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|ppc_frob_label
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|symbolS
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* TOC relocs requires special handling.  */
@@ -540,20 +526,17 @@ parameter_list|)
 value|ppc_fix_adjustable (FIX)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|ppc_fix_adjustable
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|fix
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* We need to set the section VMA.  */
@@ -569,19 +552,16 @@ parameter_list|)
 value|ppc_frob_section (sec)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|ppc_frob_section
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|asection
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Finish up the symbol.  */
@@ -599,19 +579,16 @@ parameter_list|)
 value|punt = ppc_frob_symbol (sym)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|ppc_frob_symbol
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|symbolS
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Finish up the entire symtab.  */
@@ -625,18 +602,15 @@ parameter_list|()
 value|ppc_adjust_symtab ()
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|ppc_adjust_symtab
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* We also need to copy, in particular, the class of the symbol,    over what obj-coff would otherwise have copied.  */
@@ -690,71 +664,59 @@ begin_comment
 comment|/* Support for SHF_EXCLUDE and SHT_ORDERED */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|ppc_section_letter
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|ppc_section_type
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|ppc_section_word
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|ppc_section_flags
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -836,23 +798,20 @@ parameter_list|)
 value|ppc_fix_adjustable (FIX)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|ppc_fix_adjustable
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|fix
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/* Values passed to md_apply_fix3 don't include symbol values.  */
+comment|/* Values passed to md_apply_fix don't include symbol values.  */
 end_comment
 
 begin_define
@@ -872,18 +831,15 @@ name|tc_frob_file_before_adjust
 value|ppc_frob_file_before_adjust
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|ppc_frob_file_before_adjust
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -918,20 +874,17 @@ parameter_list|)
 value|ppc_force_relocation (FIX)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|ppc_force_relocation
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|fix
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -954,22 +907,19 @@ parameter_list|)
 value|md_pcrel_from_section(FIX, SEC)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|long
 name|md_pcrel_from_section
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|fix
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|segT
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -980,29 +930,28 @@ name|name
 parameter_list|,
 name|exp
 parameter_list|,
+name|mode
+parameter_list|,
 name|c
 parameter_list|)
 value|ppc_parse_name (name, exp)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|ppc_parse_name
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|expressionS
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -1021,18 +970,15 @@ parameter_list|()
 value|ppc_cleanup ()
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|ppc_cleanup
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -1048,18 +994,15 @@ name|tc_cfi_frame_initial_instructions
 value|ppc_cfi_frame_initial_instructions
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|ppc_cfi_frame_initial_instructions
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -1068,21 +1011,16 @@ name|tc_regname_to_dw2regnum
 value|tc_ppc_regname_to_dw2regnum
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|tc_ppc_regname_to_dw2regnum
-name|PARAMS
-argument_list|(
-operator|(
-specifier|const
+parameter_list|(
 name|char
-operator|*
-name|regname
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|extern

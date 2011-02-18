@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* s390-dis.c -- Disassemble S390 instructions    Copyright 2000, 2001, 2002 Free Software Foundation, Inc.    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).     This file is part of GDB, GAS and the GNU binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* s390-dis.c -- Disassemble S390 instructions    Copyright 2000, 2001, 2002, 2003, 2005 Free Software Foundation, Inc.    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).     This file is part of GDB, GAS and the GNU binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA    02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -61,42 +61,6 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|void
-name|init_disasm
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
-name|disassemble_info
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|unsigned
-name|int
-name|s390_extract_operand
-name|PARAMS
-argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|,
-specifier|const
-expr|struct
-name|s390_operand
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Set up index table for first opcode byte.  */
 end_comment
@@ -106,13 +70,11 @@ specifier|static
 name|void
 name|init_disasm
 parameter_list|(
-name|info
-parameter_list|)
 name|struct
 name|disassemble_info
 modifier|*
 name|info
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|struct
@@ -256,21 +218,17 @@ name|unsigned
 name|int
 name|s390_extract_operand
 parameter_list|(
-name|insn
-parameter_list|,
-name|operand
-parameter_list|)
 name|unsigned
 name|char
 modifier|*
 name|insn
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|struct
 name|s390_operand
 modifier|*
 name|operand
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|int
@@ -453,7 +411,7 @@ name|val
 operator|<<=
 literal|1
 expr_stmt|;
-comment|/* Length x in an instructions has real length x+1.  */
+comment|/* Length x in an instructions has real length x + 1.  */
 if|if
 condition|(
 name|operand
@@ -479,18 +437,14 @@ begin_function
 name|int
 name|print_insn_s390
 parameter_list|(
-name|memaddr
-parameter_list|,
-name|info
-parameter_list|)
 name|bfd_vma
 name|memaddr
-decl_stmt|;
+parameter_list|,
 name|struct
 name|disassemble_info
 modifier|*
 name|info
-decl_stmt|;
+parameter_list|)
 block|{
 name|bfd_byte
 name|buffer
@@ -1209,7 +1163,7 @@ name|info
 operator|->
 name|stream
 argument_list|,
-literal|"%i"
+literal|"%u"
 argument_list|,
 name|value
 argument_list|)
