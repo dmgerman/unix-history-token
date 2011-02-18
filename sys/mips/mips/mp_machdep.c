@@ -596,7 +596,7 @@ break|break;
 if|#
 directive|if
 literal|0
-block|case IPI_HARDCLOCK: 			CTR1(KTR_SMP, "%s: IPI_HARDCLOCK", __func__); 			hardclockintr();; 			break;
+block|case IPI_HARDCLOCK: 			CTR1(KTR_SMP, "%s: IPI_HARDCLOCK", __func__); 			hardclockintr(); 			break;
 endif|#
 directive|endif
 default|default:

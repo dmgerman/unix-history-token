@@ -2423,7 +2423,6 @@ decl_stmt|;
 name|int
 name|sis_rx_cons
 decl_stmt|;
-empty_stmt|;
 name|bus_addr_t
 name|sis_rx_paddr
 decl_stmt|;
