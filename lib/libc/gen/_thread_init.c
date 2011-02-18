@@ -43,7 +43,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|__weak_reference_data
+name|__weak_reference
 argument_list|(
 name|_thread_autoinit_dummy_decl_stub
 argument_list|,

@@ -21,11 +21,20 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|PIC
-end_ifdef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__powerpc64__
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -137,33 +146,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__powerpc64__
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|PIC_PLT
-end_undef
-
-begin_define
-define|#
-directive|define
-name|PIC_PLT
-parameter_list|(
-name|x
-parameter_list|)
-value|__CONCAT(.,x)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -245,7 +227,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|.text; .align 2; .globl x; .section ".opd","aw"; \ 	.align 3; x: \ 	    .quad .x,.TOC.@tocbase,0; .previous; \ 	.align 4; .globl .x; .type .x,@function; .x:
+value|.text; .align 2; .globl x; .section ".opd","aw"; \ 	.align 3; x: \ 	    .quad .L.x,.TOC.@tocbase,0; .size x,24; .previous; \ 	.align 4; .type x,@function; .L.x:
 end_define
 
 begin_else

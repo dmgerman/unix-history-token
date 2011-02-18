@@ -34,7 +34,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|.text;							\ 	.align 2;						\ 2:	mflr	%r0;						\ 	std	%r0,16(%r1);					\ 	stdu	%r1,-48(%r1);					\ 	bl	PIC_PLT(CNAME(HIDENAME(cerror)));		\ 	nop;							\ 	addi	%r1,%r1,48;					\ 	ld	%r0,16(%r1);					\ 	mtlr	%r0;						\ 	blr;							\ ENTRY(__CONCAT(__sys_,x));					\ 	.weak	CNAME(x);					\ 	.set	CNAME(x),CNAME(__CONCAT(__sys_,x));		\ 	.weak	CNAME(__CONCAT(_,x));				\ 	.set	CNAME(__CONCAT(_,x)),CNAME(__CONCAT(__sys_,x));	\ 	.weak	CNAME(__CONCAT(.,x));				\ 	.set	CNAME(__CONCAT(.,x)),CNAME(__CONCAT(.__sys_,x));\ 	.weak	CNAME(__CONCAT(._,x));				\ 	.set	CNAME(__CONCAT(._,x)),CNAME(__CONCAT(.__sys_,x));\ 	_SYSCALL(x);						\ 	bso	2b
+value|.text;							\ 	.align 2;						\ 2:	mflr	%r0;						\ 	std	%r0,16(%r1);					\ 	stdu	%r1,-48(%r1);					\ 	bl	CNAME(HIDENAME(cerror));			\ 	nop;							\ 	addi	%r1,%r1,48;					\ 	ld	%r0,16(%r1);					\ 	mtlr	%r0;						\ 	blr;							\ ENTRY(__CONCAT(__sys_,x));					\ 	.weak	CNAME(x);					\ 	.set	CNAME(x),CNAME(__CONCAT(__sys_,x));		\ 	.weak	CNAME(__CONCAT(_,x));				\ 	.set	CNAME(__CONCAT(_,x)),CNAME(__CONCAT(__sys_,x));	\ 	_SYSCALL(x);						\ 	bso	2b
 end_define
 
 begin_define
@@ -45,7 +45,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|.text;							\ 	.align 2;						\ ENTRY(__CONCAT(__sys_,x));					\ 	.weak	CNAME(__CONCAT(_,x));				\ 	.set	CNAME(__CONCAT(_,x)),CNAME(__CONCAT(__sys_,x));	\ 	.weak	CNAME(__CONCAT(._,x));				\ 	.set	CNAME(__CONCAT(._,x)),CNAME(__CONCAT(.__sys_,x));\ 	_SYSCALL(x);						\ 	bnslr;							\ 	mflr	%r0;						\ 	std	%r0,16(%r1);					\ 	stdu	%r1,-48(%r1);					\ 	bl	PIC_PLT(CNAME(HIDENAME(cerror)));		\ 	nop;							\ 	addi	%r1,%r1,48;					\ 	ld	%r0,16(%r1);					\ 	mtlr	%r0;						\ 	blr;
+value|.text;							\ 	.align 2;						\ ENTRY(__CONCAT(__sys_,x));					\ 	.weak	CNAME(__CONCAT(_,x));				\ 	.set	CNAME(__CONCAT(_,x)),CNAME(__CONCAT(__sys_,x));	\ 	_SYSCALL(x);						\ 	bnslr;							\ 	mflr	%r0;						\ 	std	%r0,16(%r1);					\ 	stdu	%r1,-48(%r1);					\ 	bl	CNAME(HIDENAME(cerror));			\ 	nop;							\ 	addi	%r1,%r1,48;					\ 	ld	%r0,16(%r1);					\ 	mtlr	%r0;						\ 	blr;
 end_define
 
 begin_define
@@ -56,7 +56,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|.text;							\ 	.align 2;						\ ENTRY(__CONCAT(__sys_,x));					\ 	.weak	CNAME(x);					\ 	.set	CNAME(x),CNAME(__CONCAT(__sys_,x));		\ 	.weak	CNAME(__CONCAT(_,x));				\ 	.set	CNAME(__CONCAT(_,x)),CNAME(__CONCAT(__sys_,x));	\ 	.weak	CNAME(__CONCAT(.,x));				\ 	.set	CNAME(__CONCAT(.,x)),CNAME(__CONCAT(.__sys_,x));\ 	.weak	CNAME(__CONCAT(._,x));				\ 	.set	CNAME(__CONCAT(._,x)),CNAME(__CONCAT(.__sys_,x));\ 	_SYSCALL(x);						\ 	bnslr;							\ 								\ 	mflr	%r0;						\ 	std	%r0,16(%r1);					\ 	stdu	%r1,-48(%r1);					\ 	bl	PIC_PLT(CNAME(HIDENAME(cerror)));		\ 	nop;							\ 	addi	%r1,%r1,48;					\ 	ld	%r0,16(%r1);					\ 	mtlr	%r0;						\ 	blr;
+value|.text;							\ 	.align 2;						\ ENTRY(__CONCAT(__sys_,x));					\ 	.weak	CNAME(x);					\ 	.set	CNAME(x),CNAME(__CONCAT(__sys_,x));		\ 	.weak	CNAME(__CONCAT(_,x));				\ 	.set	CNAME(__CONCAT(_,x)),CNAME(__CONCAT(__sys_,x));	\ 	_SYSCALL(x);						\ 	bnslr;							\ 								\ 	mflr	%r0;						\ 	std	%r0,16(%r1);					\ 	stdu	%r1,-48(%r1);					\ 	bl	CNAME(HIDENAME(cerror));			\ 	nop;							\ 	addi	%r1,%r1,48;					\ 	ld	%r0,16(%r1);					\ 	mtlr	%r0;						\ 	blr;
 end_define
 
 end_unit

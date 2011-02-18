@@ -84,6 +84,41 @@ name|TARGET_AIX
 value|TARGET_64BIT
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_LD_NO_DOT_SYMS
+end_ifdef
+
+begin_comment
+comment|/* New ABI uses a local sym for the function entry point.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|dot_symbols
+decl_stmt|;
+end_decl_stmt
+
+begin_undef
+undef|#
+directive|undef
+name|DOT_SYMBOLS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|DOT_SYMBOLS
+value|dot_symbols
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_undef
 undef|#
 directive|undef
@@ -405,7 +440,7 @@ parameter_list|,
 name|FUNC
 parameter_list|)
 define|\
-value|asm (SECTION_OP "\n"					\ "	bl ." #FUNC "\n"				\ "	nop\n"						\ "	.previous");
+value|asm (SECTION_OP "\n"					\ "	bl " #FUNC "\n"					\ "	nop\n"						\ "	.previous");
 end_define
 
 begin_endif
