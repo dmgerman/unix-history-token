@@ -7480,20 +7480,6 @@ block|,
 endif|#
 directive|endif
 block|{
-literal|" quotas"
-block|,
-literal|"This host wishes to check quotas on startup."
-block|,
-name|dmenuVarCheck
-block|,
-name|dmenuToggleVariable
-block|,
-name|NULL
-block|,
-literal|"check_quotas=YES"
-block|}
-block|,
-block|{
 name|NULL
 block|}
 block|}
