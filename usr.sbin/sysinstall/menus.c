@@ -5419,7 +5419,7 @@ name|distSetUser
 block|}
 block|,
 block|{
-literal|"A Minimal"
+literal|"7 Minimal"
 block|,
 literal|"The smallest configuration possible"
 block|,
@@ -5429,7 +5429,7 @@ name|distSetMinimum
 block|}
 block|,
 block|{
-literal|"B Custom"
+literal|"8 Custom"
 block|,
 literal|"Specify your own distribution set"
 block|,
