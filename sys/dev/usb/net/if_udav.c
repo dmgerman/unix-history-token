@@ -1008,6 +1008,30 @@ argument_list|,
 literal|0
 argument_list|)
 block|}
+block|,
+comment|/* ShanTou AMD8515 USB NIC */
+block|{
+name|USB_VPI
+argument_list|(
+argument|USB_VENDOR_SHANTOU
+argument_list|,
+argument|USB_PRODUCT_SHANTOU_ADM8515
+argument_list|,
+literal|0
+argument_list|)
+block|}
+block|,
+comment|/* Kontron AG USB Ethernet */
+block|{
+name|USB_VPI
+argument_list|(
+argument|USB_VENDOR_KONTRON
+argument_list|,
+argument|USB_PRODUCT_KONTRON_DM9601
+argument_list|,
+literal|0
+argument_list|)
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
