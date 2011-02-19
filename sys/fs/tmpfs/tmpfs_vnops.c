@@ -4045,9 +4045,6 @@ operator||=
 name|TMPFS_NODE_ACCESSED
 operator||
 name|TMPFS_NODE_CHANGED
-operator||
-expr|\
-name|TMPFS_NODE_MODIFIED
 expr_stmt|;
 name|error
 operator|=
