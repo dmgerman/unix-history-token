@@ -433,7 +433,6 @@ operator|)
 return|;
 block|}
 else|else
-block|{
 name|memset
 argument_list|(
 name|ut
@@ -445,7 +444,6 @@ expr|*
 name|ut
 argument_list|)
 expr_stmt|;
-block|}
 switch|switch
 condition|(
 name|fu
