@@ -314,6 +314,14 @@ literal|0x10
 block|}
 block|,
 block|{
+literal|0x98659710
+block|,
+literal|"MosChip MCS9865 1284 Printer port"
+block|,
+literal|0x10
+block|}
+block|,
+block|{
 literal|0x99019710
 block|,
 literal|"MosChip MCS9901 PCIe to Peripheral Controller"
