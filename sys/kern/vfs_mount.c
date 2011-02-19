@@ -202,9 +202,11 @@ parameter_list|,
 name|int
 name|fsflags
 parameter_list|,
-name|void
+name|struct
+name|vfsoptlist
 modifier|*
-name|fsdata
+modifier|*
+name|optlist
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3417,6 +3419,7 @@ name|fspath
 argument_list|,
 name|fsflags
 argument_list|,
+operator|&
 name|optlist
 argument_list|)
 expr_stmt|;
@@ -3531,9 +3534,9 @@ block|}
 block|}
 if|if
 condition|(
-name|error
+name|optlist
 operator|!=
-literal|0
+name|NULL
 condition|)
 name|vfs_freeopts
 argument_list|(
@@ -3911,9 +3914,11 @@ name|int
 name|fsflags
 parameter_list|,
 comment|/* Flags common to all filesystems. */
-name|void
+name|struct
+name|vfsoptlist
 modifier|*
-name|fsdata
+modifier|*
+name|optlist
 comment|/* Options local to the filesystem. */
 parameter_list|)
 block|{
@@ -4136,7 +4141,8 @@ name|mp
 operator|->
 name|mnt_optnew
 operator|=
-name|fsdata
+operator|*
+name|optlist
 expr_stmt|;
 comment|/* Set the mount level flags. */
 name|mp
@@ -4230,6 +4236,11 @@ operator|=
 name|mp
 operator|->
 name|mnt_optnew
+expr_stmt|;
+operator|*
+name|optlist
+operator|=
+name|NULL
 expr_stmt|;
 operator|(
 name|void
@@ -4460,9 +4471,11 @@ name|int
 name|fsflags
 parameter_list|,
 comment|/* Flags common to all filesystems. */
-name|void
+name|struct
+name|vfsoptlist
 modifier|*
-name|fsdata
+modifier|*
+name|optlist
 comment|/* Options local to the filesystem. */
 parameter_list|)
 block|{
@@ -4481,6 +4494,8 @@ name|mp
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|export_error
 decl_stmt|,
 name|flag
 decl_stmt|;
@@ -4756,7 +4771,8 @@ name|mp
 operator|->
 name|mnt_optnew
 operator|=
-name|fsdata
+operator|*
+name|optlist
 expr_stmt|;
 name|vfs_mergeopts
 argument_list|(
@@ -4776,6 +4792,10 @@ name|VFS_MOUNT
 argument_list|(
 name|mp
 argument_list|)
+expr_stmt|;
+name|export_error
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -4807,7 +4827,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|error
+name|export_error
 operator|=
 name|vfs_export
 argument_list|(
@@ -4911,7 +4931,7 @@ name|ex_numsecflavors
 operator|=
 literal|0
 expr_stmt|;
-name|error
+name|export_error
 operator|=
 name|vfs_export
 argument_list|(
@@ -5043,6 +5063,11 @@ name|mp
 operator|->
 name|mnt_optnew
 expr_stmt|;
+operator|*
+name|optlist
+operator|=
+name|NULL
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -5118,6 +5143,12 @@ expr_stmt|;
 return|return
 operator|(
 name|error
+operator|!=
+literal|0
+condition|?
+name|error
+else|:
+name|export_error
 operator|)
 return|;
 block|}
@@ -5153,9 +5184,11 @@ name|int
 name|fsflags
 parameter_list|,
 comment|/* Flags common to all filesystems. */
-name|void
+name|struct
+name|vfsoptlist
 modifier|*
-name|fsdata
+modifier|*
+name|optlist
 comment|/* Options local to the filesystem. */
 parameter_list|)
 block|{
@@ -5498,7 +5531,7 @@ name|vp
 argument_list|,
 name|fsflags
 argument_list|,
-name|fsdata
+name|optlist
 argument_list|)
 expr_stmt|;
 block|}
@@ -5514,7 +5547,7 @@ name|vp
 argument_list|,
 name|fsflags
 argument_list|,
-name|fsdata
+name|optlist
 argument_list|)
 expr_stmt|;
 block|}
