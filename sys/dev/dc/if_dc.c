@@ -1197,7 +1197,7 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1214,7 +1214,7 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1231,7 +1231,7 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1316,7 +1316,7 @@ name|struct
 name|dc_softc
 modifier|*
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 parameter_list|,
 name|int
 parameter_list|)
@@ -2606,7 +2606,7 @@ parameter_list|,
 name|int
 name|addr
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 modifier|*
 name|dest
 parameter_list|)
@@ -2614,7 +2614,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|r
 decl_stmt|;
 name|CSR_WRITE_4
@@ -2670,7 +2670,7 @@ operator|*
 name|dest
 operator|=
 call|(
-name|u_int16_t
+name|uint16_t
 call|)
 argument_list|(
 name|r
@@ -2701,7 +2701,7 @@ parameter_list|,
 name|int
 name|addr
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 modifier|*
 name|dest
 parameter_list|)
@@ -2732,7 +2732,7 @@ operator|*
 name|dest
 operator|=
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|)
 name|CSR_READ_4
 argument_list|(
@@ -2763,7 +2763,7 @@ name|dest
 operator||=
 operator|(
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|)
 name|CSR_READ_4
 argument_list|(
@@ -2804,7 +2804,7 @@ parameter_list|,
 name|int
 name|addr
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 modifier|*
 name|dest
 parameter_list|)
@@ -2812,7 +2812,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|word
 init|=
 literal|0
@@ -2987,7 +2987,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|word
 init|=
 literal|0
@@ -3064,7 +3064,7 @@ expr_stmt|;
 name|ptr
 operator|=
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|*
 operator|)
 operator|(
@@ -3436,7 +3436,7 @@ name|dc_softc
 modifier|*
 name|sc
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|bits
 parameter_list|,
 name|int
@@ -5090,7 +5090,7 @@ name|dc_desc
 modifier|*
 name|sframe
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|h
 decl_stmt|,
 modifier|*
@@ -5513,7 +5513,7 @@ name|h
 init|=
 literal|0
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|hashes
 index|[
 literal|2
@@ -5860,7 +5860,7 @@ name|h
 init|=
 literal|0
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|hashes
 index|[
 literal|2
@@ -6234,7 +6234,7 @@ name|dc_desc
 modifier|*
 name|sframe
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|h
 decl_stmt|,
 modifier|*
@@ -6760,7 +6760,7 @@ literal|0
 decl_stmt|,
 name|watchdogreg
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|isr
 decl_stmt|;
 if|if
@@ -7786,10 +7786,10 @@ name|dc_type
 modifier|*
 name|t
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|devid
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|rev
 decl_stmt|;
 name|t
@@ -7925,14 +7925,14 @@ name|dc_mediainfo
 modifier|*
 name|m
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|p
 decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|reg
 decl_stmt|;
 name|m
@@ -8222,7 +8222,7 @@ operator|->
 name|dc_gp_ptr
 operator|=
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 operator|&
@@ -8248,7 +8248,7 @@ operator|->
 name|dc_gp_ptr
 operator|=
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 operator|&
@@ -8390,7 +8390,7 @@ operator|->
 name|dc_gp_ptr
 operator|=
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 operator|&
@@ -8447,7 +8447,7 @@ name|dc_mediainfo
 modifier|*
 name|m
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|p
 decl_stmt|;
@@ -8508,7 +8508,7 @@ expr_stmt|;
 name|p
 operator|=
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 name|l
@@ -10198,7 +10198,7 @@ operator|/
 literal|4
 index|]
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|command
 decl_stmt|;
 name|struct
@@ -10216,7 +10216,7 @@ name|dc_mediainfo
 modifier|*
 name|m
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|reg
 decl_stmt|,
 name|revision
@@ -10232,7 +10232,7 @@ name|rid
 decl_stmt|,
 name|tmp
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|mac
 decl_stmt|;
@@ -13387,7 +13387,7 @@ name|i
 decl_stmt|,
 name|total_len
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|rxstat
 init|=
 literal|0
@@ -13863,7 +13863,7 @@ name|total_len
 decl_stmt|,
 name|rx_npkts
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|rxstat
 decl_stmt|;
 name|DC_LOCK_ASSERT
@@ -14361,7 +14361,7 @@ name|idx
 decl_stmt|,
 name|setup
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|ctl
 decl_stmt|,
 name|txstat
@@ -14856,7 +14856,7 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|r
 decl_stmt|;
 name|sc
@@ -15129,7 +15129,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|isr
 decl_stmt|;
 name|int
@@ -15436,7 +15436,7 @@ name|POLL_AND_CHECK_STATUS
 condition|)
 block|{
 comment|/* also check status register */
-name|u_int32_t
+name|uint32_t
 name|status
 decl_stmt|;
 name|status
@@ -15502,7 +15502,7 @@ name|DC_ISR_RX_NOBUF
 operator|)
 condition|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|r
 init|=
 name|CSR_READ_4
@@ -15648,7 +15648,7 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|r
 decl_stmt|,
 name|status
@@ -18716,7 +18716,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|ctl
 decl_stmt|;
 name|DC_LOCK_ASSERT
