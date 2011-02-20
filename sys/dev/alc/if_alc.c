@@ -4558,9 +4558,10 @@ name|deviceid
 operator|==
 name|DEVICEID_ATHEROS_AR8152_B
 operator|&&
-name|sc
-operator|->
-name|alc_rev
+name|pci_get_revid
+argument_list|(
+name|dev
+argument_list|)
 operator|==
 name|ATHEROS_AR8152_B_V10
 condition|)
