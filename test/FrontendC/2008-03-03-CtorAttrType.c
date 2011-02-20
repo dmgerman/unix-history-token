@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %llvmgcc %s -S -emit-llvm -o - | grep llvm.global_ctors
+comment|// RUN: %llvmgcc %s -S -o - | grep llvm.global_ctors
 end_comment
 
 begin_decl_stmt

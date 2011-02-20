@@ -1,6 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|// Check that -emit-llvm [-S] works correctly.
+end_comment
+
+begin_comment
 comment|// RUN: llvmc -c -emit-llvm -o - %s | llvm-dis | grep "@f0()" | count 1
+end_comment
+
+begin_comment
+comment|// RUN: llvmc -c -emit-llvm -S -o - %s | grep "@f0()" | count 1
 end_comment
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* RUN: %llvmgcc %s -S -o - -emit-llvm -O0 | grep {zeroinitializer.*zeroinitializer.*zeroinitializer.*zeroinitializer.*zeroinitializer.*zeroinitializer}  The FE must generate padding here both at the end of each PyG_Head and between array elements.  Reduced from Python. */
+comment|/* RUN: %llvmgcc %s -S -o - -O0 | grep {zeroinitializer.*zeroinitializer.*zeroinitializer.*zeroinitializer.*zeroinitializer.*zeroinitializer}  The FE must generate padding here both at the end of each PyG_Head and between array elements.  Reduced from Python. */
 end_comment
 
 begin_typedef

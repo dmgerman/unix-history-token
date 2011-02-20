@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/AliasAnalysis.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
@@ -153,6 +159,9 @@ comment|/// clobbers the desired value.  The pointer member of the MemDepResult
 comment|/// pair holds the instruction that clobbers the memory.  For example,
 comment|/// this occurs when we see a may-aliased store to the memory location we
 comment|/// care about.
+comment|///
+comment|/// A dependence query on the first instruction of the entry block will
+comment|/// return a clobber(self) result.
 name|Clobber
 block|,
 comment|/// Def - This is a dependence on the specified instruction which
@@ -471,112 +480,6 @@ return|;
 block|}
 block|}
 empty_stmt|;
-comment|/// NonLocalDepResult - This is a result from a NonLocal dependence query.
-comment|/// For each BasicBlock (the BB entry) it keeps a MemDepResult and the
-comment|/// (potentially phi translated) address that was live in the block.
-name|class
-name|NonLocalDepResult
-block|{
-name|BasicBlock
-modifier|*
-name|BB
-decl_stmt|;
-name|MemDepResult
-name|Result
-decl_stmt|;
-name|Value
-modifier|*
-name|Address
-decl_stmt|;
-name|public
-label|:
-name|NonLocalDepResult
-argument_list|(
-argument|BasicBlock *bb
-argument_list|,
-argument|MemDepResult result
-argument_list|,
-argument|Value *address
-argument_list|)
-block|:
-name|BB
-argument_list|(
-name|bb
-argument_list|)
-operator|,
-name|Result
-argument_list|(
-name|result
-argument_list|)
-operator|,
-name|Address
-argument_list|(
-argument|address
-argument_list|)
-block|{}
-comment|// BB is the sort key, it can't be changed.
-name|BasicBlock
-operator|*
-name|getBB
-argument_list|()
-specifier|const
-block|{
-return|return
-name|BB
-return|;
-block|}
-name|void
-name|setResult
-parameter_list|(
-specifier|const
-name|MemDepResult
-modifier|&
-name|R
-parameter_list|,
-name|Value
-modifier|*
-name|Addr
-parameter_list|)
-block|{
-name|Result
-operator|=
-name|R
-expr_stmt|;
-name|Address
-operator|=
-name|Addr
-expr_stmt|;
-block|}
-specifier|const
-name|MemDepResult
-operator|&
-name|getResult
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Result
-return|;
-block|}
-comment|/// getAddress - Return the address of this pointer in this block.  This can
-comment|/// be different than the address queried for the non-local result because
-comment|/// of phi translation.  This returns null if the address was not available
-comment|/// in a block (i.e. because phi translation failed) or if this is a cached
-comment|/// result and that address was deleted.
-comment|///
-comment|/// The address is always null for a non-local 'call' dependence.
-name|Value
-operator|*
-name|getAddress
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Address
-return|;
-block|}
-block|}
-empty_stmt|;
 comment|/// NonLocalDepEntry - This is an entry in the NonLocalDepInfo cache.  For
 comment|/// each BasicBlock (the BB entry) it keeps a MemDepResult.
 name|class
@@ -678,6 +581,114 @@ return|;
 block|}
 block|}
 empty_stmt|;
+comment|/// NonLocalDepResult - This is a result from a NonLocal dependence query.
+comment|/// For each BasicBlock (the BB entry) it keeps a MemDepResult and the
+comment|/// (potentially phi translated) address that was live in the block.
+name|class
+name|NonLocalDepResult
+block|{
+name|NonLocalDepEntry
+name|Entry
+decl_stmt|;
+name|Value
+modifier|*
+name|Address
+decl_stmt|;
+name|public
+label|:
+name|NonLocalDepResult
+argument_list|(
+argument|BasicBlock *bb
+argument_list|,
+argument|MemDepResult result
+argument_list|,
+argument|Value *address
+argument_list|)
+block|:
+name|Entry
+argument_list|(
+name|bb
+argument_list|,
+name|result
+argument_list|)
+operator|,
+name|Address
+argument_list|(
+argument|address
+argument_list|)
+block|{}
+comment|// BB is the sort key, it can't be changed.
+name|BasicBlock
+operator|*
+name|getBB
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Entry
+operator|.
+name|getBB
+argument_list|()
+return|;
+block|}
+name|void
+name|setResult
+parameter_list|(
+specifier|const
+name|MemDepResult
+modifier|&
+name|R
+parameter_list|,
+name|Value
+modifier|*
+name|Addr
+parameter_list|)
+block|{
+name|Entry
+operator|.
+name|setResult
+argument_list|(
+name|R
+argument_list|)
+expr_stmt|;
+name|Address
+operator|=
+name|Addr
+expr_stmt|;
+block|}
+specifier|const
+name|MemDepResult
+operator|&
+name|getResult
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Entry
+operator|.
+name|getResult
+argument_list|()
+return|;
+block|}
+comment|/// getAddress - Return the address of this pointer in this block.  This can
+comment|/// be different than the address queried for the non-local result because
+comment|/// of phi translation.  This returns null if the address was not available
+comment|/// in a block (i.e. because phi translation failed) or if this is a cached
+comment|/// result and that address was deleted.
+comment|///
+comment|/// The address is always null for a non-local 'call' dependence.
+name|Value
+operator|*
+name|getAddress
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Address
+return|;
+block|}
+block|}
+empty_stmt|;
 comment|/// MemoryDependenceAnalysis - This is an analysis that determines, for a
 comment|/// given memory operation, what preceding memory operations it depends on.
 comment|/// It builds on alias analysis information, and tries to provide a lazy,
@@ -731,6 +742,7 @@ comment|/// the dependence is a read only dependence, false if read/write.
 typedef|typedef
 name|PointerIntPair
 operator|<
+specifier|const
 name|Value
 operator|*
 operator|,
@@ -756,6 +768,48 @@ name|bool
 operator|>
 name|BBSkipFirstBlockPair
 expr_stmt|;
+comment|/// NonLocalPointerInfo - This record is the information kept for each
+comment|/// (value, is load) pair.
+struct|struct
+name|NonLocalPointerInfo
+block|{
+comment|/// Pair - The pair of the block and the skip-first-block flag.
+name|BBSkipFirstBlockPair
+name|Pair
+decl_stmt|;
+comment|/// NonLocalDeps - The results of the query for each relevant block.
+name|NonLocalDepInfo
+name|NonLocalDeps
+decl_stmt|;
+comment|/// Size - The maximum size of the dereferences of the
+comment|/// pointer. May be UnknownSize if the sizes are unknown.
+name|uint64_t
+name|Size
+decl_stmt|;
+comment|/// TBAATag - The TBAA tag associated with dereferences of the
+comment|/// pointer. May be null if there are no tags or conflicting tags.
+specifier|const
+name|MDNode
+modifier|*
+name|TBAATag
+decl_stmt|;
+name|NonLocalPointerInfo
+argument_list|()
+operator|:
+name|Size
+argument_list|(
+name|AliasAnalysis
+operator|::
+name|UnknownSize
+argument_list|)
+operator|,
+name|TBAATag
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+block|}
+struct|;
 comment|/// CachedNonLocalPointerInfo - This map stores the cached results of doing
 comment|/// a pointer lookup at the bottom of a block.  The key of this map is the
 comment|/// pointer+isload bit, the value is a list of<bb->result> mappings.
@@ -764,15 +818,8 @@ name|DenseMap
 operator|<
 name|ValueIsLoadPair
 operator|,
-name|std
-operator|::
-name|pair
-operator|<
-name|BBSkipFirstBlockPair
-operator|,
-name|NonLocalDepInfo
+name|NonLocalPointerInfo
 operator|>
-expr|>
 name|CachedNonLocalPointerInfo
 expr_stmt|;
 name|CachedNonLocalPointerInfo
@@ -944,9 +991,12 @@ comment|/// This method assumes the pointer has a "NonLocal" dependency within B
 name|void
 name|getNonLocalPointerDependency
 argument_list|(
-name|Value
-operator|*
-name|Pointer
+specifier|const
+name|AliasAnalysis
+operator|::
+name|Location
+operator|&
+name|Loc
 argument_list|,
 name|bool
 name|isLoad
@@ -994,17 +1044,22 @@ name|void
 name|invalidateCachedPredecessors
 parameter_list|()
 function_decl|;
-name|private
-label|:
+comment|/// getPointerDependencyFrom - Return the instruction on which a memory
+comment|/// location depends.  If isLoad is true, this routine ignores may-aliases
+comment|/// with read-only operations.  If isLoad is false, this routine ignores
+comment|/// may-aliases with reads from read-only locations.
+comment|///
+comment|/// Note that this is an uncached query, and thus may be inefficient.
+comment|///
 name|MemDepResult
 name|getPointerDependencyFrom
 argument_list|(
-name|Value
-operator|*
-name|Pointer
-argument_list|,
-name|uint64_t
-name|MemSize
+specifier|const
+name|AliasAnalysis
+operator|::
+name|Location
+operator|&
+name|Loc
 argument_list|,
 name|bool
 name|isLoad
@@ -1019,6 +1074,8 @@ operator|*
 name|BB
 argument_list|)
 decl_stmt|;
+name|private
+label|:
 name|MemDepResult
 name|getCallSiteDependencyFrom
 argument_list|(
@@ -1046,8 +1103,12 @@ name|PHITransAddr
 operator|&
 name|Pointer
 argument_list|,
-name|uint64_t
-name|Size
+specifier|const
+name|AliasAnalysis
+operator|::
+name|Location
+operator|&
+name|Loc
 argument_list|,
 name|bool
 name|isLoad
@@ -1082,29 +1143,29 @@ argument_list|)
 decl_stmt|;
 name|MemDepResult
 name|GetNonLocalInfoForBlock
-parameter_list|(
-name|Value
-modifier|*
-name|Pointer
-parameter_list|,
-name|uint64_t
-name|PointeeSize
-parameter_list|,
+argument_list|(
+specifier|const
+name|AliasAnalysis
+operator|::
+name|Location
+operator|&
+name|Loc
+argument_list|,
 name|bool
 name|isLoad
-parameter_list|,
+argument_list|,
 name|BasicBlock
-modifier|*
+operator|*
 name|BB
-parameter_list|,
+argument_list|,
 name|NonLocalDepInfo
-modifier|*
+operator|*
 name|Cache
-parameter_list|,
+argument_list|,
 name|unsigned
 name|NumSortedEntries
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|void
 name|RemoveCachedNonLocalPointerDependencies
 parameter_list|(

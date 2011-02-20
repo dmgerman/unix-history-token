@@ -68,7 +68,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/System/DataTypes.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_decl_stmt
@@ -517,7 +517,7 @@ operator|*
 name|Str
 operator|)
 block|{
-comment|// Inline fast path, particulary for constant strings where a sufficiently
+comment|// Inline fast path, particularly for constant strings where a sufficiently
 comment|// smart compiler will simplify strlen.
 return|return
 name|this
@@ -734,6 +734,11 @@ name|write_escaped
 parameter_list|(
 name|StringRef
 name|Str
+parameter_list|,
+name|bool
+name|UseHexEscapes
+init|=
+name|false
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1216,6 +1221,11 @@ comment|///
 name|bool
 name|Error
 block|;
+comment|/// Controls whether the stream should attempt to use atomic writes, when
+comment|/// possible.
+name|bool
+name|UseAtomicWrites
+block|;
 name|uint64_t
 name|pos
 block|;
@@ -1312,27 +1322,7 @@ argument|bool shouldClose
 argument_list|,
 argument|bool unbuffered=false
 argument_list|)
-operator|:
-name|raw_ostream
-argument_list|(
-name|unbuffered
-argument_list|)
-block|,
-name|FD
-argument_list|(
-name|fd
-argument_list|)
-block|,
-name|ShouldClose
-argument_list|(
-name|shouldClose
-argument_list|)
-block|,
-name|Error
-argument_list|(
-argument|false
-argument_list|)
-block|{}
+block|;
 operator|~
 name|raw_fd_ostream
 argument_list|()
@@ -1344,13 +1334,29 @@ name|close
 argument_list|()
 block|;
 comment|/// seek - Flushes the stream and repositions the underlying file descriptor
-comment|/// positition to the offset specified from the beginning of the file.
+comment|/// position to the offset specified from the beginning of the file.
 name|uint64_t
 name|seek
 argument_list|(
 argument|uint64_t off
 argument_list|)
 block|;
+comment|/// SetUseAtomicWrite - Set the stream to attempt to use atomic writes for
+comment|/// individual output routines where possible.
+comment|///
+comment|/// Note that because raw_ostream's are typically buffered, this flag is only
+comment|/// sensible when used on unbuffered streams which will flush their output
+comment|/// immediately.
+name|void
+name|SetUseAtomicWrites
+argument_list|(
+argument|bool Value
+argument_list|)
+block|{
+name|UseAtomicWrites
+operator|=
+name|Value
+block|;   }
 name|virtual
 name|raw_ostream
 operator|&
@@ -1613,91 +1619,6 @@ operator|~
 name|raw_null_ostream
 argument_list|()
 block|; }
-block|;
-comment|/// tool_output_file - This class contains a raw_fd_ostream and adds a
-comment|/// few extra features commonly needed for compiler-like tool output files:
-comment|///   - The file is automatically deleted if the process is killed.
-comment|///   - The file is automatically deleted when the tool_output_file
-comment|///     object is destroyed unless the client calls keep().
-name|class
-name|tool_output_file
-block|{
-comment|/// Installer - This class is declared before the raw_fd_ostream so that
-comment|/// it is constructed before the raw_fd_ostream is constructed and
-comment|/// destructed after the raw_fd_ostream is destructed. It installs
-comment|/// cleanups in its constructor and uninstalls them in its destructor.
-name|class
-name|CleanupInstaller
-block|{
-comment|/// Filename - The name of the file.
-name|std
-operator|::
-name|string
-name|Filename
-block|;
-name|public
-operator|:
-comment|/// Keep - The flag which indicates whether we should not delete the file.
-name|bool
-name|Keep
-block|;
-name|explicit
-name|CleanupInstaller
-argument_list|(
-specifier|const
-name|char
-operator|*
-name|filename
-argument_list|)
-block|;
-operator|~
-name|CleanupInstaller
-argument_list|()
-block|;   }
-name|Installer
-block|;
-comment|/// OS - The contained stream. This is intentionally declared after
-comment|/// Installer.
-name|raw_fd_ostream
-name|OS
-block|;
-name|public
-operator|:
-comment|/// tool_output_file - This constructor's arguments are passed to
-comment|/// to raw_fd_ostream's constructor.
-name|tool_output_file
-argument_list|(
-argument|const char *filename
-argument_list|,
-argument|std::string&ErrorInfo
-argument_list|,
-argument|unsigned Flags =
-literal|0
-argument_list|)
-block|;
-comment|/// os - Return the contained raw_fd_ostream.
-name|raw_fd_ostream
-operator|&
-name|os
-argument_list|()
-block|{
-return|return
-name|OS
-return|;
-block|}
-comment|/// keep - Indicate that the tool's job wrt this output file has been
-comment|/// successful and the file should not be deleted.
-name|void
-name|keep
-argument_list|()
-block|{
-name|Installer
-operator|.
-name|Keep
-operator|=
-name|true
-block|; }
-expr|}
 block|;  }
 end_decl_stmt
 

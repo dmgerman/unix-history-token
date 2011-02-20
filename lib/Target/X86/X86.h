@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Support/DataTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetMachine.h"
 end_include
 
@@ -86,6 +92,9 @@ name|class
 name|MCContext
 decl_stmt|;
 name|class
+name|MCObjectWriter
+decl_stmt|;
+name|class
 name|MachineCodeEmitter
 decl_stmt|;
 name|class
@@ -99,6 +108,9 @@ name|X86TargetMachine
 decl_stmt|;
 name|class
 name|formatted_raw_ostream
+decl_stmt|;
+name|class
+name|raw_ostream
 decl_stmt|;
 comment|/// createX86ISelDag - This pass converts a legalized DAG into a
 comment|/// X86-specific DAG, ready for instruction scheduling.
@@ -236,6 +248,25 @@ name|FunctionPass
 modifier|*
 name|createX86MaxStackAlignmentHeuristicPass
 parameter_list|()
+function_decl|;
+comment|/// createX86MachObjectWriter - Construct an X86 Mach-O object writer.
+name|MCObjectWriter
+modifier|*
+name|createX86MachObjectWriter
+parameter_list|(
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|,
+name|bool
+name|Is64Bit
+parameter_list|,
+name|uint32_t
+name|CPUType
+parameter_list|,
+name|uint32_t
+name|CPUSubtype
+parameter_list|)
 function_decl|;
 specifier|extern
 name|Target

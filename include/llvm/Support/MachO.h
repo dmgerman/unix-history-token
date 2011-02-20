@@ -62,7 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/System/DataTypes.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_comment
@@ -2221,9 +2221,17 @@ name|CPUSubType_ARM_V4T
 init|=
 literal|5
 block|,
+name|CPUSubType_ARM_V5
+init|=
+literal|7
+block|,
 name|CPUSubType_ARM_V6
 init|=
 literal|6
+block|,
+name|CPUSubType_ARM_V7
+init|=
+literal|9
 block|,
 comment|// PowerPC
 name|CPUSubType_POWERPC_ALL

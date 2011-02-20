@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %llvmgcc %s -S -emit-llvm -O0 -o - | FileCheck %s
+comment|// RUN: %llvmgcc %s -S -O0 -o - | FileCheck %s
 end_comment
 
 begin_comment
@@ -69,7 +69,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|// CHECK: @svars1 = global [1 x %struct.svar] [%struct.svar { i8* bitcast (%struct.cpu* @cpu to i8*) }]
+comment|// CHECK: @svars1 = unnamed_addr global [1 x %struct.svar] [%struct.svar { i8* bitcast (%struct.cpu* @cpu to i8*) }]
 end_comment
 
 begin_decl_stmt
@@ -99,7 +99,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: @svars2 = global [1 x %struct.svar] [%struct.svar { i8* getelementptr ([2 x i8]* bitcast (%struct.cpu* @cpu to [2 x i8]*), i{{[0-9]+}} 0, i{{[0-9]+}} 1) }]
+comment|// CHECK: @svars2 = unnamed_addr global [1 x %struct.svar] [%struct.svar { i8* getelementptr ([2 x i8]* bitcast (%struct.cpu* @cpu to [2 x i8]*), i{{[0-9]+}} 0, i{{[0-9]+}} 1) }]
 end_comment
 
 begin_decl_stmt
@@ -132,7 +132,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: @svars3 = global [1 x %struct.svar] [%struct.svar { i8* bitcast (i16* getelementptr ([2 x i16]* bitcast (%struct.cpu* @cpu to [2 x i16]*), i{{[0-9]+}} 0, i{{[0-9]+}} 1) to i8*) }]
+comment|// CHECK: @svars3 = unnamed_addr global [1 x %struct.svar] [%struct.svar { i8* bitcast (i16* getelementptr ([2 x i16]* bitcast (%struct.cpu* @cpu to [2 x i16]*), i{{[0-9]+}} 0, i{{[0-9]+}} 1) to i8*) }]
 end_comment
 
 begin_decl_stmt
@@ -162,7 +162,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: @svars4 = global [1 x %struct.svar] [%struct.svar { i8* getelementptr ([2 x [2 x i8]]* bitcast (%struct.cpu* @cpu to [2 x [2 x i8]]*), i{{[0-9]+}} 0, i{{[0-9]+}} 1, i{{[0-9]+}} 1) }]
+comment|// CHECK: @svars4 = unnamed_addr global [1 x %struct.svar] [%struct.svar { i8* getelementptr ([2 x [2 x i8]]* bitcast (%struct.cpu* @cpu to [2 x [2 x i8]]*), i{{[0-9]+}} 0, i{{[0-9]+}} 1, i{{[0-9]+}} 1) }]
 end_comment
 
 begin_decl_stmt

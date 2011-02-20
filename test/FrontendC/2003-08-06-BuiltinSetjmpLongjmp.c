@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* RUN: %llvmgcc -xc %s -c -o - | llvm-dis | not grep __builtin_  *  * __builtin_longjmp/setjmp should get transformed into llvm.setjmp/longjmp   * just like explicit setjmp/longjmp calls are.  */
+comment|/* RUN: %llvmgcc -xc %s -S -o - | not grep __builtin_  *  * __builtin_longjmp/setjmp should get transformed into llvm.setjmp/longjmp   * just like explicit setjmp/longjmp calls are.  */
 end_comment
 
 begin_function

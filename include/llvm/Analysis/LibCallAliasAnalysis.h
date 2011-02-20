@@ -119,7 +119,16 @@ name|LCI
 argument_list|(
 argument|LC
 argument_list|)
-block|{     }
+block|{
+name|initializeLibCallAliasAnalysisPass
+argument_list|(
+operator|*
+name|PassRegistry
+operator|::
+name|getPassRegistry
+argument_list|()
+argument_list|)
+block|;     }
 name|explicit
 name|LibCallAliasAnalysis
 argument_list|(
@@ -141,7 +150,16 @@ name|LCI
 argument_list|(
 argument|LC
 argument_list|)
-block|{     }
+block|{
+name|initializeLibCallAliasAnalysisPass
+argument_list|(
+operator|*
+name|PassRegistry
+operator|::
+name|getPassRegistry
+argument_list|()
+argument_list|)
+block|;     }
 operator|~
 name|LibCallAliasAnalysis
 argument_list|()
@@ -153,12 +171,9 @@ name|ImmutableCallSite
 name|CS
 parameter_list|,
 specifier|const
-name|Value
-modifier|*
-name|P
-parameter_list|,
-name|unsigned
-name|Size
+name|Location
+modifier|&
+name|Loc
 parameter_list|)
 function_decl|;
 name|ModRefResult
@@ -261,12 +276,9 @@ name|ImmutableCallSite
 name|CS
 parameter_list|,
 specifier|const
-name|Value
-modifier|*
-name|P
-parameter_list|,
-name|unsigned
-name|Size
+name|Location
+modifier|&
+name|Loc
 parameter_list|)
 function_decl|;
 block|}

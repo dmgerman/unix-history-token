@@ -165,6 +165,10 @@ comment|/// simplify any instructions in it and recursively delete dead instruct
 comment|///
 comment|/// This returns true if it changed the code, note that it can delete
 comment|/// instructions in other blocks as well in this block.
+comment|///
+comment|/// WARNING: Do not use this function on unreachable blocks, as recursive
+comment|/// simplification is not able to handle corner-case scenarios that can
+comment|/// arise in them.
 name|bool
 name|SimplifyInstructionsInBlock
 parameter_list|(
@@ -334,6 +338,57 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
+comment|/// getOrEnforceKnownAlignment - If the specified pointer has an alignment that
+comment|/// we can determine, return it, otherwise return 0.  If PrefAlign is specified,
+comment|/// and it is more than the alignment of the ultimate object, see if we can
+comment|/// increase the alignment of the ultimate object, making this check succeed.
+name|unsigned
+name|getOrEnforceKnownAlignment
+parameter_list|(
+name|Value
+modifier|*
+name|V
+parameter_list|,
+name|unsigned
+name|PrefAlign
+parameter_list|,
+specifier|const
+name|TargetData
+modifier|*
+name|TD
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+comment|/// getKnownAlignment - Try to infer an alignment for the specified pointer.
+specifier|static
+specifier|inline
+name|unsigned
+name|getKnownAlignment
+parameter_list|(
+name|Value
+modifier|*
+name|V
+parameter_list|,
+specifier|const
+name|TargetData
+modifier|*
+name|TD
+init|=
+literal|0
+parameter_list|)
+block|{
+return|return
+name|getOrEnforceKnownAlignment
+argument_list|(
+name|V
+argument_list|,
+literal|0
+argument_list|,
+name|TD
+argument_list|)
+return|;
+block|}
 block|}
 end_decl_stmt
 

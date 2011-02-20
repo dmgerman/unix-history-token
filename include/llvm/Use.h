@@ -106,12 +106,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Casting.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/PointerIntPair.h"
 end_include
 
@@ -140,19 +134,13 @@ decl_stmt|;
 name|class
 name|Use
 decl_stmt|;
-comment|/// Tag - generic tag type for (at least 32 bit) pointers
-enum|enum
-name|Tag
-block|{
-name|noTag
-block|,
-name|tagOne
-block|,
-name|tagTwo
-block|,
-name|tagThree
-block|}
-enum|;
+name|template
+operator|<
+name|typename
+operator|>
+expr|struct
+name|simplify_type
+expr_stmt|;
 comment|// Use** is only 4-byte aligned.
 name|template
 operator|<
@@ -242,7 +230,6 @@ name|U
 argument_list|)
 expr_stmt|;
 comment|/// Destructor - Only for zap()
-specifier|inline
 operator|~
 name|Use
 argument_list|()
@@ -255,32 +242,37 @@ name|removeFromList
 argument_list|()
 expr_stmt|;
 block|}
-comment|/// Default ctor - This leaves the Use completely uninitialized.  The only
-comment|/// thing that is valid to do with this use is to call the "init" method.
-specifier|inline
-name|Use
-argument_list|()
-block|{}
-expr|enum
+enum|enum
 name|PrevPtrTag
 block|{
 name|zeroDigitTag
-operator|=
-name|noTag
 block|,
 name|oneDigitTag
-operator|=
-name|tagOne
 block|,
 name|stopTag
-operator|=
-name|tagTwo
 block|,
 name|fullStopTag
-operator|=
-name|tagThree
 block|}
+enum|;
+comment|/// Constructor
+name|Use
+argument_list|(
+argument|PrevPtrTag tag
+argument_list|)
+block|:
+name|Val
+argument_list|(
+literal|0
+argument_list|)
+block|{
+name|Prev
+operator|.
+name|setInt
+argument_list|(
+name|tag
+argument_list|)
 expr_stmt|;
+block|}
 name|public
 label|:
 comment|/// Normally Use will just implicitly convert to a Value* that it holds.
@@ -436,18 +428,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/// getPrefix - Return deletable pointer if appropriate
-end_comment
-
-begin_function_decl
-name|Use
-modifier|*
-name|getPrefix
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_label
 name|private
 label|:
@@ -476,11 +456,6 @@ parameter_list|,
 name|Use
 modifier|*
 name|Stop
-parameter_list|,
-name|ptrdiff_t
-name|Done
-init|=
-literal|0
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1047,7 +1022,46 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-unit|};  }
+unit|};
+comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_comment
+comment|//                         AugmentedUse layout struct
+end_comment
+
+begin_comment
+comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_decl_stmt
+name|struct
+name|AugmentedUse
+range|:
+name|public
+name|Use
+block|{
+name|PointerIntPair
+operator|<
+name|User
+operator|*
+block|,
+literal|1
+block|,
+name|unsigned
+operator|>
+name|ref
+block|;
+name|AugmentedUse
+argument_list|()
+block|;
+comment|// not implemented
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+unit|}
 comment|// End llvm namespace
 end_comment
 

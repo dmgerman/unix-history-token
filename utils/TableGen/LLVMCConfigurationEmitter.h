@@ -77,12 +77,23 @@ range|:
 name|public
 name|TableGenBackend
 block|{
+name|RecordKeeper
+operator|&
+name|Records
+block|;
 name|public
 operator|:
 name|explicit
 name|LLVMCConfigurationEmitter
 argument_list|(
-argument|RecordKeeper&
+name|RecordKeeper
+operator|&
+name|records
+argument_list|)
+operator|:
+name|Records
+argument_list|(
+argument|records
 argument_list|)
 block|{}
 comment|// run - Output the asmwriter, returning true on failure.

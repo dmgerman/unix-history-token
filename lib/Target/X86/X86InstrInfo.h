@@ -325,7 +325,7 @@ name|MO_DLLIMPORT
 block|,
 comment|/// MO_DARWIN_STUB - On a symbol operand "FOO", this indicates that the
 comment|/// reference is actually to the "FOO$stub" symbol.  This is used for calls
-comment|/// and jumps to external functions on Tiger and before.
+comment|/// and jumps to external functions on Tiger and earlier.
 name|MO_DARWIN_STUB
 block|,
 comment|/// MO_DARWIN_NONLAZY - On a symbol operand "FOO", this indicates that the
@@ -663,13 +663,20 @@ name|MRM_F9
 init|=
 literal|42
 block|,
+comment|/// RawFrmImm8 - This is used for the ENTER instruction, which has two
+comment|/// immediates, the first of which is a 16-bit immediate (specified by
+comment|/// the imm encoding) and the second is a 8-bit fixed value.
+name|RawFrmImm8
+init|=
+literal|43
+block|,
 comment|/// RawFrmImm16 - This is used for CALL FAR instructions, which have two
 comment|/// immediates, the first of which is a 16 or 32-bit immediate (specified by
 comment|/// the imm encoding) and the second is a 16-bit fixed value.  In the AMD
 comment|/// manual, this operand is described as pntr16:32 and pntr16:16
 name|RawFrmImm16
 init|=
-literal|43
+literal|44
 block|,
 name|FormMask
 init|=
@@ -1008,48 +1015,60 @@ operator|<<
 name|OpcodeShift
 block|,
 comment|//===------------------------------------------------------------------===//
-comment|// VEX - The opcode prefix used by AVX instructions
+comment|/// VEX - The opcode prefix used by AVX instructions
 name|VEX
 init|=
 literal|1U
 operator|<<
 literal|0
 block|,
-comment|// VEX_W - Has a opcode specific functionality, but is used in the same
-comment|// way as REX_W is for regular SSE instructions.
+comment|/// VEX_W - Has a opcode specific functionality, but is used in the same
+comment|/// way as REX_W is for regular SSE instructions.
 name|VEX_W
 init|=
 literal|1U
 operator|<<
 literal|1
 block|,
-comment|// VEX_4V - Used to specify an additional AVX/SSE register. Several 2
-comment|// address instructions in SSE are represented as 3 address ones in AVX
-comment|// and the additional register is encoded in VEX_VVVV prefix.
+comment|/// VEX_4V - Used to specify an additional AVX/SSE register. Several 2
+comment|/// address instructions in SSE are represented as 3 address ones in AVX
+comment|/// and the additional register is encoded in VEX_VVVV prefix.
 name|VEX_4V
 init|=
 literal|1U
 operator|<<
 literal|2
 block|,
-comment|// VEX_I8IMM - Specifies that the last register used in a AVX instruction,
-comment|// must be encoded in the i8 immediate field. This usually happens in
-comment|// instructions with 4 operands.
+comment|/// VEX_I8IMM - Specifies that the last register used in a AVX instruction,
+comment|/// must be encoded in the i8 immediate field. This usually happens in
+comment|/// instructions with 4 operands.
 name|VEX_I8IMM
 init|=
 literal|1U
 operator|<<
 literal|3
 block|,
-comment|// VEX_L - Stands for a bit in the VEX opcode prefix meaning the current
-comment|// instruction uses 256-bit wide registers. This is usually auto detected if
-comment|// a VR256 register is used, but some AVX instructions also have this field
-comment|// marked when using a f256 memory references.
+comment|/// VEX_L - Stands for a bit in the VEX opcode prefix meaning the current
+comment|/// instruction uses 256-bit wide registers. This is usually auto detected
+comment|/// if a VR256 register is used, but some AVX instructions also have this
+comment|/// field marked when using a f256 memory references.
 name|VEX_L
 init|=
 literal|1U
 operator|<<
 literal|4
+block|,
+comment|/// Has3DNow0F0FOpcode - This flag indicates that the instruction uses the
+comment|/// wacky 0x0F 0x0F prefix for 3DNow! instructions.  The manual documents
+comment|/// this as having a 0x0F prefix with a 0x0F opcode, and each instruction
+comment|/// storing a classifier in the imm8 field.  To simplify our implementation,
+comment|/// we handle this by storeing the classifier in the opcode field and using
+comment|/// this flag to indicate that the encoder should do the wacky 3DNow! thing.
+name|Has3DNow0F0FOpcode
+init|=
+literal|1U
+operator|<<
+literal|5
 block|}
 enum|;
 comment|// getBaseOpcodeFor - This function returns the "base" X86 opcode for the
@@ -1312,6 +1331,11 @@ case|case
 name|X86II
 operator|::
 name|MRMSrcReg
+case|:
+case|case
+name|X86II
+operator|::
+name|RawFrmImm8
 case|:
 case|case
 name|X86II
@@ -1764,7 +1788,6 @@ comment|///
 name|DenseMap
 operator|<
 name|unsigned
-operator|*
 block|,
 name|std
 operator|::
@@ -1780,7 +1803,6 @@ block|;
 name|DenseMap
 operator|<
 name|unsigned
-operator|*
 block|,
 name|std
 operator|::
@@ -1796,7 +1818,6 @@ block|;
 name|DenseMap
 operator|<
 name|unsigned
-operator|*
 block|,
 name|std
 operator|::
@@ -1812,7 +1833,6 @@ block|;
 name|DenseMap
 operator|<
 name|unsigned
-operator|*
 block|,
 name|std
 operator|::
@@ -1830,7 +1850,6 @@ comment|///
 name|DenseMap
 operator|<
 name|unsigned
-operator|*
 block|,
 name|std
 operator|::
@@ -2177,34 +2196,6 @@ argument_list|)
 specifier|const
 block|;
 name|virtual
-name|bool
-name|spillCalleeSavedRegisters
-argument_list|(
-argument|MachineBasicBlock&MBB
-argument_list|,
-argument|MachineBasicBlock::iterator MI
-argument_list|,
-argument|const std::vector<CalleeSavedInfo>&CSI
-argument_list|,
-argument|const TargetRegisterInfo *TRI
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|bool
-name|restoreCalleeSavedRegisters
-argument_list|(
-argument|MachineBasicBlock&MBB
-argument_list|,
-argument|MachineBasicBlock::iterator MI
-argument_list|,
-argument|const std::vector<CalleeSavedInfo>&CSI
-argument_list|,
-argument|const TargetRegisterInfo *TRI
-argument_list|)
-specifier|const
-block|;
-name|virtual
 name|MachineInstr
 operator|*
 name|emitFrameIndexDebugValue
@@ -2509,33 +2500,6 @@ name|Domain
 argument_list|)
 decl|const
 decl_stmt|;
-name|private
-label|:
-name|MachineInstr
-modifier|*
-name|convertToThreeAddressWithLEA
-argument_list|(
-name|unsigned
-name|MIOpc
-argument_list|,
-name|MachineFunction
-operator|::
-name|iterator
-operator|&
-name|MFI
-argument_list|,
-name|MachineBasicBlock
-operator|::
-name|iterator
-operator|&
-name|MBBI
-argument_list|,
-name|LiveVariables
-operator|*
-name|LV
-argument_list|)
-decl|const
-decl_stmt|;
 name|MachineInstr
 modifier|*
 name|foldMemoryOperandImpl
@@ -2564,6 +2528,64 @@ name|Size
 argument_list|,
 name|unsigned
 name|Alignment
+argument_list|)
+decl|const
+decl_stmt|;
+name|bool
+name|hasHighOperandLatency
+argument_list|(
+specifier|const
+name|InstrItineraryData
+operator|*
+name|ItinData
+argument_list|,
+specifier|const
+name|MachineRegisterInfo
+operator|*
+name|MRI
+argument_list|,
+specifier|const
+name|MachineInstr
+operator|*
+name|DefMI
+argument_list|,
+name|unsigned
+name|DefIdx
+argument_list|,
+specifier|const
+name|MachineInstr
+operator|*
+name|UseMI
+argument_list|,
+name|unsigned
+name|UseIdx
+argument_list|)
+decl|const
+decl_stmt|;
+name|private
+label|:
+name|MachineInstr
+modifier|*
+name|convertToThreeAddressWithLEA
+argument_list|(
+name|unsigned
+name|MIOpc
+argument_list|,
+name|MachineFunction
+operator|::
+name|iterator
+operator|&
+name|MFI
+argument_list|,
+name|MachineBasicBlock
+operator|::
+name|iterator
+operator|&
+name|MBBI
+argument_list|,
+name|LiveVariables
+operator|*
+name|LV
 argument_list|)
 decl|const
 decl_stmt|;

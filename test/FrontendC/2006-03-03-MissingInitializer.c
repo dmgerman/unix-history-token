@@ -4,7 +4,7 @@ comment|// RUN: %llvmgcc %s -S -o - | opt -std-compile-opts | \
 end_comment
 
 begin_comment
-comment|// RUN:    llvm-dis | grep {@nate.*internal global i32 0}
+comment|// RUN:    llvm-dis | grep {@nate.*internal unnamed_addr global i32 0}
 end_comment
 
 begin_struct

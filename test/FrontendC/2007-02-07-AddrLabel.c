@@ -4,7 +4,7 @@ comment|// PR947
 end_comment
 
 begin_comment
-comment|// RUN: %llvmgcc %s -c -o -
+comment|// RUN: %llvmgcc %s -S -o -
 end_comment
 
 begin_function

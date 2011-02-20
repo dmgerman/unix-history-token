@@ -134,32 +134,6 @@ return|return
 name|RI
 return|;
 block|}
-name|bool
-name|spillCalleeSavedRegisters
-argument_list|(
-argument|MachineBasicBlock&MBB
-argument_list|,
-argument|MachineBasicBlock::iterator MI
-argument_list|,
-argument|const std::vector<CalleeSavedInfo>&CSI
-argument_list|,
-argument|const TargetRegisterInfo *TRI
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|restoreCalleeSavedRegisters
-argument_list|(
-argument|MachineBasicBlock&MBB
-argument_list|,
-argument|MachineBasicBlock::iterator MI
-argument_list|,
-argument|const std::vector<CalleeSavedInfo>&CSI
-argument_list|,
-argument|const TargetRegisterInfo *TRI
-argument_list|)
-specifier|const
-block|;
 name|void
 name|copyPhysReg
 argument_list|(

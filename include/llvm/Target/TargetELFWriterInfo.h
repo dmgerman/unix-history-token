@@ -86,10 +86,6 @@ name|unsigned
 name|short
 name|EMachine
 decl_stmt|;
-name|TargetMachine
-modifier|&
-name|TM
-decl_stmt|;
 name|bool
 name|is64Bit
 decl_stmt|,
@@ -203,9 +199,11 @@ enum|;
 name|explicit
 name|TargetELFWriterInfo
 parameter_list|(
-name|TargetMachine
-modifier|&
-name|tm
+name|bool
+name|is64Bit_
+parameter_list|,
+name|bool
+name|isLittleEndian_
 parameter_list|)
 function_decl|;
 name|virtual

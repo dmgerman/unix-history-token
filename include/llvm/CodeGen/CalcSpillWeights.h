@@ -68,6 +68,44 @@ decl_stmt|;
 name|class
 name|MachineLoopInfo
 decl_stmt|;
+comment|/// normalizeSpillWeight - The spill weight of a live interval is computed as:
+comment|///
+comment|///   (sum(use freq) + sum(def freq)) / (K + size)
+comment|///
+comment|/// @param UseDefFreq Expected number of executed use and def instructions
+comment|///                   per function call. Derived from block frequencies.
+comment|/// @param Size       Size of live interval as returnexd by getSize()
+comment|///
+specifier|static
+specifier|inline
+name|float
+name|normalizeSpillWeight
+parameter_list|(
+name|float
+name|UseDefFreq
+parameter_list|,
+name|unsigned
+name|Size
+parameter_list|)
+block|{
+comment|// The magic constant 200 corresponds to approx. 25 instructions since
+comment|// SlotIndexes allocate 8 slots per instruction.
+comment|//
+comment|// The constant is added to avoid depending too much on accidental SlotIndex
+comment|// gaps for small intervals. The effect is that small intervals have a spill
+comment|// weight that is mostly proportional to the number of uses, while large
+comment|// intervals get a spill weight that is closer to a use density.
+comment|//
+return|return
+name|UseDefFreq
+operator|/
+operator|(
+name|Size
+operator|+
+literal|200
+operator|)
+return|;
+block|}
 comment|/// VirtRegAuxInfo - Calculate auxiliary information for a virtual
 comment|/// register such as its spill weight and allocation hint.
 name|class
@@ -169,7 +207,16 @@ name|MachineFunctionPass
 argument_list|(
 argument|ID
 argument_list|)
-block|{}
+block|{
+name|initializeCalculateSpillWeightsPass
+argument_list|(
+operator|*
+name|PassRegistry
+operator|::
+name|getPassRegistry
+argument_list|()
+argument_list|)
+block|;     }
 name|virtual
 name|void
 name|getAnalysisUsage

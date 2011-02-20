@@ -136,6 +136,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DepthFirstIterator.h"
 end_include
 
@@ -179,6 +185,12 @@ begin_include
 include|#
 directive|include
 file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<map>
 end_include
 
 begin_decl_stmt
@@ -255,6 +267,9 @@ name|LoopInfo
 decl_stmt|;
 name|class
 name|Loop
+decl_stmt|;
+name|class
+name|PHINode
 decl_stmt|;
 name|template
 operator|<
@@ -3200,11 +3215,10 @@ name|V
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// isLoopInvariant - Return true if the specified instruction is
-comment|/// loop-invariant.
-comment|///
+comment|/// hasLoopInvariantOperands - Return true if all the operands of the
+comment|/// specified instruction are loop invariant.
 name|bool
-name|isLoopInvariant
+name|hasLoopInvariantOperands
 argument_list|(
 name|Instruction
 operator|*
@@ -3443,9 +3457,7 @@ name|class
 name|LoopInfoBase
 block|{
 comment|// BBMap - Mapping of basic blocks to the inner most loop they occur in
-name|std
-operator|::
-name|map
+name|DenseMap
 operator|<
 name|BlockT
 operator|*
@@ -3656,9 +3668,7 @@ argument_list|)
 decl|const
 block|{
 name|typename
-name|std
-operator|::
-name|map
+name|DenseMap
 operator|<
 name|BlockT
 operator|*
@@ -4085,9 +4095,7 @@ name|BB
 parameter_list|)
 block|{
 name|typename
-name|std
-operator|::
-name|map
+name|DenseMap
 operator|<
 name|BlockT
 operator|*
@@ -5308,7 +5316,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|for (std::map<BasicBlock*, LoopT*>::const_iterator I = BBMap.begin(),            E = BBMap.end(); I != E; ++I)       OS<< "BB '"<< I->first->getName()<< "' level = "<< I->second->getLoopDepth()<< "\n";
+block|for (DenseMap<BasicBlock*, LoopT*>::const_iterator I = BBMap.begin(),            E = BBMap.end(); I != E; ++I)       OS<< "BB '"<< I->first->getName()<< "' level = "<< I->second->getLoopDepth()<< "\n";
 endif|#
 directive|endif
 block|}
@@ -5371,7 +5379,16 @@ name|FunctionPass
 argument_list|(
 argument|ID
 argument_list|)
-block|{}
+block|{
+name|initializeLoopInfoPass
+argument_list|(
+operator|*
+name|PassRegistry
+operator|::
+name|getPassRegistry
+argument_list|()
+argument_list|)
+block|;   }
 name|LoopInfoBase
 operator|<
 name|BasicBlock
@@ -5752,6 +5769,108 @@ argument_list|(
 name|BB
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// replacementPreservesLCSSAForm - Returns true if replacing From with To
+end_comment
+
+begin_comment
+comment|/// everywhere is guaranteed to preserve LCSSA form.
+end_comment
+
+begin_function
+name|bool
+name|replacementPreservesLCSSAForm
+parameter_list|(
+name|Instruction
+modifier|*
+name|From
+parameter_list|,
+name|Value
+modifier|*
+name|To
+parameter_list|)
+block|{
+comment|// Preserving LCSSA form is only problematic if the replacing value is an
+comment|// instruction.
+name|Instruction
+modifier|*
+name|I
+init|=
+name|dyn_cast
+operator|<
+name|Instruction
+operator|>
+operator|(
+name|To
+operator|)
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|I
+condition|)
+return|return
+name|true
+return|;
+comment|// If both instructions are defined in the same basic block then replacement
+comment|// cannot break LCSSA form.
+if|if
+condition|(
+name|I
+operator|->
+name|getParent
+argument_list|()
+operator|==
+name|From
+operator|->
+name|getParent
+argument_list|()
+condition|)
+return|return
+name|true
+return|;
+comment|// If the instruction is not defined in a loop then it can safely replace
+comment|// anything.
+name|Loop
+modifier|*
+name|ToLoop
+init|=
+name|getLoopFor
+argument_list|(
+name|I
+operator|->
+name|getParent
+argument_list|()
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|ToLoop
+condition|)
+return|return
+name|true
+return|;
+comment|// If the replacing instruction is defined in the same loop as the original
+comment|// instruction, or in a loop that contains it as an inner loop, then using
+comment|// it as a replacement will not break LCSSA form.
+return|return
+name|ToLoop
+operator|->
+name|contains
+argument_list|(
+name|getLoopFor
+argument_list|(
+name|From
+operator|->
+name|getParent
+argument_list|()
+argument_list|)
+argument_list|)
+return|;
 block|}
 end_function
 

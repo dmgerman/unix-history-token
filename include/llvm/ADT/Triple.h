@@ -135,9 +135,6 @@ comment|// MIPSEL: mipsel, mipsallegrexel, psp
 name|msp430
 block|,
 comment|// MSP430: msp430
-name|pic16
-block|,
-comment|// PIC16: pic16
 name|ppc
 block|,
 comment|// PPC: powerpc
@@ -171,6 +168,9 @@ comment|// XCore: xcore
 name|mblaze
 block|,
 comment|// MBlaze: mblaze
+name|ptx
+block|,
+comment|// PTX: ptx
 name|InvalidArch
 block|}
 enum|;
@@ -206,8 +206,7 @@ block|,
 comment|// PS3
 name|MinGW32
 block|,
-name|MinGW64
-block|,
+comment|// i*86-pc-mingw32, *-w64-mingw32
 name|NetBSD
 block|,
 name|OpenBSD
@@ -221,6 +220,20 @@ block|,
 name|Haiku
 block|,
 name|Minix
+block|}
+enum|;
+enum|enum
+name|EnvironmentType
+block|{
+name|UnknownEnvironment
+block|,
+name|GNU
+block|,
+name|GNUEABI
+block|,
+name|EABI
+block|,
+name|MachO
 block|}
 enum|;
 name|private
@@ -244,6 +257,11 @@ comment|/// The parsed OS type.
 name|mutable
 name|OSType
 name|OS
+decl_stmt|;
+comment|/// The parsed Environment type.
+name|mutable
+name|EnvironmentType
+name|Environment
 decl_stmt|;
 name|bool
 name|isInitialized
@@ -278,6 +296,14 @@ name|ParseOS
 parameter_list|(
 name|StringRef
 name|OSName
+parameter_list|)
+function_decl|;
+specifier|static
+name|EnvironmentType
+name|ParseEnvironment
+parameter_list|(
+name|StringRef
+name|EnvironmentName
 parameter_list|)
 function_decl|;
 name|void
@@ -351,6 +377,52 @@ block|;
 name|Data
 operator|+=
 name|OSStr
+block|;   }
+name|explicit
+name|Triple
+argument_list|(
+argument|StringRef ArchStr
+argument_list|,
+argument|StringRef VendorStr
+argument_list|,
+argument|StringRef OSStr
+argument_list|,
+argument|StringRef EnvironmentStr
+argument_list|)
+operator|:
+name|Data
+argument_list|(
+name|ArchStr
+argument_list|)
+operator|,
+name|Arch
+argument_list|(
+argument|InvalidArch
+argument_list|)
+block|{
+name|Data
+operator|+=
+literal|'-'
+block|;
+name|Data
+operator|+=
+name|VendorStr
+block|;
+name|Data
+operator|+=
+literal|'-'
+block|;
+name|Data
+operator|+=
+name|OSStr
+block|;
+name|Data
+operator|+=
+literal|'-'
+block|;
+name|Data
+operator|+=
+name|EnvironmentStr
 block|;   }
 comment|/// @}
 comment|/// @name Normalization
@@ -466,6 +538,34 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|/// getEnvironment - Get the parsed environment type of this triple.
+end_comment
+
+begin_expr_stmt
+name|EnvironmentType
+name|getEnvironment
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+operator|!
+name|isInitialized
+argument_list|()
+condition|)
+name|Parse
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_return
+return|return
+name|Environment
+return|;
+end_return
+
+begin_comment
+unit|}
 comment|/// @}
 end_comment
 
@@ -478,7 +578,7 @@ comment|/// @{
 end_comment
 
 begin_expr_stmt
-specifier|const
+unit|const
 name|std
 operator|::
 name|string
@@ -728,6 +828,24 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// setEnvironment - Set the environment (fourth) component of the triple
+end_comment
+
+begin_comment
+comment|/// to a known type.
+end_comment
+
+begin_function_decl
+name|void
+name|setEnvironment
+parameter_list|(
+name|EnvironmentType
+name|Kind
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// setTriple - Set all components to the new triple \arg Str.
 end_comment
 
@@ -942,7 +1060,11 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// getOSTypeName - Get the canonical name for the \arg Kind vendor.
+comment|/// getOSTypeName - Get the canonical name for the \arg Kind operating
+end_comment
+
+begin_comment
+comment|/// system.
 end_comment
 
 begin_function_decl
@@ -953,6 +1075,27 @@ modifier|*
 name|getOSTypeName
 parameter_list|(
 name|OSType
+name|Kind
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// getEnvironmentTypeName - Get the canonical name for the \arg Kind
+end_comment
+
+begin_comment
+comment|/// environment.
+end_comment
+
+begin_function_decl
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|getEnvironmentTypeName
+parameter_list|(
+name|EnvironmentType
 name|Kind
 parameter_list|)
 function_decl|;

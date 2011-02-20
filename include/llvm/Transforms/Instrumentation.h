@@ -81,6 +81,12 @@ modifier|*
 name|createOptimalEdgeProfilerPass
 parameter_list|()
 function_decl|;
+comment|// Insert path profiling instrumentation
+name|ModulePass
+modifier|*
+name|createPathProfilerPass
+parameter_list|()
+function_decl|;
 block|}
 end_decl_stmt
 

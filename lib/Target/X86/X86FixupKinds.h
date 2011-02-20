@@ -59,22 +59,32 @@ block|{
 enum|enum
 name|Fixups
 block|{
-name|reloc_pcrel_4byte
+name|reloc_riprel_4byte
 init|=
 name|FirstTargetFixupKind
 block|,
-comment|// 32-bit pcrel, e.g. a branch.
-name|reloc_pcrel_1byte
-block|,
-comment|// 8-bit pcrel, e.g. branch_1
-name|reloc_pcrel_2byte
-block|,
-comment|// 16-bit pcrel, e.g. callw
-name|reloc_riprel_4byte
-block|,
 comment|// 32-bit rip-relative
 name|reloc_riprel_4byte_movq_load
+block|,
 comment|// 32-bit rip-relative in movq
+name|reloc_signed_4byte
+block|,
+comment|// 32-bit signed. Unlike FK_Data_4
+comment|// this will be sign extended at
+comment|// runtime.
+name|reloc_global_offset_table
+block|,
+comment|// 32-bit, relative to the start
+comment|// of the instruction. Used only
+comment|// for _GLOBAL_OFFSET_TABLE_.
+comment|// Marker
+name|LastTargetFixupKind
+block|,
+name|NumTargetFixupKinds
+init|=
+name|LastTargetFixupKind
+operator|-
+name|FirstTargetFixupKind
 block|}
 enum|;
 block|}

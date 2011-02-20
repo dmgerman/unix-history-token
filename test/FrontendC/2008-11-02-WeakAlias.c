@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %llvmgcc -S -emit-llvm -o - %s | grep weak
+comment|// RUN: %llvmgcc -S -o - %s | grep weak
 end_comment
 
 begin_comment

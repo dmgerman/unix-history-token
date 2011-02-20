@@ -629,10 +629,23 @@ name|LLVMContextImpl
 block|{
 name|public
 label|:
-name|void
-modifier|*
+comment|/// OwnedModules - The set of modules instantiated in this context, and which
+comment|/// will be automatically deleted if this context is deleted.
+name|SmallPtrSet
+operator|<
+name|Module
+operator|*
+operator|,
+literal|4
+operator|>
+name|OwnedModules
+expr_stmt|;
+name|LLVMContext
+operator|::
+name|InlineAsmDiagHandlerTy
 name|InlineAsmDiagHandler
-decl_stmt|,
+expr_stmt|;
+name|void
 modifier|*
 name|InlineAsmDiagContext
 decl_stmt|;
@@ -876,6 +889,10 @@ decl_stmt|;
 specifier|const
 name|Type
 name|PPC_FP128Ty
+decl_stmt|;
+specifier|const
+name|Type
+name|X86_MMXTy
 decl_stmt|;
 specifier|const
 name|IntegerType

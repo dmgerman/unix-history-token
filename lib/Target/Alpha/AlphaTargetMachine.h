@@ -62,37 +62,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetMachine.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Target/TargetData.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Target/TargetFrameInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"AlphaInstrInfo.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"AlphaJITInfo.h"
+file|"AlphaISelLowering.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"AlphaISelLowering.h"
+file|"AlphaFrameLowering.h"
 end_include
 
 begin_include
@@ -105,6 +87,24 @@ begin_include
 include|#
 directive|include
 file|"AlphaSubtarget.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetMachine.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetData.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetFrameLowering.h"
 end_include
 
 begin_decl_stmt
@@ -128,11 +128,8 @@ comment|// Calculates type size& alignment
 name|AlphaInstrInfo
 name|InstrInfo
 block|;
-name|TargetFrameInfo
-name|FrameInfo
-block|;
-name|AlphaJITInfo
-name|JITInfo
+name|AlphaFrameLowering
+name|FrameLowering
 block|;
 name|AlphaSubtarget
 name|Subtarget
@@ -182,15 +179,15 @@ return|;
 block|}
 name|virtual
 specifier|const
-name|TargetFrameInfo
+name|TargetFrameLowering
 operator|*
-name|getFrameInfo
+name|getFrameLowering
 argument_list|()
 specifier|const
 block|{
 return|return
 operator|&
-name|FrameInfo
+name|FrameLowering
 return|;
 block|}
 name|virtual
@@ -261,17 +258,6 @@ operator|&
 name|DataLayout
 return|;
 block|}
-name|virtual
-name|AlphaJITInfo
-operator|*
-name|getJITInfo
-argument_list|()
-block|{
-return|return
-operator|&
-name|JITInfo
-return|;
-block|}
 comment|// Pass Pipeline Configuration
 name|virtual
 name|bool
@@ -289,17 +275,6 @@ argument_list|(
 argument|PassManagerBase&PM
 argument_list|,
 argument|CodeGenOpt::Level OptLevel
-argument_list|)
-block|;
-name|virtual
-name|bool
-name|addCodeEmitter
-argument_list|(
-argument|PassManagerBase&PM
-argument_list|,
-argument|CodeGenOpt::Level OptLevel
-argument_list|,
-argument|JITCodeEmitter&JCE
 argument_list|)
 block|; }
 decl_stmt|;

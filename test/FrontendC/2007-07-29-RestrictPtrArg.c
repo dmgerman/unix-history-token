@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %llvmgcc -c -emit-llvm %s -o - | llvm-dis | grep noalias
+comment|// RUN: %llvmgcc -S %s -o - | grep noalias
 end_comment
 
 begin_function

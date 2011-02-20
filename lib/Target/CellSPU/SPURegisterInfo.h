@@ -183,14 +183,6 @@ argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
-comment|//! Prediate: Target has dedicated frame pointer
-name|bool
-name|hasFP
-argument_list|(
-argument|const MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
 comment|//! Eliminate the call frame setup pseudo-instructions
 name|void
 name|eliminateCallFramePseudoInstr
@@ -215,41 +207,6 @@ argument|RegScavenger *RS = NULL
 argument_list|)
 specifier|const
 block|;
-comment|//! Determine the frame's layour
-name|void
-name|determineFrameLayout
-argument_list|(
-argument|MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
-name|void
-name|processFunctionBeforeCalleeSavedScan
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|RegScavenger *RS = NULL
-argument_list|)
-specifier|const
-block|;
-comment|//! Emit the function prologue
-name|void
-name|emitPrologue
-argument_list|(
-argument|MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
-comment|//! Emit the function epilogue
-name|void
-name|emitEpilogue
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|MachineBasicBlock&MBB
-argument_list|)
-specifier|const
-block|;
 comment|//! Get return address register (LR, aka R0)
 name|unsigned
 name|getRARegister
@@ -261,14 +218,6 @@ name|unsigned
 name|getFrameRegister
 argument_list|(
 argument|const MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
-comment|//! Perform target-specific stack frame setup.
-name|void
-name|getInitialFrameState
-argument_list|(
-argument|std::vector<MachineMove>&Moves
 argument_list|)
 specifier|const
 block|;

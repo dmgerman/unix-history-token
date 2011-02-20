@@ -76,6 +76,12 @@ decl_stmt|;
 name|class
 name|Instruction
 decl_stmt|;
+name|class
+name|Module
+decl_stmt|;
+name|class
+name|SMDiagnostic
+decl_stmt|;
 name|template
 operator|<
 name|typename
@@ -92,21 +98,6 @@ comment|/// to have one context per thread.
 name|class
 name|LLVMContext
 block|{
-comment|// DO NOT IMPLEMENT
-name|LLVMContext
-argument_list|(
-name|LLVMContext
-operator|&
-argument_list|)
-expr_stmt|;
-name|void
-name|operator
-init|=
-operator|(
-name|LLVMContext
-operator|&
-operator|)
-decl_stmt|;
 name|public
 label|:
 name|LLVMContextImpl
@@ -128,7 +119,12 @@ block|{
 name|MD_dbg
 init|=
 literal|0
+block|,
 comment|// "dbg"
+name|MD_tbaa
+init|=
+literal|1
+comment|// "tbaa"
 block|}
 enum|;
 comment|/// getMDKindID - Return a unique non-zero ID for the specified metadata kind.
@@ -155,18 +151,36 @@ name|Result
 argument_list|)
 decl|const
 decl_stmt|;
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|InlineAsmDiagHandlerTy
+function_decl|)
+parameter_list|(
+specifier|const
+name|SMDiagnostic
+modifier|&
+parameter_list|,
+name|void
+modifier|*
+name|Context
+parameter_list|,
+name|unsigned
+name|LocCookie
+parameter_list|)
+function_decl|;
 comment|/// setInlineAsmDiagnosticHandler - This method sets a handler that is invoked
 comment|/// when problems with inline asm are detected by the backend.  The first
-comment|/// argument is a function pointer (of type SourceMgr::DiagHandlerTy) and the
-comment|/// second is a context pointer that gets passed into the DiagHandler.
+comment|/// argument is a function pointer and the second is a context pointer that
+comment|/// gets passed into the DiagHandler.
 comment|///
-comment|/// LLVMContext doesn't take ownership or interpreter either of these
+comment|/// LLVMContext doesn't take ownership or interpret either of these
 comment|/// pointers.
 name|void
 name|setInlineAsmDiagnosticHandler
 parameter_list|(
-name|void
-modifier|*
+name|InlineAsmDiagHandlerTy
 name|DiagHandler
 parameter_list|,
 name|void
@@ -178,8 +192,7 @@ parameter_list|)
 function_decl|;
 comment|/// getInlineAsmDiagnosticHandler - Return the diagnostic handler set by
 comment|/// setInlineAsmDiagnosticHandler.
-name|void
-operator|*
+name|InlineAsmDiagHandlerTy
 name|getInlineAsmDiagnosticHandler
 argument_list|()
 specifier|const
@@ -226,6 +239,45 @@ name|StringRef
 name|ErrorStr
 parameter_list|)
 function_decl|;
+name|private
+label|:
+comment|// DO NOT IMPLEMENT
+name|LLVMContext
+argument_list|(
+name|LLVMContext
+operator|&
+argument_list|)
+expr_stmt|;
+name|void
+name|operator
+init|=
+operator|(
+name|LLVMContext
+operator|&
+operator|)
+decl_stmt|;
+comment|/// addModule - Register a module as being instantiated in this context.  If
+comment|/// the context is deleted, the module will be deleted as well.
+name|void
+name|addModule
+parameter_list|(
+name|Module
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/// removeModule - Unregister a module from this context.
+name|void
+name|removeModule
+parameter_list|(
+name|Module
+modifier|*
+parameter_list|)
+function_decl|;
+comment|// Module needs access to the add/removeModule methods.
+name|friend
+name|class
+name|Module
+decl_stmt|;
 block|}
 empty_stmt|;
 comment|/// getGlobalContext - Returns a global context.  This is for LLVM clients that

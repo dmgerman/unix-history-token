@@ -123,11 +123,11 @@ name|SDNPAssociative
 block|,
 name|SDNPHasChain
 block|,
-name|SDNPOutFlag
+name|SDNPOutGlue
 block|,
-name|SDNPInFlag
+name|SDNPInGlue
 block|,
-name|SDNPOptInFlag
+name|SDNPOptInGlue
 block|,
 name|SDNPMayLoad
 block|,
@@ -138,6 +138,10 @@ block|,
 name|SDNPMemOperand
 block|,
 name|SDNPVariadic
+block|,
+name|SDNPWantRoot
+block|,
+name|SDNPWantParent
 block|}
 enum|;
 comment|/// getValueType - Return the MVT::SimpleValueType that the specified TableGen
@@ -186,6 +190,10 @@ comment|///
 name|class
 name|CodeGenTarget
 block|{
+name|RecordKeeper
+modifier|&
+name|Records
+decl_stmt|;
 name|Record
 modifier|*
 name|TargetRec
@@ -280,7 +288,11 @@ expr_stmt|;
 name|public
 label|:
 name|CodeGenTarget
-argument_list|()
+argument_list|(
+name|RecordKeeper
+operator|&
+name|Records
+argument_list|)
 expr_stmt|;
 name|Record
 operator|*
@@ -360,6 +372,18 @@ return|return
 name|Registers
 return|;
 block|}
+comment|/// getRegisterByName - If there is a register with the specific AsmName,
+comment|/// return it.
+specifier|const
+name|CodeGenRegister
+modifier|*
+name|getRegisterByName
+argument_list|(
+name|StringRef
+name|Name
+argument_list|)
+decl|const
+decl_stmt|;
 specifier|const
 name|std
 operator|::

@@ -126,7 +126,10 @@ name|RET_FLAG
 block|,
 comment|// Return with a flag operand.
 name|GLOBAL_BASE_REG
+block|,
 comment|// Global base reg for PIC
+name|FLUSHW
+comment|// FLUSH register windows to stack
 block|}
 enum|;
 block|}

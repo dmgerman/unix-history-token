@@ -90,6 +90,9 @@ comment|///< .type _foo, STT_COMMON  # aka @common
 name|MCSA_ELF_TypeNoType
 block|,
 comment|///< .type _foo, STT_NOTYPE  # aka @notype
+name|MCSA_ELF_TypeGnuUniqueObject
+block|,
+comment|/// .type _foo, @gnu_unique_object
 name|MCSA_Global
 block|,
 comment|///< .globl
@@ -111,6 +114,9 @@ comment|///< .local (ELF)
 name|MCSA_NoDeadStrip
 block|,
 comment|///< .no_dead_strip (MachO)
+name|MCSA_SymbolResolver
+block|,
+comment|///< .symbol_resolver (MachO)
 name|MCSA_PrivateExtern
 block|,
 comment|///< .private_extern (MachO)
@@ -136,8 +142,17 @@ enum|;
 enum|enum
 name|MCAssemblerFlag
 block|{
+name|MCAF_SyntaxUnified
+block|,
+comment|///< .syntax (ARM/ELF)
 name|MCAF_SubsectionsViaSymbols
+block|,
 comment|///< .subsections_via_symbols (MachO)
+name|MCAF_Code16
+block|,
+comment|///< .code 16
+name|MCAF_Code32
+comment|///< .code 32
 block|}
 enum|;
 block|}

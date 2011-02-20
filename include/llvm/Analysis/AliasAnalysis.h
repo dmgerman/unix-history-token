@@ -72,23 +72,63 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This API represents memory as a (Pointer, Size) pair.  The Pointer component
+comment|// This API identifies memory regions with the Location class. The pointer
 end_comment
 
 begin_comment
-comment|// specifies the base memory address of the region, the Size specifies how large
+comment|// component specifies the base memory address of the region. The Size specifies
 end_comment
 
 begin_comment
-comment|// of an area is being queried, or UnknownSize if the size is not known.
+comment|// the maximum size (in address units) of the memory region, or UnknownSize if
 end_comment
 
 begin_comment
-comment|// Pointers that point to two completely different objects in memory never
+comment|// the size is not known. The TBAA tag identifies the "type" of the memory
 end_comment
 
 begin_comment
-comment|// alias, regardless of the value of the Size component.
+comment|// reference; see the TypeBasedAliasAnalysis class for details.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Some non-obvious details include:
+end_comment
+
+begin_comment
+comment|//  - Pointers that point to two completely different objects in memory never
+end_comment
+
+begin_comment
+comment|//    alias, regardless of the value of the Size component.
+end_comment
+
+begin_comment
+comment|//  - NoAlias doesn't imply inequal pointers. The most obvious example of this
+end_comment
+
+begin_comment
+comment|//    is two pointers to constant memory. Even if they are equal, constant
+end_comment
+
+begin_comment
+comment|//    memory is never stored to, so there will never be any dependencies.
+end_comment
+
+begin_comment
+comment|//    In this and other situations, the pointers may be both NoAlias and
+end_comment
+
+begin_comment
+comment|//    MustAlias at the same time. The current API can only return one result,
+end_comment
+
+begin_comment
+comment|//    though this is rarely a problem in practice.
 end_comment
 
 begin_comment
@@ -120,12 +160,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/System/IncludeFile.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vector>
 end_include
 
@@ -150,6 +184,12 @@ name|Pass
 decl_stmt|;
 name|class
 name|AnalysisUsage
+decl_stmt|;
+name|class
+name|MemTransferInst
+decl_stmt|;
+name|class
+name|MemIntrinsic
 decl_stmt|;
 name|class
 name|AliasAnalysis
@@ -225,12 +265,15 @@ comment|/// UnknownSize - This is a special value which can be used with the
 comment|/// size arguments in alias queries to indicate that the caller does not
 comment|/// know the sizes of the potential memory references.
 specifier|static
-name|unsigned
+name|uint64_t
 specifier|const
 name|UnknownSize
 init|=
 operator|~
-literal|0u
+name|UINT64_C
+argument_list|(
+literal|0
+argument_list|)
 decl_stmt|;
 comment|/// getTargetData - Return a pointer to the current TargetData object, or
 comment|/// null if no TargetData object is available.
@@ -249,7 +292,7 @@ block|}
 comment|/// getTypeStoreSize - Return the TargetData store size for the given type,
 comment|/// if known, or a conservative value otherwise.
 comment|///
-name|unsigned
+name|uint64_t
 name|getTypeStoreSize
 parameter_list|(
 specifier|const
@@ -261,6 +304,180 @@ function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|/// Alias Queries...
 comment|///
+comment|/// Location - A description of a memory location.
+struct|struct
+name|Location
+block|{
+comment|/// Ptr - The address of the start of the location.
+specifier|const
+name|Value
+modifier|*
+name|Ptr
+decl_stmt|;
+comment|/// Size - The maximum size of the location, in address-units, or
+comment|/// UnknownSize if the size is not known.  Note that an unknown size does
+comment|/// not mean the pointer aliases the entire virtual address space, because
+comment|/// there are restrictions on stepping out of one object and into another.
+comment|/// See http://llvm.org/docs/LangRef.html#pointeraliasing
+name|uint64_t
+name|Size
+decl_stmt|;
+comment|/// TBAATag - The metadata node which describes the TBAA type of
+comment|/// the location, or null if there is no known unique tag.
+specifier|const
+name|MDNode
+modifier|*
+name|TBAATag
+decl_stmt|;
+name|explicit
+name|Location
+argument_list|(
+argument|const Value *P =
+literal|0
+argument_list|,
+argument|uint64_t S = UnknownSize
+argument_list|,
+argument|const MDNode *N =
+literal|0
+argument_list|)
+block|:
+name|Ptr
+argument_list|(
+name|P
+argument_list|)
+operator|,
+name|Size
+argument_list|(
+name|S
+argument_list|)
+operator|,
+name|TBAATag
+argument_list|(
+argument|N
+argument_list|)
+block|{}
+name|Location
+name|getWithNewPtr
+argument_list|(
+argument|const Value *NewPtr
+argument_list|)
+specifier|const
+block|{
+name|Location
+name|Copy
+argument_list|(
+operator|*
+name|this
+argument_list|)
+block|;
+name|Copy
+operator|.
+name|Ptr
+operator|=
+name|NewPtr
+block|;
+return|return
+name|Copy
+return|;
+block|}
+name|Location
+name|getWithNewSize
+argument_list|(
+name|uint64_t
+name|NewSize
+argument_list|)
+decl|const
+block|{
+name|Location
+name|Copy
+argument_list|(
+operator|*
+name|this
+argument_list|)
+decl_stmt|;
+name|Copy
+operator|.
+name|Size
+operator|=
+name|NewSize
+expr_stmt|;
+return|return
+name|Copy
+return|;
+block|}
+name|Location
+name|getWithoutTBAATag
+argument_list|()
+specifier|const
+block|{
+name|Location
+name|Copy
+argument_list|(
+operator|*
+name|this
+argument_list|)
+block|;
+name|Copy
+operator|.
+name|TBAATag
+operator|=
+literal|0
+block|;
+return|return
+name|Copy
+return|;
+block|}
+block|}
+struct|;
+comment|/// getLocation - Fill in Loc with information about the memory reference by
+comment|/// the given instruction.
+name|Location
+name|getLocation
+parameter_list|(
+specifier|const
+name|LoadInst
+modifier|*
+name|LI
+parameter_list|)
+function_decl|;
+name|Location
+name|getLocation
+parameter_list|(
+specifier|const
+name|StoreInst
+modifier|*
+name|SI
+parameter_list|)
+function_decl|;
+name|Location
+name|getLocation
+parameter_list|(
+specifier|const
+name|VAArgInst
+modifier|*
+name|VI
+parameter_list|)
+function_decl|;
+specifier|static
+name|Location
+name|getLocationForSource
+parameter_list|(
+specifier|const
+name|MemTransferInst
+modifier|*
+name|MTI
+parameter_list|)
+function_decl|;
+specifier|static
+name|Location
+name|getLocationForDest
+parameter_list|(
+specifier|const
+name|MemIntrinsic
+modifier|*
+name|MI
+parameter_list|)
+function_decl|;
 comment|/// Alias analysis result - Either we know for sure that it does not alias, we
 comment|/// know for sure it must alias, or we don't know anything: The two pointers
 comment|/// _might_ alias.  This enum is designed so you can do things like:
@@ -277,21 +494,37 @@ name|NoAlias
 init|=
 literal|0
 block|,
+comment|///< No dependencies.
 name|MayAlias
-init|=
-literal|1
 block|,
+comment|///< Anything goes.
+name|PartialAlias
+block|,
+comment|///< Pointers differ, but pointees overlap.
 name|MustAlias
-init|=
-literal|2
+comment|///< Pointers are equal.
 block|}
 enum|;
 comment|/// alias - The main low level interface to the alias analysis implementation.
-comment|/// Returns a Result indicating whether the two pointers are aliased to each
-comment|/// other.  This is the interface that must be implemented by specific alias
-comment|/// analysis implementations.
-comment|///
+comment|/// Returns an AliasResult indicating whether the two pointers are aliased to
+comment|/// each other.  This is the interface that must be implemented by specific
+comment|/// alias analysis implementations.
 name|virtual
+name|AliasResult
+name|alias
+parameter_list|(
+specifier|const
+name|Location
+modifier|&
+name|LocA
+parameter_list|,
+specifier|const
+name|Location
+modifier|&
+name|LocB
+parameter_list|)
+function_decl|;
+comment|/// alias - A convenience wrapper.
 name|AliasResult
 name|alias
 parameter_list|(
@@ -300,7 +533,7 @@ name|Value
 modifier|*
 name|V1
 parameter_list|,
-name|unsigned
+name|uint64_t
 name|V1Size
 parameter_list|,
 specifier|const
@@ -308,11 +541,30 @@ name|Value
 modifier|*
 name|V2
 parameter_list|,
-name|unsigned
+name|uint64_t
 name|V2Size
 parameter_list|)
-function_decl|;
-comment|/// alias - A convenience wrapper for the case where the sizes are unknown.
+block|{
+return|return
+name|alias
+argument_list|(
+name|Location
+argument_list|(
+name|V1
+argument_list|,
+name|V1Size
+argument_list|)
+argument_list|,
+name|Location
+argument_list|(
+name|V2
+argument_list|,
+name|V2Size
+argument_list|)
+argument_list|)
+return|;
+block|}
+comment|/// alias - A convenience wrapper.
 name|AliasResult
 name|alias
 parameter_list|(
@@ -346,11 +598,37 @@ name|bool
 name|isNoAlias
 parameter_list|(
 specifier|const
+name|Location
+modifier|&
+name|LocA
+parameter_list|,
+specifier|const
+name|Location
+modifier|&
+name|LocB
+parameter_list|)
+block|{
+return|return
+name|alias
+argument_list|(
+name|LocA
+argument_list|,
+name|LocB
+argument_list|)
+operator|==
+name|NoAlias
+return|;
+block|}
+comment|/// isNoAlias - A convenience wrapper.
+name|bool
+name|isNoAlias
+parameter_list|(
+specifier|const
 name|Value
 modifier|*
 name|V1
 parameter_list|,
-name|unsigned
+name|uint64_t
 name|V1Size
 parameter_list|,
 specifier|const
@@ -358,8 +636,68 @@ name|Value
 modifier|*
 name|V2
 parameter_list|,
-name|unsigned
+name|uint64_t
 name|V2Size
+parameter_list|)
+block|{
+return|return
+name|isNoAlias
+argument_list|(
+name|Location
+argument_list|(
+name|V1
+argument_list|,
+name|V1Size
+argument_list|)
+argument_list|,
+name|Location
+argument_list|(
+name|V2
+argument_list|,
+name|V2Size
+argument_list|)
+argument_list|)
+return|;
+block|}
+comment|/// isMustAlias - A convenience wrapper.
+name|bool
+name|isMustAlias
+parameter_list|(
+specifier|const
+name|Location
+modifier|&
+name|LocA
+parameter_list|,
+specifier|const
+name|Location
+modifier|&
+name|LocB
+parameter_list|)
+block|{
+return|return
+name|alias
+argument_list|(
+name|LocA
+argument_list|,
+name|LocB
+argument_list|)
+operator|==
+name|MustAlias
+return|;
+block|}
+comment|/// isMustAlias - A convenience wrapper.
+name|bool
+name|isMustAlias
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|V1
+parameter_list|,
+specifier|const
+name|Value
+modifier|*
+name|V2
 parameter_list|)
 block|{
 return|return
@@ -367,21 +705,36 @@ name|alias
 argument_list|(
 name|V1
 argument_list|,
-name|V1Size
+literal|1
 argument_list|,
 name|V2
 argument_list|,
-name|V2Size
+literal|1
 argument_list|)
 operator|==
-name|NoAlias
+name|MustAlias
 return|;
 block|}
-comment|/// pointsToConstantMemory - If the specified pointer is known to point into
-comment|/// constant global memory, return true.  This allows disambiguation of store
-comment|/// instructions from constant pointers.
-comment|///
+comment|/// pointsToConstantMemory - If the specified memory location is
+comment|/// known to be constant, return true. If OrLocal is true and the
+comment|/// specified memory location is known to be "local" (derived from
+comment|/// an alloca), return true. Otherwise return false.
 name|virtual
+name|bool
+name|pointsToConstantMemory
+parameter_list|(
+specifier|const
+name|Location
+modifier|&
+name|Loc
+parameter_list|,
+name|bool
+name|OrLocal
+init|=
+name|false
+parameter_list|)
+function_decl|;
+comment|/// pointsToConstantMemory - A convenient wrapper.
 name|bool
 name|pointsToConstantMemory
 parameter_list|(
@@ -389,8 +742,25 @@ specifier|const
 name|Value
 modifier|*
 name|P
+parameter_list|,
+name|bool
+name|OrLocal
+init|=
+name|false
 parameter_list|)
-function_decl|;
+block|{
+return|return
+name|pointsToConstantMemory
+argument_list|(
+name|Location
+argument_list|(
+name|P
+argument_list|)
+argument_list|,
+name|OrLocal
+argument_list|)
+return|;
+block|}
 comment|//===--------------------------------------------------------------------===//
 comment|/// Simple mod/ref information...
 comment|///
@@ -417,6 +787,25 @@ init|=
 literal|3
 block|}
 enum|;
+comment|/// These values define additional bits used to define the
+comment|/// ModRefBehavior values.
+enum|enum
+block|{
+name|Nowhere
+init|=
+literal|0
+block|,
+name|ArgumentPointees
+init|=
+literal|4
+block|,
+name|Anywhere
+init|=
+literal|8
+operator||
+name|ArgumentPointees
+block|}
+enum|;
 comment|/// ModRefBehavior - Summary of how a function affects memory in the program.
 comment|/// Loads from constant globals are not considered memory accesses for this
 comment|/// interface.  Also, functions may freely modify stack space local to their
@@ -424,30 +813,59 @@ comment|/// invocation without having to report it through these interfaces.
 enum|enum
 name|ModRefBehavior
 block|{
-comment|// DoesNotAccessMemory - This function does not perform any non-local loads
-comment|// or stores to memory.
-comment|//
-comment|// This property corresponds to the GCC 'const' attribute.
+comment|/// DoesNotAccessMemory - This function does not perform any non-local loads
+comment|/// or stores to memory.
+comment|///
+comment|/// This property corresponds to the GCC 'const' attribute.
+comment|/// This property corresponds to the LLVM IR 'readnone' attribute.
+comment|/// This property corresponds to the IntrNoMem LLVM intrinsic flag.
 name|DoesNotAccessMemory
+init|=
+name|Nowhere
+operator||
+name|NoModRef
 block|,
-comment|// AccessesArguments - This function accesses function arguments in well
-comment|// known (possibly volatile) ways, but does not access any other memory.
-name|AccessesArguments
+comment|/// OnlyReadsArgumentPointees - The only memory references in this function
+comment|/// (if it has any) are non-volatile loads from objects pointed to by its
+comment|/// pointer-typed arguments, with arbitrary offsets.
+comment|///
+comment|/// This property corresponds to the IntrReadArgMem LLVM intrinsic flag.
+name|OnlyReadsArgumentPointees
+init|=
+name|ArgumentPointees
+operator||
+name|Ref
 block|,
-comment|// AccessesArgumentsAndGlobals - This function has accesses function
-comment|// arguments and global variables well known (possibly volatile) ways, but
-comment|// does not access any other memory.
-name|AccessesArgumentsAndGlobals
+comment|/// OnlyAccessesArgumentPointees - The only memory references in this
+comment|/// function (if it has any) are non-volatile loads and stores from objects
+comment|/// pointed to by its pointer-typed arguments, with arbitrary offsets.
+comment|///
+comment|/// This property corresponds to the IntrReadWriteArgMem LLVM intrinsic flag.
+name|OnlyAccessesArgumentPointees
+init|=
+name|ArgumentPointees
+operator||
+name|ModRef
 block|,
-comment|// OnlyReadsMemory - This function does not perform any non-local stores or
-comment|// volatile loads, but may read from any memory location.
-comment|//
-comment|// This property corresponds to the GCC 'pure' attribute.
+comment|/// OnlyReadsMemory - This function does not perform any non-local stores or
+comment|/// volatile loads, but may read from any memory location.
+comment|///
+comment|/// This property corresponds to the GCC 'pure' attribute.
+comment|/// This property corresponds to the LLVM IR 'readonly' attribute.
+comment|/// This property corresponds to the IntrReadMem LLVM intrinsic flag.
 name|OnlyReadsMemory
+init|=
+name|Anywhere
+operator||
+name|Ref
 block|,
-comment|// UnknownModRefBehavior - This indicates that the function could not be
-comment|// classified into one of the behaviors above.
+comment|/// UnknownModRefBehavior - This indicates that the function could not be
+comment|/// classified into one of the behaviors above.
 name|UnknownModRefBehavior
+init|=
+name|Anywhere
+operator||
+name|ModRef
 block|}
 enum|;
 comment|/// getModRefBehavior - Return the behavior when calling the given call site.
@@ -469,17 +887,6 @@ specifier|const
 name|Function
 modifier|*
 name|F
-parameter_list|)
-function_decl|;
-comment|/// getIntrinsicModRefBehavior - Return the modref behavior of the intrinsic
-comment|/// with the given id.  Most clients won't need this, because the regular
-comment|/// getModRefBehavior incorporates this information.
-specifier|static
-name|ModRefBehavior
-name|getIntrinsicModRefBehavior
-parameter_list|(
-name|unsigned
-name|iid
 parameter_list|)
 function_decl|;
 comment|/// doesNotAccessMemory - If the specified call is known to never read or
@@ -546,22 +953,14 @@ name|ImmutableCallSite
 name|CS
 parameter_list|)
 block|{
-name|ModRefBehavior
-name|MRB
-init|=
+return|return
+name|onlyReadsMemory
+argument_list|(
 name|getModRefBehavior
 argument_list|(
 name|CS
 argument_list|)
-decl_stmt|;
-return|return
-name|MRB
-operator|==
-name|DoesNotAccessMemory
-operator|||
-name|MRB
-operator|==
-name|OnlyReadsMemory
+argument_list|)
 return|;
 block|}
 comment|/// onlyReadsMemory - If the specified function is known to only read from
@@ -577,178 +976,89 @@ modifier|*
 name|F
 parameter_list|)
 block|{
-name|ModRefBehavior
-name|MRB
-init|=
+return|return
+name|onlyReadsMemory
+argument_list|(
 name|getModRefBehavior
 argument_list|(
 name|F
 argument_list|)
-decl_stmt|;
+argument_list|)
+return|;
+block|}
+comment|/// onlyReadsMemory - Return true if functions with the specified behavior are
+comment|/// known to only read from non-volatile memory (or not access memory at all).
+comment|///
+specifier|static
+name|bool
+name|onlyReadsMemory
+parameter_list|(
+name|ModRefBehavior
+name|MRB
+parameter_list|)
+block|{
 return|return
+operator|!
+operator|(
 name|MRB
-operator|==
-name|DoesNotAccessMemory
-operator|||
+operator|&
+name|Mod
+operator|)
+return|;
+block|}
+comment|/// onlyAccessesArgPointees - Return true if functions with the specified
+comment|/// behavior are known to read and write at most from objects pointed to by
+comment|/// their pointer-typed arguments (with arbitrary offsets).
+comment|///
+specifier|static
+name|bool
+name|onlyAccessesArgPointees
+parameter_list|(
+name|ModRefBehavior
 name|MRB
-operator|==
-name|OnlyReadsMemory
+parameter_list|)
+block|{
+return|return
+operator|!
+operator|(
+name|MRB
+operator|&
+name|Anywhere
+operator|&
+operator|~
+name|ArgumentPointees
+operator|)
+return|;
+block|}
+comment|/// doesAccessArgPointees - Return true if functions with the specified
+comment|/// behavior are known to potentially read or write  from objects pointed
+comment|/// to be their pointer-typed arguments (with arbitrary offsets).
+comment|///
+specifier|static
+name|bool
+name|doesAccessArgPointees
+parameter_list|(
+name|ModRefBehavior
+name|MRB
+parameter_list|)
+block|{
+return|return
+operator|(
+name|MRB
+operator|&
+name|ModRef
+operator|)
+operator|&&
+operator|(
+name|MRB
+operator|&
+name|ArgumentPointees
+operator|)
 return|;
 block|}
 comment|/// getModRefInfo - Return information about whether or not an instruction may
-comment|/// read or write memory specified by the pointer operand.  An instruction
+comment|/// read or write the specified memory location.  An instruction
 comment|/// that doesn't read or write memory may be trivially LICM'd for example.
-comment|/// getModRefInfo (for call sites) - Return whether information about whether
-comment|/// a particular call site modifies or reads the memory specified by the
-comment|/// pointer.
-comment|///
-name|virtual
-name|ModRefResult
-name|getModRefInfo
-parameter_list|(
-name|ImmutableCallSite
-name|CS
-parameter_list|,
-specifier|const
-name|Value
-modifier|*
-name|P
-parameter_list|,
-name|unsigned
-name|Size
-parameter_list|)
-function_decl|;
-comment|/// getModRefInfo - Return information about whether two call sites may refer
-comment|/// to the same set of memory locations.  See
-comment|///   http://llvm.org/docs/AliasAnalysis.html#ModRefInfo
-comment|/// for details.
-name|virtual
-name|ModRefResult
-name|getModRefInfo
-parameter_list|(
-name|ImmutableCallSite
-name|CS1
-parameter_list|,
-name|ImmutableCallSite
-name|CS2
-parameter_list|)
-function_decl|;
-name|public
-label|:
-comment|/// Convenience functions...
-name|ModRefResult
-name|getModRefInfo
-parameter_list|(
-specifier|const
-name|LoadInst
-modifier|*
-name|L
-parameter_list|,
-specifier|const
-name|Value
-modifier|*
-name|P
-parameter_list|,
-name|unsigned
-name|Size
-parameter_list|)
-function_decl|;
-name|ModRefResult
-name|getModRefInfo
-parameter_list|(
-specifier|const
-name|StoreInst
-modifier|*
-name|S
-parameter_list|,
-specifier|const
-name|Value
-modifier|*
-name|P
-parameter_list|,
-name|unsigned
-name|Size
-parameter_list|)
-function_decl|;
-name|ModRefResult
-name|getModRefInfo
-parameter_list|(
-specifier|const
-name|VAArgInst
-modifier|*
-name|I
-parameter_list|,
-specifier|const
-name|Value
-modifier|*
-name|P
-parameter_list|,
-name|unsigned
-name|Size
-parameter_list|)
-function_decl|;
-name|ModRefResult
-name|getModRefInfo
-parameter_list|(
-specifier|const
-name|CallInst
-modifier|*
-name|C
-parameter_list|,
-specifier|const
-name|Value
-modifier|*
-name|P
-parameter_list|,
-name|unsigned
-name|Size
-parameter_list|)
-block|{
-return|return
-name|getModRefInfo
-argument_list|(
-name|ImmutableCallSite
-argument_list|(
-name|C
-argument_list|)
-argument_list|,
-name|P
-argument_list|,
-name|Size
-argument_list|)
-return|;
-block|}
-name|ModRefResult
-name|getModRefInfo
-parameter_list|(
-specifier|const
-name|InvokeInst
-modifier|*
-name|I
-parameter_list|,
-specifier|const
-name|Value
-modifier|*
-name|P
-parameter_list|,
-name|unsigned
-name|Size
-parameter_list|)
-block|{
-return|return
-name|getModRefInfo
-argument_list|(
-name|ImmutableCallSite
-argument_list|(
-name|I
-argument_list|)
-argument_list|,
-name|P
-argument_list|,
-name|Size
-argument_list|)
-return|;
-block|}
 name|ModRefResult
 name|getModRefInfo
 parameter_list|(
@@ -758,12 +1068,9 @@ modifier|*
 name|I
 parameter_list|,
 specifier|const
-name|Value
-modifier|*
-name|P
-parameter_list|,
-name|unsigned
-name|Size
+name|Location
+modifier|&
+name|Loc
 parameter_list|)
 block|{
 switch|switch
@@ -789,9 +1096,7 @@ operator|*
 operator|)
 name|I
 argument_list|,
-name|P
-argument_list|,
-name|Size
+name|Loc
 argument_list|)
 return|;
 case|case
@@ -809,9 +1114,7 @@ operator|*
 operator|)
 name|I
 argument_list|,
-name|P
-argument_list|,
-name|Size
+name|Loc
 argument_list|)
 return|;
 case|case
@@ -829,9 +1132,7 @@ operator|*
 operator|)
 name|I
 argument_list|,
-name|P
-argument_list|,
-name|Size
+name|Loc
 argument_list|)
 return|;
 case|case
@@ -849,9 +1150,7 @@ operator|*
 operator|)
 name|I
 argument_list|,
-name|P
-argument_list|,
-name|Size
+name|Loc
 argument_list|)
 return|;
 case|case
@@ -869,9 +1168,7 @@ operator|*
 operator|)
 name|I
 argument_list|,
-name|P
-argument_list|,
-name|Size
+name|Loc
 argument_list|)
 return|;
 default|default:
@@ -880,12 +1177,382 @@ name|NoModRef
 return|;
 block|}
 block|}
+comment|/// getModRefInfo - A convenience wrapper.
+name|ModRefResult
+name|getModRefInfo
+parameter_list|(
+specifier|const
+name|Instruction
+modifier|*
+name|I
+parameter_list|,
+specifier|const
+name|Value
+modifier|*
+name|P
+parameter_list|,
+name|uint64_t
+name|Size
+parameter_list|)
+block|{
+return|return
+name|getModRefInfo
+argument_list|(
+name|I
+argument_list|,
+name|Location
+argument_list|(
+name|P
+argument_list|,
+name|Size
+argument_list|)
+argument_list|)
+return|;
+block|}
+comment|/// getModRefInfo (for call sites) - Return whether information about whether
+comment|/// a particular call site modifies or reads the specified memory location.
+name|virtual
+name|ModRefResult
+name|getModRefInfo
+parameter_list|(
+name|ImmutableCallSite
+name|CS
+parameter_list|,
+specifier|const
+name|Location
+modifier|&
+name|Loc
+parameter_list|)
+function_decl|;
+comment|/// getModRefInfo (for call sites) - A convenience wrapper.
+name|ModRefResult
+name|getModRefInfo
+parameter_list|(
+name|ImmutableCallSite
+name|CS
+parameter_list|,
+specifier|const
+name|Value
+modifier|*
+name|P
+parameter_list|,
+name|uint64_t
+name|Size
+parameter_list|)
+block|{
+return|return
+name|getModRefInfo
+argument_list|(
+name|CS
+argument_list|,
+name|Location
+argument_list|(
+name|P
+argument_list|,
+name|Size
+argument_list|)
+argument_list|)
+return|;
+block|}
+comment|/// getModRefInfo (for calls) - Return whether information about whether
+comment|/// a particular call modifies or reads the specified memory location.
+name|ModRefResult
+name|getModRefInfo
+parameter_list|(
+specifier|const
+name|CallInst
+modifier|*
+name|C
+parameter_list|,
+specifier|const
+name|Location
+modifier|&
+name|Loc
+parameter_list|)
+block|{
+return|return
+name|getModRefInfo
+argument_list|(
+name|ImmutableCallSite
+argument_list|(
+name|C
+argument_list|)
+argument_list|,
+name|Loc
+argument_list|)
+return|;
+block|}
+comment|/// getModRefInfo (for calls) - A convenience wrapper.
+name|ModRefResult
+name|getModRefInfo
+parameter_list|(
+specifier|const
+name|CallInst
+modifier|*
+name|C
+parameter_list|,
+specifier|const
+name|Value
+modifier|*
+name|P
+parameter_list|,
+name|uint64_t
+name|Size
+parameter_list|)
+block|{
+return|return
+name|getModRefInfo
+argument_list|(
+name|C
+argument_list|,
+name|Location
+argument_list|(
+name|P
+argument_list|,
+name|Size
+argument_list|)
+argument_list|)
+return|;
+block|}
+comment|/// getModRefInfo (for invokes) - Return whether information about whether
+comment|/// a particular invoke modifies or reads the specified memory location.
+name|ModRefResult
+name|getModRefInfo
+parameter_list|(
+specifier|const
+name|InvokeInst
+modifier|*
+name|I
+parameter_list|,
+specifier|const
+name|Location
+modifier|&
+name|Loc
+parameter_list|)
+block|{
+return|return
+name|getModRefInfo
+argument_list|(
+name|ImmutableCallSite
+argument_list|(
+name|I
+argument_list|)
+argument_list|,
+name|Loc
+argument_list|)
+return|;
+block|}
+comment|/// getModRefInfo (for invokes) - A convenience wrapper.
+name|ModRefResult
+name|getModRefInfo
+parameter_list|(
+specifier|const
+name|InvokeInst
+modifier|*
+name|I
+parameter_list|,
+specifier|const
+name|Value
+modifier|*
+name|P
+parameter_list|,
+name|uint64_t
+name|Size
+parameter_list|)
+block|{
+return|return
+name|getModRefInfo
+argument_list|(
+name|I
+argument_list|,
+name|Location
+argument_list|(
+name|P
+argument_list|,
+name|Size
+argument_list|)
+argument_list|)
+return|;
+block|}
+comment|/// getModRefInfo (for loads) - Return whether information about whether
+comment|/// a particular load modifies or reads the specified memory location.
+name|ModRefResult
+name|getModRefInfo
+parameter_list|(
+specifier|const
+name|LoadInst
+modifier|*
+name|L
+parameter_list|,
+specifier|const
+name|Location
+modifier|&
+name|Loc
+parameter_list|)
+function_decl|;
+comment|/// getModRefInfo (for loads) - A convenience wrapper.
+name|ModRefResult
+name|getModRefInfo
+parameter_list|(
+specifier|const
+name|LoadInst
+modifier|*
+name|L
+parameter_list|,
+specifier|const
+name|Value
+modifier|*
+name|P
+parameter_list|,
+name|uint64_t
+name|Size
+parameter_list|)
+block|{
+return|return
+name|getModRefInfo
+argument_list|(
+name|L
+argument_list|,
+name|Location
+argument_list|(
+name|P
+argument_list|,
+name|Size
+argument_list|)
+argument_list|)
+return|;
+block|}
+comment|/// getModRefInfo (for stores) - Return whether information about whether
+comment|/// a particular store modifies or reads the specified memory location.
+name|ModRefResult
+name|getModRefInfo
+parameter_list|(
+specifier|const
+name|StoreInst
+modifier|*
+name|S
+parameter_list|,
+specifier|const
+name|Location
+modifier|&
+name|Loc
+parameter_list|)
+function_decl|;
+comment|/// getModRefInfo (for stores) - A convenience wrapper.
+name|ModRefResult
+name|getModRefInfo
+parameter_list|(
+specifier|const
+name|StoreInst
+modifier|*
+name|S
+parameter_list|,
+specifier|const
+name|Value
+modifier|*
+name|P
+parameter_list|,
+name|uint64_t
+name|Size
+parameter_list|)
+block|{
+return|return
+name|getModRefInfo
+argument_list|(
+name|S
+argument_list|,
+name|Location
+argument_list|(
+name|P
+argument_list|,
+name|Size
+argument_list|)
+argument_list|)
+return|;
+block|}
+comment|/// getModRefInfo (for va_args) - Return whether information about whether
+comment|/// a particular va_arg modifies or reads the specified memory location.
+name|ModRefResult
+name|getModRefInfo
+parameter_list|(
+specifier|const
+name|VAArgInst
+modifier|*
+name|I
+parameter_list|,
+specifier|const
+name|Location
+modifier|&
+name|Loc
+parameter_list|)
+function_decl|;
+comment|/// getModRefInfo (for va_args) - A convenience wrapper.
+name|ModRefResult
+name|getModRefInfo
+parameter_list|(
+specifier|const
+name|VAArgInst
+modifier|*
+name|I
+parameter_list|,
+specifier|const
+name|Value
+modifier|*
+name|P
+parameter_list|,
+name|uint64_t
+name|Size
+parameter_list|)
+block|{
+return|return
+name|getModRefInfo
+argument_list|(
+name|I
+argument_list|,
+name|Location
+argument_list|(
+name|P
+argument_list|,
+name|Size
+argument_list|)
+argument_list|)
+return|;
+block|}
+comment|/// getModRefInfo - Return information about whether two call sites may refer
+comment|/// to the same set of memory locations.  See
+comment|///   http://llvm.org/docs/AliasAnalysis.html#ModRefInfo
+comment|/// for details.
+name|virtual
+name|ModRefResult
+name|getModRefInfo
+parameter_list|(
+name|ImmutableCallSite
+name|CS1
+parameter_list|,
+name|ImmutableCallSite
+name|CS2
+parameter_list|)
+function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|/// Higher level methods for querying mod/ref information.
 comment|///
 comment|/// canBasicBlockModify - Return true if it is possible for execution of the
 comment|/// specified basic block to modify the value pointed to by Ptr.
-comment|///
+name|bool
+name|canBasicBlockModify
+parameter_list|(
+specifier|const
+name|BasicBlock
+modifier|&
+name|BB
+parameter_list|,
+specifier|const
+name|Location
+modifier|&
+name|Loc
+parameter_list|)
+function_decl|;
+comment|/// canBasicBlockModify - A convenience wrapper.
 name|bool
 name|canBasicBlockModify
 parameter_list|(
@@ -899,15 +1566,48 @@ name|Value
 modifier|*
 name|P
 parameter_list|,
-name|unsigned
+name|uint64_t
 name|Size
 parameter_list|)
-function_decl|;
+block|{
+return|return
+name|canBasicBlockModify
+argument_list|(
+name|BB
+argument_list|,
+name|Location
+argument_list|(
+name|P
+argument_list|,
+name|Size
+argument_list|)
+argument_list|)
+return|;
+block|}
 comment|/// canInstructionRangeModify - Return true if it is possible for the
 comment|/// execution of the specified instructions to modify the value pointed to by
 comment|/// Ptr.  The instructions to consider are all of the instructions in the
 comment|/// range of [I1,I2] INCLUSIVE.  I1 and I2 must be in the same basic block.
-comment|///
+name|bool
+name|canInstructionRangeModify
+parameter_list|(
+specifier|const
+name|Instruction
+modifier|&
+name|I1
+parameter_list|,
+specifier|const
+name|Instruction
+modifier|&
+name|I2
+parameter_list|,
+specifier|const
+name|Location
+modifier|&
+name|Loc
+parameter_list|)
+function_decl|;
+comment|/// canInstructionRangeModify - A convenience wrapper.
 name|bool
 name|canInstructionRangeModify
 parameter_list|(
@@ -926,10 +1626,26 @@ name|Value
 modifier|*
 name|Ptr
 parameter_list|,
-name|unsigned
+name|uint64_t
 name|Size
 parameter_list|)
-function_decl|;
+block|{
+return|return
+name|canInstructionRangeModify
+argument_list|(
+name|I1
+argument_list|,
+name|I2
+argument_list|,
+name|Location
+argument_list|(
+name|Ptr
+argument_list|,
+name|Size
+argument_list|)
+argument_list|)
+return|;
+block|}
 comment|//===--------------------------------------------------------------------===//
 comment|/// Methods that clients should call when they transform the program to allow
 comment|/// alias analyses to update their internal data structures.  Note that these
@@ -966,6 +1682,24 @@ parameter_list|,
 name|Value
 modifier|*
 name|To
+parameter_list|)
+function_decl|;
+comment|/// addEscapingUse - This method should be used whenever an escaping use is
+comment|/// added to a pointer value.  Analysis implementations may either return
+comment|/// conservative responses for that value in the future, or may recompute
+comment|/// some or all internal state to continue providing precise responses.
+comment|///
+comment|/// Escaping uses are considered by anything _except_ the following:
+comment|///  - GEPs or bitcasts of the pointer
+comment|///  - Loads through the pointer
+comment|///  - Stores through (but not of) the pointer
+name|virtual
+name|void
+name|addEscapingUse
+parameter_list|(
+name|Use
+modifier|&
+name|U
 parameter_list|)
 function_decl|;
 comment|/// replaceWithNewValue - This method is the obvious combination of the two
@@ -1031,36 +1765,6 @@ end_decl_stmt
 begin_comment
 comment|// End llvm namespace
 end_comment
-
-begin_comment
-comment|// Because of the way .a files work, we must force the BasicAA implementation to
-end_comment
-
-begin_comment
-comment|// be pulled in if the AliasAnalysis header is included.  Otherwise we run
-end_comment
-
-begin_comment
-comment|// the risk of AliasAnalysis being used, but the default implementation not
-end_comment
-
-begin_comment
-comment|// being linked into the tool that uses it.
-end_comment
-
-begin_macro
-name|FORCE_DEFINING_FILE_TO_BE_LINKED
-argument_list|(
-argument|AliasAnalysis
-argument_list|)
-end_macro
-
-begin_macro
-name|FORCE_DEFINING_FILE_TO_BE_LINKED
-argument_list|(
-argument|BasicAliasAnalysis
-argument_list|)
-end_macro
 
 begin_endif
 endif|#

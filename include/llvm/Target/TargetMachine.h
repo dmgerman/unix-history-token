@@ -109,7 +109,7 @@ name|class
 name|TargetSelectionDAGInfo
 decl_stmt|;
 name|class
-name|TargetFrameInfo
+name|TargetFrameLowering
 decl_stmt|;
 name|class
 name|JITCodeEmitter
@@ -285,6 +285,16 @@ name|MCRelaxAll
 range|:
 literal|1
 decl_stmt|;
+name|unsigned
+name|MCNoExecStack
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|MCUseLoc
+range|:
+literal|1
+decl_stmt|;
 name|public
 label|:
 name|virtual
@@ -323,9 +333,9 @@ return|;
 block|}
 name|virtual
 specifier|const
-name|TargetFrameInfo
+name|TargetFrameLowering
 operator|*
-name|getFrameInfo
+name|getFrameLowering
 argument_list|()
 specifier|const
 block|{
@@ -461,13 +471,13 @@ comment|///
 name|virtual
 specifier|const
 name|InstrItineraryData
+operator|*
 name|getInstrItineraryData
 argument_list|()
 specifier|const
 block|{
 return|return
-name|InstrItineraryData
-argument_list|()
+literal|0
 return|;
 block|}
 comment|/// getELFWriterInfo - If this target supports an ELF writer, return
@@ -506,6 +516,52 @@ name|Value
 parameter_list|)
 block|{
 name|MCRelaxAll
+operator|=
+name|Value
+expr_stmt|;
+block|}
+comment|/// hasMCNoExecStack - Check whether an executable stack is not needed.
+name|bool
+name|hasMCNoExecStack
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MCNoExecStack
+return|;
+block|}
+comment|/// setMCNoExecStack - Set whether an executabel stack is not needed.
+name|void
+name|setMCNoExecStack
+parameter_list|(
+name|bool
+name|Value
+parameter_list|)
+block|{
+name|MCNoExecStack
+operator|=
+name|Value
+expr_stmt|;
+block|}
+comment|/// hasMCUseLoc - Check whether we should use dwarf's .loc directive.
+name|bool
+name|hasMCUseLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MCUseLoc
+return|;
+block|}
+comment|/// setMCUseLoc - Set whether all we should use dwarf's .loc directive.
+name|void
+name|setMCUseLoc
+parameter_list|(
+name|bool
+name|Value
+parameter_list|)
+block|{
+name|MCUseLoc
 operator|=
 name|Value
 expr_stmt|;
@@ -775,6 +831,19 @@ argument_list|()
 block|;
 name|public
 operator|:
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|getTargetTriple
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetTriple
+return|;
+block|}
 comment|/// addPassesToEmitFile - Add passes to the specified pass manager to get the
 comment|/// specified file emitted.  Typically this will involve several steps of code
 comment|/// generation.  If OptLevel is None, the code generator should emit code as

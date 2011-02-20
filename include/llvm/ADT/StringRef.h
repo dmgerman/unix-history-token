@@ -521,6 +521,10 @@ comment|/// replacements (change one character into another) as a single
 comment|/// operation, rather than as two operations (an insertion and a
 comment|/// removal).
 comment|///
+comment|/// \param MaxEditDistance If non-zero, the maximum edit distance that
+comment|/// this routine is allowed to compute. If the edit distance will exceed
+comment|/// that maximum, returns \c MaxEditDistance+1.
+comment|///
 comment|/// \returns the minimum number of character insertions, removals,
 comment|/// or (if \p AllowReplacements is \c true) replacements needed to
 comment|/// transform one of the given strings into the other. If zero,
@@ -535,6 +539,11 @@ name|bool
 name|AllowReplacements
 init|=
 name|true
+parameter_list|,
+name|unsigned
+name|MaxEditDistance
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 comment|/// str - Get the contents as an std::string.
@@ -899,6 +908,47 @@ name|size_t
 name|From
 operator|=
 literal|0
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// find_last_of - Find the last character in the string that is \arg C, or
+comment|/// npos if not found.
+name|size_type
+name|find_last_of
+argument_list|(
+name|char
+name|C
+argument_list|,
+name|size_t
+name|From
+operator|=
+name|npos
+argument_list|)
+decl|const
+block|{
+return|return
+name|rfind
+argument_list|(
+name|C
+argument_list|,
+name|From
+argument_list|)
+return|;
+block|}
+comment|/// find_last_of - Find the last character in the string that is in \arg C,
+comment|/// or npos if not found.
+comment|///
+comment|/// Note: O(size() + Chars.size())
+name|size_type
+name|find_last_of
+argument_list|(
+name|StringRef
+name|Chars
+argument_list|,
+name|size_t
+name|From
+operator|=
+name|npos
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1705,6 +1755,41 @@ end_expr_stmt
 begin_comment
 comment|/// @}
 end_comment
+
+begin_comment
+comment|// StringRefs can be treated like a POD type.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+expr|struct
+name|isPodLike
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+operator|>
+expr|struct
+name|isPodLike
+operator|<
+name|StringRef
+operator|>
+block|{
+specifier|static
+specifier|const
+name|bool
+name|value
+operator|=
+name|true
+block|; }
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 unit|}

@@ -177,7 +177,7 @@ operator|*
 operator|>
 name|Classes
 block|;
-comment|/// RegRegs - Map registers to all their references within a live range.
+comment|/// RegRefs - Map registers to all their references within a live range.
 name|std
 operator|::
 name|multimap
@@ -189,6 +189,20 @@ operator|*
 operator|>
 name|RegRefs
 block|;
+typedef|typedef
+name|std
+operator|::
+name|multimap
+operator|<
+name|unsigned
+operator|,
+name|MachineOperand
+operator|*
+operator|>
+operator|::
+name|const_iterator
+name|RegRefIter
+expr_stmt|;
 comment|/// KillIndices - The index of the most recent kill (proceding bottom-up),
 comment|/// or ~0u if the register is not live.
 name|std
@@ -198,7 +212,7 @@ operator|<
 name|unsigned
 operator|>
 name|KillIndices
-block|;
+decl_stmt|;
 comment|/// DefIndices - The index of the most recent complete def (proceding bottom
 comment|/// up), or ~0u if the register is live.
 name|std
@@ -208,39 +222,39 @@ operator|<
 name|unsigned
 operator|>
 name|DefIndices
-block|;
+expr_stmt|;
 comment|/// KeepRegs - A set of registers which are live and cannot be changed to
 comment|/// break anti-dependencies.
 name|SmallSet
 operator|<
 name|unsigned
-block|,
+operator|,
 literal|4
 operator|>
 name|KeepRegs
-block|;
+expr_stmt|;
 name|public
-operator|:
+label|:
 name|CriticalAntiDepBreaker
 argument_list|(
 name|MachineFunction
 operator|&
 name|MFi
 argument_list|)
-block|;
+expr_stmt|;
 operator|~
 name|CriticalAntiDepBreaker
 argument_list|()
-block|;
+expr_stmt|;
 comment|/// Start - Initialize anti-dep breaking for a new basic block.
 name|void
 name|StartBlock
-argument_list|(
+parameter_list|(
 name|MachineBasicBlock
-operator|*
+modifier|*
 name|BB
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 comment|/// BreakAntiDependencies - Identifiy anti-dependencies along the critical
 comment|/// path
 comment|/// of the ScheduleDAG and break them by renaming registers.
@@ -248,68 +262,116 @@ comment|///
 name|unsigned
 name|BreakAntiDependencies
 argument_list|(
-argument|const std::vector<SUnit>& SUnits
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|SUnit
+operator|>
+operator|&
+name|SUnits
 argument_list|,
-argument|MachineBasicBlock::iterator Begin
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|Begin
 argument_list|,
-argument|MachineBasicBlock::iterator End
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|End
 argument_list|,
-argument|unsigned InsertPosIndex
+name|unsigned
+name|InsertPosIndex
 argument_list|)
-block|;
+decl_stmt|;
 comment|/// Observe - Update liveness information to account for the current
 comment|/// instruction, which will not be scheduled.
 comment|///
 name|void
 name|Observe
-argument_list|(
-argument|MachineInstr *MI
-argument_list|,
-argument|unsigned Count
-argument_list|,
-argument|unsigned InsertPosIndex
-argument_list|)
-block|;
+parameter_list|(
+name|MachineInstr
+modifier|*
+name|MI
+parameter_list|,
+name|unsigned
+name|Count
+parameter_list|,
+name|unsigned
+name|InsertPosIndex
+parameter_list|)
+function_decl|;
 comment|/// Finish - Finish anti-dep breaking for a basic block.
 name|void
 name|FinishBlock
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 name|private
-operator|:
+label|:
 name|void
 name|PrescanInstruction
-argument_list|(
+parameter_list|(
 name|MachineInstr
-operator|*
+modifier|*
 name|MI
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 name|void
 name|ScanInstruction
-argument_list|(
-argument|MachineInstr *MI
-argument_list|,
-argument|unsigned Count
-argument_list|)
-block|;
+parameter_list|(
+name|MachineInstr
+modifier|*
+name|MI
+parameter_list|,
+name|unsigned
+name|Count
+parameter_list|)
+function_decl|;
+name|bool
+name|isNewRegClobberedByRefs
+parameter_list|(
+name|RegRefIter
+name|RegRefBegin
+parameter_list|,
+name|RegRefIter
+name|RegRefEnd
+parameter_list|,
+name|unsigned
+name|NewReg
+parameter_list|)
+function_decl|;
 name|unsigned
 name|findSuitableFreeRegister
-argument_list|(
-argument|MachineInstr *MI
-argument_list|,
-argument|unsigned AntiDepReg
-argument_list|,
-argument|unsigned LastNewReg
-argument_list|,
-argument|const TargetRegisterClass *
-argument_list|)
-block|;   }
-decl_stmt|;
+parameter_list|(
+name|RegRefIter
+name|RegRefBegin
+parameter_list|,
+name|RegRefIter
+name|RegRefEnd
+parameter_list|,
+name|unsigned
+name|AntiDepReg
+parameter_list|,
+name|unsigned
+name|LastNewReg
+parameter_list|,
+specifier|const
+name|TargetRegisterClass
+modifier|*
+name|RC
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif

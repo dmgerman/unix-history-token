@@ -1687,8 +1687,9 @@ operator|&&
 literal|"Element not found!"
 argument_list|)
 block|;
-name|NumErased
-operator|=
+operator|(
+name|void
+operator|)
 name|NumErased
 block|;
 comment|// Remember the structural hash for the type before we start hacking on it,

@@ -146,6 +146,43 @@ decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
+name|class
+name|formatted_raw_ostream
+decl_stmt|;
+name|MCStreamer
+modifier|*
+name|createAsmStreamer
+parameter_list|(
+name|MCContext
+modifier|&
+name|Ctx
+parameter_list|,
+name|formatted_raw_ostream
+modifier|&
+name|OS
+parameter_list|,
+name|bool
+name|isVerboseAsm
+parameter_list|,
+name|bool
+name|useLoc
+parameter_list|,
+name|MCInstPrinter
+modifier|*
+name|InstPrint
+parameter_list|,
+name|MCCodeEmitter
+modifier|*
+name|CE
+parameter_list|,
+name|TargetAsmBackend
+modifier|*
+name|TAB
+parameter_list|,
+name|bool
+name|ShowInst
+parameter_list|)
+function_decl|;
 comment|/// Target - Wrapper for Target specific information.
 comment|///
 comment|/// For registration purposes, this is a POD type so that targets can be
@@ -390,6 +427,46 @@ name|_Emitter
 operator|,
 name|bool
 name|RelaxAll
+operator|,
+name|bool
+name|NoExecStack
+operator|)
+argument_list|;     typedef
+name|MCStreamer
+operator|*
+operator|(
+operator|*
+name|AsmStreamerCtorTy
+operator|)
+operator|(
+name|MCContext
+operator|&
+name|Ctx
+operator|,
+name|formatted_raw_ostream
+operator|&
+name|OS
+operator|,
+name|bool
+name|isVerboseAsm
+operator|,
+name|bool
+name|useLoc
+operator|,
+name|MCInstPrinter
+operator|*
+name|InstPrint
+operator|,
+name|MCCodeEmitter
+operator|*
+name|CE
+operator|,
+name|TargetAsmBackend
+operator|*
+name|TAB
+operator|,
+name|bool
+name|ShowInst
 operator|)
 argument_list|;
 name|private
@@ -469,8 +546,21 @@ comment|/// ObjectStreamer, if registered.
 name|ObjectStreamerCtorTy
 name|ObjectStreamerCtorFn
 argument_list|;
+comment|/// AsmStreamerCtorFn - Construction function for this target's
+comment|/// AsmStreamer, if registered (default = llvm::createAsmStreamer).
+name|AsmStreamerCtorTy
+name|AsmStreamerCtorFn
+argument_list|;
 name|public
 operator|:
+name|Target
+argument_list|()
+operator|:
+name|AsmStreamerCtorFn
+argument_list|(
+argument|llvm::createAsmStreamer
+argument_list|)
+block|{}
 comment|/// @name Target Information
 comment|/// @{
 comment|// getNext - Return the next registered target.
@@ -626,6 +716,18 @@ specifier|const
 block|{
 return|return
 name|ObjectStreamerCtorFn
+operator|!=
+literal|0
+return|;
+block|}
+comment|/// hasAsmStreamer - Check if this target supports streaming to files.
+name|bool
+name|hasAsmStreamer
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AsmStreamerCtorFn
 operator|!=
 literal|0
 return|;
@@ -950,6 +1052,7 @@ comment|/// \arg TAB - The target assembler backend object. Takes ownership.
 comment|/// \arg _OS - The stream object.
 comment|/// \arg _Emitter - The target independent assembler object.Takes ownership.
 comment|/// \arg RelaxAll - Relax all fixups?
+comment|/// \arg NoExecStack - Mark file as not needing a executable stack.
 name|MCStreamer
 modifier|*
 name|createObjectStreamer
@@ -979,6 +1082,9 @@ name|_Emitter
 argument_list|,
 name|bool
 name|RelaxAll
+argument_list|,
+name|bool
+name|NoExecStack
 argument_list|)
 decl|const
 block|{
@@ -1007,6 +1113,66 @@ argument_list|,
 name|_Emitter
 argument_list|,
 name|RelaxAll
+argument_list|,
+name|NoExecStack
+argument_list|)
+return|;
+block|}
+comment|/// createAsmStreamer - Create a target specific MCStreamer.
+name|MCStreamer
+modifier|*
+name|createAsmStreamer
+argument_list|(
+name|MCContext
+operator|&
+name|Ctx
+argument_list|,
+name|formatted_raw_ostream
+operator|&
+name|OS
+argument_list|,
+name|bool
+name|isVerboseAsm
+argument_list|,
+name|bool
+name|useLoc
+argument_list|,
+name|MCInstPrinter
+operator|*
+name|InstPrint
+argument_list|,
+name|MCCodeEmitter
+operator|*
+name|CE
+argument_list|,
+name|TargetAsmBackend
+operator|*
+name|TAB
+argument_list|,
+name|bool
+name|ShowInst
+argument_list|)
+decl|const
+block|{
+comment|// AsmStreamerCtorFn is default to llvm::createAsmStreamer
+return|return
+name|AsmStreamerCtorFn
+argument_list|(
+name|Ctx
+argument_list|,
+name|OS
+argument_list|,
+name|isVerboseAsm
+argument_list|,
+name|useLoc
+argument_list|,
+name|InstPrint
+argument_list|,
+name|CE
+argument_list|,
+name|TAB
+argument_list|,
+name|ShowInst
 argument_list|)
 return|;
 block|}
@@ -2024,7 +2190,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// RegisterObjectStreamer - Register an MCStreamer implementation
+comment|/// RegisterObjectStreamer - Register a object code MCStreamer implementation
 end_comment
 
 begin_comment
@@ -2084,6 +2250,74 @@ condition|)
 name|T
 operator|.
 name|ObjectStreamerCtorFn
+operator|=
+name|Fn
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// RegisterAsmStreamer - Register an assembly MCStreamer implementation
+end_comment
+
+begin_comment
+comment|/// for the given target.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Clients are responsible for ensuring that registration doesn't occur
+end_comment
+
+begin_comment
+comment|/// while another thread is attempting to access the registry. Typically
+end_comment
+
+begin_comment
+comment|/// this is done by initializing all targets at program startup.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// @param T - The target being registered.
+end_comment
+
+begin_comment
+comment|/// @param Fn - A function to construct an MCStreamer for the target.
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|void
+name|RegisterAsmStreamer
+argument_list|(
+name|Target
+operator|&
+name|T
+argument_list|,
+name|Target
+operator|::
+name|AsmStreamerCtorTy
+name|Fn
+argument_list|)
+block|{
+if|if
+condition|(
+name|T
+operator|.
+name|AsmStreamerCtorFn
+operator|==
+name|createAsmStreamer
+condition|)
+name|T
+operator|.
+name|AsmStreamerCtorFn
 operator|=
 name|Fn
 expr_stmt|;

@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/System/Atomic.h"
+file|"llvm/Support/Atomic.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/System/Threading.h"
+file|"llvm/Support/Threading.h"
 end_include
 
 begin_decl_stmt
@@ -497,42 +497,6 @@ begin_empty_stmt
 unit|} }
 empty_stmt|;
 end_empty_stmt
-
-begin_expr_stmt
-name|template
-operator|<
-name|void
-argument_list|(
-operator|*
-name|CleanupFn
-argument_list|)
-argument_list|(
-name|void
-operator|*
-argument_list|)
-operator|>
-name|class
-name|ManagedCleanup
-operator|:
-name|public
-name|ManagedStaticBase
-block|{
-name|public
-operator|:
-name|void
-name|Register
-argument_list|()
-block|{
-name|RegisterManagedStatic
-argument_list|(
-literal|0
-argument_list|,
-name|CleanupFn
-argument_list|)
-block|; }
-block|}
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/// llvm_shutdown - Deallocate and destroy all ManagedStatic variables.

@@ -549,7 +549,7 @@ argument_list|)
 block|{
 name|T
 operator|=
-name|Add_internal
+name|add_internal
 argument_list|(
 name|V
 argument_list|,
@@ -599,7 +599,7 @@ name|KeyOfValue
 argument_list|(
 name|this
 operator|->
-name|Value
+name|getValue
 argument_list|(
 name|T
 argument_list|)
@@ -636,7 +636,7 @@ name|Find
 argument_list|(
 name|this
 operator|->
-name|Left
+name|getLeft
 argument_list|(
 name|T
 argument_list|)
@@ -650,7 +650,7 @@ name|Find
 argument_list|(
 name|this
 operator|->
-name|Right
+name|getRight
 argument_list|(
 name|T
 argument_list|)
@@ -669,7 +669,7 @@ end_label
 begin_function
 name|TreeTy
 modifier|*
-name|Add_internal
+name|add_internal
 parameter_list|(
 name|value_type_ref
 name|V
@@ -691,7 +691,7 @@ argument_list|)
 decl_stmt|;
 name|T
 operator|=
-name|RemoveAllOverlaps
+name|removeAllOverlaps
 argument_list|(
 name|T
 argument_list|,
@@ -759,7 +759,7 @@ name|this
 operator|->
 name|Balance
 argument_list|(
-name|Add_internal
+name|add_internal
 argument_list|(
 name|V
 argument_list|,
@@ -806,7 +806,7 @@ argument_list|(
 name|T
 argument_list|)
 argument_list|,
-name|Add_internal
+name|add_internal
 argument_list|(
 name|V
 argument_list|,
@@ -829,7 +829,7 @@ end_comment
 begin_function
 name|TreeTy
 modifier|*
-name|RemoveAllOverlaps
+name|removeAllOverlaps
 parameter_list|(
 name|TreeTy
 modifier|*
@@ -850,7 +850,7 @@ name|false
 expr_stmt|;
 name|T
 operator|=
-name|RemoveOverlap
+name|removeOverlap
 argument_list|(
 name|T
 argument_list|,
@@ -861,7 +861,7 @@ argument_list|)
 expr_stmt|;
 name|this
 operator|->
-name|MarkImmutable
+name|markImmutable
 argument_list|(
 name|T
 argument_list|)
@@ -885,7 +885,7 @@ end_comment
 begin_function
 name|TreeTy
 modifier|*
-name|RemoveOverlap
+name|removeOverlap
 parameter_list|(
 name|TreeTy
 modifier|*
@@ -940,7 +940,7 @@ name|this
 operator|->
 name|Balance
 argument_list|(
-name|RemoveOverlap
+name|removeOverlap
 argument_list|(
 name|this
 operator|->
@@ -1001,7 +1001,7 @@ argument_list|(
 name|T
 argument_list|)
 argument_list|,
-name|RemoveOverlap
+name|removeOverlap
 argument_list|(
 name|this
 operator|->
@@ -1092,7 +1092,7 @@ literal|1
 argument_list|)
 decl_stmt|;
 return|return
-name|Add_internal
+name|add_internal
 argument_list|(
 name|std
 operator|::
@@ -1127,7 +1127,7 @@ argument_list|)
 decl_stmt|;
 name|T
 operator|=
-name|Add_internal
+name|add_internal
 argument_list|(
 name|std
 operator|::
@@ -1158,7 +1158,7 @@ argument_list|()
 argument_list|)
 decl_stmt|;
 return|return
-name|Add_internal
+name|add_internal
 argument_list|(
 name|std
 operator|::
@@ -1206,7 +1206,7 @@ argument_list|()
 argument_list|)
 decl_stmt|;
 return|return
-name|Add_internal
+name|add_internal
 argument_list|(
 name|std
 operator|::
@@ -1409,7 +1409,7 @@ argument|Alloc
 argument_list|)
 block|{}
 name|ImmutableIntervalMap
-name|GetEmptyMap
+name|getEmptyMap
 argument_list|()
 block|{
 return|return
@@ -1417,13 +1417,13 @@ name|ImmutableIntervalMap
 argument_list|(
 name|F
 operator|.
-name|GetEmptyTree
+name|getEmptyTree
 argument_list|()
 argument_list|)
 return|;
 block|}
 name|ImmutableIntervalMap
-name|Add
+name|add
 argument_list|(
 argument|ImmutableIntervalMap Old
 argument_list|,
@@ -1438,7 +1438,7 @@ name|T
 operator|=
 name|F
 operator|.
-name|Add
+name|add
 argument_list|(
 name|Old
 operator|.
@@ -1464,7 +1464,7 @@ name|ImmutableIntervalMap
 argument_list|(
 name|F
 operator|.
-name|GetCanonicalTree
+name|getCanonicalTree
 argument_list|(
 name|T
 argument_list|)
@@ -1475,7 +1475,7 @@ end_expr_stmt
 
 begin_function
 name|ImmutableIntervalMap
-name|Remove
+name|remove
 parameter_list|(
 name|ImmutableIntervalMap
 name|Old
@@ -1490,7 +1490,7 @@ name|T
 init|=
 name|F
 operator|.
-name|Remove
+name|remove
 argument_list|(
 name|Old
 operator|.
@@ -1504,7 +1504,7 @@ name|ImmutableIntervalMap
 argument_list|(
 name|F
 operator|.
-name|GetCanonicalTree
+name|getCanonicalTree
 argument_list|(
 name|T
 argument_list|)
@@ -1516,7 +1516,7 @@ end_function
 begin_function
 name|data_type
 modifier|*
-name|Lookup
+name|lookup
 parameter_list|(
 name|ImmutableIntervalMap
 name|M

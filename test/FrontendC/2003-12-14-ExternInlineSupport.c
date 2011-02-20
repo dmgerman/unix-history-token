@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %llvmgcc -xc %s -c -o - | llvm-dis | not grep dead_function
+comment|// RUN: %llvmgcc -xc %s -S -o - | not grep dead_function
 end_comment
 
 begin_function

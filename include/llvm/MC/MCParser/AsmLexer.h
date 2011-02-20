@@ -80,7 +80,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/System/DataTypes.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_include
@@ -247,7 +247,15 @@ name|LexDigit
 argument_list|()
 block|;
 name|AsmToken
+name|LexSingleQuote
+argument_list|()
+block|;
+name|AsmToken
 name|LexQuote
+argument_list|()
+block|;
+name|AsmToken
+name|LexFloatLiteral
 argument_list|()
 block|; }
 decl_stmt|;

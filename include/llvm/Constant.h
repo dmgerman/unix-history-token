@@ -80,9 +80,6 @@ operator|>
 name|class
 name|SmallVectorImpl
 expr_stmt|;
-name|class
-name|LLVMContext
-decl_stmt|;
 comment|/// This is an important base class in LLVM. It provides the common facilities
 comment|/// of all constant values in an LLVM program. A constant is a value that is
 comment|/// immutable at runtime. Functions are constants because their address is
@@ -456,6 +453,15 @@ name|APInt
 operator|&
 name|V
 argument_list|)
+block|;
+comment|/// removeDeadConstantUsers - If there are any dead constant users dangling
+comment|/// off of this constant, remove them.  This method is useful for clients
+comment|/// that want to check to see if a global is unused, but don't want to deal
+comment|/// with potentially dead constants hanging off of the globals.
+name|void
+name|removeDeadConstantUsers
+argument_list|()
+specifier|const
 block|; }
 decl_stmt|;
 block|}

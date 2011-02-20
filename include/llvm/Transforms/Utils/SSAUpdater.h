@@ -295,6 +295,139 @@ expr_stmt|;
 comment|// DO NOT IMPLEMENT
 block|}
 empty_stmt|;
+comment|/// LoadAndStorePromoter - This little helper class provides a convenient way to
+comment|/// promote a collection of loads and stores into SSA Form using the SSAUpdater.
+comment|/// This handles complexities that SSAUpdater doesn't, such as multiple loads
+comment|/// and stores in one block.
+comment|///
+comment|/// Clients of this class are expected to subclass this and implement the
+comment|/// virtual methods.
+comment|///
+name|class
+name|LoadAndStorePromoter
+block|{
+name|protected
+label|:
+name|SSAUpdater
+modifier|&
+name|SSA
+decl_stmt|;
+name|public
+label|:
+name|LoadAndStorePromoter
+argument_list|(
+argument|const SmallVectorImpl<Instruction*>&Insts
+argument_list|,
+argument|SSAUpdater&S
+argument_list|,
+argument|StringRef Name = StringRef()
+argument_list|)
+empty_stmt|;
+name|virtual
+operator|~
+name|LoadAndStorePromoter
+argument_list|()
+block|{}
+comment|/// run - This does the promotion.  Insts is a list of loads and stores to
+comment|/// promote, and Name is the basename for the PHIs to insert.  After this is
+comment|/// complete, the loads and stores are removed from the code.
+name|void
+name|run
+argument_list|(
+argument|const SmallVectorImpl<Instruction*>&Insts
+argument_list|)
+specifier|const
+expr_stmt|;
+comment|/// Return true if the specified instruction is in the Inst list (which was
+comment|/// passed into the run method).  Clients should implement this with a more
+comment|/// efficient version if possible.
+name|virtual
+name|bool
+name|isInstInList
+argument_list|(
+name|Instruction
+operator|*
+name|I
+argument_list|,
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|Instruction
+operator|*
+operator|>
+operator|&
+name|Insts
+argument_list|)
+decl|const
+block|{
+for|for
+control|(
+name|unsigned
+name|i
+init|=
+literal|0
+init|,
+name|e
+init|=
+name|Insts
+operator|.
+name|size
+argument_list|()
+init|;
+name|i
+operator|!=
+name|e
+condition|;
+operator|++
+name|i
+control|)
+if|if
+condition|(
+name|Insts
+index|[
+name|i
+index|]
+operator|==
+name|I
+condition|)
+return|return
+name|true
+return|;
+return|return
+name|false
+return|;
+block|}
+comment|/// doExtraRewritesBeforeFinalDeletion - This hook is invoked after all the
+comment|/// stores are found and inserted as available values, but
+name|virtual
+name|void
+name|doExtraRewritesBeforeFinalDeletion
+argument_list|()
+specifier|const
+block|{   }
+comment|/// replaceLoadWithValue - Clients can choose to implement this to get
+comment|/// notified right before a load is RAUW'd another value.
+name|virtual
+name|void
+name|replaceLoadWithValue
+argument_list|(
+argument|LoadInst *LI
+argument_list|,
+argument|Value *V
+argument_list|)
+specifier|const
+block|{   }
+comment|/// This is called before each instruction is deleted.
+name|virtual
+name|void
+name|instructionDeleted
+argument_list|(
+argument|Instruction *I
+argument_list|)
+specifier|const
+block|{   }
+block|}
+empty_stmt|;
 block|}
 end_decl_stmt
 

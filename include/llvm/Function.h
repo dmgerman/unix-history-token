@@ -587,7 +587,7 @@ name|unsigned
 name|getIntrinsicID
 argument_list|()
 specifier|const
-name|ATTRIBUTE_READONLY
+name|LLVM_ATTRIBUTE_READONLY
 expr_stmt|;
 name|bool
 name|isIntrinsic

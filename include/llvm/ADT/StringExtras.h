@@ -62,7 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/System/DataTypes.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_include
@@ -113,7 +113,7 @@ operator|>
 name|class
 name|SmallVectorImpl
 expr_stmt|;
-comment|/// hexdigit - Return the (uppercase) hexadecimal character for the
+comment|/// hexdigit - Return the hexadecimal character for the
 comment|/// given number \arg X (which should be less than 16).
 specifier|static
 specifier|inline
@@ -122,8 +122,23 @@ name|hexdigit
 parameter_list|(
 name|unsigned
 name|X
+parameter_list|,
+name|bool
+name|LowerCase
+init|=
+name|false
 parameter_list|)
 block|{
+specifier|const
+name|char
+name|HexChar
+init|=
+name|LowerCase
+condition|?
+literal|'a'
+else|:
+literal|'A'
+decl_stmt|;
 return|return
 name|X
 operator|<
@@ -133,7 +148,7 @@ literal|'0'
 operator|+
 name|X
 else|:
-literal|'A'
+name|HexChar
 operator|+
 name|X
 operator|-

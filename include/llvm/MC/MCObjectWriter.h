@@ -46,13 +46,19 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Triple.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/raw_ostream.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/System/DataTypes.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_include
@@ -76,6 +82,15 @@ name|MCFixup
 decl_stmt|;
 name|class
 name|MCFragment
+decl_stmt|;
+name|class
+name|MCSymbol
+decl_stmt|;
+name|class
+name|MCSymbolData
+decl_stmt|;
+name|class
+name|MCSymbolRefExpr
 decl_stmt|;
 name|class
 name|MCValue
@@ -185,6 +200,11 @@ parameter_list|(
 name|MCAssembler
 modifier|&
 name|Asm
+parameter_list|,
+specifier|const
+name|MCAsmLayout
+modifier|&
+name|Layout
 parameter_list|)
 init|=
 literal|0
@@ -229,6 +249,61 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
+comment|/// \brief Check whether the difference (A - B) between two symbol
+comment|/// references is fully resolved.
+comment|///
+comment|/// Clients are not required to answer precisely and may conservatively return
+comment|/// false, even when a difference is fully resolved.
+name|bool
+name|IsSymbolRefDifferenceFullyResolved
+argument_list|(
+specifier|const
+name|MCAssembler
+operator|&
+name|Asm
+argument_list|,
+specifier|const
+name|MCSymbolRefExpr
+operator|*
+name|A
+argument_list|,
+specifier|const
+name|MCSymbolRefExpr
+operator|*
+name|B
+argument_list|,
+name|bool
+name|InSet
+argument_list|)
+decl|const
+decl_stmt|;
+name|virtual
+name|bool
+name|IsSymbolRefDifferenceFullyResolvedImpl
+argument_list|(
+specifier|const
+name|MCAssembler
+operator|&
+name|Asm
+argument_list|,
+specifier|const
+name|MCSymbolData
+operator|&
+name|DataA
+argument_list|,
+specifier|const
+name|MCFragment
+operator|&
+name|FB
+argument_list|,
+name|bool
+name|InSet
+argument_list|,
+name|bool
+name|IsPCRel
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// Write the object file.
 comment|///
 comment|/// This routine is called by the assembler after layout and relaxation is
@@ -238,7 +313,6 @@ name|virtual
 name|void
 name|WriteObject
 parameter_list|(
-specifier|const
 name|MCAssembler
 modifier|&
 name|Asm
@@ -615,6 +689,32 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/// @}
+comment|/// Utility function to encode a SLEB128 value.
+specifier|static
+name|void
+name|EncodeSLEB128
+parameter_list|(
+name|int64_t
+name|Value
+parameter_list|,
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|)
+function_decl|;
+comment|/// Utility function to encode a ULEB128 value.
+specifier|static
+name|void
+name|EncodeULEB128
+parameter_list|(
+name|uint64_t
+name|Value
+parameter_list|,
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|)
+function_decl|;
 block|}
 empty_stmt|;
 name|MCObjectWriter

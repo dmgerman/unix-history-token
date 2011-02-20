@@ -88,6 +88,9 @@ name|class
 name|MCSymbol
 decl_stmt|;
 name|class
+name|SlotIndexes
+decl_stmt|;
+name|class
 name|StringRef
 decl_stmt|;
 name|class
@@ -1080,6 +1083,15 @@ operator|=
 name|true
 expr_stmt|;
 block|}
+comment|/// getLandingPadSuccessor - If this block has a successor that is a landing
+comment|/// pad, return it. Otherwise return NULL.
+specifier|const
+name|MachineBasicBlock
+operator|*
+name|getLandingPadSuccessor
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|// Code Layout methods.
 comment|/// moveBefore/moveAfter - move 'this' block before or after the specified
 comment|/// block.  This only moves the block, it does not modify the CFG or adjust
@@ -1208,11 +1220,27 @@ name|iterator
 name|getFirstNonPHI
 parameter_list|()
 function_decl|;
+comment|/// SkipPHIsAndLabels - Return the first instruction in MBB after I that is
+comment|/// not a PHI or a label. This is the correct point to insert copies at the
+comment|/// beginning of a basic block.
+name|iterator
+name|SkipPHIsAndLabels
+parameter_list|(
+name|iterator
+name|I
+parameter_list|)
+function_decl|;
 comment|/// getFirstTerminator - returns an iterator to the first terminator
 comment|/// instruction of this basic block. If a terminator does not exist,
 comment|/// it returns end()
 name|iterator
 name|getFirstTerminator
+parameter_list|()
+function_decl|;
+comment|/// getLastNonDebugInstr - returns an iterator to the last non-debug
+comment|/// instruction in the basic block, or end()
+name|iterator
+name|getLastNonDebugInstr
 parameter_list|()
 function_decl|;
 comment|/// SplitCriticalEdge - Split the critical edge from this block to the
@@ -1308,6 +1336,28 @@ return|return
 name|Insts
 operator|.
 name|insert
+argument_list|(
+name|I
+argument_list|,
+name|M
+argument_list|)
+return|;
+block|}
+name|iterator
+name|insertAfter
+parameter_list|(
+name|iterator
+name|I
+parameter_list|,
+name|MachineInstr
+modifier|*
+name|M
+parameter_list|)
+block|{
+return|return
+name|Insts
+operator|.
+name|insertAfter
 argument_list|(
 name|I
 argument_list|,
@@ -1520,6 +1570,11 @@ argument_list|(
 name|raw_ostream
 operator|&
 name|OS
+argument_list|,
+name|SlotIndexes
+operator|*
+operator|=
+literal|0
 argument_list|)
 decl|const
 decl_stmt|;

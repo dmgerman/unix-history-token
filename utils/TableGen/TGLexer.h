@@ -62,7 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/System/DataTypes.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_include
@@ -95,6 +95,9 @@ name|SourceMgr
 decl_stmt|;
 name|class
 name|SMLoc
+decl_stmt|;
+name|class
+name|Twine
 decl_stmt|;
 name|namespace
 name|tgtok
@@ -188,19 +191,17 @@ name|XSHL
 block|,
 name|XStrConcat
 block|,
-name|XNameConcat
-block|,
 name|XCast
 block|,
 name|XSubst
 block|,
 name|XForEach
 block|,
-name|XCar
+name|XHead
 block|,
-name|XCdr
+name|XTail
 block|,
-name|XNull
+name|XEmpty
 block|,
 name|XIf
 block|,
@@ -379,9 +380,7 @@ operator|*
 name|Loc
 argument_list|,
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|Msg
 argument_list|)
@@ -394,9 +393,7 @@ name|SMLoc
 name|Loc
 argument_list|,
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|Msg
 argument_list|)
@@ -422,9 +419,7 @@ operator|*
 name|Loc
 argument_list|,
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|Msg
 argument_list|)

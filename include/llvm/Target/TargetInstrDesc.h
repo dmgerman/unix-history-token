@@ -66,7 +66,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/System/DataTypes.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_decl_stmt
@@ -247,11 +247,9 @@ name|Branch
 block|,
 name|IndirectBranch
 block|,
-name|Predicable
-block|,
-name|NotDuplicable
-block|,
 name|Compare
+block|,
+name|MoveImm
 block|,
 name|DelaySlot
 block|,
@@ -260,6 +258,10 @@ block|,
 name|MayLoad
 block|,
 name|MayStore
+block|,
+name|Predicable
+block|,
+name|NotDuplicable
 block|,
 name|UnmodeledSideEffects
 block|,
@@ -1145,6 +1147,34 @@ operator|<<
 name|TID
 operator|::
 name|Compare
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// isMoveImmediate - Return true if this instruction is a move immediate
+end_comment
+
+begin_comment
+comment|/// (including conditional moves) instruction.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isMoveImmediate
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Flags
+operator|&
+operator|(
+literal|1
+operator|<<
+name|TID
+operator|::
+name|MoveImm
 operator|)
 return|;
 block|}

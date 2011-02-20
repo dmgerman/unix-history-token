@@ -516,6 +516,24 @@ decl|const
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|virtual
+name|bool
+name|UseCodeAlign
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|virtual
+name|bool
+name|isVirtualSection
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|bool

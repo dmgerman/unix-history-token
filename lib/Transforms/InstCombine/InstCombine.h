@@ -350,7 +350,16 @@ name|Builder
 argument_list|(
 literal|0
 argument_list|)
-block|{}
+block|{
+name|initializeInstCombinerPass
+argument_list|(
+operator|*
+name|PassRegistry
+operator|::
+name|getPassRegistry
+argument_list|()
+argument_list|)
+block|;   }
 name|public
 operator|:
 name|virtual
@@ -797,6 +806,23 @@ function_decl|;
 name|Instruction
 modifier|*
 name|FoldICmpDivCst
+parameter_list|(
+name|ICmpInst
+modifier|&
+name|ICI
+parameter_list|,
+name|BinaryOperator
+modifier|*
+name|DivI
+parameter_list|,
+name|ConstantInt
+modifier|*
+name|DivRHS
+parameter_list|)
+function_decl|;
+name|Instruction
+modifier|*
+name|FoldICmpShrCst
 parameter_list|(
 name|ICmpInst
 modifier|&
@@ -1778,10 +1804,24 @@ return|;
 block|}
 name|private
 label|:
-comment|/// SimplifyCommutative - This performs a few simplifications for
-comment|/// commutative operators.
+comment|/// SimplifyAssociativeOrCommutative - This performs a few simplifications for
+comment|/// operators which are associative or commutative.
 name|bool
-name|SimplifyCommutative
+name|SimplifyAssociativeOrCommutative
+parameter_list|(
+name|BinaryOperator
+modifier|&
+name|I
+parameter_list|)
+function_decl|;
+comment|/// SimplifyUsingDistributiveLaws - This tries to simplify binary operations
+comment|/// which some other binary operation distributes over either by factorizing
+comment|/// out common terms (eg "(A*B)+(A*C)" -> "A*(B+C)") or expanding out if this
+comment|/// results in simplifications (eg: "A& (B | C) -> (A&B) | (A&C)" if this is
+comment|/// a win).  Returns the simplified value, or null if it didn't simplify.
+name|Value
+modifier|*
+name|SimplifyUsingDistributiveLaws
 parameter_list|(
 name|BinaryOperator
 modifier|&
@@ -1874,9 +1914,6 @@ comment|// which has a PHI node as operand #0, see if we can fold the instructio
 comment|// into the PHI (which is only possible if all operands to the PHI are
 comment|// constants).
 comment|//
-comment|// If AllowAggressive is true, FoldOpIntoPhi will allow certain transforms
-comment|// that would normally be unprofitable because they strongly encourage jump
-comment|// threading.
 name|Instruction
 modifier|*
 name|FoldOpIntoPhi
@@ -1884,11 +1921,6 @@ parameter_list|(
 name|Instruction
 modifier|&
 name|I
-parameter_list|,
-name|bool
-name|AllowAggressive
-init|=
-name|false
 parameter_list|)
 function_decl|;
 comment|// FoldPHIArgOpIntoPHI - If all operands to a PHI node are the same "unary"
@@ -2061,19 +2093,6 @@ name|Ty
 parameter_list|,
 name|bool
 name|isSigned
-parameter_list|)
-function_decl|;
-name|unsigned
-name|GetOrEnforceKnownAlignment
-parameter_list|(
-name|Value
-modifier|*
-name|V
-parameter_list|,
-name|unsigned
-name|PrefAlign
-init|=
-literal|0
 parameter_list|)
 function_decl|;
 block|}

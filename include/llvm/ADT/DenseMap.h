@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<algorithm>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<iterator>
 end_include
 
@@ -2238,8 +2244,9 @@ argument_list|,
 name|DestBucket
 argument_list|)
 decl_stmt|;
-name|FoundVal
-operator|=
+operator|(
+name|void
+operator|)
 name|FoundVal
 expr_stmt|;
 comment|// silence warning.

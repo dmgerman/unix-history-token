@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %llvmgcc -c -emit-llvm %s -o - | llvm-dis | grep llvm.global.annotations
+comment|// RUN: %llvmgcc -S %s -o - | grep llvm.global.annotations
 end_comment
 
 begin_comment
-comment|// RUN: %llvmgcc -c -emit-llvm %s -o - | llvm-dis | grep llvm.var.annotation | count 3
+comment|// RUN: %llvmgcc -S %s -o - | grep llvm.var.annotation | count 3
 end_comment
 
 begin_include

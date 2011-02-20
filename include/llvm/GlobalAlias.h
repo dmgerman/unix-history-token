@@ -352,6 +352,8 @@ operator|:
 name|public
 name|FixedNumOperandTraits
 operator|<
+name|GlobalAlias
+operator|,
 literal|1
 operator|>
 block|{ }

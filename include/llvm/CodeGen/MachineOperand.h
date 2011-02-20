@@ -62,7 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/System/DataTypes.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_include
@@ -227,6 +227,23 @@ name|IsDebug
 range|:
 literal|1
 decl_stmt|;
+comment|/// SmallContents - Thisreally should be part of the Contents union, but lives
+comment|/// out here so we can get a better packed struct.
+comment|/// MO_Register: Register number.
+comment|/// OffsetedInfo: Low bits of offset.
+union|union
+block|{
+name|unsigned
+name|RegNo
+decl_stmt|;
+comment|// For MO_Register.
+name|unsigned
+name|OffsetLo
+decl_stmt|;
+comment|// Matches Contents.OffsetedInfo.OffsetHi.
+block|}
+name|SmallContents
+union|;
 comment|/// ParentMI - This is the instruction that this operand is embedded into.
 comment|/// This is valid for all operand types, when the operand is in an instr.
 name|MachineInstr
@@ -265,9 +282,7 @@ comment|// For MO_MCSymbol
 struct|struct
 block|{
 comment|// For MO_Register.
-name|unsigned
-name|RegNo
-decl_stmt|;
+comment|// Register number is in SmallContents.RegNo.
 name|MachineOperand
 modifier|*
 modifier|*
@@ -312,10 +327,11 @@ comment|// For MO_BlockAddress.
 block|}
 name|Val
 union|;
-name|int64_t
-name|Offset
+comment|// Low bits of offset are in SmallContents.OffsetLo.
+name|int
+name|OffsetHi
 decl_stmt|;
-comment|// An offset from the object.
+comment|// An offset from the object, high 32 bits.
 block|}
 name|OffsetedInfo
 struct|;
@@ -415,6 +431,23 @@ block|{
 return|return
 name|ParentMI
 return|;
+block|}
+comment|/// clearParent - Reset the parent pointer.
+comment|///
+comment|/// The MachineOperand copy constructor also copies ParentMI, expecting the
+comment|/// original to be deleted. If a MachineOperand is ever stored outside a
+comment|/// MachineInstr, the parent pointer must be cleared.
+comment|///
+comment|/// Never call clearParent() on an operand in a MachineInstr.
+comment|///
+name|void
+name|clearParent
+parameter_list|()
+block|{
+name|ParentMI
+operator|=
+literal|0
+expr_stmt|;
 block|}
 name|void
 name|print
@@ -596,9 +629,7 @@ literal|"This is not a register operand!"
 argument_list|)
 block|;
 return|return
-name|Contents
-operator|.
-name|Reg
+name|SmallContents
 operator|.
 name|RegNo
 return|;
@@ -1272,11 +1303,22 @@ literal|"Wrong MachineOperand accessor"
 argument_list|)
 block|;
 return|return
+operator|(
+name|int64_t
+argument_list|(
 name|Contents
 operator|.
 name|OffsetedInfo
 operator|.
-name|Offset
+name|OffsetHi
+argument_list|)
+operator|<<
+literal|32
+operator|)
+operator||
+name|SmallContents
+operator|.
+name|OffsetLo
 return|;
 block|}
 specifier|const
@@ -1376,13 +1418,27 @@ operator|&&
 literal|"Wrong MachineOperand accessor"
 argument_list|)
 expr_stmt|;
+name|SmallContents
+operator|.
+name|OffsetLo
+operator|=
+name|unsigned
+argument_list|(
+name|Offset
+argument_list|)
+expr_stmt|;
 name|Contents
 operator|.
 name|OffsetedInfo
 operator|.
-name|Offset
+name|OffsetHi
 operator|=
+name|int
+argument_list|(
 name|Offset
+operator|>>
+literal|32
+argument_list|)
 expr_stmt|;
 block|}
 name|void
@@ -1663,9 +1719,7 @@ name|isDebug
 expr_stmt|;
 name|Op
 operator|.
-name|Contents
-operator|.
-name|Reg
+name|SmallContents
 operator|.
 name|RegNo
 operator|=

@@ -3219,6 +3219,164 @@ comment|//
 end_comment
 
 begin_comment
+comment|// A8.6.63 LDRB (literal)
+end_comment
+
+begin_comment
+comment|// A8.6.79 LDRSB (literal)
+end_comment
+
+begin_comment
+comment|// A8.6.75 LDRH (literal)
+end_comment
+
+begin_comment
+comment|// A8.6.83 LDRSH (literal)
+end_comment
+
+begin_comment
+comment|// A8.6.59 LDR (literal)
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// These instrs calculate an address from the PC value and an immediate offset.
+end_comment
+
+begin_comment
+comment|// Rd Rn=PC (+/-)imm12 (+ if Inst{23} == 0b1)
+end_comment
+
+begin_function
+specifier|static
+name|bool
+name|DisassembleThumb2Ldpci
+parameter_list|(
+name|MCInst
+modifier|&
+name|MI
+parameter_list|,
+name|unsigned
+name|Opcode
+parameter_list|,
+name|uint32_t
+name|insn
+parameter_list|,
+name|unsigned
+name|short
+name|NumOps
+parameter_list|,
+name|unsigned
+modifier|&
+name|NumOpsAdded
+parameter_list|,
+name|BO
+name|B
+parameter_list|)
+block|{
+specifier|const
+name|TargetOperandInfo
+modifier|*
+name|OpInfo
+init|=
+name|ARMInsts
+index|[
+name|Opcode
+index|]
+operator|.
+name|OpInfo
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|OpInfo
+condition|)
+return|return
+name|false
+return|;
+name|assert
+argument_list|(
+name|NumOps
+operator|>=
+literal|2
+operator|&&
+name|OpInfo
+index|[
+literal|0
+index|]
+operator|.
+name|RegClass
+operator|==
+name|ARM
+operator|::
+name|GPRRegClassID
+operator|&&
+name|OpInfo
+index|[
+literal|1
+index|]
+operator|.
+name|RegClass
+operator|<
+literal|0
+operator|&&
+literal|"Expect>= 2 operands, first as reg, and second as imm operand"
+argument_list|)
+expr_stmt|;
+comment|// Build the register operand, followed by the (+/-)imm12 immediate.
+name|MI
+operator|.
+name|addOperand
+argument_list|(
+name|MCOperand
+operator|::
+name|CreateReg
+argument_list|(
+name|getRegisterEnum
+argument_list|(
+name|B
+argument_list|,
+name|ARM
+operator|::
+name|GPRRegClassID
+argument_list|,
+name|decodeRd
+argument_list|(
+name|insn
+argument_list|)
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|MI
+operator|.
+name|addOperand
+argument_list|(
+name|MCOperand
+operator|::
+name|CreateImm
+argument_list|(
+name|decodeImm12
+argument_list|(
+name|insn
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|NumOpsAdded
+operator|=
+literal|2
+expr_stmt|;
+return|return
+name|true
+return|;
+block|}
+end_function
+
+begin_comment
 comment|// A6.2.4 Load/store single data item
 end_comment
 
@@ -4620,10 +4778,9 @@ name|true
 return|;
 block|}
 comment|// CPS has a singleton $opt operand that contains the following information:
-comment|// opt{4-0} = don't care
-comment|// opt{5} = 0 (false)
-comment|// opt{8-6} = AIF from Inst{2-0}
-comment|// opt{10-9} = 1:imod from Inst{4} with 0b10 as enable and 0b11 as disable
+comment|// The first op would be 0b10 as enable and 0b11 as disable in regular ARM,
+comment|// but in Thumb it's is 0 as enable and 1 as disable. So map it to ARM's
+comment|// default one. The second get the AIF flags from Inst{2-0}.
 if|if
 condition|(
 name|Opcode
@@ -4633,35 +4790,6 @@ operator|::
 name|tCPS
 condition|)
 block|{
-name|unsigned
-name|Option
-init|=
-name|slice
-argument_list|(
-name|insn
-argument_list|,
-literal|2
-argument_list|,
-literal|0
-argument_list|)
-operator|<<
-literal|6
-operator||
-name|slice
-argument_list|(
-name|insn
-argument_list|,
-literal|4
-argument_list|,
-literal|4
-argument_list|)
-operator|<<
-literal|9
-operator||
-literal|1
-operator|<<
-literal|10
-decl_stmt|;
 name|MI
 operator|.
 name|addOperand
@@ -4670,13 +4798,41 @@ name|MCOperand
 operator|::
 name|CreateImm
 argument_list|(
-name|Option
+literal|2
+operator|+
+name|slice
+argument_list|(
+name|insn
+argument_list|,
+literal|4
+argument_list|,
+literal|4
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|MI
+operator|.
+name|addOperand
+argument_list|(
+name|MCOperand
+operator|::
+name|CreateImm
+argument_list|(
+name|slice
+argument_list|(
+name|insn
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
 name|NumOpsAdded
 operator|=
-literal|1
+literal|2
 expr_stmt|;
 return|return
 name|true
@@ -4852,11 +5008,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// tLDM_UPD/tSTM_UPD: tRt tRt AM4ModeImm Pred-Imm Pred-CCR register_list
+comment|// tLDMIA_UPD/tSTMIA_UPD: tRt tRt AM4ModeImm Pred-Imm Pred-CCR register_list
 end_comment
 
 begin_comment
-comment|// tLDM:              tRt AM4ModeImm Pred-Imm Pred-CCR register_list
+comment|// tLDMIA:                tRt AM4ModeImm Pred-Imm Pred-CCR register_list
 end_comment
 
 begin_function
@@ -4896,30 +5052,24 @@ name|Opcode
 operator|==
 name|ARM
 operator|::
-name|tLDM
+name|tLDMIA
 operator|||
 name|Opcode
 operator|==
 name|ARM
 operator|::
-name|tLDM_UPD
+name|tLDMIA_UPD
 operator|||
 name|Opcode
 operator|==
 name|ARM
 operator|::
-name|tSTM_UPD
+name|tSTMIA_UPD
 operator|)
 operator|&&
 literal|"Unexpected opcode"
 argument_list|)
 expr_stmt|;
-name|unsigned
-modifier|&
-name|OpIdx
-init|=
-name|NumOpsAdded
-decl_stmt|;
 name|unsigned
 name|tRt
 init|=
@@ -4928,7 +5078,7 @@ argument_list|(
 name|insn
 argument_list|)
 decl_stmt|;
-name|OpIdx
+name|NumOpsAdded
 operator|=
 literal|0
 expr_stmt|;
@@ -4939,13 +5089,13 @@ name|Opcode
 operator|==
 name|ARM
 operator|::
-name|tLDM_UPD
+name|tLDMIA_UPD
 operator|||
 name|Opcode
 operator|==
 name|ARM
 operator|::
-name|tSTM_UPD
+name|tSTMIA_UPD
 condition|)
 block|{
 name|MI
@@ -4970,7 +5120,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 operator|++
-name|OpIdx
+name|NumOpsAdded
 expr_stmt|;
 block|}
 name|MI
@@ -4995,31 +5145,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 operator|++
-name|OpIdx
-expr_stmt|;
-comment|// A8.6.53 LDM / LDMIA / LDMFD - Encoding T1
-comment|// A8.6.53 STM / STMIA / STMEA - Encoding T1
-name|MI
-operator|.
-name|addOperand
-argument_list|(
-name|MCOperand
-operator|::
-name|CreateImm
-argument_list|(
-name|ARM_AM
-operator|::
-name|getAM4ModeImm
-argument_list|(
-name|ARM_AM
-operator|::
-name|ia
-argument_list|)
-argument_list|)
-argument_list|)
-expr_stmt|;
-operator|++
-name|OpIdx
+name|NumOpsAdded
 expr_stmt|;
 comment|// Handling the two predicate operands before the reglist.
 if|if
@@ -5037,10 +5163,12 @@ argument_list|,
 name|NumOps
 argument_list|)
 condition|)
-name|OpIdx
+block|{
+name|NumOpsAdded
 operator|+=
 literal|2
 expr_stmt|;
+block|}
 else|else
 block|{
 name|DEBUG
@@ -5082,7 +5210,6 @@ condition|;
 operator|++
 name|i
 control|)
-block|{
 if|if
 condition|(
 operator|(
@@ -5116,9 +5243,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 operator|++
-name|OpIdx
+name|NumOpsAdded
 expr_stmt|;
-block|}
 block|}
 return|return
 name|true
@@ -5541,31 +5667,31 @@ comment|// Table A6-1 16-bit Thumb instruction encoding (abridged)
 end_comment
 
 begin_comment
-comment|// op		Instruction or instruction class
+comment|// op    Instruction or instruction class
 end_comment
 
 begin_comment
-comment|// ------	--------------------------------------------------------------------
+comment|// ------  --------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|// 00xxxx	Shift (immediate), add, subtract, move, and compare on page A6-7
+comment|// 00xxxx  Shift (immediate), add, subtract, move, and compare on page A6-7
 end_comment
 
 begin_comment
-comment|// 010000	Data-processing on page A6-8
+comment|// 010000  Data-processing on page A6-8
 end_comment
 
 begin_comment
-comment|// 010001	Special data instructions and branch and exchange on page A6-9
+comment|// 010001  Special data instructions and branch and exchange on page A6-9
 end_comment
 
 begin_comment
-comment|// 01001x	Load from Literal Pool, see LDR (literal) on page A8-122
+comment|// 01001x  Load from Literal Pool, see LDR (literal) on page A8-122
 end_comment
 
 begin_comment
-comment|// 0101xx	Load/store single data item on page A6-10
+comment|// 0101xx  Load/store single data item on page A6-10
 end_comment
 
 begin_comment
@@ -5577,31 +5703,35 @@ comment|// 100xxx
 end_comment
 
 begin_comment
-comment|// 10100x	Generate PC-relative address, see ADR on page A8-32
+comment|// 10100x  Generate PC-relative address, see ADR on page A8-32
 end_comment
 
 begin_comment
-comment|// 10101x	Generate SP-relative address, see ADD (SP plus immediate) on page A8-28
+comment|// 10101x  Generate SP-relative address, see ADD (SP plus immediate) on
 end_comment
 
 begin_comment
-comment|// 1011xx	Miscellaneous 16-bit instructions on page A6-11
+comment|//         page A8-28
 end_comment
 
 begin_comment
-comment|// 11000x	Store multiple registers, see STM / STMIA / STMEA on page A8-374
+comment|// 1011xx  Miscellaneous 16-bit instructions on page A6-11
 end_comment
 
 begin_comment
-comment|// 11001x	Load multiple registers, see LDM / LDMIA / LDMFD on page A8-110 a
+comment|// 11000x  Store multiple registers, see STM / STMIA / STMEA on page A8-374
 end_comment
 
 begin_comment
-comment|// 1101xx	Conditional branch, and Supervisor Call on page A6-13
+comment|// 11001x  Load multiple registers, see LDM / LDMIA / LDMFD on page A8-110 a
 end_comment
 
 begin_comment
-comment|// 11100x	Unconditional Branch, see B on page A8-44
+comment|// 1101xx  Conditional branch, and Supervisor Call on page A6-13
+end_comment
+
+begin_comment
+comment|// 11100x  Unconditional Branch, see B on page A8-44
 end_comment
 
 begin_comment
@@ -6383,25 +6513,49 @@ name|Opcode
 operator|==
 name|ARM
 operator|::
-name|t2LDM
+name|t2LDMIA
 operator|||
 name|Opcode
 operator|==
 name|ARM
 operator|::
-name|t2LDM_UPD
+name|t2LDMIA_UPD
 operator|||
 name|Opcode
 operator|==
 name|ARM
 operator|::
-name|t2STM
+name|t2LDMDB
 operator|||
 name|Opcode
 operator|==
 name|ARM
 operator|::
-name|t2STM_UPD
+name|t2LDMDB_UPD
+operator|||
+name|Opcode
+operator|==
+name|ARM
+operator|::
+name|t2STMIA
+operator|||
+name|Opcode
+operator|==
+name|ARM
+operator|::
+name|t2STMIA_UPD
+operator|||
+name|Opcode
+operator|==
+name|ARM
+operator|::
+name|t2STMDB
+operator|||
+name|Opcode
+operator|==
+name|ARM
+operator|::
+name|t2STMDB_UPD
 operator|)
 operator|&&
 literal|"Unexpected opcode"
@@ -6416,13 +6570,7 @@ operator|&&
 literal|"Thumb2 LdStMul expects NumOps>= 5"
 argument_list|)
 expr_stmt|;
-name|unsigned
-modifier|&
-name|OpIdx
-init|=
 name|NumOpsAdded
-decl_stmt|;
-name|OpIdx
 operator|=
 literal|0
 expr_stmt|;
@@ -6450,13 +6598,25 @@ name|Opcode
 operator|==
 name|ARM
 operator|::
-name|t2LDM_UPD
+name|t2LDMIA_UPD
 operator|||
 name|Opcode
 operator|==
 name|ARM
 operator|::
-name|t2STM_UPD
+name|t2LDMDB_UPD
+operator|||
+name|Opcode
+operator|==
+name|ARM
+operator|::
+name|t2STMIA_UPD
+operator|||
+name|Opcode
+operator|==
+name|ARM
+operator|::
+name|t2STMDB_UPD
 condition|)
 block|{
 name|MI
@@ -6472,7 +6632,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 operator|++
-name|OpIdx
+name|NumOpsAdded
 expr_stmt|;
 block|}
 name|MI
@@ -6488,40 +6648,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 operator|++
-name|OpIdx
-expr_stmt|;
-name|ARM_AM
-operator|::
-name|AMSubMode
-name|SubMode
-operator|=
-name|getAMSubModeForBits
-argument_list|(
-name|getPUBits
-argument_list|(
-name|insn
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|MI
-operator|.
-name|addOperand
-argument_list|(
-name|MCOperand
-operator|::
-name|CreateImm
-argument_list|(
-name|ARM_AM
-operator|::
-name|getAM4ModeImm
-argument_list|(
-name|SubMode
-argument_list|)
-argument_list|)
-argument_list|)
-expr_stmt|;
-operator|++
-name|OpIdx
+name|NumOpsAdded
 expr_stmt|;
 comment|// Handling the two predicate operands before the reglist.
 if|if
@@ -6539,10 +6666,12 @@ argument_list|,
 name|NumOps
 argument_list|)
 condition|)
-name|OpIdx
+block|{
+name|NumOpsAdded
 operator|+=
 literal|2
 expr_stmt|;
+block|}
 else|else
 block|{
 name|DEBUG
@@ -6587,7 +6716,6 @@ condition|;
 operator|++
 name|i
 control|)
-block|{
 if|if
 condition|(
 operator|(
@@ -6621,9 +6749,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 operator|++
-name|OpIdx
+name|NumOpsAdded
 expr_stmt|;
-block|}
 block|}
 return|return
 name|true
@@ -7186,31 +7313,7 @@ block|}
 end_function
 
 begin_comment
-comment|// PC-based defined for Codegen, which do not get decoded by design:
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// t2TBB, t2TBH: Rm immDontCare immDontCare
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Generic version defined for disassembly:
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// t2TBBgen, t2TBHgen: Rn Rm Pred-Imm Pred-CCR
+comment|// t2TBB, t2TBH: Rn Rm Pred-Imm Pred-CCR
 end_comment
 
 begin_function
@@ -8036,7 +8139,11 @@ comment|// One register operands (Rs=0b1111 no explicit dest reg): Rn ModImm
 end_comment
 
 begin_comment
-comment|// One register operands (Rn=0b1111 no explicit src reg): Rs ModImm - {t2MOVi, t2MVNi}
+comment|// One register operands (Rn=0b1111 no explicit src reg): Rs ModImm -
+end_comment
+
+begin_comment
+comment|// {t2MOVi, t2MVNi}
 end_comment
 
 begin_comment
@@ -9395,65 +9502,19 @@ return|;
 default|default:
 break|break;
 block|}
-comment|// CPS has a singleton $opt operand that contains the following information:
-comment|// opt{4-0} = mode from Inst{4-0}
-comment|// opt{5} = changemode from Inst{8}
-comment|// opt{8-6} = AIF from Inst{7-5}
-comment|// opt{10-9} = imod from Inst{10-9} with 0b10 as enable and 0b11 as disable
+comment|// FIXME: To enable correct asm parsing and disasm of CPS we need 3 different
+comment|// opcodes which match the same real instruction. This is needed since there's
+comment|// no current handling of optional arguments. Fix here when a better handling
+comment|// of optional arguments is implemented.
 if|if
 condition|(
 name|Opcode
 operator|==
 name|ARM
 operator|::
-name|t2CPS
+name|t2CPS3p
 condition|)
 block|{
-name|unsigned
-name|Option
-init|=
-name|slice
-argument_list|(
-name|insn
-argument_list|,
-literal|4
-argument_list|,
-literal|0
-argument_list|)
-operator||
-name|slice
-argument_list|(
-name|insn
-argument_list|,
-literal|8
-argument_list|,
-literal|8
-argument_list|)
-operator|<<
-literal|5
-operator||
-name|slice
-argument_list|(
-name|insn
-argument_list|,
-literal|7
-argument_list|,
-literal|5
-argument_list|)
-operator|<<
-literal|6
-operator||
-name|slice
-argument_list|(
-name|insn
-argument_list|,
-literal|10
-argument_list|,
-literal|9
-argument_list|)
-operator|<<
-literal|9
-decl_stmt|;
 name|MI
 operator|.
 name|addOperand
@@ -9462,10 +9523,152 @@ name|MCOperand
 operator|::
 name|CreateImm
 argument_list|(
-name|Option
+name|slice
+argument_list|(
+name|insn
+argument_list|,
+literal|10
+argument_list|,
+literal|9
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|// imod
+name|MI
+operator|.
+name|addOperand
+argument_list|(
+name|MCOperand
+operator|::
+name|CreateImm
+argument_list|(
+name|slice
+argument_list|(
+name|insn
+argument_list|,
+literal|7
+argument_list|,
+literal|5
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|// iflags
+name|MI
+operator|.
+name|addOperand
+argument_list|(
+name|MCOperand
+operator|::
+name|CreateImm
+argument_list|(
+name|slice
+argument_list|(
+name|insn
+argument_list|,
+literal|4
+argument_list|,
+literal|0
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|// mode
+name|NumOpsAdded
+operator|=
+literal|3
+expr_stmt|;
+return|return
+name|true
+return|;
+block|}
+if|if
+condition|(
+name|Opcode
+operator|==
+name|ARM
+operator|::
+name|t2CPS2p
+condition|)
+block|{
+name|MI
+operator|.
+name|addOperand
+argument_list|(
+name|MCOperand
+operator|::
+name|CreateImm
+argument_list|(
+name|slice
+argument_list|(
+name|insn
+argument_list|,
+literal|10
+argument_list|,
+literal|9
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|// imod
+name|MI
+operator|.
+name|addOperand
+argument_list|(
+name|MCOperand
+operator|::
+name|CreateImm
+argument_list|(
+name|slice
+argument_list|(
+name|insn
+argument_list|,
+literal|7
+argument_list|,
+literal|5
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|// iflags
+name|NumOpsAdded
+operator|=
+literal|2
+expr_stmt|;
+return|return
+name|true
+return|;
+block|}
+if|if
+condition|(
+name|Opcode
+operator|==
+name|ARM
+operator|::
+name|t2CPS1p
+condition|)
+block|{
+name|MI
+operator|.
+name|addOperand
+argument_list|(
+name|MCOperand
+operator|::
+name|CreateImm
+argument_list|(
+name|slice
+argument_list|(
+name|insn
+argument_list|,
+literal|4
+argument_list|,
+literal|0
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|// mode
 name|NumOpsAdded
 operator|=
 literal|1
@@ -9601,7 +9804,8 @@ return|return
 name|true
 return|;
 block|}
-comment|// MSR and MSRsys take one GPR reg Rn, followed by the mask.
+comment|// MSR take a mask, followed by one GPR reg Rn. The mask contains the R Bit in
+comment|// bit 4, and the special register fields in bits 3-0.
 if|if
 condition|(
 name|Opcode
@@ -9609,20 +9813,40 @@ operator|==
 name|ARM
 operator|::
 name|t2MSR
-operator|||
-name|Opcode
-operator|==
-name|ARM
-operator|::
-name|t2MSRsys
-operator|||
-name|Opcode
-operator|==
-name|ARM
-operator|::
-name|t2BXJ
 condition|)
 block|{
+name|MI
+operator|.
+name|addOperand
+argument_list|(
+name|MCOperand
+operator|::
+name|CreateImm
+argument_list|(
+name|slice
+argument_list|(
+name|insn
+argument_list|,
+literal|20
+argument_list|,
+literal|20
+argument_list|)
+operator|<<
+literal|4
+comment|/* R Bit */
+operator||
+name|slice
+argument_list|(
+name|insn
+argument_list|,
+literal|11
+argument_list|,
+literal|8
+argument_list|)
+comment|/* Special Reg */
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|MI
 operator|.
 name|addOperand
@@ -9643,25 +9867,6 @@ name|decodeRn
 argument_list|(
 name|insn
 argument_list|)
-argument_list|)
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|MI
-operator|.
-name|addOperand
-argument_list|(
-name|MCOperand
-operator|::
-name|CreateImm
-argument_list|(
-name|slice
-argument_list|(
-name|insn
-argument_list|,
-literal|11
-argument_list|,
-literal|8
 argument_list|)
 argument_list|)
 argument_list|)
@@ -9846,16 +10051,6 @@ case|:
 case|case
 name|ARM
 operator|::
-name|t2PLDpci
-case|:
-case|case
-name|ARM
-operator|::
-name|t2PLDr
-case|:
-case|case
-name|ARM
-operator|::
 name|t2PLDs
 case|:
 case|case
@@ -9871,16 +10066,6 @@ case|:
 case|case
 name|ARM
 operator|::
-name|t2PLDWpci
-case|:
-case|case
-name|ARM
-operator|::
-name|t2PLDWr
-case|:
-case|case
-name|ARM
-operator|::
 name|t2PLDWs
 case|:
 case|case
@@ -9892,16 +10077,6 @@ case|case
 name|ARM
 operator|::
 name|t2PLIi8
-case|:
-case|case
-name|ARM
-operator|::
-name|t2PLIpci
-case|:
-case|case
-name|ARM
-operator|::
-name|t2PLIr
 case|:
 case|case
 name|ARM
@@ -10103,23 +10278,16 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
-name|Opcode
+name|slice
+argument_list|(
+name|insn
+argument_list|,
+literal|19
+argument_list|,
+literal|16
+argument_list|)
 operator|==
-name|ARM
-operator|::
-name|t2PLDpci
-operator|||
-name|Opcode
-operator|==
-name|ARM
-operator|::
-name|t2PLDWpci
-operator|||
-name|Opcode
-operator|==
-name|ARM
-operator|::
-name|t2PLIpci
+literal|0xFF
 condition|)
 block|{
 name|bool
@@ -10287,164 +10455,6 @@ block|}
 end_function
 
 begin_comment
-comment|// A8.6.63 LDRB (literal)
-end_comment
-
-begin_comment
-comment|// A8.6.79 LDRSB (literal)
-end_comment
-
-begin_comment
-comment|// A8.6.75 LDRH (literal)
-end_comment
-
-begin_comment
-comment|// A8.6.83 LDRSH (literal)
-end_comment
-
-begin_comment
-comment|// A8.6.59 LDR (literal)
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// These instrs calculate an address from the PC value and an immediate offset.
-end_comment
-
-begin_comment
-comment|// Rd Rn=PC (+/-)imm12 (+ if Inst{23} == 0b1)
-end_comment
-
-begin_function
-specifier|static
-name|bool
-name|DisassembleThumb2Ldpci
-parameter_list|(
-name|MCInst
-modifier|&
-name|MI
-parameter_list|,
-name|unsigned
-name|Opcode
-parameter_list|,
-name|uint32_t
-name|insn
-parameter_list|,
-name|unsigned
-name|short
-name|NumOps
-parameter_list|,
-name|unsigned
-modifier|&
-name|NumOpsAdded
-parameter_list|,
-name|BO
-name|B
-parameter_list|)
-block|{
-specifier|const
-name|TargetOperandInfo
-modifier|*
-name|OpInfo
-init|=
-name|ARMInsts
-index|[
-name|Opcode
-index|]
-operator|.
-name|OpInfo
-decl_stmt|;
-if|if
-condition|(
-operator|!
-name|OpInfo
-condition|)
-return|return
-name|false
-return|;
-name|assert
-argument_list|(
-name|NumOps
-operator|>=
-literal|2
-operator|&&
-name|OpInfo
-index|[
-literal|0
-index|]
-operator|.
-name|RegClass
-operator|==
-name|ARM
-operator|::
-name|GPRRegClassID
-operator|&&
-name|OpInfo
-index|[
-literal|1
-index|]
-operator|.
-name|RegClass
-operator|<
-literal|0
-operator|&&
-literal|"Expect>= 2 operands, first as reg, and second as imm operand"
-argument_list|)
-expr_stmt|;
-comment|// Build the register operand, followed by the (+/-)imm12 immediate.
-name|MI
-operator|.
-name|addOperand
-argument_list|(
-name|MCOperand
-operator|::
-name|CreateReg
-argument_list|(
-name|getRegisterEnum
-argument_list|(
-name|B
-argument_list|,
-name|ARM
-operator|::
-name|GPRRegClassID
-argument_list|,
-name|decodeRd
-argument_list|(
-name|insn
-argument_list|)
-argument_list|)
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|MI
-operator|.
-name|addOperand
-argument_list|(
-name|MCOperand
-operator|::
-name|CreateImm
-argument_list|(
-name|decodeImm12
-argument_list|(
-name|insn
-argument_list|)
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|NumOpsAdded
-operator|=
-literal|2
-expr_stmt|;
-return|return
-name|true
-return|;
-block|}
-end_function
-
-begin_comment
 comment|// A6.3.10 Store single data item
 end_comment
 
@@ -10481,7 +10491,11 @@ comment|// t2LDRi8:    Rd Rn (+/-)imm8 (+ if Inst{9} == 0b1)
 end_comment
 
 begin_comment
-comment|// t2LDRs:     Rd Rn Rm ConstantShiftSpecifier (see also DisassembleThumb2DPSoReg)
+comment|// t2LDRs:     Rd Rn Rm ConstantShiftSpecifier (see also
+end_comment
+
+begin_comment
+comment|//             DisassembleThumb2DPSoReg)
 end_comment
 
 begin_comment
@@ -10505,7 +10519,11 @@ comment|// t2STRi8:    Rd Rn (+/-)imm8 (+ if Inst{9} == 0b1)
 end_comment
 
 begin_comment
-comment|// t2STRs:     Rd Rn Rm ConstantShiftSpecifier (see also DisassembleThumb2DPSoReg)
+comment|// t2STRs:     Rd Rn Rm ConstantShiftSpecifier (see also
+end_comment
+
+begin_comment
+comment|//             DisassembleThumb2DPSoReg)
 end_comment
 
 begin_comment
@@ -11831,79 +11849,95 @@ comment|// Table A6-9 32-bit Thumb instruction encoding
 end_comment
 
 begin_comment
-comment|// op1	op2		op	Instruction class, see
+comment|// op1  op2    op  Instruction class, see
 end_comment
 
 begin_comment
-comment|// ---	-------	--	------------------------------------------------------------
+comment|// ---  -------  --  -----------------------------------------------------------
 end_comment
 
 begin_comment
-comment|// 01	00xx0xx	-	Load/store multiple on page A6-23
+comment|// 01  00xx0xx  -  Load/store multiple on page A6-23
 end_comment
 
 begin_comment
-comment|// 		00xx1xx	-	Load/store dual, load/store exclusive, table branch on page A6-24
+comment|//     00xx1xx  -  Load/store dual, load/store exclusive, table branch on
 end_comment
 
 begin_comment
-comment|// 		01xxxxx	-	Data-processing (shifted register) on page A6-31
+comment|//                 page A6-24
 end_comment
 
 begin_comment
-comment|// 		1xxxxxx	-	Coprocessor instructions on page A6-40
+comment|//     01xxxxx  -  Data-processing (shifted register) on page A6-31
 end_comment
 
 begin_comment
-comment|// 10	x0xxxxx	0	Data-processing (modified immediate) on page A6-15
+comment|//     1xxxxxx  -  Coprocessor instructions on page A6-40
 end_comment
 
 begin_comment
-comment|// 		x1xxxxx	0	Data-processing (plain binary immediate) on page A6-19
+comment|// 10  x0xxxxx  0  Data-processing (modified immediate) on page A6-15
 end_comment
 
 begin_comment
-comment|// 		-		1	Branches and miscellaneous control on page A6-20
+comment|//     x1xxxxx  0  Data-processing (plain binary immediate) on page A6-19
 end_comment
 
 begin_comment
-comment|// 11	000xxx0	-	Store single data item on page A6-30
+comment|//         -    1  Branches and miscellaneous control on page A6-20
 end_comment
 
 begin_comment
-comment|// 		001xxx0	-	Advanced SIMD element or structure load/store instructions on page A7-27
+comment|// 11  000xxx0  -  Store single data item on page A6-30
 end_comment
 
 begin_comment
-comment|// 		00xx001 -	Load byte, memory hints on page A6-28
+comment|//     001xxx0  -  Advanced SIMD element or structure load/store instructions
 end_comment
 
 begin_comment
-comment|// 		00xx011	-	Load halfword, memory hints on page A6-26
+comment|//                 on page A7-27
 end_comment
 
 begin_comment
-comment|// 		00xx101	-	Load word on page A6-25
+comment|//     00xx001  - Load byte, memory hints on page A6-28
 end_comment
 
 begin_comment
-comment|// 		00xx111	-	UNDEFINED
+comment|//     00xx011  -  Load halfword, memory hints on page A6-26
 end_comment
 
 begin_comment
-comment|// 		010xxxx	-	Data-processing (register) on page A6-33
+comment|//     00xx101  -  Load word on page A6-25
 end_comment
 
 begin_comment
-comment|// 		0110xxx	-	Multiply, multiply accumulate, and absolute difference on page A6-38
+comment|//     00xx111  -  UNDEFINED
 end_comment
 
 begin_comment
-comment|// 		0111xxx	-	Long multiply, long multiply accumulate, and divide on page A6-39
+comment|//     010xxxx  -  Data-processing (register) on page A6-33
 end_comment
 
 begin_comment
-comment|// 		1xxxxxx	-	Coprocessor instructions on page A6-40
+comment|//     0110xxx  -  Multiply, multiply accumulate, and absolute difference on
+end_comment
+
+begin_comment
+comment|//                 page A6-38
+end_comment
+
+begin_comment
+comment|//     0111xxx  -  Long multiply, long multiply accumulate, and divide on
+end_comment
+
+begin_comment
+comment|//                 page A6-39
+end_comment
+
+begin_comment
+comment|//     1xxxxxx  -  Coprocessor instructions on page A6-40
 end_comment
 
 begin_comment
@@ -12129,13 +12163,13 @@ name|Opcode
 operator|==
 name|ARM
 operator|::
-name|t2TBBgen
+name|t2TBB
 operator|||
 name|Opcode
 operator|==
 name|ARM
 operator|::
-name|t2TBHgen
+name|t2TBH
 condition|)
 block|{
 comment|// Table branch.

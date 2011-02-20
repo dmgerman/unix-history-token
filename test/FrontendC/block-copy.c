@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* RUN: %llvmgcc %s -S -o - -emit-llvm -O3 | grep {call.*memcpy}   This should compile into a memcpy from a global, not 128 stores. */
+comment|/* RUN: %llvmgcc %s -S -o - -O3 | grep {call.*memcpy}   This should compile into a memcpy from a global, not 128 stores. */
 end_comment
 
 begin_function_decl

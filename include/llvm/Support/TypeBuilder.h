@@ -186,6 +186,11 @@ name|class
 name|ppc_fp128
 block|{}
 empty_stmt|;
+comment|// X86 MMX.
+name|class
+name|x86_mmx
+block|{}
+empty_stmt|;
 block|}
 comment|// namespace types
 comment|// LLVM doesn't have const or volatile types.
@@ -870,6 +875,43 @@ return|return
 name|Type
 operator|::
 name|getPPC_FP128Ty
+argument_list|(
+name|C
+argument_list|)
+return|;
+block|}
+expr|}
+block|;
+name|template
+operator|<
+name|bool
+name|cross
+operator|>
+name|class
+name|TypeBuilder
+operator|<
+name|types
+operator|::
+name|x86_mmx
+block|,
+name|cross
+operator|>
+block|{
+name|public
+operator|:
+specifier|static
+specifier|const
+name|Type
+operator|*
+name|get
+argument_list|(
+argument|LLVMContext& C
+argument_list|)
+block|{
+return|return
+name|Type
+operator|::
+name|getX86_MMXTy
 argument_list|(
 name|C
 argument_list|)

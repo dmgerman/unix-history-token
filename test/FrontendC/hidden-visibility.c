@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %llvmgcc %s -emit-llvm -S -o - | grep {hidden global}
+comment|// RUN: %llvmgcc %s -S -o - | grep {hidden unnamed_addr global}
 end_comment
 
 begin_decl_stmt

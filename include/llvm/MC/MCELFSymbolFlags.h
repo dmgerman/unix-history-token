@@ -92,7 +92,12 @@ comment|// Shift value for STB_* flags.
 name|ELF_STV_Shift
 init|=
 literal|8
-comment|// Shift value ofr STV_* flags.
+block|,
+comment|// Shift value for STV_* flags.
+name|ELF_Other_Shift
+init|=
+literal|10
+comment|// Shift value for other flags.
 block|}
 enum|;
 enum|enum
@@ -276,6 +281,14 @@ operator|::
 name|STV_PROTECTED
 operator|<<
 name|ELF_STV_Shift
+operator|)
+block|,
+name|ELF_Other_Weakref
+init|=
+operator|(
+literal|1
+operator|<<
+name|ELF_Other_Shift
 operator|)
 block|}
 enum|;

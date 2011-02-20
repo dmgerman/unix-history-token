@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallPtrSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallString.h"
 end_include
 
@@ -88,7 +94,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/System/DataTypes.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_include
@@ -195,6 +201,12 @@ block|,
 name|FT_Inst
 block|,
 name|FT_Org
+block|,
+name|FT_Dwarf
+block|,
+name|FT_DwarfFrame
+block|,
+name|FT_LEB
 block|}
 block|;
 name|private
@@ -223,13 +235,7 @@ comment|/// initialized.
 name|uint64_t
 name|Offset
 block|;
-comment|/// EffectiveSize - The compute size of this section. This is ~0 until
-comment|/// initialized.
-name|uint64_t
-name|EffectiveSize
-block|;
-comment|/// LayoutOrder - The global layout order of this fragment. This is the index
-comment|/// across all fragments in the file, not just within the section.
+comment|/// LayoutOrder - The layout order of this fragment.
 name|unsigned
 name|LayoutOrder
 block|;
@@ -988,15 +994,6 @@ name|EmitNops
 operator|:
 literal|1
 block|;
-comment|/// OnlyAlignAddress - Flag to indicate that this align is only used to adjust
-comment|/// the address space size of a section and that it should not be included as
-comment|/// part of the section size. This flag can only be used on the last fragment
-comment|/// in a section.
-name|bool
-name|OnlyAlignAddress
-operator|:
-literal|1
-block|;
 name|public
 operator|:
 name|MCAlignFragment
@@ -1041,11 +1038,6 @@ name|_MaxBytesToEmit
 argument_list|)
 block|,
 name|EmitNops
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|OnlyAlignAddress
 argument_list|(
 argument|false
 argument_list|)
@@ -1104,25 +1096,6 @@ argument|bool Value
 argument_list|)
 block|{
 name|EmitNops
-operator|=
-name|Value
-block|; }
-name|bool
-name|hasOnlyAlignAddress
-argument_list|()
-specifier|const
-block|{
-return|return
-name|OnlyAlignAddress
-return|;
-block|}
-name|void
-name|setOnlyAlignAddress
-argument_list|(
-argument|bool Value
-argument_list|)
-block|{
-name|OnlyAlignAddress
 operator|=
 name|Value
 block|; }
@@ -1393,6 +1366,409 @@ return|;
 block|}
 expr|}
 block|;
+name|class
+name|MCLEBFragment
+operator|:
+name|public
+name|MCFragment
+block|{
+comment|/// Value - The value this fragment should contain.
+specifier|const
+name|MCExpr
+operator|*
+name|Value
+block|;
+comment|/// IsSigned - True if this is a sleb128, false if uleb128.
+name|bool
+name|IsSigned
+block|;
+name|SmallString
+operator|<
+literal|8
+operator|>
+name|Contents
+block|;
+name|public
+operator|:
+name|MCLEBFragment
+argument_list|(
+argument|const MCExpr&Value_
+argument_list|,
+argument|bool IsSigned_
+argument_list|,
+argument|MCSectionData *SD
+argument_list|)
+operator|:
+name|MCFragment
+argument_list|(
+name|FT_LEB
+argument_list|,
+name|SD
+argument_list|)
+block|,
+name|Value
+argument_list|(
+operator|&
+name|Value_
+argument_list|)
+block|,
+name|IsSigned
+argument_list|(
+argument|IsSigned_
+argument_list|)
+block|{
+name|Contents
+operator|.
+name|push_back
+argument_list|(
+literal|0
+argument_list|)
+block|; }
+comment|/// @name Accessors
+comment|/// @{
+specifier|const
+name|MCExpr
+operator|&
+name|getValue
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|Value
+return|;
+block|}
+name|bool
+name|isSigned
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsSigned
+return|;
+block|}
+name|SmallString
+operator|<
+literal|8
+operator|>
+operator|&
+name|getContents
+argument_list|()
+block|{
+return|return
+name|Contents
+return|;
+block|}
+specifier|const
+name|SmallString
+operator|<
+literal|8
+operator|>
+operator|&
+name|getContents
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Contents
+return|;
+block|}
+comment|/// @}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const MCFragment *F
+argument_list|)
+block|{
+return|return
+name|F
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|MCFragment
+operator|::
+name|FT_LEB
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const MCLEBFragment *
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+expr|}
+block|;
+name|class
+name|MCDwarfLineAddrFragment
+operator|:
+name|public
+name|MCFragment
+block|{
+comment|/// LineDelta - the value of the difference between the two line numbers
+comment|/// between two .loc dwarf directives.
+name|int64_t
+name|LineDelta
+block|;
+comment|/// AddrDelta - The expression for the difference of the two symbols that
+comment|/// make up the address delta between two .loc dwarf directives.
+specifier|const
+name|MCExpr
+operator|*
+name|AddrDelta
+block|;
+name|SmallString
+operator|<
+literal|8
+operator|>
+name|Contents
+block|;
+name|public
+operator|:
+name|MCDwarfLineAddrFragment
+argument_list|(
+argument|int64_t _LineDelta
+argument_list|,
+argument|const MCExpr&_AddrDelta
+argument_list|,
+argument|MCSectionData *SD
+argument_list|)
+operator|:
+name|MCFragment
+argument_list|(
+name|FT_Dwarf
+argument_list|,
+name|SD
+argument_list|)
+block|,
+name|LineDelta
+argument_list|(
+name|_LineDelta
+argument_list|)
+block|,
+name|AddrDelta
+argument_list|(
+argument|&_AddrDelta
+argument_list|)
+block|{
+name|Contents
+operator|.
+name|push_back
+argument_list|(
+literal|0
+argument_list|)
+block|; }
+comment|/// @name Accessors
+comment|/// @{
+name|int64_t
+name|getLineDelta
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LineDelta
+return|;
+block|}
+specifier|const
+name|MCExpr
+operator|&
+name|getAddrDelta
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|AddrDelta
+return|;
+block|}
+name|SmallString
+operator|<
+literal|8
+operator|>
+operator|&
+name|getContents
+argument_list|()
+block|{
+return|return
+name|Contents
+return|;
+block|}
+specifier|const
+name|SmallString
+operator|<
+literal|8
+operator|>
+operator|&
+name|getContents
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Contents
+return|;
+block|}
+comment|/// @}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const MCFragment *F
+argument_list|)
+block|{
+return|return
+name|F
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|MCFragment
+operator|::
+name|FT_Dwarf
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const MCDwarfLineAddrFragment *
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+expr|}
+block|;
+name|class
+name|MCDwarfCallFrameFragment
+operator|:
+name|public
+name|MCFragment
+block|{
+comment|/// AddrDelta - The expression for the difference of the two symbols that
+comment|/// make up the address delta between two .cfi_* dwarf directives.
+specifier|const
+name|MCExpr
+operator|*
+name|AddrDelta
+block|;
+name|SmallString
+operator|<
+literal|8
+operator|>
+name|Contents
+block|;
+name|public
+operator|:
+name|MCDwarfCallFrameFragment
+argument_list|(
+specifier|const
+name|MCExpr
+operator|&
+name|_AddrDelta
+argument_list|,
+name|MCSectionData
+operator|*
+name|SD
+argument_list|)
+operator|:
+name|MCFragment
+argument_list|(
+name|FT_DwarfFrame
+argument_list|,
+name|SD
+argument_list|)
+block|,
+name|AddrDelta
+argument_list|(
+argument|&_AddrDelta
+argument_list|)
+block|{
+name|Contents
+operator|.
+name|push_back
+argument_list|(
+literal|0
+argument_list|)
+block|; }
+comment|/// @name Accessors
+comment|/// @{
+specifier|const
+name|MCExpr
+operator|&
+name|getAddrDelta
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|AddrDelta
+return|;
+block|}
+name|SmallString
+operator|<
+literal|8
+operator|>
+operator|&
+name|getContents
+argument_list|()
+block|{
+return|return
+name|Contents
+return|;
+block|}
+specifier|const
+name|SmallString
+operator|<
+literal|8
+operator|>
+operator|&
+name|getContents
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Contents
+return|;
+block|}
+comment|/// @}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const MCFragment *F
+argument_list|)
+block|{
+return|return
+name|F
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|MCFragment
+operator|::
+name|FT_DwarfFrame
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const MCDwarfCallFrameFragment *
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+expr|}
+block|;
 comment|// FIXME: Should this be a separate class, or just merged into MCSection? Since
 comment|// we anticipate the fast path being through an MCAssembler, the only reason to
 comment|// keep it out is for API abstraction.
@@ -1454,132 +1830,52 @@ operator|::
 name|const_reverse_iterator
 name|const_reverse_iterator
 expr_stmt|;
-end_decl_stmt
-
-begin_typedef
 typedef|typedef
 name|FragmentListType
 operator|::
 name|reverse_iterator
 name|reverse_iterator
 expr_stmt|;
-end_typedef
-
-begin_label
 name|private
-label|:
-end_label
-
-begin_decl_stmt
+operator|:
 name|FragmentListType
 name|Fragments
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 specifier|const
 name|MCSection
-modifier|*
+operator|*
 name|Section
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/// Ordinal - The section index in the assemblers section list.
-end_comment
-
-begin_decl_stmt
 name|unsigned
 name|Ordinal
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/// LayoutOrder - The index of this section in the layout order.
-end_comment
-
-begin_decl_stmt
 name|unsigned
 name|LayoutOrder
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/// Alignment - The maximum alignment seen in this section.
-end_comment
-
-begin_decl_stmt
 name|unsigned
 name|Alignment
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/// @name Assembler Backend Data
-end_comment
-
-begin_comment
 comment|/// @{
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// FIXME: This could all be kept private to the assembler implementation.
-end_comment
-
-begin_comment
-comment|/// Address - The computed address of this section. This is ~0 until
-end_comment
-
-begin_comment
-comment|/// initialized.
-end_comment
-
-begin_decl_stmt
-name|uint64_t
-name|Address
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// HasInstructions - Whether this section has had instructions emitted into
-end_comment
-
-begin_comment
 comment|/// it.
-end_comment
-
-begin_decl_stmt
 name|unsigned
 name|HasInstructions
-range|:
+operator|:
 literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/// @}
-end_comment
-
-begin_label
 name|public
-label|:
-end_label
-
-begin_comment
+operator|:
 comment|// Only for use as sentinel.
-end_comment
-
-begin_expr_stmt
 name|MCSectionData
 argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+block|;
 name|MCSectionData
 argument_list|(
 specifier|const
@@ -1593,10 +1889,7 @@ name|A
 operator|=
 literal|0
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+block|;
 specifier|const
 name|MCSection
 operator|&
@@ -1609,9 +1902,6 @@ operator|*
 name|Section
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|unsigned
 name|getAlignment
 argument_list|()
@@ -1621,24 +1911,16 @@ return|return
 name|Alignment
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|setAlignment
-parameter_list|(
-name|unsigned
-name|Value
-parameter_list|)
+argument_list|(
+argument|unsigned Value
+argument_list|)
 block|{
 name|Alignment
 operator|=
 name|Value
-expr_stmt|;
-block|}
-end_function
-
-begin_expr_stmt
+block|; }
 name|bool
 name|hasInstructions
 argument_list|()
@@ -1648,24 +1930,16 @@ return|return
 name|HasInstructions
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|setHasInstructions
-parameter_list|(
-name|bool
-name|Value
-parameter_list|)
+argument_list|(
+argument|bool Value
+argument_list|)
 block|{
 name|HasInstructions
 operator|=
 name|Value
-expr_stmt|;
-block|}
-end_function
-
-begin_expr_stmt
+block|; }
 name|unsigned
 name|getOrdinal
 argument_list|()
@@ -1675,24 +1949,16 @@ return|return
 name|Ordinal
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|setOrdinal
-parameter_list|(
-name|unsigned
-name|Value
-parameter_list|)
+argument_list|(
+argument|unsigned Value
+argument_list|)
 block|{
 name|Ordinal
 operator|=
 name|Value
-expr_stmt|;
-block|}
-end_function
-
-begin_expr_stmt
+block|; }
 name|unsigned
 name|getLayoutOrder
 argument_list|()
@@ -1702,32 +1968,18 @@ return|return
 name|LayoutOrder
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|setLayoutOrder
-parameter_list|(
-name|unsigned
-name|Value
-parameter_list|)
+argument_list|(
+argument|unsigned Value
+argument_list|)
 block|{
 name|LayoutOrder
 operator|=
 name|Value
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
+block|; }
 comment|/// @name Fragment Access
-end_comment
-
-begin_comment
 comment|/// @{
-end_comment
-
-begin_expr_stmt
 specifier|const
 name|FragmentListType
 operator|&
@@ -1739,24 +1991,18 @@ return|return
 name|Fragments
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|FragmentListType
-modifier|&
+operator|&
 name|getFragmentList
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|Fragments
 return|;
 block|}
-end_function
-
-begin_function
 name|iterator
 name|begin
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|Fragments
@@ -1765,9 +2011,6 @@ name|begin
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|const_iterator
 name|begin
 argument_list|()
@@ -1780,12 +2023,9 @@ name|begin
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|iterator
 name|end
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|Fragments
@@ -1794,9 +2034,6 @@ name|end
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|const_iterator
 name|end
 argument_list|()
@@ -1809,12 +2046,9 @@ name|end
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|reverse_iterator
 name|rbegin
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|Fragments
@@ -1823,9 +2057,6 @@ name|rbegin
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|const_reverse_iterator
 name|rbegin
 argument_list|()
@@ -1838,12 +2069,9 @@ name|rbegin
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|reverse_iterator
 name|rend
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|Fragments
@@ -1852,9 +2080,6 @@ name|rend
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|const_reverse_iterator
 name|rend
 argument_list|()
@@ -1867,9 +2092,6 @@ name|rend
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|size_t
 name|size
 argument_list|()
@@ -1882,9 +2104,6 @@ name|size
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|bool
 name|empty
 argument_list|()
@@ -1897,28 +2116,17 @@ name|empty
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_function_decl
 name|void
 name|dump
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
+argument_list|()
+block|;
 comment|/// @}
-end_comment
-
-begin_comment
-unit|};
+block|}
+block|;
 comment|// FIXME: Same concerns as with SectionData.
-end_comment
-
-begin_decl_stmt
 name|class
 name|MCSymbolData
-range|:
+operator|:
 name|public
 name|ilist_node
 operator|<
@@ -2252,39 +2460,29 @@ name|void
 name|dump
 argument_list|()
 block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|// FIXME: This really doesn't belong here. See comments below.
-end_comment
-
-begin_struct
-struct|struct
+block|struct
 name|IndirectSymbolData
 block|{
 name|MCSymbol
-modifier|*
+operator|*
 name|Symbol
-decl_stmt|;
+block|;
 name|MCSectionData
-modifier|*
+operator|*
 name|SectionData
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_decl_stmt
+block|; }
+block|;
 name|class
 name|MCAssembler
 block|{
 name|friend
 name|class
 name|MCAsmLayout
-decl_stmt|;
+block|;
 name|public
-label|:
+operator|:
 typedef|typedef
 name|iplist
 operator|<
@@ -2299,30 +2497,45 @@ name|MCSymbolData
 operator|>
 name|SymbolDataListType
 expr_stmt|;
+end_decl_stmt
+
+begin_typedef
 typedef|typedef
 name|SectionDataListType
 operator|::
 name|const_iterator
 name|const_iterator
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|SectionDataListType
 operator|::
 name|iterator
 name|iterator
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|SymbolDataListType
 operator|::
 name|const_iterator
 name|const_symbol_iterator
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|SymbolDataListType
 operator|::
 name|iterator
 name|symbol_iterator
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|std
 operator|::
@@ -2334,6 +2547,9 @@ operator|::
 name|const_iterator
 name|const_indirect_symbol_iterator
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|std
 operator|::
@@ -2345,8 +2561,14 @@ operator|::
 name|iterator
 name|indirect_symbol_iterator
 expr_stmt|;
+end_typedef
+
+begin_label
 name|private
 label|:
+end_label
+
+begin_expr_stmt
 name|MCAssembler
 argument_list|(
 specifier|const
@@ -2354,7 +2576,13 @@ name|MCAssembler
 operator|&
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// DO NOT IMPLEMENT
+end_comment
+
+begin_decl_stmt
 name|void
 name|operator
 init|=
@@ -2364,38 +2592,78 @@ name|MCAssembler
 operator|&
 operator|)
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// DO NOT IMPLEMENT
+end_comment
+
+begin_decl_stmt
 name|MCContext
 modifier|&
 name|Context
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|TargetAsmBackend
 modifier|&
 name|Backend
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|MCCodeEmitter
 modifier|&
 name|Emitter
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|MCObjectWriter
+modifier|&
+name|Writer
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|raw_ostream
 modifier|&
 name|OS
 decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
 name|iplist
 operator|<
 name|MCSectionData
 operator|>
 name|Sections
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|iplist
 operator|<
 name|MCSymbolData
 operator|>
 name|Symbols
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// The map of sections to their associated assembler backend data.
+end_comment
+
+begin_comment
 comment|//
+end_comment
+
+begin_comment
 comment|// FIXME: Avoid this indirection?
+end_comment
+
+begin_expr_stmt
 name|DenseMap
 operator|<
 specifier|const
@@ -2407,9 +2675,21 @@ operator|*
 operator|>
 name|SectionMap
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// The map of symbols to their associated assembler backend data.
+end_comment
+
+begin_comment
 comment|//
+end_comment
+
+begin_comment
 comment|// FIXME: Avoid this indirection?
+end_comment
+
+begin_expr_stmt
 name|DenseMap
 operator|<
 specifier|const
@@ -2421,6 +2701,9 @@ operator|*
 operator|>
 name|SymbolMap
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|std
 operator|::
 name|vector
@@ -2429,31 +2712,131 @@ name|IndirectSymbolData
 operator|>
 name|IndirectSymbols
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// The set of function symbols for which a .thumb_func directive has
+end_comment
+
+begin_comment
+comment|/// been seen.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// FIXME: We really would like this in target specific code rather than
+end_comment
+
+begin_comment
+comment|// here. Maybe when the relocation stuff moves to target specific,
+end_comment
+
+begin_comment
+comment|// this can go with it? The streamer would need some target specific
+end_comment
+
+begin_comment
+comment|// refactoring too.
+end_comment
+
+begin_expr_stmt
+name|SmallPtrSet
+operator|<
+specifier|const
+name|MCSymbol
+operator|*
+operator|,
+literal|64
+operator|>
+name|ThumbFuncs
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|unsigned
 name|RelaxAll
 range|:
 literal|1
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|unsigned
+name|NoExecStack
+range|:
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|unsigned
 name|SubsectionsViaSymbols
 range|:
 literal|1
 decl_stmt|;
+end_decl_stmt
+
+begin_label
 name|private
 label|:
+end_label
+
+begin_comment
 comment|/// Evaluate a fixup to a relocatable expression and the value which should be
+end_comment
+
+begin_comment
 comment|/// placed into the fixup.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \param Layout The layout to use for evaluation.
+end_comment
+
+begin_comment
 comment|/// \param Fixup The fixup to evaluate.
+end_comment
+
+begin_comment
 comment|/// \param DF The fragment the fixup is inside.
+end_comment
+
+begin_comment
 comment|/// \param Target [out] On return, the relocatable expression the fixup
+end_comment
+
+begin_comment
 comment|/// evaluates to.
+end_comment
+
+begin_comment
 comment|/// \param Value [out] On return, the value of the fixup as currently layed
+end_comment
+
+begin_comment
 comment|/// out.
+end_comment
+
+begin_comment
 comment|/// \return Whether the fixup value was fully resolved. This is true if the
+end_comment
+
+begin_comment
 comment|/// \arg Value result is fixed, otherwise the value may change due to
+end_comment
+
+begin_comment
 comment|/// relocation.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|EvaluateFixup
 argument_list|(
@@ -2482,8 +2865,17 @@ name|Value
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Check whether a fixup can be satisfied, or whether it needs to be relaxed
+end_comment
+
+begin_comment
 comment|/// (increased in size, in order to hold its value correctly).
+end_comment
+
+begin_decl_stmt
 name|bool
 name|FixupNeedsRelaxation
 argument_list|(
@@ -2504,7 +2896,13 @@ name|Layout
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Check whether the given fragment needs relaxation.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|FragmentNeedsRelaxation
 argument_list|(
@@ -2520,30 +2918,17 @@ name|Layout
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// Compute the effective fragment size assuming it is layed out at the given
-comment|/// \arg SectionAddress and \arg FragmentOffset.
-name|uint64_t
-name|ComputeFragmentSize
-argument_list|(
-name|MCAsmLayout
-operator|&
-name|Layout
-argument_list|,
-specifier|const
-name|MCFragment
-operator|&
-name|F
-argument_list|,
-name|uint64_t
-name|SectionAddress
-argument_list|,
-name|uint64_t
-name|FragmentOffset
-argument_list|)
-decl|const
-decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// LayoutOnce - Perform one layout iteration and return true if any offsets
+end_comment
+
+begin_comment
 comment|/// were adjusted.
+end_comment
+
+begin_function_decl
 name|bool
 name|LayoutOnce
 parameter_list|(
@@ -2552,7 +2937,88 @@ modifier|&
 name|Layout
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
+name|LayoutSectionOnce
+parameter_list|(
+name|MCAsmLayout
+modifier|&
+name|Layout
+parameter_list|,
+name|MCSectionData
+modifier|&
+name|SD
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
+name|RelaxInstruction
+parameter_list|(
+name|MCAsmLayout
+modifier|&
+name|Layout
+parameter_list|,
+name|MCInstFragment
+modifier|&
+name|IF
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
+name|RelaxLEB
+parameter_list|(
+name|MCAsmLayout
+modifier|&
+name|Layout
+parameter_list|,
+name|MCLEBFragment
+modifier|&
+name|IF
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
+name|RelaxDwarfLineAddr
+parameter_list|(
+name|MCAsmLayout
+modifier|&
+name|Layout
+parameter_list|,
+name|MCDwarfLineAddrFragment
+modifier|&
+name|DF
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
+name|RelaxDwarfCallFrameFragment
+parameter_list|(
+name|MCAsmLayout
+modifier|&
+name|Layout
+parameter_list|,
+name|MCDwarfCallFrameFragment
+modifier|&
+name|DF
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// FinishLayout - Finalize a layout, including fragment lowering.
+end_comment
+
+begin_function_decl
 name|void
 name|FinishLayout
 parameter_list|(
@@ -2561,14 +3027,45 @@ modifier|&
 name|Layout
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint64_t
+name|HandleFixup
+parameter_list|(
+specifier|const
+name|MCAsmLayout
+modifier|&
+name|Layout
+parameter_list|,
+name|MCFragment
+modifier|&
+name|F
+parameter_list|,
+specifier|const
+name|MCFixup
+modifier|&
+name|Fixup
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_label
 name|public
 label|:
-comment|/// Find the symbol which defines the atom containing the given symbol, or
-comment|/// null if there is no such symbol.
-specifier|const
-name|MCSymbolData
-modifier|*
-name|getAtom
+end_label
+
+begin_comment
+comment|/// Compute the effective fragment size assuming it is layed out at the given
+end_comment
+
+begin_comment
+comment|/// \arg SectionAddress and \arg FragmentOffset.
+end_comment
+
+begin_decl_stmt
+name|uint64_t
+name|ComputeFragmentSize
 argument_list|(
 specifier|const
 name|MCAsmLayout
@@ -2576,16 +3073,54 @@ operator|&
 name|Layout
 argument_list|,
 specifier|const
+name|MCFragment
+operator|&
+name|F
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Find the symbol which defines the atom containing the given symbol, or
+end_comment
+
+begin_comment
+comment|/// null if there is no such symbol.
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|MCSymbolData
+modifier|*
+name|getAtom
+argument_list|(
+specifier|const
 name|MCSymbolData
 operator|*
 name|Symbol
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Check whether a particular symbol is visible to the linker and is required
+end_comment
+
+begin_comment
 comment|/// in the symbol table, or whether it can be discarded by the assembler. This
+end_comment
+
+begin_comment
 comment|/// also effects whether the assembler treats the label as potentially
+end_comment
+
+begin_comment
 comment|/// defining a separate atom.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|isSymbolLinkerVisible
 argument_list|(
@@ -2596,9 +3131,13 @@ name|SD
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Emit the section contents using the given object writer.
-comment|//
-comment|// FIXME: Should MCAssembler always have a reference to the object writer?
+end_comment
+
+begin_decl_stmt
 name|void
 name|WriteSectionData
 argument_list|(
@@ -2611,58 +3150,132 @@ specifier|const
 name|MCAsmLayout
 operator|&
 name|Layout
-argument_list|,
-name|MCObjectWriter
-operator|*
-name|OW
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Check whether a given symbol has been flagged with .thumb_func.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|isThumbFunc
+argument_list|(
+specifier|const
+name|MCSymbol
+operator|*
+name|Func
+argument_list|)
+decl|const
+block|{
+return|return
+name|ThumbFuncs
+operator|.
+name|count
+argument_list|(
+name|Func
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// Flag a function symbol as the target of a .thumb_func directive.
+end_comment
+
+begin_function
 name|void
-name|AddSectionToTheEnd
+name|setIsThumbFunc
 parameter_list|(
-name|MCSectionData
-modifier|&
-name|SD
-parameter_list|,
-name|MCAsmLayout
-modifier|&
-name|Layout
+specifier|const
+name|MCSymbol
+modifier|*
+name|Func
 parameter_list|)
-function_decl|;
+block|{
+name|ThumbFuncs
+operator|.
+name|insert
+argument_list|(
+name|Func
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_label
 name|public
 label|:
+end_label
+
+begin_comment
 comment|/// Construct a new assembler instance.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \arg OS - The stream to output to.
+end_comment
+
+begin_comment
 comment|//
+end_comment
+
+begin_comment
 comment|// FIXME: How are we going to parameterize this? Two obvious options are stay
+end_comment
+
+begin_comment
 comment|// concrete and require clients to pass in a target like object. The other
+end_comment
+
+begin_comment
 comment|// option is to make this abstract, and have targets provide concrete
+end_comment
+
+begin_comment
 comment|// implementations as we do with AsmParser.
+end_comment
+
+begin_expr_stmt
 name|MCAssembler
 argument_list|(
 name|MCContext
 operator|&
-name|_Context
+name|Context_
 argument_list|,
 name|TargetAsmBackend
 operator|&
-name|_Backend
+name|Backend_
 argument_list|,
 name|MCCodeEmitter
 operator|&
-name|_Emitter
+name|Emitter_
+argument_list|,
+name|MCObjectWriter
+operator|&
+name|Writer_
 argument_list|,
 name|raw_ostream
 operator|&
 name|OS
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 operator|~
 name|MCAssembler
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|MCContext
 operator|&
 name|getContext
@@ -2673,6 +3286,9 @@ return|return
 name|Context
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|TargetAsmBackend
 operator|&
 name|getBackend
@@ -2683,6 +3299,9 @@ return|return
 name|Backend
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|MCCodeEmitter
 operator|&
 name|getEmitter
@@ -2693,20 +3312,45 @@ return|return
 name|Emitter
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|MCObjectWriter
+operator|&
+name|getWriter
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Writer
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Finish - Do final processing and write the object to the output stream.
+end_comment
+
+begin_comment
 comment|/// \arg Writer is used for custom object writer (as the MCJIT does),
+end_comment
+
+begin_comment
 comment|/// if not specified it is automatically created from backend.
+end_comment
+
+begin_function_decl
 name|void
 name|Finish
-parameter_list|(
-name|MCObjectWriter
-modifier|*
-name|Writer
-init|=
-literal|0
-parameter_list|)
+parameter_list|()
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|// FIXME: This does not belong here.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|getSubsectionsViaSymbols
 argument_list|()
@@ -2716,6 +3360,9 @@ return|return
 name|SubsectionsViaSymbols
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setSubsectionsViaSymbols
 parameter_list|(
@@ -2728,6 +3375,9 @@ operator|=
 name|Value
 expr_stmt|;
 block|}
+end_function
+
+begin_expr_stmt
 name|bool
 name|getRelaxAll
 argument_list|()
@@ -2737,6 +3387,9 @@ return|return
 name|RelaxAll
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setRelaxAll
 parameter_list|(
@@ -2749,8 +3402,44 @@ operator|=
 name|Value
 expr_stmt|;
 block|}
+end_function
+
+begin_expr_stmt
+name|bool
+name|getNoExecStack
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NoExecStack
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|void
+name|setNoExecStack
+parameter_list|(
+name|bool
+name|Value
+parameter_list|)
+block|{
+name|NoExecStack
+operator|=
+name|Value
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/// @name Section List Access
+end_comment
+
+begin_comment
 comment|/// @{
+end_comment
+
+begin_expr_stmt
 specifier|const
 name|SectionDataListType
 operator|&
@@ -2762,6 +3451,9 @@ return|return
 name|Sections
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|SectionDataListType
 modifier|&
 name|getSectionList
@@ -2771,6 +3463,9 @@ return|return
 name|Sections
 return|;
 block|}
+end_function
+
+begin_function
 name|iterator
 name|begin
 parameter_list|()
@@ -2782,6 +3477,9 @@ name|begin
 argument_list|()
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 name|const_iterator
 name|begin
 argument_list|()
@@ -2794,6 +3492,9 @@ name|begin
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|iterator
 name|end
 parameter_list|()
@@ -2805,6 +3506,9 @@ name|end
 argument_list|()
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 name|const_iterator
 name|end
 argument_list|()
@@ -2817,6 +3521,9 @@ name|end
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|size_t
 name|size
 argument_list|()
@@ -2829,9 +3536,21 @@ name|size
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// @}
+end_comment
+
+begin_comment
 comment|/// @name Symbol List Access
+end_comment
+
+begin_comment
 comment|/// @{
+end_comment
+
+begin_expr_stmt
 specifier|const
 name|SymbolDataListType
 operator|&
@@ -2843,6 +3562,9 @@ return|return
 name|Symbols
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|SymbolDataListType
 modifier|&
 name|getSymbolList
@@ -2852,6 +3574,9 @@ return|return
 name|Symbols
 return|;
 block|}
+end_function
+
+begin_function
 name|symbol_iterator
 name|symbol_begin
 parameter_list|()
@@ -2863,6 +3588,9 @@ name|begin
 argument_list|()
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 name|const_symbol_iterator
 name|symbol_begin
 argument_list|()
@@ -2875,6 +3603,9 @@ name|begin
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|symbol_iterator
 name|symbol_end
 parameter_list|()
@@ -2886,6 +3617,9 @@ name|end
 argument_list|()
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 name|const_symbol_iterator
 name|symbol_end
 argument_list|()
@@ -2898,6 +3632,9 @@ name|end
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|size_t
 name|symbol_size
 argument_list|()
@@ -2910,12 +3647,33 @@ name|size
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// @}
+end_comment
+
+begin_comment
 comment|/// @name Indirect Symbol List Access
+end_comment
+
+begin_comment
 comment|/// @{
+end_comment
+
+begin_comment
 comment|// FIXME: This is a total hack, this should not be here. Once things are
+end_comment
+
+begin_comment
 comment|// factored so that the streamer has direct access to the .o writer, it can
+end_comment
+
+begin_comment
 comment|// disappear.
+end_comment
+
+begin_expr_stmt
 name|std
 operator|::
 name|vector
@@ -2930,6 +3688,9 @@ return|return
 name|IndirectSymbols
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|indirect_symbol_iterator
 name|indirect_symbol_begin
 parameter_list|()
@@ -2941,6 +3702,9 @@ name|begin
 argument_list|()
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 name|const_indirect_symbol_iterator
 name|indirect_symbol_begin
 argument_list|()
@@ -2953,6 +3717,9 @@ name|begin
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|indirect_symbol_iterator
 name|indirect_symbol_end
 parameter_list|()
@@ -2964,6 +3731,9 @@ name|end
 argument_list|()
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 name|const_indirect_symbol_iterator
 name|indirect_symbol_end
 argument_list|()
@@ -2976,6 +3746,9 @@ name|end
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|size_t
 name|indirect_symbol_size
 argument_list|()
@@ -2988,9 +3761,21 @@ name|size
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// @}
+end_comment
+
+begin_comment
 comment|/// @name Backend Data Access
+end_comment
+
+begin_comment
 comment|/// @{
+end_comment
+
+begin_decl_stmt
 name|MCSectionData
 modifier|&
 name|getSectionData
@@ -3026,6 +3811,9 @@ operator|*
 name|Entry
 return|;
 block|}
+end_decl_stmt
+
+begin_function
 name|MCSectionData
 modifier|&
 name|getOrCreateSectionData
@@ -3083,6 +3871,9 @@ operator|*
 name|Entry
 return|;
 block|}
+end_function
+
+begin_decl_stmt
 name|MCSymbolData
 modifier|&
 name|getSymbolData
@@ -3118,6 +3909,9 @@ operator|*
 name|Entry
 return|;
 block|}
+end_decl_stmt
+
+begin_function
 name|MCSymbolData
 modifier|&
 name|getOrCreateSymbolData
@@ -3179,20 +3973,21 @@ operator|*
 name|Entry
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// @}
+end_comment
+
+begin_function_decl
 name|void
 name|dump
 parameter_list|()
 function_decl|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_function_decl
 
 begin_comment
-unit|}
+unit|};  }
 comment|// end namespace llvm
 end_comment
 

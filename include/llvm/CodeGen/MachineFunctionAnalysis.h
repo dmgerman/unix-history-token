@@ -145,6 +145,18 @@ return|return
 name|OptLevel
 return|;
 block|}
+name|virtual
+specifier|const
+name|char
+operator|*
+name|getPassName
+argument_list|()
+specifier|const
+block|{
+return|return
+literal|"Machine Function Analysis"
+return|;
+block|}
 name|private
 operator|:
 name|virtual

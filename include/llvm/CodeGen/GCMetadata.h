@@ -153,6 +153,12 @@ directive|include
 file|"llvm/ADT/StringMap.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/DebugLoc.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -207,11 +213,16 @@ modifier|*
 name|Label
 decl_stmt|;
 comment|//< A label.
+name|DebugLoc
+name|Loc
+decl_stmt|;
 name|GCPoint
 argument_list|(
 argument|GC::PointKind K
 argument_list|,
 argument|MCSymbol *L
+argument_list|,
+argument|DebugLoc DL
 argument_list|)
 block|:
 name|Kind
@@ -221,7 +232,12 @@ argument_list|)
 operator|,
 name|Label
 argument_list|(
-argument|L
+name|L
+argument_list|)
+operator|,
+name|Loc
+argument_list|(
+argument|DL
 argument_list|)
 block|{}
 block|}
@@ -433,6 +449,9 @@ argument_list|,
 name|MCSymbol
 operator|*
 name|Label
+argument_list|,
+name|DebugLoc
+name|DL
 argument_list|)
 block|{
 name|SafePoints
@@ -444,6 +463,8 @@ argument_list|(
 name|Kind
 argument_list|,
 name|Label
+argument_list|,
+name|DL
 argument_list|)
 argument_list|)
 expr_stmt|;

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %llvmgcc %s -S -fno-unit-at-a-time -emit-llvm -O0 -o - | not grep sabrina
+comment|// RUN: %llvmgcc %s -S -fno-unit-at-a-time -O0 -o - | not grep sabrina
 end_comment
 
 begin_comment
-comment|// RUN: %llvmgcc %s -S -funit-at-a-time -emit-llvm -O0 -o - | not grep sabrina
+comment|// RUN: %llvmgcc %s -S -funit-at-a-time -O0 -o - | not grep sabrina
 end_comment
 
 begin_function_decl

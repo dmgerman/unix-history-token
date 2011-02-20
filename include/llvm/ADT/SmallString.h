@@ -99,6 +99,30 @@ comment|// Default ctor - Initialize to empty.
 name|SmallString
 argument_list|()
 block|{}
+comment|// Initialize from a StringRef.
+name|SmallString
+argument_list|(
+argument|StringRef S
+argument_list|)
+operator|:
+name|SmallVector
+operator|<
+name|char
+block|,
+name|InternalLen
+operator|>
+operator|(
+name|S
+operator|.
+name|begin
+argument_list|()
+operator|,
+name|S
+operator|.
+name|end
+argument_list|()
+operator|)
+block|{}
 comment|// Initialize with a range.
 name|template
 operator|<
@@ -164,17 +188,7 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-comment|// Implicit conversion to StringRef.
-name|operator
-name|StringRef
-argument_list|()
-specifier|const
-block|{
-return|return
-name|str
-argument_list|()
-return|;
-block|}
+comment|// TODO: Make this const, if it's safe...
 specifier|const
 name|char
 operator|*
@@ -197,6 +211,17 @@ return|return
 name|this
 operator|->
 name|data
+argument_list|()
+return|;
+block|}
+comment|// Implicit conversion to StringRef.
+name|operator
+name|StringRef
+argument_list|()
+specifier|const
+block|{
+return|return
+name|str
 argument_list|()
 return|;
 block|}

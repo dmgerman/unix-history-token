@@ -138,12 +138,15 @@ comment|///< Promote scalar->vector
 name|VEC2PREFSLOT
 block|,
 comment|///< Extract element 0
-name|SHLQUAD_L_BITS
+name|SHL_BITS
 block|,
-comment|///< Rotate quad left, by bits
-name|SHLQUAD_L_BYTES
+comment|///< Shift quad left, by bits
+name|SHL_BYTES
 block|,
-comment|///< Rotate quad left, by bytes
+comment|///< Shift quad left, by bytes
+name|SRL_BYTES
+block|,
+comment|///< Shift quad right, by bytes. Insert zeros.
 name|VEC_ROTL
 block|,
 comment|///< Vector rotate left
@@ -449,6 +452,17 @@ argument|const std::string&ConstraintLetter
 argument_list|)
 specifier|const
 block|;
+comment|/// Examine constraint string and operand type and determine a weight value.
+comment|/// The operand object must already have been set up with the operand type.
+name|ConstraintWeight
+name|getSingleConstraintMatchWeight
+argument_list|(
+argument|AsmOperandInfo&info
+argument_list|,
+argument|const char *constraint
+argument_list|)
+specifier|const
+block|;
 name|std
 operator|::
 name|pair
@@ -584,9 +598,44 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
-block|;   }
-decl_stmt|;
+block|;
+name|virtual
+name|bool
+name|isLegalICmpImmediate
+argument_list|(
+argument|int64_t Imm
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|isLegalAddressingMode
+argument_list|(
+argument|const AddrMode&AM
+argument_list|,
+argument|const Type *Ty
+argument_list|)
+specifier|const
+block|;
+comment|/// After allocating this many registers, the allocator should feel
+comment|/// register pressure. The value is a somewhat random guess, based on the
+comment|/// number of non callee saved registers in the C calling convention.
+name|virtual
+name|unsigned
+name|getRegPressureLimit
+argument_list|(
+argument|const TargetRegisterClass *RC
+argument_list|,
+argument|MachineFunction&MF
+argument_list|)
+specifier|const
+block|{
+return|return
+literal|50
+return|;
 block|}
+expr|}
+block|; }
 end_decl_stmt
 
 begin_endif

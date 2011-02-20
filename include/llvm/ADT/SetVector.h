@@ -426,7 +426,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/// @brief Remove an item from the set vector.
-name|void
+name|bool
 name|remove
 parameter_list|(
 specifier|const
@@ -487,7 +487,13 @@ argument_list|(
 name|I
 argument_list|)
 expr_stmt|;
+return|return
+name|true
+return|;
 block|}
+return|return
+name|false
+return|;
 block|}
 comment|/// @returns 0 if the element is not in the SetVector, 1 if it is.
 comment|/// @brief Count the number of elements of a given key in the SetVector.

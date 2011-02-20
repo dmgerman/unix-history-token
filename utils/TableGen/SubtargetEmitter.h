@@ -156,6 +156,16 @@ name|unsigned
 operator|>
 operator|&
 name|ItinClassesMap
+argument_list|,
+name|std
+operator|::
+name|vector
+operator|<
+name|Record
+operator|*
+operator|>
+operator|&
+name|ItinClassList
 argument_list|)
 block|;
 name|void
@@ -202,6 +212,18 @@ name|NOperandCycles
 argument_list|)
 block|;
 name|void
+name|FormItineraryBypassString
+argument_list|(
+argument|const std::string&Names
+argument_list|,
+argument|Record *ItinData
+argument_list|,
+argument|std::string&ItinString
+argument_list|,
+argument|unsigned NOperandCycles
+argument_list|)
+block|;
+name|void
 name|EmitStageAndOperandCycleData
 argument_list|(
 argument|raw_ostream&OS
@@ -211,6 +233,8 @@ argument_list|,
 argument|std::map<std::string
 argument_list|,
 argument|unsigned>&ItinClassesMap
+argument_list|,
+argument|std::vector<Record*>&ItinClassList
 argument_list|,
 argument|std::vector<std::vector<InstrItinerary>>&ProcList
 argument_list|)

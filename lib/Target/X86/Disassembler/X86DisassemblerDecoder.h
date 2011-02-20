@@ -36,7 +36,7 @@ define|#
 directive|define
 name|INSTRUCTION_IDS
 define|\
-value|InstrUID*  instructionIDs;
+value|const InstrUID *instructionIDs;
 include|#
 directive|include
 file|"X86DisassemblerDecoderCommon.h"
@@ -474,6 +474,7 @@ name|uint16_t
 name|instructionID
 decl_stmt|;
 comment|/* The specifier for the instruction, from the instruction info table */
+specifier|const
 name|struct
 name|InstructionSpecifier
 modifier|*

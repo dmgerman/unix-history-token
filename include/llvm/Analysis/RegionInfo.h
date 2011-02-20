@@ -195,6 +195,8 @@ name|RegionNode
 operator|&
 operator|)
 decl_stmt|;
+name|protected
+label|:
 comment|/// This is the entry basic block that starts this region node.  If this is a
 comment|/// BasicBlock RegionNode, then entry is just the basic block, that this
 comment|/// RegionNode represents.  Otherwise it is the entry of this (Sub)RegionNode.
@@ -216,8 +218,6 @@ name|bool
 operator|>
 name|entry
 expr_stmt|;
-name|protected
-label|:
 comment|/// @brief The parent Region of this RegionNode.
 comment|/// @see getParent()
 name|Region
@@ -656,6 +656,30 @@ name|getEntry
 argument_list|()
 return|;
 block|}
+comment|/// @brief Replace the entry basic block of the region with the new basic
+comment|///        block.
+comment|///
+comment|/// @param BB  The new entry basic block of the region.
+name|void
+name|replaceEntry
+parameter_list|(
+name|BasicBlock
+modifier|*
+name|BB
+parameter_list|)
+function_decl|;
+comment|/// @brief Replace the exit basic block of the region with the new basic
+comment|///        block.
+comment|///
+comment|/// @param BB  The new exit basic block of the region.
+name|void
+name|replaceExit
+parameter_list|(
+name|BasicBlock
+modifier|*
+name|BB
+parameter_list|)
+function_decl|;
 comment|/// @brief Get the exit BasicBlock of the Region.
 comment|/// @return The exit BasicBlock of the Region, NULL if this is the TopLevel
 comment|///         Region.
@@ -719,6 +743,54 @@ comment|///
 comment|/// @return The depth of the region.
 name|unsigned
 name|getDepth
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// @brief Check if a Region is the TopLevel region.
+comment|///
+comment|/// The toplevel region represents the whole function.
+name|bool
+name|isTopLevelRegion
+argument_list|()
+specifier|const
+block|{
+return|return
+name|exit
+operator|==
+name|NULL
+return|;
+block|}
+comment|/// @brief Return a new (non canonical) region, that is obtained by joining
+comment|///        this region with its predecessors.
+comment|///
+comment|/// @return A region also starting at getEntry(), but reaching to the next
+comment|///         basic block that forms with getEntry() a (non canonical) region.
+comment|///         NULL if such a basic block does not exist.
+name|Region
+operator|*
+name|getExpandedRegion
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// @brief Return the first block of this region's single entry edge,
+comment|///        if existing.
+comment|///
+comment|/// @return The BasicBlock starting this region's single entry edge,
+comment|///         else NULL.
+name|BasicBlock
+operator|*
+name|getEnteringBlock
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// @brief Return the first block of this region's single exit edge,
+comment|///        if existing.
+comment|///
+comment|/// @return The BasicBlock starting this region's single exit edge,
+comment|///         else NULL.
+name|BasicBlock
+operator|*
+name|getExitingBlock
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -977,12 +1049,19 @@ decl_stmt|;
 comment|/// @brief Add a new subregion to this Region.
 comment|///
 comment|/// @param SubRegion The new subregion that will be added.
+comment|/// @param moveChildren Move the children of this region, that are also
+comment|///                     contained in SubRegion into SubRegion.
 name|void
 name|addSubRegion
 parameter_list|(
 name|Region
 modifier|*
 name|SubRegion
+parameter_list|,
+name|bool
+name|moveChildren
+init|=
+name|false
 parameter_list|)
 function_decl|;
 comment|/// @brief Remove a subregion from this Region.
@@ -1804,6 +1883,37 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// @brief  Set the smallest region that surrounds a basic block.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// @param BB The basic block surrounded by a region.
+end_comment
+
+begin_comment
+comment|/// @param R The smallest region that surrounds BB.
+end_comment
+
+begin_function_decl
+name|void
+name|setRegionFor
+parameter_list|(
+name|BasicBlock
+modifier|*
+name|BB
+parameter_list|,
+name|Region
+modifier|*
+name|R
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// @brief A shortcut for getRegionFor().
 end_comment
 
@@ -2033,6 +2143,37 @@ name|TopLevelRegion
 return|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|/// @brief Update RegionInfo after a basic block was split.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// @param NewBB The basic block that was created before OldBB.
+end_comment
+
+begin_comment
+comment|/// @param OldBB The old basic block.
+end_comment
+
+begin_function_decl
+name|void
+name|splitBlock
+parameter_list|(
+name|BasicBlock
+modifier|*
+name|NewBB
+parameter_list|,
+name|BasicBlock
+modifier|*
+name|OldBB
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// @brief Clear the Node Cache for all Regions.

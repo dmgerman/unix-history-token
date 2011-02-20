@@ -130,6 +130,9 @@ decl_stmt|;
 name|class
 name|ScheduleDAGSDNodes
 decl_stmt|;
+name|class
+name|LoadInst
+decl_stmt|;
 comment|/// SelectionDAGISel - This is the common base class used for SelectionDAG-based
 comment|/// pattern-matching instruction selectors.
 name|class
@@ -295,8 +298,8 @@ specifier|const
 block|;
 comment|/// IsLegalToFold - Returns true if the specific operand node N of
 comment|/// U can be folded during instruction selection that starts at Root.
-comment|/// FIXME: This is a static member function because the PIC16 target,
-comment|/// which uses it during lowering.
+comment|/// FIXME: This is a static member function because the MSP430/SystemZ/X86
+comment|/// targets, which uses it during isel.  This could become a proper member.
 specifier|static
 name|bool
 name|IsLegalToFold
@@ -311,14 +314,6 @@ argument|CodeGenOpt::Level OptLevel
 argument_list|,
 argument|bool IgnoreChains = false
 argument_list|)
-block|;
-comment|/// CreateTargetHazardRecognizer - Return a newly allocated hazard recognizer
-comment|/// to use for this target when scheduling the DAG.
-name|virtual
-name|ScheduleHazardRecognizer
-operator|*
-name|CreateTargetHazardRecognizer
-argument_list|()
 block|;
 comment|// Opcodes used by the DAG state machine:
 block|enum
@@ -346,7 +341,7 @@ name|OPC_RecordChild7
 block|,
 name|OPC_RecordMemRef
 block|,
-name|OPC_CaptureFlagInput
+name|OPC_CaptureGlueInput
 block|,
 name|OPC_MoveChild
 block|,
@@ -416,32 +411,32 @@ name|OPC_EmitNode
 block|,
 name|OPC_MorphNodeTo
 block|,
-name|OPC_MarkFlagResults
+name|OPC_MarkGlueResults
 block|,
 name|OPC_CompleteMatch
 block|}
-block|;      enum
+block|;    enum
 block|{
 name|OPFL_None
 operator|=
 literal|0
 block|,
-comment|// Node has no chain or flag input and isn't variadic.
+comment|// Node has no chain or glue input and isn't variadic.
 name|OPFL_Chain
 operator|=
 literal|1
 block|,
 comment|// Node has a chain input.
-name|OPFL_FlagInput
+name|OPFL_GlueInput
 operator|=
 literal|2
 block|,
-comment|// Node has a flag input.
-name|OPFL_FlagOutput
+comment|// Node has a glue input.
+name|OPFL_GlueOutput
 operator|=
 literal|4
 block|,
-comment|// Node has a flag output.
+comment|// Node has a glue output.
 name|OPFL_MemRefs
 operator|=
 literal|8
@@ -794,11 +789,15 @@ name|CheckComplexPattern
 argument_list|(
 argument|SDNode *Root
 argument_list|,
+argument|SDNode *Parent
+argument_list|,
 argument|SDValue N
 argument_list|,
 argument|unsigned PatternNo
 argument_list|,
-argument|SmallVectorImpl<SDValue>&Result
+argument|SmallVectorImpl<std::pair<SDValue
+argument_list|,
+argument|SDNode*>>&Result
 argument_list|)
 block|{
 name|assert
@@ -909,6 +908,19 @@ operator|&
 name|Fn
 argument_list|)
 block|;
+name|bool
+name|TryToFoldFastISelLoad
+argument_list|(
+specifier|const
+name|LoadInst
+operator|*
+name|LI
+argument_list|,
+name|FastISel
+operator|*
+name|FastIS
+argument_list|)
+block|;
 name|void
 name|FinishBasicBlock
 argument_list|()
@@ -960,7 +972,7 @@ operator|>
 name|OpcodeOffset
 block|;
 name|void
-name|UpdateChainsAndFlags
+name|UpdateChainsAndGlue
 argument_list|(
 argument|SDNode *NodeToMatch
 argument_list|,
@@ -968,13 +980,13 @@ argument|SDValue InputChain
 argument_list|,
 argument|const SmallVectorImpl<SDNode*>&ChainNodesMatched
 argument_list|,
-argument|SDValue InputFlag
+argument|SDValue InputGlue
 argument_list|,
 argument|const SmallVectorImpl<SDNode*>&F
 argument_list|,
 argument|bool isMorphNodeTo
 argument_list|)
-block|;      }
+block|;  }
 block|;  }
 end_decl_stmt
 

@@ -614,7 +614,7 @@ block|{
 name|ArgFlagsTy
 name|Flags
 decl_stmt|;
-name|EVT
+name|MVT
 name|VT
 decl_stmt|;
 name|bool
@@ -649,25 +649,17 @@ argument_list|(
 name|flags
 argument_list|)
 operator|,
-name|VT
-argument_list|(
-name|vt
-argument_list|)
-operator|,
 name|Used
 argument_list|(
 argument|used
 argument_list|)
 block|{
-name|assert
-argument_list|(
 name|VT
+operator|=
+name|vt
 operator|.
-name|isSimple
+name|getSimpleVT
 argument_list|()
-operator|&&
-literal|"InputArg value type must be Simple!"
-argument_list|)
 block|;     }
 block|}
 struct|;
@@ -681,7 +673,7 @@ block|{
 name|ArgFlagsTy
 name|Flags
 decl_stmt|;
-name|EVT
+name|MVT
 name|VT
 decl_stmt|;
 comment|/// IsFixed - Is this a "fixed" value, ie not passed through a vararg "...".
@@ -710,25 +702,17 @@ argument_list|(
 name|flags
 argument_list|)
 operator|,
-name|VT
-argument_list|(
-name|vt
-argument_list|)
-operator|,
 name|IsFixed
 argument_list|(
 argument|isfixed
 argument_list|)
 block|{
-name|assert
-argument_list|(
 name|VT
+operator|=
+name|vt
 operator|.
-name|isSimple
+name|getSimpleVT
 argument_list|()
-operator|&&
-literal|"OutputArg value type must be Simple!"
-argument_list|)
 block|;     }
 block|}
 struct|;

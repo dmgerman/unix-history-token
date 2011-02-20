@@ -151,6 +151,9 @@ name|class
 name|raw_ostream
 decl_stmt|;
 name|class
+name|SlotIndexes
+decl_stmt|;
+name|class
 name|VirtRegMap
 range|:
 name|public
@@ -300,6 +303,8 @@ comment|/// (kill) index mapping.
 name|IndexedMap
 operator|<
 name|SlotIndex
+operator|,
+name|VirtReg2IndexFunctor
 operator|>
 name|Virt2SplitKillMap
 expr_stmt|;
@@ -439,6 +444,16 @@ comment|/// UnusedRegs - A list of physical registers that have not been used.
 name|BitVector
 name|UnusedRegs
 decl_stmt|;
+comment|/// createSpillSlot - Allocate a spill slot for RC from MFI.
+name|unsigned
+name|createSpillSlot
+parameter_list|(
+specifier|const
+name|TargetRegisterClass
+modifier|*
+name|RC
+parameter_list|)
+function_decl|;
 name|VirtRegMap
 argument_list|(
 specifier|const
@@ -561,12 +576,35 @@ name|assert
 argument_list|(
 name|MF
 operator|&&
-literal|"getMachineFunction called before runOnMAchineFunction"
+literal|"getMachineFunction called before runOnMachineFunction"
 argument_list|)
 block|;
 return|return
 operator|*
 name|MF
+return|;
+block|}
+name|MachineRegisterInfo
+operator|&
+name|getRegInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|MRI
+return|;
+block|}
+specifier|const
+name|TargetRegisterInfo
+operator|&
+name|getTargetRegInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|TRI
 return|;
 block|}
 name|void
@@ -752,16 +790,45 @@ block|}
 comment|/// @brief returns the live interval virtReg is split from.
 name|unsigned
 name|getPreSplitReg
-parameter_list|(
+argument_list|(
 name|unsigned
 name|virtReg
-parameter_list|)
+argument_list|)
+decl|const
 block|{
 return|return
 name|Virt2SplitMap
 index|[
 name|virtReg
 index|]
+return|;
+block|}
+comment|/// getOriginal - Return the original virtual register that VirtReg descends
+comment|/// from through splitting.
+comment|/// A register that was not created by splitting is its own original.
+comment|/// This operation is idempotent.
+name|unsigned
+name|getOriginal
+argument_list|(
+name|unsigned
+name|VirtReg
+argument_list|)
+decl|const
+block|{
+name|unsigned
+name|Orig
+init|=
+name|getPreSplitReg
+argument_list|(
+name|VirtReg
+argument_list|)
+decl_stmt|;
+return|return
+name|Orig
+condition|?
+name|Orig
+else|:
+name|VirtReg
 return|;
 block|}
 comment|/// @brief returns true if the specified virtual register is not
@@ -1825,11 +1892,12 @@ name|ImplicitDefed
 operator|.
 name|set
 argument_list|(
-name|VirtReg
-operator|-
 name|TargetRegisterInfo
 operator|::
-name|FirstVirtualRegister
+name|virtReg2Index
+argument_list|(
+name|VirtReg
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1845,11 +1913,12 @@ block|{
 return|return
 name|ImplicitDefed
 index|[
-name|VirtReg
-operator|-
 name|TargetRegisterInfo
 operator|::
-name|FirstVirtualRegister
+name|virtReg2Index
+argument_list|(
+name|VirtReg
+argument_list|)
 index|]
 return|;
 block|}
@@ -2043,6 +2112,19 @@ return|return
 literal|0
 return|;
 block|}
+comment|/// rewrite - Rewrite all instructions in MF to use only physical registers
+comment|/// by mapping all virtual register operands to their assigned physical
+comment|/// registers.
+comment|///
+comment|/// @param Indexes Optionally remove deleted instructions from indexes.
+name|void
+name|rewrite
+parameter_list|(
+name|SlotIndexes
+modifier|*
+name|Indexes
+parameter_list|)
+function_decl|;
 name|void
 name|print
 argument_list|(

@@ -1058,6 +1058,28 @@ block|}
 end_function
 
 begin_comment
+comment|/* llcontext -> lltype */
+end_comment
+
+begin_function
+name|CAMLprim
+name|LLVMTypeRef
+name|llvm_x86mmx_type
+parameter_list|(
+name|LLVMContextRef
+name|Context
+parameter_list|)
+block|{
+return|return
+name|LLVMX86MMXTypeInContext
+argument_list|(
+name|Context
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*--... Operations on function types .......................................--*/
 end_comment
 

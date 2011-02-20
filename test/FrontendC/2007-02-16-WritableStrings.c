@@ -4,15 +4,15 @@ comment|// Test the -fwritable-strings option.
 end_comment
 
 begin_comment
-comment|// RUN: %llvmgcc -O3 -S -o - -emit-llvm -fwritable-strings %s | \
+comment|// RUN: %llvmgcc -O3 -S -o - -fwritable-strings %s | \
 end_comment
 
 begin_comment
-comment|// RUN:    grep {internal global}
+comment|// RUN:    grep {internal unnamed_addr global}
 end_comment
 
 begin_comment
-comment|// RUN: %llvmgcc -O3 -S -o - -emit-llvm %s | grep {private constant}
+comment|// RUN: %llvmgcc -O3 -S -o - %s | grep {private unnamed_addr constant}
 end_comment
 
 begin_decl_stmt

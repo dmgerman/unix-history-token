@@ -52,7 +52,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/System/DataTypes.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_include
@@ -1308,6 +1308,45 @@ end_macro
 
 begin_decl_stmt
 specifier|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// toNullTerminatedStringRef - This returns the twine as a single null
+end_comment
+
+begin_comment
+comment|/// terminated StringRef if it can be represented as such. Otherwise the
+end_comment
+
+begin_comment
+comment|/// twine is written into the given SmallVector and a StringRef to the
+end_comment
+
+begin_comment
+comment|/// SmallVector's data is returned.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// The returned StringRef's size does not include the null terminator.
+end_comment
+
+begin_decl_stmt
+name|StringRef
+name|toNullTerminatedStringRef
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|&
+name|Out
+argument_list|)
+decl|const
 decl_stmt|;
 end_decl_stmt
 

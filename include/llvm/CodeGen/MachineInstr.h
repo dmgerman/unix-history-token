@@ -411,6 +411,17 @@ return|return
 name|AsmPrinterFlags
 return|;
 block|}
+comment|/// clearAsmPrinterFlags - clear the AsmPrinter bitvector
+comment|///
+name|void
+name|clearAsmPrinterFlags
+parameter_list|()
+block|{
+name|AsmPrinterFlags
+operator|=
+literal|0
+expr_stmt|;
+block|}
 comment|/// getAsmPrinterFlag - Return whether an AsmPrinter flag is set.
 comment|///
 name|bool
@@ -442,6 +453,21 @@ operator|(
 name|unsigned
 name|short
 operator|)
+name|Flag
+expr_stmt|;
+block|}
+comment|/// clearAsmPrinterFlag - clear specific AsmPrinter flags
+comment|///
+name|void
+name|clearAsmPrinterFlag
+parameter_list|(
+name|CommentFlag
+name|Flag
+parameter_list|)
+block|{
+name|AsmPrinterFlags
+operator|&=
+operator|~
 name|Flag
 expr_stmt|;
 block|}
@@ -559,6 +585,75 @@ name|getNumExplicitOperands
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// iterator/begin/end - Iterate over all operands of a machine instruction.
+typedef|typedef
+name|std
+operator|::
+name|vector
+operator|<
+name|MachineOperand
+operator|>
+operator|::
+name|iterator
+name|mop_iterator
+expr_stmt|;
+typedef|typedef
+name|std
+operator|::
+name|vector
+operator|<
+name|MachineOperand
+operator|>
+operator|::
+name|const_iterator
+name|const_mop_iterator
+expr_stmt|;
+name|mop_iterator
+name|operands_begin
+parameter_list|()
+block|{
+return|return
+name|Operands
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+name|mop_iterator
+name|operands_end
+parameter_list|()
+block|{
+return|return
+name|Operands
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+name|const_mop_iterator
+name|operands_begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Operands
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+name|const_mop_iterator
+name|operands_end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Operands
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
 comment|/// Access to memory operands of the instruction
 name|mmo_iterator
 name|memoperands_begin
@@ -789,6 +884,11 @@ operator|::
 name|INLINEASM
 return|;
 block|}
+name|bool
+name|isStackAligningInlineAsm
+argument_list|()
+specifier|const
+expr_stmt|;
 name|bool
 name|isInsertSubreg
 argument_list|()
@@ -1506,6 +1606,18 @@ name|isConstantValuePHI
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// hasUnmodeledSideEffects - Return true if this instruction has side
+comment|/// effects that are not modeled by mayLoad / mayStore, etc.
+comment|/// For all instructions, the property is encoded in TargetInstrDesc::Flags
+comment|/// (see TargetInstrDesc::hasUnmodeledSideEffects(). The only exception is
+comment|/// INLINEASM instruction, in which case the side effect property is encoded
+comment|/// in one of its operands (see InlineAsm::Extra_HasSideEffect).
+comment|///
+name|bool
+name|hasUnmodeledSideEffects
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// allDefsAreDead - Return true if all the defs of this instruction are dead.
 comment|///
 name|bool
@@ -1513,6 +1625,17 @@ name|allDefsAreDead
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// copyImplicitOps - Copy implicit register operands from specified
+comment|/// instruction to this instruction.
+name|void
+name|copyImplicitOps
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|*
+name|MI
+parameter_list|)
+function_decl|;
 comment|//
 comment|// Debugging support
 comment|//

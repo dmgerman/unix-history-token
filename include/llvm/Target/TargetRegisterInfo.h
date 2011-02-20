@@ -121,14 +121,16 @@ operator|>
 name|class
 name|SmallVectorImpl
 expr_stmt|;
+name|class
+name|raw_ostream
+decl_stmt|;
 comment|/// TargetRegisterDesc - This record contains all of the information known about
-comment|/// a particular register.  The AliasSet field (if not null) contains a pointer
-comment|/// to a Zero terminated array of registers that this register aliases.  This is
-comment|/// needed for architectures like X86 which have AL alias AX alias EAX.
-comment|/// Registers that this does not apply to simply should set this to null.
-comment|/// The SubRegs field is a zero terminated array of registers that are
-comment|/// sub-registers of the specific register, e.g. AL, AH are sub-registers of AX.
-comment|/// The SuperRegs field is a zero terminated array of registers that are
+comment|/// a particular register.  The Overlaps field contains a pointer to a zero
+comment|/// terminated array of registers that this register aliases, starting with
+comment|/// itself. This is needed for architectures like X86 which have AL alias AX
+comment|/// alias EAX. The SubRegs field is a zero terminated array of registers that
+comment|/// are sub-registers of the specific register, e.g. AL, AH are sub-registers of
+comment|/// AX. The SuperRegs field is a zero terminated array of registers that are
 comment|/// super-registers of the specific register, e.g. RAX, EAX, are super-registers
 comment|/// of AX.
 comment|///
@@ -144,9 +146,9 @@ comment|// Printable name for the reg (for debugging)
 specifier|const
 name|unsigned
 modifier|*
-name|AliasSet
+name|Overlaps
 decl_stmt|;
-comment|// Register Alias Set, described above
+comment|// Overlapping registers, described above
 specifier|const
 name|unsigned
 modifier|*
@@ -520,11 +522,6 @@ name|VTs
 index|[
 name|i
 index|]
-operator|.
-name|getSimpleVT
-argument_list|()
-operator|.
-name|SimpleTy
 operator|!=
 name|MVT
 operator|::
@@ -572,12 +569,8 @@ name|VTs
 block|;
 while|while
 condition|(
+operator|*
 name|I
-operator|->
-name|getSimpleVT
-argument_list|()
-operator|.
-name|SimpleTy
 operator|!=
 name|MVT
 operator|::
@@ -993,15 +986,27 @@ comment|/// These methods take a MachineFunction argument, which can be used to 
 end_comment
 
 begin_comment
-comment|/// the allocatable registers based on the characteristics of the function.
+comment|/// the allocatable registers based on the characteristics of the function,
 end_comment
 
 begin_comment
-comment|/// One simple example is that the frame pointer register can be used if
+comment|/// subtarget, or other criteria.
 end_comment
 
 begin_comment
-comment|/// frame-pointer-elimination is performed.
+comment|///
+end_comment
+
+begin_comment
+comment|/// Register allocators should account for the fact that an allocation
+end_comment
+
+begin_comment
+comment|/// order iterator may return a reserved register and always check
+end_comment
+
+begin_comment
+comment|/// if the register is allocatable (getAllocatableSet()) before using it.
 end_comment
 
 begin_comment
@@ -1248,24 +1253,107 @@ argument_list|()
 expr_stmt|;
 name|public
 label|:
-enum|enum
+comment|// Register numbers can represent physical registers, virtual registers, and
+comment|// sometimes stack slots. The unsigned values are divided into these ranges:
+comment|//
+comment|//   0           Not a register, can be used as a sentinel.
+comment|//   [1;2^30)    Physical registers assigned by TableGen.
+comment|//   [2^30;2^31) Stack slots. (Rarely used.)
+comment|//   [2^31;2^32) Virtual registers assigned by MachineRegisterInfo.
+comment|//
+comment|// Further sentinels can be allocated from the small negative integers.
+comment|// DenseMapInfo<unsigned> uses -1u and -2u.
+comment|/// isStackSlot - Sometimes it is useful the be able to store a non-negative
+comment|/// frame index in a variable that normally holds a register. isStackSlot()
+comment|/// returns true if Reg is in the range used for stack slots.
+comment|///
+comment|/// Note that isVirtualRegister() and isPhysicalRegister() cannot handle stack
+comment|/// slots, so if a variable may contains a stack slot, always check
+comment|/// isStackSlot() first.
+comment|///
+specifier|static
+name|bool
+name|isStackSlot
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|)
 block|{
-comment|// Define some target independent constants
-comment|/// NoRegister - This physical register is not a real target register.  It
-comment|/// is useful as a sentinal.
-name|NoRegister
-init|=
-literal|0
-block|,
-comment|/// FirstVirtualRegister - This is the first register number that is
-comment|/// considered to be a 'virtual' register, which is part of the SSA
-comment|/// namespace.  This must be the same for all targets, which means that each
-comment|/// target is limited to this fixed number of registers.
-name|FirstVirtualRegister
-init|=
-literal|16384
+return|return
+name|int
+argument_list|(
+name|Reg
+argument_list|)
+operator|>=
+operator|(
+literal|1
+operator|<<
+literal|30
+operator|)
+return|;
 block|}
-enum|;
+comment|/// stackSlot2Index - Compute the frame index from a register value
+comment|/// representing a stack slot.
+specifier|static
+name|int
+name|stackSlot2Index
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|isStackSlot
+argument_list|(
+name|Reg
+argument_list|)
+operator|&&
+literal|"Not a stack slot"
+argument_list|)
+expr_stmt|;
+return|return
+name|int
+argument_list|(
+name|Reg
+operator|-
+operator|(
+literal|1u
+operator|<<
+literal|30
+operator|)
+argument_list|)
+return|;
+block|}
+comment|/// index2StackSlot - Convert a non-negative frame index to a stack slot
+comment|/// register value.
+specifier|static
+name|unsigned
+name|index2StackSlot
+parameter_list|(
+name|int
+name|FI
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|FI
+operator|>=
+literal|0
+operator|&&
+literal|"Cannot hold a negative frame index."
+argument_list|)
+expr_stmt|;
+return|return
+name|FI
+operator|+
+operator|(
+literal|1u
+operator|<<
+literal|30
+operator|)
+return|;
+block|}
 comment|/// isPhysicalRegister - Return true if the specified register number is in
 comment|/// the physical register namespace.
 specifier|static
@@ -1278,15 +1366,22 @@ parameter_list|)
 block|{
 name|assert
 argument_list|(
+operator|!
+name|isStackSlot
+argument_list|(
 name|Reg
+argument_list|)
 operator|&&
-literal|"this is not a register!"
+literal|"Not a register! Check isStackSlot() first."
 argument_list|)
 expr_stmt|;
 return|return
+name|int
+argument_list|(
 name|Reg
-operator|<
-name|FirstVirtualRegister
+argument_list|)
+operator|>
+literal|0
 return|;
 block|}
 comment|/// isVirtualRegister - Return true if the specified register number is in
@@ -1301,15 +1396,72 @@ parameter_list|)
 block|{
 name|assert
 argument_list|(
+operator|!
+name|isStackSlot
+argument_list|(
 name|Reg
+argument_list|)
 operator|&&
-literal|"this is not a register!"
+literal|"Not a register! Check isStackSlot() first."
+argument_list|)
+expr_stmt|;
+return|return
+name|int
+argument_list|(
+name|Reg
+argument_list|)
+operator|<
+literal|0
+return|;
+block|}
+comment|/// virtReg2Index - Convert a virtual register number to a 0-based index.
+comment|/// The first virtual register in a function will get the index 0.
+specifier|static
+name|unsigned
+name|virtReg2Index
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|isVirtualRegister
+argument_list|(
+name|Reg
+argument_list|)
+operator|&&
+literal|"Not a virtual register"
 argument_list|)
 expr_stmt|;
 return|return
 name|Reg
-operator|>=
-name|FirstVirtualRegister
+operator|-
+operator|(
+literal|1u
+operator|<<
+literal|31
+operator|)
+return|;
+block|}
+comment|/// index2VirtReg - Convert a 0-based index to a virtual register number.
+comment|/// This is the inverse operation of VirtReg2IndexFunctor below.
+specifier|static
+name|unsigned
+name|index2VirtReg
+parameter_list|(
+name|unsigned
+name|Index
+parameter_list|)
+block|{
+return|return
+name|Index
+operator|+
+operator|(
+literal|1u
+operator|<<
+literal|31
+operator|)
 return|;
 block|}
 comment|/// getMinimalPhysRegClass - Returns the Register Class of a physical
@@ -1414,13 +1566,40 @@ name|RegNo
 argument_list|)
 decl|const
 block|{
+comment|// The Overlaps set always begins with Reg itself.
 return|return
 name|get
 argument_list|(
 name|RegNo
 argument_list|)
 operator|.
-name|AliasSet
+name|Overlaps
+operator|+
+literal|1
+return|;
+block|}
+comment|/// getOverlaps - Return a list of registers that overlap Reg, including
+comment|/// itself. This is the same as the alias set except Reg is included in the
+comment|/// list.
+comment|/// These are exactly the registers in { x | regsOverlap(x, Reg) }.
+comment|///
+specifier|const
+name|unsigned
+modifier|*
+name|getOverlaps
+argument_list|(
+name|unsigned
+name|RegNo
+argument_list|)
+decl|const
+block|{
+return|return
+name|get
+argument_list|(
+name|RegNo
+argument_list|)
+operator|.
+name|Overlaps
 return|;
 block|}
 comment|/// getSubRegisters - Return the list of registers that are sub-registers of
@@ -2245,19 +2424,6 @@ decl|const
 block|{
 comment|// Do nothing.
 block|}
-comment|/// targetHandlesStackFrameRounding - Returns true if the target is
-comment|/// responsible for rounding up the stack frame (probably at emitPrologue
-comment|/// time).
-name|virtual
-name|bool
-name|targetHandlesStackFrameRounding
-argument_list|()
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
 comment|/// requiresRegisterScavenging - returns true if the target requires (and can
 comment|/// make use of) the register scavenger.
 name|virtual
@@ -2310,76 +2476,6 @@ return|return
 name|false
 return|;
 block|}
-comment|/// hasFP - Return true if the specified function should have a dedicated
-comment|/// frame pointer register. For most targets this is true only if the function
-comment|/// has variable sized allocas or if frame pointer elimination is disabled.
-name|virtual
-name|bool
-name|hasFP
-argument_list|(
-specifier|const
-name|MachineFunction
-operator|&
-name|MF
-argument_list|)
-decl|const
-init|=
-literal|0
-decl_stmt|;
-comment|/// hasReservedCallFrame - Under normal circumstances, when a frame pointer is
-comment|/// not required, we reserve argument space for call sites in the function
-comment|/// immediately on entry to the current function. This eliminates the need for
-comment|/// add/sub sp brackets around call sites. Returns true if the call frame is
-comment|/// included as part of the stack frame.
-name|virtual
-name|bool
-name|hasReservedCallFrame
-argument_list|(
-specifier|const
-name|MachineFunction
-operator|&
-name|MF
-argument_list|)
-decl|const
-block|{
-return|return
-operator|!
-name|hasFP
-argument_list|(
-name|MF
-argument_list|)
-return|;
-block|}
-comment|/// canSimplifyCallFramePseudos - When possible, it's best to simplify the
-comment|/// call frame pseudo ops before doing frame index elimination. This is
-comment|/// possible only when frame index references between the pseudos won't
-comment|/// need adjusting for the call frame adjustments. Normally, that's true
-comment|/// if the function has a reserved call frame or a frame pointer. Some
-comment|/// targets (Thumb2, for example) may have more complicated criteria,
-comment|/// however, and can override this behavior.
-name|virtual
-name|bool
-name|canSimplifyCallFramePseudos
-argument_list|(
-specifier|const
-name|MachineFunction
-operator|&
-name|MF
-argument_list|)
-decl|const
-block|{
-return|return
-name|hasReservedCallFrame
-argument_list|(
-name|MF
-argument_list|)
-operator|||
-name|hasFP
-argument_list|(
-name|MF
-argument_list|)
-return|;
-block|}
 comment|/// hasReservedSpillSlot - Return true if target has reserved a spill slot in
 comment|/// the stack frame of the given function for the specified register. e.g. On
 comment|/// x86, if the frame register is required, the first fixed stack object is
@@ -2427,7 +2523,7 @@ name|false
 return|;
 block|}
 comment|/// getFrameIndexInstrOffset - Get the offset from the referenced frame
-comment|/// index in the instruction, if the is one.
+comment|/// index in the instruction, if there is one.
 name|virtual
 name|int64_t
 name|getFrameIndexInstrOffset
@@ -2474,9 +2570,8 @@ name|void
 name|materializeFrameBaseRegister
 argument_list|(
 name|MachineBasicBlock
-operator|::
-name|iterator
-name|I
+operator|*
+name|MBB
 argument_list|,
 name|unsigned
 name|BaseReg
@@ -2628,40 +2723,6 @@ literal|"Call Frame Pseudo Instructions do not exist on this target!"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// processFunctionBeforeCalleeSavedScan - This method is called immediately
-comment|/// before PrologEpilogInserter scans the physical registers used to determine
-comment|/// what callee saved registers should be spilled. This method is optional.
-name|virtual
-name|void
-name|processFunctionBeforeCalleeSavedScan
-argument_list|(
-name|MachineFunction
-operator|&
-name|MF
-argument_list|,
-name|RegScavenger
-operator|*
-name|RS
-operator|=
-name|NULL
-argument_list|)
-decl|const
-block|{    }
-comment|/// processFunctionBeforeFrameFinalized - This method is called immediately
-comment|/// before the specified function's frame layout (MF.getFrameInfo()) is
-comment|/// finalized.  Once the frame is finalized, MO_FrameIndex operands are
-comment|/// replaced with direct constants.  This method is optional.
-comment|///
-name|virtual
-name|void
-name|processFunctionBeforeFrameFinalized
-argument_list|(
-name|MachineFunction
-operator|&
-name|MF
-argument_list|)
-decl|const
-block|{   }
 comment|/// saveScavengerRegister - Spill the register so it can be used by the
 comment|/// register scavenger. Return true if the register was spilled, false
 comment|/// otherwise. If this function does not spill the register, the scavenger
@@ -2729,36 +2790,6 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
-comment|/// emitProlog/emitEpilog - These methods insert prolog and epilog code into
-comment|/// the function.
-name|virtual
-name|void
-name|emitPrologue
-argument_list|(
-name|MachineFunction
-operator|&
-name|MF
-argument_list|)
-decl|const
-init|=
-literal|0
-decl_stmt|;
-name|virtual
-name|void
-name|emitEpilogue
-argument_list|(
-name|MachineFunction
-operator|&
-name|MF
-argument_list|,
-name|MachineBasicBlock
-operator|&
-name|MBB
-argument_list|)
-decl|const
-init|=
-literal|0
-decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|/// Debug information queries.
 comment|/// getDwarfRegNum - Map a target register to an equivalent dwarf register
@@ -2794,62 +2825,6 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
-comment|/// getFrameIndexOffset - Returns the displacement from the frame register to
-comment|/// the stack frame of the specified index.
-name|virtual
-name|int
-name|getFrameIndexOffset
-argument_list|(
-specifier|const
-name|MachineFunction
-operator|&
-name|MF
-argument_list|,
-name|int
-name|FI
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// getFrameIndexReference - This method should return the base register
-comment|/// and offset used to reference a frame index location. The offset is
-comment|/// returned directly, and the base register is returned via FrameReg.
-name|virtual
-name|int
-name|getFrameIndexReference
-argument_list|(
-specifier|const
-name|MachineFunction
-operator|&
-name|MF
-argument_list|,
-name|int
-name|FI
-argument_list|,
-name|unsigned
-operator|&
-name|FrameReg
-argument_list|)
-decl|const
-block|{
-comment|// By default, assume all frame indices are referenced via whatever
-comment|// getFrameRegister() says. The target can override this if it's doing
-comment|// something different.
-name|FrameReg
-operator|=
-name|getFrameRegister
-argument_list|(
-name|MF
-argument_list|)
-expr_stmt|;
-return|return
-name|getFrameIndexOffset
-argument_list|(
-name|MF
-argument_list|,
-name|FI
-argument_list|)
-return|;
-block|}
 comment|/// getRARegister - This method should return the register where the return
 comment|/// address can be found.
 name|virtual
@@ -2860,24 +2835,6 @@ specifier|const
 operator|=
 literal|0
 expr_stmt|;
-comment|/// getInitialFrameState - Returns a list of machine moves that are assumed
-comment|/// on entry to all functions.  Note that LabelID is ignored (assumed to be
-comment|/// the beginning of the function.)
-name|virtual
-name|void
-name|getInitialFrameState
-argument_list|(
-name|std
-operator|::
-name|vector
-operator|<
-name|MachineMove
-operator|>
-operator|&
-name|Moves
-argument_list|)
-decl|const
-decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -2913,11 +2870,12 @@ operator|)
 specifier|const
 block|{
 return|return
-name|Reg
-operator|-
 name|TargetRegisterInfo
 operator|::
-name|FirstVirtualRegister
+name|virtReg2Index
+argument_list|(
+name|Reg
+argument_list|)
 return|;
 block|}
 block|}
@@ -2953,6 +2911,142 @@ name|B
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/// PrintReg - Helper class for printing registers on a raw_ostream.
+end_comment
+
+begin_comment
+comment|/// Prints virtual and physical registers with or without a TRI instance.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// The format is:
+end_comment
+
+begin_comment
+comment|///   %noreg          - NoRegister
+end_comment
+
+begin_comment
+comment|///   %vreg5          - a virtual register.
+end_comment
+
+begin_comment
+comment|///   %vreg5:sub_8bit - a virtual register with sub-register index (with TRI).
+end_comment
+
+begin_comment
+comment|///   %EAX            - a physical register
+end_comment
+
+begin_comment
+comment|///   %physreg17      - a physical register when no TRI instance given.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Usage: OS<< PrintReg(Reg, TRI)<< '\n';
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_decl_stmt
+name|class
+name|PrintReg
+block|{
+specifier|const
+name|TargetRegisterInfo
+modifier|*
+name|TRI
+decl_stmt|;
+name|unsigned
+name|Reg
+decl_stmt|;
+name|unsigned
+name|SubIdx
+decl_stmt|;
+name|public
+label|:
+name|PrintReg
+argument_list|(
+argument|unsigned reg
+argument_list|,
+argument|const TargetRegisterInfo *tri =
+literal|0
+argument_list|,
+argument|unsigned subidx =
+literal|0
+argument_list|)
+block|:
+name|TRI
+argument_list|(
+name|tri
+argument_list|)
+operator|,
+name|Reg
+argument_list|(
+name|reg
+argument_list|)
+operator|,
+name|SubIdx
+argument_list|(
+argument|subidx
+argument_list|)
+block|{}
+name|void
+name|print
+argument_list|(
+argument|raw_ostream&
+argument_list|)
+specifier|const
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
+specifier|static
+specifier|inline
+name|raw_ostream
+operator|&
+name|operator
+operator|<<
+operator|(
+name|raw_ostream
+operator|&
+name|OS
+operator|,
+specifier|const
+name|PrintReg
+operator|&
+name|PR
+operator|)
+block|{
+name|PR
+operator|.
+name|print
+argument_list|(
+name|OS
+argument_list|)
+block|;
+return|return
+name|OS
+return|;
+block|}
+end_expr_stmt
 
 begin_comment
 unit|}

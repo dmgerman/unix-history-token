@@ -111,7 +111,16 @@ name|ModulePass
 argument_list|(
 argument|ID
 argument_list|)
-block|{}
+block|{
+name|initializeFindUsedTypesPass
+argument_list|(
+operator|*
+name|PassRegistry
+operator|::
+name|getPassRegistry
+argument_list|()
+argument_list|)
+block|;   }
 comment|/// getTypes - After the pass has been run, return the set containing all of
 comment|/// the types used in the module.
 comment|///

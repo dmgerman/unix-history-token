@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"MipsFrameLowering.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"MipsSelectionDAGInfo.h"
 end_include
 
@@ -98,7 +104,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetFrameInfo.h"
+file|"llvm/Target/TargetFrameLowering.h"
 end_include
 
 begin_decl_stmt
@@ -125,8 +131,8 @@ comment|// Calculates type size& alignment
 name|MipsInstrInfo
 name|InstrInfo
 block|;
-name|TargetFrameInfo
-name|FrameInfo
+name|MipsFrameLowering
+name|FrameLowering
 block|;
 name|MipsTargetLowering
 name|TLInfo
@@ -162,15 +168,15 @@ return|;
 block|}
 name|virtual
 specifier|const
-name|TargetFrameInfo
+name|TargetFrameLowering
 operator|*
-name|getFrameInfo
+name|getFrameLowering
 argument_list|()
 specifier|const
 block|{
 return|return
 operator|&
-name|FrameInfo
+name|FrameLowering
 return|;
 block|}
 name|virtual

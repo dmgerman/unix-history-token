@@ -84,6 +84,11 @@ comment|/// VarArgsFrameOffset - Frame offset to start of varargs area.
 name|int
 name|VarArgsFrameOffset
 block|;
+comment|/// SRetReturnReg - Holds the virtual register into which the sret
+comment|/// argument is passed.
+name|unsigned
+name|SRetReturnReg
+block|;
 name|public
 operator|:
 name|SparcMachineFunctionInfo
@@ -95,6 +100,11 @@ literal|0
 argument_list|)
 block|,
 name|VarArgsFrameOffset
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|SRetReturnReg
 argument_list|(
 literal|0
 argument_list|)
@@ -113,6 +123,11 @@ literal|0
 argument_list|)
 block|,
 name|VarArgsFrameOffset
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|SRetReturnReg
 argument_list|(
 literal|0
 argument_list|)
@@ -154,6 +169,25 @@ block|{
 name|VarArgsFrameOffset
 operator|=
 name|Offset
+block|; }
+name|unsigned
+name|getSRetReturnReg
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SRetReturnReg
+return|;
+block|}
+name|void
+name|setSRetReturnReg
+argument_list|(
+argument|unsigned Reg
+argument_list|)
+block|{
+name|SRetReturnReg
+operator|=
+name|Reg
 block|; }
 expr|}
 block|; }

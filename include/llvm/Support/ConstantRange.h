@@ -140,7 +140,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/System/DataTypes.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_decl_stmt
@@ -279,6 +279,14 @@ comment|/// for example: [100, 8)
 comment|///
 name|bool
 name|isWrappedSet
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// isSignWrappedSet - Return true if this set wraps around the INT_MIN of
+comment|/// its bitwidth, for example: i8 [120, 140).
+comment|///
+name|bool
+name|isSignWrappedSet
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -599,6 +607,30 @@ comment|/// from an unsigned division of a value in this range and a value in
 comment|/// \p Other.
 name|ConstantRange
 name|udiv
+argument_list|(
+specifier|const
+name|ConstantRange
+operator|&
+name|Other
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// binaryAnd - return a new range representing the possible values resulting
+comment|/// from a binary-and of a value in this range by a value in \p Other.
+name|ConstantRange
+name|binaryAnd
+argument_list|(
+specifier|const
+name|ConstantRange
+operator|&
+name|Other
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// binaryOr - return a new range representing the possible values resulting
+comment|/// from a binary-or of a value in this range by a value in \p Other.
+name|ConstantRange
+name|binaryOr
 argument_list|(
 specifier|const
 name|ConstantRange

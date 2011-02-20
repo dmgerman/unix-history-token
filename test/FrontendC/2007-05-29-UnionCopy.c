@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %llvmgcc -S -o - -emit-llvm %s | grep memcpy
+comment|// RUN: %llvmgcc -S -o - %s | grep memcpy
 end_comment
 
 begin_comment

@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Twine.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/SourceMgr.h"
 end_include
 
@@ -86,6 +92,9 @@ name|Record
 decl_stmt|;
 name|class
 name|RecordVal
+decl_stmt|;
+name|class
+name|RecordKeeper
 decl_stmt|;
 struct_decl|struct
 name|RecTy
@@ -196,6 +205,11 @@ name|MultiClass
 modifier|*
 name|CurMultiClass
 decl_stmt|;
+comment|// Record tracker
+name|RecordKeeper
+modifier|&
+name|Records
+decl_stmt|;
 name|public
 label|:
 name|TGParser
@@ -203,6 +217,10 @@ argument_list|(
 name|SourceMgr
 operator|&
 name|SrcMgr
+argument_list|,
+name|RecordKeeper
+operator|&
+name|records
 argument_list|)
 operator|:
 name|Lex
@@ -213,6 +231,11 @@ operator|,
 name|CurMultiClass
 argument_list|(
 literal|0
+argument_list|)
+operator|,
+name|Records
+argument_list|(
+argument|records
 argument_list|)
 block|{}
 comment|/// ParseFile - Main entrypoint for parsing a tblgen file.  These parser
@@ -228,9 +251,7 @@ name|SMLoc
 name|L
 argument_list|,
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|Msg
 argument_list|)
@@ -253,9 +274,7 @@ name|bool
 name|TokError
 argument_list|(
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|Msg
 argument_list|)

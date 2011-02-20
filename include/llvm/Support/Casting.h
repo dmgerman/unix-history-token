@@ -1072,12 +1072,13 @@ operator|<
 name|X
 block|,
 name|Y
+operator|*
 operator|>
 operator|::
 name|ret_type
 name|dyn_cast_or_null
 argument_list|(
-argument|const Y&Val
+argument|Y *Val
 argument_list|)
 block|{
 return|return
@@ -1096,13 +1097,11 @@ condition|?
 name|cast
 operator|<
 name|X
-operator|,
-name|Y
 operator|>
 operator|(
 name|Val
 operator|)
-operator|:
+else|:
 literal|0
 return|;
 block|}

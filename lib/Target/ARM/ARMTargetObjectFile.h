@@ -65,6 +65,13 @@ range|:
 name|public
 name|TargetLoweringObjectFileELF
 block|{
+name|protected
+operator|:
+specifier|const
+name|MCSection
+operator|*
+name|AttributesSection
+block|;
 name|public
 operator|:
 name|ARMElfTargetObjectFile
@@ -72,6 +79,11 @@ argument_list|()
 operator|:
 name|TargetLoweringObjectFileELF
 argument_list|()
+block|,
+name|AttributesSection
+argument_list|(
+argument|NULL
+argument_list|)
 block|{}
 name|virtual
 name|void
@@ -86,9 +98,21 @@ name|TargetMachine
 operator|&
 name|TM
 argument_list|)
-block|; }
-decl_stmt|;
+block|;
+name|virtual
+specifier|const
+name|MCSection
+operator|*
+name|getAttributesSection
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AttributesSection
+return|;
 block|}
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_comment

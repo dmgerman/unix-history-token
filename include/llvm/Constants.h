@@ -114,13 +114,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vector>
+file|"llvm/ADT/ArrayRef.h"
 end_include
 
 begin_decl_stmt
@@ -876,8 +870,8 @@ name|Val
 return|;
 block|}
 comment|/// isNullValue - Return true if this is the value that would be returned by
-comment|/// getNullValue.  Don't depend on == for doubles to tell us it's zero, it
-comment|/// considers -0.0 to be null as well as 0.0.  :(
+comment|/// getNullValue.  For ConstantFP, this is +0.0, but not -0.0.  To handle the
+comment|/// two the same, use isZero().
 name|virtual
 name|bool
 name|isNullValue
@@ -1423,6 +1417,7 @@ operator|:
 name|public
 name|VariadicOperandTraits
 operator|<
+name|ConstantArray
 operator|>
 block|{ }
 block|;
@@ -1647,6 +1642,7 @@ operator|:
 name|public
 name|VariadicOperandTraits
 operator|<
+name|ConstantStruct
 operator|>
 block|{ }
 block|;
@@ -1719,6 +1715,20 @@ name|Constant
 operator|*
 name|get
 argument_list|(
+name|ArrayRef
+operator|<
+name|Constant
+operator|*
+operator|>
+name|V
+argument_list|)
+block|;
+comment|// FIXME: Eliminate this constructor form.
+specifier|static
+name|Constant
+operator|*
+name|get
+argument_list|(
 specifier|const
 name|VectorType
 operator|*
@@ -1734,33 +1744,6 @@ operator|*
 operator|>
 operator|&
 name|V
-argument_list|)
-block|;
-specifier|static
-name|Constant
-operator|*
-name|get
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-name|Constant
-operator|*
-operator|>
-operator|&
-name|V
-argument_list|)
-block|;
-specifier|static
-name|Constant
-operator|*
-name|get
-argument_list|(
-argument|Constant *const *Vals
-argument_list|,
-argument|unsigned NumVals
 argument_list|)
 block|;
 comment|/// Transparently provide more efficient getOperand methods.
@@ -1823,6 +1806,7 @@ name|Constant
 operator|*
 name|getSplatValue
 argument_list|()
+specifier|const
 block|;
 name|virtual
 name|void
@@ -1889,6 +1873,7 @@ operator|:
 name|public
 name|VariadicOperandTraits
 operator|<
+name|ConstantVector
 operator|>
 block|{ }
 block|;
@@ -2277,6 +2262,8 @@ operator|:
 name|public
 name|FixedNumOperandTraits
 operator|<
+name|BlockAddress
+block|,
 literal|2
 operator|>
 block|{ }
@@ -2417,6 +2404,11 @@ operator|*
 name|C3
 argument_list|)
 block|;
+name|template
+operator|<
+name|typename
+name|IndexTy
+operator|>
 specifier|static
 name|Constant
 operator|*
@@ -2426,23 +2418,11 @@ argument|const Type *Ty
 argument_list|,
 argument|Constant *C
 argument_list|,
-argument|Value* const *Idxs
+argument|IndexTy const *Idxs
 argument_list|,
 argument|unsigned NumIdxs
-argument_list|)
-block|;
-specifier|static
-name|Constant
-operator|*
-name|getInBoundsGetElementPtrTy
-argument_list|(
-argument|const Type *Ty
 argument_list|,
-argument|Constant *C
-argument_list|,
-argument|Value* const *Idxs
-argument_list|,
-argument|unsigned NumIdxs
+argument|bool InBounds
 argument_list|)
 block|;
 specifier|static
@@ -2540,6 +2520,25 @@ argument_list|,
 argument|unsigned NumIdxs
 argument_list|)
 block|;
+name|template
+operator|<
+name|typename
+name|IndexTy
+operator|>
+specifier|static
+name|Constant
+operator|*
+name|getGetElementPtrImpl
+argument_list|(
+argument|Constant *C
+argument_list|,
+argument|IndexTy const *IdxList
+argument_list|,
+argument|unsigned NumIdx
+argument_list|,
+argument|bool InBounds
+argument_list|)
+block|;
 name|public
 operator|:
 comment|// Static methods to construct a ConstantExpr of different kinds.  Note that
@@ -2582,7 +2581,7 @@ name|Constant
 operator|*
 name|getOffsetOf
 argument_list|(
-argument|const StructType* STy
+argument|const StructType *STy
 argument_list|,
 argument|unsigned FieldNo
 argument_list|)
@@ -2610,9 +2609,11 @@ name|Constant
 operator|*
 name|getNeg
 argument_list|(
-name|Constant
-operator|*
-name|C
+argument|Constant *C
+argument_list|,
+argument|bool HasNUW = false
+argument_list|,
+argument|bool HasNSW =false
 argument_list|)
 block|;
 specifier|static
@@ -2640,13 +2641,13 @@ name|Constant
 operator|*
 name|getAdd
 argument_list|(
-name|Constant
-operator|*
-name|C1
+argument|Constant *C1
 argument_list|,
-name|Constant
-operator|*
-name|C2
+argument|Constant *C2
+argument_list|,
+argument|bool HasNUW = false
+argument_list|,
+argument|bool HasNSW = false
 argument_list|)
 block|;
 specifier|static
@@ -2668,13 +2669,13 @@ name|Constant
 operator|*
 name|getSub
 argument_list|(
-name|Constant
-operator|*
-name|C1
+argument|Constant *C1
 argument_list|,
-name|Constant
-operator|*
-name|C2
+argument|Constant *C2
+argument_list|,
+argument|bool HasNUW = false
+argument_list|,
+argument|bool HasNSW = false
 argument_list|)
 block|;
 specifier|static
@@ -2696,13 +2697,13 @@ name|Constant
 operator|*
 name|getMul
 argument_list|(
-name|Constant
-operator|*
-name|C1
+argument|Constant *C1
 argument_list|,
-name|Constant
-operator|*
-name|C2
+argument|Constant *C2
+argument_list|,
+argument|bool HasNUW = false
+argument_list|,
+argument|bool HasNSW = false
 argument_list|)
 block|;
 specifier|static
@@ -2724,13 +2725,11 @@ name|Constant
 operator|*
 name|getUDiv
 argument_list|(
-name|Constant
-operator|*
-name|C1
+argument|Constant *C1
 argument_list|,
-name|Constant
-operator|*
-name|C2
+argument|Constant *C2
+argument_list|,
+argument|bool isExact = false
 argument_list|)
 block|;
 specifier|static
@@ -2738,13 +2737,11 @@ name|Constant
 operator|*
 name|getSDiv
 argument_list|(
-name|Constant
-operator|*
-name|C1
+argument|Constant *C1
 argument_list|,
-name|Constant
-operator|*
-name|C2
+argument|Constant *C2
+argument_list|,
+argument|bool isExact = false
 argument_list|)
 block|;
 specifier|static
@@ -2850,13 +2847,13 @@ name|Constant
 operator|*
 name|getShl
 argument_list|(
-name|Constant
-operator|*
-name|C1
+argument|Constant *C1
 argument_list|,
-name|Constant
-operator|*
-name|C2
+argument|Constant *C2
+argument_list|,
+argument|bool HasNUW = false
+argument_list|,
+argument|bool HasNSW = false
 argument_list|)
 block|;
 specifier|static
@@ -2864,13 +2861,11 @@ name|Constant
 operator|*
 name|getLShr
 argument_list|(
-name|Constant
-operator|*
-name|C1
+argument|Constant *C1
 argument_list|,
-name|Constant
-operator|*
-name|C2
+argument|Constant *C2
+argument_list|,
+argument|bool isExact = false
 argument_list|)
 block|;
 specifier|static
@@ -2878,13 +2873,11 @@ name|Constant
 operator|*
 name|getAShr
 argument_list|(
-name|Constant
-operator|*
-name|C1
+argument|Constant *C1
 argument_list|,
-name|Constant
-operator|*
-name|C2
+argument|Constant *C2
+argument_list|,
+argument|bool isExact = false
 argument_list|)
 block|;
 specifier|static
@@ -3072,119 +3065,307 @@ name|Constant
 operator|*
 name|getNSWNeg
 argument_list|(
-name|Constant
-operator|*
-name|C
+argument|Constant *C
 argument_list|)
-block|;
+block|{
+return|return
+name|getNeg
+argument_list|(
+name|C
+argument_list|,
+name|false
+argument_list|,
+name|true
+argument_list|)
+return|;
+block|}
 specifier|static
 name|Constant
 operator|*
 name|getNUWNeg
 argument_list|(
-name|Constant
-operator|*
-name|C
+argument|Constant *C
 argument_list|)
-block|;
+block|{
+return|return
+name|getNeg
+argument_list|(
+name|C
+argument_list|,
+name|true
+argument_list|,
+name|false
+argument_list|)
+return|;
+block|}
 specifier|static
 name|Constant
 operator|*
 name|getNSWAdd
 argument_list|(
-name|Constant
-operator|*
+argument|Constant *C1
+argument_list|,
+argument|Constant *C2
+argument_list|)
+block|{
+return|return
+name|getAdd
+argument_list|(
 name|C1
 argument_list|,
-name|Constant
-operator|*
 name|C2
+argument_list|,
+name|false
+argument_list|,
+name|true
 argument_list|)
-block|;
+return|;
+block|}
 specifier|static
 name|Constant
 operator|*
 name|getNUWAdd
 argument_list|(
-name|Constant
-operator|*
+argument|Constant *C1
+argument_list|,
+argument|Constant *C2
+argument_list|)
+block|{
+return|return
+name|getAdd
+argument_list|(
 name|C1
 argument_list|,
-name|Constant
-operator|*
 name|C2
+argument_list|,
+name|true
+argument_list|,
+name|false
 argument_list|)
-block|;
+return|;
+block|}
 specifier|static
 name|Constant
 operator|*
 name|getNSWSub
 argument_list|(
-name|Constant
-operator|*
+argument|Constant *C1
+argument_list|,
+argument|Constant *C2
+argument_list|)
+block|{
+return|return
+name|getSub
+argument_list|(
 name|C1
 argument_list|,
-name|Constant
-operator|*
 name|C2
+argument_list|,
+name|false
+argument_list|,
+name|true
 argument_list|)
-block|;
+return|;
+block|}
 specifier|static
 name|Constant
 operator|*
 name|getNUWSub
 argument_list|(
-name|Constant
-operator|*
+argument|Constant *C1
+argument_list|,
+argument|Constant *C2
+argument_list|)
+block|{
+return|return
+name|getSub
+argument_list|(
 name|C1
 argument_list|,
-name|Constant
-operator|*
 name|C2
+argument_list|,
+name|true
+argument_list|,
+name|false
 argument_list|)
-block|;
+return|;
+block|}
 specifier|static
 name|Constant
 operator|*
 name|getNSWMul
 argument_list|(
-name|Constant
-operator|*
+argument|Constant *C1
+argument_list|,
+argument|Constant *C2
+argument_list|)
+block|{
+return|return
+name|getMul
+argument_list|(
 name|C1
 argument_list|,
-name|Constant
-operator|*
 name|C2
+argument_list|,
+name|false
+argument_list|,
+name|true
 argument_list|)
-block|;
+return|;
+block|}
 specifier|static
 name|Constant
 operator|*
 name|getNUWMul
 argument_list|(
-name|Constant
-operator|*
+argument|Constant *C1
+argument_list|,
+argument|Constant *C2
+argument_list|)
+block|{
+return|return
+name|getMul
+argument_list|(
 name|C1
 argument_list|,
+name|C2
+argument_list|,
+name|true
+argument_list|,
+name|false
+argument_list|)
+return|;
+block|}
+specifier|static
 name|Constant
 operator|*
-name|C2
+name|getNSWShl
+argument_list|(
+argument|Constant *C1
+argument_list|,
+argument|Constant *C2
 argument_list|)
-block|;
+block|{
+return|return
+name|getShl
+argument_list|(
+name|C1
+argument_list|,
+name|C2
+argument_list|,
+name|false
+argument_list|,
+name|true
+argument_list|)
+return|;
+block|}
+specifier|static
+name|Constant
+operator|*
+name|getNUWShl
+argument_list|(
+argument|Constant *C1
+argument_list|,
+argument|Constant *C2
+argument_list|)
+block|{
+return|return
+name|getShl
+argument_list|(
+name|C1
+argument_list|,
+name|C2
+argument_list|,
+name|true
+argument_list|,
+name|false
+argument_list|)
+return|;
+block|}
 specifier|static
 name|Constant
 operator|*
 name|getExactSDiv
 argument_list|(
-name|Constant
-operator|*
+argument|Constant *C1
+argument_list|,
+argument|Constant *C2
+argument_list|)
+block|{
+return|return
+name|getSDiv
+argument_list|(
 name|C1
 argument_list|,
+name|C2
+argument_list|,
+name|true
+argument_list|)
+return|;
+block|}
+specifier|static
 name|Constant
 operator|*
-name|C2
+name|getExactUDiv
+argument_list|(
+argument|Constant *C1
+argument_list|,
+argument|Constant *C2
 argument_list|)
-block|;
+block|{
+return|return
+name|getUDiv
+argument_list|(
+name|C1
+argument_list|,
+name|C2
+argument_list|,
+name|true
+argument_list|)
+return|;
+block|}
+specifier|static
+name|Constant
+operator|*
+name|getExactAShr
+argument_list|(
+argument|Constant *C1
+argument_list|,
+argument|Constant *C2
+argument_list|)
+block|{
+return|return
+name|getAShr
+argument_list|(
+name|C1
+argument_list|,
+name|C2
+argument_list|,
+name|true
+argument_list|)
+return|;
+block|}
+specifier|static
+name|Constant
+operator|*
+name|getExactLShr
+argument_list|(
+argument|Constant *C1
+argument_list|,
+argument|Constant *C2
+argument_list|)
+block|{
+return|return
+name|getLShr
+argument_list|(
+name|C1
+argument_list|,
+name|C2
+argument_list|,
+name|true
+argument_list|)
+return|;
+block|}
 comment|/// Transparently provide more efficient getOperand methods.
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
@@ -3444,6 +3625,8 @@ argument_list|,
 argument|Constant *const *IdxList
 argument_list|,
 argument|unsigned NumIdx
+argument_list|,
+argument|bool InBounds = false
 argument_list|)
 block|;
 specifier|static
@@ -3453,9 +3636,11 @@ name|getGetElementPtr
 argument_list|(
 argument|Constant *C
 argument_list|,
-argument|Value* const *IdxList
+argument|Value *const *IdxList
 argument_list|,
 argument|unsigned NumIdx
+argument_list|,
+argument|bool InBounds = false
 argument_list|)
 block|;
 comment|/// Create an "inbounds" getelementptr. See the documentation for the
@@ -3471,7 +3656,20 @@ argument|Constant *const *IdxList
 argument_list|,
 argument|unsigned NumIdx
 argument_list|)
-block|;
+block|{
+return|return
+name|getGetElementPtr
+argument_list|(
+name|C
+argument_list|,
+name|IdxList
+argument_list|,
+name|NumIdx
+argument_list|,
+name|true
+argument_list|)
+return|;
+block|}
 specifier|static
 name|Constant
 operator|*
@@ -3483,7 +3681,20 @@ argument|Value* const *IdxList
 argument_list|,
 argument|unsigned NumIdx
 argument_list|)
-block|;
+block|{
+return|return
+name|getGetElementPtr
+argument_list|(
+name|C
+argument_list|,
+name|IdxList
+argument_list|,
+name|NumIdx
+argument_list|,
+name|true
+argument_list|)
+return|;
+block|}
 specifier|static
 name|Constant
 operator|*
@@ -3747,6 +3958,8 @@ operator|:
 name|public
 name|VariadicOperandTraits
 operator|<
+name|ConstantExpr
+block|,
 literal|1
 operator|>
 block|{ }

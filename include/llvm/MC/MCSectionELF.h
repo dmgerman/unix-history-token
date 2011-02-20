@@ -65,10 +65,19 @@ directive|include
 file|"llvm/MC/MCSection.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/ELF.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|MCSymbol
+decl_stmt|;
 comment|/// MCSectionELF - This represents a section on linux, lots of unix variants
 comment|/// and some bare metal systems.
 name|class
@@ -91,16 +100,16 @@ comment|/// below.
 name|unsigned
 name|Flags
 block|;
-comment|/// IsExplicit - Indicates that this section comes from globals with an
-comment|/// explicit section specified.
-name|bool
-name|IsExplicit
-block|;
 comment|/// EntrySize - The size of each entry in this section. This size only
 comment|/// makes sense for sections that contain fixed-sized entries. If a
 comment|/// section does not contain fixed-sized entries 'EntrySize' will be 0.
 name|unsigned
 name|EntrySize
+block|;
+specifier|const
+name|MCSymbol
+operator|*
+name|Group
 block|;
 name|private
 operator|:
@@ -118,9 +127,9 @@ argument|unsigned flags
 argument_list|,
 argument|SectionKind K
 argument_list|,
-argument|bool isExplicit
-argument_list|,
 argument|unsigned entrySize
+argument_list|,
+argument|const MCSymbol *group
 argument_list|)
 operator|:
 name|MCSection
@@ -145,14 +154,14 @@ argument_list|(
 name|flags
 argument_list|)
 block|,
-name|IsExplicit
-argument_list|(
-name|isExplicit
-argument_list|)
-block|,
 name|EntrySize
 argument_list|(
-argument|entrySize
+name|entrySize
+argument_list|)
+block|,
+name|Group
+argument_list|(
+argument|group
 argument_list|)
 block|{}
 operator|~
@@ -171,191 +180,6 @@ argument_list|,
 argument|const MCAsmInfo&MAI
 argument_list|)
 specifier|const
-block|;
-comment|/// ShouldPrintSectionType - Only prints the section type if supported
-name|bool
-name|ShouldPrintSectionType
-argument_list|(
-argument|unsigned Ty
-argument_list|)
-specifier|const
-block|;
-comment|/// HasCommonSymbols - True if this section holds common symbols, this is
-comment|/// indicated on the ELF object file by a symbol with SHN_COMMON section
-comment|/// header index.
-name|bool
-name|HasCommonSymbols
-argument_list|()
-specifier|const
-block|;
-comment|/// These are the section type and flags fields.  An ELF section can have
-comment|/// only one Type, but can have more than one of the flags specified.
-comment|///
-comment|/// Valid section types.
-block|enum
-block|{
-comment|// This value marks the section header as inactive.
-name|SHT_NULL
-operator|=
-literal|0x00U
-block|,
-comment|// Holds information defined by the program, with custom format and meaning.
-name|SHT_PROGBITS
-operator|=
-literal|0x01U
-block|,
-comment|// This section holds a symbol table.
-name|SHT_SYMTAB
-operator|=
-literal|0x02U
-block|,
-comment|// The section holds a string table.
-name|SHT_STRTAB
-operator|=
-literal|0x03U
-block|,
-comment|// The section holds relocation entries with explicit addends.
-name|SHT_RELA
-operator|=
-literal|0x04U
-block|,
-comment|// The section holds a symbol hash table.
-name|SHT_HASH
-operator|=
-literal|0x05U
-block|,
-comment|// Information for dynamic linking.
-name|SHT_DYNAMIC
-operator|=
-literal|0x06U
-block|,
-comment|// The section holds information that marks the file in some way.
-name|SHT_NOTE
-operator|=
-literal|0x07U
-block|,
-comment|// A section of this type occupies no space in the file.
-name|SHT_NOBITS
-operator|=
-literal|0x08U
-block|,
-comment|// The section holds relocation entries without explicit addends.
-name|SHT_REL
-operator|=
-literal|0x09U
-block|,
-comment|// This section type is reserved but has unspecified semantics.
-name|SHT_SHLIB
-operator|=
-literal|0x0AU
-block|,
-comment|// This section holds a symbol table.
-name|SHT_DYNSYM
-operator|=
-literal|0x0BU
-block|,
-comment|// This section contains an array of pointers to initialization functions.
-name|SHT_INIT_ARRAY
-operator|=
-literal|0x0EU
-block|,
-comment|// This section contains an array of pointers to termination functions.
-name|SHT_FINI_ARRAY
-operator|=
-literal|0x0FU
-block|,
-comment|// This section contains an array of pointers to functions that are invoked
-comment|// before all other initialization functions.
-name|SHT_PREINIT_ARRAY
-operator|=
-literal|0x10U
-block|,
-comment|// A section group is a set of sections that are related and that must be
-comment|// treated specially by the linker.
-name|SHT_GROUP
-operator|=
-literal|0x11U
-block|,
-comment|// This section is associated with a section of type SHT_SYMTAB, when the
-comment|// referenced symbol table contain the escape value SHN_XINDEX
-name|SHT_SYMTAB_SHNDX
-operator|=
-literal|0x12U
-block|,
-name|LAST_KNOWN_SECTION_TYPE
-operator|=
-name|SHT_SYMTAB_SHNDX
-block|}
-block|;
-comment|/// Valid section flags.
-block|enum
-block|{
-comment|// The section contains data that should be writable.
-name|SHF_WRITE
-operator|=
-literal|0x1U
-block|,
-comment|// The section occupies memory during execution.
-name|SHF_ALLOC
-operator|=
-literal|0x2U
-block|,
-comment|// The section contains executable machine instructions.
-name|SHF_EXECINSTR
-operator|=
-literal|0x4U
-block|,
-comment|// The data in the section may be merged to eliminate duplication.
-name|SHF_MERGE
-operator|=
-literal|0x10U
-block|,
-comment|// Elements in the section consist of null-terminated character strings.
-name|SHF_STRINGS
-operator|=
-literal|0x20U
-block|,
-comment|// A field in this section holds a section header table index.
-name|SHF_INFO_LINK
-operator|=
-literal|0x40U
-block|,
-comment|// Adds special ordering requirements for link editors.
-name|SHF_LINK_ORDER
-operator|=
-literal|0x80U
-block|,
-comment|// This section requires special OS-specific processing to avoid incorrect
-comment|// behavior.
-name|SHF_OS_NONCONFORMING
-operator|=
-literal|0x100U
-block|,
-comment|// This section is a member of a section group.
-name|SHF_GROUP
-operator|=
-literal|0x200U
-block|,
-comment|// This section holds Thread-Local Storage.
-name|SHF_TLS
-operator|=
-literal|0x400U
-block|,
-comment|// Start of target-specific flags.
-comment|/// XCORE_SHF_CP_SECTION - All sections with the "c" flag are grouped
-comment|/// together by the linker to form the constant pool and the cp register is
-comment|/// set to the start of the constant pool by the boot code.
-name|XCORE_SHF_CP_SECTION
-operator|=
-literal|0x800U
-block|,
-comment|/// XCORE_SHF_DP_SECTION - All sections with the "d" flag are grouped
-comment|/// together by the linker to form the data section and the dp register is
-comment|/// set to the start of the section by the boot code.
-name|XCORE_SHF_DP_SECTION
-operator|=
-literal|0x1000U
-block|}
 block|;
 name|StringRef
 name|getSectionName
@@ -393,6 +217,17 @@ return|return
 name|EntrySize
 return|;
 block|}
+specifier|const
+name|MCSymbol
+operator|*
+name|getGroup
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Group
+return|;
+block|}
 name|void
 name|PrintSwitchToSection
 argument_list|(
@@ -400,6 +235,18 @@ argument|const MCAsmInfo&MAI
 argument_list|,
 argument|raw_ostream&OS
 argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|UseCodeAlign
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|bool
+name|isVirtualSection
+argument_list|()
 specifier|const
 block|;
 comment|/// isBaseAddressKnownZero - We know that non-allocatable sections (like
@@ -415,6 +262,8 @@ operator|(
 name|getFlags
 argument_list|()
 operator|&
+name|ELF
+operator|::
 name|SHF_ALLOC
 operator|)
 operator|==
@@ -448,8 +297,16 @@ return|return
 name|true
 return|;
 block|}
-expr|}
+comment|// Return the entry size for sections with fixed-width data.
+specifier|static
+name|unsigned
+name|DetermineEntrySize
+argument_list|(
+argument|SectionKind Kind
+argument_list|)
 block|;  }
+decl_stmt|;
+block|}
 end_decl_stmt
 
 begin_comment

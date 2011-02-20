@@ -95,6 +95,12 @@ directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/DataTypes.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -466,7 +472,7 @@ argument_list|()
 specifier|const
 block|;
 comment|/// isLegalInteger - This function returns true if the specified type is
-comment|/// known tobe a native integer type supported by the CPU.  For example,
+comment|/// known to be a native integer type supported by the CPU.  For example,
 comment|/// i64 is not native on most 32-bit CPUs and i37 is not native on any known
 comment|/// one.  This returns false if the integer width is not legal.
 comment|///

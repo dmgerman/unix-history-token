@@ -4,7 +4,7 @@ comment|// PR 1417
 end_comment
 
 begin_comment
-comment|// RUN: %llvmgcc -xc  %s -c -o - | llvm-dis | grep "struct.anon = type \{\}"
+comment|// RUN: %llvmgcc -xc  %s -S -o - | grep "struct.anon = type \{\}"
 end_comment
 
 begin_struct

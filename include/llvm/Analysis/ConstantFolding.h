@@ -36,7 +36,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file declares routines for folding instructions into constants.
+comment|// This file declares routines for folding instructions into constants when all
+end_comment
+
+begin_comment
+comment|// operands are constants, for example "sub i32 1, 0" -> "1".
 end_comment
 
 begin_comment
@@ -101,11 +105,11 @@ decl_stmt|;
 name|class
 name|Type
 decl_stmt|;
-comment|/// ConstantFoldInstruction - Attempt to constant fold the specified
-comment|/// instruction.  If successful, the constant result is returned, if not, null
-comment|/// is returned.  Note that this function can only fail when attempting to fold
-comment|/// instructions like loads and stores, which have no constant expression form.
-comment|///
+comment|/// ConstantFoldInstruction - Try to constant fold the specified instruction.
+comment|/// If successful, the constant result is returned, if not, null is returned.
+comment|/// Note that this fails if not all of the operands are constant.  Otherwise,
+comment|/// this function can only fail when attempting to fold instructions like loads
+comment|/// and stores, which have no constant expression form.
 name|Constant
 modifier|*
 name|ConstantFoldInstruction

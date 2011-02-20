@@ -249,6 +249,42 @@ name|OS
 argument_list|)
 block|; }
 decl_stmt|;
+comment|/// ClangAttrSpellingListEmitter - class emits the list of spellings for attributes for
+comment|///   clang.
+name|class
+name|ClangAttrSpellingListEmitter
+range|:
+name|public
+name|TableGenBackend
+block|{
+name|RecordKeeper
+operator|&
+name|Records
+block|;
+name|public
+operator|:
+name|explicit
+name|ClangAttrSpellingListEmitter
+argument_list|(
+name|RecordKeeper
+operator|&
+name|R
+argument_list|)
+operator|:
+name|Records
+argument_list|(
+argument|R
+argument_list|)
+block|{}
+name|void
+name|run
+argument_list|(
+name|raw_ostream
+operator|&
+name|OS
+argument_list|)
+block|; }
+decl_stmt|;
 block|}
 end_decl_stmt
 

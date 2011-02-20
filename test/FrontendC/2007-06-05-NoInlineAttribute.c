@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %llvmgcc -O2 -c -emit-llvm %s -o - | llvm-dis | grep call
+comment|// RUN: %llvmgcc -O2 -S %s -o - | grep call
 end_comment
 
 begin_function_decl

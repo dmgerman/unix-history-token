@@ -184,6 +184,15 @@ argument_list|(
 argument|this
 argument_list|)
 block|{     }
+name|bool
+name|isBottomUp
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
 name|void
 name|initNodes
 argument_list|(
@@ -331,6 +340,14 @@ name|SUnit
 operator|*
 name|SU
 argument_list|)
+block|;
+name|virtual
+name|void
+name|dump
+argument_list|(
+argument|ScheduleDAG* DAG
+argument_list|)
+specifier|const
 block|;
 comment|// ScheduledNode - As nodes are scheduled, we look to see if there are any
 comment|// successor nodes that have a single unscheduled predecessor.  If so, that

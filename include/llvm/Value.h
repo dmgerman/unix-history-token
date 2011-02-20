@@ -735,6 +735,17 @@ return|return
 name|SubclassOptionalData
 return|;
 block|}
+comment|/// clearSubclassOptionalData - Clear the optional flags contained in
+comment|/// this value.
+name|void
+name|clearSubclassOptionalData
+parameter_list|()
+block|{
+name|SubclassOptionalData
+operator|=
+literal|0
+expr_stmt|;
+block|}
 comment|/// hasSameSubclassOptionalData - Test whether the optional flags contained
 comment|/// in this value are equal to the optional flags in the given value.
 name|bool
@@ -845,49 +856,13 @@ name|stripPointerCasts
 argument_list|()
 return|;
 block|}
-comment|/// getUnderlyingObject - This method strips off any GEP address adjustments
-comment|/// and pointer casts from the specified value, returning the original object
-comment|/// being addressed.  Note that the returned value has pointer type if the
-comment|/// specified value does.  If the MaxLookup value is non-zero, it limits the
-comment|/// number of instructions to be stripped off.
-name|Value
-modifier|*
-name|getUnderlyingObject
-parameter_list|(
-name|unsigned
-name|MaxLookup
-init|=
-literal|6
-parameter_list|)
-function_decl|;
+comment|/// isDereferenceablePointer - Test if this value is always a pointer to
+comment|/// allocated and suitably aligned memory for a simple load or store.
+name|bool
+name|isDereferenceablePointer
+argument_list|()
 specifier|const
-name|Value
-modifier|*
-name|getUnderlyingObject
-argument_list|(
-name|unsigned
-name|MaxLookup
-operator|=
-literal|6
-argument_list|)
-decl|const
-block|{
-return|return
-name|const_cast
-operator|<
-name|Value
-operator|*
-operator|>
-operator|(
-name|this
-operator|)
-operator|->
-name|getUnderlyingObject
-argument_list|(
-name|MaxLookup
-argument_list|)
-return|;
-block|}
+expr_stmt|;
 comment|/// DoPHITranslation - If this value is a PHI node with CurBB as its parent,
 comment|/// return the value in the PHI node corresponding to PredBB.  If not, return
 comment|/// ourself.  This is useful if you want to know the value something has in a

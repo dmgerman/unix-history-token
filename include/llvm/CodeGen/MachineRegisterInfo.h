@@ -74,6 +74,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/IndexedMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/DebugLoc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -87,15 +105,11 @@ comment|/// etc.
 name|class
 name|MachineRegisterInfo
 block|{
-comment|/// VRegInfo - Information we keep for each virtual register.  The entries in
-comment|/// this vector are actually converted to vreg numbers by adding the
-comment|/// TargetRegisterInfo::FirstVirtualRegister delta to their index.
+comment|/// VRegInfo - Information we keep for each virtual register.
 comment|///
 comment|/// Each element in this list contains the register class of the vreg and the
 comment|/// start of the use/def list for the register.
-name|std
-operator|::
-name|vector
+name|IndexedMap
 operator|<
 name|std
 operator|::
@@ -108,7 +122,9 @@ operator|,
 name|MachineOperand
 operator|*
 operator|>
-expr|>
+operator|,
+name|VirtReg2IndexFunctor
+operator|>
 name|VRegInfo
 expr_stmt|;
 comment|/// RegClassVRegMap - This vector acts as a map from TargetRegisterClass to
@@ -130,9 +146,7 @@ comment|/// for the value 0 which means the second value of the pair is the pref
 comment|/// register for allocation. For example, if the hint is<0, 1024>, it means
 comment|/// the allocator should prefer the physical register allocated to the virtual
 comment|/// register of the hint.
-name|std
-operator|::
-name|vector
+name|IndexedMap
 operator|<
 name|std
 operator|::
@@ -142,7 +156,9 @@ name|unsigned
 operator|,
 name|unsigned
 operator|>
-expr|>
+operator|,
+name|VirtReg2IndexFunctor
+operator|>
 name|RegAllocHints
 expr_stmt|;
 comment|/// PhysRegUseDefLists - This is an array of the head of the use/def list for
@@ -187,6 +203,15 @@ operator|<
 name|unsigned
 operator|>
 name|LiveOuts
+expr_stmt|;
+comment|/// LiveInLocs - Keep track of location livein registers.
+name|DenseMap
+operator|<
+name|unsigned
+operator|,
+name|DebugLoc
+operator|>
+name|LiveInLocs
 expr_stmt|;
 name|MachineRegisterInfo
 argument_list|(
@@ -600,24 +625,13 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|RegNo
-operator|<
 name|TargetRegisterInfo
 operator|::
-name|FirstVirtualRegister
+name|isVirtualRegister
+argument_list|(
+name|RegNo
+argument_list|)
 condition|)
-return|return
-name|PhysRegUseDefLists
-index|[
-name|RegNo
-index|]
-return|;
-name|RegNo
-operator|-=
-name|TargetRegisterInfo
-operator|::
-name|FirstVirtualRegister
-expr_stmt|;
 return|return
 name|VRegInfo
 index|[
@@ -625,6 +639,12 @@ name|RegNo
 index|]
 operator|.
 name|second
+return|;
+return|return
+name|PhysRegUseDefLists
+index|[
+name|RegNo
+index|]
 return|;
 block|}
 name|MachineOperand
@@ -638,24 +658,13 @@ decl|const
 block|{
 if|if
 condition|(
-name|RegNo
-operator|<
 name|TargetRegisterInfo
 operator|::
-name|FirstVirtualRegister
+name|isVirtualRegister
+argument_list|(
+name|RegNo
+argument_list|)
 condition|)
-return|return
-name|PhysRegUseDefLists
-index|[
-name|RegNo
-index|]
-return|;
-name|RegNo
-operator|-=
-name|TargetRegisterInfo
-operator|::
-name|FirstVirtualRegister
-expr_stmt|;
 return|return
 name|VRegInfo
 index|[
@@ -663,6 +672,12 @@ name|RegNo
 index|]
 operator|.
 name|second
+return|;
+return|return
+name|PhysRegUseDefLists
+index|[
+name|RegNo
+index|]
 return|;
 block|}
 comment|/// getVRegDef - Return the machine instr that defines the specified virtual
@@ -717,24 +732,6 @@ name|Reg
 argument_list|)
 decl|const
 block|{
-name|Reg
-operator|-=
-name|TargetRegisterInfo
-operator|::
-name|FirstVirtualRegister
-expr_stmt|;
-name|assert
-argument_list|(
-name|Reg
-operator|<
-name|VRegInfo
-operator|.
-name|size
-argument_list|()
-operator|&&
-literal|"Invalid vreg!"
-argument_list|)
-expr_stmt|;
 return|return
 name|VRegInfo
 index|[
@@ -758,6 +755,25 @@ modifier|*
 name|RC
 parameter_list|)
 function_decl|;
+comment|/// constrainRegClass - Constrain the register class of the specified virtual
+comment|/// register to be a common subclass of RC and the current register class.
+comment|/// Return the new register class, or NULL if no such class exists.
+comment|/// This should only be used when the constraint is known to be trivial, like
+comment|/// GR32 -> GR32_NOSP. Beware of increasing register pressure.
+specifier|const
+name|TargetRegisterClass
+modifier|*
+name|constrainRegClass
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|,
+specifier|const
+name|TargetRegisterClass
+modifier|*
+name|RC
+parameter_list|)
+function_decl|;
 comment|/// createVirtualRegister - Create and return a new virtual register in the
 comment|/// function with the specified register class.
 comment|///
@@ -770,27 +786,18 @@ modifier|*
 name|RegClass
 parameter_list|)
 function_decl|;
-comment|/// getLastVirtReg - Return the highest currently assigned virtual register.
+comment|/// getNumVirtRegs - Return the number of virtual registers created.
 comment|///
 name|unsigned
-name|getLastVirtReg
+name|getNumVirtRegs
 argument_list|()
 specifier|const
 block|{
 return|return
-operator|(
-name|unsigned
-operator|)
 name|VRegInfo
 operator|.
 name|size
 argument_list|()
-operator|+
-name|TargetRegisterInfo
-operator|::
-name|FirstVirtualRegister
-operator|-
-literal|1
 return|;
 block|}
 comment|/// getRegClassVirtRegs - Return the list of virtual registers of the given
@@ -834,24 +841,6 @@ name|unsigned
 name|PrefReg
 parameter_list|)
 block|{
-name|Reg
-operator|-=
-name|TargetRegisterInfo
-operator|::
-name|FirstVirtualRegister
-expr_stmt|;
-name|assert
-argument_list|(
-name|Reg
-operator|<
-name|VRegInfo
-operator|.
-name|size
-argument_list|()
-operator|&&
-literal|"Invalid vreg!"
-argument_list|)
-expr_stmt|;
 name|RegAllocHints
 index|[
 name|Reg
@@ -887,24 +876,6 @@ argument|unsigned Reg
 argument_list|)
 specifier|const
 block|{
-name|Reg
-operator|-=
-name|TargetRegisterInfo
-operator|::
-name|FirstVirtualRegister
-block|;
-name|assert
-argument_list|(
-name|Reg
-operator|<
-name|VRegInfo
-operator|.
-name|size
-argument_list|()
-operator|&&
-literal|"Invalid vreg!"
-argument_list|)
-block|;
 return|return
 name|RegAllocHints
 index|[
@@ -1037,6 +1008,25 @@ name|push_back
 argument_list|(
 name|Reg
 argument_list|)
+expr_stmt|;
+block|}
+comment|/// addLiveInLoc - Keep track of location info for live in reg.
+name|void
+name|addLiveInLoc
+parameter_list|(
+name|unsigned
+name|VReg
+parameter_list|,
+name|DebugLoc
+name|DL
+parameter_list|)
+block|{
+name|LiveInLocs
+index|[
+name|VReg
+index|]
+operator|=
+name|DL
 expr_stmt|;
 block|}
 comment|// Iteration support for live in/out sets.  These sets are kept in sorted

@@ -92,6 +92,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|"MBlazeFrameLowering.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"MBlazeELFWriterInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MCStreamer.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetMachine.h"
 end_include
 
@@ -104,7 +122,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetFrameInfo.h"
+file|"llvm/Target/TargetFrameLowering.h"
 end_include
 
 begin_decl_stmt
@@ -131,8 +149,8 @@ comment|// Calculates type size& alignment
 name|MBlazeInstrInfo
 name|InstrInfo
 block|;
-name|TargetFrameInfo
-name|FrameInfo
+name|MBlazeFrameLowering
+name|FrameLowering
 block|;
 name|MBlazeTargetLowering
 name|TLInfo
@@ -142,6 +160,9 @@ name|TSInfo
 block|;
 name|MBlazeIntrinsicInfo
 name|IntrinsicInfo
+block|;
+name|MBlazeELFWriterInfo
+name|ELFWriterInfo
 block|;
 name|public
 operator|:
@@ -182,15 +203,15 @@ return|;
 block|}
 name|virtual
 specifier|const
-name|TargetFrameInfo
+name|TargetFrameLowering
 operator|*
-name|getFrameInfo
+name|getFrameLowering
 argument_list|()
 specifier|const
 block|{
 return|return
 operator|&
-name|FrameInfo
+name|FrameLowering
 return|;
 block|}
 name|virtual
@@ -273,6 +294,19 @@ operator|&
 name|IntrinsicInfo
 return|;
 block|}
+name|virtual
+specifier|const
+name|MBlazeELFWriterInfo
+operator|*
+name|getELFWriterInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|&
+name|ELFWriterInfo
+return|;
+block|}
 comment|// Pass Pipeline Configuration
 name|virtual
 name|bool
@@ -280,7 +314,7 @@ name|addInstSelector
 argument_list|(
 argument|PassManagerBase&PM
 argument_list|,
-argument|CodeGenOpt::Level OptLevel
+argument|CodeGenOpt::Level Opt
 argument_list|)
 block|;
 name|virtual
@@ -289,7 +323,7 @@ name|addPreEmitPass
 argument_list|(
 argument|PassManagerBase&PM
 argument_list|,
-argument|CodeGenOpt::Level OptLevel
+argument|CodeGenOpt::Level Opt
 argument_list|)
 block|;   }
 decl_stmt|;

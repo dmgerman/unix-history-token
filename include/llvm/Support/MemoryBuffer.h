@@ -68,25 +68,24 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/System/DataTypes.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|error_code
+decl_stmt|;
+name|template
+operator|<
+name|class
+name|T
+operator|>
+name|class
+name|OwningPtr
+expr_stmt|;
 comment|/// MemoryBuffer - This interface provides simple read-only access to a block
 comment|/// of memory, and provides simple methods for reading files and standard input
 comment|/// into a memory buffer.  In addition to basic access to the characters in the
@@ -224,38 +223,28 @@ comment|/// MemoryBuffer if successful, otherwise returning null.  If FileSize i
 comment|/// specified, this means that the client knows that the file exists and that
 comment|/// it has the specified size.
 specifier|static
-name|MemoryBuffer
-modifier|*
+name|error_code
 name|getFile
 argument_list|(
 name|StringRef
 name|Filename
 argument_list|,
-name|std
-operator|::
-name|string
-operator|*
-name|ErrStr
-operator|=
-literal|0
+name|OwningPtr
+operator|<
+name|MemoryBuffer
+operator|>
+operator|&
+name|result
 argument_list|,
 name|int64_t
 name|FileSize
 operator|=
 operator|-
 literal|1
-argument_list|,
-expr|struct
-name|stat
-operator|*
-name|FileInfo
-operator|=
-literal|0
 argument_list|)
 decl_stmt|;
 specifier|static
-name|MemoryBuffer
-modifier|*
+name|error_code
 name|getFile
 argument_list|(
 specifier|const
@@ -263,30 +252,50 @@ name|char
 operator|*
 name|Filename
 argument_list|,
-name|std
-operator|::
-name|string
-operator|*
-name|ErrStr
-operator|=
-literal|0
+name|OwningPtr
+operator|<
+name|MemoryBuffer
+operator|>
+operator|&
+name|result
 argument_list|,
 name|int64_t
 name|FileSize
 operator|=
 operator|-
 literal|1
+argument_list|)
+decl_stmt|;
+comment|/// getOpenFile - Given an already-open file descriptor, read the file and
+comment|/// return a MemoryBuffer.
+specifier|static
+name|error_code
+name|getOpenFile
+argument_list|(
+name|int
+name|FD
 argument_list|,
-expr|struct
-name|stat
+specifier|const
+name|char
 operator|*
-name|FileInfo
+name|Filename
+argument_list|,
+name|OwningPtr
+operator|<
+name|MemoryBuffer
+operator|>
+operator|&
+name|result
+argument_list|,
+name|int64_t
+name|FileSize
 operator|=
-literal|0
+operator|-
+literal|1
 argument_list|)
 decl_stmt|;
 comment|/// getMemBuffer - Open the specified memory range as a MemoryBuffer.  Note
-comment|/// that EndPtr[0] must be a null byte and be accessible!
+comment|/// that InputData must be null terminated.
 specifier|static
 name|MemoryBuffer
 modifier|*
@@ -302,8 +311,8 @@ literal|""
 parameter_list|)
 function_decl|;
 comment|/// getMemBufferCopy - Open the specified memory range as a MemoryBuffer,
-comment|/// copying the contents and taking ownership of it.  This has no requirements
-comment|/// on EndPtr[0].
+comment|/// copying the contents and taking ownership of it.  InputData does not
+comment|/// have to be null terminated.
 specifier|static
 name|MemoryBuffer
 modifier|*
@@ -355,57 +364,45 @@ literal|""
 parameter_list|)
 function_decl|;
 comment|/// getSTDIN - Read all of stdin into a file buffer, and return it.
-comment|/// If an error occurs, this returns null and fills in *ErrStr with a reason.
+comment|/// If an error occurs, this returns null and sets ec.
 specifier|static
-name|MemoryBuffer
-modifier|*
+name|error_code
 name|getSTDIN
 argument_list|(
-name|std
-operator|::
-name|string
-operator|*
-name|ErrStr
-operator|=
-literal|0
+name|OwningPtr
+operator|<
+name|MemoryBuffer
+operator|>
+operator|&
+name|result
 argument_list|)
 decl_stmt|;
 comment|/// getFileOrSTDIN - Open the specified file as a MemoryBuffer, or open stdin
-comment|/// if the Filename is "-".  If an error occurs, this returns null and fills
-comment|/// in *ErrStr with a reason.
+comment|/// if the Filename is "-".  If an error occurs, this returns null and sets
+comment|/// ec.
 specifier|static
-name|MemoryBuffer
-modifier|*
+name|error_code
 name|getFileOrSTDIN
 argument_list|(
 name|StringRef
 name|Filename
 argument_list|,
-name|std
-operator|::
-name|string
-operator|*
-name|ErrStr
-operator|=
-literal|0
+name|OwningPtr
+operator|<
+name|MemoryBuffer
+operator|>
+operator|&
+name|result
 argument_list|,
 name|int64_t
 name|FileSize
 operator|=
 operator|-
 literal|1
-argument_list|,
-expr|struct
-name|stat
-operator|*
-name|FileInfo
-operator|=
-literal|0
 argument_list|)
 decl_stmt|;
 specifier|static
-name|MemoryBuffer
-modifier|*
+name|error_code
 name|getFileOrSTDIN
 argument_list|(
 specifier|const
@@ -413,26 +410,18 @@ name|char
 operator|*
 name|Filename
 argument_list|,
-name|std
-operator|::
-name|string
-operator|*
-name|ErrStr
-operator|=
-literal|0
+name|OwningPtr
+operator|<
+name|MemoryBuffer
+operator|>
+operator|&
+name|result
 argument_list|,
 name|int64_t
 name|FileSize
 operator|=
 operator|-
 literal|1
-argument_list|,
-expr|struct
-name|stat
-operator|*
-name|FileInfo
-operator|=
-literal|0
 argument_list|)
 decl_stmt|;
 block|}

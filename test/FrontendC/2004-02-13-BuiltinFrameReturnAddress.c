@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %llvmgcc -xc %s -c -o - | llvm-dis | grep llvm.*address | count 4
+comment|// RUN: %llvmgcc -xc %s -S -o - | grep llvm.*address | count 4
 end_comment
 
 begin_function

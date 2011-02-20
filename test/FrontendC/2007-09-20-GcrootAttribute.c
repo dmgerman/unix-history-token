@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %llvmgcc -S -emit-llvm %s -o - | grep llvm.gcroot
+comment|// RUN: %llvmgcc -S %s -o - | grep llvm.gcroot
 end_comment
 
 begin_comment
-comment|// RUN: %llvmgcc -S -emit-llvm %s -o - | grep llvm.gcroot | count 6
+comment|// RUN: %llvmgcc -S %s -o - | grep llvm.gcroot | count 6
 end_comment
 
 begin_comment
-comment|// RUN: %llvmgcc -S -emit-llvm %s -o - | llvm-as
+comment|// RUN: %llvmgcc -S %s -o - | llvm-as
 end_comment
 
 begin_typedef

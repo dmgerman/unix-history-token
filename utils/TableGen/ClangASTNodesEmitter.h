@@ -303,6 +303,8 @@ name|N
 argument_list|,
 name|SMLoc
 argument_list|()
+argument_list|,
+name|R
 argument_list|)
 decl_stmt|,
 name|BaseSuffix

@@ -98,7 +98,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/System/Path.h"
+file|"llvm/Support/Path.h"
 end_include
 
 begin_include
@@ -564,7 +564,26 @@ decl_stmt|;
 specifier|static
 name|AbstractInterpreter
 modifier|*
-name|createCustom
+name|createCustomCompiler
+argument_list|(
+name|std
+operator|::
+name|string
+operator|&
+name|Message
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|CompileCommandLine
+argument_list|)
+decl_stmt|;
+specifier|static
+name|AbstractInterpreter
+modifier|*
+name|createCustomExecutor
 argument_list|(
 name|std
 operator|::

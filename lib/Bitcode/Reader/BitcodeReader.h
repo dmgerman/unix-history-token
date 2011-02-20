@@ -976,6 +976,18 @@ modifier|*
 name|M
 parameter_list|)
 function_decl|;
+comment|/// @brief Cheap mechanism to just extract module triple
+comment|/// @returns true if an error occurred.
+name|bool
+name|ParseTriple
+argument_list|(
+name|std
+operator|::
+name|string
+operator|&
+name|Triple
+argument_list|)
+decl_stmt|;
 name|private
 label|:
 specifier|const
@@ -1332,6 +1344,16 @@ name|bool
 name|ParseMetadataAttachment
 parameter_list|()
 function_decl|;
+name|bool
+name|ParseModuleTriple
+argument_list|(
+name|std
+operator|::
+name|string
+operator|&
+name|Triple
+argument_list|)
+decl_stmt|;
 block|}
 end_decl_stmt
 

@@ -142,7 +142,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/System/DataTypes.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_include
@@ -2180,17 +2180,17 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// getFlaggedNode - If this node has a flag operand, return the node
+comment|/// getGluedNode - If this node has a glue operand, return the node
 end_comment
 
 begin_comment
-comment|/// to which the flag operand points. Otherwise return NULL.
+comment|/// to which the glue operand points. Otherwise return NULL.
 end_comment
 
 begin_expr_stmt
 name|SDNode
 operator|*
-name|getFlaggedNode
+name|getGluedNode
 argument_list|()
 specifier|const
 block|{
@@ -2211,13 +2211,10 @@ argument_list|)
 operator|.
 name|getValueType
 argument_list|()
-operator|.
-name|getSimpleVT
-argument_list|()
 operator|==
 name|MVT
 operator|::
-name|Flag
+name|Glue
 condition|)
 return|return
 name|getOperand
@@ -2245,14 +2242,14 @@ comment|// If this is a pseudo op, like copyfromreg, look to see if there is a
 end_comment
 
 begin_comment
-comment|// real target node flagged to it.  If so, return the target node.
+comment|// real target node glued to it.  If so, return the target node.
 end_comment
 
 begin_expr_stmt
 unit|const
 name|SDNode
 operator|*
-name|getFlaggedMachineNode
+name|getGluedMachineNode
 argument_list|()
 specifier|const
 block|{
@@ -2263,7 +2260,7 @@ name|FoundNode
 operator|=
 name|this
 block|;
-comment|// Climb up flag edges until a machine-opcode node is found, or the
+comment|// Climb up glue edges until a machine-opcode node is found, or the
 comment|// end of the chain is reached.
 while|while
 condition|(
@@ -2281,7 +2278,7 @@ name|N
 init|=
 name|FoundNode
 operator|->
-name|getFlaggedNode
+name|getGluedNode
 argument_list|()
 decl_stmt|;
 if|if
@@ -2305,7 +2302,7 @@ end_return
 
 begin_comment
 unit|}
-comment|/// getFlaggedUser - If this node has a flag value with a user, return
+comment|/// getGluedUser - If this node has a glue value with a user, return
 end_comment
 
 begin_comment
@@ -2315,7 +2312,7 @@ end_comment
 begin_expr_stmt
 unit|SDNode
 operator|*
-name|getFlaggedUser
+name|getGluedUser
 argument_list|()
 specifier|const
 block|{
@@ -2354,7 +2351,7 @@ argument_list|()
 operator|==
 name|MVT
 operator|::
-name|Flag
+name|Glue
 condition|)
 return|return
 operator|*
@@ -4348,6 +4345,21 @@ name|getOffset
 argument_list|()
 return|;
 block|}
+comment|/// Returns the TBAAInfo that describes the dereference.
+specifier|const
+name|MDNode
+operator|*
+name|getTBAAInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MMO
+operator|->
+name|getTBAAInfo
+argument_list|()
+return|;
+block|}
 comment|/// getMemoryVT - Return the type of the in-memory value.
 name|EVT
 name|getMemoryVT
@@ -4368,6 +4380,20 @@ specifier|const
 block|{
 return|return
 name|MMO
+return|;
+block|}
+specifier|const
+name|MachinePointerInfo
+operator|&
+name|getPointerInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MMO
+operator|->
+name|getPointerInfo
+argument_list|()
 return|;
 block|}
 comment|/// refineAlignment - Update this MemSDNode's MachineMemOperand information
@@ -4463,6 +4489,15 @@ operator|==
 name|ISD
 operator|::
 name|STORE
+operator|||
+name|N
+operator|->
+name|getOpcode
+argument_list|()
+operator|==
+name|ISD
+operator|::
+name|PREFETCH
 operator|||
 name|N
 operator|->
@@ -4906,8 +4941,8 @@ expr|}
 block|;
 comment|/// MemIntrinsicSDNode - This SDNode is used for target intrinsics that touch
 comment|/// memory and need an associated MachineMemOperand. Its opcode may be
-comment|/// INTRINSIC_VOID, INTRINSIC_W_CHAIN, or a target-specific opcode with a
-comment|/// value not less than FIRST_TARGET_MEMORY_OPCODE.
+comment|/// INTRINSIC_VOID, INTRINSIC_W_CHAIN, PREFETCH, or a target-specific opcode
+comment|/// with a value not less than FIRST_TARGET_MEMORY_OPCODE.
 name|class
 name|MemIntrinsicSDNode
 operator|:
@@ -4989,6 +5024,15 @@ operator|==
 name|ISD
 operator|::
 name|INTRINSIC_VOID
+operator|||
+name|N
+operator|->
+name|getOpcode
+argument_list|()
+operator|==
+name|ISD
+operator|::
+name|PREFETCH
 operator|||
 name|N
 operator|->

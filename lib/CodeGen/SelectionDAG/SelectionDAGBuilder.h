@@ -1112,6 +1112,8 @@ argument|const Value* SV
 argument_list|,
 argument|unsigned Rg
 argument_list|,
+argument|EVT RgVT
+argument_list|,
 argument|bool E
 argument_list|,
 argument|MachineBasicBlock* P
@@ -1139,6 +1141,11 @@ operator|,
 name|Reg
 argument_list|(
 name|Rg
+argument_list|)
+operator|,
+name|RegVT
+argument_list|(
+name|RgVT
 argument_list|)
 operator|,
 name|Emitted
@@ -1174,6 +1181,9 @@ name|SValue
 decl_stmt|;
 name|unsigned
 name|Reg
+decl_stmt|;
+name|EVT
+name|RegVT
 decl_stmt|;
 name|bool
 name|Emitted
@@ -1392,6 +1402,18 @@ block|{
 return|return
 name|CurDebugLoc
 return|;
+block|}
+name|void
+name|setCurDebugLoc
+parameter_list|(
+name|DebugLoc
+name|dl
+parameter_list|)
+block|{
+name|CurDebugLoc
+operator|=
+name|dl
+expr_stmt|;
 block|}
 name|unsigned
 name|getSDNodeOrder
@@ -1708,6 +1730,20 @@ init|=
 name|NULL
 parameter_list|)
 function_decl|;
+comment|/// UpdateSplitBlock - When an MBB was split during scheduling, update the
+comment|/// references that ned to refer to the last resulting block.
+name|void
+name|UpdateSplitBlock
+parameter_list|(
+name|MachineBasicBlock
+modifier|*
+name|First
+parameter_list|,
+name|MachineBasicBlock
+modifier|*
+name|Last
+parameter_list|)
+function_decl|;
 name|private
 label|:
 comment|// Terminator instructions.
@@ -1888,6 +1924,10 @@ function_decl|;
 name|void
 name|visitBitTestCase
 parameter_list|(
+name|BitTestBlock
+modifier|&
+name|BB
+parameter_list|,
 name|MachineBasicBlock
 modifier|*
 name|NextMBB

@@ -112,6 +112,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallPtrSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/SelectionDAGNodes.h"
 end_include
 
@@ -119,36 +125,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/CodeGen/RuntimeLibcalls.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/APFloat.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/DenseMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SmallSet.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SmallVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/STLExtras.h"
 end_include
 
 begin_include
@@ -195,6 +171,9 @@ name|class
 name|AllocaInst
 decl_stmt|;
 name|class
+name|APFloat
+decl_stmt|;
+name|class
 name|CallInst
 decl_stmt|;
 name|class
@@ -205,6 +184,9 @@ name|FastISel
 decl_stmt|;
 name|class
 name|FunctionLoweringInfo
+decl_stmt|;
+name|class
+name|ImmutableCallSite
 decl_stmt|;
 name|class
 name|MachineBasicBlock
@@ -236,6 +218,14 @@ decl_stmt|;
 name|class
 name|SelectionDAG
 decl_stmt|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|SmallVectorImpl
+expr_stmt|;
 name|class
 name|TargetData
 decl_stmt|;
@@ -462,6 +452,17 @@ specifier|const
 block|{
 return|return
 name|Pow2DivIsCheap
+return|;
+block|}
+comment|/// isJumpExpensive() - Return true if Flow Control is an expensive operation
+comment|/// that should be avoided.
+name|bool
+name|isJumpExpensive
+argument_list|()
+specifier|const
+block|{
+return|return
+name|JumpIsExpensive
 return|;
 block|}
 comment|/// getSetCCResultType - Return the ValueType of the result of SETCC
@@ -734,34 +735,6 @@ name|SimpleTy
 index|]
 operator|!=
 literal|0
-return|;
-block|}
-comment|/// isTypeSynthesizable - Return true if it's OK for the compiler to create
-comment|/// new operations of this type.  All Legal types are synthesizable except
-comment|/// MMX vector types on X86.  Non-Legal types are not synthesizable.
-name|bool
-name|isTypeSynthesizable
-argument_list|(
-name|EVT
-name|VT
-argument_list|)
-decl|const
-block|{
-return|return
-name|isTypeLegal
-argument_list|(
-name|VT
-argument_list|)
-operator|&&
-name|Synthesizable
-index|[
-name|VT
-operator|.
-name|getSimpleVT
-argument_list|()
-operator|.
-name|SimpleTy
-index|]
 return|;
 block|}
 name|class
@@ -1752,15 +1725,10 @@ name|ISD
 operator|::
 name|LAST_LOADEXT_TYPE
 operator|&&
-operator|(
-name|unsigned
-operator|)
 name|VT
 operator|.
 name|getSimpleVT
 argument_list|()
-operator|.
-name|SimpleTy
 operator|<
 name|MVT
 operator|::
@@ -1844,29 +1812,19 @@ decl|const
 block|{
 name|assert
 argument_list|(
-operator|(
-name|unsigned
-operator|)
 name|ValVT
 operator|.
 name|getSimpleVT
 argument_list|()
-operator|.
-name|SimpleTy
 operator|<
 name|MVT
 operator|::
 name|LAST_VALUETYPE
 operator|&&
-operator|(
-name|unsigned
-operator|)
 name|MemVT
 operator|.
 name|getSimpleVT
 argument_list|()
-operator|.
-name|SimpleTy
 operator|<
 name|MVT
 operator|::
@@ -1966,17 +1924,10 @@ name|ISD
 operator|::
 name|LAST_INDEXED_MODE
 operator|&&
-operator|(
-operator|(
-name|unsigned
-operator|)
 name|VT
 operator|.
 name|getSimpleVT
 argument_list|()
-operator|.
-name|SimpleTy
-operator|)
 operator|<
 name|MVT
 operator|::
@@ -2082,17 +2033,10 @@ name|ISD
 operator|::
 name|LAST_INDEXED_MODE
 operator|&&
-operator|(
-operator|(
-name|unsigned
-operator|)
 name|VT
 operator|.
 name|getSimpleVT
 argument_list|()
-operator|.
-name|SimpleTy
-operator|)
 operator|<
 name|MVT
 operator|::
@@ -2890,40 +2834,64 @@ return|;
 block|}
 comment|/// This function returns the maximum number of store operations permitted
 comment|/// to replace a call to llvm.memset. The value is set by the target at the
-comment|/// performance threshold for such a replacement.
+comment|/// performance threshold for such a replacement. If OptSize is true,
+comment|/// return the limit for functions that have OptSize attribute.
 comment|/// @brief Get maximum # of store operations permitted for llvm.memset
 name|unsigned
 name|getMaxStoresPerMemset
-argument_list|()
-specifier|const
+argument_list|(
+name|bool
+name|OptSize
+argument_list|)
+decl|const
 block|{
 return|return
+name|OptSize
+condition|?
+name|maxStoresPerMemsetOptSize
+else|:
 name|maxStoresPerMemset
 return|;
 block|}
 comment|/// This function returns the maximum number of store operations permitted
 comment|/// to replace a call to llvm.memcpy. The value is set by the target at the
-comment|/// performance threshold for such a replacement.
+comment|/// performance threshold for such a replacement. If OptSize is true,
+comment|/// return the limit for functions that have OptSize attribute.
 comment|/// @brief Get maximum # of store operations permitted for llvm.memcpy
 name|unsigned
 name|getMaxStoresPerMemcpy
-argument_list|()
-specifier|const
+argument_list|(
+name|bool
+name|OptSize
+argument_list|)
+decl|const
 block|{
 return|return
+name|OptSize
+condition|?
+name|maxStoresPerMemcpyOptSize
+else|:
 name|maxStoresPerMemcpy
 return|;
 block|}
 comment|/// This function returns the maximum number of store operations permitted
 comment|/// to replace a call to llvm.memmove. The value is set by the target at the
-comment|/// performance threshold for such a replacement.
+comment|/// performance threshold for such a replacement. If OptSize is true,
+comment|/// return the limit for functions that have OptSize attribute.
 comment|/// @brief Get maximum # of store operations permitted for llvm.memmove
 name|unsigned
 name|getMaxStoresPerMemmove
-argument_list|()
-specifier|const
+argument_list|(
+name|bool
+name|OptSize
+argument_list|)
+decl|const
 block|{
 return|return
+name|OptSize
+condition|?
+name|maxStoresPerMemmoveOptSize
+else|:
 name|maxStoresPerMemmove
 return|;
 block|}
@@ -3823,6 +3791,25 @@ name|VT
 argument_list|)
 return|;
 block|}
+comment|/// isDesirableToPromoteOp - Return true if it is profitable for dag combiner
+comment|/// to transform a floating point op of specified opcode to a equivalent op of
+comment|/// an integer type. e.g. f32 load -> i32 load can be profitable on ARM.
+name|virtual
+name|bool
+name|isDesirableToTransformToIntegerOp
+argument_list|(
+name|unsigned
+name|Opc
+argument_list|,
+name|EVT
+name|VT
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// IsDesirableToPromoteOp - This method query the target whether it is
 comment|/// beneficial for dag combiner to promote the specified node. If true, it
 comment|/// should return the desired promotion type by reference.
@@ -3971,11 +3958,33 @@ comment|/// SelectIsExpensive - Tells the code generator not to expand operation
 comment|/// into sequences that use the select operations if possible.
 name|void
 name|setSelectIsExpensive
-parameter_list|()
+parameter_list|(
+name|bool
+name|isExpensive
+init|=
+name|true
+parameter_list|)
 block|{
 name|SelectIsExpensive
 operator|=
+name|isExpensive
+expr_stmt|;
+block|}
+comment|/// JumpIsExpensive - Tells the code generator not to expand sequence of
+comment|/// operations into a seperate sequences that increases the amount of
+comment|/// flow control.
+name|void
+name|setJumpIsExpensive
+parameter_list|(
+name|bool
+name|isExpensive
+init|=
 name|true
+parameter_list|)
+block|{
+name|JumpIsExpensive
+operator|=
+name|isExpensive
 expr_stmt|;
 block|}
 comment|/// setIntDivIsCheap - Tells the code generator that integer divide is
@@ -4024,11 +4033,6 @@ parameter_list|,
 name|TargetRegisterClass
 modifier|*
 name|RC
-parameter_list|,
-name|bool
-name|isSynthesizable
-init|=
-name|true
 parameter_list|)
 block|{
 name|assert
@@ -4074,18 +4078,6 @@ name|SimpleTy
 index|]
 operator|=
 name|RC
-expr_stmt|;
-name|Synthesizable
-index|[
-name|VT
-operator|.
-name|getSimpleVT
-argument_list|()
-operator|.
-name|SimpleTy
-index|]
-operator|=
-name|isSynthesizable
 expr_stmt|;
 block|}
 comment|/// findRepresentativeClass - Return the largest legal super-reg register class
@@ -4185,12 +4177,7 @@ name|ISD
 operator|::
 name|LAST_LOADEXT_TYPE
 operator|&&
-operator|(
-name|unsigned
-operator|)
 name|VT
-operator|.
-name|SimpleTy
 operator|<
 name|MVT
 operator|::
@@ -4232,23 +4219,13 @@ parameter_list|)
 block|{
 name|assert
 argument_list|(
-operator|(
-name|unsigned
-operator|)
 name|ValVT
-operator|.
-name|SimpleTy
 operator|<
 name|MVT
 operator|::
 name|LAST_VALUETYPE
 operator|&&
-operator|(
-name|unsigned
-operator|)
 name|MemVT
-operator|.
-name|SimpleTy
 operator|<
 name|MVT
 operator|::
@@ -4294,12 +4271,7 @@ parameter_list|)
 block|{
 name|assert
 argument_list|(
-operator|(
-name|unsigned
-operator|)
 name|VT
-operator|.
-name|SimpleTy
 operator|<
 name|MVT
 operator|::
@@ -4380,12 +4352,7 @@ parameter_list|)
 block|{
 name|assert
 argument_list|(
-operator|(
-name|unsigned
-operator|)
 name|VT
-operator|.
-name|SimpleTy
 operator|<
 name|MVT
 operator|::
@@ -4464,12 +4431,7 @@ argument_list|)
 block|{
 name|assert
 argument_list|(
-operator|(
-name|unsigned
-operator|)
 name|VT
-operator|.
-name|SimpleTy
 operator|<
 name|MVT
 operator|::
@@ -5065,6 +5027,23 @@ argument_list|()
 return|;
 comment|// this is here to silence compiler errors
 block|}
+comment|/// isUsedByReturnOnly - Return true if result of the specified node is used
+comment|/// by a return node only. This is used to determine whether it is possible
+comment|/// to codegen a libcall as tail call at legalization time.
+name|virtual
+name|bool
+name|isUsedByReturnOnly
+argument_list|(
+name|SDNode
+operator|*
+name|N
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// LowerOperationWrapper - This callback is invoked by the type legalizer
 comment|/// to legalize nodes with an illegal operand type but legal result types.
 comment|/// It replaces the LowerOperation callback in the type Legalizer.
@@ -5223,6 +5202,63 @@ name|C_Unknown
 comment|// Unsupported constraint.
 block|}
 enum|;
+enum|enum
+name|ConstraintWeight
+block|{
+comment|// Generic weights.
+name|CW_Invalid
+init|=
+operator|-
+literal|1
+block|,
+comment|// No match.
+name|CW_Okay
+init|=
+literal|0
+block|,
+comment|// Acceptable.
+name|CW_Good
+init|=
+literal|1
+block|,
+comment|// Good weight.
+name|CW_Better
+init|=
+literal|2
+block|,
+comment|// Better weight.
+name|CW_Best
+init|=
+literal|3
+block|,
+comment|// Best weight.
+comment|// Well-known weights.
+name|CW_SpecificReg
+init|=
+name|CW_Okay
+block|,
+comment|// Specific register operands.
+name|CW_Register
+init|=
+name|CW_Good
+block|,
+comment|// Register operands.
+name|CW_Memory
+init|=
+name|CW_Better
+block|,
+comment|// Memory operands.
+name|CW_Constant
+init|=
+name|CW_Best
+block|,
+comment|// Constant operand.
+name|CW_Default
+init|=
+name|CW_Okay
+comment|// Default or don't know type.
+block|}
+enum|;
 comment|/// AsmOperandInfo - This contains information for each constraint that we are
 comment|/// lowering.
 name|struct
@@ -5273,6 +5309,49 @@ name|getMatchedOperand
 argument_list|()
 specifier|const
 block|;
+comment|/// Copy constructor for copying from an AsmOperandInfo.
+name|AsmOperandInfo
+argument_list|(
+specifier|const
+name|AsmOperandInfo
+operator|&
+name|info
+argument_list|)
+operator|:
+name|InlineAsm
+operator|::
+name|ConstraintInfo
+argument_list|(
+name|info
+argument_list|)
+block|,
+name|ConstraintCode
+argument_list|(
+name|info
+operator|.
+name|ConstraintCode
+argument_list|)
+block|,
+name|ConstraintType
+argument_list|(
+name|info
+operator|.
+name|ConstraintType
+argument_list|)
+block|,
+name|CallOperandVal
+argument_list|(
+name|info
+operator|.
+name|CallOperandVal
+argument_list|)
+block|,
+name|ConstraintVT
+argument_list|(
+argument|info.ConstraintVT
+argument_list|)
+block|{     }
+comment|/// Copy constructor for copying from a ConstraintInfo.
 name|AsmOperandInfo
 argument_list|(
 specifier|const
@@ -5308,6 +5387,61 @@ argument|MVT::Other
 argument_list|)
 block|{     }
 block|}
+decl_stmt|;
+typedef|typedef
+name|std
+operator|::
+name|vector
+operator|<
+name|AsmOperandInfo
+operator|>
+name|AsmOperandInfoVector
+expr_stmt|;
+comment|/// ParseConstraints - Split up the constraint string from the inline
+comment|/// assembly value into the specific constraints and their prefixes,
+comment|/// and also tie in the associated operand values.
+comment|/// If this returns an empty vector, and if the constraint string itself
+comment|/// isn't empty, there was an error parsing.
+name|virtual
+name|AsmOperandInfoVector
+name|ParseConstraints
+argument_list|(
+name|ImmutableCallSite
+name|CS
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Examine constraint type and operand type and determine a weight value.
+comment|/// The operand object must already have been set up with the operand type.
+name|virtual
+name|ConstraintWeight
+name|getMultipleConstraintMatchWeight
+argument_list|(
+name|AsmOperandInfo
+operator|&
+name|info
+argument_list|,
+name|int
+name|maIndex
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Examine constraint string and operand type and determine a weight value.
+comment|/// The operand object must already have been set up with the operand type.
+name|virtual
+name|ConstraintWeight
+name|getSingleConstraintMatchWeight
+argument_list|(
+name|AsmOperandInfo
+operator|&
+name|info
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|constraint
+argument_list|)
+decl|const
 decl_stmt|;
 comment|/// ComputeConstraintToUse - Determines the constraint code and constraint
 comment|/// type to use for the specific AsmOperandInfo, setting
@@ -5879,6 +6013,12 @@ comment|/// it.
 name|bool
 name|Pow2DivIsCheap
 decl_stmt|;
+comment|/// JumpIsExpensive - Tells the code generator that it shouldn't generate
+comment|/// extra flow control instructions and should attempt to combine flow
+comment|/// control instructions via predication.
+name|bool
+name|JumpIsExpensive
+decl_stmt|;
 comment|/// UseUnderscoreSetJmp - This target prefers to use _setjmp to implement
 comment|/// llvm.setjmp.  Defaults to false.
 name|bool
@@ -5999,17 +6139,6 @@ comment|/// register class for each ValueType. The cost is used by the scheduler
 comment|/// approximate register pressure.
 name|uint8_t
 name|RepRegClassCostForVT
-index|[
-name|MVT
-operator|::
-name|LAST_VALUETYPE
-index|]
-decl_stmt|;
-comment|/// Synthesizable indicates whether it is OK for the compiler to create new
-comment|/// operations using this type.  All Legal types are Synthesizable except
-comment|/// MMX types on X86.  Non-Legal types are not Synthesizable.
-name|bool
-name|Synthesizable
 index|[
 name|MVT
 operator|::
@@ -6224,6 +6353,11 @@ comment|/// @brief Specify maximum number of store instructions per memset call.
 name|unsigned
 name|maxStoresPerMemset
 decl_stmt|;
+comment|/// Maximum number of stores operations that may be substituted for the call
+comment|/// to memset, used for functions with OptSize attribute.
+name|unsigned
+name|maxStoresPerMemsetOptSize
+decl_stmt|;
 comment|/// When lowering \@llvm.memcpy this field specifies the maximum number of
 comment|/// store operations that may be substituted for a call to memcpy. Targets
 comment|/// must set this value based on the cost threshold for that target. Targets
@@ -6237,6 +6371,11 @@ comment|/// @brief Specify maximum bytes of store instructions per memcpy call.
 name|unsigned
 name|maxStoresPerMemcpy
 decl_stmt|;
+comment|/// Maximum number of store operations that may be substituted for a call
+comment|/// to memcpy, used for functions with OptSize attribute.
+name|unsigned
+name|maxStoresPerMemcpyOptSize
+decl_stmt|;
 comment|/// When lowering \@llvm.memmove this field specifies the maximum number of
 comment|/// store instructions that may be substituted for a call to memmove. Targets
 comment|/// must set this value based on the cost threshold for that target. Targets
@@ -6248,6 +6387,11 @@ comment|/// applies to copying a constant array of constant size.
 comment|/// @brief Specify maximum bytes of store instructions per memmove call.
 name|unsigned
 name|maxStoresPerMemmove
+decl_stmt|;
+comment|/// Maximum number of store instructions that may be substituted for a call
+comment|/// to memmove, used for functions with OpSize attribute.
+name|unsigned
+name|maxStoresPerMemmoveOptSize
 decl_stmt|;
 comment|/// This field specifies whether the target can benefit from code placement
 comment|/// optimization.

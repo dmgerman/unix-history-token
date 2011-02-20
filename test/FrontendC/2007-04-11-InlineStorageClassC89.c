@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %llvmgcc %s -S -emit-llvm -O0 -o - | grep define | grep xglobWeak | \
+comment|// RUN: %llvmgcc %s -S -O0 -o - | grep define | grep xglobWeak | \
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|// RUN:   grep weak | count 1
 end_comment
 
 begin_comment
-comment|// RUN: %llvmgcc %s -S -emit-llvm -O0 -o - | grep define | grep xextWeak | \
+comment|// RUN: %llvmgcc %s -S -O0 -o - | grep define | grep xextWeak | \
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ comment|// RUN:   grep weak | count 1
 end_comment
 
 begin_comment
-comment|// RUN: %llvmgcc %s -S -emit-llvm -O0 -o - | grep define | \
+comment|// RUN: %llvmgcc %s -S -O0 -o - | grep define | \
 end_comment
 
 begin_comment
@@ -24,7 +24,7 @@ comment|// RUN:   grep xWeaknoinline | grep weak | count 1
 end_comment
 
 begin_comment
-comment|// RUN: %llvmgcc %s -S -emit-llvm -O0 -o - | grep define | \
+comment|// RUN: %llvmgcc %s -S -O0 -o - | grep define | \
 end_comment
 
 begin_comment
@@ -32,7 +32,7 @@ comment|// RUN:   grep xWeakextnoinline | grep weak | count 1
 end_comment
 
 begin_comment
-comment|// RUN: %llvmgcc %s -S -emit-llvm -O0 -o - | grep define | \
+comment|// RUN: %llvmgcc %s -S -O0 -o - | grep define | \
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ comment|// RUN:   grep -v linkonce | count 1
 end_comment
 
 begin_comment
-comment|// RUN: %llvmgcc %s -S -emit-llvm -O0 -o - | grep define | \
+comment|// RUN: %llvmgcc %s -S -O0 -o - | grep define | \
 end_comment
 
 begin_comment
@@ -52,7 +52,7 @@ comment|// RUN:   grep xstatnoWeak | grep internal | count 1
 end_comment
 
 begin_comment
-comment|// RUN: %llvmgcc %s -S -emit-llvm -O0 -o - | grep define | \
+comment|// RUN: %llvmgcc %s -S -O0 -o - | grep define | \
 end_comment
 
 begin_comment

@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -185,7 +191,7 @@ comment|/// If no error handler is installed the default is to print the message
 comment|/// standard error, followed by a newline.
 comment|/// After the error handler is called this function will call exit(1), it
 comment|/// does not return.
-name|NORETURN
+name|LLVM_ATTRIBUTE_NORETURN
 name|void
 name|report_fatal_error
 parameter_list|(
@@ -195,7 +201,7 @@ modifier|*
 name|reason
 parameter_list|)
 function_decl|;
-name|NORETURN
+name|LLVM_ATTRIBUTE_NORETURN
 name|void
 name|report_fatal_error
 argument_list|(
@@ -207,7 +213,15 @@ operator|&
 name|reason
 argument_list|)
 decl_stmt|;
-name|NORETURN
+name|LLVM_ATTRIBUTE_NORETURN
+name|void
+name|report_fatal_error
+parameter_list|(
+name|StringRef
+name|reason
+parameter_list|)
+function_decl|;
+name|LLVM_ATTRIBUTE_NORETURN
 name|void
 name|report_fatal_error
 parameter_list|(
@@ -220,7 +234,7 @@ function_decl|;
 comment|/// This function calls abort(), and prints the optional message to stderr.
 comment|/// Use the llvm_unreachable macro (that adds location info), instead of
 comment|/// calling this function directly.
-name|NORETURN
+name|LLVM_ATTRIBUTE_NORETURN
 name|void
 name|llvm_unreachable_internal
 parameter_list|(

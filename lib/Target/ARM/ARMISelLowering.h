@@ -130,6 +130,14 @@ name|Wrapper
 block|,
 comment|// Wrapper - A wrapper node for TargetConstantPool,
 comment|// TargetExternalSymbol, and TargetGlobalAddress.
+name|WrapperDYN
+block|,
+comment|// WrapperDYN - A wrapper node for TargetGlobalAddress in
+comment|// DYN mode.
+name|WrapperPIC
+block|,
+comment|// WrapperPIC - A wrapper node for TargetGlobalAddress in
+comment|// PIC mode.
 name|WrapperJT
 block|,
 comment|// WrapperJT - A wrapper node for TargetJumpTable
@@ -160,9 +168,6 @@ comment|// Return with a flag operand.
 name|PIC_ADD
 block|,
 comment|// Add with a PC operand and a PIC label.
-name|AND
-block|,
-comment|// ARM "and" instruction that sets the 's' flag in CPSR.
 name|CMP
 block|,
 comment|// ARM compare instructions.
@@ -222,6 +227,9 @@ comment|// SjLj exception handling setjmp.
 name|EH_SJLJ_LONGJMP
 block|,
 comment|// SjLj exception handling longjmp.
+name|EH_SJLJ_DISPATCHSETUP
+block|,
+comment|// SjLj exception handling dispatch setup.
 name|TC_RETURN
 block|,
 comment|// Tail call return pseudo.
@@ -232,22 +240,40 @@ block|,
 comment|// Dynamic allocation on the stack.
 name|MEMBARRIER
 block|,
-comment|// Memory barrier
-name|SYNCBARRIER
+comment|// Memory barrier (DMB)
+name|MEMBARRIER_MCR
 block|,
-comment|// Memory sync barrier
+comment|// Memory barrier (MCR)
+name|PRELOAD
+block|,
+comment|// Preload
 name|VCEQ
 block|,
 comment|// Vector compare equal.
+name|VCEQZ
+block|,
+comment|// Vector compare equal to zero.
 name|VCGE
 block|,
 comment|// Vector compare greater than or equal.
+name|VCGEZ
+block|,
+comment|// Vector compare greater than or equal to zero.
+name|VCLEZ
+block|,
+comment|// Vector compare less than or equal to zero.
 name|VCGEU
 block|,
 comment|// Vector compare unsigned greater than or equal.
 name|VCGT
 block|,
 comment|// Vector compare greater than.
+name|VCGTZ
+block|,
+comment|// Vector compare greater than zero.
+name|VCLTZ
+block|,
+comment|// Vector compare less than zero.
 name|VCGTU
 block|,
 comment|// Vector compare unsigned greater than.
@@ -383,6 +409,59 @@ name|FMIN
 block|,
 comment|// Bit-field insert
 name|BFI
+block|,
+comment|// Vector OR with immediate
+name|VORRIMM
+block|,
+comment|// Vector AND with NOT of immediate
+name|VBICIMM
+block|,
+comment|// Vector load N-element structure to all lanes:
+name|VLD2DUP
+init|=
+name|ISD
+operator|::
+name|FIRST_TARGET_MEMORY_OPCODE
+block|,
+name|VLD3DUP
+block|,
+name|VLD4DUP
+block|,
+comment|// NEON loads with post-increment base updates:
+name|VLD1_UPD
+block|,
+name|VLD2_UPD
+block|,
+name|VLD3_UPD
+block|,
+name|VLD4_UPD
+block|,
+name|VLD2LN_UPD
+block|,
+name|VLD3LN_UPD
+block|,
+name|VLD4LN_UPD
+block|,
+name|VLD2DUP_UPD
+block|,
+name|VLD3DUP_UPD
+block|,
+name|VLD4DUP_UPD
+block|,
+comment|// NEON stores with post-increment base updates:
+name|VST1_UPD
+block|,
+name|VST2_UPD
+block|,
+name|VST3_UPD
+block|,
+name|VST4_UPD
+block|,
+name|VST2LN_UPD
+block|,
+name|VST3LN_UPD
+block|,
+name|VST4LN_UPD
 block|}
 enum|;
 block|}
@@ -472,16 +551,6 @@ argument_list|)
 specifier|const
 block|;
 name|virtual
-name|SDValue
-name|PerformDAGCombine
-argument_list|(
-argument|SDNode *N
-argument_list|,
-argument|DAGCombinerInfo&DCI
-argument_list|)
-specifier|const
-block|;
-name|virtual
 specifier|const
 name|char
 operator|*
@@ -499,6 +568,25 @@ argument_list|(
 argument|MachineInstr *MI
 argument_list|,
 argument|MachineBasicBlock *MBB
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|SDValue
+name|PerformDAGCombine
+argument_list|(
+argument|SDNode *N
+argument_list|,
+argument|DAGCombinerInfo&DCI
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isDesirableToTransformToIntegerOp
+argument_list|(
+argument|unsigned Opc
+argument_list|,
+argument|EVT VT
 argument_list|)
 specifier|const
 block|;
@@ -604,10 +692,29 @@ argument|unsigned Depth
 argument_list|)
 specifier|const
 block|;
+name|virtual
+name|bool
+name|ExpandInlineAsm
+argument_list|(
+argument|CallInst *CI
+argument_list|)
+specifier|const
+block|;
 name|ConstraintType
 name|getConstraintType
 argument_list|(
 argument|const std::string&Constraint
+argument_list|)
+specifier|const
+block|;
+comment|/// Examine constraint string and operand type and determine a weight value.
+comment|/// The operand object must already have been set up with the operand type.
+name|ConstraintWeight
+name|getSingleConstraintMatchWeight
+argument_list|(
+argument|AsmOperandInfo&info
+argument_list|,
+argument|const char *constraint
 argument_list|)
 specifier|const
 block|;
@@ -758,6 +865,18 @@ argument|EVT VT
 argument_list|)
 specifier|const
 block|;
+name|virtual
+name|bool
+name|getTgtMemIntrinsic
+argument_list|(
+argument|IntrinsicInfo&Info
+argument_list|,
+argument|const CallInst&I
+argument_list|,
+argument|unsigned Intrinsic
+argument_list|)
+specifier|const
+block|;
 name|protected
 operator|:
 name|std
@@ -789,6 +908,11 @@ specifier|const
 name|TargetRegisterInfo
 operator|*
 name|RegInfo
+block|;
+specifier|const
+name|InstrItineraryData
+operator|*
+name|Itins
 block|;
 comment|/// ARMPCLabelIndex - Keep track of the number of ARM PC labels created.
 comment|///
@@ -947,6 +1071,18 @@ decl|const
 decl_stmt|;
 name|SDValue
 name|LowerEH_SJLJ_LONGJMP
+argument_list|(
+name|SDValue
+name|Op
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|)
+decl|const
+decl_stmt|;
+name|SDValue
+name|LowerEH_SJLJ_DISPATCHSETUP
 argument_list|(
 name|SDValue
 name|Op
@@ -1170,6 +1306,35 @@ decl|const
 decl_stmt|;
 name|SDValue
 name|LowerFLT_ROUNDS_
+argument_list|(
+name|SDValue
+name|Op
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|)
+decl|const
+decl_stmt|;
+name|SDValue
+name|LowerBUILD_VECTOR
+argument_list|(
+name|SDValue
+name|Op
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|,
+specifier|const
+name|ARMSubtarget
+operator|*
+name|ST
+argument_list|)
+decl|const
+decl_stmt|;
+name|SDValue
+name|ReconstructShuffle
 argument_list|(
 name|SDValue
 name|Op
@@ -1429,6 +1594,16 @@ name|DAG
 argument_list|)
 decl|const
 decl_stmt|;
+name|virtual
+name|bool
+name|isUsedByReturnOnly
+argument_list|(
+name|SDNode
+operator|*
+name|N
+argument_list|)
+decl|const
+decl_stmt|;
 name|SDValue
 name|getARMCmp
 argument_list|(
@@ -1529,6 +1704,19 @@ end_decl_stmt
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
+
+begin_enum
+enum|enum
+name|NEONModImmType
+block|{
+name|VMOVModImm
+block|,
+name|VMVNModImm
+block|,
+name|OtherModImm
+block|}
+enum|;
+end_enum
 
 begin_decl_stmt
 name|namespace

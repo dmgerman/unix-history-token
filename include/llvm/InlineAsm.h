@@ -334,19 +334,21 @@ comment|// '=x'
 name|isClobber
 comment|// '~x'
 block|}
-block|;      struct
-name|ConstraintInfo
+block|;
+typedef|typedef
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|ConstraintCodeVector
+expr_stmt|;
+block|struct
+name|SubConstraintInfo
 block|{
-comment|/// Type - The basic type of the constraint: input/output/clobber
-comment|///
-name|ConstraintPrefix
-name|Type
-block|;
-comment|/// isEarlyClobber - "&": output operand writes result before inputs are all
-comment|/// read.  This is only ever set for an output operand.
-name|bool
-name|isEarlyClobber
-block|;
 comment|/// MatchingInput - If this is not -1, this is an output constraint where an
 comment|/// input constraint is required to match it (e.g. "0").  The value is the
 comment|/// constraint number that matches this one (for example, if this is
@@ -355,6 +357,65 @@ name|signed
 name|char
 name|MatchingInput
 block|;
+comment|/// Code - The constraint code, either the register name (in braces) or the
+comment|/// constraint letter/number.
+name|ConstraintCodeVector
+name|Codes
+block|;
+comment|/// Default constructor.
+name|SubConstraintInfo
+argument_list|()
+operator|:
+name|MatchingInput
+argument_list|(
+argument|-
+literal|1
+argument_list|)
+block|{}
+block|}
+decl_stmt|;
+typedef|typedef
+name|std
+operator|::
+name|vector
+operator|<
+name|SubConstraintInfo
+operator|>
+name|SubConstraintInfoVector
+expr_stmt|;
+struct_decl|struct
+name|ConstraintInfo
+struct_decl|;
+typedef|typedef
+name|std
+operator|::
+name|vector
+operator|<
+name|ConstraintInfo
+operator|>
+name|ConstraintInfoVector
+expr_stmt|;
+struct|struct
+name|ConstraintInfo
+block|{
+comment|/// Type - The basic type of the constraint: input/output/clobber
+comment|///
+name|ConstraintPrefix
+name|Type
+decl_stmt|;
+comment|/// isEarlyClobber - "&": output operand writes result before inputs are all
+comment|/// read.  This is only ever set for an output operand.
+name|bool
+name|isEarlyClobber
+decl_stmt|;
+comment|/// MatchingInput - If this is not -1, this is an output constraint where an
+comment|/// input constraint is required to match it (e.g. "0").  The value is the
+comment|/// constraint number that matches this one (for example, if this is
+comment|/// constraint #0 and constraint #4 has the value "0", this will be 4).
+name|signed
+name|char
+name|MatchingInput
+decl_stmt|;
 comment|/// hasMatchingInput - Return true if this is an output constraint that has
 comment|/// a matching input constraint.
 name|bool
@@ -373,61 +434,84 @@ comment|/// isCommutative - This is set to true for a constraint that is commuta
 comment|/// with the next operand.
 name|bool
 name|isCommutative
-block|;
+decl_stmt|;
 comment|/// isIndirect - True if this operand is an indirect operand.  This means
 comment|/// that the address of the source or destination is present in the call
 comment|/// instruction, instead of it being returned or passed in explicitly.  This
 comment|/// is represented with a '*' in the asm string.
 name|bool
 name|isIndirect
-block|;
+decl_stmt|;
 comment|/// Code - The constraint code, either the register name (in braces) or the
 comment|/// constraint letter/number.
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|string
-operator|>
+name|ConstraintCodeVector
 name|Codes
-block|;
+decl_stmt|;
+comment|/// isMultipleAlternative - '|': has multiple-alternative constraints.
+name|bool
+name|isMultipleAlternative
+decl_stmt|;
+comment|/// multipleAlternatives - If there are multiple alternative constraints,
+comment|/// this array will contain them.  Otherwise it will be empty.
+name|SubConstraintInfoVector
+name|multipleAlternatives
+decl_stmt|;
+comment|/// The currently selected alternative constraint index.
+name|unsigned
+name|currentAlternativeIndex
+decl_stmt|;
+comment|///Default constructor.
+name|ConstraintInfo
+argument_list|()
+expr_stmt|;
+comment|/// Copy constructor.
+name|ConstraintInfo
+argument_list|(
+specifier|const
+name|ConstraintInfo
+operator|&
+name|other
+argument_list|)
+expr_stmt|;
 comment|/// Parse - Analyze the specified string (e.g. "=*&{eax}") and fill in the
 comment|/// fields in this structure.  If the constraint string is not understood,
 comment|/// return true, otherwise return false.
 name|bool
 name|Parse
-argument_list|(
-argument|StringRef Str
-argument_list|,
-argument|std::vector<InlineAsm::ConstraintInfo>&ConstraintsSoFar
-argument_list|)
-block|;   }
-block|;
+parameter_list|(
+name|StringRef
+name|Str
+parameter_list|,
+name|ConstraintInfoVector
+modifier|&
+name|ConstraintsSoFar
+parameter_list|)
+function_decl|;
+comment|/// selectAlternative - Point this constraint to the alternative constraint
+comment|/// indicated by the index.
+name|void
+name|selectAlternative
+parameter_list|(
+name|unsigned
+name|index
+parameter_list|)
+function_decl|;
+block|}
+struct|;
 comment|/// ParseConstraints - Split up the constraint string into the specific
 comment|/// constraints and their prefixes.  If this returns an empty vector, and if
 comment|/// the constraint string itself isn't empty, there was an error parsing.
 specifier|static
-name|std
-operator|::
-name|vector
-operator|<
-name|ConstraintInfo
-operator|>
+name|ConstraintInfoVector
 name|ParseConstraints
-argument_list|(
-argument|StringRef ConstraintString
-argument_list|)
-block|;
+parameter_list|(
+name|StringRef
+name|ConstraintString
+parameter_list|)
+function_decl|;
 comment|/// ParseConstraints - Parse the constraints of this inlineasm object,
 comment|/// returning them the same way that ParseConstraints(str) does.
-name|std
-operator|::
-name|vector
-operator|<
-name|ConstraintInfo
-operator|>
+name|ConstraintInfoVector
 name|ParseConstraints
 argument_list|()
 specifier|const
@@ -444,9 +528,11 @@ specifier|static
 specifier|inline
 name|bool
 name|classof
-argument_list|(
-argument|const InlineAsm *
-argument_list|)
+parameter_list|(
+specifier|const
+name|InlineAsm
+modifier|*
+parameter_list|)
 block|{
 return|return
 name|true
@@ -456,9 +542,12 @@ specifier|static
 specifier|inline
 name|bool
 name|classof
-argument_list|(
-argument|const Value *V
-argument_list|)
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|V
+parameter_list|)
 block|{
 return|return
 name|V
@@ -473,61 +562,85 @@ return|;
 block|}
 comment|// These are helper methods for dealing with flags in the INLINEASM SDNode
 comment|// in the backend.
-expr|enum
+enum|enum
 block|{
 name|Op_InputChain
-operator|=
+init|=
 literal|0
 block|,
 name|Op_AsmString
-operator|=
+init|=
 literal|1
 block|,
 name|Op_MDNode
-operator|=
+init|=
 literal|2
 block|,
-name|Op_IsAlignStack
-operator|=
+name|Op_ExtraInfo
+init|=
 literal|3
 block|,
+comment|// HasSideEffects, IsAlignStack
 name|Op_FirstOperand
-operator|=
+init|=
 literal|4
 block|,
+name|MIOp_AsmString
+init|=
+literal|0
+block|,
+name|MIOp_ExtraInfo
+init|=
+literal|1
+block|,
+comment|// HasSideEffects, IsAlignStack
+name|MIOp_FirstOperand
+init|=
+literal|2
+block|,
+name|Extra_HasSideEffects
+init|=
+literal|1
+block|,
+name|Extra_IsAlignStack
+init|=
+literal|2
+block|,
 name|Kind_RegUse
-operator|=
+init|=
 literal|1
 block|,
 name|Kind_RegDef
-operator|=
+init|=
 literal|2
 block|,
 name|Kind_Imm
-operator|=
+init|=
 literal|3
 block|,
 name|Kind_Mem
-operator|=
+init|=
 literal|4
 block|,
 name|Kind_RegDefEarlyClobber
-operator|=
+init|=
 literal|6
 block|,
 name|Flag_MatchingOperand
-operator|=
+init|=
 literal|0x80000000
 block|}
-block|;
+enum|;
 specifier|static
 name|unsigned
 name|getFlagWord
-argument_list|(
-argument|unsigned Kind
-argument_list|,
-argument|unsigned NumOps
-argument_list|)
+parameter_list|(
+name|unsigned
+name|Kind
+parameter_list|,
+name|unsigned
+name|NumOps
+parameter_list|)
 block|{
 name|assert
 argument_list|(
@@ -546,7 +659,7 @@ literal|0
 operator|&&
 literal|"Too many inline asm operands!"
 argument_list|)
-block|;
+expr_stmt|;
 return|return
 name|Kind
 operator||
@@ -563,11 +676,13 @@ comment|/// to a previous output operand.
 specifier|static
 name|unsigned
 name|getFlagWordForMatchingOp
-argument_list|(
-argument|unsigned InputFlag
-argument_list|,
-argument|unsigned MatchedOperandNo
-argument_list|)
+parameter_list|(
+name|unsigned
+name|InputFlag
+parameter_list|,
+name|unsigned
+name|MatchedOperandNo
+parameter_list|)
 block|{
 return|return
 name|InputFlag
@@ -584,9 +699,10 @@ block|}
 specifier|static
 name|unsigned
 name|getKind
-argument_list|(
-argument|unsigned Flags
-argument_list|)
+parameter_list|(
+name|unsigned
+name|Flags
+parameter_list|)
 block|{
 return|return
 name|Flags
@@ -597,9 +713,10 @@ block|}
 specifier|static
 name|bool
 name|isRegDefKind
-argument_list|(
-argument|unsigned Flag
-argument_list|)
+parameter_list|(
+name|unsigned
+name|Flag
+parameter_list|)
 block|{
 return|return
 name|getKind
@@ -613,9 +730,10 @@ block|}
 specifier|static
 name|bool
 name|isImmKind
-argument_list|(
-argument|unsigned Flag
-argument_list|)
+parameter_list|(
+name|unsigned
+name|Flag
+parameter_list|)
 block|{
 return|return
 name|getKind
@@ -629,9 +747,10 @@ block|}
 specifier|static
 name|bool
 name|isMemKind
-argument_list|(
-argument|unsigned Flag
-argument_list|)
+parameter_list|(
+name|unsigned
+name|Flag
+parameter_list|)
 block|{
 return|return
 name|getKind
@@ -645,9 +764,10 @@ block|}
 specifier|static
 name|bool
 name|isRegDefEarlyClobberKind
-argument_list|(
-argument|unsigned Flag
-argument_list|)
+parameter_list|(
+name|unsigned
+name|Flag
+parameter_list|)
 block|{
 return|return
 name|getKind
@@ -663,9 +783,10 @@ comment|/// inline asm operand flag.
 specifier|static
 name|unsigned
 name|getNumOperandRegisters
-argument_list|(
-argument|unsigned Flag
-argument_list|)
+parameter_list|(
+name|unsigned
+name|Flag
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -682,11 +803,14 @@ comment|/// operand indicates it is an use operand that's matched to a def opera
 specifier|static
 name|bool
 name|isUseOperandTiedToDef
-argument_list|(
-argument|unsigned Flag
-argument_list|,
-argument|unsigned&Idx
-argument_list|)
+parameter_list|(
+name|unsigned
+name|Flag
+parameter_list|,
+name|unsigned
+modifier|&
+name|Idx
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -711,7 +835,7 @@ name|Flag_MatchingOperand
 operator|)
 operator|>>
 literal|16
-block|;
+expr_stmt|;
 return|return
 name|true
 return|;

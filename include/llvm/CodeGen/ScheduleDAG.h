@@ -792,6 +792,26 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
+begin_expr_stmt
+name|template
+operator|<
+operator|>
+expr|struct
+name|isPodLike
+operator|<
+name|SDep
+operator|>
+block|{
+specifier|static
+specifier|const
+name|bool
+name|value
+operator|=
+name|true
+block|; }
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/// SUnit - Scheduling unit. This is a node in the scheduling DAG.
 end_comment
@@ -820,8 +840,7 @@ name|OrigNode
 decl_stmt|;
 comment|// If not this, the node from which
 comment|// this node was cloned.
-comment|// Preds/Succs - The SUnits before/after us in the graph.  The boolean value
-comment|// is true if the edge is a token chain edge, false if it is a value edge.
+comment|// Preds/Succs - The SUnits before/after us in the graph.
 name|SmallVector
 operator|<
 name|SDep
@@ -893,11 +912,6 @@ name|NodeQueueId
 decl_stmt|;
 comment|// Queue id of node.
 name|unsigned
-name|short
-name|Latency
-decl_stmt|;
-comment|// Node latency.
-name|unsigned
 name|NumPreds
 decl_stmt|;
 comment|// # of SDep::Data preds.
@@ -913,6 +927,22 @@ name|unsigned
 name|NumSuccsLeft
 decl_stmt|;
 comment|// # of succs not scheduled.
+name|unsigned
+name|short
+name|NumRegDefsLeft
+decl_stmt|;
+comment|// # of reg defs with no scheduled use.
+name|unsigned
+name|short
+name|Latency
+decl_stmt|;
+comment|// Node latency.
+name|bool
+name|isCall
+range|:
+literal|1
+decl_stmt|;
+comment|// Is a function call.
 name|bool
 name|isTwoAddress
 range|:
@@ -1052,11 +1082,6 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
-name|Latency
-argument_list|(
-literal|0
-argument_list|)
-operator|,
 name|NumPreds
 argument_list|(
 literal|0
@@ -1075,6 +1100,21 @@ operator|,
 name|NumSuccsLeft
 argument_list|(
 literal|0
+argument_list|)
+operator|,
+name|NumRegDefsLeft
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Latency
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|isCall
+argument_list|(
+name|false
 argument_list|)
 operator|,
 name|isTwoAddress
@@ -1193,11 +1233,6 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
-name|Latency
-argument_list|(
-literal|0
-argument_list|)
-operator|,
 name|NumPreds
 argument_list|(
 literal|0
@@ -1216,6 +1251,21 @@ operator|,
 name|NumSuccsLeft
 argument_list|(
 literal|0
+argument_list|)
+operator|,
+name|NumRegDefsLeft
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Latency
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|isCall
+argument_list|(
+name|false
 argument_list|)
 operator|,
 name|isTwoAddress
@@ -1330,11 +1380,6 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
-name|Latency
-argument_list|(
-literal|0
-argument_list|)
-operator|,
 name|NumPreds
 argument_list|(
 literal|0
@@ -1353,6 +1398,21 @@ operator|,
 name|NumSuccsLeft
 argument_list|(
 literal|0
+argument_list|)
+operator|,
+name|NumRegDefsLeft
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Latency
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|isCall
+argument_list|(
+name|false
 argument_list|)
 operator|,
 name|isTwoAddress
@@ -1477,6 +1537,17 @@ return|return
 name|Node
 return|;
 block|}
+comment|/// isInstr - Return true if this SUnit refers to a machine instruction as
+comment|/// opposed to an SDNode.
+name|bool
+name|isInstr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Instr
+return|;
+block|}
 comment|/// setInstr - Assign the instruction for the SUnit.
 comment|/// This may be used during post-regalloc scheduling.
 name|void
@@ -1523,7 +1594,7 @@ block|}
 comment|/// addPred - This adds the specified edge as a pred of the current node if
 comment|/// not already.  It also adds the current node as a successor of the
 comment|/// specified node.
-name|void
+name|bool
 name|addPred
 parameter_list|(
 specifier|const
@@ -1916,14 +1987,24 @@ block|{
 name|unsigned
 name|CurCycle
 decl_stmt|;
+name|bool
+name|HasReadyFilter
+decl_stmt|;
 name|public
 label|:
 name|SchedulingPriorityQueue
-argument_list|()
-operator|:
+argument_list|(
+argument|bool rf = false
+argument_list|)
+block|:
 name|CurCycle
 argument_list|(
 literal|0
+argument_list|)
+operator|,
+name|HasReadyFilter
+argument_list|(
+argument|rf
 argument_list|)
 block|{}
 name|virtual
@@ -1931,6 +2012,14 @@ operator|~
 name|SchedulingPriorityQueue
 argument_list|()
 block|{}
+name|virtual
+name|bool
+name|isBottomUp
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
 name|virtual
 name|void
 name|initNodes
@@ -1944,9 +2033,9 @@ operator|>
 operator|&
 name|SUnits
 argument_list|)
-operator|=
+init|=
 literal|0
-expr_stmt|;
+decl_stmt|;
 name|virtual
 name|void
 name|addNode
@@ -1986,6 +2075,46 @@ specifier|const
 operator|=
 literal|0
 expr_stmt|;
+name|bool
+name|hasReadyFilter
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasReadyFilter
+return|;
+block|}
+name|virtual
+name|bool
+name|tracksRegPressure
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+name|virtual
+name|bool
+name|isReady
+argument_list|(
+name|SUnit
+operator|*
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+operator|!
+name|HasReadyFilter
+operator|&&
+literal|"The ready filter must override isReady()"
+argument_list|)
+expr_stmt|;
+return|return
+name|true
+return|;
+block|}
 name|virtual
 name|void
 name|push
@@ -2070,6 +2199,15 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
+name|virtual
+name|void
+name|dump
+argument_list|(
+name|ScheduleDAG
+operator|*
+argument_list|)
+decl|const
+block|{}
 comment|/// ScheduledNode - As each node is scheduled, this method is invoked.  This
 comment|/// allows the priority function to adjust the priority of related
 comment|/// unscheduled nodes, for example.
@@ -2204,6 +2342,47 @@ operator|~
 name|ScheduleDAG
 argument_list|()
 expr_stmt|;
+comment|/// getInstrDesc - Return the TargetInstrDesc of this SUnit.
+comment|/// Return NULL for SDNodes without a machine opcode.
+specifier|const
+name|TargetInstrDesc
+modifier|*
+name|getInstrDesc
+argument_list|(
+specifier|const
+name|SUnit
+operator|*
+name|SU
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+name|SU
+operator|->
+name|isInstr
+argument_list|()
+condition|)
+return|return
+operator|&
+name|SU
+operator|->
+name|getInstr
+argument_list|()
+operator|->
+name|getDesc
+argument_list|()
+return|;
+return|return
+name|getNodeDesc
+argument_list|(
+name|SU
+operator|->
+name|getNode
+argument_list|()
+argument_list|)
+return|;
+block|}
 comment|/// viewGraph - Pop up a GraphViz/gv window with the ScheduleDAG rendered
 comment|/// using 'dot'.
 comment|///
@@ -2391,6 +2570,21 @@ operator|>
 operator|&
 name|VRBaseMap
 argument_list|)
+decl_stmt|;
+name|private
+label|:
+comment|// Return the TargetInstrDesc of this SDNode or NULL.
+specifier|const
+name|TargetInstrDesc
+modifier|*
+name|getNodeDesc
+argument_list|(
+specifier|const
+name|SDNode
+operator|*
+name|Node
+argument_list|)
+decl|const
 decl_stmt|;
 block|}
 end_decl_stmt

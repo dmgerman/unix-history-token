@@ -166,6 +166,19 @@ operator|>
 expr|>
 name|InsertedPostIncValues
 expr_stmt|;
+comment|/// RelevantLoops - A memoization of the "relevant" loop for a given SCEV.
+name|DenseMap
+operator|<
+specifier|const
+name|SCEV
+operator|*
+operator|,
+specifier|const
+name|Loop
+operator|*
+operator|>
+name|RelevantLoops
+expr_stmt|;
 comment|/// PostIncLoops - Addrecs referring to any of the given loops are expanded
 comment|/// in post-inc mode. For example, expanding {1,+,1}<L> in post-inc mode
 comment|/// returns the add instruction that adds one to the phi for {0,+,1}<L>,
@@ -586,6 +599,17 @@ name|I
 argument_list|)
 return|;
 block|}
+comment|/// getRelevantLoop - Determine the most "relevant" loop for the given SCEV.
+specifier|const
+name|Loop
+modifier|*
+name|getRelevantLoop
+parameter_list|(
+specifier|const
+name|SCEV
+modifier|*
+parameter_list|)
+function_decl|;
 name|Value
 modifier|*
 name|visitConstant

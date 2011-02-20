@@ -78,12 +78,21 @@ block|{
 name|LLVMDebugVersion
 init|=
 operator|(
-literal|8
+literal|9
 operator|<<
 literal|16
 operator|)
 block|,
 comment|// Current version of debug information.
+name|LLVMDebugVersion8
+init|=
+operator|(
+literal|8
+operator|<<
+literal|16
+operator|)
+block|,
+comment|// Cconstant for version 8.
 name|LLVMDebugVersion7
 init|=
 operator|(
@@ -145,11 +154,6 @@ operator|~
 literal|0U
 block|,
 comment|// Tag for invalid results.
-name|DW_TAG_anchor
-init|=
-literal|0
-block|,
-comment|// Tag for descriptor anchors.
 name|DW_TAG_auto_variable
 init|=
 literal|0x100
@@ -421,6 +425,10 @@ block|,
 name|DW_TAG_shared_type
 init|=
 literal|0x40
+block|,
+name|DW_TAG_rvalue_reference_type
+init|=
+literal|0x41
 block|,
 name|DW_TAG_lo_user
 init|=
@@ -1860,6 +1868,10 @@ init|=
 literal|0x01
 block|,
 comment|// Line Number Standard Opcode Encodings
+name|DW_LNS_extended_op
+init|=
+literal|0x00
+block|,
 name|DW_LNS_copy
 init|=
 literal|0x01

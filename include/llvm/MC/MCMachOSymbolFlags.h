@@ -115,6 +115,10 @@ init|=
 literal|0x0005
 block|,
 comment|// Other 'desc' flags.
+name|SF_ThumbFunc
+init|=
+literal|0x0008
+block|,
 name|SF_NoDeadStrip
 init|=
 literal|0x0020
@@ -126,6 +130,10 @@ block|,
 name|SF_WeakDefinition
 init|=
 literal|0x0080
+block|,
+name|SF_SymbolResolver
+init|=
+literal|0x0100
 block|}
 enum|;
 block|}

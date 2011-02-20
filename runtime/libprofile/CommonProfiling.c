@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*===-- CommonProfiling.c - Profiling support library support -------------===*\ |* |*                     The LLVM Compiler Infrastructure |* |* This file is distributed under the University of Illinois Open Source       |* License. See LICENSE.TXT for details.                                       |*  |*===----------------------------------------------------------------------===*| |*  |* This file implements functions used by the various different types of |* profiling implementations. |* \*===----------------------------------------------------------------------===*/
+comment|/*===-- CommonProfiling.c - Profiling support library support -------------===*\ |* |*                     The LLVM Compiler Infrastructure |* |* This file is distributed under the University of Illinois Open Source |* License. See LICENSE.TXT for details. |* |*===----------------------------------------------------------------------===*| |* |* This file implements functions used by the various different types of |* profiling implementations. |* \*===----------------------------------------------------------------------===*/
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"Profiling.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<assert.h>
 end_include
 
 begin_include
@@ -367,24 +373,13 @@ block|}
 end_function
 
 begin_comment
-comment|/* write_profiling_data - Write a raw block of profiling counters out to the  * llvmprof.out file.  Note that we allow programs to be instrumented with  * multiple different kinds of instrumentation.  For this reason, this function  * may be called more than once.  */
+comment|/*  * Retrieves the file descriptor for the profile file.  */
 end_comment
 
 begin_function
-name|void
-name|write_profiling_data
-parameter_list|(
-name|enum
-name|ProfilingType
-name|PT
-parameter_list|,
-name|unsigned
-modifier|*
-name|Start
-parameter_list|,
-name|unsigned
-name|NumElements
-parameter_list|)
+name|int
+name|getOutFile
+parameter_list|()
 block|{
 specifier|static
 name|int
@@ -393,10 +388,7 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
-name|int
-name|PTy
-decl_stmt|;
-comment|/* If this is the first time this function is called, open the output file for    * appending, creating it if it does not already exist.    */
+comment|/* If this is the first time this function is called, open the output file    * for appending, creating it if it does not already exist.    */
 if|if
 condition|(
 name|OutFile
@@ -414,12 +406,20 @@ argument_list|,
 name|O_CREAT
 operator||
 name|O_WRONLY
-operator||
-name|O_APPEND
 argument_list|,
 literal|0666
 argument_list|)
 expr_stmt|;
+name|lseek
+argument_list|(
+name|OutFile
+argument_list|,
+literal|0
+argument_list|,
+name|SEEK_END
+argument_list|)
+expr_stmt|;
+comment|/* O_APPEND prevents seeking */
 if|if
 condition|(
 name|OutFile
@@ -442,7 +442,11 @@ argument_list|(
 literal|""
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|OutFile
+operator|)
+return|;
 block|}
 comment|/* Output the command line arguments to the file. */
 block|{
@@ -516,14 +520,53 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+return|return
+operator|(
+name|OutFile
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* write_profiling_data - Write a raw block of profiling counters out to the  * llvmprof.out file.  Note that we allow programs to be instrumented with  * multiple different kinds of instrumentation.  For this reason, this function  * may be called more than once.  */
+end_comment
+
+begin_function
+name|void
+name|write_profiling_data
+parameter_list|(
+name|enum
+name|ProfilingType
+name|PT
+parameter_list|,
+name|unsigned
+modifier|*
+name|Start
+parameter_list|,
+name|unsigned
+name|NumElements
+parameter_list|)
+block|{
+name|int
+name|PTy
+decl_stmt|;
+name|int
+name|outFile
+init|=
+name|getOutFile
+argument_list|()
+decl_stmt|;
 comment|/* Write out this record! */
 name|PTy
 operator|=
 name|PT
 expr_stmt|;
+if|if
+condition|(
 name|write
 argument_list|(
-name|OutFile
+name|outFile
 argument_list|,
 operator|&
 name|PTy
@@ -533,10 +576,12 @@ argument_list|(
 name|int
 argument_list|)
 argument_list|)
-expr_stmt|;
+operator|<
+literal|0
+operator|||
 name|write
 argument_list|(
-name|OutFile
+name|outFile
 argument_list|,
 operator|&
 name|NumElements
@@ -546,10 +591,12 @@ argument_list|(
 name|unsigned
 argument_list|)
 argument_list|)
-expr_stmt|;
+operator|<
+literal|0
+operator|||
 name|write
 argument_list|(
-name|OutFile
+name|outFile
 argument_list|,
 name|Start
 argument_list|,
@@ -560,7 +607,23 @@ argument_list|(
 name|unsigned
 argument_list|)
 argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"error: unable to write to output file."
+argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 

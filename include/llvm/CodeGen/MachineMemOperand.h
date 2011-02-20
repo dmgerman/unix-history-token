@@ -70,7 +70,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/System/DataTypes.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_decl_stmt
@@ -86,31 +86,185 @@ decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
-comment|//===----------------------------------------------------------------------===//
-comment|/// MachineMemOperand - A description of a memory reference used in the backend.
-comment|/// Instead of holding a StoreInst or LoadInst, this class holds the address
-comment|/// Value of the reference along with a byte size and offset. This allows it
-comment|/// to describe lowered loads and stores. Also, the special PseudoSourceValue
-comment|/// objects can be used to represent loads and stores to memory locations
-comment|/// that aren't explicit in the regular LLVM IR.
-comment|///
-name|class
-name|MachineMemOperand
+comment|/// MachinePointerInfo - This class contains a discriminated union of
+comment|/// information about pointers in memory operands, relating them back to LLVM IR
+comment|/// or to virtual locations (such as frame indices) that are exposed during
+comment|/// codegen.
+struct|struct
+name|MachinePointerInfo
 block|{
-name|int64_t
-name|Offset
-decl_stmt|;
-name|uint64_t
-name|Size
-decl_stmt|;
+comment|/// V - This is the IR pointer value for the access, or it is null if unknown.
+comment|/// If this is null, then the access is to a pointer in the default address
+comment|/// space.
 specifier|const
 name|Value
 modifier|*
 name|V
 decl_stmt|;
+comment|/// Offset - This is an offset from the base Value*.
+name|int64_t
+name|Offset
+decl_stmt|;
+name|explicit
+name|MachinePointerInfo
+argument_list|(
+argument|const Value *v =
+literal|0
+argument_list|,
+argument|int64_t offset =
+literal|0
+argument_list|)
+block|:
+name|V
+argument_list|(
+name|v
+argument_list|)
+operator|,
+name|Offset
+argument_list|(
+argument|offset
+argument_list|)
+block|{}
+name|MachinePointerInfo
+name|getWithOffset
+argument_list|(
+argument|int64_t O
+argument_list|)
+specifier|const
+block|{
+if|if
+condition|(
+name|V
+operator|==
+literal|0
+condition|)
+return|return
+name|MachinePointerInfo
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+return|;
+return|return
+name|MachinePointerInfo
+argument_list|(
+name|V
+argument_list|,
+name|Offset
+operator|+
+name|O
+argument_list|)
+return|;
+block|}
+comment|/// getAddrSpace - Return the LLVM IR address space number that this pointer
+comment|/// points into.
 name|unsigned
+name|getAddrSpace
+argument_list|()
+decl|const
+struct|;
+comment|/// getConstantPool - Return a MachinePointerInfo record that refers to the
+comment|/// constant pool.
+specifier|static
+name|MachinePointerInfo
+name|getConstantPool
+parameter_list|()
+function_decl|;
+comment|/// getFixedStack - Return a MachinePointerInfo record that refers to the
+comment|/// the specified FrameIndex.
+specifier|static
+name|MachinePointerInfo
+name|getFixedStack
+parameter_list|(
 name|int
+name|FI
+parameter_list|,
+name|int64_t
+name|offset
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+comment|/// getJumpTable - Return a MachinePointerInfo record that refers to a
+comment|/// jump table entry.
+specifier|static
+name|MachinePointerInfo
+name|getJumpTable
+parameter_list|()
+function_decl|;
+comment|/// getGOT - Return a MachinePointerInfo record that refers to a
+comment|/// GOT entry.
+specifier|static
+name|MachinePointerInfo
+name|getGOT
+parameter_list|()
+function_decl|;
+comment|/// getStack - stack pointer relative access.
+specifier|static
+name|MachinePointerInfo
+name|getStack
+parameter_list|(
+name|int64_t
+name|Offset
+parameter_list|)
+function_decl|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_comment
+comment|/// MachineMemOperand - A description of a memory reference used in the backend.
+end_comment
+
+begin_comment
+comment|/// Instead of holding a StoreInst or LoadInst, this class holds the address
+end_comment
+
+begin_comment
+comment|/// Value of the reference along with a byte size and offset. This allows it
+end_comment
+
+begin_comment
+comment|/// to describe lowered loads and stores. Also, the special PseudoSourceValue
+end_comment
+
+begin_comment
+comment|/// objects can be used to represent loads and stores to memory locations
+end_comment
+
+begin_comment
+comment|/// that aren't explicit in the regular LLVM IR.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_decl_stmt
+name|class
+name|MachineMemOperand
+block|{
+name|MachinePointerInfo
+name|PtrInfo
+decl_stmt|;
+name|uint64_t
+name|Size
+decl_stmt|;
+name|unsigned
 name|Flags
+decl_stmt|;
+specifier|const
+name|MDNode
+modifier|*
+name|TBAAInfo
 decl_stmt|;
 name|public
 label|:
@@ -145,20 +299,32 @@ literal|4
 block|}
 enum|;
 comment|/// MachineMemOperand - Construct an MachineMemOperand object with the
-comment|/// specified address Value, flags, offset, size, and base alignment.
+comment|/// specified PtrInfo, flags, size, and base alignment.
 name|MachineMemOperand
 argument_list|(
-argument|const Value *v
+argument|MachinePointerInfo PtrInfo
 argument_list|,
-argument|unsigned int f
-argument_list|,
-argument|int64_t o
+argument|unsigned flags
 argument_list|,
 argument|uint64_t s
 argument_list|,
-argument|unsigned int base_alignment
+argument|unsigned base_alignment
+argument_list|,
+argument|const MDNode *TBAAInfo =
+literal|0
 argument_list|)
 empty_stmt|;
+specifier|const
+name|MachinePointerInfo
+operator|&
+name|getPointerInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PtrInfo
+return|;
+block|}
 comment|/// getValue - Return the base address of the memory access. This may either
 comment|/// be a normal LLVM IR Value, or one of the special values used in CodeGen.
 comment|/// Special values are those obtained via
@@ -174,6 +340,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|PtrInfo
+operator|.
 name|V
 return|;
 block|}
@@ -207,6 +375,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|PtrInfo
+operator|.
 name|Offset
 return|;
 block|}
@@ -246,6 +416,18 @@ operator|)
 operator|)
 operator|>>
 literal|1
+return|;
+block|}
+comment|/// getTBAAInfo - Return the TBAA tag for the memory reference.
+specifier|const
+name|MDNode
+operator|*
+name|getTBAAInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TBAAInfo
 return|;
 block|}
 name|bool
@@ -316,9 +498,25 @@ modifier|*
 name|NewSV
 parameter_list|)
 block|{
+name|PtrInfo
+operator|.
 name|V
 operator|=
 name|NewSV
+expr_stmt|;
+block|}
+name|void
+name|setOffset
+parameter_list|(
+name|int64_t
+name|NewOffset
+parameter_list|)
+block|{
+name|PtrInfo
+operator|.
+name|Offset
+operator|=
+name|NewOffset
 expr_stmt|;
 block|}
 comment|/// Profile - Gather unique data for the object.
@@ -333,7 +531,13 @@ argument_list|)
 decl|const
 decl_stmt|;
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
 name|raw_ostream
 operator|&
 name|operator
@@ -349,10 +553,10 @@ operator|&
 name|MRO
 operator|)
 expr_stmt|;
-block|}
-end_decl_stmt
+end_expr_stmt
 
 begin_comment
+unit|}
 comment|// End llvm namespace
 end_comment
 

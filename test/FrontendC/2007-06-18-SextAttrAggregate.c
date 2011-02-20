@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %llvmgcc %s -o - -S -emit-llvm -O3 | grep {i8 signext}
+comment|// RUN: %llvmgcc %s -o - -S -O3 | grep {i8 signext}
 end_comment
 
 begin_comment

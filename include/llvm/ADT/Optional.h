@@ -325,6 +325,216 @@ operator|>
 expr|>
 block|{}
 expr_stmt|;
+comment|/// \brief Poison comparison between two \c Optional objects. Clients needs to
+comment|/// explicitly compare the underlying values and account for empty \c Optional
+comment|/// objects.
+comment|///
+comment|/// This routine will never be defined. It returns \c void to help diagnose
+comment|/// errors at compile time.
+name|template
+operator|<
+name|typename
+name|T
+operator|,
+name|typename
+name|U
+operator|>
+name|void
+name|operator
+operator|==
+operator|(
+specifier|const
+name|Optional
+operator|<
+name|T
+operator|>
+operator|&
+name|X
+operator|,
+specifier|const
+name|Optional
+operator|<
+name|U
+operator|>
+operator|&
+name|Y
+operator|)
+expr_stmt|;
+comment|/// \brief Poison comparison between two \c Optional objects. Clients needs to
+comment|/// explicitly compare the underlying values and account for empty \c Optional
+comment|/// objects.
+comment|///
+comment|/// This routine will never be defined. It returns \c void to help diagnose
+comment|/// errors at compile time.
+name|template
+operator|<
+name|typename
+name|T
+operator|,
+name|typename
+name|U
+operator|>
+name|void
+name|operator
+operator|!=
+operator|(
+specifier|const
+name|Optional
+operator|<
+name|T
+operator|>
+operator|&
+name|X
+operator|,
+specifier|const
+name|Optional
+operator|<
+name|U
+operator|>
+operator|&
+name|Y
+operator|)
+expr_stmt|;
+comment|/// \brief Poison comparison between two \c Optional objects. Clients needs to
+comment|/// explicitly compare the underlying values and account for empty \c Optional
+comment|/// objects.
+comment|///
+comment|/// This routine will never be defined. It returns \c void to help diagnose
+comment|/// errors at compile time.
+name|template
+operator|<
+name|typename
+name|T
+operator|,
+name|typename
+name|U
+operator|>
+name|void
+name|operator
+operator|<
+operator|(
+specifier|const
+name|Optional
+operator|<
+name|T
+operator|>
+operator|&
+name|X
+operator|,
+specifier|const
+name|Optional
+operator|<
+name|U
+operator|>
+operator|&
+name|Y
+operator|)
+expr_stmt|;
+comment|/// \brief Poison comparison between two \c Optional objects. Clients needs to
+comment|/// explicitly compare the underlying values and account for empty \c Optional
+comment|/// objects.
+comment|///
+comment|/// This routine will never be defined. It returns \c void to help diagnose
+comment|/// errors at compile time.
+name|template
+operator|<
+name|typename
+name|T
+operator|,
+name|typename
+name|U
+operator|>
+name|void
+name|operator
+operator|<=
+operator|(
+specifier|const
+name|Optional
+operator|<
+name|T
+operator|>
+operator|&
+name|X
+operator|,
+specifier|const
+name|Optional
+operator|<
+name|U
+operator|>
+operator|&
+name|Y
+operator|)
+expr_stmt|;
+comment|/// \brief Poison comparison between two \c Optional objects. Clients needs to
+comment|/// explicitly compare the underlying values and account for empty \c Optional
+comment|/// objects.
+comment|///
+comment|/// This routine will never be defined. It returns \c void to help diagnose
+comment|/// errors at compile time.
+name|template
+operator|<
+name|typename
+name|T
+operator|,
+name|typename
+name|U
+operator|>
+name|void
+name|operator
+operator|>=
+operator|(
+specifier|const
+name|Optional
+operator|<
+name|T
+operator|>
+operator|&
+name|X
+operator|,
+specifier|const
+name|Optional
+operator|<
+name|U
+operator|>
+operator|&
+name|Y
+operator|)
+expr_stmt|;
+comment|/// \brief Poison comparison between two \c Optional objects. Clients needs to
+comment|/// explicitly compare the underlying values and account for empty \c Optional
+comment|/// objects.
+comment|///
+comment|/// This routine will never be defined. It returns \c void to help diagnose
+comment|/// errors at compile time.
+name|template
+operator|<
+name|typename
+name|T
+operator|,
+name|typename
+name|U
+operator|>
+name|void
+name|operator
+operator|>
+operator|(
+specifier|const
+name|Optional
+operator|<
+name|T
+operator|>
+operator|&
+name|X
+operator|,
+specifier|const
+name|Optional
+operator|<
+name|U
+operator|>
+operator|&
+name|Y
+operator|)
+expr_stmt|;
 block|}
 end_decl_stmt
 

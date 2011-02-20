@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*===-- Profiling.h - Profiling support library support routines --*- C -*-===*\ |* |*                     The LLVM Compiler Infrastructure |* |* This file is distributed under the University of Illinois Open Source       |* License. See LICENSE.TXT for details.                                       |* |*===----------------------------------------------------------------------===*| |* |* This file defines functions shared by the various different profiling |* implementations. |* \*===----------------------------------------------------------------------===*/
+comment|/*===-- Profiling.h - Profiling support library support routines ----------===*\ |* |*                     The LLVM Compiler Infrastructure |* |* This file is distributed under the University of Illinois Open Source |* License. See LICENSE.TXT for details. |* |*===----------------------------------------------------------------------===*| |* |* This file defines functions shared by the various different profiling |* implementations. |* \*===----------------------------------------------------------------------===*/
 end_comment
 
 begin_ifndef
@@ -42,6 +42,17 @@ modifier|*
 modifier|*
 name|argv
 parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Retrieves the file descriptor for the profile file.  */
+end_comment
+
+begin_function_decl
+name|int
+name|getOutFile
+parameter_list|()
 function_decl|;
 end_function_decl
 

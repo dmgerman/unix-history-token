@@ -43,12 +43,6 @@ directive|define
 name|LLVM_CODEGEN_SPILLER_H
 end_define
 
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SmallVector.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -65,6 +59,14 @@ decl_stmt|;
 name|class
 name|SlotIndex
 decl_stmt|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|SmallVectorImpl
+expr_stmt|;
 name|class
 name|VirtRegMap
 decl_stmt|;
@@ -107,6 +109,7 @@ operator|>
 operator|&
 name|newIntervals
 argument_list|,
+specifier|const
 name|SmallVectorImpl
 operator|<
 name|LiveInterval
@@ -124,6 +127,25 @@ comment|/// Create and return a spiller object, as specified on the command line
 name|Spiller
 modifier|*
 name|createSpiller
+parameter_list|(
+name|MachineFunctionPass
+modifier|&
+name|pass
+parameter_list|,
+name|MachineFunction
+modifier|&
+name|mf
+parameter_list|,
+name|VirtRegMap
+modifier|&
+name|vrm
+parameter_list|)
+function_decl|;
+comment|/// Create and return a spiller that will insert spill code directly instead
+comment|/// of deferring though VirtRegMap.
+name|Spiller
+modifier|*
+name|createInlineSpiller
 parameter_list|(
 name|MachineFunctionPass
 modifier|&

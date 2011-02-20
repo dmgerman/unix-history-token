@@ -135,12 +135,27 @@ name|char
 modifier|&
 name|MachineLoopInfoID
 decl_stmt|;
+comment|/// MachineLoopRanges pass - This pass is an on-demand loop coverage
+comment|/// analysis pass.
+comment|///
+specifier|extern
+name|char
+modifier|&
+name|MachineLoopRangesID
+decl_stmt|;
 comment|/// MachineDominators pass - This pass is a machine dominators analysis pass.
 comment|///
 specifier|extern
 name|char
 modifier|&
 name|MachineDominatorsID
+decl_stmt|;
+comment|/// EdgeBundles analysis - Bundle machine CFG edges.
+comment|///
+specifier|extern
+name|char
+modifier|&
+name|EdgeBundlesID
 decl_stmt|;
 comment|/// PHIElimination pass - This pass eliminates machine instruction PHI nodes
 comment|/// by inserting copy instructions.  This destroys SSA information, but is the
@@ -168,6 +183,12 @@ name|char
 modifier|&
 name|PreAllocSplittingID
 decl_stmt|;
+comment|/// LiveStacks pass. An analysis keeping track of the liveness of stack slots.
+specifier|extern
+name|char
+modifier|&
+name|LiveStacksID
+decl_stmt|;
 comment|/// SimpleRegisterCoalescing pass.  Aggressively coalesces every register
 comment|/// copy it can.
 comment|///
@@ -183,6 +204,14 @@ specifier|extern
 name|char
 modifier|&
 name|TwoAddressInstructionPassID
+decl_stmt|;
+comment|/// SpillPlacement analysis. Suggest optimal placement of spill code between
+comment|/// basic blocks.
+comment|///
+specifier|extern
+name|char
+modifier|&
+name|SpillPlacementID
 decl_stmt|;
 comment|/// UnreachableMachineBlockElimination pass - This pass removes unreachable
 comment|/// machine basic blocks.
@@ -220,6 +249,22 @@ modifier|*
 name|createFastRegisterAllocator
 parameter_list|()
 function_decl|;
+comment|/// BasicRegisterAllocation Pass - This pass implements a degenerate global
+comment|/// register allocator using the basic regalloc framework.
+comment|///
+name|FunctionPass
+modifier|*
+name|createBasicRegisterAllocator
+parameter_list|()
+function_decl|;
+comment|/// Greedy register allocation pass - This pass implements a global register
+comment|/// allocator for optimized builds.
+comment|///
+name|FunctionPass
+modifier|*
+name|createGreedyRegisterAllocator
+parameter_list|()
+function_decl|;
 comment|/// LinearScanRegisterAllocation Pass - This pass implements the linear scan
 comment|/// register allocation algorithm, a global register allocator.
 comment|///
@@ -233,7 +278,7 @@ comment|/// Quadratic Prograaming (PBQP) based register allocator.
 comment|///
 name|FunctionPass
 modifier|*
-name|createPBQPRegisterAllocator
+name|createDefaultPBQPRegisterAllocator
 parameter_list|()
 function_decl|;
 comment|/// SimpleRegisterCoalescing Pass - Coalesce all copies possible.  Can run
@@ -408,7 +453,14 @@ comment|/// instructions for correctness.
 name|FunctionPass
 modifier|*
 name|createMachineVerifierPass
-parameter_list|()
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|Banner
+init|=
+literal|0
+parameter_list|)
 function_decl|;
 comment|/// createDwarfEHPass - This pass mulches exception handling code into a form
 comment|/// adapted to code generation.  Required if using dwarf exception handling.
@@ -442,6 +494,13 @@ comment|/// addressing.
 name|FunctionPass
 modifier|*
 name|createLocalStackSlotAllocationPass
+parameter_list|()
+function_decl|;
+comment|/// createExpandISelPseudosPass - This pass expands pseudo-instructions.
+comment|///
+name|FunctionPass
+modifier|*
+name|createExpandISelPseudosPass
 parameter_list|()
 function_decl|;
 block|}

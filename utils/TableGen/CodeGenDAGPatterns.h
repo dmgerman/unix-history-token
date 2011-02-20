@@ -512,6 +512,22 @@ operator|&
 name|TP
 argument_list|)
 decl_stmt|;
+comment|/// EnforceVectorSubVectorTypeIs - 'this' is now constrainted to
+comment|/// be a vector type VT.
+name|bool
+name|EnforceVectorSubVectorTypeIs
+argument_list|(
+name|EEVT
+operator|::
+name|TypeSet
+operator|&
+name|VT
+argument_list|,
+name|TreePattern
+operator|&
+name|TP
+argument_list|)
+decl_stmt|;
 name|bool
 name|operator
 operator|!=
@@ -648,6 +664,8 @@ block|,
 name|SDTCisOpSmallerThanOp
 block|,
 name|SDTCisEltOfVec
+block|,
+name|SDTCisSubVecOfVec
 block|}
 name|ConstraintType
 enum|;
@@ -695,6 +713,14 @@ name|OtherOperandNum
 decl_stmt|;
 block|}
 name|SDTCisEltOfVec_Info
+struct|;
+struct|struct
+block|{
+name|unsigned
+name|OtherOperandNum
+decl_stmt|;
+block|}
+name|SDTCisSubVecOfVec_Info
 struct|;
 block|}
 name|x
@@ -2758,6 +2784,8 @@ name|public
 label|:
 name|PatternToMatch
 argument_list|(
+argument|Record *srcrecord
+argument_list|,
 argument|ListInit *preds
 argument_list|,
 argument|TreePatternNode *src
@@ -2771,6 +2799,11 @@ argument_list|,
 argument|unsigned uid
 argument_list|)
 block|:
+name|SrcRecord
+argument_list|(
+name|srcrecord
+argument_list|)
+operator|,
 name|Predicates
 argument_list|(
 name|preds
@@ -2801,10 +2834,15 @@ argument_list|(
 argument|uid
 argument_list|)
 block|{}
-name|ListInit
+name|Record
 operator|*
-name|Predicates
+name|SrcRecord
 expr_stmt|;
+comment|// Originating Record for the pattern.
+name|ListInit
+modifier|*
+name|Predicates
+decl_stmt|;
 comment|// Top level predicate conditions to match.
 name|TreePatternNode
 modifier|*
@@ -2834,6 +2872,16 @@ name|unsigned
 name|ID
 decl_stmt|;
 comment|// Unique ID for the record.
+name|Record
+operator|*
+name|getSrcRecord
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SrcRecord
+return|;
+block|}
 name|ListInit
 operator|*
 name|getPredicates

@@ -72,7 +72,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/System/DataTypes.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_include
@@ -184,6 +184,9 @@ decl_stmt|;
 struct_decl|struct
 name|MultiClass
 struct_decl|;
+name|class
+name|RecordKeeper
+decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|//  Type Classes
 comment|//===----------------------------------------------------------------------===//
@@ -5025,11 +5028,11 @@ name|UnaryOp
 block|{
 name|CAST
 block|,
-name|CAR
+name|HEAD
 block|,
-name|CDR
+name|TAIL
 block|,
-name|LNULL
+name|EMPTY
 block|}
 block|;
 name|private
@@ -5216,8 +5219,6 @@ block|,
 name|STRCONCAT
 block|,
 name|CONCAT
-block|,
-name|NAMECONCAT
 block|,
 name|EQ
 block|}
@@ -5674,6 +5675,16 @@ operator|*
 name|CurMultiClass
 argument_list|)
 block|;
+name|virtual
+name|bool
+name|isComplete
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
 name|virtual
 name|Init
 operator|*
@@ -7204,14 +7215,22 @@ operator|*
 operator|>
 name|SuperClasses
 block|;
+comment|// Tracks Record instances. Not owned by Record.
+name|RecordKeeper
+operator|&
+name|TrackedRecords
+block|;
 name|public
 operator|:
+comment|// Constructs a record.
 name|explicit
 name|Record
 argument_list|(
 argument|const std::string&N
 argument_list|,
 argument|SMLoc loc
+argument_list|,
+argument|RecordKeeper&records
 argument_list|)
 operator|:
 name|ID
@@ -7227,7 +7246,12 @@ argument_list|)
 block|,
 name|Loc
 argument_list|(
-argument|loc
+name|loc
+argument_list|)
+block|,
+name|TrackedRecords
+argument_list|(
+argument|records
 argument_list|)
 block|{}
 operator|~
@@ -7739,6 +7763,16 @@ operator|*
 name|RV
 argument_list|)
 block|;
+name|RecordKeeper
+operator|&
+name|getRecords
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TrackedRecords
+return|;
+block|}
 name|void
 name|dump
 argument_list|()
@@ -7812,9 +7846,9 @@ argument|StringRef FieldName
 argument_list|)
 specifier|const
 block|;
-comment|/// getValueAsListOfInts - This method looks up the specified field and returns
-comment|/// its value as a vector of integers, throwing an exception if the field does
-comment|/// not exist or if the value is not the right type.
+comment|/// getValueAsListOfInts - This method looks up the specified field and
+comment|/// returns its value as a vector of integers, throwing an exception if the
+comment|/// field does not exist or if the value is not the right type.
 comment|///
 name|std
 operator|::
@@ -7932,6 +7966,8 @@ argument_list|(
 argument|const std::string&Name
 argument_list|,
 argument|SMLoc Loc
+argument_list|,
+argument|RecordKeeper&Records
 argument_list|)
 operator|:
 name|Rec
@@ -7939,6 +7975,8 @@ argument_list|(
 argument|Name
 argument_list|,
 argument|Loc
+argument_list|,
+argument|Records
 argument_list|)
 block|{}
 block|}
@@ -8488,16 +8526,12 @@ operator|&
 name|RK
 operator|)
 block|;
-specifier|extern
-name|RecordKeeper
-name|Records
-block|;
 name|void
 name|PrintError
 argument_list|(
 argument|SMLoc ErrorLoc
 argument_list|,
-argument|const std::string&Msg
+argument|const Twine&Msg
 argument_list|)
 block|;  }
 end_decl_stmt

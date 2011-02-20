@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<iterator>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<memory>
 end_include
 
@@ -205,26 +211,10 @@ decl_stmt|;
 comment|// Allocate raw space for N elements of type T.  If T has a ctor or dtor, we
 comment|// don't want it to be automatically run, so we need to represent the space as
 comment|// something else.  An array of char would work great, but might not be
-comment|// aligned sufficiently.  Instead, we either use GCC extensions, or some
-comment|// number of union instances for the space, which guarantee maximal alignment.
-struct|struct
-name|U
-block|{
-ifdef|#
-directive|ifdef
-name|__GNUC__
-name|char
-name|X
-name|__attribute__
-argument_list|(
-operator|(
-name|aligned
-operator|)
-argument_list|)
-decl_stmt|;
-else|#
-directive|else
+comment|// aligned sufficiently.  Instead we use some number of union instances for
+comment|// the space, which guarantee maximal alignment.
 union|union
+name|U
 block|{
 name|double
 name|D
@@ -242,13 +232,8 @@ modifier|*
 name|P
 decl_stmt|;
 block|}
-name|X
-union|;
-endif|#
-directive|endif
-block|}
 name|FirstEl
-struct|;
+union|;
 comment|// Space after 'FirstEl' is clobbered, do not add any instance vars after it.
 name|protected
 label|:
@@ -343,7 +328,7 @@ argument_list|)
 return|;
 block|}
 comment|/// grow_pod - This is an implementation of the grow() method which only works
-comment|/// on POD-like datatypes and is out of line to reduce code duplication.
+comment|/// on POD-like data types and is out of line to reduce code duplication.
 name|void
 name|grow_pod
 parameter_list|(

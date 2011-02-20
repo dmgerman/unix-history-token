@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %llvmgcc -S -fnested-functions -O0 -o - -emit-llvm %s
+comment|// RUN: %llvmgcc -S -fnested-functions -O0 -o - %s
 end_comment
 
 begin_comment

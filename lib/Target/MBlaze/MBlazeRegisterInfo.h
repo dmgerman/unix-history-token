@@ -158,19 +158,18 @@ argument_list|(
 argument|unsigned RegEnum
 argument_list|)
 block|;
+specifier|static
+name|unsigned
+name|getSpecialRegisterFromNumbering
+argument_list|(
+argument|unsigned RegEnum
+argument_list|)
+block|;
 comment|/// Get PIC indirect call register
 specifier|static
 name|unsigned
 name|getPICCallReg
 argument_list|()
-block|;
-comment|/// Adjust the MBlaze stack frame.
-name|void
-name|adjustMBlazeStackFrame
-argument_list|(
-argument|MachineFunction&MF
-argument_list|)
-specifier|const
 block|;
 comment|/// Code Generation virtual methods...
 specifier|const
@@ -185,13 +184,6 @@ specifier|const
 block|;
 name|BitVector
 name|getReservedRegs
-argument_list|(
-argument|const MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|hasFP
 argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
@@ -227,22 +219,6 @@ argument|MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
-name|void
-name|emitPrologue
-argument_list|(
-argument|MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
-name|void
-name|emitEpilogue
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|MachineBasicBlock&MBB
-argument_list|)
-specifier|const
-block|;
 comment|/// Debug information queries.
 name|unsigned
 name|getRARegister
@@ -267,18 +243,6 @@ name|getEHHandlerRegister
 argument_list|()
 specifier|const
 block|;
-comment|/// targetHandlesStackFrameRounding - Returns true if the target is
-comment|/// responsible for rounding up the stack frame (probably at emitPrologue
-comment|/// time).
-name|bool
-name|targetHandlesStackFrameRounding
-argument_list|()
-specifier|const
-block|{
-return|return
-name|true
-return|;
-block|}
 name|int
 name|getDwarfRegNum
 argument_list|(

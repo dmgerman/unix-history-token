@@ -147,9 +147,9 @@ name|virtual
 name|HazardType
 name|getHazardType
 argument_list|(
-name|SUnit
-operator|*
-name|SU
+argument|SUnit *SU
+argument_list|,
+argument|int Stalls
 argument_list|)
 block|;
 name|virtual

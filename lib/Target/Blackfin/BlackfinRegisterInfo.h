@@ -151,13 +151,6 @@ operator|::
 name|PRegClass
 return|;
 block|}
-name|bool
-name|hasFP
-argument_list|(
-argument|const MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
 comment|// bool hasReservedCallFrame(MachineFunction&MF) const;
 name|bool
 name|requiresRegisterScavenging
@@ -185,31 +178,6 @@ argument_list|,
 argument|int SPAdj
 argument_list|,
 argument|RegScavenger *RS = NULL
-argument_list|)
-specifier|const
-block|;
-name|void
-name|processFunctionBeforeCalleeSavedScan
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|RegScavenger *RS
-argument_list|)
-specifier|const
-block|;
-name|void
-name|emitPrologue
-argument_list|(
-argument|MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
-name|void
-name|emitEpilogue
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|MachineBasicBlock&MBB
 argument_list|)
 specifier|const
 block|;

@@ -65,23 +65,27 @@ begin_comment
 comment|/* macros for manipulating states, small version */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|states
-value|long
-end_define
+begin_comment
+comment|/* FIXME: 'states' is assumed as 'long' on small version. */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|states1
-value|states
+value|long
 end_define
 
 begin_comment
 comment|/* for later use in llvm_regexec() decision */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|states
+value|states1
+end_define
 
 begin_define
 define|#

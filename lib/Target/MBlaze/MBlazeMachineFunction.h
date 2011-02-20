@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -106,13 +112,6 @@ comment|/// Holds for each function where on the stack the Return Address must b
 comment|/// saved. This is used on Prologue and Epilogue to emit RA save/restore
 name|int
 name|RAStackOffset
-block|;
-comment|/// At each function entry a special bitmask directive must be emitted
-comment|/// to help in debugging CPU callee saved registers. It needs a negative
-comment|/// offset from the final stack size and its higher register location on
-comment|/// the stack.
-name|int
-name|CPUTopSavedRegOff
 block|;
 comment|/// MBlazeFIHolder - Holds a FrameIndex and it's Stack Pointer Offset
 block|struct
@@ -179,6 +178,17 @@ block|;
 name|bool
 name|HasStoreVarArgs
 block|;
+comment|// When determining the final stack layout some of the frame indexes may
+comment|// be replaced by new frame indexes that reside in the caller's stack
+comment|// frame. The replacements are recorded in this structure.
+name|DenseMap
+operator|<
+name|int
+block|,
+name|int
+operator|>
+name|FIReplacements
+block|;
 comment|/// SRetReturnReg - Some subtargets require that sret lowering includes
 comment|/// returning the value of the returned struct in a register. This field
 comment|/// holds the virtual register into which the sret argument is passed.
@@ -195,6 +205,16 @@ comment|// VarArgsFrameIndex - FrameIndex for start of varargs area.
 name|int
 name|VarArgsFrameIndex
 block|;
+comment|/// LiveInFI - keeps track of the frame indexes in a callers stack
+comment|/// frame that are live into a function.
+name|SmallVector
+operator|<
+name|int
+block|,
+literal|16
+operator|>
+name|LiveInFI
+block|;
 name|public
 operator|:
 name|MBlazeFunctionInfo
@@ -210,11 +230,6 @@ literal|0
 argument_list|)
 block|,
 name|RAStackOffset
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|CPUTopSavedRegOff
 argument_list|(
 literal|0
 argument_list|)
@@ -252,6 +267,9 @@ name|VarArgsFrameIndex
 argument_list|(
 literal|0
 argument_list|)
+block|,
+name|LiveInFI
+argument_list|()
 block|{}
 name|int
 name|getFPStackOffset
@@ -288,25 +306,6 @@ argument|int Off
 argument_list|)
 block|{
 name|RAStackOffset
-operator|=
-name|Off
-block|; }
-name|int
-name|getCPUTopSavedRegOff
-argument_list|()
-specifier|const
-block|{
-return|return
-name|CPUTopSavedRegOff
-return|;
-block|}
-name|void
-name|setCPUTopSavedRegOff
-argument_list|(
-argument|int Off
-argument_list|)
-block|{
-name|CPUTopSavedRegOff
 operator|=
 name|Off
 block|; }
@@ -389,12 +388,150 @@ name|HasStoreVarArgs
 return|;
 block|}
 name|void
-name|recordLoadArgsFI
+name|recordLiveIn
 argument_list|(
 argument|int FI
-argument_list|,
-argument|int SPOffset
 argument_list|)
+block|{
+name|LiveInFI
+operator|.
+name|push_back
+argument_list|(
+name|FI
+argument_list|)
+block|;   }
+name|bool
+name|isLiveIn
+argument_list|(
+argument|int FI
+argument_list|)
+block|{
+for|for
+control|(
+name|unsigned
+name|i
+init|=
+literal|0
+init|,
+name|e
+init|=
+name|LiveInFI
+operator|.
+name|size
+argument_list|()
+init|;
+name|i
+operator|<
+name|e
+condition|;
+operator|++
+name|i
+control|)
+if|if
+condition|(
+name|FI
+operator|==
+name|LiveInFI
+index|[
+name|i
+index|]
+condition|)
+return|return
+name|true
+return|;
+return|return
+name|false
+return|;
+block|}
+specifier|const
+name|SmallVector
+operator|<
+name|int
+operator|,
+literal|16
+operator|>
+operator|&
+name|getLiveIn
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LiveInFI
+return|;
+block|}
+name|void
+name|recordReplacement
+parameter_list|(
+name|int
+name|OFI
+parameter_list|,
+name|int
+name|NFI
+parameter_list|)
+block|{
+name|FIReplacements
+operator|.
+name|insert
+argument_list|(
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|OFI
+argument_list|,
+name|NFI
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+name|bool
+name|hasReplacement
+argument_list|(
+name|int
+name|OFI
+argument_list|)
+decl|const
+block|{
+return|return
+name|FIReplacements
+operator|.
+name|find
+argument_list|(
+name|OFI
+argument_list|)
+operator|!=
+name|FIReplacements
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+name|int
+name|getReplacement
+argument_list|(
+name|int
+name|OFI
+argument_list|)
+decl|const
+block|{
+return|return
+name|FIReplacements
+operator|.
+name|lookup
+argument_list|(
+name|OFI
+argument_list|)
+return|;
+block|}
+name|void
+name|recordLoadArgsFI
+parameter_list|(
+name|int
+name|FI
+parameter_list|,
+name|int
+name|SPOffset
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -416,14 +553,17 @@ argument_list|,
 name|SPOffset
 argument_list|)
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
 name|void
 name|recordStoreVarArgsFI
-argument_list|(
-argument|int FI
-argument_list|,
-argument|int SPOffset
-argument_list|)
+parameter_list|(
+name|int
+name|FI
+parameter_list|,
+name|int
+name|SPOffset
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -445,11 +585,8 @@ argument_list|,
 name|SPOffset
 argument_list|)
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 block|}
-end_decl_stmt
-
-begin_decl_stmt
 name|void
 name|adjustLoadArgsFI
 argument_list|(
@@ -507,9 +644,6 @@ name|SPOffset
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
-
-begin_decl_stmt
 name|void
 name|adjustStoreVarArgsFI
 argument_list|(
@@ -567,9 +701,6 @@ name|SPOffset
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
-
-begin_expr_stmt
 name|unsigned
 name|getSRetReturnReg
 argument_list|()
@@ -579,9 +710,6 @@ return|return
 name|SRetReturnReg
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|setSRetReturnReg
 parameter_list|(
@@ -594,9 +722,6 @@ operator|=
 name|Reg
 expr_stmt|;
 block|}
-end_function
-
-begin_expr_stmt
 name|unsigned
 name|getGlobalBaseReg
 argument_list|()
@@ -606,9 +731,6 @@ return|return
 name|GlobalBaseReg
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|setGlobalBaseReg
 parameter_list|(
@@ -621,9 +743,6 @@ operator|=
 name|Reg
 expr_stmt|;
 block|}
-end_function
-
-begin_expr_stmt
 name|int
 name|getVarArgsFrameIndex
 argument_list|()
@@ -633,9 +752,6 @@ return|return
 name|VarArgsFrameIndex
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|setVarArgsFrameIndex
 parameter_list|(
@@ -648,10 +764,15 @@ operator|=
 name|Index
 expr_stmt|;
 block|}
-end_function
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
-unit|};  }
+unit|}
 comment|// end of namespace llvm
 end_comment
 

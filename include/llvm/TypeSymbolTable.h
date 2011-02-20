@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/DataTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<map>
 end_include
 
@@ -81,9 +87,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|StringRef
-decl_stmt|;
 comment|/// This class provides a symbol table of name/type pairs with operations to
 comment|/// support constructing, searching and iterating over the symbol table. The
 comment|/// class derives from AbstractTypeUser so that the contents of the symbol

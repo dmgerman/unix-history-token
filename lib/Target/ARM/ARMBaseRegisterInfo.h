@@ -159,6 +159,185 @@ name|false
 return|;
 block|}
 block|}
+comment|/// isARMArea1Register - Returns true if the register is a low register (r0-r7)
+comment|/// or a stack/pc register that we should push/pop.
+specifier|static
+specifier|inline
+name|bool
+name|isARMArea1Register
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|,
+name|bool
+name|isDarwin
+parameter_list|)
+block|{
+name|using
+name|namespace
+name|ARM
+decl_stmt|;
+switch|switch
+condition|(
+name|Reg
+condition|)
+block|{
+case|case
+name|R0
+case|:
+case|case
+name|R1
+case|:
+case|case
+name|R2
+case|:
+case|case
+name|R3
+case|:
+case|case
+name|R4
+case|:
+case|case
+name|R5
+case|:
+case|case
+name|R6
+case|:
+case|case
+name|R7
+case|:
+case|case
+name|LR
+case|:
+case|case
+name|SP
+case|:
+case|case
+name|PC
+case|:
+return|return
+name|true
+return|;
+case|case
+name|R8
+case|:
+case|case
+name|R9
+case|:
+case|case
+name|R10
+case|:
+case|case
+name|R11
+case|:
+comment|// For darwin we want r7 and lr to be next to each other.
+return|return
+operator|!
+name|isDarwin
+return|;
+default|default:
+return|return
+name|false
+return|;
+block|}
+block|}
+specifier|static
+specifier|inline
+name|bool
+name|isARMArea2Register
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|,
+name|bool
+name|isDarwin
+parameter_list|)
+block|{
+name|using
+name|namespace
+name|ARM
+decl_stmt|;
+switch|switch
+condition|(
+name|Reg
+condition|)
+block|{
+case|case
+name|R8
+case|:
+case|case
+name|R9
+case|:
+case|case
+name|R10
+case|:
+case|case
+name|R11
+case|:
+comment|// Darwin has this second area.
+return|return
+name|isDarwin
+return|;
+default|default:
+return|return
+name|false
+return|;
+block|}
+block|}
+specifier|static
+specifier|inline
+name|bool
+name|isARMArea3Register
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|,
+name|bool
+name|isDarwin
+parameter_list|)
+block|{
+name|using
+name|namespace
+name|ARM
+decl_stmt|;
+switch|switch
+condition|(
+name|Reg
+condition|)
+block|{
+case|case
+name|D15
+case|:
+case|case
+name|D14
+case|:
+case|case
+name|D13
+case|:
+case|case
+name|D12
+case|:
+case|case
+name|D11
+case|:
+case|case
+name|D10
+case|:
+case|case
+name|D9
+case|:
+case|case
+name|D8
+case|:
+return|return
+name|true
+return|;
+default|default:
+return|return
+name|false
+return|;
+block|}
+block|}
 name|class
 name|ARMBaseRegisterInfo
 range|:
@@ -212,20 +391,6 @@ specifier|const
 block|;
 name|public
 operator|:
-comment|/// getRegisterNumbering - Given the enum value for some register, e.g.
-comment|/// ARM::LR, return the number that it corresponds to (e.g. 14). It
-comment|/// also returns true in isSPVFP if the register is a single precision
-comment|/// VFP register.
-specifier|static
-name|unsigned
-name|getRegisterNumbering
-argument_list|(
-argument|unsigned RegEnum
-argument_list|,
-argument|bool *isSPVFP =
-literal|0
-argument_list|)
-block|;
 comment|/// Code Generation virtual methods...
 specifier|const
 name|unsigned
@@ -336,13 +501,6 @@ argument_list|)
 specifier|const
 block|;
 name|bool
-name|hasFP
-argument_list|(
-argument|const MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
-name|bool
 name|hasBasePointer
 argument_list|(
 argument|const MachineFunction&MF
@@ -384,7 +542,7 @@ block|;
 name|void
 name|materializeFrameBaseRegister
 argument_list|(
-argument|MachineBasicBlock::iterator I
+argument|MachineBasicBlock *MBB
 argument_list|,
 argument|unsigned BaseReg
 argument_list|,
@@ -421,15 +579,6 @@ argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
-name|void
-name|processFunctionBeforeCalleeSavedScan
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|RegScavenger *RS = NULL
-argument_list|)
-specifier|const
-block|;
 comment|// Debug information queries.
 name|unsigned
 name|getRARegister
@@ -443,39 +592,15 @@ argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
-name|int
-name|getFrameIndexReference
-argument_list|(
-argument|const MachineFunction&MF
-argument_list|,
-argument|int FI
-argument_list|,
-argument|unsigned&FrameReg
-argument_list|)
+name|unsigned
+name|getBaseRegister
+argument_list|()
 specifier|const
-block|;
-name|int
-name|ResolveFrameIndexReference
-argument_list|(
-argument|const MachineFunction&MF
-argument_list|,
-argument|int FI
-argument_list|,
-argument|unsigned&FrameReg
-argument_list|,
-argument|int SPAdj
-argument_list|)
-specifier|const
-block|;
-name|int
-name|getFrameIndexOffset
-argument_list|(
-argument|const MachineFunction&MF
-argument_list|,
-argument|int FI
-argument_list|)
-specifier|const
-block|;
+block|{
+return|return
+name|BasePtr
+return|;
+block|}
 comment|// Exception handling queries.
 name|unsigned
 name|getEHExceptionRegister
@@ -564,22 +689,6 @@ argument_list|)
 specifier|const
 block|;
 name|virtual
-name|bool
-name|hasReservedCallFrame
-argument_list|(
-argument|const MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|bool
-name|canSimplifyCallFramePseudos
-argument_list|(
-argument|const MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
-name|virtual
 name|void
 name|eliminateCallFramePseudoInstr
 argument_list|(
@@ -603,33 +712,8 @@ argument|RegScavenger *RS = NULL
 argument_list|)
 specifier|const
 block|;
-name|virtual
-name|void
-name|emitPrologue
-argument_list|(
-argument|MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|void
-name|emitEpilogue
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|MachineBasicBlock&MBB
-argument_list|)
-specifier|const
-block|;
 name|private
 operator|:
-name|unsigned
-name|estimateRSStackSizeLimit
-argument_list|(
-argument|MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
 name|unsigned
 name|getRegisterPairEven
 argument_list|(

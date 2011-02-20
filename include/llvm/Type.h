@@ -58,12 +58,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/System/DataTypes.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/GraphTraits.h"
 end_include
 
@@ -179,35 +173,38 @@ comment|///<  6: Labels
 name|MetadataTyID
 block|,
 comment|///<  7: Metadata
+name|X86_MMXTyID
+block|,
+comment|///<  8: MMX vectors (64 bits)
 comment|// Derived types... see DerivedTypes.h file...
 comment|// Make sure FirstDerivedTyID stays up to date!!!
 name|IntegerTyID
 block|,
-comment|///<  8: Arbitrary bit width integers
+comment|///<  9: Arbitrary bit width integers
 name|FunctionTyID
 block|,
-comment|///<  9: Functions
+comment|///< 10: Functions
 name|StructTyID
 block|,
-comment|///< 10: Structures
+comment|///< 11: Structures
 name|ArrayTyID
 block|,
-comment|///< 11: Arrays
+comment|///< 12: Arrays
 name|PointerTyID
 block|,
-comment|///< 12: Pointers
+comment|///< 13: Pointers
 name|OpaqueTyID
 block|,
-comment|///< 13: Opaque: type with unknown structure
+comment|///< 14: Opaque: type with unknown structure
 name|VectorTyID
 block|,
-comment|///< 14: SIMD 'packed' format, or other vector type
+comment|///< 15: SIMD 'packed' format, or other vector type
 name|NumTypeIDs
 block|,
 comment|// Must remain as last defined ID
 name|LastPrimitiveTyID
 operator|=
-name|MetadataTyID
+name|X86_MMXTyID
 block|,
 name|FirstDerivedTyID
 operator|=
@@ -578,6 +575,18 @@ operator|==
 name|PPC_FP128TyID
 return|;
 block|}
+comment|/// isX86_MMXTy - Return true if this is X86 MMX.
+name|bool
+name|isX86_MMXTy
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ID
+operator|==
+name|X86_MMXTyID
+return|;
+block|}
 comment|/// isFPOrFPVectorTy - Return true if this is a FP type or a vector of FP.
 comment|///
 name|bool
@@ -870,6 +879,10 @@ operator|||
 name|ID
 operator|==
 name|PointerTyID
+operator|||
+name|ID
+operator|==
+name|X86_MMXTyID
 condition|)
 return|return
 name|true
@@ -1360,6 +1373,20 @@ end_function_decl
 begin_function_decl
 specifier|static
 specifier|const
+name|Type
+modifier|*
+name|getX86_MMXTy
+parameter_list|(
+name|LLVMContext
+modifier|&
+name|C
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+specifier|const
 name|IntegerType
 modifier|*
 name|getIntNTy
@@ -1542,6 +1569,25 @@ specifier|const
 name|PointerType
 modifier|*
 name|getPPC_FP128PtrTy
+parameter_list|(
+name|LLVMContext
+modifier|&
+name|C
+parameter_list|,
+name|unsigned
+name|AS
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+specifier|const
+name|PointerType
+modifier|*
+name|getX86_MMXPtrTy
 parameter_list|(
 name|LLVMContext
 modifier|&

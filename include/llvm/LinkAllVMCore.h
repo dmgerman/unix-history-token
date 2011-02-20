@@ -106,55 +106,49 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/System/Alarm.h"
+file|"llvm/Support/DynamicLibrary.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/System/DynamicLibrary.h"
+file|"llvm/Support/Memory.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/System/Memory.h"
+file|"llvm/Support/Mutex.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/System/Mutex.h"
+file|"llvm/Support/Path.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/System/Path.h"
+file|"llvm/Support/Process.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/System/Process.h"
+file|"llvm/Support/Program.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/System/Program.h"
+file|"llvm/Support/Signals.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/System/Signals.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/System/TimeValue.h"
+file|"llvm/Support/TimeValue.h"
 end_include
 
 begin_include

@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Transforms/Utils/ValueMapper.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -1086,15 +1092,7 @@ operator|>
 operator|&
 name|F
 argument_list|,
-name|ValueMap
-operator|<
-specifier|const
-name|Value
-operator|*
-argument_list|,
-name|Value
-operator|*
-operator|>
+name|ValueToValueMapTy
 operator|&
 name|VMap
 argument_list|)

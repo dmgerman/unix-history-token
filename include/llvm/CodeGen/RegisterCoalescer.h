@@ -54,7 +54,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"llvm/System/IncludeFile.h"
+file|"llvm/Support/IncludeFile.h"
 end_include
 
 begin_include

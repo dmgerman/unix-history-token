@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %llvmgcc -S -m32 -mregparm=3 %s -emit-llvm -o - | grep {inreg %action}
+comment|// RUN: %llvmgcc -S -m32 -mregparm=3 %s -o - | grep {inreg %action}
 end_comment
 
 begin_comment

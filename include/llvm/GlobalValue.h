@@ -226,6 +226,11 @@ name|Alignment
 argument_list|(
 literal|0
 argument_list|)
+block|,
+name|UnnamedAddr
+argument_list|(
+literal|0
+argument_list|)
 block|{
 name|setName
 argument_list|(
@@ -256,6 +261,12 @@ operator|:
 literal|16
 block|;
 comment|// Alignment of this symbol, must be power of two
+name|unsigned
+name|UnnamedAddr
+operator|:
+literal|1
+block|;
+comment|// This value's address is not significant
 name|std
 operator|::
 name|string
@@ -294,6 +305,25 @@ argument_list|(
 argument|unsigned Align
 argument_list|)
 block|;
+name|bool
+name|hasUnnamedAddr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UnnamedAddr
+return|;
+block|}
+name|void
+name|setUnnamedAddr
+argument_list|(
+argument|bool Val
+argument_list|)
+block|{
+name|UnnamedAddr
+operator|=
+name|Val
+block|; }
 name|VisibilityTypes
 name|getVisibility
 argument_list|()
@@ -709,7 +739,9 @@ name|LinkerPrivateWeakDefAutoLinkage
 return|;
 block|}
 comment|/// isWeakForLinker - Whether the definition of this global may be replaced at
-comment|/// link time.
+comment|/// link time.  NB: Using this method outside of the code generators is almost
+comment|/// always a mistake: when working at the IR level use mayBeOverridden instead
+comment|/// as it knows about ODR semantics.
 specifier|static
 name|bool
 name|isWeakForLinker
@@ -1104,15 +1136,6 @@ return|return
 name|Parent
 return|;
 block|}
-comment|/// removeDeadConstantUsers - If there are any dead constant users dangling
-comment|/// off of this global value, remove them.  This method is useful for clients
-comment|/// that want to check to see if a global is unused, but don't want to deal
-comment|/// with potentially dead constants hanging off of the globals.
-name|void
-name|removeDeadConstantUsers
-argument_list|()
-specifier|const
-block|;
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline

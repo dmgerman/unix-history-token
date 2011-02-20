@@ -186,6 +186,7 @@ comment|// Branch Unit
 block|}
 enum|;
 block|}
+comment|// end namespace PPCII
 name|class
 name|PPCInstrInfo
 range|:
@@ -260,6 +261,16 @@ return|return
 name|RI
 return|;
 block|}
+name|ScheduleHazardRecognizer
+operator|*
+name|CreateTargetHazardRecognizer
+argument_list|(
+argument|const TargetMachine *TM
+argument_list|,
+argument|const ScheduleDAG *DAG
+argument_list|)
+specifier|const
+block|;
 name|unsigned
 name|isLoadFromStackSlot
 argument_list|(

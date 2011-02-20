@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %llvmgcc -O3 -S -o - -emit-llvm %s | grep {align 1} | count 2
+comment|// RUN: %llvmgcc -O3 -S -o - %s | grep {align 1} | count 2
 end_comment
 
 begin_comment
-comment|// RUN: %llvmgcc -O3 -S -o - -emit-llvm %s | llc
+comment|// RUN: %llvmgcc -O3 -S -o - %s | llc
 end_comment
 
 begin_struct

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %llvmgcc %s -S -emit-llvm -O0 -o - | grep {= internal global} | count 4
+comment|// RUN: %llvmgcc %s -S -O0 -o - | grep {= internal unnamed_addr global} | count 4
 end_comment
 
 begin_comment

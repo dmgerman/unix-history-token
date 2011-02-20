@@ -76,50 +76,6 @@ operator|>
 name|class
 name|SmallVectorImpl
 expr_stmt|;
-comment|/// MCFixupKindInfo - Target independent information on a fixup kind.
-struct|struct
-name|MCFixupKindInfo
-block|{
-enum|enum
-name|FixupKindFlags
-block|{
-comment|/// Is this fixup kind PCrelative. This is used by the assembler backend to
-comment|/// evaluate fixup values in a target independent manner when possible.
-name|FKF_IsPCRel
-init|=
-operator|(
-literal|1
-operator|<<
-literal|0
-operator|)
-block|}
-enum|;
-comment|/// A target specific name for the fixup kind. The names will be unique for
-comment|/// distinct kinds on any given target.
-specifier|const
-name|char
-modifier|*
-name|Name
-decl_stmt|;
-comment|/// The bit offset to write the relocation into.
-comment|//
-comment|// FIXME: These two fields are under-specified and not general enough, but it
-comment|// is covers many things, and is enough to let the AsmStreamer pretty-print
-comment|// the encoding.
-name|unsigned
-name|TargetOffset
-decl_stmt|;
-comment|/// The number of bits written by this fixup. The bits are assumed to be
-comment|/// contiguous.
-name|unsigned
-name|TargetSize
-decl_stmt|;
-comment|/// Flags describing additional information on this fixup kind.
-name|unsigned
-name|Flags
-decl_stmt|;
-block|}
-struct|;
 comment|/// MCCodeEmitter - Generic instruction encoding interface.
 name|class
 name|MCCodeEmitter
@@ -157,30 +113,6 @@ operator|~
 name|MCCodeEmitter
 argument_list|()
 expr_stmt|;
-comment|/// @name Target Independent Fixup Information
-comment|/// @{
-comment|/// getNumFixupKinds - Get the number of target specific fixup kinds.
-name|virtual
-name|unsigned
-name|getNumFixupKinds
-argument_list|()
-specifier|const
-operator|=
-literal|0
-expr_stmt|;
-comment|/// getFixupKindInfo - Get information on a fixup kind.
-name|virtual
-specifier|const
-name|MCFixupKindInfo
-modifier|&
-name|getFixupKindInfo
-argument_list|(
-name|MCFixupKind
-name|Kind
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// @}
 comment|/// EncodeInstruction - Encode the given \arg Inst to bytes on the output
 comment|/// stream \arg OS.
 name|virtual

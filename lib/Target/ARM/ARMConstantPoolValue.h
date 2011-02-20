@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cstddef>
 end_include
 
@@ -100,6 +106,22 @@ block|,
 name|CPBlockAddress
 block|,
 name|CPLSDA
+block|}
+enum|;
+enum|enum
+name|ARMCPModifier
+block|{
+name|no_modifier
+block|,
+name|TLSGD
+block|,
+name|GOT
+block|,
+name|GOTOFF
+block|,
+name|GOTTPOFF
+block|,
+name|TPOFF
 block|}
 enum|;
 block|}
@@ -140,9 +162,9 @@ name|PCAdjust
 block|;
 comment|// Extra adjustment if constantpool is pc-relative.
 comment|// 8 for ARM, 4 for Thumb.
-specifier|const
-name|char
-operator|*
+name|ARMCP
+operator|::
+name|ARMCPModifier
 name|Modifier
 block|;
 comment|// GV modifier i.e. (&GV(modifier)-(LPIC+8))
@@ -162,7 +184,7 @@ argument_list|,
 argument|unsigned char PCAdj =
 literal|0
 argument_list|,
-argument|const char *Modifier = NULL
+argument|ARMCP::ARMCPModifier Modifier = ARMCP::no_modifier
 argument_list|,
 argument|bool AddCurrentAddress = false
 argument_list|)
@@ -178,22 +200,16 @@ argument_list|,
 argument|unsigned char PCAdj =
 literal|0
 argument_list|,
-argument|const char *Modifier = NULL
+argument|ARMCP::ARMCPModifier Modifier = ARMCP::no_modifier
 argument_list|,
 argument|bool AddCurrentAddress = false
 argument_list|)
 block|;
 name|ARMConstantPoolValue
 argument_list|(
-specifier|const
-name|GlobalValue
-operator|*
-name|GV
+argument|const GlobalValue *GV
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|Modifier
+argument|ARMCP::ARMCPModifier Modifier
 argument_list|)
 block|;
 name|ARMConstantPoolValue
@@ -228,9 +244,9 @@ name|getBlockAddress
 argument_list|()
 specifier|const
 block|;
-specifier|const
-name|char
-operator|*
+name|ARMCP
+operator|::
+name|ARMCPModifier
 name|getModifier
 argument_list|()
 specifier|const
@@ -238,6 +254,76 @@ block|{
 return|return
 name|Modifier
 return|;
+block|}
+specifier|const
+name|char
+operator|*
+name|getModifierText
+argument_list|()
+specifier|const
+block|{
+switch|switch
+condition|(
+name|Modifier
+condition|)
+block|{
+default|default:
+name|llvm_unreachable
+argument_list|(
+literal|"Unknown modifier!"
+argument_list|)
+expr_stmt|;
+comment|// FIXME: Are these case sensitive? It'd be nice to lower-case all the
+comment|// strings if that's legal.
+case|case
+name|ARMCP
+operator|::
+name|no_modifier
+case|:
+return|return
+literal|"none"
+return|;
+case|case
+name|ARMCP
+operator|::
+name|TLSGD
+case|:
+return|return
+literal|"tlsgd"
+return|;
+case|case
+name|ARMCP
+operator|::
+name|GOT
+case|:
+return|return
+literal|"GOT"
+return|;
+case|case
+name|ARMCP
+operator|::
+name|GOTOFF
+case|:
+return|return
+literal|"GOTOFF"
+return|;
+case|case
+name|ARMCP
+operator|::
+name|GOTTPOFF
+case|:
+return|return
+literal|"gottpoff"
+return|;
+case|case
+name|ARMCP
+operator|::
+name|TPOFF
+case|:
+return|return
+literal|"tpoff"
+return|;
+block|}
 block|}
 name|bool
 name|hasModifier
@@ -247,7 +333,9 @@ block|{
 return|return
 name|Modifier
 operator|!=
-name|NULL
+name|ARMCP
+operator|::
+name|no_modifier
 return|;
 block|}
 name|bool
@@ -334,8 +422,6 @@ name|getRelocationInfo
 argument_list|()
 specifier|const
 block|{
-comment|// FIXME: This is conservatively claiming that these entries require a
-comment|// relocation, we may be able to do better than this.
 return|return
 literal|2
 return|;

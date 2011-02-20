@@ -192,13 +192,6 @@ name|MCSection
 modifier|*
 name|LSDASection
 decl_stmt|;
-comment|/// EHFrameSection - If exception handling is supported by the target, this is
-comment|/// the section the EH Frame is emitted to.
-specifier|const
-name|MCSection
-modifier|*
-name|EHFrameSection
-decl_stmt|;
 comment|// Dwarf sections for debug info.  If a target supports debug info, these must
 comment|// be set.
 specifier|const
@@ -267,6 +260,12 @@ specifier|const
 name|MCSection
 modifier|*
 name|TLSExtraDataSection
+decl_stmt|;
+comment|/// CommDirectiveSupportsAlignment - True if .comm supports alignment.  This
+comment|/// is a hack for as long as we support 10.4 Tiger, whose assembler doesn't
+comment|/// support alignment on comm.
+name|bool
+name|CommDirectiveSupportsAlignment
 decl_stmt|;
 comment|/// SupportsWeakEmptyEHFrame - True if target object file supports a
 comment|/// weak_definition of constant 0 for an omitted EH frame.
@@ -353,6 +352,15 @@ return|return
 name|SupportsWeakOmittedEHFrame
 return|;
 block|}
+name|bool
+name|getCommDirectiveSupportsAlignment
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CommDirectiveSupportsAlignment
+return|;
+block|}
 specifier|const
 name|MCSection
 operator|*
@@ -419,17 +427,16 @@ return|return
 name|LSDASection
 return|;
 block|}
+name|virtual
 specifier|const
 name|MCSection
 operator|*
 name|getEHFrameSection
 argument_list|()
 specifier|const
-block|{
-return|return
-name|EHFrameSection
-return|;
-block|}
+operator|=
+literal|0
+expr_stmt|;
 specifier|const
 name|MCSection
 operator|*

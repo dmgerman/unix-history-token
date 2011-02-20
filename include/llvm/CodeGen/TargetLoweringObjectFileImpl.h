@@ -198,6 +198,14 @@ operator|&
 name|TM
 argument_list|)
 block|;
+name|virtual
+specifier|const
+name|MCSection
+operator|*
+name|getEHFrameSection
+argument_list|()
+specifier|const
+block|;
 specifier|const
 name|MCSection
 operator|*
@@ -406,6 +414,14 @@ name|virtual
 specifier|const
 name|MCSection
 operator|*
+name|getEHFrameSection
+argument_list|()
+specifier|const
+block|;
+name|virtual
+specifier|const
+name|MCSection
+operator|*
 name|SelectSectionForGlobal
 argument_list|(
 argument|const GlobalValue *GV
@@ -587,6 +603,14 @@ name|TargetMachine
 operator|&
 name|TM
 argument_list|)
+block|;
+name|virtual
+specifier|const
+name|MCSection
+operator|*
+name|getEHFrameSection
+argument_list|()
+specifier|const
 block|;
 name|virtual
 specifier|const

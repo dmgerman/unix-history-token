@@ -65,12 +65,6 @@ directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<string>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -241,19 +235,6 @@ operator|::
 name|Default
 argument_list|)
 decl_stmt|;
-comment|/// getNameWithPrefix - Return the name of the appropriate prefix
-comment|/// and the specified global variable's name.  If the global variable doesn't
-comment|/// have a name, this fills in a unique name for the global.
-name|std
-operator|::
-name|string
-name|getNameWithPrefix
-argument_list|(
-argument|const GlobalValue *GV
-argument_list|,
-argument|bool isImplicitlyPrivate = false
-argument_list|)
-expr_stmt|;
 block|}
 empty_stmt|;
 block|}

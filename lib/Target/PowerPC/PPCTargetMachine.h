@@ -62,7 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"PPCFrameInfo.h"
+file|"PPCFrameLowering.h"
 end_include
 
 begin_include
@@ -136,8 +136,8 @@ comment|// Calculates type size& alignment
 name|PPCInstrInfo
 name|InstrInfo
 block|;
-name|PPCFrameInfo
-name|FrameInfo
+name|PPCFrameLowering
+name|FrameLowering
 block|;
 name|PPCJITInfo
 name|JITInfo
@@ -179,15 +179,15 @@ return|;
 block|}
 name|virtual
 specifier|const
-name|PPCFrameInfo
+name|PPCFrameLowering
 operator|*
-name|getFrameInfo
+name|getFrameLowering
 argument_list|()
 specifier|const
 block|{
 return|return
 operator|&
-name|FrameInfo
+name|FrameLowering
 return|;
 block|}
 name|virtual
@@ -272,11 +272,13 @@ block|}
 name|virtual
 specifier|const
 name|InstrItineraryData
+operator|*
 name|getInstrItineraryData
 argument_list|()
 specifier|const
 block|{
 return|return
+operator|&
 name|InstrItins
 return|;
 block|}

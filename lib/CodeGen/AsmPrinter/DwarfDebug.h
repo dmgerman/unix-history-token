@@ -113,6 +113,12 @@ directive|include
 file|"llvm/Support/Allocator.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/DebugLoc.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -188,6 +194,12 @@ name|DISubrange
 decl_stmt|;
 name|class
 name|DICompositeType
+decl_stmt|;
+name|class
+name|DITemplateTypeParameter
+decl_stmt|;
+name|class
+name|DITemplateValueParameter
 decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// SrcLineInfo - This class is used to record source line correspondence.
@@ -285,6 +297,149 @@ return|;
 block|}
 block|}
 empty_stmt|;
+comment|/// DotDebugLocEntry - This struct describes location entries emitted in
+comment|/// .debug_loc section.
+typedef|typedef
+struct|struct
+name|DotDebugLocEntry
+block|{
+specifier|const
+name|MCSymbol
+modifier|*
+name|Begin
+decl_stmt|;
+specifier|const
+name|MCSymbol
+modifier|*
+name|End
+decl_stmt|;
+name|MachineLocation
+name|Loc
+decl_stmt|;
+name|bool
+name|Merged
+decl_stmt|;
+name|DotDebugLocEntry
+argument_list|()
+operator|:
+name|Begin
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|End
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Merged
+argument_list|(
+argument|false
+argument_list|)
+block|{}
+name|DotDebugLocEntry
+argument_list|(
+specifier|const
+name|MCSymbol
+operator|*
+name|B
+argument_list|,
+specifier|const
+name|MCSymbol
+operator|*
+name|E
+argument_list|,
+name|MachineLocation
+operator|&
+name|L
+argument_list|)
+operator|:
+name|Begin
+argument_list|(
+name|B
+argument_list|)
+operator|,
+name|End
+argument_list|(
+name|E
+argument_list|)
+operator|,
+name|Loc
+argument_list|(
+name|L
+argument_list|)
+operator|,
+name|Merged
+argument_list|(
+argument|false
+argument_list|)
+block|{}
+comment|/// Empty entries are also used as a trigger to emit temp label. Such
+comment|/// labels are referenced is used to find debug_loc offset for a given DIE.
+name|bool
+name|isEmpty
+argument_list|()
+block|{
+return|return
+name|Begin
+operator|==
+literal|0
+operator|&&
+name|End
+operator|==
+literal|0
+return|;
+block|}
+name|bool
+name|isMerged
+parameter_list|()
+block|{
+return|return
+name|Merged
+return|;
+block|}
+name|void
+name|Merge
+parameter_list|(
+name|DotDebugLocEntry
+modifier|*
+name|Next
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|Begin
+operator|&&
+name|Loc
+operator|==
+name|Next
+operator|->
+name|Loc
+operator|&&
+name|End
+operator|==
+name|Next
+operator|->
+name|Begin
+operator|)
+condition|)
+return|return;
+name|Next
+operator|->
+name|Begin
+operator|=
+name|Begin
+expr_stmt|;
+name|Merged
+operator|=
+name|true
+expr_stmt|;
+block|}
+block|}
+name|DotDebugLocEntry
+typedef|;
 name|class
 name|DwarfDebug
 block|{
@@ -335,86 +490,13 @@ operator|*
 operator|>
 name|Abbreviations
 expr_stmt|;
-comment|/// DirectoryIdMap - Directory name to directory id map.
-comment|///
-name|StringMap
-operator|<
-name|unsigned
-operator|>
-name|DirectoryIdMap
-expr_stmt|;
-comment|/// DirectoryNames - A list of directory names.
-name|SmallVector
-operator|<
-name|std
-operator|::
-name|string
-operator|,
-literal|8
-operator|>
-name|DirectoryNames
-expr_stmt|;
-comment|/// SourceFileIdMap - Source file name to source file id map.
-comment|///
-name|StringMap
-operator|<
-name|unsigned
-operator|>
-name|SourceFileIdMap
-expr_stmt|;
-comment|/// SourceFileNames - A list of source file names.
-name|SmallVector
-operator|<
-name|std
-operator|::
-name|string
-operator|,
-literal|8
-operator|>
-name|SourceFileNames
-expr_stmt|;
 comment|/// SourceIdMap - Source id map, i.e. pair of directory id and source file
 comment|/// id mapped to a unique id.
-name|DenseMap
+name|StringMap
 operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|unsigned
-operator|,
-name|unsigned
-operator|>
-operator|,
 name|unsigned
 operator|>
 name|SourceIdMap
-expr_stmt|;
-comment|/// SourceIds - Reverse map from source id to directory id + file id pair.
-comment|///
-name|SmallVector
-operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|unsigned
-operator|,
-name|unsigned
-operator|>
-operator|,
-literal|8
-operator|>
-name|SourceIds
-expr_stmt|;
-comment|/// Lines - List of source line correspondence.
-name|std
-operator|::
-name|vector
-operator|<
-name|SrcLineInfo
-operator|>
-name|Lines
 expr_stmt|;
 comment|/// DIEBlocks - A list of all the DIEBlocks in use.
 name|std
@@ -466,21 +548,6 @@ name|MCSection
 operator|*
 operator|>
 name|SectionMap
-expr_stmt|;
-comment|/// SectionSourceLines - Tracks line numbers per text section.
-comment|///
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|vector
-operator|<
-name|SrcLineInfo
-operator|>
-expr|>
-name|SectionSourceLines
 expr_stmt|;
 comment|// CurrentFnDbgScope - Top level scope for the current function.
 comment|//
@@ -590,102 +657,6 @@ operator|*
 operator|>
 name|DbgVariableToDbgInstMap
 expr_stmt|;
-comment|/// DbgVariableLabelsMap - Maps DbgVariable to corresponding MCSymbol.
-name|DenseMap
-operator|<
-specifier|const
-name|DbgVariable
-operator|*
-operator|,
-specifier|const
-name|MCSymbol
-operator|*
-operator|>
-name|DbgVariableLabelsMap
-expr_stmt|;
-comment|/// DotDebugLocEntry - This struct describes location entries emitted in
-comment|/// .debug_loc section.
-typedef|typedef
-struct|struct
-name|DotDebugLocEntry
-block|{
-specifier|const
-name|MCSymbol
-modifier|*
-name|Begin
-decl_stmt|;
-specifier|const
-name|MCSymbol
-modifier|*
-name|End
-decl_stmt|;
-name|MachineLocation
-name|Loc
-decl_stmt|;
-name|DotDebugLocEntry
-argument_list|()
-operator|:
-name|Begin
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|End
-argument_list|(
-literal|0
-argument_list|)
-block|{}
-name|DotDebugLocEntry
-argument_list|(
-specifier|const
-name|MCSymbol
-operator|*
-name|B
-argument_list|,
-specifier|const
-name|MCSymbol
-operator|*
-name|E
-argument_list|,
-name|MachineLocation
-operator|&
-name|L
-argument_list|)
-operator|:
-name|Begin
-argument_list|(
-name|B
-argument_list|)
-operator|,
-name|End
-argument_list|(
-name|E
-argument_list|)
-operator|,
-name|Loc
-argument_list|(
-argument|L
-argument_list|)
-block|{}
-comment|/// Empty entries are also used as a trigger to emit temp label. Such
-comment|/// labels are referenced is used to find debug_loc offset for a given DIE.
-name|bool
-name|isEmpty
-argument_list|()
-block|{
-return|return
-name|Begin
-operator|==
-literal|0
-operator|&&
-name|End
-operator|==
-literal|0
-return|;
-block|}
-block|}
-name|DotDebugLocEntry
-typedef|;
 comment|/// DotDebugLocEntries - Collection of DotDebugLocEntry.
 name|SmallVector
 operator|<
@@ -957,89 +928,6 @@ name|DIEIntegerOne
 decl_stmt|;
 name|private
 label|:
-comment|/// getSourceDirectoryAndFileIds - Return the directory and file ids that
-comment|/// maps to the source id. Source id starts at 1.
-name|std
-operator|::
-name|pair
-operator|<
-name|unsigned
-operator|,
-name|unsigned
-operator|>
-name|getSourceDirectoryAndFileIds
-argument_list|(
-argument|unsigned SId
-argument_list|)
-specifier|const
-block|{
-return|return
-name|SourceIds
-index|[
-name|SId
-operator|-
-literal|1
-index|]
-return|;
-block|}
-comment|/// getNumSourceDirectories - Return the number of source directories in the
-comment|/// debug info.
-name|unsigned
-name|getNumSourceDirectories
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DirectoryNames
-operator|.
-name|size
-argument_list|()
-return|;
-block|}
-comment|/// getSourceDirectoryName - Return the name of the directory corresponding
-comment|/// to the id.
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|getSourceDirectoryName
-argument_list|(
-argument|unsigned Id
-argument_list|)
-specifier|const
-block|{
-return|return
-name|DirectoryNames
-index|[
-name|Id
-operator|-
-literal|1
-index|]
-return|;
-block|}
-comment|/// getSourceFileName - Return the name of the source file corresponding
-comment|/// to the id.
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|getSourceFileName
-argument_list|(
-argument|unsigned Id
-argument_list|)
-specifier|const
-block|{
-return|return
-name|SourceFileNames
-index|[
-name|Id
-operator|-
-literal|1
-index|]
-return|;
-block|}
 comment|/// getNumSourceIds - Return the number of unique source ids.
 name|unsigned
 name|getNumSourceIds
@@ -1047,7 +935,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|SourceIds
+name|SourceIdMap
 operator|.
 name|size
 argument_list|()
@@ -1303,11 +1191,6 @@ modifier|*
 name|Die
 parameter_list|,
 specifier|const
-name|MCSymbol
-modifier|*
-name|VS
-parameter_list|,
-specifier|const
 name|MachineOperand
 modifier|&
 name|MO
@@ -1322,14 +1205,24 @@ modifier|*
 name|Die
 parameter_list|,
 specifier|const
-name|MCSymbol
-modifier|*
-name|VS
-parameter_list|,
-specifier|const
 name|MachineOperand
 modifier|&
 name|MO
+parameter_list|)
+function_decl|;
+name|bool
+name|addConstantValue
+parameter_list|(
+name|DIE
+modifier|*
+name|Die
+parameter_list|,
+name|ConstantInt
+modifier|*
+name|CI
+parameter_list|,
+name|bool
+name|Unsigned
 parameter_list|)
 function_decl|;
 comment|/// addConstantFPValue - Add constant value entry in variable DIE.
@@ -1339,11 +1232,6 @@ parameter_list|(
 name|DIE
 modifier|*
 name|Die
-parameter_list|,
-specifier|const
-name|MCSymbol
-modifier|*
-name|VS
 parameter_list|,
 specifier|const
 name|MachineOperand
@@ -1466,6 +1354,26 @@ name|DIType
 name|Ty
 parameter_list|)
 function_decl|;
+comment|/// getOrCreateTemplateTypeParameterDIE - Find existing DIE or create new DIE
+comment|/// for the given DITemplateTypeParameter.
+name|DIE
+modifier|*
+name|getOrCreateTemplateTypeParameterDIE
+parameter_list|(
+name|DITemplateTypeParameter
+name|TP
+parameter_list|)
+function_decl|;
+comment|/// getOrCreateTemplateValueParameterDIE - Find existing DIE or create new DIE
+comment|/// for the given DITemplateValueParameter.
+name|DIE
+modifier|*
+name|getOrCreateTemplateValueParameterDIE
+parameter_list|(
+name|DITemplateValueParameter
+name|TVP
+parameter_list|)
+function_decl|;
 name|void
 name|addPubTypes
 parameter_list|(
@@ -1563,11 +1471,6 @@ name|createSubprogramDIE
 parameter_list|(
 name|DISubprogram
 name|SP
-parameter_list|,
-name|bool
-name|MakeDecl
-init|=
-name|false
 parameter_list|)
 function_decl|;
 comment|/// getOrCreateDbgScope - Create DbgScope for the scope.
@@ -1731,12 +1634,6 @@ name|unsigned
 name|SectionEnd
 parameter_list|)
 function_decl|;
-comment|/// emitDebugLines - Emit source line information.
-comment|///
-name|void
-name|emitDebugLines
-parameter_list|()
-function_decl|;
 comment|/// emitCommonDebugFrame - Emit common frame info into a debug frame section.
 comment|///
 name|void
@@ -1820,16 +1717,12 @@ parameter_list|()
 function_decl|;
 comment|/// GetOrCreateSourceID - Look up the source id with the given directory and
 comment|/// source file names. If none currently exists, create a new id and insert it
-comment|/// in the SourceIds map. This can update DirectoryNames and SourceFileNames
-comment|/// maps as well.
+comment|/// in the SourceIds map.
 name|unsigned
 name|GetOrCreateSourceID
 parameter_list|(
 name|StringRef
-name|DirName
-parameter_list|,
-name|StringRef
-name|FileName
+name|FullName
 parameter_list|)
 function_decl|;
 comment|/// constructCompileUnit - Create new CompileUnit for the given
@@ -1894,20 +1787,6 @@ modifier|*
 name|Scope
 parameter_list|)
 function_decl|;
-comment|/// getSourceLineCount - Return the number of source lines in the debug
-comment|/// info.
-name|unsigned
-name|getSourceLineCount
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Lines
-operator|.
-name|size
-argument_list|()
-return|;
-block|}
 comment|/// recordVariableFrameIndex - Record a variable's index.
 name|void
 name|recordVariableFrameIndex
@@ -1934,18 +1813,6 @@ parameter_list|,
 name|int
 modifier|*
 name|FI
-parameter_list|)
-function_decl|;
-comment|/// findVariableLabel - Find MCSymbol for the variable.
-specifier|const
-name|MCSymbol
-modifier|*
-name|findVariableLabel
-parameter_list|(
-specifier|const
-name|DbgVariable
-modifier|*
-name|V
 parameter_list|)
 function_decl|;
 comment|/// findDbgScope - Find DbgScope for the debug loc attached with an
@@ -2096,9 +1963,9 @@ modifier|*
 name|MI
 parameter_list|)
 function_decl|;
-comment|/// beginScope - Process beginning of a scope.
+comment|/// beginInstruction - Process beginning of an instruction.
 name|void
-name|beginScope
+name|beginInstruction
 parameter_list|(
 specifier|const
 name|MachineInstr
@@ -2106,9 +1973,9 @@ modifier|*
 name|MI
 parameter_list|)
 function_decl|;
-comment|/// endScope - Prcess end of a scope.
+comment|/// endInstruction - Prcess end of an instruction.
 name|void
-name|endScope
+name|endInstruction
 parameter_list|(
 specifier|const
 name|MachineInstr

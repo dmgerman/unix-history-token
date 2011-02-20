@@ -124,7 +124,13 @@ name|class
 name|Twine
 decl_stmt|;
 name|class
+name|TargetAsmInfo
+decl_stmt|;
+name|class
 name|MCSectionMachO
+decl_stmt|;
+name|class
+name|MCSectionELF
 decl_stmt|;
 comment|/// MCContext - Context object for machine code objects.  This class owns all
 comment|/// of the sections that it creates.
@@ -157,6 +163,11 @@ name|MCAsmInfo
 modifier|&
 name|MAI
 decl_stmt|;
+specifier|const
+name|TargetAsmInfo
+modifier|*
+name|TAI
+decl_stmt|;
 comment|/// Symbols - Bindings of names to symbols.
 name|StringMap
 operator|<
@@ -164,6 +175,14 @@ name|MCSymbol
 operator|*
 operator|>
 name|Symbols
+expr_stmt|;
+comment|/// UsedNames - Keeps tracks of names that were used both for used declared
+comment|/// and artificial symbols.
+name|StringMap
+operator|<
+name|bool
+operator|>
+name|UsedNames
 expr_stmt|;
 comment|/// NextUniqueID - The next ID to dole out to an unnamed assembler temporary
 comment|/// symbol.
@@ -198,7 +217,7 @@ name|int64_t
 name|LocalLabelVal
 parameter_list|)
 function_decl|;
-comment|/// The file name of the log file from the enviromment variable
+comment|/// The file name of the log file from the environment variable
 comment|/// AS_SECURE_LOG_FILE.  Which must be set before the .secure_log_unique
 comment|/// directive is used or it is an error.
 name|char
@@ -254,6 +273,18 @@ operator|*
 operator|>
 name|MCLineSections
 expr_stmt|;
+comment|/// We need a deterministic iteration order, so we remember the order
+comment|/// the elements were added.
+name|std
+operator|::
+name|vector
+operator|<
+specifier|const
+name|MCSection
+operator|*
+operator|>
+name|MCLineSectionOrder
+expr_stmt|;
 comment|/// Allocator - Allocator object used for creating machine code objects.
 comment|///
 comment|/// We use a bump pointer allocator to avoid the need to track all allocated
@@ -271,6 +302,14 @@ decl_stmt|,
 modifier|*
 name|COFFUniquingMap
 decl_stmt|;
+name|MCSymbol
+modifier|*
+name|CreateSymbol
+parameter_list|(
+name|StringRef
+name|Name
+parameter_list|)
+function_decl|;
 name|public
 label|:
 name|explicit
@@ -280,6 +319,11 @@ specifier|const
 name|MCAsmInfo
 modifier|&
 name|MAI
+parameter_list|,
+specifier|const
+name|TargetAsmInfo
+modifier|*
+name|TAI
 parameter_list|)
 function_decl|;
 operator|~
@@ -297,7 +341,19 @@ return|return
 name|MAI
 return|;
 block|}
-comment|/// @name Symbol Managment
+specifier|const
+name|TargetAsmInfo
+operator|&
+name|getTargetAsmInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|TAI
+return|;
+block|}
+comment|/// @name Symbol Management
 comment|/// @{
 comment|/// CreateTempSymbol - Create and return a new assembler temporary symbol
 comment|/// with a unique but unspecified name.
@@ -306,8 +362,8 @@ modifier|*
 name|CreateTempSymbol
 parameter_list|()
 function_decl|;
-comment|/// CreateDirectionalLocalSymbol - Create the defintion of a directional
-comment|/// local symbol for numbered label (used for "1:" defintions).
+comment|/// CreateDirectionalLocalSymbol - Create the definition of a directional
+comment|/// local symbol for numbered label (used for "1:" definitions).
 name|MCSymbol
 modifier|*
 name|CreateDirectionalLocalSymbol
@@ -363,7 +419,7 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// @}
-comment|/// @name Section Managment
+comment|/// @name Section Management
 comment|/// @{
 comment|/// getMachOSection - Return the MCSection for the specified mach-o section.
 comment|/// This requires the operands to be valid.
@@ -422,7 +478,25 @@ argument_list|)
 return|;
 block|}
 specifier|const
-name|MCSection
+name|MCSectionELF
+modifier|*
+name|getELFSection
+parameter_list|(
+name|StringRef
+name|Section
+parameter_list|,
+name|unsigned
+name|Type
+parameter_list|,
+name|unsigned
+name|Flags
+parameter_list|,
+name|SectionKind
+name|Kind
+parameter_list|)
+function_decl|;
+specifier|const
+name|MCSectionELF
 modifier|*
 name|getELFSection
 parameter_list|(
@@ -438,16 +512,18 @@ parameter_list|,
 name|SectionKind
 name|Kind
 parameter_list|,
-name|bool
-name|IsExplicit
-init|=
-name|false
-parameter_list|,
 name|unsigned
 name|EntrySize
-init|=
-literal|0
+parameter_list|,
+name|StringRef
+name|Group
 parameter_list|)
+function_decl|;
+specifier|const
+name|MCSectionELF
+modifier|*
+name|CreateELFGroupSection
+parameter_list|()
 function_decl|;
 specifier|const
 name|MCSection
@@ -496,7 +572,7 @@ argument_list|)
 return|;
 block|}
 comment|/// @}
-comment|/// @name Dwarf Managment
+comment|/// @name Dwarf Management
 comment|/// @{
 comment|/// GetDwarfFile - creates an entry in the dwarf file and directory tables.
 name|unsigned
@@ -510,12 +586,25 @@ name|FileNumber
 parameter_list|)
 function_decl|;
 name|bool
-name|ValidateDwarfFileNumber
+name|isValidDwarfFileNumber
 parameter_list|(
 name|unsigned
 name|FileNumber
 parameter_list|)
 function_decl|;
+name|bool
+name|hasDwarfFiles
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|MCDwarfFiles
+operator|.
+name|empty
+argument_list|()
+return|;
+block|}
 specifier|const
 name|std
 operator|::
@@ -547,6 +636,7 @@ return|return
 name|MCDwarfDirs
 return|;
 block|}
+specifier|const
 name|DenseMap
 operator|<
 specifier|const
@@ -559,13 +649,61 @@ operator|>
 operator|&
 name|getMCLineSections
 argument_list|()
+specifier|const
 block|{
 return|return
 name|MCLineSections
 return|;
 block|}
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+specifier|const
+name|MCSection
+operator|*
+operator|>
+operator|&
+name|getMCLineSectionOrder
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MCLineSectionOrder
+return|;
+block|}
+name|void
+name|addMCLineSection
+parameter_list|(
+specifier|const
+name|MCSection
+modifier|*
+name|Sec
+parameter_list|,
+name|MCLineSection
+modifier|*
+name|Line
+parameter_list|)
+block|{
+name|MCLineSections
+index|[
+name|Sec
+index|]
+operator|=
+name|Line
+expr_stmt|;
+name|MCLineSectionOrder
+operator|.
+name|push_back
+argument_list|(
+name|Sec
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// setCurrentDwarfLoc - saves the information from the currently parsed
-comment|/// dwarf .loc directive and sets DwarfLocSeen.  When the next instruction      /// is assembled an entry in the line number table with this information and
+comment|/// dwarf .loc directive and sets DwarfLocSeen.  When the next instruction
+comment|/// is assembled an entry in the line number table with this information and
 comment|/// the address of the instruction will be created.
 name|void
 name|setCurrentDwarfLoc
@@ -584,6 +722,9 @@ name|Flags
 parameter_list|,
 name|unsigned
 name|Isa
+parameter_list|,
+name|unsigned
+name|Discriminator
 parameter_list|)
 block|{
 name|CurrentDwarfLoc
@@ -621,13 +762,20 @@ argument_list|(
 name|Isa
 argument_list|)
 expr_stmt|;
+name|CurrentDwarfLoc
+operator|.
+name|setDiscriminator
+argument_list|(
+name|Discriminator
+argument_list|)
+expr_stmt|;
 name|DwarfLocSeen
 operator|=
 name|true
 expr_stmt|;
 block|}
 name|void
-name|clearDwarfLocSeen
+name|ClearDwarfLocSeen
 parameter_list|()
 block|{
 name|DwarfLocSeen

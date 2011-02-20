@@ -323,6 +323,16 @@ comment|///function (3 bits) stored as log2
 comment|///of alignment with +1 bias
 comment|///0 means unaligned (different from
 comment|///alignstack(1))
+specifier|const
+name|Attributes
+name|Hotpatch
+init|=
+literal|1
+operator|<<
+literal|29
+decl_stmt|;
+comment|///< Function should have special
+comment|///'hotpatch' sequence in prologue
 comment|/// @brief Attributes that only apply to function parameters.
 specifier|const
 name|Attributes
@@ -369,6 +379,8 @@ operator||
 name|InlineHint
 operator||
 name|StackAlignment
+operator||
+name|Hotpatch
 decl_stmt|;
 comment|/// @brief Parameter attributes that do not apply to vararg call arguments.
 specifier|const
@@ -881,12 +893,16 @@ argument_list|)
 decl|const
 block|{
 return|return
+operator|(
 name|getAttributes
 argument_list|(
 name|Idx
 argument_list|)
 operator|&
 name|Attr
+operator|)
+operator|!=
+literal|0
 return|;
 block|}
 comment|/// getParamAlignment - Return the alignment for the specified function

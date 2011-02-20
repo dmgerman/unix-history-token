@@ -128,7 +128,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/System/Mutex.h"
+file|"llvm/Support/Mutex.h"
 end_include
 
 begin_include

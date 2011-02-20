@@ -749,7 +749,16 @@ name|MachineFunctionPass
 argument_list|(
 argument|ID
 argument_list|)
-block|{}
+block|{
+name|initializeRenderMachineFunctionPass
+argument_list|(
+operator|*
+name|PassRegistry
+operator|::
+name|getPassRegistry
+argument_list|()
+argument_list|)
+block|;     }
 name|virtual
 name|void
 name|getAnalysisUsage

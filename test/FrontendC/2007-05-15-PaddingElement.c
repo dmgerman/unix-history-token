@@ -4,7 +4,7 @@ comment|// PR 1419
 end_comment
 
 begin_comment
-comment|// RUN: %llvmgcc -xc  -O2 %s -c -o - | llvm-dis | grep "ret i32 1"
+comment|// RUN: %llvmgcc -xc  -O2 %s -S -o - | grep "ret i32 1"
 end_comment
 
 begin_struct

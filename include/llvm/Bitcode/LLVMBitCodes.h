@@ -273,7 +273,12 @@ comment|// PPC LONG DOUBLE (2 doubles)
 name|TYPE_CODE_METADATA
 init|=
 literal|16
+block|,
 comment|// METADATA
+name|TYPE_CODE_X86_MMX
+init|=
+literal|17
+comment|// X86 MMX
 block|}
 enum|;
 comment|// The type symbol table only has one code (TST_ENTRY_CODE).
@@ -607,12 +612,12 @@ init|=
 literal|1
 block|}
 enum|;
-comment|/// SDivOperatorOptionalFlags - Flags for serializing SDivOperator's
-comment|/// SubclassOptionalData contents.
+comment|/// PossiblyExactOperatorOptionalFlags - Flags for serializing
+comment|/// PossiblyExactOperator's SubclassOptionalData contents.
 enum|enum
-name|SDivOperatorOptionalFlags
+name|PossiblyExactOperatorOptionalFlags
 block|{
-name|SDIV_EXACT
+name|PEO_EXACT
 init|=
 literal|0
 block|}

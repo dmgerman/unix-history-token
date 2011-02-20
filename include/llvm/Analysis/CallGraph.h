@@ -246,7 +246,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/System/IncludeFile.h"
+file|"llvm/Support/IncludeFile.h"
 end_include
 
 begin_include
@@ -571,6 +571,25 @@ modifier|*
 name|F
 parameter_list|)
 function_decl|;
+comment|/// spliceFunction - Replace the function represented by this node by another.
+comment|/// This does not rescan the body of the function, so it is suitable when
+comment|/// splicing the body of one function to another while also updating all
+comment|/// callers from the old function to the new.
+comment|///
+name|void
+name|spliceFunction
+parameter_list|(
+specifier|const
+name|Function
+modifier|*
+name|From
+parameter_list|,
+specifier|const
+name|Function
+modifier|*
+name|To
+parameter_list|)
+function_decl|;
 comment|//===---------------------------------------------------------------------
 comment|// Pass infrastructure interface glue code.
 comment|//
@@ -633,6 +652,10 @@ comment|//
 name|class
 name|CallGraphNode
 block|{
+name|friend
+name|class
+name|CallGraph
+decl_stmt|;
 name|AssertingVH
 operator|<
 name|Function

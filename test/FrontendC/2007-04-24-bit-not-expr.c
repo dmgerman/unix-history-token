@@ -4,7 +4,7 @@ comment|// PR 1346
 end_comment
 
 begin_comment
-comment|// RUN: %llvmgcc -c %s  -o /dev/null
+comment|// RUN: %llvmgcc -S %s  -o /dev/null
 end_comment
 
 begin_extern

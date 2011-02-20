@@ -154,12 +154,6 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|MCSymbol
-operator|*
-name|GetPICBaseSymbol
-argument_list|()
-specifier|const
-expr_stmt|;
-name|MCSymbol
 modifier|*
 name|GetSymbolFromOperand
 argument_list|(

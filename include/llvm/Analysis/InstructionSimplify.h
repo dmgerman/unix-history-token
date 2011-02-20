@@ -36,15 +36,27 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file declares routines for folding instructions into simpler forms that
+comment|// This file declares routines for folding instructions into simpler forms
 end_comment
 
 begin_comment
-comment|// do not require creating new instructions.  For example, this does constant
+comment|// that do not require creating new instructions.  This does constant folding
 end_comment
 
 begin_comment
-comment|// folding, and can handle identities like (X&0)->0.
+comment|// ("add i32 1, 1" -> "2") but can also handle non-constant operands, either
+end_comment
+
+begin_comment
+comment|// returning a constant ("and i32 %x, 0" -> "0") or an already existing value
+end_comment
+
+begin_comment
+comment|// ("and i32 %x, %x" -> "%x").  If the simplification is also an instruction
+end_comment
+
+begin_comment
+comment|// then it dominates the original instruction.
 end_comment
 
 begin_comment
@@ -71,6 +83,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|DominatorTree
+decl_stmt|;
 name|class
 name|Instruction
 decl_stmt|;
@@ -106,6 +121,263 @@ modifier|*
 name|TD
 init|=
 literal|0
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+comment|/// SimplifySubInst - Given operands for a Sub, see if we can
+comment|/// fold the result.  If not, this returns null.
+name|Value
+modifier|*
+name|SimplifySubInst
+parameter_list|(
+name|Value
+modifier|*
+name|LHS
+parameter_list|,
+name|Value
+modifier|*
+name|RHS
+parameter_list|,
+name|bool
+name|isNSW
+parameter_list|,
+name|bool
+name|isNUW
+parameter_list|,
+specifier|const
+name|TargetData
+modifier|*
+name|TD
+init|=
+literal|0
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+comment|/// SimplifyMulInst - Given operands for a Mul, see if we can
+comment|/// fold the result.  If not, this returns null.
+name|Value
+modifier|*
+name|SimplifyMulInst
+parameter_list|(
+name|Value
+modifier|*
+name|LHS
+parameter_list|,
+name|Value
+modifier|*
+name|RHS
+parameter_list|,
+specifier|const
+name|TargetData
+modifier|*
+name|TD
+init|=
+literal|0
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+comment|/// SimplifySDivInst - Given operands for an SDiv, see if we can
+comment|/// fold the result.  If not, this returns null.
+name|Value
+modifier|*
+name|SimplifySDivInst
+parameter_list|(
+name|Value
+modifier|*
+name|LHS
+parameter_list|,
+name|Value
+modifier|*
+name|RHS
+parameter_list|,
+specifier|const
+name|TargetData
+modifier|*
+name|TD
+init|=
+literal|0
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+comment|/// SimplifyUDivInst - Given operands for a UDiv, see if we can
+comment|/// fold the result.  If not, this returns null.
+name|Value
+modifier|*
+name|SimplifyUDivInst
+parameter_list|(
+name|Value
+modifier|*
+name|LHS
+parameter_list|,
+name|Value
+modifier|*
+name|RHS
+parameter_list|,
+specifier|const
+name|TargetData
+modifier|*
+name|TD
+init|=
+literal|0
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+comment|/// SimplifyFDivInst - Given operands for an FDiv, see if we can
+comment|/// fold the result.  If not, this returns null.
+name|Value
+modifier|*
+name|SimplifyFDivInst
+parameter_list|(
+name|Value
+modifier|*
+name|LHS
+parameter_list|,
+name|Value
+modifier|*
+name|RHS
+parameter_list|,
+specifier|const
+name|TargetData
+modifier|*
+name|TD
+init|=
+literal|0
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+comment|/// SimplifyShlInst - Given operands for a Shl, see if we can
+comment|/// fold the result.  If not, this returns null.
+name|Value
+modifier|*
+name|SimplifyShlInst
+parameter_list|(
+name|Value
+modifier|*
+name|Op0
+parameter_list|,
+name|Value
+modifier|*
+name|Op1
+parameter_list|,
+name|bool
+name|isNSW
+parameter_list|,
+name|bool
+name|isNUW
+parameter_list|,
+specifier|const
+name|TargetData
+modifier|*
+name|TD
+init|=
+literal|0
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+comment|/// SimplifyLShrInst - Given operands for a LShr, see if we can
+comment|/// fold the result.  If not, this returns null.
+name|Value
+modifier|*
+name|SimplifyLShrInst
+parameter_list|(
+name|Value
+modifier|*
+name|Op0
+parameter_list|,
+name|Value
+modifier|*
+name|Op1
+parameter_list|,
+name|bool
+name|isExact
+parameter_list|,
+specifier|const
+name|TargetData
+modifier|*
+name|TD
+init|=
+literal|0
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+comment|/// SimplifyAShrInst - Given operands for a AShr, see if we can
+comment|/// fold the result.  If not, this returns null.
+name|Value
+modifier|*
+name|SimplifyAShrInst
+parameter_list|(
+name|Value
+modifier|*
+name|Op0
+parameter_list|,
+name|Value
+modifier|*
+name|Op1
+parameter_list|,
+name|bool
+name|isExact
+parameter_list|,
+specifier|const
+name|TargetData
+modifier|*
+name|TD
+init|=
+literal|0
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 comment|/// SimplifyAndInst - Given operands for an And, see if we can
@@ -128,6 +400,13 @@ modifier|*
 name|TD
 init|=
 literal|0
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 comment|/// SimplifyOrInst - Given operands for an Or, see if we can
@@ -148,6 +427,42 @@ specifier|const
 name|TargetData
 modifier|*
 name|TD
+init|=
+literal|0
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+comment|/// SimplifyXorInst - Given operands for a Xor, see if we can
+comment|/// fold the result.  If not, this returns null.
+name|Value
+modifier|*
+name|SimplifyXorInst
+parameter_list|(
+name|Value
+modifier|*
+name|LHS
+parameter_list|,
+name|Value
+modifier|*
+name|RHS
+parameter_list|,
+specifier|const
+name|TargetData
+modifier|*
+name|TD
+init|=
+literal|0
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
 init|=
 literal|0
 parameter_list|)
@@ -175,6 +490,13 @@ modifier|*
 name|TD
 init|=
 literal|0
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 comment|/// SimplifyFCmpInst - Given operands for an FCmpInst, see if we can
@@ -198,6 +520,13 @@ specifier|const
 name|TargetData
 modifier|*
 name|TD
+init|=
+literal|0
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
 init|=
 literal|0
 parameter_list|)
@@ -226,6 +555,13 @@ modifier|*
 name|TD
 init|=
 literal|0
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 comment|/// SimplifyGEPInst - Given operands for an GetElementPtrInst, see if we can
@@ -247,6 +583,13 @@ specifier|const
 name|TargetData
 modifier|*
 name|TD
+init|=
+literal|0
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
 init|=
 literal|0
 parameter_list|)
@@ -275,6 +618,13 @@ modifier|*
 name|TD
 init|=
 literal|0
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 comment|/// SimplifyBinOp - Given operands for a BinaryOperator, see if we can
@@ -300,6 +650,13 @@ modifier|*
 name|TD
 init|=
 literal|0
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 comment|/// SimplifyInstruction - See if we can compute a simplified version of this
@@ -316,6 +673,13 @@ specifier|const
 name|TargetData
 modifier|*
 name|TD
+init|=
+literal|0
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
 init|=
 literal|0
 parameter_list|)
@@ -341,6 +705,13 @@ specifier|const
 name|TargetData
 modifier|*
 name|TD
+init|=
+literal|0
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
 init|=
 literal|0
 parameter_list|)

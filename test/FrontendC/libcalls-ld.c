@@ -12,19 +12,19 @@ comment|// -fno-math-errno should emit an llvm intrinsic, -fmath-errno should no
 end_comment
 
 begin_comment
-comment|// RUN: %llvmgcc %s -S -fno-math-errno -emit-llvm -O0 -o - | grep {call.*exp2\\..*f}
+comment|// RUN: %llvmgcc %s -S -fno-math-errno -O0 -o - | grep {call.*exp2\\..*f}
 end_comment
 
 begin_comment
-comment|// RUN: %llvmgcc %s -S -fmath-errno -emit-llvm -O0 -o - | grep {call.*exp2l}
+comment|// RUN: %llvmgcc %s -S -fmath-errno -O0 -o - | grep {call.*exp2l}
 end_comment
 
 begin_comment
-comment|// RUN: %llvmgcc %s -S -emit-llvm -O1 -o - | grep {call.*ldexp}
+comment|// RUN: %llvmgcc %s -S -O1 -o - | grep {call.*ldexp}
 end_comment
 
 begin_comment
-comment|// RUN: %llvmgcc %s -S -emit-llvm -O3 -fno-builtin -o - | grep {call.*exp2l}
+comment|// RUN: %llvmgcc %s -S -O3 -fno-builtin -o - | grep {call.*exp2l}
 end_comment
 
 begin_comment

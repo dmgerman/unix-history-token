@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %llvmgcc -O3 -S -o - -emit-llvm %s | not grep readonly
+comment|// RUN: %llvmgcc -O3 -S -o - %s | not grep readonly
 end_comment
 
 begin_comment
-comment|// RUN: %llvmgcc -O3 -S -o - -emit-llvm %s | not grep readnone
+comment|// RUN: %llvmgcc -O3 -S -o - %s | not grep readnone
 end_comment
 
 begin_comment

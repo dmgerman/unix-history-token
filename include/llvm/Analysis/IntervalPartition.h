@@ -189,7 +189,16 @@ name|RootInterval
 argument_list|(
 literal|0
 argument_list|)
-block|{}
+block|{
+name|initializeIntervalPartitionPass
+argument_list|(
+operator|*
+name|PassRegistry
+operator|::
+name|getPassRegistry
+argument_list|()
+argument_list|)
+block|;   }
 comment|// run - Calculate the interval partition for this function
 name|virtual
 name|bool

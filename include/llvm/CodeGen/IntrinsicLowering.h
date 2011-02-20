@@ -147,6 +147,18 @@ modifier|*
 name|CI
 parameter_list|)
 function_decl|;
+comment|/// LowerToByteSwap - Replace a call instruction into a call to bswap
+comment|/// intrinsic. Return false if it has determined the call is not a
+comment|/// simple integer bswap.
+specifier|static
+name|bool
+name|LowerToByteSwap
+parameter_list|(
+name|CallInst
+modifier|*
+name|CI
+parameter_list|)
+function_decl|;
 block|}
 empty_stmt|;
 block|}

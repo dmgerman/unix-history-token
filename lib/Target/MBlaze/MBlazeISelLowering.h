@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/SelectionDAG.h"
 end_include
 
@@ -114,6 +120,124 @@ block|,
 name|LE
 block|}
 enum|;
+specifier|inline
+specifier|static
+name|CC
+name|getOppositeCondition
+parameter_list|(
+name|CC
+name|cc
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|cc
+condition|)
+block|{
+default|default:
+name|llvm_unreachable
+argument_list|(
+literal|"Unknown condition code"
+argument_list|)
+expr_stmt|;
+case|case
+name|EQ
+case|:
+return|return
+name|NE
+return|;
+case|case
+name|NE
+case|:
+return|return
+name|EQ
+return|;
+case|case
+name|GT
+case|:
+return|return
+name|LE
+return|;
+case|case
+name|LT
+case|:
+return|return
+name|GE
+return|;
+case|case
+name|GE
+case|:
+return|return
+name|LT
+return|;
+case|case
+name|LE
+case|:
+return|return
+name|GE
+return|;
+block|}
+block|}
+specifier|inline
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|MBlazeCCToString
+parameter_list|(
+name|CC
+name|cc
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|cc
+condition|)
+block|{
+default|default:
+name|llvm_unreachable
+argument_list|(
+literal|"Unknown condition code"
+argument_list|)
+expr_stmt|;
+case|case
+name|EQ
+case|:
+return|return
+literal|"eq"
+return|;
+case|case
+name|NE
+case|:
+return|return
+literal|"ne"
+return|;
+case|case
+name|GT
+case|:
+return|return
+literal|"gt"
+return|;
+case|case
+name|LT
+case|:
+return|return
+literal|"lt"
+return|;
+case|case
+name|GE
+case|:
+return|return
+literal|"ge"
+return|;
+case|case
+name|LE
+case|:
+return|return
+literal|"le"
+return|;
+block|}
+block|}
 block|}
 name|namespace
 name|MBlazeISD
@@ -143,8 +267,11 @@ block|,
 comment|// Integer Compare
 name|ICmp
 block|,
-comment|// Return
+comment|// Return from subroutine
 name|Ret
+block|,
+comment|// Return from interrupt
+name|IRet
 block|}
 enum|;
 block|}
@@ -364,6 +491,39 @@ block|;
 name|virtual
 name|MachineBasicBlock
 operator|*
+name|EmitCustomShift
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|MachineBasicBlock *MBB
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|MachineBasicBlock
+operator|*
+name|EmitCustomSelect
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|MachineBasicBlock *MBB
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|MachineBasicBlock
+operator|*
+name|EmitCustomAtomic
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|MachineBasicBlock *MBB
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|MachineBasicBlock
+operator|*
 name|EmitInstrWithCustomInserter
 argument_list|(
 argument|MachineInstr *MI
@@ -377,6 +537,17 @@ name|ConstraintType
 name|getConstraintType
 argument_list|(
 argument|const std::string&Constraint
+argument_list|)
+specifier|const
+block|;
+comment|/// Examine constraint string and operand type and determine a weight value.
+comment|/// The operand object must already have been set up with the operand type.
+name|ConstraintWeight
+name|getSingleConstraintMatchWeight
+argument_list|(
+argument|AsmOperandInfo&info
+argument_list|,
+argument|const char *constraint
 argument_list|)
 specifier|const
 block|;

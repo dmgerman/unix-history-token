@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<cstddef>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cstring>
 end_include
 
@@ -84,7 +90,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/System/DataTypes.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_include
@@ -148,7 +154,7 @@ comment|/// it, so that the end iterator actually points to valid memory.
 name|unsigned
 name|CurArraySize
 decl_stmt|;
-comment|// If small, this is # elts allocated consequtively
+comment|// If small, this is # elts allocated consecutively
 name|unsigned
 name|NumElements
 decl_stmt|;

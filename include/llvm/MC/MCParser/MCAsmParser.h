@@ -46,7 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/System/DataTypes.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_decl_stmt
@@ -346,6 +346,15 @@ comment|/// will be either the EndOfStatement or EOF.
 name|virtual
 name|StringRef
 name|ParseStringToEndOfStatement
+parameter_list|()
+init|=
+literal|0
+function_decl|;
+comment|/// EatToEndOfStatement - Skip to the end of the current statement, for error
+comment|/// recovery.
+name|virtual
+name|void
+name|EatToEndOfStatement
 parameter_list|()
 init|=
 literal|0

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*===- llvm-stub.c - Stub executable to run llvm bitcode files ------------===// //  //                     The LLVM Compiler Infrastructure // // This file is distributed under the University of Illinois Open Source // License. See LICENSE.TXT for details. //  //===----------------------------------------------------------------------===// // // This tool is used by the gccld program to enable transparent execution of // bitcode files by the user.  Specifically, gccld outputs two files when asked // to compile a<program> file: //    1. It outputs the LLVM bitcode file to<program>.bc //    2. It outputs a stub executable that runs lli on<program>.bc // // This allows the end user to just say ./<program> and have the JIT executed // automatically.  On unix, the stub executable emitted is actually a bourne // shell script that does the forwarding.  Windows does not like #!/bin/sh // programs in .exe files, so we make it an actual program, defined here. // //===----------------------------------------------------------------------===*/
+comment|/*===- llvm-stub.c - Stub executable to run llvm bitcode files ------------===// // //                     The LLVM Compiler Infrastructure // // This file is distributed under the University of Illinois Open Source // License. See LICENSE.TXT for details. // //===----------------------------------------------------------------------===// // // This tool is used by the gccld program to enable transparent execution of // bitcode files by the user.  Specifically, gccld outputs two files when asked // to compile a<program> file: //    1. It outputs the LLVM bitcode file to<program>.bc //    2. It outputs a stub executable that runs lli on<program>.bc // // This allows the end user to just say ./<program> and have the JIT executed // automatically.  On unix, the stub executable emitted is actually a bourne // shell script that does the forwarding.  Windows does not like #!/bin/sh // programs in .exe files, so we make it an actual program, defined here. // //===----------------------------------------------------------------------===*/
 end_comment
 
 begin_include
@@ -281,6 +281,9 @@ name|argc
 argument_list|)
 expr_stmt|;
 comment|/* Run the JIT. */
+ifndef|#
+directive|ifndef
+name|_WIN32
 name|execvp
 argument_list|(
 name|Interp
@@ -293,6 +296,19 @@ operator|)
 name|Args
 argument_list|)
 expr_stmt|;
+comment|/* POSIX execvp takes a char *const[]. */
+else|#
+directive|else
+name|execvp
+argument_list|(
+name|Interp
+argument_list|,
+name|Args
+argument_list|)
+expr_stmt|;
+comment|/* windows execvp takes a const char *const *. */
+endif|#
+directive|endif
 comment|/* if _execv returns, the JIT could not be started. */
 name|fprintf
 argument_list|(

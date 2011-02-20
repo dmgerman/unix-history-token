@@ -154,6 +154,29 @@ comment|/// this by default for methods in its ABI.
 name|X86_ThisCall
 init|=
 literal|70
+block|,
+comment|/// PTX_Kernel - Call to a PTX kernel.
+comment|/// Passes all arguments in parameter space.
+name|PTX_Kernel
+init|=
+literal|71
+block|,
+comment|/// PTX_Device - Call to a PTX device function.
+comment|/// Passes all arguments in register or parameter space.
+name|PTX_Device
+init|=
+literal|72
+block|,
+comment|/// MBLAZE_INTR - Calling convention used for MBlaze interrupt routines.
+name|MBLAZE_INTR
+init|=
+literal|73
+block|,
+comment|/// MBLAZE_INTR - Calling convention used for MBlaze interrupt support
+comment|/// routines (i.e. GCC's save_volatiles attribute).
+name|MBLAZE_SVOL
+init|=
+literal|74
 block|}
 enum|;
 block|}

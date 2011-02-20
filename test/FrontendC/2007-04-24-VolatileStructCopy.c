@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %llvmgcc -O3 -S -o - -emit-llvm %s | grep {volatile store}
+comment|// RUN: %llvmgcc -O3 -S -o - %s | grep {volatile store}
 end_comment
 
 begin_comment

@@ -46,7 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/System/DataTypes.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_include
@@ -80,6 +80,18 @@ comment|///< A four-byte fixup.
 name|FK_Data_8
 block|,
 comment|///< A eight-byte fixup.
+name|FK_PCRel_1
+block|,
+comment|///< A one-byte pc relative fixup.
+name|FK_PCRel_2
+block|,
+comment|///< A two-byte pc relative fixup.
+name|FK_PCRel_4
+block|,
+comment|///< A four-byte pc relative fixup.
+name|FK_PCRel_8
+block|,
+comment|///< A eight-byte pc relative fixup.
 name|FirstTargetFixupKind
 init|=
 literal|128
@@ -239,6 +251,9 @@ name|getKindForSize
 parameter_list|(
 name|unsigned
 name|Size
+parameter_list|,
+name|bool
+name|isPCRel
 parameter_list|)
 block|{
 switch|switch
@@ -258,24 +273,40 @@ case|case
 literal|1
 case|:
 return|return
+name|isPCRel
+condition|?
+name|FK_PCRel_1
+else|:
 name|FK_Data_1
 return|;
 case|case
 literal|2
 case|:
 return|return
+name|isPCRel
+condition|?
+name|FK_PCRel_2
+else|:
 name|FK_Data_2
 return|;
 case|case
 literal|4
 case|:
 return|return
+name|isPCRel
+condition|?
+name|FK_PCRel_4
+else|:
 name|FK_Data_4
 return|;
 case|case
 literal|8
 case|:
 return|return
+name|isPCRel
+condition|?
+name|FK_PCRel_8
+else|:
 name|FK_Data_8
 return|;
 block|}
