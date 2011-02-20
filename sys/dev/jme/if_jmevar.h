@@ -676,10 +676,6 @@ name|jme_int_task
 decl_stmt|;
 name|struct
 name|task
-name|jme_tx_task
-decl_stmt|;
-name|struct
-name|task
 name|jme_link_task
 decl_stmt|;
 name|struct
