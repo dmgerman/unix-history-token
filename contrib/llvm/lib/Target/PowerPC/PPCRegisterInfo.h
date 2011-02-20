@@ -175,29 +175,10 @@ argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
-comment|/// targetHandlesStackFrameRounding - Returns true if the target is
-comment|/// responsible for rounding up the stack frame (probably at emitPrologue
-comment|/// time).
-name|bool
-name|targetHandlesStackFrameRounding
-argument_list|()
-specifier|const
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|/// requiresRegisterScavenging - We require a register scavenger.
 comment|/// FIXME (64-bit): Should be inlined.
 name|bool
 name|requiresRegisterScavenging
-argument_list|(
-argument|const MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|hasFP
 argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
@@ -249,47 +230,6 @@ argument|RegScavenger *RS = NULL
 argument_list|)
 specifier|const
 block|;
-comment|/// determineFrameLayout - Determine the size of the frame and maximum call
-comment|/// frame size.
-name|void
-name|determineFrameLayout
-argument_list|(
-argument|MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
-name|void
-name|processFunctionBeforeCalleeSavedScan
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|RegScavenger *RS = NULL
-argument_list|)
-specifier|const
-block|;
-name|void
-name|processFunctionBeforeFrameFinalized
-argument_list|(
-argument|MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
-name|void
-name|emitPrologue
-argument_list|(
-argument|MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
-name|void
-name|emitEpilogue
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|MachineBasicBlock&MBB
-argument_list|)
-specifier|const
-block|;
 comment|// Debug information queries.
 name|unsigned
 name|getRARegister
@@ -300,13 +240,6 @@ name|unsigned
 name|getFrameRegister
 argument_list|(
 argument|const MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
-name|void
-name|getInitialFrameState
-argument_list|(
-argument|std::vector<MachineMove>&Moves
 argument_list|)
 specifier|const
 block|;

@@ -66,12 +66,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<string>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/APFloat.h"
 end_include
 
@@ -84,7 +78,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/System/DataTypes.h"
+file|"llvm/Support/DataTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cctype>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
 end_include
 
 begin_decl_stmt
@@ -105,6 +111,12 @@ name|SourceLocation
 decl_stmt|;
 name|class
 name|TargetInfo
+decl_stmt|;
+name|class
+name|SourceManager
+decl_stmt|;
+name|class
+name|LangOptions
 decl_stmt|;
 comment|/// NumericLiteralParser - This performs strict semantic analysis of the content
 comment|/// of a ppnumber, classifying it as either integer, floating, or erroneous,
@@ -496,9 +508,24 @@ comment|/// literals) (C99 5.1.1.2p1).
 name|class
 name|StringLiteralParser
 block|{
-name|Preprocessor
+specifier|const
+name|SourceManager
 modifier|&
-name|PP
+name|SM
+decl_stmt|;
+specifier|const
+name|LangOptions
+modifier|&
+name|Features
+decl_stmt|;
+specifier|const
+name|TargetInfo
+modifier|&
+name|Target
+decl_stmt|;
+name|Diagnostic
+modifier|*
+name|Diags
 decl_stmt|;
 name|unsigned
 name|MaxTokenLength
@@ -535,9 +562,52 @@ argument_list|,
 argument|bool Complain = true
 argument_list|)
 empty_stmt|;
+name|StringLiteralParser
+argument_list|(
+argument|const Token *StringToks
+argument_list|,
+argument|unsigned NumStringToks
+argument_list|,
+argument|const SourceManager&sm
+argument_list|,
+argument|const LangOptions&features
+argument_list|,
+argument|const TargetInfo&target
+argument_list|,
+argument|Diagnostic *diags =
+literal|0
+argument_list|)
+block|:
+name|SM
+argument_list|(
+name|sm
+argument_list|)
+operator|,
+name|Features
+argument_list|(
+name|features
+argument_list|)
+operator|,
+name|Target
+argument_list|(
+name|target
+argument_list|)
+operator|,
+name|Diags
+argument_list|(
+argument|diags
+argument_list|)
+block|{
+name|init
+argument_list|(
+name|StringToks
+argument_list|,
+name|NumStringToks
+argument_list|)
+block|;   }
 name|bool
 name|hadError
-decl_stmt|;
+expr_stmt|;
 name|bool
 name|AnyWide
 decl_stmt|;
@@ -596,26 +666,34 @@ block|}
 comment|/// getOffsetOfStringByte - This function returns the offset of the
 comment|/// specified byte of the string data represented by Token.  This handles
 comment|/// advancing over escape sequences in the string.
-specifier|static
+comment|///
+comment|/// If the Diagnostics pointer is non-null, then this will do semantic
+comment|/// checking of the string literal and emit errors and warnings.
 name|unsigned
 name|getOffsetOfStringByte
+argument_list|(
+specifier|const
+name|Token
+operator|&
+name|TheTok
+argument_list|,
+name|unsigned
+name|ByteNo
+argument_list|)
+decl|const
+decl_stmt|;
+name|private
+label|:
+name|void
+name|init
 parameter_list|(
 specifier|const
 name|Token
-modifier|&
-name|TheTok
+modifier|*
+name|StringToks
 parameter_list|,
 name|unsigned
-name|ByteNo
-parameter_list|,
-name|Preprocessor
-modifier|&
-name|PP
-parameter_list|,
-name|bool
-name|Complain
-init|=
-name|true
+name|NumStringToks
 parameter_list|)
 function_decl|;
 block|}

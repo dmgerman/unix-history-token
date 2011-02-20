@@ -72,7 +72,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"llvm/System/DataTypes.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_include
@@ -110,7 +110,7 @@ name|class
 name|MachineBasicBlock
 decl_stmt|;
 name|class
-name|TargetFrameInfo
+name|TargetFrameLowering
 decl_stmt|;
 name|class
 name|BitVector
@@ -406,20 +406,10 @@ comment|/// CSIValid - Has CSInfo been set yet?
 name|bool
 name|CSIValid
 decl_stmt|;
-comment|/// SpillObjects - A vector indicating which frame indices refer to
-comment|/// spill slots.
-name|SmallVector
-operator|<
-name|bool
-operator|,
-literal|8
-operator|>
-name|SpillObjects
-expr_stmt|;
-comment|/// TargetFrameInfo - Target information about frame layout.
+comment|/// TargetFrameLowering - Target information about frame layout.
 comment|///
 specifier|const
-name|TargetFrameInfo
+name|TargetFrameLowering
 modifier|&
 name|TFI
 decl_stmt|;
@@ -461,7 +451,7 @@ name|explicit
 name|MachineFrameInfo
 argument_list|(
 specifier|const
-name|TargetFrameInfo
+name|TargetFrameLowering
 operator|&
 name|tfi
 argument_list|)

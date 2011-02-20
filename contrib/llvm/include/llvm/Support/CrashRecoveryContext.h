@@ -148,6 +148,34 @@ modifier|*
 name|UserData
 parameter_list|)
 function_decl|;
+comment|/// \brief Execute the provide callback function (with the given arguments) in
+comment|/// a protected context which is run in another thread (optionally with a
+comment|/// requested stack size).
+comment|///
+comment|/// See RunSafely() and llvm_execute_on_thread().
+name|bool
+name|RunSafelyOnThread
+parameter_list|(
+name|void
+function_decl|(
+modifier|*
+name|Fn
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+parameter_list|,
+name|void
+modifier|*
+name|UserData
+parameter_list|,
+name|unsigned
+name|RequestedStackSize
+init|=
+literal|0
+parameter_list|)
+function_decl|;
 comment|/// \brief Explicitly trigger a crash recovery in the current process, and
 comment|/// return failure from RunSafely(). This function does not return.
 name|void

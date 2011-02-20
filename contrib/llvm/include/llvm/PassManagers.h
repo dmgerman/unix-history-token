@@ -409,6 +409,9 @@ comment|// "' on Function '" + FunctionName + "'...\n"
 name|ON_MODULE_MSG
 block|,
 comment|// "' on Module '" + ModuleName + "'...\n"
+name|ON_REGION_MSG
+block|,
+comment|// " 'on Region ...\n'"
 name|ON_LOOP_MSG
 block|,
 comment|// " 'on Loop ...\n'"
@@ -703,12 +706,11 @@ comment|/// Set pass P as the last user of the given analysis passes.
 name|void
 name|setLastUser
 argument_list|(
-name|SmallVector
+specifier|const
+name|SmallVectorImpl
 operator|<
 name|Pass
 operator|*
-argument_list|,
-literal|12
 operator|>
 operator|&
 name|AnalysisPasses
@@ -722,12 +724,10 @@ comment|/// Collect passes whose last user is P
 name|void
 name|collectLastUses
 argument_list|(
-name|SmallVector
+name|SmallVectorImpl
 operator|<
 name|Pass
 operator|*
-argument_list|,
-literal|12
 operator|>
 operator|&
 name|LastUses
@@ -787,12 +787,10 @@ argument_list|)
 expr_stmt|;
 block|}
 specifier|inline
-name|SmallVector
+name|SmallVectorImpl
 operator|<
 name|ImmutablePass
 operator|*
-operator|,
-literal|8
 operator|>
 operator|&
 name|getImmutablePasses
@@ -1123,21 +1121,17 @@ comment|/// pass that are required by pass P but are not available.
 name|void
 name|collectRequiredAnalysis
 argument_list|(
-name|SmallVector
+name|SmallVectorImpl
 operator|<
 name|Pass
 operator|*
-argument_list|,
-literal|8
 operator|>
 operator|&
 name|RequiredPasses
 argument_list|,
-name|SmallVector
+name|SmallVectorImpl
 operator|<
 name|AnalysisID
-argument_list|,
-literal|8
 operator|>
 operator|&
 name|ReqPassNotAvailable

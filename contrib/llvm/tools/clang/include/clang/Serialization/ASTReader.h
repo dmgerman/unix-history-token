@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Lex/HeaderSearch.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Lex/PreprocessingRecord.h"
 end_include
 
@@ -164,7 +170,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/System/DataTypes.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_include
@@ -221,6 +227,9 @@ name|class
 name|ASTContext
 decl_stmt|;
 name|class
+name|ASTIdentifierIterator
+decl_stmt|;
+name|class
 name|Attr
 decl_stmt|;
 name|class
@@ -236,13 +245,10 @@ name|class
 name|CXXBaseSpecifier
 decl_stmt|;
 name|class
-name|CXXBaseOrMemberInitializer
+name|CXXCtorInitializer
 decl_stmt|;
 name|class
 name|GotoStmt
-decl_stmt|;
-name|class
-name|LabelStmt
 decl_stmt|;
 name|class
 name|MacroDefinition
@@ -251,7 +257,7 @@ name|class
 name|NamedDecl
 decl_stmt|;
 name|class
-name|ASTDeserializationListener
+name|OpaqueValueExpr
 decl_stmt|;
 name|class
 name|Preprocessor
@@ -263,10 +269,22 @@ name|class
 name|SwitchCase
 decl_stmt|;
 name|class
+name|ASTDeserializationListener
+decl_stmt|;
+name|class
 name|ASTReader
 decl_stmt|;
 name|class
 name|ASTDeclReader
+decl_stmt|;
+name|class
+name|ASTStmtReader
+decl_stmt|;
+name|class
+name|ASTIdentifierLookupTrait
+decl_stmt|;
+name|class
+name|TypeLocReader
 decl_stmt|;
 struct_decl|struct
 name|HeaderFileInfo
@@ -533,6 +551,9 @@ name|public
 name|ExternalPreprocessingRecordSource
 decl_stmt|,
 name|public
+name|ExternalHeaderFileInfoSource
+decl_stmt|,
+name|public
 name|ExternalSemaSource
 decl_stmt|,
 name|public
@@ -556,6 +577,23 @@ block|,
 name|IgnorePCH
 block|}
 enum|;
+comment|/// \brief Types of AST files.
+enum|enum
+name|ASTFileType
+block|{
+name|Module
+block|,
+comment|///< File is a module proper.
+name|PCH
+block|,
+comment|///< File is a PCH file treated as such.
+name|Preamble
+block|,
+comment|///< File is a PCH file treated as the preamble.
+name|MainFile
+comment|///< File is a PCH file treated as the actual main file.
+block|}
+enum|;
 name|friend
 name|class
 name|PCHValidator
@@ -563,6 +601,22 @@ decl_stmt|;
 name|friend
 name|class
 name|ASTDeclReader
+decl_stmt|;
+name|friend
+name|class
+name|ASTStmtReader
+decl_stmt|;
+name|friend
+name|class
+name|ASTIdentifierIterator
+decl_stmt|;
+name|friend
+name|class
+name|ASTIdentifierLookupTrait
+decl_stmt|;
+name|friend
+name|class
+name|TypeLocReader
 decl_stmt|;
 name|private
 label|:
@@ -613,54 +667,24 @@ name|ASTConsumer
 modifier|*
 name|Consumer
 decl_stmt|;
-comment|/// \brief Information that is needed for every file in the chain.
+comment|/// \brief Information that is needed for every module.
 struct|struct
 name|PerFileData
 block|{
 name|PerFileData
-argument_list|()
-expr_stmt|;
+argument_list|(
+argument|ASTFileType Ty
+argument_list|)
+empty_stmt|;
 operator|~
 name|PerFileData
 argument_list|()
 expr_stmt|;
-comment|/// \brief The AST stat cache installed for this file, if any.
-comment|///
-comment|/// The dynamic type of this stat cache is always ASTStatCache
-name|void
-modifier|*
-name|StatCache
+comment|// === General information ===
+comment|/// \brief The type of this AST file.
+name|ASTFileType
+name|Type
 decl_stmt|;
-comment|/// \brief The bitstream reader from which we'll read the AST file.
-name|llvm
-operator|::
-name|BitstreamReader
-name|StreamFile
-expr_stmt|;
-name|llvm
-operator|::
-name|BitstreamCursor
-name|Stream
-expr_stmt|;
-comment|/// \brief The size of this file, in bits.
-name|uint64_t
-name|SizeInBits
-decl_stmt|;
-comment|/// \brief The cursor to the start of the preprocessor block, which stores
-comment|/// all of the macro definitions.
-name|llvm
-operator|::
-name|BitstreamCursor
-name|MacroCursor
-expr_stmt|;
-comment|/// DeclsCursor - This is a cursor to the start of the DECLS_BLOCK block. It
-comment|/// has read all the abbreviations at the start of the block and is ready to
-comment|/// jump around with these in context.
-name|llvm
-operator|::
-name|BitstreamCursor
-name|DeclsCursor
-expr_stmt|;
 comment|/// \brief The file name of the AST file.
 name|std
 operator|::
@@ -679,6 +703,23 @@ name|MemoryBuffer
 operator|>
 name|Buffer
 expr_stmt|;
+comment|/// \brief The size of this file, in bits.
+name|uint64_t
+name|SizeInBits
+decl_stmt|;
+comment|/// \brief The bitstream reader from which we'll read the AST file.
+name|llvm
+operator|::
+name|BitstreamReader
+name|StreamFile
+expr_stmt|;
+comment|/// \brief The main bitstream cursor for the main block.
+name|llvm
+operator|::
+name|BitstreamCursor
+name|Stream
+expr_stmt|;
+comment|// === Source Locations ===
 comment|/// \brief Cursor used to read source location entries.
 name|llvm
 operator|::
@@ -696,28 +737,11 @@ name|uint32_t
 modifier|*
 name|SLocOffsets
 decl_stmt|;
-comment|/// \brief The number of types in this AST file.
+comment|/// \brief The entire size of this module's source location offset range.
 name|unsigned
-name|LocalNumTypes
+name|LocalSLocSize
 decl_stmt|;
-comment|/// \brief Offset of each type within the bitstream, indexed by the
-comment|/// type ID, or the representation of a Type*.
-specifier|const
-name|uint32_t
-modifier|*
-name|TypeOffsets
-decl_stmt|;
-comment|/// \brief The number of declarations in this AST file.
-name|unsigned
-name|LocalNumDecls
-decl_stmt|;
-comment|/// \brief Offset of each declaration within the bitstream, indexed
-comment|/// by the declaration ID (-1).
-specifier|const
-name|uint32_t
-modifier|*
-name|DeclOffsets
-decl_stmt|;
+comment|// === Identifiers ===
 comment|/// \brief The number of identifiers in this AST file.
 name|unsigned
 name|LocalNumIdentifiers
@@ -732,10 +756,10 @@ name|uint32_t
 modifier|*
 name|IdentifierOffsets
 decl_stmt|;
-comment|/// \brief Actual data for the on-disk hash table.
+comment|/// \brief Actual data for the on-disk hash table of identifiers.
 comment|///
-comment|// This pointer points into a memory buffer, where the on-disk hash
-comment|// table for identifiers actually lives.
+comment|/// This pointer points into a memory buffer, where the on-disk hash
+comment|/// table for identifiers actually lives.
 specifier|const
 name|char
 modifier|*
@@ -746,6 +770,30 @@ comment|/// IdentifierHashTable.
 name|void
 modifier|*
 name|IdentifierLookupTable
+decl_stmt|;
+comment|// === Macros ===
+comment|/// \brief The cursor to the start of the preprocessor block, which stores
+comment|/// all of the macro definitions.
+name|llvm
+operator|::
+name|BitstreamCursor
+name|MacroCursor
+expr_stmt|;
+comment|/// \brief The offset of the start of the set of defined macros.
+name|uint64_t
+name|MacroStartOffset
+decl_stmt|;
+comment|// === Detailed PreprocessingRecord ===
+comment|/// \brief The cursor to the start of the (optional) detailed preprocessing
+comment|/// record block.
+name|llvm
+operator|::
+name|BitstreamCursor
+name|PreprocessorDetailCursor
+expr_stmt|;
+comment|/// \brief The offset of the start of the preprocessor detail cursor.
+name|uint64_t
+name|PreprocessorDetailStartOffset
 decl_stmt|;
 comment|/// \brief The number of macro definitions in this file.
 name|unsigned
@@ -758,19 +806,40 @@ name|uint32_t
 modifier|*
 name|MacroDefinitionOffsets
 decl_stmt|;
-comment|/// \brief The number of preallocated preprocessing entities in the
-comment|/// preprocessing record.
+comment|// === Header search information ===
+comment|/// \brief The number of local HeaderFileInfo structures.
 name|unsigned
-name|NumPreallocatedPreprocessingEntities
+name|LocalNumHeaderFileInfos
 decl_stmt|;
-comment|/// \brief A pointer to an on-disk hash table of opaque type
-comment|/// ASTSelectorLookupTable.
+comment|/// \brief Actual data for the on-disk hash table of header file
+comment|/// information.
 comment|///
-comment|/// This hash table provides the IDs of all selectors, and the associated
-comment|/// instance and factory methods.
+comment|/// This pointer points into a memory buffer, where the on-disk hash
+comment|/// table for header file information actually lives.
+specifier|const
+name|char
+modifier|*
+name|HeaderFileInfoTableData
+decl_stmt|;
+comment|/// \brief The on-disk hash table that contains information about each of
+comment|/// the header files.
 name|void
 modifier|*
-name|SelectorLookupTable
+name|HeaderFileInfoTable
+decl_stmt|;
+comment|// === Selectors ===
+comment|/// \brief The number of selectors new to this file.
+comment|///
+comment|/// This is the number of entries in SelectorOffsets.
+name|unsigned
+name|LocalNumSelectors
+decl_stmt|;
+comment|/// \brief Offsets into the selector lookup table's data array
+comment|/// where each selector resides.
+specifier|const
+name|uint32_t
+modifier|*
+name|SelectorOffsets
 decl_stmt|;
 comment|/// \brief A pointer to the character data that comprises the selector table
 comment|///
@@ -781,21 +850,134 @@ name|char
 modifier|*
 name|SelectorLookupTableData
 decl_stmt|;
-comment|/// \brief Offsets into the method pool lookup table's data array
-comment|/// where each selector resides.
+comment|/// \brief A pointer to an on-disk hash table of opaque type
+comment|/// ASTSelectorLookupTable.
+comment|///
+comment|/// This hash table provides the IDs of all selectors, and the associated
+comment|/// instance and factory methods.
+name|void
+modifier|*
+name|SelectorLookupTable
+decl_stmt|;
+comment|/// \brief Method selectors used in a @selector expression. Used for
+comment|/// implementation of -Wselector.
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|uint64_t
+operator|,
+literal|64
+operator|>
+name|ReferencedSelectorsData
+expr_stmt|;
+comment|// === Declarations ===
+comment|/// DeclsCursor - This is a cursor to the start of the DECLS_BLOCK block. It
+comment|/// has read all the abbreviations at the start of the block and is ready to
+comment|/// jump around with these in context.
+name|llvm
+operator|::
+name|BitstreamCursor
+name|DeclsCursor
+expr_stmt|;
+comment|/// \brief The number of declarations in this AST file.
+name|unsigned
+name|LocalNumDecls
+decl_stmt|;
+comment|/// \brief Offset of each declaration within the bitstream, indexed
+comment|/// by the declaration ID (-1).
 specifier|const
 name|uint32_t
 modifier|*
-name|SelectorOffsets
+name|DeclOffsets
 decl_stmt|;
-comment|/// \brief The number of selectors new to this file.
+comment|/// \brief A snapshot of the pending instantiations in the chain.
 comment|///
-comment|/// This is the number of entries in SelectorOffsets.
+comment|/// This record tracks the instantiations that Sema has to perform at the
+comment|/// end of the TU. It consists of a pair of values for every pending
+comment|/// instantiation where the first value is the ID of the decl and the second
+comment|/// is the instantiation location.
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|uint64_t
+operator|,
+literal|64
+operator|>
+name|PendingInstantiations
+expr_stmt|;
+comment|/// \brief The number of C++ base specifier sets in this AST file.
 name|unsigned
-name|LocalNumSelectors
+name|LocalNumCXXBaseSpecifiers
 decl_stmt|;
+comment|/// \brief Offset of each C++ base specifier set within the bitstream,
+comment|/// indexed by the C++ base specifier set ID (-1).
+specifier|const
+name|uint32_t
+modifier|*
+name|CXXBaseSpecifiersOffsets
+decl_stmt|;
+comment|// === Types ===
+comment|/// \brief The number of types in this AST file.
+name|unsigned
+name|LocalNumTypes
+decl_stmt|;
+comment|/// \brief Offset of each type within the bitstream, indexed by the
+comment|/// type ID, or the representation of a Type*.
+specifier|const
+name|uint32_t
+modifier|*
+name|TypeOffsets
+decl_stmt|;
+comment|// === Miscellaneous ===
+comment|/// \brief The AST stat cache installed for this file, if any.
+comment|///
+comment|/// The dynamic type of this stat cache is always ASTStatCache
+name|void
+modifier|*
+name|StatCache
+decl_stmt|;
+comment|/// \brief The number of preallocated preprocessing entities in the
+comment|/// preprocessing record.
+name|unsigned
+name|NumPreallocatedPreprocessingEntities
+decl_stmt|;
+comment|/// \brief The next module in source order.
+name|PerFileData
+modifier|*
+name|NextInSource
+decl_stmt|;
+comment|/// \brief All the modules that loaded this one. Can contain NULL for
+comment|/// directly loaded modules.
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|PerFileData
+operator|*
+operator|,
+literal|1
+operator|>
+name|Loaders
+expr_stmt|;
 block|}
 struct|;
+comment|/// \brief All loaded modules, indexed by name.
+name|llvm
+operator|::
+name|StringMap
+operator|<
+name|PerFileData
+operator|*
+operator|>
+name|Modules
+expr_stmt|;
+comment|/// \brief The first module in source order.
+name|PerFileData
+modifier|*
+name|FirstInSource
+decl_stmt|;
 comment|/// \brief The chain of AST files. The first entry is the one named by the
 comment|/// user, the last one is the one that doesn't depend on anything further.
 comment|/// That is, the entry I was created with -include-pch I+1.
@@ -809,6 +991,17 @@ operator|,
 literal|2
 operator|>
 name|Chain
+expr_stmt|;
+comment|/// \brief SLocEntries that we're going to preload.
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|uint64_t
+operator|,
+literal|64
+operator|>
+name|PreloadSLocEntries
 expr_stmt|;
 comment|/// \brief Types that have already been loaded from the chain.
 comment|///
@@ -850,6 +1043,47 @@ operator|>
 name|DeclsLoaded
 expr_stmt|;
 typedef|typedef
+name|std
+operator|::
+name|pair
+operator|<
+name|PerFileData
+operator|*
+operator|,
+name|uint64_t
+operator|>
+name|FileOffset
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|FileOffset
+operator|,
+literal|2
+operator|>
+name|FileOffsetsTy
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|serialization
+operator|::
+name|DeclID
+operator|,
+name|FileOffsetsTy
+operator|>
+name|DeclUpdateOffsetsMap
+expr_stmt|;
+comment|/// \brief Declarations that have modifications residing in a later file
+comment|/// in the chain.
+name|DeclUpdateOffsetsMap
+name|DeclUpdateOffsets
+decl_stmt|;
+typedef|typedef
 name|llvm
 operator|::
 name|DenseMap
@@ -886,7 +1120,7 @@ comment|// a ASTDeclContextNameLookupTable.
 specifier|const
 name|serialization
 operator|::
-name|DeclID
+name|KindDeclIDPair
 operator|*
 name|LexicalDecls
 expr_stmt|;
@@ -965,6 +1199,37 @@ decl_stmt|;
 typedef|typedef
 name|llvm
 operator|::
+name|SmallVector
+operator|<
+name|CXXRecordDecl
+operator|*
+operator|,
+literal|4
+operator|>
+name|ForwardRefs
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|CXXRecordDecl
+operator|*
+operator|,
+name|ForwardRefs
+operator|>
+name|PendingForwardRefsMap
+expr_stmt|;
+comment|/// \brief Forward references that have a definition but the definition decl
+comment|/// is still initializing. When the definition gets read it will update
+comment|/// the DefinitionData pointer of all pending references.
+name|PendingForwardRefsMap
+name|PendingForwardRefs
+decl_stmt|;
+typedef|typedef
+name|llvm
+operator|::
 name|DenseMap
 operator|<
 name|serialization
@@ -981,37 +1246,6 @@ comment|/// \brief Map of first declarations from a chained PCH that point to th
 comment|/// most recent declarations in another AST file.
 name|FirstLatestDeclIDMap
 name|FirstLatestDeclIDs
-decl_stmt|;
-typedef|typedef
-name|llvm
-operator|::
-name|SmallVector
-operator|<
-name|serialization
-operator|::
-name|DeclID
-operator|,
-literal|4
-operator|>
-name|AdditionalTemplateSpecializations
-expr_stmt|;
-typedef|typedef
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-name|serialization
-operator|::
-name|DeclID
-operator|,
-name|AdditionalTemplateSpecializations
-operator|>
-name|AdditionalTemplateSpecializationsMap
-expr_stmt|;
-comment|/// \brief Additional specializations (including partial) of templates that
-comment|/// were introduced after the template was serialized.
-name|AdditionalTemplateSpecializationsMap
-name|AdditionalTemplateSpecializationsPending
 decl_stmt|;
 comment|/// \brief Read the records that describe the contents of declcontexts.
 name|bool
@@ -1082,6 +1316,20 @@ literal|16
 operator|>
 name|MacroDefinitionsLoaded
 expr_stmt|;
+comment|/// \brief Mapping from identifiers that represent macros whose definitions
+comment|/// have not yet been deserialized to the global offset where the macro
+comment|/// record resides.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|IdentifierInfo
+operator|*
+operator|,
+name|uint64_t
+operator|>
+name|UnreadMacroRecordOffsets
+expr_stmt|;
 comment|/// \name CodeGen-relevant special data
 comment|/// \brief Fields containing data that is relevant to CodeGen.
 comment|//@{
@@ -1135,18 +1383,6 @@ comment|//@}
 comment|/// \name Diagnostic-relevant special data
 comment|/// \brief Fields containing data that is used for generating diagnostics
 comment|//@{
-comment|/// \brief Method selectors used in a @selector expression. Used for
-comment|/// implementation of -Wselector.
-name|llvm
-operator|::
-name|SmallVector
-operator|<
-name|uint64_t
-operator|,
-literal|64
-operator|>
-name|ReferencedSelectorsData
-expr_stmt|;
 comment|/// \brief A snapshot of Sema's unused file-scoped variable tracking, for
 comment|/// generating warnings.
 name|llvm
@@ -1202,22 +1438,6 @@ literal|16
 operator|>
 name|LocallyScopedExternalDecls
 expr_stmt|;
-comment|/// \brief A snapshot of the pwnsinf instantiations in the chain.
-comment|///
-comment|/// This record tracks the instantiations that Sema has to perform at the end
-comment|/// of the TU. It consists of a pair of values for every pending instantiation
-comment|/// where the first value is the ID of the decl and the second is the
-comment|/// instantiation location.
-name|llvm
-operator|::
-name|SmallVector
-operator|<
-name|uint64_t
-operator|,
-literal|64
-operator|>
-name|PendingInstantiations
-expr_stmt|;
 comment|/// \brief The IDs of all dynamic class declarations in the chain.
 comment|///
 comment|/// Sema tracks these because it checks for the key functions being defined
@@ -1258,7 +1478,54 @@ literal|16
 operator|>
 name|SpecialTypes
 expr_stmt|;
+comment|/// \brief The IDs of CUDA-specific declarations ASTContext stores directly.
+comment|///
+comment|/// The AST context tracks a few important decls, currently cudaConfigureCall,
+comment|/// directly.
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|uint64_t
+operator|,
+literal|2
+operator|>
+name|CUDASpecialDeclRefs
+expr_stmt|;
+comment|/// \brief The floating point pragma option settings.
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|uint64_t
+operator|,
+literal|1
+operator|>
+name|FPPragmaOptions
+expr_stmt|;
+comment|/// \brief The OpenCL extension settings.
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|uint64_t
+operator|,
+literal|1
+operator|>
+name|OpenCLExtensions
+expr_stmt|;
 comment|//@}
+comment|/// \brief Diagnostic IDs and their mappings that the user changed.
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|uint64_t
+operator|,
+literal|8
+operator|>
+name|PragmaDiagMappings
+expr_stmt|;
 comment|/// \brief The original file name that was used to build the primary AST file,
 comment|/// which may have been modified for relocatable-pch support.
 name|std
@@ -1272,6 +1539,19 @@ name|std
 operator|::
 name|string
 name|ActualOriginalFileName
+expr_stmt|;
+comment|/// \brief The directory that the PCH was originally created in. Used to
+comment|/// allow resolving headers even after headers+PCH was moved to a new path.
+name|std
+operator|::
+name|string
+name|OriginalDir
+expr_stmt|;
+comment|/// \brief The directory that the PCH we are reading is stored in.
+name|std
+operator|::
+name|string
+name|CurrentDir
 expr_stmt|;
 comment|/// \brief Whether this precompiled header is a relocatable PCH file.
 name|bool
@@ -1289,6 +1569,10 @@ comment|/// headers when they are loaded.
 name|bool
 name|DisableValidation
 decl_stmt|;
+comment|/// \brief Whether to disable the use of stat caches in AST files.
+name|bool
+name|DisableStatCache
+decl_stmt|;
 comment|/// \brief Mapping from switch-case IDs in the chain to switch-case statements
 comment|///
 comment|/// Statements usually don't have IDs, but switch cases need them, so that the
@@ -1304,48 +1588,17 @@ operator|*
 operator|>
 name|SwitchCaseStmts
 expr_stmt|;
-comment|/// \brief Mapping from label statement IDs in the chain to label statements.
-comment|///
-comment|/// Statements usually don't have IDs, but labeled statements need them, so
-comment|/// that goto statements and address-of-label expressions can refer to them.
+comment|/// \brief Mapping from opaque value IDs to OpaqueValueExprs.
 name|std
 operator|::
 name|map
 operator|<
 name|unsigned
 operator|,
-name|LabelStmt
+name|OpaqueValueExpr
 operator|*
 operator|>
-name|LabelStmts
-expr_stmt|;
-comment|/// \brief Mapping from label IDs to the set of "goto" statements
-comment|/// that point to that label before the label itself has been
-comment|/// de-serialized.
-name|std
-operator|::
-name|multimap
-operator|<
-name|unsigned
-operator|,
-name|GotoStmt
-operator|*
-operator|>
-name|UnresolvedGotoStmts
-expr_stmt|;
-comment|/// \brief Mapping from label IDs to the set of address label
-comment|/// expressions that point to that label before the label itself has
-comment|/// been de-serialized.
-name|std
-operator|::
-name|multimap
-operator|<
-name|unsigned
-operator|,
-name|AddrLabelExpr
-operator|*
-operator|>
-name|UnresolvedAddrLabelExprs
+name|OpaqueValueExprs
 expr_stmt|;
 comment|/// \brief The number of stat() calls that hit/missed the stat
 comment|/// cache.
@@ -1362,6 +1615,10 @@ decl_stmt|;
 comment|/// \brief The number of source location entries in the chain.
 name|unsigned
 name|TotalNumSLocEntries
+decl_stmt|;
+comment|/// \brief The next offset for a SLocEntry after everything in this reader.
+name|unsigned
+name|NextSLocOffset
 decl_stmt|;
 comment|/// \brief The number of statements (and expressions) de-serialized
 comment|/// from the chain.
@@ -1463,6 +1720,40 @@ operator|*
 operator|>
 name|InterestingDecls
 expr_stmt|;
+comment|/// \brief We delay loading of the previous declaration chain to avoid
+comment|/// deeply nested calls when there are many redeclarations.
+name|std
+operator|::
+name|deque
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|Decl
+operator|*
+operator|,
+name|serialization
+operator|::
+name|DeclID
+operator|>
+expr|>
+name|PendingPreviousDecls
+expr_stmt|;
+comment|/// \brief Ready to load the previous declaration of the given Decl.
+name|void
+name|loadAndAttachPreviousDecl
+argument_list|(
+name|Decl
+operator|*
+name|D
+argument_list|,
+name|serialization
+operator|::
+name|DeclID
+name|ID
+argument_list|)
+decl_stmt|;
 comment|/// \brief When reading a Stmt tree, Stmt operands are placed in this stack.
 name|llvm
 operator|::
@@ -1580,14 +1871,12 @@ comment|/// \brief Reads a statement from the specified cursor.
 name|Stmt
 modifier|*
 name|ReadStmtFromStream
-argument_list|(
-name|llvm
-operator|::
-name|BitstreamCursor
-operator|&
-name|Cursor
-argument_list|)
-decl_stmt|;
+parameter_list|(
+name|PerFileData
+modifier|&
+name|F
+parameter_list|)
+function_decl|;
 name|void
 name|MaybeAddSystemRootToFilename
 argument_list|(
@@ -1605,6 +1894,9 @@ name|llvm
 operator|::
 name|StringRef
 name|FileName
+argument_list|,
+name|ASTFileType
+name|Type
 argument_list|)
 decl_stmt|;
 name|ASTReadResult
@@ -1622,6 +1914,10 @@ function_decl|;
 name|bool
 name|ParseLineTable
 argument_list|(
+name|PerFileData
+operator|&
+name|F
+argument_list|,
 name|llvm
 operator|::
 name|SmallVectorImpl
@@ -1647,15 +1943,22 @@ name|unsigned
 name|ID
 parameter_list|)
 function_decl|;
-name|llvm
-operator|::
-name|BitstreamCursor
-operator|&
+name|PerFileData
+modifier|*
 name|SLocCursorForID
-argument_list|(
-argument|unsigned ID
-argument_list|)
-expr_stmt|;
+parameter_list|(
+name|unsigned
+name|ID
+parameter_list|)
+function_decl|;
+name|SourceLocation
+name|getImportLocation
+parameter_list|(
+name|PerFileData
+modifier|*
+name|F
+parameter_list|)
+function_decl|;
 name|bool
 name|ParseLanguageOptions
 argument_list|(
@@ -1670,20 +1973,35 @@ operator|&
 name|Record
 argument_list|)
 decl_stmt|;
-typedef|typedef
-name|std
-operator|::
-name|pair
-operator|<
-name|llvm
-operator|::
-name|BitstreamCursor
-operator|*
-operator|,
-name|uint64_t
-operator|>
+struct|struct
 name|RecordLocation
+block|{
+name|RecordLocation
+argument_list|(
+argument|PerFileData *M
+argument_list|,
+argument|uint64_t O
+argument_list|)
+block|:
+name|F
+argument_list|(
+name|M
+argument_list|)
+operator|,
+name|Offset
+argument_list|(
+argument|O
+argument_list|)
+block|{}
+name|PerFileData
+operator|*
+name|F
 expr_stmt|;
+name|uint64_t
+name|Offset
+decl_stmt|;
+block|}
+struct|;
 name|QualType
 name|ReadTypeRecord
 parameter_list|(
@@ -1799,6 +2117,12 @@ comment|///
 comment|/// \param DisableValidation If true, the AST reader will suppress most
 comment|/// of its regular consistency checking, allowing the use of precompiled
 comment|/// headers that cannot be determined to be compatible.
+comment|///
+comment|/// \param DisableStatCache If true, the AST reader will ignore the
+comment|/// stat cache in the AST files. This performance pessimization can
+comment|/// help when an AST file is being used in cases where the
+comment|/// underlying files in the file system may have changed, but
+comment|/// parsing should still continue.
 name|ASTReader
 argument_list|(
 argument|Preprocessor&PP
@@ -1809,6 +2133,8 @@ argument|const char *isysroot =
 literal|0
 argument_list|,
 argument|bool DisableValidation = false
+argument_list|,
+argument|bool DisableStatCache = false
 argument_list|)
 empty_stmt|;
 comment|/// \brief Load the AST file without using any pre-initialized Preprocessor.
@@ -1830,6 +2156,12 @@ comment|///
 comment|/// \param DisableValidation If true, the AST reader will suppress most
 comment|/// of its regular consistency checking, allowing the use of precompiled
 comment|/// headers that cannot be determined to be compatible.
+comment|///
+comment|/// \param DisableStatCache If true, the AST reader will ignore the
+comment|/// stat cache in the AST files. This performance pessimization can
+comment|/// help when an AST file is being used in cases where the
+comment|/// underlying files in the file system may have changed, but
+comment|/// parsing should still continue.
 name|ASTReader
 argument_list|(
 argument|SourceManager&SourceMgr
@@ -1842,6 +2174,8 @@ argument|const char *isysroot =
 literal|0
 argument_list|,
 argument|bool DisableValidation = false
+argument_list|,
+argument|bool DisableStatCache = false
 argument_list|)
 empty_stmt|;
 operator|~
@@ -1859,6 +2193,9 @@ operator|::
 name|string
 operator|&
 name|FileName
+argument_list|,
+name|ASTFileType
+name|Type
 argument_list|)
 decl_stmt|;
 comment|/// \brief Set the AST callbacks listener.
@@ -1952,6 +2289,10 @@ name|string
 operator|&
 name|ASTFileName
 argument_list|,
+name|FileManager
+operator|&
+name|FileMgr
+argument_list|,
 name|Diagnostic
 operator|&
 name|Diags
@@ -1972,11 +2313,40 @@ return|return
 name|SuggestedPredefines
 return|;
 block|}
-comment|/// \brief Read preprocessed entities into the
+comment|/// \brief Read preprocessed entities into the preprocessing record.
 name|virtual
 name|void
 name|ReadPreprocessedEntities
 parameter_list|()
+function_decl|;
+comment|/// \brief Read the preprocessed entity at the given offset.
+name|virtual
+name|PreprocessedEntity
+modifier|*
+name|ReadPreprocessedEntityAtOffset
+parameter_list|(
+name|uint64_t
+name|Offset
+parameter_list|)
+function_decl|;
+comment|/// \brief Read the header file information for the given file entry.
+name|virtual
+name|HeaderFileInfo
+name|GetHeaderFileInfo
+parameter_list|(
+specifier|const
+name|FileEntry
+modifier|*
+name|FE
+parameter_list|)
+function_decl|;
+name|void
+name|ReadPragmaDiagnosticMappings
+parameter_list|(
+name|Diagnostic
+modifier|&
+name|Diag
+parameter_list|)
 function_decl|;
 comment|/// \brief Returns the number of source locations found in the chain.
 name|unsigned
@@ -1986,6 +2356,16 @@ specifier|const
 block|{
 return|return
 name|TotalNumSLocEntries
+return|;
+block|}
+comment|/// \brief Returns the next SLocEntry offset after the chain.
+name|unsigned
+name|getNextSLocOffset
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NextSLocOffset
 return|;
 block|}
 comment|/// \brief Returns the number of identifiers found in the chain.
@@ -2064,21 +2444,44 @@ argument_list|()
 operator|)
 return|;
 block|}
+comment|/// \brief Returns the number of macro definitions found in the chain.
+name|unsigned
+name|getTotalNumMacroDefinitions
+argument_list|()
+specifier|const
+block|{
+return|return
+name|static_cast
+operator|<
+name|unsigned
+operator|>
+operator|(
+name|MacroDefinitionsLoaded
+operator|.
+name|size
+argument_list|()
+operator|)
+return|;
+block|}
+comment|/// \brief Returns the number of C++ base specifiers found in the chain.
+name|unsigned
+name|getTotalNumCXXBaseSpecifiers
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Reads a TemplateArgumentLocInfo appropriate for the
 comment|/// given TemplateArgument kind.
 name|TemplateArgumentLocInfo
 name|GetTemplateArgumentLocInfo
 argument_list|(
+name|PerFileData
+operator|&
+name|F
+argument_list|,
 name|TemplateArgument
 operator|::
 name|ArgKind
 name|Kind
-argument_list|,
-name|llvm
-operator|::
-name|BitstreamCursor
-operator|&
-name|DeclsCursor
 argument_list|,
 specifier|const
 name|RecordData
@@ -2093,44 +2496,40 @@ decl_stmt|;
 comment|/// \brief Reads a TemplateArgumentLoc.
 name|TemplateArgumentLoc
 name|ReadTemplateArgumentLoc
-argument_list|(
-name|llvm
-operator|::
-name|BitstreamCursor
-operator|&
-name|DeclsCursor
-argument_list|,
+parameter_list|(
+name|PerFileData
+modifier|&
+name|F
+parameter_list|,
 specifier|const
 name|RecordData
-operator|&
+modifier|&
 name|Record
-argument_list|,
+parameter_list|,
 name|unsigned
-operator|&
+modifier|&
 name|Idx
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// \brief Reads a declarator info from the given record.
 name|TypeSourceInfo
 modifier|*
 name|GetTypeSourceInfo
-argument_list|(
-name|llvm
-operator|::
-name|BitstreamCursor
-operator|&
-name|DeclsCursor
-argument_list|,
+parameter_list|(
+name|PerFileData
+modifier|&
+name|F
+parameter_list|,
 specifier|const
 name|RecordData
-operator|&
+modifier|&
 name|Record
-argument_list|,
+parameter_list|,
 name|unsigned
-operator|&
+modifier|&
 name|Idx
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// \brief Resolve and return the translation unit declaration.
 name|TranslationUnitDecl
 modifier|*
@@ -2191,6 +2590,26 @@ name|GetExternalDecl
 parameter_list|(
 name|uint32_t
 name|ID
+parameter_list|)
+function_decl|;
+comment|/// \brief Resolve a CXXBaseSpecifiers ID into an offset into the chain
+comment|/// of loaded AST files.
+name|uint64_t
+name|GetCXXBaseSpecifiersOffset
+argument_list|(
+name|serialization
+operator|::
+name|CXXBaseSpecifiersID
+name|ID
+argument_list|)
+decl_stmt|;
+name|virtual
+name|CXXBaseSpecifier
+modifier|*
+name|GetExternalCXXBaseSpecifiers
+parameter_list|(
+name|uint64_t
+name|Offset
 parameter_list|)
 function_decl|;
 comment|/// \brief Resolve the offset of a statement into a statement.
@@ -2268,6 +2687,17 @@ specifier|const
 name|DeclContext
 operator|*
 name|DC
+argument_list|,
+name|bool
+argument_list|(
+operator|*
+name|isKindWeWant
+argument_list|)
+argument_list|(
+name|Decl
+operator|::
+name|Kind
+argument_list|)
 argument_list|,
 name|llvm
 operator|::
@@ -2389,6 +2819,15 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+comment|/// \brief Retrieve an iterator into the set of all identifiers
+comment|/// in all loaded AST files.
+name|virtual
+name|IdentifierIterator
+operator|*
+name|getIdentifiers
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Load the contents of the global method pool for a given
 comment|/// selector.
 comment|///
@@ -2584,6 +3023,72 @@ modifier|&
 name|Idx
 parameter_list|)
 function_decl|;
+name|void
+name|ReadDeclarationNameLoc
+parameter_list|(
+name|PerFileData
+modifier|&
+name|F
+parameter_list|,
+name|DeclarationNameLoc
+modifier|&
+name|DNLoc
+parameter_list|,
+name|DeclarationName
+name|Name
+parameter_list|,
+specifier|const
+name|RecordData
+modifier|&
+name|Record
+parameter_list|,
+name|unsigned
+modifier|&
+name|Idx
+parameter_list|)
+function_decl|;
+name|void
+name|ReadDeclarationNameInfo
+parameter_list|(
+name|PerFileData
+modifier|&
+name|F
+parameter_list|,
+name|DeclarationNameInfo
+modifier|&
+name|NameInfo
+parameter_list|,
+specifier|const
+name|RecordData
+modifier|&
+name|Record
+parameter_list|,
+name|unsigned
+modifier|&
+name|Idx
+parameter_list|)
+function_decl|;
+name|void
+name|ReadQualifierInfo
+parameter_list|(
+name|PerFileData
+modifier|&
+name|F
+parameter_list|,
+name|QualifierInfo
+modifier|&
+name|Info
+parameter_list|,
+specifier|const
+name|RecordData
+modifier|&
+name|Record
+parameter_list|,
+name|unsigned
+modifier|&
+name|Idx
+parameter_list|)
+function_decl|;
 name|NestedNameSpecifier
 modifier|*
 name|ReadNestedNameSpecifier
@@ -2602,6 +3107,10 @@ comment|/// \brief Read a template name.
 name|TemplateName
 name|ReadTemplateName
 parameter_list|(
+name|PerFileData
+modifier|&
+name|F
+parameter_list|,
 specifier|const
 name|RecordData
 modifier|&
@@ -2615,28 +3124,30 @@ function_decl|;
 comment|/// \brief Read a template argument.
 name|TemplateArgument
 name|ReadTemplateArgument
-argument_list|(
-name|llvm
-operator|::
-name|BitstreamCursor
-operator|&
-name|DeclsCursor
-argument_list|,
+parameter_list|(
+name|PerFileData
+modifier|&
+name|F
+parameter_list|,
 specifier|const
 name|RecordData
-operator|&
+modifier|&
 name|Record
-argument_list|,
+parameter_list|,
 name|unsigned
-operator|&
+modifier|&
 name|Idx
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// \brief Read a template parameter list.
 name|TemplateParameterList
 modifier|*
 name|ReadTemplateParameterList
 parameter_list|(
+name|PerFileData
+modifier|&
+name|F
+parameter_list|,
 specifier|const
 name|RecordData
 modifier|&
@@ -2662,11 +3173,9 @@ operator|>
 operator|&
 name|TemplArgs
 argument_list|,
-name|llvm
-operator|::
-name|BitstreamCursor
+name|PerFileData
 operator|&
-name|DeclsCursor
+name|F
 argument_list|,
 specifier|const
 name|RecordData
@@ -2699,41 +3208,37 @@ function_decl|;
 comment|/// \brief Read a C++ base specifier.
 name|CXXBaseSpecifier
 name|ReadCXXBaseSpecifier
-argument_list|(
-name|llvm
-operator|::
-name|BitstreamCursor
-operator|&
-name|DeclsCursor
-argument_list|,
+parameter_list|(
+name|PerFileData
+modifier|&
+name|F
+parameter_list|,
 specifier|const
 name|RecordData
-operator|&
+modifier|&
 name|Record
-argument_list|,
+parameter_list|,
 name|unsigned
-operator|&
+modifier|&
 name|Idx
-argument_list|)
-decl_stmt|;
-comment|/// \brief Read a CXXBaseOrMemberInitializer array.
+parameter_list|)
+function_decl|;
+comment|/// \brief Read a CXXCtorInitializer array.
 name|std
 operator|::
 name|pair
 operator|<
-name|CXXBaseOrMemberInitializer
+name|CXXCtorInitializer
 operator|*
 operator|*
 operator|,
 name|unsigned
 operator|>
-name|ReadCXXBaseOrMemberInitializers
+name|ReadCXXCtorInitializers
 argument_list|(
-name|llvm
-operator|::
-name|BitstreamCursor
+name|PerFileData
 operator|&
-name|DeclsCursor
+name|F
 argument_list|,
 specifier|const
 name|RecordData
@@ -2745,10 +3250,41 @@ operator|&
 name|Idx
 argument_list|)
 expr_stmt|;
+comment|/// \brief Read a source location from raw form.
+name|SourceLocation
+name|ReadSourceLocation
+parameter_list|(
+name|PerFileData
+modifier|&
+name|Module
+parameter_list|,
+name|unsigned
+name|Raw
+parameter_list|)
+block|{
+operator|(
+name|void
+operator|)
+name|Module
+expr_stmt|;
+comment|// No remapping yet
+return|return
+name|SourceLocation
+operator|::
+name|getFromRawEncoding
+argument_list|(
+name|Raw
+argument_list|)
+return|;
+block|}
 comment|/// \brief Read a source location.
 name|SourceLocation
 name|ReadSourceLocation
 parameter_list|(
+name|PerFileData
+modifier|&
+name|Module
+parameter_list|,
 specifier|const
 name|RecordData
 modifier|&
@@ -2760,10 +3296,10 @@ name|Idx
 parameter_list|)
 block|{
 return|return
-name|SourceLocation
-operator|::
-name|getFromRawEncoding
+name|ReadSourceLocation
 argument_list|(
+name|Module
+argument_list|,
 name|Record
 index|[
 name|Idx
@@ -2776,6 +3312,10 @@ comment|/// \brief Read a source range.
 name|SourceRange
 name|ReadSourceRange
 parameter_list|(
+name|PerFileData
+modifier|&
+name|F
+parameter_list|,
 specifier|const
 name|RecordData
 modifier|&
@@ -2867,42 +3407,45 @@ function_decl|;
 comment|/// \brief Reads attributes from the current stream position.
 name|void
 name|ReadAttributes
-argument_list|(
-name|llvm
-operator|::
-name|BitstreamCursor
-operator|&
-name|DeclsCursor
-argument_list|,
+parameter_list|(
+name|PerFileData
+modifier|&
+name|F
+parameter_list|,
 name|AttrVec
-operator|&
+modifier|&
 name|Attrs
-argument_list|)
-decl_stmt|;
+parameter_list|,
+specifier|const
+name|RecordData
+modifier|&
+name|Record
+parameter_list|,
+name|unsigned
+modifier|&
+name|Idx
+parameter_list|)
+function_decl|;
 comment|/// \brief Reads a statement.
 name|Stmt
 modifier|*
 name|ReadStmt
-argument_list|(
-name|llvm
-operator|::
-name|BitstreamCursor
-operator|&
-name|Cursor
-argument_list|)
-decl_stmt|;
+parameter_list|(
+name|PerFileData
+modifier|&
+name|F
+parameter_list|)
+function_decl|;
 comment|/// \brief Reads an expression.
 name|Expr
 modifier|*
 name|ReadExpr
-argument_list|(
-name|llvm
-operator|::
-name|BitstreamCursor
-operator|&
-name|Cursor
-argument_list|)
-decl_stmt|;
+parameter_list|(
+name|PerFileData
+modifier|&
+name|F
+parameter_list|)
+function_decl|;
 comment|/// \brief Reads a sub-statement operand during statement reading.
 name|Stmt
 modifier|*
@@ -2945,25 +3488,81 @@ name|ReadSubExpr
 parameter_list|()
 function_decl|;
 comment|/// \brief Reads the macro record located at the given offset.
-name|void
+name|PreprocessedEntity
+modifier|*
 name|ReadMacroRecord
-argument_list|(
-name|llvm
-operator|::
-name|BitstreamCursor
-operator|&
-name|Stream
-argument_list|,
+parameter_list|(
+name|PerFileData
+modifier|&
+name|F
+parameter_list|,
 name|uint64_t
 name|Offset
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
+comment|/// \brief Reads the preprocessed entity located at the current stream
+comment|/// position.
+name|PreprocessedEntity
+modifier|*
+name|LoadPreprocessedEntity
+parameter_list|(
+name|PerFileData
+modifier|&
+name|F
+parameter_list|)
+function_decl|;
+comment|/// \brief Note that the identifier is a macro whose record will be loaded
+comment|/// from the given AST file at the given (file-local) offset.
+name|void
+name|SetIdentifierIsMacro
+parameter_list|(
+name|IdentifierInfo
+modifier|*
+name|II
+parameter_list|,
+name|PerFileData
+modifier|&
+name|F
+parameter_list|,
+name|uint64_t
+name|Offset
+parameter_list|)
+function_decl|;
 comment|/// \brief Read the set of macros defined by this external macro source.
 name|virtual
 name|void
 name|ReadDefinedMacros
 parameter_list|()
 function_decl|;
+comment|/// \brief Read the macro definition for this identifier.
+name|virtual
+name|void
+name|LoadMacroDefinition
+parameter_list|(
+name|IdentifierInfo
+modifier|*
+name|II
+parameter_list|)
+function_decl|;
+comment|/// \brief Read the macro definition corresponding to this iterator
+comment|/// into the unread macro record offsets table.
+name|void
+name|LoadMacroDefinition
+argument_list|(
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|IdentifierInfo
+operator|*
+argument_list|,
+name|uint64_t
+operator|>
+operator|::
+name|iterator
+name|Pos
+argument_list|)
+decl_stmt|;
 comment|/// \brief Retrieve the macro definition with the given ID.
 name|MacroDefinition
 modifier|*
@@ -2971,7 +3570,7 @@ name|getMacroDefinition
 argument_list|(
 name|serialization
 operator|::
-name|IdentID
+name|MacroID
 name|ID
 argument_list|)
 decl_stmt|;
@@ -3039,54 +3638,9 @@ name|unsigned
 name|ID
 parameter_list|)
 function_decl|;
-comment|/// \brief Record that the given label statement has been
-comment|/// deserialized and has the given ID.
 name|void
-name|RecordLabelStmt
-parameter_list|(
-name|LabelStmt
-modifier|*
-name|S
-parameter_list|,
-name|unsigned
-name|ID
-parameter_list|)
-function_decl|;
-comment|/// \brief Set the label of the given statement to the label
-comment|/// identified by ID.
-comment|///
-comment|/// Depending on the order in which the label and other statements
-comment|/// referencing that label occur, this operation may complete
-comment|/// immediately (updating the statement) or it may queue the
-comment|/// statement to be back-patched later.
-name|void
-name|SetLabelOf
-parameter_list|(
-name|GotoStmt
-modifier|*
-name|S
-parameter_list|,
-name|unsigned
-name|ID
-parameter_list|)
-function_decl|;
-comment|/// \brief Set the label of the given expression to the label
-comment|/// identified by ID.
-comment|///
-comment|/// Depending on the order in which the label and other statements
-comment|/// referencing that label occur, this operation may complete
-comment|/// immediately (updating the statement) or it may queue the
-comment|/// statement to be back-patched later.
-name|void
-name|SetLabelOf
-parameter_list|(
-name|AddrLabelExpr
-modifier|*
-name|S
-parameter_list|,
-name|unsigned
-name|ID
-parameter_list|)
+name|ClearSwitchCaseIDs
+parameter_list|()
 function_decl|;
 block|}
 empty_stmt|;

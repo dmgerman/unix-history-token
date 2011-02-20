@@ -306,7 +306,6 @@ name|RParenLoc
 operator|=
 name|Loc
 block|; }
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -355,21 +354,33 @@ name|true
 return|;
 block|}
 comment|// Iterators
-name|virtual
-name|child_iterator
-name|child_begin
+name|child_range
+name|children
 argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+operator|&
+name|SubExprs
+index|[
+literal|0
+index|]
+argument_list|,
+operator|&
+name|SubExprs
+index|[
+name|END_EXPR
+index|]
+argument_list|)
+return|;
+block|}
+expr|}
 block|;
-name|virtual
-name|child_iterator
-name|child_end
-argument_list|()
-block|; }
-decl_stmt|;
 comment|/// ObjCAtCatchStmt - This represents objective-c's @catch statement.
 name|class
 name|ObjCAtCatchStmt
-range|:
+operator|:
 name|public
 name|Stmt
 block|{
@@ -537,7 +548,6 @@ name|RParenLoc
 operator|=
 name|Loc
 block|; }
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -594,21 +604,29 @@ return|return
 name|true
 return|;
 block|}
-name|virtual
-name|child_iterator
-name|child_begin
+name|child_range
+name|children
 argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+operator|&
+name|Body
+argument_list|,
+operator|&
+name|Body
+operator|+
+literal|1
+argument_list|)
+return|;
+block|}
+expr|}
 block|;
-name|virtual
-name|child_iterator
-name|child_end
-argument_list|()
-block|; }
-decl_stmt|;
 comment|/// ObjCAtFinallyStmt - This represent objective-c's @finally Statement
 name|class
 name|ObjCAtFinallyStmt
-range|:
+operator|:
 name|public
 name|Stmt
 block|{
@@ -686,7 +704,6 @@ name|AtFinallyStmt
 operator|=
 name|S
 block|; }
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -750,22 +767,30 @@ return|return
 name|true
 return|;
 block|}
-name|virtual
-name|child_iterator
-name|child_begin
+name|child_range
+name|children
 argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+operator|&
+name|AtFinallyStmt
+argument_list|,
+operator|&
+name|AtFinallyStmt
+operator|+
+literal|1
+argument_list|)
+return|;
+block|}
+expr|}
 block|;
-name|virtual
-name|child_iterator
-name|child_end
-argument_list|()
-block|; }
-decl_stmt|;
 comment|/// ObjCAtTryStmt - This represent objective-c's over-all
 comment|/// @try ... @catch ... @finally statement.
 name|class
 name|ObjCAtTryStmt
-range|:
+operator|:
 name|public
 name|Stmt
 block|{
@@ -1112,9 +1137,9 @@ operator|)
 return|;
 block|}
 name|ObjCAtFinallyStmt
-modifier|*
+operator|*
 name|getFinallyStmt
-parameter_list|()
+argument_list|()
 block|{
 if|if
 condition|(
@@ -1142,11 +1167,9 @@ return|;
 block|}
 name|void
 name|setFinallyStmt
-parameter_list|(
-name|Stmt
-modifier|*
-name|S
-parameter_list|)
+argument_list|(
+argument|Stmt *S
+argument_list|)
 block|{
 name|assert
 argument_list|(
@@ -1154,7 +1177,7 @@ name|HasFinally
 operator|&&
 literal|"@try does not have a @finally slot!"
 argument_list|)
-expr_stmt|;
+block|;
 name|getStmts
 argument_list|()
 index|[
@@ -1164,23 +1187,18 @@ name|NumCatchStmts
 index|]
 operator|=
 name|S
-expr_stmt|;
-block|}
-name|virtual
+block|;    }
 name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 specifier|static
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|Stmt
-modifier|*
-name|T
-parameter_list|)
+argument_list|(
+argument|const Stmt *T
+argument_list|)
 block|{
 return|return
 name|T
@@ -1194,57 +1212,45 @@ block|}
 specifier|static
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|ObjCAtTryStmt
-modifier|*
-parameter_list|)
+argument_list|(
+argument|const ObjCAtTryStmt *
+argument_list|)
 block|{
 return|return
 name|true
 return|;
 block|}
-name|virtual
-name|child_iterator
-name|child_begin
-parameter_list|()
-function_decl|;
-name|virtual
-name|child_iterator
-name|child_end
-parameter_list|()
-function_decl|;
+name|child_range
+name|children
+argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+name|getStmts
+argument_list|()
+argument_list|,
+name|getStmts
+argument_list|()
+operator|+
+literal|1
+operator|+
+name|NumCatchStmts
+operator|+
+name|HasFinally
+argument_list|)
+return|;
 block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
+expr|}
+block|;
 comment|/// ObjCAtSynchronizedStmt - This is for objective-c's @synchronized statement.
-end_comment
-
-begin_comment
 comment|/// Example: @synchronized (sem) {
-end_comment
-
-begin_comment
 comment|///             do-something;
-end_comment
-
-begin_comment
 comment|///          }
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_decl_stmt
 name|class
 name|ObjCAtSynchronizedStmt
-range|:
+operator|:
 name|public
 name|Stmt
 block|{
@@ -1441,7 +1447,6 @@ index|]
 operator|=
 name|S
 block|; }
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -1487,27 +1492,35 @@ return|return
 name|true
 return|;
 block|}
-name|virtual
-name|child_iterator
-name|child_begin
+name|child_range
+name|children
 argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+operator|&
+name|SubStmts
+index|[
+literal|0
+index|]
+argument_list|,
+operator|&
+name|SubStmts
+index|[
+literal|0
+index|]
+operator|+
+name|END_EXPR
+argument_list|)
+return|;
+block|}
+expr|}
 block|;
-name|virtual
-name|child_iterator
-name|child_end
-argument_list|()
-block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// ObjCAtThrowStmt - This represents objective-c's @throw statement.
-end_comment
-
-begin_decl_stmt
 name|class
 name|ObjCAtThrowStmt
-range|:
+operator|:
 name|public
 name|Stmt
 block|{
@@ -1616,7 +1629,6 @@ name|AtThrowLoc
 operator|=
 name|Loc
 block|; }
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -1672,21 +1684,28 @@ return|return
 name|true
 return|;
 block|}
-name|virtual
-name|child_iterator
-name|child_begin
+name|child_range
+name|children
 argument_list|()
-block|;
-name|virtual
-name|child_iterator
-name|child_end
-argument_list|()
-block|; }
-decl_stmt|;
+block|{
+return|return
+name|child_range
+argument_list|(
+operator|&
+name|Throw
+argument_list|,
+operator|&
+name|Throw
+operator|+
+literal|1
+argument_list|)
+return|;
+block|}
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_comment
-unit|}
 comment|// end namespace clang
 end_comment
 

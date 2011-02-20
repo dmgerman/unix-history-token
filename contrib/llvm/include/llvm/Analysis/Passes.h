@@ -138,7 +138,7 @@ parameter_list|()
 function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|//
-comment|// createBasicAliasAnalysisPass - This pass implements the default alias
+comment|// createBasicAliasAnalysisPass - This pass implements the stateless alias
 comment|// analysis.
 comment|//
 name|ImmutablePass
@@ -231,6 +231,41 @@ parameter_list|()
 function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|//
+comment|// createPathProfileLoaderPass - This pass loads information from a path
+comment|// profile dump file.
+comment|//
+name|ModulePass
+modifier|*
+name|createPathProfileLoaderPass
+parameter_list|()
+function_decl|;
+specifier|extern
+name|char
+modifier|&
+name|PathProfileLoaderPassID
+decl_stmt|;
+comment|//===--------------------------------------------------------------------===//
+comment|//
+comment|// createNoPathProfileInfoPass - This pass implements the default
+comment|// "no path profile".
+comment|//
+name|ImmutablePass
+modifier|*
+name|createNoPathProfileInfoPass
+parameter_list|()
+function_decl|;
+comment|//===--------------------------------------------------------------------===//
+comment|//
+comment|// createPathProfileVerifierPass - This pass verifies path profiling
+comment|// information.
+comment|//
+name|ModulePass
+modifier|*
+name|createPathProfileVerifierPass
+parameter_list|()
+function_decl|;
+comment|//===--------------------------------------------------------------------===//
+comment|//
 comment|// createDSAAPass - This pass implements simple context sensitive alias
 comment|// analysis.
 comment|//
@@ -314,6 +349,16 @@ comment|// Print module-level debug info metadata in human-readable form.
 name|ModulePass
 modifier|*
 name|createModuleDebugInfoPrinterPass
+parameter_list|()
+function_decl|;
+comment|//===--------------------------------------------------------------------===//
+comment|//
+comment|// createMemDepPrinter - This pass exhaustively collects all memdep
+comment|// information and prints it with -analyze.
+comment|//
+name|FunctionPass
+modifier|*
+name|createMemDepPrinter
 parameter_list|()
 function_decl|;
 block|}

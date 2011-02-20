@@ -219,6 +219,25 @@ comment|/// efficiently cannibalized for its resources.
 name|VK_XValue
 block|}
 enum|;
+comment|/// A further classification of the kind of object referenced by an
+comment|/// l-value or x-value.
+enum|enum
+name|ExprObjectKind
+block|{
+comment|/// An ordinary object is located at an address in memory.
+name|OK_Ordinary
+block|,
+comment|/// A bitfield object is a bitfield on a C or C++ record.
+name|OK_BitField
+block|,
+comment|/// A vector component is an element or range of elements on a vector.
+name|OK_VectorComponent
+block|,
+comment|/// An Objective C property is a logical field of an Objective-C
+comment|/// object which is read and written via Objective C method calls.
+name|OK_ObjCProperty
+block|}
+enum|;
 comment|// \brief Describes the kind of template specialization that a
 comment|// particular template specialization declaration represents.
 enum|enum

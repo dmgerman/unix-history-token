@@ -260,7 +260,7 @@ operator|>
 expr|>
 name|VisitStack
 expr_stmt|;
-comment|// MinVistNumStack - Stack holding the "min" values for each node in the DFS.
+comment|// MinVisitNumStack - Stack holding the "min" values for each node in the DFS.
 comment|// This is used to track the minimum uplink values for all children of
 comment|// the corresponding node on the VisitStack.
 name|std

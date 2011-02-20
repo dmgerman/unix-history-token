@@ -129,13 +129,6 @@ argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
-name|bool
-name|hasFP
-argument_list|(
-argument|const MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
 name|void
 name|eliminateCallFramePseudoInstr
 argument_list|(
@@ -162,22 +155,6 @@ name|void
 name|processFunctionBeforeFrameFinalized
 argument_list|(
 argument|MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
-name|void
-name|emitPrologue
-argument_list|(
-argument|MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
-name|void
-name|emitEpilogue
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|MachineBasicBlock&MBB
 argument_list|)
 specifier|const
 block|;

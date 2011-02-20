@@ -40,7 +40,7 @@ comment|// This header provides a C API to use the LLVM link time optimization
 end_comment
 
 begin_comment
-comment|// library. This is inteded to be used by linkers which are C-only in
+comment|// library. This is intended to be used by linkers which are C-only in
 end_comment
 
 begin_comment

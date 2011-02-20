@@ -197,6 +197,12 @@ name|IsAllowRedefinitionsWithoutWarning
 range|:
 literal|1
 decl_stmt|;
+comment|/// \brief Must warn if the macro is unused at the end of translation unit.
+name|bool
+name|IsWarnIfUnused
+range|:
+literal|1
+decl_stmt|;
 operator|~
 name|MacroInfo
 argument_list|()
@@ -356,6 +362,19 @@ block|{
 name|IsAllowRedefinitionsWithoutWarning
 operator|=
 name|Val
+expr_stmt|;
+block|}
+comment|/// \brief Set the value of the IsWarnIfUnused flag.
+name|void
+name|setIsWarnIfUnused
+parameter_list|(
+name|bool
+name|val
+parameter_list|)
+block|{
+name|IsWarnIfUnused
+operator|=
+name|val
 expr_stmt|;
 block|}
 comment|/// setArgumentList - Set the specified list of identifiers as the argument
@@ -673,6 +692,16 @@ specifier|const
 block|{
 return|return
 name|IsAllowRedefinitionsWithoutWarning
+return|;
+block|}
+comment|/// \brief Return true if we should emit a warning if the macro is unused.
+name|bool
+name|isWarnIfUnused
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsWarnIfUnused
 return|;
 block|}
 comment|/// getNumTokens - Return the number of tokens that this macro expands to.

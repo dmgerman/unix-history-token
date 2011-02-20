@@ -495,6 +495,80 @@ block|}
 end_decl_stmt
 
 begin_comment
+comment|/// \brief If the union is set to the first pointer type we can get an
+end_comment
+
+begin_comment
+comment|/// address pointing to it.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|PT1
+specifier|const
+operator|*
+name|getAddrOf
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|is
+operator|<
+name|PT1
+operator|>
+operator|(
+operator|)
+operator|&&
+literal|"Val is not the first pointer"
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|get
+operator|<
+name|PT1
+operator|>
+operator|(
+operator|)
+operator|==
+name|Val
+operator|.
+name|getPointer
+argument_list|()
+operator|&&
+literal|"Can't get the address because PointerLikeTypeTraits changes the ptr"
+argument_list|)
+block|;
+name|T
+specifier|const
+operator|*
+name|can_only_get_address_of_first_pointer_type
+operator|=
+name|reinterpret_cast
+operator|<
+name|PT1
+specifier|const
+operator|*
+operator|>
+operator|(
+name|Val
+operator|.
+name|getAddrOfPointer
+argument_list|()
+operator|)
+block|;
+return|return
+name|can_only_get_address_of_first_pointer_type
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Assignment operators - Allow assigning into this union from either
 end_comment
 

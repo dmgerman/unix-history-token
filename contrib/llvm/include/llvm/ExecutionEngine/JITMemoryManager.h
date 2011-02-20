@@ -31,22 +31,6 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// This file defines the JITMemoryManagerInterface
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|//===----------------------------------------------------------------------===//
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -62,7 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/System/DataTypes.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_include
@@ -136,7 +120,7 @@ literal|0
 function_decl|;
 comment|/// setPoisonMemory - Setting this flag to true makes the memory manager
 comment|/// garbage values over freed memory.  This is useful for testing and
-comment|/// debugging, and is be turned on by default in debug mode.
+comment|/// debugging, and may be turned on by default in debug mode.
 name|virtual
 name|void
 name|setPoisonMemory
@@ -161,7 +145,6 @@ init|=
 literal|0
 function_decl|;
 comment|/// isManagingGOT - Return true if the AllocateGOT method is called.
-comment|///
 name|bool
 name|isManagingGOT
 argument_list|()
@@ -281,7 +264,6 @@ init|=
 literal|0
 function_decl|;
 comment|/// allocateGlobal - Allocate memory for a global.
-comment|///
 name|virtual
 name|uint8_t
 modifier|*

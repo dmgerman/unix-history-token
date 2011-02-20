@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Driver/Util.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Driver/Types.h"
 end_include
 
@@ -64,7 +70,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/System/Path.h"
+file|"llvm/Support/Path.h"
 end_include
 
 begin_include
@@ -123,6 +129,14 @@ literal|4
 operator|>
 name|path_list
 expr_stmt|;
+enum|enum
+name|CXXStdlibType
+block|{
+name|CST_Libcxx
+block|,
+name|CST_Libstdcxx
+block|}
+enum|;
 name|private
 label|:
 specifier|const
@@ -372,6 +386,14 @@ argument_list|)
 specifier|const
 expr_stmt|;
 comment|// Platform defaults information
+comment|/// HasNativeLTOLinker - Check whether the linker and related tools have
+comment|/// native LLVM support.
+name|virtual
+name|bool
+name|HasNativeLLVMSupport
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// LookupTypeForExtension - Return the default language type to use for the
 comment|/// given extension.
 name|virtual
@@ -400,6 +422,30 @@ comment|/// by default.
 name|virtual
 name|bool
 name|IsIntegratedAssemblerDefault
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// IsStrictAliasingDefault - Does this tool chain use -fstrict-aliasing by
+comment|/// default.
+name|virtual
+name|bool
+name|IsStrictAliasingDefault
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+comment|/// IsObjCDefaultSynthPropertiesDefault - Does this tool chain enable
+comment|/// -fobjc-default-synthesize-properties by default.
+name|virtual
+name|bool
+name|IsObjCDefaultSynthPropertiesDefault
 argument_list|()
 specifier|const
 block|{
@@ -552,6 +598,70 @@ argument|const ArgList&Args
 argument_list|)
 specifier|const
 expr_stmt|;
+comment|// GetCXXStdlibType - Determine the C++ standard library type to use with the
+comment|// given compilation arguments.
+name|virtual
+name|CXXStdlibType
+name|GetCXXStdlibType
+argument_list|(
+specifier|const
+name|ArgList
+operator|&
+name|Args
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// AddClangCXXStdlibIncludeArgs - Add the clang -cc1 level arguments to set
+comment|/// the include paths to use for the given C++ standard library type.
+name|virtual
+name|void
+name|AddClangCXXStdlibIncludeArgs
+argument_list|(
+specifier|const
+name|ArgList
+operator|&
+name|Args
+argument_list|,
+name|ArgStringList
+operator|&
+name|CmdArgs
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// AddCXXStdlibLibArgs - Add the system specific linker arguments to use
+comment|/// for the given C++ standard library type.
+name|virtual
+name|void
+name|AddCXXStdlibLibArgs
+argument_list|(
+specifier|const
+name|ArgList
+operator|&
+name|Args
+argument_list|,
+name|ArgStringList
+operator|&
+name|CmdArgs
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// AddCCKextLibArgs - Add the system specific linker arguments to use
+comment|/// for kernel extensions (Darwin-specific).
+name|virtual
+name|void
+name|AddCCKextLibArgs
+argument_list|(
+specifier|const
+name|ArgList
+operator|&
+name|Args
+argument_list|,
+name|ArgStringList
+operator|&
+name|CmdArgs
+argument_list|)
+decl|const
+decl_stmt|;
 block|}
 empty_stmt|;
 block|}

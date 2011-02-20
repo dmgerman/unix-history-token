@@ -84,13 +84,16 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|AliasAnalysis
+decl_stmt|;
+name|class
 name|Instruction
 decl_stmt|;
 name|class
 name|Pass
 decl_stmt|;
 name|class
-name|AliasAnalysis
+name|ReturnInst
 decl_stmt|;
 comment|/// DeleteDeadBlock - Delete the specified block, which must have no
 comment|/// predecessors.
@@ -112,6 +115,12 @@ parameter_list|(
 name|BasicBlock
 modifier|*
 name|BB
+parameter_list|,
+name|Pass
+modifier|*
+name|P
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 comment|/// DeleteDeadPHIs - Examine each PHI in the given block and delete it if it
@@ -237,24 +246,6 @@ operator|&
 name|Result
 argument_list|)
 decl_stmt|;
-comment|// RemoveSuccessor - Change the specified terminator instruction such that its
-comment|// successor #SuccNum no longer exists.  Because this reduces the outgoing
-comment|// degree of the current basic block, the actual terminator instruction itself
-comment|// may have to be changed.  In the case where the last successor of the block is
-comment|// deleted, a return instruction is inserted in its place which can cause a
-comment|// suprising change in program behavior if it is not expected.
-comment|//
-name|void
-name|RemoveSuccessor
-parameter_list|(
-name|TerminatorInst
-modifier|*
-name|TI
-parameter_list|,
-name|unsigned
-name|SuccNum
-parameter_list|)
-function_decl|;
 comment|/// GetSuccessorNumber - Search for the specified successor of basic block BB
 comment|/// and return its position in the terminator instruction's list of
 comment|/// successors.  It is an error to call this with a block that is not a
@@ -626,6 +617,28 @@ modifier|*
 name|P
 init|=
 literal|0
+parameter_list|)
+function_decl|;
+comment|/// FoldReturnIntoUncondBranch - This method duplicates the specified return
+comment|/// instruction into a predecessor which ends in an unconditional branch. If
+comment|/// the return instruction returns a value defined by a PHI, propagate the
+comment|/// right value into the return. It returns the new return instruction in the
+comment|/// predecessor.
+name|ReturnInst
+modifier|*
+name|FoldReturnIntoUncondBranch
+parameter_list|(
+name|ReturnInst
+modifier|*
+name|RI
+parameter_list|,
+name|BasicBlock
+modifier|*
+name|BB
+parameter_list|,
+name|BasicBlock
+modifier|*
+name|Pred
 parameter_list|)
 function_decl|;
 block|}

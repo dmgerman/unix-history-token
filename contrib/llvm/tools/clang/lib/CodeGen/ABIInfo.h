@@ -153,7 +153,10 @@ name|unsigned
 name|UIntData
 decl_stmt|;
 name|bool
-name|BoolData
+name|BoolData0
+decl_stmt|;
+name|bool
+name|BoolData1
 decl_stmt|;
 name|ABIArgInfo
 argument_list|(
@@ -165,7 +168,9 @@ argument_list|,
 argument|unsigned UI=
 literal|0
 argument_list|,
-argument|bool B = false
+argument|bool B0 = false
+argument_list|,
+argument|bool B1 = false
 argument_list|)
 block|:
 name|TheKind
@@ -183,9 +188,14 @@ argument_list|(
 name|UI
 argument_list|)
 operator|,
-name|BoolData
+name|BoolData0
 argument_list|(
-argument|B
+name|B0
+argument_list|)
+operator|,
+name|BoolData1
+argument_list|(
+argument|B1
 argument_list|)
 block|{}
 name|public
@@ -278,6 +288,11 @@ name|bool
 name|ByVal
 init|=
 name|true
+parameter_list|,
+name|bool
+name|Realign
+init|=
+name|false
 parameter_list|)
 block|{
 return|return
@@ -290,6 +305,8 @@ argument_list|,
 name|Alignment
 argument_list|,
 name|ByVal
+argument_list|,
+name|Realign
 argument_list|)
 return|;
 block|}
@@ -486,7 +503,25 @@ literal|"Invalid kind!"
 argument_list|)
 block|;
 return|return
-name|BoolData
+name|BoolData0
+return|;
+block|}
+name|bool
+name|getIndirectRealign
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|TheKind
+operator|==
+name|Indirect
+operator|&&
+literal|"Invalid kind!"
+argument_list|)
+block|;
+return|return
+name|BoolData1
 return|;
 block|}
 name|void

@@ -169,6 +169,56 @@ name|CharacteristicKind
 name|FileType
 argument_list|)
 block|{   }
+comment|/// \brief This callback is invoked whenever an inclusion directive of
+comment|/// any kind (\c #include, \c #import, etc.) has been processed, regardless
+comment|/// of whether the inclusion will actually result in an inclusion.
+comment|///
+comment|/// \param HashLoc The location of the '#' that starts the inclusion
+comment|/// directive.
+comment|///
+comment|/// \param IncludeTok The token that indicates the kind of inclusion
+comment|/// directive, e.g., 'include' or 'import'.
+comment|///
+comment|/// \param FileName The name of the file being included, as written in the
+comment|/// source code.
+comment|///
+comment|/// \param IsAngled Whether the file name was enclosed in angle brackets;
+comment|/// otherwise, it was enclosed in quotes.
+comment|///
+comment|/// \param File The actual file that may be included by this inclusion
+comment|/// directive.
+comment|///
+comment|/// \param EndLoc The location of the last token within the inclusion
+comment|/// directive.
+name|virtual
+name|void
+name|InclusionDirective
+argument_list|(
+name|SourceLocation
+name|HashLoc
+argument_list|,
+specifier|const
+name|Token
+operator|&
+name|IncludeTok
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
+name|FileName
+argument_list|,
+name|bool
+name|IsAngled
+argument_list|,
+specifier|const
+name|FileEntry
+operator|*
+name|File
+argument_list|,
+name|SourceLocation
+name|EndLoc
+argument_list|)
+block|{   }
 comment|/// EndOfMainFile - This callback is invoked when the end of the main file is
 comment|/// reach, no subsequent callbacks will be made.
 name|virtual
@@ -177,6 +227,8 @@ name|EndOfMainFile
 parameter_list|()
 block|{   }
 comment|/// Ident - This callback is invoked when a #ident or #sccs directive is read.
+comment|/// \param Loc The location of the directive.
+comment|/// \param str The text of the directive.
 comment|///
 name|virtual
 name|void
@@ -218,6 +270,8 @@ argument_list|)
 block|{   }
 comment|/// PragmaMessage - This callback is invoked when a #pragma message directive
 comment|/// is read.
+comment|/// \param Loc The location of the message directive.
+comment|/// \param str The text of the message directive.
 comment|///
 name|virtual
 name|void
@@ -242,7 +296,7 @@ parameter_list|(
 specifier|const
 name|Token
 modifier|&
-name|Id
+name|MacroNameTok
 parameter_list|,
 specifier|const
 name|MacroInfo
@@ -256,9 +310,9 @@ name|void
 name|MacroDefined
 parameter_list|(
 specifier|const
-name|IdentifierInfo
-modifier|*
-name|II
+name|Token
+modifier|&
+name|MacroNameTok
 parameter_list|,
 specifier|const
 name|MacroInfo
@@ -272,19 +326,76 @@ name|virtual
 name|void
 name|MacroUndefined
 parameter_list|(
-name|SourceLocation
-name|Loc
-parameter_list|,
 specifier|const
-name|IdentifierInfo
-modifier|*
-name|II
+name|Token
+modifier|&
+name|MacroNameTok
 parameter_list|,
 specifier|const
 name|MacroInfo
 modifier|*
 name|MI
 parameter_list|)
+block|{   }
+comment|/// If -- This hook is called whenever an #if is seen.
+comment|/// \param Range The SourceRange of the expression being tested.
+comment|// FIXME: better to pass in a list (or tree!) of Tokens.
+name|virtual
+name|void
+name|If
+parameter_list|(
+name|SourceRange
+name|Range
+parameter_list|)
+block|{   }
+comment|/// Elif -- This hook is called whenever an #elif is seen.
+comment|/// \param Range The SourceRange of the expression being tested.
+comment|// FIXME: better to pass in a list (or tree!) of Tokens.
+name|virtual
+name|void
+name|Elif
+parameter_list|(
+name|SourceRange
+name|Range
+parameter_list|)
+block|{   }
+comment|/// Ifdef -- This hook is called whenever an #ifdef is seen.
+comment|/// \param Loc The location of the token being tested.
+comment|/// \param II Information on the token being tested.
+name|virtual
+name|void
+name|Ifdef
+parameter_list|(
+specifier|const
+name|Token
+modifier|&
+name|MacroNameTok
+parameter_list|)
+block|{   }
+comment|/// Ifndef -- This hook is called whenever an #ifndef is seen.
+comment|/// \param Loc The location of the token being tested.
+comment|/// \param II Information on the token being tested.
+name|virtual
+name|void
+name|Ifndef
+parameter_list|(
+specifier|const
+name|Token
+modifier|&
+name|MacroNameTok
+parameter_list|)
+block|{   }
+comment|/// Else -- This hook is called whenever an #else is seen.
+name|virtual
+name|void
+name|Else
+parameter_list|()
+block|{   }
+comment|/// Endif -- This hook is called whenever an #endif is seen.
+name|virtual
+name|void
+name|Endif
+parameter_list|()
 block|{   }
 block|}
 empty_stmt|;
@@ -403,6 +514,57 @@ argument_list|)
 block|;   }
 name|virtual
 name|void
+name|InclusionDirective
+argument_list|(
+argument|SourceLocation HashLoc
+argument_list|,
+argument|const Token&IncludeTok
+argument_list|,
+argument|llvm::StringRef FileName
+argument_list|,
+argument|bool IsAngled
+argument_list|,
+argument|const FileEntry *File
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|)
+block|{
+name|First
+operator|->
+name|InclusionDirective
+argument_list|(
+name|HashLoc
+argument_list|,
+name|IncludeTok
+argument_list|,
+name|FileName
+argument_list|,
+name|IsAngled
+argument_list|,
+name|File
+argument_list|,
+name|EndLoc
+argument_list|)
+block|;
+name|Second
+operator|->
+name|InclusionDirective
+argument_list|(
+name|HashLoc
+argument_list|,
+name|IncludeTok
+argument_list|,
+name|FileName
+argument_list|,
+name|IsAngled
+argument_list|,
+name|File
+argument_list|,
+name|EndLoc
+argument_list|)
+block|;   }
+name|virtual
+name|void
 name|EndOfMainFile
 argument_list|()
 block|{
@@ -507,7 +669,7 @@ name|virtual
 name|void
 name|MacroExpands
 argument_list|(
-argument|const Token&Id
+argument|const Token&MacroNameTok
 argument_list|,
 argument|const MacroInfo* MI
 argument_list|)
@@ -516,7 +678,7 @@ name|First
 operator|->
 name|MacroExpands
 argument_list|(
-name|Id
+name|MacroNameTok
 argument_list|,
 name|MI
 argument_list|)
@@ -525,7 +687,7 @@ name|Second
 operator|->
 name|MacroExpands
 argument_list|(
-name|Id
+name|MacroNameTok
 argument_list|,
 name|MI
 argument_list|)
@@ -534,7 +696,7 @@ name|virtual
 name|void
 name|MacroDefined
 argument_list|(
-argument|const IdentifierInfo *II
+argument|const Token&MacroNameTok
 argument_list|,
 argument|const MacroInfo *MI
 argument_list|)
@@ -543,7 +705,7 @@ name|First
 operator|->
 name|MacroDefined
 argument_list|(
-name|II
+name|MacroNameTok
 argument_list|,
 name|MI
 argument_list|)
@@ -552,7 +714,7 @@ name|Second
 operator|->
 name|MacroDefined
 argument_list|(
-name|II
+name|MacroNameTok
 argument_list|,
 name|MI
 argument_list|)
@@ -561,9 +723,7 @@ name|virtual
 name|void
 name|MacroUndefined
 argument_list|(
-argument|SourceLocation Loc
-argument_list|,
-argument|const IdentifierInfo *II
+argument|const Token&MacroNameTok
 argument_list|,
 argument|const MacroInfo *MI
 argument_list|)
@@ -572,9 +732,7 @@ name|First
 operator|->
 name|MacroUndefined
 argument_list|(
-name|Loc
-argument_list|,
-name|II
+name|MacroNameTok
 argument_list|,
 name|MI
 argument_list|)
@@ -583,12 +741,130 @@ name|Second
 operator|->
 name|MacroUndefined
 argument_list|(
-name|Loc
-argument_list|,
-name|II
+name|MacroNameTok
 argument_list|,
 name|MI
 argument_list|)
+block|;   }
+comment|/// If -- This hook is called whenever an #if is seen.
+name|virtual
+name|void
+name|If
+argument_list|(
+argument|SourceRange Range
+argument_list|)
+block|{
+name|First
+operator|->
+name|If
+argument_list|(
+name|Range
+argument_list|)
+block|;
+name|Second
+operator|->
+name|If
+argument_list|(
+name|Range
+argument_list|)
+block|;   }
+comment|/// Elif -- This hook is called whenever an #if is seen.
+name|virtual
+name|void
+name|Elif
+argument_list|(
+argument|SourceRange Range
+argument_list|)
+block|{
+name|First
+operator|->
+name|Elif
+argument_list|(
+name|Range
+argument_list|)
+block|;
+name|Second
+operator|->
+name|Elif
+argument_list|(
+name|Range
+argument_list|)
+block|;   }
+comment|/// Ifdef -- This hook is called whenever an #ifdef is seen.
+name|virtual
+name|void
+name|Ifdef
+argument_list|(
+argument|const Token&MacroNameTok
+argument_list|)
+block|{
+name|First
+operator|->
+name|Ifdef
+argument_list|(
+name|MacroNameTok
+argument_list|)
+block|;
+name|Second
+operator|->
+name|Ifdef
+argument_list|(
+name|MacroNameTok
+argument_list|)
+block|;   }
+comment|/// Ifndef -- This hook is called whenever an #ifndef is seen.
+name|virtual
+name|void
+name|Ifndef
+argument_list|(
+argument|const Token&MacroNameTok
+argument_list|)
+block|{
+name|First
+operator|->
+name|Ifndef
+argument_list|(
+name|MacroNameTok
+argument_list|)
+block|;
+name|Second
+operator|->
+name|Ifndef
+argument_list|(
+name|MacroNameTok
+argument_list|)
+block|;   }
+comment|/// Else -- This hook is called whenever an #else is seen.
+name|virtual
+name|void
+name|Else
+argument_list|()
+block|{
+name|First
+operator|->
+name|Else
+argument_list|()
+block|;
+name|Second
+operator|->
+name|Else
+argument_list|()
+block|;   }
+comment|/// Endif -- This hook is called whenever an #endif is seen.
+name|virtual
+name|void
+name|Endif
+argument_list|()
+block|{
+name|First
+operator|->
+name|Endif
+argument_list|()
+block|;
+name|Second
+operator|->
+name|Endif
+argument_list|()
 block|;   }
 block|}
 decl_stmt|;

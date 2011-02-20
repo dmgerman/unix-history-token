@@ -88,12 +88,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Analysis/Dominators.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Analysis/Passes.h"
 end_include
 
@@ -119,6 +113,36 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+specifier|static
+specifier|inline
+name|void
+name|createStandardAliasAnalysisPasses
+parameter_list|(
+name|PassManagerBase
+modifier|*
+name|PM
+parameter_list|)
+block|{
+comment|// Add TypeBasedAliasAnalysis before BasicAliasAnalysis so that
+comment|// BasicAliasAnalysis wins if they disagree. This is intended to help
+comment|// support "obvious" type-punning idioms.
+name|PM
+operator|->
+name|add
+argument_list|(
+name|createTypeBasedAliasAnalysisPass
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|PM
+operator|->
+name|add
+argument_list|(
+name|createBasicAliasAnalysisPass
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// createStandardFunctionPasses - Add the standard list of function passes to
 comment|/// the provided pass manager.
 comment|///
@@ -136,7 +160,45 @@ parameter_list|,
 name|unsigned
 name|OptimizationLevel
 parameter_list|)
-function_decl|;
+block|{
+if|if
+condition|(
+name|OptimizationLevel
+operator|>
+literal|0
+condition|)
+block|{
+name|createStandardAliasAnalysisPasses
+argument_list|(
+name|PM
+argument_list|)
+expr_stmt|;
+name|PM
+operator|->
+name|add
+argument_list|(
+name|createCFGSimplificationPass
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|PM
+operator|->
+name|add
+argument_list|(
+name|createScalarReplAggregatesPass
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|PM
+operator|->
+name|add
+argument_list|(
+name|createEarlyCSEPass
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 comment|/// createStandardModulePasses - Add the standard list of module passes to the
 comment|/// provided pass manager.
 comment|///
@@ -180,128 +242,12 @@ name|Pass
 modifier|*
 name|InliningPass
 parameter_list|)
-function_decl|;
-comment|/// createStandardLTOPasses - Add the standard list of module passes suitable
-comment|/// for link time optimization.
-comment|///
-comment|/// Internalize - Run the internalize pass.
-comment|/// RunInliner - Use a function inlining pass.
-comment|/// VerifyEach - Run the verifier after each pass.
-specifier|static
-specifier|inline
-name|void
-name|createStandardLTOPasses
-parameter_list|(
-name|PassManagerBase
-modifier|*
-name|PM
-parameter_list|,
-name|bool
-name|Internalize
-parameter_list|,
-name|bool
-name|RunInliner
-parameter_list|,
-name|bool
-name|VerifyEach
-parameter_list|)
-function_decl|;
-comment|// Implementations
-specifier|static
-specifier|inline
-name|void
-name|createStandardFunctionPasses
-parameter_list|(
-name|PassManagerBase
-modifier|*
-name|PM
-parameter_list|,
-name|unsigned
-name|OptimizationLevel
-parameter_list|)
 block|{
-if|if
-condition|(
-name|OptimizationLevel
-operator|>
-literal|0
-condition|)
-block|{
-name|PM
-operator|->
-name|add
+name|createStandardAliasAnalysisPasses
 argument_list|(
-name|createCFGSimplificationPass
-argument_list|()
+name|PM
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|OptimizationLevel
-operator|==
-literal|1
-condition|)
-name|PM
-operator|->
-name|add
-argument_list|(
-name|createPromoteMemoryToRegisterPass
-argument_list|()
-argument_list|)
-expr_stmt|;
-else|else
-name|PM
-operator|->
-name|add
-argument_list|(
-name|createScalarReplAggregatesPass
-argument_list|()
-argument_list|)
-expr_stmt|;
-name|PM
-operator|->
-name|add
-argument_list|(
-name|createInstructionCombiningPass
-argument_list|()
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-comment|/// createStandardModulePasses - Add the standard module passes.  This is
-comment|/// expected to be run after the standard function passes.
-specifier|static
-specifier|inline
-name|void
-name|createStandardModulePasses
-parameter_list|(
-name|PassManagerBase
-modifier|*
-name|PM
-parameter_list|,
-name|unsigned
-name|OptimizationLevel
-parameter_list|,
-name|bool
-name|OptimizeSize
-parameter_list|,
-name|bool
-name|UnitAtATime
-parameter_list|,
-name|bool
-name|UnrollLoops
-parameter_list|,
-name|bool
-name|SimplifyLibCalls
-parameter_list|,
-name|bool
-name|HaveExceptions
-parameter_list|,
-name|Pass
-modifier|*
-name|InliningPass
-parameter_list|)
-block|{
 if|if
 condition|(
 name|OptimizationLevel
@@ -429,15 +375,29 @@ argument_list|)
 expr_stmt|;
 comment|// Scalarize uninlined fn args
 comment|// Start of function pass.
+comment|// Break up aggregate allocas, using SSAUpdater.
 name|PM
 operator|->
 name|add
 argument_list|(
 name|createScalarReplAggregatesPass
+argument_list|(
+operator|-
+literal|1
+argument_list|,
+name|false
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|PM
+operator|->
+name|add
+argument_list|(
+name|createEarlyCSEPass
 argument_list|()
 argument_list|)
 expr_stmt|;
-comment|// Break up aggregate allocas
+comment|// Catch trivial redundancies
 if|if
 condition|(
 name|SimplifyLibCalls
@@ -455,20 +415,20 @@ name|PM
 operator|->
 name|add
 argument_list|(
-name|createInstructionCombiningPass
-argument_list|()
-argument_list|)
-expr_stmt|;
-comment|// Cleanup for scalarrepl.
-name|PM
-operator|->
-name|add
-argument_list|(
 name|createJumpThreadingPass
 argument_list|()
 argument_list|)
 expr_stmt|;
 comment|// Thread jumps.
+name|PM
+operator|->
+name|add
+argument_list|(
+name|createCorrelatedValuePropagationPass
+argument_list|()
+argument_list|)
+expr_stmt|;
+comment|// Propagate conditionals
 name|PM
 operator|->
 name|add
@@ -563,6 +523,15 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 comment|// Canonicalize indvars
+name|PM
+operator|->
+name|add
+argument_list|(
+name|createLoopIdiomPass
+argument_list|()
+argument_list|)
+expr_stmt|;
+comment|// Recognize idioms like memset.
 name|PM
 operator|->
 name|add
@@ -775,6 +744,12 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
+comment|/// createStandardLTOPasses - Add the standard list of module passes suitable
+comment|/// for link time optimization.
+comment|///
+comment|/// Internalize - Run the internalize pass.
+comment|/// RunInliner - Use a function inlining pass.
+comment|/// VerifyEach - Run the verifier after each pass.
 specifier|static
 specifier|inline
 name|void
@@ -794,6 +769,12 @@ name|bool
 name|VerifyEach
 parameter_list|)
 block|{
+comment|// Provide AliasAnalysis services for optimizations.
+name|createStandardAliasAnalysisPasses
+argument_list|(
+name|PM
+argument_list|)
+expr_stmt|;
 comment|// Now that composite has been compiled, scan through the module, looking
 comment|// for a main function.  If main is defined, mark all other functions
 comment|// internal.

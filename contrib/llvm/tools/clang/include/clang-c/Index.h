@@ -80,11 +80,11 @@ name|CXIndex
 typedef|;
 comment|/**  * \brief A single translation unit, which resides in an index.  */
 typedef|typedef
-name|void
+name|struct
+name|CXTranslationUnitImpl
 modifier|*
 name|CXTranslationUnit
 typedef|;
-comment|/* A translation unit instance. */
 comment|/**  * \brief Opaque pointer representing client data that will be passed through  * to various callbacks and visitors.  */
 typedef|typedef
 name|void
@@ -133,14 +133,12 @@ comment|/**  * \brief A character string.  *  * The \c CXString type is used to 
 typedef|typedef
 struct|struct
 block|{
-specifier|const
-name|char
+name|void
 modifier|*
-name|Spelling
+name|data
 decl_stmt|;
-comment|/* A 1 value indicates the clang_ indexing API needed to allocate the string      (and it must be freed by clang_disposeString()). */
-name|int
-name|MustFreeString
+name|unsigned
+name|private_flags
 decl_stmt|;
 block|}
 name|CXString
@@ -187,18 +185,6 @@ name|CXIndex
 name|index
 parameter_list|)
 function_decl|;
-comment|/**  * \brief Request that AST's be generated externally for API calls which parse  * source code on the fly, e.g. \see createTranslationUnitFromSourceFile.  *  * Note: This is for debugging purposes only, and may be removed at a later  * date.  *  * \param index - The index to update.  * \param value - The new flag value.  */
-name|CINDEX_LINKAGE
-name|void
-name|clang_setUseExternalASTGeneration
-parameter_list|(
-name|CXIndex
-name|index
-parameter_list|,
-name|int
-name|value
-parameter_list|)
-function_decl|;
 comment|/**  * \defgroup CINDEX_FILES File manipulation routines  *  * @{  */
 comment|/**  * \brief A particular source file that is part of a translation unit.  */
 typedef|typedef
@@ -240,7 +226,7 @@ parameter_list|)
 function_decl|;
 comment|/**  * @}  */
 comment|/**  * \defgroup CINDEX_LOCATIONS Physical source locations  *  * Clang represents physical source locations in its abstract syntax tree in  * great detail, with file, line, and column information for the majority of  * the tokens parsed in the source code. These data types and functions are  * used to represent source location information, either for a particular  * point in the program or for a range of points in the program, and extract  * specific location information from those data types.  *  * @{  */
-comment|/**  * \brief Identifies a specific source location within a translation  * unit.  *  * Use clang_getInstantiationLocation() to map a source location to a  * particular file, line, and column.  */
+comment|/**  * \brief Identifies a specific source location within a translation  * unit.  *  * Use clang_getInstantiationLocation() or clang_getSpellingLocation()  * to map a source location to a particular file, line, and column.  */
 typedef|typedef
 struct|struct
 block|{
@@ -313,6 +299,21 @@ name|unsigned
 name|column
 parameter_list|)
 function_decl|;
+comment|/**  * \brief Retrieves the source location associated with a given character offset  * in a particular translation unit.  */
+name|CINDEX_LINKAGE
+name|CXSourceLocation
+name|clang_getLocationForOffset
+parameter_list|(
+name|CXTranslationUnit
+name|tu
+parameter_list|,
+name|CXFile
+name|file
+parameter_list|,
+name|unsigned
+name|offset
+parameter_list|)
+function_decl|;
 comment|/**  * \brief Retrieve a NULL (invalid) source range.  */
 name|CINDEX_LINKAGE
 name|CXSourceRange
@@ -331,10 +332,35 @@ name|CXSourceLocation
 name|end
 parameter_list|)
 function_decl|;
-comment|/**  * \brief Retrieve the file, line, column, and offset represented by  * the given source location.  *  * \param location the location within a source file that will be decomposed  * into its parts.  *  * \param file [out] if non-NULL, will be set to the file to which the given  * source location points.  *  * \param line [out] if non-NULL, will be set to the line to which the given  * source location points.  *  * \param column [out] if non-NULL, will be set to the column to which the given  * source location points.  *  * \param offset [out] if non-NULL, will be set to the offset into the  * buffer to which the given source location points.  */
+comment|/**  * \brief Retrieve the file, line, column, and offset represented by  * the given source location.  *  * If the location refers into a macro instantiation, retrieves the  * location of the macro instantiation.  *  * \param location the location within a source file that will be decomposed  * into its parts.  *  * \param file [out] if non-NULL, will be set to the file to which the given  * source location points.  *  * \param line [out] if non-NULL, will be set to the line to which the given  * source location points.  *  * \param column [out] if non-NULL, will be set to the column to which the given  * source location points.  *  * \param offset [out] if non-NULL, will be set to the offset into the  * buffer to which the given source location points.  */
 name|CINDEX_LINKAGE
 name|void
 name|clang_getInstantiationLocation
+parameter_list|(
+name|CXSourceLocation
+name|location
+parameter_list|,
+name|CXFile
+modifier|*
+name|file
+parameter_list|,
+name|unsigned
+modifier|*
+name|line
+parameter_list|,
+name|unsigned
+modifier|*
+name|column
+parameter_list|,
+name|unsigned
+modifier|*
+name|offset
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Retrieve the file, line, column, and offset represented by  * the given source location.  *  * If the location refers into a macro instantiation, return where the  * location was originally spelled in the source file.  *  * \param location the location within a source file that will be decomposed  * into its parts.  *  * \param file [out] if non-NULL, will be set to the file to which the given  * source location points.  *  * \param line [out] if non-NULL, will be set to the line to which the given  * source location points.  *  * \param column [out] if non-NULL, will be set to the column to which the given  * source location points.  *  * \param offset [out] if non-NULL, will be set to the offset into the  * buffer to which the given source location points.  */
+name|CINDEX_LINKAGE
+name|void
+name|clang_getSpellingLocation
 parameter_list|(
 name|CXSourceLocation
 name|location
@@ -460,6 +486,21 @@ comment|/**    * \brief If displaying the source-location information of the    
 name|CXDiagnostic_DisplaySourceRanges
 init|=
 literal|0x04
+block|,
+comment|/**    * \brief Display the option name associated with this diagnostic, if any.    *    * The option name displayed (e.g., -Wconversion) will be placed in brackets    * after the diagnostic text. This option corresponds to the clang flag    * \c -fdiagnostics-show-option.    */
+name|CXDiagnostic_DisplayOption
+init|=
+literal|0x08
+block|,
+comment|/**    * \brief Display the category number associated with this diagnostic, if any.    *    * The category number is displayed within brackets after the diagnostic text.    * This option corresponds to the clang flag     * \c -fdiagnostics-show-category=id.    */
+name|CXDiagnostic_DisplayCategoryId
+init|=
+literal|0x10
+block|,
+comment|/**    * \brief Display the category name associated with this diagnostic, if any.    *    * The category name is displayed within brackets after the diagnostic text.    * This option corresponds to the clang flag     * \c -fdiagnostics-show-category=name.    */
+name|CXDiagnostic_DisplayCategoryName
+init|=
+literal|0x20
 block|}
 enum|;
 comment|/**  * \brief Format the given diagnostic in a manner that is suitable for display.  *  * This routine will format the given diagnostic to a string, rendering  * the diagnostic according to the various options given. The  * \c clang_defaultDiagnosticDisplayOptions() function returns the set of  * options that most closely mimics the behavior of the clang compiler.  *  * \param Diagnostic The diagnostic to print.  *  * \param Options A set of options that control the diagnostic display,  * created by combining \c CXDiagnosticDisplayOptions values.  *  * \returns A new string containing for formatted diagnostic.  */
@@ -482,7 +523,6 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-comment|/**  * \brief Print a diagnostic to the given file.  */
 comment|/**  * \brief Determine the severity of the given diagnostic.  */
 name|CINDEX_LINKAGE
 name|enum
@@ -506,6 +546,36 @@ name|CXString
 name|clang_getDiagnosticSpelling
 parameter_list|(
 name|CXDiagnostic
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Retrieve the name of the command-line option that enabled this  * diagnostic.  *  * \param Diag The diagnostic to be queried.  *  * \param Disable If non-NULL, will be set to the option that disables this  * diagnostic (if any).  *  * \returns A string that contains the command-line option used to enable this  * warning, such as "-Wconversion" or "-pedantic".   */
+name|CINDEX_LINKAGE
+name|CXString
+name|clang_getDiagnosticOption
+parameter_list|(
+name|CXDiagnostic
+name|Diag
+parameter_list|,
+name|CXString
+modifier|*
+name|Disable
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Retrieve the category number for this diagnostic.  *  * Diagnostics can be categorized into groups along with other, related  * diagnostics (e.g., diagnostics under the same warning flag). This routine   * retrieves the category number for the given diagnostic.  *  * \returns The number of the category that contains this diagnostic, or zero  * if this diagnostic is uncategorized.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_getDiagnosticCategory
+parameter_list|(
+name|CXDiagnostic
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Retrieve the name of a particular diagnostic category.  *  * \param Category A diagnostic category number, as returned by   * \c clang_getDiagnosticCategory().  *  * \returns The name of the given diagnostic category.  */
+name|CINDEX_LINKAGE
+name|CXString
+name|clang_getDiagnosticCategoryName
+parameter_list|(
+name|unsigned
+name|Category
 parameter_list|)
 function_decl|;
 comment|/**  * \brief Determine the number of source ranges associated with the given  * diagnostic.  */
@@ -564,7 +634,7 @@ name|CXTranslationUnit
 name|CTUnit
 parameter_list|)
 function_decl|;
-comment|/**  * \brief Return the CXTranslationUnit for a given source file and the provided  * command line arguments one would pass to the compiler.  *  * Note: The 'source_filename' argument is optional.  If the caller provides a  * NULL pointer, the name of the source file is expected to reside in the  * specified command line arguments.  *  * Note: When encountered in 'clang_command_line_args', the following options  * are ignored:  *  *   '-c'  *   '-emit-ast'  *   '-fsyntax-only'  *   '-o<output file>'  (both '-o' and '<output file>' are ignored)  *  *  * \param source_filename - The name of the source file to load, or NULL if the  * source file is included in clang_command_line_args.  *  * \param num_unsaved_files the number of unsaved file entries in \p  * unsaved_files.  *  * \param unsaved_files the files that have not yet been saved to disk  * but may be required for code completion, including the contents of  * those files.  The contents and name of these files (as specified by  * CXUnsavedFile) are copied when necessary, so the client only needs to  * guarantee their validity until the call to this function returns.  *  * \param diag_callback callback function that will receive any diagnostics  * emitted while processing this source file. If NULL, diagnostics will be  * suppressed.  *  * \param diag_client_data client data that will be passed to the diagnostic  * callback function.  */
+comment|/**  * \brief Return the CXTranslationUnit for a given source file and the provided  * command line arguments one would pass to the compiler.  *  * Note: The 'source_filename' argument is optional.  If the caller provides a  * NULL pointer, the name of the source file is expected to reside in the  * specified command line arguments.  *  * Note: When encountered in 'clang_command_line_args', the following options  * are ignored:  *  *   '-c'  *   '-emit-ast'  *   '-fsyntax-only'  *   '-o<output file>'  (both '-o' and '<output file>' are ignored)  *  * \param CIdx The index object with which the translation unit will be  * associated.  *  * \param source_filename - The name of the source file to load, or NULL if the  * source file is included in \p clang_command_line_args.  *  * \param num_clang_command_line_args The number of command-line arguments in  * \p clang_command_line_args.  *  * \param clang_command_line_args The command-line arguments that would be  * passed to the \c clang executable if it were being invoked out-of-process.  * These command-line options will be parsed and will affect how the translation  * unit is parsed. Note that the following options are ignored: '-c',  * '-emit-ast', '-fsyntex-only' (which is the default), and '-o<output file>'.  *  * \param num_unsaved_files the number of unsaved file entries in \p  * unsaved_files.  *  * \param unsaved_files the files that have not yet been saved to disk  * but may be required for code completion, including the contents of  * those files.  The contents and name of these files (as specified by  * CXUnsavedFile) are copied when necessary, so the client only needs to  * guarantee their validity until the call to this function returns.  */
 name|CINDEX_LINKAGE
 name|CXTranslationUnit
 name|clang_createTranslationUnitFromSourceFile
@@ -637,6 +707,16 @@ comment|/**    * \brief Used to indicate that the translation unit should cache 
 name|CXTranslationUnit_CacheCompletionResults
 init|=
 literal|0x08
+block|,
+comment|/**    * \brief Enable precompiled preambles in C++.    *    * Note: this is a *temporary* option that is available only while    * we are testing C++ precompiled preamble support.    */
+name|CXTranslationUnit_CXXPrecompiledPreamble
+init|=
+literal|0x10
+block|,
+comment|/**    * \brief Enabled chained precompiled preambles in C++.    *    * Note: this is a *temporary* option that is available only while    * we are testing C++ precompiled preamble support.    */
+name|CXTranslationUnit_CXXChainedPCH
+init|=
+literal|0x20
 block|}
 enum|;
 comment|/**  * \brief Returns the set of flags that is suitable for parsing a translation  * unit that is being edited.  *  * The set of flags returned provide options for \c clang_parseTranslationUnit()  * to indicate that the translation unit is likely to be reparsed many times,  * either explicitly (via \c clang_reparseTranslationUnit()) or implicitly  * (e.g., by code completion (\c clang_codeCompletionAt())). The returned flag  * set contains an unspecified set of optimizations (e.g., the precompiled   * preamble) geared toward improving the performance of these routines. The  * set of optimizations enabled may change from one version to the next.  */
@@ -647,7 +727,7 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-comment|/**  * \brief Parse the given source file and the translation unit corresponding  * to that file.  *  * This routine is the main entry point for the Clang C API, providing the  * ability to parse a source file into a translation unit that can then be  * queried by other functions in the API. This routine accepts a set of  * command-line arguments so that the compilation can be configured in the same  * way that the compiler is configured on the command line.  *  * \param CIdx The index object with which the translation unit will be   * associated.  *  * \param source_filename The name of the source file to load, or NULL if the  * source file is included in \p clang_command_line_args.  *  * \param command_line_args The command-line arguments that would be  * passed to the \c clang executable if it were being invoked out-of-process.  * These command-line options will be parsed and will affect how the translation  * unit is parsed. Note that the following options are ignored: '-c',   * '-emit-ast', '-fsyntex-only' (which is the default), and '-o<output file>'.  *  * \param num_command_line_args The number of command-line arguments in  * \p command_line_args.  *  * \param unsaved_files the files that have not yet been saved to disk  * but may be required for parsing, including the contents of  * those files.  The contents and name of these files (as specified by  * CXUnsavedFile) are copied when necessary, so the client only needs to  * guarantee their validity until the call to this function returns.  *  * \param num_unsaved_files the number of unsaved file entries in \p  * unsaved_files.  *  * \param options A bitmask of options that affects how the translation unit  * is managed but not its compilation. This should be a bitwise OR of the  * CXTranslationUnit_XXX flags.  *  * \returns A new translation unit describing the parsed code and containing  * any diagnostics produced by the compiler. If there is a failure from which  * the compiler cannot recover, returns NULL.  */
+comment|/**  * \brief Parse the given source file and the translation unit corresponding  * to that file.  *  * This routine is the main entry point for the Clang C API, providing the  * ability to parse a source file into a translation unit that can then be  * queried by other functions in the API. This routine accepts a set of  * command-line arguments so that the compilation can be configured in the same  * way that the compiler is configured on the command line.  *  * \param CIdx The index object with which the translation unit will be   * associated.  *  * \param source_filename The name of the source file to load, or NULL if the  * source file is included in \p command_line_args.  *  * \param command_line_args The command-line arguments that would be  * passed to the \c clang executable if it were being invoked out-of-process.  * These command-line options will be parsed and will affect how the translation  * unit is parsed. Note that the following options are ignored: '-c',   * '-emit-ast', '-fsyntex-only' (which is the default), and '-o<output file>'.  *  * \param num_command_line_args The number of command-line arguments in  * \p command_line_args.  *  * \param unsaved_files the files that have not yet been saved to disk  * but may be required for parsing, including the contents of  * those files.  The contents and name of these files (as specified by  * CXUnsavedFile) are copied when necessary, so the client only needs to  * guarantee their validity until the call to this function returns.  *  * \param num_unsaved_files the number of unsaved file entries in \p  * unsaved_files.  *  * \param options A bitmask of options that affects how the translation unit  * is managed but not its compilation. This should be a bitwise OR of the  * CXTranslationUnit_XXX flags.  *  * \returns A new translation unit describing the parsed code and containing  * any diagnostics produced by the compiler. If there is a failure from which  * the compiler cannot recover, returns NULL.  */
 name|CINDEX_LINKAGE
 name|CXTranslationUnit
 name|clang_parseTranslationUnit
@@ -981,7 +1061,7 @@ name|CXCursor_CXXBaseSpecifier
 init|=
 literal|44
 block|,
-comment|/**     * \brief A reference to a class template, function template, or template    * template parameter.     */
+comment|/**     * \brief A reference to a class template, function template, template    * template parameter, or class template partial specialization.    */
 name|CXCursor_TemplateRef
 init|=
 literal|45
@@ -991,9 +1071,24 @@ name|CXCursor_NamespaceRef
 init|=
 literal|46
 block|,
+comment|/**    * \brief A reference to a member of a struct, union, or class that occurs in     * some non-expression context, e.g., a designated initializer.    */
+name|CXCursor_MemberRef
+init|=
+literal|47
+block|,
+comment|/**    * \brief A reference to a labeled statement.    *    * This cursor kind is used to describe the jump to "start_over" in the     * goto statement in the following example:    *    * \code    *   start_over:    *     ++counter;    *    *     goto start_over;    * \endcode    *    * A label reference cursor refers to a label statement.    */
+name|CXCursor_LabelRef
+init|=
+literal|48
+block|,
+comment|/**    * \brief A reference to a set of overloaded functions or function templates    * that has not yet been resolved to a specific function or function template.    *    * An overloaded declaration reference cursor occurs in C++ templates where    * a dependent name refers to a function. For example:    *    * \code    * template<typename T> void swap(T&, T&);    *    * struct X { ... };    * void swap(X&, X&);    *    * template<typename T>    * void reverse(T* first, T* last) {    *   while (first< last - 1) {    *     swap(*first, *--last);    *     ++first;    *   }    * }    *    * struct Y { };    * void swap(Y&, Y&);    * \endcode    *    * Here, the identifier "swap" is associated with an overloaded declaration    * reference. In the template definition, "swap" refers to either of the two    * "swap" functions declared above, so both results will be available. At    * instantiation time, "swap" may also refer to other functions found via    * argument-dependent lookup (e.g., the "swap" function at the end of the    * example).    *    * The functions \c clang_getNumOverloadedDecls() and     * \c clang_getOverloadedDecl() can be used to retrieve the definitions    * referenced by this cursor.    */
+name|CXCursor_OverloadedDeclRef
+init|=
+literal|49
+block|,
 name|CXCursor_LastRef
 init|=
-name|CXCursor_NamespaceRef
+name|CXCursor_OverloadedDeclRef
 block|,
 comment|/* Error conditions */
 name|CXCursor_FirstInvalid
@@ -1069,9 +1164,14 @@ name|CXCursor_UnexposedStmt
 init|=
 literal|200
 block|,
+comment|/** \brief A labelled statement in a function.     *    * This cursor kind is used to describe the "start_over:" label statement in     * the following example:    *    * \code    *   start_over:    *     ++counter;    * \endcode    *    */
+name|CXCursor_LabelStmt
+init|=
+literal|201
+block|,
 name|CXCursor_LastStmt
 init|=
-literal|200
+name|CXCursor_LabelStmt
 block|,
 comment|/**    * \brief Cursor that represents the translation unit itself.    *    * The translation unit cursor exists primarily to act as the root    * cursor for traversing the contents of a translation unit.    */
 name|CXCursor_TranslationUnit
@@ -1117,13 +1217,17 @@ name|CXCursor_MacroInstantiation
 init|=
 literal|502
 block|,
+name|CXCursor_InclusionDirective
+init|=
+literal|503
+block|,
 name|CXCursor_FirstPreprocessing
 init|=
 name|CXCursor_PreprocessingDirective
 block|,
 name|CXCursor_LastPreprocessing
 init|=
-name|CXCursor_MacroInstantiation
+name|CXCursor_InclusionDirective
 block|}
 enum|;
 comment|/**  * \brief A cursor representing some element in the abstract syntax tree for  * a translation unit.  *  * The cursor abstraction unifies the different kinds of entities in a  * program--declaration, statements, expressions, references to declarations,  * etc.--under a single "cursor" abstraction with a common set of operations.  * Common operation for a cursor include: getting the physical location in  * a source file where the cursor points, getting the name associated with a  * cursor, and retrieving cursors for any child nodes of a particular cursor.  *  * Cursors can be produced in two specific ways.  * clang_getTranslationUnitCursor() produces a cursor for a translation unit,  * from which one can use clang_visitChildren() to explore the rest of the  * translation unit. clang_getCursor() maps from a physical source location  * to the entity that resides at that location, allowing one to map from the  * source code into the AST.  */
@@ -1168,6 +1272,14 @@ name|clang_equalCursors
 parameter_list|(
 name|CXCursor
 parameter_list|,
+name|CXCursor
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Compute a hash value for the given cursor.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_hashCursor
+parameter_list|(
 name|CXCursor
 parameter_list|)
 function_decl|;
@@ -1313,6 +1425,107 @@ name|CINDEX_LINKAGE
 name|enum
 name|CXLanguageKind
 name|clang_getCursorLanguage
+parameter_list|(
+name|CXCursor
+name|cursor
+parameter_list|)
+function_decl|;
+comment|/**  * \brief A fast container representing a set of CXCursors.  */
+typedef|typedef
+name|struct
+name|CXCursorSetImpl
+modifier|*
+name|CXCursorSet
+typedef|;
+comment|/**  * \brief Creates an empty CXCursorSet.  */
+name|CINDEX_LINKAGE
+name|CXCursorSet
+name|clang_createCXCursorSet
+parameter_list|()
+function_decl|;
+comment|/**  * \brief Disposes a CXCursorSet and releases its associated memory.  */
+name|CINDEX_LINKAGE
+name|void
+name|clang_disposeCXCursorSet
+parameter_list|(
+name|CXCursorSet
+name|cset
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Queries a CXCursorSet to see if it contains a specific CXCursor.  *  * \returns non-zero if the set contains the specified cursor. */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_CXCursorSet_contains
+parameter_list|(
+name|CXCursorSet
+name|cset
+parameter_list|,
+name|CXCursor
+name|cursor
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Inserts a CXCursor into a CXCursorSet.  *  * \returns zero if the CXCursor was already in the set, and non-zero otherwise. */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_CXCursorSet_insert
+parameter_list|(
+name|CXCursorSet
+name|cset
+parameter_list|,
+name|CXCursor
+name|cursor
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Determine the semantic parent of the given cursor.  *  * The semantic parent of a cursor is the cursor that semantically contains  * the given \p cursor. For many declarations, the lexical and semantic parents  * are equivalent (the lexical parent is returned by   * \c clang_getCursorLexicalParent()). They diverge when declarations or  * definitions are provided out-of-line. For example:  *  * \code  * class C {  *  void f();  * };  *  * void C::f() { }  * \endcode  *  * In the out-of-line definition of \c C::f, the semantic parent is the   * the class \c C, of which this function is a member. The lexical parent is  * the place where the declaration actually occurs in the source code; in this  * case, the definition occurs in the translation unit. In general, the   * lexical parent for a given entity can change without affecting the semantics  * of the program, and the lexical parent of different declarations of the  * same entity may be different. Changing the semantic parent of a declaration,  * on the other hand, can have a major impact on semantics, and redeclarations  * of a particular entity should all have the same semantic context.  *  * In the example above, both declarations of \c C::f have \c C as their  * semantic context, while the lexical context of the first \c C::f is \c C  * and the lexical context of the second \c C::f is the translation unit.  *  * For global declarations, the semantic parent is the translation unit.  */
+name|CINDEX_LINKAGE
+name|CXCursor
+name|clang_getCursorSemanticParent
+parameter_list|(
+name|CXCursor
+name|cursor
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Determine the lexical parent of the given cursor.  *  * The lexical parent of a cursor is the cursor in which the given \p cursor  * was actually written. For many declarations, the lexical and semantic parents  * are equivalent (the semantic parent is returned by   * \c clang_getCursorSemanticParent()). They diverge when declarations or  * definitions are provided out-of-line. For example:  *  * \code  * class C {  *  void f();  * };  *  * void C::f() { }  * \endcode  *  * In the out-of-line definition of \c C::f, the semantic parent is the   * the class \c C, of which this function is a member. The lexical parent is  * the place where the declaration actually occurs in the source code; in this  * case, the definition occurs in the translation unit. In general, the   * lexical parent for a given entity can change without affecting the semantics  * of the program, and the lexical parent of different declarations of the  * same entity may be different. Changing the semantic parent of a declaration,  * on the other hand, can have a major impact on semantics, and redeclarations  * of a particular entity should all have the same semantic context.  *  * In the example above, both declarations of \c C::f have \c C as their  * semantic context, while the lexical context of the first \c C::f is \c C  * and the lexical context of the second \c C::f is the translation unit.  *  * For declarations written in the global scope, the lexical parent is  * the translation unit.  */
+name|CINDEX_LINKAGE
+name|CXCursor
+name|clang_getCursorLexicalParent
+parameter_list|(
+name|CXCursor
+name|cursor
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Determine the set of methods that are overridden by the given  * method.  *  * In both Objective-C and C++, a method (aka virtual member function,  * in C++) can override a virtual method in a base class. For  * Objective-C, a method is said to override any method in the class's  * interface (if we're coming from an implementation), its protocols,  * or its categories, that has the same selector and is of the same  * kind (class or instance). If no such method exists, the search  * continues to the class's superclass, its protocols, and its  * categories, and so on.  *  * For C++, a virtual member function overrides any virtual member  * function with the same signature that occurs in its base  * classes. With multiple inheritance, a virtual member function can  * override several virtual member functions coming from different  * base classes.  *  * In all cases, this function determines the immediate overridden  * method, rather than all of the overridden methods. For example, if  * a method is originally declared in a class A, then overridden in B  * (which in inherits from A) and also in C (which inherited from B),  * then the only overridden method returned from this function when  * invoked on C's method will be B's method. The client may then  * invoke this function again, given the previously-found overridden  * methods, to map out the complete method-override set.  *  * \param cursor A cursor representing an Objective-C or C++  * method. This routine will compute the set of methods that this  * method overrides.  *   * \param overridden A pointer whose pointee will be replaced with a  * pointer to an array of cursors, representing the set of overridden  * methods. If there are no overridden methods, the pointee will be  * set to NULL. The pointee must be freed via a call to   * \c clang_disposeOverriddenCursors().  *  * \param num_overridden A pointer to the number of overridden  * functions, will be set to the number of overridden functions in the  * array pointed to by \p overridden.  */
+name|CINDEX_LINKAGE
+name|void
+name|clang_getOverriddenCursors
+parameter_list|(
+name|CXCursor
+name|cursor
+parameter_list|,
+name|CXCursor
+modifier|*
+modifier|*
+name|overridden
+parameter_list|,
+name|unsigned
+modifier|*
+name|num_overridden
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Free the set of overridden cursors returned by \c  * clang_getOverriddenCursors().  */
+name|CINDEX_LINKAGE
+name|void
+name|clang_disposeOverriddenCursors
+parameter_list|(
+name|CXCursor
+modifier|*
+name|overridden
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Retrieve the file that is included by the given inclusion directive  * cursor.  */
+name|CINDEX_LINKAGE
+name|CXFile
+name|clang_getIncludedFile
 parameter_list|(
 name|CXCursor
 name|cursor
@@ -1580,6 +1793,33 @@ name|CXType
 name|T
 parameter_list|)
 function_decl|;
+comment|/**  *  \determine Determine whether a CXType has the "const" qualifier set,   *  without looking through typedefs that may have added "const" at a different level.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_isConstQualifiedType
+parameter_list|(
+name|CXType
+name|T
+parameter_list|)
+function_decl|;
+comment|/**  *  \determine Determine whether a CXType has the "volatile" qualifier set,  *  without looking through typedefs that may have added "volatile" at a different level.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_isVolatileQualifiedType
+parameter_list|(
+name|CXType
+name|T
+parameter_list|)
+function_decl|;
+comment|/**  *  \determine Determine whether a CXType has the "restrict" qualifier set,  *  without looking through typedefs that may have added "restrict" at a different level.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_isRestrictQualifiedType
+parameter_list|(
+name|CXType
+name|T
+parameter_list|)
+function_decl|;
 comment|/**  * \brief For pointer types, returns the type of the pointee.  *  */
 name|CINDEX_LINKAGE
 name|CXType
@@ -1596,6 +1836,15 @@ name|clang_getTypeDeclaration
 parameter_list|(
 name|CXType
 name|T
+parameter_list|)
+function_decl|;
+comment|/**  * Returns the Objective-C type encoding for the specified declaration.  */
+name|CINDEX_LINKAGE
+name|CXString
+name|clang_getDeclObjCTypeEncoding
+parameter_list|(
+name|CXCursor
+name|C
 parameter_list|)
 function_decl|;
 comment|/**  * \brief Retrieve the spelling of a given CXTypeKind.  */
@@ -1665,6 +1914,27 @@ parameter_list|(
 name|CXCursor
 parameter_list|)
 function_decl|;
+comment|/**  * \brief Determine the number of overloaded declarations referenced by a   * \c CXCursor_OverloadedDeclRef cursor.  *  * \param cursor The cursor whose overloaded declarations are being queried.  *  * \returns The number of overloaded declarations referenced by \c cursor. If it  * is not a \c CXCursor_OverloadedDeclRef cursor, returns 0.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_getNumOverloadedDecls
+parameter_list|(
+name|CXCursor
+name|cursor
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Retrieve a cursor for one of the overloaded declarations referenced  * by a \c CXCursor_OverloadedDeclRef cursor.  *  * \param cursor The cursor whose overloaded declarations are being queried.  *  * \param index The zero-based index into the set of overloaded declarations in  * the cursor.  *  * \returns A cursor representing the declaration referenced by the given   * \c cursor at the specified \c index. If the cursor does not have an   * associated set of overloaded declarations, or if the index is out of bounds,  * returns \c clang_getNullCursor();  */
+name|CINDEX_LINKAGE
+name|CXCursor
+name|clang_getOverloadedDecl
+parameter_list|(
+name|CXCursor
+name|cursor
+parameter_list|,
+name|unsigned
+name|index
+parameter_list|)
+function_decl|;
 comment|/**  * @}  */
 comment|/**  * \defgroup CINDEX_ATTRIBUTES Information for attributes  *  * @{  */
 comment|/**  * \brief For cursors representing an iboutletcollection attribute,  *  this function returns the collection element type.  *  */
@@ -1725,6 +1995,46 @@ name|CXClientData
 name|client_data
 parameter_list|)
 function_decl|;
+ifdef|#
+directive|ifdef
+name|__has_feature
+if|#
+directive|if
+name|__has_feature
+argument_list|(
+name|blocks
+argument_list|)
+comment|/**  * \brief Visitor invoked for each cursor found by a traversal.  *  * This visitor block will be invoked for each cursor found by  * clang_visitChildrenWithBlock(). Its first argument is the cursor being  * visited, its second argument is the parent visitor for that cursor.  *  * The visitor should return one of the \c CXChildVisitResult values  * to direct clang_visitChildrenWithBlock().  */
+typedef|typedef
+name|enum
+name|CXChildVisitResult
+function_decl|(
+modifier|^
+name|CXCursorVisitorBlock
+function_decl|)
+parameter_list|(
+name|CXCursor
+name|cursor
+parameter_list|,
+name|CXCursor
+name|parent
+parameter_list|)
+function_decl|;
+comment|/**  * Visits the children of a cursor using the specified block.  Behaves  * identically to clang_visitChildren() in all other respects.  */
+name|unsigned
+name|clang_visitChildrenWithBlock
+parameter_list|(
+name|CXCursor
+name|parent
+parameter_list|,
+name|CXCursorVisitorBlock
+name|block
+parameter_list|)
+function_decl|;
+endif|#
+directive|endif
+endif|#
+directive|endif
 comment|/**  * @}  */
 comment|/**  * \defgroup CINDEX_CURSOR_XREF Cross-referencing in the AST  *  * These routines provide the ability to determine references within and  * across translation units, by providing the names of the entities referenced  * by cursors, follow reference cursors to the declarations they reference,  * and associate declarations with their definitions.  *  * @{  */
 comment|/**  * \brief Retrieve a Unified Symbol Resolution (USR) for the entity referenced  * by the given cursor.  *  * A Unified Symbol Resolution (USR) is a string that identifies a particular  * entity (function, class, variable, etc.) within a program. USRs can be  * compared across translation units to determine, e.g., when references in  * one translation refer to an entity defined in another translation unit.  */
@@ -1826,6 +2136,14 @@ parameter_list|(
 name|CXCursor
 parameter_list|)
 function_decl|;
+comment|/**  * \brief Retrieve the display name for the entity referenced by this cursor.  *  * The display name contains extra information that helps identify the cursor,  * such as the parameters of a function or template or the arguments of a   * class template specialization.  */
+name|CINDEX_LINKAGE
+name|CXString
+name|clang_getCursorDisplayName
+parameter_list|(
+name|CXCursor
+parameter_list|)
+function_decl|;
 comment|/** \brief For a cursor that is a reference, retrieve a cursor representing the  * entity that it references.  *  * Reference cursors refer to other entities in the AST. For example, an  * Objective-C superclass reference cursor refers to an Objective-C class.  * This function produces the cursor for the Objective-C class from the  * cursor for the superclass reference. If the input cursor is a declaration or  * definition, it returns that declaration or definition unchanged.  * Otherwise, returns the NULL cursor.  */
 name|CINDEX_LINKAGE
 name|CXCursor
@@ -1846,6 +2164,14 @@ comment|/**  * \brief Determine whether the declaration pointed to by this curso
 name|CINDEX_LINKAGE
 name|unsigned
 name|clang_isCursorDefinition
+parameter_list|(
+name|CXCursor
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Retrieve the canonical cursor corresponding to the given cursor.  *  * In the C family of languages, many kinds of entities can be declared several  * times within a single translation unit. For example, a structure type can  * be forward-declared (possibly multiple times) and later defined:  *  * \code  * struct X;  * struct X;  * struct X {  *   int member;  * };  * \endcode  *  * The declarations and the definition of \c X are represented by three   * different cursors, all of which are declarations of the same underlying   * entity. One of these cursor is considered the "canonical" cursor, which  * is effectively the representative for the underlying entity. One can   * determine if two cursors are declarations of the same underlying entity by  * comparing their canonical cursors.  *  * \returns The canonical cursor for the entity referred to by the given cursor.  */
+name|CINDEX_LINKAGE
+name|CXCursor
+name|clang_getCanonicalCursor
 parameter_list|(
 name|CXCursor
 parameter_list|)
@@ -2070,6 +2396,28 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+name|CINDEX_LINKAGE
+name|void
+name|clang_executeOnThread
+parameter_list|(
+name|void
+function_decl|(
+modifier|*
+name|fn
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+parameter_list|,
+name|void
+modifier|*
+name|user_data
+parameter_list|,
+name|unsigned
+name|stack_size
+parameter_list|)
+function_decl|;
 comment|/**  * @}  */
 comment|/**  * \defgroup CINDEX_CODE_COMPLET Code completion  *  * Code completion involves taking an (incomplete) source file, along with  * knowledge of where the user is actively editing that file, and suggesting  * syntactically- and semantically-valid constructs that the user might want to  * use at that particular point in the source code. These data structures and  * routines provide support for code completion.  *  * @{  */
 comment|/**  * \brief A semantic string that describes a code-completion result.  *  * A semantic string that describes the formatting of a code-completion  * result as a single "template" of text that should be inserted into the  * source buffer when a particular code-completion result is selected.  * Each semantic string is made up of some number of "chunks", each of which  * contains some text along with a description of what that text means, e.g.,  * the name of the entity being referenced, whether the text chunk is part of  * the template, or whether it is a "placeholder" that the user should replace  * with actual code,of a specific kind. See \c CXCompletionChunkKind for a  * description of the different kinds of chunks.  */
@@ -2227,7 +2575,7 @@ name|CXCompletionString
 name|completion_string
 parameter_list|)
 function_decl|;
-comment|/**  * \brief Contains the results of code-completion.  *  * This data structure contains the results of code completion, as  * produced by \c clang_codeComplete. Its contents must be freed by  * \c clang_disposeCodeCompleteResults.  */
+comment|/**  * \brief Contains the results of code-completion.  *  * This data structure contains the results of code completion, as  * produced by \c clang_codeCompleteAt(). Its contents must be freed by  * \c clang_disposeCodeCompleteResults.  */
 typedef|typedef
 struct|struct
 block|{
@@ -2243,50 +2591,6 @@ decl_stmt|;
 block|}
 name|CXCodeCompleteResults
 typedef|;
-comment|/**  * \brief Perform code completion at a given location in a source file.  *  * This function performs code completion at a particular file, line, and  * column within source code, providing results that suggest potential  * code snippets based on the context of the completion. The basic model  * for code completion is that Clang will parse a complete source file,  * performing syntax checking up to the location where code-completion has  * been requested. At that point, a special code-completion token is passed  * to the parser, which recognizes this token and determines, based on the  * current location in the C/Objective-C/C++ grammar and the state of  * semantic analysis, what completions to provide. These completions are  * returned via a new \c CXCodeCompleteResults structure.  *  * Code completion itself is meant to be triggered by the client when the  * user types punctuation characters or whitespace, at which point the  * code-completion location will coincide with the cursor. For example, if \c p  * is a pointer, code-completion might be triggered after the "-" and then  * after the ">" in \c p->. When the code-completion location is afer the ">",  * the completion results will provide, e.g., the members of the struct that  * "p" points to. The client is responsible for placing the cursor at the  * beginning of the token currently being typed, then filtering the results  * based on the contents of the token. For example, when code-completing for  * the expression \c p->get, the client should provide the location just after  * the ">" (e.g., pointing at the "g") to this code-completion hook. Then, the  * client can filter the results based on the current token text ("get"), only  * showing those results that start with "get". The intent of this interface  * is to separate the relatively high-latency acquisition of code-completion  * results from the filtering of results on a per-character basis, which must  * have a lower latency.  *  * \param CIdx the \c CXIndex instance that will be used to perform code  * completion.  *  * \param source_filename the name of the source file that should be parsed to  * perform code-completion. This source file must be the same as or include the  * filename described by \p complete_filename, or no code-completion results  * will be produced.  NOTE: One can also specify NULL for this argument if the  * source file is included in command_line_args.  *  * \param num_command_line_args the number of command-line arguments stored in  * \p command_line_args.  *  * \param command_line_args the command-line arguments to pass to the Clang  * compiler to build the given source file. This should include all of the  * necessary include paths, language-dialect switches, precompiled header  * includes, etc., but should not include any information specific to  * code completion.  *  * \param num_unsaved_files the number of unsaved file entries in \p  * unsaved_files.  *  * \param unsaved_files the files that have not yet been saved to disk  * but may be required for code completion, including the contents of  * those files.  The contents and name of these files (as specified by  * CXUnsavedFile) are copied when necessary, so the client only needs to  * guarantee their validity until the call to this function returns.  *  * \param complete_filename the name of the source file where code completion  * should be performed. In many cases, this name will be the same as the  * source filename. However, the completion filename may also be a file  * included by the source file, which is required when producing  * code-completion results for a header.  *  * \param complete_line the line at which code-completion should occur.  *  * \param complete_column the column at which code-completion should occur.  * Note that the column should point just after the syntactic construct that  * initiated code completion, and not in the middle of a lexical token.  *  * \param diag_callback callback function that will receive any diagnostics  * emitted while processing this source file. If NULL, diagnostics will be  * suppressed.  *  * \param diag_client_data client data that will be passed to the diagnostic  * callback function.  *  * \returns if successful, a new CXCodeCompleteResults structure  * containing code-completion results, which should eventually be  * freed with \c clang_disposeCodeCompleteResults(). If code  * completion fails, returns NULL.  */
-name|CINDEX_LINKAGE
-name|CXCodeCompleteResults
-modifier|*
-name|clang_codeComplete
-parameter_list|(
-name|CXIndex
-name|CIdx
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|source_filename
-parameter_list|,
-name|int
-name|num_command_line_args
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-specifier|const
-modifier|*
-name|command_line_args
-parameter_list|,
-name|unsigned
-name|num_unsaved_files
-parameter_list|,
-name|struct
-name|CXUnsavedFile
-modifier|*
-name|unsaved_files
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|complete_filename
-parameter_list|,
-name|unsigned
-name|complete_line
-parameter_list|,
-name|unsigned
-name|complete_column
-parameter_list|)
-function_decl|;
 comment|/**  * \brief Flags that can be passed to \c clang_codeCompleteAt() to  * modify its behavior.  *  * The enumerators in this enumeration can be bitwise-OR'd together to  * provide multiple options to \c clang_codeCompleteAt().  */
 enum|enum
 name|CXCodeComplete_Flags
@@ -2396,7 +2700,6 @@ name|CXString
 name|clang_getClangVersion
 parameter_list|()
 function_decl|;
-comment|/**  * \brief Return a version string, suitable for showing to a user, but not  *        intended to be parsed (the format is not guaranteed to be stable).  */
 comment|/**   * \brief Visitor invoked for each file in a translation unit   *        (used with clang_getInclusions()).   *   * This visitor function will be invoked by clang_getInclusions() for each   * file included (either at the top-level or by #include directives) within   * a translation unit.  The first argument is the file being included, and   * the second and third arguments provide the inclusion stack.  The   * array is sorted in order of immediate inclusion.  For example,   * the first element refers to the location that included 'included_file'.   */
 typedef|typedef
 name|void

@@ -775,25 +775,6 @@ argument|FoldingSetNodeID& id
 argument_list|)
 specifier|const
 expr_stmt|;
-comment|/// @brief Used by the Bitcode serializer to emit APInts to Bitcode.
-name|void
-name|Emit
-argument_list|(
-name|Serializer
-operator|&
-name|S
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// @brief Used by the Bitcode deserializer to deserialize APInts.
-name|void
-name|Read
-parameter_list|(
-name|Deserializer
-modifier|&
-name|D
-parameter_list|)
-function_decl|;
 comment|/// @}
 comment|/// @name Value Tests
 comment|/// @{
@@ -843,12 +824,10 @@ return|return
 name|isNonNegative
 argument_list|()
 operator|&&
-operator|(
+operator|!
+operator|!
 operator|*
 name|this
-operator|)
-operator|!=
-literal|0
 return|;
 block|}
 comment|/// This checks to see if the value has all bits of the APInt are set or not.
@@ -918,10 +897,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|countPopulation
-argument_list|()
-operator|==
-literal|0
+operator|!
+operator|*
+name|this
 return|;
 block|}
 comment|/// This checks to see if the value of this APInt is the minimum signed
@@ -944,10 +922,8 @@ operator|:
 name|isNegative
 argument_list|()
 operator|&&
-name|countPopulation
+name|isPowerOf2
 argument_list|()
-operator|==
-literal|1
 return|;
 block|}
 comment|/// @brief Check if this APInt has an N-bits unsigned integer value.
@@ -982,25 +958,15 @@ name|isSingleWord
 argument_list|()
 condition|)
 return|return
-name|VAL
-operator|==
-operator|(
-name|VAL
-operator|&
-operator|(
-operator|~
-literal|0ULL
-operator|>>
-operator|(
-literal|64
-operator|-
+name|isUIntN
+argument_list|(
 name|N
-operator|)
-operator|)
-operator|)
+argument_list|,
+name|VAL
+argument_list|)
 return|;
+return|return
 name|APInt
-name|Tmp
 argument_list|(
 name|N
 argument_list|,
@@ -1009,17 +975,12 @@ argument_list|()
 argument_list|,
 name|pVal
 argument_list|)
-decl_stmt|;
-name|Tmp
 operator|.
 name|zext
 argument_list|(
 name|getBitWidth
 argument_list|()
 argument_list|)
-expr_stmt|;
-return|return
-name|Tmp
 operator|==
 operator|(
 operator|*
@@ -1055,8 +1016,32 @@ name|bool
 name|isPowerOf2
 argument_list|()
 specifier|const
-expr_stmt|;
+block|{
+if|if
+condition|(
+name|isSingleWord
+argument_list|()
+condition|)
+return|return
+name|isPowerOf2_64
+argument_list|(
+name|VAL
+argument_list|)
+return|;
+return|return
+name|countPopulationSlowCase
+argument_list|()
+operator|==
+literal|1
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
 comment|/// isSignBit - Return true if this is the value returned by getSignBit.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isSignBit
 argument_list|()
@@ -1067,23 +1052,44 @@ name|isMinSignedValue
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// This converts the APInt to a boolean value as a test against zero.
+end_comment
+
+begin_comment
 comment|/// @brief Boolean conversion function.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|getBoolValue
 argument_list|()
 specifier|const
 block|{
 return|return
+operator|!
+operator|!
 operator|*
 name|this
-operator|!=
-literal|0
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// getLimitedValue - If this value is smaller than the specified limit,
+end_comment
+
+begin_comment
 comment|/// return it, otherwise return the limit value.  This causes the value
+end_comment
+
+begin_comment
 comment|/// to saturate to the limit.
+end_comment
+
+begin_decl_stmt
 name|uint64_t
 name|getLimitedValue
 argument_list|(
@@ -1114,10 +1120,25 @@ name|getZExtValue
 argument_list|()
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// @}
+end_comment
+
+begin_comment
 comment|/// @name Value Generators
+end_comment
+
+begin_comment
 comment|/// @{
+end_comment
+
+begin_comment
 comment|/// @brief Gets maximum unsigned value of APInt for specific bit width.
+end_comment
+
+begin_function
 specifier|static
 name|APInt
 name|getMaxValue
@@ -1127,18 +1148,19 @@ name|numBits
 parameter_list|)
 block|{
 return|return
-name|APInt
+name|getAllOnesValue
 argument_list|(
 name|numBits
-argument_list|,
-literal|0
 argument_list|)
-operator|.
-name|set
-argument_list|()
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// @brief Gets maximum signed value of APInt for a specific bit width.
+end_comment
+
+begin_function
 specifier|static
 name|APInt
 name|getSignedMaxValue
@@ -1147,26 +1169,34 @@ name|unsigned
 name|numBits
 parameter_list|)
 block|{
-return|return
 name|APInt
+name|API
+init|=
+name|getAllOnesValue
 argument_list|(
 name|numBits
-argument_list|,
-literal|0
 argument_list|)
+decl_stmt|;
+name|API
 operator|.
-name|set
-argument_list|()
-operator|.
-name|clear
+name|clearBit
 argument_list|(
 name|numBits
 operator|-
 literal|1
 argument_list|)
+expr_stmt|;
+return|return
+name|API
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// @brief Gets minimum unsigned value of APInt for a specific bit width.
+end_comment
+
+begin_function
 specifier|static
 name|APInt
 name|getMinValue
@@ -1184,7 +1214,13 @@ literal|0
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// @brief Gets minimum signed value of APInt for a specific bit width.
+end_comment
+
+begin_function
 specifier|static
 name|APInt
 name|getSignedMinValue
@@ -1193,25 +1229,42 @@ name|unsigned
 name|numBits
 parameter_list|)
 block|{
-return|return
 name|APInt
+name|API
 argument_list|(
 name|numBits
 argument_list|,
 literal|0
 argument_list|)
+decl_stmt|;
+name|API
 operator|.
-name|set
+name|setBit
 argument_list|(
 name|numBits
 operator|-
 literal|1
 argument_list|)
+expr_stmt|;
+return|return
+name|API
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// getSignBit - This is just a wrapper function of getSignedMinValue(), and
+end_comment
+
+begin_comment
 comment|/// it helps code readability when we want to get a SignBit.
+end_comment
+
+begin_comment
 comment|/// @brief Get the SignBit for a specific bit width.
+end_comment
+
+begin_function
 specifier|static
 name|APInt
 name|getSignBit
@@ -1227,8 +1280,17 @@ name|BitWidth
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// @returns the all-ones value for an APInt of the specified bit-width.
+end_comment
+
+begin_comment
 comment|/// @brief Get the all-ones value.
+end_comment
+
+begin_function
 specifier|static
 name|APInt
 name|getAllOnesValue
@@ -1242,15 +1304,24 @@ name|APInt
 argument_list|(
 name|numBits
 argument_list|,
-literal|0
+operator|-
+literal|1ULL
+argument_list|,
+name|true
 argument_list|)
-operator|.
-name|set
-argument_list|()
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// @returns the '0' value for an APInt of the specified bit-width.
+end_comment
+
+begin_comment
 comment|/// @brief Get the '0' value.
+end_comment
+
+begin_function
 specifier|static
 name|APInt
 name|getNullValue
@@ -1268,9 +1339,21 @@ literal|0
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// Get an APInt with the same BitWidth as this APInt, just zero mask
+end_comment
+
+begin_comment
 comment|/// the low bits and right shift to the least significant bit.
+end_comment
+
+begin_comment
 comment|/// @returns the high "numBits" bits of this APInt.
+end_comment
+
+begin_decl_stmt
 name|APInt
 name|getHiBits
 argument_list|(
@@ -1279,9 +1362,21 @@ name|numBits
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Get an APInt with the same BitWidth as this APInt, just zero mask
+end_comment
+
+begin_comment
 comment|/// the high bits.
+end_comment
+
+begin_comment
 comment|/// @returns the low "numBits" bits of this APInt.
+end_comment
+
+begin_decl_stmt
 name|APInt
 name|getLoBits
 argument_list|(
@@ -1290,16 +1385,86 @@ name|numBits
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// getOneBitSet - Return an APInt with exactly one bit set in the result.
+end_comment
+
+begin_function
+specifier|static
+name|APInt
+name|getOneBitSet
+parameter_list|(
+name|unsigned
+name|numBits
+parameter_list|,
+name|unsigned
+name|BitNo
+parameter_list|)
+block|{
+name|APInt
+name|Res
+argument_list|(
+name|numBits
+argument_list|,
+literal|0
+argument_list|)
+decl_stmt|;
+name|Res
+operator|.
+name|setBit
+argument_list|(
+name|BitNo
+argument_list|)
+expr_stmt|;
+return|return
+name|Res
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/// Constructs an APInt value that has a contiguous range of bits set. The
+end_comment
+
+begin_comment
 comment|/// bits from loBit (inclusive) to hiBit (exclusive) will be set. All other
+end_comment
+
+begin_comment
 comment|/// bits will be zero. For example, with parameters(32, 0, 16) you would get
+end_comment
+
+begin_comment
 comment|/// 0x0000FFFF. If hiBit is less than loBit then the set bits "wrap". For
+end_comment
+
+begin_comment
 comment|/// example, with parameters (32, 28, 4), you would get 0xF000000F.
+end_comment
+
+begin_comment
 comment|/// @param numBits the intended bit width of the result
+end_comment
+
+begin_comment
 comment|/// @param loBit the index of the lowest bit set.
+end_comment
+
+begin_comment
 comment|/// @param hiBit the index of the highest bit set.
+end_comment
+
+begin_comment
 comment|/// @returns An APInt value with the requested bits set.
+end_comment
+
+begin_comment
 comment|/// @brief Get a value with a block of bits set.
+end_comment
+
+begin_function
 specifier|static
 name|APInt
 name|getBitsSet
@@ -1371,10 +1536,25 @@ name|loBit
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// Constructs an APInt value that has the top hiBitsSet bits set.
+end_comment
+
+begin_comment
 comment|/// @param numBits the bitwidth of the result
+end_comment
+
+begin_comment
 comment|/// @param hiBitsSet the number of high-order bits set in the result.
+end_comment
+
+begin_comment
 comment|/// @brief Get a value with high bits set
+end_comment
+
+begin_function
 specifier|static
 name|APInt
 name|getHighBitsSet
@@ -1447,10 +1627,25 @@ name|shiftAmt
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// Constructs an APInt value that has the bottom loBitsSet bits set.
+end_comment
+
+begin_comment
 comment|/// @param numBits the bitwidth of the result
+end_comment
+
+begin_comment
 comment|/// @param loBitsSet the number of low-order bits set in the result.
+end_comment
+
+begin_comment
 comment|/// @brief Get a value with low bits set
+end_comment
+
+begin_function
 specifier|static
 name|APInt
 name|getLowBitsSet
@@ -1536,17 +1731,41 @@ name|loBitsSet
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// The hash value is computed as the sum of the words and the bit width.
+end_comment
+
+begin_comment
 comment|/// @returns A hash value computed from the sum of the APInt words.
+end_comment
+
+begin_comment
 comment|/// @brief Get a hash value based on this APInt
+end_comment
+
+begin_expr_stmt
 name|uint64_t
 name|getHashValue
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// This function returns a pointer to the internal storage of the APInt.
+end_comment
+
+begin_comment
 comment|/// This is useful for writing out the APInt in binary form without any
+end_comment
+
+begin_comment
 comment|/// conversions.
+end_comment
+
+begin_expr_stmt
 specifier|const
 name|uint64_t
 operator|*
@@ -1563,6 +1782,9 @@ return|return
 operator|&
 name|VAL
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 operator|&
 name|pVal
@@ -1570,10 +1792,10 @@ index|[
 literal|0
 index|]
 return|;
-block|}
-end_decl_stmt
+end_return
 
 begin_comment
+unit|}
 comment|/// @}
 end_comment
 
@@ -1594,7 +1816,7 @@ comment|/// @brief Postfix increment operator.
 end_comment
 
 begin_expr_stmt
-specifier|const
+unit|const
 name|APInt
 name|operator
 operator|++
@@ -1722,7 +1944,7 @@ argument_list|)
 block|;
 name|Result
 operator|.
-name|flip
+name|flipAllBits
 argument_list|()
 block|;
 return|return
@@ -3260,6 +3482,127 @@ block|}
 end_function
 
 begin_comment
+comment|// Operations that return overflow indicators.
+end_comment
+
+begin_decl_stmt
+name|APInt
+name|sadd_ov
+argument_list|(
+specifier|const
+name|APInt
+operator|&
+name|RHS
+argument_list|,
+name|bool
+operator|&
+name|Overflow
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|APInt
+name|uadd_ov
+argument_list|(
+specifier|const
+name|APInt
+operator|&
+name|RHS
+argument_list|,
+name|bool
+operator|&
+name|Overflow
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|APInt
+name|ssub_ov
+argument_list|(
+specifier|const
+name|APInt
+operator|&
+name|RHS
+argument_list|,
+name|bool
+operator|&
+name|Overflow
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|APInt
+name|usub_ov
+argument_list|(
+specifier|const
+name|APInt
+operator|&
+name|RHS
+argument_list|,
+name|bool
+operator|&
+name|Overflow
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|APInt
+name|sdiv_ov
+argument_list|(
+specifier|const
+name|APInt
+operator|&
+name|RHS
+argument_list|,
+name|bool
+operator|&
+name|Overflow
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|APInt
+name|smul_ov
+argument_list|(
+specifier|const
+name|APInt
+operator|&
+name|RHS
+argument_list|,
+name|bool
+operator|&
+name|Overflow
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|APInt
+name|sshl_ov
+argument_list|(
+name|unsigned
+name|Amt
+argument_list|,
+name|bool
+operator|&
+name|Overflow
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// @returns the bit value at bitPosition
 end_comment
 
@@ -4235,16 +4578,16 @@ begin_comment
 comment|/// @brief Truncate to new width.
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|APInt
-modifier|&
 name|trunc
-parameter_list|(
+argument_list|(
 name|unsigned
 name|width
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// This operation sign extends the APInt to a new width. If the high order
@@ -4266,16 +4609,16 @@ begin_comment
 comment|/// @brief Sign extend to a new width.
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|APInt
-modifier|&
 name|sext
-parameter_list|(
+argument_list|(
 name|unsigned
 name|width
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// This operation zero extends the APInt to a new width. The high order bits
@@ -4293,16 +4636,16 @@ begin_comment
 comment|/// @brief Zero extend to a new width.
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|APInt
-modifier|&
 name|zext
-parameter_list|(
+argument_list|(
 name|unsigned
 name|width
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// Make this APInt have the bit width given by \p width. The value is sign
@@ -4316,16 +4659,16 @@ begin_comment
 comment|/// @brief Sign extend or truncate to width
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|APInt
-modifier|&
 name|sextOrTrunc
-parameter_list|(
+argument_list|(
 name|unsigned
 name|width
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// Make this APInt have the bit width given by \p width. The value is zero
@@ -4339,16 +4682,16 @@ begin_comment
 comment|/// @brief Zero extend or truncate to width
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|APInt
-modifier|&
 name|zextOrTrunc
-parameter_list|(
+argument_list|(
 name|unsigned
 name|width
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// @}
@@ -4367,9 +4710,8 @@ comment|/// @brief Set every bit to 1.
 end_comment
 
 begin_function
-name|APInt
-modifier|&
-name|set
+name|void
+name|setAllBits
 parameter_list|()
 block|{
 if|if
@@ -4377,17 +4719,13 @@ condition|(
 name|isSingleWord
 argument_list|()
 condition|)
-block|{
 name|VAL
 operator|=
 operator|-
 literal|1ULL
 expr_stmt|;
-return|return
-name|clearUnusedBits
-argument_list|()
-return|;
-block|}
+else|else
+block|{
 comment|// Set all the bits in all the words.
 for|for
 control|(
@@ -4412,11 +4750,11 @@ operator|=
 operator|-
 literal|1ULL
 expr_stmt|;
+block|}
 comment|// Clear the unused ones
-return|return
 name|clearUnusedBits
 argument_list|()
-return|;
+expr_stmt|;
 block|}
 end_function
 
@@ -4429,9 +4767,8 @@ comment|/// @brief Set a given bit to 1.
 end_comment
 
 begin_function_decl
-name|APInt
-modifier|&
-name|set
+name|void
+name|setBit
 parameter_list|(
 name|unsigned
 name|bitPosition
@@ -4444,9 +4781,8 @@ comment|/// @brief Set every bit to 0.
 end_comment
 
 begin_function
-name|APInt
-modifier|&
-name|clear
+name|void
+name|clearAllBits
 parameter_list|()
 block|{
 if|if
@@ -4471,10 +4807,6 @@ operator|*
 name|APINT_WORD_SIZE
 argument_list|)
 expr_stmt|;
-return|return
-operator|*
-name|this
-return|;
 block|}
 end_function
 
@@ -4487,9 +4819,8 @@ comment|/// @brief Set a given bit to 0.
 end_comment
 
 begin_function_decl
-name|APInt
-modifier|&
-name|clear
+name|void
+name|clearBit
 parameter_list|(
 name|unsigned
 name|bitPosition
@@ -4502,9 +4833,8 @@ comment|/// @brief Toggle every bit to its opposite value.
 end_comment
 
 begin_function
-name|APInt
-modifier|&
-name|flip
+name|void
+name|flipAllBits
 parameter_list|()
 block|{
 if|if
@@ -4512,17 +4842,13 @@ condition|(
 name|isSingleWord
 argument_list|()
 condition|)
-block|{
 name|VAL
 operator|^=
 operator|-
 literal|1ULL
 expr_stmt|;
-return|return
-name|clearUnusedBits
-argument_list|()
-return|;
-block|}
+else|else
+block|{
 for|for
 control|(
 name|unsigned
@@ -4546,10 +4872,10 @@ operator|^=
 operator|-
 literal|1ULL
 expr_stmt|;
-return|return
+block|}
 name|clearUnusedBits
 argument_list|()
-return|;
+expr_stmt|;
 block|}
 end_function
 
@@ -4566,9 +4892,8 @@ comment|/// @brief Toggles a given bit to its opposite value.
 end_comment
 
 begin_function_decl
-name|APInt
-modifier|&
-name|flip
+name|void
+name|flipBit
 parameter_list|(
 name|unsigned
 name|bitPosition
@@ -5531,11 +5856,7 @@ comment|/// The conversion does not do a translation from double to integer, it 
 end_comment
 
 begin_comment
-comment|/// re-interprets the bits of the double. Note that it is valid to do this on
-end_comment
-
-begin_comment
-comment|/// any bit width but bits from V may get truncated.
+comment|/// re-interprets the bits of the double.
 end_comment
 
 begin_comment
@@ -5543,8 +5864,8 @@ comment|/// @brief Converts a double to APInt bits.
 end_comment
 
 begin_function
+specifier|static
 name|APInt
-modifier|&
 name|doubleToBits
 parameter_list|(
 name|double
@@ -5568,30 +5889,18 @@ name|D
 operator|=
 name|V
 expr_stmt|;
-if|if
-condition|(
-name|isSingleWord
-argument_list|()
-condition|)
-name|VAL
-operator|=
-name|T
-operator|.
-name|I
-expr_stmt|;
-else|else
-name|pVal
-index|[
-literal|0
-index|]
-operator|=
-name|T
-operator|.
-name|I
-expr_stmt|;
 return|return
-name|clearUnusedBits
-argument_list|()
+name|APInt
+argument_list|(
+sizeof|sizeof
+name|T
+operator|*
+name|CHAR_BIT
+argument_list|,
+name|T
+operator|.
+name|I
+argument_list|)
 return|;
 block|}
 end_function
@@ -5601,11 +5910,7 @@ comment|/// The conversion does not do a translation from float to integer, it j
 end_comment
 
 begin_comment
-comment|/// re-interprets the bits of the float. Note that it is valid to do this on
-end_comment
-
-begin_comment
-comment|/// any bit width but bits from V may get truncated.
+comment|/// re-interprets the bits of the float.
 end_comment
 
 begin_comment
@@ -5613,8 +5918,8 @@ comment|/// @brief Converts a float to APInt bits.
 end_comment
 
 begin_function
+specifier|static
 name|APInt
-modifier|&
 name|floatToBits
 parameter_list|(
 name|float
@@ -5638,30 +5943,18 @@ name|F
 operator|=
 name|V
 expr_stmt|;
-if|if
-condition|(
-name|isSingleWord
-argument_list|()
-condition|)
-name|VAL
-operator|=
-name|T
-operator|.
-name|I
-expr_stmt|;
-else|else
-name|pVal
-index|[
-literal|0
-index|]
-operator|=
-name|T
-operator|.
-name|I
-expr_stmt|;
 return|return
-name|clearUnusedBits
-argument_list|()
+name|APInt
+argument_list|(
+sizeof|sizeof
+name|T
+operator|*
+name|CHAR_BIT
+argument_list|,
+name|T
+operator|.
+name|I
+argument_list|)
 return|;
 block|}
 end_function

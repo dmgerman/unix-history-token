@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/ASTMutationListener.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Serialization/ASTBitCodes.h"
 end_include
 
@@ -109,6 +115,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/DenseMap.h"
 end_include
 
 begin_include
@@ -159,16 +171,22 @@ name|class
 name|ASTContext
 decl_stmt|;
 name|class
+name|ASTSerializationListener
+decl_stmt|;
+name|class
 name|NestedNameSpecifier
 decl_stmt|;
 name|class
 name|CXXBaseSpecifier
 decl_stmt|;
 name|class
-name|CXXBaseOrMemberInitializer
+name|CXXCtorInitializer
 decl_stmt|;
 name|class
-name|LabelStmt
+name|FPOptions
+decl_stmt|;
+name|class
+name|HeaderSearch
 decl_stmt|;
 name|class
 name|MacroDefinition
@@ -177,7 +195,19 @@ name|class
 name|MemorizeStatCalls
 decl_stmt|;
 name|class
+name|OpaqueValueExpr
+decl_stmt|;
+name|class
+name|OpenCLOptions
+decl_stmt|;
+name|class
 name|ASTReader
+decl_stmt|;
+name|class
+name|PreprocessedEntity
+decl_stmt|;
+name|class
+name|PreprocessingRecord
 decl_stmt|;
 name|class
 name|Preprocessor
@@ -205,9 +235,12 @@ name|ASTWriter
 range|:
 name|public
 name|ASTDeserializationListener
+decl_stmt|,
+name|public
+name|ASTMutationListener
 block|{
 name|public
-operator|:
+label|:
 typedef|typedef
 name|llvm
 operator|::
@@ -218,6 +251,15 @@ operator|,
 literal|64
 operator|>
 name|RecordData
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|uint64_t
+operator|>
+name|RecordDataImpl
 expr_stmt|;
 name|friend
 name|class
@@ -236,6 +278,12 @@ comment|/// \brief The reader of existing AST files, if we're chaining.
 name|ASTReader
 modifier|*
 name|Chain
+decl_stmt|;
+comment|/// \brief A listener object that receives notifications when certain
+comment|/// entities are serialized.
+name|ASTSerializationListener
+modifier|*
+name|SerializationListener
 decl_stmt|;
 comment|/// \brief Stores a declaration or a type to be written to the AST file.
 name|class
@@ -537,8 +585,31 @@ name|uint64_t
 operator|>
 name|MacroOffsets
 expr_stmt|;
+comment|/// \brief The set of identifiers that had macro definitions at some point.
+name|std
+operator|::
+name|vector
+operator|<
+specifier|const
+name|IdentifierInfo
+operator|*
+operator|>
+name|DeserializedMacroNames
+expr_stmt|;
+comment|/// \brief The first ID number we can use for our own macro definitions.
+name|serialization
+operator|::
+name|MacroID
+name|FirstMacroID
+expr_stmt|;
+comment|/// \brief The decl ID that will be assigned to the next new macro definition.
+name|serialization
+operator|::
+name|MacroID
+name|NextMacroID
+expr_stmt|;
 comment|/// \brief Mapping from macro definitions (as they occur in the preprocessing
-comment|/// record) to the index into the macro definitions table.
+comment|/// record) to the macro IDs.
 name|llvm
 operator|::
 name|DenseMap
@@ -549,7 +620,7 @@ operator|*
 operator|,
 name|serialization
 operator|::
-name|IdentID
+name|MacroID
 operator|>
 name|MacroDefinitions
 expr_stmt|;
@@ -563,6 +634,35 @@ name|uint32_t
 operator|>
 name|MacroDefinitionOffsets
 expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|uint64_t
+operator|,
+literal|2
+operator|>
+name|UpdateRecord
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|Decl
+operator|*
+operator|,
+name|UpdateRecord
+operator|>
+name|DeclUpdateMap
+expr_stmt|;
+comment|/// \brief Mapping from declarations that came from a chained PCH to the
+comment|/// record containing modifications to them.
+name|DeclUpdateMap
+name|DeclUpdates
+decl_stmt|;
 typedef|typedef
 name|llvm
 operator|::
@@ -603,10 +703,10 @@ literal|16
 operator|>
 name|ExternalDefinitions
 expr_stmt|;
-comment|/// \brief Namespaces that have received extensions since their serialized
+comment|/// \brief DeclContexts that have received extensions since their serialized
 comment|/// form.
 comment|///
-comment|/// Basically, when we're chaining and encountering a namespace, we check if
+comment|/// For namespaces, when we're chaining and encountering a namespace, we check if
 comment|/// its primary namespace comes from the chain. If it does, we add the primary
 comment|/// to this set, so that we can write out lexical content updates for it.
 name|llvm
@@ -614,13 +714,30 @@ operator|::
 name|SmallPtrSet
 operator|<
 specifier|const
-name|NamespaceDecl
+name|DeclContext
 operator|*
 operator|,
 literal|16
 operator|>
-name|UpdatedNamespaces
+name|UpdatedDeclContexts
 expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|SmallPtrSet
+operator|<
+specifier|const
+name|Decl
+operator|*
+operator|,
+literal|16
+operator|>
+name|DeclsToRewriteTy
+expr_stmt|;
+comment|/// \brief Decls that will be replaced in the current dependent AST file.
+name|DeclsToRewriteTy
+name|DeclsToRewrite
+decl_stmt|;
 comment|/// \brief Decls that have been replaced in the current dependent AST file.
 comment|///
 comment|/// When a decl changes fundamentally after being deserialized (this shouldn't
@@ -646,37 +763,6 @@ literal|16
 operator|>
 name|ReplacedDecls
 expr_stmt|;
-typedef|typedef
-name|llvm
-operator|::
-name|SmallVector
-operator|<
-name|serialization
-operator|::
-name|DeclID
-operator|,
-literal|4
-operator|>
-name|AdditionalTemplateSpecializationsList
-expr_stmt|;
-typedef|typedef
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-name|serialization
-operator|::
-name|DeclID
-operator|,
-name|AdditionalTemplateSpecializationsList
-operator|>
-name|AdditionalTemplateSpecializationsMap
-expr_stmt|;
-comment|/// \brief Additional specializations (including partial) of templates that
-comment|/// were introduced after the template was serialized.
-name|AdditionalTemplateSpecializationsMap
-name|AdditionalTemplateSpecializations
-decl_stmt|;
 comment|/// \brief Statements that we've encountered while serializing a
 comment|/// declaration or type.
 name|llvm
@@ -716,17 +802,17 @@ name|unsigned
 operator|>
 name|SwitchCaseIDs
 expr_stmt|;
-comment|/// \brief Mapping from LabelStmt statements to IDs.
-name|std
+comment|/// \brief Mapping from OpaqueValueExpr expressions to IDs.
+name|llvm
 operator|::
-name|map
+name|DenseMap
 operator|<
-name|LabelStmt
+name|OpaqueValueExpr
 operator|*
 operator|,
 name|unsigned
 operator|>
-name|LabelIDs
+name|OpaqueValues
 expr_stmt|;
 comment|/// \brief The number of statements written to the AST file.
 name|unsigned
@@ -746,6 +832,100 @@ comment|/// file.
 name|unsigned
 name|NumVisibleDeclContexts
 decl_stmt|;
+comment|/// \brief The offset of each CXXBaseSpecifier set within the AST.
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|uint32_t
+operator|,
+literal|4
+operator|>
+name|CXXBaseSpecifiersOffsets
+expr_stmt|;
+comment|/// \brief The first ID number we can use for our own base specifiers.
+name|serialization
+operator|::
+name|CXXBaseSpecifiersID
+name|FirstCXXBaseSpecifiersID
+expr_stmt|;
+comment|/// \brief The base specifiers ID that will be assigned to the next new
+comment|/// set of C++ base specifiers.
+name|serialization
+operator|::
+name|CXXBaseSpecifiersID
+name|NextCXXBaseSpecifiersID
+expr_stmt|;
+comment|/// \brief A set of C++ base specifiers that is queued to be written into the
+comment|/// AST file.
+struct|struct
+name|QueuedCXXBaseSpecifiers
+block|{
+name|QueuedCXXBaseSpecifiers
+argument_list|()
+operator|:
+name|ID
+argument_list|()
+operator|,
+name|Bases
+argument_list|()
+operator|,
+name|BasesEnd
+argument_list|()
+block|{ }
+name|QueuedCXXBaseSpecifiers
+argument_list|(
+argument|serialization::CXXBaseSpecifiersID ID
+argument_list|,
+argument|CXXBaseSpecifier const *Bases
+argument_list|,
+argument|CXXBaseSpecifier const *BasesEnd
+argument_list|)
+operator|:
+name|ID
+argument_list|(
+name|ID
+argument_list|)
+operator|,
+name|Bases
+argument_list|(
+name|Bases
+argument_list|)
+operator|,
+name|BasesEnd
+argument_list|(
+argument|BasesEnd
+argument_list|)
+block|{ }
+name|serialization
+operator|::
+name|CXXBaseSpecifiersID
+name|ID
+expr_stmt|;
+name|CXXBaseSpecifier
+specifier|const
+modifier|*
+name|Bases
+decl_stmt|;
+name|CXXBaseSpecifier
+specifier|const
+modifier|*
+name|BasesEnd
+decl_stmt|;
+block|}
+struct|;
+comment|/// \brief Queue of C++ base specifiers to be written to the AST file,
+comment|/// in the order they should be written.
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|QueuedCXXBaseSpecifiers
+operator|,
+literal|2
+operator|>
+name|CXXBaseSpecifiersToWrite
+expr_stmt|;
 comment|/// \brief Write the given subexpression to the bitstream.
 name|void
 name|WriteSubStmt
@@ -761,17 +941,24 @@ parameter_list|()
 function_decl|;
 name|void
 name|WriteMetadata
-parameter_list|(
+argument_list|(
 name|ASTContext
-modifier|&
+operator|&
 name|Context
-parameter_list|,
+argument_list|,
 specifier|const
 name|char
-modifier|*
+operator|*
 name|isysroot
-parameter_list|)
-function_decl|;
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|OutputFile
+argument_list|)
+decl_stmt|;
 name|void
 name|WriteLanguageOptions
 parameter_list|(
@@ -814,6 +1001,36 @@ specifier|const
 name|Preprocessor
 modifier|&
 name|PP
+parameter_list|)
+function_decl|;
+name|void
+name|WriteHeaderSearch
+parameter_list|(
+name|HeaderSearch
+modifier|&
+name|HS
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|isysroot
+parameter_list|)
+function_decl|;
+name|void
+name|WritePreprocessorDetail
+parameter_list|(
+name|PreprocessingRecord
+modifier|&
+name|PPRec
+parameter_list|)
+function_decl|;
+name|void
+name|WritePragmaDiagnosticMappings
+parameter_list|(
+specifier|const
+name|Diagnostic
+modifier|&
+name|Diag
 parameter_list|)
 function_decl|;
 name|void
@@ -876,16 +1093,24 @@ name|PP
 parameter_list|)
 function_decl|;
 name|void
-name|WriteAttributeRecord
+name|WriteAttributes
 parameter_list|(
 specifier|const
 name|AttrVec
 modifier|&
 name|Attrs
+parameter_list|,
+name|RecordDataImpl
+modifier|&
+name|Record
 parameter_list|)
 function_decl|;
 name|void
-name|WriteDeclUpdateBlock
+name|WriteDeclUpdatesBlocks
+parameter_list|()
+function_decl|;
+name|void
+name|WriteDeclReplacementsBlock
 parameter_list|()
 function_decl|;
 name|void
@@ -898,8 +1123,21 @@ name|DC
 parameter_list|)
 function_decl|;
 name|void
-name|WriteAdditionalTemplateSpecializations
-parameter_list|()
+name|WriteFPPragmaOptions
+parameter_list|(
+specifier|const
+name|FPOptions
+modifier|&
+name|Opts
+parameter_list|)
+function_decl|;
+name|void
+name|WriteOpenCLExtensions
+parameter_list|(
+name|Sema
+modifier|&
+name|SemaRef
+parameter_list|)
 function_decl|;
 name|unsigned
 name|ParmVarDeclAbbrev
@@ -931,21 +1169,28 @@ parameter_list|)
 function_decl|;
 name|void
 name|WriteASTCore
-parameter_list|(
+argument_list|(
 name|Sema
-modifier|&
+operator|&
 name|SemaRef
-parameter_list|,
+argument_list|,
 name|MemorizeStatCalls
-modifier|*
+operator|*
 name|StatCalls
-parameter_list|,
+argument_list|,
 specifier|const
 name|char
-modifier|*
+operator|*
 name|isysroot
-parameter_list|)
-function_decl|;
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|OutputFile
+argument_list|)
+decl_stmt|;
 name|void
 name|WriteASTChain
 parameter_list|(
@@ -976,6 +1221,21 @@ operator|&
 name|Stream
 argument_list|)
 expr_stmt|;
+comment|/// \brief Set the listener that will receive notification of serialization
+comment|/// events.
+name|void
+name|SetSerializationListener
+parameter_list|(
+name|ASTSerializationListener
+modifier|*
+name|Listener
+parameter_list|)
+block|{
+name|SerializationListener
+operator|=
+name|Listener
+expr_stmt|;
+block|}
 comment|/// \brief Write a precompiled header for the given semantic analysis.
 comment|///
 comment|/// \param SemaRef a reference to the semantic analysis object that processed
@@ -991,21 +1251,28 @@ comment|/// \param PPRec Record of the preprocessing actions that occurred while
 comment|/// preprocessing this file, e.g., macro instantiations
 name|void
 name|WriteAST
-parameter_list|(
+argument_list|(
 name|Sema
-modifier|&
+operator|&
 name|SemaRef
-parameter_list|,
+argument_list|,
 name|MemorizeStatCalls
-modifier|*
+operator|*
 name|StatCalls
-parameter_list|,
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|OutputFile
+argument_list|,
 specifier|const
 name|char
-modifier|*
+operator|*
 name|isysroot
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// \brief Emit a source location.
 name|void
 name|AddSourceLocation
@@ -1013,7 +1280,7 @@ parameter_list|(
 name|SourceLocation
 name|Loc
 parameter_list|,
-name|RecordData
+name|RecordDataImpl
 modifier|&
 name|Record
 parameter_list|)
@@ -1025,7 +1292,7 @@ parameter_list|(
 name|SourceRange
 name|Range
 parameter_list|,
-name|RecordData
+name|RecordDataImpl
 modifier|&
 name|Record
 parameter_list|)
@@ -1041,7 +1308,7 @@ name|APInt
 operator|&
 name|Value
 argument_list|,
-name|RecordData
+name|RecordDataImpl
 operator|&
 name|Record
 argument_list|)
@@ -1057,7 +1324,7 @@ name|APSInt
 operator|&
 name|Value
 argument_list|,
-name|RecordData
+name|RecordDataImpl
 operator|&
 name|Record
 argument_list|)
@@ -1073,7 +1340,7 @@ name|APFloat
 operator|&
 name|Value
 argument_list|,
-name|RecordData
+name|RecordDataImpl
 operator|&
 name|Record
 argument_list|)
@@ -1087,7 +1354,7 @@ name|IdentifierInfo
 modifier|*
 name|II
 parameter_list|,
-name|RecordData
+name|RecordDataImpl
 modifier|&
 name|Record
 parameter_list|)
@@ -1098,7 +1365,7 @@ name|AddSelectorRef
 parameter_list|(
 name|Selector
 parameter_list|,
-name|RecordData
+name|RecordDataImpl
 modifier|&
 name|Record
 parameter_list|)
@@ -1112,7 +1379,26 @@ name|CXXTemporary
 modifier|*
 name|Temp
 parameter_list|,
-name|RecordData
+name|RecordDataImpl
+modifier|&
+name|Record
+parameter_list|)
+function_decl|;
+comment|/// \brief Emit a set of C++ base specifiers to the record.
+name|void
+name|AddCXXBaseSpecifiersRef
+parameter_list|(
+name|CXXBaseSpecifier
+specifier|const
+modifier|*
+name|Bases
+parameter_list|,
+name|CXXBaseSpecifier
+specifier|const
+modifier|*
+name|BasesEnd
+parameter_list|,
+name|RecordDataImpl
 modifier|&
 name|Record
 parameter_list|)
@@ -1179,7 +1465,7 @@ comment|/// \brief Retrieve the ID number corresponding to the given macro
 comment|/// definition.
 name|serialization
 operator|::
-name|IdentID
+name|MacroID
 name|getMacroDefinitionID
 argument_list|(
 name|MacroDefinition
@@ -1194,7 +1480,7 @@ parameter_list|(
 name|QualType
 name|T
 parameter_list|,
-name|RecordData
+name|RecordDataImpl
 modifier|&
 name|Record
 parameter_list|)
@@ -1245,7 +1531,7 @@ name|TypeSourceInfo
 modifier|*
 name|TInfo
 parameter_list|,
-name|RecordData
+name|RecordDataImpl
 modifier|&
 name|Record
 parameter_list|)
@@ -1264,7 +1550,7 @@ name|TemplateArgumentLocInfo
 operator|&
 name|Arg
 argument_list|,
-name|RecordData
+name|RecordDataImpl
 operator|&
 name|Record
 argument_list|)
@@ -1278,7 +1564,7 @@ name|TemplateArgumentLoc
 modifier|&
 name|Arg
 parameter_list|,
-name|RecordData
+name|RecordDataImpl
 modifier|&
 name|Record
 parameter_list|)
@@ -1292,7 +1578,7 @@ name|Decl
 modifier|*
 name|D
 parameter_list|,
-name|RecordData
+name|RecordDataImpl
 modifier|&
 name|Record
 parameter_list|)
@@ -1329,7 +1615,49 @@ parameter_list|(
 name|DeclarationName
 name|Name
 parameter_list|,
-name|RecordData
+name|RecordDataImpl
+modifier|&
+name|Record
+parameter_list|)
+function_decl|;
+name|void
+name|AddDeclarationNameLoc
+parameter_list|(
+specifier|const
+name|DeclarationNameLoc
+modifier|&
+name|DNLoc
+parameter_list|,
+name|DeclarationName
+name|Name
+parameter_list|,
+name|RecordDataImpl
+modifier|&
+name|Record
+parameter_list|)
+function_decl|;
+name|void
+name|AddDeclarationNameInfo
+parameter_list|(
+specifier|const
+name|DeclarationNameInfo
+modifier|&
+name|NameInfo
+parameter_list|,
+name|RecordDataImpl
+modifier|&
+name|Record
+parameter_list|)
+function_decl|;
+name|void
+name|AddQualifierInfo
+parameter_list|(
+specifier|const
+name|QualifierInfo
+modifier|&
+name|Info
+parameter_list|,
+name|RecordDataImpl
 modifier|&
 name|Record
 parameter_list|)
@@ -1342,7 +1670,7 @@ name|NestedNameSpecifier
 modifier|*
 name|NNS
 parameter_list|,
-name|RecordData
+name|RecordDataImpl
 modifier|&
 name|Record
 parameter_list|)
@@ -1354,7 +1682,7 @@ parameter_list|(
 name|TemplateName
 name|Name
 parameter_list|,
-name|RecordData
+name|RecordDataImpl
 modifier|&
 name|Record
 parameter_list|)
@@ -1368,7 +1696,7 @@ name|TemplateArgument
 modifier|&
 name|Arg
 parameter_list|,
-name|RecordData
+name|RecordDataImpl
 modifier|&
 name|Record
 parameter_list|)
@@ -1382,7 +1710,7 @@ name|TemplateParameterList
 modifier|*
 name|TemplateParams
 parameter_list|,
-name|RecordData
+name|RecordDataImpl
 modifier|&
 name|Record
 parameter_list|)
@@ -1396,7 +1724,7 @@ name|TemplateArgumentList
 modifier|*
 name|TemplateArgs
 parameter_list|,
-name|RecordData
+name|RecordDataImpl
 modifier|&
 name|Record
 parameter_list|)
@@ -1410,7 +1738,7 @@ name|UnresolvedSetImpl
 modifier|&
 name|Set
 parameter_list|,
-name|RecordData
+name|RecordDataImpl
 modifier|&
 name|Record
 parameter_list|)
@@ -1424,26 +1752,39 @@ name|CXXBaseSpecifier
 modifier|&
 name|Base
 parameter_list|,
-name|RecordData
+name|RecordDataImpl
 modifier|&
 name|Record
 parameter_list|)
 function_decl|;
-comment|/// \brief Emit a CXXBaseOrMemberInitializer array.
+comment|/// \brief Emit a CXXCtorInitializer array.
 name|void
-name|AddCXXBaseOrMemberInitializers
+name|AddCXXCtorInitializers
 parameter_list|(
 specifier|const
-name|CXXBaseOrMemberInitializer
+name|CXXCtorInitializer
 modifier|*
 specifier|const
 modifier|*
-name|BaseOrMembers
+name|CtorInitializers
 parameter_list|,
 name|unsigned
-name|NumBaseOrMembers
+name|NumCtorInitializers
 parameter_list|,
-name|RecordData
+name|RecordDataImpl
+modifier|&
+name|Record
+parameter_list|)
+function_decl|;
+name|void
+name|AddCXXDefinitionData
+parameter_list|(
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|D
+parameter_list|,
+name|RecordDataImpl
 modifier|&
 name|Record
 parameter_list|)
@@ -1457,53 +1798,58 @@ operator|::
 name|StringRef
 name|Str
 argument_list|,
-name|RecordData
+name|RecordDataImpl
 operator|&
 name|Record
 argument_list|)
 decl_stmt|;
-comment|/// \brief Mark a namespace as needing an update.
+comment|/// \brief Mark a declaration context as needing an update.
 name|void
-name|AddUpdatedNamespace
+name|AddUpdatedDeclContext
 parameter_list|(
 specifier|const
-name|NamespaceDecl
+name|DeclContext
 modifier|*
-name|NS
+name|DC
 parameter_list|)
 block|{
-name|UpdatedNamespaces
+name|UpdatedDeclContexts
 operator|.
 name|insert
 argument_list|(
-name|NS
+name|DC
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// \brief Record a template specialization or partial specialization of
-comment|/// a template from a previous PCH file.
 name|void
-name|AddAdditionalTemplateSpecialization
-argument_list|(
-name|serialization
-operator|::
-name|DeclID
-name|Templ
-argument_list|,
-name|serialization
-operator|::
-name|DeclID
-name|Spec
-argument_list|)
+name|RewriteDecl
+parameter_list|(
+specifier|const
+name|Decl
+modifier|*
+name|D
+parameter_list|)
 block|{
-name|AdditionalTemplateSpecializations
-index|[
-name|Templ
-index|]
+name|DeclsToRewrite
 operator|.
-name|push_back
+name|insert
 argument_list|(
-name|Spec
+name|D
+argument_list|)
+expr_stmt|;
+comment|// Reset the flag, so that we don't add this decl multiple times.
+name|const_cast
+operator|<
+name|Decl
+operator|*
+operator|>
+operator|(
+name|D
+operator|)
+operator|->
+name|setChangedSinceDeserialization
+argument_list|(
+name|false
 argument_list|)
 expr_stmt|;
 block|}
@@ -1563,6 +1909,12 @@ name|void
 name|FlushStmts
 parameter_list|()
 function_decl|;
+comment|/// \brief Flush all of the C++ base specifier sets that have been added
+comment|/// via \c AddCXXBaseSpecifiersRef().
+name|void
+name|FlushCXXBaseSpecifiers
+parameter_list|()
+function_decl|;
 comment|/// \brief Record an ID for the given switch-case statement.
 name|unsigned
 name|RecordSwitchCaseID
@@ -1581,14 +1933,17 @@ modifier|*
 name|S
 parameter_list|)
 function_decl|;
-comment|/// \brief Retrieve the ID for the given label statement, which may
-comment|/// or may not have been emitted yet.
+name|void
+name|ClearSwitchCaseIDs
+parameter_list|()
+function_decl|;
+comment|/// \brief Retrieve the ID for the given opaque value expression.
 name|unsigned
-name|GetLabelID
+name|getOpaqueValueID
 parameter_list|(
-name|LabelStmt
+name|OpaqueValueExpr
 modifier|*
-name|S
+name|e
 parameter_list|)
 function_decl|;
 name|unsigned
@@ -1611,7 +1966,7 @@ return|;
 block|}
 comment|// ASTDeserializationListener implementation
 name|void
-name|SetReader
+name|ReaderInitialized
 parameter_list|(
 name|ASTReader
 modifier|*
@@ -1663,28 +2018,85 @@ argument_list|(
 name|serialization
 operator|::
 name|SelectorID
-name|iD
+name|ID
 argument_list|,
 name|Selector
 name|Sel
 argument_list|)
 decl_stmt|;
+name|void
+name|MacroDefinitionRead
+argument_list|(
+name|serialization
+operator|::
+name|MacroID
+name|ID
+argument_list|,
+name|MacroDefinition
+operator|*
+name|MD
+argument_list|)
+decl_stmt|;
+comment|// ASTMutationListener implementation.
+name|virtual
+name|void
+name|CompletedTagDefinition
+parameter_list|(
+specifier|const
+name|TagDecl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
+name|virtual
+name|void
+name|AddedVisibleDecl
+parameter_list|(
+specifier|const
+name|DeclContext
+modifier|*
+name|DC
+parameter_list|,
+specifier|const
+name|Decl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
+name|virtual
+name|void
+name|AddedCXXImplicitMember
+parameter_list|(
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|RD
+parameter_list|,
+specifier|const
+name|Decl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
+name|virtual
+name|void
+name|AddedCXXTemplateSpecialization
+parameter_list|(
+specifier|const
+name|ClassTemplateDecl
+modifier|*
+name|TD
+parameter_list|,
+specifier|const
+name|ClassTemplateSpecializationDecl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_comment
 comment|/// \brief AST and semantic-analysis consumer that generates a
-end_comment
-
-begin_comment
 comment|/// precompiled header from the parsed source code.
-end_comment
-
-begin_decl_stmt
 name|class
 name|PCHGenerator
 range|:
@@ -1695,6 +2107,11 @@ specifier|const
 name|Preprocessor
 operator|&
 name|PP
+block|;
+name|std
+operator|::
+name|string
+name|OutputFile
 block|;
 specifier|const
 name|char
@@ -1733,6 +2150,9 @@ block|;
 name|ASTWriter
 name|Writer
 block|;
+name|bool
+name|Chaining
+block|;
 name|protected
 operator|:
 name|ASTWriter
@@ -1760,6 +2180,8 @@ operator|:
 name|PCHGenerator
 argument_list|(
 argument|const Preprocessor&PP
+argument_list|,
+argument|const std::string&OutputFile
 argument_list|,
 argument|bool Chaining
 argument_list|,
@@ -1790,16 +2212,28 @@ name|Ctx
 argument_list|)
 block|;
 name|virtual
+name|ASTMutationListener
+operator|*
+name|GetASTMutationListener
+argument_list|()
+block|;
+name|virtual
+name|ASTSerializationListener
+operator|*
+name|GetASTSerializationListener
+argument_list|()
+block|;
+name|virtual
 name|ASTDeserializationListener
 operator|*
 name|GetASTDeserializationListener
 argument_list|()
 block|; }
 decl_stmt|;
+block|}
 end_decl_stmt
 
 begin_comment
-unit|}
 comment|// end namespace clang
 end_comment
 

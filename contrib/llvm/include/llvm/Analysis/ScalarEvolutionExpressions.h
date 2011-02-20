@@ -162,85 +162,20 @@ return|return
 name|V
 return|;
 block|}
-name|virtual
-name|bool
-name|isLoopInvariant
-argument_list|(
-argument|const Loop *L
-argument_list|)
-specifier|const
-block|{
-return|return
-name|true
-return|;
-block|}
-name|virtual
-name|bool
-name|hasComputableLoopEvolution
-argument_list|(
-argument|const Loop *L
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-comment|// Not loop variant
-block|}
-name|virtual
 specifier|const
 name|Type
 operator|*
 name|getType
 argument_list|()
 specifier|const
-block|;
-name|virtual
-name|bool
-name|hasOperand
-argument_list|(
-argument|const SCEV *
-argument_list|)
-specifier|const
 block|{
 return|return
-name|false
+name|V
+operator|->
+name|getType
+argument_list|()
 return|;
 block|}
-name|bool
-name|dominates
-argument_list|(
-argument|BasicBlock *BB
-argument_list|,
-argument|DominatorTree *DT
-argument_list|)
-specifier|const
-block|{
-return|return
-name|true
-return|;
-block|}
-name|bool
-name|properlyDominates
-argument_list|(
-argument|BasicBlock *BB
-argument_list|,
-argument|DominatorTree *DT
-argument_list|)
-specifier|const
-block|{
-return|return
-name|true
-return|;
-block|}
-name|virtual
-name|void
-name|print
-argument_list|(
-argument|raw_ostream&OS
-argument_list|)
-specifier|const
-block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline
@@ -318,7 +253,6 @@ return|return
 name|Op
 return|;
 block|}
-name|virtual
 specifier|const
 name|Type
 operator|*
@@ -330,81 +264,6 @@ return|return
 name|Ty
 return|;
 block|}
-name|virtual
-name|bool
-name|isLoopInvariant
-argument_list|(
-argument|const Loop *L
-argument_list|)
-specifier|const
-block|{
-return|return
-name|Op
-operator|->
-name|isLoopInvariant
-argument_list|(
-name|L
-argument_list|)
-return|;
-block|}
-name|virtual
-name|bool
-name|hasComputableLoopEvolution
-argument_list|(
-argument|const Loop *L
-argument_list|)
-specifier|const
-block|{
-return|return
-name|Op
-operator|->
-name|hasComputableLoopEvolution
-argument_list|(
-name|L
-argument_list|)
-return|;
-block|}
-name|virtual
-name|bool
-name|hasOperand
-argument_list|(
-argument|const SCEV *O
-argument_list|)
-specifier|const
-block|{
-return|return
-name|Op
-operator|==
-name|O
-operator|||
-name|Op
-operator|->
-name|hasOperand
-argument_list|(
-name|O
-argument_list|)
-return|;
-block|}
-name|virtual
-name|bool
-name|dominates
-argument_list|(
-argument|BasicBlock *BB
-argument_list|,
-argument|DominatorTree *DT
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|bool
-name|properlyDominates
-argument_list|(
-argument|BasicBlock *BB
-argument_list|,
-argument|DominatorTree *DT
-argument_list|)
-specifier|const
-block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline
@@ -476,14 +335,6 @@ argument_list|)
 block|;
 name|public
 operator|:
-name|virtual
-name|void
-name|print
-argument_list|(
-argument|raw_ostream&OS
-argument_list|)
-specifier|const
-block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline
@@ -541,14 +392,6 @@ argument_list|)
 block|;
 name|public
 operator|:
-name|virtual
-name|void
-name|print
-argument_list|(
-argument|raw_ostream&OS
-argument_list|)
-specifier|const
-block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline
@@ -606,14 +449,6 @@ argument_list|)
 block|;
 name|public
 operator|:
-name|virtual
-name|void
-name|print
-argument_list|(
-argument|raw_ostream&OS
-argument_list|)
-specifier|const
-block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline
@@ -764,52 +599,6 @@ operator|+
 name|NumOperands
 return|;
 block|}
-name|virtual
-name|bool
-name|isLoopInvariant
-argument_list|(
-argument|const Loop *L
-argument_list|)
-specifier|const
-block|;
-comment|// hasComputableLoopEvolution - N-ary expressions have computable loop
-comment|// evolutions iff they have at least one operand that varies with the loop,
-comment|// but that all varying operands are computable.
-name|virtual
-name|bool
-name|hasComputableLoopEvolution
-argument_list|(
-argument|const Loop *L
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|bool
-name|hasOperand
-argument_list|(
-argument|const SCEV *O
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|dominates
-argument_list|(
-argument|BasicBlock *BB
-argument_list|,
-argument|DominatorTree *DT
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|properlyDominates
-argument_list|(
-argument|BasicBlock *BB
-argument_list|,
-argument|DominatorTree *DT
-argument_list|)
-specifier|const
-block|;
-name|virtual
 specifier|const
 name|Type
 operator|*
@@ -1003,24 +792,6 @@ argument_list|)
 block|{}
 name|public
 operator|:
-name|virtual
-specifier|const
-name|char
-operator|*
-name|getOperationStr
-argument_list|()
-specifier|const
-operator|=
-literal|0
-block|;
-name|virtual
-name|void
-name|print
-argument_list|(
-argument|raw_ostream&OS
-argument_list|)
-specifier|const
-block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline
@@ -1109,19 +880,6 @@ argument_list|)
 block|{     }
 name|public
 operator|:
-name|virtual
-specifier|const
-name|char
-operator|*
-name|getOperationStr
-argument_list|()
-specifier|const
-block|{
-return|return
-literal|" + "
-return|;
-block|}
-name|virtual
 specifier|const
 name|Type
 operator|*
@@ -1212,18 +970,6 @@ argument_list|)
 block|{     }
 name|public
 operator|:
-name|virtual
-specifier|const
-name|char
-operator|*
-name|getOperationStr
-argument_list|()
-specifier|const
-block|{
-return|return
-literal|" * "
-return|;
-block|}
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline
@@ -1329,119 +1075,26 @@ return|return
 name|RHS
 return|;
 block|}
-name|virtual
-name|bool
-name|isLoopInvariant
-argument_list|(
-argument|const Loop *L
-argument_list|)
-specifier|const
-block|{
-return|return
-name|LHS
-operator|->
-name|isLoopInvariant
-argument_list|(
-name|L
-argument_list|)
-operator|&&
-name|RHS
-operator|->
-name|isLoopInvariant
-argument_list|(
-name|L
-argument_list|)
-return|;
-block|}
-name|virtual
-name|bool
-name|hasComputableLoopEvolution
-argument_list|(
-argument|const Loop *L
-argument_list|)
-specifier|const
-block|{
-return|return
-name|LHS
-operator|->
-name|hasComputableLoopEvolution
-argument_list|(
-name|L
-argument_list|)
-operator|&&
-name|RHS
-operator|->
-name|hasComputableLoopEvolution
-argument_list|(
-name|L
-argument_list|)
-return|;
-block|}
-name|virtual
-name|bool
-name|hasOperand
-argument_list|(
-argument|const SCEV *O
-argument_list|)
-specifier|const
-block|{
-return|return
-name|O
-operator|==
-name|LHS
-operator|||
-name|O
-operator|==
-name|RHS
-operator|||
-name|LHS
-operator|->
-name|hasOperand
-argument_list|(
-name|O
-argument_list|)
-operator|||
-name|RHS
-operator|->
-name|hasOperand
-argument_list|(
-name|O
-argument_list|)
-return|;
-block|}
-name|bool
-name|dominates
-argument_list|(
-argument|BasicBlock *BB
-argument_list|,
-argument|DominatorTree *DT
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|properlyDominates
-argument_list|(
-argument|BasicBlock *BB
-argument_list|,
-argument|DominatorTree *DT
-argument_list|)
-specifier|const
-block|;
-name|virtual
 specifier|const
 name|Type
 operator|*
 name|getType
 argument_list|()
 specifier|const
-block|;
-name|void
-name|print
-argument_list|(
-argument|raw_ostream&OS
-argument_list|)
-specifier|const
-block|;
+block|{
+comment|// In most cases the types of LHS and RHS will be the same, but in some
+comment|// crazy cases one or the other may be a pointer. ScalarEvolution doesn't
+comment|// depend on the type for correctness, but handling types carefully can
+comment|// avoid extra casts in the SCEVExpander. The LHS is more likely to be
+comment|// a pointer type than the RHS, so use the RHS' type here.
+return|return
+name|getRHS
+argument_list|()
+operator|->
+name|getType
+argument_list|()
+return|;
+block|}
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline
@@ -1524,41 +1177,7 @@ name|L
 argument_list|(
 argument|l
 argument_list|)
-block|{
-for|for
-control|(
-name|size_t
-name|i
-init|=
-literal|0
-init|,
-name|e
-init|=
-name|NumOperands
-init|;
-name|i
-operator|!=
-name|e
-condition|;
-operator|++
-name|i
-control|)
-name|assert
-argument_list|(
-name|Operands
-index|[
-name|i
-index|]
-operator|->
-name|isLoopInvariant
-argument_list|(
-name|l
-argument_list|)
-operator|&&
-literal|"Operands of AddRec must be loop-invariant!"
-argument_list|)
-expr_stmt|;
-block|}
+block|{}
 name|public
 operator|:
 specifier|const
@@ -1637,46 +1256,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-name|virtual
-name|bool
-name|hasComputableLoopEvolution
-argument_list|(
-argument|const Loop *QL
-argument_list|)
-specifier|const
-block|{
-return|return
-name|L
-operator|==
-name|QL
-return|;
-block|}
-name|virtual
-name|bool
-name|isLoopInvariant
-argument_list|(
-argument|const Loop *QueryLoop
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|dominates
-argument_list|(
-argument|BasicBlock *BB
-argument_list|,
-argument|DominatorTree *DT
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|properlyDominates
-argument_list|(
-argument|BasicBlock *BB
-argument_list|,
-argument|DominatorTree *DT
-argument_list|)
-specifier|const
-block|;
 comment|/// isAffine - Return true if this is an affine AddRec (i.e., it represents
 comment|/// an expressions A+B*x where A and B are loop invariant values.
 name|bool
@@ -1769,14 +1348,6 @@ argument_list|)
 operator|)
 return|;
 block|}
-name|virtual
-name|void
-name|print
-argument_list|(
-argument|raw_ostream&OS
-argument_list|)
-specifier|const
-block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline
@@ -1855,18 +1426,6 @@ argument_list|)
 block|;     }
 name|public
 operator|:
-name|virtual
-specifier|const
-name|char
-operator|*
-name|getOperationStr
-argument_list|()
-specifier|const
-block|{
-return|return
-literal|" smax "
-return|;
-block|}
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline
@@ -1945,18 +1504,6 @@ argument_list|)
 block|;     }
 name|public
 operator|:
-name|virtual
-specifier|const
-name|char
-operator|*
-name|getOperationStr
-argument_list|()
-specifier|const
-block|{
-return|return
-literal|" umax "
-return|;
-block|}
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline
@@ -2110,73 +1657,21 @@ argument|Constant *&FieldNo
 argument_list|)
 specifier|const
 block|;
-name|virtual
-name|bool
-name|isLoopInvariant
-argument_list|(
-argument|const Loop *L
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|bool
-name|hasComputableLoopEvolution
-argument_list|(
-argument|const Loop *QL
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-comment|// not computable
-block|}
-name|virtual
-name|bool
-name|hasOperand
-argument_list|(
-argument|const SCEV *
-argument_list|)
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
-name|bool
-name|dominates
-argument_list|(
-argument|BasicBlock *BB
-argument_list|,
-argument|DominatorTree *DT
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|properlyDominates
-argument_list|(
-argument|BasicBlock *BB
-argument_list|,
-argument|DominatorTree *DT
-argument_list|)
-specifier|const
-block|;
-name|virtual
 specifier|const
 name|Type
 operator|*
 name|getType
 argument_list|()
 specifier|const
-block|;
-name|virtual
-name|void
-name|print
-argument_list|(
-argument|raw_ostream&OS
-argument_list|)
-specifier|const
-block|;
+block|{
+return|return
+name|getValPtr
+argument_list|()
+operator|->
+name|getType
+argument_list|()
+return|;
+block|}
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline

@@ -68,7 +68,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/System/TimeValue.h"
+file|"llvm/Support/TimeValue.h"
 end_include
 
 begin_include

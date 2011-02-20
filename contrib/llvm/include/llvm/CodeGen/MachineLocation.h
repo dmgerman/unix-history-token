@@ -112,7 +112,7 @@ label|:
 enum|enum
 block|{
 comment|// The target register number for an abstract frame pointer. The value is
-comment|// an arbitrary value greater than TargetRegisterInfo::FirstVirtualRegister.
+comment|// an arbitrary value that doesn't collide with any real target register.
 name|VirtualFP
 init|=
 operator|~
@@ -180,6 +180,37 @@ argument_list|(
 argument|O
 argument_list|)
 block|{}
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|MachineLocation
+operator|&
+name|Other
+operator|)
+specifier|const
+block|{
+return|return
+name|IsRegister
+operator|==
+name|Other
+operator|.
+name|IsRegister
+operator|&&
+name|Register
+operator|==
+name|Other
+operator|.
+name|Register
+operator|&&
+name|Offset
+operator|==
+name|Other
+operator|.
+name|Offset
+return|;
+block|}
 comment|// Accessors
 name|bool
 name|isReg

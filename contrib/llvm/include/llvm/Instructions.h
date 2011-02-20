@@ -119,9 +119,6 @@ decl_stmt|;
 name|class
 name|LLVMContext
 decl_stmt|;
-name|class
-name|DominatorTree
-decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|//                                AllocaInst Class
 comment|//===----------------------------------------------------------------------===//
@@ -1211,6 +1208,8 @@ operator|:
 name|public
 name|FixedNumOperandTraits
 operator|<
+name|StoreInst
+block|,
 literal|2
 operator|>
 block|{ }
@@ -1297,16 +1296,16 @@ block|;
 name|template
 operator|<
 name|typename
-name|InputIterator
+name|RandomAccessIterator
 operator|>
 name|void
 name|init
 argument_list|(
 argument|Value *Ptr
 argument_list|,
-argument|InputIterator IdxBegin
+argument|RandomAccessIterator IdxBegin
 argument_list|,
-argument|InputIterator IdxEnd
+argument|RandomAccessIterator IdxEnd
 argument_list|,
 argument|const Twine&NameStr
 argument_list|,
@@ -1381,7 +1380,7 @@ comment|///
 name|template
 operator|<
 name|typename
-name|InputIterator
+name|RandomAccessIterator
 operator|>
 specifier|static
 specifier|const
@@ -1391,9 +1390,9 @@ name|getIndexedType
 argument_list|(
 argument|const Type *Ptr
 argument_list|,
-argument|InputIterator IdxBegin
+argument|RandomAccessIterator IdxBegin
 argument_list|,
-argument|InputIterator IdxEnd
+argument|RandomAccessIterator IdxEnd
 argument_list|,
 comment|// This argument ensures that we
 comment|// have an iterator we can do
@@ -1457,22 +1456,22 @@ argument_list|)
 return|;
 block|}
 comment|/// Constructors - Create a getelementptr instruction with a base pointer an
-comment|/// list of indices.  The first ctor can optionally insert before an existing
+comment|/// list of indices. The first ctor can optionally insert before an existing
 comment|/// instruction, the second appends the new instruction to the specified
 comment|/// BasicBlock.
 name|template
 operator|<
 name|typename
-name|InputIterator
+name|RandomAccessIterator
 operator|>
 specifier|inline
 name|GetElementPtrInst
 argument_list|(
 argument|Value *Ptr
 argument_list|,
-argument|InputIterator IdxBegin
+argument|RandomAccessIterator IdxBegin
 argument_list|,
-argument|InputIterator IdxEnd
+argument|RandomAccessIterator IdxEnd
 argument_list|,
 argument|unsigned Values
 argument_list|,
@@ -1484,16 +1483,16 @@ block|;
 name|template
 operator|<
 name|typename
-name|InputIterator
+name|RandomAccessIterator
 operator|>
 specifier|inline
 name|GetElementPtrInst
 argument_list|(
 argument|Value *Ptr
 argument_list|,
-argument|InputIterator IdxBegin
+argument|RandomAccessIterator IdxBegin
 argument_list|,
-argument|InputIterator IdxEnd
+argument|RandomAccessIterator IdxEnd
 argument_list|,
 argument|unsigned Values
 argument_list|,
@@ -1562,7 +1561,7 @@ operator|:
 name|template
 operator|<
 name|typename
-name|InputIterator
+name|RandomAccessIterator
 operator|>
 specifier|static
 name|GetElementPtrInst
@@ -1571,9 +1570,9 @@ name|Create
 argument_list|(
 argument|Value *Ptr
 argument_list|,
-argument|InputIterator IdxBegin
+argument|RandomAccessIterator IdxBegin
 argument_list|,
-argument|InputIterator IdxEnd
+argument|RandomAccessIterator IdxEnd
 argument_list|,
 argument|const Twine&NameStr =
 literal|""
@@ -1587,7 +1586,7 @@ name|std
 operator|::
 name|iterator_traits
 operator|<
-name|InputIterator
+name|RandomAccessIterator
 operator|>
 operator|::
 name|difference_type
@@ -1628,7 +1627,7 @@ block|}
 name|template
 operator|<
 name|typename
-name|InputIterator
+name|RandomAccessIterator
 operator|>
 specifier|static
 name|GetElementPtrInst
@@ -1637,9 +1636,9 @@ name|Create
 argument_list|(
 argument|Value *Ptr
 argument_list|,
-argument|InputIterator IdxBegin
+argument|RandomAccessIterator IdxBegin
 argument_list|,
-argument|InputIterator IdxEnd
+argument|RandomAccessIterator IdxEnd
 argument_list|,
 argument|const Twine&NameStr
 argument_list|,
@@ -1651,7 +1650,7 @@ name|std
 operator|::
 name|iterator_traits
 operator|<
-name|InputIterator
+name|RandomAccessIterator
 operator|>
 operator|::
 name|difference_type
@@ -1760,7 +1759,7 @@ comment|/// "inbounds" flag in LangRef.html for details.
 name|template
 operator|<
 name|typename
-name|InputIterator
+name|RandomAccessIterator
 operator|>
 specifier|static
 name|GetElementPtrInst
@@ -1769,9 +1768,9 @@ name|CreateInBounds
 argument_list|(
 argument|Value *Ptr
 argument_list|,
-argument|InputIterator IdxBegin
+argument|RandomAccessIterator IdxBegin
 argument_list|,
-argument|InputIterator IdxEnd
+argument|RandomAccessIterator IdxEnd
 argument_list|,
 argument|const Twine&NameStr =
 literal|""
@@ -1811,7 +1810,7 @@ block|}
 name|template
 operator|<
 name|typename
-name|InputIterator
+name|RandomAccessIterator
 operator|>
 specifier|static
 name|GetElementPtrInst
@@ -1820,9 +1819,9 @@ name|CreateInBounds
 argument_list|(
 argument|Value *Ptr
 argument_list|,
-argument|InputIterator IdxBegin
+argument|RandomAccessIterator IdxBegin
 argument_list|,
-argument|InputIterator IdxEnd
+argument|RandomAccessIterator IdxEnd
 argument_list|,
 argument|const Twine&NameStr
 argument_list|,
@@ -1977,7 +1976,7 @@ comment|///
 name|template
 operator|<
 name|typename
-name|InputIterator
+name|RandomAccessIterator
 operator|>
 specifier|static
 specifier|const
@@ -1987,9 +1986,9 @@ name|getIndexedType
 argument_list|(
 argument|const Type *Ptr
 argument_list|,
-argument|InputIterator IdxBegin
+argument|RandomAccessIterator IdxBegin
 argument_list|,
-argument|InputIterator IdxEnd
+argument|RandomAccessIterator IdxEnd
 argument_list|)
 block|{
 return|return
@@ -2001,7 +2000,7 @@ argument|IdxBegin
 argument_list|,
 argument|IdxEnd
 argument_list|,
-argument|typename std::iterator_traits<InputIterator>::                           iterator_category()
+argument|typename std::iterator_traits<RandomAccessIterator>::                           iterator_category()
 argument_list|)
 return|;
 block|}
@@ -2014,6 +2013,19 @@ argument_list|(
 argument|const Type *Ptr
 argument_list|,
 argument|Value* const *Idx
+argument_list|,
+argument|unsigned NumIdx
+argument_list|)
+block|;
+specifier|static
+specifier|const
+name|Type
+operator|*
+name|getIndexedType
+argument_list|(
+argument|const Type *Ptr
+argument_list|,
+argument|Constant* const *Idx
 argument_list|,
 argument|unsigned NumIdx
 argument_list|)
@@ -2305,6 +2317,8 @@ operator|:
 name|public
 name|VariadicOperandTraits
 operator|<
+name|GetElementPtrInst
+block|,
 literal|1
 operator|>
 block|{ }
@@ -2312,7 +2326,7 @@ block|;
 name|template
 operator|<
 name|typename
-name|InputIterator
+name|RandomAccessIterator
 operator|>
 name|GetElementPtrInst
 operator|::
@@ -2320,9 +2334,9 @@ name|GetElementPtrInst
 argument_list|(
 argument|Value *Ptr
 argument_list|,
-argument|InputIterator IdxBegin
+argument|RandomAccessIterator IdxBegin
 argument_list|,
-argument|InputIterator IdxEnd
+argument|RandomAccessIterator IdxEnd
 argument_list|,
 argument|unsigned Values
 argument_list|,
@@ -2354,13 +2368,13 @@ argument|IdxEnd
 argument_list|,
 argument|NameStr
 argument_list|,
-argument|typename std::iterator_traits<InputIterator>::iterator_category()
+argument|typename std::iterator_traits<RandomAccessIterator>        ::iterator_category()
 argument_list|)
 block|; }
 name|template
 operator|<
 name|typename
-name|InputIterator
+name|RandomAccessIterator
 operator|>
 name|GetElementPtrInst
 operator|::
@@ -2368,9 +2382,9 @@ name|GetElementPtrInst
 argument_list|(
 argument|Value *Ptr
 argument_list|,
-argument|InputIterator IdxBegin
+argument|RandomAccessIterator IdxBegin
 argument_list|,
-argument|InputIterator IdxEnd
+argument|RandomAccessIterator IdxEnd
 argument_list|,
 argument|unsigned Values
 argument_list|,
@@ -2402,7 +2416,7 @@ argument|IdxEnd
 argument_list|,
 argument|NameStr
 argument_list|,
-argument|typename std::iterator_traits<InputIterator>::iterator_category()
+argument|typename std::iterator_traits<RandomAccessIterator>        ::iterator_category()
 argument_list|)
 block|; }
 name|DEFINE_TRANSPARENT_OPERAND_ACCESSORS
@@ -3500,16 +3514,16 @@ block|;
 name|template
 operator|<
 name|typename
-name|InputIterator
+name|RandomAccessIterator
 operator|>
 name|void
 name|init
 argument_list|(
 argument|Value *Func
 argument_list|,
-argument|InputIterator ArgBegin
+argument|RandomAccessIterator ArgBegin
 argument_list|,
-argument|InputIterator ArgEnd
+argument|RandomAccessIterator ArgEnd
 argument_list|,
 argument|const Twine&NameStr
 argument_list|,
@@ -3554,31 +3568,31 @@ argument_list|(
 name|NameStr
 argument_list|)
 block|;   }
-comment|/// Construct a CallInst given a range of arguments.  InputIterator
+comment|/// Construct a CallInst given a range of arguments. RandomAccessIterator
 comment|/// must be a random-access iterator pointing to contiguous storage
-comment|/// (e.g. a std::vector<>::iterator).  Checks are made for
+comment|/// (e.g. a std::vector<>::iterator). Checks are made for
 comment|/// random-accessness but not for contiguous storage as that would
 comment|/// incur runtime overhead.
 comment|/// @brief Construct a CallInst from a range of arguments
 name|template
 operator|<
 name|typename
-name|InputIterator
+name|RandomAccessIterator
 operator|>
 name|CallInst
 argument_list|(
 argument|Value *Func
 argument_list|,
-argument|InputIterator ArgBegin
+argument|RandomAccessIterator ArgBegin
 argument_list|,
-argument|InputIterator ArgEnd
+argument|RandomAccessIterator ArgEnd
 argument_list|,
 argument|const Twine&NameStr
 argument_list|,
 argument|Instruction *InsertBefore
 argument_list|)
 block|;
-comment|/// Construct a CallInst given a range of arguments.  InputIterator
+comment|/// Construct a CallInst given a range of arguments.  RandomAccessIterator
 comment|/// must be a random-access iterator pointing to contiguous storage
 comment|/// (e.g. a std::vector<>::iterator).  Checks are made for
 comment|/// random-accessness but not for contiguous storage as that would
@@ -3587,16 +3601,16 @@ comment|/// @brief Construct a CallInst from a range of arguments
 name|template
 operator|<
 name|typename
-name|InputIterator
+name|RandomAccessIterator
 operator|>
 specifier|inline
 name|CallInst
 argument_list|(
 argument|Value *Func
 argument_list|,
-argument|InputIterator ArgBegin
+argument|RandomAccessIterator ArgBegin
 argument_list|,
-argument|InputIterator ArgEnd
+argument|RandomAccessIterator ArgEnd
 argument_list|,
 argument|const Twine&NameStr
 argument_list|,
@@ -3690,7 +3704,7 @@ operator|:
 name|template
 operator|<
 name|typename
-name|InputIterator
+name|RandomAccessIterator
 operator|>
 specifier|static
 name|CallInst
@@ -3699,9 +3713,9 @@ name|Create
 argument_list|(
 argument|Value *Func
 argument_list|,
-argument|InputIterator ArgBegin
+argument|RandomAccessIterator ArgBegin
 argument_list|,
-argument|InputIterator ArgEnd
+argument|RandomAccessIterator ArgEnd
 argument_list|,
 argument|const Twine&NameStr =
 literal|""
@@ -3734,7 +3748,7 @@ block|}
 name|template
 operator|<
 name|typename
-name|InputIterator
+name|RandomAccessIterator
 operator|>
 specifier|static
 name|CallInst
@@ -3743,9 +3757,9 @@ name|Create
 argument_list|(
 argument|Value *Func
 argument_list|,
-argument|InputIterator ArgBegin
+argument|RandomAccessIterator ArgBegin
 argument_list|,
-argument|InputIterator ArgEnd
+argument|RandomAccessIterator ArgEnd
 argument_list|,
 argument|const Twine&NameStr
 argument_list|,
@@ -4709,6 +4723,8 @@ operator|:
 name|public
 name|VariadicOperandTraits
 operator|<
+name|CallInst
+block|,
 literal|1
 operator|>
 block|{ }
@@ -4716,7 +4732,7 @@ block|;
 name|template
 operator|<
 name|typename
-name|InputIterator
+name|RandomAccessIterator
 operator|>
 name|CallInst
 operator|::
@@ -4724,9 +4740,9 @@ name|CallInst
 argument_list|(
 argument|Value *Func
 argument_list|,
-argument|InputIterator ArgBegin
+argument|RandomAccessIterator ArgBegin
 argument_list|,
-argument|InputIterator ArgEnd
+argument|RandomAccessIterator ArgEnd
 argument_list|,
 argument|const Twine&NameStr
 argument_list|,
@@ -4760,13 +4776,13 @@ argument|ArgEnd
 argument_list|,
 argument|NameStr
 argument_list|,
-argument|typename std::iterator_traits<InputIterator>::iterator_category()
+argument|typename std::iterator_traits<RandomAccessIterator>        ::iterator_category()
 argument_list|)
 block|; }
 name|template
 operator|<
 name|typename
-name|InputIterator
+name|RandomAccessIterator
 operator|>
 name|CallInst
 operator|::
@@ -4774,9 +4790,9 @@ name|CallInst
 argument_list|(
 argument|Value *Func
 argument_list|,
-argument|InputIterator ArgBegin
+argument|RandomAccessIterator ArgBegin
 argument_list|,
-argument|InputIterator ArgEnd
+argument|RandomAccessIterator ArgEnd
 argument_list|,
 argument|const Twine&NameStr
 argument_list|,
@@ -4810,7 +4826,7 @@ argument|ArgEnd
 argument_list|,
 argument|NameStr
 argument_list|,
-argument|typename std::iterator_traits<InputIterator>::iterator_category()
+argument|typename std::iterator_traits<RandomAccessIterator>        ::iterator_category()
 argument_list|)
 block|; }
 comment|// Note: if you get compile errors about private methods then
@@ -5284,6 +5300,8 @@ operator|:
 name|public
 name|FixedNumOperandTraits
 operator|<
+name|SelectInst
+block|,
 literal|3
 operator|>
 block|{ }
@@ -5395,6 +5413,41 @@ argument_list|(
 name|NameStr
 argument_list|)
 block|;   }
+name|Value
+operator|*
+name|getPointerOperand
+argument_list|()
+block|{
+return|return
+name|getOperand
+argument_list|(
+literal|0
+argument_list|)
+return|;
+block|}
+specifier|const
+name|Value
+operator|*
+name|getPointerOperand
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOperand
+argument_list|(
+literal|0
+argument_list|)
+return|;
+block|}
+specifier|static
+name|unsigned
+name|getPointerOperandIndex
+argument_list|()
+block|{
+return|return
+literal|0U
+return|;
+block|}
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline
@@ -5768,6 +5821,8 @@ operator|:
 name|public
 name|FixedNumOperandTraits
 operator|<
+name|ExtractElementInst
+block|,
 literal|2
 operator|>
 block|{ }
@@ -6052,6 +6107,8 @@ operator|:
 name|public
 name|FixedNumOperandTraits
 operator|<
+name|InsertElementInst
+block|,
 literal|3
 operator|>
 block|{ }
@@ -6295,6 +6352,8 @@ operator|:
 name|public
 name|FixedNumOperandTraits
 operator|<
+name|ShuffleVectorInst
+block|,
 literal|3
 operator|>
 block|{ }
@@ -6354,14 +6413,14 @@ block|;
 name|template
 operator|<
 name|typename
-name|InputIterator
+name|RandomAccessIterator
 operator|>
 name|void
 name|init
 argument_list|(
-argument|InputIterator IdxBegin
+argument|RandomAccessIterator IdxBegin
 argument_list|,
-argument|InputIterator IdxEnd
+argument|RandomAccessIterator IdxEnd
 argument_list|,
 argument|const Twine&NameStr
 argument_list|,
@@ -6419,8 +6478,7 @@ block|}
 comment|/// getIndexedType - Returns the type of the element that would be extracted
 comment|/// with an extractvalue instruction with the specified parameters.
 comment|///
-comment|/// Null is returned if the indices are invalid for the specified
-comment|/// pointer type.
+comment|/// Null is returned if the indices are invalid for the specified type.
 comment|///
 specifier|static
 specifier|const
@@ -6438,7 +6496,7 @@ block|;
 name|template
 operator|<
 name|typename
-name|InputIterator
+name|RandomAccessIterator
 operator|>
 specifier|static
 specifier|const
@@ -6448,9 +6506,9 @@ name|getIndexedType
 argument_list|(
 argument|const Type *Ptr
 argument_list|,
-argument|InputIterator IdxBegin
+argument|RandomAccessIterator IdxBegin
 argument_list|,
-argument|InputIterator IdxEnd
+argument|RandomAccessIterator IdxEnd
 argument_list|,
 comment|// This argument ensures that we
 comment|// have an iterator we can do
@@ -6519,16 +6577,16 @@ comment|/// specified BasicBlock.
 name|template
 operator|<
 name|typename
-name|InputIterator
+name|RandomAccessIterator
 operator|>
 specifier|inline
 name|ExtractValueInst
 argument_list|(
 argument|Value *Agg
 argument_list|,
-argument|InputIterator IdxBegin
+argument|RandomAccessIterator IdxBegin
 argument_list|,
-argument|InputIterator IdxEnd
+argument|RandomAccessIterator IdxEnd
 argument_list|,
 argument|const Twine&NameStr
 argument_list|,
@@ -6538,16 +6596,16 @@ block|;
 name|template
 operator|<
 name|typename
-name|InputIterator
+name|RandomAccessIterator
 operator|>
 specifier|inline
 name|ExtractValueInst
 argument_list|(
 argument|Value *Agg
 argument_list|,
-argument|InputIterator IdxBegin
+argument|RandomAccessIterator IdxBegin
 argument_list|,
-argument|InputIterator IdxEnd
+argument|RandomAccessIterator IdxEnd
 argument_list|,
 argument|const Twine&NameStr
 argument_list|,
@@ -6589,7 +6647,7 @@ operator|:
 name|template
 operator|<
 name|typename
-name|InputIterator
+name|RandomAccessIterator
 operator|>
 specifier|static
 name|ExtractValueInst
@@ -6598,9 +6656,9 @@ name|Create
 argument_list|(
 argument|Value *Agg
 argument_list|,
-argument|InputIterator IdxBegin
+argument|RandomAccessIterator IdxBegin
 argument_list|,
-argument|InputIterator IdxEnd
+argument|RandomAccessIterator IdxEnd
 argument_list|,
 argument|const Twine&NameStr =
 literal|""
@@ -6628,7 +6686,7 @@ block|}
 name|template
 operator|<
 name|typename
-name|InputIterator
+name|RandomAccessIterator
 operator|>
 specifier|static
 name|ExtractValueInst
@@ -6637,9 +6695,9 @@ name|Create
 argument_list|(
 argument|Value *Agg
 argument_list|,
-argument|InputIterator IdxBegin
+argument|RandomAccessIterator IdxBegin
 argument_list|,
-argument|InputIterator IdxEnd
+argument|RandomAccessIterator IdxEnd
 argument_list|,
 argument|const Twine&NameStr
 argument_list|,
@@ -6754,13 +6812,12 @@ block|}
 comment|/// getIndexedType - Returns the type of the element that would be extracted
 comment|/// with an extractvalue instruction with the specified parameters.
 comment|///
-comment|/// Null is returned if the indices are invalid for the specified
-comment|/// pointer type.
+comment|/// Null is returned if the indices are invalid for the specified type.
 comment|///
 name|template
 operator|<
 name|typename
-name|InputIterator
+name|RandomAccessIterator
 operator|>
 specifier|static
 specifier|const
@@ -6770,9 +6827,9 @@ name|getIndexedType
 argument_list|(
 argument|const Type *Ptr
 argument_list|,
-argument|InputIterator IdxBegin
+argument|RandomAccessIterator IdxBegin
 argument_list|,
-argument|InputIterator IdxEnd
+argument|RandomAccessIterator IdxEnd
 argument_list|)
 block|{
 return|return
@@ -6784,7 +6841,7 @@ argument|IdxBegin
 argument_list|,
 argument|IdxEnd
 argument_list|,
-argument|typename std::iterator_traits<InputIterator>::                           iterator_category()
+argument|typename std::iterator_traits<RandomAccessIterator>::                           iterator_category()
 argument_list|)
 return|;
 block|}
@@ -6958,7 +7015,7 @@ block|;
 name|template
 operator|<
 name|typename
-name|InputIterator
+name|RandomAccessIterator
 operator|>
 name|ExtractValueInst
 operator|::
@@ -6966,9 +7023,9 @@ name|ExtractValueInst
 argument_list|(
 argument|Value *Agg
 argument_list|,
-argument|InputIterator IdxBegin
+argument|RandomAccessIterator IdxBegin
 argument_list|,
-argument|InputIterator IdxEnd
+argument|RandomAccessIterator IdxEnd
 argument_list|,
 argument|const Twine&NameStr
 argument_list|,
@@ -6994,13 +7051,13 @@ argument|IdxEnd
 argument_list|,
 argument|NameStr
 argument_list|,
-argument|typename std::iterator_traits<InputIterator>::iterator_category()
+argument|typename std::iterator_traits<RandomAccessIterator>        ::iterator_category()
 argument_list|)
 block|; }
 name|template
 operator|<
 name|typename
-name|InputIterator
+name|RandomAccessIterator
 operator|>
 name|ExtractValueInst
 operator|::
@@ -7008,9 +7065,9 @@ name|ExtractValueInst
 argument_list|(
 argument|Value *Agg
 argument_list|,
-argument|InputIterator IdxBegin
+argument|RandomAccessIterator IdxBegin
 argument_list|,
-argument|InputIterator IdxEnd
+argument|RandomAccessIterator IdxEnd
 argument_list|,
 argument|const Twine&NameStr
 argument_list|,
@@ -7036,7 +7093,7 @@ argument|IdxEnd
 argument_list|,
 argument|NameStr
 argument_list|,
-argument|typename std::iterator_traits<InputIterator>::iterator_category()
+argument|typename std::iterator_traits<RandomAccessIterator>        ::iterator_category()
 argument_list|)
 block|; }
 comment|//===----------------------------------------------------------------------===//
@@ -7107,7 +7164,7 @@ block|;
 name|template
 operator|<
 name|typename
-name|InputIterator
+name|RandomAccessIterator
 operator|>
 name|void
 name|init
@@ -7116,9 +7173,9 @@ argument|Value *Agg
 argument_list|,
 argument|Value *Val
 argument_list|,
-argument|InputIterator IdxBegin
+argument|RandomAccessIterator IdxBegin
 argument_list|,
-argument|InputIterator IdxEnd
+argument|RandomAccessIterator IdxEnd
 argument_list|,
 argument|const Twine&NameStr
 argument_list|,
@@ -7184,7 +7241,7 @@ comment|/// the new instruction to the specified BasicBlock.
 name|template
 operator|<
 name|typename
-name|InputIterator
+name|RandomAccessIterator
 operator|>
 specifier|inline
 name|InsertValueInst
@@ -7193,9 +7250,9 @@ argument|Value *Agg
 argument_list|,
 argument|Value *Val
 argument_list|,
-argument|InputIterator IdxBegin
+argument|RandomAccessIterator IdxBegin
 argument_list|,
-argument|InputIterator IdxEnd
+argument|RandomAccessIterator IdxEnd
 argument_list|,
 argument|const Twine&NameStr
 argument_list|,
@@ -7205,7 +7262,7 @@ block|;
 name|template
 operator|<
 name|typename
-name|InputIterator
+name|RandomAccessIterator
 operator|>
 specifier|inline
 name|InsertValueInst
@@ -7214,9 +7271,9 @@ argument|Value *Agg
 argument_list|,
 argument|Value *Val
 argument_list|,
-argument|InputIterator IdxBegin
+argument|RandomAccessIterator IdxBegin
 argument_list|,
-argument|InputIterator IdxEnd
+argument|RandomAccessIterator IdxEnd
 argument_list|,
 argument|const Twine&NameStr
 argument_list|,
@@ -7288,7 +7345,7 @@ block|}
 name|template
 operator|<
 name|typename
-name|InputIterator
+name|RandomAccessIterator
 operator|>
 specifier|static
 name|InsertValueInst
@@ -7299,9 +7356,9 @@ argument|Value *Agg
 argument_list|,
 argument|Value *Val
 argument_list|,
-argument|InputIterator IdxBegin
+argument|RandomAccessIterator IdxBegin
 argument_list|,
-argument|InputIterator IdxEnd
+argument|RandomAccessIterator IdxEnd
 argument_list|,
 argument|const Twine&NameStr =
 literal|""
@@ -7331,7 +7388,7 @@ block|}
 name|template
 operator|<
 name|typename
-name|InputIterator
+name|RandomAccessIterator
 operator|>
 specifier|static
 name|InsertValueInst
@@ -7342,9 +7399,9 @@ argument|Value *Agg
 argument_list|,
 argument|Value *Val
 argument_list|,
-argument|InputIterator IdxBegin
+argument|RandomAccessIterator IdxBegin
 argument_list|,
-argument|InputIterator IdxEnd
+argument|RandomAccessIterator IdxEnd
 argument_list|,
 argument|const Twine&NameStr
 argument_list|,
@@ -7648,6 +7705,8 @@ operator|:
 name|public
 name|FixedNumOperandTraits
 operator|<
+name|InsertValueInst
+block|,
 literal|2
 operator|>
 block|{ }
@@ -7655,7 +7714,7 @@ block|;
 name|template
 operator|<
 name|typename
-name|InputIterator
+name|RandomAccessIterator
 operator|>
 name|InsertValueInst
 operator|::
@@ -7665,9 +7724,9 @@ argument|Value *Agg
 argument_list|,
 argument|Value *Val
 argument_list|,
-argument|InputIterator IdxBegin
+argument|RandomAccessIterator IdxBegin
 argument_list|,
-argument|InputIterator IdxEnd
+argument|RandomAccessIterator IdxEnd
 argument_list|,
 argument|const Twine&NameStr
 argument_list|,
@@ -7699,13 +7758,13 @@ argument|IdxEnd
 argument_list|,
 argument|NameStr
 argument_list|,
-argument|typename std::iterator_traits<InputIterator>::iterator_category()
+argument|typename std::iterator_traits<RandomAccessIterator>        ::iterator_category()
 argument_list|)
 block|; }
 name|template
 operator|<
 name|typename
-name|InputIterator
+name|RandomAccessIterator
 operator|>
 name|InsertValueInst
 operator|::
@@ -7715,9 +7774,9 @@ argument|Value *Agg
 argument_list|,
 argument|Value *Val
 argument_list|,
-argument|InputIterator IdxBegin
+argument|RandomAccessIterator IdxBegin
 argument_list|,
-argument|InputIterator IdxEnd
+argument|RandomAccessIterator IdxEnd
 argument_list|,
 argument|const Twine&NameStr
 argument_list|,
@@ -7749,7 +7808,7 @@ argument|IdxEnd
 argument_list|,
 argument|NameStr
 argument_list|,
-argument|typename std::iterator_traits<InputIterator>::iterator_category()
+argument|typename std::iterator_traits<RandomAccessIterator>        ::iterator_category()
 argument_list|)
 block|; }
 name|DEFINE_TRANSPARENT_OPERAND_ACCESSORS
@@ -8480,19 +8539,10 @@ return|;
 block|}
 comment|/// hasConstantValue - If the specified PHI node always merges together the
 comment|/// same value, return the value, otherwise return null.
-comment|///
-comment|/// If the PHI has undef operands, but all the rest of the operands are
-comment|/// some unique value, return that value if it can be proved that the
-comment|/// value dominates the PHI. If DT is null, use a conservative check,
-comment|/// otherwise use DT to test for dominance.
-comment|///
 name|Value
 operator|*
 name|hasConstantValue
-argument_list|(
-argument|DominatorTree *DT =
-literal|0
-argument_list|)
+argument_list|()
 specifier|const
 block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
@@ -8769,25 +8819,22 @@ argument_list|(
 name|Value
 argument_list|)
 block|;
-comment|/// Convenience accessor
+comment|/// Convenience accessor. Returns null if there is no return value.
 name|Value
 operator|*
 name|getReturnValue
-argument_list|(
-argument|unsigned n =
-literal|0
-argument_list|)
+argument_list|()
 specifier|const
 block|{
 return|return
-name|n
-operator|<
 name|getNumOperands
 argument_list|()
+operator|!=
+literal|0
 operator|?
 name|getOperand
 argument_list|(
-name|n
+literal|0
 argument_list|)
 operator|:
 literal|0
@@ -8904,6 +8951,7 @@ operator|:
 name|public
 name|VariadicOperandTraits
 operator|<
+name|ReturnInst
 operator|>
 block|{ }
 block|;
@@ -9039,8 +9087,6 @@ return|return
 name|new
 argument_list|(
 literal|1
-argument_list|,
-argument|true
 argument_list|)
 name|BranchInst
 argument_list|(
@@ -9096,8 +9142,6 @@ return|return
 name|new
 argument_list|(
 literal|1
-argument_list|,
-argument|true
 argument_list|)
 name|BranchInst
 argument_list|(
@@ -9138,10 +9182,6 @@ name|InsertAtEnd
 argument_list|)
 return|;
 block|}
-operator|~
-name|BranchInst
-argument_list|()
-block|;
 comment|/// Transparently provide more efficient getOperand methods.
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
@@ -9220,67 +9260,6 @@ operator|)
 operator|=
 name|V
 block|;   }
-comment|// setUnconditionalDest - Change the current branch to an unconditional branch
-comment|// targeting the specified block.
-comment|// FIXME: Eliminate this ugly method.
-name|void
-name|setUnconditionalDest
-argument_list|(
-argument|BasicBlock *Dest
-argument_list|)
-block|{
-name|Op
-operator|<
-operator|-
-literal|1
-operator|>
-operator|(
-operator|)
-operator|=
-operator|(
-name|Value
-operator|*
-operator|)
-name|Dest
-block|;
-if|if
-condition|(
-name|isConditional
-argument_list|()
-condition|)
-block|{
-comment|// Convert this to an uncond branch.
-name|Op
-operator|<
-operator|-
-literal|2
-operator|>
-operator|(
-operator|)
-operator|=
-literal|0
-expr_stmt|;
-name|Op
-operator|<
-operator|-
-literal|3
-operator|>
-operator|(
-operator|)
-operator|=
-literal|0
-expr_stmt|;
-name|NumOperands
-operator|=
-literal|1
-expr_stmt|;
-name|OperandList
-operator|=
-name|op_begin
-argument_list|()
-expr_stmt|;
-block|}
-block|}
 name|unsigned
 name|getNumSuccessors
 argument_list|()
@@ -9475,9 +9454,11 @@ operator|:
 name|public
 name|VariadicOperandTraits
 operator|<
+name|BranchInst
+block|,
 literal|1
 operator|>
-block|{}
+block|{ }
 block|;
 name|DEFINE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
@@ -9530,7 +9511,7 @@ argument|Value *Value
 argument_list|,
 argument|BasicBlock *Default
 argument_list|,
-argument|unsigned NumCases
+argument|unsigned NumReserved
 argument_list|)
 block|;
 name|void
@@ -9924,7 +9905,8 @@ argument_list|)
 block|;
 comment|/// removeCase - This method removes the specified successor from the switch
 comment|/// instruction.  Note that this cannot be used to remove the default
-comment|/// destination (successor #0).
+comment|/// destination (successor #0). Also note that this operation may reorder the
+comment|/// remaining cases at index idx and above.
 comment|///
 name|void
 name|removeCase
@@ -10636,7 +10618,7 @@ block|;
 name|template
 operator|<
 name|typename
-name|InputIterator
+name|RandomAccessIterator
 operator|>
 name|void
 name|init
@@ -10647,9 +10629,9 @@ argument|BasicBlock *IfNormal
 argument_list|,
 argument|BasicBlock *IfException
 argument_list|,
-argument|InputIterator ArgBegin
+argument|RandomAccessIterator ArgBegin
 argument_list|,
-argument|InputIterator ArgEnd
+argument|RandomAccessIterator ArgEnd
 argument_list|,
 argument|const Twine&NameStr
 argument_list|,
@@ -10699,7 +10681,7 @@ name|NameStr
 argument_list|)
 block|;   }
 comment|/// Construct an InvokeInst given a range of arguments.
-comment|/// InputIterator must be a random-access iterator pointing to
+comment|/// RandomAccessIterator must be a random-access iterator pointing to
 comment|/// contiguous storage (e.g. a std::vector<>::iterator).  Checks are
 comment|/// made for random-accessness but not for contiguous storage as
 comment|/// that would incur runtime overhead.
@@ -10708,7 +10690,7 @@ comment|/// @brief Construct an InvokeInst from a range of arguments
 name|template
 operator|<
 name|typename
-name|InputIterator
+name|RandomAccessIterator
 operator|>
 specifier|inline
 name|InvokeInst
@@ -10719,9 +10701,9 @@ argument|BasicBlock *IfNormal
 argument_list|,
 argument|BasicBlock *IfException
 argument_list|,
-argument|InputIterator ArgBegin
+argument|RandomAccessIterator ArgBegin
 argument_list|,
-argument|InputIterator ArgEnd
+argument|RandomAccessIterator ArgEnd
 argument_list|,
 argument|unsigned Values
 argument_list|,
@@ -10731,7 +10713,7 @@ argument|Instruction *InsertBefore
 argument_list|)
 block|;
 comment|/// Construct an InvokeInst given a range of arguments.
-comment|/// InputIterator must be a random-access iterator pointing to
+comment|/// RandomAccessIterator must be a random-access iterator pointing to
 comment|/// contiguous storage (e.g. a std::vector<>::iterator).  Checks are
 comment|/// made for random-accessness but not for contiguous storage as
 comment|/// that would incur runtime overhead.
@@ -10740,7 +10722,7 @@ comment|/// @brief Construct an InvokeInst from a range of arguments
 name|template
 operator|<
 name|typename
-name|InputIterator
+name|RandomAccessIterator
 operator|>
 specifier|inline
 name|InvokeInst
@@ -10751,9 +10733,9 @@ argument|BasicBlock *IfNormal
 argument_list|,
 argument|BasicBlock *IfException
 argument_list|,
-argument|InputIterator ArgBegin
+argument|RandomAccessIterator ArgBegin
 argument_list|,
-argument|InputIterator ArgEnd
+argument|RandomAccessIterator ArgEnd
 argument_list|,
 argument|unsigned Values
 argument_list|,
@@ -10776,7 +10758,7 @@ operator|:
 name|template
 operator|<
 name|typename
-name|InputIterator
+name|RandomAccessIterator
 operator|>
 specifier|static
 name|InvokeInst
@@ -10789,9 +10771,9 @@ argument|BasicBlock *IfNormal
 argument_list|,
 argument|BasicBlock *IfException
 argument_list|,
-argument|InputIterator ArgBegin
+argument|RandomAccessIterator ArgBegin
 argument_list|,
-argument|InputIterator ArgEnd
+argument|RandomAccessIterator ArgEnd
 argument_list|,
 argument|const Twine&NameStr =
 literal|""
@@ -10838,7 +10820,7 @@ block|}
 name|template
 operator|<
 name|typename
-name|InputIterator
+name|RandomAccessIterator
 operator|>
 specifier|static
 name|InvokeInst
@@ -10851,9 +10833,9 @@ argument|BasicBlock *IfNormal
 argument_list|,
 argument|BasicBlock *IfException
 argument_list|,
-argument|InputIterator ArgBegin
+argument|RandomAccessIterator ArgBegin
 argument_list|,
-argument|InputIterator ArgEnd
+argument|RandomAccessIterator ArgEnd
 argument_list|,
 argument|const Twine&NameStr
 argument_list|,
@@ -11712,6 +11694,8 @@ operator|:
 name|public
 name|VariadicOperandTraits
 operator|<
+name|InvokeInst
+block|,
 literal|3
 operator|>
 block|{ }
@@ -11719,7 +11703,7 @@ block|;
 name|template
 operator|<
 name|typename
-name|InputIterator
+name|RandomAccessIterator
 operator|>
 name|InvokeInst
 operator|::
@@ -11731,9 +11715,9 @@ argument|BasicBlock *IfNormal
 argument_list|,
 argument|BasicBlock *IfException
 argument_list|,
-argument|InputIterator ArgBegin
+argument|RandomAccessIterator ArgBegin
 argument_list|,
-argument|InputIterator ArgEnd
+argument|RandomAccessIterator ArgEnd
 argument_list|,
 argument|unsigned Values
 argument_list|,
@@ -11769,13 +11753,13 @@ argument|ArgEnd
 argument_list|,
 argument|NameStr
 argument_list|,
-argument|typename std::iterator_traits<InputIterator>::iterator_category()
+argument|typename std::iterator_traits<RandomAccessIterator>        ::iterator_category()
 argument_list|)
 block|; }
 name|template
 operator|<
 name|typename
-name|InputIterator
+name|RandomAccessIterator
 operator|>
 name|InvokeInst
 operator|::
@@ -11787,9 +11771,9 @@ argument|BasicBlock *IfNormal
 argument_list|,
 argument|BasicBlock *IfException
 argument_list|,
-argument|InputIterator ArgBegin
+argument|RandomAccessIterator ArgBegin
 argument_list|,
-argument|InputIterator ArgEnd
+argument|RandomAccessIterator ArgEnd
 argument_list|,
 argument|unsigned Values
 argument_list|,
@@ -11825,7 +11809,7 @@ argument|ArgEnd
 argument_list|,
 argument|NameStr
 argument_list|,
-argument|typename std::iterator_traits<InputIterator>::iterator_category()
+argument|typename std::iterator_traits<RandomAccessIterator>        ::iterator_category()
 argument_list|)
 block|; }
 name|DEFINE_TRANSPARENT_OPERAND_ACCESSORS

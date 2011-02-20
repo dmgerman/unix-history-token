@@ -108,7 +108,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/System/Mutex.h"
+file|"llvm/Support/Mutex.h"
 end_include
 
 begin_include
@@ -160,6 +160,8 @@ decl_stmt|;
 name|class
 name|Type
 decl_stmt|;
+comment|/// \brief Helper class for helping synchronize access to the global address map
+comment|/// table.
 name|class
 name|ExecutionEngineState
 block|{
@@ -314,7 +316,9 @@ return|return
 name|GlobalAddressReverseMap
 return|;
 block|}
-comment|// Returns the address ToUnmap was mapped to.
+comment|/// \brief Erase an entry from the mapping table.
+comment|///
+comment|/// \returns The address that \arg ToUnmap was happed to.
 name|void
 modifier|*
 name|RemoveMapping
@@ -336,24 +340,46 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
+begin_comment
+comment|/// \brief Abstract interface for implementation execution of LLVM modules,
+end_comment
+
+begin_comment
+comment|/// designed to support both interpreter and just-in-time (JIT) compiler
+end_comment
+
+begin_comment
+comment|/// implementations.
+end_comment
+
 begin_decl_stmt
 name|class
 name|ExecutionEngine
 block|{
+comment|/// The state object holding the global address mapping, which must be
+comment|/// accessed synchronously.
+comment|//
+comment|// FIXME: There is no particular need the entire map needs to be
+comment|// synchronized.  Wouldn't a reader-writer design be better here?
+name|ExecutionEngineState
+name|EEState
+decl_stmt|;
+comment|/// The target data for the platform for which execution is being performed.
 specifier|const
 name|TargetData
 modifier|*
 name|TD
 decl_stmt|;
-name|ExecutionEngineState
-name|EEState
-decl_stmt|;
+comment|/// Whether lazy JIT compilation is enabled.
 name|bool
 name|CompilingLazily
 decl_stmt|;
+comment|/// Whether JIT compilation of external global variables is allowed.
 name|bool
 name|GVCompilationDisabled
 decl_stmt|;
+comment|/// Whether the JIT should perform lookups of external symbols (e.g.,
+comment|/// using dlsym).
 name|bool
 name|SymbolSearchingDisabled
 decl_stmt|;
@@ -364,8 +390,8 @@ decl_stmt|;
 comment|// To allow access to JITCtor and InterpCtor.
 name|protected
 label|:
-comment|/// Modules - This is a list of Modules that we are JIT'ing from.  We use a
-comment|/// smallvector to optimize for the case where there is only one module.
+comment|/// The list of Modules that we are JIT'ing from.  We use a SmallVector to
+comment|/// optimize for the case where there is only one module.
 name|SmallVector
 operator|<
 name|Module
@@ -402,14 +428,66 @@ name|GV
 parameter_list|)
 function_decl|;
 comment|// To avoid having libexecutionengine depend on the JIT and interpreter
-comment|// libraries, the JIT and Interpreter set these functions to ctor pointers
-comment|// at startup time if they are linked in.
+comment|// libraries, the execution engine implementations set these functions to ctor
+comment|// pointers at startup time if they are linked in.
 specifier|static
 name|ExecutionEngine
 operator|*
 operator|(
 operator|*
 name|JITCtor
+operator|)
+operator|(
+name|Module
+operator|*
+name|M
+operator|,
+name|std
+operator|::
+name|string
+operator|*
+name|ErrorStr
+operator|,
+name|JITMemoryManager
+operator|*
+name|JMM
+operator|,
+name|CodeGenOpt
+operator|::
+name|Level
+name|OptLevel
+operator|,
+name|bool
+name|GVsWithCode
+operator|,
+name|CodeModel
+operator|::
+name|Model
+name|CMM
+operator|,
+name|StringRef
+name|MArch
+operator|,
+name|StringRef
+name|MCPU
+operator|,
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|&
+name|MAttrs
+operator|)
+expr_stmt|;
+specifier|static
+name|ExecutionEngine
+operator|*
+operator|(
+operator|*
+name|MCJITCtor
 operator|)
 operator|(
 name|Module
@@ -476,7 +554,8 @@ name|ErrorStr
 argument_list|)
 expr_stmt|;
 comment|/// LazyFunctionCreator - If an unknown function is needed, this function
-comment|/// pointer is invoked to create it. If this returns null, the JIT will abort.
+comment|/// pointer is invoked to create it.  If this returns null, the JIT will
+comment|/// abort.
 name|void
 argument_list|*
 call|(
@@ -492,7 +571,7 @@ operator|&
 argument_list|)
 argument_list|;
 comment|/// ExceptionTableRegister - If Exception Handling is set, the JIT will
-comment|/// register dwarf tables with this function
+comment|/// register dwarf tables with this function.
 argument_list|typedef
 name|void
 argument_list|(
@@ -504,13 +583,24 @@ name|void
 operator|*
 argument_list|)
 argument_list|;
-specifier|static
 name|EERegisterFn
 name|ExceptionTableRegister
 argument_list|;
+name|EERegisterFn
+name|ExceptionTableDeregister
+argument_list|;
+name|std
+operator|::
+name|vector
+operator|<
+name|void
+operator|*
+operator|>
+name|AllExceptionTables
+argument_list|;
 name|public
 operator|:
-comment|/// lock - This lock is protects the ExecutionEngine, JIT, JITResolver and
+comment|/// lock - This lock protects the ExecutionEngine, JIT, JITResolver and
 comment|/// JITEmitter classes.  It must be held while changing the internal state of
 comment|/// any of those classes.
 name|sys
@@ -518,7 +608,6 @@ operator|::
 name|Mutex
 name|lock
 argument_list|;
-comment|// Used to make this class and subclasses thread-safe
 comment|//===--------------------------------------------------------------------===//
 comment|//  ExecutionEngine Startup
 comment|//===--------------------------------------------------------------------===//
@@ -530,6 +619,13 @@ argument_list|;
 comment|/// create - This is the factory method for creating an execution engine which
 comment|/// is appropriate for the current machine.  This takes ownership of the
 comment|/// module.
+comment|///
+comment|/// \param GVsWithCode - Allocating globals with code breaks
+comment|/// freeMachineCodeForFunction and is probably unsafe and bad for performance.
+comment|/// However, we have clients who depend on this behavior, so we must support
+comment|/// it.  Eventually, when we're willing to break some backwards compatability,
+comment|/// this flag should be flipped to false, so that by default
+comment|/// freeMachineCodeForFunction works.
 specifier|static
 name|ExecutionEngine
 operator|*
@@ -544,15 +640,6 @@ literal|0
 argument_list|,
 argument|CodeGenOpt::Level OptLevel =                                    CodeGenOpt::Default
 argument_list|,
-comment|// Allocating globals with code breaks
-comment|// freeMachineCodeForFunction and is probably
-comment|// unsafe and bad for performance.  However,
-comment|// we have clients who depend on this
-comment|// behavior, so we must support it.
-comment|// Eventually, when we're willing to break
-comment|// some backwards compatability, this flag
-comment|// should be flipped to false, so that by
-comment|// default freeMachineCodeForFunction works.
 argument|bool GVsWithCode = true
 argument_list|)
 argument_list|;
@@ -599,7 +686,7 @@ argument_list|(
 name|M
 argument_list|)
 block|;   }
-comment|//===----------------------------------------------------------------------===//
+comment|//===--------------------------------------------------------------------===//
 specifier|const
 name|TargetData
 operator|*
@@ -637,7 +724,6 @@ parameter_list|)
 function_decl|;
 comment|/// runFunction - Execute the specified function with the specified arguments,
 comment|/// and return the result.
-comment|///
 name|virtual
 name|GenericValue
 name|runFunction
@@ -660,8 +746,9 @@ init|=
 literal|0
 decl_stmt|;
 comment|/// runStaticConstructorsDestructors - This method is used to execute all of
-comment|/// the static constructors or destructors for a program, depending on the
-comment|/// value of isDtors.
+comment|/// the static constructors or destructors for a program.
+comment|///
+comment|/// \param isDtors - Run the destructors instead of constructors.
 name|void
 name|runStaticConstructorsDestructors
 parameter_list|(
@@ -670,8 +757,9 @@ name|isDtors
 parameter_list|)
 function_decl|;
 comment|/// runStaticConstructorsDestructors - This method is used to execute all of
-comment|/// the static constructors or destructors for a module, depending on the
-comment|/// value of isDtors.
+comment|/// the static constructors or destructors for a particular module.
+comment|///
+comment|/// \param isDtors - Run the destructors instead of constructors.
 name|void
 name|runStaticConstructorsDestructors
 parameter_list|(
@@ -732,8 +820,8 @@ modifier|*
 name|Addr
 parameter_list|)
 function_decl|;
-comment|/// clearAllGlobalMappings - Clear all global mappings and start over again
-comment|/// use in dynamic compilation scenarios when you want to move globals
+comment|/// clearAllGlobalMappings - Clear all global mappings and start over again,
+comment|/// for use in dynamic compilation scenarios to move globals.
 name|void
 name|clearAllGlobalMappings
 parameter_list|()
@@ -769,7 +857,6 @@ function_decl|;
 comment|/// getPointerToGlobalIfAvailable - This returns the address of the specified
 comment|/// global value if it is has already been codegen'd, otherwise it returns
 comment|/// null.
-comment|///
 name|void
 modifier|*
 name|getPointerToGlobalIfAvailable
@@ -781,8 +868,7 @@ name|GV
 parameter_list|)
 function_decl|;
 comment|/// getPointerToGlobal - This returns the address of the specified global
-comment|/// value.  This may involve code generation if it's a function.
-comment|///
+comment|/// value. This may involve code generation if it's a function.
 name|void
 modifier|*
 name|getPointerToGlobal
@@ -798,7 +884,6 @@ comment|/// different ways.  They should each implement this to say what a funct
 comment|/// pointer should look like.  When F is destroyed, the ExecutionEngine will
 comment|/// remove its global mapping and free any machine code.  Be sure no threads
 comment|/// are running inside F when that happens.
-comment|///
 name|virtual
 name|void
 modifier|*
@@ -814,7 +899,6 @@ function_decl|;
 comment|/// getPointerToBasicBlock - The different EE's represent basic blocks in
 comment|/// different ways.  Return the representation for a blockaddress of the
 comment|/// specified block.
-comment|///
 name|virtual
 name|void
 modifier|*
@@ -831,7 +915,6 @@ comment|/// getPointerToFunctionOrStub - If the specified function has been
 comment|/// code-gen'd, return a pointer to the function.  If not, compile it, or use
 comment|/// a stub to implement lazy compilation if available.  See
 comment|/// getPointerToFunction for the requirements on destroying F.
-comment|///
 name|virtual
 name|void
 modifier|*
@@ -877,6 +960,10 @@ modifier|*
 name|Addr
 parameter_list|)
 function_decl|;
+comment|/// StoreValueToMemory - Stores the data in Val of type Ty at address Ptr.
+comment|/// Ptr is the address of the memory at which to store Val, cast to
+comment|/// GenericValue *.  It is not a pointer to a GenericValue containing the
+comment|/// address at which to store Val.
 name|void
 name|StoreValueToMemory
 parameter_list|(
@@ -908,12 +995,11 @@ modifier|*
 name|Addr
 parameter_list|)
 function_decl|;
-comment|/// recompileAndRelinkFunction - This method is used to force a function
-comment|/// which has already been compiled to be compiled again, possibly
-comment|/// after it has been modified. Then the entry to the old copy is overwritten
-comment|/// with a branch to the new copy. If there was no old copy, this acts
-comment|/// just like VM::getPointerToFunction().
-comment|///
+comment|/// recompileAndRelinkFunction - This method is used to force a function which
+comment|/// has already been compiled to be compiled again, possibly after it has been
+comment|/// modified.  Then the entry to the old copy is overwritten with a branch to
+comment|/// the new copy.  If there was no old copy, this acts just like
+comment|/// VM::getPointerToFunction().
 name|virtual
 name|void
 modifier|*
@@ -929,7 +1015,6 @@ function_decl|;
 comment|/// freeMachineCodeForFunction - Release memory in the ExecutionEngine
 comment|/// corresponding to the machine code emitted to execute this function, useful
 comment|/// for garbage-collecting generated code.
-comment|///
 name|virtual
 name|void
 name|freeMachineCodeForFunction
@@ -1115,19 +1200,11 @@ expr_stmt|;
 block|}
 comment|/// InstallExceptionTableRegister - The JIT will use the given function
 comment|/// to register the exception tables it generates.
-specifier|static
 name|void
 name|InstallExceptionTableRegister
 parameter_list|(
-name|void
-function_decl|(
-modifier|*
+name|EERegisterFn
 name|F
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
 parameter_list|)
 block|{
 name|ExceptionTableRegister
@@ -1135,9 +1212,20 @@ operator|=
 name|F
 expr_stmt|;
 block|}
-comment|/// RegisterTable - Registers the given pointer as an exception table. It uses
-comment|/// the ExceptionTableRegister function.
-specifier|static
+name|void
+name|InstallExceptionTableDeregister
+parameter_list|(
+name|EERegisterFn
+name|F
+parameter_list|)
+block|{
+name|ExceptionTableDeregister
+operator|=
+name|F
+expr_stmt|;
+block|}
+comment|/// RegisterTable - Registers the given pointer as an exception table.  It
+comment|/// uses the ExceptionTableRegister function.
 name|void
 name|RegisterTable
 parameter_list|(
@@ -1150,12 +1238,27 @@ if|if
 condition|(
 name|ExceptionTableRegister
 condition|)
+block|{
 name|ExceptionTableRegister
 argument_list|(
 name|res
 argument_list|)
 expr_stmt|;
+name|AllExceptionTables
+operator|.
+name|push_back
+argument_list|(
+name|res
+argument_list|)
+expr_stmt|;
 block|}
+block|}
+comment|/// DeregisterAllTables - Deregisters all previously registered pointers to an
+comment|/// exception tables.  It uses the ExceptionTableoDeregister function.
+name|void
+name|DeregisterAllTables
+parameter_list|()
+function_decl|;
 name|protected
 label|:
 name|explicit
@@ -1170,9 +1273,6 @@ name|void
 name|emitGlobals
 parameter_list|()
 function_decl|;
-comment|// EmitGlobalVariable - This method emits the specified global variable to the
-comment|// address specified in GlobalAddresses, or allocates new memory if it's not
-comment|// already in the map.
 name|void
 name|EmitGlobalVariable
 parameter_list|(
@@ -1319,8 +1419,10 @@ literal|4
 operator|>
 name|MAttrs
 expr_stmt|;
+name|bool
+name|UseMCJIT
+decl_stmt|;
 comment|/// InitEngine - Does the common initialization of default options.
-comment|///
 name|void
 name|InitEngine
 parameter_list|()
@@ -1354,6 +1456,10 @@ operator|=
 name|CodeModel
 operator|::
 name|Default
+expr_stmt|;
+name|UseMCJIT
+operator|=
+name|false
 expr_stmt|;
 block|}
 name|public
@@ -1560,6 +1666,20 @@ return|return
 operator|*
 name|this
 return|;
+block|}
+comment|/// setUseMCJIT - Set whether the MC-JIT implementation should be used
+comment|/// (experimental).
+name|void
+name|setUseMCJIT
+parameter_list|(
+name|bool
+name|Value
+parameter_list|)
+block|{
+name|UseMCJIT
+operator|=
+name|Value
+expr_stmt|;
 block|}
 comment|/// setMAttrs - Set cpu-specific attributes.
 name|template

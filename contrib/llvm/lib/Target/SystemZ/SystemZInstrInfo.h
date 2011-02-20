@@ -136,12 +136,6 @@ name|SystemZTargetMachine
 operator|&
 name|TM
 block|;
-name|IndexedMap
-operator|<
-name|unsigned
-operator|>
-name|RegSpillOffsets
-block|;
 name|public
 operator|:
 name|explicit
@@ -237,34 +231,6 @@ argument_list|,
 argument|int FrameIdx
 argument_list|,
 argument|const TargetRegisterClass *RC
-argument_list|,
-argument|const TargetRegisterInfo *TRI
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|bool
-name|spillCalleeSavedRegisters
-argument_list|(
-argument|MachineBasicBlock&MBB
-argument_list|,
-argument|MachineBasicBlock::iterator MI
-argument_list|,
-argument|const std::vector<CalleeSavedInfo>&CSI
-argument_list|,
-argument|const TargetRegisterInfo *TRI
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|bool
-name|restoreCalleeSavedRegisters
-argument_list|(
-argument|MachineBasicBlock&MBB
-argument_list|,
-argument|MachineBasicBlock::iterator MI
-argument_list|,
-argument|const std::vector<CalleeSavedInfo>&CSI
 argument_list|,
 argument|const TargetRegisterInfo *TRI
 argument_list|)

@@ -312,7 +312,7 @@ define|#
 directive|define
 name|INSTRUCTION_IDS
 define|\
-value|InstrUID*  instructionIDs;
+value|const InstrUID *instructionIDs;
 end_define
 
 begin_include

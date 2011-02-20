@@ -76,9 +76,6 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|CalleeSavedInfo
-decl_stmt|;
-name|class
 name|InstrItineraryData
 decl_stmt|;
 name|class
@@ -89,6 +86,9 @@ name|MCAsmInfo
 decl_stmt|;
 name|class
 name|MachineMemOperand
+decl_stmt|;
+name|class
+name|MachineRegisterInfo
 decl_stmt|;
 name|class
 name|MDNode
@@ -104,6 +104,9 @@ name|ScheduleHazardRecognizer
 decl_stmt|;
 name|class
 name|SelectionDAG
+decl_stmt|;
+name|class
+name|ScheduleDAG
 decl_stmt|;
 name|class
 name|TargetRegisterClass
@@ -671,7 +674,9 @@ literal|0
 decl_stmt|;
 comment|/// produceSameValue - Return true if two machine instructions would produce
 comment|/// identical values. By default, this is only true when the two instructions
-comment|/// are deemed identical except for defs.
+comment|/// are deemed identical except for defs. If this function is called when the
+comment|/// IR is still in SSA form, the caller can pass the MachineRegisterInfo for
+comment|/// aggressive checks.
 name|virtual
 name|bool
 name|produceSameValue
@@ -685,6 +690,13 @@ specifier|const
 name|MachineInstr
 operator|*
 name|MI1
+argument_list|,
+specifier|const
+name|MachineRegisterInfo
+operator|*
+name|MRI
+operator|=
+literal|0
 argument_list|)
 decl|const
 init|=
@@ -867,8 +879,11 @@ return|return
 name|true
 return|;
 block|}
-comment|/// isProfitableToIfCvt - Return true if it's profitable to first "NumInstrs"
-comment|/// of the specified basic block.
+comment|/// isProfitableToIfCvt - Return true if it's profitable to predicate
+comment|/// instructions with accumulated instruction latency of "NumCycles"
+comment|/// of the specified basic block, where the probability of the instructions
+comment|/// being executed is given by Probability, and Confidence is a measure
+comment|/// of our confidence that it will be properly predicted.
 name|virtual
 name|bool
 name|isProfitableToIfCvt
@@ -878,7 +893,16 @@ operator|&
 name|MBB
 argument_list|,
 name|unsigned
-name|NumInstrs
+name|NumCyles
+argument_list|,
+name|unsigned
+name|ExtraPredCycles
+argument_list|,
+name|float
+name|Probability
+argument_list|,
+name|float
+name|Confidence
 argument_list|)
 decl|const
 block|{
@@ -889,7 +913,9 @@ block|}
 comment|/// isProfitableToIfCvt - Second variant of isProfitableToIfCvt, this one
 comment|/// checks for the case where two basic blocks from true and false path
 comment|/// of a if-then-else (diamond) are predicated on mutally exclusive
-comment|/// predicates.
+comment|/// predicates, where the probability of the true path being taken is given
+comment|/// by Probability, and Confidence is a measure of our confidence that it
+comment|/// will be properly predicted.
 name|virtual
 name|bool
 name|isProfitableToIfCvt
@@ -899,14 +925,26 @@ operator|&
 name|TMBB
 argument_list|,
 name|unsigned
-name|NumTInstrs
+name|NumTCycles
+argument_list|,
+name|unsigned
+name|ExtraTCycles
 argument_list|,
 name|MachineBasicBlock
 operator|&
 name|FMBB
 argument_list|,
 name|unsigned
-name|NumFInstrs
+name|NumFCycles
+argument_list|,
+name|unsigned
+name|ExtraFCycles
+argument_list|,
+name|float
+name|Probability
+argument_list|,
+name|float
+name|Confidence
 argument_list|)
 decl|const
 block|{
@@ -915,8 +953,11 @@ name|false
 return|;
 block|}
 comment|/// isProfitableToDupForIfCvt - Return true if it's profitable for
-comment|/// if-converter to duplicate a specific number of instructions in the
-comment|/// specified MBB to enable if-conversion.
+comment|/// if-converter to duplicate instructions of specified accumulated
+comment|/// instruction latencies in the specified MBB to enable if-conversion.
+comment|/// The probability of the instructions being executed is given by
+comment|/// Probability, and Confidence is a measure of our confidence that it
+comment|/// will be properly predicted.
 name|virtual
 name|bool
 name|isProfitableToDupForIfCvt
@@ -926,7 +967,13 @@ operator|&
 name|MBB
 argument_list|,
 name|unsigned
-name|NumInstrs
+name|NumCyles
+argument_list|,
+name|float
+name|Probability
+argument_list|,
+name|float
+name|Confidence
 argument_list|)
 decl|const
 block|{
@@ -1059,82 +1106,6 @@ operator|&&
 literal|"Target didn't implement TargetInstrInfo::loadRegFromStackSlot!"
 argument_list|)
 expr_stmt|;
-block|}
-comment|/// spillCalleeSavedRegisters - Issues instruction(s) to spill all callee
-comment|/// saved registers and returns true if it isn't possible / profitable to do
-comment|/// so by issuing a series of store instructions via
-comment|/// storeRegToStackSlot(). Returns false otherwise.
-name|virtual
-name|bool
-name|spillCalleeSavedRegisters
-argument_list|(
-name|MachineBasicBlock
-operator|&
-name|MBB
-argument_list|,
-name|MachineBasicBlock
-operator|::
-name|iterator
-name|MI
-argument_list|,
-specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-name|CalleeSavedInfo
-operator|>
-operator|&
-name|CSI
-argument_list|,
-specifier|const
-name|TargetRegisterInfo
-operator|*
-name|TRI
-argument_list|)
-decl|const
-block|{
-return|return
-name|false
-return|;
-block|}
-comment|/// restoreCalleeSavedRegisters - Issues instruction(s) to restore all callee
-comment|/// saved registers and returns true if it isn't possible / profitable to do
-comment|/// so by issuing a series of load instructions via loadRegToStackSlot().
-comment|/// Returns false otherwise.
-name|virtual
-name|bool
-name|restoreCalleeSavedRegisters
-argument_list|(
-name|MachineBasicBlock
-operator|&
-name|MBB
-argument_list|,
-name|MachineBasicBlock
-operator|::
-name|iterator
-name|MI
-argument_list|,
-specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-name|CalleeSavedInfo
-operator|>
-operator|&
-name|CSI
-argument_list|,
-specifier|const
-name|TargetRegisterInfo
-operator|*
-name|TRI
-argument_list|)
-decl|const
-block|{
-return|return
-name|false
-return|;
 block|}
 comment|/// emitFrameIndexDebugValue - Emit a target-dependent form of
 comment|/// DBG_VALUE encoding the address of a frame index.  Addresses would
@@ -1722,9 +1693,31 @@ name|MAI
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// CreateTargetHazardRecognizer - Allocate and return a hazard recognizer
-comment|/// to use for this target when scheduling the machine instructions after
+comment|/// CreateTargetHazardRecognizer - Allocate and return a hazard recognizer to
+comment|/// use for this target when scheduling the machine instructions before
 comment|/// register allocation.
+name|virtual
+name|ScheduleHazardRecognizer
+modifier|*
+name|CreateTargetHazardRecognizer
+argument_list|(
+specifier|const
+name|TargetMachine
+operator|*
+name|TM
+argument_list|,
+specifier|const
+name|ScheduleDAG
+operator|*
+name|DAG
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
+comment|/// CreateTargetPostRAHazardRecognizer - Allocate and return a hazard
+comment|/// recognizer to use for this target when scheduling the machine instructions
+comment|/// after register allocation.
 name|virtual
 name|ScheduleHazardRecognizer
 modifier|*
@@ -1732,7 +1725,12 @@ name|CreateTargetPostRAHazardRecognizer
 argument_list|(
 specifier|const
 name|InstrItineraryData
-operator|&
+operator|*
+argument_list|,
+specifier|const
+name|ScheduleDAG
+operator|*
+name|DAG
 argument_list|)
 decl|const
 init|=
@@ -1756,7 +1754,11 @@ name|SrcReg
 argument_list|,
 name|int
 operator|&
-name|CmpValue
+name|Mask
+argument_list|,
+name|int
+operator|&
+name|Value
 argument_list|)
 decl|const
 block|{
@@ -1764,19 +1766,30 @@ return|return
 name|false
 return|;
 block|}
-comment|/// ConvertToSetZeroFlag - Convert the instruction to set the zero flag so
-comment|/// that we can remove a "comparison with zero".
+comment|/// OptimizeCompareInstr - See if the comparison instruction can be converted
+comment|/// into something more efficient. E.g., on ARM most instructions can set the
+comment|/// flags register, obviating the need for a separate CMP.
 name|virtual
 name|bool
-name|ConvertToSetZeroFlag
+name|OptimizeCompareInstr
 argument_list|(
 name|MachineInstr
 operator|*
-name|Instr
-argument_list|,
-name|MachineInstr
-operator|*
 name|CmpInstr
+argument_list|,
+name|unsigned
+name|SrcReg
+argument_list|,
+name|int
+name|Mask
+argument_list|,
+name|int
+name|Value
+argument_list|,
+specifier|const
+name|MachineRegisterInfo
+operator|*
+name|MRI
 argument_list|)
 decl|const
 block|{
@@ -1784,6 +1797,230 @@ return|return
 name|false
 return|;
 block|}
+comment|/// FoldImmediate - 'Reg' is known to be defined by a move immediate
+comment|/// instruction, try to fold the immediate into the use instruction.
+name|virtual
+name|bool
+name|FoldImmediate
+argument_list|(
+name|MachineInstr
+operator|*
+name|UseMI
+argument_list|,
+name|MachineInstr
+operator|*
+name|DefMI
+argument_list|,
+name|unsigned
+name|Reg
+argument_list|,
+name|MachineRegisterInfo
+operator|*
+name|MRI
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// getNumMicroOps - Return the number of u-operations the given machine
+comment|/// instruction will be decoded to on the target cpu.
+name|virtual
+name|unsigned
+name|getNumMicroOps
+argument_list|(
+specifier|const
+name|InstrItineraryData
+operator|*
+name|ItinData
+argument_list|,
+specifier|const
+name|MachineInstr
+operator|*
+name|MI
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// isZeroCost - Return true for pseudo instructions that don't consume any
+comment|/// machine resources in their current form. These are common cases that the
+comment|/// scheduler should consider free, rather than conservatively handling them
+comment|/// as instructions with no itinerary.
+name|bool
+name|isZeroCost
+argument_list|(
+name|unsigned
+name|Opcode
+argument_list|)
+decl|const
+block|{
+return|return
+name|Opcode
+operator|<=
+name|TargetOpcode
+operator|::
+name|COPY
+return|;
+block|}
+comment|/// getOperandLatency - Compute and return the use operand latency of a given
+comment|/// pair of def and use.
+comment|/// In most cases, the static scheduling itinerary was enough to determine the
+comment|/// operand latency. But it may not be possible for instructions with variable
+comment|/// number of defs / uses.
+name|virtual
+name|int
+name|getOperandLatency
+argument_list|(
+specifier|const
+name|InstrItineraryData
+operator|*
+name|ItinData
+argument_list|,
+specifier|const
+name|MachineInstr
+operator|*
+name|DefMI
+argument_list|,
+name|unsigned
+name|DefIdx
+argument_list|,
+specifier|const
+name|MachineInstr
+operator|*
+name|UseMI
+argument_list|,
+name|unsigned
+name|UseIdx
+argument_list|)
+decl|const
+decl_stmt|;
+name|virtual
+name|int
+name|getOperandLatency
+argument_list|(
+specifier|const
+name|InstrItineraryData
+operator|*
+name|ItinData
+argument_list|,
+name|SDNode
+operator|*
+name|DefNode
+argument_list|,
+name|unsigned
+name|DefIdx
+argument_list|,
+name|SDNode
+operator|*
+name|UseNode
+argument_list|,
+name|unsigned
+name|UseIdx
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// getInstrLatency - Compute the instruction latency of a given instruction.
+comment|/// If the instruction has higher cost when predicated, it's returned via
+comment|/// PredCost.
+name|virtual
+name|int
+name|getInstrLatency
+argument_list|(
+specifier|const
+name|InstrItineraryData
+operator|*
+name|ItinData
+argument_list|,
+specifier|const
+name|MachineInstr
+operator|*
+name|MI
+argument_list|,
+name|unsigned
+operator|*
+name|PredCost
+operator|=
+literal|0
+argument_list|)
+decl|const
+decl_stmt|;
+name|virtual
+name|int
+name|getInstrLatency
+argument_list|(
+specifier|const
+name|InstrItineraryData
+operator|*
+name|ItinData
+argument_list|,
+name|SDNode
+operator|*
+name|Node
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// hasHighOperandLatency - Compute operand latency between a def of 'Reg'
+comment|/// and an use in the current loop, return true if the target considered
+comment|/// it 'high'. This is used by optimization passes such as machine LICM to
+comment|/// determine whether it makes sense to hoist an instruction out even in
+comment|/// high register pressure situation.
+name|virtual
+name|bool
+name|hasHighOperandLatency
+argument_list|(
+specifier|const
+name|InstrItineraryData
+operator|*
+name|ItinData
+argument_list|,
+specifier|const
+name|MachineRegisterInfo
+operator|*
+name|MRI
+argument_list|,
+specifier|const
+name|MachineInstr
+operator|*
+name|DefMI
+argument_list|,
+name|unsigned
+name|DefIdx
+argument_list|,
+specifier|const
+name|MachineInstr
+operator|*
+name|UseMI
+argument_list|,
+name|unsigned
+name|UseIdx
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// hasLowDefLatency - Compute operand latency of a def of 'Reg', return true
+comment|/// if the target considered it 'low'.
+name|virtual
+name|bool
+name|hasLowDefLatency
+argument_list|(
+specifier|const
+name|InstrItineraryData
+operator|*
+name|ItinData
+argument_list|,
+specifier|const
+name|MachineInstr
+operator|*
+name|DefMI
+argument_list|,
+name|unsigned
+name|DefIdx
+argument_list|)
+decl|const
+decl_stmt|;
 block|}
 empty_stmt|;
 comment|/// TargetInstrInfoImpl - This is the default implementation of
@@ -1903,6 +2140,8 @@ argument_list|(
 argument|const MachineInstr *MI0
 argument_list|,
 argument|const MachineInstr *MI1
+argument_list|,
+argument|const MachineRegisterInfo *MRI
 argument_list|)
 specifier|const
 block|;
@@ -1918,12 +2157,30 @@ argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
+name|bool
+name|usePreRAHazardRecognizer
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|ScheduleHazardRecognizer
+operator|*
+name|CreateTargetHazardRecognizer
+argument_list|(
+argument|const TargetMachine*
+argument_list|,
+argument|const ScheduleDAG*
+argument_list|)
+specifier|const
+block|;
 name|virtual
 name|ScheduleHazardRecognizer
 operator|*
 name|CreateTargetPostRAHazardRecognizer
 argument_list|(
-argument|const InstrItineraryData&
+argument|const InstrItineraryData*
+argument_list|,
+argument|const ScheduleDAG*
 argument_list|)
 specifier|const
 block|; }

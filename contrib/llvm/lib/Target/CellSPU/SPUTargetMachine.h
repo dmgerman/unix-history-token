@@ -86,7 +86,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"SPUFrameInfo.h"
+file|"SPUFrameLowering.h"
 end_include
 
 begin_include
@@ -112,7 +112,7 @@ name|class
 name|GlobalValue
 decl_stmt|;
 name|class
-name|TargetFrameInfo
+name|TargetFrameLowering
 decl_stmt|;
 comment|/// SPUTargetMachine
 comment|///
@@ -132,8 +132,8 @@ block|;
 name|SPUInstrInfo
 name|InstrInfo
 block|;
-name|SPUFrameInfo
-name|FrameInfo
+name|SPUFrameLowering
+name|FrameLowering
 block|;
 name|SPUTargetLowering
 name|TLInfo
@@ -197,15 +197,15 @@ return|;
 block|}
 name|virtual
 specifier|const
-name|SPUFrameInfo
+name|SPUFrameLowering
 operator|*
-name|getFrameInfo
+name|getFrameLowering
 argument_list|()
 specifier|const
 block|{
 return|return
 operator|&
-name|FrameInfo
+name|FrameLowering
 return|;
 block|}
 comment|/*!     \note Cell SPU does not support JIT today. It could support JIT at some     point.    */
@@ -277,11 +277,13 @@ block|}
 name|virtual
 specifier|const
 name|InstrItineraryData
+operator|*
 name|getInstrItineraryData
 argument_list|()
 specifier|const
 block|{
 return|return
+operator|&
 name|InstrItins
 return|;
 block|}
@@ -294,7 +296,19 @@ argument|PassManagerBase&PM
 argument_list|,
 argument|CodeGenOpt::Level OptLevel
 argument_list|)
-block|; }
+block|;
+name|virtual
+name|bool
+name|addPreEmitPass
+argument_list|(
+name|PassManagerBase
+operator|&
+argument_list|,
+name|CodeGenOpt
+operator|::
+name|Level
+argument_list|)
+block|;	 }
 decl_stmt|;
 block|}
 end_decl_stmt

@@ -197,6 +197,9 @@ block|{
 name|class
 name|CodeGenModule
 decl_stmt|;
+name|class
+name|CGBlockInfo
+decl_stmt|;
 comment|// FIXME: Several methods should be pure virtual but aren't to avoid the
 comment|// partially-implemented subclass breaking.
 comment|/// Implements runtime-specific code generation functions.
@@ -554,13 +557,24 @@ argument_list|()
 operator|=
 literal|0
 expr_stmt|;
-comment|// API for atomic copying of qualified aggregates in setter/getter.
+comment|// API for atomic copying of qualified aggregates in getter.
 name|virtual
 name|llvm
 operator|::
 name|Constant
 operator|*
-name|GetCopyStructFunction
+name|GetGetStructFunction
+argument_list|()
+operator|=
+literal|0
+expr_stmt|;
+comment|// API for atomic copying of qualified aggregates in setter.
+name|virtual
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|GetSetStructFunction
 argument_list|()
 operator|=
 literal|0
@@ -877,24 +891,20 @@ name|llvm
 operator|::
 name|Constant
 operator|*
-name|GCBlockLayout
+name|BuildGCBlockLayout
 argument_list|(
 name|CodeGen
 operator|::
-name|CodeGenFunction
+name|CodeGenModule
 operator|&
-name|CGF
+name|CGM
 argument_list|,
 specifier|const
-name|llvm
+name|CodeGen
 operator|::
-name|SmallVectorImpl
-operator|<
-specifier|const
-name|BlockDeclRefExpr
-operator|*
-operator|>
+name|CGBlockInfo
 operator|&
+name|blockInfo
 argument_list|)
 operator|=
 literal|0

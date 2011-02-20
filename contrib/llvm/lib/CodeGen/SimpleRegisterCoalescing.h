@@ -91,7 +91,7 @@ name|class
 name|SimpleRegisterCoalescing
 decl_stmt|;
 name|class
-name|LiveVariables
+name|LiveDebugVariables
 decl_stmt|;
 name|class
 name|TargetRegisterInfo
@@ -172,6 +172,10 @@ name|LiveIntervals
 modifier|*
 name|li_
 decl_stmt|;
+name|LiveDebugVariables
+modifier|*
+name|ldv_
+decl_stmt|;
 specifier|const
 name|MachineLoopInfo
 modifier|*
@@ -238,7 +242,16 @@ name|MachineFunctionPass
 argument_list|(
 argument|ID
 argument_list|)
-block|{}
+block|{
+name|initializeSimpleRegisterCoalescingPass
+argument_list|(
+operator|*
+name|PassRegistry
+operator|::
+name|getPassRegistry
+argument_list|()
+argument_list|)
+block|;     }
 expr|struct
 name|InstrSlots
 block|{       enum
@@ -470,12 +483,16 @@ parameter_list|)
 function_decl|;
 comment|/// ReMaterializeTrivialDef - If the source of a copy is defined by a trivial
 comment|/// computation, replace the copy by rematerialize the definition.
+comment|/// If PreserveSrcInt is true, make sure SrcInt is valid after the call.
 name|bool
 name|ReMaterializeTrivialDef
 parameter_list|(
 name|LiveInterval
 modifier|&
 name|SrcInt
+parameter_list|,
+name|bool
+name|PreserveSrcInt
 parameter_list|,
 name|unsigned
 name|DstReg

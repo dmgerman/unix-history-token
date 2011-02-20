@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/FileSystemOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang-c/Index.h"
 end_include
 
@@ -134,13 +140,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/System/Path.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/Timer.h"
+file|"llvm/Support/Path.h"
 end_include
 
 begin_include
@@ -230,6 +230,22 @@ name|using
 name|namespace
 name|idx
 decl_stmt|;
+comment|/// \brief Allocator for a cached set of global code completions.
+name|class
+name|GlobalCodeCompletionAllocator
+range|:
+name|public
+name|CodeCompletionAllocator
+decl_stmt|,
+name|public
+name|llvm
+decl|::
+name|RefCountedBase
+decl|<
+name|GlobalCodeCompletionAllocator
+decl|>
+block|{  }
+empty_stmt|;
 comment|/// \brief Utility class for loading a ASTContext from an AST file.
 comment|///
 name|class
@@ -312,6 +328,9 @@ name|ASTContext
 operator|>
 name|Ctx
 expr_stmt|;
+name|FileSystemOptions
+name|FileSystemOpts
+decl_stmt|;
 comment|/// \brief The AST consumer that received information about the translation
 comment|/// unit as it was parsed or loaded.
 name|llvm
@@ -342,6 +361,21 @@ name|CompilerInvocation
 operator|>
 name|Invocation
 expr_stmt|;
+comment|/// \brief The set of target features.
+comment|///
+comment|/// FIXME: each time we reparse, we need to restore the set of target
+comment|/// features from this vector, because TargetInfo::CreateTargetInfo()
+comment|/// mangles the target options in place. Yuck!
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|TargetFeatures
+expr_stmt|;
 comment|// OnlyLocalDecls - when true, walking this AST should only visit declarations
 comment|// that come from the AST itself, not from included precompiled headers.
 comment|// FIXME: This is temporary; eventually, CIndex will always do this.
@@ -360,6 +394,10 @@ comment|/// \brief Whether this AST represents a complete translation unit.
 name|bool
 name|CompleteTranslationUnit
 decl_stmt|;
+comment|/// \brief Whether we should time each operation.
+name|bool
+name|WantTiming
+decl_stmt|;
 comment|/// Track the top-level decls which appeared in an ASTUnit which was loaded
 comment|/// from a source file.
 comment|//
@@ -375,6 +413,21 @@ name|Decl
 operator|*
 operator|>
 name|TopLevelDecls
+expr_stmt|;
+comment|/// \brief The list of preprocessed entities which appeared when the ASTUnit
+comment|/// was loaded.
+comment|///
+comment|/// FIXME: This is just an optimization hack to avoid deserializing large
+comment|/// parts of a PCH file while performing a walk or search. In the long term,
+comment|/// we should provide more scalable search mechanisms.
+name|std
+operator|::
+name|vector
+operator|<
+name|PreprocessedEntity
+operator|*
+operator|>
+name|PreprocessedEntities
 expr_stmt|;
 comment|/// The name of the original source file used to generate this ASTUnit.
 name|std
@@ -398,6 +451,14 @@ literal|4
 operator|>
 name|StoredDiagnostics
 expr_stmt|;
+comment|/// \brief The number of stored diagnostics that come from the driver
+comment|/// itself.
+comment|///
+comment|/// Diagnostics that come from the driver are retained from one parse to
+comment|/// the next.
+name|unsigned
+name|NumStoredDiagnosticsFromDriver
+decl_stmt|;
 comment|/// \brief Temporary files that should be removed when the ASTUnit is
 comment|/// destroyed.
 name|llvm
@@ -546,17 +607,6 @@ comment|/// a precompiled preamble.
 name|unsigned
 name|NumStoredDiagnosticsInPreamble
 decl_stmt|;
-comment|/// \brief The group of timers associated with this translation unit.
-name|llvm
-operator|::
-name|OwningPtr
-operator|<
-name|llvm
-operator|::
-name|TimerGroup
-operator|>
-name|TimerGroup
-expr_stmt|;
 comment|/// \brief A list of the serialization ID numbers for each of the top-level
 comment|/// declarations parsed within the precompiled preamble.
 name|std
@@ -569,14 +619,52 @@ name|DeclID
 operator|>
 name|TopLevelDeclsInPreamble
 expr_stmt|;
-comment|///
-comment|/// \defgroup CodeCompleteCaching Code-completion caching
-comment|///
-comment|/// \{
-comment|///
+comment|/// \brief A list of the offsets into the precompiled preamble which
+comment|/// correspond to preprocessed entities.
+name|std
+operator|::
+name|vector
+operator|<
+name|uint64_t
+operator|>
+name|PreprocessedEntitiesInPreamble
+expr_stmt|;
 comment|/// \brief Whether we should be caching code-completion results.
 name|bool
 name|ShouldCacheCodeCompletionResults
+decl_stmt|;
+specifier|static
+name|void
+name|ConfigureDiags
+argument_list|(
+name|llvm
+operator|::
+name|IntrusiveRefCntPtr
+operator|<
+name|Diagnostic
+operator|>
+operator|&
+name|Diags
+argument_list|,
+specifier|const
+name|char
+operator|*
+operator|*
+name|ArgBegin
+argument_list|,
+specifier|const
+name|char
+operator|*
+operator|*
+name|ArgEnd
+argument_list|,
+name|ASTUnit
+operator|&
+name|AST
+argument_list|,
+name|bool
+name|CaptureDiagnostics
+argument_list|)
 decl_stmt|;
 name|public
 label|:
@@ -646,8 +734,31 @@ return|return
 name|CachedCompletionTypes
 return|;
 block|}
+comment|/// \brief Retrieve the allocator used to cache global code completions.
+name|llvm
+operator|::
+name|IntrusiveRefCntPtr
+operator|<
+name|GlobalCodeCompletionAllocator
+operator|>
+name|getCachedCompletionAllocator
+argument_list|()
+block|{
+return|return
+name|CachedCompletionAllocator
+return|;
+block|}
 name|private
 label|:
+comment|/// \brief Allocator used to store cached code completions.
+name|llvm
+operator|::
+name|IntrusiveRefCntPtr
+operator|<
+name|GlobalCodeCompletionAllocator
+operator|>
+name|CachedCompletionAllocator
+expr_stmt|;
 comment|/// \brief The set of cached code-completion results.
 name|std
 operator|::
@@ -667,21 +778,26 @@ name|unsigned
 operator|>
 name|CachedCompletionTypes
 expr_stmt|;
-comment|/// \brief The number of top-level declarations present the last time we
-comment|/// cached code-completion results.
+comment|/// \brief A string hash of the top-level declaration and macro definition
+comment|/// names processed the last time that we reparsed the file.
 comment|///
-comment|/// The value is used to help detect when we should repopulate the global
-comment|/// completion cache.
+comment|/// This hash value is used to determine when we need to refresh the
+comment|/// global code-completion cache.
 name|unsigned
-name|NumTopLevelDeclsAtLastCompletionCache
+name|CompletionCacheTopLevelHashValue
 decl_stmt|;
-comment|/// \brief The number of reparses left until we'll consider updating the
-comment|/// code-completion cache.
+comment|/// \brief A string hash of the top-level declaration and macro definition
+comment|/// names processed the last time that we reparsed the precompiled preamble.
 comment|///
-comment|/// This is meant to avoid thrashing during reparsing, by not allowing the
-comment|/// code-completion cache to be updated on every reparse.
+comment|/// This hash value is used to determine when we need to refresh the
+comment|/// global code-completion cache after a rebuild of the precompiled preamble.
 name|unsigned
-name|CacheCodeCompletionCoolDown
+name|PreambleTopLevelHashValue
+decl_stmt|;
+comment|/// \brief The current hash value for the top-level declaration and macro
+comment|/// definition names
+name|unsigned
+name|CurrentTopLevelHashValue
 decl_stmt|;
 comment|/// \brief Bit used by CIndex to mark when a translation unit may be in an
 comment|/// inconsistent state, and is not safe to free.
@@ -701,22 +817,6 @@ name|void
 name|ClearCachedCompletionResults
 parameter_list|()
 function_decl|;
-comment|///
-comment|/// \}
-comment|///
-comment|/// \brief The timers we've created from the various parses, reparses, etc.
-comment|/// involved in this translation unit.
-name|std
-operator|::
-name|vector
-operator|<
-name|llvm
-operator|::
-name|Timer
-operator|*
-operator|>
-name|Timers
-expr_stmt|;
 name|ASTUnit
 argument_list|(
 specifier|const
@@ -800,6 +900,10 @@ argument_list|)
 expr_stmt|;
 name|void
 name|RealizeTopLevelDeclsFromPreamble
+parameter_list|()
+function_decl|;
+name|void
+name|RealizePreprocessedEntitiesFromPreamble
 parameter_list|()
 function_decl|;
 name|public
@@ -1044,6 +1148,17 @@ name|FileMgr
 return|;
 block|}
 specifier|const
+name|FileSystemOptions
+operator|&
+name|getFileSystemOpts
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FileSystemOpts
+return|;
+block|}
+specifier|const
 name|std
 operator|::
 name|string
@@ -1120,6 +1235,13 @@ return|return
 name|LastLoc
 return|;
 block|}
+name|llvm
+operator|::
+name|StringRef
+name|getMainFileName
+argument_list|()
+specifier|const
+expr_stmt|;
 typedef|typedef
 name|std
 operator|::
@@ -1284,6 +1406,55 @@ name|D
 argument_list|)
 expr_stmt|;
 block|}
+comment|/// \brief Retrieve a reference to the current top-level name hash value.
+comment|///
+comment|/// Note: This is used internally by the top-level tracking action
+name|unsigned
+modifier|&
+name|getCurrentTopLevelHashValue
+parameter_list|()
+block|{
+return|return
+name|CurrentTopLevelHashValue
+return|;
+block|}
+typedef|typedef
+name|std
+operator|::
+name|vector
+operator|<
+name|PreprocessedEntity
+operator|*
+operator|>
+operator|::
+name|iterator
+name|pp_entity_iterator
+expr_stmt|;
+name|pp_entity_iterator
+name|pp_entity_begin
+parameter_list|()
+function_decl|;
+name|pp_entity_iterator
+name|pp_entity_end
+parameter_list|()
+function_decl|;
+comment|/// \brief Add a new preprocessed entity that's stored at the given offset
+comment|/// in the precompiled preamble.
+name|void
+name|addPreprocessedEntityFromPreamble
+parameter_list|(
+name|uint64_t
+name|Offset
+parameter_list|)
+block|{
+name|PreprocessedEntitiesInPreamble
+operator|.
+name|push_back
+argument_list|(
+name|Offset
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// \brief Retrieve the mapping from File IDs to the preprocessed entities
 comment|/// within that file.
 name|PreprocessedEntitiesByFileMap
@@ -1399,6 +1570,18 @@ name|size
 argument_list|()
 return|;
 block|}
+name|llvm
+operator|::
+name|MemoryBuffer
+operator|*
+name|getBufferForFile
+argument_list|(
+argument|llvm::StringRef Filename
+argument_list|,
+argument|std::string *ErrorStr =
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/// \brief Whether this AST represents a complete translation unit.
 comment|///
 comment|/// If false, this AST is only a partial translation unit, e.g., one
@@ -1459,6 +1642,11 @@ name|Diagnostic
 operator|>
 name|Diags
 argument_list|,
+specifier|const
+name|FileSystemOptions
+operator|&
+name|FileSystemOpts
+argument_list|,
 name|bool
 name|OnlyLocalDecls
 operator|=
@@ -1481,6 +1669,25 @@ operator|=
 name|false
 argument_list|)
 decl_stmt|;
+name|private
+label|:
+comment|/// \brief Helper function for \c LoadFromCompilerInvocation() and
+comment|/// \c LoadFromCommandLine(), which loads an AST from a compiler invocation.
+comment|///
+comment|/// \param PrecompilePreamble Whether to precompile the preamble of this
+comment|/// translation unit, to improve the performance of reparsing.
+comment|///
+comment|/// \returns \c true if a catastrophic failure occurred (which means that the
+comment|/// \c ASTUnit itself is invalid), or \c false otherwise.
+name|bool
+name|LoadFromCompilerInvocation
+parameter_list|(
+name|bool
+name|PrecompilePreamble
+parameter_list|)
+function_decl|;
+name|public
+label|:
 comment|/// LoadFromCompilerInvocation - Create an ASTUnit from a source file, via a
 comment|/// CompilerInvocation object.
 comment|///
@@ -1584,6 +1791,11 @@ name|OnlyLocalDecls
 operator|=
 name|false
 argument_list|,
+name|bool
+name|CaptureDiagnostics
+operator|=
+name|false
+argument_list|,
 name|RemappedFile
 operator|*
 name|RemappedFiles
@@ -1594,11 +1806,6 @@ name|unsigned
 name|NumRemappedFiles
 operator|=
 literal|0
-argument_list|,
-name|bool
-name|CaptureDiagnostics
-operator|=
-name|false
 argument_list|,
 name|bool
 name|PrecompilePreamble
@@ -1612,6 +1819,16 @@ name|true
 argument_list|,
 name|bool
 name|CacheCodeCompletionResults
+operator|=
+name|false
+argument_list|,
+name|bool
+name|CXXPrecompilePreamble
+operator|=
+name|false
+argument_list|,
+name|bool
+name|CXXChainedPCH
 operator|=
 name|false
 argument_list|)

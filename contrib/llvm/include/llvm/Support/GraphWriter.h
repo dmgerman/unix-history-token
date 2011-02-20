@@ -116,7 +116,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/System/Path.h"
+file|"llvm/Support/Path.h"
 end_include
 
 begin_include
@@ -406,11 +406,46 @@ name|DOTTraits
 argument_list|(
 name|SN
 argument_list|)
-block|; }
+block|;   }
+name|void
+name|writeGraph
+argument_list|(
+argument|const std::string&Title =
+literal|""
+argument_list|)
+block|{
+comment|// Output the header for the graph...
+name|writeHeader
+argument_list|(
+name|Title
+argument_list|)
+block|;
+comment|// Emit all of the nodes in the graph...
+name|writeNodes
+argument_list|()
+block|;
+comment|// Output any customizations on the graph
+name|DOTGraphTraits
+operator|<
+name|GraphType
+operator|>
+operator|::
+name|addCustomGraphFeatures
+argument_list|(
+name|G
+argument_list|,
+operator|*
+name|this
+argument_list|)
+block|;
+comment|// Output the end of the graph
+name|writeFooter
+argument_list|()
+block|;   }
 name|void
 name|writeHeader
 argument_list|(
-argument|const std::string&Name
+argument|const std::string&Title
 argument_list|)
 block|{
 name|std
@@ -428,7 +463,7 @@ block|;
 if|if
 condition|(
 operator|!
-name|Name
+name|Title
 operator|.
 name|empty
 argument_list|()
@@ -441,7 +476,7 @@ name|DOT
 operator|::
 name|EscapeString
 argument_list|(
-name|Name
+name|Title
 argument_list|)
 operator|<<
 literal|"\" {\n"
@@ -487,7 +522,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|Name
+name|Title
 operator|.
 name|empty
 argument_list|()
@@ -500,7 +535,7 @@ name|DOT
 operator|::
 name|EscapeString
 argument_list|(
-name|Name
+name|Title
 argument_list|)
 operator|<<
 literal|"\";\n"
@@ -1565,9 +1600,6 @@ argument|const GraphType&G
 argument_list|,
 argument|bool ShortNames = false
 argument_list|,
-argument|const std::string&Name =
-literal|""
-argument_list|,
 argument|const std::string&Title =
 literal|""
 argument_list|)
@@ -1586,38 +1618,13 @@ argument_list|,
 name|ShortNames
 argument_list|)
 block|;
-comment|// Output the header for the graph...
+comment|// Emit the graph.
 name|W
 operator|.
-name|writeHeader
+name|writeGraph
 argument_list|(
 name|Title
 argument_list|)
-block|;
-comment|// Emit all of the nodes in the graph...
-name|W
-operator|.
-name|writeNodes
-argument_list|()
-block|;
-comment|// Output any customizations on the graph
-name|DOTGraphTraits
-operator|<
-name|GraphType
-operator|>
-operator|::
-name|addCustomGraphFeatures
-argument_list|(
-name|G
-argument_list|,
-name|W
-argument_list|)
-block|;
-comment|// Output the end of the graph
-name|W
-operator|.
-name|writeFooter
-argument_list|()
 block|;
 return|return
 name|O
@@ -1785,8 +1792,6 @@ argument_list|,
 name|G
 argument_list|,
 name|ShortNames
-argument_list|,
-name|Name
 argument_list|,
 name|Title
 argument_list|)

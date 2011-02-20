@@ -82,7 +82,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/System/DataTypes.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_include
@@ -104,10 +104,12 @@ decl_stmt|;
 struct_decl|struct
 name|EVT
 struct_decl|;
+comment|/// MVT - Machine Value Type.  Every type that is supported natively by some
+comment|/// processor targeted by LLVM occurs here.  This means that any legal value
+comment|/// type can be represented by a MVT.
 name|class
 name|MVT
 block|{
-comment|// MVT = Machine Value Type
 name|public
 label|:
 enum|enum
@@ -296,23 +298,28 @@ name|LAST_VECTOR_VALUETYPE
 init|=
 name|v4f64
 block|,
-name|Flag
+name|x86mmx
 init|=
 literal|33
+block|,
+comment|// This is an X86 MMX value
+name|Glue
+init|=
+literal|34
 block|,
 comment|// This glues nodes together during pre-RA sched
 name|isVoid
 init|=
-literal|34
+literal|35
 block|,
 comment|// This has no value
 name|LAST_VALUETYPE
 init|=
-literal|35
+literal|36
 block|,
 comment|// This always remains at the end of the list.
 comment|// This is the current maximum for LAST_VALUETYPE.
-comment|// EVT::MAX_ALLOWED_VALUETYPE is used for asserts and to size bit vectors
+comment|// MVT::MAX_ALLOWED_VALUETYPE is used for asserts and to size bit vectors
 comment|// This value must be a multiple of 32.
 name|MAX_ALLOWED_VALUETYPE
 init|=
@@ -444,6 +451,25 @@ block|{
 return|return
 name|SimpleTy
 operator|==
+name|S
+operator|.
+name|SimpleTy
+return|;
+block|}
+name|bool
+name|operator
+operator|!=
+operator|(
+specifier|const
+name|MVT
+operator|&
+name|S
+operator|)
+specifier|const
+block|{
+return|return
+name|SimpleTy
+operator|!=
 name|S
 operator|.
 name|SimpleTy
@@ -610,7 +636,7 @@ operator|)
 operator|)
 return|;
 block|}
-comment|/// getPow2VectorType - Widens the length of the given vector EVT up to
+comment|/// getPow2VectorType - Widens the length of the given vector MVT up to
 comment|/// the nearest power of 2 and returns that type.
 name|MVT
 name|getPow2VectorType
@@ -957,6 +983,9 @@ return|return
 literal|32
 return|;
 case|case
+name|x86mmx
+case|:
+case|case
 name|f64
 case|:
 case|case
@@ -1045,12 +1074,45 @@ literal|512
 return|;
 block|}
 block|}
+comment|/// getStoreSize - Return the number of bytes overwritten by a store
+comment|/// of the specified value type.
+name|unsigned
+name|getStoreSize
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|getSizeInBits
+argument_list|()
+operator|+
+literal|7
+operator|)
+operator|/
+literal|8
+return|;
+block|}
+comment|/// getStoreSizeInBits - Return the number of bits overwritten by a store
+comment|/// of the specified value type.
+name|unsigned
+name|getStoreSizeInBits
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getStoreSize
+argument_list|()
+operator|*
+literal|8
+return|;
+block|}
 specifier|static
 name|MVT
 name|getFloatingPointVT
-argument_list|(
-argument|unsigned BitWidth
-argument_list|)
+parameter_list|(
+name|unsigned
+name|BitWidth
+parameter_list|)
 block|{
 switch|switch
 condition|(
@@ -1102,9 +1164,10 @@ block|}
 specifier|static
 name|MVT
 name|getIntegerVT
-argument_list|(
-argument|unsigned BitWidth
-argument_list|)
+parameter_list|(
+name|unsigned
+name|BitWidth
+parameter_list|)
 block|{
 switch|switch
 condition|(
@@ -1177,11 +1240,13 @@ block|}
 specifier|static
 name|MVT
 name|getVectorVT
-argument_list|(
-argument|MVT VT
-argument_list|,
-argument|unsigned NumElements
-argument_list|)
+parameter_list|(
+name|MVT
+name|VT
+parameter_list|,
+name|unsigned
+name|NumElements
+parameter_list|)
 block|{
 switch|switch
 condition|(
@@ -1480,11 +1545,22 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
+begin_comment
+comment|/// EVT - Extended Value Type.  Capable of holding value types which are not
+end_comment
+
+begin_comment
+comment|/// native for any processor (such as the i12345 type), as well as the types
+end_comment
+
+begin_comment
+comment|/// a MVT can represent.
+end_comment
+
 begin_struct
 struct|struct
 name|EVT
 block|{
-comment|// EVT = Extended Value Type
 name|private
 label|:
 name|MVT

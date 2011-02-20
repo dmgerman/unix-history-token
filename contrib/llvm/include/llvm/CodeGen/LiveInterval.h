@@ -90,7 +90,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallVector.h"
+file|"llvm/ADT/IntEqClasses.h"
 end_include
 
 begin_include
@@ -146,17 +146,6 @@ comment|/// VNInfo - Value Number Information.
 comment|/// This class holds information about a machine level values, including
 comment|/// definition and use points.
 comment|///
-comment|/// Care must be taken in interpreting the def index of the value. The
-comment|/// following rules apply:
-comment|///
-comment|/// If the isDefAccurate() method returns false then def does not contain the
-comment|/// index of the defining MachineInstr, or even (necessarily) to a
-comment|/// MachineInstr at all. In general such a def index is not meaningful
-comment|/// and should not be used. The exception is that, for values originally
-comment|/// defined by PHI instructions, after PHI elimination def will contain the
-comment|/// index of the MBB in which the PHI originally existed. This can be used
-comment|/// to insert code (spills or copies) which deals with the value, which will
-comment|/// be live in to the block.
 name|class
 name|VNInfo
 block|{
@@ -185,30 +174,16 @@ init|=
 literal|1
 operator|<<
 literal|3
-block|,
-name|IS_DEF_ACCURATE
-init|=
-literal|1
-operator|<<
-literal|4
 block|}
 enum|;
-name|unsigned
-name|char
-name|flags
-decl_stmt|;
-union|union
-block|{
 name|MachineInstr
 modifier|*
 name|copy
 decl_stmt|;
 name|unsigned
-name|reg
+name|char
+name|flags
 decl_stmt|;
-block|}
-name|cr
-union|;
 name|public
 label|:
 typedef|typedef
@@ -224,8 +199,6 @@ name|SlotIndex
 name|def
 decl_stmt|;
 comment|/// VNInfo constructor.
-comment|/// d is presumed to point to the actual defining instr. If it doesn't
-comment|/// setIsDefAccurate(false) should be called after construction.
 name|VNInfo
 argument_list|(
 argument|unsigned i
@@ -235,9 +208,14 @@ argument_list|,
 argument|MachineInstr *c
 argument_list|)
 block|:
+name|copy
+argument_list|(
+name|c
+argument_list|)
+operator|,
 name|flags
 argument_list|(
-name|IS_DEF_ACCURATE
+literal|0
 argument_list|)
 operator|,
 name|id
@@ -249,13 +227,7 @@ name|def
 argument_list|(
 argument|d
 argument_list|)
-block|{
-name|cr
-operator|.
-name|copy
-operator|=
-name|c
-block|; }
+block|{ }
 comment|/// VNInfo construtor, copies values from orig, except for the value number.
 name|VNInfo
 argument_list|(
@@ -264,18 +236,18 @@ argument_list|,
 argument|const VNInfo&orig
 argument_list|)
 operator|:
-name|flags
+name|copy
 argument_list|(
 name|orig
 operator|.
-name|flags
+name|copy
 argument_list|)
 operator|,
-name|cr
+name|flags
 argument_list|(
 name|orig
 operator|.
-name|cr
+name|flags
 argument_list|)
 operator|,
 name|id
@@ -301,11 +273,11 @@ name|src
 operator|.
 name|flags
 block|;
-name|cr
+name|copy
 operator|=
 name|src
 operator|.
-name|cr
+name|copy
 block|;
 name|def
 operator|=
@@ -337,6 +309,30 @@ operator|=
 name|flags
 expr_stmt|;
 block|}
+comment|/// Merge flags from another VNInfo
+name|void
+name|mergeFlags
+parameter_list|(
+specifier|const
+name|VNInfo
+modifier|*
+name|VNI
+parameter_list|)
+block|{
+name|flags
+operator|=
+operator|(
+name|flags
+operator||
+name|VNI
+operator|->
+name|flags
+operator|)
+operator|&
+operator|~
+name|IS_UNUSED
+expr_stmt|;
+block|}
 comment|/// For a register interval, if this VN was definied by a copy instr
 comment|/// getCopy() returns a pointer to it, otherwise returns 0.
 comment|/// For a stack interval the behaviour of this method is undefined.
@@ -347,8 +343,6 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|cr
-operator|.
 name|copy
 return|;
 block|}
@@ -363,43 +357,23 @@ modifier|*
 name|c
 parameter_list|)
 block|{
-name|cr
-operator|.
 name|copy
 operator|=
 name|c
 expr_stmt|;
 block|}
-comment|/// For a stack interval, returns the reg which this stack interval was
-comment|/// defined from.
-comment|/// For a register interval the behaviour of this method is undefined.
-name|unsigned
-name|getReg
+comment|/// isDefByCopy - Return true when this value was defined by a copy-like
+comment|/// instruction as determined by MachineInstr::isCopyLike.
+name|bool
+name|isDefByCopy
 argument_list|()
 specifier|const
 block|{
 return|return
-name|cr
-operator|.
-name|reg
+name|copy
+operator|!=
+literal|0
 return|;
-block|}
-comment|/// For a stack interval, set the defining register.
-comment|/// This method should not be called on register intervals as it may lead
-comment|/// to undefined behaviour.
-name|void
-name|setReg
-parameter_list|(
-name|unsigned
-name|reg
-parameter_list|)
-block|{
-name|cr
-operator|.
-name|reg
-operator|=
-name|reg
-expr_stmt|;
 block|}
 comment|/// Returns true if one or more kills are PHI nodes.
 name|bool
@@ -541,41 +515,6 @@ name|flags
 operator|&=
 operator|~
 name|IS_UNUSED
-expr_stmt|;
-block|}
-comment|/// Returns true if the def is accurate.
-name|bool
-name|isDefAccurate
-argument_list|()
-specifier|const
-block|{
-return|return
-name|flags
-operator|&
-name|IS_DEF_ACCURATE
-return|;
-block|}
-comment|/// Set the "is def accurate" flag on this value.
-name|void
-name|setIsDefAccurate
-parameter_list|(
-name|bool
-name|defAccurate
-parameter_list|)
-block|{
-if|if
-condition|(
-name|defAccurate
-condition|)
-name|flags
-operator||=
-name|IS_DEF_ACCURATE
-expr_stmt|;
-else|else
-name|flags
-operator|&=
-operator|~
-name|IS_DEF_ACCURATE
 expr_stmt|;
 block|}
 block|}
@@ -880,11 +819,11 @@ literal|4
 operator|>
 name|VNInfoList
 expr_stmt|;
+specifier|const
 name|unsigned
 name|reg
 decl_stmt|;
-comment|// the register or stack slot of this interval
-comment|// if the top bits is set, it represents a stack slot.
+comment|// the register or stack slot of this interval.
 name|float
 name|weight
 decl_stmt|;
@@ -930,8 +869,6 @@ argument_list|(
 argument|unsigned Reg
 argument_list|,
 argument|float Weight
-argument_list|,
-argument|bool IsSS = false
 argument_list|)
 block|:
 name|reg
@@ -943,31 +880,7 @@ name|weight
 argument_list|(
 argument|Weight
 argument_list|)
-block|{
-if|if
-condition|(
-name|IsSS
-condition|)
-name|reg
-operator|=
-name|reg
-operator||
-operator|(
-literal|1U
-operator|<<
-operator|(
-sizeof|sizeof
-argument_list|(
-name|unsigned
-argument_list|)
-operator|*
-name|CHAR_BIT
-operator|-
-literal|1
-operator|)
-operator|)
-expr_stmt|;
-block|}
+block|{}
 typedef|typedef
 name|Ranges
 operator|::
@@ -1099,6 +1012,14 @@ name|SlotIndex
 name|Pos
 parameter_list|)
 block|{
+name|assert
+argument_list|(
+name|I
+operator|!=
+name|end
+argument_list|()
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|Pos
@@ -1125,6 +1046,44 @@ return|return
 name|I
 return|;
 block|}
+comment|/// find - Return an iterator pointing to the first range that ends after
+comment|/// Pos, or end(). This is the same as advanceTo(begin(), Pos), but faster
+comment|/// when searching large intervals.
+comment|///
+comment|/// If Pos is contained in a LiveRange, that range is returned.
+comment|/// If Pos is in a hole, the following LiveRange is returned.
+comment|/// If Pos is beyond endIndex, end() is returned.
+name|iterator
+name|find
+parameter_list|(
+name|SlotIndex
+name|Pos
+parameter_list|)
+function_decl|;
+name|const_iterator
+name|find
+argument_list|(
+name|SlotIndex
+name|Pos
+argument_list|)
+decl|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|LiveInterval
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|find
+argument_list|(
+name|Pos
+argument_list|)
+return|;
+block|}
 name|void
 name|clear
 parameter_list|()
@@ -1139,67 +1098,6 @@ operator|.
 name|clear
 argument_list|()
 expr_stmt|;
-block|}
-comment|/// isStackSlot - Return true if this is a stack slot interval.
-comment|///
-name|bool
-name|isStackSlot
-argument_list|()
-specifier|const
-block|{
-return|return
-name|reg
-operator|&
-operator|(
-literal|1U
-operator|<<
-operator|(
-sizeof|sizeof
-argument_list|(
-name|unsigned
-argument_list|)
-operator|*
-name|CHAR_BIT
-operator|-
-literal|1
-operator|)
-operator|)
-return|;
-block|}
-comment|/// getStackSlotIndex - Return stack slot index if this is a stack slot
-comment|/// interval.
-name|int
-name|getStackSlotIndex
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|isStackSlot
-argument_list|()
-operator|&&
-literal|"Interval is not a stack slot interval!"
-argument_list|)
-block|;
-return|return
-name|reg
-operator|&
-operator|~
-operator|(
-literal|1U
-operator|<<
-operator|(
-sizeof|sizeof
-argument_list|(
-name|unsigned
-argument_list|)
-operator|*
-name|CHAR_BIT
-operator|-
-literal|1
-operator|)
-operator|)
-return|;
 block|}
 name|bool
 name|hasAtLeastOneValue
@@ -1292,9 +1190,6 @@ name|MachineInstr
 operator|*
 name|CopyMI
 argument_list|,
-name|bool
-name|isDefAccurate
-argument_list|,
 name|VNInfo
 operator|::
 name|Allocator
@@ -1325,13 +1220,6 @@ argument_list|,
 name|CopyMI
 argument_list|)
 decl_stmt|;
-name|VNI
-operator|->
-name|setIsDefAccurate
-argument_list|(
-name|isDefAccurate
-argument_list|)
-expr_stmt|;
 name|valnos
 operator|.
 name|push_back
@@ -1483,51 +1371,6 @@ modifier|*
 name|V2
 parameter_list|)
 function_decl|;
-comment|/// MergeInClobberRanges - For any live ranges that are not defined in the
-comment|/// current interval, but are defined in the Clobbers interval, mark them
-comment|/// used with an unknown definition value. Caller must pass in reference to
-comment|/// VNInfoAllocator since it will create a new val#.
-name|void
-name|MergeInClobberRanges
-argument_list|(
-name|LiveIntervals
-operator|&
-name|li_
-argument_list|,
-specifier|const
-name|LiveInterval
-operator|&
-name|Clobbers
-argument_list|,
-name|VNInfo
-operator|::
-name|Allocator
-operator|&
-name|VNInfoAllocator
-argument_list|)
-decl_stmt|;
-comment|/// MergeInClobberRange - Same as MergeInClobberRanges except it merge in a
-comment|/// single LiveRange only.
-name|void
-name|MergeInClobberRange
-argument_list|(
-name|LiveIntervals
-operator|&
-name|li_
-argument_list|,
-name|SlotIndex
-name|Start
-argument_list|,
-name|SlotIndex
-name|End
-argument_list|,
-name|VNInfo
-operator|::
-name|Allocator
-operator|&
-name|VNInfoAllocator
-argument_list|)
-decl_stmt|;
 comment|/// MergeValueInAsValue - Merge all of the live ranges of a specific val#
 comment|/// in RHS into this live interval as the specified value number.
 comment|/// The LiveRanges in RHS are allowed to overlap with LiveRanges in the
@@ -1673,18 +1516,28 @@ name|SlotIndex
 name|index
 argument_list|)
 decl|const
-decl_stmt|;
-comment|// liveBeforeAndAt - Check if the interval is live at the index and the
-comment|// index just before it. If index is liveAt, check if it starts a new live
-comment|// range.If it does, then check if the previous live range ends at index-1.
-name|bool
-name|liveBeforeAndAt
+block|{
+name|const_iterator
+name|r
+init|=
+name|find
 argument_list|(
-name|SlotIndex
 name|index
 argument_list|)
-decl|const
 decl_stmt|;
+return|return
+name|r
+operator|!=
+name|end
+argument_list|()
+operator|&&
+name|r
+operator|->
+name|start
+operator|<=
+name|index
+return|;
+block|}
 comment|/// killedAt - Return true if a live range ends at index. Note that the kill
 comment|/// point is not contained in the half-open live range. It is usually the
 comment|/// getDefIndex() slot following its last use.
@@ -1695,7 +1548,31 @@ name|SlotIndex
 name|index
 argument_list|)
 decl|const
+block|{
+name|const_iterator
+name|r
+init|=
+name|find
+argument_list|(
+name|index
+operator|.
+name|getUseIndex
+argument_list|()
+argument_list|)
 decl_stmt|;
+return|return
+name|r
+operator|!=
+name|end
+argument_list|()
+operator|&&
+name|r
+operator|->
+name|end
+operator|==
+name|index
+return|;
+block|}
 comment|/// killedInRange - Return true if the interval has kills in [Start,End).
 comment|/// Note that the kill point is considered the end of a live range, so it is
 comment|/// not contained in the live range. If a live range ends at End, it won't
@@ -1808,6 +1685,39 @@ return|;
 block|}
 comment|/// FindLiveRangeContaining - Return an iterator to the live range that
 comment|/// contains the specified index, or end() if there is none.
+name|iterator
+name|FindLiveRangeContaining
+parameter_list|(
+name|SlotIndex
+name|Idx
+parameter_list|)
+block|{
+name|iterator
+name|I
+init|=
+name|find
+argument_list|(
+name|Idx
+argument_list|)
+decl_stmt|;
+return|return
+name|I
+operator|!=
+name|end
+argument_list|()
+operator|&&
+name|I
+operator|->
+name|start
+operator|<=
+name|Idx
+condition|?
+name|I
+else|:
+name|end
+argument_list|()
+return|;
+block|}
 name|const_iterator
 name|FindLiveRangeContaining
 argument_list|(
@@ -1815,16 +1725,33 @@ name|SlotIndex
 name|Idx
 argument_list|)
 decl|const
-decl_stmt|;
-comment|/// FindLiveRangeContaining - Return an iterator to the live range that
-comment|/// contains the specified index, or end() if there is none.
-name|iterator
-name|FindLiveRangeContaining
-parameter_list|(
-name|SlotIndex
+block|{
+name|const_iterator
+name|I
+init|=
+name|find
+argument_list|(
 name|Idx
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
+return|return
+name|I
+operator|!=
+name|end
+argument_list|()
+operator|&&
+name|I
+operator|->
+name|start
+operator|<=
+name|Idx
+condition|?
+name|I
+else|:
+name|end
+argument_list|()
+return|;
+block|}
 comment|/// findDefinedVNInfo - Find the by the specified
 comment|/// index (register interval) or defined
 name|VNInfo
@@ -1833,17 +1760,6 @@ name|findDefinedVNInfoForRegInt
 argument_list|(
 name|SlotIndex
 name|Idx
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// findDefinedVNInfo - Find the VNInfo that's defined by the specified
-comment|/// register (stack inteval only).
-name|VNInfo
-modifier|*
-name|findDefinedVNInfoForStackInt
-argument_list|(
-name|unsigned
-name|Reg
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1970,14 +1886,39 @@ comment|/// isInOneLiveRange - Return true if the range specified is entirely in
 comment|/// a single LiveRange of the live interval.
 name|bool
 name|isInOneLiveRange
-parameter_list|(
+argument_list|(
 name|SlotIndex
 name|Start
-parameter_list|,
+argument_list|,
 name|SlotIndex
 name|End
-parameter_list|)
-function_decl|;
+argument_list|)
+decl|const
+block|{
+name|const_iterator
+name|r
+init|=
+name|find
+argument_list|(
+name|Start
+argument_list|)
+decl_stmt|;
+return|return
+name|r
+operator|!=
+name|end
+argument_list|()
+operator|&&
+name|r
+operator|->
+name|containsRange
+argument_list|(
+name|Start
+argument_list|,
+name|End
+argument_list|)
+return|;
+block|}
 comment|/// removeRange - Remove the specified range from this interval.  Note that
 comment|/// the range must be a single LiveRange in its entirety.
 name|void
@@ -2278,6 +2219,146 @@ name|OS
 return|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|/// ConnectedVNInfoEqClasses - Helper class that can divide VNInfos in a
+end_comment
+
+begin_comment
+comment|/// LiveInterval into equivalence clases of connected components. A
+end_comment
+
+begin_comment
+comment|/// LiveInterval that has multiple connected components can be broken into
+end_comment
+
+begin_comment
+comment|/// multiple LiveIntervals.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Given a LiveInterval that may have multiple connected components, run:
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///   unsigned numComps = ConEQ.Classify(LI);
+end_comment
+
+begin_comment
+comment|///   if (numComps> 1) {
+end_comment
+
+begin_comment
+comment|///     // allocate numComps-1 new LiveIntervals into LIS[1..]
+end_comment
+
+begin_comment
+comment|///     ConEQ.Distribute(LIS);
+end_comment
+
+begin_comment
+comment|/// }
+end_comment
+
+begin_decl_stmt
+name|class
+name|ConnectedVNInfoEqClasses
+block|{
+name|LiveIntervals
+modifier|&
+name|lis_
+decl_stmt|;
+name|IntEqClasses
+name|eqClass_
+decl_stmt|;
+comment|// Note that values a and b are connected.
+name|void
+name|Connect
+parameter_list|(
+name|unsigned
+name|a
+parameter_list|,
+name|unsigned
+name|b
+parameter_list|)
+function_decl|;
+name|unsigned
+name|Renumber
+parameter_list|()
+function_decl|;
+name|public
+label|:
+name|explicit
+name|ConnectedVNInfoEqClasses
+argument_list|(
+name|LiveIntervals
+operator|&
+name|lis
+argument_list|)
+operator|:
+name|lis_
+argument_list|(
+argument|lis
+argument_list|)
+block|{}
+comment|/// Classify - Classify the values in LI into connected components.
+comment|/// Return the number of connected components.
+name|unsigned
+name|Classify
+argument_list|(
+specifier|const
+name|LiveInterval
+operator|*
+name|LI
+argument_list|)
+expr_stmt|;
+comment|/// getEqClass - Classify creates equivalence classes numbered 0..N. Return
+comment|/// the equivalence class assigned the VNI.
+name|unsigned
+name|getEqClass
+argument_list|(
+specifier|const
+name|VNInfo
+operator|*
+name|VNI
+argument_list|)
+decl|const
+block|{
+return|return
+name|eqClass_
+index|[
+name|VNI
+operator|->
+name|id
+index|]
+return|;
+block|}
+comment|/// Distribute - Distribute values in LIV[0] into a separate LiveInterval
+comment|/// for each connected component. LIV must have a LiveInterval for each
+comment|/// connected component. The LiveIntervals in Liv[1..] must be empty.
+name|void
+name|Distribute
+parameter_list|(
+name|LiveInterval
+modifier|*
+name|LIV
+index|[]
+parameter_list|)
+function_decl|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_endif
 unit|}

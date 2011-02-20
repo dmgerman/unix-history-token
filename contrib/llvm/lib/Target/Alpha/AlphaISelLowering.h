@@ -236,6 +236,17 @@ argument|const std::string&Constraint
 argument_list|)
 specifier|const
 block|;
+comment|/// Examine constraint string and operand type and determine a weight value.
+comment|/// The operand object must already have been set up with the operand type.
+name|ConstraintWeight
+name|getSingleConstraintMatchWeight
+argument_list|(
+argument|AsmOperandInfo&info
+argument_list|,
+argument|const char *constraint
+argument_list|)
+specifier|const
+block|;
 name|std
 operator|::
 name|vector

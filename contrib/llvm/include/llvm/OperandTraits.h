@@ -81,6 +81,9 @@ comment|/// when it is a prefix to the User object, and the number of Use object
 comment|/// known at compile time.
 name|template
 operator|<
+name|typename
+name|SubClass
+operator|,
 name|unsigned
 name|ARITY
 operator|>
@@ -92,7 +95,7 @@ name|Use
 operator|*
 name|op_begin
 argument_list|(
-argument|User* U
+argument|SubClass* U
 argument_list|)
 block|{
 return|return
@@ -113,7 +116,7 @@ name|Use
 operator|*
 name|op_end
 argument_list|(
-argument|User* U
+argument|SubClass* U
 argument_list|)
 block|{
 return|return
@@ -138,45 +141,8 @@ return|return
 name|ARITY
 return|;
 block|}
-expr|struct
-name|prefix
-block|{
-name|Use
-name|Ops
-index|[
-name|ARITY
-index|]
+expr|}
 block|;
-name|prefix
-argument_list|()
-block|;
-comment|// DO NOT IMPLEMENT
-block|}
-block|;
-name|template
-operator|<
-name|class
-name|U
-operator|>
-expr|struct
-name|Layout
-block|{     struct
-name|overlay
-operator|:
-name|public
-name|prefix
-block|,
-name|public
-name|U
-block|{
-name|overlay
-argument_list|()
-block|;
-comment|// DO NOT IMPLEMENT
-block|}
-block|;   }
-block|; }
-expr_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|//                          OptionalOperand Trait Class
 comment|//===----------------------------------------------------------------------===//
@@ -184,6 +150,9 @@ comment|/// OptionalOperandTraits - when the number of operands may change at ru
 comment|/// Naturally it may only decrease, because the allocations may not change.
 name|template
 operator|<
+name|typename
+name|SubClass
+block|,
 name|unsigned
 name|ARITY
 operator|=
@@ -195,6 +164,8 @@ operator|:
 name|public
 name|FixedNumOperandTraits
 operator|<
+name|SubClass
+block|,
 name|ARITY
 operator|>
 block|{
@@ -222,6 +193,9 @@ comment|/// when it is a prefix to the User object, and the number of Use object
 comment|/// only known at allocation time.
 name|template
 operator|<
+name|typename
+name|SubClass
+block|,
 name|unsigned
 name|MINARITY
 operator|=
@@ -235,7 +209,7 @@ name|Use
 operator|*
 name|op_begin
 argument_list|(
-argument|User* U
+argument|SubClass* U
 argument_list|)
 block|{
 return|return
@@ -248,7 +222,14 @@ operator|(
 name|U
 operator|)
 operator|-
+name|static_cast
+operator|<
+name|User
+operator|*
+operator|>
+operator|(
 name|U
+operator|)
 operator|->
 name|getNumOperands
 argument_list|()
@@ -259,7 +240,7 @@ name|Use
 operator|*
 name|op_end
 argument_list|(
-argument|User* U
+argument|SubClass* U
 argument_list|)
 block|{
 return|return

@@ -182,6 +182,13 @@ comment|// It takes an input chain and a pointer to the jump buffer as inputs
 comment|// and returns an outchain.
 name|EH_SJLJ_LONGJMP
 block|,
+comment|// OUTCHAIN = EH_SJLJ_DISPATCHSETUP(INCHAIN, context)
+comment|// This corresponds to the eh.sjlj.dispatchsetup intrinsic. It takes an
+comment|// input chain and a pointer to the sjlj function context as inputs and
+comment|// returns an outchain. By default, this does nothing. Targets can lower
+comment|// this to unwind setup code if needed.
+name|EH_SJLJ_DISPATCHSETUP
+block|,
 comment|// TargetConstant* - Like Constant*, but the DAG does not do any folding,
 comment|// simplification, or lowering of the constant. They are used for constants
 comment|// which are known to fit in the immediate fields of their users, or for
@@ -378,9 +385,17 @@ comment|/// concatenated vector result value, with length equal to the sum of th
 comment|/// lengths of the input vectors.
 name|CONCAT_VECTORS
 block|,
+comment|/// INSERT_SUBVECTOR(VECTOR1, VECTOR2, IDX) - Returns a vector
+comment|/// with VECTOR2 inserted into VECTOR1 at the (potentially
+comment|/// variable) element number IDX, which must be a multiple of the
+comment|/// VECTOR2 vector length.  The elements of VECTOR1 starting at
+comment|/// IDX are overwritten with VECTOR2.  Elements IDX through
+comment|/// vector_length(VECTOR2) must be valid VECTOR1 indices.
+name|INSERT_SUBVECTOR
+block|,
 comment|/// EXTRACT_SUBVECTOR(VECTOR, IDX) - Returns a subvector from VECTOR (an
-comment|/// vector value) starting with the (potentially variable) element number
-comment|/// IDX, which must be a multiple of the result vector length.
+comment|/// vector value) starting with the element number IDX, which must be a
+comment|/// constant multiple of the result vector length.
 name|EXTRACT_SUBVECTOR
 block|,
 comment|/// VECTOR_SHUFFLE(VEC1, VEC2) - Returns a vector, of the same type as
@@ -406,15 +421,21 @@ name|MULHU
 block|,
 name|MULHS
 block|,
-comment|// Bitwise operators - logical and, logical or, logical xor, shift left,
-comment|// shift right algebraic (shift in sign bits), shift right logical (shift in
-comment|// zeroes), rotate left, rotate right, and byteswap.
+comment|/// Bitwise operators - logical and, logical or, logical xor.
 name|AND
 block|,
 name|OR
 block|,
 name|XOR
 block|,
+comment|/// Shift and rotation operations.  After legalization, the type of the
+comment|/// shift amount is known to be TLI.getShiftAmountTy().  Before legalization
+comment|/// the shift amount can be any type, but care must be taken to ensure it is
+comment|/// large enough.  TLI.getShiftAmountTy() is i8 on some targets, but before
+comment|/// legalization, types like i1024 can occur and i8 doesn't have enough bits
+comment|/// to represent the shift amount.  By convention, DAGCombine and
+comment|/// SelectionDAGBuilder forces these shift amounts to i32 for simplicity.
+comment|///
 name|SHL
 block|,
 name|SRA
@@ -425,9 +446,9 @@ name|ROTL
 block|,
 name|ROTR
 block|,
+comment|/// Byte Swap and Counting operators.
 name|BSWAP
 block|,
-comment|// Counting operators
 name|CTTZ
 block|,
 name|CTLZ
@@ -535,14 +556,14 @@ block|,
 comment|/// X = FP_EXTEND(Y) - Extend a smaller FP type into a larger FP type.
 name|FP_EXTEND
 block|,
-comment|// BIT_CONVERT - This operator converts between integer, vector and FP
+comment|// BITCAST - This operator converts between integer, vector and FP
 comment|// values, as if the value was stored to memory with one type and loaded
 comment|// from the same address with the other type (or equivalently for vector
 comment|// format conversions, etc).  The source and result are required to have
 comment|// the same bit size (e.g.  f32<-> i32).  This can also be used for
 comment|// int-to-int or fp-to-fp conversions, but that is a noop, deleted by
 comment|// getNode().
-name|BIT_CONVERT
+name|BITCAST
 block|,
 comment|// CONVERT_RNDSAT - This operator is used to support various conversions
 comment|// between various types (float, signed, unsigned and vectors of those
@@ -651,6 +672,7 @@ comment|// return values: a chain and a flag result.  The inputs are as follows:
 comment|//   Operand #0   : Input chain.
 comment|//   Operand #1   : a ExternalSymbolSDNode with a pointer to the asm string.
 comment|//   Operand #2   : a MDNodeSDNode with the !srcloc metadata.
+comment|//   Operand #3   : HasSideEffect, IsAlignStack bits.
 comment|//   After this, it is followed by a list of operands with this format:
 comment|//     ConstantSDNode: Flags that encode whether it is a mem or not, the
 comment|//                     of operands that follow, etc.  See InlineAsm.h.

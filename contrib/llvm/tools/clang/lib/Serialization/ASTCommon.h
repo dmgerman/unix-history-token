@@ -72,6 +72,16 @@ block|{
 name|namespace
 name|serialization
 block|{
+enum|enum
+name|DeclUpdateKind
+block|{
+name|UPD_CXX_SET_DEFINITIONDATA
+block|,
+name|UPD_CXX_ADDED_IMPLICIT_MEMBER
+block|,
+name|UPD_CXX_ADDED_TEMPLATE_SPECIALIZATION
+block|}
+enum|;
 name|TypeIdx
 name|TypeIdxFromBuiltin
 parameter_list|(
@@ -114,7 +124,7 @@ argument_list|()
 expr_stmt|;
 name|T
 operator|.
-name|removeFastQualifiers
+name|removeLocalFastQualifiers
 argument_list|()
 expr_stmt|;
 if|if

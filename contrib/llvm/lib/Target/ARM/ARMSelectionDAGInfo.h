@@ -119,13 +119,9 @@ argument|bool isVolatile
 argument_list|,
 argument|bool AlwaysInline
 argument_list|,
-argument|const Value *DstSV
+argument|MachinePointerInfo DstPtrInfo
 argument_list|,
-argument|uint64_t DstSVOff
-argument_list|,
-argument|const Value *SrcSV
-argument_list|,
-argument|uint64_t SrcSVOff
+argument|MachinePointerInfo SrcPtrInfo
 argument_list|)
 specifier|const
 block|; }

@@ -74,7 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"XCoreFrameInfo.h"
+file|"XCoreFrameLowering.h"
 end_include
 
 begin_include
@@ -122,8 +122,8 @@ comment|// Calculates type size& alignment
 name|XCoreInstrInfo
 name|InstrInfo
 block|;
-name|XCoreFrameInfo
-name|FrameInfo
+name|XCoreFrameLowering
+name|FrameLowering
 block|;
 name|XCoreTargetLowering
 name|TLInfo
@@ -170,15 +170,15 @@ return|;
 block|}
 name|virtual
 specifier|const
-name|XCoreFrameInfo
+name|XCoreFrameLowering
 operator|*
-name|getFrameInfo
+name|getFrameLowering
 argument_list|()
 specifier|const
 block|{
 return|return
 operator|&
-name|FrameInfo
+name|FrameLowering
 return|;
 block|}
 name|virtual

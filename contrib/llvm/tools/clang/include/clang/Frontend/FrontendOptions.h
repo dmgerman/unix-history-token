@@ -86,6 +86,9 @@ block|{
 name|ASTDump
 block|,
 comment|///< Parse ASTs and dump them.
+name|ASTDumpXML
+block|,
+comment|///< Parse ASTs and dump them in XML.
 name|ASTPrint
 block|,
 comment|///< Parse ASTs and print them.
@@ -137,9 +140,6 @@ comment|///< Generate pre-compiled header.
 name|GeneratePTH
 block|,
 comment|///< Generate pre-tokenized header.
-name|InheritanceView
-block|,
-comment|///< View C++ inheritance for a specified class.
 name|InitOnly
 block|,
 comment|///< Only execute frontend initialization.
@@ -181,13 +181,6 @@ name|FrontendOptions
 block|{
 name|public
 label|:
-name|unsigned
-name|DebugCodeCompletionPrinter
-range|:
-literal|1
-decl_stmt|;
-comment|///< Use the debug printer for code
-comment|/// completion results.
 name|unsigned
 name|DisableFree
 range|:
@@ -288,12 +281,6 @@ operator|::
 name|string
 name|OutputFile
 expr_stmt|;
-comment|/// If given, the name for a C++ class to view the inheritance of.
-name|std
-operator|::
-name|string
-name|ViewClassInheritance
-expr_stmt|;
 comment|/// If given, the new suffix for fix-it rewritten files.
 name|std
 operator|::
@@ -316,7 +303,7 @@ operator|::
 name|string
 name|ActionName
 expr_stmt|;
-comment|/// Arg to pass to the plugin
+comment|/// Args to pass to the plugin
 name|std
 operator|::
 name|vector
@@ -326,6 +313,33 @@ operator|::
 name|string
 operator|>
 name|PluginArgs
+expr_stmt|;
+comment|/// The list of plugin actions to run in addition to the normal action.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|AddPluginActions
+expr_stmt|;
+comment|/// Args to pass to the additional plugins
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+expr|>
+name|AddPluginArgs
 expr_stmt|;
 comment|/// The list of plugins to load.
 name|std
@@ -377,10 +391,6 @@ label|:
 name|FrontendOptions
 argument_list|()
 block|{
-name|DebugCodeCompletionPrinter
-operator|=
-literal|1
-expr_stmt|;
 name|DisableFree
 operator|=
 literal|0

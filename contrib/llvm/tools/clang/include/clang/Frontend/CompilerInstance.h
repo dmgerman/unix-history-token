@@ -90,9 +90,6 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|LLVMContext
-decl_stmt|;
-name|class
 name|raw_ostream
 decl_stmt|;
 name|class
@@ -168,17 +165,6 @@ comment|/// and a long form that takes explicit instances of any required object
 name|class
 name|CompilerInstance
 block|{
-comment|/// The LLVM context used for this instance.
-name|llvm
-operator|::
-name|OwningPtr
-operator|<
-name|llvm
-operator|::
-name|LLVMContext
-operator|>
-name|LLVMContext
-expr_stmt|;
 comment|/// The options used in this compiler instance.
 name|llvm
 operator|::
@@ -280,25 +266,77 @@ name|Timer
 operator|>
 name|FrontendTimer
 expr_stmt|;
+comment|/// \brief Holds information about the output file.
+comment|///
+comment|/// If TempFilename is not empty we must rename it to Filename at the end.
+comment|/// TempFilename may be empty and Filename non empty if creating the temporary
+comment|/// failed.
+struct|struct
+name|OutputFile
+block|{
+name|std
+operator|::
+name|string
+name|Filename
+expr_stmt|;
+name|std
+operator|::
+name|string
+name|TempFilename
+expr_stmt|;
+name|llvm
+operator|::
+name|raw_ostream
+operator|*
+name|OS
+expr_stmt|;
+name|OutputFile
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|filename
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|tempFilename
+argument_list|,
+name|llvm
+operator|::
+name|raw_ostream
+operator|*
+name|os
+argument_list|)
+operator|:
+name|Filename
+argument_list|(
+name|filename
+argument_list|)
+operator|,
+name|TempFilename
+argument_list|(
+name|tempFilename
+argument_list|)
+operator|,
+name|OS
+argument_list|(
+argument|os
+argument_list|)
+block|{ }
+block|}
+struct|;
 comment|/// The list of active output files.
 name|std
 operator|::
 name|list
 operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|std
-operator|::
-name|string
-operator|,
-name|llvm
-operator|::
-name|raw_ostream
-operator|*
+name|OutputFile
 operator|>
-expr|>
 name|OutputFiles
 expr_stmt|;
 name|void
@@ -368,66 +406,6 @@ modifier|&
 name|Act
 parameter_list|)
 function_decl|;
-comment|/// }
-comment|/// @name LLVM Context
-comment|/// {
-name|bool
-name|hasLLVMContext
-argument_list|()
-specifier|const
-block|{
-return|return
-name|LLVMContext
-operator|!=
-literal|0
-return|;
-block|}
-name|llvm
-operator|::
-name|LLVMContext
-operator|&
-name|getLLVMContext
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|LLVMContext
-operator|&&
-literal|"Compiler instance has no LLVM context!"
-argument_list|)
-block|;
-return|return
-operator|*
-name|LLVMContext
-return|;
-block|}
-name|llvm
-operator|::
-name|LLVMContext
-operator|*
-name|takeLLVMContext
-argument_list|()
-block|{
-return|return
-name|LLVMContext
-operator|.
-name|take
-argument_list|()
-return|;
-block|}
-comment|/// setLLVMContext - Replace the current LLVM context and take ownership of
-comment|/// \arg Value.
-name|void
-name|setLLVMContext
-argument_list|(
-name|llvm
-operator|::
-name|LLVMContext
-operator|*
-name|Value
-argument_list|)
-decl_stmt|;
 comment|/// }
 comment|/// @name Compiler Invocation and Options
 comment|/// {
@@ -585,6 +563,20 @@ return|return
 name|Invocation
 operator|->
 name|getDiagnosticOpts
+argument_list|()
+return|;
+block|}
+specifier|const
+name|FileSystemOptions
+operator|&
+name|getFileSystemOpts
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Invocation
+operator|->
+name|getFileSystemOpts
 argument_list|()
 return|;
 block|}
@@ -1295,51 +1287,18 @@ block|}
 comment|/// }
 comment|/// @name Output Files
 comment|/// {
-comment|/// getOutputFileList - Get the list of (path, output stream) pairs of output
-comment|/// files; the path may be empty but the stream will always be non-null.
-specifier|const
-name|std
-operator|::
-name|list
-operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|std
-operator|::
-name|string
-operator|,
-name|llvm
-operator|::
-name|raw_ostream
-operator|*
-operator|>
-expr|>
-operator|&
-name|getOutputFileList
-argument_list|()
-specifier|const
-expr_stmt|;
 comment|/// addOutputFile - Add an output file onto the list of tracked output files.
 comment|///
-comment|/// \param Path - The path to the output file, or empty.
-comment|/// \param OS - The output stream, which should be non-null.
+comment|/// \param OutFile - The output file info.
 name|void
 name|addOutputFile
-argument_list|(
-name|llvm
-operator|::
-name|StringRef
-name|Path
-argument_list|,
-name|llvm
-operator|::
-name|raw_ostream
-operator|*
-name|OS
-argument_list|)
-decl_stmt|;
+parameter_list|(
+specifier|const
+name|OutputFile
+modifier|&
+name|OutFile
+parameter_list|)
+function_decl|;
 comment|/// clearOutputFiles - Clear the output file list, destroying the contained
 comment|/// output streams.
 comment|///
@@ -1357,17 +1316,30 @@ comment|/// {
 comment|/// Create the diagnostics engine using the invocation's diagnostic options
 comment|/// and replace any existing one with it.
 comment|///
-comment|/// Note that this routine also replaces the diagnostic client.
+comment|/// Note that this routine also replaces the diagnostic client,
+comment|/// allocating one if one is not provided.
+comment|///
+comment|/// \param Client If non-NULL, a diagnostic client that will be
+comment|/// attached to (and, then, owned by) the Diagnostic inside this AST
+comment|/// unit.
 name|void
 name|createDiagnostics
 parameter_list|(
 name|int
 name|Argc
 parameter_list|,
+specifier|const
 name|char
 modifier|*
+specifier|const
 modifier|*
 name|Argv
+parameter_list|,
+name|DiagnosticClient
+modifier|*
+name|Client
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 comment|/// Create a Diagnostic object with a the TextDiagnosticPrinter.
@@ -1376,13 +1348,18 @@ comment|/// The \arg Argc and \arg Argv arguments are used only for logging purp
 comment|/// when the diagnostic options indicate that the compiler should output
 comment|/// logging information.
 comment|///
-comment|/// Note that this creates an unowned DiagnosticClient, if using directly the
-comment|/// caller is responsible for releasing the returned Diagnostic's client
-comment|/// eventually.
+comment|/// If no diagnostic client is provided, this creates a
+comment|/// DiagnosticClient that is owned by the returned diagnostic
+comment|/// object, if using directly the caller is responsible for
+comment|/// releasing the returned Diagnostic's client eventually.
 comment|///
 comment|/// \param Opts - The diagnostic options; note that the created text
 comment|/// diagnostic object contains a reference to these options and its lifetime
 comment|/// must extend past that of the diagnostic engine.
+comment|///
+comment|/// \param Client If non-NULL, a diagnostic client that will be
+comment|/// attached to (and, then, owned by) the returned Diagnostic
+comment|/// object.
 comment|///
 comment|/// \return The new object on success, or null on failure.
 specifier|static
@@ -1398,7 +1375,10 @@ argument|const DiagnosticOptions&Opts
 argument_list|,
 argument|int Argc
 argument_list|,
-argument|char **Argv
+argument|const char* const *Argv
+argument_list|,
+argument|DiagnosticClient *Client =
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/// Create the file manager and replace any existing one with it.
@@ -1409,7 +1389,11 @@ function_decl|;
 comment|/// Create the source manager and replace any existing one with it.
 name|void
 name|createSourceManager
-parameter_list|()
+parameter_list|(
+name|FileManager
+modifier|&
+name|FileMgr
+parameter_list|)
 function_decl|;
 comment|/// Create the preprocessor, using the invocation, file, and source managers,
 comment|/// and replace any existing one with it.
@@ -1480,6 +1464,9 @@ argument_list|,
 name|bool
 name|DisablePCHValidation
 argument_list|,
+name|bool
+name|DisableStatCache
+argument_list|,
 name|void
 operator|*
 name|DeserializationListener
@@ -1508,6 +1495,9 @@ argument_list|,
 name|bool
 name|DisablePCHValidation
 argument_list|,
+name|bool
+name|DisableStatCache
+argument_list|,
 name|Preprocessor
 operator|&
 name|PP
@@ -1519,6 +1509,9 @@ argument_list|,
 name|void
 operator|*
 name|DeserializationListener
+argument_list|,
+name|bool
+name|Preamble
 argument_list|)
 decl_stmt|;
 comment|/// Create a code completion consumer using the invocation; note that this
@@ -1552,9 +1545,6 @@ name|Line
 argument_list|,
 name|unsigned
 name|Column
-argument_list|,
-name|bool
-name|UseDebugPrinter
 argument_list|,
 name|bool
 name|ShowMacros
@@ -1622,6 +1612,8 @@ argument|llvm::StringRef OutputPath
 argument_list|,
 argument|bool Binary = true
 argument_list|,
+argument|bool RemoveFileOnSignal = true
+argument_list|,
 argument|llvm::StringRef BaseInput =
 literal|""
 argument_list|,
@@ -1633,7 +1625,8 @@ comment|/// Create a new output file, optionally deriving the output path name.
 comment|///
 comment|/// If \arg OutputPath is empty, then createOutputFile will derive an output
 comment|/// path location as \arg BaseInput, with any suffix removed, and \arg
-comment|/// Extension appended.
+comment|/// Extension appended. If OutputPath is not stdout createOutputFile will
+comment|/// create a new temporary file that must be renamed to OutputPath in the end.
 comment|///
 comment|/// \param OutputPath - If given, the path to the output file.
 comment|/// \param Error [out] - On failure, the error message.
@@ -1641,8 +1634,13 @@ comment|/// \param BaseInput - If \arg OutputPath is empty, the input path name 
 comment|/// for deriving the output path.
 comment|/// \param Extension - The extension to use for derived output names.
 comment|/// \param Binary - The mode to open the file in.
+comment|/// \param RemoveFileOnSignal - Whether the file should be registered with
+comment|/// llvm::sys::RemoveFileOnSignal. Note that this is not safe for
+comment|/// multithreaded use, as the underlying signal mechanism is not reentrant
 comment|/// \param ResultPathName [out] - If given, the result path name will be
 comment|/// stored here on success.
+comment|/// \param TempPathName [out] - If given, the temporary file path name
+comment|/// will be stored here on success.
 specifier|static
 name|llvm
 operator|::
@@ -1656,6 +1654,8 @@ argument|std::string&Error
 argument_list|,
 argument|bool Binary = true
 argument_list|,
+argument|bool RemoveFileOnSignal = true
+argument_list|,
 argument|llvm::StringRef BaseInput =
 literal|""
 argument_list|,
@@ -1663,6 +1663,9 @@ argument|llvm::StringRef Extension =
 literal|""
 argument_list|,
 argument|std::string *ResultPathName =
+literal|0
+argument_list|,
+argument|std::string *TempPathName =
 literal|0
 argument_list|)
 expr_stmt|;

@@ -116,6 +116,9 @@ name|class
 name|Function
 decl_stmt|;
 name|class
+name|GCModuleInfo
+decl_stmt|;
+name|class
 name|MachineRegisterInfo
 decl_stmt|;
 name|class
@@ -142,6 +145,9 @@ decl_stmt|;
 name|class
 name|TargetRegisterClass
 decl_stmt|;
+struct_decl|struct
+name|MachinePointerInfo
+struct_decl|;
 name|template
 operator|<
 operator|>
@@ -294,6 +300,10 @@ name|MachineModuleInfo
 modifier|&
 name|MMI
 decl_stmt|;
+name|GCModuleInfo
+modifier|*
+name|GMI
+decl_stmt|;
 comment|// RegInfo - Information about each register in use in the function.
 name|MachineRegisterInfo
 modifier|*
@@ -406,6 +416,8 @@ argument_list|,
 argument|unsigned FunctionNum
 argument_list|,
 argument|MachineModuleInfo&MMI
+argument_list|,
+argument|GCModuleInfo* GMI
 argument_list|)
 empty_stmt|;
 operator|~
@@ -420,6 +432,16 @@ specifier|const
 block|{
 return|return
 name|MMI
+return|;
+block|}
+name|GCModuleInfo
+operator|*
+name|getGMI
+argument_list|()
+specifier|const
+block|{
+return|return
+name|GMI
 return|;
 block|}
 name|MCContext
@@ -829,6 +851,11 @@ argument_list|(
 name|raw_ostream
 operator|&
 name|OS
+argument_list|,
+name|SlotIndexes
+operator|*
+operator|=
+literal|0
 argument_list|)
 decl|const
 decl_stmt|;
@@ -868,6 +895,13 @@ argument_list|(
 name|Pass
 operator|*
 name|p
+operator|=
+name|NULL
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|Banner
 operator|=
 name|NULL
 argument_list|)
@@ -916,6 +950,9 @@ specifier|const
 name|TargetRegisterClass
 modifier|*
 name|RC
+parameter_list|,
+name|DebugLoc
+name|DL
 parameter_list|)
 function_decl|;
 comment|//===--------------------------------------------------------------------===//
@@ -1366,22 +1403,24 @@ name|MachineMemOperand
 modifier|*
 name|getMachineMemOperand
 parameter_list|(
-specifier|const
-name|Value
-modifier|*
-name|v
+name|MachinePointerInfo
+name|PtrInfo
 parameter_list|,
 name|unsigned
 name|f
-parameter_list|,
-name|int64_t
-name|o
 parameter_list|,
 name|uint64_t
 name|s
 parameter_list|,
 name|unsigned
 name|base_alignment
+parameter_list|,
+specifier|const
+name|MDNode
+modifier|*
+name|TBAAInfo
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 comment|/// getMachineMemOperand - Allocate a new MachineMemOperand by copying
@@ -1480,6 +1519,14 @@ name|false
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// getPICBaseSymbol - Return a function-local symbol to represent the PIC
+comment|/// base.
+name|MCSymbol
+operator|*
+name|getPICBaseSymbol
+argument_list|()
+specifier|const
+expr_stmt|;
 block|}
 empty_stmt|;
 comment|//===--------------------------------------------------------------------===//

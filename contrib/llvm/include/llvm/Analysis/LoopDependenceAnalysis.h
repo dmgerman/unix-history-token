@@ -377,7 +377,16 @@ name|LoopPass
 argument_list|(
 argument|ID
 argument_list|)
-block|{}
+block|{
+name|initializeLoopDependenceAnalysisPass
+argument_list|(
+operator|*
+name|PassRegistry
+operator|::
+name|getPassRegistry
+argument_list|()
+argument_list|)
+block|;   }
 comment|/// isDependencePair - Check whether two values can possibly give rise to
 comment|/// a data dependence: that is the case if both are instructions accessing
 comment|/// memory and at least one of those accesses is a write.

@@ -80,7 +80,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ARMBaseRegisterInfo.h"
+file|"llvm/ADT/Triple.h"
 end_include
 
 begin_include
@@ -126,6 +126,15 @@ block|,
 name|V7M
 block|}
 block|;    enum
+name|ARMProcFamilyEnum
+block|{
+name|Others
+block|,
+name|CortexA8
+block|,
+name|CortexA9
+block|}
+block|;    enum
 name|ARMFPEnum
 block|{
 name|None
@@ -149,6 +158,10 @@ comment|/// V6, V6T2, V7A, V7M.
 name|ARMArchEnum
 name|ARMArchVersion
 block|;
+comment|/// ARMProcFamily - ARM processor family: Cortex-A8, Cortex-A9, and others.
+name|ARMProcFamilyEnum
+name|ARMProcFamily
+block|;
 comment|/// ARMFPUType - Floating Point Unit type.
 name|ARMFPEnum
 name|ARMFPUType
@@ -159,10 +172,10 @@ comment|/// determine if NEON should actually be used.
 name|bool
 name|UseNEONForSinglePrecisionFP
 block|;
-comment|/// SlowVMLx - If the VFP2 instructions are available, indicates whether
-comment|/// the VML[AS] instructions are slow (if so, don't use them).
+comment|/// SlowFPVMLx - If the VFP2 / NEON instructions are available, indicates
+comment|/// whether the FP VML[AS] instructions are slow (if so, don't use them).
 name|bool
-name|SlowVMLx
+name|SlowFPVMLx
 block|;
 comment|/// SlowFPBrcc - True if floating point compare + branch is slow.
 name|bool
@@ -198,6 +211,11 @@ comment|/// only so far)
 name|bool
 name|HasFP16
 block|;
+comment|/// HasD16 - True if subtarget is limited to 16 double precision
+comment|/// FP registers for VFPv3.
+name|bool
+name|HasD16
+block|;
 comment|/// HasHardwareDivide - True if subtarget supports [su]div
 name|bool
 name|HasHardwareDivide
@@ -217,10 +235,21 @@ comment|/// over 16-bit ones.
 name|bool
 name|Pref32BitThumb
 block|;
+comment|/// HasMPExtension - True if the subtarget supports Multiprocessing
+comment|/// extension (ARMv7 only).
+name|bool
+name|HasMPExtension
+block|;
 comment|/// FPOnlySP - If true, the floating point unit only supports single
 comment|/// precision.
 name|bool
 name|FPOnlySP
+block|;
+comment|/// AllowsUnalignedMem - If true, the subtarget allows unaligned memory
+comment|/// accesses for some types.  For details, see
+comment|/// ARMTargetLowering::allowsUnalignedMemoryAccesses().
+name|bool
+name|AllowsUnalignedMem
 block|;
 comment|/// stackAlignment - The minimum alignment known to hold of the stack frame on
 comment|/// entry to the function and which must be maintained by every function.
@@ -232,6 +261,10 @@ name|std
 operator|::
 name|string
 name|CPUString
+block|;
+comment|/// TargetTriple - What processor and OS we're targeting.
+name|Triple
+name|TargetTriple
 block|;
 comment|/// Selected instruction itineraries (one entry per itinerary class.)
 name|InstrItineraryData
@@ -307,6 +340,10 @@ operator|&
 name|CPU
 argument_list|)
 block|;
+name|void
+name|computeIssueWidth
+argument_list|()
+block|;
 name|bool
 name|hasV4TOps
 argument_list|()
@@ -371,6 +408,28 @@ return|return
 name|ARMArchVersion
 operator|>=
 name|V7A
+return|;
+block|}
+name|bool
+name|isCortexA8
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ARMProcFamily
+operator|==
+name|CortexA8
+return|;
+block|}
+name|bool
+name|isCortexA9
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ARMProcFamily
+operator|==
+name|CortexA9
 return|;
 block|}
 name|bool
@@ -456,16 +515,13 @@ name|HasDataBarrier
 return|;
 block|}
 name|bool
-name|useVMLx
+name|useFPVMLx
 argument_list|()
 specifier|const
 block|{
 return|return
-name|hasVFP2
-argument_list|()
-operator|&&
 operator|!
-name|SlowVMLx
+name|SlowFPVMLx
 return|;
 block|}
 name|bool
@@ -496,6 +552,15 @@ name|Pref32BitThumb
 return|;
 block|}
 name|bool
+name|hasMPExtension
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasMPExtension
+return|;
+block|}
+name|bool
 name|hasFP16
 argument_list|()
 specifier|const
@@ -505,14 +570,28 @@ name|HasFP16
 return|;
 block|}
 name|bool
+name|hasD16
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasD16
+return|;
+block|}
+name|bool
 name|isTargetDarwin
 argument_list|()
 specifier|const
 block|{
 return|return
-name|TargetType
+name|TargetTriple
+operator|.
+name|getOS
+argument_list|()
 operator|==
-name|isDarwin
+name|Triple
+operator|::
+name|Darwin
 return|;
 block|}
 name|bool
@@ -521,9 +600,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|TargetType
-operator|==
-name|isELF
+operator|!
+name|isTargetDarwin
+argument_list|()
 return|;
 block|}
 name|bool
@@ -619,6 +698,15 @@ name|hasV6T2Ops
 argument_list|()
 return|;
 block|}
+name|bool
+name|allowsUnalignedMem
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AllowsUnalignedMem
+return|;
+block|}
 specifier|const
 name|std
 operator|::
@@ -632,6 +720,11 @@ return|return
 name|CPUString
 return|;
 block|}
+name|unsigned
+name|getMispredictionPenalty
+argument_list|()
+specifier|const
+block|;
 comment|/// enablePostRAScheduler - True at 'More' optimization.
 name|bool
 name|enablePostRAScheduler

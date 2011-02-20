@@ -63,6 +63,12 @@ directive|define
 name|LLVM_CLANG_AST_CXXABI_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"clang/AST/Type.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -94,6 +100,30 @@ specifier|const
 name|MemberPointerType
 operator|*
 name|MPT
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
+comment|/// Returns the default calling convention for C++ methods.
+name|virtual
+name|CallingConv
+name|getDefaultMethodCallConv
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
+comment|// Returns whether the given class is nearly empty, with just virtual pointers
+comment|// and no data except possibly virtual bases.
+name|virtual
+name|bool
+name|isNearlyEmpty
+argument_list|(
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|RD
 argument_list|)
 decl|const
 init|=

@@ -92,6 +92,9 @@ name|namespace
 name|clang
 block|{
 name|class
+name|ASTContext
+decl_stmt|;
+name|class
 name|DependentTemplateName
 decl_stmt|;
 name|class
@@ -103,6 +106,9 @@ decl_stmt|;
 name|class
 name|NestedNameSpecifier
 decl_stmt|;
+name|class
+name|OverloadedTemplateStorage
+decl_stmt|;
 struct_decl|struct
 name|PrintingPolicy
 struct_decl|;
@@ -113,53 +119,172 @@ name|class
 name|NamedDecl
 decl_stmt|;
 name|class
+name|SubstTemplateTemplateParmPackStorage
+decl_stmt|;
+name|class
+name|TemplateArgument
+decl_stmt|;
+name|class
 name|TemplateDecl
 decl_stmt|;
+name|class
+name|TemplateTemplateParmDecl
+decl_stmt|;
+comment|/// \brief Implementation class used to describe either a set of overloaded
+comment|/// template names or an already-substituted template template parameter pack.
+name|class
+name|UncommonTemplateNameStorage
+block|{
+name|protected
+label|:
+union|union
+block|{
+struct|struct
+block|{
+comment|/// \brief If true, this is an OverloadedTemplateStorage instance;
+comment|/// otherwise, it's a SubstTemplateTemplateParmPackStorage instance.
+name|unsigned
+name|IsOverloadedStorage
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief The number of stored templates or template arguments,
+comment|/// depending on which subclass we have.
+name|unsigned
+name|Size
+range|:
+literal|31
+decl_stmt|;
+block|}
+name|Bits
+struct|;
+name|void
+modifier|*
+name|PointerAlignment
+decl_stmt|;
+block|}
+union|;
+name|UncommonTemplateNameStorage
+argument_list|(
+argument|unsigned Size
+argument_list|,
+argument|bool OverloadedStorage
+argument_list|)
+block|{
+name|Bits
+operator|.
+name|IsOverloadedStorage
+operator|=
+name|OverloadedStorage
+expr_stmt|;
+name|Bits
+operator|.
+name|Size
+operator|=
+name|Size
+expr_stmt|;
+block|}
+name|public
+label|:
+name|unsigned
+name|size
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Bits
+operator|.
+name|Size
+return|;
+block|}
+name|OverloadedTemplateStorage
+modifier|*
+name|getAsOverloadedStorage
+parameter_list|()
+block|{
+return|return
+name|Bits
+operator|.
+name|IsOverloadedStorage
+condition|?
+name|reinterpret_cast
+operator|<
+name|OverloadedTemplateStorage
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+else|:
+literal|0
+return|;
+block|}
+name|SubstTemplateTemplateParmPackStorage
+modifier|*
+name|getAsSubstTemplateTemplateParmPack
+parameter_list|()
+block|{
+return|return
+name|Bits
+operator|.
+name|IsOverloadedStorage
+condition|?
+literal|0
+else|:
+name|reinterpret_cast
+operator|<
+name|SubstTemplateTemplateParmPackStorage
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+return|;
+block|}
+block|}
+empty_stmt|;
 comment|/// \brief A structure for storing the information associated with an
 comment|/// overloaded template name.
 name|class
 name|OverloadedTemplateStorage
+range|:
+name|public
+name|UncommonTemplateNameStorage
 block|{
-union|union
-block|{
-name|unsigned
-name|Size
-decl_stmt|;
-name|NamedDecl
-modifier|*
-name|Storage
-index|[
-literal|1
-index|]
-decl_stmt|;
-block|}
-union|;
 name|friend
 name|class
 name|ASTContext
-decl_stmt|;
+block|;
 name|OverloadedTemplateStorage
 argument_list|(
 argument|unsigned Size
 argument_list|)
-block|:
-name|Size
+operator|:
+name|UncommonTemplateNameStorage
 argument_list|(
 argument|Size
+argument_list|,
+argument|true
 argument_list|)
-block|{}
+block|{ }
 name|NamedDecl
-modifier|*
-modifier|*
+operator|*
+operator|*
 name|getStorage
-parameter_list|()
+argument_list|()
 block|{
 return|return
-operator|&
-name|Storage
-index|[
+name|reinterpret_cast
+operator|<
+name|NamedDecl
+operator|*
+operator|*
+operator|>
+operator|(
+name|this
+operator|+
 literal|1
-index|]
+operator|)
 return|;
 block|}
 name|NamedDecl
@@ -171,15 +296,22 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|&
-name|Storage
-index|[
+name|reinterpret_cast
+operator|<
+name|NamedDecl
+operator|*
+specifier|const
+operator|*
+operator|>
+operator|(
+name|this
+operator|+
 literal|1
-index|]
+operator|)
 return|;
 block|}
 name|public
-label|:
+operator|:
 typedef|typedef
 name|NamedDecl
 modifier|*
@@ -187,15 +319,6 @@ specifier|const
 modifier|*
 name|iterator
 typedef|;
-name|unsigned
-name|size
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Size
-return|;
-block|}
 name|iterator
 name|begin
 argument_list|()
@@ -219,6 +342,125 @@ name|size
 argument_list|()
 return|;
 block|}
+block|}
+empty_stmt|;
+comment|/// \brief A structure for storing an already-substituted template template
+comment|/// parameter pack.
+comment|///
+comment|/// This kind of template names occurs when the parameter pack has been
+comment|/// provided with a template template argument pack in a context where its
+comment|/// enclosing pack expansion could not be fully expanded.
+name|class
+name|SubstTemplateTemplateParmPackStorage
+range|:
+name|public
+name|UncommonTemplateNameStorage
+decl_stmt|,
+name|public
+name|llvm
+decl|::
+name|FoldingSetNode
+block|{
+name|ASTContext
+modifier|&
+name|Context
+decl_stmt|;
+name|TemplateTemplateParmDecl
+modifier|*
+name|Parameter
+decl_stmt|;
+specifier|const
+name|TemplateArgument
+modifier|*
+name|Arguments
+decl_stmt|;
+name|public
+label|:
+name|SubstTemplateTemplateParmPackStorage
+argument_list|(
+argument|ASTContext&Context
+argument_list|,
+argument|TemplateTemplateParmDecl *Parameter
+argument_list|,
+argument|unsigned Size
+argument_list|,
+argument|const TemplateArgument *Arguments
+argument_list|)
+block|:
+name|UncommonTemplateNameStorage
+argument_list|(
+name|Size
+argument_list|,
+name|false
+argument_list|)
+operator|,
+name|Context
+argument_list|(
+name|Context
+argument_list|)
+operator|,
+name|Parameter
+argument_list|(
+name|Parameter
+argument_list|)
+operator|,
+name|Arguments
+argument_list|(
+argument|Arguments
+argument_list|)
+block|{ }
+comment|/// \brief Retrieve the template template parameter pack being substituted.
+name|TemplateTemplateParmDecl
+operator|*
+name|getParameterPack
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Parameter
+return|;
+block|}
+comment|/// \brief Retrieve the template template argument pack with which this
+comment|/// parameter was substituted.
+name|TemplateArgument
+name|getArgumentPack
+argument_list|()
+specifier|const
+expr_stmt|;
+name|void
+name|Profile
+argument_list|(
+name|llvm
+operator|::
+name|FoldingSetNodeID
+operator|&
+name|ID
+argument_list|)
+decl_stmt|;
+specifier|static
+name|void
+name|Profile
+argument_list|(
+name|llvm
+operator|::
+name|FoldingSetNodeID
+operator|&
+name|ID
+argument_list|,
+name|ASTContext
+operator|&
+name|Context
+argument_list|,
+name|TemplateTemplateParmDecl
+operator|*
+name|Parameter
+argument_list|,
+specifier|const
+name|TemplateArgument
+operator|&
+name|ArgPack
+argument_list|)
+decl_stmt|;
 block|}
 empty_stmt|;
 comment|/// \brief Represents a C++ template name within the type system.
@@ -259,7 +501,7 @@ operator|<
 name|TemplateDecl
 operator|*
 operator|,
-name|OverloadedTemplateStorage
+name|UncommonTemplateNameStorage
 operator|*
 operator|,
 name|QualifiedTemplateName
@@ -297,13 +539,24 @@ comment|// \brief Kind of name that is actually stored.
 enum|enum
 name|NameKind
 block|{
+comment|/// \brief A single template declaration.
 name|Template
 block|,
+comment|/// \brief A set of overloaded template declarations.
 name|OverloadedTemplate
 block|,
+comment|/// \brief A qualified template name, where the qualification is kept
+comment|/// to describe the source code as written.
 name|QualifiedTemplate
 block|,
+comment|/// \brief A dependent template name that has not been resolved to a
+comment|/// template (or set of templates).
 name|DependentTemplate
+block|,
+comment|/// \brief A template template parameter pack that has been substituted for
+comment|/// a template template argument pack, but has not yet been expanded into
+comment|/// individual arguments.
+name|SubstTemplateTemplateParmPack
 block|}
 enum|;
 name|TemplateName
@@ -329,6 +582,19 @@ name|explicit
 name|TemplateName
 argument_list|(
 name|OverloadedTemplateStorage
+operator|*
+name|Storage
+argument_list|)
+operator|:
+name|Storage
+argument_list|(
+argument|Storage
+argument_list|)
+block|{ }
+name|explicit
+name|TemplateName
+argument_list|(
+name|SubstTemplateTemplateParmPackStorage
 operator|*
 name|Storage
 argument_list|)
@@ -383,7 +649,7 @@ name|getKind
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// \brief Retrieve the the underlying template declaration that
+comment|/// \brief Retrieve the underlying template declaration that
 comment|/// this template name refers to, if known.
 comment|///
 comment|/// \returns The template declaration that this template name refers
@@ -396,7 +662,7 @@ name|getAsTemplateDecl
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// \brief Retrieve the the underlying, overloaded function template
+comment|/// \brief Retrieve the underlying, overloaded function template
 comment|// declarations that this template name refers to, if known.
 comment|///
 comment|/// \returns The set of overloaded function templates that this template
@@ -409,20 +675,80 @@ name|getAsOverloadedTemplate
 argument_list|()
 specifier|const
 block|{
-return|return
+if|if
+condition|(
+name|UncommonTemplateNameStorage
+modifier|*
+name|Uncommon
+init|=
 name|Storage
 operator|.
 name|dyn_cast
 operator|<
-name|OverloadedTemplateStorage
+name|UncommonTemplateNameStorage
 operator|*
 operator|>
 operator|(
 operator|)
+condition|)
+return|return
+name|Uncommon
+operator|->
+name|getAsOverloadedStorage
+argument_list|()
+return|;
+return|return
+literal|0
 return|;
 block|}
+comment|/// \brief Retrieve the substituted template template parameter pack, if
+comment|/// known.
+comment|///
+comment|/// \returns The storage for the substituted template template parameter pack,
+comment|/// if known. Otherwise, returns NULL.
+name|SubstTemplateTemplateParmPackStorage
+operator|*
+name|getAsSubstTemplateTemplateParmPack
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|UncommonTemplateNameStorage
+modifier|*
+name|Uncommon
+init|=
+name|Storage
+operator|.
+name|dyn_cast
+operator|<
+name|UncommonTemplateNameStorage
+operator|*
+operator|>
+operator|(
+operator|)
+condition|)
+return|return
+name|Uncommon
+operator|->
+name|getAsSubstTemplateTemplateParmPack
+argument_list|()
+return|;
+return|return
+literal|0
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Retrieve the underlying qualified template name
+end_comment
+
+begin_comment
 comment|/// structure, if any.
+end_comment
+
+begin_expr_stmt
 name|QualifiedTemplateName
 operator|*
 name|getAsQualifiedTemplateName
@@ -441,8 +767,17 @@ operator|(
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Retrieve the underlying dependent template name
+end_comment
+
+begin_comment
 comment|/// structure, if any.
+end_comment
+
+begin_expr_stmt
 name|DependentTemplateName
 operator|*
 name|getAsDependentTemplateName
@@ -461,20 +796,69 @@ operator|(
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Determines whether this is a dependent template name.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isDependent
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Determines whether this template name contains an
+end_comment
+
+begin_comment
+comment|/// unexpanded parameter pack (for C++0x variadic templates).
+end_comment
+
+begin_expr_stmt
+name|bool
+name|containsUnexpandedParameterPack
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Print the template name.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \param OS the output stream to which the template name will be
+end_comment
+
+begin_comment
 comment|/// printed.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \param SuppressNNS if true, don't print the
+end_comment
+
+begin_comment
 comment|/// nested-name-specifier that precedes the template name (if it has
+end_comment
+
+begin_comment
 comment|/// one).
+end_comment
+
+begin_decl_stmt
 name|void
 name|print
 argument_list|(
@@ -496,13 +880,25 @@ name|false
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Debugging aid that dumps the template name to standard
+end_comment
+
+begin_comment
 comment|/// error.
+end_comment
+
+begin_expr_stmt
 name|void
 name|dump
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|void
 name|Profile
 argument_list|(
@@ -524,7 +920,13 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Retrieve the template name as a void pointer.
+end_comment
+
+begin_expr_stmt
 name|void
 operator|*
 name|getAsVoidPointer
@@ -538,7 +940,13 @@ name|getOpaqueValue
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Build a template name from a void pointer.
+end_comment
+
+begin_function
 specifier|static
 name|TemplateName
 name|getFromVoidPointer
@@ -555,10 +963,18 @@ name|Ptr
 argument_list|)
 return|;
 block|}
-block|}
-empty_stmt|;
+end_function
+
+begin_comment
+unit|};
 comment|/// Insertion operator for diagnostics.  This allows sending TemplateName's
+end_comment
+
+begin_comment
 comment|/// into a diagnostic with<<.
+end_comment
+
+begin_expr_stmt
 specifier|const
 name|DiagnosticBuilder
 operator|&
@@ -574,17 +990,53 @@ name|TemplateName
 name|N
 operator|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Represents a template name that was expressed as a
+end_comment
+
+begin_comment
 comment|/// qualified name.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// This kind of template name refers to a template name that was
+end_comment
+
+begin_comment
 comment|/// preceded by a nested name specifier, e.g., \c std::vector. Here,
+end_comment
+
+begin_comment
 comment|/// the nested name specifier is "std::" and the template name is the
+end_comment
+
+begin_comment
 comment|/// declaration for "vector". The QualifiedTemplateName class is only
+end_comment
+
+begin_comment
 comment|/// used to provide "sugar" for template names that were expressed
+end_comment
+
+begin_comment
 comment|/// with a qualified name, and has no semantic meaning. In this
+end_comment
+
+begin_comment
 comment|/// manner, it is to TemplateName what ElaboratedType is to Type,
+end_comment
+
+begin_comment
 comment|/// providing extra syntactic sugar for downstream clients.
+end_comment
+
+begin_decl_stmt
 name|class
 name|QualifiedTemplateName
 range|:

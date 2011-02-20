@@ -114,8 +114,6 @@ block|,
 name|SV_ELF
 block|,
 name|SV_MachO
-block|,
-name|SV_PIC16
 block|}
 enum|;
 name|private
@@ -219,6 +217,26 @@ return|return
 name|false
 return|;
 block|}
+comment|// UseCodeAlign - Return true if a .align directive should use
+comment|// "optimized nops" to fill instead of 0s.
+name|virtual
+name|bool
+name|UseCodeAlign
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
+comment|/// isVirtualSection - Check whether this section is "virtual", that is
+comment|/// has no actual object file contents.
+name|virtual
+name|bool
+name|isVirtualSection
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
 specifier|static
 name|bool
 name|classof

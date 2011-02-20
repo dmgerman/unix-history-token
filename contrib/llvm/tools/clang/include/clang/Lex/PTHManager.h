@@ -125,7 +125,7 @@ name|class
 name|Diagnostic
 decl_stmt|;
 name|class
-name|StatSysCallCache
+name|FileSystemStatCache
 decl_stmt|;
 name|class
 name|PTHManager
@@ -375,11 +375,11 @@ name|FileID
 name|FID
 parameter_list|)
 function_decl|;
-comment|/// createStatCache - Returns a StatSysCallCache object for use with
+comment|/// createStatCache - Returns a FileSystemStatCache object for use with
 comment|///  FileManager objects.  These objects use the PTH data to speed up
 comment|///  calls to stat by memoizing their results from when the PTH file
 comment|///  was generated.
-name|StatSysCallCache
+name|FileSystemStatCache
 modifier|*
 name|createStatCache
 parameter_list|()

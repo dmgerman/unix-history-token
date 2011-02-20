@@ -24,6 +24,17 @@ name|CONFIG_H
 end_define
 
 begin_comment
+comment|/* Relative directory for resource files */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLANG_RESOURCE_DIR
+value|""
+end_define
+
+begin_comment
 comment|/* 32 bit multilib directory. */
 end_comment
 
@@ -379,6 +390,17 @@ comment|/* #undef HAVE_FDP */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the<fenv.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_FENV_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define if libffi is available on this platform. */
 end_comment
 
@@ -475,14 +497,6 @@ directive|define
 name|HAVE_GETRUSAGE
 value|1
 end_define
-
-begin_comment
-comment|/* Have Darwin getsect() support */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_GETSECT */
-end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `gettimeofday' function. */
@@ -722,14 +736,6 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE_MACH_O_DYLD_H */
-end_comment
-
-begin_comment
-comment|/* Define to 1 if you have the<mach-o/getsect.h> header file. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_MACH_O_GETSECT_H */
 end_comment
 
 begin_comment
@@ -1533,6 +1539,14 @@ comment|/* #undef HAVE_WINDOWS_H */
 end_comment
 
 begin_comment
+comment|/* Define if the xdot.py program is available */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_XDOT_PY */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the `__dso_handle' function. */
 end_comment
 
@@ -1559,18 +1573,40 @@ begin_define
 define|#
 directive|define
 name|LLVM_NATIVE_ARCH
-value|X86Target
+value|X86
 end_define
 
 begin_comment
-comment|/* Short LLVM architecture name for the native architecture, if available */
+comment|/* LLVM name for the native AsmPrinter init function, if available */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|LLVM_NATIVE_ARCHNAME
-value|X86
+name|LLVM_NATIVE_ASMPRINTER
+value|LLVMInitializeX86AsmPrinter
+end_define
+
+begin_comment
+comment|/* LLVM name for the native Target init function, if available */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_NATIVE_TARGET
+value|LLVMInitializeX86Target
+end_define
+
+begin_comment
+comment|/* LLVM name for the native TargetInfo init function, if available */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_NATIVE_TARGETINFO
+value|LLVMInitializeX86TargetInfo
 end_define
 
 begin_comment
@@ -1654,6 +1690,14 @@ end_comment
 
 begin_comment
 comment|/* #undef LLVM_PATH_TWOPI */
+end_comment
+
+begin_comment
+comment|/* Define to path to xdot.py program if found or 'echo xdot.py' otherwise */
+end_comment
+
+begin_comment
+comment|/* #undef LLVM_PATH_XDOT_PY */
 end_comment
 
 begin_comment
@@ -1768,7 +1812,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"llvm 2.8svn"
+value|"llvm 2.9svn"
 end_define
 
 begin_comment
@@ -1790,7 +1834,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"2.8svn"
+value|"2.9svn"
 end_define
 
 begin_comment

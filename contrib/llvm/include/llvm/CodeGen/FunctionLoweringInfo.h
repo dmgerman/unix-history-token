@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/IndexedMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -132,6 +138,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/CallSite.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetRegisterInfo.h"
 end_include
 
 begin_include
@@ -360,13 +372,12 @@ argument_list|)
 block|{}
 block|}
 struct|;
-comment|/// LiveOutRegInfo - Information about live out vregs, indexed by their
-comment|/// register number offset by 'FirstVirtualRegister'.
-name|std
-operator|::
-name|vector
+comment|/// LiveOutRegInfo - Information about live out vregs.
+name|IndexedMap
 operator|<
 name|LiveOutInfo
+operator|,
+name|VirtReg2IndexFunctor
 operator|>
 name|LiveOutRegInfo
 expr_stmt|;

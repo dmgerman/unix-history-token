@@ -225,10 +225,10 @@ literal|0
 block|}
 block|;  }
 expr_stmt|;
-comment|/// alignof - A templated function that returns the mininum alignment of
+comment|/// alignOf - A templated function that returns the minimum alignment of
 comment|///  of a type.  This provides no extra functionality beyond the AlignOf
 comment|///  class besides some cosmetic cleanliness.  Example usage:
-comment|///  alignof<int>() returns the alignment of an int.
+comment|///  alignOf<int>() returns the alignment of an int.
 name|template
 operator|<
 name|typename
@@ -237,7 +237,7 @@ operator|>
 specifier|static
 specifier|inline
 name|unsigned
-name|alignof
+name|alignOf
 argument_list|()
 block|{
 return|return

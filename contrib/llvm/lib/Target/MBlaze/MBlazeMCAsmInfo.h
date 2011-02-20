@@ -88,11 +88,7 @@ name|public
 operator|:
 name|explicit
 name|MBlazeMCAsmInfo
-argument_list|(
-argument|const Target&T
-argument_list|,
-argument|StringRef TT
-argument_list|)
+argument_list|()
 block|;   }
 decl_stmt|;
 block|}

@@ -68,13 +68,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/FoldingSet.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/System/DataTypes.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_include
@@ -87,6 +93,18 @@ begin_include
 include|#
 directive|include
 file|<functional>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_decl_stmt
@@ -135,9 +153,6 @@ name|ImutInfo
 operator|>
 name|class
 name|ImutAVLTree
-operator|:
-name|public
-name|FoldingSetNode
 block|{
 name|public
 operator|:
@@ -190,13 +205,6 @@ operator|<
 name|ImutInfo
 operator|>
 expr_stmt|;
-name|friend
-name|class
-name|FoldingSet
-operator|<
-name|ImutAVLTree
-operator|>
-expr_stmt|;
 typedef|typedef
 name|ImutAVLTreeInOrderIterator
 operator|<
@@ -207,7 +215,7 @@ expr_stmt|;
 comment|//===----------------------------------------------------===//
 comment|// Public Interface.
 comment|//===----------------------------------------------------===//
-comment|/// getLeft - Returns a pointer to the left subtree.  This value
+comment|/// Return a pointer to the left subtree.  This value
 comment|///  is NULL if there is no left subtree.
 name|ImutAVLTree
 operator|*
@@ -216,10 +224,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Left
+name|left
 return|;
 block|}
-comment|/// getRight - Returns a pointer to the right subtree.  This value is
+comment|/// Return a pointer to the right subtree.  This value is
 comment|///  NULL if there is no right subtree.
 name|ImutAVLTree
 operator|*
@@ -228,7 +236,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Right
+name|right
 return|;
 block|}
 comment|/// getHeight - Returns the height of the tree.  A tree with no subtrees
@@ -239,7 +247,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Height
+name|height
 return|;
 block|}
 comment|/// getValue - Returns the data value associated with the tree node.
@@ -251,7 +259,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Value
+name|value
 return|;
 block|}
 comment|/// find - Finds the subtree associated with the specified key value.
@@ -363,9 +371,9 @@ condition|)
 block|{
 name|T
 operator|=
-name|Right
+name|right
 expr_stmt|;
-name|Right
+name|right
 operator|=
 name|T
 operator|->
@@ -479,7 +487,7 @@ end_expr_stmt
 
 begin_decl_stmt
 name|bool
-name|ElementEqual
+name|isElementEqual
 argument_list|(
 name|value_type_ref
 name|V
@@ -548,7 +556,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|bool
-name|ElementEqual
+name|isElementEqual
 argument_list|(
 specifier|const
 name|ImutAVLTree
@@ -558,7 +566,7 @@ argument_list|)
 decl|const
 block|{
 return|return
-name|ElementEqual
+name|isElementEqual
 argument_list|(
 name|RHS
 operator|->
@@ -650,12 +658,12 @@ condition|)
 block|{
 name|LItr
 operator|.
-name|SkipSubTree
+name|skipSubTree
 argument_list|()
 expr_stmt|;
 name|RItr
 operator|.
-name|SkipSubTree
+name|skipSubTree
 argument_list|()
 expr_stmt|;
 continue|continue;
@@ -665,7 +673,7 @@ condition|(
 operator|!
 name|LItr
 operator|->
-name|ElementEqual
+name|isElementEqual
 argument_list|(
 operator|*
 name|RItr
@@ -796,7 +804,7 @@ argument_list|)
 expr_stmt|;
 name|C
 argument_list|(
-name|Value
+name|value
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -822,7 +830,7 @@ end_if
 
 begin_comment
 unit|}
-comment|/// verify - A utility method that checks that the balancing and
+comment|/// validateTree - A utility method that checks that the balancing and
 end_comment
 
 begin_comment
@@ -834,7 +842,7 @@ comment|///  method that returns the height of the tree, which is then consumed
 end_comment
 
 begin_comment
-comment|///  by the enclosing verify call.  External callers should ignore the
+comment|///  by the enclosing validateTree call.  External callers should ignore the
 end_comment
 
 begin_comment
@@ -847,7 +855,7 @@ end_comment
 
 begin_macro
 unit|unsigned
-name|verify
+name|validateTree
 argument_list|()
 end_macro
 
@@ -863,7 +871,7 @@ operator|?
 name|getLeft
 argument_list|()
 operator|->
-name|verify
+name|validateTree
 argument_list|()
 operator|:
 literal|0
@@ -877,7 +885,7 @@ condition|?
 name|getRight
 argument_list|()
 operator|->
-name|verify
+name|validateTree
 argument_list|()
 else|:
 literal|0
@@ -935,6 +943,7 @@ argument_list|)
 block|;
 name|assert
 argument_list|(
+operator|(
 operator|!
 name|getLeft
 argument_list|()
@@ -962,6 +971,7 @@ name|getValue
 argument_list|()
 argument_list|)
 argument_list|)
+operator|)
 operator|&&
 literal|"Value in left child is not less that current value"
 argument_list|)
@@ -969,6 +979,7 @@ block|;
 name|assert
 argument_list|(
 operator|!
+operator|(
 name|getRight
 argument_list|()
 operator|||
@@ -995,6 +1006,7 @@ name|getValue
 argument_list|()
 argument_list|)
 argument_list|)
+operator|)
 operator|&&
 literal|"Current value is not less that value of right child"
 argument_list|)
@@ -1007,37 +1019,11 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// Profile - Profiling for ImutAVLTree.
-end_comment
-
-begin_decl_stmt
-name|void
-name|Profile
-argument_list|(
-name|llvm
-operator|::
-name|FoldingSetNodeID
-operator|&
-name|ID
-argument_list|)
-block|{
-name|ID
-operator|.
-name|AddInteger
-argument_list|(
-name|ComputeDigest
-argument_list|()
-argument_list|)
-expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_comment
 comment|//===----------------------------------------------------===//
 end_comment
 
 begin_comment
-comment|// Internal Values.
+comment|// Internal values.
 end_comment
 
 begin_comment
@@ -1050,22 +1036,43 @@ label|:
 end_label
 
 begin_decl_stmt
-name|ImutAVLTree
+name|Factory
 modifier|*
-name|Left
+name|factory
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|ImutAVLTree
 modifier|*
-name|Right
+name|left
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ImutAVLTree
+modifier|*
+name|right
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ImutAVLTree
+modifier|*
+name|prev
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ImutAVLTree
+modifier|*
+name|next
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|unsigned
-name|Height
+name|height
 range|:
 literal|28
 decl_stmt|;
@@ -1073,7 +1080,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|unsigned
-name|Mutable
+name|IsMutable
 range|:
 literal|1
 decl_stmt|;
@@ -1081,7 +1088,15 @@ end_decl_stmt
 
 begin_decl_stmt
 name|unsigned
-name|CachedDigest
+name|IsDigestCached
+range|:
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|unsigned
+name|IsCanonicalized
 range|:
 literal|1
 decl_stmt|;
@@ -1089,13 +1104,19 @@ end_decl_stmt
 
 begin_decl_stmt
 name|value_type
-name|Value
+name|value
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|uint32_t
-name|Digest
+name|digest
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|uint32_t
+name|refCount
 decl_stmt|;
 end_decl_stmt
 
@@ -1127,6 +1148,8 @@ end_comment
 begin_macro
 name|ImutAVLTree
 argument_list|(
+argument|Factory *f
+argument_list|,
 argument|ImutAVLTree* l
 argument_list|,
 argument|ImutAVLTree* r
@@ -1139,54 +1162,125 @@ end_macro
 
 begin_expr_stmt
 unit|:
-name|Left
+name|factory
+argument_list|(
+name|f
+argument_list|)
+operator|,
+name|left
 argument_list|(
 name|l
 argument_list|)
 operator|,
-name|Right
+name|right
 argument_list|(
 name|r
 argument_list|)
 operator|,
-name|Height
+name|prev
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|next
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|height
 argument_list|(
 name|height
 argument_list|)
 operator|,
-name|Mutable
+name|IsMutable
 argument_list|(
 name|true
 argument_list|)
 operator|,
-name|CachedDigest
+name|IsDigestCached
 argument_list|(
 name|false
 argument_list|)
 operator|,
-name|Value
+name|IsCanonicalized
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|value
 argument_list|(
 name|v
 argument_list|)
 operator|,
-name|Digest
+name|digest
 argument_list|(
 literal|0
 argument_list|)
-block|{}
+operator|,
+name|refCount
+argument_list|(
+literal|0
+argument_list|)
+block|{
+if|if
+condition|(
+name|left
+condition|)
+name|left
+operator|->
+name|retain
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|right
+condition|)
+name|right
+operator|->
+name|retain
+argument_list|()
+expr_stmt|;
+end_if
+
+begin_comment
+unit|}
 comment|/// isMutable - Returns true if the left and right subtree references
+end_comment
+
+begin_comment
 comment|///  (as well as height) can be changed.  If this method returns false,
+end_comment
+
+begin_comment
 comment|///  the tree is truly immutable.  Trees returned from an ImutAVLFactory
+end_comment
+
+begin_comment
 comment|///  object should always have this method return true.  Further, if this
+end_comment
+
+begin_comment
 comment|///  method returns false for an instance of ImutAVLTree, all subtrees
+end_comment
+
+begin_comment
 comment|///  will also have this method return false.  The converse is not true.
-name|bool
+end_comment
+
+begin_macro
+unit|bool
 name|isMutable
 argument_list|()
+end_macro
+
+begin_expr_stmt
 specifier|const
 block|{
 return|return
-name|Mutable
+name|IsMutable
 return|;
 block|}
 end_expr_stmt
@@ -1206,7 +1300,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|CachedDigest
+name|IsDigestCached
 return|;
 block|}
 end_expr_stmt
@@ -1252,7 +1346,7 @@ comment|//===----------------------------------------------------===//
 end_comment
 
 begin_comment
-comment|/// MarkImmutable - Clears the mutable flag for a tree.  After this happens,
+comment|/// markImmutable - Clears the mutable flag for a tree.  After this happens,
 end_comment
 
 begin_comment
@@ -1261,7 +1355,7 @@ end_comment
 
 begin_function
 name|void
-name|MarkImmutable
+name|markImmutable
 parameter_list|()
 block|{
 name|assert
@@ -1272,7 +1366,7 @@ operator|&&
 literal|"Mutable flag already removed."
 argument_list|)
 expr_stmt|;
-name|Mutable
+name|IsMutable
 operator|=
 name|false
 expr_stmt|;
@@ -1280,12 +1374,12 @@ block|}
 end_function
 
 begin_comment
-comment|/// MarkedCachedDigest - Clears the NoCachedDigest flag for a tree.
+comment|/// markedCachedDigest - Clears the NoCachedDigest flag for a tree.
 end_comment
 
 begin_function
 name|void
-name|MarkedCachedDigest
+name|markedCachedDigest
 parameter_list|()
 block|{
 name|assert
@@ -1297,81 +1391,9 @@ operator|&&
 literal|"NoCachedDigest flag already removed."
 argument_list|)
 expr_stmt|;
-name|CachedDigest
+name|IsDigestCached
 operator|=
 name|true
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/// setLeft - Changes the reference of the left subtree.  Used internally
-end_comment
-
-begin_comment
-comment|///   by ImutAVLFactory.
-end_comment
-
-begin_function
-name|void
-name|setLeft
-parameter_list|(
-name|ImutAVLTree
-modifier|*
-name|NewLeft
-parameter_list|)
-block|{
-name|assert
-argument_list|(
-name|isMutable
-argument_list|()
-operator|&&
-literal|"Only a mutable tree can have its left subtree changed."
-argument_list|)
-expr_stmt|;
-name|Left
-operator|=
-name|NewLeft
-expr_stmt|;
-name|CachedDigest
-operator|=
-name|false
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/// setRight - Changes the reference of the right subtree.  Used internally
-end_comment
-
-begin_comment
-comment|///  by ImutAVLFactory.
-end_comment
-
-begin_function
-name|void
-name|setRight
-parameter_list|(
-name|ImutAVLTree
-modifier|*
-name|NewRight
-parameter_list|)
-block|{
-name|assert
-argument_list|(
-name|isMutable
-argument_list|()
-operator|&&
-literal|"Only a mutable tree can have its right subtree changed."
-argument_list|)
-expr_stmt|;
-name|Right
-operator|=
-name|NewRight
-expr_stmt|;
-name|CachedDigest
-operator|=
-name|false
 expr_stmt|;
 block|}
 end_function
@@ -1400,7 +1422,7 @@ operator|&&
 literal|"Only a mutable tree can have its height changed."
 argument_list|)
 expr_stmt|;
-name|Height
+name|height
 operator|=
 name|h
 expr_stmt|;
@@ -1411,7 +1433,7 @@ begin_function
 specifier|static
 specifier|inline
 name|uint32_t
-name|ComputeDigest
+name|computeDigest
 parameter_list|(
 name|ImutAVLTree
 modifier|*
@@ -1438,7 +1460,7 @@ name|digest
 operator|+=
 name|L
 operator|->
-name|ComputeDigest
+name|computeDigest
 argument_list|()
 expr_stmt|;
 comment|// Compute digest of stored data.
@@ -1469,7 +1491,7 @@ name|digest
 operator|+=
 name|R
 operator|->
-name|ComputeDigest
+name|computeDigest
 argument_list|()
 expr_stmt|;
 return|return
@@ -1481,7 +1503,7 @@ end_function
 begin_function
 specifier|inline
 name|uint32_t
-name|ComputeDigest
+name|computeDigest
 parameter_list|()
 block|{
 comment|// Check the lowest bit to determine if digest has actually been
@@ -1492,12 +1514,12 @@ name|hasCachedDigest
 argument_list|()
 condition|)
 return|return
-name|Digest
+name|digest
 return|;
 name|uint32_t
 name|X
 init|=
-name|ComputeDigest
+name|computeDigest
 argument_list|(
 name|getLeft
 argument_list|()
@@ -1509,16 +1531,147 @@ name|getValue
 argument_list|()
 argument_list|)
 decl_stmt|;
-name|Digest
+name|digest
 operator|=
 name|X
 expr_stmt|;
-name|MarkedCachedDigest
+name|markedCachedDigest
 argument_list|()
 expr_stmt|;
 return|return
 name|X
 return|;
+block|}
+end_function
+
+begin_comment
+comment|//===----------------------------------------------------===//
+end_comment
+
+begin_comment
+comment|// Reference count operations.
+end_comment
+
+begin_comment
+comment|//===----------------------------------------------------===//
+end_comment
+
+begin_label
+name|public
+label|:
+end_label
+
+begin_function
+name|void
+name|retain
+parameter_list|()
+block|{
+operator|++
+name|refCount
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|release
+parameter_list|()
+block|{
+name|assert
+argument_list|(
+name|refCount
+operator|>
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|--
+name|refCount
+operator|==
+literal|0
+condition|)
+name|destroy
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|destroy
+parameter_list|()
+block|{
+if|if
+condition|(
+name|left
+condition|)
+name|left
+operator|->
+name|release
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|right
+condition|)
+name|right
+operator|->
+name|release
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|IsCanonicalized
+condition|)
+block|{
+if|if
+condition|(
+name|next
+condition|)
+name|next
+operator|->
+name|prev
+operator|=
+name|prev
+expr_stmt|;
+if|if
+condition|(
+name|prev
+condition|)
+name|prev
+operator|->
+name|next
+operator|=
+name|next
+expr_stmt|;
+else|else
+name|factory
+operator|->
+name|Cache
+index|[
+name|computeDigest
+argument_list|()
+index|]
+operator|=
+name|next
+expr_stmt|;
+block|}
+comment|// We need to clear the mutability bit in case we are
+comment|// destroying the node as part of a sweep in ImutAVLFactory::recoverNodes().
+name|IsMutable
+operator|=
+name|false
+expr_stmt|;
+name|factory
+operator|->
+name|freeNodes
+operator|.
+name|push_back
+argument_list|(
+name|this
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1544,6 +1697,13 @@ operator|>
 name|class
 name|ImutAVLFactory
 block|{
+name|friend
+name|class
+name|ImutAVLTree
+operator|<
+name|ImutInfo
+operator|>
+block|;
 typedef|typedef
 name|ImutAVLTree
 operator|<
@@ -1575,9 +1735,12 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|FoldingSet
+name|DenseMap
 operator|<
+name|unsigned
+operator|,
 name|TreeTy
+operator|*
 operator|>
 name|CacheTy
 expr_stmt|;
@@ -1594,6 +1757,30 @@ name|uintptr_t
 name|Allocator
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|std
+operator|::
+name|vector
+operator|<
+name|TreeTy
+operator|*
+operator|>
+name|createdNodes
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|std
+operator|::
+name|vector
+operator|<
+name|TreeTy
+operator|*
+operator|>
+name|freeNodes
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|bool
@@ -1696,7 +1883,7 @@ end_expr_stmt
 begin_function
 name|TreeTy
 modifier|*
-name|Add
+name|add
 parameter_list|(
 name|TreeTy
 modifier|*
@@ -1708,17 +1895,20 @@ parameter_list|)
 block|{
 name|T
 operator|=
-name|Add_internal
+name|add_internal
 argument_list|(
 name|V
 argument_list|,
 name|T
 argument_list|)
 expr_stmt|;
-name|MarkImmutable
+name|markImmutable
 argument_list|(
 name|T
 argument_list|)
+expr_stmt|;
+name|recoverNodes
+argument_list|()
 expr_stmt|;
 return|return
 name|T
@@ -1729,7 +1919,7 @@ end_function
 begin_function
 name|TreeTy
 modifier|*
-name|Remove
+name|remove
 parameter_list|(
 name|TreeTy
 modifier|*
@@ -1741,17 +1931,20 @@ parameter_list|)
 block|{
 name|T
 operator|=
-name|Remove_internal
+name|remove_internal
 argument_list|(
 name|V
 argument_list|,
 name|T
 argument_list|)
 expr_stmt|;
-name|MarkImmutable
+name|markImmutable
 argument_list|(
 name|T
 argument_list|)
+expr_stmt|;
+name|recoverNodes
+argument_list|()
 expr_stmt|;
 return|return
 name|T
@@ -1762,7 +1955,7 @@ end_function
 begin_expr_stmt
 name|TreeTy
 operator|*
-name|GetEmptyTree
+name|getEmptyTree
 argument_list|()
 specifier|const
 block|{
@@ -1771,6 +1964,11 @@ name|NULL
 return|;
 block|}
 end_expr_stmt
+
+begin_label
+name|protected
+label|:
+end_label
 
 begin_comment
 comment|//===--------------------------------------------------===//
@@ -1796,11 +1994,6 @@ begin_comment
 comment|//===--------------------------------------------------===//
 end_comment
 
-begin_label
-name|protected
-label|:
-end_label
-
 begin_decl_stmt
 name|bool
 name|isEmpty
@@ -1820,7 +2013,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|unsigned
-name|Height
+name|getHeight
 argument_list|(
 name|TreeTy
 operator|*
@@ -1844,7 +2037,7 @@ end_decl_stmt
 begin_decl_stmt
 name|TreeTy
 modifier|*
-name|Left
+name|getLeft
 argument_list|(
 name|TreeTy
 operator|*
@@ -1864,7 +2057,7 @@ end_decl_stmt
 begin_decl_stmt
 name|TreeTy
 modifier|*
-name|Right
+name|getRight
 argument_list|(
 name|TreeTy
 operator|*
@@ -1883,7 +2076,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|value_type_ref
-name|Value
+name|getValue
 argument_list|(
 name|TreeTy
 operator|*
@@ -1894,14 +2087,14 @@ block|{
 return|return
 name|T
 operator|->
-name|Value
+name|value
 return|;
 block|}
 end_decl_stmt
 
 begin_decl_stmt
 name|unsigned
-name|IncrementHeight
+name|incrementHeight
 argument_list|(
 name|TreeTy
 operator|*
@@ -1916,7 +2109,7 @@ block|{
 name|unsigned
 name|hl
 init|=
-name|Height
+name|getHeight
 argument_list|(
 name|L
 argument_list|)
@@ -1924,7 +2117,7 @@ decl_stmt|;
 name|unsigned
 name|hr
 init|=
-name|Height
+name|getHeight
 argument_list|(
 name|R
 argument_list|)
@@ -1948,7 +2141,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|bool
-name|CompareTreeWithSection
+name|compareTreeWithSection
 argument_list|(
 name|TreeTy
 operator|*
@@ -2000,6 +2193,7 @@ operator|,
 operator|++
 name|TI
 control|)
+block|{
 if|if
 condition|(
 name|TI
@@ -2009,7 +2203,7 @@ operator|||
 operator|!
 name|I
 operator|->
-name|ElementEqual
+name|isElementEqual
 argument_list|(
 operator|*
 name|TI
@@ -2018,6 +2212,7 @@ condition|)
 return|return
 name|false
 return|;
+block|}
 return|return
 name|true
 return|;
@@ -2029,7 +2224,7 @@ comment|//===--------------------------------------------------===//
 end_comment
 
 begin_comment
-comment|// "CreateNode" is used to generate new tree roots that link
+comment|// "createNode" is used to generate new tree roots that link
 end_comment
 
 begin_comment
@@ -2063,7 +2258,7 @@ end_comment
 begin_function
 name|TreeTy
 modifier|*
-name|CreateNode
+name|createNode
 parameter_list|(
 name|TreeTy
 modifier|*
@@ -2087,7 +2282,47 @@ decl_stmt|;
 name|TreeTy
 modifier|*
 name|T
-init|=
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|freeNodes
+operator|.
+name|empty
+argument_list|()
+condition|)
+block|{
+name|T
+operator|=
+name|freeNodes
+operator|.
+name|back
+argument_list|()
+expr_stmt|;
+name|freeNodes
+operator|.
+name|pop_back
+argument_list|()
+expr_stmt|;
+name|assert
+argument_list|(
+name|T
+operator|!=
+name|L
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|T
+operator|!=
+name|R
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|T
+operator|=
 operator|(
 name|TreeTy
 operator|*
@@ -2100,25 +2335,35 @@ name|TreeTy
 operator|>
 operator|(
 operator|)
-decl_stmt|;
+expr_stmt|;
+block|}
 name|new
 argument_list|(
 argument|T
 argument_list|)
 name|TreeTy
 argument_list|(
+name|this
+argument_list|,
 name|L
 argument_list|,
 name|R
 argument_list|,
 name|V
 argument_list|,
-name|IncrementHeight
+name|incrementHeight
 argument_list|(
 name|L
 argument_list|,
 name|R
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|createdNodes
+operator|.
+name|push_back
+argument_list|(
+name|T
 argument_list|)
 expr_stmt|;
 return|return
@@ -2130,87 +2375,102 @@ end_function
 begin_function
 name|TreeTy
 modifier|*
-name|CreateNode
+name|createNode
 parameter_list|(
 name|TreeTy
 modifier|*
-name|L
+name|newLeft
 parameter_list|,
 name|TreeTy
 modifier|*
-name|OldTree
+name|oldTree
 parameter_list|,
 name|TreeTy
 modifier|*
-name|R
+name|newRight
 parameter_list|)
 block|{
-name|assert
-argument_list|(
-operator|!
-name|isEmpty
-argument_list|(
-name|OldTree
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|OldTree
-operator|->
-name|isMutable
-argument_list|()
-condition|)
-block|{
-name|OldTree
-operator|->
-name|setLeft
-argument_list|(
-name|L
-argument_list|)
-expr_stmt|;
-name|OldTree
-operator|->
-name|setRight
-argument_list|(
-name|R
-argument_list|)
-expr_stmt|;
-name|OldTree
-operator|->
-name|setHeight
-argument_list|(
-name|IncrementHeight
-argument_list|(
-name|L
-argument_list|,
-name|R
-argument_list|)
-argument_list|)
-expr_stmt|;
 return|return
-name|OldTree
-return|;
-block|}
-else|else
-return|return
-name|CreateNode
+name|createNode
 argument_list|(
-name|L
+name|newLeft
 argument_list|,
-name|Value
+name|getValue
 argument_list|(
-name|OldTree
+name|oldTree
 argument_list|)
 argument_list|,
-name|R
+name|newRight
 argument_list|)
 return|;
 block|}
 end_function
 
+begin_function
+name|void
+name|recoverNodes
+parameter_list|()
+block|{
+for|for
+control|(
+name|unsigned
+name|i
+init|=
+literal|0
+init|,
+name|n
+init|=
+name|createdNodes
+operator|.
+name|size
+argument_list|()
+init|;
+name|i
+operator|<
+name|n
+condition|;
+operator|++
+name|i
+control|)
+block|{
+name|TreeTy
+modifier|*
+name|N
+init|=
+name|createdNodes
+index|[
+name|i
+index|]
+decl_stmt|;
+if|if
+condition|(
+name|N
+operator|->
+name|isMutable
+argument_list|()
+operator|&&
+name|N
+operator|->
+name|refCount
+operator|==
+literal|0
+condition|)
+name|N
+operator|->
+name|destroy
+argument_list|()
+expr_stmt|;
+block|}
+name|createdNodes
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
-comment|/// Balance - Used by Add_internal and Remove_internal to
+comment|/// balanceTree - Used by add_internal and remove_internal to
 end_comment
 
 begin_comment
@@ -2220,7 +2480,7 @@ end_comment
 begin_function
 name|TreeTy
 modifier|*
-name|Balance
+name|balanceTree
 parameter_list|(
 name|TreeTy
 modifier|*
@@ -2237,7 +2497,7 @@ block|{
 name|unsigned
 name|hl
 init|=
-name|Height
+name|getHeight
 argument_list|(
 name|L
 argument_list|)
@@ -2245,7 +2505,7 @@ decl_stmt|;
 name|unsigned
 name|hr
 init|=
-name|Height
+name|getHeight
 argument_list|(
 name|R
 argument_list|)
@@ -2274,7 +2534,7 @@ name|TreeTy
 modifier|*
 name|LL
 init|=
-name|Left
+name|getLeft
 argument_list|(
 name|L
 argument_list|)
@@ -2283,31 +2543,31 @@ name|TreeTy
 modifier|*
 name|LR
 init|=
-name|Right
+name|getRight
 argument_list|(
 name|L
 argument_list|)
 decl_stmt|;
 if|if
 condition|(
-name|Height
+name|getHeight
 argument_list|(
 name|LL
 argument_list|)
 operator|>=
-name|Height
+name|getHeight
 argument_list|(
 name|LR
 argument_list|)
 condition|)
 return|return
-name|CreateNode
+name|createNode
 argument_list|(
 name|LL
 argument_list|,
 name|L
 argument_list|,
-name|CreateNode
+name|createNode
 argument_list|(
 name|LR
 argument_list|,
@@ -2332,7 +2592,7 @@ name|TreeTy
 modifier|*
 name|LRL
 init|=
-name|Left
+name|getLeft
 argument_list|(
 name|LR
 argument_list|)
@@ -2341,15 +2601,15 @@ name|TreeTy
 modifier|*
 name|LRR
 init|=
-name|Right
+name|getRight
 argument_list|(
 name|LR
 argument_list|)
 decl_stmt|;
 return|return
-name|CreateNode
+name|createNode
 argument_list|(
-name|CreateNode
+name|createNode
 argument_list|(
 name|LL
 argument_list|,
@@ -2360,7 +2620,7 @@ argument_list|)
 argument_list|,
 name|LR
 argument_list|,
-name|CreateNode
+name|createNode
 argument_list|(
 name|LRR
 argument_list|,
@@ -2396,7 +2656,7 @@ name|TreeTy
 modifier|*
 name|RL
 init|=
-name|Left
+name|getLeft
 argument_list|(
 name|R
 argument_list|)
@@ -2405,27 +2665,27 @@ name|TreeTy
 modifier|*
 name|RR
 init|=
-name|Right
+name|getRight
 argument_list|(
 name|R
 argument_list|)
 decl_stmt|;
 if|if
 condition|(
-name|Height
+name|getHeight
 argument_list|(
 name|RR
 argument_list|)
 operator|>=
-name|Height
+name|getHeight
 argument_list|(
 name|RL
 argument_list|)
 condition|)
 return|return
-name|CreateNode
+name|createNode
 argument_list|(
-name|CreateNode
+name|createNode
 argument_list|(
 name|L
 argument_list|,
@@ -2454,7 +2714,7 @@ name|TreeTy
 modifier|*
 name|RLL
 init|=
-name|Left
+name|getLeft
 argument_list|(
 name|RL
 argument_list|)
@@ -2463,15 +2723,15 @@ name|TreeTy
 modifier|*
 name|RLR
 init|=
-name|Right
+name|getRight
 argument_list|(
 name|RL
 argument_list|)
 decl_stmt|;
 return|return
-name|CreateNode
+name|createNode
 argument_list|(
-name|CreateNode
+name|createNode
 argument_list|(
 name|L
 argument_list|,
@@ -2482,7 +2742,7 @@ argument_list|)
 argument_list|,
 name|RL
 argument_list|,
-name|CreateNode
+name|createNode
 argument_list|(
 name|RLR
 argument_list|,
@@ -2495,7 +2755,7 @@ return|;
 block|}
 else|else
 return|return
-name|CreateNode
+name|createNode
 argument_list|(
 name|L
 argument_list|,
@@ -2508,7 +2768,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// Add_internal - Creates a new tree that includes the specified
+comment|/// add_internal - Creates a new tree that includes the specified
 end_comment
 
 begin_comment
@@ -2522,7 +2782,7 @@ end_comment
 begin_function
 name|TreeTy
 modifier|*
-name|Add_internal
+name|add_internal
 parameter_list|(
 name|value_type_ref
 name|V
@@ -2540,7 +2800,7 @@ name|T
 argument_list|)
 condition|)
 return|return
-name|CreateNode
+name|createNode
 argument_list|(
 name|T
 argument_list|,
@@ -2575,7 +2835,7 @@ name|ImutInfo
 operator|::
 name|KeyOfValue
 argument_list|(
-name|Value
+name|getValue
 argument_list|(
 name|T
 argument_list|)
@@ -2593,16 +2853,16 @@ name|KCurrent
 argument_list|)
 condition|)
 return|return
-name|CreateNode
+name|createNode
 argument_list|(
-name|Left
+name|getLeft
 argument_list|(
 name|T
 argument_list|)
 argument_list|,
 name|V
 argument_list|,
-name|Right
+name|getRight
 argument_list|(
 name|T
 argument_list|)
@@ -2621,24 +2881,24 @@ name|KCurrent
 argument_list|)
 condition|)
 return|return
-name|Balance
+name|balanceTree
 argument_list|(
-name|Add_internal
+name|add_internal
 argument_list|(
 name|V
 argument_list|,
-name|Left
+name|getLeft
 argument_list|(
 name|T
 argument_list|)
 argument_list|)
 argument_list|,
-name|Value
+name|getValue
 argument_list|(
 name|T
 argument_list|)
 argument_list|,
-name|Right
+name|getRight
 argument_list|(
 name|T
 argument_list|)
@@ -2646,23 +2906,23 @@ argument_list|)
 return|;
 else|else
 return|return
-name|Balance
+name|balanceTree
 argument_list|(
-name|Left
-argument_list|(
-name|T
-argument_list|)
-argument_list|,
-name|Value
+name|getLeft
 argument_list|(
 name|T
 argument_list|)
 argument_list|,
-name|Add_internal
+name|getValue
+argument_list|(
+name|T
+argument_list|)
+argument_list|,
+name|add_internal
 argument_list|(
 name|V
 argument_list|,
-name|Right
+name|getRight
 argument_list|(
 name|T
 argument_list|)
@@ -2673,7 +2933,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// Remove_internal - Creates a new tree that includes all the data
+comment|/// remove_internal - Creates a new tree that includes all the data
 end_comment
 
 begin_comment
@@ -2691,7 +2951,7 @@ end_comment
 begin_function
 name|TreeTy
 modifier|*
-name|Remove_internal
+name|remove_internal
 parameter_list|(
 name|key_type_ref
 name|K
@@ -2727,7 +2987,7 @@ name|ImutInfo
 operator|::
 name|KeyOfValue
 argument_list|(
-name|Value
+name|getValue
 argument_list|(
 name|T
 argument_list|)
@@ -2744,20 +3004,22 @@ argument_list|,
 name|KCurrent
 argument_list|)
 condition|)
+block|{
 return|return
-name|CombineLeftRightTrees
+name|combineTrees
 argument_list|(
-name|Left
+name|getLeft
 argument_list|(
 name|T
 argument_list|)
 argument_list|,
-name|Right
+name|getRight
 argument_list|(
 name|T
 argument_list|)
 argument_list|)
 return|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -2770,49 +3032,52 @@ argument_list|,
 name|KCurrent
 argument_list|)
 condition|)
+block|{
 return|return
-name|Balance
+name|balanceTree
 argument_list|(
-name|Remove_internal
+name|remove_internal
 argument_list|(
 name|K
 argument_list|,
-name|Left
+name|getLeft
 argument_list|(
 name|T
 argument_list|)
 argument_list|)
 argument_list|,
-name|Value
+name|getValue
 argument_list|(
 name|T
 argument_list|)
 argument_list|,
-name|Right
+name|getRight
 argument_list|(
 name|T
 argument_list|)
 argument_list|)
 return|;
+block|}
 else|else
+block|{
 return|return
-name|Balance
+name|balanceTree
 argument_list|(
-name|Left
-argument_list|(
-name|T
-argument_list|)
-argument_list|,
-name|Value
+name|getLeft
 argument_list|(
 name|T
 argument_list|)
 argument_list|,
-name|Remove_internal
+name|getValue
+argument_list|(
+name|T
+argument_list|)
+argument_list|,
+name|remove_internal
 argument_list|(
 name|K
 argument_list|,
-name|Right
+name|getRight
 argument_list|(
 name|T
 argument_list|)
@@ -2820,12 +3085,13 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+block|}
 end_function
 
 begin_function
 name|TreeTy
 modifier|*
-name|CombineLeftRightTrees
+name|combineTrees
 parameter_list|(
 name|TreeTy
 modifier|*
@@ -2862,9 +3128,9 @@ name|OldNode
 decl_stmt|;
 name|TreeTy
 modifier|*
-name|NewRight
+name|newRight
 init|=
-name|RemoveMinBinding
+name|removeMinBinding
 argument_list|(
 name|R
 argument_list|,
@@ -2872,16 +3138,16 @@ name|OldNode
 argument_list|)
 decl_stmt|;
 return|return
-name|Balance
+name|balanceTree
 argument_list|(
 name|L
 argument_list|,
-name|Value
+name|getValue
 argument_list|(
 name|OldNode
 argument_list|)
 argument_list|,
-name|NewRight
+name|newRight
 argument_list|)
 return|;
 block|}
@@ -2890,7 +3156,7 @@ end_function
 begin_function
 name|TreeTy
 modifier|*
-name|RemoveMinBinding
+name|removeMinBinding
 parameter_list|(
 name|TreeTy
 modifier|*
@@ -2899,7 +3165,7 @@ parameter_list|,
 name|TreeTy
 modifier|*
 modifier|&
-name|NodeRemoved
+name|Noderemoved
 parameter_list|)
 block|{
 name|assert
@@ -2915,43 +3181,43 @@ if|if
 condition|(
 name|isEmpty
 argument_list|(
-name|Left
+name|getLeft
 argument_list|(
 name|T
 argument_list|)
 argument_list|)
 condition|)
 block|{
-name|NodeRemoved
+name|Noderemoved
 operator|=
 name|T
 expr_stmt|;
 return|return
-name|Right
+name|getRight
 argument_list|(
 name|T
 argument_list|)
 return|;
 block|}
 return|return
-name|Balance
+name|balanceTree
 argument_list|(
-name|RemoveMinBinding
+name|removeMinBinding
 argument_list|(
-name|Left
-argument_list|(
-name|T
-argument_list|)
-argument_list|,
-name|NodeRemoved
-argument_list|)
-argument_list|,
-name|Value
+name|getLeft
 argument_list|(
 name|T
 argument_list|)
 argument_list|,
-name|Right
+name|Noderemoved
+argument_list|)
+argument_list|,
+name|getValue
+argument_list|(
+name|T
+argument_list|)
+argument_list|,
+name|getRight
 argument_list|(
 name|T
 argument_list|)
@@ -2961,7 +3227,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// MarkImmutable - Clears the mutable bits of a root and all of its
+comment|/// markImmutable - Clears the mutable bits of a root and all of its
 end_comment
 
 begin_comment
@@ -2970,7 +3236,7 @@ end_comment
 
 begin_function
 name|void
-name|MarkImmutable
+name|markImmutable
 parameter_list|(
 name|TreeTy
 modifier|*
@@ -2991,20 +3257,20 @@ condition|)
 return|return;
 name|T
 operator|->
-name|MarkImmutable
+name|markImmutable
 argument_list|()
 expr_stmt|;
-name|MarkImmutable
+name|markImmutable
 argument_list|(
-name|Left
+name|getLeft
 argument_list|(
 name|T
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|MarkImmutable
+name|markImmutable
 argument_list|(
-name|Right
+name|getRight
 argument_list|(
 name|T
 argument_list|)
@@ -3021,7 +3287,7 @@ end_label
 begin_function
 name|TreeTy
 modifier|*
-name|GetCanonicalTree
+name|getCanonicalTree
 parameter_list|(
 name|TreeTy
 modifier|*
@@ -3034,92 +3300,65 @@ operator|!
 name|TNew
 condition|)
 return|return
-name|NULL
+literal|0
 return|;
-comment|// Search the FoldingSet bucket for a Tree with the same digest.
-name|FoldingSetNodeID
-name|ID
-decl_stmt|;
+if|if
+condition|(
+name|TNew
+operator|->
+name|IsCanonicalized
+condition|)
+return|return
+name|TNew
+return|;
+comment|// Search the hashtable for another tree with the same digest, and
+comment|// if find a collision compare those trees by their contents.
 name|unsigned
 name|digest
 init|=
 name|TNew
 operator|->
-name|ComputeDigest
+name|computeDigest
 argument_list|()
 decl_stmt|;
-name|ID
-operator|.
-name|AddInteger
-argument_list|(
-name|digest
-argument_list|)
-expr_stmt|;
-name|unsigned
-name|hash
+name|TreeTy
+modifier|*
+modifier|&
+name|entry
 init|=
-name|ID
-operator|.
-name|ComputeHash
-argument_list|()
+name|Cache
+index|[
+name|digest
+index|]
 decl_stmt|;
-name|typename
-name|CacheTy
-operator|::
-name|bucket_iterator
-name|I
-operator|=
-name|Cache
-operator|.
-name|bucket_begin
-argument_list|(
-name|hash
-argument_list|)
-expr_stmt|;
-name|typename
-name|CacheTy
-operator|::
-name|bucket_iterator
-name|E
-operator|=
-name|Cache
-operator|.
-name|bucket_end
-argument_list|(
-name|hash
-argument_list|)
-expr_stmt|;
+do|do
+block|{
+if|if
+condition|(
+operator|!
+name|entry
+condition|)
+break|break;
 for|for
 control|(
-init|;
-name|I
-operator|!=
-name|E
-condition|;
-operator|++
-name|I
-control|)
-block|{
 name|TreeTy
 modifier|*
 name|T
 init|=
-operator|&
-operator|*
-name|I
-decl_stmt|;
-if|if
-condition|(
+name|entry
+init|;
+name|T
+operator|!=
+literal|0
+condition|;
+name|T
+operator|=
 name|T
 operator|->
-name|ComputeDigest
-argument_list|()
-operator|!=
-name|digest
-condition|)
-continue|continue;
-comment|// We found a collision.  Perform a comparison of Contents('T')
-comment|// with Contents('TNew')
+name|next
+control|)
+block|{
+comment|// Compare the Contents('T') with Contents('TNew')
 name|typename
 name|TreeTy
 operator|::
@@ -3141,7 +3380,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|CompareTreeWithSection
+name|compareTreeWithSection
 argument_list|(
 name|TNew
 argument_list|,
@@ -3160,30 +3399,50 @@ condition|)
 continue|continue;
 comment|// T has more contents than TNew.
 comment|// Trees did match!  Return 'T'.
+if|if
+condition|(
+name|TNew
+operator|->
+name|refCount
+operator|==
+literal|0
+condition|)
+name|TNew
+operator|->
+name|destroy
+argument_list|()
+expr_stmt|;
 return|return
 name|T
 return|;
 block|}
-comment|// 'TNew' is the only tree of its kind.  Return it.
-name|Cache
-operator|.
-name|InsertNode
-argument_list|(
+name|entry
+operator|->
+name|prev
+operator|=
 name|TNew
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-operator|&
-operator|*
-name|Cache
-operator|.
-name|bucket_end
-argument_list|(
-name|hash
-argument_list|)
-argument_list|)
+expr_stmt|;
+name|TNew
+operator|->
+name|next
+operator|=
+name|entry
+expr_stmt|;
+block|}
+do|while
+condition|(
+name|false
+condition|)
+do|;
+name|entry
+operator|=
+name|TNew
+expr_stmt|;
+name|TNew
+operator|->
+name|IsCanonicalized
+operator|=
+name|true
 expr_stmt|;
 return|return
 name|TNew
@@ -3357,7 +3616,7 @@ end_function
 
 begin_expr_stmt
 name|bool
-name|AtEnd
+name|atEnd
 argument_list|()
 specifier|const
 block|{
@@ -3372,7 +3631,7 @@ end_expr_stmt
 
 begin_expr_stmt
 name|bool
-name|AtBeginning
+name|atBeginning
 argument_list|()
 specifier|const
 block|{
@@ -3394,7 +3653,7 @@ end_expr_stmt
 
 begin_function
 name|void
-name|SkipToParent
+name|skipToParent
 parameter_list|()
 block|{
 name|assert
@@ -3680,7 +3939,7 @@ break|break;
 case|case
 name|VisitedRight
 case|:
-name|SkipToParent
+name|skipToParent
 argument_list|()
 expr_stmt|;
 break|break;
@@ -4046,7 +4305,7 @@ condition|(
 operator|!
 name|InternalItr
 operator|.
-name|AtEnd
+name|atEnd
 argument_list|()
 operator|&&
 name|InternalItr
@@ -4086,7 +4345,7 @@ condition|(
 operator|!
 name|InternalItr
 operator|.
-name|AtBeginning
+name|atBeginning
 argument_list|()
 operator|&&
 name|InternalItr
@@ -4111,12 +4370,12 @@ end_return
 begin_function
 unit|}    inline
 name|void
-name|SkipSubTree
+name|skipSubTree
 parameter_list|()
 block|{
 name|InternalItr
 operator|.
-name|SkipToParent
+name|skipToParent
 argument_list|()
 expr_stmt|;
 while|while
@@ -4124,7 +4383,7 @@ condition|(
 operator|!
 name|InternalItr
 operator|.
-name|AtEnd
+name|atEnd
 argument_list|()
 operator|&&
 name|InternalItr
@@ -4926,7 +5185,138 @@ name|Root
 argument_list|(
 argument|R
 argument_list|)
-block|{}
+block|{
+if|if
+condition|(
+name|Root
+condition|)
+block|{
+name|Root
+operator|->
+name|retain
+argument_list|()
+expr_stmt|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+unit|}   ImmutableSet
+operator|(
+specifier|const
+name|ImmutableSet
+operator|&
+name|X
+operator|)
+operator|:
+name|Root
+argument_list|(
+argument|X.Root
+argument_list|)
+block|{
+if|if
+condition|(
+name|Root
+condition|)
+block|{
+name|Root
+operator|->
+name|retain
+argument_list|()
+expr_stmt|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+unit|}   ImmutableSet
+operator|&
+name|operator
+operator|=
+operator|(
+specifier|const
+name|ImmutableSet
+operator|&
+name|X
+operator|)
+block|{
+if|if
+condition|(
+name|Root
+operator|!=
+name|X
+operator|.
+name|Root
+condition|)
+block|{
+if|if
+condition|(
+name|X
+operator|.
+name|Root
+condition|)
+block|{
+name|X
+operator|.
+name|Root
+operator|->
+name|retain
+argument_list|()
+expr_stmt|;
+block|}
+end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|Root
+condition|)
+block|{
+name|Root
+operator|->
+name|release
+argument_list|()
+expr_stmt|;
+block|}
+end_if
+
+begin_expr_stmt
+name|Root
+operator|=
+name|X
+operator|.
+name|Root
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+unit|}     return
+operator|*
+name|this
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+unit|}   ~
+name|ImmutableSet
+argument_list|()
+end_macro
+
+begin_block
+block|{
+if|if
+condition|(
+name|Root
+condition|)
+block|{
+name|Root
+operator|->
+name|release
+argument_list|()
+expr_stmt|;
+block|}
+block|}
+end_block
+
+begin_decl_stmt
 name|class
 name|Factory
 block|{
@@ -4935,18 +5325,18 @@ name|TreeTy
 operator|::
 name|Factory
 name|F
-block|;
+expr_stmt|;
 specifier|const
 name|bool
 name|Canonicalize
-block|;
+decl_stmt|;
 name|public
-operator|:
+label|:
 name|Factory
 argument_list|(
 argument|bool canonicalize = true
 argument_list|)
-operator|:
+block|:
 name|Canonicalize
 argument_list|(
 argument|canonicalize
@@ -4958,20 +5348,20 @@ argument|BumpPtrAllocator& Alloc
 argument_list|,
 argument|bool canonicalize = true
 argument_list|)
-operator|:
+block|:
 name|F
 argument_list|(
 name|Alloc
 argument_list|)
-block|,
+operator|,
 name|Canonicalize
 argument_list|(
 argument|canonicalize
 argument_list|)
 block|{}
-comment|/// GetEmptySet - Returns an immutable set that contains no elements.
+comment|/// getEmptySet - Returns an immutable set that contains no elements.
 name|ImmutableSet
-name|GetEmptySet
+name|getEmptySet
 argument_list|()
 block|{
 return|return
@@ -4979,12 +5369,12 @@ name|ImmutableSet
 argument_list|(
 name|F
 operator|.
-name|GetEmptyTree
+name|getEmptyTree
 argument_list|()
 argument_list|)
 return|;
 block|}
-comment|/// Add - Creates a new immutable set that contains all of the values
+comment|/// add - Creates a new immutable set that contains all of the values
 comment|///  of the original set with the addition of the specified value.  If
 comment|///  the original set already included the value, then the original set is
 comment|///  returned and no memory is allocated.  The time and space complexity
@@ -4992,77 +5382,7 @@ comment|///  of this operation is logarithmic in the size of the original set.
 comment|///  The memory allocated to represent the set is released when the
 comment|///  factory object that created the set is destroyed.
 name|ImmutableSet
-name|Add
-argument_list|(
-argument|ImmutableSet Old
-argument_list|,
-argument|value_type_ref V
-argument_list|)
-block|{
-name|TreeTy
-operator|*
-name|NewT
-operator|=
-name|F
-operator|.
-name|Add
-argument_list|(
-name|Old
-operator|.
-name|Root
-argument_list|,
-name|V
-argument_list|)
-block|;
-return|return
-name|ImmutableSet
-argument_list|(
-name|Canonicalize
-condition|?
-name|F
-operator|.
-name|GetCanonicalTree
-argument_list|(
-name|NewT
-argument_list|)
-else|:
-name|NewT
-argument_list|)
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-comment|/// Remove - Creates a new immutable set that contains all of the values
-end_comment
-
-begin_comment
-comment|///  of the original set with the exception of the specified value.  If
-end_comment
-
-begin_comment
-comment|///  the original set did not contain the value, the original set is
-end_comment
-
-begin_comment
-comment|///  returned and no memory is allocated.  The time and space complexity
-end_comment
-
-begin_comment
-comment|///  of this operation is logarithmic in the size of the original set.
-end_comment
-
-begin_comment
-comment|///  The memory allocated to represent the set is released when the
-end_comment
-
-begin_comment
-comment|///  factory object that created the set is destroyed.
-end_comment
-
-begin_function
-name|ImmutableSet
-name|Remove
+name|add
 parameter_list|(
 name|ImmutableSet
 name|Old
@@ -5077,7 +5397,7 @@ name|NewT
 init|=
 name|F
 operator|.
-name|Remove
+name|add
 argument_list|(
 name|Old
 operator|.
@@ -5093,7 +5413,7 @@ name|Canonicalize
 condition|?
 name|F
 operator|.
-name|GetCanonicalTree
+name|getCanonicalTree
 argument_list|(
 name|NewT
 argument_list|)
@@ -5102,9 +5422,54 @@ name|NewT
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_function
+comment|/// remove - Creates a new immutable set that contains all of the values
+comment|///  of the original set with the exception of the specified value.  If
+comment|///  the original set did not contain the value, the original set is
+comment|///  returned and no memory is allocated.  The time and space complexity
+comment|///  of this operation is logarithmic in the size of the original set.
+comment|///  The memory allocated to represent the set is released when the
+comment|///  factory object that created the set is destroyed.
+name|ImmutableSet
+name|remove
+parameter_list|(
+name|ImmutableSet
+name|Old
+parameter_list|,
+name|value_type_ref
+name|V
+parameter_list|)
+block|{
+name|TreeTy
+modifier|*
+name|NewT
+init|=
+name|F
+operator|.
+name|remove
+argument_list|(
+name|Old
+operator|.
+name|Root
+argument_list|,
+name|V
+argument_list|)
+decl_stmt|;
+return|return
+name|ImmutableSet
+argument_list|(
+name|Canonicalize
+condition|?
+name|F
+operator|.
+name|getCanonicalTree
+argument_list|(
+name|NewT
+argument_list|)
+else|:
+name|NewT
+argument_list|)
+return|;
+block|}
 name|BumpPtrAllocator
 modifier|&
 name|getAllocator
@@ -5117,14 +5482,8 @@ name|getAllocator
 argument_list|()
 return|;
 block|}
-end_function
-
-begin_label
 name|private
 label|:
-end_label
-
-begin_expr_stmt
 name|Factory
 argument_list|(
 specifier|const
@@ -5133,13 +5492,7 @@ operator|&
 name|RHS
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|// DO NOT IMPLEMENT
-end_comment
-
-begin_decl_stmt
 name|void
 name|operator
 init|=
@@ -5150,14 +5503,15 @@ operator|&
 name|RHS
 operator|)
 decl_stmt|;
+comment|// DO NOT IMPLEMENT
+block|}
 end_decl_stmt
 
-begin_comment
-comment|// DO NOT IMPLEMENT
-end_comment
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_decl_stmt
-unit|};
 name|friend
 name|class
 name|Factory
@@ -5165,7 +5519,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// contains - Returns true if the set contains the specified value.
+comment|/// Returns true if the set contains the specified value.
 end_comment
 
 begin_decl_stmt
@@ -5197,7 +5551,9 @@ name|bool
 name|operator
 operator|==
 operator|(
+specifier|const
 name|ImmutableSet
+operator|&
 name|RHS
 operator|)
 specifier|const
@@ -5233,7 +5589,9 @@ name|bool
 name|operator
 operator|!=
 operator|(
+specifier|const
 name|ImmutableSet
+operator|&
 name|RHS
 operator|)
 specifier|const
@@ -5270,6 +5628,17 @@ modifier|*
 name|getRoot
 parameter_list|()
 block|{
+if|if
+condition|(
+name|Root
+condition|)
+block|{
+name|Root
+operator|->
+name|retain
+argument_list|()
+expr_stmt|;
+block|}
 return|return
 name|Root
 return|;
@@ -5702,7 +6071,7 @@ end_comment
 
 begin_expr_stmt
 name|void
-name|verify
+name|validateTree
 argument_list|()
 specifier|const
 block|{
@@ -5712,7 +6081,7 @@ name|Root
 condition|)
 name|Root
 operator|->
-name|verify
+name|validateTree
 argument_list|()
 expr_stmt|;
 block|}

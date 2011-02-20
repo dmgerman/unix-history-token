@@ -135,7 +135,16 @@ name|PImpl
 argument_list|(
 literal|0
 argument_list|)
-block|{}
+block|{
+name|initializeLazyValueInfoPass
+argument_list|(
+operator|*
+name|PassRegistry
+operator|::
+name|getPassRegistry
+argument_list|()
+argument_list|)
+block|;   }
 operator|~
 name|LazyValueInfo
 argument_list|()

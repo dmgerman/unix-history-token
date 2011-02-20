@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/FileSystemOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -109,11 +115,28 @@ directive|include
 file|<sys/types.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
-end_include
+begin_struct_decl
+struct_decl|struct
+name|stat
+struct_decl|;
+end_struct_decl
+
+begin_decl_stmt
+name|namespace
+name|llvm
+block|{
+name|class
+name|MemoryBuffer
+decl_stmt|;
+name|namespace
+name|sys
+block|{
+name|class
+name|Path
+decl_stmt|;
+block|}
+block|}
+end_decl_stmt
 
 begin_decl_stmt
 name|namespace
@@ -122,7 +145,11 @@ block|{
 name|class
 name|FileManager
 decl_stmt|;
-comment|/// DirectoryEntry - Cached information about one directory on the disk.
+name|class
+name|FileSystemStatCache
+decl_stmt|;
+comment|/// DirectoryEntry - Cached information about one directory (either on
+comment|/// the disk or in the virtual file system).
 comment|///
 name|class
 name|DirectoryEntry
@@ -160,7 +187,9 @@ return|;
 block|}
 block|}
 empty_stmt|;
-comment|/// FileEntry - Cached information about one file on the disk.
+comment|/// FileEntry - Cached information about one file (either on the disk
+comment|/// or in the virtual file system).  If the 'FD' member is valid, then
+comment|/// this FileEntry has an open file descriptor for the file.
 comment|///
 name|class
 name|FileEntry
@@ -201,6 +230,12 @@ name|mode_t
 name|FileMode
 decl_stmt|;
 comment|// The file mode as returned by 'stat'.
+comment|/// FD - The file descriptor for the file entry if it is opened and owned
+comment|/// by the FileEntry.  If not, this is set to -1.
+name|mutable
+name|int
+name|FD
+decl_stmt|;
 name|friend
 name|class
 name|FileManager
@@ -233,7 +268,13 @@ argument_list|)
 operator|,
 name|FileMode
 argument_list|(
-argument|m
+name|m
+argument_list|)
+operator|,
+name|FD
+argument_list|(
+argument|-
+literal|1
 argument_list|)
 block|{}
 comment|// Add a default constructor for use with llvm::StringMap
@@ -259,7 +300,78 @@ name|FileMode
 argument_list|(
 literal|0
 argument_list|)
+operator|,
+name|FD
+argument_list|(
+argument|-
+literal|1
+argument_list|)
 block|{}
+name|FileEntry
+argument_list|(
+argument|const FileEntry&FE
+argument_list|)
+block|{
+name|memcpy
+argument_list|(
+name|this
+argument_list|,
+operator|&
+name|FE
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|FE
+argument_list|)
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|FD
+operator|==
+operator|-
+literal|1
+operator|&&
+literal|"Cannot copy a file-owning FileEntry"
+argument_list|)
+block|;   }
+name|void
+name|operator
+operator|=
+operator|(
+specifier|const
+name|FileEntry
+operator|&
+name|FE
+operator|)
+block|{
+name|memcpy
+argument_list|(
+name|this
+argument_list|,
+operator|&
+name|FE
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|FE
+argument_list|)
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|FD
+operator|==
+operator|-
+literal|1
+operator|&&
+literal|"Cannot assign a file-owning FileEntry"
+argument_list|)
+block|;   }
+operator|~
+name|FileEntry
+argument_list|()
+expr_stmt|;
 specifier|const
 name|char
 operator|*
@@ -373,311 +485,47 @@ return|;
 block|}
 block|}
 empty_stmt|;
-comment|/// \brief Abstract interface for introducing a FileManager cache for 'stat'
-comment|/// system calls, which is used by precompiled and pretokenized headers to
-comment|/// improve performance.
-name|class
-name|StatSysCallCache
-block|{
-name|protected
-label|:
-name|llvm
-operator|::
-name|OwningPtr
-operator|<
-name|StatSysCallCache
-operator|>
-name|NextStatCache
-expr_stmt|;
-name|public
-label|:
-name|virtual
-operator|~
-name|StatSysCallCache
-argument_list|()
-block|{}
-name|virtual
-name|int
-name|stat
-argument_list|(
-argument|const char *path
-argument_list|,
-argument|struct stat *buf
-argument_list|)
-block|{
-if|if
-condition|(
-name|getNextStatCache
-argument_list|()
-condition|)
-return|return
-name|getNextStatCache
-argument_list|()
-operator|->
-name|stat
-argument_list|(
-name|path
-argument_list|,
-name|buf
-argument_list|)
-return|;
-return|return
-operator|::
-name|stat
-argument_list|(
-name|path
-argument_list|,
-name|buf
-argument_list|)
-return|;
-block|}
-comment|/// \brief Sets the next stat call cache in the chain of stat caches.
-comment|/// Takes ownership of the given stat cache.
-name|void
-name|setNextStatCache
-parameter_list|(
-name|StatSysCallCache
-modifier|*
-name|Cache
-parameter_list|)
-block|{
-name|NextStatCache
-operator|.
-name|reset
-argument_list|(
-name|Cache
-argument_list|)
-expr_stmt|;
-block|}
-comment|/// \brief Retrieve the next stat call cache in the chain.
-name|StatSysCallCache
-modifier|*
-name|getNextStatCache
-parameter_list|()
-block|{
-return|return
-name|NextStatCache
-operator|.
-name|get
-argument_list|()
-return|;
-block|}
-comment|/// \brief Retrieve the next stat call cache in the chain, transferring
-comment|/// ownership of this cache (and, transitively, all of the remaining caches)
-comment|/// to the caller.
-name|StatSysCallCache
-modifier|*
-name|takeNextStatCache
-parameter_list|()
-block|{
-return|return
-name|NextStatCache
-operator|.
-name|take
-argument_list|()
-return|;
-block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
-comment|/// \brief A stat "cache" that can be used by FileManager to keep
-end_comment
-
-begin_comment
-comment|/// track of the results of stat() calls that occur throughout the
-end_comment
-
-begin_comment
-comment|/// execution of the front end.
-end_comment
-
-begin_decl_stmt
-name|class
-name|MemorizeStatCalls
-range|:
-name|public
-name|StatSysCallCache
-block|{
-name|public
-operator|:
-comment|/// \brief The result of a stat() call.
-comment|///
-comment|/// The first member is the result of calling stat(). If stat()
-comment|/// found something, the second member is a copy of the stat
-comment|/// structure.
-typedef|typedef
-name|std
-operator|::
-name|pair
-operator|<
-name|int
-operator|,
-expr_stmt|struct
-name|stat
-operator|>
-name|StatResult
-expr_stmt|;
-comment|/// \brief The set of stat() calls that have been
-name|llvm
-operator|::
-name|StringMap
-operator|<
-name|StatResult
-block|,
-name|llvm
-operator|::
-name|BumpPtrAllocator
-operator|>
-name|StatCalls
-decl_stmt|;
-end_decl_stmt
-
-begin_typedef
-typedef|typedef
-name|llvm
-operator|::
-name|StringMap
-operator|<
-name|StatResult
-operator|,
-name|llvm
-operator|::
-name|BumpPtrAllocator
-operator|>
-operator|::
-name|const_iterator
-name|iterator
-expr_stmt|;
-end_typedef
-
-begin_expr_stmt
-name|iterator
-name|begin
-argument_list|()
-specifier|const
-block|{
-return|return
-name|StatCalls
-operator|.
-name|begin
-argument_list|()
-return|;
-block|}
-end_expr_stmt
-
-begin_expr_stmt
-name|iterator
-name|end
-argument_list|()
-specifier|const
-block|{
-return|return
-name|StatCalls
-operator|.
-name|end
-argument_list|()
-return|;
-block|}
-end_expr_stmt
-
-begin_function_decl
-name|virtual
-name|int
-name|stat
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|path
-parameter_list|,
-name|struct
-name|stat
-modifier|*
-name|buf
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-unit|};
 comment|/// FileManager - Implements support for file system lookup, file system
-end_comment
-
-begin_comment
 comment|/// caching, and directory search management.  This also handles more advanced
-end_comment
-
-begin_comment
 comment|/// properties, such as uniquing files based on "inode", so that a file with two
-end_comment
-
-begin_comment
 comment|/// names (e.g. symlinked) will be treated as a single file.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_decl_stmt
 name|class
 name|FileManager
 block|{
+name|FileSystemOptions
+name|FileSystemOpts
+decl_stmt|;
 name|class
 name|UniqueDirContainer
 decl_stmt|;
 name|class
 name|UniqueFileContainer
 decl_stmt|;
-comment|/// UniqueDirs/UniqueFiles - Cache for existing directories/files.
+comment|/// UniqueRealDirs/UniqueRealFiles - Cache for existing real directories/files.
 comment|///
 name|UniqueDirContainer
 modifier|&
-name|UniqueDirs
+name|UniqueRealDirs
 decl_stmt|;
 name|UniqueFileContainer
 modifier|&
-name|UniqueFiles
+name|UniqueRealFiles
 decl_stmt|;
-comment|/// DirEntries/FileEntries - This is a cache of directory/file entries we have
-comment|/// looked up.  The actual Entry is owned by UniqueFiles/UniqueDirs above.
-comment|///
+comment|/// \brief The virtual directories that we have allocated.  For each
+comment|/// virtual file (e.g. foo/bar/baz.cpp), we add all of its parent
+comment|/// directories (foo/ and foo/bar/) here.
 name|llvm
 operator|::
-name|StringMap
+name|SmallVector
 operator|<
 name|DirectoryEntry
 operator|*
 operator|,
-name|llvm
-operator|::
-name|BumpPtrAllocator
+literal|4
 operator|>
-name|DirEntries
+name|VirtualDirectoryEntries
 expr_stmt|;
-name|llvm
-operator|::
-name|StringMap
-operator|<
-name|FileEntry
-operator|*
-operator|,
-name|llvm
-operator|::
-name|BumpPtrAllocator
-operator|>
-name|FileEntries
-expr_stmt|;
-comment|/// NextFileUID - Each FileEntry we create is assigned a unique ID #.
-comment|///
-name|unsigned
-name|NextFileUID
-decl_stmt|;
 comment|/// \brief The virtual files that we have allocated.
 name|llvm
 operator|::
@@ -690,6 +538,44 @@ literal|4
 operator|>
 name|VirtualFileEntries
 expr_stmt|;
+comment|/// SeenDirEntries/SeenFileEntries - This is a cache that maps paths
+comment|/// to directory/file entries (either real or virtual) we have
+comment|/// looked up.  The actual Entries for real directories/files are
+comment|/// owned by UniqueRealDirs/UniqueRealFiles above, while the Entries
+comment|/// for virtual directories/files are owned by
+comment|/// VirtualDirectoryEntries/VirtualFileEntries above.
+comment|///
+name|llvm
+operator|::
+name|StringMap
+operator|<
+name|DirectoryEntry
+operator|*
+operator|,
+name|llvm
+operator|::
+name|BumpPtrAllocator
+operator|>
+name|SeenDirEntries
+expr_stmt|;
+name|llvm
+operator|::
+name|StringMap
+operator|<
+name|FileEntry
+operator|*
+operator|,
+name|llvm
+operator|::
+name|BumpPtrAllocator
+operator|>
+name|SeenFileEntries
+expr_stmt|;
+comment|/// NextFileUID - Each FileEntry we create is assigned a unique ID #.
+comment|///
+name|unsigned
+name|NextFileUID
+decl_stmt|;
 comment|// Statistics.
 name|unsigned
 name|NumDirLookups
@@ -706,57 +592,54 @@ name|llvm
 operator|::
 name|OwningPtr
 operator|<
-name|StatSysCallCache
+name|FileSystemStatCache
 operator|>
 name|StatCache
 expr_stmt|;
-name|int
-name|stat_cached
+name|bool
+name|getStatValue
 parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|path
+name|Path
 parameter_list|,
 name|struct
 name|stat
+modifier|&
+name|StatBuf
+parameter_list|,
+name|int
 modifier|*
-name|buf
+name|FileDescriptor
 parameter_list|)
-block|{
-return|return
-name|StatCache
-operator|.
-name|get
-argument_list|()
-condition|?
-name|StatCache
-operator|->
-name|stat
+function_decl|;
+comment|/// Add all ancestors of the given path (pointing to either a file
+comment|/// or a directory) as virtual directories.
+name|void
+name|addAncestorsAsVirtualDirs
 argument_list|(
-name|path
-argument_list|,
-name|buf
+name|llvm
+operator|::
+name|StringRef
+name|Path
 argument_list|)
-else|:
-name|stat
-argument_list|(
-name|path
-argument_list|,
-name|buf
-argument_list|)
-return|;
-block|}
+decl_stmt|;
 name|public
 label|:
 name|FileManager
-argument_list|()
+argument_list|(
+specifier|const
+name|FileSystemOptions
+operator|&
+name|FileSystemOpts
+argument_list|)
 expr_stmt|;
 operator|~
 name|FileManager
 argument_list|()
 expr_stmt|;
-comment|/// \brief Installs the provided StatSysCallCache object within
+comment|/// \brief Installs the provided FileSystemStatCache object within
 comment|/// the FileManager.
 comment|///
 comment|/// Ownership of this object is transferred to the FileManager.
@@ -770,7 +653,7 @@ comment|/// the end of the chain.
 name|void
 name|addStatCache
 parameter_list|(
-name|StatSysCallCache
+name|FileSystemStatCache
 modifier|*
 name|statCache
 parameter_list|,
@@ -780,17 +663,17 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
-comment|/// \brief Removes the provided StatSysCallCache object from the file manager.
+comment|/// \brief Removes the specified FileSystemStatCache object from the manager.
 name|void
 name|removeStatCache
 parameter_list|(
-name|StatSysCallCache
+name|FileSystemStatCache
 modifier|*
 name|statCache
 parameter_list|)
 function_decl|;
-comment|/// getDirectory - Lookup, cache, and verify the specified directory.  This
-comment|/// returns null if the directory doesn't exist.
+comment|/// getDirectory - Lookup, cache, and verify the specified directory
+comment|/// (real or virtual).  This returns NULL if the directory doesn't exist.
 comment|///
 specifier|const
 name|DirectoryEntry
@@ -800,42 +683,11 @@ argument_list|(
 name|llvm
 operator|::
 name|StringRef
-name|Filename
+name|DirName
 argument_list|)
-block|{
-return|return
-name|getDirectory
-argument_list|(
-name|Filename
-operator|.
-name|begin
-argument_list|()
-argument_list|,
-name|Filename
-operator|.
-name|end
-argument_list|()
-argument_list|)
-return|;
-block|}
-specifier|const
-name|DirectoryEntry
-modifier|*
-name|getDirectory
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|FileStart
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|FileEnd
-parameter_list|)
-function_decl|;
-comment|/// getFile - Lookup, cache, and verify the specified file.  This returns null
-comment|/// if the file doesn't exist.
+decl_stmt|;
+comment|/// getFile - Lookup, cache, and verify the specified file (real or
+comment|/// virtual).  This returns NULL if the file doesn't exist.
 comment|///
 specifier|const
 name|FileEntry
@@ -847,38 +699,7 @@ operator|::
 name|StringRef
 name|Filename
 argument_list|)
-block|{
-return|return
-name|getFile
-argument_list|(
-name|Filename
-operator|.
-name|begin
-argument_list|()
-argument_list|,
-name|Filename
-operator|.
-name|end
-argument_list|()
-argument_list|)
-return|;
-block|}
-specifier|const
-name|FileEntry
-modifier|*
-name|getFile
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|FilenameStart
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|FilenameEnd
-parameter_list|)
-function_decl|;
+decl_stmt|;
 comment|/// \brief Retrieve a file entry for a "virtual" file that acts as
 comment|/// if there were a file with the given name on disk. The file
 comment|/// itself is not accessed.
@@ -899,20 +720,90 @@ name|time_t
 name|ModificationTime
 argument_list|)
 decl_stmt|;
+comment|/// \brief Open the specified file as a MemoryBuffer, returning a new
+comment|/// MemoryBuffer if successful, otherwise returning null.
+name|llvm
+operator|::
+name|MemoryBuffer
+operator|*
+name|getBufferForFile
+argument_list|(
+specifier|const
+name|FileEntry
+operator|*
+name|Entry
+argument_list|,
+name|std
+operator|::
+name|string
+operator|*
+name|ErrorStr
+operator|=
+literal|0
+argument_list|)
+expr_stmt|;
+name|llvm
+operator|::
+name|MemoryBuffer
+operator|*
+name|getBufferForFile
+argument_list|(
+argument|llvm::StringRef Filename
+argument_list|,
+argument|std::string *ErrorStr =
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/// \brief If path is not absolute and FileSystemOptions set the working
+comment|/// directory, the path is modified to be relative to the given
+comment|/// working directory.
+specifier|static
+name|void
+name|FixupRelativePath
+argument_list|(
+name|llvm
+operator|::
+name|sys
+operator|::
+name|Path
+operator|&
+name|path
+argument_list|,
+specifier|const
+name|FileSystemOptions
+operator|&
+name|FSOpts
+argument_list|)
+decl_stmt|;
+comment|/// \brief Produce an array mapping from the unique IDs assigned to each
+comment|/// file to the corresponding FileEntry pointer.
+name|void
+name|GetUniqueIDMapping
+argument_list|(
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+specifier|const
+name|FileEntry
+operator|*
+operator|>
+operator|&
+name|UIDToFiles
+argument_list|)
+decl|const
+decl_stmt|;
 name|void
 name|PrintStats
 argument_list|()
 specifier|const
 expr_stmt|;
 block|}
+empty_stmt|;
+block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
 comment|// end namespace clang
 end_comment
 

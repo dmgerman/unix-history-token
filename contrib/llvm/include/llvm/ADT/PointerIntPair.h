@@ -374,6 +374,43 @@ name|IntShift
 block|;
 comment|// Set new integer.
 block|}
+name|PointerTy
+specifier|const
+operator|*
+name|getAddrOfPointer
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|Value
+operator|==
+name|reinterpret_cast
+operator|<
+name|intptr_t
+operator|>
+operator|(
+name|getPointer
+argument_list|()
+operator|)
+operator|&&
+literal|"Can only return the address if IntBits is cleared and "
+literal|"PtrTraits doesn't change the pointer"
+argument_list|)
+block|;
+return|return
+name|reinterpret_cast
+operator|<
+name|PointerTy
+specifier|const
+operator|*
+operator|>
+operator|(
+operator|&
+name|Value
+operator|)
+return|;
+block|}
 name|void
 operator|*
 name|getOpaqueValue

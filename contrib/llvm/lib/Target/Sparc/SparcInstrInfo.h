@@ -189,6 +189,30 @@ argument_list|)
 specifier|const
 block|;
 name|virtual
+name|bool
+name|AnalyzeBranch
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock *&TBB
+argument_list|,
+argument|MachineBasicBlock *&FBB
+argument_list|,
+argument|SmallVectorImpl<MachineOperand>&Cond
+argument_list|,
+argument|bool AllowModify = false
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|unsigned
+name|RemoveBranch
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|)
+specifier|const
+block|;
+name|virtual
 name|unsigned
 name|InsertBranch
 argument_list|(

@@ -52,7 +52,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/System/DataTypes.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_include
@@ -95,6 +95,9 @@ name|String
 block|,
 comment|// Integer values.
 name|Integer
+block|,
+comment|// Real values.
+name|Real
 block|,
 comment|// Register values (stored in IntVal).  Only used by TargetAsmLexer.
 name|Register

@@ -118,13 +118,6 @@ argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
-name|bool
-name|hasFP
-argument_list|(
-argument|const MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
 name|void
 name|eliminateCallFramePseudoInstr
 argument_list|(
@@ -144,23 +137,6 @@ argument_list|,
 argument|int SPAdj
 argument_list|,
 argument|RegScavenger *RS = NULL
-argument_list|)
-specifier|const
-block|;
-comment|//void processFunctionBeforeFrameFinalized(MachineFunction&MF) const;
-name|void
-name|emitPrologue
-argument_list|(
-argument|MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
-name|void
-name|emitEpilogue
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|MachineBasicBlock&MBB
 argument_list|)
 specifier|const
 block|;
@@ -205,12 +181,6 @@ name|getPrettyName
 argument_list|(
 argument|unsigned reg
 argument_list|)
-block|;
-name|private
-operator|:
-name|mutable
-name|int
-name|curgpdist
 block|; }
 decl_stmt|;
 block|}

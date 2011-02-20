@@ -73,18 +73,40 @@ begin_define
 define|#
 directive|define
 name|LLVM_NATIVE_ARCH
-value|X86Target
+value|X86
 end_define
 
 begin_comment
-comment|/* Short LLVM architecture name for the native architecture, if available */
+comment|/* LLVM name for the native Target init function, if available */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|LLVM_NATIVE_ARCHNAME
-value|X86
+name|LLVM_NATIVE_TARGET
+value|LLVMInitializeX86Target
+end_define
+
+begin_comment
+comment|/* LLVM name for the native TargetInfo init function, if available */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_NATIVE_TARGETINFO
+value|LLVMInitializeX86TargetInfo
+end_define
+
+begin_comment
+comment|/* LLVM name for the native AsmPrinter init function, if available */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_NATIVE_ASMPRINTER
+value|LLVMInitializeX86AsmPrinter
 end_define
 
 begin_comment

@@ -168,6 +168,9 @@ block|{
 name|class
 name|MacroDefinition
 decl_stmt|;
+name|class
+name|FileEntry
+decl_stmt|;
 comment|/// \brief Base class that describes a preprocessed entity, which may be a
 comment|/// preprocessor directive or macro instantiation.
 name|class
@@ -191,13 +194,17 @@ block|,
 comment|/// \brief A macro definition.
 name|MacroDefinitionKind
 block|,
+comment|/// \brief An inclusion directive, such as \c #include, \c
+comment|/// #import, or \c #include_next.
+name|InclusionDirectiveKind
+block|,
 name|FirstPreprocessingDirective
 init|=
 name|PreprocessingDirectiveKind
 block|,
 name|LastPreprocessingDirective
 init|=
-name|MacroDefinitionKind
+name|InclusionDirectiveKind
 block|}
 enum|;
 name|private
@@ -660,6 +667,163 @@ return|;
 block|}
 expr|}
 block|;
+comment|/// \brief Record the location of an inclusion directive, such as an
+comment|/// \c #include or \c #import statement.
+name|class
+name|InclusionDirective
+operator|:
+name|public
+name|PreprocessingDirective
+block|{
+name|public
+operator|:
+comment|/// \brief The kind of inclusion directives known to the
+comment|/// preprocessor.
+expr|enum
+name|InclusionKind
+block|{
+comment|/// \brief An \c #include directive.
+name|Include
+block|,
+comment|/// \brief An Objective-C \c #import directive.
+name|Import
+block|,
+comment|/// \brief A GNU \c #include_next directive.
+name|IncludeNext
+block|,
+comment|/// \brief A Clang \c #__include_macros directive.
+name|IncludeMacros
+block|}
+block|;
+name|private
+operator|:
+comment|/// \brief The name of the file that was included, as written in
+comment|/// the source.
+name|llvm
+operator|::
+name|StringRef
+name|FileName
+block|;
+comment|/// \brief Whether the file name was in quotation marks; otherwise, it was
+comment|/// in angle brackets.
+name|unsigned
+name|InQuotes
+operator|:
+literal|1
+block|;
+comment|/// \brief The kind of inclusion directive we have.
+comment|///
+comment|/// This is a value of type InclusionKind.
+name|unsigned
+name|Kind
+operator|:
+literal|2
+block|;
+comment|/// \brief The file that was included.
+specifier|const
+name|FileEntry
+operator|*
+name|File
+block|;
+name|public
+operator|:
+name|InclusionDirective
+argument_list|(
+argument|PreprocessingRecord&PPRec
+argument_list|,
+argument|InclusionKind Kind
+argument_list|,
+argument|llvm::StringRef FileName
+argument_list|,
+argument|bool InQuotes
+argument_list|,
+argument|const FileEntry *File
+argument_list|,
+argument|SourceRange Range
+argument_list|)
+block|;
+comment|/// \brief Determine what kind of inclusion directive this is.
+name|InclusionKind
+name|getKind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|static_cast
+operator|<
+name|InclusionKind
+operator|>
+operator|(
+name|Kind
+operator|)
+return|;
+block|}
+comment|/// \brief Retrieve the included file name as it was written in the source.
+name|llvm
+operator|::
+name|StringRef
+name|getFileName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FileName
+return|;
+block|}
+comment|/// \brief Determine whether the included file name was written in quotes;
+comment|/// otherwise, it was written in angle brackets.
+name|bool
+name|wasInQuotes
+argument_list|()
+specifier|const
+block|{
+return|return
+name|InQuotes
+return|;
+block|}
+comment|/// \brief Retrieve the file entry for the actual file that was included
+comment|/// by this directive.
+specifier|const
+name|FileEntry
+operator|*
+name|getFile
+argument_list|()
+specifier|const
+block|{
+return|return
+name|File
+return|;
+block|}
+comment|// Implement isa/cast/dyncast/etc.
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const PreprocessedEntity *PE
+argument_list|)
+block|{
+return|return
+name|PE
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|InclusionDirectiveKind
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const InclusionDirective *
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+expr|}
+block|;
 comment|/// \brief An abstract class that should be subclassed by any external source
 comment|/// of preprocessing record entries.
 name|class
@@ -678,6 +842,17 @@ name|virtual
 name|void
 name|ReadPreprocessedEntities
 argument_list|()
+operator|=
+literal|0
+block|;
+comment|/// \brief Read the preprocessed entity at the given offset.
+name|virtual
+name|PreprocessedEntity
+operator|*
+name|ReadPreprocessedEntityAtOffset
+argument_list|(
+argument|uint64_t Offset
+argument_list|)
 operator|=
 literal|0
 block|;   }
@@ -845,6 +1020,26 @@ argument_list|,
 argument|unsigned NumPreallocatedEntities
 argument_list|)
 block|;
+comment|/// \brief Retrieve the external source for preprocessed entities.
+name|ExternalPreprocessingRecordSource
+operator|*
+name|getExternalSource
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ExternalSource
+return|;
+block|}
+name|unsigned
+name|getNumPreallocatedEntities
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NumPreallocatedEntities
+return|;
+block|}
 comment|/// \brief Set the preallocated entry at the given index to the given
 comment|/// preprocessed entity.
 name|void
@@ -927,9 +1122,9 @@ name|void
 name|MacroDefined
 argument_list|(
 specifier|const
-name|IdentifierInfo
-operator|*
-name|II
+name|Token
+operator|&
+name|Id
 argument_list|,
 specifier|const
 name|MacroInfo
@@ -941,11 +1136,32 @@ name|virtual
 name|void
 name|MacroUndefined
 argument_list|(
-argument|SourceLocation Loc
+specifier|const
+name|Token
+operator|&
+name|Id
 argument_list|,
-argument|const IdentifierInfo *II
+specifier|const
+name|MacroInfo
+operator|*
+name|MI
+argument_list|)
+block|;
+name|virtual
+name|void
+name|InclusionDirective
+argument_list|(
+argument|SourceLocation HashLoc
 argument_list|,
-argument|const MacroInfo *MI
+argument|const Token&IncludeTok
+argument_list|,
+argument|llvm::StringRef FileName
+argument_list|,
+argument|bool IsAngled
+argument_list|,
+argument|const FileEntry *File
+argument_list|,
+argument|SourceLocation EndLoc
 argument_list|)
 block|;   }
 block|; }
@@ -981,17 +1197,11 @@ name|void
 name|operator
 name|delete
 argument_list|(
-name|void
-operator|*
-name|ptr
+argument|void* ptr
 argument_list|,
-name|clang
-operator|::
-name|PreprocessingRecord
-operator|&
-name|PR
+argument|clang::PreprocessingRecord& PR
 argument_list|,
-name|unsigned
+argument|unsigned
 argument_list|)
 name|throw
 argument_list|()
@@ -1002,8 +1212,7 @@ name|Deallocate
 argument_list|(
 name|ptr
 argument_list|)
-expr_stmt|;
-block|}
+block|; }
 end_decl_stmt
 
 begin_endif

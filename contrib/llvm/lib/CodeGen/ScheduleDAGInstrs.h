@@ -590,6 +590,11 @@ name|MachineFrameInfo
 operator|*
 name|MFI
 block|;
+specifier|const
+name|InstrItineraryData
+operator|*
+name|InstrItins
+block|;
 comment|/// Defs, Uses - Remember where defs and uses of each physical register
 comment|/// are as we iterate upward through the instructions. This is allocated
 comment|/// here instead of inside BuildSchedGraph to avoid the need for it to be
@@ -812,6 +817,17 @@ name|AliasAnalysis
 operator|*
 name|AA
 argument_list|)
+block|;
+comment|/// AddSchedBarrierDeps - Add dependencies from instructions in the current
+comment|/// list of instructions being scheduled to scheduling barrier. We want to
+comment|/// make sure instructions which define registers that are either used by
+comment|/// the terminator or are live-out are properly scheduled. This is
+comment|/// especially important when the definition latency of the return value(s)
+comment|/// are too high to be hidden by the branch or when the liveout registers
+comment|/// used by instructions in the fallthrough block.
+name|void
+name|AddSchedBarrierDeps
+argument_list|()
 block|;
 comment|/// ComputeLatency - Compute node latency.
 comment|///

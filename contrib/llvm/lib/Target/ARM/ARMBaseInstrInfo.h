@@ -77,6 +77,18 @@ directive|include
 file|"llvm/Target/TargetInstrInfo.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallSet.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -101,7 +113,7 @@ comment|//===------------------------------------------------------------------=
 comment|// This four-bit field describes the addressing mode used.
 name|AddrModeMask
 init|=
-literal|0xf
+literal|0x1f
 block|,
 name|AddrModeNone
 init|=
@@ -170,10 +182,14 @@ init|=
 literal|15
 block|,
 comment|// i8 * 4
+name|AddrMode_i12
+init|=
+literal|16
+block|,
 comment|// Size* - Flags to keep track of the size of an instruction.
 name|SizeShift
 init|=
-literal|4
+literal|5
 block|,
 name|SizeMask
 init|=
@@ -202,7 +218,7 @@ comment|// IndexMode - Unindex, pre-indexed, or post-indexed are valid for load
 comment|// and store ops only.  Generic "updating" flag is used for ld/st multiple.
 name|IndexModeShift
 init|=
-literal|7
+literal|8
 block|,
 name|IndexModeMask
 init|=
@@ -227,7 +243,7 @@ comment|// Instruction encoding formats.
 comment|//
 name|FormShift
 init|=
-literal|9
+literal|10
 block|,
 name|FormMask
 init|=
@@ -506,7 +522,7 @@ name|UnaryDP
 init|=
 literal|1
 operator|<<
-literal|15
+literal|16
 block|,
 comment|// Xform16Bit - Indicates this Thumb2 instruction may be transformed into
 comment|// a 16-bit Thumb instruction if certain conditions are met.
@@ -514,13 +530,13 @@ name|Xform16Bit
 init|=
 literal|1
 operator|<<
-literal|16
+literal|17
 block|,
 comment|//===------------------------------------------------------------------===//
 comment|// Code domain.
 name|DomainShift
 init|=
-literal|17
+literal|18
 block|,
 name|DomainMask
 init|=
@@ -549,6 +565,13 @@ block|,
 comment|//===------------------------------------------------------------------===//
 comment|// Field shifts - such shifts are used to set field while generating
 comment|// machine instructions.
+comment|//
+comment|// FIXME: This list will need adjusting/fixing as the MC code emitter
+comment|// takes shape and the ARMCodeEmitter.cpp bits go away.
+name|ShiftTypeShift
+init|=
+literal|4
+block|,
 name|M_BitShift
 init|=
 literal|5
@@ -630,23 +653,6 @@ init|=
 literal|28
 block|}
 enum|;
-comment|/// Target Operand Flag enum.
-enum|enum
-name|TOF
-block|{
-comment|//===------------------------------------------------------------------===//
-comment|// ARM Specific MachineOperand flags.
-name|MO_NO_FLAG
-block|,
-comment|/// MO_LO16 - On a symbol operand, this represents a relocation containing
-comment|/// lower 16 bit of the address. Used only via movw instruction.
-name|MO_LO16
-block|,
-comment|/// MO_HI16 - On a symbol operand, this represents a relocation containing
-comment|/// higher 16 bit of the address. Used only via movt instruction.
-name|MO_HI16
-block|}
-enum|;
 block|}
 name|class
 name|ARMBaseInstrInfo
@@ -719,16 +725,23 @@ return|return
 name|Subtarget
 return|;
 block|}
-name|bool
-name|spillCalleeSavedRegisters
+name|ScheduleHazardRecognizer
+operator|*
+name|CreateTargetHazardRecognizer
 argument_list|(
-argument|MachineBasicBlock&MBB
+argument|const TargetMachine *TM
 argument_list|,
-argument|MachineBasicBlock::iterator MI
+argument|const ScheduleDAG *DAG
+argument_list|)
+specifier|const
+block|;
+name|ScheduleHazardRecognizer
+operator|*
+name|CreateTargetPostRAHazardRecognizer
+argument_list|(
+argument|const InstrItineraryData *II
 argument_list|,
-argument|const std::vector<CalleeSavedInfo>&CSI
-argument_list|,
-argument|const TargetRegisterInfo *TRI
+argument|const ScheduleDAG *DAG
 argument_list|)
 specifier|const
 block|;
@@ -1037,6 +1050,8 @@ argument_list|(
 argument|const MachineInstr *MI0
 argument_list|,
 argument|const MachineInstr *MI1
+argument_list|,
+argument|const MachineRegisterInfo *MRI
 argument_list|)
 specifier|const
 block|;
@@ -1101,7 +1116,13 @@ name|isProfitableToIfCvt
 argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|,
-argument|unsigned NumInstrs
+argument|unsigned NumCyles
+argument_list|,
+argument|unsigned ExtraPredCycles
+argument_list|,
+argument|float Prob
+argument_list|,
+argument|float Confidence
 argument_list|)
 specifier|const
 block|;
@@ -1113,9 +1134,17 @@ argument|MachineBasicBlock&TMBB
 argument_list|,
 argument|unsigned NumT
 argument_list|,
+argument|unsigned ExtraT
+argument_list|,
 argument|MachineBasicBlock&FMBB
 argument_list|,
 argument|unsigned NumF
+argument_list|,
+argument|unsigned ExtraF
+argument_list|,
+argument|float Probability
+argument_list|,
+argument|float Confidence
 argument_list|)
 specifier|const
 block|;
@@ -1125,14 +1154,16 @@ name|isProfitableToDupForIfCvt
 argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|,
-argument|unsigned NumInstrs
+argument|unsigned NumCyles
+argument_list|,
+argument|float Probability
+argument_list|,
+argument|float Confidence
 argument_list|)
 specifier|const
 block|{
 return|return
-name|NumInstrs
-operator|&&
-name|NumInstrs
+name|NumCyles
 operator|==
 literal|1
 return|;
@@ -1148,35 +1179,309 @@ argument|const MachineInstr *MI
 argument_list|,
 argument|unsigned&SrcReg
 argument_list|,
+argument|int&CmpMask
+argument_list|,
 argument|int&CmpValue
 argument_list|)
 specifier|const
 block|;
-comment|/// ConvertToSetZeroFlag - Convert the instruction to set the zero flag so
+comment|/// OptimizeCompareInstr - Convert the instruction to set the zero flag so
 comment|/// that we can remove a "comparison with zero".
 name|virtual
 name|bool
-name|ConvertToSetZeroFlag
+name|OptimizeCompareInstr
 argument_list|(
-argument|MachineInstr *Instr
-argument_list|,
 argument|MachineInstr *CmpInstr
+argument_list|,
+argument|unsigned SrcReg
+argument_list|,
+argument|int CmpMask
+argument_list|,
+argument|int CmpValue
+argument_list|,
+argument|const MachineRegisterInfo *MRI
 argument_list|)
 specifier|const
-block|; }
-decl_stmt|;
+block|;
+comment|/// FoldImmediate - 'Reg' is known to be defined by a move immediate
+comment|/// instruction, try to fold the immediate into the use instruction.
+name|virtual
+name|bool
+name|FoldImmediate
+argument_list|(
+argument|MachineInstr *UseMI
+argument_list|,
+argument|MachineInstr *DefMI
+argument_list|,
+argument|unsigned Reg
+argument_list|,
+argument|MachineRegisterInfo *MRI
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|unsigned
+name|getNumMicroOps
+argument_list|(
+argument|const InstrItineraryData *ItinData
+argument_list|,
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|int
+name|getOperandLatency
+argument_list|(
+argument|const InstrItineraryData *ItinData
+argument_list|,
+argument|const MachineInstr *DefMI
+argument_list|,
+argument|unsigned DefIdx
+argument_list|,
+argument|const MachineInstr *UseMI
+argument_list|,
+argument|unsigned UseIdx
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|int
+name|getOperandLatency
+argument_list|(
+argument|const InstrItineraryData *ItinData
+argument_list|,
+argument|SDNode *DefNode
+argument_list|,
+argument|unsigned DefIdx
+argument_list|,
+argument|SDNode *UseNode
+argument_list|,
+argument|unsigned UseIdx
+argument_list|)
+specifier|const
+block|;
+name|private
+operator|:
+name|int
+name|getVLDMDefCycle
+argument_list|(
+argument|const InstrItineraryData *ItinData
+argument_list|,
+argument|const TargetInstrDesc&DefTID
+argument_list|,
+argument|unsigned DefClass
+argument_list|,
+argument|unsigned DefIdx
+argument_list|,
+argument|unsigned DefAlign
+argument_list|)
+specifier|const
+block|;
+name|int
+name|getLDMDefCycle
+argument_list|(
+argument|const InstrItineraryData *ItinData
+argument_list|,
+argument|const TargetInstrDesc&DefTID
+argument_list|,
+argument|unsigned DefClass
+argument_list|,
+argument|unsigned DefIdx
+argument_list|,
+argument|unsigned DefAlign
+argument_list|)
+specifier|const
+block|;
+name|int
+name|getVSTMUseCycle
+argument_list|(
+argument|const InstrItineraryData *ItinData
+argument_list|,
+argument|const TargetInstrDesc&UseTID
+argument_list|,
+argument|unsigned UseClass
+argument_list|,
+argument|unsigned UseIdx
+argument_list|,
+argument|unsigned UseAlign
+argument_list|)
+specifier|const
+block|;
+name|int
+name|getSTMUseCycle
+argument_list|(
+argument|const InstrItineraryData *ItinData
+argument_list|,
+argument|const TargetInstrDesc&UseTID
+argument_list|,
+argument|unsigned UseClass
+argument_list|,
+argument|unsigned UseIdx
+argument_list|,
+argument|unsigned UseAlign
+argument_list|)
+specifier|const
+block|;
+name|int
+name|getOperandLatency
+argument_list|(
+argument|const InstrItineraryData *ItinData
+argument_list|,
+argument|const TargetInstrDesc&DefTID
+argument_list|,
+argument|unsigned DefIdx
+argument_list|,
+argument|unsigned DefAlign
+argument_list|,
+argument|const TargetInstrDesc&UseTID
+argument_list|,
+argument|unsigned UseIdx
+argument_list|,
+argument|unsigned UseAlign
+argument_list|)
+specifier|const
+block|;
+name|int
+name|getInstrLatency
+argument_list|(
+argument|const InstrItineraryData *ItinData
+argument_list|,
+argument|const MachineInstr *MI
+argument_list|,
+argument|unsigned *PredCost =
+literal|0
+argument_list|)
+specifier|const
+block|;
+name|int
+name|getInstrLatency
+argument_list|(
+argument|const InstrItineraryData *ItinData
+argument_list|,
+argument|SDNode *Node
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|hasHighOperandLatency
+argument_list|(
+argument|const InstrItineraryData *ItinData
+argument_list|,
+argument|const MachineRegisterInfo *MRI
+argument_list|,
+argument|const MachineInstr *DefMI
+argument_list|,
+argument|unsigned DefIdx
+argument_list|,
+argument|const MachineInstr *UseMI
+argument_list|,
+argument|unsigned UseIdx
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|hasLowDefLatency
+argument_list|(
+argument|const InstrItineraryData *ItinData
+argument_list|,
+argument|const MachineInstr *DefMI
+argument_list|,
+argument|unsigned DefIdx
+argument_list|)
+specifier|const
+block|;
+name|private
+operator|:
+comment|/// Modeling special VFP / NEON fp MLA / MLS hazards.
+comment|/// MLxEntryMap - Map fp MLA / MLS to the corresponding entry in the internal
+comment|/// MLx table.
+name|DenseMap
+operator|<
+name|unsigned
+block|,
+name|unsigned
+operator|>
+name|MLxEntryMap
+block|;
+comment|/// MLxHazardOpcodes - Set of add / sub and multiply opcodes that would cause
+comment|/// stalls when scheduled together with fp MLA / MLS opcodes.
+name|SmallSet
+operator|<
+name|unsigned
+block|,
+literal|16
+operator|>
+name|MLxHazardOpcodes
+block|;
+name|public
+operator|:
+comment|/// isFpMLxInstruction - Return true if the specified opcode is a fp MLA / MLS
+comment|/// instruction.
+name|bool
+name|isFpMLxInstruction
+argument_list|(
+argument|unsigned Opcode
+argument_list|)
+specifier|const
+block|{
+return|return
+name|MLxEntryMap
+operator|.
+name|count
+argument_list|(
+name|Opcode
+argument_list|)
+return|;
+block|}
+comment|/// isFpMLxInstruction - This version also returns the multiply opcode and the
+comment|/// addition / subtraction opcode to expand to. Return true for 'HasLane' for
+comment|/// the MLX instructions with an extra lane operand.
+name|bool
+name|isFpMLxInstruction
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|unsigned&MulOpc
+argument_list|,
+argument|unsigned&AddSubOpc
+argument_list|,
+argument|bool&NegAcc
+argument_list|,
+argument|bool&HasLane
+argument_list|)
+specifier|const
+block|;
+comment|/// canCauseFpMLxStall - Return true if an instruction of the specified opcode
+comment|/// will cause stalls when scheduled after (within 4-cycle window) a fp
+comment|/// MLA / MLS instruction.
+name|bool
+name|canCauseFpMLxStall
+argument_list|(
+argument|unsigned Opcode
+argument_list|)
+specifier|const
+block|{
+return|return
+name|MLxHazardOpcodes
+operator|.
+name|count
+argument_list|(
+name|Opcode
+argument_list|)
+return|;
+block|}
+expr|}
+block|;
 specifier|static
 specifier|inline
 specifier|const
 name|MachineInstrBuilder
-modifier|&
+operator|&
 name|AddDefaultPred
-parameter_list|(
-specifier|const
-name|MachineInstrBuilder
-modifier|&
-name|MIB
-parameter_list|)
+argument_list|(
+argument|const MachineInstrBuilder&MIB
+argument_list|)
 block|{
 return|return
 name|MIB
@@ -1201,14 +1506,11 @@ specifier|static
 specifier|inline
 specifier|const
 name|MachineInstrBuilder
-modifier|&
+operator|&
 name|AddDefaultCC
-parameter_list|(
-specifier|const
-name|MachineInstrBuilder
-modifier|&
-name|MIB
-parameter_list|)
+argument_list|(
+argument|const MachineInstrBuilder&MIB
+argument_list|)
 block|{
 return|return
 name|MIB
@@ -1223,19 +1525,13 @@ specifier|static
 specifier|inline
 specifier|const
 name|MachineInstrBuilder
-modifier|&
+operator|&
 name|AddDefaultT1CC
-parameter_list|(
-specifier|const
-name|MachineInstrBuilder
-modifier|&
-name|MIB
-parameter_list|,
-name|bool
-name|isDead
-init|=
-name|false
-parameter_list|)
+argument_list|(
+argument|const MachineInstrBuilder&MIB
+argument_list|,
+argument|bool isDead = false
+argument_list|)
 block|{
 return|return
 name|MIB
@@ -1262,14 +1558,11 @@ specifier|static
 specifier|inline
 specifier|const
 name|MachineInstrBuilder
-modifier|&
+operator|&
 name|AddNoT1CC
-parameter_list|(
-specifier|const
-name|MachineInstrBuilder
-modifier|&
-name|MIB
-parameter_list|)
+argument_list|(
+argument|const MachineInstrBuilder&MIB
+argument_list|)
 block|{
 return|return
 name|MIB
@@ -1284,10 +1577,9 @@ specifier|static
 specifier|inline
 name|bool
 name|isUncondBranchOpcode
-parameter_list|(
-name|int
-name|Opc
-parameter_list|)
+argument_list|(
+argument|int Opc
+argument_list|)
 block|{
 return|return
 name|Opc
@@ -1313,10 +1605,9 @@ specifier|static
 specifier|inline
 name|bool
 name|isCondBranchOpcode
-parameter_list|(
-name|int
-name|Opc
-parameter_list|)
+argument_list|(
+argument|int Opc
+argument_list|)
 block|{
 return|return
 name|Opc
@@ -1342,10 +1633,9 @@ specifier|static
 specifier|inline
 name|bool
 name|isJumpTableBranchOpcode
-parameter_list|(
-name|int
-name|Opc
-parameter_list|)
+argument_list|(
+argument|int Opc
+argument_list|)
 block|{
 return|return
 name|Opc
@@ -1383,17 +1673,16 @@ specifier|static
 specifier|inline
 name|bool
 name|isIndirectBranchOpcode
-parameter_list|(
-name|int
-name|Opc
-parameter_list|)
+argument_list|(
+argument|int Opc
+argument_list|)
 block|{
 return|return
 name|Opc
 operator|==
 name|ARM
 operator|::
-name|BRIND
+name|BX
 operator|||
 name|Opc
 operator|==
@@ -1425,146 +1714,112 @@ name|unsigned
 operator|&
 name|PredReg
 argument_list|)
-expr_stmt|;
+block|;
 name|int
 name|getMatchingCondBranchOpcode
-parameter_list|(
-name|int
-name|Opc
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|int Opc
+argument_list|)
+block|;
 comment|/// emitARMRegPlusImmediate / emitT2RegPlusImmediate - Emits a series of
 comment|/// instructions to materializea destreg = basereg + immediate in ARM / Thumb2
 comment|/// code.
 name|void
 name|emitARMRegPlusImmediate
 argument_list|(
-name|MachineBasicBlock
-operator|&
-name|MBB
+argument|MachineBasicBlock&MBB
 argument_list|,
-name|MachineBasicBlock
-operator|::
-name|iterator
-operator|&
-name|MBBI
+argument|MachineBasicBlock::iterator&MBBI
 argument_list|,
-name|DebugLoc
-name|dl
+argument|DebugLoc dl
 argument_list|,
-name|unsigned
-name|DestReg
+argument|unsigned DestReg
 argument_list|,
-name|unsigned
-name|BaseReg
+argument|unsigned BaseReg
 argument_list|,
-name|int
-name|NumBytes
+argument|int NumBytes
 argument_list|,
-name|ARMCC
-operator|::
-name|CondCodes
-name|Pred
+argument|ARMCC::CondCodes Pred
 argument_list|,
-name|unsigned
-name|PredReg
+argument|unsigned PredReg
 argument_list|,
-specifier|const
-name|ARMBaseInstrInfo
-operator|&
-name|TII
+argument|const ARMBaseInstrInfo&TII
 argument_list|)
-decl_stmt|;
+block|;
 name|void
 name|emitT2RegPlusImmediate
 argument_list|(
-name|MachineBasicBlock
-operator|&
-name|MBB
+argument|MachineBasicBlock&MBB
 argument_list|,
-name|MachineBasicBlock
-operator|::
-name|iterator
-operator|&
-name|MBBI
+argument|MachineBasicBlock::iterator&MBBI
 argument_list|,
-name|DebugLoc
-name|dl
+argument|DebugLoc dl
 argument_list|,
-name|unsigned
-name|DestReg
+argument|unsigned DestReg
 argument_list|,
-name|unsigned
-name|BaseReg
+argument|unsigned BaseReg
 argument_list|,
-name|int
-name|NumBytes
+argument|int NumBytes
 argument_list|,
-name|ARMCC
-operator|::
-name|CondCodes
-name|Pred
+argument|ARMCC::CondCodes Pred
 argument_list|,
-name|unsigned
-name|PredReg
+argument|unsigned PredReg
 argument_list|,
-specifier|const
-name|ARMBaseInstrInfo
-operator|&
-name|TII
+argument|const ARMBaseInstrInfo&TII
 argument_list|)
-decl_stmt|;
+block|;
+name|void
+name|emitThumbRegPlusImmediate
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator&MBBI
+argument_list|,
+argument|unsigned DestReg
+argument_list|,
+argument|unsigned BaseReg
+argument_list|,
+argument|int NumBytes
+argument_list|,
+argument|const TargetInstrInfo&TII
+argument_list|,
+argument|const ARMBaseRegisterInfo& MRI
+argument_list|,
+argument|DebugLoc dl
+argument_list|)
+block|;
 comment|/// rewriteARMFrameIndex / rewriteT2FrameIndex -
 comment|/// Rewrite MI to access 'Offset' bytes from the FP. Return false if the
 comment|/// offset could not be handled directly in MI, and return the left-over
 comment|/// portion by reference.
 name|bool
 name|rewriteARMFrameIndex
-parameter_list|(
-name|MachineInstr
-modifier|&
-name|MI
-parameter_list|,
-name|unsigned
-name|FrameRegIdx
-parameter_list|,
-name|unsigned
-name|FrameReg
-parameter_list|,
-name|int
-modifier|&
-name|Offset
-parameter_list|,
-specifier|const
-name|ARMBaseInstrInfo
-modifier|&
-name|TII
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|MachineInstr&MI
+argument_list|,
+argument|unsigned FrameRegIdx
+argument_list|,
+argument|unsigned FrameReg
+argument_list|,
+argument|int&Offset
+argument_list|,
+argument|const ARMBaseInstrInfo&TII
+argument_list|)
+block|;
 name|bool
 name|rewriteT2FrameIndex
-parameter_list|(
-name|MachineInstr
-modifier|&
-name|MI
-parameter_list|,
-name|unsigned
-name|FrameRegIdx
-parameter_list|,
-name|unsigned
-name|FrameReg
-parameter_list|,
-name|int
-modifier|&
-name|Offset
-parameter_list|,
-specifier|const
-name|ARMBaseInstrInfo
-modifier|&
-name|TII
-parameter_list|)
-function_decl|;
-block|}
+argument_list|(
+argument|MachineInstr&MI
+argument_list|,
+argument|unsigned FrameRegIdx
+argument_list|,
+argument|unsigned FrameReg
+argument_list|,
+argument|int&Offset
+argument_list|,
+argument|const ARMBaseInstrInfo&TII
+argument_list|)
+block|;  }
 end_decl_stmt
 
 begin_comment

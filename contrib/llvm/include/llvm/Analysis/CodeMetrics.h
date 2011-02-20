@@ -36,15 +36,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file implements various weight measurements for a function, helping
+comment|// This file implements various weight measurements for code, helping
 end_comment
 
 begin_comment
-comment|// the Inliner and PartialSpecialization decide whether to duplicate its
-end_comment
-
-begin_comment
-comment|// contents.
+comment|// the Inliner and other passes decide whether to duplicate its contents.
 end_comment
 
 begin_comment
@@ -66,6 +62,12 @@ define|#
 directive|define
 name|LLVM_ANALYSIS_CODEMETRICS_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
 
 begin_decl_stmt
 name|namespace
@@ -117,6 +119,12 @@ comment|/// NumCalls - Keep track of the number of calls to 'big' functions.
 name|unsigned
 name|NumCalls
 decl_stmt|;
+comment|/// NumInlineCandidates - Keep track of the number of calls to internal
+comment|/// functions with only a single caller.  These are likely targets for
+comment|/// future inlining, likely exposed by interleaved devirtualization.
+name|unsigned
+name|NumInlineCandidates
+decl_stmt|;
 comment|/// NumVectorInsts - Keep track of how many instructions produce vector
 comment|/// values.  The inliner is being more aggressive with inlining vector
 comment|/// kernels.
@@ -165,6 +173,11 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
+name|NumInlineCandidates
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|NumVectorInsts
 argument_list|(
 literal|0
@@ -194,6 +207,40 @@ parameter_list|(
 name|Function
 modifier|*
 name|F
+parameter_list|)
+function_decl|;
+comment|/// CountCodeReductionForConstant - Figure out an approximation for how
+comment|/// many instructions will be constant folded if the specified value is
+comment|/// constant.
+name|unsigned
+name|CountCodeReductionForConstant
+parameter_list|(
+name|Value
+modifier|*
+name|V
+parameter_list|)
+function_decl|;
+comment|/// CountBonusForConstant - Figure out an approximation for how much
+comment|/// per-call performance boost we can expect if the specified value is
+comment|/// constant.
+name|unsigned
+name|CountBonusForConstant
+parameter_list|(
+name|Value
+modifier|*
+name|V
+parameter_list|)
+function_decl|;
+comment|/// CountCodeReductionForAlloca - Figure out an approximation of how much
+comment|/// smaller the function will be if it is inlined into a context where an
+comment|/// argument becomes an alloca.
+comment|///
+name|unsigned
+name|CountCodeReductionForAlloca
+parameter_list|(
+name|Value
+modifier|*
+name|V
 parameter_list|)
 function_decl|;
 block|}

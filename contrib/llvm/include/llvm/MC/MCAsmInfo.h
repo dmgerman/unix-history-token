@@ -99,7 +99,9 @@ name|ExceptionsType
 block|{
 name|None
 block|,
-name|Dwarf
+name|DwarfTable
+block|,
+name|DwarfCFI
 block|,
 name|SjLj
 block|}
@@ -139,6 +141,13 @@ name|bool
 name|HasStaticCtorDtorReferenceInStaticMode
 decl_stmt|;
 comment|// Default is false.
+comment|/// LinkerRequiresNonEmptyDwarfLines - True if the linker has a bug and
+comment|/// requires that the debug_line section be of a minimum size. In practice
+comment|/// such a linker requires a non empty line sequence if a file is present.
+name|bool
+name|LinkerRequiresNonEmptyDwarfLines
+decl_stmt|;
+comment|// Default to false.
 comment|/// MaxInstLength - This is the maximum possible length of an instruction,
 comment|/// which is needed to compute the size of an inline asm.
 name|unsigned
@@ -174,6 +183,13 @@ modifier|*
 name|CommentString
 decl_stmt|;
 comment|// Defaults to "#"
+comment|/// LabelSuffix - This is appended to emitted labels.
+specifier|const
+name|char
+modifier|*
+name|LabelSuffix
+decl_stmt|;
+comment|// Defaults to ":"
 comment|/// GlobalPrefix - If this is set to a non-empty string, it is prepended
 comment|/// onto all global symbols.  This is often used for "_" or ".".
 specifier|const
@@ -395,6 +411,15 @@ name|bool
 name|HasSetDirective
 decl_stmt|;
 comment|// Defaults to true.
+comment|/// HasAggressiveSymbolFolding - False if the assembler requires that we use
+comment|/// Lc = a - b
+comment|/// .long Lc
+comment|/// instead of
+comment|/// .long a - b
+name|bool
+name|HasAggressiveSymbolFolding
+decl_stmt|;
+comment|// Defaults to true.
 comment|/// HasLCOMMDirective - This is true if the target supports the .lcomm
 comment|/// directive.
 name|bool
@@ -423,6 +448,12 @@ comment|/// HasNoDeadStrip - True if this target supports the MachO .no_dead_str
 comment|/// directive.
 name|bool
 name|HasNoDeadStrip
+decl_stmt|;
+comment|// Defaults to false.
+comment|/// HasSymbolResolver - True if this target supports the MachO
+comment|/// .symbol_resolver directive.
+name|bool
+name|HasSymbolResolver
 decl_stmt|;
 comment|// Defaults to false.
 comment|/// WeakRefDirective - This directive, if non-null, is used to declare a
@@ -465,12 +496,6 @@ comment|//===--- Dwarf Emission Directives -----------------------------------==
 comment|/// HasLEB128 - True if target asm supports leb128 directives.
 name|bool
 name|HasLEB128
-decl_stmt|;
-comment|// Defaults to false.
-comment|/// hasDotLocAndDotFile - True if target asm supports .loc and .file
-comment|/// directives for emitting debugging information.
-name|bool
-name|HasDotLocAndDotFile
 decl_stmt|;
 comment|// Defaults to false.
 comment|/// SupportsDebugInformation - True if target supports emission of debugging
@@ -757,6 +782,15 @@ return|return
 name|HasStaticCtorDtorReferenceInStaticMode
 return|;
 block|}
+name|bool
+name|getLinkerRequiresNonEmptyDwarfLines
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LinkerRequiresNonEmptyDwarfLines
+return|;
+block|}
 name|unsigned
 name|getMaxInstLength
 argument_list|()
@@ -804,6 +838,17 @@ specifier|const
 block|{
 return|return
 name|CommentString
+return|;
+block|}
+specifier|const
+name|char
+operator|*
+name|getLabelSuffix
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LabelSuffix
 return|;
 block|}
 specifier|const
@@ -991,6 +1036,15 @@ name|HasSetDirective
 return|;
 block|}
 name|bool
+name|hasAggressiveSymbolFolding
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasAggressiveSymbolFolding
+return|;
+block|}
+name|bool
 name|hasLCOMMDirective
 argument_list|()
 specifier|const
@@ -1033,6 +1087,15 @@ specifier|const
 block|{
 return|return
 name|HasNoDeadStrip
+return|;
+block|}
+name|bool
+name|hasSymbolResolver
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasSymbolResolver
 return|;
 block|}
 specifier|const
@@ -1096,15 +1159,6 @@ name|HasLEB128
 return|;
 block|}
 name|bool
-name|hasDotLocAndDotFile
-argument_list|()
-specifier|const
-block|{
-return|return
-name|HasDotLocAndDotFile
-return|;
-block|}
-name|bool
 name|doesSupportDebugInformation
 argument_list|()
 specifier|const
@@ -1135,6 +1189,27 @@ specifier|const
 block|{
 return|return
 name|ExceptionsType
+return|;
+block|}
+name|bool
+name|isExceptionHandlingDwarf
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|ExceptionsType
+operator|==
+name|ExceptionHandling
+operator|::
+name|DwarfTable
+operator|||
+name|ExceptionsType
+operator|==
+name|ExceptionHandling
+operator|::
+name|DwarfCFI
+operator|)
 return|;
 block|}
 name|bool

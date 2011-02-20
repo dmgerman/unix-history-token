@@ -171,6 +171,8 @@ name|ObserveStmt
 argument_list|(
 argument|Stmt* S
 argument_list|,
+argument|const CFGBlock *currentBlock
+argument_list|,
 argument|const AnalysisDataTy& AD
 argument_list|,
 argument|const ValTy& V

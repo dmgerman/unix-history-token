@@ -86,7 +86,7 @@ comment|/// and additional edges can be added by the schedulers as heuristics.
 comment|/// SDNodes such as Constants, Registers, and a few others that are not
 comment|/// interesting to schedulers are not allocated SUnits.
 comment|///
-comment|/// SDNodes with MVT::Flag operands are grouped along with the flagged
+comment|/// SDNodes with MVT::Glue operands are grouped along with the flagged
 comment|/// nodes into a single SUnit so that they are scheduled together.
 comment|///
 comment|/// SDNode-based scheduling graphs do not use SDep::Anti or SDep::Output
@@ -106,6 +106,11 @@ operator|*
 name|DAG
 block|;
 comment|// DAG of the current basic block
+specifier|const
+name|InstrItineraryData
+operator|*
+name|InstrItins
+block|;
 name|explicit
 name|ScheduleDAGSDNodes
 argument_list|(
@@ -371,6 +376,25 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// InitNumRegDefsLeft - Determine the # of regs defined by this node.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_function_decl
+name|void
+name|InitNumRegDefsLeft
+parameter_list|(
+name|SUnit
+modifier|*
+name|SU
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// ComputeLatency - Compute node latency.
 end_comment
 
@@ -521,6 +545,101 @@ argument_list|)
 decl|const
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/// RegDefIter - In place iteration over the values defined by an
+end_comment
+
+begin_comment
+comment|/// SUnit. This does not need copies of the iterator or any other STLisms.
+end_comment
+
+begin_comment
+comment|/// The iterator creates itself, rather than being provided by the SchedDAG.
+end_comment
+
+begin_decl_stmt
+name|class
+name|RegDefIter
+block|{
+specifier|const
+name|ScheduleDAGSDNodes
+modifier|*
+name|SchedDAG
+decl_stmt|;
+specifier|const
+name|SDNode
+modifier|*
+name|Node
+decl_stmt|;
+name|unsigned
+name|DefIdx
+decl_stmt|;
+name|unsigned
+name|NodeNumDefs
+decl_stmt|;
+name|EVT
+name|ValueType
+decl_stmt|;
+name|public
+label|:
+name|RegDefIter
+argument_list|(
+specifier|const
+name|SUnit
+operator|*
+name|SU
+argument_list|,
+specifier|const
+name|ScheduleDAGSDNodes
+operator|*
+name|SD
+argument_list|)
+expr_stmt|;
+name|bool
+name|IsValid
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Node
+operator|!=
+name|NULL
+return|;
+block|}
+name|EVT
+name|GetValue
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|IsValid
+argument_list|()
+operator|&&
+literal|"bad iterator"
+argument_list|)
+block|;
+return|return
+name|ValueType
+return|;
+block|}
+name|void
+name|Advance
+parameter_list|()
+function_decl|;
+name|private
+label|:
+name|void
+name|InitNodeNumDefs
+parameter_list|()
+function_decl|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_label
 name|private

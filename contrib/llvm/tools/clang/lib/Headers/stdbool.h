@@ -16,7 +16,7 @@ name|__STDBOOL_H
 end_define
 
 begin_comment
-comment|/* Don't define bool, true, and false in C++ */
+comment|/* Don't define bool, true, and false in C++, except as a GNU extension. */
 end_comment
 
 begin_ifndef
@@ -44,6 +44,53 @@ define|#
 directive|define
 name|false
 value|0
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__STRICT_ANSI__
+argument_list|)
+end_elif
+
+begin_comment
+comment|/* Define _Bool, bool, false, true as a GNU extension. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_Bool
+value|bool
+end_define
+
+begin_define
+define|#
+directive|define
+name|bool
+value|bool
+end_define
+
+begin_define
+define|#
+directive|define
+name|false
+value|false
+end_define
+
+begin_define
+define|#
+directive|define
+name|true
+value|true
 end_define
 
 begin_endif

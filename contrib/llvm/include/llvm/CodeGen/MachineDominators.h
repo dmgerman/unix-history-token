@@ -646,7 +646,7 @@ comment|/// eraseNode - Removes a node from  the dominator tree. Block must not
 end_comment
 
 begin_comment
-comment|/// domiante any other blocks. Removes node from its immediate dominator's
+comment|/// dominate any other blocks. Removes node from its immediate dominator's
 end_comment
 
 begin_comment

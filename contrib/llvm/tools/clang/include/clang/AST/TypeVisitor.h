@@ -76,7 +76,7 @@ parameter_list|(
 name|CLASS
 parameter_list|)
 define|\
-value|return static_cast<ImplClass*>(this)->Visit ## CLASS(static_cast<CLASS*>(T))
+value|return static_cast<ImplClass*>(this)-> \            Visit##CLASS(static_cast<const CLASS*>(T))
 name|template
 operator|<
 name|typename
@@ -95,7 +95,7 @@ operator|:
 name|RetTy
 name|Visit
 argument_list|(
-argument|Type *T
+argument|const Type *T
 argument_list|)
 block|{
 comment|// Top switch stmt: dispatch to VisitFooType for each FooType.
@@ -147,7 +147,7 @@ name|CLASS
 parameter_list|,
 name|PARENT
 parameter_list|)
-value|RetTy Visit##CLASS##Type(CLASS##Type *T) {       \   DISPATCH(PARENT);                                                          \ }
+value|RetTy Visit##CLASS##Type(const CLASS##Type *T) { \   DISPATCH(PARENT);                                                          \ }
 include|#
 directive|include
 file|"clang/AST/TypeNodes.def"
@@ -155,7 +155,7 @@ comment|// Base case, ignore it. :)
 name|RetTy
 name|VisitType
 argument_list|(
-argument|Type*
+argument|const Type*
 argument_list|)
 block|{
 return|return

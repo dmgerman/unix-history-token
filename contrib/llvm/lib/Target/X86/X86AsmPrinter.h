@@ -351,13 +351,6 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
-name|void
-name|PrintPICBaseSymbol
-argument_list|(
-argument|raw_ostream&O
-argument_list|)
-specifier|const
-block|;
 name|bool
 name|runOnMachineFunction
 argument_list|(

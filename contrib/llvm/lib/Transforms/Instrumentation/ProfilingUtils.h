@@ -84,6 +84,9 @@ decl_stmt|;
 name|class
 name|BasicBlock
 decl_stmt|;
+name|class
+name|PointerType
+decl_stmt|;
 name|void
 name|InsertProfilingInitCall
 parameter_list|(
@@ -101,6 +104,12 @@ modifier|*
 name|Arr
 init|=
 literal|0
+parameter_list|,
+name|PointerType
+modifier|*
+name|arrayType
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 name|void
@@ -116,6 +125,11 @@ parameter_list|,
 name|GlobalValue
 modifier|*
 name|CounterArray
+parameter_list|,
+name|bool
+name|beginning
+init|=
+name|true
 parameter_list|)
 function_decl|;
 block|}

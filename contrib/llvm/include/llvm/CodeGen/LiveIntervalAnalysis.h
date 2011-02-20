@@ -266,7 +266,16 @@ name|MachineFunctionPass
 argument_list|(
 argument|ID
 argument_list|)
-block|{}
+block|{
+name|initializeLiveIntervalsPass
+argument_list|(
+operator|*
+name|PassRegistry
+operator|::
+name|getPassRegistry
+argument_list|()
+argument_list|)
+block|;     }
 comment|// Calculate the spill weight to assign to a single instruction.
 specifier|static
 name|float
@@ -279,30 +288,6 @@ argument_list|,
 argument|unsigned loopDepth
 argument_list|)
 expr_stmt|;
-comment|// After summing the spill weights of all defs and uses, the final weight
-comment|// should be normalized, dividing the weight of the interval by its size.
-comment|// This encourages spilling of intervals that are large and have few uses,
-comment|// and discourages spilling of small intervals with many uses.
-name|void
-name|normalizeSpillWeight
-parameter_list|(
-name|LiveInterval
-modifier|&
-name|li
-parameter_list|)
-block|{
-name|li
-operator|.
-name|weight
-operator|/=
-name|getApproximateInstructionCount
-argument_list|(
-name|li
-argument_list|)
-operator|+
-literal|25
-expr_stmt|;
-block|}
 typedef|typedef
 name|Reg2IntervalMap
 operator|::
@@ -692,6 +677,18 @@ modifier|*
 name|startInst
 parameter_list|)
 function_decl|;
+comment|/// shrinkToUses - After removing some uses of a register, shrink its live
+comment|/// range to just the remaining uses. This method does not compute reaching
+comment|/// defs for new uses, and it doesn't remove dead defs.
+comment|/// Dead PHIDef values are marked as unused.
+name|void
+name|shrinkToUses
+parameter_list|(
+name|LiveInterval
+modifier|*
+name|li
+parameter_list|)
+function_decl|;
 comment|// Interval removal
 name|void
 name|removeInterval
@@ -730,6 +727,16 @@ argument_list|(
 name|I
 argument_list|)
 expr_stmt|;
+block|}
+name|SlotIndexes
+operator|*
+name|getSlotIndexes
+argument_list|()
+specifier|const
+block|{
+return|return
+name|indexes_
+return|;
 block|}
 name|SlotIndex
 name|getZeroIndex
@@ -987,24 +994,6 @@ argument_list|)
 return|;
 block|}
 name|SlotIndex
-name|getMBBTerminatorGap
-parameter_list|(
-specifier|const
-name|MachineBasicBlock
-modifier|*
-name|mbb
-parameter_list|)
-block|{
-return|return
-name|indexes_
-operator|->
-name|getTerminatorGap
-argument_list|(
-name|mbb
-argument_list|)
-return|;
-block|}
-name|SlotIndex
 name|InsertMachineInstrInMaps
 parameter_list|(
 name|MachineInstr
@@ -1186,6 +1175,7 @@ name|LiveInterval
 operator|&
 name|i
 argument_list|,
+specifier|const
 name|SmallVectorImpl
 operator|<
 name|LiveInterval
@@ -1234,6 +1224,7 @@ name|LiveInterval
 operator|&
 name|li
 argument_list|,
+specifier|const
 name|SmallVectorImpl
 operator|<
 name|LiveInterval
@@ -1304,6 +1295,26 @@ name|li
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// getLastSplitPoint - Return the last possible insertion point in mbb for
+comment|/// spilling and splitting code. This is the first terminator, or the call
+comment|/// instruction if li is live into a landing pad successor.
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|getLastSplitPoint
+argument_list|(
+argument|const LiveInterval&li
+argument_list|,
+argument|MachineBasicBlock *mbb
+argument_list|)
+specifier|const
+expr_stmt|;
+comment|/// addKillFlags - Add kill flags to any instruction that kills a virtual
+comment|/// register.
+name|void
+name|addKillFlags
+parameter_list|()
+function_decl|;
 name|private
 label|:
 comment|/// computeIntervals - Compute live intervals.
@@ -1492,6 +1503,7 @@ name|MachineInstr
 operator|*
 name|MI
 argument_list|,
+specifier|const
 name|SmallVectorImpl
 operator|<
 name|LiveInterval
@@ -1983,21 +1995,6 @@ operator|>
 operator|&
 name|MBBVRegsMap
 argument_list|,
-name|std
-operator|::
-name|vector
-operator|<
-name|LiveInterval
-operator|*
-operator|>
-operator|&
-name|NewLIs
-argument_list|)
-decl_stmt|;
-comment|// Normalize the spill weight of all the intervals in NewLIs.
-name|void
-name|normalizeSpillWeights
-argument_list|(
 name|std
 operator|::
 name|vector

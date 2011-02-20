@@ -164,6 +164,8 @@ name|kw_hidden
 block|,
 name|kw_protected
 block|,
+name|kw_unnamed_addr
+block|,
 name|kw_extern_weak
 block|,
 name|kw_external
@@ -240,6 +242,10 @@ name|kw_arm_aapcs_vfpcc
 block|,
 name|kw_msp430_intrcc
 block|,
+name|kw_ptx_kernel
+block|,
+name|kw_ptx_device
+block|,
 name|kw_signext
 block|,
 name|kw_zeroext
@@ -281,6 +287,8 @@ block|,
 name|kw_noimplicitfloat
 block|,
 name|kw_naked
+block|,
+name|kw_hotpatch
 block|,
 name|kw_type
 block|,

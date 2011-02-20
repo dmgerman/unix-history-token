@@ -62,7 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Analysis/Dominators.h"
+file|"llvm/Analysis/DominanceFrontier.h"
 end_include
 
 begin_decl_stmt
@@ -98,6 +98,15 @@ argument_list|(
 argument|ID
 argument_list|)
 block|{
+name|initializePostDominatorTreePass
+argument_list|(
+operator|*
+name|PassRegistry
+operator|::
+name|getPassRegistry
+argument_list|()
+argument_list|)
+block|;
 name|DT
 operator|=
 name|new
@@ -447,7 +456,16 @@ argument|ID
 argument_list|,
 argument|true
 argument_list|)
-block|{}
+block|{
+name|initializePostDominanceFrontierPass
+argument_list|(
+operator|*
+name|PassRegistry
+operator|::
+name|getPassRegistry
+argument_list|()
+argument_list|)
+block|;     }
 name|virtual
 name|bool
 name|runOnFunction

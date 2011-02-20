@@ -140,13 +140,6 @@ argument_list|)
 specifier|const
 block|;
 comment|/// Code Generation virtual methods...
-name|bool
-name|hasReservedCallFrame
-argument_list|(
-argument|const MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
 name|void
 name|eliminateCallFramePseudoInstr
 argument_list|(
@@ -210,22 +203,6 @@ argument_list|,
 argument|int SPAdj
 argument_list|,
 argument|RegScavenger *RS = NULL
-argument_list|)
-specifier|const
-block|;
-name|void
-name|emitPrologue
-argument_list|(
-argument|MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
-name|void
-name|emitEpilogue
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|MachineBasicBlock&MBB
 argument_list|)
 specifier|const
 block|; }

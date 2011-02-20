@@ -118,9 +118,6 @@ block|,
 comment|// Handle gp_rel (small data/bss sections) relocation.
 name|GPRel
 block|,
-comment|// Conditional Move
-name|CMov
-block|,
 comment|// Select CC Pseudo Instruction
 name|SelectCC
 block|,
@@ -138,6 +135,15 @@ name|FPRound
 block|,
 comment|// Return
 name|Ret
+block|,
+comment|// MAdd/Sub nodes
+name|MAdd
+block|,
+name|MAddu
+block|,
+name|MSub
+block|,
+name|MSubu
 block|}
 enum|;
 block|}
@@ -199,6 +205,16 @@ name|unsigned
 name|getFunctionAlignment
 argument_list|(
 argument|const Function *F
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|SDValue
+name|PerformDAGCombine
+argument_list|(
+argument|SDNode *N
+argument_list|,
+argument|DAGCombinerInfo&DCI
 argument_list|)
 specifier|const
 block|;
@@ -416,6 +432,17 @@ name|ConstraintType
 name|getConstraintType
 argument_list|(
 argument|const std::string&Constraint
+argument_list|)
+specifier|const
+block|;
+comment|/// Examine constraint string and operand type and determine a weight value.
+comment|/// The operand object must already have been set up with the operand type.
+name|ConstraintWeight
+name|getSingleConstraintMatchWeight
+argument_list|(
+argument|AsmOperandInfo&info
+argument_list|,
+argument|const char *constraint
 argument_list|)
 specifier|const
 block|;

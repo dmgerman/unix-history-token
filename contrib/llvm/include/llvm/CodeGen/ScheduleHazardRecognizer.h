@@ -76,8 +76,25 @@ comment|/// the hazard.
 name|class
 name|ScheduleHazardRecognizer
 block|{
+name|protected
+label|:
+comment|/// MaxLookAhead - Indicate the number of cycles in the scoreboard
+comment|/// state. Important to restore the state after backtracking. Additionally,
+comment|/// MaxLookAhead=0 identifies a fake recognizer, allowing the client to
+comment|/// bypass virtual calls. Currently the PostRA scheduler ignores it.
+name|unsigned
+name|MaxLookAhead
+decl_stmt|;
 name|public
 label|:
+name|ScheduleHazardRecognizer
+argument_list|()
+operator|:
+name|MaxLookAhead
+argument_list|(
+literal|0
+argument_list|)
+block|{}
 name|virtual
 operator|~
 name|ScheduleHazardRecognizer
@@ -96,6 +113,38 @@ name|NoopHazard
 comment|// This instruction can't be emitted, and needs noops.
 block|}
 enum|;
+name|unsigned
+name|getMaxLookAhead
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MaxLookAhead
+return|;
+block|}
+name|bool
+name|isEnabled
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MaxLookAhead
+operator|!=
+literal|0
+return|;
+block|}
+comment|/// atIssueLimit - Return true if no more instructions may be issued in this
+comment|/// cycle.
+name|virtual
+name|bool
+name|atIssueLimit
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// getHazardType - Return the hazard type of emitting this node.  There are
 comment|/// three possible results.  Either:
 comment|///  * NoHazard: it is legal to issue this instruction on this cycle.
@@ -109,6 +158,10 @@ name|getHazardType
 parameter_list|(
 name|SUnit
 modifier|*
+name|m
+parameter_list|,
+name|int
+name|Stalls
 parameter_list|)
 block|{
 return|return
@@ -133,13 +186,22 @@ name|SUnit
 modifier|*
 parameter_list|)
 block|{}
-comment|/// AdvanceCycle - This callback is invoked when no instructions can be
-comment|/// issued on this cycle without a hazard.  This should increment the
+comment|/// AdvanceCycle - This callback is invoked whenever the next top-down
+comment|/// instruction to be scheduled cannot issue in the current cycle, either
+comment|/// because of latency or resource conflicts.  This should increment the
 comment|/// internal state of the hazard recognizer so that previously "Hazard"
 comment|/// instructions will now not be hazards.
 name|virtual
 name|void
 name|AdvanceCycle
+parameter_list|()
+block|{}
+comment|/// RecedeCycle - This callback is invoked whenever the next bottom-up
+comment|/// instruction to be scheduled cannot issue in the current cycle, either
+comment|/// because of latency or resource conflicts.
+name|virtual
+name|void
+name|RecedeCycle
 parameter_list|()
 block|{}
 comment|/// EmitNoop - This callback is invoked when a noop was added to the

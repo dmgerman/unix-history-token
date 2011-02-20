@@ -18,7 +18,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/System/DataTypes.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_ifdef
@@ -35,6 +35,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Module.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/PassRegistry.h"
 end_include
 
 begin_include
@@ -120,6 +126,13 @@ name|struct
 name|LLVMOpaquePassManager
 modifier|*
 name|LLVMPassManagerRef
+typedef|;
+comment|/** See the llvm::PassRegistry class. */
+typedef|typedef
+name|struct
+name|LLVMOpaquePassRegistry
+modifier|*
+name|LLVMPassRegistryRef
 typedef|;
 comment|/** Used to get the users and usees of a Value. See the llvm::Use class. */
 typedef|typedef
@@ -538,7 +551,10 @@ name|LLVMVectorTypeKind
 block|,
 comment|/**< SIMD 'packed' format, or other vector type */
 name|LLVMMetadataTypeKind
+block|,
 comment|/**< Metadata */
+name|LLVMX86_MMXTypeKind
+comment|/**< X86 MMX */
 block|}
 name|LLVMTypeKind
 typedef|;
@@ -899,6 +915,18 @@ modifier|*
 name|Name
 parameter_list|)
 function_decl|;
+specifier|const
+name|char
+modifier|*
+name|LLVMGetTypeName
+parameter_list|(
+name|LLVMModuleRef
+name|M
+parameter_list|,
+name|LLVMTypeRef
+name|Ty
+parameter_list|)
+function_decl|;
 comment|/** See Module::dump. */
 name|void
 name|LLVMDumpModule
@@ -918,6 +946,14 @@ specifier|const
 name|char
 modifier|*
 name|Asm
+parameter_list|)
+function_decl|;
+comment|/** See Module::getContext. */
+name|LLVMContextRef
+name|LLVMGetModuleContext
+parameter_list|(
+name|LLVMModuleRef
+name|M
 parameter_list|)
 function_decl|;
 comment|/*===-- Types -------------------------------------------------------------===*/
@@ -1283,6 +1319,13 @@ name|C
 parameter_list|)
 function_decl|;
 name|LLVMTypeRef
+name|LLVMX86MMXTypeInContext
+parameter_list|(
+name|LLVMContextRef
+name|C
+parameter_list|)
+function_decl|;
+name|LLVMTypeRef
 name|LLVMVoidType
 parameter_list|(
 name|void
@@ -1296,6 +1339,12 @@ parameter_list|)
 function_decl|;
 name|LLVMTypeRef
 name|LLVMOpaqueType
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+name|LLVMTypeRef
+name|LLVMX86MMXType
 parameter_list|(
 name|void
 parameter_list|)
@@ -1610,6 +1659,21 @@ name|N
 parameter_list|,
 name|LLVMBool
 name|SignExtend
+parameter_list|)
+function_decl|;
+name|LLVMValueRef
+name|LLVMConstIntOfArbitraryPrecision
+parameter_list|(
+name|LLVMTypeRef
+name|IntTy
+parameter_list|,
+name|unsigned
+name|NumWords
+parameter_list|,
+specifier|const
+name|uint64_t
+name|Words
+index|[]
 parameter_list|)
 function_decl|;
 name|LLVMValueRef
@@ -4856,6 +4920,14 @@ name|LLVMMemoryBufferRef
 name|MemBuf
 parameter_list|)
 function_decl|;
+comment|/*===-- Pass Registry -----------------------------------------------------===*/
+comment|/** Return the global pass registry, for use with initialization functions.     See llvm::PassRegistry::getPassRegistry. */
+name|LLVMPassRegistryRef
+name|LLVMGetGlobalPassRegistry
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
 comment|/*===-- Pass Managers -----------------------------------------------------===*/
 comment|/** Constructs a new whole-module pass pipeline. This type of pipeline is     suitable for link-time optimization and whole-module transformations.     See llvm::PassManager::PassManager. */
 name|LLVMPassManagerRef
@@ -5031,6 +5103,12 @@ argument_list|(
 argument|PassManagerBase
 argument_list|,
 argument|LLVMPassManagerRef
+argument_list|)
+name|DEFINE_STDCXX_CONVERSION_FUNCTIONS
+argument_list|(
+argument|PassRegistry
+argument_list|,
+argument|LLVMPassRegistryRef
 argument_list|)
 comment|/* LLVMModuleProviderRef exists for historical reasons, but now just holds a    * Module.    */
 specifier|inline

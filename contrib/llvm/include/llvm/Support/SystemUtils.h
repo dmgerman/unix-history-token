@@ -102,15 +102,16 @@ name|true
 comment|///< Control whether warnings are printed
 parameter_list|)
 function_decl|;
-comment|/// FindExecutable - Find a named executable, giving the argv[0] of program
-comment|/// being executed. This allows us to find another LLVM tool if it is built in
-comment|/// the same directory.  If the executable cannot be found, return an
-comment|/// empty string.
+comment|/// PrependMainExecutablePath - Prepend the path to the program being executed
+comment|/// to \p ExeName, given the value of argv[0] and the address of main()
+comment|/// itself. This allows us to find another LLVM tool if it is built in the same
+comment|/// directory. An empty string is returned on error; note that this function
+comment|/// just mainpulates the path and doesn't check for executability.
 comment|/// @brief Find a named executable.
 name|sys
 operator|::
 name|Path
-name|FindExecutable
+name|PrependMainExecutablePath
 argument_list|(
 specifier|const
 name|std

@@ -67,12 +67,6 @@ literal|1
 decl_stmt|;
 comment|///< Show comments.
 name|unsigned
-name|ShowHeaderIncludes
-range|:
-literal|1
-decl_stmt|;
-comment|///< Show header inclusions (-H).
-name|unsigned
 name|ShowLineMarkers
 range|:
 literal|1
@@ -100,10 +94,6 @@ operator|=
 literal|1
 expr_stmt|;
 name|ShowComments
-operator|=
-literal|0
-expr_stmt|;
-name|ShowHeaderIncludes
 operator|=
 literal|0
 expr_stmt|;

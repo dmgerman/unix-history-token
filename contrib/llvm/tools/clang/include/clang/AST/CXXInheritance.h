@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -1033,6 +1039,21 @@ operator|*
 decl_stmt|,
 name|OverridingMethods
 decl|>
+block|{ }
+empty_stmt|;
+comment|/// \brief A set of all the primary bases for a class.
+name|class
+name|CXXIndirectPrimaryBaseSet
+range|:
+name|public
+name|llvm
+operator|::
+name|SmallSet
+operator|<
+specifier|const
+name|CXXRecordDecl
+operator|*
+decl_stmt|, 32>
 block|{ }
 empty_stmt|;
 block|}

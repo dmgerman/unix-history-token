@@ -91,6 +91,15 @@ modifier|&
 name|TM
 parameter_list|)
 function_decl|;
+name|FunctionPass
+modifier|*
+name|createSPUNopFillerPass
+parameter_list|(
+name|SPUTargetMachine
+modifier|&
+name|tm
+parameter_list|)
+function_decl|;
 specifier|extern
 name|Target
 name|TheCellSPUTarget

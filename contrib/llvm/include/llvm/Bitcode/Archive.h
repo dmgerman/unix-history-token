@@ -86,7 +86,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/System/Path.h"
+file|"llvm/Support/Path.h"
 end_include
 
 begin_include
@@ -107,6 +107,9 @@ name|llvm
 block|{
 name|class
 name|MemoryBuffer
+decl_stmt|;
+name|class
+name|raw_ostream
 decl_stmt|;
 comment|// Forward declare classes
 name|class
@@ -257,7 +260,7 @@ argument_list|()
 return|;
 block|}
 comment|/// The "mode" specifies the access permissions for the file per Unix
-comment|/// security. This may not have any applicabiity on non-Unix systems but is
+comment|/// security. This may not have any applicability on non-Unix systems but is
 comment|/// a required component of the "ar" file format.
 comment|/// @brief Get the permission mode associated with this archive member.
 name|unsigned
@@ -426,7 +429,7 @@ comment|/// separator character (/). To avoid this, a "long format" member name 
 comment|/// allowed that doesn't have this restriction. This method determines if
 comment|/// that "long format" is used for this member.
 comment|/// @returns true iff the file name uses the long form
-comment|/// @brief Determin if the member has a long file name
+comment|/// @brief Determine if the member has a long file name
 name|bool
 name|hasLongFilename
 argument_list|()
@@ -1156,7 +1159,7 @@ comment|/// This method determines whether the archive is a properly formed llvm
 comment|/// bitcode archive.  It first makes sure the symbol table has been loaded
 comment|/// and has a non-zero size.  If it does, then it is an archive.  If not,
 comment|/// then it tries to load all the bitcode modules of the archive.  Finally,
-comment|/// it returns whether it was successfull.
+comment|/// it returns whether it was successful.
 comment|/// @returns true if the archive is a proper llvm bitcode archive
 comment|/// @brief Determine whether the archive is a proper llvm bitcode archive.
 name|bool
@@ -1355,14 +1358,12 @@ decl_stmt|;
 comment|/// @brief Write the symbol table to an ofstream.
 name|void
 name|writeSymbolTable
-argument_list|(
-name|std
-operator|::
-name|ofstream
-operator|&
+parameter_list|(
+name|raw_ostream
+modifier|&
 name|ARFile
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// Writes one ArchiveMember to an ofstream. If an error occurs, returns
 comment|/// false, otherwise true. If an error occurs and error is non-null then
 comment|/// it will be set to an error message.
@@ -1377,9 +1378,7 @@ operator|&
 name|member
 argument_list|,
 comment|///< The member to be written
-name|std
-operator|::
-name|ofstream
+name|raw_ostream
 operator|&
 name|ARFile
 argument_list|,

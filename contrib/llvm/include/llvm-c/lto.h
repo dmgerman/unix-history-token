@@ -31,14 +31,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/System/DataTypes.h"
+file|<unistd.h>
 end_include
 
 begin_define
 define|#
 directive|define
 name|LTO_API_VERSION
-value|3
+value|4
 end_define
 
 begin_typedef
@@ -109,6 +109,10 @@ block|,
 name|LTO_SYMBOL_SCOPE_DEFAULT
 init|=
 literal|0x00001800
+block|,
+name|LTO_SYMBOL_SCOPE_DEFAULT_CAN_BE_HIDDEN
+init|=
+literal|0x00002800
 block|}
 name|lto_symbol_attributes
 typedef|;
@@ -293,6 +297,23 @@ name|size_t
 name|length
 parameter_list|)
 function_decl|;
+comment|/**  * Loads an object file from disk. The seek point of fd is not preserved.  * Returns NULL on error (check lto_get_error_message() for details).  */
+specifier|extern
+name|lto_module_t
+name|lto_module_create_from_fd
+parameter_list|(
+name|int
+name|fd
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|path
+parameter_list|,
+name|off_t
+name|size
+parameter_list|)
+function_decl|;
 comment|/**  * Frees all memory internally allocated by the module.  * Upon return the lto_module_t is no longer valid.  */
 specifier|extern
 name|void
@@ -329,7 +350,8 @@ parameter_list|)
 function_decl|;
 comment|/**  * Returns the number of symbols in the object module.  */
 specifier|extern
-name|uint32_t
+name|unsigned
+name|int
 name|lto_module_get_num_symbols
 parameter_list|(
 name|lto_module_t
@@ -346,7 +368,8 @@ parameter_list|(
 name|lto_module_t
 name|mod
 parameter_list|,
-name|uint32_t
+name|unsigned
+name|int
 name|index
 parameter_list|)
 function_decl|;
@@ -358,7 +381,8 @@ parameter_list|(
 name|lto_module_t
 name|mod
 parameter_list|,
-name|uint32_t
+name|unsigned
+name|int
 name|index
 parameter_list|)
 function_decl|;

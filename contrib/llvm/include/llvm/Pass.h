@@ -193,6 +193,9 @@ comment|///< FPPassManager
 name|PMT_LoopPassManager
 block|,
 comment|///< LPPassManager
+name|PMT_RegionPassManager
+block|,
+comment|///< RGPassManager
 name|PMT_BasicBlockPassManager
 block|,
 comment|///< BBPassManager
@@ -204,6 +207,8 @@ enum|enum
 name|PassKind
 block|{
 name|PT_BasicBlock
+block|,
+name|PT_Region
 block|,
 name|PT_Loop
 block|,

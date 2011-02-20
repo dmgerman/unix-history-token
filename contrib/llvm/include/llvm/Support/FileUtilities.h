@@ -66,7 +66,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/System/Path.h"
+file|"llvm/Support/Path.h"
 end_include
 
 begin_decl_stmt

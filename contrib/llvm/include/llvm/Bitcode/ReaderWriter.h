@@ -113,6 +113,33 @@ operator|=
 literal|0
 argument_list|)
 decl_stmt|;
+comment|/// getBitcodeTargetTriple - Read the header of the specified bitcode
+comment|/// buffer and extract just the triple information. If successful,
+comment|/// this returns a string and *does not* take ownership
+comment|/// of 'buffer'. On error, this returns "", and fills in *ErrMsg
+comment|/// if ErrMsg is non-null.
+name|std
+operator|::
+name|string
+name|getBitcodeTargetTriple
+argument_list|(
+name|MemoryBuffer
+operator|*
+name|Buffer
+argument_list|,
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
+name|std
+operator|::
+name|string
+operator|*
+name|ErrMsg
+operator|=
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/// ParseBitcodeFile - Read the specified bitcode file, returning the module.
 comment|/// If an error occurs, this returns null and fills in *ErrMsg if it is
 comment|/// non-null.  This method *never* takes ownership of Buffer.

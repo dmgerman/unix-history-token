@@ -271,36 +271,8 @@ argument_list|(
 name|II
 argument_list|)
 block|; }
-name|CallSiteBase
-argument_list|(
-argument|InstrTy *II
-argument_list|)
-block|{
-name|assert
-argument_list|(
-name|II
-operator|&&
-literal|"Null instruction given?"
-argument_list|)
-block|;
-operator|*
-name|this
-operator|=
-name|get
-argument_list|(
-name|II
-argument_list|)
-block|;
-name|assert
-argument_list|(
-name|I
-operator|.
-name|getPointer
-argument_list|()
-operator|&&
-literal|"Not a call?"
-argument_list|)
-block|;   }
+name|protected
+operator|:
 comment|/// CallSiteBase::get - This static method is sort of like a constructor.  It
 comment|/// will create an appropriate call site for a Call or Invoke instruction, but
 comment|/// it can also create a null initialized CallSiteBase object for something
@@ -383,6 +355,8 @@ name|CallSiteBase
 argument_list|()
 return|;
 block|}
+name|public
+operator|:
 comment|/// isCall - true if a CallInst is enclosed.
 comment|/// Note that !isCall() does not mean it is an InvokeInst enclosed,
 comment|/// it also could signify a NULL Instruction pointer.
@@ -1307,29 +1281,6 @@ operator|!=
 name|CS
 operator|.
 name|I
-return|;
-block|}
-comment|/// CallSite::get - This static method is sort of like a constructor.  It will
-comment|/// create an appropriate call site for a Call or Invoke instruction, but it
-comment|/// can also create a null initialized CallSite object for something which is
-comment|/// NOT a call site.
-comment|///
-specifier|static
-name|CallSite
-name|get
-parameter_list|(
-name|Value
-modifier|*
-name|V
-parameter_list|)
-block|{
-return|return
-name|Base
-operator|::
-name|get
-argument_list|(
-name|V
-argument_list|)
 return|;
 block|}
 name|bool

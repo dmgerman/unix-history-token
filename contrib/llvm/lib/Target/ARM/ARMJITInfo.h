@@ -350,7 +350,7 @@ name|resize
 argument_list|(
 name|AFI
 operator|->
-name|getNumConstPoolEntries
+name|getNumPICLabels
 argument_list|()
 argument_list|)
 expr_stmt|;

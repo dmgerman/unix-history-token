@@ -715,13 +715,60 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// none - Returns true if none of the bits are set.
+comment|/// all - Returns true if all bits are set.
 end_comment
 
 begin_expr_stmt
 name|bool
+name|all
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|isSmall
+argument_list|()
+condition|)
+return|return
+name|getSmallBits
+argument_list|()
+operator|==
+operator|(
+name|uintptr_t
+argument_list|(
+literal|1
+argument_list|)
+operator|<<
+name|getSmallSize
+argument_list|()
+operator|)
+operator|-
+literal|1
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+name|getPointer
+argument_list|()
+operator|->
+name|all
+argument_list|()
+return|;
+end_return
+
+begin_comment
+unit|}
+comment|/// none - Returns true if none of the bits are set.
+end_comment
+
+begin_macro
+unit|bool
 name|none
 argument_list|()
+end_macro
+
+begin_expr_stmt
 specifier|const
 block|{
 if|if

@@ -65,23 +65,6 @@ directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NDEBUG
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SmallSet.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -145,6 +128,9 @@ name|TargetRegisterClass
 decl_stmt|;
 name|class
 name|TargetRegisterInfo
+decl_stmt|;
+name|class
+name|LoadInst
 decl_stmt|;
 comment|/// FastISel - This is a fast-path instruction selection class that
 comment|/// generates poor code and doesn't support illegal types or non-trivial
@@ -329,7 +315,32 @@ operator|*
 name|V
 argument_list|)
 expr_stmt|;
-comment|/// recomputeInsertPt - Reset InsertPt to prepare for insterting instructions
+comment|/// TryToFoldLoad - The specified machine instr operand is a vreg, and that
+comment|/// vreg is being provided by the specified load instruction.  If possible,
+comment|/// try to fold the load as an operand to the instruction, returning true if
+comment|/// possible.
+name|virtual
+name|bool
+name|TryToFoldLoad
+parameter_list|(
+name|MachineInstr
+modifier|*
+comment|/*MI*/
+parameter_list|,
+name|unsigned
+comment|/*OpNo*/
+parameter_list|,
+specifier|const
+name|LoadInst
+modifier|*
+comment|/*LI*/
+parameter_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// recomputeInsertPt - Reset InsertPt to prepare for inserting instructions
 comment|/// into the current block.
 name|void
 name|recomputeInsertPt

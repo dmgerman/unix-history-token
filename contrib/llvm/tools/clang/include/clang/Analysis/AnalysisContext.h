@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/Expr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/OwningPtr.h"
 end_include
 
@@ -211,6 +217,12 @@ decl_stmt|;
 name|bool
 name|AddEHEdges
 decl_stmt|;
+name|bool
+name|AddImplicitDtors
+decl_stmt|;
+name|bool
+name|AddInitializers
+decl_stmt|;
 name|public
 label|:
 name|AnalysisContext
@@ -222,6 +234,10 @@ argument_list|,
 argument|bool useUnoptimizedCFG = false
 argument_list|,
 argument|bool addehedges = false
+argument_list|,
+argument|bool addImplicitDtors = false
+argument_list|,
+argument|bool addInitializers = false
 argument_list|)
 block|:
 name|D
@@ -286,7 +302,17 @@ argument_list|)
 operator|,
 name|AddEHEdges
 argument_list|(
-argument|addehedges
+name|addehedges
+argument_list|)
+operator|,
+name|AddImplicitDtors
+argument_list|(
+name|addImplicitDtors
+argument_list|)
+operator|,
+name|AddInitializers
+argument_list|(
+argument|addInitializers
 argument_list|)
 block|{}
 operator|~
@@ -350,6 +376,24 @@ return|return
 name|UseUnoptimizedCFG
 return|;
 block|}
+name|bool
+name|getAddImplicitDtors
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AddImplicitDtors
+return|;
+block|}
+name|bool
+name|getAddInitializers
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AddInitializers
+return|;
+block|}
 name|Stmt
 modifier|*
 name|getBody
@@ -364,6 +408,10 @@ comment|/// Return a version of the CFG without any edges pruned.
 name|CFG
 modifier|*
 name|getUnoptimizedCFG
+parameter_list|()
+function_decl|;
+name|void
+name|dumpCFG
 parameter_list|()
 function_decl|;
 name|ParentMap
@@ -444,16 +492,36 @@ decl_stmt|;
 name|bool
 name|UseUnoptimizedCFG
 decl_stmt|;
+name|bool
+name|AddImplicitDtors
+decl_stmt|;
+name|bool
+name|AddInitializers
+decl_stmt|;
 name|public
 label|:
 name|AnalysisContextManager
 argument_list|(
 argument|bool useUnoptimizedCFG = false
+argument_list|,
+argument|bool addImplicitDtors = false
+argument_list|,
+argument|bool addInitializers = false
 argument_list|)
 block|:
 name|UseUnoptimizedCFG
 argument_list|(
-argument|useUnoptimizedCFG
+name|useUnoptimizedCFG
+argument_list|)
+operator|,
+name|AddImplicitDtors
+argument_list|(
+name|addImplicitDtors
+argument_list|)
+operator|,
+name|AddInitializers
+argument_list|(
+argument|addInitializers
 argument_list|)
 block|{}
 operator|~
@@ -485,6 +553,24 @@ specifier|const
 block|{
 return|return
 name|UseUnoptimizedCFG
+return|;
+block|}
+name|bool
+name|getAddImplicitDtors
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AddImplicitDtors
+return|;
+block|}
+name|bool
+name|getAddInitializers
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AddInitializers
 return|;
 block|}
 comment|// Discard all previously created AnalysisContexts.

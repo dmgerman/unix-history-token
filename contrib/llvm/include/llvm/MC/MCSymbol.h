@@ -127,10 +127,10 @@ name|IsTemporary
 range|:
 literal|1
 decl_stmt|;
-comment|/// IsUsedInExpr - True if this symbol has been used in an expression and
-comment|/// cannot be redefined.
+comment|/// IsUsed - True if this symbol has been used.
+name|mutable
 name|unsigned
-name|IsUsedInExpr
+name|IsUsed
 range|:
 literal|1
 decl_stmt|;
@@ -168,7 +168,7 @@ argument_list|(
 name|isTemporary
 argument_list|)
 operator|,
-name|IsUsedInExpr
+name|IsUsed
 argument_list|(
 argument|false
 argument_list|)
@@ -215,24 +215,25 @@ return|return
 name|IsTemporary
 return|;
 block|}
-comment|/// isUsedInExpr - Check if this is an assembler temporary symbol.
+comment|/// isUsed - Check if this is used.
 name|bool
-name|isUsedInExpr
+name|isUsed
 argument_list|()
 specifier|const
 block|{
 return|return
-name|IsUsedInExpr
+name|IsUsed
 return|;
 block|}
 name|void
-name|setUsedInExpr
-parameter_list|(
+name|setUsed
+argument_list|(
 name|bool
 name|Value
-parameter_list|)
+argument_list|)
+decl|const
 block|{
-name|IsUsedInExpr
+name|IsUsed
 operator|=
 name|Value
 expr_stmt|;
@@ -383,10 +384,24 @@ operator|&&
 literal|"Invalid accessor!"
 argument_list|)
 block|;
+name|IsUsed
+operator|=
+name|true
+block|;
 return|return
 name|Value
 return|;
 block|}
+comment|// AliasedSymbol() - If this is an alias (a = b), return the symbol
+comment|// we ultimately point to. For a non alias, this just returns the symbol
+comment|// itself.
+specifier|const
+name|MCSymbol
+operator|&
+name|AliasedSymbol
+argument_list|()
+specifier|const
+expr_stmt|;
 name|void
 name|setVariableValue
 parameter_list|(

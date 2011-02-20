@@ -544,9 +544,6 @@ name|NumOperands
 return|;
 block|}
 comment|/// isFunctionLocal - Return whether MDNode is local to a function.
-comment|/// Note: MDNodes are designated as function-local when created, and keep
-comment|///       that designation even if their operands are modified to no longer
-comment|///       refer to function-local IR.
 name|bool
 name|isFunctionLocal
 argument_list|()

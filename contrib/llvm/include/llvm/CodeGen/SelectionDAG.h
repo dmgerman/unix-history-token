@@ -640,15 +640,6 @@ name|SDDbgInfo
 modifier|*
 name|DbgInfo
 decl_stmt|;
-comment|/// VerifyNode - Sanity check the given node.  Aborts if it is invalid.
-name|void
-name|VerifyNode
-parameter_list|(
-name|SDNode
-modifier|*
-name|N
-parameter_list|)
-function_decl|;
 comment|/// setGraphColorHelper - Implementation of setSubgraphColor.
 comment|/// Return whether we had to truncate the search.
 comment|///
@@ -1936,8 +1927,8 @@ argument_list|)
 return|;
 block|}
 comment|// This version of the getCopyToReg method takes an extra operand, which
-comment|// indicates that there is potentially an incoming flag value (if Flag is not
-comment|// null) and that there should be a flag result.
+comment|// indicates that there is potentially an incoming glue value (if Glue is not
+comment|// null) and that there should be a glue result.
 name|SDValue
 name|getCopyToReg
 parameter_list|(
@@ -1954,7 +1945,7 @@ name|SDValue
 name|N
 parameter_list|,
 name|SDValue
-name|Flag
+name|Glue
 parameter_list|)
 block|{
 name|SDVTList
@@ -1968,7 +1959,7 @@ name|Other
 argument_list|,
 name|MVT
 operator|::
-name|Flag
+name|Glue
 argument_list|)
 decl_stmt|;
 name|SDValue
@@ -1990,7 +1981,7 @@ argument_list|)
 block|,
 name|N
 block|,
-name|Flag
+name|Glue
 block|}
 decl_stmt|;
 return|return
@@ -2006,7 +1997,7 @@ name|VTs
 argument_list|,
 name|Ops
 argument_list|,
-name|Flag
+name|Glue
 operator|.
 name|getNode
 argument_list|()
@@ -2034,7 +2025,7 @@ name|SDValue
 name|N
 parameter_list|,
 name|SDValue
-name|Flag
+name|Glue
 parameter_list|)
 block|{
 name|SDVTList
@@ -2048,7 +2039,7 @@ name|Other
 argument_list|,
 name|MVT
 operator|::
-name|Flag
+name|Glue
 argument_list|)
 decl_stmt|;
 name|SDValue
@@ -2062,7 +2053,7 @@ name|Reg
 block|,
 name|N
 block|,
-name|Flag
+name|Glue
 block|}
 decl_stmt|;
 return|return
@@ -2078,7 +2069,7 @@ name|VTs
 argument_list|,
 name|Ops
 argument_list|,
-name|Flag
+name|Glue
 operator|.
 name|getNode
 argument_list|()
@@ -2150,8 +2141,8 @@ argument_list|)
 return|;
 block|}
 comment|// This version of the getCopyFromReg method takes an extra operand, which
-comment|// indicates that there is potentially an incoming flag value (if Flag is not
-comment|// null) and that there should be a flag result.
+comment|// indicates that there is potentially an incoming glue value (if Glue is not
+comment|// null) and that there should be a glue result.
 name|SDValue
 name|getCopyFromReg
 parameter_list|(
@@ -2168,7 +2159,7 @@ name|EVT
 name|VT
 parameter_list|,
 name|SDValue
-name|Flag
+name|Glue
 parameter_list|)
 block|{
 name|SDVTList
@@ -2184,7 +2175,7 @@ name|Other
 argument_list|,
 name|MVT
 operator|::
-name|Flag
+name|Glue
 argument_list|)
 decl_stmt|;
 name|SDValue
@@ -2201,7 +2192,7 @@ argument_list|,
 name|VT
 argument_list|)
 block|,
-name|Flag
+name|Glue
 block|}
 decl_stmt|;
 return|return
@@ -2217,7 +2208,7 @@ name|VTs
 argument_list|,
 name|Ops
 argument_list|,
-name|Flag
+name|Glue
 operator|.
 name|getNode
 argument_list|()
@@ -2354,7 +2345,7 @@ name|VT
 parameter_list|)
 function_decl|;
 comment|/// getCALLSEQ_START - Return a new CALLSEQ_START node, which always must have
-comment|/// a flag result (to ensure it's not CSE'd).  CALLSEQ_START does not have a
+comment|/// a glue result (to ensure it's not CSE'd).  CALLSEQ_START does not have a
 comment|/// useful DebugLoc.
 name|SDValue
 name|getCALLSEQ_START
@@ -2377,7 +2368,7 @@ name|Other
 argument_list|,
 name|MVT
 operator|::
-name|Flag
+name|Glue
 argument_list|)
 decl_stmt|;
 name|SDValue
@@ -2409,7 +2400,7 @@ argument_list|)
 return|;
 block|}
 comment|/// getCALLSEQ_END - Return a new CALLSEQ_END node, which always must have a
-comment|/// flag result (to ensure it's not CSE'd).  CALLSEQ_END does not have
+comment|/// glue result (to ensure it's not CSE'd).  CALLSEQ_END does not have
 comment|/// a useful DebugLoc.
 name|SDValue
 name|getCALLSEQ_END
@@ -2424,7 +2415,7 @@ name|SDValue
 name|Op2
 parameter_list|,
 name|SDValue
-name|InFlag
+name|InGlue
 parameter_list|)
 block|{
 name|SDVTList
@@ -2438,7 +2429,7 @@ name|Other
 argument_list|,
 name|MVT
 operator|::
-name|Flag
+name|Glue
 argument_list|)
 decl_stmt|;
 name|SmallVector
@@ -2474,7 +2465,7 @@ name|Ops
 operator|.
 name|push_back
 argument_list|(
-name|InFlag
+name|InGlue
 argument_list|)
 expr_stmt|;
 return|return
@@ -2504,7 +2495,7 @@ name|size
 argument_list|()
 operator|-
 operator|(
-name|InFlag
+name|InGlue
 operator|.
 name|getNode
 argument_list|()
@@ -2966,21 +2957,11 @@ parameter_list|,
 name|bool
 name|AlwaysInline
 parameter_list|,
-specifier|const
-name|Value
-modifier|*
-name|DstSV
+name|MachinePointerInfo
+name|DstPtrInfo
 parameter_list|,
-name|uint64_t
-name|DstSVOff
-parameter_list|,
-specifier|const
-name|Value
-modifier|*
-name|SrcSV
-parameter_list|,
-name|uint64_t
-name|SrcSVOff
+name|MachinePointerInfo
+name|SrcPtrInfo
 parameter_list|)
 function_decl|;
 name|SDValue
@@ -3007,21 +2988,11 @@ parameter_list|,
 name|bool
 name|isVol
 parameter_list|,
-specifier|const
-name|Value
-modifier|*
-name|DstSV
+name|MachinePointerInfo
+name|DstPtrInfo
 parameter_list|,
-name|uint64_t
-name|DstOSVff
-parameter_list|,
-specifier|const
-name|Value
-modifier|*
-name|SrcSV
-parameter_list|,
-name|uint64_t
-name|SrcSVOff
+name|MachinePointerInfo
+name|SrcPtrInfo
 parameter_list|)
 function_decl|;
 name|SDValue
@@ -3048,13 +3019,8 @@ parameter_list|,
 name|bool
 name|isVol
 parameter_list|,
-specifier|const
-name|Value
-modifier|*
-name|DstSV
-parameter_list|,
-name|uint64_t
-name|DstSVOff
+name|MachinePointerInfo
+name|DstPtrInfo
 parameter_list|)
 function_decl|;
 comment|/// getSetCC - Helper function to make it easier to build SetCC's if you just
@@ -3255,10 +3221,8 @@ parameter_list|,
 name|SDValue
 name|Swp
 parameter_list|,
-specifier|const
-name|Value
-modifier|*
-name|PtrVal
+name|MachinePointerInfo
+name|PtrInfo
 parameter_list|,
 name|unsigned
 name|Alignment
@@ -3387,13 +3351,8 @@ parameter_list|,
 name|EVT
 name|MemVT
 parameter_list|,
-specifier|const
-name|Value
-modifier|*
-name|srcValue
-parameter_list|,
-name|int
-name|SVOff
+name|MachinePointerInfo
+name|PtrInfo
 parameter_list|,
 name|unsigned
 name|Align
@@ -3439,13 +3398,8 @@ parameter_list|,
 name|EVT
 name|MemVT
 parameter_list|,
-specifier|const
-name|Value
-modifier|*
-name|srcValue
-parameter_list|,
-name|int
-name|SVOff
+name|MachinePointerInfo
+name|PtrInfo
 parameter_list|,
 name|unsigned
 name|Align
@@ -3530,13 +3484,8 @@ parameter_list|,
 name|SDValue
 name|Ptr
 parameter_list|,
-specifier|const
-name|Value
-modifier|*
-name|SV
-parameter_list|,
-name|int
-name|SVOffset
+name|MachinePointerInfo
+name|PtrInfo
 parameter_list|,
 name|bool
 name|isVolatile
@@ -3546,6 +3495,13 @@ name|isNonTemporal
 parameter_list|,
 name|unsigned
 name|Alignment
+parameter_list|,
+specifier|const
+name|MDNode
+modifier|*
+name|TBAAInfo
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 name|SDValue
@@ -3556,11 +3512,11 @@ operator|::
 name|LoadExtType
 name|ExtType
 argument_list|,
-name|EVT
-name|VT
-argument_list|,
 name|DebugLoc
 name|dl
+argument_list|,
+name|EVT
+name|VT
 argument_list|,
 name|SDValue
 name|Chain
@@ -3568,13 +3524,8 @@ argument_list|,
 name|SDValue
 name|Ptr
 argument_list|,
-specifier|const
-name|Value
-operator|*
-name|SV
-argument_list|,
-name|int
-name|SVOffset
+name|MachinePointerInfo
+name|PtrInfo
 argument_list|,
 name|EVT
 name|MemVT
@@ -3587,6 +3538,13 @@ name|isNonTemporal
 argument_list|,
 name|unsigned
 name|Alignment
+argument_list|,
+specifier|const
+name|MDNode
+operator|*
+name|TBAAInfo
+operator|=
+literal|0
 argument_list|)
 decl_stmt|;
 name|SDValue
@@ -3638,13 +3596,8 @@ argument_list|,
 name|SDValue
 name|Offset
 argument_list|,
-specifier|const
-name|Value
-operator|*
-name|SV
-argument_list|,
-name|int
-name|SVOffset
+name|MachinePointerInfo
+name|PtrInfo
 argument_list|,
 name|EVT
 name|MemVT
@@ -3657,6 +3610,13 @@ name|isNonTemporal
 argument_list|,
 name|unsigned
 name|Alignment
+argument_list|,
+specifier|const
+name|MDNode
+operator|*
+name|TBAAInfo
+operator|=
+literal|0
 argument_list|)
 decl_stmt|;
 name|SDValue
@@ -3712,13 +3672,8 @@ parameter_list|,
 name|SDValue
 name|Ptr
 parameter_list|,
-specifier|const
-name|Value
-modifier|*
-name|SV
-parameter_list|,
-name|int
-name|SVOffset
+name|MachinePointerInfo
+name|PtrInfo
 parameter_list|,
 name|bool
 name|isVolatile
@@ -3728,6 +3683,13 @@ name|isNonTemporal
 parameter_list|,
 name|unsigned
 name|Alignment
+parameter_list|,
+specifier|const
+name|MDNode
+modifier|*
+name|TBAAInfo
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 name|SDValue
@@ -3765,13 +3727,8 @@ parameter_list|,
 name|SDValue
 name|Ptr
 parameter_list|,
-specifier|const
-name|Value
-modifier|*
-name|SV
-parameter_list|,
-name|int
-name|SVOffset
+name|MachinePointerInfo
+name|PtrInfo
 parameter_list|,
 name|EVT
 name|TVT
@@ -3784,6 +3741,13 @@ name|isVolatile
 parameter_list|,
 name|unsigned
 name|Alignment
+parameter_list|,
+specifier|const
+name|MDNode
+modifier|*
+name|TBAAInfo
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 name|SDValue
@@ -5235,6 +5199,17 @@ name|SD
 argument_list|)
 return|;
 block|}
+comment|/// TransferDbgValues - Transfer SDDbgValues.
+name|void
+name|TransferDbgValues
+parameter_list|(
+name|SDValue
+name|From
+parameter_list|,
+name|SDValue
+name|To
+parameter_list|)
+function_decl|;
 comment|/// hasDebugValues - Return true if there are any SDDbgValue nodes associated
 comment|/// with this SelectionDAG.
 name|bool
@@ -5459,6 +5434,19 @@ name|unsigned
 name|Depth
 operator|=
 literal|0
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// isBaseWithConstantOffset - Return true if the specified operand is an
+comment|/// ISD::ADD with a ConstantSDNode on the right-hand side, or if it is an
+comment|/// ISD::OR with a ConstantSDNode that is guaranteed to have the same
+comment|/// semantics as an ADD.  This handles the equivalence:
+comment|///     X|Cst == X+Cst iff X&Cst = 0.
+name|bool
+name|isBaseWithConstantOffset
+argument_list|(
+name|SDValue
+name|Op
 argument_list|)
 decl|const
 decl_stmt|;

@@ -76,7 +76,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DebugLoc.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_decl_stmt
@@ -169,6 +169,9 @@ name|MCStreamer
 decl_stmt|;
 name|class
 name|MCSymbol
+decl_stmt|;
+name|class
+name|MDNode
 decl_stmt|;
 name|class
 name|DwarfDebug
@@ -907,6 +910,13 @@ argument|bool isEH
 argument_list|)
 specifier|const
 block|;
+name|void
+name|EmitCFIFrameMoves
+argument_list|(
+argument|const std::vector<MachineMove>&Moves
+argument_list|)
+specifier|const
+block|;
 comment|//===------------------------------------------------------------------===//
 comment|// Inline Asm Support
 comment|//===------------------------------------------------------------------===//
@@ -998,7 +1008,8 @@ name|EmitInlineAsm
 argument_list|(
 argument|StringRef Str
 argument_list|,
-argument|unsigned LocCookie
+argument|const MDNode *LocMDNode =
+literal|0
 argument_list|)
 specifier|const
 block|;

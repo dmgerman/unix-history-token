@@ -54,7 +54,7 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|MCInst
+name|MCStreamer
 decl_stmt|;
 name|class
 name|StringRef
@@ -161,6 +161,25 @@ name|AvailableFeatures
 operator|=
 name|Value
 block|; }
+name|virtual
+name|bool
+name|ParseRegister
+argument_list|(
+name|unsigned
+operator|&
+name|RegNo
+argument_list|,
+name|SMLoc
+operator|&
+name|StartLoc
+argument_list|,
+name|SMLoc
+operator|&
+name|EndLoc
+argument_list|)
+operator|=
+literal|0
+block|;
 comment|/// ParseInstruction - Parse one assembly instruction.
 comment|///
 comment|/// The parser is positioned following the instruction name. The target
@@ -206,21 +225,21 @@ argument_list|)
 operator|=
 literal|0
 block|;
-comment|/// MatchInstruction - Recognize a series of operands of a parsed instruction
-comment|/// as an actual MCInst.  This returns false and fills in Inst on success and
-comment|/// returns true on failure to match.
+comment|/// MatchAndEmitInstruction - Recognize a series of operands of a parsed
+comment|/// instruction as an actual MCInst and emit it to the specified MCStreamer.
+comment|/// This returns false on success and returns true on failure to match.
 comment|///
 comment|/// On failure, the target parser is responsible for emitting a diagnostic
 comment|/// explaining the match failure.
 name|virtual
 name|bool
-name|MatchInstruction
+name|MatchAndEmitInstruction
 argument_list|(
 argument|SMLoc IDLoc
 argument_list|,
-argument|const SmallVectorImpl<MCParsedAsmOperand*>&Operands
+argument|SmallVectorImpl<MCParsedAsmOperand*>&Operands
 argument_list|,
-argument|MCInst&Inst
+argument|MCStreamer&Out
 argument_list|)
 operator|=
 literal|0

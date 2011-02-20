@@ -44,7 +44,7 @@ comment|// types".  These are things like "arrays of x" or "structure of x, y, z
 end_comment
 
 begin_comment
-comment|// "method returning x taking (y,z) as parameters", etc...
+comment|// "function returning x taking (y,z) as parameters", etc...
 end_comment
 
 begin_comment
@@ -79,6 +79,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Type.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_decl_stmt

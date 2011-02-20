@@ -46,13 +46,19 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Casting.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/System/DataTypes.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_decl_stmt
@@ -66,7 +72,13 @@ name|class
 name|MCAsmLayout
 decl_stmt|;
 name|class
+name|MCAssembler
+decl_stmt|;
+name|class
 name|MCContext
+decl_stmt|;
+name|class
+name|MCSectionData
 decl_stmt|;
 name|class
 name|MCSymbol
@@ -80,6 +92,17 @@ decl_stmt|;
 name|class
 name|StringRef
 decl_stmt|;
+typedef|typedef
+name|DenseMap
+operator|<
+specifier|const
+name|MCSectionData
+operator|*
+operator|,
+name|uint64_t
+operator|>
+name|SectionAddrMap
+expr_stmt|;
 comment|/// MCExpr - Base class for the full range of assembler expressions which are
 comment|/// needed for parsing.
 name|class
@@ -129,6 +152,30 @@ operator|&
 operator|)
 decl_stmt|;
 comment|// DO NOT IMPLEMENT
+name|bool
+name|EvaluateAsAbsolute
+argument_list|(
+name|int64_t
+operator|&
+name|Res
+argument_list|,
+specifier|const
+name|MCAssembler
+operator|*
+name|Asm
+argument_list|,
+specifier|const
+name|MCAsmLayout
+operator|*
+name|Layout
+argument_list|,
+specifier|const
+name|SectionAddrMap
+operator|*
+name|Addrs
+argument_list|)
+decl|const
+decl_stmt|;
 name|protected
 label|:
 name|explicit
@@ -142,6 +189,33 @@ argument_list|(
 argument|_Kind
 argument_list|)
 block|{}
+name|bool
+name|EvaluateAsRelocatableImpl
+argument_list|(
+name|MCValue
+operator|&
+name|Res
+argument_list|,
+specifier|const
+name|MCAssembler
+operator|*
+name|Asm
+argument_list|,
+specifier|const
+name|MCAsmLayout
+operator|*
+name|Layout
+argument_list|,
+specifier|const
+name|SectionAddrMap
+operator|*
+name|Addrs
+argument_list|,
+name|bool
+name|InSet
+argument_list|)
+decl|const
+decl_stmt|;
 name|public
 label|:
 comment|/// @name Accessors
@@ -188,13 +262,53 @@ argument_list|(
 name|int64_t
 operator|&
 name|Res
+argument_list|)
+decl|const
+decl_stmt|;
+name|bool
+name|EvaluateAsAbsolute
+argument_list|(
+name|int64_t
+operator|&
+name|Res
+argument_list|,
+specifier|const
+name|MCAssembler
+operator|&
+name|Asm
+argument_list|)
+decl|const
+decl_stmt|;
+name|bool
+name|EvaluateAsAbsolute
+argument_list|(
+name|int64_t
+operator|&
+name|Res
 argument_list|,
 specifier|const
 name|MCAsmLayout
-operator|*
+operator|&
 name|Layout
-operator|=
-literal|0
+argument_list|)
+decl|const
+decl_stmt|;
+name|bool
+name|EvaluateAsAbsolute
+argument_list|(
+name|int64_t
+operator|&
+name|Res
+argument_list|,
+specifier|const
+name|MCAsmLayout
+operator|&
+name|Layout
+argument_list|,
+specifier|const
+name|SectionAddrMap
+operator|&
+name|Addrs
 argument_list|)
 decl|const
 decl_stmt|;
@@ -213,10 +327,8 @@ name|Res
 argument_list|,
 specifier|const
 name|MCAsmLayout
-operator|*
+operator|&
 name|Layout
-operator|=
-literal|0
 argument_list|)
 decl|const
 decl_stmt|;
@@ -383,20 +495,45 @@ name|VK_INDNTPOFF
 block|,
 name|VK_NTPOFF
 block|,
+name|VK_GOTNTPOFF
+block|,
 name|VK_PLT
 block|,
 name|VK_TLSGD
 block|,
+name|VK_TLSLD
+block|,
+name|VK_TLSLDM
+block|,
 name|VK_TPOFF
 block|,
-name|VK_ARM_HI16
+name|VK_DTPOFF
 block|,
-comment|// The R_ARM_MOVT_ABS relocation (:upper16: in the asm file)
-name|VK_ARM_LO16
-block|,
-comment|// The R_ARM_MOVW_ABS_NC relocation (:lower16: in the asm file)
 name|VK_TLVP
+block|,
 comment|// Mach-O thread local variable relocation
+comment|// FIXME: We'd really like to use the generic Kinds listed above for these.
+name|VK_ARM_PLT
+block|,
+comment|// ARM-style PLT references. i.e., (PLT) instead of @PLT
+name|VK_ARM_TLSGD
+block|,
+comment|//   ditto for TLSGD, GOT, GOTOFF, TPOFF and GOTTPOFF
+name|VK_ARM_GOT
+block|,
+name|VK_ARM_GOTOFF
+block|,
+name|VK_ARM_TPOFF
+block|,
+name|VK_ARM_GOTTPOFF
+block|,
+name|VK_PPC_TOC
+block|,
+name|VK_PPC_HA16
+block|,
+comment|// ha16(symbol)
+name|VK_PPC_LO16
+comment|// lo16(symbol)
 block|}
 block|;
 name|private
@@ -1506,6 +1643,16 @@ argument_list|(
 argument|MCValue&Res
 argument_list|,
 argument|const MCAsmLayout *Layout
+argument_list|)
+specifier|const
+operator|=
+literal|0
+block|;
+name|virtual
+name|void
+name|AddValueSymbols
+argument_list|(
+argument|MCAssembler *
 argument_list|)
 specifier|const
 operator|=

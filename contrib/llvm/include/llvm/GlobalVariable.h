@@ -318,7 +318,21 @@ argument_list|()
 return|;
 block|}
 comment|/// hasDefinitiveInitializer - Whether the global variable has an initializer,
-comment|/// and this is the initializer that will be used in the final executable.
+comment|/// and any other instances of the global (this can happen due to weak
+comment|/// linkage) are guaranteed to have the same initializer.
+comment|///
+comment|/// Note that if you want to transform a global, you must use
+comment|/// hasUniqueInitializer() instead, because of the *_odr linkage type.
+comment|///
+comment|/// Example:
+comment|///
+comment|/// @a = global SomeType* null - Initializer is both definitive and unique.
+comment|///
+comment|/// @b = global weak SomeType* null - Initializer is neither definitive nor
+comment|/// unique.
+comment|///
+comment|/// @c = global weak_odr SomeType* null - Initializer is definitive, but not
+comment|/// unique.
 specifier|inline
 name|bool
 name|hasDefinitiveInitializer
@@ -333,6 +347,29 @@ comment|// The initializer of a global variable with weak linkage may change at
 comment|// link time.
 operator|!
 name|mayBeOverridden
+argument_list|()
+return|;
+block|}
+comment|/// hasUniqueInitializer - Whether the global variable has an initializer, and
+comment|/// any changes made to the initializer will turn up in the final executable.
+specifier|inline
+name|bool
+name|hasUniqueInitializer
+argument_list|()
+specifier|const
+block|{
+return|return
+name|hasInitializer
+argument_list|()
+operator|&&
+comment|// It's not safe to modify initializers of global variables with weak
+comment|// linkage, because the linker might choose to discard the initializer and
+comment|// use the initializer from another instance of the global variable
+comment|// instead. It is wrong to modify the initializer of a global variable
+comment|// with *_odr linkage because then different instances of the global may
+comment|// have different initializers, breaking the One Definition Rule.
+operator|!
+name|isWeakForLinker
 argument_list|()
 return|;
 block|}
@@ -563,6 +600,7 @@ operator|:
 name|public
 name|OptionalOperandTraits
 operator|<
+name|GlobalVariable
 operator|>
 block|{ }
 expr_stmt|;

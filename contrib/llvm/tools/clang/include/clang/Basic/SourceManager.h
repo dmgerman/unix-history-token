@@ -74,7 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/System/DataTypes.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_include
@@ -1162,6 +1162,10 @@ name|Diagnostic
 modifier|&
 name|Diag
 decl_stmt|;
+name|FileManager
+modifier|&
+name|FileMgr
+decl_stmt|;
 name|mutable
 name|llvm
 operator|::
@@ -1309,36 +1313,12 @@ argument_list|(
 name|Diagnostic
 operator|&
 name|Diag
+argument_list|,
+name|FileManager
+operator|&
+name|FileMgr
 argument_list|)
-operator|:
-name|Diag
-argument_list|(
-name|Diag
-argument_list|)
-operator|,
-name|ExternalSLocEntries
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|LineTable
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NumLinearScans
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NumBinaryProbes
-argument_list|(
-literal|0
-argument_list|)
-block|{
-name|clearIDTables
-argument_list|()
-block|;   }
+expr_stmt|;
 operator|~
 name|SourceManager
 argument_list|()
@@ -1347,6 +1327,26 @@ name|void
 name|clearIDTables
 parameter_list|()
 function_decl|;
+name|Diagnostic
+operator|&
+name|getDiagnostics
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Diag
+return|;
+block|}
+name|FileManager
+operator|&
+name|getFileManager
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FileMgr
+return|;
+block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// MainFileID creation and querying methods.
 comment|//===--------------------------------------------------------------------===//
@@ -1398,6 +1398,30 @@ return|return
 name|MainFileID
 return|;
 block|}
+comment|/// \brief Set the file ID for the precompiled preamble, which is also the
+comment|/// main file.
+name|void
+name|SetPreambleFileID
+parameter_list|(
+name|FileID
+name|Preamble
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|MainFileID
+operator|.
+name|isInvalid
+argument_list|()
+operator|&&
+literal|"MainFileID already set!"
+argument_list|)
+expr_stmt|;
+name|MainFileID
+operator|=
+name|Preamble
+expr_stmt|;
+block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// Methods to create new FileID's and instantiations.
 comment|//===--------------------------------------------------------------------===//
@@ -1445,17 +1469,13 @@ argument_list|(
 name|SourceFile
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|assert
+argument_list|(
 name|IR
-operator|==
-literal|0
-condition|)
-return|return
-name|FileID
-argument_list|()
-return|;
-comment|// Error opening file?
+operator|&&
+literal|"getOrCreateContentCache() cannot return NULL"
+argument_list|)
+expr_stmt|;
 return|return
 name|createFileID
 argument_list|(
@@ -1613,9 +1633,7 @@ comment|/// data in the given source file.
 comment|///
 comment|/// \param DoNotFree If true, then the buffer will not be freed when the
 comment|/// source manager is destroyed.
-comment|///
-comment|/// \returns true if an error occurred, false otherwise.
-name|bool
+name|void
 name|overrideFileContents
 argument_list|(
 specifier|const
@@ -2499,6 +2517,26 @@ begin_comment
 comment|/// of an instantiation location, not at the spelling location.
 end_comment
 
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns The presumed location of the specified SourceLocation. If the
+end_comment
+
+begin_comment
+comment|/// presumed location cannot be calculate (e.g., because \p Loc is invalid
+end_comment
+
+begin_comment
+comment|/// or the file containing \p Loc has changed on disk), returns an invalid
+end_comment
+
+begin_comment
+comment|/// presumed location.
+end_comment
+
 begin_decl_stmt
 name|PresumedLoc
 name|getPresumedLoc
@@ -2778,24 +2816,23 @@ begin_comment
 comment|/// be based upon the first inclusion.
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|SourceLocation
 name|getLocation
-argument_list|(
+parameter_list|(
 specifier|const
 name|FileEntry
-operator|*
+modifier|*
 name|SourceFile
-argument_list|,
+parameter_list|,
 name|unsigned
 name|Line
-argument_list|,
+parameter_list|,
 name|unsigned
 name|Col
-argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// \brief Determines the order of 2 source locations in the translation unit.

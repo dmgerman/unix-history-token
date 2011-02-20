@@ -569,6 +569,8 @@ operator|:
 name|public
 name|FixedNumOperandTraits
 operator|<
+name|UnaryInstruction
+block|,
 literal|1
 operator|>
 block|{ }
@@ -763,13 +765,13 @@ value|static BinaryOperator *Create##OPC(Value *V1, Value *V2, \                
 include|#
 directive|include
 file|"llvm/Instruction.def"
-comment|/// CreateNSWAdd - Create an Add operator with the NSW flag set.
-comment|///
 specifier|static
 name|BinaryOperator
 operator|*
-name|CreateNSWAdd
+name|CreateNSW
 argument_list|(
+argument|BinaryOps Opc
+argument_list|,
 argument|Value *V1
 argument_list|,
 argument|Value *V2
@@ -782,8 +784,10 @@ name|BinaryOperator
 operator|*
 name|BO
 operator|=
-name|CreateAdd
+name|Create
 argument_list|(
+name|Opc
+argument_list|,
 name|V1
 argument_list|,
 name|V2
@@ -805,8 +809,10 @@ block|}
 specifier|static
 name|BinaryOperator
 operator|*
-name|CreateNSWAdd
+name|CreateNSW
 argument_list|(
+argument|BinaryOps Opc
+argument_list|,
 argument|Value *V1
 argument_list|,
 argument|Value *V2
@@ -820,8 +826,10 @@ name|BinaryOperator
 operator|*
 name|BO
 operator|=
-name|CreateAdd
+name|Create
 argument_list|(
+name|Opc
+argument_list|,
 name|V1
 argument_list|,
 name|V2
@@ -845,8 +853,10 @@ block|}
 specifier|static
 name|BinaryOperator
 operator|*
-name|CreateNSWAdd
+name|CreateNSW
 argument_list|(
+argument|BinaryOps Opc
+argument_list|,
 argument|Value *V1
 argument_list|,
 argument|Value *V2
@@ -860,8 +870,10 @@ name|BinaryOperator
 operator|*
 name|BO
 operator|=
-name|CreateAdd
+name|Create
 argument_list|(
+name|Opc
+argument_list|,
 name|V1
 argument_list|,
 name|V2
@@ -882,13 +894,13 @@ return|return
 name|BO
 return|;
 block|}
-comment|/// CreateNUWAdd - Create an Add operator with the NUW flag set.
-comment|///
 specifier|static
 name|BinaryOperator
 operator|*
-name|CreateNUWAdd
+name|CreateNUW
 argument_list|(
+argument|BinaryOps Opc
+argument_list|,
 argument|Value *V1
 argument_list|,
 argument|Value *V2
@@ -901,8 +913,10 @@ name|BinaryOperator
 operator|*
 name|BO
 operator|=
-name|CreateAdd
+name|Create
 argument_list|(
+name|Opc
+argument_list|,
 name|V1
 argument_list|,
 name|V2
@@ -924,8 +938,10 @@ block|}
 specifier|static
 name|BinaryOperator
 operator|*
-name|CreateNUWAdd
+name|CreateNUW
 argument_list|(
+argument|BinaryOps Opc
+argument_list|,
 argument|Value *V1
 argument_list|,
 argument|Value *V2
@@ -939,8 +955,10 @@ name|BinaryOperator
 operator|*
 name|BO
 operator|=
-name|CreateAdd
+name|Create
 argument_list|(
+name|Opc
+argument_list|,
 name|V1
 argument_list|,
 name|V2
@@ -964,8 +982,10 @@ block|}
 specifier|static
 name|BinaryOperator
 operator|*
-name|CreateNUWAdd
+name|CreateNUW
 argument_list|(
+argument|BinaryOps Opc
+argument_list|,
 argument|Value *V1
 argument_list|,
 argument|Value *V2
@@ -979,8 +999,10 @@ name|BinaryOperator
 operator|*
 name|BO
 operator|=
-name|CreateAdd
+name|Create
 argument_list|(
+name|Opc
+argument_list|,
 name|V1
 argument_list|,
 name|V2
@@ -1001,13 +1023,13 @@ return|return
 name|BO
 return|;
 block|}
-comment|/// CreateNSWSub - Create an Sub operator with the NSW flag set.
-comment|///
 specifier|static
 name|BinaryOperator
 operator|*
-name|CreateNSWSub
+name|CreateExact
 argument_list|(
+argument|BinaryOps Opc
+argument_list|,
 argument|Value *V1
 argument_list|,
 argument|Value *V2
@@ -1020,484 +1042,10 @@ name|BinaryOperator
 operator|*
 name|BO
 operator|=
-name|CreateSub
+name|Create
 argument_list|(
-name|V1
+name|Opc
 argument_list|,
-name|V2
-argument_list|,
-name|Name
-argument_list|)
-block|;
-name|BO
-operator|->
-name|setHasNoSignedWrap
-argument_list|(
-name|true
-argument_list|)
-block|;
-return|return
-name|BO
-return|;
-block|}
-specifier|static
-name|BinaryOperator
-operator|*
-name|CreateNSWSub
-argument_list|(
-argument|Value *V1
-argument_list|,
-argument|Value *V2
-argument_list|,
-argument|const Twine&Name
-argument_list|,
-argument|BasicBlock *BB
-argument_list|)
-block|{
-name|BinaryOperator
-operator|*
-name|BO
-operator|=
-name|CreateSub
-argument_list|(
-name|V1
-argument_list|,
-name|V2
-argument_list|,
-name|Name
-argument_list|,
-name|BB
-argument_list|)
-block|;
-name|BO
-operator|->
-name|setHasNoSignedWrap
-argument_list|(
-name|true
-argument_list|)
-block|;
-return|return
-name|BO
-return|;
-block|}
-specifier|static
-name|BinaryOperator
-operator|*
-name|CreateNSWSub
-argument_list|(
-argument|Value *V1
-argument_list|,
-argument|Value *V2
-argument_list|,
-argument|const Twine&Name
-argument_list|,
-argument|Instruction *I
-argument_list|)
-block|{
-name|BinaryOperator
-operator|*
-name|BO
-operator|=
-name|CreateSub
-argument_list|(
-name|V1
-argument_list|,
-name|V2
-argument_list|,
-name|Name
-argument_list|,
-name|I
-argument_list|)
-block|;
-name|BO
-operator|->
-name|setHasNoSignedWrap
-argument_list|(
-name|true
-argument_list|)
-block|;
-return|return
-name|BO
-return|;
-block|}
-comment|/// CreateNUWSub - Create an Sub operator with the NUW flag set.
-comment|///
-specifier|static
-name|BinaryOperator
-operator|*
-name|CreateNUWSub
-argument_list|(
-argument|Value *V1
-argument_list|,
-argument|Value *V2
-argument_list|,
-argument|const Twine&Name =
-literal|""
-argument_list|)
-block|{
-name|BinaryOperator
-operator|*
-name|BO
-operator|=
-name|CreateSub
-argument_list|(
-name|V1
-argument_list|,
-name|V2
-argument_list|,
-name|Name
-argument_list|)
-block|;
-name|BO
-operator|->
-name|setHasNoUnsignedWrap
-argument_list|(
-name|true
-argument_list|)
-block|;
-return|return
-name|BO
-return|;
-block|}
-specifier|static
-name|BinaryOperator
-operator|*
-name|CreateNUWSub
-argument_list|(
-argument|Value *V1
-argument_list|,
-argument|Value *V2
-argument_list|,
-argument|const Twine&Name
-argument_list|,
-argument|BasicBlock *BB
-argument_list|)
-block|{
-name|BinaryOperator
-operator|*
-name|BO
-operator|=
-name|CreateSub
-argument_list|(
-name|V1
-argument_list|,
-name|V2
-argument_list|,
-name|Name
-argument_list|,
-name|BB
-argument_list|)
-block|;
-name|BO
-operator|->
-name|setHasNoUnsignedWrap
-argument_list|(
-name|true
-argument_list|)
-block|;
-return|return
-name|BO
-return|;
-block|}
-specifier|static
-name|BinaryOperator
-operator|*
-name|CreateNUWSub
-argument_list|(
-argument|Value *V1
-argument_list|,
-argument|Value *V2
-argument_list|,
-argument|const Twine&Name
-argument_list|,
-argument|Instruction *I
-argument_list|)
-block|{
-name|BinaryOperator
-operator|*
-name|BO
-operator|=
-name|CreateSub
-argument_list|(
-name|V1
-argument_list|,
-name|V2
-argument_list|,
-name|Name
-argument_list|,
-name|I
-argument_list|)
-block|;
-name|BO
-operator|->
-name|setHasNoUnsignedWrap
-argument_list|(
-name|true
-argument_list|)
-block|;
-return|return
-name|BO
-return|;
-block|}
-comment|/// CreateNSWMul - Create a Mul operator with the NSW flag set.
-comment|///
-specifier|static
-name|BinaryOperator
-operator|*
-name|CreateNSWMul
-argument_list|(
-argument|Value *V1
-argument_list|,
-argument|Value *V2
-argument_list|,
-argument|const Twine&Name =
-literal|""
-argument_list|)
-block|{
-name|BinaryOperator
-operator|*
-name|BO
-operator|=
-name|CreateMul
-argument_list|(
-name|V1
-argument_list|,
-name|V2
-argument_list|,
-name|Name
-argument_list|)
-block|;
-name|BO
-operator|->
-name|setHasNoSignedWrap
-argument_list|(
-name|true
-argument_list|)
-block|;
-return|return
-name|BO
-return|;
-block|}
-specifier|static
-name|BinaryOperator
-operator|*
-name|CreateNSWMul
-argument_list|(
-argument|Value *V1
-argument_list|,
-argument|Value *V2
-argument_list|,
-argument|const Twine&Name
-argument_list|,
-argument|BasicBlock *BB
-argument_list|)
-block|{
-name|BinaryOperator
-operator|*
-name|BO
-operator|=
-name|CreateMul
-argument_list|(
-name|V1
-argument_list|,
-name|V2
-argument_list|,
-name|Name
-argument_list|,
-name|BB
-argument_list|)
-block|;
-name|BO
-operator|->
-name|setHasNoSignedWrap
-argument_list|(
-name|true
-argument_list|)
-block|;
-return|return
-name|BO
-return|;
-block|}
-specifier|static
-name|BinaryOperator
-operator|*
-name|CreateNSWMul
-argument_list|(
-argument|Value *V1
-argument_list|,
-argument|Value *V2
-argument_list|,
-argument|const Twine&Name
-argument_list|,
-argument|Instruction *I
-argument_list|)
-block|{
-name|BinaryOperator
-operator|*
-name|BO
-operator|=
-name|CreateMul
-argument_list|(
-name|V1
-argument_list|,
-name|V2
-argument_list|,
-name|Name
-argument_list|,
-name|I
-argument_list|)
-block|;
-name|BO
-operator|->
-name|setHasNoSignedWrap
-argument_list|(
-name|true
-argument_list|)
-block|;
-return|return
-name|BO
-return|;
-block|}
-comment|/// CreateNUWMul - Create a Mul operator with the NUW flag set.
-comment|///
-specifier|static
-name|BinaryOperator
-operator|*
-name|CreateNUWMul
-argument_list|(
-argument|Value *V1
-argument_list|,
-argument|Value *V2
-argument_list|,
-argument|const Twine&Name =
-literal|""
-argument_list|)
-block|{
-name|BinaryOperator
-operator|*
-name|BO
-operator|=
-name|CreateMul
-argument_list|(
-name|V1
-argument_list|,
-name|V2
-argument_list|,
-name|Name
-argument_list|)
-block|;
-name|BO
-operator|->
-name|setHasNoUnsignedWrap
-argument_list|(
-name|true
-argument_list|)
-block|;
-return|return
-name|BO
-return|;
-block|}
-specifier|static
-name|BinaryOperator
-operator|*
-name|CreateNUWMul
-argument_list|(
-argument|Value *V1
-argument_list|,
-argument|Value *V2
-argument_list|,
-argument|const Twine&Name
-argument_list|,
-argument|BasicBlock *BB
-argument_list|)
-block|{
-name|BinaryOperator
-operator|*
-name|BO
-operator|=
-name|CreateMul
-argument_list|(
-name|V1
-argument_list|,
-name|V2
-argument_list|,
-name|Name
-argument_list|,
-name|BB
-argument_list|)
-block|;
-name|BO
-operator|->
-name|setHasNoUnsignedWrap
-argument_list|(
-name|true
-argument_list|)
-block|;
-return|return
-name|BO
-return|;
-block|}
-specifier|static
-name|BinaryOperator
-operator|*
-name|CreateNUWMul
-argument_list|(
-argument|Value *V1
-argument_list|,
-argument|Value *V2
-argument_list|,
-argument|const Twine&Name
-argument_list|,
-argument|Instruction *I
-argument_list|)
-block|{
-name|BinaryOperator
-operator|*
-name|BO
-operator|=
-name|CreateMul
-argument_list|(
-name|V1
-argument_list|,
-name|V2
-argument_list|,
-name|Name
-argument_list|,
-name|I
-argument_list|)
-block|;
-name|BO
-operator|->
-name|setHasNoUnsignedWrap
-argument_list|(
-name|true
-argument_list|)
-block|;
-return|return
-name|BO
-return|;
-block|}
-comment|/// CreateExactSDiv - Create an SDiv operator with the exact flag set.
-comment|///
-specifier|static
-name|BinaryOperator
-operator|*
-name|CreateExactSDiv
-argument_list|(
-argument|Value *V1
-argument_list|,
-argument|Value *V2
-argument_list|,
-argument|const Twine&Name =
-literal|""
-argument_list|)
-block|{
-name|BinaryOperator
-operator|*
-name|BO
-operator|=
-name|CreateSDiv
-argument_list|(
 name|V1
 argument_list|,
 name|V2
@@ -1519,8 +1067,10 @@ block|}
 specifier|static
 name|BinaryOperator
 operator|*
-name|CreateExactSDiv
+name|CreateExact
 argument_list|(
+argument|BinaryOps Opc
+argument_list|,
 argument|Value *V1
 argument_list|,
 argument|Value *V2
@@ -1534,8 +1084,10 @@ name|BinaryOperator
 operator|*
 name|BO
 operator|=
-name|CreateSDiv
+name|Create
 argument_list|(
+name|Opc
+argument_list|,
 name|V1
 argument_list|,
 name|V2
@@ -1559,8 +1111,10 @@ block|}
 specifier|static
 name|BinaryOperator
 operator|*
-name|CreateExactSDiv
+name|CreateExact
 argument_list|(
+argument|BinaryOps Opc
+argument_list|,
 argument|Value *V1
 argument_list|,
 argument|Value *V2
@@ -1574,8 +1128,10 @@ name|BinaryOperator
 operator|*
 name|BO
 operator|=
-name|CreateSDiv
+name|Create
 argument_list|(
+name|Opc
+argument_list|,
 name|V1
 argument_list|,
 name|V2
@@ -1596,6 +1152,103 @@ return|return
 name|BO
 return|;
 block|}
+define|#
+directive|define
+name|DEFINE_HELPERS
+parameter_list|(
+name|OPC
+parameter_list|,
+name|NUWNSWEXACT
+parameter_list|)
+define|\
+value|static BinaryOperator *Create ## NUWNSWEXACT ## OPC                        \            (Value *V1, Value *V2, const Twine&Name = "") {                  \     return Create ## NUWNSWEXACT(Instruction::OPC, V1, V2, Name);            \   }                                                                          \   static BinaryOperator *Create ## NUWNSWEXACT ## OPC                        \            (Value *V1, Value *V2, const Twine&Name, BasicBlock *BB) {       \     return Create ## NUWNSWEXACT(Instruction::OPC, V1, V2, Name, BB);        \   }                                                                          \   static BinaryOperator *Create ## NUWNSWEXACT ## OPC                        \            (Value *V1, Value *V2, const Twine&Name, Instruction *I) {       \     return Create ## NUWNSWEXACT(Instruction::OPC, V1, V2, Name, I);         \   }
+name|DEFINE_HELPERS
+argument_list|(
+argument|Add
+argument_list|,
+argument|NSW
+argument_list|)
+comment|// CreateNSWAdd
+name|DEFINE_HELPERS
+argument_list|(
+argument|Add
+argument_list|,
+argument|NUW
+argument_list|)
+comment|// CreateNUWAdd
+name|DEFINE_HELPERS
+argument_list|(
+argument|Sub
+argument_list|,
+argument|NSW
+argument_list|)
+comment|// CreateNSWSub
+name|DEFINE_HELPERS
+argument_list|(
+argument|Sub
+argument_list|,
+argument|NUW
+argument_list|)
+comment|// CreateNUWSub
+name|DEFINE_HELPERS
+argument_list|(
+argument|Mul
+argument_list|,
+argument|NSW
+argument_list|)
+comment|// CreateNSWMul
+name|DEFINE_HELPERS
+argument_list|(
+argument|Mul
+argument_list|,
+argument|NUW
+argument_list|)
+comment|// CreateNUWMul
+name|DEFINE_HELPERS
+argument_list|(
+argument|Shl
+argument_list|,
+argument|NSW
+argument_list|)
+comment|// CreateNSWShl
+name|DEFINE_HELPERS
+argument_list|(
+argument|Shl
+argument_list|,
+argument|NUW
+argument_list|)
+comment|// CreateNUWShl
+name|DEFINE_HELPERS
+argument_list|(
+argument|SDiv
+argument_list|,
+argument|Exact
+argument_list|)
+comment|// CreateExactSDiv
+name|DEFINE_HELPERS
+argument_list|(
+argument|UDiv
+argument_list|,
+argument|Exact
+argument_list|)
+comment|// CreateExactUDiv
+name|DEFINE_HELPERS
+argument_list|(
+argument|AShr
+argument_list|,
+argument|Exact
+argument_list|)
+comment|// CreateExactAShr
+name|DEFINE_HELPERS
+argument_list|(
+argument|LShr
+argument_list|,
+argument|Exact
+argument_list|)
+comment|// CreateExactLShr
+undef|#
+directive|undef
+name|DEFINE_HELPERS
 comment|/// Helper functions to construct and inspect unary operations (NEG and NOT)
 comment|/// via binary operators SUB and XOR:
 comment|///
@@ -2058,6 +1711,8 @@ operator|:
 name|public
 name|FixedNumOperandTraits
 operator|<
+name|BinaryOperator
+block|,
 literal|2
 operator|>
 block|{ }
@@ -3324,12 +2979,14 @@ comment|/// @brief Determine if this CmpInst is commutative.
 name|bool
 name|isCommutative
 argument_list|()
+specifier|const
 block|;
 comment|/// This is just a convenience that dispatches to the subclasses.
 comment|/// @brief Determine if this is an equals/not equals predicate.
 name|bool
 name|isEquality
 argument_list|()
+specifier|const
 block|;
 comment|/// @returns true if the comparison is signed, false otherwise.
 comment|/// @brief Determine if this instruction is using a signed comparison.
@@ -3604,6 +3261,8 @@ operator|:
 name|public
 name|FixedNumOperandTraits
 operator|<
+name|CmpInst
+block|,
 literal|2
 operator|>
 block|{ }

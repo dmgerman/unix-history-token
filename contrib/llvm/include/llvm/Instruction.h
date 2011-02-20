@@ -769,8 +769,7 @@ comment|/// isAssociative - Return true if the instruction is associative:
 comment|///
 comment|///   Associative operators satisfy:  x op (y op z) === (x op y) op z
 comment|///
-comment|/// In LLVM, the Add, Mul, And, Or, and Xor operators are associative, when
-comment|/// not applied to floating point types.
+comment|/// In LLVM, the Add, Mul, And, Or, and Xor operators are associative.
 comment|///
 name|bool
 name|isAssociative
@@ -782,9 +781,6 @@ name|isAssociative
 argument_list|(
 name|getOpcode
 argument_list|()
-argument_list|,
-name|getType
-argument_list|()
 argument_list|)
 return|;
 block|}
@@ -794,11 +790,6 @@ name|isAssociative
 parameter_list|(
 name|unsigned
 name|op
-parameter_list|,
-specifier|const
-name|Type
-modifier|*
-name|Ty
 parameter_list|)
 function_decl|;
 comment|/// isCommutative - Return true if the instruction is commutative:

@@ -305,13 +305,6 @@ argument_list|)
 specifier|const
 block|;
 name|bool
-name|hasFP
-argument_list|(
-argument|const MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
-name|bool
 name|canRealignStack
 argument_list|(
 argument|const MachineFunction&MF
@@ -320,13 +313,6 @@ specifier|const
 block|;
 name|bool
 name|needsStackRealignment
-argument_list|(
-argument|const MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|hasReservedCallFrame
 argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
@@ -365,42 +351,6 @@ argument|RegScavenger *RS = NULL
 argument_list|)
 specifier|const
 block|;
-name|void
-name|processFunctionBeforeCalleeSavedScan
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|RegScavenger *RS = NULL
-argument_list|)
-specifier|const
-block|;
-name|void
-name|emitCalleeSavedFrameMoves
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|MCSymbol *Label
-argument_list|,
-argument|unsigned FramePtr
-argument_list|)
-specifier|const
-block|;
-name|void
-name|emitPrologue
-argument_list|(
-argument|MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
-name|void
-name|emitEpilogue
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|MachineBasicBlock&MBB
-argument_list|)
-specifier|const
-block|;
 comment|// Debug information queries.
 name|unsigned
 name|getRARegister
@@ -414,22 +364,25 @@ argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
-name|int
-name|getFrameIndexOffset
-argument_list|(
-argument|const MachineFunction&MF
-argument_list|,
-argument|int FI
-argument_list|)
+name|unsigned
+name|getStackRegister
+argument_list|()
 specifier|const
-block|;
-name|void
-name|getInitialFrameState
-argument_list|(
-argument|std::vector<MachineMove>&Moves
-argument_list|)
+block|{
+return|return
+name|StackPtr
+return|;
+block|}
+comment|// FIXME: Move to FrameInfok
+name|unsigned
+name|getSlotSize
+argument_list|()
 specifier|const
-block|;
+block|{
+return|return
+name|SlotSize
+return|;
+block|}
 comment|// Exception handling queries.
 name|unsigned
 name|getEHExceptionRegister

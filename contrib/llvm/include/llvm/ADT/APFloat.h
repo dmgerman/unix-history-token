@@ -570,6 +570,24 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
+comment|/// getAllOnesValue - Returns a float which is bitcasted from
+comment|/// an all one value int.
+comment|///
+comment|/// \param BitWidth - Select float type
+comment|/// \param isIEEE   - If 128 bit number, select between PPC and IEEE
+specifier|static
+name|APFloat
+name|getAllOnesValue
+parameter_list|(
+name|unsigned
+name|BitWidth
+parameter_list|,
+name|bool
+name|isIEEE
+init|=
+name|false
+parameter_list|)
+function_decl|;
 comment|/// Profile - Used to insert APFloat objects, or objects that contain
 comment|///  APFloat objects, into FoldingSets.
 name|void

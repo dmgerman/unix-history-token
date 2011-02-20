@@ -179,9 +179,9 @@ comment|// Record a child of the current node.
 name|RecordMemRef
 block|,
 comment|// Record the memref in the current node.
-name|CaptureFlagInput
+name|CaptureGlueInput
 block|,
-comment|// If the current node has an input flag, save it.
+comment|// If the current node has an input glue, save it.
 name|MoveChild
 block|,
 comment|// Move current node to specified child.
@@ -253,9 +253,9 @@ comment|// Create a DAG node
 name|EmitNodeXForm
 block|,
 comment|// Run a SDNodeXForm
-name|MarkFlagResults
+name|MarkGlueResults
 block|,
-comment|// Indicate which interior nodes have flag results.
+comment|// Indicate which interior nodes have glue results.
 name|CompleteMatch
 block|,
 comment|// Finish a match and update the results.
@@ -1296,22 +1296,22 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// CaptureFlagInputMatcher - If the current record has a flag input, record
+comment|/// CaptureGlueInputMatcher - If the current record has a glue input, record
 comment|/// it so that it is used as an input to the generated code.
 name|class
-name|CaptureFlagInputMatcher
+name|CaptureGlueInputMatcher
 operator|:
 name|public
 name|Matcher
 block|{
 name|public
 operator|:
-name|CaptureFlagInputMatcher
+name|CaptureGlueInputMatcher
 argument_list|()
 operator|:
 name|Matcher
 argument_list|(
-argument|CaptureFlagInput
+argument|CaptureGlueInput
 argument_list|)
 block|{}
 specifier|static
@@ -1328,7 +1328,7 @@ operator|->
 name|getKind
 argument_list|()
 operator|==
-name|CaptureFlagInput
+name|CaptureGlueInput
 return|;
 block|}
 name|virtual
@@ -2979,8 +2979,8 @@ name|ComplexPattern
 operator|&
 name|Pattern
 block|;
-comment|/// MatchNumber - This is the recorded nodes slot that contains the node we want to
-comment|/// match against.
+comment|/// MatchNumber - This is the recorded nodes slot that contains the node we
+comment|/// want to match against.
 name|unsigned
 name|MatchNumber
 block|;
@@ -4133,7 +4133,7 @@ specifier|const
 block|; }
 block|;
 comment|/// EmitCopyToRegMatcher - Emit a CopyToReg node from a value to a physreg,
-comment|/// pushing the chain and flag results.
+comment|/// pushing the chain and glue results.
 comment|///
 name|class
 name|EmitCopyToRegMatcher
@@ -4460,9 +4460,9 @@ block|;
 name|bool
 name|HasChain
 block|,
-name|HasInFlag
+name|HasInGlue
 block|,
-name|HasOutFlag
+name|HasOutGlue
 block|,
 name|HasMemRefs
 block|;
@@ -4488,9 +4488,9 @@ argument|unsigned numops
 argument_list|,
 argument|bool hasChain
 argument_list|,
-argument|bool hasInFlag
+argument|bool hasInGlue
 argument_list|,
-argument|bool hasOutFlag
+argument|bool hasOutGlue
 argument_list|,
 argument|bool hasmemrefs
 argument_list|,
@@ -4536,14 +4536,14 @@ argument_list|(
 name|hasChain
 argument_list|)
 block|,
-name|HasInFlag
+name|HasInGlue
 argument_list|(
-name|hasInFlag
+name|hasInGlue
 argument_list|)
 block|,
-name|HasOutFlag
+name|HasOutGlue
 argument_list|(
-name|hasOutFlag
+name|hasOutGlue
 argument_list|)
 block|,
 name|HasMemRefs
@@ -4688,7 +4688,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|HasInFlag
+name|HasInGlue
 return|;
 block|}
 name|bool
@@ -4697,7 +4697,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|HasOutFlag
+name|HasOutGlue
 return|;
 block|}
 name|bool
@@ -4962,11 +4962,11 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// MarkFlagResultsMatcher - This node indicates which non-root nodes in the
-comment|/// pattern produce flags.  This allows CompleteMatchMatcher to update them
-comment|/// with the output flag of the resultant code.
+comment|/// MarkGlueResultsMatcher - This node indicates which non-root nodes in the
+comment|/// pattern produce glue.  This allows CompleteMatchMatcher to update them
+comment|/// with the output glue of the resultant code.
 name|class
-name|MarkFlagResultsMatcher
+name|MarkGlueResultsMatcher
 operator|:
 name|public
 name|Matcher
@@ -4977,11 +4977,11 @@ name|unsigned
 block|,
 literal|3
 operator|>
-name|FlagResultNodes
+name|GlueResultNodes
 block|;
 name|public
 operator|:
-name|MarkFlagResultsMatcher
+name|MarkGlueResultsMatcher
 argument_list|(
 argument|const unsigned *nodes
 argument_list|,
@@ -4990,10 +4990,10 @@ argument_list|)
 operator|:
 name|Matcher
 argument_list|(
-name|MarkFlagResults
+name|MarkGlueResults
 argument_list|)
 block|,
-name|FlagResultNodes
+name|GlueResultNodes
 argument_list|(
 argument|nodes
 argument_list|,
@@ -5006,7 +5006,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|FlagResultNodes
+name|GlueResultNodes
 operator|.
 name|size
 argument_list|()
@@ -5023,14 +5023,14 @@ name|assert
 argument_list|(
 name|i
 operator|<
-name|FlagResultNodes
+name|GlueResultNodes
 operator|.
 name|size
 argument_list|()
 argument_list|)
 block|;
 return|return
-name|FlagResultNodes
+name|GlueResultNodes
 index|[
 name|i
 index|]
@@ -5050,7 +5050,7 @@ operator|->
 name|getKind
 argument_list|()
 operator|==
-name|MarkFlagResults
+name|MarkGlueResults
 return|;
 block|}
 name|private
@@ -5076,15 +5076,15 @@ block|{
 return|return
 name|cast
 operator|<
-name|MarkFlagResultsMatcher
+name|MarkGlueResultsMatcher
 operator|>
 operator|(
 name|M
 operator|)
 operator|->
-name|FlagResultNodes
+name|GlueResultNodes
 operator|==
-name|FlagResultNodes
+name|GlueResultNodes
 return|;
 block|}
 name|virtual
@@ -5254,7 +5254,7 @@ name|getHashImpl
 argument_list|()
 specifier|const
 block|; }
-block|;   }
+block|;  }
 end_decl_stmt
 
 begin_comment

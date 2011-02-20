@@ -94,7 +94,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/System/Mutex.h"
+file|"llvm/Support/Mutex.h"
 end_include
 
 begin_include
@@ -304,10 +304,20 @@ condition|)
 return|return
 name|false
 return|;
+elseif|else
+if|if
+condition|(
+name|Arch
+operator|==
+name|key
+operator|.
+name|Arch
+condition|)
+block|{
 if|if
 condition|(
 name|Syntax
-operator|>=
+operator|>
 name|key
 operator|.
 name|Syntax
@@ -315,6 +325,7 @@ condition|)
 return|return
 name|false
 return|;
+block|}
 return|return
 name|true
 return|;
@@ -788,14 +799,11 @@ argument_list|()
 specifier|const
 expr_stmt|;
 block|}
+struct|;
+block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
 comment|// end namespace llvm
 end_comment
 

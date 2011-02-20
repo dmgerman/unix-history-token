@@ -60,19 +60,7 @@ comment|// is held is LiveIntervals and provides the real numbering. This allows
 end_comment
 
 begin_comment
-comment|// LiveIntervals to perform largely transparent renumbering. The SlotIndex
-end_comment
-
-begin_comment
-comment|// class does hold a PHI bit, which determines whether the index relates to a
-end_comment
-
-begin_comment
-comment|// PHI use or def point, or an actual instruction. See the SlotIndex class
-end_comment
-
-begin_comment
-comment|// description for futher information.
+comment|// LiveIntervals to perform largely transparent renumbering.
 end_comment
 
 begin_comment
@@ -554,21 +542,12 @@ block|,
 name|NUM
 block|}
 enum|;
-specifier|static
-specifier|const
-name|unsigned
-name|PHI_BIT
-init|=
-literal|1
-operator|<<
-literal|2
-decl_stmt|;
 name|PointerIntPair
 operator|<
 name|IndexListEntry
 operator|*
 operator|,
-literal|3
+literal|2
 operator|,
 name|unsigned
 operator|>
@@ -578,14 +557,14 @@ name|SlotIndex
 argument_list|(
 argument|IndexListEntry *entry
 argument_list|,
-argument|unsigned phiAndSlot
+argument|unsigned slot
 argument_list|)
 block|:
 name|lie
 argument_list|(
 argument|entry
 argument_list|,
-argument|phiAndSlot
+argument|slot
 argument_list|)
 block|{
 name|assert
@@ -644,9 +623,6 @@ name|lie
 operator|.
 name|getInt
 argument_list|()
-operator|&
-operator|~
-name|PHI_BIT
 operator|)
 return|;
 block|}
@@ -746,41 +722,10 @@ argument_list|,
 literal|0
 argument_list|)
 block|{}
-comment|// Construct a new slot index from the given one, set the phi flag on the
-comment|// new index to the value of the phi parameter.
+comment|// Construct a new slot index from the given one, and set the slot.
 name|SlotIndex
 argument_list|(
 argument|const SlotIndex&li
-argument_list|,
-argument|bool phi
-argument_list|)
-operator|:
-name|lie
-argument_list|(
-argument|&li.entry()
-argument_list|,
-argument|phi ? PHI_BIT | li.getSlot() : (unsigned)li.getSlot()
-argument_list|)
-block|{
-name|assert
-argument_list|(
-name|lie
-operator|.
-name|getPointer
-argument_list|()
-operator|!=
-literal|0
-operator|&&
-literal|"Attempt to construct index with 0 pointer."
-argument_list|)
-block|;     }
-comment|// Construct a new slot index from the given one, set the phi flag on the
-comment|// new index to the value of the phi parameter, and the slot to the new slot.
-name|SlotIndex
-argument_list|(
-argument|const SlotIndex&li
-argument_list|,
-argument|bool phi
 argument_list|,
 argument|Slot s
 argument_list|)
@@ -789,7 +734,7 @@ name|lie
 argument_list|(
 argument|&li.entry()
 argument_list|,
-argument|phi ? PHI_BIT | s : (unsigned)s
+argument|unsigned(s)
 argument_list|)
 block|{
 name|assert
@@ -994,21 +939,6 @@ argument_list|()
 operator|-
 name|getIndex
 argument_list|()
-return|;
-block|}
-comment|/// Returns the state of the PHI bit.
-name|bool
-name|isPHI
-argument_list|()
-specifier|const
-block|{
-return|return
-name|lie
-operator|.
-name|getInt
-argument_list|()
-operator|&
-name|PHI_BIT
 return|;
 block|}
 comment|/// isLoad - Return true if this is a LOAD slot.
@@ -1592,20 +1522,6 @@ name|IdxMBBPair
 operator|>
 name|idx2MBBMap
 expr_stmt|;
-typedef|typedef
-name|DenseMap
-operator|<
-specifier|const
-name|MachineBasicBlock
-operator|*
-operator|,
-name|SlotIndex
-operator|>
-name|TerminatorGapsMap
-expr_stmt|;
-name|TerminatorGapsMap
-name|terminatorGaps
-decl_stmt|;
 comment|// IndexListEntry allocator.
 name|BumpPtrAllocator
 name|ileAllocator
@@ -1641,7 +1557,7 @@ argument_list|(
 name|IndexListEntry
 argument_list|)
 argument_list|,
-name|alignof
+name|alignOf
 operator|<
 name|IndexListEntry
 operator|>
@@ -1971,7 +1887,16 @@ name|indexListHead
 argument_list|(
 literal|0
 argument_list|)
-block|{}
+block|{
+name|initializeSlotIndexesPass
+argument_list|(
+operator|*
+name|PassRegistry
+operator|::
+name|getPassRegistry
+argument_list|()
+argument_list|)
+block|;     }
 name|virtual
 name|void
 name|getAnalysisUsage
@@ -2233,16 +2158,22 @@ return|return
 name|nextNonNull
 return|;
 block|}
-comment|/// Returns the first index in the given basic block.
-name|SlotIndex
-name|getMBBStartIdx
-argument_list|(
+comment|/// Return the (start,end) range of the given basic block.
 specifier|const
-name|MachineBasicBlock
-operator|*
-name|mbb
+name|std
+operator|::
+name|pair
+operator|<
+name|SlotIndex
+operator|,
+name|SlotIndex
+operator|>
+operator|&
+name|getMBBRange
+argument_list|(
+argument|const MachineBasicBlock *mbb
 argument_list|)
-decl|const
+specifier|const
 block|{
 name|MBB2IdxMap
 operator|::
@@ -2255,7 +2186,7 @@ name|find
 argument_list|(
 name|mbb
 argument_list|)
-expr_stmt|;
+block|;
 name|assert
 argument_list|(
 name|itr
@@ -2267,11 +2198,29 @@ argument_list|()
 operator|&&
 literal|"MBB not found in maps."
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|itr
 operator|->
 name|second
+return|;
+block|}
+comment|/// Returns the first index in the given basic block.
+name|SlotIndex
+name|getMBBStartIdx
+argument_list|(
+specifier|const
+name|MachineBasicBlock
+operator|*
+name|mbb
+argument_list|)
+decl|const
+block|{
+return|return
+name|getMBBRange
+argument_list|(
+name|mbb
+argument_list|)
 operator|.
 name|first
 return|;
@@ -2287,75 +2236,12 @@ name|mbb
 argument_list|)
 decl|const
 block|{
-name|MBB2IdxMap
-operator|::
-name|const_iterator
-name|itr
-operator|=
-name|mbb2IdxMap
-operator|.
-name|find
-argument_list|(
-name|mbb
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-name|itr
-operator|!=
-name|mbb2IdxMap
-operator|.
-name|end
-argument_list|()
-operator|&&
-literal|"MBB not found in maps."
-argument_list|)
-expr_stmt|;
 return|return
-name|itr
-operator|->
-name|second
-operator|.
-name|second
-return|;
-block|}
-comment|/// Returns the terminator gap for the given index.
-name|SlotIndex
-name|getTerminatorGap
-parameter_list|(
-specifier|const
-name|MachineBasicBlock
-modifier|*
-name|mbb
-parameter_list|)
-block|{
-name|TerminatorGapsMap
-operator|::
-name|iterator
-name|itr
-operator|=
-name|terminatorGaps
-operator|.
-name|find
+name|getMBBRange
 argument_list|(
 name|mbb
 argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-name|itr
-operator|!=
-name|terminatorGaps
 operator|.
-name|end
-argument_list|()
-operator|&&
-literal|"All MBBs should have terminator gaps in their indexes."
-argument_list|)
-expr_stmt|;
-return|return
-name|itr
-operator|->
 name|second
 return|;
 block|}
@@ -2572,142 +2458,6 @@ return|return
 name|resVal
 return|;
 block|}
-comment|/// Return a list of MBBs that can be reach via any branches or
-comment|/// fall-throughs.
-name|bool
-name|findReachableMBBs
-argument_list|(
-name|SlotIndex
-name|start
-argument_list|,
-name|SlotIndex
-name|end
-argument_list|,
-name|SmallVectorImpl
-operator|<
-name|MachineBasicBlock
-operator|*
-operator|>
-operator|&
-name|mbbs
-argument_list|)
-decl|const
-block|{
-name|std
-operator|::
-name|vector
-operator|<
-name|IdxMBBPair
-operator|>
-operator|::
-name|const_iterator
-name|itr
-operator|=
-name|std
-operator|::
-name|lower_bound
-argument_list|(
-name|idx2MBBMap
-operator|.
-name|begin
-argument_list|()
-argument_list|,
-name|idx2MBBMap
-operator|.
-name|end
-argument_list|()
-argument_list|,
-name|start
-argument_list|)
-expr_stmt|;
-name|bool
-name|resVal
-init|=
-name|false
-decl_stmt|;
-while|while
-condition|(
-name|itr
-operator|!=
-name|idx2MBBMap
-operator|.
-name|end
-argument_list|()
-condition|)
-block|{
-if|if
-condition|(
-name|itr
-operator|->
-name|first
-operator|>
-name|end
-condition|)
-break|break;
-name|MachineBasicBlock
-modifier|*
-name|mbb
-init|=
-name|itr
-operator|->
-name|second
-decl_stmt|;
-if|if
-condition|(
-name|getMBBEndIdx
-argument_list|(
-name|mbb
-argument_list|)
-operator|>
-name|end
-condition|)
-break|break;
-for|for
-control|(
-name|MachineBasicBlock
-operator|::
-name|succ_iterator
-name|si
-operator|=
-name|mbb
-operator|->
-name|succ_begin
-argument_list|()
-operator|,
-name|se
-operator|=
-name|mbb
-operator|->
-name|succ_end
-argument_list|()
-init|;
-name|si
-operator|!=
-name|se
-condition|;
-operator|++
-name|si
-control|)
-name|mbbs
-operator|.
-name|push_back
-argument_list|(
-operator|*
-name|si
-argument_list|)
-expr_stmt|;
-name|resVal
-operator|=
-name|true
-expr_stmt|;
-operator|++
-name|itr
-expr_stmt|;
-block|}
-return|return
-name|resVal
-return|;
-block|}
 comment|/// Returns the MBB covering the given range, or null if the range covers
 comment|/// more than one basic block.
 name|MachineBasicBlock
@@ -2848,6 +2598,19 @@ name|end
 argument_list|()
 operator|&&
 literal|"Instr already indexed."
+argument_list|)
+expr_stmt|;
+comment|// Numbering DBG_VALUE instructions could cause code generation to be
+comment|// affected by debug information.
+name|assert
+argument_list|(
+operator|!
+name|mi
+operator|->
+name|isDebugValue
+argument_list|()
+operator|&&
+literal|"Cannot number DBG_VALUE instructions."
 argument_list|)
 expr_stmt|;
 name|MachineBasicBlock
@@ -3419,7 +3182,7 @@ argument_list|)
 decl_stmt|;
 name|IndexListEntry
 modifier|*
-name|terminatorEntry
+name|stopEntry
 init|=
 name|createEntry
 argument_list|(
@@ -3478,7 +3241,7 @@ name|insert
 argument_list|(
 name|nextEntry
 argument_list|,
-name|terminatorEntry
+name|stopEntry
 argument_list|)
 expr_stmt|;
 name|SlotIndex
@@ -3492,16 +3255,6 @@ name|LOAD
 argument_list|)
 decl_stmt|;
 name|SlotIndex
-name|terminatorIdx
-argument_list|(
-name|terminatorEntry
-argument_list|,
-name|SlotIndex
-operator|::
-name|PHI_BIT
-argument_list|)
-decl_stmt|;
-name|SlotIndex
 name|endIdx
 argument_list|(
 name|nextEntry
@@ -3511,20 +3264,6 @@ operator|::
 name|LOAD
 argument_list|)
 decl_stmt|;
-name|terminatorGaps
-operator|.
-name|insert
-argument_list|(
-name|std
-operator|::
-name|make_pair
-argument_list|(
-name|mbb
-argument_list|,
-name|terminatorIdx
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|mbb2IdxMap
 operator|.
 name|insert
@@ -3632,8 +3371,91 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
+begin_comment
+comment|// Specialize IntervalMapInfo for half-open slot index intervals.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+operator|>
+expr|struct
+name|IntervalMapInfo
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+operator|>
+expr|struct
+name|IntervalMapInfo
+operator|<
+name|SlotIndex
+operator|>
+block|{
+specifier|static
+specifier|inline
+name|bool
+name|startLess
+argument_list|(
+argument|const SlotIndex&x
+argument_list|,
+argument|const SlotIndex&a
+argument_list|)
+block|{
+return|return
+name|x
+operator|<
+name|a
+return|;
+block|}
+specifier|static
+specifier|inline
+name|bool
+name|stopLess
+argument_list|(
+argument|const SlotIndex&b
+argument_list|,
+argument|const SlotIndex&x
+argument_list|)
+block|{
+return|return
+name|b
+operator|<=
+name|x
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+specifier|static
+specifier|inline
+name|bool
+name|adjacent
+parameter_list|(
+specifier|const
+name|SlotIndex
+modifier|&
+name|a
+parameter_list|,
+specifier|const
+name|SlotIndex
+modifier|&
+name|b
+parameter_list|)
+block|{
+return|return
+name|a
+operator|==
+name|b
+return|;
+block|}
+end_function
+
 begin_endif
-unit|}
+unit|};  }
 endif|#
 directive|endif
 end_endif

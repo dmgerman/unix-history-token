@@ -756,6 +756,38 @@ name|DebugLoc
 name|dl
 argument_list|)
 decl_stmt|;
+name|std
+operator|::
+name|pair
+operator|<
+name|SDValue
+operator|,
+name|SDValue
+operator|>
+name|ExpandChainLibCall
+argument_list|(
+argument|RTLIB::Libcall LC
+argument_list|,
+argument|SDNode *Node
+argument_list|,
+argument|bool isSigned
+argument_list|)
+expr_stmt|;
+name|std
+operator|::
+name|pair
+operator|<
+name|SDValue
+operator|,
+name|SDValue
+operator|>
+name|ExpandAtomic
+argument_list|(
+name|SDNode
+operator|*
+name|Node
+argument_list|)
+expr_stmt|;
 name|SDValue
 name|PromoteTargetBoolean
 parameter_list|(
@@ -1018,7 +1050,7 @@ name|N
 parameter_list|)
 function_decl|;
 name|SDValue
-name|PromoteIntRes_BIT_CONVERT
+name|PromoteIntRes_BITCAST
 parameter_list|(
 name|SDNode
 modifier|*
@@ -1287,7 +1319,7 @@ name|N
 parameter_list|)
 function_decl|;
 name|SDValue
-name|PromoteIntOp_BIT_CONVERT
+name|PromoteIntOp_BITCAST
 parameter_list|(
 name|SDNode
 modifier|*
@@ -1958,6 +1990,22 @@ name|Hi
 parameter_list|)
 function_decl|;
 name|void
+name|ExpandIntRes_UMULSMULO
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|,
+name|SDValue
+modifier|&
+name|Lo
+parameter_list|,
+name|SDValue
+modifier|&
+name|Hi
+parameter_list|)
+function_decl|;
+name|void
 name|ExpandShiftByConstant
 parameter_list|(
 name|SDNode
@@ -2021,7 +2069,7 @@ name|OperandNo
 parameter_list|)
 function_decl|;
 name|SDValue
-name|ExpandIntOp_BIT_CONVERT
+name|ExpandIntOp_BITCAST
 parameter_list|(
 name|SDNode
 modifier|*
@@ -2206,7 +2254,7 @@ name|OpNo
 parameter_list|)
 function_decl|;
 name|SDValue
-name|SoftenFloatRes_BIT_CONVERT
+name|SoftenFloatRes_BITCAST
 parameter_list|(
 name|SDNode
 modifier|*
@@ -2506,7 +2554,7 @@ name|OpNo
 parameter_list|)
 function_decl|;
 name|SDValue
-name|SoftenFloatOp_BIT_CONVERT
+name|SoftenFloatOp_BITCAST
 parameter_list|(
 name|SDNode
 modifier|*
@@ -3246,7 +3294,7 @@ name|N
 parameter_list|)
 function_decl|;
 name|SDValue
-name|ScalarizeVecRes_BIT_CONVERT
+name|ScalarizeVecRes_BITCAST
 parameter_list|(
 name|SDNode
 modifier|*
@@ -3370,7 +3418,7 @@ name|OpNo
 parameter_list|)
 function_decl|;
 name|SDValue
-name|ScalarizeVecOp_BIT_CONVERT
+name|ScalarizeVecOp_BITCAST
 parameter_list|(
 name|SDNode
 modifier|*
@@ -3503,7 +3551,7 @@ name|Hi
 parameter_list|)
 function_decl|;
 name|void
-name|SplitVecRes_BIT_CONVERT
+name|SplitVecRes_BITCAST
 parameter_list|(
 name|SDNode
 modifier|*
@@ -3747,7 +3795,7 @@ name|N
 parameter_list|)
 function_decl|;
 name|SDValue
-name|SplitVecOp_BIT_CONVERT
+name|SplitVecOp_BITCAST
 parameter_list|(
 name|SDNode
 modifier|*
@@ -3783,6 +3831,14 @@ parameter_list|)
 function_decl|;
 name|SDValue
 name|SplitVecOp_CONCAT_VECTORS
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+name|SDValue
+name|SplitVecOp_FP_ROUND
 parameter_list|(
 name|SDNode
 modifier|*
@@ -3856,7 +3912,7 @@ name|ResNo
 parameter_list|)
 function_decl|;
 name|SDValue
-name|WidenVecRes_BIT_CONVERT
+name|WidenVecRes_BITCAST
 parameter_list|(
 name|SDNode
 modifier|*
@@ -4036,7 +4092,7 @@ name|ResNo
 parameter_list|)
 function_decl|;
 name|SDValue
-name|WidenVecOp_BIT_CONVERT
+name|WidenVecOp_BITCAST
 parameter_list|(
 name|SDNode
 modifier|*
@@ -4412,7 +4468,7 @@ expr_stmt|;
 block|}
 comment|// Generic Result Expansion.
 name|void
-name|ExpandRes_BIT_CONVERT
+name|ExpandRes_BITCAST
 parameter_list|(
 name|SDNode
 modifier|*
@@ -4509,7 +4565,7 @@ parameter_list|)
 function_decl|;
 comment|// Generic Operand Expansion.
 name|SDValue
-name|ExpandOp_BIT_CONVERT
+name|ExpandOp_BITCAST
 parameter_list|(
 name|SDNode
 modifier|*

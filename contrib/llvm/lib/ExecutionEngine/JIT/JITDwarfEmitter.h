@@ -86,6 +86,9 @@ name|class
 name|TargetData
 decl_stmt|;
 name|class
+name|TargetFrameLowering
+decl_stmt|;
+name|class
 name|TargetMachine
 decl_stmt|;
 name|class
@@ -107,6 +110,11 @@ specifier|const
 name|TargetRegisterInfo
 modifier|*
 name|RI
+decl_stmt|;
+specifier|const
+name|TargetFrameLowering
+modifier|*
+name|TFI
 decl_stmt|;
 name|MachineModuleInfo
 modifier|*

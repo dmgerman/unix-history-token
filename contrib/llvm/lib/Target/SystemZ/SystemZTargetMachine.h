@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"SystemZFrameLowering.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"SystemZSelectionDAGInfo.h"
 end_include
 
@@ -98,7 +104,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetFrameInfo.h"
+file|"llvm/Target/TargetFrameLowering.h"
 end_include
 
 begin_include
@@ -136,10 +142,8 @@ block|;
 name|SystemZSelectionDAGInfo
 name|TSInfo
 block|;
-comment|// SystemZ does not have any call stack frame, therefore not having
-comment|// any SystemZ specific FrameInfo class.
-name|TargetFrameInfo
-name|FrameInfo
+name|SystemZFrameLowering
+name|FrameLowering
 block|;
 name|public
 operator|:
@@ -167,15 +171,15 @@ argument_list|)
 block|;
 name|virtual
 specifier|const
-name|TargetFrameInfo
+name|TargetFrameLowering
 operator|*
-name|getFrameInfo
+name|getFrameLowering
 argument_list|()
 specifier|const
 block|{
 return|return
 operator|&
-name|FrameInfo
+name|FrameLowering
 return|;
 block|}
 name|virtual

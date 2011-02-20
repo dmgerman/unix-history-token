@@ -293,9 +293,7 @@ name|LocTy
 name|L
 argument_list|,
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|Msg
 argument_list|)
@@ -305,9 +303,7 @@ name|bool
 name|Error
 argument_list|(
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|Msg
 argument_list|)

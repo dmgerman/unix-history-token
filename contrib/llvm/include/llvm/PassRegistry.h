@@ -40,15 +40,15 @@ comment|// This file defines PassRegistry, a class that is used in the initializ
 end_comment
 
 begin_comment
-comment|// and registration of passes.  At initialization, passes are registered with
+comment|// and registration of passes.  At application startup, passes are registered
 end_comment
 
 begin_comment
-comment|// the PassRegistry, which is later provided to the PassManager for dependency
+comment|// with the PassRegistry, which is later provided to the PassManager for
 end_comment
 
 begin_comment
-comment|// resolution and similar tasks.
+comment|// dependency resolution and similar tasks.
 end_comment
 
 begin_comment
@@ -74,37 +74,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/System/DataTypes.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/System/Mutex.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<map>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<set>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vector>
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_decl_stmt
@@ -117,95 +87,51 @@ decl_stmt|;
 struct_decl|struct
 name|PassRegistrationListener
 struct_decl|;
+comment|/// PassRegistry - This class manages the registration and intitialization of
+comment|/// the pass subsystem as application startup, and assists the PassManager
+comment|/// in resolving pass dependencies.
+comment|/// NOTE: PassRegistry is NOT thread-safe.  If you want to use LLVM on multiple
+comment|/// threads simultaneously, you will need to use a separate PassRegistry on
+comment|/// each thread.
 name|class
 name|PassRegistry
 block|{
-comment|/// Guards the contents of this class.
 name|mutable
-name|sys
-operator|::
-name|SmartMutex
-operator|<
-name|true
-operator|>
-name|Lock
-expr_stmt|;
-comment|/// PassInfoMap - Keep track of the PassInfo object for each registered pass.
-typedef|typedef
-name|std
-operator|::
-name|map
-operator|<
-specifier|const
+name|void
+modifier|*
+name|pImpl
+decl_stmt|;
 name|void
 operator|*
-operator|,
+name|getImpl
+argument_list|()
 specifier|const
-name|PassInfo
-operator|*
-operator|>
-name|MapType
-expr_stmt|;
-name|MapType
-name|PassInfoMap
-decl_stmt|;
-typedef|typedef
-name|StringMap
-operator|<
-specifier|const
-name|PassInfo
-operator|*
-operator|>
-name|StringMapType
-expr_stmt|;
-name|StringMapType
-name|PassInfoStringMap
-decl_stmt|;
-comment|/// AnalysisGroupInfo - Keep track of information for each analysis group.
-struct|struct
-name|AnalysisGroupInfo
-block|{
-name|std
-operator|::
-name|set
-operator|<
-specifier|const
-name|PassInfo
-operator|*
-operator|>
-name|Implementations
-expr_stmt|;
-block|}
-struct|;
-name|std
-operator|::
-name|map
-operator|<
-specifier|const
-name|PassInfo
-operator|*
-operator|,
-name|AnalysisGroupInfo
-operator|>
-name|AnalysisGroupInfoMap
-expr_stmt|;
-name|std
-operator|::
-name|vector
-operator|<
-name|PassRegistrationListener
-operator|*
-operator|>
-name|Listeners
 expr_stmt|;
 name|public
 label|:
+name|PassRegistry
+argument_list|()
+operator|:
+name|pImpl
+argument_list|(
+literal|0
+argument_list|)
+block|{ }
+operator|~
+name|PassRegistry
+argument_list|()
+expr_stmt|;
+comment|/// getPassRegistry - Access the global registry object, which is
+comment|/// automatically initialized at application launch and destroyed by
+comment|/// llvm_shutdown.
 specifier|static
 name|PassRegistry
 modifier|*
 name|getPassRegistry
 parameter_list|()
 function_decl|;
+comment|/// getPassInfo - Look up a pass' corresponding PassInfo, indexed by the pass'
+comment|/// type identifier (&MyPass::ID).
 specifier|const
 name|PassInfo
 modifier|*
@@ -218,6 +144,8 @@ name|TI
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// getPassInfo - Look up a pass' corresponding PassInfo, indexed by the pass'
+comment|/// argument string.
 specifier|const
 name|PassInfo
 modifier|*
@@ -228,6 +156,8 @@ name|Arg
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// registerPass - Register a pass (by means of its PassInfo) with the
+comment|/// registry.  Required in order to use the pass with a PassManager.
 name|void
 name|registerPass
 parameter_list|(
@@ -235,8 +165,15 @@ specifier|const
 name|PassInfo
 modifier|&
 name|PI
+parameter_list|,
+name|bool
+name|ShouldFree
+init|=
+name|false
 parameter_list|)
 function_decl|;
+comment|/// registerPass - Unregister a pass (by means of its PassInfo) with the
+comment|/// registry.
 name|void
 name|unregisterPass
 parameter_list|(
@@ -246,7 +183,9 @@ modifier|&
 name|PI
 parameter_list|)
 function_decl|;
-comment|/// Analysis Group Mechanisms.
+comment|/// registerAnalysisGroup - Register an analysis group (or a pass implementing
+comment|// an analysis group) with the registry.  Like registerPass, this is required
+comment|// in order for a PassManager to be able to use this group/pass.
 name|void
 name|registerAnalysisGroup
 parameter_list|(
@@ -266,8 +205,15 @@ name|Registeree
 parameter_list|,
 name|bool
 name|isDefault
+parameter_list|,
+name|bool
+name|ShouldFree
+init|=
+name|false
 parameter_list|)
 function_decl|;
+comment|/// enumerateWith - Enumerate the registered passes, calling the provided
+comment|/// PassRegistrationListener's passEnumerate() callback on each of them.
 name|void
 name|enumerateWith
 parameter_list|(
@@ -276,6 +222,8 @@ modifier|*
 name|L
 parameter_list|)
 function_decl|;
+comment|/// addRegistrationListener - Register the given PassRegistrationListener
+comment|/// to receive passRegistered() callbacks whenever a new pass is registered.
 name|void
 name|addRegistrationListener
 parameter_list|(
@@ -284,6 +232,8 @@ modifier|*
 name|L
 parameter_list|)
 function_decl|;
+comment|/// removeRegistrationListener - Unregister a PassRegistrationListener so that
+comment|/// it no longer receives passRegistered() callbacks.
 name|void
 name|removeRegistrationListener
 parameter_list|(

@@ -65,6 +65,12 @@ directive|include
 file|<string>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"clang/Basic/Visibility.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -197,6 +203,18 @@ literal|1
 decl_stmt|;
 comment|// Objective-C enhanced modern abi enabled
 name|unsigned
+name|ObjCDefaultSynthProperties
+range|:
+literal|1
+decl_stmt|;
+comment|// Objective-C auto-synthesized properties.
+name|unsigned
+name|AppleKext
+range|:
+literal|1
+decl_stmt|;
+comment|// Allow apple kext features.
+name|unsigned
 name|PascalStrings
 range|:
 literal|1
@@ -238,11 +256,23 @@ literal|1
 decl_stmt|;
 comment|// Use setjmp-longjump exception handling.
 name|unsigned
+name|ObjCExceptions
+range|:
+literal|1
+decl_stmt|;
+comment|// Support Objective-C exceptions.
+name|unsigned
 name|RTTI
 range|:
 literal|1
 decl_stmt|;
 comment|// Support RTTI information.
+name|unsigned
+name|MSBitfields
+range|:
+literal|1
+decl_stmt|;
+comment|// MS-compatible structure layout
 name|unsigned
 name|NeXTRuntime
 range|:
@@ -374,11 +404,24 @@ literal|1
 decl_stmt|;
 comment|// Force wchar_t to be unsigned short int.
 name|unsigned
+name|ShortEnums
+range|:
+literal|1
+decl_stmt|;
+comment|// The enum type will be equivalent to the
+comment|// smallest integer type with enough room.
+name|unsigned
 name|OpenCL
 range|:
 literal|1
 decl_stmt|;
 comment|// OpenCL C99 language extensions.
+name|unsigned
+name|CUDA
+range|:
+literal|1
+decl_stmt|;
+comment|// CUDA C++ language extensions.
 name|unsigned
 name|AssumeSaneOperatorNew
 range|:
@@ -432,6 +475,27 @@ literal|1
 decl_stmt|;
 comment|// Whether to perform spell-checking for error
 comment|// recovery.
+name|unsigned
+name|SinglePrecisionConstants
+range|:
+literal|1
+decl_stmt|;
+comment|// Whether to treat double-precision
+comment|// floating point constants as
+comment|// single precision constants.
+name|unsigned
+name|FastRelaxedMath
+range|:
+literal|1
+decl_stmt|;
+comment|// OpenCL fast relaxed math (on its own,
+comment|// defines __FAST_RELAXED_MATH__).
+name|unsigned
+name|DefaultFPContract
+range|:
+literal|1
+decl_stmt|;
+comment|// Default setting for FP_CONTRACT
 comment|// FIXME: This is just a temporary option, for testing purposes.
 name|unsigned
 name|NoBitFieldTypeAlign
@@ -472,6 +536,17 @@ name|unsigned
 name|InstantiationDepth
 decl_stmt|;
 comment|// Maximum template instantiation depth.
+name|unsigned
+name|NumLargeByValueCopy
+decl_stmt|;
+comment|// Warn if parameter/return value is larger
+comment|// in bytes than this setting. 0 is no check.
+comment|// Version of Microsoft Visual C/C++ we are pretending to be. This is
+comment|// temporary until we support all MS extensions used in Windows SDK and stdlib
+comment|// headers. Sets _MSC_VER.
+name|unsigned
+name|MSCVersion
+decl_stmt|;
 name|std
 operator|::
 name|string
@@ -498,16 +573,6 @@ name|SSPReq
 block|}
 enum|;
 enum|enum
-name|VisibilityMode
-block|{
-name|Default
-block|,
-name|Protected
-block|,
-name|Hidden
-block|}
-enum|;
-enum|enum
 name|SignedOverflowBehaviorTy
 block|{
 name|SOB_Undefined
@@ -520,6 +585,13 @@ name|SOB_Trapping
 comment|// -ftrapv
 block|}
 enum|;
+comment|/// The name of the handler function to be called when -ftrapv is specified.
+comment|/// If none is specified, abort (GCC-compatible behaviour).
+name|std
+operator|::
+name|string
+name|OverflowHandler
+expr_stmt|;
 name|LangOptions
 argument_list|()
 block|{
@@ -558,6 +630,14 @@ operator|=
 name|ObjCNonFragileABI
 operator|=
 name|ObjCNonFragileABI2
+operator|=
+literal|0
+expr_stmt|;
+name|AppleKext
+operator|=
+literal|0
+expr_stmt|;
+name|ObjCDefaultSynthProperties
 operator|=
 literal|0
 expr_stmt|;
@@ -601,6 +681,14 @@ name|NoBuiltin
 operator|=
 literal|0
 expr_stmt|;
+name|ObjCExceptions
+operator|=
+literal|1
+expr_stmt|;
+name|MSBitfields
+operator|=
+literal|0
+expr_stmt|;
 name|NeXTRuntime
 operator|=
 literal|1
@@ -621,6 +709,8 @@ name|AltiVec
 operator|=
 name|OpenCL
 operator|=
+name|CUDA
+operator|=
 name|StackProtector
 operator|=
 literal|0
@@ -630,7 +720,7 @@ operator|=
 operator|(
 name|unsigned
 operator|)
-name|Default
+name|DefaultVisibility
 expr_stmt|;
 name|ThreadsafeStatics
 operator|=
@@ -680,6 +770,14 @@ name|InstantiationDepth
 operator|=
 literal|1024
 expr_stmt|;
+name|NumLargeByValueCopy
+operator|=
+literal|0
+expr_stmt|;
+name|MSCVersion
+operator|=
+literal|0
+expr_stmt|;
 name|Optimize
 operator|=
 literal|0
@@ -712,6 +810,10 @@ name|ShortWChar
 operator|=
 literal|0
 expr_stmt|;
+name|ShortEnums
+operator|=
+literal|0
+expr_stmt|;
 name|CatchUndefined
 operator|=
 literal|0
@@ -727,6 +829,18 @@ expr_stmt|;
 name|SpellChecking
 operator|=
 literal|1
+expr_stmt|;
+name|SinglePrecisionConstants
+operator|=
+literal|0
+expr_stmt|;
+name|FastRelaxedMath
+operator|=
+literal|0
+expr_stmt|;
+name|DefaultFPContract
+operator|=
+literal|0
 expr_stmt|;
 name|NoBitFieldTypeAlign
 operator|=
@@ -793,14 +907,14 @@ name|m
 operator|)
 expr_stmt|;
 block|}
-name|VisibilityMode
+name|Visibility
 name|getVisibilityMode
 argument_list|()
 specifier|const
 block|{
 return|return
 operator|(
-name|VisibilityMode
+name|Visibility
 operator|)
 name|SymbolVisibility
 return|;
@@ -808,7 +922,7 @@ block|}
 name|void
 name|setVisibilityMode
 parameter_list|(
-name|VisibilityMode
+name|Visibility
 name|v
 parameter_list|)
 block|{
@@ -846,6 +960,81 @@ name|unsigned
 operator|)
 name|V
 expr_stmt|;
+block|}
+name|bool
+name|areExceptionsEnabled
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Exceptions
+return|;
+block|}
+block|}
+empty_stmt|;
+comment|/// Floating point control options
+name|class
+name|FPOptions
+block|{
+name|public
+label|:
+name|unsigned
+name|fp_contract
+range|:
+literal|1
+decl_stmt|;
+name|FPOptions
+argument_list|()
+operator|:
+name|fp_contract
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+name|FPOptions
+argument_list|(
+specifier|const
+name|LangOptions
+operator|&
+name|LangOpts
+argument_list|)
+operator|:
+name|fp_contract
+argument_list|(
+argument|LangOpts.DefaultFPContract
+argument_list|)
+block|{}
+block|}
+empty_stmt|;
+comment|/// OpenCL volatile options
+name|class
+name|OpenCLOptions
+block|{
+name|public
+label|:
+define|#
+directive|define
+name|OPENCLEXT
+parameter_list|(
+name|nm
+parameter_list|)
+value|unsigned nm : 1;
+include|#
+directive|include
+file|"clang/Basic/OpenCLExtensions.def"
+name|OpenCLOptions
+argument_list|()
+block|{
+define|#
+directive|define
+name|OPENCLEXT
+parameter_list|(
+name|nm
+parameter_list|)
+value|nm = 0;
+include|#
+directive|include
+file|"clang/Basic/OpenCLExtensions.def"
 block|}
 block|}
 empty_stmt|;

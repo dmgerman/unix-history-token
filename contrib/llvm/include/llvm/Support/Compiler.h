@@ -63,6 +63,27 @@ directive|define
 name|LLVM_SUPPORT_COMPILER_H
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__has_feature
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__has_feature
+parameter_list|(
+name|x
+parameter_list|)
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/// LLVM_LIBRARY_VISIBILITY - If a class marked with this attribute is linked
 end_comment
@@ -79,30 +100,22 @@ begin_comment
 comment|/// functions, making them private to any shared library they are linked into.
 end_comment
 
-begin_comment
-comment|/// LLVM_GLOBAL_VISIBILITY - If a class marked with this attribute is linked
-end_comment
-
-begin_comment
-comment|/// into a shared library, then the class will be accessible from outside the
-end_comment
-
-begin_comment
-comment|/// the library.  Can also be used to mark variables and functions, making them
-end_comment
-
-begin_comment
-comment|/// accessible from outside any shared library they are linked into.
-end_comment
-
 begin_if
 if|#
 directive|if
+operator|(
+name|__GNUC__
+operator|>=
+literal|4
+operator|)
+operator|&&
+operator|!
 name|defined
 argument_list|(
 name|__MINGW32__
 argument_list|)
-operator|||
+operator|&&
+operator|!
 name|defined
 argument_list|(
 name|__CYGWIN__
@@ -113,37 +126,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_LIBRARY_VISIBILITY
-end_define
-
-begin_define
-define|#
-directive|define
-name|LLVM_GLOBAL_VISIBILITY
-value|__declspec(dllexport)
-end_define
-
-begin_elif
-elif|#
-directive|elif
-operator|(
-name|__GNUC__
-operator|>=
-literal|4
-operator|)
-end_elif
-
-begin_define
-define|#
-directive|define
-name|LLVM_LIBRARY_VISIBILITY
 value|__attribute__ ((visibility("hidden")))
-end_define
-
-begin_define
-define|#
-directive|define
-name|LLVM_GLOBAL_VISIBILITY
-value|__attribute__ ((visibility("default")))
 end_define
 
 begin_else
@@ -155,12 +138,6 @@ begin_define
 define|#
 directive|define
 name|LLVM_LIBRARY_VISIBILITY
-end_define
-
-begin_define
-define|#
-directive|define
-name|LLVM_GLOBAL_VISIBILITY
 end_define
 
 begin_endif
@@ -191,7 +168,7 @@ end_if
 begin_define
 define|#
 directive|define
-name|ATTRIBUTE_USED
+name|LLVM_ATTRIBUTE_USED
 value|__attribute__((__used__))
 end_define
 
@@ -203,13 +180,45 @@ end_else
 begin_define
 define|#
 directive|define
-name|ATTRIBUTE_USED
+name|LLVM_ATTRIBUTE_USED
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// Some compilers warn about unused functions. When a function is sometimes
+end_comment
+
+begin_comment
+comment|// used or not depending on build settings (e.g. a function only called from
+end_comment
+
+begin_comment
+comment|// within "assert"), this attribute can be used to suppress such warnings.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// However, it shouldn't be used for unused *variables*, as those have a much
+end_comment
+
+begin_comment
+comment|// more portable solution:
+end_comment
+
+begin_comment
+comment|//   (void)unused_var_name;
+end_comment
+
+begin_comment
+comment|// Prefer cast-to-void wherever it is sufficient.
+end_comment
 
 begin_if
 if|#
@@ -234,7 +243,7 @@ end_if
 begin_define
 define|#
 directive|define
-name|ATTRIBUTE_UNUSED
+name|LLVM_ATTRIBUTE_UNUSED
 value|__attribute__((__unused__))
 end_define
 
@@ -246,7 +255,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|ATTRIBUTE_UNUSED
+name|LLVM_ATTRIBUTE_UNUSED
 end_define
 
 begin_endif
@@ -267,7 +276,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ATTRIBUTE_READNONE
+name|LLVM_ATTRIBUTE_READNONE
 value|__attribute__((__const__))
 end_define
 
@@ -279,7 +288,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|ATTRIBUTE_READNONE
+name|LLVM_ATTRIBUTE_READNONE
 end_define
 
 begin_endif
@@ -300,7 +309,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ATTRIBUTE_READONLY
+name|LLVM_ATTRIBUTE_READONLY
 value|__attribute__((__pure__))
 end_define
 
@@ -312,7 +321,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|ATTRIBUTE_READONLY
+name|LLVM_ATTRIBUTE_READONLY
 end_define
 
 begin_endif
@@ -439,11 +448,11 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// DISABLE_INLINE - On compilers where we have a directive to do so, mark a
+comment|// LLVM_ATTRIBUTE_NOINLINE - On compilers where we have a directive to do so,
 end_comment
 
 begin_comment
-comment|// method "not for inlining".
+comment|// mark a method "not for inlining".
 end_comment
 
 begin_if
@@ -469,7 +478,7 @@ end_if
 begin_define
 define|#
 directive|define
-name|DISABLE_INLINE
+name|LLVM_ATTRIBUTE_NOINLINE
 value|__attribute__((noinline))
 end_define
 
@@ -485,7 +494,7 @@ end_elif
 begin_define
 define|#
 directive|define
-name|DISABLE_INLINE
+name|LLVM_ATTRIBUTE_NOINLINE
 value|__declspec(noinline)
 end_define
 
@@ -497,7 +506,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|DISABLE_INLINE
+name|LLVM_ATTRIBUTE_NOINLINE
 end_define
 
 begin_endif
@@ -506,19 +515,19 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// ALWAYS_INLINE - On compilers where we have a directive to do so, mark a
+comment|// LLVM_ATTRIBUTE_ALWAYS_INLINE - On compilers where we have a directive to do
 end_comment
 
 begin_comment
-comment|// method "always inline" because it is performance sensitive.
+comment|// so, mark a method "always inline" because it is performance sensitive. GCC
 end_comment
 
 begin_comment
-comment|// GCC 3.4 supported this but is buggy in various cases and produces
+comment|// 3.4 supported this but is buggy in various cases and produces unimplemented
 end_comment
 
 begin_comment
-comment|// unimplemented errors, just use it in GCC 4.0 and later.
+comment|// errors, just use it in GCC 4.0 and later.
 end_comment
 
 begin_if
@@ -532,8 +541,24 @@ end_if
 begin_define
 define|#
 directive|define
-name|ALWAYS_INLINE
+name|LLVM_ATTRIBUTE_ALWAYS_INLINE
 value|__attribute__((always_inline))
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|LLVM_ATTRIBUTE_ALWAYS_INLINE
+value|__forceinline
 end_define
 
 begin_else
@@ -541,14 +566,10 @@ else|#
 directive|else
 end_else
 
-begin_comment
-comment|// TODO: No idea how to do this with MSVC.
-end_comment
-
 begin_define
 define|#
 directive|define
-name|ALWAYS_INLINE
+name|LLVM_ATTRIBUTE_ALWAYS_INLINE
 end_define
 
 begin_endif
@@ -565,7 +586,7 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|NORETURN
+name|LLVM_ATTRIBUTE_NORETURN
 value|__attribute__((noreturn))
 end_define
 
@@ -581,7 +602,7 @@ end_elif
 begin_define
 define|#
 directive|define
-name|NORETURN
+name|LLVM_ATTRIBUTE_NORETURN
 value|__declspec(noreturn)
 end_define
 
@@ -593,7 +614,100 @@ end_else
 begin_define
 define|#
 directive|define
-name|NORETURN
+name|LLVM_ATTRIBUTE_NORETURN
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// LLVM_ATTRIBUTE_DEPRECATED(decl, "message")
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__has_feature
+argument_list|(
+name|attribute_deprecated_with_message
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|LLVM_ATTRIBUTE_DEPRECATED
+parameter_list|(
+name|decl
+parameter_list|,
+name|message
+parameter_list|)
+define|\
+value|decl __attribute__((deprecated(message)))
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|LLVM_ATTRIBUTE_DEPRECATED
+parameter_list|(
+name|decl
+parameter_list|,
+name|message
+parameter_list|)
+define|\
+value|decl __attribute__((deprecated))
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|LLVM_ATTRIBUTE_DEPRECATED
+parameter_list|(
+name|decl
+parameter_list|,
+name|message
+parameter_list|)
+define|\
+value|__declspec(deprecated(message)) decl
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LLVM_ATTRIBUTE_DEPRECATED
+parameter_list|(
+name|decl
+parameter_list|,
+name|message
+parameter_list|)
+define|\
+value|decl
 end_define
 
 begin_endif

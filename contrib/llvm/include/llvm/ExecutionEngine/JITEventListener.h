@@ -66,7 +66,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/System/DataTypes.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_include
@@ -91,31 +91,32 @@ decl_stmt|;
 name|class
 name|MachineFunction
 decl_stmt|;
-comment|/// Empty for now, but this object will contain all details about the
-comment|/// generated machine code that a Listener might care about.
+comment|/// JITEvent_EmittedFunctionDetails - Helper struct for containing information
+comment|/// about a generated machine code function.
 struct|struct
 name|JITEvent_EmittedFunctionDetails
 block|{
-specifier|const
-name|MachineFunction
-modifier|*
-name|MF
-decl_stmt|;
 struct|struct
 name|LineStart
 block|{
-comment|// The address at which the current line changes.
+comment|/// The address at which the current line changes.
 name|uintptr_t
 name|Address
 decl_stmt|;
-comment|// The new location information.  These can be translated to
-comment|// DebugLocTuples using MF->getDebugLocTuple().
+comment|/// The new location information.  These can be translated to DebugLocTuples
+comment|/// using MF->getDebugLocTuple().
 name|DebugLoc
 name|Loc
 decl_stmt|;
 block|}
 struct|;
-comment|// This holds line boundary information sorted by address.
+comment|/// The machine function the struct contains information for.
+specifier|const
+name|MachineFunction
+modifier|*
+name|MF
+decl_stmt|;
+comment|/// The list of line boundary information, sorted by address.
 name|std
 operator|::
 name|vector
@@ -126,16 +127,20 @@ name|LineStarts
 expr_stmt|;
 block|}
 struct|;
-comment|/// JITEventListener - This interface is used by the JIT to notify clients about
-comment|/// significant events during compilation.  For example, we could have
-comment|/// implementations for profilers and debuggers that need to know where
-comment|/// functions have been emitted.
+comment|/// JITEventListener - Abstract interface for use by the JIT to notify clients
+comment|/// about significant events during compilation. For example, to notify
+comment|/// profilers and debuggers that need to know where functions have been emitted.
 comment|///
-comment|/// Each method defaults to doing nothing, so you only need to override the ones
-comment|/// you care about.
+comment|/// The default implementation of each method does nothing.
 name|class
 name|JITEventListener
 block|{
+name|public
+label|:
+typedef|typedef
+name|JITEvent_EmittedFunctionDetails
+name|EmittedFunctionDetails
+typedef|;
 name|public
 label|:
 name|JITEventListener
@@ -146,11 +151,6 @@ operator|~
 name|JITEventListener
 argument_list|()
 expr_stmt|;
-comment|// Defined in JIT.cpp.
-typedef|typedef
-name|JITEvent_EmittedFunctionDetails
-name|EmittedFunctionDetails
-typedef|;
 comment|/// NotifyFunctionEmitted - Called after a function has been successfully
 comment|/// emitted to memory.  The function still has its MachineFunction attached,
 comment|/// if you should happen to need that.
@@ -176,13 +176,14 @@ modifier|&
 name|Details
 parameter_list|)
 block|{}
-comment|/// NotifyFreeingMachineCode - This is called inside of
-comment|/// freeMachineCodeForFunction(), after the global mapping is removed, but
-comment|/// before the machine code is returned to the allocator.  OldPtr is the
-comment|/// address of the machine code and will be the same as the Code parameter to
-comment|/// a previous NotifyFunctionEmitted call.  The Function passed to
-comment|/// NotifyFunctionEmitted may have been destroyed by the time of the matching
-comment|/// NotifyFreeingMachineCode call.
+comment|/// NotifyFreeingMachineCode - Called from freeMachineCodeForFunction(), after
+comment|/// the global mapping is removed, but before the machine code is returned to
+comment|/// the allocator.
+comment|///
+comment|/// OldPtr is the address of the machine code and will be the same as the Code
+comment|/// parameter to a previous NotifyFunctionEmitted call.  The Function passed
+comment|/// to NotifyFunctionEmitted may have been destroyed by the time of the
+comment|/// matching NotifyFreeingMachineCode call.
 name|virtual
 name|void
 name|NotifyFreeingMachineCode

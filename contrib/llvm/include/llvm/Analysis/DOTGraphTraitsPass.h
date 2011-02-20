@@ -348,8 +348,6 @@ name|Graph
 argument_list|,
 name|Simple
 argument_list|,
-name|Name
-argument_list|,
 name|Title
 argument_list|)
 expr_stmt|;

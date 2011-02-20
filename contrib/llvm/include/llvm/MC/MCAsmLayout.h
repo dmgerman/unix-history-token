@@ -123,10 +123,17 @@ comment|/// The last fragment which was layed out, or 0 if nothing has been laye
 comment|/// out. Fragments are always layed out in order, so all fragments with a
 comment|/// lower ordinal will be up to date.
 name|mutable
+name|DenseMap
+operator|<
+specifier|const
+name|MCSectionData
+operator|*
+operator|,
 name|MCFragment
-modifier|*
+operator|*
+operator|>
 name|LastValidFragment
-decl_stmt|;
+expr_stmt|;
 comment|/// \brief Make sure that the layout for the given fragment is valid, lazily
 comment|/// computing it if necessary.
 name|void
@@ -136,16 +143,6 @@ specifier|const
 name|MCFragment
 operator|*
 name|F
-argument_list|)
-decl|const
-decl_stmt|;
-name|bool
-name|isSectionUpToDate
-argument_list|(
-specifier|const
-name|MCSectionData
-operator|*
-name|SD
 argument_list|)
 decl|const
 decl_stmt|;
@@ -179,37 +176,15 @@ return|return
 name|Assembler
 return|;
 block|}
-comment|/// \brief Update the layout because a fragment has been resized. The
-comment|/// fragments size should have already been updated, the \arg SlideAmount is
-comment|/// the delta from the old size.
+comment|/// \brief Invalidate all following fragments because a fragment has been
+comment|/// resized. The fragments size should have already been updated.
 name|void
-name|UpdateForSlide
+name|Invalidate
 parameter_list|(
 name|MCFragment
 modifier|*
 name|F
-parameter_list|,
-name|int
-name|SlideAmount
 parameter_list|)
-function_decl|;
-comment|/// \brief Update the layout because a fragment has been replaced.
-name|void
-name|FragmentReplaced
-parameter_list|(
-name|MCFragment
-modifier|*
-name|Src
-parameter_list|,
-name|MCFragment
-modifier|*
-name|Dst
-parameter_list|)
-function_decl|;
-comment|/// \brief Perform a full layout.
-name|void
-name|LayoutFile
-parameter_list|()
 function_decl|;
 comment|/// \brief Perform layout for a single fragment, assuming that the previous
 comment|/// fragment has already been layed out correctly, and the parent section has
@@ -220,17 +195,6 @@ parameter_list|(
 name|MCFragment
 modifier|*
 name|Fragment
-parameter_list|)
-function_decl|;
-comment|/// \brief Performs initial layout for a single section, assuming that the
-comment|/// previous section (including its fragments) has already been layed out
-comment|/// correctly.
-name|void
-name|LayoutSection
-parameter_list|(
-name|MCSectionData
-modifier|*
-name|SD
 parameter_list|)
 function_decl|;
 comment|/// @name Section Access (in layout order)
@@ -270,18 +234,6 @@ block|}
 comment|/// @}
 comment|/// @name Fragment Layout Data
 comment|/// @{
-comment|/// \brief Get the effective size of the given fragment, as computed in the
-comment|/// current layout.
-name|uint64_t
-name|getFragmentEffectiveSize
-argument_list|(
-specifier|const
-name|MCFragment
-operator|*
-name|F
-argument_list|)
-decl|const
-decl_stmt|;
 comment|/// \brief Get the offset of the given fragment inside its containing section.
 name|uint64_t
 name|getFragmentOffset
@@ -294,34 +246,8 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// @}
-comment|/// @name Section Layout Data
-comment|/// @{
-comment|/// \brief Get the computed address of the given section.
-name|uint64_t
-name|getSectionAddress
-argument_list|(
-specifier|const
-name|MCSectionData
-operator|*
-name|SD
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// @}
 comment|/// @name Utility Functions
 comment|/// @{
-comment|/// \brief Get the address of the given fragment, as computed in the current
-comment|/// layout.
-name|uint64_t
-name|getFragmentAddress
-argument_list|(
-specifier|const
-name|MCFragment
-operator|*
-name|F
-argument_list|)
-decl|const
-decl_stmt|;
 comment|/// \brief Get the address space size of the given section, as it effects
 comment|/// layout. This may differ from the size reported by \see getSectionSize() by
 comment|/// not including section tail padding.
@@ -347,21 +273,10 @@ name|SD
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// \brief Get the logical data size of the given section.
-name|uint64_t
-name|getSectionSize
-argument_list|(
-specifier|const
-name|MCSectionData
-operator|*
-name|SD
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// \brief Get the address of the given symbol, as computed in the current
+comment|/// \brief Get the offset of the given symbol, as computed in the current
 comment|/// layout.
 name|uint64_t
-name|getSymbolAddress
+name|getSymbolOffset
 argument_list|(
 specifier|const
 name|MCSymbolData

@@ -182,6 +182,10 @@ comment|///
 name|bool
 name|HasX86_64
 block|;
+comment|/// HasPOPCNT - True if the processor supports POPCNT.
+name|bool
+name|HasPOPCNT
+block|;
 comment|/// HasSSE4A - True if the processor supports SSE4A instructions.
 name|bool
 name|HasSSE4A
@@ -453,12 +457,47 @@ name|ThreeDNowA
 return|;
 block|}
 name|bool
+name|hasPOPCNT
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasPOPCNT
+return|;
+block|}
+name|bool
 name|hasAVX
 argument_list|()
 specifier|const
 block|{
 return|return
 name|HasAVX
+return|;
+block|}
+name|bool
+name|hasXMM
+argument_list|()
+specifier|const
+block|{
+return|return
+name|hasSSE1
+argument_list|()
+operator|||
+name|hasAVX
+argument_list|()
+return|;
+block|}
+name|bool
+name|hasXMMInt
+argument_list|()
+specifier|const
+block|{
+return|return
+name|hasSSE2
+argument_list|()
+operator|||
+name|hasAVX
+argument_list|()
 return|;
 block|}
 name|bool
@@ -607,15 +646,6 @@ operator|==
 name|Triple
 operator|::
 name|MinGW32
-operator|||
-name|TargetTriple
-operator|.
-name|getOS
-argument_list|()
-operator|==
-name|Triple
-operator|::
-name|MinGW64
 return|;
 block|}
 name|bool
@@ -682,6 +712,27 @@ operator|)
 return|;
 block|}
 name|bool
+name|isTargetEnvMacho
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isTargetDarwin
+argument_list|()
+operator|||
+operator|(
+name|TargetTriple
+operator|.
+name|getEnvironment
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|MachO
+operator|)
+return|;
+block|}
+name|bool
 name|isTargetWin32
 argument_list|()
 specifier|const
@@ -697,64 +748,6 @@ operator|||
 name|isTargetWindows
 argument_list|()
 operator|)
-return|;
-block|}
-name|std
-operator|::
-name|string
-name|getDataLayout
-argument_list|()
-specifier|const
-block|{
-specifier|const
-name|char
-operator|*
-name|p
-block|;
-if|if
-condition|(
-name|is64Bit
-argument_list|()
-condition|)
-name|p
-operator|=
-literal|"e-p:64:64-s:64-f64:64:64-i64:64:64-f80:128:128-n8:16:32:64"
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|isTargetDarwin
-argument_list|()
-condition|)
-name|p
-operator|=
-literal|"e-p:32:32-f64:32:64-i64:32:64-f80:128:128-n8:16:32"
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|isTargetMingw
-argument_list|()
-operator|||
-name|isTargetWindows
-argument_list|()
-condition|)
-name|p
-operator|=
-literal|"e-p:32:32-f64:64:64-i64:64:64-f80:32:32-n8:16:32"
-expr_stmt|;
-else|else
-name|p
-operator|=
-literal|"e-p:32:32-f64:32:64-i64:32:64-f80:32:32-n8:16:32"
-expr_stmt|;
-return|return
-name|std
-operator|::
-name|string
-argument_list|(
-name|p
-argument_list|)
 return|;
 block|}
 name|bool
@@ -863,21 +856,9 @@ return|return
 literal|0
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// ClassifyGlobalReference - Classify a global variable reference for the
-end_comment
-
-begin_comment
 comment|/// current subtarget according to how we should reference it in a non-pcrel
-end_comment
-
-begin_comment
 comment|/// context.
-end_comment
-
-begin_decl_stmt
 name|unsigned
 name|char
 name|ClassifyGlobalReference
@@ -894,38 +875,17 @@ name|TM
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// ClassifyBlockAddressReference - Classify a blockaddress reference for the
-end_comment
-
-begin_comment
 comment|/// current subtarget according to how we should reference it in a non-pcrel
-end_comment
-
-begin_comment
 comment|/// context.
-end_comment
-
-begin_expr_stmt
 name|unsigned
 name|char
 name|ClassifyBlockAddressReference
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// IsLegalToCallImmediateAddr - Return true if the subtarget allows calls
-end_comment
-
-begin_comment
 comment|/// to immediate address.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|IsLegalToCallImmediateAddr
 argument_list|(
@@ -936,29 +896,11 @@ name|TM
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// This function returns the name of a function which has an interface
-end_comment
-
-begin_comment
 comment|/// like the non-standard bzero function, if such a function exists on
-end_comment
-
-begin_comment
 comment|/// the current subtarget and it is considered prefereable over
-end_comment
-
-begin_comment
 comment|/// memset with zero passed as the second argument. Otherwise it
-end_comment
-
-begin_comment
 comment|/// returns null.
-end_comment
-
-begin_expr_stmt
 specifier|const
 name|char
 operator|*
@@ -966,37 +908,16 @@ name|getBZeroEntry
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// getSpecialAddressLatency - For targets where it is beneficial to
-end_comment
-
-begin_comment
 comment|/// backschedule instructions that compute addresses, return a value
-end_comment
-
-begin_comment
 comment|/// indicating the number of scheduling cycles of backscheduling that
-end_comment
-
-begin_comment
 comment|/// should be attempted.
-end_comment
-
-begin_expr_stmt
 name|unsigned
 name|getSpecialAddressLatency
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// IsCalleePop - Test whether a function should pop its own arguments.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|IsCalleePop
 argument_list|(
@@ -1010,10 +931,15 @@ name|CallConv
 argument_list|)
 decl|const
 decl_stmt|;
+block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
-unit|};  }
+unit|}
 comment|// End llvm namespace
 end_comment
 

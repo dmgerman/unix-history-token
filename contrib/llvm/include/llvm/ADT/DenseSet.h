@@ -154,6 +154,22 @@ name|size
 argument_list|()
 return|;
 block|}
+comment|/// Grow the denseset so that it has at least Size buckets. Does not shrink
+name|void
+name|resize
+parameter_list|(
+name|size_t
+name|Size
+parameter_list|)
+block|{
+name|TheMap
+operator|.
+name|resize
+argument_list|(
+name|Size
+argument_list|)
+expr_stmt|;
+block|}
 name|void
 name|clear
 parameter_list|()

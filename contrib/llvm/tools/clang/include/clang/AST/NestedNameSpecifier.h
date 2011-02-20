@@ -257,6 +257,7 @@ name|NestedNameSpecifier
 operator|*
 name|FindOrInsert
 argument_list|(
+specifier|const
 name|ASTContext
 operator|&
 name|Context
@@ -279,6 +280,7 @@ name|NestedNameSpecifier
 operator|*
 name|Create
 argument_list|(
+specifier|const
 name|ASTContext
 operator|&
 name|Context
@@ -298,6 +300,7 @@ name|NestedNameSpecifier
 operator|*
 name|Create
 argument_list|(
+specifier|const
 name|ASTContext
 operator|&
 name|Context
@@ -317,13 +320,13 @@ name|NestedNameSpecifier
 operator|*
 name|Create
 argument_list|(
-argument|ASTContext&Context
+argument|const ASTContext&Context
 argument_list|,
 argument|NestedNameSpecifier *Prefix
 argument_list|,
 argument|bool Template
 argument_list|,
-argument|Type *T
+argument|const Type *T
 argument_list|)
 block|;
 comment|/// \brief Builds a specifier that consists of just an identifier.
@@ -337,6 +340,7 @@ name|NestedNameSpecifier
 operator|*
 name|Create
 argument_list|(
+specifier|const
 name|ASTContext
 operator|&
 name|Context
@@ -353,6 +357,7 @@ name|NestedNameSpecifier
 operator|*
 name|GlobalSpecifier
 argument_list|(
+specifier|const
 name|ASTContext
 operator|&
 name|Context
@@ -478,7 +483,8 @@ comment|/// \brief Retrieve the type stored in this nested name specifier.
 end_comment
 
 begin_expr_stmt
-unit|Type
+unit|const
+name|Type
 operator|*
 name|getAsType
 argument_list|()
@@ -502,6 +508,7 @@ name|TypeSpecWithTemplate
 condition|)
 return|return
 operator|(
+specifier|const
 name|Type
 operator|*
 operator|)
@@ -534,6 +541,22 @@ begin_decl_stmt
 specifier|const
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/// \brief Whether this nested-name-specifier contains an unexpanded
+end_comment
+
+begin_comment
+comment|/// parameter pack (for C++0x variadic templates).
+end_comment
+
+begin_expr_stmt
+name|bool
+name|containsUnexpandedParameterPack
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// \brief Print this nested name specifier to the given output

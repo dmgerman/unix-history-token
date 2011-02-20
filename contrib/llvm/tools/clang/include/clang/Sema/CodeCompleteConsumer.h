@@ -86,13 +86,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang-c/Index.h"
+file|"llvm/Support/Allocator.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<memory>
+file|"clang-c/Index.h"
 end_include
 
 begin_include
@@ -107,6 +107,9 @@ name|llvm
 block|{
 name|class
 name|raw_ostream
+decl_stmt|;
+name|class
+name|Twine
 decl_stmt|;
 block|}
 end_decl_stmt
@@ -128,45 +131,51 @@ name|CCP_NextInitializer
 init|=
 literal|7
 block|,
+comment|/// \brief Priority for an enumeration constant inside a switch whose
+comment|/// condition is of the enumeration type.
+name|CCP_EnumInCase
+init|=
+literal|7
+block|,
 comment|/// \brief Priority for a send-to-super completion.
 name|CCP_SuperCompletion
 init|=
-literal|8
+literal|20
 block|,
 comment|/// \brief Priority for a declaration that is in the local scope.
 name|CCP_LocalDeclaration
 init|=
-literal|8
+literal|34
 block|,
 comment|/// \brief Priority for a member declaration found from the current
 comment|/// method or member function.
 name|CCP_MemberDeclaration
 init|=
-literal|20
+literal|35
 block|,
 comment|/// \brief Priority for a language keyword (that isn't any of the other
 comment|/// categories).
 name|CCP_Keyword
 init|=
-literal|30
+literal|40
 block|,
 comment|/// \brief Priority for a code pattern.
 name|CCP_CodePattern
 init|=
-literal|30
+literal|40
 block|,
 comment|/// \brief Priority for a non-type declaration.
 name|CCP_Declaration
 init|=
 literal|50
 block|,
-comment|/// \brief Priority for a constant value (e.g., enumerator).
-name|CCP_Constant
-init|=
-literal|60
-block|,
 comment|/// \brief Priority for a type.
 name|CCP_Type
+init|=
+name|CCP_Declaration
+block|,
+comment|/// \brief Priority for a constant value (e.g., enumerator).
+name|CCP_Constant
 init|=
 literal|65
 block|,
@@ -185,6 +194,11 @@ comment|/// but is included for completeness.
 name|CCP_Unlikely
 init|=
 literal|80
+block|,
+comment|/// \brief Priority for the Objective-C "_cmd" implicit parameter.
+name|CCP_ObjC_cmd
+init|=
+name|CCP_Unlikely
 block|}
 enum|;
 comment|/// \brief Priority value deltas that are added to code-completion results
@@ -195,15 +209,6 @@ comment|/// \brief The result is in a base class.
 name|CCD_InBaseClass
 init|=
 literal|2
-block|,
-comment|/// \brief The result is a type match against void.
-comment|///
-comment|/// Since everything converts to "void", we don't give as drastic an
-comment|/// adjustment for matching void.
-name|CCD_VoidMatch
-init|=
-operator|-
-literal|5
 block|,
 comment|/// \brief The result is a C++ non-static member function whose qualifiers
 comment|/// exactly match the object type on which the member function can be called.
@@ -219,6 +224,18 @@ name|CCD_SelectorMatch
 init|=
 operator|-
 literal|3
+block|,
+comment|/// \brief Adjustment to the "bool" type in Objective-C, where the typedef
+comment|/// "BOOL" is preferred.
+name|CCD_bool_in_ObjC
+init|=
+literal|1
+block|,
+comment|/// \brief Adjustment for KVC code pattern priorities when it doesn't look
+comment|/// like the
+name|CCD_ProbablyNotObjCCollection
+init|=
+literal|15
 block|}
 enum|;
 comment|/// \brief Priority value factors by which we will divide or multiply the
@@ -290,6 +307,8 @@ comment|/// with the given name.
 comment|///
 comment|/// \param MacroName The name of the macro.
 comment|///
+comment|/// \param LangOpts Options describing the current language dialect.
+comment|///
 comment|/// \param PreferredTypeIsPointer Whether the preferred type for the context
 comment|/// of this macro is a pointer type.
 name|unsigned
@@ -299,6 +318,11 @@ name|llvm
 operator|::
 name|StringRef
 name|MacroName
+argument_list|,
+specifier|const
+name|LangOptions
+operator|&
+name|LangOpts
 argument_list|,
 name|bool
 name|PreferredTypeIsPointer
@@ -349,6 +373,10 @@ name|Kind
 block|{
 comment|/// \brief An unspecified code-completion context.
 name|CCC_Other
+block|,
+comment|/// \brief An unspecified code-completion context where we should also add
+comment|/// macro completions.
+name|CCC_OtherWithMacros
 block|,
 comment|/// \brief Code completion occurred within a "top-level" completion context,
 comment|/// e.g., at namespace or global scope.
@@ -443,6 +471,14 @@ name|CCC_SelectorName
 block|,
 comment|/// \brief Code completion within a type-qualifier list.
 name|CCC_TypeQualifiers
+block|,
+comment|/// \brief Code completion in a parenthesized expression, which means that
+comment|/// we may also have types here in C and Objective-C (as well as in C++).
+name|CCC_ParenthesizedExpression
+block|,
+comment|/// \brief An unknown context, in which we are recovering from a parsing
+comment|/// error and don't know which completions we should give.
+name|CCC_Recovery
 block|}
 enum|;
 name|private
@@ -536,6 +572,13 @@ return|return
 name|BaseType
 return|;
 block|}
+comment|/// \brief Determines whether we want C++ constructors as results within this
+comment|/// context.
+name|bool
+name|wantConstructorResults
+argument_list|()
+specifier|const
+expr_stmt|;
 block|}
 empty_stmt|;
 comment|/// \brief A "string" used to describe how code completion can
@@ -676,7 +719,7 @@ name|Chunk
 argument_list|(
 argument|ChunkKind Kind
 argument_list|,
-argument|llvm::StringRef Text =
+argument|const char *Text =
 literal|""
 argument_list|)
 expr_stmt|;
@@ -684,97 +727,87 @@ comment|/// \brief Create a new text chunk.
 specifier|static
 name|Chunk
 name|CreateText
-argument_list|(
-name|llvm
-operator|::
-name|StringRef
+parameter_list|(
+specifier|const
+name|char
+modifier|*
 name|Text
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// \brief Create a new optional chunk.
 specifier|static
 name|Chunk
 name|CreateOptional
-argument_list|(
-name|std
-operator|::
-name|auto_ptr
-operator|<
+parameter_list|(
 name|CodeCompletionString
-operator|>
+modifier|*
 name|Optional
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// \brief Create a new placeholder chunk.
 specifier|static
 name|Chunk
 name|CreatePlaceholder
-argument_list|(
-name|llvm
-operator|::
-name|StringRef
+parameter_list|(
+specifier|const
+name|char
+modifier|*
 name|Placeholder
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// \brief Create a new informative chunk.
 specifier|static
 name|Chunk
 name|CreateInformative
-argument_list|(
-name|llvm
-operator|::
-name|StringRef
+parameter_list|(
+specifier|const
+name|char
+modifier|*
 name|Informative
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// \brief Create a new result type chunk.
 specifier|static
 name|Chunk
 name|CreateResultType
-argument_list|(
-name|llvm
-operator|::
-name|StringRef
+parameter_list|(
+specifier|const
+name|char
+modifier|*
 name|ResultType
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// \brief Create a new current-parameter chunk.
 specifier|static
 name|Chunk
 name|CreateCurrentParameter
-argument_list|(
-name|llvm
-operator|::
-name|StringRef
-name|CurrentParameter
-argument_list|)
-decl_stmt|;
-comment|/// \brief Clone the given chunk.
-name|Chunk
-name|Clone
-argument_list|()
+parameter_list|(
 specifier|const
-expr_stmt|;
-comment|/// \brief Destroy this chunk, deallocating any memory it owns.
-name|void
-name|Destroy
-parameter_list|()
+name|char
+modifier|*
+name|CurrentParameter
+parameter_list|)
 function_decl|;
 block|}
 struct|;
 name|private
 label|:
-comment|/// \brief The chunks stored in this string.
-name|llvm
-operator|::
-name|SmallVector
-operator|<
-name|Chunk
-operator|,
-literal|4
-operator|>
-name|Chunks
-expr_stmt|;
+comment|/// \brief The number of chunks stored in this string.
+name|unsigned
+name|NumChunks
+decl_stmt|;
+comment|/// \brief The priority of this code-completion string.
+name|unsigned
+name|Priority
+range|:
+literal|30
+decl_stmt|;
+comment|/// \brief The availability of this code-completion result.
+name|unsigned
+name|Availability
+range|:
+literal|2
+decl_stmt|;
 name|CodeCompletionString
 argument_list|(
 specifier|const
@@ -794,41 +827,54 @@ operator|&
 operator|)
 decl_stmt|;
 comment|// DITTO
-name|public
-label|:
 name|CodeCompletionString
-argument_list|()
-block|{ }
+argument_list|(
+argument|const Chunk *Chunks
+argument_list|,
+argument|unsigned NumChunks
+argument_list|,
+argument|unsigned Priority
+argument_list|,
+argument|CXAvailabilityKind Availability
+argument_list|)
+empty_stmt|;
 operator|~
 name|CodeCompletionString
 argument_list|()
-block|{
-name|clear
-argument_list|()
-block|; }
-typedef|typedef
-name|llvm
-operator|::
-name|SmallVector
-operator|<
-name|Chunk
-operator|,
-literal|4
-operator|>
-operator|::
-name|const_iterator
-name|iterator
+block|{ }
+name|friend
+name|class
+name|CodeCompletionBuilder
 expr_stmt|;
+name|friend
+name|class
+name|CodeCompletionResult
+decl_stmt|;
+name|public
+label|:
+typedef|typedef
+specifier|const
+name|Chunk
+modifier|*
+name|iterator
+typedef|;
 name|iterator
 name|begin
 argument_list|()
 specifier|const
 block|{
 return|return
-name|Chunks
-operator|.
-name|begin
-argument_list|()
+name|reinterpret_cast
+operator|<
+specifier|const
+name|Chunk
+operator|*
+operator|>
+operator|(
+name|this
+operator|+
+literal|1
+operator|)
 return|;
 block|}
 name|iterator
@@ -837,10 +883,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Chunks
-operator|.
-name|end
+name|begin
 argument_list|()
+operator|+
+name|NumChunks
 return|;
 block|}
 name|bool
@@ -849,10 +895,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Chunks
-operator|.
-name|empty
-argument_list|()
+name|NumChunks
+operator|==
+literal|0
 return|;
 block|}
 name|unsigned
@@ -861,40 +906,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Chunks
-operator|.
-name|size
-argument_list|()
-return|;
-block|}
-name|void
-name|clear
-parameter_list|()
-function_decl|;
-name|Chunk
-modifier|&
-name|operator
-function|[]
-parameter_list|(
-name|unsigned
-name|I
-parameter_list|)
-block|{
-name|assert
-argument_list|(
-name|I
-operator|<
-name|size
-argument_list|()
-operator|&&
-literal|"Chunk index out-of-range"
-argument_list|)
-expr_stmt|;
-return|return
-name|Chunks
-index|[
-name|I
-index|]
+name|NumChunks
 return|;
 block|}
 specifier|const
@@ -919,21 +931,233 @@ literal|"Chunk index out-of-range"
 argument_list|)
 expr_stmt|;
 return|return
-name|Chunks
+name|begin
+argument_list|()
 index|[
 name|I
 index|]
 return|;
 block|}
-comment|/// \brief Add a new typed-text chunk.
-comment|/// The text string will be copied.
-name|void
-name|AddTypedTextChunk
+comment|/// \brief Returns the text in the TypedText chunk.
+specifier|const
+name|char
+operator|*
+name|getTypedText
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief Retrieve the priority of this code completion result.
+name|unsigned
+name|getPriority
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Priority
+return|;
+block|}
+comment|/// \brief Reteirve the availability of this code completion result.
+name|unsigned
+name|getAvailability
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Availability
+return|;
+block|}
+comment|/// \brief Retrieve a string representation of the code completion string,
+comment|/// which is mainly useful for debugging.
+name|std
+operator|::
+name|string
+name|getAsString
+argument_list|()
+specifier|const
+expr_stmt|;
+block|}
+empty_stmt|;
+comment|/// \brief An allocator used specifically for the purpose of code completion.
+name|class
+name|CodeCompletionAllocator
+range|:
+name|public
+name|llvm
+operator|::
+name|BumpPtrAllocator
+block|{
+name|public
+operator|:
+comment|/// \brief Copy the given string into this allocator.
+specifier|const
+name|char
+operator|*
+name|CopyString
+argument_list|(
+argument|llvm::StringRef String
+argument_list|)
+block|;
+comment|/// \brief Copy the given string into this allocator.
+specifier|const
+name|char
+operator|*
+name|CopyString
+argument_list|(
+argument|llvm::Twine String
+argument_list|)
+block|;
+comment|// \brief Copy the given string into this allocator.
+specifier|const
+name|char
+operator|*
+name|CopyString
+argument_list|(
+argument|const char *String
+argument_list|)
+block|{
+return|return
+name|CopyString
 argument_list|(
 name|llvm
 operator|::
 name|StringRef
-name|Text
+argument_list|(
+name|String
+argument_list|)
+argument_list|)
+return|;
+block|}
+comment|/// \brief Copy the given string into this allocator.
+specifier|const
+name|char
+operator|*
+name|CopyString
+argument_list|(
+argument|const std::string&String
+argument_list|)
+block|{
+return|return
+name|CopyString
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
+argument_list|(
+name|String
+argument_list|)
+argument_list|)
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief A builder class used to construct new code-completion strings.
+name|class
+name|CodeCompletionBuilder
+block|{
+name|public
+operator|:
+typedef|typedef
+name|CodeCompletionString
+operator|::
+name|Chunk
+name|Chunk
+expr_stmt|;
+name|private
+operator|:
+name|CodeCompletionAllocator
+operator|&
+name|Allocator
+block|;
+name|unsigned
+name|Priority
+block|;
+name|CXAvailabilityKind
+name|Availability
+block|;
+comment|/// \brief The chunks stored in this string.
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|Chunk
+block|,
+literal|4
+operator|>
+name|Chunks
+block|;
+name|public
+operator|:
+name|CodeCompletionBuilder
+argument_list|(
+name|CodeCompletionAllocator
+operator|&
+name|Allocator
+argument_list|)
+operator|:
+name|Allocator
+argument_list|(
+name|Allocator
+argument_list|)
+block|,
+name|Priority
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|Availability
+argument_list|(
+argument|CXAvailability_Available
+argument_list|)
+block|{   }
+name|CodeCompletionBuilder
+argument_list|(
+argument|CodeCompletionAllocator&Allocator
+argument_list|,
+argument|unsigned Priority
+argument_list|,
+argument|CXAvailabilityKind Availability
+argument_list|)
+operator|:
+name|Allocator
+argument_list|(
+name|Allocator
+argument_list|)
+block|,
+name|Priority
+argument_list|(
+name|Priority
+argument_list|)
+block|,
+name|Availability
+argument_list|(
+argument|Availability
+argument_list|)
+block|{ }
+comment|/// \brief Retrieve the allocator into which the code completion
+comment|/// strings should be allocated.
+name|CodeCompletionAllocator
+operator|&
+name|getAllocator
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Allocator
+return|;
+block|}
+comment|/// \brief Take the resulting completion string.
+comment|///
+comment|/// This operation can only be performed once.
+name|CodeCompletionString
+operator|*
+name|TakeString
+argument_list|()
+block|;
+comment|/// \brief Add a new typed-text chunk.
+name|void
+name|AddTypedTextChunk
+argument_list|(
+argument|const char *Text
 argument_list|)
 block|{
 name|Chunks
@@ -942,22 +1166,19 @@ name|push_back
 argument_list|(
 name|Chunk
 argument_list|(
+name|CodeCompletionString
+operator|::
 name|CK_TypedText
 argument_list|,
 name|Text
 argument_list|)
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 comment|/// \brief Add a new text chunk.
-comment|/// The text string will be copied.
 name|void
 name|AddTextChunk
 argument_list|(
-name|llvm
-operator|::
-name|StringRef
-name|Text
+argument|const char *Text
 argument_list|)
 block|{
 name|Chunks
@@ -971,19 +1192,12 @@ argument_list|(
 name|Text
 argument_list|)
 argument_list|)
-expr_stmt|;
-block|}
+block|;    }
 comment|/// \brief Add a new optional chunk.
 name|void
 name|AddOptionalChunk
 argument_list|(
-name|std
-operator|::
-name|auto_ptr
-operator|<
-name|CodeCompletionString
-operator|>
-name|Optional
+argument|CodeCompletionString *Optional
 argument_list|)
 block|{
 name|Chunks
@@ -997,17 +1211,12 @@ argument_list|(
 name|Optional
 argument_list|)
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 comment|/// \brief Add a new placeholder chunk.
-comment|/// The placeholder text will be copied.
 name|void
 name|AddPlaceholderChunk
 argument_list|(
-name|llvm
-operator|::
-name|StringRef
-name|Placeholder
+argument|const char *Placeholder
 argument_list|)
 block|{
 name|Chunks
@@ -1021,17 +1230,12 @@ argument_list|(
 name|Placeholder
 argument_list|)
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 comment|/// \brief Add a new informative chunk.
-comment|/// The text will be copied.
 name|void
 name|AddInformativeChunk
 argument_list|(
-name|llvm
-operator|::
-name|StringRef
-name|Text
+argument|const char *Text
 argument_list|)
 block|{
 name|Chunks
@@ -1045,17 +1249,12 @@ argument_list|(
 name|Text
 argument_list|)
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 comment|/// \brief Add a new result-type chunk.
-comment|/// The text will be copied.
 name|void
 name|AddResultTypeChunk
 argument_list|(
-name|llvm
-operator|::
-name|StringRef
-name|ResultType
+argument|const char *ResultType
 argument_list|)
 block|{
 name|Chunks
@@ -1069,17 +1268,12 @@ argument_list|(
 name|ResultType
 argument_list|)
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 comment|/// \brief Add a new current-parameter chunk.
-comment|/// The text will be copied.
 name|void
 name|AddCurrentParameterChunk
 argument_list|(
-name|llvm
-operator|::
-name|StringRef
-name|CurrentParameter
+argument|const char *CurrentParameter
 argument_list|)
 block|{
 name|Chunks
@@ -1093,15 +1287,13 @@ argument_list|(
 name|CurrentParameter
 argument_list|)
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 comment|/// \brief Add a new chunk.
 name|void
 name|AddChunk
-parameter_list|(
-name|Chunk
-name|C
-parameter_list|)
+argument_list|(
+argument|Chunk C
+argument_list|)
 block|{
 name|Chunks
 operator|.
@@ -1109,73 +1301,9 @@ name|push_back
 argument_list|(
 name|C
 argument_list|)
-expr_stmt|;
+block|; }
 block|}
-comment|/// \brief Returns the text in the TypedText chunk.
-specifier|const
-name|char
-operator|*
-name|getTypedText
-argument_list|()
-specifier|const
-expr_stmt|;
-comment|/// \brief Retrieve a string representation of the code completion string,
-comment|/// which is mainly useful for debugging.
-name|std
-operator|::
-name|string
-name|getAsString
-argument_list|()
-specifier|const
-expr_stmt|;
-comment|/// \brief Clone this code-completion string.
-comment|///
-comment|/// \param Result If non-NULL, points to an empty code-completion
-comment|/// result that will be given a cloned copy of
-name|CodeCompletionString
-modifier|*
-name|Clone
-argument_list|(
-name|CodeCompletionString
-operator|*
-name|Result
-operator|=
-literal|0
-argument_list|)
-decl|const
 decl_stmt|;
-comment|/// \brief Serialize this code-completion string to the given stream.
-name|void
-name|Serialize
-argument_list|(
-name|llvm
-operator|::
-name|raw_ostream
-operator|&
-name|OS
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// \brief Deserialize a code-completion string from the given string.
-comment|///
-comment|/// \returns true if successful, false otherwise.
-name|bool
-name|Deserialize
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-modifier|&
-name|Str
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|StrEnd
-parameter_list|)
-function_decl|;
-block|}
-empty_stmt|;
 comment|/// \brief Captures a result of code completion.
 name|class
 name|CodeCompletionResult
@@ -1612,9 +1740,8 @@ comment|/// this result into a program.
 comment|///
 comment|/// \param S The semantic analysis that created the result.
 comment|///
-comment|/// \param Result If non-NULL, the already-allocated, empty
-comment|/// code-completion string that will be populated with the
-comment|/// appropriate code completion string for this result.
+comment|/// \param Allocator The allocator that will be used to allocate the
+comment|/// string itself.
 name|CodeCompletionString
 modifier|*
 name|CreateCodeCompletionString
@@ -1623,18 +1750,12 @@ name|Sema
 modifier|&
 name|S
 parameter_list|,
-name|CodeCompletionString
-modifier|*
-name|Result
-init|=
-literal|0
+name|CodeCompletionAllocator
+modifier|&
+name|Allocator
 parameter_list|)
 function_decl|;
-name|void
-name|Destroy
-parameter_list|()
-function_decl|;
-comment|/// brief Determine a base priority for the given declaration.
+comment|/// \brief Determine a base priority for the given declaration.
 specifier|static
 name|unsigned
 name|getPriorityFromDecl
@@ -1868,7 +1989,7 @@ argument_list|)
 operator|,
 name|FunctionTemplate
 argument_list|(
-argument|FunctionTemplate
+argument|FunctionTemplateDecl
 argument_list|)
 block|{ }
 name|OverloadCandidate
@@ -1949,6 +2070,10 @@ argument_list|,
 name|Sema
 operator|&
 name|S
+argument_list|,
+name|CodeCompletionAllocator
+operator|&
+name|Allocator
 argument_list|)
 decl|const
 decl_stmt|;
@@ -2104,6 +2229,16 @@ name|NumCandidates
 parameter_list|)
 block|{ }
 comment|//@}
+comment|/// \brief Retrieve the allocator that will be used to allocate
+comment|/// code completion strings.
+name|virtual
+name|CodeCompletionAllocator
+modifier|&
+name|getAllocator
+parameter_list|()
+init|=
+literal|0
+function_decl|;
 block|}
 empty_stmt|;
 comment|/// \brief A simple code-completion consumer that prints the results it
@@ -2120,6 +2255,9 @@ operator|::
 name|raw_ostream
 operator|&
 name|OS
+block|;
+name|CodeCompletionAllocator
+name|Allocator
 block|;
 name|public
 operator|:
@@ -2178,84 +2316,19 @@ argument|OverloadCandidate *Candidates
 argument_list|,
 argument|unsigned NumCandidates
 argument_list|)
-block|;   }
-decl_stmt|;
-comment|/// \brief A code-completion consumer that prints the results it receives
-comment|/// in a format that is parsable by the CIndex library.
-name|class
-name|CIndexCodeCompleteConsumer
-range|:
-name|public
-name|CodeCompleteConsumer
-block|{
-comment|/// \brief The raw output stream.
-name|llvm
-operator|::
-name|raw_ostream
+block|;
+name|virtual
+name|CodeCompletionAllocator
 operator|&
-name|OS
-block|;
-name|public
-operator|:
-comment|/// \brief Create a new CIndex code-completion consumer that prints its
-comment|/// results to the given raw output stream in a format readable to the CIndex
-comment|/// library.
-name|CIndexCodeCompleteConsumer
-argument_list|(
-argument|bool IncludeMacros
-argument_list|,
-argument|bool IncludeCodePatterns
-argument_list|,
-argument|bool IncludeGlobals
-argument_list|,
-argument|llvm::raw_ostream&OS
-argument_list|)
-operator|:
-name|CodeCompleteConsumer
-argument_list|(
-name|IncludeMacros
-argument_list|,
-name|IncludeCodePatterns
-argument_list|,
-name|IncludeGlobals
-argument_list|,
-name|true
-argument_list|)
-block|,
-name|OS
-argument_list|(
-argument|OS
-argument_list|)
-block|{}
-comment|/// \brief Prints the finalized code-completion results.
-name|virtual
-name|void
-name|ProcessCodeCompleteResults
-argument_list|(
-argument|Sema&S
-argument_list|,
-argument|CodeCompletionContext Context
-argument_list|,
-argument|CodeCompletionResult *Results
-argument_list|,
-argument|unsigned NumResults
-argument_list|)
-block|;
-name|virtual
-name|void
-name|ProcessOverloadCandidates
-argument_list|(
-argument|Sema&S
-argument_list|,
-argument|unsigned CurrentArg
-argument_list|,
-argument|OverloadCandidate *Candidates
-argument_list|,
-argument|unsigned NumCandidates
-argument_list|)
-block|;   }
-decl_stmt|;
+name|getAllocator
+argument_list|()
+block|{
+return|return
+name|Allocator
+return|;
 block|}
+expr|}
+block|;    }
 end_decl_stmt
 
 begin_comment

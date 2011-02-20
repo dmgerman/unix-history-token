@@ -46,16 +46,31 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/System/DataTypes.h"
+file|"llvm/MC/MCDirectives.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MCFixup.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MCFixupKindInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|MCDataFragment
-decl_stmt|;
 name|class
 name|MCFixup
 decl_stmt|;
@@ -76,9 +91,6 @@ operator|>
 name|class
 name|SmallVectorImpl
 expr_stmt|;
-name|class
-name|Target
-decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
@@ -108,30 +120,10 @@ name|protected
 label|:
 comment|// Can only create subclasses.
 name|TargetAsmBackend
-argument_list|(
-specifier|const
-name|Target
-operator|&
-argument_list|)
+argument_list|()
 expr_stmt|;
-comment|/// TheTarget - The Target that this machine was created for.
-specifier|const
-name|Target
-modifier|&
-name|TheTarget
-decl_stmt|;
-name|unsigned
-name|HasAbsolutizedSet
-range|:
-literal|1
-decl_stmt|;
 name|unsigned
 name|HasReliableSymbolDifference
-range|:
-literal|1
-decl_stmt|;
-name|unsigned
-name|HasScatteredSymbols
 range|:
 literal|1
 decl_stmt|;
@@ -142,17 +134,6 @@ operator|~
 name|TargetAsmBackend
 argument_list|()
 expr_stmt|;
-specifier|const
-name|Target
-operator|&
-name|getTarget
-argument_list|()
-specifier|const
-block|{
-return|return
-name|TheTarget
-return|;
-block|}
 comment|/// createObjectWriter - Create a new MCObjectWriter instance for use by the
 comment|/// assembler backend to emit the final object file.
 name|virtual
@@ -168,26 +149,6 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
-comment|/// hasAbsolutizedSet - Check whether this target "absolutizes"
-comment|/// assignments. That is, given code like:
-comment|///   a:
-comment|///   ...
-comment|///   b:
-comment|///   tmp = a - b
-comment|///       .long tmp
-comment|/// will the value of 'tmp' be a relocatable expression, or the assembly time
-comment|/// value of L0 - L1. This distinction is only relevant for platforms that
-comment|/// support scattered symbols, since in the absence of scattered symbols (a -
-comment|/// b) cannot change after assembly.
-name|bool
-name|hasAbsolutizedSet
-argument_list|()
-specifier|const
-block|{
-return|return
-name|HasAbsolutizedSet
-return|;
-block|}
 comment|/// hasReliableSymbolDifference - Check whether this target implements
 comment|/// accurate relocations for differences between symbols. If not, differences
 comment|/// between symbols will always be relocatable expressions and any references
@@ -197,7 +158,7 @@ comment|///
 comment|/// This should always be true (since it results in fewer relocations with no
 comment|/// loss of functionality), but is currently supported as a way to maintain
 comment|/// exact object compatibility with Darwin 'as' (on non-x86_64). It should
-comment|/// eventually should be eliminated. See also \see hasAbsolutizedSet.
+comment|/// eventually should be eliminated.
 name|bool
 name|hasReliableSymbolDifference
 argument_list|()
@@ -205,23 +166,6 @@ specifier|const
 block|{
 return|return
 name|HasReliableSymbolDifference
-return|;
-block|}
-comment|/// hasScatteredSymbols - Check whether this target supports scattered
-comment|/// symbols. If so, the assembler should assume that atoms can be scattered by
-comment|/// the linker. In particular, this means that the offsets between symbols
-comment|/// which are in distinct atoms is not known at link time, and the assembler
-comment|/// must generate fixups and relocations appropriately.
-comment|///
-comment|/// Note that the assembler currently does not reason about atoms, instead it
-comment|/// assumes all temporary symbols reside in the "current atom".
-name|bool
-name|hasScatteredSymbols
-argument_list|()
-specifier|const
-block|{
-return|return
-name|HasScatteredSymbols
 return|;
 block|}
 comment|/// doesSectionRequireSymbols - Check whether the given section requires that
@@ -260,21 +204,30 @@ return|return
 name|true
 return|;
 block|}
-comment|/// isVirtualSection - Check whether the given section is "virtual", that is
-comment|/// has no actual object file contents.
+comment|/// @name Target Fixup Interfaces
+comment|/// @{
+comment|/// getNumFixupKinds - Get the number of target specific fixup kinds.
 name|virtual
-name|bool
-name|isVirtualSection
-argument_list|(
+name|unsigned
+name|getNumFixupKinds
+argument_list|()
 specifier|const
-name|MCSection
-operator|&
-name|Section
+operator|=
+literal|0
+expr_stmt|;
+comment|/// getFixupKindInfo - Get information on a fixup kind.
+name|virtual
+specifier|const
+name|MCFixupKindInfo
+modifier|&
+name|getFixupKindInfo
+argument_list|(
+name|MCFixupKind
+name|Kind
 argument_list|)
 decl|const
-init|=
-literal|0
 decl_stmt|;
+comment|/// @}
 comment|/// ApplyFixup - Apply the \arg Value for given \arg Fixup into the provided
 comment|/// data fragment, at the offset specified by the fixup and following the
 comment|/// fixup kind as appropriate.
@@ -287,9 +240,12 @@ name|MCFixup
 operator|&
 name|Fixup
 argument_list|,
-name|MCDataFragment
-operator|&
-name|Fragment
+name|char
+operator|*
+name|Data
+argument_list|,
+name|unsigned
+name|DataSize
 argument_list|,
 name|uint64_t
 name|Value
@@ -298,6 +254,9 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
+comment|/// @}
+comment|/// @name Target Relaxation Interfaces
+comment|/// @{
 comment|/// MayNeedRelaxation - Check whether the given instruction may need
 comment|/// relaxation.
 comment|///
@@ -338,6 +297,7 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
+comment|/// @}
 comment|/// WriteNopData - Write an (optimal) nop sequence of Count bytes to the given
 comment|/// output. If the target cannot generate such a sequence, it should return an
 comment|/// error.
@@ -358,6 +318,16 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
+comment|/// HandleAssemblerFlag - Handle any target-specific assembler flags.
+comment|/// By default, do nothing.
+name|virtual
+name|void
+name|HandleAssemblerFlag
+parameter_list|(
+name|MCAssemblerFlag
+name|Flag
+parameter_list|)
+block|{}
 block|}
 empty_stmt|;
 block|}

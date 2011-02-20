@@ -455,6 +455,15 @@ argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|;
+name|SDValue
+name|LowerTRAMPOLINE
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
 comment|// Inline asm support
 name|std
 operator|::

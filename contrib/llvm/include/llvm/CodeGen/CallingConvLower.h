@@ -163,11 +163,11 @@ range|:
 literal|6
 decl_stmt|;
 comment|/// ValVT - The type of the value being assigned.
-name|EVT
+name|MVT
 name|ValVT
 decl_stmt|;
 comment|/// LocVT - The type of the location being assigned to.
-name|EVT
+name|MVT
 name|LocVT
 decl_stmt|;
 name|public
@@ -179,13 +179,13 @@ parameter_list|(
 name|unsigned
 name|ValNo
 parameter_list|,
-name|EVT
+name|MVT
 name|ValVT
 parameter_list|,
 name|unsigned
 name|RegNo
 parameter_list|,
-name|EVT
+name|MVT
 name|LocVT
 parameter_list|,
 name|LocInfo
@@ -248,13 +248,13 @@ parameter_list|(
 name|unsigned
 name|ValNo
 parameter_list|,
-name|EVT
+name|MVT
 name|ValVT
 parameter_list|,
 name|unsigned
 name|RegNo
 parameter_list|,
-name|EVT
+name|MVT
 name|LocVT
 parameter_list|,
 name|LocInfo
@@ -296,13 +296,13 @@ parameter_list|(
 name|unsigned
 name|ValNo
 parameter_list|,
-name|EVT
+name|MVT
 name|ValVT
 parameter_list|,
 name|unsigned
 name|Offset
 parameter_list|,
-name|EVT
+name|MVT
 name|LocVT
 parameter_list|,
 name|LocInfo
@@ -365,13 +365,13 @@ parameter_list|(
 name|unsigned
 name|ValNo
 parameter_list|,
-name|EVT
+name|MVT
 name|ValVT
 parameter_list|,
 name|unsigned
 name|Offset
 parameter_list|,
-name|EVT
+name|MVT
 name|LocVT
 parameter_list|,
 name|LocInfo
@@ -415,7 +415,7 @@ return|return
 name|ValNo
 return|;
 block|}
-name|EVT
+name|MVT
 name|getValVT
 argument_list|()
 specifier|const
@@ -482,7 +482,7 @@ return|return
 name|Loc
 return|;
 block|}
-name|EVT
+name|MVT
 name|getLocVT
 argument_list|()
 specifier|const
@@ -524,7 +524,7 @@ block|}
 block|}
 empty_stmt|;
 comment|/// CCAssignFn - This function assigns a location for Val, updating State to
-comment|/// reflect the change.
+comment|/// reflect the change.  It returns 'true' if it failed to handle Val.
 typedef|typedef
 name|bool
 name|CCAssignFn
@@ -532,10 +532,10 @@ argument_list|(
 name|unsigned
 name|ValNo
 argument_list|,
-name|EVT
+name|MVT
 name|ValVT
 argument_list|,
-name|EVT
+name|MVT
 name|LocVT
 argument_list|,
 name|CCValAssign
@@ -564,11 +564,11 @@ name|unsigned
 operator|&
 name|ValNo
 argument_list|,
-name|EVT
+name|MVT
 operator|&
 name|ValVT
 argument_list|,
-name|EVT
+name|MVT
 operator|&
 name|LocVT
 argument_list|,
@@ -835,7 +835,7 @@ name|AnalyzeCallOperands
 argument_list|(
 name|SmallVectorImpl
 operator|<
-name|EVT
+name|MVT
 operator|>
 operator|&
 name|ArgVTs
@@ -877,7 +877,7 @@ comment|/// produce a single value.
 name|void
 name|AnalyzeCallResult
 parameter_list|(
-name|EVT
+name|MVT
 name|VT
 parameter_list|,
 name|CCAssignFn
@@ -1215,10 +1215,10 @@ argument_list|(
 name|unsigned
 name|ValNo
 argument_list|,
-name|EVT
+name|MVT
 name|ValVT
 argument_list|,
-name|EVT
+name|MVT
 name|LocVT
 argument_list|,
 name|CCValAssign

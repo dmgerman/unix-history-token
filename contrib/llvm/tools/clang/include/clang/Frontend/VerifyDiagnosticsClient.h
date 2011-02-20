@@ -141,9 +141,6 @@ name|Preprocessor
 operator|*
 name|CurrentPreprocessor
 block|;
-name|unsigned
-name|NumErrors
-block|;
 name|private
 operator|:
 name|void
@@ -199,11 +196,6 @@ argument|Diagnostic::Level DiagLevel
 argument_list|,
 argument|const DiagnosticInfo&Info
 argument_list|)
-block|;
-comment|/// HadErrors - Check if there were any mismatches in expected diagnostics.
-name|bool
-name|HadErrors
-argument_list|()
 block|; }
 decl_stmt|;
 block|}

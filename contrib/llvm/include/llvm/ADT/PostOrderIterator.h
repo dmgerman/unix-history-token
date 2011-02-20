@@ -314,18 +314,6 @@ operator|++
 decl_stmt|;
 if|if
 condition|(
-operator|!
-name|this
-operator|->
-name|Visited
-operator|.
-name|count
-argument_list|(
-name|BB
-argument_list|)
-condition|)
-block|{
-comment|// If the block is not visited...
 name|this
 operator|->
 name|Visited
@@ -334,7 +322,9 @@ name|insert
 argument_list|(
 name|BB
 argument_list|)
-expr_stmt|;
+condition|)
+block|{
+comment|// If the block is not visited...
 name|VisitStack
 operator|.
 name|push_back
@@ -423,15 +413,6 @@ operator|)
 block|{
 if|if
 condition|(
-operator|!
-name|S
-operator|.
-name|count
-argument_list|(
-name|BB
-argument_list|)
-condition|)
-block|{
 name|this
 operator|->
 name|Visited
@@ -440,7 +421,8 @@ name|insert
 argument_list|(
 name|BB
 argument_list|)
-expr_stmt|;
+condition|)
+block|{
 name|VisitStack
 operator|.
 name|push_back

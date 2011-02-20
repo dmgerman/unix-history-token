@@ -178,7 +178,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/System/DataTypes.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_include
@@ -515,6 +515,11 @@ comment|/// in this module.
 name|bool
 name|DbgInfoAvailable
 block|;
+comment|/// True if this module calls VarArg function with floating point arguments.
+comment|/// This is used to emit an undefined reference to fltused on Windows targets.
+name|bool
+name|CallsExternalVAFunctionWithFloatingPointArguments
+block|;
 name|public
 operator|:
 specifier|static
@@ -559,15 +564,20 @@ name|MachineModuleInfo
 argument_list|()
 expr_stmt|;
 comment|// DUMMY CONSTRUCTOR, DO NOT CALL.
+comment|// Real constructor.
 name|MachineModuleInfo
 argument_list|(
 specifier|const
 name|MCAsmInfo
 operator|&
 name|MAI
+argument_list|,
+specifier|const
+name|TargetAsmInfo
+operator|*
+name|TAI
 argument_list|)
 expr_stmt|;
-comment|// Real constructor.
 operator|~
 name|MachineModuleInfo
 argument_list|()
@@ -756,7 +766,7 @@ parameter_list|)
 block|{
 name|DbgInfoAvailable
 operator|=
-name|true
+name|avail
 expr_stmt|;
 block|}
 end_function
@@ -809,6 +819,33 @@ name|b
 parameter_list|)
 block|{
 name|CallsUnwindInit
+operator|=
+name|b
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
+name|bool
+name|callsExternalVAFunctionWithFloatingPointArguments
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CallsExternalVAFunctionWithFloatingPointArguments
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|void
+name|setCallsExternalVAFunctionWithFloatingPointArguments
+parameter_list|(
+name|bool
+name|b
+parameter_list|)
+block|{
+name|CallsExternalVAFunctionWithFloatingPointArguments
 operator|=
 name|b
 expr_stmt|;

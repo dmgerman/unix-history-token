@@ -83,6 +83,9 @@ name|class
 name|QualType
 decl_stmt|;
 name|class
+name|MacroDefinition
+decl_stmt|;
+name|class
 name|ASTDeserializationListener
 block|{
 name|protected
@@ -91,21 +94,19 @@ name|virtual
 operator|~
 name|ASTDeserializationListener
 argument_list|()
-block|{}
+expr_stmt|;
 name|public
-operator|:
-comment|/// \brief Tell the listener about the reader.
+label|:
+comment|/// \brief The ASTReader was initialized.
 name|virtual
 name|void
-name|SetReader
-argument_list|(
+name|ReaderInitialized
+parameter_list|(
 name|ASTReader
-operator|*
+modifier|*
 name|Reader
-argument_list|)
-operator|=
-literal|0
-expr_stmt|;
+parameter_list|)
+block|{ }
 comment|/// \brief An identifier was deserialized from the AST file.
 name|virtual
 name|void
@@ -120,9 +121,7 @@ name|IdentifierInfo
 operator|*
 name|II
 argument_list|)
-init|=
-literal|0
-decl_stmt|;
+block|{ }
 comment|/// \brief A type was deserialized from the AST file. The ID here has the
 comment|///        qualifier bits already removed, and T is guaranteed to be locally
 comment|///        unqualified.
@@ -138,9 +137,7 @@ argument_list|,
 name|QualType
 name|T
 argument_list|)
-init|=
-literal|0
-decl_stmt|;
+block|{ }
 comment|/// \brief A decl was deserialized from the AST file.
 name|virtual
 name|void
@@ -156,9 +153,7 @@ name|Decl
 operator|*
 name|D
 argument_list|)
-init|=
-literal|0
-decl_stmt|;
+block|{ }
 comment|/// \brief A selector was read from the AST file.
 name|virtual
 name|void
@@ -172,9 +167,21 @@ argument_list|,
 name|Selector
 name|Sel
 argument_list|)
-init|=
-literal|0
-decl_stmt|;
+block|{ }
+comment|/// \brief A macro definition was read from the AST file.
+name|virtual
+name|void
+name|MacroDefinitionRead
+argument_list|(
+name|serialization
+operator|::
+name|MacroID
+argument_list|,
+name|MacroDefinition
+operator|*
+name|MD
+argument_list|)
+block|{ }
 block|}
 empty_stmt|;
 block|}

@@ -105,6 +105,9 @@ name|class
 name|SMDiagnostic
 decl_stmt|;
 name|class
+name|Twine
+decl_stmt|;
+name|class
 name|raw_ostream
 decl_stmt|;
 comment|/// SourceMgr - This owns the files read by a parser, handles include stacks,
@@ -131,9 +134,6 @@ parameter_list|,
 name|void
 modifier|*
 name|Context
-parameter_list|,
-name|unsigned
-name|LocCookie
 parameter_list|)
 function_decl|;
 name|private
@@ -187,9 +187,6 @@ decl_stmt|;
 name|void
 modifier|*
 name|DiagContext
-decl_stmt|;
-name|unsigned
-name|DiagLocCookie
 decl_stmt|;
 name|SourceMgr
 argument_list|(
@@ -255,8 +252,7 @@ name|Dirs
 expr_stmt|;
 block|}
 comment|/// setDiagHandler - Specify a diagnostic handler to be invoked every time
-comment|/// PrintMessage is called.  Ctx and Cookie are passed into the handler when
-comment|/// it is invoked.
+comment|/// PrintMessage is called. Ctx is passed into the handler when it is invoked.
 name|void
 name|setDiagHandler
 parameter_list|(
@@ -268,11 +264,6 @@ modifier|*
 name|Ctx
 init|=
 literal|0
-parameter_list|,
-name|unsigned
-name|Cookie
-init|=
-literal|0
 parameter_list|)
 block|{
 name|DiagHandler
@@ -282,10 +273,6 @@ expr_stmt|;
 name|DiagContext
 operator|=
 name|Ctx
-expr_stmt|;
-name|DiagLocCookie
-operator|=
-name|Cookie
 expr_stmt|;
 block|}
 specifier|const
@@ -477,9 +464,7 @@ name|SMLoc
 name|Loc
 argument_list|,
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|Msg
 argument_list|,
@@ -508,9 +493,7 @@ name|SMLoc
 name|Loc
 argument_list|,
 specifier|const
-name|std
-operator|::
-name|string
+name|Twine
 operator|&
 name|Msg
 argument_list|,

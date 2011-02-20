@@ -327,6 +327,7 @@ name|llvm
 operator|::
 name|DenseMap
 operator|<
+specifier|const
 name|Type
 operator|*
 operator|,
@@ -576,13 +577,12 @@ specifier|const
 name|CGRecordLayout
 modifier|&
 name|getCGRecordLayout
-argument_list|(
+parameter_list|(
 specifier|const
 name|RecordDecl
-operator|*
-argument_list|)
-decl|const
-decl_stmt|;
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/// UpdateCompletedType - When we find the full definition for a TagDecl,
 comment|/// replace the 'opaque' type we previously made for it if applicable.
 name|void

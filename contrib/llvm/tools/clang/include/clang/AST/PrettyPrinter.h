@@ -59,6 +59,12 @@ directive|define
 name|LLVM_CLANG_AST_PRETTY_PRINTER_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"clang/Basic/LangOptions.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -174,7 +180,6 @@ expr_stmt|;
 comment|/// \brief What language we're printing.
 specifier|const
 name|LangOptions
-modifier|&
 name|LangOpts
 decl_stmt|;
 comment|/// \brief Whether we should suppress printing of the actual specifiers for

@@ -98,6 +98,18 @@ name|MCSectionData
 operator|*
 name|CurSectionData
 block|;
+name|virtual
+name|void
+name|EmitInstToData
+argument_list|(
+specifier|const
+name|MCInst
+operator|&
+name|Inst
+argument_list|)
+operator|=
+literal|0
+block|;
 name|protected
 operator|:
 name|MCObjectStreamer
@@ -174,12 +186,123 @@ comment|/// @name MCStreamer Interface
 comment|/// @{
 name|virtual
 name|void
-name|SwitchSection
+name|EmitLabel
+argument_list|(
+name|MCSymbol
+operator|*
+name|Symbol
+argument_list|)
+block|;
+name|virtual
+name|void
+name|EmitValueImpl
+argument_list|(
+argument|const MCExpr *Value
+argument_list|,
+argument|unsigned Size
+argument_list|,
+argument|bool isPCRel
+argument_list|,
+argument|unsigned AddrSpace
+argument_list|)
+block|;
+name|virtual
+name|void
+name|EmitULEB128Value
+argument_list|(
+argument|const MCExpr *Value
+argument_list|,
+argument|unsigned AddrSpace =
+literal|0
+argument_list|)
+block|;
+name|virtual
+name|void
+name|EmitSLEB128Value
+argument_list|(
+argument|const MCExpr *Value
+argument_list|,
+argument|unsigned AddrSpace =
+literal|0
+argument_list|)
+block|;
+name|virtual
+name|void
+name|EmitWeakReference
+argument_list|(
+name|MCSymbol
+operator|*
+name|Alias
+argument_list|,
+specifier|const
+name|MCSymbol
+operator|*
+name|Symbol
+argument_list|)
+block|;
+name|virtual
+name|void
+name|ChangeSection
 argument_list|(
 specifier|const
 name|MCSection
 operator|*
 name|Section
+argument_list|)
+block|;
+name|virtual
+name|void
+name|EmitInstruction
+argument_list|(
+specifier|const
+name|MCInst
+operator|&
+name|Inst
+argument_list|)
+block|;
+name|virtual
+name|void
+name|EmitInstToFragment
+argument_list|(
+specifier|const
+name|MCInst
+operator|&
+name|Inst
+argument_list|)
+block|;
+name|virtual
+name|void
+name|EmitValueToOffset
+argument_list|(
+argument|const MCExpr *Offset
+argument_list|,
+argument|unsigned char Value
+argument_list|)
+block|;
+name|virtual
+name|void
+name|EmitDwarfAdvanceLineAddr
+argument_list|(
+argument|int64_t LineDelta
+argument_list|,
+argument|const MCSymbol *LastLabel
+argument_list|,
+argument|const MCSymbol *Label
+argument_list|)
+block|;
+name|virtual
+name|void
+name|EmitDwarfAdvanceFrameAddr
+argument_list|(
+specifier|const
+name|MCSymbol
+operator|*
+name|LastLabel
+argument_list|,
+specifier|const
+name|MCSymbol
+operator|*
+name|Label
 argument_list|)
 block|;
 name|virtual

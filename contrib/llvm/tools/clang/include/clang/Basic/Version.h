@@ -178,9 +178,9 @@ block|{
 comment|/// \brief Retrieves the repository path (e.g., Subversion path) that
 comment|/// identifies the particular Clang branch, tag, or trunk from which this
 comment|/// Clang was built.
-name|llvm
+name|std
 operator|::
-name|StringRef
+name|string
 name|getClangRepositoryPath
 argument_list|()
 expr_stmt|;

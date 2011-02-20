@@ -595,7 +595,7 @@ block|;
 name|unsigned
 name|Alignment
 operator|=
-name|alignof
+name|alignOf
 operator|<
 name|StringMapEntry
 operator|>
@@ -1044,6 +1044,11 @@ argument_list|()
 operator|&&
 literal|"Copy ctor from non-empty stringmap not implemented yet!"
 argument_list|)
+block|;
+operator|(
+name|void
+operator|)
+name|RHS
 block|;   }
 name|void
 name|operator
@@ -1065,21 +1070,44 @@ operator|&&
 literal|"assignment from non-empty stringmap not implemented yet!"
 argument_list|)
 block|;
+operator|(
+name|void
+operator|)
+name|RHS
+block|;
 name|clear
 argument_list|()
 block|;   }
+typedef|typedef
+name|typename
+name|ReferenceAdder
+operator|<
 name|AllocatorTy
-operator|&
+operator|>
+operator|::
+name|result
+name|AllocatorRefTy
+expr_stmt|;
+typedef|typedef
+name|typename
+name|ReferenceAdder
+operator|<
+specifier|const
+name|AllocatorTy
+operator|>
+operator|::
+name|result
+name|AllocatorCRefTy
+expr_stmt|;
+name|AllocatorRefTy
 name|getAllocator
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|Allocator
 return|;
 block|}
-specifier|const
-name|AllocatorTy
-operator|&
+name|AllocatorCRefTy
 name|getAllocator
 argument_list|()
 specifier|const

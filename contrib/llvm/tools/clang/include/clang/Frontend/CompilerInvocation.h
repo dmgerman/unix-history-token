@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/FileSystemOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Frontend/AnalyzerOptions.h"
 end_include
 
@@ -89,6 +95,12 @@ begin_include
 include|#
 directive|include
 file|"clang/Frontend/HeaderSearchOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Frontend/LangStandard.h"
 end_include
 
 begin_include
@@ -174,6 +186,10 @@ comment|/// Options controlling the diagnostic engine.
 name|DiagnosticOptions
 name|DiagnosticOpts
 decl_stmt|;
+comment|/// Options controlling file system operations.
+name|FileSystemOptions
+name|FileSystemOpts
+decl_stmt|;
 comment|/// Options controlling the frontend itself.
 name|FrontendOptions
 name|FrontendOpts
@@ -223,12 +239,14 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+specifier|const
 modifier|*
 name|ArgBegin
 parameter_list|,
 specifier|const
 name|char
 modifier|*
+specifier|const
 modifier|*
 name|ArgEnd
 parameter_list|,
@@ -276,6 +294,64 @@ name|string
 operator|>
 operator|&
 name|Res
+argument_list|)
+decl_stmt|;
+comment|/// setLangDefaults - Set language defaults for the given input language and
+comment|/// language standard in this CompilerInvocation.
+comment|///
+comment|/// \param IK - The input language.
+comment|/// \param LangStd - The input language standard.
+name|void
+name|setLangDefaults
+argument_list|(
+name|InputKind
+name|IK
+argument_list|,
+name|LangStandard
+operator|::
+name|Kind
+name|LangStd
+operator|=
+name|LangStandard
+operator|::
+name|lang_unspecified
+argument_list|)
+block|{
+name|setLangDefaults
+argument_list|(
+name|LangOpts
+argument_list|,
+name|IK
+argument_list|,
+name|LangStd
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// setLangDefaults - Set language defaults for the given input language and
+comment|/// language standard in the given LangOptions object.
+comment|///
+comment|/// \param LangOpts - The LangOptions object to set up.
+comment|/// \param IK - The input language.
+comment|/// \param LangStd - The input language standard.
+specifier|static
+name|void
+name|setLangDefaults
+argument_list|(
+name|LangOptions
+operator|&
+name|Opts
+argument_list|,
+name|InputKind
+name|IK
+argument_list|,
+name|LangStandard
+operator|::
+name|Kind
+name|LangStd
+operator|=
+name|LangStandard
+operator|::
+name|lang_unspecified
 argument_list|)
 decl_stmt|;
 comment|/// @}
@@ -359,6 +435,26 @@ specifier|const
 block|{
 return|return
 name|DiagnosticOpts
+return|;
+block|}
+name|FileSystemOptions
+modifier|&
+name|getFileSystemOpts
+parameter_list|()
+block|{
+return|return
+name|FileSystemOpts
+return|;
+block|}
+specifier|const
+name|FileSystemOptions
+operator|&
+name|getFileSystemOpts
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FileSystemOpts
 return|;
 block|}
 name|HeaderSearchOptions

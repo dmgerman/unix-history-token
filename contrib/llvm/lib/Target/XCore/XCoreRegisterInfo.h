@@ -171,13 +171,6 @@ argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
-name|bool
-name|hasFP
-argument_list|(
-argument|const MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
 name|void
 name|eliminateCallFramePseudoInstr
 argument_list|(
@@ -200,38 +193,6 @@ argument|RegScavenger *RS = NULL
 argument_list|)
 specifier|const
 block|;
-name|void
-name|processFunctionBeforeCalleeSavedScan
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|RegScavenger *RS = NULL
-argument_list|)
-specifier|const
-block|;
-name|void
-name|processFunctionBeforeFrameFinalized
-argument_list|(
-argument|MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
-name|void
-name|emitPrologue
-argument_list|(
-argument|MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
-name|void
-name|emitEpilogue
-argument_list|(
-argument|MachineFunction&MF
-argument_list|,
-argument|MachineBasicBlock&MBB
-argument_list|)
-specifier|const
-block|;
 comment|// Debug information queries.
 name|unsigned
 name|getRARegister
@@ -242,13 +203,6 @@ name|unsigned
 name|getFrameRegister
 argument_list|(
 argument|const MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
-name|void
-name|getInitialFrameState
-argument_list|(
-argument|std::vector<MachineMove>&Moves
 argument_list|)
 specifier|const
 block|;

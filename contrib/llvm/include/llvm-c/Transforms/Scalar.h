@@ -105,14 +105,6 @@ name|LLVMPassManagerRef
 name|PM
 parameter_list|)
 function_decl|;
-comment|/** See llvm::createLoopIndexSplitPass function. */
-name|void
-name|LLVMAddLoopIndexSplitPass
-parameter_list|(
-name|LLVMPassManagerRef
-name|PM
-parameter_list|)
-function_decl|;
 comment|/** See llvm::createLoopRotatePass function. */
 name|void
 name|LLVMAddLoopRotatePass

@@ -86,11 +86,64 @@ specifier|const
 name|Value
 operator|*
 operator|,
+name|TrackingVH
+operator|<
 name|Value
-operator|*
 operator|>
+expr|>
 name|ValueToValueMapTy
 expr_stmt|;
+comment|/// RemapFlags - These are flags that the value mapping APIs allow.
+enum|enum
+name|RemapFlags
+block|{
+name|RF_None
+init|=
+literal|0
+block|,
+comment|/// RF_NoModuleLevelChanges - If this flag is set, the remapper knows that
+comment|/// only local values within a function (such as an instruction or argument)
+comment|/// are mapped, not global values like functions and global metadata.
+name|RF_NoModuleLevelChanges
+init|=
+literal|1
+block|,
+comment|/// RF_IgnoreMissingEntries - If this flag is set, the remapper ignores
+comment|/// entries that are not in the value map.  If it is unset, it aborts if an
+comment|/// operand is asked to be remapped which doesn't exist in the mapping.
+name|RF_IgnoreMissingEntries
+init|=
+literal|2
+block|}
+enum|;
+specifier|static
+specifier|inline
+name|RemapFlags
+name|operator
+operator||
+operator|(
+name|RemapFlags
+name|LHS
+operator|,
+name|RemapFlags
+name|RHS
+operator|)
+block|{
+return|return
+name|RemapFlags
+argument_list|(
+name|unsigned
+argument_list|(
+name|LHS
+argument_list|)
+operator||
+name|unsigned
+argument_list|(
+name|RHS
+argument_list|)
+argument_list|)
+return|;
+block|}
 name|Value
 modifier|*
 name|MapValue
@@ -104,8 +157,10 @@ name|ValueToValueMapTy
 modifier|&
 name|VM
 parameter_list|,
-name|bool
-name|ModuleLevelChanges
+name|RemapFlags
+name|Flags
+init|=
+name|RF_None
 parameter_list|)
 function_decl|;
 name|void
@@ -119,8 +174,10 @@ name|ValueToValueMapTy
 modifier|&
 name|VM
 parameter_list|,
-name|bool
-name|ModuleLevelChanges
+name|RemapFlags
+name|Flags
+init|=
+name|RF_None
 parameter_list|)
 function_decl|;
 block|}

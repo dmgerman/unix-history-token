@@ -76,6 +76,9 @@ name|class
 name|HandleTagDeclDefinition
 decl_stmt|;
 name|class
+name|ASTMutationListener
+decl_stmt|;
+name|class
 name|ASTDeserializationListener
 decl_stmt|;
 comment|// layering violation because void* is ugly
@@ -213,10 +216,21 @@ name|bool
 name|DefinitionRequired
 parameter_list|)
 block|{}
+comment|/// \brief If the consumer is interested in entities getting modified after
+comment|/// their initial creation, it should return a pointer to
+comment|/// a GetASTMutationListener here.
+name|virtual
+name|ASTMutationListener
+modifier|*
+name|GetASTMutationListener
+parameter_list|()
+block|{
+return|return
+literal|0
+return|;
+block|}
 comment|/// \brief If the consumer is interested in entities being deserialized from
 comment|/// AST files, it should return a pointer to a ASTDeserializationListener here
-comment|///
-comment|/// The return type is void* because ASTDS lives in Frontend.
 name|virtual
 name|ASTDeserializationListener
 modifier|*

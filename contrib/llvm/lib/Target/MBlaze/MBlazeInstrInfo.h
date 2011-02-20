@@ -178,15 +178,15 @@ block|,
 name|FCOND_GT
 block|,
 comment|// Only integer conditions
-name|COND_E
+name|COND_EQ
 block|,
-name|COND_GZ
+name|COND_GT
 block|,
-name|COND_GEZ
+name|COND_GE
 block|,
-name|COND_LZ
+name|COND_LT
 block|,
-name|COND_LEZ
+name|COND_LE
 block|,
 name|COND_NE
 block|,
@@ -194,24 +194,79 @@ name|COND_INVALID
 block|}
 enum|;
 comment|// Turn condition code into conditional branch opcode.
+specifier|inline
+specifier|static
 name|unsigned
 name|GetCondBranchFromCond
 parameter_list|(
 name|CondCode
 name|CC
 parameter_list|)
-function_decl|;
-comment|/// GetOppositeBranchCondition - Return the inverse of the specified cond,
-comment|/// e.g. turning COND_E to COND_NE.
-name|CondCode
-name|GetOppositeBranchCondition
+block|{
+switch|switch
+condition|(
+name|CC
+condition|)
+block|{
+default|default:
+name|llvm_unreachable
 argument_list|(
+literal|"Unknown condition code"
+argument_list|)
+expr_stmt|;
+case|case
+name|COND_EQ
+case|:
+return|return
 name|MBlaze
 operator|::
-name|CondCode
-name|CC
-argument_list|)
-decl_stmt|;
+name|BEQID
+return|;
+case|case
+name|COND_NE
+case|:
+return|return
+name|MBlaze
+operator|::
+name|BNEID
+return|;
+case|case
+name|COND_GT
+case|:
+return|return
+name|MBlaze
+operator|::
+name|BGTID
+return|;
+case|case
+name|COND_GE
+case|:
+return|return
+name|MBlaze
+operator|::
+name|BGEID
+return|;
+case|case
+name|COND_LT
+case|:
+return|return
+name|MBlaze
+operator|::
+name|BLTID
+return|;
+case|case
+name|COND_LE
+case|:
+return|return
+name|MBlaze
+operator|::
+name|BLEID
+return|;
+block|}
+block|}
+comment|/// GetOppositeBranchCondition - Return the inverse of the specified cond,
+comment|/// e.g. turning COND_E to COND_NE.
+comment|// CondCode GetOppositeBranchCondition(MBlaze::CondCode CC);
 comment|/// MBlazeCCToString - Map each FP condition code to its string
 specifier|inline
 specifier|static
@@ -383,6 +438,132 @@ literal|"gt"
 return|;
 block|}
 block|}
+specifier|inline
+specifier|static
+name|bool
+name|isUncondBranchOpcode
+parameter_list|(
+name|int
+name|Opc
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|Opc
+condition|)
+block|{
+default|default:
+return|return
+name|false
+return|;
+case|case
+name|MBlaze
+operator|::
+name|BRI
+case|:
+case|case
+name|MBlaze
+operator|::
+name|BRAI
+case|:
+case|case
+name|MBlaze
+operator|::
+name|BRID
+case|:
+case|case
+name|MBlaze
+operator|::
+name|BRAID
+case|:
+return|return
+name|true
+return|;
+block|}
+block|}
+specifier|inline
+specifier|static
+name|bool
+name|isCondBranchOpcode
+parameter_list|(
+name|int
+name|Opc
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|Opc
+condition|)
+block|{
+default|default:
+return|return
+name|false
+return|;
+case|case
+name|MBlaze
+operator|::
+name|BEQI
+case|:
+case|case
+name|MBlaze
+operator|::
+name|BEQID
+case|:
+case|case
+name|MBlaze
+operator|::
+name|BNEI
+case|:
+case|case
+name|MBlaze
+operator|::
+name|BNEID
+case|:
+case|case
+name|MBlaze
+operator|::
+name|BGTI
+case|:
+case|case
+name|MBlaze
+operator|::
+name|BGTID
+case|:
+case|case
+name|MBlaze
+operator|::
+name|BGEI
+case|:
+case|case
+name|MBlaze
+operator|::
+name|BGEID
+case|:
+case|case
+name|MBlaze
+operator|::
+name|BLTI
+case|:
+case|case
+name|MBlaze
+operator|::
+name|BLTID
+case|:
+case|case
+name|MBlaze
+operator|::
+name|BLEI
+case|:
+case|case
+name|MBlaze
+operator|::
+name|BLEID
+case|:
+return|return
+name|true
+return|;
+block|}
+block|}
 block|}
 comment|/// MBlazeII - This namespace holds all of the target specific flags that
 comment|/// instruction info tracks.
@@ -390,31 +571,75 @@ comment|///
 name|namespace
 name|MBlazeII
 block|{
-comment|/// Target Operand Flag enum.
 enum|enum
-name|TOF
 block|{
+comment|// PseudoFrm - This represents an instruction that is a pseudo instruction
+comment|// or one that has not been implemented yet.  It is illegal to code generate
+comment|// it, but tolerated for intermediate implementation stages.
+name|FPseudo
+init|=
+literal|0
+block|,
+name|FRRR
+block|,
+name|FRRI
+block|,
+name|FCRR
+block|,
+name|FCRI
+block|,
+name|FRCR
+block|,
+name|FRCI
+block|,
+name|FCCR
+block|,
+name|FCCI
+block|,
+name|FRRCI
+block|,
+name|FRRC
+block|,
+name|FRCX
+block|,
+name|FRCS
+block|,
+name|FCRCS
+block|,
+name|FCRCX
+block|,
+name|FCX
+block|,
+name|FCR
+block|,
+name|FRIR
+block|,
+name|FRRRR
+block|,
+name|FRI
+block|,
+name|FC
+block|,
+name|FormMask
+init|=
+literal|63
 comment|//===------------------------------------------------------------------===//
 comment|// MBlaze Specific MachineOperand flags.
-name|MO_NO_FLAG
-block|,
+comment|// MO_NO_FLAG,
 comment|/// MO_GOT - Represents the offset into the global offset table at which
 comment|/// the address the relocation entry symbol resides during execution.
-name|MO_GOT
-block|,
+comment|// MO_GOT,
 comment|/// MO_GOT_CALL - Represents the offset into the global offset table at
 comment|/// which the address of a call site relocation entry symbol resides
 comment|/// during execution. This is different from the above since this flag
 comment|/// can only be present in call instructions.
-name|MO_GOT_CALL
-block|,
+comment|// MO_GOT_CALL,
 comment|/// MO_GPREL - Represents the offset from the current gp value to be used
 comment|/// for the relocatable object file being produced.
-name|MO_GPREL
-block|,
+comment|// MO_GPREL,
 comment|/// MO_ABS_HILO - Represents the hi or low part of an absolute symbol
 comment|/// address.
-name|MO_ABS_HILO
+comment|// MO_ABS_HILO
 block|}
 enum|;
 block|}
@@ -490,6 +715,22 @@ specifier|const
 block|;
 comment|/// Branch Analysis
 name|virtual
+name|bool
+name|AnalyzeBranch
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock *&TBB
+argument_list|,
+argument|MachineBasicBlock *&FBB
+argument_list|,
+argument|SmallVectorImpl<MachineOperand>&Cond
+argument_list|,
+argument|bool AllowModify
+argument_list|)
+specifier|const
+block|;
+name|virtual
 name|unsigned
 name|InsertBranch
 argument_list|(
@@ -502,6 +743,22 @@ argument_list|,
 argument|const SmallVectorImpl<MachineOperand>&Cond
 argument_list|,
 argument|DebugLoc DL
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|unsigned
+name|RemoveBranch
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|ReverseBranchCondition
+argument_list|(
+argument|SmallVectorImpl<MachineOperand>&Cond
 argument_list|)
 specifier|const
 block|;

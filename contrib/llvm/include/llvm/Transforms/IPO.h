@@ -207,6 +207,8 @@ comment|//===-------------------------------------------------------------------
 comment|/// createFunctionInliningPass - Return a new pass object that uses a heuristic
 comment|/// to inline direct function calls to small functions.
 comment|///
+comment|/// The -inline-threshold command line option takes precedence over the
+comment|/// threshold given here.
 name|Pass
 modifier|*
 name|createFunctionInliningPass
@@ -365,15 +367,6 @@ comment|/// (prototypes) that are not used.
 name|ModulePass
 modifier|*
 name|createStripDeadPrototypesPass
-parameter_list|()
-function_decl|;
-comment|//===----------------------------------------------------------------------===//
-comment|/// createPartialSpecializationPass - This pass specializes functions for
-comment|/// constant arguments.
-comment|///
-name|ModulePass
-modifier|*
-name|createPartialSpecializationPass
 parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//

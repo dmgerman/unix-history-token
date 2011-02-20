@@ -98,7 +98,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/System/DataTypes.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_include
@@ -221,7 +221,7 @@ name|SF_ClassShift
 init|=
 literal|16
 block|,
-name|SF_WeakReference
+name|SF_WeakExternal
 init|=
 literal|0x01000000
 block|}
@@ -495,7 +495,7 @@ comment|///< An array of base type.
 comment|/// Type is formed as (base + (derived<< SCT_COMPLEX_TYPE_SHIFT))
 name|SCT_COMPLEX_TYPE_SHIFT
 init|=
-literal|8
+literal|4
 block|}
 enum|;
 struct|struct

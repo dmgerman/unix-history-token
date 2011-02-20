@@ -182,6 +182,7 @@ operator|.
 name|Line
 argument_list|)
 condition|)
+block|{
 name|PSL
 operator|.
 name|FileName
@@ -190,6 +191,23 @@ name|LineSplit
 operator|.
 name|first
 expr_stmt|;
+comment|// On the command-line, stdin may be specified via "-". Inside the
+comment|// compiler, stdin is called "<stdin>".
+if|if
+condition|(
+name|PSL
+operator|.
+name|FileName
+operator|==
+literal|"-"
+condition|)
+name|PSL
+operator|.
+name|FileName
+operator|=
+literal|"<stdin>"
+expr_stmt|;
+block|}
 return|return
 name|PSL
 return|;

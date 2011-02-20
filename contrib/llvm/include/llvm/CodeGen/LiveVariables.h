@@ -140,6 +140,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Target/TargetRegisterInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/BitVector.h"
 end_include
 
@@ -147,6 +153,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/IndexedMap.h"
 end_include
 
 begin_include
@@ -197,7 +209,16 @@ name|MachineFunctionPass
 argument_list|(
 argument|ID
 argument_list|)
-block|{}
+block|{
+name|initializeLiveVariablesPass
+argument_list|(
+operator|*
+name|PassRegistry
+operator|::
+name|getPassRegistry
+argument_list|()
+argument_list|)
+block|;   }
 comment|/// VarInfo - This represents the regions where a virtual register is live in
 comment|/// the program.  We represent this with three different pieces of
 comment|/// information: the set of blocks in which the instruction is live
@@ -352,14 +373,13 @@ decl_stmt|;
 name|private
 label|:
 comment|/// VirtRegInfo - This list is a mapping from virtual register number to
-comment|/// variable information.  FirstVirtualRegister is subtracted from the virtual
-comment|/// register number before indexing into this list.
+comment|/// variable information.
 comment|///
-name|std
-operator|::
-name|vector
+name|IndexedMap
 operator|<
 name|VarInfo
+operator|,
+name|VirtReg2IndexFunctor
 operator|>
 name|VirtRegInfo
 expr_stmt|;

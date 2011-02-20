@@ -575,12 +575,14 @@ argument_list|(
 specifier|const
 name|char
 operator|*
+specifier|const
 operator|*
 name|ArgBegin
 argument_list|,
 specifier|const
 name|char
 operator|*
+specifier|const
 operator|*
 name|ArgEnd
 argument_list|,

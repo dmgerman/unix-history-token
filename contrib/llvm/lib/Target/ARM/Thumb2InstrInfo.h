@@ -140,28 +140,6 @@ argument|MachineBasicBlock::iterator MBBI
 argument_list|)
 specifier|const
 block|;
-name|bool
-name|isProfitableToIfCvt
-argument_list|(
-argument|MachineBasicBlock&MBB
-argument_list|,
-argument|unsigned NumInstrs
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|isProfitableToIfCvt
-argument_list|(
-argument|MachineBasicBlock&TMBB
-argument_list|,
-argument|unsigned NumTInstrs
-argument_list|,
-argument|MachineBasicBlock&FMBB
-argument_list|,
-argument|unsigned NumFInstrs
-argument_list|)
-specifier|const
-block|;
 name|void
 name|copyPhysReg
 argument_list|(
@@ -243,15 +221,8 @@ return|return
 name|RI
 return|;
 block|}
-name|ScheduleHazardRecognizer
-operator|*
-name|CreateTargetPostRAHazardRecognizer
-argument_list|(
-argument|const InstrItineraryData&II
-argument_list|)
-specifier|const
-block|; }
-decl_stmt|;
+expr|}
+block|;
 comment|/// getITInstrPredicate - Valid only in Thumb2 mode. This function is identical
 comment|/// to llvm::getInstrPredicate except it returns AL for conditional branch
 comment|/// instructions which are "predicated", but are not in IT blocks.
@@ -269,8 +240,7 @@ name|unsigned
 operator|&
 name|PredReg
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 end_decl_stmt
 
 begin_endif

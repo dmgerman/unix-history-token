@@ -269,6 +269,27 @@ name|unsigned
 name|NumIdx
 parameter_list|)
 function_decl|;
+name|Constant
+modifier|*
+name|ConstantFoldGetElementPtr
+parameter_list|(
+name|Constant
+modifier|*
+name|C
+parameter_list|,
+name|bool
+name|inBounds
+parameter_list|,
+name|Value
+modifier|*
+specifier|const
+modifier|*
+name|Idxs
+parameter_list|,
+name|unsigned
+name|NumIdx
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

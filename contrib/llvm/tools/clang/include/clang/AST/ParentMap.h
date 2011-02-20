@@ -89,6 +89,17 @@ operator|~
 name|ParentMap
 argument_list|()
 expr_stmt|;
+comment|/// \brief Adds and/or updates the parent/child-relations of the complete
+comment|/// stmt tree of S. All children of S including indirect descendants are
+comment|/// visited and updated or inserted but not the parents of S.
+name|void
+name|addStmt
+parameter_list|(
+name|Stmt
+modifier|*
+name|S
+parameter_list|)
+function_decl|;
 name|Stmt
 modifier|*
 name|getParent
@@ -101,6 +112,15 @@ decl_stmt|;
 name|Stmt
 modifier|*
 name|getParentIgnoreParens
+argument_list|(
+name|Stmt
+operator|*
+argument_list|)
+decl|const
+decl_stmt|;
+name|Stmt
+modifier|*
+name|getParentIgnoreParenCasts
 argument_list|(
 name|Stmt
 operator|*
@@ -147,6 +167,32 @@ decl|const
 block|{
 return|return
 name|getParentIgnoreParens
+argument_list|(
+name|const_cast
+operator|<
+name|Stmt
+operator|*
+operator|>
+operator|(
+name|S
+operator|)
+argument_list|)
+return|;
+block|}
+specifier|const
+name|Stmt
+modifier|*
+name|getParentIgnoreParenCasts
+argument_list|(
+specifier|const
+name|Stmt
+operator|*
+name|S
+argument_list|)
+decl|const
+block|{
+return|return
+name|getParentIgnoreParenCasts
 argument_list|(
 name|const_cast
 operator|<

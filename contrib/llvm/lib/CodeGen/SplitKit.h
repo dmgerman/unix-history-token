@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===---------- SplitKit.cpp - Toolkit for splitting live ranges ----------===//
+comment|//===-------- SplitKit.h - Toolkit for splitting live ranges ----*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -54,13 +54,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallPtrSet.h"
+file|"llvm/ADT/DenseMap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseMap.h"
+file|"llvm/ADT/IntervalMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallPtrSet.h"
 end_include
 
 begin_include
@@ -74,16 +80,19 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|ConnectedVNInfoEqClasses
+decl_stmt|;
+name|class
 name|LiveInterval
 decl_stmt|;
 name|class
 name|LiveIntervals
 decl_stmt|;
 name|class
-name|MachineInstr
+name|LiveRangeEdit
 decl_stmt|;
 name|class
-name|MachineLoop
+name|MachineInstr
 decl_stmt|;
 name|class
 name|MachineLoopInfo
@@ -95,11 +104,36 @@ name|class
 name|TargetInstrInfo
 decl_stmt|;
 name|class
+name|TargetRegisterInfo
+decl_stmt|;
+name|class
 name|VirtRegMap
 decl_stmt|;
 name|class
 name|VNInfo
 decl_stmt|;
+name|class
+name|raw_ostream
+decl_stmt|;
+comment|/// At some point we should just include MachineDominators.h:
+name|class
+name|MachineDominatorTree
+decl_stmt|;
+name|template
+operator|<
+name|class
+name|NodeT
+operator|>
+name|class
+name|DomTreeNodeBase
+expr_stmt|;
+typedef|typedef
+name|DomTreeNodeBase
+operator|<
+name|MachineBasicBlock
+operator|>
+name|MachineDomTreeNode
+expr_stmt|;
 comment|/// SplitAnalysis - Analyze a LiveInterval, looking for live range splitting
 comment|/// opportunities.
 name|class
@@ -110,22 +144,27 @@ label|:
 specifier|const
 name|MachineFunction
 modifier|&
-name|mf_
+name|MF
+decl_stmt|;
+specifier|const
+name|VirtRegMap
+modifier|&
+name|VRM
 decl_stmt|;
 specifier|const
 name|LiveIntervals
 modifier|&
-name|lis_
+name|LIS
 decl_stmt|;
 specifier|const
 name|MachineLoopInfo
 modifier|&
-name|loops_
+name|Loops
 decl_stmt|;
 specifier|const
 name|TargetInstrInfo
 modifier|&
-name|tii_
+name|TII
 decl_stmt|;
 comment|// Instructions using the the current register.
 typedef|typedef
@@ -140,9 +179,18 @@ operator|>
 name|InstrPtrSet
 expr_stmt|;
 name|InstrPtrSet
-name|usingInstrs_
+name|UsingInstrs
 decl_stmt|;
-comment|// The number of instructions using curli in each basic block.
+comment|// Sorted slot indexes of using instructions.
+name|SmallVector
+operator|<
+name|SlotIndex
+operator|,
+literal|8
+operator|>
+name|UseSlots
+expr_stmt|;
+comment|// The number of instructions using CurLI in each basic block.
 typedef|typedef
 name|DenseMap
 operator|<
@@ -155,34 +203,98 @@ operator|>
 name|BlockCountMap
 expr_stmt|;
 name|BlockCountMap
-name|usingBlocks_
+name|UsingBlocks
 decl_stmt|;
-comment|// The number of basic block using curli in each loop.
-typedef|typedef
-name|DenseMap
+comment|/// Additional information about basic blocks where the current variable is
+comment|/// live. Such a block will look like one of these templates:
+comment|///
+comment|///  1. |   o---x   | Internal to block. Variable is only live in this block.
+comment|///  2. |---x       | Live-in, kill.
+comment|///  3. |       o---| Def, live-out.
+comment|///  4. |---x   o---| Live-in, kill, def, live-out.
+comment|///  5. |---o---o---| Live-through with uses or defs.
+comment|///  6. |-----------| Live-through without uses. Transparent.
+comment|///
+struct|struct
+name|BlockInfo
+block|{
+name|MachineBasicBlock
+modifier|*
+name|MBB
+decl_stmt|;
+name|SlotIndex
+name|FirstUse
+decl_stmt|;
+comment|///< First instr using current reg.
+name|SlotIndex
+name|LastUse
+decl_stmt|;
+comment|///< Last instr using current reg.
+name|SlotIndex
+name|Kill
+decl_stmt|;
+comment|///< Interval end point inside block.
+name|SlotIndex
+name|Def
+decl_stmt|;
+comment|///< Interval start point inside block.
+comment|/// Last possible point for splitting live ranges.
+name|SlotIndex
+name|LastSplitPoint
+decl_stmt|;
+name|bool
+name|Uses
+decl_stmt|;
+comment|///< Current reg has uses or defs in block.
+name|bool
+name|LiveThrough
+decl_stmt|;
+comment|///< Live in whole block (Templ 5. or 6. above).
+name|bool
+name|LiveIn
+decl_stmt|;
+comment|///< Current reg is live in.
+name|bool
+name|LiveOut
+decl_stmt|;
+comment|///< Current reg is live out.
+comment|// Per-interference pattern scratch data.
+name|bool
+name|OverlapEntry
+decl_stmt|;
+comment|///< Interference overlaps entering interval.
+name|bool
+name|OverlapExit
+decl_stmt|;
+comment|///< Interference overlaps exiting interval.
+block|}
+struct|;
+comment|/// Basic blocks where var is live. This array is parallel to
+comment|/// SpillConstraints.
+name|SmallVector
 operator|<
-specifier|const
-name|MachineLoop
-operator|*
+name|BlockInfo
 operator|,
-name|unsigned
+literal|8
 operator|>
-name|LoopCountMap
+name|LiveBlocks
 expr_stmt|;
-name|LoopCountMap
-name|usingLoops_
-decl_stmt|;
 name|private
 label|:
 comment|// Current live interval.
 specifier|const
 name|LiveInterval
 modifier|*
-name|curli_
+name|CurLI
 decl_stmt|;
-comment|// Sumarize statistics by counting instructions using curli_.
+comment|// Sumarize statistics by counting instructions using CurLI.
 name|void
 name|analyzeUses
+parameter_list|()
+function_decl|;
+comment|/// calcLiveBlockInfo - Compute per-block information about CurLI.
+name|void
+name|calcLiveBlockInfo
 parameter_list|()
 function_decl|;
 comment|/// canAnalyzeBranch - Return true if MBB ends in a branch that can be
@@ -201,9 +313,9 @@ label|:
 name|SplitAnalysis
 argument_list|(
 specifier|const
-name|MachineFunction
+name|VirtRegMap
 operator|&
-name|mf
+name|vrm
 argument_list|,
 specifier|const
 name|LiveIntervals
@@ -216,7 +328,7 @@ operator|&
 name|mli
 argument_list|)
 expr_stmt|;
-comment|/// analyze - set curli to the specified interval, and analyze how it may be
+comment|/// analyze - set CurLI to the specified interval, and analyze how it may be
 comment|/// split.
 name|void
 name|analyze
@@ -227,32 +339,45 @@ modifier|*
 name|li
 parameter_list|)
 function_decl|;
-comment|/// removeUse - Update statistics by noting that mi no longer uses curli.
-name|void
-name|removeUse
-parameter_list|(
-specifier|const
-name|MachineInstr
-modifier|*
-name|mi
-parameter_list|)
-function_decl|;
-specifier|const
-name|LiveInterval
-modifier|*
-name|getCurLI
-parameter_list|()
-block|{
-return|return
-name|curli_
-return|;
-block|}
 comment|/// clear - clear all data structures so SplitAnalysis is ready to analyze a
 comment|/// new interval.
 name|void
 name|clear
 parameter_list|()
 function_decl|;
+comment|/// getParent - Return the last analyzed interval.
+specifier|const
+name|LiveInterval
+operator|&
+name|getParent
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|CurLI
+return|;
+block|}
+comment|/// hasUses - Return true if MBB has any uses of CurLI.
+name|bool
+name|hasUses
+argument_list|(
+specifier|const
+name|MachineBasicBlock
+operator|*
+name|MBB
+argument_list|)
+decl|const
+block|{
+return|return
+name|UsingBlocks
+operator|.
+name|lookup
+argument_list|(
+name|MBB
+argument_list|)
+return|;
+block|}
 typedef|typedef
 name|SmallPtrSet
 operator|<
@@ -264,138 +389,21 @@ literal|16
 operator|>
 name|BlockPtrSet
 expr_stmt|;
-typedef|typedef
-name|SmallPtrSet
-operator|<
-specifier|const
-name|MachineLoop
-operator|*
-operator|,
-literal|16
-operator|>
-name|LoopPtrSet
-expr_stmt|;
-comment|// Sets of basic blocks surrounding a machine loop.
-struct|struct
-name|LoopBlocks
-block|{
-name|BlockPtrSet
-name|Loop
-decl_stmt|;
-comment|// Blocks in the loop.
-name|BlockPtrSet
-name|Preds
-decl_stmt|;
-comment|// Loop predecessor blocks.
-name|BlockPtrSet
-name|Exits
-decl_stmt|;
-comment|// Loop exit blocks.
+comment|// Print a set of blocks with use counts.
 name|void
-name|clear
-parameter_list|()
-block|{
-name|Loop
-operator|.
-name|clear
-argument_list|()
-expr_stmt|;
-name|Preds
-operator|.
-name|clear
-argument_list|()
-expr_stmt|;
-name|Exits
-operator|.
-name|clear
-argument_list|()
-expr_stmt|;
-block|}
-block|}
-struct|;
-comment|// Calculate the block sets surrounding the loop.
-name|void
-name|getLoopBlocks
-parameter_list|(
+name|print
+argument_list|(
 specifier|const
-name|MachineLoop
-modifier|*
-name|Loop
-parameter_list|,
-name|LoopBlocks
-modifier|&
-name|Blocks
-parameter_list|)
-function_decl|;
-comment|/// LoopPeripheralUse - how is a variable used in and around a loop?
-comment|/// Peripheral blocks are the loop predecessors and exit blocks.
-enum|enum
-name|LoopPeripheralUse
-block|{
-name|ContainedInLoop
-block|,
-comment|// All uses are inside the loop.
-name|SinglePeripheral
-block|,
-comment|// At most one instruction per peripheral block.
-name|MultiPeripheral
-block|,
-comment|// Multiple instructions in some peripheral blocks.
-name|OutsideLoop
-comment|// Uses outside loop periphery.
-block|}
-enum|;
-comment|/// analyzeLoopPeripheralUse - Return an enum describing how curli_ is used in
-comment|/// and around the Loop.
-name|LoopPeripheralUse
-name|analyzeLoopPeripheralUse
-parameter_list|(
-specifier|const
-name|LoopBlocks
-modifier|&
-parameter_list|)
-function_decl|;
-comment|/// getCriticalExits - It may be necessary to partially break critical edges
-comment|/// leaving the loop if an exit block has phi uses of curli. Collect the exit
-comment|/// blocks that need special treatment into CriticalExits.
-name|void
-name|getCriticalExits
-parameter_list|(
-specifier|const
-name|LoopBlocks
-modifier|&
-name|Blocks
-parameter_list|,
 name|BlockPtrSet
-modifier|&
-name|CriticalExits
-parameter_list|)
-function_decl|;
-comment|/// canSplitCriticalExits - Return true if it is possible to insert new exit
-comment|/// blocks before the blocks in CriticalExits.
-name|bool
-name|canSplitCriticalExits
-parameter_list|(
-specifier|const
-name|LoopBlocks
-modifier|&
-name|Blocks
-parameter_list|,
-name|BlockPtrSet
-modifier|&
-name|CriticalExits
-parameter_list|)
-function_decl|;
-comment|/// getBestSplitLoop - Return the loop where curli may best be split to a
-comment|/// separate register, or NULL.
-specifier|const
-name|MachineLoop
-modifier|*
-name|getBestSplitLoop
-parameter_list|()
-function_decl|;
+operator|&
+argument_list|,
+name|raw_ostream
+operator|&
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// getMultiUseBlocks - Add basic blocks to Blocks that may benefit from
-comment|/// having curli split to a new live interval. Return true if Blocks can be
+comment|/// having CurLI split to a new live interval. Return true if Blocks can be
 comment|/// passed to SplitEditor::splitSingleBlocks.
 name|bool
 name|getMultiUseBlocks
@@ -405,9 +413,9 @@ modifier|&
 name|Blocks
 parameter_list|)
 function_decl|;
-comment|/// getBlockForInsideSplit - If curli is contained inside a single basic block,
-comment|/// and it wou pay to subdivide the interval inside that block, return it.
-comment|/// Otherwise return NULL. The returned block can be passed to
+comment|/// getBlockForInsideSplit - If CurLI is contained inside a single basic
+comment|/// block, and it would pay to subdivide the interval inside that block,
+comment|/// return it. Otherwise return NULL. The returned block can be passed to
 comment|/// SplitEditor::splitInsideBlock.
 specifier|const
 name|MachineBasicBlock
@@ -421,27 +429,31 @@ comment|/// LiveIntervalMap - Map values from a large LiveInterval into a small
 comment|/// interval that is a subset. Insert phi-def values as needed. This class is
 comment|/// used by SplitEditor to create new smaller LiveIntervals.
 comment|///
-comment|/// parentli_ is the larger interval, li_ is the subset interval. Every value
-comment|/// in li_ corresponds to exactly one value in parentli_, and the live range
-comment|/// of the value is contained within the live range of the parentli_ value.
-comment|/// Values in parentli_ may map to any number of openli_ values, including 0.
+comment|/// ParentLI is the larger interval, LI is the subset interval. Every value
+comment|/// in LI corresponds to exactly one value in ParentLI, and the live range
+comment|/// of the value is contained within the live range of the ParentLI value.
+comment|/// Values in ParentLI may map to any number of OpenLI values, including 0.
 name|class
 name|LiveIntervalMap
 block|{
 name|LiveIntervals
 modifier|&
-name|lis_
+name|LIS
+decl_stmt|;
+name|MachineDominatorTree
+modifier|&
+name|MDT
 decl_stmt|;
 comment|// The parent interval is never changed.
 specifier|const
 name|LiveInterval
 modifier|&
-name|parentli_
+name|ParentLI
 decl_stmt|;
-comment|// The child interval's values are fully contained inside parentli_ values.
+comment|// The child interval's values are fully contained inside ParentLI values.
 name|LiveInterval
-modifier|&
-name|li_
+modifier|*
+name|LI
 decl_stmt|;
 typedef|typedef
 name|DenseMap
@@ -455,20 +467,167 @@ operator|*
 operator|>
 name|ValueMap
 expr_stmt|;
-comment|// Map parentli_ values to simple values in li_ that are defined at the same
-comment|// SlotIndex, or NULL for parentli_ values that have complex li_ defs.
+comment|// Map ParentLI values to simple values in LI that are defined at the same
+comment|// SlotIndex, or NULL for ParentLI values that have complex LI defs.
 comment|// Note there is a difference between values mapping to NULL (complex), and
 comment|// values not present (unknown/unmapped).
 name|ValueMap
-name|valueMap_
+name|Values
 decl_stmt|;
-comment|// extendTo - Find the last li_ value defined in MBB at or before Idx. The
-comment|// parentli_ is assumed to be live at Idx. Extend the live range to Idx.
-comment|// Return the found VNInfo, or NULL.
+typedef|typedef
+name|std
+operator|::
+name|pair
+operator|<
+name|VNInfo
+operator|*
+operator|,
+name|MachineDomTreeNode
+operator|*
+operator|>
+name|LiveOutPair
+expr_stmt|;
+typedef|typedef
+name|DenseMap
+operator|<
+name|MachineBasicBlock
+operator|*
+operator|,
+name|LiveOutPair
+operator|>
+name|LiveOutMap
+expr_stmt|;
+comment|// LiveOutCache - Map each basic block where LI is live out to the live-out
+comment|// value and its defining block. One of these conditions shall be true:
+comment|//
+comment|//  1. !LiveOutCache.count(MBB)
+comment|//  2. LiveOutCache[MBB].second.getNode() == MBB
+comment|//  3. forall P in preds(MBB): LiveOutCache[P] == LiveOutCache[MBB]
+comment|//
+comment|// This is only a cache, the values can be computed as:
+comment|//
+comment|//  VNI = LI->getVNInfoAt(LIS.getMBBEndIdx(MBB))
+comment|//  Node = mbt_[LIS.getMBBFromIndex(VNI->def)]
+comment|//
+comment|// The cache is also used as a visiteed set by mapValue().
+name|LiveOutMap
+name|LiveOutCache
+decl_stmt|;
+comment|// Dump the live-out cache to dbgs().
+name|void
+name|dumpCache
+parameter_list|()
+function_decl|;
+name|public
+label|:
+name|LiveIntervalMap
+argument_list|(
+name|LiveIntervals
+operator|&
+name|lis
+argument_list|,
+name|MachineDominatorTree
+operator|&
+name|mdt
+argument_list|,
+specifier|const
+name|LiveInterval
+operator|&
+name|parentli
+argument_list|)
+operator|:
+name|LIS
+argument_list|(
+name|lis
+argument_list|)
+operator|,
+name|MDT
+argument_list|(
+name|mdt
+argument_list|)
+operator|,
+name|ParentLI
+argument_list|(
+name|parentli
+argument_list|)
+operator|,
+name|LI
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+comment|/// reset - clear all data structures and start a new live interval.
+name|void
+name|reset
+argument_list|(
+name|LiveInterval
+operator|*
+argument_list|)
+expr_stmt|;
+comment|/// getLI - return the current live interval.
+name|LiveInterval
+operator|*
+name|getLI
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LI
+return|;
+block|}
+comment|/// defValue - define a value in LI from the ParentLI value VNI and Idx.
+comment|/// Idx does not have to be ParentVNI->def, but it must be contained within
+comment|/// ParentVNI's live range in ParentLI.
+comment|/// Return the new LI value.
+name|VNInfo
+modifier|*
+name|defValue
+parameter_list|(
+specifier|const
+name|VNInfo
+modifier|*
+name|ParentVNI
+parameter_list|,
+name|SlotIndex
+name|Idx
+parameter_list|)
+function_decl|;
+comment|/// mapValue - map ParentVNI to the corresponding LI value at Idx. It is
+comment|/// assumed that ParentVNI is live at Idx.
+comment|/// If ParentVNI has not been defined by defValue, it is assumed that
+comment|/// ParentVNI->def dominates Idx.
+comment|/// If ParentVNI has been defined by defValue one or more times, a value that
+comment|/// dominates Idx will be returned. This may require creating extra phi-def
+comment|/// values and adding live ranges to LI.
+comment|/// If simple is not NULL, *simple will indicate if ParentVNI is a simply
+comment|/// mapped value.
+name|VNInfo
+modifier|*
+name|mapValue
+parameter_list|(
+specifier|const
+name|VNInfo
+modifier|*
+name|ParentVNI
+parameter_list|,
+name|SlotIndex
+name|Idx
+parameter_list|,
+name|bool
+modifier|*
+name|simple
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+comment|// extendTo - Find the last LI value defined in MBB at or before Idx. The
+comment|// parentli is assumed to be live at Idx. Extend the live range to include
+comment|// Idx. Return the found VNInfo, or NULL.
 name|VNInfo
 modifier|*
 name|extendTo
 parameter_list|(
+specifier|const
 name|MachineBasicBlock
 modifier|*
 name|MBB
@@ -477,7 +636,59 @@ name|SlotIndex
 name|Idx
 parameter_list|)
 function_decl|;
-comment|// addSimpleRange - Add a simple range from parentli_ to li_.
+comment|/// isMapped - Return true is ParentVNI is a known mapped value. It may be a
+comment|/// simple 1-1 mapping or a complex mapping to later defs.
+name|bool
+name|isMapped
+argument_list|(
+specifier|const
+name|VNInfo
+operator|*
+name|ParentVNI
+argument_list|)
+decl|const
+block|{
+return|return
+name|Values
+operator|.
+name|count
+argument_list|(
+name|ParentVNI
+argument_list|)
+return|;
+block|}
+comment|/// isComplexMapped - Return true if ParentVNI has received new definitions
+comment|/// with defValue.
+name|bool
+name|isComplexMapped
+argument_list|(
+specifier|const
+name|VNInfo
+operator|*
+name|ParentVNI
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// markComplexMapped - Mark ParentVNI as complex mapped regardless of the
+comment|/// number of definitions.
+name|void
+name|markComplexMapped
+parameter_list|(
+specifier|const
+name|VNInfo
+modifier|*
+name|ParentVNI
+parameter_list|)
+block|{
+name|Values
+index|[
+name|ParentVNI
+index|]
+operator|=
+literal|0
+expr_stmt|;
+block|}
+comment|// addSimpleRange - Add a simple range from ParentLI to LI.
 comment|// ParentVNI must be live in the [Start;End) interval.
 name|void
 name|addSimpleRange
@@ -494,73 +705,7 @@ modifier|*
 name|ParentVNI
 parameter_list|)
 function_decl|;
-name|public
-label|:
-name|LiveIntervalMap
-argument_list|(
-name|LiveIntervals
-operator|&
-name|lis
-argument_list|,
-specifier|const
-name|LiveInterval
-operator|&
-name|parentli
-argument_list|,
-name|LiveInterval
-operator|&
-name|li
-argument_list|)
-operator|:
-name|lis_
-argument_list|(
-name|lis
-argument_list|)
-operator|,
-name|parentli_
-argument_list|(
-name|parentli
-argument_list|)
-operator|,
-name|li_
-argument_list|(
-argument|li
-argument_list|)
-block|{}
-comment|/// defValue - define a value in li_ from the parentli_ value VNI and Idx.
-comment|/// Idx does not have to be ParentVNI->def, but it must be contained within
-comment|/// ParentVNI's live range in parentli_.
-comment|/// Return the new li_ value.
-name|VNInfo
-operator|*
-name|defValue
-argument_list|(
-argument|const VNInfo *ParentVNI
-argument_list|,
-argument|SlotIndex Idx
-argument_list|)
-expr_stmt|;
-comment|/// mapValue - map ParentVNI to the corresponding li_ value at Idx. It is
-comment|/// assumed that ParentVNI is live at Idx.
-comment|/// If ParentVNI has not been defined by defValue, it is assumed that
-comment|/// ParentVNI->def dominates Idx.
-comment|/// If ParentVNI has been defined by defValue one or more times, a value that
-comment|/// dominates Idx will be returned. This may require creating extra phi-def
-comment|/// values and adding live ranges to li_.
-name|VNInfo
-modifier|*
-name|mapValue
-parameter_list|(
-specifier|const
-name|VNInfo
-modifier|*
-name|ParentVNI
-parameter_list|,
-name|SlotIndex
-name|Idx
-parameter_list|)
-function_decl|;
-comment|/// addRange - Add live ranges to li_ where [Start;End) intersects parentli_.
+comment|/// addRange - Add live ranges to LI where [Start;End) intersects ParentLI.
 comment|/// All needed values whose def is not inside [Start;End) must be defined
 comment|/// beforehand so mapValue will work.
 name|void
@@ -584,116 +729,98 @@ comment|/// - Mark the places where the new interval is entered using enterIntv*
 comment|/// - Mark the ranges where the new interval is used with useIntv*
 comment|/// - Mark the places where the interval is exited with exitIntv*.
 comment|/// - Finish the current interval with closeIntv and repeat from 2.
-comment|/// - Rewrite instructions with rewrite().
+comment|/// - Rewrite instructions with finish().
 comment|///
 name|class
 name|SplitEditor
 block|{
 name|SplitAnalysis
 modifier|&
-name|sa_
+name|SA
 decl_stmt|;
 name|LiveIntervals
 modifier|&
-name|lis_
+name|LIS
 decl_stmt|;
 name|VirtRegMap
 modifier|&
-name|vrm_
+name|VRM
 decl_stmt|;
 name|MachineRegisterInfo
 modifier|&
-name|mri_
+name|MRI
+decl_stmt|;
+name|MachineDominatorTree
+modifier|&
+name|MDT
 decl_stmt|;
 specifier|const
 name|TargetInstrInfo
 modifier|&
-name|tii_
+name|TII
 decl_stmt|;
-comment|/// curli_ - The immutable interval we are currently splitting.
 specifier|const
-name|LiveInterval
-modifier|*
-specifier|const
-name|curli_
+name|TargetRegisterInfo
+modifier|&
+name|TRI
 decl_stmt|;
-comment|/// dupli_ - Created as a copy of curli_, ranges are carved out as new
-comment|/// intervals get added through openIntv / closeIntv. This is used to avoid
-comment|/// editing curli_.
-name|LiveInterval
-modifier|*
-name|dupli_
+comment|/// Edit - The current parent register and new intervals created.
+name|LiveRangeEdit
+modifier|&
+name|Edit
 decl_stmt|;
-comment|/// Currently open LiveInterval.
-name|LiveInterval
-modifier|*
-name|openli_
-decl_stmt|;
-comment|/// createInterval - Create a new virtual register and LiveInterval with same
-comment|/// register class and spill slot as curli.
-name|LiveInterval
-modifier|*
-name|createInterval
-parameter_list|()
-function_decl|;
-comment|/// getDupLI - Ensure dupli is created and return it.
-name|LiveInterval
-modifier|*
-name|getDupLI
-parameter_list|()
-function_decl|;
-comment|/// valueMap_ - Map values in cupli to values in openli. These are direct 1-1
-comment|/// mappings, and do not include values created by inserted copies.
-name|DenseMap
-operator|<
-specifier|const
-name|VNInfo
-operator|*
-operator|,
-name|VNInfo
-operator|*
-operator|>
-name|valueMap_
-expr_stmt|;
-comment|/// mapValue - Return the openIntv value that corresponds to the given curli
-comment|/// value.
-name|VNInfo
-modifier|*
-name|mapValue
-parameter_list|(
-specifier|const
-name|VNInfo
-modifier|*
-name|curliVNI
-parameter_list|)
-function_decl|;
-comment|/// A dupli value is live through openIntv.
-name|bool
-name|liveThrough_
-decl_stmt|;
-comment|/// All the new intervals created for this split are added to intervals_.
-name|SmallVectorImpl
-operator|<
-name|LiveInterval
-operator|*
-operator|>
-operator|&
-name|intervals_
-expr_stmt|;
-comment|/// The index into intervals_ of the first interval we added. There may be
-comment|/// others from before we got it.
+comment|/// Index into Edit of the currently open interval.
+comment|/// The index 0 is used for the complement, so the first interval started by
+comment|/// openIntv will be 1.
 name|unsigned
-name|firstInterval
+name|OpenIdx
 decl_stmt|;
-comment|/// Insert a COPY instruction curli -> li. Allocate a new value from li
-comment|/// defined by the COPY
+typedef|typedef
+name|IntervalMap
+operator|<
+name|SlotIndex
+operator|,
+name|unsigned
+operator|>
+name|RegAssignMap
+expr_stmt|;
+comment|/// Allocator for the interval map. This will eventually be shared with
+comment|/// SlotIndexes and LiveIntervals.
+name|RegAssignMap
+operator|::
+name|Allocator
+name|Allocator
+expr_stmt|;
+comment|/// RegAssign - Map of the assigned register indexes.
+comment|/// Edit.get(RegAssign.lookup(Idx)) is the register that should be live at
+comment|/// Idx.
+name|RegAssignMap
+name|RegAssign
+decl_stmt|;
+comment|/// LIMappers - One LiveIntervalMap or each interval in Edit.
+name|SmallVector
+operator|<
+name|LiveIntervalMap
+operator|,
+literal|4
+operator|>
+name|LIMappers
+expr_stmt|;
+comment|/// defFromParent - Define Reg from ParentVNI at UseIdx using either
+comment|/// rematerialization or a COPY from parent. Return the new value.
 name|VNInfo
 modifier|*
-name|insertCopy
+name|defFromParent
 argument_list|(
-name|LiveInterval
-operator|&
-name|LI
+name|unsigned
+name|RegIdx
+argument_list|,
+name|VNInfo
+operator|*
+name|ParentVNI
+argument_list|,
+name|SlotIndex
+name|UseIdx
 argument_list|,
 name|MachineBasicBlock
 operator|&
@@ -703,6 +830,33 @@ name|MachineBasicBlock
 operator|::
 name|iterator
 name|I
+argument_list|)
+decl_stmt|;
+comment|/// rewriteAssigned - Rewrite all uses of Edit.getReg() to assigned registers.
+name|void
+name|rewriteAssigned
+parameter_list|()
+function_decl|;
+comment|/// rewriteComponents - Rewrite all uses of Intv[0] according to the eq
+comment|/// classes in ConEQ.
+comment|/// This must be done when Intvs[0] is styill live at all uses, before calling
+comment|/// ConEq.Distribute().
+name|void
+name|rewriteComponents
+argument_list|(
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|LiveInterval
+operator|*
+operator|>
+operator|&
+name|Intvs
+argument_list|,
+specifier|const
+name|ConnectedVNInfoEqClasses
+operator|&
+name|ConEq
 argument_list|)
 decl_stmt|;
 name|public
@@ -721,13 +875,11 @@ argument_list|,
 name|VirtRegMap
 operator|&
 argument_list|,
-name|SmallVectorImpl
-operator|<
-name|LiveInterval
-operator|*
-operator|>
+name|MachineDominatorTree
 operator|&
-name|newIntervals
+argument_list|,
+name|LiveRangeEdit
+operator|&
 argument_list|)
 expr_stmt|;
 comment|/// getAnalysis - Get the corresponding analysis.
@@ -737,7 +889,7 @@ name|getAnalysis
 parameter_list|()
 block|{
 return|return
-name|sa_
+name|SA
 return|;
 block|}
 comment|/// Create a new virtual register and live interval.
@@ -745,31 +897,28 @@ name|void
 name|openIntv
 parameter_list|()
 function_decl|;
-comment|/// enterIntvBefore - Enter openli before the instruction at Idx. If curli is
-comment|/// not live before Idx, a COPY is not inserted.
-name|void
+comment|/// enterIntvBefore - Enter the open interval before the instruction at Idx.
+comment|/// If the parent interval is not live before Idx, a COPY is not inserted.
+comment|/// Return the beginning of the new live range.
+name|SlotIndex
 name|enterIntvBefore
 parameter_list|(
 name|SlotIndex
 name|Idx
 parameter_list|)
 function_decl|;
-comment|/// enterIntvAtEnd - Enter openli at the end of MBB.
-comment|/// PhiMBB is a successor inside openli where a PHI value is created.
-comment|/// Currently, all entries must share the same PhiMBB.
-name|void
+comment|/// enterIntvAtEnd - Enter the open interval at the end of MBB.
+comment|/// Use the open interval from he inserted copy to the MBB end.
+comment|/// Return the beginning of the new live range.
+name|SlotIndex
 name|enterIntvAtEnd
 parameter_list|(
 name|MachineBasicBlock
 modifier|&
 name|MBB
-parameter_list|,
-name|MachineBasicBlock
-modifier|&
-name|PhiMBB
 parameter_list|)
 function_decl|;
-comment|/// useIntv - indicate that all instructions in MBB should use openli.
+comment|/// useIntv - indicate that all instructions in MBB should use OpenLI.
 name|void
 name|useIntv
 parameter_list|(
@@ -779,7 +928,7 @@ modifier|&
 name|MBB
 parameter_list|)
 function_decl|;
-comment|/// useIntv - indicate that all instructions in range should use openli.
+comment|/// useIntv - indicate that all instructions in range should use OpenLI.
 name|void
 name|useIntv
 parameter_list|(
@@ -790,22 +939,53 @@ name|SlotIndex
 name|End
 parameter_list|)
 function_decl|;
-comment|/// leaveIntvAfter - Leave openli after the instruction at Idx.
-name|void
+comment|/// leaveIntvAfter - Leave the open interval after the instruction at Idx.
+comment|/// Return the end of the live range.
+name|SlotIndex
 name|leaveIntvAfter
 parameter_list|(
 name|SlotIndex
 name|Idx
 parameter_list|)
 function_decl|;
+comment|/// leaveIntvBefore - Leave the open interval before the instruction at Idx.
+comment|/// Return the end of the live range.
+name|SlotIndex
+name|leaveIntvBefore
+parameter_list|(
+name|SlotIndex
+name|Idx
+parameter_list|)
+function_decl|;
 comment|/// leaveIntvAtTop - Leave the interval at the top of MBB.
-comment|/// Currently, only one value can leave the interval.
-name|void
+comment|/// Add liveness from the MBB top to the copy.
+comment|/// Return the end of the live range.
+name|SlotIndex
 name|leaveIntvAtTop
 parameter_list|(
 name|MachineBasicBlock
 modifier|&
 name|MBB
+parameter_list|)
+function_decl|;
+comment|/// overlapIntv - Indicate that all instructions in range should use the open
+comment|/// interval, but also let the complement interval be live.
+comment|///
+comment|/// This doubles the register pressure, but is sometimes required to deal with
+comment|/// register uses after the last valid split point.
+comment|///
+comment|/// The Start index should be a return value from a leaveIntv* call, and End
+comment|/// should be in the same basic block. The parent interval must have the same
+comment|/// value across the range.
+comment|///
+name|void
+name|overlapIntv
+parameter_list|(
+name|SlotIndex
+name|Start
+parameter_list|,
+name|SlotIndex
+name|End
 parameter_list|)
 function_decl|;
 comment|/// closeIntv - Indicate that we are done editing the currently open
@@ -814,28 +994,22 @@ name|void
 name|closeIntv
 parameter_list|()
 function_decl|;
-comment|/// rewrite - after all the new live ranges have been created, rewrite
-comment|/// instructions using curli to use the new intervals.
+comment|/// finish - after all the new live ranges have been created, compute the
+comment|/// remaining live range, and rewrite instructions to use the new registers.
 name|void
-name|rewrite
+name|finish
 parameter_list|()
 function_decl|;
-comment|// ===--- High level methods ---===
-comment|/// splitAroundLoop - Split curli into a separate live interval inside
-comment|/// the loop. Return true if curli has been completely replaced, false if
-comment|/// curli is still intact, and needs to be spilled or split further.
-name|bool
-name|splitAroundLoop
-parameter_list|(
+comment|/// dump - print the current interval maping to dbgs().
+name|void
+name|dump
+argument_list|()
 specifier|const
-name|MachineLoop
-modifier|*
-parameter_list|)
-function_decl|;
-comment|/// splitSingleBlocks - Split curli into a separate live interval inside each
-comment|/// basic block in Blocks. Return true if curli has been completely replaced,
-comment|/// false if curli is still intact, and needs to be spilled or split further.
-name|bool
+expr_stmt|;
+comment|// ===--- High level methods ---===
+comment|/// splitSingleBlocks - Split CurLI into a separate live interval inside each
+comment|/// basic block in Blocks.
+name|void
 name|splitSingleBlocks
 argument_list|(
 specifier|const
@@ -846,10 +1020,8 @@ operator|&
 name|Blocks
 argument_list|)
 decl_stmt|;
-comment|/// splitInsideBlock - Split curli into multiple intervals inside MBB. Return
-comment|/// true if curli has been completely replaced, false if curli is still
-comment|/// intact, and needs to be spilled or split further.
-name|bool
+comment|/// splitInsideBlock - Split CurLI into multiple intervals inside MBB.
+name|void
 name|splitInsideBlock
 parameter_list|(
 specifier|const

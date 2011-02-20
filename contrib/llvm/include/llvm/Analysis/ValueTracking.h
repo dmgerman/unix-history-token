@@ -66,7 +66,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/System/DataTypes.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_include
@@ -128,6 +128,84 @@ parameter_list|,
 name|APInt
 modifier|&
 name|KnownOne
+parameter_list|,
+specifier|const
+name|TargetData
+modifier|*
+name|TD
+init|=
+literal|0
+parameter_list|,
+name|unsigned
+name|Depth
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+comment|/// ComputeSignBit - Determine whether the sign bit is known to be zero or
+comment|/// one.  Convenience wrapper around ComputeMaskedBits.
+name|void
+name|ComputeSignBit
+parameter_list|(
+name|Value
+modifier|*
+name|V
+parameter_list|,
+name|bool
+modifier|&
+name|KnownZero
+parameter_list|,
+name|bool
+modifier|&
+name|KnownOne
+parameter_list|,
+specifier|const
+name|TargetData
+modifier|*
+name|TD
+init|=
+literal|0
+parameter_list|,
+name|unsigned
+name|Depth
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+comment|/// isPowerOfTwo - Return true if the given value is known to have exactly one
+comment|/// bit set when defined. For vectors return true if every element is known to
+comment|/// be a power of two when defined.  Supports values with integer or pointer
+comment|/// type and vectors of integers.
+name|bool
+name|isPowerOfTwo
+parameter_list|(
+name|Value
+modifier|*
+name|V
+parameter_list|,
+specifier|const
+name|TargetData
+modifier|*
+name|TD
+init|=
+literal|0
+parameter_list|,
+name|unsigned
+name|Depth
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+comment|/// isKnownNonZero - Return true if the given value is known to be non-zero
+comment|/// when defined.  For vectors return true if every element is known to be
+comment|/// non-zero when defined.  Supports values with integer or pointer type and
+comment|/// vectors of integers.
+name|bool
+name|isKnownNonZero
+parameter_list|(
+name|Value
+modifier|*
+name|V
 parameter_list|,
 specifier|const
 name|TargetData
@@ -252,6 +330,20 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
+comment|/// isBytewiseValue - If the specified value can be set by repeating the same
+comment|/// byte in memory, return the i8 value that it is represented with.  This is
+comment|/// true for all i8 values obviously, but is also true for i32 0, i32 -1,
+comment|/// i16 0xF0F0, double 0.0 etc.  If the value can't be handled with a repeated
+comment|/// byte store (e.g. i16 0x1234), return null.
+name|Value
+modifier|*
+name|isBytewiseValue
+parameter_list|(
+name|Value
+modifier|*
+name|V
+parameter_list|)
+function_decl|;
 comment|/// FindInsertedValue - Given an aggregrate and an sequence of indices, see if
 comment|/// the scalar value indexed is already around as a register, for example if
 comment|/// it were inserted directly into the aggregrate.
@@ -337,6 +429,67 @@ name|InsertBefore
 argument_list|)
 return|;
 block|}
+comment|/// GetPointerBaseWithConstantOffset - Analyze the specified pointer to see if
+comment|/// it can be expressed as a base pointer plus a constant offset.  Return the
+comment|/// base and offset to the caller.
+name|Value
+modifier|*
+name|GetPointerBaseWithConstantOffset
+parameter_list|(
+name|Value
+modifier|*
+name|Ptr
+parameter_list|,
+name|int64_t
+modifier|&
+name|Offset
+parameter_list|,
+specifier|const
+name|TargetData
+modifier|&
+name|TD
+parameter_list|)
+function_decl|;
+specifier|static
+specifier|inline
+specifier|const
+name|Value
+modifier|*
+name|GetPointerBaseWithConstantOffset
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|Ptr
+parameter_list|,
+name|int64_t
+modifier|&
+name|Offset
+parameter_list|,
+specifier|const
+name|TargetData
+modifier|&
+name|TD
+parameter_list|)
+block|{
+return|return
+name|GetPointerBaseWithConstantOffset
+argument_list|(
+name|const_cast
+operator|<
+name|Value
+operator|*
+operator|>
+operator|(
+name|Ptr
+operator|)
+argument_list|,
+name|Offset
+argument_list|,
+name|TD
+argument_list|)
+return|;
+block|}
 comment|/// GetConstantStringInfo - This function computes the length of a
 comment|/// null-terminated C string pointed to by V.  If successful, it returns true
 comment|/// and returns the string in Str.  If unsuccessful, it returns false.  If
@@ -378,6 +531,75 @@ modifier|*
 name|V
 parameter_list|)
 function_decl|;
+comment|/// GetUnderlyingObject - This method strips off any GEP address adjustments
+comment|/// and pointer casts from the specified value, returning the original object
+comment|/// being addressed.  Note that the returned value has pointer type if the
+comment|/// specified value does.  If the MaxLookup value is non-zero, it limits the
+comment|/// number of instructions to be stripped off.
+name|Value
+modifier|*
+name|GetUnderlyingObject
+parameter_list|(
+name|Value
+modifier|*
+name|V
+parameter_list|,
+specifier|const
+name|TargetData
+modifier|*
+name|TD
+init|=
+literal|0
+parameter_list|,
+name|unsigned
+name|MaxLookup
+init|=
+literal|6
+parameter_list|)
+function_decl|;
+specifier|static
+specifier|inline
+specifier|const
+name|Value
+modifier|*
+name|GetUnderlyingObject
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|V
+parameter_list|,
+specifier|const
+name|TargetData
+modifier|*
+name|TD
+init|=
+literal|0
+parameter_list|,
+name|unsigned
+name|MaxLookup
+init|=
+literal|6
+parameter_list|)
+block|{
+return|return
+name|GetUnderlyingObject
+argument_list|(
+name|const_cast
+operator|<
+name|Value
+operator|*
+operator|>
+operator|(
+name|V
+operator|)
+argument_list|,
+name|TD
+argument_list|,
+name|MaxLookup
+argument_list|)
+return|;
+block|}
 block|}
 end_decl_stmt
 

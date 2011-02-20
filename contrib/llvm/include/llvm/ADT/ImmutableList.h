@@ -74,7 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/System/DataTypes.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_include
@@ -694,7 +694,7 @@ name|ImmutableList
 operator|<
 name|T
 operator|>
-name|Concat
+name|concat
 argument_list|(
 argument|const T& Head
 argument_list|,
@@ -807,7 +807,7 @@ unit|}    ImmutableList
 operator|<
 name|T
 operator|>
-name|Add
+name|add
 argument_list|(
 argument|const T& D
 argument_list|,
@@ -815,7 +815,7 @@ argument|ImmutableList<T> L
 argument_list|)
 block|{
 return|return
-name|Concat
+name|concat
 argument_list|(
 name|D
 argument_list|,
@@ -830,7 +830,7 @@ name|ImmutableList
 operator|<
 name|T
 operator|>
-name|GetEmptyList
+name|getEmptyList
 argument_list|()
 specifier|const
 block|{
@@ -851,7 +851,7 @@ name|ImmutableList
 operator|<
 name|T
 operator|>
-name|Create
+name|create
 argument_list|(
 argument|const T& X
 argument_list|)
@@ -861,7 +861,7 @@ name|Concat
 argument_list|(
 name|X
 argument_list|,
-name|GetEmptyList
+name|getEmptyList
 argument_list|()
 argument_list|)
 return|;

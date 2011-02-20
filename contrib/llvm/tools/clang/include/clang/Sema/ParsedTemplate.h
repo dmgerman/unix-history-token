@@ -105,7 +105,9 @@ comment|/// \brief A template template argument, stored as a template name.
 name|Template
 block|}
 enum|;
-comment|/// \brief Build an empty template argument. This template argument
+comment|/// \brief Build an empty template argument.
+comment|///
+comment|/// This template argument is invalid.
 name|ParsedTemplateArgument
 argument_list|()
 operator|:
@@ -187,8 +189,11 @@ argument_list|)
 operator|,
 name|SS
 argument_list|(
-argument|SS
+name|SS
 argument_list|)
+operator|,
+name|EllipsisLoc
+argument_list|()
 block|{ }
 comment|/// \brief Determine whether the given template argument is invalid.
 name|bool
@@ -319,6 +324,38 @@ return|return
 name|SS
 return|;
 block|}
+comment|/// \brief Retrieve the location of the ellipsis that makes a template
+comment|/// template argument into a pack expansion.
+name|SourceLocation
+name|getEllipsisLoc
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|Kind
+operator|==
+name|Template
+operator|&&
+literal|"Only template template arguments can have an ellipsis"
+argument_list|)
+block|;
+return|return
+name|EllipsisLoc
+return|;
+block|}
+comment|/// \brief Retrieve a pack expansion of the given template template
+comment|/// argument.
+comment|///
+comment|/// \param EllipsisLoc The location of the ellipsis.
+name|ParsedTemplateArgument
+name|getTemplatePackExpansion
+argument_list|(
+name|SourceLocation
+name|EllipsisLoc
+argument_list|)
+decl|const
+decl_stmt|;
 name|private
 label|:
 name|KindType
@@ -339,6 +376,11 @@ comment|/// \brief The nested-name-specifier that can accompany a template templ
 comment|/// argument.
 name|CXXScopeSpec
 name|SS
+decl_stmt|;
+comment|/// \brief The ellipsis location that can accompany a template template
+comment|/// argument (turning it into a template template argument expansion).
+name|SourceLocation
+name|EllipsisLoc
 decl_stmt|;
 block|}
 empty_stmt|;
@@ -465,6 +507,21 @@ expr_stmt|;
 block|}
 block|}
 struct|;
+comment|/// Retrieves the range of the given template parameter lists.
+name|SourceRange
+name|getTemplateParamsRange
+parameter_list|(
+name|TemplateParameterList
+specifier|const
+modifier|*
+specifier|const
+modifier|*
+name|Params
+parameter_list|,
+name|unsigned
+name|NumParams
+parameter_list|)
+function_decl|;
 specifier|inline
 specifier|const
 name|ParsedTemplateArgument

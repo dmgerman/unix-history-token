@@ -158,6 +158,10 @@ specifier|const
 name|FileEntry
 modifier|*
 name|FE
+parameter_list|,
+name|FileManager
+modifier|&
+name|FM
 parameter_list|)
 function_decl|;
 comment|/// LookupFile - Check to see if the specified relative filename is located in

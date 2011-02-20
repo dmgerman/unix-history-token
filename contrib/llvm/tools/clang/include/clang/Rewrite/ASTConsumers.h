@@ -91,7 +91,7 @@ decl_stmt|;
 name|class
 name|Preprocessor
 decl_stmt|;
-comment|// ObjC rewriter: attempts tp rewrite ObjC constructs into pure C code.
+comment|// ObjC rewriter: attempts to rewrite ObjC constructs into pure C code.
 comment|// This is considered experimental, and only works with Apple's ObjC runtime.
 name|ASTConsumer
 modifier|*

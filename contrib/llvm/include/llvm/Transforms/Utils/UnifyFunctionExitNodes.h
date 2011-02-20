@@ -125,7 +125,16 @@ name|UnwindBlock
 argument_list|(
 literal|0
 argument_list|)
-block|{}
+block|{
+name|initializeUnifyFunctionExitNodesPass
+argument_list|(
+operator|*
+name|PassRegistry
+operator|::
+name|getPassRegistry
+argument_list|()
+argument_list|)
+block|;   }
 comment|// We can preserve non-critical-edgeness when we unify function exit nodes
 name|virtual
 name|void

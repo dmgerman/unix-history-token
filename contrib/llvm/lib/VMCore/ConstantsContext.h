@@ -1139,6 +1139,8 @@ operator|:
 name|public
 name|FixedNumOperandTraits
 operator|<
+name|UnaryConstantExpr
+operator|,
 literal|1
 operator|>
 block|{ }
@@ -1161,6 +1163,8 @@ operator|:
 name|public
 name|FixedNumOperandTraits
 operator|<
+name|BinaryConstantExpr
+operator|,
 literal|2
 operator|>
 block|{ }
@@ -1183,6 +1187,8 @@ operator|:
 name|public
 name|FixedNumOperandTraits
 operator|<
+name|SelectConstantExpr
+operator|,
 literal|3
 operator|>
 block|{ }
@@ -1205,6 +1211,8 @@ operator|:
 name|public
 name|FixedNumOperandTraits
 operator|<
+name|ExtractElementConstantExpr
+operator|,
 literal|2
 operator|>
 block|{ }
@@ -1227,6 +1235,8 @@ operator|:
 name|public
 name|FixedNumOperandTraits
 operator|<
+name|InsertElementConstantExpr
+operator|,
 literal|3
 operator|>
 block|{ }
@@ -1249,6 +1259,8 @@ operator|:
 name|public
 name|FixedNumOperandTraits
 operator|<
+name|ShuffleVectorConstantExpr
+operator|,
 literal|3
 operator|>
 block|{ }
@@ -1271,6 +1283,8 @@ operator|:
 name|public
 name|FixedNumOperandTraits
 operator|<
+name|ExtractValueConstantExpr
+operator|,
 literal|1
 operator|>
 block|{ }
@@ -1293,6 +1307,8 @@ operator|:
 name|public
 name|FixedNumOperandTraits
 operator|<
+name|InsertValueConstantExpr
+operator|,
 literal|2
 operator|>
 block|{ }
@@ -1315,6 +1331,8 @@ operator|:
 name|public
 name|VariadicOperandTraits
 operator|<
+name|GetElementPtrConstantExpr
+operator|,
 literal|1
 operator|>
 block|{ }
@@ -1337,6 +1355,8 @@ operator|:
 name|public
 name|FixedNumOperandTraits
 operator|<
+name|CompareConstantExpr
+operator|,
 literal|2
 operator|>
 block|{ }

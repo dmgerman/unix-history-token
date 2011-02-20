@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Lex/MacroInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Lex/Lexer.h"
 end_include
 
@@ -117,6 +123,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallPtrSet.h"
 end_include
 
 begin_include
@@ -307,6 +319,11 @@ modifier|*
 name|Ident__has_builtin
 decl_stmt|;
 comment|// __has_builtin
+name|IdentifierInfo
+modifier|*
+name|Ident__has_attribute
+decl_stmt|;
+comment|// __has_attribute
 name|IdentifierInfo
 modifier|*
 name|Ident__has_include
@@ -588,18 +605,27 @@ operator|*
 operator|>
 name|Macros
 expr_stmt|;
-comment|/// MICache - A "freelist" of MacroInfo objects that can be reused for quick
-comment|/// allocation.
-comment|/// FIXME: why not use a singly linked list?
-name|std
+comment|/// \brief Macros that we want to warn because they are not used at the end
+comment|/// of the translation unit; we store just their SourceLocations instead
+comment|/// something like MacroInfo*. The benefit of this is that when we are
+comment|/// deserializing from PCH, we don't need to deserialize identifier& macros
+comment|/// just so that we can report that they are unused, we just warn using
+comment|/// the SourceLocations of this set (that will be filled by the ASTReader).
+comment|/// We are using SmallPtrSet instead of a vector for faster removal.
+typedef|typedef
+name|llvm
 operator|::
-name|vector
+name|SmallPtrSet
 operator|<
-name|MacroInfo
-operator|*
+name|SourceLocation
+operator|,
+literal|32
 operator|>
-name|MICache
+name|WarnUnusedMacroLocsTy
 expr_stmt|;
+name|WarnUnusedMacroLocsTy
+name|WarnUnusedMacroLocs
+decl_stmt|;
 comment|/// MacroArgCache - This is a "freelist" of MacroArg objects that can be
 comment|/// reused for quick allocation.
 name|MacroArgs
@@ -746,6 +772,44 @@ name|size_type
 operator|>
 name|BacktrackPositions
 expr_stmt|;
+struct|struct
+name|MacroInfoChain
+block|{
+name|MacroInfo
+name|MI
+decl_stmt|;
+name|MacroInfoChain
+modifier|*
+name|Next
+decl_stmt|;
+name|MacroInfoChain
+modifier|*
+name|Prev
+decl_stmt|;
+block|}
+struct|;
+comment|/// MacroInfos are managed as a chain for easy disposal.  This is the head
+comment|/// of that list.
+name|MacroInfoChain
+modifier|*
+name|MIChainHead
+decl_stmt|;
+comment|/// MICache - A "freelist" of MacroInfo objects that can be reused for quick
+comment|/// allocation.
+name|MacroInfoChain
+modifier|*
+name|MICache
+decl_stmt|;
+name|MacroInfo
+modifier|*
+name|getInfoForMacro
+argument_list|(
+name|IdentifierInfo
+operator|*
+name|II
+argument_list|)
+decl|const
+decl_stmt|;
 name|public
 label|:
 name|Preprocessor
@@ -1058,22 +1122,22 @@ name|II
 argument_list|)
 decl|const
 block|{
-return|return
+if|if
+condition|(
+operator|!
 name|II
 operator|->
 name|hasMacroDefinition
 argument_list|()
-condition|?
-name|Macros
-operator|.
-name|find
+condition|)
+return|return
+literal|0
+return|;
+return|return
+name|getInfoForMacro
 argument_list|(
 name|II
 argument_list|)
-operator|->
-name|second
-else|:
-literal|0
 return|;
 block|}
 comment|/// setMacroInfo - Specify a macro for this identifier.
@@ -1858,6 +1922,18 @@ name|FileLoc
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Determine if we are performing code completion.
+name|bool
+name|isCodeCompletionEnabled
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CodeCompletionFile
+operator|!=
+literal|0
+return|;
+block|}
 comment|/// \brief Instruct the preprocessor to skip part of the main
 comment|/// the main source file.
 comment|///
@@ -1906,13 +1982,7 @@ name|Diags
 operator|->
 name|Report
 argument_list|(
-name|FullSourceLoc
-argument_list|(
 name|Loc
-argument_list|,
-name|getSourceManager
-argument_list|()
-argument_list|)
 argument_list|,
 name|DiagID
 argument_list|)
@@ -1935,16 +2005,10 @@ name|Diags
 operator|->
 name|Report
 argument_list|(
-name|FullSourceLoc
-argument_list|(
 name|Tok
 operator|.
 name|getLocation
 argument_list|()
-argument_list|,
-name|getSourceManager
-argument_list|()
-argument_list|)
 argument_list|,
 name|DiagID
 argument_list|)
@@ -1968,40 +2032,22 @@ argument|bool *Invalid =
 literal|0
 argument_list|)
 specifier|const
-expr_stmt|;
-comment|/// getSpelling() - Return the 'spelling' of the Tok token.  The spelling of a
-comment|/// token is the characters used to represent the token in the source file
-comment|/// after trigraph expansion and escaped-newline folding.  In particular, this
-comment|/// wants to get the true, uncanonicalized, spelling of things like digraphs
-comment|/// UCNs, etc.
-specifier|static
-name|std
+block|{
+return|return
+name|Lexer
 operator|::
-name|string
 name|getSpelling
 argument_list|(
-specifier|const
-name|Token
-operator|&
 name|Tok
 argument_list|,
-specifier|const
-name|SourceManager
-operator|&
 name|SourceMgr
 argument_list|,
-specifier|const
-name|LangOptions
-operator|&
 name|Features
 argument_list|,
-name|bool
-operator|*
 name|Invalid
-operator|=
-literal|0
 argument_list|)
-expr_stmt|;
+return|;
+block|}
 comment|/// getSpelling - This method is used to get the spelling of a token into a
 comment|/// preallocated buffer, instead of as an std::string.  The caller is required
 comment|/// to allocate enough space for the token, which is guaranteed to be at least
@@ -2033,7 +2079,24 @@ operator|=
 literal|0
 argument_list|)
 decl|const
-decl_stmt|;
+block|{
+return|return
+name|Lexer
+operator|::
+name|getSpelling
+argument_list|(
+name|Tok
+argument_list|,
+name|Buffer
+argument_list|,
+name|SourceMgr
+argument_list|,
+name|Features
+argument_list|,
+name|Invalid
+argument_list|)
+return|;
+block|}
 comment|/// getSpelling - This method is used to get the spelling of a token into a
 comment|/// SmallVector. Note that the returned StringRef may not point to the
 comment|/// supplied buffer if a copy can be avoided.
@@ -2186,7 +2249,22 @@ name|Offset
 init|=
 literal|0
 parameter_list|)
-function_decl|;
+block|{
+return|return
+name|Lexer
+operator|::
+name|getLocForEndOfToken
+argument_list|(
+name|Loc
+argument_list|,
+name|Offset
+argument_list|,
+name|SourceMgr
+argument_list|,
+name|Features
+argument_list|)
+return|;
+block|}
 comment|/// DumpToken - Print the token to stderr, used for debugging.
 comment|///
 name|void
@@ -2226,14 +2304,30 @@ comment|/// AdvanceToTokenCharacter - Given a location that specifies the start 
 comment|/// token, return a new location that specifies a character within the token.
 name|SourceLocation
 name|AdvanceToTokenCharacter
-parameter_list|(
+argument_list|(
 name|SourceLocation
 name|TokStart
-parameter_list|,
+argument_list|,
 name|unsigned
 name|Char
-parameter_list|)
-function_decl|;
+argument_list|)
+decl|const
+block|{
+return|return
+name|Lexer
+operator|::
+name|AdvanceToTokenCharacter
+argument_list|(
+name|TokStart
+argument_list|,
+name|Char
+argument_list|,
+name|SourceMgr
+argument_list|,
+name|Features
+argument_list|)
+return|;
+block|}
 comment|/// IncrementPasteCounter - Increment the counters for the number of token
 comment|/// paste operations performed.  If fast was specified, this is a 'fast paste'
 comment|/// case we handled.
@@ -2275,8 +2369,9 @@ function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Preprocessor callback methods.  These are invoked by a lexer as various
 comment|// directives and events are found.
-comment|/// LookUpIdentifierInfo - Given a tok::identifier token, look up the
-comment|/// identifier information for the token and install it into the token.
+comment|/// LookUpIdentifierInfo - Given a tok::raw_identifier token, look up the
+comment|/// identifier information for the token and install it into the token,
+comment|/// updating the token kind accordingly.
 name|IdentifierInfo
 modifier|*
 name|LookUpIdentifierInfo
@@ -2284,13 +2379,6 @@ argument_list|(
 name|Token
 operator|&
 name|Identifier
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|BufPtr
-operator|=
-literal|0
 argument_list|)
 decl|const
 decl_stmt|;
@@ -2517,6 +2605,22 @@ literal|128
 operator|>
 operator|&
 name|FilenameBuffer
+argument_list|,
+name|SourceLocation
+operator|&
+name|End
+argument_list|)
+decl_stmt|;
+comment|/// LexOnOffSwitch - Lex an on-off-switch (C99 6.10.6p2) and verify that it is
+comment|/// followed by EOM.  Return true if the token is not a valid on-off-switch.
+name|bool
+name|LexOnOffSwitch
+argument_list|(
+name|tok
+operator|::
+name|OnOffSwitch
+operator|&
+name|OOS
 argument_list|)
 decl_stmt|;
 name|private
@@ -2792,6 +2896,9 @@ function_decl|;
 name|void
 name|Handle_Pragma
 argument_list|(
+name|unsigned
+name|Introducer
+argument_list|,
 specifier|const
 name|std
 operator|::
@@ -3022,6 +3129,9 @@ comment|// File inclusion.
 name|void
 name|HandleIncludeDirective
 parameter_list|(
+name|SourceLocation
+name|HashLoc
+parameter_list|,
 name|Token
 modifier|&
 name|Tok
@@ -3042,6 +3152,9 @@ function_decl|;
 name|void
 name|HandleIncludeNextDirective
 parameter_list|(
+name|SourceLocation
+name|HashLoc
+parameter_list|,
 name|Token
 modifier|&
 name|Tok
@@ -3050,6 +3163,9 @@ function_decl|;
 name|void
 name|HandleIncludeMacrosDirective
 parameter_list|(
+name|SourceLocation
+name|HashLoc
+parameter_list|,
 name|Token
 modifier|&
 name|Tok
@@ -3058,6 +3174,9 @@ function_decl|;
 name|void
 name|HandleImportDirective
 parameter_list|(
+name|SourceLocation
+name|HashLoc
+parameter_list|,
 name|Token
 modifier|&
 name|Tok
@@ -3133,7 +3252,10 @@ function_decl|;
 comment|// Pragmas.
 name|void
 name|HandlePragmaDirective
-parameter_list|()
+parameter_list|(
+name|unsigned
+name|Introducer
+parameter_list|)
 function_decl|;
 name|public
 label|:
@@ -3225,6 +3347,16 @@ name|Token
 parameter_list|,
 name|SourceRange
 name|Comment
+parameter_list|)
+function_decl|;
+comment|/// \brief A macro is used, update information about macros that need unused
+comment|/// warnings.
+name|void
+name|markMacroAsUsed
+parameter_list|(
+name|MacroInfo
+modifier|*
+name|MI
 parameter_list|)
 function_decl|;
 block|}

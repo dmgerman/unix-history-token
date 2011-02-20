@@ -136,7 +136,8 @@ specifier|const
 name|int
 name|IndirectCallBonus
 init|=
-literal|500
+operator|-
+literal|100
 decl_stmt|;
 specifier|const
 name|int
@@ -443,29 +444,6 @@ name|ArgInfo
 operator|>
 name|ArgumentWeights
 expr_stmt|;
-comment|/// CountCodeReductionForConstant - Figure out an approximation for how
-comment|/// many instructions will be constant folded if the specified value is
-comment|/// constant.
-name|unsigned
-name|CountCodeReductionForConstant
-parameter_list|(
-name|Value
-modifier|*
-name|V
-parameter_list|)
-function_decl|;
-comment|/// CountCodeReductionForAlloca - Figure out an approximation of how much
-comment|/// smaller the function will be if it is inlined into a context where an
-comment|/// argument becomes an alloca.
-comment|///
-name|unsigned
-name|CountCodeReductionForAlloca
-parameter_list|(
-name|Value
-modifier|*
-name|V
-parameter_list|)
-function_decl|;
 comment|/// analyzeFunction - Add information about the specified function
 comment|/// to the current structure.
 name|void
@@ -496,6 +474,53 @@ name|FunctionInfo
 operator|>
 name|CachedFunctionInfo
 expr_stmt|;
+name|int
+name|CountBonusForConstant
+parameter_list|(
+name|Value
+modifier|*
+name|V
+parameter_list|,
+name|Constant
+modifier|*
+name|C
+init|=
+name|NULL
+parameter_list|)
+function_decl|;
+name|int
+name|ConstantFunctionBonus
+parameter_list|(
+name|CallSite
+name|CS
+parameter_list|,
+name|Constant
+modifier|*
+name|C
+parameter_list|)
+function_decl|;
+name|int
+name|getInlineSize
+parameter_list|(
+name|CallSite
+name|CS
+parameter_list|,
+name|Function
+modifier|*
+name|Callee
+parameter_list|)
+function_decl|;
+name|int
+name|getInlineBonuses
+parameter_list|(
+name|CallSite
+name|CS
+parameter_list|,
+name|Function
+modifier|*
+name|Callee
+parameter_list|)
+function_decl|;
 name|public
 label|:
 comment|/// getInlineCost - The heuristic used to determine if we should inline the
@@ -544,6 +569,42 @@ literal|16
 operator|>
 operator|&
 name|NeverInline
+argument_list|)
+decl_stmt|;
+comment|/// getSpecializationBonus - The heuristic used to determine the per-call
+comment|/// performance boost for using a specialization of Callee with argument
+comment|/// SpecializedArgNos replaced by a constant.
+name|int
+name|getSpecializationBonus
+argument_list|(
+name|Function
+operator|*
+name|Callee
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|unsigned
+operator|>
+operator|&
+name|SpecializedArgNo
+argument_list|)
+decl_stmt|;
+comment|/// getSpecializationCost - The heuristic used to determine the code-size
+comment|/// impact of creating a specialized version of Callee with argument
+comment|/// SpecializedArgNo replaced by a constant.
+name|InlineCost
+name|getSpecializationCost
+argument_list|(
+name|Function
+operator|*
+name|Callee
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|unsigned
+operator|>
+operator|&
+name|SpecializedArgNo
 argument_list|)
 decl_stmt|;
 comment|/// getInlineFudgeFactor - Return a> 1.0 factor if the inliner should use a

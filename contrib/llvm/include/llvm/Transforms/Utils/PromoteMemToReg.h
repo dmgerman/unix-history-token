@@ -123,10 +123,6 @@ name|DominatorTree
 operator|&
 name|DT
 argument_list|,
-name|DominanceFrontier
-operator|&
-name|DF
-argument_list|,
 name|AliasSetTracker
 operator|*
 name|AST

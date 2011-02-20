@@ -168,14 +168,6 @@ comment|/// Check that diagnostics match the expected
 comment|/// diagnostics, indicated by markers in the
 comment|/// input source file.
 name|unsigned
-name|BinaryOutput
-range|:
-literal|1
-decl_stmt|;
-comment|/// Emit diagnostics via the diagnostic
-comment|/// binary serialization mechanism, to be
-comment|/// deserialized by, e.g., the CIndex library.
-name|unsigned
 name|ErrorLimit
 decl_stmt|;
 comment|/// Limit # errors emitted.
@@ -306,10 +298,6 @@ operator|=
 literal|0
 expr_stmt|;
 name|VerifyDiagnostics
-operator|=
-literal|0
-expr_stmt|;
-name|BinaryOutput
 operator|=
 literal|0
 expr_stmt|;

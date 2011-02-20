@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/AST/DeclBase.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cassert>
 end_include
 
@@ -98,6 +104,9 @@ name|class
 name|ASTConsumer
 decl_stmt|;
 name|class
+name|CXXBaseSpecifier
+decl_stmt|;
+name|class
 name|Decl
 decl_stmt|;
 name|class
@@ -121,6 +130,9 @@ name|Selector
 decl_stmt|;
 name|class
 name|Stmt
+decl_stmt|;
+name|class
+name|TagDecl
 decl_stmt|;
 comment|/// \brief Abstract interface for external sources of AST nodes.
 comment|///
@@ -257,6 +269,19 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
+comment|/// \brief Resolve the offset of a set of C++ base specifiers in the decl
+comment|/// stream into an array of specifiers.
+name|virtual
+name|CXXBaseSpecifier
+modifier|*
+name|GetExternalCXXBaseSpecifiers
+parameter_list|(
+name|uint64_t
+name|Offset
+parameter_list|)
+init|=
+literal|0
+function_decl|;
 comment|/// \brief Finds all declarations with the given name in the
 comment|/// given context.
 comment|///
@@ -297,10 +322,50 @@ init|=
 literal|0
 function_decl|;
 comment|/// \brief Finds all declarations lexically contained within the given
-comment|/// DeclContext.
+comment|/// DeclContext, after applying an optional filter predicate.
+comment|///
+comment|/// \param isKindWeWant a predicate function that returns true if the passed
+comment|/// declaration kind is one we are looking for. If NULL, all declarations
+comment|/// are returned.
 comment|///
 comment|/// \return true if an error occurred
 name|virtual
+name|bool
+name|FindExternalLexicalDecls
+argument_list|(
+specifier|const
+name|DeclContext
+operator|*
+name|DC
+argument_list|,
+name|bool
+argument_list|(
+operator|*
+name|isKindWeWant
+argument_list|)
+argument_list|(
+name|Decl
+operator|::
+name|Kind
+argument_list|)
+argument_list|,
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|Decl
+operator|*
+operator|>
+operator|&
+name|Result
+argument_list|)
+init|=
+literal|0
+decl_stmt|;
+comment|/// \brief Finds all declarations lexically contained within the given
+comment|/// DeclContext.
+comment|///
+comment|/// \return true if an error occurred
 name|bool
 name|FindExternalLexicalDecls
 argument_list|(
@@ -319,9 +384,70 @@ operator|>
 operator|&
 name|Result
 argument_list|)
-init|=
+block|{
+return|return
+name|FindExternalLexicalDecls
+argument_list|(
+name|DC
+argument_list|,
 literal|0
-decl_stmt|;
+argument_list|,
+name|Result
+argument_list|)
+return|;
+block|}
+name|template
+operator|<
+name|typename
+name|DeclTy
+operator|>
+name|bool
+name|FindExternalLexicalDeclsBy
+argument_list|(
+argument|const DeclContext *DC
+argument_list|,
+argument|llvm::SmallVectorImpl<Decl*>&Result
+argument_list|)
+block|{
+return|return
+name|FindExternalLexicalDecls
+argument_list|(
+name|DC
+argument_list|,
+name|DeclTy
+operator|::
+name|classofKind
+argument_list|,
+name|Result
+argument_list|)
+return|;
+block|}
+comment|/// \brief Gives the external AST source an opportunity to complete
+comment|/// an incomplete type.
+name|virtual
+name|void
+name|CompleteType
+parameter_list|(
+name|TagDecl
+modifier|*
+name|Tag
+parameter_list|)
+block|{}
+comment|/// \brief Gives the external AST source an opportunity to complete an
+comment|/// incomplete Objective-C class.
+comment|///
+comment|/// This routine will only be invoked if the "externally completed" bit is
+comment|/// set on the ObjCInterfaceDecl via the function
+comment|/// \c ObjCInterfaceDecl::setExternallyCompleted().
+name|virtual
+name|void
+name|CompleteType
+parameter_list|(
+name|ObjCInterfaceDecl
+modifier|*
+name|Class
+parameter_list|)
+block|{ }
 comment|/// \brief Notify ExternalASTSource that we started deserialization of
 comment|/// a decl or type so until FinishedDeserializing is called there may be
 comment|/// decls that are initializing. Must be paired with FinishedDeserializing.
@@ -735,6 +861,27 @@ operator|::
 name|GetExternalDecl
 operator|>
 name|LazyDeclPtr
+expr_stmt|;
+end_typedef
+
+begin_comment
+comment|/// \brief A lazy pointer to a set of CXXBaseSpecifiers.
+end_comment
+
+begin_typedef
+typedef|typedef
+name|LazyOffsetPtr
+operator|<
+name|CXXBaseSpecifier
+operator|,
+name|uint64_t
+operator|,
+operator|&
+name|ExternalASTSource
+operator|::
+name|GetExternalCXXBaseSpecifiers
+operator|>
+name|LazyCXXBaseSpecifiersPtr
 expr_stmt|;
 end_typedef
 

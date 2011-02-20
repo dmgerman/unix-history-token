@@ -157,38 +157,6 @@ comment|/// FSRL - Bitwise logical right shift of floating point values. These
 comment|/// corresponds to X86::PSRLDQ.
 name|FSRL
 block|,
-comment|/// FILD, FILD_FLAG - This instruction implements SINT_TO_FP with the
-comment|/// integer source in memory and FP reg result.  This corresponds to the
-comment|/// X86::FILD*m instructions. It has three inputs (token chain, address,
-comment|/// and source type) and two outputs (FP value and token chain). FILD_FLAG
-comment|/// also produces a flag).
-name|FILD
-block|,
-name|FILD_FLAG
-block|,
-comment|/// FP_TO_INT*_IN_MEM - This instruction implements FP_TO_SINT with the
-comment|/// integer destination in memory and a FP reg source.  This corresponds
-comment|/// to the X86::FIST*m instructions and the rounding mode change stuff. It
-comment|/// has two inputs (token chain and address) and two outputs (int value
-comment|/// and token chain).
-name|FP_TO_INT16_IN_MEM
-block|,
-name|FP_TO_INT32_IN_MEM
-block|,
-name|FP_TO_INT64_IN_MEM
-block|,
-comment|/// FLD - This instruction implements an extending load to FP stack slots.
-comment|/// This corresponds to the X86::FLD32m / X86::FLD64m. It takes a chain
-comment|/// operand, ptr to load from, and a ValueType node indicating the type
-comment|/// to load to.
-name|FLD
-block|,
-comment|/// FST - This instruction implements a truncating store to FP stack
-comment|/// slots. This corresponds to the X86::FST32m / X86::FST64m. It takes a
-comment|/// chain operand, value to store, address, and a ValueType to store it
-comment|/// as.
-name|FST
-block|,
 comment|/// CALL - These operations represent an abstract X86 call
 comment|/// instruction, which includes a bunch of information.  In particular the
 comment|/// operands of these node are:
@@ -222,14 +190,15 @@ block|,
 comment|/// X86 bit-test instructions.
 name|BT
 block|,
-comment|/// X86 SetCC. Operand 0 is condition code, and operand 1 is the flag
-comment|/// operand produced by a CMP instruction.
+comment|/// X86 SetCC. Operand 0 is condition code, and operand 1 is the EFLAGS
+comment|/// operand, usually produced by a CMP instruction.
 name|SETCC
 block|,
 comment|// Same as SETCC except it's materialized with a sbb and the value is all
 comment|// one's or all zero's.
 name|SETCC_CARRY
 block|,
+comment|// R = carry_bit ? ~0 : 0
 comment|/// X86 conditional moves. Operand 0 and operand 1 are the two values
 comment|/// to select from. Operand 2 is the condition code, and operand 3 is the
 comment|/// flag operand produced by a CMP or TEST instruction. It also writes a
@@ -264,10 +233,14 @@ comment|/// WrapperRIP - Special wrapper used under X86-64 PIC mode for RIP
 comment|/// relative displacements.
 name|WrapperRIP
 block|,
-comment|/// MOVQ2DQ - Copies a 64-bit value from a vector to another vector.
-comment|/// Can be used to move a vector value from a MMX register to a XMM
-comment|/// register.
+comment|/// MOVQ2DQ - Copies a 64-bit value from an MMX vector to the low word
+comment|/// of an XMM vector, with the high word zero filled.
 name|MOVQ2DQ
+block|,
+comment|/// MOVDQ2Q - Copies a 64-bit value from the low word of an XMM vector
+comment|/// to an MMX vector.  If you think this is too close to the previous
+comment|/// mnemonic, so do I; blame Intel.
+name|MOVDQ2Q
 block|,
 comment|/// PEXTRB - Extract an 8-bit value from a vector and zero extend it to
 comment|/// i32, corresponds to X86::PEXTRB.
@@ -294,6 +267,19 @@ block|,
 comment|/// PSHUFB - Shuffle 16 8-bit values within a vector.
 name|PSHUFB
 block|,
+comment|/// PANDN - and with not'd value.
+name|PANDN
+block|,
+comment|/// PSIGNB/W/D - Copy integer sign.
+name|PSIGNB
+block|,
+name|PSIGNW
+block|,
+name|PSIGND
+block|,
+comment|/// PBLENDVB - Variable blend
+name|PBLENDVB
+block|,
 comment|/// FMAX, FMIN - Floating point max and min.
 comment|///
 name|FMAX
@@ -314,9 +300,6 @@ comment|// TLSCALL - Thread Local Storage.  When calling to an OS provided
 comment|// thunk at the address from an earlier relocation.
 name|TLSCALL
 block|,
-comment|// SegmentBaseAddress - The address segment:0
-name|SegmentBaseAddress
-block|,
 comment|// EH_RETURN - Exception Handling helpers.
 name|EH_RETURN
 block|,
@@ -327,19 +310,8 @@ comment|///   operand #2 stack adjustment
 comment|///   operand #3 optional in flag
 name|TC_RETURN
 block|,
-comment|// LCMPXCHG_DAG, LCMPXCHG8_DAG - Compare and swap.
-name|LCMPXCHG_DAG
-block|,
-name|LCMPXCHG8_DAG
-block|,
-comment|// FNSTCW16m - Store FP control world into i16 memory.
-name|FNSTCW16m
-block|,
 comment|// VZEXT_MOVL - Vector move low and zero extend.
 name|VZEXT_MOVL
-block|,
-comment|// VZEXT_LOAD - Load, scalar_to_vector, and zero extend.
-name|VZEXT_LOAD
 block|,
 comment|// VSHL, VSRL - Vector logical left / right shift.
 name|VSHL
@@ -369,14 +341,16 @@ name|PCMPGTD
 block|,
 name|PCMPGTQ
 block|,
-comment|// ADD, SUB, SMUL, UMUL, etc. - Arithmetic operations with FLAGS results.
+comment|// ADD, SUB, SMUL, etc. - Arithmetic operations with FLAGS results.
 name|ADD
 block|,
 name|SUB
 block|,
-name|SMUL
+name|ADC
 block|,
-name|UMUL
+name|SBB
+block|,
+name|SMUL
 block|,
 name|INC
 block|,
@@ -388,6 +362,9 @@ name|XOR
 block|,
 name|AND
 block|,
+name|UMUL
+block|,
+comment|// LOW, HI, FLAGS = umul LHS, RHS
 comment|// MUL_IMM - X86 specific multiply by immediate.
 name|MUL_IMM
 block|,
@@ -469,8 +446,17 @@ comment|// according to %al. An operator is needed so that this can be expanded
 comment|// with control flow.
 name|VASTART_SAVE_XMM_REGS
 block|,
-comment|// MINGW_ALLOCA - MingW's __alloca call to do stack probing.
-name|MINGW_ALLOCA
+comment|// WIN_ALLOCA - Windows's _chkstk call to do stack probing.
+name|WIN_ALLOCA
+block|,
+comment|// Memory barrier
+name|MEMBARRIER
+block|,
+name|MFENCE
+block|,
+name|SFENCE
+block|,
+name|LFENCE
 block|,
 comment|// ATOMADD64_DAG, ATOMSUB64_DAG, ATOMOR64_DAG, ATOMAND64_DAG,
 comment|// ATOMXOR64_DAG, ATOMNAND64_DAG, ATOMSWAP64_DAG -
@@ -493,14 +479,52 @@ name|ATOMNAND64_DAG
 block|,
 name|ATOMSWAP64_DAG
 block|,
-comment|// Memory barrier
-name|MEMBARRIER
+comment|// LCMPXCHG_DAG, LCMPXCHG8_DAG - Compare and swap.
+name|LCMPXCHG_DAG
 block|,
-name|MFENCE
+name|LCMPXCHG8_DAG
 block|,
-name|SFENCE
+comment|// VZEXT_LOAD - Load, scalar_to_vector, and zero extend.
+name|VZEXT_LOAD
 block|,
-name|LFENCE
+comment|// FNSTCW16m - Store FP control world into i16 memory.
+name|FNSTCW16m
+block|,
+comment|/// FP_TO_INT*_IN_MEM - This instruction implements FP_TO_SINT with the
+comment|/// integer destination in memory and a FP reg source.  This corresponds
+comment|/// to the X86::FIST*m instructions and the rounding mode change stuff. It
+comment|/// has two inputs (token chain and address) and two outputs (int value
+comment|/// and token chain).
+name|FP_TO_INT16_IN_MEM
+block|,
+name|FP_TO_INT32_IN_MEM
+block|,
+name|FP_TO_INT64_IN_MEM
+block|,
+comment|/// FILD, FILD_FLAG - This instruction implements SINT_TO_FP with the
+comment|/// integer source in memory and FP reg result.  This corresponds to the
+comment|/// X86::FILD*m instructions. It has three inputs (token chain, address,
+comment|/// and source type) and two outputs (FP value and token chain). FILD_FLAG
+comment|/// also produces a flag).
+name|FILD
+block|,
+name|FILD_FLAG
+block|,
+comment|/// FLD - This instruction implements an extending load to FP stack slots.
+comment|/// This corresponds to the X86::FLD32m / X86::FLD64m. It takes a chain
+comment|/// operand, ptr to load from, and a ValueType node indicating the type
+comment|/// to load to.
+name|FLD
+block|,
+comment|/// FST - This instruction implements a truncating store to FP stack
+comment|/// slots. This corresponds to the X86::FST32m / X86::FST64m. It takes a
+comment|/// chain operand, value to store, address, and a ValueType to store it
+comment|/// as.
+name|FST
+block|,
+comment|/// VAARG_64 - This instruction grabs the address of the next argument
+comment|/// from a va_list. (reads and modifies the va_list in memory)
+name|VAARG_64
 comment|// WARNING: Do not add anything in the end unless you want the node to
 comment|// have memop! In fact, starting from ATOMADD64_DAG all opcodes will be
 comment|// thought as target memory ops!
@@ -696,6 +720,28 @@ modifier|*
 name|N
 parameter_list|)
 function_decl|;
+comment|/// isVEXTRACTF128Index - Return true if the specified
+comment|/// EXTRACT_SUBVECTOR operand specifies a vector extract that is
+comment|/// suitable for input to VEXTRACTF128.
+name|bool
+name|isVEXTRACTF128Index
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+comment|/// isVINSERTF128Index - Return true if the specified
+comment|/// INSERT_SUBVECTOR operand specifies a subvector insert that is
+comment|/// suitable for input to VINSERTF128.
+name|bool
+name|isVINSERTF128Index
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
 comment|/// getShuffleSHUFImmediate - Return the appropriate immediate to shuffle
 comment|/// the specified isShuffleMask VECTOR_SHUFFLE mask with PSHUF* and SHUFP*
 comment|/// instructions.
@@ -731,6 +777,28 @@ comment|/// getShufflePALIGNRImmediate - Return the appropriate immediate to shu
 comment|/// the specified VECTOR_SHUFFLE mask with the PALIGNR instruction.
 name|unsigned
 name|getShufflePALIGNRImmediate
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+comment|/// getExtractVEXTRACTF128Immediate - Return the appropriate
+comment|/// immediate to extract the specified EXTRACT_SUBVECTOR index
+comment|/// with VEXTRACTF128 instructions.
+name|unsigned
+name|getExtractVEXTRACTF128Immediate
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+comment|/// getInsertVINSERTF128Immediate - Return the appropriate
+comment|/// immediate to insert at the specified INSERT_SUBVECTOR index
+comment|/// with VINSERTF128 instructions.
+name|unsigned
+name|getInsertVINSERTF128Immediate
 parameter_list|(
 name|SDNode
 modifier|*
@@ -783,17 +851,6 @@ name|X86TargetMachine
 operator|&
 name|TM
 argument_list|)
-block|;
-comment|/// getPICBaseSymbol - Return the X86-32 PIC base.
-name|MCSymbol
-operator|*
-name|getPICBaseSymbol
-argument_list|(
-argument|const MachineFunction *MF
-argument_list|,
-argument|MCContext&Ctx
-argument_list|)
-specifier|const
 block|;
 name|virtual
 name|unsigned
@@ -1031,6 +1088,18 @@ literal|0
 argument_list|)
 specifier|const
 block|;
+comment|// ComputeNumSignBitsForTargetNode - Determine the number of bits in the
+comment|// operation that are sign bits.
+name|virtual
+name|unsigned
+name|ComputeNumSignBitsForTargetNode
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|unsigned Depth
+argument_list|)
+specifier|const
+block|;
 name|virtual
 name|bool
 name|isGAPlusOffset
@@ -1062,6 +1131,18 @@ name|ConstraintType
 name|getConstraintType
 argument_list|(
 argument|const std::string&Constraint
+argument_list|)
+specifier|const
+block|;
+comment|/// Examine constraint string and operand type and determine a weight value.
+comment|/// The operand object must already have been set up with the operand type.
+name|virtual
+name|ConstraintWeight
+name|getSingleConstraintMatchWeight
+argument_list|(
+argument|AsmOperandInfo&info
+argument_list|,
+argument|const char *constraint
 argument_list|)
 specifier|const
 block|;
@@ -1549,14 +1630,6 @@ argument|DebugLoc dl
 argument_list|)
 specifier|const
 block|;
-name|CCAssignFn
-operator|*
-name|CCAssignFnForNode
-argument_list|(
-argument|CallingConv::ID CallConv
-argument_list|)
-specifier|const
-block|;
 name|unsigned
 name|GetAlignedArgumentStackSize
 argument_list|(
@@ -1670,6 +1743,24 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
+name|LowerEXTRACT_SUBVECTOR
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerINSERT_SUBVECTOR
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
 name|LowerConstantPool
 argument_list|(
 argument|SDValue Op
@@ -1752,7 +1843,7 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
-name|LowerBIT_CONVERT
+name|LowerBITCAST
 argument_list|(
 argument|SDValue op
 argument_list|,
@@ -2168,6 +2259,14 @@ specifier|const
 block|;
 name|virtual
 name|bool
+name|isUsedByReturnOnly
+argument_list|(
+argument|SDNode *N
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
 name|CanLowerReturn
 argument_list|(
 argument|CallingConv::ID CallConv
@@ -2209,6 +2308,29 @@ argument_list|,
 argument|unsigned argNum
 argument_list|,
 argument|bool inMem
+argument_list|)
+specifier|const
+block|;
+comment|/// Utility functions to emit monitor and mwait instructions. These
+comment|/// need to make sure that the arguments to the intrinsic are in the
+comment|/// correct registers.
+name|MachineBasicBlock
+operator|*
+name|EmitMonitor
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|MachineBasicBlock *BB
+argument_list|)
+specifier|const
+block|;
+name|MachineBasicBlock
+operator|*
+name|EmitMwait
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|MachineBasicBlock *BB
 argument_list|)
 specifier|const
 block|;
@@ -2276,6 +2398,17 @@ argument|unsigned cmovOpc
 argument_list|)
 specifier|const
 block|;
+comment|// Utility function to emit the low-level va_arg code for X86-64.
+name|MachineBasicBlock
+operator|*
+name|EmitVAARG64WithCustomInserter
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|MachineBasicBlock *MBB
+argument_list|)
+specifier|const
+block|;
 comment|/// Utility function to emit the xmm reg save portion of va_start.
 name|MachineBasicBlock
 operator|*
@@ -2299,7 +2432,7 @@ specifier|const
 block|;
 name|MachineBasicBlock
 operator|*
-name|EmitLoweredMingwAlloca
+name|EmitLoweredWinAlloca
 argument_list|(
 argument|MachineInstr *MI
 argument_list|,
@@ -2310,6 +2443,16 @@ block|;
 name|MachineBasicBlock
 operator|*
 name|EmitLoweredTLSCall
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|MachineBasicBlock *BB
+argument_list|)
+specifier|const
+block|;
+name|MachineBasicBlock
+operator|*
+name|emitLoweredTLSAddr
 argument_list|(
 argument|MachineInstr *MI
 argument_list|,

@@ -76,35 +76,6 @@ name|bool
 typedef|;
 end_typedef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__GNUC__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|NORETURN
-value|__attribute__((noreturn))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|NORETURN
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -277,6 +248,7 @@ name|uint8_t
 name|modRM
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|ModRMDecision
 modifier|*
@@ -450,6 +422,7 @@ end_comment
 
 begin_function
 specifier|static
+specifier|const
 name|struct
 name|InstructionSpecifier
 modifier|*
@@ -863,6 +836,8 @@ name|prefixLocation
 decl_stmt|;
 name|uint8_t
 name|byte
+init|=
+literal|0
 decl_stmt|;
 name|BOOL
 name|hasAdSize
@@ -1293,6 +1268,16 @@ argument_list|(
 name|insn
 argument_list|)
 expr_stmt|;
+name|insn
+operator|->
+name|necessaryPrefixLocation
+operator|=
+name|insn
+operator|->
+name|readerCursor
+operator|-
+literal|1
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -1403,7 +1388,7 @@ operator|->
 name|immediateSize
 operator|=
 operator|(
-name|hasAdSize
+name|hasOpSize
 condition|?
 literal|2
 else|:
@@ -1848,11 +1833,17 @@ condition|(
 name|hasModRMExtension
 condition|)
 block|{
+if|if
+condition|(
 name|readModRM
 argument_list|(
 name|insn
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 operator|*
 name|instructionID
 operator|=
@@ -2385,6 +2376,7 @@ operator|)
 condition|)
 block|{
 comment|/*      * Although for SSE instructions it is usually necessary to treat REX.W+F2      * as F2 for decode (in the absence of a 64BIT_REXW_XD category) there is      * an occasional instruction where F2 is incidental and REX.W is the more      * significant.  If the decoded instruction is 32-bit and adding REX.W      * instead of F2 changes a 32 to a 64, we adopt the new encoding.      */
+specifier|const
 name|struct
 name|InstructionSpecifier
 modifier|*
@@ -2393,6 +2385,7 @@ decl_stmt|;
 name|uint16_t
 name|instructionIDWithREXw
 decl_stmt|;
+specifier|const
 name|struct
 name|InstructionSpecifier
 modifier|*
@@ -2511,6 +2504,7 @@ operator|)
 condition|)
 block|{
 comment|/*      * The instruction tables make no distinction between instructions that      * allow OpSize anywhere (i.e., 16-bit operations) and that need it in a      * particular spot (i.e., many MMX operations).  In general we're      * conservative, but in the specific case where OpSize is present but not      * in the right place we check if there's a 16-bit operation.      */
+specifier|const
 name|struct
 name|InstructionSpecifier
 modifier|*
@@ -2519,6 +2513,7 @@ decl_stmt|;
 name|uint16_t
 name|instructionIDWithOpsize
 decl_stmt|;
+specifier|const
 name|struct
 name|InstructionSpecifier
 modifier|*
@@ -3204,6 +3199,8 @@ condition|)
 return|return
 literal|0
 return|;
+if|if
+condition|(
 name|consumeByte
 argument_list|(
 name|insn
@@ -3213,7 +3210,11 @@ name|insn
 operator|->
 name|modRM
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 name|insn
 operator|->
 name|consumedModRM
@@ -3828,6 +3829,7 @@ name|InternalInstruction
 modifier|*
 name|insn
 parameter_list|,
+specifier|const
 name|struct
 name|OperandSpecifier
 modifier|*

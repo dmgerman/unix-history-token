@@ -73,6 +73,12 @@ literal|1
 decl_stmt|;
 comment|///< Include system header dependencies.
 name|unsigned
+name|ShowHeaderIncludes
+range|:
+literal|1
+decl_stmt|;
+comment|///< Show header inclusions (-H).
+name|unsigned
 name|UsePhonyTargets
 range|:
 literal|1
@@ -80,11 +86,20 @@ decl_stmt|;
 comment|///< Include phony targets for each
 comment|/// dependency, which can avoid some 'make'
 comment|/// problems.
-comment|/// The file to write depencency output to.
+comment|/// The file to write dependency output to.
 name|std
 operator|::
 name|string
 name|OutputFile
+expr_stmt|;
+comment|/// The file to write header include output to. This is orthogonal to
+comment|/// ShowHeaderIncludes (-H) and will include headers mentioned in the
+comment|/// predefines buffer. If the output file is "-", output will be sent to
+comment|/// stderr.
+name|std
+operator|::
+name|string
+name|HeaderIncludeOutputFile
 expr_stmt|;
 comment|/// A list of names to use as the targets in the dependency file; this list
 comment|/// must contain at least one entry.
@@ -104,6 +119,10 @@ name|DependencyOutputOptions
 argument_list|()
 block|{
 name|IncludeSystemHeaders
+operator|=
+literal|0
+expr_stmt|;
+name|ShowHeaderIncludes
 operator|=
 literal|0
 expr_stmt|;

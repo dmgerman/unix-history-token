@@ -77,6 +77,12 @@ directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SetVector.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -88,7 +94,7 @@ name|class
 name|IdentifierInfo
 decl_stmt|;
 name|class
-name|LabelStmt
+name|LabelDecl
 decl_stmt|;
 name|class
 name|ReturnStmt
@@ -127,26 +133,10 @@ comment|/// \brief Whether this function contains any indirect gotos.
 name|bool
 name|HasIndirectGoto
 decl_stmt|;
-comment|/// \brief The number of errors that had occurred before starting this
-comment|/// function or block.
-name|unsigned
-name|NumErrorsAtStartOfFunction
+comment|/// \brief Used to determine if errors occurred in this function or block.
+name|DiagnosticErrorTrap
+name|ErrorTrap
 decl_stmt|;
-comment|/// LabelMap - This is a mapping from label identifiers to the LabelStmt for
-comment|/// it (which acts like the label decl in some ways).  Forward referenced
-comment|/// labels have a LabelStmt created for them with a null location& SubStmt.
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-name|IdentifierInfo
-operator|*
-operator|,
-name|LabelStmt
-operator|*
-operator|>
-name|LabelMap
-expr_stmt|;
 comment|/// SwitchStack - This is the current set of active switch statements in the
 comment|/// block.
 name|llvm
@@ -218,9 +208,11 @@ return|;
 block|}
 name|FunctionScopeInfo
 argument_list|(
-argument|unsigned NumErrors
+name|Diagnostic
+operator|&
+name|Diag
 argument_list|)
-block|:
+operator|:
 name|IsBlockInfo
 argument_list|(
 name|false
@@ -241,9 +233,9 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
-name|NumErrorsAtStartOfFunction
+name|ErrorTrap
 argument_list|(
-argument|NumErrors
+argument|Diag
 argument_list|)
 block|{ }
 name|virtual
@@ -255,10 +247,7 @@ comment|/// \brief Clear out the information in this function scope, making it
 comment|/// suitable for reuse.
 name|void
 name|Clear
-parameter_list|(
-name|unsigned
-name|NumErrors
-parameter_list|)
+parameter_list|()
 function_decl|;
 specifier|static
 name|bool
@@ -285,9 +274,6 @@ name|FunctionScopeInfo
 block|{
 name|public
 operator|:
-name|bool
-name|hasBlockDeclRefExprs
-block|;
 name|BlockDecl
 operator|*
 name|TheDecl
@@ -308,23 +294,53 @@ comment|/// Its return type may be BuiltinType::Dependent.
 name|QualType
 name|FunctionType
 block|;
+comment|/// CaptureMap - A map of captured variables to (index+1) into Captures.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|VarDecl
+operator|*
+block|,
+name|unsigned
+operator|>
+name|CaptureMap
+block|;
+comment|/// Captures - The captured variables.
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|BlockDecl
+operator|::
+name|Capture
+block|,
+literal|4
+operator|>
+name|Captures
+block|;
+comment|/// CapturesCXXThis - Whether this block captures 'this'.
+name|bool
+name|CapturesCXXThis
+block|;
 name|BlockScopeInfo
 argument_list|(
-argument|unsigned NumErrors
+name|Diagnostic
+operator|&
+name|Diag
 argument_list|,
-argument|Scope *BlockScope
+name|Scope
+operator|*
+name|BlockScope
 argument_list|,
-argument|BlockDecl *Block
+name|BlockDecl
+operator|*
+name|Block
 argument_list|)
 operator|:
 name|FunctionScopeInfo
 argument_list|(
-name|NumErrors
-argument_list|)
-block|,
-name|hasBlockDeclRefExprs
-argument_list|(
-name|false
+name|Diag
 argument_list|)
 block|,
 name|TheDecl
@@ -334,7 +350,12 @@ argument_list|)
 block|,
 name|TheScope
 argument_list|(
-argument|BlockScope
+name|BlockScope
+argument_list|)
+block|,
+name|CapturesCXXThis
+argument_list|(
+argument|false
 argument_list|)
 block|{
 name|IsBlockInfo

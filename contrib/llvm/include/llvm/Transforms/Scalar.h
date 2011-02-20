@@ -161,6 +161,11 @@ name|Threshold
 init|=
 operator|-
 literal|1
+parameter_list|,
+name|bool
+name|UseDomTree
+init|=
+name|true
 parameter_list|)
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
@@ -234,6 +239,15 @@ parameter_list|)
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
+comment|// LoopInstSimplify - This pass simplifies instructions in a loop's body.
+comment|//
+name|Pass
+modifier|*
+name|createLoopInstSimplifyPass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
 comment|// LoopUnroll - This pass is a simple loop unrolling pass.
 comment|//
 name|Pass
@@ -252,12 +266,11 @@ parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
-comment|// LoopIndexSplit - This pass divides loop's iteration range by spliting loop
-comment|// such that each individual loop is executed efficiently.
+comment|// LoopIdiom - This pass recognizes and replaces idioms in loops.
 comment|//
 name|Pass
 modifier|*
-name|createLoopIndexSplitPass
+name|createLoopIdiomPass
 parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
@@ -466,6 +479,16 @@ name|LCSSAID
 decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
+comment|// EarlyCSE - This pass performs a simple and fast CSE pass over the dominator
+comment|// tree.
+comment|//
+name|FunctionPass
+modifier|*
+name|createEarlyCSEPass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
 comment|// GVN - This pass performs global value numbering and redundant load
 comment|// elimination cotemporaneously.
 comment|//
@@ -583,6 +606,20 @@ modifier|*
 name|createCorrelatedValuePropagationPass
 parameter_list|()
 function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
+comment|// InstructionSimplifier - Remove redundant instructions.
+comment|//
+name|FunctionPass
+modifier|*
+name|createInstructionSimplifierPass
+parameter_list|()
+function_decl|;
+specifier|extern
+name|char
+modifier|&
+name|InstructionSimplifierID
+decl_stmt|;
 block|}
 end_decl_stmt
 
