@@ -1,22 +1,22 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -Wunused-variable -analyze -analyzer-experimental-internal-checks -analyzer-check-objc-mem -analyzer-check-dead-stores -fblocks -verify -Wno-unreachable-code -analyzer-opt-analyze-nested-blocks %s
+comment|// RUN: %clang_cc1 -Wunused-variable -analyze -analyzer-checker=core.experimental.IdempotentOps -analyzer-experimental-internal-checks -analyzer-check-objc-mem -analyzer-checker=core.DeadStores -fblocks -verify -Wno-unreachable-code -analyzer-opt-analyze-nested-blocks %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -Wunused-variable -analyze -analyzer-experimental-internal-checks -analyzer-check-objc-mem -analyzer-store=basic -analyzer-constraints=basic -analyzer-check-dead-stores -fblocks -verify -Wno-unreachable-code -analyzer-opt-analyze-nested-blocks %s
+comment|// RUN: %clang_cc1 -Wunused-variable -analyze -analyzer-checker=core.experimental.IdempotentOps -analyzer-experimental-internal-checks -analyzer-check-objc-mem -analyzer-store=basic -analyzer-constraints=basic -analyzer-checker=core.DeadStores -fblocks -verify -Wno-unreachable-code -analyzer-opt-analyze-nested-blocks %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -Wunused-variable -analyze -analyzer-experimental-internal-checks -analyzer-check-objc-mem -analyzer-store=basic -analyzer-constraints=range -analyzer-check-dead-stores -fblocks -verify -Wno-unreachable-code -analyzer-opt-analyze-nested-blocks %s
+comment|// RUN: %clang_cc1 -Wunused-variable -analyze -analyzer-checker=core.experimental.IdempotentOps -analyzer-experimental-internal-checks -analyzer-check-objc-mem -analyzer-store=basic -analyzer-constraints=range -analyzer-checker=core.DeadStores -fblocks -verify -Wno-unreachable-code -analyzer-opt-analyze-nested-blocks %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -Wunused-variable -analyze -analyzer-experimental-internal-checks -analyzer-check-objc-mem -analyzer-store=region -analyzer-constraints=basic -analyzer-check-dead-stores -fblocks -verify -Wno-unreachable-code -analyzer-opt-analyze-nested-blocks %s
+comment|// RUN: %clang_cc1 -Wunused-variable -analyze -analyzer-checker=core.experimental.IdempotentOps -analyzer-experimental-internal-checks -analyzer-check-objc-mem -analyzer-store=region -analyzer-constraints=basic -analyzer-checker=core.DeadStores -fblocks -verify -Wno-unreachable-code -analyzer-opt-analyze-nested-blocks %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -Wunused-variable -analyze -analyzer-experimental-internal-checks -analyzer-check-objc-mem -analyzer-store=region -analyzer-constraints=range -analyzer-check-dead-stores -fblocks -verify -Wno-unreachable-code -analyzer-opt-analyze-nested-blocks %s
+comment|// RUN: %clang_cc1 -Wunused-variable -analyze -analyzer-checker=core.experimental.IdempotentOps -analyzer-experimental-internal-checks -analyzer-check-objc-mem -analyzer-store=region -analyzer-constraints=range -analyzer-checker=core.DeadStores -fblocks -verify -Wno-unreachable-code -analyzer-opt-analyze-nested-blocks %s
 end_comment
 
 begin_function
@@ -84,7 +84,7 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{implicitly declaring C library function 'printf' with type 'int (char const *, ...)'}} \
+comment|// expected-warning{{implicitly declaring C library function 'printf' with type 'int (const char *, ...)'}} \
 comment|// expected-note{{please include the header<stdio.h> or explicitly provide a declaration for 'printf'}}
 block|}
 end_function
@@ -183,6 +183,10 @@ comment|// expected-warning{{never read}} expected-warning{{unused variable 'p'}
 block|}
 end_function
 
+begin_comment
+comment|//
+end_comment
+
 begin_function
 name|int
 name|f6
@@ -196,7 +200,7 @@ decl_stmt|;
 operator|++
 name|x
 expr_stmt|;
-comment|// expected-warning{{never read}}
+comment|// no-warning
 return|return
 literal|1
 return|;
@@ -299,6 +303,14 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// Don't warn for dead stores in nested expressions.  We have yet
+end_comment
+
+begin_comment
+comment|// to see a real bug in this scenario.
+end_comment
+
 begin_function
 name|int
 name|f8
@@ -323,7 +335,7 @@ name|baz
 argument_list|()
 operator|)
 condition|)
-comment|// expected-warning{{Although the value}}
+comment|// no-warning
 return|return
 literal|1
 return|;
@@ -627,6 +639,14 @@ comment|// expected-warning{{unused variable 'z'}}
 block|}
 end_function
 
+begin_comment
+comment|// Don't warn for dead stores in nested expressions.  We have yet
+end_comment
+
+begin_comment
+comment|// to see a real bug in this scenario.
+end_comment
+
 begin_function
 name|int
 name|f16
@@ -660,7 +680,7 @@ operator|*
 literal|2
 index|]
 argument_list|)
-comment|// expected-warning{{Although the value stored to 'x' is used}} expected-warning{{The left operand to '*' is always 1}}
+comment|// expected-warning{{The left operand to '+' is always 0}} expected-warning{{The left operand to '*' is always 1}}
 condition|?
 literal|5
 else|:
@@ -738,12 +758,13 @@ operator|=
 literal|10
 expr_stmt|;
 comment|// expected-warning{{Value stored to 'x' is never read}}
+comment|// unreachable.
 do|do
 name|x
 operator|=
 literal|10
 expr_stmt|;
-comment|// expected-warning{{Value stored to 'x' is never read}}
+comment|// no-warning
 do|while
 condition|(
 literal|1
@@ -756,7 +777,99 @@ operator|=
 literal|10
 operator|)
 return|;
-comment|// expected-warning{{Although the value stored to 'x' is used in the enclosing expression, the value is never actually read from 'x'}}
+comment|// no-warning
+block|}
+end_function
+
+begin_function
+name|int
+name|f18_a
+parameter_list|()
+block|{
+name|int
+name|x
+init|=
+literal|0
+decl_stmt|;
+comment|// no-warning
+return|return
+operator|(
+name|x
+operator|=
+literal|10
+operator|)
+return|;
+comment|// no-warning
+block|}
+end_function
+
+begin_function
+name|void
+name|f18_b
+parameter_list|()
+block|{
+name|int
+name|x
+init|=
+literal|0
+decl_stmt|;
+comment|// no-warning
+if|if
+condition|(
+literal|1
+condition|)
+name|x
+operator|=
+literal|10
+expr_stmt|;
+comment|// expected-warning{{Value stored to 'x' is never read}}
+block|}
+end_function
+
+begin_function
+name|void
+name|f18_c
+parameter_list|()
+block|{
+name|int
+name|x
+init|=
+literal|0
+decl_stmt|;
+while|while
+condition|(
+literal|1
+condition|)
+name|x
+operator|=
+literal|10
+expr_stmt|;
+comment|// expected-warning{{Value stored to 'x' is never read}}
+block|}
+end_function
+
+begin_function
+name|void
+name|f18_d
+parameter_list|()
+block|{
+name|int
+name|x
+init|=
+literal|0
+decl_stmt|;
+comment|// no-warning
+do|do
+name|x
+operator|=
+literal|10
+expr_stmt|;
+comment|// expected-warning{{Value stored to 'x' is never read}}
+do|while
+condition|(
+literal|1
+condition|)
+do|;
 block|}
 end_function
 
@@ -875,8 +988,11 @@ name|x
 init|=
 literal|4
 decl_stmt|;
-operator|++
 name|x
+operator|=
+name|x
+operator|+
+literal|1
 expr_stmt|;
 comment|// expected-warning{{never read}}
 if|if
@@ -1015,8 +1131,11 @@ name|y20
 init|=
 literal|4
 decl_stmt|;
-operator|++
 name|x
+operator|=
+name|x
+operator|+
+literal|1
 expr_stmt|;
 comment|// expected-warning{{never read}}
 operator|++
@@ -2501,6 +2620,57 @@ operator|--
 name|m
 condition|)
 do|;
+block|}
+end_function
+
+begin_comment
+comment|// Avoid dead stores resulting from an assignment (and use) being unreachable.
+end_comment
+
+begin_function_decl
+name|void
+name|rdar8405222_aux
+parameter_list|(
+name|int
+name|i
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|rdar8405222
+parameter_list|()
+block|{
+specifier|const
+name|int
+name|show
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|i
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+name|show
+condition|)
+name|i
+operator|=
+literal|5
+expr_stmt|;
+comment|// no-warning
+if|if
+condition|(
+name|show
+condition|)
+name|rdar8405222_aux
+argument_list|(
+name|i
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

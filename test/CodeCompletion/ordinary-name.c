@@ -74,5 +74,13 @@ begin_comment
 comment|// CHECK-CC1: y
 end_comment
 
+begin_comment
+comment|// PR8744
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -isystem %S/Inputs -fsyntax-only -code-completion-at=%s:1:11 %s
+end_comment
+
 end_unit
 

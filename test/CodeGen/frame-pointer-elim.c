@@ -1,38 +1,70 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang -ccc-host-triple i386 -S -o - %s | \
+comment|// RUN: %clang -ccc-host-triple i386-apple-darwin -S -o - %s | \
 end_comment
 
 begin_comment
-comment|// RUN:   FileCheck --check-prefix=DEFAULT %s
+comment|// RUN:   FileCheck --check-prefix=DARWIN %s
 end_comment
 
 begin_comment
-comment|// DEFAULT: f0:
+comment|// DARWIN: f0:
 end_comment
 
 begin_comment
-comment|// DEFAULT: pushl %ebp
+comment|// DARWIN: pushl %ebp
 end_comment
 
 begin_comment
-comment|// DEFAULT: ret
+comment|// DARWIN: ret
 end_comment
 
 begin_comment
-comment|// DEFAULT: f1:
+comment|// DARWIN: f1:
 end_comment
 
 begin_comment
-comment|// DEFAULT: pushl %ebp
+comment|// DARWIN: pushl %ebp
 end_comment
 
 begin_comment
-comment|// DEFAULT: ret
+comment|// DARWIN: ret
 end_comment
 
 begin_comment
-comment|// RUN: %clang -ccc-host-triple i386 -S -o - -fomit-frame-pointer %s | \
+comment|// RUN: %clang -ccc-host-triple i386-pc-linux-gnu -S -o - %s | \
+end_comment
+
+begin_comment
+comment|// RUN:   FileCheck --check-prefix=LINUX %s
+end_comment
+
+begin_comment
+comment|// LINUX: f0:
+end_comment
+
+begin_comment
+comment|// LINUX-NOT: pushl %ebp
+end_comment
+
+begin_comment
+comment|// LINUX: ret
+end_comment
+
+begin_comment
+comment|// LINUX: f1:
+end_comment
+
+begin_comment
+comment|// LINUX: pushl %ebp
+end_comment
+
+begin_comment
+comment|// LINUX: ret
+end_comment
+
+begin_comment
+comment|// RUN: %clang -ccc-host-triple i386-darwin -S -o - -fomit-frame-pointer %s | \
 end_comment
 
 begin_comment
@@ -64,7 +96,7 @@ comment|// OMIT_ALL: ret
 end_comment
 
 begin_comment
-comment|// RUN: %clang -ccc-host-triple i386 -S -o - -momit-leaf-frame-pointer %s | \
+comment|// RUN: %clang -ccc-host-triple i386-darwin -S -o - -momit-leaf-frame-pointer %s | \
 end_comment
 
 begin_comment

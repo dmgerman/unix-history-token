@@ -122,6 +122,7 @@ block|{
 goto|goto
 name|A
 goto|;
+comment|// expected-error {{use of undeclared label 'A'}}
 return|return
 lambda|^
 block|{
@@ -133,7 +134,6 @@ return|;
 block|}
 argument_list|()
 return|;
-comment|// expected-error {{use of undeclared label 'A'}}
 block|}
 end_function
 

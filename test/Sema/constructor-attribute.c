@@ -16,7 +16,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{'constructor' attribute only applies to function types}}
+comment|// expected-warning {{'constructor' attribute only applies to functions}}
 end_comment
 
 begin_function_decl
@@ -104,7 +104,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{'destructor' attribute only applies to function types}}
+comment|// expected-warning {{'destructor' attribute only applies to functions}}
 end_comment
 
 begin_function_decl

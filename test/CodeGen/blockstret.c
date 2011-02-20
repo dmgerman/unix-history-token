@@ -8,7 +8,7 @@ comment|// RUN: %clang_cc1 -fblocks -triple i686-apple-darwin9 %s -emit-llvm -o 
 end_comment
 
 begin_comment
-comment|// X64:   internal constant %2 { i8** @_NSConcreteGlobalBlock, i32 1879048192
+comment|// X64:   internal constant {{%.*}} { i8** @_NSConcreteGlobalBlock, i32 1879048192
 end_comment
 
 begin_comment

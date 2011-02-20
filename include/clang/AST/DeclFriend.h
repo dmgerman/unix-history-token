@@ -116,13 +116,18 @@ name|FriendUnion
 name|Friend
 decl_stmt|;
 comment|// A pointer to the next friend in the sequence.
-name|FriendDecl
-modifier|*
+name|LazyDeclPtr
 name|NextFriend
 decl_stmt|;
 comment|// Location of the 'friend' specifier.
 name|SourceLocation
 name|FriendLoc
+decl_stmt|;
+comment|/// True if this 'friend' declaration is unsupported.  Eventually we
+comment|/// will support every possible friend declaration, but for now we
+comment|/// silently ignore some and set this flag to authorize all access.
+name|bool
+name|UnsupportedFriend
 decl_stmt|;
 name|friend
 name|class
@@ -162,13 +167,16 @@ name|Friend
 argument_list|)
 operator|,
 name|NextFriend
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 operator|,
 name|FriendLoc
 argument_list|(
-argument|FriendL
+name|FriendL
+argument_list|)
+operator|,
+name|UnsupportedFriend
+argument_list|(
+argument|false
 argument_list|)
 block|{   }
 name|explicit
@@ -187,28 +195,57 @@ name|Empty
 argument_list|)
 operator|,
 name|NextFriend
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 block|{ }
-name|public
-operator|:
-specifier|static
 name|FriendDecl
 operator|*
-name|Create
+name|getNextFriend
+argument_list|()
+block|{
+return|return
+name|cast_or_null
+operator|<
+name|FriendDecl
+operator|>
+operator|(
+name|NextFriend
+operator|.
+name|get
 argument_list|(
-argument|ASTContext&C
-argument_list|,
-argument|DeclContext *DC
-argument_list|,
-argument|SourceLocation L
-argument_list|,
-argument|FriendUnion Friend_
-argument_list|,
-argument|SourceLocation FriendL
+name|getASTContext
+argument_list|()
+operator|.
+name|getExternalSource
+argument_list|()
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
+block|}
+name|public
+label|:
+specifier|static
+name|FriendDecl
+modifier|*
+name|Create
+parameter_list|(
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|DeclContext
+modifier|*
+name|DC
+parameter_list|,
+name|SourceLocation
+name|L
+parameter_list|,
+name|FriendUnion
+name|Friend_
+parameter_list|,
+name|SourceLocation
+name|FriendL
+parameter_list|)
+function_decl|;
 specifier|static
 name|FriendDecl
 modifier|*
@@ -273,6 +310,28 @@ block|{
 return|return
 name|FriendLoc
 return|;
+block|}
+comment|/// Determines if this friend kind is unsupported.
+name|bool
+name|isUnsupportedFriend
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UnsupportedFriend
+return|;
+block|}
+name|void
+name|setUnsupportedFriend
+parameter_list|(
+name|bool
+name|Unsupported
+parameter_list|)
+block|{
+name|UnsupportedFriend
+operator|=
+name|Unsupported
+expr_stmt|;
 block|}
 comment|// Implement isa/cast/dyncast/etc.
 specifier|static
@@ -448,7 +507,8 @@ name|Ptr
 operator|=
 name|Ptr
 operator|->
-name|NextFriend
+name|getNextFriend
+argument_list|()
 block|;
 return|return
 operator|*

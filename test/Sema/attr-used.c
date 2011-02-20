@@ -45,7 +45,7 @@ argument|(used)
 argument_list|)
 name|s
 block|{
-comment|// expected-warning {{'used' attribute only applies to variable and function types}}
+comment|// expected-warning {{'used' attribute only applies to variables and functions}}
 name|int
 name|x
 decl_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -verify -Wunused-variable -fsyntax-only %s
+comment|// RUN: %clang_cc1 -verify -Wunused -Wused-but-marked-unused -Wunused-parameter -Wunused -fsyntax-only %s
 end_comment
 
 begin_function_decl
@@ -144,6 +144,7 @@ comment|// expected-warning {{unused variable}}
 name|Int_unused
 name|i1
 decl_stmt|;
+comment|// expected-warning {{'Int_unused' was marked unused but was used}}
 name|struct
 name|Test0_not_unused
 name|s0
@@ -153,8 +154,79 @@ name|struct
 name|Test0_unused
 name|s1
 decl_stmt|;
+comment|// expected-warning {{'Test0_unused' was marked unused but was used}}
 block|}
 end_function
+
+begin_function
+name|int
+name|f3
+parameter_list|(
+name|int
+name|x
+parameter_list|)
+block|{
+comment|// expected-warning{{unused parameter 'x'}}
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|f4
+parameter_list|(
+name|int
+name|x
+parameter_list|)
+block|{
+return|return
+name|x
+return|;
+block|}
+end_function
+
+begin_decl_stmt
+name|int
+name|f5
+argument_list|(
+name|int
+name|x
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|)
+block|{
+return|return
+literal|0
+return|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|f6
+argument_list|(
+name|int
+name|x
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|)
+block|{
+return|return
+name|x
+return|;
+comment|// expected-warning{{'x' was marked unused but was used}}
+block|}
+end_decl_stmt
 
 end_unit
 

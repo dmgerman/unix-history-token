@@ -178,7 +178,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// CHECK-NOT: palignr
+comment|// CHECK: palignr
 end_comment
 
 begin_function
@@ -206,7 +206,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: psrlq
+comment|// CHECK: palignr
 end_comment
 
 begin_function
@@ -234,7 +234,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: xor
+comment|// CHECK: palignr
 end_comment
 
 begin_function

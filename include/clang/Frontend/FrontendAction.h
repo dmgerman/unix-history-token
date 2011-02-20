@@ -118,6 +118,8 @@ name|IK_PreprocessedObjCXX
 block|,
 name|IK_OpenCL
 block|,
+name|IK_CUDA
+block|,
 name|IK_AST
 block|,
 name|IK_LLVM_IR
@@ -151,6 +153,22 @@ decl_stmt|;
 name|friend
 name|class
 name|ASTMergeAction
+decl_stmt|;
+name|private
+label|:
+name|ASTConsumer
+modifier|*
+name|CreateWrappedASTConsumer
+argument_list|(
+name|CompilerInstance
+operator|&
+name|CI
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
+name|InFile
+argument_list|)
 decl_stmt|;
 name|protected
 label|:
@@ -351,7 +369,6 @@ specifier|const
 block|{
 name|assert
 argument_list|(
-operator|!
 name|CurrentASTUnit
 operator|&&
 literal|"No current AST unit!"

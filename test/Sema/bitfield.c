@@ -183,5 +183,18 @@ name|y
 decl_stmt|;
 end_decl_stmt
 
+begin_struct
+struct|struct
+name|PR8025
+block|{
+name|double
+label|:
+literal|2
+expr_stmt|;
+comment|// expected-error{{anonymous bit-field has non-integral type 'double'}}
+block|}
+struct|;
+end_struct
+
 end_unit
 

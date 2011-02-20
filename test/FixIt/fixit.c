@@ -179,5 +179,24 @@ name|int_t
 typedef|;
 end_typedef
 
+begin_comment
+comment|//<rdar://problem/7159693>
+end_comment
+
+begin_enum
+enum|enum
+name|Color
+block|{
+name|Red
+comment|// expected-error{{missing ',' between enumerators}}
+name|Green
+init|=
+literal|17
+comment|// expected-error{{missing ',' between enumerators}}
+name|Blue
+block|, }
+enum|;
+end_enum
+
 end_unit
 

@@ -62,7 +62,19 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/PartialDiagnostic.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/DeclTemplate.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_decl_stmt
@@ -100,6 +112,18 @@ comment|/// deduction is occurring.
 name|SourceLocation
 name|Loc
 decl_stmt|;
+comment|/// \brief Warnings (and follow-on notes) that were suppressed due to
+comment|/// SFINAE while performing template argument deduction.
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|PartialDiagnosticAt
+operator|,
+literal|4
+operator|>
+name|SuppressedDiagnostics
+expr_stmt|;
 comment|// do not implement these
 name|TemplateDeductionInfo
 argument_list|(
@@ -194,6 +218,74 @@ name|Deduced
 operator|=
 name|NewDeduced
 expr_stmt|;
+block|}
+comment|/// \brief Add a new diagnostic to the set of diagnostics
+name|void
+name|addSuppressedDiagnostic
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|,
+specifier|const
+name|PartialDiagnostic
+modifier|&
+name|PD
+parameter_list|)
+block|{
+name|SuppressedDiagnostics
+operator|.
+name|push_back
+argument_list|(
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|Loc
+argument_list|,
+name|PD
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// \brief Iterator over the set of suppressed diagnostics.
+typedef|typedef
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|PartialDiagnosticAt
+operator|>
+operator|::
+name|const_iterator
+name|diag_iterator
+expr_stmt|;
+comment|/// \brief Returns an iterator at the beginning of the sequence of suppressed
+comment|/// diagnostics.
+name|diag_iterator
+name|diag_begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SuppressedDiagnostics
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+comment|/// \brief Returns an iterator at the end of the sequence of suppressed
+comment|/// diagnostics.
+name|diag_iterator
+name|diag_end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SuppressedDiagnostics
+operator|.
+name|end
+argument_list|()
+return|;
 block|}
 comment|/// \brief The template parameter to which a template argument
 comment|/// deduction failure refers.

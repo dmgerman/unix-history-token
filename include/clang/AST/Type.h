@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/Visibility.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/NestedNameSpecifier.h"
 end_include
 
@@ -117,6 +123,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/FoldingSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/Optional.h"
 end_include
 
 begin_include
@@ -179,7 +191,7 @@ enum|enum
 block|{
 name|TypeAlignmentInBits
 init|=
-literal|3
+literal|4
 block|,
 name|TypeAlignment
 init|=
@@ -433,10 +445,13 @@ name|class
 name|TemplateArgumentListInfo
 decl_stmt|;
 name|class
-name|Type
+name|ElaboratedType
 decl_stmt|;
 name|class
-name|ElaboratedType
+name|ExtQuals
+decl_stmt|;
+name|class
+name|ExtQualsTypeCommonBase
 decl_stmt|;
 struct_decl|struct
 name|PrintingPolicy
@@ -526,7 +541,7 @@ block|,
 comment|/// The width of the "fast" qualifier mask.
 name|FastWidth
 init|=
-literal|2
+literal|3
 block|,
 comment|/// The fast qualifier mask.
 name|FastMask
@@ -1311,6 +1326,120 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/// \brief Add the qualifiers from the given set to this set, given that
+comment|/// they don't conflict.
+name|void
+name|addConsistentQualifiers
+parameter_list|(
+name|Qualifiers
+name|qs
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|getAddressSpace
+argument_list|()
+operator|==
+name|qs
+operator|.
+name|getAddressSpace
+argument_list|()
+operator|||
+operator|!
+name|hasAddressSpace
+argument_list|()
+operator|||
+operator|!
+name|qs
+operator|.
+name|hasAddressSpace
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|getObjCGCAttr
+argument_list|()
+operator|==
+name|qs
+operator|.
+name|getObjCGCAttr
+argument_list|()
+operator|||
+operator|!
+name|hasObjCGCAttr
+argument_list|()
+operator|||
+operator|!
+name|qs
+operator|.
+name|hasObjCGCAttr
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|Mask
+operator||=
+name|qs
+operator|.
+name|Mask
+expr_stmt|;
+block|}
+comment|/// \brief Determines if these qualifiers compatibly include another set.
+comment|/// Generally this answers the question of whether an object with the other
+comment|/// qualifiers can be safely used as an object with these qualifiers.
+name|bool
+name|compatiblyIncludes
+argument_list|(
+name|Qualifiers
+name|other
+argument_list|)
+decl|const
+block|{
+comment|// Non-CVR qualifiers must match exactly.  CVR qualifiers may subset.
+return|return
+operator|(
+operator|(
+name|Mask
+operator|&
+operator|~
+name|CVRMask
+operator|)
+operator|==
+operator|(
+name|other
+operator|.
+name|Mask
+operator|&
+operator|~
+name|CVRMask
+operator|)
+operator|)
+operator|&&
+operator|(
+operator|(
+operator|(
+name|Mask
+operator|&
+name|CVRMask
+operator|)
+operator||
+operator|(
+name|other
+operator|.
+name|Mask
+operator|&
+name|CVRMask
+operator|)
+operator|)
+operator|==
+operator|(
+name|Mask
+operator|&
+name|CVRMask
+operator|)
+operator|)
+return|;
+block|}
 name|bool
 name|isSupersetOf
 argument_list|(
@@ -1559,257 +1688,8 @@ literal|5
 decl_stmt|;
 block|}
 empty_stmt|;
-comment|/// ExtQuals - We can encode up to three bits in the low bits of a
-comment|/// type pointer, but there are many more type qualifiers that we want
-comment|/// to be able to apply to an arbitrary type.  Therefore we have this
-comment|/// struct, intended to be heap-allocated and used by QualType to
-comment|/// store qualifiers.
-comment|///
-comment|/// The current design tags the 'const' and 'restrict' qualifiers in
-comment|/// two low bits on the QualType pointer; a third bit records whether
-comment|/// the pointer is an ExtQuals node.  'const' was chosen because it is
-comment|/// orders of magnitude more common than the other two qualifiers, in
-comment|/// both library and user code.  It's relatively rare to see
-comment|/// 'restrict' in user code, but many standard C headers are saturated
-comment|/// with 'restrict' declarations, so that representing them efficiently
-comment|/// is a critical goal of this representation.
-name|class
-name|ExtQuals
-range|:
-name|public
-name|llvm
-operator|::
-name|FoldingSetNode
-block|{
-comment|// NOTE: changing the fast qualifiers should be straightforward as
-comment|// long as you don't make 'const' non-fast.
-comment|// 1. Qualifiers:
-comment|//    a) Modify the bitmasks (Qualifiers::TQ and DeclSpec::TQ).
-comment|//       Fast qualifiers must occupy the low-order bits.
-comment|//    b) Update Qualifiers::FastWidth and FastMask.
-comment|// 2. QualType:
-comment|//    a) Update is{Volatile,Restrict}Qualified(), defined inline.
-comment|//    b) Update remove{Volatile,Restrict}, defined near the end of
-comment|//       this header.
-comment|// 3. ASTContext:
-comment|//    a) Update get{Volatile,Restrict}Type.
-comment|/// Context - the context to which this set belongs.  We save this
-comment|/// here so that QualifierCollector can use it to reapply extended
-comment|/// qualifiers to an arbitrary type without requiring a context to
-comment|/// be pushed through every single API dealing with qualifiers.
-name|ASTContext
-operator|&
-name|Context
-block|;
-comment|/// BaseType - the underlying type that this qualifies
-specifier|const
-name|Type
-operator|*
-name|BaseType
-block|;
-comment|/// Quals - the immutable set of qualifiers applied by this
-comment|/// node;  always contains extended qualifiers.
-name|Qualifiers
-name|Quals
-block|;
-name|public
-operator|:
-name|ExtQuals
-argument_list|(
-argument|ASTContext& Context
-argument_list|,
-argument|const Type *Base
-argument_list|,
-argument|Qualifiers Quals
-argument_list|)
-operator|:
-name|Context
-argument_list|(
-name|Context
-argument_list|)
-block|,
-name|BaseType
-argument_list|(
-name|Base
-argument_list|)
-block|,
-name|Quals
-argument_list|(
-argument|Quals
-argument_list|)
-block|{
-name|assert
-argument_list|(
-name|Quals
-operator|.
-name|hasNonFastQualifiers
-argument_list|()
-operator|&&
-literal|"ExtQuals created with no fast qualifiers"
-argument_list|)
-block|;
-name|assert
-argument_list|(
-operator|!
-name|Quals
-operator|.
-name|hasFastQualifiers
-argument_list|()
-operator|&&
-literal|"ExtQuals created with fast qualifiers"
-argument_list|)
-block|;   }
-name|Qualifiers
-name|getQualifiers
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Quals
-return|;
-block|}
-name|bool
-name|hasVolatile
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Quals
-operator|.
-name|hasVolatile
-argument_list|()
-return|;
-block|}
-name|bool
-name|hasObjCGCAttr
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Quals
-operator|.
-name|hasObjCGCAttr
-argument_list|()
-return|;
-block|}
-name|Qualifiers
-operator|::
-name|GC
-name|getObjCGCAttr
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Quals
-operator|.
-name|getObjCGCAttr
-argument_list|()
-return|;
-block|}
-name|bool
-name|hasAddressSpace
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Quals
-operator|.
-name|hasAddressSpace
-argument_list|()
-return|;
-block|}
-name|unsigned
-name|getAddressSpace
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Quals
-operator|.
-name|getAddressSpace
-argument_list|()
-return|;
-block|}
-specifier|const
-name|Type
-operator|*
-name|getBaseType
-argument_list|()
-specifier|const
-block|{
-return|return
-name|BaseType
-return|;
-block|}
-name|ASTContext
-operator|&
-name|getContext
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Context
-return|;
-block|}
-name|public
-operator|:
-name|void
-name|Profile
-argument_list|(
-argument|llvm::FoldingSetNodeID&ID
-argument_list|)
-specifier|const
-block|{
-name|Profile
-argument_list|(
-name|ID
-argument_list|,
-name|getBaseType
-argument_list|()
-argument_list|,
-name|Quals
-argument_list|)
-block|;   }
-specifier|static
-name|void
-name|Profile
-argument_list|(
-argument|llvm::FoldingSetNodeID&ID
-argument_list|,
-argument|const Type *BaseType
-argument_list|,
-argument|Qualifiers Quals
-argument_list|)
-block|{
-name|assert
-argument_list|(
-operator|!
-name|Quals
-operator|.
-name|hasFastQualifiers
-argument_list|()
-operator|&&
-literal|"fast qualifiers in ExtQuals hash!"
-argument_list|)
-block|;
-name|ID
-operator|.
-name|AddPointer
-argument_list|(
-name|BaseType
-argument_list|)
-block|;
-name|Quals
-operator|.
-name|Profile
-argument_list|(
-name|ID
-argument_list|)
-block|;   }
-expr|}
-block|;
 comment|/// CallingConv - Specifies the calling convention that a function uses.
-block|enum
+enum|enum
 name|CallingConv
 block|{
 name|CC_Default
@@ -1829,7 +1709,20 @@ comment|// __attribute__((thiscall))
 name|CC_X86Pascal
 comment|// __attribute__((pascal))
 block|}
-block|;
+enum|;
+typedef|typedef
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|Type
+operator|*
+operator|,
+name|Qualifiers
+operator|>
+name|SplitQualType
+expr_stmt|;
 comment|/// QualType - For efficiency, we don't store CV-qualified types as nodes on
 comment|/// their own: instead each reference to a type stores the qualifiers.  This
 comment|/// greatly reduces the number of nodes we need to allocate for types (for
@@ -1857,18 +1750,18 @@ operator|<
 specifier|const
 name|Type
 operator|*
-block|,
+operator|,
 specifier|const
 name|ExtQuals
 operator|*
 operator|>
-block|,
+operator|,
 name|Qualifiers
 operator|::
 name|FastWidth
 operator|>
 name|Value
-block|;
+expr_stmt|;
 specifier|const
 name|ExtQuals
 operator|*
@@ -1915,17 +1808,69 @@ operator|(
 operator|)
 return|;
 block|}
-name|QualType
-name|getUnqualifiedTypeSlow
+specifier|const
+name|ExtQualsTypeCommonBase
+operator|*
+name|getCommonPtr
 argument_list|()
 specifier|const
+block|{
+name|assert
+argument_list|(
+operator|!
+name|isNull
+argument_list|()
+operator|&&
+literal|"Cannot retrieve a NULL type pointer"
+argument_list|)
 block|;
+name|uintptr_t
+name|CommonPtrVal
+operator|=
+name|reinterpret_cast
+operator|<
+name|uintptr_t
+operator|>
+operator|(
+name|Value
+operator|.
+name|getOpaqueValue
+argument_list|()
+operator|)
+block|;
+name|CommonPtrVal
+operator|&=
+operator|~
+call|(
+name|uintptr_t
+call|)
+argument_list|(
+operator|(
+literal|1
+operator|<<
+name|TypeAlignmentInBits
+operator|)
+operator|-
+literal|1
+argument_list|)
+block|;
+return|return
+name|reinterpret_cast
+operator|<
+name|ExtQualsTypeCommonBase
+operator|*
+operator|>
+operator|(
+name|CommonPtrVal
+operator|)
+return|;
+block|}
 name|friend
 name|class
 name|QualifierCollector
-block|;
+decl_stmt|;
 name|public
-operator|:
+label|:
 name|QualType
 argument_list|()
 block|{}
@@ -1935,7 +1880,7 @@ argument|const Type *Ptr
 argument_list|,
 argument|unsigned Quals
 argument_list|)
-operator|:
+block|:
 name|Value
 argument_list|(
 argument|Ptr
@@ -1949,7 +1894,7 @@ argument|const ExtQuals *Ptr
 argument_list|,
 argument|unsigned Quals
 argument_list|)
-operator|:
+block|:
 name|Value
 argument_list|(
 argument|Ptr
@@ -1971,9 +1916,10 @@ return|;
 block|}
 name|void
 name|setLocalFastQualifiers
-argument_list|(
-argument|unsigned Quals
-argument_list|)
+parameter_list|(
+name|unsigned
+name|Quals
+parameter_list|)
 block|{
 name|Value
 operator|.
@@ -1981,47 +1927,35 @@ name|setInt
 argument_list|(
 name|Quals
 argument_list|)
-block|; }
+expr_stmt|;
+block|}
 comment|/// Retrieves a pointer to the underlying (unqualified) type.
 comment|/// This should really return a const Type, but it's not worth
 comment|/// changing all the users right now.
+comment|///
+comment|/// This function requires that the type not be NULL. If the type might be
+comment|/// NULL, use the (slightly less efficient) \c getTypePtrOrNull().
+specifier|const
 name|Type
 operator|*
 name|getTypePtr
 argument_list|()
 specifier|const
-block|{
-if|if
-condition|(
-name|hasLocalNonFastQualifiers
-argument_list|()
-condition|)
-return|return
-name|const_cast
-operator|<
+expr_stmt|;
+specifier|const
 name|Type
 operator|*
-operator|>
-operator|(
-name|getExtQualsUnsafe
+name|getTypePtrOrNull
 argument_list|()
-operator|->
-name|getBaseType
+specifier|const
+expr_stmt|;
+comment|/// Divides a QualType into its unqualified type and a set of local
+comment|/// qualifiers.
+name|SplitQualType
+name|split
 argument_list|()
-operator|)
-return|;
-return|return
-name|const_cast
-operator|<
-name|Type
-operator|*
-operator|>
-operator|(
-name|getTypePtrUnsafe
-argument_list|()
-operator|)
-return|;
-block|}
+specifier|const
+expr_stmt|;
 name|void
 operator|*
 name|getAsOpaquePtr
@@ -2038,26 +1972,37 @@ block|}
 specifier|static
 name|QualType
 name|getFromOpaquePtr
-argument_list|(
-argument|void *Ptr
-argument_list|)
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|Ptr
+parameter_list|)
 block|{
 name|QualType
 name|T
-block|;
+decl_stmt|;
 name|T
 operator|.
 name|Value
 operator|.
 name|setFromOpaqueValue
 argument_list|(
+name|const_cast
+operator|<
+name|void
+operator|*
+operator|>
+operator|(
 name|Ptr
+operator|)
 argument_list|)
-block|;
+expr_stmt|;
 return|return
 name|T
 return|;
 block|}
+specifier|const
 name|Type
 operator|&
 name|operator
@@ -2072,13 +2017,14 @@ name|getTypePtr
 argument_list|()
 return|;
 block|}
+specifier|const
 name|Type
 operator|*
 name|operator
 operator|->
 expr|(
 block|)
-specifier|const
+decl|const
 block|{
 return|return
 name|getTypePtr
@@ -2089,7 +2035,7 @@ name|bool
 name|isCanonical
 argument_list|()
 specifier|const
-decl_stmt|;
+expr_stmt|;
 name|bool
 name|isCanonicalAsParam
 argument_list|()
@@ -2171,14 +2117,12 @@ specifier|const
 block|{
 return|return
 operator|(
-name|hasLocalNonFastQualifiers
+name|getLocalFastQualifiers
 argument_list|()
-operator|&&
-name|getExtQualsUnsafe
-argument_list|()
-operator|->
-name|hasVolatile
-argument_list|()
+operator|&
+name|Qualifiers
+operator|::
+name|Volatile
 operator|)
 return|;
 block|}
@@ -2241,133 +2185,33 @@ name|Qualifiers
 name|getLocalQualifiers
 argument_list|()
 specifier|const
-block|{
-name|Qualifiers
-name|Quals
-block|;
-if|if
-condition|(
-name|hasLocalNonFastQualifiers
-argument_list|()
-condition|)
-name|Quals
-operator|=
-name|getExtQualsUnsafe
-argument_list|()
-operator|->
-name|getQualifiers
-argument_list|()
 expr_stmt|;
-name|Quals
-operator|.
-name|addFastQualifiers
-argument_list|(
-name|getLocalFastQualifiers
-argument_list|()
-argument_list|)
-expr_stmt|;
-return|return
-name|Quals
-return|;
-block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Retrieve the set of qualifiers applied to this type.
-end_comment
-
-begin_expr_stmt
 name|Qualifiers
 name|getQualifiers
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Retrieve the set of CVR (const-volatile-restrict) qualifiers
-end_comment
-
-begin_comment
 comment|/// local to this particular QualType instance, not including any qualifiers
-end_comment
-
-begin_comment
 comment|/// acquired through typedefs or other sugar.
-end_comment
-
-begin_expr_stmt
 name|unsigned
 name|getLocalCVRQualifiers
 argument_list|()
 specifier|const
 block|{
-name|unsigned
-name|CVR
-operator|=
+return|return
 name|getLocalFastQualifiers
 argument_list|()
-block|;
-if|if
-condition|(
-name|isLocalVolatileQualified
-argument_list|()
-condition|)
-name|CVR
-operator||=
-name|Qualifiers
-operator|::
-name|Volatile
-expr_stmt|;
-end_expr_stmt
-
-begin_return
-return|return
-name|CVR
 return|;
-end_return
-
-begin_comment
-unit|}
+block|}
 comment|/// \brief Retrieve the set of CVR (const-volatile-restrict) qualifiers
-end_comment
-
-begin_comment
 comment|/// applied to this type.
-end_comment
-
-begin_macro
-unit|unsigned
+name|unsigned
 name|getCVRQualifiers
 argument_list|()
-end_macro
-
-begin_decl_stmt
-specifier|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// \brief Retrieve the set of CVR (const-volatile-restrict) qualifiers
-end_comment
-
-begin_comment
-comment|/// applied to this type, looking through any number of unqualified array
-end_comment
-
-begin_comment
-comment|/// types to their element types' qualifiers.
-end_comment
-
-begin_expr_stmt
-name|unsigned
-name|getCVRQualifiersThroughArrayTypes
-argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
 name|bool
 name|isConstant
 argument_list|(
@@ -2389,21 +2233,9 @@ name|Ctx
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|// Don't promise in the API that anything besides 'const' can be
-end_comment
-
-begin_comment
 comment|// easily added.
-end_comment
-
-begin_comment
 comment|/// addConst - add the specified type qualifier to this QualType.
-end_comment
-
-begin_function
 name|void
 name|addConst
 parameter_list|()
@@ -2416,9 +2248,6 @@ name|Const
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_expr_stmt
 name|QualType
 name|withConst
 argument_list|()
@@ -2433,9 +2262,6 @@ name|Const
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|addFastQualifiers
 parameter_list|(
@@ -2471,54 +2297,27 @@ name|TQs
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
-comment|// FIXME: The remove* functions are semantically broken, because they might
-end_comment
-
-begin_comment
-comment|// not remove a qualifier stored on a typedef. Most of the with* functions
-end_comment
-
-begin_comment
-comment|// have the same problem.
-end_comment
-
-begin_function_decl
 name|void
-name|removeConst
+name|removeLocalConst
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
-name|removeVolatile
+name|removeLocalVolatile
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
-name|removeRestrict
+name|removeLocalRestrict
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
-name|removeCVRQualifiers
+name|removeLocalCVRQualifiers
 parameter_list|(
 name|unsigned
 name|Mask
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function
 name|void
-name|removeFastQualifiers
+name|removeLocalFastQualifiers
 parameter_list|()
 block|{
 name|Value
@@ -2529,11 +2328,8 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
-name|removeFastQualifiers
+name|removeLocalFastQualifiers
 parameter_list|(
 name|unsigned
 name|Mask
@@ -2568,17 +2364,8 @@ name|Mask
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|// Creates a type with the given qualifiers in addition to any
-end_comment
-
-begin_comment
 comment|// qualifiers already on this type.
-end_comment
-
-begin_decl_stmt
 name|QualType
 name|withFastQualifiers
 argument_list|(
@@ -2604,19 +2391,10 @@ return|return
 name|T
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|// Creates a type with exactly the given fast qualifiers, removing
-end_comment
-
-begin_comment
 comment|// any existing fast qualifiers.
-end_comment
-
-begin_decl_stmt
 name|QualType
-name|withExactFastQualifiers
+name|withExactLocalFastQualifiers
 argument_list|(
 name|unsigned
 name|TQs
@@ -2624,7 +2402,7 @@ argument_list|)
 decl|const
 block|{
 return|return
-name|withoutFastQualifiers
+name|withoutLocalFastQualifiers
 argument_list|()
 operator|.
 name|withFastQualifiers
@@ -2633,15 +2411,9 @@ name|TQs
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|// Removes fast qualifiers, but leaves any extended qualifiers in place.
-end_comment
-
-begin_expr_stmt
 name|QualType
-name|withoutFastQualifiers
+name|withoutLocalFastQualifiers
 argument_list|()
 specifier|const
 block|{
@@ -2653,28 +2425,21 @@ name|this
 block|;
 name|T
 operator|.
-name|removeFastQualifiers
+name|removeLocalFastQualifiers
 argument_list|()
 block|;
 return|return
 name|T
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
+name|QualType
+name|getCanonicalType
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Return this type with all of the instance-specific qualifiers
-end_comment
-
-begin_comment
 comment|/// removed, but without removing any qualifiers that may have been applied
-end_comment
-
-begin_comment
 comment|/// through typedefs.
-end_comment
-
-begin_expr_stmt
 name|QualType
 name|getLocalUnqualifiedType
 argument_list|()
@@ -2690,62 +2455,53 @@ literal|0
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
-comment|/// \brief Return the unqualified form of the given type, which might be
-end_comment
-
-begin_comment
-comment|/// desugared to eliminate qualifiers introduced via typedefs.
-end_comment
-
-begin_expr_stmt
+comment|/// \brief Retrieve the unqualified variant of the given type,
+comment|/// removing as little sugar as possible.
+comment|///
+comment|/// This routine looks through various kinds of sugar to find the
+comment|/// least-desugared type that is unqualified. For example, given:
+comment|///
+comment|/// \code
+comment|/// typedef int Integer;
+comment|/// typedef const Integer CInteger;
+comment|/// typedef CInteger DifferenceType;
+comment|/// \endcode
+comment|///
+comment|/// Executing \c getUnqualifiedType() on the type \c DifferenceType will
+comment|/// desugar until we hit the type \c Integer, which has no qualifiers on it.
+comment|///
+comment|/// The resulting type might still be qualified if it's an array
+comment|/// type.  To strip qualifiers even from within an array type, use
+comment|/// ASTContext::getUnqualifiedArrayType.
+specifier|inline
 name|QualType
 name|getUnqualifiedType
 argument_list|()
 specifier|const
-block|{
-name|QualType
-name|T
-operator|=
-name|getLocalUnqualifiedType
+expr_stmt|;
+comment|/// getSplitUnqualifiedType - Retrieve the unqualified variant of the
+comment|/// given type, removing as little sugar as possible.
+comment|///
+comment|/// Like getUnqualifiedType(), but also returns the set of
+comment|/// qualifiers that were built up.
+comment|///
+comment|/// The resulting type might still be qualified if it's an array
+comment|/// type.  To strip qualifiers even from within an array type, use
+comment|/// ASTContext::getUnqualifiedArrayType.
+specifier|inline
+name|SplitQualType
+name|getSplitUnqualifiedType
 argument_list|()
-block|;
-if|if
-condition|(
-operator|!
-name|T
-operator|.
-name|hasQualifiers
-argument_list|()
-condition|)
-return|return
-name|T
-return|;
-end_expr_stmt
-
-begin_return
-return|return
-name|getUnqualifiedTypeSlow
-argument_list|()
-return|;
-end_return
-
-begin_macro
-unit|}      bool
+specifier|const
+expr_stmt|;
+name|bool
 name|isMoreQualifiedThan
 argument_list|(
-argument|QualType Other
+name|QualType
+name|Other
 argument_list|)
-end_macro
-
-begin_decl_stmt
-specifier|const
+decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|bool
 name|isAtLeastAsQualifiedAs
 argument_list|(
@@ -2754,49 +2510,19 @@ name|Other
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
 name|QualType
 name|getNonReferenceType
 argument_list|()
 specifier|const
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Determine the type of a (typically non-lvalue) expression with the
-end_comment
-
-begin_comment
 comment|/// specified result type.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This routine should be used for expressions for which the return type is
-end_comment
-
-begin_comment
 comment|/// explicitly specified (e.g., in a cast or call) and isn't necessarily
-end_comment
-
-begin_comment
 comment|/// an lvalue. It removes a top-level reference (since there are no
-end_comment
-
-begin_comment
 comment|/// expressions of reference type) and deletes top-level cvr-qualifiers
-end_comment
-
-begin_comment
 comment|/// from non-class types (in C++) or all types (in C).
-end_comment
-
-begin_decl_stmt
 name|QualType
 name|getNonLValueExprType
 argument_list|(
@@ -2806,57 +2532,80 @@ name|Context
 argument_list|)
 decl|const
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// getDesugaredType - Return the specified type with any "sugar" removed from
-end_comment
-
-begin_comment
 comment|/// the type.  This takes off typedefs, typeof's etc.  If the outer level of
-end_comment
-
-begin_comment
 comment|/// the type is already concrete, it returns it unmodified.  This is similar
-end_comment
-
-begin_comment
 comment|/// to getting the canonical type, but it doesn't remove *all* typedefs.  For
-end_comment
-
-begin_comment
 comment|/// example, it returns "T*" as "T*", (not as "int*"), because the pointer is
-end_comment
-
-begin_comment
 comment|/// concrete.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Qualifiers are left in place.
-end_comment
-
-begin_expr_stmt
 name|QualType
 name|getDesugaredType
+argument_list|(
+specifier|const
+name|ASTContext
+operator|&
+name|Context
+argument_list|)
+decl|const
+block|{
+return|return
+name|getDesugaredType
+argument_list|(
+operator|*
+name|this
+argument_list|,
+name|Context
+argument_list|)
+return|;
+block|}
+name|SplitQualType
+name|getSplitDesugaredType
 argument_list|()
 specifier|const
 block|{
 return|return
-name|QualType
-operator|::
-name|getDesugaredType
+name|getSplitDesugaredType
 argument_list|(
 operator|*
 name|this
 argument_list|)
 return|;
 block|}
-end_expr_stmt
+comment|/// IgnoreParens - Returns the specified type after dropping any
+comment|/// outer-level parentheses.
+name|QualType
+name|IgnoreParens
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|isa
+operator|<
+name|ParenType
+operator|>
+operator|(
+operator|*
+name|this
+operator|)
+condition|)
+return|return
+name|QualType
+operator|::
+name|IgnoreParens
+argument_list|(
+operator|*
+name|this
+argument_list|)
+return|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+end_decl_stmt
 
 begin_comment
 comment|/// operator==/!= - Indicate whether the specified types and qualifiers are
@@ -2931,6 +2680,53 @@ name|string
 name|getAsString
 argument_list|()
 specifier|const
+block|{
+return|return
+name|getAsString
+argument_list|(
+name|split
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|static
+name|std
+operator|::
+name|string
+name|getAsString
+argument_list|(
+argument|SplitQualType split
+argument_list|)
+block|{
+return|return
+name|getAsString
+argument_list|(
+name|split
+operator|.
+name|first
+argument_list|,
+name|split
+operator|.
+name|second
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|static
+name|std
+operator|::
+name|string
+name|getAsString
+argument_list|(
+argument|const Type *ty
+argument_list|,
+argument|Qualifiers qs
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 
@@ -2978,6 +2774,84 @@ operator|&
 name|Policy
 argument_list|)
 decl|const
+block|{
+return|return
+name|getAsStringInternal
+argument_list|(
+name|split
+argument_list|()
+argument_list|,
+name|Str
+argument_list|,
+name|Policy
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|getAsStringInternal
+argument_list|(
+name|SplitQualType
+name|split
+argument_list|,
+name|std
+operator|::
+name|string
+operator|&
+name|out
+argument_list|,
+specifier|const
+name|PrintingPolicy
+operator|&
+name|policy
+argument_list|)
+block|{
+return|return
+name|getAsStringInternal
+argument_list|(
+name|split
+operator|.
+name|first
+argument_list|,
+name|split
+operator|.
+name|second
+argument_list|,
+name|out
+argument_list|,
+name|policy
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|getAsStringInternal
+argument_list|(
+specifier|const
+name|Type
+operator|*
+name|ty
+argument_list|,
+name|Qualifiers
+name|qs
+argument_list|,
+name|std
+operator|::
+name|string
+operator|&
+name|out
+argument_list|,
+specifier|const
+name|PrintingPolicy
+operator|&
+name|policy
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -3095,6 +2969,49 @@ return|;
 block|}
 end_expr_stmt
 
+begin_enum
+enum|enum
+name|DestructionKind
+block|{
+name|DK_none
+block|,
+name|DK_cxx_destructor
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/// isDestructedType - nonzero if objects of this type require
+end_comment
+
+begin_comment
+comment|/// non-trivial work to clean up after.  Non-zero because it's
+end_comment
+
+begin_comment
+comment|/// conceivable that qualifiers (objc_gc(weak)?) could make
+end_comment
+
+begin_comment
+comment|/// something require destruction.
+end_comment
+
+begin_expr_stmt
+name|DestructionKind
+name|isDestructedType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isDestructedTypeImpl
+argument_list|(
+operator|*
+name|this
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
 begin_label
 name|private
 label|:
@@ -3134,6 +3051,55 @@ name|getDesugaredType
 parameter_list|(
 name|QualType
 name|T
+parameter_list|,
+specifier|const
+name|ASTContext
+modifier|&
+name|Context
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|SplitQualType
+name|getSplitDesugaredType
+parameter_list|(
+name|QualType
+name|T
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|SplitQualType
+name|getSplitUnqualifiedTypeImpl
+parameter_list|(
+name|QualType
+name|type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|QualType
+name|IgnoreParens
+parameter_list|(
+name|QualType
+name|T
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|DestructionKind
+name|isDestructedTypeImpl
+parameter_list|(
+name|QualType
+name|type
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3166,6 +3132,7 @@ name|QualType
 operator|>
 block|{
 typedef|typedef
+specifier|const
 operator|::
 name|clang
 operator|::
@@ -3290,6 +3257,322 @@ end_macro
 
 begin_block
 block|{
+comment|/// \brief Base class that is common to both the \c ExtQuals and \c Type
+comment|/// classes, which allows \c QualType to access the common fields between the
+comment|/// two.
+comment|///
+name|class
+name|ExtQualsTypeCommonBase
+block|{
+name|ExtQualsTypeCommonBase
+argument_list|(
+argument|const Type *baseType
+argument_list|,
+argument|QualType canon
+argument_list|)
+block|:
+name|BaseType
+argument_list|(
+name|baseType
+argument_list|)
+operator|,
+name|CanonicalType
+argument_list|(
+argument|canon
+argument_list|)
+block|{}
+comment|/// \brief The "base" type of an extended qualifiers type (\c ExtQuals) or
+comment|/// a self-referential pointer (for \c Type).
+comment|///
+comment|/// This pointer allows an efficient mapping from a QualType to its
+comment|/// underlying type pointer.
+specifier|const
+name|Type
+operator|*
+specifier|const
+name|BaseType
+expr_stmt|;
+comment|/// \brief The canonical type of this type.  A QualType.
+name|QualType
+name|CanonicalType
+decl_stmt|;
+name|friend
+name|class
+name|QualType
+decl_stmt|;
+name|friend
+name|class
+name|Type
+decl_stmt|;
+name|friend
+name|class
+name|ExtQuals
+decl_stmt|;
+block|}
+empty_stmt|;
+comment|/// ExtQuals - We can encode up to four bits in the low bits of a
+comment|/// type pointer, but there are many more type qualifiers that we want
+comment|/// to be able to apply to an arbitrary type.  Therefore we have this
+comment|/// struct, intended to be heap-allocated and used by QualType to
+comment|/// store qualifiers.
+comment|///
+comment|/// The current design tags the 'const', 'restrict', and 'volatile' qualifiers
+comment|/// in three low bits on the QualType pointer; a fourth bit records whether
+comment|/// the pointer is an ExtQuals node. The extended qualifiers (address spaces,
+comment|/// Objective-C GC attributes) are much more rare.
+name|class
+name|ExtQuals
+range|:
+name|public
+name|ExtQualsTypeCommonBase
+decl_stmt|,
+name|public
+name|llvm
+decl|::
+name|FoldingSetNode
+block|{
+comment|// NOTE: changing the fast qualifiers should be straightforward as
+comment|// long as you don't make 'const' non-fast.
+comment|// 1. Qualifiers:
+comment|//    a) Modify the bitmasks (Qualifiers::TQ and DeclSpec::TQ).
+comment|//       Fast qualifiers must occupy the low-order bits.
+comment|//    b) Update Qualifiers::FastWidth and FastMask.
+comment|// 2. QualType:
+comment|//    a) Update is{Volatile,Restrict}Qualified(), defined inline.
+comment|//    b) Update remove{Volatile,Restrict}, defined near the end of
+comment|//       this header.
+comment|// 3. ASTContext:
+comment|//    a) Update get{Volatile,Restrict}Type.
+comment|/// Quals - the immutable set of qualifiers applied by this
+comment|/// node;  always contains extended qualifiers.
+name|Qualifiers
+name|Quals
+decl_stmt|;
+name|ExtQuals
+modifier|*
+name|this_
+parameter_list|()
+block|{
+return|return
+name|this
+return|;
+block|}
+name|public
+label|:
+name|ExtQuals
+argument_list|(
+argument|const Type *baseType
+argument_list|,
+argument|QualType canon
+argument_list|,
+argument|Qualifiers quals
+argument_list|)
+block|:
+name|ExtQualsTypeCommonBase
+argument_list|(
+name|baseType
+argument_list|,
+name|canon
+operator|.
+name|isNull
+argument_list|()
+condition|?
+name|QualType
+argument_list|(
+name|this_
+argument_list|()
+argument_list|,
+literal|0
+argument_list|)
+else|:
+name|canon
+argument_list|)
+operator|,
+name|Quals
+argument_list|(
+argument|quals
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|Quals
+operator|.
+name|hasNonFastQualifiers
+argument_list|()
+operator|&&
+literal|"ExtQuals created with no fast qualifiers"
+argument_list|)
+block|;
+name|assert
+argument_list|(
+operator|!
+name|Quals
+operator|.
+name|hasFastQualifiers
+argument_list|()
+operator|&&
+literal|"ExtQuals created with fast qualifiers"
+argument_list|)
+block|;   }
+name|Qualifiers
+name|getQualifiers
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Quals
+return|;
+block|}
+name|bool
+name|hasObjCGCAttr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Quals
+operator|.
+name|hasObjCGCAttr
+argument_list|()
+return|;
+block|}
+name|Qualifiers
+operator|::
+name|GC
+name|getObjCGCAttr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Quals
+operator|.
+name|getObjCGCAttr
+argument_list|()
+return|;
+block|}
+name|bool
+name|hasAddressSpace
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Quals
+operator|.
+name|hasAddressSpace
+argument_list|()
+return|;
+block|}
+name|unsigned
+name|getAddressSpace
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Quals
+operator|.
+name|getAddressSpace
+argument_list|()
+return|;
+block|}
+specifier|const
+name|Type
+operator|*
+name|getBaseType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BaseType
+return|;
+block|}
+name|public
+label|:
+name|void
+name|Profile
+argument_list|(
+name|llvm
+operator|::
+name|FoldingSetNodeID
+operator|&
+name|ID
+argument_list|)
+decl|const
+block|{
+name|Profile
+argument_list|(
+name|ID
+argument_list|,
+name|getBaseType
+argument_list|()
+argument_list|,
+name|Quals
+argument_list|)
+expr_stmt|;
+block|}
+specifier|static
+name|void
+name|Profile
+argument_list|(
+name|llvm
+operator|::
+name|FoldingSetNodeID
+operator|&
+name|ID
+argument_list|,
+specifier|const
+name|Type
+operator|*
+name|BaseType
+argument_list|,
+name|Qualifiers
+name|Quals
+argument_list|)
+block|{
+name|assert
+argument_list|(
+operator|!
+name|Quals
+operator|.
+name|hasFastQualifiers
+argument_list|()
+operator|&&
+literal|"fast qualifiers in ExtQuals hash!"
+argument_list|)
+expr_stmt|;
+name|ID
+operator|.
+name|AddPointer
+argument_list|(
+name|BaseType
+argument_list|)
+expr_stmt|;
+name|Quals
+operator|.
+name|Profile
+argument_list|(
+name|ID
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+empty_stmt|;
+comment|/// \brief The kind of C++0x ref-qualifier associated with a function type,
+comment|/// which determines whether a member function's "this" object can be an
+comment|/// lvalue, rvalue, or neither.
+enum|enum
+name|RefQualifierKind
+block|{
+comment|/// \brief No ref-qualifier was provided.
+name|RQ_None
+init|=
+literal|0
+block|,
+comment|/// \brief An lvalue ref-qualifier was provided (\c&).
+name|RQ_LValue
+block|,
+comment|/// \brief An rvalue ref-qualifier was provided (\c&&).
+name|RQ_RValue
+block|}
+enum|;
 comment|/// Type - This is the base class of the type hierarchy.  A central concept
 comment|/// with types is that each type always has a canonical type.  A canonical type
 comment|/// is the type with any typedef names stripped out of it or the types it
@@ -3317,10 +3600,13 @@ comment|/// Types, once created, are immutable.
 comment|///
 name|class
 name|Type
+range|:
+name|public
+name|ExtQualsTypeCommonBase
 block|{
 name|public
-label|:
-enum|enum
+operator|:
+expr|enum
 name|TypeClass
 block|{
 define|#
@@ -3351,109 +3637,470 @@ include|#
 directive|include
 file|"clang/AST/TypeNodes.def"
 name|TagFirst
-init|=
+operator|=
 name|Record
 block|,
 name|TagLast
-init|=
+operator|=
 name|Enum
 block|}
-enum|;
+block|;
 name|private
-label|:
+operator|:
 name|Type
 argument_list|(
 specifier|const
 name|Type
 operator|&
 argument_list|)
-expr_stmt|;
+block|;
 comment|// DO NOT IMPLEMENT.
 name|void
 name|operator
-init|=
+operator|=
 operator|(
 specifier|const
 name|Type
 operator|&
 operator|)
-decl_stmt|;
+block|;
 comment|// DO NOT IMPLEMENT.
-name|QualType
-name|CanonicalType
-decl_stmt|;
+comment|/// Bitfields required by the Type class.
+name|class
+name|TypeBitfields
+block|{
+name|friend
+name|class
+name|Type
+block|;
+name|template
+operator|<
+name|class
+name|T
+operator|>
+name|friend
+name|class
+name|TypePropertyCache
+block|;
 comment|/// TypeClass bitfield - Enum that specifies what subclass this belongs to.
 name|unsigned
 name|TC
-range|:
+operator|:
 literal|8
-decl_stmt|;
+block|;
 comment|/// Dependent - Whether this type is a dependent type (C++ [temp.dep.type]).
 comment|/// Note that this should stay at the end of the ivars for Type so that
 comment|/// subclasses can pack their bitfields into the same word.
-name|bool
+name|unsigned
 name|Dependent
-range|:
+operator|:
 literal|1
-decl_stmt|;
-comment|/// \brief Whether the linkage of this type is already known.
+block|;
+comment|/// \brief Whether this type is a variably-modified type (C99 6.7.5).
+name|unsigned
+name|VariablyModified
+operator|:
+literal|1
+block|;
+comment|/// \brief Whether this type contains an unexpanded parameter pack
+comment|/// (for C++0x variadic templates).
+name|unsigned
+name|ContainsUnexpandedParameterPack
+operator|:
+literal|1
+block|;
+comment|/// \brief Nonzero if the cache (i.e. the bitfields here starting
+comment|/// with 'Cache') is valid.  If so, then this is a
+comment|/// LangOptions::VisibilityMode+1.
 name|mutable
-name|bool
-name|LinkageKnown
-range|:
-literal|1
-decl_stmt|;
+name|unsigned
+name|CacheValidAndVisibility
+operator|:
+literal|2
+block|;
 comment|/// \brief Linkage of this type.
 name|mutable
 name|unsigned
 name|CachedLinkage
-range|:
+operator|:
 literal|2
-decl_stmt|;
+block|;
+comment|/// \brief Whether this type involves and local or unnamed types.
+name|mutable
+name|unsigned
+name|CachedLocalOrUnnamed
+operator|:
+literal|1
+block|;
 comment|/// \brief FromAST - Whether this type comes from an AST file.
 name|mutable
-name|bool
+name|unsigned
 name|FromAST
-range|:
+operator|:
 literal|1
-decl_stmt|;
+block|;
+name|bool
+name|isCacheValid
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|CacheValidAndVisibility
+operator|!=
+literal|0
+operator|)
+return|;
+block|}
+name|Visibility
+name|getVisibility
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isCacheValid
+argument_list|()
+operator|&&
+literal|"getting linkage from invalid cache"
+argument_list|)
+block|;
+return|return
+name|static_cast
+operator|<
+name|Visibility
+operator|>
+operator|(
+name|CacheValidAndVisibility
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+name|Linkage
+name|getLinkage
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isCacheValid
+argument_list|()
+operator|&&
+literal|"getting linkage from invalid cache"
+argument_list|)
+block|;
+return|return
+name|static_cast
+operator|<
+name|Linkage
+operator|>
+operator|(
+name|CachedLinkage
+operator|)
+return|;
+block|}
+name|bool
+name|hasLocalOrUnnamedType
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isCacheValid
+argument_list|()
+operator|&&
+literal|"getting linkage from invalid cache"
+argument_list|)
+block|;
+return|return
+name|CachedLocalOrUnnamed
+return|;
+block|}
+expr|}
+block|;   enum
+block|{
+name|NumTypeBits
+operator|=
+literal|17
+block|}
+block|;
+name|protected
+operator|:
+comment|// These classes allow subclasses to somewhat cleanly pack bitfields
+comment|// into Type.
+name|class
+name|ArrayTypeBitfields
+block|{
+name|friend
+name|class
+name|ArrayType
+block|;
+name|unsigned
+operator|:
+name|NumTypeBits
+block|;
+comment|/// IndexTypeQuals - CVR qualifiers from declarations like
+comment|/// 'int X[static restrict 4]'. For function parameters only.
+name|unsigned
+name|IndexTypeQuals
+operator|:
+literal|3
+block|;
+comment|/// SizeModifier - storage class qualifiers from declarations like
+comment|/// 'int X[static restrict 4]'. For function parameters only.
+comment|/// Actually an ArrayType::ArraySizeModifier.
+name|unsigned
+name|SizeModifier
+operator|:
+literal|3
+block|;   }
+block|;
+name|class
+name|BuiltinTypeBitfields
+block|{
+name|friend
+name|class
+name|BuiltinType
+block|;
+name|unsigned
+operator|:
+name|NumTypeBits
+block|;
+comment|/// The kind (BuiltinType::Kind) of builtin type this is.
+name|unsigned
+name|Kind
+operator|:
+literal|8
+block|;   }
+block|;
+name|class
+name|FunctionTypeBitfields
+block|{
+name|friend
+name|class
+name|FunctionType
+block|;
+name|unsigned
+operator|:
+name|NumTypeBits
+block|;
+comment|/// Extra information which affects how the function is called, like
+comment|/// regparm and the calling convention.
+name|unsigned
+name|ExtInfo
+operator|:
+literal|8
+block|;
+comment|/// Whether the function is variadic.  Only used by FunctionProtoType.
+name|unsigned
+name|Variadic
+operator|:
+literal|1
+block|;
+comment|/// TypeQuals - Used only by FunctionProtoType, put here to pack with the
+comment|/// other bitfields.
+comment|/// The qualifiers are part of FunctionProtoType because...
+comment|///
+comment|/// C++ 8.3.5p4: The return type, the parameter type list and the
+comment|/// cv-qualifier-seq, [...], are part of the function type.
+name|unsigned
+name|TypeQuals
+operator|:
+literal|3
+block|;
+comment|/// \brief The ref-qualifier associated with a \c FunctionProtoType.
+comment|///
+comment|/// This is a value of type \c RefQualifierKind.
+name|unsigned
+name|RefQualifier
+operator|:
+literal|2
+block|;   }
+block|;
+name|class
+name|ObjCObjectTypeBitfields
+block|{
+name|friend
+name|class
+name|ObjCObjectType
+block|;
+name|unsigned
+operator|:
+name|NumTypeBits
+block|;
+comment|/// NumProtocols - The number of protocols stored directly on this
+comment|/// object type.
+name|unsigned
+name|NumProtocols
+operator|:
+literal|32
+operator|-
+name|NumTypeBits
+block|;   }
+block|;
+name|class
+name|ReferenceTypeBitfields
+block|{
+name|friend
+name|class
+name|ReferenceType
+block|;
+name|unsigned
+operator|:
+name|NumTypeBits
+block|;
+comment|/// True if the type was originally spelled with an lvalue sigil.
+comment|/// This is never true of rvalue references but can also be false
+comment|/// on lvalue references because of C++0x [dcl.typedef]p9,
+comment|/// as follows:
+comment|///
+comment|///   typedef int&ref;    // lvalue, spelled lvalue
+comment|///   typedef int&&rvref; // rvalue
+comment|///   ref&a;              // lvalue, inner ref, spelled lvalue
+comment|///   ref&&a;             // lvalue, inner ref
+comment|///   rvref&a;            // lvalue, inner ref, spelled lvalue
+comment|///   rvref&&a;           // rvalue, inner ref
+name|unsigned
+name|SpelledAsLValue
+operator|:
+literal|1
+block|;
+comment|/// True if the inner type is a reference type.  This only happens
+comment|/// in non-canonical forms.
+name|unsigned
+name|InnerRef
+operator|:
+literal|1
+block|;   }
+block|;
+name|class
+name|TypeWithKeywordBitfields
+block|{
+name|friend
+name|class
+name|TypeWithKeyword
+block|;
+name|unsigned
+operator|:
+name|NumTypeBits
+block|;
+comment|/// An ElaboratedTypeKeyword.  8 bits for efficient access.
+name|unsigned
+name|Keyword
+operator|:
+literal|8
+block|;   }
+block|;
+name|class
+name|VectorTypeBitfields
+block|{
+name|friend
+name|class
+name|VectorType
+block|;
+name|unsigned
+operator|:
+name|NumTypeBits
+block|;
+comment|/// VecKind - The kind of vector, either a generic vector type or some
+comment|/// target-specific vector type such as for AltiVec or Neon.
+name|unsigned
+name|VecKind
+operator|:
+literal|3
+block|;
+comment|/// NumElements - The number of elements in the vector.
+name|unsigned
+name|NumElements
+operator|:
+literal|29
+operator|-
+name|NumTypeBits
+block|;   }
+block|;
+name|class
+name|AttributedTypeBitfields
+block|{
+name|friend
+name|class
+name|AttributedType
+block|;
+name|unsigned
+operator|:
+name|NumTypeBits
+block|;
+comment|/// AttrKind - an AttributedType::Kind
+name|unsigned
+name|AttrKind
+operator|:
+literal|32
+operator|-
+name|NumTypeBits
+block|;   }
+block|;
+expr|union
+block|{
+name|TypeBitfields
+name|TypeBits
+block|;
+name|ArrayTypeBitfields
+name|ArrayTypeBits
+block|;
+name|AttributedTypeBitfields
+name|AttributedTypeBits
+block|;
+name|BuiltinTypeBitfields
+name|BuiltinTypeBits
+block|;
+name|FunctionTypeBitfields
+name|FunctionTypeBits
+block|;
+name|ObjCObjectTypeBitfields
+name|ObjCObjectTypeBits
+block|;
+name|ReferenceTypeBitfields
+name|ReferenceTypeBits
+block|;
+name|TypeWithKeywordBitfields
+name|TypeWithKeywordBits
+block|;
+name|VectorTypeBitfields
+name|VectorTypeBits
+block|;   }
+block|;
+name|private
+operator|:
 comment|/// \brief Set whether this type comes from an AST file.
 name|void
 name|setFromAST
 argument_list|(
-name|bool
-name|V
-operator|=
-name|true
+argument|bool V = true
 argument_list|)
-decl|const
+specifier|const
 block|{
+name|TypeBits
+operator|.
 name|FromAST
 operator|=
 name|V
-expr_stmt|;
-block|}
+block|;   }
+name|template
+operator|<
+name|class
+name|T
+operator|>
+name|friend
+name|class
+name|TypePropertyCache
+block|;
 name|protected
-label|:
-comment|/// \brief Compute the linkage of this type.
-name|virtual
-name|Linkage
-name|getLinkageImpl
-argument_list|()
-specifier|const
-expr_stmt|;
-enum|enum
-block|{
-name|BitsRemainingInType
-init|=
-literal|19
-block|}
-enum|;
+operator|:
 comment|// silence VC++ warning C4355: 'this' : used in base member initializer list
 name|Type
-modifier|*
+operator|*
 name|this_
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|this
@@ -3463,65 +4110,114 @@ name|Type
 argument_list|(
 argument|TypeClass tc
 argument_list|,
-argument|QualType Canonical
+argument|QualType canon
 argument_list|,
-argument|bool dependent
+argument|bool Dependent
+argument_list|,
+argument|bool VariablyModified
+argument_list|,
+argument|bool ContainsUnexpandedParameterPack
 argument_list|)
-block|:
-name|CanonicalType
+operator|:
+name|ExtQualsTypeCommonBase
 argument_list|(
-name|Canonical
-operator|.
-name|isNull
-argument_list|()
-condition|?
-name|QualType
-argument_list|(
-name|this_
-argument_list|()
+argument|this
 argument_list|,
+argument|canon.isNull() ? QualType(this_(),
 literal|0
+argument|) : canon
 argument_list|)
-else|:
-name|Canonical
-argument_list|)
-operator|,
+block|{
+name|TypeBits
+operator|.
 name|TC
-argument_list|(
+operator|=
 name|tc
-argument_list|)
-operator|,
+block|;
+name|TypeBits
+operator|.
 name|Dependent
-argument_list|(
-name|dependent
-argument_list|)
-operator|,
-name|LinkageKnown
-argument_list|(
+operator|=
+name|Dependent
+block|;
+name|TypeBits
+operator|.
+name|VariablyModified
+operator|=
+name|VariablyModified
+block|;
+name|TypeBits
+operator|.
+name|ContainsUnexpandedParameterPack
+operator|=
+name|ContainsUnexpandedParameterPack
+block|;
+name|TypeBits
+operator|.
+name|CacheValidAndVisibility
+operator|=
+literal|0
+block|;
+name|TypeBits
+operator|.
+name|CachedLocalOrUnnamed
+operator|=
 name|false
-argument_list|)
-operator|,
+block|;
+name|TypeBits
+operator|.
 name|CachedLinkage
-argument_list|(
+operator|=
 name|NoLinkage
-argument_list|)
-operator|,
+block|;
+name|TypeBits
+operator|.
 name|FromAST
-argument_list|(
-argument|false
-argument_list|)
-block|{}
-name|virtual
-operator|~
-name|Type
-argument_list|()
-expr_stmt|;
+operator|=
+name|false
+block|;   }
 name|friend
 name|class
 name|ASTContext
-decl_stmt|;
+block|;
+name|void
+name|setDependent
+argument_list|(
+argument|bool D = true
+argument_list|)
+block|{
+name|TypeBits
+operator|.
+name|Dependent
+operator|=
+name|D
+block|; }
+name|void
+name|setVariablyModified
+argument_list|(
+argument|bool VM = true
+argument_list|)
+block|{
+name|TypeBits
+operator|.
+name|VariablyModified
+operator|=
+name|VM
+block|; }
+name|void
+name|setContainsUnexpandedParameterPack
+argument_list|(
+argument|bool PP = true
+argument_list|)
+block|{
+name|TypeBits
+operator|.
+name|ContainsUnexpandedParameterPack
+operator|=
+name|PP
+block|;   }
 name|public
-label|:
+operator|:
 name|TypeClass
 name|getTypeClass
 argument_list|()
@@ -3533,6 +4229,8 @@ operator|<
 name|TypeClass
 operator|>
 operator|(
+name|TypeBits
+operator|.
 name|TC
 operator|)
 return|;
@@ -3544,9 +4242,39 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|TypeBits
+operator|.
 name|FromAST
 return|;
 block|}
+comment|/// \brief Whether this type is or contains an unexpanded parameter
+comment|/// pack, used to support C++0x variadic templates.
+comment|///
+comment|/// A type that contains a parameter pack shall be expanded by the
+comment|/// ellipsis operator at some point. For example, the typedef in the
+comment|/// following example contains an unexpanded parameter pack 'T':
+comment|///
+comment|/// \code
+comment|/// template<typename ...T>
+comment|/// struct X {
+comment|///   typedef T* pointer_types; // ill-formed; T is a parameter pack.
+comment|/// };
+comment|/// \endcode
+comment|///
+comment|/// Note that this routine does not specify which
+name|bool
+name|containsUnexpandedParameterPack
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TypeBits
+operator|.
+name|ContainsUnexpandedParameterPack
+return|;
+block|}
+comment|/// Determines if this type would be canonical if it had no further
+comment|/// qualification.
 name|bool
 name|isCanonicalUnqualified
 argument_list|()
@@ -3554,11 +4282,13 @@ specifier|const
 block|{
 return|return
 name|CanonicalType
-operator|.
-name|getTypePtr
-argument_list|()
 operator|==
+name|QualType
+argument_list|(
 name|this
+argument_list|,
+literal|0
+argument_list|)
 return|;
 block|}
 comment|/// Types are partitioned into 3 broad categories (C99 6.2.5p1):
@@ -3571,7 +4301,7 @@ name|bool
 name|isIncompleteType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// isIncompleteOrObjectType - Return true if this is an incomplete or object
 comment|/// type, in other words, not a function type.
 name|bool
@@ -3585,26 +4315,42 @@ name|isFunctionType
 argument_list|()
 return|;
 block|}
+comment|/// \brief Determine whether this type is an object type.
+name|bool
+name|isObjectType
+argument_list|()
+specifier|const
+block|{
+comment|// C++ [basic.types]p8:
+comment|//   An object type is a (possibly cv-qualified) type that is not a
+comment|//   function type, not a reference type, and not a void type.
+return|return
+operator|!
+name|isReferenceType
+argument_list|()
+operator|&&
+operator|!
+name|isFunctionType
+argument_list|()
+operator|&&
+operator|!
+name|isVoidType
+argument_list|()
+return|;
+block|}
 comment|/// isPODType - Return true if this is a plain-old-data type (C++ 3.9p10).
 name|bool
 name|isPODType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// isLiteralType - Return true if this is a literal type
 comment|/// (C++0x [basic.types]p10)
 name|bool
 name|isLiteralType
 argument_list|()
 specifier|const
-expr_stmt|;
-comment|/// isVariablyModifiedType (C99 6.7.5.2p2) - Return true for variable array
-comment|/// types that have a non-constant expression. This does not include "[]".
-name|bool
-name|isVariablyModifiedType
-argument_list|()
-specifier|const
-expr_stmt|;
+block|;
 comment|/// Helper methods to distinguish type categories. All type predicates
 comment|/// operate on the canonical type, ignoring typedefs and qualifiers.
 comment|/// isBuiltinType - returns true if the type is a builtin type.
@@ -3612,70 +4358,83 @@ name|bool
 name|isBuiltinType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// isSpecificBuiltinType - Test for a particular builtin type.
 name|bool
 name|isSpecificBuiltinType
 argument_list|(
-name|unsigned
-name|K
+argument|unsigned K
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
+comment|/// isPlaceholderType - Test for a type which does not represent an
+comment|/// actual type-system type but is instead used as a placeholder for
+comment|/// various convenient purposes within Clang.  All such types are
+comment|/// BuiltinTypes.
+name|bool
+name|isPlaceholderType
+argument_list|()
+specifier|const
+block|;
 comment|/// isIntegerType() does *not* include complex integers (a GCC extension).
 comment|/// isComplexIntegerType() can be used to test for complex integers.
 name|bool
 name|isIntegerType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|// C99 6.2.5p17 (int, char, bool, enum)
 name|bool
 name|isEnumeralType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|bool
 name|isBooleanType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|bool
 name|isCharType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|bool
 name|isWideCharType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|bool
 name|isAnyCharacterType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|bool
 name|isIntegralType
 argument_list|(
-name|ASTContext
-operator|&
-name|Ctx
+argument|ASTContext&Ctx
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 comment|/// \brief Determine whether this type is an integral or enumeration type.
 name|bool
 name|isIntegralOrEnumerationType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
+comment|/// \brief Determine whether this type is an integral or unscoped enumeration
+comment|/// type.
+name|bool
+name|isIntegralOrUnscopedEnumerationType
+argument_list|()
+specifier|const
+block|;
 comment|/// Floating point categories.
 name|bool
 name|isRealFloatingType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|// C99 6.2.5p10 (float, double, long double)
 comment|/// isComplexType() does *not* include complex integers (a GCC extension).
 comment|/// isComplexIntegerType() can be used to test for complex integers.
@@ -3683,62 +4442,62 @@ name|bool
 name|isComplexType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|// C99 6.2.5p11 (complex)
 name|bool
 name|isAnyComplexType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|// C99 6.2.5p11 (complex) + Complex Int.
 name|bool
 name|isFloatingType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|// C99 6.2.5p11 (real floating + complex)
 name|bool
 name|isRealType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|// C99 6.2.5p17 (real floating + integer)
 name|bool
 name|isArithmeticType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|// C99 6.2.5p18 (integer + floating)
 name|bool
 name|isVoidType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|// C99 6.2.5p19
 name|bool
 name|isDerivedType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|// C99 6.2.5p20
 name|bool
 name|isScalarType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|// C99 6.2.5p21 (arithmetic + pointers)
 name|bool
 name|isAggregateType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|// Type Predicates: Check to see if this type is structurally the specified
 comment|// type, ignoring typedefs and qualifiers.
 name|bool
 name|isFunctionType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|bool
 name|isFunctionNoProtoType
 argument_list|()
@@ -3771,131 +4530,131 @@ name|bool
 name|isPointerType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|bool
 name|isAnyPointerType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|// Any C pointer or ObjC object pointer
 name|bool
 name|isBlockPointerType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|bool
 name|isVoidPointerType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|bool
 name|isReferenceType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|bool
 name|isLValueReferenceType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|bool
 name|isRValueReferenceType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|bool
 name|isFunctionPointerType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|bool
 name|isMemberPointerType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|bool
 name|isMemberFunctionPointerType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|bool
 name|isMemberDataPointerType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|bool
 name|isArrayType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|bool
 name|isConstantArrayType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|bool
 name|isIncompleteArrayType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|bool
 name|isVariableArrayType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|bool
 name|isDependentSizedArrayType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|bool
 name|isRecordType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|bool
 name|isClassType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|bool
 name|isStructureType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|bool
 name|isStructureOrClassType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|bool
 name|isUnionType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|bool
 name|isComplexIntegerType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|// GCC _Complex integer type.
 name|bool
 name|isVectorType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|// GCC vector type.
 name|bool
 name|isExtVectorType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|// Extended vector type.
 name|bool
 name|isObjCObjectPointerType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|// Pointer to *any* ObjC object.
 comment|// FIXME: change this to 'raw' interface type, so we can used 'interface' type
 comment|// for the common case.
@@ -3903,67 +4662,91 @@ name|bool
 name|isObjCObjectType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|// NSString or typeof(*(id)0)
 name|bool
 name|isObjCQualifiedInterfaceType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|// NSString<foo>
 name|bool
 name|isObjCQualifiedIdType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|// id<foo>
 name|bool
 name|isObjCQualifiedClassType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|// Class<foo>
 name|bool
 name|isObjCObjectOrInterfaceType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|bool
 name|isObjCIdType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|// id
 name|bool
 name|isObjCClassType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|// Class
 name|bool
 name|isObjCSelType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|// Class
 name|bool
 name|isObjCBuiltinType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|// 'id' or 'Class'
 name|bool
 name|isTemplateTypeParmType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|// C++ template type parameter
 name|bool
 name|isNullPtrType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|// C++0x nullptr_t
+block|enum
+name|ScalarTypeKind
+block|{
+name|STK_Pointer
+block|,
+name|STK_MemberPointer
+block|,
+name|STK_Bool
+block|,
+name|STK_Integral
+block|,
+name|STK_Floating
+block|,
+name|STK_IntegralComplex
+block|,
+name|STK_FloatingComplex
+block|}
+block|;
+comment|/// getScalarTypeKind - Given that this is a scalar type, classify it.
+name|ScalarTypeKind
+name|getScalarTypeKind
+argument_list|()
+specifier|const
+block|;
 comment|/// isDependentType - Whether this type is a dependent type, meaning
 comment|/// that its definition somehow depends on a template parameter
 comment|/// (C++ [temp.dep.type]).
@@ -3973,20 +4756,47 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|TypeBits
+operator|.
 name|Dependent
 return|;
 block|}
+comment|/// \brief Whether this type is a variably-modified type (C99 6.7.5).
+name|bool
+name|isVariablyModifiedType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TypeBits
+operator|.
+name|VariablyModified
+return|;
+block|}
+comment|/// \brief Whether this type involves a variable-length array type
+comment|/// with a definite size.
+name|bool
+name|hasSizedVLAType
+argument_list|()
+specifier|const
+block|;
+comment|/// \brief Whether this type is or contains a local or unnamed type.
+name|bool
+name|hasUnnamedOrLocalType
+argument_list|()
+specifier|const
+block|;
 name|bool
 name|isOverloadableType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// \brief Determine wither this type is a C++ elaborated-type-specifier.
 name|bool
 name|isElaboratedTypeSpecifier
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// hasPointerRepresentation - Whether this type is represented
 comment|/// natively as a pointer; this includes pointers, references, block
 comment|/// pointers, and Objective-C interface, qualified id, and qualified
@@ -3995,42 +4805,42 @@ name|bool
 name|hasPointerRepresentation
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// hasObjCPointerRepresentation - Whether this type can represent
 comment|/// an objective pointer type for the purpose of GC'ability
 name|bool
 name|hasObjCPointerRepresentation
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// \brief Determine whether this type has an integer representation
 comment|/// of some sort, e.g., it is an integer type or a vector.
 name|bool
 name|hasIntegerRepresentation
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// \brief Determine whether this type has an signed integer representation
 comment|/// of some sort, e.g., it is an signed integer type or a vector.
 name|bool
 name|hasSignedIntegerRepresentation
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// \brief Determine whether this type has an unsigned integer representation
 comment|/// of some sort, e.g., it is an unsigned integer type or a vector.
 name|bool
 name|hasUnsignedIntegerRepresentation
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// \brief Determine whether this type has a floating-point representation
 comment|/// of some sort, e.g., it is a floating-point type or a vector thereof.
 name|bool
 name|hasFloatingRepresentation
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|// Type Checking Functions: Check to see if this type is structurally the
 comment|// specified type, ignoring typedefs and qualifiers, and return a pointer to
 comment|// the best type we can.
@@ -4040,7 +4850,7 @@ operator|*
 name|getAsStructureType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// NOTE: getAs*ArrayType are methods on ASTContext.
 specifier|const
 name|RecordType
@@ -4048,14 +4858,14 @@ operator|*
 name|getAsUnionType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 specifier|const
 name|ComplexType
 operator|*
 name|getAsComplexIntegerType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|// GCC complex int type.
 comment|// The following is a convenience method that returns an ObjCObjectPointerType
 comment|// for object declared using an interface.
@@ -4065,28 +4875,28 @@ operator|*
 name|getAsObjCInterfacePointerType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 specifier|const
 name|ObjCObjectPointerType
 operator|*
 name|getAsObjCQualifiedIdType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 specifier|const
 name|ObjCObjectType
 operator|*
 name|getAsObjCQualifiedInterfaceType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 specifier|const
 name|CXXRecordDecl
 operator|*
 name|getCXXRecordDeclForPointerType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// \brief Retrieves the CXXRecordDecl that this type refers to, either
 comment|/// because the type is a RecordType or because it is the injected-class-name
 comment|/// type of a class template or class template partial specialization.
@@ -4095,13 +4905,22 @@ operator|*
 name|getAsCXXRecordDecl
 argument_list|()
 specifier|const
-expr_stmt|;
-comment|// Member-template getAs<specific type>'.  Look through sugar for
-comment|// an instance of<specific type>.   This scheme will eventually
-comment|// replace the specific getAsXXXX methods above.
-comment|//
-comment|// There are some specializations of this member template listed
-comment|// immediately following this class.
+block|;
+comment|/// \brief Get the AutoType whose type will be deduced for a variable with
+comment|/// an initializer of this type. This looks through declarators like pointer
+comment|/// types, but not through decltype or typedefs.
+name|AutoType
+operator|*
+name|getContainedAutoType
+argument_list|()
+specifier|const
+block|;
+comment|/// Member-template getAs<specific type>'.  Look through sugar for
+comment|/// an instance of<specific type>.   This scheme will eventually
+comment|/// replace the specific getAsXXXX methods above.
+comment|///
+comment|/// There are some specializations of this member template listed
+comment|/// immediately following this class.
 name|template
 operator|<
 name|typename
@@ -4113,7 +4932,53 @@ operator|*
 name|getAs
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
+comment|/// A variant of getAs<> for array types which silently discards
+comment|/// qualifiers from the outermost type.
+specifier|const
+name|ArrayType
+operator|*
+name|getAsArrayTypeUnsafe
+argument_list|()
+specifier|const
+block|;
+comment|/// Member-template castAs<specific type>.  Look through sugar for
+comment|/// the underlying instance of<specific type>.
+comment|///
+comment|/// This method has the same relationship to getAs<T> as cast<T> has
+comment|/// to dyn_cast<T>; which is to say, the underlying type *must*
+comment|/// have the intended type, and this method will never return null.
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+specifier|const
+name|T
+operator|*
+name|castAs
+argument_list|()
+specifier|const
+block|;
+comment|/// A variant of castAs<> for array type which silently discards
+comment|/// qualifiers from the outermost type.
+specifier|const
+name|ArrayType
+operator|*
+name|castAsArrayTypeUnsafe
+argument_list|()
+specifier|const
+block|;
+comment|/// getBaseElementTypeUnsafe - Get the base element type of this
+comment|/// type, potentially discarding type qualifiers.  This method
+comment|/// should never be used when type qualifiers are meaningful.
+specifier|const
+name|Type
+operator|*
+name|getBaseElementTypeUnsafe
+argument_list|()
+specifier|const
+block|;
 comment|/// getArrayElementTypeNoTypeQual - If this is an array type, return the
 comment|/// element type of the array, potentially with type qualifiers missing.
 comment|/// This method should never be used when type qualifiers are meaningful.
@@ -4123,14 +4988,14 @@ operator|*
 name|getArrayElementTypeNoTypeQual
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// getPointeeType - If this is a pointer, ObjC object pointer, or block
 comment|/// pointer, this returns the respective pointee.
 name|QualType
 name|getPointeeType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// getUnqualifiedDesugaredType() - Return the specified type with
 comment|/// any "sugar" removed from the type, removing any typedefs,
 comment|/// typeofs, etc., as well as any qualifiers.
@@ -4140,13 +5005,13 @@ operator|*
 name|getUnqualifiedDesugaredType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// More type predicates useful for type checking/promotion
 name|bool
 name|isPromotableIntegerType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|// C99 6.3.1.1p2
 comment|/// isSignedIntegerType - Return true if this is an integer type that is
 comment|/// signed, according to C99 6.2.5p4 [char, signed char, short, int, long..],
@@ -4156,7 +5021,7 @@ name|bool
 name|isSignedIntegerType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// isUnsignedIntegerType - Return true if this is an integer type that is
 comment|/// unsigned, according to C99 6.2.5p6 [which returns true for _Bool], an enum
 comment|/// decl which has an unsigned representation, or a vector of unsigned integer
@@ -4165,7 +5030,7 @@ name|bool
 name|isUnsignedIntegerType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// isConstantSizeType - Return true if this is not a variable sized type,
 comment|/// according to the rules of C99 6.7.5p3.  It is not legal to call this on
 comment|/// incomplete types.
@@ -4173,32 +5038,51 @@ name|bool
 name|isConstantSizeType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// isSpecifierType - Returns true if this type can be represented by some
 comment|/// set of type specifiers.
 name|bool
 name|isSpecifierType
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|/// \brief Determine the linkage of this type.
 name|Linkage
 name|getLinkage
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
+comment|/// \brief Determine the visibility of this type.
+name|Visibility
+name|getVisibility
+argument_list|()
+specifier|const
+block|;
+comment|/// \brief Determine the linkage and visibility of this type.
+name|std
+operator|::
+name|pair
+operator|<
+name|Linkage
+block|,
+name|Visibility
+operator|>
+name|getLinkageAndVisibility
+argument_list|()
+specifier|const
+block|;
 comment|/// \brief Note that the linkage is no longer known.
 name|void
 name|ClearLinkageCache
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 specifier|const
 name|char
 operator|*
 name|getTypeClassName
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|QualType
 name|getCanonicalTypeInternal
 argument_list|()
@@ -4212,21 +5096,19 @@ name|CanQualType
 name|getCanonicalTypeUnqualified
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 comment|// in CanonicalType.h
 name|void
 name|dump
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 specifier|static
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|Type
-modifier|*
-parameter_list|)
+argument_list|(
+argument|const Type *
+argument_list|)
 block|{
 return|return
 name|true
@@ -4235,13 +5117,12 @@ block|}
 name|friend
 name|class
 name|ASTReader
-decl_stmt|;
+block|;
 name|friend
 name|class
 name|ASTWriter
-decl_stmt|;
-block|}
-empty_stmt|;
+block|; }
+block|;
 name|template
 operator|<
 operator|>
@@ -4282,7 +5163,7 @@ parameter_list|(
 name|Class
 parameter_list|)
 define|\
-value|template<> inline const Class##Type *Type::getAs() const { \   return dyn_cast<Class##Type>(CanonicalType); \ }
+value|template<> inline const Class##Type *Type::getAs() const { \   return dyn_cast<Class##Type>(CanonicalType); \ } \ template<> inline const Class##Type *Type::castAs() const { \   return cast<Class##Type>(CanonicalType); \ }
 include|#
 directive|include
 file|"clang/AST/TypeNodes.def"
@@ -4290,7 +5171,7 @@ comment|/// BuiltinType - This class is used for builtin types like 'int'.  Buil
 comment|/// types are always canonical and have a literal name field.
 name|class
 name|BuiltinType
-range|:
+operator|:
 name|public
 name|Type
 block|{
@@ -4310,6 +5191,9 @@ comment|// This is 'char' for targets where char is unsigned.
 name|UChar
 block|,
 comment|// This is explicitly qualified unsigned char.
+name|WChar_U
+block|,
+comment|// This is 'wchar_t' for C++, when unsigned.
 name|Char16
 block|,
 comment|// This is 'char16_t' for C++.
@@ -4333,9 +5217,9 @@ comment|// This is 'char' for targets where char is signed.
 name|SChar
 block|,
 comment|// This is explicitly qualified signed char.
-name|WChar
+name|WChar_S
 block|,
-comment|// This is 'wchar_t' for C++.
+comment|// This is 'wchar_t' for C++, when signed.
 name|Short
 block|,
 name|Int
@@ -4356,16 +5240,15 @@ block|,
 name|NullPtr
 block|,
 comment|// This is the type of C++0x 'nullptr'.
+comment|/// This represents the type of an expression whose type is
+comment|/// totally unknown, e.g. 'T::foo'.  It is permitted for this to
+comment|/// appear in situations where the structure of the type is
+comment|/// theoretically deducible.
+name|Dependent
+block|,
 name|Overload
 block|,
 comment|// This represents the type of an overloaded function declaration.
-name|Dependent
-block|,
-comment|// This represents the type of a type-dependent expression.
-name|UndeducedAuto
-block|,
-comment|// In C++0x, this represents the type of an auto variable
-comment|// that has not been deduced yet.
 comment|/// The primitive Objective C 'id' type.  The type pointed to by the
 comment|/// user-visible 'id' type.  Only ever shows up in an AST as the base
 comment|/// type of an ObjCObjectType.
@@ -4380,19 +5263,6 @@ name|ObjCSel
 comment|// This represents the ObjC 'SEL' type.
 block|}
 block|;
-name|private
-operator|:
-name|Kind
-name|TypeKind
-block|;
-name|protected
-operator|:
-name|virtual
-name|Linkage
-name|getLinkageImpl
-argument_list|()
-specifier|const
-block|;
 name|public
 operator|:
 name|BuiltinType
@@ -4402,31 +5272,41 @@ argument_list|)
 operator|:
 name|Type
 argument_list|(
-name|Builtin
+argument|Builtin
 argument_list|,
-name|QualType
-argument_list|()
+argument|QualType()
 argument_list|,
 comment|/*Dependent=*/
-operator|(
+argument|(K == Dependent)
+argument_list|,
+comment|/*VariablyModified=*/
+argument|false
+argument_list|,
+comment|/*Unexpanded paramter pack=*/
+argument|false
+argument_list|)
+block|{
+name|BuiltinTypeBits
+operator|.
+name|Kind
+operator|=
 name|K
-operator|==
-name|Dependent
-operator|)
-argument_list|)
-block|,
-name|TypeKind
-argument_list|(
-argument|K
-argument_list|)
-block|{}
+block|;   }
 name|Kind
 name|getKind
 argument_list|()
 specifier|const
 block|{
 return|return
-name|TypeKind
+name|static_cast
+operator|<
+name|Kind
+operator|>
+operator|(
+name|BuiltinTypeBits
+operator|.
+name|Kind
+operator|)
 return|;
 block|}
 specifier|const
@@ -4467,11 +5347,13 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|TypeKind
+name|getKind
+argument_list|()
 operator|>=
 name|Bool
 operator|&&
-name|TypeKind
+name|getKind
+argument_list|()
 operator|<=
 name|Int128
 return|;
@@ -4482,11 +5364,13 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|TypeKind
+name|getKind
+argument_list|()
 operator|>=
 name|Char_S
 operator|&&
-name|TypeKind
+name|getKind
+argument_list|()
 operator|<=
 name|Int128
 return|;
@@ -4497,11 +5381,13 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|TypeKind
+name|getKind
+argument_list|()
 operator|>=
 name|Bool
 operator|&&
-name|TypeKind
+name|getKind
+argument_list|()
 operator|<=
 name|UInt128
 return|;
@@ -4512,13 +5398,30 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|TypeKind
+name|getKind
+argument_list|()
 operator|>=
 name|Float
 operator|&&
-name|TypeKind
+name|getKind
+argument_list|()
 operator|<=
 name|LongDouble
+return|;
+block|}
+comment|/// Determines whether this type is a "forbidden" placeholder type,
+comment|/// i.e. a type which cannot appear in arbitrary positions in a
+comment|/// fully-formed expression.
+name|bool
+name|isPlaceholderType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getKind
+argument_list|()
+operator|==
+name|Overload
 return|;
 block|}
 specifier|static
@@ -4584,6 +5487,16 @@ name|Element
 operator|->
 name|isDependentType
 argument_list|()
+argument_list|,
+name|Element
+operator|->
+name|isVariablyModifiedType
+argument_list|()
+argument_list|,
+name|Element
+operator|->
+name|containsUnexpandedParameterPack
+argument_list|()
 argument_list|)
 block|,
 name|ElementType
@@ -4596,14 +5509,6 @@ name|class
 name|ASTContext
 block|;
 comment|// ASTContext creates these.
-name|protected
-operator|:
-name|virtual
-name|Linkage
-name|getLinkageImpl
-argument_list|()
-specifier|const
-block|;
 name|public
 operator|:
 name|QualType
@@ -4700,6 +5605,150 @@ return|;
 block|}
 expr|}
 block|;
+comment|/// ParenType - Sugar for parentheses used when specifying types.
+comment|///
+name|class
+name|ParenType
+operator|:
+name|public
+name|Type
+block|,
+name|public
+name|llvm
+operator|::
+name|FoldingSetNode
+block|{
+name|QualType
+name|Inner
+block|;
+name|ParenType
+argument_list|(
+argument|QualType InnerType
+argument_list|,
+argument|QualType CanonType
+argument_list|)
+operator|:
+name|Type
+argument_list|(
+name|Paren
+argument_list|,
+name|CanonType
+argument_list|,
+name|InnerType
+operator|->
+name|isDependentType
+argument_list|()
+argument_list|,
+name|InnerType
+operator|->
+name|isVariablyModifiedType
+argument_list|()
+argument_list|,
+name|InnerType
+operator|->
+name|containsUnexpandedParameterPack
+argument_list|()
+argument_list|)
+block|,
+name|Inner
+argument_list|(
+argument|InnerType
+argument_list|)
+block|{   }
+name|friend
+name|class
+name|ASTContext
+block|;
+comment|// ASTContext creates these.
+name|public
+operator|:
+name|QualType
+name|getInnerType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Inner
+return|;
+block|}
+name|bool
+name|isSugared
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+name|QualType
+name|desugar
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getInnerType
+argument_list|()
+return|;
+block|}
+name|void
+name|Profile
+argument_list|(
+argument|llvm::FoldingSetNodeID&ID
+argument_list|)
+block|{
+name|Profile
+argument_list|(
+name|ID
+argument_list|,
+name|getInnerType
+argument_list|()
+argument_list|)
+block|;   }
+specifier|static
+name|void
+name|Profile
+argument_list|(
+argument|llvm::FoldingSetNodeID&ID
+argument_list|,
+argument|QualType Inner
+argument_list|)
+block|{
+name|Inner
+operator|.
+name|Profile
+argument_list|(
+name|ID
+argument_list|)
+block|;   }
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Type *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getTypeClass
+argument_list|()
+operator|==
+name|Paren
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const ParenType *
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+expr|}
+block|;
 comment|/// PointerType - C99 6.7.5.1 - Pointer Declarators.
 comment|///
 name|class
@@ -4733,6 +5782,16 @@ name|Pointee
 operator|->
 name|isDependentType
 argument_list|()
+argument_list|,
+name|Pointee
+operator|->
+name|isVariablyModifiedType
+argument_list|()
+argument_list|,
+name|Pointee
+operator|->
+name|containsUnexpandedParameterPack
+argument_list|()
 argument_list|)
 block|,
 name|PointeeType
@@ -4745,14 +5804,6 @@ name|class
 name|ASTContext
 block|;
 comment|// ASTContext creates these.
-name|protected
-operator|:
-name|virtual
-name|Linkage
-name|getLinkageImpl
-argument_list|()
-specifier|const
-block|;
 name|public
 operator|:
 name|QualType
@@ -4885,6 +5936,16 @@ name|Pointee
 operator|->
 name|isDependentType
 argument_list|()
+argument_list|,
+name|Pointee
+operator|->
+name|isVariablyModifiedType
+argument_list|()
+argument_list|,
+name|Pointee
+operator|->
+name|containsUnexpandedParameterPack
+argument_list|()
 argument_list|)
 block|,
 name|PointeeType
@@ -4897,14 +5958,6 @@ name|class
 name|ASTContext
 block|;
 comment|// ASTContext creates these.
-name|protected
-operator|:
-name|virtual
-name|Linkage
-name|getLinkageImpl
-argument_list|()
-specifier|const
-block|;
 name|public
 operator|:
 comment|// Get the pointee type. Pointee is required to always be a function type.
@@ -5018,25 +6071,6 @@ block|{
 name|QualType
 name|PointeeType
 block|;
-comment|/// True if the type was originally spelled with an lvalue sigil.
-comment|/// This is never true of rvalue references but can also be false
-comment|/// on lvalue references because of C++0x [dcl.typedef]p9,
-comment|/// as follows:
-comment|///
-comment|///   typedef int&ref;    // lvalue, spelled lvalue
-comment|///   typedef int&&rvref; // rvalue
-comment|///   ref&a;              // lvalue, inner ref, spelled lvalue
-comment|///   ref&&a;             // lvalue, inner ref
-comment|///   rvref&a;            // lvalue, inner ref, spelled lvalue
-comment|///   rvref&&a;           // rvalue, inner ref
-name|bool
-name|SpelledAsLValue
-block|;
-comment|/// True if the inner type is a reference type.  This only happens
-comment|/// in non-canonical forms.
-name|bool
-name|InnerRef
-block|;
 name|protected
 operator|:
 name|ReferenceType
@@ -5060,29 +6094,38 @@ name|Referencee
 operator|->
 name|isDependentType
 argument_list|()
+argument_list|,
+name|Referencee
+operator|->
+name|isVariablyModifiedType
+argument_list|()
+argument_list|,
+name|Referencee
+operator|->
+name|containsUnexpandedParameterPack
+argument_list|()
 argument_list|)
 block|,
 name|PointeeType
 argument_list|(
-name|Referencee
+argument|Referencee
 argument_list|)
-block|,
+block|{
+name|ReferenceTypeBits
+operator|.
 name|SpelledAsLValue
-argument_list|(
+operator|=
 name|SpelledAsLValue
-argument_list|)
-block|,
-name|InnerRef
-argument_list|(
-argument|Referencee->isReferenceType()
-argument_list|)
-block|{   }
-name|virtual
-name|Linkage
-name|getLinkageImpl
-argument_list|()
-specifier|const
 block|;
+name|ReferenceTypeBits
+operator|.
+name|InnerRef
+operator|=
+name|Referencee
+operator|->
+name|isReferenceType
+argument_list|()
+block|;   }
 name|public
 operator|:
 name|bool
@@ -5091,6 +6134,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|ReferenceTypeBits
+operator|.
 name|SpelledAsLValue
 return|;
 block|}
@@ -5100,6 +6145,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|ReferenceTypeBits
+operator|.
 name|InnerRef
 return|;
 block|}
@@ -5129,7 +6176,8 @@ while|while
 condition|(
 name|T
 operator|->
-name|InnerRef
+name|isInnerRef
+argument_list|()
 condition|)
 name|T
 operator|=
@@ -5137,7 +6185,7 @@ name|T
 operator|->
 name|PointeeType
 operator|->
-name|getAs
+name|castAs
 operator|<
 name|ReferenceType
 operator|>
@@ -5162,7 +6210,8 @@ name|ID
 argument_list|,
 name|PointeeType
 argument_list|,
-name|SpelledAsLValue
+name|isSpelledAsLValue
+argument_list|()
 argument_list|)
 block|;   }
 specifier|static
@@ -5448,6 +6497,23 @@ name|Pointee
 operator|->
 name|isDependentType
 argument_list|()
+argument_list|,
+name|Pointee
+operator|->
+name|isVariablyModifiedType
+argument_list|()
+argument_list|,
+operator|(
+name|Cls
+operator|->
+name|containsUnexpandedParameterPack
+argument_list|()
+operator|||
+name|Pointee
+operator|->
+name|containsUnexpandedParameterPack
+argument_list|()
+operator|)
 argument_list|)
 block|,
 name|PointeeType
@@ -5465,14 +6531,6 @@ name|class
 name|ASTContext
 block|;
 comment|// ASTContext creates these.
-name|protected
-operator|:
-name|virtual
-name|Linkage
-name|getLinkageImpl
-argument_list|()
-specifier|const
-block|;
 name|public
 operator|:
 name|QualType
@@ -5656,20 +6714,6 @@ comment|/// ElementType - The element type of the array.
 name|QualType
 name|ElementType
 block|;
-comment|// NOTE: VC++ treats enums as signed, avoid using the ArraySizeModifier enum
-comment|/// NOTE: These fields are packed into the bitfields space in the Type class.
-name|unsigned
-name|SizeModifier
-operator|:
-literal|2
-block|;
-comment|/// IndexTypeQuals - Capture qualifiers in declarations like:
-comment|/// 'int X[static restrict 4]'. For function parameters only.
-name|unsigned
-name|IndexTypeQuals
-operator|:
-literal|3
-block|;
 name|protected
 operator|:
 comment|// C++ [temp.dep.type]p1:
@@ -5688,6 +6732,8 @@ argument_list|,
 argument|ArraySizeModifier sm
 argument_list|,
 argument|unsigned tq
+argument_list|,
+argument|bool ContainsUnexpandedParameterPack
 argument_list|)
 operator|:
 name|Type
@@ -5704,34 +6750,43 @@ operator|||
 name|tc
 operator|==
 name|DependentSizedArray
+argument_list|,
+operator|(
+name|tc
+operator|==
+name|VariableArray
+operator|||
+name|et
+operator|->
+name|isVariablyModifiedType
+argument_list|()
+operator|)
+argument_list|,
+name|ContainsUnexpandedParameterPack
 argument_list|)
 block|,
 name|ElementType
 argument_list|(
-name|et
+argument|et
 argument_list|)
-block|,
-name|SizeModifier
-argument_list|(
-name|sm
-argument_list|)
-block|,
+block|{
+name|ArrayTypeBits
+operator|.
 name|IndexTypeQuals
-argument_list|(
-argument|tq
-argument_list|)
-block|{}
+operator|=
+name|tq
+block|;
+name|ArrayTypeBits
+operator|.
+name|SizeModifier
+operator|=
+name|sm
+block|;   }
 name|friend
 name|class
 name|ASTContext
 block|;
 comment|// ASTContext creates these.
-name|virtual
-name|Linkage
-name|getLinkageImpl
-argument_list|()
-specifier|const
-block|;
 name|public
 operator|:
 name|QualType
@@ -5751,6 +6806,8 @@ block|{
 return|return
 name|ArraySizeModifier
 argument_list|(
+name|ArrayTypeBits
+operator|.
 name|SizeModifier
 argument_list|)
 return|;
@@ -5765,7 +6822,8 @@ name|Qualifiers
 operator|::
 name|fromCVRMask
 argument_list|(
-name|IndexTypeQuals
+name|getIndexTypeCVRQualifiers
+argument_list|()
 argument_list|)
 return|;
 block|}
@@ -5775,6 +6833,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|ArrayTypeBits
+operator|.
 name|IndexTypeQuals
 return|;
 block|}
@@ -5868,6 +6928,11 @@ argument_list|,
 name|sm
 argument_list|,
 name|tq
+argument_list|,
+name|et
+operator|->
+name|containsUnexpandedParameterPack
+argument_list|()
 argument_list|)
 block|,
 name|Size
@@ -5903,6 +6968,11 @@ argument_list|,
 name|sm
 argument_list|,
 name|tq
+argument_list|,
+name|et
+operator|->
+name|containsUnexpandedParameterPack
+argument_list|()
 argument_list|)
 block|,
 name|Size
@@ -6109,6 +7179,8 @@ argument_list|,
 argument|sm
 argument_list|,
 argument|tq
+argument_list|,
+argument|et->containsUnexpandedParameterPack()
 argument_list|)
 block|{}
 name|friend
@@ -6288,6 +7360,11 @@ argument_list|,
 name|sm
 argument_list|,
 name|tq
+argument_list|,
+name|et
+operator|->
+name|containsUnexpandedParameterPack
+argument_list|()
 argument_list|)
 block|,
 name|SizeExpr
@@ -6448,6 +7525,7 @@ operator|:
 name|public
 name|ArrayType
 block|{
+specifier|const
 name|ASTContext
 operator|&
 name|Context
@@ -6467,7 +7545,7 @@ name|Brackets
 block|;
 name|DependentSizedArrayType
 argument_list|(
-argument|ASTContext&Context
+argument|const ASTContext&Context
 argument_list|,
 argument|QualType et
 argument_list|,
@@ -6481,39 +7559,7 @@ argument|unsigned tq
 argument_list|,
 argument|SourceRange brackets
 argument_list|)
-operator|:
-name|ArrayType
-argument_list|(
-name|DependentSizedArray
-argument_list|,
-name|et
-argument_list|,
-name|can
-argument_list|,
-name|sm
-argument_list|,
-name|tq
-argument_list|)
-block|,
-name|Context
-argument_list|(
-name|Context
-argument_list|)
-block|,
-name|SizeExpr
-argument_list|(
-operator|(
-name|Stmt
-operator|*
-operator|)
-name|e
-argument_list|)
-block|,
-name|Brackets
-argument_list|(
-argument|brackets
-argument_list|)
-block|{}
+block|;
 name|friend
 name|class
 name|ASTContext
@@ -6655,7 +7701,7 @@ name|Profile
 argument_list|(
 argument|llvm::FoldingSetNodeID&ID
 argument_list|,
-argument|ASTContext&Context
+argument|const ASTContext&Context
 argument_list|,
 argument|QualType ET
 argument_list|,
@@ -6686,6 +7732,7 @@ name|llvm
 operator|::
 name|FoldingSetNode
 block|{
+specifier|const
 name|ASTContext
 operator|&
 name|Context
@@ -6703,7 +7750,7 @@ name|loc
 block|;
 name|DependentSizedExtVectorType
 argument_list|(
-argument|ASTContext&Context
+argument|const ASTContext&Context
 argument_list|,
 argument|QualType ElementType
 argument_list|,
@@ -6713,36 +7760,7 @@ argument|Expr *SizeExpr
 argument_list|,
 argument|SourceLocation loc
 argument_list|)
-operator|:
-name|Type
-argument_list|(
-name|DependentSizedExtVector
-argument_list|,
-name|can
-argument_list|,
-name|true
-argument_list|)
-block|,
-name|Context
-argument_list|(
-name|Context
-argument_list|)
-block|,
-name|SizeExpr
-argument_list|(
-name|SizeExpr
-argument_list|)
-block|,
-name|ElementType
-argument_list|(
-name|ElementType
-argument_list|)
-block|,
-name|loc
-argument_list|(
-argument|loc
-argument_list|)
-block|{}
+block|;
 name|friend
 name|class
 name|ASTContext
@@ -6852,7 +7870,7 @@ name|Profile
 argument_list|(
 argument|llvm::FoldingSetNodeID&ID
 argument_list|,
-argument|ASTContext&Context
+argument|const ASTContext&Context
 argument_list|,
 argument|QualType ElementType
 argument_list|,
@@ -6879,19 +7897,25 @@ block|{
 name|public
 operator|:
 expr|enum
-name|AltiVecSpecific
+name|VectorKind
 block|{
-name|NotAltiVec
+name|GenericVector
 block|,
-comment|// is not AltiVec vector
-name|AltiVec
+comment|// not a target-specific vector type
+name|AltiVecVector
 block|,
 comment|// is AltiVec vector
-name|Pixel
+name|AltiVecPixel
 block|,
 comment|// is AltiVec 'vector Pixel'
-name|Bool
+name|AltiVecBool
+block|,
 comment|// is AltiVec 'vector bool ...'
+name|NeonVector
+block|,
+comment|// is ARM Neon vector
+name|NeonPolyVector
+comment|// is ARM Neon polynomial vector
 block|}
 block|;
 name|protected
@@ -6899,13 +7923,6 @@ operator|:
 comment|/// ElementType - The element type of the vector.
 name|QualType
 name|ElementType
-block|;
-comment|/// NumElements - The number of elements in the vector.
-name|unsigned
-name|NumElements
-block|;
-name|AltiVecSpecific
-name|AltiVecSpec
 block|;
 name|VectorType
 argument_list|(
@@ -6915,36 +7932,9 @@ argument|unsigned nElements
 argument_list|,
 argument|QualType canonType
 argument_list|,
-argument|AltiVecSpecific altiVecSpec
+argument|VectorKind vecKind
 argument_list|)
-operator|:
-name|Type
-argument_list|(
-name|Vector
-argument_list|,
-name|canonType
-argument_list|,
-name|vecType
-operator|->
-name|isDependentType
-argument_list|()
-argument_list|)
-block|,
-name|ElementType
-argument_list|(
-name|vecType
-argument_list|)
-block|,
-name|NumElements
-argument_list|(
-name|nElements
-argument_list|)
-block|,
-name|AltiVecSpec
-argument_list|(
-argument|altiVecSpec
-argument_list|)
-block|{}
+block|;
 name|VectorType
 argument_list|(
 argument|TypeClass tc
@@ -6955,47 +7945,14 @@ argument|unsigned nElements
 argument_list|,
 argument|QualType canonType
 argument_list|,
-argument|AltiVecSpecific altiVecSpec
+argument|VectorKind vecKind
 argument_list|)
-operator|:
-name|Type
-argument_list|(
-name|tc
-argument_list|,
-name|canonType
-argument_list|,
-name|vecType
-operator|->
-name|isDependentType
-argument_list|()
-argument_list|)
-block|,
-name|ElementType
-argument_list|(
-name|vecType
-argument_list|)
-block|,
-name|NumElements
-argument_list|(
-name|nElements
-argument_list|)
-block|,
-name|AltiVecSpec
-argument_list|(
-argument|altiVecSpec
-argument_list|)
-block|{}
+block|;
 name|friend
 name|class
 name|ASTContext
 block|;
 comment|// ASTContext creates these.
-name|virtual
-name|Linkage
-name|getLinkageImpl
-argument_list|()
-specifier|const
-block|;
 name|public
 operator|:
 name|QualType
@@ -7013,6 +7970,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|VectorTypeBits
+operator|.
 name|NumElements
 return|;
 block|}
@@ -7039,13 +7998,18 @@ literal|0
 argument_list|)
 return|;
 block|}
-name|AltiVecSpecific
-name|getAltiVecSpecific
+name|VectorKind
+name|getVectorKind
 argument_list|()
 specifier|const
 block|{
 return|return
-name|AltiVecSpec
+name|VectorKind
+argument_list|(
+name|VectorTypeBits
+operator|.
+name|VecKind
+argument_list|)
 return|;
 block|}
 name|void
@@ -7067,7 +8031,8 @@ argument_list|,
 name|getTypeClass
 argument_list|()
 argument_list|,
-name|AltiVecSpec
+name|getVectorKind
+argument_list|()
 argument_list|)
 block|;   }
 specifier|static
@@ -7082,7 +8047,7 @@ argument|unsigned NumElements
 argument_list|,
 argument|TypeClass TypeClass
 argument_list|,
-argument|unsigned AltiVecSpec
+argument|VectorKind VecKind
 argument_list|)
 block|{
 name|ID
@@ -7113,7 +8078,7 @@ name|ID
 operator|.
 name|AddInteger
 argument_list|(
-name|AltiVecSpec
+name|VecKind
 argument_list|)
 block|;   }
 specifier|static
@@ -7182,7 +8147,7 @@ argument|nElements
 argument_list|,
 argument|canonType
 argument_list|,
-argument|NotAltiVec
+argument|GenericVector
 argument_list|)
 block|{}
 name|friend
@@ -7426,7 +8391,8 @@ operator|-
 literal|1
 argument_list|)
 operator|<
-name|NumElements
+name|getNumElements
+argument_list|()
 return|;
 return|return
 name|false
@@ -7493,61 +8459,22 @@ operator|:
 name|public
 name|Type
 block|{
-name|virtual
-name|void
-name|ANCHOR
-argument_list|()
-block|;
-comment|// Key function for FunctionType.
-comment|/// SubClassData - This field is owned by the subclass, put here to pack
-comment|/// tightly with the ivars in Type.
-name|bool
-name|SubClassData
-operator|:
-literal|1
-block|;
-comment|/// TypeQuals - Used only by FunctionProtoType, put here to pack with the
-comment|/// other bitfields.
-comment|/// The qualifiers are part of FunctionProtoType because...
-comment|///
-comment|/// C++ 8.3.5p4: The return type, the parameter type list and the
-comment|/// cv-qualifier-seq, [...], are part of the function type.
-comment|///
-name|unsigned
-name|TypeQuals
-operator|:
-literal|3
-block|;
-comment|/// NoReturn - Indicates if the function type is attribute noreturn.
-name|unsigned
-name|NoReturn
-operator|:
-literal|1
-block|;
-comment|/// RegParm - How many arguments to pass inreg.
-name|unsigned
-name|RegParm
-operator|:
-literal|3
-block|;
-comment|/// CallConv - The calling convention used by the function.
-name|unsigned
-name|CallConv
-operator|:
-literal|3
-block|;
 comment|// The type returned by the function.
 name|QualType
 name|ResultType
 block|;
 name|public
 operator|:
-comment|// This class is used for passing arround the information needed to
-comment|// construct a call. It is not actually used for storage, just for
-comment|// factoring together common arguments.
-comment|// If you add a field (say Foo), other than the obvious places (both, constructors,
-comment|// compile failures), what you need to update is
-comment|// * Operetor==
+comment|/// ExtInfo - A class which abstracts out some details necessary for
+comment|/// making a call.
+comment|///
+comment|/// It is not actually used directly for storing this information in
+comment|/// a FunctionType, although FunctionType does currently use the
+comment|/// same bit-pattern.
+comment|///
+comment|// If you add a field (say Foo), other than the obvious places (both,
+comment|// constructors, compile failures), what you need to update is
+comment|// * Operator==
 comment|// * getFoo
 comment|// * withFoo
 comment|// * functionType. Add Foo, getFoo.
@@ -7561,6 +8488,57 @@ comment|// * Codegen
 name|class
 name|ExtInfo
 block|{
+comment|// Feel free to rearrange or add bits, but if you go over 8,
+comment|// you'll need to adjust both the Bits field below and
+comment|// Type::FunctionTypeBitfields.
+comment|//   |  CC  |noreturn|regparm
+comment|//   |0 .. 2|   3    |4 ..  6
+block|enum
+block|{
+name|CallConvMask
+operator|=
+literal|0x7
+block|}
+block|;     enum
+block|{
+name|NoReturnMask
+operator|=
+literal|0x8
+block|}
+block|;     enum
+block|{
+name|RegParmMask
+operator|=
+operator|~
+operator|(
+name|CallConvMask
+operator||
+name|NoReturnMask
+operator|)
+block|,
+name|RegParmOffset
+operator|=
+literal|4
+block|}
+block|;
+name|unsigned
+name|char
+name|Bits
+block|;
+name|ExtInfo
+argument_list|(
+argument|unsigned Bits
+argument_list|)
+operator|:
+name|Bits
+argument_list|(
+argument|static_cast<unsigned char>(Bits)
+argument_list|)
+block|{}
+name|friend
+name|class
+name|FunctionType
+block|;
 name|public
 operator|:
 comment|// Constructor with no defaults. Use this when you know that you
@@ -7573,40 +8551,38 @@ argument|unsigned regParm
 argument_list|,
 argument|CallingConv cc
 argument_list|)
-operator|:
-name|NoReturn
-argument_list|(
+block|{
+name|Bits
+operator|=
+operator|(
+operator|(
+name|unsigned
+operator|)
+name|cc
+operator|)
+operator||
+operator|(
 name|noReturn
-argument_list|)
-block|,
-name|RegParm
-argument_list|(
+operator|?
+name|NoReturnMask
+operator|:
+literal|0
+operator|)
+operator||
+operator|(
 name|regParm
-argument_list|)
-block|,
-name|CC
-argument_list|(
-argument|cc
-argument_list|)
-block|{}
+operator|<<
+name|RegParmOffset
+operator|)
+block|;     }
 comment|// Constructor with all defaults. Use when for example creating a
 comment|// function know to use defaults.
 name|ExtInfo
 argument_list|()
 operator|:
-name|NoReturn
-argument_list|(
-name|false
-argument_list|)
-block|,
-name|RegParm
+name|Bits
 argument_list|(
 literal|0
-argument_list|)
-block|,
-name|CC
-argument_list|(
-argument|CC_Default
 argument_list|)
 block|{}
 name|bool
@@ -7615,7 +8591,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|NoReturn
+name|Bits
+operator|&
+name|NoReturnMask
 return|;
 block|}
 name|unsigned
@@ -7624,7 +8602,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|RegParm
+name|Bits
+operator|>>
+name|RegParmOffset
 return|;
 block|}
 name|CallingConv
@@ -7633,65 +8613,46 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|CC
+name|CallingConv
+argument_list|(
+name|Bits
+operator|&
+name|CallConvMask
+argument_list|)
 return|;
 block|}
 name|bool
 name|operator
 operator|==
 operator|(
-specifier|const
 name|ExtInfo
-operator|&
 name|Other
 operator|)
 specifier|const
 block|{
 return|return
-name|getNoReturn
-argument_list|()
+name|Bits
 operator|==
 name|Other
 operator|.
-name|getNoReturn
-argument_list|()
-operator|&&
-name|getRegParm
-argument_list|()
-operator|==
-name|Other
-operator|.
-name|getRegParm
-argument_list|()
-operator|&&
-name|getCC
-argument_list|()
-operator|==
-name|Other
-operator|.
-name|getCC
-argument_list|()
+name|Bits
 return|;
 block|}
 name|bool
 name|operator
 operator|!=
 operator|(
-specifier|const
 name|ExtInfo
-operator|&
 name|Other
 operator|)
 specifier|const
 block|{
 return|return
-operator|!
-operator|(
-operator|*
-name|this
-operator|==
+name|Bits
+operator|!=
 name|Other
-operator|)
+operator|.
+name|Bits
 return|;
 block|}
 comment|// Note that we don't have setters. That is by design, use
@@ -7703,16 +8664,26 @@ argument|bool noReturn
 argument_list|)
 specifier|const
 block|{
+if|if
+condition|(
+name|noReturn
+condition|)
 return|return
 name|ExtInfo
 argument_list|(
-name|noReturn
-argument_list|,
-name|getRegParm
-argument_list|()
-argument_list|,
-name|getCC
-argument_list|()
+name|Bits
+operator||
+name|NoReturnMask
+argument_list|)
+return|;
+else|else
+return|return
+name|ExtInfo
+argument_list|(
+name|Bits
+operator|&
+operator|~
+name|NoReturnMask
 argument_list|)
 return|;
 block|}
@@ -7726,13 +8697,18 @@ block|{
 return|return
 name|ExtInfo
 argument_list|(
-name|getNoReturn
-argument_list|()
-argument_list|,
+operator|(
+name|Bits
+operator|&
+operator|~
+name|RegParmMask
+operator|)
+operator||
+operator|(
 name|RegParm
-argument_list|,
-name|getCC
-argument_list|()
+operator|<<
+name|RegParmOffset
+operator|)
 argument_list|)
 return|;
 block|}
@@ -7746,31 +8722,35 @@ block|{
 return|return
 name|ExtInfo
 argument_list|(
-name|getNoReturn
-argument_list|()
-argument_list|,
-name|getRegParm
-argument_list|()
-argument_list|,
+operator|(
+name|Bits
+operator|&
+operator|~
+name|CallConvMask
+operator|)
+operator||
+operator|(
+name|unsigned
+operator|)
 name|cc
 argument_list|)
 return|;
 block|}
-name|private
-operator|:
-comment|// True if we have __attribute__((noreturn))
-name|bool
-name|NoReturn
-block|;
-comment|// The value passed to __attribute__((regparm(x)))
-name|unsigned
-name|RegParm
-block|;
-comment|// The calling convention as specified via
-comment|// __attribute__((cdecl|stdcall|fastcall|thiscall|pascal))
-name|CallingConv
-name|CC
-block|;   }
+name|void
+name|Profile
+argument_list|(
+argument|llvm::FoldingSetNodeID&ID
+argument_list|)
+specifier|const
+block|{
+name|ID
+operator|.
+name|AddInteger
+argument_list|(
+name|Bits
+argument_list|)
+block|;     }
+expr|}
 block|;
 name|protected
 operator|:
@@ -7780,15 +8760,21 @@ argument|TypeClass tc
 argument_list|,
 argument|QualType res
 argument_list|,
-argument|bool SubclassInfo
+argument|bool variadic
 argument_list|,
 argument|unsigned typeQuals
+argument_list|,
+argument|RefQualifierKind RefQualifier
 argument_list|,
 argument|QualType Canonical
 argument_list|,
 argument|bool Dependent
 argument_list|,
-argument|const ExtInfo&Info
+argument|bool VariablyModified
+argument_list|,
+argument|bool ContainsUnexpandedParameterPack
+argument_list|,
+argument|ExtInfo Info
 argument_list|)
 operator|:
 name|Type
@@ -7798,54 +8784,58 @@ argument_list|,
 name|Canonical
 argument_list|,
 name|Dependent
-argument_list|)
-block|,
-name|SubClassData
-argument_list|(
-name|SubclassInfo
-argument_list|)
-block|,
-name|TypeQuals
-argument_list|(
-name|typeQuals
-argument_list|)
-block|,
-name|NoReturn
-argument_list|(
-name|Info
-operator|.
-name|getNoReturn
-argument_list|()
-argument_list|)
-block|,
-name|RegParm
-argument_list|(
-name|Info
-operator|.
-name|getRegParm
-argument_list|()
-argument_list|)
-block|,
-name|CallConv
-argument_list|(
-name|Info
-operator|.
-name|getCC
-argument_list|()
+argument_list|,
+name|VariablyModified
+argument_list|,
+name|ContainsUnexpandedParameterPack
 argument_list|)
 block|,
 name|ResultType
 argument_list|(
 argument|res
 argument_list|)
-block|{}
+block|{
+name|FunctionTypeBits
+operator|.
+name|ExtInfo
+operator|=
+name|Info
+operator|.
+name|Bits
+block|;
+name|FunctionTypeBits
+operator|.
+name|Variadic
+operator|=
+name|variadic
+block|;
+name|FunctionTypeBits
+operator|.
+name|TypeQuals
+operator|=
+name|typeQuals
+block|;
+name|FunctionTypeBits
+operator|.
+name|RefQualifier
+operator|=
+name|static_cast
+operator|<
+name|unsigned
+operator|>
+operator|(
+name|RefQualifier
+operator|)
+block|;   }
 name|bool
-name|getSubClassData
+name|isVariadic
 argument_list|()
 specifier|const
 block|{
 return|return
-name|SubClassData
+name|FunctionTypeBits
+operator|.
+name|Variadic
 return|;
 block|}
 name|unsigned
@@ -7854,7 +8844,26 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|FunctionTypeBits
+operator|.
 name|TypeQuals
+return|;
+block|}
+name|RefQualifierKind
+name|getRefQualifier
+argument_list|()
+specifier|const
+block|{
+return|return
+name|static_cast
+operator|<
+name|RefQualifierKind
+operator|>
+operator|(
+name|FunctionTypeBits
+operator|.
+name|RefQualifier
+operator|)
 return|;
 block|}
 name|public
@@ -7874,7 +8883,11 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|RegParm
+name|getExtInfo
+argument_list|()
+operator|.
+name|getRegParm
+argument_list|()
 return|;
 block|}
 name|bool
@@ -7883,7 +8896,11 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|NoReturn
+name|getExtInfo
+argument_list|()
+operator|.
+name|getNoReturn
+argument_list|()
 return|;
 block|}
 name|CallingConv
@@ -7892,10 +8909,11 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|(
-name|CallingConv
-operator|)
-name|CallConv
+name|getExtInfo
+argument_list|()
+operator|.
+name|getCC
+argument_list|()
 return|;
 block|}
 name|ExtInfo
@@ -7906,14 +8924,9 @@ block|{
 return|return
 name|ExtInfo
 argument_list|(
-name|NoReturn
-argument_list|,
-name|RegParm
-argument_list|,
-operator|(
-name|CallingConv
-operator|)
-name|CallConv
+name|FunctionTypeBits
+operator|.
+name|ExtInfo
 argument_list|)
 return|;
 block|}
@@ -8000,7 +9013,7 @@ argument|QualType Result
 argument_list|,
 argument|QualType Canonical
 argument_list|,
-argument|const ExtInfo&Info
+argument|ExtInfo Info
 argument_list|)
 operator|:
 name|FunctionType
@@ -8013,9 +9026,16 @@ argument|false
 argument_list|,
 literal|0
 argument_list|,
+argument|RQ_None
+argument_list|,
 argument|Canonical
 argument_list|,
 comment|/*Dependent=*/
+argument|false
+argument_list|,
+argument|Result->isVariablyModifiedType()
+argument_list|,
+comment|/*ContainsUnexpandedParameterPack=*/
 argument|false
 argument_list|,
 argument|Info
@@ -8026,14 +9046,6 @@ name|class
 name|ASTContext
 block|;
 comment|// ASTContext creates these.
-name|protected
-operator|:
-name|virtual
-name|Linkage
-name|getLinkageImpl
-argument_list|()
-specifier|const
-block|;
 name|public
 operator|:
 comment|// No additional state past what FunctionType provides.
@@ -8085,37 +9097,14 @@ argument|llvm::FoldingSetNodeID&ID
 argument_list|,
 argument|QualType ResultType
 argument_list|,
-argument|const ExtInfo&Info
+argument|ExtInfo Info
 argument_list|)
 block|{
-name|ID
-operator|.
-name|AddInteger
-argument_list|(
 name|Info
 operator|.
-name|getCC
-argument_list|()
-argument_list|)
-block|;
-name|ID
-operator|.
-name|AddInteger
+name|Profile
 argument_list|(
-name|Info
-operator|.
-name|getRegParm
-argument_list|()
-argument_list|)
-block|;
 name|ID
-operator|.
-name|AddInteger
-argument_list|(
-name|Info
-operator|.
-name|getNoReturn
-argument_list|()
 argument_list|)
 block|;
 name|ID
@@ -8173,11 +9162,87 @@ name|llvm
 operator|::
 name|FoldingSetNode
 block|{
-comment|/// hasAnyDependentType - Determine whether there are any dependent
-comment|/// types within the arguments passed in.
+name|public
+operator|:
+comment|/// ExtProtoInfo - Extra information about a function prototype.
+expr|struct
+name|ExtProtoInfo
+block|{
+name|ExtProtoInfo
+argument_list|()
+operator|:
+name|Variadic
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|HasExceptionSpec
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|HasAnyExceptionSpec
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|TypeQuals
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|RefQualifier
+argument_list|(
+name|RQ_None
+argument_list|)
+block|,
+name|NumExceptions
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|Exceptions
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+name|FunctionType
+operator|::
+name|ExtInfo
+name|ExtInfo
+block|;
+name|bool
+name|Variadic
+block|;
+name|bool
+name|HasExceptionSpec
+block|;
+name|bool
+name|HasAnyExceptionSpec
+block|;
+name|unsigned
+name|char
+name|TypeQuals
+block|;
+name|RefQualifierKind
+name|RefQualifier
+block|;
+name|unsigned
+name|NumExceptions
+block|;
+specifier|const
+name|QualType
+operator|*
+name|Exceptions
+block|;   }
+block|;
+name|private
+operator|:
+comment|/// \brief Determine whether there are any argument types that
+comment|/// contain an unexpanded parameter pack.
 specifier|static
 name|bool
-name|hasAnyDependentType
+name|containsAnyUnexpandedParameterPack
 argument_list|(
 argument|const QualType *ArgArray
 argument_list|,
@@ -8205,7 +9270,7 @@ index|[
 name|Idx
 index|]
 operator|->
-name|isDependentType
+name|containsUnexpandedParameterPack
 argument_list|()
 condition|)
 return|return
@@ -8217,152 +9282,17 @@ return|;
 block|}
 name|FunctionProtoType
 argument_list|(
-argument|QualType Result
+argument|QualType result
 argument_list|,
-argument|const QualType *ArgArray
+argument|const QualType *args
 argument_list|,
 argument|unsigned numArgs
 argument_list|,
-argument|bool isVariadic
+argument|QualType canonical
 argument_list|,
-argument|unsigned typeQuals
-argument_list|,
-argument|bool hasExs
-argument_list|,
-argument|bool hasAnyExs
-argument_list|,
-argument|const QualType *ExArray
-argument_list|,
-argument|unsigned numExs
-argument_list|,
-argument|QualType Canonical
-argument_list|,
-argument|const ExtInfo&Info
+argument|const ExtProtoInfo&epi
 argument_list|)
-operator|:
-name|FunctionType
-argument_list|(
-name|FunctionProto
-argument_list|,
-name|Result
-argument_list|,
-name|isVariadic
-argument_list|,
-name|typeQuals
-argument_list|,
-name|Canonical
-argument_list|,
-operator|(
-name|Result
-operator|->
-name|isDependentType
-argument_list|()
-operator|||
-name|hasAnyDependentType
-argument_list|(
-name|ArgArray
-argument_list|,
-name|numArgs
-argument_list|)
-operator|)
-argument_list|,
-name|Info
-argument_list|)
-block|,
-name|NumArgs
-argument_list|(
-name|numArgs
-argument_list|)
-block|,
-name|NumExceptions
-argument_list|(
-name|numExs
-argument_list|)
-block|,
-name|HasExceptionSpec
-argument_list|(
-name|hasExs
-argument_list|)
-block|,
-name|AnyExceptionSpec
-argument_list|(
-argument|hasAnyExs
-argument_list|)
-block|{
-comment|// Fill in the trailing argument array.
-name|QualType
-operator|*
-name|ArgInfo
-operator|=
-name|reinterpret_cast
-operator|<
-name|QualType
-operator|*
-operator|>
-operator|(
-name|this
-operator|+
-literal|1
-operator|)
 block|;
-for|for
-control|(
-name|unsigned
-name|i
-init|=
-literal|0
-init|;
-name|i
-operator|!=
-name|numArgs
-condition|;
-operator|++
-name|i
-control|)
-name|ArgInfo
-index|[
-name|i
-index|]
-operator|=
-name|ArgArray
-index|[
-name|i
-index|]
-expr_stmt|;
-comment|// Fill in the exception array.
-name|QualType
-operator|*
-name|Ex
-operator|=
-name|ArgInfo
-operator|+
-name|numArgs
-block|;
-for|for
-control|(
-name|unsigned
-name|i
-init|=
-literal|0
-init|;
-name|i
-operator|!=
-name|numExs
-condition|;
-operator|++
-name|i
-control|)
-name|Ex
-index|[
-name|i
-index|]
-operator|=
-name|ExArray
-index|[
-name|i
-index|]
-expr_stmt|;
-block|}
 comment|/// NumArgs - The number of arguments this function has, not counting '...'.
 name|unsigned
 name|NumArgs
@@ -8376,14 +9306,14 @@ operator|:
 literal|10
 block|;
 comment|/// HasExceptionSpec - Whether this function has an exception spec at all.
-name|bool
+name|unsigned
 name|HasExceptionSpec
 operator|:
 literal|1
 block|;
-comment|/// AnyExceptionSpec - Whether this function has a throw(...) spec.
-name|bool
-name|AnyExceptionSpec
+comment|/// HasAnyExceptionSpec - Whether this function has a throw(...) spec.
+name|unsigned
+name|HasAnyExceptionSpec
 operator|:
 literal|1
 block|;
@@ -8396,14 +9326,6 @@ name|class
 name|ASTContext
 block|;
 comment|// ASTContext creates these.
-name|protected
-operator|:
-name|virtual
-name|Linkage
-name|getLinkageImpl
-argument_list|()
-specifier|const
-block|;
 name|public
 operator|:
 name|unsigned
@@ -8439,6 +9361,80 @@ name|i
 index|]
 return|;
 block|}
+name|ExtProtoInfo
+name|getExtProtoInfo
+argument_list|()
+specifier|const
+block|{
+name|ExtProtoInfo
+name|EPI
+block|;
+name|EPI
+operator|.
+name|ExtInfo
+operator|=
+name|getExtInfo
+argument_list|()
+block|;
+name|EPI
+operator|.
+name|Variadic
+operator|=
+name|isVariadic
+argument_list|()
+block|;
+name|EPI
+operator|.
+name|HasExceptionSpec
+operator|=
+name|hasExceptionSpec
+argument_list|()
+block|;
+name|EPI
+operator|.
+name|HasAnyExceptionSpec
+operator|=
+name|hasAnyExceptionSpec
+argument_list|()
+block|;
+name|EPI
+operator|.
+name|TypeQuals
+operator|=
+name|static_cast
+operator|<
+name|unsigned
+name|char
+operator|>
+operator|(
+name|getTypeQuals
+argument_list|()
+operator|)
+block|;
+name|EPI
+operator|.
+name|RefQualifier
+operator|=
+name|getRefQualifier
+argument_list|()
+block|;
+name|EPI
+operator|.
+name|NumExceptions
+operator|=
+name|NumExceptions
+block|;
+name|EPI
+operator|.
+name|Exceptions
+operator|=
+name|exception_begin
+argument_list|()
+block|;
+return|return
+name|EPI
+return|;
+block|}
 name|bool
 name|hasExceptionSpec
 argument_list|()
@@ -8454,7 +9450,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|AnyExceptionSpec
+name|HasAnyExceptionSpec
 return|;
 block|}
 name|unsigned
@@ -8509,16 +9505,22 @@ operator|==
 literal|0
 return|;
 block|}
-name|bool
+name|using
+name|FunctionType
+operator|::
 name|isVariadic
+block|;
+comment|/// \brief Determines whether this function prototype contains a
+comment|/// parameter pack at the end.
+comment|///
+comment|/// A function template whose last parameter is a parameter pack can be
+comment|/// called with an arbitrary number of arguments, much like a variadic
+comment|/// function. However,
+name|bool
+name|isTemplateVariadic
 argument_list|()
 specifier|const
-block|{
-return|return
-name|getSubClassData
-argument_list|()
-return|;
-block|}
+block|;
 name|unsigned
 name|getTypeQuals
 argument_list|()
@@ -8528,6 +9530,19 @@ return|return
 name|FunctionType
 operator|::
 name|getTypeQuals
+argument_list|()
+return|;
+block|}
+comment|/// \brief Retrieve the ref-qualifier associated with this function type.
+name|RefQualifierKind
+name|getRefQualifier
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FunctionType
+operator|::
+name|getRefQualifier
 argument_list|()
 return|;
 block|}
@@ -8669,19 +9684,7 @@ argument|arg_type_iterator ArgTys
 argument_list|,
 argument|unsigned NumArgs
 argument_list|,
-argument|bool isVariadic
-argument_list|,
-argument|unsigned TypeQuals
-argument_list|,
-argument|bool hasExceptionSpec
-argument_list|,
-argument|bool anyExceptionSpec
-argument_list|,
-argument|unsigned NumExceptions
-argument_list|,
-argument|exception_iterator Exs
-argument_list|,
-argument|const ExtInfo&ExtInfo
+argument|const ExtProtoInfo&EPI
 argument_list|)
 block|; }
 block|;
@@ -8715,6 +9718,11 @@ name|QualType
 argument_list|()
 argument_list|,
 name|true
+argument_list|,
+name|false
+argument_list|,
+comment|/*ContainsUnexpandedParameterPack=*/
+name|false
 argument_list|)
 block|,
 name|Decl
@@ -8853,6 +9861,14 @@ name|can
 operator|->
 name|isDependentType
 argument_list|()
+argument_list|,
+name|can
+operator|->
+name|isVariablyModifiedType
+argument_list|()
+argument_list|,
+comment|/*ContainsUnexpandedParameterPack=*/
+name|false
 argument_list|)
 block|,
 name|Decl
@@ -8891,17 +9907,6 @@ return|return
 name|Decl
 return|;
 block|}
-comment|/// LookThroughTypedefs - Return the ultimate type this typedef corresponds to
-comment|/// potentially looking through *all* consecutive typedefs.  This returns the
-comment|/// sum of the type qualifiers, so if you have:
-comment|///   typedef const int A;
-comment|///   typedef volatile A B;
-comment|/// looking through the typedefs for B will give you "const volatile A".
-name|QualType
-name|LookThroughTypedefs
-argument_list|()
-specifier|const
-block|;
 name|bool
 name|isSugared
 argument_list|()
@@ -9044,6 +10049,7 @@ name|llvm
 operator|::
 name|FoldingSetNode
 block|{
+specifier|const
 name|ASTContext
 operator|&
 name|Context
@@ -9052,6 +10058,7 @@ name|public
 operator|:
 name|DependentTypeOfExprType
 argument_list|(
+specifier|const
 name|ASTContext
 operator|&
 name|Context
@@ -9120,6 +10127,7 @@ name|FoldingSetNodeID
 operator|&
 name|ID
 argument_list|,
+specifier|const
 name|ASTContext
 operator|&
 name|Context
@@ -9156,6 +10164,16 @@ argument_list|,
 name|T
 operator|->
 name|isDependentType
+argument_list|()
+argument_list|,
+name|T
+operator|->
+name|isVariablyModifiedType
+argument_list|()
+argument_list|,
+name|T
+operator|->
+name|containsUnexpandedParameterPack
 argument_list|()
 argument_list|)
 block|,
@@ -9367,6 +10385,7 @@ name|llvm
 operator|::
 name|FoldingSetNode
 block|{
+specifier|const
 name|ASTContext
 operator|&
 name|Context
@@ -9375,6 +10394,7 @@ name|public
 operator|:
 name|DependentDecltypeType
 argument_list|(
+specifier|const
 name|ASTContext
 operator|&
 name|Context
@@ -9433,6 +10453,7 @@ name|FoldingSetNodeID
 operator|&
 name|ID
 argument_list|,
+specifier|const
 name|ASTContext
 operator|&
 name|Context
@@ -9465,12 +10486,6 @@ argument|const TagDecl *D
 argument_list|,
 argument|QualType can
 argument_list|)
-block|;
-name|virtual
-name|Linkage
-name|getLinkageImpl
-argument_list|()
-specifier|const
 block|;
 name|public
 operator|:
@@ -9627,17 +10642,6 @@ specifier|const
 block|{
 return|return
 name|false
-return|;
-block|}
-comment|// FIXME: RecordType needs to check when it is created that all fields are in
-comment|// the same address space, and return that.
-name|unsigned
-name|getAddressSpace
-argument_list|()
-specifier|const
-block|{
-return|return
-literal|0
 return|;
 block|}
 name|bool
@@ -9841,6 +10845,285 @@ return|;
 block|}
 expr|}
 block|;
+comment|/// AttributedType - An attributed type is a type to which a type
+comment|/// attribute has been applied.  The "modified type" is the
+comment|/// fully-sugared type to which the attributed type was applied;
+comment|/// generally it is not canonically equivalent to the attributed type.
+comment|/// The "equivalent type" is the minimally-desugared type which the
+comment|/// type is canonically equivalent to.
+comment|///
+comment|/// For example, in the following attributed type:
+comment|///     int32_t __attribute__((vector_size(16)))
+comment|///   - the modified type is the TypedefType for int32_t
+comment|///   - the equivalent type is VectorType(16, int32_t)
+comment|///   - the canonical type is VectorType(16, int)
+name|class
+name|AttributedType
+operator|:
+name|public
+name|Type
+block|,
+name|public
+name|llvm
+operator|::
+name|FoldingSetNode
+block|{
+name|public
+operator|:
+comment|// It is really silly to have yet another attribute-kind enum, but
+comment|// clang::attr::Kind doesn't currently cover the pure type attrs.
+expr|enum
+name|Kind
+block|{
+comment|// Expression operand.
+name|attr_address_space
+block|,
+name|attr_regparm
+block|,
+name|attr_vector_size
+block|,
+name|attr_neon_vector_type
+block|,
+name|attr_neon_polyvector_type
+block|,
+name|FirstExprOperandKind
+operator|=
+name|attr_address_space
+block|,
+name|LastExprOperandKind
+operator|=
+name|attr_neon_polyvector_type
+block|,
+comment|// Enumerated operand (string or keyword).
+name|attr_objc_gc
+block|,
+name|FirstEnumOperandKind
+operator|=
+name|attr_objc_gc
+block|,
+name|LastEnumOperandKind
+operator|=
+name|attr_objc_gc
+block|,
+comment|// No operand.
+name|attr_noreturn
+block|,
+name|attr_cdecl
+block|,
+name|attr_fastcall
+block|,
+name|attr_stdcall
+block|,
+name|attr_thiscall
+block|,
+name|attr_pascal
+block|}
+block|;
+name|private
+operator|:
+name|QualType
+name|ModifiedType
+block|;
+name|QualType
+name|EquivalentType
+block|;
+name|friend
+name|class
+name|ASTContext
+block|;
+comment|// creates these
+name|AttributedType
+argument_list|(
+argument|QualType canon
+argument_list|,
+argument|Kind attrKind
+argument_list|,
+argument|QualType modified
+argument_list|,
+argument|QualType equivalent
+argument_list|)
+operator|:
+name|Type
+argument_list|(
+name|Attributed
+argument_list|,
+name|canon
+argument_list|,
+name|canon
+operator|->
+name|isDependentType
+argument_list|()
+argument_list|,
+name|canon
+operator|->
+name|isVariablyModifiedType
+argument_list|()
+argument_list|,
+name|canon
+operator|->
+name|containsUnexpandedParameterPack
+argument_list|()
+argument_list|)
+block|,
+name|ModifiedType
+argument_list|(
+name|modified
+argument_list|)
+block|,
+name|EquivalentType
+argument_list|(
+argument|equivalent
+argument_list|)
+block|{
+name|AttributedTypeBits
+operator|.
+name|AttrKind
+operator|=
+name|attrKind
+block|;   }
+name|public
+operator|:
+name|Kind
+name|getAttrKind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|static_cast
+operator|<
+name|Kind
+operator|>
+operator|(
+name|AttributedTypeBits
+operator|.
+name|AttrKind
+operator|)
+return|;
+block|}
+name|QualType
+name|getModifiedType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ModifiedType
+return|;
+block|}
+name|QualType
+name|getEquivalentType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|EquivalentType
+return|;
+block|}
+name|bool
+name|isSugared
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+name|QualType
+name|desugar
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getEquivalentType
+argument_list|()
+return|;
+block|}
+name|void
+name|Profile
+argument_list|(
+argument|llvm::FoldingSetNodeID&ID
+argument_list|)
+block|{
+name|Profile
+argument_list|(
+name|ID
+argument_list|,
+name|getAttrKind
+argument_list|()
+argument_list|,
+name|ModifiedType
+argument_list|,
+name|EquivalentType
+argument_list|)
+block|;   }
+specifier|static
+name|void
+name|Profile
+argument_list|(
+argument|llvm::FoldingSetNodeID&ID
+argument_list|,
+argument|Kind attrKind
+argument_list|,
+argument|QualType modified
+argument_list|,
+argument|QualType equivalent
+argument_list|)
+block|{
+name|ID
+operator|.
+name|AddInteger
+argument_list|(
+name|attrKind
+argument_list|)
+block|;
+name|ID
+operator|.
+name|AddPointer
+argument_list|(
+name|modified
+operator|.
+name|getAsOpaquePtr
+argument_list|()
+argument_list|)
+block|;
+name|ID
+operator|.
+name|AddPointer
+argument_list|(
+name|equivalent
+operator|.
+name|getAsOpaquePtr
+argument_list|()
+argument_list|)
+block|;   }
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Type *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getTypeClass
+argument_list|()
+operator|==
+name|Attributed
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const AttributedType *T
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+expr|}
+block|;
 name|class
 name|TemplateTypeParmType
 operator|:
@@ -9858,14 +11141,14 @@ operator|:
 literal|15
 block|;
 name|unsigned
-name|Index
-operator|:
-literal|16
-block|;
-name|unsigned
 name|ParameterPack
 operator|:
 literal|1
+block|;
+name|unsigned
+name|Index
+operator|:
+literal|16
 block|;
 name|IdentifierInfo
 operator|*
@@ -9892,6 +11175,11 @@ name|Canon
 argument_list|,
 comment|/*Dependent=*/
 name|true
+argument_list|,
+comment|/*VariablyModified=*/
+name|false
+argument_list|,
+name|PP
 argument_list|)
 block|,
 name|Depth
@@ -9899,14 +11187,14 @@ argument_list|(
 name|D
 argument_list|)
 block|,
-name|Index
-argument_list|(
-name|I
-argument_list|)
-block|,
 name|ParameterPack
 argument_list|(
 name|PP
+argument_list|)
+block|,
+name|Index
+argument_list|(
+name|I
 argument_list|)
 block|,
 name|Name
@@ -9936,6 +11224,11 @@ argument_list|)
 argument_list|,
 comment|/*Dependent=*/
 name|true
+argument_list|,
+comment|/*VariablyModified=*/
+name|false
+argument_list|,
+name|PP
 argument_list|)
 block|,
 name|Depth
@@ -9943,14 +11236,14 @@ argument_list|(
 name|D
 argument_list|)
 block|,
-name|Index
-argument_list|(
-name|I
-argument_list|)
-block|,
 name|ParameterPack
 argument_list|(
 name|PP
+argument_list|)
+block|,
+name|Index
+argument_list|(
+name|I
 argument_list|)
 block|,
 name|Name
@@ -10157,6 +11450,16 @@ name|Canon
 operator|->
 name|isDependentType
 argument_list|()
+argument_list|,
+name|Canon
+operator|->
+name|isVariablyModifiedType
+argument_list|()
+argument_list|,
+name|Canon
+operator|->
+name|containsUnexpandedParameterPack
+argument_list|()
 argument_list|)
 block|,
 name|Replaced
@@ -10300,6 +11603,347 @@ return|;
 block|}
 expr|}
 block|;
+comment|/// \brief Represents the result of substituting a set of types for a template
+comment|/// type parameter pack.
+comment|///
+comment|/// When a pack expansion in the source code contains multiple parameter packs
+comment|/// and those parameter packs correspond to different levels of template
+comment|/// parameter lists, this type node is used to represent a template type
+comment|/// parameter pack from an outer level, which has already had its argument pack
+comment|/// substituted but that still lives within a pack expansion that itself
+comment|/// could not be instantiated. When actually performing a substitution into
+comment|/// that pack expansion (e.g., when all template parameters have corresponding
+comment|/// arguments), this type will be replaced with the \c SubstTemplateTypeParmType
+comment|/// at the current pack substitution index.
+name|class
+name|SubstTemplateTypeParmPackType
+operator|:
+name|public
+name|Type
+block|,
+name|public
+name|llvm
+operator|::
+name|FoldingSetNode
+block|{
+comment|/// \brief The original type parameter.
+specifier|const
+name|TemplateTypeParmType
+operator|*
+name|Replaced
+block|;
+comment|/// \brief A pointer to the set of template arguments that this
+comment|/// parameter pack is instantiated with.
+specifier|const
+name|TemplateArgument
+operator|*
+name|Arguments
+block|;
+comment|/// \brief The number of template arguments in \c Arguments.
+name|unsigned
+name|NumArguments
+block|;
+name|SubstTemplateTypeParmPackType
+argument_list|(
+argument|const TemplateTypeParmType *Param
+argument_list|,
+argument|QualType Canon
+argument_list|,
+argument|const TemplateArgument&ArgPack
+argument_list|)
+block|;
+name|friend
+name|class
+name|ASTContext
+block|;
+name|public
+operator|:
+name|IdentifierInfo
+operator|*
+name|getName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Replaced
+operator|->
+name|getName
+argument_list|()
+return|;
+block|}
+comment|/// Gets the template parameter that was substituted for.
+specifier|const
+name|TemplateTypeParmType
+operator|*
+name|getReplacedParameter
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Replaced
+return|;
+block|}
+name|bool
+name|isSugared
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+name|QualType
+name|desugar
+argument_list|()
+specifier|const
+block|{
+return|return
+name|QualType
+argument_list|(
+name|this
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+name|TemplateArgument
+name|getArgumentPack
+argument_list|()
+specifier|const
+block|;
+name|void
+name|Profile
+argument_list|(
+name|llvm
+operator|::
+name|FoldingSetNodeID
+operator|&
+name|ID
+argument_list|)
+block|;
+specifier|static
+name|void
+name|Profile
+argument_list|(
+name|llvm
+operator|::
+name|FoldingSetNodeID
+operator|&
+name|ID
+argument_list|,
+specifier|const
+name|TemplateTypeParmType
+operator|*
+name|Replaced
+argument_list|,
+specifier|const
+name|TemplateArgument
+operator|&
+name|ArgPack
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Type *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getTypeClass
+argument_list|()
+operator|==
+name|SubstTemplateTypeParmPack
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const SubstTemplateTypeParmPackType *T
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief Represents a C++0x auto type.
+comment|///
+comment|/// These types are usually a placeholder for a deduced type. However, within
+comment|/// templates and before the initializer is attached, there is no deduced type
+comment|/// and an auto type is type-dependent and canonical.
+name|class
+name|AutoType
+operator|:
+name|public
+name|Type
+block|,
+name|public
+name|llvm
+operator|::
+name|FoldingSetNode
+block|{
+name|AutoType
+argument_list|(
+argument|QualType DeducedType
+argument_list|)
+operator|:
+name|Type
+argument_list|(
+argument|Auto
+argument_list|,
+argument|DeducedType.isNull() ? QualType(this,
+literal|0
+argument|) : DeducedType
+argument_list|,
+comment|/*Dependent=*/
+argument|DeducedType.isNull()
+argument_list|,
+comment|/*VariablyModified=*/
+argument|false
+argument_list|,
+comment|/*ContainsParameterPack=*/
+argument|false
+argument_list|)
+block|{
+name|assert
+argument_list|(
+operator|(
+name|DeducedType
+operator|.
+name|isNull
+argument_list|()
+operator|||
+operator|!
+name|DeducedType
+operator|->
+name|isDependentType
+argument_list|()
+operator|)
+operator|&&
+literal|"deduced a dependent type for auto"
+argument_list|)
+block|;   }
+name|friend
+name|class
+name|ASTContext
+block|;
+comment|// ASTContext creates these
+name|public
+operator|:
+name|bool
+name|isSugared
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isDeduced
+argument_list|()
+return|;
+block|}
+name|QualType
+name|desugar
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getCanonicalTypeInternal
+argument_list|()
+return|;
+block|}
+name|QualType
+name|getDeducedType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isDeduced
+argument_list|()
+operator|?
+name|getCanonicalTypeInternal
+argument_list|()
+operator|:
+name|QualType
+argument_list|()
+return|;
+block|}
+name|bool
+name|isDeduced
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|isDependentType
+argument_list|()
+return|;
+block|}
+name|void
+name|Profile
+argument_list|(
+argument|llvm::FoldingSetNodeID&ID
+argument_list|)
+block|{
+name|Profile
+argument_list|(
+name|ID
+argument_list|,
+name|getDeducedType
+argument_list|()
+argument_list|)
+block|;   }
+specifier|static
+name|void
+name|Profile
+argument_list|(
+argument|llvm::FoldingSetNodeID&ID
+argument_list|,
+argument|QualType Deduced
+argument_list|)
+block|{
+name|ID
+operator|.
+name|AddPointer
+argument_list|(
+name|Deduced
+operator|.
+name|getAsOpaquePtr
+argument_list|()
+argument_list|)
+block|;   }
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Type *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getTypeClass
+argument_list|()
+operator|==
+name|Auto
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const AutoType *T
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+expr|}
+block|;
 comment|/// \brief Represents the type of a template specialization as written
 comment|/// in the source code.
 comment|///
@@ -10395,6 +12039,8 @@ argument_list|,
 argument|unsigned NumArgs
 argument_list|,
 argument|const PrintingPolicy&Policy
+argument_list|,
+argument|bool SkipBrackets = false
 argument_list|)
 block|;
 specifier|static
@@ -10549,7 +12195,7 @@ name|Profile
 argument_list|(
 argument|llvm::FoldingSetNodeID&ID
 argument_list|,
-argument|ASTContext&Ctx
+argument|const ASTContext&Ctx
 argument_list|)
 block|{
 name|Profile
@@ -10578,7 +12224,7 @@ argument|const TemplateArgument *Args
 argument_list|,
 argument|unsigned NumArgs
 argument_list|,
-argument|ASTContext&Context
+argument|const ASTContext&Context
 argument_list|)
 block|;
 specifier|static
@@ -10675,7 +12321,14 @@ argument_list|,
 name|QualType
 argument_list|()
 argument_list|,
+comment|/*Dependent=*/
 name|true
+argument_list|,
+comment|/*VariablyModified=*/
+name|false
+argument_list|,
+comment|/*ContainsUnexpandedParameterPack=*/
+name|false
 argument_list|)
 block|,
 name|Decl
@@ -10857,12 +12510,6 @@ operator|:
 name|public
 name|Type
 block|{
-comment|/// Keyword - Encodes an ElaboratedTypeKeyword enumeration constant.
-name|unsigned
-name|Keyword
-operator|:
-literal|3
-block|;
 name|protected
 operator|:
 name|TypeWithKeyword
@@ -10873,31 +12520,34 @@ argument|TypeClass tc
 argument_list|,
 argument|QualType Canonical
 argument_list|,
-argument|bool dependent
+argument|bool Dependent
+argument_list|,
+argument|bool VariablyModified
+argument_list|,
+argument|bool ContainsUnexpandedParameterPack
 argument_list|)
 operator|:
 name|Type
 argument_list|(
-name|tc
+argument|tc
 argument_list|,
-name|Canonical
+argument|Canonical
 argument_list|,
-name|dependent
+argument|Dependent
+argument_list|,
+argument|VariablyModified
+argument_list|,
+argument|ContainsUnexpandedParameterPack
 argument_list|)
-block|,
+block|{
+name|TypeWithKeywordBits
+operator|.
 name|Keyword
-argument_list|(
-argument|Keyword
-argument_list|)
-block|{}
+operator|=
+name|Keyword
+block|;   }
 name|public
 operator|:
-name|virtual
-operator|~
-name|TypeWithKeyword
-argument_list|()
-block|;
-comment|// pin vtable to Type.cpp
 name|ElaboratedTypeKeyword
 name|getKeyword
 argument_list|()
@@ -10909,6 +12559,8 @@ operator|<
 name|ElaboratedTypeKeyword
 operator|>
 operator|(
+name|TypeWithKeywordBits
+operator|.
 name|Keyword
 operator|)
 return|;
@@ -11050,6 +12702,16 @@ argument_list|,
 name|NamedType
 operator|->
 name|isDependentType
+argument_list|()
+argument_list|,
+name|NamedType
+operator|->
+name|isVariablyModifiedType
+argument_list|()
+argument_list|,
+name|NamedType
+operator|->
+name|containsUnexpandedParameterPack
 argument_list|()
 argument_list|)
 block|,
@@ -11264,7 +12926,16 @@ name|DependentName
 argument_list|,
 name|CanonType
 argument_list|,
+comment|/*Dependent=*/
 name|true
+argument_list|,
+comment|/*VariablyModified=*/
+name|false
+argument_list|,
+name|NNS
+operator|->
+name|containsUnexpandedParameterPack
+argument_list|()
 argument_list|)
 block|,
 name|NNS
@@ -11294,11 +12965,6 @@ block|;
 comment|// ASTContext creates these
 name|public
 operator|:
-name|virtual
-operator|~
-name|DependentNameType
-argument_list|()
-block|;
 comment|/// \brief Retrieve the qualification on this type.
 name|NestedNameSpecifier
 operator|*
@@ -11522,11 +13188,6 @@ block|;
 comment|// ASTContext creates these
 name|public
 operator|:
-name|virtual
-operator|~
-name|DependentTemplateSpecializationType
-argument_list|()
-block|;
 name|NestedNameSpecifier
 operator|*
 name|getQualifier
@@ -11631,7 +13292,7 @@ name|Profile
 argument_list|(
 argument|llvm::FoldingSetNodeID&ID
 argument_list|,
-argument|ASTContext&Context
+argument|const ASTContext&Context
 argument_list|)
 block|{
 name|Profile
@@ -11659,7 +13320,7 @@ name|Profile
 argument_list|(
 argument|llvm::FoldingSetNodeID&ID
 argument_list|,
-argument|ASTContext&Context
+argument|const ASTContext&Context
 argument_list|,
 argument|ElaboratedTypeKeyword Keyword
 argument_list|,
@@ -11701,6 +13362,254 @@ return|;
 block|}
 expr|}
 block|;
+comment|/// \brief Represents a pack expansion of types.
+comment|///
+comment|/// Pack expansions are part of C++0x variadic templates. A pack
+comment|/// expansion contains a pattern, which itself contains one or more
+comment|/// "unexpanded" parameter packs. When instantiated, a pack expansion
+comment|/// produces a series of types, each instantiated from the pattern of
+comment|/// the expansion, where the Ith instantiation of the pattern uses the
+comment|/// Ith arguments bound to each of the unexpanded parameter packs. The
+comment|/// pack expansion is considered to "expand" these unexpanded
+comment|/// parameter packs.
+comment|///
+comment|/// \code
+comment|/// template<typename ...Types> struct tuple;
+comment|///
+comment|/// template<typename ...Types>
+comment|/// struct tuple_of_references {
+comment|///   typedef tuple<Types&...> type;
+comment|/// };
+comment|/// \endcode
+comment|///
+comment|/// Here, the pack expansion \c Types&... is represented via a
+comment|/// PackExpansionType whose pattern is Types&.
+name|class
+name|PackExpansionType
+operator|:
+name|public
+name|Type
+block|,
+name|public
+name|llvm
+operator|::
+name|FoldingSetNode
+block|{
+comment|/// \brief The pattern of the pack expansion.
+name|QualType
+name|Pattern
+block|;
+comment|/// \brief The number of expansions that this pack expansion will
+comment|/// generate when substituted (+1), or indicates that
+comment|///
+comment|/// This field will only have a non-zero value when some of the parameter
+comment|/// packs that occur within the pattern have been substituted but others have
+comment|/// not.
+name|unsigned
+name|NumExpansions
+block|;
+name|PackExpansionType
+argument_list|(
+argument|QualType Pattern
+argument_list|,
+argument|QualType Canon
+argument_list|,
+argument|llvm::Optional<unsigned> NumExpansions
+argument_list|)
+operator|:
+name|Type
+argument_list|(
+name|PackExpansion
+argument_list|,
+name|Canon
+argument_list|,
+comment|/*Dependent=*/
+name|true
+argument_list|,
+comment|/*VariableModified=*/
+name|Pattern
+operator|->
+name|isVariablyModifiedType
+argument_list|()
+argument_list|,
+comment|/*ContainsUnexpandedParameterPack=*/
+name|false
+argument_list|)
+block|,
+name|Pattern
+argument_list|(
+name|Pattern
+argument_list|)
+block|,
+name|NumExpansions
+argument_list|(
+argument|NumExpansions? *NumExpansions +
+literal|1
+argument|:
+literal|0
+argument_list|)
+block|{ }
+name|friend
+name|class
+name|ASTContext
+block|;
+comment|// ASTContext creates these
+name|public
+operator|:
+comment|/// \brief Retrieve the pattern of this pack expansion, which is the
+comment|/// type that will be repeatedly instantiated when instantiating the
+comment|/// pack expansion itself.
+name|QualType
+name|getPattern
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Pattern
+return|;
+block|}
+comment|/// \brief Retrieve the number of expansions that this pack expansion will
+comment|/// generate, if known.
+name|llvm
+operator|::
+name|Optional
+operator|<
+name|unsigned
+operator|>
+name|getNumExpansions
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|NumExpansions
+condition|)
+return|return
+name|NumExpansions
+operator|-
+literal|1
+return|;
+return|return
+name|llvm
+operator|::
+name|Optional
+operator|<
+name|unsigned
+operator|>
+operator|(
+operator|)
+return|;
+block|}
+name|bool
+name|isSugared
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+name|QualType
+name|desugar
+argument_list|()
+specifier|const
+block|{
+return|return
+name|QualType
+argument_list|(
+name|this
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+name|void
+name|Profile
+argument_list|(
+argument|llvm::FoldingSetNodeID&ID
+argument_list|)
+block|{
+name|Profile
+argument_list|(
+name|ID
+argument_list|,
+name|getPattern
+argument_list|()
+argument_list|,
+name|getNumExpansions
+argument_list|()
+argument_list|)
+block|;   }
+specifier|static
+name|void
+name|Profile
+argument_list|(
+argument|llvm::FoldingSetNodeID&ID
+argument_list|,
+argument|QualType Pattern
+argument_list|,
+argument|llvm::Optional<unsigned> NumExpansions
+argument_list|)
+block|{
+name|ID
+operator|.
+name|AddPointer
+argument_list|(
+name|Pattern
+operator|.
+name|getAsOpaquePtr
+argument_list|()
+argument_list|)
+block|;
+name|ID
+operator|.
+name|AddBoolean
+argument_list|(
+name|NumExpansions
+argument_list|)
+block|;
+if|if
+condition|(
+name|NumExpansions
+condition|)
+name|ID
+operator|.
+name|AddInteger
+argument_list|(
+operator|*
+name|NumExpansions
+argument_list|)
+expr_stmt|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Type *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getTypeClass
+argument_list|()
+operator|==
+name|PackExpansion
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const PackExpansionType *T
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+expr|}
+block|;
 comment|/// ObjCObjectType - Represents a class type in Objective C.
 comment|/// Every Objective C type is a combination of a base type and a
 comment|/// list of protocols.
@@ -11727,27 +13636,15 @@ operator|:
 name|public
 name|Type
 block|{
-comment|// Pad the bit count up so that NumProtocols is 2-byte aligned
-name|unsigned
-operator|:
-name|BitsRemainingInType
-operator|-
-literal|16
-block|;
-comment|/// \brief The number of protocols stored after the
-comment|/// ObjCObjectPointerType node.
-comment|///
-comment|/// These protocols are those written directly on the type.  If
-comment|/// protocol qualifiers ever become additive, the iterators will
-comment|/// get kindof complicated.
-comment|///
-comment|/// In the canonical object type, these are sorted alphabetically
-comment|/// and uniqued.
-name|unsigned
-name|NumProtocols
-operator|:
-literal|16
-block|;
+comment|// ObjCObjectType.NumProtocols - the number of protocols stored
+comment|// after the ObjCObjectPointerType node.
+comment|//
+comment|// These protocols are those written directly on the type.  If
+comment|// protocol qualifiers ever become additive, the iterators will need
+comment|// to get kindof complicated.
+comment|//
+comment|// In the canonical object type, these are sorted alphabetically
+comment|// and uniqued.
 comment|/// Either a BuiltinType or an InterfaceType or sugar for either.
 name|QualType
 name|BaseType
@@ -11812,11 +13709,10 @@ name|QualType
 argument_list|()
 argument_list|,
 name|false
-argument_list|)
-block|,
-name|NumProtocols
-argument_list|(
-literal|0
+argument_list|,
+name|false
+argument_list|,
+name|false
 argument_list|)
 block|,
 name|BaseType
@@ -11825,15 +13721,13 @@ argument|QualType(this_(),
 literal|0
 argument|)
 argument_list|)
-block|{}
-name|protected
-operator|:
-name|Linkage
-name|getLinkageImpl
-argument_list|()
-specifier|const
-block|;
-comment|// key function
+block|{
+name|ObjCObjectTypeBits
+operator|.
+name|NumProtocols
+operator|=
+literal|0
+block|;   }
 name|public
 operator|:
 comment|/// getBaseType - Gets the base type of this object type.  This is
@@ -12051,6 +13945,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|ObjCObjectTypeBits
+operator|.
 name|NumProtocols
 return|;
 block|}
@@ -12439,6 +14335,10 @@ argument_list|,
 name|Canonical
 argument_list|,
 name|false
+argument_list|,
+name|false
+argument_list|,
+name|false
 argument_list|)
 block|,
 name|PointeeType
@@ -12451,14 +14351,6 @@ name|class
 name|ASTContext
 block|;
 comment|// ASTContext creates these.
-name|protected
-operator|:
-name|virtual
-name|Linkage
-name|getLinkageImpl
-argument_list|()
-specifier|const
-block|;
 name|public
 operator|:
 comment|/// getPointeeType - Gets the type pointed to by this ObjC pointer.
@@ -12504,7 +14396,7 @@ block|{
 return|return
 name|PointeeType
 operator|->
-name|getAs
+name|castAs
 operator|<
 name|ObjCObjectType
 operator|>
@@ -12792,10 +14684,6 @@ operator|:
 name|public
 name|Qualifiers
 block|{
-name|ASTContext
-operator|*
-name|Context
-block|;
 name|public
 operator|:
 name|QualifierCollector
@@ -12805,55 +14693,23 @@ argument_list|)
 operator|:
 name|Qualifiers
 argument_list|(
-name|Qs
-argument_list|)
-block|,
-name|Context
-argument_list|(
-literal|0
+argument|Qs
 argument_list|)
 block|{}
-name|QualifierCollector
-argument_list|(
-argument|ASTContext&Context
-argument_list|,
-argument|Qualifiers Qs = Qualifiers()
-argument_list|)
-operator|:
-name|Qualifiers
-argument_list|(
-name|Qs
-argument_list|)
-block|,
-name|Context
-argument_list|(
-argument|&Context
-argument_list|)
-block|{}
-name|void
-name|setContext
-argument_list|(
-argument|ASTContext&C
-argument_list|)
-block|{
-name|Context
-operator|=
-operator|&
-name|C
-block|; }
 comment|/// Collect any qualifiers on the given type and return an
-comment|/// unqualified type.
+comment|/// unqualified type.  The qualifiers are assumed to be consistent
+comment|/// with those already in the type.
 specifier|const
 name|Type
 operator|*
 name|strip
 argument_list|(
-argument|QualType QT
+argument|QualType type
 argument_list|)
 block|{
 name|addFastQualifiers
 argument_list|(
-name|QT
+name|type
 operator|.
 name|getLocalFastQualifiers
 argument_list|()
@@ -12861,49 +14717,40 @@ argument_list|)
 block|;
 if|if
 condition|(
-name|QT
+operator|!
+name|type
 operator|.
 name|hasLocalNonFastQualifiers
 argument_list|()
 condition|)
-block|{
+return|return
+name|type
+operator|.
+name|getTypePtrUnsafe
+argument_list|()
+return|;
 specifier|const
 name|ExtQuals
-modifier|*
-name|EQ
-init|=
-name|QT
+operator|*
+name|extQuals
+operator|=
+name|type
 operator|.
 name|getExtQualsUnsafe
 argument_list|()
-decl_stmt|;
-name|Context
-operator|=
-operator|&
-name|EQ
-operator|->
-name|getContext
-argument_list|()
-expr_stmt|;
-name|addQualifiers
+block|;
+name|addConsistentQualifiers
 argument_list|(
-name|EQ
+name|extQuals
 operator|->
 name|getQualifiers
 argument_list|()
 argument_list|)
-expr_stmt|;
+block|;
 return|return
-name|EQ
+name|extQuals
 operator|->
 name|getBaseType
-argument_list|()
-return|;
-block|}
-return|return
-name|QT
-operator|.
-name|getTypePtrUnsafe
 argument_list|()
 return|;
 block|}
@@ -12911,6 +14758,8 @@ comment|/// Apply the collected qualifiers to the given type.
 name|QualType
 name|apply
 argument_list|(
+argument|const ASTContext&Context
+argument_list|,
 argument|QualType QT
 argument_list|)
 specifier|const
@@ -12919,12 +14768,241 @@ comment|/// Apply the collected qualifiers to the given type.
 name|QualType
 name|apply
 argument_list|(
+argument|const ASTContext&Context
+argument_list|,
 argument|const Type* T
 argument_list|)
 specifier|const
-block|;  }
+block|; }
 block|;
 comment|// Inline function definitions.
+specifier|inline
+specifier|const
+name|Type
+operator|*
+name|QualType
+operator|::
+name|getTypePtr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getCommonPtr
+argument_list|()
+operator|->
+name|BaseType
+return|;
+block|}
+specifier|inline
+specifier|const
+name|Type
+operator|*
+name|QualType
+operator|::
+name|getTypePtrOrNull
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|isNull
+argument_list|()
+operator|?
+literal|0
+operator|:
+name|getCommonPtr
+argument_list|()
+operator|->
+name|BaseType
+operator|)
+return|;
+block|}
+specifier|inline
+name|SplitQualType
+name|QualType
+operator|::
+name|split
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+operator|!
+name|hasLocalNonFastQualifiers
+argument_list|()
+condition|)
+return|return
+name|SplitQualType
+argument_list|(
+name|getTypePtrUnsafe
+argument_list|()
+argument_list|,
+name|Qualifiers
+operator|::
+name|fromFastMask
+argument_list|(
+name|getLocalFastQualifiers
+argument_list|()
+argument_list|)
+argument_list|)
+return|;
+specifier|const
+name|ExtQuals
+operator|*
+name|eq
+operator|=
+name|getExtQualsUnsafe
+argument_list|()
+block|;
+name|Qualifiers
+name|qs
+operator|=
+name|eq
+operator|->
+name|getQualifiers
+argument_list|()
+block|;
+name|qs
+operator|.
+name|addFastQualifiers
+argument_list|(
+name|getLocalFastQualifiers
+argument_list|()
+argument_list|)
+block|;
+return|return
+name|SplitQualType
+argument_list|(
+name|eq
+operator|->
+name|getBaseType
+argument_list|()
+argument_list|,
+name|qs
+argument_list|)
+return|;
+block|}
+specifier|inline
+name|Qualifiers
+name|QualType
+operator|::
+name|getLocalQualifiers
+argument_list|()
+specifier|const
+block|{
+name|Qualifiers
+name|Quals
+block|;
+if|if
+condition|(
+name|hasLocalNonFastQualifiers
+argument_list|()
+condition|)
+name|Quals
+operator|=
+name|getExtQualsUnsafe
+argument_list|()
+operator|->
+name|getQualifiers
+argument_list|()
+expr_stmt|;
+name|Quals
+operator|.
+name|addFastQualifiers
+argument_list|(
+name|getLocalFastQualifiers
+argument_list|()
+argument_list|)
+block|;
+return|return
+name|Quals
+return|;
+block|}
+specifier|inline
+name|Qualifiers
+name|QualType
+operator|::
+name|getQualifiers
+argument_list|()
+specifier|const
+block|{
+name|Qualifiers
+name|quals
+operator|=
+name|getCommonPtr
+argument_list|()
+operator|->
+name|CanonicalType
+operator|.
+name|getLocalQualifiers
+argument_list|()
+block|;
+name|quals
+operator|.
+name|addFastQualifiers
+argument_list|(
+name|getLocalFastQualifiers
+argument_list|()
+argument_list|)
+block|;
+return|return
+name|quals
+return|;
+block|}
+specifier|inline
+name|unsigned
+name|QualType
+operator|::
+name|getCVRQualifiers
+argument_list|()
+specifier|const
+block|{
+name|unsigned
+name|cvr
+operator|=
+name|getCommonPtr
+argument_list|()
+operator|->
+name|CanonicalType
+operator|.
+name|getLocalCVRQualifiers
+argument_list|()
+block|;
+name|cvr
+operator||=
+name|getLocalCVRQualifiers
+argument_list|()
+block|;
+return|return
+name|cvr
+return|;
+block|}
+specifier|inline
+name|QualType
+name|QualType
+operator|::
+name|getCanonicalType
+argument_list|()
+specifier|const
+block|{
+name|QualType
+name|canon
+operator|=
+name|getCommonPtr
+argument_list|()
+operator|->
+name|CanonicalType
+block|;
+return|return
+name|canon
+operator|.
+name|withFastQualifiers
+argument_list|(
+name|getLocalFastQualifiers
+argument_list|()
+argument_list|)
+return|;
+block|}
 specifier|inline
 name|bool
 name|QualType
@@ -12933,36 +15011,9 @@ name|isCanonical
 argument_list|()
 specifier|const
 block|{
-specifier|const
-name|Type
-operator|*
-name|T
-operator|=
+return|return
 name|getTypePtr
 argument_list|()
-block|;
-if|if
-condition|(
-name|hasLocalQualifiers
-argument_list|()
-condition|)
-return|return
-name|T
-operator|->
-name|isCanonicalUnqualified
-argument_list|()
-operator|&&
-operator|!
-name|isa
-operator|<
-name|ArrayType
-operator|>
-operator|(
-name|T
-operator|)
-return|;
-return|return
-name|T
 operator|->
 name|isCanonicalUnqualified
 argument_list|()
@@ -12976,6 +15027,15 @@ name|isCanonicalAsParam
 argument_list|()
 specifier|const
 block|{
+if|if
+condition|(
+operator|!
+name|isCanonical
+argument_list|()
+condition|)
+return|return
+name|false
+return|;
 if|if
 condition|(
 name|hasLocalQualifiers
@@ -12992,12 +15052,22 @@ operator|=
 name|getTypePtr
 argument_list|()
 block|;
-return|return
+if|if
+condition|(
 name|T
 operator|->
-name|isCanonicalUnqualified
+name|isVariablyModifiedType
 argument_list|()
 operator|&&
+name|T
+operator|->
+name|hasSizedVLAType
+argument_list|()
+condition|)
+return|return
+name|false
+return|;
+return|return
 operator|!
 name|isa
 operator|<
@@ -13029,11 +15099,10 @@ return|return
 name|isLocalConstQualified
 argument_list|()
 operator|||
-name|getTypePtr
+name|getCommonPtr
 argument_list|()
 operator|->
-name|getCanonicalTypeInternal
-argument_list|()
+name|CanonicalType
 operator|.
 name|isLocalConstQualified
 argument_list|()
@@ -13051,11 +15120,10 @@ return|return
 name|isLocalRestrictQualified
 argument_list|()
 operator|||
-name|getTypePtr
+name|getCommonPtr
 argument_list|()
 operator|->
-name|getCanonicalTypeInternal
-argument_list|()
+name|CanonicalType
 operator|.
 name|isLocalRestrictQualified
 argument_list|()
@@ -13073,11 +15141,10 @@ return|return
 name|isLocalVolatileQualified
 argument_list|()
 operator|||
-name|getTypePtr
+name|getCommonPtr
 argument_list|()
 operator|->
-name|getCanonicalTypeInternal
-argument_list|()
+name|CanonicalType
 operator|.
 name|isLocalVolatileQualified
 argument_list|()
@@ -13095,6 +15162,26 @@ return|return
 name|hasLocalQualifiers
 argument_list|()
 operator|||
+name|getCommonPtr
+argument_list|()
+operator|->
+name|CanonicalType
+operator|.
+name|hasLocalQualifiers
+argument_list|()
+return|;
+block|}
+specifier|inline
+name|QualType
+name|QualType
+operator|::
+name|getUnqualifiedType
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+operator|!
 name|getTypePtr
 argument_list|()
 operator|->
@@ -13103,130 +15190,71 @@ argument_list|()
 operator|.
 name|hasLocalQualifiers
 argument_list|()
-return|;
-block|}
-specifier|inline
-name|Qualifiers
+condition|)
+return|return
 name|QualType
-operator|::
-name|getQualifiers
-argument_list|()
-specifier|const
-block|{
-name|Qualifiers
-name|Quals
-operator|=
-name|getLocalQualifiers
-argument_list|()
-block|;
-name|Quals
-operator|.
-name|addQualifiers
 argument_list|(
 name|getTypePtr
 argument_list|()
-operator|->
-name|getCanonicalTypeInternal
-argument_list|()
-operator|.
-name|getLocalQualifiers
-argument_list|()
-argument_list|)
-block|;
-return|return
-name|Quals
-return|;
-block|}
-specifier|inline
-name|unsigned
-name|QualType
-operator|::
-name|getCVRQualifiers
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getLocalCVRQualifiers
-argument_list|()
-operator||
-name|getTypePtr
-argument_list|()
-operator|->
-name|getCanonicalTypeInternal
-argument_list|()
-operator|.
-name|getLocalCVRQualifiers
-argument_list|()
-return|;
-block|}
-comment|/// getCVRQualifiersThroughArrayTypes - If there are CVR qualifiers for this
-comment|/// type, returns them. Otherwise, if this is an array type, recurses
-comment|/// on the element type until some qualifiers have been found or a non-array
-comment|/// type reached.
-specifier|inline
-name|unsigned
-name|QualType
-operator|::
-name|getCVRQualifiersThroughArrayTypes
-argument_list|()
-specifier|const
-block|{
-if|if
-condition|(
-name|unsigned
-name|Quals
-init|=
-name|getCVRQualifiers
-argument_list|()
-condition|)
-return|return
-name|Quals
-return|;
-name|QualType
-name|CT
-operator|=
-name|getTypePtr
-argument_list|()
-operator|->
-name|getCanonicalTypeInternal
-argument_list|()
-block|;
-if|if
-condition|(
-specifier|const
-name|ArrayType
-modifier|*
-name|AT
-init|=
-name|dyn_cast
-operator|<
-name|ArrayType
-operator|>
-operator|(
-name|CT
-operator|)
-condition|)
-return|return
-name|AT
-operator|->
-name|getElementType
-argument_list|()
-operator|.
-name|getCVRQualifiersThroughArrayTypes
-argument_list|()
-return|;
-return|return
+argument_list|,
 literal|0
+argument_list|)
+return|;
+return|return
+name|QualType
+argument_list|(
+name|getSplitUnqualifiedTypeImpl
+argument_list|(
+operator|*
+name|this
+argument_list|)
+operator|.
+name|first
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+specifier|inline
+name|SplitQualType
+name|QualType
+operator|::
+name|getSplitUnqualifiedType
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+operator|!
+name|getTypePtr
+argument_list|()
+operator|->
+name|getCanonicalTypeInternal
+argument_list|()
+operator|.
+name|hasLocalQualifiers
+argument_list|()
+condition|)
+return|return
+name|split
+argument_list|()
+return|;
+return|return
+name|getSplitUnqualifiedTypeImpl
+argument_list|(
+operator|*
+name|this
+argument_list|)
 return|;
 block|}
 specifier|inline
 name|void
 name|QualType
 operator|::
-name|removeConst
+name|removeLocalConst
 argument_list|()
 block|{
-name|removeFastQualifiers
+name|removeLocalFastQualifiers
 argument_list|(
 name|Qualifiers
 operator|::
@@ -13237,10 +15265,10 @@ specifier|inline
 name|void
 name|QualType
 operator|::
-name|removeRestrict
+name|removeLocalRestrict
 argument_list|()
 block|{
-name|removeFastQualifiers
+name|removeLocalFastQualifiers
 argument_list|(
 name|Qualifiers
 operator|::
@@ -13251,55 +15279,21 @@ specifier|inline
 name|void
 name|QualType
 operator|::
-name|removeVolatile
+name|removeLocalVolatile
 argument_list|()
 block|{
-name|QualifierCollector
-name|Qc
-block|;
-specifier|const
-name|Type
-operator|*
-name|Ty
-operator|=
-name|Qc
-operator|.
-name|strip
+name|removeLocalFastQualifiers
 argument_list|(
-operator|*
-name|this
+name|Qualifiers
+operator|::
+name|Volatile
 argument_list|)
-block|;
-if|if
-condition|(
-name|Qc
-operator|.
-name|hasVolatile
-argument_list|()
-condition|)
-block|{
-name|Qc
-operator|.
-name|removeVolatile
-argument_list|()
-expr_stmt|;
-operator|*
-name|this
-operator|=
-name|Qc
-operator|.
-name|apply
-argument_list|(
-name|Ty
-argument_list|)
-expr_stmt|;
-block|}
-block|}
+block|; }
 specifier|inline
 name|void
 name|QualType
 operator|::
-name|removeCVRQualifiers
+name|removeLocalCVRQualifiers
 argument_list|(
 argument|unsigned Mask
 argument_list|)
@@ -13319,58 +15313,27 @@ operator|&&
 literal|"mask has non-CVR bits"
 argument_list|)
 block|;
-comment|// Fast path: we don't need to touch the slow qualifiers.
-if|if
-condition|(
-operator|!
+name|assert
+argument_list|(
 operator|(
-name|Mask
-operator|&
-operator|~
+name|int
+operator|)
+name|Qualifiers
+operator|::
+name|CVRMask
+operator|==
+operator|(
+name|int
+operator|)
 name|Qualifiers
 operator|::
 name|FastMask
-operator|)
-condition|)
-block|{
-name|removeFastQualifiers
-argument_list|(
-name|Mask
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-name|QualifierCollector
-name|Qc
-decl_stmt|;
-specifier|const
-name|Type
-operator|*
-name|Ty
-operator|=
-name|Qc
-operator|.
-name|strip
-argument_list|(
-operator|*
-name|this
 argument_list|)
 block|;
-name|Qc
-operator|.
-name|removeCVRQualifiers
+comment|// Fast path: we don't need to touch the slow qualifiers.
+name|removeLocalFastQualifiers
 argument_list|(
 name|Mask
-argument_list|)
-block|;
-operator|*
-name|this
-operator|=
-name|Qc
-operator|.
-name|apply
-argument_list|(
-name|Ty
 argument_list|)
 block|; }
 comment|/// getAddressSpace - Return the address space of this type.
@@ -13382,122 +15345,12 @@ name|getAddressSpace
 argument_list|()
 specifier|const
 block|{
-if|if
-condition|(
-name|hasLocalNonFastQualifiers
-argument_list|()
-condition|)
-block|{
-specifier|const
-name|ExtQuals
-modifier|*
-name|EQ
-init|=
-name|getExtQualsUnsafe
-argument_list|()
-decl_stmt|;
-if|if
-condition|(
-name|EQ
-operator|->
-name|hasAddressSpace
-argument_list|()
-condition|)
 return|return
-name|EQ
-operator|->
-name|getAddressSpace
-argument_list|()
-return|;
-block|}
-name|QualType
-name|CT
-init|=
-name|getTypePtr
-argument_list|()
-operator|->
-name|getCanonicalTypeInternal
-argument_list|()
-decl_stmt|;
-if|if
-condition|(
-name|CT
-operator|.
-name|hasLocalNonFastQualifiers
-argument_list|()
-condition|)
-block|{
-specifier|const
-name|ExtQuals
-modifier|*
-name|EQ
-init|=
-name|CT
-operator|.
-name|getExtQualsUnsafe
-argument_list|()
-decl_stmt|;
-if|if
-condition|(
-name|EQ
-operator|->
-name|hasAddressSpace
-argument_list|()
-condition|)
-return|return
-name|EQ
-operator|->
-name|getAddressSpace
-argument_list|()
-return|;
-block|}
-if|if
-condition|(
-specifier|const
-name|ArrayType
-modifier|*
-name|AT
-init|=
-name|dyn_cast
-operator|<
-name|ArrayType
-operator|>
-operator|(
-name|CT
-operator|)
-condition|)
-return|return
-name|AT
-operator|->
-name|getElementType
+name|getQualifiers
 argument_list|()
 operator|.
 name|getAddressSpace
 argument_list|()
-return|;
-if|if
-condition|(
-specifier|const
-name|RecordType
-modifier|*
-name|RT
-init|=
-name|dyn_cast
-operator|<
-name|RecordType
-operator|>
-operator|(
-name|CT
-operator|)
-condition|)
-return|return
-name|RT
-operator|->
-name|getAddressSpace
-argument_list|()
-return|;
-return|return
-literal|0
 return|;
 block|}
 comment|/// getObjCGCAttr - Return the gc attribute of this type.
@@ -13511,154 +15364,12 @@ name|getObjCGCAttr
 argument_list|()
 specifier|const
 block|{
-if|if
-condition|(
-name|hasLocalNonFastQualifiers
-argument_list|()
-condition|)
-block|{
-specifier|const
-name|ExtQuals
-modifier|*
-name|EQ
-init|=
-name|getExtQualsUnsafe
-argument_list|()
-decl_stmt|;
-if|if
-condition|(
-name|EQ
-operator|->
-name|hasObjCGCAttr
-argument_list|()
-condition|)
 return|return
-name|EQ
-operator|->
-name|getObjCGCAttr
-argument_list|()
-return|;
-block|}
-name|QualType
-name|CT
-init|=
-name|getTypePtr
-argument_list|()
-operator|->
-name|getCanonicalTypeInternal
-argument_list|()
-decl_stmt|;
-if|if
-condition|(
-name|CT
-operator|.
-name|hasLocalNonFastQualifiers
-argument_list|()
-condition|)
-block|{
-specifier|const
-name|ExtQuals
-modifier|*
-name|EQ
-init|=
-name|CT
-operator|.
-name|getExtQualsUnsafe
-argument_list|()
-decl_stmt|;
-if|if
-condition|(
-name|EQ
-operator|->
-name|hasObjCGCAttr
-argument_list|()
-condition|)
-return|return
-name|EQ
-operator|->
-name|getObjCGCAttr
-argument_list|()
-return|;
-block|}
-if|if
-condition|(
-specifier|const
-name|ArrayType
-modifier|*
-name|AT
-init|=
-name|dyn_cast
-operator|<
-name|ArrayType
-operator|>
-operator|(
-name|CT
-operator|)
-condition|)
-return|return
-name|AT
-operator|->
-name|getElementType
+name|getQualifiers
 argument_list|()
 operator|.
 name|getObjCGCAttr
 argument_list|()
-return|;
-if|if
-condition|(
-specifier|const
-name|ObjCObjectPointerType
-modifier|*
-name|PT
-init|=
-name|CT
-operator|->
-name|getAs
-operator|<
-name|ObjCObjectPointerType
-operator|>
-operator|(
-operator|)
-condition|)
-return|return
-name|PT
-operator|->
-name|getPointeeType
-argument_list|()
-operator|.
-name|getObjCGCAttr
-argument_list|()
-return|;
-comment|// We most look at all pointer types, not just pointer to interface types.
-if|if
-condition|(
-specifier|const
-name|PointerType
-modifier|*
-name|PT
-init|=
-name|CT
-operator|->
-name|getAs
-operator|<
-name|PointerType
-operator|>
-operator|(
-operator|)
-condition|)
-return|return
-name|PT
-operator|->
-name|getPointeeType
-argument_list|()
-operator|.
-name|getObjCGCAttr
-argument_list|()
-return|;
-return|return
-name|Qualifiers
-operator|::
-name|GCNone
 return|;
 block|}
 specifier|inline
@@ -13801,52 +15512,37 @@ name|QualType
 operator|::
 name|isMoreQualifiedThan
 argument_list|(
-argument|QualType Other
+argument|QualType other
 argument_list|)
 specifier|const
 block|{
-comment|// FIXME: work on arbitrary qualifiers
-name|unsigned
-name|MyQuals
+name|Qualifiers
+name|myQuals
 operator|=
-name|this
-operator|->
-name|getCVRQualifiersThroughArrayTypes
+name|getQualifiers
 argument_list|()
 block|;
-name|unsigned
-name|OtherQuals
+name|Qualifiers
+name|otherQuals
 operator|=
-name|Other
+name|other
 operator|.
-name|getCVRQualifiersThroughArrayTypes
+name|getQualifiers
 argument_list|()
 block|;
-if|if
-condition|(
-name|getAddressSpace
-argument_list|()
-operator|!=
-name|Other
-operator|.
-name|getAddressSpace
-argument_list|()
-condition|)
 return|return
-name|false
-return|;
-return|return
-name|MyQuals
-operator|!=
-name|OtherQuals
-operator|&&
 operator|(
-name|MyQuals
-operator||
-name|OtherQuals
+name|myQuals
+operator|!=
+name|otherQuals
+operator|&&
+name|myQuals
+operator|.
+name|compatiblyIncludes
+argument_list|(
+name|otherQuals
+argument_list|)
 operator|)
-operator|==
-name|MyQuals
 return|;
 block|}
 comment|/// isAtLeastAsQualifiedAs - Determine whether this type is at last
@@ -13859,48 +15555,21 @@ name|QualType
 operator|::
 name|isAtLeastAsQualifiedAs
 argument_list|(
-argument|QualType Other
+argument|QualType other
 argument_list|)
 specifier|const
 block|{
-comment|// FIXME: work on arbitrary qualifiers
-name|unsigned
-name|MyQuals
-operator|=
-name|this
-operator|->
-name|getCVRQualifiersThroughArrayTypes
-argument_list|()
-block|;
-name|unsigned
-name|OtherQuals
-operator|=
-name|Other
-operator|.
-name|getCVRQualifiersThroughArrayTypes
-argument_list|()
-block|;
-if|if
-condition|(
-name|getAddressSpace
-argument_list|()
-operator|!=
-name|Other
-operator|.
-name|getAddressSpace
-argument_list|()
-condition|)
 return|return
-name|false
-return|;
-return|return
-operator|(
-name|MyQuals
-operator||
-name|OtherQuals
-operator|)
-operator|==
-name|MyQuals
+name|getQualifiers
+argument_list|()
+operator|.
+name|compatiblyIncludes
+argument_list|(
+name|other
+operator|.
+name|getQualifiers
+argument_list|()
+argument_list|)
 return|;
 block|}
 comment|/// getNonReferenceType - If Type is a reference type (e.g., const
@@ -14289,6 +15958,24 @@ specifier|inline
 name|bool
 name|Type
 operator|::
+name|isBuiltinType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isa
+operator|<
+name|BuiltinType
+operator|>
+operator|(
+name|CanonicalType
+operator|)
+return|;
+block|}
+specifier|inline
+name|bool
+name|Type
+operator|::
 name|isRecordType
 argument_list|()
 specifier|const
@@ -14297,6 +15984,24 @@ return|return
 name|isa
 operator|<
 name|RecordType
+operator|>
+operator|(
+name|CanonicalType
+operator|)
+return|;
+block|}
+specifier|inline
+name|bool
+name|Type
+operator|::
+name|isEnumeralType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isa
+operator|<
+name|EnumType
 operator|>
 operator|(
 name|CanonicalType
@@ -14515,9 +16220,6 @@ return|return
 name|false
 return|;
 block|}
-end_block
-
-begin_expr_stmt
 specifier|inline
 name|bool
 name|Type
@@ -14546,16 +16248,11 @@ operator|->
 name|isObjCClassType
 argument_list|()
 return|;
-end_expr_stmt
-
-begin_return
 return|return
 name|false
 return|;
-end_return
-
-begin_expr_stmt
-unit|} inline
+block|}
+specifier|inline
 name|bool
 name|Type
 operator|::
@@ -14590,16 +16287,11 @@ operator|::
 name|ObjCSel
 argument_list|)
 return|;
-end_expr_stmt
-
-begin_return
 return|return
 name|false
 return|;
-end_return
-
-begin_expr_stmt
-unit|} inline
+block|}
+specifier|inline
 name|bool
 name|Type
 operator|::
@@ -14618,9 +16310,6 @@ name|isObjCSelType
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|inline
 name|bool
 name|Type
@@ -14639,29 +16328,6 @@ name|CanonicalType
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
-specifier|inline
-name|bool
-name|Type
-operator|::
-name|isBuiltinType
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getAs
-operator|<
-name|BuiltinType
-operator|>
-operator|(
-operator|)
-return|;
-block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|inline
 name|bool
 name|Type
@@ -14703,25 +16369,45 @@ condition|)
 return|return
 name|true
 return|;
-end_expr_stmt
-
-begin_return
 return|return
 name|false
 return|;
-end_return
-
-begin_comment
-unit|}
+block|}
+specifier|inline
+name|bool
+name|Type
+operator|::
+name|isPlaceholderType
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+specifier|const
+name|BuiltinType
+modifier|*
+name|BT
+init|=
+name|getAs
+operator|<
+name|BuiltinType
+operator|>
+operator|(
+operator|)
+condition|)
+return|return
+name|BT
+operator|->
+name|isPlaceholderType
+argument_list|()
+return|;
+return|return
+name|false
+return|;
+block|}
 comment|/// \brief Determines whether this is a type for which one can define
-end_comment
-
-begin_comment
 comment|/// an overloaded operator.
-end_comment
-
-begin_expr_stmt
-unit|inline
+specifier|inline
 name|bool
 name|Type
 operator|::
@@ -14740,9 +16426,6 @@ name|isEnumeralType
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|inline
 name|bool
 name|Type
@@ -14770,9 +16453,6 @@ argument_list|()
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|inline
 name|bool
 name|Type
@@ -14786,17 +16466,51 @@ name|isObjCObjectPointerType
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
+specifier|inline
+specifier|const
+name|Type
+operator|*
+name|Type
+operator|::
+name|getBaseElementTypeUnsafe
+argument_list|()
+specifier|const
+block|{
+specifier|const
+name|Type
+operator|*
+name|type
+operator|=
+name|this
+block|;
+while|while
+condition|(
+specifier|const
+name|ArrayType
+modifier|*
+name|arrayType
+init|=
+name|type
+operator|->
+name|getAsArrayTypeUnsafe
+argument_list|()
+condition|)
+name|type
+operator|=
+name|arrayType
+operator|->
+name|getElementType
+argument_list|()
+operator|.
+name|getTypePtr
+argument_list|()
+expr_stmt|;
+return|return
+name|type
+return|;
+block|}
 comment|/// Insertion operator for diagnostics.  This allows sending QualType's into a
-end_comment
-
-begin_comment
 comment|/// diagnostic with<<.
-end_comment
-
-begin_expr_stmt
 specifier|inline
 specifier|const
 name|DiagnosticBuilder
@@ -14808,7 +16522,7 @@ specifier|const
 name|DiagnosticBuilder
 operator|&
 name|DB
-operator|,
+expr|,
 name|QualType
 name|T
 operator|)
@@ -14837,17 +16551,8 @@ return|return
 name|DB
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// Insertion operator for partial diagnostics.  This allows sending QualType's
-end_comment
-
-begin_comment
 comment|/// into a diagnostic with<<.
-end_comment
-
-begin_expr_stmt
 specifier|inline
 specifier|const
 name|PartialDiagnostic
@@ -14859,7 +16564,7 @@ specifier|const
 name|PartialDiagnostic
 operator|&
 name|PD
-operator|,
+expr|,
 name|QualType
 name|T
 operator|)
@@ -14888,22 +16593,13 @@ return|return
 name|PD
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|// Helper class template that is used by Type::getAs to ensure that one does
-end_comment
-
-begin_comment
 comment|// not try to look through a qualified type to get to an array type.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
 name|T
-operator|,
+block|,
 name|bool
 name|isArrayType
 operator|=
@@ -14913,7 +16609,7 @@ operator|::
 name|is_same
 operator|<
 name|T
-operator|,
+expr|,
 name|ArrayType
 operator|>
 operator|::
@@ -14924,7 +16620,7 @@ operator|::
 name|is_base_of
 operator|<
 name|ArrayType
-operator|,
+expr|,
 name|T
 operator|>
 operator|::
@@ -14934,10 +16630,7 @@ operator|>
 expr|struct
 name|ArrayType_cannot_be_used_with_getAs
 block|{ }
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+block|;
 name|template
 operator|<
 name|typename
@@ -14947,17 +16640,11 @@ expr|struct
 name|ArrayType_cannot_be_used_with_getAs
 operator|<
 name|T
-operator|,
+block|,
 name|true
 operator|>
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
+block|;
 comment|/// Member-template getAs<specific type>'.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -15002,13 +16689,7 @@ condition|)
 return|return
 name|Ty
 return|;
-end_expr_stmt
-
-begin_comment
 comment|// If the canonical form of this type isn't the right kind, reject it.
-end_comment
-
-begin_if
 if|if
 condition|(
 operator|!
@@ -15023,17 +16704,8 @@ condition|)
 return|return
 literal|0
 return|;
-end_if
-
-begin_comment
 comment|// If this is a typedef for the type, strip the typedef off without
-end_comment
-
-begin_comment
 comment|// losing all typedef information.
-end_comment
-
-begin_return
 return|return
 name|cast
 operator|<
@@ -15044,10 +16716,183 @@ name|getUnqualifiedDesugaredType
 argument_list|()
 operator|)
 return|;
-end_return
+block|}
+specifier|inline
+specifier|const
+name|ArrayType
+operator|*
+name|Type
+operator|::
+name|getAsArrayTypeUnsafe
+argument_list|()
+specifier|const
+block|{
+comment|// If this is directly an array type, return it.
+if|if
+condition|(
+specifier|const
+name|ArrayType
+modifier|*
+name|arr
+init|=
+name|dyn_cast
+operator|<
+name|ArrayType
+operator|>
+operator|(
+name|this
+operator|)
+condition|)
+return|return
+name|arr
+return|;
+comment|// If the canonical form of this type isn't the right kind, reject it.
+if|if
+condition|(
+operator|!
+name|isa
+operator|<
+name|ArrayType
+operator|>
+operator|(
+name|CanonicalType
+operator|)
+condition|)
+return|return
+literal|0
+return|;
+comment|// If this is a typedef for the type, strip the typedef off without
+comment|// losing all typedef information.
+return|return
+name|cast
+operator|<
+name|ArrayType
+operator|>
+operator|(
+name|getUnqualifiedDesugaredType
+argument_list|()
+operator|)
+return|;
+block|}
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+specifier|const
+name|T
+operator|*
+name|Type
+operator|::
+name|castAs
+argument_list|()
+specifier|const
+block|{
+name|ArrayType_cannot_be_used_with_getAs
+operator|<
+name|T
+operator|>
+name|at
+block|;
+operator|(
+name|void
+operator|)
+name|at
+block|;
+name|assert
+argument_list|(
+name|isa
+operator|<
+name|T
+operator|>
+operator|(
+name|CanonicalType
+operator|)
+argument_list|)
+block|;
+if|if
+condition|(
+specifier|const
+name|T
+modifier|*
+name|ty
+init|=
+name|dyn_cast
+operator|<
+name|T
+operator|>
+operator|(
+name|this
+operator|)
+condition|)
+return|return
+name|ty
+return|;
+return|return
+name|cast
+operator|<
+name|T
+operator|>
+operator|(
+name|getUnqualifiedDesugaredType
+argument_list|()
+operator|)
+return|;
+block|}
+specifier|inline
+specifier|const
+name|ArrayType
+operator|*
+name|Type
+operator|::
+name|castAsArrayTypeUnsafe
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isa
+operator|<
+name|ArrayType
+operator|>
+operator|(
+name|CanonicalType
+operator|)
+argument_list|)
+block|;
+if|if
+condition|(
+specifier|const
+name|ArrayType
+modifier|*
+name|arr
+init|=
+name|dyn_cast
+operator|<
+name|ArrayType
+operator|>
+operator|(
+name|this
+operator|)
+condition|)
+return|return
+name|arr
+return|;
+return|return
+name|cast
+operator|<
+name|ArrayType
+operator|>
+operator|(
+name|getUnqualifiedDesugaredType
+argument_list|()
+operator|)
+return|;
+block|}
+expr|}
+end_block
 
 begin_comment
-unit|}  }
 comment|// end namespace clang
 end_comment
 

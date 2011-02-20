@@ -73,5 +73,45 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|//<rdar://problem/6880464>
+end_comment
+
+begin_function
+specifier|extern
+specifier|inline
+name|int
+name|g
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// expected-note{{previous definition}}
+end_comment
+
+begin_function
+name|int
+name|g
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// expected-error{{redefinition of a 'extern inline' function 'g' is not supported in C99 mode}}
+end_comment
+
 end_unit
 

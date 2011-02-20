@@ -36,5 +36,12 @@ parameter_list|()
 value|f()
 end_define
 
+begin_define
+define|#
+directive|define
+name|x
+value|x
+end_define
+
 end_unit
 

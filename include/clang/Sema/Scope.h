@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/Diagnostic.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallPtrSet.h"
 end_include
 
@@ -123,7 +129,7 @@ name|ClassScope
 init|=
 literal|0x20
 block|,
-comment|/// BlockScope - This is a scope that corresponds to a block object.
+comment|/// BlockScope - This is a scope that corresponds to a block/closure object.
 comment|/// Blocks serve as top-level scopes for some objects like labels, they
 comment|/// also prevent things like break and continue.  BlockScopes always have
 comment|/// the FnScope, BreakScope, ContinueScope, and DeclScope flags set as well.
@@ -259,9 +265,9 @@ expr_stmt|;
 name|UsingDirectivesTy
 name|UsingDirectives
 decl_stmt|;
-comment|/// \brief The number of errors at the start of the given scope.
-name|unsigned
-name|NumErrorsAtStart
+comment|/// \brief Used to determine if errors occurred in this scope.
+name|DiagnosticErrorTrap
+name|ErrorTrap
 decl_stmt|;
 name|public
 label|:
@@ -270,6 +276,13 @@ argument_list|(
 argument|Scope *Parent
 argument_list|,
 argument|unsigned ScopeFlags
+argument_list|,
+argument|Diagnostic&Diag
+argument_list|)
+block|:
+name|ErrorTrap
+argument_list|(
+argument|Diag
 argument_list|)
 block|{
 name|Init
@@ -303,8 +316,7 @@ operator|=
 name|F
 expr_stmt|;
 block|}
-comment|/// isBlockScope - Return true if this scope does not correspond to a
-comment|/// closure.
+comment|/// isBlockScope - Return true if this scope correspond to a closure.
 name|bool
 name|isBlockScope
 argument_list|()
@@ -630,28 +642,17 @@ operator|=
 name|E
 expr_stmt|;
 block|}
-comment|/// \brief Retrieve the number of errors that had been emitted when we
-comment|/// entered this scope.
-name|unsigned
-name|getNumErrorsAtStart
+name|bool
+name|hasErrorOccurred
 argument_list|()
 specifier|const
 block|{
 return|return
-name|NumErrorsAtStart
+name|ErrorTrap
+operator|.
+name|hasErrorOccurred
+argument_list|()
 return|;
-block|}
-name|void
-name|setNumErrorsAtStart
-parameter_list|(
-name|unsigned
-name|NumErrors
-parameter_list|)
-block|{
-name|NumErrorsAtStart
-operator|=
-name|NumErrors
-expr_stmt|;
 block|}
 comment|/// isClassScope - Return true if this scope is a class/struct/union scope.
 name|bool
@@ -1048,9 +1049,10 @@ name|Entity
 operator|=
 literal|0
 expr_stmt|;
-name|NumErrorsAtStart
-operator|=
-literal|0
+name|ErrorTrap
+operator|.
+name|reset
+argument_list|()
 expr_stmt|;
 block|}
 block|}

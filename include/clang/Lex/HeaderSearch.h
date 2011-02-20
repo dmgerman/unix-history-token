@@ -99,7 +99,7 @@ struct|struct
 name|HeaderFileInfo
 block|{
 comment|/// isImport - True if this is a #import'd or #pragma once file.
-name|bool
+name|unsigned
 name|isImport
 range|:
 literal|1
@@ -113,11 +113,32 @@ name|DirInfo
 range|:
 literal|2
 decl_stmt|;
+comment|/// \brief Whether this header file info was supplied by an external source.
+name|unsigned
+name|External
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief Whether this structure is considered to already have been
+comment|/// "resolved", meaning that it was loaded from the external source.
+name|unsigned
+name|Resolved
+range|:
+literal|1
+decl_stmt|;
 comment|/// NumIncludes - This is the number of times the file has been included
 comment|/// already.
 name|unsigned
 name|short
 name|NumIncludes
+decl_stmt|;
+comment|/// \brief The ID number of the controlling macro.
+comment|///
+comment|/// This ID number will be non-zero when there is a controlling
+comment|/// macro whose IdentifierInfo may not yet have been loaded from
+comment|/// external storage.
+name|unsigned
+name|ControllingMacroID
 decl_stmt|;
 comment|/// ControllingMacro - If this file has a #ifndef XXX (or equivalent) guard
 comment|/// that protects the entire contents of the file, this is the identifier
@@ -131,14 +152,6 @@ specifier|const
 name|IdentifierInfo
 modifier|*
 name|ControllingMacro
-decl_stmt|;
-comment|/// \brief The ID number of the controlling macro.
-comment|///
-comment|/// This ID number will be non-zero when there is a controlling
-comment|/// macro whose IdentifierInfo may not yet have been loaded from
-comment|/// external storage.
-name|unsigned
-name|ControllingMacroID
 decl_stmt|;
 name|HeaderFileInfo
 argument_list|()
@@ -155,17 +168,27 @@ operator|::
 name|C_User
 argument_list|)
 operator|,
+name|External
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|Resolved
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|NumIncludes
 argument_list|(
 literal|0
 argument_list|)
 operator|,
-name|ControllingMacro
+name|ControllingMacroID
 argument_list|(
 literal|0
 argument_list|)
 operator|,
-name|ControllingMacroID
+name|ControllingMacro
 argument_list|(
 literal|0
 argument_list|)
@@ -182,8 +205,56 @@ operator|*
 name|External
 argument_list|)
 expr_stmt|;
+comment|/// \brief Determine whether this is a non-default header file info, e.g.,
+comment|/// it corresponds to an actual header we've included or tried to include.
+name|bool
+name|isNonDefault
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isImport
+operator|||
+name|NumIncludes
+operator|||
+name|ControllingMacro
+operator|||
+name|ControllingMacroID
+return|;
+block|}
 block|}
 struct|;
+comment|/// \brief An external source of header file information, which may supply
+comment|/// information about header files already included.
+name|class
+name|ExternalHeaderFileInfoSource
+block|{
+name|public
+label|:
+name|virtual
+operator|~
+name|ExternalHeaderFileInfoSource
+argument_list|()
+expr_stmt|;
+comment|/// \brief Retrieve the header file information for the given file entry.
+comment|///
+comment|/// \returns Header file information for the given file entry, with the
+comment|/// \c External bit set. If the file entry is not known, return a
+comment|/// default-constructed \c HeaderFileInfo.
+name|virtual
+name|HeaderFileInfo
+name|GetHeaderFileInfo
+parameter_list|(
+specifier|const
+name|FileEntry
+modifier|*
+name|FE
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+block|}
+empty_stmt|;
 comment|/// HeaderSearch - This class encapsulates the information needed to find the
 comment|/// file referenced by a #include or #include_next, (sub-)framework lookup, etc.
 name|class
@@ -283,6 +354,11 @@ comment|/// macros into IdentifierInfo pointers, as needed.
 name|ExternalIdentifierLookup
 modifier|*
 name|ExternalLookup
+decl_stmt|;
+comment|/// \brief Entity used to look up stored header file information.
+name|ExternalHeaderFileInfoSource
+modifier|*
+name|ExternalSource
 decl_stmt|;
 comment|// Various statistics we track for performance analysis.
 name|unsigned
@@ -399,6 +475,30 @@ block|{
 name|ExternalLookup
 operator|=
 name|EIL
+expr_stmt|;
+block|}
+name|ExternalIdentifierLookup
+operator|*
+name|getExternalLookup
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ExternalLookup
+return|;
+block|}
+comment|/// \brief Set the external source of header information.
+name|void
+name|SetExternalSource
+parameter_list|(
+name|ExternalHeaderFileInfoSource
+modifier|*
+name|ES
+parameter_list|)
+block|{
+name|ExternalSource
+operator|=
+name|ES
 expr_stmt|;
 block|}
 comment|/// LookupFile - Given a "foo" or<foo> reference, look up the indicated file,

@@ -239,6 +239,51 @@ name|OldGreaterThanIsOperator
 block|;     }
 block|}
 empty_stmt|;
+name|class
+name|InMessageExpressionRAIIObject
+block|{
+name|bool
+modifier|&
+name|InMessageExpression
+decl_stmt|;
+name|bool
+name|OldValue
+decl_stmt|;
+name|public
+label|:
+name|InMessageExpressionRAIIObject
+argument_list|(
+argument|Parser&P
+argument_list|,
+argument|bool Value
+argument_list|)
+block|:
+name|InMessageExpression
+argument_list|(
+name|P
+operator|.
+name|InMessageExpression
+argument_list|)
+operator|,
+name|OldValue
+argument_list|(
+argument|P.InMessageExpression
+argument_list|)
+block|{
+name|InMessageExpression
+operator|=
+name|Value
+block|;     }
+operator|~
+name|InMessageExpressionRAIIObject
+argument_list|()
+block|{
+name|InMessageExpression
+operator|=
+name|OldValue
+block|;     }
+block|}
+empty_stmt|;
 comment|/// \brief RAII object that makes sure paren/bracket/brace count is correct
 comment|/// after declaration/statement parsing, even when there's a parsing error.
 name|class

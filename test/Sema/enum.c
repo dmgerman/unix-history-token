@@ -520,5 +520,63 @@ comment|// expected-error {{statement requires expression of integer type}}
 block|}
 end_function
 
+begin_decl_stmt
+name|char
+name|test5
+index|[
+name|__has_feature
+argument_list|(
+name|enumerator_attributes
+argument_list|)
+condition|?
+literal|1
+else|:
+operator|-
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// PR8694
+end_comment
+
+begin_comment
+comment|// rdar://8707031
+end_comment
+
+begin_function
+name|void
+name|PR8694
+parameter_list|(
+name|int
+modifier|*
+name|e
+parameter_list|)
+comment|// expected-note {{passing argument to parameter 'e' here}}
+block|{ }
+end_function
+
+begin_function
+name|void
+name|crash
+parameter_list|(
+name|enum
+name|E
+modifier|*
+name|e
+parameter_list|)
+comment|// expected-warning {{declaration of 'enum E' will not be visible outside of this function}} \
+comment|// expected-warning {{ISO C forbids forward references to 'enum' types}}
+block|{
+name|PR8694
+argument_list|(
+name|e
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{incompatible pointer types passing 'enum E *' to parameter of type 'int *'}}
+block|}
+end_function
+
 end_unit
 

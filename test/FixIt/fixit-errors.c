@@ -4,7 +4,7 @@ comment|// RUN: cp %s %t
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -pedantic -verify -fixit -x c %t || true
+comment|// RUN: true || %clang_cc1 -pedantic -verify -fixit -x c %t
 end_comment
 
 begin_comment

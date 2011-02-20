@@ -87,8 +87,7 @@ parameter_list|(
 name|QualType
 name|T
 parameter_list|,
-name|ASTUnit
-modifier|*
+name|CXTranslationUnit
 name|TU
 parameter_list|)
 function_decl|;

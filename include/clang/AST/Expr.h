@@ -128,6 +128,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<cctype>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -169,10 +175,16 @@ name|class
 name|CXXMemberCallExpr
 decl_stmt|;
 name|class
+name|ObjCPropertyRefExpr
+decl_stmt|;
+name|class
 name|TemplateArgumentLoc
 decl_stmt|;
 name|class
 name|TemplateArgumentListInfo
+decl_stmt|;
+name|class
+name|OpaqueValueExpr
 decl_stmt|;
 comment|/// \brief A simple array of base specifiers.
 typedef|typedef
@@ -200,72 +212,60 @@ block|{
 name|QualType
 name|TR
 block|;
-name|virtual
-name|void
-name|ANCHOR
-argument_list|()
-block|;
-comment|// key function.
 name|protected
 operator|:
-comment|/// TypeDependent - Whether this expression is type-dependent
-comment|/// (C++ [temp.dep.expr]).
-name|bool
-name|TypeDependent
-operator|:
-literal|1
-block|;
-comment|/// ValueDependent - Whether this expression is value-dependent
-comment|/// (C++ [temp.dep.constexpr]).
-name|bool
-name|ValueDependent
-operator|:
-literal|1
-block|;
-comment|/// ValueKind - The value classification of this expression.
-comment|/// Only actually used by certain subclasses.
-name|unsigned
-name|ValueKind
-operator|:
-literal|2
-block|;    enum
-block|{
-name|BitsRemaining
-operator|=
-literal|28
-block|}
-block|;
 name|Expr
 argument_list|(
 argument|StmtClass SC
 argument_list|,
 argument|QualType T
 argument_list|,
+argument|ExprValueKind VK
+argument_list|,
+argument|ExprObjectKind OK
+argument_list|,
 argument|bool TD
 argument_list|,
 argument|bool VD
+argument_list|,
+argument|bool ContainsUnexpandedParameterPack
 argument_list|)
 operator|:
 name|Stmt
 argument_list|(
-name|SC
-argument_list|)
-block|,
-name|TypeDependent
-argument_list|(
-name|TD
-argument_list|)
-block|,
-name|ValueDependent
-argument_list|(
-name|VD
-argument_list|)
-block|,
-name|ValueKind
-argument_list|(
-literal|0
+argument|SC
 argument_list|)
 block|{
+name|ExprBits
+operator|.
+name|TypeDependent
+operator|=
+name|TD
+block|;
+name|ExprBits
+operator|.
+name|ValueDependent
+operator|=
+name|VD
+block|;
+name|ExprBits
+operator|.
+name|ValueKind
+operator|=
+name|VK
+block|;
+name|ExprBits
+operator|.
+name|ObjectKind
+operator|=
+name|OK
+block|;
+name|ExprBits
+operator|.
+name|ContainsUnexpandedParameterPack
+operator|=
+name|ContainsUnexpandedParameterPack
+block|;
 name|setType
 argument_list|(
 name|T
@@ -287,24 +287,6 @@ argument_list|)
 block|{ }
 name|public
 operator|:
-comment|/// \brief Increases the reference count for this expression.
-comment|///
-comment|/// Invoke the Retain() operation when this expression
-comment|/// is being shared by another owner.
-name|Expr
-operator|*
-name|Retain
-argument_list|()
-block|{
-name|Stmt
-operator|::
-name|Retain
-argument_list|()
-block|;
-return|return
-name|this
-return|;
-block|}
 name|QualType
 name|getType
 argument_list|()
@@ -362,6 +344,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|ExprBits
+operator|.
 name|ValueDependent
 return|;
 block|}
@@ -372,6 +356,8 @@ argument_list|(
 argument|bool VD
 argument_list|)
 block|{
+name|ExprBits
+operator|.
 name|ValueDependent
 operator|=
 name|VD
@@ -393,6 +379,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|ExprBits
+operator|.
 name|TypeDependent
 return|;
 block|}
@@ -403,34 +391,58 @@ argument_list|(
 argument|bool TD
 argument_list|)
 block|{
+name|ExprBits
+operator|.
 name|TypeDependent
 operator|=
 name|TD
 block|; }
-comment|/// SourceLocation tokens are not useful in isolation - they are low level
-comment|/// value objects created/interpreted by SourceManager. We assume AST
-comment|/// clients will have a pointer to the respective SourceManager.
-name|virtual
-name|SourceRange
-name|getSourceRange
-argument_list|()
-specifier|const
-operator|=
-literal|0
-block|;
-comment|/// getExprLoc - Return the preferred location for the arrow when diagnosing
-comment|/// a problem with a generic expression.
-name|virtual
-name|SourceLocation
-name|getExprLoc
+comment|/// \brief Whether this expression contains an unexpanded parameter
+comment|/// pack (for C++0x variadic templates).
+comment|///
+comment|/// Given the following function template:
+comment|///
+comment|/// \code
+comment|/// template<typename F, typename ...Types>
+comment|/// void forward(const F&f, Types&&...args) {
+comment|///   f(static_cast<Types&&>(args)...);
+comment|/// }
+comment|/// \endcode
+comment|///
+comment|/// The expressions \c args and \c static_cast<Types&&>(args) both
+comment|/// contain parameter packs.
+name|bool
+name|containsUnexpandedParameterPack
 argument_list|()
 specifier|const
 block|{
 return|return
-name|getLocStart
-argument_list|()
+name|ExprBits
+operator|.
+name|ContainsUnexpandedParameterPack
 return|;
 block|}
+comment|/// \brief Set the bit that describes whether this expression
+comment|/// contains an unexpanded parameter pack.
+name|void
+name|setContainsUnexpandedParameterPack
+argument_list|(
+argument|bool PP = true
+argument_list|)
+block|{
+name|ExprBits
+operator|.
+name|ContainsUnexpandedParameterPack
+operator|=
+name|PP
+block|;   }
+comment|/// getExprLoc - Return the preferred location for the arrow when diagnosing
+comment|/// a problem with a generic expression.
+name|SourceLocation
+name|getExprLoc
+argument_list|()
+specifier|const
+block|;
 comment|/// isUnusedResultAWarning - Return true if this immediate expression should
 comment|/// be warned about if the result is unused.  If so, fill in Loc and Ranges
 comment|/// with location to warn on and the source range[s] to report with the
@@ -448,20 +460,69 @@ argument|ASTContext&Ctx
 argument_list|)
 specifier|const
 block|;
-comment|/// isLvalue - C99 6.3.2.1: an lvalue is an expression with an object type or
-comment|/// incomplete type other than void. Nonarray expressions that can be lvalues:
-comment|///  - name, where name must be a variable
-comment|///  - e[i]
-comment|///  - (e), where e must be an lvalue
-comment|///  - e.name, where e must be an lvalue
-comment|///  - e->name
-comment|///  - *e, the type of e cannot be a function type
-comment|///  - string-constant
-comment|///  - reference type [C++ [expr]]
-comment|///  - b ? x : y, where x and y are lvalues of suitable types [C++]
+comment|/// isLValue - True if this expression is an "l-value" according to
+comment|/// the rules of the current language.  C and C++ give somewhat
+comment|/// different rules for this concept, but in general, the result of
+comment|/// an l-value expression identifies a specific object whereas the
+comment|/// result of an r-value expression is a value detached from any
+comment|/// specific storage.
 comment|///
-block|enum
-name|isLvalueResult
+comment|/// C++0x divides the concept of "r-value" into pure r-values
+comment|/// ("pr-values") and so-called expiring values ("x-values"), which
+comment|/// identify specific objects that can be safely cannibalized for
+comment|/// their resources.  This is an unfortunate abuse of terminology on
+comment|/// the part of the C++ committee.  In Clang, when we say "r-value",
+comment|/// we generally mean a pr-value.
+name|bool
+name|isLValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getValueKind
+argument_list|()
+operator|==
+name|VK_LValue
+return|;
+block|}
+name|bool
+name|isRValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getValueKind
+argument_list|()
+operator|==
+name|VK_RValue
+return|;
+block|}
+name|bool
+name|isXValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getValueKind
+argument_list|()
+operator|==
+name|VK_XValue
+return|;
+block|}
+name|bool
+name|isGLValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getValueKind
+argument_list|()
+operator|!=
+name|VK_RValue
+return|;
+block|}
+expr|enum
+name|LValueClassification
 block|{
 name|LV_Valid
 block|,
@@ -480,8 +541,9 @@ block|,
 name|LV_ClassTemporary
 block|}
 block|;
-name|isLvalueResult
-name|isLvalue
+comment|/// Reasons why an expression might not be an l-value.
+name|LValueClassification
+name|ClassifyLValue
 argument_list|(
 argument|ASTContext&Ctx
 argument_list|)
@@ -751,9 +813,24 @@ operator|==
 name|CM_Modifiable
 return|;
 block|}
+comment|/// \brief Create a simple, modifiably lvalue
+specifier|static
+name|Classification
+name|makeSimpleLValue
+argument_list|()
+block|{
+return|return
+name|Classification
+argument_list|(
+name|CL_LValue
+argument_list|,
+name|CM_Modifiable
+argument_list|)
+return|;
+block|}
 expr|}
 block|;
-comment|/// \brief classify - Classify this expression according to the C++0x
+comment|/// \brief Classify - Classify this expression according to the C++0x
 comment|///        expression taxonomy.
 comment|///
 comment|/// C++0x defines ([basic.lval]) a new taxonomy of expressions to replace the
@@ -781,7 +858,7 @@ literal|0
 argument_list|)
 return|;
 block|}
-comment|/// \brief classifyModifiable - Classify this expression according to the
+comment|/// \brief ClassifyModifiable - Classify this expression according to the
 comment|///        C++0x expression taxonomy, and see if it is valid on the left side
 comment|///        of an assignment.
 comment|///
@@ -808,6 +885,149 @@ name|Loc
 argument_list|)
 return|;
 block|}
+comment|/// getValueKindForType - Given a formal return or parameter type,
+comment|/// give its value kind.
+specifier|static
+name|ExprValueKind
+name|getValueKindForType
+argument_list|(
+argument|QualType T
+argument_list|)
+block|{
+if|if
+condition|(
+specifier|const
+name|ReferenceType
+modifier|*
+name|RT
+init|=
+name|T
+operator|->
+name|getAs
+operator|<
+name|ReferenceType
+operator|>
+operator|(
+operator|)
+condition|)
+return|return
+operator|(
+name|isa
+operator|<
+name|LValueReferenceType
+operator|>
+operator|(
+name|RT
+operator|)
+operator|?
+name|VK_LValue
+operator|:
+operator|(
+name|RT
+operator|->
+name|getPointeeType
+argument_list|()
+operator|->
+name|isFunctionType
+argument_list|()
+operator|?
+name|VK_LValue
+operator|:
+name|VK_XValue
+operator|)
+operator|)
+return|;
+return|return
+name|VK_RValue
+return|;
+block|}
+comment|/// getValueKind - The value kind that this expression produces.
+name|ExprValueKind
+name|getValueKind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|static_cast
+operator|<
+name|ExprValueKind
+operator|>
+operator|(
+name|ExprBits
+operator|.
+name|ValueKind
+operator|)
+return|;
+block|}
+comment|/// getObjectKind - The object kind that this expression produces.
+comment|/// Object kinds are meaningful only for expressions that yield an
+comment|/// l-value or x-value.
+name|ExprObjectKind
+name|getObjectKind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|static_cast
+operator|<
+name|ExprObjectKind
+operator|>
+operator|(
+name|ExprBits
+operator|.
+name|ObjectKind
+operator|)
+return|;
+block|}
+name|bool
+name|isOrdinaryOrBitFieldObject
+argument_list|()
+specifier|const
+block|{
+name|ExprObjectKind
+name|OK
+operator|=
+name|getObjectKind
+argument_list|()
+block|;
+return|return
+operator|(
+name|OK
+operator|==
+name|OK_Ordinary
+operator|||
+name|OK
+operator|==
+name|OK_BitField
+operator|)
+return|;
+block|}
+comment|/// setValueKind - Set the value kind produced by this expression.
+name|void
+name|setValueKind
+argument_list|(
+argument|ExprValueKind Cat
+argument_list|)
+block|{
+name|ExprBits
+operator|.
+name|ValueKind
+operator|=
+name|Cat
+block|; }
+comment|/// setObjectKind - Set the object kind produced by this expression.
+name|void
+name|setObjectKind
+argument_list|(
+argument|ExprObjectKind Cat
+argument_list|)
+block|{
+name|ExprBits
+operator|.
+name|ObjectKind
+operator|=
+name|Cat
+block|; }
 name|private
 operator|:
 name|Classification
@@ -849,6 +1069,15 @@ name|getBitField
 argument_list|()
 return|;
 block|}
+comment|/// \brief If this expression is an l-value for an Objective C
+comment|/// property, find the underlying property reference expression.
+specifier|const
+name|ObjCPropertyRefExpr
+operator|*
+name|getObjCProperty
+argument_list|()
+specifier|const
+block|;
 comment|/// \brief Returns whether this expression refers to a vector element.
 name|bool
 name|refersToVectorElement
@@ -998,7 +1227,7 @@ name|Evaluate
 argument_list|(
 argument|EvalResult&Result
 argument_list|,
-argument|ASTContext&Ctx
+argument|const ASTContext&Ctx
 argument_list|)
 specifier|const
 block|;
@@ -1010,7 +1239,7 @@ name|EvaluateAsBooleanCondition
 argument_list|(
 argument|bool&Result
 argument_list|,
-argument|ASTContext&Ctx
+argument|const ASTContext&Ctx
 argument_list|)
 specifier|const
 block|;
@@ -1019,18 +1248,18 @@ comment|/// folded, but discard the result.
 name|bool
 name|isEvaluatable
 argument_list|(
-argument|ASTContext&Ctx
+argument|const ASTContext&Ctx
 argument_list|)
 specifier|const
 block|;
 comment|/// HasSideEffects - This routine returns true for all those expressions
-comment|/// which must be evaluated each time and must not be optimization away
+comment|/// which must be evaluated each time and must not be optimized away
 comment|/// or evaluated at compile time. Example is a function call, volatile
 comment|/// variable read.
 name|bool
 name|HasSideEffects
 argument_list|(
-argument|ASTContext&Ctx
+argument|const ASTContext&Ctx
 argument_list|)
 specifier|const
 block|;
@@ -1041,7 +1270,7 @@ operator|::
 name|APSInt
 name|EvaluateAsInt
 argument_list|(
-argument|ASTContext&Ctx
+argument|const ASTContext&Ctx
 argument_list|)
 specifier|const
 block|;
@@ -1052,7 +1281,7 @@ name|EvaluateAsLValue
 argument_list|(
 argument|EvalResult&Result
 argument_list|,
-argument|ASTContext&Ctx
+argument|const ASTContext&Ctx
 argument_list|)
 specifier|const
 block|;
@@ -1062,9 +1291,29 @@ name|EvaluateAsAnyLValue
 argument_list|(
 argument|EvalResult&Result
 argument_list|,
-argument|ASTContext&Ctx
+argument|const ASTContext&Ctx
 argument_list|)
 specifier|const
+block|;
+comment|/// \brief Enumeration used to describe the kind of Null pointer constant
+comment|/// returned from \c isNullPointerConstant().
+block|enum
+name|NullPointerConstantKind
+block|{
+comment|/// \brief Expression is not a Null pointer constant.
+name|NPCK_NotNull
+operator|=
+literal|0
+block|,
+comment|/// \brief Expression is a Null pointer constant built from a zero integer.
+name|NPCK_ZeroInteger
+block|,
+comment|/// \brief Expression is a C++0X nullptr.
+name|NPCK_CXX0X_nullptr
+block|,
+comment|/// \brief Expression is a GNU-style __null constant.
+name|NPCK_GNUNull
+block|}
 block|;
 comment|/// \brief Enumeration used to describe how \c isNullPointerConstant()
 comment|/// should cope with value-dependent expressions.
@@ -1085,10 +1334,10 @@ comment|/// to never be a null pointer constant.
 name|NPC_ValueDependentIsNotNull
 block|}
 block|;
-comment|/// isNullPointerConstant - C99 6.3.2.3p3 -  Return true if this is either an
-comment|/// integer constant expression with the value zero, or if this is one that is
-comment|/// cast to void*.
-name|bool
+comment|/// isNullPointerConstant - C99 6.3.2.3p3 - Test if this reduces down to
+comment|/// a Null pointer constant. The return value can further distinguish the
+comment|/// kind of NULL pointer constant that was detected.
+name|NullPointerConstantKind
 name|isNullPointerConstant
 argument_list|(
 argument|ASTContext&Ctx
@@ -1103,6 +1352,34 @@ name|bool
 name|isOBJCGCCandidate
 argument_list|(
 argument|ASTContext&Ctx
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Returns true if this expression is a bound member function.
+name|bool
+name|isBoundMemberFunction
+argument_list|(
+argument|ASTContext&Ctx
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Result type of CanThrow().
+block|enum
+name|CanThrowResult
+block|{
+name|CT_Cannot
+block|,
+name|CT_Dependent
+block|,
+name|CT_Can
+block|}
+block|;
+comment|/// \brief Test if this expression, if evaluated, might throw, according to
+comment|///        the rules of C++ [expr.unary.noexcept].
+name|CanThrowResult
+name|CanThrow
+argument_list|(
+argument|ASTContext&C
 argument_list|)
 specifier|const
 block|;
@@ -1129,6 +1406,55 @@ operator|*
 name|IgnoreParenImpCasts
 argument_list|()
 block|;
+specifier|const
+name|Expr
+operator|*
+name|IgnoreParenImpCasts
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|IgnoreParenImpCasts
+argument_list|()
+return|;
+block|}
+comment|/// Ignore parentheses and lvalue casts.  Strip off any ParenExpr and
+comment|/// CastExprs that represent lvalue casts, returning their operand.
+name|Expr
+operator|*
+name|IgnoreParenLValueCasts
+argument_list|()
+block|;
+specifier|const
+name|Expr
+operator|*
+name|IgnoreParenLValueCasts
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|IgnoreParenLValueCasts
+argument_list|()
+return|;
+block|}
 comment|/// IgnoreParenNoopCasts - Ignore parentheses and casts that do not change the
 comment|/// value (including ptr->int casts of the same size).  Strip off any
 comment|/// ParenExpr or CastExprs, returning their operand.
@@ -1153,28 +1479,15 @@ name|isDefaultArgument
 argument_list|()
 specifier|const
 block|;
-comment|/// \brief Determine whether this expression directly creates a
-comment|/// temporary object (of class type).
+comment|/// \brief Determine whether the result of this expression is a
+comment|/// temporary object of the given class type.
 name|bool
 name|isTemporaryObject
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getTemporaryObject
-argument_list|()
-operator|!=
-literal|0
-return|;
-block|}
-comment|/// \brief If this expression directly creates a temporary object of
-comment|/// class type, return the expression that actually constructs that
-comment|/// temporary object.
-specifier|const
-name|Expr
-operator|*
-name|getTemporaryObject
-argument_list|()
+argument_list|(
+argument|ASTContext&Ctx
+argument_list|,
+argument|const CXXRecordDecl *TempTy
+argument_list|)
 specifier|const
 block|;
 specifier|const
@@ -1301,6 +1614,216 @@ block|;
 comment|//===----------------------------------------------------------------------===//
 comment|// Primary Expressions.
 comment|//===----------------------------------------------------------------------===//
+comment|/// OpaqueValueExpr - An expression referring to an opaque object of a
+comment|/// fixed type and value class.  These don't correspond to concrete
+comment|/// syntax; instead they're used to express operations (usually copy
+comment|/// operations) on values whose source is generally obvious from
+comment|/// context.
+name|class
+name|OpaqueValueExpr
+operator|:
+name|public
+name|Expr
+block|{
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+name|Expr
+operator|*
+name|SourceExpr
+block|;
+name|SourceLocation
+name|Loc
+block|;
+name|public
+operator|:
+name|OpaqueValueExpr
+argument_list|(
+argument|SourceLocation Loc
+argument_list|,
+argument|QualType T
+argument_list|,
+argument|ExprValueKind VK
+argument_list|,
+argument|ExprObjectKind OK = OK_Ordinary
+argument_list|)
+operator|:
+name|Expr
+argument_list|(
+name|OpaqueValueExprClass
+argument_list|,
+name|T
+argument_list|,
+name|VK
+argument_list|,
+name|OK
+argument_list|,
+name|T
+operator|->
+name|isDependentType
+argument_list|()
+argument_list|,
+name|T
+operator|->
+name|isDependentType
+argument_list|()
+argument_list|,
+name|false
+argument_list|)
+block|,
+name|SourceExpr
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|Loc
+argument_list|(
+argument|Loc
+argument_list|)
+block|{   }
+comment|/// Given an expression which invokes a copy constructor --- i.e.  a
+comment|/// CXXConstructExpr, possibly wrapped in an ExprWithCleanups ---
+comment|/// find the OpaqueValueExpr that's the source of the construction.
+specifier|static
+specifier|const
+name|OpaqueValueExpr
+operator|*
+name|findInCopyConstruct
+argument_list|(
+specifier|const
+name|Expr
+operator|*
+name|expr
+argument_list|)
+block|;
+name|explicit
+name|OpaqueValueExpr
+argument_list|(
+argument|EmptyShell Empty
+argument_list|)
+operator|:
+name|Expr
+argument_list|(
+argument|OpaqueValueExprClass
+argument_list|,
+argument|Empty
+argument_list|)
+block|{ }
+comment|/// \brief Retrieve the location of this expression.
+name|SourceLocation
+name|getLocation
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Loc
+return|;
+block|}
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|SourceExpr
+condition|)
+return|return
+name|SourceExpr
+operator|->
+name|getSourceRange
+argument_list|()
+return|;
+return|return
+name|Loc
+return|;
+block|}
+name|SourceLocation
+name|getExprLoc
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|SourceExpr
+condition|)
+return|return
+name|SourceExpr
+operator|->
+name|getExprLoc
+argument_list|()
+return|;
+return|return
+name|Loc
+return|;
+block|}
+name|child_range
+name|children
+argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|()
+return|;
+block|}
+comment|/// The source expression of an opaque value expression is the
+comment|/// expression which originally generated the value.  This is
+comment|/// provided as a convenience for analyses that don't wish to
+comment|/// precisely model the execution behavior of the program.
+comment|///
+comment|/// The source expression is typically set when building the
+comment|/// expression which binds the opaque value expression in the first
+comment|/// place.
+name|Expr
+operator|*
+name|getSourceExpr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SourceExpr
+return|;
+block|}
+name|void
+name|setSourceExpr
+argument_list|(
+argument|Expr *e
+argument_list|)
+block|{
+name|SourceExpr
+operator|=
+name|e
+block|; }
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|OpaqueValueExprClass
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const OpaqueValueExpr *
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+expr|}
+block|;
 comment|/// \brief Represents the qualifier that may precede a C++ name, e.g., the
 comment|/// "std::" in "std::sort".
 block|struct
@@ -1383,6 +1906,23 @@ specifier|const
 name|TemplateArgumentListInfo
 operator|&
 name|List
+argument_list|)
+block|;
+name|void
+name|initializeFrom
+argument_list|(
+specifier|const
+name|TemplateArgumentListInfo
+operator|&
+name|List
+argument_list|,
+name|bool
+operator|&
+name|Dependent
+argument_list|,
+name|bool
+operator|&
+name|ContainsUnexpandedParameterPack
 argument_list|)
 block|;
 name|void
@@ -1530,6 +2070,8 @@ argument_list|,
 argument|const TemplateArgumentListInfo *TemplateArgs
 argument_list|,
 argument|QualType T
+argument_list|,
+argument|ExprValueKind VK
 argument_list|)
 block|;
 name|DeclRefExpr
@@ -1545,6 +2087,8 @@ argument_list|,
 argument|const TemplateArgumentListInfo *TemplateArgs
 argument_list|,
 argument|QualType T
+argument_list|,
+argument|ExprValueKind VK
 argument_list|)
 block|;
 comment|/// \brief Construct an empty declaration reference expression.
@@ -1575,6 +2119,8 @@ argument|ValueDecl *d
 argument_list|,
 argument|QualType t
 argument_list|,
+argument|ExprValueKind VK
+argument_list|,
 argument|SourceLocation l
 argument_list|)
 operator|:
@@ -1583,6 +2129,12 @@ argument_list|(
 name|DeclRefExprClass
 argument_list|,
 name|t
+argument_list|,
+name|VK
+argument_list|,
+name|OK_Ordinary
+argument_list|,
+name|false
 argument_list|,
 name|false
 argument_list|,
@@ -1621,6 +2173,8 @@ argument|SourceLocation NameLoc
 argument_list|,
 argument|QualType T
 argument_list|,
+argument|ExprValueKind VK
+argument_list|,
 argument|const TemplateArgumentListInfo *TemplateArgs =
 literal|0
 argument_list|)
@@ -1642,6 +2196,8 @@ argument|const DeclarationNameInfo&NameInfo
 argument_list|,
 argument|QualType T
 argument_list|,
+argument|ExprValueKind VK
+argument_list|,
 argument|const TemplateArgumentListInfo *TemplateArgs =
 literal|0
 argument_list|)
@@ -1655,6 +2211,8 @@ argument_list|(
 argument|ASTContext&Context
 argument_list|,
 argument|bool HasQualifier
+argument_list|,
+argument|bool HasExplicitTemplateArgs
 argument_list|,
 argument|unsigned NumTemplateArgs
 argument_list|)
@@ -1737,7 +2295,6 @@ name|Loc
 operator|=
 name|L
 block|; }
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -1808,6 +2365,9 @@ operator|->
 name|NNS
 return|;
 block|}
+end_decl_stmt
+
+begin_expr_stmt
 name|bool
 name|hasExplicitTemplateArgs
 argument_list|()
@@ -1824,19 +2384,28 @@ name|HasExplicitTemplateArgumentListFlag
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Retrieve the explicit template argument list that followed the
+end_comment
+
+begin_comment
 comment|/// member template name.
+end_comment
+
+begin_function
 name|ExplicitTemplateArgumentList
-operator|&
+modifier|&
 name|getExplicitTemplateArgs
-argument_list|()
+parameter_list|()
 block|{
 name|assert
 argument_list|(
 name|hasExplicitTemplateArgs
 argument_list|()
 argument_list|)
-block|;
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1878,8 +2447,17 @@ literal|1
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Retrieve the explicit template argument list that followed the
+end_comment
+
+begin_comment
 comment|/// member template name.
+end_comment
+
+begin_expr_stmt
 specifier|const
 name|ExplicitTemplateArgumentList
 operator|&
@@ -1901,9 +2479,21 @@ name|getExplicitTemplateArgs
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Retrieves the optional explicit template arguments.
+end_comment
+
+begin_comment
 comment|/// This points to the same data as getExplicitTemplateArgs(), but
+end_comment
+
+begin_comment
 comment|/// returns null if there are no explicit template arguments.
+end_comment
+
+begin_expr_stmt
 specifier|const
 name|ExplicitTemplateArgumentList
 operator|*
@@ -1920,15 +2510,18 @@ condition|)
 return|return
 literal|0
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 operator|&
 name|getExplicitTemplateArgs
 argument_list|()
 return|;
-block|}
-end_decl_stmt
+end_return
 
 begin_comment
+unit|}
 comment|/// \brief Copies the template arguments (if present) into the given
 end_comment
 
@@ -1936,15 +2529,16 @@ begin_comment
 comment|/// structure.
 end_comment
 
-begin_decl_stmt
-name|void
+begin_macro
+unit|void
 name|copyTemplateArgumentsInto
 argument_list|(
-name|TemplateArgumentListInfo
-operator|&
-name|List
+argument|TemplateArgumentListInfo&List
 argument_list|)
-decl|const
+end_macro
+
+begin_expr_stmt
+specifier|const
 block|{
 if|if
 condition|(
@@ -1960,7 +2554,7 @@ name|List
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
+end_expr_stmt
 
 begin_comment
 comment|/// \brief Retrieve the location of the left angle bracket following the
@@ -2154,21 +2748,17 @@ begin_comment
 comment|// Iterators
 end_comment
 
-begin_function_decl
-name|virtual
-name|child_iterator
-name|child_begin
+begin_function
+name|child_range
+name|children
 parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|virtual
-name|child_iterator
-name|child_end
-parameter_list|()
-function_decl|;
-end_function_decl
+block|{
+return|return
+name|child_range
+argument_list|()
+return|;
+block|}
+end_function
 
 begin_decl_stmt
 name|friend
@@ -2237,6 +2827,10 @@ name|PredefinedExprClass
 argument_list|,
 name|type
 argument_list|,
+name|VK_LValue
+argument_list|,
+name|OK_Ordinary
+argument_list|,
 name|type
 operator|->
 name|isDependentType
@@ -2246,6 +2840,9 @@ name|type
 operator|->
 name|isDependentType
 argument_list|()
+argument_list|,
+comment|/*ContainsUnexpandedParameterPack=*/
+name|false
 argument_list|)
 block|,
 name|Loc
@@ -2321,7 +2918,6 @@ argument_list|,
 argument|const Decl *CurrentDecl
 argument_list|)
 block|;
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -2362,71 +2958,44 @@ name|true
 return|;
 block|}
 comment|// Iterators
-name|virtual
-name|child_iterator
-name|child_begin
+name|child_range
+name|children
 argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|()
+return|;
+block|}
+expr|}
 block|;
-name|virtual
-name|child_iterator
-name|child_end
-argument_list|()
-block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Used by IntegerLiteral/FloatingLiteral to store the numeric without
-end_comment
-
-begin_comment
 comment|/// leaking memory.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// For large floats/integers, APFloat/APInt will allocate memory from the heap
-end_comment
-
-begin_comment
 comment|/// to represent these numbers.  Unfortunately, when we use a BumpPtrAllocator
-end_comment
-
-begin_comment
 comment|/// to allocate IntegerLiteral/FloatingLiteral nodes the memory associated with
-end_comment
-
-begin_comment
 comment|/// the APFloat/APInt values will never get freed. APNumericStorage uses
-end_comment
-
-begin_comment
 comment|/// ASTContext's allocator for memory allocation.
-end_comment
-
-begin_decl_stmt
 name|class
 name|APNumericStorage
 block|{
 name|unsigned
 name|BitWidth
-decl_stmt|;
-union|union
+block|;
+expr|union
 block|{
 name|uint64_t
 name|VAL
-decl_stmt|;
+block|;
 comment|///< Used to store the<= 64 bits integer value.
 name|uint64_t
-modifier|*
+operator|*
 name|pVal
-decl_stmt|;
+block|;
 comment|///< Used to store the>64 bits integer value.
 block|}
-union|;
+block|;
 name|bool
 name|hasAllocation
 argument_list|()
@@ -2451,21 +3020,21 @@ specifier|const
 name|APNumericStorage
 operator|&
 argument_list|)
-expr_stmt|;
+block|;
 comment|// do not implement
 name|APNumericStorage
-modifier|&
+operator|&
 name|operator
-init|=
+operator|=
 operator|(
 specifier|const
 name|APNumericStorage
 operator|&
 operator|)
-decl_stmt|;
+block|;
 comment|// do not implement
 name|protected
-label|:
+operator|:
 name|APNumericStorage
 argument_list|()
 operator|:
@@ -2473,7 +3042,7 @@ name|BitWidth
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+block|,
 name|VAL
 argument_list|(
 literal|0
@@ -2542,18 +3111,11 @@ name|APInt
 operator|&
 name|Val
 argument_list|)
-decl_stmt|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_decl_stmt
+block|; }
+block|;
 name|class
 name|APIntStorage
-range|:
+operator|:
 name|public
 name|APNumericStorage
 block|{
@@ -2680,6 +3242,12 @@ name|IntegerLiteralClass
 argument_list|,
 name|type
 argument_list|,
+name|VK_RValue
+argument_list|,
+name|OK_Ordinary
+argument_list|,
+name|false
+argument_list|,
 name|false
 argument_list|,
 name|false
@@ -2747,7 +3315,6 @@ name|getValue
 argument_list|()
 return|;
 block|}
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -2825,16 +3392,16 @@ name|true
 return|;
 block|}
 comment|// Iterators
-name|virtual
-name|child_iterator
-name|child_begin
+name|child_range
+name|children
 argument_list|()
-block|;
-name|virtual
-name|child_iterator
-name|child_end
+block|{
+return|return
+name|child_range
 argument_list|()
-block|; }
+return|;
+block|}
+expr|}
 block|;
 name|class
 name|CharacterLiteral
@@ -2870,6 +3437,12 @@ argument_list|(
 name|CharacterLiteralClass
 argument_list|,
 name|type
+argument_list|,
+name|VK_RValue
+argument_list|,
+name|OK_Ordinary
+argument_list|,
+name|false
 argument_list|,
 name|false
 argument_list|,
@@ -2922,7 +3495,6 @@ return|return
 name|IsWide
 return|;
 block|}
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -3002,16 +3574,16 @@ name|true
 return|;
 block|}
 comment|// Iterators
-name|virtual
-name|child_iterator
-name|child_begin
+name|child_range
+name|children
 argument_list|()
-block|;
-name|virtual
-name|child_iterator
-name|child_end
+block|{
+return|return
+name|child_range
 argument_list|()
-block|; }
+return|;
+block|}
+expr|}
 block|;
 name|class
 name|FloatingLiteral
@@ -3048,6 +3620,12 @@ argument_list|(
 name|FloatingLiteralClass
 argument_list|,
 name|Type
+argument_list|,
+name|VK_RValue
+argument_list|,
+name|OK_Ordinary
+argument_list|,
+name|false
 argument_list|,
 name|false
 argument_list|,
@@ -3195,7 +3773,6 @@ name|Loc
 operator|=
 name|L
 block|; }
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -3236,16 +3813,16 @@ name|true
 return|;
 block|}
 comment|// Iterators
-name|virtual
-name|child_iterator
-name|child_begin
+name|child_range
+name|children
 argument_list|()
-block|;
-name|virtual
-name|child_iterator
-name|child_end
+block|{
+return|return
+name|child_range
 argument_list|()
-block|; }
+return|;
+block|}
+expr|}
 block|;
 comment|/// ImaginaryLiteral - We support imaginary integer and floating point literals,
 comment|/// like "1.0i".  We represent these as a wrapper around FloatingLiteral and
@@ -3276,6 +3853,12 @@ argument_list|(
 name|ImaginaryLiteralClass
 argument_list|,
 name|Ty
+argument_list|,
+name|VK_RValue
+argument_list|,
+name|OK_Ordinary
+argument_list|,
+name|false
 argument_list|,
 name|false
 argument_list|,
@@ -3343,7 +3926,6 @@ name|Val
 operator|=
 name|E
 block|; }
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -3384,16 +3966,24 @@ name|true
 return|;
 block|}
 comment|// Iterators
-name|virtual
-name|child_iterator
-name|child_begin
+name|child_range
+name|children
 argument_list|()
-block|;
-name|virtual
-name|child_iterator
-name|child_end
-argument_list|()
-block|; }
+block|{
+return|return
+name|child_range
+argument_list|(
+operator|&
+name|Val
+argument_list|,
+operator|&
+name|Val
+operator|+
+literal|1
+argument_list|)
+return|;
+block|}
+expr|}
 block|;
 comment|/// StringLiteral - This represents a string literal expression, e.g. "foo"
 comment|/// or L"bar" (wide strings).  The actual string is returned by getStrData()
@@ -3447,6 +4037,12 @@ argument_list|(
 argument|StringLiteralClass
 argument_list|,
 argument|Ty
+argument_list|,
+argument|VK_LValue
+argument_list|,
+argument|OK_Ordinary
+argument_list|,
+argument|false
 argument_list|,
 argument|false
 argument_list|,
@@ -3698,6 +4294,26 @@ index|]
 operator|=
 name|L
 block|;   }
+comment|/// getLocationOfByte - Return a source location that points to the specified
+comment|/// byte of this string literal.
+comment|///
+comment|/// Strings are amazingly complex.  They can be formed from multiple tokens
+comment|/// and can have escape sequences in them in addition to the usual trigraph
+comment|/// and escaped newline business.  This routine handles this complexity.
+comment|///
+name|SourceLocation
+name|getLocationOfByte
+argument_list|(
+argument|unsigned ByteNo
+argument_list|,
+argument|const SourceManager&SM
+argument_list|,
+argument|const LangOptions&Features
+argument_list|,
+argument|const TargetInfo&Target
+argument_list|)
+specifier|const
+block|;
 typedef|typedef
 specifier|const
 name|SourceLocation
@@ -3724,7 +4340,6 @@ operator|+
 name|NumConcatenated
 return|;
 block|}
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -3775,31 +4390,22 @@ name|true
 return|;
 block|}
 comment|// Iterators
-name|virtual
-name|child_iterator
-name|child_begin
+name|child_range
+name|children
 argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|()
+return|;
+block|}
+expr|}
 block|;
-name|virtual
-name|child_iterator
-name|child_end
-argument_list|()
-block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// ParenExpr - This represents a parethesized expression, e.g. "(1)".  This
-end_comment
-
-begin_comment
 comment|/// AST node is only formed if full location information is requested.
-end_comment
-
-begin_decl_stmt
 name|class
 name|ParenExpr
-range|:
+operator|:
 name|public
 name|Expr
 block|{
@@ -3834,12 +4440,27 @@ argument_list|()
 argument_list|,
 name|val
 operator|->
+name|getValueKind
+argument_list|()
+argument_list|,
+name|val
+operator|->
+name|getObjectKind
+argument_list|()
+argument_list|,
+name|val
+operator|->
 name|isTypeDependent
 argument_list|()
 argument_list|,
 name|val
 operator|->
 name|isValueDependent
+argument_list|()
+argument_list|,
+name|val
+operator|->
+name|containsUnexpandedParameterPack
 argument_list|()
 argument_list|)
 block|,
@@ -3914,7 +4535,6 @@ name|Val
 operator|=
 name|E
 block|; }
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -3997,63 +4617,38 @@ name|true
 return|;
 block|}
 comment|// Iterators
-name|virtual
-name|child_iterator
-name|child_begin
+name|child_range
+name|children
 argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+operator|&
+name|Val
+argument_list|,
+operator|&
+name|Val
+operator|+
+literal|1
+argument_list|)
+return|;
+block|}
+expr|}
 block|;
-name|virtual
-name|child_iterator
-name|child_end
-argument_list|()
-block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// UnaryOperator - This represents the unary-expression's (except sizeof and
-end_comment
-
-begin_comment
 comment|/// alignof), the postinc/postdec operators from postfix-expression, and various
-end_comment
-
-begin_comment
 comment|/// extensions.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Notes on various nodes:
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Real/Imag - These return the real/imag part of a complex operand.  If
-end_comment
-
-begin_comment
 comment|///   applied to a non-complex value, the former returns its operand and the
-end_comment
-
-begin_comment
 comment|///   later returns zero in the type of the operand.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_decl_stmt
 name|class
 name|UnaryOperator
-range|:
+operator|:
 name|public
 name|Expr
 block|{
@@ -4069,28 +4664,16 @@ name|unsigned
 name|Opc
 operator|:
 literal|5
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|SourceLocation
 name|Loc
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+block|;
 name|Stmt
-modifier|*
+operator|*
 name|Val
-decl_stmt|;
-end_decl_stmt
-
-begin_label
+block|;
 name|public
-label|:
-end_label
-
-begin_macro
+operator|:
 name|UnaryOperator
 argument_list|(
 argument|Expr *input
@@ -4099,17 +4682,22 @@ argument|Opcode opc
 argument_list|,
 argument|QualType type
 argument_list|,
+argument|ExprValueKind VK
+argument_list|,
+argument|ExprObjectKind OK
+argument_list|,
 argument|SourceLocation l
 argument_list|)
-end_macro
-
-begin_expr_stmt
-unit|:
+operator|:
 name|Expr
 argument_list|(
 name|UnaryOperatorClass
 argument_list|,
 name|type
+argument_list|,
+name|VK
+argument_list|,
+name|OK
 argument_list|,
 name|input
 operator|->
@@ -4125,18 +4713,23 @@ name|input
 operator|->
 name|isValueDependent
 argument_list|()
+argument_list|,
+name|input
+operator|->
+name|containsUnexpandedParameterPack
+argument_list|()
 argument_list|)
-operator|,
+block|,
 name|Opc
 argument_list|(
 name|opc
 argument_list|)
-operator|,
+block|,
 name|Loc
 argument_list|(
 name|l
 argument_list|)
-operator|,
+block|,
 name|Val
 argument_list|(
 argument|input
@@ -4155,7 +4748,7 @@ name|UnaryOperatorClass
 argument_list|,
 name|Empty
 argument_list|)
-operator|,
+block|,
 name|Opc
 argument_list|(
 argument|UO_AddrOf
@@ -4176,24 +4769,16 @@ name|Opc
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|setOpcode
-parameter_list|(
-name|Opcode
-name|O
-parameter_list|)
+argument_list|(
+argument|Opcode O
+argument_list|)
 block|{
 name|Opc
 operator|=
 name|O
-expr_stmt|;
-block|}
-end_function
-
-begin_expr_stmt
+block|; }
 name|Expr
 operator|*
 name|getSubExpr
@@ -4210,29 +4795,17 @@ name|Val
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|setSubExpr
-parameter_list|(
-name|Expr
-modifier|*
-name|E
-parameter_list|)
+argument_list|(
+argument|Expr *E
+argument_list|)
 block|{
 name|Val
 operator|=
 name|E
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
+block|; }
 comment|/// getOperatorLoc - Return the location of the operator.
-end_comment
-
-begin_expr_stmt
 name|SourceLocation
 name|getOperatorLoc
 argument_list|()
@@ -4242,35 +4815,23 @@ return|return
 name|Loc
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|setOperatorLoc
-parameter_list|(
-name|SourceLocation
-name|L
-parameter_list|)
+argument_list|(
+argument|SourceLocation L
+argument_list|)
 block|{
 name|Loc
 operator|=
 name|L
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
+block|; }
 comment|/// isPostfix - Return true if this is a postfix operation, like x++.
-end_comment
-
-begin_function
 specifier|static
 name|bool
 name|isPostfix
-parameter_list|(
-name|Opcode
-name|Op
-parameter_list|)
+argument_list|(
+argument|Opcode Op
+argument_list|)
 block|{
 return|return
 name|Op
@@ -4282,20 +4843,13 @@ operator|==
 name|UO_PostDec
 return|;
 block|}
-end_function
-
-begin_comment
-comment|/// isPostfix - Return true if this is a prefix operation, like --x.
-end_comment
-
-begin_function
+comment|/// isPrefix - Return true if this is a prefix operation, like --x.
 specifier|static
 name|bool
 name|isPrefix
-parameter_list|(
-name|Opcode
-name|Op
-parameter_list|)
+argument_list|(
+argument|Opcode Op
+argument_list|)
 block|{
 return|return
 name|Op
@@ -4307,9 +4861,6 @@ operator|==
 name|UO_PreDec
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|bool
 name|isPrefix
 argument_list|()
@@ -4323,9 +4874,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|bool
 name|isPostfix
 argument_list|()
@@ -4339,9 +4887,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|bool
 name|isIncrementOp
 argument_list|()
@@ -4357,9 +4902,6 @@ operator|==
 name|UO_PostInc
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|bool
 name|isIncrementDecrementOp
 argument_list|()
@@ -4371,16 +4913,12 @@ operator|<=
 name|UO_PreDec
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 specifier|static
 name|bool
 name|isArithmeticOp
-parameter_list|(
-name|Opcode
-name|Op
-parameter_list|)
+argument_list|(
+argument|Opcode Op
+argument_list|)
 block|{
 return|return
 name|Op
@@ -4392,9 +4930,6 @@ operator|<=
 name|UO_LNot
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|bool
 name|isArithmeticOp
 argument_list|()
@@ -4408,72 +4943,37 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// getOpcodeStr - Turn an Opcode enum value into the punctuation char it
-end_comment
-
-begin_comment
 comment|/// corresponds to, e.g. "sizeof" or "[pre]++"
-end_comment
-
-begin_function_decl
 specifier|static
 specifier|const
 name|char
-modifier|*
+operator|*
 name|getOpcodeStr
-parameter_list|(
-name|Opcode
-name|Op
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
+argument_list|(
+argument|Opcode Op
+argument_list|)
+block|;
 comment|/// \brief Retrieve the unary opcode that corresponds to the given
-end_comment
-
-begin_comment
 comment|/// overloaded operator.
-end_comment
-
-begin_function_decl
 specifier|static
 name|Opcode
 name|getOverloadedOpcode
-parameter_list|(
-name|OverloadedOperatorKind
-name|OO
-parameter_list|,
-name|bool
-name|Postfix
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
+argument_list|(
+argument|OverloadedOperatorKind OO
+argument_list|,
+argument|bool Postfix
+argument_list|)
+block|;
 comment|/// \brief Retrieve the overloaded operator kind that corresponds to
-end_comment
-
-begin_comment
 comment|/// the given unary opcode.
-end_comment
-
-begin_function_decl
 specifier|static
 name|OverloadedOperatorKind
 name|getOverloadedOperator
-parameter_list|(
-name|Opcode
-name|Opc
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_expr_stmt
-name|virtual
+argument_list|(
+argument|Opcode Opc
+argument_list|)
+block|;
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -4508,10 +5008,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
-name|virtual
 name|SourceLocation
 name|getExprLoc
 argument_list|()
@@ -4521,18 +5017,12 @@ return|return
 name|Loc
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 specifier|static
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|Stmt
-modifier|*
-name|T
-parameter_list|)
+argument_list|(
+argument|const Stmt *T
+argument_list|)
 block|{
 return|return
 name|T
@@ -4543,101 +5033,53 @@ operator|==
 name|UnaryOperatorClass
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|UnaryOperator
-modifier|*
-parameter_list|)
+argument_list|(
+argument|const UnaryOperator *
+argument_list|)
 block|{
 return|return
 name|true
 return|;
 block|}
-end_function
-
-begin_comment
 comment|// Iterators
-end_comment
-
-begin_function_decl
-name|virtual
-name|child_iterator
-name|child_begin
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|virtual
-name|child_iterator
-name|child_end
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-unit|};
+name|child_range
+name|children
+argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+operator|&
+name|Val
+argument_list|,
+operator|&
+name|Val
+operator|+
+literal|1
+argument_list|)
+return|;
+block|}
+expr|}
+block|;
 comment|/// OffsetOfExpr - [C99 7.17] - This represents an expression of the form
-end_comment
-
-begin_comment
 comment|/// offsetof(record-type, member-designator). For example, given:
-end_comment
-
-begin_comment
 comment|/// @code
-end_comment
-
-begin_comment
 comment|/// struct S {
-end_comment
-
-begin_comment
 comment|///   float f;
-end_comment
-
-begin_comment
 comment|///   double d;
-end_comment
-
-begin_comment
 comment|/// };
-end_comment
-
-begin_comment
 comment|/// struct T {
-end_comment
-
-begin_comment
 comment|///   int i;
-end_comment
-
-begin_comment
 comment|///   struct S s[10];
-end_comment
-
-begin_comment
 comment|/// };
-end_comment
-
-begin_comment
 comment|/// @endcode
-end_comment
-
-begin_comment
 comment|/// we can represent and evaluate the expression @c offsetof(struct T, s[2].d).
-end_comment
-
-begin_decl_stmt
 name|class
 name|OffsetOfExpr
-range|:
+operator|:
 name|public
 name|Expr
 block|{
@@ -5273,7 +5715,6 @@ return|return
 name|NumExprs
 return|;
 block|}
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -5316,16 +5757,48 @@ name|true
 return|;
 block|}
 comment|// Iterators
-name|virtual
-name|child_iterator
-name|child_begin
+name|child_range
+name|children
 argument_list|()
+block|{
+name|Stmt
+operator|*
+operator|*
+name|begin
+operator|=
+name|reinterpret_cast
+operator|<
+name|Stmt
+operator|*
+operator|*
+operator|>
+operator|(
+name|reinterpret_cast
+operator|<
+name|OffsetOfNode
+operator|*
+operator|>
+operator|(
+name|this
+operator|+
+literal|1
+operator|)
+operator|+
+name|NumComps
+operator|)
 block|;
-name|virtual
-name|child_iterator
-name|child_end
-argument_list|()
-block|; }
+return|return
+name|child_range
+argument_list|(
+name|begin
+argument_list|,
+name|begin
+operator|+
+name|NumExprs
+argument_list|)
+return|;
+block|}
+expr|}
 block|;
 comment|/// SizeOfAlignOfExpr - [C99 6.5.3.4] - This is for sizeof/alignof, both of
 comment|/// types and expressions.
@@ -5385,6 +5858,10 @@ name|SizeOfAlignOfExprClass
 argument_list|,
 name|resultType
 argument_list|,
+name|VK_RValue
+argument_list|,
+name|OK_Ordinary
+argument_list|,
 name|false
 argument_list|,
 comment|// Never type-dependent (C++ [temp.dep.expr]p3).
@@ -5395,6 +5872,14 @@ name|getType
 argument_list|()
 operator|->
 name|isDependentType
+argument_list|()
+argument_list|,
+name|TInfo
+operator|->
+name|getType
+argument_list|()
+operator|->
+name|containsUnexpandedParameterPack
 argument_list|()
 argument_list|)
 block|,
@@ -5443,6 +5928,10 @@ name|SizeOfAlignOfExprClass
 argument_list|,
 name|resultType
 argument_list|,
+name|VK_RValue
+argument_list|,
+name|OK_Ordinary
+argument_list|,
 name|false
 argument_list|,
 comment|// Never type-dependent (C++ [temp.dep.expr]p3).
@@ -5450,6 +5939,11 @@ comment|// Value-dependent if the argument is type-dependent.
 name|E
 operator|->
 name|isTypeDependent
+argument_list|()
+argument_list|,
+name|E
+operator|->
+name|containsUnexpandedParameterPack
 argument_list|()
 argument_list|)
 block|,
@@ -5693,7 +6187,6 @@ name|RParenLoc
 operator|=
 name|L
 block|; }
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -5736,14 +6229,8 @@ name|true
 return|;
 block|}
 comment|// Iterators
-name|virtual
-name|child_iterator
-name|child_begin
-argument_list|()
-block|;
-name|virtual
-name|child_iterator
-name|child_end
+name|child_range
+name|children
 argument_list|()
 block|; }
 block|;
@@ -5787,6 +6274,10 @@ argument|Expr *rhs
 argument_list|,
 argument|QualType t
 argument_list|,
+argument|ExprValueKind VK
+argument_list|,
+argument|ExprObjectKind OK
+argument_list|,
 argument|SourceLocation rbracketloc
 argument_list|)
 operator|:
@@ -5796,6 +6287,10 @@ name|ArraySubscriptExprClass
 argument_list|,
 name|t
 argument_list|,
+name|VK
+argument_list|,
+name|OK
+argument_list|,
 name|lhs
 operator|->
 name|isTypeDependent
@@ -5815,6 +6310,18 @@ name|rhs
 operator|->
 name|isValueDependent
 argument_list|()
+argument_list|,
+operator|(
+name|lhs
+operator|->
+name|containsUnexpandedParameterPack
+argument_list|()
+operator|||
+name|rhs
+operator|->
+name|containsUnexpandedParameterPack
+argument_list|()
+operator|)
 argument_list|)
 block|,
 name|RBracketLoc
@@ -6077,7 +6584,6 @@ argument_list|()
 operator|)
 return|;
 block|}
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -6115,7 +6621,6 @@ name|RBracketLoc
 operator|=
 name|L
 block|; }
-name|virtual
 name|SourceLocation
 name|getExprLoc
 argument_list|()
@@ -6157,16 +6662,30 @@ name|true
 return|;
 block|}
 comment|// Iterators
-name|virtual
-name|child_iterator
-name|child_begin
+name|child_range
+name|children
 argument_list|()
-block|;
-name|virtual
-name|child_iterator
-name|child_end
-argument_list|()
-block|; }
+block|{
+return|return
+name|child_range
+argument_list|(
+operator|&
+name|SubExprs
+index|[
+literal|0
+index|]
+argument_list|,
+operator|&
+name|SubExprs
+index|[
+literal|0
+index|]
+operator|+
+name|END_EXPR
+argument_list|)
+return|;
+block|}
+expr|}
 block|;
 comment|/// CallExpr - Represents a function call (C99 6.5.2.2, C++ [expr.call]).
 comment|/// CallExpr itself represents a normal function call, e.g., "f(x, 2)",
@@ -6185,7 +6704,7 @@ name|FN
 operator|=
 literal|0
 block|,
-name|ARGS_START
+name|PREARGS_START
 operator|=
 literal|1
 block|}
@@ -6203,7 +6722,7 @@ name|RParenLoc
 block|;
 name|protected
 operator|:
-comment|// This version of the constructor is for derived classes.
+comment|// These versions of the constructor are for derived classes.
 name|CallExpr
 argument_list|(
 argument|ASTContext& C
@@ -6212,15 +6731,122 @@ argument|StmtClass SC
 argument_list|,
 argument|Expr *fn
 argument_list|,
+argument|unsigned NumPreArgs
+argument_list|,
 argument|Expr **args
 argument_list|,
 argument|unsigned numargs
 argument_list|,
 argument|QualType t
 argument_list|,
+argument|ExprValueKind VK
+argument_list|,
 argument|SourceLocation rparenloc
 argument_list|)
 block|;
+name|CallExpr
+argument_list|(
+argument|ASTContext&C
+argument_list|,
+argument|StmtClass SC
+argument_list|,
+argument|unsigned NumPreArgs
+argument_list|,
+argument|EmptyShell Empty
+argument_list|)
+block|;
+name|Stmt
+operator|*
+name|getPreArg
+argument_list|(
+argument|unsigned i
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|i
+operator|<
+name|getNumPreArgs
+argument_list|()
+operator|&&
+literal|"Prearg access out of range!"
+argument_list|)
+block|;
+return|return
+name|SubExprs
+index|[
+name|PREARGS_START
+operator|+
+name|i
+index|]
+return|;
+block|}
+specifier|const
+name|Stmt
+operator|*
+name|getPreArg
+argument_list|(
+argument|unsigned i
+argument_list|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|i
+operator|<
+name|getNumPreArgs
+argument_list|()
+operator|&&
+literal|"Prearg access out of range!"
+argument_list|)
+block|;
+return|return
+name|SubExprs
+index|[
+name|PREARGS_START
+operator|+
+name|i
+index|]
+return|;
+block|}
+name|void
+name|setPreArg
+argument_list|(
+argument|unsigned i
+argument_list|,
+argument|Stmt *PreArg
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|i
+operator|<
+name|getNumPreArgs
+argument_list|()
+operator|&&
+literal|"Prearg access out of range!"
+argument_list|)
+block|;
+name|SubExprs
+index|[
+name|PREARGS_START
+operator|+
+name|i
+index|]
+operator|=
+name|PreArg
+block|;   }
+name|unsigned
+name|getNumPreArgs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CallExprBits
+operator|.
+name|NumPreArgs
+return|;
+block|}
 name|public
 operator|:
 name|CallExpr
@@ -6234,6 +6860,8 @@ argument_list|,
 argument|unsigned numargs
 argument_list|,
 argument|QualType t
+argument_list|,
+argument|ExprValueKind VK
 argument_list|,
 argument|SourceLocation rparenloc
 argument_list|)
@@ -6363,6 +6991,30 @@ return|return
 name|NumArgs
 return|;
 block|}
+comment|/// \brief Retrieve the call arguments.
+name|Expr
+operator|*
+operator|*
+name|getArgs
+argument_list|()
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+name|Expr
+operator|*
+operator|*
+operator|>
+operator|(
+name|SubExprs
+operator|+
+name|getNumPreArgs
+argument_list|()
+operator|+
+name|PREARGS_START
+operator|)
+return|;
+block|}
 comment|/// getArg - Return the specified argument.
 name|Expr
 operator|*
@@ -6390,7 +7042,10 @@ name|SubExprs
 index|[
 name|Arg
 operator|+
-name|ARGS_START
+name|getNumPreArgs
+argument_list|()
+operator|+
+name|PREARGS_START
 index|]
 operator|)
 return|;
@@ -6423,7 +7078,10 @@ name|SubExprs
 index|[
 name|Arg
 operator|+
-name|ARGS_START
+name|getNumPreArgs
+argument_list|()
+operator|+
+name|PREARGS_START
 index|]
 operator|)
 return|;
@@ -6450,7 +7108,10 @@ name|SubExprs
 index|[
 name|Arg
 operator|+
-name|ARGS_START
+name|getNumPreArgs
+argument_list|()
+operator|+
+name|PREARGS_START
 index|]
 operator|=
 name|ArgExpr
@@ -6481,7 +7142,10 @@ block|{
 return|return
 name|SubExprs
 operator|+
-name|ARGS_START
+name|PREARGS_START
+operator|+
+name|getNumPreArgs
+argument_list|()
 return|;
 block|}
 name|arg_iterator
@@ -6491,7 +7155,10 @@ block|{
 return|return
 name|SubExprs
 operator|+
-name|ARGS_START
+name|PREARGS_START
+operator|+
+name|getNumPreArgs
+argument_list|()
 operator|+
 name|getNumArgs
 argument_list|()
@@ -6505,7 +7172,10 @@ block|{
 return|return
 name|SubExprs
 operator|+
-name|ARGS_START
+name|PREARGS_START
+operator|+
+name|getNumPreArgs
+argument_list|()
 return|;
 block|}
 name|const_arg_iterator
@@ -6516,7 +7186,10 @@ block|{
 return|return
 name|SubExprs
 operator|+
-name|ARGS_START
+name|PREARGS_START
+operator|+
+name|getNumPreArgs
+argument_list|()
 operator|+
 name|getNumArgs
 argument_list|()
@@ -6544,33 +7217,18 @@ comment|/// not, return 0.
 name|unsigned
 name|isBuiltinCall
 argument_list|(
-argument|ASTContext&Context
+argument|const ASTContext&Context
 argument_list|)
 specifier|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/// getCallReturnType - Get the return type of the call expr. This is not
-end_comment
-
-begin_comment
 comment|/// always the type of the expr itself, if the return type is a reference
-end_comment
-
-begin_comment
 comment|/// type.
-end_comment
-
-begin_expr_stmt
 name|QualType
 name|getCallReturnType
 argument_list|()
 specifier|const
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+block|;
 name|SourceLocation
 name|getRParenLoc
 argument_list|()
@@ -6580,25 +7238,16 @@ return|return
 name|RParenLoc
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|setRParenLoc
-parameter_list|(
-name|SourceLocation
-name|L
-parameter_list|)
+argument_list|(
+argument|SourceLocation L
+argument_list|)
 block|{
 name|RParenLoc
 operator|=
 name|L
-expr_stmt|;
-block|}
-end_function
-
-begin_expr_stmt
-name|virtual
+block|; }
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -6617,18 +7266,12 @@ name|RParenLoc
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 specifier|static
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|Stmt
-modifier|*
-name|T
-parameter_list|)
+argument_list|(
+argument|const Stmt *T
+argument_list|)
 block|{
 return|return
 name|T
@@ -6646,57 +7289,53 @@ operator|<=
 name|lastCallExprConstant
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|CallExpr
-modifier|*
-parameter_list|)
+argument_list|(
+argument|const CallExpr *
+argument_list|)
 block|{
 return|return
 name|true
 return|;
 block|}
-end_function
-
-begin_comment
 comment|// Iterators
-end_comment
-
-begin_function_decl
-name|virtual
-name|child_iterator
-name|child_begin
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|virtual
-name|child_iterator
-name|child_end
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-unit|};
+name|child_range
+name|children
+argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+operator|&
+name|SubExprs
+index|[
+literal|0
+index|]
+argument_list|,
+operator|&
+name|SubExprs
+index|[
+literal|0
+index|]
+operator|+
+name|NumArgs
+operator|+
+name|getNumPreArgs
+argument_list|()
+operator|+
+name|PREARGS_START
+argument_list|)
+return|;
+block|}
+expr|}
+block|;
 comment|/// MemberExpr - [C99 6.5.2.3] Structure and Union Members.  X->F and X.F.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_decl_stmt
 name|class
 name|MemberExpr
-range|:
+operator|:
 name|public
 name|Expr
 block|{
@@ -6816,6 +7455,10 @@ argument_list|,
 argument|const DeclarationNameInfo&NameInfo
 argument_list|,
 argument|QualType ty
+argument_list|,
+argument|ExprValueKind VK
+argument_list|,
+argument|ExprObjectKind OK
 argument_list|)
 operator|:
 name|Expr
@@ -6823,6 +7466,10 @@ argument_list|(
 name|MemberExprClass
 argument_list|,
 name|ty
+argument_list|,
+name|VK
+argument_list|,
+name|OK
 argument_list|,
 name|base
 operator|->
@@ -6832,6 +7479,11 @@ argument_list|,
 name|base
 operator|->
 name|isValueDependent
+argument_list|()
+argument_list|,
+name|base
+operator|->
+name|containsUnexpandedParameterPack
 argument_list|()
 argument_list|)
 block|,
@@ -6904,6 +7556,10 @@ argument_list|,
 argument|SourceLocation l
 argument_list|,
 argument|QualType ty
+argument_list|,
+argument|ExprValueKind VK
+argument_list|,
+argument|ExprObjectKind OK
 argument_list|)
 operator|:
 name|Expr
@@ -6911,6 +7567,10 @@ argument_list|(
 name|MemberExprClass
 argument_list|,
 name|ty
+argument_list|,
+name|VK
+argument_list|,
+name|OK
 argument_list|,
 name|base
 operator|->
@@ -6920,6 +7580,11 @@ argument_list|,
 name|base
 operator|->
 name|isValueDependent
+argument_list|()
+argument_list|,
+name|base
+operator|->
+name|containsUnexpandedParameterPack
 argument_list|()
 argument_list|)
 block|,
@@ -6980,6 +7645,10 @@ argument_list|,
 argument|const TemplateArgumentListInfo *targs
 argument_list|,
 argument|QualType ty
+argument_list|,
+argument|ExprValueKind VK
+argument_list|,
+argument|ExprObjectKind OK
 argument_list|)
 block|;
 name|void
@@ -7065,21 +7734,9 @@ operator|->
 name|FoundDecl
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Determines whether this member expression actually had
-end_comment
-
-begin_comment
 comment|/// a C++ nested-name-specifier prior to the name of the member, e.g.,
-end_comment
-
-begin_comment
 comment|/// x->Base::foo.
-end_comment
-
-begin_expr_stmt
 name|bool
 name|hasQualifier
 argument_list|()
@@ -7092,21 +7749,9 @@ operator|!=
 literal|0
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief If the member name was qualified, retrieves the source range of
-end_comment
-
-begin_comment
 comment|/// the nested-name-specifier that precedes the member name. Otherwise,
-end_comment
-
-begin_comment
 comment|/// returns an empty source range.
-end_comment
-
-begin_expr_stmt
 name|SourceRange
 name|getQualifierRange
 argument_list|()
@@ -7121,32 +7766,17 @@ return|return
 name|SourceRange
 argument_list|()
 return|;
-end_expr_stmt
-
-begin_return
 return|return
 name|getMemberQualifier
 argument_list|()
 operator|->
 name|Range
 return|;
-end_return
-
-begin_comment
-unit|}
+block|}
 comment|/// \brief If the member name was qualified, retrieves the
-end_comment
-
-begin_comment
 comment|/// nested-name-specifier that precedes the member name. Otherwise, returns
-end_comment
-
-begin_comment
 comment|/// NULL.
-end_comment
-
-begin_expr_stmt
-unit|NestedNameSpecifier
+name|NestedNameSpecifier
 operator|*
 name|getQualifier
 argument_list|()
@@ -7160,58 +7790,32 @@ condition|)
 return|return
 literal|0
 return|;
-end_expr_stmt
-
-begin_return
 return|return
 name|getMemberQualifier
 argument_list|()
 operator|->
 name|NNS
 return|;
-end_return
-
-begin_comment
-unit|}
+block|}
 comment|/// \brief Determines whether this member expression actually had a C++
-end_comment
-
-begin_comment
 comment|/// template argument list explicitly specified, e.g., x.f<int>.
-end_comment
-
-begin_macro
-unit|bool
+name|bool
 name|hasExplicitTemplateArgs
 argument_list|()
-end_macro
-
-begin_expr_stmt
 specifier|const
 block|{
 return|return
 name|HasExplicitTemplateArgumentList
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Copies the template arguments (if present) into the given
-end_comment
-
-begin_comment
 comment|/// structure.
-end_comment
-
-begin_decl_stmt
 name|void
 name|copyTemplateArgumentsInto
 argument_list|(
-name|TemplateArgumentListInfo
-operator|&
-name|List
+argument|TemplateArgumentListInfo&List
 argument_list|)
-decl|const
+specifier|const
 block|{
 if|if
 condition|(
@@ -7227,31 +7831,19 @@ name|List
 argument_list|)
 expr_stmt|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Retrieve the explicit template argument list that
-end_comment
-
-begin_comment
 comment|/// follow the member template name.  This must only be called on an
-end_comment
-
-begin_comment
 comment|/// expression with explicit template arguments.
-end_comment
-
-begin_function
 name|ExplicitTemplateArgumentList
-modifier|&
+operator|&
 name|getExplicitTemplateArgs
-parameter_list|()
+argument_list|()
 block|{
 name|assert
 argument_list|(
 name|HasExplicitTemplateArgumentList
 argument_list|)
-expr_stmt|;
+block|;
 if|if
 condition|(
 operator|!
@@ -7285,21 +7877,9 @@ literal|1
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/// \brief Retrieve the explicit template argument list that
-end_comment
-
-begin_comment
 comment|/// followed the member template name.  This must only be called on
-end_comment
-
-begin_comment
 comment|/// an expression with explicit template arguments.
-end_comment
-
-begin_expr_stmt
 specifier|const
 name|ExplicitTemplateArgumentList
 operator|&
@@ -7321,21 +7901,9 @@ name|getExplicitTemplateArgs
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Retrieves the optional explicit template arguments.
-end_comment
-
-begin_comment
 comment|/// This points to the same data as getExplicitTemplateArgs(), but
-end_comment
-
-begin_comment
 comment|/// returns null if there are no explicit template arguments.
-end_comment
-
-begin_expr_stmt
 specifier|const
 name|ExplicitTemplateArgumentList
 operator|*
@@ -7352,32 +7920,17 @@ condition|)
 return|return
 literal|0
 return|;
-end_expr_stmt
-
-begin_return
 return|return
 operator|&
 name|getExplicitTemplateArgs
 argument_list|()
 return|;
-end_return
-
-begin_comment
-unit|}
+block|}
 comment|/// \brief Retrieve the location of the left angle bracket following the
-end_comment
-
-begin_comment
 comment|/// member name ('<'), if any.
-end_comment
-
-begin_macro
-unit|SourceLocation
+name|SourceLocation
 name|getLAngleLoc
 argument_list|()
-end_macro
-
-begin_expr_stmt
 specifier|const
 block|{
 if|if
@@ -7389,28 +7942,16 @@ return|return
 name|SourceLocation
 argument_list|()
 return|;
-end_expr_stmt
-
-begin_return
 return|return
 name|getExplicitTemplateArgs
 argument_list|()
 operator|.
 name|LAngleLoc
 return|;
-end_return
-
-begin_comment
-unit|}
+block|}
 comment|/// \brief Retrieve the template arguments provided as part of this
-end_comment
-
-begin_comment
 comment|/// template-id.
-end_comment
-
-begin_expr_stmt
-unit|const
+specifier|const
 name|TemplateArgumentLoc
 operator|*
 name|getTemplateArgs
@@ -7425,9 +7966,6 @@ condition|)
 return|return
 literal|0
 return|;
-end_expr_stmt
-
-begin_return
 return|return
 name|getExplicitTemplateArgs
 argument_list|()
@@ -7435,24 +7973,12 @@ operator|.
 name|getTemplateArgs
 argument_list|()
 return|;
-end_return
-
-begin_comment
-unit|}
+block|}
 comment|/// \brief Retrieve the number of template arguments provided as part of this
-end_comment
-
-begin_comment
 comment|/// template-id.
-end_comment
-
-begin_macro
-unit|unsigned
+name|unsigned
 name|getNumTemplateArgs
 argument_list|()
-end_macro
-
-begin_expr_stmt
 specifier|const
 block|{
 if|if
@@ -7463,33 +7989,18 @@ condition|)
 return|return
 literal|0
 return|;
-end_expr_stmt
-
-begin_return
 return|return
 name|getExplicitTemplateArgs
 argument_list|()
 operator|.
 name|NumTemplateArgs
 return|;
-end_return
-
-begin_comment
-unit|}
+block|}
 comment|/// \brief Retrieve the location of the right angle bracket following the
-end_comment
-
-begin_comment
 comment|/// template arguments ('>').
-end_comment
-
-begin_macro
-unit|SourceLocation
+name|SourceLocation
 name|getRAngleLoc
 argument_list|()
-end_macro
-
-begin_expr_stmt
 specifier|const
 block|{
 if|if
@@ -7501,29 +8012,17 @@ return|return
 name|SourceLocation
 argument_list|()
 return|;
-end_expr_stmt
-
-begin_return
 return|return
 name|getExplicitTemplateArgs
 argument_list|()
 operator|.
 name|RAngleLoc
 return|;
-end_return
-
-begin_comment
-unit|}
+block|}
 comment|/// \brief Retrieve the member declaration name info.
-end_comment
-
-begin_macro
-unit|DeclarationNameInfo
+name|DeclarationNameInfo
 name|getMemberNameInfo
 argument_list|()
-end_macro
-
-begin_expr_stmt
 specifier|const
 block|{
 return|return
@@ -7540,9 +8039,6 @@ name|MemberDNLoc
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|bool
 name|isArrow
 argument_list|()
@@ -7552,32 +8048,18 @@ return|return
 name|IsArrow
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|setArrow
-parameter_list|(
-name|bool
-name|A
-parameter_list|)
+argument_list|(
+argument|bool A
+argument_list|)
 block|{
 name|IsArrow
 operator|=
 name|A
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
+block|; }
 comment|/// getMemberLoc - Return the location of the "member", in X->F, it is the
-end_comment
-
-begin_comment
 comment|/// location of 'F'.
-end_comment
-
-begin_expr_stmt
 name|SourceLocation
 name|getMemberLoc
 argument_list|()
@@ -7587,25 +8069,16 @@ return|return
 name|MemberLoc
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|void
 name|setMemberLoc
-parameter_list|(
-name|SourceLocation
-name|L
-parameter_list|)
+argument_list|(
+argument|SourceLocation L
+argument_list|)
 block|{
 name|MemberLoc
 operator|=
 name|L
-expr_stmt|;
-block|}
-end_function
-
-begin_expr_stmt
-name|virtual
+block|; }
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -7653,9 +8126,6 @@ argument_list|,
 name|EndLoc
 argument_list|)
 return|;
-end_expr_stmt
-
-begin_return
 return|return
 name|SourceRange
 argument_list|(
@@ -7664,10 +8134,10 @@ argument_list|,
 name|EndLoc
 argument_list|)
 return|;
-end_return
+block|}
+end_decl_stmt
 
 begin_expr_stmt
-unit|}    virtual
 name|SourceLocation
 name|getExprLoc
 argument_list|()
@@ -7721,21 +8191,39 @@ begin_comment
 comment|// Iterators
 end_comment
 
-begin_function_decl
-name|virtual
-name|child_iterator
-name|child_begin
+begin_function
+name|child_range
+name|children
 parameter_list|()
-function_decl|;
-end_function_decl
+block|{
+return|return
+name|child_range
+argument_list|(
+operator|&
+name|Base
+argument_list|,
+operator|&
+name|Base
+operator|+
+literal|1
+argument_list|)
+return|;
+block|}
+end_function
 
-begin_function_decl
-name|virtual
-name|child_iterator
-name|child_end
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_decl_stmt
+name|friend
+name|class
+name|ASTReader
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|friend
+name|class
+name|ASTStmtWriter
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 unit|};
@@ -7774,7 +8262,6 @@ name|FileScope
 block|;
 name|public
 operator|:
-comment|// FIXME: Can compound literals be value-dependent?
 name|CompoundLiteralExpr
 argument_list|(
 argument|SourceLocation lparenloc
@@ -7782,6 +8269,8 @@ argument_list|,
 argument|TypeSourceInfo *tinfo
 argument_list|,
 argument|QualType T
+argument_list|,
+argument|ExprValueKind VK
 argument_list|,
 argument|Expr *init
 argument_list|,
@@ -7794,6 +8283,10 @@ name|CompoundLiteralExprClass
 argument_list|,
 name|T
 argument_list|,
+name|VK
+argument_list|,
+name|OK_Ordinary
+argument_list|,
 name|tinfo
 operator|->
 name|getType
@@ -7802,7 +8295,15 @@ operator|->
 name|isDependentType
 argument_list|()
 argument_list|,
-name|false
+name|init
+operator|->
+name|isValueDependent
+argument_list|()
+argument_list|,
+name|init
+operator|->
+name|containsUnexpandedParameterPack
+argument_list|()
 argument_list|)
 block|,
 name|LParenLoc
@@ -7939,7 +8440,6 @@ name|TInfo
 operator|=
 name|tinfo
 block|; }
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -8026,21 +8526,25 @@ begin_comment
 comment|// Iterators
 end_comment
 
-begin_function_decl
-name|virtual
-name|child_iterator
-name|child_begin
+begin_function
+name|child_range
+name|children
 parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|virtual
-name|child_iterator
-name|child_end
-parameter_list|()
-function_decl|;
-end_function_decl
+block|{
+return|return
+name|child_range
+argument_list|(
+operator|&
+name|Init
+argument_list|,
+operator|&
+name|Init
+operator|+
+literal|1
+argument_list|)
+return|;
+block|}
+end_function
 
 begin_comment
 unit|};
@@ -8076,33 +8580,15 @@ name|CastKind
 expr_stmt|;
 name|private
 operator|:
-name|unsigned
-name|Kind
-operator|:
-literal|5
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|unsigned
-name|BasePathSize
-range|:
-name|BitsRemaining
-operator|-
-literal|5
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|Stmt
-modifier|*
+operator|*
 name|Op
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
 name|void
-name|CheckBasePath
+name|CheckCastConsistency
 argument_list|()
 specifier|const
 block|{
@@ -8142,16 +8628,7 @@ expr_stmt|;
 break|break;
 comment|// These should not have an inheritance path.
 case|case
-name|CK_Unknown
-case|:
-case|case
 name|CK_BitCast
-case|:
-case|case
-name|CK_LValueBitCast
-case|:
-case|case
-name|CK_NoOp
 case|:
 case|case
 name|CK_Dynamic
@@ -8169,7 +8646,7 @@ case|case
 name|CK_NullToMemberPointer
 case|:
 case|case
-name|CK_UserDefinedConversion
+name|CK_NullToPointer
 case|:
 case|case
 name|CK_ConstructorConversion
@@ -8199,9 +8676,6 @@ case|case
 name|CK_FloatingCast
 case|:
 case|case
-name|CK_MemberPointerToBoolean
-case|:
-case|case
 name|CK_AnyPointerToObjCPointerCast
 case|:
 case|case
@@ -8210,6 +8684,81 @@ case|:
 case|case
 name|CK_ObjCObjectLValueCast
 case|:
+case|case
+name|CK_FloatingRealToComplex
+case|:
+case|case
+name|CK_FloatingComplexToReal
+case|:
+case|case
+name|CK_FloatingComplexCast
+case|:
+case|case
+name|CK_FloatingComplexToIntegralComplex
+case|:
+case|case
+name|CK_IntegralRealToComplex
+case|:
+case|case
+name|CK_IntegralComplexToReal
+case|:
+case|case
+name|CK_IntegralComplexCast
+case|:
+case|case
+name|CK_IntegralComplexToFloatingComplex
+case|:
+name|assert
+argument_list|(
+operator|!
+name|getType
+argument_list|()
+operator|->
+name|isBooleanType
+argument_list|()
+operator|&&
+literal|"unheralded conversion to bool"
+argument_list|)
+expr_stmt|;
+comment|// fallthrough to check for null base path
+case|case
+name|CK_Dependent
+case|:
+case|case
+name|CK_LValueToRValue
+case|:
+case|case
+name|CK_GetObjCProperty
+case|:
+case|case
+name|CK_NoOp
+case|:
+case|case
+name|CK_PointerToBoolean
+case|:
+case|case
+name|CK_IntegralToBoolean
+case|:
+case|case
+name|CK_FloatingToBoolean
+case|:
+case|case
+name|CK_MemberPointerToBoolean
+case|:
+case|case
+name|CK_FloatingComplexToBoolean
+case|:
+case|case
+name|CK_IntegralComplexToBoolean
+case|:
+case|case
+name|CK_LValueBitCast
+case|:
+comment|// -> bool&
+case|case
+name|CK_UserDefinedConversion
+case|:
+comment|// operator bool()
 name|assert
 argument_list|(
 name|path_empty
@@ -8274,6 +8823,8 @@ argument|StmtClass SC
 argument_list|,
 argument|QualType ty
 argument_list|,
+argument|ExprValueKind VK
+argument_list|,
 argument|const CastKind kind
 argument_list|,
 argument|Expr *op
@@ -8289,6 +8840,10 @@ argument_list|(
 name|SC
 argument_list|,
 name|ty
+argument_list|,
+name|VK
+argument_list|,
+name|OK_Ordinary
 argument_list|,
 comment|// Cast expressions are type-dependent if the type is
 comment|// dependent (C++ [temp.dep.expr]p3).
@@ -8312,16 +8867,18 @@ operator|->
 name|isValueDependent
 argument_list|()
 operator|)
-argument_list|)
-operator|,
-name|Kind
-argument_list|(
-name|kind
-argument_list|)
-operator|,
-name|BasePathSize
-argument_list|(
-name|BasePathSize
+argument_list|,
+operator|(
+name|ty
+operator|->
+name|containsUnexpandedParameterPack
+argument_list|()
+operator|||
+name|op
+operator|->
+name|containsUnexpandedParameterPack
+argument_list|()
+operator|)
 argument_list|)
 operator|,
 name|Op
@@ -8329,7 +8886,28 @@ argument_list|(
 argument|op
 argument_list|)
 block|{
-name|CheckBasePath
+name|assert
+argument_list|(
+name|kind
+operator|!=
+name|CK_Invalid
+operator|&&
+literal|"creating cast with invalid cast kind"
+argument_list|)
+block|;
+name|CastExprBits
+operator|.
+name|Kind
+operator|=
+name|kind
+block|;
+name|CastExprBits
+operator|.
+name|BasePathSize
+operator|=
+name|BasePathSize
+block|;
+name|CheckCastConsistency
 argument_list|()
 block|;   }
 comment|/// \brief Construct an empty cast.
@@ -8344,16 +8922,17 @@ argument_list|)
 operator|:
 name|Expr
 argument_list|(
-name|SC
+argument|SC
 argument_list|,
-name|Empty
+argument|Empty
 argument_list|)
-operator|,
+block|{
+name|CastExprBits
+operator|.
 name|BasePathSize
-argument_list|(
-argument|BasePathSize
-argument_list|)
-block|{ }
+operator|=
+name|BasePathSize
+block|;   }
 name|public
 operator|:
 name|CastKind
@@ -8362,13 +8941,12 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|static_cast
-operator|<
-name|CastKind
-operator|>
 operator|(
-name|Kind
+name|CastKind
 operator|)
+name|CastExprBits
+operator|.
+name|Kind
 return|;
 block|}
 end_expr_stmt
@@ -8381,6 +8959,8 @@ name|CastKind
 name|K
 parameter_list|)
 block|{
+name|CastExprBits
+operator|.
 name|Kind
 operator|=
 name|K
@@ -8523,6 +9103,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|CastExprBits
+operator|.
 name|BasePathSize
 operator|==
 literal|0
@@ -8537,6 +9119,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|CastExprBits
+operator|.
 name|BasePathSize
 return|;
 block|}
@@ -8659,21 +9243,25 @@ begin_comment
 comment|// Iterators
 end_comment
 
-begin_function_decl
-name|virtual
-name|child_iterator
-name|child_begin
+begin_function
+name|child_range
+name|children
 parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|virtual
-name|child_iterator
-name|child_end
-parameter_list|()
-function_decl|;
-end_function_decl
+block|{
+return|return
+name|child_range
+argument_list|(
+operator|&
+name|Op
+argument_list|,
+operator|&
+name|Op
+operator|+
+literal|1
+argument_list|)
+return|;
+block|}
+end_function
 
 begin_comment
 unit|};
@@ -8784,17 +9372,15 @@ argument|ImplicitCastExprClass
 argument_list|,
 argument|ty
 argument_list|,
+argument|VK
+argument_list|,
 argument|kind
 argument_list|,
 argument|op
 argument_list|,
 argument|BasePathLength
 argument_list|)
-block|{
-name|ValueKind
-operator|=
-name|VK
-block|;   }
+block|{   }
 comment|/// \brief Construct an empty implicit cast.
 name|explicit
 name|ImplicitCastExpr
@@ -8840,17 +9426,15 @@ argument|ImplicitCastExprClass
 argument_list|,
 argument|ty
 argument_list|,
+argument|VK
+argument_list|,
 argument|kind
 argument_list|,
 argument|op
 argument_list|,
 literal|0
 argument_list|)
-block|{
-name|ValueKind
-operator|=
-name|VK
-block|;   }
+block|{   }
 specifier|static
 name|ImplicitCastExpr
 operator|*
@@ -8879,7 +9463,6 @@ argument_list|,
 argument|unsigned PathSize
 argument_list|)
 block|;
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -8893,33 +9476,6 @@ name|getSourceRange
 argument_list|()
 return|;
 block|}
-comment|/// getValueKind - The value kind that this cast produces.
-name|ExprValueKind
-name|getValueKind
-argument_list|()
-specifier|const
-block|{
-return|return
-name|static_cast
-operator|<
-name|ExprValueKind
-operator|>
-operator|(
-name|ValueKind
-operator|)
-return|;
-block|}
-comment|/// setValueKind - Set the value kind this cast produces.
-name|void
-name|setValueKind
-argument_list|(
-argument|ExprValueKind Cat
-argument_list|)
-block|{
-name|ValueKind
-operator|=
-name|Cat
-block|; }
 specifier|static
 name|bool
 name|classof
@@ -8985,6 +9541,8 @@ argument|StmtClass SC
 argument_list|,
 argument|QualType exprTy
 argument_list|,
+argument|ExprValueKind VK
+argument_list|,
 argument|CastKind kind
 argument_list|,
 argument|Expr *op
@@ -8999,6 +9557,8 @@ argument_list|(
 name|SC
 argument_list|,
 name|exprTy
+argument_list|,
+name|VK
 argument_list|,
 name|kind
 argument_list|,
@@ -9126,6 +9686,8 @@ name|CStyleCastExpr
 argument_list|(
 argument|QualType exprTy
 argument_list|,
+argument|ExprValueKind vk
+argument_list|,
 argument|CastKind kind
 argument_list|,
 argument|Expr *op
@@ -9144,6 +9706,8 @@ argument_list|(
 name|CStyleCastExprClass
 argument_list|,
 name|exprTy
+argument_list|,
+name|vk
 argument_list|,
 name|kind
 argument_list|,
@@ -9192,6 +9756,8 @@ argument_list|(
 argument|ASTContext&Context
 argument_list|,
 argument|QualType T
+argument_list|,
+argument|ExprValueKind VK
 argument_list|,
 argument|CastKind K
 argument_list|,
@@ -9254,7 +9820,6 @@ name|RPLoc
 operator|=
 name|L
 block|; }
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -9372,6 +9937,10 @@ argument|Opcode opc
 argument_list|,
 argument|QualType ResTy
 argument_list|,
+argument|ExprValueKind VK
+argument_list|,
+argument|ExprObjectKind OK
+argument_list|,
 argument|SourceLocation opLoc
 argument_list|)
 operator|:
@@ -9381,6 +9950,10 @@ name|BinaryOperatorClass
 argument_list|,
 name|ResTy
 argument_list|,
+name|VK
+argument_list|,
+name|OK
+argument_list|,
 name|lhs
 operator|->
 name|isTypeDependent
@@ -9400,6 +9973,18 @@ name|rhs
 operator|->
 name|isValueDependent
 argument_list|()
+argument_list|,
+operator|(
+name|lhs
+operator|->
+name|containsUnexpandedParameterPack
+argument_list|()
+operator|||
+name|rhs
+operator|->
+name|containsUnexpandedParameterPack
+argument_list|()
+operator|)
 argument_list|)
 block|,
 name|Opc
@@ -9562,7 +10147,6 @@ index|]
 operator|=
 name|E
 block|; }
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -9630,6 +10214,21 @@ argument|Opcode Opc
 argument_list|)
 block|;
 comment|/// predicates to categorize the respective opcodes.
+name|bool
+name|isPtrMemOp
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Opc
+operator|==
+name|BO_PtrMemD
+operator|||
+name|Opc
+operator|==
+name|BO_PtrMemI
+return|;
+block|}
 name|bool
 name|isMultiplicativeOp
 argument_list|()
@@ -9855,14 +10454,46 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+specifier|static
+name|bool
+name|isAssignmentOp
+argument_list|(
+argument|Opcode Opc
+argument_list|)
+block|{
+return|return
+name|Opc
+operator|>=
+name|BO_Assign
+operator|&&
+name|Opc
+operator|<=
+name|BO_OrAssign
+return|;
+block|}
 name|bool
 name|isAssignmentOp
 argument_list|()
 specifier|const
 block|{
 return|return
+name|isAssignmentOp
+argument_list|(
+name|getOpcode
+argument_list|()
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|isCompoundAssignmentOp
+argument_list|(
+argument|Opcode Opc
+argument_list|)
+block|{
+return|return
 name|Opc
-operator|>=
+operator|>
 name|BO_Assign
 operator|&&
 name|Opc
@@ -9876,19 +10507,19 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Opc
-operator|>
-name|BO_Assign
-operator|&&
-name|Opc
-operator|<=
-name|BO_OrAssign
+name|isCompoundAssignmentOp
+argument_list|(
+name|getOpcode
+argument_list|()
+argument_list|)
 return|;
 block|}
+specifier|static
 name|bool
 name|isShiftAssignOp
-argument_list|()
-specifier|const
+argument_list|(
+argument|Opcode Opc
+argument_list|)
 block|{
 return|return
 name|Opc
@@ -9898,6 +10529,19 @@ operator|||
 name|Opc
 operator|==
 name|BO_ShrAssign
+return|;
+block|}
+name|bool
+name|isShiftAssignOp
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isShiftAssignOp
+argument_list|(
+name|getOpcode
+argument_list|()
+argument_list|)
 return|;
 block|}
 specifier|static
@@ -9935,16 +10579,29 @@ name|true
 return|;
 block|}
 comment|// Iterators
-name|virtual
-name|child_iterator
-name|child_begin
+name|child_range
+name|children
 argument_list|()
-block|;
-name|virtual
-name|child_iterator
-name|child_end
-argument_list|()
-block|;
+block|{
+return|return
+name|child_range
+argument_list|(
+operator|&
+name|SubExprs
+index|[
+literal|0
+index|]
+argument_list|,
+operator|&
+name|SubExprs
+index|[
+literal|0
+index|]
+operator|+
+name|END_EXPR
+argument_list|)
+return|;
+block|}
 name|protected
 operator|:
 name|BinaryOperator
@@ -9957,6 +10614,10 @@ argument|Opcode opc
 argument_list|,
 argument|QualType ResTy
 argument_list|,
+argument|ExprValueKind VK
+argument_list|,
+argument|ExprObjectKind OK
+argument_list|,
 argument|SourceLocation opLoc
 argument_list|,
 argument|bool dead
@@ -9968,6 +10629,10 @@ name|CompoundAssignOperatorClass
 argument_list|,
 name|ResTy
 argument_list|,
+name|VK
+argument_list|,
+name|OK
+argument_list|,
 name|lhs
 operator|->
 name|isTypeDependent
@@ -9987,6 +10652,18 @@ name|rhs
 operator|->
 name|isValueDependent
 argument_list|()
+argument_list|,
+operator|(
+name|lhs
+operator|->
+name|containsUnexpandedParameterPack
+argument_list|()
+operator|||
+name|rhs
+operator|->
+name|containsUnexpandedParameterPack
+argument_list|()
+operator|)
 argument_list|)
 block|,
 name|Opc
@@ -10064,6 +10741,10 @@ argument|Opcode opc
 argument_list|,
 argument|QualType ResType
 argument_list|,
+argument|ExprValueKind VK
+argument_list|,
+argument|ExprObjectKind OK
+argument_list|,
 argument|QualType CompLHSType
 argument_list|,
 argument|QualType CompResultType
@@ -10080,6 +10761,10 @@ argument_list|,
 name|opc
 argument_list|,
 name|ResType
+argument_list|,
+name|VK
+argument_list|,
+name|OK
 argument_list|,
 name|OpLoc
 argument_list|,
@@ -10188,14 +10873,175 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// ConditionalOperator - The ?: operator.  Note that LHS may be null when the
-comment|/// GNU "missing LHS" extension is in use.
-comment|///
+comment|/// AbstractConditionalOperator - An abstract base class for
+comment|/// ConditionalOperator and BinaryConditionalOperator.
+name|class
+name|AbstractConditionalOperator
+operator|:
+name|public
+name|Expr
+block|{
+name|SourceLocation
+name|QuestionLoc
+block|,
+name|ColonLoc
+block|;
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+name|protected
+operator|:
+name|AbstractConditionalOperator
+argument_list|(
+argument|StmtClass SC
+argument_list|,
+argument|QualType T
+argument_list|,
+argument|ExprValueKind VK
+argument_list|,
+argument|ExprObjectKind OK
+argument_list|,
+argument|bool TD
+argument_list|,
+argument|bool VD
+argument_list|,
+argument|bool ContainsUnexpandedParameterPack
+argument_list|,
+argument|SourceLocation qloc
+argument_list|,
+argument|SourceLocation cloc
+argument_list|)
+operator|:
+name|Expr
+argument_list|(
+name|SC
+argument_list|,
+name|T
+argument_list|,
+name|VK
+argument_list|,
+name|OK
+argument_list|,
+name|TD
+argument_list|,
+name|VD
+argument_list|,
+name|ContainsUnexpandedParameterPack
+argument_list|)
+block|,
+name|QuestionLoc
+argument_list|(
+name|qloc
+argument_list|)
+block|,
+name|ColonLoc
+argument_list|(
+argument|cloc
+argument_list|)
+block|{}
+name|AbstractConditionalOperator
+argument_list|(
+argument|StmtClass SC
+argument_list|,
+argument|EmptyShell Empty
+argument_list|)
+operator|:
+name|Expr
+argument_list|(
+argument|SC
+argument_list|,
+argument|Empty
+argument_list|)
+block|{ }
+name|public
+operator|:
+comment|// getCond - Return the expression representing the condition for
+comment|//   the ?: operator.
+name|Expr
+operator|*
+name|getCond
+argument_list|()
+specifier|const
+block|;
+comment|// getTrueExpr - Return the subexpression representing the value of
+comment|//   the expression if the condition evaluates to true.
+name|Expr
+operator|*
+name|getTrueExpr
+argument_list|()
+specifier|const
+block|;
+comment|// getFalseExpr - Return the subexpression representing the value of
+comment|//   the expression if the condition evaluates to false.  This is
+comment|//   the same as getRHS.
+name|Expr
+operator|*
+name|getFalseExpr
+argument_list|()
+specifier|const
+block|;
+name|SourceLocation
+name|getQuestionLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|QuestionLoc
+return|;
+block|}
+name|SourceLocation
+name|getColonLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ColonLoc
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|ConditionalOperatorClass
+operator|||
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|BinaryConditionalOperatorClass
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const AbstractConditionalOperator *
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+expr|}
+block|;
+comment|/// ConditionalOperator - The ?: ternary operator.  The GNU "missing
+comment|/// middle" extension is a BinaryConditionalOperator.
 name|class
 name|ConditionalOperator
 operator|:
 name|public
-name|Expr
+name|AbstractConditionalOperator
 block|{   enum
 block|{
 name|COND
@@ -10215,14 +11061,9 @@ name|END_EXPR
 index|]
 block|;
 comment|// Left/Middle/Right hand sides.
-name|Stmt
-operator|*
-name|Save
-block|;
-name|SourceLocation
-name|QuestionLoc
-block|,
-name|ColonLoc
+name|friend
+name|class
+name|ASTStmtReader
 block|;
 name|public
 operator|:
@@ -10238,73 +11079,34 @@ argument|SourceLocation CLoc
 argument_list|,
 argument|Expr *rhs
 argument_list|,
-argument|Expr *save
-argument_list|,
 argument|QualType t
+argument_list|,
+argument|ExprValueKind VK
+argument_list|,
+argument|ExprObjectKind OK
 argument_list|)
 operator|:
-name|Expr
+name|AbstractConditionalOperator
 argument_list|(
-name|ConditionalOperatorClass
+argument|ConditionalOperatorClass
 argument_list|,
-name|t
+argument|t
+argument_list|,
+argument|VK
+argument_list|,
+argument|OK
 argument_list|,
 comment|// FIXME: the type of the conditional operator doesn't
 comment|// depend on the type of the conditional, but the standard
 comment|// seems to imply that it could. File a bug!
-operator|(
-operator|(
-name|lhs
-operator|&&
-name|lhs
-operator|->
-name|isTypeDependent
-argument_list|()
-operator|)
-operator|||
-operator|(
-name|rhs
-operator|&&
-name|rhs
-operator|->
-name|isTypeDependent
-argument_list|()
-operator|)
-operator|)
+argument|(lhs->isTypeDependent() || rhs->isTypeDependent())
 argument_list|,
-operator|(
-name|cond
-operator|->
-name|isValueDependent
-argument_list|()
-operator|||
-operator|(
-name|lhs
-operator|&&
-name|lhs
-operator|->
-name|isValueDependent
-argument_list|()
-operator|)
-operator|||
-operator|(
-name|rhs
-operator|&&
-name|rhs
-operator|->
-name|isValueDependent
-argument_list|()
-operator|)
-operator|)
-argument_list|)
-block|,
-name|QuestionLoc
-argument_list|(
-name|QLoc
-argument_list|)
-block|,
-name|ColonLoc
-argument_list|(
+argument|(cond->isValueDependent() || lhs->isValueDependent() ||             rhs->isValueDependent())
+argument_list|,
+argument|(cond->containsUnexpandedParameterPack() ||             lhs->containsUnexpandedParameterPack() ||             rhs->containsUnexpandedParameterPack())
+argument_list|,
+argument|QLoc
+argument_list|,
 argument|CLoc
 argument_list|)
 block|{
@@ -10328,10 +11130,6 @@ name|RHS
 index|]
 operator|=
 name|rhs
-block|;
-name|Save
-operator|=
-name|save
 block|;   }
 comment|/// \brief Build an empty conditional operator.
 name|explicit
@@ -10340,7 +11138,7 @@ argument_list|(
 argument|EmptyShell Empty
 argument_list|)
 operator|:
-name|Expr
+name|AbstractConditionalOperator
 argument_list|(
 argument|ConditionalOperatorClass
 argument_list|,
@@ -10348,7 +11146,7 @@ argument|Empty
 argument_list|)
 block|{ }
 comment|// getCond - Return the expression representing the condition for
-comment|//  the ?: operator.
+comment|//   the ?: operator.
 name|Expr
 operator|*
 name|getCond
@@ -10368,21 +11166,8 @@ index|]
 operator|)
 return|;
 block|}
-name|void
-name|setCond
-argument_list|(
-argument|Expr *E
-argument_list|)
-block|{
-name|SubExprs
-index|[
-name|COND
-index|]
-operator|=
-name|E
-block|; }
-comment|// getTrueExpr - Return the subexpression representing the value of the ?:
-comment|//  expression if the condition evaluates to true.
+comment|// getTrueExpr - Return the subexpression representing the value of
+comment|//   the expression if the condition evaluates to true.
 name|Expr
 operator|*
 name|getTrueExpr
@@ -10395,23 +11180,16 @@ operator|<
 name|Expr
 operator|>
 operator|(
-operator|!
-name|Save
-operator|?
 name|SubExprs
 index|[
 name|LHS
 index|]
-operator|:
-name|SubExprs
-index|[
-name|COND
-index|]
 operator|)
 return|;
 block|}
-comment|// getFalseExpr - Return the subexpression representing the value of the ?:
-comment|// expression if the condition evaluates to false. This is the same as getRHS.
+comment|// getFalseExpr - Return the subexpression representing the value of
+comment|//   the expression if the condition evaluates to false.  This is
+comment|//   the same as getRHS.
 name|Expr
 operator|*
 name|getFalseExpr
@@ -10431,35 +11209,6 @@ index|]
 operator|)
 return|;
 block|}
-comment|// getSaveExpr - In most cases this value will be null. Except a GCC extension
-comment|// allows the left subexpression to be omitted, and instead of that condition
-comment|// be returned. e.g: x ?: y is shorthand for x ? x : y, except that the
-comment|// expression "x" is only evaluated once. Under this senario, this function
-comment|// returns the original, non-converted condition expression for the ?:operator
-name|Expr
-operator|*
-name|getSaveExpr
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Save
-condition|?
-name|cast
-operator|<
-name|Expr
-operator|>
-operator|(
-name|Save
-operator|)
-else|:
-operator|(
-name|Expr
-operator|*
-operator|)
-literal|0
-return|;
-block|}
 name|Expr
 operator|*
 name|getLHS
@@ -10467,10 +11216,6 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Save
-condition|?
-literal|0
-else|:
 name|cast
 operator|<
 name|Expr
@@ -10483,19 +11228,6 @@ index|]
 operator|)
 return|;
 block|}
-name|void
-name|setLHS
-argument_list|(
-argument|Expr *E
-argument_list|)
-block|{
-name|SubExprs
-index|[
-name|LHS
-index|]
-operator|=
-name|E
-block|; }
 name|Expr
 operator|*
 name|getRHS
@@ -10515,92 +11247,6 @@ index|]
 operator|)
 return|;
 block|}
-name|void
-name|setRHS
-argument_list|(
-argument|Expr *E
-argument_list|)
-block|{
-name|SubExprs
-index|[
-name|RHS
-index|]
-operator|=
-name|E
-block|; }
-name|Expr
-operator|*
-name|getSAVE
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Save
-condition|?
-name|cast
-operator|<
-name|Expr
-operator|>
-operator|(
-name|Save
-operator|)
-else|:
-operator|(
-name|Expr
-operator|*
-operator|)
-literal|0
-return|;
-block|}
-name|void
-name|setSAVE
-argument_list|(
-argument|Expr *E
-argument_list|)
-block|{
-name|Save
-operator|=
-name|E
-block|; }
-name|SourceLocation
-name|getQuestionLoc
-argument_list|()
-specifier|const
-block|{
-return|return
-name|QuestionLoc
-return|;
-block|}
-name|void
-name|setQuestionLoc
-argument_list|(
-argument|SourceLocation L
-argument_list|)
-block|{
-name|QuestionLoc
-operator|=
-name|L
-block|; }
-name|SourceLocation
-name|getColonLoc
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ColonLoc
-return|;
-block|}
-name|void
-name|setColonLoc
-argument_list|(
-argument|SourceLocation L
-argument_list|)
-block|{
-name|ColonLoc
-operator|=
-name|L
-block|; }
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -10651,17 +11297,498 @@ name|true
 return|;
 block|}
 comment|// Iterators
-name|virtual
-name|child_iterator
-name|child_begin
+name|child_range
+name|children
 argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+operator|&
+name|SubExprs
+index|[
+literal|0
+index|]
+argument_list|,
+operator|&
+name|SubExprs
+index|[
+literal|0
+index|]
+operator|+
+name|END_EXPR
+argument_list|)
+return|;
+block|}
+expr|}
 block|;
-name|virtual
-name|child_iterator
-name|child_end
+comment|/// BinaryConditionalOperator - The GNU extension to the conditional
+comment|/// operator which allows the middle operand to be omitted.
+comment|///
+comment|/// This is a different expression kind on the assumption that almost
+comment|/// every client ends up needing to know that these are different.
+name|class
+name|BinaryConditionalOperator
+operator|:
+name|public
+name|AbstractConditionalOperator
+block|{   enum
+block|{
+name|COMMON
+block|,
+name|COND
+block|,
+name|LHS
+block|,
+name|RHS
+block|,
+name|NUM_SUBEXPRS
+block|}
+block|;
+comment|/// - the common condition/left-hand-side expression, which will be
+comment|///   evaluated as the opaque value
+comment|/// - the condition, expressed in terms of the opaque value
+comment|/// - the left-hand-side, expressed in terms of the opaque value
+comment|/// - the right-hand-side
+name|Stmt
+operator|*
+name|SubExprs
+index|[
+name|NUM_SUBEXPRS
+index|]
+block|;
+name|OpaqueValueExpr
+operator|*
+name|OpaqueValue
+block|;
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+name|public
+operator|:
+name|BinaryConditionalOperator
+argument_list|(
+argument|Expr *common
+argument_list|,
+argument|OpaqueValueExpr *opaqueValue
+argument_list|,
+argument|Expr *cond
+argument_list|,
+argument|Expr *lhs
+argument_list|,
+argument|Expr *rhs
+argument_list|,
+argument|SourceLocation qloc
+argument_list|,
+argument|SourceLocation cloc
+argument_list|,
+argument|QualType t
+argument_list|,
+argument|ExprValueKind VK
+argument_list|,
+argument|ExprObjectKind OK
+argument_list|)
+operator|:
+name|AbstractConditionalOperator
+argument_list|(
+name|BinaryConditionalOperatorClass
+argument_list|,
+name|t
+argument_list|,
+name|VK
+argument_list|,
+name|OK
+argument_list|,
+operator|(
+name|common
+operator|->
+name|isTypeDependent
 argument_list|()
-block|; }
+operator|||
+name|rhs
+operator|->
+name|isTypeDependent
+argument_list|()
+operator|)
+argument_list|,
+operator|(
+name|common
+operator|->
+name|isValueDependent
+argument_list|()
+operator|||
+name|rhs
+operator|->
+name|isValueDependent
+argument_list|()
+operator|)
+argument_list|,
+operator|(
+name|common
+operator|->
+name|containsUnexpandedParameterPack
+argument_list|()
+operator|||
+name|rhs
+operator|->
+name|containsUnexpandedParameterPack
+argument_list|()
+operator|)
+argument_list|,
+name|qloc
+argument_list|,
+name|cloc
+argument_list|)
+block|,
+name|OpaqueValue
+argument_list|(
+argument|opaqueValue
+argument_list|)
+block|{
+name|SubExprs
+index|[
+name|COMMON
+index|]
+operator|=
+name|common
 block|;
+name|SubExprs
+index|[
+name|COND
+index|]
+operator|=
+name|cond
+block|;
+name|SubExprs
+index|[
+name|LHS
+index|]
+operator|=
+name|lhs
+block|;
+name|SubExprs
+index|[
+name|RHS
+index|]
+operator|=
+name|rhs
+block|;
+name|OpaqueValue
+operator|->
+name|setSourceExpr
+argument_list|(
+name|common
+argument_list|)
+block|;   }
+comment|/// \brief Build an empty conditional operator.
+name|explicit
+name|BinaryConditionalOperator
+argument_list|(
+argument|EmptyShell Empty
+argument_list|)
+operator|:
+name|AbstractConditionalOperator
+argument_list|(
+argument|BinaryConditionalOperatorClass
+argument_list|,
+argument|Empty
+argument_list|)
+block|{ }
+comment|/// \brief getCommon - Return the common expression, written to the
+comment|///   left of the condition.  The opaque value will be bound to the
+comment|///   result of this expression.
+name|Expr
+operator|*
+name|getCommon
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|Expr
+operator|>
+operator|(
+name|SubExprs
+index|[
+name|COMMON
+index|]
+operator|)
+return|;
+block|}
+comment|/// \brief getOpaqueValue - Return the opaque value placeholder.
+name|OpaqueValueExpr
+operator|*
+name|getOpaqueValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|OpaqueValue
+return|;
+block|}
+comment|/// \brief getCond - Return the condition expression; this is defined
+comment|///   in terms of the opaque value.
+name|Expr
+operator|*
+name|getCond
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|Expr
+operator|>
+operator|(
+name|SubExprs
+index|[
+name|COND
+index|]
+operator|)
+return|;
+block|}
+comment|/// \brief getTrueExpr - Return the subexpression which will be
+comment|///   evaluated if the condition evaluates to true;  this is defined
+comment|///   in terms of the opaque value.
+name|Expr
+operator|*
+name|getTrueExpr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|Expr
+operator|>
+operator|(
+name|SubExprs
+index|[
+name|LHS
+index|]
+operator|)
+return|;
+block|}
+comment|/// \brief getFalseExpr - Return the subexpression which will be
+comment|///   evaluated if the condnition evaluates to false; this is
+comment|///   defined in terms of the opaque value.
+name|Expr
+operator|*
+name|getFalseExpr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|Expr
+operator|>
+operator|(
+name|SubExprs
+index|[
+name|RHS
+index|]
+operator|)
+return|;
+block|}
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SourceRange
+argument_list|(
+name|getCommon
+argument_list|()
+operator|->
+name|getLocStart
+argument_list|()
+argument_list|,
+name|getFalseExpr
+argument_list|()
+operator|->
+name|getLocEnd
+argument_list|()
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|BinaryConditionalOperatorClass
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const BinaryConditionalOperator *
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+comment|// Iterators
+name|child_range
+name|children
+argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+name|SubExprs
+argument_list|,
+name|SubExprs
+operator|+
+name|NUM_SUBEXPRS
+argument_list|)
+return|;
+block|}
+expr|}
+block|;
+specifier|inline
+name|Expr
+operator|*
+name|AbstractConditionalOperator
+operator|::
+name|getCond
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+specifier|const
+name|ConditionalOperator
+modifier|*
+name|co
+init|=
+name|dyn_cast
+operator|<
+name|ConditionalOperator
+operator|>
+operator|(
+name|this
+operator|)
+condition|)
+return|return
+name|co
+operator|->
+name|getCond
+argument_list|()
+return|;
+return|return
+name|cast
+operator|<
+name|BinaryConditionalOperator
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getCond
+argument_list|()
+return|;
+block|}
+specifier|inline
+name|Expr
+operator|*
+name|AbstractConditionalOperator
+operator|::
+name|getTrueExpr
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+specifier|const
+name|ConditionalOperator
+modifier|*
+name|co
+init|=
+name|dyn_cast
+operator|<
+name|ConditionalOperator
+operator|>
+operator|(
+name|this
+operator|)
+condition|)
+return|return
+name|co
+operator|->
+name|getTrueExpr
+argument_list|()
+return|;
+return|return
+name|cast
+operator|<
+name|BinaryConditionalOperator
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getTrueExpr
+argument_list|()
+return|;
+block|}
+specifier|inline
+name|Expr
+operator|*
+name|AbstractConditionalOperator
+operator|::
+name|getFalseExpr
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+specifier|const
+name|ConditionalOperator
+modifier|*
+name|co
+init|=
+name|dyn_cast
+operator|<
+name|ConditionalOperator
+operator|>
+operator|(
+name|this
+operator|)
+condition|)
+return|return
+name|co
+operator|->
+name|getFalseExpr
+argument_list|()
+return|;
+return|return
+name|cast
+operator|<
+name|BinaryConditionalOperator
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getFalseExpr
+argument_list|()
+return|;
+block|}
 comment|/// AddrLabelExpr - The GNU address of label extension, representing&&label.
 name|class
 name|AddrLabelExpr
@@ -10674,7 +11801,7 @@ name|AmpAmpLoc
 block|,
 name|LabelLoc
 block|;
-name|LabelStmt
+name|LabelDecl
 operator|*
 name|Label
 block|;
@@ -10686,7 +11813,7 @@ argument|SourceLocation AALoc
 argument_list|,
 argument|SourceLocation LLoc
 argument_list|,
-argument|LabelStmt *L
+argument|LabelDecl *L
 argument_list|,
 argument|QualType t
 argument_list|)
@@ -10696,6 +11823,12 @@ argument_list|(
 name|AddrLabelExprClass
 argument_list|,
 name|t
+argument_list|,
+name|VK_RValue
+argument_list|,
+name|OK_Ordinary
+argument_list|,
+name|false
 argument_list|,
 name|false
 argument_list|,
@@ -10769,7 +11902,6 @@ name|LabelLoc
 operator|=
 name|L
 block|; }
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -10784,7 +11916,7 @@ name|LabelLoc
 argument_list|)
 return|;
 block|}
-name|LabelStmt
+name|LabelDecl
 operator|*
 name|getLabel
 argument_list|()
@@ -10797,12 +11929,12 @@ block|}
 name|void
 name|setLabel
 argument_list|(
-argument|LabelStmt *S
+argument|LabelDecl *L
 argument_list|)
 block|{
 name|Label
 operator|=
-name|S
+name|L
 block|; }
 specifier|static
 name|bool
@@ -10832,20 +11964,23 @@ name|true
 return|;
 block|}
 comment|// Iterators
-name|virtual
-name|child_iterator
-name|child_begin
+name|child_range
+name|children
 argument_list|()
-block|;
-name|virtual
-name|child_iterator
-name|child_end
+block|{
+return|return
+name|child_range
 argument_list|()
-block|; }
+return|;
+block|}
+expr|}
 block|;
 comment|/// StmtExpr - This is the GNU Statement Expression extension: ({int X=4; X;}).
 comment|/// The StmtExpr contains a single CompoundStmt node, which it evaluates and
 comment|/// takes the value of the last subexpression.
+comment|///
+comment|/// A StmtExpr is always an r-value; values "returned" out of a
+comment|/// StmtExpr will be copied.
 name|class
 name|StmtExpr
 operator|:
@@ -10881,10 +12016,16 @@ name|StmtExprClass
 argument_list|,
 name|T
 argument_list|,
+name|VK_RValue
+argument_list|,
+name|OK_Ordinary
+argument_list|,
 name|T
 operator|->
 name|isDependentType
 argument_list|()
+argument_list|,
+name|false
 argument_list|,
 name|false
 argument_list|)
@@ -10960,7 +12101,6 @@ name|SubStmt
 operator|=
 name|S
 block|; }
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -11041,255 +12181,24 @@ name|true
 return|;
 block|}
 comment|// Iterators
-name|virtual
-name|child_iterator
-name|child_begin
+name|child_range
+name|children
 argument_list|()
-block|;
-name|virtual
-name|child_iterator
-name|child_end
-argument_list|()
-block|; }
-block|;
-comment|/// TypesCompatibleExpr - GNU builtin-in function __builtin_types_compatible_p.
-comment|/// This AST node represents a function that returns 1 if two *types* (not
-comment|/// expressions) are compatible. The result of this built-in function can be
-comment|/// used in integer constant expressions.
-name|class
-name|TypesCompatibleExpr
-operator|:
-name|public
-name|Expr
-block|{
-name|TypeSourceInfo
-operator|*
-name|TInfo1
-block|;
-name|TypeSourceInfo
-operator|*
-name|TInfo2
-block|;
-name|SourceLocation
-name|BuiltinLoc
-block|,
-name|RParenLoc
-block|;
-name|public
-operator|:
-name|TypesCompatibleExpr
-argument_list|(
-argument|QualType ReturnType
-argument_list|,
-argument|SourceLocation BLoc
-argument_list|,
-argument|TypeSourceInfo *tinfo1
-argument_list|,
-argument|TypeSourceInfo *tinfo2
-argument_list|,
-argument|SourceLocation RP
-argument_list|)
-operator|:
-name|Expr
-argument_list|(
-name|TypesCompatibleExprClass
-argument_list|,
-name|ReturnType
-argument_list|,
-name|false
-argument_list|,
-name|false
-argument_list|)
-block|,
-name|TInfo1
-argument_list|(
-name|tinfo1
-argument_list|)
-block|,
-name|TInfo2
-argument_list|(
-name|tinfo2
-argument_list|)
-block|,
-name|BuiltinLoc
-argument_list|(
-name|BLoc
-argument_list|)
-block|,
-name|RParenLoc
-argument_list|(
-argument|RP
-argument_list|)
-block|{}
-comment|/// \brief Build an empty __builtin_type_compatible_p expression.
-name|explicit
-name|TypesCompatibleExpr
-argument_list|(
-argument|EmptyShell Empty
-argument_list|)
-operator|:
-name|Expr
-argument_list|(
-argument|TypesCompatibleExprClass
-argument_list|,
-argument|Empty
-argument_list|)
-block|{ }
-name|TypeSourceInfo
-operator|*
-name|getArgTInfo1
-argument_list|()
-specifier|const
 block|{
 return|return
-name|TInfo1
-return|;
-block|}
-name|void
-name|setArgTInfo1
+name|child_range
 argument_list|(
-argument|TypeSourceInfo *TInfo
-argument_list|)
-block|{
-name|TInfo1
-operator|=
-name|TInfo
-block|; }
-name|TypeSourceInfo
-operator|*
-name|getArgTInfo2
-argument_list|()
-specifier|const
-block|{
-return|return
-name|TInfo2
-return|;
-block|}
-name|void
-name|setArgTInfo2
-argument_list|(
-argument|TypeSourceInfo *TInfo
-argument_list|)
-block|{
-name|TInfo2
-operator|=
-name|TInfo
-block|; }
-name|QualType
-name|getArgType1
-argument_list|()
-specifier|const
-block|{
-return|return
-name|TInfo1
-operator|->
-name|getType
-argument_list|()
-return|;
-block|}
-name|QualType
-name|getArgType2
-argument_list|()
-specifier|const
-block|{
-return|return
-name|TInfo2
-operator|->
-name|getType
-argument_list|()
-return|;
-block|}
-name|SourceLocation
-name|getBuiltinLoc
-argument_list|()
-specifier|const
-block|{
-return|return
-name|BuiltinLoc
-return|;
-block|}
-name|void
-name|setBuiltinLoc
-argument_list|(
-argument|SourceLocation L
-argument_list|)
-block|{
-name|BuiltinLoc
-operator|=
-name|L
-block|; }
-name|SourceLocation
-name|getRParenLoc
-argument_list|()
-specifier|const
-block|{
-return|return
-name|RParenLoc
-return|;
-block|}
-name|void
-name|setRParenLoc
-argument_list|(
-argument|SourceLocation L
-argument_list|)
-block|{
-name|RParenLoc
-operator|=
-name|L
-block|; }
-name|virtual
-name|SourceRange
-name|getSourceRange
-argument_list|()
-specifier|const
-block|{
-return|return
-name|SourceRange
-argument_list|(
-name|BuiltinLoc
+operator|&
+name|SubStmt
 argument_list|,
-name|RParenLoc
+operator|&
+name|SubStmt
+operator|+
+literal|1
 argument_list|)
 return|;
 block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const Stmt *T
-argument_list|)
-block|{
-return|return
-name|T
-operator|->
-name|getStmtClass
-argument_list|()
-operator|==
-name|TypesCompatibleExprClass
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const TypesCompatibleExpr *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-comment|// Iterators
-name|virtual
-name|child_iterator
-name|child_begin
-argument_list|()
-block|;
-name|virtual
-name|child_iterator
-name|child_end
-argument_list|()
-block|; }
+expr|}
 block|;
 comment|/// ShuffleVectorExpr - clang-specific builtin-in function
 comment|/// __builtin_shufflevector.
@@ -11322,8 +12231,6 @@ name|NumExprs
 block|;
 name|public
 operator|:
-comment|// FIXME: Can a shufflevector be value-dependent?  Does type-dependence need
-comment|// to be computed differently?
 name|ShuffleVectorExpr
 argument_list|(
 argument|ASTContext&C
@@ -11338,73 +12245,7 @@ argument|SourceLocation BLoc
 argument_list|,
 argument|SourceLocation RP
 argument_list|)
-operator|:
-name|Expr
-argument_list|(
-name|ShuffleVectorExprClass
-argument_list|,
-name|Type
-argument_list|,
-name|Type
-operator|->
-name|isDependentType
-argument_list|()
-argument_list|,
-name|false
-argument_list|)
-block|,
-name|BuiltinLoc
-argument_list|(
-name|BLoc
-argument_list|)
-block|,
-name|RParenLoc
-argument_list|(
-name|RP
-argument_list|)
-block|,
-name|NumExprs
-argument_list|(
-argument|nexpr
-argument_list|)
-block|{
-name|SubExprs
-operator|=
-name|new
-argument_list|(
-argument|C
-argument_list|)
-name|Stmt
-operator|*
-index|[
-name|nexpr
-index|]
 block|;
-for|for
-control|(
-name|unsigned
-name|i
-init|=
-literal|0
-init|;
-name|i
-operator|<
-name|nexpr
-condition|;
-name|i
-operator|++
-control|)
-name|SubExprs
-index|[
-name|i
-index|]
-operator|=
-name|args
-index|[
-name|i
-index|]
-expr_stmt|;
-block|}
 comment|/// \brief Build an empty vector-shuffle expression.
 name|explicit
 name|ShuffleVectorExpr
@@ -11462,7 +12303,6 @@ name|RParenLoc
 operator|=
 name|L
 block|; }
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -11514,6 +12354,25 @@ specifier|const
 block|{
 return|return
 name|NumExprs
+return|;
+block|}
+comment|/// \brief Retrieve the array of expressions.
+name|Expr
+operator|*
+operator|*
+name|getSubExprs
+argument_list|()
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+name|Expr
+operator|*
+operator|*
+operator|>
+operator|(
+name|SubExprs
+operator|)
 return|;
 block|}
 comment|/// getExpr - Return the Expr at the specified index.
@@ -11630,16 +12489,30 @@ argument_list|()
 return|;
 block|}
 comment|// Iterators
-name|virtual
-name|child_iterator
-name|child_begin
+name|child_range
+name|children
 argument_list|()
-block|;
-name|virtual
-name|child_iterator
-name|child_end
-argument_list|()
-block|; }
+block|{
+return|return
+name|child_range
+argument_list|(
+operator|&
+name|SubExprs
+index|[
+literal|0
+index|]
+argument_list|,
+operator|&
+name|SubExprs
+index|[
+literal|0
+index|]
+operator|+
+name|NumExprs
+argument_list|)
+return|;
+block|}
+expr|}
 block|;
 comment|/// ChooseExpr - GNU builtin-in function __builtin_choose_expr.
 comment|/// This AST node is similar to the conditional operator (?:) in C, with
@@ -11693,6 +12566,10 @@ argument|Expr *rhs
 argument_list|,
 argument|QualType t
 argument_list|,
+argument|ExprValueKind VK
+argument_list|,
+argument|ExprObjectKind OK
+argument_list|,
 argument|SourceLocation RP
 argument_list|,
 argument|bool TypeDependent
@@ -11706,9 +12583,30 @@ name|ChooseExprClass
 argument_list|,
 name|t
 argument_list|,
+name|VK
+argument_list|,
+name|OK
+argument_list|,
 name|TypeDependent
 argument_list|,
 name|ValueDependent
+argument_list|,
+operator|(
+name|cond
+operator|->
+name|containsUnexpandedParameterPack
+argument_list|()
+operator|||
+name|lhs
+operator|->
+name|containsUnexpandedParameterPack
+argument_list|()
+operator|||
+name|rhs
+operator|->
+name|containsUnexpandedParameterPack
+argument_list|()
+operator|)
 argument_list|)
 block|,
 name|BuiltinLoc
@@ -11761,7 +12659,7 @@ comment|/// equal to zero).
 name|bool
 name|isConditionTrue
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|)
 specifier|const
 block|;
@@ -11771,7 +12669,7 @@ name|Expr
 operator|*
 name|getChosenSubExpr
 argument_list|(
-argument|ASTContext&C
+argument|const ASTContext&C
 argument_list|)
 specifier|const
 block|{
@@ -11922,7 +12820,6 @@ name|RParenLoc
 operator|=
 name|L
 block|; }
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -11965,16 +12862,30 @@ name|true
 return|;
 block|}
 comment|// Iterators
-name|virtual
-name|child_iterator
-name|child_begin
+name|child_range
+name|children
 argument_list|()
-block|;
-name|virtual
-name|child_iterator
-name|child_end
-argument_list|()
-block|; }
+block|{
+return|return
+name|child_range
+argument_list|(
+operator|&
+name|SubExprs
+index|[
+literal|0
+index|]
+argument_list|,
+operator|&
+name|SubExprs
+index|[
+literal|0
+index|]
+operator|+
+name|END_EXPR
+argument_list|)
+return|;
+block|}
+expr|}
 block|;
 comment|/// GNUNullExpr - Implements the GNU __null extension, which is a name
 comment|/// for a null pointer constant that has integral type (e.g., int or
@@ -12006,6 +12917,12 @@ argument_list|(
 name|GNUNullExprClass
 argument_list|,
 name|Ty
+argument_list|,
+name|VK_RValue
+argument_list|,
+name|OK_Ordinary
+argument_list|,
+name|false
 argument_list|,
 name|false
 argument_list|,
@@ -12051,7 +12968,6 @@ name|TokenLoc
 operator|=
 name|L
 block|; }
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -12092,16 +13008,16 @@ name|true
 return|;
 block|}
 comment|// Iterators
-name|virtual
-name|child_iterator
-name|child_begin
+name|child_range
+name|children
 argument_list|()
-block|;
-name|virtual
-name|child_iterator
-name|child_end
+block|{
+return|return
+name|child_range
 argument_list|()
-block|; }
+return|;
+block|}
+expr|}
 block|;
 comment|/// VAArgExpr, used for the builtin function __builtin_va_arg.
 name|class
@@ -12144,12 +13060,31 @@ name|VAArgExprClass
 argument_list|,
 name|t
 argument_list|,
+name|VK_RValue
+argument_list|,
+name|OK_Ordinary
+argument_list|,
 name|t
 operator|->
 name|isDependentType
 argument_list|()
 argument_list|,
 name|false
+argument_list|,
+operator|(
+name|TInfo
+operator|->
+name|getType
+argument_list|()
+operator|->
+name|containsUnexpandedParameterPack
+argument_list|()
+operator|||
+name|e
+operator|->
+name|containsUnexpandedParameterPack
+argument_list|()
+operator|)
 argument_list|)
 block|,
 name|Val
@@ -12286,7 +13221,6 @@ name|RParenLoc
 operator|=
 name|L
 block|; }
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -12329,16 +13263,24 @@ name|true
 return|;
 block|}
 comment|// Iterators
-name|virtual
-name|child_iterator
-name|child_begin
+name|child_range
+name|children
 argument_list|()
-block|;
-name|virtual
-name|child_iterator
-name|child_end
-argument_list|()
-block|; }
+block|{
+return|return
+name|child_range
+argument_list|(
+operator|&
+name|Val
+argument_list|,
+operator|&
+name|Val
+operator|+
+literal|1
+argument_list|)
+return|;
+block|}
+expr|}
 block|;
 comment|/// @brief Describes an C or C++ initializer list.
 comment|///
@@ -12463,6 +13405,28 @@ name|InitExprs
 operator|.
 name|size
 argument_list|()
+return|;
+block|}
+comment|/// \brief Retrieve the set of initializers.
+name|Expr
+operator|*
+operator|*
+name|getInits
+argument_list|()
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+name|Expr
+operator|*
+operator|*
+operator|>
+operator|(
+name|InitExprs
+operator|.
+name|data
+argument_list|()
+operator|)
 return|;
 block|}
 specifier|const
@@ -12717,21 +13681,11 @@ name|HadArrayRangeDesignator
 operator|=
 name|ARD
 block|;   }
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
-block|{
-return|return
-name|SourceRange
-argument_list|(
-name|LBraceLoc
-argument_list|,
-name|RBraceLoc
-argument_list|)
-return|;
-block|}
+block|;
 specifier|static
 name|bool
 name|classof
@@ -12760,246 +13714,184 @@ name|true
 return|;
 block|}
 comment|// Iterators
-name|virtual
-name|child_iterator
-name|child_begin
+name|child_range
+name|children
 argument_list|()
+block|{
+if|if
+condition|(
+name|InitExprs
+operator|.
+name|empty
+argument_list|()
+condition|)
+return|return
+name|child_range
+argument_list|()
+return|;
+return|return
+name|child_range
+argument_list|(
+operator|&
+name|InitExprs
+index|[
+literal|0
+index|]
+argument_list|,
+operator|&
+name|InitExprs
+index|[
+literal|0
+index|]
+operator|+
+name|InitExprs
+operator|.
+name|size
+argument_list|()
+argument_list|)
+return|;
+block|}
+typedef|typedef
+name|InitExprsTy
+operator|::
+name|iterator
+name|iterator
+expr_stmt|;
+typedef|typedef
+name|InitExprsTy
+operator|::
+name|const_iterator
+name|const_iterator
+expr_stmt|;
+typedef|typedef
+name|InitExprsTy
+operator|::
+name|reverse_iterator
+name|reverse_iterator
+expr_stmt|;
+typedef|typedef
+name|InitExprsTy
+operator|::
+name|const_reverse_iterator
+name|const_reverse_iterator
+expr_stmt|;
+name|iterator
+name|begin
+argument_list|()
+block|{
+return|return
+name|InitExprs
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+name|const_iterator
+name|begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|InitExprs
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+name|iterator
+name|end
+argument_list|()
+block|{
+return|return
+name|InitExprs
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+name|const_iterator
+name|end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|InitExprs
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+name|reverse_iterator
+name|rbegin
+argument_list|()
+block|{
+return|return
+name|InitExprs
+operator|.
+name|rbegin
+argument_list|()
+return|;
+block|}
+name|const_reverse_iterator
+name|rbegin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|InitExprs
+operator|.
+name|rbegin
+argument_list|()
+return|;
+block|}
+name|reverse_iterator
+name|rend
+argument_list|()
+block|{
+return|return
+name|InitExprs
+operator|.
+name|rend
+argument_list|()
+return|;
+block|}
+name|const_reverse_iterator
+name|rend
+argument_list|()
+specifier|const
+block|{
+return|return
+name|InitExprs
+operator|.
+name|rend
+argument_list|()
+return|;
+block|}
+expr|}
 block|;
-name|virtual
-name|child_iterator
-name|child_end
-argument_list|()
-block|;
-typedef|typedef
-name|InitExprsTy
-operator|::
-name|iterator
-name|iterator
-expr_stmt|;
-typedef|typedef
-name|InitExprsTy
-operator|::
-name|const_iterator
-name|const_iterator
-expr_stmt|;
-typedef|typedef
-name|InitExprsTy
-operator|::
-name|reverse_iterator
-name|reverse_iterator
-expr_stmt|;
-end_decl_stmt
-
-begin_typedef
-typedef|typedef
-name|InitExprsTy
-operator|::
-name|const_reverse_iterator
-name|const_reverse_iterator
-expr_stmt|;
-end_typedef
-
-begin_function
-name|iterator
-name|begin
-parameter_list|()
-block|{
-return|return
-name|InitExprs
-operator|.
-name|begin
-argument_list|()
-return|;
-block|}
-end_function
-
-begin_expr_stmt
-name|const_iterator
-name|begin
-argument_list|()
-specifier|const
-block|{
-return|return
-name|InitExprs
-operator|.
-name|begin
-argument_list|()
-return|;
-block|}
-end_expr_stmt
-
-begin_function
-name|iterator
-name|end
-parameter_list|()
-block|{
-return|return
-name|InitExprs
-operator|.
-name|end
-argument_list|()
-return|;
-block|}
-end_function
-
-begin_expr_stmt
-name|const_iterator
-name|end
-argument_list|()
-specifier|const
-block|{
-return|return
-name|InitExprs
-operator|.
-name|end
-argument_list|()
-return|;
-block|}
-end_expr_stmt
-
-begin_function
-name|reverse_iterator
-name|rbegin
-parameter_list|()
-block|{
-return|return
-name|InitExprs
-operator|.
-name|rbegin
-argument_list|()
-return|;
-block|}
-end_function
-
-begin_expr_stmt
-name|const_reverse_iterator
-name|rbegin
-argument_list|()
-specifier|const
-block|{
-return|return
-name|InitExprs
-operator|.
-name|rbegin
-argument_list|()
-return|;
-block|}
-end_expr_stmt
-
-begin_function
-name|reverse_iterator
-name|rend
-parameter_list|()
-block|{
-return|return
-name|InitExprs
-operator|.
-name|rend
-argument_list|()
-return|;
-block|}
-end_function
-
-begin_expr_stmt
-name|const_reverse_iterator
-name|rend
-argument_list|()
-specifier|const
-block|{
-return|return
-name|InitExprs
-operator|.
-name|rend
-argument_list|()
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-unit|};
 comment|/// @brief Represents a C99 designated initializer expression.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// A designated initializer expression (C99 6.7.8) contains one or
-end_comment
-
-begin_comment
 comment|/// more designators (which can be field designators, array
-end_comment
-
-begin_comment
 comment|/// designators, or GNU array-range designators) followed by an
-end_comment
-
-begin_comment
 comment|/// expression that initializes the field or element(s) that the
-end_comment
-
-begin_comment
 comment|/// designators refer to. For example, given:
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// @code
-end_comment
-
-begin_comment
 comment|/// struct point {
-end_comment
-
-begin_comment
 comment|///   double x;
-end_comment
-
-begin_comment
 comment|///   double y;
-end_comment
-
-begin_comment
 comment|/// };
-end_comment
-
-begin_comment
 comment|/// struct point ptarray[10] = { [2].y = 1.0, [2].x = 2.0, [0].x = 1.0 };
-end_comment
-
-begin_comment
 comment|/// @endcode
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// The InitListExpr contains three DesignatedInitExprs, the first of
-end_comment
-
-begin_comment
 comment|/// which covers @c [2].y=1.0. This DesignatedInitExpr will have two
-end_comment
-
-begin_comment
 comment|/// designators, one array designator for @c [2] followed by one field
-end_comment
-
-begin_comment
 comment|/// designator for @c .y. The initalization expression will be 1.0.
-end_comment
-
-begin_decl_stmt
 name|class
 name|DesignatedInitExpr
-range|:
+operator|:
 name|public
 name|Expr
 block|{
@@ -13693,6 +14585,39 @@ operator|+
 name|NumDesignators
 return|;
 block|}
+typedef|typedef
+name|std
+operator|::
+name|reverse_iterator
+operator|<
+name|designators_iterator
+operator|>
+name|reverse_designators_iterator
+expr_stmt|;
+name|reverse_designators_iterator
+name|designators_rbegin
+argument_list|()
+block|{
+return|return
+name|reverse_designators_iterator
+argument_list|(
+name|designators_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|reverse_designators_iterator
+name|designators_rend
+argument_list|()
+block|{
+return|return
+name|reverse_designators_iterator
+argument_list|(
+name|designators_begin
+argument_list|()
+argument_list|)
+return|;
+block|}
 name|Designator
 operator|*
 name|getDesignator
@@ -13991,7 +14916,6 @@ argument_list|,
 argument|const Designator *Last
 argument_list|)
 block|;
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -14025,55 +14949,51 @@ name|true
 return|;
 block|}
 comment|// Iterators
-name|virtual
-name|child_iterator
-name|child_begin
+name|child_range
+name|children
 argument_list|()
+block|{
+name|Stmt
+operator|*
+operator|*
+name|begin
+operator|=
+name|reinterpret_cast
+operator|<
+name|Stmt
+operator|*
+operator|*
+operator|>
+operator|(
+name|this
+operator|+
+literal|1
+operator|)
 block|;
-name|virtual
-name|child_iterator
-name|child_end
-argument_list|()
-block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+return|return
+name|child_range
+argument_list|(
+name|begin
+argument_list|,
+name|begin
+operator|+
+name|NumSubExprs
+argument_list|)
+return|;
+block|}
+expr|}
+block|;
 comment|/// \brief Represents an implicitly-generated value initialization of
-end_comment
-
-begin_comment
 comment|/// an object of a given type.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Implicit value initializations occur within semantic initializer
-end_comment
-
-begin_comment
 comment|/// list expressions (InitListExpr) as placeholders for subobject
-end_comment
-
-begin_comment
 comment|/// initializations not explicitly specified by the user.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// \see InitListExpr
-end_comment
-
-begin_decl_stmt
 name|class
 name|ImplicitValueInitExpr
-range|:
+operator|:
 name|public
 name|Expr
 block|{
@@ -14090,6 +15010,12 @@ argument_list|(
 argument|ImplicitValueInitExprClass
 argument_list|,
 argument|ty
+argument_list|,
+argument|VK_RValue
+argument_list|,
+argument|OK_Ordinary
+argument_list|,
+argument|false
 argument_list|,
 argument|false
 argument_list|,
@@ -14137,7 +15063,6 @@ return|return
 name|true
 return|;
 block|}
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -14149,23 +15074,20 @@ argument_list|()
 return|;
 block|}
 comment|// Iterators
-name|virtual
-name|child_iterator
-name|child_begin
+name|child_range
+name|children
 argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|()
+return|;
+block|}
+expr|}
 block|;
-name|virtual
-name|child_iterator
-name|child_end
-argument_list|()
-block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|class
 name|ParenListExpr
-range|:
+operator|:
 name|public
 name|Expr
 block|{
@@ -14318,7 +15240,6 @@ return|return
 name|RParenLoc
 return|;
 block|}
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -14361,16 +15282,29 @@ name|true
 return|;
 block|}
 comment|// Iterators
-name|virtual
-name|child_iterator
-name|child_begin
+name|child_range
+name|children
 argument_list|()
-block|;
-name|virtual
-name|child_iterator
-name|child_end
-argument_list|()
-block|;
+block|{
+return|return
+name|child_range
+argument_list|(
+operator|&
+name|Exprs
+index|[
+literal|0
+index|]
+argument_list|,
+operator|&
+name|Exprs
+index|[
+literal|0
+index|]
+operator|+
+name|NumExprs
+argument_list|)
+return|;
+block|}
 name|friend
 name|class
 name|ASTStmtReader
@@ -14379,53 +15313,20 @@ name|friend
 name|class
 name|ASTStmtWriter
 block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|// Clang Extensions
-end_comment
-
-begin_comment
 comment|//===----------------------------------------------------------------------===//
-end_comment
-
-begin_comment
 comment|/// ExtVectorElementExpr - This represents access to specific elements of a
-end_comment
-
-begin_comment
 comment|/// vector, and may occur on the left hand side or right hand side.  For example
-end_comment
-
-begin_comment
 comment|/// the following is legal:  "V.xy = V.zw" if V is a 4 element extended vector.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Note that the base may have either vector or pointer to vector type, just
-end_comment
-
-begin_comment
 comment|/// like a struct field reference.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_decl_stmt
 name|class
 name|ExtVectorElementExpr
-range|:
+operator|:
 name|public
 name|Expr
 block|{
@@ -14446,6 +15347,8 @@ name|ExtVectorElementExpr
 argument_list|(
 argument|QualType ty
 argument_list|,
+argument|ExprValueKind VK
+argument_list|,
 argument|Expr *base
 argument_list|,
 argument|IdentifierInfo&accessor
@@ -14459,6 +15362,18 @@ name|ExtVectorElementExprClass
 argument_list|,
 name|ty
 argument_list|,
+name|VK
+argument_list|,
+operator|(
+name|VK
+operator|==
+name|VK_RValue
+condition|?
+name|OK_Ordinary
+else|:
+name|OK_VectorComponent
+operator|)
+argument_list|,
 name|base
 operator|->
 name|isTypeDependent
@@ -14467,6 +15382,11 @@ argument_list|,
 name|base
 operator|->
 name|isValueDependent
+argument_list|()
+argument_list|,
+name|base
+operator|->
+name|containsUnexpandedParameterPack
 argument_list|()
 argument_list|)
 block|,
@@ -14604,7 +15524,6 @@ argument|llvm::SmallVectorImpl<unsigned>&Elts
 argument_list|)
 specifier|const
 block|;
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -14658,31 +15577,30 @@ name|true
 return|;
 block|}
 comment|// Iterators
-name|virtual
-name|child_iterator
-name|child_begin
+name|child_range
+name|children
 argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+operator|&
+name|Base
+argument_list|,
+operator|&
+name|Base
+operator|+
+literal|1
+argument_list|)
+return|;
+block|}
+expr|}
 block|;
-name|virtual
-name|child_iterator
-name|child_end
-argument_list|()
-block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// BlockExpr - Adaptor class for mixing a BlockDecl with expressions.
-end_comment
-
-begin_comment
 comment|/// ^{ statement-body }   or   ^(int arg1, float arg2){ statement-body }
-end_comment
-
-begin_decl_stmt
 name|class
 name|BlockExpr
-range|:
+operator|:
 name|public
 name|Expr
 block|{
@@ -14692,9 +15610,6 @@ name|BlockDecl
 operator|*
 name|TheBlock
 block|;
-name|bool
-name|HasBlockDeclRefExprs
-block|;
 name|public
 operator|:
 name|BlockExpr
@@ -14702,8 +15617,6 @@ argument_list|(
 argument|BlockDecl *BD
 argument_list|,
 argument|QualType ty
-argument_list|,
-argument|bool hasBlockDeclRefExprs
 argument_list|)
 operator|:
 name|Expr
@@ -14712,22 +15625,23 @@ name|BlockExprClass
 argument_list|,
 name|ty
 argument_list|,
+name|VK_RValue
+argument_list|,
+name|OK_Ordinary
+argument_list|,
 name|ty
 operator|->
 name|isDependentType
 argument_list|()
 argument_list|,
 name|false
+argument_list|,
+name|false
 argument_list|)
 block|,
 name|TheBlock
 argument_list|(
-name|BD
-argument_list|)
-block|,
-name|HasBlockDeclRefExprs
-argument_list|(
-argument|hasBlockDeclRefExprs
+argument|BD
 argument_list|)
 block|{}
 comment|/// \brief Build an empty block expression.
@@ -14792,7 +15706,6 @@ operator|*
 name|getBody
 argument_list|()
 block|;
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -14820,27 +15733,6 @@ name|getFunctionType
 argument_list|()
 specifier|const
 block|;
-comment|/// hasBlockDeclRefExprs - Return true iff the block has BlockDeclRefExpr
-comment|/// inside of the block that reference values outside the block.
-name|bool
-name|hasBlockDeclRefExprs
-argument_list|()
-specifier|const
-block|{
-return|return
-name|HasBlockDeclRefExprs
-return|;
-block|}
-name|void
-name|setHasBlockDeclRefExprs
-argument_list|(
-argument|bool BDRE
-argument_list|)
-block|{
-name|HasBlockDeclRefExprs
-operator|=
-name|BDRE
-block|; }
 specifier|static
 name|bool
 name|classof
@@ -14869,35 +15761,26 @@ name|true
 return|;
 block|}
 comment|// Iterators
-name|virtual
-name|child_iterator
-name|child_begin
+name|child_range
+name|children
 argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|()
+return|;
+block|}
+expr|}
 block|;
-name|virtual
-name|child_iterator
-name|child_end
-argument_list|()
-block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// BlockDeclRefExpr - A reference to a declared variable, function,
-end_comment
-
-begin_comment
-comment|/// enum, etc.
-end_comment
-
-begin_decl_stmt
+comment|/// BlockDeclRefExpr - A reference to a local variable declared in an
+comment|/// enclosing scope.
 name|class
 name|BlockDeclRefExpr
-range|:
+operator|:
 name|public
 name|Expr
 block|{
-name|ValueDecl
+name|VarDecl
 operator|*
 name|D
 block|;
@@ -14914,76 +15797,23 @@ name|ConstQualAdded
 operator|:
 literal|1
 block|;
-name|Stmt
-operator|*
-name|CopyConstructorVal
-block|;
 name|public
 operator|:
-comment|// FIXME: Fix type/value dependence!
 name|BlockDeclRefExpr
 argument_list|(
-argument|ValueDecl *d
+argument|VarDecl *d
 argument_list|,
 argument|QualType t
+argument_list|,
+argument|ExprValueKind VK
 argument_list|,
 argument|SourceLocation l
 argument_list|,
 argument|bool ByRef
 argument_list|,
 argument|bool constAdded = false
-argument_list|,
-argument|Stmt *copyConstructorVal =
-literal|0
 argument_list|)
-operator|:
-name|Expr
-argument_list|(
-name|BlockDeclRefExprClass
-argument_list|,
-name|t
-argument_list|,
-operator|(
-operator|!
-name|t
-operator|.
-name|isNull
-argument_list|()
-operator|&&
-name|t
-operator|->
-name|isDependentType
-argument_list|()
-operator|)
-argument_list|,
-name|false
-argument_list|)
-block|,
-name|D
-argument_list|(
-name|d
-argument_list|)
-block|,
-name|Loc
-argument_list|(
-name|l
-argument_list|)
-block|,
-name|IsByRef
-argument_list|(
-name|ByRef
-argument_list|)
-block|,
-name|ConstQualAdded
-argument_list|(
-name|constAdded
-argument_list|)
-block|,
-name|CopyConstructorVal
-argument_list|(
-argument|copyConstructorVal
-argument_list|)
-block|{}
+block|;
 comment|// \brief Build an empty reference to a declared variable in a
 comment|// block.
 name|explicit
@@ -14999,7 +15829,7 @@ argument_list|,
 argument|Empty
 argument_list|)
 block|{ }
-name|ValueDecl
+name|VarDecl
 operator|*
 name|getDecl
 argument_list|()
@@ -15009,7 +15839,7 @@ name|D
 return|;
 block|}
 specifier|const
-name|ValueDecl
+name|VarDecl
 operator|*
 name|getDecl
 argument_list|()
@@ -15022,7 +15852,7 @@ block|}
 name|void
 name|setDecl
 argument_list|(
-argument|ValueDecl *VD
+argument|VarDecl *VD
 argument_list|)
 block|{
 name|D
@@ -15048,7 +15878,6 @@ name|Loc
 operator|=
 name|L
 block|; }
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -15099,48 +15928,6 @@ name|ConstQualAdded
 operator|=
 name|C
 block|; }
-specifier|const
-name|Expr
-operator|*
-name|getCopyConstructorExpr
-argument_list|()
-specifier|const
-block|{
-return|return
-name|cast_or_null
-operator|<
-name|Expr
-operator|>
-operator|(
-name|CopyConstructorVal
-operator|)
-return|;
-block|}
-name|Expr
-operator|*
-name|getCopyConstructorExpr
-argument_list|()
-block|{
-return|return
-name|cast_or_null
-operator|<
-name|Expr
-operator|>
-operator|(
-name|CopyConstructorVal
-operator|)
-return|;
-block|}
-name|void
-name|setCopyConstructorExpr
-argument_list|(
-argument|Expr *E
-argument_list|)
-block|{
-name|CopyConstructorVal
-operator|=
-name|E
-block|; }
 specifier|static
 name|bool
 name|classof
@@ -15169,21 +15956,20 @@ name|true
 return|;
 block|}
 comment|// Iterators
-name|virtual
-name|child_iterator
-name|child_begin
+name|child_range
+name|children
 argument_list|()
-block|;
-name|virtual
-name|child_iterator
-name|child_end
+block|{
+return|return
+name|child_range
 argument_list|()
-block|; }
-decl_stmt|;
+return|;
+block|}
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_comment
-unit|}
 comment|// end namespace clang
 end_comment
 

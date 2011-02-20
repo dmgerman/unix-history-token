@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang %s -fsyntax-only -Xclang -verify -pedantic -fpascal-strings
+comment|// RUN: %clang %s -ffreestanding -fsyntax-only -Xclang -verify -pedantic -fpascal-strings
 end_comment
 
 begin_include
@@ -76,6 +76,31 @@ argument_list|)
 condition|?
 name|expr
 else|:
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|v
+index|[
+sizeof|sizeof
+argument_list|(
+name|__builtin_constant_p
+argument_list|(
+literal|0
+argument_list|)
+argument_list|)
+operator|==
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+condition|?
+literal|1
+else|:
+operator|-
 literal|1
 index|]
 decl_stmt|;

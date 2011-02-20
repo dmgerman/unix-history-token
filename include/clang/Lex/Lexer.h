@@ -592,6 +592,81 @@ operator|&
 name|Str
 argument_list|)
 block|;
+comment|/// getSpelling - This method is used to get the spelling of a token into a
+comment|/// preallocated buffer, instead of as an std::string.  The caller is required
+comment|/// to allocate enough space for the token, which is guaranteed to be at least
+comment|/// Tok.getLength() bytes long.  The length of the actual result is returned.
+comment|///
+comment|/// Note that this method may do two possible things: it may either fill in
+comment|/// the buffer specified with characters, or it may *change the input pointer*
+comment|/// to point to a constant buffer with the data already in it (avoiding a
+comment|/// copy).  The caller is not allowed to modify the returned buffer pointer
+comment|/// if an internal buffer is returned.
+specifier|static
+name|unsigned
+name|getSpelling
+argument_list|(
+specifier|const
+name|Token
+operator|&
+name|Tok
+argument_list|,
+specifier|const
+name|char
+operator|*
+operator|&
+name|Buffer
+argument_list|,
+specifier|const
+name|SourceManager
+operator|&
+name|SourceMgr
+argument_list|,
+specifier|const
+name|LangOptions
+operator|&
+name|Features
+argument_list|,
+name|bool
+operator|*
+name|Invalid
+operator|=
+literal|0
+argument_list|)
+block|;
+comment|/// getSpelling() - Return the 'spelling' of the Tok token.  The spelling of a
+comment|/// token is the characters used to represent the token in the source file
+comment|/// after trigraph expansion and escaped-newline folding.  In particular, this
+comment|/// wants to get the true, uncanonicalized, spelling of things like digraphs
+comment|/// UCNs, etc.
+specifier|static
+name|std
+operator|::
+name|string
+name|getSpelling
+argument_list|(
+specifier|const
+name|Token
+operator|&
+name|Tok
+argument_list|,
+specifier|const
+name|SourceManager
+operator|&
+name|SourceMgr
+argument_list|,
+specifier|const
+name|LangOptions
+operator|&
+name|Features
+argument_list|,
+name|bool
+operator|*
+name|Invalid
+operator|=
+literal|0
+argument_list|)
+block|;
 comment|/// MeasureTokenLength - Relex the token at the specified location and return
 comment|/// its length in bytes in the input file.  If the token needs cleaning (e.g.
 comment|/// includes a trigraph or an escaped newline) then this count includes bytes
@@ -621,6 +696,50 @@ argument_list|,
 argument|const SourceManager&SM
 argument_list|,
 argument|const LangOptions&LangOpts
+argument_list|)
+block|;
+comment|/// AdvanceToTokenCharacter - If the current SourceLocation specifies a
+comment|/// location at the start of a token, return a new location that specifies a
+comment|/// character within the token.  This handles trigraphs and escaped newlines.
+specifier|static
+name|SourceLocation
+name|AdvanceToTokenCharacter
+argument_list|(
+argument|SourceLocation TokStart
+argument_list|,
+argument|unsigned Character
+argument_list|,
+argument|const SourceManager&SM
+argument_list|,
+argument|const LangOptions&Features
+argument_list|)
+block|;
+comment|/// \brief Computes the source location just past the end of the
+comment|/// token at this source location.
+comment|///
+comment|/// This routine can be used to produce a source location that
+comment|/// points just past the end of the token referenced by \p Loc, and
+comment|/// is generally used when a diagnostic needs to point just after a
+comment|/// token where it expected something different that it received. If
+comment|/// the returned source location would not be meaningful (e.g., if
+comment|/// it points into a macro), this routine returns an invalid
+comment|/// source location.
+comment|///
+comment|/// \param Offset an offset from the end of the token, where the source
+comment|/// location should refer to. The default offset (0) produces a source
+comment|/// location pointing just past the end of the token; an offset of 1 produces
+comment|/// a source location pointing to the last character in the token, etc.
+specifier|static
+name|SourceLocation
+name|getLocForEndOfToken
+argument_list|(
+argument|SourceLocation Loc
+argument_list|,
+argument|unsigned Offset
+argument_list|,
+argument|const SourceManager&SM
+argument_list|,
+argument|const LangOptions&Features
 argument_list|)
 block|;
 comment|/// \brief Compute the preamble of the given file.

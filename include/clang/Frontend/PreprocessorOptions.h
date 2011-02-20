@@ -73,6 +73,12 @@ directive|include
 file|<vector>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<set>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -164,6 +170,27 @@ comment|/// precompiled headers.
 name|bool
 name|DisablePCHValidation
 decl_stmt|;
+comment|/// \brief When true, disables the use of the stat cache within a
+comment|/// precompiled header or AST file.
+name|bool
+name|DisableStatCache
+decl_stmt|;
+comment|/// \brief Dump declarations that are deserialized from PCH, for testing.
+name|bool
+name|DumpDeserializedPCHDecls
+decl_stmt|;
+comment|/// \brief This is a set of names for decls that we do not want to be
+comment|/// deserialized, and we emit an error if they are; for testing purposes.
+name|std
+operator|::
+name|set
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|DeserializedPCHDeclsToErrorOn
+expr_stmt|;
 comment|/// \brief If non-zero, the implicit PCH include is actually a precompiled
 comment|/// preamble that covers this number of bytes in the main source file.
 comment|///
@@ -448,6 +475,16 @@ name|false
 argument_list|)
 operator|,
 name|DisablePCHValidation
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|DisableStatCache
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|DumpDeserializedPCHDecls
 argument_list|(
 name|false
 argument_list|)

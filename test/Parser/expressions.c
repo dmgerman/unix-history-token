@@ -281,6 +281,8 @@ argument_list|)
 operator|=
 literal|1
 expr_stmt|;
+comment|// expected-warning {{indirection of non-volatile null pointer}} \
+comment|// expected-note {{consider using __builtin_trap}}
 return|return
 literal|0
 return|;

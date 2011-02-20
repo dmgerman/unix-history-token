@@ -222,6 +222,12 @@ name|DeclaratorDecl
 modifier|*
 name|VariableOrMember
 decl_stmt|;
+comment|/// \brief When Kind == EK_Temporary, the type source information for
+comment|/// the temporary.
+name|TypeSourceInfo
+modifier|*
+name|TypeInfo
+decl_stmt|;
 struct|struct
 block|{
 comment|/// \brief When Kind == EK_Result, EK_Exception, or EK_New, the
@@ -282,7 +288,7 @@ argument_list|)
 operator|,
 name|VariableOrMember
 argument_list|(
-argument|reinterpret_cast<DeclaratorDecl*>(Var)
+argument|Var
 argument_list|)
 block|{ }
 comment|/// \brief Create the initialization entity for a parameter.
@@ -316,7 +322,7 @@ argument_list|)
 operator|,
 name|VariableOrMember
 argument_list|(
-argument|reinterpret_cast<DeclaratorDecl*>(Parm)
+argument|Parm
 argument_list|)
 block|{ }
 comment|/// \brief Create the initialization entity for the result of a
@@ -396,7 +402,7 @@ argument_list|)
 operator|,
 name|VariableOrMember
 argument_list|(
-argument|reinterpret_cast<DeclaratorDecl*>(Member)
+argument|Member
 argument_list|)
 block|{ }
 comment|/// \brief Create the initialization entity for an array element.
@@ -433,16 +439,36 @@ specifier|static
 name|InitializedEntity
 name|InitializeParameter
 parameter_list|(
+name|ASTContext
+modifier|&
+name|Context
+parameter_list|,
 name|ParmVarDecl
 modifier|*
 name|Parm
 parameter_list|)
 block|{
-return|return
 name|InitializedEntity
+name|Res
 argument_list|(
 name|Parm
 argument_list|)
+decl_stmt|;
+name|Res
+operator|.
+name|Type
+operator|=
+name|Context
+operator|.
+name|getVariableArrayDecayedType
+argument_list|(
+name|Res
+operator|.
+name|Type
+argument_list|)
+expr_stmt|;
+return|return
+name|Res
 return|;
 block|}
 comment|/// \brief Create the initialization entity for a parameter that is
@@ -451,6 +477,10 @@ specifier|static
 name|InitializedEntity
 name|InitializeParameter
 parameter_list|(
+name|ASTContext
+modifier|&
+name|Context
+parameter_list|,
 name|QualType
 name|Type
 parameter_list|)
@@ -468,7 +498,12 @@ name|Entity
 operator|.
 name|Type
 operator|=
+name|Context
+operator|.
+name|getVariableArrayDecayedType
+argument_list|(
 name|Type
+argument_list|)
 expr_stmt|;
 name|Entity
 operator|.
@@ -613,6 +648,40 @@ name|Type
 argument_list|)
 return|;
 block|}
+comment|/// \brief Create the initialization entity for a temporary.
+specifier|static
+name|InitializedEntity
+name|InitializeTemporary
+parameter_list|(
+name|TypeSourceInfo
+modifier|*
+name|TypeInfo
+parameter_list|)
+block|{
+name|InitializedEntity
+name|Result
+argument_list|(
+name|EK_Temporary
+argument_list|,
+name|SourceLocation
+argument_list|()
+argument_list|,
+name|TypeInfo
+operator|->
+name|getType
+argument_list|()
+argument_list|)
+decl_stmt|;
+name|Result
+operator|.
+name|TypeInfo
+operator|=
+name|TypeInfo
+expr_stmt|;
+return|return
+name|Result
+return|;
+block|}
 comment|/// \brief Create the initialization entity for a base class subobject.
 specifier|static
 name|InitializedEntity
@@ -651,6 +720,35 @@ return|return
 name|InitializedEntity
 argument_list|(
 name|Member
+argument_list|,
+name|Parent
+argument_list|)
+return|;
+block|}
+comment|/// \brief Create the initialization entity for a member subobject.
+specifier|static
+name|InitializedEntity
+name|InitializeMember
+parameter_list|(
+name|IndirectFieldDecl
+modifier|*
+name|Member
+parameter_list|,
+specifier|const
+name|InitializedEntity
+modifier|*
+name|Parent
+init|=
+literal|0
+parameter_list|)
+block|{
+return|return
+name|InitializedEntity
+argument_list|(
+name|Member
+operator|->
+name|getAnonField
+argument_list|()
 argument_list|,
 name|Parent
 argument_list|)
@@ -717,6 +815,27 @@ specifier|const
 block|{
 return|return
 name|Type
+return|;
+block|}
+comment|/// \brief Retrieve complete type-source information for the object being
+comment|/// constructed, if known.
+name|TypeSourceInfo
+operator|*
+name|getTypeSourceInfo
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|Kind
+operator|==
+name|EK_Temporary
+condition|)
+return|return
+name|TypeInfo
+return|;
+return|return
+literal|0
 return|;
 block|}
 comment|/// \brief Retrieve the name of the entity being initialized.
@@ -879,10 +998,25 @@ name|Index
 expr_stmt|;
 block|}
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// \brief Describes the kind of initialization being performed, along with
+end_comment
+
+begin_comment
 comment|/// location information for tokens related to the initialization (equal sign,
+end_comment
+
+begin_comment
 comment|/// parentheses).
+end_comment
+
+begin_decl_stmt
 name|class
 name|InitializationKind
 block|{
@@ -1173,7 +1307,13 @@ operator|)
 name|Kind
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Determine whether this initialization is an explicit cast.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isExplicitCast
 argument_list|()
@@ -1189,7 +1329,13 @@ operator|==
 name|SIK_DirectCStyleOrFunctionalCast
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Determine whether this initialization is a C-style cast.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isCStyleOrFunctionalCast
 argument_list|()
@@ -1201,9 +1347,21 @@ operator|==
 name|SIK_DirectCStyleOrFunctionalCast
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Determine whether this initialization is an implicit
+end_comment
+
+begin_comment
 comment|/// value-initialization, e.g., as occurs during aggregate
+end_comment
+
+begin_comment
 comment|/// initialization.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isImplicitValueInit
 argument_list|()
@@ -1215,7 +1373,13 @@ operator|==
 name|SIK_ImplicitValue
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Retrieve the location at which initialization is occurring.
+end_comment
+
+begin_expr_stmt
 name|SourceLocation
 name|getLocation
 argument_list|()
@@ -1228,7 +1392,13 @@ literal|0
 index|]
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Retrieve the source range that covers the initialization.
+end_comment
+
+begin_expr_stmt
 name|SourceRange
 name|getRange
 argument_list|()
@@ -1249,8 +1419,17 @@ index|]
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Retrieve the location of the equal sign for copy initialization
+end_comment
+
+begin_comment
 comment|/// (if present).
+end_comment
+
+begin_expr_stmt
 name|SourceLocation
 name|getEqualLoc
 argument_list|()
@@ -1272,6 +1451,9 @@ literal|1
 index|]
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|isCopyInit
 argument_list|()
@@ -1283,8 +1465,17 @@ operator|==
 name|SIK_Copy
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Retrieve the source range containing the locations of the open
+end_comment
+
+begin_comment
 comment|/// and closing parentheses for value and direct initializations.
+end_comment
+
+begin_expr_stmt
 name|SourceRange
 name|getParenRange
 argument_list|()
@@ -1321,14 +1512,10 @@ index|]
 argument_list|)
 return|;
 block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_expr_stmt
 
 begin_comment
+unit|};
 comment|/// \brief Describes the sequence of initializations required to initialize
 end_comment
 
@@ -2028,6 +2215,17 @@ parameter_list|()
 block|{
 return|return
 name|FailedCandidateSet
+return|;
+block|}
+comment|/// brief Get the overloading result, for when the initialization
+comment|/// sequence failed due to a bad overload.
+name|OverloadingResult
+name|getFailedOverloadResult
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FailedOverloadResult
 return|;
 block|}
 comment|/// \brief Determine why initialization failed.

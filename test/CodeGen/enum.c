@@ -7,6 +7,18 @@ begin_comment
 comment|// RUN: %clang_cc1 -triple i386-unknown-unknown -x c++ %s -O3 -emit-llvm -o - | grep 'ret i32 7'
 end_comment
 
+begin_comment
+comment|// This test case illustrates a peculiarity of the promotion of
+end_comment
+
+begin_comment
+comment|// enumeration types in C and C++. In particular, the enumeration type
+end_comment
+
+begin_comment
+comment|// "z" below promotes to an unsigned int in C but int in C++.
+end_comment
+
 begin_enum
 specifier|static
 enum|enum

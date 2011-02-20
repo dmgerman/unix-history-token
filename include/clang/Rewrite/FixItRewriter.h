@@ -308,7 +308,7 @@ comment|/// \brief Emit a diagnostic via the adapted diagnostic client.
 name|void
 name|Diag
 parameter_list|(
-name|FullSourceLoc
+name|SourceLocation
 name|Loc
 parameter_list|,
 name|unsigned

@@ -140,7 +140,7 @@ operator|++
 argument_list|)
 expr_stmt|;
 comment|// expected-warning {{use of uninitialized variable}} \
-comment|// expected-warning{{implicitly declaring C library function 'printf' with type 'int (char const *, ...)'}} \
+comment|// expected-warning{{implicitly declaring C library function 'printf' with type 'int (const char *, ...)'}} \
 comment|// expected-note{{please include the header<stdio.h> or explicitly provide a declaration for 'printf'}}
 block|}
 end_function

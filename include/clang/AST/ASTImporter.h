@@ -176,10 +176,9 @@ decl_stmt|,
 modifier|&
 name|FromFileManager
 decl_stmt|;
-comment|/// \brief The diagnostics object that we should use to emit diagnostics.
-name|Diagnostic
-modifier|&
-name|Diags
+comment|/// \brief Whether to perform a minimal import.
+name|bool
+name|Minimal
 decl_stmt|;
 comment|/// \brief Mapping from the already-imported types in the "from" context
 comment|/// to the corresponding types in the "to" context.
@@ -187,9 +186,11 @@ name|llvm
 operator|::
 name|DenseMap
 operator|<
+specifier|const
 name|Type
 operator|*
 operator|,
+specifier|const
 name|Type
 operator|*
 operator|>
@@ -229,7 +230,7 @@ name|llvm
 operator|::
 name|DenseMap
 operator|<
-name|unsigned
+name|FileID
 operator|,
 name|FileID
 operator|>
@@ -255,34 +256,48 @@ name|NonEquivalentDecls
 decl_stmt|;
 name|public
 label|:
+comment|/// \brief Create a new AST importer.
+comment|///
+comment|/// \param ToContext The context we'll be importing into.
+comment|///
+comment|/// \param ToFileManager The file manager we'll be importing into.
+comment|///
+comment|/// \param FromContext The context we'll be importing from.
+comment|///
+comment|/// \param FromFileManager The file manager we'll be importing into.
+comment|///
+comment|/// \param MinimalImport If true, the importer will attempt to import
+comment|/// as little as it can, e.g., by importing declarations as forward
+comment|/// declarations that can be completed at a later point.
 name|ASTImporter
 argument_list|(
-name|Diagnostic
-operator|&
-name|Diags
+argument|ASTContext&ToContext
 argument_list|,
-name|ASTContext
-operator|&
-name|ToContext
+argument|FileManager&ToFileManager
 argument_list|,
-name|FileManager
-operator|&
-name|ToFileManager
+argument|ASTContext&FromContext
 argument_list|,
-name|ASTContext
-operator|&
-name|FromContext
+argument|FileManager&FromFileManager
 argument_list|,
-name|FileManager
-operator|&
-name|FromFileManager
+argument|bool MinimalImport
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 name|virtual
 operator|~
 name|ASTImporter
 argument_list|()
 expr_stmt|;
+comment|/// \brief Whether the importer will perform a minimal import, creating
+comment|/// to-be-completed forward declarations when possible.
+name|bool
+name|isMinimalImport
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Minimal
+return|;
+block|}
 comment|/// \brief Import the given type from the "from" context into the "to"
 comment|/// context.
 comment|///
@@ -379,6 +394,15 @@ modifier|*
 name|FromNNS
 parameter_list|)
 function_decl|;
+comment|/// \brief Import the goven template name from the "from" context into the
+comment|/// "to" context.
+name|TemplateName
+name|Import
+parameter_list|(
+name|TemplateName
+name|From
+parameter_list|)
+function_decl|;
 comment|/// \brief Import the given source location from the "from" context into
 comment|/// the "to" context.
 comment|///
@@ -423,6 +447,7 @@ name|IdentifierInfo
 modifier|*
 name|Import
 parameter_list|(
+specifier|const
 name|IdentifierInfo
 modifier|*
 name|FromId
@@ -448,6 +473,18 @@ name|FileID
 name|Import
 parameter_list|(
 name|FileID
+parameter_list|)
+function_decl|;
+comment|/// \brief Import the definition of the given declaration, including all of
+comment|/// the declarations it contains.
+comment|///
+comment|/// This routine is intended to be used
+name|void
+name|ImportDefinition
+parameter_list|(
+name|Decl
+modifier|*
+name|From
 parameter_list|)
 function_decl|;
 comment|/// \brief Cope with a name conflict when importing a declaration into the
@@ -543,17 +580,6 @@ return|return
 name|FromFileManager
 return|;
 block|}
-comment|/// \brief Retrieve the diagnostic formatter.
-name|Diagnostic
-operator|&
-name|getDiags
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Diags
-return|;
-block|}
 comment|/// \brief Report a diagnostic in the "to" context.
 name|DiagnosticBuilder
 name|ToDiag
@@ -589,7 +615,9 @@ block|}
 comment|/// \brief Note that we have imported the "from" declaration by mapping it
 comment|/// to the (potentially-newly-created) "to" declaration.
 comment|///
-comment|/// \returns \p To
+comment|/// Subclasses can override this function to observe all of the \c From ->
+comment|/// \c To declaration mappings as they are imported.
+name|virtual
 name|Decl
 modifier|*
 name|Imported

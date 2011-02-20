@@ -65,7 +65,11 @@ block|}
 end_function
 
 begin_comment
-comment|// Check that we do generate reloads for volatile access.
+comment|// This used to test that we generate reloads for volatile access,
+end_comment
+
+begin_comment
+comment|// but that does not appear to be correct behavior for C.
 end_comment
 
 begin_comment
@@ -93,11 +97,7 @@ comment|// CHECK-NEXT: volatile store i32 1, i32* [[x_1]]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: [[tmp_1:%.*]] = volatile load i32* [[x_1]]
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: volatile store i32 [[tmp_1]], i32* [[y_1]]
+comment|// CHECK-NEXT: volatile store i32 1, i32* [[y_1]]
 end_comment
 
 begin_comment

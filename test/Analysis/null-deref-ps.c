@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-apple-darwin10 -analyze -analyzer-experimental-internal-checks -std=gnu99 -analyzer-check-objc-mem -verify %s -analyzer-constraints=basic -analyzer-store=basic -Wreturn-type
+comment|// RUN: %clang_cc1 -triple i386-apple-darwin10 -analyze -analyzer-checker=core.experimental.IdempotentOps -analyzer-experimental-internal-checks -std=gnu99 -analyzer-check-objc-mem -verify %s -analyzer-constraints=basic -analyzer-store=basic -Wreturn-type
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-apple-darwin10 -analyze -analyzer-experimental-internal-checks -std=gnu99 -analyzer-check-objc-mem -verify %s -analyzer-constraints=range -analyzer-store=basic -Wreturn-type
+comment|// RUN: %clang_cc1 -triple i386-apple-darwin10 -analyze -analyzer-checker=core.experimental.IdempotentOps -analyzer-experimental-internal-checks -std=gnu99 -analyzer-check-objc-mem -verify %s -analyzer-constraints=range -analyzer-store=basic -Wreturn-type
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-apple-darwin10 -analyze -analyzer-experimental-internal-checks -std=gnu99 -analyzer-check-objc-mem -analyzer-store=region -analyzer-constraints=range -analyzer-no-purge-dead -verify %s -Wreturn-type
+comment|// RUN: %clang_cc1 -triple i386-apple-darwin10 -analyze -analyzer-checker=core.experimental.IdempotentOps -analyzer-experimental-internal-checks -std=gnu99 -analyzer-check-objc-mem -analyzer-store=region -analyzer-constraints=range -analyzer-no-purge-dead -verify %s -Wreturn-type
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-apple-darwin10 -analyze -analyzer-experimental-internal-checks -std=gnu99 -analyzer-check-objc-mem -analyzer-store=region -analyzer-constraints=range -verify %s -Wreturn-type
+comment|// RUN: %clang_cc1 -triple i386-apple-darwin10 -analyze -analyzer-checker=core.experimental.IdempotentOps -analyzer-experimental-internal-checks -std=gnu99 -analyzer-check-objc-mem -analyzer-store=region -analyzer-constraints=range -verify %s -Wreturn-type
 end_comment
 
 begin_typedef
@@ -132,7 +132,7 @@ operator|->
 name|x
 operator|++
 return|;
-comment|// expected-warning{{Field access results in a dereference of a null pointer (loaded from variable 'p')}}
+comment|// expected-warning{{Access to field 'x' results in a dereference of a null pointer (loaded from variable 'p')}}
 block|}
 end_function
 
@@ -170,7 +170,7 @@ operator|+
 literal|1
 index|]
 return|;
-comment|// expected-warning{{Dereference of null pointer}}
+comment|// expected-warning{{Array access (from variable 'x') results in a null pointer dereference}}
 block|}
 end_function
 
@@ -209,7 +209,7 @@ literal|1
 index|]
 operator|++
 return|;
-comment|// expected-warning{{Dereference of null pointer}}
+comment|// expected-warning{{Array access (from variable 'x') results in a null pointer dereference}}
 block|}
 end_function
 
@@ -1086,6 +1086,7 @@ operator|>=
 literal|0
 condition|)
 block|{
+comment|// expected-warning{{always true}}
 comment|// always true
 block|}
 else|else
@@ -1346,7 +1347,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{undefined}}
+comment|// expected-warning{{Function call argument is an uninitialized value}}
 block|}
 end_function
 

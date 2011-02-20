@@ -76,7 +76,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/System/Path.h"
+file|"llvm/Support/Path.h"
 end_include
 
 begin_comment
@@ -223,11 +223,22 @@ comment|/// A prefix directory used to emulated a limited subset of GCC's '-Bpre
 comment|/// functionality.
 comment|/// FIXME: This type of customization should be removed in favor of the
 comment|/// universal driver when it is ready.
+typedef|typedef
+name|llvm
+operator|::
+name|SmallVector
+operator|<
 name|std
 operator|::
 name|string
-name|PrefixDir
+operator|,
+literal|4
+operator|>
+name|prefix_list
 expr_stmt|;
+name|prefix_list
+name|PrefixDirs
+decl_stmt|;
 comment|/// Default host triple.
 name|std
 operator|::
@@ -265,17 +276,17 @@ name|HostSystem
 operator|,
 name|HostRelease
 expr_stmt|;
-comment|/// Name to use when calling the generic gcc.
-name|std
-operator|::
-name|string
-name|CCCGenericGCCName
-expr_stmt|;
 comment|/// The file to log CC_PRINT_OPTIONS output to, if enabled.
 specifier|const
 name|char
 modifier|*
 name|CCPrintOptionsFilename
+decl_stmt|;
+comment|/// The file to log CC_PRINT_HEADERS output to, if enabled.
+specifier|const
+name|char
+modifier|*
+name|CCPrintHeadersFilename
 decl_stmt|;
 comment|/// Whether the driver should follow g++ like behavior.
 name|unsigned
@@ -302,8 +313,21 @@ name|CCPrintOptions
 range|:
 literal|1
 decl_stmt|;
+comment|/// Set CC_PRINT_HEADERS mode, which causes the frontend to log header include
+comment|/// information to CCPrintHeadersFilename or to stderr.
+name|unsigned
+name|CCPrintHeaders
+range|:
+literal|1
+decl_stmt|;
 name|private
 label|:
+comment|/// Name to use when calling the generic gcc.
+name|std
+operator|::
+name|string
+name|CCCGenericGCCName
+expr_stmt|;
 comment|/// Whether to check that input files exist when constructing compilation
 comment|/// jobs.
 name|unsigned
@@ -418,6 +442,20 @@ argument_list|()
 expr_stmt|;
 comment|/// @name Accessors
 comment|/// @{
+comment|/// Name to use when calling the generic gcc.
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|getCCCGenericGCCName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CCCGenericGCCName
+return|;
+block|}
 specifier|const
 name|OptTable
 operator|&

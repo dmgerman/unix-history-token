@@ -1,10 +1,22 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple i686-pc-linux-gnu -emit-llvm -o - %s | grep thread_local | count 4
+comment|// RUN: %clang_cc1 -triple i686-pc-linux-gnu -emit-llvm -o - %s | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple i686-pc-linux-gnu -emit-llvm -o - %s | not grep common
+comment|// CHECK: @b = external thread_local global
+end_comment
+
+begin_comment
+comment|// CHECK: @d.e = internal thread_local global
+end_comment
+
+begin_comment
+comment|// CHECK: @d.f = internal thread_local global
+end_comment
+
+begin_comment
+comment|// CHECK: @a = thread_local global
 end_comment
 
 begin_decl_stmt
@@ -28,6 +40,7 @@ name|c
 parameter_list|()
 block|{
 return|return
+operator|*
 operator|&
 name|b
 return|;
@@ -63,6 +76,9 @@ operator|=
 literal|1
 block|}
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 

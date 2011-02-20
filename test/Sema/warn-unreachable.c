@@ -128,8 +128,8 @@ literal|3
 case|:
 name|live
 argument_list|()
-comment|// expected-warning {{will never be executed}}
 operator|+
+comment|// expected-warning {{will never be executed}}
 name|halt
 argument_list|()
 expr_stmt|;
@@ -232,10 +232,10 @@ case|:
 name|halt
 argument_list|()
 operator|+
-comment|// expected-warning {{will never be executed}}
 name|dead
 argument_list|()
 expr_stmt|;
+comment|// expected-warning {{will never be executed}}
 operator|-
 comment|// expected-warning {{will never be executed}}
 name|halt
@@ -293,6 +293,64 @@ argument_list|()
 index|]
 expr_stmt|;
 comment|// expected-warning {{will never be executed}}
+block|}
+block|}
+block|}
+end_function
+
+begin_enum
+enum|enum
+name|Cases
+block|{
+name|C1
+block|,
+name|C2
+block|,
+name|C3
+block|}
+enum|;
+end_enum
+
+begin_function
+name|int
+name|test_enum_cases
+parameter_list|(
+name|enum
+name|Cases
+name|C
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|C
+condition|)
+block|{
+case|case
+name|C1
+case|:
+case|case
+name|C2
+case|:
+case|case
+name|C3
+case|:
+return|return
+literal|1
+return|;
+default|default:
+block|{
+name|int
+name|i
+init|=
+literal|0
+decl_stmt|;
+comment|// expected-warning{{will never be executed}}
+operator|++
+name|i
+expr_stmt|;
+return|return
+name|i
+return|;
 block|}
 block|}
 block|}

@@ -141,16 +141,39 @@ expr_stmt|;
 block|}
 end_function
 
+begin_typedef
+typedef|typedef
+name|int
+name|type
+typedef|;
+end_typedef
+
+begin_function
+name|void
+name|f5
+parameter_list|(
+name|float
+name|f
+parameter_list|)
+block|{
+operator|(
+name|type
+operator|)
+name|f
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|// RUN: c-index-test -code-completion-at=%s:7:9 -Xclang -code-completion-patterns %s | FileCheck -check-prefix=CHECK-CC1 %s
 end_comment
 
 begin_comment
-comment|// RUN: env CINDEXTEST_EDITING=1 c-index-test -code-completion-at=%s:7:9 -Xclang -code-completion-patterns %s | FileCheck -check-prefix=CHECK-CC1 %s
+comment|// RUN: env CINDEXTEST_EDITING=1 CINDEXTEST_COMPLETION_CACHING=1 c-index-test -code-completion-at=%s:7:9 -Xclang -code-completion-patterns %s | FileCheck -check-prefix=CHECK-CC1 %s
 end_comment
 
 begin_comment
-comment|// CHECK-CC1: NotImplemented:{TypedText __PRETTY_FUNCTION__} (60)
+comment|// CHECK-CC1: NotImplemented:{TypedText __PRETTY_FUNCTION__} (65)
 end_comment
 
 begin_comment
@@ -166,11 +189,11 @@ comment|// CHECK-CC1-NOT: NotImplemented:{TypedText float} (65)
 end_comment
 
 begin_comment
-comment|// CHECK-CC1: ParmDecl:{ResultType int}{TypedText j} (2)
+comment|// CHECK-CC1: ParmDecl:{ResultType int}{TypedText j} (8)
 end_comment
 
 begin_comment
-comment|// CHECK-CC1: NotImplemented:{TypedText sizeof}{LeftParen (}{Placeholder expression-or-type}{RightParen )} (30)
+comment|// CHECK-CC1: NotImplemented:{TypedText sizeof}{LeftParen (}{Placeholder expression-or-type}{RightParen )} (40)
 end_comment
 
 begin_comment
@@ -182,7 +205,7 @@ comment|// RUN: c-index-test -code-completion-at=%s:7:14 -Xclang -code-completio
 end_comment
 
 begin_comment
-comment|// RUN: env CINDEXTEST_EDITING=1 c-index-test -code-completion-at=%s:7:14 -Xclang -code-completion-patterns %s | FileCheck -check-prefix=CHECK-CC3 %s
+comment|// RUN: env CINDEXTEST_EDITING=1 CINDEXTEST_COMPLETION_CACHING=1 c-index-test -code-completion-at=%s:7:14 -Xclang -code-completion-patterns %s | FileCheck -check-prefix=CHECK-CC3 %s
 end_comment
 
 begin_comment
@@ -194,11 +217,11 @@ comment|// CHECK-CC3: FunctionDecl:{ResultType int}{TypedText f}{LeftParen (}{Pl
 end_comment
 
 begin_comment
-comment|// CHECK-CC3-NOT: NotImplemented:{TypedText float} (65)
+comment|// CHECK-CC3-NOT: NotImplemented:{TypedText float}
 end_comment
 
 begin_comment
-comment|// CHECK-CC3: ParmDecl:{ResultType int}{TypedText j} (8)
+comment|// CHECK-CC3: ParmDecl:{ResultType int}{TypedText j} (34)
 end_comment
 
 begin_comment
@@ -226,15 +249,15 @@ comment|// CHECK-CC2: FunctionDecl:{ResultType int}{TypedText f}{LeftParen (}{Pl
 end_comment
 
 begin_comment
-comment|// CHECK-CC2: NotImplemented:{TypedText float} (65)
+comment|// CHECK-CC2: NotImplemented:{TypedText float} (50)
 end_comment
 
 begin_comment
-comment|// CHECK-CC2: ParmDecl:{ResultType int}{TypedText j} (8)
+comment|// CHECK-CC2: ParmDecl:{ResultType int}{TypedText j} (34)
 end_comment
 
 begin_comment
-comment|// CHECK-CC2: NotImplemented:{TypedText sizeof}{LeftParen (}{Placeholder expression-or-type}{RightParen )} (30)
+comment|// CHECK-CC2: NotImplemented:{TypedText sizeof}{LeftParen (}{Placeholder expression-or-type}{RightParen )} (40)
 end_comment
 
 begin_comment
@@ -254,15 +277,51 @@ comment|// RUN: c-index-test -code-completion-at=%s:19:3 -Xclang -code-completio
 end_comment
 
 begin_comment
-comment|// CHECK-CC6: FunctionDecl:{ResultType void}{TypedText f3}{LeftParen (}{Placeholder char const *, ...}{Text , NULL}{RightParen )} (45)
+comment|// CHECK-CC6: FunctionDecl:{ResultType void}{TypedText f3}{LeftParen (}{Placeholder const char *, ...}{Text , NULL}{RightParen )} (50)
 end_comment
 
 begin_comment
-comment|// CHECK-CC6: NotImplemented:{TypedText void} (65)
+comment|// CHECK-CC6: NotImplemented:{TypedText void} (50)
 end_comment
 
 begin_comment
-comment|// CHECK-CC6: NotImplemented:{TypedText volatile} (65)
+comment|// CHECK-CC6: NotImplemented:{TypedText volatile} (50)
+end_comment
+
+begin_comment
+comment|// RUN: c-index-test -code-completion-at=%s:24:4 -Xclang -code-completion-patterns %s | FileCheck -check-prefix=CHECK-CC7 %s
+end_comment
+
+begin_comment
+comment|// RUN: env CINDEXTEST_EDITING=1 CINDEXTEST_COMPLETION_CACHING=1 c-index-test -code-completion-at=%s:24:4 -Xclang -code-completion-patterns %s | FileCheck -check-prefix=CHECK-CC7 %s
+end_comment
+
+begin_comment
+comment|// CHECK-CC7: ParmDecl:{ResultType float}{TypedText f} (34)
+end_comment
+
+begin_comment
+comment|// CHECK-CC7: VarDecl:{ResultType struct X}{TypedText f1} (50) (deprecated)
+end_comment
+
+begin_comment
+comment|// CHECK-CC7: FunctionDecl:{ResultType void}{TypedText f2}{LeftParen (}{RightParen )} (50)
+end_comment
+
+begin_comment
+comment|// CHECK-CC7: FunctionDecl:{ResultType void}{TypedText f3}{LeftParen (}{Placeholder const char *, ...}{Text , NULL}{RightParen )} (50)
+end_comment
+
+begin_comment
+comment|// CHECK-CC7: FunctionDecl:{ResultType void}{TypedText f4}{LeftParen (}{Placeholder const char *str}{RightParen )} (50)
+end_comment
+
+begin_comment
+comment|// CHECK-CC7: FunctionDecl:{ResultType void}{TypedText f5}{LeftParen (}{Placeholder float f}{RightParen )} (50)
+end_comment
+
+begin_comment
+comment|// CHECK-CC7: TypedefDecl:{TypedText type}
 end_comment
 
 end_unit

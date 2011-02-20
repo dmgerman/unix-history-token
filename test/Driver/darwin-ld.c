@@ -96,7 +96,7 @@ comment|// RUN: FileCheck -check-prefix=LINK_IPHONE_3_0 %s< %t.log
 end_comment
 
 begin_comment
-comment|// LINK_IPHONE_3_0: ld"
+comment|// LINK_IPHONE_3_0: {{ld(.exe)?"}}
 end_comment
 
 begin_comment
@@ -112,7 +112,7 @@ comment|// LINK_IPHONE_3_0: -lSystem
 end_comment
 
 begin_comment
-comment|// LINK_IPHONE_3_0: ld"
+comment|// LINK_IPHONE_3_0: {{ld(.exe)?"}}
 end_comment
 
 begin_comment
@@ -128,7 +128,7 @@ comment|// LINK_IPHONE_3_0: -lSystem
 end_comment
 
 begin_comment
-comment|// LINK_IPHONE_3_0: ld"
+comment|// LINK_IPHONE_3_0: {{ld(.exe)?"}}
 end_comment
 
 begin_comment
@@ -156,7 +156,7 @@ comment|// RUN: FileCheck -check-prefix=LINK_IPHONE_3_1 %s< %t.log
 end_comment
 
 begin_comment
-comment|// LINK_IPHONE_3_1: ld"
+comment|// LINK_IPHONE_3_1: {{ld(.exe)?"}}
 end_comment
 
 begin_comment
@@ -172,7 +172,7 @@ comment|// LINK_IPHONE_3_1: -lSystem
 end_comment
 
 begin_comment
-comment|// LINK_IPHONE_3_1: ld"
+comment|// LINK_IPHONE_3_1: {{ld(.exe)?"}}
 end_comment
 
 begin_comment
@@ -188,7 +188,7 @@ comment|// LINK_IPHONE_3_1: -lSystem
 end_comment
 
 begin_comment
-comment|// LINK_IPHONE_3_1: ld"
+comment|// LINK_IPHONE_3_1: {{ld(.exe)?"}}
 end_comment
 
 begin_comment
@@ -212,7 +212,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// LINK_EXPLICIT_PIE: ld"
+comment|// LINK_EXPLICIT_PIE: {{ld(.exe)?"}}
 end_comment
 
 begin_comment
@@ -232,7 +232,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// LINK_EXPLICIT_NO_PIE: ld"
+comment|// LINK_EXPLICIT_NO_PIE: {{ld(.exe)?"}}
 end_comment
 
 begin_comment
@@ -256,7 +256,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// LINK_NEWER_DEMANGLE: ld"
+comment|// LINK_NEWER_DEMANGLE: {{ld(.exe)?"}}
 end_comment
 
 begin_comment
@@ -280,7 +280,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// LINK_NEWER_NODEMANGLE: ld"
+comment|// LINK_NEWER_NODEMANGLE: {{ld(.exe)?"}}
 end_comment
 
 begin_comment
@@ -308,7 +308,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// LINK_OLDER_NODEMANGLE: ld"
+comment|// LINK_OLDER_NODEMANGLE: {{ld(.exe)?"}}
 end_comment
 
 begin_comment

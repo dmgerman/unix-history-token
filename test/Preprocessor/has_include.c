@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -Eonly -verify %s
+comment|// RUN: %clang_cc1 -ffreestanding -Eonly -verify %s
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ if|#
 directive|if
 name|__has_include
 argument_list|(
-literal|"stdio.h"
+literal|"stdint.h"
 argument_list|)
 end_if
 
@@ -38,7 +38,7 @@ directive|if
 name|__has_include
 argument_list|(
 operator|<
-name|stdio
+name|stdint
 operator|.
 name|h
 operator|>
@@ -71,7 +71,7 @@ directive|if
 operator|!
 name|__has_include
 argument_list|(
-literal|"stdio.h"
+literal|"stdint.h"
 argument_list|)
 end_if
 
@@ -95,7 +95,7 @@ if|#
 directive|if
 name|__has_include
 argument_list|(
-literal|"stdio.h"
+literal|"stdint.h"
 argument_list|)
 operator|&&
 name|__has_include
@@ -245,7 +245,7 @@ directive|if
 operator|!
 name|__has_include_next
 argument_list|(
-literal|"stdio.h"
+literal|"stdint.h"
 argument_list|)
 end_if
 
@@ -273,7 +273,7 @@ if|#
 directive|if
 name|__has_include_next
 argument_list|(
-literal|"stdio.h"
+literal|"stdint.h"
 argument_list|)
 operator|&&
 name|__has_include
@@ -372,15 +372,15 @@ comment|// It also assert due to unterminated #if's.
 end_comment
 
 begin_comment
-comment|//#if __has_include("stdio.h"
+comment|//#if __has_include("stdint.h"
 end_comment
 
 begin_comment
-comment|//#if __has_include "stdio.h")
+comment|//#if __has_include "stdint.h")
 end_comment
 
 begin_comment
-comment|//#if __has_include(stdio.h)
+comment|//#if __has_include(stdint.h)
 end_comment
 
 begin_comment
@@ -400,27 +400,27 @@ comment|//#if __has_include
 end_comment
 
 begin_comment
-comment|//#if __has_include(<stdio.h>
+comment|//#if __has_include(<stdint.h>
 end_comment
 
 begin_comment
-comment|//#if __has_include<stdio.h>)
+comment|//#if __has_include<stdint.h>)
 end_comment
 
 begin_comment
-comment|//#if __has_include("stdio.h)
+comment|//#if __has_include("stdint.h)
 end_comment
 
 begin_comment
-comment|//#if __has_include(stdio.h")
+comment|//#if __has_include(stdint.h")
 end_comment
 
 begin_comment
-comment|//#if __has_include(<stdio.h)
+comment|//#if __has_include(<stdint.h)
 end_comment
 
 begin_comment
-comment|//#if __has_include(stdio.h>)
+comment|//#if __has_include(stdint.h>)
 end_comment
 
 end_unit

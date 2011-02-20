@@ -42,12 +42,38 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* System headers include a number of constants from POSIX in<limits.h>. */
+comment|/* System headers include a number of constants from POSIX in<limits.h>.    Include it if we're hosted. */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|__STDC_HOSTED__
+operator|&&
+expr|\
+name|defined
+argument_list|(
+name|__has_include_next
+argument_list|)
+operator|&&
+name|__has_include_next
+argument_list|(
+operator|<
+name|limits
+operator|.
+name|h
+operator|>
+argument_list|)
+end_if
 
 begin_empty
 empty|#include_next<limits.h>
 end_empty
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Many system headers try to "help us out" by defining these.  No really, we    know how big each datatype is. */

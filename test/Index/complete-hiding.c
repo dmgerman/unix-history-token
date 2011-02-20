@@ -69,7 +69,11 @@ block|}
 end_function
 
 begin_comment
-comment|// RUN: c-index-test -code-completion-at=%s:16:3 %s | FileCheck -check-prefix=CHECK-CC1 %s
+comment|// RUN: c-index-test -code-completion-at=%s:16:3 %s> %t
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=CHECK-CC1 -input-file=%t %s
 end_comment
 
 begin_comment
@@ -77,11 +81,11 @@ comment|// RUN: env CINDEXTEST_EDITING=1 CINDEXTEST_COMPLETION_CACHING=1 c-index
 end_comment
 
 begin_comment
-comment|// CHECK-CC1: VarDecl:{ResultType int}{TypedText StructA} (8)
+comment|// CHECK-CC1: VarDecl:{ResultType int}{TypedText StructA} (34)
 end_comment
 
 begin_comment
-comment|// CHECK-CC1: VarDecl:{ResultType int}{TypedText ValueA} (8)
+comment|// CHECK-CC1: VarDecl:{ResultType int}{TypedText ValueA} (34)
 end_comment
 
 begin_comment
@@ -93,23 +97,31 @@ comment|// CHECK-CC1: VarDecl:{ResultType int}{TypedText ValueB} (50)
 end_comment
 
 begin_comment
-comment|// RUN: c-index-test -code-completion-at=%s:16:10 %s | FileCheck -check-prefix=CHECK-CC2 %s
+comment|// RUN: c-index-test -code-completion-at=%s:16:10 %s> %t
 end_comment
 
 begin_comment
-comment|// CHECK-CC2: StructDecl:{TypedText StructA} (65)
+comment|// RUN: FileCheck -check-prefix=CHECK-CC2 -input-file=%t %s
 end_comment
 
 begin_comment
-comment|// CHECK-CC2-NOT: StructDecl:{TypedText StructB} (65)
+comment|// CHECK-CC2: StructDecl:{TypedText StructA} (50)
 end_comment
 
 begin_comment
-comment|// CHECK-CC2: StructDecl:{TypedText StructC} (65)
+comment|// CHECK-CC2-NOT: StructDecl:{TypedText StructB} (50)
 end_comment
 
 begin_comment
-comment|// RUN: env CINDEXTEST_EDITING=1 CINDEXTEST_COMPLETION_CACHING=1 c-index-test -code-completion-at=%s:16:10 %s | FileCheck -check-prefix=CHECK-CC2 %s
+comment|// CHECK-CC2: StructDecl:{TypedText StructC} (50)
+end_comment
+
+begin_comment
+comment|// RUN: env CINDEXTEST_EDITING=1 CINDEXTEST_COMPLETION_CACHING=1 c-index-test -code-completion-at=%s:16:10 %s> %t
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=CHECK-CC2 -input-file=%t %s
 end_comment
 
 end_unit

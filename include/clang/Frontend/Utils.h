@@ -256,6 +256,35 @@ modifier|&
 name|Opts
 parameter_list|)
 function_decl|;
+comment|/// AttachHeaderIncludeGen - Create a header include list generator, and attach
+comment|/// it to the given preprocessor.
+comment|///
+comment|/// \param ShowAllHeaders - If true, show all header information instead of just
+comment|/// headers following the predefines buffer. This is useful for making sure
+comment|/// includes mentioned on the command line are also reported, but differs from
+comment|/// the default behavior used by -H.
+comment|/// \param OutputPath - If non-empty, a path to write the header include
+comment|/// information to, instead of writing to stderr.
+name|void
+name|AttachHeaderIncludeGen
+argument_list|(
+name|Preprocessor
+operator|&
+name|PP
+argument_list|,
+name|bool
+name|ShowAllHeaders
+operator|=
+name|false
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
+name|OutputPath
+operator|=
+literal|""
+argument_list|)
+decl_stmt|;
 comment|/// CacheTokens - Cache tokens for use with PCH. Note that this requires
 comment|/// a seekable stream.
 name|void

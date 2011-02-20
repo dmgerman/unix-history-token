@@ -88,6 +88,9 @@ name|namespace
 name|clang
 block|{
 name|class
+name|ASTContext
+decl_stmt|;
+name|class
 name|ParmVarDecl
 decl_stmt|;
 name|class
@@ -129,6 +132,7 @@ name|protected
 label|:
 comment|// The correctness of this relies on the property that, for Type *Ty,
 comment|//   QualType(Ty, 0).getAsOpaquePtr() == (void*) Ty
+specifier|const
 name|void
 modifier|*
 name|Ty
@@ -204,6 +208,7 @@ argument_list|)
 block|{ }
 name|TypeLoc
 argument_list|(
+specifier|const
 name|Type
 operator|*
 name|ty
@@ -294,6 +299,7 @@ name|Ty
 argument_list|)
 return|;
 block|}
+specifier|const
 name|Type
 operator|*
 name|getTypePtr
@@ -402,14 +408,63 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|// implemented in this header
+name|TypeLoc
+name|IgnoreParens
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|isa
+operator|<
+name|ParenTypeLoc
+operator|>
+operator|(
+name|this
+operator|)
+condition|)
+return|return
+name|IgnoreParensImpl
+argument_list|(
+operator|*
+name|this
+argument_list|)
+return|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Initializes this to state that every location in this
+end_comment
+
+begin_comment
 comment|/// type is the given location.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// This method exists to provide a simple transition for code that
+end_comment
+
+begin_comment
 comment|/// relies on location-less types.
+end_comment
+
+begin_decl_stmt
 name|void
 name|initialize
 argument_list|(
+name|ASTContext
+operator|&
+name|Context
+argument_list|,
 name|SourceLocation
 name|Loc
 argument_list|)
@@ -417,6 +472,8 @@ decl|const
 block|{
 name|initializeImpl
 argument_list|(
+name|Context
+argument_list|,
 operator|*
 name|this
 argument_list|,
@@ -424,6 +481,118 @@ name|Loc
 argument_list|)
 expr_stmt|;
 block|}
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Initializes this by copying its information from another
+end_comment
+
+begin_comment
+comment|/// TypeLoc of the same type.
+end_comment
+
+begin_decl_stmt
+name|void
+name|initializeFullCopy
+argument_list|(
+name|TypeLoc
+name|Other
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+name|getType
+argument_list|()
+operator|==
+name|Other
+operator|.
+name|getType
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|size_t
+name|Size
+init|=
+name|getFullDataSize
+argument_list|()
+decl_stmt|;
+name|memcpy
+argument_list|(
+name|getOpaqueData
+argument_list|()
+argument_list|,
+name|Other
+operator|.
+name|getOpaqueData
+argument_list|()
+argument_list|,
+name|Size
+argument_list|)
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Initializes this by copying its information from another
+end_comment
+
+begin_comment
+comment|/// TypeLoc of the same type.  The given size must be the full data
+end_comment
+
+begin_comment
+comment|/// size.
+end_comment
+
+begin_decl_stmt
+name|void
+name|initializeFullCopy
+argument_list|(
+name|TypeLoc
+name|Other
+argument_list|,
+name|unsigned
+name|Size
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+name|getType
+argument_list|()
+operator|==
+name|Other
+operator|.
+name|getType
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|getFullDataSize
+argument_list|()
+operator|==
+name|Size
+argument_list|)
+expr_stmt|;
+name|memcpy
+argument_list|(
+name|getOpaqueData
+argument_list|()
+argument_list|,
+name|Other
+operator|.
+name|getOpaqueData
+argument_list|()
+argument_list|,
+name|Size
+argument_list|)
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_expr_stmt
 name|friend
 name|bool
 name|operator
@@ -458,6 +627,9 @@ operator|.
 name|Data
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|friend
 name|bool
 name|operator
@@ -483,6 +655,9 @@ name|RHS
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 specifier|static
 name|bool
 name|classof
@@ -497,12 +672,22 @@ return|return
 name|true
 return|;
 block|}
+end_function
+
+begin_label
 name|private
 label|:
+end_label
+
+begin_function_decl
 specifier|static
 name|void
 name|initializeImpl
 parameter_list|(
+name|ASTContext
+modifier|&
+name|Context
+parameter_list|,
 name|TypeLoc
 name|TL
 parameter_list|,
@@ -510,6 +695,9 @@ name|SourceLocation
 name|Loc
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|static
 name|TypeLoc
 name|getNextTypeLocImpl
@@ -518,6 +706,20 @@ name|TypeLoc
 name|TL
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|TypeLoc
+name|IgnoreParensImpl
+parameter_list|(
+name|TypeLoc
+name|TL
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|static
 name|SourceRange
 name|getLocalSourceRangeImpl
@@ -526,14 +728,10 @@ name|TypeLoc
 name|TL
 parameter_list|)
 function_decl|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_function_decl
 
 begin_comment
+unit|};
 comment|/// \brief Return the TypeLoc for a type source info.
 end_comment
 
@@ -579,7 +777,7 @@ comment|/// \brief Wrapper of type source information for a type with
 end_comment
 
 begin_comment
-comment|/// no direct quqlaifiers.
+comment|/// no direct qualifiers.
 end_comment
 
 begin_decl_stmt
@@ -596,6 +794,7 @@ argument_list|()
 block|{}
 name|UnqualTypeLoc
 argument_list|(
+specifier|const
 name|Type
 operator|*
 name|Ty
@@ -612,6 +811,7 @@ argument_list|,
 argument|Data
 argument_list|)
 block|{}
+specifier|const
 name|Type
 operator|*
 name|getTypePtr
@@ -621,6 +821,7 @@ block|{
 return|return
 name|reinterpret_cast
 operator|<
+specifier|const
 name|Type
 operator|*
 operator|>
@@ -719,6 +920,8 @@ comment|/// provide no information.
 name|void
 name|initializeLocal
 argument_list|(
+argument|ASTContext&Context
+argument_list|,
 argument|SourceLocation Loc
 argument_list|)
 block|{
@@ -1026,6 +1229,7 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+specifier|const
 name|TypeClass
 operator|*
 name|getTypePtr
@@ -1311,6 +1515,7 @@ return|return
 name|true
 return|;
 block|}
+specifier|const
 name|TypeClass
 operator|*
 name|getTypePtr
@@ -1415,6 +1620,8 @@ block|}
 name|void
 name|initializeLocal
 argument_list|(
+argument|ASTContext&Context
+argument_list|,
 argument|SourceLocation Loc
 argument_list|)
 block|{
@@ -1843,6 +2050,8 @@ block|}
 name|void
 name|initializeLocal
 argument_list|(
+argument|ASTContext&Context
+argument_list|,
 argument|SourceLocation Loc
 argument_list|)
 block|{
@@ -2101,6 +2310,416 @@ block|,
 name|SubstTemplateTypeParmType
 operator|>
 block|{ }
+block|;
+comment|/// \brief Wrapper for substituted template type parameters.
+name|class
+name|SubstTemplateTypeParmPackTypeLoc
+operator|:
+name|public
+name|InheritingConcreteTypeLoc
+operator|<
+name|TypeSpecTypeLoc
+block|,
+name|SubstTemplateTypeParmPackTypeLoc
+block|,
+name|SubstTemplateTypeParmPackType
+operator|>
+block|{ }
+block|;  struct
+name|AttributedLocInfo
+block|{
+expr|union
+block|{
+name|Expr
+operator|*
+name|ExprOperand
+block|;
+comment|/// A raw SourceLocation.
+name|unsigned
+name|EnumOperandLoc
+block|;   }
+block|;
+name|SourceRange
+name|OperandParens
+block|;
+name|SourceLocation
+name|AttrLoc
+block|; }
+block|;
+comment|/// \brief Type source information for an attributed type.
+name|class
+name|AttributedTypeLoc
+operator|:
+name|public
+name|ConcreteTypeLoc
+operator|<
+name|UnqualTypeLoc
+block|,
+name|AttributedTypeLoc
+block|,
+name|AttributedType
+block|,
+name|AttributedLocInfo
+operator|>
+block|{
+name|public
+operator|:
+name|AttributedType
+operator|::
+name|Kind
+name|getAttrKind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getTypePtr
+argument_list|()
+operator|->
+name|getAttrKind
+argument_list|()
+return|;
+block|}
+name|bool
+name|hasAttrExprOperand
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|getAttrKind
+argument_list|()
+operator|>=
+name|AttributedType
+operator|::
+name|FirstExprOperandKind
+operator|&&
+name|getAttrKind
+argument_list|()
+operator|<=
+name|AttributedType
+operator|::
+name|LastExprOperandKind
+operator|)
+return|;
+block|}
+name|bool
+name|hasAttrEnumOperand
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|getAttrKind
+argument_list|()
+operator|>=
+name|AttributedType
+operator|::
+name|FirstEnumOperandKind
+operator|&&
+name|getAttrKind
+argument_list|()
+operator|<=
+name|AttributedType
+operator|::
+name|LastEnumOperandKind
+operator|)
+return|;
+block|}
+name|bool
+name|hasAttrOperand
+argument_list|()
+specifier|const
+block|{
+return|return
+name|hasAttrExprOperand
+argument_list|()
+operator|||
+name|hasAttrEnumOperand
+argument_list|()
+return|;
+block|}
+comment|/// The modified type, which is generally canonically different from
+comment|/// the attribute type.
+comment|///    int main(int, char**) __attribute__((noreturn))
+comment|///    ~~~     ~~~~~~~~~~~~~
+name|TypeLoc
+name|getModifiedLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getInnerTypeLoc
+argument_list|()
+return|;
+block|}
+comment|/// The location of the attribute name, i.e.
+comment|///    __attribute__((regparm(1000)))
+comment|///                   ^~~~~~~
+name|SourceLocation
+name|getAttrNameLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getLocalData
+argument_list|()
+operator|->
+name|AttrLoc
+return|;
+block|}
+name|void
+name|setAttrNameLoc
+argument_list|(
+argument|SourceLocation loc
+argument_list|)
+block|{
+name|getLocalData
+argument_list|()
+operator|->
+name|AttrLoc
+operator|=
+name|loc
+block|;   }
+comment|/// The attribute's expression operand, if it has one.
+comment|///    void *cur_thread __attribute__((address_space(21)))
+comment|///                                                  ^~
+name|Expr
+operator|*
+name|getAttrExprOperand
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|hasAttrExprOperand
+argument_list|()
+argument_list|)
+block|;
+return|return
+name|getLocalData
+argument_list|()
+operator|->
+name|ExprOperand
+return|;
+block|}
+name|void
+name|setAttrExprOperand
+argument_list|(
+argument|Expr *e
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|hasAttrExprOperand
+argument_list|()
+argument_list|)
+block|;
+name|getLocalData
+argument_list|()
+operator|->
+name|ExprOperand
+operator|=
+name|e
+block|;   }
+comment|/// The location of the attribute's enumerated operand, if it has one.
+comment|///    void * __attribute__((objc_gc(weak)))
+comment|///                                  ^~~~
+name|SourceLocation
+name|getAttrEnumOperandLoc
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|hasAttrEnumOperand
+argument_list|()
+argument_list|)
+block|;
+return|return
+name|SourceLocation
+operator|::
+name|getFromRawEncoding
+argument_list|(
+name|getLocalData
+argument_list|()
+operator|->
+name|EnumOperandLoc
+argument_list|)
+return|;
+block|}
+name|void
+name|setAttrEnumOperandLoc
+argument_list|(
+argument|SourceLocation loc
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|hasAttrEnumOperand
+argument_list|()
+argument_list|)
+block|;
+name|getLocalData
+argument_list|()
+operator|->
+name|EnumOperandLoc
+operator|=
+name|loc
+operator|.
+name|getRawEncoding
+argument_list|()
+block|;   }
+comment|/// The location of the parentheses around the operand, if there is
+comment|/// an operand.
+comment|///    void * __attribute__((objc_gc(weak)))
+comment|///                                 ^    ^
+name|SourceRange
+name|getAttrOperandParensRange
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|hasAttrOperand
+argument_list|()
+argument_list|)
+block|;
+return|return
+name|getLocalData
+argument_list|()
+operator|->
+name|OperandParens
+return|;
+block|}
+name|void
+name|setAttrOperandParensRange
+argument_list|(
+argument|SourceRange range
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|hasAttrOperand
+argument_list|()
+argument_list|)
+block|;
+name|getLocalData
+argument_list|()
+operator|->
+name|OperandParens
+operator|=
+name|range
+block|;   }
+name|SourceRange
+name|getLocalSourceRange
+argument_list|()
+specifier|const
+block|{
+comment|// Note that this does *not* include the range of the attribute
+comment|// enclosure, e.g.:
+comment|//    __attribute__((foo(bar)))
+comment|//    ^~~~~~~~~~~~~~~        ~~
+comment|// or
+comment|//    [[foo(bar)]]
+comment|//    ^~        ~~
+comment|// That enclosure doesn't necessarily belong to a single attribute
+comment|// anyway.
+name|SourceRange
+name|range
+argument_list|(
+name|getAttrNameLoc
+argument_list|()
+argument_list|)
+block|;
+if|if
+condition|(
+name|hasAttrOperand
+argument_list|()
+condition|)
+name|range
+operator|.
+name|setEnd
+argument_list|(
+name|getAttrOperandParensRange
+argument_list|()
+operator|.
+name|getEnd
+argument_list|()
+argument_list|)
+expr_stmt|;
+return|return
+name|range
+return|;
+block|}
+name|void
+name|initializeLocal
+argument_list|(
+argument|ASTContext&Context
+argument_list|,
+argument|SourceLocation loc
+argument_list|)
+block|{
+name|setAttrNameLoc
+argument_list|(
+name|loc
+argument_list|)
+block|;
+if|if
+condition|(
+name|hasAttrExprOperand
+argument_list|()
+condition|)
+block|{
+name|setAttrOperandParensRange
+argument_list|(
+name|SourceRange
+argument_list|(
+name|loc
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|setAttrExprOperand
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|hasAttrEnumOperand
+argument_list|()
+condition|)
+block|{
+name|setAttrOperandParensRange
+argument_list|(
+name|SourceRange
+argument_list|(
+name|loc
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|setAttrEnumOperandLoc
+argument_list|(
+name|loc
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+name|QualType
+name|getInnerType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getTypePtr
+argument_list|()
+operator|->
+name|getModifiedType
+argument_list|()
+return|;
+block|}
+expr|}
 block|;   struct
 name|ObjCProtocolListLocInfo
 block|{
@@ -2365,6 +2984,8 @@ block|}
 name|void
 name|initializeLocal
 argument_list|(
+argument|ASTContext&Context
+argument_list|,
 argument|SourceLocation Loc
 argument_list|)
 block|{
@@ -2521,6 +3142,8 @@ block|}
 name|void
 name|initializeLocal
 argument_list|(
+argument|ASTContext&Context
+argument_list|,
 argument|SourceLocation Loc
 argument_list|)
 block|{
@@ -2529,6 +3152,151 @@ argument_list|(
 name|Loc
 argument_list|)
 block|;   }
+expr|}
+block|;  struct
+name|ParenLocInfo
+block|{
+name|SourceLocation
+name|LParenLoc
+block|;
+name|SourceLocation
+name|RParenLoc
+block|; }
+block|;
+name|class
+name|ParenTypeLoc
+operator|:
+name|public
+name|ConcreteTypeLoc
+operator|<
+name|UnqualTypeLoc
+block|,
+name|ParenTypeLoc
+block|,
+name|ParenType
+block|,
+name|ParenLocInfo
+operator|>
+block|{
+name|public
+operator|:
+name|SourceLocation
+name|getLParenLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|this
+operator|->
+name|getLocalData
+argument_list|()
+operator|->
+name|LParenLoc
+return|;
+block|}
+name|SourceLocation
+name|getRParenLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|this
+operator|->
+name|getLocalData
+argument_list|()
+operator|->
+name|RParenLoc
+return|;
+block|}
+name|void
+name|setLParenLoc
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+block|{
+name|this
+operator|->
+name|getLocalData
+argument_list|()
+operator|->
+name|LParenLoc
+operator|=
+name|Loc
+block|;   }
+name|void
+name|setRParenLoc
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+block|{
+name|this
+operator|->
+name|getLocalData
+argument_list|()
+operator|->
+name|RParenLoc
+operator|=
+name|Loc
+block|;   }
+name|SourceRange
+name|getLocalSourceRange
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SourceRange
+argument_list|(
+name|getLParenLoc
+argument_list|()
+argument_list|,
+name|getRParenLoc
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|void
+name|initializeLocal
+argument_list|(
+argument|ASTContext&Context
+argument_list|,
+argument|SourceLocation Loc
+argument_list|)
+block|{
+name|setLParenLoc
+argument_list|(
+name|Loc
+argument_list|)
+block|;
+name|setRParenLoc
+argument_list|(
+name|Loc
+argument_list|)
+block|;   }
+name|TypeLoc
+name|getInnerLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getInnerTypeLoc
+argument_list|()
+return|;
+block|}
+name|QualType
+name|getInnerType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|this
+operator|->
+name|getTypePtr
+argument_list|()
+operator|->
+name|getInnerType
+argument_list|()
+return|;
+block|}
 expr|}
 block|;   struct
 name|PointerLikeLocInfo
@@ -2628,6 +3396,8 @@ block|}
 name|void
 name|initializeLocal
 argument_list|(
+argument|ASTContext&Context
+argument_list|,
 argument|SourceLocation Loc
 argument_list|)
 block|{
@@ -2911,6 +3681,9 @@ name|SourceLocation
 name|LParenLoc
 block|,
 name|RParenLoc
+block|;
+name|bool
+name|TrailingReturn
 block|; }
 block|;
 comment|/// \brief Wrapper for source info for functions.
@@ -2929,24 +3702,6 @@ block|,
 name|FunctionLocInfo
 operator|>
 block|{
-comment|// ParmVarDecls* are stored after Info, one for each argument.
-name|ParmVarDecl
-operator|*
-operator|*
-name|getParmArray
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|(
-name|ParmVarDecl
-operator|*
-operator|*
-operator|)
-name|getExtraLocalData
-argument_list|()
-return|;
-block|}
 name|public
 operator|:
 name|SourceLocation
@@ -2999,6 +3754,49 @@ name|RParenLoc
 operator|=
 name|Loc
 block|;   }
+name|bool
+name|getTrailingReturn
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getLocalData
+argument_list|()
+operator|->
+name|TrailingReturn
+return|;
+block|}
+name|void
+name|setTrailingReturn
+argument_list|(
+argument|bool Trailing
+argument_list|)
+block|{
+name|getLocalData
+argument_list|()
+operator|->
+name|TrailingReturn
+operator|=
+name|Trailing
+block|;   }
+comment|// ParmVarDecls* are stored after Info, one for each argument.
+name|ParmVarDecl
+operator|*
+operator|*
+name|getParmArray
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|ParmVarDecl
+operator|*
+operator|*
+operator|)
+name|getExtraLocalData
+argument_list|()
+return|;
+block|}
 name|unsigned
 name|getNumArgs
 argument_list|()
@@ -3093,6 +3891,8 @@ block|}
 name|void
 name|initializeLocal
 argument_list|(
+argument|ASTContext&Context
+argument_list|,
 argument|SourceLocation Loc
 argument_list|)
 block|{
@@ -3104,6 +3904,11 @@ block|;
 name|setRParenLoc
 argument_list|(
 name|Loc
+argument_list|)
+block|;
+name|setTrailingReturn
+argument_list|(
+name|false
 argument_list|)
 block|;
 for|for
@@ -3345,6 +4150,8 @@ block|}
 name|void
 name|initializeLocal
 argument_list|(
+argument|ASTContext&Context
+argument_list|,
 argument|SourceLocation Loc
 argument_list|)
 block|{
@@ -3541,24 +4348,6 @@ argument_list|,
 argument|TemplateArgumentLocInfo AI
 argument_list|)
 block|{
-ifndef|#
-directive|ifndef
-name|NDEBUG
-name|AI
-operator|.
-name|validateForArgument
-argument_list|(
-name|getTypePtr
-argument_list|()
-operator|->
-name|getArg
-argument_list|(
-name|i
-argument_list|)
-argument_list|)
-block|;
-endif|#
-directive|endif
 name|getArgInfos
 argument_list|()
 index|[
@@ -3689,6 +4478,8 @@ block|}
 name|void
 name|initializeLocal
 argument_list|(
+argument|ASTContext&Context
+argument_list|,
 argument|SourceLocation Loc
 argument_list|)
 block|{
@@ -3709,6 +4500,8 @@ argument_list|)
 block|;
 name|initializeArgLocs
 argument_list|(
+name|Context
+argument_list|,
 name|getNumArgs
 argument_list|()
 argument_list|,
@@ -3728,6 +4521,8 @@ specifier|static
 name|void
 name|initializeArgLocs
 argument_list|(
+argument|ASTContext&Context
+argument_list|,
 argument|unsigned NumArgs
 argument_list|,
 argument|const TemplateArgument *Args
@@ -3736,131 +4531,7 @@ argument|TemplateArgumentLocInfo *ArgInfos
 argument_list|,
 argument|SourceLocation Loc
 argument_list|)
-block|{
-for|for
-control|(
-name|unsigned
-name|i
-init|=
-literal|0
-init|,
-name|e
-init|=
-name|NumArgs
-init|;
-name|i
-operator|!=
-name|e
-condition|;
-operator|++
-name|i
-control|)
-block|{
-name|TemplateArgumentLocInfo
-name|Info
-decl_stmt|;
-ifndef|#
-directive|ifndef
-name|NDEBUG
-comment|// If asserts are enabled, be sure to initialize the argument
-comment|// loc with the right kind of pointer.
-switch|switch
-condition|(
-name|Args
-index|[
-name|i
-index|]
-operator|.
-name|getKind
-argument_list|()
-condition|)
-block|{
-case|case
-name|TemplateArgument
-operator|::
-name|Expression
-case|:
-case|case
-name|TemplateArgument
-operator|::
-name|Declaration
-case|:
-name|Info
-operator|=
-name|TemplateArgumentLocInfo
-argument_list|(
-operator|(
-name|Expr
-operator|*
-operator|)
-literal|0
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|TemplateArgument
-operator|::
-name|Type
-case|:
-name|Info
-operator|=
-name|TemplateArgumentLocInfo
-argument_list|(
-operator|(
-name|TypeSourceInfo
-operator|*
-operator|)
-literal|0
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|TemplateArgument
-operator|::
-name|Template
-case|:
-name|Info
-operator|=
-name|TemplateArgumentLocInfo
-argument_list|(
-name|SourceRange
-argument_list|(
-name|Loc
-argument_list|)
-argument_list|,
-name|Loc
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|TemplateArgument
-operator|::
-name|Integral
-case|:
-case|case
-name|TemplateArgument
-operator|::
-name|Pack
-case|:
-case|case
-name|TemplateArgument
-operator|::
-name|Null
-case|:
-comment|// K_None is fine.
-break|break;
-block|}
-endif|#
-directive|endif
-name|ArgInfos
-index|[
-name|i
-index|]
-operator|=
-name|Info
-expr_stmt|;
-block|}
-block|}
+block|;
 name|unsigned
 name|getExtraLocalDataSize
 argument_list|()
@@ -4167,6 +4838,8 @@ block|}
 name|void
 name|initializeLocal
 argument_list|(
+argument|ASTContext&Context
+argument_list|,
 argument|SourceLocation Loc
 argument_list|)
 block|{
@@ -4300,6 +4973,20 @@ block|,
 name|DecltypeTypeLoc
 block|,
 name|DecltypeType
+operator|>
+block|{ }
+block|;
+name|class
+name|AutoTypeLoc
+operator|:
+name|public
+name|InheritingConcreteTypeLoc
+operator|<
+name|TypeSpecTypeLoc
+block|,
+name|AutoTypeLoc
+block|,
+name|AutoType
 operator|>
 block|{ }
 block|;  struct
@@ -4441,6 +5128,8 @@ block|}
 name|void
 name|initializeLocal
 argument_list|(
+argument|ASTContext&Context
+argument_list|,
 argument|SourceLocation Loc
 argument_list|)
 block|{
@@ -4704,6 +5393,8 @@ block|;   }
 name|void
 name|initializeLocal
 argument_list|(
+argument|ASTContext&Context
+argument_list|,
 argument|SourceLocation Loc
 argument_list|)
 block|{
@@ -4926,24 +5617,6 @@ argument_list|,
 argument|TemplateArgumentLocInfo AI
 argument_list|)
 block|{
-ifndef|#
-directive|ifndef
-name|NDEBUG
-name|AI
-operator|.
-name|validateForArgument
-argument_list|(
-name|getTypePtr
-argument_list|()
-operator|->
-name|getArg
-argument_list|(
-name|i
-argument_list|)
-argument_list|)
-block|;
-endif|#
-directive|endif
 name|getArgInfos
 argument_list|()
 index|[
@@ -5066,6 +5739,8 @@ block|;   }
 name|void
 name|initializeLocal
 argument_list|(
+argument|ASTContext&Context
+argument_list|,
 argument|SourceLocation Loc
 argument_list|)
 block|{
@@ -5101,6 +5776,8 @@ name|TemplateSpecializationTypeLoc
 operator|::
 name|initializeArgLocs
 argument_list|(
+name|Context
+argument_list|,
 name|getNumArgs
 argument_list|()
 argument_list|,
@@ -5149,6 +5826,114 @@ operator|(
 name|getExtraLocalData
 argument_list|()
 operator|)
+return|;
+block|}
+expr|}
+block|;   struct
+name|PackExpansionTypeLocInfo
+block|{
+name|SourceLocation
+name|EllipsisLoc
+block|; }
+block|;
+name|class
+name|PackExpansionTypeLoc
+operator|:
+name|public
+name|ConcreteTypeLoc
+operator|<
+name|UnqualTypeLoc
+block|,
+name|PackExpansionTypeLoc
+block|,
+name|PackExpansionType
+block|,
+name|PackExpansionTypeLocInfo
+operator|>
+block|{
+name|public
+operator|:
+name|SourceLocation
+name|getEllipsisLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|this
+operator|->
+name|getLocalData
+argument_list|()
+operator|->
+name|EllipsisLoc
+return|;
+block|}
+name|void
+name|setEllipsisLoc
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+block|{
+name|this
+operator|->
+name|getLocalData
+argument_list|()
+operator|->
+name|EllipsisLoc
+operator|=
+name|Loc
+block|;   }
+name|SourceRange
+name|getLocalSourceRange
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SourceRange
+argument_list|(
+name|getEllipsisLoc
+argument_list|()
+argument_list|,
+name|getEllipsisLoc
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|void
+name|initializeLocal
+argument_list|(
+argument|ASTContext&Context
+argument_list|,
+argument|SourceLocation Loc
+argument_list|)
+block|{
+name|setEllipsisLoc
+argument_list|(
+name|Loc
+argument_list|)
+block|;   }
+name|TypeLoc
+name|getPatternLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getInnerTypeLoc
+argument_list|()
+return|;
+block|}
+name|QualType
+name|getInnerType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|this
+operator|->
+name|getTypePtr
+argument_list|()
+operator|->
+name|getPattern
+argument_list|()
 return|;
 block|}
 expr|}

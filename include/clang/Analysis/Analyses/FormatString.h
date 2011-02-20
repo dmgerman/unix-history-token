@@ -1463,6 +1463,10 @@ operator|::
 name|FormatSpecifier
 block|{
 name|OptionalFlag
+name|HasThousandsGrouping
+block|;
+comment|// ''', POSIX extension.
+name|OptionalFlag
 name|IsLeftJustified
 block|;
 comment|// '-'
@@ -1494,6 +1498,11 @@ name|FormatSpecifier
 argument_list|(
 comment|/* isPrintf = */
 name|true
+argument_list|)
+block|,
+name|HasThousandsGrouping
+argument_list|(
+literal|"'"
 argument_list|)
 block|,
 name|IsLeftJustified
@@ -1546,6 +1555,23 @@ block|{
 name|CS
 operator|=
 name|cs
+block|;   }
+name|void
+name|setHasThousandsGrouping
+argument_list|(
+argument|const char *position
+argument_list|)
+block|{
+name|HasThousandsGrouping
+operator|=
+name|true
+block|;
+name|HasThousandsGrouping
+operator|.
+name|setPosition
+argument_list|(
+name|position
+argument_list|)
 block|;   }
 name|void
 name|setIsLeftJustified
@@ -1712,6 +1738,17 @@ block|;
 specifier|const
 name|OptionalFlag
 operator|&
+name|hasThousandsGrouping
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasThousandsGrouping
+return|;
+block|}
+specifier|const
+name|OptionalFlag
+operator|&
 name|isLeftJustified
 argument_list|()
 specifier|const
@@ -1812,6 +1849,11 @@ specifier|const
 block|;
 name|bool
 name|hasValidLeftJustified
+argument_list|()
+specifier|const
+block|;
+name|bool
+name|hasValidThousandsGroupingPrefix
 argument_list|()
 specifier|const
 block|;

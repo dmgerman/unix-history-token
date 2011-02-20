@@ -233,7 +233,7 @@ name|short
 operator|)
 name|BIG
 expr_stmt|;
-comment|// expected-warning {{implicit conversion loses integer precision}}
+comment|// expected-warning {{implicit conversion from 'short' to 'char' changes value}}
 name|c
 operator|=
 operator|(
@@ -241,7 +241,7 @@ name|int
 operator|)
 name|BIG
 expr_stmt|;
-comment|// expected-warning {{implicit conversion loses integer precision}}
+comment|// expected-warning {{implicit conversion from 'int' to 'char' changes value}}
 name|c
 operator|=
 operator|(
@@ -249,7 +249,7 @@ name|long
 operator|)
 name|BIG
 expr_stmt|;
-comment|// expected-warning {{implicit conversion loses integer precision}}
+comment|// expected-warning {{implicit conversion from 'long' to 'char' changes value}}
 name|s
 operator|=
 operator|(
@@ -271,7 +271,7 @@ name|int
 operator|)
 name|BIG
 expr_stmt|;
-comment|// expected-warning {{implicit conversion loses integer precision}}
+comment|// expected-warning {{implicit conversion from 'int' to 'short' changes value}}
 name|s
 operator|=
 operator|(
@@ -279,7 +279,7 @@ name|long
 operator|)
 name|BIG
 expr_stmt|;
-comment|// expected-warning {{implicit conversion loses integer precision}}
+comment|// expected-warning {{implicit conversion from 'long' to 'short' changes value}}
 name|i
 operator|=
 operator|(
@@ -308,7 +308,7 @@ name|long
 operator|)
 name|BIG
 expr_stmt|;
-comment|// expected-warning {{implicit conversion loses integer precision}}
+comment|// expected-warning {{implicit conversion from 'long' to 'int' changes value}}
 name|l
 operator|=
 operator|(
@@ -391,28 +391,28 @@ name|long
 operator|)
 name|BIG
 return|;
-comment|// expected-warning {{implicit conversion loses integer precision}}
+comment|// expected-warning {{implicit conversion from 'long long' to 'char' changes value}}
 return|return
 operator|(
 name|long
 operator|)
 name|BIG
 return|;
-comment|// expected-warning {{implicit conversion loses integer precision}}
+comment|// expected-warning {{implicit conversion from 'long' to 'char' changes value}}
 return|return
 operator|(
 name|int
 operator|)
 name|BIG
 return|;
-comment|// expected-warning {{implicit conversion loses integer precision}}
+comment|// expected-warning {{implicit conversion from 'int' to 'char' changes value}}
 return|return
 operator|(
 name|short
 operator|)
 name|BIG
 return|;
-comment|// expected-warning {{implicit conversion loses integer precision}}
+comment|// expected-warning {{implicit conversion from 'short' to 'char' changes value}}
 return|return
 operator|(
 name|char
@@ -472,21 +472,21 @@ name|long
 operator|)
 name|BIG
 return|;
-comment|// expected-warning {{implicit conversion loses integer precision}}
+comment|// expected-warning {{implicit conversion from 'long long' to 'short' changes value}}
 return|return
 operator|(
 name|long
 operator|)
 name|BIG
 return|;
-comment|// expected-warning {{implicit conversion loses integer precision}}
+comment|// expected-warning {{implicit conversion from 'long' to 'short' changes value}}
 return|return
 operator|(
 name|int
 operator|)
 name|BIG
 return|;
-comment|// expected-warning {{implicit conversion loses integer precision}}
+comment|// expected-warning {{implicit conversion from 'int' to 'short' changes value}}
 return|return
 operator|(
 name|short
@@ -551,14 +551,14 @@ name|long
 operator|)
 name|BIG
 return|;
-comment|// expected-warning {{implicit conversion loses integer precision}}
+comment|// expected-warning {{implicit conversion from 'long long' to 'int' changes value}}
 return|return
 operator|(
 name|long
 operator|)
 name|BIG
 return|;
-comment|// expected-warning {{implicit conversion loses integer precision}}
+comment|// expected-warning {{implicit conversion from 'long' to 'int' changes value}}
 return|return
 operator|(
 name|int
@@ -1555,7 +1555,7 @@ name|s
 init|=
 name|LONG_MAX
 decl_stmt|;
-comment|// expected-warning {{implicit conversion loses integer precision: 'long' to 'char'}}
+comment|// expected-warning {{implicit conversion from 'long' to 'char' changes value}}
 block|}
 end_function
 
@@ -1641,6 +1641,66 @@ operator|-
 literal|1
 expr_stmt|;
 comment|// expected-warning {{implicit conversion changes signedness}}
+block|}
+end_function
+
+begin_comment
+comment|//<rdar://problem/8232669>: don't warn about conversions required by
+end_comment
+
+begin_comment
+comment|// contexts in system headers
+end_comment
+
+begin_function
+name|void
+name|test_8232669
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|unsigned
+name|bitset
+index|[
+literal|20
+index|]
+decl_stmt|;
+name|SETBIT
+argument_list|(
+name|bitset
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|unsigned
+name|y
+init|=
+literal|50
+decl_stmt|;
+name|SETBIT
+argument_list|(
+name|bitset
+argument_list|,
+name|y
+argument_list|)
+expr_stmt|;
+define|#
+directive|define
+name|USER_SETBIT
+parameter_list|(
+name|set
+parameter_list|,
+name|bit
+parameter_list|)
+value|do { int i = bit; set[i/(8*sizeof(set[0]))] |= (1<< (i%(8*sizeof(set)))); } while(0)
+name|USER_SETBIT
+argument_list|(
+name|bitset
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning 2 {{implicit conversion changes signedness}}
 block|}
 end_function
 

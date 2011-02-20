@@ -14,7 +14,7 @@ name|int
 name|values
 index|[]
 decl_stmt|;
-comment|// expected-note 3{{initialized flexible array member 'values' is here}}
+comment|// expected-note 4{{initialized flexible array member 'values' is here}}
 block|}
 name|x
 init|=
@@ -78,7 +78,41 @@ literal|3
 block|}
 block|}
 decl_stmt|;
-comment|// expected-warning{{flexible array initialization is a GNU extension}}
+comment|// \
+comment|// expected-warning{{flexible array initialization is a GNU extension}} \
+comment|// expected-error {{non-static initialization of a variable with flexible array member}}
+name|struct
+name|one
+name|x3a
+init|=
+block|{
+literal|5
+block|}
+decl_stmt|;
+name|struct
+name|one
+name|x3b
+init|=
+block|{
+operator|.
+name|a
+operator|=
+literal|5
+block|}
+decl_stmt|;
+name|struct
+name|one
+name|x3c
+init|=
+block|{
+literal|5
+block|,
+block|{}
+block|}
+decl_stmt|;
+comment|// expected-warning{{use of GNU empty initializer extension}} \
+comment|// expected-warning{{flexible array initialization is a GNU extension}} \
+comment|// expected-warning{{zero size arrays are an extension}}
 block|}
 end_function
 
@@ -418,6 +452,90 @@ comment|// expected-warning{{'struct X' may not be used as an array element due 
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|// PR8217
+end_comment
+
+begin_struct
+struct|struct
+name|PR8217a
+block|{
+name|int
+name|i
+decl_stmt|;
+name|char
+name|v
+index|[]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_function
+name|void
+name|PR8217
+parameter_list|()
+block|{
+name|struct
+name|PR8217a
+name|foo1
+init|=
+block|{
+operator|.
+name|i
+operator|=
+literal|0
+block|,
+operator|.
+name|v
+operator|=
+literal|"foo"
+block|}
+decl_stmt|;
+comment|// expected-error {{non-static initialization of a variable with flexible array member}}
+name|struct
+name|PR8217a
+name|foo2
+init|=
+block|{
+operator|.
+name|i
+operator|=
+literal|0
+block|}
+decl_stmt|;
+name|struct
+name|PR8217a
+name|foo3
+init|=
+block|{
+operator|.
+name|i
+operator|=
+literal|0
+block|,
+operator|.
+name|v
+operator|=
+block|{
+literal|'b'
+block|,
+literal|'a'
+block|,
+literal|'r'
+block|,
+literal|'\0'
+block|}
+block|}
+decl_stmt|;
+comment|// expected-error {{non-static initialization of a variable with flexible array member}}
+name|struct
+name|PR8217a
+name|bar
+decl_stmt|;
+block|}
+end_function
 
 end_unit
 

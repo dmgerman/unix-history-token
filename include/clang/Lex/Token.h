@@ -176,7 +176,12 @@ comment|// This identifier may never be macro expanded.
 name|NeedsCleaning
 init|=
 literal|0x08
+block|,
 comment|// Contained an escaped newline or trigraph.
+name|LeadingEmptyMacro
+init|=
+literal|0x10
+comment|// Empty macro exists before this token.
 block|}
 enum|;
 name|tok
@@ -249,6 +254,29 @@ operator|)
 name|K
 return|;
 block|}
+comment|/// isAnyIdentifier - Return true if this is a raw identifier (when lexing
+comment|/// in raw mode) or a non-keyword identifier (when lexing in non-raw mode).
+name|bool
+name|isAnyIdentifier
+argument_list|()
+specifier|const
+block|{
+return|return
+name|is
+argument_list|(
+name|tok
+operator|::
+name|identifier
+argument_list|)
+operator|||
+name|is
+argument_list|(
+name|tok
+operator|::
+name|raw_identifier
+argument_list|)
+return|;
+block|}
 comment|/// isLiteral - Return true if this is a "literal", like a numeric
 comment|/// constant, string, etc.
 name|bool
@@ -298,27 +326,19 @@ name|isAnnotation
 argument_list|()
 specifier|const
 block|{
+define|#
+directive|define
+name|ANNOTATION
+parameter_list|(
+name|NAME
+parameter_list|)
+define|\
+value|if (is(tok::annot_##NAME)) \       return true;
+include|#
+directive|include
+file|"clang/Basic/TokenKinds.def"
 return|return
-name|is
-argument_list|(
-name|tok
-operator|::
-name|annot_typename
-argument_list|)
-operator|||
-name|is
-argument_list|(
-name|tok
-operator|::
-name|annot_cxxscope
-argument_list|)
-operator|||
-name|is
-argument_list|(
-name|tok
-operator|::
-name|annot_template_id
-argument_list|)
+name|false
 return|;
 block|}
 comment|/// getLocation - Return a source location identifier for the specified
@@ -545,11 +565,23 @@ specifier|const
 block|{
 name|assert
 argument_list|(
+name|isNot
+argument_list|(
+name|tok
+operator|::
+name|raw_identifier
+argument_list|)
+operator|&&
+literal|"getIdentifierInfo() on a tok::raw_identifier token!"
+argument_list|)
+block|;
+name|assert
+argument_list|(
 operator|!
 name|isAnnotation
 argument_list|()
 operator|&&
-literal|"Used IdentInfo on annotation token!"
+literal|"getIdentifierInfo() on an annotation token!"
 argument_list|)
 block|;
 if|if
@@ -583,6 +615,69 @@ name|void
 operator|*
 operator|)
 name|II
+expr_stmt|;
+block|}
+comment|/// getRawIdentifierData - For a raw identifier token (i.e., an identifier
+comment|/// lexed in raw mode), returns a pointer to the start of it in the text
+comment|/// buffer if known, null otherwise.
+specifier|const
+name|char
+operator|*
+name|getRawIdentifierData
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|is
+argument_list|(
+name|tok
+operator|::
+name|raw_identifier
+argument_list|)
+argument_list|)
+block|;
+return|return
+name|reinterpret_cast
+operator|<
+specifier|const
+name|char
+operator|*
+operator|>
+operator|(
+name|PtrData
+operator|)
+return|;
+block|}
+name|void
+name|setRawIdentifierData
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|Ptr
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|is
+argument_list|(
+name|tok
+operator|::
+name|raw_identifier
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|PtrData
+operator|=
+name|const_cast
+operator|<
+name|char
+operator|*
+operator|>
+operator|(
+name|Ptr
+operator|)
 expr_stmt|;
 block|}
 comment|/// getLiteralData - For a literal token (numeric constant, string, etc), this
@@ -838,6 +933,25 @@ operator|(
 name|Flags
 operator|&
 name|NeedsCleaning
+operator|)
+operator|?
+name|true
+operator|:
+name|false
+return|;
+block|}
+comment|/// \brief Return true if this token has an empty macro before it.
+comment|///
+name|bool
+name|hasLeadingEmptyMacro
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|Flags
+operator|&
+name|LeadingEmptyMacro
 operator|)
 operator|?
 name|true

@@ -26,7 +26,7 @@ argument_list|,
 name|int
 argument_list|)
 expr_stmt|;
-comment|// expected-error {{first argument to 'va_arg' is of type '__builtin_va_list const' and not 'va_list'}}
+comment|// expected-error {{first argument to 'va_arg' is of type 'const __builtin_va_list' and not 'va_list'}}
 block|}
 end_function
 

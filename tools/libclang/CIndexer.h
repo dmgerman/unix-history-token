@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- CIndexer.h - Clang-C Source Indexing Library -----------------------===//
+comment|//===- CIndexer.h - Clang-C Source Indexing Library -------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -78,7 +78,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/System/Path.h"
+file|"llvm/Support/Path.h"
 end_include
 
 begin_include
@@ -89,40 +89,11 @@ end_include
 
 begin_decl_stmt
 name|namespace
-name|clang
-block|{
-name|namespace
-name|cxstring
-block|{
-name|CXString
-name|createCXString
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|String
-parameter_list|,
-name|bool
-name|DupString
-init|=
-name|false
-parameter_list|)
-function_decl|;
-name|CXString
-name|createCXString
-argument_list|(
 name|llvm
-operator|::
-name|StringRef
-name|String
-argument_list|,
-name|bool
-name|DupString
-operator|=
-name|true
-argument_list|)
+block|{
+name|class
+name|CrashRecoveryContext
 decl_stmt|;
-block|}
 block|}
 end_decl_stmt
 
@@ -130,9 +101,6 @@ begin_decl_stmt
 name|class
 name|CIndexer
 block|{
-name|bool
-name|UseExternalASTGeneration
-decl_stmt|;
 name|bool
 name|OnlyLocalDecls
 decl_stmt|;
@@ -144,18 +112,18 @@ operator|::
 name|sys
 operator|::
 name|Path
-name|ClangPath
+name|ResourcesPath
+expr_stmt|;
+name|std
+operator|::
+name|string
+name|WorkingDir
 expr_stmt|;
 name|public
 label|:
 name|CIndexer
 argument_list|()
 operator|:
-name|UseExternalASTGeneration
-argument_list|(
-name|false
-argument_list|)
-operator|,
 name|OnlyLocalDecls
 argument_list|(
 name|false
@@ -215,38 +183,6 @@ operator|=
 name|Display
 expr_stmt|;
 block|}
-name|bool
-name|getUseExternalASTGeneration
-argument_list|()
-specifier|const
-block|{
-return|return
-name|UseExternalASTGeneration
-return|;
-block|}
-name|void
-name|setUseExternalASTGeneration
-parameter_list|(
-name|bool
-name|Value
-parameter_list|)
-block|{
-name|UseExternalASTGeneration
-operator|=
-name|Value
-expr_stmt|;
-block|}
-comment|/// \brief Get the path of the clang binary.
-specifier|const
-name|llvm
-operator|::
-name|sys
-operator|::
-name|Path
-operator|&
-name|getClangPath
-argument_list|()
-expr_stmt|;
 comment|/// \brief Get the path of the clang resource files.
 name|std
 operator|::
@@ -254,6 +190,35 @@ name|string
 name|getClangResourcesPath
 argument_list|()
 expr_stmt|;
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|getWorkingDirectory
+argument_list|()
+specifier|const
+block|{
+return|return
+name|WorkingDir
+return|;
+block|}
+name|void
+name|setWorkingDirectory
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Dir
+argument_list|)
+block|{
+name|WorkingDir
+operator|=
+name|Dir
+expr_stmt|;
+block|}
 block|}
 end_decl_stmt
 
@@ -300,6 +265,53 @@ name|Path
 operator|>
 operator|&
 name|TemporaryFiles
+argument_list|)
+decl_stmt|;
+comment|/// \brief Return the current size to request for "safety".
+name|unsigned
+name|GetSafetyThreadStackSize
+parameter_list|()
+function_decl|;
+comment|/// \brief Set the current size to request for "safety" (or 0, if safety
+comment|/// threads should not be used).
+name|void
+name|SetSafetyThreadStackSize
+parameter_list|(
+name|unsigned
+name|Value
+parameter_list|)
+function_decl|;
+comment|/// \brief Execution the given code "safely", using crash recovery or safety
+comment|/// threads when possible.
+comment|///
+comment|/// \return False if a crash was detected.
+name|bool
+name|RunSafely
+argument_list|(
+name|llvm
+operator|::
+name|CrashRecoveryContext
+operator|&
+name|CRC
+argument_list|,
+name|void
+argument_list|(
+operator|*
+name|Fn
+argument_list|)
+argument_list|(
+name|void
+operator|*
+argument_list|)
+argument_list|,
+name|void
+operator|*
+name|UserData
+argument_list|,
+name|unsigned
+name|Size
+operator|=
+literal|0
 argument_list|)
 decl_stmt|;
 block|}

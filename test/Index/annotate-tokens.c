@@ -121,11 +121,38 @@ argument_list|,
 name|Int
 argument_list|)
 expr_stmt|;
+name|struct
+name|X
+name|x
+init|=
+block|{
+literal|0
+block|,
+literal|0
+block|}
+decl_stmt|;
+do|do
+block|{
+name|x
+operator|.
+name|a
+operator|++
+expr_stmt|;
+block|}
+do|while
+condition|(
+name|x
+operator|.
+name|a
+operator|<
+literal|10
+condition|)
+do|;
 block|}
 end_function
 
 begin_comment
-comment|// RUN: c-index-test -test-annotate-tokens=%s:4:1:17:1 %s | FileCheck %s
+comment|// RUN: c-index-test -test-annotate-tokens=%s:4:1:22:1 %s | FileCheck %s
 end_comment
 
 begin_comment
@@ -354,6 +381,66 @@ end_comment
 
 begin_comment
 comment|// CHECK: Identifier: "Int" [16:43 - 16:46] TypeRef=Int:12:13
+end_comment
+
+begin_comment
+comment|// CHECK: Keyword: "struct" [18:3 - 18:9] UnexposedStmt=
+end_comment
+
+begin_comment
+comment|// CHECK: Identifier: "X" [18:10 - 18:11] TypeRef=struct X:2:8
+end_comment
+
+begin_comment
+comment|// CHECK: Identifier: "x" [18:12 - 18:13] VarDecl=x:18:12 (Definition)
+end_comment
+
+begin_comment
+comment|// CHECK: Keyword: "do" [19:3 - 19:5] UnexposedStmt=
+end_comment
+
+begin_comment
+comment|// CHECK: Identifier: "x" [20:5 - 20:6] DeclRefExpr=x:18:12
+end_comment
+
+begin_comment
+comment|// CHECK: Punctuation: "." [20:6 - 20:7] MemberRefExpr=a:2:16
+end_comment
+
+begin_comment
+comment|// CHECK: Identifier: "a" [20:7 - 20:8] MemberRefExpr=a:2:16
+end_comment
+
+begin_comment
+comment|// CHECK: Punctuation: "++" [20:8 - 20:10] UnexposedExpr=
+end_comment
+
+begin_comment
+comment|// CHECK: Punctuation: ";" [20:10 - 20:11] UnexposedStmt=
+end_comment
+
+begin_comment
+comment|// CHECK: Punctuation: "}" [21:3 - 21:4] UnexposedStmt=
+end_comment
+
+begin_comment
+comment|// CHECK: Keyword: "while" [21:5 - 21:10] UnexposedStmt=
+end_comment
+
+begin_comment
+comment|// CHECK: Punctuation: "(" [21:11 - 21:12] UnexposedStmt=
+end_comment
+
+begin_comment
+comment|// CHECK: Identifier: "x" [21:12 - 21:13] DeclRefExpr=x:18:12
+end_comment
+
+begin_comment
+comment|// CHECK: Punctuation: "." [21:13 - 21:14] MemberRefExpr=a:2:16
+end_comment
+
+begin_comment
+comment|// CHECK: Identifier: "a" [21:14 - 21:15] MemberRefExpr=a:2:16
 end_comment
 
 begin_comment

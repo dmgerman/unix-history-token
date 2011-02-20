@@ -66,7 +66,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-name|char
+name|int
 name|c
 index|[]
 init|=
@@ -141,7 +141,7 @@ literal|"-Wmultichar"
 end_pragma
 
 begin_decl_stmt
-name|char
+name|int
 name|d
 init|=
 literal|'df'
@@ -153,7 +153,7 @@ comment|// no warning.
 end_comment
 
 begin_decl_stmt
-name|char
+name|int
 name|e
 init|=
 literal|'abcd'
@@ -174,7 +174,7 @@ literal|"-Wfour-char-constants"
 end_pragma
 
 begin_decl_stmt
-name|char
+name|int
 name|f
 init|=
 literal|'abcd'

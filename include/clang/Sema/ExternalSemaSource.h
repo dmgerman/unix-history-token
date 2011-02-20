@@ -68,13 +68,16 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Sema/ObjCMethodList.h"
+file|<utility>
 end_include
 
 begin_decl_stmt
 name|namespace
 name|clang
 block|{
+struct_decl|struct
+name|ObjCMethodList
+struct_decl|;
 name|class
 name|Sema
 decl_stmt|;
@@ -136,20 +139,7 @@ name|ReadMethodPool
 argument_list|(
 argument|Selector Sel
 argument_list|)
-block|{
-return|return
-name|std
-operator|::
-name|pair
-operator|<
-name|ObjCMethodList
-operator|,
-name|ObjCMethodList
-operator|>
-operator|(
-operator|)
-return|;
-block|}
+block|;
 comment|// isa/cast/dyn_cast support
 specifier|static
 name|bool

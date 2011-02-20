@@ -91,7 +91,7 @@ name|class
 name|Attr
 decl_stmt|;
 name|class
-name|CXXBaseOrMemberInitializer
+name|CXXCtorInitializer
 decl_stmt|;
 name|class
 name|CXXBaseSpecifier
@@ -488,6 +488,33 @@ end_block
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|class
+name|T
+operator|>
+expr|struct
+name|isPodLike
+operator|<
+name|clang
+operator|::
+name|OpaquePtr
+operator|<
+name|T
+operator|>
+expr|>
+block|{
+specifier|static
+specifier|const
+name|bool
+name|value
+operator|=
+name|true
+block|; }
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 unit|}
@@ -2009,7 +2036,7 @@ operator|>
 expr|struct
 name|IsResultPtrLowBitFree
 operator|<
-name|CXXBaseOrMemberInitializer
+name|CXXCtorInitializer
 operator|*
 operator|>
 block|{
@@ -2098,7 +2125,7 @@ begin_typedef
 typedef|typedef
 name|ActionResult
 operator|<
-name|CXXBaseOrMemberInitializer
+name|CXXCtorInitializer
 operator|*
 operator|>
 name|MemInitResult

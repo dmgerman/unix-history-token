@@ -16,7 +16,7 @@ comment|// RUN:   -c %s 2> %t
 end_comment
 
 begin_comment
-comment|// RUN: FileCheck< %t %s
+comment|// RUN: FileCheck --check-prefix=CHECK-COMPILE< %t %s
 end_comment
 
 begin_comment
@@ -24,11 +24,31 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CHECK: clang{{.*}}" "-cc1" "-triple" "i386-apple-darwin8.0.0"
+comment|// CHECK-COMPILE: clang{{.*}}" "-cc1" "-triple" "i386-apple-darwin8.0.0"
 end_comment
 
 begin_comment
-comment|// CHECK: clang{{.*}}" "-cc1" "-triple" "x86_64-apple-darwin9.0.0"
+comment|// CHECK-COMPILE: clang{{.*}}" "-cc1" "-triple" "x86_64-apple-darwin9.0.0"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -ccc-host-triple x86_64-apple-darwin10 -### \
+end_comment
+
+begin_comment
+comment|// RUN:   -arch i386 -Xarch_i386 -Wl,-some-linker-arg -filelist X 2> %t
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck --check-prefix=CHECK-LINK< %t %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK-LINK: ld"{{.*}} "-some-linker-arg"
 end_comment
 
 end_unit

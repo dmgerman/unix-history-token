@@ -112,5 +112,16 @@ function_decl|;
 block|}
 end_extern
 
+begin_decl_stmt
+specifier|inline
+name|namespace
+name|N4
+block|{
+struct_decl|struct
+name|MemberOfN4
+struct_decl|;
+block|}
+end_decl_stmt
+
 end_unit
 

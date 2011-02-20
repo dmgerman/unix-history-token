@@ -585,5 +585,71 @@ expr_stmt|;
 block|}
 end_function
 
+begin_struct
+struct|struct
+name|__attribute__
+argument_list|(
+argument|(packed, aligned)
+argument_list|)
+name|s3
+block|{
+name|short
+name|aShort
+decl_stmt|;
+name|int
+name|anInt
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|// CHECK-GLOBAL: @s3_1 = global i32 2
+end_comment
+
+begin_decl_stmt
+name|int
+name|s3_1
+init|=
+name|__alignof
+argument_list|(
+operator|(
+operator|(
+expr|struct
+name|s3
+operator|*
+operator|)
+literal|0
+operator|)
+operator|->
+name|anInt
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// CHECK-FUNCTIONS: define i32 @test3(
+end_comment
+
+begin_function
+name|int
+name|test3
+parameter_list|(
+name|struct
+name|s3
+modifier|*
+name|ptr
+parameter_list|)
+block|{
+comment|// CHECK-FUNCTIONS:      [[PTR:%.*]] = getelementptr inbounds {{%.*}}* {{%.*}}, i32 0, i32 1
+comment|// CHECK-FUNCTIONS-NEXT: load i32* [[PTR]], align 2
+return|return
+name|ptr
+operator|->
+name|anInt
+return|;
+block|}
+end_function
+
 end_unit
 

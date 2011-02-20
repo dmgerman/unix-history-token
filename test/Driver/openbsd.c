@@ -12,10 +12,6 @@ comment|// CHECK: clang{{.*}}" "-cc1" "-triple" "i686-pc-openbsd"
 end_comment
 
 begin_comment
-comment|// CHECK: as{{.*}}" "-o" "{{.*}}.o" "{{.*}}.s
-end_comment
-
-begin_comment
 comment|// CHECK: ld{{.*}}" "-e" "__start" "--eh-frame-hdr" "-Bdynamic" "-dynamic-linker" "{{.*}}ld.so" "-o" "a.out" "{{.*}}crt0.o" "{{.*}}crtbegin.o" "{{.*}}.o" "-lgcc" "-lc" "-lgcc" "{{.*}}crtend.o"
 end_comment
 

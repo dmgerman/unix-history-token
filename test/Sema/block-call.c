@@ -90,7 +90,7 @@ parameter_list|()
 init|=
 name|IFP
 function_decl|;
-comment|// expected-error {{incompatible block pointer types initializing 'int const (^)()' with an expression of type 'int (^)()'}}
+comment|// OK -  initializing 'const int (^)()' with an expression of type 'int (^)()'}}
 specifier|const
 name|int
 function_decl|(

@@ -4,8 +4,14 @@ comment|// RUN: %clang_cc1 -emit-llvm -o -  %s -fpascal-strings -fshort-wchar  |
 end_comment
 
 begin_comment
-comment|// rdar: // 8020384
+comment|// rdar://8020384
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
 
 begin_function_decl
 specifier|extern
@@ -132,6 +138,41 @@ end_comment
 begin_comment
 comment|// CHECK: c"\04\00g\00o\00r\00f\00\00\00"
 end_comment
+
+begin_comment
+comment|// PR8856 - -fshort-wchar makes wchar_t be unsigned.
+end_comment
+
+begin_comment
+comment|// CHECK: @test2
+end_comment
+
+begin_comment
+comment|// CHECK: volatile store i32 1, i32* %isUnsigned
+end_comment
+
+begin_function
+name|void
+name|test2
+parameter_list|()
+block|{
+specifier|volatile
+name|int
+name|isUnsigned
+init|=
+operator|(
+name|wchar_t
+operator|)
+operator|-
+literal|1
+operator|>
+operator|(
+name|wchar_t
+operator|)
+literal|0
+decl_stmt|;
+block|}
+end_function
 
 end_unit
 

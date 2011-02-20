@@ -107,5 +107,37 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|// radar://9008853
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|P
+block|{
+name|int
+name|x
+decl_stmt|;
+block|}
+name|PS
+typedef|;
+end_typedef
+
+begin_empty
+empty|# 1 ""
+end_empty
+
+begin_function
+name|void
+name|foo
+parameter_list|()
+block|{
+name|PS
+name|p2
+decl_stmt|;
+block|}
+end_function
+
 end_unit
 

@@ -100,6 +100,17 @@ block|,
 name|UTT_IsLiteral
 block|}
 enum|;
+comment|/// BinaryTypeTrait - Names for the binary type traits.
+enum|enum
+name|BinaryTypeTrait
+block|{
+name|BTT_IsBaseOf
+block|,
+name|BTT_TypeCompatible
+block|,
+name|BTT_IsConvertibleTo
+block|}
+enum|;
 block|}
 end_decl_stmt
 

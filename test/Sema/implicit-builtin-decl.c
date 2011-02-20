@@ -98,7 +98,7 @@ name|int
 argument_list|)
 decl_stmt|;
 comment|// expected-warning{{incompatible redeclaration of library function 'strcpy'}} \
-comment|// expected-note{{'strcpy' is a builtin with type 'char *(char *, char const *)'}}
+comment|// expected-note{{'strcpy' is a builtin with type 'char *(char *, const char *)'}}
 block|}
 end_function
 
@@ -114,7 +114,7 @@ argument_list|,
 literal|"foo"
 argument_list|)
 expr_stmt|;
-comment|// expected-error{{implicit declaration of 'fprintf' requires inclusion of the header<stdio.h>}} \
+comment|// expected-warning{{declaration of built-in function 'fprintf' requires inclusion of the header<stdio.h>}} \
 name|expected
 operator|-
 name|warning
@@ -243,6 +243,21 @@ name|snprintf
 parameter_list|()
 block|{ }
 end_function
+
+begin_comment
+comment|// PR8316
+end_comment
+
+begin_function_decl
+name|void
+name|longjmp
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// expected-warning{{declaration of built-in function 'longjmp' requires inclusion of the header<setjmp.h>}}
+end_comment
 
 end_unit
 

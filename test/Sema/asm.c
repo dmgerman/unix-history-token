@@ -83,7 +83,7 @@ name|addr
 parameter_list|)
 block|{
 asm|asm ("nop" : : "r"(*addr));
-comment|// expected-error {{invalid type 'void const volatile' in asm input for constraint 'r'}}
+comment|// expected-error {{invalid type 'const volatile void' in asm input for constraint 'r'}}
 asm|asm ("nop" : : "m"(*addr));
 asm|asm ("nop" : : "r"(test4(addr)));
 comment|// expected-error {{invalid type 'void' in asm input for constraint 'r'}}
@@ -193,6 +193,128 @@ end_asm
 begin_comment
 comment|// expected-warning {{meaningless 'volatile' on asm outside function}}
 end_comment
+
+begin_comment
+comment|// PR3904
+end_comment
+
+begin_function
+name|void
+name|test8
+parameter_list|(
+name|int
+name|i
+parameter_list|)
+block|{
+comment|// A number in an input constraint can't point to a read-write constraint.
+asm|asm("" : "+r" (i), "=r"(i) :  "0" (i));
+comment|// expected-error{{invalid input constraint '0' in asm}}
+block|}
+end_function
+
+begin_comment
+comment|// PR3905
+end_comment
+
+begin_function
+name|void
+name|test9
+parameter_list|(
+name|int
+name|i
+parameter_list|)
+block|{
+asm|asm("" : [foo] "=r" (i), "=r"(i) : "1[foo]"(i));
+comment|// expected-error{{invalid input constraint '1[foo]' in asm}}
+asm|asm("" : [foo] "=r" (i), "=r"(i) : "[foo]1"(i));
+comment|// expected-error{{invalid input constraint '[foo]1' in asm}}
+block|}
+end_function
+
+begin_decl_stmt
+specifier|register
+name|int
+name|g
+name|asm
+argument_list|(
+literal|"dx"
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error{{global register variables are not supported}}
+end_comment
+
+begin_function
+name|void
+name|test10
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+specifier|static
+name|int
+name|g
+name|asm
+argument_list|(
+literal|"g_asm"
+argument_list|)
+init|=
+literal|0
+decl_stmt|;
+specifier|extern
+name|int
+name|gg
+name|asm
+argument_list|(
+literal|"gg_asm"
+argument_list|)
+decl_stmt|;
+name|__private_extern__
+name|int
+name|ggg
+name|asm
+argument_list|(
+literal|"ggg_asm"
+argument_list|)
+decl_stmt|;
+name|int
+name|a
+name|asm
+argument_list|(
+literal|"a_asm"
+argument_list|)
+decl_stmt|;
+comment|// expected-warning{{ignored asm label 'a_asm' on automatic variable}}
+specifier|auto
+name|int
+name|aa
+name|asm
+argument_list|(
+literal|"aa_asm"
+argument_list|)
+decl_stmt|;
+comment|// expected-warning{{ignored asm label 'aa_asm' on automatic variable}}
+specifier|register
+name|int
+name|r
+name|asm
+argument_list|(
+literal|"cx"
+argument_list|)
+decl_stmt|;
+specifier|register
+name|int
+name|rr
+name|asm
+argument_list|(
+literal|"rr_asm"
+argument_list|)
+decl_stmt|;
+comment|// expected-error{{unknown register name 'rr_asm' in asm}}
+block|}
+end_function
 
 end_unit
 

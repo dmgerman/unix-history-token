@@ -65,7 +65,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: @__func__.__main_block_invoke_0 = private constant [22 x i8] c"__main_block_invoke_0\00"
+comment|// CHECK: @__func__.__main_block_invoke_0 = private unnamed_addr constant [22 x i8] c"__main_block_invoke_0\00"
 end_comment
 
 begin_comment

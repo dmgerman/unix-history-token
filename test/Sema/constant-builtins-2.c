@@ -298,5 +298,47 @@ name|bi0
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|// Strings
+end_comment
+
+begin_decl_stmt
+name|int
+name|array1
+index|[
+name|__builtin_strlen
+argument_list|(
+literal|"ab\0cd"
+argument_list|)
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|array2
+index|[
+operator|(
+sizeof|sizeof
+argument_list|(
+name|array1
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+operator|)
+operator|==
+literal|2
+condition|?
+literal|1
+else|:
+operator|-
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 

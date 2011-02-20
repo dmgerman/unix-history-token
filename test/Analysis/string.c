@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-experimental-internal-checks -analyzer-check-objc-mem -analyzer-store=region -analyzer-experimental-checks -verify %s
+comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core.experimental.CString -analyzer-checker=core.experimental.UnreachableCode -analyzer-check-objc-mem -analyzer-store=region -verify %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -DUSE_BUILTINS -analyzer-experimental-internal-checks -analyzer-check-objc-mem -analyzer-store=region -analyzer-experimental-checks -verify %s
+comment|// RUN: %clang_cc1 -analyze -DUSE_BUILTINS -analyzer-checker=core.experimental.CString -analyzer-checker=core.experimental.UnreachableCode -analyzer-check-objc-mem -analyzer-store=region -verify %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -DVARIANT -analyzer-experimental-internal-checks -analyzer-check-objc-mem -analyzer-store=region -analyzer-experimental-checks -verify %s
+comment|// RUN: %clang_cc1 -analyze -DVARIANT -analyzer-checker=core.experimental.CString -analyzer-checker=core.experimental.UnreachableCode -analyzer-check-objc-mem -analyzer-store=region -verify %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -DUSE_BUILTINS -DVARIANT -analyzer-experimental-internal-checks -analyzer-check-objc-mem -analyzer-store=region -analyzer-experimental-checks -verify %s
+comment|// RUN: %clang_cc1 -analyze -DUSE_BUILTINS -DVARIANT -analyzer-checker=core.experimental.CString -analyzer-checker=core.experimental.UnreachableCode -analyzer-check-objc-mem -analyzer-store=region -verify %s
 end_comment
 
 begin_comment

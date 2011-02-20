@@ -84,7 +84,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/System/DataTypes.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_include
@@ -194,6 +194,12 @@ name|PointerAlign
 decl_stmt|;
 name|unsigned
 name|char
+name|BoolWidth
+decl_stmt|,
+name|BoolAlign
+decl_stmt|;
+name|unsigned
+name|char
 name|IntWidth
 decl_stmt|,
 name|IntAlign
@@ -243,6 +249,11 @@ specifier|const
 name|char
 modifier|*
 name|UserLabelPrefix
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|MCountName
 decl_stmt|;
 specifier|const
 name|llvm
@@ -520,14 +531,14 @@ decl|const
 decl_stmt|;
 comment|/// isTypeSigned - Return whether an integer types is signed. Returns true if
 comment|/// the type is signed; false otherwise.
+specifier|static
 name|bool
 name|isTypeSigned
-argument_list|(
+parameter_list|(
 name|IntType
 name|T
-argument_list|)
-decl|const
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// getPointerWidth - Return the width of pointers on this target, for the
 comment|/// specified address space.
 name|uint64_t
@@ -576,34 +587,22 @@ comment|/// getBoolWidth/Align - Return the size of '_Bool' and C++ 'bool' for t
 comment|/// target, in bits.
 name|unsigned
 name|getBoolWidth
-argument_list|(
-name|bool
-name|isWide
-operator|=
-name|false
-argument_list|)
-decl|const
+argument_list|()
+specifier|const
 block|{
 return|return
-literal|8
+name|BoolWidth
 return|;
 block|}
-comment|// FIXME
 name|unsigned
 name|getBoolAlign
-argument_list|(
-name|bool
-name|isWide
-operator|=
-name|false
-argument_list|)
-decl|const
+argument_list|()
+specifier|const
 block|{
 return|return
-literal|8
+name|BoolAlign
 return|;
 block|}
-comment|// FIXME
 name|unsigned
 name|getCharWidth
 argument_list|()
@@ -931,6 +930,18 @@ specifier|const
 block|{
 return|return
 name|UserLabelPrefix
+return|;
+block|}
+comment|/// MCountName - This returns name of the mcount instrumentation function.
+specifier|const
+name|char
+operator|*
+name|getMCountName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MCountName
 return|;
 block|}
 name|bool
@@ -1407,6 +1418,21 @@ argument|const char Constraint
 argument_list|)
 specifier|const
 block|{
+comment|// 'p' defaults to 'r', but can be overridden by targets.
+if|if
+condition|(
+name|Constraint
+operator|==
+literal|'p'
+condition|)
+return|return
+name|std
+operator|::
+name|string
+argument_list|(
+literal|"r"
+argument_list|)
+return|;
 return|return
 name|std
 operator|::
@@ -1973,11 +1999,14 @@ init|=
 literal|0
 decl_stmt|;
 block|}
-empty_stmt|;
-block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
+unit|}
 comment|// end namespace clang
 end_comment
 

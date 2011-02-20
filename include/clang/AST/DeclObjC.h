@@ -106,7 +106,7 @@ name|class
 name|ObjCPropertyImplDecl
 decl_stmt|;
 name|class
-name|CXXBaseOrMemberInitializer
+name|CXXCtorInitializer
 decl_stmt|;
 name|class
 name|ObjCListBase
@@ -2025,6 +2025,7 @@ block|{
 comment|/// TypeForDecl - This indicates the Type object that represents this
 comment|/// TypeDecl.  It is a cache maintained by ASTContext::getObjCInterfaceType
 name|mutable
+specifier|const
 name|Type
 operator|*
 name|TypeForDecl
@@ -2049,8 +2050,11 @@ name|ObjCProtocolDecl
 operator|>
 name|AllReferencedProtocols
 block|;
-comment|/// List of categories defined for this class.
-comment|/// FIXME: Why is this a linked list??
+comment|/// \brief List of categories and class extensions defined for this class.
+comment|///
+comment|/// Categories are stored as a linked list in the AST, since the categories
+comment|/// and class extensions come long after the initial interface declaration,
+comment|/// and we avoid dynamically-resized arrays in the AST whereever possible.
 name|ObjCCategoryDecl
 operator|*
 name|CategoryList
@@ -2073,6 +2077,14 @@ operator|:
 literal|1
 block|;
 comment|// true - no @interface for @implementation
+comment|/// \brief Indicates that the contents of this Objective-C class will be
+comment|/// completed by the external AST source when required.
+name|mutable
+name|bool
+name|ExternallyCompleted
+operator|:
+literal|1
+block|;
 name|SourceLocation
 name|ClassLoc
 block|;
@@ -2100,6 +2112,11 @@ argument_list|,
 argument|bool isInternal
 argument_list|)
 block|;
+name|void
+name|LoadExternalDefinition
+argument_list|()
+specifier|const
+block|;
 name|public
 operator|:
 specifier|static
@@ -2122,6 +2139,13 @@ argument_list|,
 argument|bool isInternal = false
 argument_list|)
 block|;
+comment|/// \brief Indicate that this Objective-C class is complete, but that
+comment|/// the external AST source will be responsible for filling in its contents
+comment|/// when a complete class is required.
+name|void
+name|setExternallyCompleted
+argument_list|()
+block|;
 specifier|const
 name|ObjCProtocolList
 operator|&
@@ -2129,101 +2153,105 @@ name|getReferencedProtocols
 argument_list|()
 specifier|const
 block|{
+if|if
+condition|(
+name|ExternallyCompleted
+condition|)
+name|LoadExternalDefinition
+argument_list|()
+expr_stmt|;
 return|return
 name|ReferencedProtocols
 return|;
 block|}
+end_decl_stmt
+
+begin_expr_stmt
 name|ObjCImplementationDecl
 operator|*
 name|getImplementation
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_function_decl
 name|void
 name|setImplementation
-argument_list|(
+parameter_list|(
 name|ObjCImplementationDecl
-operator|*
+modifier|*
 name|ImplD
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
 name|ObjCCategoryDecl
-operator|*
+modifier|*
 name|FindCategoryDeclaration
 argument_list|(
-argument|IdentifierInfo *CategoryId
-argument_list|)
-specifier|const
-block|;
-comment|// Get the local instance/class method declared in a category.
-name|ObjCMethodDecl
+name|IdentifierInfo
 operator|*
+name|CategoryId
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// Get the local instance/class method declared in a category.
+end_comment
+
+begin_decl_stmt
+name|ObjCMethodDecl
+modifier|*
 name|getCategoryInstanceMethod
 argument_list|(
-argument|Selector Sel
+name|Selector
+name|Sel
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|ObjCMethodDecl
-operator|*
+modifier|*
 name|getCategoryClassMethod
 argument_list|(
-argument|Selector Sel
+name|Selector
+name|Sel
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|ObjCMethodDecl
-operator|*
+modifier|*
 name|getCategoryMethod
 argument_list|(
-argument|Selector Sel
+name|Selector
+name|Sel
 argument_list|,
-argument|bool isInstance
+name|bool
+name|isInstance
 argument_list|)
-specifier|const
+decl|const
 block|{
 return|return
 name|isInstance
-operator|?
+condition|?
 name|getInstanceMethod
 argument_list|(
 name|Sel
 argument_list|)
-operator|:
+else|:
 name|getClassMethod
 argument_list|(
 name|Sel
 argument_list|)
-return|;
-block|}
-typedef|typedef
-name|ObjCProtocolList
-operator|::
-name|iterator
-name|protocol_iterator
-expr_stmt|;
-name|protocol_iterator
-name|protocol_begin
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ReferencedProtocols
-operator|.
-name|begin
-argument_list|()
-return|;
-block|}
-name|protocol_iterator
-name|protocol_end
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ReferencedProtocols
-operator|.
-name|end
-argument_list|()
 return|;
 block|}
 end_decl_stmt
@@ -2232,10 +2260,70 @@ begin_typedef
 typedef|typedef
 name|ObjCProtocolList
 operator|::
+name|iterator
+name|protocol_iterator
+expr_stmt|;
+end_typedef
+
+begin_expr_stmt
+name|protocol_iterator
+name|protocol_begin
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|ExternallyCompleted
+condition|)
+name|LoadExternalDefinition
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_return
+return|return
+name|ReferencedProtocols
+operator|.
+name|begin
+argument_list|()
+return|;
+end_return
+
+begin_macro
+unit|}   protocol_iterator
+name|protocol_end
+argument_list|()
+end_macro
+
+begin_expr_stmt
+specifier|const
+block|{
+if|if
+condition|(
+name|ExternallyCompleted
+condition|)
+name|LoadExternalDefinition
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_return
+return|return
+name|ReferencedProtocols
+operator|.
+name|end
+argument_list|()
+return|;
+end_return
+
+begin_expr_stmt
+unit|}    typedef
+name|ObjCProtocolList
+operator|::
 name|loc_iterator
 name|protocol_loc_iterator
 expr_stmt|;
-end_typedef
+end_expr_stmt
 
 begin_expr_stmt
 name|protocol_loc_iterator
@@ -2243,32 +2331,53 @@ name|protocol_loc_begin
 argument_list|()
 specifier|const
 block|{
+if|if
+condition|(
+name|ExternallyCompleted
+condition|)
+name|LoadExternalDefinition
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 name|ReferencedProtocols
 operator|.
 name|loc_begin
 argument_list|()
 return|;
-block|}
-end_expr_stmt
+end_return
 
-begin_expr_stmt
-name|protocol_loc_iterator
+begin_macro
+unit|}    protocol_loc_iterator
 name|protocol_loc_end
 argument_list|()
+end_macro
+
+begin_expr_stmt
 specifier|const
 block|{
+if|if
+condition|(
+name|ExternallyCompleted
+condition|)
+name|LoadExternalDefinition
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 name|ReferencedProtocols
 operator|.
 name|loc_end
 argument_list|()
 return|;
-block|}
-end_expr_stmt
+end_return
 
-begin_typedef
-typedef|typedef
+begin_expr_stmt
+unit|}      typedef
 name|ObjCList
 operator|<
 name|ObjCProtocolDecl
@@ -2277,7 +2386,7 @@ operator|::
 name|iterator
 name|all_protocol_iterator
 expr_stmt|;
-end_typedef
+end_expr_stmt
 
 begin_expr_stmt
 name|all_protocol_iterator
@@ -2285,55 +2394,76 @@ name|all_referenced_protocol_begin
 argument_list|()
 specifier|const
 block|{
+if|if
+condition|(
+name|ExternallyCompleted
+condition|)
+name|LoadExternalDefinition
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 name|AllReferencedProtocols
 operator|.
 name|empty
 argument_list|()
-operator|?
+condition|?
 name|protocol_begin
 argument_list|()
-operator|:
+else|:
 name|AllReferencedProtocols
 operator|.
 name|begin
 argument_list|()
 return|;
-block|}
-end_expr_stmt
+end_return
 
-begin_expr_stmt
-name|all_protocol_iterator
+begin_macro
+unit|}   all_protocol_iterator
 name|all_referenced_protocol_end
 argument_list|()
+end_macro
+
+begin_expr_stmt
 specifier|const
 block|{
+if|if
+condition|(
+name|ExternallyCompleted
+condition|)
+name|LoadExternalDefinition
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 name|AllReferencedProtocols
 operator|.
 name|empty
 argument_list|()
-operator|?
+condition|?
 name|protocol_end
 argument_list|()
-operator|:
+else|:
 name|AllReferencedProtocols
 operator|.
 name|end
 argument_list|()
 return|;
-block|}
-end_expr_stmt
+end_return
 
-begin_typedef
-typedef|typedef
+begin_expr_stmt
+unit|}    typedef
 name|specific_decl_iterator
 operator|<
 name|ObjCIvarDecl
 operator|>
 name|ivar_iterator
 expr_stmt|;
-end_typedef
+end_expr_stmt
 
 begin_expr_stmt
 name|ivar_iterator
@@ -2537,27 +2667,37 @@ name|getSuperClass
 argument_list|()
 specifier|const
 block|{
+if|if
+condition|(
+name|ExternallyCompleted
+condition|)
+name|LoadExternalDefinition
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 name|SuperClass
 return|;
-block|}
-end_expr_stmt
+end_return
 
-begin_function
-name|void
+begin_macro
+unit|}      void
 name|setSuperClass
-parameter_list|(
-name|ObjCInterfaceDecl
-modifier|*
-name|superCls
-parameter_list|)
+argument_list|(
+argument|ObjCInterfaceDecl * superCls
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|SuperClass
 operator|=
 name|superCls
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_expr_stmt
 name|ObjCCategoryDecl
@@ -2566,27 +2706,37 @@ name|getCategoryList
 argument_list|()
 specifier|const
 block|{
+if|if
+condition|(
+name|ExternallyCompleted
+condition|)
+name|LoadExternalDefinition
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 name|CategoryList
 return|;
-block|}
-end_expr_stmt
+end_return
 
-begin_function
-name|void
+begin_macro
+unit|}      void
 name|setCategoryList
-parameter_list|(
-name|ObjCCategoryDecl
-modifier|*
-name|category
-parameter_list|)
+argument_list|(
+argument|ObjCCategoryDecl *category
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|CategoryList
 operator|=
 name|category
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_expr_stmt
 name|ObjCCategoryDecl
@@ -2789,12 +2939,17 @@ end_comment
 begin_function_decl
 name|ObjCMethodDecl
 modifier|*
-name|lookupPrivateInstanceMethod
+name|lookupPrivateMethod
 parameter_list|(
 specifier|const
 name|Selector
 modifier|&
 name|Sel
+parameter_list|,
+name|bool
+name|Instance
+init|=
+name|true
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2976,6 +3131,7 @@ comment|// Low-level accessor
 end_comment
 
 begin_expr_stmt
+specifier|const
 name|Type
 operator|*
 name|getTypeForDecl
@@ -2992,6 +3148,7 @@ begin_decl_stmt
 name|void
 name|setTypeForDecl
 argument_list|(
+specifier|const
 name|Type
 operator|*
 name|TD
@@ -4750,6 +4907,13 @@ argument_list|(
 name|this
 argument_list|)
 expr_stmt|;
+name|ClassInterface
+operator|->
+name|setChangedSinceDeserialization
+argument_list|(
+name|true
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -5537,7 +5701,7 @@ name|SuperClass
 block|;
 comment|/// Support for ivar initialization.
 comment|/// IvarInitializers - The arguments used to initialize the ivars
-name|CXXBaseOrMemberInitializer
+name|CXXCtorInitializer
 operator|*
 operator|*
 name|IvarInitializers
@@ -5613,14 +5777,14 @@ argument_list|)
 block|;
 comment|/// init_iterator - Iterates through the ivar initializer list.
 typedef|typedef
-name|CXXBaseOrMemberInitializer
+name|CXXCtorInitializer
 modifier|*
 modifier|*
 name|init_iterator
 typedef|;
 comment|/// init_const_iterator - Iterates through the ivar initializer list.
 typedef|typedef
-name|CXXBaseOrMemberInitializer
+name|CXXCtorInitializer
 modifier|*
 specifier|const
 modifier|*
@@ -5693,7 +5857,7 @@ name|setIvarInitializers
 argument_list|(
 argument|ASTContext&C
 argument_list|,
-argument|CXXBaseOrMemberInitializer ** initializers
+argument|CXXCtorInitializer ** initializers
 argument_list|,
 argument|unsigned numInitializers
 argument_list|)
@@ -6266,6 +6430,10 @@ block|,
 name|OBJC_PR_setter
 operator|=
 literal|0x80
+block|,
+name|OBJC_PR_atomic
+operator|=
+literal|0x100
 block|}
 block|;    enum
 name|SetterKind
@@ -6299,12 +6467,12 @@ block|;
 name|unsigned
 name|PropertyAttributes
 operator|:
-literal|8
+literal|9
 block|;
 name|unsigned
 name|PropertyAttributesAsWritten
 operator|:
-literal|8
+literal|9
 block|;
 comment|// @required/@optional
 name|unsigned
@@ -6765,6 +6933,25 @@ return|;
 block|}
 end_expr_stmt
 
+begin_expr_stmt
+name|virtual
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SourceRange
+argument_list|(
+name|AtLoc
+argument_list|,
+name|getLocation
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
 begin_comment
 comment|/// Lookup a property by name in the specified DeclContext.
 end_comment
@@ -6884,6 +7071,15 @@ name|SourceLocation
 name|AtLoc
 block|;
 comment|// location of @synthesize or @dynamic
+comment|/// \brief For @synthesize, the location of the ivar, if it was written in
+comment|/// the source code.
+comment|///
+comment|/// \code
+comment|/// @synthesize int a = b
+comment|/// \endcode
+name|SourceLocation
+name|IvarLoc
+block|;
 comment|/// Property declaration being implemented
 name|ObjCPropertyDecl
 operator|*
@@ -6918,6 +7114,8 @@ argument_list|,
 argument|Kind PK
 argument_list|,
 argument|ObjCIvarDecl *ivarDecl
+argument_list|,
+argument|SourceLocation ivarLoc
 argument_list|)
 operator|:
 name|Decl
@@ -6932,6 +7130,11 @@ block|,
 name|AtLoc
 argument_list|(
 name|atLoc
+argument_list|)
+block|,
+name|IvarLoc
+argument_list|(
+name|ivarLoc
 argument_list|)
 block|,
 name|PropertyDecl
@@ -6983,6 +7186,8 @@ argument_list|,
 argument|Kind PK
 argument_list|,
 argument|ObjCIvarDecl *ivarDecl
+argument_list|,
+argument|SourceLocation ivarLoc
 argument_list|)
 block|;
 name|virtual
@@ -6990,17 +7195,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
-block|{
-return|return
-name|SourceRange
-argument_list|(
-name|AtLoc
-argument_list|,
-name|getLocation
-argument_list|()
-argument_list|)
-return|;
-block|}
+block|;
 name|SourceLocation
 name|getLocStart
 argument_list|()
@@ -7063,16 +7258,33 @@ return|return
 name|PropertyIvarDecl
 return|;
 block|}
+name|SourceLocation
+name|getPropertyIvarDeclLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IvarLoc
+return|;
+block|}
 name|void
 name|setPropertyIvarDecl
 argument_list|(
 argument|ObjCIvarDecl *Ivar
+argument_list|,
+argument|SourceLocation IvarLoc
 argument_list|)
 block|{
 name|PropertyIvarDecl
 operator|=
 name|Ivar
-block|; }
+block|;
+name|this
+operator|->
+name|IvarLoc
+operator|=
+name|IvarLoc
+block|;   }
 name|Expr
 operator|*
 name|getGetterCXXConstructor
@@ -7154,11 +7366,15 @@ operator|==
 name|ObjCPropertyImpl
 return|;
 block|}
-expr|}
-block|;  }
+name|friend
+name|class
+name|ASTDeclReader
+block|; }
+decl_stmt|;
 end_decl_stmt
 
 begin_comment
+unit|}
 comment|// end namespace clang
 end_comment
 

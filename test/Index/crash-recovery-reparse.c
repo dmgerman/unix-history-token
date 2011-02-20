@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: env CINDEXTEST_EDITING=1 \
+comment|// RUN: env CINDEXTEST_EDITING=1 CINDEXTEST_PREAMBLE_FILE=%t-preamble.pch \
 end_comment
 
 begin_comment
@@ -17,6 +17,10 @@ end_comment
 
 begin_comment
 comment|// RUN: FileCheck< %t.err -check-prefix=CHECK-REPARSE-SOURCE-CRASH %s
+end_comment
+
+begin_comment
+comment|// RUN: rm %t-preamble.pch
 end_comment
 
 begin_comment

@@ -603,7 +603,7 @@ decl_stmt|;
 goto|goto *
 name|P
 goto|;
-comment|// expected-warning {{indirect goto might cross protected scopes}}
+comment|// expected-error {{indirect goto might cross protected scopes}}
 name|L2
 label|:
 empty_stmt|;
@@ -841,6 +841,155 @@ block|}
 decl_stmt|;
 block|}
 end_function
+
+begin_function
+name|int
+name|test14
+parameter_list|(
+name|int
+name|n
+parameter_list|)
+block|{
+specifier|static
+name|void
+modifier|*
+name|ps
+index|[]
+init|=
+block|{
+operator|&&
+name|a0
+block|,
+operator|&&
+name|a1
+block|}
+decl_stmt|;
+if|if
+condition|(
+name|n
+operator|<
+literal|0
+condition|)
+goto|goto *&&
+name|a0
+goto|;
+if|if
+condition|(
+name|n
+operator|>
+literal|0
+condition|)
+block|{
+name|int
+name|vla
+index|[
+name|n
+index|]
+decl_stmt|;
+name|a1
+label|:
+name|vla
+index|[
+name|n
+operator|-
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
+block|}
+name|a0
+label|:
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// PR8473: IR gen can't deal with indirect gotos past VLA
+end_comment
+
+begin_comment
+comment|// initialization, so that really needs to be a hard error.
+end_comment
+
+begin_function
+name|void
+name|test15
+parameter_list|(
+name|int
+name|n
+parameter_list|,
+name|void
+modifier|*
+name|pc
+parameter_list|)
+block|{
+specifier|static
+specifier|const
+name|void
+modifier|*
+name|addrs
+index|[]
+init|=
+block|{
+operator|&&
+name|L1
+block|,
+operator|&&
+name|L2
+block|}
+decl_stmt|;
+goto|goto *
+name|pc
+goto|;
+comment|// expected-error {{indirect goto might cross protected scope}}
+name|L1
+label|:
+block|{
+name|char
+name|vla
+index|[
+name|n
+index|]
+decl_stmt|;
+comment|// expected-note {{jump bypasses initialization}}
+name|L2
+label|:
+comment|// expected-note {{possible target}}
+name|vla
+index|[
+literal|0
+index|]
+operator|=
+literal|'a'
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|// rdar://9024687
+end_comment
+
+begin_decl_stmt
+name|int
+name|test16
+argument_list|(
+name|int
+index|[
+sizeof|sizeof
+expr|&&
+name|z
+expr|]
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{use of address-of-label extension outside of a function body}}
+end_comment
 
 end_unit
 

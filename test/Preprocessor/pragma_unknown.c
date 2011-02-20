@@ -163,7 +163,7 @@ name|POWER
 end_pragma
 
 begin_comment
-comment|// expected-warning {{expected end of macro in STDC pragma}}
+comment|// expected-warning {{expected end of macro in pragma}}
 end_comment
 
 begin_pragma

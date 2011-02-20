@@ -189,7 +189,7 @@ operator|-
 literal|2
 index|]
 decl_stmt|;
-comment|// expected-error{{array size is negative}}
+comment|// expected-error{{array with a negative size}}
 name|int
 name|zero_size
 index|[
@@ -255,7 +255,7 @@ argument_list|(
 name|staticAry
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{passing 'char const [5]' to parameter of type 'char *' discards qualifiers}}
+comment|// expected-warning{{passing 'const char [5]' to parameter of type 'char *' discards qualifiers}}
 block|}
 end_function
 

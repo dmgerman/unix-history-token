@@ -15,7 +15,7 @@ name|int
 name|X
 parameter_list|)
 block|{
-comment|// CHECK: error: unrecognized instruction
+comment|// CHECK: error: invalid instruction mnemonic 'abc'
 asm|__asm__ ("abc incl    %0" : "+r" (X));
 return|return
 name|X

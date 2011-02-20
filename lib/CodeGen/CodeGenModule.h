@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/ABI.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/LangOptions.h"
 end_include
 
@@ -86,19 +92,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"CGBlocks.h"
+file|"clang/AST/Mangle.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"CGCall.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"CGCXX.h"
 end_include
 
 begin_include
@@ -117,12 +117,6 @@ begin_include
 include|#
 directive|include
 file|"GlobalDecl.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"Mangle.h"
 end_include
 
 begin_include
@@ -262,11 +256,17 @@ decl_stmt|;
 name|class
 name|CXXDestructorDecl
 decl_stmt|;
+name|class
+name|MangleBuffer
+decl_stmt|;
 name|namespace
 name|CodeGen
 block|{
 name|class
 name|CodeGenFunction
+decl_stmt|;
+name|class
+name|CodeGenTBAA
 decl_stmt|;
 name|class
 name|CGCXXABI
@@ -278,7 +278,7 @@ name|class
 name|CGObjCRuntime
 decl_stmt|;
 name|class
-name|MangleBuffer
+name|BlockFieldFlags
 decl_stmt|;
 struct|struct
 name|OrderGlobalInits
@@ -371,13 +371,102 @@ return|;
 block|}
 block|}
 empty_stmt|;
+struct|struct
+name|CodeGenTypeCache
+block|{
+comment|/// i8, i32, and i64
+specifier|const
+name|llvm
+operator|::
+name|IntegerType
+operator|*
+name|Int8Ty
+operator|,
+operator|*
+name|Int32Ty
+operator|,
+operator|*
+name|Int64Ty
+expr_stmt|;
+comment|/// int
+specifier|const
+name|llvm
+operator|::
+name|IntegerType
+operator|*
+name|IntTy
+expr_stmt|;
+comment|/// intptr_t and size_t, which we assume are the same
+union|union
+block|{
+specifier|const
+name|llvm
+operator|::
+name|IntegerType
+operator|*
+name|IntPtrTy
+expr_stmt|;
+specifier|const
+name|llvm
+operator|::
+name|IntegerType
+operator|*
+name|SizeTy
+expr_stmt|;
+block|}
+union|;
+comment|/// void* in address space 0
+union|union
+block|{
+specifier|const
+name|llvm
+operator|::
+name|PointerType
+operator|*
+name|VoidPtrTy
+expr_stmt|;
+specifier|const
+name|llvm
+operator|::
+name|PointerType
+operator|*
+name|Int8PtrTy
+expr_stmt|;
+block|}
+union|;
+comment|/// void** in address space 0
+union|union
+block|{
+specifier|const
+name|llvm
+operator|::
+name|PointerType
+operator|*
+name|VoidPtrPtrTy
+expr_stmt|;
+specifier|const
+name|llvm
+operator|::
+name|PointerType
+operator|*
+name|Int8PtrPtrTy
+expr_stmt|;
+block|}
+union|;
+comment|/// The width of an address-zero pointer.
+name|unsigned
+name|char
+name|PointerWidthInBits
+decl_stmt|;
+block|}
+struct|;
 comment|/// CodeGenModule - This class organizes the cross-function state that is used
 comment|/// while generating LLVM code.
 name|class
 name|CodeGenModule
 range|:
 name|public
-name|BlockModule
+name|CodeGenTypeCache
 block|{
 name|CodeGenModule
 argument_list|(
@@ -459,6 +548,10 @@ name|ABI
 decl_stmt|;
 name|CodeGenTypes
 name|Types
+decl_stmt|;
+name|CodeGenTBAA
+modifier|*
+name|TBAA
 decl_stmt|;
 comment|/// VTables - Holds information about C++ vtables.
 name|CodeGenVTables
@@ -686,13 +779,13 @@ name|Constant
 operator|*
 name|CFConstantStringClassRef
 expr_stmt|;
-comment|/// NSConstantStringClassRef - Cached reference to the class for constant
+comment|/// ConstantStringClassRef - Cached reference to the class for constant
 comment|/// strings. This value has type int * but is actually an Obj-C class pointer.
 name|llvm
 operator|::
 name|Constant
 operator|*
-name|NSConstantStringClassRef
+name|ConstantStringClassRef
 expr_stmt|;
 comment|/// Lazily create the Objective-C runtime
 name|void
@@ -750,6 +843,54 @@ operator|::
 name|Constant
 operator|*
 name|BlockObjectDispose
+expr_stmt|;
+specifier|const
+name|llvm
+operator|::
+name|Type
+operator|*
+name|BlockDescriptorType
+expr_stmt|;
+specifier|const
+name|llvm
+operator|::
+name|Type
+operator|*
+name|GenericBlockLiteralType
+expr_stmt|;
+struct|struct
+block|{
+name|int
+name|GlobalUniqueCount
+decl_stmt|;
+block|}
+name|Block
+struct|;
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|uint64_t
+operator|,
+name|llvm
+operator|::
+name|Constant
+operator|*
+operator|>
+name|AssignCache
+expr_stmt|;
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|uint64_t
+operator|,
+name|llvm
+operator|::
+name|Constant
+operator|*
+operator|>
+name|DestroyCache
 expr_stmt|;
 comment|/// @}
 name|public
@@ -967,6 +1108,19 @@ return|return
 name|TheTargetData
 return|;
 block|}
+specifier|const
+name|TargetInfo
+operator|&
+name|getTarget
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Context
+operator|.
+name|Target
+return|;
+block|}
 name|llvm
 operator|::
 name|LLVMContext
@@ -989,16 +1143,32 @@ name|isTargetDarwin
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// getDeclVisibilityMode - Compute the visibility of the decl \arg D.
-name|LangOptions
+name|llvm
 operator|::
-name|VisibilityMode
-name|getDeclVisibilityMode
+name|MDNode
+operator|*
+name|getTBAAInfo
 argument_list|(
-argument|const Decl *D
+argument|QualType QTy
 argument_list|)
-specifier|const
 expr_stmt|;
+specifier|static
+name|void
+name|DecorateInstruction
+argument_list|(
+name|llvm
+operator|::
+name|Instruction
+operator|*
+name|Inst
+argument_list|,
+name|llvm
+operator|::
+name|MDNode
+operator|*
+name|TBAAInfo
+argument_list|)
+decl_stmt|;
 comment|/// setGlobalVisibility - Set the visibility for the given LLVM
 comment|/// GlobalValue.
 name|void
@@ -1011,12 +1181,26 @@ operator|*
 name|GV
 argument_list|,
 specifier|const
-name|Decl
+name|NamedDecl
 operator|*
 name|D
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// TypeVisibilityKind - The kind of global variable that is passed to
+comment|/// setTypeVisibility
+enum|enum
+name|TypeVisibilityKind
+block|{
+name|TVK_ForVTT
+block|,
+name|TVK_ForVTable
+block|,
+name|TVK_ForRTTI
+block|,
+name|TVK_ForRTTIName
+block|}
+enum|;
 comment|/// setTypeVisibility - Set the visibility for the given global
 comment|/// value which holds information about a type.
 name|void
@@ -1033,11 +1217,71 @@ name|CXXRecordDecl
 operator|*
 name|D
 argument_list|,
-name|bool
-name|IsForRTTI
+name|TypeVisibilityKind
+name|TVK
 argument_list|)
 decl|const
 decl_stmt|;
+specifier|static
+name|llvm
+operator|::
+name|GlobalValue
+operator|::
+name|VisibilityTypes
+name|GetLLVMVisibility
+argument_list|(
+argument|Visibility V
+argument_list|)
+block|{
+switch|switch
+condition|(
+name|V
+condition|)
+block|{
+case|case
+name|DefaultVisibility
+case|:
+return|return
+name|llvm
+operator|::
+name|GlobalValue
+operator|::
+name|DefaultVisibility
+return|;
+case|case
+name|HiddenVisibility
+case|:
+return|return
+name|llvm
+operator|::
+name|GlobalValue
+operator|::
+name|HiddenVisibility
+return|;
+case|case
+name|ProtectedVisibility
+case|:
+return|return
+name|llvm
+operator|::
+name|GlobalValue
+operator|::
+name|ProtectedVisibility
+return|;
+block|}
+name|llvm_unreachable
+argument_list|(
+literal|"unknown visibility!"
+argument_list|)
+expr_stmt|;
+return|return
+name|llvm
+operator|::
+name|GlobalValue
+operator|::
+name|DefaultVisibility
+return|;
+block|}
 name|llvm
 operator|::
 name|Constant
@@ -1151,6 +1395,23 @@ operator|)
 argument_list|)
 return|;
 block|}
+comment|/// CreateOrReplaceCXXRuntimeVariable - Will return a global variable of the given
+comment|/// type. If a variable with a different type already exists then a new
+comment|/// variable with the right type will be created and all uses of the old
+comment|/// variable will be replaced with a bitcast to the new variable.
+name|llvm
+operator|::
+name|GlobalVariable
+operator|*
+name|CreateOrReplaceCXXRuntimeVariable
+argument_list|(
+argument|llvm::StringRef Name
+argument_list|,
+argument|const llvm::Type *Ty
+argument_list|,
+argument|llvm::GlobalValue::LinkageTypes Linkage
+argument_list|)
+expr_stmt|;
 comment|/// GetAddrOfGlobalVar - Return the llvm::Constant for the address of the
 comment|/// given global variable.  If Ty is non-null and if the global doesn't exist,
 comment|/// then it will be greated with the specified type instead of whatever the
@@ -1189,6 +1450,8 @@ argument|GlobalDecl GD
 argument_list|,
 argument|const llvm::Type *Ty =
 literal|0
+argument_list|,
+argument|bool ForVTable = false
 argument_list|)
 expr_stmt|;
 comment|/// GetAddrOfRTTIDescriptor - Get the address of the RTTI descriptor
@@ -1244,6 +1507,85 @@ argument_list|,
 argument|CastExpr::path_const_iterator PathEnd
 argument_list|)
 expr_stmt|;
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|BuildbyrefCopyHelper
+argument_list|(
+argument|const llvm::Type *T
+argument_list|,
+argument|BlockFieldFlags flags
+argument_list|,
+argument|unsigned Align
+argument_list|,
+argument|const VarDecl *variable
+argument_list|)
+expr_stmt|;
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|BuildbyrefDestroyHelper
+argument_list|(
+argument|const llvm::Type *T
+argument_list|,
+argument|BlockFieldFlags flags
+argument_list|,
+argument|unsigned Align
+argument_list|,
+argument|const VarDecl *variable
+argument_list|)
+expr_stmt|;
+comment|/// getGlobalUniqueCount - Fetches the global unique block count.
+name|int
+name|getGlobalUniqueCount
+parameter_list|()
+block|{
+return|return
+operator|++
+name|Block
+operator|.
+name|GlobalUniqueCount
+return|;
+block|}
+comment|/// getBlockDescriptorType - Fetches the type of a generic block
+comment|/// descriptor.
+specifier|const
+name|llvm
+operator|::
+name|Type
+operator|*
+name|getBlockDescriptorType
+argument_list|()
+expr_stmt|;
+comment|/// getGenericBlockLiteralType - The type of a generic block literal.
+specifier|const
+name|llvm
+operator|::
+name|Type
+operator|*
+name|getGenericBlockLiteralType
+argument_list|()
+expr_stmt|;
+comment|/// GetAddrOfGlobalBlock - Gets the address of a block which
+comment|/// requires no captures.
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|GetAddrOfGlobalBlock
+argument_list|(
+specifier|const
+name|BlockExpr
+operator|*
+name|BE
+argument_list|,
+specifier|const
+name|char
+operator|*
+argument_list|)
+expr_stmt|;
 comment|/// GetStringForStringLiteral - Return the appropriate bytes for a string
 comment|/// literal, properly padded to match the literal type. If only the address of
 comment|/// a constant is needed consider using GetAddrOfConstantStringLiteral.
@@ -1272,13 +1614,14 @@ operator|*
 name|Literal
 argument_list|)
 expr_stmt|;
-comment|/// GetAddrOfConstantNSString - Return a pointer to a constant NSString object
-comment|/// for the given string.
+comment|/// GetAddrOfConstantString - Return a pointer to a constant NSString object
+comment|/// for the given string. Or a user defined String object as defined via
+comment|/// -fconstant-string-class=class_name option.
 name|llvm
 operator|::
 name|Constant
 operator|*
-name|GetAddrOfConstantNSString
+name|GetAddrOfConstantString
 argument_list|(
 specifier|const
 name|StringLiteral
@@ -1408,83 +1751,6 @@ argument_list|(
 argument|const FunctionDecl *FD
 argument_list|,
 argument|unsigned BuiltinID
-argument_list|)
-expr_stmt|;
-name|llvm
-operator|::
-name|Function
-operator|*
-name|getMemCpyFn
-argument_list|(
-specifier|const
-name|llvm
-operator|::
-name|Type
-operator|*
-name|DestType
-argument_list|,
-specifier|const
-name|llvm
-operator|::
-name|Type
-operator|*
-name|SrcType
-argument_list|,
-specifier|const
-name|llvm
-operator|::
-name|Type
-operator|*
-name|SizeType
-argument_list|)
-expr_stmt|;
-name|llvm
-operator|::
-name|Function
-operator|*
-name|getMemMoveFn
-argument_list|(
-specifier|const
-name|llvm
-operator|::
-name|Type
-operator|*
-name|DestType
-argument_list|,
-specifier|const
-name|llvm
-operator|::
-name|Type
-operator|*
-name|SrcType
-argument_list|,
-specifier|const
-name|llvm
-operator|::
-name|Type
-operator|*
-name|SizeType
-argument_list|)
-expr_stmt|;
-name|llvm
-operator|::
-name|Function
-operator|*
-name|getMemSetFn
-argument_list|(
-specifier|const
-name|llvm
-operator|::
-name|Type
-operator|*
-name|DestType
-argument_list|,
-specifier|const
-name|llvm
-operator|::
-name|Type
-operator|*
-name|SizeType
 argument_list|)
 expr_stmt|;
 name|llvm
@@ -1650,6 +1916,18 @@ name|TD
 argument_list|)
 expr_stmt|;
 block|}
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|getMemberPointerConstant
+argument_list|(
+specifier|const
+name|UnaryOperator
+operator|*
+name|e
+argument_list|)
+expr_stmt|;
 comment|/// EmitConstantExpr - Try to emit the given expression as a
 comment|/// constant; returns 0 if the expression cannot be emitted as a
 comment|/// constant.
@@ -1861,7 +2139,7 @@ argument|GlobalDecl GD
 argument_list|)
 expr_stmt|;
 name|void
-name|getMangledName
+name|getBlockMangledName
 parameter_list|(
 name|GlobalDecl
 name|GD
@@ -1937,7 +2215,6 @@ expr_stmt|;
 block|}
 comment|/// getVTableLinkage - Return the appropriate linkage for the vtable, VTT,
 comment|/// and type information of the given class.
-specifier|static
 name|llvm
 operator|::
 name|GlobalVariable
@@ -1965,6 +2242,27 @@ name|Ty
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// GetLLVMLinkageVarDefinition - Returns LLVM linkage for a global
+comment|/// variable.
+name|llvm
+operator|::
+name|GlobalValue
+operator|::
+name|LinkageTypes
+name|GetLLVMLinkageVarDefinition
+argument_list|(
+specifier|const
+name|VarDecl
+operator|*
+name|D
+argument_list|,
+name|llvm
+operator|::
+name|GlobalVariable
+operator|*
+name|GV
+argument_list|)
+expr_stmt|;
 name|std
 operator|::
 name|vector
@@ -1997,6 +2295,8 @@ argument_list|,
 argument|const llvm::Type *Ty
 argument_list|,
 argument|GlobalDecl D
+argument_list|,
+argument|bool ForVTable
 argument_list|)
 expr_stmt|;
 name|llvm
@@ -2010,6 +2310,8 @@ argument_list|,
 argument|const llvm::PointerType *PTy
 argument_list|,
 argument|const VarDecl *D
+argument_list|,
+argument|bool UnnamedAddr = false
 argument_list|)
 expr_stmt|;
 comment|/// SetCommonAttributes - Set attributes which are common to any
@@ -2222,13 +2524,19 @@ parameter_list|()
 function_decl|;
 name|void
 name|EmitCXXGlobalVarDeclInitFunc
-parameter_list|(
+argument_list|(
 specifier|const
 name|VarDecl
-modifier|*
+operator|*
 name|D
-parameter_list|)
-function_decl|;
+argument_list|,
+name|llvm
+operator|::
+name|GlobalVariable
+operator|*
+name|Addr
+argument_list|)
+decl_stmt|;
 comment|// FIXME: Hardcoding priority here is gross.
 name|void
 name|AddGlobalCtor
@@ -2329,6 +2637,12 @@ name|ValueDecl
 modifier|*
 name|D
 parameter_list|)
+function_decl|;
+comment|/// SimplifyPersonality - Check whether we can use a "simpler", more
+comment|/// core exceptions personality function.
+name|void
+name|SimplifyPersonality
+parameter_list|()
 function_decl|;
 block|}
 end_decl_stmt

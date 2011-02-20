@@ -231,6 +231,9 @@ comment|///< A vector splat from an arithmetic type
 name|ICK_Complex_Real
 block|,
 comment|///< Complex-real conversions (C99 6.3.1.7)
+name|ICK_Block_Pointer_Conversion
+block|,
+comment|///< Block Pointer conversions
 name|ICK_Num_Conversion_Kinds
 comment|///< The number of conversion kinds
 block|}
@@ -332,39 +335,58 @@ name|Third
 range|:
 literal|8
 decl_stmt|;
-comment|/// Deprecated - Whether this the deprecated conversion of a
+comment|/// \brief Whether this is the deprecated conversion of a
 comment|/// string literal to a pointer to non-const character data
 comment|/// (C++ 4.2p2).
-name|bool
+name|unsigned
 name|DeprecatedStringLiteralToCharPtr
 range|:
 literal|1
 decl_stmt|;
 comment|/// IncompatibleObjC - Whether this is an Objective-C conversion
 comment|/// that we should warn about (if we actually use it).
-name|bool
+name|unsigned
 name|IncompatibleObjC
 range|:
 literal|1
 decl_stmt|;
 comment|/// ReferenceBinding - True when this is a reference binding
 comment|/// (C++ [over.ics.ref]).
-name|bool
+name|unsigned
 name|ReferenceBinding
 range|:
 literal|1
 decl_stmt|;
 comment|/// DirectBinding - True when this is a reference binding that is a
 comment|/// direct binding (C++ [dcl.init.ref]).
-name|bool
+name|unsigned
 name|DirectBinding
 range|:
 literal|1
 decl_stmt|;
-comment|/// RRefBinding - True when this is a reference binding of an rvalue
-comment|/// reference to an rvalue (C++0x [over.ics.rank]p3b4).
-name|bool
-name|RRefBinding
+comment|/// \brief Whether this is an lvalue reference binding (otherwise, it's
+comment|/// an rvalue reference binding).
+name|unsigned
+name|IsLvalueReference
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief Whether we're binding to a function lvalue.
+name|unsigned
+name|BindsToFunctionLvalue
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief Whether we're binding to an rvalue.
+name|unsigned
+name|BindsToRvalue
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief Whether this binds an implicit object argument to a
+comment|/// non-static member function without a ref-qualifier.
+name|unsigned
+name|BindsImplicitObjectArgumentWithoutRefQualifier
 range|:
 literal|1
 decl_stmt|;
@@ -608,6 +630,13 @@ comment|/// user-defined conversion.
 name|FunctionDecl
 modifier|*
 name|ConversionFunction
+decl_stmt|;
+comment|/// \brief The declaration that we found via name lookup, which might be
+comment|/// the same as \c ConversionFunction or it might be a using declaration
+comment|/// that refers to \c ConversionFunction.
+name|NamedDecl
+modifier|*
+name|FoundConversionFunction
 decl_stmt|;
 name|void
 name|DebugPrint
@@ -856,6 +885,10 @@ block|,
 name|suppressed_user
 block|,
 name|bad_qualifiers
+block|,
+name|lvalue_ref_to_rvalue
+block|,
+name|rvalue_ref_to_lvalue
 block|}
 enum|;
 comment|// This can be null, e.g. for implicit object arguments.
@@ -1648,6 +1681,11 @@ name|unsigned
 name|char
 name|FailureKind
 decl_stmt|;
+comment|/// \brief The number of call arguments that were explicitly provided,
+comment|/// to be used while performing partial ordering of function templates.
+name|unsigned
+name|ExplicitCallArguments
+decl_stmt|;
 comment|/// A structure used to record information about a failed
 comment|/// template argument deduction.
 struct|struct
@@ -1899,6 +1937,8 @@ argument_list|,
 argument|SourceLocation Loc
 argument_list|,
 argument|OverloadCandidateSet::iterator& Best
+argument_list|,
+argument|bool UserDefinedConversion = false
 argument_list|)
 expr_stmt|;
 name|void
@@ -1954,6 +1994,11 @@ name|Cand2
 parameter_list|,
 name|SourceLocation
 name|Loc
+parameter_list|,
+name|bool
+name|UserDefinedConversion
+init|=
+name|false
 parameter_list|)
 function_decl|;
 block|}

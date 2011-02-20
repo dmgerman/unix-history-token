@@ -4,14 +4,6 @@ comment|// RUN: c-index-test -test-load-source all -remap-file="%s;%S/Inputs/rem
 end_comment
 
 begin_comment
-comment|// RUN: env CINDEXTEST_USE_EXTERNAL_AST_GENERATION=1 c-index-test -test-load-source all -remap-file="%s;%S/Inputs/remap-load-to.c" %s | FileCheck -check-prefix=CHECK %s
-end_comment
-
-begin_comment
-comment|// XFAIL: win32
-end_comment
-
-begin_comment
 comment|// CHECK: remap-load.c:1:5: FunctionDecl=foo:1:5 (Definition) Extent=[1:5 - 3:2]
 end_comment
 
@@ -21,14 +13,6 @@ end_comment
 
 begin_comment
 comment|// CHECK: remap-load.c:1:26: ParmDecl=parm2:1:26 (Definition) Extent=[1:20 - 1:31]
-end_comment
-
-begin_comment
-comment|// CHECK:<invalid loc>:0:0: UnexposedStmt= Extent=[1:33 - 3:2]
-end_comment
-
-begin_comment
-comment|// CHECK:<invalid loc>:0:0: UnexposedStmt= Extent=[2:3 - 2:23]
 end_comment
 
 begin_comment

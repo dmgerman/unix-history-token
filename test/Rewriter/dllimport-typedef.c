@@ -57,7 +57,7 @@ comment|// CHECK-NEG: 1 error generated
 end_comment
 
 begin_comment
-comment|// CHECK-POS: warning: 'dllimport' attribute only applies to variable and function type
+comment|// CHECK-POS: warning: 'dllimport' attribute only applies to variables and functions
 end_comment
 
 begin_comment

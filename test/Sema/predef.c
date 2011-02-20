@@ -69,7 +69,7 @@ name|an
 name|expression
 name|of
 name|type
-literal|'char const [1]'
+literal|'const char [1]'
 name|discards
 name|qualifiers
 block|}

@@ -66,6 +66,15 @@ operator|-=
 literal|1
 expr_stmt|;
 comment|// expected-warning {{use of GNU void* extension}}
+operator|(
+name|void
+operator|)
+name|c
+index|[
+literal|1
+index|]
+expr_stmt|;
+comment|// expected-warning {{use of GNU void* extension}}
 name|b
 operator|=
 literal|1

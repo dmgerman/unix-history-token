@@ -10,11 +10,15 @@ comment|// RUN: c-index-test -test-annotate-tokens=%s:1:1:2:1 %s | FileCheck %s
 end_comment
 
 begin_comment
-comment|// CHECK: Identifier: "include" [1:2 - 1:9] preprocessing directive=
+comment|// CHECK: Punctuation: "#" [1:1 - 1:2] inclusion directive=annotate-tokens-include.h
 end_comment
 
 begin_comment
-comment|// CHECK: Literal: ""annotate-tokens-include.h"" [1:10 - 1:37] preprocessing directive=
+comment|// CHECK: Identifier: "include" [1:2 - 1:9] inclusion directive=annotate-tokens-include.h
+end_comment
+
+begin_comment
+comment|// CHECK: Literal: ""annotate-tokens-include.h"" [1:10 - 1:37] inclusion directive=annotate-tokens-include.h
 end_comment
 
 end_unit

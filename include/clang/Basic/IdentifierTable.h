@@ -108,13 +108,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string>
+file|<cassert>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<cassert>
+file|<cctype>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
 end_include
 
 begin_decl_stmt
@@ -191,7 +197,7 @@ comment|// are for builtins.
 name|unsigned
 name|ObjCOrBuiltinID
 range|:
-literal|10
+literal|11
 decl_stmt|;
 name|bool
 name|HasMacro
@@ -237,7 +243,7 @@ literal|1
 decl_stmt|;
 comment|// True if RevertTokenIDToIdentifier was
 comment|// called.
-comment|// 7 bits left in 32-bit word.
+comment|// 6 bits left in 32-bit word.
 name|void
 modifier|*
 name|FETokenInfo
@@ -1147,6 +1153,104 @@ end_function
 
 begin_comment
 unit|};
+comment|/// \brief An iterator that walks over all of the known identifiers
+end_comment
+
+begin_comment
+comment|/// in the lookup table.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Since this iterator uses an abstract interface via virtual
+end_comment
+
+begin_comment
+comment|/// functions, it uses an object-oriented interface rather than the
+end_comment
+
+begin_comment
+comment|/// more standard C++ STL iterator interface. In this OO-style
+end_comment
+
+begin_comment
+comment|/// iteration, the single function \c Next() provides dereference,
+end_comment
+
+begin_comment
+comment|/// advance, and end-of-sequence checking in a single
+end_comment
+
+begin_comment
+comment|/// operation. Subclasses of this iterator type will provide the
+end_comment
+
+begin_comment
+comment|/// actual functionality.
+end_comment
+
+begin_decl_stmt
+name|class
+name|IdentifierIterator
+block|{
+name|private
+label|:
+name|IdentifierIterator
+argument_list|(
+specifier|const
+name|IdentifierIterator
+operator|&
+argument_list|)
+expr_stmt|;
+comment|// Do not implement
+name|IdentifierIterator
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|IdentifierIterator
+operator|&
+operator|)
+decl_stmt|;
+comment|// Do not implement
+name|protected
+label|:
+name|IdentifierIterator
+argument_list|()
+block|{ }
+name|public
+label|:
+name|virtual
+operator|~
+name|IdentifierIterator
+argument_list|()
+expr_stmt|;
+comment|/// \brief Retrieve the next string in the identifier table and
+comment|/// advances the iterator for the following string.
+comment|///
+comment|/// \returns The next string in the identifier table. If there is
+comment|/// no such string, returns an empty \c llvm::StringRef.
+name|virtual
+name|llvm
+operator|::
+name|StringRef
+name|Next
+argument_list|()
+operator|=
+literal|0
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// IdentifierInfoLookup - An abstract class used by IdentifierTable that
 end_comment
 
@@ -1186,6 +1290,23 @@ argument_list|)
 init|=
 literal|0
 decl_stmt|;
+comment|/// \brief Retrieve an iterator into the set of all identifiers
+comment|/// known to this identifier lookup source.
+comment|///
+comment|/// This routine provides access to all of the identifiers known to
+comment|/// the identifier lookup, allowing access to the contents of the
+comment|/// identifiers without introducing the overhead of constructing
+comment|/// IdentifierInfo objects for each.
+comment|///
+comment|/// \returns A new iterator into the set of known identifiers. The
+comment|/// caller is responsible for deleting this iterator.
+name|virtual
+name|IdentifierIterator
+operator|*
+name|getIdentifiers
+argument_list|()
+specifier|const
+expr_stmt|;
 block|}
 end_decl_stmt
 
@@ -1311,6 +1432,17 @@ name|ExternalLookup
 operator|=
 name|IILookup
 expr_stmt|;
+block|}
+comment|/// \brief Retrieve the external identifier lookup object, if any.
+name|IdentifierInfoLookup
+operator|*
+name|getExternalIdentifierLookup
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ExternalLookup
+return|;
 block|}
 name|llvm
 operator|::
@@ -2084,6 +2216,58 @@ specifier|const
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/// \brief Retrieve the identifier at a given position in the selector.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Note that the identifier pointer returned may be NULL. Clients that only
+end_comment
+
+begin_comment
+comment|/// care about the text of the identifier string, and not the specific,
+end_comment
+
+begin_comment
+comment|/// uniqued identifier pointer, should use \c getNameForSlot(), which returns
+end_comment
+
+begin_comment
+comment|/// an empty string when the identifier pointer would be NULL.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param argIndex The index for which we want to retrieve the identifier.
+end_comment
+
+begin_comment
+comment|/// This index shall be less than \c getNumArgs() unless this is a keyword
+end_comment
+
+begin_comment
+comment|/// selector, in which case 0 is the only permissible value.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns the uniqued identifier for this slot, or NULL if this slot has
+end_comment
+
+begin_comment
+comment|/// no corresponding identifier.
+end_comment
+
 begin_decl_stmt
 name|IdentifierInfo
 modifier|*
@@ -2095,6 +2279,50 @@ argument_list|)
 decl|const
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/// \brief Retrieve the name at a given position in the selector.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param argIndex The index for which we want to retrieve the name.
+end_comment
+
+begin_comment
+comment|/// This index shall be less than \c getNumArgs() unless this is a keyword
+end_comment
+
+begin_comment
+comment|/// selector, in which case 0 is the only permissible value.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns the name for this slot, which may be the empty string if no
+end_comment
+
+begin_comment
+comment|/// name was supplied.
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|StringRef
+name|getNameForSlot
+argument_list|(
+argument|unsigned argIndex
+argument_list|)
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// getAsString - Derive the full selector name (e.g. "foo:bar:") and return
@@ -2525,7 +2753,76 @@ block|; }
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|template
+operator|<
+operator|>
+name|class
+name|PointerLikeTypeTraits
+operator|<
+name|clang
+operator|::
+name|Selector
+operator|>
+block|{
+name|public
+operator|:
+specifier|static
+specifier|inline
+specifier|const
+name|void
+operator|*
+name|getAsVoidPointer
+argument_list|(
+argument|clang::Selector P
+argument_list|)
+block|{
+return|return
+name|P
+operator|.
+name|getAsOpaquePtr
+argument_list|()
+return|;
+block|}
+specifier|static
+specifier|inline
+name|clang
+operator|::
+name|Selector
+name|getFromVoidPointer
+argument_list|(
+argument|const void *P
+argument_list|)
+block|{
+return|return
+name|clang
+operator|::
+name|Selector
+argument_list|(
+name|reinterpret_cast
+operator|<
+name|uintptr_t
+operator|>
+operator|(
+name|P
+operator|)
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_enum
+enum|enum
+block|{
+name|NumLowBitsAvailable
+init|=
+literal|0
+block|}
+enum|;
+end_enum
+
 begin_comment
+unit|};
 comment|// Provide PointerLikeTypeTraits for IdentifierInfo pointers, which
 end_comment
 

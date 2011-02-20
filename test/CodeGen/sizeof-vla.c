@@ -8,7 +8,6 @@ comment|// PR3442
 end_comment
 
 begin_function_decl
-specifier|static
 name|void
 modifier|*
 name|g

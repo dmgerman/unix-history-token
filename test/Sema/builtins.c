@@ -170,6 +170,7 @@ argument_list|(
 literal|"\242"
 argument_list|)
 expr_stmt|;
+comment|// expected-warning {{input conversion stopped}}
 name|X
 operator|=
 name|CFSTR
@@ -471,6 +472,31 @@ argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// PR7885
+end_comment
+
+begin_function
+name|int
+name|test16
+parameter_list|()
+block|{
+return|return
+name|__builtin_constant_p
+argument_list|()
+operator|+
+comment|// expected-error{{too few arguments}}
+name|__builtin_constant_p
+argument_list|(
+literal|1
+argument_list|,
+literal|2
+argument_list|)
+return|;
+comment|// expected-error {{too many arguments}}
 block|}
 end_function
 

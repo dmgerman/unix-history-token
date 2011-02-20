@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/DIBuilder.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/ValueHandle.h"
 end_include
 
@@ -139,6 +145,9 @@ decl_stmt|;
 name|class
 name|GlobalDecl
 decl_stmt|;
+name|class
+name|CGBlockInfo
+decl_stmt|;
 comment|/// CGDebugInfo - This class gathers all debug information during compilation
 comment|/// and is responsible for emitting to llvm globals or pass directly to
 comment|/// the backend.
@@ -151,8 +160,8 @@ name|CGM
 decl_stmt|;
 name|llvm
 operator|::
-name|DIFactory
-name|DebugFactory
+name|DIBuilder
+name|DBuilder
 expr_stmt|;
 name|llvm
 operator|::
@@ -303,9 +312,10 @@ operator|::
 name|DIType
 name|CreateType
 argument_list|(
-argument|const BuiltinType *Ty
-argument_list|,
-argument|llvm::DIFile F
+specifier|const
+name|BuiltinType
+operator|*
+name|Ty
 argument_list|)
 expr_stmt|;
 name|llvm
@@ -313,9 +323,10 @@ operator|::
 name|DIType
 name|CreateType
 argument_list|(
-argument|const ComplexType *Ty
-argument_list|,
-argument|llvm::DIFile F
+specifier|const
+name|ComplexType
+operator|*
+name|Ty
 argument_list|)
 expr_stmt|;
 name|llvm
@@ -383,9 +394,10 @@ operator|::
 name|DIType
 name|CreateType
 argument_list|(
-argument|const TagType *Ty
-argument_list|,
-argument|llvm::DIFile F
+specifier|const
+name|TagType
+operator|*
+name|Ty
 argument_list|)
 expr_stmt|;
 name|llvm
@@ -393,9 +405,10 @@ operator|::
 name|DIType
 name|CreateType
 argument_list|(
-argument|const RecordType *Ty
-argument_list|,
-argument|llvm::DIFile F
+specifier|const
+name|RecordType
+operator|*
+name|Ty
 argument_list|)
 expr_stmt|;
 name|llvm
@@ -414,16 +427,6 @@ name|DIType
 name|CreateType
 argument_list|(
 argument|const ObjCObjectType *Ty
-argument_list|,
-argument|llvm::DIFile F
-argument_list|)
-expr_stmt|;
-name|llvm
-operator|::
-name|DIType
-name|CreateType
-argument_list|(
-argument|const EnumType *Ty
 argument_list|,
 argument|llvm::DIFile F
 argument_list|)
@@ -463,6 +466,16 @@ operator|::
 name|DIType
 name|CreateType
 argument_list|(
+argument|const RValueReferenceType *Ty
+argument_list|,
+argument|llvm::DIFile Unit
+argument_list|)
+expr_stmt|;
+name|llvm
+operator|::
+name|DIType
+name|CreateType
+argument_list|(
 argument|const MemberPointerType *Ty
 argument_list|,
 argument|llvm::DIFile F
@@ -473,9 +486,10 @@ operator|::
 name|DIType
 name|CreateEnumType
 argument_list|(
-argument|const EnumDecl *ED
-argument_list|,
-argument|llvm::DIFile Unit
+specifier|const
+name|EnumDecl
+operator|*
+name|ED
 argument_list|)
 expr_stmt|;
 name|llvm
@@ -501,9 +515,20 @@ operator|::
 name|DINameSpace
 name|getOrCreateNameSpace
 argument_list|(
-argument|const NamespaceDecl *N
+specifier|const
+name|NamespaceDecl
+operator|*
+name|N
+argument_list|)
+expr_stmt|;
+name|llvm
+operator|::
+name|DIType
+name|CreatePointeeType
+argument_list|(
+argument|QualType PointeeTy
 argument_list|,
-argument|llvm::DIDescriptor Unit
+argument|llvm::DIFile F
 argument_list|)
 expr_stmt|;
 name|llvm
@@ -551,7 +576,8 @@ name|SmallVectorImpl
 operator|<
 name|llvm
 operator|::
-name|DIDescriptor
+name|Value
+operator|*
 operator|>
 operator|&
 name|E
@@ -581,7 +607,8 @@ name|SmallVectorImpl
 operator|<
 name|llvm
 operator|::
-name|DIDescriptor
+name|Value
+operator|*
 operator|>
 operator|&
 name|EltTys
@@ -611,7 +638,8 @@ name|SmallVectorImpl
 operator|<
 name|llvm
 operator|::
-name|DIDescriptor
+name|Value
+operator|*
 operator|>
 operator|&
 name|EltTys
@@ -641,7 +669,8 @@ name|SmallVectorImpl
 operator|<
 name|llvm
 operator|::
-name|DIDescriptor
+name|Value
+operator|*
 operator|>
 operator|&
 name|E
@@ -666,7 +695,8 @@ name|SmallVectorImpl
 operator|<
 name|llvm
 operator|::
-name|DIDescriptor
+name|Value
+operator|*
 operator|>
 operator|&
 name|EltTys
@@ -792,23 +822,24 @@ name|void
 name|EmitDeclareOfBlockDeclRefVariable
 argument_list|(
 specifier|const
-name|BlockDeclRefExpr
+name|VarDecl
 operator|*
-name|BDRE
+name|variable
 argument_list|,
 name|llvm
 operator|::
 name|Value
 operator|*
-name|AI
+name|storage
 argument_list|,
 name|CGBuilderTy
 operator|&
 name|Builder
 argument_list|,
-name|CodeGenFunction
-operator|*
-name|CGF
+specifier|const
+name|CGBlockInfo
+operator|&
+name|blockInfo
 argument_list|)
 decl_stmt|;
 comment|/// EmitDeclareOfArgVariable - Emit call to llvm.dbg.declare for an argument
@@ -874,15 +905,22 @@ name|VD
 argument_list|,
 name|llvm
 operator|::
-name|ConstantInt
+name|Constant
 operator|*
 name|Init
-argument_list|,
-name|CGBuilderTy
-operator|&
-name|Builder
 argument_list|)
 decl_stmt|;
+comment|/// getOrCreateRecordType - Emit record type's standalone debug info.
+name|llvm
+operator|::
+name|DIType
+name|getOrCreateRecordType
+argument_list|(
+argument|QualType Ty
+argument_list|,
+argument|SourceLocation L
+argument_list|)
+expr_stmt|;
 name|private
 label|:
 comment|/// EmitDeclare - Emit call to llvm.dbg.declare for a variable declaration.
@@ -908,14 +946,15 @@ operator|&
 name|Builder
 argument_list|)
 decl_stmt|;
-comment|/// EmitDeclare - Emit call to llvm.dbg.declare for a variable declaration.
+comment|/// EmitDeclare - Emit call to llvm.dbg.declare for a variable
+comment|/// declaration from an enclosing block.
 name|void
 name|EmitDeclare
 argument_list|(
 specifier|const
-name|BlockDeclRefExpr
+name|VarDecl
 operator|*
-name|BDRE
+name|decl
 argument_list|,
 name|unsigned
 name|Tag
@@ -930,9 +969,10 @@ name|CGBuilderTy
 operator|&
 name|Builder
 argument_list|,
-name|CodeGenFunction
-operator|*
-name|CGF
+specifier|const
+name|CGBlockInfo
+operator|&
+name|blockInfo
 argument_list|)
 decl_stmt|;
 comment|// EmitTypeForVarWithBlocksAttr - Build up structure info for the byref.
@@ -962,12 +1002,6 @@ specifier|const
 name|Decl
 operator|*
 name|Decl
-argument_list|,
-name|llvm
-operator|::
-name|DIDescriptor
-operator|&
-name|CU
 argument_list|)
 expr_stmt|;
 comment|/// getCurrentDirname - Return current directory name.
@@ -991,6 +1025,13 @@ name|getOrCreateFile
 argument_list|(
 argument|SourceLocation Loc
 argument_list|)
+expr_stmt|;
+comment|/// getOrCreateMainFile - Get the file info for main compile unit.
+name|llvm
+operator|::
+name|DIFile
+name|getOrCreateMainFile
+argument_list|()
 expr_stmt|;
 comment|/// getOrCreateType - Get the type from the cache or create a new type if
 comment|/// necessary.

@@ -1922,6 +1922,15 @@ argument_list|,
 name|tmp_V4s
 argument_list|)
 expr_stmt|;
+name|tmp_i
+operator|=
+name|__builtin_ia32_vec_ext_v2si
+argument_list|(
+name|tmp_V2i
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)

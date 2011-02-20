@@ -62,11 +62,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error{{different address spaces}} \
-end_comment
-
-begin_comment
-comment|// FIXME: expected-warning{{discards qualifiers}}
+comment|// expected-error{{changes address space of pointer}}
 end_comment
 
 begin_decl_stmt

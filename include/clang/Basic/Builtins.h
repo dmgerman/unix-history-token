@@ -114,6 +114,39 @@ decl_stmt|;
 name|class
 name|QualType
 decl_stmt|;
+name|class
+name|LangOptions
+decl_stmt|;
+enum|enum
+name|LanguageID
+block|{
+name|C_LANG
+init|=
+literal|0x1
+block|,
+comment|// builtin for c only.
+name|CXX_LANG
+init|=
+literal|0x2
+block|,
+comment|// builtin for cplusplus only.
+name|OBJC_LANG
+init|=
+literal|0x4
+block|,
+comment|// builtin for objective-c and objective-c++
+name|ALL_LANGUAGES
+init|=
+operator|(
+name|C_LANG
+operator||
+name|CXX_LANG
+operator||
+name|OBJC_LANG
+operator|)
+comment|//builtin is for all languages.
+block|}
+enum|;
 name|namespace
 name|Builtin
 block|{
@@ -158,6 +191,9 @@ name|Attributes
 decl_stmt|,
 modifier|*
 name|HeaderName
+decl_stmt|;
+name|LanguageID
+name|builtin_lang
 decl_stmt|;
 name|bool
 name|Suppressed
@@ -261,10 +297,10 @@ name|IdentifierTable
 modifier|&
 name|Table
 parameter_list|,
-name|bool
-name|NoBuiltins
-init|=
-name|false
+specifier|const
+name|LangOptions
+modifier|&
+name|LangOpts
 parameter_list|)
 function_decl|;
 comment|/// \brief Popular the vector with the names of all of the builtins.
@@ -456,6 +492,19 @@ operator|!=
 literal|0
 return|;
 block|}
+comment|/// \brief Completely forget that the given ID was ever considered a builtin,
+comment|/// e.g., because the user provided a conflicting signature.
+name|void
+name|ForgetBuiltin
+parameter_list|(
+name|unsigned
+name|ID
+parameter_list|,
+name|IdentifierTable
+modifier|&
+name|Table
+parameter_list|)
+function_decl|;
 comment|/// \brief If this is a library function that comes from a specific
 comment|/// header, retrieve that header name.
 specifier|const
@@ -513,32 +562,6 @@ modifier|&
 name|HasVAListArg
 parameter_list|)
 function_decl|;
-comment|/// hasVAListUse - Return true of the specified builtin uses __builtin_va_list
-comment|/// as an operand or return type.
-name|bool
-name|hasVAListUse
-argument_list|(
-name|unsigned
-name|ID
-argument_list|)
-decl|const
-block|{
-return|return
-name|strpbrk
-argument_list|(
-name|GetRecord
-argument_list|(
-name|ID
-argument_list|)
-operator|.
-name|Type
-argument_list|,
-literal|"Aa"
-argument_list|)
-operator|!=
-literal|0
-return|;
-block|}
 comment|/// isConstWithoutErrno - Return true if this function has no side
 comment|/// effects and doesn't read memory, except for possibly errno. Such
 comment|/// functions can be const when the MathErrno lang option is

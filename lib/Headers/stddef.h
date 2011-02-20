@@ -137,12 +137,29 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|offsetof
+parameter_list|(
+name|t
+parameter_list|,
+name|d
+parameter_list|)
+value|__builtin_offsetof(t, d)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|// Some C libraries expect to see a wint_t here. Others (notably MinGW) will use
+comment|/* __STDDEF_H */
 end_comment
 
 begin_comment
-comment|// __WINT_TYPE__ directly; accomodate both by requiring __need_wint_t
+comment|/* Some C libraries expect to see a wint_t here. Others (notably MinGW) will use __WINT_TYPE__ directly; accomodate both by requiring __need_wint_t */
 end_comment
 
 begin_if
@@ -152,7 +169,11 @@ name|defined
 argument_list|(
 name|__need_wint_t
 argument_list|)
-operator|&&
+end_if
+
+begin_if
+if|#
+directive|if
 operator|!
 name|defined
 argument_list|(
@@ -178,17 +199,15 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|offsetof
-parameter_list|(
-name|t
-parameter_list|,
-name|d
-parameter_list|)
-value|__builtin_offsetof(t, d)
-end_define
+begin_comment
+comment|/* _WINT_T */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|__need_wint_t
+end_undef
 
 begin_endif
 endif|#
@@ -196,7 +215,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __STDDEF_H */
+comment|/* __need_wint_t */
 end_comment
 
 end_unit

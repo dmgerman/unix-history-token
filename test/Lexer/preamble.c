@@ -110,10 +110,6 @@ comment|// RUN: FileCheck< %t %s
 end_comment
 
 begin_comment
-comment|// XFAIL: win32
-end_comment
-
-begin_comment
 comment|// CHECK: // Preamble detection test: see below for comments and test commands.
 end_comment
 

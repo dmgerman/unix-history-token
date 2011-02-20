@@ -331,5 +331,19 @@ begin_comment
 comment|// expected-warning {{non-standard escape}}
 end_comment
 
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|format
+init|=
+literal|"abc \m def"
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-warning{{unknown escape sequence '\m'}}
+end_comment
+
 end_unit
 

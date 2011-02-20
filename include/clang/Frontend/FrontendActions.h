@@ -166,6 +166,25 @@ argument_list|)
 block|; }
 block|;
 name|class
+name|ASTDumpXMLAction
+operator|:
+name|public
+name|ASTFrontendAction
+block|{
+name|protected
+operator|:
+name|virtual
+name|ASTConsumer
+operator|*
+name|CreateASTConsumer
+argument_list|(
+argument|CompilerInstance&CI
+argument_list|,
+argument|llvm::StringRef InFile
+argument_list|)
+block|; }
+block|;
+name|class
 name|ASTViewAction
 operator|:
 name|public
@@ -256,28 +275,11 @@ argument|llvm::StringRef InFile
 argument_list|,
 argument|std::string&Sysroot
 argument_list|,
+argument|std::string&OutputFile
+argument_list|,
 argument|llvm::raw_ostream *&OS
 argument_list|,
 argument|bool&Chaining
-argument_list|)
-block|; }
-block|;
-name|class
-name|InheritanceViewAction
-operator|:
-name|public
-name|ASTFrontendAction
-block|{
-name|protected
-operator|:
-name|virtual
-name|ASTConsumer
-operator|*
-name|CreateASTConsumer
-argument_list|(
-argument|CompilerInstance&CI
-argument_list|,
-argument|llvm::StringRef InFile
 argument_list|)
 block|; }
 block|;

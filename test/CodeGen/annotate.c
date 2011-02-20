@@ -41,6 +41,14 @@ block|}
 end_function
 
 begin_comment
+comment|// CHECK: private unnamed_addr global
+end_comment
+
+begin_comment
+comment|// CHECK: private unnamed_addr global
+end_comment
+
+begin_comment
 comment|// CHECK: @llvm.global.annotations = appending global [2 x %0]
 end_comment
 

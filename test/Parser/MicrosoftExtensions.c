@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-mingw32 -fsyntax-only -verify -fms-extensions -Wno-missing-declarations -x objective-c++ %s
+comment|// RUN: %clang_cc1 -triple i386-mingw32 -fsyntax-only -verify -fms-extensions  -Wno-missing-declarations -x objective-c++ %s
 end_comment
 
 begin_function_decl
@@ -202,6 +202,18 @@ asm|};
 block|}
 end_function
 
+begin_function
+name|_inline
+name|int
+name|foo99
+parameter_list|()
+block|{
+return|return
+literal|99
+return|;
+block|}
+end_function
+
 begin_function_decl
 name|void
 modifier|*
@@ -254,6 +266,24 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_function
+name|void
+name|local_callconv
+parameter_list|()
+block|{
+name|bool
+function_decl|(
+name|__stdcall
+modifier|*
+name|p
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+block|}
+end_function
+
 begin_comment
 comment|// Charify extension.
 end_comment
@@ -288,6 +318,82 @@ name|e1
 block|}
 empty_stmt|;
 end_typedef
+
+begin_comment
+comment|/* Microsoft attribute tests */
+end_comment
+
+begin_expr_stmt
+index|[
+name|repeatable
+index|]
+index|[
+name|source_annotation_attribute
+argument_list|(
+name|Parameter
+operator||
+name|ReturnValue
+argument_list|)
+index|]
+expr|struct
+name|SA_Post
+block|{
+name|SA_Post
+argument_list|()
+block|;
+name|int
+name|attr
+block|; }
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+index|[
+name|returnvalue
+operator|:
+name|SA_Post
+argument_list|(
+name|attr
+operator|=
+literal|1
+argument_list|)
+index|]
+name|int
+name|foo1
+argument_list|(
+index|[
+name|SA_Post
+argument_list|(
+name|attr
+operator|=
+literal|1
+argument_list|)
+index|]
+name|void
+operator|*
+name|param
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_function
+name|void
+name|ms_intrinsics
+parameter_list|(
+name|int
+name|a
+parameter_list|)
+block|{
+name|__noop
+argument_list|()
+expr_stmt|;
+name|__assume
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 end_unit
 

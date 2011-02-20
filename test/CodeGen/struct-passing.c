@@ -1,34 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-pc-linux-gnu -emit-llvm -o %t %s
+comment|// This verifies that structs returned from functions by value are passed
 end_comment
 
 begin_comment
-comment|// RUN: grep 'declare i32 @f0() readnone' %t
+comment|// correctly according to their attributes and the ABI.
 end_comment
 
 begin_comment
-comment|// RUN: grep 'declare i32 @f1() readonly' %t
+comment|// SEE: PR3835
 end_comment
 
 begin_comment
-comment|// RUN: grep 'declare void @f2(.* sret)' %t
-end_comment
-
-begin_comment
-comment|// RUN: grep 'declare void @f3(.* sret)' %t
-end_comment
-
-begin_comment
-comment|// RUN: grep 'declare void @f4(.* byval)' %t
-end_comment
-
-begin_comment
-comment|// RUN: grep 'declare void @f5(.* byval)' %t
-end_comment
-
-begin_comment
-comment|// PR3835
+comment|// RUN: %clang_cc1 -triple i386-unknown-unknown -emit-llvm %s -o - | FileCheck %s
 end_comment
 
 begin_typedef
@@ -166,6 +150,30 @@ name|f5
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|// CHECK: declare i32 @f0() readnone
+end_comment
+
+begin_comment
+comment|// CHECK: declare i32 @f1() readonly
+end_comment
+
+begin_comment
+comment|// CHECK: declare void @f2({{.*}} sret)
+end_comment
+
+begin_comment
+comment|// CHECK: declare void @f3({{.*}} sret)
+end_comment
+
+begin_comment
+comment|// CHECK: declare void @f4({{.*}} byval)
+end_comment
+
+begin_comment
+comment|// CHECK: declare void @f5({{.*}} byval)
+end_comment
 
 end_unit
 

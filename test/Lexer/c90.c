@@ -76,5 +76,26 @@ decl_stmt|;
 block|}
 end_function
 
+begin_function
+name|void
+name|test3
+parameter_list|()
+block|{
+operator|(
+name|void
+operator|)
+literal|L"\u1234"
+expr_stmt|;
+comment|// expected-error {{unicode escape sequences are only valid in C99 or C++}}
+operator|(
+name|void
+operator|)
+literal|L'
+expr|\u1234'
+expr_stmt|;
+comment|// expected-error {{unicode escape sequences are only valid in C99 or C++}}
+block|}
+end_function
+
 end_unit
 

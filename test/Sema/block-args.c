@@ -280,5 +280,39 @@ comment|// expected-error {{parameter name omitted}}
 block|}
 end_function
 
+begin_comment
+comment|// rdar://problem/8962770
+end_comment
+
+begin_function
+name|void
+name|test4
+parameter_list|()
+block|{
+name|int
+function_decl|(
+modifier|^
+name|f
+function_decl|)
+parameter_list|()
+init|=
+lambda|^
+parameter_list|(
+init|(
+name|x
+init|)
+block|)
+block|{ }
+end_function
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|// expected-error {{expected ')'}} expected-warning {{type specifier missing}} expected-note {{to match this}}
+end_comment
+
+unit|}
 end_unit
 

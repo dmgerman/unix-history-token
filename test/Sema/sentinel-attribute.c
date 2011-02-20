@@ -16,7 +16,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|//expected-warning{{'sentinel' attribute only applies to function, method or block types}}
+comment|//expected-warning{{'sentinel' attribute only applies to functions, methods and blocks}}
 end_comment
 
 begin_function_decl

@@ -109,13 +109,11 @@ name|virtual
 name|void
 name|HandlePragma
 argument_list|(
-name|Preprocessor
-operator|&
-name|PP
+argument|Preprocessor&PP
 argument_list|,
-name|Token
-operator|&
-name|FirstToken
+argument|PragmaIntroducerKind Introducer
+argument_list|,
+argument|Token&FirstToken
 argument_list|)
 block|; }
 decl_stmt|;
@@ -153,13 +151,11 @@ name|virtual
 name|void
 name|HandlePragma
 argument_list|(
-name|Preprocessor
-operator|&
-name|PP
+argument|Preprocessor&PP
 argument_list|,
-name|Token
-operator|&
-name|FirstToken
+argument|PragmaIntroducerKind Introducer
+argument_list|,
+argument|Token&FirstToken
 argument_list|)
 block|; }
 decl_stmt|;
@@ -197,13 +193,11 @@ name|virtual
 name|void
 name|HandlePragma
 argument_list|(
-name|Preprocessor
-operator|&
-name|PP
+argument|Preprocessor&PP
 argument_list|,
-name|Token
-operator|&
-name|FirstToken
+argument|PragmaIntroducerKind Introducer
+argument_list|,
+argument|Token&FirstToken
 argument_list|)
 block|; }
 decl_stmt|;
@@ -241,13 +235,11 @@ name|virtual
 name|void
 name|HandlePragma
 argument_list|(
-name|Preprocessor
-operator|&
-name|PP
+argument|Preprocessor&PP
 argument_list|,
-name|Token
-operator|&
-name|FirstToken
+argument|PragmaIntroducerKind Introducer
+argument_list|,
+argument|Token&FirstToken
 argument_list|)
 block|; }
 decl_stmt|;
@@ -297,13 +289,11 @@ name|virtual
 name|void
 name|HandlePragma
 argument_list|(
-name|Preprocessor
-operator|&
-name|PP
+argument|Preprocessor&PP
 argument_list|,
-name|Token
-operator|&
-name|FirstToken
+argument|PragmaIntroducerKind Introducer
+argument_list|,
+argument|Token&FirstToken
 argument_list|)
 block|; }
 decl_stmt|;
@@ -341,13 +331,119 @@ name|virtual
 name|void
 name|HandlePragma
 argument_list|(
-name|Preprocessor
-operator|&
-name|PP
+argument|Preprocessor&PP
 argument_list|,
-name|Token
+argument|PragmaIntroducerKind Introducer
+argument_list|,
+argument|Token&FirstToken
+argument_list|)
+block|; }
+decl_stmt|;
+name|class
+name|PragmaOpenCLExtensionHandler
+range|:
+name|public
+name|PragmaHandler
+block|{
+name|Sema
 operator|&
-name|FirstToken
+name|Actions
+block|;
+name|Parser
+operator|&
+name|parser
+block|;
+name|public
+operator|:
+name|PragmaOpenCLExtensionHandler
+argument_list|(
+name|Sema
+operator|&
+name|S
+argument_list|,
+name|Parser
+operator|&
+name|p
+argument_list|)
+operator|:
+name|PragmaHandler
+argument_list|(
+literal|"EXTENSION"
+argument_list|)
+block|,
+name|Actions
+argument_list|(
+name|S
+argument_list|)
+block|,
+name|parser
+argument_list|(
+argument|p
+argument_list|)
+block|{}
+name|virtual
+name|void
+name|HandlePragma
+argument_list|(
+argument|Preprocessor&PP
+argument_list|,
+argument|PragmaIntroducerKind Introducer
+argument_list|,
+argument|Token&FirstToken
+argument_list|)
+block|; }
+decl_stmt|;
+name|class
+name|PragmaFPContractHandler
+range|:
+name|public
+name|PragmaHandler
+block|{
+name|Sema
+operator|&
+name|Actions
+block|;
+name|Parser
+operator|&
+name|parser
+block|;
+name|public
+operator|:
+name|PragmaFPContractHandler
+argument_list|(
+name|Sema
+operator|&
+name|S
+argument_list|,
+name|Parser
+operator|&
+name|p
+argument_list|)
+operator|:
+name|PragmaHandler
+argument_list|(
+literal|"FP_CONTRACT"
+argument_list|)
+block|,
+name|Actions
+argument_list|(
+name|S
+argument_list|)
+block|,
+name|parser
+argument_list|(
+argument|p
+argument_list|)
+block|{}
+name|virtual
+name|void
+name|HandlePragma
+argument_list|(
+argument|Preprocessor&PP
+argument_list|,
+argument|PragmaIntroducerKind Introducer
+argument_list|,
+argument|Token&FirstToken
 argument_list|)
 block|; }
 decl_stmt|;

@@ -324,5 +324,51 @@ comment|// expected-warning{{array comparison always evaluates to a constant}}
 block|}
 end_function
 
+begin_comment
+comment|// Don't issue a warning when either the left or right side of the comparison
+end_comment
+
+begin_comment
+comment|// results from a macro expansion.<rdar://problem/8435950>
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R8435950_A
+value|i
+end_define
+
+begin_define
+define|#
+directive|define
+name|R8435950_B
+value|i
+end_define
+
+begin_function
+name|int
+name|R8435950
+parameter_list|(
+name|int
+name|i
+parameter_list|)
+block|{
+if|if
+condition|(
+name|R8435950_A
+operator|==
+name|R8435950_B
+condition|)
+comment|// no-warning
+return|return
+literal|0
+return|;
+return|return
+literal|1
+return|;
+block|}
+end_function
+
 end_unit
 

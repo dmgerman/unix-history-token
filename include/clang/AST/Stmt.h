@@ -98,12 +98,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/AST/FullExpr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -678,21 +672,6 @@ directive|include
 file|"clang/AST/StmtNodes.inc"
 block|}
 enum|;
-name|private
-label|:
-comment|/// \brief The statement class.
-specifier|const
-name|unsigned
-name|sClass
-range|:
-literal|8
-decl_stmt|;
-comment|/// \brief The reference count for this statement.
-name|unsigned
-name|RefCount
-range|:
-literal|24
-decl_stmt|;
 comment|// Make vanilla 'new' and 'delete' illegal for Stmts.
 name|protected
 label|:
@@ -737,6 +716,246 @@ literal|"Stmts cannot be released with regular 'delete'."
 argument_list|)
 expr_stmt|;
 block|}
+name|class
+name|StmtBitfields
+block|{
+name|friend
+name|class
+name|Stmt
+decl_stmt|;
+comment|/// \brief The statement class.
+name|unsigned
+name|sClass
+range|:
+literal|8
+decl_stmt|;
+block|}
+empty_stmt|;
+enum|enum
+block|{
+name|NumStmtBits
+init|=
+literal|8
+block|}
+enum|;
+name|class
+name|CompoundStmtBitfields
+block|{
+name|friend
+name|class
+name|CompoundStmt
+decl_stmt|;
+name|unsigned
+label|:
+name|NumStmtBits
+expr_stmt|;
+name|unsigned
+name|NumStmts
+range|:
+literal|32
+operator|-
+name|NumStmtBits
+decl_stmt|;
+block|}
+empty_stmt|;
+name|class
+name|ExprBitfields
+block|{
+name|friend
+name|class
+name|Expr
+decl_stmt|;
+name|friend
+name|class
+name|DeclRefExpr
+decl_stmt|;
+comment|// computeDependence
+name|friend
+name|class
+name|InitListExpr
+decl_stmt|;
+comment|// ctor
+name|friend
+name|class
+name|DesignatedInitExpr
+decl_stmt|;
+comment|// ctor
+name|friend
+name|class
+name|BlockDeclRefExpr
+decl_stmt|;
+comment|// ctor
+name|friend
+name|class
+name|ASTStmtReader
+decl_stmt|;
+comment|// deserialization
+name|friend
+name|class
+name|CXXNewExpr
+decl_stmt|;
+comment|// ctor
+name|friend
+name|class
+name|DependentScopeDeclRefExpr
+decl_stmt|;
+comment|// ctor
+name|friend
+name|class
+name|CXXConstructExpr
+decl_stmt|;
+comment|// ctor
+name|friend
+name|class
+name|CallExpr
+decl_stmt|;
+comment|// ctor
+name|friend
+name|class
+name|OffsetOfExpr
+decl_stmt|;
+comment|// ctor
+name|friend
+name|class
+name|ObjCMessageExpr
+decl_stmt|;
+comment|// ctor
+name|friend
+name|class
+name|ShuffleVectorExpr
+decl_stmt|;
+comment|// ctor
+name|friend
+name|class
+name|ParenListExpr
+decl_stmt|;
+comment|// ctor
+name|friend
+name|class
+name|CXXUnresolvedConstructExpr
+decl_stmt|;
+comment|// ctor
+name|friend
+name|class
+name|CXXDependentScopeMemberExpr
+decl_stmt|;
+comment|// ctor
+name|friend
+name|class
+name|OverloadExpr
+decl_stmt|;
+comment|// ctor
+name|unsigned
+label|:
+name|NumStmtBits
+expr_stmt|;
+name|unsigned
+name|ValueKind
+range|:
+literal|2
+decl_stmt|;
+name|unsigned
+name|ObjectKind
+range|:
+literal|2
+decl_stmt|;
+name|unsigned
+name|TypeDependent
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|ValueDependent
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|ContainsUnexpandedParameterPack
+range|:
+literal|1
+decl_stmt|;
+block|}
+empty_stmt|;
+enum|enum
+block|{
+name|NumExprBits
+init|=
+literal|15
+block|}
+enum|;
+name|class
+name|CastExprBitfields
+block|{
+name|friend
+name|class
+name|CastExpr
+decl_stmt|;
+name|unsigned
+label|:
+name|NumExprBits
+expr_stmt|;
+name|unsigned
+name|Kind
+range|:
+literal|6
+decl_stmt|;
+name|unsigned
+name|BasePathSize
+range|:
+literal|32
+operator|-
+literal|6
+operator|-
+name|NumExprBits
+decl_stmt|;
+block|}
+empty_stmt|;
+name|class
+name|CallExprBitfields
+block|{
+name|friend
+name|class
+name|CallExpr
+decl_stmt|;
+name|unsigned
+label|:
+name|NumExprBits
+expr_stmt|;
+name|unsigned
+name|NumPreArgs
+range|:
+literal|1
+decl_stmt|;
+block|}
+empty_stmt|;
+union|union
+block|{
+comment|// FIXME: this is wasteful on 64-bit platforms.
+name|void
+modifier|*
+name|Aligner
+decl_stmt|;
+name|StmtBitfields
+name|StmtBits
+decl_stmt|;
+name|CompoundStmtBitfields
+name|CompoundStmtBits
+decl_stmt|;
+name|ExprBitfields
+name|ExprBits
+decl_stmt|;
+name|CastExprBitfields
+name|CastExprBits
+decl_stmt|;
+name|CallExprBitfields
+name|CallExprBits
+decl_stmt|;
+block|}
+union|;
+name|friend
+name|class
+name|ASTStmtReader
+decl_stmt|;
 name|public
 label|:
 comment|// Only allow allocation of Stmts using the allocator in ASTContext
@@ -898,22 +1117,19 @@ label|:
 comment|/// \brief Construct an empty statement.
 name|explicit
 name|Stmt
-argument_list|(
-argument|StmtClass SC
-argument_list|,
-argument|EmptyShell
-argument_list|)
-block|:
-name|sClass
-argument_list|(
+parameter_list|(
+name|StmtClass
 name|SC
-argument_list|)
-operator|,
-name|RefCount
-argument_list|(
-literal|1
-argument_list|)
+parameter_list|,
+name|EmptyShell
+parameter_list|)
 block|{
+name|StmtBits
+operator|.
+name|sClass
+operator|=
+name|SC
+expr_stmt|;
 if|if
 condition|(
 name|Stmt
@@ -935,17 +1151,13 @@ name|Stmt
 argument_list|(
 argument|StmtClass SC
 argument_list|)
-block|:
-name|sClass
-argument_list|(
-name|SC
-argument_list|)
-operator|,
-name|RefCount
-argument_list|(
-literal|1
-argument_list|)
 block|{
+name|StmtBits
+operator|.
+name|sClass
+operator|=
+name|SC
+expr_stmt|;
 if|if
 condition|(
 name|Stmt
@@ -961,73 +1173,21 @@ name|SC
 argument_list|)
 expr_stmt|;
 block|}
-name|virtual
-operator|~
-name|Stmt
-argument_list|()
-block|{}
-ifndef|#
-directive|ifndef
-name|NDEBUG
-comment|/// \brief True if this statement's refcount is in a valid state.
-comment|/// Should be used only in assertions.
-name|bool
-name|isRetained
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|(
-name|RefCount
-operator|>=
-literal|1
-operator|)
-return|;
-block|}
-endif|#
-directive|endif
-comment|/// \brief Increases the reference count for this statement.
-comment|///
-comment|/// Invoke the Retain() operation when this statement or expression
-comment|/// is being shared by another owner.
-name|Stmt
-modifier|*
-name|Retain
-parameter_list|()
-block|{
-name|assert
-argument_list|(
-name|RefCount
-operator|>=
-literal|1
-argument_list|)
-expr_stmt|;
-operator|++
-name|RefCount
-expr_stmt|;
-return|return
-name|this
-return|;
-block|}
 name|StmtClass
 name|getStmtClass
 argument_list|()
 specifier|const
 block|{
-name|assert
-argument_list|(
-name|RefCount
-operator|>=
-literal|1
-operator|&&
-literal|"Referencing already-destroyed statement!"
-argument_list|)
-block|;
 return|return
-operator|(
+name|static_cast
+operator|<
 name|StmtClass
-operator|)
+operator|>
+operator|(
+name|StmtBits
+operator|.
 name|sClass
+operator|)
 return|;
 block|}
 specifier|const
@@ -1040,13 +1200,10 @@ expr_stmt|;
 comment|/// SourceLocation tokens are not useful in isolation - they are low level
 comment|/// value objects created/interpreted by SourceManager. We assume AST
 comment|/// clients will have a pointer to the respective SourceManager.
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
-operator|=
-literal|0
 expr_stmt|;
 name|SourceLocation
 name|getLocStart
@@ -1261,9 +1418,9 @@ name|hasImplicitControlFlow
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// Child Iterators: All subclasses must implement child_begin and child_end
-comment|///  to permit easy iteration over the substatements/subexpessions of an
-comment|///  AST node.  This permits easy iteration over all nodes in the AST.
+comment|/// Child Iterators: All subclasses must implement 'children'
+comment|/// to permit easy iteration over the substatements/subexpessions of an
+comment|/// AST node.  This permits easy iteration over all nodes in the AST.
 typedef|typedef
 name|StmtIterator
 name|child_iterator
@@ -1272,28 +1429,24 @@ typedef|typedef
 name|ConstStmtIterator
 name|const_child_iterator
 typedef|;
-name|virtual
-name|child_iterator
-name|child_begin
+typedef|typedef
+name|StmtRange
+name|child_range
+typedef|;
+typedef|typedef
+name|ConstStmtRange
+name|const_child_range
+typedef|;
+name|child_range
+name|children
 parameter_list|()
-init|=
-literal|0
 function_decl|;
-name|virtual
-name|child_iterator
-name|child_end
-parameter_list|()
-init|=
-literal|0
-function_decl|;
-name|const_child_iterator
-name|child_begin
+name|const_child_range
+name|children
 argument_list|()
 specifier|const
 block|{
 return|return
-name|const_child_iterator
-argument_list|(
 name|const_cast
 operator|<
 name|Stmt
@@ -1303,9 +1456,42 @@ operator|(
 name|this
 operator|)
 operator|->
+name|children
+argument_list|()
+return|;
+block|}
+name|child_iterator
+name|child_begin
+parameter_list|()
+block|{
+return|return
+name|children
+argument_list|()
+operator|.
+name|first
+return|;
+block|}
+name|child_iterator
+name|child_end
+parameter_list|()
+block|{
+return|return
+name|children
+argument_list|()
+operator|.
+name|second
+return|;
+block|}
+name|const_child_iterator
 name|child_begin
 argument_list|()
-argument_list|)
+specifier|const
+block|{
+return|return
+name|children
+argument_list|()
+operator|.
+name|first
 return|;
 block|}
 name|const_child_iterator
@@ -1314,20 +1500,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|const_child_iterator
-argument_list|(
-name|const_cast
-operator|<
-name|Stmt
-operator|*
-operator|>
-operator|(
-name|this
-operator|)
-operator|->
-name|child_end
+name|children
 argument_list|()
-argument_list|)
+operator|.
+name|second
 return|;
 block|}
 comment|/// \brief Produce a unique representation of the given statement.
@@ -1351,6 +1527,7 @@ name|FoldingSetNodeID
 operator|&
 name|ID
 argument_list|,
+specifier|const
 name|ASTContext
 operator|&
 name|Context
@@ -1594,16 +1771,41 @@ name|true
 return|;
 block|}
 comment|// Iterators over subexpressions.
-name|virtual
-name|child_iterator
-name|child_begin
+name|child_range
+name|children
 argument_list|()
-block|;
-name|virtual
+block|{
+return|return
+name|child_range
+argument_list|(
 name|child_iterator
-name|child_end
+argument_list|(
+name|DG
+operator|.
+name|begin
 argument_list|()
-block|;
+argument_list|,
+name|DG
+operator|.
+name|end
+argument_list|()
+argument_list|)
+argument_list|,
+name|child_iterator
+argument_list|(
+name|DG
+operator|.
+name|end
+argument_list|()
+argument_list|,
+name|DG
+operator|.
+name|end
+argument_list|()
+argument_list|)
+argument_list|)
+return|;
+block|}
 typedef|typedef
 name|DeclGroupRef
 operator|::
@@ -1698,11 +1900,21 @@ block|{
 name|SourceLocation
 name|SemiLoc
 block|;
+comment|/// \brief Whether the null statement was preceded by an empty macro, e.g:
+comment|/// @code
+comment|///   #define CALL(x)
+comment|///   CALL(0);
+comment|/// @endcode
+name|bool
+name|LeadingEmptyMacro
+block|;
 name|public
 operator|:
 name|NullStmt
 argument_list|(
 argument|SourceLocation L
+argument_list|,
+argument|bool LeadingEmptyMacro = false
 argument_list|)
 operator|:
 name|Stmt
@@ -1712,7 +1924,12 @@ argument_list|)
 block|,
 name|SemiLoc
 argument_list|(
-argument|L
+name|L
+argument_list|)
+block|,
+name|LeadingEmptyMacro
+argument_list|(
+argument|LeadingEmptyMacro
 argument_list|)
 block|{}
 comment|/// \brief Build an empty null statement.
@@ -1748,7 +1965,15 @@ name|SemiLoc
 operator|=
 name|L
 block|; }
-name|virtual
+name|bool
+name|hasLeadingEmptyMacro
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LeadingEmptyMacro
+return|;
+block|}
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -1788,16 +2013,22 @@ return|return
 name|true
 return|;
 block|}
-comment|// Iterators
-name|virtual
-name|child_iterator
-name|child_begin
+name|child_range
+name|children
 argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|()
+return|;
+block|}
+name|friend
+name|class
+name|ASTStmtReader
 block|;
-name|virtual
-name|child_iterator
-name|child_end
-argument_list|()
+name|friend
+name|class
+name|ASTStmtWriter
 block|; }
 decl_stmt|;
 end_decl_stmt
@@ -1822,9 +2053,6 @@ operator|*
 operator|*
 name|Body
 block|;
-name|unsigned
-name|NumStmts
-block|;
 name|SourceLocation
 name|LBracLoc
 block|,
@@ -1838,7 +2066,7 @@ argument|ASTContext& C
 argument_list|,
 argument|Stmt **StmtStart
 argument_list|,
-argument|unsigned numStmts
+argument|unsigned NumStmts
 argument_list|,
 argument|SourceLocation LB
 argument_list|,
@@ -1848,11 +2076,6 @@ operator|:
 name|Stmt
 argument_list|(
 name|CompoundStmtClass
-argument_list|)
-block|,
-name|NumStmts
-argument_list|(
-name|numStmts
 argument_list|)
 block|,
 name|LBracLoc
@@ -1865,6 +2088,12 @@ argument_list|(
 argument|RB
 argument_list|)
 block|{
+name|CompoundStmtBits
+operator|.
+name|NumStmts
+operator|=
+name|NumStmts
+block|;
 if|if
 condition|(
 name|NumStmts
@@ -1896,7 +2125,7 @@ name|Body
 argument_list|,
 name|StmtStart
 argument_list|,
-name|numStmts
+name|NumStmts
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -1923,12 +2152,14 @@ name|Body
 argument_list|(
 literal|0
 argument_list|)
-decl_stmt|,
+block|{
+name|CompoundStmtBits
+operator|.
 name|NumStmts
-argument_list|(
+operator|=
 literal|0
-argument_list|)
-block|{ }
+expr_stmt|;
+block|}
 end_decl_stmt
 
 begin_function_decl
@@ -1957,6 +2188,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|CompoundStmtBits
+operator|.
 name|NumStmts
 operator|==
 literal|0
@@ -1971,6 +2204,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|CompoundStmtBits
+operator|.
 name|NumStmts
 return|;
 block|}
@@ -2004,7 +2239,8 @@ block|{
 return|return
 name|Body
 operator|+
-name|NumStmts
+name|size
+argument_list|()
 return|;
 block|}
 end_function
@@ -2016,17 +2252,51 @@ name|body_back
 parameter_list|()
 block|{
 return|return
-name|NumStmts
+operator|!
+name|body_empty
+argument_list|()
 condition|?
 name|Body
 index|[
-name|NumStmts
+name|size
+argument_list|()
 operator|-
 literal|1
 index|]
 else|:
 literal|0
 return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|setLastStmt
+parameter_list|(
+name|Stmt
+modifier|*
+name|S
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+operator|!
+name|body_empty
+argument_list|()
+operator|&&
+literal|"setLastStmt"
+argument_list|)
+expr_stmt|;
+name|Body
+index|[
+name|size
+argument_list|()
+operator|-
+literal|1
+index|]
+operator|=
+name|S
+expr_stmt|;
 block|}
 end_function
 
@@ -2061,7 +2331,8 @@ block|{
 return|return
 name|Body
 operator|+
-name|NumStmts
+name|size
+argument_list|()
 return|;
 block|}
 end_expr_stmt
@@ -2075,11 +2346,14 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|NumStmts
+operator|!
+name|body_empty
+argument_list|()
 operator|?
 name|Body
 index|[
-name|NumStmts
+name|size
+argument_list|()
 operator|-
 literal|1
 index|]
@@ -2176,7 +2450,6 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -2289,21 +2562,33 @@ begin_comment
 comment|// Iterators
 end_comment
 
-begin_function_decl
-name|virtual
-name|child_iterator
-name|child_begin
+begin_function
+name|child_range
+name|children
 parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|virtual
-name|child_iterator
-name|child_end
-parameter_list|()
-function_decl|;
-end_function_decl
+block|{
+return|return
+name|child_range
+argument_list|(
+operator|&
+name|Body
+index|[
+literal|0
+index|]
+argument_list|,
+operator|&
+name|Body
+index|[
+literal|0
+index|]
+operator|+
+name|CompoundStmtBits
+operator|.
+name|NumStmts
+argument_list|)
+return|;
+block|}
+end_function
 
 begin_comment
 unit|};
@@ -2376,13 +2661,7 @@ name|Stmt
 operator|*
 name|getSubStmt
 argument_list|()
-block|{
-return|return
-name|v_getSubStmt
-argument_list|()
-return|;
-block|}
-name|virtual
+block|;
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -2427,23 +2706,11 @@ return|return
 name|true
 return|;
 block|}
-name|protected
-operator|:
-name|virtual
-name|Stmt
-operator|*
-name|v_getSubStmt
-argument_list|()
-operator|=
-literal|0
-block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+expr|}
+block|;
 name|class
 name|CaseStmt
-range|:
+operator|:
 name|public
 name|SwitchCase
 block|{   enum
@@ -2475,17 +2742,6 @@ block|;
 name|SourceLocation
 name|ColonLoc
 block|;
-name|virtual
-name|Stmt
-operator|*
-name|v_getSubStmt
-argument_list|()
-block|{
-return|return
-name|getSubStmt
-argument_list|()
-return|;
-block|}
 name|public
 operator|:
 name|CaseStmt
@@ -2783,7 +3039,6 @@ operator|(
 name|Val
 operator|)
 block|; }
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -2834,18 +3089,12 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_function
 specifier|static
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|Stmt
-modifier|*
-name|T
-parameter_list|)
+argument_list|(
+argument|const Stmt *T
+argument_list|)
 block|{
 return|return
 name|T
@@ -2856,49 +3105,44 @@ operator|==
 name|CaseStmtClass
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|CaseStmt
-modifier|*
-parameter_list|)
+argument_list|(
+argument|const CaseStmt *
+argument_list|)
 block|{
 return|return
 name|true
 return|;
 block|}
-end_function
-
-begin_comment
 comment|// Iterators
-end_comment
-
-begin_function_decl
-name|virtual
-name|child_iterator
-name|child_begin
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|virtual
-name|child_iterator
-name|child_end
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-unit|};
+name|child_range
+name|children
+argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+operator|&
+name|SubExprs
+index|[
+literal|0
+index|]
+argument_list|,
+operator|&
+name|SubExprs
+index|[
+name|END_EXPR
+index|]
+argument_list|)
+return|;
+block|}
+expr|}
+block|;
 name|class
 name|DefaultStmt
-range|:
+operator|:
 name|public
 name|SwitchCase
 block|{
@@ -2912,17 +3156,6 @@ block|;
 name|SourceLocation
 name|ColonLoc
 block|;
-name|virtual
-name|Stmt
-operator|*
-name|v_getSubStmt
-argument_list|()
-block|{
-return|return
-name|getSubStmt
-argument_list|()
-return|;
-block|}
 name|public
 operator|:
 name|DefaultStmt
@@ -3034,7 +3267,6 @@ name|ColonLoc
 operator|=
 name|L
 block|; }
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -3080,29 +3312,37 @@ name|true
 return|;
 block|}
 comment|// Iterators
-name|virtual
-name|child_iterator
-name|child_begin
+name|child_range
+name|children
 argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+operator|&
+name|SubStmt
+argument_list|,
+operator|&
+name|SubStmt
+operator|+
+literal|1
+argument_list|)
+return|;
+block|}
+expr|}
 block|;
-name|virtual
-name|child_iterator
-name|child_end
-argument_list|()
-block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+comment|/// LabelStmt - Represents a label, which has a substatement.  For example:
+comment|///    foo: return;
+comment|///
 name|class
 name|LabelStmt
-range|:
+operator|:
 name|public
 name|Stmt
 block|{
-name|IdentifierInfo
+name|LabelDecl
 operator|*
-name|Label
+name|TheDecl
 block|;
 name|Stmt
 operator|*
@@ -3117,7 +3357,7 @@ name|LabelStmt
 argument_list|(
 argument|SourceLocation IL
 argument_list|,
-argument|IdentifierInfo *label
+argument|LabelDecl *D
 argument_list|,
 argument|Stmt *substmt
 argument_list|)
@@ -3127,9 +3367,9 @@ argument_list|(
 name|LabelStmtClass
 argument_list|)
 block|,
-name|Label
+name|TheDecl
 argument_list|(
-name|label
+name|D
 argument_list|)
 block|,
 name|SubStmt
@@ -3141,7 +3381,7 @@ name|IdentLoc
 argument_list|(
 argument|IL
 argument_list|)
-block|{}
+block|{   }
 comment|// \brief Build an empty label statement.
 name|explicit
 name|LabelStmt
@@ -3165,25 +3405,25 @@ return|return
 name|IdentLoc
 return|;
 block|}
-name|IdentifierInfo
+name|LabelDecl
 operator|*
-name|getID
+name|getDecl
 argument_list|()
 specifier|const
 block|{
 return|return
-name|Label
+name|TheDecl
 return|;
 block|}
 name|void
-name|setID
+name|setDecl
 argument_list|(
-argument|IdentifierInfo *II
+argument|LabelDecl *D
 argument_list|)
 block|{
-name|Label
+name|TheDecl
 operator|=
-name|II
+name|D
 block|; }
 specifier|const
 name|char
@@ -3232,7 +3472,6 @@ name|SubStmt
 operator|=
 name|SS
 block|; }
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -3247,6 +3486,23 @@ name|SubStmt
 operator|->
 name|getLocEnd
 argument_list|()
+argument_list|)
+return|;
+block|}
+name|child_range
+name|children
+argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+operator|&
+name|SubStmt
+argument_list|,
+operator|&
+name|SubStmt
+operator|+
+literal|1
 argument_list|)
 return|;
 block|}
@@ -3277,32 +3533,13 @@ return|return
 name|true
 return|;
 block|}
-comment|// Iterators
-name|virtual
-name|child_iterator
-name|child_begin
-argument_list|()
+expr|}
 block|;
-name|virtual
-name|child_iterator
-name|child_end
-argument_list|()
-block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// IfStmt - This represents an if/then/else.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_decl_stmt
 name|class
 name|IfStmt
-range|:
+operator|:
 name|public
 name|Stmt
 block|{   enum
@@ -3567,7 +3804,6 @@ name|ElseLoc
 operator|=
 name|L
 block|; }
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -3610,6 +3846,31 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+comment|// Iterators over subexpressions.  The iterators will include iterating
+comment|// over the initialization expression referenced by the condition variable.
+name|child_range
+name|children
+argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+operator|&
+name|SubExprs
+index|[
+literal|0
+index|]
+argument_list|,
+operator|&
+name|SubExprs
+index|[
+literal|0
+index|]
+operator|+
+name|END_EXPR
+argument_list|)
+return|;
+block|}
 specifier|static
 name|bool
 name|classof
@@ -3637,33 +3898,13 @@ return|return
 name|true
 return|;
 block|}
-comment|// Iterators over subexpressions.  The iterators will include iterating
-comment|// over the initialization expression referenced by the condition variable.
-name|virtual
-name|child_iterator
-name|child_begin
-argument_list|()
+expr|}
 block|;
-name|virtual
-name|child_iterator
-name|child_end
-argument_list|()
-block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// SwitchStmt - This represents a 'switch' stmt.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_decl_stmt
 name|class
 name|SwitchStmt
-range|:
+operator|:
 name|public
 name|Stmt
 block|{   enum
@@ -3691,6 +3932,14 @@ name|FirstCase
 block|;
 name|SourceLocation
 name|SwitchLoc
+block|;
+comment|/// If the SwitchStmt is a switch on an enum value, this records whether
+comment|/// all the enum values were covered by CaseStmts.  This value is meant to
+comment|/// be a hint for possible clients.
+name|unsigned
+name|AllEnumCasesCovered
+operator|:
+literal|1
 block|;
 name|public
 operator|:
@@ -3940,11 +4189,6 @@ argument_list|)
 block|;
 name|SC
 operator|->
-name|Retain
-argument_list|()
-block|;
-name|SC
-operator|->
 name|setNextSwitchCase
 argument_list|(
 name|FirstCase
@@ -3954,7 +4198,30 @@ name|FirstCase
 operator|=
 name|SC
 block|;   }
-name|virtual
+comment|/// Set a flag in the SwitchStmt indicating that if the 'switch (X)' is a
+comment|/// switch over an enum value then all cases have been explicitly covered.
+name|void
+name|setAllEnumCasesCovered
+argument_list|()
+block|{
+name|AllEnumCasesCovered
+operator|=
+literal|1
+block|;   }
+comment|/// Returns true if the SwitchStmt is a switch of an enum value and all cases
+comment|/// have been explicitly covered.
+name|bool
+name|isAllEnumCasesCovered
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|bool
+operator|)
+name|AllEnumCasesCovered
+return|;
+block|}
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -3972,6 +4239,30 @@ index|]
 operator|->
 name|getLocEnd
 argument_list|()
+argument_list|)
+return|;
+block|}
+comment|// Iterators
+name|child_range
+name|children
+argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+operator|&
+name|SubExprs
+index|[
+literal|0
+index|]
+argument_list|,
+operator|&
+name|SubExprs
+index|[
+literal|0
+index|]
+operator|+
+name|END_EXPR
 argument_list|)
 return|;
 block|}
@@ -4002,32 +4293,13 @@ return|return
 name|true
 return|;
 block|}
-comment|// Iterators
-name|virtual
-name|child_iterator
-name|child_begin
-argument_list|()
+expr|}
 block|;
-name|virtual
-name|child_iterator
-name|child_end
-argument_list|()
-block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// WhileStmt - This represents a 'while' stmt.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_decl_stmt
 name|class
 name|WhileStmt
-range|:
+operator|:
 name|public
 name|Stmt
 block|{   enum
@@ -4224,7 +4496,6 @@ name|WhileLoc
 operator|=
 name|L
 block|; }
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -4273,38 +4544,43 @@ name|true
 return|;
 block|}
 comment|// Iterators
-name|virtual
-name|child_iterator
-name|child_begin
+name|child_range
+name|children
 argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+operator|&
+name|SubExprs
+index|[
+literal|0
+index|]
+argument_list|,
+operator|&
+name|SubExprs
+index|[
+literal|0
+index|]
+operator|+
+name|END_EXPR
+argument_list|)
+return|;
+block|}
+expr|}
 block|;
-name|virtual
-name|child_iterator
-name|child_end
-argument_list|()
-block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// DoStmt - This represents a 'do/while' stmt.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_decl_stmt
 name|class
 name|DoStmt
-range|:
+operator|:
 name|public
 name|Stmt
 block|{   enum
 block|{
-name|COND
-block|,
 name|BODY
+block|,
+name|COND
 block|,
 name|END_EXPR
 block|}
@@ -4552,7 +4828,6 @@ name|RParenLoc
 operator|=
 name|L
 block|; }
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -4595,39 +4870,38 @@ name|true
 return|;
 block|}
 comment|// Iterators
-name|virtual
-name|child_iterator
-name|child_begin
+name|child_range
+name|children
 argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+operator|&
+name|SubExprs
+index|[
+literal|0
+index|]
+argument_list|,
+operator|&
+name|SubExprs
+index|[
+literal|0
+index|]
+operator|+
+name|END_EXPR
+argument_list|)
+return|;
+block|}
+expr|}
 block|;
-name|virtual
-name|child_iterator
-name|child_end
-argument_list|()
-block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// ForStmt - This represents a 'for (init;cond;inc)' stmt.  Note that any of
-end_comment
-
-begin_comment
 comment|/// the init/cond/inc parts of the ForStmt will be null if they were not
-end_comment
-
-begin_comment
 comment|/// specified in the source.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_decl_stmt
 name|class
 name|ForStmt
-range|:
+operator|:
 name|public
 name|Stmt
 block|{   enum
@@ -4979,7 +5253,6 @@ name|RParenLoc
 operator|=
 name|L
 block|; }
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -5028,35 +5301,40 @@ name|true
 return|;
 block|}
 comment|// Iterators
-name|virtual
-name|child_iterator
-name|child_begin
+name|child_range
+name|children
 argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+operator|&
+name|SubExprs
+index|[
+literal|0
+index|]
+argument_list|,
+operator|&
+name|SubExprs
+index|[
+literal|0
+index|]
+operator|+
+name|END_EXPR
+argument_list|)
+return|;
+block|}
+expr|}
 block|;
-name|virtual
-name|child_iterator
-name|child_end
-argument_list|()
-block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// GotoStmt - This represents a direct goto.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_decl_stmt
 name|class
 name|GotoStmt
-range|:
+operator|:
 name|public
 name|Stmt
 block|{
-name|LabelStmt
+name|LabelDecl
 operator|*
 name|Label
 block|;
@@ -5070,7 +5348,7 @@ name|public
 operator|:
 name|GotoStmt
 argument_list|(
-argument|LabelStmt *label
+argument|LabelDecl *label
 argument_list|,
 argument|SourceLocation GL
 argument_list|,
@@ -5111,7 +5389,7 @@ argument_list|,
 argument|Empty
 argument_list|)
 block|{ }
-name|LabelStmt
+name|LabelDecl
 operator|*
 name|getLabel
 argument_list|()
@@ -5124,12 +5402,12 @@ block|}
 name|void
 name|setLabel
 argument_list|(
-argument|LabelStmt *S
+argument|LabelDecl *D
 argument_list|)
 block|{
 name|Label
 operator|=
-name|S
+name|D
 block|; }
 name|SourceLocation
 name|getGotoLoc
@@ -5169,7 +5447,6 @@ name|LabelLoc
 operator|=
 name|L
 block|; }
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -5212,31 +5489,22 @@ name|true
 return|;
 block|}
 comment|// Iterators
-name|virtual
-name|child_iterator
-name|child_begin
+name|child_range
+name|children
 argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|()
+return|;
+block|}
+expr|}
 block|;
-name|virtual
-name|child_iterator
-name|child_end
-argument_list|()
-block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// IndirectGotoStmt - This represents an indirect goto.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_decl_stmt
 name|class
 name|IndirectGotoStmt
-range|:
+operator|:
 name|public
 name|Stmt
 block|{
@@ -5337,14 +5605,37 @@ name|Expr
 operator|*
 name|getTarget
 argument_list|()
-block|;
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|Target
+operator|)
+return|;
+block|}
 specifier|const
 name|Expr
 operator|*
 name|getTarget
 argument_list|()
 specifier|const
-block|;
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+operator|(
+name|Target
+operator|)
+return|;
+block|}
 name|void
 name|setTarget
 argument_list|(
@@ -5362,7 +5653,34 @@ operator|(
 name|E
 operator|)
 block|; }
-name|virtual
+comment|/// getConstantTarget - Returns the fixed target of this indirect
+comment|/// goto, if one exists.
+name|LabelDecl
+operator|*
+name|getConstantTarget
+argument_list|()
+block|;
+specifier|const
+name|LabelDecl
+operator|*
+name|getConstantTarget
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|IndirectGotoStmt
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getConstantTarget
+argument_list|()
+return|;
+block|}
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -5408,31 +5726,30 @@ name|true
 return|;
 block|}
 comment|// Iterators
-name|virtual
-name|child_iterator
-name|child_begin
+name|child_range
+name|children
 argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+operator|&
+name|Target
+argument_list|,
+operator|&
+name|Target
+operator|+
+literal|1
+argument_list|)
+return|;
+block|}
+expr|}
 block|;
-name|virtual
-name|child_iterator
-name|child_end
-argument_list|()
-block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// ContinueStmt - This represents a continue.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_decl_stmt
 name|class
 name|ContinueStmt
-range|:
+operator|:
 name|public
 name|Stmt
 block|{
@@ -5489,7 +5806,6 @@ name|ContinueLoc
 operator|=
 name|L
 block|; }
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -5530,31 +5846,22 @@ name|true
 return|;
 block|}
 comment|// Iterators
-name|virtual
-name|child_iterator
-name|child_begin
+name|child_range
+name|children
 argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|()
+return|;
+block|}
+expr|}
 block|;
-name|virtual
-name|child_iterator
-name|child_end
-argument_list|()
-block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// BreakStmt - This represents a break.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_decl_stmt
 name|class
 name|BreakStmt
-range|:
+operator|:
 name|public
 name|Stmt
 block|{
@@ -5611,7 +5918,6 @@ name|BreakLoc
 operator|=
 name|L
 block|; }
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -5652,59 +5958,29 @@ name|true
 return|;
 block|}
 comment|// Iterators
-name|virtual
-name|child_iterator
-name|child_begin
+name|child_range
+name|children
 argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|()
+return|;
+block|}
+expr|}
 block|;
-name|virtual
-name|child_iterator
-name|child_end
-argument_list|()
-block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// ReturnStmt - This represents a return, optionally of an expression:
-end_comment
-
-begin_comment
 comment|///   return;
-end_comment
-
-begin_comment
 comment|///   return 4;
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Note that GCC allows return with no argument in a function declared to
-end_comment
-
-begin_comment
 comment|/// return a value, and it allows returning a value in functions declared to
-end_comment
-
-begin_comment
 comment|/// return void.  We explicitly model this in the AST, which means you can't
-end_comment
-
-begin_comment
 comment|/// depend on the return type of the function and the presence of an argument.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_decl_stmt
 name|class
 name|ReturnStmt
-range|:
+operator|:
 name|public
 name|Stmt
 block|{
@@ -5868,7 +6144,6 @@ name|NRVOCandidate
 operator|=
 name|Var
 block|; }
-name|virtual
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -5902,31 +6177,38 @@ name|true
 return|;
 block|}
 comment|// Iterators
-name|virtual
-name|child_iterator
-name|child_begin
+name|child_range
+name|children
 argument_list|()
+block|{
+if|if
+condition|(
+name|RetExpr
+condition|)
+return|return
+name|child_range
+argument_list|(
+operator|&
+name|RetExpr
+argument_list|,
+operator|&
+name|RetExpr
+operator|+
+literal|1
+argument_list|)
+return|;
+return|return
+name|child_range
+argument_list|()
+return|;
+block|}
+expr|}
 block|;
-name|virtual
-name|child_iterator
-name|child_end
-argument_list|()
-block|; }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// AsmStmt - This represents a GNU inline-assembly statement extension.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_decl_stmt
 name|class
 name|AsmStmt
-range|:
+operator|:
 name|public
 name|Stmt
 block|{
@@ -6563,17 +6845,8 @@ name|StringRef
 argument_list|()
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// getInputConstraint - Return the specified input constraint.  Unlike output
-end_comment
-
-begin_comment
 comment|/// constraints, these can be empty.
-end_comment
-
-begin_expr_stmt
 name|llvm
 operator|::
 name|StringRef
@@ -6582,19 +6855,15 @@ argument_list|(
 argument|unsigned i
 argument_list|)
 specifier|const
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+block|;
 specifier|const
 name|StringLiteral
-modifier|*
+operator|*
 name|getInputConstraintLiteral
 argument_list|(
-name|unsigned
-name|i
+argument|unsigned i
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|Constraints
@@ -6605,16 +6874,12 @@ name|NumOutputs
 index|]
 return|;
 block|}
-end_decl_stmt
-
-begin_function
 name|StringLiteral
-modifier|*
+operator|*
 name|getInputConstraintLiteral
-parameter_list|(
-name|unsigned
-name|i
-parameter_list|)
+argument_list|(
+argument|unsigned i
+argument_list|)
 block|{
 return|return
 name|Constraints
@@ -6625,29 +6890,21 @@ name|NumOutputs
 index|]
 return|;
 block|}
-end_function
-
-begin_function_decl
 name|Expr
-modifier|*
-name|getInputExpr
-parameter_list|(
-name|unsigned
-name|i
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-specifier|const
-name|Expr
-modifier|*
+operator|*
 name|getInputExpr
 argument_list|(
-name|unsigned
-name|i
+argument|unsigned i
 argument_list|)
-decl|const
+block|;
+specifier|const
+name|Expr
+operator|*
+name|getInputExpr
+argument_list|(
+argument|unsigned i
+argument_list|)
+specifier|const
 block|{
 return|return
 name|const_cast
@@ -6665,78 +6922,37 @@ name|i
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_function_decl
 name|void
 name|setOutputsAndInputsAndClobbers
-parameter_list|(
-name|ASTContext
-modifier|&
-name|C
-parameter_list|,
-name|IdentifierInfo
-modifier|*
-modifier|*
-name|Names
-parameter_list|,
-name|StringLiteral
-modifier|*
-modifier|*
-name|Constraints
-parameter_list|,
-name|Stmt
-modifier|*
-modifier|*
-name|Exprs
-parameter_list|,
-name|unsigned
-name|NumOutputs
-parameter_list|,
-name|unsigned
-name|NumInputs
-parameter_list|,
-name|StringLiteral
-modifier|*
-modifier|*
-name|Clobbers
-parameter_list|,
-name|unsigned
-name|NumClobbers
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
+argument_list|(
+argument|ASTContext&C
+argument_list|,
+argument|IdentifierInfo **Names
+argument_list|,
+argument|StringLiteral **Constraints
+argument_list|,
+argument|Stmt **Exprs
+argument_list|,
+argument|unsigned NumOutputs
+argument_list|,
+argument|unsigned NumInputs
+argument_list|,
+argument|StringLiteral **Clobbers
+argument_list|,
+argument|unsigned NumClobbers
+argument_list|)
+block|;
 comment|//===--- Other ---===//
-end_comment
-
-begin_comment
 comment|/// getNamedOperand - Given a symbolic operand reference like %[foo],
-end_comment
-
-begin_comment
 comment|/// translate this into a numeric value needed to reference the same operand.
-end_comment
-
-begin_comment
 comment|/// This returns -1 if the operand name is invalid.
-end_comment
-
-begin_decl_stmt
 name|int
 name|getNamedOperand
 argument_list|(
-name|llvm
-operator|::
-name|StringRef
-name|SymbolicName
+argument|llvm::StringRef SymbolicName
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
+specifier|const
+block|;
 name|unsigned
 name|getNumClobbers
 argument_list|()
@@ -6746,36 +6962,12 @@ return|return
 name|NumClobbers
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 name|StringLiteral
-modifier|*
-name|getClobber
-parameter_list|(
-name|unsigned
-name|i
-parameter_list|)
-block|{
-return|return
-name|Clobbers
-index|[
-name|i
-index|]
-return|;
-block|}
-end_function
-
-begin_decl_stmt
-specifier|const
-name|StringLiteral
-modifier|*
+operator|*
 name|getClobber
 argument_list|(
-name|unsigned
-name|i
+argument|unsigned i
 argument_list|)
-decl|const
 block|{
 return|return
 name|Clobbers
@@ -6784,10 +6976,22 @@ name|i
 index|]
 return|;
 block|}
-end_decl_stmt
-
-begin_expr_stmt
-name|virtual
+specifier|const
+name|StringLiteral
+operator|*
+name|getClobber
+argument_list|(
+argument|unsigned i
+argument_list|)
+specifier|const
+block|{
+return|return
+name|Clobbers
+index|[
+name|i
+index|]
+return|;
+block|}
 name|SourceRange
 name|getSourceRange
 argument_list|()
@@ -6802,18 +7006,12 @@ name|RParenLoc
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_function
 specifier|static
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|Stmt
-modifier|*
-name|T
-parameter_list|)
+argument_list|(
+argument|const Stmt *T
+argument_list|)
 block|{
 return|return
 name|T
@@ -6824,46 +7022,29 @@ operator|==
 name|AsmStmtClass
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|AsmStmt
-modifier|*
-parameter_list|)
+argument_list|(
+argument|const AsmStmt *
+argument_list|)
 block|{
 return|return
 name|true
 return|;
 block|}
-end_function
-
-begin_comment
 comment|// Input expr iterators.
-end_comment
-
-begin_typedef
 typedef|typedef
 name|ExprIterator
 name|inputs_iterator
 typedef|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 name|ConstExprIterator
 name|const_inputs_iterator
 typedef|;
-end_typedef
-
-begin_function
 name|inputs_iterator
 name|begin_inputs
-parameter_list|()
+argument_list|()
 block|{
 return|return
 operator|&
@@ -6875,12 +7056,9 @@ operator|+
 name|NumOutputs
 return|;
 block|}
-end_function
-
-begin_function
 name|inputs_iterator
 name|end_inputs
-parameter_list|()
+argument_list|()
 block|{
 return|return
 operator|&
@@ -6894,9 +7072,6 @@ operator|+
 name|NumInputs
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|const_inputs_iterator
 name|begin_inputs
 argument_list|()
@@ -6912,9 +7087,6 @@ operator|+
 name|NumOutputs
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|const_inputs_iterator
 name|end_inputs
 argument_list|()
@@ -6932,30 +7104,18 @@ operator|+
 name|NumInputs
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|// Output expr iterators.
-end_comment
-
-begin_typedef
 typedef|typedef
 name|ExprIterator
 name|outputs_iterator
 typedef|;
-end_typedef
-
-begin_typedef
 typedef|typedef
 name|ConstExprIterator
 name|const_outputs_iterator
 typedef|;
-end_typedef
-
-begin_function
 name|outputs_iterator
 name|begin_outputs
-parameter_list|()
+argument_list|()
 block|{
 return|return
 operator|&
@@ -6965,12 +7125,9 @@ literal|0
 index|]
 return|;
 block|}
-end_function
-
-begin_function
 name|outputs_iterator
 name|end_outputs
-parameter_list|()
+argument_list|()
 block|{
 return|return
 operator|&
@@ -6982,9 +7139,6 @@ operator|+
 name|NumOutputs
 return|;
 block|}
-end_function
-
-begin_expr_stmt
 name|const_outputs_iterator
 name|begin_outputs
 argument_list|()
@@ -6998,9 +7152,6 @@ literal|0
 index|]
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|const_outputs_iterator
 name|end_outputs
 argument_list|()
@@ -7016,30 +7167,36 @@ operator|+
 name|NumOutputs
 return|;
 block|}
-end_expr_stmt
+name|child_range
+name|children
+argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+operator|&
+name|Exprs
+index|[
+literal|0
+index|]
+argument_list|,
+operator|&
+name|Exprs
+index|[
+literal|0
+index|]
+operator|+
+name|NumOutputs
+operator|+
+name|NumInputs
+argument_list|)
+return|;
+block|}
+expr|}
+block|;  }
+end_decl_stmt
 
 begin_comment
-comment|// Child iterators
-end_comment
-
-begin_function_decl
-name|virtual
-name|child_iterator
-name|child_begin
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|virtual
-name|child_iterator
-name|child_end
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-unit|};  }
 comment|// end namespace clang
 end_comment
 

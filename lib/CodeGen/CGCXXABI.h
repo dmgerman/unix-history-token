@@ -115,6 +115,9 @@ decl_stmt|;
 name|class
 name|FieldDecl
 decl_stmt|;
+name|class
+name|MangleContext
+decl_stmt|;
 name|namespace
 name|CodeGen
 block|{
@@ -123,9 +126,6 @@ name|CodeGenFunction
 decl_stmt|;
 name|class
 name|CodeGenModule
-decl_stmt|;
-name|class
-name|MangleContext
 decl_stmt|;
 comment|/// Implements C++ ABI-specific code generation functions.
 name|class
@@ -137,6 +137,14 @@ name|CodeGenModule
 modifier|&
 name|CGM
 decl_stmt|;
+name|llvm
+operator|::
+name|OwningPtr
+operator|<
+name|MangleContext
+operator|>
+name|MangleCtx
+expr_stmt|;
 name|CGCXXABI
 argument_list|(
 name|CodeGenModule
@@ -146,7 +154,12 @@ argument_list|)
 operator|:
 name|CGM
 argument_list|(
-argument|CGM
+name|CGM
+argument_list|)
+operator|,
+name|MangleCtx
+argument_list|(
+argument|CGM.getContext().createMangleContext()
 argument_list|)
 block|{}
 name|protected
@@ -257,14 +270,16 @@ name|CGCXXABI
 argument_list|()
 expr_stmt|;
 comment|/// Gets the mangle context.
-name|virtual
 name|MangleContext
 modifier|&
 name|getMangleContext
 parameter_list|()
-init|=
-literal|0
-function_decl|;
+block|{
+return|return
+operator|*
+name|MangleCtx
+return|;
+block|}
 comment|/// Find the LLVM type used to represent the given member pointer
 comment|/// type.
 name|virtual
@@ -436,12 +451,11 @@ name|llvm
 operator|::
 name|Constant
 operator|*
-name|EmitMemberPointer
+name|EmitMemberDataPointer
 argument_list|(
-specifier|const
-name|FieldDecl
-operator|*
-name|FD
+argument|const MemberPointerType *MPT
+argument_list|,
+argument|CharUnits offset
 argument_list|)
 expr_stmt|;
 comment|/// Emit a comparison between two member pointers.  Returns an i1.
@@ -623,8 +637,10 @@ name|virtual
 name|CharUnits
 name|GetArrayCookieSize
 parameter_list|(
-name|QualType
-name|ElementType
+specifier|const
+name|CXXNewExpr
+modifier|*
+name|expr
 parameter_list|)
 function_decl|;
 comment|/// Initialize the array cookie for the given allocation.
@@ -647,6 +663,8 @@ argument_list|,
 argument|llvm::Value *NewPtr
 argument_list|,
 argument|llvm::Value *NumElements
+argument_list|,
+argument|const CXXNewExpr *expr
 argument_list|,
 argument|QualType ElementType
 argument_list|)
@@ -678,6 +696,11 @@ name|Value
 operator|*
 name|Ptr
 argument_list|,
+specifier|const
+name|CXXDeleteExpr
+operator|*
+name|expr
+argument_list|,
 name|QualType
 name|ElementType
 argument_list|,
@@ -698,6 +721,33 @@ argument_list|,
 name|CharUnits
 operator|&
 name|CookieSize
+argument_list|)
+decl_stmt|;
+comment|/*************************** Static local guards ****************************/
+comment|/// Emits the guarded initializer and destructor setup for the given
+comment|/// variable, given that it couldn't be emitted as a constant.
+comment|///
+comment|/// The variable may be:
+comment|///   - a static local variable
+comment|///   - a static data member of a class template instantiation
+name|virtual
+name|void
+name|EmitGuardedInit
+argument_list|(
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|,
+specifier|const
+name|VarDecl
+operator|&
+name|D
+argument_list|,
+name|llvm
+operator|::
+name|GlobalVariable
+operator|*
+name|DeclPtr
 argument_list|)
 decl_stmt|;
 block|}

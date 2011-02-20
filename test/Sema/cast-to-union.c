@@ -10,6 +10,10 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|unsigned
+label|:
+literal|3
+expr_stmt|;
 block|}
 union|;
 end_union
@@ -53,6 +57,16 @@ name|x
 argument_list|)
 expr_stmt|;
 comment|// expected-error {{cast to union type from type 'int *' not present in union}}
+name|f
+argument_list|(
+operator|(
+expr|union
+name|u
+operator|)
+literal|2U
+argument_list|)
+expr_stmt|;
+comment|// expected-error {{cast to union type from type 'unsigned int' not present in union}}
 block|}
 end_function
 

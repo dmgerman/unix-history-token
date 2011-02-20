@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/DerivedTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/Decl.h"
 end_include
 
@@ -63,7 +69,7 @@ name|class
 name|raw_ostream
 decl_stmt|;
 name|class
-name|Type
+name|StructType
 decl_stmt|;
 block|}
 end_decl_stmt
@@ -492,13 +498,19 @@ decl_stmt|;
 comment|// DO NOT IMPLEMENT
 name|private
 label|:
-comment|/// The LLVMType corresponding to this record layout.
-specifier|const
+comment|/// The LLVM type corresponding to this record layout; used when
+comment|/// laying it out as a complete object.
 name|llvm
 operator|::
-name|Type
-operator|*
-name|LLVMType
+name|PATypeHolder
+name|CompleteObjectType
+expr_stmt|;
+comment|/// The LLVM type for the non-virtual part of this record layout;
+comment|/// used when laying it out as a base subobject.
+name|llvm
+operator|::
+name|PATypeHolder
+name|BaseSubobjectType
 expr_stmt|;
 comment|/// Map from (non-bit-field) struct field to the corresponding llvm struct
 comment|/// type field no. This info is populated by record builder.
@@ -540,12 +552,34 @@ operator|*
 operator|,
 name|unsigned
 operator|>
-name|NonVirtualBaseFields
+name|NonVirtualBases
 expr_stmt|;
-comment|/// Whether one of the fields in this record layout is a pointer to data
-comment|/// member, or a struct that contains pointer to data member.
+comment|/// Map from virtual bases to their field index in the complete object.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|CXXRecordDecl
+operator|*
+operator|,
+name|unsigned
+operator|>
+name|CompleteObjectVirtualBases
+expr_stmt|;
+comment|/// False if any direct or indirect subobject of this class, when
+comment|/// considered as a complete object, requires a non-zero bitpattern
+comment|/// when zero-initialized.
 name|bool
 name|IsZeroInitializable
+range|:
+literal|1
+decl_stmt|;
+comment|/// False if any direct or indirect subobject of this class, when
+comment|/// considered as a base subobject, requires a non-zero bitpattern
+comment|/// when zero-initialized.
+name|bool
+name|IsZeroInitializableAsBase
 range|:
 literal|1
 decl_stmt|;
@@ -553,33 +587,85 @@ name|public
 label|:
 name|CGRecordLayout
 argument_list|(
-argument|const llvm::Type *T
+argument|const llvm::StructType *CompleteObjectType
+argument_list|,
+argument|const llvm::StructType *BaseSubobjectType
 argument_list|,
 argument|bool IsZeroInitializable
+argument_list|,
+argument|bool IsZeroInitializableAsBase
 argument_list|)
 block|:
-name|LLVMType
+name|CompleteObjectType
 argument_list|(
-name|T
+name|CompleteObjectType
+argument_list|)
+operator|,
+name|BaseSubobjectType
+argument_list|(
+name|BaseSubobjectType
 argument_list|)
 operator|,
 name|IsZeroInitializable
 argument_list|(
-argument|IsZeroInitializable
+name|IsZeroInitializable
+argument_list|)
+operator|,
+name|IsZeroInitializableAsBase
+argument_list|(
+argument|IsZeroInitializableAsBase
 argument_list|)
 block|{}
-comment|/// \brief Return the LLVM type associated with this record.
+comment|/// \brief Return the "complete object" LLVM type associated with
+comment|/// this record.
 specifier|const
 name|llvm
 operator|::
-name|Type
+name|StructType
 operator|*
 name|getLLVMType
 argument_list|()
 specifier|const
 block|{
 return|return
-name|LLVMType
+name|cast
+operator|<
+name|llvm
+operator|::
+name|StructType
+operator|>
+operator|(
+name|CompleteObjectType
+operator|.
+name|get
+argument_list|()
+operator|)
+return|;
+block|}
+comment|/// \brief Return the "base subobject" LLVM type associated with
+comment|/// this record.
+specifier|const
+name|llvm
+operator|::
+name|StructType
+operator|*
+name|getBaseSubobjectLLVMType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|llvm
+operator|::
+name|StructType
+operator|>
+operator|(
+name|BaseSubobjectType
+operator|.
+name|get
+argument_list|()
+operator|)
 return|;
 block|}
 comment|/// \brief Check whether this struct can be C++ zero-initialized
@@ -591,6 +677,17 @@ specifier|const
 block|{
 return|return
 name|IsZeroInitializable
+return|;
+block|}
+comment|/// \brief Check whether this struct can be C++ zero-initialized
+comment|/// with a zeroinitializer when considered as a base subobject.
+name|bool
+name|isZeroInitializableAsBase
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsZeroInitializableAsBase
 return|;
 block|}
 comment|/// \brief Return llvm::StructType element number that corresponds to the
@@ -649,7 +746,7 @@ decl|const
 block|{
 name|assert
 argument_list|(
-name|NonVirtualBaseFields
+name|NonVirtualBases
 operator|.
 name|count
 argument_list|(
@@ -660,11 +757,44 @@ literal|"Invalid non-virtual base!"
 argument_list|)
 expr_stmt|;
 return|return
-name|NonVirtualBaseFields
+name|NonVirtualBases
 operator|.
 name|lookup
 argument_list|(
 name|RD
+argument_list|)
+return|;
+block|}
+comment|/// \brief Return the LLVM field index corresponding to the given
+comment|/// virtual base.  Only valid when operating on the complete object.
+name|unsigned
+name|getVirtualBaseIndex
+argument_list|(
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|base
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+name|CompleteObjectVirtualBases
+operator|.
+name|count
+argument_list|(
+name|base
+argument_list|)
+operator|&&
+literal|"Invalid virtual base!"
+argument_list|)
+expr_stmt|;
+return|return
+name|CompleteObjectVirtualBases
+operator|.
+name|lookup
+argument_list|(
+name|base
 argument_list|)
 return|;
 block|}

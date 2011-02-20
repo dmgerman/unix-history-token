@@ -90,7 +90,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/System/DataTypes.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_include
@@ -146,6 +146,18 @@ typedef|typedef
 name|uint32_t
 name|DeclID
 typedef|;
+comment|/// \brief a Decl::Kind/DeclID pair.
+typedef|typedef
+name|std
+operator|::
+name|pair
+operator|<
+name|uint32_t
+operator|,
+name|DeclID
+operator|>
+name|KindDeclIDPair
+expr_stmt|;
 comment|/// \brief An ID number that refers to a type in an AST file.
 comment|///
 comment|/// The ID of a type is partitioned into two parts: the lower
@@ -377,15 +389,26 @@ name|UnsafeQualTypeDenseMapInfo
 operator|>
 name|TypeIdxMap
 expr_stmt|;
-comment|/// \brief An ID number that refers to an identifier in an AST
-comment|/// file.
+comment|/// \brief An ID number that refers to an identifier in an AST file.
 typedef|typedef
 name|uint32_t
 name|IdentID
 typedef|;
+comment|/// \brief An ID number that refers to a macro in an AST file.
+typedef|typedef
+name|uint32_t
+name|MacroID
+typedef|;
+comment|/// \brief An ID number that refers to an ObjC selctor in an AST file.
 typedef|typedef
 name|uint32_t
 name|SelectorID
+typedef|;
+comment|/// \brief An ID number that refers to a set of CXXBaseSpecifiers in an
+comment|/// AST file.
+typedef|typedef
+name|uint32_t
+name|CXXBaseSpecifiersID
 typedef|;
 comment|/// \brief Describes the various kinds of blocks that occur within
 comment|/// an AST file.
@@ -413,6 +436,12 @@ block|,
 comment|/// \brief The block containing the definitions of all of the
 comment|/// types and decls used within the AST file.
 name|DECLTYPES_BLOCK_ID
+block|,
+comment|/// \brief The block containing DECL_UPDATES records.
+name|DECL_UPDATES_BLOCK_ID
+block|,
+comment|/// \brief The block containing the detailed preprocessing record.
+name|PREPROCESSOR_DETAIL_BLOCK_ID
 block|}
 enum|;
 comment|/// \brief Record types that occur within the AST block itself.
@@ -662,11 +691,53 @@ name|UPDATE_VISIBLE
 init|=
 literal|34
 block|,
-comment|/// \brief Record code for template specializations introduced after
-comment|/// serializations of the original template decl.
-name|ADDITIONAL_TEMPLATE_SPECIALIZATIONS
+comment|/// \brief Record for offsets of DECL_UPDATES records for declarations
+comment|/// that were modified after being deserialized and need updates.
+name|DECL_UPDATE_OFFSETS
 init|=
 literal|35
+block|,
+comment|/// \brief Record of updates for a declaration that was modified after
+comment|/// being deserialized.
+name|DECL_UPDATES
+init|=
+literal|36
+block|,
+comment|/// \brief Record code for the table of offsets to CXXBaseSpecifier
+comment|/// sets.
+name|CXX_BASE_SPECIFIER_OFFSETS
+init|=
+literal|37
+block|,
+comment|/// \brief Record code for #pragma diagnostic mappings.
+name|DIAG_PRAGMA_MAPPINGS
+init|=
+literal|38
+block|,
+comment|/// \brief Record code for special CUDA declarations.
+name|CUDA_SPECIAL_DECL_REFS
+init|=
+literal|39
+block|,
+comment|/// \brief Record code for header search information.
+name|HEADER_SEARCH_TABLE
+init|=
+literal|40
+block|,
+comment|/// \brief The directory that the PCH was originally created in.
+name|ORIGINAL_PCH_DIR
+init|=
+literal|41
+block|,
+comment|/// \brief Record code for floating point #pragma options.
+name|FP_PRAGMA_OPTIONS
+init|=
+literal|42
+block|,
+comment|/// \brief Record code for enabled OpenCL extensions.
+name|OPENCL_EXTENSIONS
+init|=
+literal|43
 block|}
 enum|;
 comment|/// \brief Record types used within a source manager block.
@@ -729,17 +800,28 @@ comment|/// [PP_TOKEN, SLoc, Length, IdentInfoID, Kind, Flags]
 name|PP_TOKEN
 init|=
 literal|3
-block|,
+block|}
+enum|;
+comment|/// \brief Record types used within a preprocessor detail block.
+enum|enum
+name|PreprocessorDetailRecordTypes
+block|{
 comment|/// \brief Describes a macro instantiation within the preprocessing
 comment|/// record.
-name|PP_MACRO_INSTANTIATION
+name|PPD_MACRO_INSTANTIATION
 init|=
-literal|4
+literal|0
 block|,
 comment|/// \brief Describes a macro definition within the preprocessing record.
-name|PP_MACRO_DEFINITION
+name|PPD_MACRO_DEFINITION
 init|=
-literal|5
+literal|1
+block|,
+comment|/// \brief Describes an inclusion directive within the preprocessing
+comment|/// record.
+name|PPD_INCLUSION_DIRECTIVE
+init|=
+literal|2
 block|}
 enum|;
 comment|/// \defgroup ASTAST AST file AST constants
@@ -1083,6 +1165,31 @@ comment|/// \brief A DependentSizedArrayType record.
 name|TYPE_DEPENDENT_SIZED_ARRAY
 init|=
 literal|33
+block|,
+comment|/// \brief A ParenType record.
+name|TYPE_PAREN
+init|=
+literal|34
+block|,
+comment|/// \brief A PackExpansionType record.
+name|TYPE_PACK_EXPANSION
+init|=
+literal|35
+block|,
+comment|/// \brief An AttributedType record.
+name|TYPE_ATTRIBUTED
+init|=
+literal|36
+block|,
+comment|/// \brief A SubstTemplateTypeParmPackType record.
+name|TYPE_SUBST_TEMPLATE_TYPE_PARM_PACK
+init|=
+literal|37
+block|,
+comment|/// \brief A AutoType record.
+name|TYPE_AUTO
+init|=
+literal|38
 block|}
 enum|;
 comment|/// \brief The type IDs for special types constructed by semantic
@@ -1188,13 +1295,10 @@ comment|/// in the AST.
 enum|enum
 name|DeclCode
 block|{
-comment|/// \brief Attributes attached to a declaration.
-name|DECL_ATTR
-init|=
-literal|50
-block|,
 comment|/// \brief A TranslationUnitDecl record.
 name|DECL_TRANSLATION_UNIT
+init|=
+literal|50
 block|,
 comment|/// \brief A TypedefDecl record.
 name|DECL_TYPEDEF
@@ -1287,7 +1391,10 @@ comment|/// IDs. This data is used when performing qualified name lookup
 comment|/// into a DeclContext via DeclContext::lookup.
 name|DECL_CONTEXT_VISIBLE
 block|,
-comment|/// \brief A NamespaceDecl rcord.
+comment|/// \brief A LabelDecl record.
+name|DECL_LABEL
+block|,
+comment|/// \brief A NamespaceDecl record.
 name|DECL_NAMESPACE
 block|,
 comment|/// \brief A NamespaceAliasDecl record.
@@ -1358,6 +1465,16 @@ name|DECL_TEMPLATE_TEMPLATE_PARM
 block|,
 comment|/// \brief A StaticAssertDecl record.
 name|DECL_STATIC_ASSERT
+block|,
+comment|/// \brief A record containing CXXBaseSpecifiers.
+name|DECL_CXX_BASE_SPECIFIERS
+block|,
+comment|/// \brief A IndirectFieldDecl record.
+name|DECL_INDIRECTFIELD
+block|,
+comment|/// \brief A NonTypeTemplateParmDecl record that stores an expanded
+comment|/// non-type template parameter pack.
+name|DECL_EXPANDED_NON_TYPE_TEMPLATE_PARM_PACK
 block|}
 enum|;
 comment|/// \brief Record codes for each kind of statement or expression.
@@ -1514,9 +1631,6 @@ block|,
 comment|/// \brief A StmtExpr record.
 name|EXPR_STMT
 block|,
-comment|/// \brief A TypesCompatibleExpr record.
-name|EXPR_TYPES_COMPATIBLE
-block|,
 comment|/// \brief A ChooseExpr record.
 name|EXPR_CHOOSE
 block|,
@@ -1551,14 +1665,11 @@ block|,
 comment|/// \brief An ObjCPropertyRefExpr record.
 name|EXPR_OBJC_PROPERTY_REF_EXPR
 block|,
-comment|/// \brief An ObjCImplicitSetterGetterRefExpr record.
+comment|/// \brief UNUSED
 name|EXPR_OBJC_KVC_REF_EXPR
 block|,
 comment|/// \brief An ObjCMessageExpr record.
 name|EXPR_OBJC_MESSAGE_EXPR
-block|,
-comment|/// \brief An ObjCSuperExpr record.
-name|EXPR_OBJC_SUPER_EXPR
 block|,
 comment|/// \brief An ObjCIsa Expr record.
 name|EXPR_OBJC_ISA
@@ -1627,6 +1738,12 @@ comment|// CXXTypeidExpr (of expr).
 name|EXPR_CXX_TYPEID_TYPE
 block|,
 comment|// CXXTypeidExpr (of type).
+name|EXPR_CXX_UUIDOF_EXPR
+block|,
+comment|// CXXUuidofExpr (of expr).
+name|EXPR_CXX_UUIDOF_TYPE
+block|,
+comment|// CXXUuidofExpr (of type).
 name|EXPR_CXX_THIS
 block|,
 comment|// CXXThisExpr
@@ -1651,9 +1768,9 @@ comment|// CXXDeleteExpr
 name|EXPR_CXX_PSEUDO_DESTRUCTOR
 block|,
 comment|// CXXPseudoDestructorExpr
-name|EXPR_CXX_EXPR_WITH_TEMPORARIES
+name|EXPR_EXPR_WITH_CLEANUPS
 block|,
-comment|// CXXExprWithTemporaries
+comment|// ExprWithCleanups
 name|EXPR_CXX_DEPENDENT_SCOPE_MEMBER
 block|,
 comment|// CXXDependentScopeMemberExpr
@@ -1670,7 +1787,32 @@ name|EXPR_CXX_UNRESOLVED_LOOKUP
 block|,
 comment|// UnresolvedLookupExpr
 name|EXPR_CXX_UNARY_TYPE_TRAIT
+block|,
 comment|// UnaryTypeTraitExpr
+name|EXPR_CXX_NOEXCEPT
+block|,
+comment|// CXXNoexceptExpr
+name|EXPR_OPAQUE_VALUE
+block|,
+comment|// OpaqueValueExpr
+name|EXPR_BINARY_CONDITIONAL_OPERATOR
+block|,
+comment|// BinaryConditionalOperator
+name|EXPR_BINARY_TYPE_TRAIT
+block|,
+comment|// BinaryTypeTraitExpr
+name|EXPR_PACK_EXPANSION
+block|,
+comment|// PackExpansionExpr
+name|EXPR_SIZEOF_PACK
+block|,
+comment|// SizeOfPackExpr
+name|EXPR_SUBST_NON_TYPE_TEMPLATE_PARM_PACK
+block|,
+comment|// SubstNonTypeTemplateParmPackExpr
+comment|// CUDA
+name|EXPR_CUDA_KERNEL_CALL
+comment|// CUDAKernelCallExpr
 block|}
 enum|;
 comment|/// \brief The kinds of designators that can occur in a

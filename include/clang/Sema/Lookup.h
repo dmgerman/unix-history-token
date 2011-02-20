@@ -934,6 +934,21 @@ name|ResultKind
 operator|=
 name|NotFound
 expr_stmt|;
+if|if
+condition|(
+name|Paths
+condition|)
+block|{
+name|deletePaths
+argument_list|(
+name|Paths
+argument_list|)
+expr_stmt|;
+name|Paths
+operator|=
+literal|0
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -1455,14 +1470,9 @@ expr_stmt|;
 name|bool
 name|Changed
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|NDEBUG
 name|bool
 name|CalledDone
 decl_stmt|;
-endif|#
-directive|endif
 name|friend
 name|class
 name|LookupResult
@@ -1491,22 +1501,14 @@ name|Changed
 argument_list|(
 name|false
 argument_list|)
-ifndef|#
-directive|ifndef
-name|NDEBUG
 operator|,
 name|CalledDone
 argument_list|(
 argument|false
 argument_list|)
-endif|#
-directive|endif
 block|{}
 name|public
 operator|:
-ifndef|#
-directive|ifndef
-name|NDEBUG
 operator|~
 name|Filter
 argument_list|()
@@ -1518,8 +1520,6 @@ operator|&&
 literal|"LookupResult::Filter destroyed without done() call"
 argument_list|)
 block|;     }
-endif|#
-directive|endif
 name|bool
 name|hasNext
 argument_list|()
@@ -1641,9 +1641,6 @@ name|void
 name|done
 parameter_list|()
 block|{
-ifndef|#
-directive|ifndef
-name|NDEBUG
 name|assert
 argument_list|(
 operator|!
@@ -1656,8 +1653,6 @@ name|CalledDone
 operator|=
 name|true
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|Changed
@@ -1783,12 +1778,6 @@ begin_comment
 comment|// Sanity checks.
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NDEBUG
-end_ifndef
-
 begin_expr_stmt
 name|void
 name|sanity
@@ -1797,19 +1786,7 @@ specifier|const
 expr_stmt|;
 end_expr_stmt
 
-begin_else
-else|#
-directive|else
-end_else
-
 begin_expr_stmt
-name|void
-name|sanity
-argument_list|()
-specifier|const
-block|{}
-endif|#
-directive|endif
 name|bool
 name|sanityCheckUnresolved
 argument_list|()

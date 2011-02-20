@@ -864,6 +864,11 @@ name|defined
 argument_list|(
 name|_WIN64
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
 name|longjmp
 argument_list|(
 name|test30_j
@@ -1114,6 +1119,75 @@ end_function_decl
 
 begin_comment
 comment|// expected-warning{{'const volatile' type qualifiers on return type have no effect}}
+end_comment
+
+begin_comment
+comment|// Test that for switch(enum) that if the switch statement covers all the cases
+end_comment
+
+begin_comment
+comment|// that we don't consider that for -Wreturn-type.
+end_comment
+
+begin_enum
+enum|enum
+name|Cases
+block|{
+name|C1
+block|,
+name|C2
+block|,
+name|C3
+block|,
+name|C4
+block|}
+enum|;
+end_enum
+
+begin_function
+name|int
+name|test_enum_cases
+parameter_list|(
+name|enum
+name|Cases
+name|C
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|C
+condition|)
+block|{
+case|case
+name|C1
+case|:
+return|return
+literal|1
+return|;
+case|case
+name|C2
+case|:
+return|return
+literal|2
+return|;
+case|case
+name|C4
+case|:
+return|return
+literal|3
+return|;
+case|case
+name|C3
+case|:
+return|return
+literal|4
+return|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|// no-warning
 end_comment
 
 end_unit

@@ -472,7 +472,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// expected-error {{incompatible block pointer types initializing 'int (^)(char const *)' with an expression of type 'int (^)(char *)'}}
+comment|// expected-error {{incompatible block pointer types initializing 'int (^)(const char *)' with an expression of type 'int (^)(char *)'}}
 end_comment
 
 begin_function_decl
@@ -493,7 +493,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// expected-warning {{incompatible pointer types initializing 'int (*)(char const *)' with an expression of type 'int (char *)'}}
+comment|// expected-warning {{incompatible pointer types initializing 'int (*)(const char *)' with an expression of type 'int (char *)'}}
 end_comment
 
 begin_function_decl
@@ -553,7 +553,7 @@ end_return
 
 begin_comment
 unit|};
-comment|// expected-warning{{implicitly declaring C library function 'printf' with type 'int (char const *, ...)'}} \
+comment|// expected-warning{{implicitly declaring C library function 'printf' with type 'int (const char *, ...)'}} \
 end_comment
 
 begin_comment
@@ -687,7 +687,33 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// expected-error {{block declared as returning an array}}
+comment|// expected-error {{block cannot return array type}} expected-warning {{incompatible pointer to integer conversion}}
+end_comment
+
+begin_decl_stmt
+name|int
+name|sz9
+init|=
+sizeof|sizeof
+argument_list|(
+operator|^
+name|int
+argument_list|(
+operator|*
+operator|(
+operator|)
+argument_list|)
+argument_list|()
+index|[
+literal|3
+index|]
+block|{ }
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{function cannot return array type}}
 end_comment
 
 begin_function
@@ -826,7 +852,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// expected-error{{incompatible block pointer types initializing 'int const (^)(void)' with an expression of type 'int (^)(void)'}}
+comment|// OK - initializing 'const int (^)(void)' with an expression of type 'int (^)(void)'
 end_comment
 
 begin_function_decl

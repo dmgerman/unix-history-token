@@ -90,7 +90,7 @@ comment|// RUN: env CINDEXTEST_EDITING=1 CINDEXTEST_COMPLETION_CACHING=1 c-index
 end_comment
 
 begin_comment
-comment|// CHECK-CC2: macro definition:{TypedText nil} (30)
+comment|// CHECK-CC2: macro definition:{TypedText nil} (32)
 end_comment
 
 begin_comment
@@ -102,7 +102,7 @@ comment|// RUN: env CINDEXTEST_EDITING=1 CINDEXTEST_COMPLETION_CACHING=1 c-index
 end_comment
 
 begin_comment
-comment|// CHECK-CC3: macro definition:{TypedText nil} (60)
+comment|// CHECK-CC3: macro definition:{TypedText nil} (65)
 end_comment
 
 end_unit

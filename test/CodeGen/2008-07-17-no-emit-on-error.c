@@ -12,6 +12,10 @@ comment|// RUN: test -f %t1.bc
 end_comment
 
 begin_comment
+comment|// RUN: rm -f %t1.bc
+end_comment
+
+begin_comment
 comment|// RUN: not %clang_cc1 %s -emit-llvm-bc -o %t1.bc
 end_comment
 

@@ -122,14 +122,15 @@ name|void
 name|f0
 parameter_list|()
 block|{
-comment|// FIXME: Diagnose this?
 name|int
 name|g6
 decl_stmt|;
+comment|// expected-note {{previous}}
 specifier|extern
 name|int
 name|g6
 decl_stmt|;
+comment|// expected-error {{extern declaration of 'g6' follows non-extern declaration}}
 block|}
 end_function
 
@@ -138,14 +139,15 @@ name|void
 name|f1
 parameter_list|()
 block|{
-comment|// FIXME: Diagnose this?
 name|int
 name|g7
 decl_stmt|;
+comment|// expected-note {{previous}}
 name|__private_extern__
 name|int
 name|g7
 decl_stmt|;
+comment|// expected-error {{extern declaration of 'g7' follows non-extern declaration}}
 block|}
 end_function
 
@@ -159,11 +161,10 @@ name|int
 name|g8
 decl_stmt|;
 comment|// expected-note{{previous definition}}
-comment|// FIXME: Improve this diagnostic.
 name|int
 name|g8
 decl_stmt|;
-comment|// expected-error{{redefinition of 'g8'}}
+comment|// expected-error {{non-extern declaration of 'g8' follows extern declaration}}
 block|}
 end_function
 
@@ -177,11 +178,10 @@ name|int
 name|g9
 decl_stmt|;
 comment|// expected-note{{previous definition}}
-comment|// FIXME: Improve this diagnostic.
 name|int
 name|g9
 decl_stmt|;
-comment|// expected-error{{redefinition of 'g9'}}
+comment|// expected-error {{non-extern declaration of 'g9' follows extern declaration}}
 block|}
 end_function
 

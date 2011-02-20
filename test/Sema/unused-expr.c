@@ -509,7 +509,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{'warn_unused_result' attribute only applies to function types}}
+comment|// expected-warning {{'warn_unused_result' attribute only applies to functions}}
 end_comment
 
 begin_comment
@@ -629,6 +629,24 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|// PR8371
+end_comment
+
+begin_function_decl
+name|int
+name|fn5
+parameter_list|()
+function_decl|__attribute__
+parameter_list|(
+function_decl|(__const
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
 
 end_unit
 

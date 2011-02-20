@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -verify -Wunused-value %s
+comment|// RUN: %clang_cc1 -fsyntax-only -verify -Wunused-value -Wunused-label %s
 end_comment
 
 begin_comment
@@ -242,6 +242,12 @@ comment|// expected-warning {{expression result unused}}
 operator|*
 name|pj
 expr_stmt|;
+name|foo_label
+label|:
+comment|// expected-warning {{unused label}}
+name|i
+expr_stmt|;
+comment|// expected-warning {{expression result unused}}
 block|}
 end_function
 

@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Support/PointerLikeTypeTraits.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<utility>
 end_include
 
@@ -569,6 +575,54 @@ name|Encoding
 expr_stmt|;
 return|return
 name|X
+return|;
+block|}
+comment|/// getPtrEncoding - When a SourceLocation itself cannot be used, this returns
+comment|/// an (opaque) pointer encoding for it.  This should only be passed
+comment|/// to SourceLocation::getFromPtrEncoding, it should not be inspected
+comment|/// directly.
+name|void
+operator|*
+name|getPtrEncoding
+argument_list|()
+specifier|const
+block|{
+comment|// Double cast to avoid a warning "cast to pointer from integer of different
+comment|// size".
+return|return
+operator|(
+name|void
+operator|*
+operator|)
+operator|(
+name|uintptr_t
+operator|)
+name|getRawEncoding
+argument_list|()
+return|;
+block|}
+comment|/// getFromPtrEncoding - Turn a pointer encoding of a SourceLocation object
+comment|/// into a real SourceLocation.
+specifier|static
+name|SourceLocation
+name|getFromPtrEncoding
+parameter_list|(
+name|void
+modifier|*
+name|Encoding
+parameter_list|)
+block|{
+return|return
+name|getFromRawEncoding
+argument_list|(
+operator|(
+name|unsigned
+operator|)
+operator|(
+name|uintptr_t
+operator|)
+name|Encoding
+argument_list|)
 return|;
 block|}
 name|void
@@ -1266,6 +1320,55 @@ name|isInSystemHeader
 argument_list|()
 specifier|const
 block|;
+comment|/// \brief Determines the order of 2 source locations in the translation unit.
+comment|///
+comment|/// \returns true if this source location comes before 'Loc', false otherwise.
+name|bool
+name|isBeforeInTranslationUnitThan
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Determines the order of 2 source locations in the translation unit.
+comment|///
+comment|/// \returns true if this source location comes before 'Loc', false otherwise.
+name|bool
+name|isBeforeInTranslationUnitThan
+argument_list|(
+argument|FullSourceLoc Loc
+argument_list|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|Loc
+operator|.
+name|isValid
+argument_list|()
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|SrcMgr
+operator|==
+name|Loc
+operator|.
+name|SrcMgr
+operator|&&
+literal|"Loc comes from another SourceManager!"
+argument_list|)
+block|;
+return|return
+name|isBeforeInTranslationUnitThan
+argument_list|(
+operator|(
+name|SourceLocation
+operator|)
+name|Loc
+argument_list|)
+return|;
+block|}
 comment|/// Prints information about this FullSourceLoc to stderr. Useful for
 comment|///  debugging.
 name|void
@@ -1599,6 +1702,71 @@ name|value
 operator|=
 name|true
 block|; }
+block|;
+comment|// Teach SmallPtrSet how to handle SourceLocation.
+name|template
+operator|<
+operator|>
+name|class
+name|PointerLikeTypeTraits
+operator|<
+name|clang
+operator|::
+name|SourceLocation
+operator|>
+block|{
+name|public
+operator|:
+specifier|static
+specifier|inline
+name|void
+operator|*
+name|getAsVoidPointer
+argument_list|(
+argument|clang::SourceLocation L
+argument_list|)
+block|{
+return|return
+name|L
+operator|.
+name|getPtrEncoding
+argument_list|()
+return|;
+block|}
+specifier|static
+specifier|inline
+name|clang
+operator|::
+name|SourceLocation
+name|getFromVoidPointer
+argument_list|(
+argument|void *P
+argument_list|)
+block|{
+return|return
+name|clang
+operator|::
+name|SourceLocation
+operator|::
+name|getFromRawEncoding
+argument_list|(
+operator|(
+name|unsigned
+operator|)
+operator|(
+name|uintptr_t
+operator|)
+name|P
+argument_list|)
+return|;
+block|}
+expr|enum
+block|{
+name|NumLowBitsAvailable
+operator|=
+literal|0
+block|}
+block|;   }
 block|;  }
 end_decl_stmt
 

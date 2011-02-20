@@ -72,12 +72,6 @@ block|{
 name|class
 name|raw_ostream
 decl_stmt|;
-name|class
-name|Module
-decl_stmt|;
-name|class
-name|LLVMContext
-decl_stmt|;
 name|namespace
 name|sys
 block|{
@@ -150,6 +144,19 @@ modifier|*
 name|CreateASTDumper
 parameter_list|()
 function_decl|;
+comment|// AST XML-dumper: dumps out the AST to stderr in a very detailed XML
+comment|// format; this is intended for particularly intense debugging.
+name|ASTConsumer
+modifier|*
+name|CreateASTDumperXML
+argument_list|(
+name|llvm
+operator|::
+name|raw_ostream
+operator|&
+name|OS
+argument_list|)
+decl_stmt|;
 comment|// Graphical AST viewer: for each function definition, creates a graph of
 comment|// the AST and displays it with the graph viewer "dotty".  Also outputs
 comment|// function declarations to stderr.
@@ -165,20 +172,6 @@ modifier|*
 name|CreateDeclContextPrinter
 parameter_list|()
 function_decl|;
-comment|// Inheritance viewer: for C++ code, creates a graph of the inheritance
-comment|// tree for the given class and displays it with "dotty".
-name|ASTConsumer
-modifier|*
-name|CreateInheritanceViewer
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|clsname
-argument_list|)
-decl_stmt|;
 block|}
 end_decl_stmt
 

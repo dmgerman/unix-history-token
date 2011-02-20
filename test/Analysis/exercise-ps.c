@@ -122,7 +122,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{implicitly declaring C library function 'memcpy' with type 'void *(void *, void const *}} \
+comment|// expected-warning{{implicitly declaring C library function 'memcpy' with type 'void *(void *, const void *}} \
 comment|// expected-note{{please include the header<string.h> or explicitly provide a declaration for 'memcpy'}}
 block|}
 end_function

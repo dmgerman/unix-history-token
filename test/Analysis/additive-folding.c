@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-check-objc-mem -analyzer-experimental-checks -verify -analyzer-constraints=basic %s
+comment|// RUN: %clang_cc1 -analyze -analyzer-check-objc-mem -analyzer-experimental-checks -analyzer-checker=core.experimental.UnreachableCode -verify -analyzer-constraints=basic %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-check-objc-mem -analyzer-experimental-checks -verify -analyzer-constraints=range %s
+comment|// RUN: %clang_cc1 -analyze -analyzer-check-objc-mem -analyzer-experimental-checks -analyzer-checker=core.experimental.UnreachableCode -verify -analyzer-constraints=range %s
 end_comment
 
 begin_comment
@@ -891,6 +891,7 @@ name|a
 operator|>=
 literal|0
 condition|)
+comment|// expected-warning{{always true}}
 name|free
 argument_list|(
 name|b
@@ -924,6 +925,7 @@ name|a
 operator|<
 literal|0
 condition|)
+comment|// expected-warning{{always false}}
 return|return;
 comment|// expected-warning{{never executed}}
 name|free

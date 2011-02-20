@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin10 -analyze -analyzer-check-objc-mem %s -analyzer-store=region -fblocks -verify
+comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin10 -analyze -analyzer-check-objc-mem -analyzer-checker=unix.API -analyzer-checker=macosx.API %s -analyzer-store=region -fblocks -verify
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin10 -analyze -analyzer-check-objc-mem %s -analyzer-store=basic -fblocks -verify
+comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin10 -analyze -analyzer-check-objc-mem -analyzer-checker=unix.API -analyzer-checker=macosx.API %s -analyzer-store=basic -fblocks -verify
 end_comment
 
 begin_struct
@@ -53,6 +53,32 @@ function_decl|)
 parameter_list|(
 name|void
 parameter_list|)
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_typedef
+typedef|typedef
+name|long
+name|unsigned
+name|int
+name|__darwin_size_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|__darwin_size_t
+name|size_t
+typedef|;
+end_typedef
+
+begin_function_decl
+name|void
+modifier|*
+name|malloc
+parameter_list|(
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -365,6 +391,95 @@ name|test_pthread_once_aux
 argument_list|)
 expr_stmt|;
 comment|// no-warning
+block|}
+end_function
+
+begin_comment
+comment|// PR 2899 - warn of zero-sized allocations to malloc().
+end_comment
+
+begin_function
+name|void
+name|pr2899
+parameter_list|()
+block|{
+name|char
+modifier|*
+name|foo
+init|=
+name|malloc
+argument_list|(
+literal|0
+argument_list|)
+decl_stmt|;
+comment|// expected-warning{{Call to 'malloc' has an allocation size of 0 bytes}}
+for|for
+control|(
+name|unsigned
+name|i
+init|=
+literal|0
+init|;
+name|i
+operator|<
+literal|100
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|foo
+index|[
+name|i
+index|]
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_function
+name|void
+name|pr2899_nowarn
+parameter_list|(
+name|size_t
+name|size
+parameter_list|)
+block|{
+name|char
+modifier|*
+name|foo
+init|=
+name|malloc
+argument_list|(
+name|size
+argument_list|)
+decl_stmt|;
+comment|// no-warning
+for|for
+control|(
+name|unsigned
+name|i
+init|=
+literal|0
+init|;
+name|i
+operator|<
+literal|100
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|foo
+index|[
+name|i
+index|]
+operator|=
+literal|0
+expr_stmt|;
+block|}
 block|}
 end_function
 

@@ -19,6 +19,10 @@ begin_comment
 comment|// CHECK: 2.000000e+{{[0]*}}32
 end_comment
 
+begin_comment
+comment|// CHECK: 0x7FF0000000000000
+end_comment
+
 begin_decl_stmt
 name|float
 name|F
@@ -48,6 +52,14 @@ name|double
 name|D2
 init|=
 literal|02e32
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|float
+name|F3
+init|=
+literal|0xFp100000000000000000000F
 decl_stmt|;
 end_decl_stmt
 

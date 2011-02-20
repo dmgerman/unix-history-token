@@ -226,25 +226,51 @@ index|[
 literal|0
 index|]
 return|;
-comment|// expected-error {{illegal implicit conversion between two pointers with different address spaces}} \
-name|expected
-operator|-
-name|warning
-block|{
-block|{
-name|returning
-literal|'void __attribute__((address_space(256))) *'
-name|from
-name|a
-name|function
-name|with
-name|result
-name|type
-literal|'void *'
-name|discards
-name|qualifiers
+comment|// expected-error {{returning '__attribute__((address_space(256))) void *' from a function with result type 'void *' changes address space of pointer}}
 block|}
-block|}
+end_function
+
+begin_macro
+name|__attribute__
+argument_list|(
+argument|(address_space(
+literal|1
+argument|))
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+name|test3_array
+index|[
+literal|10
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|void
+name|test3
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+specifier|extern
+name|void
+name|test3_helper
+argument_list|(
+name|char
+operator|*
+name|p
+argument_list|)
+decl_stmt|;
+comment|// expected-note {{passing argument to parameter 'p' here}}
+name|test3_helper
+argument_list|(
+name|test3_array
+argument_list|)
+expr_stmt|;
+comment|// expected-error {{changes address space of pointer}}
 block|}
 end_function
 

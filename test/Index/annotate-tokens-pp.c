@@ -191,27 +191,27 @@ comment|// CHECK: Identifier: "STILL_NOTHING" [2:9 - 2:22] macro definition=STIL
 end_comment
 
 begin_comment
-comment|// CHECK: Identifier: "NOTHING" [2:23 - 2:30] preprocessing directive=
+comment|// CHECK: Identifier: "NOTHING" [2:23 - 2:30] macro definition=STILL_NOTHING
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: "(" [2:30 - 2:31] preprocessing directive=
+comment|// CHECK: Punctuation: "(" [2:30 - 2:31] macro definition=STILL_NOTHING
 end_comment
 
 begin_comment
-comment|// CHECK: Identifier: "honk" [2:31 - 2:35] preprocessing directive=
+comment|// CHECK: Identifier: "honk" [2:31 - 2:35] macro definition=STILL_NOTHING
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: "," [2:35 - 2:36] preprocessing directive=
+comment|// CHECK: Punctuation: "," [2:35 - 2:36] macro definition=STILL_NOTHING
 end_comment
 
 begin_comment
-comment|// CHECK: Identifier: "warble" [2:36 - 2:42] preprocessing directive=
+comment|// CHECK: Identifier: "warble" [2:36 - 2:42] macro definition=STILL_NOTHING
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: ")" [2:42 - 2:43] preprocessing directive=
+comment|// CHECK: Punctuation: ")" [2:42 - 2:43] macro definition=STILL_NOTHING
 end_comment
 
 begin_comment
@@ -227,7 +227,7 @@ comment|// CHECK: Identifier: "BAR" [3:9 - 3:12] macro definition=BAR
 end_comment
 
 begin_comment
-comment|// CHECK: Identifier: "baz" [3:13 - 3:16] preprocessing directive=
+comment|// CHECK: Identifier: "baz" [3:13 - 3:16] macro definition=BAR
 end_comment
 
 begin_comment
@@ -243,35 +243,35 @@ comment|// CHECK: Identifier: "WIBBLE" [4:9 - 4:15] macro definition=WIBBLE
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: "(" [4:15 - 4:16] preprocessing directive=
+comment|// CHECK: Punctuation: "(" [4:15 - 4:16] macro definition=WIBBLE
 end_comment
 
 begin_comment
-comment|// CHECK: Identifier: "X" [4:16 - 4:17] preprocessing directive=
+comment|// CHECK: Identifier: "X" [4:16 - 4:17] macro definition=WIBBLE
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: "," [4:17 - 4:18] preprocessing directive=
+comment|// CHECK: Punctuation: "," [4:17 - 4:18] macro definition=WIBBLE
 end_comment
 
 begin_comment
-comment|// CHECK: Identifier: "Y" [4:19 - 4:20] preprocessing directive=
+comment|// CHECK: Identifier: "Y" [4:19 - 4:20] macro definition=WIBBLE
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: ")" [4:20 - 4:21] preprocessing directive=
+comment|// CHECK: Punctuation: ")" [4:20 - 4:21] macro definition=WIBBLE
 end_comment
 
 begin_comment
-comment|// CHECK: Identifier: "X" [4:22 - 4:23] preprocessing directive=
+comment|// CHECK: Identifier: "X" [4:22 - 4:23] macro definition=WIBBLE
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: "##" [4:23 - 4:25] preprocessing directive=
+comment|// CHECK: Punctuation: "##" [4:23 - 4:25] macro definition=WIBBLE
 end_comment
 
 begin_comment
-comment|// CHECK: Identifier: "Y" [4:25 - 4:26] preprocessing directive=
+comment|// CHECK: Identifier: "Y" [4:25 - 4:26] macro definition=WIBBLE
 end_comment
 
 begin_comment
@@ -347,15 +347,15 @@ comment|// CHECK: Punctuation: ";" [6:22 - 6:23]
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: "#" [7:1 - 7:2] preprocessing directive=
+comment|// CHECK: Punctuation: "#" [7:1 - 7:2] inclusion directive=foo.h
 end_comment
 
 begin_comment
-comment|// CHECK: Identifier: "include" [7:2 - 7:9] preprocessing directive=
+comment|// CHECK: Identifier: "include" [7:2 - 7:9] inclusion directive=foo.h
 end_comment
 
 begin_comment
-comment|// CHECK: Literal: ""foo.h"" [7:10 - 7:17] preprocessing directive=
+comment|// CHECK: Literal: ""foo.h"" [7:10 - 7:17] inclusion directive=foo.h
 end_comment
 
 begin_comment
@@ -383,35 +383,35 @@ comment|// CHECK: Identifier: "REVERSE_MACRO" [10:9 - 10:22] macro definition=RE
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: "(" [10:22 - 10:23] preprocessing directive=
+comment|// CHECK: Punctuation: "(" [10:22 - 10:23] macro definition=REVERSE_MACRO
 end_comment
 
 begin_comment
-comment|// CHECK: Identifier: "x" [10:23 - 10:24] preprocessing directive=
+comment|// CHECK: Identifier: "x" [10:23 - 10:24] macro definition=REVERSE_MACRO
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: "," [10:24 - 10:25] preprocessing directive=
+comment|// CHECK: Punctuation: "," [10:24 - 10:25] macro definition=REVERSE_MACRO
 end_comment
 
 begin_comment
-comment|// CHECK: Identifier: "y" [10:25 - 10:26] preprocessing directive=
+comment|// CHECK: Identifier: "y" [10:25 - 10:26] macro definition=REVERSE_MACRO
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: ")" [10:26 - 10:27] preprocessing directive=
+comment|// CHECK: Punctuation: ")" [10:26 - 10:27] macro definition=REVERSE_MACRO
 end_comment
 
 begin_comment
-comment|// CHECK: Identifier: "y" [10:28 - 10:29] preprocessing directive=
+comment|// CHECK: Identifier: "y" [10:28 - 10:29] macro definition=REVERSE_MACRO
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: "+" [10:30 - 10:31] preprocessing directive=
+comment|// CHECK: Punctuation: "+" [10:30 - 10:31] macro definition=REVERSE_MACRO
 end_comment
 
 begin_comment
-comment|// CHECK: Identifier: "x" [10:32 - 10:33] preprocessing directive=
+comment|// CHECK: Identifier: "x" [10:32 - 10:33] macro definition=REVERSE_MACRO
 end_comment
 
 begin_comment
@@ -427,27 +427,27 @@ comment|// CHECK: Identifier: "TWICE_MACRO" [11:9 - 11:20] macro definition=TWIC
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: "(" [11:20 - 11:21] preprocessing directive=
+comment|// CHECK: Punctuation: "(" [11:20 - 11:21] macro definition=TWICE_MACRO
 end_comment
 
 begin_comment
-comment|// CHECK: Identifier: "y" [11:21 - 11:22] preprocessing directive=
+comment|// CHECK: Identifier: "y" [11:21 - 11:22] macro definition=TWICE_MACRO
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: ")" [11:22 - 11:23] preprocessing directive=
+comment|// CHECK: Punctuation: ")" [11:22 - 11:23] macro definition=TWICE_MACRO
 end_comment
 
 begin_comment
-comment|// CHECK: Identifier: "y" [11:24 - 11:25] preprocessing directive=
+comment|// CHECK: Identifier: "y" [11:24 - 11:25] macro definition=TWICE_MACRO
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: "+" [11:26 - 11:27] preprocessing directive=
+comment|// CHECK: Punctuation: "+" [11:26 - 11:27] macro definition=TWICE_MACRO
 end_comment
 
 begin_comment
-comment|// CHECK: Identifier: "y" [11:28 - 11:29] preprocessing directive=
+comment|// CHECK: Identifier: "y" [11:28 - 11:29] macro definition=TWICE_MACRO
 end_comment
 
 begin_comment
@@ -635,71 +635,71 @@ comment|// CHECK: Identifier: "fun_with_macro_bodies" [21:9 - 21:30] macro defin
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: "(" [21:30 - 21:31] preprocessing directive=
+comment|// CHECK: Punctuation: "(" [21:30 - 21:31] macro definition=fun_with_macro_bodies
 end_comment
 
 begin_comment
-comment|// CHECK: Identifier: "x" [21:31 - 21:32] preprocessing directive=
+comment|// CHECK: Identifier: "x" [21:31 - 21:32] macro definition=fun_with_macro_bodies
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: "," [21:32 - 21:33] preprocessing directive=
+comment|// CHECK: Punctuation: "," [21:32 - 21:33] macro definition=fun_with_macro_bodies
 end_comment
 
 begin_comment
-comment|// CHECK: Identifier: "y" [21:34 - 21:35] preprocessing directive=
+comment|// CHECK: Identifier: "y" [21:34 - 21:35] macro definition=fun_with_macro_bodies
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: ")" [21:35 - 21:36] preprocessing directive=
+comment|// CHECK: Punctuation: ")" [21:35 - 21:36] macro definition=fun_with_macro_bodies
 end_comment
 
 begin_comment
-comment|// CHECK: Keyword: "do" [21:37 - 21:39] preprocessing directive=
+comment|// CHECK: Keyword: "do" [21:37 - 21:39] macro definition=fun_with_macro_bodies
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: "{" [21:40 - 21:41] preprocessing directive=
+comment|// CHECK: Punctuation: "{" [21:40 - 21:41] macro definition=fun_with_macro_bodies
 end_comment
 
 begin_comment
-comment|// CHECK: Keyword: "if" [21:42 - 21:44] preprocessing directive=
+comment|// CHECK: Keyword: "if" [21:42 - 21:44] macro definition=fun_with_macro_bodies
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: "(" [21:45 - 21:46] preprocessing directive=
+comment|// CHECK: Punctuation: "(" [21:45 - 21:46] macro definition=fun_with_macro_bodies
 end_comment
 
 begin_comment
-comment|// CHECK: Identifier: "x" [21:46 - 21:47] preprocessing directive=
+comment|// CHECK: Identifier: "x" [21:46 - 21:47] macro definition=fun_with_macro_bodies
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: ")" [21:47 - 21:48] preprocessing directive=
+comment|// CHECK: Punctuation: ")" [21:47 - 21:48] macro definition=fun_with_macro_bodies
 end_comment
 
 begin_comment
-comment|// CHECK: Identifier: "y" [21:49 - 21:50] preprocessing directive=
+comment|// CHECK: Identifier: "y" [21:49 - 21:50] macro definition=fun_with_macro_bodies
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: "}" [21:51 - 21:52] preprocessing directive=
+comment|// CHECK: Punctuation: "}" [21:51 - 21:52] macro definition=fun_with_macro_bodies
 end_comment
 
 begin_comment
-comment|// CHECK: Keyword: "while" [21:53 - 21:58] preprocessing directive=
+comment|// CHECK: Keyword: "while" [21:53 - 21:58] macro definition=fun_with_macro_bodies
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: "(" [21:59 - 21:60] preprocessing directive=
+comment|// CHECK: Punctuation: "(" [21:59 - 21:60] macro definition=fun_with_macro_bodies
 end_comment
 
 begin_comment
-comment|// CHECK: Literal: "0" [21:60 - 21:61] preprocessing directive=
+comment|// CHECK: Literal: "0" [21:60 - 21:61] macro definition=fun_with_macro_bodies
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: ")" [21:61 - 21:62] preprocessing directive=
+comment|// CHECK: Punctuation: ")" [21:61 - 21:62] macro definition=fun_with_macro_bodies
 end_comment
 
 begin_comment
@@ -767,7 +767,7 @@ comment|// CHECK: Keyword: "int" [25:30 - 25:33] UnexposedStmt=
 end_comment
 
 begin_comment
-comment|// CHECK: Identifier: "z" [25:34 - 25:35] VarDecl=z:25:3 (Definition)
+comment|// CHECK: Identifier: "z" [25:34 - 25:35] VarDecl=z:25:34 (Definition)
 end_comment
 
 begin_comment

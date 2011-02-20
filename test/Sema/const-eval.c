@@ -375,11 +375,6 @@ operator|*
 operator|)
 literal|10
 operator|)
-argument_list|,
-operator|-
-literal|1
-argument_list|,
-literal|1
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -806,6 +801,30 @@ argument|: -
 literal|1
 argument_list|)
 end_macro
+
+begin_comment
+comment|// rdar://8875946
+end_comment
+
+begin_function
+name|void
+name|rdar8875946
+parameter_list|()
+block|{
+name|double
+specifier|_Complex
+name|P
+decl_stmt|;
+name|float
+specifier|_Complex
+name|P2
+init|=
+literal|3.3f
+operator|+
+name|P
+decl_stmt|;
+block|}
+end_function
 
 end_unit
 

@@ -127,6 +127,18 @@ file|"clang/Basic/TokenKinds.def"
 name|NUM_OBJC_KEYWORDS
 block|}
 enum|;
+comment|/// OnOffSwitch - This defines the possible values of an on-off-switch
+comment|/// (C99 6.10.6p2).
+enum|enum
+name|OnOffSwitch
+block|{
+name|OOS_ON
+block|,
+name|OOS_OFF
+block|,
+name|OOS_DEFAULT
+block|}
+enum|;
 comment|/// \brief Determines the name of a token as used within the front end.
 comment|///
 comment|/// The name of a token will be an internal name (such as "l_square")

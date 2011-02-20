@@ -809,7 +809,7 @@ comment|// CHECK: @g25.g26 = internal global i8* getelementptr inbounds ([4 x i8
 end_comment
 
 begin_comment
-comment|// CHECK: @__func__.g25 = private constant [4 x i8] c"g25\00"
+comment|// CHECK: @__func__.g25 = private unnamed_addr constant [4 x i8] c"g25\00"
 end_comment
 
 begin_function

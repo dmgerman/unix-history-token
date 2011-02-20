@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Allocator.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Sema/Ownership.h"
 end_include
 
@@ -102,6 +108,13 @@ comment|///
 name|class
 name|AttributeList
 block|{
+name|public
+label|:
+name|class
+name|Factory
+decl_stmt|;
+name|private
+label|:
 name|IdentifierInfo
 modifier|*
 name|AttrName
@@ -140,11 +153,11 @@ name|DeclspecAttribute
 decl_stmt|,
 name|CXX0XAttribute
 decl_stmt|;
+comment|/// True if already diagnosed as invalid.
 name|mutable
 name|bool
 name|Invalid
 decl_stmt|;
-comment|/// True if already diagnosed as invalid.
 name|AttributeList
 argument_list|(
 specifier|const
@@ -163,9 +176,67 @@ operator|&
 operator|)
 decl_stmt|;
 comment|// DO NOT IMPLEMENT
+name|void
+name|operator
+name|delete
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+comment|// DO NOT IMPLEMENT
+operator|~
+name|AttributeList
+argument_list|()
+expr_stmt|;
+comment|// DO NOT IMPLEMENT
+name|AttributeList
+argument_list|(
+argument|llvm::BumpPtrAllocator&Alloc
+argument_list|,
+argument|IdentifierInfo *AttrName
+argument_list|,
+argument|SourceLocation AttrLoc
+argument_list|,
+argument|IdentifierInfo *ScopeName
+argument_list|,
+argument|SourceLocation ScopeLoc
+argument_list|,
+argument|IdentifierInfo *ParmName
+argument_list|,
+argument|SourceLocation ParmLoc
+argument_list|,
+argument|Expr **args
+argument_list|,
+argument|unsigned numargs
+argument_list|,
+argument|bool declspec
+argument_list|,
+argument|bool cxx0x
+argument_list|)
+empty_stmt|;
 name|public
 label|:
+name|class
+name|Factory
+block|{
+name|llvm
+operator|::
+name|BumpPtrAllocator
+name|Alloc
+expr_stmt|;
+name|public
+label|:
+name|Factory
+argument_list|()
+block|{}
+operator|~
+name|Factory
+argument_list|()
+block|{}
 name|AttributeList
+operator|*
+name|Create
 argument_list|(
 argument|IdentifierInfo *AttrName
 argument_list|,
@@ -183,17 +254,59 @@ argument|Expr **args
 argument_list|,
 argument|unsigned numargs
 argument_list|,
-argument|AttributeList *Next
-argument_list|,
 argument|bool declspec = false
 argument_list|,
 argument|bool cxx0x = false
 argument_list|)
-empty_stmt|;
-operator|~
+block|{
 name|AttributeList
-argument_list|()
-expr_stmt|;
+operator|*
+name|Mem
+operator|=
+name|Alloc
+operator|.
+name|Allocate
+operator|<
+name|AttributeList
+operator|>
+operator|(
+operator|)
+block|;
+name|new
+argument_list|(
+argument|Mem
+argument_list|)
+name|AttributeList
+argument_list|(
+name|Alloc
+argument_list|,
+name|AttrName
+argument_list|,
+name|AttrLoc
+argument_list|,
+name|ScopeName
+argument_list|,
+name|ScopeLoc
+argument_list|,
+name|ParmName
+argument_list|,
+name|ParmLoc
+argument_list|,
+name|args
+argument_list|,
+name|numargs
+argument_list|,
+name|declspec
+argument_list|,
+name|cxx0x
+argument_list|)
+block|;
+return|return
+name|Mem
+return|;
+block|}
+block|}
+empty_stmt|;
 enum|enum
 name|Kind
 block|{
@@ -229,13 +342,19 @@ name|AT_cdecl
 block|,
 name|AT_cleanup
 block|,
+name|AT_common
+block|,
 name|AT_const
+block|,
+name|AT_constant
 block|,
 name|AT_constructor
 block|,
 name|AT_deprecated
 block|,
 name|AT_destructor
+block|,
+name|AT_device
 block|,
 name|AT_dllexport
 block|,
@@ -245,25 +364,39 @@ name|AT_ext_vector_type
 block|,
 name|AT_fastcall
 block|,
-name|AT_final
-block|,
 name|AT_format
 block|,
 name|AT_format_arg
 block|,
+name|AT_global
+block|,
 name|AT_gnu_inline
 block|,
-name|AT_hiding
+name|AT_host
+block|,
+name|AT_launch_bounds
 block|,
 name|AT_malloc
 block|,
+name|AT_may_alias
+block|,
 name|AT_mode
+block|,
+name|AT_neon_polyvector_type
+block|,
+comment|// Clang-specific.
+name|AT_neon_vector_type
+block|,
+comment|// Clang-specific.
+name|AT_naked
 block|,
 name|AT_nodebug
 block|,
 name|AT_noinline
 block|,
 name|AT_no_instrument_function
+block|,
+name|AT_nocommon
 block|,
 name|AT_nonnull
 block|,
@@ -274,8 +407,6 @@ block|,
 name|AT_nsobject
 block|,
 name|AT_objc_exception
-block|,
-name|AT_override
 block|,
 name|AT_cf_returns_not_retained
 block|,
@@ -289,8 +420,23 @@ comment|// Clang-specific.
 name|AT_ns_returns_retained
 block|,
 comment|// Clang-specific.
+name|AT_ns_returns_autoreleased
+block|,
+comment|// Clang-specific.
+name|AT_cf_consumed
+block|,
+comment|// Clang-specific.
+name|AT_ns_consumed
+block|,
+comment|// Clang-specific.
+name|AT_ns_consumes_self
+block|,
+comment|// Clang-specific.
 name|AT_objc_gc
 block|,
+name|AT_opencl_kernel_function
+block|,
+comment|// OpenCL-specific.
 name|AT_overloadable
 block|,
 comment|// Clang-specific.
@@ -315,6 +461,8 @@ name|AT_section
 block|,
 name|AT_sentinel
 block|,
+name|AT_shared
+block|,
 name|AT_stdcall
 block|,
 name|AT_thiscall
@@ -326,6 +474,8 @@ block|,
 name|AT_unused
 block|,
 name|AT_used
+block|,
+name|AT_uuid
 block|,
 name|AT_vecreturn
 block|,
@@ -406,6 +556,15 @@ specifier|const
 block|{
 return|return
 name|ParmName
+return|;
+block|}
+name|SourceLocation
+name|getParameterLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ParmLoc
 return|;
 block|}
 name|bool
@@ -809,6 +968,170 @@ argument_list|)
 block|{   }
 block|}
 struct|;
+comment|/// ParsedAttributes - A collection of parsed attributes.  Currently
+comment|/// we don't differentiate between the various attribute syntaxes,
+comment|/// which is basically silly.
+comment|///
+comment|/// Right now this is a very lightweight container, but the expectation
+comment|/// is that this will become significantly more serious.
+name|class
+name|ParsedAttributes
+block|{
+name|public
+label|:
+name|ParsedAttributes
+argument_list|()
+operator|:
+name|list
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+name|bool
+name|empty
+argument_list|()
+specifier|const
+block|{
+return|return
+name|list
+operator|==
+literal|0
+return|;
+block|}
+name|void
+name|add
+parameter_list|(
+name|AttributeList
+modifier|*
+name|newAttr
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|newAttr
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|newAttr
+operator|->
+name|getNext
+argument_list|()
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+name|newAttr
+operator|->
+name|setNext
+argument_list|(
+name|list
+argument_list|)
+expr_stmt|;
+name|list
+operator|=
+name|newAttr
+expr_stmt|;
+block|}
+name|void
+name|append
+parameter_list|(
+name|AttributeList
+modifier|*
+name|newList
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|newList
+condition|)
+return|return;
+name|AttributeList
+modifier|*
+name|lastInNewList
+init|=
+name|newList
+decl_stmt|;
+while|while
+condition|(
+name|AttributeList
+modifier|*
+name|next
+init|=
+name|lastInNewList
+operator|->
+name|getNext
+argument_list|()
+condition|)
+name|lastInNewList
+operator|=
+name|next
+expr_stmt|;
+name|lastInNewList
+operator|->
+name|setNext
+argument_list|(
+name|list
+argument_list|)
+expr_stmt|;
+name|list
+operator|=
+name|newList
+expr_stmt|;
+block|}
+name|void
+name|set
+parameter_list|(
+name|AttributeList
+modifier|*
+name|newList
+parameter_list|)
+block|{
+name|list
+operator|=
+name|newList
+expr_stmt|;
+block|}
+name|void
+name|clear
+parameter_list|()
+block|{
+name|list
+operator|=
+literal|0
+expr_stmt|;
+block|}
+name|AttributeList
+operator|*
+name|getList
+argument_list|()
+specifier|const
+block|{
+return|return
+name|list
+return|;
+block|}
+comment|/// Returns a reference to the attribute list.  Try not to introduce
+comment|/// dependencies on this method, it may not be long-lived.
+name|AttributeList
+modifier|*
+modifier|&
+name|getListRef
+parameter_list|()
+block|{
+return|return
+name|list
+return|;
+block|}
+name|private
+label|:
+name|AttributeList
+modifier|*
+name|list
+decl_stmt|;
+block|}
+empty_stmt|;
 block|}
 end_decl_stmt
 

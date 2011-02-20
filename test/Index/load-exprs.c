@@ -124,6 +124,84 @@ return|;
 block|}
 end_function
 
+begin_struct
+struct|struct
+name|Y
+block|{
+name|struct
+name|X
+name|array
+index|[
+literal|3
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_enum
+enum|enum
+block|{
+name|StartIndex
+init|=
+literal|1
+block|}
+enum|;
+end_enum
+
+begin_function
+name|void
+name|test_members
+parameter_list|(
+name|int
+name|aval
+parameter_list|,
+name|int
+name|bval
+parameter_list|)
+block|{
+name|struct
+name|Y
+name|y0
+init|=
+block|{
+operator|.
+name|array
+index|[
+name|StartIndex
+index|]
+operator|.
+name|b
+operator|=
+name|bval
+block|,
+operator|.
+name|array
+index|[
+name|StartIndex
+index|]
+operator|.
+name|a
+operator|=
+name|aval
+block|}
+decl_stmt|;
+name|__builtin_offsetof
+argument_list|(
+expr|struct
+name|Y
+argument_list|,
+name|array
+index|[
+name|StartIndex
+index|]
+operator|.
+name|b
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|// RUN: c-index-test -test-load-source all %s -fblocks | FileCheck %s
 end_comment
@@ -221,7 +299,7 @@ comment|// CHECK: load-exprs.c:13:17: VarDecl=z:13:17 (Definition) Extent=[13:13
 end_comment
 
 begin_comment
-comment|// CHECK: load-exprs.c:14:6: DeclRefExpr= Extent=[14:6 - 14:7]
+comment|// CHECK: load-exprs.c:14:6: DeclRefExpr=y:11:15 Extent=[14:6 - 14:7]
 end_comment
 
 begin_comment
@@ -229,7 +307,7 @@ comment|// CHECK: load-exprs.c:14:13: DeclRefExpr=z:13:17 Extent=[14:13 - 14:14]
 end_comment
 
 begin_comment
-comment|// CHECK: load-exprs.c:14:18: DeclRefExpr= Extent=[14:18 - 14:19]
+comment|// CHECK: load-exprs.c:14:18: DeclRefExpr=x:10:21 Extent=[14:18 - 14:19]
 end_comment
 
 begin_comment
@@ -241,11 +319,71 @@ comment|// CHECK: load-exprs.c:16:10: DeclRefExpr=z:13:17 Extent=[16:10 - 16:11]
 end_comment
 
 begin_comment
-comment|// CHECK: load-exprs.c:17:10: DeclRefExpr= Extent=[17:10 - 17:11]
+comment|// CHECK: load-exprs.c:17:10: DeclRefExpr=y:11:15 Extent=[17:10 - 17:11]
 end_comment
 
 begin_comment
 comment|// CHECK: load-exprs.c:20:10: DeclRefExpr=y:11:15 Extent=[20:10 - 20:11]
+end_comment
+
+begin_comment
+comment|// CHECK: load-exprs.c:29:6: FunctionDecl=test_members:29:6 (Definition)
+end_comment
+
+begin_comment
+comment|// CHECK: load-exprs.c:30:12: VarDecl=y0:30:12 (Definition) Extent=[30:10 - 30:77]
+end_comment
+
+begin_comment
+comment|// CHECK: load-exprs.c:30:10: TypeRef=struct Y:23:8 Extent=[30:10 - 30:11]
+end_comment
+
+begin_comment
+comment|// CHECK: load-exprs.c:30:20: MemberRef=array:24:12 Extent=[30:20 - 30:25]
+end_comment
+
+begin_comment
+comment|// CHECK: load-exprs.c:30:26: DeclRefExpr=StartIndex:27:8 Extent=[30:26 - 30:36]
+end_comment
+
+begin_comment
+comment|// CHECK: load-exprs.c:30:38: MemberRef=b:2:19 Extent=[30:38 - 30:39]
+end_comment
+
+begin_comment
+comment|// CHECK: load-exprs.c:30:42: DeclRefExpr=bval:29:33 Extent=[30:42 - 30:46]
+end_comment
+
+begin_comment
+comment|// CHECK: load-exprs.c:30:49: MemberRef=array:24:12 Extent=[30:49 - 30:54]
+end_comment
+
+begin_comment
+comment|// CHECK: load-exprs.c:30:55: DeclRefExpr=StartIndex:27:8 Extent=[30:55 - 30:65]
+end_comment
+
+begin_comment
+comment|// CHECK: load-exprs.c:30:67: MemberRef=a:2:16 Extent=[30:67 - 30:68]
+end_comment
+
+begin_comment
+comment|// CHECK: load-exprs.c:30:71: DeclRefExpr=aval:29:23 Extent=[30:71 - 30:75]
+end_comment
+
+begin_comment
+comment|// CHECK: load-exprs.c:31:29: TypeRef=struct Y:23:8 Extent=[31:29 - 31:30]
+end_comment
+
+begin_comment
+comment|// CHECK: load-exprs.c:31:32: MemberRef=array:24:12 Extent=[31:32 - 31:37]
+end_comment
+
+begin_comment
+comment|// CHECK: load-exprs.c:31:38: DeclRefExpr=StartIndex:27:8 Extent=[31:38 - 31:48]
+end_comment
+
+begin_comment
+comment|// CHECK: load-exprs.c:31:50: MemberRef=b:2:19 Extent=[31:50 - 31:51]
 end_comment
 
 end_unit

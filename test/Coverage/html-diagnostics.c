@@ -16,7 +16,15 @@ comment|// CHECK:<h3>Annotated Source Code</h3>
 end_comment
 
 begin_comment
-comment|// CHECK: Dereference of null pointer
+comment|// Without tweaking expr, the expr would hit to the line below
+end_comment
+
+begin_comment
+comment|// emitted to the output as comment.
+end_comment
+
+begin_comment
+comment|// CHECK: {{[D]ereference of null pointer}}
 end_comment
 
 begin_function

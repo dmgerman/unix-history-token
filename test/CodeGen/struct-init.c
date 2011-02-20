@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -emit-llvm -o -
+comment|// RUN: %clang_cc1 %s -emit-llvm-only
 end_comment
 
 begin_typedef
@@ -99,6 +99,70 @@ literal|1
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_typedef
+typedef|typedef
+name|__attribute__
+argument_list|(
+argument|( ext_vector_type(
+literal|2
+argument|) )
+argument_list|)
+name|unsigned
+name|int
+name|uint2
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|__attribute__
+argument_list|(
+argument|( __vector_size__(
+literal|8
+argument|) )
+argument_list|)
+name|unsigned
+name|int
+name|__neon_uint32x2_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|// rdar://8183908
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|__simd64_uint32_t
+block|{
+name|__neon_uint32x2_t
+name|val
+decl_stmt|;
+block|}
+name|uint32x2_t
+typedef|;
+end_typedef
+
+begin_function
+name|void
+name|foo
+parameter_list|()
+block|{
+specifier|const
+name|uint32x2_t
+name|signBit
+init|=
+block|{
+operator|(
+name|uint2
+operator|)
+literal|0x80000000
+block|}
+decl_stmt|;
+block|}
+end_function
 
 end_unit
 

@@ -63,12 +63,21 @@ directive|define
 name|CLANG_CODEGEN_TARGETINFO_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
 name|class
 name|GlobalValue
+decl_stmt|;
+name|class
+name|Type
 decl_stmt|;
 name|class
 name|Value
@@ -289,6 +298,26 @@ specifier|const
 block|{
 return|return
 name|Address
+return|;
+block|}
+name|virtual
+specifier|const
+name|llvm
+operator|::
+name|Type
+operator|*
+name|adjustInlineAsmType
+argument_list|(
+argument|CodeGen::CodeGenFunction&CGF
+argument_list|,
+argument|llvm::StringRef Constraint
+argument_list|,
+argument|const llvm::Type* Ty
+argument_list|)
+specifier|const
+block|{
+return|return
+name|Ty
 return|;
 block|}
 block|}

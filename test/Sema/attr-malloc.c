@@ -10,8 +10,29 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|<stddef.h>
 end_include
+
+begin_comment
+comment|// Declare malloc here explicitly so we don't depend on system headers.
+end_comment
+
+begin_function_decl
+name|void
+modifier|*
+name|malloc
+parameter_list|(
+name|size_t
+parameter_list|)
+function_decl|__attribute
+parameter_list|(
+function_decl|(malloc
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
 
 begin_decl_stmt
 name|int

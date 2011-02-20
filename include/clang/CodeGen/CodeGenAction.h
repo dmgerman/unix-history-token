@@ -60,6 +60,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|LLVMContext
+decl_stmt|;
+name|class
 name|Module
 decl_stmt|;
 block|}
@@ -69,6 +72,9 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
+name|class
+name|BackendConsumer
+decl_stmt|;
 name|class
 name|CodeGenAction
 range|:
@@ -90,11 +96,26 @@ name|Module
 operator|>
 name|TheModule
 block|;
+name|llvm
+operator|::
+name|LLVMContext
+operator|*
+name|VMContext
+block|;
+name|bool
+name|OwnsVMContext
+block|;
 name|protected
 operator|:
+comment|/// Create a new code generation action.  If the optional \arg _VMContext
+comment|/// parameter is supplied, the action uses it without taking ownership,
+comment|/// otherwise it creates a fresh LLVM context and takes ownership.
 name|CodeGenAction
 argument_list|(
 argument|unsigned _Act
+argument_list|,
+argument|llvm::LLVMContext *_VMContext =
+literal|0
 argument_list|)
 block|;
 name|virtual
@@ -137,6 +158,18 @@ name|Module
 operator|*
 name|takeModule
 argument_list|()
+block|;
+comment|/// Take the LLVM context used by this action.
+name|llvm
+operator|::
+name|LLVMContext
+operator|*
+name|takeLLVMContext
+argument_list|()
+block|;
+name|BackendConsumer
+operator|*
+name|BEConsumer
 block|; }
 decl_stmt|;
 name|class
@@ -148,7 +181,15 @@ block|{
 name|public
 operator|:
 name|EmitAssemblyAction
-argument_list|()
+argument_list|(
+name|llvm
+operator|::
+name|LLVMContext
+operator|*
+name|_VMContext
+operator|=
+literal|0
+argument_list|)
 block|; }
 decl_stmt|;
 name|class
@@ -160,7 +201,15 @@ block|{
 name|public
 operator|:
 name|EmitBCAction
-argument_list|()
+argument_list|(
+name|llvm
+operator|::
+name|LLVMContext
+operator|*
+name|_VMContext
+operator|=
+literal|0
+argument_list|)
 block|; }
 decl_stmt|;
 name|class
@@ -172,7 +221,15 @@ block|{
 name|public
 operator|:
 name|EmitLLVMAction
-argument_list|()
+argument_list|(
+name|llvm
+operator|::
+name|LLVMContext
+operator|*
+name|_VMContext
+operator|=
+literal|0
+argument_list|)
 block|; }
 decl_stmt|;
 name|class
@@ -184,7 +241,15 @@ block|{
 name|public
 operator|:
 name|EmitLLVMOnlyAction
-argument_list|()
+argument_list|(
+name|llvm
+operator|::
+name|LLVMContext
+operator|*
+name|_VMContext
+operator|=
+literal|0
+argument_list|)
 block|; }
 decl_stmt|;
 name|class
@@ -196,7 +261,15 @@ block|{
 name|public
 operator|:
 name|EmitCodeGenOnlyAction
-argument_list|()
+argument_list|(
+name|llvm
+operator|::
+name|LLVMContext
+operator|*
+name|_VMContext
+operator|=
+literal|0
+argument_list|)
 block|; }
 decl_stmt|;
 name|class
@@ -208,7 +281,15 @@ block|{
 name|public
 operator|:
 name|EmitObjAction
-argument_list|()
+argument_list|(
+name|llvm
+operator|::
+name|LLVMContext
+operator|*
+name|_VMContext
+operator|=
+literal|0
+argument_list|)
 block|; }
 decl_stmt|;
 block|}

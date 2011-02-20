@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-check-objc-mem -analyzer-experimental-checks -analyzer-store region -verify %s
+comment|// RUN: %clang_cc1 -analyze -analyzer-check-objc-mem -analyzer-checker=unix.experimental.Stream -analyzer-store region -verify %s
 end_comment
 
 begin_typedef
@@ -500,6 +500,37 @@ name|fp
 argument_list|)
 expr_stmt|;
 comment|// no-warning
+block|}
+end_function
+
+begin_comment
+comment|// PR 8081 - null pointer crash when 'whence' is not an integer constant
+end_comment
+
+begin_function
+name|void
+name|pr8081
+parameter_list|(
+name|FILE
+modifier|*
+name|stream
+parameter_list|,
+name|long
+name|offset
+parameter_list|,
+name|int
+name|whence
+parameter_list|)
+block|{
+name|fseek
+argument_list|(
+name|stream
+argument_list|,
+name|offset
+argument_list|,
+name|whence
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

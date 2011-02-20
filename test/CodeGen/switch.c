@@ -706,5 +706,51 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|// Don't delete a basic block that we want to introduce later references to.
+end_comment
+
+begin_comment
+comment|// This isn't really specific to switches, but it's easy to show with them.
+end_comment
+
+begin_comment
+comment|// rdar://problem/8837067
+end_comment
+
+begin_function
+name|int
+name|f14
+parameter_list|(
+name|int
+name|x
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|x
+condition|)
+block|{
+comment|// case range so that the case block has no predecessors
+case|case
+literal|0
+operator|...
+literal|15
+case|:
+comment|// any expression which doesn't introduce a new block
+operator|(
+name|void
+operator|)
+literal|0
+expr_stmt|;
+comment|// kaboom
+default|default:
+return|return
+name|x
+return|;
+block|}
+block|}
+end_function
+
 end_unit
 

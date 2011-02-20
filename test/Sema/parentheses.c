@@ -154,6 +154,97 @@ operator|!=
 literal|3
 argument_list|)
 expr_stmt|;
+call|(
+name|void
+call|)
+argument_list|(
+name|i
+operator|||
+name|i
+operator|&&
+name|i
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{'&&' within '||'}} \
+comment|// expected-note {{place parentheses around the '&&' expression to silence this warning}}
+call|(
+name|void
+call|)
+argument_list|(
+name|i
+operator|||
+name|i
+operator|&&
+literal|"w00t"
+argument_list|)
+expr_stmt|;
+comment|// no warning.
+call|(
+name|void
+call|)
+argument_list|(
+literal|"w00t"
+operator|&&
+name|i
+operator|||
+name|i
+argument_list|)
+expr_stmt|;
+comment|// no warning.
+call|(
+name|void
+call|)
+argument_list|(
+name|i
+operator|||
+name|i
+operator|&&
+literal|"w00t"
+operator|||
+name|i
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{'&&' within '||'}} \
+comment|// expected-note {{place parentheses around the '&&' expression to silence this warning}}
+call|(
+name|void
+call|)
+argument_list|(
+name|i
+operator|||
+literal|"w00t"
+operator|&&
+name|i
+operator|||
+name|i
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{'&&' within '||'}} \
+comment|// expected-note {{place parentheses around the '&&' expression to silence this warning}}
+call|(
+name|void
+call|)
+argument_list|(
+name|i
+operator|&&
+name|i
+operator|||
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// no warning.
+call|(
+name|void
+call|)
+argument_list|(
+literal|0
+operator|||
+name|i
+operator|&&
+name|i
+argument_list|)
+expr_stmt|;
+comment|// no warning.
 block|}
 end_function
 

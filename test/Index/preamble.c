@@ -47,18 +47,6 @@ comment|// CHECK: preamble.h:1:12: FunctionDecl=bar:1:12 (Definition) Extent=[1:
 end_comment
 
 begin_comment
-comment|// CHECK:<invalid loc>:0:0: UnexposedStmt= Extent=[1:23 - 6:2]
-end_comment
-
-begin_comment
-comment|// CHECK:<invalid loc>:0:0: UnexposedStmt= Extent=[2:3 - 2:16]
-end_comment
-
-begin_comment
-comment|// CHECK:<invalid loc>:0:0: UnexposedStmt= Extent=[3:3 - 3:15]
-end_comment
-
-begin_comment
 comment|// CHECK: preamble.h:4:3: UnexposedExpr= Extent=[4:3 - 4:13]
 end_comment
 
@@ -72,10 +60,6 @@ end_comment
 
 begin_comment
 comment|// CHECK: preamble.h:4:9: DeclRefExpr=ptr1:3:10 Extent=[4:9 - 4:13]
-end_comment
-
-begin_comment
-comment|// CHECK:<invalid loc>:0:0: UnexposedStmt= Extent=[5:3 - 5:11]
 end_comment
 
 begin_comment
@@ -103,7 +87,7 @@ comment|// CHECK-CC: FunctionDecl:{ResultType int}{TypedText bar}{LeftParen (}{P
 end_comment
 
 begin_comment
-comment|// CHECK-CC: FunctionDecl:{ResultType void}{TypedText f}{LeftParen (}{Placeholder int x}{RightParen )} (45)
+comment|// CHECK-CC: FunctionDecl:{ResultType void}{TypedText f}{LeftParen (}{Placeholder int x}{RightParen )} (50)
 end_comment
 
 begin_comment

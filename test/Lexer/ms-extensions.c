@@ -40,6 +40,14 @@ end_decl_stmt
 
 begin_decl_stmt
 name|__int64
+name|x6
+init|=
+literal|0x42I64
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|__int64
 name|x4
 init|=
 literal|70000000i

@@ -260,7 +260,7 @@ argument_list|(
 name|src
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{incompatible pointer types passing 'unsigned int const *' to parameter of type 'longlongvec *'}}
+comment|// expected-warning {{incompatible pointer types passing 'const unsigned int *' to parameter of type 'longlongvec *'}}
 block|}
 end_function
 

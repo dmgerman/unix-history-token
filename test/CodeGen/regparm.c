@@ -61,7 +61,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-specifier|static
+specifier|extern
 name|void
 name|FASTCALL
 name|reduced
@@ -133,7 +133,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|// CHECK: call void @reduced(i8 signext inreg 0, {{.*}} %struct.anon* inreg null
+comment|// CHECK: call void @reduced(i8 signext inreg 0, {{.*}} %struct.foo* inreg null
 name|reduced
 argument_list|(
 literal|0

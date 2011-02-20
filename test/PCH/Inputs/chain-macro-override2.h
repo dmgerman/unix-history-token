@@ -27,5 +27,11 @@ parameter_list|()
 value|g()
 end_define
 
+begin_decl_stmt
+name|int
+name|x
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 

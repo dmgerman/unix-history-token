@@ -16,11 +16,7 @@ comment|// CHECK-PPC: clang{{.*}}" "-cc1" "-triple" "powerpc64-pc-freebsd8"
 end_comment
 
 begin_comment
-comment|// CHECK-PPC: as{{.*}}" "-o" "{{.*}}.o" "{{.*}}.s
-end_comment
-
-begin_comment
-comment|// CHECK-PPC: ld{{.*}}" "--eh-frame-hdr" "-dynamic-linker" "{{.*}}ld-elf{{.*}}" "-o" "a.out" "{{.*}}crt1.o" "{{.*}}crti.o" "{{.*}}crtbegin.o" "{{.*}}.o" "-lgcc" "--as-needed" "-lgcc_s" "--no-as-needed" "-lc" "-lgcc" "--as-needed" "-lgcc_s" "--no-as-needed" "{{.*}}crtend.o" "{{.*}}crtn.o"
+comment|// CHECK-PPC: ld{{.*}}" "--eh-frame-hdr" "-dynamic-linker" "{{.*}}ld-elf{{.*}}" "-o" "a.out" "{{.*}}crt1.o" "{{.*}}crti.o" "{{.*}}crtbegin.o" "-L/usr/lib" "{{.*}}.o" "-lgcc" "--as-needed" "-lgcc_s" "--no-as-needed" "-lc" "-lgcc" "--as-needed" "-lgcc_s" "--no-as-needed" "{{.*}}crtend.o" "{{.*}}crtn.o"
 end_comment
 
 begin_comment
@@ -48,10 +44,6 @@ comment|// CHECK-LIB32: clang{{.*}}" "-cc1" "-triple" "i386-pc-freebsd8"
 end_comment
 
 begin_comment
-comment|// CHECK-LIB32: as{{.*}}" "--32"
-end_comment
-
-begin_comment
 comment|// CHECK-LIB32: ld{{.*}}" {{.*}} "-m" "elf_i386_fbsd"
 end_comment
 
@@ -72,7 +64,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CHECK-LIB32PATHS: libraries: ={{.*}}:/usr/lib32
+comment|// CHECK-LIB32PATHS: libraries: ={{.*:?}}/usr/lib32
 end_comment
 
 end_unit

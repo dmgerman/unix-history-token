@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/PointerUnion.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<utility>
 end_include
 
@@ -100,6 +106,15 @@ name|class
 name|Expr
 decl_stmt|;
 name|class
+name|FieldDecl
+decl_stmt|;
+name|class
+name|InclusionDirective
+decl_stmt|;
+name|class
+name|LabelStmt
+decl_stmt|;
+name|class
 name|MacroDefinition
 decl_stmt|;
 name|class
@@ -115,10 +130,19 @@ name|class
 name|ObjCProtocolDecl
 decl_stmt|;
 name|class
+name|OverloadedTemplateStorage
+decl_stmt|;
+name|class
+name|OverloadExpr
+decl_stmt|;
+name|class
 name|Stmt
 decl_stmt|;
 name|class
 name|TemplateDecl
+decl_stmt|;
+name|class
+name|TemplateName
 decl_stmt|;
 name|class
 name|TypeDecl
@@ -142,8 +166,7 @@ name|Decl
 operator|*
 name|Parent
 argument_list|,
-name|ASTUnit
-operator|*
+name|CXTranslationUnit
 name|TU
 argument_list|)
 decl_stmt|;
@@ -156,9 +179,13 @@ name|Decl
 operator|*
 name|D
 argument_list|,
-name|ASTUnit
-operator|*
+name|CXTranslationUnit
 name|TU
+argument_list|,
+name|bool
+name|FirstInDeclGroup
+operator|=
+name|true
 argument_list|)
 decl_stmt|;
 name|CXCursor
@@ -176,8 +203,7 @@ name|Decl
 operator|*
 name|Parent
 argument_list|,
-name|ASTUnit
-operator|*
+name|CXTranslationUnit
 name|TU
 argument_list|)
 decl_stmt|;
@@ -199,8 +225,7 @@ parameter_list|,
 name|SourceLocation
 name|Loc
 parameter_list|,
-name|ASTUnit
-modifier|*
+name|CXTranslationUnit
 name|TU
 parameter_list|)
 function_decl|;
@@ -231,8 +256,7 @@ parameter_list|,
 name|SourceLocation
 name|Loc
 parameter_list|,
-name|ASTUnit
-modifier|*
+name|CXTranslationUnit
 name|TU
 parameter_list|)
 function_decl|;
@@ -263,8 +287,7 @@ parameter_list|,
 name|SourceLocation
 name|Loc
 parameter_list|,
-name|ASTUnit
-modifier|*
+name|CXTranslationUnit
 name|TU
 parameter_list|)
 function_decl|;
@@ -295,8 +318,7 @@ parameter_list|,
 name|SourceLocation
 name|Loc
 parameter_list|,
-name|ASTUnit
-modifier|*
+name|CXTranslationUnit
 name|TU
 parameter_list|)
 function_decl|;
@@ -327,8 +349,7 @@ parameter_list|,
 name|SourceLocation
 name|Loc
 parameter_list|,
-name|ASTUnit
-modifier|*
+name|CXTranslationUnit
 name|TU
 parameter_list|)
 function_decl|;
@@ -360,8 +381,7 @@ parameter_list|,
 name|SourceLocation
 name|Loc
 parameter_list|,
-name|ASTUnit
-modifier|*
+name|CXTranslationUnit
 name|TU
 parameter_list|)
 function_decl|;
@@ -381,6 +401,37 @@ argument_list|(
 argument|CXCursor C
 argument_list|)
 expr_stmt|;
+comment|/// \brief Create a reference to a field at the given location.
+name|CXCursor
+name|MakeCursorMemberRef
+parameter_list|(
+name|FieldDecl
+modifier|*
+name|Field
+parameter_list|,
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|CXTranslationUnit
+name|TU
+parameter_list|)
+function_decl|;
+comment|/// \brief Unpack a MemberRef cursor into the field it references and the
+comment|/// location where the reference occurred.
+name|std
+operator|::
+name|pair
+operator|<
+name|FieldDecl
+operator|*
+operator|,
+name|SourceLocation
+operator|>
+name|getCursorMemberRef
+argument_list|(
+argument|CXCursor C
+argument_list|)
+expr_stmt|;
 comment|/// \brief Create a CXX base specifier cursor.
 name|CXCursor
 name|MakeCursorCXXBaseSpecifier
@@ -389,8 +440,7 @@ name|CXXBaseSpecifier
 modifier|*
 name|B
 parameter_list|,
-name|ASTUnit
-modifier|*
+name|CXTranslationUnit
 name|TU
 parameter_list|)
 function_decl|;
@@ -410,8 +460,7 @@ parameter_list|(
 name|SourceRange
 name|Range
 parameter_list|,
-name|ASTUnit
-modifier|*
+name|CXTranslationUnit
 name|TU
 parameter_list|)
 function_decl|;
@@ -430,8 +479,7 @@ parameter_list|(
 name|MacroDefinition
 modifier|*
 parameter_list|,
-name|ASTUnit
-modifier|*
+name|CXTranslationUnit
 name|TU
 parameter_list|)
 function_decl|;
@@ -452,8 +500,7 @@ parameter_list|(
 name|MacroInstantiation
 modifier|*
 parameter_list|,
-name|ASTUnit
-modifier|*
+name|CXTranslationUnit
 name|TU
 parameter_list|)
 function_decl|;
@@ -467,6 +514,131 @@ name|CXCursor
 name|C
 parameter_list|)
 function_decl|;
+comment|/// \brief Create an inclusion directive cursor.
+name|CXCursor
+name|MakeInclusionDirectiveCursor
+parameter_list|(
+name|InclusionDirective
+modifier|*
+parameter_list|,
+name|CXTranslationUnit
+name|TU
+parameter_list|)
+function_decl|;
+comment|/// \brief Unpack a given inclusion directive cursor to retrieve its
+comment|/// source range.
+name|InclusionDirective
+modifier|*
+name|getCursorInclusionDirective
+parameter_list|(
+name|CXCursor
+name|C
+parameter_list|)
+function_decl|;
+comment|/// \brief Create a label reference at the given location.
+name|CXCursor
+name|MakeCursorLabelRef
+parameter_list|(
+name|LabelStmt
+modifier|*
+name|Label
+parameter_list|,
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|CXTranslationUnit
+name|TU
+parameter_list|)
+function_decl|;
+comment|/// \brief Unpack a label reference into the label statement it refers to and
+comment|/// the location of the reference.
+name|std
+operator|::
+name|pair
+operator|<
+name|LabelStmt
+operator|*
+operator|,
+name|SourceLocation
+operator|>
+name|getCursorLabelRef
+argument_list|(
+argument|CXCursor C
+argument_list|)
+expr_stmt|;
+comment|/// \brief Create a overloaded declaration reference cursor for an expression.
+name|CXCursor
+name|MakeCursorOverloadedDeclRef
+parameter_list|(
+name|OverloadExpr
+modifier|*
+name|E
+parameter_list|,
+name|CXTranslationUnit
+name|TU
+parameter_list|)
+function_decl|;
+comment|/// \brief Create a overloaded declaration reference cursor for a declaration.
+name|CXCursor
+name|MakeCursorOverloadedDeclRef
+parameter_list|(
+name|Decl
+modifier|*
+name|D
+parameter_list|,
+name|SourceLocation
+name|Location
+parameter_list|,
+name|CXTranslationUnit
+name|TU
+parameter_list|)
+function_decl|;
+comment|/// \brief Create a overloaded declaration reference cursor for a template name.
+name|CXCursor
+name|MakeCursorOverloadedDeclRef
+parameter_list|(
+name|TemplateName
+name|Template
+parameter_list|,
+name|SourceLocation
+name|Location
+parameter_list|,
+name|CXTranslationUnit
+name|TU
+parameter_list|)
+function_decl|;
+comment|/// \brief Internal storage for an overloaded declaration reference cursor;
+typedef|typedef
+name|llvm
+operator|::
+name|PointerUnion3
+operator|<
+name|OverloadExpr
+operator|*
+operator|,
+name|Decl
+operator|*
+operator|,
+name|OverloadedTemplateStorage
+operator|*
+operator|>
+name|OverloadedDeclRefStorage
+expr_stmt|;
+comment|/// \brief Unpack an overloaded declaration reference into an expression,
+comment|/// declaration, or template name along with the source location.
+name|std
+operator|::
+name|pair
+operator|<
+name|OverloadedDeclRefStorage
+operator|,
+name|SourceLocation
+operator|>
+name|getCursorOverloadedDeclRef
+argument_list|(
+argument|CXCursor C
+argument_list|)
+expr_stmt|;
 name|Decl
 modifier|*
 name|getCursorDecl
@@ -515,6 +687,13 @@ name|CXCursor
 name|Cursor
 parameter_list|)
 function_decl|;
+name|CXTranslationUnit
+name|getCursorTU
+parameter_list|(
+name|CXCursor
+name|Cursor
+parameter_list|)
+function_decl|;
 name|bool
 name|operator
 operator|==
@@ -547,6 +726,15 @@ name|Y
 operator|)
 return|;
 block|}
+comment|/// \brief Return true if the cursor represents a declaration that is the
+comment|/// first in a declaration group.
+name|bool
+name|isFirstInDeclGroup
+parameter_list|(
+name|CXCursor
+name|C
+parameter_list|)
+function_decl|;
 block|}
 block|}
 end_decl_stmt

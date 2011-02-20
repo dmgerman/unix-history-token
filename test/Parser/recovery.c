@@ -346,5 +346,31 @@ begin_comment
 comment|// expected-error {{unknown type name 'intptr'; did you mean 'intptr_t'?}}
 end_comment
 
+begin_function
+name|void
+name|test1
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|int
+name|x
+init|=
+literal|2
+operator|:
+comment|// expected-error {{expected ';' at end of declaration}}
+name|int
+name|y
+operator|=
+name|x
+decl_stmt|;
+name|int
+name|z
+init|=
+name|y
+decl_stmt|;
+block|}
+end_function
+
 end_unit
 

@@ -99,6 +99,20 @@ decl_stmt|;
 name|class
 name|PragmaNamespace
 decl_stmt|;
+comment|/**    * \brief Describes how the pragma was introduced, e.g., with #pragma,     * _Pragma, or __pragma.    */
+enum|enum
+name|PragmaIntroducerKind
+block|{
+comment|/**      * \brief The pragma was introduced via #pragma.      */
+name|PIK_HashPragma
+block|,
+comment|/**      * \brief The pragma was introduced via the C99 _Pragma(string-literal).      */
+name|PIK__Pragma
+block|,
+comment|/**      * \brief The pragma was introduced via the Microsoft       * __pragma(token-string).      */
+name|PIK___pragma
+block|}
+enum|;
 comment|/// PragmaHandler - Instances of this interface defined to handle the various
 comment|/// pragmas that the language front-end uses.  Each handler optionally has a
 comment|/// name (e.g. "pack") and the HandlePragma method is invoked when a pragma with
@@ -159,6 +173,9 @@ name|Preprocessor
 modifier|&
 name|PP
 parameter_list|,
+name|PragmaIntroducerKind
+name|Introducer
+parameter_list|,
 name|Token
 modifier|&
 name|FirstToken
@@ -197,13 +214,11 @@ name|virtual
 name|void
 name|HandlePragma
 argument_list|(
-name|Preprocessor
-operator|&
-name|PP
+argument|Preprocessor&PP
 argument_list|,
-name|Token
-operator|&
-name|FirstToken
+argument|PragmaIntroducerKind Introducer
+argument_list|,
+argument|Token&FirstToken
 argument_list|)
 block|; }
 decl_stmt|;
@@ -296,13 +311,11 @@ name|virtual
 name|void
 name|HandlePragma
 argument_list|(
-name|Preprocessor
-operator|&
-name|PP
+argument|Preprocessor&PP
 argument_list|,
-name|Token
-operator|&
-name|FirstToken
+argument|PragmaIntroducerKind Introducer
+argument_list|,
+argument|Token&FirstToken
 argument_list|)
 block|;
 name|virtual

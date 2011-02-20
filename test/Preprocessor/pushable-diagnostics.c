@@ -28,7 +28,7 @@ comment|// expected-warning {{pragma diagnostic expected 'error', 'warning', 'ig
 end_comment
 
 begin_decl_stmt
-name|char
+name|int
 name|a
 init|=
 literal|'df'
@@ -57,7 +57,7 @@ literal|"-Wmultichar"
 end_pragma
 
 begin_decl_stmt
-name|char
+name|int
 name|b
 init|=
 literal|'df'
@@ -77,7 +77,7 @@ name|pop
 end_pragma
 
 begin_decl_stmt
-name|char
+name|int
 name|c
 init|=
 literal|'df'

@@ -174,9 +174,35 @@ argument_list|)
 block|;
 comment|/// \brief Retrieve the underlying type pointer, which refers to a
 comment|/// canonical type.
+comment|///
+comment|/// The underlying pointer must not be NULL.
+specifier|const
 name|T
 operator|*
 name|getTypePtr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|T
+operator|>
+operator|(
+name|Stored
+operator|.
+name|getTypePtr
+argument_list|()
+operator|)
+return|;
+block|}
+comment|/// \brief Retrieve the underlying type pointer, which refers to a
+comment|/// canonical type, or NULL.
+comment|///
+specifier|const
+name|T
+operator|*
+name|getTypePtrOrNull
 argument_list|()
 specifier|const
 block|{
@@ -188,7 +214,7 @@ operator|>
 operator|(
 name|Stored
 operator|.
-name|getTypePtr
+name|getTypePtrOrNull
 argument_list|()
 operator|)
 return|;
@@ -224,6 +250,18 @@ return|return
 name|Stored
 operator|.
 name|isNull
+argument_list|()
+return|;
+block|}
+name|SplitQualType
+name|split
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Stored
+operator|.
+name|split
 argument_list|()
 return|;
 block|}
@@ -728,6 +766,7 @@ block|;
 name|public
 operator|:
 comment|/// \brief Retrieve the pointer to the underlying Type
+specifier|const
 name|T
 operator|*
 name|getTypePtr
@@ -761,7 +800,7 @@ name|this
 operator|->
 name|Stored
 operator|.
-name|getTypePtr
+name|getTypePtrOrNull
 argument_list|()
 return|;
 block|}
@@ -1460,6 +1499,7 @@ operator|>
 expr|>
 block|{
 typedef|typedef
+specifier|const
 name|T
 modifier|*
 name|SimpleType
@@ -2815,12 +2855,6 @@ argument_list|(
 argument|bool
 argument_list|,
 argument|hasConstFields
-argument_list|)
-name|LLVM_CLANG_CANPROXY_SIMPLE_ACCESSOR
-argument_list|(
-argument|unsigned
-argument_list|,
-argument|getAddressSpace
 argument_list|)
 block|}
 expr_stmt|;

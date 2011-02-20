@@ -112,6 +112,15 @@ name|S
 argument_list|)
 block|;   }
 name|void
+name|VisitCompoundStmt
+argument_list|(
+argument|CompoundStmt *S
+argument_list|)
+block|{
+comment|// Do nothing.  Everything in a CompoundStmt is inlined
+comment|// into the CFG.
+block|}
+name|void
 name|VisitConditionVariableInit
 argument_list|(
 argument|Stmt *S

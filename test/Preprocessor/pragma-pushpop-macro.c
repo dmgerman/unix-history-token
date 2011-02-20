@@ -148,6 +148,38 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|// Have a stray 'push' to show we don't crash when having inbalanced
+end_comment
+
+begin_comment
+comment|// push/pop
+end_comment
+
+begin_pragma
+pragma|#
+directive|pragma
+name|push_macro
+name|(
+literal|"Y"
+name|)
+end_pragma
+
+begin_define
+define|#
+directive|define
+name|Y
+value|4
+end_define
+
+begin_decl_stmt
+name|int
+name|pmy2
+init|=
+name|Y
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// CHECK: int pmx0 = 1
 end_comment
 
@@ -169,6 +201,10 @@ end_comment
 
 begin_comment
 comment|// CHECK: int pmy1 = 3
+end_comment
+
+begin_comment
+comment|// CHECK: int pmy2 = 4
 end_comment
 
 end_unit

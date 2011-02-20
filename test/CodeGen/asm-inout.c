@@ -49,5 +49,26 @@ asm|asm ("foobar" : "+r"(*foo()));
 block|}
 end_function
 
+begin_comment
+comment|// PR7338
+end_comment
+
+begin_function
+name|void
+name|test3
+parameter_list|(
+name|int
+modifier|*
+name|vout
+parameter_list|,
+name|int
+name|vin
+parameter_list|)
+block|{
+comment|// CHECK: call void asm "opr $0,$1", "=*r|m|r,r|m|r,~{di},~{dirflag},~{fpsr},~{flags}"
+asm|asm( 		"opr %[vout],%[vin]" 		: [vout] "=r,=m,=r" (*vout) 		: [vin] "r,m,r" (vin) 		: "edi" 		);
+block|}
+end_function
+
 end_unit
 

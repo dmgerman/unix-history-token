@@ -16,7 +16,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{'nodebug' attribute only applies to function types}}
+comment|// expected-warning {{'nodebug' attribute only applies to functions}}
 end_comment
 
 begin_function_decl

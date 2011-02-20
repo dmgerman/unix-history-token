@@ -119,7 +119,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// expected-warning{{'dllexport' attribute only applies to variable and function types}}
+comment|// expected-warning{{'dllexport' attribute only applies to variables and functions}}
 end_comment
 
 begin_typedef
@@ -136,7 +136,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// expected-warning{{'dllimport' attribute only applies to variable and function}}
+comment|// expected-warning{{'dllimport' attribute only applies to variables and functions}}
 end_comment
 
 begin_decl_stmt
@@ -271,7 +271,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// expected-warning{{'dllexport' attribute only applies to variable and function types}}
+comment|// expected-warning{{'dllexport' attribute only applies to variables and functions}}
 end_comment
 
 begin_typedef
@@ -286,7 +286,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// expected-warning{{'dllimport' attribute only applies to variable and function}}
+comment|// expected-warning{{'dllimport' attribute only applies to variables and functions}}
 end_comment
 
 begin_function_decl

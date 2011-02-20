@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang -fsyntax-only %s
+comment|// RUN: %clang -fsyntax-only -ffreestanding %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -fsyntax-only -fno-lax-vector-conversions %s
+comment|// RUN: %clang -fsyntax-only -ffreestanding -fno-lax-vector-conversions %s
 end_comment
 
 begin_comment
-comment|// RUN: %clangxx -fsyntax-only -x c++ %s
+comment|// RUN: %clangxx -fsyntax-only -ffreestanding -x c++ %s
 end_comment
 
 begin_if
@@ -24,23 +24,6 @@ argument_list|(
 name|__x86_64__
 argument_list|)
 end_if
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__MMX__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<mm_malloc.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#

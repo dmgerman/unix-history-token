@@ -30,6 +30,7 @@ name|FooType
 name|z
 parameter_list|)
 block|{
+specifier|const
 name|FooType
 name|w
 init|=
@@ -42,6 +43,13 @@ name|z
 return|;
 block|}
 end_function
+
+begin_typedef
+typedef|typedef
+name|double
+name|OtherType
+typedef|;
+end_typedef
 
 begin_comment
 comment|// RUN: c-index-test -test-print-typekind %s | FileCheck %s
@@ -72,7 +80,7 @@ comment|// CHECK: ParmDecl=z:3:33 (Definition) typekind=Typedef [canonical=Int] 
 end_comment
 
 begin_comment
-comment|// CHECK: TypeRef=FooType:1:13 typekind=Invalid [isPOD=0]
+comment|// CHECK: TypeRef=FooType:1:13 typekind=Typedef [canonical=Int] [isPOD=1]
 end_comment
 
 begin_comment
@@ -84,11 +92,11 @@ comment|// CHECK: UnexposedStmt= typekind=Invalid [isPOD=0]
 end_comment
 
 begin_comment
-comment|// CHECK: VarDecl=w:4:11 (Definition) typekind=Typedef [canonical=Int] [isPOD=1]
+comment|// CHECK: VarDecl=w:4:17 (Definition) typekind=Typedef const [canonical=Int] [isPOD=1]
 end_comment
 
 begin_comment
-comment|// CHECK: TypeRef=FooType:1:13 typekind=Invalid [isPOD=0]
+comment|// CHECK: TypeRef=FooType:1:13 typekind=Typedef [canonical=Int] [isPOD=1]
 end_comment
 
 begin_comment
@@ -109,6 +117,10 @@ end_comment
 
 begin_comment
 comment|// CHECK: DeclRefExpr=z:3:33 typekind=Typedef [canonical=Int] [isPOD=1]
+end_comment
+
+begin_comment
+comment|// CHECK: TypedefDecl=OtherType:7:16 (Definition) typekind=Typedef [canonical=Double] [isPOD=1]
 end_comment
 
 end_unit

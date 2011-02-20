@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -verify %s
+comment|// RUN: %clang_cc1 -Wconversion -Wliteral-conversion -fsyntax-only -verify %s
 end_comment
 
 begin_comment
@@ -180,11 +180,59 @@ name|s
 decl_stmt|,
 name|c
 decl_stmt|;
-comment|// expected-warning{{promoted type 'char *' of K&R function parameter is not compatible with the parameter type 'char const *' declared in a previous prototype}}
+comment|// expected-warning{{promoted type 'char *' of K&R function parameter is not compatible with the parameter type 'const char *' declared in a previous prototype}}
 block|{
 return|return
 literal|0
 return|;
+block|}
+end_function
+
+begin_comment
+comment|// PR8314
+end_comment
+
+begin_function_decl
+name|void
+name|proto
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|proto
+parameter_list|(
+name|x
+parameter_list|)
+name|int
+name|x
+decl_stmt|;
+block|{ }
+end_function
+
+begin_function
+name|void
+name|use_proto
+parameter_list|()
+block|{
+name|proto
+argument_list|(
+literal|42.0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{implicit conversion turns literal floating-point number into integer}}
+call|(
+modifier|&
+name|proto
+call|)
+argument_list|(
+literal|42.0
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{implicit conversion turns literal floating-point number into integer}}
 block|}
 end_function
 

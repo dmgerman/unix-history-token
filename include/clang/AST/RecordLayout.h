@@ -62,13 +62,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/System/DataTypes.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/CharUnits.h"
 end_include
 
 begin_include
@@ -103,12 +109,12 @@ comment|/// These objects are managed by ASTContext.
 name|class
 name|ASTRecordLayout
 block|{
-comment|/// Size - Size of record in bits.
-name|uint64_t
+comment|/// Size - Size of record in characters.
+name|CharUnits
 name|Size
 decl_stmt|;
-comment|/// DataSize - Size of record in bits without tail padding.
-name|uint64_t
+comment|/// DataSize - Size of record in characters without tail padding.
+name|CharUnits
 name|DataSize
 decl_stmt|;
 comment|/// FieldOffsets - Array of field offsets in bits.
@@ -116,39 +122,35 @@ name|uint64_t
 modifier|*
 name|FieldOffsets
 decl_stmt|;
-comment|// Alignment - Alignment of record in bits.
-name|unsigned
+comment|// Alignment - Alignment of record in characters.
+name|CharUnits
 name|Alignment
 decl_stmt|;
 comment|// FieldCount - Number of fields.
 name|unsigned
 name|FieldCount
 decl_stmt|;
-name|public
-label|:
-comment|/// PrimaryBaseInfo - Contains info about a primary base.
+comment|/// CXXRecordLayoutInfo - Contains C++ specific layout information.
 struct|struct
-name|PrimaryBaseInfo
+name|CXXRecordLayoutInfo
 block|{
-name|PrimaryBaseInfo
-argument_list|()
-block|{}
-name|PrimaryBaseInfo
-argument_list|(
-argument|const CXXRecordDecl *Base
-argument_list|,
-argument|bool IsVirtual
-argument_list|)
-block|:
-name|Value
-argument_list|(
-argument|Base
-argument_list|,
-argument|Base&& IsVirtual
-argument_list|)
-block|{}
-comment|/// Value - Points to the primary base. The single-bit value
-comment|/// will be non-zero when the primary base is virtual.
+comment|/// NonVirtualSize - The non-virtual size (in chars) of an object, which is
+comment|/// the size of the object without virtual bases.
+name|CharUnits
+name|NonVirtualSize
+decl_stmt|;
+comment|/// NonVirtualAlign - The non-virtual alignment (in chars) of an object,
+comment|/// which is the alignment of the object without virtual bases.
+name|CharUnits
+name|NonVirtualAlign
+decl_stmt|;
+comment|/// SizeOfLargestEmptySubobject - The size of the largest empty subobject
+comment|/// (either a base or a member). Will be zero if the class doesn't contain
+comment|/// any empty subobjects.
+name|CharUnits
+name|SizeOfLargestEmptySubobject
+decl_stmt|;
+comment|/// PrimaryBase - The primary base info for this record.
 name|llvm
 operator|::
 name|PointerIntPair
@@ -161,217 +163,8 @@ literal|1
 operator|,
 name|bool
 operator|>
-name|Value
-expr_stmt|;
-comment|/// getBase - Returns the primary base.
-specifier|const
-name|CXXRecordDecl
-operator|*
-name|getBase
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Value
-operator|.
-name|getPointer
-argument_list|()
-return|;
-block|}
-comment|/// isVirtual - Returns whether the primary base is virtual or not.
-name|bool
-name|isVirtual
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Value
-operator|.
-name|getInt
-argument_list|()
-return|;
-block|}
-name|friend
-name|bool
-name|operator
-operator|==
-operator|(
-specifier|const
-name|PrimaryBaseInfo
-operator|&
-name|X
-operator|,
-specifier|const
-name|PrimaryBaseInfo
-operator|&
-name|Y
-operator|)
-block|{
-return|return
-name|X
-operator|.
-name|Value
-operator|==
-name|Y
-operator|.
-name|Value
-return|;
-block|}
-block|}
-struct|;
-comment|/// primary_base_info_iterator - An iterator for iterating the primary base
-comment|/// class chain.
-name|class
-name|primary_base_info_iterator
-block|{
-comment|/// Current - The current base class info.
-name|PrimaryBaseInfo
-name|Current
-decl_stmt|;
-name|public
-label|:
-name|primary_base_info_iterator
-argument_list|()
-block|{}
-name|primary_base_info_iterator
-argument_list|(
-argument|PrimaryBaseInfo Info
-argument_list|)
-block|:
-name|Current
-argument_list|(
-argument|Info
-argument_list|)
-block|{}
-specifier|const
-name|PrimaryBaseInfo
-operator|&
-name|operator
-operator|*
-operator|(
-operator|)
-specifier|const
-block|{
-return|return
-name|Current
-return|;
-block|}
-name|primary_base_info_iterator
-operator|&
-name|operator
-operator|++
-operator|(
-operator|)
-block|{
-specifier|const
-name|CXXRecordDecl
-operator|*
-name|RD
-operator|=
-name|Current
-operator|.
-name|getBase
-argument_list|()
-block|;
-name|Current
-operator|=
-name|RD
-operator|->
-name|getASTContext
-argument_list|()
-operator|.
-name|getASTRecordLayout
-argument_list|(
-name|RD
-argument_list|)
-operator|.
-name|getPrimaryBaseInfo
-argument_list|()
-block|;
-return|return
-operator|*
-name|this
-return|;
-block|}
-name|friend
-name|bool
-name|operator
-operator|==
-operator|(
-specifier|const
-name|primary_base_info_iterator
-operator|&
-name|X
-operator|,
-specifier|const
-name|primary_base_info_iterator
-operator|&
-name|Y
-operator|)
-block|{
-return|return
-name|X
-operator|.
-name|Current
-operator|==
-name|Y
-operator|.
-name|Current
-return|;
-block|}
-name|friend
-name|bool
-name|operator
-operator|!=
-operator|(
-specifier|const
-name|primary_base_info_iterator
-operator|&
-name|X
-operator|,
-specifier|const
-name|primary_base_info_iterator
-operator|&
-name|Y
-operator|)
-block|{
-return|return
-operator|!
-operator|(
-name|X
-operator|==
-name|Y
-operator|)
-return|;
-block|}
-block|}
-empty_stmt|;
-name|private
-label|:
-comment|/// CXXRecordLayoutInfo - Contains C++ specific layout information.
-struct|struct
-name|CXXRecordLayoutInfo
-block|{
-comment|/// NonVirtualSize - The non-virtual size (in bits) of an object, which is
-comment|/// the size of the object without virtual bases.
-name|uint64_t
-name|NonVirtualSize
-decl_stmt|;
-comment|/// NonVirtualAlign - The non-virtual alignment (in bits) of an object,
-comment|/// which is the alignment of the object without virtual bases.
-name|uint64_t
-name|NonVirtualAlign
-decl_stmt|;
-comment|/// SizeOfLargestEmptySubobject - The size of the largest empty subobject
-comment|/// (either a base or a member). Will be zero if the class doesn't contain
-comment|/// any empty subobjects.
-name|uint64_t
-name|SizeOfLargestEmptySubobject
-decl_stmt|;
-comment|/// PrimaryBase - The primary base info for this record.
-name|PrimaryBaseInfo
 name|PrimaryBase
-decl_stmt|;
+expr_stmt|;
 comment|/// FIXME: This should really use a SmallPtrMap, once we have one in LLVM :)
 typedef|typedef
 name|llvm
@@ -382,7 +175,7 @@ specifier|const
 name|CXXRecordDecl
 operator|*
 operator|,
-name|uint64_t
+name|CharUnits
 operator|>
 name|BaseOffsetsMapTy
 expr_stmt|;
@@ -408,13 +201,13 @@ name|ASTContext
 decl_stmt|;
 name|ASTRecordLayout
 argument_list|(
-argument|ASTContext&Ctx
+argument|const ASTContext&Ctx
 argument_list|,
-argument|uint64_t size
+argument|CharUnits size
 argument_list|,
-argument|unsigned alignment
+argument|CharUnits alignment
 argument_list|,
-argument|unsigned datasize
+argument|CharUnits datasize
 argument_list|,
 argument|const uint64_t *fieldoffsets
 argument_list|,
@@ -430,27 +223,27 @@ name|BaseOffsetsMapTy
 expr_stmt|;
 name|ASTRecordLayout
 argument_list|(
-argument|ASTContext&Ctx
+argument|const ASTContext&Ctx
 argument_list|,
-argument|uint64_t size
+argument|CharUnits size
 argument_list|,
-argument|unsigned alignment
+argument|CharUnits alignment
 argument_list|,
-argument|uint64_t datasize
+argument|CharUnits datasize
 argument_list|,
 argument|const uint64_t *fieldoffsets
 argument_list|,
 argument|unsigned fieldcount
 argument_list|,
-argument|uint64_t nonvirtualsize
+argument|CharUnits nonvirtualsize
 argument_list|,
-argument|unsigned nonvirtualalign
+argument|CharUnits nonvirtualalign
 argument_list|,
-argument|uint64_t SizeOfLargestEmptySubobject
+argument|CharUnits SizeOfLargestEmptySubobject
 argument_list|,
 argument|const CXXRecordDecl *PrimaryBase
 argument_list|,
-argument|bool PrimaryBaseIsVirtual
+argument|bool IsPrimaryBaseVirtual
 argument_list|,
 argument|const BaseOffsetsMapTy& BaseOffsets
 argument_list|,
@@ -489,8 +282,8 @@ decl_stmt|;
 comment|// DO NOT IMPLEMENT
 name|public
 label|:
-comment|/// getAlignment - Get the record alignment in bits.
-name|unsigned
+comment|/// getAlignment - Get the record alignment in characters.
+name|CharUnits
 name|getAlignment
 argument_list|()
 specifier|const
@@ -499,8 +292,8 @@ return|return
 name|Alignment
 return|;
 block|}
-comment|/// getSize - Get the record size in bits.
-name|uint64_t
+comment|/// getSize - Get the record size in characters.
+name|CharUnits
 name|getSize
 argument_list|()
 specifier|const
@@ -546,8 +339,8 @@ index|]
 return|;
 block|}
 comment|/// getDataSize() - Get the record data size, which is the record size
-comment|/// without tail padding, in bits.
-name|uint64_t
+comment|/// without tail padding, in characters.
+name|CharUnits
 name|getDataSize
 argument_list|()
 specifier|const
@@ -556,9 +349,9 @@ return|return
 name|DataSize
 return|;
 block|}
-comment|/// getNonVirtualSize - Get the non-virtual size (in bits) of an object,
+comment|/// getNonVirtualSize - Get the non-virtual size (in chars) of an object,
 comment|/// which is the size of the object without virtual bases.
-name|uint64_t
+name|CharUnits
 name|getNonVirtualSize
 argument_list|()
 specifier|const
@@ -576,9 +369,9 @@ operator|->
 name|NonVirtualSize
 return|;
 block|}
-comment|/// getNonVirtualSize - Get the non-virtual alignment (in bits) of an object,
+comment|/// getNonVirtualSize - Get the non-virtual alignment (in chars) of an object,
 comment|/// which is the alignment of the object without virtual bases.
-name|unsigned
+name|CharUnits
 name|getNonVirtualAlign
 argument_list|()
 specifier|const
@@ -596,11 +389,11 @@ operator|->
 name|NonVirtualAlign
 return|;
 block|}
-comment|/// getPrimaryBaseInfo - Get the primary base info.
+comment|/// getPrimaryBase - Get the primary base for this record.
 specifier|const
-name|PrimaryBaseInfo
-operator|&
-name|getPrimaryBaseInfo
+name|CXXRecordDecl
+operator|*
+name|getPrimaryBase
 argument_list|()
 specifier|const
 block|{
@@ -615,40 +408,36 @@ return|return
 name|CXXInfo
 operator|->
 name|PrimaryBase
-return|;
-block|}
-comment|// FIXME: Migrate off of this function and use getPrimaryBaseInfo directly.
-specifier|const
-name|CXXRecordDecl
-operator|*
-name|getPrimaryBase
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getPrimaryBaseInfo
-argument_list|()
 operator|.
-name|getBase
+name|getPointer
 argument_list|()
 return|;
 block|}
-comment|// FIXME: Migrate off of this function and use getPrimaryBaseInfo directly.
+comment|/// isPrimaryBaseVirtual - Get whether the primary base for this record
+comment|/// is virtual or not.
 name|bool
-name|getPrimaryBaseWasVirtual
+name|isPrimaryBaseVirtual
 argument_list|()
 specifier|const
 block|{
+name|assert
+argument_list|(
+name|CXXInfo
+operator|&&
+literal|"Record layout does not have C++ specific info!"
+argument_list|)
+block|;
 return|return
-name|getPrimaryBaseInfo
-argument_list|()
+name|CXXInfo
+operator|->
+name|PrimaryBase
 operator|.
-name|isVirtual
+name|getInt
 argument_list|()
 return|;
 block|}
-comment|/// getBaseClassOffset - Get the offset, in bits, for the given base class.
-name|uint64_t
+comment|/// getBaseClassOffset - Get the offset, in chars, for the given base class.
+name|CharUnits
 name|getBaseClassOffset
 argument_list|(
 specifier|const
@@ -688,8 +477,8 @@ name|Base
 index|]
 return|;
 block|}
-comment|/// getVBaseClassOffset - Get the offset, in bits, for the given base class.
-name|uint64_t
+comment|/// getVBaseClassOffset - Get the offset, in chars, for the given base class.
+name|CharUnits
 name|getVBaseClassOffset
 argument_list|(
 specifier|const
@@ -729,7 +518,109 @@ name|VBase
 index|]
 return|;
 block|}
+comment|/// getBaseClassOffsetInBits - Get the offset, in bits, for the given
+comment|/// base class.
 name|uint64_t
+name|getBaseClassOffsetInBits
+argument_list|(
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|Base
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+name|CXXInfo
+operator|&&
+literal|"Record layout does not have C++ specific info!"
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|CXXInfo
+operator|->
+name|BaseOffsets
+operator|.
+name|count
+argument_list|(
+name|Base
+argument_list|)
+operator|&&
+literal|"Did not find base!"
+argument_list|)
+expr_stmt|;
+return|return
+name|getBaseClassOffset
+argument_list|(
+name|Base
+argument_list|)
+operator|.
+name|getQuantity
+argument_list|()
+operator|*
+name|Base
+operator|->
+name|getASTContext
+argument_list|()
+operator|.
+name|getCharWidth
+argument_list|()
+return|;
+block|}
+comment|/// getVBaseClassOffsetInBits - Get the offset, in bits, for the given
+comment|/// base class.
+name|uint64_t
+name|getVBaseClassOffsetInBits
+argument_list|(
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|VBase
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+name|CXXInfo
+operator|&&
+literal|"Record layout does not have C++ specific info!"
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|CXXInfo
+operator|->
+name|VBaseOffsets
+operator|.
+name|count
+argument_list|(
+name|VBase
+argument_list|)
+operator|&&
+literal|"Did not find base!"
+argument_list|)
+expr_stmt|;
+return|return
+name|getVBaseClassOffset
+argument_list|(
+name|VBase
+argument_list|)
+operator|.
+name|getQuantity
+argument_list|()
+operator|*
+name|VBase
+operator|->
+name|getASTContext
+argument_list|()
+operator|.
+name|getCharWidth
+argument_list|()
+return|;
+block|}
+name|CharUnits
 name|getSizeOfLargestEmptySubobject
 argument_list|()
 specifier|const
@@ -745,43 +636,6 @@ return|return
 name|CXXInfo
 operator|->
 name|SizeOfLargestEmptySubobject
-return|;
-block|}
-name|primary_base_info_iterator
-name|primary_base_begin
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|CXXInfo
-operator|&&
-literal|"Record layout does not have C++ specific info!"
-argument_list|)
-block|;
-return|return
-name|primary_base_info_iterator
-argument_list|(
-name|getPrimaryBaseInfo
-argument_list|()
-argument_list|)
-return|;
-block|}
-name|primary_base_info_iterator
-name|primary_base_end
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|CXXInfo
-operator|&&
-literal|"Record layout does not have C++ specific info!"
-argument_list|)
-block|;
-return|return
-name|primary_base_info_iterator
-argument_list|()
 return|;
 block|}
 block|}

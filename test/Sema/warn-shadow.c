@@ -210,5 +210,45 @@ parameter_list|)
 block|{}
 end_function
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|bob
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-note {{previous declaration is here}}
+end_comment
+
+begin_comment
+comment|// rdar://8883302
+end_comment
+
+begin_function
+name|void
+name|rdar8883302
+parameter_list|()
+block|{
+specifier|extern
+name|int
+name|bob
+decl_stmt|;
+comment|// don't warn for shadowing.
+block|}
+end_function
+
+begin_function
+name|void
+name|test8
+parameter_list|()
+block|{
+name|int
+name|bob
+decl_stmt|;
+comment|// expected-warning {{declaration shadows a variable in the global scope}}
+block|}
+end_function
+
 end_unit
 

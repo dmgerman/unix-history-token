@@ -160,12 +160,13 @@ name|vGCC
 operator|=
 name|vAltiVec
 expr_stmt|;
-name|vGCC
-operator|=
+name|int
+name|res
+init|=
 name|vGCC
 operator|>
 name|vAltiVec
-expr_stmt|;
+decl_stmt|;
 name|vAltiVec
 operator|=
 literal|0

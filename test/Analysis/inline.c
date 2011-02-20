@@ -5,7 +5,7 @@ end_comment
 
 begin_function
 name|int
-name|f1
+name|test1_f1
 parameter_list|()
 block|{
 name|int
@@ -24,7 +24,7 @@ end_function
 
 begin_function
 name|void
-name|f2
+name|test1_f2
 parameter_list|()
 block|{
 name|int
@@ -34,7 +34,7 @@ literal|1
 decl_stmt|;
 name|x
 operator|=
-name|f1
+name|test1_f1
 argument_list|()
 expr_stmt|;
 if|if
@@ -77,6 +77,43 @@ literal|3
 expr_stmt|;
 comment|// expected-warning{{Dereference of null pointer (loaded from variable 'p')}}
 block|}
+block|}
+end_function
+
+begin_comment
+comment|// Test that inlining works when the declared function has less arguments
+end_comment
+
+begin_comment
+comment|// than the actual number in the declaration.
+end_comment
+
+begin_function
+name|void
+name|test2_f1
+parameter_list|()
+block|{}
+end_function
+
+begin_function_decl
+name|int
+name|test2_f2
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|test2_f3
+parameter_list|()
+block|{
+name|test2_f1
+argument_list|(
+name|test2_f2
+argument_list|()
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{too many arguments in call to 'test2_f1'}}
 block|}
 end_function
 

@@ -99,7 +99,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|// expected-warning {{'weak' attribute only applies to variable and function types}}
+comment|// expected-warning {{'weak' attribute only applies to variables and functions}}
 end_comment
 
 begin_struct
@@ -114,7 +114,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|// expected-warning {{'weak_import' attribute only applies to variable and function types}}
+comment|// expected-warning {{'weak_import' attribute only applies to variables and functions}}
 end_comment
 
 begin_decl_stmt
@@ -131,7 +131,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error {{weak declaration of 'x' must be public}}
+comment|// expected-error {{weak declaration cannot have internal linkage}}
 end_comment
 
 end_unit

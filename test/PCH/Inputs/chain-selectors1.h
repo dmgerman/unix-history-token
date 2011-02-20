@@ -75,5 +75,25 @@ expr_stmt|;
 block|}
 end_function
 
+begin_decl_stmt
+unit|@
+name|interface
+name|X
+argument_list|(
+name|Blah
+argument_list|)
+decl|-
+argument_list|(
+name|void
+argument_list|)
+name|blah_method
+decl_stmt|;
+end_decl_stmt
+
+begin_macro
+unit|@
+name|end
+end_macro
+
 end_unit
 

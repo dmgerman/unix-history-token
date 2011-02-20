@@ -32,10 +32,6 @@ comment|// RUN: %clang_cc1 -g -triple i686-unknown-win32 -emit-llvm -o %t %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -g -triple pic16-unknown-unknown -emit-llvm -o %t %s
-end_comment
-
-begin_comment
 comment|// RUN: %clang_cc1 -g -triple powerpc-apple-darwin9 -emit-llvm -o %t %s
 end_comment
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple i686-pc-linux-gnu -analyze -analyzer-check-security-syntactic %s -verify
+comment|// RUN: %clang_cc1 -triple i686-pc-linux-gnu -analyze -analyzer-checker=core.experimental.SecuritySyntactic %s -verify
 end_comment
 
 begin_comment

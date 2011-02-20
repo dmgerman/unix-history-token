@@ -1302,6 +1302,7 @@ begin_decl_stmt
 name|class
 name|DeclarationNameTable
 block|{
+specifier|const
 name|ASTContext
 modifier|&
 name|Ctx
@@ -1344,6 +1345,7 @@ name|public
 label|:
 name|DeclarationNameTable
 argument_list|(
+specifier|const
 name|ASTContext
 operator|&
 name|C
@@ -1546,11 +1548,22 @@ comment|// FIXME: this should go away once all DNLocs are properly initialized.
 name|DeclarationNameLoc
 argument_list|()
 block|{
-name|NamedType
-operator|.
-name|TInfo
-operator|=
+name|memset
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|this
+argument_list|,
 literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|this
+argument_list|)
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -1977,6 +1990,13 @@ name|getRawEncoding
 argument_list|()
 expr_stmt|;
 block|}
+comment|/// \brief Determine whether this name contains an unexpanded
+comment|/// parameter pack.
+name|bool
+name|containsUnexpandedParameterPack
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// getAsString - Retrieve the human-readable string for this name.
 name|std
 operator|::

@@ -162,6 +162,7 @@ argument_list|(
 name|size_t
 name|Bytes
 argument_list|,
+specifier|const
 name|clang
 operator|::
 name|ASTContext
@@ -196,6 +197,7 @@ argument_list|(
 name|size_t
 name|Bytes
 argument_list|,
+specifier|const
 name|clang
 operator|::
 name|ASTContext
@@ -231,6 +233,7 @@ name|void
 operator|*
 name|Ptr
 argument_list|,
+specifier|const
 name|clang
 operator|::
 name|ASTContext
@@ -254,6 +257,7 @@ name|void
 operator|*
 name|Ptr
 argument_list|,
+specifier|const
 name|clang
 operator|::
 name|ASTContext
@@ -285,13 +289,13 @@ name|AttrKind
 range|:
 literal|16
 decl_stmt|;
+name|protected
+label|:
 name|bool
 name|Inherited
 range|:
 literal|1
 decl_stmt|;
-name|protected
-label|:
 name|virtual
 operator|~
 name|Attr
@@ -431,18 +435,6 @@ argument_list|)
 block|{}
 name|public
 operator|:
-comment|/// \brief Whether this attribute should be merged to new
-comment|/// declarations.
-name|virtual
-name|bool
-name|isMerged
-argument_list|()
-specifier|const
-block|{
-return|return
-name|true
-return|;
-block|}
 name|attr
 operator|::
 name|Kind
@@ -492,18 +484,6 @@ return|return
 name|Inherited
 return|;
 block|}
-name|void
-name|setInherited
-parameter_list|(
-name|bool
-name|I
-parameter_list|)
-block|{
-name|Inherited
-operator|=
-name|I
-expr_stmt|;
-block|}
 comment|// Clone this attribute.
 name|virtual
 name|Attr
@@ -534,6 +514,72 @@ return|;
 block|}
 block|}
 empty_stmt|;
+name|class
+name|InheritableAttr
+range|:
+name|public
+name|Attr
+block|{
+name|protected
+operator|:
+name|InheritableAttr
+argument_list|(
+argument|attr::Kind AK
+argument_list|,
+argument|SourceLocation L
+argument_list|)
+operator|:
+name|Attr
+argument_list|(
+argument|AK
+argument_list|,
+argument|L
+argument_list|)
+block|{}
+name|public
+operator|:
+name|void
+name|setInherited
+argument_list|(
+argument|bool I
+argument_list|)
+block|{
+name|Inherited
+operator|=
+name|I
+block|; }
+comment|// Implement isa/cast/dyncast/etc.
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Attr *A
+argument_list|)
+block|{
+return|return
+name|A
+operator|->
+name|getKind
+argument_list|()
+operator|<=
+name|attr
+operator|::
+name|LAST_INHERITABLE
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const InheritableAttr *
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+expr|}
+block|;
 include|#
 directive|include
 file|"clang/AST/Attrs.inc"

@@ -68,11 +68,30 @@ name|__vector_size__
 typedef|(16)));
 end_typedef
 
+begin_comment
+comment|// This header should only be included in a hosted environment as it depends on
+end_comment
+
+begin_comment
+comment|// a standard library to provide allocation routines.
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__STDC_HOSTED__
+end_if
+
 begin_include
 include|#
 directive|include
 file|<mm_malloc.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -3885,7 +3904,7 @@ parameter_list|,
 name|n
 parameter_list|)
 define|\
-value|((__m64)__builtin_shufflevector((__v4hi)(a), (__v4hi) {0}, \                                   (n)& 0x3, ((n)& 0xc)>> 2, \                                   ((n)& 0x30)>> 4, ((n)& 0xc0)>> 6))
+value|((__m64)__builtin_ia32_pshufw(a, n))
 end_define
 
 begin_decl_stmt

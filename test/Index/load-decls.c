@@ -41,10 +41,6 @@ comment|// CHECK: load-decls.c:6:3: EnumConstantDecl=Rouge:6:3 (Definition) Exte
 end_comment
 
 begin_comment
-comment|// CHECK: load-decls.c:6:11: UnexposedExpr=Red:2:3 Extent=[6:11 - 6:14]
-end_comment
-
-begin_comment
 comment|// CHECK: load-decls.c:6:11: DeclRefExpr=Red:2:3 Extent=[6:11 - 6:14]
 end_comment
 

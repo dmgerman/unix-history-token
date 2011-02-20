@@ -465,7 +465,7 @@ begin_comment
 comment|/// first and only declaration.
 end_comment
 
-begin_function
+begin_function_decl
 name|void
 name|setPreviousDeclaration
 parameter_list|(
@@ -473,91 +473,8 @@ name|decl_type
 modifier|*
 name|PrevDecl
 parameter_list|)
-block|{
-name|decl_type
-modifier|*
-name|First
-decl_stmt|;
-if|if
-condition|(
-name|PrevDecl
-condition|)
-block|{
-comment|// Point to previous. Make sure that this is actually the most recent
-comment|// redeclaration, or we can build invalid chains. If the most recent
-comment|// redeclaration is invalid, it won't be PrevDecl, but we want it anyway.
-name|RedeclLink
-operator|=
-name|PreviousDeclLink
-argument_list|(
-name|llvm
-operator|::
-name|cast
-operator|<
-name|decl_type
-operator|>
-operator|(
-name|PrevDecl
-operator|->
-name|getMostRecentDeclaration
-argument_list|()
-operator|)
-argument_list|)
-expr_stmt|;
-name|First
-operator|=
-name|PrevDecl
-operator|->
-name|getFirstDeclaration
-argument_list|()
-expr_stmt|;
-name|assert
-argument_list|(
-name|First
-operator|->
-name|RedeclLink
-operator|.
-name|NextIsLatest
-argument_list|()
-operator|&&
-literal|"Expected first"
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|// Make this first.
-name|First
-operator|=
-name|static_cast
-operator|<
-name|decl_type
-operator|*
-operator|>
-operator|(
-name|this
-operator|)
-expr_stmt|;
-block|}
-comment|// First one will point to this one as latest.
-name|First
-operator|->
-name|RedeclLink
-operator|=
-name|LatestDeclLink
-argument_list|(
-name|static_cast
-operator|<
-name|decl_type
-operator|*
-operator|>
-operator|(
-name|this
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// \brief Iterates through all the redeclarations of the same decl.

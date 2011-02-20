@@ -8,19 +8,19 @@ comment|// RUN: grep "_Block_object_dispose" %t | count 17
 end_comment
 
 begin_comment
-comment|// RUN: grep "__copy_helper_block_" %t | count 16
+comment|// RUN: grep "__copy_helper_block_" %t | count 14
 end_comment
 
 begin_comment
-comment|// RUN: grep "__destroy_helper_block_" %t | count 16
+comment|// RUN: grep "__destroy_helper_block_" %t | count 14
 end_comment
 
 begin_comment
-comment|// RUN: grep "__Block_byref_id_object_copy_" %t | count 2
+comment|// RUN: grep "__Block_byref_object_copy_" %t | count 2
 end_comment
 
 begin_comment
-comment|// RUN: grep "__Block_byref_id_object_dispose_" %t | count 2
+comment|// RUN: grep "__Block_byref_object_dispose_" %t | count 2
 end_comment
 
 begin_comment
@@ -89,6 +89,7 @@ expr_stmt|;
 block|}
 argument_list|()
 expr_stmt|;
+comment|// needs copy/dispose
 name|printf
 argument_list|(
 literal|"a is %d, b is %d\n"
@@ -136,8 +137,10 @@ argument_list|)
 expr_stmt|;
 lambda|^
 block|{
+comment|// needs copy/dispose
 lambda|^
 block|{
+comment|// needs copy/dispose
 name|a
 operator|=
 literal|10
@@ -201,6 +204,7 @@ expr_stmt|;
 block|}
 argument_list|()
 expr_stmt|;
+comment|// needs copy/dispose
 block|}
 end_function
 
@@ -238,6 +242,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+comment|// does not need copy/dispose
 return|return
 name|i
 operator|+
@@ -276,6 +281,7 @@ expr_stmt|;
 block|}
 argument_list|()
 expr_stmt|;
+comment|// needs copy/dispose
 block|}
 end_function
 
@@ -297,10 +303,12 @@ expr_stmt|;
 block|}
 argument_list|()
 expr_stmt|;
+comment|// needs copy/dispose
 lambda|^
 block|{}
 argument_list|()
 expr_stmt|;
+comment|// does not need copy/dispose
 block|}
 end_function
 
@@ -311,6 +319,7 @@ parameter_list|()
 block|{
 lambda|^
 block|{
+comment|// does not need copy/dispose
 specifier|__block
 name|int
 name|i
@@ -324,6 +333,7 @@ expr_stmt|;
 block|}
 argument_list|()
 expr_stmt|;
+comment|// needs copy/dispose
 block|}
 argument_list|()
 expr_stmt|;

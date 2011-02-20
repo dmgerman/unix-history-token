@@ -173,5 +173,21 @@ begin_comment
 comment|// CHECK-Identifiers-True: 11: #0
 end_comment
 
+begin_comment
+comment|// This should not crash
+end_comment
+
+begin_comment
+comment|// rdar://8823139
+end_comment
+
+begin_empty
+empty|# ##
+end_empty
+
+begin_comment
+comment|// CHECK-Identifiers-False: # ##
+end_comment
+
 end_unit
 

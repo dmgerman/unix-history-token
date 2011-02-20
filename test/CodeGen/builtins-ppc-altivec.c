@@ -449,7 +449,43 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|res_sc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|res_uc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|res_s
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|res_us
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|res_i
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|res_ui
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|res_f
 decl_stmt|;
 end_decl_stmt
 
@@ -13373,8 +13409,2416 @@ name|vbi
 argument_list|)
 expr_stmt|;
 comment|// CHECK: xor<4 x i32>
+comment|/* ------------------------------ extensions -------------------------------------- */
+comment|/* vec_extract */
+name|res_sc
+operator|=
+name|vec_extract
+argument_list|(
+name|vsc
+argument_list|,
+name|param_i
+argument_list|)
+expr_stmt|;
+comment|// CHECK: extractelement<16 x i8>
+name|res_uc
+operator|=
+name|vec_extract
+argument_list|(
+name|vuc
+argument_list|,
+name|param_i
+argument_list|)
+expr_stmt|;
+comment|// CHECK: extractelement<16 x i8>
+name|res_s
+operator|=
+name|vec_extract
+argument_list|(
+name|vs
+argument_list|,
+name|param_i
+argument_list|)
+expr_stmt|;
+comment|// CHECK: extractelement<8 x i16>
+name|res_us
+operator|=
+name|vec_extract
+argument_list|(
+name|vus
+argument_list|,
+name|param_i
+argument_list|)
+expr_stmt|;
+comment|// CHECK: extractelement<8 x i16>
+name|res_i
+operator|=
+name|vec_extract
+argument_list|(
+name|vi
+argument_list|,
+name|param_i
+argument_list|)
+expr_stmt|;
+comment|// CHECK: extractelement<4 x i32>
+name|res_ui
+operator|=
+name|vec_extract
+argument_list|(
+name|vui
+argument_list|,
+name|param_i
+argument_list|)
+expr_stmt|;
+comment|// CHECK: extractelement<4 x i32>
+name|res_f
+operator|=
+name|vec_extract
+argument_list|(
+name|vf
+argument_list|,
+name|param_i
+argument_list|)
+expr_stmt|;
+comment|// CHECK: extractelement<4 x float>
+comment|/* vec_insert */
+name|res_vsc
+operator|=
+name|vec_insert
+argument_list|(
+name|param_sc
+argument_list|,
+name|vsc
+argument_list|,
+name|param_i
+argument_list|)
+expr_stmt|;
+comment|// CHECK: insertelement<16 x i8>
+name|res_vuc
+operator|=
+name|vec_insert
+argument_list|(
+name|param_uc
+argument_list|,
+name|vuc
+argument_list|,
+name|param_i
+argument_list|)
+expr_stmt|;
+comment|// CHECK: insertelement<16 x i8>
+name|res_vs
+operator|=
+name|vec_insert
+argument_list|(
+name|param_s
+argument_list|,
+name|vs
+argument_list|,
+name|param_i
+argument_list|)
+expr_stmt|;
+comment|// CHECK: insertelement<8 x i16>
+name|res_vus
+operator|=
+name|vec_insert
+argument_list|(
+name|param_us
+argument_list|,
+name|vus
+argument_list|,
+name|param_i
+argument_list|)
+expr_stmt|;
+comment|// CHECK: insertelement<8 x i16>
+name|res_vi
+operator|=
+name|vec_insert
+argument_list|(
+name|param_i
+argument_list|,
+name|vi
+argument_list|,
+name|param_i
+argument_list|)
+expr_stmt|;
+comment|// CHECK: insertelement<4 x i32>
+name|res_vui
+operator|=
+name|vec_insert
+argument_list|(
+name|param_ui
+argument_list|,
+name|vui
+argument_list|,
+name|param_i
+argument_list|)
+expr_stmt|;
+comment|// CHECK: insertelement<4 x i32>
+name|res_vf
+operator|=
+name|vec_insert
+argument_list|(
+name|param_f
+argument_list|,
+name|vf
+argument_list|,
+name|param_i
+argument_list|)
+expr_stmt|;
+comment|// CHECK: insertelement<4 x float>
+comment|/* vec_lvlx */
+name|res_vsc
+operator|=
+name|vec_lvlx
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|param_sc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: store<16 x i8> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vsc
+operator|=
+name|vec_lvlx
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|vsc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: store<16 x i8> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vuc
+operator|=
+name|vec_lvlx
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|param_uc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: store<16 x i8> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vuc
+operator|=
+name|vec_lvlx
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|vuc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: store<16 x i8> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vbc
+operator|=
+name|vec_lvlx
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|vbc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: store<16 x i8> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vs
+operator|=
+name|vec_lvlx
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|param_s
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: store<8 x i16> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vs
+operator|=
+name|vec_lvlx
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|vs
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: store<8 x i16> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vus
+operator|=
+name|vec_lvlx
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|param_us
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: store<8 x i16> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vus
+operator|=
+name|vec_lvlx
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|vus
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: store<8 x i16> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vbs
+operator|=
+name|vec_lvlx
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|vbs
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: store<8 x i16> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vp
+operator|=
+name|vec_lvlx
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|vp
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: store<8 x i16> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vi
+operator|=
+name|vec_lvlx
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|param_i
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: store<4 x i32> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vi
+operator|=
+name|vec_lvlx
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|vi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: store<4 x i32> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vui
+operator|=
+name|vec_lvlx
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|param_ui
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: store<4 x i32> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vui
+operator|=
+name|vec_lvlx
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|vui
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: store<4 x i32> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vbi
+operator|=
+name|vec_lvlx
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|vbi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: store<4 x i32> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vf
+operator|=
+name|vec_lvlx
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|vf
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: store<4 x float> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|/* vec_lvlxl */
+name|res_vsc
+operator|=
+name|vec_lvlxl
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|param_sc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK: store<16 x i8> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vsc
+operator|=
+name|vec_lvlxl
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|vsc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK: store<16 x i8> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vuc
+operator|=
+name|vec_lvlxl
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|param_uc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK: store<16 x i8> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vuc
+operator|=
+name|vec_lvlxl
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|vuc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK: store<16 x i8> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vbc
+operator|=
+name|vec_lvlxl
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|vbc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK: store<16 x i8> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vs
+operator|=
+name|vec_lvlxl
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|param_s
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK: store<8 x i16> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vs
+operator|=
+name|vec_lvlxl
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|vs
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK: store<8 x i16> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vus
+operator|=
+name|vec_lvlxl
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|param_us
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK: store<8 x i16> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vus
+operator|=
+name|vec_lvlxl
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|vus
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK: store<8 x i16> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vbs
+operator|=
+name|vec_lvlxl
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|vbs
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK: store<8 x i16> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vp
+operator|=
+name|vec_lvlxl
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|vp
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK: store<8 x i16> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vi
+operator|=
+name|vec_lvlxl
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|param_i
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK: store<4 x i32> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vi
+operator|=
+name|vec_lvlxl
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|vi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK: store<4 x i32> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vui
+operator|=
+name|vec_lvlxl
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|param_ui
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK: store<4 x i32> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vui
+operator|=
+name|vec_lvlxl
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|vui
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK: store<4 x i32> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vbi
+operator|=
+name|vec_lvlxl
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|vbi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK: store<4 x i32> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vf
+operator|=
+name|vec_lvlxl
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|vf
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK: store<4 x float> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|/* vec_lvrx */
+name|res_vsc
+operator|=
+name|vec_lvrx
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|param_sc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<16 x i8> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vsc
+operator|=
+name|vec_lvrx
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|vsc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<16 x i8> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vuc
+operator|=
+name|vec_lvrx
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|param_uc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<16 x i8> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vuc
+operator|=
+name|vec_lvrx
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|vuc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<16 x i8> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vbc
+operator|=
+name|vec_lvrx
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|vbc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<16 x i8> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vs
+operator|=
+name|vec_lvrx
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|param_s
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<8 x i16> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vs
+operator|=
+name|vec_lvrx
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|vs
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<8 x i16> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vus
+operator|=
+name|vec_lvrx
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|param_us
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<8 x i16> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vus
+operator|=
+name|vec_lvrx
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|vus
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<8 x i16> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vbs
+operator|=
+name|vec_lvrx
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|vbs
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<8 x i16> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vp
+operator|=
+name|vec_lvrx
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|vp
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<8 x i16> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vi
+operator|=
+name|vec_lvrx
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|param_i
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<4 x i32> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vi
+operator|=
+name|vec_lvrx
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|vi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<4 x i32> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vui
+operator|=
+name|vec_lvrx
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|param_ui
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<4 x i32> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vui
+operator|=
+name|vec_lvrx
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|vui
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<4 x i32> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vbi
+operator|=
+name|vec_lvrx
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|vbi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<4 x i32> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vf
+operator|=
+name|vec_lvrx
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|vf
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<4 x float> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|/* vec_lvrxl */
+name|res_vsc
+operator|=
+name|vec_lvrxl
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|param_sc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<16 x i8> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vsc
+operator|=
+name|vec_lvrxl
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|vsc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<16 x i8> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vuc
+operator|=
+name|vec_lvrxl
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|param_uc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<16 x i8> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vuc
+operator|=
+name|vec_lvrxl
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|vuc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<16 x i8> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vbc
+operator|=
+name|vec_lvrxl
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|vbc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<16 x i8> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vs
+operator|=
+name|vec_lvrxl
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|param_s
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<8 x i16> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vs
+operator|=
+name|vec_lvrxl
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|vs
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<8 x i16> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vus
+operator|=
+name|vec_lvrxl
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|param_us
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<8 x i16> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vus
+operator|=
+name|vec_lvrxl
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|vus
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<8 x i16> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vbs
+operator|=
+name|vec_lvrxl
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|vbs
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<8 x i16> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vp
+operator|=
+name|vec_lvrxl
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|vp
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<8 x i16> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vi
+operator|=
+name|vec_lvrxl
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|param_i
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<4 x i32> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vi
+operator|=
+name|vec_lvrxl
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|vi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<4 x i32> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vui
+operator|=
+name|vec_lvrxl
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|param_ui
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<4 x i32> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vui
+operator|=
+name|vec_lvrxl
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|vui
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<4 x i32> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vbi
+operator|=
+name|vec_lvrxl
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|vbi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<4 x i32> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+name|res_vf
+operator|=
+name|vec_lvrxl
+argument_list|(
+literal|0
+argument_list|,
+operator|&
+name|vf
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<4 x float> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvxl
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|/* vec_stvlx */
+name|vec_stvlx
+argument_list|(
+name|vsc
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|param_sc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<16 x i8> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvx
+name|vec_stvlx
+argument_list|(
+name|vsc
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|vsc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<16 x i8> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvx
+name|vec_stvlx
+argument_list|(
+name|vuc
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|param_uc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<16 x i8> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvx
+name|vec_stvlx
+argument_list|(
+name|vuc
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|vuc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<16 x i8> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvx
+name|vec_stvlx
+argument_list|(
+name|vbc
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|vbc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<16 x i8> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvx
+name|vec_stvlx
+argument_list|(
+name|vs
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|param_s
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<8 x i16> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvx
+name|vec_stvlx
+argument_list|(
+name|vs
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|vs
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<8 x i16> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvx
+name|vec_stvlx
+argument_list|(
+name|vus
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|param_us
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<8 x i16> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvx
+name|vec_stvlx
+argument_list|(
+name|vus
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|vus
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<8 x i16> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvx
+name|vec_stvlx
+argument_list|(
+name|vbs
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|vbs
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<8 x i16> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvx
+name|vec_stvlx
+argument_list|(
+name|vp
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|vp
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<8 x i16> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvx
+name|vec_stvlx
+argument_list|(
+name|vi
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|param_i
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<4 x i32> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvx
+name|vec_stvlx
+argument_list|(
+name|vi
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|vi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<4 x i32> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvx
+name|vec_stvlx
+argument_list|(
+name|vui
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|param_ui
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<4 x i32> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvx
+name|vec_stvlx
+argument_list|(
+name|vui
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|vui
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<4 x i32> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvx
+name|vec_stvlx
+argument_list|(
+name|vbi
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|vbi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<4 x i32> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvx
+name|vec_stvlx
+argument_list|(
+name|vf
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|vf
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<4 x float> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|/* vec_stvlxl */
+name|vec_stvlxl
+argument_list|(
+name|vsc
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|param_sc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<16 x i8> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvxl
+name|vec_stvlxl
+argument_list|(
+name|vsc
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|vsc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<16 x i8> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvxl
+name|vec_stvlxl
+argument_list|(
+name|vuc
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|param_uc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<16 x i8> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvxl
+name|vec_stvlxl
+argument_list|(
+name|vuc
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|vuc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<16 x i8> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvxl
+name|vec_stvlxl
+argument_list|(
+name|vbc
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|vbc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<16 x i8> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvxl
+name|vec_stvlxl
+argument_list|(
+name|vs
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|param_s
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<8 x i16> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvxl
+name|vec_stvlxl
+argument_list|(
+name|vs
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|vs
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<8 x i16> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvxl
+name|vec_stvlxl
+argument_list|(
+name|vus
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|param_us
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<8 x i16> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvxl
+name|vec_stvlxl
+argument_list|(
+name|vus
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|vus
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<8 x i16> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvxl
+name|vec_stvlxl
+argument_list|(
+name|vbs
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|vbs
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<8 x i16> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvxl
+name|vec_stvlxl
+argument_list|(
+name|vp
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|vp
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<8 x i16> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvxl
+name|vec_stvlxl
+argument_list|(
+name|vi
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|param_i
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<4 x i32> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvxl
+name|vec_stvlxl
+argument_list|(
+name|vi
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|vi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<4 x i32> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvxl
+name|vec_stvlxl
+argument_list|(
+name|vui
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|param_ui
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<4 x i32> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvxl
+name|vec_stvlxl
+argument_list|(
+name|vui
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|vui
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<4 x i32> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvxl
+name|vec_stvlxl
+argument_list|(
+name|vbi
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|vbi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<4 x i32> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvxl
+name|vec_stvlxl
+argument_list|(
+name|vf
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|vf
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<4 x float> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|/* vec_stvrx */
+name|vec_stvrx
+argument_list|(
+name|vsc
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|param_sc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: store<16 x i8> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvx
+name|vec_stvrx
+argument_list|(
+name|vsc
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|vsc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: store<16 x i8> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvx
+name|vec_stvrx
+argument_list|(
+name|vuc
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|param_uc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: store<16 x i8> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvx
+name|vec_stvrx
+argument_list|(
+name|vuc
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|vuc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: store<16 x i8> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvx
+name|vec_stvrx
+argument_list|(
+name|vbc
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|vbc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: store<16 x i8> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvx
+name|vec_stvrx
+argument_list|(
+name|vs
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|param_s
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: store<8 x i16> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvx
+name|vec_stvrx
+argument_list|(
+name|vs
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|vs
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: store<8 x i16> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvx
+name|vec_stvrx
+argument_list|(
+name|vus
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|param_us
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: store<8 x i16> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvx
+name|vec_stvrx
+argument_list|(
+name|vus
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|vus
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: store<8 x i16> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvx
+name|vec_stvrx
+argument_list|(
+name|vbs
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|vbs
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: store<8 x i16> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvx
+name|vec_stvrx
+argument_list|(
+name|vp
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|vp
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: store<8 x i16> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvx
+name|vec_stvrx
+argument_list|(
+name|vi
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|param_i
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: store<4 x i32> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvx
+name|vec_stvrx
+argument_list|(
+name|vi
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|vi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: store<4 x i32> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvx
+name|vec_stvrx
+argument_list|(
+name|vui
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|param_ui
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: store<4 x i32> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvx
+name|vec_stvrx
+argument_list|(
+name|vui
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|vui
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: store<4 x i32> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvx
+name|vec_stvrx
+argument_list|(
+name|vbi
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|vbi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: store<4 x i32> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvx
+name|vec_stvrx
+argument_list|(
+name|vf
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|vf
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: store<4 x float> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvx
+comment|/* vec_stvrxl */
+name|vec_stvrxl
+argument_list|(
+name|vsc
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|param_sc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: store<16 x i8> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvxl
+name|vec_stvrxl
+argument_list|(
+name|vsc
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|vsc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: store<16 x i8> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvxl
+name|vec_stvrxl
+argument_list|(
+name|vuc
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|param_uc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: store<16 x i8> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvxl
+name|vec_stvrxl
+argument_list|(
+name|vuc
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|vuc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: store<16 x i8> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvxl
+name|vec_stvrxl
+argument_list|(
+name|vbc
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|vbc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: store<16 x i8> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvxl
+name|vec_stvrxl
+argument_list|(
+name|vs
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|param_s
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: store<8 x i16> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvxl
+name|vec_stvrxl
+argument_list|(
+name|vs
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|vs
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: store<8 x i16> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvxl
+name|vec_stvrxl
+argument_list|(
+name|vus
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|param_us
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: store<8 x i16> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvxl
+name|vec_stvrxl
+argument_list|(
+name|vus
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|vus
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: store<8 x i16> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvxl
+name|vec_stvrxl
+argument_list|(
+name|vbs
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|vbs
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: store<8 x i16> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvxl
+name|vec_stvrxl
+argument_list|(
+name|vp
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|vp
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: store<8 x i16> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvxl
+name|vec_stvrxl
+argument_list|(
+name|vi
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|param_i
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: store<4 x i32> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvxl
+name|vec_stvrxl
+argument_list|(
+name|vi
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|vi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: store<4 x i32> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvxl
+name|vec_stvrxl
+argument_list|(
+name|vui
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|param_ui
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: store<4 x i32> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvxl
+name|vec_stvrxl
+argument_list|(
+name|vui
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|vui
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: store<4 x i32> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvxl
+name|vec_stvrxl
+argument_list|(
+name|vbi
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|vbi
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: store<4 x i32> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvxl
+name|vec_stvrxl
+argument_list|(
+name|vf
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|vf
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.lvx
+comment|// CHECK: store<4 x float> zeroinitializer
+comment|// CHECK: @llvm.ppc.altivec.lvsl
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.lvsr
+comment|// CHECK: @llvm.ppc.altivec.vperm
+comment|// CHECK: @llvm.ppc.altivec.stvxl
+comment|/* vec_promote */
+name|res_vsc
+operator|=
+name|vec_promote
+argument_list|(
+name|param_sc
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<16 x i8> zeroinitializer
+comment|// CHECK: insertelement<16 x i8>
+name|res_vuc
+operator|=
+name|vec_promote
+argument_list|(
+name|param_uc
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<16 x i8> zeroinitializer
+comment|// CHECK: insertelement<16 x i8>
+name|res_vs
+operator|=
+name|vec_promote
+argument_list|(
+name|param_s
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<8 x i16> zeroinitializer
+comment|// CHECK: insertelement<8 x i16>
+name|res_vus
+operator|=
+name|vec_promote
+argument_list|(
+name|param_us
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<8 x i16> zeroinitializer
+comment|// CHECK: insertelement<8 x i16>
+name|res_vi
+operator|=
+name|vec_promote
+argument_list|(
+name|param_i
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<4 x i32> zeroinitializer
+comment|// CHECK: insertelement<4 x i32>
+name|res_vui
+operator|=
+name|vec_promote
+argument_list|(
+name|param_ui
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<4 x i32> zeroinitializer
+comment|// CHECK: insertelement<4 x i32>
+name|res_vf
+operator|=
+name|vec_promote
+argument_list|(
+name|param_f
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store<4 x float> zeroinitializer
+comment|// CHECK: insertelement<4 x float>
+comment|/* vec_splats */
+name|res_vsc
+operator|=
+name|vec_splats
+argument_list|(
+name|param_sc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: insertelement<16 x i8>
+name|res_vuc
+operator|=
+name|vec_splats
+argument_list|(
+name|param_uc
+argument_list|)
+expr_stmt|;
+comment|// CHECK: insertelement<16 x i8>
+name|res_vs
+operator|=
+name|vec_splats
+argument_list|(
+name|param_s
+argument_list|)
+expr_stmt|;
+comment|// CHECK: insertelement<8 x i16>
+name|res_vus
+operator|=
+name|vec_splats
+argument_list|(
+name|param_us
+argument_list|)
+expr_stmt|;
+comment|// CHECK: insertelement<8 x i16>
+name|res_vi
+operator|=
+name|vec_splats
+argument_list|(
+name|param_i
+argument_list|)
+expr_stmt|;
+comment|// CHECK: insertelement<4 x i32>
+name|res_vui
+operator|=
+name|vec_splats
+argument_list|(
+name|param_ui
+argument_list|)
+expr_stmt|;
+comment|// CHECK: insertelement<4 x i32>
+name|res_vf
+operator|=
+name|vec_splats
+argument_list|(
+name|param_f
+argument_list|)
+expr_stmt|;
+comment|// CHECK: insertelement<4 x float>
 comment|/* ------------------------------ predicates -------------------------------------- */
-comment|/*  vec_all_eq */
+comment|/* vec_all_eq */
 name|res_i
 operator|=
 name|vec_all_eq
@@ -16212,6 +18656,631 @@ name|vf
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpbfp.p
+block|}
+end_function
+
+begin_comment
+comment|/* ------------------------------ Relational Operators------------------------------- */
+end_comment
+
+begin_comment
+comment|// CHECK: define void @test7
+end_comment
+
+begin_function
+name|void
+name|test7
+parameter_list|()
+block|{
+name|vector
+name|signed
+name|char
+name|vsc1
+init|=
+call|(
+name|vector
+name|signed
+name|char
+call|)
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+decl_stmt|;
+name|vector
+name|signed
+name|char
+name|vsc2
+init|=
+call|(
+name|vector
+name|signed
+name|char
+call|)
+argument_list|(
+operator|-
+literal|2
+argument_list|)
+decl_stmt|;
+name|res_i
+operator|=
+operator|(
+name|vsc1
+operator|==
+name|vsc2
+operator|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpequb.p(i32 2
+name|res_i
+operator|=
+operator|(
+name|vsc1
+operator|!=
+name|vsc2
+operator|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpequb.p(i32 0
+name|res_i
+operator|=
+operator|(
+name|vsc1
+operator|<
+name|vsc2
+operator|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpgtsb.p(i32 2
+name|res_i
+operator|=
+operator|(
+name|vsc1
+operator|>
+name|vsc2
+operator|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpgtsb.p(i32 2
+name|res_i
+operator|=
+operator|(
+name|vsc1
+operator|<=
+name|vsc2
+operator|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpgtsb.p(i32 0
+name|res_i
+operator|=
+operator|(
+name|vsc1
+operator|>=
+name|vsc2
+operator|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpgtsb.p(i32 0
+name|vector
+name|unsigned
+name|char
+name|vuc1
+init|=
+call|(
+name|vector
+name|unsigned
+name|char
+call|)
+argument_list|(
+literal|1
+argument_list|)
+decl_stmt|;
+name|vector
+name|unsigned
+name|char
+name|vuc2
+init|=
+call|(
+name|vector
+name|unsigned
+name|char
+call|)
+argument_list|(
+literal|2
+argument_list|)
+decl_stmt|;
+name|res_i
+operator|=
+operator|(
+name|vuc1
+operator|==
+name|vuc2
+operator|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpequb.p(i32 2
+name|res_i
+operator|=
+operator|(
+name|vuc1
+operator|!=
+name|vuc2
+operator|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpequb.p(i32 0
+name|res_i
+operator|=
+operator|(
+name|vuc1
+operator|<
+name|vuc2
+operator|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpgtub.p(i32 2
+name|res_i
+operator|=
+operator|(
+name|vuc1
+operator|>
+name|vuc2
+operator|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpgtub.p(i32 2
+name|res_i
+operator|=
+operator|(
+name|vuc1
+operator|<=
+name|vuc2
+operator|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpgtub.p(i32 0
+name|res_i
+operator|=
+operator|(
+name|vuc1
+operator|>=
+name|vuc2
+operator|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpgtub.p(i32 0
+name|vector
+name|short
+name|vs1
+init|=
+call|(
+name|vector
+name|short
+call|)
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+decl_stmt|;
+name|vector
+name|short
+name|vs2
+init|=
+call|(
+name|vector
+name|short
+call|)
+argument_list|(
+operator|-
+literal|2
+argument_list|)
+decl_stmt|;
+name|res_i
+operator|=
+operator|(
+name|vs1
+operator|==
+name|vs2
+operator|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpequh.p(i32 2
+name|res_i
+operator|=
+operator|(
+name|vs1
+operator|!=
+name|vs2
+operator|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpequh.p(i32 0
+name|res_i
+operator|=
+operator|(
+name|vs1
+operator|<
+name|vs2
+operator|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpgtsh.p(i32 2
+name|res_i
+operator|=
+operator|(
+name|vs1
+operator|>
+name|vs2
+operator|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpgtsh.p(i32 2
+name|res_i
+operator|=
+operator|(
+name|vs1
+operator|<=
+name|vs2
+operator|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpgtsh.p(i32 0
+name|res_i
+operator|=
+operator|(
+name|vs1
+operator|>=
+name|vs2
+operator|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpgtsh.p(i32 0
+name|vector
+name|unsigned
+name|short
+name|vus1
+init|=
+call|(
+name|vector
+name|unsigned
+name|short
+call|)
+argument_list|(
+literal|1
+argument_list|)
+decl_stmt|;
+name|vector
+name|unsigned
+name|short
+name|vus2
+init|=
+call|(
+name|vector
+name|unsigned
+name|short
+call|)
+argument_list|(
+literal|2
+argument_list|)
+decl_stmt|;
+name|res_i
+operator|=
+operator|(
+name|vus1
+operator|==
+name|vus2
+operator|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpequh.p(i32 2
+name|res_i
+operator|=
+operator|(
+name|vus1
+operator|!=
+name|vus2
+operator|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpequh.p(i32 0
+name|res_i
+operator|=
+operator|(
+name|vus1
+operator|<
+name|vus2
+operator|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh.p(i32 2
+name|res_i
+operator|=
+operator|(
+name|vus1
+operator|>
+name|vus2
+operator|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh.p(i32 2
+name|res_i
+operator|=
+operator|(
+name|vus1
+operator|<=
+name|vus2
+operator|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh.p(i32 0
+name|res_i
+operator|=
+operator|(
+name|vus1
+operator|>=
+name|vus2
+operator|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpgtuh.p(i32 0
+name|vector
+name|int
+name|vi1
+init|=
+call|(
+name|vector
+name|int
+call|)
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+decl_stmt|;
+name|vector
+name|int
+name|vi2
+init|=
+call|(
+name|vector
+name|int
+call|)
+argument_list|(
+operator|-
+literal|2
+argument_list|)
+decl_stmt|;
+name|res_i
+operator|=
+operator|(
+name|vi1
+operator|==
+name|vi2
+operator|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpequw.p(i32 2
+name|res_i
+operator|=
+operator|(
+name|vi1
+operator|!=
+name|vi2
+operator|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpequw.p(i32 0
+name|res_i
+operator|=
+operator|(
+name|vi1
+operator|<
+name|vi2
+operator|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpgtsw.p(i32 2
+name|res_i
+operator|=
+operator|(
+name|vi1
+operator|>
+name|vi2
+operator|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpgtsw.p(i32 2
+name|res_i
+operator|=
+operator|(
+name|vi1
+operator|<=
+name|vi2
+operator|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpgtsw.p(i32 0
+name|res_i
+operator|=
+operator|(
+name|vi1
+operator|>=
+name|vi2
+operator|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpgtsw.p(i32 0
+name|vector
+name|unsigned
+name|int
+name|vui1
+init|=
+call|(
+name|vector
+name|unsigned
+name|int
+call|)
+argument_list|(
+literal|1
+argument_list|)
+decl_stmt|;
+name|vector
+name|unsigned
+name|int
+name|vui2
+init|=
+call|(
+name|vector
+name|unsigned
+name|int
+call|)
+argument_list|(
+literal|2
+argument_list|)
+decl_stmt|;
+name|res_i
+operator|=
+operator|(
+name|vui1
+operator|==
+name|vui2
+operator|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpequw.p(i32 2
+name|res_i
+operator|=
+operator|(
+name|vui1
+operator|!=
+name|vui2
+operator|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpequw.p(i32 0
+name|res_i
+operator|=
+operator|(
+name|vui1
+operator|<
+name|vui2
+operator|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw.p(i32 2
+name|res_i
+operator|=
+operator|(
+name|vui1
+operator|>
+name|vui2
+operator|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw.p(i32 2
+name|res_i
+operator|=
+operator|(
+name|vui1
+operator|<=
+name|vui2
+operator|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw.p(i32 0
+name|res_i
+operator|=
+operator|(
+name|vui1
+operator|>=
+name|vui2
+operator|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpgtuw.p(i32 0
+name|vector
+name|float
+name|vf1
+init|=
+call|(
+name|vector
+name|float
+call|)
+argument_list|(
+literal|1.0
+argument_list|)
+decl_stmt|;
+name|vector
+name|float
+name|vf2
+init|=
+call|(
+name|vector
+name|float
+call|)
+argument_list|(
+literal|2.0
+argument_list|)
+decl_stmt|;
+name|res_i
+operator|=
+operator|(
+name|vf1
+operator|==
+name|vf2
+operator|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpeqfp.p(i32 2
+name|res_i
+operator|=
+operator|(
+name|vf1
+operator|!=
+name|vf2
+operator|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpeqfp.p(i32 0
+name|res_i
+operator|=
+operator|(
+name|vf1
+operator|<
+name|vf2
+operator|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpgtfp.p(i32 2
+name|res_i
+operator|=
+operator|(
+name|vf1
+operator|>
+name|vf2
+operator|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpgtfp.p(i32 2
+name|res_i
+operator|=
+operator|(
+name|vf1
+operator|<=
+name|vf2
+operator|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpgefp.p(i32 2
+name|res_i
+operator|=
+operator|(
+name|vf1
+operator|>=
+name|vf2
+operator|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vcmpgefp.p(i32 2
+block|}
+end_function
+
+begin_comment
+comment|/* ------------------------------- increment/decrement: ----------------------------- */
+end_comment
+
+begin_comment
+comment|// CHECK: define void @test8
+end_comment
+
+begin_function
+name|void
+name|test8
+parameter_list|()
+block|{
+name|vector
+name|int
+name|vi
+decl_stmt|;
+name|vi
+operator|++
+expr_stmt|;
+comment|// CHECK: add nsw<4 x i32> {{.*}}<i32 1, i32 1, i32 1, i32 1>
+name|vector
+name|unsigned
+name|int
+name|vui
+decl_stmt|;
+operator|--
+name|vui
+expr_stmt|;
+comment|// CHECK: add<4 x i32> {{.*}}<i32 -1, i32 -1, i32 -1, i32 -1>
+name|vector
+name|float
+name|vf
+decl_stmt|;
+name|vf
+operator|++
+expr_stmt|;
+comment|// CHECK: fadd<4 x float> {{.*}}<float 1.000000e+{{0+}}, float 1.000000e+{{0+}}, float 1.000000e+{{0+}}, float 1.000000e+{{0+}}>
 block|}
 end_function
 

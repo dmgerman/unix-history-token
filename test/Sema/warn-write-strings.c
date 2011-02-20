@@ -17,7 +17,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{initializing 'char *' with an expression of type 'char const [4]' discards qualifiers}}
+comment|// expected-warning {{initializing 'char *' with an expression of type 'const char [4]' discards qualifiers}}
 end_comment
 
 begin_comment

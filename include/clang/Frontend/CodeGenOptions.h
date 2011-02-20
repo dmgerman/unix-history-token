@@ -137,6 +137,12 @@ literal|1
 decl_stmt|;
 comment|/// Should generate debug info (-g).
 name|unsigned
+name|LimitDebugInfo
+range|:
+literal|1
+decl_stmt|;
+comment|/// Limit generated debug info to reduce size.
+name|unsigned
 name|DisableFPElim
 range|:
 literal|1
@@ -162,9 +168,10 @@ name|EmitDeclMetadata
 range|:
 literal|1
 decl_stmt|;
-comment|/// Emit special metadata indicating what Decl*
-comment|/// various IR entities came from.  Only useful
-comment|/// when running CodeGen as a subroutine.
+comment|/// Emit special metadata indicating what
+comment|/// Decl* various IR entities came from.  Only
+comment|/// useful when running CodeGen as a
+comment|/// subroutine.
 name|unsigned
 name|FunctionSections
 range|:
@@ -184,13 +191,27 @@ range|:
 literal|1
 decl_stmt|;
 comment|/// Emit weak vtables, RTTI, and thunks with
-comment|/// hidden visibility
+comment|/// hidden visibility.
 name|unsigned
 name|InstrumentFunctions
 range|:
 literal|1
 decl_stmt|;
-comment|/// Set when -finstrument-functions is enabled
+comment|/// Set when -finstrument-functions is
+comment|/// enabled.
+name|unsigned
+name|InstrumentForProfiling
+range|:
+literal|1
+decl_stmt|;
+comment|/// Set when -pg is enabled
+name|unsigned
+name|LessPreciseFPMAD
+range|:
+literal|1
+decl_stmt|;
+comment|/// Enable less precise MAD instructions to be
+comment|/// generated.
 name|unsigned
 name|MergeAllConstants
 range|:
@@ -209,6 +230,18 @@ range|:
 literal|1
 decl_stmt|;
 comment|/// Set when -mno-implicit-float is enabled.
+name|unsigned
+name|NoInfsFPMath
+range|:
+literal|1
+decl_stmt|;
+comment|/// Assume FP arguments, results not +-Inf.
+name|unsigned
+name|NoNaNsFPMath
+range|:
+literal|1
+decl_stmt|;
+comment|/// Assume FP arguments, results not NaN.
 name|unsigned
 name|NoZeroInitializedInBSS
 range|:
@@ -247,6 +280,12 @@ literal|1
 decl_stmt|;
 comment|/// Relax all machine code instructions.
 name|unsigned
+name|RelaxedAliasing
+range|:
+literal|1
+decl_stmt|;
+comment|/// Set when -fno-strict-aliasing is enabled.
+name|unsigned
 name|SimplifyLibCalls
 range|:
 literal|1
@@ -277,6 +316,12 @@ range|:
 literal|1
 decl_stmt|;
 comment|/// Control whether loops are unrolled.
+name|unsigned
+name|UnsafeFPMath
+range|:
+literal|1
+decl_stmt|;
+comment|/// Allow unsafe floating point optzns.
 name|unsigned
 name|UnwindTables
 range|:
@@ -339,6 +384,11 @@ operator|::
 name|string
 name|RelocationModel
 expr_stmt|;
+comment|/// The user specified number of registers to be used for integral arguments,
+comment|/// or 0 if unspecified.
+name|unsigned
+name|NumRegisterParameters
+decl_stmt|;
 name|public
 label|:
 name|CodeGenOptions
@@ -361,6 +411,10 @@ operator|=
 literal|0
 expr_stmt|;
 name|DebugInfo
+operator|=
+literal|0
+expr_stmt|;
+name|LimitDebugInfo
 operator|=
 literal|0
 expr_stmt|;
@@ -396,6 +450,14 @@ name|InstrumentFunctions
 operator|=
 literal|0
 expr_stmt|;
+name|InstrumentForProfiling
+operator|=
+literal|0
+expr_stmt|;
+name|LessPreciseFPMAD
+operator|=
+literal|0
+expr_stmt|;
 name|MergeAllConstants
 operator|=
 literal|1
@@ -408,7 +470,19 @@ name|NoImplicitFloat
 operator|=
 literal|0
 expr_stmt|;
+name|NoInfsFPMath
+operator|=
+literal|0
+expr_stmt|;
+name|NoNaNsFPMath
+operator|=
+literal|0
+expr_stmt|;
 name|NoZeroInitializedInBSS
+operator|=
+literal|0
+expr_stmt|;
+name|NumRegisterParameters
 operator|=
 literal|0
 expr_stmt|;
@@ -432,6 +506,10 @@ name|RelaxAll
 operator|=
 literal|0
 expr_stmt|;
+name|RelaxedAliasing
+operator|=
+literal|0
+expr_stmt|;
 name|SimplifyLibCalls
 operator|=
 literal|1
@@ -449,6 +527,10 @@ operator|=
 literal|1
 expr_stmt|;
 name|UnrollLoops
+operator|=
+literal|0
+expr_stmt|;
+name|UnsafeFPMath
 operator|=
 literal|0
 expr_stmt|;

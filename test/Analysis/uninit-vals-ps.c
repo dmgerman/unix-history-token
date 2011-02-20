@@ -88,7 +88,7 @@ argument_list|)
 operator|+
 literal|1
 return|;
-comment|// expected-warning{{Pass-by-value argument in function call is undefined.}}
+comment|// expected-warning{{Function call argument is an uninitialized value}}
 block|}
 end_function
 

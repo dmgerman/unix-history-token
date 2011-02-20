@@ -377,5 +377,53 @@ begin_comment
 comment|// expected-warning{{unused}}
 end_comment
 
+begin_comment
+comment|// rdar://8728293
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|cleanupMalloc
+parameter_list|(
+name|char
+modifier|*
+specifier|const
+modifier|*
+specifier|const
+name|allocation
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+name|void
+name|f13
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|char
+modifier|*
+specifier|const
+name|__attribute__
+argument_list|(
+operator|(
+name|cleanup
+argument_list|(
+name|cleanupMalloc
+argument_list|)
+operator|)
+argument_list|)
+name|a
+decl_stmt|;
+operator|(
+name|void
+operator|)
+name|a
+expr_stmt|;
+block|}
+end_function
+
 end_unit
 

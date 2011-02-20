@@ -4,7 +4,7 @@ comment|// RUN: %clang_cc1 -triple i386-pc-linux-gnu -emit-llvm -o - %s | FileCh
 end_comment
 
 begin_comment
-comment|// CHECK: @"\01foo"
+comment|// CHECK: @foo
 end_comment
 
 begin_comment
@@ -56,7 +56,7 @@ block|{}
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: @"\01bar"
+comment|// CHECK: @bar
 end_comment
 
 begin_comment
@@ -260,7 +260,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: @"\01FUNC"
+comment|// CHECK: @FUNC
 end_comment
 
 begin_function
