@@ -3561,6 +3561,20 @@ name|RL_TDESC_CMD_IPCSUMV2
 value|0x20000000
 end_define
 
+begin_define
+define|#
+directive|define
+name|RL_TDESC_CMD_MSSVALV2
+value|0x1FFC0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|RL_TDESC_CMD_MSSVALV2_SHIFT
+value|18
+end_define
+
 begin_comment
 comment|/*  * Error bits are valid only on the last descriptor of a frame  * (i.e. RL_TDESC_CMD_EOF == 1)  */
 end_comment
