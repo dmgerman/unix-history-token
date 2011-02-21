@@ -32429,7 +32429,7 @@ name|ast_rx_halfgi
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"number of frames received with half-GI"
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_UINT
@@ -32453,7 +32453,7 @@ name|ast_rx_2040
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"number of HT/40 frames received"
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_UINT
@@ -32477,7 +32477,7 @@ name|ast_rx_pre_crc_err
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"number of delimeter-CRC errors detected"
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_UINT
@@ -32501,7 +32501,7 @@ name|ast_rx_post_crc_err
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"number of post-delimiter CRC errors detected"
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_UINT
@@ -32525,7 +32525,7 @@ name|ast_rx_decrypt_busy_err
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"number of frames received w/ busy decrypt engine"
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_UINT
