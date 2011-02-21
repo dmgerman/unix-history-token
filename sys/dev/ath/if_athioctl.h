@@ -391,9 +391,13 @@ name|u_int32_t
 name|ast_rx_hi_rx_chain
 decl_stmt|;
 name|u_int32_t
+name|ast_tx_htprotect
+decl_stmt|;
+comment|/* HT tx frames with protection */
+name|u_int32_t
 name|ast_pad
 index|[
-literal|4
+literal|3
 index|]
 decl_stmt|;
 block|}
