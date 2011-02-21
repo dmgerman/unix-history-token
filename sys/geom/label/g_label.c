@@ -444,7 +444,7 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
-comment|/* Check is the label starts from ../ */
+comment|/* Check if the label starts from ../ */
 if|if
 condition|(
 name|strncmp
@@ -463,7 +463,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* Check is the label contains /../ */
+comment|/* Check if the label contains /../ */
 if|if
 condition|(
 name|strstr
@@ -480,7 +480,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* Check is the label ends at ../ */
+comment|/* Check if the label ends at ../ */
 if|if
 condition|(
 operator|(
@@ -605,6 +605,21 @@ argument_list|,
 name|pp
 operator|->
 name|name
+argument_list|,
+name|label
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|req
+operator|!=
+name|NULL
+condition|)
+name|gctl_error
+argument_list|(
+name|req
+argument_list|,
+literal|"Label name %s is invalid."
 argument_list|,
 name|label
 argument_list|)
@@ -1640,7 +1655,7 @@ name|gctl_error
 argument_list|(
 name|req
 argument_list|,
-literal|"Invalid number of argument."
+literal|"Invalid number of arguments."
 argument_list|)
 expr_stmt|;
 return|return;
