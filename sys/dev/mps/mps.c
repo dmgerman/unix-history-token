@@ -4444,6 +4444,14 @@ operator|->
 name|tm_list
 argument_list|)
 expr_stmt|;
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|io_list
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
