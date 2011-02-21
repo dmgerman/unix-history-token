@@ -924,6 +924,10 @@ operator|&
 name|thread0
 argument_list|)
 expr_stmt|;
+comment|/* Do basic tuning, hz etc */
+name|init_param1
+argument_list|()
+expr_stmt|;
 name|freemempos
 operator|=
 operator|(
@@ -1145,10 +1149,6 @@ argument_list|)
 operator|/
 name|PAGE_SIZE
 argument_list|)
-expr_stmt|;
-comment|/* Do basic tuning, hz etc */
-name|init_param1
-argument_list|()
 expr_stmt|;
 comment|/* 	 * Now we start construction of the L1 page table 	 * We start by mapping the L2 page tables into the L1. 	 * This means that we can replace L1 mappings later on if necessary 	 */
 name|l1pagetable
