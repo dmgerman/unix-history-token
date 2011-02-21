@@ -115,7 +115,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Some notes:  *  * If the EV_VOLATILE flag is set, a copy of the variable is made.  * If EV_DYNAMIC is set, the the variable has been allocated with  * malloc and ownership transferred to the environment.  * If (value) is NULL, the variable is set but has no value.  */
+comment|/*  * Some notes:  *  * If the EV_VOLATILE flag is set, a copy of the variable is made.  * If EV_DYNAMIC is set, the variable has been allocated with  * malloc and ownership transferred to the environment.  * If (value) is NULL, the variable is set but has no value.  */
 end_comment
 
 begin_function

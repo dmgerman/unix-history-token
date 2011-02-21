@@ -11490,7 +11490,7 @@ name|PCR_PRIO_ROTATE
 block|,
 literal|0
 block|,
-comment|/* all channels share the the bus hold */
+comment|/* all channels share the bus hold */
 literal|0
 block|,
 comment|/* hold the bus until all transfers done */

@@ -349,7 +349,7 @@ operator|->
 name|bo_private
 expr_stmt|;
 comment|/* G_VALID_CONSUMER(cp); We likely lack topology lock */
-comment|/* 	 * If the the provider has orphaned us, just return EXIO. 	 */
+comment|/* 	 * If the provider has orphaned us, just return EXIO. 	 */
 if|if
 condition|(
 name|cp

@@ -6141,7 +6141,7 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Set up a bio request for fdstrategy().  bio_offset is faked 	 * so that fdstrategy() will seek to the the requested 	 * cylinder, and use the desired head. 	 */
+comment|/* 	 * Set up a bio request for fdstrategy().  bio_offset is faked 	 * so that fdstrategy() will seek to the requested 	 * cylinder, and use the desired head. 	 */
 name|bp
 operator|->
 name|bio_cmd

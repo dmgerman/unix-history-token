@@ -12859,7 +12859,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Format a dirent64 structure and copy it out the the user's buffer.  */
+comment|/*  * Format a dirent64 structure and copy it out the user's buffer.  */
 end_comment
 
 begin_function
@@ -13025,7 +13025,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Format a dirent64 structure and copy it out the the user's buffer.  */
+comment|/*  * Format a dirent64 structure and copy it out the user's buffer.  */
 end_comment
 
 begin_function

@@ -946,7 +946,7 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* 1 - chan holds the bus until end of data */
-comment|/* 0 - all channels share the the bus hold */
+comment|/* 0 - all channels share the bus hold */
 name|unsigned
 name|release
 range|:

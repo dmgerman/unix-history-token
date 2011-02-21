@@ -3404,7 +3404,7 @@ argument_list|,
 name|gpe_entry
 argument_list|)
 expr_stmt|;
-comment|/* Wipe-out the the first EBR when there are no slices. */
+comment|/* Wipe-out the first EBR when there are no slices. */
 if|if
 condition|(
 name|baseentry

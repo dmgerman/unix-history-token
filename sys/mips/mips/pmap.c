@@ -8499,7 +8499,7 @@ argument_list|,
 name|newpte
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Sync I& D caches for executable pages.  Do this only if the the 	 * target pmap belongs to the current process.  Otherwise, an 	 * unresolvable TLB miss may occur. 	 */
+comment|/* 	 * Sync I& D caches for executable pages.  Do this only if the 	 * target pmap belongs to the current process.  Otherwise, an 	 * unresolvable TLB miss may occur. 	 */
 if|if
 condition|(
 operator|!
@@ -8995,7 +8995,7 @@ name|pte
 operator||=
 name|PTE_RO
 expr_stmt|;
-comment|/* 		 * Sync I& D caches.  Do this only if the the target pmap 		 * belongs to the current process.  Otherwise, an 		 * unresolvable TLB miss may occur. */
+comment|/* 		 * Sync I& D caches.  Do this only if the target pmap 		 * belongs to the current process.  Otherwise, an 		 * unresolvable TLB miss may occur. */
 if|if
 condition|(
 name|pmap

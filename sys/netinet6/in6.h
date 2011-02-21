@@ -54,7 +54,7 @@ value|"FreeBSD"
 end_define
 
 begin_comment
-comment|/*  * IPv6 port allocation rules should mirror the IPv4 rules and are controlled  * by the the net.inet.ip.portrange sysctl tree. The following defines exist  * for compatibility with userland applications that need them.  */
+comment|/*  * IPv6 port allocation rules should mirror the IPv4 rules and are controlled  * by the net.inet.ip.portrange sysctl tree. The following defines exist  * for compatibility with userland applications that need them.  */
 end_comment
 
 begin_if

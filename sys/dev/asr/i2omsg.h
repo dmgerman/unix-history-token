@@ -341,7 +341,7 @@ comment|/*   Defines for the Message Flags Field. */
 end_comment
 
 begin_comment
-comment|/*   Please Note the the FAIL bit is only set in the Transport Fail Message. */
+comment|/*   Please Note the FAIL bit is only set in the Transport Fail Message. */
 end_comment
 
 begin_define

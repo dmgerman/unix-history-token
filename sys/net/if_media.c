@@ -737,7 +737,7 @@ name|ENXIO
 operator|)
 return|;
 block|}
-comment|/* 		 * If no change, we're done. 		 * XXX Automedia may invole software intervention. 		 *     Keep going in case the the connected media changed. 		 *     Similarly, if best match changed (kernel debugger?). 		 */
+comment|/* 		 * If no change, we're done. 		 * XXX Automedia may invole software intervention. 		 *     Keep going in case the connected media changed. 		 *     Similarly, if best match changed (kernel debugger?). 		 */
 if|if
 condition|(
 operator|(

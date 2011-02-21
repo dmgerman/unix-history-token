@@ -2717,7 +2717,7 @@ name|l2so
 argument_list|)
 expr_stmt|;
 comment|/* we don't need new L2CAP socket */
-comment|/* 	 * Check if we already have the same DLCI the the same session 	 */
+comment|/* 	 * Check if we already have the same DLCI the same session 	 */
 name|mtx_lock
 argument_list|(
 operator|&

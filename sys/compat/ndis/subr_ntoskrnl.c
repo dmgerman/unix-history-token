@@ -14808,7 +14808,7 @@ literal|1
 expr_stmt|;
 else|else
 block|{
-comment|/* 		 * Get the first waiter. If this is a synchronization 		 * event, just wake up that one thread (don't bother 		 * setting the state to signalled since we're supposed 		 * to automatically clear synchronization events anyway). 		 * 		 * If it's a notification event, or the the first 		 * waiter is doing a WAITTYPE_ALL wait, go through 		 * the full wait satisfaction process. 		 */
+comment|/* 		 * Get the first waiter. If this is a synchronization 		 * event, just wake up that one thread (don't bother 		 * setting the state to signalled since we're supposed 		 * to automatically clear synchronization events anyway). 		 * 		 * If it's a notification event, or the first 		 * waiter is doing a WAITTYPE_ALL wait, go through 		 * the full wait satisfaction process. 		 */
 name|w
 operator|=
 name|CONTAINING_RECORD

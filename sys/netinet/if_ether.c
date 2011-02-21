@@ -4137,7 +4137,7 @@ operator|->
 name|ar_hln
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Also check that the node which sent the ARP packet 			 * is on the the interface we expect it to be on. This 			 * avoids ARP chaos if an interface is connected to the 			 * wrong network. 			 */
+comment|/* 			 * Also check that the node which sent the ARP packet 			 * is on the interface we expect it to be on. This 			 * avoids ARP chaos if an interface is connected to the 			 * wrong network. 			 */
 name|sin
 operator|.
 name|sin_addr

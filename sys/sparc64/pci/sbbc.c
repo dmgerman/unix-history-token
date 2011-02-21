@@ -1506,7 +1506,7 @@ name|rid
 operator|=
 name|SBBC_PCI_BAR
 expr_stmt|;
-comment|/* 	 * Note that we don't activate the resource so it's not mapped twice 	 * but only once by the the firmware. 	 */
+comment|/* 	 * Note that we don't activate the resource so it's not mapped twice 	 * but only once by the firmware. 	 */
 name|sc
 operator|->
 name|sc_res
