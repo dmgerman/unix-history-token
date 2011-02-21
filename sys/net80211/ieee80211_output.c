@@ -13570,7 +13570,7 @@ name|adjust
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|IEEE80211_SUPERG_SUPPORT
+name|IEEE80211_SUPPORT_SUPERG
 name|bo
 operator|->
 name|bo_ath
@@ -13581,7 +13581,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|IEEE80211_TDMA_SUPPORT
+name|IEEE80211_SUPPORT_TDMA
 name|bo
 operator|->
 name|bo_tdma
@@ -13592,7 +13592,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|IEEE80211_MESH_SUPPORT
+name|IEEE80211_SUPPORT_MESH
 name|bo
 operator|->
 name|bo_meshconf
@@ -13824,7 +13824,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|IEEE80211_SUPERG_SUPPORT
+name|IEEE80211_SUPPORT_SUPERG
 name|bo
 operator|->
 name|bo_ath
@@ -13839,7 +13839,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|IEEE80211_TDMA_SUPPORT
+name|IEEE80211_SUPPORT_TDMA
 name|bo
 operator|->
 name|bo_tdma
@@ -13854,7 +13854,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|IEEE80211_MESH_SUPPORT
+name|IEEE80211_SUPPORT_MESH
 name|bo
 operator|->
 name|bo_meshconf
