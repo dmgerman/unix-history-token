@@ -512,6 +512,13 @@ name|IEEE80211_FC0_SUBTYPE_ACTION
 value|0xd0
 end_define
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_FC0_SUBTYPE_ACTION_NOACK
+value|0xe0
+end_define
+
 begin_comment
 comment|/* for TYPE_CTL */
 end_comment

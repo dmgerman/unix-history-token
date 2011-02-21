@@ -206,7 +206,7 @@ literal|"deauth"
 block|,
 literal|"action"
 block|,
-literal|"reserved#14"
+literal|"action_noack"
 block|,
 literal|"reserved#15"
 block|}

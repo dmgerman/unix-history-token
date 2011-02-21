@@ -3058,7 +3058,6 @@ name|rx_action
 argument_list|)
 expr_stmt|;
 comment|/* verify frame payloads but defer processing */
-comment|/* XXX maybe push this to method */
 switch|switch
 condition|(
 name|ia
