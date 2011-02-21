@@ -2495,6 +2495,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|RL_CFG3_JUMBO_EN0
+value|0x04
+end_define
+
+begin_comment
+comment|/* RTL8168C or later. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RL_CFG3_FAST_B2B
 value|0x01
 end_define
@@ -2516,6 +2527,17 @@ directive|define
 name|RL_CFG4_LWPME
 value|0x10
 end_define
+
+begin_define
+define|#
+directive|define
+name|RL_CFG4_JUMBO_EN1
+value|0x02
+end_define
+
+begin_comment
+comment|/* RTL8168C or later. */
+end_comment
 
 begin_comment
 comment|/*  * Config 5 register  */
@@ -3275,6 +3297,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|rl_desc
+decl_stmt|;
+name|int
+name|rl_max_mtu
 decl_stmt|;
 block|}
 struct|;
@@ -4123,6 +4148,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|RL_RX_JUMBO_DESC_CNT
+value|RL_RX_DESC_CNT
+end_define
+
+begin_define
+define|#
+directive|define
 name|RL_NTXSEGS
 value|32
 end_define
@@ -4313,13 +4345,30 @@ begin_define
 define|#
 directive|define
 name|RL_JUMBO_MTU
-value|(RL_JUMBO_FRAMELEN-ETHER_HDR_LEN-ETHER_CRC_LEN)
+define|\
+value|(RL_JUMBO_FRAMELEN-ETHER_VLAN_ENCAP_LEN-ETHER_HDR_LEN-ETHER_CRC_LEN)
 end_define
 
 begin_define
 define|#
 directive|define
-name|RL_MAX_FRAMELEN
+name|RL_JUMBO_MTU_6K
+define|\
+value|((6 * 1024) - ETHER_VLAN_ENCAP_LEN - ETHER_HDR_LEN - ETHER_CRC_LEN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RL_JUMBO_MTU_9K
+define|\
+value|((9 * 1024) - ETHER_VLAN_ENCAP_LEN - ETHER_HDR_LEN - ETHER_CRC_LEN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RL_MTU
 define|\
 value|(ETHER_MAX_LEN + ETHER_VLAN_ENCAP_LEN - ETHER_HDR_LEN - ETHER_CRC_LEN)
 end_define
@@ -4377,6 +4426,13 @@ index|[
 name|RL_RX_DESC_CNT
 index|]
 decl_stmt|;
+name|struct
+name|rl_rxdesc
+name|rl_jrx_desc
+index|[
+name|RL_RX_JUMBO_DESC_CNT
+index|]
+decl_stmt|;
 name|int
 name|rl_tx_desc_cnt
 decl_stmt|;
@@ -4403,8 +4459,15 @@ name|bus_dma_tag_t
 name|rl_rx_mtag
 decl_stmt|;
 comment|/* mbuf RX mapping tag */
+name|bus_dma_tag_t
+name|rl_jrx_mtag
+decl_stmt|;
+comment|/* mbuf RX mapping tag */
 name|bus_dmamap_t
 name|rl_rx_sparemap
+decl_stmt|;
+name|bus_dmamap_t
+name|rl_jrx_sparemap
 decl_stmt|;
 name|bus_dma_tag_t
 name|rl_stag
@@ -4529,14 +4592,16 @@ decl_stmt|;
 name|uint8_t
 name|rl_type
 decl_stmt|;
+name|struct
+name|rl_hwrev
+modifier|*
+name|rl_hwrev
+decl_stmt|;
 name|int
 name|rl_eecmd_read
 decl_stmt|;
 name|int
 name|rl_eewidth
-decl_stmt|;
-name|uint8_t
-name|rl_stats_no_timeout
 decl_stmt|;
 name|int
 name|rl_txthresh
@@ -4569,9 +4634,6 @@ name|struct
 name|mbuf
 modifier|*
 name|rl_tail
-decl_stmt|;
-name|uint32_t
-name|rl_hwrev
 decl_stmt|;
 name|uint32_t
 name|rl_rxlenmask
@@ -4639,7 +4701,7 @@ name|RL_FLAG_PHYWAKE
 value|0x0008
 define|#
 directive|define
-name|RL_FLAG_NOJUMBO
+name|RL_FLAG_JUMBOV2
 value|0x0010
 define|#
 directive|define
