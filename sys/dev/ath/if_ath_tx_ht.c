@@ -426,6 +426,17 @@ name|i
 operator|++
 control|)
 block|{
+comment|/* Only set flags for actual TX attempts */
+if|if
+condition|(
+name|try
+index|[
+name|i
+index|]
+operator|==
+literal|0
+condition|)
+continue|continue;
 name|series
 index|[
 name|i
@@ -438,6 +449,7 @@ index|[
 name|i
 index|]
 expr_stmt|;
+comment|/* 		 * XXX this isn't strictly correct - sc_txchainmask 		 * XXX isn't the currently active chainmask; 		 * XXX it's the interface chainmask at startup. 		 * XXX It's overridden in the HAL rate scenario function 		 * XXX for now. 		 */
 name|series
 index|[
 name|i
@@ -449,6 +461,7 @@ name|sc
 operator|->
 name|sc_txchainmask
 expr_stmt|;
+comment|/* 		 * This merely enables RTS or RTS/CTS for the given scenario; 		 * it needs to be enabled elsewhere. 		 */
 if|if
 condition|(
 name|ic
