@@ -13561,6 +13561,11 @@ case|:
 case|case
 name|SIOCDELMULTI
 case|:
+name|FXP_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -13573,7 +13578,14 @@ operator|)
 operator|!=
 literal|0
 condition|)
-name|fxp_init
+name|fxp_init_body
+argument_list|(
+name|sc
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|FXP_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
