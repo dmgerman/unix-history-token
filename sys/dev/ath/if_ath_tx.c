@@ -1841,7 +1841,85 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|uint8_t
+name|ath_tx_get_rtscts_rate
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+specifier|const
+name|HAL_RATE_TABLE
+modifier|*
+name|rt
+parameter_list|,
+name|int
+name|rix
+parameter_list|,
+name|int
+name|cix
+parameter_list|,
+name|int
+name|shortPreamble
+parameter_list|)
+block|{
+name|uint8_t
+name|ctsrate
+decl_stmt|;
+comment|/* 	 * CTS transmit rate is derived from the transmit rate 	 * by looking in the h/w rate table.  We must also factor 	 * in whether or not a short preamble is to be used. 	 */
+comment|/* NB: cix is set above where RTS/CTS is enabled */
+name|KASSERT
+argument_list|(
+name|cix
+operator|!=
+literal|0xff
+argument_list|,
+operator|(
+literal|"cix not setup"
+operator|)
+argument_list|)
+expr_stmt|;
+name|ctsrate
+operator|=
+name|rt
+operator|->
+name|info
+index|[
+name|cix
+index|]
+operator|.
+name|rateCode
+expr_stmt|;
+comment|/* XXX this should only matter for legacy rates */
+if|if
+condition|(
+name|shortPreamble
+condition|)
+name|ctsrate
+operator||=
+name|rt
+operator|->
+name|info
+index|[
+name|cix
+index|]
+operator|.
+name|shortPreamble
+expr_stmt|;
+return|return
+name|ctsrate
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Calculate the RTS/CTS duration for legacy frames.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
 name|ath_tx_calc_ctsduration
 parameter_list|(
 name|struct
@@ -1868,34 +1946,34 @@ name|rt
 parameter_list|,
 name|int
 name|flags
-parameter_list|,
-name|u_int8_t
-modifier|*
-name|ctsrate
-parameter_list|,
-name|int
-modifier|*
-name|ctsduration
 parameter_list|)
 block|{
-comment|/* 	 * CTS transmit rate is derived from the transmit rate 	 * by looking in the h/w rate table.  We must also factor 	 * in whether or not a short preamble is to be used. 	 */
-comment|/* NB: cix is set above where RTS/CTS is enabled */
-name|KASSERT
-argument_list|(
+name|int
+name|ctsduration
+init|=
+literal|0
+decl_stmt|;
+comment|/* This mustn't be called for HT modes */
+if|if
+condition|(
+name|rt
+operator|->
+name|info
+index|[
 name|cix
-operator|!=
-literal|0xff
+index|]
+operator|.
+name|phy
+operator|==
+name|IEEE80211_T_HT
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: HT rate where it shouldn't be (0x%x)\n"
 argument_list|,
-operator|(
-literal|"cix not setup"
-operator|)
-argument_list|)
-expr_stmt|;
-operator|(
-operator|*
-name|ctsrate
-operator|)
-operator|=
+name|__func__
+argument_list|,
 name|rt
 operator|->
 name|info
@@ -1904,27 +1982,19 @@ name|cix
 index|]
 operator|.
 name|rateCode
+argument_list|)
 expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 comment|/* 	 * Compute the transmit duration based on the frame 	 * size and the size of an ACK frame.  We call into the 	 * HAL to do the computation since it depends on the 	 * characteristics of the actual PHY being used. 	 * 	 * NB: CTS is assumed the same size as an ACK so we can 	 *     use the precalculated ACK durations. 	 */
 if|if
 condition|(
 name|shortPreamble
 condition|)
 block|{
-operator|(
-operator|*
-name|ctsrate
-operator|)
-operator||=
-name|rt
-operator|->
-name|info
-index|[
-name|cix
-index|]
-operator|.
-name|shortPreamble
-expr_stmt|;
 if|if
 condition|(
 name|flags
@@ -1932,10 +2002,7 @@ operator|&
 name|HAL_TXDESC_RTSENA
 condition|)
 comment|/* SIFS + CTS */
-operator|(
-operator|*
 name|ctsduration
-operator|)
 operator|+=
 name|rt
 operator|->
@@ -1946,10 +2013,7 @@ index|]
 operator|.
 name|spAckDuration
 expr_stmt|;
-operator|(
-operator|*
 name|ctsduration
-operator|)
 operator|+=
 name|ath_hal_computetxtime
 argument_list|(
@@ -1975,10 +2039,7 @@ operator|==
 literal|0
 condition|)
 comment|/* SIFS + ACK */
-operator|(
-operator|*
 name|ctsduration
-operator|)
 operator|+=
 name|rt
 operator|->
@@ -1999,10 +2060,7 @@ operator|&
 name|HAL_TXDESC_RTSENA
 condition|)
 comment|/* SIFS + CTS */
-operator|(
-operator|*
 name|ctsduration
-operator|)
 operator|+=
 name|rt
 operator|->
@@ -2013,10 +2071,7 @@ index|]
 operator|.
 name|lpAckDuration
 expr_stmt|;
-operator|(
-operator|*
 name|ctsduration
-operator|)
 operator|+=
 name|ath_hal_computetxtime
 argument_list|(
@@ -2042,10 +2097,7 @@ operator|==
 literal|0
 condition|)
 comment|/* SIFS + ACK */
-operator|(
-operator|*
 name|ctsduration
-operator|)
 operator|+=
 name|rt
 operator|->
@@ -2057,6 +2109,9 @@ operator|.
 name|lpAckDuration
 expr_stmt|;
 block|}
+return|return
+name|ctsduration
+return|;
 block|}
 end_function
 
@@ -3254,9 +3309,32 @@ name|HAL_TXDESC_CTSENA
 operator|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
+name|ctsrate
+operator|=
+name|ath_tx_get_rtscts_rate
+argument_list|(
+name|ah
+argument_list|,
+name|rt
+argument_list|,
+name|rix
+argument_list|,
+name|cix
+argument_list|,
+name|shortPreamble
+argument_list|)
+expr_stmt|;
+comment|/* The 11n chipsets do ctsduration calculations for you */
+if|if
+condition|(
+operator|!
+name|ath_tx_is_11n
+argument_list|(
+name|sc
+argument_list|)
+condition|)
+name|ctsduration
+operator|=
 name|ath_tx_calc_ctsduration
 argument_list|(
 name|ah
@@ -3272,12 +3350,6 @@ argument_list|,
 name|rt
 argument_list|,
 name|flags
-argument_list|,
-operator|&
-name|ctsrate
-argument_list|,
-operator|&
-name|ctsduration
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Must disable multi-rate retry when using RTS/CTS. 		 */
@@ -4139,9 +4211,36 @@ operator|->
 name|ibp_ctsrate
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|ctsrate
+operator|=
+name|ath_tx_get_rtscts_rate
+argument_list|(
+name|ah
+argument_list|,
+name|rt
+argument_list|,
+name|rix
+argument_list|,
+name|cix
+argument_list|,
+name|params
+operator|->
+name|ibp_flags
+operator|&
+name|IEEE80211_BPF_SHORTPRE
+argument_list|)
+expr_stmt|;
+comment|/* The 11n chipsets do ctsduration calculations for you */
+if|if
+condition|(
+operator|!
+name|ath_tx_is_11n
+argument_list|(
+name|sc
+argument_list|)
+condition|)
+name|ctsduration
+operator|=
 name|ath_tx_calc_ctsduration
 argument_list|(
 name|ah
@@ -4161,12 +4260,6 @@ argument_list|,
 name|rt
 argument_list|,
 name|flags
-argument_list|,
-operator|&
-name|ctsrate
-argument_list|,
-operator|&
-name|ctsduration
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Must disable multi-rate retry when using RTS/CTS. 		 */
