@@ -339,6 +339,9 @@ parameter_list|,
 name|uint8_t
 modifier|*
 name|try
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 name|struct
@@ -461,20 +464,15 @@ name|sc
 operator|->
 name|sc_txchainmask
 expr_stmt|;
-comment|/* 		 * This merely enables RTS or RTS/CTS for the given scenario; 		 * it needs to be enabled elsewhere. 		 */
 if|if
 condition|(
-name|ic
-operator|->
-name|ic_protmode
-operator|==
-name|IEEE80211_PROT_RTSCTS
-operator|||
-name|ic
-operator|->
-name|ic_protmode
-operator|==
-name|IEEE80211_PROT_CTSONLY
+name|flags
+operator|&
+operator|(
+name|HAL_TXDESC_RTSENA
+operator||
+name|HAL_TXDESC_CTSENA
+operator|)
 condition|)
 name|series
 index|[
@@ -773,6 +771,8 @@ argument_list|,
 name|rix
 argument_list|,
 name|try
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 comment|/* Enforce AR5416 aggregate limit - can't do RTS w/ an agg frame> 8k */
@@ -792,6 +792,12 @@ operator|-
 literal|1
 index|]
 expr_stmt|;
+if|#
+directive|if
+literal|0
+block|printf("pktlen: %d; flags 0x%x\n", pktlen, flags); 	ath_rateseries_print(series);
+endif|#
+directive|endif
 comment|/* Set rate scenario */
 name|ath_hal_set11nratescenario
 argument_list|(
