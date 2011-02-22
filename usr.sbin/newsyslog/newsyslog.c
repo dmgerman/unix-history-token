@@ -6762,6 +6762,9 @@ name|DIR
 modifier|*
 name|dirp
 decl_stmt|;
+name|int
+name|c
+decl_stmt|;
 name|oldlogs
 operator|=
 name|malloc
@@ -7086,9 +7089,8 @@ continue|continue;
 block|}
 for|for
 control|(
-name|int
 name|c
-init|=
+operator|=
 literal|0
 init|;
 name|c
@@ -7624,11 +7626,13 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
-for|for
-control|(
 name|int
 name|c
-init|=
+decl_stmt|;
+for|for
+control|(
+name|c
+operator|=
 literal|0
 init|;
 name|c
@@ -7778,6 +7782,9 @@ name|tm
 decl_stmt|;
 name|time_t
 name|now
+decl_stmt|;
+name|int
+name|c
 decl_stmt|;
 name|flags
 operator|=
@@ -8028,9 +8035,8 @@ block|{
 comment|/* name of oldest log */
 for|for
 control|(
-name|int
 name|c
-init|=
+operator|=
 literal|0
 init|;
 name|c
@@ -8814,6 +8820,9 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
+name|int
+name|c
+decl_stmt|;
 name|pgm_path
 operator|=
 name|NULL
@@ -8854,9 +8863,8 @@ name|COMPRESS_NONE
 condition|)
 for|for
 control|(
-name|int
 name|c
-init|=
+operator|=
 literal|1
 init|;
 name|c
