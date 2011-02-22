@@ -4983,7 +4983,7 @@ name|distSetXUser
 block|}
 block|,
 block|{
-literal|"A Minimal"
+literal|"B Minimal"
 block|,
 literal|"The smallest configuration possible"
 block|,
@@ -4993,7 +4993,7 @@ name|distSetMinimum
 block|}
 block|,
 block|{
-literal|"B Custom"
+literal|"C Custom"
 block|,
 literal|"Specify your own distribution set"
 block|,
@@ -7146,20 +7146,6 @@ block|}
 block|,
 endif|#
 directive|endif
-block|{
-literal|" quotas"
-block|,
-literal|"This host wishes to check quotas on startup."
-block|,
-name|dmenuVarCheck
-block|,
-name|dmenuToggleVariable
-block|,
-name|NULL
-block|,
-literal|"check_quotas=YES"
-block|}
-block|,
 block|{
 name|NULL
 block|}
