@@ -3974,9 +3974,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: install [-bCcpSsv] [-B suffix] [-f flags] [-g group] [-m mode]\n"
+literal|"usage: install [-bCcMpSsv] [-B suffix] [-f flags] [-g group] [-m mode]\n"
 literal|"               [-o owner] file1 file2\n"
-literal|"       install [-bCcpSsv] [-B suffix] [-f flags] [-g group] [-m mode]\n"
+literal|"       install [-bCcMpSsv] [-B suffix] [-f flags] [-g group] [-m mode]\n"
 literal|"               [-o owner] file1 ... fileN directory\n"
 literal|"       install -d [-v] [-g group] [-m mode] [-o owner] directory ...\n"
 argument_list|)
