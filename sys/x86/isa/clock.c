@@ -1742,7 +1742,7 @@ decl_stmt|;
 name|u_int
 name|freq
 decl_stmt|;
-comment|/* 	 * Use `i8254' instead of `timer' in external names because `timer' 	 * is is too generic.  Should use it everywhere. 	 */
+comment|/* 	 * Use `i8254' instead of `timer' in external names because `timer' 	 * is too generic.  Should use it everywhere. 	 */
 name|freq
 operator|=
 name|i8254_freq
