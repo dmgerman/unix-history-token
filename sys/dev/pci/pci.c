@@ -12791,6 +12791,9 @@ return|;
 block|}
 name|count
 operator|=
+operator|(
+name|pci_addr_t
+operator|)
 literal|1
 operator|<<
 name|mapsize
@@ -12828,11 +12831,7 @@ name|end
 operator|=
 name|base
 operator|+
-operator|(
-literal|1
-operator|<<
-name|mapsize
-operator|)
+name|count
 operator|-
 literal|1
 expr_stmt|;
@@ -18916,7 +18915,10 @@ block|}
 comment|/* 	 * For real BARs, we need to override the size that 	 * the driver requests, because that's what the BAR 	 * actually uses and we would otherwise have a 	 * situation where we might allocate the excess to 	 * another driver, which won't work. 	 */
 name|count
 operator|=
-literal|1UL
+operator|(
+name|pci_addr_t
+operator|)
+literal|1
 operator|<<
 name|mapsize
 expr_stmt|;
