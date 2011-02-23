@@ -714,7 +714,7 @@ condition|(
 name|p
 operator|->
 name|p_numthreads
-operator|>
+operator|>=
 name|max_threads_per_proc
 condition|)
 block|{
