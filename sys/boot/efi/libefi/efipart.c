@@ -955,7 +955,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"%s: rw=%d, status=%lu\n"
+literal|"%s: rw=%d, status=%u\n"
 argument_list|,
 name|__func__
 argument_list|,
