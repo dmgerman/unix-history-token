@@ -598,6 +598,14 @@ operator|--
 expr_stmt|;
 continue|continue;
 block|}
+else|else
+name|strcat
+argument_list|(
+name|diskdesc
+argument_list|,
+literal|" Hard Disk"
+argument_list|)
+expr_stmt|;
 name|disks
 index|[
 name|n
