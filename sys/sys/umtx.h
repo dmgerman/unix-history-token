@@ -824,7 +824,9 @@ block|,
 name|TYPE_PP_UMUTEX
 block|,
 name|TYPE_RWLOCK
-block|, }
+block|,
+name|TYPE_FUTEX
+block|}
 enum|;
 end_enum
 
