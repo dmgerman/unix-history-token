@@ -3619,7 +3619,7 @@ operator|->
 name|ip_off
 condition|)
 break|break;
-comment|/* 	 * If there is a preceding segment, it may provide some of 	 * our data already.  If so, drop the data from the incoming 	 * segment.  If it provides all of our data, drop us, otherwise 	 * stick new segment in the proper place. 	 * 	 * If some of the data is dropped from the the preceding 	 * segment, then it's checksum is invalidated. 	 */
+comment|/* 	 * If there is a preceding segment, it may provide some of 	 * our data already.  If so, drop the data from the incoming 	 * segment.  If it provides all of our data, drop us, otherwise 	 * stick new segment in the proper place. 	 * 	 * If some of the data is dropped from the preceding 	 * segment, then it's checksum is invalidated. 	 */
 if|if
 condition|(
 name|p

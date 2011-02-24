@@ -11195,7 +11195,7 @@ name|ntcs
 operator|->
 name|dconf
 decl_stmt|;
-comment|/* 			 * We don't really know whether this device supports 			 * Data Compression if the the algorithm field is 			 * zero. Just say we do. 			 */
+comment|/* 			 * We don't really know whether this device supports 			 * Data Compression if the algorithm field is 			 * zero. Just say we do. 			 */
 operator|*
 name|comp_supported
 operator|=

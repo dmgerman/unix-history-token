@@ -2970,7 +2970,7 @@ operator|==
 name|ES_DAC1
 condition|)
 block|{
-comment|/* 		 * DAC1 does not support continuous rate settings. 		 * Pick the nearest and use it since FEEDER_RATE will 		 * do the the proper conversion for us. 		 */
+comment|/* 		 * DAC1 does not support continuous rate settings. 		 * Pick the nearest and use it since FEEDER_RATE will 		 * do the proper conversion for us. 		 */
 name|es
 operator|->
 name|ctrl

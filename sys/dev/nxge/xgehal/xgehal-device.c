@@ -18655,7 +18655,7 @@ block|}
 ifndef|#
 directive|ifndef
 name|XGE_HAL_HERC_EMULATION
-comment|/* 	 * Andrew: in PCI 33 mode, the P_PLL is not used, and therefore, 	 * the the P_PLL_LOCK bit in the adapter_status register will 	 * not be asserted. 	 */
+comment|/* 	 * Andrew: in PCI 33 mode, the P_PLL is not used, and therefore, 	 * the P_PLL_LOCK bit in the adapter_status register will 	 * not be asserted. 	 */
 if|if
 condition|(
 operator|!

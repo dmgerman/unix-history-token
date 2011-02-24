@@ -2486,7 +2486,7 @@ goto|goto
 name|done
 goto|;
 block|}
-comment|/* 	 * No corresponding connection was found in syncache. 	 * If syncookies are enabled and possibly exclusively 	 * used, or we are under memory pressure, a valid RST 	 * may not find a syncache entry.  In that case we're 	 * done and no SYN|ACK retransmissions will happen. 	 * Otherwise the the RST was misdirected or spoofed. 	 */
+comment|/* 	 * No corresponding connection was found in syncache. 	 * If syncookies are enabled and possibly exclusively 	 * used, or we are under memory pressure, a valid RST 	 * may not find a syncache entry.  In that case we're 	 * done and no SYN|ACK retransmissions will happen. 	 * Otherwise the RST was misdirected or spoofed. 	 */
 if|if
 condition|(
 name|sc

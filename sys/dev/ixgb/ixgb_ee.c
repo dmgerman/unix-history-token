@@ -823,7 +823,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  * Verifies that the EEPROM has a valid checksum  *  * hw - Struct containing variables accessed by shared code  *  * Reads the first 64 16 bit words of the EEPROM and sums the values read.  * If the the sum of the 64 16 bit words is 0xBABA, the EEPROM's checksum is  * valid.  *  * Returns:  *  TRUE: Checksum is valid  *  FALSE: Checksum is not valid.  *****************************************************************************/
+comment|/******************************************************************************  * Verifies that the EEPROM has a valid checksum  *  * hw - Struct containing variables accessed by shared code  *  * Reads the first 64 16 bit words of the EEPROM and sums the values read.  * If the sum of the 64 16 bit words is 0xBABA, the EEPROM's checksum is  * valid.  *  * Returns:  *  TRUE: Checksum is valid  *  FALSE: Checksum is not valid.  *****************************************************************************/
 end_comment
 
 begin_function

@@ -534,7 +534,7 @@ comment|/* FALLTHROUGH */
 case|case
 literal|'P'
 case|:
-comment|/* 			 * POSIX specifically discusses the the behavior of 			 * both -k and -P. It states that the blocksize should 			 * be set to 1024. Thus, if this occurs, simply break 			 * rather than clobbering the old blocksize. 			 */
+comment|/* 			 * POSIX specifically discusses the behavior of 			 * both -k and -P. It states that the blocksize should 			 * be set to 1024. Thus, if this occurs, simply break 			 * rather than clobbering the old blocksize. 			 */
 if|if
 condition|(
 name|kflag

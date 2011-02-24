@@ -1511,7 +1511,7 @@ decl_stmt|;
 name|u_int
 name|chunk
 decl_stmt|;
-comment|/* 	 * Break the input up into HARVESTSIZE chunks. The writer has too 	 * much control here, so "estimate" the the entropy as zero. 	 */
+comment|/* 	 * Break the input up into HARVESTSIZE chunks. The writer has too 	 * much control here, so "estimate" the entropy as zero. 	 */
 for|for
 control|(
 name|i

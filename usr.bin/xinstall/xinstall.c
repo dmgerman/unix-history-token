@@ -2455,7 +2455,7 @@ name|to_name
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * If provided a set of flags, set them, otherwise, preserve the 	 * flags, except for the dump flag. 	 * NFS does not support flags.  Ignore EOPNOTSUPP flags if we're just 	 * trying to turn off UF_NODUMP.  If we're trying to set real flags, 	 * then warn if the the fs doesn't support it, otherwise fail. 	 */
+comment|/* 	 * If provided a set of flags, set them, otherwise, preserve the 	 * flags, except for the dump flag. 	 * NFS does not support flags.  Ignore EOPNOTSUPP flags if we're just 	 * trying to turn off UF_NODUMP.  If we're trying to set real flags, 	 * then warn if the fs doesn't support it, otherwise fail. 	 */
 if|if
 condition|(
 operator|!

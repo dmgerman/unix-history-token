@@ -353,7 +353,7 @@ argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If the the provider has orphaned us, just return EXIO. 	 */
+comment|/* 	 * If the provider has orphaned us, just return EXIO. 	 */
 if|if
 condition|(
 name|cp

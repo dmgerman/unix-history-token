@@ -4928,7 +4928,7 @@ operator|-
 literal|1
 condition|)
 block|{
-comment|/* 		 * We cannot continue because of error.  Exit if the 		 * program has not become a daemon.  Otherwise, block 		 * until the the user corrects the problem and issues SIGHUP. 		 */
+comment|/* 		 * We cannot continue because of error.  Exit if the 		 * program has not become a daemon.  Otherwise, block 		 * until the user corrects the problem and issues SIGHUP. 		 */
 if|if
 condition|(
 operator|!
