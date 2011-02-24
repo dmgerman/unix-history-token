@@ -90,8 +90,19 @@ parameter_list|,
 name|size_t
 name|size
 parameter_list|)
-function_decl|;
+function_decl|lzma_attribute
+parameter_list|(
+function_decl|(malloc
 end_function_decl
+
+begin_expr_stmt
+unit|))
+name|lzma_attr_alloc_size
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// \brief      Safe strdup() that never returns NULL
@@ -108,8 +119,15 @@ name|char
 modifier|*
 name|src
 parameter_list|)
-function_decl|;
+function_decl|lzma_attribute
+parameter_list|(
+function_decl|(malloc
 end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
 comment|/// \brief      Fancy version of strtoull()

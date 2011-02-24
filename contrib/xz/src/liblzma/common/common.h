@@ -673,10 +673,14 @@ parameter_list|(
 function_decl|(malloc
 end_function_decl
 
-begin_empty_stmt
+begin_expr_stmt
 unit|))
-empty_stmt|;
-end_empty_stmt
+name|lzma_attr_alloc_size
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// Frees memory

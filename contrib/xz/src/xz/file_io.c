@@ -1700,10 +1700,7 @@ block|}
 if|if
 condition|(
 name|reg_files_only
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 operator|!
 name|S_ISREG
 argument_list|(
@@ -1719,8 +1716,7 @@ name|message_warning
 argument_list|(
 name|_
 argument_list|(
-literal|"%s: Not a regular file, "
-literal|"skipping"
+literal|"%s: Not a regular file, skipping"
 argument_list|)
 argument_list|,
 name|pair
@@ -1732,10 +1728,17 @@ goto|goto
 name|error
 goto|;
 block|}
-comment|// These are meaningless on Windows.
 ifndef|#
 directive|ifndef
 name|TUKLIB_DOSLIKE
+if|if
+condition|(
+name|reg_files_only
+operator|&&
+operator|!
+name|opt_force
+condition|)
+block|{
 if|if
 condition|(
 name|pair
@@ -1834,9 +1837,9 @@ goto|goto
 name|error
 goto|;
 block|}
+block|}
 endif|#
 directive|endif
-block|}
 return|return
 name|false
 return|;
