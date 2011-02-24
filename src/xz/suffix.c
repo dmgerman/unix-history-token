@@ -108,6 +108,92 @@ struct|;
 end_struct
 
 begin_comment
+comment|/// \brief      Test if the char is a directory separator
+end_comment
+
+begin_function
+specifier|static
+name|bool
+name|is_dir_sep
+parameter_list|(
+name|char
+name|c
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|TUKLIB_DOSLIKE
+return|return
+name|c
+operator|==
+literal|'/'
+operator|||
+name|c
+operator|==
+literal|'\\'
+operator|||
+name|c
+operator|==
+literal|':'
+return|;
+else|#
+directive|else
+return|return
+name|c
+operator|==
+literal|'/'
+return|;
+endif|#
+directive|endif
+block|}
+end_function
+
+begin_comment
+comment|/// \brief      Test if the string contains a directory separator
+end_comment
+
+begin_function
+specifier|static
+name|bool
+name|has_dir_sep
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|str
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|TUKLIB_DOSLIKE
+return|return
+name|strpbrk
+argument_list|(
+name|str
+argument_list|,
+literal|"/\\:"
+argument_list|)
+operator|!=
+name|NULL
+return|;
+else|#
+directive|else
+return|return
+name|strchr
+argument_list|(
+name|str
+argument_list|,
+literal|'/'
+argument_list|)
+operator|!=
+name|NULL
+return|;
+endif|#
+directive|endif
+block|}
+end_function
+
+begin_comment
 comment|/// \brief      Checks if src_name has given compressed_suffix
 end_comment
 
@@ -180,6 +266,8 @@ name|src_len
 operator|<=
 name|suffix_len
 operator|||
+name|is_dir_sep
+argument_list|(
 name|src_name
 index|[
 name|src_len
@@ -188,8 +276,7 @@ name|suffix_len
 operator|-
 literal|1
 index|]
-operator|==
-literal|'/'
+argument_list|)
 condition|)
 return|return
 literal|0
@@ -842,8 +929,8 @@ modifier|*
 name|suffix
 parameter_list|)
 block|{
-comment|// Empty suffix and suffixes having a slash are rejected. Such
-comment|// suffixes would break things later.
+comment|// Empty suffix and suffixes having a directory separator are
+comment|// rejected. Such suffixes would break things later.
 if|if
 condition|(
 name|suffix
@@ -853,14 +940,10 @@ index|]
 operator|==
 literal|'\0'
 operator|||
-name|strchr
+name|has_dir_sep
 argument_list|(
 name|suffix
-argument_list|,
-literal|'/'
 argument_list|)
-operator|!=
-name|NULL
 condition|)
 name|message_fatal
 argument_list|(
