@@ -1006,6 +1006,11 @@ name|sc_uq_bad_adc
 range|:
 literal|1
 decl_stmt|;
+name|uint8_t
+name|sc_uq_au_vendor_class
+range|:
+literal|1
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -2033,7 +2038,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int32_t
+name|int
 name|umidi_probe
 parameter_list|(
 name|device_t
@@ -2044,7 +2049,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int32_t
+name|int
 name|umidi_detach
 parameter_list|(
 name|device_t
@@ -2770,20 +2775,38 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-comment|/* trigger on the control interface */
+comment|/* lookup non-standard device */
 if|if
 condition|(
-operator|(
 name|uaa
 operator|->
 name|info
 operator|.
 name|bInterfaceClass
-operator|==
+operator|!=
 name|UICLASS_AUDIO
-operator|)
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
+name|usb_test_quirk
+argument_list|(
+name|uaa
+argument_list|,
+name|UQ_AU_VENDOR_CLASS
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
 operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
+comment|/* check for AUDIO control interface */
+if|if
+condition|(
 name|uaa
 operator|->
 name|info
@@ -2791,7 +2814,6 @@ operator|.
 name|bInterfaceSubClass
 operator|==
 name|UISUBCLASS_AUDIOCONTROL
-operator|)
 condition|)
 block|{
 if|if
@@ -2818,17 +2840,6 @@ block|}
 comment|/* check for MIDI stream */
 if|if
 condition|(
-operator|(
-name|uaa
-operator|->
-name|info
-operator|.
-name|bInterfaceClass
-operator|==
-name|UICLASS_AUDIO
-operator|)
-operator|&&
-operator|(
 name|uaa
 operator|->
 name|info
@@ -2836,9 +2847,23 @@ operator|.
 name|bInterfaceSubClass
 operator|==
 name|UISUBCLASS_MIDISTREAM
-operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|usb_test_quirk
+argument_list|(
+name|uaa
+argument_list|,
+name|UQ_BAD_MIDI
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+else|else
 return|return
 operator|(
 literal|0
@@ -2991,6 +3016,21 @@ condition|)
 name|sc
 operator|->
 name|sc_uq_bad_adc
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|usb_test_quirk
+argument_list|(
+name|uaa
+argument_list|,
+name|UQ_AU_VENDOR_CLASS
+argument_list|)
+condition|)
+name|sc
+operator|->
+name|sc_uq_au_vendor_class
 operator|=
 literal|1
 expr_stmt|;
@@ -3928,6 +3968,9 @@ name|audio_if
 init|=
 literal|0
 decl_stmt|;
+name|uint8_t
+name|uma_if_class
+decl_stmt|;
 while|while
 condition|(
 operator|(
@@ -4002,14 +4045,42 @@ name|alt_index
 operator|++
 expr_stmt|;
 block|}
-if|if
-condition|(
+name|uma_if_class
+operator|=
+operator|(
 operator|(
 name|id
 operator|->
 name|bInterfaceClass
 operator|==
 name|UICLASS_AUDIO
+operator|)
+operator|||
+operator|(
+operator|(
+name|id
+operator|->
+name|bInterfaceClass
+operator|==
+name|UICLASS_VENDOR
+operator|)
+operator|&&
+operator|(
+name|sc
+operator|->
+name|sc_uq_au_vendor_class
+operator|!=
+literal|0
+operator|)
+operator|)
+operator|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|uma_if_class
+operator|!=
+literal|0
 operator|)
 operator|&&
 operator|(
@@ -4036,11 +4107,9 @@ block|}
 if|if
 condition|(
 operator|(
-name|id
-operator|->
-name|bInterfaceClass
-operator|==
-name|UICLASS_AUDIO
+name|uma_if_class
+operator|!=
+literal|0
 operator|)
 operator|&&
 operator|(
@@ -4052,7 +4121,7 @@ name|UISUBCLASS_MIDISTREAM
 operator|)
 condition|)
 block|{
-comment|/* 				 * XXX could allow multiple MIDI interfaces 				 * XXX 				 */
+comment|/* 				 * XXX could allow multiple MIDI interfaces 				 */
 if|if
 condition|(
 operator|(
@@ -17715,7 +17784,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|int32_t
+name|int
 name|umidi_probe
 parameter_list|(
 name|device_t
@@ -18018,7 +18087,7 @@ end_function
 
 begin_function
 specifier|static
-name|int32_t
+name|int
 name|umidi_detach
 parameter_list|(
 name|device_t
