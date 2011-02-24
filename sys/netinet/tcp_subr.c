@@ -6508,7 +6508,7 @@ expr|struct
 name|tcpiphdr
 argument_list|)
 expr_stmt|;
-comment|/* 					     * Only cache the the MTU if it 					     * is smaller than the interface 					     * or route MTU.  tcp_mtudisc() 					     * will do right thing by itself. 					     */
+comment|/* 					     * Only cache the MTU if it 					     * is smaller than the interface 					     * or route MTU.  tcp_mtudisc() 					     * will do right thing by itself. 					     */
 if|if
 condition|(
 name|mtu

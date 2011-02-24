@@ -1275,7 +1275,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Attach the the cluster from *m to *n, set up m_ext in *n  * and bump the refcount of the cluster.  */
+comment|/*  * Attach the cluster from *m to *n, set up m_ext in *n  * and bump the refcount of the cluster.  */
 end_comment
 
 begin_function

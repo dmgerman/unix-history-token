@@ -4321,7 +4321,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Record the the fact that we have to scan this region of the  * string for IFS characters.  */
+comment|/*  * Record the fact that we have to scan this region of the  * string for IFS characters.  */
 end_comment
 
 begin_function

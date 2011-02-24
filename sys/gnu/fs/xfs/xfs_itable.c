@@ -3513,7 +3513,7 @@ name|agbp
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 				 * Move up the the last inode in the current 				 * chunk.  The lookup_ge will always get 				 * us the first inode in the next chunk. 				 */
+comment|/* 				 * Move up the last inode in the current 				 * chunk.  The lookup_ge will always get 				 * us the first inode in the next chunk. 				 */
 name|agino
 operator|+=
 name|XFS_INODES_PER_CHUNK

@@ -53,7 +53,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * rpcinfo: ping a particular rpc program  * 	or dump the the registered programs on the remote machine.  */
+comment|/*  * rpcinfo: ping a particular rpc program  * 	or dump the registered programs on the remote machine.  */
 end_comment
 
 begin_comment

@@ -9674,7 +9674,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Clear this port's bit from the open device map, and then drain all 	 * the tasks that can access/manipulate this port's port_info or ifp. 	 * We disable this port's interrupts here and so the the slow/ext 	 * interrupt tasks won't be enqueued.  The tick task will continue to 	 * be enqueued every second but the runs after this drain will not see 	 * this port in the open device map. 	 * 	 * A well behaved task must take open_device_map into account and ignore 	 * ports that are not open. 	 */
+comment|/* 	 * Clear this port's bit from the open device map, and then drain all 	 * the tasks that can access/manipulate this port's port_info or ifp. 	 * We disable this port's interrupts here and so the slow/ext 	 * interrupt tasks won't be enqueued.  The tick task will continue to 	 * be enqueued every second but the runs after this drain will not see 	 * this port in the open device map. 	 * 	 * A well behaved task must take open_device_map into account and ignore 	 * ports that are not open. 	 */
 name|clrbit
 argument_list|(
 operator|&
@@ -14836,7 +14836,7 @@ index|[
 literal|32
 index|]
 decl_stmt|;
-comment|/* 		 * Use these to avoid modifying len/addr in the the return 		 * struct 		 */
+comment|/* 		 * Use these to avoid modifying len/addr in the return 		 * struct 		 */
 name|uint32_t
 name|len
 init|=

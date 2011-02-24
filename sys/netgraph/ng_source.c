@@ -2281,7 +2281,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set sc->output_ifp to point to the the struct ifnet of the interface  * reached via our output hook.  */
+comment|/*  * Set sc->output_ifp to point to the struct ifnet of the interface  * reached via our output hook.  */
 end_comment
 
 begin_function

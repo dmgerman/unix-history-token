@@ -1728,7 +1728,7 @@ name|impl
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Clear the the error from the AFSR. */
+comment|/* Clear the error from the AFSR. */
 name|stxa_sync
 argument_list|(
 literal|0

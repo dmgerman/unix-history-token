@@ -3776,7 +3776,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__ia64__
-comment|/* Move /boot to the the EFI partition and make /boot a link to it. */
+comment|/* Move /boot to the EFI partition and make /boot a link to it. */
 name|efi_mntpt
 operator|=
 operator|(

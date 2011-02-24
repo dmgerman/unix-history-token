@@ -9457,7 +9457,7 @@ block|}
 end_function
 
 begin_comment
-comment|/** @ingroup state_machine  * @brief Process SCTP message while association is in the process of closing  *  * This function waits for a SHUT-COMP to close the association. Depending on  * the the setting of sysctl_holddown_timer it may not remove the association  * immediately, but leave it up until SN_X_T(la). Only SHUT-COMP, SHUT-ACK, and  * ABORT packets are permitted in this state. All other packets are dropped.  *  * @param la Pointer to the relevant libalias instance  * @param direction SN_TO_LOCAL | SN_TO_GLOBAL   * @param sm Pointer to sctp message information  * @param assoc Pointer to the association this SCTP Message belongs to  *   * @return SN_NAT_PKT | SN_DROP_PKT   */
+comment|/** @ingroup state_machine  * @brief Process SCTP message while association is in the process of closing  *  * This function waits for a SHUT-COMP to close the association. Depending on  * the setting of sysctl_holddown_timer it may not remove the association  * immediately, but leave it up until SN_X_T(la). Only SHUT-COMP, SHUT-ACK, and  * ABORT packets are permitted in this state. All other packets are dropped.  *  * @param la Pointer to the relevant libalias instance  * @param direction SN_TO_LOCAL | SN_TO_GLOBAL   * @param sm Pointer to sctp message information  * @param assoc Pointer to the association this SCTP Message belongs to  *   * @return SN_NAT_PKT | SN_DROP_PKT   */
 end_comment
 
 begin_function

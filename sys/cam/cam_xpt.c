@@ -1703,7 +1703,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* 		 * The priority of a device waiting for CCB resources 		 * is that of the the highest priority peripheral driver 		 * enqueued. 		 */
+comment|/* 		 * The priority of a device waiting for CCB resources 		 * is that of the highest priority peripheral driver 		 * enqueued. 		 */
 name|retval
 operator|=
 name|xpt_schedule_dev
@@ -1806,7 +1806,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* 		 * The priority of a device waiting for controller 		 * resources is that of the the highest priority CCB 		 * enqueued. 		 */
+comment|/* 		 * The priority of a device waiting for controller 		 * resources is that of the highest priority CCB 		 * enqueued. 		 */
 name|retval
 operator|=
 name|xpt_schedule_dev

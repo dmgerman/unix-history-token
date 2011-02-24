@@ -399,7 +399,7 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Reserve the the physical memory that is used to read/write to the 	 * pci config space but don't activate it. We are using a page worth 	 * of KVA as a window over this region. 	 */
+comment|/* 	 * Reserve the physical memory that is used to read/write to the 	 * pci config space but don't activate it. We are using a page worth 	 * of KVA as a window over this region. 	 */
 name|rid
 operator|=
 literal|1

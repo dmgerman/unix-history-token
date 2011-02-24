@@ -284,7 +284,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*   * The device drivers can register a handler for the the messages sent  * from a station (corresponding to the device).   */
+comment|/*   * The device drivers can register a handler for the messages sent  * from a station (corresponding to the device).   */
 end_comment
 
 begin_struct
@@ -514,7 +514,7 @@ literal|7
 index|]
 argument_list|)
 expr_stmt|;
-comment|/*  	 * For sending FMN messages, we need credits on the destination 	 * bucket.  Program the credits this core has on the 128 possible 	 * destination buckets. 	 * We cannot use a loop here, because the the first argument has 	 * to be a constant integer value. 	 */
+comment|/*  	 * For sending FMN messages, we need credits on the destination 	 * bucket.  Program the credits this core has on the 128 possible 	 * destination buckets. 	 * We cannot use a loop here, because the first argument has 	 * to be a constant integer value. 	 */
 name|MSGRNG_CC_INIT_CPU_DEST
 argument_list|(
 literal|0

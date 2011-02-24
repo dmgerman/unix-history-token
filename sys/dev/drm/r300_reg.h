@@ -1319,7 +1319,7 @@ value|20
 end_define
 
 begin_comment
-comment|/* Addresses are relative the the vertex program parameters area. */
+comment|/* Addresses are relative the vertex program parameters area. */
 end_comment
 
 begin_define

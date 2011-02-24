@@ -130,7 +130,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Support for include path search  * First search in the the current directory.  * If not found, and the path is not absolute, include path kicks in.  * First, -I options, in the order found on the command line.  * Then M4PATH env variable  */
+comment|/*  * Support for include path search  * First search in the current directory.  * If not found, and the path is not absolute, include path kicks in.  * First, -I options, in the order found on the command line.  * Then M4PATH env variable  */
 end_comment
 
 begin_struct

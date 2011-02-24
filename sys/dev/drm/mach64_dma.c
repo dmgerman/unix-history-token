@@ -486,7 +486,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Reset the the ring buffer descriptors.  *  * \sa mach64_do_engine_reset()  */
+comment|/**  * Reset the ring buffer descriptors.  *  * \sa mach64_do_engine_reset()  */
 end_comment
 
 begin_function

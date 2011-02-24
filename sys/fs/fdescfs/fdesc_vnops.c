@@ -1437,7 +1437,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	 * XXX Kludge: set td->td_proc->p_dupfd to contain the value of the the file 	 * descriptor being sought for duplication. The error return ensures 	 * that the vnode for this device will be released by vn_open. Open 	 * will detect this special error and take the actions in dupfdopen. 	 * Other callers of vn_open or VOP_OPEN will simply report the 	 * error. 	 */
+comment|/* 	 * XXX Kludge: set td->td_proc->p_dupfd to contain the value of the file 	 * descriptor being sought for duplication. The error return ensures 	 * that the vnode for this device will be released by vn_open. Open 	 * will detect this special error and take the actions in dupfdopen. 	 * Other callers of vn_open or VOP_OPEN will simply report the 	 * error. 	 */
 name|ap
 operator|->
 name|a_td

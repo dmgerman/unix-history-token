@@ -1342,7 +1342,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* 	 * Drop the the segment if it does not contain an ACK. 	 */
+comment|/* 	 * Drop the segment if it does not contain an ACK. 	 */
 if|if
 condition|(
 operator|(
