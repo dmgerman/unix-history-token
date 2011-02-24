@@ -2641,6 +2641,8 @@ operator|=
 name|net
 operator|->
 name|rtt
+operator|/
+literal|1000
 expr_stmt|;
 name|xraddr
 operator|.

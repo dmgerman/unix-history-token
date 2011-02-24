@@ -704,10 +704,10 @@ decl_stmt|;
 name|int
 name|lastsv
 decl_stmt|;
-name|int
+name|uint64_t
 name|rtt
 decl_stmt|;
-comment|/* last measured rtt value in ms */
+comment|/* last measured rtt value in us */
 name|unsigned
 name|int
 name|RTO
@@ -726,6 +726,11 @@ comment|/* last time in seconds I sent to it */
 name|struct
 name|timeval
 name|last_sent_time
+decl_stmt|;
+comment|/* JRS - struct used in HTCP algorithm */
+name|struct
+name|htcp
+name|htcp_ca
 decl_stmt|;
 name|int
 name|ref_count
@@ -751,9 +756,6 @@ name|uint32_t
 name|partial_bytes_acked
 decl_stmt|;
 comment|/* in CA tracks when to incr a MTU */
-name|uint32_t
-name|prev_rtt
-decl_stmt|;
 comment|/* tracking variables to avoid the aloc/free in sack processing */
 name|unsigned
 name|int
@@ -798,10 +800,6 @@ name|timeval
 name|start_time
 decl_stmt|;
 comment|/* time when this net was created */
-name|struct
-name|timeval
-name|last_measured_rtt
-decl_stmt|;
 name|uint32_t
 name|marked_retrans
 decl_stmt|;
@@ -881,11 +879,6 @@ decl_stmt|;
 comment|/* index into the last HS table entry we used */
 name|uint8_t
 name|lan_type
-decl_stmt|;
-comment|/* JRS - struct used in HTCP algorithm */
-name|struct
-name|htcp
-name|htcp_ca
 decl_stmt|;
 name|uint32_t
 name|flowid
