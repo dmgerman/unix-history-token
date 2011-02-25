@@ -134,7 +134,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Open a fifolog file or partition for reading or writing.  *  * Return value is NULL for success or a error description string to  * be augmented by errno if non-zero.  *  * The second function is just an error-handling wrapper around the   * first which, does the actual work.  */
+comment|/*  * Open a fifolog file or partition for reading or writing.  *  * Return value is NULL for success or a error description string to  * be augmented by errno if non-zero.  *  * The second function is just an error-handling wrapper around the  * first which, does the actual work.  */
 end_comment
 
 begin_function
