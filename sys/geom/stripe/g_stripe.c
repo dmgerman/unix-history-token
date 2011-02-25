@@ -90,6 +90,16 @@ file|<geom/stripe/g_stripe.h>
 end_include
 
 begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|geom_stripe
+argument_list|,
+literal|"GEOM striping support"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
 argument_list|(

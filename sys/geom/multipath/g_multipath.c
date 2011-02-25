@@ -94,6 +94,16 @@ file|<geom/multipath/g_multipath.h>
 end_include
 
 begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|geom_multipath
+argument_list|,
+literal|"GEOM multipath support"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
 name|_kern_geom

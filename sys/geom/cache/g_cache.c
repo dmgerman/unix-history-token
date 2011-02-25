@@ -102,6 +102,16 @@ file|<geom/cache/g_cache.h>
 end_include
 
 begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|geom_cache
+argument_list|,
+literal|"GEOM cache module"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
 argument_list|(

@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<geom/geom.h>
 end_include
 
@@ -118,6 +124,40 @@ include|#
 directive|include
 file|"g_part_if.h"
 end_include
+
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|geom_part_ebr
+argument_list|,
+literal|"GEOM partitioning class for extended boot records support"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|GEOM_PART_EBR_COMPAT
+argument_list|)
+end_if
+
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|geom_part_ebr_compat
+argument_list|,
+literal|"GEOM EBR partitioning class: backward-compatible partition names"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

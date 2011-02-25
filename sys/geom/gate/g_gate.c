@@ -138,6 +138,16 @@ file|<geom/gate/g_gate.h>
 end_include
 
 begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|geom_gate
+argument_list|,
+literal|"GEOM Gate module"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
 argument_list|(

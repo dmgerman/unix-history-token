@@ -120,6 +120,16 @@ file|<geom/raid3/g_raid3.h>
 end_include
 
 begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|geom_raid3
+argument_list|,
+literal|"GEOM RAID-3 functionality"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
 argument_list|(

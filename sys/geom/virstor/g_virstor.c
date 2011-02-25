@@ -129,6 +129,16 @@ directive|include
 file|<geom/virstor/g_virstor_md.h>
 end_include
 
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|g_virstor
+argument_list|,
+literal|"GEOM virtual storage support"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Declare malloc(9) label */
 end_comment

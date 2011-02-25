@@ -172,6 +172,16 @@ directive|include
 file|<geom/journal/g_journal.h>
 end_include
 
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|geom_journal
+argument_list|,
+literal|"GEOM journaling support"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * On-disk journal format:  *  * JH - Journal header  * RH - Record header  *  * %%%%%% ****** +------+ +------+     ****** +------+     %%%%%%  * % JH % * RH * | Data | | Data | ... * RH * | Data | ... % JH % ...  * %%%%%% ****** +------+ +------+     ****** +------+     %%%%%%  *  */
 end_comment

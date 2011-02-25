@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<geom/geom.h>
 end_include
 
@@ -88,6 +94,16 @@ include|#
 directive|include
 file|<geom/label/g_label.h>
 end_include
+
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|geom_label
+argument_list|,
+literal|"GEOM labeling support"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_DECL

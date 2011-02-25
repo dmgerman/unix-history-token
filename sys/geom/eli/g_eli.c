@@ -144,6 +144,16 @@ file|<geom/eli/pkcs5v2.h>
 end_include
 
 begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|geom_eli
+argument_list|,
+literal|"GEOM crypto module"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|MALLOC_DEFINE
 argument_list|(
 name|M_ELI

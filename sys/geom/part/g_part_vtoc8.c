@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/vtoc.h>
 end_include
 
@@ -112,6 +118,16 @@ include|#
 directive|include
 file|"g_part_if.h"
 end_include
+
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|geom_part_vtoc8
+argument_list|,
+literal|"GEOM partitioning class for SMI VTOC8 disk labels"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_struct
 struct|struct

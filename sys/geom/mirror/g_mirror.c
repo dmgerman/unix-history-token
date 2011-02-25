@@ -120,6 +120,16 @@ file|<geom/mirror/g_mirror.h>
 end_include
 
 begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|geom_mirror
+argument_list|,
+literal|"GEOM mirroring support"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
 argument_list|(

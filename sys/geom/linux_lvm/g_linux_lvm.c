@@ -89,6 +89,16 @@ directive|include
 file|<geom/linux_lvm/g_linux_lvm.h>
 end_include
 
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|geom_linux_lvm
+argument_list|,
+literal|"GEOM Linux LVM partitioning support"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Declare malloc(9) label */
 end_comment
