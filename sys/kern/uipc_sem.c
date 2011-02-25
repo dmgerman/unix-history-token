@@ -190,7 +190,7 @@ name|FEATURE
 argument_list|(
 name|p1003_1b_semaphores
 argument_list|,
-literal|"POSIX1003.1B semaphores support"
+literal|"POSIX P1003.1B semaphores support"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
