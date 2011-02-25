@@ -116,11 +116,15 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* XXX use a define common with other hash stuff ! */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|AH_ALEN_MAX
-value|20
+value|64
 end_define
 
 begin_comment
