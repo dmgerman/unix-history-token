@@ -560,7 +560,7 @@ value|2
 end_define
 
 begin_comment
-comment|/*  * Various features and capabilities for the acpi_get_features() method.  * In particular, these are used for the ACPI 3.0 _PDC and _OSC methods.  * See the Intel document titled "Processor Driver Capabilities Bit  * Definitions", number 302223-002.  */
+comment|/*  * Various features and capabilities for the acpi_get_features() method.  * In particular, these are used for the ACPI 3.0 _PDC and _OSC methods.  * See the Intel document titled "Intel Processor Vendor-Specific ACPI",  * number 302223-005.  */
 end_comment
 
 begin_define
@@ -660,6 +660,28 @@ end_define
 
 begin_comment
 comment|/* MP C1 support other than halt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_CAP_SMP_C3_NATIVE
+value|(1<< 9)
+end_define
+
+begin_comment
+comment|/* MP C2 and C3 support */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_CAP_PX_HW_COORD
+value|(1<< 11)
+end_define
+
+begin_comment
+comment|/* Intel P-state HW coordination */
 end_comment
 
 begin_comment
