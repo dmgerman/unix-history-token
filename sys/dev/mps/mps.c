@@ -8182,9 +8182,11 @@ literal|0
 condition|)
 block|{
 comment|/* Resource shortage, roll back! */
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_INFO
 argument_list|,
 literal|"out of chain frames\n"
 argument_list|)
