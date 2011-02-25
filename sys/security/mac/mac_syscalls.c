@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysproto.h>
 end_include
 
@@ -154,6 +160,16 @@ ifdef|#
 directive|ifdef
 name|MAC
 end_ifdef
+
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|mac
+argument_list|,
+literal|"Mandatory Access Control Framework support"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int

@@ -209,6 +209,16 @@ directive|include
 file|<fs/nfsclient/nfsdiskless.h>
 end_include
 
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|nfscl
+argument_list|,
+literal|"NFSv4 client"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|extern
 name|int

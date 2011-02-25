@@ -231,6 +231,16 @@ directive|include
 file|<machine/atomic.h>
 end_include
 
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|p1003_1b_mqueue
+argument_list|,
+literal|"POSIX P1003.1B message queues support"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Limits and constants  */
 end_comment

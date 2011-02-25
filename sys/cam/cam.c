@@ -143,6 +143,16 @@ directive|include
 file|<cam/cam_xpt.h>
 end_include
 
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|scbus
+argument_list|,
+literal|"SCSI devices support"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_endif
 endif|#
 directive|endif

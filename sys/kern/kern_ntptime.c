@@ -117,6 +117,27 @@ directive|include
 file|<sys/sysctl.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PPS_SYNC
+end_ifdef
+
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|pps_sync
+argument_list|,
+literal|"Support usage of external PPS signal by kernel PLL"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Single-precision macros for 64-bit machines  */
 end_comment

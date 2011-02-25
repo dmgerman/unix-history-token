@@ -185,6 +185,16 @@ directive|include
 file|<security/mac/mac_framework.h>
 end_include
 
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|p1003_1b_semaphores
+argument_list|,
+literal|"POSIX1003.1B semaphores support"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * TODO  *  * - Resource limits?  * - Update fstat(1)  * - Replace global sem_lock with mtx_pool locks?  * - Add a MAC check_create() hook for creating new named semaphores.  */
 end_comment

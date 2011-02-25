@@ -71,6 +71,12 @@ directive|include
 file|<sys/dtrace_bsd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -84,6 +90,16 @@ directive|define
 name|KDTRACE_THREAD_SIZE
 value|256
 end_define
+
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|kdtrace_hooks
+argument_list|,
+literal|"Kernel DTrace hooks which are required to load DTrace kernel modules"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|MALLOC_DEFINE

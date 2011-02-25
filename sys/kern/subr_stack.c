@@ -82,6 +82,22 @@ directive|include
 file|<sys/systm.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|stack
+argument_list|,
+literal|"Support for capturing kernel stack"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE

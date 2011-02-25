@@ -136,6 +136,16 @@ file|<security/mac/mac_framework.h>
 end_include
 
 begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|sysv_msg
+argument_list|,
+literal|"System V message queues support"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
 argument_list|(

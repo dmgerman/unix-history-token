@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -122,6 +128,16 @@ include|#
 directive|include
 file|<vm/vm_object.h>
 end_include
+
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|zero_copy_sockets
+argument_list|,
+literal|"Zero copy sockets support"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_struct
 struct|struct

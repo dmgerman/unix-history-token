@@ -228,6 +228,16 @@ file|<nfsclient/nfsdiskless.h>
 end_include
 
 begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|nfsclient
+argument_list|,
+literal|"NFS client"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|MALLOC_DEFINE
 argument_list|(
 name|M_NFSREQ

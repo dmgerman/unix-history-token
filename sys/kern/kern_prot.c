@@ -159,6 +159,27 @@ directive|include
 file|<sys/sysctl.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|REGRESSION
+end_ifdef
+
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|regression
+argument_list|,
+literal|"Kernel support for interfaces nessesary for regression testing (SECURITY RISK!)"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if

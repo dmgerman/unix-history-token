@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/endian.h>
 end_include
 
@@ -64,6 +70,16 @@ include|#
 directive|include
 file|<sys/mchain.h>
 end_include
+
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|libmchain
+argument_list|,
+literal|"mchain library"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|MODULE_VERSION

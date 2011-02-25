@@ -236,6 +236,16 @@ directive|endif
 end_endif
 
 begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|ktr
+argument_list|,
+literal|"Kernel support for KTR kernel tracing facility"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
 name|_debug

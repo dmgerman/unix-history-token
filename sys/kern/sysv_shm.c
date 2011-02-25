@@ -200,6 +200,16 @@ file|<vm/vm_pager.h>
 end_include
 
 begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|sysv_shm
+argument_list|,
+literal|"System V shared memory segments support"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
 argument_list|(

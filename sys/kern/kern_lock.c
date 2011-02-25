@@ -5423,6 +5423,16 @@ directive|ifdef
 name|INVARIANT_SUPPORT
 end_ifdef
 
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|invariant_support
+argument_list|,
+literal|"Support for modules compiled with INVARIANTS option"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifndef
 ifndef|#
 directive|ifndef

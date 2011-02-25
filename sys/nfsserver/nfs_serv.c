@@ -171,6 +171,16 @@ directive|include
 file|<nfsserver/nfsm_subs.h>
 end_include
 
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|nfsserver
+argument_list|,
+literal|"NFS server"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef

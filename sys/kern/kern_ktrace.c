@@ -178,6 +178,16 @@ directive|ifdef
 name|KTRACE
 end_ifdef
 
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|ktrace
+argument_list|,
+literal|"Kernel support for system-call tracing"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifndef
 ifndef|#
 directive|ifndef

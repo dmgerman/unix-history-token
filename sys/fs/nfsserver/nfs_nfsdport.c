@@ -51,6 +51,16 @@ directive|include
 file|<nlm/nlm.h>
 end_include
 
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|nfsd
+argument_list|,
+literal|"NFSv4 server"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|extern
 name|u_int32_t
