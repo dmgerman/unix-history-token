@@ -58,12 +58,95 @@ name|CONFIG_H
 end_ifndef
 
 begin_comment
-comment|/* Build multithreading support into LLVM */
+comment|/* Installation directory for binary executables */
 end_comment
 
 begin_comment
-comment|/* #undef LLVM_MULTITHREADED */
+comment|/* #undef LLVM_BINDIR */
 end_comment
+
+begin_comment
+comment|/* Time at which LLVM was configured */
+end_comment
+
+begin_comment
+comment|/* #undef LLVM_CONFIGTIME */
+end_comment
+
+begin_comment
+comment|/* Installation directory for data files */
+end_comment
+
+begin_comment
+comment|/* #undef LLVM_DATADIR */
+end_comment
+
+begin_comment
+comment|/* Installation directory for documentation */
+end_comment
+
+begin_comment
+comment|/* #undef LLVM_DOCSDIR */
+end_comment
+
+begin_comment
+comment|/* Installation directory for config files */
+end_comment
+
+begin_comment
+comment|/* #undef LLVM_ETCDIR */
+end_comment
+
+begin_comment
+comment|/* Host triple we were built on */
+end_comment
+
+begin_comment
+comment|/* #undef LLVM_HOSTTRIPLE */
+end_comment
+
+begin_comment
+comment|/* Installation directory for include files */
+end_comment
+
+begin_comment
+comment|/* #undef LLVM_INCLUDEDIR */
+end_comment
+
+begin_comment
+comment|/* Installation directory for .info files */
+end_comment
+
+begin_comment
+comment|/* #undef LLVM_INFODIR */
+end_comment
+
+begin_comment
+comment|/* Installation directory for libraries */
+end_comment
+
+begin_comment
+comment|/* #undef LLVM_LIBDIR */
+end_comment
+
+begin_comment
+comment|/* Installation directory for man pages */
+end_comment
+
+begin_comment
+comment|/* #undef LLVM_MANDIR */
+end_comment
+
+begin_comment
+comment|/* Build multithreading support into LLVM */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_MULTITHREADED
+value|0
+end_define
 
 begin_comment
 comment|/* LLVM architecture name for the native architecture, if available */
@@ -196,12 +279,9 @@ begin_comment
 comment|/* Installation prefix directory */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|LLVM_PREFIX
-value|"/usr"
-end_define
+begin_comment
+comment|/* #undef LLVM_PREFIX */
+end_comment
 
 begin_endif
 endif|#

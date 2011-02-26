@@ -108,24 +108,30 @@ begin_define
 define|#
 directive|define
 name|ENABLE_PIC
-value|1
+value|0
 end_define
 
 begin_comment
 comment|/* Define if threads enabled */
 end_comment
 
-begin_comment
-comment|/* #undef ENABLE_THREADS */
-end_comment
+begin_define
+define|#
+directive|define
+name|ENABLE_THREADS
+value|0
+end_define
 
 begin_comment
 comment|/* Define if timestamp information (e.g., __DATE___) is allowed */
 end_comment
 
-begin_comment
-comment|/* #undef ENABLE_TIMESTAMPS */
-end_comment
+begin_define
+define|#
+directive|define
+name|ENABLE_TIMESTAMPS
+value|0
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `argz_append' function. */
@@ -241,6 +247,17 @@ comment|/* #undef HAVE_CRASHREPORTERCLIENT_H */
 end_comment
 
 begin_comment
+comment|/* Define if __crashreporter_info__ exists. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_CRASHREPORTER_INFO
+value|0
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<ctype.h> header file. */
 end_comment
 
@@ -249,6 +266,17 @@ define|#
 directive|define
 name|HAVE_CTYPE_H
 value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the declaration of `strerror_s', and to 0 if you    don't. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DECL_STRERROR_S
+value|0
 end_define
 
 begin_comment
@@ -652,12 +680,9 @@ begin_comment
 comment|/* Define to 1 if you have the `pthread' library (-lpthread). */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_LIBPTHREAD
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_LIBPTHREAD */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `udis86' library (-ludis86). */
@@ -1266,14 +1291,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if you have the `strerror_s' function. */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_STRERROR_S */
-end_comment
-
-begin_comment
 comment|/* Define to 1 if you have the<strings.h> header file. */
 end_comment
 
@@ -1452,6 +1469,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the<sys/uio.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_UIO_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have<sys/wait.h> that is POSIX.1 compatible. */
 end_comment
 
@@ -1539,11 +1567,78 @@ comment|/* #undef HAVE_WINDOWS_H */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the `writev' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_WRITEV
+value|1
+end_define
+
+begin_comment
 comment|/* Define if the xdot.py program is available */
 end_comment
 
 begin_comment
 comment|/* #undef HAVE_XDOT_PY */
+end_comment
+
+begin_comment
+comment|/* Have host's _alloca */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE__ALLOCA */
+end_comment
+
+begin_comment
+comment|/* Have host's __alloca */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE___ALLOCA */
+end_comment
+
+begin_comment
+comment|/* Have host's __ashldi3 */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE___ASHLDI3 */
+end_comment
+
+begin_comment
+comment|/* Have host's __ashrdi3 */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE___ASHRDI3 */
+end_comment
+
+begin_comment
+comment|/* Have host's __chkstk */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE___CHKSTK */
+end_comment
+
+begin_comment
+comment|/* Have host's __cmpdi2 */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE___CMPDI2 */
+end_comment
+
+begin_comment
+comment|/* Have host's __divdi3 */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE___DIVDI3 */
 end_comment
 
 begin_comment
@@ -1558,12 +1653,175 @@ value|1
 end_define
 
 begin_comment
-comment|/* Build multithreading support into LLVM */
+comment|/* Have host's __fixdfdi */
 end_comment
 
 begin_comment
-comment|/* #undef LLVM_MULTITHREADED */
+comment|/* #undef HAVE___FIXDFDI */
 end_comment
+
+begin_comment
+comment|/* Have host's __fixsfdi */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE___FIXSFDI */
+end_comment
+
+begin_comment
+comment|/* Have host's __floatdidf */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE___FLOATDIDF */
+end_comment
+
+begin_comment
+comment|/* Have host's __lshrdi3 */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE___LSHRDI3 */
+end_comment
+
+begin_comment
+comment|/* Have host's __main */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE___MAIN */
+end_comment
+
+begin_comment
+comment|/* Have host's __moddi3 */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE___MODDI3 */
+end_comment
+
+begin_comment
+comment|/* Have host's __udivdi3 */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE___UDIVDI3 */
+end_comment
+
+begin_comment
+comment|/* Have host's __umoddi3 */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE___UMODDI3 */
+end_comment
+
+begin_comment
+comment|/* Have host's ___chkstk */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE____CHKSTK */
+end_comment
+
+begin_comment
+comment|/* Linker version detected at compile time. */
+end_comment
+
+begin_comment
+comment|/* #undef HOST_LINK_VERSION */
+end_comment
+
+begin_comment
+comment|/* Installation directory for binary executables */
+end_comment
+
+begin_comment
+comment|/* #undef LLVM_BINDIR */
+end_comment
+
+begin_comment
+comment|/* Time at which LLVM was configured */
+end_comment
+
+begin_comment
+comment|/* #undef LLVM_CONFIGTIME */
+end_comment
+
+begin_comment
+comment|/* Installation directory for data files */
+end_comment
+
+begin_comment
+comment|/* #undef LLVM_DATADIR */
+end_comment
+
+begin_comment
+comment|/* Installation directory for documentation */
+end_comment
+
+begin_comment
+comment|/* #undef LLVM_DOCSDIR */
+end_comment
+
+begin_comment
+comment|/* Installation directory for config files */
+end_comment
+
+begin_comment
+comment|/* #undef LLVM_ETCDIR */
+end_comment
+
+begin_comment
+comment|/* Host triple we were built on */
+end_comment
+
+begin_comment
+comment|/* #undef LLVM_HOSTTRIPLE */
+end_comment
+
+begin_comment
+comment|/* Installation directory for include files */
+end_comment
+
+begin_comment
+comment|/* #undef LLVM_INCLUDEDIR */
+end_comment
+
+begin_comment
+comment|/* Installation directory for .info files */
+end_comment
+
+begin_comment
+comment|/* #undef LLVM_INFODIR */
+end_comment
+
+begin_comment
+comment|/* Installation directory for libraries */
+end_comment
+
+begin_comment
+comment|/* #undef LLVM_LIBDIR */
+end_comment
+
+begin_comment
+comment|/* Installation directory for man pages */
+end_comment
+
+begin_comment
+comment|/* #undef LLVM_MANDIR */
+end_comment
+
+begin_comment
+comment|/* Build multithreading support into LLVM */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_MULTITHREADED
+value|0
+end_define
 
 begin_comment
 comment|/* LLVM architecture name for the native architecture, if available */
@@ -1704,12 +1962,9 @@ begin_comment
 comment|/* Installation prefix directory */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|LLVM_PREFIX
-value|"/usr"
-end_define
+begin_comment
+comment|/* #undef LLVM_PREFIX */
+end_comment
 
 begin_comment
 comment|/* Define if the OS needs help to load dependent libraries for dlopen(). */
