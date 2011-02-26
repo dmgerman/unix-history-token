@@ -3750,29 +3750,6 @@ name|flags
 decl_stmt|,
 name|page_req
 decl_stmt|;
-name|page_req
-operator|=
-name|req
-operator|&
-name|VM_ALLOC_CLASS_MASK
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|curthread
-operator|->
-name|td_intr_nesting_level
-operator|==
-literal|0
-operator|||
-name|page_req
-operator|==
-name|VM_ALLOC_INTERRUPT
-argument_list|,
-operator|(
-literal|"vm_page_alloc(NORMAL|SYSTEM) in interrupt context"
-operator|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3803,6 +3780,12 @@ name|MA_OWNED
 argument_list|)
 expr_stmt|;
 block|}
+name|page_req
+operator|=
+name|req
+operator|&
+name|VM_ALLOC_CLASS_MASK
+expr_stmt|;
 comment|/* 	 * The pager is allowed to eat deeper into the free page list. 	 */
 if|if
 condition|(
@@ -3818,13 +3801,10 @@ operator|!=
 name|VM_ALLOC_INTERRUPT
 operator|)
 condition|)
-block|{
 name|page_req
 operator|=
 name|VM_ALLOC_SYSTEM
 expr_stmt|;
-block|}
-empty_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
