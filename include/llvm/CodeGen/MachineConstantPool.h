@@ -70,6 +70,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cassert>
 end_include
 
@@ -411,6 +417,14 @@ operator|>
 name|Constants
 expr_stmt|;
 comment|///< The pool of constants.
+comment|/// MachineConstantPoolValues that use an existing MachineConstantPoolEntry.
+name|DenseSet
+operator|<
+name|MachineConstantPoolValue
+operator|*
+operator|>
+name|MachineCPVsSharingEntries
+expr_stmt|;
 name|public
 label|:
 comment|/// @brief The only constructor.

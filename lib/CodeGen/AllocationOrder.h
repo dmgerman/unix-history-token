@@ -140,6 +140,21 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+comment|/// isHint - Return true if PhysReg is a preferred register.
+name|bool
+name|isHint
+argument_list|(
+name|unsigned
+name|PhysReg
+argument_list|)
+decl|const
+block|{
+return|return
+name|PhysReg
+operator|==
+name|Hint
+return|;
+block|}
 block|}
 empty_stmt|;
 block|}

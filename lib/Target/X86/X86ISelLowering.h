@@ -421,6 +421,14 @@ name|UNPCKLPS
 block|,
 name|UNPCKLPD
 block|,
+name|VUNPCKLPS
+block|,
+name|VUNPCKLPD
+block|,
+name|VUNPCKLPSY
+block|,
+name|VUNPCKLPDY
+block|,
 name|UNPCKHPS
 block|,
 name|UNPCKHPD
@@ -858,6 +866,20 @@ name|getJumpTableEncoding
 argument_list|()
 specifier|const
 block|;
+name|virtual
+name|MVT
+name|getShiftAmountTy
+argument_list|(
+argument|EVT LHSTy
+argument_list|)
+specifier|const
+block|{
+return|return
+name|MVT
+operator|::
+name|i8
+return|;
+block|}
 name|virtual
 specifier|const
 name|MCExpr

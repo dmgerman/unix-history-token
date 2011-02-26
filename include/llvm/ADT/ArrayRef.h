@@ -236,7 +236,36 @@ argument_list|(
 argument|Vec.size()
 argument_list|)
 block|{}
-comment|// TODO: C arrays.
+comment|/// Construct an ArrayRef from a C array.
+name|template
+operator|<
+name|size_t
+name|N
+operator|>
+comment|/*implicit*/
+name|ArrayRef
+argument_list|(
+specifier|const
+name|T
+argument_list|(
+operator|&
+name|Arr
+argument_list|)
+index|[
+name|N
+index|]
+argument_list|)
+operator|:
+name|Data
+argument_list|(
+name|Arr
+argument_list|)
+operator|,
+name|Length
+argument_list|(
+argument|N
+argument_list|)
+block|{}
 comment|/// @}
 comment|/// @name Simple Operations
 comment|/// @{

@@ -157,6 +157,9 @@ name|DirectiveLoc
 operator|)
 return|;
 block|}
+name|bool
+name|BracketExpressionsSupported
+decl_stmt|;
 name|public
 label|:
 name|virtual
@@ -333,6 +336,15 @@ argument_list|()
 operator|.
 name|getTok
 argument_list|()
+return|;
+block|}
+name|bool
+name|HasBracketExpressions
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BracketExpressionsSupported
 return|;
 block|}
 comment|/// @}

@@ -342,6 +342,15 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
+block|;
+name|unsigned
+name|getSRetArgSize
+argument_list|(
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SDValue Callee
+argument_list|)
+specifier|const
 block|;   }
 decl_stmt|;
 block|}

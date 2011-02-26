@@ -412,15 +412,15 @@ return|return
 name|PointerTy
 return|;
 block|}
+name|virtual
 name|MVT
 name|getShiftAmountTy
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ShiftAmountTy
-return|;
-block|}
+argument_list|(
+name|EVT
+name|LHSTy
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// isSelectExpensive - Return true if the select operation is expensive for
 comment|/// this target.
 name|bool
@@ -806,10 +806,37 @@ return|return
 name|Expand
 return|;
 block|}
-comment|// If this is a type smaller than a legal vector type, promote to that
-comment|// type, e.g.<2 x float> -><4 x float>.
+comment|// Vectors with only one element are always scalarized.
 if|if
 condition|(
+name|VT
+operator|.
+name|getVectorNumElements
+argument_list|()
+operator|==
+literal|1
+condition|)
+return|return
+name|Expand
+return|;
+comment|// Vectors with a number of elements that is not a power of two are always
+comment|// widened, for example<3 x float> -><4 x float>.
+if|if
+condition|(
+operator|!
+name|VT
+operator|.
+name|isPow2VectorType
+argument_list|()
+condition|)
+return|return
+name|Promote
+return|;
+comment|// Vectors with a crazy element type are always expanded, for example
+comment|//<4 x i2> is expanded into two vectors of type<2 x i2>.
+if|if
+condition|(
+operator|!
 name|VT
 operator|.
 name|getVectorElementType
@@ -817,15 +844,12 @@ argument_list|()
 operator|.
 name|isSimple
 argument_list|()
-operator|&&
-name|VT
-operator|.
-name|getVectorNumElements
-argument_list|()
-operator|!=
-literal|1
 condition|)
-block|{
+return|return
+name|Expand
+return|;
+comment|// If this type is smaller than a legal vector type then widen it,
+comment|// otherwise expand it.  E.g.<2 x float> -><4 x float>.
 name|MVT
 name|EltType
 init|=
@@ -850,7 +874,7 @@ condition|(
 literal|1
 condition|)
 block|{
-comment|// Round up to the nearest power of 2.
+comment|// Round up to the next power of 2.
 name|NumElts
 operator|=
 operator|(
@@ -861,6 +885,9 @@ argument_list|(
 name|NumElts
 argument_list|)
 expr_stmt|;
+comment|// If there is no simple vector type with this many elements then there
+comment|// cannot be a larger legal vector type.  Note that this assumes that
+comment|// there are no skipped intermediate vector types in the simple types.
 name|MVT
 name|LargerVector
 init|=
@@ -880,8 +907,10 @@ operator|==
 name|MVT
 argument_list|()
 condition|)
-break|break;
-comment|// If this the larger type is legal, promote to it.
+return|return
+name|Expand
+return|;
+comment|// If this type is legal then widen the vector.
 if|if
 condition|(
 name|getTypeAction
@@ -895,17 +924,6 @@ return|return
 name|Promote
 return|;
 block|}
-block|}
-return|return
-name|VT
-operator|.
-name|isPow2VectorType
-argument_list|()
-condition|?
-name|Expand
-else|:
-name|Promote
-return|;
 block|}
 name|public
 label|:
@@ -3836,20 +3854,6 @@ comment|// the derived class constructor to configure this object for the target
 comment|//
 name|protected
 label|:
-comment|/// setShiftAmountType - Describe the type that should be used for shift
-comment|/// amounts.  This type defaults to the pointer type.
-name|void
-name|setShiftAmountType
-parameter_list|(
-name|MVT
-name|VT
-parameter_list|)
-block|{
-name|ShiftAmountTy
-operator|=
-name|VT
-expr_stmt|;
-block|}
 comment|/// setBooleanContents - Specify how the target extends the result of a
 comment|/// boolean value from i1 to a wider type.  See getBooleanContents.
 name|void
@@ -6028,11 +6032,6 @@ comment|/// UseUnderscoreLongJmp - This target prefers to use _longjmp to implem
 comment|/// llvm.longjmp.  Defaults to false.
 name|bool
 name|UseUnderscoreLongJmp
-decl_stmt|;
-comment|/// ShiftAmountTy - The type to use for shift amounts, usually i8 or whatever
-comment|/// PointerTy is.
-name|MVT
-name|ShiftAmountTy
 decl_stmt|;
 comment|/// BooleanContents - Information about the contents of the high-bits in
 comment|/// boolean values held in a type wider than i1.  See getBooleanContents.
