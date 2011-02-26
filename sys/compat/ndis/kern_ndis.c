@@ -2578,7 +2578,7 @@ name|prd
 operator|->
 name|u
 operator|.
-name|cprd_port
+name|cprd_mem
 operator|.
 name|cprd_start
 operator|.
@@ -2592,7 +2592,7 @@ name|prd
 operator|->
 name|u
 operator|.
-name|cprd_port
+name|cprd_mem
 operator|.
 name|cprd_len
 operator|=
