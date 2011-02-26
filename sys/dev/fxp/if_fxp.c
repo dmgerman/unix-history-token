@@ -313,7 +313,7 @@ file|"miibus_if.h"
 end_include
 
 begin_comment
-comment|/*  * NOTE!  On the Alpha, we have an alignment constraint.  The  * card DMAs the packet immediately following the RFA.  However,  * the first thing in the packet is a 14-byte Ethernet header.  * This means that the packet is misaligned.  To compensate,  * we actually offset the RFA 2 bytes into the cluster.  This  * alignes the packet after the Ethernet header at a 32-bit  * boundary.  HOWEVER!  This means that the RFA is misaligned!  */
+comment|/*  * NOTE!  On !x86 we typically have an alignment constraint.  The  * card DMAs the packet immediately following the RFA.  However,  * the first thing in the packet is a 14-byte Ethernet header.  * This means that the packet is misaligned.  To compensate,  * we actually offset the RFA 2 bytes into the cluster.  This  * alignes the packet after the Ethernet header at a 32-bit  * boundary.  HOWEVER!  This means that the RFA is misaligned!  */
 end_comment
 
 begin_define
@@ -3630,6 +3630,8 @@ name|fxp_stats
 argument_list|,
 name|BUS_DMA_NOWAIT
 operator||
+name|BUS_DMA_COHERENT
+operator||
 name|BUS_DMA_ZERO
 argument_list|,
 operator|&
@@ -3779,6 +3781,8 @@ operator|.
 name|cbl_list
 argument_list|,
 name|BUS_DMA_NOWAIT
+operator||
+name|BUS_DMA_COHERENT
 operator||
 name|BUS_DMA_ZERO
 argument_list|,
@@ -3935,6 +3939,8 @@ operator|->
 name|mcsp
 argument_list|,
 name|BUS_DMA_NOWAIT
+operator||
+name|BUS_DMA_COHERENT
 operator||
 name|BUS_DMA_ZERO
 argument_list|,
