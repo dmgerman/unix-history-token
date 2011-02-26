@@ -350,11 +350,6 @@ operator|*
 name|getRecordDecl
 argument_list|()
 block|;
-name|SourceRange
-name|getSourceRange
-argument_list|()
-specifier|const
-block|;
 specifier|static
 name|bool
 name|classof
@@ -5643,14 +5638,8 @@ name|SourceLocation
 name|OperatorLoc
 block|;
 comment|/// \brief The nested-name-specifier that follows the operator, if present.
-name|NestedNameSpecifier
-operator|*
-name|Qualifier
-block|;
-comment|/// \brief The source range that covers the nested-name-specifier, if
-comment|/// present.
-name|SourceRange
-name|QualifierRange
+name|NestedNameSpecifierLoc
+name|QualifierLoc
 block|;
 comment|/// \brief The type that precedes the '::' in a qualified pseudo-destructor
 comment|/// expression.
@@ -5672,6 +5661,10 @@ comment|/// resolve the name.
 name|PseudoDestructorTypeStorage
 name|DestroyedType
 block|;
+name|friend
+name|class
+name|ASTStmtReader
+block|;
 name|public
 operator|:
 name|CXXPseudoDestructorExpr
@@ -5684,9 +5677,7 @@ argument|bool isArrow
 argument_list|,
 argument|SourceLocation OperatorLoc
 argument_list|,
-argument|NestedNameSpecifier *Qualifier
-argument_list|,
-argument|SourceRange QualifierRange
+argument|NestedNameSpecifierLoc QualifierLoc
 argument_list|,
 argument|TypeSourceInfo *ScopeType
 argument_list|,
@@ -5720,26 +5711,14 @@ argument_list|(
 name|false
 argument_list|)
 block|,
-name|Qualifier
-argument_list|(
-literal|0
-argument_list|)
+name|QualifierLoc
+argument_list|()
 block|,
 name|ScopeType
 argument_list|(
 literal|0
 argument_list|)
 block|{ }
-name|void
-name|setBase
-argument_list|(
-argument|Expr *E
-argument_list|)
-block|{
-name|Base
-operator|=
-name|E
-block|; }
 name|Expr
 operator|*
 name|getBase
@@ -5765,33 +5744,20 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Qualifier
-operator|!=
-literal|0
+name|QualifierLoc
 return|;
 block|}
-comment|/// \brief If the member name was qualified, retrieves the source range of
-comment|/// the nested-name-specifier that precedes the member name. Otherwise,
-comment|/// returns an empty source range.
-name|SourceRange
-name|getQualifierRange
+comment|/// \brief Retrieves the nested-name-specifier that qualifies the type name,
+comment|/// with source-location information.
+name|NestedNameSpecifierLoc
+name|getQualifierLoc
 argument_list|()
 specifier|const
 block|{
 return|return
-name|QualifierRange
+name|QualifierLoc
 return|;
 block|}
-name|void
-name|setQualifierRange
-argument_list|(
-argument|SourceRange R
-argument_list|)
-block|{
-name|QualifierRange
-operator|=
-name|R
-block|; }
 comment|/// \brief If the member name was qualified, retrieves the
 comment|/// nested-name-specifier that precedes the member name. Otherwise, returns
 comment|/// NULL.
@@ -5802,19 +5768,12 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Qualifier
+name|QualifierLoc
+operator|.
+name|getNestedNameSpecifier
+argument_list|()
 return|;
 block|}
-name|void
-name|setQualifier
-argument_list|(
-argument|NestedNameSpecifier *NNS
-argument_list|)
-block|{
-name|Qualifier
-operator|=
-name|NNS
-block|; }
 comment|/// \brief Determine whether this pseudo-destructor expression was written
 comment|/// using an '->' (otherwise, it used a '.').
 name|bool
@@ -5826,16 +5785,6 @@ return|return
 name|IsArrow
 return|;
 block|}
-name|void
-name|setArrow
-argument_list|(
-argument|bool A
-argument_list|)
-block|{
-name|IsArrow
-operator|=
-name|A
-block|; }
 comment|/// \brief Retrieve the location of the '.' or '->' operator.
 name|SourceLocation
 name|getOperatorLoc
@@ -5846,16 +5795,6 @@ return|return
 name|OperatorLoc
 return|;
 block|}
-name|void
-name|setOperatorLoc
-argument_list|(
-argument|SourceLocation L
-argument_list|)
-block|{
-name|OperatorLoc
-operator|=
-name|L
-block|; }
 comment|/// \brief Retrieve the scope type in a qualified pseudo-destructor
 comment|/// expression.
 comment|///
@@ -5875,16 +5814,6 @@ return|return
 name|ScopeType
 return|;
 block|}
-name|void
-name|setScopeTypeInfo
-argument_list|(
-argument|TypeSourceInfo *Info
-argument_list|)
-block|{
-name|ScopeType
-operator|=
-name|Info
-block|; }
 comment|/// \brief Retrieve the location of the '::' in a qualified pseudo-destructor
 comment|/// expression.
 name|SourceLocation
@@ -5896,16 +5825,6 @@ return|return
 name|ColonColonLoc
 return|;
 block|}
-name|void
-name|setColonColonLoc
-argument_list|(
-argument|SourceLocation L
-argument_list|)
-block|{
-name|ColonColonLoc
-operator|=
-name|L
-block|; }
 comment|/// \brief Retrieve the location of the '~'.
 name|SourceLocation
 name|getTildeLoc
@@ -5916,16 +5835,6 @@ return|return
 name|TildeLoc
 return|;
 block|}
-name|void
-name|setTildeLoc
-argument_list|(
-argument|SourceLocation L
-argument_list|)
-block|{
-name|TildeLoc
-operator|=
-name|L
-block|; }
 comment|/// \brief Retrieve the source location information for the type
 comment|/// being destroyed.
 comment|///
@@ -7668,20 +7577,14 @@ operator|:
 name|public
 name|Expr
 block|{
+comment|/// \brief The nested-name-specifier that qualifies this unresolved
+comment|/// declaration name.
+name|NestedNameSpecifierLoc
+name|QualifierLoc
+block|;
 comment|/// The name of the entity we will be referencing.
 name|DeclarationNameInfo
 name|NameInfo
-block|;
-comment|/// QualifierRange - The source range that covers the
-comment|/// nested-name-specifier.
-name|SourceRange
-name|QualifierRange
-block|;
-comment|/// \brief The nested-name-specifier that qualifies this unresolved
-comment|/// declaration name.
-name|NestedNameSpecifier
-operator|*
-name|Qualifier
 block|;
 comment|/// \brief Whether the name includes explicit template arguments.
 name|bool
@@ -7691,9 +7594,7 @@ name|DependentScopeDeclRefExpr
 argument_list|(
 argument|QualType T
 argument_list|,
-argument|NestedNameSpecifier *Qualifier
-argument_list|,
-argument|SourceRange QualifierRange
+argument|NestedNameSpecifierLoc QualifierLoc
 argument_list|,
 argument|const DeclarationNameInfo&NameInfo
 argument_list|,
@@ -7709,9 +7610,7 @@ name|Create
 argument_list|(
 argument|ASTContext&C
 argument_list|,
-argument|NestedNameSpecifier *Qualifier
-argument_list|,
-argument|SourceRange QualifierRange
+argument|NestedNameSpecifierLoc QualifierLoc
 argument_list|,
 argument|const DeclarationNameInfo&NameInfo
 argument_list|,
@@ -7743,16 +7642,6 @@ return|return
 name|NameInfo
 return|;
 block|}
-name|void
-name|setNameInfo
-argument_list|(
-argument|const DeclarationNameInfo&N
-argument_list|)
-block|{
-name|NameInfo
-operator|=
-name|N
-block|; }
 comment|/// \brief Retrieve the name that this expression refers to.
 name|DeclarationName
 name|getDeclName
@@ -7766,19 +7655,6 @@ name|getName
 argument_list|()
 return|;
 block|}
-name|void
-name|setDeclName
-argument_list|(
-argument|DeclarationName N
-argument_list|)
-block|{
-name|NameInfo
-operator|.
-name|setName
-argument_list|(
-name|N
-argument_list|)
-block|; }
 comment|/// \brief Retrieve the location of the name within the expression.
 name|SourceLocation
 name|getLocation
@@ -7792,39 +7668,17 @@ name|getLoc
 argument_list|()
 return|;
 block|}
-name|void
-name|setLocation
-argument_list|(
-argument|SourceLocation L
-argument_list|)
-block|{
-name|NameInfo
-operator|.
-name|setLoc
-argument_list|(
-name|L
-argument_list|)
-block|; }
-comment|/// \brief Retrieve the source range of the nested-name-specifier.
-name|SourceRange
-name|getQualifierRange
+comment|/// \brief Retrieve the nested-name-specifier that qualifies the
+comment|/// name, with source location information.
+name|NestedNameSpecifierLoc
+name|getQualifierLoc
 argument_list|()
 specifier|const
 block|{
 return|return
-name|QualifierRange
+name|QualifierLoc
 return|;
 block|}
-name|void
-name|setQualifierRange
-argument_list|(
-argument|SourceRange R
-argument_list|)
-block|{
-name|QualifierRange
-operator|=
-name|R
-block|; }
 comment|/// \brief Retrieve the nested-name-specifier that qualifies this
 comment|/// declaration.
 name|NestedNameSpecifier
@@ -7834,19 +7688,12 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Qualifier
+name|QualifierLoc
+operator|.
+name|getNestedNameSpecifier
+argument_list|()
 return|;
 block|}
-name|void
-name|setQualifier
-argument_list|(
-argument|NestedNameSpecifier *NNS
-argument_list|)
-block|{
-name|Qualifier
-operator|=
-name|NNS
-block|; }
 comment|/// Determines whether this lookup had explicit template arguments.
 name|bool
 name|hasExplicitTemplateArgs
@@ -8014,9 +7861,9 @@ block|{
 name|SourceRange
 name|Range
 argument_list|(
-name|QualifierRange
+name|QualifierLoc
 operator|.
-name|getBegin
+name|getBeginLoc
 argument_list|()
 argument_list|,
 name|getLocation

@@ -209,5 +209,61 @@ comment|// expected-error {{no member named 'bad2' in 'struct test'}}
 block|}
 end_function
 
+begin_comment
+comment|// Enumeration types with a fixed underlying type.
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|int
+name|seventeen
+init|=
+literal|17
+decl_stmt|;
+end_decl_stmt
+
+begin_typedef
+typedef|typedef
+name|int
+name|Int
+typedef|;
+end_typedef
+
+begin_struct
+struct|struct
+name|X0
+block|{
+enum|enum
+name|E1
+enum|:
+name|Int
+block|{
+name|SomeOtherValue
+block|}
+name|field
+enum|;
+comment|// expected-warning{{enumeration types with a fixed underlying type are a Microsoft extension}}
+enum_decl|enum
+name|E1
+enum_decl|:
+name|seventeen
+enum_decl|;
+block|}
+struct|;
+end_struct
+
+begin_enum_decl
+enum_decl|enum :
+name|long
+name|long
+block|{
+comment|// expected-warning{{enumeration types with a fixed underlying type are a Microsoft extension}}
+name|SomeValue
+operator|=
+literal|0x100000000
+block|}
+enum_decl|;
+end_enum_decl
+
 end_unit
 

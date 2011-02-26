@@ -81,6 +81,12 @@ struct_decl|;
 name|class
 name|Sema
 decl_stmt|;
+name|class
+name|Scope
+decl_stmt|;
+name|class
+name|LookupResult
+decl_stmt|;
 comment|/// \brief An abstract interface that should be implemented by
 comment|/// external AST sources that also provide information for semantic
 comment|/// analysis.
@@ -140,6 +146,27 @@ argument_list|(
 argument|Selector Sel
 argument_list|)
 block|;
+comment|/// \brief Do last resort, unqualified lookup on a LookupResult that
+comment|/// Sema cannot find.
+comment|///
+comment|/// \param R a LookupResult that is being recovered.
+comment|///
+comment|/// \param S the Scope of the identifier occurrence.
+comment|///
+comment|/// \return true to tell Sema to recover using the LookupResult.
+name|virtual
+name|bool
+name|LookupUnqualified
+argument_list|(
+argument|LookupResult&R
+argument_list|,
+argument|Scope *S
+argument_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|// isa/cast/dyn_cast support
 specifier|static
 name|bool

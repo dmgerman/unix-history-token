@@ -474,7 +474,7 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|illegaldiv1
+name|illegaldiv1a
 index|[
 literal|1
 operator|||
@@ -487,6 +487,23 @@ end_decl_stmt
 
 begin_comment
 comment|// expected-warning {{division by zero is undefined}}
+end_comment
+
+begin_decl_stmt
+name|int
+name|illegaldiv1b
+index|[
+literal|1
+operator|&&
+literal|1
+operator|/
+literal|0
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-warning {{division by zero is undefined}} expected-error{{variable length array declaration not allowed at file scope}}
 end_comment
 
 begin_decl_stmt
@@ -522,6 +539,29 @@ end_decl_stmt
 
 begin_comment
 comment|// expected-error {{variable length array declaration not allowed at file scope}}
+end_comment
+
+begin_comment
+comment|// PR9262
+end_comment
+
+begin_decl_stmt
+name|int
+name|illegaldiv4
+index|[
+literal|0
+operator|/
+operator|(
+literal|1
+operator|/
+literal|0
+operator|)
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-warning {{division by zero is undefined}} expected-error {{variable length array declaration not allowed at file scope}}
 end_comment
 
 begin_decl_stmt

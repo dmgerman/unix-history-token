@@ -151,6 +151,8 @@ comment|/// parameter list.
 name|unsigned
 name|NumParams
 decl_stmt|;
+name|protected
+label|:
 name|TemplateParameterList
 argument_list|(
 argument|SourceLocation TemplateLoc
@@ -395,6 +397,54 @@ return|;
 block|}
 block|}
 empty_stmt|;
+comment|/// FixedSizeTemplateParameterList - Stores a list of template parameters for a
+comment|/// TemplateDecl and its derived classes. Suitable for creating on the stack.
+name|template
+operator|<
+name|size_t
+name|N
+operator|>
+name|class
+name|FixedSizeTemplateParameterList
+operator|:
+name|public
+name|TemplateParameterList
+block|{
+name|NamedDecl
+operator|*
+name|Params
+index|[
+name|N
+index|]
+block|;
+name|public
+operator|:
+name|FixedSizeTemplateParameterList
+argument_list|(
+argument|SourceLocation TemplateLoc
+argument_list|,
+argument|SourceLocation LAngleLoc
+argument_list|,
+argument|NamedDecl **Params
+argument_list|,
+argument|SourceLocation RAngleLoc
+argument_list|)
+operator|:
+name|TemplateParameterList
+argument_list|(
+argument|TemplateLoc
+argument_list|,
+argument|LAngleLoc
+argument_list|,
+argument|Params
+argument_list|,
+argument|N
+argument_list|,
+argument|RAngleLoc
+argument_list|)
+block|{   }
+block|}
+expr_stmt|;
 comment|/// \brief A template argument list.
 name|class
 name|TemplateArgumentList
@@ -3173,6 +3223,11 @@ operator|.
 name|getTypePtrOrNull
 argument_list|()
 block|;   }
+comment|/// Sema creates these on the stack during auto type deduction.
+name|friend
+name|class
+name|Sema
+block|;
 name|public
 operator|:
 specifier|static

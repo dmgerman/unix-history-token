@@ -453,10 +453,15 @@ name|Int8PtrPtrTy
 expr_stmt|;
 block|}
 union|;
-comment|/// The width of an address-zero pointer.
+comment|/// The width of a pointer into the generic address space.
 name|unsigned
 name|char
 name|PointerWidthInBits
+decl_stmt|;
+comment|/// The alignment of a pointer into the generic address space.
+name|unsigned
+name|char
+name|PointerAlignInBytes
 decl_stmt|;
 block|}
 struct|;
@@ -1143,6 +1148,17 @@ name|isTargetDarwin
 argument_list|()
 specifier|const
 expr_stmt|;
+name|bool
+name|shouldUseTBAA
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TBAA
+operator|!=
+literal|0
+return|;
+block|}
 name|llvm
 operator|::
 name|MDNode
@@ -1537,9 +1553,9 @@ argument_list|,
 argument|const VarDecl *variable
 argument_list|)
 expr_stmt|;
-comment|/// getGlobalUniqueCount - Fetches the global unique block count.
+comment|/// getUniqueBlockCount - Fetches the global unique block count.
 name|int
-name|getGlobalUniqueCount
+name|getUniqueBlockCount
 parameter_list|()
 block|{
 return|return

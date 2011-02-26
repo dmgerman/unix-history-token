@@ -78,6 +78,9 @@ comment|///< Paths for both `#include ""` and `#include<>`. (`-I`)
 name|System
 block|,
 comment|///< Like Angled, but marks system directories.
+name|CXXSystem
+block|,
+comment|///< Like System, but only used for C++.
 name|After
 comment|///< Like System, but searched after the system directories.
 block|}
@@ -176,17 +179,6 @@ operator|<
 name|Entry
 operator|>
 name|UserEntries
-expr_stmt|;
-comment|/// If non-empty, the list of C++ standard include paths to use.
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|string
-operator|>
-name|CXXSystemIncludes
 expr_stmt|;
 comment|/// A (system-path) delimited list of include paths to be added from the
 comment|/// environment following the user specified includes (but prior to builtin

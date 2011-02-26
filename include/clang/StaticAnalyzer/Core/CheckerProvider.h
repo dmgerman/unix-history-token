@@ -73,6 +73,16 @@ end_include
 
 begin_decl_stmt
 name|namespace
+name|llvm
+block|{
+name|class
+name|raw_ostream
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
 name|clang
 block|{
 name|namespace
@@ -209,6 +219,19 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
+name|virtual
+name|void
+name|printHelp
+argument_list|(
+name|llvm
+operator|::
+name|raw_ostream
+operator|&
+name|OS
+argument_list|)
+init|=
+literal|0
+decl_stmt|;
 block|}
 empty_stmt|;
 block|}

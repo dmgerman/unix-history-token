@@ -51,6 +51,9 @@ name|class
 name|AnalyzerOptions
 decl_stmt|;
 name|class
+name|LangOptions
+decl_stmt|;
+name|class
 name|Diagnostic
 decl_stmt|;
 name|namespace
@@ -67,6 +70,11 @@ specifier|const
 name|AnalyzerOptions
 modifier|&
 name|opts
+parameter_list|,
+specifier|const
+name|LangOptions
+modifier|&
+name|langOpts
 parameter_list|,
 name|Diagnostic
 modifier|&

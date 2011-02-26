@@ -70,5 +70,34 @@ asm|asm( 		"opr %[vout],%[vin]" 		: [vout] "=r,=m,=r" (*vout) 		: [vin] "r,m,r" 
 block|}
 end_function
 
+begin_comment
+comment|// PR8959 - This should implicitly truncate the immediate to a byte.
+end_comment
+
+begin_function
+name|int
+name|test4
+parameter_list|(
+specifier|volatile
+name|int
+modifier|*
+name|addr
+parameter_list|)
+block|{
+name|unsigned
+name|char
+name|oldval
+decl_stmt|;
+asm|__asm__ ("frob %0" : "=r"(oldval) : "0"(0xff));
+return|return
+operator|(
+name|int
+operator|)
+name|oldval
+return|;
+comment|// CHECK: call i8 asm "frob $0", "=r,0{{.*}}"(i8 -1)
+block|}
+end_function
+
 end_unit
 

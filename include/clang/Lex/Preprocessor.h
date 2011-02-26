@@ -2893,26 +2893,6 @@ modifier|&
 name|Tok
 parameter_list|)
 function_decl|;
-name|void
-name|Handle_Pragma
-argument_list|(
-name|unsigned
-name|Introducer
-argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|StrVal
-argument_list|,
-name|SourceLocation
-name|PragmaLoc
-argument_list|,
-name|SourceLocation
-name|RParenLoc
-argument_list|)
-decl_stmt|;
 comment|/// EnterSourceFileWithLexer - Add a lexer to the top of the include stack and
 comment|/// start lexing tokens from it instead of the current buffer.
 name|void

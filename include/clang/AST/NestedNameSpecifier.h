@@ -99,6 +99,9 @@ name|class
 name|ASTContext
 decl_stmt|;
 name|class
+name|NamespaceAliasDecl
+decl_stmt|;
+name|class
 name|NamespaceDecl
 decl_stmt|;
 name|class
@@ -109,6 +112,9 @@ name|PrintingPolicy
 struct_decl|;
 name|class
 name|Type
+decl_stmt|;
+name|class
+name|TypeLoc
 decl_stmt|;
 name|class
 name|LangOptions
@@ -130,6 +136,27 @@ name|llvm
 operator|::
 name|FoldingSetNode
 block|{
+comment|/// \brief Enumeration describing
+block|enum
+name|StoredSpecifierKind
+block|{
+name|StoredIdentifier
+operator|=
+literal|0
+block|,
+name|StoredNamespaceOrAlias
+operator|=
+literal|1
+block|,
+name|StoredTypeSpec
+operator|=
+literal|2
+block|,
+name|StoredTypeSpecWithTemplate
+operator|=
+literal|3
+block|}
+block|;
 comment|/// \brief The nested name specifier that precedes this nested name
 comment|/// specifier.
 comment|///
@@ -144,6 +171,8 @@ name|NestedNameSpecifier
 operator|*
 block|,
 literal|2
+block|,
+name|StoredSpecifierKind
 operator|>
 name|Prefix
 block|;
@@ -167,29 +196,22 @@ name|SpecifierKind
 block|{
 comment|/// \brief An identifier, stored as an IdentifierInfo*.
 name|Identifier
-operator|=
-literal|0
 block|,
-comment|/// \brief A namespace, stored as a Namespace*.
+comment|/// \brief A namespace, stored as a NamespaceDecl*.
 name|Namespace
-operator|=
-literal|1
+block|,
+comment|/// \brief A namespace alias, stored as a NamespaceAliasDecl*.
+name|NamespaceAlias
 block|,
 comment|/// \brief A type, stored as a Type*.
 name|TypeSpec
-operator|=
-literal|2
 block|,
 comment|/// \brief A type that was preceded by the 'template' keyword,
 comment|/// stored as a Type*.
 name|TypeSpecWithTemplate
-operator|=
-literal|3
 block|,
 comment|/// \brief The global specifier '::'. There is no stored value.
 name|Global
-operator|=
-literal|4
 block|}
 block|;
 name|private
@@ -202,7 +224,7 @@ name|Prefix
 argument_list|(
 literal|0
 argument_list|,
-literal|0
+name|StoredIdentifier
 argument_list|)
 block|,
 name|Specifier
@@ -314,6 +336,26 @@ operator|*
 name|NS
 argument_list|)
 block|;
+comment|/// \brief Builds a nested name specifier that names a namespace alias.
+specifier|static
+name|NestedNameSpecifier
+operator|*
+name|Create
+argument_list|(
+specifier|const
+name|ASTContext
+operator|&
+name|Context
+argument_list|,
+name|NestedNameSpecifier
+operator|*
+name|Prefix
+argument_list|,
+name|NamespaceAliasDecl
+operator|*
+name|Alias
+argument_list|)
+block|;
 comment|/// \brief Builds a nested name specifier that names a type.
 specifier|static
 name|NestedNameSpecifier
@@ -388,26 +430,7 @@ name|SpecifierKind
 name|getKind
 argument_list|()
 specifier|const
-block|{
-if|if
-condition|(
-name|Specifier
-operator|==
-literal|0
-condition|)
-return|return
-name|Global
-return|;
-return|return
-operator|(
-name|SpecifierKind
-operator|)
-name|Prefix
-operator|.
-name|getInt
-argument_list|()
-return|;
-block|}
+block|;
 comment|/// \brief Retrieve the identifier stored in this nested name
 comment|/// specifier.
 name|IdentifierInfo
@@ -423,7 +446,7 @@ operator|.
 name|getInt
 argument_list|()
 operator|==
-name|Identifier
+name|StoredIdentifier
 condition|)
 return|return
 operator|(
@@ -436,54 +459,24 @@ return|return
 literal|0
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Retrieve the namespace stored in this nested name
-end_comment
-
-begin_comment
 comment|/// specifier.
-end_comment
-
-begin_expr_stmt
 name|NamespaceDecl
 operator|*
 name|getAsNamespace
 argument_list|()
 specifier|const
-block|{
-if|if
-condition|(
-name|Prefix
-operator|.
-name|getInt
-argument_list|()
-operator|==
-name|Namespace
-condition|)
-return|return
-operator|(
-name|NamespaceDecl
+expr_stmt|;
+comment|/// \brief Retrieve the namespace alias stored in this nested name
+comment|/// specifier.
+name|NamespaceAliasDecl
 operator|*
-operator|)
-name|Specifier
-return|;
-end_expr_stmt
-
-begin_return
-return|return
-literal|0
-return|;
-end_return
-
-begin_comment
-unit|}
+name|getAsNamespaceAlias
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Retrieve the type stored in this nested name specifier.
-end_comment
-
-begin_expr_stmt
-unit|const
+specifier|const
 name|Type
 operator|*
 name|getAsType
@@ -497,14 +490,14 @@ operator|.
 name|getInt
 argument_list|()
 operator|==
-name|TypeSpec
+name|StoredTypeSpec
 operator|||
 name|Prefix
 operator|.
 name|getInt
 argument_list|()
 operator|==
-name|TypeSpecWithTemplate
+name|StoredTypeSpecWithTemplate
 condition|)
 return|return
 operator|(
@@ -514,16 +507,13 @@ operator|*
 operator|)
 name|Specifier
 return|;
-end_expr_stmt
-
-begin_return
 return|return
 literal|0
 return|;
-end_return
+block|}
+end_decl_stmt
 
 begin_comment
-unit|}
 comment|/// \brief Whether this nested name specifier refers to a dependent
 end_comment
 
@@ -531,16 +521,13 @@ begin_comment
 comment|/// type or not.
 end_comment
 
-begin_macro
-unit|bool
+begin_expr_stmt
+name|bool
 name|isDependent
 argument_list|()
-end_macro
-
-begin_decl_stmt
 specifier|const
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// \brief Whether this nested-name-specifier contains an unexpanded
@@ -636,6 +623,334 @@ name|LO
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+unit|};
+comment|/// \brief A C++ nested-name-specifier augmented with source location
+end_comment
+
+begin_comment
+comment|/// information.
+end_comment
+
+begin_decl_stmt
+name|class
+name|NestedNameSpecifierLoc
+block|{
+name|NestedNameSpecifier
+modifier|*
+name|Qualifier
+decl_stmt|;
+name|void
+modifier|*
+name|Data
+decl_stmt|;
+comment|/// \brief Determines the data length for the last component in the
+comment|/// given nested-name-specifier.
+specifier|static
+name|unsigned
+name|getLocalDataLength
+parameter_list|(
+name|NestedNameSpecifier
+modifier|*
+name|Qualifier
+parameter_list|)
+function_decl|;
+comment|/// \brief Determines the data length for the entire
+comment|/// nested-name-specifier.
+specifier|static
+name|unsigned
+name|getDataLength
+parameter_list|(
+name|NestedNameSpecifier
+modifier|*
+name|Qualifier
+parameter_list|)
+function_decl|;
+name|public
+label|:
+comment|/// \brief Construct an empty nested-name-specifier.
+name|NestedNameSpecifierLoc
+argument_list|()
+operator|:
+name|Qualifier
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Data
+argument_list|(
+literal|0
+argument_list|)
+block|{ }
+comment|/// \brief Construct a nested-name-specifier with source location information
+comment|/// from
+name|NestedNameSpecifierLoc
+argument_list|(
+name|NestedNameSpecifier
+operator|*
+name|Qualifier
+argument_list|,
+name|void
+operator|*
+name|Data
+argument_list|)
+operator|:
+name|Qualifier
+argument_list|(
+name|Qualifier
+argument_list|)
+operator|,
+name|Data
+argument_list|(
+argument|Data
+argument_list|)
+block|{ }
+comment|/// \brief Evalutes true when this nested-name-specifier location is
+comment|/// non-empty.
+name|operator
+name|bool
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Qualifier
+return|;
+block|}
+comment|/// \brief Retrieve the nested-name-specifier to which this instance
+comment|/// refers.
+name|NestedNameSpecifier
+operator|*
+name|getNestedNameSpecifier
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Qualifier
+return|;
+block|}
+comment|/// \brief Retrieve the opaque pointer that refers to source-location data.
+name|void
+operator|*
+name|getOpaqueData
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Data
+return|;
+block|}
+comment|/// \brief Retrieve the source range covering the entirety of this
+comment|/// nested-name-specifier.
+comment|///
+comment|/// For example, if this instance refers to a nested-name-specifier
+comment|/// \c ::std::vector<int>::, the returned source range would cover
+comment|/// from the initial '::' to the last '::'.
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief Retrieve the source range covering just the last part of
+comment|/// this nested-name-specifier, not including the prefix.
+comment|///
+comment|/// For example, if this instance refers to a nested-name-specifier
+comment|/// \c ::std::vector<int>::, the returned source range would cover
+comment|/// from "vector" to the last '::'.
+name|SourceRange
+name|getLocalSourceRange
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief Retrieve the location of the beginning of this
+comment|/// nested-name-specifier.
+name|SourceLocation
+name|getBeginLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getSourceRange
+argument_list|()
+operator|.
+name|getBegin
+argument_list|()
+return|;
+block|}
+comment|/// \brief Retrieve the location of the end of this
+comment|/// nested-name-specifier.
+name|SourceLocation
+name|getEndLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getSourceRange
+argument_list|()
+operator|.
+name|getEnd
+argument_list|()
+return|;
+block|}
+comment|/// \brief Retrieve the location of the beginning of this
+comment|/// component of the nested-name-specifier.
+name|SourceLocation
+name|getLocalBeginLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getLocalSourceRange
+argument_list|()
+operator|.
+name|getBegin
+argument_list|()
+return|;
+block|}
+comment|/// \brief Retrieve the location of the end of this component of the
+comment|/// nested-name-specifier.
+name|SourceLocation
+name|getLocalEndLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getLocalSourceRange
+argument_list|()
+operator|.
+name|getEnd
+argument_list|()
+return|;
+block|}
+comment|/// \brief Return the prefix of this nested-name-specifier.
+comment|///
+comment|/// For example, if this instance refers to a nested-name-specifier
+comment|/// \c ::std::vector<int>::, the prefix is \c ::std::. Note that the
+comment|/// returned prefix may be empty, if this is the first component of
+comment|/// the nested-name-specifier.
+name|NestedNameSpecifierLoc
+name|getPrefix
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+operator|!
+name|Qualifier
+condition|)
+return|return
+operator|*
+name|this
+return|;
+return|return
+name|NestedNameSpecifierLoc
+argument_list|(
+name|Qualifier
+operator|->
+name|getPrefix
+argument_list|()
+argument_list|,
+name|Data
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// \brief For a nested-name-specifier that refers to a type,
+end_comment
+
+begin_comment
+comment|/// retrieve the type with source-location information.
+end_comment
+
+begin_expr_stmt
+name|TypeLoc
+name|getTypeLoc
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Determines the data length for the entire
+end_comment
+
+begin_comment
+comment|/// nested-name-specifier.
+end_comment
+
+begin_expr_stmt
+name|unsigned
+name|getDataLength
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getDataLength
+argument_list|(
+name|Qualifier
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|friend
+name|bool
+name|operator
+operator|==
+operator|(
+name|NestedNameSpecifierLoc
+name|X
+operator|,
+name|NestedNameSpecifierLoc
+name|Y
+operator|)
+block|{
+return|return
+name|X
+operator|.
+name|Qualifier
+operator|==
+name|Y
+operator|.
+name|Qualifier
+operator|&&
+name|X
+operator|.
+name|Data
+operator|==
+name|Y
+operator|.
+name|Data
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|friend
+name|bool
+name|operator
+operator|!=
+operator|(
+name|NestedNameSpecifierLoc
+name|X
+operator|,
+name|NestedNameSpecifierLoc
+name|Y
+operator|)
+block|{
+return|return
+operator|!
+operator|(
+name|X
+operator|==
+name|Y
+operator|)
+return|;
+block|}
+end_expr_stmt
 
 begin_comment
 unit|};

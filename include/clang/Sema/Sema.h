@@ -927,6 +927,20 @@ name|RecordDeclSetTy
 operator|>
 name|PureVirtualClassDiagSet
 expr_stmt|;
+comment|/// ParsingInitForAutoVars - a set of declarations with auto types for which
+comment|/// we are currently parsing the initializer.
+name|llvm
+operator|::
+name|SmallPtrSet
+operator|<
+specifier|const
+name|Decl
+operator|*
+operator|,
+literal|4
+operator|>
+name|ParsingInitForAutoVars
+expr_stmt|;
 comment|/// \brief A mapping from external names to the most recent
 comment|/// locally-scoped external declaration with that name.
 comment|///
@@ -2585,12 +2599,37 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|PopFunctionOrBlockScope
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|(
+specifier|const
+name|sema
+operator|::
+name|AnalysisBasedWarnings
+operator|::
+name|Policy
+operator|*
+name|WP
+operator|=
+literal|0
+argument_list|,
+specifier|const
+name|Decl
+operator|*
+name|D
+operator|=
+literal|0
+argument_list|,
+specifier|const
+name|BlockExpr
+operator|*
+name|blkExpr
+operator|=
+literal|0
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|sema
@@ -3921,6 +3960,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|FinalizeDeclaration
+parameter_list|(
+name|Decl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|DeclGroupPtrTy
 name|FinalizeDeclaratorGroup
 parameter_list|(
@@ -3940,6 +3990,26 @@ name|Group
 parameter_list|,
 name|unsigned
 name|NumDecls
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|DeclGroupPtrTy
+name|BuildDeclaratorGroup
+parameter_list|(
+name|Decl
+modifier|*
+modifier|*
+name|Group
+parameter_list|,
+name|unsigned
+name|NumDecls
+parameter_list|,
+name|bool
+name|TypeMayContainAuto
+init|=
+name|true
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -7589,7 +7659,10 @@ name|ImpMethod
 parameter_list|,
 name|ObjCMethodDecl
 modifier|*
-name|IntfMethod
+name|MethodDecl
+parameter_list|,
+name|bool
+name|IsProtocolMethodDecl
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -9625,12 +9698,45 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/// \brief Conditionally issue a diagnostic based on the current
+end_comment
+
+begin_comment
+comment|/// evaluation context.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param stmt - If stmt is non-null, delay reporting the diagnostic until
+end_comment
+
+begin_comment
+comment|///  the function body is parsed, and then do a basic reachability analysis to
+end_comment
+
+begin_comment
+comment|///  determine if the statement is reachable.  If it is unreachable, the
+end_comment
+
+begin_comment
+comment|///  diagnostic will not be emitted.
+end_comment
+
 begin_function_decl
 name|bool
 name|DiagRuntimeBehavior
 parameter_list|(
 name|SourceLocation
 name|Loc
+parameter_list|,
+specifier|const
+name|Stmt
+modifier|*
+name|stmt
 parameter_list|,
 specifier|const
 name|PartialDiagnostic
@@ -13294,16 +13400,47 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// ActOnCXXGlobalScopeSpecifier - Return the object that represents the
+comment|/// \brief The parser has parsed a global nested-name-specifier '::'.
 end_comment
 
 begin_comment
-comment|/// global scope ('::').
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param S The scope in which this nested-name-specifier occurs.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param CCLoc The location of the '::'.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param SS The nested-name-specifier, which will be updated in-place
+end_comment
+
+begin_comment
+comment|/// to reflect the parsed nested-name-specifier.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns true if an error occurred, false otherwise.
 end_comment
 
 begin_function_decl
-name|NestedNameSpecifier
-modifier|*
+name|bool
 name|ActOnCXXGlobalScopeSpecifier
 parameter_list|(
 name|Scope
@@ -13312,6 +13449,10 @@ name|S
 parameter_list|,
 name|SourceLocation
 name|CCLoc
+parameter_list|,
+name|CXXScopeSpec
+modifier|&
+name|SS
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -13369,37 +13510,36 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|NestedNameSpecifier
-modifier|*
+name|bool
 name|BuildCXXNestedNameSpecifier
 parameter_list|(
 name|Scope
 modifier|*
 name|S
 parameter_list|,
-name|CXXScopeSpec
+name|IdentifierInfo
 modifier|&
-name|SS
+name|Identifier
 parameter_list|,
 name|SourceLocation
-name|IdLoc
+name|IdentifierLoc
 parameter_list|,
 name|SourceLocation
 name|CCLoc
 parameter_list|,
-name|IdentifierInfo
-modifier|&
-name|II
-parameter_list|,
 name|QualType
 name|ObjectType
+parameter_list|,
+name|bool
+name|EnteringContext
+parameter_list|,
+name|CXXScopeSpec
+modifier|&
+name|SS
 parameter_list|,
 name|NamedDecl
 modifier|*
 name|ScopeLookupResult
-parameter_list|,
-name|bool
-name|EnteringContext
 parameter_list|,
 name|bool
 name|ErrorRecoveryLookup
@@ -13407,34 +13547,121 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/// \brief The parser has parsed a nested-name-specifier 'identifier::'.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param S The scope in which this nested-name-specifier occurs.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param Identifier The identifier preceding the '::'.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param IdentifierLoc The location of the identifier.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param CCLoc The location of the '::'.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param ObjectType The type of the object, if we're parsing
+end_comment
+
+begin_comment
+comment|/// nested-name-specifier in a member access expression.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param EnteringContext Whether we're entering the context nominated by
+end_comment
+
+begin_comment
+comment|/// this nested-name-specifier.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param SS The nested-name-specifier, which is both an input
+end_comment
+
+begin_comment
+comment|/// parameter (the nested-name-specifier before this type) and an
+end_comment
+
+begin_comment
+comment|/// output parameter (containing the full nested-name-specifier,
+end_comment
+
+begin_comment
+comment|/// including this new type).
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns true if an error occurred, false otherwise.
+end_comment
+
 begin_function_decl
-name|NestedNameSpecifier
-modifier|*
+name|bool
 name|ActOnCXXNestedNameSpecifier
 parameter_list|(
 name|Scope
 modifier|*
 name|S
 parameter_list|,
-name|CXXScopeSpec
+name|IdentifierInfo
 modifier|&
-name|SS
+name|Identifier
 parameter_list|,
 name|SourceLocation
-name|IdLoc
+name|IdentifierLoc
 parameter_list|,
 name|SourceLocation
 name|CCLoc
-parameter_list|,
-name|IdentifierInfo
-modifier|&
-name|II
 parameter_list|,
 name|ParsedType
 name|ObjectType
 parameter_list|,
 name|bool
 name|EnteringContext
+parameter_list|,
+name|CXXScopeSpec
+modifier|&
+name|SS
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -13453,7 +13680,13 @@ name|SS
 parameter_list|,
 name|IdentifierInfo
 modifier|&
-name|II
+name|Identifier
+parameter_list|,
+name|SourceLocation
+name|IdentifierLoc
+parameter_list|,
+name|SourceLocation
+name|ColonLoc
 parameter_list|,
 name|ParsedType
 name|ObjectType
@@ -13465,59 +13698,184 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// ActOnCXXNestedNameSpecifier - Called during parsing of a
+comment|/// \brief The parser has parsed a nested-name-specifier 'type::'.
 end_comment
 
 begin_comment
-comment|/// nested-name-specifier that involves a template-id, e.g.,
+comment|///
 end_comment
 
 begin_comment
-comment|/// "foo::bar<int, float>::", and now we need to build a scope
+comment|/// \param S The scope in which this nested-name-specifier occurs.
 end_comment
 
 begin_comment
-comment|/// specifier. \p SS is empty or the previously parsed nested-name
+comment|///
 end_comment
 
 begin_comment
-comment|/// part ("foo::"), \p Type is the already-parsed class template
+comment|/// \param Type The type, which will be a template specialization
 end_comment
 
 begin_comment
-comment|/// specialization (or other template-id that names a type), \p
+comment|/// type, preceding the '::'.
 end_comment
 
 begin_comment
-comment|/// TypeRange is the source range where the type is located, and \p
+comment|///
 end_comment
 
 begin_comment
-comment|/// CCLoc is the location of the trailing '::'.
+comment|/// \param CCLoc The location of the '::'.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param SS The nested-name-specifier, which is both an input
+end_comment
+
+begin_comment
+comment|/// parameter (the nested-name-specifier before this type) and an
+end_comment
+
+begin_comment
+comment|/// output parameter (containing the full nested-name-specifier,
+end_comment
+
+begin_comment
+comment|/// including this new type).
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns true if an error occurred, false otherwise.
 end_comment
 
 begin_function_decl
-name|CXXScopeTy
-modifier|*
+name|bool
 name|ActOnCXXNestedNameSpecifier
 parameter_list|(
 name|Scope
 modifier|*
 name|S
 parameter_list|,
-specifier|const
-name|CXXScopeSpec
-modifier|&
-name|SS
-parameter_list|,
 name|ParsedType
 name|Type
 parameter_list|,
-name|SourceRange
-name|TypeRange
-parameter_list|,
 name|SourceLocation
 name|CCLoc
+parameter_list|,
+name|CXXScopeSpec
+modifier|&
+name|SS
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Given a C++ nested-name-specifier, produce an annotation value
+end_comment
+
+begin_comment
+comment|/// that the parser can use later to reconstruct the given
+end_comment
+
+begin_comment
+comment|/// nested-name-specifier.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param SS A nested-name-specifier.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns A pointer containing all of the information in the
+end_comment
+
+begin_comment
+comment|/// nested-name-specifier \p SS.
+end_comment
+
+begin_function_decl
+name|void
+modifier|*
+name|SaveNestedNameSpecifierAnnotation
+parameter_list|(
+name|CXXScopeSpec
+modifier|&
+name|SS
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Given an annotation pointer for a nested-name-specifier, restore
+end_comment
+
+begin_comment
+comment|/// the nested-name-specifier structure.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param Annotation The annotation pointer, produced by
+end_comment
+
+begin_comment
+comment|/// \c SaveNestedNameSpecifierAnnotation().
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param AnnotationRange The source range corresponding to the annotation.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param SS The nested-name-specifier that will be updated with the contents
+end_comment
+
+begin_comment
+comment|/// of the annotation pointer.
+end_comment
+
+begin_function_decl
+name|void
+name|RestoreNestedNameSpecifierAnnotation
+parameter_list|(
+name|void
+modifier|*
+name|Annotation
+parameter_list|,
+name|SourceRange
+name|AnnotationRange
+parameter_list|,
+name|CXXScopeSpec
+modifier|&
+name|SS
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -20099,6 +20457,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|NestedNameSpecifierLoc
+name|SubstNestedNameSpecifierLoc
+parameter_list|(
+name|NestedNameSpecifierLoc
+name|NNS
+parameter_list|,
+specifier|const
+name|MultiLevelTemplateArgumentList
+modifier|&
+name|TemplateArgs
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|DeclarationNameInfo
 name|SubstDeclarationNameInfo
 parameter_list|(
@@ -22581,6 +22954,9 @@ name|rex
 parameter_list|,
 name|SourceLocation
 name|OpLoc
+parameter_list|,
+name|unsigned
+name|Opc
 parameter_list|,
 name|bool
 name|isCompAssign

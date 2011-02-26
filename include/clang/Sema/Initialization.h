@@ -1573,6 +1573,9 @@ name|CAssignment
 block|,
 comment|/// \brief String initialization
 name|StringInit
+block|,
+comment|/// \brief Array initialization from another array (GNU C extension).
+name|ArrayInit
 block|}
 enum|;
 comment|/// \brief Describes the kind of a particular step in an initialization
@@ -1638,6 +1641,10 @@ block|,
 comment|/// \brief An initialization that "converts" an Objective-C object
 comment|/// (not a point to an object) to another Objective-C object type.
 name|SK_ObjCObjectConversion
+block|,
+comment|/// \brief Array initialization (from an array rvalue).
+comment|/// This is a GNU C extension.
+name|SK_ArrayInit
 block|}
 enum|;
 comment|/// \brief A single step in the initialization sequence.
@@ -1722,6 +1729,12 @@ block|,
 comment|/// \brief Array must be initialized with an initializer list or a
 comment|/// string literal.
 name|FK_ArrayNeedsInitListOrStringLiteral
+block|,
+comment|/// \brief Array type mismatch.
+name|FK_ArrayTypeMismatch
+block|,
+comment|/// \brief Non-constant array initializer
+name|FK_NonConstantArrayInit
 block|,
 comment|/// \brief Cannot resolve the address of an overloaded function.
 name|FK_AddressOfOverloadFailed
@@ -2170,6 +2183,14 @@ comment|/// \brief Add an Objective-C object conversion step, which is
 comment|/// always a no-op.
 name|void
 name|AddObjCObjectConversionStep
+parameter_list|(
+name|QualType
+name|T
+parameter_list|)
+function_decl|;
+comment|/// \brief Add an array initialization step.
+name|void
+name|AddArrayInitStep
 parameter_list|(
 name|QualType
 name|T

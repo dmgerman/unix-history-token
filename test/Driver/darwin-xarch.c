@@ -48,7 +48,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CHECK-LINK: ld"{{.*}} "-some-linker-arg"
+comment|// CHECK-LINK: ld{{.*}} "-arch" "i386"{{.*}} "-some-linker-arg"
 end_comment
 
 end_unit

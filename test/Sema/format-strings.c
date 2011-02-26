@@ -2400,5 +2400,79 @@ comment|// expected-warning{{results in undefined behavior with 'p' conversion s
 block|}
 end_function
 
+begin_comment
+comment|// PR8486
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Test what happens when -Wformat is on, but -Wformat-security is off.
+end_comment
+
+begin_pragma
+pragma|#
+directive|pragma
+name|GCC
+name|diagnostic
+name|warning
+literal|"-Wformat"
+end_pragma
+
+begin_pragma
+pragma|#
+directive|pragma
+name|GCC
+name|diagnostic
+name|ignored
+literal|"-Wformat-security"
+end_pragma
+
+begin_function
+name|void
+name|pr8486
+parameter_list|()
+block|{
+name|printf
+argument_list|(
+literal|"%s"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{conversion specifies type 'char *' but the argument has type 'int'}}
+block|}
+end_function
+
+begin_comment
+comment|// PR9314
+end_comment
+
+begin_comment
+comment|// Don't warn about string literals that are PreDefinedExprs, e.g. __func__.
+end_comment
+
+begin_function
+name|void
+name|pr9314
+parameter_list|()
+block|{
+name|printf
+argument_list|(
+name|__PRETTY_FUNCTION__
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+name|printf
+argument_list|(
+name|__func__
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+block|}
+end_function
+
 end_unit
 

@@ -215,7 +215,7 @@ specifier|const
 name|unsigned
 name|NumCached
 init|=
-literal|4
+literal|16
 decl_stmt|;
 name|Storage
 name|Cached

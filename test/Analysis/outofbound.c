@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -Wno-array-bounds -analyze -analyzer-experimental-internal-checks -analyzer-experimental-checks -analyzer-check-objc-mem -analyzer-store=region -verify %s
+comment|// RUN: %clang_cc1 -Wno-array-bounds -analyze -analyzer-checker=core.experimental -analyzer-experimental-checks -analyzer-check-objc-mem -analyzer-store=region -verify %s
 end_comment
 
 begin_typedef

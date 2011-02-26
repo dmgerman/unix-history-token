@@ -2344,6 +2344,23 @@ decl|const
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|unsigned
+name|getPresumedColumnNumber
+argument_list|(
+name|SourceLocation
+name|Loc
+argument_list|,
+name|bool
+operator|*
+name|Invalid
+operator|=
+literal|0
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/// getLineNumber - Given a SourceLocation, return the spelling line number
 end_comment
@@ -2382,6 +2399,23 @@ end_decl_stmt
 
 begin_decl_stmt
 name|unsigned
+name|getSpellingLineNumber
+argument_list|(
+name|SourceLocation
+name|Loc
+argument_list|,
+name|bool
+operator|*
+name|Invalid
+operator|=
+literal|0
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|unsigned
 name|getInstantiationLineNumber
 argument_list|(
 name|SourceLocation
@@ -2399,7 +2433,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|unsigned
-name|getSpellingLineNumber
+name|getPresumedLineNumber
 argument_list|(
 name|SourceLocation
 name|Loc

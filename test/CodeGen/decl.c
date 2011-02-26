@@ -4,7 +4,7 @@ comment|// RUN: %clang_cc1 -w -emit-llvm< %s | FileCheck %s
 end_comment
 
 begin_comment
-comment|// CHECK: @test1.x = internal constant [12 x i32] [i32 1
+comment|// CHECK: @test1.x = private constant [12 x i32] [i32 1
 end_comment
 
 begin_comment

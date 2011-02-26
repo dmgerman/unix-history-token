@@ -1121,6 +1121,21 @@ begin_comment
 comment|// expected-warning{{'const volatile' type qualifiers on return type have no effect}}
 end_comment
 
+begin_function_decl
+name|char
+modifier|*
+specifier|const
+specifier|volatile
+specifier|restrict
+name|ignored_cvr_quals
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// expected-warning{{'const volatile restrict' type qualifiers on return type have no effect}}
+end_comment
+
 begin_comment
 comment|// Test that for switch(enum) that if the switch statement covers all the cases
 end_comment

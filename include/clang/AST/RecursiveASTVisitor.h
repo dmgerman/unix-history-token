@@ -392,6 +392,16 @@ operator|*
 name|NNS
 argument_list|)
 block|;
+comment|/// \brief Recursively visit a C++ nested-name-specifier with location
+comment|/// information.
+comment|///
+comment|/// \returns false if the visitation was terminated early, true otherwise.
+name|bool
+name|TraverseNestedNameSpecifierLoc
+argument_list|(
+argument|NestedNameSpecifierLoc NNS
+argument_list|)
+block|;
 comment|/// \brief Recursively visit a template name and dispatch to the
 comment|/// appropriate method.
 comment|///
@@ -1408,6 +1418,11 @@ case|:
 case|case
 name|NestedNameSpecifier
 operator|::
+name|NamespaceAlias
+case|:
+case|case
+name|NestedNameSpecifier
+operator|::
 name|Global
 case|:
 return|return
@@ -1439,6 +1454,120 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
+end_switch
+
+begin_return
+return|return
+name|true
+return|;
+end_return
+
+begin_expr_stmt
+unit|}  template
+operator|<
+name|typename
+name|Derived
+operator|>
+name|bool
+name|RecursiveASTVisitor
+operator|<
+name|Derived
+operator|>
+operator|::
+name|TraverseNestedNameSpecifierLoc
+argument_list|(
+argument|NestedNameSpecifierLoc NNS
+argument_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|NNS
+condition|)
+return|return
+name|true
+return|;
+end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|NestedNameSpecifierLoc
+name|Prefix
+init|=
+name|NNS
+operator|.
+name|getPrefix
+argument_list|()
+condition|)
+name|TRY_TO
+argument_list|(
+name|TraverseNestedNameSpecifierLoc
+argument_list|(
+name|Prefix
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_if
+
+begin_switch
+switch|switch
+condition|(
+name|NNS
+operator|.
+name|getNestedNameSpecifier
+argument_list|()
+operator|->
+name|getKind
+argument_list|()
+condition|)
+block|{
+case|case
+name|NestedNameSpecifier
+operator|::
+name|Identifier
+case|:
+case|case
+name|NestedNameSpecifier
+operator|::
+name|Namespace
+case|:
+case|case
+name|NestedNameSpecifier
+operator|::
+name|NamespaceAlias
+case|:
+case|case
+name|NestedNameSpecifier
+operator|::
+name|Global
+case|:
+return|return
+name|true
+return|;
+case|case
+name|NestedNameSpecifier
+operator|::
+name|TypeSpec
+case|:
+case|case
+name|NestedNameSpecifier
+operator|::
+name|TypeSpecWithTemplate
+case|:
+name|TRY_TO
+argument_list|(
+name|TraverseTypeLoc
+argument_list|(
+name|NNS
+operator|.
+name|getTypeLoc
+argument_list|()
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 end_switch
 
@@ -3001,13 +3130,13 @@ name|DEF_TRAVERSE_DECL
 argument_list|(
 argument|UsingDecl
 argument_list|,
-argument|{     TRY_TO(TraverseNestedNameSpecifier(D->getTargetNestedNameDecl()));   }
+argument|{     TRY_TO(TraverseNestedNameSpecifierLoc(D->getQualifierLoc()));   }
 argument_list|)
 name|DEF_TRAVERSE_DECL
 argument_list|(
 argument|UsingDirectiveDecl
 argument_list|,
-argument|{     TRY_TO(TraverseNestedNameSpecifier(D->getQualifier()));   }
+argument|{     TRY_TO(TraverseNestedNameSpecifierLoc(D->getQualifierLoc()));   }
 argument_list|)
 name|DEF_TRAVERSE_DECL
 argument_list|(
@@ -3629,7 +3758,7 @@ argument_list|,
 argument|{
 comment|// A dependent using declaration which was marked with 'typename'.
 comment|//   template<class T> class A : public B<T> { using typename B<T>::foo; };
-argument|TRY_TO(TraverseNestedNameSpecifier(D->getTargetNestedNameSpecifier()));
+argument|TRY_TO(TraverseNestedNameSpecifierLoc(D->getQualifierLoc()));
 comment|// We shouldn't traverse D->getTypeForDecl(); it's a result of
 comment|// declaring the type, not something that was written in the
 comment|// source.
@@ -4037,7 +4166,7 @@ argument_list|,
 argument|{
 comment|// Like UnresolvedUsingTypenameDecl, but without the 'typename':
 comment|//    template<class T> Class A : public Base<T> { using Base<T>::foo; };
-argument|TRY_TO(TraverseNestedNameSpecifier(D->getTargetNestedNameSpecifier()));   }
+argument|TRY_TO(TraverseNestedNameSpecifierLoc(D->getQualifierLoc()));   }
 argument_list|)
 end_macro
 
@@ -4854,9 +4983,7 @@ name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|DeclRefExpr
 argument_list|,
-argument|{     TRY_TO(TraverseTemplateArgumentLocsHelper(         S->getTemplateArgs(), S->getNumTemplateArgs()));
-comment|// FIXME: Should we be recursing on the qualifier?
-argument|TRY_TO(TraverseNestedNameSpecifier(S->getQualifier()));   }
+argument|{     TRY_TO(TraverseNestedNameSpecifier(S->getQualifier()));     TRY_TO(TraverseTemplateArgumentLocsHelper(         S->getTemplateArgs(), S->getNumTemplateArgs()));   }
 argument_list|)
 end_macro
 
@@ -4865,9 +4992,7 @@ name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|DependentScopeDeclRefExpr
 argument_list|,
-argument|{
-comment|// FIXME: Should we be recursing on these two things?
-argument|if (S->hasExplicitTemplateArgs()) {       TRY_TO(TraverseTemplateArgumentLocsHelper(           S->getExplicitTemplateArgs().getTemplateArgs(),           S->getNumTemplateArgs()));     }     TRY_TO(TraverseNestedNameSpecifier(S->getQualifier()));   }
+argument|{     TRY_TO(TraverseNestedNameSpecifierLoc(S->getQualifierLoc()));     if (S->hasExplicitTemplateArgs()) {       TRY_TO(TraverseTemplateArgumentLocsHelper(           S->getExplicitTemplateArgs().getTemplateArgs(),           S->getNumTemplateArgs()));     }   }
 argument_list|)
 end_macro
 
@@ -5254,7 +5379,7 @@ name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|CXXPseudoDestructorExpr
 argument_list|,
-argument|{    TRY_TO(TraverseNestedNameSpecifier(S->getQualifier()));   if (TypeSourceInfo *ScopeInfo = S->getScopeTypeInfo())     TRY_TO(TraverseTypeLoc(ScopeInfo->getTypeLoc()));   if (TypeSourceInfo *DestroyedTypeInfo = S->getDestroyedTypeInfo())     TRY_TO(TraverseTypeLoc(DestroyedTypeInfo->getTypeLoc())); }
+argument|{    TRY_TO(TraverseNestedNameSpecifierLoc(S->getQualifierLoc()));   if (TypeSourceInfo *ScopeInfo = S->getScopeTypeInfo())     TRY_TO(TraverseTypeLoc(ScopeInfo->getTypeLoc()));   if (TypeSourceInfo *DestroyedTypeInfo = S->getDestroyedTypeInfo())     TRY_TO(TraverseTypeLoc(DestroyedTypeInfo->getTypeLoc())); }
 argument_list|)
 name|DEF_TRAVERSE_STMT
 argument_list|(

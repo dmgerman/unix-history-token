@@ -457,6 +457,9 @@ argument_list|,
 argument|SourceLocation Loc
 argument_list|,
 argument|const Diagnostic&Diag
+argument_list|,
+argument|diag::Mapping *mapping =
+literal|0
 argument_list|)
 specifier|const
 block|;
@@ -474,6 +477,9 @@ argument_list|,
 argument|SourceLocation Loc
 argument_list|,
 argument|const Diagnostic&Diag
+argument_list|,
+argument|diag::Mapping *mapping =
+literal|0
 argument_list|)
 specifier|const
 block|;

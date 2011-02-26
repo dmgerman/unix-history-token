@@ -1536,6 +1536,18 @@ modifier|&
 name|Record
 parameter_list|)
 function_decl|;
+comment|/// \brief Emits a type with source-location information.
+name|void
+name|AddTypeLoc
+parameter_list|(
+name|TypeLoc
+name|TL
+parameter_list|,
+name|RecordDataImpl
+modifier|&
+name|Record
+parameter_list|)
+function_decl|;
 comment|/// \brief Emits a template argument location info.
 name|void
 name|AddTemplateArgumentLocInfo
@@ -1668,6 +1680,18 @@ name|AddNestedNameSpecifier
 parameter_list|(
 name|NestedNameSpecifier
 modifier|*
+name|NNS
+parameter_list|,
+name|RecordDataImpl
+modifier|&
+name|Record
+parameter_list|)
+function_decl|;
+comment|/// \brief Emit a nested name specifier with source-location information.
+name|void
+name|AddNestedNameSpecifierLoc
+parameter_list|(
+name|NestedNameSpecifierLoc
 name|NNS
 parameter_list|,
 name|RecordDataImpl

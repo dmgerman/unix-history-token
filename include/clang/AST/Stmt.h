@@ -6897,6 +6897,14 @@ argument_list|(
 argument|unsigned i
 argument_list|)
 block|;
+name|void
+name|setInputExpr
+argument_list|(
+argument|unsigned i
+argument_list|,
+argument|Expr *E
+argument_list|)
+block|;
 specifier|const
 name|Expr
 operator|*

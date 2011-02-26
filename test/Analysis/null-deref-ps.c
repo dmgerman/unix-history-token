@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-apple-darwin10 -analyze -analyzer-checker=core.experimental.IdempotentOps -analyzer-experimental-internal-checks -std=gnu99 -analyzer-check-objc-mem -verify %s -analyzer-constraints=basic -analyzer-store=basic -Wreturn-type
+comment|// RUN: %clang_cc1 -triple i386-apple-darwin10 -analyze -analyzer-checker=core.experimental -std=gnu99 -analyzer-check-objc-mem -verify %s -analyzer-constraints=basic -analyzer-store=basic -Wreturn-type
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-apple-darwin10 -analyze -analyzer-checker=core.experimental.IdempotentOps -analyzer-experimental-internal-checks -std=gnu99 -analyzer-check-objc-mem -verify %s -analyzer-constraints=range -analyzer-store=basic -Wreturn-type
+comment|// RUN: %clang_cc1 -triple i386-apple-darwin10 -analyze -analyzer-checker=core.experimental -std=gnu99 -analyzer-check-objc-mem -verify %s -analyzer-constraints=range -analyzer-store=basic -Wreturn-type
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-apple-darwin10 -analyze -analyzer-checker=core.experimental.IdempotentOps -analyzer-experimental-internal-checks -std=gnu99 -analyzer-check-objc-mem -analyzer-store=region -analyzer-constraints=range -analyzer-no-purge-dead -verify %s -Wreturn-type
+comment|// RUN: %clang_cc1 -triple i386-apple-darwin10 -analyze -analyzer-checker=core.experimental -std=gnu99 -analyzer-check-objc-mem -analyzer-store=region -analyzer-constraints=range -analyzer-no-purge-dead -verify %s -Wreturn-type
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-apple-darwin10 -analyze -analyzer-checker=core.experimental.IdempotentOps -analyzer-experimental-internal-checks -std=gnu99 -analyzer-check-objc-mem -analyzer-store=region -analyzer-constraints=range -verify %s -Wreturn-type
+comment|// RUN: %clang_cc1 -triple i386-apple-darwin10 -analyze -analyzer-checker=core.experimental -std=gnu99 -analyzer-check-objc-mem -analyzer-store=region -analyzer-constraints=range -verify %s -Wreturn-type
 end_comment
 
 begin_typedef

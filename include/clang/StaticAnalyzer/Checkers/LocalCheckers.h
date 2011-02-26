@@ -141,14 +141,6 @@ name|Eng
 parameter_list|)
 function_decl|;
 name|void
-name|RegisterExperimentalInternalChecks
-parameter_list|(
-name|ExprEngine
-modifier|&
-name|Eng
-parameter_list|)
-function_decl|;
-name|void
 name|RegisterCallInliner
 parameter_list|(
 name|ExprEngine

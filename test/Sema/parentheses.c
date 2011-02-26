@@ -248,5 +248,13 @@ comment|// no warning.
 block|}
 end_function
 
+begin_comment
+comment|// RUN: %clang_cc1 -fsyntax-only -Wparentheses -Werror -fdiagnostics-show-option %s 2>&1 | FileCheck %s
+end_comment
+
+begin_comment
+comment|// CHECK: error: using the result of an assignment as a condition without parentheses [-Werror,-Wparentheses]
+end_comment
+
 end_unit
 

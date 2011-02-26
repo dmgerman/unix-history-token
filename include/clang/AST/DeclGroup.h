@@ -160,7 +160,6 @@ literal|"Out-of-bounds access."
 argument_list|)
 expr_stmt|;
 return|return
-operator|*
 operator|(
 operator|(
 name|Decl
@@ -173,6 +172,9 @@ operator|+
 literal|1
 operator|)
 operator|)
+index|[
+name|i
+index|]
 return|;
 block|}
 name|Decl
@@ -197,7 +199,6 @@ literal|"Out-of-bounds access."
 argument_list|)
 expr_stmt|;
 return|return
-operator|*
 operator|(
 operator|(
 name|Decl
@@ -211,6 +212,9 @@ operator|+
 literal|1
 operator|)
 operator|)
+index|[
+name|i
+index|]
 return|;
 block|}
 block|}

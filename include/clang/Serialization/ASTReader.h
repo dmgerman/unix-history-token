@@ -395,6 +395,10 @@ operator|::
 name|string
 operator|&
 name|SuggestedPredefines
+argument_list|,
+name|FileManager
+operator|&
+name|FileMgr
 argument_list|)
 block|{
 return|return
@@ -499,6 +503,8 @@ argument_list|,
 argument|llvm::StringRef OriginalFileName
 argument_list|,
 argument|std::string&SuggestedPredefines
+argument_list|,
+argument|FileManager&FileMgr
 argument_list|)
 block|;
 name|virtual
@@ -3093,6 +3099,23 @@ name|NestedNameSpecifier
 modifier|*
 name|ReadNestedNameSpecifier
 parameter_list|(
+specifier|const
+name|RecordData
+modifier|&
+name|Record
+parameter_list|,
+name|unsigned
+modifier|&
+name|Idx
+parameter_list|)
+function_decl|;
+name|NestedNameSpecifierLoc
+name|ReadNestedNameSpecifierLoc
+parameter_list|(
+name|PerFileData
+modifier|&
+name|F
+parameter_list|,
 specifier|const
 name|RecordData
 modifier|&

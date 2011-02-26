@@ -496,16 +496,90 @@ else|:
 literal|""
 return|;
 block|}
+name|llvm
+operator|::
+name|StringRef
+name|getMessageUnavailableAttr
+argument_list|(
+argument|bool unavailable
+argument_list|)
+specifier|const
+block|{
+if|if
+condition|(
+operator|!
+name|unavailable
+condition|)
+return|return
+literal|""
+return|;
+if|if
+condition|(
+specifier|const
+name|UnavailableAttr
+modifier|*
+name|UA
+init|=
+name|getAttr
+operator|<
+name|UnavailableAttr
+operator|>
+operator|(
+operator|)
+condition|)
+return|return
+name|UA
+operator|->
+name|getMessage
+argument_list|()
+return|;
+return|return
+literal|""
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
 comment|/// getNameAsString - Get a human-readable name for the declaration, even if
+end_comment
+
+begin_comment
 comment|/// it is one of the special kinds of names (C++ constructor, Objective-C
+end_comment
+
+begin_comment
 comment|/// selector, etc).  Creating this name requires expensive string
+end_comment
+
+begin_comment
 comment|/// manipulation, so it should be called only when performance doesn't matter.
+end_comment
+
+begin_comment
 comment|/// For simple declarations, getNameAsCString() should suffice.
+end_comment
+
+begin_comment
 comment|//
+end_comment
+
+begin_comment
 comment|// FIXME: This function should be renamed to indicate that it is not just an
+end_comment
+
+begin_comment
 comment|// alternate form of getName(), and clients should move as appropriate.
+end_comment
+
+begin_comment
 comment|//
+end_comment
+
+begin_comment
 comment|// FIXME: Deprecated, move clients to getName().
+end_comment
+
+begin_expr_stmt
 name|std
 operator|::
 name|string
@@ -520,12 +594,19 @@ name|getAsString
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_decl_stmt
 name|void
 name|printName
 argument_list|(
-argument|llvm::raw_ostream&os
+name|llvm
+operator|::
+name|raw_ostream
+operator|&
+name|os
 argument_list|)
-specifier|const
+decl|const
 block|{
 return|return
 name|Name
@@ -536,8 +617,17 @@ name|os
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// getDeclName - Get the actual, stored name of the declaration,
+end_comment
+
+begin_comment
 comment|/// which may be a special name.
+end_comment
+
+begin_expr_stmt
 name|DeclarationName
 name|getDeclName
 argument_list|()
@@ -547,30 +637,62 @@ return|return
 name|Name
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Set the name of this declaration.
+end_comment
+
+begin_function
 name|void
 name|setDeclName
-argument_list|(
-argument|DeclarationName N
-argument_list|)
+parameter_list|(
+name|DeclarationName
+name|N
+parameter_list|)
 block|{
 name|Name
 operator|=
 name|N
-block|; }
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/// getQualifiedNameAsString - Returns human-readable qualified name for
+end_comment
+
+begin_comment
 comment|/// declaration, like A::B::i, for i being member of namespace A::B.
+end_comment
+
+begin_comment
 comment|/// If declaration is not member of context which can be named (record,
+end_comment
+
+begin_comment
 comment|/// namespace), it will return same result as getNameAsString().
+end_comment
+
+begin_comment
 comment|/// Creating this name is expensive, so it should be called only when
+end_comment
+
+begin_comment
 comment|/// performance doesn't matter.
+end_comment
+
+begin_expr_stmt
 name|std
 operator|::
 name|string
 name|getQualifiedNameAsString
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|std
 operator|::
 name|string
@@ -579,27 +701,65 @@ argument_list|(
 argument|const PrintingPolicy&Policy
 argument_list|)
 specifier|const
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// getNameForDiagnostic - Appends a human-readable name for this
+end_comment
+
+begin_comment
 comment|/// declaration into the given string.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// This is the method invoked by Sema when displaying a NamedDecl
+end_comment
+
+begin_comment
 comment|/// in a diagnostic.  It does not necessarily produce the same
+end_comment
+
+begin_comment
 comment|/// result as getNameAsString(); for example, class template
+end_comment
+
+begin_comment
 comment|/// specializations are printed with their template arguments.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// TODO: use an API that doesn't require so many temporary strings
+end_comment
+
+begin_decl_stmt
 name|virtual
 name|void
 name|getNameForDiagnostic
 argument_list|(
-argument|std::string&S
+name|std
+operator|::
+name|string
+operator|&
+name|S
 argument_list|,
-argument|const PrintingPolicy&Policy
-argument_list|,
-argument|bool Qualified
-argument_list|)
 specifier|const
+name|PrintingPolicy
+operator|&
+name|Policy
+argument_list|,
+name|bool
+name|Qualified
+argument_list|)
+decl|const
 block|{
 if|if
 condition|(
@@ -619,27 +779,65 @@ name|getNameAsString
 argument_list|()
 expr_stmt|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// declarationReplaces - Determine whether this declaration, if
+end_comment
+
+begin_comment
 comment|/// known to be well-formed within its context, will replace the
+end_comment
+
+begin_comment
 comment|/// declaration OldD if introduced into scope. A declaration will
+end_comment
+
+begin_comment
 comment|/// replace another declaration if, for example, it is a
+end_comment
+
+begin_comment
 comment|/// redeclaration of the same variable or function, but not if it is
+end_comment
+
+begin_comment
 comment|/// a declaration of a different kind (function vs. class) or an
+end_comment
+
+begin_comment
 comment|/// overloaded function.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|declarationReplaces
 argument_list|(
-argument|NamedDecl *OldD
+name|NamedDecl
+operator|*
+name|OldD
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Determine whether this declaration has linkage.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|hasLinkage
 argument_list|()
 specifier|const
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Determine whether this declaration is a C++ class member.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isCXXClassMember
 argument_list|()
@@ -674,19 +872,38 @@ operator|->
 name|getParent
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 name|DC
 operator|->
 name|isRecord
 argument_list|()
 return|;
-block|}
+end_return
+
+begin_comment
+unit|}
 comment|/// \brief Given that this declaration is a C++ class member,
+end_comment
+
+begin_comment
 comment|/// determine whether it's an instance member of its class.
-name|bool
+end_comment
+
+begin_macro
+unit|bool
 name|isCXXInstanceMember
-parameter_list|()
-function|const;
+argument_list|()
+end_macro
+
+begin_decl_stmt
+specifier|const
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|class
 name|LinkageInfo
 block|{
@@ -1070,14 +1287,29 @@ name|L
 return|;
 block|}
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// \brief Determine what kind of linkage this entity has.
+end_comment
+
+begin_expr_stmt
 name|Linkage
 name|getLinkage
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Determines the visibility of this entity.
+end_comment
+
+begin_expr_stmt
 name|Visibility
 name|getVisibility
 argument_list|()
@@ -1091,25 +1323,52 @@ name|visibility
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Determines the linkage and visibility of this entity.
+end_comment
+
+begin_expr_stmt
 name|LinkageInfo
 name|getLinkageAndVisibility
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Clear the linkage cache in response to a change
+end_comment
+
+begin_comment
 comment|/// to the declaration.
+end_comment
+
+begin_function_decl
 name|void
 name|ClearLinkageCache
 parameter_list|()
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// \brief Looks through UsingDecls and ObjCCompatibleAliasDecls for
+end_comment
+
+begin_comment
 comment|/// the underlying named decl.
+end_comment
+
+begin_function_decl
 name|NamedDecl
 modifier|*
 name|getUnderlyingDecl
 parameter_list|()
 function_decl|;
+end_function_decl
+
+begin_expr_stmt
 specifier|const
 name|NamedDecl
 operator|*
@@ -1131,6 +1390,9 @@ name|getUnderlyingDecl
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 specifier|static
 name|bool
 name|classof
@@ -1151,6 +1413,9 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|classof
@@ -1165,6 +1430,9 @@ return|return
 name|true
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|classofKind
@@ -1183,14 +1451,10 @@ operator|<=
 name|lastNamed
 return|;
 block|}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_function
 
 begin_expr_stmt
+unit|};
 specifier|inline
 name|llvm
 operator|::
@@ -1999,14 +2263,8 @@ comment|/// name qualifier, to be used for the case of out-of-line declarations.
 block|struct
 name|QualifierInfo
 block|{
-comment|/// NNS - The syntactic name qualifier.
-name|NestedNameSpecifier
-operator|*
-name|NNS
-block|;
-comment|/// NNSRange - The source range for the qualifier.
-name|SourceRange
-name|NNSRange
+name|NestedNameSpecifierLoc
+name|QualifierLoc
 block|;
 comment|/// NumTemplParamLists - The number of template parameter lists
 comment|/// that were matched against the template-ids occurring into the NNS.
@@ -2024,12 +2282,7 @@ comment|/// Default constructor.
 name|QualifierInfo
 argument_list|()
 operator|:
-name|NNS
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|NNSRange
+name|QualifierLoc
 argument_list|()
 block|,
 name|NumTemplParamLists
@@ -2284,6 +2537,8 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+comment|/// \brief Retrieve the nested-name-specifier that qualifies the name of this
+comment|/// declaration, if it was present in the source.
 name|NestedNameSpecifier
 operator|*
 name|getQualifier
@@ -2297,13 +2552,19 @@ operator|?
 name|getExtInfo
 argument_list|()
 operator|->
-name|NNS
+name|QualifierLoc
+operator|.
+name|getNestedNameSpecifier
+argument_list|()
 operator|:
 literal|0
 return|;
 block|}
-name|SourceRange
-name|getQualifierRange
+comment|/// \brief Retrieve the nested-name-specifier (with source-location
+comment|/// information) that qualifies the name of this declaration, if it was
+comment|/// present in the source.
+name|NestedNameSpecifierLoc
+name|getQualifierLoc
 argument_list|()
 specifier|const
 block|{
@@ -2314,18 +2575,16 @@ condition|?
 name|getExtInfo
 argument_list|()
 operator|->
-name|NNSRange
+name|QualifierLoc
 else|:
-name|SourceRange
+name|NestedNameSpecifierLoc
 argument_list|()
 return|;
 block|}
 name|void
 name|setQualifierInfo
 argument_list|(
-argument|NestedNameSpecifier *Qualifier
-argument_list|,
-argument|SourceRange QualifierRange
+argument|NestedNameSpecifierLoc QualifierLoc
 argument_list|)
 block|;
 name|unsigned
@@ -2675,22 +2934,6 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/// \brief Whether this variable has a deduced C++0x auto type for which we're
-end_comment
-
-begin_comment
-comment|/// currently parsing the initializer.
-end_comment
-
-begin_decl_stmt
-name|bool
-name|ParsingAutoInit
-range|:
-literal|1
-decl_stmt|;
-end_decl_stmt
-
 begin_decl_stmt
 name|friend
 name|class
@@ -2767,11 +3010,6 @@ name|false
 argument_list|)
 operator|,
 name|NRVOVariable
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|ParsingAutoInit
 argument_list|(
 argument|false
 argument_list|)
@@ -3927,49 +4165,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/// \brief Check whether we are in the process of parsing an initializer
-end_comment
-
-begin_comment
-comment|/// needed to deduce the type of this variable.
-end_comment
-
-begin_expr_stmt
-name|bool
-name|isParsingAutoInit
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ParsingAutoInit
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-comment|/// \brief Note whether we are currently parsing an initializer needed to
-end_comment
-
-begin_comment
-comment|/// deduce the type of this variable.
-end_comment
-
-begin_function
-name|void
-name|setParsingAutoInit
-parameter_list|(
-name|bool
-name|P
-parameter_list|)
-block|{
-name|ParsingAutoInit
-operator|=
-name|P
-expr_stmt|;
-block|}
-end_function
-
 begin_expr_stmt
 name|EvaluatedStmt
 operator|*
@@ -4684,44 +4879,6 @@ range|:
 name|public
 name|VarDecl
 block|{
-name|protected
-operator|:
-name|ImplicitParamDecl
-argument_list|(
-argument|Kind DK
-argument_list|,
-argument|DeclContext *DC
-argument_list|,
-argument|SourceLocation L
-argument_list|,
-argument|IdentifierInfo *Id
-argument_list|,
-argument|QualType Tw
-argument_list|)
-operator|:
-name|VarDecl
-argument_list|(
-argument|DK
-argument_list|,
-argument|DC
-argument_list|,
-argument|L
-argument_list|,
-argument|Id
-argument_list|,
-argument|Tw
-argument_list|,
-comment|/*TInfo=*/
-literal|0
-argument_list|,
-argument|SC_None
-argument_list|,
-argument|SC_None
-argument_list|)
-block|{
-name|setImplicit
-argument_list|()
-block|;   }
 name|public
 operator|:
 specifier|static
@@ -4740,6 +4897,40 @@ argument_list|,
 argument|QualType T
 argument_list|)
 block|;
+name|ImplicitParamDecl
+argument_list|(
+argument|DeclContext *DC
+argument_list|,
+argument|SourceLocation loc
+argument_list|,
+argument|IdentifierInfo *name
+argument_list|,
+argument|QualType type
+argument_list|)
+operator|:
+name|VarDecl
+argument_list|(
+argument|ImplicitParam
+argument_list|,
+argument|DC
+argument_list|,
+argument|loc
+argument_list|,
+argument|name
+argument_list|,
+argument|type
+argument_list|,
+comment|/*tinfo*/
+literal|0
+argument_list|,
+argument|SC_None
+argument_list|,
+argument|SC_None
+argument_list|)
+block|{
+name|setImplicit
+argument_list|()
+block|;   }
 comment|// Implement isa/cast/dyncast/etc.
 specifier|static
 name|bool
@@ -9495,6 +9686,8 @@ modifier|*
 name|TDD
 parameter_list|)
 function_decl|;
+comment|/// \brief Retrieve the nested-name-specifier that qualifies the name of this
+comment|/// declaration, if it was present in the source.
 name|NestedNameSpecifier
 operator|*
 name|getQualifier
@@ -9508,13 +9701,19 @@ operator|?
 name|getExtInfo
 argument_list|()
 operator|->
-name|NNS
+name|QualifierLoc
+operator|.
+name|getNestedNameSpecifier
+argument_list|()
 operator|:
 literal|0
 return|;
 block|}
-name|SourceRange
-name|getQualifierRange
+comment|/// \brief Retrieve the nested-name-specifier (with source-location
+comment|/// information) that qualifies the name of this declaration, if it was
+comment|/// present in the source.
+name|NestedNameSpecifierLoc
+name|getQualifierLoc
 argument_list|()
 specifier|const
 block|{
@@ -9525,21 +9724,17 @@ operator|?
 name|getExtInfo
 argument_list|()
 operator|->
-name|NNSRange
+name|QualifierLoc
 operator|:
-name|SourceRange
+name|NestedNameSpecifierLoc
 argument_list|()
 return|;
 block|}
 name|void
 name|setQualifierInfo
 parameter_list|(
-name|NestedNameSpecifier
-modifier|*
-name|Qualifier
-parameter_list|,
-name|SourceRange
-name|QualifierRange
+name|NestedNameSpecifierLoc
+name|QualifierLoc
 parameter_list|)
 function_decl|;
 name|unsigned

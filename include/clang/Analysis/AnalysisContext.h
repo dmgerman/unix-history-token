@@ -122,6 +122,12 @@ name|class
 name|CFGBlock
 decl_stmt|;
 name|class
+name|CFGReachabilityAnalysis
+decl_stmt|;
+name|class
+name|CFGStmtMap
+decl_stmt|;
+name|class
 name|LiveVariables
 decl_stmt|;
 name|class
@@ -171,6 +177,10 @@ decl_stmt|,
 modifier|*
 name|completeCFG
 decl_stmt|;
+name|CFGStmtMap
+modifier|*
+name|cfgStmtMap
+decl_stmt|;
 name|bool
 name|builtCFG
 decl_stmt|,
@@ -191,6 +201,10 @@ decl_stmt|;
 name|PseudoConstantAnalysis
 modifier|*
 name|PCA
+decl_stmt|;
+name|CFGReachabilityAnalysis
+modifier|*
+name|CFA
 decl_stmt|;
 name|llvm
 operator|::
@@ -260,6 +274,11 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
+name|cfgStmtMap
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|builtCFG
 argument_list|(
 name|false
@@ -286,6 +305,11 @@ literal|0
 argument_list|)
 operator|,
 name|PCA
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|CFA
 argument_list|(
 literal|0
 argument_list|)
@@ -402,6 +426,16 @@ function_decl|;
 name|CFG
 modifier|*
 name|getCFG
+parameter_list|()
+function_decl|;
+name|CFGStmtMap
+modifier|*
+name|getCFGStmtMap
+parameter_list|()
+function_decl|;
+name|CFGReachabilityAnalysis
+modifier|*
+name|getCFGReachablityAnalysis
 parameter_list|()
 function_decl|;
 comment|/// Return a version of the CFG without any edges pruned.
