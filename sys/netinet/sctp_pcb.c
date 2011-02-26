@@ -18043,6 +18043,8 @@ name|mtu
 expr_stmt|;
 block|}
 comment|/* JRS - Use the congestion control given in the CC module */
+if|if
+condition|(
 name|stcb
 operator|->
 name|asoc
@@ -18050,6 +18052,19 @@ operator|.
 name|cc_functions
 operator|.
 name|sctp_set_initial_cc_param
+operator|!=
+name|NULL
+condition|)
+call|(
+modifier|*
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|cc_functions
+operator|.
+name|sctp_set_initial_cc_param
+call|)
 argument_list|(
 name|stcb
 argument_list|,
