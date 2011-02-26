@@ -513,6 +513,9 @@ argument_list|)
 operator|=
 name|SCTPCTL_INITIAL_CWND_DEFAULT
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SCTP_HAS_RTTCC
 name|SCTP_BASE_SYSCTL
 argument_list|(
 name|sctp_rttvar_bw
@@ -534,6 +537,8 @@ argument_list|)
 operator|=
 name|SCTPCTL_RTTVAR_EQRET_DEFAULT
 expr_stmt|;
+endif|#
+directive|endif
 if|#
 directive|if
 name|defined
@@ -3864,6 +3869,9 @@ argument_list|,
 name|SCTPCTL_INITIAL_CWND_MAX
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SCTP_HAS_RTTCC
 name|RANGECHK
 argument_list|(
 name|SCTP_BASE_SYSCTL
@@ -3900,6 +3908,8 @@ argument_list|,
 name|SCTPCTL_RTTVAR_EQRET_MAX
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|RANGECHK
 argument_list|(
 name|SCTP_BASE_SYSCTL
@@ -7342,6 +7352,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SCTP_HAS_RTTCC
+end_ifdef
+
 begin_expr_stmt
 name|SYSCTL_VNET_PROC
 argument_list|(
@@ -7431,6 +7447,11 @@ name|SCTPCTL_RTTVAR_EQRET_DESC
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
