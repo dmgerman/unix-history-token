@@ -1396,7 +1396,7 @@ name|bus
 operator|->
 name|bdev
 argument_list|,
-literal|"4.8Gbps Super Speed USB v3.0\n"
+literal|"5.0Gbps Super Speed USB v3.0\n"
 argument_list|)
 expr_stmt|;
 break|break;

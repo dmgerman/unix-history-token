@@ -220,7 +220,7 @@ name|LIBUSB20_SPEED_SUPER
 case|:
 return|return
 operator|(
-literal|"SUPER (4.8Gbps)"
+literal|"SUPER (5.0Gbps)"
 operator|)
 return|;
 default|default:
@@ -228,7 +228,7 @@ break|break;
 block|}
 return|return
 operator|(
-literal|"unknown"
+literal|"UNKNOWN ()"
 operator|)
 return|;
 block|}
