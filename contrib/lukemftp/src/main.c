@@ -2886,6 +2886,9 @@ argument_list|)
 operator|!=
 name|NULL
 operator|||
+operator|!
+name|editing
+operator|||
 name|el_parse
 argument_list|(
 name|el
