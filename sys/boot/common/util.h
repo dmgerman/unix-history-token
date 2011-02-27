@@ -86,7 +86,7 @@ end_function_decl
 begin_define
 define|#
 directive|define
-name|bcpy
+name|bcopy
 parameter_list|(
 name|src
 parameter_list|,

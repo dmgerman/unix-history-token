@@ -200,7 +200,7 @@ name|slba
 operator|*
 name|entries_per_sec
 expr_stmt|;
-name|bcpy
+name|bcopy
 argument_list|(
 operator|&
 name|table
@@ -287,7 +287,7 @@ argument_list|,
 name|DEV_BSIZE
 argument_list|)
 expr_stmt|;
-name|bcpy
+name|bcopy
 argument_list|(
 name|hdr
 argument_list|,
@@ -852,7 +852,7 @@ literal|1
 operator|)
 return|;
 block|}
-name|bcpy
+name|bcopy
 argument_list|(
 name|secbuf
 argument_list|,
@@ -1267,7 +1267,7 @@ operator|!
 name|sector_updated
 condition|)
 continue|continue;
-name|bcpy
+name|bcopy
 argument_list|(
 operator|&
 name|table
@@ -1354,7 +1354,7 @@ argument_list|,
 name|DEV_BSIZE
 argument_list|)
 expr_stmt|;
-name|bcpy
+name|bcopy
 argument_list|(
 name|hdr
 argument_list|,
@@ -1532,7 +1532,7 @@ name|ent
 operator|++
 control|)
 block|{
-name|bcpy
+name|bcopy
 argument_list|(
 name|ent
 argument_list|,
