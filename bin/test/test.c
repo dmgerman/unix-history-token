@@ -500,6 +500,14 @@ name|BINOP
 block|}
 block|,
 block|{
+literal|"=="
+block|,
+name|STREQ
+block|,
+name|BINOP
+block|}
+block|,
+block|{
 literal|"!="
 block|,
 name|STRNE
