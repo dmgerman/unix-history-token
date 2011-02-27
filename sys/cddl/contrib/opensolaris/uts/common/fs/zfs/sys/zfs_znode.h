@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -40,6 +40,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sa.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/zfs_vfsops.h>
 end_include
 
@@ -47,6 +53,18 @@ begin_include
 include|#
 directive|include
 file|<sys/rrwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/zfs_sa.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/zfs_stat.h>
 end_include
 
 begin_endif
@@ -125,6 +143,18 @@ name|ZFS_AV_MODIFIED
 value|0x0000040000000000
 define|#
 directive|define
+name|ZFS_REPARSE
+value|0x0000080000000000
+define|#
+directive|define
+name|ZFS_OFFLINE
+value|0x0000100000000000
+define|#
+directive|define
+name|ZFS_SPARSE
+value|0x0000200000000000
+define|#
+directive|define
 name|ZFS_ATTR_SET
 parameter_list|(
 name|zp
@@ -132,9 +162,13 @@ parameter_list|,
 name|attr
 parameter_list|,
 name|value
+parameter_list|,
+name|pflags
+parameter_list|,
+name|tx
 parameter_list|)
 define|\
-value|{ \ 	if (value) \ 		zp->z_phys->zp_flags |= attr; \ 	else \ 		zp->z_phys->zp_flags&= ~attr; \ }
+value|{ \ 	if (value) \ 		pflags |= attr; \ 	else \ 		pflags&= ~attr; \ 	VERIFY(0 == sa_update(zp->z_sa_hdl, SA_ZPL_FLAGS(zp->z_zfsvfs), \&pflags, sizeof (pflags), tx)); \ }
 comment|/*  * Define special zfs pflags  */
 define|#
 directive|define
@@ -181,10 +215,147 @@ directive|define
 name|ZFS_NO_EXECS_DENIED
 value|0x100
 comment|/* exec was given to everyone */
+define|#
+directive|define
+name|SA_ZPL_ATIME
+parameter_list|(
+name|z
+parameter_list|)
+value|z->z_attr_table[ZPL_ATIME]
+define|#
+directive|define
+name|SA_ZPL_MTIME
+parameter_list|(
+name|z
+parameter_list|)
+value|z->z_attr_table[ZPL_MTIME]
+define|#
+directive|define
+name|SA_ZPL_CTIME
+parameter_list|(
+name|z
+parameter_list|)
+value|z->z_attr_table[ZPL_CTIME]
+define|#
+directive|define
+name|SA_ZPL_CRTIME
+parameter_list|(
+name|z
+parameter_list|)
+value|z->z_attr_table[ZPL_CRTIME]
+define|#
+directive|define
+name|SA_ZPL_GEN
+parameter_list|(
+name|z
+parameter_list|)
+value|z->z_attr_table[ZPL_GEN]
+define|#
+directive|define
+name|SA_ZPL_DACL_ACES
+parameter_list|(
+name|z
+parameter_list|)
+value|z->z_attr_table[ZPL_DACL_ACES]
+define|#
+directive|define
+name|SA_ZPL_XATTR
+parameter_list|(
+name|z
+parameter_list|)
+value|z->z_attr_table[ZPL_XATTR]
+define|#
+directive|define
+name|SA_ZPL_SYMLINK
+parameter_list|(
+name|z
+parameter_list|)
+value|z->z_attr_table[ZPL_SYMLINK]
+define|#
+directive|define
+name|SA_ZPL_RDEV
+parameter_list|(
+name|z
+parameter_list|)
+value|z->z_attr_table[ZPL_RDEV]
+define|#
+directive|define
+name|SA_ZPL_SCANSTAMP
+parameter_list|(
+name|z
+parameter_list|)
+value|z->z_attr_table[ZPL_SCANSTAMP]
+define|#
+directive|define
+name|SA_ZPL_UID
+parameter_list|(
+name|z
+parameter_list|)
+value|z->z_attr_table[ZPL_UID]
+define|#
+directive|define
+name|SA_ZPL_GID
+parameter_list|(
+name|z
+parameter_list|)
+value|z->z_attr_table[ZPL_GID]
+define|#
+directive|define
+name|SA_ZPL_PARENT
+parameter_list|(
+name|z
+parameter_list|)
+value|z->z_attr_table[ZPL_PARENT]
+define|#
+directive|define
+name|SA_ZPL_LINKS
+parameter_list|(
+name|z
+parameter_list|)
+value|z->z_attr_table[ZPL_LINKS]
+define|#
+directive|define
+name|SA_ZPL_MODE
+parameter_list|(
+name|z
+parameter_list|)
+value|z->z_attr_table[ZPL_MODE]
+define|#
+directive|define
+name|SA_ZPL_DACL_COUNT
+parameter_list|(
+name|z
+parameter_list|)
+value|z->z_attr_table[ZPL_DACL_COUNT]
+define|#
+directive|define
+name|SA_ZPL_FLAGS
+parameter_list|(
+name|z
+parameter_list|)
+value|z->z_attr_table[ZPL_FLAGS]
+define|#
+directive|define
+name|SA_ZPL_SIZE
+parameter_list|(
+name|z
+parameter_list|)
+value|z->z_attr_table[ZPL_SIZE]
+define|#
+directive|define
+name|SA_ZPL_ZNODE_ACL
+parameter_list|(
+name|z
+parameter_list|)
+value|z->z_attr_table[ZPL_ZNODE_ACL]
+define|#
+directive|define
+name|SA_ZPL_PAD
+parameter_list|(
+name|z
+parameter_list|)
+value|z->z_attr_table[ZPL_PAD]
 comment|/*  * Is ID ephemeral?  */
-ifdef|#
-directive|ifdef
-name|TODO
 define|#
 directive|define
 name|IS_EPHEMERAL
@@ -192,17 +363,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(x> MAXUID)
-else|#
-directive|else
-define|#
-directive|define
-name|IS_EPHEMERAL
-parameter_list|(
-name|x
-parameter_list|)
-value|(0)
-endif|#
-directive|endif
 comment|/*  * Should we use FUIDs?  */
 define|#
 directive|define
@@ -212,12 +372,21 @@ name|version
 parameter_list|,
 name|os
 parameter_list|)
-value|(version>= ZPL_VERSION_FUID&&\     spa_version(dmu_objset_spa(os))>= SPA_VERSION_FUID)
+value|(version>= ZPL_VERSION_FUID&& \     spa_version(dmu_objset_spa(os))>= SPA_VERSION_FUID)
+define|#
+directive|define
+name|USE_SA
+parameter_list|(
+name|version
+parameter_list|,
+name|os
+parameter_list|)
+value|(version>= ZPL_VERSION_SA&& \     spa_version(dmu_objset_spa(os))>= SPA_VERSION_SA)
 define|#
 directive|define
 name|MASTER_NODE_OBJ
 value|1
-comment|/*  * Special attributes for master node.  */
+comment|/*  * Special attributes for master node.  * "userquota@" and "groupquota@" are also valid (from  * zfs_userquota_prop_prefixes[]).  */
 define|#
 directive|define
 name|ZFS_FSID
@@ -242,6 +411,10 @@ define|#
 directive|define
 name|ZFS_SHARES_DIR
 value|"SHARES"
+define|#
+directive|define
+name|ZFS_SA_ATTRS
+value|"SA_ATTRS"
 define|#
 directive|define
 name|ZFS_MAX_BLOCKSIZE
@@ -280,98 +453,6 @@ parameter_list|(
 name|de
 parameter_list|)
 value|BF64_GET(de, 0, 48)
-comment|/*  * This is the persistent portion of the znode.  It is stored  * in the "bonus buffer" of the file.  Short symbolic links  * are also stored in the bonus buffer.  */
-typedef|typedef
-struct|struct
-name|znode_phys
-block|{
-name|uint64_t
-name|zp_atime
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/*  0 - last file access time */
-name|uint64_t
-name|zp_mtime
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* 16 - last file modification time */
-name|uint64_t
-name|zp_ctime
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* 32 - last file change time */
-name|uint64_t
-name|zp_crtime
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* 48 - creation time */
-name|uint64_t
-name|zp_gen
-decl_stmt|;
-comment|/* 64 - generation (txg of creation) */
-name|uint64_t
-name|zp_mode
-decl_stmt|;
-comment|/* 72 - file mode bits */
-name|uint64_t
-name|zp_size
-decl_stmt|;
-comment|/* 80 - size of file */
-name|uint64_t
-name|zp_parent
-decl_stmt|;
-comment|/* 88 - directory parent (`..') */
-name|uint64_t
-name|zp_links
-decl_stmt|;
-comment|/* 96 - number of links to file */
-name|uint64_t
-name|zp_xattr
-decl_stmt|;
-comment|/* 104 - DMU object for xattrs */
-name|uint64_t
-name|zp_rdev
-decl_stmt|;
-comment|/* 112 - dev_t for VBLK& VCHR files */
-name|uint64_t
-name|zp_flags
-decl_stmt|;
-comment|/* 120 - persistent flags */
-name|uint64_t
-name|zp_uid
-decl_stmt|;
-comment|/* 128 - file owner */
-name|uint64_t
-name|zp_gid
-decl_stmt|;
-comment|/* 136 - owning group */
-name|uint64_t
-name|zp_zap
-decl_stmt|;
-comment|/* 144 - extra attributes */
-name|uint64_t
-name|zp_pad
-index|[
-literal|3
-index|]
-decl_stmt|;
-comment|/* 152 - future */
-name|zfs_acl_phys_t
-name|zp_acl
-decl_stmt|;
-comment|/* 176 - 263 ACL */
-comment|/* 	 * Data may pad out any remaining bytes in the znode buffer, eg: 	 * 	 * |<---------------------- dnode_phys (512) ------------------------>| 	 * |<-- dnode (192) --->|<----------- "bonus" buffer (320) ---------->| 	 *			|<---- znode (264) ---->|<---- data (56) ---->| 	 * 	 * At present, we use this space for the following: 	 *  - symbolic links 	 *  - 32-byte anti-virus scanstamp (regular files only) 	 */
-block|}
-name|znode_phys_t
-typedef|;
 comment|/*  * Directory entry locks control access to directory entries.  * They are used to protect creates, deletes, and renames.  * Each directory znode has a mutex and a list of locked names.  */
 ifdef|#
 directive|ifdef
@@ -470,6 +551,10 @@ name|uint8_t
 name|z_zn_prefetch
 decl_stmt|;
 comment|/* Prefetch znodes? */
+name|uint8_t
+name|z_moved
+decl_stmt|;
+comment|/* Has this znode been moved? */
 name|uint_t
 name|z_blksz
 decl_stmt|;
@@ -483,13 +568,40 @@ name|z_mapcnt
 decl_stmt|;
 comment|/* number of pages mapped to file */
 name|uint64_t
-name|z_last_itx
-decl_stmt|;
-comment|/* last ZIL itx on this znode */
-name|uint64_t
 name|z_gen
 decl_stmt|;
-comment|/* generation (same as zp_gen) */
+comment|/* generation (cached) */
+name|uint64_t
+name|z_size
+decl_stmt|;
+comment|/* file size (cached) */
+name|uint64_t
+name|z_atime
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* atime (cached) */
+name|uint64_t
+name|z_links
+decl_stmt|;
+comment|/* file links (cached) */
+name|uint64_t
+name|z_pflags
+decl_stmt|;
+comment|/* pflags (cached) */
+name|uint64_t
+name|z_uid
+decl_stmt|;
+comment|/* uid fuid (cached) */
+name|uint64_t
+name|z_gid
+decl_stmt|;
+comment|/* gid fuid (cached) */
+name|mode_t
+name|z_mode
+decl_stmt|;
+comment|/* mode (cached) */
 name|uint32_t
 name|z_sync_cnt
 decl_stmt|;
@@ -507,17 +619,15 @@ name|list_node_t
 name|z_link_node
 decl_stmt|;
 comment|/* all znodes in fs link */
-comment|/* 	 * These are dmu managed fields. 	 */
-name|znode_phys_t
+name|sa_handle_t
 modifier|*
-name|z_phys
+name|z_sa_hdl
 decl_stmt|;
-comment|/* pointer to persistent znode */
-name|dmu_buf_t
-modifier|*
-name|z_dbuf
+comment|/* handle to sa data */
+name|boolean_t
+name|z_is_sa
 decl_stmt|;
-comment|/* buffer containing the z_phys */
+comment|/* are we native sa? */
 comment|/* FreeBSD-specific field. */
 name|struct
 name|task
@@ -672,7 +782,7 @@ parameter_list|(
 name|zp
 parameter_list|)
 define|\
-value|if ((zp)->z_dbuf == NULL) { \ 		ZFS_EXIT((zp)->z_zfsvfs); \ 		return (EIO); \ 	}
+value|if ((zp)->z_sa_hdl == NULL) { \ 		ZFS_EXIT((zp)->z_zfsvfs); \ 		return (EIO); \ 	}
 block|\
 comment|/*  * Macros for dealing with dmu_buf_hold  */
 define|#
@@ -765,7 +875,7 @@ parameter_list|,
 name|zp
 parameter_list|)
 define|\
-value|if ((zfsvfs)->z_atime&& !((zfsvfs)->z_vfs->vfs_flag& VFS_RDONLY)) \ 		zfs_time_stamper(zp, ACCESSED, NULL)
+value|if ((zfsvfs)->z_atime&& !((zfsvfs)->z_vfs->vfs_flag& VFS_RDONLY)) \ 		zfs_tstamp_update_setup(zp, ACCESSED, NULL, NULL, B_FALSE);
 specifier|extern
 name|int
 name|zfs_init_fs
@@ -808,28 +918,24 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|void
-name|zfs_time_stamper
+name|zfs_tstamp_update_setup
 parameter_list|(
 name|znode_t
 modifier|*
 parameter_list|,
 name|uint_t
 parameter_list|,
-name|dmu_tx_t
-modifier|*
-parameter_list|)
-function_decl|;
-specifier|extern
-name|void
-name|zfs_time_stamper_locked
-parameter_list|(
-name|znode_t
-modifier|*
+name|uint64_t
+index|[
+literal|2
+index|]
 parameter_list|,
-name|uint_t
+name|uint64_t
+index|[
+literal|2
+index|]
 parameter_list|,
-name|dmu_tx_t
-modifier|*
+name|boolean_t
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -1053,8 +1159,16 @@ parameter_list|,
 name|char
 modifier|*
 name|name
+parameter_list|,
+name|uint64_t
+name|foid
 parameter_list|)
 function_decl|;
+define|#
+directive|define
+name|ZFS_NO_OBJECT
+value|0
+comment|/* no object id */
 specifier|extern
 name|void
 name|zfs_log_link
@@ -1278,6 +1392,10 @@ parameter_list|,
 name|xvattr_t
 modifier|*
 name|xvap
+parameter_list|,
+name|dmu_tx_t
+modifier|*
+name|tx
 parameter_list|)
 function_decl|;
 specifier|extern

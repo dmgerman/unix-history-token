@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2007, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2010 Nexenta Systems, Inc. All rights reserved.  */
 end_comment
 
 begin_if
@@ -181,7 +181,7 @@ block|,
 block|{
 name|ZFS_DELEG_PERM_SEND
 block|,
-name|ZFS_DELEG_NOTE_NONE
+name|ZFS_DELEG_NOTE_SEND
 block|}
 block|,
 block|{
@@ -212,6 +212,24 @@ block|{
 name|ZFS_DELEG_PERM_GROUPUSED
 block|,
 name|ZFS_DELEG_NOTE_GROUPUSED
+block|}
+block|,
+block|{
+name|ZFS_DELEG_PERM_HOLD
+block|,
+name|ZFS_DELEG_NOTE_HOLD
+block|}
+block|,
+block|{
+name|ZFS_DELEG_PERM_RELEASE
+block|,
+name|ZFS_DELEG_NOTE_RELEASE
+block|}
+block|,
+block|{
+name|ZFS_DELEG_PERM_DIFF
+block|,
+name|ZFS_DELEG_NOTE_DIFF
 block|}
 block|,
 block|{

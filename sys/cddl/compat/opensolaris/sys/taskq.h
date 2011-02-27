@@ -57,6 +57,9 @@ name|void
 modifier|*
 name|arg
 parameter_list|,
+name|u_int
+name|flags
+parameter_list|,
 name|struct
 name|ostask
 modifier|*

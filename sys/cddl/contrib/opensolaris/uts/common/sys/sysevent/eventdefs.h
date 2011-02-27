@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -106,6 +106,11 @@ directive|define
 name|EC_DATALINK
 value|"EC_datalink"
 comment|/* datalink event */
+define|#
+directive|define
+name|EC_VRRP
+value|"EC_vrrp"
+comment|/* VRRP event */
 comment|/*  * The following event class is reserved for exclusive use  * by Sun Cluster software.  */
 define|#
 directive|define
@@ -383,6 +388,11 @@ define|#
 directive|define
 name|ESC_IPMP_IF_CHANGE
 value|"ESC_ipmp_if_change"
+comment|/* IPMP probe has changed state */
+define|#
+directive|define
+name|ESC_IPMP_PROBE_STATE
+value|"ESC_ipmp_probe_state"
 comment|/*  * EC_DEV_ADD and EC_DEV_REMOVE subclass definitions - supporting attributes  * (name/value pairs) are found in sys/sysevent/dev.h  */
 define|#
 directive|define
@@ -415,11 +425,16 @@ define|#
 directive|define
 name|ESC_DEV_BRANCH_REMOVE
 value|"ESC_dev_branch_remove"
-comment|/* device capacity dynamically changed */
+comment|/*  * EC_DEV_STATUS subclass definitions  *  * device capacity dynamically changed  */
 define|#
 directive|define
 name|ESC_DEV_DLE
 value|"ESC_dev_dle"
+comment|/* LUN has received an eject request from the user */
+define|#
+directive|define
+name|ESC_DEV_EJECT_REQUEST
+value|"ESC_dev_eject_request"
 comment|/* FMA Fault and Error event protocol subclass */
 define|#
 directive|define
@@ -471,6 +486,35 @@ define|#
 directive|define
 name|ESC_PWRCTL_BRIGHTNESS_DOWN
 value|"ESC_pwrctl_brightness_down"
+comment|/* EC_ACPIEV subclass definitions */
+define|#
+directive|define
+name|EC_ACPIEV
+value|"EC_acpiev"
+define|#
+directive|define
+name|ESC_ACPIEV_DISPLAY_SWITCH
+value|"ESC_acpiev_display_switch"
+define|#
+directive|define
+name|ESC_ACPIEV_SCREEN_LOCK
+value|"ESC_acpiev_screen_lock"
+define|#
+directive|define
+name|ESC_ACPIEV_SLEEP
+value|"ESC_acpiev_sleep"
+define|#
+directive|define
+name|ESC_ACPIEV_AUDIO_MUTE
+value|"ESC_acpiev_audio_mute"
+define|#
+directive|define
+name|ESC_ACPIEV_WIFI
+value|"ESC_acpiev_wifi"
+define|#
+directive|define
+name|ESC_ACPIEV_TOUCHPAD
+value|"ESC_acpiev_touchpad"
 comment|/*  * ZFS subclass definitions.  supporting attributes (name/value paris) are found  * in sys/fs/zfs.h  */
 define|#
 directive|define
@@ -512,12 +556,25 @@ define|#
 directive|define
 name|ESC_ZFS_VDEV_SPARE
 value|"ESC_ZFS_vdev_spare"
+define|#
+directive|define
+name|ESC_ZFS_BOOTFS_VDEV_ATTACH
+value|"ESC_ZFS_bootfs_vdev_attach"
+define|#
+directive|define
+name|ESC_ZFS_VDEV_AUTOEXPAND
+value|"ESC_ZFS_vdev_autoexpand"
 comment|/*  * datalink subclass definitions.  */
 define|#
 directive|define
 name|ESC_DATALINK_PHYS_ADD
 value|"ESC_datalink_phys_add"
 comment|/* new physical link */
+comment|/*  * VRRP subclass definitions. Supporting attributes (name/value paris) are  * found in sys/sysevent/vrrp.h  */
+define|#
+directive|define
+name|ESC_VRRP_STATE_CHANGE
+value|"ESC_vrrp_state_change"
 ifdef|#
 directive|ifdef
 name|__cplusplus

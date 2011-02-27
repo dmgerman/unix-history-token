@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/zio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/spa.h>
 end_include
 

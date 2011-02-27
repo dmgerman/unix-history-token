@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,6 @@ define|#
 directive|define
 name|_AVL_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_comment
 comment|/*  * This is a private header file.  Applications should not directly include  * this file.  */
@@ -117,6 +110,7 @@ name|avl_tree_t
 modifier|*
 name|tree
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|node

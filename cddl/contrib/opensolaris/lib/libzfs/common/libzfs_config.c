@@ -4,15 +4,8 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_comment
 comment|/*  * The pool configuration repository is stored in /etc/zfs/zpool.cache as a  * single packed nvlist.  While it would be nice to just read in this  * file from userland, this wouldn't work from a local zone.  So we have to have  * a zpool ioctl to return the complete configuration for all pools.  In the  * global zone, this will be identical to reading the file and unpacking it in  * userland.  */
@@ -1262,8 +1255,14 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
+comment|/* 	 * If someone makes a recursive call to zpool_iter(), we want to avoid 	 * refreshing the namespace because that will invalidate the parent 	 * context.  We allow recursive calls, but simply re-use the same 	 * namespace AVL tree. 	 */
 if|if
 condition|(
+operator|!
+name|hdl
+operator|->
+name|libzfs_pool_iter
+operator|&&
 name|namespace_reload
 argument_list|(
 name|hdl
@@ -1277,6 +1276,11 @@ operator|-
 literal|1
 operator|)
 return|;
+name|hdl
+operator|->
+name|libzfs_pool_iter
+operator|++
+expr_stmt|;
 for|for
 control|(
 name|cn
@@ -1320,12 +1324,19 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|hdl
+operator|->
+name|libzfs_pool_iter
+operator|--
+expr_stmt|;
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|zhp
@@ -1348,12 +1359,24 @@ operator|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|hdl
+operator|->
+name|libzfs_pool_iter
+operator|--
+expr_stmt|;
 return|return
 operator|(
 name|ret
 operator|)
 return|;
 block|}
+block|}
+name|hdl
+operator|->
+name|libzfs_pool_iter
+operator|--
+expr_stmt|;
 return|return
 operator|(
 literal|0

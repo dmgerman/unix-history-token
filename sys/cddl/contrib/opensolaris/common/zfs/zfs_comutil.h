@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,6 @@ define|#
 directive|define
 name|_ZFS_COMUTIL_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -56,9 +49,44 @@ name|zfs_allocatable_devs
 parameter_list|(
 name|nvlist_t
 modifier|*
-name|nv
 parameter_list|)
 function_decl|;
+specifier|extern
+name|void
+name|zpool_get_rewind_policy
+parameter_list|(
+name|nvlist_t
+modifier|*
+parameter_list|,
+name|zpool_rewind_policy_t
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|zfs_zpl_version_map
+parameter_list|(
+name|int
+name|spa_version
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|zfs_spa_version_map
+parameter_list|(
+name|int
+name|zpl_version
+parameter_list|)
+function_decl|;
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|zfs_history_event_names
+index|[
+name|LOG_END
+index|]
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|__cplusplus

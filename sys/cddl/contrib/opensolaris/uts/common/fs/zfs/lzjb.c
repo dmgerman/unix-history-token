@@ -4,18 +4,11 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2007 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
 end_comment
 
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
-
 begin_comment
-comment|/*  * We keep our own copy of this algorithm for 2 main reasons:  * 	1. If we didn't, anyone modifying common/os/compress.c would  *         directly break our on disk format  * 	2. Our version of lzjb does not have a number of checks that the  *         common/os version needs and uses  * In particular, we are adding the "feature" that compress() can  * take a destination buffer size and return -1 if the data will not  * compress to d_len or less.  */
+comment|/*  * We keep our own copy of this algorithm for 3 main reasons:  *	1. If we didn't, anyone modifying common/os/compress.c would  *         directly break our on disk format  *	2. Our version of lzjb does not have a number of checks that the  *         common/os version needs and uses  *	3. We initialize the lempel to ensure deterministic results,  *	   so that identical blocks can always be deduplicated.  * In particular, we are adding the "feature" that compress() can  * take a destination buffer size and returns the compressed length, or the  * source length if compression would overflow the destination buffer.  */
 end_comment
 
 begin_include
@@ -62,7 +55,7 @@ begin_define
 define|#
 directive|define
 name|LEMPEL_SIZE
-value|256
+value|1024
 end_define
 
 begin_comment
@@ -125,6 +118,8 @@ name|int
 name|mlen
 decl_stmt|,
 name|offset
+decl_stmt|,
+name|hash
 decl_stmt|;
 name|uint16_t
 modifier|*
@@ -135,8 +130,11 @@ name|lempel
 index|[
 name|LEMPEL_SIZE
 index|]
+init|=
+block|{
+literal|0
+block|}
 decl_stmt|;
-comment|/* uninitialized; see above */
 while|while
 condition|(
 name|src
@@ -183,51 +181,11 @@ literal|2
 operator|*
 name|NBBY
 condition|)
-block|{
-if|if
-condition|(
-name|d_len
-operator|!=
-name|s_len
-condition|)
 return|return
 operator|(
 name|s_len
 operator|)
 return|;
-name|mlen
-operator|=
-name|s_len
-expr_stmt|;
-for|for
-control|(
-name|src
-operator|=
-name|s_start
-operator|,
-name|dst
-operator|=
-name|d_start
-init|;
-name|mlen
-condition|;
-name|mlen
-operator|--
-control|)
-operator|*
-name|dst
-operator|++
-operator|=
-operator|*
-name|src
-operator|++
-expr_stmt|;
-return|return
-operator|(
-name|s_len
-operator|)
-return|;
-block|}
 name|copymask
 operator|=
 literal|1
@@ -268,35 +226,49 @@ operator|++
 expr_stmt|;
 continue|continue;
 block|}
-name|hp
+name|hash
 operator|=
-operator|&
-name|lempel
-index|[
-operator|(
 operator|(
 name|src
 index|[
 literal|0
 index|]
-operator|+
-literal|13
+operator|<<
+literal|16
 operator|)
-operator|^
+operator|+
 operator|(
 name|src
 index|[
 literal|1
 index|]
-operator|-
-literal|13
+operator|<<
+literal|8
 operator|)
-operator|^
+operator|+
 name|src
 index|[
 literal|2
 index|]
-operator|)
+expr_stmt|;
+name|hash
+operator|+=
+name|hash
+operator|>>
+literal|9
+expr_stmt|;
+name|hash
+operator|+=
+name|hash
+operator|>>
+literal|5
+expr_stmt|;
+name|hp
+operator|=
+operator|&
+name|lempel
+index|[
+name|hash
 operator|&
 operator|(
 name|LEMPEL_SIZE

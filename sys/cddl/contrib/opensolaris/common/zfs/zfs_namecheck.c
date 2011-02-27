@@ -132,7 +132,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Snapshot names must be made up of alphanumeric characters plus the following  * characters:  *  * 	[-_.:]  */
+comment|/*  * Snapshot names must be made up of alphanumeric characters plus the following  * characters:  *  * 	[-_.: ]  */
 end_comment
 
 begin_function

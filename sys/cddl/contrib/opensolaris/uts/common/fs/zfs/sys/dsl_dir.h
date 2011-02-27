@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -141,9 +141,13 @@ name|DD_USED_NUM
 index|]
 decl_stmt|;
 name|uint64_t
+name|dd_clones
+decl_stmt|;
+comment|/* dsl_dir objects */
+name|uint64_t
 name|dd_pad
 index|[
-literal|14
+literal|13
 index|]
 decl_stmt|;
 comment|/* pad out to 256 bytes for good measure */
@@ -186,6 +190,13 @@ name|list_t
 name|dd_prop_cbs
 decl_stmt|;
 comment|/* list of dsl_prop_cb_record_t's */
+name|timestruc_t
+name|dd_snap_cmtime
+decl_stmt|;
+comment|/* last time snapshot namespace changed */
+name|uint64_t
+name|dd_origin_txg
+decl_stmt|;
 comment|/* gross estimate of space used by in-flight tx's */
 name|uint64_t
 name|dd_tempreserved
@@ -505,6 +516,9 @@ name|char
 modifier|*
 name|ddname
 parameter_list|,
+name|zprop_source_t
+name|source
+parameter_list|,
 name|uint64_t
 name|quota
 parameter_list|)
@@ -516,6 +530,9 @@ specifier|const
 name|char
 modifier|*
 name|ddname
+parameter_list|,
+name|zprop_source_t
+name|source
 parameter_list|,
 name|uint64_t
 name|reservation
@@ -597,6 +614,22 @@ modifier|*
 name|tx
 parameter_list|)
 function_decl|;
+name|void
+name|dsl_dir_snap_cmtime_update
+parameter_list|(
+name|dsl_dir_t
+modifier|*
+name|dd
+parameter_list|)
+function_decl|;
+name|timestruc_t
+name|dsl_dir_snap_cmtime
+parameter_list|(
+name|dsl_dir_t
+modifier|*
+name|dd
+parameter_list|)
+function_decl|;
 comment|/* internal reserved dir name */
 define|#
 directive|define
@@ -606,6 +639,14 @@ define|#
 directive|define
 name|ORIGIN_DIR_NAME
 value|"$ORIGIN"
+define|#
+directive|define
+name|XLATION_DIR_NAME
+value|"$XLATION"
+define|#
+directive|define
+name|FREE_DIR_NAME
+value|"$FREE"
 ifdef|#
 directive|ifdef
 name|ZFS_DEBUG

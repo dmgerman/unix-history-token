@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -51,15 +51,6 @@ parameter_list|(
 name|size_t
 parameter_list|)
 function_decl|;
-name|char
-modifier|*
-name|safe_strdup
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
 name|void
 name|zpool_no_memory
 parameter_list|(
@@ -90,10 +81,38 @@ name|int
 name|check_rep
 parameter_list|,
 name|boolean_t
-name|isreplace
+name|replacing
 parameter_list|,
 name|boolean_t
 name|dryrun
+parameter_list|,
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|argv
+parameter_list|)
+function_decl|;
+name|nvlist_t
+modifier|*
+name|split_mirror_vdev
+parameter_list|(
+name|zpool_handle_t
+modifier|*
+name|zhp
+parameter_list|,
+name|char
+modifier|*
+name|newname
+parameter_list|,
+name|nvlist_t
+modifier|*
+name|props
+parameter_list|,
+name|splitflags_t
+name|flags
 parameter_list|,
 name|int
 name|argc

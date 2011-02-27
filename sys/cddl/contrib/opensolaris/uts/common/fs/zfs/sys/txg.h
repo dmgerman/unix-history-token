@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,6 @@ define|#
 directive|define
 name|_SYS_TXG_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -74,6 +67,11 @@ define|#
 directive|define
 name|TXG_IDX
 value|(txg& TXG_MASK)
+comment|/* Number of txgs worth of frees we defer adding to in-core spacemaps */
+define|#
+directive|define
+name|TXG_DEFER_SIZE
+value|2
 define|#
 directive|define
 name|TXG_WAIT
@@ -222,22 +220,15 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|void
-name|txg_suspend
+name|txg_register_callbacks
 parameter_list|(
-name|struct
-name|dsl_pool
+name|txg_handle_t
 modifier|*
-name|dp
-parameter_list|)
-function_decl|;
-specifier|extern
-name|void
-name|txg_resume
-parameter_list|(
-name|struct
-name|dsl_pool
+name|txghp
+parameter_list|,
+name|list_t
 modifier|*
-name|dp
+name|tx_callbacks
 parameter_list|)
 function_decl|;
 comment|/*  * Delay the caller by the specified number of ticks or until  * the txg closes (whichever comes first).  This is intended  * to be used to throttle writers when the system nears its  * capacity.  */
@@ -351,6 +342,22 @@ function_decl|;
 specifier|extern
 name|int
 name|txg_list_add
+parameter_list|(
+name|txg_list_t
+modifier|*
+name|tl
+parameter_list|,
+name|void
+modifier|*
+name|p
+parameter_list|,
+name|uint64_t
+name|txg
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|txg_list_add_tail
 parameter_list|(
 name|txg_list_t
 modifier|*

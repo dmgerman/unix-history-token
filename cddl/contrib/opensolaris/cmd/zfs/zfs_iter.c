@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
 end_comment
 
 begin_include
@@ -359,6 +359,14 @@ argument_list|,
 name|cb
 operator|->
 name|cb_proplist
+argument_list|,
+operator|(
+name|cb
+operator|->
+name|cb_flags
+operator|&
+name|ZFS_ITER_RECVD_PROPS
+operator|)
 argument_list|)
 operator|!=
 literal|0
@@ -1564,26 +1572,9 @@ name|avl_pool
 operator|==
 name|NULL
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|gettext
-argument_list|(
-literal|"internal error: out of memory\n"
-argument_list|)
-argument_list|)
+name|nomem
+argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|cb
 operator|.
 name|cb_sortcol
@@ -1614,7 +1605,7 @@ name|cb_depth_limit
 operator|=
 name|limit
 expr_stmt|;
-comment|/* 	 * If cb_proplist is provided then in the zfs_handles created  we 	 * retain only those properties listed in cb_proplist and sortcol. 	 * The rest are pruned. So, the caller should make sure that no other 	 * properties other than those listed in cb_proplist/sortcol are 	 * accessed. 	 * 	 * If cb_proplist is NULL then we retain all the properties.  We 	 * always retain the zoned property, which some other properties 	 * need (userquota& friends), and the createtxg property, which 	 * we need to sort snapshots. 	 */
+comment|/* 	 * If cb_proplist is provided then in the zfs_handles created we 	 * retain only those properties listed in cb_proplist and sortcol. 	 * The rest are pruned. So, the caller should make sure that no other 	 * properties other than those listed in cb_proplist/sortcol are 	 * accessed. 	 * 	 * If cb_proplist is NULL then we retain all the properties.  We 	 * always retain the zoned property, which some other properties 	 * need (userquota& friends), and the createtxg property, which 	 * we need to sort snapshots. 	 */
 if|if
 condition|(
 name|cb
@@ -1774,26 +1765,9 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|gettext
-argument_list|(
-literal|"internal error: out of memory\n"
-argument_list|)
-argument_list|)
+name|nomem
+argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|argc
@@ -1992,26 +1966,9 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|gettext
-argument_list|(
-literal|"internal error: out of memory"
-argument_list|)
-argument_list|)
+name|nomem
+argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 while|while
 condition|(
 operator|(

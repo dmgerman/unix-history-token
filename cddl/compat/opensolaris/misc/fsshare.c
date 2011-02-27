@@ -26,25 +26,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
+file|<assert.h>
 end_include
 
 begin_include
@@ -56,13 +38,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<libutil.h>
+file|<fcntl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<assert.h>
+file|<fsshare.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<libutil.h>
 end_include
 
 begin_include
@@ -78,7 +66,25 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<fsshare.h>
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_define

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -117,6 +117,9 @@ directive|include
 file|<umem.h>
 include|#
 directive|include
+file|<inttypes.h>
+include|#
+directive|include
 file|<fsshare.h>
 include|#
 directive|include
@@ -180,7 +183,13 @@ directive|include
 file|<sys/disk.h>
 include|#
 directive|include
+file|<sys/sysevent.h>
+include|#
+directive|include
 file|<sys/sysevent/eventdefs.h>
+include|#
+directive|include
+file|<sys/sysevent/dev.h>
 include|#
 directive|include
 file|<machine/atomic.h>
@@ -303,6 +312,10 @@ define|#
 directive|define
 name|fm_panic
 value|panic
+specifier|extern
+name|int
+name|aok
+decl_stmt|;
 comment|/* This definition is copied from assert.h. */
 if|#
 directive|if
@@ -319,20 +332,20 @@ operator|>=
 literal|199901L
 define|#
 directive|define
-name|verify
+name|zverify
 parameter_list|(
 name|EX
 parameter_list|)
-value|(void)((EX) || (__assert(#EX, __FILE__, __LINE__), 0))
+value|(void)((EX) || (aok) || \ 	(__assert(#EX, __FILE__, __LINE__), 0))
 else|#
 directive|else
 define|#
 directive|define
-name|verify
+name|zverify
 parameter_list|(
 name|EX
 parameter_list|)
-value|(void)((EX) || (__assert(#EX, __FILE__, __LINE__), 0))
+value|(void)((EX) || (aok) || \ 	(__assert(#EX, __FILE__, __LINE__), 0))
 endif|#
 directive|endif
 comment|/* __STDC_VERSION__ - 0>= 199901L */
@@ -340,22 +353,29 @@ else|#
 directive|else
 define|#
 directive|define
-name|verify
+name|zverify
 parameter_list|(
 name|EX
 parameter_list|)
-value|(void)((EX) || (_assert("EX", __FILE__, __LINE__), 0))
+value|(void)((EX) || (aok) || \ 	(_assert("EX", __FILE__, __LINE__), 0))
 endif|#
 directive|endif
 comment|/* __STDC__ */
 define|#
 directive|define
 name|VERIFY
-value|verify
+value|zverify
 define|#
 directive|define
 name|ASSERT
-value|assert
+value|zverify
+undef|#
+directive|undef
+name|assert
+define|#
+directive|define
+name|assert
+value|zverify
 specifier|extern
 name|void
 name|__assert
@@ -402,7 +422,7 @@ name|RIGHT
 parameter_list|,
 name|TYPE
 parameter_list|)
-value|do { \ 	const TYPE __left = (TYPE)(LEFT); \ 	const TYPE __right = (TYPE)(RIGHT); \ 	if (!(__left OP __right)) { \ 		char *__buf = alloca(256); \ 		(void) snprintf(__buf, 256, "%s %s %s (0x%llx %s 0x%llx)", \ 			#LEFT, #OP, #RIGHT, \ 			(u_longlong_t)__left, #OP, (u_longlong_t)__right); \ 		__assert(__buf, __FILE__, __LINE__); \ 	} \ _NOTE(CONSTCOND) } while (0)
+value|do { \ 	const TYPE __left = (TYPE)(LEFT); \ 	const TYPE __right = (TYPE)(RIGHT); \ 	if (!(__left OP __right)&& (!aok)) { \ 		char *__buf = alloca(256); \ 		(void) snprintf(__buf, 256, "%s %s %s (0x%llx %s 0x%llx)", \ 			#LEFT, #OP, #RIGHT, \ 			(u_longlong_t)__left, #OP, (u_longlong_t)__right); \ 		__assert(__buf, __FILE__, __LINE__); \ 	} \ _NOTE(CONSTCOND) } while (0)
 comment|/* END CSTYLED */
 endif|#
 directive|endif
@@ -671,6 +691,48 @@ directive|define
 name|thread_exit
 parameter_list|()
 value|thr_exit(NULL)
+define|#
+directive|define
+name|thread_join
+parameter_list|(
+name|t
+parameter_list|)
+value|panic("libzpool cannot join threads")
+define|#
+directive|define
+name|newproc
+parameter_list|(
+name|f
+parameter_list|,
+name|a
+parameter_list|,
+name|cid
+parameter_list|,
+name|pri
+parameter_list|,
+name|ctp
+parameter_list|,
+name|pid
+parameter_list|)
+value|(ENOSYS)
+comment|/* in libzpool, p0 exists only to have its address taken */
+struct|struct
+name|proc
+block|{
+name|uintptr_t
+name|this_is_never_used_dont_dereference_it
+decl_stmt|;
+block|}
+struct|;
+specifier|extern
+name|struct
+name|proc
+name|p0
+decl_stmt|;
+define|#
+directive|define
+name|PS_NONE
+value|-1
 specifier|extern
 name|kthread_t
 modifier|*
@@ -729,6 +791,9 @@ value|USYNC_THREAD
 undef|#
 directive|undef
 name|MUTEX_HELD
+undef|#
+directive|undef
+name|MUTEX_NOT_HELD
 define|#
 directive|define
 name|MUTEX_HELD
@@ -736,9 +801,24 @@ parameter_list|(
 name|m
 parameter_list|)
 value|((m)->m_owner == curthread)
+define|#
+directive|define
+name|MUTEX_NOT_HELD
+parameter_list|(
+name|m
+parameter_list|)
+value|(!MUTEX_HELD(m))
+define|#
+directive|define
+name|_mutex_held
+parameter_list|(
+name|m
+parameter_list|)
+value|pthread_mutex_isowned_np(m)
 comment|/*  * Argh -- we have to get cheesy here because the kernel and userland  * have different signatures for the same routine.  */
 comment|//extern int _mutex_init(mutex_t *mp, int type, void *arg);
 comment|//extern int _mutex_destroy(mutex_t *mp);
+comment|//extern int _mutex_owned(mutex_t *mp);
 define|#
 directive|define
 name|mutex_init
@@ -1122,6 +1202,11 @@ name|KMC_NODEBUG
 value|UMC_NODEBUG
 define|#
 directive|define
+name|KMC_NOTOUCH
+value|0
+comment|/* not needed for userland caches */
+define|#
+directive|define
 name|kmem_alloc
 parameter_list|(
 name|_s
@@ -1210,11 +1295,51 @@ define|#
 directive|define
 name|kmem_cache_reap_now
 parameter_list|(
-name|c
+name|_c
 parameter_list|)
+comment|/* nothing */
+define|#
+directive|define
+name|kmem_cache_set_move
+parameter_list|(
+name|_c
+parameter_list|,
+name|_cb
+parameter_list|)
+comment|/* nothing */
+define|#
+directive|define
+name|POINTER_INVALIDATE
+parameter_list|(
+name|_pp
+parameter_list|)
+comment|/* nothing */
+define|#
+directive|define
+name|POINTER_IS_VALID
+parameter_list|(
+name|_p
+parameter_list|)
+value|0
 typedef|typedef
 name|umem_cache_t
 name|kmem_cache_t
+typedef|;
+typedef|typedef
+enum|enum
+name|kmem_cbrc
+block|{
+name|KMEM_CBRC_YES
+block|,
+name|KMEM_CBRC_NO
+block|,
+name|KMEM_CBRC_LATER
+block|,
+name|KMEM_CBRC_DONT_NEED
+block|,
+name|KMEM_CBRC_DONT_KNOW
+block|}
+name|kmem_cbrc_t
 typedef|;
 comment|/*  * Task queues  */
 typedef|typedef
@@ -1254,7 +1379,12 @@ define|#
 directive|define
 name|TASKQ_THREADS_CPU_PCT
 value|0x0008
-comment|/* Use dynamic thread scheduling */
+comment|/* Scale # threads by # cpus */
+define|#
+directive|define
+name|TASKQ_DC_BATCH
+value|0x0010
+comment|/* Mark threads as batch */
 define|#
 directive|define
 name|TQ_SLEEP
@@ -1270,6 +1400,11 @@ directive|define
 name|TQ_NOQUEUE
 value|0x02
 comment|/* Do not enqueue if can't dispatch */
+define|#
+directive|define
+name|TQ_FRONT
+value|0x08
+comment|/* Queue in front */
 specifier|extern
 name|taskq_t
 modifier|*
@@ -1295,6 +1430,46 @@ parameter_list|,
 name|uint_t
 parameter_list|)
 function_decl|;
+define|#
+directive|define
+name|taskq_create_proc
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|,
+name|d
+parameter_list|,
+name|e
+parameter_list|,
+name|p
+parameter_list|,
+name|f
+parameter_list|)
+define|\
+value|(taskq_create(a, b, c, d, e, f))
+define|#
+directive|define
+name|taskq_create_sysdc
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|d
+parameter_list|,
+name|e
+parameter_list|,
+name|p
+parameter_list|,
+name|dc
+parameter_list|,
+name|f
+parameter_list|)
+define|\
+value|(taskq_create(a, b, maxclsyspri, d, e, f))
 specifier|extern
 name|taskqid_t
 name|taskq_dispatch
@@ -1344,6 +1519,13 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+specifier|extern
+name|void
+name|system_taskq_fini
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
 define|#
 directive|define
 name|taskq_dispatch_safe
@@ -1354,10 +1536,12 @@ name|func
 parameter_list|,
 name|arg
 parameter_list|,
+name|flags
+parameter_list|,
 name|task
 parameter_list|)
 define|\
-value|taskq_dispatch((tq), (func), (arg), TQ_SLEEP)
+value|taskq_dispatch((tq), (func), (arg), (flags))
 define|#
 directive|define
 name|XVA_MAPSIZE
@@ -1384,6 +1568,11 @@ decl_stmt|;
 block|}
 name|vnode_t
 typedef|;
+define|#
+directive|define
+name|AV_SCANSTAMP_SZ
+value|32
+comment|/* length of anti-virus scanstamp */
 typedef|typedef
 struct|struct
 name|xoptattr
@@ -1427,6 +1616,21 @@ name|xoa_av_quarantined
 decl_stmt|;
 name|uint8_t
 name|xoa_av_modified
+decl_stmt|;
+name|uint8_t
+name|xoa_av_scanstamp
+index|[
+name|AV_SCANSTAMP_SZ
+index|]
+decl_stmt|;
+name|uint8_t
+name|xoa_reparse
+decl_stmt|;
+name|uint8_t
+name|xoa_offline
+decl_stmt|;
+name|uint8_t
+name|xoa_sparse
 decl_stmt|;
 block|}
 name|xoptattr_t
@@ -1589,6 +1793,19 @@ define|#
 directive|define
 name|CRCREAT
 value|0
+specifier|extern
+name|int
+name|fop_getattr
+parameter_list|(
+name|vnode_t
+modifier|*
+name|vp
+parameter_list|,
+name|vattr_t
+modifier|*
+name|vap
+parameter_list|)
+function_decl|;
 define|#
 directive|define
 name|VOP_CLOSE
@@ -1633,7 +1850,7 @@ name|vap
 parameter_list|,
 name|cr
 parameter_list|)
-value|((vap)->va_size = (vp)->v_size, 0)
+value|fop_getattr((vp), (vap));
 define|#
 directive|define
 name|VOP_FSYNC
@@ -1877,13 +2094,19 @@ value|O_TRUNC
 comment|/*  * Random stuff  */
 define|#
 directive|define
-name|lbolt
+name|ddi_get_lbolt
+parameter_list|()
 value|(gethrtime()>> 23)
 define|#
 directive|define
-name|lbolt64
+name|ddi_get_lbolt64
+parameter_list|()
 value|(gethrtime()>> 23)
-comment|//#define	hz	119	/* frequency when using gethrtime()>> 23 for lbolt */
+define|#
+directive|define
+name|hz
+value|119
+comment|/* frequency when using gethrtime()>> 23 for lbolt */
 specifier|extern
 name|void
 name|delay
@@ -1897,6 +2120,14 @@ directive|define
 name|gethrestime_sec
 parameter_list|()
 value|time(NULL)
+define|#
+directive|define
+name|gethrestime
+parameter_list|(
+name|t
+parameter_list|)
+define|\
+value|do {\ 		(t)->tv_sec = gethrestime_sec();\ 		(t)->tv_nsec = 0;\ 	} while (0);
 define|#
 directive|define
 name|max_ncpus
@@ -1913,6 +2144,15 @@ define|#
 directive|define
 name|CPU_SEQID
 value|(thr_self()& (max_ncpus - 1))
+define|#
+directive|define
+name|kcred
+value|NULL
+define|#
+directive|define
+name|CRED
+parameter_list|()
+value|NULL
 ifndef|#
 directive|ifndef
 name|ptob
@@ -2062,6 +2302,26 @@ parameter_list|(
 name|z
 parameter_list|)
 value|(1)
+specifier|extern
+name|char
+modifier|*
+name|kmem_asprintf
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+define|#
+directive|define
+name|strfree
+parameter_list|(
+name|str
+parameter_list|)
+value|kmem_free((str), strlen(str)+1)
 comment|/*  * Hostname information  */
 specifier|extern
 name|struct
@@ -2073,6 +2333,7 @@ name|char
 name|hw_serial
 index|[]
 decl_stmt|;
+comment|/* for userland-emulated hostid access */
 specifier|extern
 name|int
 name|ddi_strtoul
@@ -2092,6 +2353,28 @@ name|base
 parameter_list|,
 name|unsigned
 name|long
+modifier|*
+name|result
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|ddi_strtoull
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|str
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|nptr
+parameter_list|,
+name|int
+name|base
+parameter_list|,
+name|u_longlong_t
 modifier|*
 name|result
 parameter_list|)
@@ -2279,10 +2562,6 @@ directive|define
 name|lbolt64
 value|(gethrtime()>> 23)
 specifier|extern
-name|int
-name|hz
-decl_stmt|;
-specifier|extern
 name|uint64_t
 name|physmem
 decl_stmt|;
@@ -2383,6 +2662,29 @@ typedef|typedef
 name|uint32_t
 name|idmap_rid_t
 typedef|;
+define|#
+directive|define
+name|DDI_SLEEP
+value|KM_SLEEP
+define|#
+directive|define
+name|ddi_log_sysevent
+parameter_list|(
+name|_a
+parameter_list|,
+name|_b
+parameter_list|,
+name|_c
+parameter_list|,
+name|_d
+parameter_list|,
+name|_e
+parameter_list|,
+name|_f
+parameter_list|,
+name|_g
+parameter_list|)
+value|(0)
 define|#
 directive|define
 name|SX_SYSINIT

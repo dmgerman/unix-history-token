@@ -4,15 +4,8 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_comment
 comment|/*  * AVL - generic AVL tree implementation for kernel use  *  * A complete description of AVL trees can be found in many CS textbooks.  *  * Here is a very brief overview. An AVL tree is a binary search tree that is  * almost perfectly balanced. By "almost" perfectly balanced, we mean that at  * any given node, the left and right subtrees are allowed to differ in height  * by at most 1 level.  *  * This relaxation from a perfectly balanced binary tree allows doing  * insertion and deletion relatively efficiently. Searching the tree is  * still a fast operation, roughly O(log(N)).  *  * The key to insertion and deletion is a set of tree maniuplations called  * rotations, which bring unbalanced subtrees back into the semi-balanced state.  *  * This implementation of AVL trees has the following peculiarities:  *  *	- The AVL specific data structures are physically embedded as fields  *	  in the "using" data structures.  To maintain generality the code  *	  must constantly translate between "avl_node_t *" and containing  *	  data structure "void *"s by adding/subracting the avl_offset.  *  *	- Since the AVL data is always embedded in other structures, there is  *	  no locking or memory allocation in the AVL routines. This must be  *	  provided for by the enclosing data structure's semantics. Typically,  *	  avl_insert()/_add()/_remove()/avl_insert_here() require some kind of  *	  exclusive write lock. Other operations require a read lock.  *  *      - The implementation uses iteration instead of explicit recursion,  *	  since it is intended to run on limited size kernel stacks. Since  *	  there is no recursion stack present to move "up" in the tree,  *	  there is an explicit "parent" link in the avl_node_t.  *  *      - The left/right children pointers of a node are in an array.  *	  In the code, variables (instead of constants) are used to represent  *	  left and right indices.  The implementation is written as if it only  *	  dealt with left handed manipulations.  By changing the value assigned  *	  to "left", the code also works for right handed trees.  The  *	  following variables/terms are frequently used:  *  *		int left;	// 0 when dealing with left children,  *				// 1 for dealing with right children  *  *		int left_heavy;	// -1 when left subtree is taller at some node,  *				// +1 when right subtree is taller  *  *		int right;	// will be the opposite of left (0 or 1)  *		int right_heavy;// will be the opposite of left_heavy (-1 or 1)  *  *		int direction;  // 0 for "<" (ie. left child); 1 for ">" (right)  *  *	  Though it is a little more confusing to read the code, the approach  *	  allows using half as much code (and hence cache footprint) for tree  *	  manipulations and eliminates many conditional branches.  *  *	- The avl_index_t is an opaque "cookie" used to find nodes at or  *	  adjacent to where a new value would be inserted in the tree. The value  *	  is a modified "avl_node_t *".  The bottom bit (normally 0 for a  *	  pointer) is set to indicate if that the new node has a value greater  *	  than the value of the indicated "avl_node_t *".  */
@@ -526,6 +519,7 @@ name|avl_tree_t
 modifier|*
 name|tree
 parameter_list|,
+specifier|const
 name|void
 modifier|*
 name|value

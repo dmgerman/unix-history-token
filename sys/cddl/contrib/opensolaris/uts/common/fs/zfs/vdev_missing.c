@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_comment
@@ -67,12 +67,12 @@ comment|/* 	 * Really this should just fail.  But then the root vdev will be in 
 operator|*
 name|psize
 operator|=
-name|SPA_MINDEVSIZE
+literal|0
 expr_stmt|;
 operator|*
 name|ashift
 operator|=
-name|SPA_MINBLOCKSHIFT
+literal|0
 expr_stmt|;
 return|return
 operator|(
@@ -159,7 +159,41 @@ name|vdev_missing_io_done
 block|,
 name|NULL
 block|,
+name|NULL
+block|,
+name|NULL
+block|,
 name|VDEV_TYPE_MISSING
+block|,
+comment|/* name of this vdev type */
+name|B_TRUE
+comment|/* leaf vdev */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vdev_ops_t
+name|vdev_hole_ops
+init|=
+block|{
+name|vdev_missing_open
+block|,
+name|vdev_missing_close
+block|,
+name|vdev_default_asize
+block|,
+name|vdev_missing_io_start
+block|,
+name|vdev_missing_io_done
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|VDEV_TYPE_HOLE
 block|,
 comment|/* name of this vdev type */
 name|B_TRUE

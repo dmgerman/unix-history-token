@@ -530,7 +530,63 @@ end_comment
 begin_define
 define|#
 directive|define
+name|VFSFT_SYSATTR_VIEWS
+value|0x100000040
+end_define
+
+begin_comment
+comment|/* Supports sysattr view i/f */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VFSFT_ACCESS_FILTER
+value|0x100000080
+end_define
+
+begin_comment
+comment|/* dirents filtered by access */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VFSFT_REPARSE
+value|0x100000100
+end_define
+
+begin_comment
+comment|/* Supports reparse point */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VFSFT_ZEROCOPY_SUPPORTED
+value|0x100000200
+end_define
+
+begin_comment
+comment|/* Support loaning /returning cache buffer */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|vfs_set_feature
+parameter_list|(
+name|vfsp
+parameter_list|,
+name|feature
+parameter_list|)
+value|do { } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|vfs_clear_feature
 parameter_list|(
 name|vfsp
 parameter_list|,

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,6 @@ define|#
 directive|define
 name|_SYS_DMU_TX_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -117,6 +110,10 @@ name|dmu_tx_hold
 modifier|*
 name|tx_needassign_txh
 decl_stmt|;
+name|list_t
+name|tx_callbacks
+decl_stmt|;
+comment|/* list of dmu_tx_callback_t on this dmu_tx */
 name|uint8_t
 name|tx_anyobj
 decl_stmt|;
@@ -162,6 +159,8 @@ block|,
 name|THT_ZAP
 block|,
 name|THT_SPACE
+block|,
+name|THT_SPILL
 block|,
 name|THT_NUMTYPES
 block|}
@@ -218,6 +217,27 @@ directive|endif
 block|}
 name|dmu_tx_hold_t
 typedef|;
+typedef|typedef
+struct|struct
+name|dmu_tx_callback
+block|{
+name|list_node_t
+name|dcb_node
+decl_stmt|;
+comment|/* linked to tx_callbacks list */
+name|dmu_tx_callback_func_t
+modifier|*
+name|dcb_func
+decl_stmt|;
+comment|/* caller function pointer */
+name|void
+modifier|*
+name|dcb_data
+decl_stmt|;
+comment|/* caller private data */
+block|}
+name|dmu_tx_callback_t
+typedef|;
 comment|/*  * These routines are defined in dmu.h, and are called by the user.  */
 name|dmu_tx_t
 modifier|*
@@ -269,6 +289,33 @@ parameter_list|(
 name|dmu_tx_t
 modifier|*
 name|tx
+parameter_list|)
+function_decl|;
+name|void
+name|dmu_tx_callback_register
+parameter_list|(
+name|dmu_tx_t
+modifier|*
+name|tx
+parameter_list|,
+name|dmu_tx_callback_func_t
+modifier|*
+name|dcb_func
+parameter_list|,
+name|void
+modifier|*
+name|dcb_data
+parameter_list|)
+function_decl|;
+name|void
+name|dmu_tx_do_callbacks
+parameter_list|(
+name|list_t
+modifier|*
+name|cb_list
+parameter_list|,
+name|int
+name|error
 parameter_list|)
 function_decl|;
 comment|/*  * These routines are defined in dmu_spa.h, and are called by the SPA.  */

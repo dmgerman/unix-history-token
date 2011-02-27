@@ -4,7 +4,11 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+end_comment
+
+begin_comment
+comment|/* Portions Copyright 2010 Robert Milkowski */
 end_comment
 
 begin_ifndef
@@ -74,17 +78,21 @@ name|zh_log
 decl_stmt|;
 comment|/* log chain */
 name|uint64_t
-name|zh_claim_seq
+name|zh_claim_blk_seq
 decl_stmt|;
-comment|/* highest claimed sequence number */
+comment|/* highest claimed block sequence number */
 name|uint64_t
 name|zh_flags
 decl_stmt|;
 comment|/* header flags */
 name|uint64_t
+name|zh_claim_lr_seq
+decl_stmt|;
+comment|/* highest claimed lr sequence number */
+name|uint64_t
 name|zh_pad
 index|[
-literal|4
+literal|3
 index|]
 decl_stmt|;
 block|}
@@ -96,28 +104,33 @@ directive|define
 name|ZIL_REPLAY_NEEDED
 value|0x1
 comment|/* replay needed - internal only */
-comment|/*  * Log block trailer - structure at the end of the header and each log block  *  * The zit_bt contains a zbt_cksum which for the intent log is  * the sequence number of this log block. A seq of 0 is invalid.  * The zbt_cksum is checked by the SPA against the sequence  * number passed in the blk_cksum field of the blkptr_t  */
+define|#
+directive|define
+name|ZIL_CLAIM_LR_SEQ_VALID
+value|0x2
+comment|/* zh_claim_lr_seq field is valid */
+comment|/*  * Log block chaining.  *  * Log blocks are chained together. Originally they were chained at the  * end of the block. For performance reasons the chain was moved to the  * beginning of the block which allows writes for only the data being used.  * The older position is supported for backwards compatability.  *  * The zio_eck_t contains a zec_cksum which for the intent log is  * the sequence number of this log block. A seq of 0 is invalid.  * The zec_cksum is checked by the SPA against the sequence  * number passed in the blk_cksum field of the blkptr_t  */
 typedef|typedef
 struct|struct
-name|zil_trailer
+name|zil_chain
 block|{
 name|uint64_t
-name|zit_pad
+name|zc_pad
 decl_stmt|;
 name|blkptr_t
-name|zit_next_blk
+name|zc_next_blk
 decl_stmt|;
 comment|/* next block in chain */
 name|uint64_t
-name|zit_nused
+name|zc_nused
 decl_stmt|;
 comment|/* bytes in log block used */
-name|zio_block_tail_t
-name|zit_bt
+name|zio_eck_t
+name|zc_eck
 decl_stmt|;
 comment|/* block trailer */
 block|}
-name|zil_trailer_t
+name|zil_chain_t
 typedef|;
 define|#
 directive|define
@@ -127,13 +140,6 @@ define|#
 directive|define
 name|ZIL_MAX_BLKSZ
 value|SPA_MAXBLOCKSIZE
-define|#
-directive|define
-name|ZIL_BLK_DATA_SZ
-parameter_list|(
-name|lwb
-parameter_list|)
-value|((lwb)->lwb_sz - sizeof (zil_trailer_t))
 comment|/*  * The words of a log block checksum.  */
 define|#
 directive|define
@@ -292,7 +298,16 @@ directive|define
 name|TX_CI
 value|((uint64_t)0x1<< 63)
 comment|/* case-insensitive behavior requested */
-comment|/*  * Format of log records.  * The fields are carefully defined to allow them to be aligned  * and sized the same on sparc& intel architectures.  * Each log record has a common structure at the beginning.  *  * Note, lrc_seq holds two different sequence numbers. Whilst in memory  * it contains the transaction sequence number.  The log record on  * disk holds the sequence number of all log records which is used to  * ensure we don't replay the same record.  The two sequence numbers are  * different because the transactions can now be pushed out of order.  */
+comment|/*  * Transactions for write, truncate, setattr, acl_v0, and acl can be logged  * out of order.  For convenience in the code, all such records must have  * lr_foid at the same offset.  */
+define|#
+directive|define
+name|TX_OOO
+parameter_list|(
+name|txtype
+parameter_list|)
+define|\
+value|((txtype) == TX_WRITE ||	\ 	(txtype) == TX_TRUNCATE ||	\ 	(txtype) == TX_SETATTR ||	\ 	(txtype) == TX_ACL_V0 ||	\ 	(txtype) == TX_ACL ||		\ 	(txtype) == TX_WRITE2)
+comment|/*  * Format of log records.  * The fields are carefully defined to allow them to be aligned  * and sized the same on sparc& intel architectures.  * Each log record has a common structure at the beginning.  *  * The log record on disk (lrc_seq) holds the sequence number of all log  * records which is used to ensure we don't replay the same record.  */
 typedef|typedef
 struct|struct
 block|{
@@ -315,6 +330,21 @@ decl_stmt|;
 comment|/* see comment above */
 block|}
 name|lr_t
+typedef|;
+comment|/*  * Common start of all out-of-order record types (TX_OOO() above).  */
+typedef|typedef
+struct|struct
+block|{
+name|lr_t
+name|lr_common
+decl_stmt|;
+comment|/* common portion of log record */
+name|uint64_t
+name|lr_foid
+decl_stmt|;
+comment|/* object id */
+block|}
+name|lr_ooo_t
 typedef|;
 comment|/*  * Handle option extended vattr attributes.  *  * Whenever new attributes are added the version number  * will need to be updated as will code in  * zfs_log.c and zfs_replay.c  */
 typedef|typedef
@@ -495,7 +525,7 @@ comment|/* user data length to write */
 name|uint64_t
 name|lr_blkoff
 decl_stmt|;
-comment|/* offset represented by lr_blkptr */
+comment|/* no longer used */
 name|blkptr_t
 name|lr_blkptr
 decl_stmt|;
@@ -630,7 +660,7 @@ block|}
 name|lr_acl_t
 typedef|;
 comment|/*  * ZIL structure definitions, interface function prototype and globals.  */
-comment|/*  * ZFS intent log transaction structure  */
+comment|/*  * Writes are handled in three different ways:  *  * WR_INDIRECT:  *    In this mode, if we need to commit the write later, then the block  *    is immediately written into the file system (using dmu_sync),  *    and a pointer to the block is put into the log record.  *    When the txg commits the block is linked in.  *    This saves additionally writing the data into the log record.  *    There are a few requirements for this to occur:  *	- write is greater than zfs/zvol_immediate_write_sz  *	- not using slogs (as slogs are assumed to always be faster  *	  than writing into the main pool)  *	- the write occupies only one block  * WR_COPIED:  *    If we know we'll immediately be committing the  *    transaction (FSYNC or FDSYNC), the we allocate a larger  *    log record here for the data and copy the data in.  * WR_NEED_COPY:  *    Otherwise we don't allocate a buffer, and *if* we need to  *    flush the write later then a buffer is allocated and  *    we retrieve the data using the dmu.  */
 typedef|typedef
 enum|enum
 block|{
@@ -644,6 +674,8 @@ comment|/* immediate - data is copied into lr_write_t */
 name|WR_NEED_COPY
 block|,
 comment|/* immediate - data needs to be copied if pushed */
+name|WR_NUM_STATES
+comment|/* number of states */
 block|}
 name|itx_wr_state_t
 typedef|;
@@ -672,6 +704,10 @@ name|uint64_t
 name|itx_sod
 decl_stmt|;
 comment|/* record size on disk */
+name|uint64_t
+name|itx_oid
+decl_stmt|;
+comment|/* object id */
 name|lr_t
 name|itx_lr
 decl_stmt|;
@@ -680,31 +716,8 @@ comment|/* followed by type-specific part of lr_xx_t and its immediate data */
 block|}
 name|itx_t
 typedef|;
-comment|/*  * zgd_t is passed through dmu_sync() to the callback routine zfs_get_done()  * to handle the cleanup of the dmu_sync() buffer write  */
 typedef|typedef
-struct|struct
-block|{
-name|zilog_t
-modifier|*
-name|zgd_zilog
-decl_stmt|;
-comment|/* zilog */
-name|blkptr_t
-modifier|*
-name|zgd_bp
-decl_stmt|;
-comment|/* block pointer */
-name|struct
-name|rl
-modifier|*
-name|zgd_rl
-decl_stmt|;
-comment|/* range lock */
-block|}
-name|zgd_t
-typedef|;
-typedef|typedef
-name|void
+name|int
 name|zil_parse_blk_func_t
 parameter_list|(
 name|zilog_t
@@ -724,7 +737,7 @@ name|txg
 parameter_list|)
 function_decl|;
 typedef|typedef
-name|void
+name|int
 name|zil_parse_lr_func_t
 parameter_list|(
 name|zilog_t
@@ -770,7 +783,7 @@ name|zio
 parameter_list|)
 function_decl|;
 specifier|extern
-name|uint64_t
+name|int
 name|zil_parse
 parameter_list|(
 name|zilog_t
@@ -874,6 +887,19 @@ index|]
 parameter_list|)
 function_decl|;
 specifier|extern
+name|boolean_t
+name|zil_replaying
+parameter_list|(
+name|zilog_t
+modifier|*
+name|zilog
+parameter_list|,
+name|dmu_tx_t
+modifier|*
+name|tx
+parameter_list|)
+function_decl|;
+specifier|extern
 name|void
 name|zil_destroy
 parameter_list|(
@@ -911,7 +937,16 @@ name|lrsize
 parameter_list|)
 function_decl|;
 specifier|extern
-name|uint64_t
+name|void
+name|zil_itx_destroy
+parameter_list|(
+name|itx_t
+modifier|*
+name|itx
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
 name|zil_itx_assign
 parameter_list|(
 name|zilog_t
@@ -936,9 +971,6 @@ modifier|*
 name|zilog
 parameter_list|,
 name|uint64_t
-name|seq
-parameter_list|,
-name|uint64_t
 name|oid
 parameter_list|)
 function_decl|;
@@ -946,6 +978,7 @@ specifier|extern
 name|int
 name|zil_vdev_offline
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|osname
@@ -959,6 +992,7 @@ specifier|extern
 name|int
 name|zil_claim
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|osname
@@ -972,6 +1006,7 @@ specifier|extern
 name|int
 name|zil_check_log_chain
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|osname
@@ -1001,15 +1036,9 @@ parameter_list|(
 name|zilog_t
 modifier|*
 name|zilog
-parameter_list|)
-function_decl|;
-specifier|extern
-name|int
-name|zil_is_committed
-parameter_list|(
-name|zilog_t
-modifier|*
-name|zilog
+parameter_list|,
+name|uint64_t
+name|synced_txg
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -1038,6 +1067,21 @@ name|zilog_t
 modifier|*
 name|zilog
 parameter_list|,
+specifier|const
+name|blkptr_t
+modifier|*
+name|bp
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|zil_bp_tree_add
+parameter_list|(
+name|zilog_t
+modifier|*
+name|zilog
+parameter_list|,
+specifier|const
 name|blkptr_t
 modifier|*
 name|bp
@@ -1045,20 +1089,31 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|void
-name|zil_get_replay_data
+name|zil_set_sync
 parameter_list|(
 name|zilog_t
 modifier|*
 name|zilog
 parameter_list|,
-name|lr_write_t
+name|uint64_t
+name|syncval
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|zil_set_logbias
+parameter_list|(
+name|zilog_t
 modifier|*
-name|lr
+name|zilog
+parameter_list|,
+name|uint64_t
+name|slogval
 parameter_list|)
 function_decl|;
 specifier|extern
 name|int
-name|zil_disable
+name|zil_replay_disable
 decl_stmt|;
 ifdef|#
 directive|ifdef

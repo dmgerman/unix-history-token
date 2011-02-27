@@ -492,6 +492,8 @@ name|task
 decl_stmt|;
 name|int
 name|mflag
+decl_stmt|,
+name|prio
 decl_stmt|;
 if|if
 condition|(
@@ -515,6 +517,17 @@ else|else
 name|mflag
 operator|=
 name|M_NOWAIT
+expr_stmt|;
+comment|/*  	 * If TQ_FRONT is given, we want higher priority for this task, so it 	 * can go at the front of the queue. 	 */
+name|prio
+operator|=
+operator|!
+operator|!
+operator|(
+name|flags
+operator|&
+name|TQ_FRONT
+operator|)
 expr_stmt|;
 name|task
 operator|=
@@ -555,7 +568,7 @@ name|task
 operator|->
 name|ost_task
 argument_list|,
-literal|0
+name|prio
 argument_list|,
 name|taskq_run
 argument_list|,
@@ -659,12 +672,18 @@ name|void
 modifier|*
 name|arg
 parameter_list|,
+name|u_int
+name|flags
+parameter_list|,
 name|struct
 name|ostask
 modifier|*
 name|task
 parameter_list|)
 block|{
+name|int
+name|prio
+decl_stmt|;
 name|ASSERT
 argument_list|(
 name|task
@@ -673,6 +692,17 @@ name|ost_magic
 operator|!=
 name|TASKQ_MAGIC
 argument_list|)
+expr_stmt|;
+comment|/*  	 * If TQ_FRONT is given, we want higher priority for this task, so it 	 * can go at the front of the queue. 	 */
+name|prio
+operator|=
+operator|!
+operator|!
+operator|(
+name|flags
+operator|&
+name|TQ_FRONT
+operator|)
 expr_stmt|;
 name|task
 operator|->
@@ -699,7 +729,7 @@ name|task
 operator|->
 name|ost_task
 argument_list|,
-literal|0
+name|prio
 argument_list|,
 name|taskq_run_safe
 argument_list|,

@@ -70,6 +70,14 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|struct
+name|timespec
+name|timespec_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|u_int
 name|uint_t
 typedef|;
@@ -166,6 +174,13 @@ begin_typedef
 typedef|typedef
 name|uint64_t
 name|pgcnt_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|u_int
+name|minor_t
 typedef|;
 end_typedef
 
@@ -309,14 +324,6 @@ begin_typedef
 typedef|typedef
 name|uint64_t
 name|upad64_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|struct
-name|timespec
-name|timespec_t
 typedef|;
 end_typedef
 

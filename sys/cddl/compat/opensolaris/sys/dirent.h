@@ -15,6 +15,12 @@ directive|define
 name|_OPENSOLARIS_SYS_DIRENT_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
 begin_empty
 empty|#include_next<sys/dirent.h>
 end_empty
@@ -27,18 +33,18 @@ name|dirent64_t
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|ino_t
+name|ino64_t
+typedef|;
+end_typedef
+
 begin_define
 define|#
 directive|define
 name|dirent64
 value|dirent
-end_define
-
-begin_define
-define|#
-directive|define
-name|ino64_t
-value|ino_t
 end_define
 
 begin_define

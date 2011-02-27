@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,6 @@ define|#
 directive|define
 name|_ZFS_PROP_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -158,6 +151,10 @@ name|pd_table
 decl_stmt|;
 comment|/* for index properties, a table */
 comment|/* defining the possible values */
+name|size_t
+name|pd_table_size
+decl_stmt|;
+comment|/* number of entries in pd_table[] */
 block|}
 name|zprop_desc_t
 typedef|;
@@ -210,7 +207,7 @@ parameter_list|)
 function_decl|;
 comment|/*  * Common routines to initialize property tables  */
 name|void
-name|register_impl
+name|zprop_register_impl
 parameter_list|(
 name|int
 parameter_list|,
@@ -248,7 +245,7 @@ modifier|*
 parameter_list|)
 function_decl|;
 name|void
-name|register_string
+name|zprop_register_string
 parameter_list|(
 name|int
 parameter_list|,
@@ -275,7 +272,7 @@ modifier|*
 parameter_list|)
 function_decl|;
 name|void
-name|register_number
+name|zprop_register_number
 parameter_list|(
 name|int
 parameter_list|,
@@ -299,7 +296,7 @@ modifier|*
 parameter_list|)
 function_decl|;
 name|void
-name|register_index
+name|zprop_register_index
 parameter_list|(
 name|int
 parameter_list|,
@@ -327,7 +324,7 @@ modifier|*
 parameter_list|)
 function_decl|;
 name|void
-name|register_hidden
+name|zprop_register_hidden
 parameter_list|(
 name|int
 parameter_list|,
@@ -398,6 +395,16 @@ specifier|const
 name|char
 modifier|*
 modifier|*
+parameter_list|,
+name|zfs_type_t
+parameter_list|)
+function_decl|;
+name|uint64_t
+name|zprop_random_value
+parameter_list|(
+name|int
+parameter_list|,
+name|uint64_t
 parameter_list|,
 name|zfs_type_t
 parameter_list|)

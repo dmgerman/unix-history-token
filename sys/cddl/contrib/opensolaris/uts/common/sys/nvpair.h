@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2000, 2010, Oracle and/or its affiliates. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,6 @@ define|#
 directive|define
 name|_SYS_NVPAIR_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -547,6 +540,13 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
+name|uint_t
+name|nvlist_nvflag
+parameter_list|(
+name|nvlist_t
+modifier|*
+parameter_list|)
+function_decl|;
 name|int
 name|nvlist_xalloc
 parameter_list|(
@@ -1052,6 +1052,16 @@ modifier|*
 parameter_list|)
 function_decl|;
 name|int
+name|nvlist_remove_nvpair
+parameter_list|(
+name|nvlist_t
+modifier|*
+parameter_list|,
+name|nvpair_t
+modifier|*
+parameter_list|)
+function_decl|;
+name|int
 name|nvlist_lookup_boolean
 parameter_list|(
 name|nvlist_t
@@ -1546,10 +1556,28 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+name|boolean_t
+name|nvlist_empty
+parameter_list|(
+name|nvlist_t
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/* processing nvpair */
 name|nvpair_t
 modifier|*
 name|nvlist_next_nvpair
+parameter_list|(
+name|nvlist_t
+modifier|*
+parameter_list|,
+name|nvpair_t
+modifier|*
+parameter_list|)
+function_decl|;
+name|nvpair_t
+modifier|*
+name|nvlist_prev_nvpair
 parameter_list|(
 name|nvlist_t
 modifier|*

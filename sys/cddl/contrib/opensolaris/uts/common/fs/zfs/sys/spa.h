@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -85,6 +85,21 @@ name|metaslab_t
 typedef|;
 typedef|typedef
 name|struct
+name|metaslab_group
+name|metaslab_group_t
+typedef|;
+typedef|typedef
+name|struct
+name|metaslab_class
+name|metaslab_class_t
+typedef|;
+typedef|typedef
+name|struct
+name|zio
+name|zio_t
+typedef|;
+typedef|typedef
+name|struct
 name|zilog
 name|zilog_t
 typedef|;
@@ -92,6 +107,16 @@ typedef|typedef
 name|struct
 name|spa_aux_vdev
 name|spa_aux_vdev_t
+typedef|;
+typedef|typedef
+name|struct
+name|ddt
+name|ddt_t
+typedef|;
+typedef|typedef
+name|struct
+name|ddt_entry
+name|ddt_entry_t
 typedef|;
 struct_decl|struct
 name|dsl_pool
@@ -329,44 +354,7 @@ decl_stmt|;
 block|}
 name|zio_cksum_t
 typedef|;
-comment|/*  * Each block is described by its DVAs, time of birth, checksum, etc.  * The word-by-word, bit-by-bit layout of the blkptr is as follows:  *  *	64	56	48	40	32	24	16	8	0  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 0	|		vdev1		| GRID  |	  ASIZE		|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 1	|G|			 offset1				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 2	|		vdev2		| GRID  |	  ASIZE		|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 3	|G|			 offset2				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 4	|		vdev3		| GRID  |	  ASIZE		|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 5	|G|			 offset3				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 6	|E| lvl | type	| cksum | comp	|     PSIZE	|     LSIZE	|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 7	|			padding					|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 8	|			padding					|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 9	|			padding					|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * a	|			birth txg				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * b	|			fill count				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * c	|			checksum[0]				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * d	|			checksum[1]				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * e	|			checksum[2]				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * f	|			checksum[3]				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  *  * Legend:  *  * vdev		virtual device ID  * offset	offset into virtual device  * LSIZE	logical size  * PSIZE	physical size (after compression)  * ASIZE	allocated size (including RAID-Z parity and gang block headers)  * GRID		RAID-Z layout information (reserved for future use)  * cksum	checksum function  * comp		compression function  * G		gang block indicator  * E		endianness  * type		DMU object type  * lvl		level of indirection  * birth txg	transaction group in which the block was born  * fill count	number of non-zero blocks under this bp  * checksum[4]	256-bit checksum of the data this bp describes  */
-typedef|typedef
-struct|struct
-name|blkptr
-block|{
-name|dva_t
-name|blk_dva
-index|[
-literal|3
-index|]
-decl_stmt|;
-comment|/* 128-bit Data Virtual Address	*/
-name|uint64_t
-name|blk_prop
-decl_stmt|;
-comment|/* size, compression, type, etc	*/
-name|uint64_t
-name|blk_pad
-index|[
-literal|3
-index|]
-decl_stmt|;
-comment|/* Extra space for the future	*/
-name|uint64_t
-name|blk_birth
-decl_stmt|;
-comment|/* transaction group at birth	*/
-name|uint64_t
-name|blk_fill
-decl_stmt|;
-comment|/* fill count			*/
-name|zio_cksum_t
-name|blk_cksum
-decl_stmt|;
-comment|/* 256-bit checksum		*/
-block|}
-name|blkptr_t
-typedef|;
+comment|/*  * Each block is described by its DVAs, time of birth, checksum, etc.  * The word-by-word, bit-by-bit layout of the blkptr is as follows:  *  *	64	56	48	40	32	24	16	8	0  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 0	|		vdev1		| GRID  |	  ASIZE		|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 1	|G|			 offset1				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 2	|		vdev2		| GRID  |	  ASIZE		|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 3	|G|			 offset2				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 4	|		vdev3		| GRID  |	  ASIZE		|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 5	|G|			 offset3				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 6	|BDX|lvl| type	| cksum | comp	|     PSIZE	|     LSIZE	|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 7	|			padding					|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 8	|			padding					|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * 9	|			physical birth txg			|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * a	|			logical birth txg			|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * b	|			fill count				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * c	|			checksum[0]				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * d	|			checksum[1]				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * e	|			checksum[2]				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  * f	|			checksum[3]				|  *	+-------+-------+-------+-------+-------+-------+-------+-------+  *  * Legend:  *  * vdev		virtual device ID  * offset	offset into virtual device  * LSIZE	logical size  * PSIZE	physical size (after compression)  * ASIZE	allocated size (including RAID-Z parity and gang block headers)  * GRID		RAID-Z layout information (reserved for future use)  * cksum	checksum function  * comp		compression function  * G		gang block indicator  * B		byteorder (endianness)  * D		dedup  * X		unused  * lvl		level of indirection  * type		DMU object type  * phys birth	txg of block allocation; zero if same as logical birth txg  * log. birth	transaction group in which the block was logically born  * fill count	number of non-zero blocks under this bp  * checksum[4]	256-bit checksum of the data this bp describes  */
 define|#
 directive|define
 name|SPA_BLKPTRSHIFT
@@ -377,6 +365,47 @@ directive|define
 name|SPA_DVAS_PER_BP
 value|3
 comment|/* Number of DVAs in a bp	*/
+typedef|typedef
+struct|struct
+name|blkptr
+block|{
+name|dva_t
+name|blk_dva
+index|[
+name|SPA_DVAS_PER_BP
+index|]
+decl_stmt|;
+comment|/* Data Virtual Addresses */
+name|uint64_t
+name|blk_prop
+decl_stmt|;
+comment|/* size, compression, type, etc	    */
+name|uint64_t
+name|blk_pad
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* Extra space for the future	    */
+name|uint64_t
+name|blk_phys_birth
+decl_stmt|;
+comment|/* txg when block was allocated	    */
+name|uint64_t
+name|blk_birth
+decl_stmt|;
+comment|/* transaction group at birth	    */
+name|uint64_t
+name|blk_fill
+decl_stmt|;
+comment|/* fill count			    */
+name|zio_cksum_t
+name|blk_cksum
+decl_stmt|;
+comment|/* 256-bit checksum		    */
+block|}
+name|blkptr_t
+typedef|;
 comment|/*  * Macros to get and set fields in a bp or DVA.  */
 define|#
 directive|define
@@ -564,6 +593,38 @@ parameter_list|)
 value|BF64_SET((bp)->blk_prop, 56, 5, x)
 define|#
 directive|define
+name|BP_GET_PROP_BIT_61
+parameter_list|(
+name|bp
+parameter_list|)
+value|BF64_GET((bp)->blk_prop, 61, 1)
+define|#
+directive|define
+name|BP_SET_PROP_BIT_61
+parameter_list|(
+name|bp
+parameter_list|,
+name|x
+parameter_list|)
+value|BF64_SET((bp)->blk_prop, 61, 1, x)
+define|#
+directive|define
+name|BP_GET_DEDUP
+parameter_list|(
+name|bp
+parameter_list|)
+value|BF64_GET((bp)->blk_prop, 62, 1)
+define|#
+directive|define
+name|BP_SET_DEDUP
+parameter_list|(
+name|bp
+parameter_list|,
+name|x
+parameter_list|)
+value|BF64_SET((bp)->blk_prop, 62, 1, x)
+define|#
+directive|define
 name|BP_GET_BYTEORDER
 parameter_list|(
 name|bp
@@ -580,6 +641,26 @@ parameter_list|)
 value|BF64_SET((bp)->blk_prop, 63, 1, x)
 define|#
 directive|define
+name|BP_PHYSICAL_BIRTH
+parameter_list|(
+name|bp
+parameter_list|)
+define|\
+value|((bp)->blk_phys_birth ? (bp)->blk_phys_birth : (bp)->blk_birth)
+define|#
+directive|define
+name|BP_SET_BIRTH
+parameter_list|(
+name|bp
+parameter_list|,
+name|logical
+parameter_list|,
+name|physical
+parameter_list|)
+define|\
+value|{						\ 	(bp)->blk_birth = (logical);		\ 	(bp)->blk_phys_birth = ((logical) == (physical) ? 0 : (physical)); \ }
+define|#
+directive|define
 name|BP_GET_ASIZE
 parameter_list|(
 name|bp
@@ -593,7 +674,7 @@ parameter_list|(
 name|bp
 parameter_list|)
 define|\
-value|((BP_GET_LEVEL(bp)> 0 || dmu_ot[BP_GET_TYPE(bp)].ot_metadata) ? \ 	BP_GET_PSIZE(bp) : BP_GET_LSIZE(bp));
+value|((BP_GET_LEVEL(bp)> 0 || dmu_ot[BP_GET_TYPE(bp)].ot_metadata) ? \ 	BP_GET_PSIZE(bp) : BP_GET_LSIZE(bp))
 define|#
 directive|define
 name|BP_GET_NDVAS
@@ -620,6 +701,16 @@ name|dva2
 parameter_list|)
 define|\
 value|((dva1)->dva_word[1] == (dva2)->dva_word[1]&& \ 	(dva1)->dva_word[0] == (dva2)->dva_word[0])
+define|#
+directive|define
+name|BP_EQUAL
+parameter_list|(
+name|bp1
+parameter_list|,
+name|bp2
+parameter_list|)
+define|\
+value|(BP_PHYSICAL_BIRTH(bp1) == BP_PHYSICAL_BIRTH(bp2)&&	\ 	DVA_EQUAL(&(bp1)->blk_dva[0],&(bp2)->blk_dva[0])&&	\ 	DVA_EQUAL(&(bp1)->blk_dva[1],&(bp2)->blk_dva[1])&&	\ 	DVA_EQUAL(&(bp1)->blk_dva[2],&(bp2)->blk_dva[2]))
 define|#
 directive|define
 name|ZIO_CHECKSUM_EQUAL
@@ -674,15 +765,14 @@ parameter_list|(
 name|bp
 parameter_list|)
 value|((bp)->blk_birth == 0)
+comment|/* BP_IS_RAIDZ(bp) assumes no block compression */
 define|#
 directive|define
-name|BP_IS_OLDER
+name|BP_IS_RAIDZ
 parameter_list|(
 name|bp
-parameter_list|,
-name|txg
 parameter_list|)
-value|(!BP_IS_HOLE(bp)&& (bp)->blk_birth< (txg))
+value|(DVA_GET_ASIZE(&(bp)->blk_dva[0])> \ 				BP_GET_PSIZE(bp))
 define|#
 directive|define
 name|BP_ZERO
@@ -690,11 +780,7 @@ parameter_list|(
 name|bp
 parameter_list|)
 define|\
-value|{						\ 	(bp)->blk_dva[0].dva_word[0] = 0;	\ 	(bp)->blk_dva[0].dva_word[1] = 0;	\ 	(bp)->blk_dva[1].dva_word[0] = 0;	\ 	(bp)->blk_dva[1].dva_word[1] = 0;	\ 	(bp)->blk_dva[2].dva_word[0] = 0;	\ 	(bp)->blk_dva[2].dva_word[1] = 0;	\ 	(bp)->blk_prop = 0;			\ 	(bp)->blk_pad[0] = 0;			\ 	(bp)->blk_pad[1] = 0;			\ 	(bp)->blk_pad[2] = 0;			\ 	(bp)->blk_birth = 0;			\ 	(bp)->blk_fill = 0;			\ 	ZIO_SET_CHECKSUM(&(bp)->blk_cksum, 0, 0, 0, 0);	\ }
-define|#
-directive|define
-name|BLK_FILL_ALREADY_FREED
-value|(-1ULL)
+value|{						\ 	(bp)->blk_dva[0].dva_word[0] = 0;	\ 	(bp)->blk_dva[0].dva_word[1] = 0;	\ 	(bp)->blk_dva[1].dva_word[0] = 0;	\ 	(bp)->blk_dva[1].dva_word[1] = 0;	\ 	(bp)->blk_dva[2].dva_word[0] = 0;	\ 	(bp)->blk_dva[2].dva_word[1] = 0;	\ 	(bp)->blk_prop = 0;			\ 	(bp)->blk_pad[0] = 0;			\ 	(bp)->blk_pad[1] = 0;			\ 	(bp)->blk_phys_birth = 0;		\ 	(bp)->blk_birth = 0;			\ 	(bp)->blk_fill = 0;			\ 	ZIO_SET_CHECKSUM(&(bp)->blk_cksum, 0, 0, 0, 0);	\ }
 comment|/*  * Note: the byteorder is either 0 or -1, both of which are palindromes.  * This simplifies the endianness handling a bit.  */
 if|#
 directive|if
@@ -724,6 +810,27 @@ define|#
 directive|define
 name|BP_SPRINTF_LEN
 value|320
+comment|/*  * This macro allows code sharing between zfs, libzpool, and mdb.  * 'func' is either snprintf() or mdb_snprintf().  * 'ws' (whitespace) can be ' ' for single-line format, '\n' for multi-line.  */
+define|#
+directive|define
+name|SPRINTF_BLKPTR
+parameter_list|(
+name|func
+parameter_list|,
+name|ws
+parameter_list|,
+name|buf
+parameter_list|,
+name|bp
+parameter_list|,
+name|type
+parameter_list|,
+name|checksum
+parameter_list|,
+name|compress
+parameter_list|)
+define|\
+value|{									\ 	static const char *copyname[] =					\ 	    { "zero", "single", "double", "triple" };			\ 	int size = BP_SPRINTF_LEN;					\ 	int len = 0;							\ 	int copies = 0;							\ 									\ 	if (bp == NULL) {						\ 		len = func(buf + len, size - len, "<NULL>");		\ 	} else if (BP_IS_HOLE(bp)) {					\ 		len = func(buf + len, size - len, "<hole>");		\ 	} else {							\ 		for (int d = 0; d< BP_GET_NDVAS(bp); d++) {		\ 			const dva_t *dva =&bp->blk_dva[d];		\ 			if (DVA_IS_VALID(dva))				\ 				copies++;				\ 			len += func(buf + len, size - len,		\ 			    "DVA[%d]=<%llu:%llx:%llx>%c", d,		\ 			    (u_longlong_t)DVA_GET_VDEV(dva),		\ 			    (u_longlong_t)DVA_GET_OFFSET(dva),		\ 			    (u_longlong_t)DVA_GET_ASIZE(dva),		\ 			    ws);					\ 		}							\ 		if (BP_IS_GANG(bp)&&					\ 		    DVA_GET_ASIZE(&bp->blk_dva[2])<=			\ 		    DVA_GET_ASIZE(&bp->blk_dva[1]) / 2)			\ 			copies--;					\ 		len += func(buf + len, size - len,			\ 		    "[L%llu %s] %s %s %s %s %s %s%c"			\ 		    "size=%llxL/%llxP birth=%lluL/%lluP fill=%llu%c"	\ 		    "cksum=%llx:%llx:%llx:%llx",			\ 		    (u_longlong_t)BP_GET_LEVEL(bp),			\ 		    type,						\ 		    checksum,						\ 		    compress,						\ 		    BP_GET_BYTEORDER(bp) == 0 ? "BE" : "LE",		\ 		    BP_IS_GANG(bp) ? "gang" : "contiguous",		\ 		    BP_GET_DEDUP(bp) ? "dedup" : "unique",		\ 		    copyname[copies],					\ 		    ws,							\ 		    (u_longlong_t)BP_GET_LSIZE(bp),			\ 		    (u_longlong_t)BP_GET_PSIZE(bp),			\ 		    (u_longlong_t)bp->blk_birth,			\ 		    (u_longlong_t)BP_PHYSICAL_BIRTH(bp),		\ 		    (u_longlong_t)bp->blk_fill,				\ 		    ws,							\ 		    (u_longlong_t)bp->blk_cksum.zc_word[0],		\ 		    (u_longlong_t)bp->blk_cksum.zc_word[1],		\ 		    (u_longlong_t)bp->blk_cksum.zc_word[2],		\ 		    (u_longlong_t)bp->blk_cksum.zc_word[3]);		\ 	}								\ 	ASSERT(len< size);						\ }
 include|#
 directive|include
 file|<sys/dmu.h>
@@ -735,7 +842,16 @@ name|bp
 parameter_list|)
 define|\
 value|(((BP_GET_LEVEL(bp)> 0) || (dmu_ot[BP_GET_TYPE(bp)].ot_metadata)) ? \ 	ARC_BUFC_METADATA : ARC_BUFC_DATA);
-comment|/*  * Routines found in spa.c  */
+typedef|typedef
+enum|enum
+name|spa_import_type
+block|{
+name|SPA_IMPORT_EXISTING
+block|,
+name|SPA_IMPORT_ASSEMBLE
+block|}
+name|spa_import_type_t
+typedef|;
 comment|/* state manipulation functions */
 specifier|extern
 name|int
@@ -753,6 +869,33 @@ parameter_list|,
 name|void
 modifier|*
 name|tag
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|spa_open_rewind
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|pool
+parameter_list|,
+name|spa_t
+modifier|*
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+name|tag
+parameter_list|,
+name|nvlist_t
+modifier|*
+name|policy
+parameter_list|,
+name|nvlist_t
+modifier|*
+modifier|*
+name|config
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -806,37 +949,6 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|int
-name|spa_check_rootconf
-parameter_list|(
-name|char
-modifier|*
-name|devpath
-parameter_list|,
-name|char
-modifier|*
-name|devid
-parameter_list|,
-name|nvlist_t
-modifier|*
-modifier|*
-name|bestconf
-parameter_list|,
-name|uint64_t
-modifier|*
-name|besttxg
-parameter_list|)
-function_decl|;
-specifier|extern
-name|boolean_t
-name|spa_rootdev_validate
-parameter_list|(
-name|nvlist_t
-modifier|*
-name|nv
-parameter_list|)
-function_decl|;
-specifier|extern
-name|int
 name|spa_import_rootpool
 parameter_list|(
 name|char
@@ -864,21 +976,9 @@ parameter_list|,
 name|nvlist_t
 modifier|*
 name|props
-parameter_list|)
-function_decl|;
-specifier|extern
-name|int
-name|spa_import_verbatim
-parameter_list|(
-specifier|const
-name|char
-modifier|*
 parameter_list|,
-name|nvlist_t
-modifier|*
-parameter_list|,
-name|nvlist_t
-modifier|*
+name|uint64_t
+name|flags
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -990,6 +1090,28 @@ modifier|*
 name|spa
 parameter_list|)
 function_decl|;
+specifier|extern
+name|void
+name|spa_scan_stat_init
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|spa_scan_get_stats
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|,
+name|pool_scan_stat_t
+modifier|*
+name|ps
+parameter_list|)
+function_decl|;
 define|#
 directive|define
 name|SPA_ASYNC_CONFIG_UPDATE
@@ -1010,6 +1132,27 @@ define|#
 directive|define
 name|SPA_ASYNC_RESILVER
 value|0x10
+define|#
+directive|define
+name|SPA_ASYNC_AUTOEXPAND
+value|0x20
+define|#
+directive|define
+name|SPA_ASYNC_REMOVE_DONE
+value|0x40
+define|#
+directive|define
+name|SPA_ASYNC_REMOVE_STOP
+value|0x80
+comment|/*  * Controls the behavior of spa_vdev_remove().  */
+define|#
+directive|define
+name|SPA_REMOVE_UNSPARE
+value|0x01
+define|#
+directive|define
+name|SPA_REMOVE_DONE
+value|0x02
 comment|/* device manipulation */
 specifier|extern
 name|int
@@ -1077,6 +1220,15 @@ name|unspare
 parameter_list|)
 function_decl|;
 specifier|extern
+name|boolean_t
+name|spa_vdev_remove_active
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|)
+function_decl|;
+specifier|extern
 name|int
 name|spa_vdev_setpath
 parameter_list|(
@@ -1108,6 +1260,30 @@ specifier|const
 name|char
 modifier|*
 name|newfru
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|spa_vdev_split_mirror
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|,
+name|char
+modifier|*
+name|newname
+parameter_list|,
+name|nvlist_t
+modifier|*
+name|config
+parameter_list|,
+name|nvlist_t
+modifier|*
+name|props
+parameter_list|,
+name|boolean_t
+name|exp
 parameter_list|)
 function_decl|;
 comment|/* spare state (which is global across all pools) */
@@ -1203,32 +1379,26 @@ modifier|*
 name|spa
 parameter_list|)
 function_decl|;
-specifier|extern
-name|void
-name|spa_l2cache_space_update
-parameter_list|(
-name|vdev_t
-modifier|*
-name|vd
-parameter_list|,
-name|int64_t
-name|space
-parameter_list|,
-name|int64_t
-name|alloc
-parameter_list|)
-function_decl|;
-comment|/* scrubbing */
+comment|/* scanning */
 specifier|extern
 name|int
-name|spa_scrub
+name|spa_scan
 parameter_list|(
 name|spa_t
 modifier|*
 name|spa
 parameter_list|,
-name|pool_scrub_type_t
-name|type
+name|pool_scan_func_t
+name|func
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|spa_scan_stop
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
 parameter_list|)
 function_decl|;
 comment|/* spa syncing */
@@ -1252,6 +1422,22 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+comment|/*  * DEFERRED_FREE must be large enough that regular blocks are not  * deferred.  XXX so can't we change it back to 1?  */
+define|#
+directive|define
+name|SYNC_PASS_DEFERRED_FREE
+value|2
+comment|/* defer frees after this pass */
+define|#
+directive|define
+name|SYNC_PASS_DONT_COMPRESS
+value|4
+comment|/* don't compress after this pass */
+define|#
+directive|define
+name|SYNC_PASS_REWRITE
+value|1
+comment|/* rewrite new bps after this pass */
 comment|/* spa namespace global mutex */
 specifier|extern
 name|kmutex_t
@@ -1339,21 +1525,6 @@ name|int
 name|what
 parameter_list|)
 function_decl|;
-specifier|extern
-name|void
-name|spa_config_update_common
-parameter_list|(
-name|spa_t
-modifier|*
-name|spa
-parameter_list|,
-name|int
-name|what
-parameter_list|,
-name|boolean_t
-name|isroot
-parameter_list|)
-function_decl|;
 comment|/*  * Miscellaneous SPA routines in spa_misc.c  */
 comment|/* Namespace manipulation */
 specifier|extern
@@ -1376,6 +1547,10 @@ specifier|const
 name|char
 modifier|*
 name|name
+parameter_list|,
+name|nvlist_t
+modifier|*
+name|config
 parameter_list|,
 specifier|const
 name|char
@@ -1438,6 +1613,10 @@ modifier|*
 name|spa
 parameter_list|)
 function_decl|;
+define|#
+directive|define
+name|SCL_NONE
+value|0x00
 define|#
 directive|define
 name|SCL_CONFIG
@@ -1560,6 +1739,38 @@ name|spa
 parameter_list|)
 function_decl|;
 specifier|extern
+name|uint64_t
+name|spa_vdev_config_enter
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|spa_vdev_config_exit
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|,
+name|vdev_t
+modifier|*
+name|vd
+parameter_list|,
+name|uint64_t
+name|txg
+parameter_list|,
+name|int
+name|error
+parameter_list|,
+name|char
+modifier|*
+name|tag
+parameter_list|)
+function_decl|;
+specifier|extern
 name|int
 name|spa_vdev_exit
 parameter_list|(
@@ -1586,6 +1797,9 @@ parameter_list|(
 name|spa_t
 modifier|*
 name|spa
+parameter_list|,
+name|int
+name|oplock
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -1602,6 +1816,68 @@ name|vd
 parameter_list|,
 name|int
 name|error
+parameter_list|)
+function_decl|;
+comment|/* Log state */
+typedef|typedef
+enum|enum
+name|spa_log_state
+block|{
+name|SPA_LOG_UNKNOWN
+init|=
+literal|0
+block|,
+comment|/* unknown log state */
+name|SPA_LOG_MISSING
+block|,
+comment|/* missing log(s) */
+name|SPA_LOG_CLEAR
+block|,
+comment|/* clear the log(s) */
+name|SPA_LOG_GOOD
+block|,
+comment|/* log(s) are good */
+block|}
+name|spa_log_state_t
+typedef|;
+specifier|extern
+name|spa_log_state_t
+name|spa_get_log_state
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|spa_set_log_state
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|,
+name|spa_log_state_t
+name|state
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|spa_offline_log
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|)
+function_decl|;
+comment|/* Log claim callback */
+specifier|extern
+name|void
+name|spa_claim_notify
+parameter_list|(
+name|zio_t
+modifier|*
+name|zio
 parameter_list|)
 function_decl|;
 comment|/* Accessor functions */
@@ -1710,6 +1986,15 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|uint64_t
+name|spa_syncing_txg
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|)
+function_decl|;
+specifier|extern
+name|uint64_t
 name|spa_version
 parameter_list|(
 name|spa_t
@@ -1727,35 +2012,17 @@ name|spa
 parameter_list|)
 function_decl|;
 specifier|extern
+name|spa_load_state_t
+name|spa_load_state
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|)
+function_decl|;
+specifier|extern
 name|uint64_t
 name|spa_freeze_txg
-parameter_list|(
-name|spa_t
-modifier|*
-name|spa
-parameter_list|)
-function_decl|;
-specifier|extern
-name|uint64_t
-name|spa_get_alloc
-parameter_list|(
-name|spa_t
-modifier|*
-name|spa
-parameter_list|)
-function_decl|;
-specifier|extern
-name|uint64_t
-name|spa_get_space
-parameter_list|(
-name|spa_t
-modifier|*
-name|spa
-parameter_list|)
-function_decl|;
-specifier|extern
-name|uint64_t
-name|spa_get_dspace
 parameter_list|(
 name|spa_t
 modifier|*
@@ -1776,7 +2043,54 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|uint64_t
+name|spa_get_dspace
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|spa_update_dspace
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|)
+function_decl|;
+specifier|extern
+name|uint64_t
 name|spa_version
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|)
+function_decl|;
+specifier|extern
+name|boolean_t
+name|spa_deflate
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|)
+function_decl|;
+specifier|extern
+name|metaslab_class_t
+modifier|*
+name|spa_normal_class
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|)
+function_decl|;
+specifier|extern
+name|metaslab_class_t
+modifier|*
+name|spa_log_class
 parameter_list|(
 name|spa_t
 modifier|*
@@ -1786,6 +2100,15 @@ function_decl|;
 specifier|extern
 name|int
 name|spa_max_replication
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|spa_prev_software_version
 parameter_list|(
 name|spa_t
 modifier|*
@@ -1817,6 +2140,34 @@ modifier|*
 name|spa
 parameter_list|)
 function_decl|;
+specifier|extern
+name|uint64_t
+name|spa_bootfs
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|)
+function_decl|;
+specifier|extern
+name|uint64_t
+name|spa_delegation
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|)
+function_decl|;
+specifier|extern
+name|objset_t
+modifier|*
+name|spa_meta_objset
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|)
+function_decl|;
 comment|/* Miscellaneous support routines */
 specifier|extern
 name|int
@@ -1831,6 +2182,18 @@ specifier|const
 name|char
 modifier|*
 name|newname
+parameter_list|)
+function_decl|;
+specifier|extern
+name|spa_t
+modifier|*
+name|spa_by_guid
+parameter_list|(
+name|uint64_t
+name|pool_guid
+parameter_list|,
+name|uint64_t
+name|device_guid
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -1871,15 +2234,21 @@ name|range
 parameter_list|)
 function_decl|;
 specifier|extern
+name|uint64_t
+name|spa_generate_guid
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|)
+function_decl|;
+specifier|extern
 name|void
 name|sprintf_blkptr
 parameter_list|(
 name|char
 modifier|*
 name|buf
-parameter_list|,
-name|int
-name|len
 parameter_list|,
 specifier|const
 name|blkptr_t
@@ -1944,7 +2313,35 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|uint64_t
-name|bp_get_dasize
+name|dva_get_dsize_sync
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|,
+specifier|const
+name|dva_t
+modifier|*
+name|dva
+parameter_list|)
+function_decl|;
+specifier|extern
+name|uint64_t
+name|bp_get_dsize_sync
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|,
+specifier|const
+name|blkptr_t
+modifier|*
+name|bp
+parameter_list|)
+function_decl|;
+specifier|extern
+name|uint64_t
+name|bp_get_dsize
 parameter_list|(
 name|spa_t
 modifier|*
@@ -2033,7 +2430,6 @@ typedef|typedef
 struct|struct
 name|history_arg
 block|{
-specifier|const
 name|char
 modifier|*
 name|ha_history_str
@@ -2045,10 +2441,11 @@ name|history_internal_events_t
 name|ha_event
 decl_stmt|;
 name|char
+modifier|*
 name|ha_zone
-index|[
-name|MAXPATHLEN
-index|]
+decl_stmt|;
+name|uid_t
+name|ha_uid
 decl_stmt|;
 block|}
 name|history_arg_t
@@ -2110,8 +2507,9 @@ name|history_log_type_t
 name|what
 parameter_list|)
 function_decl|;
+specifier|extern
 name|void
-name|spa_history_internal_log
+name|spa_history_log_internal
 parameter_list|(
 name|history_internal_events_t
 name|event
@@ -2124,10 +2522,6 @@ name|dmu_tx_t
 modifier|*
 name|tx
 parameter_list|,
-name|cred_t
-modifier|*
-name|cr
-parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -2136,12 +2530,21 @@ parameter_list|,
 modifier|...
 parameter_list|)
 function_decl|;
+specifier|extern
+name|void
+name|spa_history_log_version
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|,
+name|history_internal_events_t
+name|evt
+parameter_list|)
+function_decl|;
 comment|/* error handling */
 struct_decl|struct
 name|zbookmark
-struct_decl|;
-struct_decl|struct
-name|zio
 struct_decl|;
 specifier|extern
 name|void
@@ -2151,8 +2554,7 @@ name|spa_t
 modifier|*
 name|spa
 parameter_list|,
-name|struct
-name|zio
+name|zio_t
 modifier|*
 name|zio
 parameter_list|)
@@ -2174,8 +2576,7 @@ name|vdev_t
 modifier|*
 name|vd
 parameter_list|,
-name|struct
-name|zio
+name|zio_t
 modifier|*
 name|zio
 parameter_list|,
@@ -2189,6 +2590,19 @@ function_decl|;
 specifier|extern
 name|void
 name|zfs_post_remove
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|,
+name|vdev_t
+modifier|*
+name|vd
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|zfs_post_state_change
 parameter_list|(
 name|spa_t
 modifier|*
@@ -2410,7 +2824,7 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-value|do {				\ 	if (zfs_flags& ZFS_DEBUG_DPRINTF) { 			\ 	char *__blkbuf = kmem_alloc(BP_SPRINTF_LEN, KM_SLEEP);	\ 	sprintf_blkptr(__blkbuf, BP_SPRINTF_LEN, (bp));		\ 	dprintf(fmt " %s\n", __VA_ARGS__, __blkbuf);		\ 	kmem_free(__blkbuf, BP_SPRINTF_LEN);			\ 	} \ _NOTE(CONSTCOND) } while (0)
+value|do {				\ 	if (zfs_flags& ZFS_DEBUG_DPRINTF) { 			\ 	char *__blkbuf = kmem_alloc(BP_SPRINTF_LEN, KM_SLEEP);	\ 	sprintf_blkptr(__blkbuf, (bp));				\ 	dprintf(fmt " %s\n", __VA_ARGS__, __blkbuf);		\ 	kmem_free(__blkbuf, BP_SPRINTF_LEN);			\ 	} \ _NOTE(CONSTCOND) } while (0)
 else|#
 directive|else
 define|#

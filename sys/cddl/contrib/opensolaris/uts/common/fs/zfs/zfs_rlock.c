@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
 begin_comment
@@ -74,7 +74,7 @@ init|;
 condition|;
 control|)
 block|{
-comment|/* 		 * Range locking is also used by zvol and uses a 		 * dummied up znode. However, for zvol, we don't need to 		 * append or grow blocksize, and besides we don't have 		 * a z_phys or z_zfsvfs - so skip that processing. 		 * 		 * Yes, this is ugly, and would be solved by not handling 		 * grow or append in range lock code. If that was done then 		 * we could make the range locking code generically available 		 * to other non-zfs consumers. 		 */
+comment|/* 		 * Range locking is also used by zvol and uses a 		 * dummied up znode. However, for zvol, we don't need to 		 * append or grow blocksize, and besides we don't have 		 * a "sa" data or z_zfsvfs - so skip that processing. 		 * 		 * Yes, this is ugly, and would be solved by not handling 		 * grow or append in range lock code. If that was done then 		 * we could make the range locking code generically available 		 * to other non-zfs consumers. 		 */
 if|if
 condition|(
 name|zp
@@ -98,9 +98,7 @@ name|r_off
 operator|=
 name|zp
 operator|->
-name|z_phys
-operator|->
-name|zp_size
+name|z_size
 expr_stmt|;
 comment|/* 			 * If we need to grow the block size then grab the whole 			 * file range. This is also done under z_range_lock to 			 * avoid races. 			 */
 name|end_size
@@ -109,9 +107,7 @@ name|MAX
 argument_list|(
 name|zp
 operator|->
-name|z_phys
-operator|->
-name|zp_size
+name|z_size
 argument_list|,
 name|new
 operator|->

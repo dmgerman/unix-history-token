@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -55,6 +55,12 @@ struct_decl|;
 struct_decl|struct
 name|dsl_dataset
 struct_decl|;
+struct_decl|struct
+name|zilog
+struct_decl|;
+struct_decl|struct
+name|arc_buf
+struct_decl|;
 typedef|typedef
 name|int
 function_decl|(
@@ -65,9 +71,19 @@ name|spa_t
 modifier|*
 name|spa
 parameter_list|,
+name|zilog_t
+modifier|*
+name|zilog
+parameter_list|,
+specifier|const
 name|blkptr_t
 modifier|*
 name|bp
+parameter_list|,
+name|struct
+name|arc_buf
+modifier|*
+name|pbuf
 parameter_list|,
 specifier|const
 name|zbookmark_t
@@ -105,6 +121,15 @@ define|#
 directive|define
 name|TRAVERSE_PREFETCH
 value|(TRAVERSE_PREFETCH_METADATA | TRAVERSE_PREFETCH_DATA)
+define|#
+directive|define
+name|TRAVERSE_HARD
+value|(1<<4)
+comment|/* Special traverse error return value to indicate skipping of children */
+define|#
+directive|define
+name|TRAVERSE_VISIT_NO_CHILDREN
+value|-1
 name|int
 name|traverse_dataset
 parameter_list|(
@@ -133,6 +158,12 @@ parameter_list|(
 name|spa_t
 modifier|*
 name|spa
+parameter_list|,
+name|uint64_t
+name|txg_start
+parameter_list|,
+name|int
+name|flags
 parameter_list|,
 name|blkptr_cb_t
 name|func

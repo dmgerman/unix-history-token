@@ -46,6 +46,7 @@ name|__inline
 name|int
 name|priv_ineffect
 parameter_list|(
+name|int
 name|priv
 parameter_list|)
 block|{

@@ -726,6 +726,22 @@ name|defined
 argument_list|(
 name|__powerpc__
 argument_list|)
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIG_ENDIAN__
+argument_list|)
+define|#
+directive|define
+name|_BIT_FIELDS_HTOL
+else|#
+directive|else
+define|#
+directive|define
+name|_BIT_FIELDS_LTOH
+endif|#
+directive|endif
 comment|/*  * The following set of definitions characterize the Solaris on SPARC systems.  *  * The symbol __sparc indicates any of the SPARC family of processor  * architectures.  This includes SPARC V7, SPARC V8 and SPARC V9.  *  * The symbol __sparcv8 indicates the 32-bit SPARC V8 architecture as defined  * by Version 8 of the SPARC Architecture Manual.  (SPARC V7 is close enough  * to SPARC V8 for the former to be subsumed into the latter definition.)  *  * The symbol __sparcv9 indicates the 64-bit SPARC V9 architecture as defined  * by Version 9 of the SPARC Architecture Manual.  *  * The symbols __sparcv8 and __sparcv9 are mutually exclusive, and are only  * relevant when the symbol __sparc is defined.  */
 comment|/*  * XXX Due to the existence of 5110166, "defined(__sparcv9)" needs to be added  * to support backwards builds.  This workaround should be removed in s10_71.  */
 elif|#

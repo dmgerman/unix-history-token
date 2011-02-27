@@ -60,6 +60,12 @@ directive|include
 file|<sys/kmem.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/sunddi.h>
+end_include
+
 begin_else
 else|#
 directive|else

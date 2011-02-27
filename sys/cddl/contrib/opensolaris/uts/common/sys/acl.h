@@ -127,13 +127,9 @@ comment|/* allow or deny */
 block|}
 name|ace_t
 typedef|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+ifndef|#
+directive|ifndef
 name|_KERNEL
-argument_list|)
 typedef|typedef
 name|struct
 name|acl_info

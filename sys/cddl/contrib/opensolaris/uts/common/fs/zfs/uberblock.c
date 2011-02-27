@@ -4,15 +4,8 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
 end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -142,6 +135,12 @@ name|ub_timestamp
 operator|=
 name|gethrestime_sec
 argument_list|()
+expr_stmt|;
+name|ub
+operator|->
+name|ub_software_version
+operator|=
+name|SPA_VERSION
 expr_stmt|;
 return|return
 operator|(

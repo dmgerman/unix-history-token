@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to the terms of the  * Common Development and Distribution License, Version 1.0 only  * (the "License").  You may not use this file except in compliance  * with the License.  *  * You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE  * or http://www.opensolaris.org/os/licensing.  * See the License for the specific language governing permissions  * and limitations under the License.  *  * When distributing Covered Code, include this CDDL HEADER in each  * file and include the License file at usr/src/OPENSOLARIS.LICENSE.  * If applicable, add the following below this CDDL HEADER, with the  * fields enclosed by brackets "[]" replaced with your own identifying  * information: Portions Copyright [yyyy] [name of copyright owner]  *  * CDDL HEADER END  */
+comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to the terms of the  * Common Development and Distribution License (the "License").  * You may not use this file except in compliance with the License.  *  * You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE  * or http://www.opensolaris.org/os/licensing.  * See the License for the specific language governing permissions  * and limitations under the License.  *  * When distributing Covered Code, include this CDDL HEADER in each  * file and include the License file at usr/src/OPENSOLARIS.LICENSE.  * If applicable, add the following below this CDDL HEADER, with the  * fields enclosed by brackets "[]" replaced with your own identifying  * information: Portions Copyright [yyyy] [name of copyright owner]  *  * CDDL HEADER END  */
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2004 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2000, 2010, Oracle and/or its affiliates. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,6 @@ define|#
 directive|define
 name|_SYS_SYSEVENT_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -343,29 +336,38 @@ directive|define
 name|EVCH_QWAIT
 value|0x0008
 comment|/* Wait for slot in event queue */
-comment|/*  * Meaning of flags for subscribe/unsubscribe. Bits 0 to 7 are dedicated to  * the consolidation private interface.  */
+comment|/*  * Meaning of flags for subscribe. Bits 8 to 15 are dedicated to  * the consolidation private interface, so flags defined here are restricted  * to the LSB.  *  * EVCH_SUB_KEEP indicates that this subscription should persist even if  * this subscriber id should die unexpectedly; matching events will be  * queued (up to a limit) and will be delivered if/when we restart again  * with the same subscriber id.  */
 define|#
 directive|define
 name|EVCH_SUB_KEEP
-value|0x0001
+value|0x01
+comment|/*  * Subscriptions may be wildcarded, but we limit the number of  * wildcards permitted.  */
+define|#
+directive|define
+name|EVCH_WILDCARD_MAX
+value|10
+comment|/*  * Used in unsubscribe to indicate all subscriber ids for a channel.  */
 define|#
 directive|define
 name|EVCH_ALLSUB
 value|"all_subs"
-comment|/*  * Meaning of flags parameter of channel bind function  */
+comment|/*  * Meaning of flags parameter of channel bind function  *  * EVCH_CREAT indicates to create a channel if not already present.  *  * EVCH_HOLD_PEND indicates that events should be published to this  * channel even if there are no matching subscribers present; when  * a subscriber belatedly binds to the channel and registers their  * subscriptions they will receive events that predate their bind.  * If the channel is closed, however, with no remaining bindings then  * the channel is destroyed.  *  * EVCH_HOLD_PEND_INDEF is a stronger version of EVCH_HOLD_PEND -  * even if the channel has no remaining bindings it will not be  * destroyed so long as events remain unconsumed.  This is suitable for  * use with short-lived event producers that may bind to (create) the  * channel and exit before the intended consumer has started.  */
 define|#
 directive|define
 name|EVCH_CREAT
 value|0x0001
-comment|/* Create a channel if not present */
 define|#
 directive|define
 name|EVCH_HOLD_PEND
 value|0x0002
 define|#
 directive|define
+name|EVCH_HOLD_PEND_INDEF
+value|0x0004
+define|#
+directive|define
 name|EVCH_B_FLAGS
-value|0x0003
+value|0x0007
 comment|/* All valid bits */
 comment|/*  * Meaning of commands of evc_control function  */
 define|#
@@ -388,7 +390,11 @@ directive|define
 name|EVCH_CMD_LAST
 value|EVCH_SET_CHAN_LEN
 comment|/* Last command */
-comment|/*  * Event channel interface definitions  */
+ifdef|#
+directive|ifdef
+name|sun
+comment|/*  * Shared user/kernel event channel interface definitions  */
+specifier|extern
 name|int
 name|sysevent_evc_bind
 parameter_list|(
@@ -403,13 +409,15 @@ parameter_list|,
 name|uint32_t
 parameter_list|)
 function_decl|;
-name|void
+specifier|extern
+name|int
 name|sysevent_evc_unbind
 parameter_list|(
 name|evchan_t
 modifier|*
 parameter_list|)
 function_decl|;
+specifier|extern
 name|int
 name|sysevent_evc_subscribe
 parameter_list|(
@@ -442,7 +450,8 @@ parameter_list|,
 name|uint32_t
 parameter_list|)
 function_decl|;
-name|void
+specifier|extern
+name|int
 name|sysevent_evc_unsubscribe
 parameter_list|(
 name|evchan_t
@@ -453,6 +462,7 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
+specifier|extern
 name|int
 name|sysevent_evc_publish
 parameter_list|(
@@ -481,6 +491,7 @@ parameter_list|,
 name|uint32_t
 parameter_list|)
 function_decl|;
+specifier|extern
 name|int
 name|sysevent_evc_control
 parameter_list|(
@@ -492,10 +503,156 @@ parameter_list|,
 modifier|...
 parameter_list|)
 function_decl|;
+specifier|extern
+name|int
+name|sysevent_evc_setpropnvl
+parameter_list|(
+name|evchan_t
+modifier|*
+parameter_list|,
+name|nvlist_t
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|sysevent_evc_getpropnvl
+parameter_list|(
+name|evchan_t
+modifier|*
+parameter_list|,
+name|nvlist_t
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+endif|#
+directive|endif
+comment|/* sun */
+ifndef|#
+directive|ifndef
+name|_KERNEL
 ifdef|#
 directive|ifdef
-name|_KERNEL
+name|sun
+comment|/*  * Userland-only event channel interfaces  */
+include|#
+directive|include
+file|<door.h>
+typedef|typedef
+name|struct
+name|sysevent_subattr
+name|sysevent_subattr_t
+typedef|;
+specifier|extern
+name|sysevent_subattr_t
+modifier|*
+name|sysevent_subattr_alloc
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|sysevent_subattr_free
+parameter_list|(
+name|sysevent_subattr_t
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|sysevent_subattr_thrattr
+parameter_list|(
+name|sysevent_subattr_t
+modifier|*
+parameter_list|,
+name|pthread_attr_t
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|sysevent_subattr_sigmask
+parameter_list|(
+name|sysevent_subattr_t
+modifier|*
+parameter_list|,
+name|sigset_t
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|sysevent_subattr_thrcreate
+parameter_list|(
+name|sysevent_subattr_t
+modifier|*
+parameter_list|,
+name|door_xcreate_server_func_t
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|void
+name|sysevent_subattr_thrsetup
+parameter_list|(
+name|sysevent_subattr_t
+modifier|*
+parameter_list|,
+name|door_xcreate_thrsetup_func_t
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|sysevent_evc_xsubscribe
+parameter_list|(
+name|evchan_t
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+function_decl|(
+modifier|*
+function_decl|)
+parameter_list|(
+name|sysevent_t
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|uint32_t
+parameter_list|,
+name|sysevent_subattr_t
+modifier|*
+parameter_list|)
+function_decl|;
+endif|#
+directive|endif
+comment|/* sun */
+else|#
+directive|else
 comment|/*  * Kernel log_event interfaces.  */
+specifier|extern
 name|int
 name|log_sysevent
 parameter_list|(
@@ -508,6 +665,7 @@ name|sysevent_id_t
 modifier|*
 parameter_list|)
 function_decl|;
+specifier|extern
 name|sysevent_t
 modifier|*
 name|sysevent_alloc
@@ -524,6 +682,7 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
+specifier|extern
 name|void
 name|sysevent_free
 parameter_list|(
@@ -531,6 +690,7 @@ name|sysevent_t
 modifier|*
 parameter_list|)
 function_decl|;
+specifier|extern
 name|int
 name|sysevent_add_attr
 parameter_list|(
@@ -547,6 +707,7 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
+specifier|extern
 name|void
 name|sysevent_free_attr
 parameter_list|(
@@ -554,6 +715,7 @@ name|sysevent_attr_list_t
 modifier|*
 parameter_list|)
 function_decl|;
+specifier|extern
 name|int
 name|sysevent_attach_attributes
 parameter_list|(
@@ -564,6 +726,7 @@ name|sysevent_attr_list_t
 modifier|*
 parameter_list|)
 function_decl|;
+specifier|extern
 name|void
 name|sysevent_detach_attributes
 parameter_list|(
@@ -571,6 +734,10 @@ name|sysevent_t
 modifier|*
 parameter_list|)
 function_decl|;
+ifdef|#
+directive|ifdef
+name|sun
+specifier|extern
 name|char
 modifier|*
 name|sysevent_get_class_name
@@ -579,6 +746,7 @@ name|sysevent_t
 modifier|*
 parameter_list|)
 function_decl|;
+specifier|extern
 name|char
 modifier|*
 name|sysevent_get_subclass_name
@@ -587,6 +755,7 @@ name|sysevent_t
 modifier|*
 parameter_list|)
 function_decl|;
+specifier|extern
 name|uint64_t
 name|sysevent_get_seq
 parameter_list|(
@@ -594,6 +763,7 @@ name|sysevent_t
 modifier|*
 parameter_list|)
 function_decl|;
+specifier|extern
 name|void
 name|sysevent_get_time
 parameter_list|(
@@ -604,6 +774,7 @@ name|hrtime_t
 modifier|*
 parameter_list|)
 function_decl|;
+specifier|extern
 name|size_t
 name|sysevent_get_size
 parameter_list|(
@@ -611,6 +782,7 @@ name|sysevent_t
 modifier|*
 parameter_list|)
 function_decl|;
+specifier|extern
 name|char
 modifier|*
 name|sysevent_get_pub
@@ -619,6 +791,7 @@ name|sysevent_t
 modifier|*
 parameter_list|)
 function_decl|;
+specifier|extern
 name|int
 name|sysevent_get_attr_list
 parameter_list|(
@@ -630,6 +803,9 @@ modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
+endif|#
+directive|endif
+comment|/* sun */
 endif|#
 directive|endif
 comment|/* _KERNEL */

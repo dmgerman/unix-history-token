@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -77,6 +77,12 @@ begin_include
 include|#
 directive|include
 file|<sys/bplist.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/bpobj.h>
 end_include
 
 begin_ifdef
@@ -210,27 +216,6 @@ decl_stmt|;
 block|}
 name|spa_config_dirent_t
 typedef|;
-typedef|typedef
-enum|enum
-name|spa_log_state
-block|{
-name|SPA_LOG_UNKNOWN
-init|=
-literal|0
-block|,
-comment|/* unknown log state */
-name|SPA_LOG_MISSING
-block|,
-comment|/* missing log(s) */
-name|SPA_LOG_CLEAR
-block|,
-comment|/* clear the log(s) */
-name|SPA_LOG_GOOD
-block|,
-comment|/* log(s) are good */
-block|}
-name|spa_log_state_t
-typedef|;
 enum|enum
 name|zio_taskq_type
 block|{
@@ -247,6 +232,28 @@ block|,
 name|ZIO_TASKQ_TYPES
 block|}
 enum|;
+comment|/*  * State machine for the zpool-pooname process.  The states transitions  * are done as follows:  *  *	From		   To			Routine  *	PROC_NONE	-> PROC_CREATED		spa_activate()  *	PROC_CREATED	-> PROC_ACTIVE		spa_thread()  *	PROC_ACTIVE	-> PROC_DEACTIVATE	spa_deactivate()  *	PROC_DEACTIVATE	-> PROC_GONE		spa_thread()  *	PROC_GONE	-> PROC_NONE		spa_deactivate()  */
+typedef|typedef
+enum|enum
+name|spa_proc_state
+block|{
+name|SPA_PROC_NONE
+block|,
+comment|/* spa_proc =&p0, no process created */
+name|SPA_PROC_CREATED
+block|,
+comment|/* spa_activate() has proc, is waiting */
+name|SPA_PROC_ACTIVE
+block|,
+comment|/* taskqs created, spa_proc set */
+name|SPA_PROC_DEACTIVATE
+block|,
+comment|/* spa_deactivate() requests process exit */
+name|SPA_PROC_GONE
+comment|/* spa_thread() is exiting, spa_proc =&p0 */
+block|}
+name|spa_proc_state_t
+typedef|;
 struct|struct
 name|spa
 block|{
@@ -272,6 +279,16 @@ modifier|*
 name|spa_config_syncing
 decl_stmt|;
 comment|/* currently syncing config */
+name|nvlist_t
+modifier|*
+name|spa_config_splitting
+decl_stmt|;
+comment|/* config for splitting */
+name|nvlist_t
+modifier|*
+name|spa_load_info
+decl_stmt|;
+comment|/* info and errors from load */
 name|uint64_t
 name|spa_config_txg
 decl_stmt|;
@@ -296,10 +313,10 @@ name|spa_load_state_t
 name|spa_load_state
 decl_stmt|;
 comment|/* current load operation */
-name|boolean_t
-name|spa_load_verbatim
+name|uint64_t
+name|spa_import_flags
 decl_stmt|;
-comment|/* load the given config? */
+comment|/* import specific flags */
 name|taskq_t
 modifier|*
 name|spa_zio_taskq
@@ -336,6 +353,18 @@ name|uint64_t
 name|spa_freeze_txg
 decl_stmt|;
 comment|/* freeze pool at this txg */
+name|uint64_t
+name|spa_load_max_txg
+decl_stmt|;
+comment|/* best initial ub_txg */
+name|uint64_t
+name|spa_claim_max_txg
+decl_stmt|;
+comment|/* highest claimed birth txg */
+name|timespec_t
+name|spa_loaded_ts
+decl_stmt|;
+comment|/* 1st successful open time */
 name|objset_t
 modifier|*
 name|spa_meta_objset
@@ -375,17 +404,24 @@ name|spa_config_object
 decl_stmt|;
 comment|/* MOS object for pool config */
 name|uint64_t
+name|spa_config_generation
+decl_stmt|;
+comment|/* config generation number */
+name|uint64_t
 name|spa_syncing_txg
 decl_stmt|;
 comment|/* txg currently syncing */
-name|uint64_t
-name|spa_sync_bplist_obj
-decl_stmt|;
-comment|/* object for deferred frees */
-name|bplist_t
-name|spa_sync_bplist
+name|bpobj_t
+name|spa_deferred_bpobj
 decl_stmt|;
 comment|/* deferred-free bplist */
+name|bplist_t
+name|spa_free_bplist
+index|[
+name|TXG_SIZE
+index|]
+decl_stmt|;
+comment|/* bplist of stuff to free */
 name|uberblock_t
 name|spa_ubsync
 decl_stmt|;
@@ -394,6 +430,14 @@ name|uberblock_t
 name|spa_uberblock
 decl_stmt|;
 comment|/* current uberblock */
+name|boolean_t
+name|spa_extreme_rewind
+decl_stmt|;
+comment|/* rewind past deferred frees */
+name|uint64_t
+name|spa_last_io
+decl_stmt|;
+comment|/* lbolt of last non-scan I/O */
 name|kmutex_t
 name|spa_scrub_lock
 decl_stmt|;
@@ -402,14 +446,6 @@ name|uint64_t
 name|spa_scrub_inflight
 decl_stmt|;
 comment|/* in-flight scrub I/Os */
-name|uint64_t
-name|spa_scrub_maxinflight
-decl_stmt|;
-comment|/* max in-flight scrub I/Os */
-name|uint64_t
-name|spa_scrub_errors
-decl_stmt|;
-comment|/* scrub I/O error count */
 name|kcondvar_t
 name|spa_scrub_io_cv
 decl_stmt|;
@@ -434,6 +470,14 @@ name|uint8_t
 name|spa_scrub_reopen
 decl_stmt|;
 comment|/* scrub doing vdev_reopen */
+name|uint64_t
+name|spa_scan_pass_start
+decl_stmt|;
+comment|/* start time per pass/reboot */
+name|uint64_t
+name|spa_scan_pass_exam
+decl_stmt|;
+comment|/* examined bytes per pass */
 name|kmutex_t
 name|spa_async_lock
 decl_stmt|;
@@ -464,10 +508,38 @@ name|uint64_t
 name|spa_ena
 decl_stmt|;
 comment|/* spa-wide ereport ENA */
-name|boolean_t
+name|int
 name|spa_last_open_failed
 decl_stmt|;
-comment|/* true if last open faled */
+comment|/* error if last open failed */
+name|uint64_t
+name|spa_last_ubsync_txg
+decl_stmt|;
+comment|/* "best" uberblock txg */
+name|uint64_t
+name|spa_last_ubsync_txg_ts
+decl_stmt|;
+comment|/* timestamp from that ub */
+name|uint64_t
+name|spa_load_txg
+decl_stmt|;
+comment|/* ub txg that loaded */
+name|uint64_t
+name|spa_load_txg_ts
+decl_stmt|;
+comment|/* timestamp from that ub */
+name|uint64_t
+name|spa_load_meta_errors
+decl_stmt|;
+comment|/* verify metadata err count */
+name|uint64_t
+name|spa_load_data_errors
+decl_stmt|;
+comment|/* verify data err count */
+name|uint64_t
+name|spa_verify_min_txg
+decl_stmt|;
+comment|/* start txg of verify scrub */
 name|kmutex_t
 name|spa_errlog_lock
 decl_stmt|;
@@ -555,6 +627,10 @@ name|uint8_t
 name|spa_suspended
 decl_stmt|;
 comment|/* pool is suspended */
+name|uint8_t
+name|spa_claiming
+decl_stmt|;
+comment|/* pool is doing zil_claim() */
 name|boolean_t
 name|spa_is_root
 decl_stmt|;
@@ -571,6 +647,75 @@ name|spa_log_state_t
 name|spa_log_state
 decl_stmt|;
 comment|/* log state */
+name|uint64_t
+name|spa_autoexpand
+decl_stmt|;
+comment|/* lun expansion on/off */
+name|ddt_t
+modifier|*
+name|spa_ddt
+index|[
+name|ZIO_CHECKSUM_FUNCTIONS
+index|]
+decl_stmt|;
+comment|/* in-core DDTs */
+name|uint64_t
+name|spa_ddt_stat_object
+decl_stmt|;
+comment|/* DDT statistics */
+name|uint64_t
+name|spa_dedup_ditto
+decl_stmt|;
+comment|/* dedup ditto threshold */
+name|uint64_t
+name|spa_dedup_checksum
+decl_stmt|;
+comment|/* default dedup checksum */
+name|uint64_t
+name|spa_dspace
+decl_stmt|;
+comment|/* dspace in normal class */
+name|kmutex_t
+name|spa_vdev_top_lock
+decl_stmt|;
+comment|/* dueling offline/remove */
+name|kmutex_t
+name|spa_proc_lock
+decl_stmt|;
+comment|/* protects spa_proc* */
+name|kcondvar_t
+name|spa_proc_cv
+decl_stmt|;
+comment|/* spa_proc_state transitions */
+name|spa_proc_state_t
+name|spa_proc_state
+decl_stmt|;
+comment|/* see definition */
+name|struct
+name|proc
+modifier|*
+name|spa_proc
+decl_stmt|;
+comment|/* "zpool-poolname" process */
+name|uint64_t
+name|spa_did
+decl_stmt|;
+comment|/* if procp != p0, did of t1 */
+name|boolean_t
+name|spa_autoreplace
+decl_stmt|;
+comment|/* autoreplace set in open */
+name|int
+name|spa_vdev_locks
+decl_stmt|;
+comment|/* locks grabbed */
+name|uint64_t
+name|spa_creation_version
+decl_stmt|;
+comment|/* version at pool creation */
+name|uint64_t
+name|spa_prev_software_version
+decl_stmt|;
 comment|/* 	 * spa_refcnt& spa_config_lock must be the last elements 	 * because refcount_t changes size based on compilation options. 	 * In order for the MDB module to function correctly, the other 	 * fields must remain in the same location. 	 */
 name|spa_config_lock_t
 name|spa_config_lock
@@ -583,6 +728,15 @@ name|refcount_t
 name|spa_refcount
 decl_stmt|;
 comment|/* number of opens */
+ifndef|#
+directive|ifndef
+name|sun
+name|boolean_t
+name|spa_splitting_newspa
+decl_stmt|;
+comment|/* creating new spa in split */
+endif|#
+directive|endif
 block|}
 struct|;
 specifier|extern
@@ -591,14 +745,6 @@ name|char
 modifier|*
 name|spa_config_path
 decl_stmt|;
-define|#
-directive|define
-name|BOOTFS_COMPRESS_VALID
-parameter_list|(
-name|compress
-parameter_list|)
-define|\
-value|((compress) == ZIO_COMPRESS_LZJB || \ 	((compress) == ZIO_COMPRESS_ON&& \ 	ZIO_COMPRESS_ON_VALUE == ZIO_COMPRESS_LZJB) || \ 	(compress) == ZIO_COMPRESS_OFF)
 ifdef|#
 directive|ifdef
 name|__cplusplus

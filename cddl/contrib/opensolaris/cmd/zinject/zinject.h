@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -18,13 +18,6 @@ define|#
 directive|define
 name|_ZINJECT_H
 end_define
-
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
 
 begin_include
 include|#
@@ -65,7 +58,7 @@ comment|/* metaslab objects		*/
 name|TYPE_CONFIG
 block|,
 comment|/* MOS config			*/
-name|TYPE_BPLIST
+name|TYPE_BPOBJ
 block|,
 comment|/* block pointer list		*/
 name|TYPE_SPACEMAP
@@ -80,6 +73,12 @@ comment|/* label specific uberblock	*/
 name|TYPE_LABEL_NVLIST
 block|,
 comment|/* label specific nvlist	*/
+name|TYPE_LABEL_PAD1
+block|,
+comment|/* label specific 8K pad1 area	*/
+name|TYPE_LABEL_PAD2
+block|,
+comment|/* label specific 8K pad2 area	*/
 name|TYPE_INVAL
 block|}
 name|err_type_t
