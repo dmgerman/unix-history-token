@@ -1816,12 +1816,9 @@ begin_comment
 comment|/* Build multithreading support into LLVM */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|LLVM_MULTITHREADED
-value|0
-end_define
+begin_comment
+comment|/* #undef LLVM_MULTITHREADED */
+end_comment
 
 begin_comment
 comment|/* LLVM architecture name for the native architecture, if available */
