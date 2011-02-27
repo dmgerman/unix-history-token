@@ -104,6 +104,9 @@ name|class
 name|DiagnosticOptions
 decl_stmt|;
 name|class
+name|FileManager
+decl_stmt|;
+name|class
 name|HeaderSearch
 decl_stmt|;
 name|class
@@ -144,6 +147,8 @@ name|string
 name|NormalizeDashIncludePath
 argument_list|(
 argument|llvm::StringRef File
+argument_list|,
+argument|FileManager&FileMgr
 argument_list|)
 expr_stmt|;
 comment|/// Apply the header search options to get given HeaderSearch object.

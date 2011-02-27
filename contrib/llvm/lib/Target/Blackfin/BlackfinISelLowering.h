@@ -118,6 +118,20 @@ argument_list|)
 block|;
 name|virtual
 name|MVT
+name|getShiftAmountTy
+argument_list|(
+argument|EVT LHSTy
+argument_list|)
+specifier|const
+block|{
+return|return
+name|MVT
+operator|::
+name|i16
+return|;
+block|}
+name|virtual
+name|MVT
 operator|::
 name|SimpleValueType
 name|getSetCCResultType

@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/PartialDiagnostic.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
@@ -108,6 +114,48 @@ decl_stmt|;
 name|namespace
 name|sema
 block|{
+name|class
+name|PossiblyUnreachableDiag
+block|{
+name|public
+label|:
+name|PartialDiagnostic
+name|PD
+decl_stmt|;
+name|SourceLocation
+name|Loc
+decl_stmt|;
+specifier|const
+name|Stmt
+modifier|*
+name|stmt
+decl_stmt|;
+name|PossiblyUnreachableDiag
+argument_list|(
+argument|const PartialDiagnostic&PD
+argument_list|,
+argument|SourceLocation Loc
+argument_list|,
+argument|const Stmt *stmt
+argument_list|)
+block|:
+name|PD
+argument_list|(
+name|PD
+argument_list|)
+operator|,
+name|Loc
+argument_list|(
+name|Loc
+argument_list|)
+operator|,
+name|stmt
+argument_list|(
+argument|stmt
+argument_list|)
+block|{}
+block|}
+empty_stmt|;
 comment|/// \brief Retains information about a function, method, or block that is
 comment|/// currently being parsed.
 name|class
@@ -163,6 +211,19 @@ operator|,
 literal|4
 operator|>
 name|Returns
+expr_stmt|;
+comment|/// \brief A list of PartialDiagnostics created but delayed within the
+comment|/// current function scope.  These diagnostics are vetted for reachability
+comment|/// prior to being emitted.
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|PossiblyUnreachableDiag
+operator|,
+literal|4
+operator|>
+name|PossiblyUnreachableDiags
 expr_stmt|;
 name|void
 name|setHasBranchIntoScope

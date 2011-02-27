@@ -80,18 +80,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/DebugLoc.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vector>
 end_include
 
@@ -203,15 +191,6 @@ operator|<
 name|unsigned
 operator|>
 name|LiveOuts
-expr_stmt|;
-comment|/// LiveInLocs - Keep track of location livein registers.
-name|DenseMap
-operator|<
-name|unsigned
-operator|,
-name|DebugLoc
-operator|>
-name|LiveInLocs
 expr_stmt|;
 name|MachineRegisterInfo
 argument_list|(
@@ -1008,25 +987,6 @@ name|push_back
 argument_list|(
 name|Reg
 argument_list|)
-expr_stmt|;
-block|}
-comment|/// addLiveInLoc - Keep track of location info for live in reg.
-name|void
-name|addLiveInLoc
-parameter_list|(
-name|unsigned
-name|VReg
-parameter_list|,
-name|DebugLoc
-name|DL
-parameter_list|)
-block|{
-name|LiveInLocs
-index|[
-name|VReg
-index|]
-operator|=
-name|DL
 expr_stmt|;
 block|}
 comment|// Iteration support for live in/out sets.  These sets are kept in sorted

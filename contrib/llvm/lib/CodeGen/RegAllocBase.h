@@ -163,12 +163,6 @@ directive|include
 file|"LiveIntervalUnion.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<queue>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -203,8 +197,8 @@ comment|/// RegAllocBase provides the register allocation driver and interface t
 comment|/// be extended to add interesting heuristics.
 comment|///
 comment|/// Register allocators must override the selectOrSplit() method to implement
-comment|/// live range splitting. They may also override getPriority() which otherwise
-comment|/// defaults to the spill weight computed by CalculateSpillWeights.
+comment|/// live range splitting. They must also override enqueue/dequeue to provide an
+comment|/// assignment order.
 name|class
 name|RegAllocBase
 block|{
@@ -429,16 +423,24 @@ parameter_list|()
 init|=
 literal|0
 function_decl|;
-comment|// getPriority - Calculate the allocation priority for VirtReg.
-comment|// Virtual registers with higher priorities are allocated first.
+comment|/// enqueue - Add VirtReg to the priority queue of unassigned registers.
 name|virtual
-name|float
-name|getPriority
+name|void
+name|enqueue
 parameter_list|(
 name|LiveInterval
 modifier|*
 name|LI
 parameter_list|)
+init|=
+literal|0
+function_decl|;
+comment|/// dequeue - Return the next unassigned register, or NULL.
+name|virtual
+name|LiveInterval
+modifier|*
+name|dequeue
+parameter_list|()
 init|=
 literal|0
 function_decl|;
@@ -569,24 +571,9 @@ decl_stmt|;
 name|private
 label|:
 name|void
-name|seedLiveVirtRegs
-argument_list|(
-name|std
-operator|::
-name|priority_queue
-operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|float
-argument_list|,
-name|unsigned
-operator|>
-expr|>
-operator|&
-argument_list|)
-decl_stmt|;
+name|seedLiveRegs
+parameter_list|()
+function_decl|;
 name|void
 name|spillReg
 argument_list|(

@@ -1033,6 +1033,8 @@ argument_list|(
 argument|MCSymbol *Sym
 argument_list|,
 argument|unsigned Visibility
+argument_list|,
+argument|bool IsDefinition = true
 argument_list|)
 specifier|const
 block|;

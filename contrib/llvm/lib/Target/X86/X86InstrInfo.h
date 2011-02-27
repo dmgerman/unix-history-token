@@ -663,6 +663,14 @@ name|MRM_F9
 init|=
 literal|42
 block|,
+name|MRM_D0
+init|=
+literal|45
+block|,
+name|MRM_D1
+init|=
+literal|46
+block|,
 comment|/// RawFrmImm8 - This is used for the ENTER instruction, which has two
 comment|/// immediates, the first of which is a 16-bit immediate (specified by
 comment|/// the imm encoding) and the second is a 8-bit fixed value.
@@ -1529,6 +1537,16 @@ case|case
 name|X86II
 operator|::
 name|MRM_F9
+case|:
+case|case
+name|X86II
+operator|::
+name|MRM_D0
+case|:
+case|case
+name|X86II
+operator|::
+name|MRM_D1
 case|:
 return|return
 operator|-

@@ -394,6 +394,18 @@ modifier|*
 name|FromNNS
 parameter_list|)
 function_decl|;
+comment|/// \brief Import the given nested-name-specifier from the "from"
+comment|/// context into the "to" context.
+comment|///
+comment|/// \returns the equivalent nested-name-specifier in the "to"
+comment|/// context.
+name|NestedNameSpecifierLoc
+name|Import
+parameter_list|(
+name|NestedNameSpecifierLoc
+name|FromNNS
+parameter_list|)
+function_decl|;
 comment|/// \brief Import the goven template name from the "from" context into the
 comment|/// "to" context.
 name|TemplateName

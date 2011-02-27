@@ -217,7 +217,7 @@ block|,
 name|OpDeref
 block|}
 enum|;
-comment|/// CreateCompileUnit - A CompileUnit provides an anchor for all debugging
+comment|/// createCompileUnit - A CompileUnit provides an anchor for all debugging
 comment|/// information generated during this instance of compilation.
 comment|/// @param Lang     Source programming language, eg. dwarf::DW_LANG_C99
 comment|/// @param File     File name
@@ -232,7 +232,7 @@ comment|///                 by a tool analyzing generated debugging information.
 comment|/// @param RV       This indicates runtime version for languages like
 comment|///                 Objective-C.
 name|void
-name|CreateCompileUnit
+name|createCompileUnit
 parameter_list|(
 name|unsigned
 name|Lang
@@ -256,10 +256,10 @@ name|unsigned
 name|RV
 parameter_list|)
 function_decl|;
-comment|/// CreateFile - Create a file descriptor to hold debugging information
+comment|/// createFile - Create a file descriptor to hold debugging information
 comment|/// for a file.
 name|DIFile
-name|CreateFile
+name|createFile
 parameter_list|(
 name|StringRef
 name|Filename
@@ -268,9 +268,9 @@ name|StringRef
 name|Directory
 parameter_list|)
 function_decl|;
-comment|/// CreateEnumerator - Create a single enumerator value.
+comment|/// createEnumerator - Create a single enumerator value.
 name|DIEnumerator
-name|CreateEnumerator
+name|createEnumerator
 parameter_list|(
 name|StringRef
 name|Name
@@ -279,14 +279,14 @@ name|uint64_t
 name|Val
 parameter_list|)
 function_decl|;
-comment|/// CreateBasicType - Create debugging information entry for a basic
+comment|/// createBasicType - Create debugging information entry for a basic
 comment|/// type.
 comment|/// @param Name        Type name.
 comment|/// @param SizeInBits  Size of the type.
 comment|/// @param AlignInBits Type alignment.
 comment|/// @param Encoding    DWARF encoding code, e.g. dwarf::DW_ATE_float.
 name|DIType
-name|CreateBasicType
+name|createBasicType
 parameter_list|(
 name|StringRef
 name|Name
@@ -301,12 +301,12 @@ name|unsigned
 name|Encoding
 parameter_list|)
 function_decl|;
-comment|/// CreateQualifiedType - Create debugging information entry for a qualified
+comment|/// createQualifiedType - Create debugging information entry for a qualified
 comment|/// type, e.g. 'const int'.
 comment|/// @param Tag         Tag identifing type, e.g. dwarf::TAG_volatile_type
 comment|/// @param FromTy      Base Type.
 name|DIType
-name|CreateQualifiedType
+name|createQualifiedType
 parameter_list|(
 name|unsigned
 name|Tag
@@ -315,13 +315,13 @@ name|DIType
 name|FromTy
 parameter_list|)
 function_decl|;
-comment|/// CreatePointerType - Create debugging information entry for a pointer.
+comment|/// createPointerType - Create debugging information entry for a pointer.
 comment|/// @param PointeeTy   Type pointed by this pointer.
 comment|/// @param SizeInBits  Size.
 comment|/// @param AlignInBits Alignment. (optional)
 comment|/// @param Name        Pointer type name. (optional)
 name|DIType
-name|CreatePointerType
+name|createPointerType
 parameter_list|(
 name|DIType
 name|PointeeTy
@@ -341,22 +341,22 @@ name|StringRef
 argument_list|()
 parameter_list|)
 function_decl|;
-comment|/// CreateReferenceType - Create debugging information entry for a c++
+comment|/// createReferenceType - Create debugging information entry for a c++
 comment|/// style reference.
 name|DIType
-name|CreateReferenceType
+name|createReferenceType
 parameter_list|(
 name|DIType
 name|RTy
 parameter_list|)
 function_decl|;
-comment|/// CreateTypedef - Create debugging information entry for a typedef.
+comment|/// createTypedef - Create debugging information entry for a typedef.
 comment|/// @param Ty          Original type.
 comment|/// @param Name        Typedef name.
 comment|/// @param File        File where this type is defined.
 comment|/// @param LineNo      Line number.
 name|DIType
-name|CreateTypedef
+name|createTypedef
 parameter_list|(
 name|DIType
 name|Ty
@@ -371,9 +371,9 @@ name|unsigned
 name|LineNo
 parameter_list|)
 function_decl|;
-comment|/// CreateFriend - Create debugging information entry for a 'friend'.
+comment|/// createFriend - Create debugging information entry for a 'friend'.
 name|DIType
-name|CreateFriend
+name|createFriend
 parameter_list|(
 name|DIType
 name|Ty
@@ -382,7 +382,7 @@ name|DIType
 name|FriendTy
 parameter_list|)
 function_decl|;
-comment|/// CreateInheritance - Create debugging information entry to establish
+comment|/// createInheritance - Create debugging information entry to establish
 comment|/// inheritance relationship between two types.
 comment|/// @param Ty           Original type.
 comment|/// @param BaseTy       Base type. Ty is inherits from base.
@@ -390,7 +390,7 @@ comment|/// @param BaseOffset   Base offset.
 comment|/// @param Flags        Flags to describe inheritance attribute,
 comment|///                     e.g. private
 name|DIType
-name|CreateInheritance
+name|createInheritance
 parameter_list|(
 name|DIType
 name|Ty
@@ -405,7 +405,7 @@ name|unsigned
 name|Flags
 parameter_list|)
 function_decl|;
-comment|/// CreateMemberType - Create debugging information entry for a member.
+comment|/// createMemberType - Create debugging information entry for a member.
 comment|/// @param Name         Member name.
 comment|/// @param File         File where this member is defined.
 comment|/// @param LineNo       Line number.
@@ -415,7 +415,7 @@ comment|/// @param OffsetInBits Member offset.
 comment|/// @param Flags        Flags to encode member attribute, e.g. private
 comment|/// @param Ty           Parent type.
 name|DIType
-name|CreateMemberType
+name|createMemberType
 parameter_list|(
 name|StringRef
 name|Name
@@ -442,7 +442,7 @@ name|DIType
 name|Ty
 parameter_list|)
 function_decl|;
-comment|/// CreateClassType - Create debugging information entry for a class.
+comment|/// createClassType - Create debugging information entry for a class.
 comment|/// @param Scope        Scope in which this class is defined.
 comment|/// @param Name         class name.
 comment|/// @param File         File where this member is defined.
@@ -458,7 +458,7 @@ comment|///                     DW_AT_containing_type. See DWARF documentation
 comment|///                     for more info.
 comment|/// @param TemplateParms Template type parameters.
 name|DIType
-name|CreateClassType
+name|createClassType
 parameter_list|(
 name|DIDescriptor
 name|Scope
@@ -503,7 +503,7 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
-comment|/// CreateStructType - Create debugging information entry for a struct.
+comment|/// createStructType - Create debugging information entry for a struct.
 comment|/// @param Scope        Scope in which this struct is defined.
 comment|/// @param Name         Struct name.
 comment|/// @param File         File where this member is defined.
@@ -514,7 +514,7 @@ comment|/// @param Flags        Flags to encode member attribute, e.g. private
 comment|/// @param Elements     Struct elements.
 comment|/// @param RunTimeLang  Optional parameter, Objective-C runtime version.
 name|DIType
-name|CreateStructType
+name|createStructType
 parameter_list|(
 name|DIDescriptor
 name|Scope
@@ -546,7 +546,7 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
-comment|/// CreateUnionType - Create debugging information entry for an union.
+comment|/// createUnionType - Create debugging information entry for an union.
 comment|/// @param Scope        Scope in which this union is defined.
 comment|/// @param Name         Union name.
 comment|/// @param File         File where this member is defined.
@@ -557,7 +557,7 @@ comment|/// @param Flags        Flags to encode member attribute, e.g. private
 comment|/// @param Elements     Union elements.
 comment|/// @param RunTimeLang  Optional parameter, Objective-C runtime version.
 name|DIType
-name|CreateUnionType
+name|createUnionType
 parameter_list|(
 name|DIDescriptor
 name|Scope
@@ -589,7 +589,7 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
-comment|/// CreateTemplateTypeParameter - Create debugging information for template
+comment|/// createTemplateTypeParameter - Create debugging information for template
 comment|/// type parameter.
 comment|/// @param Scope        Scope in which this type is defined.
 comment|/// @param Name         Type parameter name.
@@ -598,7 +598,7 @@ comment|/// @param File         File where this type parameter is defined.
 comment|/// @param LineNo       Line number.
 comment|/// @param ColumnNo     Column Number.
 name|DITemplateTypeParameter
-name|CreateTemplateTypeParameter
+name|createTemplateTypeParameter
 parameter_list|(
 name|DIDescriptor
 name|Scope
@@ -626,7 +626,7 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
-comment|/// CreateTemplateValueParameter - Create debugging information for template
+comment|/// createTemplateValueParameter - Create debugging information for template
 comment|/// value parameter.
 comment|/// @param Scope        Scope in which this type is defined.
 comment|/// @param Name         Value parameter name.
@@ -636,7 +636,7 @@ comment|/// @param File         File where this type parameter is defined.
 comment|/// @param LineNo       Line number.
 comment|/// @param ColumnNo     Column Number.
 name|DITemplateValueParameter
-name|CreateTemplateValueParameter
+name|createTemplateValueParameter
 parameter_list|(
 name|DIDescriptor
 name|Scope
@@ -667,13 +667,13 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
-comment|/// CreateArrayType - Create debugging information entry for an array.
+comment|/// createArrayType - Create debugging information entry for an array.
 comment|/// @param Size         Array size.
 comment|/// @param AlignInBits  Alignment.
 comment|/// @param Ty           Element type.
 comment|/// @param Subscripts   Subscripts.
 name|DIType
-name|CreateArrayType
+name|createArrayType
 parameter_list|(
 name|uint64_t
 name|Size
@@ -688,13 +688,13 @@ name|DIArray
 name|Subscripts
 parameter_list|)
 function_decl|;
-comment|/// CreateVectorType - Create debugging information entry for a vector type.
+comment|/// createVectorType - Create debugging information entry for a vector type.
 comment|/// @param Size         Array size.
 comment|/// @param AlignInBits  Alignment.
 comment|/// @param Ty           Element type.
 comment|/// @param Subscripts   Subscripts.
 name|DIType
-name|CreateVectorType
+name|createVectorType
 parameter_list|(
 name|uint64_t
 name|Size
@@ -709,7 +709,7 @@ name|DIArray
 name|Subscripts
 parameter_list|)
 function_decl|;
-comment|/// CreateEnumerationType - Create debugging information entry for an
+comment|/// createEnumerationType - Create debugging information entry for an
 comment|/// enumeration.
 comment|/// @param Scope        Scope in which this enumeration is defined.
 comment|/// @param Name         Union name.
@@ -719,7 +719,7 @@ comment|/// @param SizeInBits   Member size.
 comment|/// @param AlignInBits  Member alignment.
 comment|/// @param Elements     Enumeration elements.
 name|DIType
-name|CreateEnumerationType
+name|createEnumerationType
 parameter_list|(
 name|DIDescriptor
 name|Scope
@@ -743,12 +743,12 @@ name|DIArray
 name|Elements
 parameter_list|)
 function_decl|;
-comment|/// CreateSubroutineType - Create subroutine type.
+comment|/// createSubroutineType - Create subroutine type.
 comment|/// @param File          File in which this subroutine is defined.
 comment|/// @param ParamterTypes An array of subroutine parameter types. This
 comment|///                      includes return type at 0th index.
 name|DIType
-name|CreateSubroutineType
+name|createSubroutineType
 parameter_list|(
 name|DIFile
 name|File
@@ -757,44 +757,44 @@ name|DIArray
 name|ParameterTypes
 parameter_list|)
 function_decl|;
-comment|/// CreateArtificialType - Create a new DIType with "artificial" flag set.
+comment|/// createArtificialType - Create a new DIType with "artificial" flag set.
 name|DIType
-name|CreateArtificialType
+name|createArtificialType
 parameter_list|(
 name|DIType
 name|Ty
 parameter_list|)
 function_decl|;
-comment|/// CreateTemporaryType - Create a temporary forward-declared type.
+comment|/// createTemporaryType - Create a temporary forward-declared type.
 name|DIType
-name|CreateTemporaryType
+name|createTemporaryType
 parameter_list|()
 function_decl|;
 name|DIType
-name|CreateTemporaryType
+name|createTemporaryType
 parameter_list|(
 name|DIFile
 name|F
 parameter_list|)
 function_decl|;
-comment|/// RetainType - Retain DIType in a module even if it is not referenced
+comment|/// retainType - Retain DIType in a module even if it is not referenced
 comment|/// through debug info anchors.
 name|void
-name|RetainType
+name|retainType
 parameter_list|(
 name|DIType
 name|T
 parameter_list|)
 function_decl|;
-comment|/// CreateUnspecifiedParameter - Create unspeicified type descriptor
+comment|/// createUnspecifiedParameter - Create unspeicified type descriptor
 comment|/// for a subroutine type.
 name|DIDescriptor
-name|CreateUnspecifiedParameter
+name|createUnspecifiedParameter
 parameter_list|()
 function_decl|;
-comment|/// GetOrCreateArray - Get a DIArray, create one if required.
+comment|/// getOrCreateArray - Get a DIArray, create one if required.
 name|DIArray
-name|GetOrCreateArray
+name|getOrCreateArray
 parameter_list|(
 name|Value
 modifier|*
@@ -806,10 +806,10 @@ name|unsigned
 name|NumElements
 parameter_list|)
 function_decl|;
-comment|/// GetOrCreateSubrange - Create a descriptor for a value range.  This
+comment|/// getOrCreateSubrange - Create a descriptor for a value range.  This
 comment|/// implicitly uniques the values returned.
 name|DISubrange
-name|GetOrCreateSubrange
+name|getOrCreateSubrange
 parameter_list|(
 name|int64_t
 name|Lo
@@ -818,7 +818,7 @@ name|int64_t
 name|Hi
 parameter_list|)
 function_decl|;
-comment|/// CreateGlobalVariable - Create a new descriptor for the specified global.
+comment|/// createGlobalVariable - Create a new descriptor for the specified global.
 comment|/// @param Name        Name of the variable.
 comment|/// @param File        File where this variable is defined.
 comment|/// @param LineNo      Line number.
@@ -827,7 +827,7 @@ comment|/// @param isLocalToUnit Boolean flag indicate whether this variable is
 comment|///                      externally visible or not.
 comment|/// @param Val         llvm::Value of the variable.
 name|DIGlobalVariable
-name|CreateGlobalVariable
+name|createGlobalVariable
 argument_list|(
 name|StringRef
 name|Name
@@ -851,7 +851,7 @@ operator|*
 name|Val
 argument_list|)
 decl_stmt|;
-comment|/// CreateStaticVariable - Create a new descriptor for the specified
+comment|/// createStaticVariable - Create a new descriptor for the specified
 comment|/// variable.
 comment|/// @param Conext      Variable scope.
 comment|/// @param Name        Name of the variable.
@@ -863,7 +863,7 @@ comment|/// @param isLocalToUnit Boolean flag indicate whether this variable is
 comment|///                      externally visible or not.
 comment|/// @param Val         llvm::Value of the variable.
 name|DIGlobalVariable
-name|CreateStaticVariable
+name|createStaticVariable
 argument_list|(
 name|DIDescriptor
 name|Context
@@ -893,7 +893,7 @@ operator|*
 name|Val
 argument_list|)
 decl_stmt|;
-comment|/// CreateLocalVariable - Create a new descriptor for the specified
+comment|/// createLocalVariable - Create a new descriptor for the specified
 comment|/// local variable.
 comment|/// @param Tag         Dwarf TAG. Usually DW_TAG_auto_variable or
 comment|///                    DW_TAG_arg_variable.
@@ -906,7 +906,7 @@ comment|/// @param AlwaysPreserve Boolean. Set to true if debug info for this
 comment|///                       variable should be preserved in optimized build.
 comment|/// @param Flags          Flags, e.g. artificial variable.
 name|DIVariable
-name|CreateLocalVariable
+name|createLocalVariable
 parameter_list|(
 name|unsigned
 name|Tag
@@ -937,7 +937,7 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
-comment|/// CreateComplexVariable - Create a new descriptor for the specified
+comment|/// createComplexVariable - Create a new descriptor for the specified
 comment|/// variable which has a complex address expression for its address.
 comment|/// @param Tag         Dwarf TAG. Usually DW_TAG_auto_variable or
 comment|///                    DW_TAG_arg_variable.
@@ -949,7 +949,7 @@ comment|/// @param Ty          Variable Type
 comment|/// @param Addr        A pointer to a vector of complex address operations.
 comment|/// @param NumAddr     Num of address operations in the vector.
 name|DIVariable
-name|CreateComplexVariable
+name|createComplexVariable
 parameter_list|(
 name|unsigned
 name|Tag
@@ -979,7 +979,7 @@ name|unsigned
 name|NumAddr
 parameter_list|)
 function_decl|;
-comment|/// CreateFunction - Create a new descriptor for the specified subprogram.
+comment|/// createFunction - Create a new descriptor for the specified subprogram.
 comment|/// See comments in DISubprogram for descriptions of these fields.
 comment|/// @param Scope         Function scope.
 comment|/// @param Name          Function name.
@@ -994,7 +994,7 @@ comment|///                      This flags are used to emit dwarf attributes.
 comment|/// @param isOptimized   True if optimization is ON.
 comment|/// @param Fn            llvm::Function pointer.
 name|DISubprogram
-name|CreateFunction
+name|createFunction
 parameter_list|(
 name|DIDescriptor
 name|Scope
@@ -1037,7 +1037,7 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
-comment|/// CreateMethod - Create a new descriptor for the specified C++ method.
+comment|/// createMethod - Create a new descriptor for the specified C++ method.
 comment|/// See comments in DISubprogram for descriptions of these fields.
 comment|/// @param Scope         Function scope.
 comment|/// @param Name          Function name.
@@ -1056,7 +1056,7 @@ comment|///                      This flags are used to emit dwarf attributes.
 comment|/// @param isOptimized   True if optimization is ON.
 comment|/// @param Fn            llvm::Function pointer.
 name|DISubprogram
-name|CreateMethod
+name|createMethod
 parameter_list|(
 name|DIDescriptor
 name|Scope
@@ -1115,14 +1115,14 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
-comment|/// CreateNameSpace - This creates new descriptor for a namespace
+comment|/// createNameSpace - This creates new descriptor for a namespace
 comment|/// with the specified parent scope.
 comment|/// @param Scope       Namespace scope
 comment|/// @param Name        Name of this namespace
 comment|/// @param File        Source file
 comment|/// @param LineNo      Line number
 name|DINameSpace
-name|CreateNameSpace
+name|createNameSpace
 parameter_list|(
 name|DIDescriptor
 name|Scope
@@ -1137,14 +1137,14 @@ name|unsigned
 name|LineNo
 parameter_list|)
 function_decl|;
-comment|/// CreateLexicalBlock - This creates a descriptor for a lexical block
+comment|/// createLexicalBlock - This creates a descriptor for a lexical block
 comment|/// with the specified parent context.
 comment|/// @param Scope       Parent lexical scope.
 comment|/// @param File        Source file
 comment|/// @param Line        Line number
 comment|/// @param Col         Column number
 name|DILexicalBlock
-name|CreateLexicalBlock
+name|createLexicalBlock
 parameter_list|(
 name|DIDescriptor
 name|Scope
@@ -1159,13 +1159,13 @@ name|unsigned
 name|Col
 parameter_list|)
 function_decl|;
-comment|/// InsertDeclare - Insert a new llvm.dbg.declare intrinsic call.
+comment|/// insertDeclare - Insert a new llvm.dbg.declare intrinsic call.
 comment|/// @param Storage     llvm::Value of the variable
 comment|/// @param VarInfo     Variable's debug info descriptor.
 comment|/// @param InsertAtEnd Location for the new intrinsic.
 name|Instruction
 modifier|*
-name|InsertDeclare
+name|insertDeclare
 argument_list|(
 name|llvm
 operator|::
@@ -1181,13 +1181,13 @@ operator|*
 name|InsertAtEnd
 argument_list|)
 decl_stmt|;
-comment|/// InsertDeclare - Insert a new llvm.dbg.declare intrinsic call.
+comment|/// insertDeclare - Insert a new llvm.dbg.declare intrinsic call.
 comment|/// @param Storage      llvm::Value of the variable
 comment|/// @param VarInfo      Variable's debug info descriptor.
 comment|/// @param InsertBefore Location for the new intrinsic.
 name|Instruction
 modifier|*
-name|InsertDeclare
+name|insertDeclare
 argument_list|(
 name|llvm
 operator|::
@@ -1203,14 +1203,14 @@ operator|*
 name|InsertBefore
 argument_list|)
 decl_stmt|;
-comment|/// InsertDbgValueIntrinsic - Insert a new llvm.dbg.value intrinsic call.
+comment|/// insertDbgValueIntrinsic - Insert a new llvm.dbg.value intrinsic call.
 comment|/// @param Val          llvm::Value of the variable
 comment|/// @param Offset       Offset
 comment|/// @param VarInfo      Variable's debug info descriptor.
 comment|/// @param InsertAtEnd Location for the new intrinsic.
 name|Instruction
 modifier|*
-name|InsertDbgValueIntrinsic
+name|insertDbgValueIntrinsic
 argument_list|(
 name|llvm
 operator|::
@@ -1229,14 +1229,14 @@ operator|*
 name|InsertAtEnd
 argument_list|)
 decl_stmt|;
-comment|/// InsertDbgValueIntrinsic - Insert a new llvm.dbg.value intrinsic call.
+comment|/// insertDbgValueIntrinsic - Insert a new llvm.dbg.value intrinsic call.
 comment|/// @param Val          llvm::Value of the variable
 comment|/// @param Offset       Offset
 comment|/// @param VarInfo      Variable's debug info descriptor.
 comment|/// @param InsertBefore Location for the new intrinsic.
 name|Instruction
 modifier|*
-name|InsertDbgValueIntrinsic
+name|insertDbgValueIntrinsic
 argument_list|(
 name|llvm
 operator|::

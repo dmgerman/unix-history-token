@@ -540,7 +540,7 @@ literal|18
 block|,
 name|DomainMask
 init|=
-literal|3
+literal|7
 operator|<<
 name|DomainShift
 block|,
@@ -559,6 +559,12 @@ block|,
 name|DomainNEON
 init|=
 literal|2
+operator|<<
+name|DomainShift
+block|,
+name|DomainNEONA8
+init|=
+literal|4
 operator|<<
 name|DomainShift
 block|,

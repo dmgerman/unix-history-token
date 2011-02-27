@@ -238,6 +238,11 @@ name|unsigned
 name|MaxLoop
 decl_stmt|;
 name|unsigned
+name|ShowCheckerHelp
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
 name|AnalyzeAll
 range|:
 literal|1
@@ -289,11 +294,6 @@ literal|1
 decl_stmt|;
 name|unsigned
 name|EnableExperimentalChecks
-range|:
-literal|1
-decl_stmt|;
-name|unsigned
-name|EnableExperimentalInternalChecks
 range|:
 literal|1
 decl_stmt|;
@@ -339,6 +339,10 @@ name|AnalysisDiagOpt
 operator|=
 name|PD_HTML
 expr_stmt|;
+name|ShowCheckerHelp
+operator|=
+literal|0
+expr_stmt|;
 name|AnalyzeAll
 operator|=
 literal|0
@@ -380,10 +384,6 @@ operator|=
 literal|0
 expr_stmt|;
 name|EnableExperimentalChecks
-operator|=
-literal|0
-expr_stmt|;
-name|EnableExperimentalInternalChecks
 operator|=
 literal|0
 expr_stmt|;

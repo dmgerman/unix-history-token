@@ -434,7 +434,7 @@ comment|/* The segment override type */
 name|SegmentOverride
 name|segmentOverride
 decl_stmt|;
-comment|/* Sizes of various critical pieces of data */
+comment|/* Sizes of various critical pieces of data, in bytes */
 name|uint8_t
 name|registerSize
 decl_stmt|;

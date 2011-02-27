@@ -1446,7 +1446,7 @@ name|Root
 argument_list|,
 name|std
 operator|::
-name|make_pair
+name|pair
 operator|<
 name|key_type
 argument_list|,

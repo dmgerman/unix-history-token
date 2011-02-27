@@ -6985,16 +6985,9 @@ comment|/// SourceLocation - Location of 'namespace' token.
 name|SourceLocation
 name|NamespaceLoc
 block|;
-comment|/// \brief The source range that covers the nested-name-specifier
-comment|/// preceding the namespace name.
-name|SourceRange
-name|QualifierRange
-block|;
-comment|/// \brief The nested-name-specifier that precedes the namespace
-comment|/// name, if any.
-name|NestedNameSpecifier
-operator|*
-name|Qualifier
+comment|/// \brief The nested-name-specifier that precedes the namespace.
+name|NestedNameSpecifierLoc
+name|QualifierLoc
 block|;
 comment|/// NominatedNamespace - Namespace nominated by using-directive.
 name|NamedDecl
@@ -7030,9 +7023,7 @@ argument|SourceLocation UsingLoc
 argument_list|,
 argument|SourceLocation NamespcLoc
 argument_list|,
-argument|SourceRange QualifierRange
-argument_list|,
-argument|NestedNameSpecifier *Qualifier
+argument|NestedNameSpecifierLoc QualifierLoc
 argument_list|,
 argument|SourceLocation IdentLoc
 argument_list|,
@@ -7063,14 +7054,9 @@ argument_list|(
 name|NamespcLoc
 argument_list|)
 block|,
-name|QualifierRange
+name|QualifierLoc
 argument_list|(
-name|QualifierRange
-argument_list|)
-block|,
-name|Qualifier
-argument_list|(
-name|Qualifier
+name|QualifierLoc
 argument_list|)
 block|,
 name|NominatedNamespace
@@ -7082,18 +7068,18 @@ name|CommonAncestor
 argument_list|(
 argument|CommonAncestor
 argument_list|)
-block|{   }
+block|{ }
 name|public
 operator|:
-comment|/// \brief Retrieve the source range of the nested-name-specifier
-comment|/// that qualifies the namespace name.
-name|SourceRange
-name|getQualifierRange
+comment|/// \brief Retrieve the nested-name-specifier that qualifies the
+comment|/// name of the namespace, with source-location information.
+name|NestedNameSpecifierLoc
+name|getQualifierLoc
 argument_list|()
 specifier|const
 block|{
 return|return
-name|QualifierRange
+name|QualifierLoc
 return|;
 block|}
 comment|/// \brief Retrieve the nested-name-specifier that qualifies the
@@ -7105,7 +7091,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Qualifier
+name|QualifierLoc
+operator|.
+name|getNestedNameSpecifier
+argument_list|()
 return|;
 block|}
 name|NamedDecl
@@ -7222,9 +7211,7 @@ argument|SourceLocation UsingLoc
 argument_list|,
 argument|SourceLocation NamespaceLoc
 argument_list|,
-argument|SourceRange QualifierRange
-argument_list|,
-argument|NestedNameSpecifier *Qualifier
+argument|NestedNameSpecifierLoc QualifierLoc
 argument_list|,
 argument|SourceLocation IdentLoc
 argument_list|,
@@ -7332,20 +7319,13 @@ comment|/// \brief The location of the "namespace" keyword.
 name|SourceLocation
 name|NamespaceLoc
 block|;
-comment|/// \brief The source range that covers the nested-name-specifier
-comment|/// preceding the namespace name.
-name|SourceRange
-name|QualifierRange
-block|;
-comment|/// \brief The nested-name-specifier that precedes the namespace
-comment|/// name, if any.
-name|NestedNameSpecifier
-operator|*
-name|Qualifier
-block|;
 comment|/// IdentLoc - Location of namespace identifier. Accessed by TargetNameLoc.
 name|SourceLocation
 name|IdentLoc
+block|;
+comment|/// \brief The nested-name-specifier that precedes the namespace.
+name|NestedNameSpecifierLoc
+name|QualifierLoc
 block|;
 comment|/// Namespace - The Decl that this alias points to. Can either be a
 comment|/// NamespaceDecl or a NamespaceAliasDecl.
@@ -7363,9 +7343,7 @@ argument|SourceLocation AliasLoc
 argument_list|,
 argument|IdentifierInfo *Alias
 argument_list|,
-argument|SourceRange QualifierRange
-argument_list|,
-argument|NestedNameSpecifier *Qualifier
+argument|NestedNameSpecifierLoc QualifierLoc
 argument_list|,
 argument|SourceLocation IdentLoc
 argument_list|,
@@ -7388,19 +7366,14 @@ argument_list|(
 name|NamespaceLoc
 argument_list|)
 block|,
-name|QualifierRange
-argument_list|(
-name|QualifierRange
-argument_list|)
-block|,
-name|Qualifier
-argument_list|(
-name|Qualifier
-argument_list|)
-block|,
 name|IdentLoc
 argument_list|(
 name|IdentLoc
+argument_list|)
+block|,
+name|QualifierLoc
+argument_list|(
+name|QualifierLoc
 argument_list|)
 block|,
 name|Namespace
@@ -7414,29 +7387,17 @@ name|ASTDeclReader
 block|;
 name|public
 operator|:
-comment|/// \brief Retrieve the source range of the nested-name-specifier
-comment|/// that qualifiers the namespace name.
-name|SourceRange
-name|getQualifierRange
+comment|/// \brief Retrieve the nested-name-specifier that qualifies the
+comment|/// name of the namespace, with source-location information.
+name|NestedNameSpecifierLoc
+name|getQualifierLoc
 argument_list|()
 specifier|const
 block|{
 return|return
-name|QualifierRange
+name|QualifierLoc
 return|;
 block|}
-comment|/// \brief Set the source range of the nested-name-specifier that qualifies
-comment|/// the namespace name.
-name|void
-name|setQualifierRange
-argument_list|(
-argument|SourceRange R
-argument_list|)
-block|{
-name|QualifierRange
-operator|=
-name|R
-block|; }
 comment|/// \brief Retrieve the nested-name-specifier that qualifies the
 comment|/// name of the namespace.
 name|NestedNameSpecifier
@@ -7446,21 +7407,12 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Qualifier
+name|QualifierLoc
+operator|.
+name|getNestedNameSpecifier
+argument_list|()
 return|;
 block|}
-comment|/// \brief Set the nested-name-specifier that qualifies the name of the
-comment|/// namespace.
-name|void
-name|setQualifier
-argument_list|(
-argument|NestedNameSpecifier *NNS
-argument_list|)
-block|{
-name|Qualifier
-operator|=
-name|NNS
-block|; }
 comment|/// \brief Retrieve the namespace declaration aliased by this directive.
 name|NamespaceDecl
 operator|*
@@ -7621,12 +7573,8 @@ name|IdentifierInfo
 modifier|*
 name|Alias
 parameter_list|,
-name|SourceRange
-name|QualifierRange
-parameter_list|,
-name|NestedNameSpecifier
-modifier|*
-name|Qualifier
+name|NestedNameSpecifierLoc
+name|QualifierLoc
 parameter_list|,
 name|SourceLocation
 name|IdentLoc
@@ -8005,19 +7953,13 @@ range|:
 name|public
 name|NamedDecl
 block|{
-comment|/// \brief The source range that covers the nested-name-specifier
-comment|/// preceding the declaration name.
-name|SourceRange
-name|NestedNameRange
-block|;
 comment|/// \brief The source location of the "using" location itself.
 name|SourceLocation
 name|UsingLocation
 block|;
-comment|/// \brief Target nested name specifier.
-name|NestedNameSpecifier
-operator|*
-name|TargetNestedName
+comment|/// \brief The nested-name-specifier that precedes the name.
+name|NestedNameSpecifierLoc
+name|QualifierLoc
 block|;
 comment|/// DNLoc - Provides source/type location info for the
 comment|/// declaration name embedded in the ValueDecl base class.
@@ -8038,11 +7980,9 @@ name|UsingDecl
 argument_list|(
 argument|DeclContext *DC
 argument_list|,
-argument|SourceRange NNR
-argument_list|,
 argument|SourceLocation UL
 argument_list|,
-argument|NestedNameSpecifier* TargetNNS
+argument|NestedNameSpecifierLoc QualifierLoc
 argument_list|,
 argument|const DeclarationNameInfo&NameInfo
 argument_list|,
@@ -8066,19 +8006,14 @@ name|getName
 argument_list|()
 argument_list|)
 block|,
-name|NestedNameRange
-argument_list|(
-name|NNR
-argument_list|)
-block|,
 name|UsingLocation
 argument_list|(
 name|UL
 argument_list|)
 block|,
-name|TargetNestedName
+name|QualifierLoc
 argument_list|(
-name|TargetNNS
+name|QualifierLoc
 argument_list|)
 block|,
 name|DNLoc
@@ -8101,29 +8036,6 @@ argument_list|)
 block|{   }
 name|public
 operator|:
-comment|/// \brief Returns the source range that covers the nested-name-specifier
-comment|/// preceding the namespace name.
-name|SourceRange
-name|getNestedNameRange
-argument_list|()
-specifier|const
-block|{
-return|return
-name|NestedNameRange
-return|;
-block|}
-comment|/// \brief Set the source range of the nested-name-specifier.
-name|void
-name|setNestedNameRange
-argument_list|(
-argument|SourceRange R
-argument_list|)
-block|{
-name|NestedNameRange
-operator|=
-name|R
-block|; }
-comment|// FIXME: Naming is inconsistent with other get*Loc functions.
 comment|/// \brief Returns the source location of the "using" keyword.
 name|SourceLocation
 name|getUsingLocation
@@ -8145,28 +8057,45 @@ name|UsingLocation
 operator|=
 name|L
 block|; }
-comment|/// \brief Get the target nested name declaration.
-name|NestedNameSpecifier
-operator|*
-name|getTargetNestedNameDecl
+comment|/// \brief Retrieve the nested-name-specifier that qualifies the name,
+comment|/// with source-location information.
+name|NestedNameSpecifierLoc
+name|getQualifierLoc
 argument_list|()
 specifier|const
 block|{
 return|return
-name|TargetNestedName
+name|QualifierLoc
 return|;
 block|}
-comment|/// \brief Set the target nested name declaration.
-name|void
-name|setTargetNestedNameDecl
-argument_list|(
-argument|NestedNameSpecifier *NNS
-argument_list|)
+comment|/// \brief Retrieve the nested-name-specifier that qualifies the name.
+name|NestedNameSpecifier
+operator|*
+name|getQualifier
+argument_list|()
+specifier|const
 block|{
-name|TargetNestedName
-operator|=
-name|NNS
-block|;   }
+return|return
+name|QualifierLoc
+operator|.
+name|getNestedNameSpecifier
+argument_list|()
+return|;
+block|}
+comment|/// \brief Retrieve the source range of the nested-name-specifier
+comment|/// that qualifies the name.
+name|SourceRange
+name|getQualifierRange
+argument_list|()
+specifier|const
+block|{
+return|return
+name|QualifierLoc
+operator|.
+name|getSourceRange
+argument_list|()
+return|;
+block|}
 name|DeclarationNameInfo
 name|getNameInfo
 argument_list|()
@@ -8501,15 +8430,11 @@ name|DeclContext
 modifier|*
 name|DC
 parameter_list|,
-name|SourceRange
-name|NNR
-parameter_list|,
 name|SourceLocation
 name|UsingL
 parameter_list|,
-name|NestedNameSpecifier
-modifier|*
-name|TargetNNS
+name|NestedNameSpecifierLoc
+name|QualifierLoc
 parameter_list|,
 specifier|const
 name|DeclarationNameInfo
@@ -8654,18 +8579,13 @@ range|:
 name|public
 name|ValueDecl
 block|{
-comment|/// \brief The source range that covers the nested-name-specifier
-comment|/// preceding the declaration name.
-name|SourceRange
-name|TargetNestedNameRange
-block|;
 comment|/// \brief The source location of the 'using' keyword
 name|SourceLocation
 name|UsingLocation
 block|;
-name|NestedNameSpecifier
-operator|*
-name|TargetNestedNameSpecifier
+comment|/// \brief The nested-name-specifier that precedes the name.
+name|NestedNameSpecifierLoc
+name|QualifierLoc
 block|;
 comment|/// DNLoc - Provides source/type location info for the
 comment|/// declaration name embedded in the ValueDecl base class.
@@ -8680,9 +8600,7 @@ argument|QualType Ty
 argument_list|,
 argument|SourceLocation UsingLoc
 argument_list|,
-argument|SourceRange TargetNNR
-argument_list|,
-argument|NestedNameSpecifier *TargetNNS
+argument|NestedNameSpecifierLoc QualifierLoc
 argument_list|,
 argument|const DeclarationNameInfo&NameInfo
 argument_list|)
@@ -8706,19 +8624,14 @@ argument_list|,
 name|Ty
 argument_list|)
 block|,
-name|TargetNestedNameRange
-argument_list|(
-name|TargetNNR
-argument_list|)
-block|,
 name|UsingLocation
 argument_list|(
 name|UsingLoc
 argument_list|)
 block|,
-name|TargetNestedNameSpecifier
+name|QualifierLoc
 argument_list|(
-name|TargetNNS
+name|QualifierLoc
 argument_list|)
 block|,
 name|DNLoc
@@ -8728,51 +8641,6 @@ argument_list|)
 block|{ }
 name|public
 operator|:
-comment|/// \brief Returns the source range that covers the nested-name-specifier
-comment|/// preceding the namespace name.
-name|SourceRange
-name|getTargetNestedNameRange
-argument_list|()
-specifier|const
-block|{
-return|return
-name|TargetNestedNameRange
-return|;
-block|}
-comment|/// \brief Set the source range coverting the nested-name-specifier preceding
-comment|/// the namespace name.
-name|void
-name|setTargetNestedNameRange
-argument_list|(
-argument|SourceRange R
-argument_list|)
-block|{
-name|TargetNestedNameRange
-operator|=
-name|R
-block|; }
-comment|/// \brief Get target nested name declaration.
-name|NestedNameSpecifier
-operator|*
-name|getTargetNestedNameSpecifier
-argument_list|()
-specifier|const
-block|{
-return|return
-name|TargetNestedNameSpecifier
-return|;
-block|}
-comment|/// \brief Set the nested name declaration.
-name|void
-name|setTargetNestedNameSpecifier
-argument_list|(
-argument|NestedNameSpecifier* NNS
-argument_list|)
-block|{
-name|TargetNestedNameSpecifier
-operator|=
-name|NNS
-block|;   }
 comment|/// \brief Returns the source location of the 'using' keyword.
 name|SourceLocation
 name|getUsingLoc
@@ -8794,6 +8662,45 @@ name|UsingLocation
 operator|=
 name|L
 block|; }
+comment|/// \brief Retrieve the nested-name-specifier that qualifies the name,
+comment|/// with source-location information.
+name|NestedNameSpecifierLoc
+name|getQualifierLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|QualifierLoc
+return|;
+block|}
+comment|/// \brief Retrieve the nested-name-specifier that qualifies the name.
+name|NestedNameSpecifier
+operator|*
+name|getQualifier
+argument_list|()
+specifier|const
+block|{
+return|return
+name|QualifierLoc
+operator|.
+name|getNestedNameSpecifier
+argument_list|()
+return|;
+block|}
+comment|/// \brief Retrieve the source range of the nested-name-specifier
+comment|/// that qualifies the name.
+name|SourceRange
+name|getQualifierRange
+argument_list|()
+specifier|const
+block|{
+return|return
+name|QualifierLoc
+operator|.
+name|getSourceRange
+argument_list|()
+return|;
+block|}
 name|DeclarationNameInfo
 name|getNameInfo
 argument_list|()
@@ -8823,9 +8730,7 @@ argument|DeclContext *DC
 argument_list|,
 argument|SourceLocation UsingLoc
 argument_list|,
-argument|SourceRange TargetNNR
-argument_list|,
-argument|NestedNameSpecifier *TargetNNS
+argument|NestedNameSpecifierLoc QualifierLoc
 argument_list|,
 argument|const DeclarationNameInfo&NameInfo
 argument_list|)
@@ -8943,11 +8848,6 @@ range|:
 name|public
 name|TypeDecl
 block|{
-comment|/// \brief The source range that covers the nested-name-specifier
-comment|/// preceding the declaration name.
-name|SourceRange
-name|TargetNestedNameRange
-block|;
 comment|/// \brief The source location of the 'using' keyword
 name|SourceLocation
 name|UsingLocation
@@ -8956,9 +8856,9 @@ comment|/// \brief The source location of the 'typename' keyword
 name|SourceLocation
 name|TypenameLocation
 block|;
-name|NestedNameSpecifier
-operator|*
-name|TargetNestedNameSpecifier
+comment|/// \brief The nested-name-specifier that precedes the name.
+name|NestedNameSpecifierLoc
+name|QualifierLoc
 block|;
 name|UnresolvedUsingTypenameDecl
 argument_list|(
@@ -8968,9 +8868,7 @@ argument|SourceLocation UsingLoc
 argument_list|,
 argument|SourceLocation TypenameLoc
 argument_list|,
-argument|SourceRange TargetNNR
-argument_list|,
-argument|NestedNameSpecifier *TargetNNS
+argument|NestedNameSpecifierLoc QualifierLoc
 argument_list|,
 argument|SourceLocation TargetNameLoc
 argument_list|,
@@ -8988,11 +8886,6 @@ argument_list|,
 name|TargetName
 argument_list|)
 block|,
-name|TargetNestedNameRange
-argument_list|(
-name|TargetNNR
-argument_list|)
-block|,
 name|UsingLocation
 argument_list|(
 name|UsingLoc
@@ -9003,9 +8896,9 @@ argument_list|(
 name|TypenameLoc
 argument_list|)
 block|,
-name|TargetNestedNameSpecifier
+name|QualifierLoc
 argument_list|(
-argument|TargetNNS
+argument|QualifierLoc
 argument_list|)
 block|{ }
 name|friend
@@ -9014,27 +8907,6 @@ name|ASTDeclReader
 block|;
 name|public
 operator|:
-comment|/// \brief Returns the source range that covers the nested-name-specifier
-comment|/// preceding the namespace name.
-name|SourceRange
-name|getTargetNestedNameRange
-argument_list|()
-specifier|const
-block|{
-return|return
-name|TargetNestedNameRange
-return|;
-block|}
-comment|/// \brief Get target nested name declaration.
-name|NestedNameSpecifier
-operator|*
-name|getTargetNestedNameSpecifier
-argument_list|()
-block|{
-return|return
-name|TargetNestedNameSpecifier
-return|;
-block|}
 comment|/// \brief Returns the source location of the 'using' keyword.
 name|SourceLocation
 name|getUsingLoc
@@ -9055,6 +8927,46 @@ return|return
 name|TypenameLocation
 return|;
 block|}
+comment|/// \brief Retrieve the nested-name-specifier that qualifies the name,
+comment|/// with source-location information.
+name|NestedNameSpecifierLoc
+name|getQualifierLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|QualifierLoc
+return|;
+block|}
+comment|/// \brief Retrieve the nested-name-specifier that qualifies the name.
+name|NestedNameSpecifier
+operator|*
+name|getQualifier
+argument_list|()
+specifier|const
+block|{
+return|return
+name|QualifierLoc
+operator|.
+name|getNestedNameSpecifier
+argument_list|()
+return|;
+block|}
+comment|/// \brief Retrieve the source range of the nested-name-specifier
+comment|/// that qualifies the name.
+name|SourceRange
+name|getQualifierRange
+argument_list|()
+specifier|const
+block|{
+return|return
+name|QualifierLoc
+operator|.
+name|getSourceRange
+argument_list|()
+return|;
+block|}
+comment|// FIXME: DeclarationNameInfo
 specifier|static
 name|UnresolvedUsingTypenameDecl
 operator|*
@@ -9068,9 +8980,7 @@ argument|SourceLocation UsingLoc
 argument_list|,
 argument|SourceLocation TypenameLoc
 argument_list|,
-argument|SourceRange TargetNNR
-argument_list|,
-argument|NestedNameSpecifier *TargetNNS
+argument|NestedNameSpecifierLoc QualifierLoc
 argument_list|,
 argument|SourceLocation TargetNameLoc
 argument_list|,

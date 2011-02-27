@@ -950,9 +950,6 @@ specifier|const
 name|TargetRegisterClass
 modifier|*
 name|RC
-parameter_list|,
-name|DebugLoc
-name|DL
 parameter_list|)
 function_decl|;
 comment|//===--------------------------------------------------------------------===//

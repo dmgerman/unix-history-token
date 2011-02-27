@@ -130,6 +130,12 @@ name|namespace
 name|clang
 block|{
 name|class
+name|ASTContext
+decl_stmt|;
+name|class
+name|TypeLoc
+decl_stmt|;
+name|class
 name|LangOptions
 decl_stmt|;
 name|class
@@ -139,7 +145,16 @@ name|class
 name|IdentifierInfo
 decl_stmt|;
 name|class
+name|NamespaceAliasDecl
+decl_stmt|;
+name|class
+name|NamespaceDecl
+decl_stmt|;
+name|class
 name|NestedNameSpecifier
+decl_stmt|;
+name|class
+name|NestedNameSpecifierLoc
 decl_stmt|;
 name|class
 name|Preprocessor
@@ -171,6 +186,26 @@ name|NestedNameSpecifier
 modifier|*
 name|ScopeRep
 decl_stmt|;
+comment|/// \brief Buffer used to store source-location information for the
+comment|/// nested-name-specifier.
+comment|///
+comment|/// Note that we explicitly manage the buffer (rather than using a
+comment|/// SmallVector) because \c Declarator expects it to be possible to memcpy()
+comment|/// a \c CXXScopeSpec.
+name|char
+modifier|*
+name|Buffer
+decl_stmt|;
+comment|/// \brief The size of the buffer used to store source-location information
+comment|/// for the nested-name-specifier.
+name|unsigned
+name|BufferSize
+decl_stmt|;
+comment|/// \brief The capacity of the buffer used to store source-location
+comment|/// information for the nested-name-specifier.
+name|unsigned
+name|BufferCapacity
+decl_stmt|;
 name|public
 label|:
 name|CXXScopeSpec
@@ -181,7 +216,45 @@ argument_list|()
 operator|,
 name|ScopeRep
 argument_list|()
+operator|,
+name|Buffer
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|BufferSize
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|BufferCapacity
+argument_list|(
+literal|0
+argument_list|)
 block|{ }
+name|CXXScopeSpec
+argument_list|(
+specifier|const
+name|CXXScopeSpec
+operator|&
+name|Other
+argument_list|)
+expr_stmt|;
+name|CXXScopeSpec
+modifier|&
+name|operator
+init|=
+operator|(
+specifier|const
+name|CXXScopeSpec
+operator|&
+name|Other
+operator|)
+decl_stmt|;
+operator|~
+name|CXXScopeSpec
+argument_list|()
+expr_stmt|;
 specifier|const
 name|SourceRange
 operator|&
@@ -271,19 +344,179 @@ return|return
 name|ScopeRep
 return|;
 block|}
+comment|/// \brief Extend the current nested-name-specifier by another
+comment|/// nested-name-specifier component of the form 'type::'.
+comment|///
+comment|/// \param Context The AST context in which this nested-name-specifier
+comment|/// resides.
+comment|///
+comment|/// \param TemplateKWLoc The location of the 'template' keyword, if present.
+comment|///
+comment|/// \param TL The TypeLoc that describes the type preceding the '::'.
+comment|///
+comment|/// \param ColonColonLoc The location of the trailing '::'.
 name|void
-name|setScopeRep
+name|Extend
 parameter_list|(
+name|ASTContext
+modifier|&
+name|Context
+parameter_list|,
+name|SourceLocation
+name|TemplateKWLoc
+parameter_list|,
+name|TypeLoc
+name|TL
+parameter_list|,
+name|SourceLocation
+name|ColonColonLoc
+parameter_list|)
+function_decl|;
+comment|/// \brief Extend the current nested-name-specifier by another
+comment|/// nested-name-specifier component of the form 'identifier::'.
+comment|///
+comment|/// \param Context The AST context in which this nested-name-specifier
+comment|/// resides.
+comment|///
+comment|/// \param Identifier The identifier.
+comment|///
+comment|/// \param IdentifierLoc The location of the identifier.
+comment|///
+comment|/// \param ColonColonLoc The location of the trailing '::'.
+name|void
+name|Extend
+parameter_list|(
+name|ASTContext
+modifier|&
+name|Context
+parameter_list|,
+name|IdentifierInfo
+modifier|*
+name|Identifier
+parameter_list|,
+name|SourceLocation
+name|IdentifierLoc
+parameter_list|,
+name|SourceLocation
+name|ColonColonLoc
+parameter_list|)
+function_decl|;
+comment|/// \brief Extend the current nested-name-specifier by another
+comment|/// nested-name-specifier component of the form 'namespace::'.
+comment|///
+comment|/// \param Context The AST context in which this nested-name-specifier
+comment|/// resides.
+comment|///
+comment|/// \param Namespace The namespace.
+comment|///
+comment|/// \param NamespaceLoc The location of the namespace name.
+comment|///
+comment|/// \param ColonColonLoc The location of the trailing '::'.
+name|void
+name|Extend
+parameter_list|(
+name|ASTContext
+modifier|&
+name|Context
+parameter_list|,
+name|NamespaceDecl
+modifier|*
+name|Namespace
+parameter_list|,
+name|SourceLocation
+name|NamespaceLoc
+parameter_list|,
+name|SourceLocation
+name|ColonColonLoc
+parameter_list|)
+function_decl|;
+comment|/// \brief Extend the current nested-name-specifier by another
+comment|/// nested-name-specifier component of the form 'namespace-alias::'.
+comment|///
+comment|/// \param Context The AST context in which this nested-name-specifier
+comment|/// resides.
+comment|///
+comment|/// \param Alias The namespace alias.
+comment|///
+comment|/// \param AliasLoc The location of the namespace alias
+comment|/// name.
+comment|///
+comment|/// \param ColonColonLoc The location of the trailing '::'.
+name|void
+name|Extend
+parameter_list|(
+name|ASTContext
+modifier|&
+name|Context
+parameter_list|,
+name|NamespaceAliasDecl
+modifier|*
+name|Alias
+parameter_list|,
+name|SourceLocation
+name|AliasLoc
+parameter_list|,
+name|SourceLocation
+name|ColonColonLoc
+parameter_list|)
+function_decl|;
+comment|/// \brief Turn this (empty) nested-name-specifier into the global
+comment|/// nested-name-specifier '::'.
+name|void
+name|MakeGlobal
+parameter_list|(
+name|ASTContext
+modifier|&
+name|Context
+parameter_list|,
+name|SourceLocation
+name|ColonColonLoc
+parameter_list|)
+function_decl|;
+comment|/// \brief Make a new nested-name-specifier from incomplete source-location
+comment|/// information.
+comment|///
+comment|/// FIXME: This routine should be used very, very rarely, in cases where we
+comment|/// need to synthesize a nested-name-specifier. Most code should instead use
+comment|/// \c Adopt() with a proper \c NestedNameSpecifierLoc.
+name|void
+name|MakeTrivial
+parameter_list|(
+name|ASTContext
+modifier|&
+name|Context
+parameter_list|,
 name|NestedNameSpecifier
 modifier|*
-name|S
+name|Qualifier
+parameter_list|,
+name|SourceRange
+name|R
 parameter_list|)
-block|{
-name|ScopeRep
-operator|=
-name|S
-expr_stmt|;
-block|}
+function_decl|;
+comment|/// \brief Adopt an existing nested-name-specifier (with source-range
+comment|/// information).
+name|void
+name|Adopt
+parameter_list|(
+name|NestedNameSpecifierLoc
+name|Other
+parameter_list|)
+function_decl|;
+comment|/// \brief Retrieve a nested-name-specifier with location information, copied
+comment|/// into the given AST context.
+comment|///
+comment|/// \param Context The context into which this nested-name-specifier will be
+comment|/// copied.
+name|NestedNameSpecifierLoc
+name|getWithLocInContext
+argument_list|(
+name|ASTContext
+operator|&
+name|Context
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// No scope specifier.
 name|bool
 name|isEmpty
@@ -340,6 +573,59 @@ operator|!=
 literal|0
 return|;
 block|}
+comment|/// \brief Indicate that this nested-name-specifier is invalid.
+name|void
+name|SetInvalid
+parameter_list|(
+name|SourceRange
+name|R
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|R
+operator|.
+name|isValid
+argument_list|()
+operator|&&
+literal|"Must have a valid source range"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Range
+operator|.
+name|getBegin
+argument_list|()
+operator|.
+name|isInvalid
+argument_list|()
+condition|)
+name|Range
+operator|.
+name|setBegin
+argument_list|(
+name|R
+operator|.
+name|getBegin
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|Range
+operator|.
+name|setEnd
+argument_list|(
+name|R
+operator|.
+name|getEnd
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|ScopeRep
+operator|=
+literal|0
+expr_stmt|;
+block|}
 comment|/// Deprecated.  Some call sites intend isNotEmpty() while others intend
 comment|/// isValid().
 name|bool
@@ -366,6 +652,28 @@ name|ScopeRep
 operator|=
 literal|0
 expr_stmt|;
+block|}
+comment|/// \brief Retrieve the data associated with the source-location information.
+name|char
+operator|*
+name|location_data
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Buffer
+return|;
+block|}
+comment|/// \brief Retrieve the size of the data associated with source-location
+comment|/// information.
+name|unsigned
+name|location_size
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BufferSize
+return|;
 block|}
 block|}
 empty_stmt|;
@@ -3303,6 +3611,18 @@ name|TypeQuals
 operator|:
 literal|3
 block|;
+comment|/// The location of the const-qualifier, if any.
+name|unsigned
+name|ConstQualLoc
+block|;
+comment|/// The location of the volatile-qualifier, if any.
+name|unsigned
+name|VolatileQualLoc
+block|;
+comment|/// The location of the restrict-qualifier, if any.
+name|unsigned
+name|RestrictQualLoc
+block|;
 name|void
 name|destroy
 argument_list|()
@@ -3916,6 +4236,12 @@ argument|unsigned TypeQuals
 argument_list|,
 argument|SourceLocation Loc
 argument_list|,
+argument|SourceLocation ConstQualLoc
+argument_list|,
+argument|SourceLocation VolatileQualLoc
+argument_list|,
+argument|SourceLocation RestrictQualLoc
+argument_list|,
 argument|const ParsedAttributes&attrs
 argument_list|)
 block|{
@@ -3941,6 +4267,39 @@ operator|.
 name|TypeQuals
 operator|=
 name|TypeQuals
+block|;
+name|I
+operator|.
+name|Ptr
+operator|.
+name|ConstQualLoc
+operator|=
+name|ConstQualLoc
+operator|.
+name|getRawEncoding
+argument_list|()
+block|;
+name|I
+operator|.
+name|Ptr
+operator|.
+name|VolatileQualLoc
+operator|=
+name|VolatileQualLoc
+operator|.
+name|getRawEncoding
+argument_list|()
+block|;
+name|I
+operator|.
+name|Ptr
+operator|.
+name|RestrictQualLoc
+operator|=
+name|RestrictQualLoc
+operator|.
+name|getRawEncoding
+argument_list|()
 block|;
 name|I
 operator|.

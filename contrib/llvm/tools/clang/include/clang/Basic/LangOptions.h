@@ -250,17 +250,23 @@ literal|1
 decl_stmt|;
 comment|// Support exception handling.
 name|unsigned
-name|SjLjExceptions
-range|:
-literal|1
-decl_stmt|;
-comment|// Use setjmp-longjump exception handling.
-name|unsigned
 name|ObjCExceptions
 range|:
 literal|1
 decl_stmt|;
 comment|// Support Objective-C exceptions.
+name|unsigned
+name|CXXExceptions
+range|:
+literal|1
+decl_stmt|;
+comment|// Support C++ exceptions.
+name|unsigned
+name|SjLjExceptions
+range|:
+literal|1
+decl_stmt|;
+comment|// Use setjmp-longjump exception handling.
 name|unsigned
 name|RTTI
 range|:
@@ -673,17 +679,19 @@ literal|0
 expr_stmt|;
 name|Exceptions
 operator|=
+name|ObjCExceptions
+operator|=
+name|CXXExceptions
+operator|=
 name|SjLjExceptions
 operator|=
+literal|0
+expr_stmt|;
 name|Freestanding
 operator|=
 name|NoBuiltin
 operator|=
 literal|0
-expr_stmt|;
-name|ObjCExceptions
-operator|=
-literal|1
 expr_stmt|;
 name|MSBitfields
 operator|=

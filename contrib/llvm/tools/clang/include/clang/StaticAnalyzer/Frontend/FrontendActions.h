@@ -78,6 +78,16 @@ argument|llvm::StringRef InFile
 argument_list|)
 block|; }
 decl_stmt|;
+name|void
+name|printCheckerHelp
+argument_list|(
+name|llvm
+operator|::
+name|raw_ostream
+operator|&
+name|OS
+argument_list|)
+decl_stmt|;
 block|}
 comment|// end GR namespace
 block|}

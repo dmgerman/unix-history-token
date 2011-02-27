@@ -342,6 +342,13 @@ name|LiveOutInfo
 block|{
 name|unsigned
 name|NumSignBits
+range|:
+literal|31
+decl_stmt|;
+name|bool
+name|IsValid
+range|:
+literal|1
 decl_stmt|;
 name|APInt
 name|KnownOne
@@ -354,6 +361,11 @@ operator|:
 name|NumSignBits
 argument_list|(
 literal|0
+argument_list|)
+operator|,
+name|IsValid
+argument_list|(
+name|true
 argument_list|)
 operator|,
 name|KnownOne
@@ -372,14 +384,15 @@ argument_list|)
 block|{}
 block|}
 struct|;
-comment|/// LiveOutRegInfo - Information about live out vregs.
-name|IndexedMap
+comment|/// VisitedBBs - The set of basic blocks visited thus far by instruction
+comment|/// selection.
+name|DenseSet
 operator|<
-name|LiveOutInfo
-operator|,
-name|VirtReg2IndexFunctor
+specifier|const
+name|BasicBlock
+operator|*
 operator|>
-name|LiveOutRegInfo
+name|VisitedBBs
 expr_stmt|;
 comment|/// PHINodesToUpdate - A list of phi instructions whose operand list will
 comment|/// be updated after processing the current basic block.
@@ -508,6 +521,190 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+comment|/// GetLiveOutRegInfo - Gets LiveOutInfo for a register, returning NULL if the
+comment|/// register is a PHI destination and the PHI's LiveOutInfo is not valid.
+specifier|const
+name|LiveOutInfo
+modifier|*
+name|GetLiveOutRegInfo
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|LiveOutRegInfo
+operator|.
+name|inBounds
+argument_list|(
+name|Reg
+argument_list|)
+condition|)
+return|return
+name|NULL
+return|;
+specifier|const
+name|LiveOutInfo
+modifier|*
+name|LOI
+init|=
+operator|&
+name|LiveOutRegInfo
+index|[
+name|Reg
+index|]
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|LOI
+operator|->
+name|IsValid
+condition|)
+return|return
+name|NULL
+return|;
+return|return
+name|LOI
+return|;
+block|}
+comment|/// GetLiveOutRegInfo - Gets LiveOutInfo for a register, returning NULL if the
+comment|/// register is a PHI destination and the PHI's LiveOutInfo is not valid. If
+comment|/// the register's LiveOutInfo is for a smaller bit width, it is extended to
+comment|/// the larger bit width by zero extension. The bit width must be no smaller
+comment|/// than the LiveOutInfo's existing bit width.
+specifier|const
+name|LiveOutInfo
+modifier|*
+name|GetLiveOutRegInfo
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|,
+name|unsigned
+name|BitWidth
+parameter_list|)
+function_decl|;
+comment|/// AddLiveOutRegInfo - Adds LiveOutInfo for a register.
+name|void
+name|AddLiveOutRegInfo
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|,
+name|unsigned
+name|NumSignBits
+parameter_list|,
+specifier|const
+name|APInt
+modifier|&
+name|KnownZero
+parameter_list|,
+specifier|const
+name|APInt
+modifier|&
+name|KnownOne
+parameter_list|)
+block|{
+comment|// Only install this information if it tells us something.
+if|if
+condition|(
+name|NumSignBits
+operator|==
+literal|1
+operator|&&
+name|KnownZero
+operator|==
+literal|0
+operator|&&
+name|KnownOne
+operator|==
+literal|0
+condition|)
+return|return;
+name|LiveOutRegInfo
+operator|.
+name|grow
+argument_list|(
+name|Reg
+argument_list|)
+expr_stmt|;
+name|LiveOutInfo
+modifier|&
+name|LOI
+init|=
+name|LiveOutRegInfo
+index|[
+name|Reg
+index|]
+decl_stmt|;
+name|LOI
+operator|.
+name|NumSignBits
+operator|=
+name|NumSignBits
+expr_stmt|;
+name|LOI
+operator|.
+name|KnownOne
+operator|=
+name|KnownOne
+expr_stmt|;
+name|LOI
+operator|.
+name|KnownZero
+operator|=
+name|KnownZero
+expr_stmt|;
+block|}
+comment|/// ComputePHILiveOutRegInfo - Compute LiveOutInfo for a PHI's destination
+comment|/// register based on the LiveOutInfo of its operands.
+name|void
+name|ComputePHILiveOutRegInfo
+parameter_list|(
+specifier|const
+name|PHINode
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/// InvalidatePHILiveOutRegInfo - Invalidates a PHI's LiveOutInfo, to be
+comment|/// called when a block is visited before all of its predecessors.
+name|void
+name|InvalidatePHILiveOutRegInfo
+parameter_list|(
+specifier|const
+name|PHINode
+modifier|*
+name|PN
+parameter_list|)
+block|{
+name|unsigned
+name|Reg
+init|=
+name|ValueMap
+index|[
+name|PN
+index|]
+decl_stmt|;
+name|LiveOutRegInfo
+operator|.
+name|grow
+argument_list|(
+name|Reg
+argument_list|)
+expr_stmt|;
+name|LiveOutRegInfo
+index|[
+name|Reg
+index|]
+operator|.
+name|IsValid
+operator|=
+name|false
+expr_stmt|;
+block|}
 comment|/// setByValArgumentFrameIndex - Record frame index for the byval
 comment|/// argument.
 name|void
@@ -532,6 +729,17 @@ modifier|*
 name|A
 parameter_list|)
 function_decl|;
+name|private
+label|:
+comment|/// LiveOutRegInfo - Information about live out vregs.
+name|IndexedMap
+operator|<
+name|LiveOutInfo
+operator|,
+name|VirtReg2IndexFunctor
+operator|>
+name|LiveOutRegInfo
+expr_stmt|;
 block|}
 empty_stmt|;
 comment|/// AddCatchInfo - Extract the personality and type infos from an eh.selector

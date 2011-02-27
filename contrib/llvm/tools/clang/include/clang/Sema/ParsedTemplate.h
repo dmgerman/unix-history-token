@@ -491,6 +491,37 @@ name|NumArgs
 operator|=
 name|NumArgs
 expr_stmt|;
+comment|// Default-construct parsed template arguments.
+name|ParsedTemplateArgument
+modifier|*
+name|TemplateArgs
+init|=
+name|TemplateId
+operator|->
+name|getTemplateArgs
+argument_list|()
+decl_stmt|;
+for|for
+control|(
+name|unsigned
+name|I
+init|=
+literal|0
+init|;
+name|I
+operator|!=
+name|NumArgs
+condition|;
+operator|++
+name|I
+control|)
+name|new
+argument_list|(
+argument|TemplateArgs + I
+argument_list|)
+name|ParsedTemplateArgument
+argument_list|()
+expr_stmt|;
 return|return
 name|TemplateId
 return|;

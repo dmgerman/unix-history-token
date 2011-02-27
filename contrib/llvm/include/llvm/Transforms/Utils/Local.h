@@ -151,7 +151,7 @@ comment|/// RecursivelyDeleteDeadPHINode - If the specified value is an effectiv
 comment|/// dead PHI node, due to being a def-use chain of single-use nodes that
 comment|/// either forms a cycle or is terminated by a trivially dead instruction,
 comment|/// delete it.  If that makes any of its operands trivially dead, delete them
-comment|/// too, recursively.  Return true if the PHI node is actually deleted.
+comment|/// too, recursively.  Return true if a change was made.
 name|bool
 name|RecursivelyDeleteDeadPHINode
 parameter_list|(

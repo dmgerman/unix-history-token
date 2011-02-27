@@ -2159,6 +2159,14 @@ name|DiagID
 argument_list|,
 name|SourceLocation
 name|Loc
+argument_list|,
+name|diag
+operator|::
+name|Mapping
+operator|*
+name|mapping
+operator|=
+literal|0
 argument_list|)
 decl|const
 block|{
@@ -2176,6 +2184,8 @@ name|Loc
 argument_list|,
 operator|*
 name|this
+argument_list|,
+name|mapping
 argument_list|)
 return|;
 block|}

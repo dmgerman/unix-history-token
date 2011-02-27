@@ -761,12 +761,13 @@ label|:
 comment|/// This function determines if the path name is absolute, as opposed to
 comment|/// relative.
 comment|/// @brief Determine if the path is absolute.
-comment|//FIXME:      LLVM_ATTRIBUTE_DEPRECATED(
-name|bool
-name|isAbsolute
-parameter_list|()
-function_decl|const;
-comment|//FIXME:      LLVMV_PATH_DEPRECATED_MSG(path::is_absolute));
+name|LLVM_ATTRIBUTE_DEPRECATED
+argument_list|(
+argument|bool isAbsolute() const
+argument_list|,
+argument|LLVM_PATH_DEPRECATED_MSG(path::is_absolute)
+argument_list|)
+empty_stmt|;
 comment|/// This function determines if the path name is absolute, as opposed to
 comment|/// relative.
 comment|/// @brief Determine if the path is absolute.

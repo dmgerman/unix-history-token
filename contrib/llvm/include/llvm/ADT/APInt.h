@@ -5369,6 +5369,33 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// Computes the number of leading bits of this APInt that are equal to its
+end_comment
+
+begin_comment
+comment|/// sign bit.
+end_comment
+
+begin_expr_stmt
+name|unsigned
+name|getNumSignBits
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isNegative
+argument_list|()
+operator|?
+name|countLeadingOnes
+argument_list|()
+operator|:
+name|countLeadingZeros
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|/// countTrailingZeros - This function is an APInt version of the
 end_comment
 

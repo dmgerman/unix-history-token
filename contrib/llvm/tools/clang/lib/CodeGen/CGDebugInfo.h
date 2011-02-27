@@ -650,6 +650,26 @@ name|DIType
 name|RecordTy
 argument_list|)
 decl_stmt|;
+name|llvm
+operator|::
+name|DIType
+name|createFieldType
+argument_list|(
+argument|llvm::StringRef name
+argument_list|,
+argument|QualType type
+argument_list|,
+argument|Expr *bitWidth
+argument_list|,
+argument|SourceLocation loc
+argument_list|,
+argument|AccessSpecifier AS
+argument_list|,
+argument|uint64_t offsetInBits
+argument_list|,
+argument|llvm::DIFile tunit
+argument_list|)
+expr_stmt|;
 name|void
 name|CollectRecordFields
 argument_list|(
@@ -857,6 +877,28 @@ operator|::
 name|Value
 operator|*
 name|AI
+argument_list|,
+name|CGBuilderTy
+operator|&
+name|Builder
+argument_list|)
+decl_stmt|;
+comment|/// EmitDeclareOfBlockLiteralArgVariable - Emit call to
+comment|/// llvm.dbg.declare for the block-literal argument to a block
+comment|/// invocation function.
+name|void
+name|EmitDeclareOfBlockLiteralArgVariable
+argument_list|(
+specifier|const
+name|CGBlockInfo
+operator|&
+name|block
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|addr
 argument_list|,
 name|CGBuilderTy
 operator|&

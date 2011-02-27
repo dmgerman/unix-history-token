@@ -378,6 +378,19 @@ name|MBB
 argument_list|)
 return|;
 block|}
+comment|/// isOriginalEndpoint - Return true if the original live range was killed or
+comment|/// (re-)defined at Idx. Idx should be the 'def' slot for a normal kill/def,
+comment|/// and 'use' for an early-clobber def.
+comment|/// This can be used to recognize code inserted by earlier live range
+comment|/// splitting.
+name|bool
+name|isOriginalEndpoint
+argument_list|(
+name|SlotIndex
+name|Idx
+argument_list|)
+decl|const
+decl_stmt|;
 typedef|typedef
 name|SmallPtrSet
 operator|<

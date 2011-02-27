@@ -329,6 +329,13 @@ modifier|&
 name|Tok
 parameter_list|)
 function_decl|;
+comment|/// isParsingPreprocessorDirective - Return true if we are in the middle of a
+comment|/// preprocessor directive.
+name|bool
+name|isParsingPreprocessorDirective
+argument_list|()
+specifier|const
+expr_stmt|;
 name|private
 label|:
 name|void

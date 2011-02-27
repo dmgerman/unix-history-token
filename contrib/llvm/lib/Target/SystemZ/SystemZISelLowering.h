@@ -150,6 +150,20 @@ operator|&
 name|TM
 argument_list|)
 block|;
+name|virtual
+name|MVT
+name|getShiftAmountTy
+argument_list|(
+argument|EVT LHSTy
+argument_list|)
+specifier|const
+block|{
+return|return
+name|MVT
+operator|::
+name|i64
+return|;
+block|}
 comment|/// LowerOperation - Provide custom lowering hooks for some operations.
 name|virtual
 name|SDValue

@@ -486,6 +486,12 @@ name|MCSymbolAttr
 name|HiddenVisibilityAttr
 decl_stmt|;
 comment|// Defaults to MCSA_Hidden.
+comment|/// HiddenDeclarationVisibilityAttr - This attribute, if not MCSA_Invalid,
+comment|/// is used to declare an undefined symbol as having hidden visibility.
+name|MCSymbolAttr
+name|HiddenDeclarationVisibilityAttr
+decl_stmt|;
+comment|// Defaults to MCSA_Hidden.
 comment|/// ProtectedVisibilityAttr - This attribute, if not MCSA_Invalid, is used
 comment|/// to declare a symbol as having protected visibility.
 name|MCSymbolAttr
@@ -1138,6 +1144,15 @@ specifier|const
 block|{
 return|return
 name|HiddenVisibilityAttr
+return|;
+block|}
+name|MCSymbolAttr
+name|getHiddenDeclarationVisibilityAttr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HiddenDeclarationVisibilityAttr
 return|;
 block|}
 name|MCSymbolAttr

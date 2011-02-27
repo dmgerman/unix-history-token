@@ -568,6 +568,15 @@ name|ObjCObjectPointerType
 operator|>
 name|ObjCObjectPointerTypes
 expr_stmt|;
+name|mutable
+name|llvm
+operator|::
+name|FoldingSet
+operator|<
+name|AutoType
+operator|>
+name|AutoTypes
+expr_stmt|;
 name|llvm
 operator|::
 name|FoldingSet
@@ -1904,27 +1913,6 @@ return|return
 name|cudaConfigureCallDecl
 return|;
 block|}
-comment|/// This gets the struct used to keep track of pointer to blocks, complete
-comment|/// with captured variables.
-name|QualType
-name|getBlockParmType
-argument_list|(
-name|bool
-name|BlockHasCopyDispose
-argument_list|,
-name|llvm
-operator|::
-name|SmallVectorImpl
-operator|<
-specifier|const
-name|Expr
-operator|*
-operator|>
-operator|&
-name|Layout
-argument_list|)
-decl|const
-decl_stmt|;
 comment|/// This builds the struct used for __block variables.
 name|QualType
 name|BuildByRefType
@@ -6694,14 +6682,6 @@ name|mutable
 name|unsigned
 name|int
 name|UniqueBlockByRefTypeID
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|mutable
-name|unsigned
-name|int
-name|UniqueBlockParmTypeID
 decl_stmt|;
 end_decl_stmt
 
