@@ -4571,6 +4571,11 @@ decl_stmt|;
 name|struct
 name|resource
 modifier|*
+name|rl_res_pba
+decl_stmt|;
+name|struct
+name|resource
+modifier|*
 name|rl_irq
 index|[
 name|RL_MSI_MESSAGES
@@ -4727,6 +4732,10 @@ define|#
 directive|define
 name|RL_FLAG_MACRESET
 value|0x0400
+define|#
+directive|define
+name|RL_FLAG_MSIX
+value|0x0800
 define|#
 directive|define
 name|RL_FLAG_WOLRXENB
