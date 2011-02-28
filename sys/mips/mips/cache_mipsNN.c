@@ -848,8 +848,7 @@ name|vm_size_t
 name|size
 parameter_list|)
 block|{
-name|unsigned
-name|int
+name|vm_offset_t
 name|eva
 decl_stmt|,
 name|tmpva
@@ -1015,8 +1014,7 @@ name|vm_size_t
 name|size
 parameter_list|)
 block|{
-name|unsigned
-name|int
+name|vm_offset_t
 name|eva
 decl_stmt|,
 name|tmpva
