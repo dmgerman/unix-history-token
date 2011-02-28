@@ -11086,7 +11086,7 @@ block|{
 name|size_t
 name|amt
 init|=
-name|imin
+name|ISP_MIN
 argument_list|(
 name|QLTM_SENSELEN
 argument_list|,

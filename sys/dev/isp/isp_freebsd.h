@@ -1103,6 +1103,13 @@ parameter_list|)
 value|DELAY(x)
 end_define
 
+begin_define
+define|#
+directive|define
+name|ISP_MIN
+value|imin
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef

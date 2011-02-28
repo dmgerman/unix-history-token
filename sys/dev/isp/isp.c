@@ -23077,7 +23077,7 @@ argument_list|)
 expr_stmt|;
 name|cdblen
 operator|=
-name|MIN
+name|ISP_MIN
 argument_list|(
 name|cdblen
 argument_list|,
@@ -23242,7 +23242,7 @@ name|req_cdb
 expr_stmt|;
 name|cdblen
 operator|=
-name|MIN
+name|ISP_MIN
 argument_list|(
 name|cdblen
 argument_list|,
@@ -23297,7 +23297,7 @@ name|req_cdb
 expr_stmt|;
 name|cdblen
 operator|=
-name|MIN
+name|ISP_MIN
 argument_list|(
 name|cdblen
 argument_list|,
@@ -23352,7 +23352,7 @@ name|req_cdb
 expr_stmt|;
 name|cdblen
 operator|=
-name|MIN
+name|ISP_MIN
 argument_list|(
 name|cdblen
 argument_list|,
@@ -23400,7 +23400,7 @@ name|req_cdb
 expr_stmt|;
 name|cdblen
 operator|=
-name|MIN
+name|ISP_MIN
 argument_list|(
 name|cdblen
 argument_list|,
