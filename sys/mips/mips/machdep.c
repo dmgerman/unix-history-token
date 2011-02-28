@@ -764,15 +764,21 @@ operator|++
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"real memory  = %lu (%luK bytes)\n"
+literal|"real memory  = %ju (%juK bytes)\n"
 argument_list|,
 name|ptoa
 argument_list|(
+operator|(
+name|uintmax_t
+operator|)
 name|realmem
 argument_list|)
 argument_list|,
 name|ptoa
 argument_list|(
+operator|(
+name|uintmax_t
+operator|)
 name|realmem
 argument_list|)
 operator|/
@@ -813,7 +819,7 @@ operator|+=
 literal|2
 control|)
 block|{
-name|uintptr_t
+name|vm_paddr_t
 name|size1
 init|=
 name|phys_avail
@@ -830,12 +836,10 @@ index|]
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"0x%08llx - 0x%08llx, %llu bytes (%llu pages)\n"
+literal|"0x%08jx - 0x%08jx, %ju bytes (%ju pages)\n"
 argument_list|,
 operator|(
-name|unsigned
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|phys_avail
 index|[
@@ -843,9 +847,7 @@ name|indx
 index|]
 argument_list|,
 operator|(
-name|unsigned
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|phys_avail
 index|[
@@ -857,16 +859,12 @@ operator|-
 literal|1
 argument_list|,
 operator|(
-name|unsigned
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|size1
 argument_list|,
 operator|(
-name|unsigned
-name|long
-name|long
+name|uintmax_t
 operator|)
 name|size1
 operator|/

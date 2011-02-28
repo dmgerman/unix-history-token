@@ -1702,12 +1702,12 @@ name|vm_size_t
 name|size
 parameter_list|)
 block|{
-name|vm_size_t
+name|vm_paddr_t
 name|bank_size
+decl_stmt|,
+name|pa
 decl_stmt|;
 name|vm_offset_t
-name|pa
-decl_stmt|,
 name|va
 decl_stmt|;
 name|size
@@ -2541,10 +2541,13 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"Maxmem is 0x%0lx\n"
+literal|"Maxmem is 0x%0jx\n"
 argument_list|,
 name|ptoa
 argument_list|(
+operator|(
+name|uintmax_t
+operator|)
 name|Maxmem
 argument_list|)
 argument_list|)
