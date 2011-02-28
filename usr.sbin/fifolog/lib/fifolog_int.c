@@ -110,7 +110,7 @@ name|struct
 name|stat
 name|st
 decl_stmt|;
-name|unsigned
+name|ssize_t
 name|u
 decl_stmt|;
 name|int
