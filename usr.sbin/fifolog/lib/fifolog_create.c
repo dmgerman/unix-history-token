@@ -89,7 +89,7 @@ parameter_list|,
 name|off_t
 name|size
 parameter_list|,
-name|unsigned
+name|ssize_t
 name|recsize
 parameter_list|)
 block|{
@@ -440,9 +440,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|int
-operator|)
 name|recsize
 operator|!=
 name|pwrite
