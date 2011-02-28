@@ -2868,6 +2868,63 @@ comment|/* byte count times 8 */
 end_comment
 
 begin_comment
+comment|/* Timer interrupt register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RL_TIMERINT_8169_VAL
+value|0x00001FFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|RL_TIMER_MIN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|RL_TIMER_MAX
+value|65
+end_define
+
+begin_comment
+comment|/* 65.528us */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RL_TIMER_DEFAULT
+value|RL_TIMER_MAX
+end_define
+
+begin_define
+define|#
+directive|define
+name|RL_TIMER_PCIE_CLK
+value|125
+end_define
+
+begin_comment
+comment|/* 125MHZ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RL_USECS
+parameter_list|(
+name|x
+parameter_list|)
+value|((x) * RL_TIMER_PCIE_CLK)
+end_define
+
+begin_comment
 comment|/*  * Gigabit PHY access register (8169 only)  */
 end_comment
 
@@ -4680,6 +4737,12 @@ name|rl_inttask
 decl_stmt|;
 name|int
 name|rl_txstart
+decl_stmt|;
+name|int
+name|rl_int_rx_act
+decl_stmt|;
+name|int
+name|rl_int_rx_mod
 decl_stmt|;
 name|uint32_t
 name|rl_flags
