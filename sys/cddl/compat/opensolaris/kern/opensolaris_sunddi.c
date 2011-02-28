@@ -366,7 +366,9 @@ argument_list|(
 name|MUTEX_HELD
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|ss
+operator|->
+name|ss_lock
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -624,7 +626,9 @@ argument_list|(
 name|MUTEX_HELD
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|ss
+operator|->
+name|ss_lock
 argument_list|)
 argument_list|)
 expr_stmt|;
