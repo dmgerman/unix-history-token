@@ -3199,6 +3199,9 @@ name|MaxFrameCount
 parameter_list|,
 name|uint8_t
 name|ep_no
+parameter_list|,
+name|uint8_t
+name|pre_scale
 parameter_list|)
 block|{
 name|struct
@@ -3210,6 +3213,14 @@ name|usb_fs_endpoint
 modifier|*
 name|fsep
 decl_stmt|;
+if|if
+condition|(
+name|pre_scale
+condition|)
+name|MaxFrameCount
+operator||=
+name|USB_FS_MAX_FRAMES_PRE_SCALE
+expr_stmt|;
 name|memset
 argument_list|(
 operator|&

@@ -759,6 +759,12 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* set if the endpoint belonging to 					 * this USB transfer should be stalled 					 * before starting this transfer! */
+name|uint8_t
+name|pre_scale_frames
+range|:
+literal|1
+decl_stmt|;
+comment|/* "usb_config->frames" is 					 * assumed to give the 					 * buffering time in 					 * milliseconds and is 					 * converted into the nearest 					 * number of frames when the 					 * USB transfer is setup. This 					 * option only has effect for 					 * ISOCHRONOUS transfers. 					 */
 block|}
 struct|;
 end_struct
