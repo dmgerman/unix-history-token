@@ -299,7 +299,7 @@ begin_define
 define|#
 directive|define
 name|WITNESS_PENDLIST
-value|512
+value|768
 end_define
 
 begin_comment

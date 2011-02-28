@@ -290,6 +290,10 @@ argument_list|,
 name|kernel
 argument_list|, ,
 name|signal_send
+argument_list|,
+name|signal
+operator|-
+name|send
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -350,6 +354,10 @@ argument_list|,
 name|kernel
 argument_list|, ,
 name|signal_clear
+argument_list|,
+name|signal
+operator|-
+name|clear
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -394,6 +402,10 @@ argument_list|,
 name|kernel
 argument_list|, ,
 name|signal_discard
+argument_list|,
+name|signal
+operator|-
+name|discard
 argument_list|)
 expr_stmt|;
 end_expr_stmt

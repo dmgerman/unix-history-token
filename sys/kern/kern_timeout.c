@@ -135,6 +135,10 @@ argument_list|,
 name|kernel
 argument_list|, ,
 name|callout_start
+argument_list|,
+name|callout
+operator|-
+name|start
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -163,6 +167,10 @@ argument_list|,
 name|kernel
 argument_list|, ,
 name|callout_end
+argument_list|,
+name|callout
+operator|-
+name|end
 argument_list|)
 expr_stmt|;
 end_expr_stmt

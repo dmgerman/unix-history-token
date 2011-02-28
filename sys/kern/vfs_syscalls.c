@@ -284,6 +284,8 @@ argument_list|, ,
 name|stat
 argument_list|,
 name|mode
+argument_list|,
+name|mode
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -326,6 +328,8 @@ argument_list|(
 name|vfs
 argument_list|, ,
 name|stat
+argument_list|,
+name|reg
 argument_list|,
 name|reg
 argument_list|)

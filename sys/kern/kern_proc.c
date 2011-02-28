@@ -297,6 +297,8 @@ argument_list|,
 name|ctor
 argument_list|,
 name|entry
+argument_list|,
+name|entry
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -381,6 +383,8 @@ argument_list|,
 argument|kernel
 argument_list|,
 argument|ctor
+argument_list|,
+argument|return
 argument_list|,
 argument|return
 argument_list|)
@@ -482,6 +486,8 @@ argument_list|,
 name|kernel
 argument_list|,
 name|dtor
+argument_list|,
+name|entry
 argument_list|,
 name|entry
 argument_list|)
@@ -570,6 +576,8 @@ argument_list|,
 argument|dtor
 argument_list|,
 argument|return
+argument_list|,
+argument|return
 argument_list|)
 end_macro
 
@@ -650,6 +658,8 @@ argument_list|,
 name|init
 argument_list|,
 name|entry
+argument_list|,
+name|entry
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -716,6 +726,8 @@ argument_list|,
 argument|kernel
 argument_list|,
 argument|init
+argument_list|,
+argument|return
 argument_list|,
 argument|return
 argument_list|)

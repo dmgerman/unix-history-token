@@ -1968,7 +1968,7 @@ name|ulong_t
 name|dtrace_getreg
 parameter_list|(
 name|struct
-name|regs
+name|trapframe
 modifier|*
 parameter_list|,
 name|uint_t

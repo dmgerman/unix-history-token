@@ -342,6 +342,13 @@ name|IRQ_SYSCALL
 value|(NUM_IO_INTS + 2)
 end_define
 
+begin_define
+define|#
+directive|define
+name|IRQ_DTRACE_RET
+value|(NUM_IO_INTS + 3)
+end_define
+
 begin_comment
 comment|/*  * Support for local APICs.  Local APICs manage interrupts on each  * individual processor as opposed to I/O APICs which receive interrupts  * from I/O devices and then forward them on to the local APICs.  *  * Local APICs can also send interrupts to each other thus providing the  * mechanism for IPIs.  */
 end_comment
@@ -1303,6 +1310,25 @@ index|]
 operator|=
 name|IRQ_TIMER
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KDTRACE_HOOKS
+name|lapics
+index|[
+name|apic_id
+index|]
+operator|.
+name|la_ioint_irqs
+index|[
+name|IDT_DTRACE_RET
+operator|-
+name|APIC_IO_INTS
+index|]
+operator|=
+name|IRQ_DTRACE_RET
+expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|SMP
@@ -4329,6 +4355,22 @@ name|vector
 operator|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KDTRACE_HOOKS
+name|KASSERT
+argument_list|(
+name|vector
+operator|!=
+name|IDT_DTRACE_RET
+argument_list|,
+operator|(
+literal|"Attempt to overwrite DTrace entry"
+operator|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|setidt
 argument_list|(
 name|vector
@@ -4372,6 +4414,22 @@ literal|"Attempt to overwrite syscall entry"
 operator|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KDTRACE_HOOKS
+name|KASSERT
+argument_list|(
+name|vector
+operator|!=
+name|IDT_DTRACE_RET
+argument_list|,
+operator|(
+literal|"Attempt to overwrite DTrace entry"
+operator|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|KASSERT
 argument_list|(
 name|ioint_handlers
@@ -4496,6 +4554,22 @@ literal|"IRQ mismatch"
 operator|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KDTRACE_HOOKS
+name|KASSERT
+argument_list|(
+name|vector
+operator|!=
+name|IDT_DTRACE_RET
+argument_list|,
+operator|(
+literal|"Attempt to overwrite DTrace entry"
+operator|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Bind us to the cpu that owned the vector before freeing it so 	 * we don't lose an interrupt delivery race. 	 */
 name|td
 operator|=
@@ -4633,6 +4707,22 @@ name|vector
 operator|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KDTRACE_HOOKS
+name|KASSERT
+argument_list|(
+name|vector
+operator|!=
+name|IDT_DTRACE_RET
+argument_list|,
+operator|(
+literal|"Attempt to overwrite DTrace entry"
+operator|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|irq
 operator|=
 name|lapics
@@ -4814,6 +4904,18 @@ operator|==
 name|IRQ_SYSCALL
 condition|)
 continue|continue;
+ifdef|#
+directive|ifdef
+name|KDTRACE_HOOKS
+if|if
+condition|(
+name|irq
+operator|==
+name|IRQ_DTRACE_RET
+condition|)
+continue|continue;
+endif|#
+directive|endif
 name|db_printf
 argument_list|(
 literal|"vec 0x%2x -> "
