@@ -6636,12 +6636,14 @@ name|flags
 operator||=
 name|MPSSAS_QUEUE_FROZEN
 expr_stmt|;
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
 argument_list|,
-literal|"Error sending command, freezing "
-literal|"SIM queue\n"
+name|MPS_INFO
+argument_list|,
+literal|"Error sending command, "
+literal|"freezing SIM queue\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -6711,9 +6713,11 @@ operator|&=
 operator|~
 name|MPSSAS_QUEUE_FROZEN
 expr_stmt|;
-name|mps_printf
+name|mps_dprint
 argument_list|(
 name|sc
+argument_list|,
+name|MPS_INFO
 argument_list|,
 literal|"Unfreezing SIM queue\n"
 argument_list|)

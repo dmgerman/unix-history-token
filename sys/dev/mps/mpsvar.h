@@ -47,7 +47,7 @@ begin_define
 define|#
 directive|define
 name|MPS_CHAIN_FRAMES
-value|1024
+value|2048
 end_define
 
 begin_define
