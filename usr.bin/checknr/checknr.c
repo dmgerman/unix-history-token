@@ -291,7 +291,7 @@ comment|/* parm to size, font, etc */
 name|int
 name|lno
 decl_stmt|;
-comment|/* line number the thing came in */
+comment|/* line number the thing came in in */
 block|}
 name|stk
 index|[
