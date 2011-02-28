@@ -1736,9 +1736,11 @@ comment|/* SiS hardware descriptor section */
 name|uint32_t
 name|sis_next
 decl_stmt|;
+specifier|volatile
 name|uint32_t
 name|sis_cmdsts
 decl_stmt|;
+specifier|volatile
 name|uint32_t
 name|sis_ptr
 decl_stmt|;
