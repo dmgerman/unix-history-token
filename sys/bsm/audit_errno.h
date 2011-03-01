@@ -1392,6 +1392,28 @@ begin_comment
 comment|/* Linux-specific. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|BSM_ERRNO_ENOTCAPABLE
+value|223
+end_define
+
+begin_comment
+comment|/* FreeBSD-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BSM_ERRNO_ECAPMODE
+value|224
+end_define
+
+begin_comment
+comment|/* FreeBSD-specific. */
+end_comment
+
 begin_comment
 comment|/*  * In the event that OpenBSM doesn't have a file representation of a local  * error number, use this.  */
 end_comment
