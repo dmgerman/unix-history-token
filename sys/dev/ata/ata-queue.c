@@ -2393,6 +2393,11 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|!
+name|request
+operator|->
+name|result
+operator|&&
 operator|(
 name|request
 operator|->
