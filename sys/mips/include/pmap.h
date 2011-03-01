@@ -27,6 +27,40 @@ directive|include
 file|<machine/pte.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__mips_n32
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__mips_n64
+argument_list|)
+end_if
+
+begin_comment
+comment|/* PHYSADDR_64BIT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NKPT
+value|256
+end_define
+
+begin_comment
+comment|/* mem> 4G, vm_page_startup needs more KPTs */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -37,6 +71,11 @@ end_define
 begin_comment
 comment|/* actual number of kernel page tables */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
