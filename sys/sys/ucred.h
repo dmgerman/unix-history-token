@@ -177,6 +177,21 @@ value|16
 end_define
 
 begin_comment
+comment|/*  * Flags for cr_flags.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CRED_FLAG_CAPMODE
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* In capability mode. */
+end_comment
+
+begin_comment
 comment|/*  * This is the external representation of struct ucred.  */
 end_comment
 

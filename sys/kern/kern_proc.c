@@ -3771,9 +3771,21 @@ name|kp
 operator|->
 name|ki_cr_flags
 operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
 name|cred
 operator|->
 name|cr_flags
+operator|&
+name|CRED_FLAG_CAPMODE
+condition|)
+name|kp
+operator|->
+name|ki_cr_flags
+operator||=
+name|KI_CRF_CAPABILITY_MODE
 expr_stmt|;
 comment|/* XXX bde doesn't like KI_NGROUPS */
 if|if

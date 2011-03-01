@@ -320,7 +320,18 @@ comment|/* size of returned ki_login */
 end_comment
 
 begin_comment
-comment|/*  * Steal a bit from ki_cr_flags (cr_flags is never used) to indicate  * that the cred had more than KI_NGROUPS groups.  */
+comment|/* Flags for the process credential. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KI_CRF_CAPABILITY_MODE
+value|0x00000001
+end_define
+
+begin_comment
+comment|/*  * Steal a bit from ki_cr_flags to indicate that the cred had more than  * KI_NGROUPS groups.  */
 end_comment
 
 begin_define
