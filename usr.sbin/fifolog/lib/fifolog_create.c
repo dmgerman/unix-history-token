@@ -98,7 +98,7 @@ name|i
 decl_stmt|,
 name|fd
 decl_stmt|;
-name|unsigned
+name|ssize_t
 name|u
 decl_stmt|;
 name|off_t

@@ -1497,7 +1497,7 @@ index|[
 literal|9
 index|]
 decl_stmt|;
-name|unsigned
+name|ssize_t
 name|bufl
 decl_stmt|;
 name|fifolog_write_assert
