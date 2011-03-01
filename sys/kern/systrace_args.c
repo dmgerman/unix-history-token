@@ -16847,6 +16847,50 @@ literal|2
 expr_stmt|;
 break|break;
 block|}
+comment|/* cap_enter */
+case|case
+literal|516
+case|:
+block|{
+operator|*
+name|n_args
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+comment|/* cap_getmode */
+case|case
+literal|517
+case|:
+block|{
+name|struct
+name|cap_getmode_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|uarg
+index|[
+literal|0
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|p
+operator|->
+name|modep
+expr_stmt|;
+comment|/* u_int * */
+operator|*
+name|n_args
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+block|}
 comment|/* pselect */
 case|case
 literal|522
@@ -28945,6 +28989,33 @@ case|:
 name|p
 operator|=
 literal|"int"
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+empty_stmt|;
+break|break;
+comment|/* cap_enter */
+case|case
+literal|516
+case|:
+break|break;
+comment|/* cap_getmode */
+case|case
+literal|517
+case|:
+switch|switch
+condition|(
+name|ndx
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|p
+operator|=
+literal|"u_int *"
 expr_stmt|;
 break|break;
 default|default:
