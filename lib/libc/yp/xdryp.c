@@ -61,7 +61,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * I'm leaving the xdr_datum() function in purely for backwards  * compatibility. yplib.c doesn't actually use it, but it's listed  * in yp_prot.h as being available, so it's probably a good idea to  * leave it in in case somebody goes looking for it.  */
+comment|/*  * I'm leaving the xdr_datum() function in purely for backwards  * compatibility. yplib.c doesn't actually use it, but it's listed  * in yp_prot.h as being available, so it's probably a good idea to  * leave it in case somebody goes looking for it.  */
 end_comment
 
 begin_typedef
