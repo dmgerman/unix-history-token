@@ -658,6 +658,52 @@ end_struct
 
 begin_struct
 struct|struct
+name|rtcc_cc
+block|{
+name|struct
+name|timeval
+name|tls
+decl_stmt|;
+comment|/* The time we started the sending  */
+name|uint64_t
+name|lbw
+decl_stmt|;
+comment|/* Our last estimated bw */
+name|uint64_t
+name|lbw_rtt
+decl_stmt|;
+comment|/* RTT at bw estimate */
+name|uint64_t
+name|bw_bytes
+decl_stmt|;
+comment|/* The total bytes since this sending began */
+name|uint64_t
+name|bw_tot_time
+decl_stmt|;
+comment|/* The total time since sending began */
+name|uint64_t
+name|new_tot_time
+decl_stmt|;
+comment|/* temp holding the new value */
+name|uint32_t
+name|cwnd_at_bw_set
+decl_stmt|;
+name|uint8_t
+name|ret_from_eq
+decl_stmt|;
+name|uint8_t
+name|use_dccc_ecn
+decl_stmt|;
+name|uint8_t
+name|tls_needs_set
+decl_stmt|;
+comment|/* Flag to indicate we need to set tls 0 or 1 				 * means set at send 2 not */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|sctp_nets
 block|{
 name|TAILQ_ENTRY
@@ -735,6 +781,11 @@ name|htcp
 name|htcp_ca
 decl_stmt|;
 comment|/* JRS - struct used in HTCP algorithm */
+name|struct
+name|rtcc_cc
+name|rtcc
+decl_stmt|;
+comment|/* rtcc module cc stuff  */
 block|}
 name|cc_mod
 union|;

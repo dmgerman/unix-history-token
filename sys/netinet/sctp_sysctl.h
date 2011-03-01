@@ -234,9 +234,6 @@ decl_stmt|;
 name|uint32_t
 name|sctp_inits_include_nat_friendly
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|SCTP_HAS_RTTCC
 name|uint32_t
 name|sctp_rttvar_bw
 decl_stmt|;
@@ -246,8 +243,6 @@ decl_stmt|;
 name|uint32_t
 name|sctp_rttvar_eqret
 decl_stmt|;
-endif|#
-directive|endif
 if|#
 directive|if
 name|defined
@@ -2401,12 +2396,6 @@ name|SCTPCTL_INITIAL_CWND_DEFAULT
 value|3
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SCTP_HAS_RTTCC
-end_ifdef
-
 begin_comment
 comment|/* rttvar smooth avg for bw calc  */
 end_comment
@@ -2498,11 +2487,6 @@ directive|define
 name|SCTPCTL_RTTVAR_EQRET_DEFAULT
 value|0
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
