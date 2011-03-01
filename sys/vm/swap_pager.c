@@ -8287,7 +8287,7 @@ comment|/*  * vmspace_swap_count() - count the approximate swap usage in pages f
 end_comment
 
 begin_function
-name|vm_offset_t
+name|long
 name|vmspace_swap_count
 parameter_list|(
 name|struct
@@ -8305,7 +8305,7 @@ decl_stmt|;
 name|vm_object_t
 name|object
 decl_stmt|;
-name|vm_offset_t
+name|long
 name|count
 decl_stmt|,
 name|n

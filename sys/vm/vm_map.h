@@ -1787,7 +1787,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|vm_offset_t
+name|long
 name|vmspace_swap_count
 parameter_list|(
 name|struct
