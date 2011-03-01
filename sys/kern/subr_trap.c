@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_capabilities.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_ktrace.h"
 end_include
 
@@ -45,6 +51,12 @@ begin_include
 include|#
 directive|include
 file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/capability.h>
 end_include
 
 begin_include
@@ -1265,6 +1277,39 @@ goto|goto
 name|retval
 goto|;
 block|}
+ifdef|#
+directive|ifdef
+name|CAPABILITIES
+comment|/* 		 * In capability mode, we only allow access to system calls 		 * flagged with SYF_CAPENABLED. 		 */
+if|if
+condition|(
+name|IN_CAPABILITY_MODE
+argument_list|(
+name|td
+argument_list|)
+operator|&&
+operator|!
+operator|(
+name|sa
+operator|->
+name|callp
+operator|->
+name|sy_flags
+operator|&
+name|SYF_CAPENABLED
+operator|)
+condition|)
+block|{
+name|error
+operator|=
+name|ECAPMODE
+expr_stmt|;
+goto|goto
+name|retval
+goto|;
+block|}
+endif|#
+directive|endif
 name|error
 operator|=
 name|syscall_thread_enter
