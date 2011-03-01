@@ -162,6 +162,17 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * A system call is permitted in capability mode.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYF_CAPENABLED
+value|0x00000001
+end_define
+
 begin_define
 define|#
 directive|define
