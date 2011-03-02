@@ -2349,7 +2349,8 @@ name|printf
 argument_list|(
 name|LMSG
 argument_list|(
-literal|"linux_rt_sigtimedwait: incoming timeout (%d/%d)\n"
+literal|"linux_rt_sigtimedwait: "
+literal|"incoming timeout (%d/%d)\n"
 argument_list|)
 argument_list|,
 name|ltv
@@ -2461,7 +2462,8 @@ name|printf
 argument_list|(
 name|LMSG
 argument_list|(
-literal|"linux_rt_sigtimedwait: converted timeout (%jd/%ld)\n"
+literal|"linux_rt_sigtimedwait: "
+literal|"converted timeout (%jd/%ld)\n"
 argument_list|)
 argument_list|,
 operator|(
@@ -2522,7 +2524,8 @@ name|printf
 argument_list|(
 name|LMSG
 argument_list|(
-literal|"linux_rt_sigtimedwait: sigtimedwait returning (%d)\n"
+literal|"linux_rt_sigtimedwait: "
+literal|"sigtimedwait returning (%d)\n"
 argument_list|)
 argument_list|,
 name|error
