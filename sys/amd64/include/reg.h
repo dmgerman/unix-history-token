@@ -401,6 +401,12 @@ begin_comment
 comment|/*  * XXX these interfaces are MI, so they should be declared in a MI place.  */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|trapframe
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|int
 name|fill_regs
