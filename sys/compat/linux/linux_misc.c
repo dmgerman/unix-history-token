@@ -351,17 +351,6 @@ begin_comment
 comment|/* Statistics clock frequency */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|BSD_TO_LINUX_SIGNAL
-parameter_list|(
-name|sig
-parameter_list|)
-define|\
-value|(((sig)<= LINUX_SIGTBLSZ) ? bsd_to_linux_signal[_SIG_IDX(sig)] : sig)
-end_define
-
 begin_decl_stmt
 specifier|static
 name|unsigned
