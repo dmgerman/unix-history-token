@@ -700,6 +700,7 @@ operator|=
 literal|1
 expr_stmt|;
 return|return
+operator|(
 name|copyout
 argument_list|(
 operator|&
@@ -714,6 +715,7 @@ argument_list|(
 name|sysinfo
 argument_list|)
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -1048,7 +1050,9 @@ operator|)
 name|old
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -2057,7 +2061,9 @@ name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -2542,7 +2548,9 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -2726,7 +2734,9 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
+operator|(
 name|ENOMEM
+operator|)
 return|;
 block|}
 if|if
@@ -2802,7 +2812,9 @@ operator|->
 name|addr
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -2884,6 +2896,7 @@ operator|~
 name|LINUX_MS_SYNC
 expr_stmt|;
 return|return
+operator|(
 name|msync
 argument_list|(
 name|td
@@ -2891,6 +2904,7 @@ argument_list|,
 operator|&
 name|bsd_args
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -2980,7 +2994,9 @@ argument_list|)
 operator|)
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|td
 operator|->
@@ -2992,7 +3008,9 @@ operator|=
 name|tm
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -3234,7 +3252,9 @@ argument_list|)
 operator|)
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 name|microuptime
@@ -3259,7 +3279,9 @@ name|tv
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -3608,7 +3630,9 @@ name|fname
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 name|tv
@@ -4888,7 +4912,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 comment|/* Yes Jim, it's still a Linux... */
 name|td
@@ -4901,7 +4927,9 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -5339,6 +5367,7 @@ operator|->
 name|inc
 expr_stmt|;
 return|return
+operator|(
 name|setpriority
 argument_list|(
 name|td
@@ -5346,6 +5375,7 @@ argument_list|,
 operator|&
 name|bsd_args
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -6480,7 +6510,9 @@ expr_stmt|;
 break|break;
 default|default:
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 name|bsd
@@ -6505,6 +6537,7 @@ operator|->
 name|param
 expr_stmt|;
 return|return
+operator|(
 name|sched_setscheduler
 argument_list|(
 name|td
@@ -6512,6 +6545,7 @@ argument_list|,
 operator|&
 name|bsd
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -6633,7 +6667,9 @@ expr_stmt|;
 break|break;
 block|}
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -6722,10 +6758,13 @@ expr_stmt|;
 break|break;
 default|default:
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 return|return
+operator|(
 name|sched_get_priority_max
 argument_list|(
 name|td
@@ -6733,6 +6772,7 @@ argument_list|,
 operator|&
 name|bsd
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -6821,10 +6861,13 @@ expr_stmt|;
 break|break;
 default|default:
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 return|return
+operator|(
 name|sched_get_priority_min
 argument_list|(
 name|td
@@ -6832,6 +6875,7 @@ argument_list|,
 operator|&
 name|bsd
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -6960,7 +7004,9 @@ operator|!=
 name|REBOOT_MAGIC1
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 switch|switch
 condition|(
@@ -6981,7 +7027,9 @@ case|:
 break|break;
 default|default:
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 switch|switch
@@ -7042,10 +7090,13 @@ expr_stmt|;
 break|break;
 default|default:
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 return|return
+operator|(
 name|reboot
 argument_list|(
 name|td
@@ -7053,6 +7104,7 @@ argument_list|,
 operator|&
 name|bsd_args
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -7640,6 +7692,7 @@ operator|->
 name|pid
 expr_stmt|;
 return|return
+operator|(
 name|getsid
 argument_list|(
 name|td
@@ -7647,6 +7700,7 @@ argument_list|,
 operator|&
 name|bsd
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -7769,7 +7823,9 @@ literal|0
 index|]
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
