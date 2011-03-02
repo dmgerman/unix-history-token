@@ -116,6 +116,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|LINUX_FUTEX_WAKE_BITSET
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
 name|LINUX_FUTEX_WAIT_REQUEUE_PI
 value|11
 end_define
@@ -285,6 +292,13 @@ define|#
 directive|define
 name|FUTEX_TID_MASK
 value|0x3fffffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|FUTEX_BITSET_MATCH_ANY
+value|0xffffffff
 end_define
 
 begin_function_decl

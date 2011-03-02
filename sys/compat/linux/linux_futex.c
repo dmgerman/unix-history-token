@@ -242,6 +242,9 @@ decl_stmt|;
 name|uint32_t
 name|f_refcount
 decl_stmt|;
+name|uint32_t
+name|f_bitset
+decl_stmt|;
 name|LIST_ENTRY
 argument_list|(
 argument|futex
@@ -1212,6 +1215,9 @@ name|f
 parameter_list|,
 name|int
 name|n
+parameter_list|,
+name|uint32_t
+name|bitset
 parameter_list|)
 block|{
 name|struct
@@ -1227,6 +1233,17 @@ name|count
 init|=
 literal|0
 decl_stmt|;
+if|if
+condition|(
+name|bitset
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 name|FUTEX_ASSERT_LOCKED
 argument_list|(
 name|f
@@ -1260,6 +1277,21 @@ operator|->
 name|f_refcount
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Unless we find a matching bit in 		 * the bitset, continue searching. 		 */
+if|if
+condition|(
+operator|!
+operator|(
+name|wp
+operator|->
+name|wp_futex
+operator|->
+name|f_bitset
+operator|&
+name|bitset
+operator|)
+condition|)
+continue|continue;
 name|wp
 operator|->
 name|wp_flags
@@ -1505,6 +1537,9 @@ name|struct
 name|l_timespec
 modifier|*
 name|ts
+parameter_list|,
+name|uint32_t
+name|bitset
 parameter_list|)
 block|{
 name|struct
@@ -1533,6 +1568,23 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+if|if
+condition|(
+name|bitset
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+name|f
+operator|->
+name|f_bitset
+operator|=
+name|bitset
+expr_stmt|;
 if|if
 condition|(
 name|ts
@@ -2074,11 +2126,25 @@ block|{
 case|case
 name|LINUX_FUTEX_WAIT
 case|:
-name|LINUX_CTR2
+name|args
+operator|->
+name|val3
+operator|=
+name|FUTEX_BITSET_MATCH_ANY
+expr_stmt|;
+comment|/* FALLTHROUGH */
+case|case
+name|LINUX_FUTEX_WAIT_BITSET
+case|:
+name|LINUX_CTR3
 argument_list|(
 name|sys_futex
 argument_list|,
-literal|"WAIT val %d uaddr %p"
+literal|"WAIT uaddr %p val %d val3 %d"
+argument_list|,
+name|args
+operator|->
+name|uaddr
 argument_list|,
 name|args
 operator|->
@@ -2086,7 +2152,7 @@ name|val
 argument_list|,
 name|args
 operator|->
-name|uaddr
+name|val3
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -2105,8 +2171,12 @@ name|ARGS
 argument_list|(
 name|sys_futex
 argument_list|,
-literal|"futex_wait val %d uaddr %p"
+literal|"futex_wait uaddr %p val %d val3 %d"
 argument_list|)
+argument_list|,
+name|args
+operator|->
+name|uaddr
 argument_list|,
 name|args
 operator|->
@@ -2114,7 +2184,7 @@ name|val
 argument_list|,
 name|args
 operator|->
-name|uaddr
+name|val3
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2198,11 +2268,11 @@ operator|->
 name|val
 condition|)
 block|{
-name|LINUX_CTR3
+name|LINUX_CTR4
 argument_list|(
 name|sys_futex
 argument_list|,
-literal|"WAIT uaddr %p val %d != uval %d"
+literal|"WAIT uaddr %p val %d != uval %d val3 %d"
 argument_list|,
 name|args
 operator|->
@@ -2213,6 +2283,10 @@ operator|->
 name|val
 argument_list|,
 name|val
+argument_list|,
+name|args
+operator|->
+name|val3
 argument_list|)
 expr_stmt|;
 name|futex_put
@@ -2239,17 +2313,35 @@ argument_list|,
 name|args
 operator|->
 name|timeout
+argument_list|,
+name|args
+operator|->
+name|val3
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|LINUX_FUTEX_WAKE
 case|:
-name|LINUX_CTR2
+name|args
+operator|->
+name|val3
+operator|=
+name|FUTEX_BITSET_MATCH_ANY
+expr_stmt|;
+comment|/* FALLTHROUGH */
+case|case
+name|LINUX_FUTEX_WAKE_BITSET
+case|:
+name|LINUX_CTR3
 argument_list|(
 name|sys_futex
 argument_list|,
-literal|"WAKE val %d uaddr %p"
+literal|"WAKE uaddr %p val % d val3 %d"
+argument_list|,
+name|args
+operator|->
+name|uaddr
 argument_list|,
 name|args
 operator|->
@@ -2257,7 +2349,7 @@ name|val
 argument_list|,
 name|args
 operator|->
-name|uaddr
+name|val3
 argument_list|)
 expr_stmt|;
 comment|/* 		 * XXX: Linux is able to cope with different addresses 		 * corresponding to the same mapped memory in the sleeping 		 * and waker process(es). 		 */
@@ -2277,8 +2369,12 @@ name|ARGS
 argument_list|(
 name|sys_futex
 argument_list|,
-literal|"futex_wake val %d uaddr %p"
+literal|"futex_wake uaddr %p val %d val3 %d"
 argument_list|)
+argument_list|,
+name|args
+operator|->
+name|uaddr
 argument_list|,
 name|args
 operator|->
@@ -2286,7 +2382,7 @@ name|val
 argument_list|,
 name|args
 operator|->
-name|uaddr
+name|val3
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2352,6 +2448,10 @@ argument_list|,
 name|args
 operator|->
 name|val
+argument_list|,
+name|args
+operator|->
+name|val3
 argument_list|)
 expr_stmt|;
 name|futex_put
@@ -2896,6 +2996,10 @@ argument_list|,
 name|args
 operator|->
 name|val
+argument_list|,
+name|args
+operator|->
+name|val3
 argument_list|)
 expr_stmt|;
 if|if
@@ -2935,6 +3039,10 @@ argument_list|(
 name|f2
 argument_list|,
 name|nrwake
+argument_list|,
+name|args
+operator|->
+name|val3
 argument_list|)
 expr_stmt|;
 else|else
@@ -2945,6 +3053,10 @@ argument_list|(
 name|f
 argument_list|,
 name|nrwake
+argument_list|,
+name|args
+operator|->
+name|val3
 argument_list|)
 expr_stmt|;
 name|ret
@@ -3075,23 +3187,6 @@ block|}
 return|return
 operator|(
 name|EINVAL
-operator|)
-return|;
-case|case
-name|LINUX_FUTEX_WAIT_BITSET
-case|:
-comment|/* not yet implemented */
-name|linux_msg
-argument_list|(
-name|td
-argument_list|,
-literal|"linux_sys_futex: "
-literal|"op FUTEX_WAIT_BITSET not implemented\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENOSYS
 operator|)
 return|;
 case|case
@@ -3613,6 +3708,8 @@ argument_list|(
 name|f
 argument_list|,
 literal|1
+argument_list|,
+name|FUTEX_BITSET_MATCH_ANY
 argument_list|)
 expr_stmt|;
 name|futex_put
