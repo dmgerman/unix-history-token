@@ -1778,7 +1778,7 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"Staring faith daemon for %s port"
+literal|"Starting faith daemon for %s port"
 argument_list|,
 name|service
 argument_list|)
