@@ -838,6 +838,12 @@ name|f_refcount
 operator|=
 literal|1
 expr_stmt|;
+name|tmpf
+operator|->
+name|f_bitset
+operator|=
+name|FUTEX_BITSET_MATCH_ANY
+expr_stmt|;
 name|FUTEX_INIT
 argument_list|(
 name|tmpf
