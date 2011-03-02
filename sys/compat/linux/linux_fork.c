@@ -384,15 +384,6 @@ name|p2
 operator|->
 name|p_pid
 expr_stmt|;
-name|td
-operator|->
-name|td_retval
-index|[
-literal|1
-index|]
-operator|=
-literal|0
-expr_stmt|;
 name|error
 operator|=
 name|linux_proc_init
