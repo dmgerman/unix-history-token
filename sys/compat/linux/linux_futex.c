@@ -3168,9 +3168,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|em
 operator|->
-name|used_requeue
+name|flags
+operator|&
+name|LINUX_XDEPR_REQUEUEOP
+operator|)
 operator|==
 literal|0
 condition|)
@@ -3185,9 +3189,9 @@ argument_list|)
 expr_stmt|;
 name|em
 operator|->
-name|used_requeue
-operator|=
-literal|1
+name|flags
+operator||=
+name|LINUX_XDEPR_REQUEUEOP
 expr_stmt|;
 block|}
 return|return

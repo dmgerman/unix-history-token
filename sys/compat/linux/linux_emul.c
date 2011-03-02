@@ -299,7 +299,7 @@ literal|0
 expr_stmt|;
 name|em
 operator|->
-name|used_requeue
+name|flags
 operator|=
 literal|0
 expr_stmt|;
