@@ -2061,13 +2061,9 @@ name|f
 decl_stmt|,
 modifier|*
 name|f2
-init|=
-name|NULL
 decl_stmt|;
 name|int
 name|error
-init|=
-literal|0
 decl_stmt|;
 comment|/* 	 * Our implementation provides only privates futexes. Most of the apps 	 * should use private futexes but don't claim so. Therefore we treat 	 * all futexes as private by clearing the FUTEX_PRIVATE_FLAG. It works 	 * in most cases (ie. when futexes are not shared on file descriptor 	 * or between different processes.). 	 */
 name|args
@@ -2122,6 +2118,16 @@ operator|(
 name|ENOSYS
 operator|)
 return|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
+name|f
+operator|=
+name|f2
+operator|=
+name|NULL
+expr_stmt|;
 switch|switch
 condition|(
 name|args
