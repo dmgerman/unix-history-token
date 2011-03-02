@@ -297,7 +297,7 @@ name|FUTEX_INIT
 parameter_list|(
 name|f
 parameter_list|)
-value|sx_init_flags(&(f)->f_lck, "ftlk", 0)
+value|sx_init_flags(&(f)->f_lck, "ftlk", SX_DUPOK)
 end_define
 
 begin_define
@@ -2595,7 +2595,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 		 * To avoid deadlocks return EINVAL if second futex 		 * exists at this time. Otherwise create the new futex 		 * and ignore false positive LOR which thus happens. 		 * 		 * Glibc fall back to FUTEX_WAKE in case of any error 		 * returned by FUTEX_CMP_REQUEUE. 		 */
+comment|/* 		 * To avoid deadlocks return EINVAL if second futex 		 * exists at this time. 		 * 		 * Glibc fall back to FUTEX_WAKE in case of any error 		 * returned by FUTEX_CMP_REQUEUE. 		 */
 name|error
 operator|=
 name|futex_get0
