@@ -77,12 +77,6 @@ directive|include
 file|<sys/unistd.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/frame.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
