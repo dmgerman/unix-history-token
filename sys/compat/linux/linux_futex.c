@@ -727,7 +727,7 @@ operator|&
 name|FUTEX_SHARED
 operator|)
 condition|?
-name|PROCESS_SHARE
+name|AUTO_SHARE
 else|:
 name|THREAD_SHARE
 argument_list|,
