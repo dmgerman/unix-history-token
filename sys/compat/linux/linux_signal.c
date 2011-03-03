@@ -3006,9 +3006,11 @@ name|cr_ruid
 expr_stmt|;
 name|error
 operator|=
-name|pksignal
+name|tdsignal
 argument_list|(
 name|p
+argument_list|,
+name|NULL
 argument_list|,
 name|ksi
 operator|.
