@@ -357,6 +357,9 @@ comment|/* 92 - EPROTO */
 literal|"Capabilities insufficient"
 block|,
 comment|/* 93 - ENOTCAPABLE */
+literal|"Not permitted in capability mode"
+block|,
+comment|/* 94 - ECAPMODE */
 block|}
 decl_stmt|;
 end_decl_stmt
