@@ -610,11 +610,12 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
-name|LINUX_CTR2
+name|LINUX_CTR3
 argument_list|(
 name|sys_futex
 argument_list|,
-literal|"futex_put destroy uaddr %p ref %d"
+literal|"futex_put destroy uaddr %p ref %d "
+literal|"shared %d"
 argument_list|,
 name|f
 operator|->
@@ -623,6 +624,12 @@ argument_list|,
 name|f
 operator|->
 name|f_refcount
+argument_list|,
+name|f
+operator|->
+name|f_key
+operator|.
+name|shared
 argument_list|)
 expr_stmt|;
 name|umtx_key_release
@@ -647,11 +654,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|LINUX_CTR2
+name|LINUX_CTR3
 argument_list|(
 name|sys_futex
 argument_list|,
-literal|"futex_put uaddr %p ref %d"
+literal|"futex_put uaddr %p ref %d shared %d"
 argument_list|,
 name|f
 operator|->
@@ -660,6 +667,12 @@ argument_list|,
 name|f
 operator|->
 name|f_refcount
+argument_list|,
+name|f
+operator|->
+name|f_key
+operator|.
+name|shared
 argument_list|)
 expr_stmt|;
 name|FUTEXES_UNLOCK
@@ -841,17 +854,23 @@ name|newf
 operator|=
 name|f
 expr_stmt|;
-name|LINUX_CTR2
+name|LINUX_CTR3
 argument_list|(
 name|sys_futex
 argument_list|,
-literal|"futex_get uaddr %p ref %d"
+literal|"futex_get uaddr %p ref %d shared %d"
 argument_list|,
 name|uaddr
 argument_list|,
 name|f
 operator|->
 name|f_refcount
+argument_list|,
+name|f
+operator|->
+name|f_key
+operator|.
+name|shared
 argument_list|)
 expr_stmt|;
 return|return
@@ -976,17 +995,23 @@ argument_list|)
 expr_stmt|;
 name|FUTEXES_UNLOCK
 expr_stmt|;
-name|LINUX_CTR2
+name|LINUX_CTR3
 argument_list|(
 name|sys_futex
 argument_list|,
-literal|"futex_get uaddr %p ref %d new"
+literal|"futex_get uaddr %p ref %d shared %d new"
 argument_list|,
 name|uaddr
 argument_list|,
 name|tmpf
 operator|->
 name|f_refcount
+argument_list|,
+name|tmpf
+operator|->
+name|f_key
+operator|.
+name|shared
 argument_list|)
 expr_stmt|;
 operator|*
