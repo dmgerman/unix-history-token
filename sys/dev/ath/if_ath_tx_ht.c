@@ -483,41 +483,14 @@ name|RateFlags
 operator||=
 name|HAL_RATESERIES_RTS_CTS
 expr_stmt|;
-if|if
-condition|(
-name|ni
-operator|->
-name|ni_htcap
-operator|&
-name|IEEE80211_HTCAP_CHWIDTH40
-condition|)
-name|series
-index|[
-name|i
-index|]
-operator|.
-name|RateFlags
-operator||=
-name|HAL_RATESERIES_2040
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|if (ni->ni_htcap& IEEE80211_HTCAP_CHWIDTH40) 			series[i].RateFlags |= HAL_RATESERIES_2040;
 comment|/* 		 * The hardware only supports short-gi in 40mhz mode - 		 * if later hardware supports it in 20mhz mode, be sure 		 * to add the relevant check here. 		 */
-if|if
-condition|(
-name|ni
-operator|->
-name|ni_htcap
-operator|&
-name|IEEE80211_HTCAP_SHORTGI40
-condition|)
-name|series
-index|[
-name|i
-index|]
-operator|.
-name|RateFlags
-operator||=
-name|HAL_RATESERIES_HALFGI
-expr_stmt|;
+block|if (ni->ni_htcap& IEEE80211_HTCAP_SHORTGI40) 			series[i].RateFlags |= HAL_RATESERIES_HALFGI;
+endif|#
+directive|endif
 name|series
 index|[
 name|i
@@ -608,13 +581,8 @@ name|ic
 operator|->
 name|ic_txstream
 argument_list|,
-operator|(
-name|ni
-operator|->
-name|ni_htcap
-operator|&
-name|IEEE80211_HTCAP_CHWIDTH40
-operator|)
+literal|0
+comment|/* disable 20/40 for now */
 argument_list|,
 name|series
 index|[
