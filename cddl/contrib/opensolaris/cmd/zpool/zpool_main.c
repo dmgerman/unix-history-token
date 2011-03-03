@@ -14527,7 +14527,7 @@ name|char
 modifier|*
 name|slash
 decl_stmt|;
-while|while
+if|if
 condition|(
 operator|!
 name|stated
@@ -14566,7 +14566,11 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-break|break;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -14581,7 +14585,11 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-break|break;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|poolname
 operator|=
 name|sfs
@@ -14608,7 +14616,6 @@ name|slash
 operator|=
 literal|'\0'
 expr_stmt|;
-break|break;
 block|}
 return|return
 operator|(

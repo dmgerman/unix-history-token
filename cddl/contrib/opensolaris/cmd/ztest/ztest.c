@@ -16887,21 +16887,16 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-if|if
-condition|(
-name|realpath
+name|strlcpy
 argument_list|(
-name|progname
+name|zdb
 argument_list|,
+literal|"/usr/bin/ztest"
+argument_list|,
+sizeof|sizeof
+argument_list|(
 name|zdb
 argument_list|)
-operator|==
-name|NULL
-condition|)
-name|assert
-argument_list|(
-operator|!
-literal|"realpath() failed"
 argument_list|)
 expr_stmt|;
 comment|/* zdb lives in /usr/sbin, while ztest lives in /usr/bin */
