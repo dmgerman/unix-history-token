@@ -416,6 +416,41 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|dot11rate_label
+parameter_list|(
+specifier|const
+name|HAL_RATE_TABLE
+modifier|*
+name|rt
+parameter_list|,
+name|int
+name|rix
+parameter_list|)
+block|{
+return|return
+name|rt
+operator|->
+name|info
+index|[
+name|rix
+index|]
+operator|.
+name|phy
+operator|==
+name|IEEE80211_T_HT
+condition|?
+literal|"MCS"
+else|:
+literal|"Mb "
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Return the rix with the lowest average_tx_time,  * or -1 if all the average_tx_times are 0.  */
 end_comment
@@ -3021,7 +3056,7 @@ name|an
 operator|->
 name|an_node
 argument_list|,
-literal|"%s: size %d %s rate/try %d/%d/%d"
+literal|"%s: size %d %s rate/try %d %s/%d/%d"
 argument_list|,
 name|__func__
 argument_list|,
@@ -3042,6 +3077,13 @@ else|:
 literal|"OK"
 argument_list|,
 name|dot11rate
+argument_list|(
+name|rt
+argument_list|,
+name|final_rix
+argument_list|)
+argument_list|,
+name|dot11rate_label
 argument_list|(
 name|rt
 argument_list|,
@@ -3174,7 +3216,7 @@ name|an
 operator|->
 name|an_node
 argument_list|,
-literal|"%s: size %d finaltsidx %d tries %d %s rate/try [%d/%d %d/%d %d/%d %d/%d]"
+literal|"%s: size %d finaltsidx %d tries %d %s rate/try [%d %s/%d %d %s/%d %d %s/%d %d %s/%d]"
 argument_list|,
 name|__func__
 argument_list|,
@@ -3208,6 +3250,16 @@ literal|0
 index|]
 argument_list|)
 argument_list|,
+name|dot11rate_label
+argument_list|(
+name|rt
+argument_list|,
+name|rix
+index|[
+literal|0
+index|]
+argument_list|)
+argument_list|,
 name|tries
 index|[
 literal|0
@@ -3223,6 +3275,16 @@ literal|1
 index|]
 argument_list|)
 argument_list|,
+name|dot11rate_label
+argument_list|(
+name|rt
+argument_list|,
+name|rix
+index|[
+literal|1
+index|]
+argument_list|)
+argument_list|,
 name|tries
 index|[
 literal|1
@@ -3238,12 +3300,32 @@ literal|2
 index|]
 argument_list|)
 argument_list|,
+name|dot11rate_label
+argument_list|(
+name|rt
+argument_list|,
+name|rix
+index|[
+literal|2
+index|]
+argument_list|)
+argument_list|,
 name|tries
 index|[
 literal|2
 index|]
 argument_list|,
 name|dot11rate
+argument_list|(
+name|rt
+argument_list|,
+name|rix
+index|[
+literal|3
+index|]
+argument_list|)
+argument_list|,
+name|dot11rate_label
 argument_list|(
 name|rt
 argument_list|,
@@ -4180,9 +4262,16 @@ condition|)
 continue|continue;
 name|printf
 argument_list|(
-literal|" %d/%d"
+literal|" %d %s/%d"
 argument_list|,
 name|dot11rate
+argument_list|(
+name|rt
+argument_list|,
+name|rix
+argument_list|)
+argument_list|,
+name|dot11rate_label
 argument_list|(
 name|rt
 argument_list|,
@@ -4596,7 +4685,7 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|"[%4u] cur rix %d since switch: packets %d ticks %u\n"
+literal|"[%4u] cur rix %d (%d %s) since switch: packets %d ticks %u\n"
 argument_list|,
 name|bin_to_size
 argument_list|(
@@ -4609,6 +4698,30 @@ name|current_rix
 index|[
 name|y
 index|]
+argument_list|,
+name|dot11rate
+argument_list|(
+name|rt
+argument_list|,
+name|sn
+operator|->
+name|current_rix
+index|[
+name|y
+index|]
+argument_list|)
+argument_list|,
+name|dot11rate_label
+argument_list|(
+name|rt
+argument_list|,
+name|sn
+operator|->
+name|current_rix
+index|[
+name|y
+index|]
+argument_list|)
 argument_list|,
 name|sn
 operator|->
@@ -4749,9 +4862,16 @@ condition|)
 continue|continue;
 name|printf
 argument_list|(
-literal|"[%2u:%4u] %8d:%-8d (%3d%%) T %8d F %4d avg %5u last %u\n"
+literal|"[%2u %s:%4u] %8d:%-8d (%3d%%) T %8d F %4d avg %5u last %u\n"
 argument_list|,
 name|dot11rate
+argument_list|(
+name|rt
+argument_list|,
+name|rix
+argument_list|)
+argument_list|,
+name|dot11rate_label
 argument_list|(
 name|rt
 argument_list|,
