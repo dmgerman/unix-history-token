@@ -287,9 +287,9 @@ endif|#
 directive|endif
 comment|/* PTS_EXTERNAL */
 name|struct
-name|uidinfo
+name|ucred
 modifier|*
-name|pts_uidinfo
+name|pts_cred
 decl_stmt|;
 comment|/* (c) Resource limit. */
 block|}
@@ -2676,7 +2676,9 @@ name|chgptscnt
 argument_list|(
 name|psc
 operator|->
-name|pts_uidinfo
+name|pts_cred
+operator|->
+name|cr_ruidinfo
 argument_list|,
 operator|-
 literal|1
@@ -2684,11 +2686,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|uifree
+name|crfree
 argument_list|(
 name|psc
 operator|->
-name|pts_uidinfo
+name|pts_cred
 argument_list|)
 expr_stmt|;
 name|knlist_destroy
@@ -2841,15 +2843,13 @@ operator|->
 name|td_proc
 decl_stmt|;
 name|struct
-name|uidinfo
+name|ucred
 modifier|*
-name|uid
+name|cred
 init|=
 name|td
 operator|->
 name|td_ucred
-operator|->
-name|cr_ruidinfo
 decl_stmt|;
 comment|/* Resource limiting. */
 name|PROC_LOCK
@@ -2861,7 +2861,9 @@ name|ok
 operator|=
 name|chgptscnt
 argument_list|(
-name|uid
+name|cred
+operator|->
+name|cr_ruidinfo
 argument_list|,
 literal|1
 argument_list|,
@@ -2905,7 +2907,9 @@ condition|)
 block|{
 name|chgptscnt
 argument_list|(
-name|uid
+name|cred
+operator|->
+name|cr_ruidinfo
 argument_list|,
 operator|-
 literal|1
@@ -2965,13 +2969,11 @@ name|unit
 expr_stmt|;
 name|psc
 operator|->
-name|pts_uidinfo
+name|pts_cred
 operator|=
-name|uid
-expr_stmt|;
-name|uihold
+name|crhold
 argument_list|(
-name|uid
+name|cred
 argument_list|)
 expr_stmt|;
 name|tp
@@ -3107,15 +3109,13 @@ operator|->
 name|td_proc
 decl_stmt|;
 name|struct
-name|uidinfo
+name|ucred
 modifier|*
-name|uid
+name|cred
 init|=
 name|td
 operator|->
 name|td_ucred
-operator|->
-name|cr_ruidinfo
 decl_stmt|;
 comment|/* Resource limiting. */
 name|PROC_LOCK
@@ -3127,7 +3127,9 @@ name|ok
 operator|=
 name|chgptscnt
 argument_list|(
-name|uid
+name|cred
+operator|->
+name|cr_ruidinfo
 argument_list|,
 literal|1
 argument_list|,
@@ -3207,13 +3209,11 @@ name|dev
 expr_stmt|;
 name|psc
 operator|->
-name|pts_uidinfo
+name|pts_cred
 operator|=
-name|uid
-expr_stmt|;
-name|uihold
+name|crhold
 argument_list|(
-name|uid
+name|cred
 argument_list|)
 expr_stmt|;
 name|tp
