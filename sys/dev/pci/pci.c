@@ -12608,6 +12608,9 @@ return|;
 block|}
 name|count
 operator|=
+operator|(
+name|pci_addr_t
+operator|)
 literal|1
 operator|<<
 name|mapsize
@@ -12645,11 +12648,7 @@ name|end
 operator|=
 name|base
 operator|+
-operator|(
-literal|1
-operator|<<
-name|mapsize
-operator|)
+name|count
 operator|-
 literal|1
 expr_stmt|;
@@ -18675,7 +18674,10 @@ argument_list|)
 expr_stmt|;
 name|count
 operator|=
-literal|1UL
+operator|(
+name|pci_addr_t
+operator|)
+literal|1
 operator|<<
 name|mapsize
 expr_stmt|;
