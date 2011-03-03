@@ -3363,6 +3363,13 @@ name|AR_PCU_MISC_MODE2_HWWAR1
 value|0x00100000
 end_define
 
+begin_define
+define|#
+directive|define
+name|AR_PCU_MISC_MODE2_HWWAR2
+value|0x02000000
+end_define
+
 begin_comment
 comment|/* GPIO Interrupt */
 end_comment
@@ -3867,6 +3874,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AR_XSREV_VERSION_HOWL
+value|0x14
+end_define
+
+begin_comment
+comment|/* Howl (AR9130) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|AR_XSREV_VERSION_SOWL
 value|0x40
 end_define
@@ -4000,7 +4018,7 @@ parameter_list|(
 name|_ah
 parameter_list|)
 define|\
-value|(AH_PRIVATE((_ah))->ah_macVersion>= AR_XSREV_VERSION_SOWL || \ 	 AH_PRIVATE((_ah))->ah_macRev>= AR_XSREV_REVISION_OWL_20)
+value|((AR_SREV_OWL(_ah)&& AH_PRIVATE((_ah))->ah_macRev>= AR_XSREV_REVISION_OWL_20) || \ 	AH_PRIVATE((_ah))->ah_macVersion>= AR_XSREV_VERSION_HOWL)
 end_define
 
 begin_define
@@ -4011,7 +4029,7 @@ parameter_list|(
 name|_ah
 parameter_list|)
 define|\
-value|(AH_PRIVATE((_ah))->ah_macVersion>= AR_XSREV_VERSION_SOWL || \ 	 AH_PRIVATE((_ah))->ah_macRev>= AR_XSREV_REVISION_OWL_22)
+value|((AR_SREV_OWL(_ah)&& AH_PRIVATE((_ah))->ah_macRev>= AR_XSREV_REVISION_OWL_22) || \ 	AH_PRIVATE((_ah))->ah_macVersion>= AR_XSREV_VERSION_HOWL)
 end_define
 
 begin_define
@@ -4166,6 +4184,40 @@ name|_ah
 parameter_list|)
 define|\
 value|(AR_SREV_KITE_12_OR_LATER(_ah)&& \ 	((OS_REG_READ(_ah, AR_AN_SYNTH9)& 0x7) == 0x1))
+end_define
+
+begin_comment
+comment|/* Not yet implemented chips */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_SREV_9271
+parameter_list|(
+name|_ah
+parameter_list|)
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_SREV_9287_11_OR_LATER
+parameter_list|(
+name|_ah
+parameter_list|)
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_SREV_9100
+parameter_list|(
+name|_ah
+parameter_list|)
+value|0
 end_define
 
 begin_endif
