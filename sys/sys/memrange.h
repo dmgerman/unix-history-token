@@ -3,6 +3,18 @@ begin_comment
 comment|/*  * Memory range attribute operations, peformed on /dev/mem  *  * $FreeBSD$  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_MEMRANGE_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_SYS_MEMRANGE_H_
+end_define
+
 begin_comment
 comment|/* Memory range attributes */
 end_comment
@@ -352,6 +364,26 @@ end_decl_stmt
 
 begin_function_decl
 specifier|extern
+name|void
+name|mem_range_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|mem_range_destroy
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|int
 name|mem_range_attr_get
 parameter_list|(
@@ -388,6 +420,19 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _SYS_MEMRANGE_H_ */
+end_comment
 
 end_unit
 

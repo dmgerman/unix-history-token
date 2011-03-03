@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/memrange.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/module.h>
 end_include
 
@@ -267,10 +273,9 @@ argument_list|(
 literal|"mem:<memory>\n"
 argument_list|)
 expr_stmt|;
-name|dev_mem_md_init
+name|mem_range_init
 argument_list|()
 expr_stmt|;
-comment|/* Machine dependant bit */
 name|memdev
 operator|=
 name|make_dev
@@ -311,6 +316,9 @@ break|break;
 case|case
 name|MOD_UNLOAD
 case|:
+name|mem_range_destroy
+argument_list|()
+expr_stmt|;
 name|destroy_dev
 argument_list|(
 name|memdev

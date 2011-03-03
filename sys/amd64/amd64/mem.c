@@ -157,6 +157,13 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+name|struct
+name|mem_range_softc
+name|mem_range_softc
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -866,34 +873,6 @@ operator|(
 name|error
 operator|)
 return|;
-block|}
-end_function
-
-begin_function
-name|void
-name|dev_mem_md_init
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-if|if
-condition|(
-name|mem_range_softc
-operator|.
-name|mr_op
-operator|!=
-name|NULL
-condition|)
-name|mem_range_softc
-operator|.
-name|mr_op
-operator|->
-name|init
-argument_list|(
-operator|&
-name|mem_range_softc
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
