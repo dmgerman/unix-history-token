@@ -220,8 +220,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator|<
-operator|-
-literal|1
+literal|0
 condition|)
 block|{
 name|err
@@ -328,8 +327,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator|<
-operator|-
-literal|1
+literal|0
 condition|)
 name|err
 argument_list|(
@@ -382,8 +380,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator|<
-operator|-
-literal|1
+literal|0
 condition|)
 name|err
 argument_list|(
@@ -613,8 +610,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator|<
-operator|-
-literal|1
+literal|0
 condition|)
 block|{
 name|err
