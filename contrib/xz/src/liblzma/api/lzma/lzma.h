@@ -286,7 +286,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * \brief       Set a compression preset to lzma_options_lzma structure  *  * 0 is the fastest and 9 is the slowest. These match the switches -0 .. -9  * of the xz command line tool. In addition, it is possible to bitwise-or  * flags to the preset. Currently only LZMA_PRESET_EXTREME is supported.  * The flags are defined in container.h, because the flags are used also  * with lzma_easy_encoder().  *  * The preset values are subject to changes between liblzma versions.  *  * This function is available only if LZMA1 or LZMA2 encoder has been enabled  * when building liblzma.  */
+comment|/**  * \brief       Set a compression preset to lzma_options_lzma structure  *  * 0 is the fastest and 9 is the slowest. These match the switches -0 .. -9  * of the xz command line tool. In addition, it is possible to bitwise-or  * flags to the preset. Currently only LZMA_PRESET_EXTREME is supported.  * The flags are defined in container.h, because the flags are used also  * with lzma_easy_encoder().  *  * The preset values are subject to changes between liblzma versions.  *  * This function is available only if LZMA1 or LZMA2 encoder has been enabled  * when building liblzma.  *  * \return      On success, false is returned. If the preset is not  *              supported, true is returned.  */
 end_comment
 
 begin_extern
