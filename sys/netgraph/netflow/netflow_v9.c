@@ -1256,6 +1256,9 @@ name|fle
 operator|->
 name|f
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
 name|fed6
 operator|=
 operator|(
@@ -1268,6 +1271,8 @@ name|fle
 operator|->
 name|f
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* We can use flow_type field since fle6 offset is equal to fle */
 name|flow_type
 operator|=

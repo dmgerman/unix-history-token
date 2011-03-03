@@ -343,6 +343,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|int
@@ -364,6 +370,11 @@ name|uint8_t
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -1292,6 +1303,9 @@ argument_list|,
 name|priv
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
 elseif|else
 if|if
 condition|(
@@ -1310,6 +1324,8 @@ argument_list|,
 name|priv
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 else|else
 name|panic
 argument_list|(
@@ -1390,6 +1406,9 @@ argument_list|,
 name|priv
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
 elseif|else
 if|if
 condition|(
@@ -1408,6 +1427,8 @@ argument_list|,
 name|priv
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
