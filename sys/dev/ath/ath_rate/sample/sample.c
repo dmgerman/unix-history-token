@@ -1066,6 +1066,7 @@ goto|goto
 name|done
 goto|;
 block|}
+comment|/* XXX TODO: this doesn't know about 11gn vs 11g protection; teach it */
 name|mrr
 operator|=
 name|sc
