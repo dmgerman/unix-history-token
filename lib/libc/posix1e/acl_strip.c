@@ -576,7 +576,7 @@ name|_nfs4_acl_strip_np
 argument_list|(
 name|aclp
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 operator|)
 return|;
