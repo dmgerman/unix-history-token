@@ -123,6 +123,16 @@ directive|ifdef
 name|CAPABILITIES
 end_ifdef
 
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|security_capabilities
+argument_list|,
+literal|"Capsicum Capability Mode"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * We don't currently have any MIB entries for sysctls, but we do expose  * security.capabilities so that it's easy to tell if options CAPABILITIES is  * compiled into the kernel.  */
 end_comment

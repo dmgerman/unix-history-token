@@ -164,7 +164,7 @@ end_ifdef
 begin_expr_stmt
 name|FEATURE
 argument_list|(
-name|mac
+name|security_mac
 argument_list|,
 literal|"Mandatory Access Control Framework support"
 argument_list|)
