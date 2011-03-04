@@ -2084,6 +2084,14 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Unhook the aggregation protocol */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_detach
+operator|!=
+name|NULL
+condition|)
 call|(
 modifier|*
 name|sc
