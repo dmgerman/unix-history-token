@@ -1805,7 +1805,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|long
 name|vmspace_swap_count
 parameter_list|(
 name|struct
