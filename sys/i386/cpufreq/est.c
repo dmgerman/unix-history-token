@@ -7083,11 +7083,13 @@ modifier|*
 name|features
 parameter_list|)
 block|{
-comment|/* Notify the ACPI CPU that we support direct access to MSRs */
+comment|/* 	 * Notify the ACPI CPU that we support direct access to MSRs. 	 * XXX C1 "I/O then Halt" seems necessary for some broken BIOS. 	 */
 operator|*
 name|features
 operator|=
 name|ACPI_CAP_PERF_MSRS
+operator||
+name|ACPI_CAP_C1_IO_HALT
 expr_stmt|;
 return|return
 operator|(
