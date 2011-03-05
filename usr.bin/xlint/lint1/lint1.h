@@ -995,7 +995,7 @@ name|d_vararg
 range|:
 literal|1
 decl_stmt|;
-comment|/* ... in in current function decl. */
+comment|/* ... in current function decl. */
 name|u_int
 name|d_proto
 range|:

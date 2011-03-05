@@ -16426,7 +16426,7 @@ comment|/* 	 * For debugging, five ioctls are needed: 	 * ALT_ATTACH 	 * ALT_REA
 case|case
 name|ALT_ATTACH
 case|:
-comment|/* 		 * From what I can tell, Alteon's Solaris Tigon driver 		 * only has one character device, so you have to attach 		 * to the Tigon board you're interested in.  This seems 		 * like a not-so-good way to do things, since unless you 		 * subsequently specify the unit number of the device 		 * you're interested in in every ioctl, you'll only be 		 * able to debug one board at a time. 		 */
+comment|/* 		 * From what I can tell, Alteon's Solaris Tigon driver 		 * only has one character device, so you have to attach 		 * to the Tigon board you're interested in.  This seems 		 * like a not-so-good way to do things, since unless you 		 * subsequently specify the unit number of the device 		 * you're interested in every ioctl, you'll only be 		 * able to debug one board at a time. 		 */
 name|error
 operator|=
 literal|0
