@@ -209,10 +209,12 @@ name|KASSERT
 argument_list|(
 name|tag
 operator|==
-name|X86_BUS_SPACE_IO
+name|X86_BUS_SPACE_MEM
 argument_list|,
 operator|(
-literal|"64-bit reads from I/O space not possible."
+literal|"%s: can only handle mem space"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
@@ -257,10 +259,12 @@ name|KASSERT
 argument_list|(
 name|tag
 operator|==
-name|X86_BUS_SPACE_IO
+name|X86_BUS_SPACE_MEM
 argument_list|,
 operator|(
-literal|"64-bit writes to I/O space not possible."
+literal|"%s: can only handle mem space"
+operator|,
+name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
