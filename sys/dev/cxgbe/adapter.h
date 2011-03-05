@@ -670,6 +670,11 @@ name|port_stats
 name|stats
 decl_stmt|;
 name|struct
+name|taskqueue
+modifier|*
+name|tq
+decl_stmt|;
+name|struct
 name|callout
 name|tick
 decl_stmt|;
@@ -1159,6 +1164,16 @@ modifier|*
 name|m
 decl_stmt|;
 comment|/* held up due to temporary resource shortage */
+name|struct
+name|task
+name|resume_tx
+decl_stmt|;
+name|struct
+name|port_info
+modifier|*
+name|port
+decl_stmt|;
+comment|/* the port this txq belongs to */
 comment|/* stats for common events first */
 name|uint64_t
 name|txcsum
@@ -2322,6 +2337,22 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* t4_main.c */
+end_comment
+
+begin_function_decl
+name|void
+name|cxgbe_txq_start
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function_decl
 name|int
 name|t4_os_find_pci_capability
@@ -2385,6 +2416,10 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* t4_sge.c */
+end_comment
 
 begin_function_decl
 name|void
