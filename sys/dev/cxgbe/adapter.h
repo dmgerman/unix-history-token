@@ -834,34 +834,48 @@ decl_stmt|;
 name|bus_dmamap_t
 name|desc_map
 decl_stmt|;
-name|struct
-name|mtx
-name|iq_lock
+name|bus_addr_t
+name|ba
 decl_stmt|;
+comment|/* bus address of descriptor ring */
 name|char
 name|lockname
 index|[
 literal|16
 index|]
 decl_stmt|;
-name|unsigned
-name|int
+name|uint32_t
 name|flags
 decl_stmt|;
-name|struct
-name|adapter
+name|uint16_t
+name|abs_id
+decl_stmt|;
+comment|/* absolute SGE id for the iq */
+name|int8_t
+name|intr_pktc_idx
+decl_stmt|;
+comment|/* packet count threshold index */
+name|int8_t
+name|pad0
+decl_stmt|;
+name|iq_intr_handler_t
 modifier|*
-name|adapter
+name|handler
 decl_stmt|;
 name|__be64
 modifier|*
 name|desc
 decl_stmt|;
 comment|/* KVA of descriptor ring */
-name|bus_addr_t
-name|ba
+name|struct
+name|mtx
+name|iq_lock
 decl_stmt|;
-comment|/* bus address of descriptor ring */
+name|struct
+name|adapter
+modifier|*
+name|adapter
+decl_stmt|;
 specifier|const
 name|__be64
 modifier|*
@@ -876,10 +890,6 @@ name|uint8_t
 name|intr_params
 decl_stmt|;
 comment|/* interrupt holdoff parameters */
-name|int8_t
-name|intr_pktc_idx
-decl_stmt|;
-comment|/* packet count threshold index */
 name|uint8_t
 name|intr_next
 decl_stmt|;
@@ -900,14 +910,6 @@ name|uint16_t
 name|cntxt_id
 decl_stmt|;
 comment|/* SGE context id  for the iq */
-name|uint16_t
-name|abs_id
-decl_stmt|;
-comment|/* absolute SGE id for the iq */
-name|iq_intr_handler_t
-modifier|*
-name|handler
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1259,21 +1261,26 @@ name|struct
 name|sge_fl
 name|fl
 decl_stmt|;
-name|unsigned
-name|int
-name|flags
-decl_stmt|;
 name|struct
 name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
 comment|/* the interface this rxq belongs to */
+name|unsigned
+name|int
+name|flags
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 name|struct
 name|lro_ctrl
 name|lro
 decl_stmt|;
 comment|/* LRO state */
+endif|#
+directive|endif
 comment|/* stats for common events first */
 name|uint64_t
 name|rxcsum
