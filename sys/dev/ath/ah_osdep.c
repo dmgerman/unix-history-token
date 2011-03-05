@@ -252,7 +252,7 @@ end_ifdef
 begin_function_decl
 specifier|extern
 name|void
-name|HALDEBUG
+name|DO_HALDEBUG
 parameter_list|(
 name|struct
 name|ath_hal
@@ -328,7 +328,6 @@ name|AH_DEBUG
 end_ifdef
 
 begin_decl_stmt
-specifier|static
 name|int
 name|ath_hal_debug
 init|=
@@ -636,7 +635,7 @@ end_ifdef
 
 begin_function
 name|void
-name|HALDEBUG
+name|DO_HALDEBUG
 parameter_list|(
 name|struct
 name|ath_hal

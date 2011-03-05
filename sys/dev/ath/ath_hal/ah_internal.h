@@ -2172,10 +2172,25 @@ name|ath_hal_debug
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|HALDEBUG
+parameter_list|(
+name|_ah
+parameter_list|,
+name|__m
+parameter_list|,
+modifier|...
+parameter_list|)
+define|\
+value|do {							\ 		if (ath_hal_debug& (__m)) {			\ 			DO_HALDEBUG((_ah), (__m), __VA_ARGS__);	\ 		}						\ 	} while(0);
+end_define
+
 begin_function_decl
 specifier|extern
 name|void
-name|HALDEBUG
+name|DO_HALDEBUG
 parameter_list|(
 name|struct
 name|ath_hal
