@@ -1031,6 +1031,10 @@ name|uint16_t
 name|pending
 decl_stmt|;
 comment|/* # of descriptors used since last doorbell */
+name|uint16_t
+name|iqid
+decl_stmt|;
+comment|/* iq that gets egr_update for the eq */
 name|uint32_t
 name|cntxt_id
 decl_stmt|;
