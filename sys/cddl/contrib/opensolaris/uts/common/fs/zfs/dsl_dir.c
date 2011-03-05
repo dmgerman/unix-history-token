@@ -94,6 +94,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/zvol.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"zfs_namecheck.h"
 end_include
 
@@ -6546,6 +6552,17 @@ modifier|*
 name|tx
 parameter_list|)
 block|{
+name|char
+name|oldname
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|,
+name|newname
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|;
 name|dsl_dir_t
 modifier|*
 name|dd
@@ -6739,6 +6756,13 @@ name|tx
 argument_list|)
 expr_stmt|;
 comment|/* remove from old parent zapobj */
+name|dsl_dir_name
+argument_list|(
+name|dd
+argument_list|,
+name|oldname
+argument_list|)
+expr_stmt|;
 name|err
 operator|=
 name|zap_remove
@@ -6869,6 +6893,20 @@ argument_list|,
 operator|==
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|dsl_dir_name
+argument_list|(
+name|dd
+argument_list|,
+name|newname
+argument_list|)
+expr_stmt|;
+name|zvol_rename_minors
+argument_list|(
+name|oldname
+argument_list|,
+name|newname
 argument_list|)
 expr_stmt|;
 name|spa_history_log_internal
