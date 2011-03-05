@@ -858,7 +858,7 @@ name|int
 name|op
 parameter_list|,
 name|int
-name|prec
+name|precedence
 parameter_list|,
 name|int
 name|noeval
@@ -980,7 +980,7 @@ argument_list|(
 name|op2
 argument_list|)
 operator|>=
-name|prec
+name|precedence
 condition|)
 return|return
 name|a

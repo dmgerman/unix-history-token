@@ -128,6 +128,10 @@ name|buf
 init|=
 name|arith_buf
 decl_stmt|;
+name|char
+modifier|*
+name|end
+decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -210,10 +214,14 @@ operator|*
 operator|*
 operator|)
 operator|&
-name|arith_buf
+name|end
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+name|arith_buf
+operator|=
+name|end
 expr_stmt|;
 return|return
 name|ARITH_NUM
