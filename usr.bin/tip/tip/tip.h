@@ -1458,7 +1458,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* terminal is is 8-bit mode */
+comment|/* terminal is 8-bit mode */
 end_comment
 
 begin_define

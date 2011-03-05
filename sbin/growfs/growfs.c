@@ -3248,7 +3248,7 @@ argument_list|,
 name|fragnum
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Copy the block back immediately. 		 * 		 * XXX	If src is is from an indirect block we have 		 *	to implement copy on write here in case of 		 *	active snapshots. 		 */
+comment|/* 		 * Copy the block back immediately. 		 * 		 * XXX	If src is from an indirect block we have 		 *	to implement copy on write here in case of 		 *	active snapshots. 		 */
 name|ibuf
 operator|=
 name|malloc

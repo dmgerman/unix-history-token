@@ -1864,7 +1864,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * There is no way to tell that someone issued remove/rmdir operation  * on the underlying filesystem. For now we just have to release lowevrp  * as soon as possible.  *  * Note, we can't release any resources nor remove vnode from hash before   * appropriate VXLOCK stuff is is done because other process can find this  * vnode in hash during inactivation and may be sitting in vget() and waiting  * for null_inactive to unlock vnode. Thus we will do all those in VOP_RECLAIM.  */
+comment|/*  * There is no way to tell that someone issued remove/rmdir operation  * on the underlying filesystem. For now we just have to release lowevrp  * as soon as possible.  *  * Note, we can't release any resources nor remove vnode from hash before   * appropriate VXLOCK stuff is done because other process can find this  * vnode in hash during inactivation and may be sitting in vget() and waiting  * for null_inactive to unlock vnode. Thus we will do all those in VOP_RECLAIM.  */
 end_comment
 
 begin_function
