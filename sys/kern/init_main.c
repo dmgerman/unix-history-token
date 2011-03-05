@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/loginclass.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mount.h>
 end_include
 
@@ -2036,6 +2042,17 @@ name|cr_prison
 operator|=
 operator|&
 name|prison0
+expr_stmt|;
+name|p
+operator|->
+name|p_ucred
+operator|->
+name|cr_loginclass
+operator|=
+name|loginclass_find
+argument_list|(
+literal|"default"
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef

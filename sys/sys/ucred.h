@@ -21,6 +21,12 @@ directive|include
 file|<bsm/audit.h>
 end_include
 
+begin_struct_decl
+struct_decl|struct
+name|loginclass
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/*  * Credentials.  *  * Please do not inspect cr_uid directly to determine superuserness.  The  * priv(9) interface should be used to check for privilege.  */
 end_comment
@@ -93,11 +99,12 @@ modifier|*
 name|cr_prison
 decl_stmt|;
 comment|/* jail(2) */
-name|void
+name|struct
+name|loginclass
 modifier|*
-name|cr_pspare
+name|cr_loginclass
 decl_stmt|;
-comment|/* general use */
+comment|/* login class */
 name|u_int
 name|cr_flags
 decl_stmt|;

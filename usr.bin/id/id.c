@@ -292,11 +292,22 @@ name|uflag
 decl_stmt|;
 name|int
 name|Aflag
+decl_stmt|,
+name|cflag
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 specifier|const
 name|char
 modifier|*
 name|myname
+decl_stmt|;
+name|char
+name|loginclass
+index|[
+name|MAXLOGNAME
+index|]
 decl_stmt|;
 name|Gflag
 operator|=
@@ -317,6 +328,8 @@ operator|=
 literal|0
 expr_stmt|;
 name|Aflag
+operator|=
+name|cflag
 operator|=
 literal|0
 expr_stmt|;
@@ -415,7 +428,7 @@ operator|)
 condition|?
 literal|""
 else|:
-literal|"APGMagnpru"
+literal|"APGMacgnpru"
 argument_list|)
 operator|)
 operator|!=
@@ -467,6 +480,14 @@ break|break;
 case|case
 literal|'a'
 case|:
+break|break;
+case|case
+literal|'c'
+case|:
+name|cflag
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 case|case
 literal|'g'
@@ -617,6 +638,52 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+if|if
+condition|(
+name|cflag
+condition|)
+block|{
+name|error
+operator|=
+name|getloginclass
+argument_list|(
+name|loginclass
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|loginclass
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"loginclass"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|loginclass
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|gflag
@@ -2338,7 +2405,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n%s%s\n%s\n%s\n%s\n%s\n%s\n"
+literal|"%s\n%s%s\n%s\n%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
 literal|"usage: id [user]"
 argument_list|,
@@ -2358,6 +2425,8 @@ argument_list|,
 literal|"       id -M"
 argument_list|,
 literal|"       id -P [user]"
+argument_list|,
+literal|"       id -c"
 argument_list|,
 literal|"       id -g [-nr] [user]"
 argument_list|,

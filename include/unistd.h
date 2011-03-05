@@ -3631,6 +3631,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|getloginclass
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|mode_t
 name|getmode
 parameter_list|(
@@ -4294,6 +4306,17 @@ end_endif
 begin_function_decl
 name|int
 name|setlogin
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|setloginclass
 parameter_list|(
 specifier|const
 name|char

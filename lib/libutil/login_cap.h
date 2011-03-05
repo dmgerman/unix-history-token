@@ -198,8 +198,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|LOGIN_SETLOGINCLASS
+value|0x0400
+end_define
+
+begin_comment
+comment|/* set login class in the kernel */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|LOGIN_SETALL
-value|0x03ff
+value|0x07ff
 end_define
 
 begin_comment

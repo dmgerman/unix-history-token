@@ -672,6 +672,17 @@ begin_comment
 comment|/* Can raise resources limits. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PRIV_PROC_SETLOGINCLASS
+value|163
+end_define
+
+begin_comment
+comment|/* Can call setloginclass(2). */
+end_comment
+
 begin_comment
 comment|/* System V IPC privileges.  */
 end_comment

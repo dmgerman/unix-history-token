@@ -18398,6 +18398,15 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* 		 * Allow jailed root to set loginclass. 		 */
+case|case
+name|PRIV_PROC_SETLOGINCLASS
+case|:
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 default|default:
 comment|/* 		 * In all remaining cases, deny the privilege request.  This 		 * includes almost all network privileges, many system 		 * configuration privileges. 		 */
 return|return
