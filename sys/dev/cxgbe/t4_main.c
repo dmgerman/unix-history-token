@@ -14524,7 +14524,25 @@ argument_list|,
 literal|"transceiver unplugged.\n"
 argument_list|)
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+name|pi
+operator|->
+name|mod_type
+operator|>
+literal|0
+operator|&&
+name|pi
+operator|->
+name|mod_type
+operator|<
+name|ARRAY_SIZE
+argument_list|(
+name|mod_str
+argument_list|)
+condition|)
+block|{
 name|if_printf
 argument_list|(
 name|pi
@@ -14541,6 +14559,23 @@ name|mod_type
 index|]
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|if_printf
+argument_list|(
+name|pi
+operator|->
+name|ifp
+argument_list|,
+literal|"transceiver (type %d) inserted.\n"
+argument_list|,
+name|pi
+operator|->
+name|mod_type
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
