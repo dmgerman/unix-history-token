@@ -121,14 +121,14 @@ begin_define
 define|#
 directive|define
 name|FW_VERSION_MINOR
-value|2
+value|3
 end_define
 
 begin_define
 define|#
 directive|define
 name|FW_VERSION_MICRO
-value|65
+value|0
 end_define
 
 begin_struct
