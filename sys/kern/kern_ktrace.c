@@ -2524,7 +2524,6 @@ name|thread
 modifier|*
 name|td2
 decl_stmt|;
-empty_stmt|;
 name|ktrace_assert
 argument_list|(
 name|td
