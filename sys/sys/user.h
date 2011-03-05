@@ -319,6 +319,17 @@ begin_comment
 comment|/* size of returned ki_login */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|LOGINCLASSLEN
+value|17
+end_define
+
+begin_comment
+comment|/* size of returned ki_loginclass */
+end_comment
+
 begin_comment
 comment|/* Flags for the process credential. */
 end_comment
@@ -644,11 +655,20 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* emulation name */
+name|char
+name|ki_loginclass
+index|[
+name|LOGINCLASSLEN
+operator|+
+literal|1
+index|]
+decl_stmt|;
+comment|/* login class */
 comment|/* 	 * When adding new variables, take space for char-strings from the 	 * front of ki_sparestrings, and ints from the end of ki_spareints. 	 * That way the spare room from both arrays will remain contiguous. 	 */
 name|char
 name|ki_sparestrings
 index|[
-literal|68
+literal|50
 index|]
 decl_stmt|;
 comment|/* spare string space */
