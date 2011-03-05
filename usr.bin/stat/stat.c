@@ -22,7 +22,7 @@ name|lint
 end_ifndef
 
 begin_endif
-unit|__RCSID("$NetBSD: stat.c,v 1.31 2010/12/16 05:30:16 dholland Exp $" "$OpenBSD: stat.c,v 1.14 2009/06/24 09:44:25 sobrado Exp $");
+unit|__RCSID("$NetBSD: stat.c,v 1.33 2011/01/15 22:54:10 njoly Exp $" "$OpenBSD: stat.c,v 1.14 2009/06/24 09:44:25 sobrado Exp $");
 endif|#
 directive|endif
 end_endif
@@ -3281,6 +3281,30 @@ operator|.
 name|tv_sec
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tm
+operator|==
+name|NULL
+condition|)
+block|{
+name|ts
+operator|.
+name|tv_sec
+operator|=
+literal|0
+expr_stmt|;
+name|tm
+operator|=
+name|localtime
+argument_list|(
+operator|&
+name|ts
+operator|.
+name|tv_sec
+argument_list|)
+expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
