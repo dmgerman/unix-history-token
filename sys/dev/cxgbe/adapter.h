@@ -1173,11 +1173,11 @@ name|task
 name|resume_tx
 decl_stmt|;
 name|struct
-name|port_info
+name|ifnet
 modifier|*
-name|port
+name|ifp
 decl_stmt|;
-comment|/* the port this txq belongs to */
+comment|/* the interface this txq belongs to */
 comment|/* stats for common events first */
 name|uint64_t
 name|txcsum
@@ -1264,11 +1264,11 @@ name|int
 name|flags
 decl_stmt|;
 name|struct
-name|port_info
+name|ifnet
 modifier|*
-name|port
+name|ifp
 decl_stmt|;
-comment|/* the port this rxq belongs to */
+comment|/* the interface this rxq belongs to */
 name|struct
 name|lro_ctrl
 name|lro

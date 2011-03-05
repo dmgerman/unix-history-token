@@ -14172,17 +14172,6 @@ name|txq
 init|=
 name|arg
 decl_stmt|;
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
-name|txq
-operator|->
-name|port
-operator|->
-name|ifp
-decl_stmt|;
 name|TXQ_LOCK
 argument_list|(
 name|txq
@@ -14190,6 +14179,8 @@ argument_list|)
 expr_stmt|;
 name|txq_start
 argument_list|(
+name|txq
+operator|->
 name|ifp
 argument_list|,
 name|txq
