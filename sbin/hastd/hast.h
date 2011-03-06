@@ -390,6 +390,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAST_COMPRESSION_NONE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAST_COMPRESSION_HOLE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAST_COMPRESSION_LZF
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAST_CHECKSUM_NONE
 value|0
 end_define
@@ -448,6 +469,10 @@ name|hr_exec
 index|[
 name|PATH_MAX
 index|]
+decl_stmt|;
+comment|/* Compression algorithm. */
+name|int
+name|hr_compression
 decl_stmt|;
 comment|/* Checksum algorithm. */
 name|int

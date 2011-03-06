@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"hast_compression.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"hast_proto.h"
 end_include
 
@@ -1142,6 +1148,22 @@ name|hr_checksum
 argument_list|)
 argument_list|,
 literal|"checksum%u"
+argument_list|,
+name|no
+argument_list|)
+expr_stmt|;
+name|nv_add_string
+argument_list|(
+name|nvout
+argument_list|,
+name|compression_name
+argument_list|(
+name|res
+operator|->
+name|hr_compression
+argument_list|)
+argument_list|,
+literal|"compression%u"
 argument_list|,
 name|no
 argument_list|)

@@ -91,6 +91,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|"hast_compression.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"hast_proto.h"
 end_include
 
@@ -196,6 +202,14 @@ name|pipeline
 index|[]
 init|=
 block|{
+block|{
+literal|"compression"
+block|,
+name|compression_send
+block|,
+name|compression_recv
+block|}
+block|,
 block|{
 literal|"checksum"
 block|,
