@@ -171,6 +171,8 @@ decl_stmt|,
 name|prec
 decl_stmt|,
 name|nsec
+decl_stmt|,
+name|ret
 decl_stmt|;
 if|if
 condition|(
@@ -548,8 +550,8 @@ name|nsec
 argument_list|)
 expr_stmt|;
 block|}
-return|return
-operator|(
+name|ret
+operator|=
 name|__printf_out
 argument_list|(
 name|io
@@ -562,6 +564,15 @@ name|p
 operator|-
 name|buf
 argument_list|)
+expr_stmt|;
+name|__printf_flush
+argument_list|(
+name|io
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ret
 operator|)
 return|;
 block|}
