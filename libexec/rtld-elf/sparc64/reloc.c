@@ -1139,7 +1139,7 @@ argument_list|(
 literal|32
 argument_list|)
 block|,
-comment|/* RELOC_8, _16, _32 */
+comment|/* RELOC_8, 16, 32 */
 name|_BM
 argument_list|(
 literal|8
@@ -1177,7 +1177,7 @@ argument_list|(
 literal|22
 argument_list|)
 block|,
-comment|/* HI22, _22 */
+comment|/* HI22, 22 */
 name|_BM
 argument_list|(
 literal|13
@@ -1188,7 +1188,7 @@ argument_list|(
 literal|10
 argument_list|)
 block|,
-comment|/* RELOC_13, _LO10 */
+comment|/* RELOC_13, LO10 */
 name|_BM
 argument_list|(
 literal|10
@@ -1215,7 +1215,7 @@ argument_list|(
 literal|22
 argument_list|)
 block|,
-comment|/* _PC10, _PC22 */
+comment|/* PC10, PC22 */
 name|_BM
 argument_list|(
 literal|30
@@ -1223,7 +1223,7 @@ argument_list|)
 block|,
 literal|0
 block|,
-comment|/* _WPLT30, _COPY */
+comment|/* WPLT30, COPY */
 name|_BM
 argument_list|(
 literal|32
@@ -1239,7 +1239,7 @@ argument_list|(
 literal|32
 argument_list|)
 block|,
-comment|/* _GLOB_DAT, JMP_SLOT, _RELATIVE */
+comment|/* GLOB_DAT, JMP_SLOT, RELATIVE */
 name|_BM
 argument_list|(
 literal|32
@@ -1250,7 +1250,7 @@ argument_list|(
 literal|32
 argument_list|)
 block|,
-comment|/* _UA32, PLT32 */
+comment|/* UA32, PLT32 */
 name|_BM
 argument_list|(
 literal|22
@@ -1261,7 +1261,7 @@ argument_list|(
 literal|10
 argument_list|)
 block|,
-comment|/* _HIPLT22, LOPLT10 */
+comment|/* HIPLT22, LOPLT10 */
 name|_BM
 argument_list|(
 literal|32
@@ -1277,7 +1277,7 @@ argument_list|(
 literal|10
 argument_list|)
 block|,
-comment|/* _PCPLT32, _PCPLT22, _PCPLT10 */
+comment|/* PCPLT32, PCPLT22, PCPLT10 */
 name|_BM
 argument_list|(
 literal|10
@@ -1291,7 +1291,7 @@ block|,
 operator|-
 literal|1
 block|,
-comment|/* _10, _11, _64 */
+comment|/* 10, 11, 64 */
 name|_BM
 argument_list|(
 literal|13
@@ -1302,7 +1302,7 @@ argument_list|(
 literal|22
 argument_list|)
 block|,
-comment|/* _OLO10, _HH22 */
+comment|/* OLO10, HH22 */
 name|_BM
 argument_list|(
 literal|10
@@ -1313,7 +1313,7 @@ argument_list|(
 literal|22
 argument_list|)
 block|,
-comment|/* _HM10, _LM22 */
+comment|/* HM10, LM22 */
 name|_BM
 argument_list|(
 literal|22
@@ -1329,7 +1329,7 @@ argument_list|(
 literal|22
 argument_list|)
 block|,
-comment|/* _PC_HH22, _PC_HM10, _PC_LM22 */
+comment|/* PC_HH22, PC_HM10, PC_LM22 */
 name|_BM
 argument_list|(
 literal|16
@@ -1340,7 +1340,7 @@ argument_list|(
 literal|19
 argument_list|)
 block|,
-comment|/* _WDISP16, _WDISP19 */
+comment|/* WDISP16, WDISP19 */
 operator|-
 literal|1
 block|,
@@ -1360,7 +1360,7 @@ argument_list|(
 literal|6
 argument_list|)
 block|,
-comment|/* _7, _5, _6 */
+comment|/* 7, 5, 6 */
 operator|-
 literal|1
 block|,
@@ -1407,6 +1407,85 @@ literal|16
 argument_list|)
 block|,
 comment|/* REGISTER, UA64, UA16 */
+name|_BM
+argument_list|(
+literal|22
+argument_list|)
+block|,
+name|_BM
+argument_list|(
+literal|10
+argument_list|)
+block|,
+literal|0
+block|,
+name|_BM
+argument_list|(
+literal|30
+argument_list|)
+block|,
+comment|/* GD_HI22, GD_LO10, GD_ADD, GD_CALL */
+name|_BM
+argument_list|(
+literal|22
+argument_list|)
+block|,
+name|_BM
+argument_list|(
+literal|10
+argument_list|)
+block|,
+literal|0
+block|,
+comment|/* LDM_HI22, LDMO10, LDM_ADD */
+name|_BM
+argument_list|(
+literal|30
+argument_list|)
+block|,
+comment|/* LDM_CALL */
+name|_BM
+argument_list|(
+literal|22
+argument_list|)
+block|,
+name|_BM
+argument_list|(
+literal|10
+argument_list|)
+block|,
+literal|0
+block|,
+comment|/* LDO_HIX22, LDO_LOX10, LDO_ADD */
+name|_BM
+argument_list|(
+literal|22
+argument_list|)
+block|,
+name|_BM
+argument_list|(
+literal|10
+argument_list|)
+block|,
+literal|0
+block|,
+literal|0
+block|,
+comment|/* IE_HI22, IE_LO10, IE_LD, IE_LDX */
+literal|0
+block|,
+comment|/* IE_ADD */
+name|_BM
+argument_list|(
+literal|22
+argument_list|)
+block|,
+name|_BM
+argument_list|(
+literal|13
+argument_list|)
+block|,
+comment|/* LE_HIX22, LE_LOX10 */
 undef|#
 directive|undef
 name|_BM
@@ -2046,7 +2125,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* We do JMP_SLOTs below */
+comment|/* We do JMP_SLOTs below. */
 if|if
 condition|(
 name|type
@@ -2058,7 +2137,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* COPY relocs are also handled elsewhere */
+comment|/* COPY relocs are also handled elsewhere. */
 if|if
 condition|(
 name|type
@@ -2098,7 +2177,7 @@ name|rela
 operator|->
 name|r_addend
 expr_stmt|;
-comment|/* 	 * Handle relative relocs here, because we might not 	 * be able to access globals yet. 	 */
+comment|/* 	 * Handle relative relocs here, because we might not be able to access 	 * globals yet. 	 */
 if|if
 condition|(
 name|type
@@ -2106,7 +2185,7 @@ operator|==
 name|R_SPARC_RELATIVE
 condition|)
 block|{
-comment|/* XXXX -- apparently we ignore the preexisting value */
+comment|/* XXXX -- apparently we ignore the preexisting value. */
 operator|*
 name|where
 operator|=
@@ -2136,7 +2215,7 @@ name|type
 argument_list|)
 condition|)
 block|{
-comment|/* Find the symbol */
+comment|/* Find the symbol. */
 name|def
 operator|=
 name|find_symdef
@@ -2172,7 +2251,7 @@ operator|-
 literal|1
 operator|)
 return|;
-comment|/* Add in the symbol's absolute address */
+comment|/* Add in the symbol's absolute address. */
 name|value
 operator|+=
 call|(
@@ -3791,7 +3870,7 @@ name|Elf_Addr
 modifier|*
 name|tpval
 decl_stmt|;
-comment|/*      * Fix the size of the static TLS block by using the maximum      * offset allocated so far and adding a bit for dynamic modules to      * use.      */
+comment|/* 	 * Fix the size of the static TLS block by using the maximum offset 	 * allocated so far and adding a bit for dynamic modules to use. 	 */
 name|tls_static_space
 operator|=
 name|tls_last_offset
@@ -3844,6 +3923,7 @@ literal|"%g7"
 argument_list|)
 decl_stmt|;
 return|return
+operator|(
 name|tls_get_addr_common
 argument_list|(
 name|tp
@@ -3856,6 +3936,7 @@ name|ti
 operator|->
 name|ti_offset
 argument_list|)
+operator|)
 return|;
 block|}
 end_function

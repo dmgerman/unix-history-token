@@ -1470,7 +1470,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static const char *const reloc_names[] = { 	"NONE", "RELOC_8", "RELOC_16", "RELOC_32", "DISP_8", 	"DISP_16", "DISP_32", "WDISP_30", "WDISP_22", "HI22", 	"22", "13", "LO10", "GOT10", "GOT13", 	"GOT22", "PC10", "PC22", "WPLT30", "COPY", 	"GLOB_DAT", "JMP_SLOT", "RELATIVE", "UA_32", "PLT32", 	"HIPLT22", "LOPLT10", "LOPLT10", "PCPLT22", "PCPLT32", 	"10", "11", "64", "OLO10", "HH22", 	"HM10", "LM22", "PC_HH22", "PC_HM10", "PC_LM22",  	"WDISP16", "WDISP19", "GLOB_JMP", "7", "5", "6", 	"DISP64", "PLT64", "HIX22", "LOX10", "H44", "M44",  	"L44", "REGISTER", "UA64", "UA16" };
+unit|static const char *const reloc_names[] = { 	"NONE", "RELOC_8", "RELOC_16", "RELOC_32", "DISP_8", 	"DISP_16", "DISP_32", "WDISP_30", "WDISP_22", "HI22", 	"22", "13", "LO10", "GOT10", "GOT13", 	"GOT22", "PC10", "PC22", "WPLT30", "COPY", 	"GLOB_DAT", "JMP_SLOT", "RELATIVE", "UA_32", "PLT32", 	"HIPLT22", "LOPLT10", "LOPLT10", "PCPLT22", "PCPLT32", 	"10", "11", "64", "OLO10", "HH22", 	"HM10", "LM22", "PC_HH22", "PC_HM10", "PC_LM22", 	"WDISP16", "WDISP19", "GLOB_JMP", "7", "5", "6", 	"DISP64", "PLT64", "HIX22", "LOX10", "H44", "M44", 	"L44", "REGISTER", "UA64", "UA16" };
 endif|#
 directive|endif
 end_endif
@@ -1664,7 +1664,7 @@ argument_list|(
 literal|22
 argument_list|)
 block|,
-comment|/* _PC10, _PC22 */
+comment|/* PC10, PC22 */
 name|_BM
 argument_list|(
 literal|30
@@ -1672,7 +1672,7 @@ argument_list|)
 block|,
 literal|0
 block|,
-comment|/* _WPLT30, _COPY */
+comment|/* WPLT30, COPY */
 name|_BM
 argument_list|(
 literal|32
@@ -1688,7 +1688,7 @@ argument_list|(
 literal|32
 argument_list|)
 block|,
-comment|/* _GLOB_DAT, JMP_SLOT, _RELATIVE */
+comment|/* GLOB_DAT, JMP_SLOT, RELATIVE */
 name|_BM
 argument_list|(
 literal|32
@@ -1699,7 +1699,7 @@ argument_list|(
 literal|32
 argument_list|)
 block|,
-comment|/* _UA32, PLT32 */
+comment|/* UA32, PLT32 */
 name|_BM
 argument_list|(
 literal|22
@@ -1710,7 +1710,7 @@ argument_list|(
 literal|10
 argument_list|)
 block|,
-comment|/* _HIPLT22, LOPLT10 */
+comment|/* HIPLT22, LOPLT10 */
 name|_BM
 argument_list|(
 literal|32
@@ -1726,7 +1726,7 @@ argument_list|(
 literal|10
 argument_list|)
 block|,
-comment|/* _PCPLT32, _PCPLT22, _PCPLT10 */
+comment|/* PCPLT32, _PCPLT22, _PCPLT10 */
 name|_BM
 argument_list|(
 literal|10
@@ -1740,7 +1740,7 @@ block|,
 operator|-
 literal|1
 block|,
-comment|/* _10, _11, _64 */
+comment|/* 10, 11, 64 */
 name|_BM
 argument_list|(
 literal|13
@@ -1751,7 +1751,7 @@ argument_list|(
 literal|22
 argument_list|)
 block|,
-comment|/* _OLO10, _HH22 */
+comment|/* OLO10, HH22 */
 name|_BM
 argument_list|(
 literal|10
@@ -1762,7 +1762,7 @@ argument_list|(
 literal|22
 argument_list|)
 block|,
-comment|/* _HM10, _LM22 */
+comment|/* HM10, LM22 */
 name|_BM
 argument_list|(
 literal|22
@@ -1778,7 +1778,7 @@ argument_list|(
 literal|22
 argument_list|)
 block|,
-comment|/* _PC_HH22, _PC_HM10, _PC_LM22 */
+comment|/* PC_HH22, PC_HM10, PC_LM22 */
 name|_BM
 argument_list|(
 literal|16
@@ -1789,7 +1789,7 @@ argument_list|(
 literal|19
 argument_list|)
 block|,
-comment|/* _WDISP16, _WDISP19 */
+comment|/* WDISP16, WDISP19 */
 operator|-
 literal|1
 block|,
@@ -1808,7 +1808,7 @@ name|_BM
 argument_list|(
 literal|6
 argument_list|)
-comment|/* _7, _5, _6 */
+comment|/* 7, 5, 6 */
 operator|-
 literal|1
 block|,
