@@ -12230,6 +12230,9 @@ argument_list|,
 name|newname
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|_KERNEL
 name|zvol_rename_minors
 argument_list|(
 name|oldname
@@ -12237,6 +12240,8 @@ argument_list|,
 name|newname
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|spa_history_log_internal
 argument_list|(
 name|LOG_DS_RENAME

@@ -441,6 +441,7 @@ endif|#
 directive|endif
 endif|#
 directive|endif
+comment|/* _KERNEL */
 ifdef|#
 directive|ifdef
 name|__cplusplus
