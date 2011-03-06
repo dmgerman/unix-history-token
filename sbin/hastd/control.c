@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"hast_checksum.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"hast_proto.h"
 end_include
 
@@ -1124,6 +1130,22 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|nv_add_string
+argument_list|(
+name|nvout
+argument_list|,
+name|checksum_name
+argument_list|(
+name|res
+operator|->
+name|hr_checksum
+argument_list|)
+argument_list|,
+literal|"checksum%u"
+argument_list|,
+name|no
+argument_list|)
+expr_stmt|;
 name|nv_add_string
 argument_list|(
 name|nvout
