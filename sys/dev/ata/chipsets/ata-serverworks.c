@@ -961,11 +961,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|ata_pci_dmainit
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 name|ch_offset
 operator|=
 name|ch
@@ -1342,6 +1337,11 @@ operator|=
 literal|64
 operator|*
 name|DEV_BSIZE
+expr_stmt|;
+name|ata_pci_dmainit
+argument_list|(
+name|dev
+argument_list|)
 expr_stmt|;
 return|return
 literal|0
