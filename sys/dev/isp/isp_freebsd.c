@@ -3526,6 +3526,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|QENTRY_LEN
+argument_list|,
+name|chan
 argument_list|)
 expr_stmt|;
 name|sp
@@ -3563,6 +3565,8 @@ argument_list|,
 name|QENTRY_LEN
 argument_list|,
 name|QENTRY_LEN
+argument_list|,
+name|chan
 argument_list|)
 expr_stmt|;
 name|isp_get_24xx_response

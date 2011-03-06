@@ -5872,6 +5872,9 @@ name|BIU_CONF1
 argument_list|)
 argument_list|,
 literal|2
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -5928,6 +5931,9 @@ name|BIU_CONF1
 argument_list|)
 argument_list|,
 literal|2
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -6016,6 +6022,9 @@ name|BIU_CONF1
 argument_list|)
 argument_list|,
 literal|2
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -6047,6 +6056,9 @@ name|regoff
 argument_list|)
 argument_list|,
 literal|2
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -6088,6 +6100,9 @@ name|BIU_CONF1
 argument_list|)
 argument_list|,
 literal|2
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -6205,6 +6220,9 @@ name|BIU_CONF1
 argument_list|)
 argument_list|,
 literal|2
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -6264,6 +6282,9 @@ name|BIU_CONF1
 argument_list|)
 argument_list|,
 literal|2
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -6314,6 +6335,9 @@ name|BIU_CONF1
 argument_list|)
 argument_list|,
 literal|2
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -6437,6 +6461,9 @@ name|BIU_CONF1
 argument_list|)
 argument_list|,
 literal|2
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -6496,6 +6523,9 @@ name|BIU_CONF1
 argument_list|)
 argument_list|,
 literal|2
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -6527,6 +6557,9 @@ name|regoff
 argument_list|)
 argument_list|,
 literal|2
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -6562,6 +6595,9 @@ name|BIU_CONF1
 argument_list|)
 argument_list|,
 literal|2
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -6891,6 +6927,9 @@ name|regoff
 argument_list|)
 argument_list|,
 literal|2
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 return|return;
@@ -7037,6 +7076,9 @@ name|regoff
 argument_list|)
 argument_list|,
 literal|4
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 break|break;
@@ -8178,6 +8220,8 @@ operator|&
 name|base
 argument_list|,
 name|BUS_DMA_NOWAIT
+operator||
+name|BUS_DMA_COHERENT
 argument_list|,
 operator|&
 name|isp
@@ -8423,6 +8467,8 @@ operator|&
 name|base
 argument_list|,
 name|BUS_DMA_NOWAIT
+operator||
+name|BUS_DMA_COHERENT
 argument_list|,
 operator|&
 name|fc

@@ -3141,6 +3141,8 @@ argument_list|,
 literal|2
 operator|*
 name|QENTRY_LEN
+argument_list|,
+name|chan
 argument_list|)
 expr_stmt|;
 name|isp_control
@@ -3187,6 +3189,8 @@ argument_list|,
 name|QENTRY_LEN
 argument_list|,
 name|QENTRY_LEN
+argument_list|,
+name|chan
 argument_list|)
 expr_stmt|;
 name|isp_get_vp_modify
