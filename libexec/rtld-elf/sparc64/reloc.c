@@ -2291,6 +2291,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|type
+operator|==
+name|R_SPARC_HIX22
+condition|)
+name|value
+operator|^=
+literal|0xffffffffffffffff
+expr_stmt|;
+if|if
+condition|(
 name|RELOC_PC_RELATIVE
 argument_list|(
 name|type
