@@ -618,7 +618,9 @@ name|dma
 operator|.
 name|work
 argument_list|,
-literal|0
+name|BUS_DMA_WAITOK
+operator||
+name|BUS_DMA_COHERENT
 argument_list|,
 operator|&
 name|ch
@@ -1076,7 +1078,7 @@ name|slot
 operator|->
 name|sg
 argument_list|,
-literal|0
+name|BUS_DMA_WAITOK
 argument_list|,
 operator|&
 name|slot
