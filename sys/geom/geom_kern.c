@@ -397,30 +397,10 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
 name|g_run_events
 argument_list|()
 expr_stmt|;
-name|tsleep
-argument_list|(
-operator|&
-name|g_wait_event
-argument_list|,
-name|PRIBIO
-argument_list|,
-literal|"-"
-argument_list|,
-name|hz
-operator|/
-literal|10
-argument_list|)
-expr_stmt|;
-block|}
+comment|/* NOTREACHED */
 block|}
 end_function
 
