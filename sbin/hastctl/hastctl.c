@@ -879,10 +879,17 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    datasize: %ju\n"
+literal|"    datasize: %ju (%NB)\n"
 argument_list|,
 operator|(
 name|uintmax_t
+operator|)
+name|res
+operator|->
+name|hr_datasize
+argument_list|,
+operator|(
+name|intmax_t
 operator|)
 name|res
 operator|->
@@ -891,8 +898,15 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    extentsize: %d\n"
+literal|"    extentsize: %d (%NB)\n"
 argument_list|,
+name|res
+operator|->
+name|hr_extentsize
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|res
 operator|->
 name|hr_extentsize
@@ -1484,11 +1498,23 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  extentsize: %u\n"
+literal|"  extentsize: %u (%NB)\n"
 argument_list|,
 operator|(
 name|unsigned
 name|int
+operator|)
+name|nv_get_uint32
+argument_list|(
+name|nv
+argument_list|,
+literal|"extentsize%u"
+argument_list|,
+name|ii
+argument_list|)
+argument_list|,
+operator|(
+name|intmax_t
 operator|)
 name|nv_get_uint32
 argument_list|(
@@ -1572,10 +1598,22 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  dirty: %ju bytes\n"
+literal|"  dirty: %ju (%NB)\n"
 argument_list|,
 operator|(
 name|uintmax_t
+operator|)
+name|nv_get_uint64
+argument_list|(
+name|nv
+argument_list|,
+literal|"dirty%u"
+argument_list|,
+name|ii
+argument_list|)
+argument_list|,
+operator|(
+name|intmax_t
 operator|)
 name|nv_get_uint64
 argument_list|(
