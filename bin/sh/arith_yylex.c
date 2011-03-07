@@ -208,11 +208,6 @@ name|strtoarith_t
 argument_list|(
 name|buf
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 operator|&
 name|end
 argument_list|,
