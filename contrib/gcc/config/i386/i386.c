@@ -1504,6 +1504,255 @@ specifier|static
 specifier|const
 name|struct
 name|processor_costs
+name|geode_cost
+init|=
+block|{
+name|COSTS_N_INSNS
+argument_list|(
+literal|1
+argument_list|)
+block|,
+comment|/* cost of an add instruction */
+name|COSTS_N_INSNS
+argument_list|(
+literal|1
+argument_list|)
+block|,
+comment|/* cost of a lea instruction */
+name|COSTS_N_INSNS
+argument_list|(
+literal|2
+argument_list|)
+block|,
+comment|/* variable shift costs */
+name|COSTS_N_INSNS
+argument_list|(
+literal|1
+argument_list|)
+block|,
+comment|/* constant shift costs */
+block|{
+name|COSTS_N_INSNS
+argument_list|(
+literal|3
+argument_list|)
+block|,
+comment|/* cost of starting multiply for QI */
+name|COSTS_N_INSNS
+argument_list|(
+literal|4
+argument_list|)
+block|,
+comment|/*                               HI */
+name|COSTS_N_INSNS
+argument_list|(
+literal|7
+argument_list|)
+block|,
+comment|/*                               SI */
+name|COSTS_N_INSNS
+argument_list|(
+literal|7
+argument_list|)
+block|,
+comment|/*                               DI */
+name|COSTS_N_INSNS
+argument_list|(
+literal|7
+argument_list|)
+block|}
+block|,
+comment|/*                               other */
+literal|0
+block|,
+comment|/* cost of multiply per each bit set */
+block|{
+name|COSTS_N_INSNS
+argument_list|(
+literal|15
+argument_list|)
+block|,
+comment|/* cost of a divide/mod for QI */
+name|COSTS_N_INSNS
+argument_list|(
+literal|23
+argument_list|)
+block|,
+comment|/*                          HI */
+name|COSTS_N_INSNS
+argument_list|(
+literal|39
+argument_list|)
+block|,
+comment|/*                          SI */
+name|COSTS_N_INSNS
+argument_list|(
+literal|39
+argument_list|)
+block|,
+comment|/*                          DI */
+name|COSTS_N_INSNS
+argument_list|(
+literal|39
+argument_list|)
+block|}
+block|,
+comment|/*                          other */
+name|COSTS_N_INSNS
+argument_list|(
+literal|1
+argument_list|)
+block|,
+comment|/* cost of movsx */
+name|COSTS_N_INSNS
+argument_list|(
+literal|1
+argument_list|)
+block|,
+comment|/* cost of movzx */
+literal|8
+block|,
+comment|/* "large" insn */
+literal|4
+block|,
+comment|/* MOVE_RATIO */
+literal|1
+block|,
+comment|/* cost for loading QImode using movzbl */
+block|{
+literal|1
+block|,
+literal|1
+block|,
+literal|1
+block|}
+block|,
+comment|/* cost of loading integer registers 					   in QImode, HImode and SImode. 					   Relative to reg-reg move (2).  */
+block|{
+literal|1
+block|,
+literal|1
+block|,
+literal|1
+block|}
+block|,
+comment|/* cost of storing integer registers */
+literal|1
+block|,
+comment|/* cost of reg,reg fld/fst */
+block|{
+literal|1
+block|,
+literal|1
+block|,
+literal|1
+block|}
+block|,
+comment|/* cost of loading fp registers 					   in SFmode, DFmode and XFmode */
+block|{
+literal|4
+block|,
+literal|6
+block|,
+literal|6
+block|}
+block|,
+comment|/* cost of storing fp registers 					   in SFmode, DFmode and XFmode */
+literal|1
+block|,
+comment|/* cost of moving MMX register */
+block|{
+literal|1
+block|,
+literal|1
+block|}
+block|,
+comment|/* cost of loading MMX registers 					   in SImode and DImode */
+block|{
+literal|1
+block|,
+literal|1
+block|}
+block|,
+comment|/* cost of storing MMX registers 					   in SImode and DImode */
+literal|1
+block|,
+comment|/* cost of moving SSE register */
+block|{
+literal|1
+block|,
+literal|1
+block|,
+literal|1
+block|}
+block|,
+comment|/* cost of loading SSE registers 					   in SImode, DImode and TImode */
+block|{
+literal|1
+block|,
+literal|1
+block|,
+literal|1
+block|}
+block|,
+comment|/* cost of storing SSE registers 					   in SImode, DImode and TImode */
+literal|1
+block|,
+comment|/* MMX or SSE register to integer */
+literal|32
+block|,
+comment|/* size of prefetch block */
+literal|1
+block|,
+comment|/* number of parallel prefetches */
+literal|1
+block|,
+comment|/* Branch cost */
+name|COSTS_N_INSNS
+argument_list|(
+literal|6
+argument_list|)
+block|,
+comment|/* cost of FADD and FSUB insns.  */
+name|COSTS_N_INSNS
+argument_list|(
+literal|11
+argument_list|)
+block|,
+comment|/* cost of FMUL instruction.  */
+name|COSTS_N_INSNS
+argument_list|(
+literal|47
+argument_list|)
+block|,
+comment|/* cost of FDIV instruction.  */
+name|COSTS_N_INSNS
+argument_list|(
+literal|1
+argument_list|)
+block|,
+comment|/* cost of FABS instruction.  */
+name|COSTS_N_INSNS
+argument_list|(
+literal|1
+argument_list|)
+block|,
+comment|/* cost of FCHS instruction.  */
+name|COSTS_N_INSNS
+argument_list|(
+literal|54
+argument_list|)
+block|,
+comment|/* cost of FSQRT instruction.  */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|struct
+name|processor_costs
 name|k6_cost
 init|=
 block|{
@@ -2744,6 +2993,257 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|struct
+name|processor_costs
+name|core2_cost
+init|=
+block|{
+name|COSTS_N_INSNS
+argument_list|(
+literal|1
+argument_list|)
+block|,
+comment|/* cost of an add instruction */
+name|COSTS_N_INSNS
+argument_list|(
+literal|1
+argument_list|)
+operator|+
+literal|1
+block|,
+comment|/* cost of a lea instruction */
+name|COSTS_N_INSNS
+argument_list|(
+literal|1
+argument_list|)
+block|,
+comment|/* variable shift costs */
+name|COSTS_N_INSNS
+argument_list|(
+literal|1
+argument_list|)
+block|,
+comment|/* constant shift costs */
+block|{
+name|COSTS_N_INSNS
+argument_list|(
+literal|3
+argument_list|)
+block|,
+comment|/* cost of starting multiply for QI */
+name|COSTS_N_INSNS
+argument_list|(
+literal|3
+argument_list|)
+block|,
+comment|/*                               HI */
+name|COSTS_N_INSNS
+argument_list|(
+literal|3
+argument_list|)
+block|,
+comment|/*                               SI */
+name|COSTS_N_INSNS
+argument_list|(
+literal|3
+argument_list|)
+block|,
+comment|/*                               DI */
+name|COSTS_N_INSNS
+argument_list|(
+literal|3
+argument_list|)
+block|}
+block|,
+comment|/*                               other */
+literal|0
+block|,
+comment|/* cost of multiply per each bit set */
+block|{
+name|COSTS_N_INSNS
+argument_list|(
+literal|22
+argument_list|)
+block|,
+comment|/* cost of a divide/mod for QI */
+name|COSTS_N_INSNS
+argument_list|(
+literal|22
+argument_list|)
+block|,
+comment|/*                          HI */
+name|COSTS_N_INSNS
+argument_list|(
+literal|22
+argument_list|)
+block|,
+comment|/*                          SI */
+name|COSTS_N_INSNS
+argument_list|(
+literal|22
+argument_list|)
+block|,
+comment|/*                          DI */
+name|COSTS_N_INSNS
+argument_list|(
+literal|22
+argument_list|)
+block|}
+block|,
+comment|/*                          other */
+name|COSTS_N_INSNS
+argument_list|(
+literal|1
+argument_list|)
+block|,
+comment|/* cost of movsx */
+name|COSTS_N_INSNS
+argument_list|(
+literal|1
+argument_list|)
+block|,
+comment|/* cost of movzx */
+literal|8
+block|,
+comment|/* "large" insn */
+literal|16
+block|,
+comment|/* MOVE_RATIO */
+literal|2
+block|,
+comment|/* cost for loading QImode using movzbl */
+block|{
+literal|6
+block|,
+literal|6
+block|,
+literal|6
+block|}
+block|,
+comment|/* cost of loading integer registers 					   in QImode, HImode and SImode. 					   Relative to reg-reg move (2).  */
+block|{
+literal|4
+block|,
+literal|4
+block|,
+literal|4
+block|}
+block|,
+comment|/* cost of storing integer registers */
+literal|2
+block|,
+comment|/* cost of reg,reg fld/fst */
+block|{
+literal|6
+block|,
+literal|6
+block|,
+literal|6
+block|}
+block|,
+comment|/* cost of loading fp registers 					   in SFmode, DFmode and XFmode */
+block|{
+literal|4
+block|,
+literal|4
+block|,
+literal|4
+block|}
+block|,
+comment|/* cost of loading integer registers */
+literal|2
+block|,
+comment|/* cost of moving MMX register */
+block|{
+literal|6
+block|,
+literal|6
+block|}
+block|,
+comment|/* cost of loading MMX registers 					   in SImode and DImode */
+block|{
+literal|4
+block|,
+literal|4
+block|}
+block|,
+comment|/* cost of storing MMX registers 					   in SImode and DImode */
+literal|2
+block|,
+comment|/* cost of moving SSE register */
+block|{
+literal|6
+block|,
+literal|6
+block|,
+literal|6
+block|}
+block|,
+comment|/* cost of loading SSE registers 					   in SImode, DImode and TImode */
+block|{
+literal|4
+block|,
+literal|4
+block|,
+literal|4
+block|}
+block|,
+comment|/* cost of storing SSE registers 					   in SImode, DImode and TImode */
+literal|2
+block|,
+comment|/* MMX or SSE register to integer */
+literal|128
+block|,
+comment|/* size of prefetch block */
+literal|8
+block|,
+comment|/* number of parallel prefetches */
+literal|3
+block|,
+comment|/* Branch cost */
+name|COSTS_N_INSNS
+argument_list|(
+literal|3
+argument_list|)
+block|,
+comment|/* cost of FADD and FSUB insns.  */
+name|COSTS_N_INSNS
+argument_list|(
+literal|5
+argument_list|)
+block|,
+comment|/* cost of FMUL instruction.  */
+name|COSTS_N_INSNS
+argument_list|(
+literal|32
+argument_list|)
+block|,
+comment|/* cost of FDIV instruction.  */
+name|COSTS_N_INSNS
+argument_list|(
+literal|1
+argument_list|)
+block|,
+comment|/* cost of FABS instruction.  */
+name|COSTS_N_INSNS
+argument_list|(
+literal|1
+argument_list|)
+block|,
+comment|/* cost of FCHS instruction.  */
+name|COSTS_N_INSNS
+argument_list|(
+literal|58
+argument_list|)
+block|,
+comment|/* cost of FSQRT instruction.  */
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Generic64 should produce code tuned for Nocona and K8.  */
 end_comment
@@ -3303,6 +3803,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|m_GEODE
+value|(1<<PROCESSOR_GEODE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|m_K6_GEODE
+value|(m_K6 | m_GEODE)
+end_define
+
+begin_define
+define|#
+directive|define
 name|m_K6
 value|(1<<PROCESSOR_K6)
 end_define
@@ -3345,6 +3859,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|m_CORE2
+value|(1<<PROCESSOR_CORE2)
+end_define
+
+begin_define
+define|#
+directive|define
 name|m_GENERIC32
 value|(1<<PROCESSOR_GENERIC32)
 end_define
@@ -3364,7 +3885,7 @@ value|(m_GENERIC32 | m_GENERIC64)
 end_define
 
 begin_comment
-comment|/* Generic instruction choice should be common subset of supported CPUs    (PPro/PENT4/NOCONA/Athlon/K8).  */
+comment|/* Generic instruction choice should be common subset of supported CPUs    (PPro/PENT4/NOCONA/CORE2/Athlon/K8).  */
 end_comment
 
 begin_comment
@@ -3378,9 +3899,11 @@ name|x86_use_leave
 init|=
 name|m_386
 operator||
-name|m_K6
+name|m_K6_GEODE
 operator||
 name|m_ATHLON_K8
+operator||
+name|m_CORE2
 operator||
 name|m_GENERIC64
 decl_stmt|;
@@ -3393,13 +3916,15 @@ name|x86_push_memory
 init|=
 name|m_386
 operator||
-name|m_K6
+name|m_K6_GEODE
 operator||
 name|m_ATHLON_K8
 operator||
 name|m_PENT4
 operator||
 name|m_NOCONA
+operator||
+name|m_CORE2
 operator||
 name|m_GENERIC
 decl_stmt|;
@@ -3429,7 +3954,11 @@ name|m_PENT4
 operator||
 name|m_NOCONA
 operator||
+name|m_CORE2
+operator||
 name|m_GENERIC
+operator||
+name|m_GEODE
 comment|/* m_386 | m_K6 */
 decl_stmt|;
 end_decl_stmt
@@ -3468,6 +3997,8 @@ name|m_ATHLON_K8
 operator||
 name|m_K6
 operator||
+name|m_CORE2
+operator||
 name|m_GENERIC
 decl_stmt|;
 end_decl_stmt
@@ -3478,6 +4009,8 @@ name|int
 name|x86_cmove
 init|=
 name|m_PPRO
+operator||
+name|m_GEODE
 operator||
 name|m_ATHLON_K8
 operator||
@@ -3503,13 +4036,15 @@ name|x86_deep_branch
 init|=
 name|m_PPRO
 operator||
-name|m_K6
+name|m_K6_GEODE
 operator||
 name|m_ATHLON_K8
 operator||
 name|m_PENT4
 operator||
 name|m_NOCONA
+operator||
+name|m_CORE2
 operator||
 name|m_GENERIC
 decl_stmt|;
@@ -3535,7 +4070,7 @@ name|x86_use_sahf
 init|=
 name|m_PPRO
 operator||
-name|m_K6
+name|m_K6_GEODE
 operator||
 name|m_PENT4
 operator||
@@ -3567,6 +4102,8 @@ specifier|const
 name|int
 name|x86_partial_flag_reg_stall
 init|=
+name|m_CORE2
+operator||
 name|m_GENERIC
 decl_stmt|;
 end_decl_stmt
@@ -3580,7 +4117,7 @@ name|m_386
 operator||
 name|m_486
 operator||
-name|m_K6
+name|m_K6_GEODE
 decl_stmt|;
 end_decl_stmt
 
@@ -3596,6 +4133,8 @@ operator||
 name|m_ATHLON_K8
 operator||
 name|m_PENT
+operator||
+name|m_CORE2
 operator||
 name|m_GENERIC
 operator|)
@@ -3621,6 +4160,8 @@ operator|(
 name|m_PENT
 operator||
 name|m_K6
+operator||
+name|m_CORE2
 operator||
 name|m_GENERIC
 operator|)
@@ -3665,7 +4206,7 @@ specifier|const
 name|int
 name|x86_promote_QImode
 init|=
-name|m_K6
+name|m_K6_GEODE
 operator||
 name|m_PENT
 operator||
@@ -3674,6 +4215,8 @@ operator||
 name|m_486
 operator||
 name|m_ATHLON_K8
+operator||
+name|m_CORE2
 operator||
 name|m_GENERIC
 decl_stmt|;
@@ -3771,6 +4314,8 @@ name|m_PENT4
 operator||
 name|m_NOCONA
 operator||
+name|m_CORE2
+operator||
 name|m_GENERIC
 decl_stmt|;
 end_decl_stmt
@@ -3792,6 +4337,8 @@ name|m_PENT4
 operator||
 name|m_NOCONA
 operator||
+name|m_CORE2
+operator||
 name|m_GENERIC
 decl_stmt|;
 end_decl_stmt
@@ -3803,11 +4350,13 @@ name|x86_add_esp_4
 init|=
 name|m_ATHLON_K8
 operator||
-name|m_K6
+name|m_K6_GEODE
 operator||
 name|m_PENT4
 operator||
 name|m_NOCONA
+operator||
+name|m_CORE2
 operator||
 name|m_GENERIC
 decl_stmt|;
@@ -3822,7 +4371,7 @@ name|m_ATHLON_K8
 operator||
 name|m_PPRO
 operator||
-name|m_K6
+name|m_K6_GEODE
 operator||
 name|m_386
 operator||
@@ -3831,6 +4380,8 @@ operator||
 name|m_PENT4
 operator||
 name|m_NOCONA
+operator||
+name|m_CORE2
 operator||
 name|m_GENERIC
 decl_stmt|;
@@ -3851,7 +4402,11 @@ name|m_NOCONA
 operator||
 name|m_PPRO
 operator||
+name|m_CORE2
+operator||
 name|m_GENERIC
+operator||
+name|m_GEODE
 operator|)
 decl_stmt|;
 end_decl_stmt
@@ -3867,6 +4422,8 @@ name|m_PENT4
 operator||
 name|m_NOCONA
 operator||
+name|m_CORE2
+operator||
 name|m_GENERIC
 decl_stmt|;
 end_decl_stmt
@@ -3881,6 +4438,8 @@ operator||
 name|m_PENT4
 operator||
 name|m_NOCONA
+operator||
+name|m_CORE2
 operator||
 name|m_GENERIC
 decl_stmt|;
@@ -3899,6 +4458,8 @@ name|m_NOCONA
 operator||
 name|m_PPRO
 operator||
+name|m_CORE2
+operator||
 name|m_GENERIC
 decl_stmt|;
 end_decl_stmt
@@ -3912,6 +4473,8 @@ name|m_ATHLON_K8
 operator||
 name|m_PPRO
 operator||
+name|m_CORE2
+operator||
 name|m_GENERIC
 decl_stmt|;
 end_decl_stmt
@@ -3924,6 +4487,8 @@ init|=
 name|m_ATHLON_K8
 operator||
 name|m_PPRO
+operator||
+name|m_CORE2
 operator||
 name|m_GENERIC
 decl_stmt|;
@@ -3954,6 +4519,8 @@ name|m_PENT4
 operator||
 name|m_NOCONA
 operator||
+name|m_CORE2
+operator||
 name|m_GENERIC
 decl_stmt|;
 end_decl_stmt
@@ -3972,6 +4539,8 @@ operator||
 name|m_NOCONA
 operator||
 name|m_PPRO
+operator||
+name|m_CORE2
 operator||
 name|m_GENERIC
 decl_stmt|;
@@ -4032,7 +4601,9 @@ name|m_PENT
 operator||
 name|m_PPRO
 operator||
-name|m_K6
+name|m_K6_GEODE
+operator||
+name|m_CORE2
 decl_stmt|;
 end_decl_stmt
 
@@ -4046,6 +4617,8 @@ operator|(
 name|m_PENT4
 operator||
 name|m_NOCONA
+operator||
+name|m_CORE2
 operator||
 name|m_GENERIC
 operator|)
@@ -4071,7 +4644,7 @@ specifier|const
 name|int
 name|x86_ext_80387_constants
 init|=
-name|m_K6
+name|m_K6_GEODE
 operator||
 name|m_ATHLON
 operator||
@@ -4102,6 +4675,8 @@ name|m_PENT4
 operator||
 name|m_NOCONA
 operator||
+name|m_CORE2
+operator||
 name|m_GENERIC
 decl_stmt|;
 end_decl_stmt
@@ -4115,9 +4690,11 @@ name|m_PPRO
 operator||
 name|m_ATHLON_K8
 operator||
-name|m_K6
+name|m_K6_GEODE
 operator||
 name|m_PENT
+operator||
+name|m_CORE2
 operator||
 name|m_GENERIC
 decl_stmt|;
@@ -4197,6 +4774,8 @@ name|int
 name|x86_pad_returns
 init|=
 name|m_ATHLON_K8
+operator||
+name|m_CORE2
 operator||
 name|m_GENERIC
 decl_stmt|;
@@ -7581,6 +8160,25 @@ block|}
 block|,
 block|{
 operator|&
+name|geode_cost
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+operator|&
 name|k6_cost
 block|,
 literal|0
@@ -7672,6 +8270,25 @@ block|,
 literal|0
 block|,
 literal|0
+block|}
+block|,
+block|{
+operator|&
+name|core2_cost
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|16
+block|,
+literal|7
+block|,
+literal|16
+block|,
+literal|7
+block|,
+literal|16
 block|}
 block|,
 block|{
@@ -7985,6 +8602,38 @@ operator||
 name|PTA_MMX
 operator||
 name|PTA_PREFETCH_SSE
+block|}
+block|,
+block|{
+literal|"core2"
+block|,
+name|PROCESSOR_CORE2
+block|,
+name|PTA_SSE
+operator||
+name|PTA_SSE2
+operator||
+name|PTA_SSE3
+operator||
+name|PTA_64BIT
+operator||
+name|PTA_MMX
+operator||
+name|PTA_PREFETCH_SSE
+block|}
+block|,
+block|{
+literal|"geode"
+block|,
+name|PROCESSOR_GEODE
+block|,
+name|PTA_MMX
+operator||
+name|PTA_PREFETCH_SSE
+operator||
+name|PTA_3DNOW
+operator||
+name|PTA_3DNOW_A
 block|}
 block|,
 block|{
@@ -62348,6 +62997,12 @@ name|PROCESSOR_GENERIC64
 case|:
 return|return
 literal|3
+return|;
+case|case
+name|PROCESSOR_CORE2
+case|:
+return|return
+literal|4
 return|;
 default|default:
 return|return
