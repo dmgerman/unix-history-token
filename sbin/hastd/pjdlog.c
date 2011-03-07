@@ -38,12 +38,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdbool.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 
@@ -71,12 +65,33 @@ directive|include
 file|"pjdlog.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|PJDLOG_NEVER_INITIALIZED
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|PJDLOG_NOT_INITIALIZED
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PJDLOG_INITIALIZED
+value|2
+end_define
+
 begin_decl_stmt
 specifier|static
-name|bool
+name|int
 name|pjdlog_initialized
 init|=
-name|false
+name|PJDLOG_NEVER_INITIALIZED
 decl_stmt|;
 end_decl_stmt
 
@@ -109,8 +124,13 @@ parameter_list|)
 block|{
 name|assert
 argument_list|(
-operator|!
 name|pjdlog_initialized
+operator|==
+name|PJDLOG_NEVER_INITIALIZED
+operator|||
+name|pjdlog_initialized
+operator|==
+name|PJDLOG_NOT_INITIALIZED
 argument_list|)
 expr_stmt|;
 name|assert
@@ -161,7 +181,7 @@ argument_list|)
 expr_stmt|;
 name|pjdlog_initialized
 operator|=
-name|true
+name|PJDLOG_INITIALIZED
 expr_stmt|;
 block|}
 end_function
@@ -176,6 +196,8 @@ block|{
 name|assert
 argument_list|(
 name|pjdlog_initialized
+operator|==
+name|PJDLOG_INITIALIZED
 argument_list|)
 expr_stmt|;
 if|if
@@ -189,7 +211,7 @@ argument_list|()
 expr_stmt|;
 name|pjdlog_initialized
 operator|=
-name|false
+name|PJDLOG_NOT_INITIALIZED
 expr_stmt|;
 block|}
 end_function
@@ -209,6 +231,8 @@ block|{
 name|assert
 argument_list|(
 name|pjdlog_initialized
+operator|==
+name|PJDLOG_INITIALIZED
 argument_list|)
 expr_stmt|;
 name|assert
@@ -272,6 +296,8 @@ block|{
 name|assert
 argument_list|(
 name|pjdlog_initialized
+operator|==
+name|PJDLOG_INITIALIZED
 argument_list|)
 expr_stmt|;
 return|return
@@ -297,6 +323,8 @@ block|{
 name|assert
 argument_list|(
 name|pjdlog_initialized
+operator|==
+name|PJDLOG_INITIALIZED
 argument_list|)
 expr_stmt|;
 name|assert
@@ -327,6 +355,8 @@ block|{
 name|assert
 argument_list|(
 name|pjdlog_initialized
+operator|==
+name|PJDLOG_INITIALIZED
 argument_list|)
 expr_stmt|;
 return|return
@@ -359,6 +389,8 @@ decl_stmt|;
 name|assert
 argument_list|(
 name|pjdlog_initialized
+operator|==
+name|PJDLOG_INITIALIZED
 argument_list|)
 expr_stmt|;
 name|va_start
@@ -403,6 +435,8 @@ block|{
 name|assert
 argument_list|(
 name|pjdlog_initialized
+operator|==
+name|PJDLOG_INITIALIZED
 argument_list|)
 expr_stmt|;
 name|assert
@@ -558,6 +592,8 @@ decl_stmt|;
 name|assert
 argument_list|(
 name|pjdlog_initialized
+operator|==
+name|PJDLOG_INITIALIZED
 argument_list|)
 expr_stmt|;
 name|va_start
@@ -617,6 +653,8 @@ block|{
 name|assert
 argument_list|(
 name|pjdlog_initialized
+operator|==
+name|PJDLOG_INITIALIZED
 argument_list|)
 expr_stmt|;
 name|assert
@@ -978,6 +1016,8 @@ block|{
 name|assert
 argument_list|(
 name|pjdlog_initialized
+operator|==
+name|PJDLOG_INITIALIZED
 argument_list|)
 expr_stmt|;
 comment|/* LOG_DEBUG is invalid here, pjdlogv?_debug() should be used. */
@@ -1054,6 +1094,8 @@ decl_stmt|;
 name|assert
 argument_list|(
 name|pjdlog_initialized
+operator|==
+name|PJDLOG_INITIALIZED
 argument_list|)
 expr_stmt|;
 name|va_start
@@ -1103,6 +1145,8 @@ block|{
 name|assert
 argument_list|(
 name|pjdlog_initialized
+operator|==
+name|PJDLOG_INITIALIZED
 argument_list|)
 expr_stmt|;
 name|pjdlogv_common
@@ -1147,6 +1191,8 @@ decl_stmt|;
 name|assert
 argument_list|(
 name|pjdlog_initialized
+operator|==
+name|PJDLOG_INITIALIZED
 argument_list|)
 expr_stmt|;
 name|va_start
@@ -1196,6 +1242,8 @@ block|{
 name|assert
 argument_list|(
 name|pjdlog_initialized
+operator|==
+name|PJDLOG_INITIALIZED
 argument_list|)
 expr_stmt|;
 name|pjdlogv_common
@@ -1239,6 +1287,8 @@ decl_stmt|;
 name|assert
 argument_list|(
 name|pjdlog_initialized
+operator|==
+name|PJDLOG_INITIALIZED
 argument_list|)
 expr_stmt|;
 name|va_start
@@ -1288,6 +1338,8 @@ block|{
 name|assert
 argument_list|(
 name|pjdlog_initialized
+operator|==
+name|PJDLOG_INITIALIZED
 argument_list|)
 expr_stmt|;
 name|pjdlogv_errno
@@ -1333,6 +1385,8 @@ decl_stmt|;
 name|assert
 argument_list|(
 name|pjdlog_initialized
+operator|==
+name|PJDLOG_INITIALIZED
 argument_list|)
 expr_stmt|;
 name|va_start
@@ -1383,6 +1437,8 @@ block|{
 name|assert
 argument_list|(
 name|pjdlog_initialized
+operator|==
+name|PJDLOG_INITIALIZED
 argument_list|)
 expr_stmt|;
 name|pjdlogv
@@ -1428,6 +1484,8 @@ decl_stmt|;
 name|assert
 argument_list|(
 name|pjdlog_initialized
+operator|==
+name|PJDLOG_INITIALIZED
 argument_list|)
 expr_stmt|;
 name|va_start
@@ -1495,6 +1553,8 @@ decl_stmt|;
 name|assert
 argument_list|(
 name|pjdlog_initialized
+operator|==
+name|PJDLOG_INITIALIZED
 argument_list|)
 expr_stmt|;
 comment|/* 	 * When there is no message we pass __func__ as 'fmt'. 	 * It would be cleaner to pass NULL or "", but gcc generates a warning 	 * for both of those. 	 */
