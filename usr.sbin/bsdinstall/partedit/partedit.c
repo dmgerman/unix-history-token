@@ -605,9 +605,6 @@ condition|(
 name|op
 operator|==
 literal|5
-operator|&&
-name|validate_setup
-argument_list|()
 condition|)
 block|{
 comment|/* Finished */
@@ -674,6 +671,9 @@ condition|(
 name|op
 operator|==
 literal|0
+operator|&&
+name|validate_setup
+argument_list|()
 condition|)
 block|{
 comment|/* Save */
