@@ -17518,6 +17518,12 @@ block|}
 comment|/* 	 * We set this to 0, the timer code knows that this means its an 	 * initial value 	 */
 name|net
 operator|->
+name|rto_needed
+operator|=
+literal|1
+expr_stmt|;
+name|net
+operator|->
 name|RTO
 operator|=
 literal|0

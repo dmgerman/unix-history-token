@@ -846,6 +846,13 @@ name|SCTP_CC_OPT_USE_DCCC_ECN
 value|0x00002001
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCTP_CC_OPT_STEADY_STEP
+value|0x00002002
+end_define
+
 begin_comment
 comment|/* RS - Supported stream scheduling modules for pluggable  * stream scheduling  */
 end_comment

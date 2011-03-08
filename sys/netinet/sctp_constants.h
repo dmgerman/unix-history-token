@@ -1459,14 +1459,14 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SCTP_DETERMINE_LL_NOTOK
+name|SCTP_RTT_FROM_NON_DATA
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_DETERMINE_LL_OK
+name|SCTP_RTT_FROM_DATA
 value|1
 end_define
 

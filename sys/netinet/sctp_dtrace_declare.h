@@ -205,6 +205,20 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SDT_PROBE_DECLARE
+argument_list|(
+name|sctp
+argument_list|,
+name|cwnd
+argument_list|,
+name|net
+argument_list|,
+name|rttstep
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* One to track an associations rwnd */
 end_comment
