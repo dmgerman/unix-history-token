@@ -216,7 +216,7 @@ comment|/* Where to log changes */
 literal|"/home"
 block|,
 comment|/* Where to create home directory */
-literal|0777
+name|_DEF_DIRMODE
 block|,
 comment|/* Home directory perms, modified by umask */
 literal|"/bin"
@@ -1252,13 +1252,13 @@ literal|1
 argument_list|)
 operator|)
 condition|?
-literal|0777
+name|_DEF_DIRMODE
 else|:
 name|getmode
 argument_list|(
 name|modeset
 argument_list|,
-literal|0777
+name|_DEF_DIRMODE
 argument_list|)
 expr_stmt|;
 name|free

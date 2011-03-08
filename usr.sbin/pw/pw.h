@@ -268,6 +268,13 @@ end_struct
 begin_define
 define|#
 directive|define
+name|_DEF_DIRMODE
+value|(S_IRWXU | S_IRWXG | S_IRWXO)
+end_define
+
+begin_define
+define|#
+directive|define
 name|_PATH_PW_CONF
 value|"/etc/pw.conf"
 end_define

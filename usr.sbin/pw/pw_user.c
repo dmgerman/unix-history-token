@@ -428,9 +428,6 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-name|mode_t
-name|dmode
-decl_stmt|;
 name|char
 modifier|*
 name|dmode_c
@@ -559,14 +556,6 @@ operator|->
 name|val
 expr_stmt|;
 block|}
-name|dmode
-operator|=
-name|S_IRWXU
-operator||
-name|S_IRWXG
-operator||
-name|S_IRWXO
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -619,7 +608,7 @@ name|getmode
 argument_list|(
 name|set
 argument_list|,
-name|dmode
+name|_DEF_DIRMODE
 argument_list|)
 expr_stmt|;
 name|free
@@ -773,7 +762,7 @@ name|mkdir
 argument_list|(
 name|dbuf
 argument_list|,
-name|dmode
+name|_DEF_DIRMODE
 argument_list|)
 operator|!=
 operator|-
@@ -882,7 +871,7 @@ name|mkdir
 argument_list|(
 name|dbuf
 argument_list|,
-name|dmode
+name|_DEF_DIRMODE
 argument_list|)
 operator|==
 operator|-
@@ -948,7 +937,7 @@ name|mkdir
 argument_list|(
 name|dbuf
 argument_list|,
-name|dmode
+name|_DEF_DIRMODE
 argument_list|)
 operator|==
 operator|-
