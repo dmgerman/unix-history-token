@@ -399,6 +399,11 @@ operator|.
 name|sv_shared_page_len
 operator|=
 name|PAGE_SIZE
+block|,
+operator|.
+name|sv_schedtail
+operator|=
+name|NULL
 block|, }
 decl_stmt|;
 end_decl_stmt

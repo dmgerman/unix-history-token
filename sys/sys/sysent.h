@@ -516,6 +516,17 @@ name|void
 modifier|*
 name|sv_shared_page_obj
 decl_stmt|;
+name|void
+function_decl|(
+modifier|*
+name|sv_schedtail
+function_decl|)
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct

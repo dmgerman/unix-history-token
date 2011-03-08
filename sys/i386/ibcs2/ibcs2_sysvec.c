@@ -353,6 +353,11 @@ operator|.
 name|sv_syscallnames
 operator|=
 name|NULL
+block|,
+operator|.
+name|sv_schedtail
+operator|=
+name|NULL
 block|, }
 decl_stmt|;
 end_decl_stmt
