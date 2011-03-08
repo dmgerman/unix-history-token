@@ -17829,6 +17829,10 @@ condition|)
 return|return;
 if|if
 condition|(
+name|panicstr
+operator|==
+name|NULL
+operator|&&
 operator|!
 name|BUF_ISLOCKED
 argument_list|(
