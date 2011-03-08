@@ -3412,20 +3412,6 @@ name|wname
 expr_stmt|;
 block|}
 block|}
-else|else
-block|{
-comment|/* In some cases width of index can be greater than 		 * length of provider's name. 		 */
-if|if
-condition|(
-name|wblocks
-operator|>
-name|wmax
-condition|)
-name|wmax
-operator|=
-name|wblocks
-expr_stmt|;
-block|}
 name|wname
 operator|=
 name|wmax
