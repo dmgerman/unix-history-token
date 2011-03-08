@@ -433,10 +433,25 @@ init|=
 literal|64
 block|,
 comment|/* 8 64bit addresses */
+if|#
+directive|if
+name|MJUMPAGESIZE
+operator|!=
+name|MCLBYTES
 name|FL_BUF_SIZES
 init|=
 literal|4
 block|,
+comment|/* cluster, jumbop, jumbo9k, jumbo16k */
+else|#
+directive|else
+name|FL_BUF_SIZES
+init|=
+literal|3
+block|,
+comment|/* cluster, jumbo9k, jumbo16k */
+endif|#
+directive|endif
 name|TX_EQ_QSIZE
 init|=
 literal|1024
@@ -2431,6 +2446,15 @@ end_function_decl
 begin_comment
 comment|/* t4_sge.c */
 end_comment
+
+begin_function_decl
+name|void
+name|t4_sge_modload
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
