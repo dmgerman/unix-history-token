@@ -1632,6 +1632,17 @@ condition|(
 name|longcal
 condition|)
 block|{
+comment|/* Do temperature compensation if the chipset needs it */
+name|AH5416
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_olcTempCompensation
+argument_list|(
+name|ah
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Get the value from the previous NF cal 		 * and update the history buffer. 		 */
 name|ar5416GetNf
 argument_list|(

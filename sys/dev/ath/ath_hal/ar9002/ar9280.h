@@ -21,6 +21,17 @@ directive|include
 file|"ar5416/ar5416.h"
 end_include
 
+begin_comment
+comment|/*  * This is a chip thing, but it's used here as part of the  * ath_hal_9280 struct; so it's convienent to locate the  * define here.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR9280_TX_GAIN_TABLE_SIZE
+value|22
+end_define
+
 begin_struct
 struct|struct
 name|ath_hal_9280
@@ -37,6 +48,15 @@ name|ah_ini_rxgain
 decl_stmt|;
 name|HAL_INI_ARRAY
 name|ah_ini_txgain
+decl_stmt|;
+name|int
+name|PDADCdelta
+decl_stmt|;
+name|uint32_t
+name|originalGain
+index|[
+name|AR9280_TX_GAIN_TABLE_SIZE
+index|]
 decl_stmt|;
 block|}
 struct|;

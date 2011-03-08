@@ -302,6 +302,36 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * AR5416 doesn't do OLC or temperature compensation.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|ar5416olcInit
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
+name|void
+name|ar5416olcTempCompensation
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
 comment|/*  * Attach for an AR5416 part.  */
 end_comment
 
@@ -778,6 +808,7 @@ name|ah_getChipPowerLimits
 operator|=
 name|ar5416GetChipPowerLimits
 expr_stmt|;
+comment|/* Internal ops */
 name|AH5416
 argument_list|(
 name|ah
@@ -795,6 +826,34 @@ operator|->
 name|ah_spurMitigate
 operator|=
 name|ar5416SpurMitigate
+expr_stmt|;
+comment|/* Internal TX power control related operations */
+name|AH5416
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_olcInit
+operator|=
+name|ar5416olcInit
+expr_stmt|;
+name|AH5416
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_olcTempCompensation
+operator|=
+name|ar5416olcTempCompensation
+expr_stmt|;
+name|AH5416
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_setPowerCalTable
+operator|=
+name|ar5416SetPowerCalTable
 expr_stmt|;
 comment|/* 	 * Start by setting all Owl devices to 2x2 	 */
 name|AH5416
