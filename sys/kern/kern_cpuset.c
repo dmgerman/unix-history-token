@@ -784,6 +784,7 @@ name|cpuset
 modifier|*
 name|parent
 parameter_list|,
+specifier|const
 name|cpuset_t
 modifier|*
 name|mask
@@ -852,7 +853,10 @@ argument_list|)
 expr_stmt|;
 name|CPU_AND
 argument_list|(
-name|mask
+operator|&
+name|set
+operator|->
+name|cs_mask
 argument_list|,
 operator|&
 name|parent
@@ -939,6 +943,7 @@ name|cpuset
 modifier|*
 name|parent
 parameter_list|,
+specifier|const
 name|cpuset_t
 modifier|*
 name|mask
@@ -1768,6 +1773,7 @@ name|cpuset
 modifier|*
 name|fset
 parameter_list|,
+specifier|const
 name|cpuset_t
 modifier|*
 name|mask
