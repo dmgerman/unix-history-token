@@ -233,7 +233,7 @@ condition|(
 name|tmp
 operator|->
 name|tm_nodes_inuse
-operator|>
+operator|>=
 name|tmp
 operator|->
 name|tm_nodes_max
