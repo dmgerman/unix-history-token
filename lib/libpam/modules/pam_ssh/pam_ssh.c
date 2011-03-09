@@ -369,7 +369,7 @@ name|openpam_log
 argument_list|(
 name|PAM_LOG_DEBUG
 argument_list|,
-literal|"failed to load key from %s\n"
+literal|"failed to load key from %s"
 argument_list|,
 name|fn
 argument_list|)
@@ -384,7 +384,7 @@ name|openpam_log
 argument_list|(
 name|PAM_LOG_DEBUG
 argument_list|,
-literal|"loaded '%s' from %s\n"
+literal|"loaded '%s' from %s"
 argument_list|,
 name|comment
 argument_list|,
