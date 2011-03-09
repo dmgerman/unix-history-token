@@ -3759,8 +3759,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: newsyslog [-CFNnrsv] [-a directory] [-d directory] [-f config-file]\n"
-literal|"                 [-S pidfile] [-t timefmt ] [ [-R requestor] filename ... ]\n"
+literal|"usage: newsyslog [-CFNPnrsv] [-a directory] [-d directory] [-f config_file]\n"
+literal|"                 [-S pidfile] [-t timefmt] [[-R tagname] file ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
