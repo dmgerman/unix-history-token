@@ -407,7 +407,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"| CapFlags: 0x%.2x  | eepMisc: 0x%.2x | RegDomain: 0x%.2x 0x%.2x | \n"
+literal|"| CapFlags: 0x%.2x  | eepMisc: 0x%.2x | RegDomain: 0x%.4x 0x%.4x | \n"
 argument_list|,
 name|eh
 operator|->
