@@ -1316,16 +1316,6 @@ name|td
 operator|->
 name|td_proc
 expr_stmt|;
-if|if
-condition|(
-name|SV_PROC_ABI
-argument_list|(
-name|p
-argument_list|)
-operator|!=
-name|SV_ABI_LINUX
-condition|)
-return|return;
 comment|/* find the emuldata */
 name|em
 operator|=
