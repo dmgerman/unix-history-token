@@ -32,6 +32,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_msgbuf.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_vm.h"
 end_include
 
@@ -69,6 +75,12 @@ begin_include
 include|#
 directive|include
 file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/msgbuf.h>
 end_include
 
 begin_include
@@ -1002,6 +1014,50 @@ argument_list|,
 name|vm_page_dump_size
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|__amd64__
+comment|/* 	 * Request that the physical pages underlying the message buffer be 	 * included in a crash dump.  Since the message buffer is accessed 	 * through the direct map, they are not automatically included. 	 */
+name|pa
+operator|=
+name|DMAP_TO_PHYS
+argument_list|(
+operator|(
+name|vm_offset_t
+operator|)
+name|msgbufp
+operator|->
+name|msg_ptr
+argument_list|)
+expr_stmt|;
+name|last_pa
+operator|=
+name|pa
+operator|+
+name|round_page
+argument_list|(
+name|MSGBUF_SIZE
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|pa
+operator|<
+name|last_pa
+condition|)
+block|{
+name|dump_add_page
+argument_list|(
+name|pa
+argument_list|)
+expr_stmt|;
+name|pa
+operator|+=
+name|PAGE_SIZE
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* 	 * Compute the number of pages of memory that will be available for 	 * use (taking into account the overhead of a page structure per 	 * page). 	 */
