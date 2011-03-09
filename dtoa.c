@@ -60,7 +60,7 @@ ifdef|#
 directive|ifdef
 name|KR_headers
 argument_list|(
-name|d
+name|d0
 argument_list|,
 name|mode
 argument_list|,
@@ -73,7 +73,7 @@ argument_list|,
 name|rve
 argument_list|)
 name|double
-name|d
+name|d0
 decl_stmt|;
 end_decl_stmt
 
@@ -107,7 +107,7 @@ end_else
 begin_expr_stmt
 operator|(
 name|double
-name|d
+name|d0
 operator|,
 name|int
 name|mode
@@ -210,12 +210,15 @@ block|,
 operator|*
 name|S
 block|;
-name|double
+name|U
+name|d
+block|,
 name|d2
 block|,
-name|ds
-block|,
 name|eps
+block|;
+name|double
+name|ds
 block|;
 name|char
 operator|*
@@ -335,11 +338,21 @@ endif|#
 directive|endif
 end_endif
 
+begin_expr_stmt
+name|d
+operator|.
+name|d
+operator|=
+name|d0
+expr_stmt|;
+end_expr_stmt
+
 begin_if
 if|if
 condition|(
 name|word0
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|&
@@ -354,6 +367,7 @@ literal|1
 expr_stmt|;
 name|word0
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|&=
@@ -396,6 +410,7 @@ condition|(
 operator|(
 name|word0
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|&
@@ -410,6 +425,7 @@ if|if
 condition|(
 name|word0
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|==
@@ -432,6 +448,7 @@ condition|(
 operator|!
 name|word1
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|&&
@@ -439,6 +456,7 @@ operator|!
 operator|(
 name|word0
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|&
@@ -484,6 +502,7 @@ end_ifdef
 begin_expr_stmt
 name|dval
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|+=
@@ -506,6 +525,7 @@ condition|(
 operator|!
 name|dval
 argument_list|(
+operator|&
 name|d
 argument_list|)
 condition|)
@@ -611,6 +631,7 @@ name|d2b
 argument_list|(
 name|dval
 argument_list|(
+operator|&
 name|d
 argument_list|)
 argument_list|,
@@ -638,6 +659,7 @@ call|)
 argument_list|(
 name|word0
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|>>
@@ -669,6 +691,7 @@ call|)
 argument_list|(
 name|word0
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|>>
@@ -689,16 +712,19 @@ endif|#
 directive|endif
 name|dval
 argument_list|(
+operator|&
 name|d2
 argument_list|)
 operator|=
 name|dval
 argument_list|(
+operator|&
 name|d
 argument_list|)
 expr_stmt|;
 name|word0
 argument_list|(
+operator|&
 name|d2
 argument_list|)
 operator|&=
@@ -706,6 +732,7 @@ name|Frac_mask1
 expr_stmt|;
 name|word0
 argument_list|(
+operator|&
 name|d2
 argument_list|)
 operator||=
@@ -725,6 +752,7 @@ name|hi0bits
 argument_list|(
 name|word0
 argument_list|(
+operator|&
 name|d2
 argument_list|)
 operator|&
@@ -736,6 +764,7 @@ literal|0
 condition|)
 name|dval
 argument_list|(
+operator|&
 name|d2
 argument_list|)
 operator|/=
@@ -745,7 +774,7 @@ name|j
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* log(x)	~=~ log(1.5) + (x-1.5)/1.5 		 * log10(x)	 =  log(x) / log(10) 		 *		~=~ log(1.5)/log(10) + (x-1.5)/(1.5*log(10)) 		 * log10(d) = (i-Bias)*log(2)/log(10) + log10(d2) 		 * 		 * This suggests computing an approximation k to log10(d) by 		 * 		 * k = (i - Bias)*0.301029995663981 		 *	+ ( (d2-1.5)*0.289529654602168 + 0.176091259055681 ); 		 * 		 * We want k to be too large rather than too small. 		 * The error in the first-order Taylor series approximation 		 * is in our favor, so we just round up the constant enough 		 * to compensate for any error in the multiplication of 		 * (i - Bias) by 0.301029995663981; since |i - Bias|<= 1077, 		 * and 1077 * 0.30103 * 2^-52 ~=~ 7.2e-14, 		 * adding 1e-13 to the constant term more than suffices. 		 * Hence we adjust the constant term to 0.1760912590558. 		 * (We could get a more accurate k by invoking log10, 		 *  but this is probably not worthwhile.) 		 */
+comment|/* log(x)	~=~ log(1.5) + (x-1.5)/1.5 		 * log10(x)	 =  log(x) / log(10) 		 *		~=~ log(1.5)/log(10) + (x-1.5)/(1.5*log(10)) 		 * log10(&d) = (i-Bias)*log(2)/log(10) + log10(&d2) 		 * 		 * This suggests computing an approximation k to log10(&d) by 		 * 		 * k = (i - Bias)*0.301029995663981 		 *	+ ( (d2-1.5)*0.289529654602168 + 0.176091259055681 ); 		 * 		 * We want k to be too large rather than too small. 		 * The error in the first-order Taylor series approximation 		 * is in our favor, so we just round up the constant enough 		 * to compensate for any error in the multiplication of 		 * (i - Bias) by 0.301029995663981; since |i - Bias|<= 1077, 		 * and 1077 * 0.30103 * 2^-52 ~=~ 7.2e-14, 		 * adding 1e-13 to the constant term more than suffices. 		 * Hence we adjust the constant term to 0.1760912590558. 		 * (We could get a more accurate k by invoking log10, 		 *  but this is probably not worthwhile.) 		 */
 name|i
 operator|-=
 name|Bias
@@ -800,33 +829,43 @@ literal|32
 condition|?
 name|word0
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|<<
+operator|(
 literal|64
 operator|-
 name|i
+operator|)
 operator||
 name|word1
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|>>
+operator|(
 name|i
 operator|-
 literal|32
+operator|)
 else|:
 name|word1
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|<<
+operator|(
 literal|32
 operator|-
 name|i
+operator|)
 expr_stmt|;
 name|dval
 argument_list|(
+operator|&
 name|d2
 argument_list|)
 operator|=
@@ -834,6 +873,7 @@ name|x
 expr_stmt|;
 name|word0
 argument_list|(
+operator|&
 name|d2
 argument_list|)
 operator|-=
@@ -876,6 +916,7 @@ operator|=
 operator|(
 name|dval
 argument_list|(
+operator|&
 name|d2
 argument_list|)
 operator|-
@@ -945,6 +986,7 @@ if|if
 condition|(
 name|dval
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|<
@@ -1134,6 +1176,24 @@ literal|1
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|ilim
+operator|=
+name|ilim1
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* Values for cases 0 and 1; done here to */
+end_comment
+
+begin_comment
+comment|/* silence erroneous "gcc -Wall" warning. */
+end_comment
+
 begin_switch
 switch|switch
 condition|(
@@ -1146,13 +1206,6 @@ case|:
 case|case
 literal|1
 case|:
-name|ilim
-operator|=
-name|ilim1
-operator|=
-operator|-
-literal|1
-expr_stmt|;
 name|i
 operator|=
 literal|18
@@ -1295,11 +1348,13 @@ literal|0
 expr_stmt|;
 name|dval
 argument_list|(
+operator|&
 name|d2
 argument_list|)
 operator|=
 name|dval
 argument_list|(
+operator|&
 name|d
 argument_list|)
 expr_stmt|;
@@ -1354,6 +1409,7 @@ literal|1
 expr_stmt|;
 name|dval
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|/=
@@ -1400,6 +1456,7 @@ expr_stmt|;
 block|}
 name|dval
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|/=
@@ -1421,6 +1478,7 @@ condition|)
 block|{
 name|dval
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|*=
@@ -1460,6 +1518,7 @@ operator|++
 expr_stmt|;
 name|dval
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|*=
@@ -1476,6 +1535,7 @@ name|k_check
 operator|&&
 name|dval
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|<
@@ -1504,6 +1564,7 @@ operator|--
 expr_stmt|;
 name|dval
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|*=
@@ -1515,6 +1576,7 @@ expr_stmt|;
 block|}
 name|dval
 argument_list|(
+operator|&
 name|eps
 argument_list|)
 operator|=
@@ -1522,6 +1584,7 @@ name|ieps
 operator|*
 name|dval
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|+
@@ -1529,6 +1592,7 @@ literal|7.
 expr_stmt|;
 name|word0
 argument_list|(
+operator|&
 name|eps
 argument_list|)
 operator|-=
@@ -1555,6 +1619,7 @@ literal|0
 expr_stmt|;
 name|dval
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|-=
@@ -1564,11 +1629,13 @@ if|if
 condition|(
 name|dval
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|>
 name|dval
 argument_list|(
+operator|&
 name|eps
 argument_list|)
 condition|)
@@ -1579,12 +1646,14 @@ if|if
 condition|(
 name|dval
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|<
 operator|-
 name|dval
 argument_list|(
+operator|&
 name|eps
 argument_list|)
 condition|)
@@ -1606,6 +1675,7 @@ block|{
 comment|/* Use Steele& White method of only 			 * generating digits needed. 			 */
 name|dval
 argument_list|(
+operator|&
 name|eps
 argument_list|)
 operator|=
@@ -1620,6 +1690,7 @@ index|]
 operator|-
 name|dval
 argument_list|(
+operator|&
 name|eps
 argument_list|)
 expr_stmt|;
@@ -1636,11 +1707,13 @@ name|L
 operator|=
 name|dval
 argument_list|(
+operator|&
 name|d
 argument_list|)
 expr_stmt|;
 name|dval
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|-=
@@ -1661,11 +1734,13 @@ if|if
 condition|(
 name|dval
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|<
 name|dval
 argument_list|(
+operator|&
 name|eps
 argument_list|)
 condition|)
@@ -1678,11 +1753,13 @@ literal|1.
 operator|-
 name|dval
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|<
 name|dval
 argument_list|(
+operator|&
 name|eps
 argument_list|)
 condition|)
@@ -1699,6 +1776,7 @@ condition|)
 break|break;
 name|dval
 argument_list|(
+operator|&
 name|eps
 argument_list|)
 operator|*=
@@ -1706,6 +1784,7 @@ literal|10.
 expr_stmt|;
 name|dval
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|*=
@@ -1720,6 +1799,7 @@ directive|endif
 comment|/* Generate ilim digits, then fix them up. */
 name|dval
 argument_list|(
+operator|&
 name|eps
 argument_list|)
 operator|*=
@@ -1742,6 +1822,7 @@ operator|++
 operator|,
 name|dval
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|*=
@@ -1756,6 +1837,7 @@ call|)
 argument_list|(
 name|dval
 argument_list|(
+operator|&
 name|d
 argument_list|)
 argument_list|)
@@ -1766,6 +1848,7 @@ operator|!
 operator|(
 name|dval
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|-=
@@ -1798,6 +1881,7 @@ if|if
 condition|(
 name|dval
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|>
@@ -1805,6 +1889,7 @@ literal|0.5
 operator|+
 name|dval
 argument_list|(
+operator|&
 name|eps
 argument_list|)
 condition|)
@@ -1816,6 +1901,7 @@ if|if
 condition|(
 name|dval
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|<
@@ -1823,6 +1909,7 @@ literal|0.5
 operator|-
 name|dval
 argument_list|(
+operator|&
 name|eps
 argument_list|)
 condition|)
@@ -1860,11 +1947,13 @@ name|s0
 expr_stmt|;
 name|dval
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|=
 name|dval
 argument_list|(
+operator|&
 name|d2
 argument_list|)
 expr_stmt|;
@@ -1928,6 +2017,7 @@ literal|0
 operator|||
 name|dval
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|<=
@@ -1954,6 +2044,7 @@ operator|++
 operator|,
 name|dval
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|*=
@@ -1968,6 +2059,7 @@ call|)
 argument_list|(
 name|dval
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|/
@@ -1976,6 +2068,7 @@ argument_list|)
 expr_stmt|;
 name|dval
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|-=
@@ -1991,6 +2084,7 @@ if|if
 condition|(
 name|dval
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|<
@@ -2002,6 +2096,7 @@ operator|--
 expr_stmt|;
 name|dval
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|+=
@@ -2026,6 +2121,7 @@ condition|(
 operator|!
 name|dval
 argument_list|(
+operator|&
 name|d
 argument_list|)
 condition|)
@@ -2079,25 +2175,45 @@ endif|#
 directive|endif
 name|dval
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|+=
 name|dval
 argument_list|(
+operator|&
 name|d
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ROUND_BIASED
 if|if
 condition|(
 name|dval
 argument_list|(
+operator|&
+name|d
+argument_list|)
+operator|>=
+name|ds
+condition|)
+else|#
+directive|else
+if|if
+condition|(
+name|dval
+argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|>
 name|ds
 operator|||
+operator|(
 name|dval
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|==
@@ -2106,7 +2222,10 @@ operator|&&
 name|L
 operator|&
 literal|1
+operator|)
 condition|)
+endif|#
+directive|endif
 block|{
 name|bump_up
 label|:
@@ -2442,6 +2561,7 @@ condition|(
 operator|!
 name|word1
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|&&
@@ -2449,6 +2569,7 @@ operator|!
 operator|(
 name|word0
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|&
@@ -2460,6 +2581,7 @@ name|Sudden_Underflow
 operator|&&
 name|word0
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|&
@@ -2953,6 +3075,7 @@ operator|!
 operator|(
 name|word1
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|&
@@ -3031,6 +3154,7 @@ name|j
 operator|<
 literal|0
 operator|||
+operator|(
 name|j
 operator|==
 literal|0
@@ -3046,6 +3170,7 @@ operator|!
 operator|(
 name|word1
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|&
@@ -3053,6 +3178,7 @@ literal|1
 operator|)
 endif|#
 directive|endif
+operator|)
 condition|)
 block|{
 if|if
@@ -3140,6 +3266,17 @@ argument_list|,
 name|S
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ROUND_BIASED
+if|if
+condition|(
+name|j1
+operator|>=
+literal|0
+comment|/*)*/
+else|#
+directive|else
 if|if
 condition|(
 operator|(
@@ -3147,6 +3284,7 @@ name|j1
 operator|>
 literal|0
 operator|||
+operator|(
 name|j1
 operator|==
 literal|0
@@ -3155,6 +3293,9 @@ name|dig
 operator|&
 literal|1
 operator|)
+operator|)
+endif|#
+directive|endif
 operator|&&
 name|dig
 operator|++
@@ -3444,13 +3585,28 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ROUND_BIASED
+end_ifdef
+
 begin_if
+if|if
+condition|(
+name|j
+operator|>=
+literal|0
+condition|)
+else|#
+directive|else
 if|if
 condition|(
 name|j
 operator|>
 literal|0
 operator|||
+operator|(
 name|j
 operator|==
 literal|0
@@ -3458,7 +3614,10 @@ operator|&&
 name|dig
 operator|&
 literal|1
+operator|)
 condition|)
+endif|#
+directive|endif
 block|{
 name|roundoff
 label|:
@@ -3498,8 +3657,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|Honor_FLT_ROUNDS
 name|trimzeros
 label|:
+endif|#
+directive|endif
 while|while
 condition|(
 operator|*
@@ -3580,6 +3744,7 @@ condition|)
 block|{
 name|word0
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|=
@@ -3593,6 +3758,7 @@ operator|)
 expr_stmt|;
 name|word1
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|=
@@ -3600,6 +3766,7 @@ literal|0
 expr_stmt|;
 name|dval
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|+=

@@ -196,6 +196,7 @@ name|i
 operator|<=
 literal|' '
 operator|||
+operator|(
 name|i
 operator|>=
 literal|'0'
@@ -203,6 +204,7 @@ operator|&&
 name|i
 operator|<=
 literal|'9'
+operator|)
 condition|)
 block|{
 name|ndig

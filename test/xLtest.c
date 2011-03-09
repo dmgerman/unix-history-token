@@ -208,6 +208,7 @@ index|]
 union|;
 while|while
 condition|(
+operator|(
 name|s
 operator|=
 name|fgets
@@ -221,6 +222,7 @@ argument_list|)
 argument_list|,
 name|stdin
 argument_list|)
+operator|)
 condition|)
 block|{
 while|while
@@ -277,6 +279,7 @@ name|i
 operator|<=
 literal|' '
 operator|||
+operator|(
 name|i
 operator|>=
 literal|'0'
@@ -284,6 +287,7 @@ operator|&&
 name|i
 operator|<=
 literal|'9'
+operator|)
 condition|)
 block|{
 name|ndig
@@ -397,28 +401,13 @@ name|printf
 argument_list|(
 literal|" --> f = #%lx %lx %lx\n"
 argument_list|,
-name|u
-operator|.
-name|bits
-index|[
-name|_0
-index|]
+argument|U u.bits[_0]
 argument_list|,
-name|u
-operator|.
-name|bits
-index|[
-name|_1
-index|]
+argument|U u.bits[_1]
 argument_list|,
-name|u
-operator|.
-name|bits
-index|[
-name|_2
-index|]
+argument|U u.bits[_2]
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 goto|goto
 name|fmt_test
 goto|;

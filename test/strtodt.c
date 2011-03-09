@@ -70,6 +70,13 @@ name|U
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|UL
+value|(unsigned long)
+end_define
+
 begin_function
 specifier|static
 name|int
@@ -293,39 +300,23 @@ name|printf
 argument_list|(
 literal|"Line %d of %s: got %lx %lx; expected %lx %lx\n"
 argument_list|,
-name|line
+argument|line
 argument_list|,
-name|fname
+argument|fname
 argument_list|,
-name|b
-operator|.
-name|L
-index|[
-name|W0
-index|]
+argument|UL b.L[W0]
 argument_list|,
-name|b
-operator|.
-name|L
-index|[
-name|W1
-index|]
+argument|UL b.L[W1]
 argument_list|,
-name|a
-operator|.
-name|L
-index|[
+argument|UL a.L[
 literal|0
-index|]
+argument|]
 argument_list|,
-name|a
-operator|.
-name|L
-index|[
+argument|UL a.L[
 literal|1
-index|]
+argument|]
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 block|}
 block|}
 return|return
@@ -459,14 +450,17 @@ expr_stmt|;
 else|else
 while|while
 condition|(
+operator|(
 name|s
 operator|=
 operator|*
 operator|++
 name|argv
+operator|)
 condition|)
 if|if
 condition|(
+operator|(
 name|f
 operator|=
 name|fopen
@@ -475,6 +469,7 @@ name|s
 argument_list|,
 literal|"r"
 argument_list|)
+operator|)
 condition|)
 block|{
 name|n

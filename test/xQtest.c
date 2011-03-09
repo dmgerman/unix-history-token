@@ -16,6 +16,24 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+union|union
+block|{
+name|long
+name|double
+name|d
+decl_stmt|;
+name|unsigned
+name|int
+name|bits
+index|[
+literal|4
+index|]
+decl_stmt|;
+block|}
+name|u
+union|,
+name|w
+union|;
 switch|switch
 condition|(
 expr|sizeof
@@ -26,6 +44,79 @@ operator|)
 condition|)
 block|{
 case|case
+literal|16
+case|:
+name|w
+operator|.
+name|bits
+index|[
+literal|0
+index|]
+operator|=
+name|w
+operator|.
+name|bits
+index|[
+literal|3
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|w
+operator|.
+name|d
+operator|=
+literal|1.
+expr_stmt|;
+name|u
+operator|.
+name|d
+operator|=
+literal|3.
+expr_stmt|;
+name|w
+operator|.
+name|d
+operator|=
+name|w
+operator|.
+name|d
+operator|/
+name|u
+operator|.
+name|d
+expr_stmt|;
+if|if
+condition|(
+name|w
+operator|.
+name|bits
+index|[
+literal|0
+index|]
+operator|&&
+name|w
+operator|.
+name|bits
+index|[
+literal|3
+index|]
+condition|)
+name|printf
+argument_list|(
+literal|"cp x.ou0 x.out; cp xL.ou0 xL.out;"
+literal|" cp Q.ou1 Q.out; cp pftestQ.out pftest.out\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"cp x.ou0 x.out; cp xL.ou0 xL.out;"
+literal|" cp Q.ou0 Q.out; cp pftestx.out pftest.out\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|10
 case|:
 case|case
@@ -33,23 +124,16 @@ literal|12
 case|:
 name|printf
 argument_list|(
-literal|"cp x.ou1 x.out; cp xL.ou1 xL.out; cp Q.ou0 Q.out\n"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|16
-case|:
-name|printf
-argument_list|(
-literal|"cp x.ou0 x.out; cp xL.ou0 xL.out; cp Q.ou1 Q.out\n"
+literal|"cp x.ou1 x.out; cp xL.ou1 xL.out; cp Q.ou0 Q.out;"
+literal|" cp pftestx.out pftest.out\n"
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"cp x.ou0 x.out; cp xL.ou0 xL.out; cp Q.ou0 Q.out\n"
+literal|"cp x.ou0 x.out; cp xL.ou0 xL.out; cp Q.ou0 Q.out;"
+literal|" cp pftestx.out pftest.out\n"
 argument_list|)
 expr_stmt|;
 block|}

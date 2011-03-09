@@ -352,7 +352,7 @@ operator|)
 endif|#
 directive|endif
 block|{
-name|double
+name|U
 name|da
 block|,
 name|db
@@ -366,6 +366,7 @@ name|kb
 block|;
 name|dval
 argument_list|(
+operator|&
 name|da
 argument_list|)
 operator|=
@@ -379,6 +380,7 @@ argument_list|)
 block|;
 name|dval
 argument_list|(
+operator|&
 name|db
 argument_list|)
 operator|=
@@ -420,6 +422,7 @@ condition|)
 block|{
 name|word0
 argument_list|(
+operator|&
 name|da
 argument_list|)
 operator|+=
@@ -439,6 +442,7 @@ literal|3
 condition|)
 name|dval
 argument_list|(
+operator|&
 name|da
 argument_list|)
 operator|*=
@@ -459,6 +463,7 @@ name|k
 expr_stmt|;
 name|word0
 argument_list|(
+operator|&
 name|db
 argument_list|)
 operator|+=
@@ -478,6 +483,7 @@ literal|3
 condition|)
 name|dval
 argument_list|(
+operator|&
 name|db
 argument_list|)
 operator|*=
@@ -502,6 +508,7 @@ literal|0
 condition|)
 name|word0
 argument_list|(
+operator|&
 name|da
 argument_list|)
 operator|+=
@@ -518,6 +525,7 @@ name|k
 expr_stmt|;
 name|word0
 argument_list|(
+operator|&
 name|db
 argument_list|)
 operator|+=
@@ -537,11 +545,13 @@ begin_return
 return|return
 name|dval
 argument_list|(
+operator|&
 name|da
 argument_list|)
 operator|/
 name|dval
 argument_list|(
+operator|&
 name|db
 argument_list|)
 return|;

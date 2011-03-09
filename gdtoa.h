@@ -45,7 +45,7 @@ begin_define
 define|#
 directive|define
 name|Long
-value|long
+value|int
 end_define
 
 begin_endif

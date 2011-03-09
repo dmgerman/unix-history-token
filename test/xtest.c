@@ -226,6 +226,7 @@ index|]
 union|;
 while|while
 condition|(
+operator|(
 name|s
 operator|=
 name|fgets
@@ -239,6 +240,7 @@ argument_list|)
 argument_list|,
 name|stdin
 argument_list|)
+operator|)
 condition|)
 block|{
 while|while
@@ -295,6 +297,7 @@ name|i
 operator|<=
 literal|' '
 operator|||
+operator|(
 name|i
 operator|>=
 literal|'0'
@@ -302,6 +305,7 @@ operator|&&
 name|i
 operator|<=
 literal|'9'
+operator|)
 condition|)
 block|{
 name|ndig

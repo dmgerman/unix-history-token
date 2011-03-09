@@ -316,6 +316,7 @@ literal|2
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|c
 operator|=
 operator|*
@@ -327,6 +328,7 @@ operator|*
 operator|)
 operator|++
 name|s
+operator|)
 condition|)
 block|{
 if|if
@@ -517,11 +519,13 @@ block|}
 block|}
 do|while
 condition|(
+operator|(
 name|c
 operator|=
 operator|*
 operator|++
 name|s
+operator|)
 condition|)
 do|;
 endif|#
@@ -569,9 +573,11 @@ operator|<<
 literal|4
 operator|)
 operator||
+operator|(
 name|h
 operator|&
 literal|0xf
+operator|)
 expr_stmt|;
 block|}
 if|if

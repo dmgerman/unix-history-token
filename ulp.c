@@ -22,7 +22,8 @@ name|KR_headers
 argument_list|(
 name|x
 argument_list|)
-name|double
+name|U
+modifier|*
 name|x
 decl_stmt|;
 end_decl_stmt
@@ -34,7 +35,8 @@ end_else
 
 begin_expr_stmt
 operator|(
-name|double
+name|U
+operator|*
 name|x
 operator|)
 endif|#
@@ -43,7 +45,7 @@ block|{
 name|Long
 name|L
 block|;
-name|double
+name|U
 name|a
 block|;
 name|L
@@ -90,6 +92,7 @@ endif|#
 directive|endif
 name|word0
 argument_list|(
+operator|&
 name|a
 argument_list|)
 operator|=
@@ -97,6 +100,7 @@ name|L
 expr_stmt|;
 name|word1
 argument_list|(
+operator|&
 name|a
 argument_list|)
 operator|=
@@ -127,6 +131,7 @@ condition|)
 block|{
 name|word0
 argument_list|(
+operator|&
 name|a
 argument_list|)
 operator|=
@@ -136,6 +141,7 @@ name|L
 expr_stmt|;
 name|word1
 argument_list|(
+operator|&
 name|a
 argument_list|)
 operator|=
@@ -146,6 +152,7 @@ else|else
 block|{
 name|word0
 argument_list|(
+operator|&
 name|a
 argument_list|)
 operator|=
@@ -157,6 +164,7 @@ name|Exp_shift
 expr_stmt|;
 name|word1
 argument_list|(
+operator|&
 name|a
 argument_list|)
 operator|=
@@ -168,9 +176,11 @@ literal|1
 else|:
 literal|1
 operator|<<
+operator|(
 literal|31
 operator|-
 name|L
+operator|)
 expr_stmt|;
 block|}
 block|}
@@ -183,7 +193,11 @@ end_endif
 
 begin_return
 return|return
+name|dval
+argument_list|(
+operator|&
 name|a
+argument_list|)
 return|;
 end_return
 

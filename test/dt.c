@@ -23,6 +23,14 @@ directive|include
 file|"gdtoa.h"
 end_include
 
+begin_decl_stmt
+name|int
+name|STRTOD_DIGLIM
+init|=
+literal|24
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -121,6 +129,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_typedef
+typedef|typedef
+union|union
+block|{
+name|double
+name|d
+decl_stmt|;
+name|ULong
+name|L
+index|[
+literal|2
+index|]
+decl_stmt|;
+block|}
+name|U
+typedef|;
+end_typedef
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -134,7 +160,7 @@ name|word0
 parameter_list|(
 name|x
 parameter_list|)
-value|((ULong *)&x)[1]
+value|(x)->L[1]
 end_define
 
 begin_define
@@ -144,7 +170,7 @@ name|word1
 parameter_list|(
 name|x
 parameter_list|)
-value|((ULong *)&x)[0]
+value|(x)->L[0]
 end_define
 
 begin_else
@@ -159,7 +185,7 @@ name|word0
 parameter_list|(
 name|x
 parameter_list|)
-value|((ULong *)&x)[0]
+value|(x)->L[0]
 end_define
 
 begin_define
@@ -169,13 +195,23 @@ name|word1
 parameter_list|(
 name|x
 parameter_list|)
-value|((ULong *)&x)[1]
+value|(x)->L[1]
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|dval
+parameter_list|(
+name|x
+parameter_list|)
+value|(x)->d
+end_define
 
 begin_include
 include|#
@@ -363,6 +399,7 @@ comment|/* Infinity or Nan */
 block|{
 while|while
 condition|(
+operator|(
 operator|*
 name|b
 operator|++
@@ -370,6 +407,7 @@ operator|=
 operator|*
 name|s
 operator|++
+operator|)
 condition|)
 empty_stmt|;
 return|return;
@@ -412,12 +450,14 @@ literal|'.'
 expr_stmt|;
 while|while
 condition|(
+operator|(
 operator|*
 name|b
 operator|=
 operator|*
 name|s
 operator|++
+operator|)
 condition|)
 name|b
 operator|++
@@ -559,6 +599,7 @@ literal|'0'
 expr_stmt|;
 while|while
 condition|(
+operator|(
 operator|*
 name|b
 operator|++
@@ -566,6 +607,7 @@ operator|=
 operator|*
 name|s
 operator|++
+operator|)
 condition|)
 empty_stmt|;
 block|}
@@ -573,12 +615,14 @@ else|else
 block|{
 while|while
 condition|(
+operator|(
 operator|*
 name|b
 operator|=
 operator|*
 name|s
 operator|++
+operator|)
 condition|)
 block|{
 name|b
@@ -655,7 +699,7 @@ end_function
 begin_define
 define|#
 directive|define
-name|U
+name|UL
 value|(unsigned long)
 end_define
 
@@ -669,14 +713,16 @@ name|check
 parameter_list|(
 name|d
 parameter_list|)
-name|double
+name|U
+modifier|*
 name|d
 decl_stmt|;
 else|#
 directive|else
 function|check
 parameter_list|(
-name|double
+name|U
+modifier|*
 name|d
 parameter_list|)
 endif|#
@@ -700,14 +746,17 @@ decl_stmt|,
 modifier|*
 name|se
 decl_stmt|;
-name|double
+name|U
 name|d1
 decl_stmt|;
 name|s
 operator|=
 name|dtoa
 argument_list|(
+name|dval
+argument_list|(
 name|d
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -752,7 +801,11 @@ name|errno
 operator|=
 literal|0
 expr_stmt|;
+name|dval
+argument_list|(
+operator|&
 name|d1
+argument_list|)
 operator|=
 name|strtod
 argument_list|(
@@ -775,20 +828,27 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+name|dval
+argument_list|(
 name|d
+argument_list|)
 operator|!=
+name|dval
+argument_list|(
+operator|&
 name|d1
+argument_list|)
 condition|)
 block|{
 name|printf
 argument_list|(
 literal|"sent d = %.17g = 0x%lx %lx, buf = %s\n"
 argument_list|,
-argument|d
+argument|dval(d)
 argument_list|,
-argument|U word0(d)
+argument|UL word0(d)
 argument_list|,
-argument|U word1(d)
+argument|UL word1(d)
 argument_list|,
 argument|buf
 argument_list|)
@@ -797,11 +857,11 @@ name|printf
 argument_list|(
 literal|"got d1 = %.17g = 0x%lx %lx\n"
 argument_list|,
-argument|d1
+argument|dval(&d1)
 argument_list|,
-argument|U word0(d1)
+argument|UL word0(&d1)
 argument_list|,
-argument|U word1(d1)
+argument|UL word1(&d1)
 argument_list|)
 empty_stmt|;
 block|}
@@ -815,6 +875,11 @@ parameter_list|(
 name|Void
 parameter_list|)
 block|{
+name|U
+name|d
+decl_stmt|,
+name|d1
+decl_stmt|;
 name|char
 name|buf
 index|[
@@ -838,11 +903,6 @@ name|s1
 decl_stmt|,
 modifier|*
 name|se
-decl_stmt|;
-name|double
-name|d
-decl_stmt|,
-name|d1
 decl_stmt|;
 name|int
 name|decpt
@@ -922,6 +982,7 @@ name|x
 operator|=
 name|word0
 argument_list|(
+operator|&
 name|d
 argument_list|)
 expr_stmt|;
@@ -929,6 +990,7 @@ name|y
 operator|=
 name|word1
 argument_list|(
+operator|&
 name|d
 argument_list|)
 expr_stmt|;
@@ -998,6 +1060,7 @@ expr_stmt|;
 block|}
 name|word0
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|=
@@ -1005,6 +1068,7 @@ name|x
 expr_stmt|;
 name|word1
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|=
@@ -1015,13 +1079,64 @@ operator|=
 literal|"Output: d =\n%.17g = 0x%lx %lx\n"
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+operator|*
+name|buf
+operator|==
+literal|'*'
+condition|)
+block|{
+name|x
+operator|=
+name|strtoul
+argument_list|(
+name|buf
+argument_list|,
+operator|&
+name|s
+argument_list|,
+literal|10
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|*
+name|s
+operator|&&
+name|x
+operator|>
+literal|18
+condition|)
+name|STRTOD_DIGLIM
+operator|=
+operator|(
+name|int
+operator|)
+name|x
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"STRTOD_DIGLIM = %lu\n"
+argument_list|,
+argument|UL x
+argument_list|)
+empty_stmt|;
+continue|continue;
+block|}
 else|else
 block|{
 name|errno
 operator|=
 literal|0
 expr_stmt|;
+name|dval
+argument_list|(
+operator|&
 name|d
+argument_list|)
 operator|=
 name|strtod
 argument_list|(
@@ -1053,7 +1168,11 @@ operator|&
 name|ndigits
 argument_list|)
 expr_stmt|;
+name|dval
+argument_list|(
+operator|&
 name|d1
+argument_list|)
 operator|=
 name|atof
 argument_list|(
@@ -1076,11 +1195,11 @@ name|printf
 argument_list|(
 argument|fmt
 argument_list|,
-argument|d
+argument|dval(&d)
 argument_list|,
-argument|U word0(d)
+argument|UL word0(&d)
 argument_list|,
-argument|U word1(d)
+argument|UL word1(&d)
 argument_list|,
 argument|se
 argument_list|)
@@ -1089,7 +1208,11 @@ name|g_fmt
 argument_list|(
 name|buf1
 argument_list|,
+name|dval
+argument_list|(
+operator|&
 name|d
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1106,29 +1229,38 @@ name|buf
 operator|!=
 literal|'#'
 operator|&&
+name|dval
+argument_list|(
+operator|&
 name|d
+argument_list|)
 operator|!=
+name|dval
+argument_list|(
+operator|&
 name|d1
+argument_list|)
 condition|)
 name|printf
 argument_list|(
 literal|"atof gives\n\ 	d1 = %.17g = 0x%lx %lx\nversus\n\ 	d  = %.17g = 0x%lx %lx\n"
 argument_list|,
-argument|d1
+argument|dval(&d1)
 argument_list|,
-argument|U word0(d1)
+argument|UL word0(&d1)
 argument_list|,
-argument|U word1(d1)
+argument|UL word1(&d1)
 argument_list|,
-argument|d
+argument|dval(&d)
 argument_list|,
-argument|U word0(d)
+argument|UL word0(&d)
 argument_list|,
-argument|U word1(d)
+argument|UL word1(&d)
 argument_list|)
 empty_stmt|;
 name|check
 argument_list|(
+operator|&
 name|d
 argument_list|)
 expr_stmt|;
@@ -1136,7 +1268,11 @@ name|s
 operator|=
 name|dtoa
 argument_list|(
+name|dval
+argument_list|(
+operator|&
 name|d
+argument_list|)
 argument_list|,
 name|mode
 argument_list|,
@@ -1169,9 +1305,14 @@ name|sign
 argument_list|,
 name|decpt
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|se
 operator|-
 name|s
+argument_list|)
 argument_list|,
 name|s
 argument_list|)
@@ -1180,6 +1321,7 @@ name|x
 operator|=
 name|word1
 argument_list|(
+operator|&
 name|d
 argument_list|)
 expr_stmt|;
@@ -1192,6 +1334,7 @@ operator|&&
 operator|(
 name|word0
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|&
@@ -1229,6 +1372,7 @@ literal|16
 expr_stmt|;
 name|word1
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|=
@@ -1238,6 +1382,7 @@ else|#
 directive|else
 name|word1
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|=
@@ -1251,18 +1396,22 @@ name|printf
 argument_list|(
 literal|"\tnextafter(d,+Inf) = %.17g = 0x%lx %lx:\n"
 argument_list|,
-argument|d
+argument|dval(&d)
 argument_list|,
-argument|U word0(d)
+argument|UL word0(&d)
 argument_list|,
-argument|U word1(d)
+argument|UL word1(&d)
 argument_list|)
 empty_stmt|;
 name|g_fmt
 argument_list|(
 name|buf1
 argument_list|,
+name|dval
+argument_list|(
+operator|&
 name|d
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1276,7 +1425,11 @@ name|s
 operator|=
 name|dtoa
 argument_list|(
+name|dval
+argument_list|(
+operator|&
 name|d
+argument_list|)
 argument_list|,
 name|mode
 argument_list|,
@@ -1300,15 +1453,21 @@ name|sign
 argument_list|,
 name|decpt
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|se
 operator|-
 name|s
+argument_list|)
 argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
 name|check
 argument_list|(
+operator|&
 name|d
 argument_list|)
 expr_stmt|;
@@ -1346,6 +1505,7 @@ literal|16
 expr_stmt|;
 name|word1
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|=
@@ -1355,6 +1515,7 @@ else|#
 directive|else
 name|word1
 argument_list|(
+operator|&
 name|d
 argument_list|)
 operator|=
@@ -1368,18 +1529,22 @@ name|printf
 argument_list|(
 literal|"\tnextafter(d,-Inf) = %.17g = 0x%lx %lx:\n"
 argument_list|,
-argument|d
+argument|dval(&d)
 argument_list|,
-argument|U word0(d)
+argument|UL word0(&d)
 argument_list|,
-argument|U word1(d)
+argument|UL word1(&d)
 argument_list|)
 empty_stmt|;
 name|g_fmt
 argument_list|(
 name|buf1
 argument_list|,
+name|dval
+argument_list|(
+operator|&
 name|d
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1393,7 +1558,11 @@ name|s
 operator|=
 name|dtoa
 argument_list|(
+name|dval
+argument_list|(
+operator|&
 name|d
+argument_list|)
 argument_list|,
 name|mode
 argument_list|,
@@ -1417,15 +1586,21 @@ name|sign
 argument_list|,
 name|decpt
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|se
 operator|-
 name|s
+argument_list|)
 argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
 name|check
 argument_list|(
+operator|&
 name|d
 argument_list|)
 expr_stmt|;
