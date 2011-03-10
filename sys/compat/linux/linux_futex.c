@@ -1913,7 +1913,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* XXX: linux verifies access here and returns EFAULT */
+comment|/* XXX: Linux verifies access here and returns EFAULT */
 switch|switch
 condition|(
 name|op
@@ -2458,7 +2458,6 @@ operator|->
 name|val3
 argument_list|)
 expr_stmt|;
-comment|/* 		 * XXX: Linux is able to cope with different addresses 		 * corresponding to the same mapped memory in the sleeping 		 * and waker process(es). 		 */
 ifdef|#
 directive|ifdef
 name|DEBUG
