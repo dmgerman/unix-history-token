@@ -1349,12 +1349,11 @@ name|pwr_table_offset
 operator|!=
 name|AR5416_PWR_TABLE_OFFSET_DB
 condition|)
-block|{
 name|ath_hal_printf
 argument_list|(
 name|ah
 argument_list|,
-literal|"ERROR: default pwr offset: %d dBm != EEPROM pwr offset: %d dBm\n"
+literal|"[ath]: default pwr offset: %d dBm != EEPROM pwr offset: %d dBm; curves will be adjusted.\n"
 argument_list|,
 name|AR5416_PWR_TABLE_OFFSET_DB
 argument_list|,
@@ -1364,14 +1363,6 @@ operator|)
 name|pwr_table_offset
 argument_list|)
 expr_stmt|;
-name|ecode
-operator|=
-name|HAL_ENOTSUPP
-expr_stmt|;
-goto|goto
-name|bad
-goto|;
-block|}
 if|if
 condition|(
 name|AR_SREV_MERLIN_20_OR_LATER
