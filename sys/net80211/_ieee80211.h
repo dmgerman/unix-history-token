@@ -1346,7 +1346,7 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_HTRATE_MAXSIZE
-value|127
+value|77
 end_define
 
 begin_struct

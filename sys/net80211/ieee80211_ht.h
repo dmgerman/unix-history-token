@@ -512,9 +512,7 @@ specifier|const
 name|struct
 name|ieee80211_mcs_rates
 name|ieee80211_htrates
-index|[
-literal|16
-index|]
+index|[]
 decl_stmt|;
 end_decl_stmt
 
