@@ -290,6 +290,11 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|__amd64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|__i386__
 argument_list|)
 end_if
@@ -365,7 +370,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __i386__ */
+comment|/* __amd64 || __i386__ */
 end_comment
 
 begin_comment
@@ -4051,16 +4056,23 @@ operator|(
 operator|!
 name|defined
 argument_list|(
-name|__i386__
+name|__alpha__
 argument_list|)
 operator|&&
 operator|!
 name|defined
 argument_list|(
-name|__alpha__
+name|__amd64__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__i386__
 argument_list|)
 operator|)
 operator|||
+expr|\
 name|defined
 argument_list|(
 name|ALTQ_NOPCC
@@ -4105,9 +4117,17 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|__i386__
+argument_list|)
 comment|/* check if TSC is available */
 if|if
 condition|(
@@ -4197,9 +4217,17 @@ directive|endif
 return|return;
 block|}
 comment|/* 	 * if the clock frequency (of Pentium TSC or Alpha PCC) is 	 * accessible, just use it. 	 */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|__i386__
+argument_list|)
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
@@ -4489,6 +4517,11 @@ condition|)
 block|{
 if|#
 directive|if
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|||
 name|defined
 argument_list|(
 name|__i386__
